@@ -1,0 +1,76 @@
+<div id="revisions" data-post-id={{@model.post_id}} class={{@hiddenClasses}}>
+  {{#if @model.title_changes}}
+    <div class="row">
+      <h2>{{html-safe @titleDiff}}</h2>
+    </div>
+  {{/if}}
+  {{#if @mobileView}}
+    {{#if @userChanges}}
+      <div class="row">
+        {{bound-avatar-template
+          @model.user_changes.previous.avatar_template
+          "small"
+        }}
+        {{@model.user_changes.previous.username}}
+        &rarr;
+        {{bound-avatar-template
+          @model.user_changes.current.avatar_template
+          "small"
+        }}
+        {{@model.user_changes.current.username}}
+      </div>
+    {{/if}}
+    {{#if @model.wiki_changes}}
+      <div class="row">
+        <DisabledIcon @icon="far-edit" @disabled={{@wikiDisabled}} />
+      </div>
+    {{/if}}
+    {{#if @model.post_type_changes}}
+      <div class="row">
+        <DisabledIcon @icon="shield-alt" @disabled={{@postTypeDisabled}} />
+      </div>
+    {{/if}}
+    {{#if @model.category_id_changes}}
+      <div class="row">
+        {{html-safe @previousCategory}}
+        &rarr;
+        {{html-safe @currentCategory}}
+      </div>
+    {{/if}}
+  {{/if}}
+  {{#if @model.tags_changes}}
+    <div class="row">
+      {{i18n "tagging.changed"}}
+      {{#each @previousTagChanges as |t|}}
+        {{discourse-tag t.name style=(if t.deleted "diff-del")}}
+      {{/each}}
+      &rarr;&nbsp;
+      {{#each @currentTagChanges as |t|}}
+        {{discourse-tag t.name style=(if t.inserted "diff-ins")}}
+      {{/each}}
+    </div>
+  {{/if}}
+  {{#if @model.featured_link_changes}}
+    <div class="row">
+      {{@model.featured_link_changes.previous}}
+      &rarr;
+      {{@model.featured_link_changes.current}}
+    </div>
+  {{/if}}
+
+  <span>
+    <PluginOutlet
+      @name="post-revisions"
+      @connectorTagName="div"
+      @outletArgs={{hash model=@model}}
+    />
+  </span>
+
+  <LinksRedirect
+    @class="row body-diff"
+    {{did-insert @calculateBodyDiff @bodyDiffHTML}}
+    {{did-update @calculateBodyDiff @bodyDiffHTML}}
+  >
+    {{html-safe @bodyDiff}}
+  </LinksRedirect>
+</div>

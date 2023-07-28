@@ -1026,14 +1026,7 @@ fa_IR:
       experimental_sidebar:
         enable: "فعال کردن نوار کناری"
         options: "تنظیمات"
-        categories_section: "بخش دسته‌بندی‌ها"
-        categories_section_instruction: "دسته‌بندی‌های انتخاب شده در بخش دسته‌بندی نوار کناری نمایش داده می‌شود."
-        tags_section: "بخش برچسب‌ها"
-        tags_section_instruction: "برچسب‌های انتخاب شده در بخش برچسب‌ها نوار کناری نمایش داده می‌شود."
         navigation_section: "ناوبری"
-        list_destination_instruction: "وقتی محتوای جدیدی در نوار کناری وجود دارد..."
-        list_destination_default: "از پیوند پیش‌فرض استفاده کنید و یک نشان برای موارد جدید نشان دهید"
-        list_destination_unread_new: "پیوند به خوانده نشده/جدید و نمایش تعداد موارد جدید"
       change: "تغییر"
       featured_topic: "مبحث برجسته"
       moderator: "%{user} یک مدیر است"
@@ -1131,7 +1124,6 @@ fa_IR:
         tags: "برچسب‌‌ها"
         interface: "رابط"
         apps: "برنامه‌ها"
-        sidebar: "نوار کناری"
       change_password:
         success: "(ایمیل ارسال شد)"
         in_progress: "(فرستادن ایمیل)"
@@ -1544,8 +1536,7 @@ fa_IR:
       pause_notifications: "مکث کردن آگاه‌سازی‌ها"
       remove_status: "حذف وضعیت"
     user_tips:
-      primary: "فهمیدم!"
-      secondary: "این نکات را به من نشان نده"
+      button: "فهمیدم!"
       first_notification:
         title: "اولین آگاه‌سازی شما!"
         content: "آگاه‌سازی‌ها برای این است که هر آنچه در انجمن اتفاق می‌افتد را به شما اطلاع بدهد، مورد استفاده قرار می‌گیرد."
@@ -1621,11 +1612,11 @@ fa_IR:
       hide_forever: "نه ممنون"
       intro: "سلام! :heart_eyes: به نظر میاد شما از بحث لذت می‌برید، اما هنوز برای یک حساب کاربری ثبت نام نکرده‌اید."
     summary:
-      enabled_description: "شما خلاصه ای از این موضوع را می بینید: بالاترین‌ نوشته‌هایی که توسط انجمن انتخاب شده."
       description:
         one: "<b>%{count}</b> پاسخ داده شده."
         other: "<b>%{count}</b> پاسخ داده شده."
-      enable: "خلاصه‌ی این موضوع"
+      buttons:
+        hide: "پنهان کردن خلاصه"
       disable: "نمایش همه‌ی نوشته‌ها"
     deleted_filter:
       enabled_description: "این موضوع شامل نوشته‌های حذف شده‌ای است، که مخفی شده‌اند."
@@ -3117,6 +3108,9 @@ fa_IR:
       next: "بعدی (مکان‌نمای راست)"
       counter: "%curr% از %total%"
       close: "بستن (خروج)"
+    experimental_lightbox:
+      buttons:
+        close: "بستن (خروج)"
     cannot_render_video: این ویدیو قابل ارائه نیست، چون مرورگر شما از کدک پشتیبانی نمی‌کند.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -3360,6 +3354,9 @@ fa_IR:
       more: "بیشتر"
       all_categories: "همه‌ی دسته‌بندی‌ها"
       all_tags: "همه برچسب‌ها"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "همه"
       sections:
         custom:
           add: "افزودن بخش سفارشی"
@@ -3367,6 +3364,7 @@ fa_IR:
           save: "ذخیره"
           delete: "حذف"
           delete_confirm: "آیا مطمئن هستید که می‌خواهید این بخش را حذف کنید؟"
+          always_public: "محتوای این بخش همیشه عمومی است"
           links:
             delete: "حذف پیوند"
             reset: "بازگردانی به پیش‌فرض"
@@ -3402,8 +3400,8 @@ fa_IR:
           header_action_title: "ويرايش دسته‌بندی‌های نوار کناری خود"
           configure_defaults: "تنظیمات پیش‌فرض"
         community:
-          header_link_text: "انجمن"
-          header_action_create_topic_title: "ایجاد موضوع"
+          edit_section:
+            header_dropdown: "سفارشی‌سازی"
           links:
             about:
               content: "درباره"
@@ -3413,8 +3411,8 @@ fa_IR:
               title: "تنظیمات و گزارش‌های سایت"
             badges:
               content: "نشان‌ها"
-            everything:
-              content: "همه چیز"
+            topics:
+              content: "موضوعات"
               title: "همه موضوعات"
             faq:
               content: "پرسش‌های متداول"
@@ -3433,7 +3431,15 @@ fa_IR:
             review:
               content: "بازنگری"
               pending_count: "%{count} در انتظار"
+      panels:
+        forum:
+          label: انجمن
     until: "تا وقتی که:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "یک مقدار معتبر وارد کنید."
+          email: "لطفا یک آدرس ایمیل معتبر وارد کنید."
   admin_js:
     type_to_filter: "بنویسید تا فیلتر کنید..."
     admin:
@@ -4177,6 +4183,8 @@ fa_IR:
               key: "حداقل"
             maximum:
               key: "حداکثر"
+            type:
+              key: "نوع"
       impersonate:
         title: "جعل هویت کردن"
         help: "با استفاده از ابزار جعل هویت کردن یک حساب کاربری را برای اشکال زدایی انتخاب نمایید، شما باید بعد از اتمام کار یک بار خارج شوید."
@@ -4411,6 +4419,8 @@ fa_IR:
         recommended: "ما پیشنهاد میکنیم این متن را بر اساس نیاز های خود ویرایش کنید:"
         show_overriden: "تنها بازنویسی‌شده‌ها را نمایش بده"
         locale: "زبان:"
+        outdated:
+          dismiss: "رد کردن"
       settings:
         show_overriden: "تنها بازنویسی‌شده‌ها را نمایش بده"
         history: "مشاهده تاریخچه تغییر"

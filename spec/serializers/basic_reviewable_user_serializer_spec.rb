@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 describe BasicReviewableUserSerializer do
-  fab!(:user) { Fabricate(:user) }
+  subject(:serializer) { described_class.new(reviewable, root: false).as_json }
 
+  fab!(:user) { Fabricate(:user) }
   fab!(:reviewable) do
     ReviewableUser.needs_review!(
       target: user,
@@ -17,13 +18,11 @@ describe BasicReviewableUserSerializer do
     )
   end
 
-  subject { described_class.new(reviewable, root: false).as_json }
-
   include_examples "basic reviewable attributes"
 
   describe "#username" do
     it "equals the username in the reviewable's payload" do
-      expect(subject[:username]).to eq(user.username)
+      expect(serializer[:username]).to eq(user.username)
     end
   end
 end

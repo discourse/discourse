@@ -1086,14 +1086,7 @@ nl:
       experimental_sidebar:
         enable: "Zijbalk inschakelen"
         options: "Opties"
-        categories_section: "Categorieënsectie"
-        categories_section_instruction: "Geselecteerde categorieën worden weergegeven onder de sectie Categorieën van de zijbalk."
-        tags_section: "Tagssectie"
-        tags_section_instruction: "Geselecteerde tags worden weergegeven onder de sectie Tags van de zijbalk."
         navigation_section: "Navigatie"
-        list_destination_instruction: "Wanneer er nieuwe inhoud in de zijbalk is..."
-        list_destination_default: "standaardlink gebruiken en een badge weergeven voor nieuwe items"
-        list_destination_unread_new: "linken naar ongelezen/nieuw en het aantal nieuwe items weergeven"
       change: "wijzigen"
       featured_topic: "Uitgelicht topic"
       moderator: "%{user} is een moderator"
@@ -1255,7 +1248,6 @@ nl:
         tags: "Tags"
         interface: "Interface"
         apps: "Apps"
-        sidebar: "Zijbalk"
       change_password:
         success: "(e-mail verzonden)"
         in_progress: "(e-mail verzenden)"
@@ -1709,8 +1701,7 @@ nl:
       pause_notifications: "Meldingen pauzeren"
       remove_status: "Status verwijderen"
     user_tips:
-      primary: "Begrepen!"
-      secondary: "laat me deze tips niet zien"
+      button: "Begrepen!"
       first_notification:
         title: "Je eerste melding!"
         content: "Meldingen worden gebruikt om je op de hoogte te houden van wat er gaande is in de community."
@@ -1760,36 +1751,6 @@ nl:
       logout_disabled: "Afmelden is uitgeschakeld zolang de website zich in de alleen-lezenmodus bevindt."
     staff_writes_only_mode:
       enabled: "Deze site is in de medewerkermodus. Ga door met bekijken, maar antwoorden, liken en andere acties zijn beperkt tot medewerkers."
-    too_few_topics_and_posts_notice_MF: |
-      Laten we <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">de discussie starten!</a> Er { currentTopics, plural,
-          one {is <strong>#</strong> topic}
-        other {zijn <strong>#</strong> topics}
-      } en { currentPosts, plural,
-          one {<strong>#</strong> bericht}
-        other {<strong>#</strong> berichten}
-      }. Bezoekers hebben meer nodig om te lezen en op te antwoorden – wij raden minimaal { requiredTopics, plural,
-          one {<strong>#</strong> topic}
-        other {<strong>#</strong> topics}
-      } en { requiredPosts, plural,
-          one {<strong>#</strong> bericht}
-        other {<strong>#</strong> berichten}
-      } aan. Alleen personeel kan dit bericht zien.
-    too_few_topics_notice_MF: |
-      Laten we <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">de discussie starten!</a> Er { currentTopics, plural,
-          one {is <strong>#</strong> topic}
-        other {zijn <strong>#</strong> topics}
-      }. Bezoekers hebben meer nodig om te lezen en op te antwoorden – wij raden minimaal { requiredTopics, plural,
-          one {<strong>#</strong> topic}
-        other {<strong>#</strong> topics}
-      } aan. Alleen personeel kan dit bericht zien.
-    too_few_posts_notice_MF: |
-      Laten we <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">de discussie starten!</a> Er { currentPosts, plural,
-          one {is <strong>#</strong> post}
-        other {zijn <strong>#</strong> posts}
-      }. Bezoekers hebben meer nodig om te lezen en op te antwoorden – wij raden minimaal { requiredPosts, plural,
-          one {<strong>#</strong> bericht}
-        other {<strong>#</strong> berichten}
-      } aan. Alleen personeel kan dit bericht zien.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/uur} other {# fouten/uur}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/uur} other {# fouten/uur}} bereikt.
@@ -1820,16 +1781,12 @@ nl:
       intro: "Hallo! Zo te zien heb je plezier aan de discussie, maar heb je je nog niet geregistreerd voor een account."
       value_prop: "Ben je het zat om door dezelfde berichten te scrollen? Wanneer je een account maakt, kom je altijd terug waar je was gebleven. Met een account kun je ook op de hoogte worden gehouden van nieuwe antwoorden, bladwijzers opslaan en likes gebruiken om anderen te bedanken. We kunnen allemaal samenwerken om deze community geweldig te maken. :heart:"
     summary:
-      enabled_description: "Je bekijkt een samenvatting van dit topic: de interessantste berichten volgens de community."
       description:
         one: "Er is <b>%{count}</b> antwoord."
         other: "Er zijn <b>%{count}</b> antwoorden."
       description_time_MF: |
         Er {replyCount, plural, one {is <b>#</b> antwoord} other {zijn <b>#</b> antwoorden}} met een geschatte leestijd van <b>{readingTime, plural, one {# minuut} other {# minuten}}</b>.
-      enable: "Vat dit topic samen"
       disable: "Alle berichten weergeven"
-      short_label: "Samenvatten"
-      short_title: "Bekijk een samenvatting van dit topic: de interessantste berichten volgens de community"
     deleted_filter:
       enabled_description: "Dit topic bevat verwijderde berichten, die zijn verborgen."
       disabled_description: "Verwijderde berichten in het topic worden weergegeven."
@@ -3275,7 +3232,6 @@ nl:
       filtered_replies:
         viewing_posts_by: "%{post_count} berichten weergegeven van"
         viewing_subset: "Sommige antwoorden zijn samengevouwen"
-        viewing_summary: "Samenvatting van dit topic weergegeven"
         post_number: "%{username}, bericht #%{post_number}"
         show_all: "Alles weergeven"
       share:
@@ -3645,6 +3601,9 @@ nl:
       close: "Sluiten (Esc)"
       content_load_error: '<a href="%url%">De inhoud</a> kon niet worden geladen.'
       image_load_error: '<a href="%url%">De afbeelding</a> kon niet worden geladen.'
+    experimental_lightbox:
+      buttons:
+        close: "Sluiten (Esc)"
     cannot_render_video: Deze video kan niet worden weergegeven omdat je browser de codec niet ondersteunt.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -3972,6 +3931,9 @@ nl:
       more: "Meer"
       all_categories: "Alle categorieën"
       all_tags: "Alle tags"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Alles"
       sections:
         custom:
           save: "Opslaan"
@@ -3998,28 +3960,20 @@ nl:
             unread_with_count: "Ongelezen (%{count})"
             archive: "Archief"
         tags:
-          links:
-            add_tags:
-              content: "Tags toevoegen"
-              title: "Je hebt geen tags toegevoegd. Klik om te beginnen."
           none: "Je hebt geen tags toegevoegd."
           click_to_get_started: "Klik hier om te beginnen."
           header_link_text: "Tags"
           header_action_title: "Bewerk je zijbalktags"
           configure_defaults: "Standaardinstellingen configureren"
         categories:
-          links:
-            add_categories:
-              content: "Categorieën toevoegen"
-              title: "Je hebt geen categorieën toegevoegd. Klik om te beginnen."
           none: "Je hebt geen categorieën toegevoegd."
           click_to_get_started: "Klik hier om te beginnen."
           header_link_text: "Categorieën"
           header_action_title: "Bewerk je zijbalkcategorieën"
           configure_defaults: "Standaardinstellingen configureren"
         community:
-          header_link_text: "Community"
-          header_action_create_topic_title: "Maak een topic"
+          edit_section:
+            header_dropdown: "Aanpassen"
           links:
             about:
               content: "Over"
@@ -4030,8 +3984,8 @@ nl:
             badges:
               content: "Badges"
               title: "Alle beschikbare badges om te verdienen"
-            everything:
-              content: "Alles"
+            topics:
+              content: "Topics"
               title: "Alle topics"
             faq:
               content: "FAQ"
@@ -4058,6 +4012,11 @@ nl:
       description: "Je welkomsttopic is het eerste dat nieuwe leden lezen. Zie het als je \"elevator pitch\" of \"missiestatement\". Laat iedereen eerst weten voor wie deze community is, wat ze hier kunnen verwachten en wat je wilt dat ze doen."
       button_title: "Beginnen met bewerken"
     until: "Tot:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Voer een geldige waarde in."
+          email: "Voer een geldig e-mailadres in."
   admin_js:
     type_to_filter: "typ om te filteren..."
     admin:
@@ -5089,6 +5048,8 @@ nl:
               key: "minimum"
             maximum:
               key: "maximum"
+            type:
+              key: "type"
       impersonate:
         title: "Imiteren"
         help: "Gebruik deze tool om een gebruikersaccount te imiteren voor debugdoeleinden. Je moet je afmelden wanneer je klaar bent."
@@ -5427,6 +5388,8 @@ nl:
         show_overriden: "Alleen aangepaste weergeven"
         locale: "Taal:"
         more_than_50_results: "Er zijn meer dan 50 resultaten. Verfijn je zoekopdracht."
+        outdated:
+          dismiss: "Sluiten"
       settings:
         show_overriden: "Alleen aangepaste weergeven"
         history: "Wijzigingsgeschiedenis weergeven"

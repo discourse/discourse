@@ -20,6 +20,12 @@ import { isPresent } from "@ember/utils";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
+import {
+  destroyTippyInstances,
+  initUserStatusHtml,
+  renderUserStatusHtml,
+} from "discourse/lib/user-status-on-autocomplete";
+import ChatModalChannelSummary from "discourse/plugins/chat/discourse/components/chat/modal/channel-summary";
 
 export default class ChatComposer extends Component {
   @service capabilities;
@@ -34,14 +40,11 @@ export default class ChatComposer extends Component {
   @service currentUser;
   @service chatApi;
   @service chatDraftsManager;
+  @service modal;
 
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
   @tracked presenceChannelName;
-
-  get shouldRenderReplyingIndicator() {
-    return !this.args.channel?.isDraft;
-  }
 
   get shouldRenderMessageDetails() {
     return (
@@ -84,7 +87,7 @@ export default class ChatComposer extends Component {
   setupTextareaInteractor(textarea) {
     this.composer.textarea = new TextareaInteractor(getOwner(this), textarea);
 
-    if (this.site.desktopView) {
+    if (this.site.desktopView && this.args.autofocus) {
       this.composer.focus({ ensureAtEnd: true, refreshHeight: true });
     }
   }
@@ -211,10 +214,17 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  async onSend() {
+  trapMouseDown(event) {
+    event?.preventDefault();
+  }
+
+  @action
+  async onSend(event) {
     if (!this.sendEnabled) {
       return;
     }
+
+    event?.preventDefault();
 
     if (
       this.currentMessage.editing &&
@@ -229,23 +239,12 @@ export default class ChatComposer extends Component {
       return;
     }
 
-    if (this.site.mobileView) {
-      // prevents to hide the keyboard after sending a message
-      // we use direct DOM manipulation here because textareaInteractor.focus()
-      // is using the runloop which is too late
-      this.composer.textarea.textarea.focus();
-    }
-
     await this.args.onSendMessage(this.currentMessage);
-    this.composer.focus({ refreshHeight: true });
+    this.composer.textarea.refreshHeight();
   }
 
   reportReplyingPresence() {
     if (!this.args.channel || !this.currentMessage) {
-      return;
-    }
-
-    if (this.args.channel.isDraft) {
       return;
     }
 
@@ -277,9 +276,9 @@ export default class ChatComposer extends Component {
       return;
     }
 
-    // hack to prevent the whole viewport
-    // to move on focus input
-    textarea = document.querySelector(".chat-composer__input");
+    // hack to prevent the whole viewport to move on focus input
+    // we need access to native node
+    textarea = this.composer.textarea.textarea;
     textarea.style.transform = "translateY(-99999px)";
     textarea.focus();
     window.requestAnimationFrame(() => {
@@ -378,6 +377,13 @@ export default class ChatComposer extends Component {
     }
   }
 
+  @action
+  showChannelSummaryModal() {
+    this.modal.show(ChatModalChannelSummary, {
+      model: { channelId: this.args.channel.id },
+    });
+  }
+
   #addMentionedUser(userData) {
     const user = User.create(userData);
     this.currentMessage.mentionedUsers.set(user.id, user);
@@ -402,6 +408,7 @@ export default class ChatComposer extends Component {
         return obj.username || obj.name;
       },
       dataSource: (term) => {
+        destroyTippyInstances();
         return userSearch({ term, includeGroups: true }).then((result) => {
           if (result?.users?.length > 0) {
             const presentUserNames =
@@ -411,9 +418,13 @@ export default class ChatComposer extends Component {
                 user.cssClasses = "is-online";
               }
             });
+            initUserStatusHtml(result.users);
           }
           return result;
         });
+      },
+      onRender: (options) => {
+        renderUserStatusHtml(options);
       },
       afterComplete: (text, event) => {
         event.preventDefault();
@@ -421,6 +432,7 @@ export default class ChatComposer extends Component {
         this.composer.focus();
         this.captureMentions();
       },
+      onClose: destroyTippyInstances,
     });
   }
 

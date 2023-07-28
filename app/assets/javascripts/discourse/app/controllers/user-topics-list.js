@@ -25,10 +25,6 @@ export default Controller.extend(BulkTopicSelection, {
     return topicsLength === 0 && incomingCount === 0;
   },
 
-  saveScrollPosition() {
-    this.session.set("topicListScrollPosition", $(window).scrollTop());
-  },
-
   @observes("model.canLoadMore")
   _showFooter() {
     this.set("application.showFooter", !this.get("model.canLoadMore"));

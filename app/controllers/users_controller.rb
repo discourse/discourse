@@ -1182,6 +1182,8 @@ class UsersController < ApplicationController
     end
   end
 
+  SEARCH_USERS_LIMIT = 50
+
   def search_users
     term = params[:term].to_s.strip
 
@@ -1204,10 +1206,11 @@ class UsersController < ApplicationController
       params[:include_staged_users],
     )
     options[:last_seen_users] = !!ActiveModel::Type::Boolean.new.cast(params[:last_seen_users])
-    if params[:limit].present?
-      options[:limit] = params[:limit].to_i
-      raise Discourse::InvalidParameters.new(:limit) if options[:limit] <= 0
+
+    if limit = fetch_limit_from_params(default: nil, max: SEARCH_USERS_LIMIT)
+      options[:limit] = limit
     end
+
     options[:topic_id] = topic_id if topic_id
     options[:category_id] = category_id if category_id
 
@@ -1234,6 +1237,11 @@ class UsersController < ApplicationController
         groups = block.call(groups, current_user) if params[param_name.to_s]
       end
 
+      # the plugin registry callbacks above are only evaluated when a param
+      # is present matching the name of the callback. Any modifier registered using
+      # register_modifier(:groups_for_users_search) will be evaluated without needing the
+      # param.
+      groups = DiscoursePluginRegistry.apply_modifier(:groups_for_users_search, groups)
       groups = Group.search_groups(term, groups: groups, sort: :auto)
 
       to_render[:groups] = groups.map { |m| { name: m.name, full_name: m.full_name } }
@@ -1728,6 +1736,8 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
+  BOOKMARKS_LIMIT = 20
+
   def bookmarks
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
@@ -1735,7 +1745,15 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.json do
-        bookmark_list = UserBookmarkList.new(user: user, guardian: guardian, params: params)
+        bookmark_list =
+          UserBookmarkList.new(
+            user: user,
+            guardian: guardian,
+            search_term: params[:q],
+            page: params[:page],
+            per_page: fetch_limit_from_params(default: nil, max: BOOKMARKS_LIMIT),
+          )
+
         bookmark_list.load
 
         if bookmark_list.bookmarks.empty?
@@ -1784,10 +1802,9 @@ class UsersController < ApplicationController
         UserBookmarkList.new(
           user: current_user,
           guardian: guardian,
-          params: {
-            per_page: USER_MENU_LIST_LIMIT - reminder_notifications.size,
-          },
+          per_page: USER_MENU_LIST_LIMIT - reminder_notifications.size,
         )
+
       bookmark_list.load do |query|
         if exclude_bookmark_ids.present?
           query.where("bookmarks.id NOT IN (?)", exclude_bookmark_ids)

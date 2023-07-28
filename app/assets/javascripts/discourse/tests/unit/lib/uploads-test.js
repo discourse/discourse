@@ -1,4 +1,3 @@
-import * as Utilities from "discourse/lib/utilities";
 import {
   allowsAttachments,
   allowsImages,
@@ -348,7 +347,8 @@ module("Unit | Utility | uploads", function (hooks) {
       "![8F2B469B-6B2C-4213-BC68-57B4876365A0|100x200](/uploads/123/abcdef.ext)"
     );
 
-    sinon.stub(Utilities, "isAppleDevice").returns(true);
+    const capabilities = getOwner(this).lookup("service:capabilities");
+    sinon.stub(capabilities, "isIOS").get(() => true);
     assert.strictEqual(
       testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),
       "![image|100x200](/uploads/123/abcdef.ext)"

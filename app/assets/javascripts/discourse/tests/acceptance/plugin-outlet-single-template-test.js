@@ -15,7 +15,7 @@ acceptance("Plugin Outlet - Single Template", function (needs) {
   needs.hooks.beforeEach(() => {
     registerTemporaryModule(
       CONNECTOR_MODULE,
-      hbs`<span class='hello-username'>{{model.username}}</span>`
+      hbs`<span class='hello-username'>{{this.model.username}}</span>`
     );
   });
 

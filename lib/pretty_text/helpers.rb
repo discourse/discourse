@@ -125,6 +125,11 @@ module PrettyText
         cooking_user = User.find(cooking_user_id)
       end
 
+      types_in_priority_order =
+        types_in_priority_order.select do |type|
+          HashtagAutocompleteService.data_source_types.include?(type)
+        end
+
       result =
         HashtagAutocompleteService.new(Guardian.new(cooking_user)).lookup(
           [slug],

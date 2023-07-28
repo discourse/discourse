@@ -36,7 +36,7 @@ html.composer-open {
   transition: height 250ms ease, background 250ms ease, transform 250ms ease,
     max-width 250ms ease, padding-bottom 250ms ease;
   background-color: var(--secondary);
-  box-shadow: shadow("composer");
+  box-shadow: var(--shadow-composer);
 
   .reply-area {
     display: flex;
@@ -129,18 +129,20 @@ html.composer-open {
       align-items: center;
       width: auto;
       max-width: 100%;
+      min-width: 0; // allows shrinking when needed
 
       .action-title {
         display: flex;
         align-items: center;
         line-height: normal;
-        @include ellipsis;
-      }
+        min-width: 0;
 
-      .topic-link,
-      .user-link,
-      .post-link {
-        margin-right: 8px;
+        .topic-link,
+        .user-link,
+        .post-link {
+          margin-right: 8px;
+          @include ellipsis;
+        }
       }
 
       .username {
@@ -278,7 +280,7 @@ html.composer-open {
     }
   }
 
-  .with-tags {
+  .with-tags.with-category {
     .title-and-category {
       flex-wrap: wrap;
     }
@@ -319,7 +321,6 @@ html.composer-open {
 
   .mini-tag-chooser {
     flex-grow: 1;
-    max-width: calc(50% - 4px);
     margin: 0 0 8px 0px;
     z-index: z("composer", "dropdown");
     .select-kit-header {
@@ -426,7 +427,7 @@ html.composer-open {
   width: 300px;
   background-color: var(--secondary);
   border: 1px solid var(--primary-low);
-  box-shadow: shadow("dropdown-lite");
+  box-shadow: var(--shadow-dropdown);
   border-radius: 8px;
 
   ul {
@@ -476,10 +477,17 @@ html.composer-open {
           color: var(--primary-high);
         }
 
-        .status-description {
-          @include ellipsis;
-          font-size: var(--font-down-2);
-          color: var(--primary-high);
+        .user-status-message {
+          display: flex;
+          align-items: center;
+          gap: 0.25em;
+
+          .user-status-message-description {
+            @include ellipsis;
+            font-size: var(--font-down-2);
+            color: var(--primary-high);
+            margin: 0;
+          }
         }
 
         .relative-date {

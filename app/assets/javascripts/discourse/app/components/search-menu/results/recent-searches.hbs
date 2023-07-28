@@ -1,0 +1,23 @@
+{{#if this.currentUser.recent_searches}}
+  <div class="search-menu-recent">
+    <div class="heading">
+      <h4>{{i18n "search.recent"}}</h4>
+      <FlatButton
+        @title="search.clear_recent"
+        @icon="times"
+        @action={{this.clearRecent}}
+        @class="clear-recent-searches"
+      />
+    </div>
+
+    {{#each this.currentUser.recent_searches as |slug|}}
+      <SearchMenu::Results::AssistantItem
+        @icon="history"
+        @label={{slug}}
+        @slug={{slug}}
+        @closeSearchMenu={{@closeSearchMenu}}
+        @searchTermChanged={{@searchTermChanged}}
+      />
+    {{/each}}
+  </div>
+{{/if}}

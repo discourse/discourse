@@ -87,8 +87,7 @@ describe Chat::Message do
       <aside class="quote no-group" data-username="#{post.user.username}" data-post="#{post.post_number}" data-topic="#{topic.id}">
       <div class="title">
       <div class="quote-controls"></div>
-      <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src}" class="avatar"><a href="http://test.localhost/t/some-quotable-topic/#{topic.id}/#{post.post_number}">#{topic.title}</a>
-      </div>
+      <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src}" class="avatar"><a href="http://test.localhost/t/some-quotable-topic/#{topic.id}/#{post.post_number}">#{topic.title}</a></div>
       <blockquote>
       <p>Mark me...this will go down in history.</p>
       </blockquote>
@@ -131,36 +130,29 @@ describe Chat::Message do
       expect(cooked).to eq(<<~COOKED.chomp)
         <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg1.id}" data-username="chatbbcodeuser" data-datetime="#{msg1.created_at.iso8601}" data-channel-name="testchannel" data-channel-id="#{chat_channel.id}">
         <div class="chat-transcript-meta">
-        Originally sent in <a href="/chat/c/-/#{chat_channel.id}">testchannel</a>
-        </div>
+        Originally sent in <a href="/chat/c/-/#{chat_channel.id}">testchannel</a></div>
         <div class="chat-transcript-user">
         <div class="chat-transcript-user-avatar">
-        <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src}" class="avatar">
-        </div>
+        <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src}" class="avatar"></div>
         <div class="chat-transcript-username">
         chatbbcodeuser</div>
         <div class="chat-transcript-datetime">
-        <a href="/chat/c/-/#{chat_channel.id}/#{msg1.id}" title="#{msg1.created_at.iso8601}"></a>
-        </div>
+        <a href="/chat/c/-/#{chat_channel.id}/#{msg1.id}" title="#{msg1.created_at.iso8601}"></a></div>
         </div>
         <div class="chat-transcript-messages">
-        <p>this is the first message</p>
-        </div>
+        <p>this is the first message</p></div>
         </div>
         <div class="chat-transcript chat-transcript-chained" data-message-id="#{msg2.id}" data-username="otherbbcodeuser" data-datetime="#{msg2.created_at.iso8601}">
         <div class="chat-transcript-user">
         <div class="chat-transcript-user-avatar">
-        <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src2}" class="avatar">
-        </div>
+        <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src2}" class="avatar"></div>
         <div class="chat-transcript-username">
         otherbbcodeuser</div>
         <div class="chat-transcript-datetime">
-        <span title="#{msg2.created_at.iso8601}"></span>
-        </div>
+        <span title="#{msg2.created_at.iso8601}"></span></div>
         </div>
         <div class="chat-transcript-messages">
-        <p>and another cool one</p>
-        </div>
+        <p>and another cool one</p></div>
         </div>
       COOKED
     end
@@ -249,7 +241,7 @@ describe Chat::Message do
       )
     end
 
-    it "supports hashtag-autocomplete plugin" do
+    it "supports hashtag autocomplete" do
       SiteSetting.chat_enabled = true
       SiteSetting.enable_experimental_hashtag_autocomplete = true
 
@@ -258,9 +250,18 @@ describe Chat::Message do
 
       cooked = described_class.cook("##{category.slug}", user_id: user.id)
 
-      expect(cooked).to eq(
-        "<p><a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"#{category.slug}\" data-id=\"#{category.id}\"><span class=\"hashtag-icon-placeholder\"></span><span>#{category.name}</span></a></p>",
-      )
+      expect(cooked).to have_tag(
+        "a",
+        with: {
+          class: "hashtag-cooked",
+          href: category.url,
+          "data-type": "category",
+          "data-slug": category.slug,
+          "data-id": category.id,
+        },
+      ) do
+        with_tag("span", with: { class: "hashtag-icon-placeholder" })
+      end
     end
 
     it "supports censored plugin" do
@@ -292,8 +293,7 @@ describe Chat::Message do
     it "excerpts upload file name if message is empty" do
       gif =
         Fabricate(:upload, original_filename: "cat.gif", width: 400, height: 300, extension: "gif")
-      message = Fabricate(:chat_message, message: "")
-      message.attach_uploads([gif])
+      message = Fabricate(:chat_message, message: "", uploads: [gif])
 
       expect(message.excerpt).to eq "cat.gif"
     end
@@ -376,7 +376,7 @@ describe Chat::Message do
         )
       image2 =
         Fabricate(:upload, original_filename: "meme.jpg", width: 10, height: 10, extension: "jpg")
-      message.attach_uploads([image, image2])
+      message.uploads = [image, image2]
       expect(message.to_markdown).to eq(<<~MSG.chomp)
       hey friend, what's up?!
 
@@ -409,7 +409,7 @@ describe Chat::Message do
       Fabricate(:chat_message, message: "this is duplicate", chat_channel: channel, user: user1)
       message =
         described_class.new(message: "this is duplicate", chat_channel: channel, user: user2)
-      message.validate_message(has_uploads: false)
+      message.valid?
       expect(message.errors.full_messages).to include(I18n.t("chat.errors.duplicate_message"))
     end
   end
@@ -522,30 +522,6 @@ describe Chat::Message do
         chat_message.rebake!
         expect(chat_message.reload.cooked).to include(secure_category.name)
       end
-    end
-  end
-
-  describe "#attach_uploads" do
-    fab!(:chat_message) { Fabricate(:chat_message) }
-    fab!(:upload_1) { Fabricate(:upload) }
-    fab!(:upload_2) { Fabricate(:upload) }
-
-    it "creates an UploadReference record for the provided uploads" do
-      chat_message.attach_uploads([upload_1, upload_2])
-      upload_references = UploadReference.where(upload_id: [upload_1, upload_2])
-      expect(upload_references.count).to eq(2)
-      expect(upload_references.map(&:target_id).uniq).to eq([chat_message.id])
-      expect(upload_references.map(&:target_type).uniq).to eq([described_class.polymorphic_name])
-    end
-
-    it "does nothing if the message record is new" do
-      expect { described_class.new.attach_uploads([upload_1, upload_2]) }.to not_change {
-        UploadReference.count
-      }
-    end
-
-    it "does nothing for an empty uploads array" do
-      expect { chat_message.attach_uploads([]) }.to not_change { UploadReference.count }
     end
   end
 

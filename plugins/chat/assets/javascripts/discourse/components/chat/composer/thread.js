@@ -18,6 +18,10 @@ export default class ChatComposerThread extends ChatComposer {
     this.composer.reset(this.args.thread);
   }
 
+  get shouldRenderReplyingIndicator() {
+    return this.args.thread;
+  }
+
   get disabled() {
     return (
       !this.chat.userCanInteractWithChat ||
@@ -34,12 +38,8 @@ export default class ChatComposerThread extends ChatComposer {
     return I18n.t("chat.placeholder_thread");
   }
 
-  get lastMessage() {
-    return this.args.thread.lastMessage;
-  }
-
   lastUserMessage(user) {
-    return this.args.thread.lastUserMessage(user);
+    return this.args.thread.messagesManager.findLastUserMessage(user);
   }
 
   handleEscape(event) {

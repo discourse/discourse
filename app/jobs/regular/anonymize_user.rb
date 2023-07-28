@@ -3,6 +3,9 @@
 module Jobs
   class AnonymizeUser < ::Jobs::Base
     sidekiq_options queue: "low"
+    # this is an extremely expensive job
+    # we are limiting it so only 1 per cluster runs
+    cluster_concurrency 1
 
     def execute(args)
       @user_id = args[:user_id]

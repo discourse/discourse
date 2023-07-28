@@ -284,7 +284,7 @@ RSpec.describe UserStat do
     subject(:update_pending_posts) { stat.update_pending_posts }
 
     let!(:reviewable) { Fabricate(:reviewable_queued_post) }
-    let(:user) { reviewable.created_by }
+    let(:user) { reviewable.target_created_by }
     let(:stat) { user.user_stat }
 
     before do

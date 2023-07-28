@@ -1,14 +1,12 @@
-import { htmlHelper } from "discourse-common/lib/helpers";
+import { htmlSafe } from "@ember/template";
 
 const validDirections = ["top", "right", "bottom", "left"];
 
-export default htmlHelper((color, direction) => {
-  const borderColor = `#${color}`;
-
+export default function borderColor(color, direction) {
   const borderProperty =
     direction && validDirections.includes(direction)
       ? `border-${direction}-color`
       : "border-color";
 
-  return `${borderProperty}: ${borderColor} `;
-});
+  return htmlSafe(`${borderProperty}: #${color} `);
+}

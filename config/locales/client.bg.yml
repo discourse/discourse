@@ -189,7 +189,6 @@ bg:
     software_update_prompt:
       message: "Актуализирахме този сайт, <span>моля, презаредете</span>, или може да изпитате неочаквано поведение."
       dismiss: "Отмени"
-    bootstrap_mode: "Режим Bootstrap"
     themes:
       default_description: "По подразбиране"
       broken_theme_alert: "Вашият сайт може да не работи, защото тема/компонент има грешки."
@@ -1115,14 +1114,7 @@ bg:
       experimental_sidebar:
         enable: "Активиране на страничната лента"
         options: "Опции"
-        categories_section: "Раздел Категории"
-        categories_section_instruction: "Избраните категории ще бъдат показани в раздел \"Категории\" на страничната лента."
-        tags_section: "Раздел за етикети"
-        tags_section_instruction: "Избраните етикети ще бъдат показани в секцията с етикети на страничната лента."
         navigation_section: "Навигация"
-        list_destination_instruction: "Когато има ново съдържание в страничната лента..."
-        list_destination_default: "използвайте връзката по подразбиране и покажете значка за нови елементи"
-        list_destination_unread_new: "връзка към непрочетени/нови и показване на броя нови елементи"
       change: "промени"
       featured_topic: "Представена тема"
       moderator: "%{user} е модератор"
@@ -1303,7 +1295,6 @@ bg:
         tags: "Етикети"
         interface: "Интерфейс"
         apps: "Апликации"
-        sidebar: "Странична лента"
       change_password:
         success: "(имейлът е изпратен)"
         in_progress: "(изпраща се имейл)"
@@ -1761,8 +1752,7 @@ bg:
       pause_notifications: "Пауза на известията"
       remove_status: "Премахване на статуса"
     user_tips:
-      primary: "Схванах го!"
-      secondary: "не ми показвай тези съвети"
+      button: "Схванах го!"
       first_notification:
         title: "Вашето първо известие!"
         content: "Известията се използват, за да ви информират какво се случва в общността."
@@ -1812,36 +1802,6 @@ bg:
       logout_disabled: "Излизане от сайта е временно спряно, докато е пуснат режим \"само за четене\"."
     staff_writes_only_mode:
       enabled: "Този сайт е в режим само за персонал. Моля, продължете да сърфирате, но отговарянето, харесванията и други действия са ограничени само до членове на персонала."
-    too_few_topics_and_posts_notice_MF: |
-      Нека <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">започнем дискусията!</a> Там { currentTopics, plural,
-          one {е <strong>#</strong> тема}
-        other {са <strong>#</strong> теми}
-      } и { currentPosts, plural,
-          one {<strong>#</strong> публикация}
-        other {<strong>#</strong> публикации}
-      }. Посетителите се нуждаят от повече за четене и отговор – препоръчваме поне { requiredTopics, plural,
-          one {<strong>#</strong> тема}
-        other {<strong>#</strong> теми}
-      } и { requiredPosts, plural,
-          one {<strong>#</strong> публикация}
-        other {<strong>#</strong> публикации}
-      }. Само служителите могат да видят това съобщение.
-    too_few_topics_notice_MF: |
-      Нека <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">започнем дискусията!</a> Там { currentTopics, plural,
-          one {е <strong>#</strong> тема}
-        other {са <strong>#</strong> теми}
-      }. Посетителите се нуждаят от повече за четене и отговор – препоръчваме поне { requiredTopics, plural,
-          one {<strong>#</strong> тема}
-        other {<strong>#</strong> теми}
-      }. Само служителите могат да видят това съобщение.
-    too_few_posts_notice_MF: |
-      Нека <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">започнем дискусията!</a> Там { currentPosts, plural,
-          one {е <strong>#</strong> публикация}
-        other {са <strong>#</strong> публикации}
-      }. Посетителите се нуждаят от повече за четене и отговор – препоръчваме поне { requiredPosts, plural,
-          one {<strong>#</strong> публикация}
-        other {<strong>#</strong> публикации}
-      }. Само служителите могат да видят това съобщение.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{ rate, plural,
@@ -1878,13 +1838,9 @@ bg:
       intro: "Здравейте! Изглежда, че следите дискусията, но все още не сте създали собствен профил."
       value_prop: "Уморихте ли се да превъртате едни и същи публикации? Когато създадете акаунт, винаги ще се връщате там, до където сте стигнали. С акаунт можете също да получавате известия за нови отговори, да запазвате отметки и да използвате харесвания, за да благодарите на другите. Всички можем да работим заедно, за да направим тази общност страхотна. :heart:"
     summary:
-      enabled_description: "В момента гледате резюме на тази тема: най-интересните публикации определени от общността."
       description_time_MF: |
         Има{replyCount, plural, one {<b>#</b> reply} other { <b>#</b> отговора}} с очаквано време за четене <b>{readingTime, plural, one {# минута} other {# минути}}</b>.
-      enable: "Обобщи Тази Тема"
       disable: "Покажи всички публикации"
-      short_label: "Обобщаване"
-      short_title: "Покажете обобщение на тази тема: най-интересните публикации, определени от общността"
     deleted_filter:
       enabled_description: "Тази тема има изтрити публикации, които са скрити."
       disabled_description: "Изтритите публикации в тази тема са показани."
@@ -3395,6 +3351,9 @@ bg:
         other: "%{count} нови"
       more: "Повече"
       all_categories: "Всички категории"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Всички"
       sections:
         custom:
           add: "Добавяне на персонализиран раздел"
@@ -3434,7 +3393,8 @@ bg:
         categories:
           header_link_text: "Категории"
         community:
-          header_link_text: "Общност "
+          edit_section:
+            header_dropdown: "Персонализация"
           links:
             about:
               content: "Относно"
@@ -3442,8 +3402,8 @@ bg:
               content: "Администратор"
             badges:
               content: "Значки"
-            everything:
-              content: "Всичко"
+            topics:
+              content: "Теми"
             faq:
               content: "FAQ"
             groups:
@@ -3456,6 +3416,11 @@ bg:
               content: "Преглед"
     form_template_chooser:
       select_template: "Изберете шаблони за формуляри"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Моля, въведете валидна стойност."
+          email: "Моля, въведете валиден имейл адрес."
   admin_js:
     type_to_filter: "филтрирай..."
     admin:
@@ -3974,13 +3939,13 @@ bg:
             minimum:
               key: "минимум"
               type: "цяло число"
-              description: "В текстовите полета указва минималния разрешен брой знаци."
             maximum:
               key: "максимум"
               type: "цяло число"
-              description: "В текстовите полета указва максималния разрешен брой знаци. В падащите менюта за множествен избор указва максималния брой опции, които могат да бъдат избрани."
             pattern:
               key: "модел"
+            type:
+              key: "тип"
         preview_modal:
           title: "Преглед на шаблон"
         field_placeholders:
@@ -4204,6 +4169,8 @@ bg:
         go_back: "Към търсачката"
         recommended: "За вашите нужди, Ви препоръчваме да редактирате следният текст:"
         show_overriden: "Избери само презаписаните"
+        outdated:
+          dismiss: "Отмени"
       settings:
         show_overriden: "Показване само на презаписаните"
         reset: "изчисти"

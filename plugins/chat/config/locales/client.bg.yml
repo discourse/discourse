@@ -68,6 +68,8 @@ bg:
       flag: "Сигнализиране"
       join: "Влизане"
       last_visit: "последно посещение"
+      summarization:
+        summarize: "Обобщаване"
       mention_warning:
         dismiss: "отмени"
         cannot_see: "%{username} няма достъп до този канал и не е уведомен."
@@ -119,6 +121,8 @@ bg:
       settings:
         follow: "Влизане"
         followed: "Присъединен"
+        threading_enabled: "Да е включен"
+        threading_disabled: "Деактивирани"
         notifications: "Известия"
         save: "Запази "
         saved: "Запазено"
@@ -154,6 +158,14 @@ bg:
           other: "%{count} отговора"
         settings: "Настройки"
         last_reply: "последен отговор"
+        notifications:
+          regular:
+            title: "Нормален"
+          tracking:
+            title: "Следене"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Ново Съобщение"
         cancel: "Прекрати"

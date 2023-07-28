@@ -36,19 +36,19 @@ it:
           x_options:
             one: "Scegli <strong>%{count}</strong> opzione."
             other: "Scegli <strong>%{count}</strong> opzioni."
-          between_min_and_max_options: "Scegli tra <strong>%{min}</strong> e <strong>%{max}</strong> opzioni."
+          between_min_and_max_options: "Scegli tra <strong>%{min} e %{max} opzioni</strong>."
       cast-votes:
         title: "Vota"
         label: "Vota ora!"
       show-results:
         title: "Visualizza i risultati del sondaggio"
-        label: "Mostra i risultati"
+        label: "Risultati"
       remove-vote:
         title: "Annulla il tuo voto"
-        label: "Annulla voto"
+        label: "Annulla il voto"
       hide-results:
         title: "Torna ai sondaggi"
-        label: "Mostra voto"
+        label: "Vota"
       group-results:
         title: "Voti raggruppati per campo utente"
         label: "Mostra la suddivisione"
@@ -72,6 +72,8 @@ it:
         breakdown: "Ripartizione"
         percentage: "Percentuale"
         count: "Conteggio"
+      options:
+        label: "Opzioni"
       error_while_toggling_status: "Spiacenti, si è verificato un errore nel cambiamento di stato di questo sondaggio."
       error_while_casting_votes: "Spiacenti, si è verificato un errore nella votazione."
       error_while_fetching_voters: "Spiacenti, si è verificato un errore nel visualizzare i votanti."

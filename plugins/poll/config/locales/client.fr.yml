@@ -25,30 +25,16 @@ fr:
           title: "Les résultats sont affichés après la <strong>fermeture</strong> du sondage."
         staff:
           title: "Les résultats ne sont montrés qu'aux <strong>responsables</strong>."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Choisissez au moins <strong>%{count}</strong> option."
-            other: "Choisissez au moins <strong>%{count}</strong> options."
-          up_to_max_options:
-            one: "Choisissez jusqu'à <strong>%{count}</strong> option."
-            other: "Choisissez jusqu'à <strong>%{count}</strong> options."
-          x_options:
-            one: "Choisissez <strong>%{count}</strong> option."
-            other: "Choisissez <strong>%{count}</strong> options."
-          between_min_and_max_options: "Choisissez entre <strong>%{min}</strong> et <strong>%{max}</strong> options."
       cast-votes:
         title: "Distribuez vos votes"
         label: "Votez maintenant !"
       show-results:
         title: "Afficher les résultats du sondage"
-        label: "Afficher les résultats"
+        label: "Résultats"
       remove-vote:
         title: "Supprimer votre vote"
-        label: "Supprimer le vote"
       hide-results:
         title: "Retourner au vote"
-        label: "Afficher le sondage"
       group-results:
         title: "Grouper les votes par champ utilisateur"
         label: "Afficher les détails"
@@ -72,6 +58,8 @@ fr:
         breakdown: "Détails"
         percentage: "Pourcentage"
         count: "Nombre"
+      options:
+        label: "Options"
       error_while_toggling_status: "Nous sommes désolés, une erreur s'est produite lors du changement de statut de ce sondage."
       error_while_casting_votes: "Nous sommes désolés, une erreur s'est produite lors de l'envoi de vos votes."
       error_while_fetching_voters: "Nous sommes désolés, une erreur s'est produite lors de l'affichage des votants."

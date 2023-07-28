@@ -1,16 +1,15 @@
 import { convertIconClass, iconHTML } from "discourse-common/lib/icon-library";
-import { htmlHelper } from "discourse-common/lib/helpers";
 import { isEmpty } from "@ember/utils";
+import { htmlSafe } from "@ember/template";
 
-export default htmlHelper(function ({ icon, image }) {
+export default function iconOrImage({ icon, image }) {
   if (!isEmpty(image)) {
-    return `<img src='${image}'>`;
+    return htmlSafe(`<img src='${image}'>`);
   }
 
   if (isEmpty(icon)) {
     return "";
   }
 
-  icon = convertIconClass(icon);
-  return iconHTML(icon);
-});
+  return htmlSafe(iconHTML(convertIconClass(icon)));
+}

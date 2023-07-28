@@ -1193,8 +1193,6 @@ et:
       sign_up: "Liitu"
       hide_forever: "tänan, ei"
     summary:
-      enabled_description: "Vaatad selle teema kokkuvõtet: kõige huvipakkuvamad postitused valib kogukond."
-      enable: "Võta see teema kokku"
       disable: "Näita kõiki postitusi"
     deleted_filter:
       enabled_description: "See teema sisaldab kustutatud postitusi, mis on peidetud."
@@ -2054,7 +2052,6 @@ et:
       filtered_replies:
         viewing_posts_by: "Vaatad %{post_count} sõnumit autorilt"
         viewing_subset: "Mõned vastused on peidetud"
-        viewing_summary: "Vaatad teema kokkuvõtet"
         show_all: "Näita kõiki"
     category:
       none: "(foorum puudub)"
@@ -2513,6 +2510,9 @@ et:
         other: "%{count} uut"
       more: "Veel"
       all_categories: "Kõik foorumid"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Kõik"
       sections:
         custom:
           save: "Salvesta"
@@ -2539,7 +2539,8 @@ et:
         categories:
           header_link_text: "Liigid"
         community:
-          header_link_text: "Kogukond"
+          edit_section:
+            header_dropdown: "Kohanda"
           links:
             about:
               content: "Teave"
@@ -2547,6 +2548,8 @@ et:
               content: "Admin"
             badges:
               content: "Märgised"
+            topics:
+              content: "Teemasid"
             faq:
               content: "KKK"
             groups:
@@ -2557,6 +2560,11 @@ et:
               content: "Minu"
             review:
               content: "Vaata üle"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Palun sisesta korrektne väärtus."
+          email: "Sisesta palun korrektne meiliaadress."
   admin_js:
     type_to_filter: "filtreerimiseks trüki..."
     admin:
@@ -3164,6 +3172,8 @@ et:
               key: "miinimum"
             maximum:
               key: "maksimum"
+            type:
+              key: "tüüp"
       impersonate:
         title: "Kehasta"
         help: "Kasuta seda töövahendit kasutajakonto ülevõtmiseks silumise eesmärgil. Tühistamiseks pead välja logima."
@@ -3395,6 +3405,8 @@ et:
         go_back: "Tagasi otsingusse"
         recommended: "Soovitame järgnevat teksti oma vajadustele vastavalt kohandada:"
         show_overriden: "Näita vaid käsitsi muudetuid"
+        outdated:
+          dismiss: "Ignoreeri"
       settings:
         show_overriden: "Näita vaid käsitsi muudetuid"
         reset: "lähtesta"

@@ -56,6 +56,8 @@ hy:
           about: Մասին
           members: Անդամներ
           settings: Կարգավորումներ
+      new_message_modal:
+        no_items: "Տարրեր չկան"
       direct_message_creator:
         title: Նոր Հաղորդագրություն
         prefix: "Ում:"
@@ -73,6 +75,7 @@ hy:
       settings:
         follow: "Միանալ"
         followed: "Միացել է"
+        threading_disabled: "Անջատված"
         notifications: "Ծանուցումներ"
         preview: "Նախադիտում"
         save: "Պահպանել"
@@ -111,6 +114,11 @@ hy:
           other: "%{count} պատասխան"
         settings: "Կարգավորումներ"
         last_reply: "վերջին պատասխանը"
+        notifications:
+          regular:
+            title: "Նորմալ"
+          tracking:
+            title: "Հետևում Եմ"
       draft_channel_screen:
         header: "Նոր Հաղորդագրություն"
         cancel: "Չեղարկել"

@@ -7,6 +7,7 @@ import { next } from "@ember/runloop";
 
 export default class AdminCustomizeThemesRoute extends Route {
   @service dialog;
+  @service router;
 
   queryParams = {
     repoUrl: null,
@@ -15,6 +16,11 @@ export default class AdminCustomizeThemesRoute extends Route {
 
   model() {
     return this.store.findAll("theme");
+  }
+
+  @action
+  routeRefreshModel() {
+    this.refresh();
   }
 
   setupController(controller, model) {
@@ -54,7 +60,7 @@ export default class AdminCustomizeThemesRoute extends Route {
   addTheme(theme) {
     this.refresh();
     theme.setProperties({ recentlyInstalled: true });
-    this.transitionTo("adminCustomizeThemes.show", theme.get("id"), {
+    this.router.transitionTo("adminCustomizeThemes.show", theme.get("id"), {
       queryParams: {
         repoName: null,
         repoUrl: null,

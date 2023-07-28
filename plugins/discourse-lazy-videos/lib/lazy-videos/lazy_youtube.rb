@@ -21,7 +21,8 @@ class Onebox::Engine::YoutubeOnebox
       end
 
       escaped_title = ERB::Util.html_escape(video_title)
-      escaped_start_time = ERB::Util.html_escape(params["t"] || 0)
+      escaped_start_time = ERB::Util.html_escape(params["t"])
+      t_param = "&t=#{escaped_start_time}" if escaped_start_time.present?
 
       <<~HTML
         <div class="youtube-onebox lazy-video-container"
@@ -29,7 +30,7 @@ class Onebox::Engine::YoutubeOnebox
           data-video-title="#{escaped_title}"
           data-video-start-time="#{escaped_start_time}"
           data-provider-name="youtube">
-          <a href="https://www.youtube.com/watch?v=#{video_id}" target="_blank">
+          <a href="https://www.youtube.com/watch?v=#{video_id}#{t_param}" target="_blank">
             <img class="youtube-thumbnail"
               src="#{thumbnail_url}"
               title="#{escaped_title}">

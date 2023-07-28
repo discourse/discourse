@@ -3,6 +3,14 @@
 module PageObjects
   module Components
     class Dialog < PageObjects::Components::Base
+      def closed?
+        has_no_css?(".dialog-container")
+      end
+
+      def open?
+        has_css?(".dialog-container")
+      end
+
       def has_content?(content)
         find(".dialog-container").has_content?(content)
       end

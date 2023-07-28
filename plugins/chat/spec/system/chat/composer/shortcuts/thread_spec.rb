@@ -11,7 +11,6 @@ RSpec.describe "Chat | composer | shortcuts | thread", type: :system do
   let(:side_panel_page) { PageObjects::Pages::ChatSidePanel.new }
 
   before do
-    SiteSetting.enable_experimental_chat_threaded_discussions = true
     chat_system_bootstrap
     channel_1.add(current_user)
     sign_in(current_user)
@@ -59,7 +58,10 @@ RSpec.describe "Chat | composer | shortcuts | thread", type: :system do
     end
 
     context "when last message is deleted" do
-      before { last_thread_message.trash! }
+      before do
+        last_thread_message.trash!
+        thread_1.update_last_message_id!
+      end
 
       it "does not edit a message" do
         chat_page.visit_thread(thread_1)

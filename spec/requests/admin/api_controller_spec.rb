@@ -20,6 +20,12 @@ RSpec.describe Admin::ApiController do
         expect(response.parsed_body["keys"].length).to eq(3)
       end
 
+      describe "when limit params is invalid" do
+        include_examples "invalid limit params",
+                         "/admin/api/keys.json",
+                         described_class::INDEX_LIMIT
+      end
+
       it "can paginate results" do
         get "/admin/api/keys.json?offset=0&limit=2"
 
@@ -435,7 +441,26 @@ RSpec.describe Admin::ApiController do
           "wordpress",
         )
 
-        expect(scopes["topics"].any? { |h| h["urls"].include?("/latest.rss (GET)") }).to be_truthy
+        topic_routes = [
+          "/t/:id (GET)",
+          "/t/external_id/:external_id (GET)",
+          "/t/:slug/:topic_id/print (GET)",
+          "/t/:slug/:topic_id/summary (GET)",
+          "/t/:topic_id/summary (GET)",
+          "/t/:topic_id/:post_number (GET)",
+          "/t/:topic_id/last (GET)",
+          "/t/:slug/:topic_id.rss (GET)",
+          "/t/:slug/:topic_id (GET)",
+          "/t/:slug/:topic_id/:post_number (GET)",
+          "/t/:slug/:topic_id/last (GET)",
+          "/t/:topic_id/posts (GET)",
+          "/latest.rss (GET)",
+        ]
+
+        topic_routes.each do |route|
+          expect(scopes["topics"].any? { |h| h["urls"].include?(route) }).to be_truthy
+        end
+
         expect(scopes["posts"].any? { |h| h["urls"].include?("/posts (GET)") }).to be_truthy
         expect(scopes["posts"].any? { |h| h["urls"].include?("/private-posts (GET)") }).to be_truthy
       end

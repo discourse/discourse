@@ -1819,8 +1819,9 @@ RSpec.describe TopicsController do
         end
 
         describe "when first post is locked" do
-          it "blocks non-staff from editing even if 'trusted_users_can_edit_others' is true" do
-            SiteSetting.trusted_users_can_edit_others = true
+          it "blocks user from editing even if they are in 'edit_all_topic_groups' and 'edit_all_post_groups'" do
+            SiteSetting.edit_all_topic_groups = Group::AUTO_GROUPS[:trust_level_3]
+            SiteSetting.edit_all_post_groups = Group::AUTO_GROUPS[:trust_level_4]
             user.update!(trust_level: 3)
             topic.first_post.update!(locked_by_id: admin.id)
 
@@ -3853,7 +3854,7 @@ RSpec.describe TopicsController do
 
       context "when tracked is unset" do
         it "updates the `new_since` date" do
-          TopicTrackingState.expects(:publish_dismiss_new)
+          TopicTrackingState.expects(:publish_dismiss_new).never
 
           put "/topics/reset-new.json"
           expect(response.status).to eq(200)
@@ -3971,9 +3972,138 @@ RSpec.describe TopicsController do
 
           put "/topics/reset-new.json?category_id=#{category.id}&include_subcategories=true"
 
+          expect(response.status).to eq(200)
+
           expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id).sort).to eq(
             [category_topic.id, subcategory_topic.id].sort,
           )
+        end
+
+        it "dismisses topics for main category, subcategories and sub-subcategories" do
+          SiteSetting.max_category_nesting = 3
+
+          sub_subcategory = Fabricate(:category, parent_category_id: subcategory.id)
+          sub_subcategory_topic = Fabricate(:topic, category: sub_subcategory)
+
+          TopicTrackingState.expects(:publish_dismiss_new).with(
+            user.id,
+            topic_ids: [category_topic.id, subcategory_topic.id, sub_subcategory_topic.id],
+          )
+
+          put "/topics/reset-new.json?category_id=#{category.id}&include_subcategories=true"
+
+          expect(response.status).to eq(200)
+
+          expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to contain_exactly(
+            category_topic.id,
+            subcategory_topic.id,
+            sub_subcategory_topic.id,
+          )
+        end
+
+        context "when the category has private child categories" do
+          fab!(:category) { Fabricate(:category) }
+          fab!(:group) { Fabricate(:group) }
+          fab!(:private_child_category) do
+            Fabricate(:private_category, parent_category: category, group: group)
+          end
+          fab!(:public_child_category) { Fabricate(:category, parent_category: category) }
+          fab!(:topic_in_private_child_category) do
+            Fabricate(:topic, category: private_child_category)
+          end
+          fab!(:topic_in_public_child_category) do
+            Fabricate(:topic, category: public_child_category)
+          end
+
+          it "doesn't dismiss topics in private child categories that the user can't see" do
+            messages =
+              MessageBus.track_publish(TopicTrackingState.unread_channel_key(user.id)) do
+                put "/topics/reset-new.json",
+                    params: {
+                      category_id: category.id,
+                      include_subcategories: true,
+                    }
+
+                expect(response.status).to eq(200)
+              end
+
+            expect(messages.size).to eq(1)
+            expect(messages[0].user_ids).to eq([user.id])
+            expect(messages[0].data["message_type"]).to eq(
+              TopicTrackingState::DISMISS_NEW_MESSAGE_TYPE,
+            )
+            expect(messages[0].data["payload"]["topic_ids"]).to eq(
+              [topic_in_public_child_category.id],
+            )
+            expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq(
+              [topic_in_public_child_category.id],
+            )
+          end
+
+          it "dismisses topics in private child categories that the user can see" do
+            group.add(user)
+
+            messages =
+              MessageBus.track_publish(TopicTrackingState.unread_channel_key(user.id)) do
+                put "/topics/reset-new.json",
+                    params: {
+                      category_id: category.id,
+                      include_subcategories: true,
+                    }
+
+                expect(response.status).to eq(200)
+              end
+
+            expect(messages.size).to eq(1)
+            expect(messages[0].user_ids).to eq([user.id])
+            expect(messages[0].data["message_type"]).to eq(
+              TopicTrackingState::DISMISS_NEW_MESSAGE_TYPE,
+            )
+            expect(messages[0].data["payload"]["topic_ids"]).to contain_exactly(
+              topic_in_public_child_category.id,
+              topic_in_private_child_category.id,
+            )
+            expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to contain_exactly(
+              topic_in_public_child_category.id,
+              topic_in_private_child_category.id,
+            )
+          end
+        end
+
+        context "when the category is private" do
+          fab!(:group) { Fabricate(:group) }
+          fab!(:private_category) { Fabricate(:private_category, group: group) }
+          fab!(:topic_in_private_category) { Fabricate(:topic, category: private_category) }
+
+          it "doesn't dismiss topics or publish topic IDs via MessageBus if the user can't access the category" do
+            messages =
+              MessageBus.track_publish do
+                put "/topics/reset-new.json", params: { category_id: private_category.id }
+                expect(response.status).to eq(200)
+              end
+
+            expect(messages.size).to eq(0)
+            expect(DismissedTopicUser.where(user_id: user.id).count).to eq(0)
+          end
+
+          it "dismisses topics and publishes the dismissed topic IDs if the user can access the category" do
+            group.add(user)
+            messages =
+              MessageBus.track_publish do
+                put "/topics/reset-new.json", params: { category_id: private_category.id }
+              end
+            expect(response.status).to eq(200)
+            expect(messages.size).to eq(1)
+            expect(messages[0].channel).to eq(TopicTrackingState.unread_channel_key(user.id))
+            expect(messages[0].user_ids).to eq([user.id])
+            expect(messages[0].data["message_type"]).to eq(
+              TopicTrackingState::DISMISS_NEW_MESSAGE_TYPE,
+            )
+            expect(messages[0].data["payload"]["topic_ids"]).to eq([topic_in_private_category.id])
+            expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq(
+              [topic_in_private_category.id],
+            )
+          end
         end
       end
 
@@ -3985,6 +4115,54 @@ RSpec.describe TopicsController do
           TopicTrackingState.expects(:publish_dismiss_new).with(user.id, topic_ids: [tag_topic.id])
           put "/topics/reset-new.json?tag_id=#{tag.name}"
           expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq([tag_topic.id])
+        end
+
+        context "when the tag is restricted" do
+          fab!(:restricted_tag) { Fabricate(:tag, name: "restricted-tag") }
+          fab!(:topic_with_restricted_tag) { Fabricate(:topic, tags: [restricted_tag]) }
+          fab!(:group) { Fabricate(:group) }
+          fab!(:topic_without_tag) { Fabricate(:topic) }
+          fab!(:tag_group) do
+            Fabricate(
+              :tag_group,
+              name: "Restricted Tag Group",
+              tag_names: ["restricted-tag"],
+              permissions: [[group, TagGroupPermission.permission_types[:full]]],
+            )
+          end
+
+          it "respects the tag param and only dismisses topics tagged with this tag if the user can see it" do
+            group.add(user)
+            messages =
+              MessageBus.track_publish do
+                put "/topics/reset-new.json", params: { tag_id: restricted_tag.name }
+              end
+            expect(messages.size).to eq(1)
+            expect(messages[0].data["payload"]["topic_ids"]).to contain_exactly(
+              topic_with_restricted_tag.id,
+            )
+            expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to contain_exactly(
+              topic_with_restricted_tag.id,
+            )
+          end
+
+          it "ignores the tag param and dismisses all topics if the user can't see the tag" do
+            messages =
+              MessageBus.track_publish do
+                put "/topics/reset-new.json", params: { tag_id: restricted_tag.name }
+              end
+            expect(messages.size).to eq(1)
+            expect(messages[0].data["payload"]["topic_ids"]).to contain_exactly(
+              topic_with_restricted_tag.id,
+              tag_topic.id,
+              topic_without_tag.id,
+            )
+            expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to contain_exactly(
+              topic_with_restricted_tag.id,
+              tag_topic.id,
+              topic_without_tag.id,
+            )
+          end
         end
       end
 
@@ -4032,6 +4210,24 @@ RSpec.describe TopicsController do
           )
           put "/topics/reset-new.json", params: { topic_ids: [topic2.id] }
           expect(response.parsed_body["errors"]).to eq(nil)
+        end
+
+        it "doesn't dismiss topics that the user can't see" do
+          private_category = Fabricate(:private_category, group: Fabricate(:group))
+          topic2.update!(category_id: private_category.id)
+
+          messages =
+            MessageBus.track_publish do
+              put "/topics/reset-new.json", params: { topic_ids: [topic2.id, topic3.id] }
+            end
+          expect(messages.size).to eq(1)
+          expect(messages[0].channel).to eq(TopicTrackingState.unread_channel_key(user.id))
+          expect(messages[0].user_ids).to eq([user.id])
+          expect(messages[0].data["message_type"]).to eq(
+            TopicTrackingState::DISMISS_NEW_MESSAGE_TYPE,
+          )
+          expect(messages[0].data["payload"]["topic_ids"]).to eq([topic3.id])
+          expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq([topic3.id])
         end
 
         describe "when tracked param is true" do
@@ -5280,6 +5476,93 @@ RSpec.describe TopicsController do
         expect(TopicUser.find_by(user: user, topic: topic).notification_level).to eq(
           NotificationLevels.topic_levels[:watching],
         )
+      end
+    end
+  end
+
+  describe "#summary" do
+    fab!(:topic) { Fabricate(:topic) }
+    let(:plugin) { Plugin::Instance.new }
+
+    before do
+      strategy = DummyCustomSummarization.new("dummy")
+      plugin.register_summarization_strategy(strategy)
+      SiteSetting.summarization_strategy = strategy.model
+    end
+
+    context "for anons" do
+      it "returns a 404 if there is no cached summary" do
+        get "/t/#{topic.id}/strategy-summary.json"
+
+        expect(response.status).to eq(404)
+      end
+
+      it "returns a cached summary" do
+        section =
+          SummarySection.create!(
+            target: topic,
+            summarized_text: "test",
+            algorithm: "test",
+            original_content_sha: "test",
+          )
+
+        get "/t/#{topic.id}/strategy-summary.json"
+
+        expect(response.status).to eq(200)
+
+        summary = response.parsed_body
+        expect(summary["summary"]).to eq(section.summarized_text)
+      end
+    end
+
+    context "when the user is a member of an allowlisted group" do
+      fab!(:user) { Fabricate(:leader) }
+
+      before { sign_in(user) }
+
+      it "returns a 404 if there is no topic" do
+        invalid_topic_id = 999
+
+        get "/t/#{invalid_topic_id}/strategy-summary.json"
+
+        expect(response.status).to eq(404)
+      end
+
+      it "returns a 403 if not allowed to see the topic" do
+        pm = Fabricate(:private_message_topic)
+
+        get "/t/#{pm.id}/strategy-summary.json"
+
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context "when the user is not a member of an allowlisted group" do
+      fab!(:user) { Fabricate(:user) }
+
+      before { sign_in(user) }
+
+      it "return a 404 if there is no cached summary" do
+        get "/t/#{topic.id}/strategy-summary.json"
+
+        expect(response.status).to eq(404)
+      end
+
+      it "returns a cached summary" do
+        section =
+          SummarySection.create!(
+            target: topic,
+            summarized_text: "test",
+            algorithm: "test",
+            original_content_sha: "test",
+          )
+
+        get "/t/#{topic.id}/strategy-summary.json"
+
+        expect(response.status).to eq(200)
+
+        summary = response.parsed_body
+        expect(summary["summary"]).to eq(section.summarized_text)
       end
     end
   end

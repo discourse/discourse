@@ -18,8 +18,15 @@ module Chat
         @chat_header_indicator_preferences ||= { all_new: 0, dm_and_mentions: 1, never: 2 }
       end
 
-      base.enum :chat_email_frequency, base.chat_email_frequencies, prefix: "send_chat_email"
-      base.enum :chat_header_indicator_preference, base.chat_header_indicator_preferences
+      if !base.method_defined?(:send_chat_email_never?) # Avoid attempting to override when autoloading
+        base.enum :chat_email_frequency, base.chat_email_frequencies, prefix: "send_chat_email"
+      end
+
+      if !base.method_defined?(:chat_header_indicator_never?) # Avoid attempting to override when autoloading
+        base.enum :chat_header_indicator_preference,
+                  base.chat_header_indicator_preferences,
+                  prefix: "chat_header_indicator"
+      end
     end
   end
 end

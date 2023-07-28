@@ -7,7 +7,7 @@ class ColorScheme < ActiveRecord::Base
     Dark: {
       "primary" => "dddddd",
       "secondary" => "222222",
-      "tertiary" => "0f82af",
+      "tertiary" => "099dd7",
       "quaternary" => "c14924",
       "header_background" => "111111",
       "header_primary" => "dddddd",
@@ -256,7 +256,7 @@ class ColorScheme < ActiveRecord::Base
       "secondary" => "002B36",
       "tertiary_low" => "003E54",
       "tertiary_medium" => "00557A",
-      "tertiary" => "0088cc",
+      "tertiary" => "1a97d5",
       "tertiary_high" => "006C9F",
       "quaternary_low" => "944835",
       "quaternary" => "e45735",

@@ -17,7 +17,7 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
 
   needs.site({});
 
-  test("everything section link is shown by default ", async function (assert) {
+  test("topics section link is shown by default ", async function (assert) {
     await visit("/");
 
     const sectionLinks = queryAll(
@@ -26,8 +26,8 @@ acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
 
     assert.strictEqual(
       sectionLinks[0].textContent.trim(),
-      I18n.t("sidebar.sections.community.links.everything.content"),
-      "displays the everything section link first"
+      I18n.t("sidebar.sections.community.links.topics.content"),
+      "displays the topics section link first"
     );
   });
 

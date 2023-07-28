@@ -9,7 +9,7 @@ export default class ChatThreadHeaderUnreadIndicator extends Component {
   }
 
   get unreadCount() {
-    return this.args.channel.unreadThreadCount;
+    return this.args.channel.threadsManager.unreadThreadCount;
   }
 
   get showUnreadIndicator() {

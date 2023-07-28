@@ -7,6 +7,8 @@ RSpec.describe Post do
 
   before { Oneboxer.stubs :onebox }
 
+  it_behaves_like "it has custom fields"
+
   it { is_expected.to have_many(:reviewables).dependent(:destroy) }
 
   describe "#hidden_reasons" do
@@ -59,6 +61,7 @@ RSpec.describe Post do
   end
 
   it { is_expected.to validate_presence_of :raw }
+  it { is_expected.to validate_length_of(:edit_reason).is_at_most(1000) }
 
   # Min/max body lengths, respecting padding
   it { is_expected.not_to allow_value("x").for(:raw) }

@@ -3,7 +3,7 @@
 require "seed_data/topics"
 
 RSpec.describe SeedData::Topics do
-  subject { SeedData::Topics.with_default_locale }
+  subject(:seeder) { SeedData::Topics.with_default_locale }
 
   before do
     general_category = Fabricate(:category, name: "General")
@@ -11,7 +11,7 @@ RSpec.describe SeedData::Topics do
   end
 
   def create_topic(name = "welcome_topic_id")
-    subject.create(site_setting_names: [name], include_legal_topics: true)
+    seeder.create(site_setting_names: [name], include_legal_topics: true)
   end
 
   describe "#create" do
@@ -74,7 +74,7 @@ RSpec.describe SeedData::Topics do
     end
 
     it "does not create a legal topic if company_name is not set" do
-      subject.create(site_setting_names: ["tos_topic_id"])
+      seeder.create(site_setting_names: ["tos_topic_id"])
 
       expect(SiteSetting.tos_topic_id).to eq(-1)
     end
@@ -102,7 +102,7 @@ RSpec.describe SeedData::Topics do
 
     it "creates a legal topic if company_name is set" do
       SiteSetting.company_name = "Company Name"
-      subject.create(site_setting_names: ["tos_topic_id"])
+      seeder.create(site_setting_names: ["tos_topic_id"])
 
       expect(SiteSetting.tos_topic_id).to_not eq(-1)
     end
@@ -110,7 +110,7 @@ RSpec.describe SeedData::Topics do
 
   describe "#update" do
     def update_topic(name = "welcome_topic_id", skip_changed: false)
-      subject.update(site_setting_names: [name], skip_changed: skip_changed)
+      seeder.update(site_setting_names: [name], skip_changed: skip_changed)
     end
 
     it "updates the changed topic" do
@@ -167,7 +167,7 @@ RSpec.describe SeedData::Topics do
 
   describe "#delete" do
     def delete_topic(name = "welcome_topic_id", skip_changed: false)
-      subject.delete(site_setting_names: [name], skip_changed: skip_changed)
+      seeder.delete(site_setting_names: [name], skip_changed: skip_changed)
     end
 
     it "deletes the topic" do
@@ -199,7 +199,7 @@ RSpec.describe SeedData::Topics do
         { id: "welcome_topic_id", name: "Changed Topic Title", selected: false },
       ]
 
-      expect(subject.reseed_options).to eq(expected_options)
+      expect(seeder.reseed_options).to eq(expected_options)
     end
   end
 end

@@ -254,7 +254,6 @@ RSpec.describe Middleware::RequestTracker do
     before do
       RateLimiter.enable
       RateLimiter.clear_all_global!
-      RateLimiter.clear_all!
 
       @orig_logger = Rails.logger
       Rails.logger = @fake_logger = FakeLogger.new
@@ -263,6 +262,8 @@ RSpec.describe Middleware::RequestTracker do
       # they can be sensitive to clock skew during test runs
       freeze_time DateTime.parse("2021-01-01 01:00")
     end
+
+    use_redis_snapshotting
 
     after { Rails.logger = @orig_logger }
 
@@ -676,6 +677,8 @@ RSpec.describe Middleware::RequestTracker do
     after { Middleware::RequestTracker.unregister_detailed_request_logger(logger) }
 
     it "can report data from anon cache" do
+      Middleware::AnonymousCache.enable_anon_cache
+
       cache = Middleware::AnonymousCache.new(app([200, {}, ["i am a thing"]]))
       tracker = Middleware::RequestTracker.new(cache)
 

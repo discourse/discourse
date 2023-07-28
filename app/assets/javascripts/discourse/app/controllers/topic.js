@@ -10,6 +10,11 @@ import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 import { isEmpty, isPresent } from "@ember/utils";
 import { next, schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
+import BookmarkModal from "discourse/components/modal/bookmark";
+import {
+  CLOSE_INITIATED_BY_BUTTON,
+  CLOSE_INITIATED_BY_ESC,
+} from "discourse/components/d-modal";
 import Bookmark, { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Composer from "discourse/models/composer";
 import EmberObject, { action } from "@ember/object";
@@ -29,7 +34,8 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
-import { openBookmarkModal } from "discourse/controllers/bookmark";
+import { BookmarkFormData } from "discourse/lib/bookmark";
+import DeleteTopicConfirmModal from "discourse/components/modal/delete-topic-confirm";
 
 let customPostMessageCallbacks = {};
 
@@ -53,6 +59,12 @@ export default Controller.extend(bufferedProperty("model"), {
   dialog: service(),
   documentTitle: service(),
   screenTrack: service(),
+  modal: service(),
+  currentUser: service(),
+  router: service(),
+  siteSettings: service(),
+  site: service(),
+  appEvents: service(),
 
   multiSelect: false,
   selectedPostIds: null,
@@ -520,9 +532,9 @@ export default Controller.extend(bufferedProperty("model"), {
       }
     },
 
-    showSummary() {
+    showTopReplies() {
       return this.get("model.postStream")
-        .showSummary()
+        .showTopReplies()
         .then(() => {
           this.updateQueryParams();
         });
@@ -559,7 +571,7 @@ export default Controller.extend(bufferedProperty("model"), {
         .removeAllowedUser(user)
         .then(() => {
           if (this.currentUser.id === user.id) {
-            this.transitionToRoute("userPrivateMessages", user);
+            this.router.transitionTo("userPrivateMessages", user);
           }
         });
     },
@@ -826,7 +838,7 @@ export default Controller.extend(bufferedProperty("model"), {
 
       // Cancel and reopen the composer for the first post
       if (editingFirst) {
-        composer.cancelComposer().then(() => composer.open(opts));
+        composer.cancelComposer(opts).then(() => composer.open(opts));
       } else {
         composer.open(opts);
       }
@@ -1272,43 +1284,60 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   _modifyTopicBookmark(bookmark) {
-    return openBookmarkModal(bookmark, {
-      onAfterSave: (savedData) => {
-        this._syncBookmarks(savedData);
-        this.model.set("bookmarking", false);
-        this.model.set("bookmarked", true);
-        this.model.incrementProperty("bookmarksWereChanged");
-        this.appEvents.trigger(
-          "bookmarks:changed",
-          savedData,
-          bookmark.attachedTo()
-        );
-      },
-      onAfterDelete: (topicBookmarked, bookmarkId) => {
-        this.model.removeBookmark(bookmarkId);
+    this.modal.show(BookmarkModal, {
+      model: {
+        bookmark: new BookmarkFormData(bookmark),
+        afterSave: (savedData) => {
+          this._syncBookmarks(savedData);
+          this.model.set("bookmarking", false);
+          this.model.set("bookmarked", true);
+          this.model.incrementProperty("bookmarksWereChanged");
+          this.appEvents.trigger(
+            "bookmarks:changed",
+            savedData,
+            bookmark.attachedTo()
+          );
+        },
+        afterDelete: (topicBookmarked, bookmarkId) => {
+          this.model.removeBookmark(bookmarkId);
+        },
       },
     });
   },
 
   _modifyPostBookmark(bookmark, post) {
-    return openBookmarkModal(bookmark, {
-      onCloseWithoutSaving: () => {
-        post.appEvents.trigger("post-stream:refresh", {
-          id: bookmark.bookmarkable_id,
-        });
-      },
-      onAfterSave: (savedData) => {
-        this._syncBookmarks(savedData);
-        this.model.set("bookmarking", false);
-        post.createBookmark(savedData);
-        this.model.afterPostBookmarked(post, savedData);
-        return [post.id];
-      },
-      onAfterDelete: (topicBookmarked, bookmarkId) => {
-        this.model.removeBookmark(bookmarkId);
-        post.deleteBookmark(topicBookmarked);
-      },
-    });
+    this.modal
+      .show(BookmarkModal, {
+        model: {
+          bookmark: new BookmarkFormData(bookmark),
+          afterSave: (savedData) => {
+            this._syncBookmarks(savedData);
+            this.model.set("bookmarking", false);
+            post.createBookmark(savedData);
+            this.model.afterPostBookmarked(post, savedData);
+            return [post.id];
+          },
+          afterDelete: (topicBookmarked, bookmarkId) => {
+            this.model.removeBookmark(bookmarkId);
+            post.deleteBookmark(topicBookmarked);
+          },
+        },
+      })
+      .then((closeData) => {
+        if (!closeData) {
+          return;
+        }
+
+        if (
+          closeData.closeWithoutSaving ||
+          closeData.initiatedBy === CLOSE_INITIATED_BY_ESC ||
+          closeData.initiatedBy === CLOSE_INITIATED_BY_BUTTON
+        ) {
+          post.appEvents.trigger("post-stream:refresh", {
+            id: bookmark.bookmarkable_id,
+          });
+        }
+      });
   },
 
   _syncBookmarks(data) {
@@ -1541,10 +1570,7 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   deleteTopicModal() {
-    showModal("delete-topic-confirm", {
-      model: this.model,
-      title: "topic.actions.delete",
-    });
+    this.modal.show(DeleteTopicConfirmModal, { model: { topic: this.model } });
   },
 
   retryOnRateLimit(times, promise, topicId) {

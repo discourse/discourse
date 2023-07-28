@@ -58,7 +58,7 @@ a.hashtag {
 .hashtag-autocomplete {
   max-height: 13.5em;
   overflow-y: auto;
-  box-shadow: shadow("dropdown-lite");
+  box-shadow: var(--shadow-dropdown);
   border-radius: 8px;
 
   &__fadeout {

@@ -211,7 +211,7 @@ en:
       message: "We've updated this site, <span>please refresh</span>, or you may experience unexpected behavior."
       dismiss: "Dismiss"
 
-    bootstrap_mode: "Bootstrap mode"
+    bootstrap_mode: "Getting started"
 
     themes:
       default_description: "Default"
@@ -1206,14 +1206,10 @@ en:
       experimental_sidebar:
         enable: "Enable sidebar"
         options: "Options"
-        categories_section: "Categories Section"
-        categories_section_instruction: "Selected categories will be displayed under Sidebar's categories section."
-        tags_section: "Tags Section"
-        tags_section_instruction: "Selected tags will be displayed under Sidebar's tags section."
         navigation_section: "Navigation"
-        list_destination_instruction: "When there's new content in the sidebar..."
-        list_destination_default: "use the default link and show a badge for new items"
-        list_destination_unread_new: "link to unread/new and show a count of new items"
+        navigation_section_instruction: "When a topic list in the navigation menu has new or unread items…"
+        link_to_filtered_list_checkbox_description: "Link to the filtered list"
+        show_count_new_items_checkbox_description: "Show a count of the new items"
       change: "change"
       featured_topic: "Featured Topic"
       moderator: "%{user} is a moderator"
@@ -1252,6 +1248,7 @@ en:
       watched_first_post_categories_instructions: "You will be notified of the first post in each new topic in these categories."
       watched_first_post_tags: "Watching First Post"
       watched_first_post_tags_instructions: "You will be notified of the first post in each new topic with these tags."
+      watched_precedence_over_muted: "Notify me about topics in categories or tags I’m watching that also belong to one I have muted"
 
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on the categories or latest pages."
@@ -1408,7 +1405,7 @@ en:
         tags: "Tags"
         interface: "Interface"
         apps: "Apps"
-        sidebar: "Sidebar"
+        navigation_menu: "Navigation Menu"
 
       change_password:
         success: "(email sent)"
@@ -1912,8 +1909,7 @@ en:
       remove_status: "Remove status"
 
     user_tips:
-      primary: "Got it!"
-      secondary: "don't show me these tips"
+      button: "Got it!"
 
       first_notification:
         title: "Your first notification!"
@@ -1934,6 +1930,11 @@ en:
       suggested_topics:
         title: "Keep reading!"
         content: "Here are some topics we think you might like to read next."
+
+      admin_guide:
+        title: "Welcome to your new site!"
+        content: "Read the admin guide to continue building your site and community."
+        button: "Let's go!"
 
     loading: "Loading..."
     errors:
@@ -2039,10 +2040,21 @@ en:
       refresh_page: "Refresh page"
 
     summary:
-      enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
+      in_progress: "Summarizing topic using AI"
+      summarized_on: "Summarized with AI on %{date}"
+      model_used: "AI used: %{model}"
+      outdated: "Summary is outdated"
+      outdated_posts:
+        one: "(%{count} post missing)"
+        other: "(%{count} posts missing)"
+      enabled_description: "You're viewing this topic top replies: the most interesting posts as determined by the community."
       description:
         one: "There is <b>%{count}</b> reply."
         other: "There are <b>%{count}</b> replies."
+      buttons:
+        hide: "Hide summary"
+        generate: "Summarize with AI"
+        regenerate: "Regenerate summary"
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
       description_time_MF: |
@@ -2054,10 +2066,10 @@ en:
           other {# minutes}
         }</b>.
 
-      enable: "Summarize This Topic"
+      enable: "Show top replies"
       disable: "Show All Posts"
-      short_label: "Summarize"
-      short_title: "Show a summary of this topic: the most interesting posts as determined by the community"
+      short_label: "Top replies"
+      short_title: "Show this topic top replies: the most interesting posts as determined by the community"
 
     deleted_filter:
       enabled_description: "This topic contains deleted posts, which have been hidden."
@@ -3629,7 +3641,7 @@ en:
       filtered_replies:
         viewing_posts_by: "Viewing %{post_count} posts by"
         viewing_subset: "Some replies are collapsed"
-        viewing_summary: "Viewing a summary of this topic"
+        viewing_summary: "Viewing this topic top replies"
         post_number: "%{username}, post #%{post_number}"
         show_all: "Show all"
 
@@ -4034,6 +4046,21 @@ en:
       content_load_error: '<a href="%url%">The content</a> could not be loaded.'
       image_load_error: '<a href="%url%">The image</a> could not be loaded.'
 
+    experimental_lightbox:
+      image_load_error: "The image could not be loaded."
+      screen_reader_image_title: "Image %{current} of %{total}: %{title}"
+      buttons:
+        next: "Next (Right or down arrow key)"
+        previous: "Previous (Left or up arrow key)"
+        close: "Close (Esc)"
+        download: "Download image"
+        newtab: "Open image in a new tab"
+        zoom: "Zoom image in/out (Z key)"
+        rotate: "Rotate image (R key)"
+        fullscreen: "Toggle browser full screen mode (M key)"
+        carousel: "Display all images in a carousel (A key)"
+        retry: "Retry loading the image"
+
     cannot_render_video: This video cannot be rendered because your browser does not support the codec.
 
     keyboard_shortcuts_help:
@@ -4386,11 +4413,25 @@ en:
       more: "More"
       all_categories: "All categories"
       all_tags: "All tags"
-      categories_form:
-        save: "Save"
+      categories_form_modal:
         title: "Edit categories navigation"
+        subtitle:
+          text: "and we'll automatically show this site's most popular categories"
         filter_placeholder: "Filter categories"
         no_categories: "There are no categories matching the given term."
+      tags_form_modal:
+        title: "Edit tags navigation"
+        filter_placeholder: "Filter tags"
+        no_tags: "There are no tags matching the given term."
+        subtitle:
+          text: "and we'll automatically show this site's top tags"
+      edit_navigation_modal_form:
+        deselect_button_text: "Deselect all"
+        reset_to_defaults: "Reset to defaults"
+        filter_dropdown:
+          all: "All"
+          selected: "Selected"
+          unselected: "Unselected"
 
       sections:
         custom:
@@ -4401,6 +4442,7 @@ en:
           delete_confirm: "Are you sure you want to delete this section?"
           reset_confirm: "Are you sure you want to reset this section to default?"
           public: "Make this section public and visible to everyone"
+          always_public: "Content in this section is always public"
           more_menu: "More menu"
           links:
             add: "Add another link"
@@ -4441,29 +4483,21 @@ en:
             unread_with_count: "Unread (%{count})"
             archive: "Archive"
         tags:
-          links:
-            add_tags:
-              content: "Add tags"
-              title: "You have not added any tags. Click to get started."
           none: "You have not added any tags."
           click_to_get_started: "Click here to get started."
           header_link_text: "Tags"
           header_action_title: "Edit your sidebar tags"
           configure_defaults: "Configure defaults"
         categories:
-          links:
-            add_categories:
-              content: "Add categories"
-              title: "You have not added any categories. Click to get started."
           none: "You have not added any categories."
           click_to_get_started: "Click here to get started."
           header_link_text: "Categories"
           header_action_title: "Edit your sidebar categories"
           configure_defaults: "Configure defaults"
         community:
-          header_link_text: "Community"
-          header_action_create_topic_title: "Create a topic"
-          header_action_edit_section_title: "Edit Community section"
+          edit_section:
+            sidebar: "Customize this section"
+            header_dropdown: "Customize"
           links:
             about:
               content: "About"
@@ -4474,8 +4508,8 @@ en:
             badges:
               content: "Badges"
               title: "All the badges available to earn"
-            everything:
-              content: "Everything"
+            topics:
+              content: "Topics"
               title: "All topics"
             faq:
               content: "FAQ"
@@ -4499,6 +4533,9 @@ en:
               title: "Flagged posts and other queued items"
               pending_count: "%{count} pending"
         global_section: "Global section, visible to everyone"
+      panels:
+        forum:
+          label: Forum
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
@@ -4512,6 +4549,30 @@ en:
 
     form_template_chooser:
       select_template: "Select form templates"
+    form_templates:
+      errors:
+        valueMissing:
+          default: "Please fill out this field."
+          text: "Please fill out this field."
+          select-one: "Please select an item in the list."
+          select-multiple: "Please select at least one item in the list."
+          checkbox: "Please check this box if you want to proceed."
+        typeMismatch:
+          default: "Please enter a valid value."
+          color: "Please enter a color."
+          date: "Please enter a date."
+          email: "Please enter a valid email address."
+          number: "Please enter a number."
+          password: "Please enter a valid password."
+          tel: "Please enter a valid telephone number."
+          text: "Please enter a text value."
+          url: "Please enter a valid URL."
+        tooShort: "The input must be %{minLength} characters or longer."
+        tooLong: "The input must be less than %{maxLength} characters."
+        rangeOverflow: "The input must be less than %{max}."
+        rangeUnderflow: "The input must be more than %{min}."
+        patternMismatch: "Please match the requested format."
+        badInput: "Please enter a valid input."
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
@@ -4756,7 +4817,7 @@ en:
               update: Update a topic. Change the title, category, tags, status, archetype, featured_link etc.
               delete: Delete a topic.
               read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
-              status: "Update a topic's status. Status: closed, archive, visisble, pinned. Enabled: true, false. Specify a category_id here and in the request payload to only allow status changes on topics in that category."
+              status: "Update a topic's status. Status: closed, archive, visible, pinned. Enabled: true, false. Specify a category_id here and in the request payload to only allow status changes on topics in that category."
             posts:
               edit: Edit any post or a specific one.
               delete: Delete a post.
@@ -5002,6 +5063,11 @@ en:
         title: "Customize"
         preview: "preview"
         explain_preview: "See the site with this theme enabled"
+        syntax_error: "Syntax Error"
+        settings_editor: "Settings Editor"
+        validation_settings_keys: "Each item must have only a 'setting' key and a 'value' key."
+        validation_settings_deleted: "These settings were deleted. Please restore them and try again."
+        validation_settings_added: "These settings were added. Please remove them and try again."
         save: "Save"
         new: "New"
         new_style: "New Style"
@@ -5040,6 +5106,7 @@ en:
           create: "Create"
           create_type: "Type"
           create_name: "Name"
+          save: "Save"
           long_title: "Amend colors, CSS and HTML contents of your site"
           edit: "Edit"
           edit_confirm: "This is a remote theme, if you edit CSS/HTML your changes will be erased next time you update the theme."
@@ -5055,6 +5122,7 @@ en:
           extra_files_upload: "Export theme to view these files."
           extra_files_remote: "Export theme or check the git repository to view these files."
           preview: "Preview"
+          settings_editor: "Settings Editor"
           show_advanced: "Show advanced fields"
           hide_advanced: "Hide advanced fields"
           hide_unused_fields: "Hide unused fields"
@@ -6038,8 +6106,16 @@ en:
         go_back: "Back to Search"
         recommended: "We recommend customizing the following text to suit your needs:"
         show_overriden: "Only show overridden"
+        show_outdated: "Only show outdated/invalid"
         locale: "Language:"
         more_than_50_results: "There are more than 50 results. Please refine your search."
+        interpolation_keys: "Available interpolation keys:"
+        outdated:
+          title: "This translation is outdated"
+          description: "The default translation for this key has changed since this override was created. Please check below that your translation matches any changes that have been made to the original intent."
+          old_default: "Old default"
+          new_default: "New default"
+          dismiss: "Dismiss"
 
       settings: # used by theme and site settings
         show_overriden: "Only show overridden"

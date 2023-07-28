@@ -23,12 +23,18 @@ export default class ChatThreadPaneSubscriptionsManager extends ChatPaneBaseSubs
 
     const message = ChatMessage.create(this.model.channel, data.chat_message);
     message.thread = this.model;
+    message.manager = this.messagesManager;
     this.messagesManager.addMessages([message]);
   }
 
   // NOTE: noop, there is nothing to do when a thread original message
   // is updated inside the thread panel (for now).
   handleThreadOriginalMessageUpdate() {
+    return;
+  }
+
+  // NOTE: We don't yet handle notices inside of threads so do nothing.
+  handleNotice() {
     return;
   }
 

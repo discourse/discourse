@@ -140,6 +140,14 @@ export default Controller.extend(CanCheckEmails, {
     return findAll().length > 0;
   },
 
+  @discourseComputed(
+    "siteSettings.max_allowed_secondary_emails",
+    "model.can_edit_email"
+  )
+  canAddEmail(maxAllowedSecondaryEmails, canEditEmail) {
+    return maxAllowedSecondaryEmails > 0 && canEditEmail;
+  },
+
   @action
   resendConfirmationEmail(email, event) {
     event?.preventDefault();

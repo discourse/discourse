@@ -7,6 +7,7 @@
 sv:
   site_settings:
     chat_enabled: "Aktivera chattillägget."
+    enable_public_channels: "Aktivera offentliga kanaler baserat på kategorier."
     chat_allowed_groups: "Användare i dessa grupper kan chatta. Observera att personalen alltid har tillgång till chatten."
     chat_channel_retention_days: "Chattmeddelanden i ordinarie kanaler kommer att behållas i så här många dagar. Sätt till '0' för att behålla meddelanden för alltid."
     chat_dm_retention_days: "Chattmeddelanden i personliga chattkanaler kommer att behållas i så här många dagar. Sätt till '0' för att behålla meddelanden för alltid."
@@ -90,6 +91,8 @@ sv:
         one: "Du kan inte skapa ett direktmeddelande med fler än %{count} annan användare."
         other: "Du kan inte skapa ett direktmeddelande med fler än %{count} andra användare."
       original_message_not_found: "Det första meddelandet i meddelandekedjan som du svarar på kan inte hittas eller har tagits bort."
+      thread_invalid_for_channel: "Tråden är inte en del av angiven kanal."
+      thread_does_not_match_parent: "Tråden matchar inte överordnat meddelande."
     reviewables:
       message_already_handled: "Tack, men vi har redan granskat det här meddelandet och beslutat att det inte behöver flaggas igen."
       actions:
@@ -154,6 +157,8 @@ sv:
       and_x_others:
         one: "och %{count} annan"
         other: "och %{count} andra"
+    summaries:
+      no_targets: "Det fanns inga meddelanden under den valda perioden."
   discourse_push_notifications:
     popup:
       chat_mention:

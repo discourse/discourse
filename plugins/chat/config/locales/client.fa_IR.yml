@@ -181,8 +181,6 @@ fa_IR:
         title: پیام جدید
         prefix: "به:"
         no_results: هیج نتیجه‌ای نداشت
-      channel_selector:
-        no_channels: "هیچ کانالی با جستجوی شما مطابقت ندارد"
       channel:
         no_memberships: این کانال هنوز هیچ عضوی ندارد
         no_memberships_found: هیچ عضوی یافت نشد
@@ -223,6 +221,7 @@ fa_IR:
         follow: "عضو شدن"
         followed: "عضو شده"
         mute: "بی‌صدا کردن کانال"
+        threading_disabled: "غیرفعال"
         muted_on: "روشن"
         muted_off: "خاموش"
         notifications: "اعلان‌ها"
@@ -284,7 +283,6 @@ fa_IR:
       thread:
         title: "عنوان"
         view_thread: مشاهده موضوع
-        default_title: "موضوع #%{thread_id}"
         replies:
           one: "%{count} پاسخ"
           other: "%{count} پاسخ"
@@ -292,6 +290,11 @@ fa_IR:
           started_by: "شروع شده توسط"
         settings: "تنظیمات"
         last_reply: "آخرین پاسخ"
+        notifications:
+          regular:
+            title: "معمولی"
+          tracking:
+            title: "پیگیری"
       threads:
         list: "گفتگوهای در حال انجام"
       draft_channel_screen:

@@ -101,10 +101,33 @@ module Chat
       end
     end
 
-    def can_join_chat_channel?(chat_channel)
+    def can_join_chat_channel?(chat_channel, post_allowed_category_ids: nil)
       return false if anonymous?
+      return false unless can_chat?
       can_preview_chat_channel?(chat_channel) &&
-        (chat_channel.direct_message_channel? || can_post_in_category?(chat_channel.chatable))
+        can_post_in_chatable?(
+          chat_channel.chatable,
+          post_allowed_category_ids: post_allowed_category_ids,
+        )
+    end
+
+    def can_post_in_chatable?(chatable, post_allowed_category_ids: nil)
+      case chatable
+      when Category
+        # technically when fetching channels in channel_fetcher we alread scope it to
+        # categories with post_create_allowed(guardian) so this is redundant but still
+        # valuable to have here when we're not fetching channels through channel_fetcher
+        if post_allowed_category_ids
+          return false unless chatable
+          return false if is_anonymous?
+          return true if is_admin?
+          post_allowed_category_ids.include?(chatable.id)
+        else
+          can_post_in_category?(chatable)
+        end
+      when Chat::DirectMessage
+        true
+      end
     end
 
     def can_flag_chat_messages?
@@ -114,10 +137,10 @@ module Chat
       @user.in_any_groups?(SiteSetting.chat_message_flag_allowed_groups_map)
     end
 
-    def can_flag_in_chat_channel?(chat_channel)
+    def can_flag_in_chat_channel?(chat_channel, post_allowed_category_ids: nil)
       return false if !can_modify_channel_message?(chat_channel)
 
-      can_join_chat_channel?(chat_channel)
+      can_join_chat_channel?(chat_channel, post_allowed_category_ids: post_allowed_category_ids)
     end
 
     def can_flag_chat_message?(chat_message)
@@ -172,9 +195,9 @@ module Chat
       if message.user_id == current_user.id
         case chatable
         when Category
-          return can_see_category?(chatable)
+          return message.deleted_by_id == current_user.id || can_see_category?(chatable)
         when Chat::DirectMessage
-          return true
+          return message.deleted_by_id == current_user.id || is_staff?
         end
       end
 

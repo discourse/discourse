@@ -348,6 +348,8 @@ class ApplicationController < ActionController::Base
     before_action do
       if plugin = Discourse.plugins_by_name[plugin_name]
         raise PluginDisabled.new if !plugin.enabled?
+      elsif Rails.env.test?
+        raise "Required plugin '#{plugin_name}' not found. The string passed to requires_plugin should match the plugin's name at the top of plugin.rb"
       else
         Rails.logger.warn("Required plugin '#{plugin_name}' not found")
       end
@@ -661,6 +663,9 @@ class ApplicationController < ActionController::Base
 
     store_preloaded("topicTrackingStates", MultiJson.dump(hash[:data]))
     store_preloaded("topicTrackingStateMeta", MultiJson.dump(hash[:meta]))
+
+    # This is used in the wizard so we can preload fonts using the FontMap JS API.
+    store_preloaded("fontMap", MultiJson.dump(load_font_map)) if current_user.admin?
   end
 
   def custom_html_json
@@ -1064,5 +1069,37 @@ class ApplicationController < ActionController::Base
 
   def spa_boot_request?
     request.get? && !(request.format && request.format.json?) && !request.xhr?
+  end
+
+  def load_font_map
+    DiscourseFonts
+      .fonts
+      .each_with_object({}) do |font, font_map|
+        next if !font[:variants]
+        font_map[font[:key]] = font[:variants].map do |v|
+          {
+            url: "#{Discourse.base_url}/fonts/#{v[:filename]}?v=#{DiscourseFonts::VERSION}",
+            weight: v[:weight],
+          }
+        end
+      end
+  end
+
+  def fetch_limit_from_params(params: self.params, default:, max:)
+    raise "default limit cannot be greater than max limit" if default.present? && default > max
+
+    if params.has_key?(:limit)
+      limit =
+        begin
+          Integer(params[:limit])
+        rescue ArgumentError
+          raise Discourse::InvalidParameters.new(:limit)
+        end
+
+      raise Discourse::InvalidParameters.new(:limit) if limit < 0 || limit > max
+      limit
+    else
+      default
+    end
   end
 end

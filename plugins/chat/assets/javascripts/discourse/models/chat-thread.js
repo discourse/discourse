@@ -43,7 +43,10 @@ export default class ChatThread {
     this.draft = args.draft;
     this.staged = args.staged;
     this.replyCount = args.reply_count;
-    this.originalMessage = ChatMessage.create(channel, args.original_message);
+
+    this.originalMessage = args.original_message
+      ? ChatMessage.create(channel, args.original_message)
+      : null;
 
     this.title =
       args.title ||
@@ -58,9 +61,7 @@ export default class ChatThread {
     }
 
     this.tracking = new ChatTrackingState(getOwner(this));
-    if (args.preview) {
-      this.preview = ChatThreadPreview.create(args.preview);
-    }
+    this.preview = ChatThreadPreview.create(args.preview);
   }
 
   async stageMessage(message) {
@@ -71,30 +72,11 @@ export default class ChatThread {
     message.thread = this;
 
     this.messagesManager.addMessages([message]);
-  }
-
-  get lastMessage() {
-    return this.messagesManager.findLastMessage();
-  }
-
-  lastUserMessage(user) {
-    return this.messagesManager.findLastUserMessage(user);
+    message.manager = this.messagesManager;
   }
 
   get routeModels() {
     return [...this.channel.routeModels, this.id];
-  }
-
-  get messages() {
-    return this.messagesManager.messages;
-  }
-
-  set messages(messages) {
-    this.messagesManager.messages = messages;
-  }
-
-  get selectedMessages() {
-    return this.messages.filter((message) => message.selected);
   }
 
   get escapedTitle() {

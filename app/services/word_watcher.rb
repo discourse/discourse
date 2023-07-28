@@ -2,7 +2,7 @@
 
 class WordWatcher
   REPLACEMENT_LETTER ||= CGI.unescape_html("&#9632;")
-  CACHE_VERSION = 2
+  CACHE_VERSION ||= 3
 
   def initialize(raw)
     @raw = raw
@@ -24,8 +24,9 @@ class WordWatcher
       .limit(WatchedWord::MAX_WORDS_PER_ACTION)
       .order(:id)
       .pluck(:word, :replacement, :case_sensitive)
-      .map { |w, r, c| [w, { replacement: r, case_sensitive: c }.compact] }
-      .to_h
+      .to_h do |w, r, c|
+        [w, { word: word_to_regexp(w, whole: false), replacement: r, case_sensitive: c }.compact]
+      end
   end
 
   def self.words_for_action_exists?(action)
@@ -78,9 +79,7 @@ class WordWatcher
   end
 
   def self.word_matcher_regexps(action, engine: :ruby)
-    if words = get_cached_words(action)
-      words.map { |word, attrs| [word_to_regexp(word, engine: engine), attrs] }.to_h
-    end
+    get_cached_words(action)&.to_h { |word, attrs| [word_to_regexp(word, engine: engine), attrs] }
   end
 
   def self.word_to_regexp(word, engine: :ruby, whole: true)

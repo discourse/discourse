@@ -2,7 +2,7 @@
 
 RSpec.describe "Sidebar navigation menu", type: :system do
   let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
-  let(:sidebar_component) { PageObjects::Components::Sidebar.new }
+  let(:sidebar_component) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   fab!(:current_user) { Fabricate(:user) }
 
@@ -146,7 +146,7 @@ RSpec.describe "Sidebar navigation menu", type: :system do
           visit("/")
 
           expect(sidebar_page.dms_section.find("a.sidebar-section-link:nth-child(1)")).to have_css(
-            ".user-status",
+            ".user-status-message",
           )
         end
       end

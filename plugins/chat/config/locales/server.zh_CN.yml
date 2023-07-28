@@ -7,6 +7,7 @@
 zh_CN:
   site_settings:
     chat_enabled: "启用聊天插件。"
+    enable_public_channels: "根据类别启用公共频道。"
     chat_allowed_groups: "这些群组中的用户可以聊天。请注意，管理人员始终可以访问聊天。"
     chat_channel_retention_days: "常规频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
     chat_dm_retention_days: "个人聊天频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
@@ -87,6 +88,8 @@ zh_CN:
       over_chat_max_direct_message_users:
         other: "您无法创建与超过 %{count} 个其他用户的直接消息。"
       original_message_not_found: "无法找到您要回复信息的内容，或已被删除。"
+      thread_invalid_for_channel: "该聊天串不是所提供频道的一部分。"
+      thread_does_not_match_parent: "聊天串与父消息不匹配。"
     reviewables:
       message_already_handled: "谢谢，但我们已经审核此消息，并确定它不需要被再次举报。"
       actions:
@@ -147,6 +150,8 @@ zh_CN:
         other: "%{count} 个成员"
       and_x_others:
         other: "和其他 %{count} 人"
+    summaries:
+      no_targets: "在所选时间段内没有消息。"
   discourse_push_notifications:
     popup:
       chat_mention:

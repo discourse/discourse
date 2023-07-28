@@ -4,8 +4,6 @@ module Jobs
   module Chat
     class UpdateThreadReplyCount < Jobs::Base
       def execute(args = {})
-        return if !SiteSetting.enable_experimental_chat_threaded_discussions
-
         thread = ::Chat::Thread.find_by(id: args[:thread_id])
         return if thread.blank?
         return if thread.replies_count_cache_recently_updated?
@@ -16,8 +14,6 @@ module Jobs
           Time.zone.now.to_i,
         )
         thread.set_replies_count_cache(thread.replies.count, update_db: true)
-
-        ::Chat::Publisher.publish_thread_original_message_metadata!(thread)
       end
     end
   end

@@ -1,9 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import showModal from "discourse/lib/show-modal";
-
-const APPLE =
-  navigator.platform.startsWith("Mac") || navigator.platform === "iPhone";
-export const KEY_MODIFIER = APPLE ? "meta" : "ctrl";
+import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
+import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 
 export default {
   name: "chat-keyboard-shortcuts",
@@ -16,6 +13,7 @@ export default {
 
     const router = container.lookup("service:router");
     const appEvents = container.lookup("service:app-events");
+    const modal = container.lookup("service:modal");
     const chatStateManager = container.lookup("service:chat-state-manager");
     const chatThreadPane = container.lookup("service:chat-thread-pane");
     const chatThreadListPane = container.lookup(
@@ -24,14 +22,10 @@ export default {
     const chatChannelsManager = container.lookup(
       "service:chat-channels-manager"
     );
-    const openChannelSelector = (e) => {
+    const openQuickChannelSelector = (e) => {
       e.preventDefault();
       e.stopPropagation();
-      if (document.getElementById("chat-channel-selector-modal-inner")) {
-        appEvents.trigger("chat-channel-selector-modal:close");
-      } else {
-        showModal("chat-channel-selector-modal");
-      }
+      modal.show(ChatModalNewMessage);
     };
 
     const handleMoveUpShortcut = (e) => {
@@ -130,17 +124,21 @@ export default {
     };
 
     withPluginApi("0.12.1", (api) => {
-      api.addKeyboardShortcut(`${KEY_MODIFIER}+k`, openChannelSelector, {
-        global: true,
-        help: {
-          category: "chat",
-          name: "chat.keyboard_shortcuts.open_quick_channel_selector",
-          definition: {
-            keys1: ["meta", "k"],
-            keysDelimiter: "plus",
+      api.addKeyboardShortcut(
+        `${PLATFORM_KEY_MODIFIER}+k`,
+        openQuickChannelSelector,
+        {
+          global: true,
+          help: {
+            category: "chat",
+            name: "chat.keyboard_shortcuts.open_quick_channel_selector",
+            definition: {
+              keys1: ["meta", "k"],
+              keysDelimiter: "plus",
+            },
           },
-        },
-      });
+        }
+      );
       api.addKeyboardShortcut("alt+up", handleMoveUpShortcut, {
         global: true,
         help: {
@@ -159,7 +157,7 @@ export default {
         global: true,
       });
       api.addKeyboardShortcut(
-        `${KEY_MODIFIER}+b`,
+        `${PLATFORM_KEY_MODIFIER}+b`,
         (event) => modifyComposerSelection(event, "bold"),
         {
           global: true,
@@ -174,7 +172,7 @@ export default {
         }
       );
       api.addKeyboardShortcut(
-        `${KEY_MODIFIER}+i`,
+        `${PLATFORM_KEY_MODIFIER}+i`,
         (event) => modifyComposerSelection(event, "italic"),
         {
           global: true,
@@ -189,7 +187,7 @@ export default {
         }
       );
       api.addKeyboardShortcut(
-        `${KEY_MODIFIER}+e`,
+        `${PLATFORM_KEY_MODIFIER}+e`,
         (event) => modifyComposerSelection(event, "code"),
         {
           global: true,
@@ -204,7 +202,7 @@ export default {
         }
       );
       api.addKeyboardShortcut(
-        `${KEY_MODIFIER}+l`,
+        `${PLATFORM_KEY_MODIFIER}+l`,
         (event) => openInsertLinkModal(event),
         {
           global: true,

@@ -1,0 +1,11 @@
+<span class="blurb">
+  {{format-age @result.created_at}}
+  <span> - </span>
+  {{#if this.siteSettings.use_pg_headlines_for_excerpt}}
+    <span>{{@result.blurb}}</span>
+  {{else}}
+    <span>
+      <SearchMenu::HighlightedSearch @string={{@result.blurb}} />
+    </span>
+  {{/if}}
+</span>

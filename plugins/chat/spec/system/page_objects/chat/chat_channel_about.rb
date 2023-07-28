@@ -3,7 +3,7 @@
 module PageObjects
   module Pages
     class ChatChannelAbout < PageObjects::Pages::Base
-      EDIT_MODAL_SELECTOR = ".chat-channel-edit-name-slug-modal"
+      EDIT_MODAL_SELECTOR = ".chat-modal-edit-channel-name"
 
       def open_edit_modal
         click_button(class: "edit-name-slug-btn")

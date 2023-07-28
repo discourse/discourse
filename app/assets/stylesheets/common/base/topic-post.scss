@@ -315,6 +315,11 @@ nav.post-controls {
       vertical-align: top;
       background: transparent;
       border: none;
+      .d-icon {
+        // this avoids an issue where hovering off the icon
+        // removes the .d-hover class from the button prematurely
+        pointer-events: none;
+      }
       &.d-hover,
       &:focus,
       &:active {
@@ -329,7 +334,7 @@ nav.post-controls {
         position: relative;
       }
       &.delete.d-hover,
-      &.delete:hover,
+      &.delete:active,
       &.delete:focus {
         background: var(--danger);
         color: var(--secondary);
@@ -556,7 +561,7 @@ aside.quote {
   z-index: z("dropdown");
   background-color: var(--secondary);
   border: 1px solid var(--primary-low);
-  box-shadow: shadow("card");
+  box-shadow: var(--shadow-card);
   flex-direction: column;
 
   &.animated {
@@ -976,17 +981,13 @@ aside.quote {
     .widget-button {
       display: flex;
       align-items: center;
-
       .d-button-label {
         order: 0;
         padding-right: 0.25em;
         color: var(--primary-med-or-secondary-med);
-        transition: color 0.25s;
       }
-
       .d-icon {
         order: 1;
-        transition: color 0.25s;
         color: var(--primary-med-or-secondary-med);
       }
       .discourse-no-touch & {
@@ -1388,7 +1389,7 @@ span.mention {
         margin-left: 8px;
         background-color: var(--primary-low);
         color: var(--primary);
-        box-shadow: shadow("dropdown");
+        box-shadow: var(--shadow-dropdown);
       }
     }
   }
@@ -1410,7 +1411,7 @@ span.mention {
   box-sizing: border-box;
   max-width: calc(var(--topic-body-width) + 4.5em);
   padding: 3em 5em 2em
-    calc(var(--topic-avatar-width + var(--topic-body-width-padding)));
+    calc(var(--topic-avatar-width) + var(--topic-body-width-padding));
   @include breakpoint(mobile-extra-large) {
     padding: 1.5em 1.5em 0.25em;
   }
@@ -1534,6 +1535,11 @@ span.mention {
       }
     }
   }
+}
+
+iframe {
+  max-width: 100%;
+  max-height: #{"min(1000px, 200vh)"};
 }
 
 .post-admin-menu {

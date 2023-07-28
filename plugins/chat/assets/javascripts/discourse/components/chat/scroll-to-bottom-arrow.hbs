@@ -1,0 +1,14 @@
+<div class="chat-scroll-to-bottom">
+  <DButton
+    class={{concat-class
+      "btn-flat"
+      "chat-scroll-to-bottom__button"
+      (if @isVisible "visible")
+    }}
+    @action={{@onScrollToBottom}}
+  >
+    <span class="chat-scroll-to-bottom__arrow">
+      {{d-icon "arrow-down"}}
+    </span>
+  </DButton>
+</div>

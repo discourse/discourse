@@ -205,6 +205,8 @@ sv:
       page_publishing_requirements: "Sidpublicering kan inte aktiveras om säkra medier är aktiverade."
       s3_backup_requires_s3_settings: "Du kan inte använda S3 som säkerhetskopieringsplats innan du har angivit '%{setting_name}'."
       s3_bucket_reused: "Du kan inte använda samma behållare för 's3_upload_bucket' och 's3_backup_bucket'. Välj en annan behållare eller använd en annan sökväg för varje behållare."
+      secure_uploads_requirements: "S3-uppladdningar och S3 ACL:er måste ha aktiverats innan säkra uppladdningar aktiveras."
+      s3_use_acls_requirements: "Du måste ha S3 ACL:er aktiverade när säkra uppladdningar är aktiverade."
       share_quote_facebook_requirements: "Du måste ange ett Facebook-app-id för att möjliggöra delning av citat på Facebook."
       second_factor_cannot_enforce_with_socials: "Du kan inte tvinga 2FA med sociala inloggningar aktiverade. Du måste först inaktivera inloggning via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Du kan inte genomdriva 2FA om lokala inloggningar är inaktiverade."
@@ -225,6 +227,10 @@ sv:
         other: "Tyvärr kunde vi inte skapa en förhandsvisning för den här webbsidan eftersom följande oEmbed / OpenGraph-taggar inte kunde hittas: %{missing_attributes}"
   word_connector:
     comma: ", "
+  custom_fields:
+    validations:
+      max_items: "Maximalt antal anpassade fält för denna enhet har uppnåtts (%{max_items_number})"
+      max_value_length: "Maximal längd för ett anpassat fältvärde har uppnåtts (%{max_value_length})"
   invite:
     expired: "Din inbjudningskod har löpt ut. <a href='%{base_url}/about'>Kontakta personalen</a>."
     not_found: "Din inbjudningskod är ogiltig. <a href='%{base_url}/about'>Kontakta personalen</a>."
@@ -623,11 +629,9 @@ sv:
   discourse_welcome_topic:
     title: "Välkommen till %{site_title}! :wave:"
     body: |
-      Vi är så glada att du kom till oss.
+      Vi är så glada över att du kom till oss.
 
-      > ## %{site_title}
-      >
-      > %{site_description}
+      %{site_info_quote}
 
       Här är några saker du kan göra för att komma igång:
 
@@ -635,10 +639,10 @@ sv:
 
       :open_book: **Lär känna forumet** genom att [bläddra i diskussioner](%{base_path}/top) som redan pågår här. När du tycker att ett inlägg är intressant, informativt eller underhållande, använd :heart: för att visa din uppskattning eller ditt stöd!
 
-      :handshake: **Bidrag** genom att kommentera, dela med dig av ditt perspektiv, ställa frågor eller ge feedback i diskussionen. Innan du svarar eller startar nya ämnen bör du läsa igenom [forumets riktlinjer](%{base_path}/faq).
+      :handshake: **Bidra** genom att kommentera, dela med dig av ditt perspektiv, ställa frågor eller ge feedback i diskussionen. Innan du svarar eller startar nya ämnen bör du läsa igenom [forumets riktlinjer](%{base_path}/faq).
 
       > Om du behöver hjälp eller har ett förslag, fråga gärna i [#feedback](%{base_path}/c/site-feedback) eller [kontakta administratörerna](%{base_path}/about).
-  admin_quick_start_title: "LÄS MIG FÖRST: Administratörers Snabbstartsguide"
+  admin_quick_start_title: "Administratörsguide: Komma igång"
   category:
     topic_prefix: "Om kategorin %{category}"
     replace_paragraph: "(Byt ut det här första stycket mot en sammanfattad beskrivning av din nya kategori. Den här vägledningen kommer att dyka upp i kategorins urvalsområde, så försök att hålla det kortare än 200 tecken.)"
@@ -1390,6 +1394,7 @@ sv:
     image_magick_warning: 'Servern är konfigurerad att skapa ikoner av stora bilder, men ImageMagick är inte installerad. Installera ImageMagick med din föredragna pakethanterare eller <a href="https://www.imagemagick.org/script/download.php" target="_blank">hämta den senaste utgåvan</a>.'
     failing_emails_warning: 'Det finns %{num_failed_jobs} e-postutskick som har misslyckats. Kontrollera din app.yml för att säkerställa att serverinställningarna för e-post är korrekta. <a href="%{base_path}/sidekiq/retries" target="_blank">Se alla misslyckade utskick i Sidekiq</a>.'
     subfolder_ends_in_slash: "Inställningarna för dina undermappar är inte korrekt; DISCOURSE_RELATIV_URL_ROOT slutar med ett snedstreck."
+    outdated_translations_warning: "Vissa av dina översättningsåsidosättningar är inaktuella. Kontrollera dina <a href='%{base_path}/admin/customize/site_texts?outdated=true'>textanpassningar</a>."
     email_polling_errored_recently:
       one: "E-postpolling har genererat ett fel de senaste 24 timmarna. Se <a href='%{base_path}/logs' target='_blank'>loggarna</a> för mer detaljer."
       other: "E-postpolling har genererat %{count} fel de senaste 24 timmarna. Se <a href='%{base_path}/logs' target='_blank'>loggarna</a> för mer detaljer."
@@ -1402,6 +1407,7 @@ sv:
     unreachable_themes: "Vi kunde inte kontrollera uppdateringar för följande teman:"
     watched_word_regexp_error: "Det reguljära uttrycket för '%{action}'-bevakade ord är ogiltigt. Kontrollera dina <a href='%{base_path}/admin/customize/watched_words'>inställningar för bevakade ord</a> eller inaktivera webbplatsinställningen 'Reguljära uttryck för bevakade ord'."
     v3_analytics_deprecated: "Din Discourse använder för närvarande Google Analytics 3, som inte längre kommer att stödjas efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Uppgradera till Google Analytics 4</a> nu för att fortsätta att få värdefulla insikter i, och analyser av, din webbplats prestanda."
+    legacy_navigation_menu_deprecated: "Din Discourse använder för närvarande den \"äldre\" navigeringsmenyn som <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>kommer att tas bort i den första betaversionen av Discourse 3.2</a>. Migrera till den nya navigeringsmenyn genom att uppdatera din <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>webbplatsinställning för navigeringsmenyer</a> till 'sidebar' eller 'header dropdown'."
   site_settings:
     allow_bulk_invite: "Tillåt massinbjudningar genom att ladda upp en CSV-fil"
     disabled: "inaktiverade"
@@ -1467,6 +1473,8 @@ sv:
     fixed_category_positions_on_create: "Kategoriordningen kommer att upprätthållas vid dialogrutan för skapandet av ämnen om den här bockas för (kräver fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'Lägg till rel nofollow på allt användargenererat innehåll, förutom interna länkar (inklusive förälderdomän). Om du ändrar det här så måste du uppdatera alla inlägg med "rake posts:rebake"'
     exclude_rel_nofollow_domains: "En lista av alla domän där nofollow inte bör läggas till länkarna. exempel.se kommer automatiskt tillåta underdomän.exempel.se också. Du bör lägga till top-level-domänen för den här webbplatsen för att hjälpa sökrobotar hitta allt innehåll. Om andra delar av din webbplats finns på andra domäner så bör du lägga till dem också."
+    max_form_template_title_length: "Maximal tillåten längd för formulärmallstitlar."
+    max_form_template_content_length: "Maximal tillåten längd för formulärmallsinnehåll."
     post_excerpt_maxlength: "Maxlängd på ett inläggs utdrag/sammanfattning."
     topic_excerpt_maxlength: "Maxlängd på ett inläggs utdrag/sammanfattning, genererat från det första inlägget i ett ämne."
     default_subcategory_on_read_only_category: "Aktiverar knappen \"Nytt ämne\" och väljer en standardunderkategori för att göra inlägg i kategorier där användaren inte får skapa ett nytt ämne."
@@ -1507,6 +1515,8 @@ sv:
     summary_percent_filter: "Visa högsta % av inläggen när en användare bockar i 'Sammanfatta det här ämnet'"
     summary_max_results: "Maximalt antal inlägg som returneras av 'Sammanfatta detta ämne'"
     summary_timeline_button: "Visa en \"Sammanfatta\"-knapp på tidslinjen"
+    summarization_strategy: "Ytterligare sätt att sammanfatta innehåll som registrerats av plugins"
+    custom_summarization_allowed_groups: "Grupper som tillåts att sammanfatta innehåll med hjälp av `summarization_strategy`."
     enable_personal_messages: "UTFASAT, använd inställningen \"personal message enabled groups\" istället. Tillåt användare med förtroendenivå 1 (konfigurera genom minsta förtroendenivå för att skicka meddelanden) att skapa meddelanden och svara på meddelanden. Notera att personalen alltid kan skicka meddelanden oavsett."
     personal_message_enabled_groups: "Tillåt användare inom dessa grupper att skapa meddelanden och svara på meddelanden. Förtroendenivågrupper omfattar alla förtroendenivåer över det numret, om till exempel förtroendenivå_1 väljs tillåts också användare på förtroendenivå_2, 3, 4 att skicka PM. Observera att personal alltid kan skicka meddelanden oavsett vad."
     enable_system_message_replies: "Tillåter användare att svara på systemmeddelanden, även om personliga meddelanden har inaktiverats"
@@ -1678,6 +1688,7 @@ sv:
     s3_configure_tombstone_policy: "Aktivera automatisk raderingspolicy för Tombstone uppladdningar. VIKTIGT: Om det är inaktiverat kommer inget utrymme att återtas efter att överföringar har tagits bort."
     s3_disable_cleanup: "Förhindra borttagning av äldre säkerhetskopior från S3 när det finns fler säkerhetskopior än högsta tillåtna."
     enable_s3_inventory: "Generera rapporter och verifiera uppladdningar med Amazon S3 inventering. VIKTIGT: kräver giltiga S3-referenser (både åtkomstnyckel-ID och hemlig åtkomstnyckel)."
+    s3_use_acls: "AWS rekommenderar att inte använda ACL:er på S3-behållare. Om du följer detta råd ska det här alternativet avmarkeras. Det måste vara aktiverat om du använder säkra uppladdningar."
     backup_time_of_day: "UTC-tid på dygnet då säkerhetskopieringen sker."
     backup_with_uploads: "Inkludera uppladdning i schemalagda säkerhetskopieringar. Inaktivering av det här kommer endast att säkerhetskopiera databasen."
     backup_location: "Plats där säkerhetskopior lagras. VIKTIGT: S3 kräver giltiga S3-referenser som anges i Fil-inställningarna."
@@ -1727,6 +1738,7 @@ sv:
     s3_secret_access_key: "Amazons hemliga S3-åtkomstnyckel-ID som kommer att användas för att ladda upp bilder, bilagor och säkerhetskopior."
     s3_region: "Regionsnamn för Amazon S3 som kommer att användas för att ladda upp bilder och säkerhetskopior."
     s3_cdn_url: "CDN URL som används för alla S3-tillgångar (till exempel: https://cdn.somewhere.com). VARNING: efter ändring av den här inställningen så måste du uppdatera alla gamla inlägg med rake posts: rebake."
+    s3_use_cdn_url_for_all_uploads: "Använd CDN-URL för alla filer som laddas upp till s3 istället för endast för bilder."
     avatar_sizes: "Lista över automatiskt genererade avatar-storlekar."
     external_system_avatars_enabled: "Använd externt system för avatar-tjänster."
     external_system_avatars_url: "URL till externt system för avatar-tjänster. Tillåtna ersättningar är {username} {first_letter} {color} {size}"
@@ -1776,7 +1788,8 @@ sv:
     tl3_requires_likes_received: "Minsta antalet gillningar som måste ha mottagits de senaste (tl3 time period) dagarna för att kvalificeras för en befordran till förtroendenivå 3."
     tl3_links_no_follow: "Radera ej rel=nofollow från länkarna som lagts upp av användare med förtroendenivå 3."
     tl4_delete_posts_and_topics: "Tillåt TL4-användare att ta bort inlägg och ämnen som skapats av andra användare. TL4-användare kommer också att kunna se raderade ämnen och inlägg."
-    trusted_users_can_edit_others: "Låt användare med hög förtroendenivå redigera innehåll från andra användare"
+    edit_all_topic_groups: "Tillåt användare i den här gruppen att redigera andra användares ämnestitlar, taggar och kategorier"
+    edit_all_post_groups: "Tillåt användare i den här gruppen att redigera andra användares inlägg"
     min_trust_to_create_topic: "Lägsta förtroendenivå som krävs för att skapa ett nytt ämne."
     allow_flagging_staff: "Om aktiverat kan användare flagga inlägg från personalkonton."
     min_trust_to_edit_wiki_post: "Lägsta förtroendenivå som krävs för att redigera inlägg markerade som wiki."
@@ -1812,7 +1825,7 @@ sv:
     title_min_entropy: "Minsta tillåtna entropi (unika tecken) som krävs för en ämnesrubrik."
     body_min_entropy: "Minsta tillåtna entropi (unika tecken) som krävs för ett inläggs innehåll."
     allow_uppercase_posts: "Tillåt enbart versaler i ämnets rubrik eller innehåll."
-    max_consecutive_replies: "Antal inlägg som en användare måste göra i rad inom ett ämne innan användaren hindras lägga till ytterligare ett svar."
+    max_consecutive_replies: "Antal inlägg i rad som en användare kan göra i ett ämne innan den hindras från att lägga till ett nytt svar. Denna gräns gäller inte ämnesägaren, webbplatspersonalen eller kategorimoderatorerna."
     enable_filtered_replies_view: '(n)-svarsknappen förminskar alla andra inlägg och visar bara det aktuella inlägget och dess svar.'
     title_fancy_entities: "Konvertera vanliga ASCII-tecken till häftiga HTML-enheter i ämnesrubriker, à la SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>http://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Minsta längd för en rubrik innan den kommer att kontrolleras för liknande ämnen."
@@ -1970,6 +1983,7 @@ sv:
     enable_category_group_moderation: "Tillåt att grupper modererar innehåll i specifika kategorier"
     group_in_subject: "Ställ in %%{optional_pm} i e-postämnet till namnet på den första gruppen i PM, se: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Anpassa ämnesformat för standardmeddelanden</a>"
     allow_anonymous_posting: "Tillåt att användare växlar till anonymt läge"
+    allow_anonymous_likes: "Tillåt anonyma användare att gilla inlägg"
     anonymous_posting_min_trust_level: "Lägsta förtroendenivå som krävs för att aktivera anonyma inlägg"
     anonymous_account_duration_minutes: "Skapa ett nytt anonymt konto var N:e minut för varje användare för att skydda anonymiteten. Exempel: om detta ställs in till 600, så skapas ett nytt anonymt konto så snart som 600 minuter har gått sedan senaste inlägget OCH användaren väljer anon."
     hide_user_profiles_from_public: "Inaktivera användarkort, användarprofiler och användarkataloger för anonyma användare."
@@ -1998,8 +2012,8 @@ sv:
     permalink_normalizations: "Tillämpa följande regex innan matchning av permalänkar, till exempel: /(topic.*)\\?.*/\\1 kommer att rensa bort söksträngar från ämnesvägen. Formatet är regex+sträng, använd \\1 osv. för att komma åt grupperingar."
     global_notice: "Visa ett BRÅDSKANDE, icke-stängningsbart globalt banderollmeddelande för alla besökare, ändra till blankt för att dölja det (HTML tillåts)."
     disable_system_edit_notifications: "Inaktivera redigering av aviseringar av systemanvändaren när 'download_remote_images_to_local' har aktiverats."
-    disable_category_edit_notifications: "Inaktivera kategoriredigeringsaviseringar för ämnen."
-    disable_tags_edit_notifications: "Inaktivera notifieringar om att taggar har redigerats för ämnen."
+    disable_category_edit_notifications: "Inaktivera aviseringar för redigeringar av ämneskategorier."
+    disable_tags_edit_notifications: "Inaktivera aviseringar för redigeringar av ämnestaggar."
     notification_consolidation_threshold: "Antal meddelanden om gillad eller medlemskapsbegäran innan meddelandena konsolideras till en enda. Ställ in till 0 för att inaktivera."
     likes_notification_consolidation_window_mins: "Varaktighet i minuter efter vilken gillad-aviseringar konsolideras till en enda avisering då tröskeln har uppnåtts. Tröskeln kan konfigureras via `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Ta automatiskt ned ämnen när användaren når botten."
@@ -2013,7 +2027,7 @@ sv:
     auto_handle_queued_age: "Hantera automatiskt inlägg som väntar på att granskas efter detta antal dagar. Flaggor ignoreras. Inlägg och användare i kö avvisas. Ställ in till 0 för att inaktivera den här funktionen."
     penalty_step_hours: "Standardtid, uttryckt i timmar, under vilken användare bestraffas genom att tystas eller stängas av. Det första värdet är standard för deras första överträdelse, det andra värdet är standard för deras andra överträdelse etc."
     svg_icon_subset: "Lägg till ytterligare FontAwesome 5-ikoner som du vill inkludera i dina tillgångar. Använd prefixet 'fa-' för solida ikoner, 'far-' för vanliga ikoner och 'fab-' för märkesikoner."
-    max_prints_per_hour_per_user: "Maximalt antal /print page-utskrifter (ställ in till 0 för att inaktivera)"
+    max_prints_per_hour_per_user: "Maximalt antal /print page-utskrifter (ställ in till 0 för att inaktivera utskrifter)"
     full_name_required: "Fullständigt namn är ett obligatoriskt fält i en användares profil."
     enable_names: "Visa användarens fullständiga namn på dess profil, användarkort och e-post. Inaktivera för att dölja det fullständiga namnet överallt."
     display_name_on_posts: "Visa en användares fullständiga namn på deras inlägg som tillägg till deras @användarnamn."
@@ -2035,7 +2049,6 @@ sv:
     embed_post_limit: "Högsta antal inlägg att bädda in."
     embed_username_required: "Användarnamn krävs för skapade av ämne."
     notify_about_reviewable_item_after: "Om det finns granskningsbara objekt som inte har hanterats efter så många timmar, skicka ett personligt meddelande till moderatorer. Ställ in på 0 för att inaktivera."
-    show_create_topics_notice: "Visa ett meddelande som ber administratörerna att skapa några ämnen om webbplatsen har färre än 5 publika ämnen."
     delete_drafts_older_than_n_days: "Ta bort utkast som är äldre än (n) dagar."
     delete_merged_stub_topics_after_days: "Antal dagar att vänta innan helt sammanslagna stub-ämnen raderas automatiskt. Ställ in till 0 för att aldrig radera stub-ämnen."
     bootstrap_mode_min_users: "Minsta antal användare som krävs för att inaktivera bootstrap-läget (ställ in på 0 för att inaktivera, kan ta upp till 24 timmar)"
@@ -2104,6 +2117,10 @@ sv:
     default_tags_watching_first_post: "Förteckning över taggar i vilket första inlägget i varje nytt ämne kommer att bevakas som standard."
     default_text_size: "Textstorlek som är vald som standard"
     default_title_count_mode: "Standardläge för räknaren i sidtiteln"
+    enable_offline_indicator: "Visa ett meddelande för användare när det upptäcks att de inte har någon nätverksanslutning"
+    default_sidebar_link_to_filtered_list: "Låt länkar i navigeringsmenyn länka till filtrerad lista som standard."
+    default_sidebar_show_count_of_new_items: "Låt länkar i navigeringsmenyn visa antalet nya objekt istället för utmärkelser som standard."
+    default_sidebar_switch_panel_position: "Placering av panelknappar för sidofältsomkoppling"
     retain_web_hook_events_period_days: "Antal dagar för att behålla register över webhook-händelsedata."
     retry_web_hook_events: "Försök automatiskt igen för misslyckade händelser för webhooken 4 gånger. Tidsspannet mellan försöken är 1, 5, 25 och 125 minuter."
     revoke_api_keys_days: "Antal dagar innan en oanvänd API-nyckel automatiskt återkallas (0 för aldrig)"
@@ -2118,6 +2135,8 @@ sv:
     tagging_enabled: "Vill du aktivera taggar på ämnen?"
     min_trust_to_create_tag: "Lägsta förtroendenivå som krävs för att skapa en tagg."
     max_tags_per_topic: "Högsta antal taggar som kan tillskrivas ett ämne."
+    enable_max_tags_per_email_subject: "Använd max_tags_per_email_subject när du skapar ämnet för ett e-postmeddelande"
+    max_tags_per_email_subject: "Det maximala antalet taggar som kan finnas i ett e-postmeddelandes ämne"
     max_tag_length: "Högsta antal tecken som kan användas i en tagg."
     max_tag_search_results: "Maximalt antal resultat som visas vid sökning efter taggar"
     max_tags_in_filter_list: "Högsta antal taggar att visa i filtreringsrullgardinmenyn. De taggar som används mest kommer att visas."
@@ -2161,12 +2180,15 @@ sv:
     suggest_weekends_in_date_pickers: "Inkludera helger (lördag och söndag) i förslagen till datumval (inaktivera detta om du endast använder Discourse på vardagar, måndag till fredag)."
     splash_screen: "Visar en tillfällig laddningsskärm medan webbplatsens tillgångar laddas"
     navigation_menu: "Bestäm vilken navigeringsmeny som ska användas. Sidofälts- och rubriknavigering kan anpassas av användare. Det äldre alternativet är tillgängligt för bakåtkompatibilitet."
-    default_sidebar_categories: "Valda kategorier kommer att visas under sidofältets sektion Kategorier som standard."
-    default_sidebar_tags: "Valda taggar kommer att visas under sidofältets sektion Taggar som standard."
+    default_navigation_menu_categories: "Valda kategorier visas som standard under navigeringsmenyns sektion Kategorier."
+    default_navigation_menu_tags: "Valda taggar visas som standard under navigeringsmenyns sektion Taggar."
     enable_experimental_hashtag_autocomplete: "EXPERIMENTELLT: Använd det nya #hashtag-autokompletteringssystemet för kategorier och taggar som renderar det valda objektet annorlunda och har förbättrad sökning"
     experimental_new_new_view_groups: 'EXPERIMENTELLT: Aktivera en ny ämneslista som kombinerar olästa och nya ämnen och gör att länken "Allt" i sidofältet länkar till den.'
     enable_custom_sidebar_sections: "EXPERIMENTELLT: Aktivera anpassade sidofältssektioner"
     experimental_topics_filter: "EXPERIMENTELLT: Aktiverar den experimentella ämnesfiltervägen vid /filter"
+    experimental_search_menu_groups: "EXPERIMENTELLT: Aktiverar den nya sökmenyn som har uppgraderats för att använda glimmer"
+    enable_experimental_lightbox: "EXPERIMENTELLT: Byt ut standardbild-lightboxen mot den nya designen."
+    page_loading_indicator: "Konfigurera laddningsindikatorn som visas under sidnavigeringar i Discourse. 'Spinnare' är en indikator som tar upp hela sidan. 'Skjutreglage' visar ett smalt fält högst upp på skärmen."
     errors:
       invalid_css_color: "Ogiltig färg. Ange ett färgnamn eller ett hexvärde."
       invalid_email: "Felaktig e-postadress."
@@ -2192,7 +2214,7 @@ sv:
       pop3_polling_password_is_empty: "Du måste ställa in ett 'pop3 polling password' innan du aktiverar POP3-polling."
       pop3_polling_authentication_failed: "POP3-autentisering misslyckades. Verifiera dina pop3-certifikat."
       reply_by_email_address_is_empty: "Du måste ställa in en 'reply by email address' innan du aktiverar svar via e-post."
-      email_polling_disabled: "Du måste aktivera antingen manuell polling eller POP3-polling innan du aktiverar svar via e-post."
+      email_polling_disabled: "Du måste aktivera antingen manuell POP3-pollning eller ha en anpassad e-postpollare aktiverad innan du kan aktivera svar via e-post."
       user_locale_not_enabled: "Du måste först aktivera 'allow user locale' innan du aktiverar den här inställningen."
       personal_message_enabled_groups_invalid: "Du måste ange minst en grupp för den här inställningen. Om du inte vill att någon förutom personal ska skicka PM, välj personalgrupp."
       invalid_regex: "Vanligt uttryck är ogiltigt eller inte tillåtet."

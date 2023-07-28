@@ -80,7 +80,7 @@ RSpec.describe "Drawer", type: :system do
       drawer.open_channel(channel_1)
       channel_page.hover_message(message_1)
 
-      expect(page).to have_css(".chat-message-actions-container")
+      expect(page).to have_css(".chat-message-actions-container", visible: :all)
 
       drawer.close
 

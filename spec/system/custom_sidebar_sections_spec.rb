@@ -4,30 +4,42 @@ describe "Custom sidebar sections", type: :system do
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
   let(:section_modal) { PageObjects::Modals::SidebarSectionForm.new }
-  let(:sidebar) { PageObjects::Components::Sidebar.new }
+  let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
-  it "allows the user to create custom section" do
-    visit("/latest")
+  before { user.user_option.update!(external_links_in_new_tab: true) }
 
-    expect(sidebar).to have_no_add_section_button
+  shared_examples "creating custom sections" do |relative_root_url|
+    it "allows the user to create custom section" do
+      visit("#{relative_root_url}/latest")
 
-    sign_in user
-    visit("/latest")
-    sidebar.click_add_section_button
+      expect(sidebar).to have_no_add_section_button
 
-    expect(section_modal).to be_visible
-    expect(section_modal).to have_disabled_save
-    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
+      sign_in user
+      visit("#{relative_root_url}/latest")
+      sidebar.click_add_section_button
 
-    section_modal.fill_name("My section")
+      expect(section_modal).to be_visible
+      expect(section_modal).to have_disabled_save
+      expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
 
-    section_modal.fill_link("Sidebar Tags", "/tags")
-    expect(section_modal).to have_enabled_save
+      section_modal.fill_name("My section")
 
-    section_modal.save
+      section_modal.fill_link("Sidebar Tags", "/tags")
+      expect(section_modal).to have_enabled_save
 
-    expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_section_link("Sidebar Tags")
+      section_modal.save
+
+      expect(sidebar).to have_section("My section")
+      expect(sidebar).to have_section_link("Sidebar Tags")
+    end
+  end
+
+  include_examples "creating custom sections"
+
+  context "when subfolder install" do
+    before { set_subfolder "/community" }
+
+    include_examples "creating custom sections", "/community"
   end
 
   it "allows the user to create custom section with /my link" do
@@ -40,7 +52,7 @@ describe "Custom sidebar sections", type: :system do
     section_modal.save
 
     expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_section_link("My preferences")
+    expect(sidebar).to have_section_link("My preferences", target: "_self")
   end
 
   it "allows the user to create custom section with /pub link" do
@@ -53,7 +65,7 @@ describe "Custom sidebar sections", type: :system do
     section_modal.save
 
     expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_section_link("Published Page")
+    expect(sidebar).to have_section_link("Published Page", target: "_self")
   end
 
   it "allows the user to create custom section with external link" do
@@ -76,7 +88,11 @@ describe "Custom sidebar sections", type: :system do
     section_modal.save
 
     expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_section_link("Discourse Homepage", href: "https://discourse.org")
+    expect(sidebar).to have_section_link(
+      "Discourse Homepage",
+      href: "https://discourse.org",
+      target: "_blank",
+    )
   end
 
   it "allows the user to edit custom section" do
@@ -99,31 +115,43 @@ describe "Custom sidebar sections", type: :system do
     section_modal.save
 
     expect(sidebar).to have_section("Edited section")
-    expect(sidebar).to have_section_link("Edited Tag")
+    expect(sidebar).to have_section_link("Edited Tags")
 
     expect(sidebar).to have_no_section_link("Sidebar Categories")
   end
 
   it "allows the user to reorder links in custom section" do
     sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
-    sidebar_url_1 = Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags")
-    Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_1)
-    sidebar_url_2 = Fabricate(:sidebar_url, name: "Sidebar Categories", value: "/categories")
-    Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url_2)
+
+    sidebar_url_1 =
+      Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags").tap do |sidebar_url|
+        Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+      end
+
+    sidebar_url_2 =
+      Fabricate(:sidebar_url, name: "Sidebar Categories", value: "/categories").tap do |sidebar_url|
+        Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+      end
+
+    sidebar_url_3 =
+      Fabricate(:sidebar_url, name: "Sidebar Latest", value: "/latest").tap do |sidebar_url|
+        Fabricate(:sidebar_section_link, sidebar_section: sidebar_section, linkable: sidebar_url)
+      end
 
     sign_in user
+
     visit("/latest")
 
     expect(sidebar.primary_section_links("my-section")).to eq(
-      ["Sidebar Tags", "Sidebar Categories"],
+      ["Sidebar Tags", "Sidebar Categories", "Sidebar Latest"],
     )
 
     tags_link = find(".sidebar-section-link[data-link-name='Sidebar Tags']")
-    categories_link = find(".sidebar-section-link[data-link-name='Sidebar Categories']")
-    tags_link.drag_to(categories_link, html5: true, delay: 0.4)
+    latest_link = find(".sidebar-section-link[data-link-name='Sidebar Latest']")
+    tags_link.drag_to(latest_link, html5: true, delay: 0.4)
 
     expect(sidebar.primary_section_links("my-section")).to eq(
-      ["Sidebar Categories", "Sidebar Tags"],
+      ["Sidebar Categories", "Sidebar Tags", "Sidebar Latest"],
     )
   end
 
@@ -191,40 +219,6 @@ describe "Custom sidebar sections", type: :system do
     section_modal.confirm_delete
 
     expect(sidebar).to have_no_section("Edited public section")
-  end
-
-  it "allows admin to edit community section and reset to default" do
-    sign_in admin
-    visit("/latest")
-
-    expect(sidebar.primary_section_icons("community")).to eq(
-      %w[layer-group user flag wrench ellipsis-v],
-    )
-
-    sidebar.edit_custom_section("Community")
-    section_modal.fill_link("Everything", "/latest", "paper-plane")
-    section_modal.fill_name("Edited community section")
-    section_modal.everything_link.drag_to(section_modal.review_link, delay: 0.4)
-    section_modal.save
-
-    expect(sidebar).to have_section("Edited community section")
-    expect(sidebar.primary_section_links("edited-community-section")).to eq(
-      ["My Posts", "Everything", "Review", "Admin", "More"],
-    )
-    expect(sidebar.primary_section_icons("edited-community-section")).to eq(
-      %w[user paper-plane flag wrench ellipsis-v],
-    )
-
-    sidebar.edit_custom_section("Edited community section")
-    section_modal.reset
-
-    expect(sidebar).to have_section("Community")
-    expect(sidebar.primary_section_links("community")).to eq(
-      ["Everything", "My Posts", "Review", "Admin", "More"],
-    )
-    expect(sidebar.primary_section_icons("community")).to eq(
-      %w[layer-group user flag wrench ellipsis-v],
-    )
   end
 
   it "shows anonymous public sections" do

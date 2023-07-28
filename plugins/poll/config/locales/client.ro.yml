@@ -30,21 +30,25 @@ ro:
       multiple:
         help:
           at_least_min_options:
-            one: "Alegeți cel puțin <strong>%{count}</strong> opțiune."
+            one: "Alege cel puțin <strong>%{count} opțiune</strong>."
             few: "Alegeți cel puțin <strong>%{count}</strong> opțiuni."
-            other: "Alege cel puțin <strong>%{count}</strong> opțiuni."
-          between_min_and_max_options: "Alege între <strong>%{min}</strong> și <strong>%{max}</strong> opțiuni."
+            other: "Alege cel puțin <strong>%{count} opțiuni</strong>."
+          up_to_max_options:
+            one: "Alege până la <strong>%{count} </strong> opțiune."
+            few: "Alegeți până la <strong>%{count} </strong> opțiuni."
+            other: "Alege până la <strong>%{count} </strong> opțiuni."
+          between_min_and_max_options: "Alege între <strong>%{min} și %{max} opțiuni</strong>."
       cast-votes:
         title: "Exprimă-ți votul"
         label: "Votează acum!"
       show-results:
         title: "Afişează rezultatele sondajului"
-        label: "Afișează rezultate"
+        label: "Rezultate"
       remove-vote:
-        label: "Eliminați votul"
+        label: "Anulează votul"
       hide-results:
         title: "Înapoi la voturile tale"
-        label: "Arată votul"
+        label: "Votează"
       export-results:
         title: "Exportează rezultatele sondajului"
         label: "Exportă"
@@ -64,6 +68,8 @@ ro:
         votes: "%{count} voturi"
         percentage: "Procent"
         count: "Număr"
+      options:
+        label: "Opțiuni"
       error_while_toggling_status: "Ne pare rău, a apărut o eroare la schimbarea stării acestui sondaj."
       error_while_casting_votes: "Ne pare rău, a apărut o eroare la exercitarea voturilor tale."
       error_while_fetching_voters: "Ne pare rău, a apărut o eroare la afișarea votanților."

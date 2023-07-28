@@ -68,7 +68,6 @@ import {
 import { addTagsHtmlCallback } from "discourse/lib/render-tags";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addTopicParticipantClassesCallback } from "discourse/widgets/topic-map";
-import { addTopicSummaryCallback } from "discourse/widgets/toggle-topic-summary";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
 import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
@@ -101,11 +100,15 @@ import {
   addSearchSuggestion,
   removeDefaultQuickSearchRandomTips,
 } from "discourse/widgets/search-menu-results";
+import { addSearchSuggestion as addGlimmerSearchSuggestion } from "discourse/components/search-menu/results/assistant";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
-import { addSidebarSection } from "discourse/lib/sidebar/custom-sections";
+import {
+  addSidebarPanel,
+  addSidebarSection,
+} from "discourse/lib/sidebar/custom-sections";
 import {
   registerCustomCategoryLockIcon,
   registerCustomCategorySectionLinkPrefix,
@@ -120,12 +123,13 @@ import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
 import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
 import { registerHashtagType } from "discourse/lib/hashtag-autocomplete";
+import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-export const PLUGIN_API_VERSION = "1.6.1";
+export const PLUGIN_API_VERSION = "1.8.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -1048,28 +1052,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
-   * Adds a callback to be topic summary widget markup that can be used, for example,
-   * to add an extra button to the topic summary widget.
-   *
-   * Example:
-   *
-   *  api.addTopicSummaryCallback((html, attrs, widget) => {
-   *    html.push(
-   *      widget.attach("button", {
-   *        className: "btn btn-primary",
-   *        icon: "magic",
-   *        title: "discourse_ai.ai_helper.title",
-   *        label: "discourse_ai.ai_helper.title",
-   *        action: "showAiSummary",
-   *     })
-   *   );
-   **/
-  addTopicSummaryCallback(callback) {
-    addTopicSummaryCallback(callback);
-  }
-
-  /**
    *
    * Adds a callback to be executed on the "transformed" post that is passed to the post
    * widget.
@@ -1690,6 +1672,7 @@ class PluginApi {
    */
   addSearchSuggestion(value) {
     addSearchSuggestion(value);
+    addGlimmerSearchSuggestion(value);
   }
 
   /**
@@ -1712,7 +1695,7 @@ class PluginApi {
   /**
    * Add a function to be called when there is a keyDown even on the search-menu widget.
    * This function runs before the default logic, and if one callback returns a falsey value
-   * the logic chain will stop, to prevent the core behavior from occuring.
+   * the logic chain will stop, to prevent the core behavior from occurring.
    *
    * Example usage:
    * ```
@@ -1834,7 +1817,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Support for adding a navigation link to Sidebar Community section under the "More..." links drawer by returning a
    * class which extends from the BaseSectionLink class interface. See `lib/sidebar/user/community-section/base-section-link.js`
    * for documentation on the BaseSectionLink class interface.
@@ -1894,7 +1876,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Registers a new countable for section links under Sidebar Categories section on top of the default countables of
    * unread topics count and new topics count.
    *
@@ -1963,7 +1944,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Changes the lock icon used for a sidebar category section link to indicate that a category is read restricted.
    *
    * @param {String} Name of a FontAwesome 5 icon
@@ -1973,7 +1953,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Register a custom prefix for a sidebar category section link.
    *
    * Example:
@@ -1987,15 +1966,15 @@ class PluginApi {
    * })
    * ```
    *
-   * @params {Object} arg - An object
-   * @params {string} arg.categoryId - The id of the category
-   * @params {string} arg.prefixType - The type of prefix to use. Can be "icon", "image", "text" or "span".
-   * @params {string} arg.prefixValue - The value of the prefix to use.
+   * @param {Object} arg - An object
+   * @param {string} arg.categoryId - The id of the category
+   * @param {string} arg.prefixType - The type of prefix to use. Can be "icon", "image", "text" or "span".
+   * @param {string} arg.prefixValue - The value of the prefix to use.
    *                                    For "icon", pass in the name of a FontAwesome 5 icon.
    *                                    For "image", pass in the src of the image.
    *                                    For "text", pass in the text to display.
    *                                    For "span", pass in an array containing two hex color values. Example: `[FF0000, 000000]`.
-   * @params {string} arg.prefixColor - The color of the prefix to use. Example: "FF0000".
+   * @param {string} arg.prefixColor - The color of the prefix to use. Example: "FF0000".
    */
   registerCustomCategorySectionLinkPrefix({
     categoryId,
@@ -2012,7 +1991,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Register a custom prefix for a sidebar tag section link.
    *
    * Example:
@@ -2026,10 +2004,10 @@ class PluginApi {
    * });
    * ```
    *
-   * @params {Object} arg - An object
-   * @params {string} arg.tagName - The name of the tag
-   * @params {string} arg.prefixValue - The name of a FontAwesome 5 icon.
-   * @params {string} arg.prefixColor - The color represented using hexadecimal to use for the prefix. Example: "#FF0000" or "#FFF".
+   * @param {Object} arg - An object
+   * @param {string} arg.tagName - The name of the tag
+   * @param {string} arg.prefixValue - The name of a FontAwesome 5 icon.
+   * @param {string} arg.prefixColor - The color represented using hexadecimal to use for the prefix. Example: "#FF0000" or "#FFF".
    */
   registerCustomTagSectionLinkPrefixIcon({
     tagName,
@@ -2044,7 +2022,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Triggers a refresh of the counts for all category section links under the categories section for a logged in user.
    */
   refreshUserSidebarCategoriesSectionCounts() {
@@ -2057,6 +2034,59 @@ class PluginApi {
 
   /**
    * EXPERIMENTAL. Do not use.
+   * Support for adding a Sidebar panel by returning a class which extends from the BaseCustomSidebarPanel
+   * class interface. See `lib/sidebar/user/base-custom-sidebar-panel.js` for documentation on the BaseCustomSidebarPanel class
+   * interface.
+   *
+   * ```
+   * api.addSidebarPanel((BaseCustomSidebarPanel) => {
+   *   const ChatSidebarPanel = class extends BaseCustomSidebarPanel {
+   *     get key() {
+   *       return "chat";
+   *     }
+   *     get switchButtonLabel() {
+   *       return I18n.t("sidebar.panels.chat.label");
+   *     }
+   *     get switchButtonIcon() {
+   *       return "d-chat";
+   *     }
+   *     get switchButtonDefaultUrl() {
+   *       return "/chat";
+   *     }
+   *   };
+   *   return ChatSidebarPanel;
+   * });
+   * ```
+   */
+  addSidebarPanel(func) {
+    addSidebarPanel(func);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Support for setting a Sidebar panel.
+   */
+  setSidebarPanel(name) {
+    this._lookupContainer("service:sidebar-state").setPanel(name);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Set combined sidebar section mode. In this mode, sections from all panels are displayed together.
+   */
+  setCombinedSidebarMode() {
+    this._lookupContainer("service:sidebar-state").setCombinedMode();
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Set separated sidebar section mode. In this mode, only sections from the current panel are displayed.
+   */
+  setSeparatedSidebarMode() {
+    this._lookupContainer("service:sidebar-state").setSeparatedMode();
+  }
+
+  /**
    * Support for adding a Sidebar section by returning a class which extends from the BaseCustomSidebarSection
    * class interface. See `lib/sidebar/user/base-custom-sidebar-section.js` for documentation on the BaseCustomSidebarSection class
    * interface.
@@ -2175,12 +2205,11 @@ class PluginApi {
    * })
    * ```
    */
-  addSidebarSection(func) {
-    addSidebarSection(func);
+  addSidebarSection(func, panelKey = "main") {
+    addSidebarSection(func, panelKey);
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Register a custom renderer for a notification type or override the
    * renderer of an existing type. See lib/notification-types/base.js for
    * documentation and the default renderer.
@@ -2244,7 +2273,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Apply transformation using a callback on a list of model instances of a
    * specific type. Currently, this API only works on lists rendered in the
    * user menu such as notifications, bookmarks and topics (i.e. messages), but
@@ -2275,7 +2303,6 @@ class PluginApi {
   }
 
   /**
-   * EXPERIMENTAL. Do not use.
    * Adds a row to the dropdown used on the `userPrivateMessages` route used to navigate between the different user
    * messages pages.
    *
@@ -2300,7 +2327,7 @@ class PluginApi {
   }
 
   /**
-   * Registers a hastag type and its corresponding class.
+   * Registers a hashtag type and its corresponding class.
    * This is used when generating CSS classes in the hashtag-css-generator.
    *
    * @param {string} type - The type of the hashtag.
@@ -2309,6 +2336,49 @@ class PluginApi {
    */
   registerHashtagType(type, typeClassInstance) {
     registerHashtagType(type, typeClassInstance);
+  }
+
+  /**
+   * Adds a button to the bulk topic actions modal.
+   *
+   * ```
+   * api.addBulkActionButton({
+   *   label: "super_plugin.bulk.enhance",
+   *   icon: "magic",
+   *   class: "btn-default",
+   *   visible: ({ currentUser, siteSettings }) => siteSettings.super_plugin_enabled && currentUser.staff,
+   *   async action({ setComponent }) {
+   *     await doSomething(this.model.topics);
+   *     setComponent(MyBulkModal);
+   *   },
+   * });
+   * ```
+   *
+   * @callback buttonVisibilityCallback
+   * @param {Object} opts
+   * @param {Topic[]} opts.topics - the selected topic for the bulk action
+   * @param {Category} opts.category - the category in which the action is performed (if applicable)
+   * @param {User} opts.currentUser
+   * @param {SiteSettings} opts.siteSettings
+   * @returns {Boolean} - whether the button should be visible or not
+   *
+   * @callback buttonAction
+   * @param {Object} opts
+   * @param {Topic[]} opts.topics - the selected topic for the bulk action
+   * @param {Category} opts.category - the category in which the action is performed (if applicable)
+   * @param {function} opts.setComponent - render a template in the bulk action modal (pass in an imported component)
+   * @param {function} opts.performAndRefresh
+   * @param {function} opts.forEachPerformed
+   *
+   * @param {Object} opts
+   * @param {string} opts.label
+   * @param {string} opts.icon
+   * @param {string} opts.class
+   * @param {buttonVisibilityCallback} opts.visible
+   * @param {buttonAction} opts.action
+   */
+  addBulkActionButton(opts) {
+    _addBulkButton(opts);
   }
 }
 

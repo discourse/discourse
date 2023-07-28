@@ -761,7 +761,6 @@ bs_BA:
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
     embed_truncate: "Truncate the embedded posts."
     embed_post_limit: "Maximum number of posts to embed."
-    show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
     enable_emoji: "Omogući smajlije"
     default_other_skip_new_user_tips: "Preskoči savjete i upute za novoregistrirane korisnike."
     errors:

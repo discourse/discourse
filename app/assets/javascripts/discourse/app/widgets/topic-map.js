@@ -376,7 +376,7 @@ export default createWidget("topic-map", {
   buildKey: (attrs) => `topic-map-${attrs.id}`,
 
   defaultState(attrs) {
-    return { collapsed: !attrs.hasTopicSummary };
+    return { collapsed: !attrs.hasTopRepliesSummary };
   },
 
   html(attrs, state) {
@@ -386,7 +386,7 @@ export default createWidget("topic-map", {
       contents.push(this.attach("topic-map-expanded", attrs));
     }
 
-    if (attrs.hasTopicSummary) {
+    if (attrs.hasTopRepliesSummary || attrs.summarizable) {
       contents.push(this.attach("toggle-topic-summary", attrs));
     }
 

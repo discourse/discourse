@@ -82,6 +82,10 @@ module PageObjects
         find(".category-row[data-name='#{category_name}']").click
       end
 
+      def preview
+        find("#{COMPOSER_ID} .d-editor-preview-wrapper")
+      end
+
       def has_emoji_autocomplete?
         has_css?(AUTOCOMPLETE_MENU)
       end
@@ -142,6 +146,12 @@ module PageObjects
         page.has_css?(".form-template-field[data-field-type='#{field}']")
       end
 
+      def has_form_template_field_required_indicator?(field)
+        page.has_css?(
+          ".form-template-field[data-field-type='#{field}'] .form-template-field__required-indicator",
+        )
+      end
+
       FORM_TEMPLATE_CHOOSER_SELECTOR = ".composer-select-form-template"
 
       def has_no_form_template_chooser?
@@ -166,6 +176,24 @@ module PageObjects
 
       def form_template_field(field)
         find(".form-template-field[data-field-type='#{field}']")
+      end
+
+      def move_cursor_after(text)
+        execute_script(<<~JS, text)
+          const text = arguments[0];
+          const composer = document.querySelector("#{COMPOSER_ID} .d-editor-input");
+          const index = composer.value.indexOf(text);
+          const position = index + text.length;
+
+          composer.setSelectionRange(position, position);
+        JS
+      end
+
+      def select_all
+        execute_script(<<~JS, text)
+          const composer = document.querySelector("#{COMPOSER_ID} .d-editor-input");
+          composer.setSelectionRange(0, composer.value.length);
+        JS
       end
 
       private

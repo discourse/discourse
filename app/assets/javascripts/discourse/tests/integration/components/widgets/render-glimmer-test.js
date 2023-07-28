@@ -158,12 +158,6 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
     );
 
     await fillIn("input.dynamic-value-input", "somedynamicvalue");
-    assert.strictEqual(
-      query("div.glimmer-content").innerText,
-      "arg1=val1 dynamicArg=",
-      "changed arguments do not change before rerender"
-    );
-
     await click(".my-widget button");
     assert.strictEqual(
       query("div.glimmer-content").innerText,
@@ -200,16 +194,10 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
     DemoComponent.eventLog = [];
 
     await fillIn("input.dynamic-value-input", "somedynamicvalue");
-    assert.deepEqual(
-      DemoComponent.eventLog,
-      [],
-      "component is not notified of attr change before widget rerender"
-    );
-
     await click(".my-widget button");
     assert.deepEqual(
       DemoComponent.eventLog,
-      ["didReceiveAttrs"],
+      ["didReceiveAttrs", "didReceiveAttrs"], // once for input, once for event
       "component is notified of attr change during widget rerender"
     );
 

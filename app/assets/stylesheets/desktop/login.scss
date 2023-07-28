@@ -274,7 +274,7 @@
   .login-welcome-header {
     grid-area: header;
     padding: 3em 2em 1em;
-
+    background-color: var(--secondary);
     .login-title {
       font-size: var(--font-up-6);
       line-height: var(--line-height-medium);
@@ -417,7 +417,7 @@
   }
   .invite-form,
   .invite-success {
-    box-shadow: shadow("card");
+    box-shadow: var(--shadow-card);
   }
 }
 
@@ -437,7 +437,9 @@
       width: 100%;
     }
 
-    .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(.poll-breakdown) {
+    .modal-body:not(.reorder-categories):not(.poll-ui-builder):not(
+        .poll-breakdown
+      ) {
       max-height: 90vh !important; // overrides base/modal.scss
     }
     .login-welcome-header,

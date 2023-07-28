@@ -1438,8 +1438,6 @@ bs_BA:
       hide_forever: "ne hvala"
       intro: "Zdravo! Čini se da uživate u raspravi, ali još se niste prijavili za račun."
     summary:
-      enabled_description: "Trenutno gledate sažetak ove teme: objave koje drugi članovi smatraju kao najinteresantnije."
-      enable: "Napravi sažetak ove teme"
       disable: "Prikaži sve objave"
     deleted_filter:
       enabled_description: "Ova tema sadrži obrisane objave, vidljive za administratore dok su za ostale korisnike skrivene."
@@ -2786,6 +2784,9 @@ bs_BA:
       close: "Zatvori (Esc)"
       content_load_error: '<a href="%url%">Sadržaj</a> nije moguće učitati.'
       image_load_error: '<a href="%url%">Slika</a> se ne može učitati.'
+    experimental_lightbox:
+      buttons:
+        close: "Zatvori (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", \\ T"
       shortcut_key_delimiter_plus: "+"
@@ -3038,6 +3039,9 @@ bs_BA:
         other: "%{count} novih"
       more: "Još"
       all_categories: "Sve kategorije"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "All"
       sections:
         custom:
           save: "Save"
@@ -3066,7 +3070,8 @@ bs_BA:
         categories:
           header_link_text: "Kategorije"
         community:
-          header_link_text: "Zajednica"
+          edit_section:
+            header_dropdown: "Customize"
           links:
             about:
               content: "O nama"
@@ -3074,8 +3079,8 @@ bs_BA:
               content: "Admin"
             badges:
               content: "Bedž"
-            everything:
-              content: "Sve"
+            topics:
+              content: "Topics"
             faq:
               content: "Česta pitanja"
             groups:
@@ -3087,6 +3092,10 @@ bs_BA:
             review:
               content: "Pregled"
     until: "Sve do:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Molim unesite ispravnu vrijednost."
   admin_js:
     type_to_filter: "kucaj da sortiraš..."
     admin:
@@ -3922,6 +3931,8 @@ bs_BA:
           validations:
             required:
               key: "required"
+            type:
+              key: "tip"
       impersonate:
         title: "Impersonate"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
@@ -4182,6 +4193,8 @@ bs_BA:
         recommended: "Preporučujemo da prilagodite sledeći tekst tako da odgovara vašim potrebama:"
         show_overriden: "Only show overridden"
         more_than_50_results: "Postoji više od 50 rezultata. Pročistite pretraživanje."
+        outdated:
+          dismiss: "Odbaci"
       settings:
         show_overriden: "Only show overridden"
         reset: "reset"

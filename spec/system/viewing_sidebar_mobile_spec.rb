@@ -34,14 +34,14 @@ describe "Viewing sidebar mobile", type: :system, mobile: true do
     expect(sidebar_dropdown).to be_hidden
   end
 
-  it "collpases the sidebar when clicking on a link in the sidebar" do
+  it "collapses the sidebar when clicking on a link in the sidebar" do
     visit("/latest")
 
     sidebar_dropdown.click
 
     expect(sidebar_dropdown).to be_visible
 
-    sidebar_dropdown.click_everything_link
+    sidebar_dropdown.click_topics_link
 
     expect(sidebar_dropdown).to be_hidden
   end
@@ -53,9 +53,8 @@ describe "Viewing sidebar mobile", type: :system, mobile: true do
 
     expect(sidebar_dropdown).to be_visible
 
-    sidebar_dropdown.click_community_header_button
+    sidebar_dropdown.click_categories_header_button
 
-    expect(composer).to be_opened
     expect(sidebar_dropdown).to be_hidden
   end
 

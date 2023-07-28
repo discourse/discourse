@@ -86,26 +86,9 @@ module Jobs
 
       filename = entities[0][:filename] # use first entity as a name for this export
       user_export = UserExport.create(file_name: filename, user_id: @current_user.id)
-
       filename = "#{filename}-#{user_export.id}"
-      dirname = "#{UserExport.base_directory}/#{filename}"
 
-      # ensure directory exists
-      FileUtils.mkdir_p(dirname) unless Dir.exist?(dirname)
-
-      # Generate a compressed CSV file
-      begin
-        entities.each do |entity|
-          CSV.open("#{dirname}/#{entity[:filename]}.csv", "w") do |csv|
-            csv << get_header(entity[:name]) if entity[:name] != "report"
-            public_send(entity[:method]).each { |d| csv << d }
-          end
-        end
-
-        zip_filename = Compression::Zip.new.compress(UserExport.base_directory, filename)
-      ensure
-        FileUtils.rm_rf(dirname)
-      end
+      zip_filename = write_to_csv_and_zip(filename, entities)
 
       # create upload
       upload = nil
@@ -172,12 +155,14 @@ module Jobs
 
       staff_action_data =
         if @current_user.admin?
-          UserHistory.only_staff_actions.order("id DESC")
+          UserHistory.only_staff_actions
         else
-          UserHistory.where(admin_only: false).only_staff_actions.order("id DESC")
+          UserHistory.where(admin_only: false).only_staff_actions
         end
 
-      staff_action_data.each { |staff_action| yield get_staff_action_fields(staff_action) }
+      staff_action_data.find_each(order: :desc) do |staff_action|
+        yield get_staff_action_fields(staff_action)
+      end
     end
 
     def screened_email_export
@@ -185,7 +170,7 @@ module Jobs
 
       ScreenedEmail
         .order("last_match_at DESC")
-        .each { |screened_email| yield get_screened_email_fields(screened_email) }
+        .find_each { |screened_email| yield get_screened_email_fields(screened_email) }
     end
 
     def screened_ip_export
@@ -474,6 +459,23 @@ module Jobs
       end
 
       post
+    end
+
+    def write_to_csv_and_zip(filename, entities)
+      dirname = "#{UserExport.base_directory}/#{filename}"
+      FileUtils.mkdir_p(dirname) unless Dir.exist?(dirname)
+      begin
+        entities.each do |entity|
+          CSV.open("#{dirname}/#{entity[:filename]}.csv", "w") do |csv|
+            csv << get_header(entity[:name]) if entity[:name] != "report"
+            public_send(entity[:method]) { |d| csv << d }
+          end
+        end
+
+        Compression::Zip.new.compress(UserExport.base_directory, filename)
+      ensure
+        FileUtils.rm_rf(dirname)
+      end
     end
   end
 end

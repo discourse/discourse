@@ -16,16 +16,7 @@ RSpec.describe "Chat channel", type: :system do
   end
 
   context "when first batch of messages doesnt fill page" do
-    before do
-      50.times do
-        Fabricate(
-          :chat_message,
-          message: Faker::Lorem.characters(number: SiteSetting.chat_minimum_message_length),
-          user: current_user,
-          chat_channel: channel_1,
-        )
-      end
-    end
+    before { 30.times { Fabricate(:chat_message, user: current_user, chat_channel: channel_1) } }
 
     it "autofills for more messages" do
       chat.prefers_full_page
@@ -105,7 +96,7 @@ RSpec.describe "Chat channel", type: :system do
       expect(channel_page).to have_no_loading_skeleton
       expect(page).to have_no_css("[data-id='#{unloaded_message.id}']")
 
-      find(".chat-scroll-to-bottom").click
+      find(".chat-scroll-to-bottom__button.visible").click
 
       expect(channel_page).to have_no_loading_skeleton
       expect(page).to have_css("[data-id='#{unloaded_message.id}']")
@@ -131,15 +122,10 @@ RSpec.describe "Chat channel", type: :system do
       50.times { Fabricate(:chat_message, chat_channel: channel_1) }
     end
 
-    it "doesn’t scroll the pane" do
+    xit "doesn’t scroll the pane" do
       visit("/chat/message/#{message_1.id}")
 
-      new_message =
-        Chat::MessageCreator.create(
-          chat_channel: channel_1,
-          user: other_user,
-          content: "this is fine",
-        ).chat_message
+      new_message = Fabricate(:chat_message, chat_channel: channel_1)
 
       expect(page).to have_no_content(new_message.message)
     end
@@ -181,10 +167,10 @@ RSpec.describe "Chat channel", type: :system do
       chat.visit_channel(channel_1)
 
       expect(page).to have_selector(
-        ".mention .user-status[title='#{current_user.user_status.description}']",
+        ".mention .user-status-message img[alt='#{current_user.user_status.emoji}']",
       )
       expect(page).to have_selector(
-        ".mention .user-status[title='#{other_user.user_status.description}']",
+        ".mention .user-status-message img[alt='#{other_user.user_status.emoji}']",
       )
     end
   end
@@ -240,7 +226,19 @@ RSpec.describe "Chat channel", type: :system do
     it "renders text in the reply-to" do
       chat.visit_channel(channel_1)
 
-      expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq("not marked")
+      expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
+        "&lt;mark&gt;not marked&lt;/mark&gt;",
+      )
+    end
+
+    it "renders safe HTML like mentions (which are just links) in the reply-to" do
+      message_2.update!(message: "@#{other_user.username} <mark>not marked</mark>")
+      message_2.rebake!
+      chat.visit_channel(channel_1)
+
+      expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
+        "<a class=\"mention\" href=\"/u/#{other_user.username}\">@#{other_user.username}</a> &lt;mark&gt;not marked&lt;/mark&gt;",
+      )
     end
   end
 

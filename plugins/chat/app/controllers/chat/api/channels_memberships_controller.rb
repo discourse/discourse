@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 class Chat::Api::ChannelsMembershipsController < Chat::Api::ChannelsController
+  INDEX_LIMIT = 50
+
   def index
     params.permit(:username, :offset, :limit)
 
     offset = params[:offset].to_i
-    limit = (params[:limit] || 50).to_i.clamp(1, 50)
+    limit = fetch_limit_from_params(default: INDEX_LIMIT, max: INDEX_LIMIT)
 
     memberships =
       Chat::ChannelMembershipsQuery.call(

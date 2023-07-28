@@ -7,7 +7,6 @@ export default class ChatChannelComposer extends Service {
   @service chat;
   @service currentUser;
   @service router;
-  @service siteSettings;
   @service("chat-thread-composer") threadComposer;
 
   @tracked message;
@@ -15,7 +14,7 @@ export default class ChatChannelComposer extends Service {
 
   @action
   focus(options = {}) {
-    this.textarea.focus(options);
+    this.textarea?.focus(options);
   }
 
   @action
@@ -53,10 +52,7 @@ export default class ChatChannelComposer extends Service {
   async replyTo(message) {
     this.chat.activeMessage = null;
 
-    if (
-      this.siteSettings.enable_experimental_chat_threaded_discussions &&
-      message.channel.threadingEnabled
-    ) {
+    if (message.channel.threadingEnabled) {
       if (!message.thread?.id) {
         message.thread = message.channel.createStagedThread(message);
       }

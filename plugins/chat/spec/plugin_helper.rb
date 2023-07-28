@@ -53,10 +53,26 @@ module ChatSystemHelpers
     last_message.thread.update!(thread_attrs) if thread_attrs.any?
     last_message.thread
   end
+
+  def thread_excerpt(message)
+    CGI.escapeHTML(
+      message.censored_excerpt(max_length: ::Chat::Thread::EXCERPT_LENGTH).gsub("&hellip;", "…"),
+    )
+  end
+end
+
+module ChatSpecHelpers
+  def service_failed!(result)
+    raise RSpec::Expectations::ExpectationNotMetError.new(
+            "Service failed, see below for step details:\n\n" + result.inspect_steps.inspect,
+          )
+  end
 end
 
 RSpec.configure do |config|
   config.include ChatSystemHelpers, type: :system
+  config.include ChatSpecHelpers
+  config.include Chat::WithServiceHelper
   config.include Chat::ServiceMatchers
 
   config.expect_with :rspec do |c|

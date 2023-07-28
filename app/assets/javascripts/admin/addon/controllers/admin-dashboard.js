@@ -4,10 +4,13 @@ import AdminDashboard from "admin/models/admin-dashboard";
 import VersionCheck from "admin/models/version-check";
 import discourseComputed from "discourse-common/utils/decorators";
 import { setting } from "discourse/lib/computed";
+import { inject as service } from "@ember/service";
 
 const PROBLEMS_CHECK_MINUTES = 1;
 
 export default class AdminDashboardController extends Controller {
+  @service router;
+  @service siteSettings;
   @controller("exception") exceptionController;
 
   isLoading = false;
@@ -88,7 +91,7 @@ export default class AdminDashboardController extends Controller {
         })
         .catch((e) => {
           this.exceptionController.set("thrown", e.jqXHR);
-          this.replaceRoute("exception");
+          this.router.replaceWith("exception");
         })
         .finally(() => {
           this.set("isLoading", false);

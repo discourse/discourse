@@ -241,6 +241,9 @@
         },
         "suggested_topics": {
           "type": "integer"
+        },
+        "admin_guide": {
+          "type": "integer"
         }
       },
       "required": [
@@ -248,7 +251,8 @@
         "topic_timeline",
         "post_menu",
         "topic_notification_levels",
-        "suggested_topics"
+        "suggested_topics",
+        "admin_guide"
       ]
     },
     "groups": {
@@ -712,7 +716,7 @@
             },
             "form_template_ids": {
               "type": "array",
-              "items": []
+              "items": {}
             }
           },
           "required": [
@@ -795,6 +799,9 @@
       "type": "array"
     },
     "denied_emojis" : {
+      "type": "array"
+    },
+    "navigation_menu_site_top_tags": {
       "type": "array"
     }
   },

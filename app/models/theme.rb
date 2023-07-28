@@ -14,7 +14,7 @@ class Theme < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :color_scheme
-  has_many :theme_fields, dependent: :destroy
+  has_many :theme_fields, dependent: :destroy, validate: false
   has_many :theme_settings, dependent: :destroy
   has_many :theme_translation_overrides, dependent: :destroy
   has_many :child_theme_relation,
@@ -59,6 +59,7 @@ class Theme < ActiveRecord::Base
            class_name: "ThemeField"
 
   validate :component_validations
+  validate :validate_theme_fields
 
   after_create :update_child_components
 
@@ -116,7 +117,7 @@ class Theme < ActiveRecord::Base
     update_javascript_cache!
 
     remove_from_cache!
-    DB.after_commit { ColorScheme.hex_cache.clear }
+    ColorScheme.hex_cache.clear
     notify_theme_change(with_scheme: notify_with_scheme)
 
     if theme_setting_requests_refresh
@@ -300,6 +301,12 @@ class Theme < ActiveRecord::Base
     errors.add(:base, I18n.t("themes.errors.component_no_default")) if default?
   end
 
+  def validate_theme_fields
+    theme_fields.each do |field|
+      field.errors.full_messages.each { |message| errors.add(:base, message) } unless field.valid?
+    end
+  end
+
   def switch_to_component!
     return if component
 
@@ -351,7 +358,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.clear_cache!
-    DB.after_commit { @cache.clear }
+    @cache.clear
   end
 
   def self.targets
@@ -518,6 +525,16 @@ class Theme < ActiveRecord::Base
         )
       end
     end
+  end
+
+  def child_theme_ids=(theme_ids)
+    super(theme_ids)
+    Theme.clear_cache!
+  end
+
+  def parent_theme_ids=(theme_ids)
+    super(theme_ids)
+    Theme.clear_cache!
   end
 
   def add_relative_theme!(kind, theme)

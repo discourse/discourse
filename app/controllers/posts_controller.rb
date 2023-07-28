@@ -662,13 +662,15 @@ class PostsController < ApplicationController
     render body: nil
   end
 
+  DELETED_POSTS_MAX_LIMIT = 100
+
   def deleted_posts
     params.permit(:offset, :limit)
     guardian.ensure_can_see_deleted_posts!
 
     user = fetch_user_from_params
     offset = [params[:offset].to_i, 0].max
-    limit = [(params[:limit] || 60).to_i, 100].min
+    limit = fetch_limit_from_params(default: 60, max: DELETED_POSTS_MAX_LIMIT)
 
     posts = user_posts(guardian, user.id, offset: offset, limit: limit).where.not(deleted_at: nil)
 
@@ -790,20 +792,18 @@ class PostsController < ApplicationController
   end
 
   def create_params
-    permitted = [
-      :raw,
-      :topic_id,
-      :archetype,
-      :category,
-      # TODO remove together with 'targetUsername' deprecations
-      :target_usernames,
-      :target_recipients,
-      :reply_to_post_number,
-      :auto_track,
-      :typing_duration_msecs,
-      :composer_open_duration_msecs,
-      :visible,
-      :draft_key,
+    permitted = %i[
+      raw
+      topic_id
+      archetype
+      category
+      target_recipients
+      reply_to_post_number
+      auto_track
+      typing_duration_msecs
+      composer_open_duration_msecs
+      visible
+      draft_key
     ]
 
     Post.plugin_permitted_create_params.each do |key, value|
@@ -891,15 +891,7 @@ class PostsController < ApplicationController
     result[:user_agent] = request.user_agent
     result[:referrer] = request.env["HTTP_REFERER"]
 
-    if recipients = result[:target_usernames]
-      Discourse.deprecate(
-        "`target_usernames` is deprecated, use `target_recipients` instead.",
-        output_in_test: true,
-        drop_from: "2.9.0",
-      )
-    else
-      recipients = result[:target_recipients]
-    end
+    recipients = result[:target_recipients]
 
     if recipients
       recipients = recipients.split(",").map(&:downcase)

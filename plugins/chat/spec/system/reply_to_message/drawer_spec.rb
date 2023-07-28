@@ -9,11 +9,15 @@ RSpec.describe "Reply to message - channel - drawer", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:category_channel) }
   fab!(:original_message) do
-    Fabricate(:chat_message, chat_channel: channel_1, user: Fabricate(:user))
+    Fabricate(
+      :chat_message,
+      chat_channel: channel_1,
+      user: Fabricate(:user),
+      message: "This is a message to reply to!",
+    )
   end
 
   before do
-    SiteSetting.enable_experimental_chat_threaded_discussions = true
     chat_system_bootstrap
     channel_1.update!(threading_enabled: true)
     channel_1.add(current_user)
@@ -57,7 +61,7 @@ RSpec.describe "Reply to message - channel - drawer", type: :system do
       chat_page.open_from_header
       drawer_page.open_channel(channel_1)
 
-      expect(channel_page).to have_thread_indicator(original_message, text: "1")
+      expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(1)
 
       channel_page.reply_to(original_message)
 
@@ -70,7 +74,7 @@ RSpec.describe "Reply to message - channel - drawer", type: :system do
 
       drawer_page.back
 
-      expect(channel_page).to have_thread_indicator(original_message, text: "2")
+      expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(2)
       expect(channel_page.messages).to have_no_message(text: "reply to message")
     end
   end

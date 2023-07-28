@@ -64,19 +64,69 @@ describe "Using #hashtag autocompletion to search for and lookup channels", type
         )
       expect(message).not_to eq(nil)
     end
-    expect(chat_channel_page).to have_message(id: message.id)
+    expect(chat_channel_page.messages).to have_message(id: message.id)
+
+    expect(page).to have_css(".hashtag-cooked[aria-label]", count: 3)
 
     cooked_hashtags = page.all(".hashtag-cooked", count: 3)
 
-    expect(cooked_hashtags[0]["outerHTML"]).to eq(<<~HTML.chomp)
-    <a class=\"hashtag-cooked\" href=\"#{channel2.relative_url}\" data-type=\"channel\" data-slug=\"random\" data-id=\"#{channel2.id}\"><svg class=\"fa d-icon d-icon-comment svg-icon hashtag-color--channel-#{channel2.id} svg-string\" xmlns=\"http://www.w3.org/2000/svg\"><use href=\"#comment\"></use></svg><span>Random</span></a>
-    HTML
-    expect(cooked_hashtags[1]["outerHTML"]).to eq(<<~HTML.chomp)
-    <a class=\"hashtag-cooked\" href=\"#{category.url}\" data-type=\"category\" data-slug=\"raspberry-beret\" data-id="#{category.id}"><span class=\"hashtag-category-badge hashtag-color--category-#{category.id}\"></span><span>Raspberry</span></a>
-    HTML
-    expect(cooked_hashtags[2]["outerHTML"]).to eq(<<~HTML.chomp)
-    <a class=\"hashtag-cooked\" href=\"#{tag.url}\" data-type=\"tag\" data-slug=\"razed\" data-id="#{tag.id}"><svg class=\"fa d-icon d-icon-tag svg-icon hashtag-color--tag-#{tag.id} svg-string\" xmlns=\"http://www.w3.org/2000/svg\"><use href=\"#tag\"></use></svg><span>razed</span></a>
-    HTML
+    expect(cooked_hashtags[0]["outerHTML"]).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: channel2.relative_url,
+        "data-type": "channel",
+        "data-slug": "random",
+        "data-id": channel2.id,
+        "aria-label": "Random",
+      },
+    ) do
+      with_tag(
+        "svg",
+        with: {
+          class:
+            "fa d-icon d-icon-comment svg-icon hashtag-color--channel-#{channel2.id} svg-string",
+        },
+      ) { with_tag("use", with: { href: "#comment" }) }
+    end
+
+    expect(cooked_hashtags[1]["outerHTML"]).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: category.url,
+        "data-type": "category",
+        "data-slug": "raspberry-beret",
+        "data-id": category.id,
+        "aria-label": "Raspberry",
+      },
+    ) do
+      with_tag(
+        "span",
+        with: {
+          class: "hashtag-category-badge hashtag-color--category-#{category.id}",
+        },
+      )
+    end
+
+    expect(cooked_hashtags[2]["outerHTML"]).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: tag.url,
+        "data-type": "tag",
+        "data-slug": "razed",
+        "data-id": tag.id,
+        "aria-label": "razed",
+      },
+    ) do
+      with_tag(
+        "svg",
+        with: {
+          class: "fa d-icon d-icon-tag svg-icon hashtag-color--tag-#{tag.id} svg-string",
+        },
+      ) { with_tag("use", with: { href: "#tag" }) }
+    end
   end
 
   context "when a user cannot access the category for a cooked channel hashtag" do
@@ -110,11 +160,13 @@ describe "Using #hashtag autocompletion to search for and lookup channels", type
 
     it "shows a default color and css class for the channel icon in a post" do
       topic_page.visit_topic(topic, post_number: post_with_private_category.post_number)
+      expect(page).to have_css(".hashtag-cooked")
       expect(page).to have_css(".hashtag-cooked .hashtag-missing")
     end
 
     it "shows a default color and css class for the channel icon in a channel" do
       chat_page.visit_channel(channel1)
+      expect(page).to have_css(".hashtag-cooked")
       expect(page).to have_css(".hashtag-cooked .hashtag-missing")
     end
   end

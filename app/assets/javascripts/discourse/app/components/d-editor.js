@@ -1,4 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
+import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import {
   caretPosition,
   inCodeBlock,
@@ -180,15 +181,14 @@ class Toolbar {
 
     const title = I18n.t(button.title || `composer.${button.id}_title`);
     if (button.shortcut) {
-      const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
-      const mod = mac ? "Meta" : "Ctrl";
-
-      const shortcutTitle = `${translateModKey(mod + "+")}${translateModKey(
-        button.shortcut
-      )}`;
+      const shortcutTitle = `${translateModKey(
+        PLATFORM_KEY_MODIFIER + "+"
+      )}${translateModKey(button.shortcut)}`;
 
       createdButton.title = `${title} (${shortcutTitle})`;
-      this.shortcuts[`${mod}+${button.shortcut}`.toLowerCase()] = createdButton;
+      this.shortcuts[
+        `${PLATFORM_KEY_MODIFIER}+${button.shortcut}`.toLowerCase()
+      ] = createdButton;
     } else {
       createdButton.title = title;
     }
@@ -247,9 +247,10 @@ export default Component.extend(TextareaTextManipulation, {
     this.selectedFormTemplateId = formTemplateId;
   },
 
-  @discourseComputed("formTemplateIds", "replyingToTopic")
-  showFormTemplateForm(formTemplateIds, replyingToTopic) {
-    if (formTemplateIds?.length > 0 && !replyingToTopic) {
+  @discourseComputed("formTemplateIds", "replyingToTopic", "editingPost")
+  showFormTemplateForm(formTemplateIds, replyingToTopic, editingPost) {
+    // TODO(@keegan): Remove !editingPost once we add edit/draft support for form templates
+    if (formTemplateIds?.length > 0 && !replyingToTopic && !editingPost) {
       return true;
     }
 
@@ -303,11 +304,9 @@ export default Component.extend(TextareaTextManipulation, {
 
     this._itsatrap.bind("tab", () => this.indentSelection("right"));
     this._itsatrap.bind("shift+tab", () => this.indentSelection("left"));
-
-    const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
-    const mod = mac ? "meta" : "ctrl";
-
-    this._itsatrap.bind(`${mod}+shift+.`, () => this.send("insertCurrentTime"));
+    this._itsatrap.bind(`${PLATFORM_KEY_MODIFIER}+shift+.`, () =>
+      this.send("insertCurrentTime")
+    );
 
     // disable clicking on links in the preview
     this.element
@@ -454,10 +453,12 @@ export default Component.extend(TextareaTextManipulation, {
         );
 
         previewPromise = loadScript("/javascripts/diffhtml.min.js").then(() => {
-          window.diff.innerHTML(
-            this.element.querySelector(".d-editor-preview"),
-            cookedElement.innerHTML
-          );
+          const previewElement =
+            this.element.querySelector(".d-editor-preview");
+          // This is a workaround for a known bug in diffHTML
+          // https://github.com/tbranyen/diffhtml/issues/217#issuecomment-1479956332
+          window.diff.release(previewElement);
+          window.diff.innerHTML(previewElement, cookedElement.innerHTML);
         });
       }
 

@@ -97,8 +97,14 @@ class ThemeJavascriptCompiler
     tree.transform_keys! do |filename|
       if filename.ends_with? ".js.es6"
         filename.sub(/\.js\.es6\z/, ".js")
-      elsif filename.ends_with? ".raw.hbs"
-        filename.sub(/\.raw\.hbs\z/, ".hbr")
+      elsif filename.include? "/templates/"
+        filename = filename.sub(/\.raw\.hbs\z/, ".hbr") if filename.ends_with? ".raw.hbs"
+
+        if filename.ends_with? ".hbr"
+          filename.sub(%r{/templates/}, "/raw-templates/")
+        else
+          filename
+        end
       else
         filename
       end
@@ -168,7 +174,7 @@ class ThemeJavascriptCompiler
       elsif extension == "hbs"
         append_ember_template(module_name, content)
       elsif extension == "hbr"
-        append_raw_template(module_name.sub("discourse/templates/", ""), content)
+        append_raw_template(module_name.sub("discourse/raw-templates/", ""), content)
       else
         append_js_error(filename, "unknown file extension '#{extension}' (#{filename})")
       end

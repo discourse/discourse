@@ -6,9 +6,12 @@ import { isEmpty } from "@ember/utils";
 import { debounce } from "discourse-common/utils/decorators";
 import { observes } from "@ember-decorators/object";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 
 export default class AdminSiteSettingsController extends Controller {
-  filter = null;
+  @service router;
+
+  filter = "";
 
   @alias("model") allSiteSettings;
 
@@ -117,7 +120,7 @@ export default class AdminSiteSettingsController extends Controller {
     if (isEmpty(this.filter) && !this.onlyOverridden) {
       this.set("visibleSiteSettings", this.allSiteSettings);
       if (this.categoryNameKey === "all_results") {
-        this.transitionToRoute("adminSiteSettings");
+        this.router.transitionTo("adminSiteSettings");
       }
       return;
     }
@@ -138,7 +141,7 @@ export default class AdminSiteSettingsController extends Controller {
     }
 
     this.set("visibleSiteSettings", matchesGroupedByCategory);
-    this.transitionToRoute(
+    this.router.transitionTo(
       "adminSiteSettingsCategory",
       category || "all_results"
     );

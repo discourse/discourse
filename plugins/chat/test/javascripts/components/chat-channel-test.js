@@ -1,9 +1,9 @@
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import hbs from "htmlbars-inline-precompile";
 import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
-import { render, waitFor } from "@ember/test-helpers";
+import { render, triggerEvent, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import pretender, { OK } from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
 
 module(
@@ -12,14 +12,6 @@ module(
     setupRenderingTest(hooks);
 
     const channelId = 1;
-    const channel = {
-      id: channelId,
-      chatable_id: 1,
-      chatable_type: "Category",
-      meta: { message_bus_last_ids: {} },
-      current_user_membership: { following: true },
-      chatable: { id: 1 },
-    };
     const actingUser = {
       id: 1,
       username: "acting_user",
@@ -45,6 +37,7 @@ module(
       message: `Hey @${mentionedUser.username}`,
       cooked: `<p>Hey <a class="mention" href="/u/${mentionedUser.username}">@${mentionedUser.username}</a></p>`,
       mentioned_users: [mentionedUser],
+      created_at: "2020-08-04T15:00:00.000Z",
       user: {
         id: 1,
         username: "jesse",
@@ -52,10 +45,9 @@ module(
     };
 
     hooks.beforeEach(function () {
-      pretender.get(`/chat/api/channels/1`, () =>
-        OK({
-          channel,
-          chat_messages: [message],
+      pretender.get(`/chat/api/channels/1/messages`, () =>
+        response({
+          messages: [message],
           meta: { can_delete_self: true },
         })
       );
@@ -72,6 +64,11 @@ module(
       await render(hbs`<ChatChannel @channel={{this.channel}} />`);
 
       assertStatusIsRendered(
+        assert,
+        statusSelector(mentionedUser.username),
+        mentionedUser.status
+      );
+      await assertStatusTooltipIsRendered(
         assert,
         statusSelector(mentionedUser.username),
         mentionedUser.status
@@ -93,6 +90,11 @@ module(
       const selector = statusSelector(mentionedUser.username);
       await waitFor(selector);
       assertStatusIsRendered(
+        assert,
+        statusSelector(mentionedUser.username),
+        newStatus
+      );
+      await assertStatusTooltipIsRendered(
         assert,
         statusSelector(mentionedUser.username),
         newStatus
@@ -121,6 +123,11 @@ module(
         statusSelector(mentionedUser2.username),
         mentionedUser2.status
       );
+      await assertStatusTooltipIsRendered(
+        assert,
+        statusSelector(mentionedUser2.username),
+        mentionedUser2.status
+      );
     });
 
     test("it updates status on mentions on messages that came from Message Bus", async function (assert) {
@@ -138,6 +145,11 @@ module(
       const selector = statusSelector(mentionedUser2.username);
       await waitFor(selector);
       assertStatusIsRendered(
+        assert,
+        statusSelector(mentionedUser2.username),
+        newStatus
+      );
+      await assertStatusTooltipIsRendered(
         assert,
         statusSelector(mentionedUser2.username),
         newStatus
@@ -162,15 +174,31 @@ module(
         .dom(selector)
         .exists("status is rendered")
         .hasAttribute(
-          "title",
-          status.description,
-          "status description is updated"
-        )
-        .hasAttribute(
           "src",
           new RegExp(`${status.emoji}.png`),
           "status emoji is updated"
         );
+    }
+
+    async function assertStatusTooltipIsRendered(assert, selector, status) {
+      await triggerEvent(selector, "mouseenter");
+
+      assert.equal(
+        document
+          .querySelector(".user-status-tooltip-description")
+          .textContent.trim(),
+        status.description,
+        "status description is correct"
+      );
+
+      assert.ok(
+        document.querySelector(
+          `.user-status-message-tooltip img[alt='${status.emoji}']`
+        ),
+        "status emoji is correct"
+      );
+
+      await triggerEvent(selector, "mouseleave");
     }
 
     async function receiveChatMessageViaMessageBus() {
@@ -182,7 +210,6 @@ module(
           created_at: "2023-05-18T16:07:59.588Z",
           excerpt: `Hey @${mentionedUser2.username}`,
           available_flags: [],
-          thread_title: null,
           chat_channel_id: 7,
           mentioned_users: [mentionedUser2],
           user: actingUser,
@@ -194,7 +221,7 @@ module(
     }
 
     function statusSelector(username) {
-      return `.mention[href='/u/${username}'] .user-status`;
+      return `.mention[href='/u/${username}'] .user-status-message img`;
     }
   }
 );
