@@ -63,6 +63,7 @@ class Post < ActiveRecord::Base
   has_many :post_hotlinked_media, dependent: :destroy, class_name: "PostHotlinkedMedia"
 
   validates_with PostValidator, unless: :skip_validation
+  validates :edit_reason, length: { maximum: 1000 }
 
   after_commit :index_search
 
