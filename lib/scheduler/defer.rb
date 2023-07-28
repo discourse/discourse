@@ -7,7 +7,11 @@ module Scheduler
 
     def initialize
       @async = !Rails.env.test?
-      @queue = Queue.new
+      @queue =
+        WorkQueue::ThreadSafeWrapper.new(
+          WorkQueue::FairQueue.new(500) { WorkQueue::BoundedQueue.new(10) },
+        )
+
       @mutex = Mutex.new
       @paused = false
       @thread = nil
@@ -20,7 +24,7 @@ module Scheduler
     end
 
     def length
-      @queue.length
+      @queue.size
     end
 
     def pause
@@ -37,10 +41,10 @@ module Scheduler
       @async = val
     end
 
-    def later(desc = nil, db = RailsMultisite::ConnectionManagement.current_db, &blk)
+    def later(desc = nil, db = RailsMultisite::ConnectionManagement.current_db, force: true, &blk)
       if @async
         start_thread if !@thread&.alive? && !@paused
-        @queue << [db, blk, desc]
+        @queue.push({ key: db, task: [db, blk, desc] }, force: force)
       else
         blk.call
       end
@@ -59,7 +63,7 @@ module Scheduler
     end
 
     def do_all_work
-      do_work(_non_block = true) while !@queue.empty?
+      do_work(non_block = true) while !@queue.empty?
     end
 
     private
@@ -73,7 +77,7 @@ module Scheduler
 
     # using non_block to match Ruby #deq
     def do_work(non_block = false)
-      db, job, desc = @queue.deq(non_block)
+      db, job, desc = @queue.shift(block: !non_block)[:task]
       db ||= RailsMultisite::ConnectionManagement::DEFAULT
 
       RailsMultisite::ConnectionManagement.with_connection(db) do
