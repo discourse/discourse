@@ -2,12 +2,10 @@
 
 module Chat
   module MessagesExporter
-    LIMIT = 10_000
-
     def chat_message_export(&block)
       # perform 1 db query per month:
       now = Time.now
-      from = 6.months.ago
+      from = oldest_message_date
       while from <= now
         export(from, from + 1.month, &block)
         from = from + 1.month
@@ -38,6 +36,10 @@ module Chat
 
     private
 
+    def oldest_message_date
+      Chat::Message.order(:created_at).pick(:created_at)
+    end
+
     def export(from, to)
       Chat::Message
         .unscoped
@@ -45,7 +47,6 @@ module Chat
         .includes(:chat_channel)
         .includes(:user)
         .includes(:last_editor)
-        .limit(LIMIT)
         .find_each do |chat_message|
           yield(
             [
