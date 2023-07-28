@@ -8,4 +8,8 @@ module RouteFormat
   def self.backup
     /.+\.(sql\.gz|tar\.gz|tgz)/i
   end
+
+  def self.category_slug_path_with_id
+    %r{[^/].+/\d+}
+  end
 end

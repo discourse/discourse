@@ -1166,8 +1166,15 @@ Discourse::Application.routes.draw do
         }
     get "/new-category" => "categories#show", :constraints => { format: "html" }
 
-    get "c/*category_slug_path_with_id.rss" => "list#category_feed", :format => :rss
-    scope path: "c/*category_slug_path_with_id" do
+    get "c/*category_slug_path_with_id.rss" => "list#category_feed",
+        :constraints => {
+          category_slug_path_with_id: RouteFormat.category_slug_path_with_id,
+        },
+        :format => :rss
+    scope path: "c/*category_slug_path_with_id",
+          constraints: {
+            category_slug_path_with_id: RouteFormat.category_slug_path_with_id,
+          } do
       get "/none" => "list#category_none_latest"
 
       TopTopic.periods.each do |period|
@@ -1502,7 +1509,10 @@ Discourse::Application.routes.draw do
       delete "/unused" => "tags#destroy_unused"
 
       constraints(tag_id: %r{[^/]+?}, format: /json|rss/) do
-        scope path: "/c/*category_slug_path_with_id" do
+        scope path: "/c/*category_slug_path_with_id",
+              constraints: {
+                category_slug_path_with_id: RouteFormat.category_slug_path_with_id,
+              } do
           Discourse.filters.each do |filter|
             get "/none/:tag_id/l/#{filter}" => "tags#show_#{filter}",
                 :as => "tag_category_none_show_#{filter}",
