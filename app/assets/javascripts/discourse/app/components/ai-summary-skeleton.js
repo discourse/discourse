@@ -50,6 +50,10 @@ export default class AiSummarySkeleton extends Component {
 
   @action
   onShowing(block) {
+    if (!block.show) {
+      return;
+    }
+
     this.#onBlockShownTimer = discourseLater(
       this,
       () => {
