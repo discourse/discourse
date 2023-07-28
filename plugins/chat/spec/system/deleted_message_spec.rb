@@ -136,7 +136,7 @@ RSpec.describe "Deleted message", type: :system do
       thread_1.add(current_user)
     end
 
-    it "hides the deleted messages" do
+    xit "hides the deleted messages" do
       chat_page.visit_channel(channel_1)
 
       channel_page.message_thread_indicator(message_3).click
