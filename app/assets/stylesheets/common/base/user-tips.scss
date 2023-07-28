@@ -52,8 +52,7 @@
   }
 }
 
-.tippy-box[data-placement^="left"]
-  > .tippy-svg-arrow {
+.tippy-box[data-placement^="left"] > .tippy-svg-arrow {
   right: -1px;
 }
 
