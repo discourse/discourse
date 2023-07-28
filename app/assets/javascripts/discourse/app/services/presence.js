@@ -532,7 +532,11 @@ export default class PresenceService extends Service {
         }
       }
 
-      if (queue.length === 0 && presentChannels.length === 0 && channelsToLeave.length === 0) {
+      if (
+        queue.length === 0 &&
+        presentChannels.length === 0 &&
+        channelsToLeave.length === 0
+      ) {
         return;
       }
 

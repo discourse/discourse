@@ -426,7 +426,7 @@ module("Unit | Service | presence | entering and leaving", function (hooks) {
     );
   });
 
-  test("updates the server presence after going idle", async function(assert) {
+  test("updates the server presence after going idle", async function (assert) {
     const presenceService = getOwner(this).lookup("service:presence");
     presenceService.currentUser = currentUser();
     const channel = presenceService.getChannel("/test/ch1");
@@ -437,7 +437,11 @@ module("Unit | Service | presence | entering and leaving", function (hooks) {
     setTestPresence(false);
 
     await presenceService._updateServer();
-    assert.strictEqual(requests.length, 1, "updated the server after going idle");
+    assert.strictEqual(
+      requests.length,
+      1,
+      "updated the server after going idle"
+    );
   });
 
   test("handles the onlyWhileActive flag", async function (assert) {
