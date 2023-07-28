@@ -15,14 +15,14 @@ class Block {
   }
 }
 
-const ANIMATION_TIME = 500;
 const BLOCKS_SIZE = 20; // changing this requires to change css accordingly
 
 export default class AiSummarySkeleton extends Component {
   blocks = [...Array.from({ length: BLOCKS_SIZE }, () => new Block())];
 
-  #onBlockBlinkingTimer;
-  #onBlockShownTimer;
+  #nextBlockBlinkingTimer;
+  #blockBlinkingTimer;
+  #blockShownTimer;
 
   @action
   setupAnimation() {
@@ -38,13 +38,20 @@ export default class AiSummarySkeleton extends Component {
 
     block.show = false;
 
-    this.#onBlockBlinkingTimer = discourseLater(
+    this.#nextBlockBlinkingTimer = discourseLater(
+      this,
+      () => {
+        this.#nextBlock(block).blinking = true;
+      },
+      250
+    );
+
+    this.#blockBlinkingTimer = discourseLater(
       this,
       () => {
         block.blinking = false;
-        this.#nextBlock(block).blinking = true;
       },
-      ANIMATION_TIME
+      500
     );
   }
 
@@ -54,7 +61,7 @@ export default class AiSummarySkeleton extends Component {
       return;
     }
 
-    this.#onBlockShownTimer = discourseLater(
+    this.#blockShownTimer = discourseLater(
       this,
       () => {
         this.#nextBlock(block).show = true;
@@ -62,17 +69,17 @@ export default class AiSummarySkeleton extends Component {
 
         if (this.blocks.lastObject === block) {
           this.blocks.firstObject.blinking = true;
-          return;
         }
       },
-      ANIMATION_TIME
+      250
     );
   }
 
   @action
   teardownAnimation() {
-    cancel(this.#onBlockBlinkingTimer);
-    cancel(this.onBlockShownTimer);
+    cancel(this.#blockShownTimer);
+    cancel(this.#nextBlockBlinkingTimer);
+    cancel(this.#blockBlinkingTimer);
   }
 
   #nextBlock(currentBlock) {
