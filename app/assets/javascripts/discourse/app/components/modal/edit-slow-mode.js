@@ -54,7 +54,7 @@ const SLOW_MODE_OPTIONS = [
   },
 ];
 
-export default class SlowModeEditorComponent extends Component {
+export default class EditSlowMode extends Component {
   @service currentUser;
 
   @tracked selectedSlowMode;
@@ -66,7 +66,6 @@ export default class SlowModeEditorComponent extends Component {
 
   constructor() {
     super(...arguments);
-    this.slowModes = SLOW_MODE_OPTIONS;
     const currentDuration = parseInt(
       this.args.model.topic.slow_mode_seconds,
       10
@@ -84,6 +83,10 @@ export default class SlowModeEditorComponent extends Component {
 
       this._setFromSeconds(currentDuration);
     }
+  }
+
+  get slowModes() {
+    return SLOW_MODE_OPTIONS;
   }
 
   get saveButtonLabel() {
@@ -117,16 +120,6 @@ export default class SlowModeEditorComponent extends Component {
 
   get durationIsSet() {
     return this.hours || this.minutes || this.seconds;
-  }
-
-  @action
-  setSlowModeDuration(duration) {
-    if (duration !== "custom") {
-      let seconds = parseInt(duration, 10);
-      this._setFromSeconds(seconds);
-    }
-
-    this.selectedSlowMode = duration;
   }
 
   @action
@@ -165,6 +158,16 @@ export default class SlowModeEditorComponent extends Component {
     } finally {
       this.saveDisabled = false;
     }
+  }
+
+  @action
+  setSlowModeDuration(duration) {
+    if (duration !== "custom") {
+      let seconds = parseInt(duration, 10);
+      this._setFromSeconds(seconds);
+    }
+
+    this.selectedSlowMode = duration;
   }
 
   _setFromSeconds(seconds) {

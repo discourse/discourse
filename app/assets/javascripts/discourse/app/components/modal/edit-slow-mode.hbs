@@ -18,7 +18,7 @@
         class="slow-mode-type"
         @content={{this.slowModes}}
         @value={{this.selectedSlowMode}}
-        {{on "change" this.setSlowModeDuration}}
+        @onChange={{this.setSlowModeDuration}}
       />
     </div>
     {{#if this.showCustomSelect}}
