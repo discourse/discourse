@@ -1065,4 +1065,22 @@ class ApplicationController < ActionController::Base
   def spa_boot_request?
     request.get? && !(request.format && request.format.json?) && !request.xhr?
   end
+
+  def fetch_limit_from_params(params: self.params, default:, max:)
+    raise "default limit cannot be greater than max limit" if default.present? && default > max
+
+    if params.has_key?(:limit)
+      limit =
+        begin
+          Integer(params[:limit])
+        rescue ArgumentError
+          raise Discourse::InvalidParameters.new(:limit)
+        end
+
+      raise Discourse::InvalidParameters.new(:limit) if limit < 0 || limit > max
+      limit
+    else
+      default
+    end
+  end
 end

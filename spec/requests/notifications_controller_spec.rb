@@ -87,6 +87,15 @@ RSpec.describe NotificationsController do
           Discourse.clear_redis_readonly!
         end
 
+        describe "when limit params is invalid" do
+          include_examples "invalid limit params",
+                           "/notifications.json",
+                           described_class::INDEX_LIMIT,
+                           params: {
+                             recent: true,
+                           }
+        end
+
         it "get notifications with all filters" do
           notification = Fabricate(:notification, user: user)
           notification2 = Fabricate(:notification, user: user)

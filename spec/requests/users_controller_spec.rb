@@ -4,7 +4,7 @@ require "rotp"
 
 RSpec.describe UsersController do
   fab!(:user) { Fabricate(:user) }
-  fab!(:user1) { Fabricate(:user) }
+  fab!(:user1) { Fabricate(:user, username: "someusername") }
   fab!(:another_user) { Fabricate(:user) }
   fab!(:invitee) { Fabricate(:user) }
   fab!(:inviter) { Fabricate(:user) }
@@ -4790,11 +4790,10 @@ RSpec.describe UsersController do
       expect(response.status).to eq(200)
     end
 
-    context "with limit" do
-      it "returns an error if value is invalid" do
-        get "/u/search/users.json", params: { limit: "-1" }
-        expect(response.status).to eq(400)
-      end
+    describe "when limit params is invalid" do
+      include_examples "invalid limit params",
+                       "/u/search/users.json",
+                       described_class::SEARCH_USERS_LIMIT
     end
 
     context "when `enable_names` is true" do
@@ -6042,6 +6041,14 @@ RSpec.describe UsersController do
       get "/u/#{user1.username}/bookmarks.json", params: { q: "badsearch" }
       expect(response.status).to eq(200)
       expect(response.parsed_body["bookmarks"]).to eq([])
+    end
+
+    describe "when limit params is invalid" do
+      before { sign_in(user1) }
+
+      include_examples "invalid limit params",
+                       "/u/someusername/bookmarks.json",
+                       described_class::BOOKMARKS_LIMIT
     end
   end
 
