@@ -1166,12 +1166,12 @@ Discourse::Application.routes.draw do
         }
     get "/new-category" => "categories#show", :constraints => { format: "html" }
 
-    get "c/*category_slug_path_with_id.rss" => "list#category_feed",
+    get "c/:category_slug_path_with_id.rss" => "list#category_feed",
         :constraints => {
           category_slug_path_with_id: RouteFormat.category_slug_path_with_id,
         },
         :format => :rss
-    scope path: "c/*category_slug_path_with_id",
+    scope path: "c/:category_slug_path_with_id",
           constraints: {
             category_slug_path_with_id: RouteFormat.category_slug_path_with_id,
           } do
@@ -1509,7 +1509,7 @@ Discourse::Application.routes.draw do
       delete "/unused" => "tags#destroy_unused"
 
       constraints(tag_id: %r{[^/]+?}, format: /json|rss/) do
-        scope path: "/c/*category_slug_path_with_id",
+        scope path: "/c/:category_slug_path_with_id",
               constraints: {
                 category_slug_path_with_id: RouteFormat.category_slug_path_with_id,
               } do
