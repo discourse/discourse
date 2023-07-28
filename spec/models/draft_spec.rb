@@ -298,4 +298,6 @@ RSpec.describe Draft do
       expect(drafts[0].post.id).to eq(post.id)
     end
   end
+
+  it { is_expected.to validate_length_of(:draft_key).is_at_most(25) }
 end
