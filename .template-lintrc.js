@@ -22,7 +22,6 @@ module.exports = {
     "no-implicit-this": {
       allow: ["loading-spinner"],
     },
-    "no-negated-condition": false,
     "no-obscure-array-access": false,
     "require-mandatory-role-attributes": false,
     "require-media-caption": false,

@@ -201,34 +201,6 @@
   .notifications {
     position: relative;
   }
-  .ring {
-    position: absolute;
-    top: -11px;
-    right: 23.5px;
-    z-index: z("base");
-    margin-left: 0;
-    border-radius: 100%;
-    width: 20px;
-    height: 20px;
-    box-shadow: 0 0 0 rgba(var(--success-rgb), 1);
-    transform: scale(1);
-    transform-origin: center;
-    animation-iteration-count: infinite;
-    animation-duration: 3s;
-    animation-name: ping;
-
-    &.revamped {
-      right: -4px;
-      top: -6px;
-
-      &.regular-notifications {
-        background: radial-gradient(
-          transparent,
-          var(--tertiary-med-or-tertiary)
-        );
-      }
-    }
-  }
   .header-dropdown-toggle {
     position: relative;
   }
@@ -259,8 +231,7 @@
   .unread-notifications {
     background-color: var(--tertiary-med-or-tertiary);
   }
-  .unread-high-priority-notifications,
-  .ring {
+  .unread-high-priority-notifications {
     left: auto;
     right: 25px;
   }

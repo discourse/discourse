@@ -30,6 +30,12 @@ RSpec.describe Admin::ReportsController do
       end
 
       context "with invalid params" do
+        context "when limit param is invalid" do
+          include_examples "invalid limit params",
+                           "/admin/reports/topics.json",
+                           described_class::REPORTS_LIMIT
+        end
+
         context "with nonexistent report" do
           it "returns not found reports" do
             get "/admin/reports/bulk.json",
@@ -153,6 +159,12 @@ RSpec.describe Admin::ReportsController do
             expect(response.status).to eq(200)
             expect(response.parsed_body["report"]["total"]).to eq(1)
           end
+        end
+
+        context "when limit param is invalid" do
+          include_examples "invalid limit params",
+                           "/admin/reports/topics.json",
+                           described_class::REPORTS_LIMIT
         end
       end
 

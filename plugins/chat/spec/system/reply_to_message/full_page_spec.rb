@@ -18,7 +18,6 @@ RSpec.describe "Reply to message - channel - full page", type: :system do
   end
 
   before do
-    SiteSetting.enable_experimental_chat_threaded_discussions = true
     chat_system_bootstrap
     channel_1.add(current_user)
     sign_in(current_user)
@@ -58,16 +57,10 @@ RSpec.describe "Reply to message - channel - full page", type: :system do
 
   context "when the message has an existing thread" do
     fab!(:message_1) do
-      creator =
-        Chat::MessageCreator.new(
-          chat_channel: channel_1,
-          in_reply_to_id: original_message.id,
-          user: Fabricate(:user),
-          content: Faker::Lorem.paragraph,
-        )
-      creator.create
-      creator.chat_message
+      Fabricate(:chat_message, chat_channel: channel_1, in_reply_to: original_message)
     end
+
+    before { original_message.thread.add(current_user) }
 
     it "replies to the existing thread" do
       chat_page.visit_channel(channel_1)
@@ -78,13 +71,12 @@ RSpec.describe "Reply to message - channel - full page", type: :system do
 
       expect(side_panel_page).to have_open_thread
 
-      thread_page.fill_composer("reply to message")
-      thread_page.click_send_message
+      message = thread_page.send_message
 
-      expect(thread_page).to have_message(text: message_1.message)
-      expect(thread_page).to have_message(text: "reply to message")
+      expect(thread_page.messages).to have_message(text: message_1.message)
+      expect(thread_page.messages).to have_message(text: message)
       expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(2)
-      expect(channel_page).to have_no_message(text: "reply to message")
+      expect(channel_page.messages).to have_no_message(text: message)
     end
   end
 

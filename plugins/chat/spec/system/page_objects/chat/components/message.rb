@@ -7,7 +7,7 @@ module PageObjects
         attr_reader :context
         attr_reader :component
 
-        SELECTOR = ".chat-message-container"
+        SELECTOR = ".chat-message-container:not(.has-thread-indicator)"
 
         def initialize(context)
           @context = context

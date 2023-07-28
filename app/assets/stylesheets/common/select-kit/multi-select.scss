@@ -55,6 +55,38 @@
         @include ellipsis;
         display: inline-block;
       }
+
+      .select-kit-header--filter {
+        display: flex;
+        flex-wrap: wrap;
+        margin: -0.35em;
+        margin-left: -0.25em;
+        position: relative;
+        .selected-choice {
+          margin: 0.125em 0.25em 0.125em 0;
+          padding: 0.2em 0.3em;
+          font-size: var(--font-down-1);
+
+          &.selected-choice-color {
+            border-bottom: 2px solid transparent;
+          }
+        }
+
+        .select-kit-filter {
+          display: inline-flex;
+          flex: 1 1 30px;
+          width: auto;
+          margin-left: 0.25em;
+          position: static;
+          min-height: 28px;
+          &.is-expanded {
+            padding: 0;
+          }
+          .filter-input {
+            min-height: auto;
+          }
+        }
+      }
     }
 
     &.is-expanded .multi-select-header,

@@ -7,6 +7,7 @@
 sv:
   site_settings:
     chat_enabled: "Aktivera chattillägget."
+    enable_public_channels: "Aktivera offentliga kanaler baserat på kategorier."
     chat_allowed_groups: "Användare i dessa grupper kan chatta. Observera att personalen alltid har tillgång till chatten."
     chat_channel_retention_days: "Chattmeddelanden i ordinarie kanaler kommer att behållas i så här många dagar. Sätt till '0' för att behålla meddelanden för alltid."
     chat_dm_retention_days: "Chattmeddelanden i personliga chattkanaler kommer att behållas i så här många dagar. Sätt till '0' för att behålla meddelanden för alltid."
@@ -26,7 +27,6 @@ sv:
     max_mentions_per_chat_message: "Maximalt antal @namnomnämnanden en användare kan göra i ett chattmeddelande."
     chat_max_direct_message_users: "Användare kan inte lägga till fler än detta antal andra användare när de skapar ett nytt direktmeddelande. Ställ in till 0 för att endast tillåta meddelanden till sig själv. Personalen är undantagen från denna inställning."
     chat_allow_archiving_channels: "Tillåt att personalen arkiverar meddelanden till ett ämne när en kanal stängs."
-    enable_experimental_chat_threaded_discussions: "EXPERIMENTELLT: Tillåt att personalen aktiverar trådning på chattkanaler, vilket gör att parallella diskussioner kan uppstå i en kanal när användare svarar varandra."
     errors:
       chat_default_channel: "Standardchattkanalen måste vara en offentlig kanal."
       direct_message_enabled_groups_invalid: "Du måste ange minst en grupp för den här inställningen. Om du inte vill att någon förutom personal ska skicka direktmeddelanden, välj personalgrupp."
@@ -157,6 +157,8 @@ sv:
       and_x_others:
         one: "och %{count} annan"
         other: "och %{count} andra"
+    summaries:
+      no_targets: "Det fanns inga meddelanden under den valda perioden."
   discourse_push_notifications:
     popup:
       chat_mention:

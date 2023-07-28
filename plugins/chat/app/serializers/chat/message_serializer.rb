@@ -24,6 +24,7 @@ module Chat
             user_flag_status
             reviewable_id
             edited
+            thread
           ]
       ),
     )
@@ -176,12 +177,24 @@ module Chat
       end
     end
 
-    def include_threading_data?
-      SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
+    def include_thread?
+      include_thread_id? && object.thread_om? && object.thread.present?
     end
 
     def include_thread_id?
-      include_threading_data?
+      channel.threading_enabled
+    end
+
+    def thread
+      Chat::ThreadSerializer.new(
+        object.thread,
+        scope: scope,
+        membership: @options[:thread_memberships]&.find { |m| m.thread_id == object.thread.id },
+        participants: @options[:thread_participants]&.dig(object.thread.id),
+        include_thread_preview: true,
+        include_thread_original_message: @options[:include_thread_original_message],
+        root: false,
+      )
     end
   end
 end

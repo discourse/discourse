@@ -1382,7 +1382,6 @@ ca:
       hide_forever: "no, gràcies"
       intro: "Bon dia! Sembla que gaudiu de la discussió, però no heu registrat un compte."
     summary:
-      enabled_description: "Ara veieu un resum del tema: les publicacions més interessants segons la comunitat."
       disable: "Mostra totes les publicacions"
     deleted_filter:
       enabled_description: "Aquest tema conté publicacions suprimides, que han estat amagades."
@@ -2677,6 +2676,9 @@ ca:
       close: "Tanca (Esc)"
       content_load_error: 'No s''ha pogut carregar <a href="%url%">el contingut</a>. '
       image_load_error: 'No s''ha pogut carregar la <a href="%url%">imatge</a>.'
+    experimental_lightbox:
+      buttons:
+        close: "Tanca (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -4037,6 +4039,8 @@ ca:
         recommended: "Recomanem personalitzar el text següent segons us convingui:"
         show_overriden: "Mostra sols texts editats"
         more_than_50_results: "Hi ha més de 50 resultats. Restringiu la cerca."
+        outdated:
+          dismiss: "Descarta-ho"
       settings:
         show_overriden: "Mostra només els sobreescrits"
         reset: "restableix"

@@ -245,6 +245,7 @@ uk:
     software_update_prompt:
       message: "Ми оновили цей сайт, <span>оновіть сторінку</span>, інакше у вас може виникнути неочікувана поведінка."
       dismiss: "Відхилити"
+    bootstrap_mode: "Початок роботи"
     themes:
       default_description: "Типово"
       broken_theme_alert: "Ваш сайт не може працювати, оскільки тема / компонент має помилки."
@@ -1240,6 +1241,9 @@ uk:
         enable: "Увімкнути бічну панель"
         options: "Параметри"
         navigation_section: "Навігація"
+        navigation_section_instruction: "Коли список тем у навігаційному меню містить нові або непрочитані елементи…"
+        link_to_filtered_list_checkbox_description: "Посилання на відфільтрований список"
+        show_count_new_items_checkbox_description: "Показати кількість нових елементів"
       change: "змінити"
       featured_topic: "Закріплені теми"
       moderator: "%{user} є модератором"
@@ -1278,6 +1282,7 @@ uk:
       watched_first_post_categories_instructions: "Ви отримуватимете сповіщення про перший допис у кожній новій темі у цих розділах."
       watched_first_post_tags: "Слідкувати за першим дописом"
       watched_first_post_tags_instructions: "Ви отримуватимете сповіщення про перший допис у кожній новій темі з цими теґами."
+      watched_precedence_over_muted: "Сповіщати мене про теми в категоріях або тегах, які я переглядаю і які також належать до тих, які я вимкнув"
       muted_categories: "Приглушено"
       muted_categories_instructions: "Ви не будете отримувати жодних сповіщень про нові теми у цих розділах, і вони не зʼявлятимуться на сторінках розділів чи найсвіжіших."
       muted_categories_instructions_dont_hide: "Ви не отримуватимете сповіщень про нові теми в цих розділах."
@@ -1452,6 +1457,7 @@ uk:
         tags: "Теґи"
         interface: "Інтерфейс"
         apps: "Застосунки"
+        navigation_menu: "Навігаційне меню"
       change_password:
         success: "(лист надіслано)"
         in_progress: "(надсилання листа)"
@@ -1933,8 +1939,7 @@ uk:
       pause_notifications: "Призупинити сповіщення"
       remove_status: "Видалити статус"
     user_tips:
-      primary: "Зрозуміло!"
-      secondary: "не показувати ці поради"
+      button: "Зрозуміло!"
       first_notification:
         title: "Ваше перше сповіщення!"
         content: "Сповіщення використовуються для того, щоб тримати вас в курсі того, що відбувається в спільноті."
@@ -1950,6 +1955,9 @@ uk:
       suggested_topics:
         title: "Продовжуйте читати!"
         content: "Ось кілька тем, які, на нашу думку, ви можете прочитати далі."
+      admin_guide:
+        title: "Ласкаво просимо на ваш новий сайт!"
+        button: "Поїхали!"
     loading: "Завантаження…"
     errors:
       prev_page: "при спробі завантаження"
@@ -2019,17 +2027,31 @@ uk:
       no_internet: "Немає з’єднання з Інтернетом."
       refresh_page: "Оновити сторінку"
     summary:
-      enabled_description: "Ви переглядаєте витяг з теми – тільки найцікавіші дописи на думку спільноти."
+      in_progress: "Підбиття підсумків теми за допомогою ШІ..."
+      summarized_on: "Підсумовано з AI на %{date}"
+      model_used: "ШІ використано: %{model}"
+      outdated: "Резюме застаріло"
+      outdated_posts:
+        one: "(%{count} допис відсутній)"
+        few: "(%{count} повідомлення відсутні)"
+        many: "(%{count} повідомлень відсутні)"
+        other: "(%{count} повідомлень відсутні)"
+      enabled_description: "Ви переглядаєте найкращі відповіді на цю тему: найцікавіші публікації, визначені спільнотою."
       description:
         one: "Тут <b>%{count}</b> відповідь."
         few: "Тут <b>%{count}</b> відповіді."
         many: "Тут <b>%{count}</b> відповідей."
         other: "Тут <b>%{count}</b> відповідей."
+      buttons:
+        hide: "Приховати підсумок"
+        generate: "Підведіть підсумки за допомогою ШІ"
+        regenerate: "Регенерувати підсумок"
       description_time_MF: |
         Тут є {replyCount, plural, one {<b>#</b> відповідь} few {<b>#</b> відповіді} many {<b>#</b> відповідей} other {<b>#</b> відповідей}} з розрахунковим часом читання <b>{readingTime, plural, one {# хвилина} few {# хвилини} many {# хвилин} other {# хвилин}}</b>.
+      enable: "Показати найкращі відповіді"
       disable: "Показати всі дописи"
-      short_label: "Підсумок"
-      short_title: "Показати підсумок цієї теми: найцікавіші дописи, визначені спільнотою"
+      short_label: "Найпопулярніші відповіді"
+      short_title: "Показати в цій темі найпопулярніші відповіді: найцікавіші публікації, визначені спільнотою"
     deleted_filter:
       enabled_description: "Ця тема містить видалені дописи, які були сховані."
       disabled_description: "Показуються видалені дописи в темі."
@@ -3666,7 +3688,7 @@ uk:
       filtered_replies:
         viewing_posts_by: "Перегляд %{post_count} дописів від"
         viewing_subset: "Деякі відповіді згорнуті"
-        viewing_summary: "Перегляд резюме цієї теми"
+        viewing_summary: "Перегляд найкращих відповідей на цю тему"
         post_number: "%{username}, допис #%{post_number}"
         show_all: "Показати всі"
       share:
@@ -4071,6 +4093,9 @@ uk:
       close: "Закрити (Esc)"
       content_load_error: '<a href="%url%">Вміст</a> не вдалося завантажити.'
       image_load_error: '<a href="%url%">Зображення</a> не вдалося завантажити.'
+    experimental_lightbox:
+      buttons:
+        close: "Закрити (Esc)"
     cannot_render_video: Це відео неможливо відтворити, оскільки ваш браузер не підтримує цей кодек.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -6051,6 +6076,12 @@ uk:
         show_overriden: "Показувати тільки перевизначені"
         locale: "Мова:"
         more_than_50_results: "Знайдено понад 50 результатів. Будь ласка виправте параметри пошуку."
+        outdated:
+          title: "Цей переклад застарів"
+          description: "Переклад за замовчуванням для цього ключа змінився після створення цього перевизначення. Будь ласка, перевірте нижче, чи ваш переклад відповідає будь-яким змінам, які були внесені до оригіналу."
+          old_default: "Старе значення"
+          new_default: "Нове за замовчуванням"
+          dismiss: "Відхилити"
       settings:
         show_overriden: "Показувати тільки перевизначені"
         history: "Переглянути історію змін"

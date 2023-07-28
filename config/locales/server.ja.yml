@@ -1709,7 +1709,6 @@ ja:
     title_min_entropy: "トピックタイトルの最小許容エントロピー (特殊文字や英語以外の単語を含むとより大きな値になります)"
     body_min_entropy: "投稿本文の最小許容エントロピー (特殊文字や英語以外の単語を含むとより大きな値になります)"
     allow_uppercase_posts: "トピックタイトルまたは投稿本文での大文字のみ使用を許可する。"
-    max_consecutive_replies: "返信を追加できなくなるまでに、ユーザーがトピックで連続して作成できる投稿数。"
     enable_filtered_replies_view: '"返信 (n) 件" ボタンはほかのすべての投稿を折りたたみ、現在の投稿とその返信のみを表示します。'
     title_fancy_entities: "トピックのタイトル内の共通の ASCII 文字をファンシーな HTML エンティティ (SmartyPants、<a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>) に変換する"
     min_title_similar_length: "類似トピックのチェックに必要な最小タイトル長"

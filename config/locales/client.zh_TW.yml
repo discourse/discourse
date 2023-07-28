@@ -1403,7 +1403,6 @@ zh_TW:
       hide_forever: "不了"
       intro: "你好！:heart_eyes: 看起來你挺喜歡這樣的討論，可是你還沒有註冊帳號。"
     summary:
-      enabled_description: "你正在檢視此話題的摘要：在這個社群裡最熱門的貼文。"
       description:
         other: "有 <b>%{count}</b> 個回覆。"
       disable: "顯示所有貼文"
@@ -2656,6 +2655,9 @@ zh_TW:
       close: "關閉（Esc）"
       content_load_error: '無法加載<a href="%url%">內容</a>。'
       image_load_error: '無法加載<a href="%url%">圖片</a>。'
+    experimental_lightbox:
+      buttons:
+        close: "關閉（Esc）"
     keyboard_shortcuts_help:
       title: "快捷鍵"
       jump_to:
@@ -3986,6 +3988,8 @@ zh_TW:
         recommended: "我們建議自定義以下文本以符合你的需求："
         show_overriden: "只顯示修改過的項目"
         more_than_50_results: "有超過50個搜尋結果。請嘗試重新定義搜尋關鍵字。"
+        outdated:
+          dismiss: "忽略"
       settings:
         show_overriden: "只顯示被覆寫的內容"
         reset: "重置"

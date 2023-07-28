@@ -1,15 +1,10 @@
 # frozen_string_literal: true
 
 module UserSidebarMixin
-  def sidebar_tags
-    topic_count_column = Tag.topic_count_column(scope)
+  include NavigationMenuTagsMixin
 
-    object
-      .visible_sidebar_tags(scope)
-      .pluck(:name, topic_count_column, :pm_topic_count)
-      .reduce([]) do |tags, sidebar_tag|
-        tags.push(name: sidebar_tag[0], pm_only: sidebar_tag[1] == 0 && sidebar_tag[2] > 0)
-      end
+  def sidebar_tags
+    serialize_tags(object.visible_sidebar_tags(scope))
   end
 
   def display_sidebar_tags
@@ -25,7 +20,7 @@ module UserSidebarMixin
   end
 
   def sidebar_category_ids
-    object.category_sidebar_section_links.pluck(:linkable_id) & scope.allowed_category_ids
+    object.secured_sidebar_category_ids(scope)
   end
 
   def include_sidebar_category_ids?

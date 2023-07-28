@@ -1028,7 +1028,7 @@ pt_BR:
         sunday: "Domingo"
         to: "para"
       activity_stream: "Atividade"
-      read: "Lidos(as)"
+      read: "Lidos"
       read_help: "Tópicos lidos recentemente"
       preferences: "Preferências"
       feature_topic_on_profile:
@@ -1726,8 +1726,7 @@ pt_BR:
       pause_notifications: "Pausar notificações"
       remove_status: "Remover status"
     user_tips:
-      primary: "Entendi!"
-      secondary: "não me mostre essas dicas"
+      button: "Entendi!"
       first_notification:
         title: "Sua primeira notificação!"
         content: "As notificações são usadas para que você se atualize sobre o que está acontecendo na comunidade."
@@ -1807,15 +1806,12 @@ pt_BR:
       intro: "Olá! Parece que você está gostando da discussão, mas ainda não cadastou uma conta."
       value_prop: "Cansou de ver as mesmas postagens? Ao criar uma conta, você sempre volta de onde parou. Com uma conta, você também pode receber notificações de novas respostas, salvar favoritos e usar curtidas para agradecer aos outros. Todos nós podemos trabalhar juntos para tornar esta comunidade excelente. :heart:"
     summary:
-      enabled_description: "Você está vendo um resumo deste tópico: as postagens mais interessantes segundo a comunidade."
       description:
         one: "Existe <b>%{count}</b> resposta."
         other: "Existem <b>%{count}</b> respostas."
       description_time_MF: |
         Há {replyCount, plural, one {<b>#</b> resposta} other {<b>#</b> respostas}} com um tempo de leitura estimado de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>.
       disable: "Exibir todas as postagens"
-      short_label: "Resumir"
-      short_title: "Exibir um resumo deste tópico: as postagens mais interessantes segundo a comunidade"
     deleted_filter:
       enabled_description: "Este tópico contém postagens excluídas, que foram ocultadas."
       disabled_description: "As postagens excluídas deste tópico estão sendo exibidas."
@@ -3270,7 +3266,6 @@ pt_BR:
       filtered_replies:
         viewing_posts_by: "Vendo %{post_count} postagens de"
         viewing_subset: "Algumas respostas foram recolhidas"
-        viewing_summary: "visualizando um resumo deste tópico"
         post_number: "%{username}, postagem #%{post_number}"
         show_all: "Exibir tudo"
       share:
@@ -3640,6 +3635,9 @@ pt_BR:
       close: "Fechar (Esc)"
       content_load_error: '<a href="%url%">O conteúdo</a> não pôde ser carregado.'
       image_load_error: '<a href="%url%">A imagem</a> não pôde ser carregada.'
+    experimental_lightbox:
+      buttons:
+        close: "Fechar (Esc)"
     cannot_render_video: Este vídeo não pode ser renderizado porque o seu navegador não é compatível com o codec.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ","
@@ -5429,6 +5427,8 @@ pt_BR:
         show_overriden: "Exibir apenas substituídos"
         locale: "Idioma:"
         more_than_50_results: "Existem mais de 50 resultados. Refine sua pesquisa."
+        outdated:
+          dismiss: "Descartar"
       settings:
         show_overriden: "Exibir apenas substituídos"
         history: "Visualizar histórico de alterações"

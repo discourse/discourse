@@ -7,12 +7,16 @@ module Discourse
   # work around reloader
   unless defined?(::Discourse::VERSION)
     module VERSION #:nodoc:
-      MAJOR = 3
-      MINOR = 1
-      TINY = 0
-      PRE = "beta6"
+      STRING = "3.1.0.beta7"
 
-      STRING = [MAJOR, MINOR, TINY, PRE].compact.join(".")
+      PARTS = STRING.split(".")
+      private_constant :PARTS
+
+      MAJOR = PARTS[0].to_i
+      MINOR = PARTS[1].to_i
+      TINY = PARTS[2].to_i
+      PRE = PARTS[3]&.split("-", 2)&.first
+      DEV = PARTS[3]&.split("-", 2)&.second
     end
   end
 
@@ -31,7 +35,7 @@ module Discourse
   #  2.5.0.beta2: bbffee
   #  2.4.4.beta6: some-other-branch-ref
   #  2.4.2.beta1: v1-tag
-  def self.find_compatible_resource(version_list, version = ::Discourse::VERSION::STRING)
+  def self.find_compatible_resource(version_list, target_version = ::Discourse::VERSION::STRING)
     return unless version_list.present?
 
     begin
@@ -41,21 +45,37 @@ module Discourse
 
     raise InvalidVersionListError unless version_list.is_a?(Hash)
 
-    version_list = version_list.sort_by { |v, pin| Gem::Version.new(v) }.reverse
+    version_list =
+      version_list
+        .transform_keys do |v|
+          Gem::Requirement.parse(v)
+        rescue Gem::Requirement::BadRequirementError => e
+          raise InvalidVersionListError, "Invalid version specifier: #{v}"
+        end
+        .sort_by do |parsed_requirement, _|
+          operator, version = parsed_requirement
+          [version, operator == "<" ? 0 : 1]
+        end
 
-    # If plugin compat version is listed as less than current Discourse version, take the version/hash listed before.
-    checkout_version = nil
-    version_list.each do |core_compat, target|
-      if Gem::Version.new(core_compat) == Gem::Version.new(version) # Exact version match - return it
-        checkout_version = target
-        break
-      elsif Gem::Version.new(core_compat) < Gem::Version.new(version) # Core is on a higher version than listed, use a later version
-        break
+    parsed_target_version = Gem::Version.new(target_version)
+
+    lowest_matching_entry =
+      version_list.find do |parsed_requirement, target|
+        req_operator, req_version = parsed_requirement
+        req_operator = "<=" if req_operator == "="
+
+        if !%w[<= <].include?(req_operator)
+          raise InvalidVersionListError,
+                "Invalid version specifier operator for '#{req_operator} #{req_version}'. Operator must be one of <= or <"
+        end
+
+        resolved_requirement = Gem::Requirement.new("#{req_operator} #{req_version.to_s}")
+        resolved_requirement.satisfied_by?(parsed_target_version)
       end
-      checkout_version = target
-    end
 
-    return if checkout_version.nil?
+    return if lowest_matching_entry.nil?
+
+    checkout_version = lowest_matching_entry[1]
 
     begin
       Discourse::Utils.execute_command "git",

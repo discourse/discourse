@@ -1,13 +1,9 @@
 <DSection @pageClass="has-sidebar" @id="d-sidebar" @class="sidebar-container">
   {{#if this.showSwitchPanelButtonsOnTop}}
-    <Sidebar::SwitchPanelButtons
-      @currentPanel={{this.currentPanel}}
-      @buttons={{this.switchPanelButtons}}
-      @setCurrentPanelKey={{this.setCurrentPanelKey}}
-    />
+    <Sidebar::SwitchPanelButtons @buttons={{this.switchPanelButtons}} />
   {{/if}}
 
-  {{#if this.showMainPanel}}
+  {{#if this.sidebarState.showMainPanel}}
     <Sidebar::Sections
       @currentUser={{this.currentUser}}
       @collapsableSections={{true}}
@@ -17,16 +13,11 @@
     <Sidebar::ApiPanels
       @currentUser={{this.currentUser}}
       @collapsableSections={{true}}
-      @panel={{this.currentPanel}}
     />
   {{/if}}
 
   {{#unless this.showSwitchPanelButtonsOnTop}}
-    <Sidebar::SwitchPanelButtons
-      @currentPanel={{this.currentPanel}}
-      @buttons={{this.switchPanelButtons}}
-      @setCurrentPanelKey={{this.setCurrentPanelKey}}
-    />
+    <Sidebar::SwitchPanelButtons @buttons={{this.switchPanelButtons}} />
   {{/unless}}
 
   <Sidebar::Footer />

@@ -295,6 +295,7 @@ pl_PL:
         add_user_short: <span>Dodaj użytkownika</span>
         open_channel: <span>Otwórz kanał</span>
         default_search_placeholder: "#kanał, @ktoś lub cokolwiek"
+        default_user_search_placeholder: "@ktoś"
         user_search_placeholder: "...dodaj więcej użytkowników"
         disabled_user: "wyłączył czat"
         no_items: "Brak elementu"

@@ -118,6 +118,7 @@ tr_TR:
       last_visit: "son ziyaret"
       summarization:
         title: "Mesajları özetle"
+        description: "İstediğiniz zaman diliminde gönderilen görüşmeyi özetlemek için aşağıdaki seçeneklerden birini belirleyin."
         summarize: "Özetle"
         since:
           one: "Son bir saat"
@@ -153,6 +154,60 @@ tr_TR:
           unreachable_multiple:
             one: "@%{group} ve diğer %{count} grup bahsetmeye izin vermiyor."
             other: "@%{group} ve diğer %{count} grup bahsetmeye izin vermiyor."
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {@{group1} adlı gruptan bahsetmek # kullanıcının <a href="{siteSettingUrl}" target="_blank">bildirim limitini</a> aşıyor.}
+                              other {@{group1} adlı gruptan bahsetmek # kullanıcının <a href="{siteSettingUrl}" target="_blank"> bildirim limitini </a> aşıyor.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {@{group1} adlı gruptan bahsetmek # kullanıcının bildirim limitini aşıyor.}
+                              other {@{group1} adlı gruptan bahsetmek # kullanıcının bildirim limitini aşıyor.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {@{group1} ve @{group2} adlı gruplardan bahsetmek # kullanıcının <a href="{siteSettingUrl}" target="_blank"> bildirim limitini </a> aşıyor.}
+                            other {@{group1} ve @{group2} adlı gruplardan bahsetmek # kullanıcının <a href="{siteSettingUrl}" target="_blank"> bildirim limitini </a> aşıyor.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {@{group1} ve @{group2} adlı gruplardan bahsetmek # kullanıcının bildirim limitini aşıyor.}
+                            other {@{group1} ve @{group2} adlı gruplardan bahsetmek # kullanıcının bildirim limitini aşıyor.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Bu {groupCount} gruptan bahsetmek # kullanıcının <a href="{siteSettingUrl}" target="_blank">bildirim limitini</a> aşıyor.}
+                            other {Bu {groupCount} gruptan bahsetmek # kullanıcının <a href="{siteSettingUrl}" target="_blank"> bildirim limitini </a> aşıyor.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Bu {groupCount} gruptan bahsetmek # kullanıcının bildirim limitini aşıyor.}
+                            other {Bu {groupCount} gruptan bahsetmek # kullanıcının bildirim limitini aşıyor.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
         too_many_mentions:
           one: "Bu mesaj, %{count} bahsetme bildirim sınırını aşıyor."
           other: "Bu mesaj, %{count} bahsetme bildirim sınırını aşıyor."
@@ -263,6 +318,15 @@ tr_TR:
           members: Üyeler
           settings: Ayarlar
       new_message_modal:
+        title: Mesaj gönder
+        add_user_long: <kbd>shift + tıklama</kbd> veya <kbd>shift + enter</kbd><span>@%{username} ekleyin</span>
+        add_user_short: <span>Kullanıcı ekleyin</span>
+        open_channel: <span>Kanal açın</span>
+        default_search_placeholder: "#bir-kanal, @biri veya herhangi bir şey"
+        default_channel_search_placeholder: "#bir-kanal"
+        default_user_search_placeholder: "@biri"
+        user_search_placeholder: "...daha fazla kullanıcı ekleyin"
+        disabled_user: "sohbeti devre dışı bıraktı"
         no_items: "Öge yok"
       channel_edit_name_slug_modal:
         title: Kanalı düzenle
@@ -286,8 +350,31 @@ tr_TR:
           one: "%{count} üye"
           other: "%{count} üye"
       create_channel:
+        threading:
+          label: "İleti dizisine izin ver"
         auto_join_users:
           public_category_warning: "%{category} herkese açık bir kategori. Son zamanlarda aktif olan tüm kullanıcılar bu kanala otomatik olarak eklensin mi?"
+          warning_1_group:
+            one: "%{group} grubundan %{count} kullanıcı otomatik olarak eklensin mi?"
+            other: "%{group} grubundan %{count} kullanıcı otomatik olarak eklensin mi?"
+          warning_2_groups:
+            one: "%{group1} ve %{group2} gruplarından %{count} kullanıcı otomatik olarak eklensin mi?"
+            other: "%{group1} ve %{group2} gruplarından %{count} kullanıcı otomatik olarak eklensin mi?"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                one {
+                      { userCount, plural,
+                          one {{groupName} ve {groupCount} gruptan daha {userCount} kullanıcı otomatik olarak eklensin mi?}
+                        other {{groupName} ve {groupCount} gruptan daha {userCount} kullanıcı otomatik olarak eklensin mi?}
+                      }
+                    }
+              other {
+                      { userCount, plural,
+                          one {{groupName} ve {groupCount} gruptan daha {userCount} kullanıcı otomatik olarak eklensin mi?}
+                        other {{groupName} ve {groupCount} gruptan daha {userCount} kullanıcı otomatik olarak eklensin mi?}
+                      }
+                    }
+            }
         choose_category:
           label: "Kategori seçin"
           none: "birini seçin..."
@@ -312,8 +399,14 @@ tr_TR:
         only_you: ":%{emoji}: ile tepki verdiniz"
         you_and_single_user: "Siz ve %{username}, :%{emoji} ile tepki verdiniz:"
         you_and_multiple_users: "Siz, %{commaSeparatedUsernames} ve %{username}, :%{emoji} ile tepki gösterdiniz:"
+        you_multiple_users_and_more:
+          one: "Siz, %{commaSeparatedUsernames} ve %{count} kişi daha :%{emoji}: ile tepki verdiniz"
+          other: "Siz, %{commaSeparatedUsernames} ve %{count} kişi daha :%{emoji}: ile tepki verdiniz"
         single_user: "%{username} :%{emoji}: ile tepki verdi"
         multiple_users: "%{commaSeparatedUsernames} ve %{username}, :%{emoji} ile tepki gösterdi:"
+        multiple_users_and_more:
+          one: "%{commaSeparatedUsernames} ve %{count} kişi daha :%{emoji}: ile tepki verdi"
+          other: "%{commaSeparatedUsernames} ve %{count} kişi daha :%{emoji}: ile tepki verdi"
       composer:
         toggle_toolbar: "Araç çubuğunu aç/kapat"
         italic_text: "vurgulanan yazı"
@@ -330,6 +423,8 @@ tr_TR:
       settings:
         channel_wide_mentions_label: "@all ve @here bahsetmelerine izin ver"
         channel_wide_mentions_description: "Kullanıcıların @all ile #%{channel} kanalının tüm üyelerine veya @here ile yalnızca o anda aktif olanlara bildirim göndermelerine izin verin"
+        channel_threading_label: "İleti dizisi"
+        channel_threading_description: "İleti dizisi etkinleştirildiğinde, bir sohbet mesajına verilen yanıtlar, ana kanalın yanında yer alacak ayrı bir konuşma oluşturur."
         auto_join_users_label: "Kullanıcıları otomatik olarak ekle"
         auto_join_users_info: "Son 3 ayda hangi kullanıcıların aktif olduğunu saatlik olarak kontrol edin. %{category} kategorisine erişimleri varsa onları bu kanala ekleyin."
         auto_join_users_info_no_category: "Son 3 ayda hangi kullanıcıların aktif olduğunu saatlik olarak kontrol edin. Seçilen kategoriye erişimleri varsa onları bu kanala ekleyin."
@@ -420,7 +515,13 @@ tr_TR:
           other: "%{commaSeparatedUsernames} ve %{count} kişi daha yazıyor"
       retention_reminders:
         public_none: "Kanal geçmişi süresiz olarak saklanır."
+        public:
+          one: "Kanal geçmişi %{count} gün boyunca saklanır."
+          other: "Kanal geçmişi %{count} gün boyunca saklanır."
         dm_none: "Kişisel sohbet geçmişi süresiz olarak saklanır."
+        dm:
+          one: "Kişisel sohbet geçmişi %{count} gün boyunca saklanır."
+          other: "Kişisel sohbet geçmişi %{count} gün boyunca saklanır."
       flags:
         off_topic: "Bu mesaj, kanal başlığı tarafından tanımlanan mevcut tartışma ile ilgili değildir ve muhtemelen başka bir yere taşınmalıdır."
         inappropriate: "Bu mesaj, makul bir kişinin saldırgan, taciz edici veya <a href=\"%{basePath}/guidelines\">topluluk kurallarımızı</a> ihlal ettiğini düşüneceği içerik içeriyor."
@@ -449,6 +550,7 @@ tr_TR:
         replies:
           one: "%{count} yanıt"
           other: "%{count} yanıt"
+        label: Konu
         close: "Konuyu Kapat"
         original_message:
           started_by: "Başlatan"

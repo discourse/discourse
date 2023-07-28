@@ -1,0 +1,36 @@
+<DModal
+  @title={{html-safe
+    (i18n
+      "admin.user.delete_posts.confirmation.title" username=@model.user.username
+    )
+  }}
+  @closeModal={{@closeModal}}
+>
+  <:body>
+    <p>{{html-safe
+        (i18n
+          "admin.user.delete_posts.confirmation.description"
+          username=@model.user.username
+          post_count=@model.user.post_count
+          text=this.text
+        )
+      }}</p>
+    <Input @type="text" @value={{this.value}} />
+  </:body>
+  <:footer>
+    <DButton
+      class="btn-danger"
+      @action={{@model.deleteAllPosts}}
+      @icon="trash-alt"
+      @disabled={{this.deleteDisabled}}
+      @translatedLabel={{i18n
+        "admin.user.delete_posts.confirmation.delete"
+        username=@model.user.username
+      }}
+    />
+    <DButton
+      @action={{@closeModal}}
+      @label="admin.user.delete_posts.confirmation.cancel"
+    />
+  </:footer>
+</DModal>

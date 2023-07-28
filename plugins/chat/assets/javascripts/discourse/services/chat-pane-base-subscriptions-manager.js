@@ -16,7 +16,7 @@ export function handleStagedMessage(channel, messagesManager, data) {
   stagedMessage.staged = false;
   stagedMessage.excerpt = data.chat_message.excerpt;
   stagedMessage.channel = channel;
-  stagedMessage.createdAt = data.chat_message.created_at;
+  stagedMessage.createdAt = new Date(data.chat_message.created_at);
   stagedMessage.cooked = data.chat_message.cooked;
 
   return stagedMessage;
@@ -191,9 +191,9 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
     if (message) {
       message.deletedAt = null;
     } else {
-      this.messagesManager.addMessages([
-        ChatMessage.create(this.args.channel, data.chat_message),
-      ]);
+      const newMessage = ChatMessage.create(this.model, data.chat_message);
+      newMessage.manager = this.messagesManager;
+      this.messagesManager.addMessages([newMessage]);
     }
   }
 

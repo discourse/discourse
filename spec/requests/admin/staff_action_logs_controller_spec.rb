@@ -27,6 +27,12 @@ RSpec.describe Admin::StaffActionLogsController do
           "action_id" => UserHistory.actions[:delete_topic],
         )
       end
+
+      describe "when limit params is invalid" do
+        include_examples "invalid limit params",
+                         "/admin/logs/staff_action_logs.json",
+                         described_class::INDEX_LIMIT
+      end
     end
 
     context "when logged in as an admin" do

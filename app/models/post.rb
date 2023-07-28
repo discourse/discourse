@@ -64,6 +64,7 @@ class Post < ActiveRecord::Base
   has_many :reviewables, as: :target, dependent: :destroy
 
   validates_with PostValidator, unless: :skip_validation
+  validates :edit_reason, length: { maximum: 1000 }
 
   after_commit :index_search
 
@@ -1320,6 +1321,7 @@ end
 #  index_posts_on_id_topic_id_where_not_deleted_or_empty  (id,topic_id) WHERE ((deleted_at IS NULL) AND (raw <> ''::text))
 #  index_posts_on_image_upload_id                         (image_upload_id)
 #  index_posts_on_reply_to_post_number                    (reply_to_post_number)
+#  index_posts_on_topic_id_and_created_at                 (topic_id,created_at)
 #  index_posts_on_topic_id_and_percent_rank               (topic_id,percent_rank)
 #  index_posts_on_topic_id_and_post_number                (topic_id,post_number) UNIQUE
 #  index_posts_on_topic_id_and_sort_order                 (topic_id,sort_order)

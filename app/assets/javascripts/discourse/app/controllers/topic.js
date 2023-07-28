@@ -35,6 +35,7 @@ import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { BookmarkFormData } from "discourse/lib/bookmark";
+import DeleteTopicConfirmModal from "discourse/components/modal/delete-topic-confirm";
 
 let customPostMessageCallbacks = {};
 
@@ -1569,10 +1570,7 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   deleteTopicModal() {
-    showModal("delete-topic-confirm", {
-      model: this.model,
-      title: "topic.actions.delete",
-    });
+    this.modal.show(DeleteTopicConfirmModal, { model: { topic: this.model } });
   },
 
   retryOnRateLimit(times, promise, topicId) {

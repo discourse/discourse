@@ -1084,4 +1084,22 @@ class ApplicationController < ActionController::Base
         end
       end
   end
+
+  def fetch_limit_from_params(params: self.params, default:, max:)
+    raise "default limit cannot be greater than max limit" if default.present? && default > max
+
+    if params.has_key?(:limit)
+      limit =
+        begin
+          Integer(params[:limit])
+        rescue ArgumentError
+          raise Discourse::InvalidParameters.new(:limit)
+        end
+
+      raise Discourse::InvalidParameters.new(:limit) if limit < 0 || limit > max
+      limit
+    else
+      default
+    end
+  end
 end

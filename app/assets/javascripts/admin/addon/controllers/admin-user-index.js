@@ -13,6 +13,7 @@ import getURL from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
+import DeletePostsConfirmationModal from "../components/modal/delete-posts-confirmation";
 
 export default class AdminUserIndexController extends Controller.extend(
   CanCheckEmails
@@ -20,6 +21,7 @@ export default class AdminUserIndexController extends Controller.extend(
   @service router;
   @service dialog;
   @service adminTools;
+  @service modal;
 
   originalPrimaryGroupId = null;
   customGroupIdsBuffer = null;
@@ -619,9 +621,8 @@ export default class AdminUserIndexController extends Controller.extend(
 
   @action
   showDeletePostsConfirmation() {
-    showModal("admin-delete-posts-confirmation", {
-      admin: true,
-      model: this.model,
+    this.modal.show(DeletePostsConfirmationModal, {
+      model: { user: this.model, deleteAllPosts: this.deleteAllPosts },
     });
   }
 

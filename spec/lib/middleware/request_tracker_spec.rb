@@ -677,6 +677,8 @@ RSpec.describe Middleware::RequestTracker do
     after { Middleware::RequestTracker.unregister_detailed_request_logger(logger) }
 
     it "can report data from anon cache" do
+      Middleware::AnonymousCache.enable_anon_cache
+
       cache = Middleware::AnonymousCache.new(app([200, {}, ["i am a thing"]]))
       tracker = Middleware::RequestTracker.new(cache)
 

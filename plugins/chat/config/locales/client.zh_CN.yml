@@ -115,7 +115,11 @@ zh_CN:
       join: "加入"
       last_visit: "上次访问"
       summarization:
+        title: "总结消息"
+        description: "选择以下选项，以总结在所需时间范围内发送的对话。"
         summarize: "摘要"
+        since:
+          other: "最后 %{count} 小时"
       mention_warning:
         dismiss: "忽略"
         cannot_see: "%{username} 无法访问此频道且未被通知。"
@@ -163,7 +167,7 @@ zh_CN:
       open_message: "在聊天中打开消息"
       placeholder_self: "做些记录"
       placeholder_channel: "在 %{channelName} 聊天"
-      placeholder_thread: "在话题中聊天"
+      placeholder_thread: "在聊天串中聊天"
       placeholder_users: "在 %{commaSeparatedNames} 聊天"
       placeholder_new_message_disallowed:
         archived: "频道已归档，你无法在此发送新信息。"
@@ -203,7 +207,7 @@ zh_CN:
       title_capitalized: "聊天"
       upload: "附加文件"
       upload_to_channel: "上传到 %{title}"
-      upload_to_thread: "上传到话题"
+      upload_to_thread: "上传到聊天串"
       uploaded_files:
         other: "%{count} 个文件"
       you_flagged: "您已举报此消息"
@@ -247,6 +251,15 @@ zh_CN:
           members: 成员
           settings: 设置
       new_message_modal:
+        title: 发送消息
+        add_user_long: <kbd>shift + 点击</kbd>或 <kbd>shift + enter</kbd><span>添加 @%{username}</span>
+        add_user_short: <span>添加用户</span>
+        open_channel: <span>打开频道</span>
+        default_search_placeholder: "#一个频道、@某人或任何内容"
+        default_channel_search_placeholder: "#一个频道"
+        default_user_search_placeholder: "@某人"
+        user_search_placeholder: "...添加更多用户"
+        disabled_user: "已禁用聊天功能"
         no_items: "无条目"
       channel_edit_name_slug_modal:
         title: 编辑频道
@@ -269,12 +282,22 @@ zh_CN:
         memberships_count:
           other: "%{count} 个成员"
       create_channel:
+        threading:
+          label: "启用聊天串"
         auto_join_users:
           public_category_warning: "%{category}是公共类别。是否自动将所有最近活跃的用户添加到此频道？"
           warning_1_group:
             other: "自动从 %{group} 添加 %{count} 用户？"
           warning_2_groups:
             other: "自动从%{group1}和%{group2}添加 %{count} 个用户？"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                other {
+                      { userCount, plural,
+                          other {是否自动添加 {userCount} 个来自 {groupName} 和 {groupCount} 个其他组的用户？}
+                      }
+                    }
+            }
         choose_category:
           label: "选择一个类别"
           none: "选择一个…"
@@ -320,6 +343,8 @@ zh_CN:
       settings:
         channel_wide_mentions_label: "允许 @all 和 @here 提及"
         channel_wide_mentions_description: "允许用户使用 @all 通知#%{channel} 的所有成员，或仅使用 @here 通知当前活跃的成员"
+        channel_threading_label: "串"
+        channel_threading_description: "启用聊天串后，对聊天消息的回复将创建一个单独的对话，该对话将与主频道并存。"
         auto_join_users_label: "自动添加用户"
         auto_join_users_info: "每小时检查哪些用户在过去3个月中是活跃的。如果他们有权限进入 %{category} 类别，就把他们添加到这个频道。"
         auto_join_users_info_no_category: "每小时检查哪些用户在过去 3 个月内处于活跃状态。如果他们有权访问所选类别，则将他们添加到此频道。"
@@ -329,6 +354,7 @@ zh_CN:
         followed: "已加入"
         mobile_notification_level: "移动推送通知"
         mute: "将频道设为免打扰"
+        threading_enabled: "已启用"
         threading_disabled: "已禁用"
         muted_on: "开"
         muted_off: "关"
@@ -340,6 +366,11 @@ zh_CN:
         admin_title: "管理员"
       admin:
         title: "聊天"
+        export_messages:
+          title: "导出聊天消息"
+          description: "目前只能导出过去 6 个月内的 10000 条最新消息。"
+          create_export: "创建导出"
+          export_has_started: "导出已开始。导出完成后，您将收到一条私信。"
       direct_messages:
         title: "个人聊天"
         new: "创建个人聊天"
@@ -428,12 +459,12 @@ zh_CN:
         no_results: "没有结果"
       thread:
         title: "标题"
-        view_thread: 查看对话
-        default_title: "话题"
+        view_thread: 查看聊天串
+        default_title: "聊天串"
         replies:
           other: "%{count} 个回复"
-        label: 话题
-        close: "关闭话题"
+        label: 聊天串
+        close: "关闭聊天串"
         original_message:
           started_by: "开始于"
         settings: "设置"
@@ -441,14 +472,16 @@ zh_CN:
         notifications:
           regular:
             title: "正常"
+            description: "您会在别人在聊天串里 @ 您或回复您时收到通知。"
           tracking:
             title: "跟踪"
+            description: "该聊天串的新回复计数将显示在聊天串列表和频道中。如果有人在此串中提及您的@name，您将会收到通知。"
         participants_other_count:
           other: "+%{count}"
       threads:
-        open: "打开主题"
+        open: "打开聊天串"
         list: "正在进行的讨论"
-        none: "你没有参与这个频道中的任何话题。"
+        none: "你没有参与这个频道中的任何聊天串。"
       draft_channel_screen:
         header: "新消息"
         cancel: "取消"

@@ -2040,11 +2040,11 @@ en:
       refresh_page: "Refresh page"
 
     summary:
-      in_progress: "Summarizing topic using AI..."
+      in_progress: "Summarizing topic using AI"
       summarized_on: "Summarized with AI on %{date}"
       model_used: "AI used: %{model}"
       outdated: "Summary is outdated"
-      outdated_posts: 
+      outdated_posts:
         one: "(%{count} post missing)"
         other: "(%{count} posts missing)"
       enabled_description: "You're viewing this topic top replies: the most interesting posts as determined by the community."
@@ -4817,7 +4817,7 @@ en:
               update: Update a topic. Change the title, category, tags, status, archetype, featured_link etc.
               delete: Delete a topic.
               read_lists: Read topic lists like top, new, latest, etc. RSS is also supported.
-              status: "Update a topic's status. Status: closed, archive, visisble, pinned. Enabled: true, false. Specify a category_id here and in the request payload to only allow status changes on topics in that category."
+              status: "Update a topic's status. Status: closed, archive, visible, pinned. Enabled: true, false. Specify a category_id here and in the request payload to only allow status changes on topics in that category."
             posts:
               edit: Edit any post or a specific one.
               delete: Delete a post.
@@ -5063,6 +5063,11 @@ en:
         title: "Customize"
         preview: "preview"
         explain_preview: "See the site with this theme enabled"
+        syntax_error: "Syntax Error"
+        settings_editor: "Settings Editor"
+        validation_settings_keys: "Each item must have only a 'setting' key and a 'value' key."
+        validation_settings_deleted: "These settings were deleted. Please restore them and try again."
+        validation_settings_added: "These settings were added. Please remove them and try again."
         save: "Save"
         new: "New"
         new_style: "New Style"
@@ -5101,6 +5106,7 @@ en:
           create: "Create"
           create_type: "Type"
           create_name: "Name"
+          save: "Save"
           long_title: "Amend colors, CSS and HTML contents of your site"
           edit: "Edit"
           edit_confirm: "This is a remote theme, if you edit CSS/HTML your changes will be erased next time you update the theme."
@@ -5116,6 +5122,7 @@ en:
           extra_files_upload: "Export theme to view these files."
           extra_files_remote: "Export theme or check the git repository to view these files."
           preview: "Preview"
+          settings_editor: "Settings Editor"
           show_advanced: "Show advanced fields"
           hide_advanced: "Hide advanced fields"
           hide_unused_fields: "Hide unused fields"

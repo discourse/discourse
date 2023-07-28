@@ -7,6 +7,7 @@
 fi:
   site_settings:
     chat_enabled: "Ota chat-lisäosa käyttöön."
+    enable_public_channels: "Käytä julkisia kanavia kategorioiden perusteella."
     chat_allowed_groups: "Näiden ryhmien käyttäjät voivat keskustella chatissa. Huomaa, että henkilökunnalla on aina chatin käyttöoikeus."
     chat_channel_retention_days: "Tavallisten kanavien chat-viestit säilytetään näin monta päivää. Viestit säilytetään ikuisesti, jos asetat arvoksi 0."
     chat_dm_retention_days: "Henkilökohtaisten chat-kanavien chat-viestit säilytetään näin monta päivää. Viestit säilytetään ikuisesti, jos asetat arvoksi 0."

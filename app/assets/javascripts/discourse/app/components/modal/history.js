@@ -29,6 +29,7 @@ export default class History extends Component {
   @tracked postRevision;
   @tracked viewMode = this.site?.mobileView ? "inline" : "side_by_side";
   @tracked bodyDiff;
+  @tracked initialLoad = true;
 
   constructor() {
     super(...arguments);
@@ -45,6 +46,7 @@ export default class History extends Component {
   get loadPreviousDisabled() {
     return (
       this.loading ||
+      !this.postRevision.previous_revision ||
       (!this.postRevision.previous_revision &&
         this.postRevision.current_revision <=
           this.postRevision.previous_revision)
@@ -170,6 +172,7 @@ export default class History extends Component {
     Post.loadRevision(postId, postVersion).then((result) => {
       this.postRevision = result;
       this.loading = false;
+      this.initialLoad = false;
     });
   }
 

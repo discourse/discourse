@@ -15,25 +15,9 @@ describe "Single thread in side panel", type: :system do
     sign_in(current_user)
   end
 
-  context "when enable_experimental_chat_threaded_discussions is disabled" do
-    fab!(:channel) { Fabricate(:chat_channel) }
-    before { SiteSetting.enable_experimental_chat_threaded_discussions = false }
-
-    it "does not open the side panel for a single thread" do
-      thread =
-        chat_thread_chain_bootstrap(channel: channel, users: [current_user, Fabricate(:user)])
-      chat_page.visit_channel(channel)
-      channel_page.hover_message(thread.original_message)
-      expect(page).not_to have_css(".chat-message-thread-btn")
-    end
-  end
-
   context "when threading_enabled is false for the channel" do
     fab!(:channel) { Fabricate(:chat_channel) }
-    before do
-      SiteSetting.enable_experimental_chat_threaded_discussions = true
-      channel.update!(threading_enabled: false)
-    end
+    before { channel.update!(threading_enabled: false) }
 
     it "does not open the side panel for a single thread" do
       thread =
@@ -44,12 +28,10 @@ describe "Single thread in side panel", type: :system do
     end
   end
 
-  context "when enable_experimental_chat_threaded_discussions is true and threading is enabled for the channel" do
+  context "when threading is enabled for the channel" do
     fab!(:user_2) { Fabricate(:user) }
     fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
     fab!(:thread) { chat_thread_chain_bootstrap(channel: channel, users: [current_user, user_2]) }
-
-    before { SiteSetting.enable_experimental_chat_threaded_discussions = true }
 
     context "when in full page" do
       context "when switching channel" do

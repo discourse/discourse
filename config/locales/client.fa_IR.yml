@@ -1536,8 +1536,7 @@ fa_IR:
       pause_notifications: "مکث کردن آگاه‌سازی‌ها"
       remove_status: "حذف وضعیت"
     user_tips:
-      primary: "فهمیدم!"
-      secondary: "این نکات را به من نشان نده"
+      button: "فهمیدم!"
       first_notification:
         title: "اولین آگاه‌سازی شما!"
         content: "آگاه‌سازی‌ها برای این است که هر آنچه در انجمن اتفاق می‌افتد را به شما اطلاع بدهد، مورد استفاده قرار می‌گیرد."
@@ -1613,10 +1612,11 @@ fa_IR:
       hide_forever: "نه ممنون"
       intro: "سلام! :heart_eyes: به نظر میاد شما از بحث لذت می‌برید، اما هنوز برای یک حساب کاربری ثبت نام نکرده‌اید."
     summary:
-      enabled_description: "شما خلاصه ای از این موضوع را می بینید: بالاترین‌ نوشته‌هایی که توسط انجمن انتخاب شده."
       description:
         one: "<b>%{count}</b> پاسخ داده شده."
         other: "<b>%{count}</b> پاسخ داده شده."
+      buttons:
+        hide: "پنهان کردن خلاصه"
       disable: "نمایش همه‌ی نوشته‌ها"
     deleted_filter:
       enabled_description: "این موضوع شامل نوشته‌های حذف شده‌ای است، که مخفی شده‌اند."
@@ -3108,6 +3108,9 @@ fa_IR:
       next: "بعدی (مکان‌نمای راست)"
       counter: "%curr% از %total%"
       close: "بستن (خروج)"
+    experimental_lightbox:
+      buttons:
+        close: "بستن (خروج)"
     cannot_render_video: این ویدیو قابل ارائه نیست، چون مرورگر شما از کدک پشتیبانی نمی‌کند.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -3428,6 +3431,9 @@ fa_IR:
             review:
               content: "بازنگری"
               pending_count: "%{count} در انتظار"
+      panels:
+        forum:
+          label: انجمن
     until: "تا وقتی که:"
     form_templates:
       errors:
@@ -4413,6 +4419,8 @@ fa_IR:
         recommended: "ما پیشنهاد میکنیم این متن را بر اساس نیاز های خود ویرایش کنید:"
         show_overriden: "تنها بازنویسی‌شده‌ها را نمایش بده"
         locale: "زبان:"
+        outdated:
+          dismiss: "رد کردن"
       settings:
         show_overriden: "تنها بازنویسی‌شده‌ها را نمایش بده"
         history: "مشاهده تاریخچه تغییر"

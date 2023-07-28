@@ -61,11 +61,6 @@ export default class ChatChannel {
   @tracked description;
   @tracked status;
   @tracked activeThread = null;
-  @tracked canDeleteOthers;
-  @tracked canDeleteSelf;
-  @tracked canFlag;
-  @tracked canModerate;
-  @tracked userSilenced;
   @tracked meta;
   @tracked chatableType;
   @tracked chatableUrl;
@@ -88,15 +83,9 @@ export default class ChatChannel {
     this.chatableUrl = args.chatable_url;
     this.chatableType = args.chatable_type;
     this.membershipsCount = args.memberships_count;
-    this.meta = args.meta;
     this.slug = args.slug;
     this.title = args.title;
     this.status = args.status;
-    this.canDeleteSelf = args.can_delete_self;
-    this.canDeleteOthers = args.can_delete_others;
-    this.canFlag = args.can_flag;
-    this.userSilenced = args.user_silenced;
-    this.canModerate = args.can_moderate;
     this.description = args.description;
     this.threadingEnabled = args.threading_enabled;
     this.autoJoinUsers = args.auto_join_users;
@@ -115,6 +104,7 @@ export default class ChatChannel {
 
     this.tracking = new ChatTrackingState(getOwner(this));
     this.lastMessage = args.last_message;
+    this.meta = args.meta;
   }
 
   get unreadThreadsCountSinceLastViewed() {
@@ -128,52 +118,24 @@ export default class ChatChannel {
     this.currentUserMembership.lastViewedAt = new Date();
   }
 
-  findIndexOfMessage(id) {
-    return this.messagesManager.findIndexOfMessage(id);
+  get canDeleteSelf() {
+    return this.meta.can_delete_self;
   }
 
-  findStagedMessage(id) {
-    return this.messagesManager.findStagedMessage(id);
+  get canDeleteOthers() {
+    return this.meta.can_delete_others;
   }
 
-  findMessage(id) {
-    return this.messagesManager.findMessage(id);
+  get canFlag() {
+    return this.meta.can_flag;
   }
 
-  findFirstMessageOfDay(date) {
-    return this.messagesManager.findFirstMessageOfDay(date);
+  get userSilenced() {
+    return this.meta.user_silenced;
   }
 
-  addMessages(messages) {
-    this.messagesManager.addMessages(messages);
-  }
-
-  clearMessages() {
-    this.messagesManager.clearMessages();
-  }
-
-  removeMessage(message) {
-    this.messagesManager.removeMessage(message);
-  }
-
-  lastUserMessage(user) {
-    return this.messagesManager.findLastUserMessage(user);
-  }
-
-  get messages() {
-    return this.messagesManager.messages;
-  }
-
-  set messages(messages) {
-    this.messagesManager.messages = messages;
-  }
-
-  get canLoadMoreFuture() {
-    return this.messagesManager.canLoadMoreFuture;
-  }
-
-  get canLoadMorePast() {
-    return this.messagesManager.canLoadMorePast;
+  get canModerate() {
+    return this.meta.can_moderate;
   }
 
   get escapedTitle() {
@@ -190,10 +152,6 @@ export default class ChatChannel {
 
   get routeModels() {
     return [this.slugifiedTitle, this.id];
-  }
-
-  get selectedMessages() {
-    return this.messages.filter((message) => message.selected);
   }
 
   get isDirectMessageChannel() {
@@ -232,26 +190,6 @@ export default class ChatChannel {
     return this.meta.can_join_chat_channel;
   }
 
-  get visibleMessages() {
-    return this.messages.filter((message) => message.visible);
-  }
-
-  set details(details) {
-    this.canDeleteOthers = details.can_delete_others ?? false;
-    this.canDeleteSelf = details.can_delete_self ?? false;
-    this.canFlag = details.can_flag ?? false;
-    this.canModerate = details.can_moderate ?? false;
-    if (details.can_load_more_future !== undefined) {
-      this.messagesManager.canLoadMoreFuture = details.can_load_more_future;
-    }
-    if (details.can_load_more_past !== undefined) {
-      this.messagesManager.canLoadMorePast = details.can_load_more_past;
-    }
-    this.userSilenced = details.user_silenced ?? false;
-    this.status = details.channel_status;
-    this.channelMessageBusLastId = details.channel_message_bus_last_id;
-  }
-
   createStagedThread(message) {
     const clonedMessage = message.duplicate();
 
@@ -263,7 +201,7 @@ export default class ChatChannel {
     });
 
     clonedMessage.thread = thread;
-    this.threadsManager.add(this, thread);
+    clonedMessage.manager = thread.messagesManager;
     thread.messagesManager.addMessages([clonedMessage]);
 
     return thread;
@@ -273,16 +211,18 @@ export default class ChatChannel {
     message.id = guid();
     message.staged = true;
     message.draft = false;
-    message.createdAt ??= moment.utc().format();
+    message.createdAt = new Date();
     message.channel = this;
 
     if (message.inReplyTo) {
       if (!this.threadingEnabled) {
-        this.addMessages([message]);
+        this.messagesManager.addMessages([message]);
       }
     } else {
-      this.addMessages([message]);
+      this.messagesManager.addMessages([message]);
     }
+
+    message.manager = this.messagesManager;
   }
 
   canModifyMessages(user) {
@@ -321,9 +261,5 @@ export default class ChatChannel {
     } else {
       this._lastMessage = ChatMessage.create(this, message);
     }
-  }
-
-  clearSelectedMessages() {
-    this.selectedMessages.forEach((message) => (message.selected = false));
   }
 }

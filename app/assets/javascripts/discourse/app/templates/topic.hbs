@@ -72,6 +72,8 @@
                   filterable=true
                   categoryId=this.buffered.category_id
                   minimum=this.minimumRequiredTags
+                  filterPlaceholder="tagging.choose_for_topic"
+                  useHeaderFilter=true
                 }}
               />
             {{/if}}
@@ -593,6 +595,5 @@
     @selectText={{action "selectText"}}
     @editPost={{action "editPost"}}
     @topic={{this.model}}
-    @composerVisible={{this.composer.visible}}
   />
 </DiscourseTopic>

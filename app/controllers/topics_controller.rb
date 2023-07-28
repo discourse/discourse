@@ -1062,13 +1062,17 @@ class TopicsController < ApplicationController
     if tag_name = params[:tag_id]
       tag_name = DiscourseTagging.visible_tags(guardian).where(name: tag_name).pluck(:name).first
     end
+
     topic_scope =
       if params[:category_id].present?
-        category_ids = [params[:category_id].to_i]
-        if ActiveModel::Type::Boolean.new.cast(params[:include_subcategories])
-          category_ids =
-            category_ids.concat(Category.where(parent_category_id: params[:category_id]).pluck(:id))
-        end
+        category_id = params[:category_id].to_i
+
+        category_ids =
+          if ActiveModel::Type::Boolean.new.cast(params[:include_subcategories])
+            Category.subcategory_ids(category_id)
+          else
+            [category_id]
+          end
 
         category_ids &= guardian.allowed_category_ids
         if category_ids.blank?

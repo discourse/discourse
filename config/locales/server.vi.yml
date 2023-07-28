@@ -1197,7 +1197,6 @@ vi:
     title_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho tên chủ đề."
     body_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho nội dung bài viết."
     allow_uppercase_posts: "Cho phép viết hoa tất cả các chữ trong tên chủ đề hoặc nội dung bài viết."
-    max_consecutive_replies: "Số lượng bài đăng mà người dùng phải thực hiện liên tiếp trong một chủ đề trước khi bị ngăn không cho thêm câu trả lời khác."
     enable_filtered_replies_view: 'Nút "(n) trả lời" thu gọn tất cả các bài đăng khác và chỉ hiển thị bài đăng hiện tại và các câu trả lời của nó.'
     title_fancy_entities: "Chuyển đổi các ký tự ASCII phổ biến thành các thực thể HTML ưa thích trong tiêu đề chủ đề, xem SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Chiều dài tối thiểu của tiêu đề trước khi kiểm tra trùng chủ đề."

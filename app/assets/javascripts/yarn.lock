@@ -1940,12 +1940,12 @@
   resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
   integrity sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==
 
-a11y-dialog@7.5.2:
-  version "7.5.2"
-  resolved "https://registry.yarnpkg.com/a11y-dialog/-/a11y-dialog-7.5.2.tgz#8174d3f71a05d8d5a02ebae515384c747910391c"
-  integrity sha512-zfWtVvrbGbP3AFnEJ1aJFtu7GvedgjOEKbkyEUSeaNWDzmFJk9O5nuolDQrRDyRDE5fqSJRiBJtD5bUYKveoUg==
+a11y-dialog@8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/a11y-dialog/-/a11y-dialog-8.0.0.tgz#e080be9b0bca2a3c22a526da3f4bca00c0e221ed"
+  integrity sha512-O0u7j+5bWik8B0SEmAJYZBgiVerGP3bvgtLeYVwv03Y2x5j/nqcRpZSibSjUWwmJ3rouo1M51Ly5i1didwLMgA==
   dependencies:
-    focusable-selectors "^0.4.0"
+    focusable-selectors "^0.8.0"
 
 abab@^2.0.6:
   version "2.0.6"
@@ -3784,10 +3784,10 @@ ember-cache-primitive-polyfill@^1.0.1:
     ember-compatibility-helpers "^1.2.1"
     silent-error "^1.1.1"
 
-ember-cached-decorator-polyfill@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/ember-cached-decorator-polyfill/-/ember-cached-decorator-polyfill-1.0.1.tgz#320abc0fe45338ee7c54777e32353023c48775c5"
-  integrity sha512-VDgrpIJ6rDDHIfkYrsFR1BM3fpcC0+zFWIOsX0qY44zPrIXjhQWVXs2iVXLIPHprSgf+tFQ3ESxwDscpeRe/0A==
+ember-cached-decorator-polyfill@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/ember-cached-decorator-polyfill/-/ember-cached-decorator-polyfill-1.0.2.tgz#26445056ebee3776c340e28652ce59be73dd3958"
+  integrity sha512-hUX6OYTKltAPAu8vsVZK02BfMTV0OUXrPqvRahYPhgS7D0I6joLjlskd7mhqJMcaXLywqceIy8/s+x8bxF8bpQ==
   dependencies:
     "@embroider/macros" "^1.8.3"
     "@glimmer/tracking" "^1.1.2"
@@ -5180,10 +5180,10 @@ flatted@^3.1.0:
   resolved "https://registry.yarnpkg.com/flatted/-/flatted-3.2.7.tgz#609f39207cb614b89d0765b477cb2d437fbf9787"
   integrity sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==
 
-focusable-selectors@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/focusable-selectors/-/focusable-selectors-0.4.0.tgz#c93092bfe65c7cf7ef52aed82fb6f8df31072459"
-  integrity sha512-tc/236hUU3xemsRLu1RKhRQ5UWHjRM9iJTli1zdac43h7b1biRSgG0mILM0qrcsKaGCHcOPJ6NKbk12ouKHLpw==
+focusable-selectors@^0.8.0:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/focusable-selectors/-/focusable-selectors-0.8.1.tgz#ed50e1ace402a3769c203525cea616c80111ac76"
+  integrity sha512-QXOebaidkRK27TmfboyrJZwzNPYtvs01itWrXmSc7rd8/ORql9ZiM1fkQ1IZKcCjYp4J/lWCBkFLxuupvt3y9w==
 
 follow-redirects@^1.0.0:
   version "1.15.2"
@@ -6521,7 +6521,7 @@ json-stable-stringify-without-jsonify@^1.0.1:
   resolved "https://registry.yarnpkg.com/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz#9db7b59496ad3f3cfef30a75142d2d930ad72651"
   integrity sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==
 
-json-stable-stringify@^1.0.0, json-stable-stringify@^1.0.1:
+json-stable-stringify@^1.0.0, json-stable-stringify@^1.0.1, json-stable-stringify@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/json-stable-stringify/-/json-stable-stringify-1.0.2.tgz#e06f23128e0bbe342dc996ed5a19e28b57b580e0"
   integrity sha512-eunSSaEnxV12z+Z73y/j5N37/In40GK4GmsSy+tEHJMxknvqnA7/djeYtAgW0GsWHUfg+847WJjKaEylk2y09g==
@@ -7324,10 +7324,10 @@ node-fetch@^2.6.0:
   dependencies:
     whatwg-url "^5.0.0"
 
-node-fetch@^3.3.1:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-3.3.1.tgz#b3eea7b54b3a48020e46f4f88b9c5a7430d20b2e"
-  integrity sha512-cRVc/kyto/7E5shrWca1Wsea4y6tL9iYJE5FBCius3JQfb/4P4I295PfhgbJQBLTx6lATE4z+wK0rPM4VS2uow==
+node-fetch@^3.3.2:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-3.3.2.tgz#d1e889bacdf733b4ff3b2b243eb7a12866a0b78b"
+  integrity sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==
   dependencies:
     data-uri-to-buffer "^4.0.0"
     fetch-blob "^3.1.4"
@@ -7702,10 +7702,10 @@ pascalcase@^0.1.1:
   resolved "https://registry.yarnpkg.com/pascalcase/-/pascalcase-0.1.1.tgz#b363e55e8006ca6fe21784d2db22bd15d7917f14"
   integrity sha512-XHXfu/yOQRy9vYOtUDVMN60OEJjW013GoObG1o+xwQTpB9eYJX/BjXMsdW13ZDPruFhYYn0AG22w0xgQMwl3Nw==
 
-patch-package@^7.0.2:
-  version "7.0.2"
-  resolved "https://registry.yarnpkg.com/patch-package/-/patch-package-7.0.2.tgz#c01589bb6964854b5210506a5845d47900641f5a"
-  integrity sha512-PMYfL8LXxGIRmxXLqlEaBxzKPu7/SdP13ld6GSfAUJUZRmBDPp8chZs0dpzaAFn9TSPnFiMwkC6PJt6pBiAl8Q==
+patch-package@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/patch-package/-/patch-package-8.0.0.tgz#d191e2f1b6e06a4624a0116bcb88edd6714ede61"
+  integrity sha512-da8BVIhzjtgScwDJ2TtKsfT5JFWz1hYoBl9rUQ1f38MC2HwnEIkK8VN3dKMKcP7P7bvvgzNDbfNHtx3MsQb5vA==
   dependencies:
     "@yarnpkg/lockfile" "^1.1.0"
     chalk "^4.1.2"
@@ -7713,6 +7713,7 @@ patch-package@^7.0.2:
     cross-spawn "^7.0.3"
     find-yarn-workspace-root "^2.0.0"
     fs-extra "^9.0.0"
+    json-stable-stringify "^1.0.2"
     klaw-sync "^6.0.0"
     minimist "^1.2.6"
     open "^7.4.2"
@@ -8435,10 +8436,10 @@ sane@^5.0.1:
     minimist "^1.1.1"
     walker "~1.0.5"
 
-sass@^1.64.0:
-  version "1.64.0"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.64.0.tgz#9ca8d0acb1a704b86b7f1197dc310f568fb34638"
-  integrity sha512-m7YtAGmQta9uANIUJwXesAJMSncqH+3INc8kdVXs6eV6GUC8Qu2IYKQSN8PRLgiQfpca697G94klm2leYMxSHw==
+sass@^1.64.1:
+  version "1.64.1"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.64.1.tgz#6a46f6d68e0fa5ad90aa59ce025673ddaa8441cf"
+  integrity sha512-16rRACSOFEE8VN7SCgBu1MpYCyN7urj9At898tyzdXFhC+a+yOX5dXwAR7L8/IdPJ1NB8OYoXmD55DM30B2kEQ==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
     immutable "^4.0.0"
@@ -9069,10 +9070,10 @@ terser-webpack-plugin@^5.3.7:
     serialize-javascript "^6.0.1"
     terser "^5.16.8"
 
-terser@^5.16.8, terser@^5.19.1, terser@^5.3.0:
-  version "5.19.1"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.19.1.tgz#dbd7231f224a9e2401d0f0959542ed74d76d340b"
-  integrity sha512-27hxBUVdV6GoNg1pKQ7Z5cbR6V9txPVyBA+FQw3BaZ1Wuzvztce5p156DaP0NVZNrMZZ+6iG9Syf7WgMNKDg2Q==
+terser@^5.16.8, terser@^5.19.2, terser@^5.3.0:
+  version "5.19.2"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.19.2.tgz#bdb8017a9a4a8de4663a7983f45c506534f9234e"
+  integrity sha512-qC5+dmecKJA4cpYxRa5aVkKehYsQKc+AHeKl0Oe62aYjBL8ZA33tTljktDHJSaxxMnbI5ZYw+o/S2DxxLu8OfA==
   dependencies:
     "@jridgewell/source-map" "^0.3.3"
     acorn "^8.8.2"

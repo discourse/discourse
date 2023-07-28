@@ -1,7 +1,5 @@
 import { test } from "qunit";
-
-import { click, settled, visit, waitUntil } from "@ember/test-helpers";
-
+import { click, settled, visit, waitFor } from "@ember/test-helpers";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Sidebar - Narrow Desktop", function (needs) {
@@ -27,12 +25,9 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
     const bodyElement = document.querySelector("body");
     bodyElement.style.width = "767px";
 
-    await waitUntil(
-      () => document.querySelector(".btn-sidebar-toggle.narrow-desktop"),
-      {
-        timeout: 5000,
-      }
-    );
+    await waitFor(".btn-sidebar-toggle.narrow-desktop", {
+      timeout: 5000,
+    });
     await click(".btn-sidebar-toggle");
 
     assert.ok(
@@ -47,7 +42,7 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
     );
 
     bodyElement.style.width = "1200px";
-    await waitUntil(() => document.querySelector("#d-sidebar"), {
+    await waitFor("#d-sidebar", {
       timeout: 5000,
     });
     assert.ok(exists("#d-sidebar"), "wide sidebar is displayed");
@@ -62,16 +57,13 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
     const bodyElement = document.querySelector("body");
     bodyElement.style.width = "767px";
 
-    await waitUntil(
-      () => document.querySelector(".btn-sidebar-toggle.narrow-desktop"),
-      {
-        timeout: 5000,
-      }
-    );
+    await waitFor(".btn-sidebar-toggle.narrow-desktop", {
+      timeout: 5000,
+    });
     await click(".btn-sidebar-toggle");
 
     bodyElement.style.width = "1200px";
-    await waitUntil(() => document.querySelector("#d-sidebar"), {
+    await waitFor("#d-sidebar", {
       timeout: 5000,
     });
     await click(".header-dropdown-toggle.current-user");

@@ -1,7 +1,6 @@
 .tippy-box[data-theme="user-tip"] {
   background-color: var(--tertiary);
   color: var(--secondary);
-  border-color: var(--tertiary);
 
   .btn-flat {
     color: var(--secondary);
@@ -53,23 +52,8 @@
   }
 }
 
-.tippy-box[data-theme~="user-tips"][data-placement^="left"]
-  > .tippy-svg-arrow
-  > svg {
-  left: 12px;
-}
-
-.tippy-box[data-theme~="user-tips"][data-placement^="top"]
-  > .tippy-svg-arrow
-  > svg {
-  top: 12px;
-}
-
-.tippy-box[data-theme~="user-tips"][data-placement^="bottom"]
-  > .tippy-svg-arrow
-  > svg {
-  top: -14px;
-  left: -1px;
+.tippy-box[data-placement^="left"] > .tippy-svg-arrow {
+  right: -1px;
 }
 
 .tippy-box[data-theme~="user-tips"] > .tippy-svg-arrow:after,
