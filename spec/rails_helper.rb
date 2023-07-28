@@ -149,6 +149,8 @@ module TestSetup
     BadgeGranter.disable_queue
 
     OmniAuth.config.test_mode = false
+
+    Middleware::AnonymousCache.disable_anon_cache
   end
 end
 

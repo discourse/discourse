@@ -106,7 +106,9 @@ RSpec.describe ContentSecurityPolicy do
 
       script_srcs = parse(policy)["script-src"]
       expect(script_srcs).to include("https://www.googletagmanager.com/gtm.js")
-      expect(script_srcs.to_s).to include("nonce-")
+      # nonce is added by the GtmScriptNonceInjector middleware to prevent the
+      # nonce from getting cached by AnonymousCache
+      expect(script_srcs.to_s).not_to include("nonce-")
     end
 
     it "allowlists CDN assets when integrated" do

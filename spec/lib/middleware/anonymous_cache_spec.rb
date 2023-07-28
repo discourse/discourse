@@ -3,6 +3,8 @@
 RSpec.describe Middleware::AnonymousCache do
   let(:middleware) { Middleware::AnonymousCache.new(lambda { |_| [200, {}, []] }) }
 
+  before { Middleware::AnonymousCache.enable_anon_cache }
+
   def env(opts = {})
     create_request_env(path: opts.delete(:path) || "http://test.com/path?bla=1").merge(opts)
   end
