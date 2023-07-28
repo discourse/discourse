@@ -1,4 +1,4 @@
-import { module, skip, test } from "qunit";
+import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
@@ -43,7 +43,7 @@ module(
 
     let model;
 
-    skip("renders passed json model object into string in the ace editor", async function (assert) {
+    test("renders passed json model object into string in the ace editor", async function (assert) {
       await render(hbs`<ThemeSettingsEditor @model={{hash
         model=(hash
          settings=(array
