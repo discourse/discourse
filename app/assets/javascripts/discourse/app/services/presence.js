@@ -266,6 +266,7 @@ export default class PresenceService extends Service {
     this._presentProxies = new Map();
     this._subscribedProxies = new Map();
     this._initialDataRequests = new Map();
+    this._previousPresentButInactiveChannels = new Set();
 
     if (this.currentUser) {
       window.addEventListener("beforeunload", this._beaconLeaveAll);
@@ -512,6 +513,7 @@ export default class PresenceService extends Service {
 
     try {
       const presentChannels = [];
+      const presentButInactiveChannels = new Set();
       const channelsToLeave = queue
         .filter((e) => e.type === "leave")
         .map((e) => e.channel);
@@ -524,13 +526,13 @@ export default class PresenceService extends Service {
         ) {
           presentChannels.push(channelName);
         } else {
-          // The user is not present. Update the proxies and add the channel to the leave list.
-          Array.from(proxies).forEach((p) => {
-            this._removePresent(p);
-          });
-          channelsToLeave.push(channelName);
+          presentButInactiveChannels.add(channelName);
+          if (!this._previousPresentButInactiveChannels.has(channelName)) {
+            channelsToLeave.push(channelName);
+          }
         }
       }
+      this._previousPresentButInactiveChannels = presentButInactiveChannels;
 
       if (
         queue.length === 0 &&
