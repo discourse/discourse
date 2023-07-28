@@ -129,12 +129,13 @@ html.composer-open {
       align-items: center;
       width: auto;
       max-width: 100%;
-      min-width: 0;
+      min-width: 0; // allows shrinking when needed
 
       .action-title {
         display: flex;
         align-items: center;
         line-height: normal;
+        min-width: 0;
 
         .topic-link,
         .user-link,
