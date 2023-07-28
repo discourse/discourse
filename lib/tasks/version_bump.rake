@@ -169,6 +169,7 @@ def with_clean_worktree(origin_branch)
     git "worktree", "add", path, "origin/#{origin_branch}"
     Dir.chdir(path) { yield } # rubocop:disable Discourse/NoChdir
   ensure
+    puts "Cleaning up temporary worktree..."
     git "worktree", "remove", "--force", path, silent: true, allow_failure: true
     FileUtils.rm_rf(path)
   end
@@ -342,5 +343,50 @@ task "version_bump:major_stable_merge", [:version_bump_ref] do |t, args|
     fastforward(base: base, branch: branch)
     stage_tags([stable_release_commit])
     push_tags([stable_release_commit])
+  end
+end
+
+desc "Stage the merge of a stable version bump into the stable branch. A PR will be created for approval, then the script will merge to `stable`. Should be passed the ref of the major version bump commit (output from the version_bump:major_stable_prepare rake task)"
+task "version_bump:stage_security_fixes", [:base] do |t, args|
+  base = args[:base]
+  raise "Unknown base: #{base.inspect}" unless %w[stable main].include?(base)
+
+  fix_refs = ENV["SECURITY_FIX_REFS"]&.split(",").map(&:strip)
+  raise "No branches specified in SECURITY_FIX_REFS env" if fix_refs.nil? || fix_refs.empty?
+
+  fix_refs.each do |ref|
+    if !ref.include?("/")
+      raise "Ref #{ref} did not specify an origin. Please specify the origin, e.g. privatemirror/mybranch"
+    end
+  end
+
+  puts "Staging security fixes for #{base} branch: #{fix_refs.inspect}"
+
+  branch = "security/#{base}-security-fixes"
+
+  with_clean_worktree(base) do
+    git "branch", "-D", branch if ref_exists?(branch)
+    git "checkout", "-b", branch
+
+    fix_refs.each do |ref|
+      origin, origin_branch = ref.split("/", 2)
+      git "fetch", origin, origin_branch
+
+      first_commit_on_branch = git("log", "--format=%H", "origin/#{base}..#{ref}").strip
+      author = git("log", "-n", "1", "--format=%an <%ae>", first_commit_on_branch).strip
+      message = git("log", "-n", "1", "--format=%B", first_commit_on_branch).strip
+
+      git "merge", "--squash", ref
+      git "commit", "--author", author, "-m", message
+    end
+
+    puts "Finished merging commits into a locally-staged #{branch} branch. Git log is:"
+    puts git("log", "origin/#{base}..#{branch}")
+
+    confirm "Check the log above. Ready to push this branch to the origin and create a PR?"
+    git("push", "-f", "--set-upstream", "origin", branch)
+
+    make_pr(base: base, branch: branch, title: "Security fixes for #{base}")
+    fastforward(base: base, branch: branch)
   end
 end
