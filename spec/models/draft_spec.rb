@@ -5,6 +5,8 @@ RSpec.describe Draft do
 
   fab!(:post) { Fabricate(:post) }
 
+  it { is_expected.to have_many(:upload_references).dependent(:delete_all) }
+
   describe "system user" do
     it "can not set drafts" do
       # fake a sequence
