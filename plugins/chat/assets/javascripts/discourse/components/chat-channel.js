@@ -427,9 +427,8 @@ export default class ChatChannel extends Component {
   @action
   scrollToLatestMessage() {
     if (this.messagesLoader.canLoadMoreFuture) {
-      this.fetchMessages({ fetch_from_last_read: true });
+      this.fetchMessages();
     } else if (this.messagesManager.messages.length > 0) {
-      this._ignoreNextScroll = true;
       this.scrollToBottom(this.scrollable);
     }
   }
