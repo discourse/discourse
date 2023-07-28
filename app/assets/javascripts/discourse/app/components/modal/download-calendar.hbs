@@ -12,7 +12,7 @@
             @name="select-calendar"
             @value="ics"
             @selection={{this.selectedCalendar}}
-            {{on "change" (fn this.selectCalendar "ics")}}
+            @onChange={{fn this.selectCalendar "ics"}}
           />
           {{i18n "download_calendar.save_ics"}}
         </label>
@@ -24,7 +24,7 @@
             @name="select-calendar"
             @value="google"
             @selection={{this.selectedCalendar}}
-            {{on "change" (fn this.selectCalendar "google")}}
+            @onChange={{fn this.selectCalendar "google"}}
           />
           {{i18n "download_calendar.save_google"}}
         </label>
