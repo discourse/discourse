@@ -16,7 +16,7 @@ RSpec.describe "tasks/version_bump" do
   let(:local_path) { "#{tmpdir}/local-repo" }
 
   before do
-    ENV["UNSAFE_VERSION_BUMP_TEST_MODE"] = "1"
+    ENV["RUNNING_VERSION_BUMP_IN_RSPEC_TESTS"] = "1"
 
     Rake::Task.clear
     Discourse::Application.load_tasks
@@ -49,7 +49,7 @@ RSpec.describe "tasks/version_bump" do
 
   after do
     FileUtils.remove_entry(tmpdir)
-    ENV.delete("UNSAFE_SKIP_VERSION_BUMP_INTERACTIONS")
+    ENV.delete("RUNNING_VERSION_BUMP_IN_RSPEC_TESTS")
   end
 
   it "can bump the beta version with version_bump:beta" do
@@ -134,9 +134,9 @@ RSpec.describe "tasks/version_bump" do
       end
 
       # Version numbers in version.rb are correct at all commits
-      expect(run "git", "show", "HEAD", "lib/version.rb").to include('STRING = "3.3.0.beta1-dev"')
-      expect(run "git", "show", "HEAD~1", "lib/version.rb").to include('STRING = "3.2.0.beta1"')
-      expect(run "git", "show", "HEAD~2", "lib/version.rb").to include('STRING = "3.2.0.beta1-dev"')
+      expect(run "git", "show", "HEAD:lib/version.rb").to include('STRING = "3.3.0.beta1-dev"')
+      expect(run "git", "show", "HEAD~1:lib/version.rb").to include('STRING = "3.2.0.beta1"')
+      expect(run "git", "show", "HEAD~2:lib/version.rb").to include('STRING = "3.2.0.beta1-dev"')
 
       # No changes to stable branch
       expect(run("git", "log", "--pretty=%s", "stable").lines.map(&:strip)).to eq(
@@ -217,9 +217,9 @@ RSpec.describe "tasks/version_bump" do
       )
 
       # Check all the files from both fixes are present
-      expect(run("git", "show", "main", "somefile.txt")).to include("contents\n")
-      expect(run("git", "show", "main", "firstfile.txt")).to include("contents\n")
-      expect(run("git", "show", "main", "secondfile.txt")).to include("contents\n")
+      expect(run("git", "show", "main:somefile.txt")).to eq("contents")
+      expect(run("git", "show", "main:firstfile.txt")).to eq("contents")
+      expect(run("git", "show", "main:secondfile.txt")).to eq("contents")
     end
   end
 end

@@ -5,7 +5,7 @@ def dry_run?
 end
 
 def test_mode?
-  ENV["UNSAFE_VERSION_BUMP_TEST_MODE"] == "1"
+  ENV["RUNNING_VERSION_BUMP_IN_RSPEC_TESTS"] == "1"
 end
 
 class PlannedTag
