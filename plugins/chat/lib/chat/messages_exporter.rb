@@ -5,7 +5,7 @@ module Chat
     def chat_message_export(&block)
       # perform 1 db query per month:
       now = Time.now
-      from = oldest_message_date
+      from = Chat::Message.minimum(:created_at)
       while from <= now
         export(from, from + 1.month, &block)
         from = from + 1.month
@@ -35,10 +35,6 @@ module Chat
     end
 
     private
-
-    def oldest_message_date
-      Chat::Message.order(:created_at).pick(:created_at)
-    end
 
     def export(from, to)
       Chat::Message
