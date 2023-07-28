@@ -70,11 +70,11 @@
                   </span>
                 </a>
               <% end %>
-              <% if t.tags %>
+              <% if tags = t.visible_tags(guardian) %>
                 <div class="discourse-tags">
-                  <% t.tags.each_with_index do |tag, index| %>
+                  <% tags.each_with_index do |tag, index| %>
                     <a href='<%= tag.full_url %>' class='discourse-tag'><%= tag.name %></a>
-                    <% if index < t.tags.size - 1 %>,&nbsp;<% end %>
+                    <% if index < tags.size - 1 %>,&nbsp;<% end %>
                   <% end %>
                 </div>
               <% end %>

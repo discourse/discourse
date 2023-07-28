@@ -2035,6 +2035,10 @@ class Topic < ActiveRecord::Base
     end
   end
 
+  def visible_tags(guardian)
+    tags.reject { |tag| guardian.hidden_tag_names.include?(tag[:name]) }
+  end
+
   private
 
   def invite_to_private_message(invited_by, target_user, guardian)
