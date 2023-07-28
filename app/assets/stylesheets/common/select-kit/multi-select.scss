@@ -59,11 +59,11 @@
       .select-kit-header--filter {
         display: flex;
         flex-wrap: wrap;
-        margin: -0.25em;
-        margin-bottom: -0.45em;
+        margin: -0.35em;
+        margin-left: -0.25em;
         position: relative;
         .selected-choice {
-          margin: 0 0.25em 0.25em 0;
+          margin: 0.125em 0.25em 0.125em 0;
           padding: 0.2em 0.3em;
           font-size: var(--font-down-1);
 
@@ -78,14 +78,12 @@
           width: auto;
           margin-left: 0.25em;
           position: static;
-          min-height: 28px;
+          min-height: 30px;
           &.is-expanded {
             padding: 0;
           }
           .filter-input {
-            font-size: var(--font-down-1);
             min-height: auto;
-            margin-top: -2px; // better vertical alignment
           }
         }
       }
