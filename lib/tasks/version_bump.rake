@@ -39,7 +39,8 @@ end
 
 def parse_current_version
   version = read_version_rb[/STRING = "(.*)"/, 1]
-  puts "Parsed current version: #{version}"
+  raise "Unable to parse current version" if version.nil?
+  puts "Parsed current version: #{version.inspect}"
   version
 end
 
@@ -152,7 +153,7 @@ def push_tags(commits)
   end
 
   confirm "Ready to push tags #{tag_names.join(", ")} to origin?"
-  tag_names.each { |tag_name| git "push", "-f", "origin", tag_name }
+  tag_names.each { |tag_name| git "push", "-f", "origin", "refs/tags/#{tag_name}" }
 end
 
 def with_clean_worktree(origin_branch)
@@ -182,25 +183,43 @@ task "version_bump:beta" do
 
   with_clean_worktree(base) do
     current_version = parse_current_version
-    raise "Expected current version to end in -dev" if !current_version.end_with?("-dev")
 
-    beta_release_version = current_version.sub("-dev", "")
-    next_dev_version = current_version.sub(/beta(\d+)/) { "beta#{$1.to_i + 1}" }
+    commits =
+      if current_version.start_with?("3.1")
+        # Legacy strategy - no `-dev` suffix
+        next_version = current_version.sub(/beta(\d+)/) { "beta#{$1.to_i + 1}" }
 
-    commits = [
-      PlannedCommit.new(
-        version: beta_release_version,
-        tags: [
-          PlannedTag.new(name: "beta", message: "latest beta release"),
-          PlannedTag.new(name: "latest-release", message: "latest release"),
-          PlannedTag.new(
-            name: "v#{beta_release_version}",
-            message: "version #{beta_release_version}",
+        [
+          PlannedCommit.new(
+            version: next_version,
+            tags: [
+              PlannedTag.new(name: "beta", message: "latest beta release"),
+              PlannedTag.new(name: "latest-release", message: "latest release"),
+              PlannedTag.new(name: "v#{next_version}", message: "version #{next_version}"),
+            ],
           ),
-        ],
-      ),
-      PlannedCommit.new(version: next_dev_version),
-    ]
+        ]
+      else
+        raise "Expected current version to end in -dev" if !current_version.end_with?("-dev")
+
+        beta_release_version = current_version.sub("-dev", "")
+        next_dev_version = current_version.sub(/beta(\d+)/) { "beta#{$1.to_i + 1}" }
+
+        [
+          PlannedCommit.new(
+            version: beta_release_version,
+            tags: [
+              PlannedTag.new(name: "beta", message: "latest beta release"),
+              PlannedTag.new(name: "latest-release", message: "latest release"),
+              PlannedTag.new(
+                name: "v#{beta_release_version}",
+                message: "version #{beta_release_version}",
+              ),
+            ],
+          ),
+          PlannedCommit.new(version: next_dev_version),
+        ]
+      end
 
     make_commits(commits: commits, branch: branch, base: base)
     fastforward(base: base, branch: branch)
@@ -219,7 +238,7 @@ task "version_bump:minor_stable" do
   with_clean_worktree(base) do
     current_version = parse_current_version
     if current_version !~ /^(\d+)\.(\d+)\.(\d+)$/
-      raise "Expected current stable version to be in the form X.Y.Z"
+      raise "Expected current stable version to be in the form X.Y.Z. It was #{current_version}"
     end
 
     new_version = current_version.sub(/\.(\d+)\z/) { ".#{$1.to_i + 1}" }
@@ -292,17 +311,25 @@ task "version_bump:major_stable_prepare", [:next_major_version_number] do |t, ar
     puts <<~MSG
       The #{base} branch is now ready for a stable release.
       Now run this command to merge the release into the stable branch:
-        bin/rake "version_bump:major_stable_merge[#{final_beta_release.ref}]"
+        bin/rake "version_bump:major_stable_merge[v#{beta_release_version}]"
     MSG
   end
 end
 
-desc "Stage the merge of a stable version bump into the stable branch. A PR will be created for approval, then the script will merge to `stable`. Should be passed the ref of the major version bump commit (output from the version_bump:major_stable_prepare rake task)"
+desc <<~DESC
+  Stage the merge of a stable version bump into the stable branch.
+  A PR will be created for approval, then the script will merge to `stable`.
+  Should be passed the ref of the beta release which should be promoted to stable
+  (output from the version_bump:major_stable_prepare rake task)
+  e.g.:
+    bin/rake "version_bump:major_stable_merge[v3.1.0.beta12]"
+DESC
 task "version_bump:major_stable_merge", [:version_bump_ref] do |t, args|
   merge_ref = args[:version_bump_ref]
-  unless merge_ref =~ /\A\w+\z/ && ref_exists?(merge_ref)
-    raise "Unknown version_bump_ref: #{merge_ref.inspect}"
-  end
+  raise "Must pass version_bump_ref" unless merge_ref.present?
+
+  git "fetch", "origin", merge_ref
+  raise "Unknown version_bump_ref: #{merge_ref.inspect}" unless ref_exists?(merge_ref)
 
   base = "stable"
   branch = "version_bump/stable"
@@ -346,7 +373,13 @@ task "version_bump:major_stable_merge", [:version_bump_ref] do |t, args|
   end
 end
 
-desc "Stage the merge of a stable version bump into the stable branch. A PR will be created for approval, then the script will merge to `stable`. Should be passed the ref of the major version bump commit (output from the version_bump:major_stable_prepare rake task)"
+desc <<~DESC
+  squash-merge many security fixes into a single branch for review/merge.
+  Pass a list of comma-separated branches in the SECURITY_FIX_REFS env var, including the remote name.
+  Pass the name of the destination branch as the argument of the rake task.
+  e.g.
+    SECURITY_FIX_REFS='privatemirror/mybranch1,privatemirror/mybranch2' bin/rake "version_bump:stage_security_fixes[main]"
+DESC
 task "version_bump:stage_security_fixes", [:base] do |t, args|
   base = args[:base]
   raise "Unknown base: #{base.inspect}" unless %w[stable main].include?(base)
@@ -372,7 +405,7 @@ task "version_bump:stage_security_fixes", [:base] do |t, args|
       origin, origin_branch = ref.split("/", 2)
       git "fetch", origin, origin_branch
 
-      first_commit_on_branch = git("log", "--format=%H", "origin/#{base}..#{ref}").strip
+      first_commit_on_branch = git("log", "--format=%H", "origin/#{base}..#{ref}").lines.last.strip
       author = git("log", "-n", "1", "--format=%an <%ae>", first_commit_on_branch).strip
       message = git("log", "-n", "1", "--format=%B", first_commit_on_branch).strip
 

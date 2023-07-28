@@ -181,4 +181,45 @@ RSpec.describe "tasks/version_bump" do
       expect(run("git", "log", "--pretty=%s", "-1", "v3.2.0").strip).to eq("Bump version to v3.2.0")
     end
   end
+
+  it "can stage a PR of multiple security fixes using version_bump:stage_security_fixes" do
+    Dir.chdir(origin_path) do
+      run "git", "checkout", "-b", "security-fix-one"
+
+      File.write("firstfile.txt", "contents")
+      run "git", "add", "firstfile.txt"
+      run "git", "commit", "-m", "security fix one, commit one"
+      File.write("secondfile.txt", "contents")
+      run "git", "add", "secondfile.txt"
+      run "git", "commit", "-m", "security fix one, commit two"
+
+      run "git", "checkout", "main"
+      run "git", "checkout", "-b", "security-fix-two"
+      File.write("somefile.txt", "contents")
+      run "git", "add", "somefile.txt"
+      run "git", "commit", "-m", "security fix two"
+    end
+
+    Dir.chdir(local_path) do
+      output =
+        capture_stdout do
+          ENV["SECURITY_FIX_REFS"] = "origin/security-fix-one,origin/security-fix-two"
+          Rake::Task["version_bump:stage_security_fixes"].invoke("main")
+        ensure
+          ENV.delete("SECURITY_FIX_REFS")
+        end
+    end
+
+    Dir.chdir(origin_path) do
+      # Check each fix has been added as a single commit, with the message matching the first commit on the branch
+      expect(run("git", "log", "--pretty=%s", "main").lines.map(&:strip)).to eq(
+        ["security fix two", "security fix one, commit one", "Initial commit"],
+      )
+
+      # Check all the files from both fixes are present
+      expect(run("git", "show", "main", "somefile.txt")).to include("contents\n")
+      expect(run("git", "show", "main", "firstfile.txt")).to include("contents\n")
+      expect(run("git", "show", "main", "secondfile.txt")).to include("contents\n")
+    end
+  end
 end
