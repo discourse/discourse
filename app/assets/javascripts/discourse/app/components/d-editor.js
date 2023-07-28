@@ -18,13 +18,15 @@ import I18n from "I18n";
 import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
 import { SKIP } from "discourse/lib/autocomplete";
-import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
+import {
+  linkSeenHashtagsInContext,
+  setupHashtagAutocomplete,
+} from "discourse/lib/hashtag-autocomplete";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { getRegister } from "discourse-common/lib/get-owner";
 import { isTesting } from "discourse-common/config/environment";
-import { linkSeenHashtags } from "discourse/lib/link-hashtags";
 import { linkSeenMentions } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import loadScript from "discourse/lib/load-script";
@@ -438,9 +440,10 @@ export default Component.extend(TextareaTextManipulation, {
       if (this.siteSettings.enable_diffhtml_preview) {
         const cookedElement = document.createElement("div");
         cookedElement.innerHTML = cooked;
-
-        // TODO (martin)  FIGURE
-        linkSeenHashtags(cookedElement);
+        linkSeenHashtagsInContext(
+          this.site.hashtag_configurations["topic-composer"],
+          cookedElement
+        );
         linkSeenMentions(cookedElement, this.siteSettings);
         resolveCachedShortUrls(this.siteSettings, cookedElement);
         loadOneboxes(
