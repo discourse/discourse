@@ -3,7 +3,6 @@
 module PageObjects
   module Pages
     class User < PageObjects::Pages::Base
-      STAFF_INFO_SECTION_SELECTOR = ".staff-counters"
       def visit(user)
         page.visit("/u/#{user.username}")
         self
@@ -25,16 +24,9 @@ module PageObjects
         page.has_current_path?("/u/#{user.username}/messages/warnings")
       end
 
-      def staff_info_section
-        begin
-          page.find(".staff-counters")
-        rescue Capybara::ElementNotFound
-          nil
-        end
-      end
-
       def click_staff_info_warnings_link(user, warnings_count: 0)
-        staff_info_section.find("a[href='/u/#{user.username}/messages/warnings']").click
+        staff_counters = page.find(".staff-counters")
+        staff_counters.find("a[href='/u/#{user.username}/messages/warnings']").click
         self
       end
 
@@ -55,7 +47,7 @@ module PageObjects
       end
 
       def staff_info_flagged_posts_counter
-        staff_info_section&.find(".flagged-posts")
+        page.find(".staff-counters .flagged-posts")
       end
 
       def has_staff_info_flagged_posts_count?(count:)
@@ -63,7 +55,7 @@ module PageObjects
       end
 
       def has_no_staff_info_flagged_posts_counter?
-        page.has_no_css?("#{STAFF_INFO_SECTION_SELECTOR} .flagged-posts")
+        page.has_no_css?(".staff-counters .flagged-posts")
       end
     end
   end
