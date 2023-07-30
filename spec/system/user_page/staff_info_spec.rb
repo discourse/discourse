@@ -20,13 +20,12 @@ describe "Viewing user staff info as an admin", type: :system do
 
   context "for flagged posts" do
     before do
-      ReviewableFlaggedPost
-        .statuses
-        .except(:approved)
-        .keys
-        .map do |status|
-          Fabricate(:reviewable_flagged_post, status: status, target_created_by: user)
-        end
+      %i[disagree ignore delete_and_ignore].each do |review_action|
+        PostActionCreator
+          .off_topic(admin, Fabricate(:post, user: user))
+          .reviewable
+          .perform(admin, review_action)
+      end
     end
 
     context "when there are no approved flagged posts" do

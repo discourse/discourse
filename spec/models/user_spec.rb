@@ -2011,14 +2011,13 @@ RSpec.describe User do
             .reviewable
             .perform(admin, review_action)
         end
-        PostActionCreator
-          .off_topic(admin, Fabricate(:post, user: user))
-          .reviewable
-          .perform(admin, :agree_and_keep)
-        PostActionCreator
-          .off_topic(admin, Fabricate(:post, user: user))
-          .reviewable
-          .perform(admin, :delete_and_agree)
+        %i[agree_and_keep delete_and_agree].each do |approval_action|
+          PostActionCreator
+            .off_topic(admin, Fabricate(:post, user: user))
+            .reviewable
+            .perform(admin, approval_action)
+        end
+
         expect(user.number_of_flagged_posts).to eq 2
       end
 
