@@ -3,6 +3,7 @@
 module PageObjects
   module Pages
     class User < PageObjects::Pages::Base
+      STAFF_INFO_SECTION_SELECTOR = ".staff-counters"
       def visit(user)
         page.visit("/u/#{user.username}")
         self
@@ -55,6 +56,14 @@ module PageObjects
 
       def staff_info_flagged_posts_counter
         staff_info_section&.find(".flagged-posts")
+      end
+
+      def has_staff_info_flagged_posts_count?(count:)
+        staff_info_flagged_posts_counter.text.to_i == count
+      end
+
+      def has_no_staff_info_flagged_posts_counter?
+        page.has_no_css?("#{STAFF_INFO_SECTION_SELECTOR} .flagged-posts")
       end
     end
   end
