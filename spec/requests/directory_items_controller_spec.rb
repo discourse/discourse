@@ -33,6 +33,16 @@ RSpec.describe DirectoryItemsController do
     include_examples "invalid limit params", "/directory_items.json", described_class::PAGE_SIZE
   end
 
+  context "with page parameter" do
+    it "only accepts valid page numbers" do
+      get "/directory_items.json", params: { period: "all", page: -1 }
+      expect(response.status).to eq(400)
+
+      get "/directory_items.json", params: { period: "all", page: 0 }
+      expect(response.status).to eq(200)
+    end
+  end
+
   context "with exclude_groups parameter" do
     before { DirectoryItem.refresh! }
 
