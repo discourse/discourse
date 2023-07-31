@@ -266,6 +266,7 @@ export default class PresenceService extends Service {
     this._presentProxies = new Map();
     this._subscribedProxies = new Map();
     this._initialDataRequests = new Map();
+    this._previousPresentButInactiveChannels = new Set();
 
     if (this.currentUser) {
       window.addEventListener("beforeunload", this._beaconLeaveAll);
@@ -512,6 +513,7 @@ export default class PresenceService extends Service {
 
     try {
       const presentChannels = [];
+      const presentButInactiveChannels = new Set();
       const channelsToLeave = queue
         .filter((e) => e.type === "leave")
         .map((e) => e.channel);
@@ -524,11 +526,19 @@ export default class PresenceService extends Service {
         ) {
           presentChannels.push(channelName);
         } else {
-          channelsToLeave.push(channelName);
+          presentButInactiveChannels.add(channelName);
+          if (!this._previousPresentButInactiveChannels.has(channelName)) {
+            channelsToLeave.push(channelName);
+          }
         }
       }
+      this._previousPresentButInactiveChannels = presentButInactiveChannels;
 
-      if (queue.length === 0 && presentChannels.length === 0) {
+      if (
+        queue.length === 0 &&
+        presentChannels.length === 0 &&
+        channelsToLeave.length === 0
+      ) {
         return;
       }
 
