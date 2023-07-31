@@ -3516,7 +3516,7 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(400)
       end
 
-      it "can mark sub-categories unread" do
+      it "can dismiss sub-categories posts as read" do
         sub = Fabricate(:category, parent_category_id: category.id)
 
         topic.update!(category_id: sub.id)
@@ -3536,6 +3536,31 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(200)
         expect(TopicUser.get(post1.topic, post1.user).last_read_post_number).to eq(2)
+      end
+
+      it "can dismiss sub-subcategories posts as read" do
+        SiteSetting.max_category_nesting = 3
+
+        sub_category = Fabricate(:category, parent_category_id: category.id)
+        sub_subcategory = Fabricate(:category, parent_category_id: sub_category.id)
+
+        topic.update!(category_id: sub_subcategory.id)
+
+        post_1 = create_post(user: user, topic_id: topic.id)
+        post_2 = create_post(topic_id: topic.id)
+
+        put "/topics/bulk.json",
+            params: {
+              category_id: category.id,
+              include_subcategories: true,
+              filter: "unread",
+              operation: {
+                type: "dismiss_posts",
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(TopicUser.get(post_1.topic, post_1.user).last_read_post_number).to eq(2)
       end
 
       it "can mark tag topics unread" do
