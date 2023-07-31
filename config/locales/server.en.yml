@@ -697,7 +697,7 @@ en:
 
       :handshake: **Contribute** by commenting, sharing your own perspective, asking questions, or offering feedback in the discussion. Before replying or starting new topics, please review the [Community Guidelines](%{base_path}/faq).
 
-      > If you need help or have a suggestion, feel free to ask in [#feedback](%{base_path}/c/site-feedback) or [contact the admins](%{base_path}/about).
+      > If you need help or have a suggestion, feel free to ask in %{feedback_category} or [contact the admins](%{base_path}/about).
 
   admin_quick_start_title: "Admin Guide: Getting Started"
 
