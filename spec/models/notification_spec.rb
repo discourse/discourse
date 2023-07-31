@@ -159,11 +159,11 @@ RSpec.describe Notification do
         }.to change(user, :total_unread_notifications)
       end
 
-      it "doesn't increase unread_private_messages" do
+      it "doesn't increase unread_high_priority_notifications" do
         expect {
           Fabricate(:notification, user: user)
           user.reload
-        }.not_to change(user, :unread_private_messages)
+        }.not_to change(user, :unread_high_priority_notifications)
       end
     end
 
@@ -180,13 +180,6 @@ RSpec.describe Notification do
           Fabricate(:notification, user: user)
           user.reload
         }.to change(user, :total_unread_notifications)
-      end
-
-      it "increases unread_private_messages" do
-        expect {
-          Fabricate(:private_message_notification, user: user)
-          user.reload
-        }.to change(user, :unread_private_messages)
       end
 
       it "increases unread_high_priority_notifications" do
@@ -283,11 +276,11 @@ RSpec.describe Notification do
       )
       expect(@post.user.unread_notifications).to eq(0)
       expect(@post.user.total_unread_notifications).to eq(0)
-      expect(@target.unread_private_messages).to eq(1)
+      expect(@target.unread_high_priority_notifications).to eq(1)
 
       Fabricate(:post, topic: @topic, user: @topic.user)
       @target.reload
-      expect(@target.unread_private_messages).to eq(1)
+      expect(@target.unread_high_priority_notifications).to eq(1)
     end
   end
 
@@ -351,9 +344,6 @@ RSpec.describe Notification do
 
       expect(user.unread_notifications).to eq(0)
       expect(user.total_unread_notifications).to eq(3)
-      # NOTE: because of deprecation this will be equal to unread_high_priority_notifications,
-      #       to be removed in 2.5
-      expect(user.unread_private_messages).to eq(2)
       expect(user.unread_high_priority_notifications).to eq(2)
     end
   end

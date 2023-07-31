@@ -2341,9 +2341,6 @@ RSpec.describe User do
           .first
 
       expect(message.data[:unread_notifications]).to eq(1)
-      # NOTE: because of deprecation this will be equal to unread_high_priority_notifications,
-      #       to be removed in 2.5
-      expect(message.data[:unread_private_messages]).to eq(2)
       expect(message.data[:unread_high_priority_notifications]).to eq(2)
     end
 
