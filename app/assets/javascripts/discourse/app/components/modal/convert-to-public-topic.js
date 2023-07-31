@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import I18n from "I18n";
 
 export default class ConvertToPublicTopic extends Component {
   @service appEvents;
@@ -23,7 +24,7 @@ export default class ConvertToPublicTopic extends Component {
       this.saving = false;
       this.args.closeModal();
     } catch (e) {
-      this.flash = e;
+      this.flash = I18n.t("generic_error");
       this.saving = false;
     }
   }

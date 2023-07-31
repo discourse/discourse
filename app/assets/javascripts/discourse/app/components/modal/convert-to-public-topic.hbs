@@ -8,7 +8,10 @@
     <div class="instructions">
       {{i18n "topic.make_public.choose_category"}}
     </div>
-    <CategoryChooser @value={{this.publicCategoryId}} />
+    <CategoryChooser
+      @value={{this.publicCategoryId}}
+      @onChange={{action (mut this.publicCategoryId)}}
+    />
   </:body>
   <:footer>
     <DButton
