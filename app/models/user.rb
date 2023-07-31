@@ -1202,13 +1202,6 @@ class User < ActiveRecord::Base
     user_warnings.count
   end
 
-  def flags_received_count
-    posts
-      .includes(:post_actions)
-      .where("post_actions.post_action_type_id" => PostActionType.flag_types_without_custom.values)
-      .count
-  end
-
   def private_topics_count
     topics_allowed.where(archetype: Archetype.private_message).count
   end
@@ -1539,8 +1532,14 @@ class User < ActiveRecord::Base
   end
 
   def number_of_flagged_posts
-    ReviewableFlaggedPost.where(target_created_by: self.id).count
+    posts
+      .with_deleted
+      .includes(:post_actions)
+      .where("post_actions.post_action_type_id" => PostActionType.flag_types_without_custom.values)
+      .where("post_actions.agreed_at IS NOT NULL")
+      .count
   end
+  alias_method :flags_received_count, :number_of_flagged_posts
 
   def number_of_rejected_posts
     ReviewableQueuedPost.rejected.where(target_created_by_id: self.id).count
