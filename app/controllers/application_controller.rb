@@ -1092,7 +1092,7 @@ class ApplicationController < ActionController::Base
   def fetch_int_from_params(key, params: self.params, default:, min: 0, max: nil)
     key = key.to_sym
 
-    if default.present? && (max.present? && default > max) || (min.present? && default < min)
+    if default.present? && ((max.present? && default > max) || (min.present? && default < min))
       raise "default #{key.inspect} is not between #{min.inspect} and #{max.inspect}"
     end
 
