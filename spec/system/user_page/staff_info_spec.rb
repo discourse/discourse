@@ -45,13 +45,13 @@ describe "Viewing user staff info as an admin", type: :system do
         end
       end
 
-      it "should show the right count in the flagged-posts staff counter" do
+      it "should display a flagged-posts staff counter with the right count and link to user's flagged posts" do
         user_page.visit(user)
-        expect(user_page).to have_staff_info_flagged_posts_count(count: 2)
-      end
 
-      it "should have the right link to user's flagged posts in the flagged-posts staff counter" do
-        user_page.visit(user).staff_info_flagged_posts_counter.click
+        expect(user_page).to have_staff_info_flagged_posts_count(count: 2)
+
+        user_page.staff_info_flagged_posts_counter.click
+
         expect(user_page).to have_reviewable_flagged_posts_path(user)
       end
     end
