@@ -25,12 +25,10 @@ export default class BootstrapModeNotice extends Component {
     );
   }
 
-  @computed("siteSettings.admin_quick_start_topic_id")
   get adminGuideUrl() {
     return getURL(`/t/-/${this.siteSettings.admin_quick_start_topic_id}`);
   }
 
-  @computed("adminGuideUrl")
   get userTipContent() {
     return I18n.t("user_tips.admin_guide.content", {
       admin_guide_url: this.adminGuideUrl,
