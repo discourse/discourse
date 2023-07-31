@@ -58,7 +58,7 @@ class DirectoryItemsController < ApplicationController
     end
 
     result = result.includes(:user_stat) if period_type == DirectoryItem.period_types[:all]
-    page = params[:page].to_i
+    page = fetch_int_from_params(:page, default: 0)
 
     user_ids = nil
     if params[:name].present?
