@@ -287,8 +287,13 @@
   <div class="content-body current-badge-actions">
     <div>
       <LinkTo @route="badges.show" @model={{this}}>
-        {{number this.grant_count}}
-        {{i18n "badges.awarded"}}
+        {{html-safe
+          (i18n
+            "badges.awarded"
+            count=this.displayCount
+            number=(number this.displayCount)
+          )
+        }}
       </LinkTo>
     </div>
   </div>
