@@ -332,7 +332,7 @@ GEM
     puma (6.3.0)
       nio4r (~> 2.0)
     racc (1.7.1)
-    rack (2.2.7)
+    rack (2.2.8)
     rack-mini-profiler (3.1.0)
       rack (>= 1.2.0)
     rack-protection (3.0.6)
