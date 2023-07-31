@@ -139,8 +139,8 @@ export default class EditSlowMode extends Component {
       );
       this.args.model.topic.set("slow_mode_seconds", seconds);
       this.args.closeModal();
-    } catch (e) {
-      this.flash = e;
+    } catch {
+      this.flash = I18n.t("generic_error");
     } finally {
       this.saveDisabled = false;
     }
