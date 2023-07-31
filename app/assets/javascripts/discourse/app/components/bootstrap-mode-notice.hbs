@@ -5,12 +5,7 @@
   {{did-insert this.setupUserTip}}
 >
   {{#if this.showUserTip}}
-    <UserTip
-      @id="admin_guide"
-      @buttonLabel="user_tips.admin_guide.button"
-      @buttonIcon="link"
-      @onDismiss={{this.routeToAdminGuide}}
-    />
+    <UserTip @id="admin_guide" @content={{this.userTipContent}} />
   {{else}}
     <DTooltip @theme="user-tip" @arrow={{true}}>
       <div class="user-tip__container">
@@ -18,7 +13,7 @@
           {{i18n "user_tips.admin_guide.title"}}
         </div>
         <div class="user-tip__content">
-          {{i18n "user_tips.admin_guide.content"}}
+          {{i18n "user_tips.admin_guide.content_no_url"}}
         </div>
       </div>
     </DTooltip>
