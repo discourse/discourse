@@ -252,17 +252,18 @@ a.reply-to-tab {
   }
 }
 
-.suggested-topics {
+.more-content-wrapper {
+  &:not(.mobile-single-list) {
+    .more-topics-title {
+      display: none;
+    }
+  }
+}
+
+.more-content-topics {
   clear: left;
   padding: 20px 0 15px 0;
-  th.views,
-  td.views,
-  td.activity,
-  th.activity,
-  th.likes,
-  td.likes {
-    display: none;
-  }
+
   a.badge-category,
   a.badge-category-parent {
     font-size: var(--font-down-1);

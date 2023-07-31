@@ -1,10 +1,12 @@
 <div
   id="related-messages"
-  class="suggested-topics"
+  class="more-content-topics {{if this.hidden 'hidden'}}"
   role="complementary"
   aria-labelledby="related-messages-title"
+  data-mobile-title={{i18n "related_messages.pill"}}
+  data-list-id={{this.listId}}
 >
-  <h3 class="suggested-topics-title" id="related-messages-title">
+  <h3 id="related-messages-title" class="more-topics-title">
     {{i18n "related_messages.title"}}
   </h3>
 

@@ -362,11 +362,11 @@ pre.codeblock-buttons:hover {
   }
 }
 
-.suggested-topics {
-  margin: 4.5em 0 1em;
+.more-content-topics {
+  margin-top: 2em;
 
-  table {
-    margin-top: 10px;
+  .suggested-topics-message {
+    display: none;
   }
 }
 
