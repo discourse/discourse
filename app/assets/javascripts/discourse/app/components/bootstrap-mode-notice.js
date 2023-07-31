@@ -1,5 +1,5 @@
 import getURL from "discourse-common/lib/get-url";
-import { action, computed } from "@ember/object";
+import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
