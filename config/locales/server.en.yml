@@ -2218,9 +2218,9 @@ en:
 
     disable_system_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
 
-    disable_category_edit_notifications: "Disable notifications for topic category edits."
+    disable_category_edit_notifications: "Disable notifications for topic category edits. This includes topics which are 'published' (e.g. shared drafts)."
 
-    disable_tags_edit_notifications: "Disable notifications for topic tag edits."
+    disable_tags_edit_notifications: "Disable notifications for topic tag edits. This includes topics which are 'published' (e.g. shared drafts)."
 
     notification_consolidation_threshold: "Number of liked or membership request notifications received before the notifications are consolidated into a single one. Set to 0 to disable."
 
