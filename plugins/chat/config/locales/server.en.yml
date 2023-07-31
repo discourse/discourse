@@ -68,7 +68,7 @@ en:
         one: "Message is too short, must have a minimum of %{count} character."
         other: "Message is too short, must have a minimum of %{count} characters."
       message_too_long:
-        one: "Message is too long, messages must be a maximum of %{count} characters."
+        one: "Message is too long, messages must be a maximum of %{count} character."
         other: "Message is too long, messages must be a maximum of %{count} characters."
       draft_too_long: "Draft is too long."
       max_reactions_limit_reached: "New reactions are not allowed on this message."
