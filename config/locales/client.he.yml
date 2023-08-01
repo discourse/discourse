@@ -336,9 +336,11 @@ he:
       aria_label: "סינון לפי תקופה"
     related_messages:
       title: "הודעות קשורות"
+      pill: "הודעות קשורות"
       see_all: 'להציג את <a href="%{path}">כל ההודעות</a> מאת ‎@%{username}‎…'
     suggested_topics:
-      title: "נושאים מוצעים"
+      title: "נושאים חדשים ולא נקראו"
+      pill: "מוצע"
       pm_title: "הודעות מוצעות"
     about:
       simple_title: "על אודות"
@@ -1959,8 +1961,8 @@ he:
         content: "הינה כמה נושאים שלדעתנו יעניין אותך לקרוא בהמשך."
       admin_guide:
         title: "ברוך בואך לאתר החדש שלך!"
-        content: "כדאי לקרוא את המדריך למנהלים בטרם בניית האתר והקהילה שלך."
-        button: "קדימה!"
+        content: "<a href='%{admin_guide_url}'>כדאי לקרוא את המדריך למנהלים</a> כדי להמשיך לבנות את האתר והקהילה שלך."
+        content_no_url: "כדאי לקרוא את המדריך למנהלים בטרם בניית האתר והקהילה שלך."
     loading: "טוען..."
     errors:
       prev_page: "בזמן הניסיון לטעון"
@@ -2030,7 +2032,7 @@ he:
       no_internet: "אין חיבור לאינטרנט."
       refresh_page: "רענון עמוד"
     summary:
-      in_progress: "הנושא מסוכם באמצעות בינה מלאכותית…"
+      in_progress: "הנושא מסוכם באמצעות בינה מלאכותית"
       summarized_on: "סוכם עם בינה מלאכותית ב־%{date}"
       model_used: "בינה מלאכותית בשימוש: %{model}"
       outdated: "הסיכום מיושן"
@@ -4223,12 +4225,11 @@ he:
         two: "+%{count} נוספים"
         many: "+%{count} נוספים"
         other: "+%{count} נוספים"
-      granted:
-        one: "הוענק"
-        two: "%{count} הוענקו"
-        many: "%{count} הוענקו"
-        other: "%{count} הוענקו"
-      awarded: הוענק
+      awarded:
+        one: "הוענק אחד"
+        two: "הוענקו %{number}"
+        many: "הוענקו %{number}"
+        other: "הוענקו %{number}"
       select_badge_for_title: נא לבחור עיטור לשימוש בכותרת שלך
       none: "(ללא)"
       successfully_granted: "העיטור %{badge} הוענק בהצלחה למשתמש %{username}"
@@ -5117,6 +5118,11 @@ he:
         title: "התאמה אישית"
         preview: "תצוגה מקדימה"
         explain_preview: "הצגת האתר עם ערכת העיצוב הזאת מופעלת"
+        syntax_error: "שגיאת תחביר"
+        settings_editor: "עורך הגדרות"
+        validation_settings_keys: "לכל פריט חייב להיות רק מפתח ‚הגדרה’ ומפתח ‚ערך’."
+        validation_settings_deleted: "ההגדרות האלה נמחקו. נא לשחזר אותן ולנסות שוב."
+        validation_settings_added: "ההגדרות האלה נוספו. נא להסיר אותן ולנסות שוב."
         save: "שמור"
         new: "חדש"
         new_style: "סגנון חדש"
@@ -5154,6 +5160,7 @@ he:
           create: "יצירה"
           create_type: "סוג"
           create_name: "שם"
+          save: "שמירה"
           long_title: "התאמת צבעים, CSS ותכני HTML של האתר שלך"
           edit: "עריכה"
           edit_confirm: "זו ערכת עיצוב מרוחקת, אם ערכת CSS/HTML השינויים שלך יימחקו עם העדכון הבא של ערכת העיצוב."
@@ -5169,6 +5176,7 @@ he:
           extra_files_upload: "יש לייצא את ערכת העיצוב כדי לצפות בקבצים האלה."
           extra_files_remote: "יש לייצא את ערכת הנושא או לבדוק את מאגר ה־git כדי לצפות בקבצים אלה."
           preview: "תצוגה מקדימה"
+          settings_editor: "עורך הגדרות"
           show_advanced: "הצגת שדות מתקדמים"
           hide_advanced: "הסתרת שדות מתקדמים"
           hide_unused_fields: "הסתרת שדות שאינם בשימוש"

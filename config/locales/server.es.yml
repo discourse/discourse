@@ -628,20 +628,6 @@ es:
   staff_category_description: "Categoría privada para debates entre moderadores y administradores. Los temas solo serán visibles para miembros del equipo."
   discourse_welcome_topic:
     title: "¡Te damos la bienvenida a %{site_title}! :wave:"
-    body: |
-      Nos alegra mucho que te hayas unido a nosotros.
-
-      %{site_info_quote}
-
-      Aquí tienes algunas cosas que puedes hacer para empezar:
-
-      :speaking_head: **Preséntate** añadiendo tu foto e información sobre ti y tus intereses a [tu perfil](%{base_path}/my/preferences/account). ¿Qué te gustaría que te preguntaran?
-
-      :open_book: **Conoce a la comunidad** [navegando por los debates](%{base_path}/top) que ya se están produciendo aquí. Cuando encuentres una publicación interesante, informativa o entretenida, utiliza :heart: para mostrar tu agradecimiento o apoyo.
-
-      :handshake: **Contribuye** comentando, compartiendo tu propia perspectiva, haciendo preguntas u ofreciendo tu opinión en el debate. Antes de responder o iniciar nuevos temas, revisa las [Directrices de la Comunidad](%{base_path}/faq).
-
-      > Si necesitas ayuda o tienes alguna sugerencia, no dudes en preguntar en [#feedback](%{base_path}/c/site-feedback) o [contacta con los administradores](%{base_path}/about).
   admin_quick_start_title: "Guía del administrador: Primeros pasos"
   category:
     topic_prefix: "Acerca de la categoría %{category}"
@@ -2012,8 +1998,6 @@ es:
     permalink_normalizations: "Aplicar la siguiente expresión regular antes de hacer coincidir los permalinks, por ejemplo: /(topic.*)\\?.*/\\1 despojará las cadenas de consulta de las rutas de los temas. El formato es regex+string usa \\1 etc. para acceder a capturas"
     global_notice: "Mostrar a todos los visitantes un mensaje global para URGENCIAS o EMERGENCIAS que no se pueda ocultar. Deja este campo en blanco para quitarlo (puedes usar HTML)."
     disable_system_edit_notifications: "Desactivar editar notificaciones por el usuario del sistema cuando «download_remote_images_to_local» este activo."
-    disable_category_edit_notifications: "Desactiva las notificaciones para las ediciones de categorías de temas."
-    disable_tags_edit_notifications: "Desactiva las notificaciones para las ediciones de etiquetas de temas."
     notification_consolidation_threshold: "Cantidad de me gusta o notificaciones de solicitud de membresía recibidas antes de que las notificaciones se consoliden en una sola. Establece el valor en 0 para desactivar."
     likes_notification_consolidation_window_mins: "Minutos durante los que las notificaciones se consolidan en una sola notificación una vez que se haya alcanzado el limite. El límite se puede configurar en «SiteSetting.notification_consolidation_threshold»."
     automatically_unpin_topics: "Desanclar automáticamente cuando el usuario llega al final del tema."

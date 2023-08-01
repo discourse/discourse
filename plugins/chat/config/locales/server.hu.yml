@@ -39,9 +39,6 @@ hu:
       channel_cannot_be_archived: "A csatorna jelenleg nem archiválható, a csatornát vagy le kell zárni, vagy meg kell nyitni az archiváláshoz."
       duplicate_message: "Nemrég küldött egy azonos tartalmú üzenetet."
       delete_channel_failed: "A csatorna törlése sikertelen, próbálja meg újra."
-      message_too_long:
-        one: "Az üzenet túl hosszú, az üzenetek legfeljebb %{count} karakterekből állhatnak."
-        other: "Az üzenet túl hosszú, az üzenetek legfeljebb %{count} karakterekből állhatnak."
       draft_too_long: "A vázlat túl hosszú."
       max_reactions_limit_reached: "Új reakciók nem engedélyezettek ezen az üzeneten."
       message_move_invalid_channel: "A forrás- és célcsatornának nyilvános csatornának kell lennie."

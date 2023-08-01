@@ -679,20 +679,6 @@ pl_PL:
   staff_category_description: "Ukryta kategoria dla rozmów zespołu. Tematy są widoczne tylko dla adminów i moderatorów."
   discourse_welcome_topic:
     title: "Witamy w %{site_title}! :wave:"
-    body: |
-      Bardzo się cieszymy, że do nas dołączyłeś.
-
-      %{site_info_quote}
-
-      Oto kilka rzeczy, które możesz zrobić, aby zacząć:
-
-      :speaking_head: **Przedstaw się**, dodając swoje zdjęcie oraz informacje o sobie i swoich zainteresowaniach do [swojego profilu](%{base_path}/my/preferences/account). Jaka jest jedna rzecz, o którą chciałbyś zostać zapytany?
-
-      :open_book: **Poznaj społeczność**, [przeglądając dyskusje](%{base_path}/top), które już się tutaj toczą. Gdy uznasz post za interesujący, pouczający lub zabawny, użyj :heart:, aby okazać uznanie lub wsparcie!
-
-      :handshake: **Wnieś swój wkład**, komentując, dzieląc się własną perspektywą, zadając pytania lub wyrażając opinie w dyskusji. Przed udzieleniem odpowiedzi lub rozpoczęciem nowych tematów zapoznaj się z [wytycznymi dla społeczności](%{base_path}/faq).
-
-      > Jeśli potrzebujesz pomocy lub masz sugestie, możesz zapytać [#feedback](%{base_path}/c/site-feedback) lub [skontaktuj się z administratorami](%{base_path}/about).
   admin_quick_start_title: "Przewodnik administratora: Pierwsze kroki"
   category:
     topic_prefix: "O kategorii %{category}"
@@ -1512,6 +1498,7 @@ pl_PL:
     unreachable_themes: "Nie byliśmy w stanie sprawdzić aktualizacji następujących tematów:"
     watched_word_regexp_error: "Wyrażenie regularne dla '%{action}' jest nieprawidłowe. Sprawdź ustawienia <a href='%{base_path}/admin/customize/watched_words'>obserwowanych słów</a> lub wyłącz ustawienie witryny „obserwowane słowa regularne”."
     v3_analytics_deprecated: "Twój Discourse używa obecnie Google Analytics 3, które nie będzie już wspierane po lipcu 2023 roku. <a href='https://meta.discourse.org/t/260498'>Uaktualnij do Google Analytics 4</a> teraz, aby nadal otrzymywać cenne informacje i analizy dotyczące wydajności twojej strony."
+    legacy_navigation_menu_deprecated: "Twój Discourse używa obecnie \"starszego\" menu nawigacyjnego, które <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>zostanie usunięte w pierwszej wersji beta Discourse 3.2</a>. Przeprowadź migrację do nowego menu nawigacyjnego, aktualizując ustawienia witryny menu nawigacyjnego <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'></a> do 'sidebar' lub 'header dropdown'."
   site_settings:
     allow_bulk_invite: "Zezwalaj na zaproszenia zbiorcze, przesyłając plik CSV"
     disabled: "wyłączone"
@@ -2084,6 +2071,7 @@ pl_PL:
     enable_category_group_moderation: "Zezwalaj grupom na moderowanie treści w określonych kategoriach"
     group_in_subject: "Ustaw %%{optional_pm} w temacie wiadomości e-mail z nazwą pierwszej grupy w prywatnej wiadomości, zobacz: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Dostosuj format tematu dla standardowych wiadomości e-mail</a>"
     allow_anonymous_posting: "Zezwól użytkownikom na przechodzenie w tryb anonimowości."
+    allow_anonymous_likes: "Zezwól anonimowym użytkownikom na polubienie postów"
     anonymous_posting_min_trust_level: "Minimalny poziom zaufania potrzebny by aktywować anonimowe wpisy"
     anonymous_account_duration_minutes: "Aby chronić anonimowość twórz nowe anonimowe konto co N minut dla każdego użytkownika. Przykład: jeśli ustawione na 600, dopóki nie minie 600 minut od ostatniego wpisu i użytkownik przełącza się na anon, zostanie utworzone nowe anonimowe konto."
     hide_user_profiles_from_public: "Wyłącz karty użytkownika, profile użytkowników i katalog użytkowników dla użytkowników anonimowych."
@@ -2112,8 +2100,6 @@ pl_PL:
     permalink_normalizations: "Zastosuj następujący regex przed dopasowaniem permalinków, na przykład /(topic.*)\\?.*/\\1  spowoduje ściągnięcie ciągu zapytań z dróg tematu. Format to regex+strin używaj \\1 itd aby przechwycić dostęp"
     global_notice: "Wyświetlaj PILNE, AWARYJNE lub zawsze widoczny banner informacyjny, który będzie widoczny dla wszystkich odwiedzających. Ustaw to pole jako puste, aby go ukryć. (HTML dozwolony)"
     disable_system_edit_notifications: "Wyłącz edytowanie powiadomień przez system użytkownika gdy 'download_remote_images_to_local' jest aktywne."
-    disable_category_edit_notifications: "Wyłącz powiadomienia o zmianach kategorii tematu."
-    disable_tags_edit_notifications: "Wyłącz powiadomienia o edycji tagów tematu."
     notification_consolidation_threshold: "Liczba polubień lub powiadomień o członkostwie otrzymanych przed połączeniem powiadomień w jedno. Ustaw 0 aby wyłączyć."
     likes_notification_consolidation_window_mins: "Czas w minutach, po którym powiadomienia o polubieniach są łączone w jedno powiadomienie. Próg można skonfigurować za pomocą `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Automatycznie odpinaj tematy, gdy użytkownik dotknie dna."

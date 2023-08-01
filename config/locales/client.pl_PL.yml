@@ -336,9 +336,9 @@ pl_PL:
       aria_label: "Filtruj według okresu"
     related_messages:
       title: "Wiadomości powiązane"
+      pill: "Wiadomości powiązane"
       see_all: 'Zobacz <a href="%{path}">wszystkie wiadomości</a> od @%{username} ...'
     suggested_topics:
-      title: "Sugerowane tematy"
       pm_title: "Sugerowane wiadomości"
     about:
       simple_title: "O stronie"
@@ -1956,6 +1956,7 @@ pl_PL:
         content: "Oto kilka tematów, które naszym zdaniem warto przeczytać w następnej kolejności."
       admin_guide:
         title: "Witaj w swojej nowej witrynie!"
+        content_no_url: "Przeczytaj przewodnik administratora, aby kontynuować tworzenie witryny i społeczności."
     loading: "Wczytuję…"
     errors:
       prev_page: "podczas próby wczytania"
@@ -2025,15 +2026,31 @@ pl_PL:
       no_internet: "Brak połączenia z internetem."
       refresh_page: "Odśwież stronę"
     summary:
+      in_progress: "Podsumowanie tematu za pomocą sztucznej inteligencji"
+      summarized_on: "Podsumowane przez sztuczną inteligencję w %{date}"
+      model_used: "Użyta AI: %{model}"
+      outdated: "Podsumowanie jest nieaktualne"
+      outdated_posts:
+        one: "(brakuje %{count} postu)"
+        few: "(brakuje %{count} postów)"
+        many: "(brakuje %{count} postów)"
+        other: "(brakuje %{count} postów)"
+      enabled_description: "Przeglądasz najlepsze odpowiedzi w tym temacie: najciekawsze posty określone przez społeczność."
       description:
         one: "Jest <b>%{count}</b> odpowiedź."
         few: "Jest <b>%{count}</b> odpowiedzi."
         many: "Jest <b>%{count}</b> odpowiedzi."
         other: "Jest <b>%{count}</b> odpowiedzi."
+      buttons:
+        hide: "Ukryj podsumowanie"
+        generate: "Podsumuj z AI"
+        regenerate: "Wygeneruj ponownie podsumowanie"
       description_time_MF: |
         Istnieje {replyCount, plural, one {<b>#</b> odpowiedź} few {<b>#</b> odpowiedzi} many {<b>#</b> odpowiedzi} other {<b>#</b> odpowiedzi}} z szacowanym czasem czytania <b>{readingTime, plural, one {# minuty} few {# minut} many {# minut} other {# minut}}</b>.
       enable: "Pokaż najlepsze odpowiedzi"
       disable: "Pokaż wszystkie posty"
+      short_label: "Najlepsze odpowiedzi"
+      short_title: "Pokaż najlepsze odpowiedzi w tym temacie: najciekawsze posty określone przez społeczność"
     deleted_filter:
       enabled_description: "Ten temat posiada usunięte wpisy, które zostały ukryte."
       disabled_description: "Usunięte wpisy w tym temacie są widoczne."
@@ -2893,6 +2910,7 @@ pl_PL:
         educate:
           new: '<p>Twoje nowe tematy pojawią się tutaj. Domyślnie tematy są uważane za nowe i będą pokazywać wskaźnik <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span>, jeśli zostały utworzone w ciągu ostatnich 2 dni.</p><p>Odwiedź swoje <a href="%{userPrefsUrl}">ustawienia</a>, aby to zmienić.</p>'
           unread: "<p>Twoje nie przeczytane tematy będą pojawiać się tutaj.</p><p>Domyślnie tematy są określane jako nieprzeczytane a ich liczba zostanie wyświetlona<span class=\"badge unread-posts badge-notification\">1</span> Jeśli:</p><ul><li>Utworzyłeś/łaś temat</li><li>Odpowiedziałeś/łaś w temacie</li><li>Czytałeś/łaś temat dłużej niż 5 minuty</li></ul><p>Albo ustawiłeś/łaś śledzenie lub obserwowanie tematu przez \U0001F514 na dole każdej dyskusji.</p><p>Odwiedź swoje <a href=\"%{userPrefsUrl}\">ustawienia</a> by to zmienić.</p>"
+          new_new: "<p>Twoje nowe tematy pojawią się tutaj, a Twoje nieprzeczytane tematy również zostaną wyświetlone. Domyślnie tematy są uważane za nowe i będą wyświetlać wskaźnik <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span>, jeśli zostały utworzone w ciągu ostatnich 2 dni. Nieprzeczytane tematy będą wyświetlane jako nieprzeczytane <span class=\"badge unread-posts badge-notification\">1</span>, jeśli: utworzyłeś temat, odpowiedziałeś na temat, czytałeś temat przez ponad 5 minut lub jeśli wyraźnie ustawiłeś temat jako śledzony lub obserwowany za pomocą \U0001F514 w każdym temacie.</p><p>Odwiedź <a href=\"%{userPrefsUrl}\">preferencje</a>, aby to zmienić.</p>"
       bottom:
         latest: "Nie ma więcej najnowszych tematów."
         posted: "Nie ma więcej tematów w których pisałeś."
@@ -3669,6 +3687,7 @@ pl_PL:
       filtered_replies:
         viewing_posts_by: "Przeglądanie %{post_count} postów autorstwa"
         viewing_subset: "Niektóre odpowiedzi są zwinięte"
+        viewing_summary: "Wyświetlanie najlepszych odpowiedzi w tym temacie"
         post_number: "%{username}, post #%{post_number}"
         show_all: "Pokaż wszystkie"
       share:
@@ -4200,12 +4219,6 @@ pl_PL:
         few: "+%{count} więcej"
         many: "+%{count} więcej"
         other: "+%{count} więcej"
-      granted:
-        one: "%{count} przyznany"
-        few: "%{count} przyznanych"
-        many: "%{count} przyznanych"
-        other: "%{count} przyznanych"
-      awarded: nagrodzony
       select_badge_for_title: Wybierz odznakę do użycia jako twój tytuł
       none: "(brak)"
       successfully_granted: "Przyznano %{badge} użytkownikowi %{username}"
@@ -4479,6 +4492,7 @@ pl_PL:
           delete_confirm: "Czy na pewno chcesz usunąć tę sekcję?"
           reset_confirm: "Czy na pewno chcesz przywrócić tę sekcję do ustawień domyślnych?"
           public: "Ustaw tę sekcję jako publiczną i widoczną dla wszystkich"
+          always_public: "Treść w tej sekcji jest zawsze publiczna"
           more_menu: "Menu więcej"
           links:
             add: "Dodaj kolejny link"
@@ -4532,6 +4546,7 @@ pl_PL:
           configure_defaults: "Skonfiguruj ustawienia domyślne"
         community:
           edit_section:
+            sidebar: "Dostosuj tę sekcję"
             header_dropdown: "Wygląd"
           links:
             about:
@@ -4570,6 +4585,9 @@ pl_PL:
               title: "Oflagowane posty i inne elementy w kolejce"
               pending_count: "%{count} oczekujących"
         global_section: "Sekcja globalna, widoczna dla wszystkich"
+      panels:
+        forum:
+          label: Forum
     welcome_topic_banner:
       title: "Stwórz swój temat powitalny"
       description: "Twój temat powitalny to pierwsza rzecz, którą przeczytają nowi członkowie. Pomyśl o tym jako o swoim „przemówieniu” lub „deklaracji misji”. Poinformuj wszystkich, dla kogo jest ta społeczność, czego mogą się tu spodziewać, i co chcesz, aby zrobili najpierw."
@@ -4845,7 +4863,7 @@ pl_PL:
               update: Zaktualizuj temat. Zmień tytuł, kategorię, tagi, status, archetyp, featured_link itp.
               delete: Usuń temat.
               read_lists: Czytaj listy tematów, takie jak najpopularniejsze, nowe, najnowsze itp. Obsługiwany jest również format RSS.
-              status: "Zaktualizuj status tematu. Status: zamknięty, archiwalny, widoczny, przypięty. Włączone: prawda, fałsz. Określ identyfikator kategorii_id tutaj i w żądaniu payload, aby zezwalać na zmiany statusu tylko w tematach z tej kategorii."
+              status: "Zaktualizuj status tematu. Status: zamknięty, archiwalny, widoczny, przypięty. Włączone: prawda, fałsz. Określ identyfikator category_id tutaj i w żądaniu payload, aby zezwalać na zmiany statusu tylko w tematach z tej kategorii."
             posts:
               edit: Edytuj dowolny post lub konkretny.
               delete: Usuń post.
@@ -5125,6 +5143,7 @@ pl_PL:
           create: "Stwórz"
           create_type: "Typ"
           create_name: "Imię"
+          save: "Zapisz"
           long_title: "Zmodyfikuj kolory, kod CSS i kod HTML zawartości Twojej strony"
           edit: "Edytuj"
           edit_confirm: "To jest zdalny styl. Jeśli edytujesz CSS/HTML, twoje zmiany zostaną usunięte po ponownej aktualizacji motywu."
@@ -5258,6 +5277,8 @@ pl_PL:
           embedded_scss:
             text: "Osadzony CSS"
             title: "Podaj spersonalizowany kod CSS dostarczany w ramkowej wersji komentarzy"
+          embedded_header:
+            title: "Wprowadź HTML, aby wyświetlić nad osadzoną wersją komentarzy"
           color_definitions:
             text: "Definicje kolorów"
             title: "Określ własne kolory (tylko dla zaawansowanych użytkowników)"
@@ -6090,10 +6111,15 @@ pl_PL:
         go_back: "Wróć do wyszukiwania"
         recommended: "Zalecamy zmianę poniższego tekstu, aby lepiej odpowiadał Twoim potrzebom:"
         show_overriden: "Pokaż tylko nadpisane"
+        show_outdated: "Pokaż tylko nieaktualne/nieprawidłowe"
         locale: "Język:"
         more_than_50_results: "Istnieje ponad 50 wyników. Zawęź wyszukiwanie."
         interpolation_keys: "Dostępne klucze interpolacji:"
         outdated:
+          title: "To tłumaczenie jest nieaktualne"
+          description: "Domyślne tłumaczenie tego klucza zmieniło się od czasu utworzenia tego zastąpienia. Sprawdź poniżej, czy Twoje tłumaczenie odpowiada wszelkim zmianom wprowadzonym w pierwotnej intencji."
+          old_default: "Stare domyślne"
+          new_default: "Nowe domyślne"
           dismiss: "Odrzuć"
       settings:
         show_overriden: "Pokaż tylko nadpisane"
