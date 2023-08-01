@@ -46,6 +46,23 @@ class StaffActionLogger
     UserHistory.create!(attrs)
   end
 
+  def edit_directory_columns_details(column_data, directory_column)
+    directory_column = directory_column.attributes.transform_values(&:to_s)
+    previous_value = directory_column
+    new_value = directory_column.clone
+
+    directory_column.each do |key, value|
+      if column_data[key] != value && column_data[key].present?
+        new_value[key] = column_data[key]
+      elsif key != "name"
+        previous_value.delete key
+        new_value.delete key
+      end
+    end
+
+    [previous_value.to_json, new_value.to_json]
+  end
+
   def log_post_deletion(deleted_post, opts = {})
     unless deleted_post && deleted_post.is_a?(Post)
       raise Discourse::InvalidParameters.new(:deleted_post)
@@ -219,7 +236,7 @@ class StaffActionLogger
   end
 
   def theme_json(theme)
-    ThemeSerializer.new(theme, root: false).to_json
+    ThemeSerializer.new(theme, root: false, include_theme_field_values: true).to_json
   end
 
   def strip_duplicates(old, cur)
@@ -779,8 +796,8 @@ class StaffActionLogger
 
     topic = reviewable.topic || Topic.with_deleted.find_by(id: reviewable.topic_id)
     topic_title = topic&.title || I18n.t("staff_action_logs.not_found")
-    username = reviewable.created_by&.username || I18n.t("staff_action_logs.unknown")
-    name = reviewable.created_by&.name || I18n.t("staff_action_logs.unknown")
+    username = reviewable.target_created_by&.username || I18n.t("staff_action_logs.unknown")
+    name = reviewable.target_created_by&.name || I18n.t("staff_action_logs.unknown")
 
     details = [
       "created_at: #{reviewable.created_at}",
@@ -940,7 +957,7 @@ class StaffActionLogger
     )
   end
 
-  def log_group_deletetion(group)
+  def log_group_deletion(group)
     raise Discourse::InvalidParameters.new(:group) if group.nil?
 
     details = ["name: #{group.name}", "id: #{group.id}"]
@@ -951,6 +968,50 @@ class StaffActionLogger
       acting_user_id: @admin.id,
       action: UserHistory.actions[:delete_group],
       details: details.join(", "),
+    )
+  end
+
+  def log_permanently_delete_post_revisions(post)
+    raise Discourse::InvalidParameters.new(:post) if post.nil?
+
+    UserHistory.create!(
+      action: UserHistory.actions[:permanently_delete_post_revisions],
+      acting_user_id: @admin.id,
+      post_id: post.id,
+    )
+  end
+
+  def log_create_public_sidebar_section(section)
+    UserHistory.create!(
+      action: UserHistory.actions[:create_public_sidebar_section],
+      acting_user_id: @admin.id,
+      subject: section.title,
+      details: custom_section_details(section),
+    )
+  end
+
+  def log_update_public_sidebar_section(section)
+    UserHistory.create!(
+      action: UserHistory.actions[:update_public_sidebar_section],
+      acting_user_id: @admin.id,
+      subject: section.title,
+      details: custom_section_details(section),
+    )
+  end
+
+  def log_destroy_public_sidebar_section(section)
+    UserHistory.create!(
+      action: UserHistory.actions[:destroy_public_sidebar_section],
+      acting_user_id: @admin.id,
+      subject: section.title,
+    )
+  end
+
+  def log_reset_bounce_score(user, opts = {})
+    raise Discourse::InvalidParameters.new(:user) unless user
+
+    UserHistory.create!(
+      params(opts).merge(action: UserHistory.actions[:reset_bounce_score], target_user_id: user.id),
     )
   end
 
@@ -979,5 +1040,10 @@ class StaffActionLogger
 
   def validate_category(category)
     raise Discourse::InvalidParameters.new(:category) unless category && category.is_a?(Category)
+  end
+
+  def custom_section_details(section)
+    urls = section.sidebar_urls.map { |url| "#{url.name} - #{url.value}" }
+    "links: #{urls.join(", ")}"
   end
 end

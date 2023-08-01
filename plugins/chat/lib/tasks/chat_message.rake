@@ -15,7 +15,7 @@ end
 
 def rebake_uncooked_chat_messages
   puts "Rebaking uncooked chat messages on #{RailsMultisite::ConnectionManagement.current_db}"
-  uncooked = ChatMessage.uncooked
+  uncooked = Chat::Message.uncooked
 
   rebaked = 0
   total = uncooked.count
@@ -100,7 +100,7 @@ task "chat:make_channel_to_test_archiving", [:user_for_membership] => :environme
       raw: "This is some cool first post for archive stuff",
     )
     chat_channel =
-      ChatChannel.create(
+      Chat::Channel.create(
         chatable: topic,
         chatable_type: "Topic",
         name: "testing channel for archiving #{SecureRandom.hex(4)}",
@@ -112,12 +112,13 @@ task "chat:make_channel_to_test_archiving", [:user_for_membership] => :environme
 
   users = [make_test_user, make_test_user, make_test_user]
 
-  ChatChannel.transaction do
+  Chat::Channel.transaction do
     start_time = Time.now
 
     puts "creating 1039 messages for the channel"
     1039.times do
-      cm = ChatMessage.new(message: messages.sample, user: users.sample, chat_channel: chat_channel)
+      cm =
+        Chat::Message.new(message: messages.sample, user: users.sample, chat_channel: chat_channel)
       cm.cook
       cm.save!
     end
@@ -125,7 +126,7 @@ task "chat:make_channel_to_test_archiving", [:user_for_membership] => :environme
     puts "message creation done"
     puts "took #{Time.now - start_time} seconds"
 
-    UserChatChannelMembership.create(
+    Chat::UserChatChannelMembership.create(
       chat_channel: chat_channel,
       last_read_message_id: 0,
       user: User.find_by(username: user_for_membership),

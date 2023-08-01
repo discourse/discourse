@@ -102,7 +102,7 @@ class ComposerController < ApplicationController
         :not_allowed
       end
 
-    # Regular users can see only basic information why the users cannot see the topic.
+    # Non-staff users can see only basic information why the users cannot see the topic.
     reason = nil if !guardian.is_staff? && reason != :private && reason != :category
 
     reason

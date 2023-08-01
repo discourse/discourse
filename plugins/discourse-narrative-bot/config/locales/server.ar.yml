@@ -45,13 +45,6 @@ ar:
       trigger: "رمي النرد"
       invalid: |-
         عذرًا، من المستحيل رياضيًا الحصول على هذه التركيبة في النرد. :confounded:
-      not_enough_dice:
-        zero: "لدي %{count} حجر نرد فقط. [هذا مخزٍ](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
-        one: "لدي حجر نرد واحد (%{count}) فقط. [هذا مخزٍ](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
-        two: "لدي حجرَي نرد (%{count}) فقط. [هذا مخزٍ](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
-        few: "لدي %{count} أحجار نرد فقط. [هذا مخزٍ](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
-        many: "لدي فقط %{count} حجر نرد. [هذا مخزٍ](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
-        other: "لدي فقط %{count} حجر نرد. [هذا مخزٍ](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), اعرف!"
       out_of_range: |-
         هل تعلم أن [أقصى عدد من الجوانب](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) في نرد عادل رياضيًا هو 120؟
       results: |-

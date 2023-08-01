@@ -33,24 +33,13 @@ class AdminUserIndexQuery
     find_users_query.count
   end
 
-  def custom_direction
-    if params[:ascending]
-      Discourse.deprecate(
-        ":ascending is deprecated please use :asc instead",
-        output_in_test: true,
-        drop_from: "2.9.0",
-      )
-    end
-    asc = params[:asc] || params[:ascending]
-    asc.present? && asc ? "ASC" : "DESC"
-  end
-
   def initialize_query_with_order(klass)
     order = []
 
     custom_order = params[:order]
+    custom_direction = params[:asc].present? ? "ASC" : "DESC"
     if custom_order.present? &&
-         without_dir = SORTABLE_MAPPING[custom_order.downcase.sub(/ (asc|desc)$/, "")]
+         without_dir = SORTABLE_MAPPING[custom_order.downcase.sub(/ (asc|desc)\z/, "")]
       order << "#{without_dir} #{custom_direction}"
     end
 

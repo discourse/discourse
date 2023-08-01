@@ -173,7 +173,11 @@ module DiscourseNarrativeBot
       topic = @post.topic
       post = topic.first_post
 
-      MessageBus.publish("/new_user_narrative/tutorial_search", {}, user_ids: [@user.id])
+      MessageBus.publish(
+        "/new_user_narrative/tutorial_search/#{@user.id}",
+        {},
+        user_ids: [@user.id],
+      )
 
       raw = <<~MD
       #{post.raw}
@@ -634,7 +638,10 @@ module DiscourseNarrativeBot
     end
 
     def url_helpers(url, opts = {})
-      Rails.application.routes.url_helpers.public_send(url, opts.merge(host: Discourse.base_url))
+      Rails.application.routes.url_helpers.public_send(
+        url,
+        opts.merge(host: Discourse.base_url_no_prefix),
+      )
     end
   end
 end

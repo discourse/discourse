@@ -35,7 +35,7 @@ def gather_uploads
     .where("url !~ ?", "^\/uploads\/#{current_db}")
     .find_each do |upload|
       begin
-        old_db = upload.url[%r{^/uploads/([^/]+)/}, 1]
+        old_db = upload.url[%r{\A/uploads/([^/]+)/}, 1]
         from = upload.url.dup
         to = upload.url.sub("/uploads/#{old_db}/", "/uploads/#{current_db}/")
         source = "#{public_directory}#{from}"
@@ -119,7 +119,6 @@ def create_migration
     s3_options: FileStore::ToS3Migration.s3_options_from_env,
     dry_run: !!ENV["DRY_RUN"],
     migrate_to_multisite: !!ENV["MIGRATE_TO_MULTISITE"],
-    skip_etag_verify: !!ENV["SKIP_ETAG_VERIFY"],
   )
 end
 
@@ -321,8 +320,8 @@ def regenerate_missing_optimized
     scope.find_each do |optimized_image|
       upload = optimized_image.upload
 
-      next unless optimized_image.url =~ %r{^/[^/]}
-      next unless upload.url =~ %r{^/[^/]}
+      next unless optimized_image.url =~ %r{\A/[^/]}
+      next unless upload.url =~ %r{\A/[^/]}
 
       thumbnail = "#{public_directory}#{optimized_image.url}"
       original = "#{public_directory}#{upload.url}"
@@ -385,7 +384,7 @@ end
 
 task "uploads:stop_migration" => :environment do
   SiteSetting.migrate_to_new_scheme = false
-  puts "Migration stoped!"
+  puts "Migration stopped!"
 end
 
 task "uploads:analyze", %i[cache_path limit] => :environment do |_, args|

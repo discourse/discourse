@@ -35,6 +35,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
   id: null,
   uploadRootPath: "/uploads",
   fileInputSelector: ".hidden-upload-field",
+  autoFindInput: true,
 
   uploadDone() {
     warn("You should implement `uploadDone`", {
@@ -68,12 +69,15 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
 
   @on("didInsertElement")
   _initialize() {
-    this.setProperties({
-      fileInputEl: this.element.querySelector(this.fileInputSelector),
-    });
+    if (this.autoFindInput) {
+      this.setProperties({
+        fileInputEl: this.element.querySelector(this.fileInputSelector),
+      });
+    } else if (!this.fileInputEl) {
+      return;
+    }
     this.set("allowMultipleFiles", this.fileInputEl.multiple);
     this.set("inProgressUploads", []);
-    this._triggerInProgressUploadsEvent();
 
     this._bindFileInputChange();
 
@@ -267,6 +271,10 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
       });
     });
 
+    if (this.siteSettings.enable_upload_debug_mode) {
+      this._instrumentUploadTimings();
+    }
+
     // TODO (martin) preventDirectS3Uploads is necessary because some of
     // the current upload mixin components, for example the emoji uploader,
     // send the upload to custom endpoints that do fancy things in the rails
@@ -294,8 +302,10 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
     this._uppyInstance.on("cancel-all", () => {
       this.appEvents.trigger(`upload-mixin:${this.id}:uploads-cancelled`);
       if (!this.isDestroyed && !this.isDestroying) {
-        this.set("inProgressUploads", []);
-        this._triggerInProgressUploadsEvent();
+        if (this.inProgressUploads.length) {
+          this.set("inProgressUploads", []);
+          this._triggerInProgressUploadsEvent();
+        }
       }
     });
 
@@ -314,6 +324,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
   },
 
   _triggerInProgressUploadsEvent() {
+    this.onProgressUploadsChanged?.(this.inProgressUploads);
     this.appEvents.trigger(
       `upload-mixin:${this.id}:in-progress-uploads`,
       this.inProgressUploads

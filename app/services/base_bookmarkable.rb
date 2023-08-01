@@ -2,7 +2,7 @@
 
 ##
 # Anything that we want to be able to bookmark must be registered as a
-# bookmarkable type using Bookmark.register_bookmarkable(bookmarkable_klass),
+# bookmarkable type using Plugin::Instance#register_bookmarkable(bookmarkable_klass),
 # where the bookmarkable_klass is a class that implements this BaseBookmarkable
 # interface. Some examples are TopicBookmarkable and PostBookmarkable.
 #

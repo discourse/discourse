@@ -7,6 +7,7 @@
 de:
   site_settings:
     chat_enabled: "Chat-Plug-in aktivieren."
+    enable_public_channels: "Öffentliche Kanäle basierend auf Kategorien aktivieren."
     chat_allowed_groups: "Benutzer in diesen Gruppen können chatten. Bitte beachte, dass Teammitglieder jederzeit auf den Chat zugreifen können."
     chat_channel_retention_days: "Chat-Nachrichten in regulären Kanälen werden so viele Tage lang aufbewahrt. Auf „0“ setzen, um Nachrichten für immer aufzubewahren."
     chat_dm_retention_days: "Chat-Nachrichten in persönlichen Chat-Kanälen werden so viele Tage lang aufbewahrt. Auf „0“ setzen, um Nachrichten für immer aufzubewahren."
@@ -54,16 +55,26 @@ de:
     deleted_chat_username: gelöscht
     errors:
       channel_exists_for_category: "Für diese Kategorie und diesen Namen existiert bereits ein Kanal"
-      channel_new_message_disallowed: "Der Kanal ist %{status}, es können keine neuen Nachrichten gesendet werden"
-      channel_modify_message_disallowed: "Der Kanal ist %{status}, es können keine Nachrichten bearbeitet oder gelöscht werden"
+      channel_new_message_disallowed:
+        archived: "Der Kanal ist archiviert, es können keine neuen Nachrichten gesendet werden"
+        closed: "Der Kanal ist geschlossen, es können keine neuen Nachrichten gesendet werden"
+        read_only: "Der Kanal ist schreibgeschützt, es können keine neuen Nachrichten gesendet werden"
+      channel_modify_message_disallowed:
+        archived: "Der Kanal ist archiviert, es können keine Nachrichten bearbeitet oder gelöscht werden"
+        closed: "Der Kanal ist geschlossen, es können keine Nachrichten bearbeitet oder gelöscht werden"
+        read_only: "Der Kanal ist schreibgeschützt, es können keine Nachrichten bearbeitet oder gelöscht werden"
       user_cannot_send_message: "Du kannst derzeit keine Nachrichten senden."
       rate_limit_exceeded: "Das Limit der Chat-Nachrichten, die innerhalb von 30 Sekunden gesendet werden können, wurde überschritten"
       auto_silence_from_flags: "Chat-Nachricht wurde mit einer Punktzahl markiert, die hoch genug ist, um den Benutzer stummzuschalten."
       channel_cannot_be_archived: "Der Kanal kann zu diesem Zeitpunkt nicht archiviert werden, er muss entweder geschlossen oder geöffnet sein."
       duplicate_message: "Du hast vor Kurzem eine identische Nachricht gepostet."
       delete_channel_failed: "Löschen des Kanals fehlgeschlagen, bitte versuche es erneut."
-      minimum_length_not_met: "Die Nachricht ist zu kurz, sie muss mindestens %{minimum} Zeichen lang sein."
-      message_too_long: "Nachricht ist zu lang. Nachrichten dürfen maximal %{maximum} Zeichen lang sein."
+      minimum_length_not_met:
+        one: "Die Nachricht ist zu kurz, sie muss mindestens %{count} Zeichen lang sein."
+        other: "Die Nachricht ist zu kurz, sie muss mindestens %{count} Zeichen lang sein."
+      message_too_long:
+        one: "Nachricht ist zu lang. Nachrichten dürfen maximal %{count} Zeichen lang sein."
+        other: "Nachricht ist zu lang. Nachrichten dürfen maximal %{count} Zeichen lang sein."
       draft_too_long: "Der Entwurf ist zu lang."
       max_reactions_limit_reached: "Neue Reaktionen auf diese Nachricht sind nicht erlaubt."
       message_move_invalid_channel: "Quell- und Zielkanal müssen öffentliche Kanäle sein."
@@ -75,9 +86,13 @@ de:
       actor_disallowed_dms: "Du hast dich dafür entschieden, dass Benutzer dir keine privaten und Direktnachrichten schicken können, daher kannst du keine neuen Direktnachrichten erstellen."
       actor_preventing_target_user_from_dm: "Du hast dich dafür entschieden, dass %{username} dir keine privaten und Direktnachrichten schicken kann, daher kannst du keine neuen Direktnachrichten an diese Person erstellen."
       user_cannot_send_direct_messages: "Du kannst leider keine Direktnachrichten senden."
+      over_chat_max_direct_message_users_allow_self: "Du kannst nur eine Direktnachricht an dich selbst erstellen."
       over_chat_max_direct_message_users:
-        one: "Du kannst nur eine Direktnachricht an dich selbst erstellen."
+        one: "Du kannst keine Direktnachricht an mehr als %{count} anderen Benutzer erstellen."
         other: "Du kannst keine Direktnachricht an mehr als %{count} andere Benutzer erstellen."
+      original_message_not_found: "Der Vorgänger der Nachricht, auf die du antwortest, kann nicht gefunden werden oder wurde gelöscht."
+      thread_invalid_for_channel: "Der Thread ist nicht Teil des bereitgestellten Kanals."
+      thread_does_not_match_parent: "Der Thread stimmt nicht mit der übergeordneten Nachricht überein."
     reviewables:
       message_already_handled: "Danke, aber wir haben diese Nachricht bereits überprüft und festgestellt, dass sie nicht erneut markiert werden muss."
       actions:
@@ -114,20 +129,17 @@ de:
         transcript_title: "Transkript früherer Nachrichten in %{channel_name}"
         transcript_body: "Um dir mehr Kontext zu geben, haben wir ein Transkript der vorherigen Nachrichten in dieser Unterhaltung beigefügt (bis zu zehn):\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "Schreibgeschützt"
-        archived: "Archiviert"
-        closed: "Geschlossen"
-        open: "Offen"
       archive:
         first_post_raw: "Dieses Thema ist ein Archiv des Chat-Kanals [%{channel_name}](%{channel_url})."
       messages_moved:
         one: "@%{acting_username} hat eine Nachricht in den Kanal [%{channel_name}](%{first_moved_message_url}) verschoben."
         other: "@%{acting_username} hat %{count} Nachrichten in den Kanal [%{channel_name}](%{first_moved_message_url}) verschoben."
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} und %{leftover} andere"
+        single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} und %{count} andere Person"
+          other: "%{comma_separated_usernames} und %{count} andere"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "enthält Nicht-ASCII-Zeichen"
@@ -145,6 +157,8 @@ de:
       and_x_others:
         one: "und %{count} andere Person"
         other: "und %{count} andere"
+    summaries:
+      no_targets: "Im ausgewählten Zeitraum gab es keine Nachrichten."
   discourse_push_notifications:
     popup:
       chat_mention:

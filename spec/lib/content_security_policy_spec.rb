@@ -85,6 +85,8 @@ RSpec.describe ContentSecurityPolicy do
       before { SiteSetting.ga_universal_tracking_code = "UA-12345678-9" }
 
       it "allowlists Google Analytics v3 when integrated" do
+        SiteSetting.ga_version = "v3_analytics"
+
         script_srcs = parse(policy)["script-src"]
         expect(script_srcs).to include("https://www.google-analytics.com/analytics.js")
         expect(script_srcs).not_to include("https://www.googletagmanager.com/gtag/js")

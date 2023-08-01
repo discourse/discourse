@@ -24,6 +24,7 @@ acceptance("User Routes", function (needs) {
       helper.response(400, {})
     );
   });
+
   test("Invalid usernames", async function (assert) {
     try {
       await visit("/u/eviltrout%2F..%2F..%2F/summary");
@@ -52,6 +53,7 @@ acceptance("User Routes", function (needs) {
 
   test("Notifications", async function (assert) {
     await visit("/u/eviltrout/notifications");
+
     assert.ok(
       document.body.classList.contains("user-notifications-page"),
       "has the body class"
@@ -66,16 +68,20 @@ acceptance("User Routes", function (needs) {
     );
 
     updateCurrentUser({ moderator: true, admin: false });
+
     await visit("/u/charlie/summary");
+
     assert.notOk(
-      exists(".user-nav > .user-notifications"),
+      exists(".user-nav > .user-nav__notifications"),
       "does not have the notifications tab"
     );
 
     updateCurrentUser({ moderator: false, admin: true });
+
     await visit("/u/charlie/summary");
+
     assert.ok(
-      exists(".user-nav > .user-notifications"),
+      exists(".user-nav > .user-nav__notifications"),
       "has the notifications tab"
     );
   });
@@ -312,14 +318,14 @@ acceptance(
       );
 
       await notificationLevelDropdown.selectRowByValue("changeToIgnored");
-      assert.ok(exists(".ignore-duration-modal"));
+      assert.ok(exists(".ignore-duration-with-username-modal"));
 
       const durationDropdown = selectKit(
-        ".ignore-duration-modal .future-date-input-selector"
+        ".ignore-duration-with-username-modal .future-date-input-selector"
       );
       await durationDropdown.expand();
       await durationDropdown.selectRowByIndex(0);
-      await click(".modal-footer .ignore-duration-save");
+      await click(".modal-footer .btn-primary");
       await notificationLevelDropdown.expand();
       assert.strictEqual(
         notificationLevelDropdown.selectedRow().value(),
@@ -328,6 +334,30 @@ acceptance(
     });
   }
 );
+
+acceptance("User - Invalid view_user_route setting", function (needs) {
+  needs.settings({
+    view_user_route: "X",
+  });
+
+  test("It defaults to summary", async function (assert) {
+    await visit("/u/eviltrout");
+
+    assert.strictEqual(currentRouteName(), "user.summary");
+  });
+});
+
+acceptance("User - Valid view_user_route setting", function (needs) {
+  needs.settings({
+    view_user_route: "activity",
+  });
+
+  test("It defaults to summary", async function (assert) {
+    await visit("/u/eviltrout");
+
+    assert.strictEqual(currentRouteName(), "userActivity.index");
+  });
+});
 
 acceptance("User - Logout", function (needs) {
   needs.user({ username: "eviltrout" });

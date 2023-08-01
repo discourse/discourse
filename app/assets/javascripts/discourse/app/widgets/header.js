@@ -13,6 +13,7 @@ import { logSearchLinkClick } from "discourse/lib/search";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { hbs } from "ember-cli-htmlbars";
 import { hideUserTip } from "discourse/lib/user-tips";
+import { SEARCH_BUTTON_ID } from "discourse/components/search-menu";
 
 let _extraHeaderIcons = [];
 
@@ -24,7 +25,7 @@ export function clearExtraHeaderIcons() {
   _extraHeaderIcons = [];
 }
 
-const dropdown = {
+export const dropdown = {
   buildClasses(attrs) {
     let classes = attrs.classNames || [];
     if (attrs.active) {
@@ -81,83 +82,57 @@ createWidget("header-notifications", {
     if (user.isInDoNotDisturb()) {
       contents.push(h("div.do-not-disturb-background", iconNode("moon")));
     } else {
-      if (this.currentUser.redesigned_user_menu_enabled) {
-        let ringClass = null;
-        if (user.new_personal_messages_notifications_count) {
-          ringClass = "personal-messages";
-          contents.push(
-            this.attach("link", {
-              action: attrs.action,
-              className: "badge-notification with-icon new-pms",
-              icon: "envelope",
-              omitSpan: true,
-              title: "notifications.tooltip.new_message_notification",
-              titleOptions: {
-                count: user.new_personal_messages_notifications_count,
-              },
-            })
-          );
-        } else if (user.unseen_reviewable_count) {
-          contents.push(
-            this.attach("link", {
-              action: attrs.action,
-              className: "badge-notification with-icon new-reviewables",
-              icon: "flag",
-              omitSpan: true,
-              title: "notifications.tooltip.new_reviewable",
-              titleOptions: { count: user.unseen_reviewable_count },
-            })
-          );
-        } else if (user.all_unread_notifications_count) {
-          ringClass = "regular-notifications";
-          contents.push(
-            this.attach("link", {
-              action: attrs.action,
-              className: "badge-notification unread-notifications",
-              rawLabel: user.all_unread_notifications_count,
-              omitSpan: true,
-              title: "notifications.tooltip.regular",
-              titleOptions: { count: user.all_unread_notifications_count },
-            })
-          );
-        }
-        if (ringClass && this._shouldHighlightAvatar()) {
-          contents.push(h(`span.ring.revamped.${ringClass}`));
-        }
-      } else {
-        const unreadNotifications = user.unread_notifications;
-        if (!!unreadNotifications) {
-          contents.push(
-            this.attach("link", {
-              action: attrs.action,
-              className: "badge-notification unread-notifications",
-              rawLabel: unreadNotifications,
-              omitSpan: true,
-              title: "notifications.tooltip.regular",
-              titleOptions: { count: unreadNotifications },
-            })
-          );
-        }
-
-        const unreadHighPriority = user.unread_high_priority_notifications;
-        if (!!unreadHighPriority) {
-          if (this._shouldHighlightAvatar()) {
-            contents.push(h("span.ring"));
-          }
-
-          // add the counter for the unread high priority
-          contents.push(
-            this.attach("link", {
-              action: attrs.action,
-              className:
-                "badge-notification unread-high-priority-notifications",
-              rawLabel: unreadHighPriority,
-              omitSpan: true,
-              title: "notifications.tooltip.high_priority",
-              titleOptions: { count: unreadHighPriority },
-            })
-          );
-        }
+      if (user.new_personal_messages_notifications_count) {
+        contents.push(
+          this.attach("link", {
+            action: attrs.action,
+            className: "badge-notification with-icon new-pms",
+            icon: "envelope",
+            omitSpan: true,
+            title: "notifications.tooltip.new_message_notification",
+            titleOptions: {
+              count: user.new_personal_messages_notifications_count,
+            },
+            attributes: {
+              "aria-label": I18n.t(
+                "notifications.tooltip.new_message_notification",
+                {
+                  count: user.new_personal_messages_notifications_count,
+                }
+              ),
+            },
+          })
+        );
+      } else if (user.unseen_reviewable_count) {
+        contents.push(
+          this.attach("link", {
+            action: attrs.action,
+            className: "badge-notification with-icon new-reviewables",
+            icon: "flag",
+            omitSpan: true,
+            title: "notifications.tooltip.new_reviewable",
+            titleOptions: { count: user.unseen_reviewable_count },
+            attributes: {
+              "aria-label": I18n.t("notifications.tooltip.new_reviewable", {
+                count: user.unseen_reviewable_count,
+              }),
+            },
+          })
+        );
+      } else if (user.all_unread_notifications_count) {
+        contents.push(
+          this.attach("link", {
+            action: attrs.action,
+            className: "badge-notification unread-notifications",
+            rawLabel: user.all_unread_notifications_count,
+            omitSpan: true,
+            title: "notifications.tooltip.regular",
+            titleOptions: { count: user.all_unread_notifications_count },
+            attributes: {
+              "aria-label": I18n.t("user.notifications"),
+            },
+          })
+        );
       }
     }
     return contents;
@@ -214,7 +189,7 @@ createWidget(
 
       html(attrs) {
         return h(
-          "a.icon",
+          "button.icon.btn-flat",
           {
             attributes: {
               "aria-haspopup": true,
@@ -247,7 +222,7 @@ createWidget(
         }
 
         return h(
-          "a.icon.btn-flat",
+          "button.icon.btn-flat",
           {
             attributes: {
               "aria-expanded": attrs.active,
@@ -286,7 +261,7 @@ createWidget("header-icons", {
     const search = this.attach("header-dropdown", {
       title: "search.title",
       icon: "search",
-      iconId: "search-button",
+      iconId: SEARCH_BUTTON_ID,
       action: "toggleSearchMenu",
       active: attrs.searchVisible,
       href: getURL("/search"),
@@ -308,7 +283,7 @@ createWidget("header-icons", {
         let { currentUser } = this;
         if (
           currentUser?.reviewable_count &&
-          !this.currentUser.redesigned_user_menu_enabled
+          this.siteSettings.navigation_menu === "legacy"
         ) {
           return h(
             "div.badge-notification.reviewables",
@@ -323,11 +298,7 @@ createWidget("header-icons", {
       },
     });
 
-    if (
-      this.siteSettings.navigation_menu === "legacy" ||
-      !attrs.sidebarEnabled ||
-      this.site.mobileView
-    ) {
+    if (!attrs.sidebarEnabled || this.site.mobileView) {
       icons.push(hamburger);
     }
 
@@ -409,6 +380,7 @@ createWidget("revamped-hamburger-menu-wrapper", {
   click(event) {
     if (
       event.target.closest(".sidebar-section-header-button") ||
+      event.target.closest(".sidebar-section-link-button") ||
       event.target.closest(".sidebar-section-link")
     ) {
       this.sendWidgetAction("toggleHamburger");
@@ -447,8 +419,47 @@ createWidget("revamped-user-menu-wrapper", {
   },
 });
 
+createWidget("glimmer-search-menu-wrapper", {
+  buildAttributes() {
+    return { "data-click-outside": true, "aria-live": "polite" };
+  },
+
+  buildClasses() {
+    return ["search-menu"];
+  },
+
+  html() {
+    return [
+      new RenderGlimmer(
+        this,
+        "div.widget-component-connector",
+        hbs`<SearchMenu
+          @inTopicContext={{@data.inTopicContext}}
+          @searchVisible={{@data.searchVisible}}
+          @animationClass={{@data.animationClass}}
+          @closeSearchMenu={{@data.closeSearchMenu}}
+        />`,
+        {
+          closeSearchMenu: this.closeSearchMenu.bind(this),
+          inTopicContext: this.attrs.inTopicContext,
+          searchVisible: this.attrs.searchVisible,
+          animationClass: this.attrs.animationClass,
+        }
+      ),
+    ];
+  },
+
+  closeSearchMenu() {
+    this.sendWidgetAction("toggleSearchMenu");
+  },
+
+  clickOutside() {
+    this.closeSearchMenu();
+  },
+});
+
 export default createWidget("header", {
-  tagName: "header.d-header.clearfix",
+  tagName: "header.d-header",
   buildKey: () => `header`,
   services: ["router", "search"],
 
@@ -491,25 +502,34 @@ export default createWidget("header", {
       const panels = [this.attach("header-buttons", attrs), headerIcons];
 
       if (state.searchVisible) {
-        panels.push(
-          this.attach("search-menu", {
-            inTopicContext: state.inTopicContext && inTopicRoute,
-          })
-        );
+        if (this.currentUser?.experimental_search_menu_groups_enabled) {
+          panels.push(
+            this.attach("glimmer-search-menu-wrapper", {
+              inTopicContext: state.inTopicContext && inTopicRoute,
+              searchVisible: state.searchVisible,
+              animationClass: this.animationClass(),
+            })
+          );
+        } else {
+          panels.push(
+            this.attach("search-menu", {
+              inTopicContext: state.inTopicContext && inTopicRoute,
+            })
+          );
+        }
       } else if (state.hamburgerVisible) {
-        if (this.siteSettings.navigation_menu !== "legacy") {
-          if (!attrs.sidebarEnabled || this.site.narrowDesktopView) {
-            panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));
-          }
+        if (
+          attrs.navigationMenuQueryParamOverride === "header_dropdown" ||
+          (attrs.navigationMenuQueryParamOverride !== "legacy" &&
+            this.siteSettings.navigation_menu !== "legacy" &&
+            (!attrs.sidebarEnabled || this.site.narrowDesktopView))
+        ) {
+          panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));
         } else {
           panels.push(this.attach("hamburger-menu"));
         }
       } else if (state.userVisible) {
-        if (this.currentUser.redesigned_user_menu_enabled) {
-          panels.push(this.attach("revamped-user-menu-wrapper", {}));
-        } else {
-          panels.push(this.attach("user-menu"));
-        }
+        panels.push(this.attach("revamped-user-menu-wrapper", {}));
       }
 
       additionalPanels.map((panel) => {
@@ -545,6 +565,12 @@ export default createWidget("header", {
     if (!this.state.searchVisible) {
       this.search.set("highlightTerm", "");
     }
+  },
+
+  animationClass() {
+    return this.site.mobileView || this.site.narrowDesktopView
+      ? "slide-in"
+      : "drop-down";
   },
 
   closeAll() {
@@ -649,14 +675,32 @@ export default createWidget("header", {
   },
 
   preventDefault(e) {
-    // prevent all scrolling on menu panels, except on overflow
-    const height = window.innerHeight ? window.innerHeight : $(window).height();
-    if (
-      !$(e.target).parents(".menu-panel").length ||
-      $(".menu-panel .panel-body-contents").height() <= height
-    ) {
-      e.preventDefault();
+    const windowHeight = window.innerHeight;
+
+    // allow profile menu tabs to scroll if they're taller than the window
+    if (e.target.closest(".menu-panel .menu-tabs-container")) {
+      const topTabs = document.querySelector(".menu-panel .top-tabs");
+      const bottomTabs = document.querySelector(".menu-panel .bottom-tabs");
+      const profileTabsHeight =
+        topTabs?.offsetHeight + bottomTabs?.offsetHeight || 0;
+
+      if (profileTabsHeight > windowHeight) {
+        return;
+      }
     }
+
+    // allow menu panels to scroll if contents are taller than the window
+    if (e.target.closest(".menu-panel")) {
+      const menuContentHeight =
+        document.querySelector(".menu-panel .panel-body-contents")
+          .offsetHeight || 0;
+
+      if (menuContentHeight > windowHeight) {
+        return;
+      }
+    }
+
+    e.preventDefault();
   },
 
   togglePageSearch() {
@@ -719,7 +763,12 @@ export default createWidget("header", {
   },
 
   focusSearchInput() {
-    if (this.state.searchVisible) {
+    // the glimmer search menu handles the focusing of the search
+    // input within the search component
+    if (
+      this.state.searchVisible &&
+      !this.currentUser?.experimental_search_menu_groups_enabled
+    ) {
       schedule("afterRender", () => {
         const searchInput = document.querySelector("#search-term");
         searchInput.focus();

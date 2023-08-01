@@ -1,13 +1,17 @@
 <DSection @pageClass="users">
-  <LoadMore @selector=".directory tbody tr" @action={{action "loadMore"}}>
+  <LoadMore
+    @selector=".directory-table .directory-table__cell"
+    @action={{action "loadMore"}}
+  >
     <div class="container">
       <div class="users-directory directory">
-        <PluginOutlet
-          @name="users-top"
-          @tagName="span"
-          @connectorTagName="div"
-          @args={{hash model=this.model}}
-        />
+        <span>
+          <PluginOutlet
+            @name="users-top"
+            @connectorTagName="div"
+            @outletArgs={{hash model=this.model}}
+          />
+        </span>
         <div class="directory-controls">
           <div class="period-controls">
             <PeriodChooser
@@ -55,7 +59,7 @@
             {{/if}}
             <PluginOutlet
               @name="users-directory-controls"
-              @args={{hash model=this.model}}
+              @outletArgs={{hash model=this.model}}
             />
           </div>
         </div>

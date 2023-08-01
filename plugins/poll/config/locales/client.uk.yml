@@ -29,36 +29,18 @@ uk:
           title: "Результати будуть показані після <strong>закриття</strong> ."
         staff:
           title: "Результати показуються лише <strong>членам команди обслуговування</strong> ."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Виберіть принаймні <strong>%{count}</strong> варіант."
-            few: "Виберіть принаймні <strong>%{count}</strong> варіанти."
-            many: "Виберіть принаймні <strong>%{count}</strong> варіантів."
-            other: "Виберіть принаймні <strong>%{count}</strong> варіанти."
-          up_to_max_options:
-            one: "Виберіть не більше як <strong>%{count}</strong> варіант."
-            few: "Виберіть не більше <strong>%{count}</strong> варіанти."
-            many: "Виберіть не більше <strong>%{count}</strong> варіантів."
-            other: "Виберіть не більше <strong>%{count}</strong> варіантів."
-          x_options:
-            one: "Виберіть <strong>%{count}</strong> варіант."
-            few: "Виберіть <strong>%{count}</strong> варіанти."
-            many: "Виберіть <strong>%{count}</strong> варіантів."
-            other: "Виберіть <strong>%{count}</strong> варіантів."
-          between_min_and_max_options: "Виберіть між <strong>%{min}</strong> і <strong>%{max}</strong> варіантами."
       cast-votes:
         title: "Проголосуйте"
         label: "Проголосувати!"
       show-results:
         title: "Показати результати опитування"
-        label: "Показати результати"
+        label: "Результати"
       remove-vote:
         title: "Видалити свій голос"
-        label: "Вилучити голос"
+        label: "Скасувати голосування"
       hide-results:
         title: "Назад до своїх голосів"
-        label: "Показати голосування"
+        label: "Голосувати"
       group-results:
         title: "Групувати голоси за полем користувача"
         label: "Показати відбивку"
@@ -82,6 +64,8 @@ uk:
         breakdown: "Розбивка"
         percentage: "Відсоток"
         count: "Кількість"
+      options:
+        label: "Параметри"
       error_while_toggling_status: "На жаль, виникла помилка зміни статусу цього опитування."
       error_while_casting_votes: "На жаль, сталася помилка під час голосування."
       error_while_fetching_voters: "На жаль, під час відображення тих, хто проголосував, сталася помилка."

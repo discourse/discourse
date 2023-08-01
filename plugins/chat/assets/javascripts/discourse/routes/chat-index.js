@@ -6,6 +6,10 @@ export default class ChatIndexRoute extends DiscourseRoute {
   @service chatChannelsManager;
   @service router;
 
+  activate() {
+    this.chat.activeChannel = null;
+  }
+
   redirect() {
     // Always want the channel index on mobile.
     if (this.site.mobileView) {
@@ -16,10 +20,10 @@ export default class ChatIndexRoute extends DiscourseRoute {
     const id = this.chat.getIdealFirstChannelId();
     if (id) {
       return this.chatChannelsManager.find(id).then((c) => {
-        return this.chat.openChannel(c);
+        return this.router.replaceWith("chat.channel", ...c.routeModels);
       });
     } else {
-      return this.router.transitionTo("chat.browse");
+      return this.router.replaceWith("chat.browse");
     }
   }
 

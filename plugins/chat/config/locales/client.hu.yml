@@ -15,6 +15,7 @@ hu:
           actions:
             chat_channel_status_change: "A csevegőcsatorna állapota megváltozott"
             chat_channel_delete: "Csevegőcsatorna törölve"
+            chat_auto_remove_membership: "A tagságok automatikusan eltávolításra kerülnek a csatornákról"
       api:
         scopes:
           descriptions:
@@ -64,7 +65,6 @@ hu:
         instructions: "A csatorna lezárása megakadályozza, hogy a nem stábtagok új üzeneteket küldjenek vagy szerkesszék a meglévő üzeneteket. Biztos, hogy be akarja zárni ezt a csatornát?"
       channel_delete:
         title: "Csatorna törlése"
-        instructions: "<p>Törli a(z) <strong>%{name}</strong> csatornát és a csevegési előzményeket. Minden üzenet és a kapcsolódó adat, például a reakciók és a feltöltések véglegesen törlődnek. Ha meg szeretné őrizni a csatorna előzményeit, de meg akarja szüntetni, akkor inkább archiválja a csatornát.</p> <p>Biztos, hogy <strong>véglegesen törli </strong> a csatornát? A megerősítéshez írja be a csatorna nevét az alábbi mezőbe.</p>"
         confirm: "Megértem a következményeket, a csatorna törlése"
         confirm_channel_name: "Adja meg a csatorna nevét"
         process_started: "A csatorna törlése megkezdődött. Ez a kérdésablak hamarosan bezárul, és már nem fogja látni a törölt csatornát."
@@ -74,8 +74,8 @@ hu:
       click_to_join: "Kattintson ide az elérhető csatornák megtekintéséhez."
       close: "Lezárás"
       collapse: "Csevegőfiók összecsukása"
+      expand: "Chat fiók bővítése"
       confirm_flag: "Biztos, hogy jelenti %{username} üzenetét?"
-      deleted: "Egy üzenet törölve lett. [megtekintés]"
       hidden: "Egy üzenet el lett rejtve. [megtekintés]"
       delete: "Törlés"
       edited: "szerkesztve"
@@ -90,6 +90,11 @@ hu:
         never: "Soha"
         title: "E-mail értesítések"
         when_away: "Csak ha távol van"
+      header_indicator_preference:
+        title: "Aktivitásjelző megjelenítése a fejlécben"
+        all_new: "Minden új üzenet"
+        dm_and_mentions: "Közvetlen üzenetek és említések"
+        never: "Soha"
       enable: "Csevegés engedélyezése"
       flag: "Jelölés"
       emoji: "Emodzsi beszúrása"
@@ -99,22 +104,21 @@ hu:
       in_reply_to: "Válaszul erre:"
       heading: "Csevegés"
       join: "Belépés"
-      new_messages: "új üzenetek"
+      last_visit: "utolsó látogatás"
+      summarization:
+        summarize: "Összefoglalás"
       mention_warning:
         dismiss: "elvetés"
         invitations_sent:
           one: "Meghívó elküldve"
           other: "Meghívók elküldve"
         invite: "Meghívás a csatornára"
-        groups:
-          users_limit:
-            one: "%{count} felhasználó"
-            other: "%{count} felhasználó"
       aria_roles:
         header: "Csevegés fejléce"
         composer: "Csevegés szerkesztője"
         channels_list: "Csevegőcsatornák"
       no_public_channels: "Nem csatlakozott egyetlen csatornához sem."
+      kicked_from_channel: "Ezt a csatornát már nem tudja elérni."
       only_chat_push_notifications:
         title: "Csak csevegési leküldéses értesítések küldése"
         description: "Az összes nem csevegési leküldéses értesítés elküldésének letiltása"
@@ -126,10 +130,8 @@ hu:
       close_full_page: "Teljes képernyős csevegés bezárása"
       open_message: "Üzenet megnyitása a csevegésben"
       placeholder_self: "Jegyezzen le valamit"
-      placeholder_others: "Csevegés vele: %{messageRecipient}"
-      placeholder_new_message_disallowed: "A csatorna „%{status}”, jelenleg nem küldhet új üzeneteket."
+      placeholder_channel: "Csevegés %{channelName}"
       placeholder_silenced: "Jelenleg nem küldhet üzeneteket."
-      placeholder_start_conversation: 'Beszélgetés kezdése a következőkkel: %{usernames}'
       remove_upload: "Fájl eltávolítása"
       react: "Reagálás emodzsival"
       reply: "Válasz"
@@ -145,7 +147,6 @@ hu:
       restore: "Törölt üzenet helyreállítása"
       save: "Mentés"
       select: "Válasszon"
-      silence: "Felhasználó némítása"
       return_to_list: "Vissza a csatornákhoz"
       scroll_to_bottom: "Görgetés lefelé"
       scroll_to_new_messages: "Új üzenetek megtekintése"
@@ -158,6 +159,7 @@ hu:
       title: "csevegés"
       title_capitalized: "Csevegés"
       upload: "Fájl csatolása"
+      upload_to_channel: "Feltöltés %{title} címre"
       uploaded_files:
         one: "%{count} fájl"
         other: "%{count} fájl"
@@ -199,8 +201,10 @@ hu:
           about: Névjegy
           members: Tagok
           settings: Beállítások
-      channel_edit_name_modal:
+      channel_edit_name_slug_modal:
+        title: Csatorna szerkesztése
         input_placeholder: Név hozzáadása
+        name: Csatorna neve
       channel_edit_description_modal:
         title: Leírás szerkesztése
         input_placeholder: Leírás hozzáadása
@@ -210,9 +214,6 @@ hu:
         prefix: "Címzett:"
         no_results: Nincs találat
         selected_user_title: "%{username} kijelölésének megszüntetése"
-      channel_selector:
-        title: "Ugrás a csatornára"
-        no_channels: "Egyetlen csatorna sem felel meg a keresésnek"
       channel:
         no_memberships: Ennek a csatornának nincsenek tagjai
         no_memberships_found: Nem találhatók tagok
@@ -222,10 +223,6 @@ hu:
       create_channel:
         auto_join_users:
           public_category_warning: "A(z) %{category} egy nyilvános kategória. Automatikusan hozzáadja az összes nemrég aktív felhasználót ehhez a csatornához?"
-          warning_groups:
-            one: '%{members_count} felhasználó automatikus hozzáadása a(z) %{group} csoportból?'
-            other: '%{members_count} felhasználó automatikus hozzáadása a(z) %{group} és %{group_2} csoportokból?'
-          warning_multiple_groups: Automatikusan hozzáadja a(z) %{group_1} csoport %{members_count} felhasználóját, és további %{count} felhasználót?
         choose_category:
           label: "Válasszon kategóriát"
           none: "válasszon egyet…"
@@ -242,15 +239,12 @@ hu:
         type: "Csevegőüzenet"
       reactions:
         only_you: "Ezzel reagált: :%{emoji}:"
-        and_others: "Ön, %{usernames} ezzel reagált: :%{emoji}:"
-        only_others: "%{usernames} ezzel reagált: :%{emoji}:"
-        others_and_more: "%{usernames} és még %{more} valaki ezzel reagált: :%{emoji}:"
-        you_others_and_more: "Ön, %{usernames} és még %{more} valaki ezzel reagált: :%{emoji}:"
       composer:
         toggle_toolbar: "Eszköztár be/ki"
         italic_text: "dőlt szöveg"
         bold_text: "félkövér szöveg"
         code_text: "kódszöveg"
+        send: "Küldés"
       quote:
         copy_success: "Csevegési idézet a vágólapra másolva"
       notification_levels:
@@ -260,12 +254,13 @@ hu:
       settings:
         channel_wide_mentions_label: "Engedélyezve az @all és @here említések"
         auto_join_users_label: "Felhasználók automatikus hozzáadása"
-        enable_auto_join_users: "Az összes nemrégiben aktív felhasználó automatikus hozzáadása"
         desktop_notification_level: "Asztali értesítések"
         follow: "Belépés"
         followed: "Csatlakozott"
         mobile_notification_level: "Mobilos leküldéses értesítések"
         mute: "Csatorna némítása"
+        threading_enabled: "Engedélyezed"
+        threading_disabled: "Kikapcsolt"
         muted_on: "Be"
         muted_off: "Ki"
         notifications: "Értesítések"
@@ -336,8 +331,8 @@ hu:
           one: "%{commaSeparatedUsernames} és még %{count} valaki gépel"
           other: "%{commaSeparatedUsernames} és még %{count} valaki gépel"
       retention_reminders:
-        public: "A csatorna előzményei %{days} napig maradnak meg."
-        dm: "A személyes csevegési előzményei %{days} napig maradnak meg."
+        public_none: "A csatornaelőzmények korlátlan ideig megőrződnek."
+        dm_none: "A személyes csevegési előzmények korlátlan ideig megőrződnek."
       flagging:
         action: "Üzenet megjelölése"
       emoji_picker:
@@ -352,6 +347,24 @@ hu:
         flags: "Zászlók"
         symbols: "Szimbólumok"
         no_results: "Nincs találat"
+      thread:
+        title: "Cím"
+        view_thread: Téma megtekintése
+        default_title: "Szál"
+        replies:
+          one: "%{count} válasz"
+          other: "%{count} válasz"
+        label: Szál
+        settings: "Beállítások"
+        last_reply: "utolsó válasz"
+        notifications:
+          regular:
+            title: "Normális"
+          tracking:
+            title: "Követés"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Új üzenet"
         cancel: "Visszavon"
@@ -392,11 +405,6 @@ hu:
             sender:
               label: Feladó
               description: Alapértelmezés szerint a rendszer
-    review:
-      types:
-        reviewable_chat_message:
-          title: "Jelentett csevegőüzenet"
-          flagged_by: "Megjelölte"
     keyboard_shortcuts_help:
       chat:
         title: "Csevegés"

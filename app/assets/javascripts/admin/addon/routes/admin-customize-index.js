@@ -1,10 +1,14 @@
 import Route from "@ember/routing/route";
-export default Route.extend({
+import { inject as service } from "@ember/service";
+
+export default class AdminCustomizeIndexRoute extends Route {
+  @service router;
+
   beforeModel() {
     if (this.currentUser.admin) {
-      this.transitionTo("adminCustomizeThemes");
+      this.router.transitionTo("adminCustomizeThemes");
     } else {
-      this.transitionTo("adminWatchedWords");
+      this.router.transitionTo("adminWatchedWords");
     }
-  },
-});
+  }
+}

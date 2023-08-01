@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe Reviewable, type: :model do
+  describe "Validations" do
+    it { is_expected.to validate_length_of(:reject_reason).is_at_most(500) }
+  end
+
   describe ".create" do
     fab!(:admin) { Fabricate(:admin) }
     fab!(:user) { Fabricate(:user) }
@@ -173,7 +177,7 @@ RSpec.describe Reviewable, type: :model do
         it "can filter by who reviewed the flag" do
           reviewable = Fabricate(:reviewable_flagged_post)
           admin = Fabricate(:admin)
-          reviewable.perform(admin, :ignore)
+          reviewable.perform(admin, :ignore_and_do_nothing)
 
           reviewables = Reviewable.list_for(user, status: :all, reviewed_by: admin.username)
 
@@ -394,14 +398,15 @@ RSpec.describe Reviewable, type: :model do
     it "triggers a notification on approve -> reject to update status" do
       reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])
 
-      expect do reviewable.perform(moderator, :reject_post) end.to change {
-        Jobs::NotifyReviewable.jobs.size
-      }.by(1)
+      expect { reviewable.perform(moderator, :reject_post) }.to raise_error(
+        Reviewable::InvalidAction,
+      )
+    end
 
-      job = Jobs::NotifyReviewable.jobs.last
+    it "triggers a notification on approve -> edit to update status" do
+      reviewable = Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])
 
-      expect(job["args"].first["reviewable_id"]).to eq(reviewable.id)
-      expect(job["args"].first["updated_reviewable_ids"]).to contain_exactly(reviewable.id)
+      expect { reviewable.perform(moderator, :edit_post) }.to raise_error(Reviewable::InvalidAction)
     end
 
     it "triggers a notification on reject -> approve to update status" do
@@ -437,7 +442,7 @@ RSpec.describe Reviewable, type: :model do
 
     it "increases flags_ignored when ignored" do
       expect(user.user_stat.flags_ignored).to eq(0)
-      reviewable.perform(Discourse.system_user, :ignore)
+      reviewable.perform(Discourse.system_user, :ignore_and_do_nothing)
       expect(user.user_stat.reload.flags_ignored).to eq(1)
     end
 

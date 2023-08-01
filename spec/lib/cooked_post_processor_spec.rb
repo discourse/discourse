@@ -1012,7 +1012,7 @@ RSpec.describe CookedPostProcessor do
       end
     end
 
-    it "optimizes images in quotes" do
+    it "optimizes and wraps images in quotes with lightbox wrapper" do
       post = Fabricate(:post, raw: <<~MD)
         [quote]
         ![image|1024x768, 50%](#{large_image_upload.short_url})
@@ -1023,7 +1023,7 @@ RSpec.describe CookedPostProcessor do
       cpp.post_process
 
       doc = Nokogiri::HTML5.fragment(cpp.html)
-      expect(doc.css(".lightbox-wrapper").size).to eq(0)
+      expect(doc.css(".lightbox-wrapper").size).to eq(1)
       expect(doc.css("img").first["srcset"]).to_not eq(nil)
     end
 
@@ -1042,7 +1042,9 @@ RSpec.describe CookedPostProcessor do
 
       doc = Nokogiri::HTML5.fragment(cpp.html)
       expect(doc.css(".lightbox-wrapper").size).to eq(0)
-      expect(doc.css("img").first["srcset"]).to_not eq(nil)
+      expect(doc.css("img").first["srcset"]).to eq(nil)
+      expect(doc.css("img").first["src"]).to include("optimized")
+      expect(doc.css("img").first["src"]).to include("512x384")
     end
   end
 
@@ -1080,7 +1082,7 @@ RSpec.describe CookedPostProcessor do
           .returns("<img class='onebox' src='#{image_url}' />")
 
         post = Fabricate(:post, raw: url)
-        upload.update!(url: "https://test.s3.amazonaws.com/something.png")
+        upload.update!(url: "https://test.s3.amazonaws.com/something.png", dominant_color: "00ffff")
 
         PostHotlinkedMedia.create!(
           url: "//image.com/avatar.png",
@@ -1094,7 +1096,7 @@ RSpec.describe CookedPostProcessor do
         cpp.post_process_oneboxes
 
         expect(cpp.doc.to_s).to eq(
-          "<p><img class=\"onebox\" src=\"#{upload.url}\" width=\"100\" height=\"200\"></p>",
+          "<p><img class=\"onebox\" src=\"#{upload.url}\" data-dominant-color=\"00ffff\" width=\"100\" height=\"200\"></p>",
         )
 
         upload.destroy!
@@ -1124,7 +1126,10 @@ RSpec.describe CookedPostProcessor do
             .returns("<img class='onebox' src='#{image_url}' />")
 
           post = Fabricate(:post, raw: url)
-          upload.update!(url: "https://test.s3.amazonaws.com/something.png")
+          upload.update!(
+            url: "https://test.s3.amazonaws.com/something.png",
+            dominant_color: "00ffff",
+          )
 
           PostHotlinkedMedia.create!(
             url: "//image.com/avatar.png",
@@ -1141,7 +1146,7 @@ RSpec.describe CookedPostProcessor do
           cpp.post_process_oneboxes
 
           expect(cpp.doc.to_s).to eq(
-            "<p><img class=\"onebox\" src=\"#{cooked_url}\" width=\"100\" height=\"200\"></p>",
+            "<p><img class=\"onebox\" src=\"#{cooked_url}\" data-dominant-color=\"00ffff\" width=\"100\" height=\"200\"></p>",
           )
         end
       end
@@ -1149,13 +1154,13 @@ RSpec.describe CookedPostProcessor do
 
     it "replaces large image placeholder" do
       SiteSetting.max_image_size_kb = 4096
-      url = "https://image.com/my-avatar"
-      image_url = "https://image.com/avatar.png"
+      url = "https://image.com/avatar.png"
 
-      Oneboxer
-        .stubs(:onebox)
-        .with(url, anything)
-        .returns("<img class='onebox' src='#{image_url}' />")
+      Oneboxer.stubs(:onebox).with(url, anything).returns <<~HTML
+          <a href="#{url}" target="_blank" rel="noopener" class="onebox">
+            <img class='onebox' src='#{url}' />
+          </a>
+        HTML
 
       post = Fabricate(:post, raw: url)
 
@@ -1665,15 +1670,23 @@ RSpec.describe CookedPostProcessor do
               audio_upload.url.sub(SiteSetting.s3_cdn_url, "#{Discourse.base_url}/secure-uploads")
 
             expect(cpp.html).to match_html <<~HTML
-              <p>This post has a video upload.</p>
-              <div class="onebox video-onebox">
+              <p>This post has a video upload.</p><div class="onebox video-onebox">
                 <video width="100%" height="100%" controls="">
                   <source src="#{secure_video_url}">
-                  <a href="#{secure_video_url}">#{secure_video_url}</a>
+                  <a href="#{secure_video_url}">
+                    #{secure_video_url}
+                  </a>
                 </video>
               </div>
+
               <p>This post has an audio upload.<br>
-              <audio controls=""><source src="#{secure_audio_url}"><a href="#{secure_audio_url}">#{secure_audio_url}</a></audio></p>
+              <audio controls="">
+                <source src="#{secure_audio_url}">
+                <a href="#{secure_audio_url}">
+                  #{secure_audio_url}
+                </a>
+              </audio>
+              </p>
               <p>And an image upload.<br>
               <img src="#{image_upload.url}" alt="#{image_upload.original_filename}" data-base62-sha1="#{image_upload.base62_sha1}"></p>
             HTML
@@ -2133,10 +2146,10 @@ RSpec.describe CookedPostProcessor do
   end
 
   describe "#html" do
-    it "escapes attributes" do
-      post = Fabricate(:post, raw: '<img alt="<something>">')
-      expect(post.cook(post.raw)).to eq('<p><img alt="&lt;something&gt;"></p>')
-      expect(CookedPostProcessor.new(post).html).to eq('<p><img alt="&lt;something&gt;"></p>')
+    it "escapes html entities in attributes per html5" do
+      post = Fabricate(:post, raw: '<img alt="&<something>">')
+      expect(post.cook(post.raw)).to eq('<p><img alt="&amp;<something>"></p>')
+      expect(CookedPostProcessor.new(post).html).to eq('<p><img alt="&amp;<something>"></p>')
     end
   end
 end

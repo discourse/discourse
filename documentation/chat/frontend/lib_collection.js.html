@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Discourse: lib/collection.js</title>
+    
+      <link type="text/css" rel="stylesheet" href="styles/vendor/prism-custom.css">
+    
+    <link type="text/css" rel="stylesheet" href="styles/styles.css">
+    
+</head>
+<body>
+
+<header class="layout-header">
+  
+  <h1>
+    <a href="./index.html">
+      Discourse
+    </a>
+  </h1>
+  <nav class="layout-nav">
+    <ul><li class="nav-heading">Classes</li><li class="nav-heading"><span class="nav-item-type type-class" title="class">C</span><span class="nav-item-name is-class"><a href="PluginApi.html">PluginApi</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="PluginApi.html#decorateChatMessage">decorateChatMessage</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="PluginApi.html#registerChatComposerButton">registerChatComposerButton</a></span></li><li class="nav-heading"><span class="nav-item-type type-class" title="class">C</span><span class="nav-item-name is-class"><a href="module.exports.html">exports</a></span></li></ul><ul><li class="nav-heading">Modules</li><li class="nav-heading"><span class="nav-item-type type-module" title="module">M</span><span class="nav-item-name is-module"><a href="module-ChatApi.html">ChatApi</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#categoryPermissions">categoryPermissions</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#channel">channel</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#channels">channels</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#createChannel">createChannel</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#createChannelArchive">createChannelArchive</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#destroyChannel">destroyChannel</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#followChannel">followChannel</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#listChannelMemberships">listChannelMemberships</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#listCurrentUserChannels">listCurrentUserChannels</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#moveChannelMessages">moveChannelMessages</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#sendMessage">sendMessage</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#unfollowChannel">unfollowChannel</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#updateChannel">updateChannel</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#updateChannelStatus">updateChannelStatus</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="module-ChatApi.html#updateCurrentUserChannelNotificationsSettings">updateCurrentUserChannelNotificationsSettings</a></span></li></ul><li class="nav-heading"><a href="global.html">Globals</a></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="global.html#load">load</a></span></li><li class="nav-item"><span class="nav-item-type type-function" title="function">F</span><span class="nav-item-name is-function"><a href="global.html#loadMore">loadMore</a></span></li>
+  </nav>
+</header>
+
+
+<main class="layout-main  layout-content--source">
+  <div class="container">
+    <p class="page-kind">source</p>
+    <h1 class="page-title">lib/collection.js</h1>
+    
+
+
+
+    
+
+<section>
+    <article>
+        <pre id="source" class="source-page line-numbers"><code class="language-js">import { ajax } from "discourse/lib/ajax";
+import { tracked } from "@glimmer/tracking";
+import { bind } from "discourse-common/utils/decorators";
+import { Promise } from "rsvp";
+
+/**
+ * Handles a paginated API response.
+ */
+export default class Collection {
+  @tracked items = [];
+  @tracked meta = {};
+  @tracked loading = false;
+
+  constructor(resourceURL, handler) {
+    this._resourceURL = resourceURL;
+    this._handler = handler;
+    this._fetchedAll = false;
+  }
+
+  get loadMoreURL() {
+    return this.meta.load_more_url;
+  }
+
+  get totalRows() {
+    return this.meta.total_rows;
+  }
+
+  get length() {
+    return this.items.length;
+  }
+
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols
+  [Symbol.iterator]() {
+    let index = 0;
+
+    return {
+      next: () => {
+        if (index &lt; this.items.length) {
+          return { value: this.items[index++], done: false };
+        } else {
+          return { done: true };
+        }
+      },
+    };
+  }
+
+  /**
+   * Loads first batch of results
+   * @returns {Promise}
+   */
+  @bind
+  load(params = {}) {
+    this._fetchedAll = false;
+
+    if (this.loading) {
+      return Promise.resolve();
+    }
+
+    this.loading = true;
+
+    const filteredQueryParams = Object.entries(params).filter(
+      ([, v]) => v !== undefined
+    );
+    const queryString = new URLSearchParams(filteredQueryParams).toString();
+
+    const endpoint = this._resourceURL + (queryString ? `?${queryString}` : "");
+    return this.#fetch(endpoint)
+      .then((result) => {
+        this.items = this._handler(result);
+        this.meta = result.meta;
+      })
+      .finally(() => {
+        this.loading = false;
+      });
+  }
+
+  /**
+   * Attempts to load more results
+   * @returns {Promise}
+   */
+  @bind
+  loadMore() {
+    let promise = Promise.resolve();
+
+    if (this.loading) {
+      return promise;
+    }
+
+    if (
+      this._fetchedAll ||
+      (this.totalRows &amp;&amp; this.items.length >= this.totalRows)
+    ) {
+      return promise;
+    }
+
+    this.loading = true;
+
+    if (this.loadMoreURL) {
+      promise = this.#fetch(this.loadMoreURL).then((result) => {
+        const newItems = this._handler(result);
+
+        if (newItems.length) {
+          this.items = this.items.concat(newItems);
+        } else {
+          this._fetchedAll = true;
+        }
+        this.meta = result.meta;
+      });
+    }
+
+    return promise.finally(() => {
+      this.loading = false;
+    });
+  }
+
+  #fetch(url) {
+    return ajax(url, { type: "GET" });
+  }
+}
+</code></pre>
+    </article>
+</section>
+
+
+
+
+  </div>
+</main>
+
+<footer class="layout-footer">
+  <div class="container">
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.0</a>
+  </div>
+</footer>
+
+
+
+<script src="scripts/prism.dev.js"></script>
+</body>
+</html>

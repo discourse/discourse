@@ -1,6 +1,5 @@
 import {
   acceptance,
-  invisible,
   query,
   queryAll,
   updateCurrentUser,
@@ -23,7 +22,7 @@ acceptance("Topic - Bulk Actions - Mobile", function (needs) {
   });
 
   test("bulk select - modal", async function (assert) {
-    updateCurrentUser({ moderator: true, enable_defer: true });
+    updateCurrentUser({ moderator: true, user_option: { enable_defer: true } });
     await visit("/latest");
     await click("button.bulk-select");
 
@@ -124,9 +123,8 @@ acceptance("Topic - Bulk Actions - Mobile", function (needs) {
     await click(".bulk-select-actions");
     await click(".modal-body .delete-topics");
 
-    assert.ok(
-      invisible(".topic-bulk-actions-modal"),
-      "it closes the bulk select modal"
-    );
+    assert
+      .dom(".topic-bulk-actions-modal")
+      .doesNotExist("it closes the bulk select modal");
   });
 });

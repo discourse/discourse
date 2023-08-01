@@ -1,44 +1,51 @@
 <UserNav::MessagesSecondaryNav>
-  <li class="messages-group-latest">
-    <LinkTo @route="userPrivateMessages.group.index" @model={{this.groupName}}>
-      {{d-icon "envelope"}}
-      <span>{{i18n "categories.latest"}}</span>
-    </LinkTo>
-  </li>
+
+  <DNavigationItem
+    @route="userPrivateMessages.group.index"
+    @ariaCurrentContext="subNav"
+    class="user-nav__messages-group-latest"
+  >
+    {{d-icon "envelope"}}
+    <span>{{i18n "categories.latest"}}</span>
+  </DNavigationItem>
 
   {{#if this.viewingSelf}}
-    <li class="messages-group-new">
-      <LinkTo
-        @route="userPrivateMessages.group.new"
-        @model={{this.groupName}}
-        class="new"
-      >
-        {{d-icon "exclamation-circle"}}
-        <span>{{this.newLinkText}}</span>
-      </LinkTo>
-    </li>
+    <DNavigationItem
+      @route="userPrivateMessages.group.new"
+      @ariaCurrentContext="subNav"
+      class="user-nav__messages-group-new"
+    >
+      {{d-icon "exclamation-circle"}}
+      <span>{{this.newLinkText}}</span>
+    </DNavigationItem>
 
-    <li class="messages-group-unread">
-      <LinkTo
-        @route="userPrivateMessages.group.unread"
-        @model={{this.groupName}}
-        class="unread"
-      >
-        {{d-icon "plus-circle"}}
-        <span>{{this.unreadLinkText}}</span>
-      </LinkTo>
-    </li>
+    <DNavigationItem
+      @route="userPrivateMessages.group.unread"
+      @ariaCurrentContext="subNav"
+      class="user-nav__messages-group-unread"
+    >
+      {{d-icon "plus-circle"}}
+      <span>{{this.unreadLinkText}}</span>
+    </DNavigationItem>
 
-    <li class="messages-group-archive">
-      <LinkTo
-        @route="userPrivateMessages.group.archive"
-        @model={{this.groupName}}
-      >
-        {{d-icon "archive"}}
-        <span>{{i18n "user.messages.archive"}}</span>
-      </LinkTo>
-    </li>
+    <DNavigationItem
+      @route="userPrivateMessages.group.archive"
+      @ariaCurrentContext="subNav"
+      class="user-nav__messages-group-archive"
+    >
+      {{d-icon "archive"}}
+      <span>{{i18n "user.messages.archive"}}</span>
+    </DNavigationItem>
   {{/if}}
 </UserNav::MessagesSecondaryNav>
 
-{{outlet}}
+{{#in-element this.navigationControlsButton}}
+  <GroupNotificationsButton
+    @value={{this.group.group_user.notification_level}}
+    @onChange={{this.changeGroupNotificationLevel}}
+  />
+{{/in-element}}
+
+<div class="group-messages group-{{this.group.name}}">
+  {{outlet}}
+</div>

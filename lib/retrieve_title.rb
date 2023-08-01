@@ -9,7 +9,7 @@ module RetrieveTitle
       max_redirects: max_redirects,
       initial_https_redirect_ignore_limit: initial_https_redirect_ignore_limit,
     )
-  rescue Net::ReadTimeout, FinalDestination::SSRFDetector::LookupFailedError
+  rescue Net::ReadTimeout, FinalDestination::SSRFError
     # do nothing for Net::ReadTimeout errors
   end
 
@@ -32,7 +32,7 @@ module RetrieveTitle
       # A horrible hack - YouTube uses `document.title` to populate the title
       # for some reason. For any other site than YouTube this wouldn't be worth it.
       if title == "YouTube" && html =~ /document\.title *= *"(.*)";/
-        title = Regexp.last_match[1].sub(/ - YouTube$/, "")
+        title = Regexp.last_match[1].sub(/ - YouTube\z/, "")
       end
 
       if !title && node = doc.at('meta[property="og:title"]')
@@ -53,11 +53,12 @@ module RetrieveTitle
 
   def self.max_chunk_size(uri)
     # Exception for sites that leave the title until very late.
-    if uri.host =~ /(^|\.)amazon\.(com|ca|co\.uk|es|fr|de|it|com\.au|com\.br|cn|in|co\.jp|com\.mx)$/
+    if uri.host =~
+         /(^|\.)amazon\.(com|ca|co\.uk|es|fr|de|it|com\.au|com\.br|cn|in|co\.jp|com\.mx)\z/
       return 500
     end
-    return 300 if uri.host =~ /(^|\.)youtube\.com$/ || uri.host =~ /(^|\.)youtu\.be$/
-    return 50 if uri.host =~ /(^|\.)github\.com$/
+    return 300 if uri.host =~ /(^|\.)youtube\.com\z/ || uri.host =~ /(^|\.)youtu\.be\z/
+    return 50 if uri.host =~ /(^|\.)github\.com\z/
 
     # default is 20k
     20

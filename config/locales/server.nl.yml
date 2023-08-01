@@ -189,9 +189,6 @@ nl:
       load_from_remote: "Er is een fout opgetreden bij het laden van dat bericht."
     site_settings:
       invalid_category_id: "Je hebt een categorie opgegeven die niet bestaat"
-      invalid_choice:
-        one: "Je hebt de ongeldige keuze %{name} opgegeven"
-        other: "Je hebt de ongeldige keuzes %{name} opgegeven"
       default_categories_already_selected: "Je kunt geen categorie selecteren die in een andere lijst wordt gebruikt."
       default_tags_already_selected: "Je kunt geen tag selecteren die in een andere lijst wordt gebruikt."
       s3_upload_bucket_is_required: "Je kunt uploads naar S3 niet inschakelen voordat je de 's3_upload_bucket' hebt opgegeven."
@@ -199,7 +196,6 @@ nl:
       page_publishing_requirements: "Het publiceren van pagina's kan niet worden ingeschakeld als beveiligde media is ingeschakeld."
       s3_backup_requires_s3_settings: "Je kunt S3 niet als back-uplocatie gebruiken voordat je een '%{setting_name}' hebt opgegeven."
       s3_bucket_reused: "Je kunt niet dezelfde bucket voor 's3_upload_bucket' en 's3_backup_bucket' gebruiken. Kies een andere bucket of gebruik een ander pad voor elke bucket."
-      secure_uploads_requirements: "S3-uploads moeten zijn ingeschakeld voordat beveiligde uploads worden ingeschakeld."
       share_quote_facebook_requirements: "Je moet een Facebook-app-ID instellen om het delen van citaten in te schakelen voor Facebook."
       second_factor_cannot_enforce_with_socials: "Je kunt 2FA niet afdwingen terwijl sociaal aanmelden is ingeschakeld. Je moet eerst aanmelden uitschakelen via: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Je kunt geen 2FA afdwingen als lokale aanmeldingen zijn uitgeschakeld."
@@ -587,10 +583,6 @@ nl:
             duration_minutes:
               cannot_be_zero: "moet groter zijn dan 0."
               exceeds_maximum: "kan niet meer dan 20 jaar zijn."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'De volgende interpolatiesleutel(s) zijn ongeldig: ''%{keys}'''
         watched_word:
           attributes:
             word:
@@ -610,23 +602,6 @@ nl:
   meta_category_description: "Discussies over deze website, de organisatie, hoe deze werkt en hoe we deze kunnen verbeteren."
   staff_category_name: "Medewerkers"
   staff_category_description: "Privécategorie voor medewerkergesprekken. Topics zijn alleen zichtbaar voor beheerders en moderators."
-  discourse_welcome_topic:
-    title: "Welkom bij onze community!"
-    body: |2
-
-      De eerste alinea van dit vastgemaakte topic is zichtbaar op je startpagina als een welkomstbericht voor alle nieuwe bezoekers. Dit is belangrijk!
-
-      **Bewerk dit** tot een korte beschrijving van je community:
-
-      - Voor wie is deze bestemd?
-      - Wat kunnen ze hier vinden?
-      - Waarom zouden ze hier moeten komen?
-      - Waar kunnen ze meer lezen (links, bronnen, enz.)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Mogelijk wilt je dit topic sluiten via de :wrench: voor beheer (rechtsboven en -beneden), zodat er bij een aankondiging geen antwoorden opstapelen.
-  admin_quick_start_title: "LEES MIJ EERST: Snelstartgids voor beheerders"
   category:
     topic_prefix: "Over de categorie %{category}"
     replace_paragraph: "(Vervang deze eerste alinea door een korte beschrijving van de nieuwe categorie. Deze leidraad wordt weergegeven in het categorieselectiegebied, dus probeer deze onder de 200 tekens te houden.)"
@@ -1108,7 +1083,7 @@ nl:
       title: "DAU/MAU"
       xaxis: "Dag"
       yaxis: "DAU/MAU"
-      description: "Aantal leden dat de afgelopen dag was aangemeld, gedeeld door het aantal leden dat de afgelopen maand was aangemeld – geeft een % terug dat 'plakkerigheid' in de community aangeeft. Het streven is >30%."
+      description: "Aantal leden dat de afgelopen dag was aangemeld, gedeeld door het aantal leden dat de afgelopen maand was aangemeld – geeft een % terug dat 'plakkerigheid' in de community aangeeft. Het streven is >20%."
     daily_engaged_users:
       title: "Dagelijkse actieve gebruikers"
       xaxis: "Dag"
@@ -1476,7 +1451,6 @@ nl:
     manifest_icon: "Afbeelding die als logo/splashafbeelding op Android wordt gebruikt. Wordt automatisch verkleind naar 512 x 512. Bij leeg laten wordt large_icon gebruikt."
     manifest_screenshots: "Schermafbeeldingen die de eigenschappen en functies van je instantie tonen op de installatiepromptpagina. Alle afbeeldingen moeten lokale uploads zijn en dezelfde afmetingen hebben."
     favicon: "Een favicon voor je website, zie <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://nl.wikipedia.org/wiki/Favicon</a>.  Om goed via een CDN te werken, moet dit een png zijn. Wordt verkleind naar 32x32. Bij leeg laten wordt large_icon gebruikt."
-    apple_touch_icon: "Pictogram dat voor Apple touch-apparaten wordt gebruikt. Wordt automatisch verkleind naar 180x180. Bij leeg laten wordt large_icon gebruikt."
     opengraph_image: "Standaard opengraph-afbeelding, gebruikt wanneer de pagina geen andere geschikte afbeelding bevat. Bij leeg laten wordt large_icon gebruikt."
     twitter_summary_large_image: "Twitter-kaart 'grote samenvattingsafbeelding' (moet minimaal 280 breed en minimaal 150 hoog zijn, mag geen .svg zijn). Als dit leeg wordt gelaten, worden reguliere kaartmetagegevens gegenereerd met behulp van de opengraph_image, zolang dat niet ook een .svg is"
     notification_email: "Het Van:-e-mailadres adres dat wordt gebruikt voor het verzenden van alle essentiële systeem-e-mails. Het hier opgegeven domein moet goed ingestelde SPF-, DKIM- en reverse-PTR-records hebben om e-mails te doen aankomen."
@@ -1607,7 +1581,6 @@ nl:
     enable_discourse_connect: "Schakel aanmelden via DiscourseConnect (voorheen 'Discourse SSO') in (WAARSCHUWING: E-MAILADRESSEN VAN GEBRUIKERS *MOETEN* WORDEN GEVALIDEERD DOOR DE EXTERNE SITE!)"
     verbose_discourse_connect_logging: "Log uitgebreide DiscourseConnect-gerelateerde diagnostiek naar <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Implementeer providerprotocol DiscourseConnect (voorheen 'Discourse SSO') op het eindpunt /session/sso_provider, vereist dat discourse_connect_provider_secrets is ingesteld"
-    discourse_connect_url: "URL van DiscourseConnect-eindpunt (moet http:// of https:// bevatten)"
     discourse_connect_secret: "Geheime tekenreeks die wordt gebruikt om DiscourseConnect-gegevens cryptografisch te verifiëren, zorg dat deze 10 tekens of langer is"
     discourse_connect_provider_secrets: "Een lijst met domeingeheimparen die DiscourseConnect gebruiken. Zorg dat het DiscourseConnect-geheim 10 tekens of langer is. Het jokerteken * kan worden gebruikt om elk domein of slechts een deel ervan te matchen (bijvoorbeeld *.voorbeeld.com)."
     discourse_connect_overrides_bio: "Overschrijft biografie in gebruikersprofiel en voorkomt dat gebruiker deze kan wijzigen"
@@ -1621,7 +1594,6 @@ nl:
     discourse_connect_overrides_profile_background: "Overschrijft achtergrond gebruikersprofiel door waarde uit DiscourseConnect-payload."
     discourse_connect_overrides_card_background: "Overschrijft achtergrond gebruikerskaart door waarde uit DiscourseConnect-payload."
     discourse_connect_not_approved_url: "Niet-goedgekeurde DiscourseConnect-accounts omleiden naar deze URL"
-    discourse_connect_allows_all_return_paths: "Het domein niet beperken voor return_paths opgegeven door DiscourseConnect (standaard moet het retourpad zich op de huidige website bevinden)"
     enable_local_logins: "Accounts op basis van een lokale gebruikersnaam en wachtwoord toestaan. WAARSCHUWING: als dit is uitgeschakeld, kun je je mogelijk niet aanmelden als je eerder niet ten minste één alternatieve aanmeldmethode hebt geconfigureerd."
     enable_local_logins_via_email: "Sta gebruikers toe te verzoeken een aanmeldlink met één klik te ontvangen via e-mail."
     allow_new_registrations: "Nieuwe gebruikersregistraties toestaan. Vink dit uit om te voorkomen dat iedereen een nieuwe account kan maken."
@@ -1725,7 +1697,6 @@ nl:
     composer_media_optimization_image_bytes_optimization_threshold: "Minimale bestandsgrootte van afbeeldingen om optimalisatie aan de clientzijde te activeren"
     composer_media_optimization_image_resize_dimensions_threshold: "Minimale afbeeldingsbreedte om vergroting/verkleining aan de clientzijde te activeren"
     composer_media_optimization_image_resize_width_target: "Afbeeldingen met een breedte groter dan `composer_media_optimization_image_dimensions_resize_threshold` worden verkleind tot deze breedte. Moet >= `composer_media_optimization_image_dimensions_resize_threshold` zijn."
-    composer_media_optimization_image_encode_quality: "JPEG-coderingskwaliteit gebruikt in het hercoderingsproces."
     min_ratio_to_crop: "Gebruikte verhouding voor het bijsnijden van hoge afbeeldingen. Voer het resultaat van breedte / hoogte in."
     simultaneous_uploads: "Maximale aantal bestanden dat naar de editor kan worden gesleept"
     default_invitee_trust_level: "Standaard vertrouwensniveau (0-4) voor uitgenodigde leden."
@@ -1754,7 +1725,6 @@ nl:
     tl3_requires_likes_given: "Het minimale aantal likes dat in de afgelopen (tl3 time period) dagen moet worden gegeven om voor promotie naar vertrouwensniveau 3 in aanmerking te komen."
     tl3_requires_likes_received: "Het minimale aantal likes dat in de afgelopen (tl3 time period) dagen moet worden ontvangen om voor promotie naar vertrouwensniveau 3 in aanmerking te komen."
     tl3_links_no_follow: "Verwijder rel=nofollow niet uit links die door gebruikers met vertrouwensniveau 3 zijn geplaatst."
-    trusted_users_can_edit_others: "Gebruikers met hoge vertrouwensniveaus mogen inhoud van andere gebruikers bewerken"
     min_trust_to_create_topic: "Het minimale vertrouwensniveau dat nodig is om een topic te maken."
     allow_flagging_staff: "Wanneer ingeschakeld, kunnen gebruikers berichten van medewerkeraccounts markeren."
     min_trust_to_edit_wiki_post: "Het minimale vertrouwensniveau dat nodig is om een bericht te bewerken dat als wiki is gemarkeerd."
@@ -1790,7 +1760,6 @@ nl:
     title_min_entropy: "De minimale entropie (unieke tekens, niet-Engels telt zwaarder) die voor een topictitel is vereist."
     body_min_entropy: "De minimale entropie (unieke tekens, niet-Engels telt zwaarder) die voor een berichttekst is vereist."
     allow_uppercase_posts: "Alles in hoofdletters in een topictitel of berichttekst toestaan."
-    max_consecutive_replies: "Aantal berichten dat een gebruiker achter elkaar in een topic moet plaatsen voordat het toevoegen van een ander antwoord wordt voorkomen."
     enable_filtered_replies_view: 'De knop "(n) antwoorden" vouwt alle andere berichten samen en toont alleen het huidige bericht en de bijbehorende antwoorden.'
     title_fancy_entities: "Algemene ASCII-tekens naar decoratieve HTML-entiteiten converteren in topictitels, zoals SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "De minimale lengte van een titel voordat er op vergelijkbare topics wordt gecontroleerd."
@@ -1897,7 +1866,6 @@ nl:
     pop3_polling_password: "Het wachtwoord voor de te pollen POP3-account voor e-mail."
     pop3_polling_delete_from_server: "Verwijder e-mails van de server. OPMERKING: als je dit uitschakelt, moet je je e-mail handmatig opschonen."
     log_mail_processing_failures: "Alle fouten van e-mailverwerking opslaan in <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: 'Gebruikers mogen nieuwe topics maken via e-mail (vereist handmatige of POP3-polling). Configureer de adressen in het tabblad ''Instellingen'' van elke categorie.'
     email_in_min_trust: "Het minimale vertrouwensniveau dat een gebruiker moet hebben om nieuwe topics te kunnen plaatsen via e-mail."
     email_in_authserv_id: "De ID van de service die verificatiecontroles op inkomende e-mails uitvoert. Zie <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> voor instructies over het configureren hiervan."
     email_in_spam_header: "De e-mailheader voor het detecteren van spam."
@@ -1970,22 +1938,17 @@ nl:
     permalink_normalizations: "De volgende reguliere expressie toepassen voordat permalinks worden verwerkt. Voorbeeld: /(topic.*)\\?.*/\\1 verwijdert querystrings uit topicroutes. Notatie is regex+strings, gebruik \\1 etc. voor deeluitdrukkingen."
     global_notice: "Toon een algemene niet te sluiten DRINGENDE NOOD-bannermelding voor alle gebruikers. Laat dit leeg om te verbergen (HTML toegestaan)."
     disable_system_edit_notifications: "Schakelt bewerkingsmeldingen van de systeemgebruiker uit als 'download_remote_images_to_local' actief is."
-    disable_category_edit_notifications: "Schakel meldingen van bewerking van categorieën uit voor topics."
-    disable_tags_edit_notifications: "Schakel meldingen van bewerking van tags uit voor topics."
     notification_consolidation_threshold: "Aantal ontvangen meldingen van likes of lidmaatschapsverzoeken voordat de meldingen in één melding worden samengevoegd. Stel dit in op 0 om uit te schakelen."
     likes_notification_consolidation_window_mins: "Tijdsduur in minuten waarin like-meldingen in één melding worden samengevoegd zodra de drempel is bereikt. De drempel kan worden geconfigureerd via 'SiteSetting.notification_consolidation_threshold'."
     automatically_unpin_topics: "Topics automatisch losmaken wanneer de gebruiker de onderkant bereikt."
     read_time_word_count: "Aantal woorden per minuut voor het berekenen van geschatte leestijd."
     topic_page_title_includes_category: "Topicpagina <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>titeltag</a> bevat de categorienaam."
-    native_app_install_banner_ios: "Geeft DiscourseHub-app-banner weer op iOS-apparaten voor vaste gebruikers (vertrouwensniveau 1 en hoger)."
-    native_app_install_banner_android: "Geeft DiscourseHub-app-banner weer op Android-apparaten voor vaste gebruikers (vertrouwensniveau 1 en hoger)."
     app_association_android: "Inhoud van <a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>-eindpunt, gebruikt voor Google's Digital Asset Links-API."
     app_association_ios: "Inhoud van <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>-eindpunt, gebruikt voor het maken van Universal Links tussen deze website en iOS-apps."
     share_anonymized_statistics: "Geanonimiseerde gebruiksstatistieken delen."
     auto_handle_queued_age: "Records die dit aantal dagen op beoordeling wachten automatisch verwijderen. Markeringen worden genegeerd. Berichten en gebruikers in de wachtrij worden geweigerd. Stel dit in op 0 om deze functie uit te schakelen."
     penalty_step_hours: "Standaardstraffen bij demping of schorsing van gebruikers in uren. Bij de eerste overtreding wordt standaard de eerste waarde gebruikt, bij de tweede overtreding de tweede waarde, enz."
     svg_icon_subset: "Extra FontAwesome 5-pictogrammen toevoegen die je in je assets wilt opnemen. Gebruik het voorvoegsel 'fa-' voor effen pictogrammen, 'far-' voor normale pictogrammen en 'fab-' voor merkpictogrammen."
-    max_prints_per_hour_per_user: "Maximale aantal /print-pagina-impressies (stel dit in op 0 om uit te schakelen)"
     full_name_required: "Volledige naam is een verplicht veld van een gebruikersprofiel."
     enable_names: "Volledige naam van gebruiker weergeven op profiel, gebruikerskaart en e-mails. Schakel dit uit om de volledige naam overal te verbergen."
     display_name_on_posts: "Volledige naam van een gebruiker weergeven bij berichten, naast de @gebruikersnaam."
@@ -2006,17 +1969,11 @@ nl:
     allowed_href_schemes: "Toegestane schema's in links, naast http en https."
     embed_post_limit: "Maximale aantal in te bedden berichten."
     embed_username_required: "De gebruikersnaam voor het maken van topics is vereist."
-    notify_about_flags_after: "Als er na dit aantal uren markeringen zijn die nog niet zijn afgehandeld, een privébericht naar moderators sturen. Stel dit in op 0 om uit te schakelen."
-    show_create_topics_notice: "Als de website minder dan 5 publieke topics heeft, een melding weergeven waarin beheerders wordt gevraagd een aantal topics te maken."
     delete_drafts_older_than_n_days: "Concepten ouder dan (n) dagen verwijderen."
     delete_merged_stub_topics_after_days: "Aantal dagen dat moet worden gewacht voordat volledig samengevoegde stubtopics automatisch worden verwijderd. Stel dit in op 0 om stubtopics niet te verwijderen."
-    bootstrap_mode_min_users: "Minimale aantal vereiste gebruikers om bootstrapmodus uit te schakelen (stel dit in op 0 om uit te schakelen)"
     prevent_anons_from_downloading_files: "Voorkom dat anonieme gebruikers bijlagen downloaden."
-    secure_media: "VEROUDERD: wordt verwijderd in Discourse 3.0, gebruik in plaats hiervan de instelling secure_uploads."
     secure_uploads: 'Beperkt de toegang tot ALLE uploads (afbeeldingen, video, audio, tekst, pdf''s, zips en andere). Als ''aanmelding vereist'' is ingeschakeld, hebben alleen aangemelde gebruikers toegang tot uploads. Anders is de toegang alleen beperkt voor media-uploads in privéberichten en privécategorieën. WAARSCHUWING: deze instelling is complex en vereist diepgaande beheerkennis. Zie <a target="_blank" href="https://meta.discourse.org/t/-/140017">het onderwerp Veilige uploads op Meta</a> voor meer informatie.'
-    secure_media_allow_embed_images_in_emails: "VEROUDERD: wordt verwijderd in Discourse 3.0, gebruik secure_uploads_allow_embed_images_in_emails."
     secure_uploads_allow_embed_images_in_emails: "Staat het insluiten van beveiligde afbeeldingen toe die normaal gesproken zouden worden geredigeerd in e-mails, als hun grootte kleiner is dan de instelling 'veilige uploads max. afbeeldingsgrootte insluiten in e-mail kb'."
-    secure_media_max_email_embed_image_size_kb: "VEROUDERD: wordt verwijderd in Discourse 3.0, gebruik secure_uploads_max_email_embed_image_size_kb."
     secure_uploads_max_email_embed_image_size_kb: "De maximale grootte voor beveiligde afbeeldingen die worden ingesloten in e-mails als de instelling 'veilige uploads insluiten toestaan in e-mails' is ingeschakeld. Als die instelling niet is ingeschakeld, heeft deze instelling geen effect."
     slug_generation_method: "Kies een slug-generatiemodus. 'encoded' genereert een percentage-coderingsstring. 'none' schakelt de slug helemaal uit."
     enable_emoji: "Emoji inschakelen"
@@ -2083,7 +2040,6 @@ nl:
     revoke_api_keys_days: "Aantal dagen voordat een niet-gebruikte API-sleutel van een gebruiker automatisch wordt ingetrokken (0 voor nooit)"
     allow_user_api_keys: "Genereren van API-sleutels van gebruiker toestaan"
     allow_user_api_key_scopes: "Lijst van toegestane scopes voor API-sleutels van gebruiker"
-    min_trust_level_for_user_api_key: "Vereiste vertrouwensniveau voor genereren van API-sleutels van gebruiker"
     allowed_user_api_auth_redirects: "Toegestane URL voor verificatie bij omleiden voor API-sleutels van gebruiker. Het jokerteken * kan worden gebruikt om een deel ervan te laten overeenkomen (bv. www.example.com/*)."
     allowed_user_api_push_urls: "Toegestane URL's voor server-push naar gebruikers-API"
     expire_user_api_keys_days: "Aantal dagen voordat een API-sleutel van een gebruiker automatisch verloopt (0 voor nooit)"
@@ -2115,7 +2071,6 @@ nl:
     enable_sitemap: "Genereer een sitemap voor je website en neem deze op in het bestand robots.txt."
     sitemap_page_size: "Aantal URL's om op te nemen in elke sitemappagina. Maximaal 50.000"
     enable_user_status: "(experimenteel) Sta gebruikers toe om een aangepast statusbericht in te stellen (emoji + beschrijving)."
-    enable_user_tips: "(experimenteel) Schakel nieuwe gebruikerstips in die belangrijke functies beschrijven"
     short_title: "De korte titel wordt gebruikt op het startscherm van de gebruiker, de starter, of andere plaatsen waar ruimte beperkt kan zijn. Beperk de naam tot 12 tekens."
     dashboard_hidden_reports: "Toestaan dat de opgegeven rapporten worden verborgen op het dashboard."
     dashboard_visible_tabs: "Kiezen welke dashboardtabbladen zichtbaar zijn."
@@ -2132,10 +2087,6 @@ nl:
     suggest_weekends_in_date_pickers: "Neem weekenden (zaterdag en zondag) op in suggesties voor datumkiezers (schakel dit uit als je Discourse alleen op weekdagen gebruikt, maandag t/m vrijdag)."
     splash_screen: "Geeft een tijdelijk laadscherm weer terwijl website-items worden geladen"
     navigation_menu: "Bepaal welk navigatiemenu u wilt gebruiken. Zijbalk- en kopnavigatie kunnen door gebruikers worden aangepast. Een legacyoptie is beschikbaar voor terugwaartse compatibiliteit."
-    default_sidebar_categories: "Geselecteerde categorieën worden standaard weergegeven onder de sectie Categorieën van de zijbalk."
-    default_sidebar_tags: "Geselecteerde tags worden standaard weergegeven onder de sectie Tags van de zijbalk."
-    enable_new_user_profile_nav_groups: "EXPERIMENTEEL: gebruikers van de geselecteerde groepen krijgen het nieuwe navigatiemenu voor gebruikersprofielen te zien"
-    enable_experimental_topic_timeline_groups: "EXPERIMENTEEL: gebruikers in de geselecteerde groepen krijgen de tijdlijn van het geherformuleerde topic te zien"
     enable_experimental_hashtag_autocomplete: "EXPERIMENTEEL: gebruik het nieuwe automatische #hashtag-aanvulsysteem voor categorieën en tags dat het geselecteerde item anders weergeeft en de zoekfunctie verbetert"
     errors:
       invalid_css_color: "Ongeldige kleur. Voer een kleurnaam of hexadecimale waarde in."
@@ -2162,7 +2113,6 @@ nl:
       pop3_polling_password_is_empty: "Je moet een 'pop3 polling password' instellen voordat je POP3-polling inschakelt."
       pop3_polling_authentication_failed: "POP3-verificatie mislukt. Verifieer je POP3-referenties."
       reply_by_email_address_is_empty: "Je moet een 'reply by email address' instellen voordat je antwoorden via e-mail inschakelt."
-      email_polling_disabled: "Je moet handmatige of POP3-polling inschakelen voordat je antwoorden via e-mail inschakelt."
       user_locale_not_enabled: "Je moet 'allow user locale' inschakelen voordat je deze instelling inschakelt."
       personal_message_enabled_groups_invalid: "Je moet ten minste één groep opgeven voor deze instelling. Als je niet wilt dat iemand behalve medewerkers PB's stuurt, kies dan de medewerkersgroep."
       invalid_regex: "Regex is ongeldig of niet toegestaan."
@@ -2171,7 +2121,6 @@ nl:
       staged_users_disabled: "Je moet eerst 'gefaseerde gebruikers' inschakelen voordat je deze instelling inschakelt."
       reply_by_email_disabled: "Je moet eerst 'reply by email' inschakelen voordat je deze instelling inschakelt."
       discourse_connect_url_is_empty: "Je moet een 'DiscourseConnect-URL' instellen voordat je deze instelling inschakelt."
-      discourse_connect_invite_only: "Je kunt DiscourseConnect en alleen uitnodiging niet tegelijk inschakelen."
       enable_local_logins_disabled: "Je moet eerst 'enable local logins' inschakelen voordat je deze instelling inschakelt."
       min_username_length_exists: "Je kunt de minimale gebruikersnaamlengte niet hoger instellen dan de kortste gebruikersnaam (%{username})."
       min_username_length_range: "Je kunt het minimum niet hoger instellen dan het maximum."
@@ -2193,7 +2142,6 @@ nl:
       search_tokenize_japanese_enabled: "Je moet 'search_tokenize_japanese' uitschakelen voordat je deze instelling inschakelt."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Je kunt DiscourseConnect niet inschakelen als 2FA wordt afgedwongen."
       delete_rejected_email_after_days: "Deze instelling kan niet lager worden ingesteld dan de instelling delete_email_logs_after_days of hoger dan %{max}"
-      invalid_uncategorized_category_setting: "De categorie Ongecategoriseerd kan niet worden geselecteerd als het toestaan van ongecategoriseerde topics niet is toegestaan"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2388,7 +2336,6 @@ nl:
     activated_by_staff: "Geactiveerd door medewerker"
     new_user_typed_too_fast: "Nieuwe gebruiker typte te snel"
     content_matches_auto_silence_regex: "Inhoud komt overeen met reguliere expressie voor automatisch dempen"
-    content_matches_auto_block_regex: "Inhoud komt overeen met regex voor auto-blokkeren"
     username:
       short: "moet uit minstens %{min} tekens bestaan"
       long: "mag niet meer dan %{max} tekens zijn"
@@ -3125,14 +3072,6 @@ nl:
     user_automatically_silenced:
       title: "Gebruiker automatisch gedempt"
       subject_template: "Nieuwe gebruiker %{username} gedempt wegens markeringen door community"
-      text_body_template: |
-        Dit is een automatisch bericht.
-
-        De nieuwe gebruiker [%{username}](%{user_url}) is automatisch gedempt, omdat meerdere gebruikers een of meer berichten van %{username} hebben gemarkeerd.
-
-        [Beoordeel de markeringen](%{base_url}/admin/flags). Als %{username} ten onrechte is gedempt, klik dan op de knop voor opheffen van het dempen op [de beheerpagina van deze gebruiker](%{user_url}).
-
-        Deze drempel kan worden gewijzigd via de 'silence_new_user'-website-instellingen.
     spam_post_blocked:
       title: "Spambericht geblokkeerd"
       subject_template: "Berichten van nieuwe gebruiker %{username} geblokkeerd vanwege herhaalde links"
@@ -3166,15 +3105,6 @@ nl:
       title: "Externe afbeeldingen downloaden uitgeschakeld"
       subject_template: "Het downloaden van externe afbeeldingen is uitgeschakeld"
       text_body_template: "De instelling 'download_remote_images_to_local' is uitgeschakeld omdat de schijfruimtelimiet van 'download_remote_images_threshold' is bereikt."
-    dashboard_problems:
-      title: "Dashboardproblemen"
-      subject_template: "Nieuw advies op je websitedashboard"
-      text_body_template: |
-        We hebben nieuw advies en aanbevelingen voor je op basis van je huidige website-instellingen.
-
-        [Ga naar het websitedashboard](%{base_url}/admin) om het te bekijken.
-
-        Als er niets te zien is op je dashboard, kan het zijn dat een ander medewerker al iets heeft gedaan met dit advies. Een lijst met medewerkeracties is te vinden in je [medewerkeractielogs](%{base_url}/admin/logs/medewerkerf_action_logs).
     new_user_of_the_month:
       title: "Je bent een nieuwe gebruiker van de maand!"
       subject_template: "Je bent een nieuwe gebruiker van de maand!"
@@ -3211,9 +3141,6 @@ nl:
       one: "Let op: we sturen maximaal %{count} e-mail per dag. Kijk op de site om te zien welke mogelijk worden tegengehouden."
       other: "Let op: we sturen maximaal %{count} e-mails per dag. Kijk op de site om te zien welke mogelijk worden tegengehouden."
     in_reply_to: "In antwoord op"
-    unsubscribe:
-      title: "Uitschrijven"
-      description: "Niet geïnteresseerd in deze e-mails? Geen probleem! Klik hieronder om direct uitgeschreven te worden:"
     reply_by_email: "[Bezoek het topic](%{base_url}%{url}) of beantwoord deze e-mail om te reageren."
     reply_by_email_pm: "[Bezoek het bericht](%{base_url}%{url}) of beantwoord deze e-mail om op %{participants} te reageren."
     only_reply_by_email: "Beantwoord deze e-mail om te reageren."
@@ -3510,7 +3437,6 @@ nl:
       liked_received: "Ontvangen likes"
       new_users: "Nieuwe gebruikers"
       popular_topics: "Populaire topics"
-      follow_topic: "Dit topic volgen"
       join_the_discussion: "Meer lezen"
       popular_posts: "Populaire berichten"
       more_new: "Nieuw voor u"
@@ -3711,15 +3637,6 @@ nl:
   offline:
     title: "Kan app niet laden"
     offline_page_message: "Het lijkt erop dat je offline bent! Controleer je netwerkverbinding en probeer het opnieuw."
-  login_required:
-    welcome_message: |
-      ## [Welkom bij %{title}](#welkom)
-      Een account is vereist. Maak een account of meld je aan om verder te gaan.
-    welcome_message_invite_only: |
-      ## [Welkom bij %{title}](#welkom)
-      Een account is vereist. Vraag een bestaand lid om een uitnodiging of meld je aan om verder te gaan.
-  deleted: "verwijderd"
-  image: "afbeelding"
   upload:
     edit_reason: "lokale kopieën van afbeeldingen gedownload"
     unauthorized: "Sorry, het bestand dat je probeert te uploaden is niet toegestaan (toegestane extensies: %{authorized_extensions})."
@@ -3920,262 +3837,8 @@ nl:
       Ja, juridisch jargon is saai, maar we moeten onszelf &ndash; en bij uitbreiding jou en je gegevens &ndash; beschermen tegen onvriendelijke mensen. We hebben [Gebruiksvoorwaarden](%{base_path}/tos) die jouw (en ons) gedrag en rechten beschrijft met betrekking tot inhoud, privacy en wetten. Om deze dienst te gebruiken, moet je akkoord gaan met onze [Gebruiksvoorwaarden](%{base_path}/tos).
   tos_topic:
     title: "Gebruiksvoorwaarden"
-    body: |
-      Deze voorwaarden regelen het gebruik van het internetforum op <%{base_url}>. Om het forum te gebruiken, moet u akkoord gaan met deze voorwaarden van %{bedrijfsnaam}, het bedrijf dat het forum beheert.
-
-      Het bedrijf kan andere producten en diensten aanbieden, onder andere voorwaarden. Deze voorwaarden zijn alleen van toepassing op het gebruik van het forum.
-
-      Ga naar:
-
-      - [Belangrijke termen](#heading--important-terms)
-      - [Uw toestemming om het forum te gebruiken](#heading--permission)
-      - [Voorwaarden voor het gebruik van het forum](#heading--conditions)
-      - [Acceptabel gebruik](#heading--acceptable-use)
-      - [Contentnormen](#heading--content-standards)
-      - [Handhaving](#heading--enforcement)
-      - [Uw account](#heading--your-account)
-      - [Uw content](#heading--your-content)
-      - [Uw verantwoordelijkheid](#heading--responsibility)
-      - [Disclaimers](#heading--disclaimers)
-      - [Beperking van de aansprakelijkheid](#heading--liability)
-      - [Feedback](#heading--feedback)
-      - [Beëindiging](#heading--termination)
-      - [Geschillen](#heading--disputes)
-      - [Algemene voorwaarden](#heading--general)
-      - [Contact](#heading--contact)
-      - [Wijzigingen](#heading--changes)
-
-      <h2 id="heading--important-terms"><a href="#heading--important-terms">Belangrijke voorwaarden</a></h2>
-
-      ***Deze voorwaarden bevatten een aantal belangrijke bepalingen die uw rechten en verantwoordelijkheden beïnvloeden, zoals de disclaimers in [Disclaimers](#heading--disclaimers), beperking van de aansprakelijkheid van het bedrijf jegens u in [Beperking van de aansprakelijkheid](#heading--liability), uw akkoord om het bedrijf te vrijwaren van schade veroorzaakt door uw misbruik van het forum in [Uw verantwoordelijkheid](#heading--responsibility) en een overeenkomst om geschillen te arbitreren in [Geschillen](#heading--disputes).***
-
-      <h2 id="heading--permission"><a href="#heading--permission">Uw toestemming om het forum te gebruiken</a></h2>
-
-      Het bedrijf geeft u toestemming om het forum te gebruiken onder deze voorwaarden. Iedereen moet akkoord gaan met deze voorwaarden om het forum te kunnen gebruiken.
-
-      <h2 id="heading--conditions"><a href="#heading--conditions">Voorwaarden voor het gebruik van het forum</a></h2>
-
-      Uw toestemming om het forum te gebruiken is onderworpen aan de volgende voorwaarden:
-
-      1. U moet ten minste dertien jaar oud zijn.
-
-      2. U mag het forum niet langer gebruiken als het bedrijf rechtstreeks contact met u opneemt om te zeggen dat u dat niet mag.
-
-      3. U moet het forum gebruiken in overeenstemming met [Acceptabel gebruik](#heading--acceptable-use) en [Contentnormen](#heading--content-standards).
-
-      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Acceptabel gebruik</a></h2>
-
-      1. U mag de wet niet overtreden via het forum.
-
-      2. U mag het account van een ander op het forum niet gebruiken of proberen te gebruiken zonder diens specifieke toestemming.
-
-      3. U mag geen gebruikersnamen of andere unieke identificaties op het forum kopen, verkopen of anderszins verhandelen.
-
-      4. U mag geen advertenties, kettingbrieven of andere verzoeken via het forum versturen, of het forum gebruiken om adressen of andere persoonsgegevens te verzamelen voor commerciële mailinglijsten of databases.
-
-      5. U mag de toegang tot het forum niet automatiseren of het forum monitoren, zoals met een webcrawler, browserplug-in of -add-on, of een ander computerprogramma dat geen webbrowser is. U kunt het forum crawlen om het te indexeren voor een openbare zoekmachine, als u die beheert.
-
-      6. U mag het forum niet gebruiken om e-mail te versturen naar distributielijsten, nieuwsgroepen of aliassen voor groeps-e-mail.
-
-      7. U mag niet ten onrechte suggereren dat u verbonden bent met of gesteund wordt door het bedrijf.
-
-      8. U mag geen hyperlink naar afbeeldingen of andere niet-hypertext content van het forum op andere webpagina's plaatsen.
-
-      9. U mag geen aanduidingen van eigendomsrecht verwijderen uit materiaal dat u van het forum downloadt.
-
-      10. U mag geen enkel deel van het forum op andere websites tonen met '<iframe>'.
-
-      11. U mag geen beveiligings- of toegangsbeperkingen van het forum uitschakelen, vermijden of omzeilen.
-
-      12. U mag de infrastructuur van het forum niet belasten met een onredelijke hoeveelheid verzoeken of verzoeken die een onredelijke belasting vormen voor de informatiesystemen die aan het forum ten grondslag liggen.
-
-      13. U mag zich via het forum niet voordoen als iemand anders.
-
-      14. U mag niemand aanmoedigen of helpen in strijd met deze voorwaarden.
-
-      <h2 id="heading--content-standards"><a href="#heading--content-standards">Contentnormen</a></h2>
-
-      1. U mag geen content naar het forum sturen die illegaal, aanstootgevend of anderszins schadelijk is voor anderen. Dit omvat content die intimiderend, ongepast, beledigend of haatdragend is.
-
-      2. U mag geen content naar het forum sturen die de wet overtreedt, inbreuk maakt op iemands intellectuele-eigendomsrechten, iemands privacy schendt of inbreuk maakt op overeenkomsten die u met anderen hebt gesloten.
-
-      3. U mag geen content naar het forum sturen die schadelijke computercode bevat, zoals computervirussen of spyware.
-
-      4. U mag geen content naar het forum sturen als louter plaatshouder, om een bepaald adres, gebruikersnaam of andere unieke identificatie vast te houden.
-
-      5. U mag het forum niet gebruiken om informatie bekend te maken waarvoor u niet het recht hebt deze bekend te maken, zoals vertrouwelijke of persoonlijke informatie van anderen.
-
-      <h2 id="heading--enforcement"><a href="#heading--enforcement">Handhaving</a></h2>
-
-      Het bedrijf kan schendingen van deze voorwaarden onderzoeken en vervolgen in de ruimste zin van het recht. Het bedrijf kan wetshandhavingsinstanties inlichten en met hen samenwerken bij de vervolging van schendingen van de wet en deze voorwaarden.
-
-      Het bedrijf behoudt zich het recht voor om de inhoud van het forum om welke reden dan ook te wijzigen, te bewerken en te verwijderen. Als u denkt dat iemand in strijd met deze voorwaarden inhoud op het forum heeft geplaatst, [neem dan onmiddellijk contact met ons op](#heading--contact).
-
-      <h2 id="heading--your-account"><a href="#heading--your-account">Uw account</a></h2>
-
-      U moet een account maken en zich aanmelden om sommige functies van het forum te kunnen gebruiken.
-
-      Om een account te maken, moet u enkele gegevens over uzelf verstrekken. Als u een account maakt, gaat u ermee akkoord om ten minste een geldig e-mailadres op te geven en dat adres up-to-date te houden. U kunt uw account te allen tijde beëindigen door een e-mail te sturen naar <%{contact_email}>.
-
-      U gaat ermee akkoord verantwoordelijk te zijn voor alle acties die met uw account worden ondernomen, ongeacht of u daarvoor toestemming hebt gegeven of niet, totdat u uw account beëindigt of het bedrijf ervan in kennis stelt dat uw account is gecompromitteerd. U gaat ermee akkoord het bedrijf onmiddellijk op de hoogte te stellen als u vermoedt dat uw account is gecompromitteerd. U gaat ermee akkoord een veilig wachtwoord voor uw account te kiezen en dit geheim te houden.
-
-      Het bedrijf kan uw account op het forum beperken, opschorten of beëindigen in overeenstemming met zijn beleid voor het behandelen van auteursrechtengerelateerde verwijderingsverzoeken, of als het bedrijf redelijkerwijs van mening is dat u een regel in deze voorwaarden hebt overtreden.
-
-      <h2 id="heading--your-content"><a href="#heading--your-content">Uw content</a></h2>
-
-      Niets in deze voorwaarden geeft het bedrijf eigendomsrechten op de intellectuele eigendommen die u deelt met het forum, zoals uw accountinformatie, berichten of andere content die indient bij het forum. Niets in deze voorwaarden geeft u enig eigendomsrecht op de intellectuele eigendommen van het bedrijf.
-
-      Tussen u en het bedrijf blijft u als enige verantwoordelijk voor de content die indient bij het forum. U gaat ermee akkoord dat u niet ten onrechte impliceert dat content die u indient bij het forum, wordt gesponsord of goedgekeurd door het bedrijf. Deze voorwaarden verplichten het bedrijf niet tot het opslaan, onderhouden of verstrekken van kopieën van content die u indient en tot het wijzigen ervan, overeenkomstig deze voorwaarden.
-
-      Content die indient bij het forum is van u en u beslist welke toestemming u anderen daarvoor geeft. U geeft het bedrijf echter ten minste een licentie om content die u bij het forum indient te verstrekken aan andere gebruikers van het forum. Die speciale licentie staat het bedrijf toe om content die u indient bij het forum te kopiëren, te publiceren en te analyseren.
-
-      Wanneer content die u indient bij het forum wordt verwijderd, door u of door het bedrijf, eindigt de speciale licentie van het bedrijf wanneer de laatste kopie verdwijnt uit de back-ups, caches en andere systemen van het bedrijf. Andere licenties die u toepast op content die u indient, zoals [Creative Commons](https://creativecommons.org)-licenties, kunnen blijven bestaan nadat uw content is verwijderd. Deze licenties kunnen anderen, of het bedrijf zelf, het recht geven om uw content opnieuw te delen via het forum.
-
-      Anderen die content ontvangen die u indient bij het forum kunnen de voorwaarden schenden waarop u uw content in licentie geeft. U gaat ermee akkoord dat het bedrijf niet aansprakelijk is jegens u voor deze schendingen of de gevolgen ervan.
-
-      <h2 id="heading--responsibility"><a href="#heading--responsibility">Uw verantwoordelijkheid</a></h2>
-
-      U gaat ermee akkoord het bedrijf te vrijwaren van rechtsvorderingen van anderen in verband met schending van deze voorwaarden door u of door anderen die uw account op het forum gebruiken. U en het bedrijf komen overeen om de andere partij zo snel mogelijk in kennis te stellen van alle rechtsvorderingen waarvoor u het bedrijf zou moeten vrijwaren. Als het bedrijf u niet onmiddellijk in kennis stelt van een rechtsvordering, hoeft u het bedrijf niet schadeloos te stellen voor schade die u met een tijdige kennisgeving had kunnen verdedigen of beperken. U gaat ermee akkoord dat u het bedrijf toestaat het onderzoek, de verdediging en de schikking van rechtsvorderingen waarvoor u het bedrijf zou moeten vrijwaren te controleren en dat u meewerkt met deze inspanningen. Het bedrijf gaat ermee akkoord niet in te stemmen met enige schikking die uw schuld toegeeft of u verplichtingen oplegt zonder uw voorafgaande instemming.
-
-      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Disclaimers</a></h2>
-
-      ***U aanvaardt alle risico's van het gebruik van het forum en de inhoud daarvan. Voor zover toegestaan door de wet leveren het bedrijf en zijn leveranciers het forum zoals het is, zonder enige garantie.***
-
-      Het forum kan hyperlinks naar forums en diensten van anderen plaatsen en deze integreren. Het bedrijf geeft geen enkele garantie over diensten die door anderen worden beheerd of content die zij kunnen leveren. Op het gebruik van diensten die door anderen worden uitgevoerd, kunnen andere voorwaarden van toepassing zijn tussen u en degene die de dienst beheert.
-
-      <h2 id="heading--liability"><a href="#heading--liability">Beperking van de aansprakelijkheid</a></h2>
-
-      ***Noch het bedrijf noch zijn leveranciers zijn jegens u aansprakelijk voor contractbreukschade die hun personeel redelijkerwijs niet kon voorzien toen u akkoord ging met deze voorwaarden.***
-
-      ***Voor zover toegestaan door de wet is de totale aansprakelijkheid jegens u voor vorderingen van welke aard dan ook die verband houden met het forum of de inhoud ervan beperkt tot $ 50.***
-
-      <h2 id="heading--feedback"><a href="#heading--feedback">Feedback</a></h2>
-
-      Het bedrijf verwelkomt uw feedback en suggesties voor het forum. Zie de sectie [Contact](#heading--contact) hieronder voor manieren om met ons in contact te komen.
-
-      U gaat ermee akkoord dat het bedrijf vrij is om te handelen naar de feedback en suggesties die u geeft en dat het bedrijf u niet hoeft te melden dat uw feedback is gebruikt, uw toestemming hoeft te vragen om deze te gebruiken of u hoeft te betalen. U gaat ermee akkoord geen feedback of suggesties in te dienen die volgens u vertrouwelijk of eigendomsrechtelijk zijn voor u of voor anderen.
-
-      <h2 id="heading--termination"><a href="#heading--termination">Beëindiging</a></h2>
-
-      Zowel u als het bedrijf kunnen te allen tijde de in deze voorwaarden beschreven overeenkomst beëindigen. Wanneer onze overeenkomst eindigt, eindigt ook uw toestemming om het forum te gebruiken.
-
-      De volgende bepalingen blijven van kracht na beëindiging van onze overeenkomst: [Uw content](#heading--your-content), [Feedback](#heading--feedback), [Uw verantwoordelijkheid](#heading--responsibility), [Disclaimers](#heading--disclaimers), [Beperking van de aansprakelijkheid](#heading--liability) en [Algemene voorwaarden](#heading--general).
-
-      <h2 id="heading--disputes"><a href="#heading--disputes">Geschillen</a></h2>
-
-      %{governing_law} is van toepassing op elk geschil met betrekking tot deze voorwaarden of uw gebruik van het forum.
-
-      U en het bedrijf komen overeen om alleen bij een staats- of federale rechtbank in %{city_for_disputes} gerechtelijke bevelen te verzoeken met betrekking tot deze voorwaarden. Noch u noch het bedrijf zal bezwaar maken tegen de rechtsbevoegdheid, het forum of de locatie van deze rechtbanken.
-
-      ***U en het bedrijf zullen elk geschil oplossen door middel van bindende arbitrage door de American Arbitration Association. De arbitrage volgt het handelsarbitragereglement en de aanvullende procedures voor consumentengeschillen van de AAA. Arbitrage zal plaatsvinden in %{city_for_disputes}. U zult elk geschil als individu regelen en niet als onderdeel van een collectieve actie of een andere representatieve procedure, hetzij als eiser of als lid van een groep. Geen enkele arbiter zal een geschil consolideren met een andere arbitrage zonder toestemming van het bedrijf.***
-
-      Elke arbitrage-uitspraak omvat de kosten van de arbitrage, redelijke advocatenhonoraria en redelijke kosten voor getuigen. U en het bedrijf kunnen arbitrage starten bij elke bevoegde rechtbank.
-
-      <h2 id="heading--general"><a href="#heading--general">Algemene voorwaarden</a></h2>
-
-      Indien een bepaling van deze voorwaarden niet afdwingbaar is zoals die geschreven is, maar gewijzigd kan worden om die afdwingbaar te maken, moet die bepaling worden gewijzigd in de minimale mate die nodig is om die afdwingbaar te maken. Anders moet die bepaling worden geschrapt.
-
-      U mag uw overeenkomst met het bedrijf niet overdragen. Het bedrijf kan uw overeenkomst overdragen aan een vestiging van het bedrijf, een ander bedrijf dat de controle over het bedrijf verkrijgt, of een ander bedrijf dat activa van het bedrijf koopt die verband houden met het forum. Elke poging tot overdracht in strijd met deze voorwaarden heeft geen rechtsgevolgen.
-
-      Noch de uitoefening van enig recht uit hoofde van deze overeenkomst, noch het afzien van het optreden tegen een schending van deze overeenkomst, ziet af van optreden tegen enige andere schending van deze overeenkomst.
-
-      Deze voorwaarden belichamen alle voorwaarden van overeenkomst tussen u en het bedrijf betreffende het gebruik van het forum. Deze voorwaarden vervangen volledig alle andere overeenkomsten betreffende uw gebruik van het forum, al dan niet schriftelijk.
-
-      <h2 id="heading--contact"><a href="#heading--contact">Contact</a></h2>
-
-      U kunt het bedrijf onder deze voorwaarden informeren en vragen sturen naar het bedrijf op <%{contact_email}>.
-
-      Het bedrijf kan u onder deze voorwaarden informeren via het e-mailadres dat u voor uw account op het forum hebt opgegeven, of door een bericht te plaatsen op de startpagina van het forum of op de pagina van uw account.
-
-      <h2 id="heading--changes"><a href="#heading--changes">Wijzigingen</a></h2>
-
-      Het bedrijf heeft deze voorwaarden voor het laatst bijgewerkt op 12 juli 2018 en kan deze voorwaarden opnieuw bijwerken. Het bedrijf zal alle updates op het forum plaatsen. Voor updates die belangrijke wijzigingen bevatten, gaat het bedrijf ermee akkoord u een e-mail te sturen, indien u een account hebt gemaakt en een geldig e-mailadres hebt opgegeven. Het bedrijf kan ook updates aankondigen met speciale berichten of meldingen op het forum.
-
-      Zodra u bericht krijgt over een update van deze voorwaarden, moet u akkoord gaan met de nieuwe voorwaarden om het forum te kunnen blijven gebruiken.
   privacy_topic:
     title: "Privacybeleid"
-    body: |
-      <a name="collect"></a>
-
-      ## [Welke gegevens verzamelen we?](#collect)
-
-      We verzamelen gegevens van je wanneer je je op onze site registreert en wanneer je deelneemt aan het forum door de hier gedeelde inhoud te lezen, te schrijven en te evalueren.
-
-      Bij registratie op onze site kun je gevraagd worden je naam en e-mailadres op te geven. Je kunt onze site echter bezoeken zonder je te registreren. Je e-mailadres wordt geverifieerd door middel van een e-mail met een unieke link. Als die link wordt bezocht, weten we dat jij het e-mailadres beheert.
-
-      Bij registratie en het plaatsen van berichten registreren we het IP-adres waar de berichten vandaan komen. We kunnen ook serverlogs bewaren met daarin het IP-adres van elk verzoek aan onze server.
-
-      <a name="use"></a>
-
-      ## [Waarvoor gebruiken we je gegevens?](#use)
-
-      Alle gegevens die we van je verzamelen kunnen op een van de volgende manieren worden gebruikt:
-
-      * Om je ervaring te personaliseren. Je gegevens helpen ons om beter in te spelen op je individuele behoeften.
-      * Om onze site te verbeteren. We streven er voortdurend naar ons siteaanbod te verbeteren op basis van de gegevens en feedback die we van je ontvangen.
-      * Om de klantenservice te verbeteren. Je gegevens helpen ons om effectiever te reageren op je klantenserviceverzoeken en ondersteuningsbehoeften.
-      * Om periodieke e-mails te sturen. Het e-mailadres dat je opgeeft kan worden gebruikt om je informatie te sturen, meldingen die je aanvraagt over wijzigingen in topics of in reactie op je gebruikersnaam, om te reageren op vragen en/of andere verzoeken of vragen.
-
-      <a name="protect"></a>
-
-      ## [Hoe beschermen we je gegevens?](#protect)
-
-      We passen diverse beveiligingsmaatregelen toe om de veiligheid van je persoonsgegevens te handhaven wanneer je deze invoert, verzendt of opent.
-
-      <a name="data-retention"></a>
-
-      ## [Wat is jullie beleid voor het bewaren van gegevens?](#data-retention)
-
-      We zullen ons te goeder trouw inspannen en:
-
-      * Serverlogs met het IP-adres van alle verzoeken aan deze server niet langer dan 90 dagen bewaren.
-      * De IP-adressen van geregistreerde gebruikers en hun berichten niet langer dan 5 jaar bewaren.
-
-      <a name="cookies"></a>
-
-      ## [Gebruiken we cookies?](#cookies)
-
-      Ja. Cookies zijn kleine bestanden die een site of zijn dienstverlener op de harde schijf van je computer plaatst via je webbrowser (als je dat toestaat). Met deze cookies kan de site je browser herkennen en, als je een geregistreerde account hebt, deze koppelen aan je geregistreerde account.
-
-      We gebruiken cookies om je voorkeuren te begrijpen en op te slaan voor toekomstige bezoeken en om samengevoegde gegevens over websiteverkeer en -interactie te verzamelen, zodat we in de toekomst betere website-ervaringen en tools kunnen aanbieden. We kunnen een overeenkomst aangaan met externe dienstverleners om ons te helpen de bezoekers van onze site beter te begrijpen. Het is deze dienstverleners niet toegestaan de namens ons verzamelde gegevens te gebruiken, behalve om ons te helpen onze activiteiten uit te voeren en te verbeteren.
-
-      <a name="disclose"></a>
-
-      ## [Verstrekken we gegevens aan derden?](#disclose)
-
-      We verkopen, verhandelen of dragen je persoonlijk identificeerbare informatie niet over aan derden. Dit geldt niet voor vertrouwde derden die ons helpen bij de exploitatie van onze site, het uitvoeren van onze activiteiten of het verlenen van diensten aan jou, zolang deze partijen ermee instemmen deze gegevens vertrouwelijk te houden. We kunnen je gegevens ook vrijgeven wanneer we van mening zijn dat dit nodig is om aan de wet te voldoen, het beleid van onze site te handhaven of onze of andermans rechten, eigendom of veiligheid te beschermen. Niet-persoonlijk identificeerbare bezoekersinformatie kan echter aan andere partijen worden verstrekt voor marketing, reclame of ander gebruik.
-
-      <a name="third-party"></a>
-
-      ## [Links van derden](#third-party)
-
-      Af en toe kunnen we naar eigen goeddunken producten of diensten van derden op onze site opnemen of aanbieden. Deze sites van derden hebben een apart en onafhankelijk privacybeleid. We zijn dan ook niet verantwoordelijk of aansprakelijk voor de inhoud en activiteiten van deze gelinkte sites. Niettemin proberen we de integriteit van onze site te beschermen en verwelkomen we alle feedback over deze sites.
-
-      <a name="coppa"></a>
-
-      ## [Children's Online Privacy Protection Act Compliance](#coppa)
-
-      Onze site, producten en diensten zijn allemaal gericht op mensen die ten minste 13 jaar of ouder zijn. Als deze server zich in de VS bevindt en je jonger dan 13 jaar bent volgens de eisen van COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), gebruik deze site dan niet.
-
-      <a name="online"></a>
-
-      ## [Alleen online privacybeleid](#online)
-
-      Dit online privacybeleid is alleen van toepassing op gegevens die via onze site worden verzameld en niet op gegevens die offline worden verzameld.
-
-      <a name="consent"></a>
-
-      ## [Je toestemming](#consent)
-
-      Door onze site te gebruiken, ga je akkoord met ons privacybeleid.
-
-      <a name="changes"></a>
-
-      ## [Wijzigingen in ons privacybeleid](#changes)
-
-      Als we besluiten ons privacybeleid te wijzigen, zullen we die wijzigingen bekendmaken op deze pagina.
-
-      Dit document is CC-BY-SA. Het is voor het laatst bijgewerkt op 31 mei 2013.
   badges:
     mass_award:
       errors:
@@ -4480,10 +4143,7 @@ nl:
       message: "<p>We hebben de activerings-e-mail opnieuw naar <b>%{email}</b> gestuurd"
   safe_mode:
     title: "Veilige modus starten"
-    description: "In de veilige modus kun je je website testen zonder plug-ins of thema's te laden."
     no_themes: "Thema's en themacomponenten uitschakelen"
-    no_unofficial_plugins: "Niet-officiële plug-ins uitschakelen"
-    no_plugins: "Alle plug-ins uitschakelen"
     enter: "Veilige modus starten"
     must_select: "Je moet ten minste één optie selecteren om naar de veilige modus te gaan."
   wizard:
@@ -4598,7 +4258,6 @@ nl:
           <p>Veel plezier en succes met het <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>bouwen van je nieuwe community!</a></p>
   search_logs:
     graph_title: "Aantal zoekopdrachten"
-  joined: "Lid sinds"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} heeft je genoemd in ''%{topic}'' - %{site_title}'
@@ -4661,50 +4320,30 @@ nl:
         category: categorie-instellingen
     actions:
       agree:
-        title: "Akkoord..."
-      agree_and_keep:
-        title: "Bericht behouden"
-        description: "Akkoord met markering en het bericht ongewijzigd laten."
-      agree_and_keep_hidden:
-        title: "Bericht verborgen houden"
-        description: "Akkoord gaan met markering en het bericht verborgen laten."
+        title: "Ja"
       agree_and_suspend:
-        title: "Gebruiker schorsen"
         description: "Akkoord met markering en de gebruiker schorsen."
       agree_and_silence:
         title: "Gebruiker dempen"
         description: "Akkoord met markering en de gebruiker dempen."
       agree_and_restore:
-        title: "Bericht herstellen"
         description: "Het bericht herstellen, zodat alle gebruikers het kunnen zien."
-      agree_and_hide:
-        title: "Bericht verbergen"
-        description: "Dit bericht verbergen en de gebruiker automatisch een bericht sturen waarin dringend wordt gevraagd het te bewerken."
       delete_single:
         title: "Verwijderen"
       delete:
         title: "Verwijderen..."
-      delete_and_ignore:
-        title: "Bericht verwijderen en negeren"
-        description: "Bericht verwijderen; als dit het eerste bericht is, ook het topic verwijderen"
       delete_and_ignore_replies:
-        title: "Bericht + antwoorden verwijderen en negeren"
-        description: "Bericht en alle antwoorden erop verwijderen; als dit het eerste bericht is, ook het topic verwijderen"
         confirm: "Weet je zeker dat je de antwoorden op het bericht ook wilt verwijderen?"
-      delete_and_agree:
-        title: "Bericht verwijderen en akkoord"
-        description: "Bericht verwijderen; als dit het eerste bericht is, ook het topic verwijderen"
       delete_and_agree_replies:
-        title: "Bericht + antwoorden verwijderen en akkoord"
-        description: "Bericht en alle antwoorden erop verwijderen; als dit het eerste bericht is, ook het topic verwijderen"
         confirm: "Weet je zeker dat je de antwoorden op het bericht ook wilt verwijderen?"
       disagree_and_restore:
-        title: "Niet akkoord en bericht herstellen"
         description: "Het bericht herstellen, zodat alle gebruikers het kunnen zien."
       disagree:
-        title: "Niet akkoord"
+        title: "Nee"
       ignore:
         title: "Negeren"
+      ignore_and_do_nothing:
+        title: "Niets doen"
       approve:
         title: "Goedkeuren"
       approve_post:

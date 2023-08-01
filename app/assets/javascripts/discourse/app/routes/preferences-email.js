@@ -7,16 +7,12 @@ export default RestrictedUserRoute.extend({
     return this.modelFor("user");
   },
 
-  renderTemplate() {
-    this.render({ into: "user" });
-  },
-
   setupController(controller, model) {
     controller.reset();
     controller.setProperties({
       model,
-      oldEmail: controller.new ? "" : model.get("email"),
-      newEmail: controller.new ? "" : model.get("email"),
+      oldEmail: controller.new ? "" : model.email,
+      newEmail: controller.new ? "" : model.email,
     });
   },
 
@@ -24,11 +20,5 @@ export default RestrictedUserRoute.extend({
     if (isExiting) {
       controller.set("new", undefined);
     }
-  },
-
-  // A bit odd, but if we leave to /preferences we need to re-render that outlet
-  deactivate() {
-    this._super(...arguments);
-    this.render("preferences", { into: "user", controller: "preferences" });
   },
 });

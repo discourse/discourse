@@ -55,7 +55,6 @@ pt:
       close: "Fechar"
       collapse: "Colapsar gaveta de Chat"
       confirm_flag: "Tem certeza de que deseja sinalizar a mensagem de %{username}?"
-      deleted: "Uma mensagem foi apagada. [view]"
       hidden: "Uma mensagem foi ocultada. [view]"
       delete: "Eliminar"
       edited: "editado"
@@ -66,14 +65,15 @@ pt:
         direct_message: "Você também pode iniciar um Chat pessoal com um ou mais utilizadores."
       email_frequency:
         never: "Nunca"
+      header_indicator_preference:
+        never: "Nunca"
       flag: "Denunciar"
       join: "Entrar"
+      last_visit: "última visita"
+      summarization:
+        summarize: "Resumir"
       mention_warning:
         dismiss: "marcar Visto"
-        groups:
-          users_limit:
-            one: "%{count} usuário"
-            other: "%{count} usuários"
       only_chat_push_notifications:
         title: "Enviar notificações push apenas para chat"
       reply: "Responder"
@@ -89,7 +89,6 @@ pt:
       restore: "Restaurar mensagem apagada"
       save: "Guardar"
       select: "Selecionar"
-      silence: "Silenciar utilizador"
       return_to_list: "Voltar à lista de canais"
       scroll_to_bottom: "Rolar até o final"
       scroll_to_new_messages: "Ver novas mensagens"
@@ -122,14 +121,16 @@ pt:
           about: Sobre
           members: Membros
           settings: Configurações
-      channel_edit_name_modal:
-        title: Editar nome
+      new_message_modal:
+        no_items: "Sem itens"
+      channel_edit_name_slug_modal:
         input_placeholder: Adicionar um nome
-        description: Dê um breve nome descritivo ao seu canal
+        slug: Slug do canal (opcional)
       direct_message_creator:
         title: Nova Mensagem
         prefix: "Para:"
       create_channel:
+        slug: "Slug do canal (opcional)"
         title: "Novo canal"
         type: "Tipo"
         types:
@@ -138,11 +139,16 @@ pt:
       composer:
         italic_text: "texto em itálico"
         bold_text: "texto em negrito"
+        send: "Enviar"
       notification_levels:
         never: "Nunca"
       settings:
+        auto_join_users_info: "Verificar de hora em hora quais os utilizadores que estiveram activos nos últimos 3 meses. Adicione-os a este canal se tiverem acesso à categoria %{category} ."
+        auto_join_users_info_no_category: "Verificar de hora em hora quais os utilizadores que estiveram activos nos últimos 3 meses. Adicione-os a este canal se tiverem acesso à categoria seleccionada."
         follow: "Entrar"
         followed: "Juntou-se"
+        threading_enabled: "Ativado"
+        threading_disabled: "Desativado"
         notifications: "Notificações"
         preview: "Pré-visualização"
         save: "Guardar"
@@ -174,6 +180,21 @@ pt:
         activities: "Atividades"
         flags: "Sinalizações"
         symbols: "Símbolos"
+      thread:
+        title: "Título"
+        replies:
+          one: "%{count} resposta"
+          other: "%{count} respostas"
+        settings: "Configurações"
+        last_reply: "última resposta"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "A Seguir"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Nova Mensagem"
         cancel: "Cancelar"
@@ -185,7 +206,3 @@ pt:
           fields:
             message:
               label: Mensagem
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Sinalizado por"

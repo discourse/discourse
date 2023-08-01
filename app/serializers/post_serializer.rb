@@ -37,11 +37,13 @@ class PostSerializer < BasicPostSerializer
              :flair_url,
              :flair_bg_color,
              :flair_color,
+             :flair_group_id,
              :version,
              :can_edit,
              :can_delete,
              :can_permanently_delete,
              :can_recover,
+             :can_see_hidden_post,
              :can_wiki,
              :link_counts,
              :read,
@@ -179,6 +181,10 @@ class PostSerializer < BasicPostSerializer
     scope.can_recover_post?(object)
   end
 
+  def can_see_hidden_post
+    scope.can_see_hidden_post?(object)
+  end
+
   def can_wiki
     scope.can_wiki?(object)
   end
@@ -211,6 +217,10 @@ class PostSerializer < BasicPostSerializer
 
   def flair_color
     object.user&.flair_group&.flair_color
+  end
+
+  def flair_group_id
+    object.user&.flair_group_id
   end
 
   def link_counts
@@ -305,8 +315,14 @@ class PostSerializer < BasicPostSerializer
         summary.delete(:can_act)
       end
 
+      if actions.present? && SiteSetting.allow_anonymous_likes && sym == :like &&
+           !scope.can_delete_post_action?(actions[id])
+        summary.delete(:can_act)
+      end
+
       if actions.present? && actions.has_key?(id)
         summary[:acted] = true
+
         summary[:can_undo] = true if scope.can_delete?(actions[id])
       end
 
@@ -561,13 +577,20 @@ class PostSerializer < BasicPostSerializer
   end
 
   def mentioned_users
-    if @topic_view && (mentions = @topic_view.mentions[object.id])
-      users = mentions.map { |username| @topic_view.mentioned_users[username] }.compact
-    else
-      users = User.where(username: object.mentions)
-    end
+    users =
+      if @topic_view && (mentioned_users = @topic_view.mentioned_users[object.id])
+        mentioned_users
+      else
+        query = User
+        query = query.includes(:user_status) if SiteSetting.enable_user_status
+        query = query.where(username: object.mentions)
+      end
 
     users.map { |user| BasicUserWithStatusSerializer.new(user, root: false) }
+  end
+
+  def include_mentioned_users?
+    SiteSetting.enable_user_status
   end
 
   private

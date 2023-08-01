@@ -2,17 +2,18 @@
   class={{concat-class
     "chat-channel-preview-card"
     (unless this.hasDescription "-no-description")
+    (unless this.showJoinButton "-no-button")
   }}
 >
-  <ChatChannelTitle @channel={{this.channel}} />
+  <ChatChannelTitle @channel={{@channel}} />
   {{#if this.hasDescription}}
     <p class="chat-channel-preview-card__description">
-      {{this.channel.description}}
+      {{@channel.description}}
     </p>
   {{/if}}
   {{#if this.showJoinButton}}
     <ToggleChannelMembershipButton
-      @channel={{this.channel}}
+      @channel={{@channel}}
       @options={{hash joinClass="btn-primary"}}
     />
   {{/if}}

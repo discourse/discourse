@@ -3,7 +3,12 @@
 
 RSpec.describe ThemeField do
   fab!(:theme) { Fabricate(:theme) }
-  before { ThemeJavascriptCompiler.disable_terser! }
+
+  before do
+    SvgSprite.clear_plugin_svg_sprite_cache!
+    ThemeJavascriptCompiler.disable_terser!
+  end
+
   after { ThemeJavascriptCompiler.enable_terser! }
 
   describe "scope: find_by_theme_ids" do
@@ -160,7 +165,7 @@ HTML
     field.value = "@import 'missingfile';"
     field.save!
     field.ensure_baked!
-    expect(field.error).to include("File to import not found or unreadable: missingfile")
+    expect(field.error).to include("Error: Can't find stylesheet to import.")
 
     field.value = "body {color: blue};"
     field.save!
@@ -611,7 +616,24 @@ HTML
   end
 
   describe "SVG sprite theme fields" do
-    let(:upload) { Fabricate(:upload) }
+    let :svg_content do
+      "<svg><symbol id='test'></symbol></svg>"
+    end
+
+    let :upload_file do
+      tmp = Tempfile.new("test.svg")
+      File.write(tmp.path, svg_content)
+      tmp
+    end
+
+    after { upload_file.unlink }
+
+    let(:upload) do
+      UploadCreator.new(upload_file, "test.svg", for_theme: true).create_for(
+        Discourse::SYSTEM_USER_ID,
+      )
+    end
+
     let(:theme) { Fabricate(:theme) }
     let(:theme_field) do
       ThemeField.create!(
@@ -626,19 +648,18 @@ HTML
     end
 
     it "is rebaked when upload changes" do
-      theme_field.update(upload: Fabricate(:upload))
+      fname = "custom-theme-icon-sprite.svg"
+      sprite = UploadCreator.new(file_from_fixtures(fname), fname, for_theme: true).create_for(-1)
+      theme_field.update(upload: sprite)
       expect(theme_field.value_baked).to eq(nil)
     end
 
     it "clears SVG sprite cache when upload is deleted" do
-      fname = "custom-theme-icon-sprite.svg"
-      sprite = UploadCreator.new(file_from_fixtures(fname), fname, for_theme: true).create_for(-1)
-
-      theme_field.update(upload: sprite)
-      expect(SvgSprite.custom_svg_sprites(theme.id).size).to eq(1)
+      theme_field
+      expect(SvgSprite.custom_svgs(theme.id).size).to eq(1)
 
       theme_field.destroy!
-      expect(SvgSprite.custom_svg_sprites(theme.id).size).to eq(0)
+      expect(SvgSprite.custom_svgs(theme.id).size).to eq(0)
     end
 
     it "crashes gracefully when svg is invalid" do

@@ -286,7 +286,7 @@ class UserMerger
         bio_cooked_version   = COALESCE(t.bio_cooked_version, s.bio_cooked_version),
         profile_background_upload_id = COALESCE(t.profile_background_upload_id, s.profile_background_upload_id),
         dismissed_banner_key = COALESCE(t.dismissed_banner_key, s.dismissed_banner_key),
-        badge_granted_title  = t.badge_granted_title OR s.badge_granted_title,
+        granted_title_badge_id = COALESCE(t.granted_title_badge_id, s.granted_title_badge_id),
         card_background_upload_id = COALESCE(t.card_background_upload_id, s.card_background_upload_id),
         views                = t.views + s.views
       FROM user_profiles AS s

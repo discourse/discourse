@@ -150,9 +150,6 @@ nb_NO:
     embed:
       load_from_remote: "Det oppstod et problem med innlastingen av innlegget."
     site_settings:
-      invalid_choice:
-        one: "Du spesifiserte det ugyldige valget %{name}"
-        other: "Du spesifiserte de ugyldige valgene %{name}"
       default_categories_already_selected: "Du kan ikke velge en annen kategori brukt i en annen liste."
       s3_upload_bucket_is_required: "Du kan ikke aktivere opplasting til S3 hvis ikke du har satt innstillingen 's3_upload_bucket'."
     conflicting_google_user_id: 'Google Account ID for denne kontoen har endret seg; staben må manuelt godkjenne endringen av sikkerhetshensyn. Vennligst kontakt staben og pek dem til <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
@@ -383,10 +380,6 @@ nb_NO:
           attributes:
             execute_at:
               in_the_past: "må være i fremtiden."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'De følgende interpolasjonsnøklene er ugyldige: "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -398,21 +391,6 @@ nb_NO:
   meta_category_description: "Diskusjon om dette nettstedet, hvordan det er organisert, hvordan det fungerer og hvordan vi kan forbedre det."
   staff_category_name: "Stab"
   staff_category_description: "Privat kategori for diskusjoner blant staben. Emner er kun synlige for administratorer og moderatorer."
-  discourse_welcome_topic:
-    body: |2
-
-      Det første avsnittet av dette festede emnet vil være synlig som en velkomstmelding til alle nye besøkende på hjemmesiden. Det er viktig!
-
-      **Rediger dette** til en kort beskrivelse av samfunnet ditt:
-
-      - Hvem er det ment for?
-      - Hva kan de finner her?
-      - Hvorfor skal de besøke stedet?
-      - Hvor kan de lese mer (lenker, ressurser, etc)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Vi anbefaler at du stenger dette emnet ved hjelp av Admin :wrench: knappen (oppe til høyre og i bunnen), slik at svar ikke hoper seg opp på en kunngjøring som denne.
   category:
     topic_prefix: "Om kategorien %{category} "
     post_template: "%{replace_paragraph}\n\nBruk de følgende avsnittene for en lengre beskrivelse, eller for å formulere retningslinjer eller regler for kategorien:\n\n- Hvorfor skal folk bruke denne kategorien? Hva er den ment for?\n\n- Hvordan skiller den seg fra de andre kategoriene vi allerede har?\n\n- Hva skal emner i denne kategorien generelt sett inneholde?\n\n- Trenger vi denne kategorien? Kan vi slå den sammen med en annen kategori eller underkategori?\n"
@@ -1147,8 +1125,6 @@ nb_NO:
   subject_pm: "[privat samtale]"
   user_notifications:
     previous_discussion: "Tidligere svar"
-    unsubscribe:
-      title: "Avmeld"
     user_invited_to_private_message_pm_group:
       title: "Bruker inviterte gruppe til privat samtale"
     user_invited_to_private_message_pm:
@@ -1183,7 +1159,6 @@ nb_NO:
       liked_received: "Likes mottatt"
       new_users: "Nye brukere"
       popular_topics: "Populære emner"
-      follow_topic: "Følg dette emnet"
       join_the_discussion: "Les mer"
       popular_posts: "Populære innlegg"
       more_new: "Nytt for deg"
@@ -1203,8 +1178,6 @@ nb_NO:
     see_more: "Mer"
     search_title: "Søk i denne siden"
     search_button: "Søk"
-  deleted: "slettet"
-  image: "bilde"
   upload:
     edit_reason: "Last ned lokal kopi av bilder"
     unauthorized: "Beklager, filen du prøver å legge til er ikke autorisert\n(authorized extensions: %{authorized_extensions})."
@@ -1237,88 +1210,6 @@ nb_NO:
     title: "Bruksvilkår"
   privacy_topic:
     title: "Personvernserklæring"
-    body: |
-      <a name="samle"></a>
-
-      ## [Hvilke opplysninger samler vi?](#samle)
-
-      Vi samler opplysninger fra deg når du registrerer deg på nettstedet vårt, og vi samler data når du deltar på forumet ved å lese, skrive og evaluere innholdet som deles her.
-
-      Når du registrerer deg på nettstedet vårt, kan du bli bedt om å oppgi navnet og e-postadressen din. Imidlertid kan du besøke nettstedet vårt uten å registrere deg. E-postadressen din vil bli bekreftet med en e-post som inneholder en unik lenke. Hvis siden den lenker til, blir besøkt, vet vi at du har kontroll over e-postadressen.
-
-      Når du registrerer deg og skriver innlegg, registrerer vi IP-adressen som innlegget stammer fra. Vi kan også oppbevare logger som inkluderer IP-adressen til alle forespørslene sendt til tjeneren vår.
-
-      <a name="bruk"></a>
-
-      ## [Hva bruker vi opplysningene dine til?](#bruk)
-
-      Alle opplysningene vi samler fra deg, kan bli brukt på en av følgende måter:
-
-      * For å gjøre opplevelsen din mer personlig. Opplysningene dine hjelper oss å svare bedre på dine individuelle behov.
-      * For å forbedre nettstedet vårt. Vi jobber konstant for å forbedre nettstedets tilbud basert på opplysningene og tilbakemeldingene vi mottar fra deg.
-      * For å forbedre vår kundeservice. Dine opplysninger hjelper oss å svare mer effektivt på dine forespørsler sendt til kundeservice eller behov om støtte.
-      * For å sende periodiske e-poster. E-postadressen du oppgir, kan bli brukt til å sende deg informasjon, påminnelser som du ber om ved endringer av emner eller ved svar til brukernavnet ditt, til henvendelser, og/eller andre forspørsler eller andre spørsmål.
-
-      <a name="sikre"></a>
-
-      ## [Hvordan sikrer vi opplysningene?](#sikre)
-
-      Vi gjennomfører flere sikkerhetstiltak for å holde personopplysningene dine sikre når du skriver inn, lagrer eller henter dem.
-
-      <a name="datalagring"></a>
-
-      ## [Hva er retningslinjene deres for lagring av data?](#datalagring)
-
-      Vi vil forsøke i god tro å:
-
-      * Ikke oppbevare tjener-logger som inneholder IP-adressen til alle forespørslene til denne tjeneren i lenger enn i 90 dager.
-      * Ikke oppbevare IP-adressene forbundet med registrerte brukere og deres innlegg lenger enn i 5 år.
-
-      <a name="informasjonskapsler"></a>
-
-      ## [Bruker vi informasjonskapsler?](#informasjonskapsler)
-
-      Ja. Informasjonskapsler er små filer som et nettsted eller dets tjenesteleverandør overfører til harddisken på datamaskinen din gjennom nettleseren din (dersom du tillater det). Disse informasjonskapslene gjør det mulig for nettstedet å gjenkjenne nettleseren din og, dersom du har en konto, knytte nettleseren til den.
-
-      Vi bruker informasjonskapsler for å forstå og lagre preferansene dine for fremtidige besøk og for å samle aggregatdata om trafikk på og samhandling med nettstedet slik at vi kan tilby bedre opplevelser og verktøy på nettstedet i fremtiden. Vi kan inngå avtaler med tredjeparts tjenesteleverandører for å bistå oss i å forstå besøkerne våres bedre. Disse tjenesteleverandørene har ikke lov til å bruke opplysningene samlet på våres vegne unntatt til å hjelpe oss å gjennomføre og forbedre anliggendet vårt.
-
-      <a name="gi-videre"></a>
-
-      ## [Gir vi noen opplysninger videre til andre parter?](#gi-videre)
-
-      Vi verken selger, handler med eller overfører på noen annen måte til andre parter dine identifiserbare personopplysninger. Dette inkluderer ikke tredjeparter som har vår tillit og bistår oss i å drive nettstedet, utføre våre anliggender eller yter tjenester til deg, så lenge disse partene samtykker til å behandle disse opplysningene fortrolig. Vi kan også frigi opplysningene dine dersom vi tror at å frigi dem er hensiktsmessig for å overholde loven, håndheve nettstedet retningslinjer eller beskytte våre og andres rettigheter. Imidlertid kan opplysninger som ikke er personlig identifiserbare, bli delt med andre parter for markedsføring, reklame eller annet bruk.
-
-      <a name="tredjepart"></a>
-
-      ## [Tredjeparts lenker](#tredjepart)
-
-      Av og til, etter skjønn, kan vil inkludere eller tilby tredjeparts produkter eller tjenester på nettstedet vårt. Disse tredjeparts nettstedene har separate og selvstendige personvernerklæringer. Vi bærer derfor intet ansvar eller forpliktelser for innholdet eller aktivitetene til disse nettstedene det lenkes til. Ikke mindre prøver vi å bevare vår eget nettsteds integritet og ønsker enhver tilbakemelding om disse nettstedene velkomne.
-
-      <a name="coppa"></a>
-
-      ## [Overensstemmelse med Children's Online Privacy Protection Act](#coppa)
-
-      Nettstedet, produktene og tjenestene våre er rettet mot folk som er minst 13 år gamle. Dersom denne tjeneren er i USA, og du er under 13 år i henhold til kravene i COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), ikke bruk dette nettstedet.
-
-      <a name="nett"></a>
-
-      ## [Personvernerklæring bare for nettet](#nett)
-
-      Denne nett-personvernerklæringen gjelder bare for informasjon samlet gjennom nettstedet vårt og ikke for opplysninger samlet når en er frakoblet.
-
-      <a name="samtykke"></a>
-
-      ## [Ditt samtykke](#samtykke)
-
-      Vet å bruke nettstedet vårt samtykker du til nettstedets personvernerklæring.
-
-      <a name="endringer"></a>
-
-      ## [Changes to our Privacy Policy](#endringer)
-
-      Dersom vi beslutter å endre personvernerklæringen vår, vil vi publisere disse endringene på denne siden.
-
-      Dette dokumentet er lisensiert under CC-BY-SA. De ble sist oppdatert 31. mai 2013.
   badges:
     editor:
       name: Tekstbehandler
@@ -1432,7 +1323,6 @@ nb_NO:
                 label: "Kategorier og siste emner"
               categories_and_top_topics:
                 label: "Kategorier og toppemner"
-  joined: "Medlem fra"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nevnte deg i "%{topic}" - %{site_title}'
@@ -1456,28 +1346,24 @@ nb_NO:
       medium: "Middels"
       high: "Høy"
     actions:
-      agree_and_keep:
-        title: "Behold innlegg"
-        description: "Samtykk med flagg og behold innlegget uendret."
+      agree:
+        title: "Ja"
       agree_and_suspend:
-        title: "Steng ute bruker"
         description: "Si deg enig med rapportering og steng ute bruker. "
       agree_and_silence:
-        title: "Demp bruker"
         description: "Si deg enig med rapportering og demp bruker. "
       agree_and_restore:
         description: "Gjenopprett innlegget slik at alle brukere kan se det."
-      agree_and_hide:
-        title: "Skjul innlegg"
-        description: "Gjem dette innlegget og send en melding til brukeren automatisk med en forespørsel om gjøre endringer."
       delete_single:
         title: "Slett"
       disagree_and_restore:
         description: "Gjenopprett innlegget slik at alle brukere kan se det."
       disagree:
-        title: "Si deg uenig"
+        title: "Nei"
       ignore:
         title: "Ignorer"
+      ignore_and_do_nothing:
+        title: "ikke gjør noe"
       approve:
         title: "Godkjenn"
       reject_user:

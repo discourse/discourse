@@ -18,6 +18,7 @@
       align-items: center;
       color: var(--primary-medium);
       display: flex;
+      flex-wrap: wrap;
 
       .avatar {
         aspect-ratio: 30 / 30;
@@ -27,8 +28,50 @@
   }
 }
 
-.chat-transcript {
-  .chat-transcript-user-avatar .avatar {
-    aspect-ratio: 20 / 20;
+.chat-drawer-container .chat-message .onebox {
+  width: 85%;
+  border: 2px solid var(--primary-low);
+
+  header {
+    margin-bottom: 0.5em;
+  }
+
+  .onebox-body {
+    grid-template-rows: auto auto auto;
+    overflow: auto;
+  }
+
+  h3 {
+    @include line-clamp(2);
+    font-weight: 500;
+    font-size: var(--font-down-1);
+  }
+
+  p {
+    display: none;
+  }
+}
+
+.has-full-page-chat .chat-message .onebox:not(img),
+.chat-drawer-container .chat-message .onebox {
+  margin: 0.5em 0;
+  border-width: 2px;
+
+  header {
+    margin-bottom: 0.5em;
+  }
+
+  h3 a,
+  h4 a {
+    font-size: 14px;
+  }
+
+  pre {
+    display: flex;
+    max-height: 150px;
+  }
+
+  p {
+    overflow: hidden;
   }
 }

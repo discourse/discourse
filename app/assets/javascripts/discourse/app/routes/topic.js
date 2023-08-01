@@ -10,15 +10,25 @@ import { setTopicId } from "discourse/lib/topic-list-tracker";
 import showModal from "discourse/lib/show-modal";
 import TopicFlag from "discourse/lib/flag-targets/topic-flag";
 import PostFlag from "discourse/lib/flag-targets/post-flag";
+import HistoryModal from "discourse/components/modal/history";
+import PublishPageModal from "discourse/components/modal/publish-page";
 
 const SCROLL_DELAY = 500;
 
 const TopicRoute = DiscourseRoute.extend({
+  composer: service(),
   screenTrack: service(),
+  modal: service(),
 
   scheduledReplace: null,
   lastScrollPos: null,
   isTransitioning: false,
+
+  buildRouteInfoMetadata() {
+    return {
+      scrollOnTransition: false,
+    };
+  },
 
   redirect() {
     return this.redirectIfLoginRequired();
@@ -103,9 +113,8 @@ const TopicRoute = DiscourseRoute.extend({
   @action
   showPagePublish() {
     const model = this.modelFor("topic");
-    showModal("publish-page", {
+    this.modal.show(PublishPageModal, {
       model,
-      title: "topic.publish_page.title",
     });
   },
 
@@ -113,13 +122,11 @@ const TopicRoute = DiscourseRoute.extend({
   showTopicTimerModal() {
     const model = this.modelFor("topic");
 
-    const topicTimer = model.get("topic_timer");
-    if (!topicTimer) {
+    if (!model.get("topic_timer")) {
       model.set("topic_timer", {});
     }
 
     showModal("edit-topic-timer", { model });
-    this.controllerFor("modal").set("modalClass", "edit-topic-timer-modal");
   },
 
   @action
@@ -139,23 +146,23 @@ const TopicRoute = DiscourseRoute.extend({
 
   @action
   showFeatureTopic() {
-    showModal("featureTopic", {
+    showModal("feature-topic", {
       model: this.modelFor("topic"),
       title: "topic.feature_topic.title",
     });
-    this.controllerFor("modal").set("modalClass", "feature-topic-modal");
     this.controllerFor("feature_topic").reset();
   },
 
   @action
   showHistory(model, revision) {
-    let historyController = showModal("history", {
-      model,
-      modalClass: "history-modal",
+    this.modal.show(HistoryModal, {
+      model: {
+        postId: model.id,
+        postVersion: revision || "latest",
+        post: model,
+        editPost: (post) => this.controllerFor("topic").send("editPost", post),
+      },
     });
-    historyController.refresh(model.get("id"), revision || "latest");
-    historyController.set("post", model);
-    historyController.set("topicController", this.controllerFor("topic"));
   },
 
   @action
@@ -319,16 +326,12 @@ const TopicRoute = DiscourseRoute.extend({
   activate() {
     this._super(...arguments);
     this.set("isTransitioning", false);
-
-    const topic = this.modelFor("topic");
-    this.session.set("lastTopicIdViewed", parseInt(topic.get("id"), 10));
   },
 
   deactivate() {
     this._super(...arguments);
 
-    this.searchService.set("searchContext", null);
-    this.controllerFor("user-card").set("visible", false);
+    this.searchService.searchContext = null;
 
     const topicController = this.controllerFor("topic");
     const postStream = topicController.get("model.postStream");
@@ -336,7 +339,7 @@ const TopicRoute = DiscourseRoute.extend({
     postStream.cancelFilter();
 
     topicController.set("multiSelect", false);
-    this.controllerFor("composer").set("topic", null);
+    this.composer.set("topic", null);
     this.screenTrack.stop();
 
     this.appEvents.trigger("header:hide-topic");
@@ -354,13 +357,13 @@ const TopicRoute = DiscourseRoute.extend({
       firstPostExpanded: false,
     });
 
-    this.searchService.set("searchContext", model.get("searchContext"));
+    this.searchService.searchContext = model.get("searchContext");
 
     // close the multi select when switching topics
     controller.set("multiSelect", false);
     controller.get("quoteState").clear();
 
-    this.controllerFor("composer").set("topic", model);
+    this.composer.set("topic", model);
     this.topicTrackingState.trackIncoming("all");
 
     // We reset screen tracking every time a topic is entered

@@ -54,6 +54,7 @@ class SiteSettings::TypeSupervisor
         simple_list: 23,
         emoji_list: 24,
         html_deprecated: 25,
+        tag_group_list: 26,
       )
   end
 
@@ -193,6 +194,10 @@ class SiteSettings::TypeSupervisor
 
   def get_type(name)
     self.class.types[@types[name.to_sym]]
+  end
+
+  def get_list_type(name)
+    @list_type[name.to_sym]
   end
 
   private

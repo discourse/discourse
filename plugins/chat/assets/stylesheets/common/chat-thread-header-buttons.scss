@@ -1,0 +1,66 @@
+@mixin chat-channel-header-button {
+  color: var(--primary-low-mid);
+  padding: 0.25em 0.4em;
+
+  .d-icon {
+    color: inherit;
+  }
+
+  &:visited {
+    color: var(--primary-low-mid);
+  }
+
+  &:hover {
+    color: var(--primary-medium);
+    background: var(--primary-very-low);
+    border-radius: var(--d-border-radius);
+
+    &:hover {
+      .d-icon {
+        color: inherit;
+      }
+    }
+  }
+
+  > * {
+    pointer-events: none;
+  }
+}
+
+.chat-channel {
+  .chat-threads-list-button {
+    @include chat-channel-header-button;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    &.has-unreads {
+      color: var(--tertiary-med-or-tertiary);
+      gap: 0.25rem;
+
+      &:hover {
+        color: var(--tertiary-hover);
+      }
+    }
+
+    .d-icon {
+      margin-right: 0;
+    }
+
+    &:hover {
+      .discourse-touch & {
+        background: none !important;
+      }
+    }
+
+    &:active {
+      .discourse-touch & {
+        background: var(--secondary-very-high) !important;
+      }
+    }
+  }
+
+  .open-drawer-btn {
+    @include chat-channel-header-button;
+  }
+}

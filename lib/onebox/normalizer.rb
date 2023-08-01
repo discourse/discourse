@@ -4,19 +4,11 @@ module Onebox
   class Normalizer
     attr_reader :data
 
-    def get(attr, length = nil, sanitize = true)
-      return nil if Onebox::Helpers.blank?(data)
-
+    def get(attr, *args)
       value = data[attr]
-
-      return nil if Onebox::Helpers.blank?(value)
-
-      value = html_entities.decode(value)
-      value = Sanitize.fragment(value) if sanitize
-      value.strip!
-      value = Onebox::Helpers.truncate(value, length) unless length.nil?
-
-      value
+      return if value.blank?
+      return value.map { |v| sanitize_value(v, *args) } if value.is_a?(Array)
+      sanitize_value(value, *args)
     end
 
     def method_missing(attr, *args, &block)
@@ -47,6 +39,14 @@ module Onebox
 
     def html_entities
       @html_entities ||= HTMLEntities.new
+    end
+
+    def sanitize_value(value, length = nil, sanitize = true)
+      value = html_entities.decode(value)
+      value = Sanitize.fragment(value) if sanitize
+      value.strip!
+      value = Onebox::Helpers.truncate(value, length) if length
+      value
     end
   end
 end

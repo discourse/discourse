@@ -118,7 +118,7 @@ RSpec.describe Stylesheet::Importer do
       styles = Stylesheet::Importer.new({ theme_id: theme.id }).import_color_definitions
       expect(styles).to include("Color definitions from Child Theme")
       expect(styles).to include("--custom-color: red")
-      expect(styles).to include("--custom-color-rgb: 0,0,128")
+      expect(styles).to include("--custom-color-rgb: 0, 0, 128")
     end
 
     it "should include default theme color definitions" do

@@ -39,7 +39,7 @@ class UserAvatarsController < ApplicationController
   def show_proxy_letter
     is_asset_path
 
-    if SiteSetting.external_system_avatars_url !~ %r{^/letter_avatar_proxy}
+    if SiteSetting.external_system_avatars_url !~ %r{\A/letter_avatar_proxy}
       raise Discourse::NotFound
     end
 
@@ -104,7 +104,7 @@ class UserAvatarsController < ApplicationController
     return render_blank if version > OptimizedImage::VERSION
 
     upload_id = upload_id.to_i
-    return render_blank unless upload_id > 0
+    return render_blank if upload_id <= 0
 
     size = params[:size].to_i
     return render_blank if size < 8 || size > 1000
@@ -192,7 +192,9 @@ class UserAvatarsController < ApplicationController
   end
 
   def redirect_s3_avatar(url)
-    immutable_for 1.hour
+    response.cache_control[:max_age] = 1.hour.to_i
+    response.cache_control[:public] = true
+    response.cache_control[:extras] = ["immutable", "stale-while-revalidate=#{1.day.to_i}"]
     redirect_to url, allow_other_host: true
   end
 

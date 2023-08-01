@@ -33,7 +33,7 @@ module SuggestedTopicsMixin
           object.topic_allowed_group_ids,
           scope.user.id,
         )
-        .pluck_first(:name)
+        .pick(:name)
     end
   end
 

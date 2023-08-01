@@ -1,17 +1,8 @@
 import getAbsoluteURL, { isAbsoluteURL } from "discourse-common/lib/get-url";
 
-export function registerServiceWorker(
-  container,
-  serviceWorkerURL,
-  registerOptions = {}
-) {
+export function registerServiceWorker(serviceWorkerURL, registerOptions = {}) {
   if (window.isSecureContext && "serviceWorker" in navigator) {
-    const caps = container.lookup("capabilities:main");
-    const isAppleBrowser =
-      caps.isSafari ||
-      (caps.isIOS && !window.matchMedia("(display-mode: standalone)").matches);
-
-    if (serviceWorkerURL && !isAppleBrowser) {
+    if (serviceWorkerURL) {
       navigator.serviceWorker.getRegistrations().then((registrations) => {
         for (let registration of registrations) {
           if (

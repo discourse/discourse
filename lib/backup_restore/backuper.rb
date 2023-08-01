@@ -11,7 +11,7 @@ module BackupRestore
       @user_id = user_id
       @client_id = opts[:client_id]
       @publish_to_message_bus = opts[:publish_to_message_bus] || false
-      @with_uploads = opts[:with_uploads].nil? ? include_uploads? : opts[:with_uploads]
+      @with_uploads = opts[:with_uploads] == false ? false : include_uploads?
       @filename_override = opts[:filename]
       @ticket = opts[:ticket]
 

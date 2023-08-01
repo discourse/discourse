@@ -9,7 +9,7 @@ class UnicodeUsernameAllowlistValidator
     @error_message = nil
     return true if value.blank?
 
-    if value.match?(%r{^/.*/[imxo]*$})
+    if value.match?(%r{\A/.*/[imxo]*\z})
       @error_message =
         I18n.t("site_settings.errors.allowed_unicode_usernames.leading_trailing_slash")
     else

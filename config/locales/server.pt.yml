@@ -181,9 +181,6 @@ pt:
       load_from_remote: "Ocorreu um erro no carregamento dessa mensagem."
     site_settings:
       invalid_category_id: "Especificou uma categoria que não existe"
-      invalid_choice:
-        one: "Especificou a escolha inválida %{name}"
-        other: "Especificou escolhas inválidas %{name}"
       default_categories_already_selected: "Não pode selecionar uma categoria usada noutra lista."
       default_tags_already_selected: "Não pode selecionar uma etiqueta usada noutra lista."
       s3_upload_bucket_is_required: "Não pode ativar carregamentos para o S3 excepto se tiver fornecido o 's3_upload_bucket'."
@@ -456,10 +453,6 @@ pt:
             duration_minutes:
               cannot_be_zero: "deve ser maior que 0."
               exceeds_maximum: "não pode ter mais de 20 anos."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'As seguintes chaves de interpolação são inválidas: "%{keys}”'
         watched_word:
           attributes:
             word:
@@ -1231,7 +1224,6 @@ pt:
     automatically_unpin_topics: "Desafixar tópicos automaticamente quando um utilizador chega ao final."
     read_time_word_count: "Contagem de palavras por minuto para calcular tempo estimado de leitura."
     share_anonymized_statistics: "Partilhe estatísticas de utilização anonimizadas."
-    max_prints_per_hour_per_user: "Número máximo de impressões de páginas /print, por hora, por utlizador. (coloque 0 para desactivar)"
     full_name_required: "O nome completo é um campo obrigatório no perfil de utilizador."
     enable_names: "Mostrar o nome completo do utilizador no seu perfil, cartão de utilizador, e emails. Desativar para esconder o nome completo em todos os locais."
     display_name_on_posts: "Mostrar o nome completo de um utilizador nas suas mensagens em adição ao seu @nome-de-utilizador."
@@ -1243,9 +1235,7 @@ pt:
     allowed_href_schemes: "Esquemas permitidos nos links além de http e https."
     embed_post_limit: "Número máximo de mensagens a serem incorporadas."
     embed_username_required: "O nome de utilizador para a criação de tópico é necessário."
-    show_create_topics_notice: "Se o sítio tem menos de 5 tópicos públicos, mostrar um aviso pedindo aos administradores a criação de mais tópicos."
     delete_drafts_older_than_n_days: "Eliminar rascunhos mais antigos que (n) days."
-    bootstrap_mode_min_users: "Número mínimo de utilizadores necessários para desactivar o modo de inicialização (coloque 0 para desactivar)"
     slug_generation_method: "Escolha um método de geração slug. 'encoded' irá gerar sequências de caracteres com código percentual. 'none' irá desativar slug por completo."
     enable_emoji: "Ativar emoji"
     emoji_set: "Como gostaria de ter o seu emoji?"
@@ -1279,7 +1269,6 @@ pt:
     default_categories_watching_first_post: "Lista de categorias em que a primeira publicação em cada novo tópico será vigiada por defeito."
     allow_user_api_keys: "Permitir geração de chaves de API de utilizador"
     allow_user_api_key_scopes: "Lista de esferas permitidas para chaves da API de utlizador"
-    min_trust_level_for_user_api_key: "Nível de confiança requerido para gerar chaves da API de utilizador"
     allowed_user_api_push_urls: "URLs permitidos para o servidor fazer push para a API de utilizador"
     tagging_enabled: "Permitir etiquetas em tópicos?"
     min_trust_to_create_tag: "O nível de confiança mínimo necessário para criar uma etiqueta."
@@ -1312,7 +1301,6 @@ pt:
       pop3_polling_password_is_empty: "Deve configurar uma 'palavra-passe de polling pop3' antes de ativar o polling POP3."
       pop3_polling_authentication_failed: "Autenticação POP3 falhada. Por favor verifique as suas credenciais pop3."
       reply_by_email_address_is_empty: "É necessário definir um email para 'resposta por endereço de email' antes de ligar a resposta por email."
-      email_polling_disabled: "Tem de ligar a consulta manual ou automática de emails via POP3 antes de ligar a resposta por email."
       user_locale_not_enabled: "Tem de ligar 'permitir definições regionais do utilizador' antes de ligar esta configuração."
       invalid_regex: "A expressão regular não é válida ou permitida."
       min_username_length_range: "Não pode definir o mínimo acima do máximo."
@@ -1628,9 +1616,6 @@ pt:
   user_notifications:
     previous_discussion: "Respostas Anteriores"
     in_reply_to: "Em Resposta A"
-    unsubscribe:
-      title: "Cancelar a Subscrição"
-      description: "Não está interessado em receber estes emails? Não há problema! Clique em baixo para cancelar a subscrição instantaneamente:"
     reply_by_email: "[Visitar Tópico](%{base_url}%{url}) ou responda a este email para responder."
     only_reply_by_email: "Responda a este email para responder."
     visit_link_to_respond: "[Visitar Tópico](%{base_url}%{url}) para responder."
@@ -1810,7 +1795,6 @@ pt:
       liked_received: "Gostos Recebidos"
       new_users: "Novos Utilizadores"
       popular_topics: "Tópicos Populares"
-      follow_topic: "Acompanhar este tópico"
       join_the_discussion: "Ler Mais"
       popular_posts: "Publicações Populares"
       click_here: "clique aqui"
@@ -1843,8 +1827,6 @@ pt:
     see_more: "Mais"
     search_title: "Pesquisar neste sítio"
     search_button: "Pesquisar"
-  deleted: "eliminado"
-  image: "imagem"
   upload:
     edit_reason: "cópias das imagens locais transferidas"
     unauthorized: "Pedimos desculpa, o ficheiro que está a tentar carregar não está autorizado (extensões autorizadas: %{authorized_extensions})."
@@ -1896,93 +1878,6 @@ pt:
     title: "Termos de Serviço"
   privacy_topic:
     title: "Política de Privacidade"
-    body: |2
-
-      <a name="collect"></a>
-
-      ## [Que informações reunimos?](#reunião)
-
-      Reunimos informação sobre si assim que se regista no nosso sítio e juntamos dados quando participa no fórum ao ler, escrever e avaliar o conteúdo aqui partilhado.
-
-      Ao inscrever-se no nosso sítio, pode ser-lhe pedido para inserir o seu nome e endereço de email. Pode contudo, visitar o nosso sítio sem se registar. O seu endereço de email será verificado por um email contendo uma hiperligação única. Se essa hiperligação for visitada, sabemos que tem controlo do seu endereço de email.
-
-      Ao inscrever-se e publicar, recordamos o endereço IP de onde a publicação é originária. Podemos também reter logs de servidores que incluem endereços IP de todos os pedidos feitos ao servidor.
-
-      <a name="use"></a>
-
-      ## [Para que usamos as suas informações?](#usar)
-
-      Todas as informações que reunimos sobre si podem ser usadas numa das seguintes maneiras:
-
-      * Para personalizar a sua experiência &mdash; a sua informação ajuda-nos a responder melhor às suas necessidades individuais.
-
-      * Para melhorar o nosso sítio &mdash; continuamos a lutar por melhorar as ofertas do nosso sítio com base na informação e feedback que recebemos de si.
-
-      * Para melhorar o serviço ao cliente &mdash; a sua informação ajuda-nos a responder mais eficazmente aos pedidos de serviço ao cliente e pedidos de suporte.
-
-      * Para enviar emails periodicamente &mdash; O endereço de email que nos fornece pode ser usado para lhe enviar informação, notificações que peça sobre mudanças em tópicos ou em resposta ao seu nome de utilizador, respostas a inquéritos e/ou outros pedidos ou questões.
-
-      <a name="protect"></a>
-
-      ## [Como protegemos a sua informação?](#protect)
-
-      Implementamos uma variedade de medidas de precaução para manter as suas informações pessoais em segurança quando insere, submete ou acede à sua informação pessoal.
-
-      <a name="data-retention"></a>
-
-      ## [Qual é a sua política de retenção de dados?](#retenção-dados)
-
-      Iremos fazer um esforço de boa fé para:
-
-      * Reter logs de servidores contendo o endereço IP de todos os pedidos para este servidor não mais que 90 dias.
-
-      * Reter endereços IP associados a utilizadores registados e às suas publicações por não mais que 5 anos.
-
-      <a name="cookies"></a>
-
-      ## [Usamos cookies?](#cookies)
-
-      Sim. Os cookies são pequenos ficheiros que um sítio ou um fornecedor de serviços transfere para o disco do seu computador através do navegador de Internet (se assim o permitir). Estes cookies permitem que o sítio reconheça o seu navegador e, se tiver uma conta registada, associá-lo a essa.
-
-      Usamos cookies para entender e guardar as suas preferências para visitas futuras e compilar dados agregados sobre o tráfego do sítio e a interação com o mesmo para lhe podermos oferecer as melhores experiências e ferramentas no futuro. Podemos contratar fornecedores de serviços para nos ajudarem a entender melhor os visitantes do nosso sítio. Estes fornecedores de serviços não têm permissão para usar a informação reunida em nosso nome excepto para nos ajudar a conduzir e melhorar o nosso negócio.
-
-      <a name="disclose"></a>
-
-      ## [Divulgamos informação com partes exteriores?](#divulgar)
-
-      Não vendemos, trocamos ou de outra maneira transferimos a sua informação pessoal para partes exteriores. Isto não inclui terceiras partes confiáveis que nos ajudam a operar sítio, conduzir o nosso negócio, ou servi-lo, enquanto estas partes acordarem em manter a informação confidencial. Podemos também partilhar a sua informação quando acreditamos que é apropriado para estar de acordo com a lei, reforçar as políticas do nosso sítio ou proteger os nossos, ou de outros, direitos, propriedades ou segurança. Contudo, informação não-pessoal do visitante pode ser fornecida a outras partes para marketing, publicidade ou outros usos.
-
-      <a name="third-party"></a>
-
-      ## [Hiperligações de Terceiras Partes](#terceira-parte)
-
-      Ocasionalmente, à nossa descrição, podemos incluir ou oferecer serviços ou produtos de terceiros no nosso sítio. Estes sítios de terceiros têm políticas de privacidade separadas e independentes. Por este motivo, não temos responsabilidade no conteúdo ou atividades destes sítios hiperligados. No entanto, procuramos proteger a integridade do nosso sítio e damos as boas-vindas a qualquer feedback sobre estes sítios.
-
-      <a name="coppa"></a>
-
-      ## [Cumprimento da Proteção da Privacidade Online Infantil](#coppa)
-
-      O nosso sítio, produtos e serviços são direcionados a pessoas com pelo menos 13 anos de idade. Se este servidor está nos EUA e tem menos de 13 anos de idade, como parte dos requisitos do COPPA ([Proteção da Privacidade Online Infantil]( https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), não utilize este sítio.
-
-      <a name="online"></a>
-
-      ## [Política de Privacidade Online](#online)
-
-      Estas políticas de privacidade online aplicam-se apenas à informação reunida através do nosso sítio e não à informação reunida offline.
-
-      <a name="consent"></a>
-
-      ## [O seu consentimento](#consentimento)
-
-      Ao utilizar o nosso sítio, está a consentir a política de privacidade do nosso sítio.
-
-      <a name="changes"></a>
-
-      ## [Mudanças à nossa Política de Privacidade](#mudanças)
-
-      Se decidirmos alterar a nossa política de privacidade, iremos publicar as mudanças nesta página.
-
-      Este documento é CC-BY-SA. Foi atualizado pela última vez em 31 de Maio de 2013.
   badges:
     mass_award:
       errors:
@@ -2172,8 +2067,6 @@ pt:
       message: "<p>Reenviamos o email de ativação para <b>%{email}</b>"
   safe_mode:
     title: "Entrar em modo de segurança"
-    no_unofficial_plugins: "Desativar plugins não-oficiais"
-    no_plugins: "Desativar todos os plugins"
     enter: "Entrar em Modo de Segurança"
   wizard:
     title: "Configuração do Discourse"
@@ -2212,7 +2105,6 @@ pt:
         title: "Convidar Equipa de Apoio"
       finished:
         title: "O seu Discourse está Pronto!"
-  joined: "Juntou-se"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mencionou-o em "%{topic}" - %{site_title}'
@@ -2241,14 +2133,14 @@ pt:
     reasons:
       queued_by_staff: "Um membro do pessoal considera que esta publicação necessita de ser revista. Ela permanecerá oculta até lá."
     actions:
-      agree_and_suspend:
-        title: "Utilizador Suspenso"
+      agree:
+        title: "Sim"
       agree_and_silence:
-        title: "Silenciar Usuário"
+        title: "Silenciar utilizador"
       delete_single:
         title: "Eliminar"
       disagree:
-        title: "Discordar"
+        title: "Não"
       ignore:
         title: "Ignorar"
       approve:

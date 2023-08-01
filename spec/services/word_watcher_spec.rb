@@ -21,9 +21,11 @@ RSpec.describe WordWatcher do
       expect(described_class.words_for_action(:block)).to include(
         word1 => {
           case_sensitive: false,
+          word: word1,
         },
         word2 => {
           case_sensitive: true,
+          word: word2,
         },
       )
     end
@@ -40,6 +42,7 @@ RSpec.describe WordWatcher do
         word => {
           case_sensitive: false,
           replacement: "http://test.localhost/",
+          word: word,
         },
       )
     end
@@ -79,8 +82,8 @@ RSpec.describe WordWatcher do
 
         expect(regexps).to be_an(Array)
         expect(regexps.map(&:inspect)).to contain_exactly(
-          "/(?:\\W|^)(#{word1}|#{word2})(?=\\W|$)/i",
-          "/(?:\\W|^)(#{word3}|#{word4})(?=\\W|$)/",
+          "/(?:[^[:word:]]|^)(#{word1}|#{word2})(?=[^[:word:]]|$)/i",
+          "/(?:[^[:word:]]|^)(#{word3}|#{word4})(?=[^[:word:]]|$)/",
         )
       end
 
@@ -361,7 +364,7 @@ RSpec.describe WordWatcher do
     end
   end
 
-  describe ".apply_to_text" do
+  describe "word replacement" do
     fab!(:censored_word) do
       Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor])
     end
@@ -382,36 +385,54 @@ RSpec.describe WordWatcher do
       )
     end
 
-    it "replaces all types of words" do
-      text = "hello censored world to replace https://notdiscourse.org"
-      expected =
-        "hello #{described_class::REPLACEMENT_LETTER * 8} world replaced https://discourse.org"
-      expect(described_class.apply_to_text(text)).to eq(expected)
+    it "censors text" do
+      expect(described_class.censor_text("a censored word")).to eq(
+        "a #{described_class::REPLACEMENT_LETTER * 8} word",
+      )
     end
 
-    context "when watched_words_regular_expressions = true" do
-      it "replaces captured non-word prefix" do
-        SiteSetting.watched_words_regular_expressions = true
-        Fabricate(
-          :watched_word,
-          word: "\\Wplaceholder",
-          replacement: "replacement",
-          action: WatchedWord.actions[:replace],
-        )
+    it "replaces text" do
+      expect(described_class.replace_text("a word to replace meow")).to eq("a word replaced meow")
+    end
 
-        text = "is \tplaceholder in https://notdiscourse.org"
-        expected = "is replacement in https://discourse.org"
+    it "replaces links" do
+      expect(described_class.replace_link("please visit https://notdiscourse.org meow")).to eq(
+        "please visit https://discourse.org meow",
+      )
+    end
+
+    describe ".apply_to_text" do
+      it "replaces all types of words" do
+        text = "hello censored world to replace https://notdiscourse.org"
+        expected =
+          "hello #{described_class::REPLACEMENT_LETTER * 8} world replaced https://discourse.org"
         expect(described_class.apply_to_text(text)).to eq(expected)
       end
-    end
 
-    context "when watched_words_regular_expressions = false" do
-      it "maintains non-word character prefix" do
-        SiteSetting.watched_words_regular_expressions = false
+      context "when watched_words_regular_expressions = true" do
+        it "replaces captured non-word prefix" do
+          SiteSetting.watched_words_regular_expressions = true
+          Fabricate(
+            :watched_word,
+            word: "\\Wplaceholder",
+            replacement: "replacement",
+            action: WatchedWord.actions[:replace],
+          )
 
-        text = "to replace and\thttps://notdiscourse.org"
-        expected = "replaced and\thttps://discourse.org"
-        expect(described_class.apply_to_text(text)).to eq(expected)
+          text = "is \tplaceholder in https://notdiscourse.org"
+          expected = "is replacement in https://discourse.org"
+          expect(described_class.apply_to_text(text)).to eq(expected)
+        end
+      end
+
+      context "when watched_words_regular_expressions = false" do
+        it "maintains non-word character prefix" do
+          SiteSetting.watched_words_regular_expressions = false
+
+          text = "to replace and\thttps://notdiscourse.org"
+          expected = "replaced and\thttps://discourse.org"
+          expect(described_class.apply_to_text(text)).to eq(expected)
+        end
       end
     end
   end

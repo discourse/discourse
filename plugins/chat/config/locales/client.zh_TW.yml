@@ -72,15 +72,15 @@ zh_TW:
         direct_message: "您還可以與一個或多個使用者開始個人聊天。"
       email_frequency:
         never: "永不"
+      header_indicator_preference:
+        never: "永不"
       flag: "檢舉"
       heading: "聊天"
       join: "加入"
+      last_visit: "上次到訪"
       mention_warning:
         dismiss: "忽略"
-        groups:
-          users_limit:
-            other: "%{count} 個使用者"
-      placeholder_start_conversation: 從 %{usernames}開始對話
+      placeholder_start_conversation_users: "從 %{commaSeparatedUsernames}開始對話"
       remove_upload: "移除檔案"
       react: "用表情符號反應"
       reply: "回覆"
@@ -95,7 +95,6 @@ zh_TW:
       restore: "還原已刪除的訊息"
       save: "保存"
       select: "選擇"
-      silence: "使用者靜音"
       scroll_to_bottom: "捲動到底部"
       scroll_to_new_messages: "查看新訊息"
       sound:
@@ -135,6 +134,8 @@ zh_TW:
           about: 關於
           members: 成員
           settings: 設定
+      new_message_modal:
+        no_items: "沒有物件"
       channel_edit_description_modal:
         title: 編輯描述
         input_placeholder: 新增描述
@@ -143,8 +144,6 @@ zh_TW:
         prefix: "發至:"
         no_results: 沒有結果
         selected_user_title: "取消選取 %{username}"
-      channel_selector:
-        title: "跳轉到頻道"
       create_channel:
         type: "類型"
         types:
@@ -153,11 +152,14 @@ zh_TW:
       composer:
         italic_text: "斜體字"
         bold_text: "粗體字"
+        send: "發送"
       notification_levels:
         never: "永不"
       settings:
         follow: "加入"
         followed: "建立日期"
+        threading_enabled: "啟用"
+        threading_disabled: "停用"
         notifications: "通知"
         preview: "預覽"
         save: "保存"
@@ -192,6 +194,17 @@ zh_TW:
         flags: "投訴"
         symbols: "象徵<br>"
         no_results: "沒有結果"
+      thread:
+        title: "標題"
+        replies:
+          other: "%{count}個回覆"
+        settings: "設定"
+        last_reply: "最新回覆"
+        notifications:
+          regular:
+            title: "一般"
+          tracking:
+            title: "跟蹤"
       draft_channel_screen:
         header: "新訊息"
         cancel: "取消"
@@ -203,10 +216,10 @@ zh_TW:
           fields:
             message:
               label: 訊息
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "標記由"
     keyboard_shortcuts_help:
       chat:
         title: "聊天"
+    styleguide:
+      sections:
+        chat:
+          title: 聊天

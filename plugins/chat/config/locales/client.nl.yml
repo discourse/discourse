@@ -38,9 +38,6 @@ nl:
       browse_all_channels: "Alle kanalen bekijken"
       move_to_channel:
         title: "Berichten verplaatsen naar kanaal"
-        instructions:
-          one: "Je gaat <strong>%{count}</strong> bericht verplaatsen. Selecteer een bestemmingskanaal. Er wordt een vervangend bericht gemaakt in het kanaal <strong>%{channelTitle}</strong> om aan te geven dat dit bericht is verplaatst."
-          other: "Je gaat <strong>%{count}</strong> berichten verplaatsen. Selecteer een bestemmingskanaal. Er wordt een vervangend bericht gemaakt in het kanaal <strong>%{channelTitle}</strong> om aan te geven dat deze berichten zijn verplaatst."
         confirm_move: "Berichten verplaatsen"
       channel_settings:
         title: "Kanaalinstellingen"
@@ -71,7 +68,6 @@ nl:
         instructions: "Door het kanaal te sluiten, kunnen niet-medewerkers geen nieuwe berichten sturen of bestaande berichten bewerken. Weet je zeker dat je dit kanaal wilt sluiten?"
       channel_delete:
         title: "Kanaal verwijderen"
-        instructions: "<p>Verwijdert de het kanaal <strong>%{name}</strong> en de chatgeschiedenis. Alle berichten en gerelateerde gegevens, zoals antwoorden en uploads, worden definitief verwijderd. Als je de kanaalgeschiedenis wilt behouden en buiten gebruik wilt stellen, kun je het kanaal in plaats daarvan archiveren.</p> <p>Weet je zeker dat je het kanaal <strong>permanent wilt verwijderen</strong>? Typ ter bevestiging de naam van het kanaal in het onderstaande vak.</p>"
         confirm: "Ik begrijp de gevolgen, verwijder het kanaal"
         confirm_channel_name: "Voer kanaalnaam in"
         process_started: "Het proces om het kanaal te verwijderen is gestart. Dit venster wordt over enkele ogenblikken gesloten, je ziet het verwijderde kanaal nergens meer."
@@ -82,7 +78,6 @@ nl:
       close: "Sluiten"
       collapse: "Chatlade samenvouwen"
       confirm_flag: "Weet je zeker dat je het bericht van %{username} wilt markeren?"
-      deleted: "Er is een bericht verwijderd. [weergeven]"
       hidden: "Er is een bericht verborgen. [weergeven]"
       delete: "Verwijderen"
       edited: "bewerkt"
@@ -97,6 +92,8 @@ nl:
         never: "Nooit"
         title: "E-mailmeldingen"
         when_away: "Alleen wanneer afwezig"
+      header_indicator_preference:
+        never: "Nooit"
       enable: "Chat inschakelen"
       flag: "Markeren"
       emoji: "Emoji invoegen"
@@ -106,48 +103,23 @@ nl:
       in_reply_to: "In antwoord op"
       heading: "Chat"
       join: "Deelnemen"
-      new_messages: "nieuwe berichten"
+      last_visit: "laatste bezoek"
+      summarization:
+        summarize: "Samenvatten"
       mention_warning:
         dismiss: "negeren"
-        cannot_see:
-          one: "%{username} heeft geen toegang tot dit kanaal en is niet geïnformeerd."
-          other: "%{username} hebben geen toegang tot dit kanaal en zijn niet geïnformeerd."
         invitations_sent:
           one: "Uitnodiging gestuurd"
           other: "Uitnodigingen gestuurd"
         invite: "Uitnodigen voor kanaal"
-        without_membership:
-          one: "%{username} neemt niet deel aan dit kanaal."
-          other: "%{username} en %{others} nemen niet deel aan dit kanaal."
-        group_mentions_disabled:
-          one: "%{group_name} staat geen vermeldingen toe"
-          other: "%{group_name} en %{others} staan geen vermeldingen toe"
-        too_many_members:
-          one: "%{group_name} heeft te veel leden. Niemand is geïnformeerd"
-          other: "%{group_name} en %{others} hebben te veel leden. Niemand is geïnformeerd"
-        warning_multiple:
-          one: "%{count} ander"
-          other: "%{count} anderen"
+        without_membership: "%{username} neemt niet deel aan dit kanaal."
+        group_mentions_disabled: "%{group_name} staat geen vermeldingen toe."
+        too_many_members: "%{group_name} heeft te veel leden. Niemand is geïnformeerd."
         groups:
           header:
             some: "Sommige gebruikers worden niet geïnformeerd"
             all: "Niemand wordt geïnformeerd"
-          unreachable:
-            one: "@%{group} staat geen vermeldingen toe"
-            other: "@%{group} en %{group_2} staan geen vermeldingen toe"
-          unreachable_multiple: "@%{group} en %{count} andere groepen staan geen vermeldingen toe"
-          too_many_members:
-            one: "Het noemen van @%{group} overschrijdt de %{notification_limit} van %{limit}"
-            other: "Het noemen van zowel @%{group} als @%{group_2} overschrijdt de %{notification_limit} van %{limit}"
-          too_many_members_multiple: "Deze %{count} groepen overschrijden de %{notification_limit} van %{limit}"
-          users_limit:
-            one: "%{count} gebruiker"
-            other: "%{count} gebruikers"
-          notification_limit: "meldingslimiet"
-        too_many_mentions: "Dit bericht overschrijdt de %{notification_limit} van %{limit}"
-        mentions_limit:
-          one: "%{count} vermelding"
-          other: "%{count} vermeldingen"
+          unreachable_1: "@%{group} staat geen vermeldingen toe."
       aria_roles:
         header: "Chatkop"
         composer: "Chateditor"
@@ -164,10 +136,9 @@ nl:
       close_full_page: "Chat op volledig scherm sluiten"
       open_message: "Bericht openen in chat"
       placeholder_self: "Schrijf iets"
-      placeholder_others: "Chatten met %{messageRecipient}"
-      placeholder_new_message_disallowed: "Kanaal is %{status}, je kunt momenteel geen nieuwe berichten sturen."
+      placeholder_users: "Chatten met %{commaSeparatedNames}"
       placeholder_silenced: "Je kunt op dit moment geen berichten sturen."
-      placeholder_start_conversation: Begin een gesprek met %{usernames}
+      placeholder_start_conversation_users: "Begin een gesprek met %{commaSeparatedUsernames}"
       remove_upload: "Bestand verwijderen"
       react: "Reageren met emoji"
       reply: "Antwoorden"
@@ -183,7 +154,6 @@ nl:
       restore: "Verwijderd bericht herstellen"
       save: "Opslaan"
       select: "Selecteren"
-      silence: "Gebruiker dempen"
       return_to_list: "Terug naar kanalenlijst"
       scroll_to_bottom: "Naar beneden scrollen"
       scroll_to_new_messages: "Nieuwe berichten weergeven"
@@ -237,6 +207,10 @@ nl:
           about: Over
           members: Leden
           settings: Instellingen
+      new_message_modal:
+        no_items: "Geen items"
+      channel_edit_name_slug_modal:
+        name: Kanaalnaam
       channel_edit_description_modal:
         title: Beschrijving bewerken
         input_placeholder: Voeg een beschrijving toe
@@ -246,9 +220,6 @@ nl:
         prefix: "Aan:"
         no_results: Geen resultaten
         selected_user_title: "%{username} deselecteren"
-      channel_selector:
-        title: "Naar kanaal springen"
-        no_channels: "Er komen geen kanalen overeen met je zoekopdracht"
       channel:
         no_memberships: Dit kanaal heeft geen leden
         no_memberships_found: Geen leden gevonden
@@ -258,18 +229,10 @@ nl:
       create_channel:
         auto_join_users:
           public_category_warning: "%{category} is een openbare categorie. Alle recent actieve gebruikers automatisch toevoegen aan dit kanaal?"
-          warning_groups:
-            one: '%{members_count} gebruikers uit %{group} automatisch toevoegen?'
-            other: '%{members_count} gebruikers uit %{group} en %{group_2} automatisch toevoegen?'
-          warning_multiple_groups: '%{members_count} gebruikers uit %{group_1} en %{count} anderen automatisch toevoegen?'
         choose_category:
           label: "Kies een categorie"
           none: "selecteer een..."
           default_hint: Beheer de toegang door naar <a href=%{link} target="_blank">%{category}beveiligingsinstellingen</a> te gaan
-          hint_groups:
-            one: Gebruikers in %{hint} hebben toegang tot dit kanaal volgens de <a href=%{link} target="_blank">beveiligingsinstellingen</a>
-            other: Gebruikers in %{hint} en %{hint_2} hebben toegang tot dit kanaal volgens de <a href=%{link} target="_blank">beveiligingsinstellingen</a>
-          hint_multiple_groups: Gebruikers in %{hint_1} en %{count} andere groepen hebben toegang tot dit kanaal volgens de <a href=%{link} target="_blank">beveiligingsinstellingen</a>
         create: "Kanaal maken"
         description: "Beschrijving (optioneel)"
         name: "Kanaalnaam"
@@ -282,15 +245,13 @@ nl:
         type: "Chatbericht"
       reactions:
         only_you: "Je hebt gereageerd met :%{emoji}:"
-        and_others: "Jij, %{usernames} hebben gereageerd met :%{emoji}:"
-        only_others: "%{usernames} hebben gereageerd met :%{emoji}:"
-        others_and_more: "%{usernames} en %{more} anderen hebben gereageerd met :%{emoji}:"
-        you_others_and_more: "Jij, %{usernames} en %{more} anderen hebben gereageerd met :%{emoji}:"
+        single_user: "%{username} hebben gereageerd met :%{emoji}:"
       composer:
         toggle_toolbar: "Werkbalk schakelen"
         italic_text: "Cursieve tekst"
         bold_text: "Vetgedrukte tekst"
         code_text: "codetekst"
+        send: "Verzenden"
       quote:
         original_channel: 'Oorspronkelijk gestuurd in <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chatcitaat gekopieerd naar klembord"
@@ -302,14 +263,14 @@ nl:
         channel_wide_mentions_label: "Sta vermeldingen van @all en @here toe"
         channel_wide_mentions_description: "Sta gebruikers toe om alle leden van #%{channel} te informeren met @all of alleen degenen die op dat moment actief zijn met @here"
         auto_join_users_label: "Gebruikers automatisch toevoegen"
-        auto_join_users_info: "Controleer elk uur welke gebruikers de afgelopen 3 maanden actief zijn geweest en voeg ze toe aan dit kanaal als ze toegang hebben tot de categorie %{category}."
-        enable_auto_join_users: "Automatisch alle recent actieve gebruikers toevoegen"
         auto_join_users_warning: "Elke gebruiker die geen lid is van dit kanaal en toegang heeft tot de categorie %{category} wordt lid. Weet je het zeker?"
         desktop_notification_level: "Bureaubladmeldingen"
         follow: "Deelnemen"
         followed: "Lid sinds"
         mobile_notification_level: "Mobiele pushmeldingen"
         mute: "Kanaal dempen"
+        threading_enabled: "Ingeschakeld"
+        threading_disabled: "Uitgeschakeld"
         muted_on: "Aan"
         muted_off: "Uit"
         notifications: "Meldingen"
@@ -318,7 +279,6 @@ nl:
         saved: "Opgeslagen"
         unfollow: "Verlaten"
         admin_title: "Beheerder"
-        retention_info: "Chatgeschiedenis wordt %{days} dagen bewaard."
       admin:
         title: "Chat"
       direct_messages:
@@ -383,9 +343,6 @@ nl:
         many_users:
           one: "%{commaSeparatedUsernames} en %{count} ander zijn aan het typen"
           other: "%{commaSeparatedUsernames} en %{count} anderen zijn aan het typen"
-      retention_reminders:
-        public: "Kanaalgeschiedenis wordt %{days} dagen bewaard."
-        dm: "Persoonlijke chatgeschiedenis wordt %{days} dagen bewaard."
       flags:
         off_topic: "Dit bericht is niet relevant voor de huidige discussie zoals gedefinieerd door de kanaaltitel en moet waarschijnlijk worden verplaats naar elders."
         inappropriate: "Dit bericht bevat inhoud die een redelijk persoon als aanstootgevend, kwetsend of een overtreding van <a href=\"%{basePath}/guidelines\">onze communityrichtlijnen</a> zou beschouwen."
@@ -407,6 +364,21 @@ nl:
         symbols: "Symbolen"
         search_placeholder: "Zoek op emojinaam en -alias..."
         no_results: "Geen resultaten"
+      thread:
+        title: "Titel"
+        replies:
+          one: "%{count} antwoord"
+          other: "%{count} antwoorden"
+        settings: "Instellingen"
+        last_reply: "laatste antwoord"
+        notifications:
+          regular:
+            title: "Normaal"
+          tracking:
+            title: "Tracking"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Nieuw bericht"
         cancel: "Annuleren"
@@ -451,9 +423,8 @@ nl:
       transcript:
         view: "Transcript van eerdere berichten weergeven"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Gemarkeerd chatbericht"
-          flagged_by: "Gemarkeerd door"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"
@@ -484,3 +455,7 @@ nl:
         chat_notifications_with_unread:
           one: "Chatmeldingen - %{count} ongelezen melding"
           other: "Chatmeldingen - %{count} ongelezen meldingen"
+    styleguide:
+      sections:
+        chat:
+          title: Chat

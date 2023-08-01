@@ -1,14 +1,11 @@
 import Controller from "@ember/controller";
 import EmailLog from "admin/models/email-log";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 
-export default Controller.extend({
-  loading: false,
+export default class AdminEmailLogsController extends Controller {
+  loading = false;
+  filter = EmberObject.create();
 
-  init() {
-    this._super(...arguments);
-    this.set("filter", EmberObject.create());
-  },
   loadLogs(sourceModel, loadMore) {
     if ((loadMore && this.loading) || this.get("model.allLoaded")) {
       return;
@@ -38,11 +35,10 @@ export default Controller.extend({
         }
       })
       .finally(() => this.set("loading", false));
-  },
+  }
 
-  actions: {
-    loadMore() {
-      this.loadLogs(EmailLog, true);
-    },
-  },
-});
+  @action
+  loadMore() {
+    this.loadLogs(EmailLog, true);
+  }
+}

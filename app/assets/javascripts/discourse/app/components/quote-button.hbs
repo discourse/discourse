@@ -1,0 +1,71 @@
+<div
+  {{did-insert this.didInsert}}
+  class={{concat-class
+    "quote-button"
+    (if this.visible "visible")
+    (if this.displayFastEditInput "fast-editing")
+    (if this.animated "animated")
+  }}
+>
+  <div class="buttons">
+    {{#if this.embedQuoteButton}}
+      <DButton
+        @action={{this.insertQuote}}
+        @icon="quote-left"
+        @label="post.quote_reply"
+        @title="post.quote_reply_shortcut"
+        class="btn-flat insert-quote"
+      />
+    {{/if}}
+
+    {{#if this.canEditPost}}
+      <DButton
+        @icon="pencil-alt"
+        @action={{this.toggleFastEditForm}}
+        @label="post.quote_edit"
+        @title="post.quote_edit_shortcut"
+        class="btn-flat quote-edit-label"
+      />
+    {{/if}}
+
+    {{#if this.quoteSharingEnabled}}
+      <span class="quote-sharing">
+        {{#if this.quoteSharingShowLabel}}
+          <DButton
+            @icon="share"
+            @label="post.quote_share"
+            class="btn-flat quote-share-label"
+          />
+        {{/if}}
+
+        <span class="quote-share-buttons">
+          {{#each this.quoteSharingSources as |source|}}
+            <DButton
+              @action={{fn this.share source}}
+              @translatedTitle={{source.title}}
+              @icon={{source.icon}}
+              class="btn-flat"
+            />
+          {{/each}}
+
+          <PluginOutlet
+            @name="quote-share-buttons-after"
+            @connectorTagName="span"
+          />
+        </span>
+      </span>
+    {{/if}}
+  </div>
+
+  <div class="extra">
+    {{#if this.displayFastEditInput}}
+      <FastEdit
+        @initialValue={{this.fastEditInitialSelection}}
+        @post={{this.post}}
+        @close={{this.hideButton}}
+      />
+    {{/if}}
+
+    <PluginOutlet @name="quote-button-after" @connectorTagName="div" />
+  </div>
+</div>

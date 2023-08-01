@@ -1,0 +1,22 @@
+<div class="control-group form-template-field" data-field-type="input">
+  {{#if @attributes.label}}
+    <label class="form-template-field__label">
+      {{@attributes.label}}
+      {{#if @validations.required}}
+        {{d-icon "asterisk" class="form-template-field__required-indicator"}}
+      {{/if}}
+    </label>
+
+  {{/if}}
+
+  <Input
+    name={{@attributes.label}}
+    class="form-template-field__input"
+    @type={{if @validations.type @validations.type "text"}}
+    placeholder={{@attributes.placeholder}}
+    required={{if @validations.required "required" ""}}
+    pattern={{@validations.pattern}}
+    minLength={{@validations.min}}
+    maxLength={{@validations.max}}
+  />
+</div>

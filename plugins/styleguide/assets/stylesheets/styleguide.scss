@@ -73,6 +73,44 @@
 
       .rendered {
         width: 100%;
+        position: relative;
+
+        .component {
+          padding: 2rem;
+          border: 2px dotted var(--primary-low);
+          margin-bottom: 2rem;
+        }
+
+        .component-properties {
+          width: 100%;
+
+          &__row {
+            align-items: center;
+            display: flex;
+          }
+
+          &__cell {
+            padding: 0.5rem 0;
+            width: 70%;
+            box-sizing: border-box;
+
+            &:first-child {
+              width: 30%;
+              box-sizing: border-box;
+            }
+
+            textarea,
+            input {
+              box-sizing: border-box;
+              margin: 0;
+              width: 100%;
+            }
+
+            textarea {
+              height: 100px;
+            }
+          }
+        }
       }
 
       margin-bottom: 2em;
@@ -143,6 +181,12 @@
     display: inline;
     color: var(--primary-medium);
     margin: 0 0 0 10px;
+  }
+
+  &--char-counter {
+    display: block;
+    width: 100%;
+    margin-bottom: 0;
   }
 }
 

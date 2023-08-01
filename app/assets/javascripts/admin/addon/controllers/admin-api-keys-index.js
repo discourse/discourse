@@ -2,18 +2,18 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Controller.extend({
-  loading: false,
+export default class AdminApiKeysIndexController extends Controller {
+  loading = false;
 
   @action
   revokeKey(key) {
     key.revoke().catch(popupAjaxError);
-  },
+  }
 
   @action
   undoRevokeKey(key) {
     key.undoRevoke().catch(popupAjaxError);
-  },
+  }
 
   @action
   loadMore() {
@@ -35,5 +35,5 @@ export default Controller.extend({
       .finally(() => {
         this.set("loading", false);
       });
-  },
-});
+  }
+}

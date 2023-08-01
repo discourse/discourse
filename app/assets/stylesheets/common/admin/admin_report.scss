@@ -121,11 +121,11 @@
 
   .average-chart {
     padding: 0.5em;
-    border: 1px solid var(--highlight-high);
-    color: var(--highlight-high);
+    border: 1px solid var(--highlight);
+    color: var(--highlight);
     margin-bottom: 1em;
     text-align: center;
-    background: var(--highlight-low);
+    background: var(--highlight-bg);
   }
 
   .filters {

@@ -24,6 +24,8 @@ RSpec.describe PresenceChannel do
         PresenceChannel::Config.new(allowed_user_ids: [user.id])
       when "/test/allowedgroup"
         PresenceChannel::Config.new(allowed_group_ids: [group.id])
+      when "/test/everyonegroup"
+        PresenceChannel::Config.new(allowed_group_ids: [Group::AUTO_GROUPS[:everyone]])
       when "/test/noaccess"
         PresenceChannel::Config.new
       when "/test/countonly"
@@ -61,6 +63,12 @@ RSpec.describe PresenceChannel do
 
     expect(channel3.user_ids).to eq([])
     expect(channel3.count).to eq(0)
+  end
+
+  it "does not raise error when getting channel config under readonly" do
+    PresenceChannel.redis.stubs(:set).raises(Redis::CommandError.new("READONLY")).once
+    channel = PresenceChannel.new("/test/public1")
+    expect(channel.user_ids).to eq([])
   end
 
   it "can automatically expire users" do
@@ -204,11 +212,13 @@ RSpec.describe PresenceChannel do
     expect(PresenceChannel.new("/test/secureuser").can_enter?(user_id: nil)).to eq(false)
     expect(PresenceChannel.new("/test/securegroup").can_enter?(user_id: nil)).to eq(false)
     expect(PresenceChannel.new("/test/noaccess").can_enter?(user_id: nil)).to eq(false)
+    expect(PresenceChannel.new("/test/everyonegroup").can_enter?(user_id: nil)).to eq(false)
 
     expect(PresenceChannel.new("/test/public1").can_view?(user_id: nil)).to eq(true)
     expect(PresenceChannel.new("/test/secureuser").can_view?(user_id: nil)).to eq(false)
     expect(PresenceChannel.new("/test/securegroup").can_view?(user_id: nil)).to eq(false)
     expect(PresenceChannel.new("/test/noaccess").can_view?(user_id: nil)).to eq(false)
+    expect(PresenceChannel.new("/test/everyonegroup").can_view?(user_id: nil)).to eq(false)
   end
 
   it "handles security correctly for a user" do
@@ -216,12 +226,14 @@ RSpec.describe PresenceChannel do
     expect(PresenceChannel.new("/test/securegroup").can_enter?(user_id: user.id)).to eq(false)
     expect(PresenceChannel.new("/test/alloweduser").can_enter?(user_id: user.id)).to eq(true)
     expect(PresenceChannel.new("/test/allowedgroup").can_enter?(user_id: user.id)).to eq(true)
+    expect(PresenceChannel.new("/test/everyonegroup").can_enter?(user_id: user.id)).to eq(true)
     expect(PresenceChannel.new("/test/noaccess").can_enter?(user_id: user.id)).to eq(false)
 
     expect(PresenceChannel.new("/test/secureuser").can_view?(user_id: user.id)).to eq(false)
     expect(PresenceChannel.new("/test/securegroup").can_view?(user_id: user.id)).to eq(false)
     expect(PresenceChannel.new("/test/alloweduser").can_view?(user_id: user.id)).to eq(true)
     expect(PresenceChannel.new("/test/allowedgroup").can_view?(user_id: user.id)).to eq(true)
+    expect(PresenceChannel.new("/test/everyonegroup").can_view?(user_id: user.id)).to eq(true)
     expect(PresenceChannel.new("/test/noaccess").can_view?(user_id: user.id)).to eq(false)
   end
 

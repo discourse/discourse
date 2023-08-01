@@ -9,13 +9,10 @@ module PrettyText
     # functions here are available to v8
     def t(key, opts)
       key = "js." + key
-      unless opts
-        I18n.t(key)
-      else
-        str = I18n.t(key, Hash[opts.entries].symbolize_keys).dup
-        opts.each { |k, v| str.gsub!("{{#{k.to_s}}}", v.to_s) }
-        str
-      end
+      return I18n.t(key) if opts.blank?
+      str = I18n.t(key, Hash[opts.entries].symbolize_keys).dup
+      opts.each { |k, v| str.gsub!("{{#{k.to_s}}}", v.to_s) }
+      str
     end
 
     def avatar_template(username)
@@ -102,7 +99,7 @@ module PrettyText
     # TODO (martin) Remove this when everything is using hashtag_lookup
     # after enable_experimental_hashtag_autocomplete is default.
     def category_tag_hashtag_lookup(text)
-      is_tag = text =~ /#{TAG_HASHTAG_POSTFIX}$/
+      is_tag = text =~ /#{TAG_HASHTAG_POSTFIX}\z/
 
       if !is_tag && category = Category.query_from_hashtag_slug(text)
         [category.url, text]
@@ -127,6 +124,11 @@ module PrettyText
       else
         cooking_user = User.find(cooking_user_id)
       end
+
+      types_in_priority_order =
+        types_in_priority_order.select do |type|
+          HashtagAutocompleteService.data_source_types.include?(type)
+        end
 
       result =
         HashtagAutocompleteService.new(Guardian.new(cooking_user)).lookup(

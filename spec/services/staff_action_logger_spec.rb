@@ -15,9 +15,9 @@ RSpec.describe StaffActionLogger do
   end
 
   describe "log_user_deletion" do
-    fab!(:deleted_user) { Fabricate(:user) }
-
     subject(:log_user_deletion) { described_class.new(admin).log_user_deletion(deleted_user) }
+
+    fab!(:deleted_user) { Fabricate(:user) }
 
     it "raises an error when user is nil" do
       expect { logger.log_user_deletion(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -47,9 +47,9 @@ RSpec.describe StaffActionLogger do
   end
 
   describe "log_post_deletion" do
-    fab!(:deleted_post) { Fabricate(:post) }
-
     subject(:log_post_deletion) { described_class.new(admin).log_post_deletion(deleted_post) }
+
+    fab!(:deleted_post) { Fabricate(:post) }
 
     it "raises an error when post is nil" do
       expect { logger.log_post_deletion(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -116,13 +116,14 @@ RSpec.describe StaffActionLogger do
   end
 
   describe "log_trust_level_change" do
-    fab!(:user) { Fabricate(:user) }
-    let(:old_trust_level) { TrustLevel[0] }
-    let(:new_trust_level) { TrustLevel[1] }
-
     subject(:log_trust_level_change) do
       described_class.new(admin).log_trust_level_change(user, old_trust_level, new_trust_level)
     end
+
+    fab!(:user) { Fabricate(:user) }
+
+    let(:old_trust_level) { TrustLevel[0] }
+    let(:new_trust_level) { TrustLevel[1] }
 
     it "raises an error when user or trust level is nil" do
       expect {
@@ -371,10 +372,10 @@ RSpec.describe StaffActionLogger do
   end
 
   describe "log_roll_up" do
+    subject(:log_roll_up) { described_class.new(admin).log_roll_up(subnet, ips) }
+
     let(:subnet) { "1.2.3.0/24" }
     let(:ips) { %w[1.2.3.4 1.2.3.100] }
-
-    subject(:log_roll_up) { described_class.new(admin).log_roll_up(subnet, ips) }
 
     it "creates a new UserHistory record" do
       log_record = logger.log_roll_up(subnet, ips)
@@ -439,18 +440,18 @@ RSpec.describe StaffActionLogger do
       expect(name_user_history.new_value).to eq("new_name")
     end
 
-    it "does not log permissions changes for category visible to everyone" do
+    it "logs permissions changes even if the category is visible to everyone" do
       attributes = { name: "new_name" }
-      old_permission = category.permissions_params
+      old_permission = { "everyone" => 1 }
       category.update!(attributes)
 
       logger.log_category_settings_change(
         category,
-        attributes.merge(permissions: { "everyone" => 1 }),
+        attributes.merge(permissions: { "trust_level_3" => 1 }),
         old_permissions: old_permission,
       )
 
-      expect(UserHistory.count).to eq(1)
+      expect(UserHistory.count).to eq(2)
       expect(UserHistory.find_by_subject("name").category).to eq(category)
     end
 
@@ -584,11 +585,11 @@ RSpec.describe StaffActionLogger do
   end
 
   describe "log_check_personal_message" do
-    fab!(:personal_message) { Fabricate(:private_message_topic) }
-
     subject(:log_check_personal_message) do
       described_class.new(admin).log_check_personal_message(personal_message)
     end
+
+    fab!(:personal_message) { Fabricate(:private_message_topic) }
 
     it "raises an error when topic is nil" do
       expect { logger.log_check_personal_message(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -604,9 +605,9 @@ RSpec.describe StaffActionLogger do
   end
 
   describe "log_post_approved" do
-    fab!(:approved_post) { Fabricate(:post) }
-
     subject(:log_post_approved) { described_class.new(admin).log_post_approved(approved_post) }
+
+    fab!(:approved_post) { Fabricate(:post) }
 
     it "raises an error when post is nil" do
       expect { logger.log_post_approved(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -622,11 +623,11 @@ RSpec.describe StaffActionLogger do
   end
 
   describe "log_post_rejected" do
-    fab!(:reviewable) { Fabricate(:reviewable_queued_post) }
-
     subject(:log_post_rejected) do
       described_class.new(admin).log_post_rejected(reviewable, DateTime.now)
     end
+
+    fab!(:reviewable) { Fabricate(:reviewable_queued_post) }
 
     it "raises an error when reviewable not supplied" do
       expect { logger.log_post_rejected(nil, DateTime.now) }.to raise_error(

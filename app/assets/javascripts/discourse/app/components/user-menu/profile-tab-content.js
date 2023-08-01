@@ -3,11 +3,23 @@ import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
 import DoNotDisturb from "discourse/lib/do-not-disturb";
+import DoNotDisturbModal from "discourse/components/modal/do-not-disturb";
+
+const _extraItems = [];
+
+export function addUserMenuProfileTabItem(item) {
+  _extraItems.push(item);
+}
+
+export function resetUserMenuProfileTabItems() {
+  _extraItems.clear();
+}
 
 export default class UserMenuProfileTabContent extends Component {
   @service currentUser;
   @service siteSettings;
   @service userStatus;
+  @service modal;
 
   saving = false;
 
@@ -34,6 +46,10 @@ export default class UserMenuProfileTabContent extends Component {
     );
   }
 
+  get extraItems() {
+    return _extraItems;
+  }
+
   get #doNotDisturbUntilDate() {
     if (!this.currentUser.get("do_not_disturb_until")) {
       return;
@@ -58,7 +74,7 @@ export default class UserMenuProfileTabContent extends Component {
     } else {
       this.saving = false;
       this.args.closeUserMenu();
-      showModal("do-not-disturb");
+      this.modal.show(DoNotDisturbModal);
     }
   }
 

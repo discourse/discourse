@@ -59,18 +59,19 @@ ko:
         never: "알림 받지 않기"
         title: "이메일 알림"
         when_away: "자리를 비울 때만"
+      header_indicator_preference:
+        never: "알림 받지 않기"
       enable: "채팅 활성화"
       flag: "신고"
       emoji: "이모티콘 삽입"
       flagged: "이 메시지는 신고가 되어 검토가 필요합니다."
       heading: "채팅"
       join: "가입"
-      new_messages: "새 메시지"
+      last_visit: "마지막 방문"
+      summarization:
+        summarize: "요약하기"
       mention_warning:
         dismiss: "무시"
-        groups:
-          users_limit:
-            other: "사용자 %{count}명"
       aria_roles:
         header: "채팅 헤더"
         composer: "채팅 작성기"
@@ -138,6 +139,10 @@ ko:
           about: 소개
           members: 회원
           settings: 설정
+      new_message_modal:
+        no_items: "항목이 없습니다"
+      channel_edit_name_slug_modal:
+        name: 채널명
       channel_edit_description_modal:
         title: 설명 수정
         input_placeholder: 설명 추가
@@ -145,9 +150,6 @@ ko:
         title: 새로운 메시지
         prefix: "받는사람:"
         no_results: 결과 없음
-      channel_selector:
-        title: "채널로 이동"
-        no_channels: "검색과 일치하는 채널이 없습니다."
       channel:
         no_memberships: 이 채널에는 회원이 없습니다.
         no_memberships_found: 회원을 찾을 수 없음
@@ -172,6 +174,7 @@ ko:
         italic_text: "강조하기"
         bold_text: "굵게하기"
         code_text: "코드 텍스트"
+        send: "보내기"
       notification_levels:
         never: "알림 받지 않기"
       settings:
@@ -179,6 +182,8 @@ ko:
         desktop_notification_level: "데스크톱 알림"
         follow: "가입"
         followed: "가입"
+        threading_enabled: "활성화"
+        threading_disabled: "비활성"
         muted_on: "켜기"
         muted_off: "끄기"
         notifications: "알림"
@@ -236,6 +241,19 @@ ko:
         symbols: "기호"
         search_placeholder: "이모티콘 이름과 별칭으로 검색..."
         no_results: "결과 없음"
+      thread:
+        title: "제목"
+        replies:
+          other: "%{count} 댓글"
+        settings: "사이트 설정"
+        last_reply: "마지막 댓글"
+        notifications:
+          regular:
+            title: "일반"
+          tracking:
+            title: "알림"
+        participants_other_count:
+          other: "+%{count}"
       draft_channel_screen:
         header: "새로운 메시지"
         cancel: "취소"
@@ -261,9 +279,8 @@ ko:
               description: 시스템 기본값
     review:
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "신고된 채팅 메시지"
-          flagged_by: "신고자"
     keyboard_shortcuts_help:
       chat:
         title: "채팅"
@@ -272,3 +289,7 @@ ko:
         chat_notifications: "채팅 알림"
         chat_notifications_with_unread:
           other: "채팅 알림 - 읽지 않은 알림 %{count}개"
+    styleguide:
+      sections:
+        chat:
+          title: 채팅

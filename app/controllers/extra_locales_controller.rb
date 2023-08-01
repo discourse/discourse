@@ -71,6 +71,6 @@ class ExtraLocalesController < ApplicationController
   private
 
   def valid_bundle?(bundle)
-    bundle == OVERRIDES_BUNDLE || (bundle =~ /^(admin|wizard)$/ && current_user&.staff?)
+    bundle == OVERRIDES_BUNDLE || (bundle =~ /\A(admin|wizard)\z/ && current_user&.staff?)
   end
 end

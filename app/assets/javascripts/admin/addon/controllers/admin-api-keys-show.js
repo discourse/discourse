@@ -1,66 +1,77 @@
+import { action } from "@ember/object";
+import { empty } from "@ember/object/computed";
 import Controller from "@ember/controller";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
-import { empty } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import showModal from "discourse/lib/show-modal";
+import { inject as service } from "@ember/service";
 
-export default Controller.extend(bufferedProperty("model"), {
-  isNew: empty("model.id"),
+export default class AdminApiKeysShowController extends Controller.extend(
+  bufferedProperty("model")
+) {
+  @service router;
 
-  actions: {
-    saveDescription() {
-      const buffered = this.buffered;
-      const attrs = buffered.getProperties("description");
+  @empty("model.id") isNew;
 
-      this.model
-        .save(attrs)
-        .then(() => {
-          this.set("editingDescription", false);
-          this.rollbackBuffer();
-        })
-        .catch(popupAjaxError);
-    },
+  @action
+  saveDescription() {
+    const buffered = this.buffered;
+    const attrs = buffered.getProperties("description");
 
-    cancel() {
-      const id = this.get("userField.id");
-      if (isEmpty(id)) {
-        this.destroyAction(this.userField);
-      } else {
+    this.model
+      .save(attrs)
+      .then(() => {
+        this.set("editingDescription", false);
         this.rollbackBuffer();
-        this.set("editing", false);
-      }
-    },
+      })
+      .catch(popupAjaxError);
+  }
 
-    editDescription() {
-      this.toggleProperty("editingDescription");
-      if (!this.editingDescription) {
-        this.rollbackBuffer();
-      }
-    },
+  @action
+  cancel() {
+    const id = this.get("userField.id");
+    if (isEmpty(id)) {
+      this.destroyAction(this.userField);
+    } else {
+      this.rollbackBuffer();
+      this.set("editing", false);
+    }
+  }
 
-    revokeKey(key) {
-      key.revoke().catch(popupAjaxError);
-    },
+  @action
+  editDescription() {
+    this.toggleProperty("editingDescription");
+    if (!this.editingDescription) {
+      this.rollbackBuffer();
+    }
+  }
 
-    deleteKey(key) {
-      key
-        .destroyRecord()
-        .then(() => this.transitionToRoute("adminApiKeys.index"))
-        .catch(popupAjaxError);
-    },
+  @action
+  revokeKey(key) {
+    key.revoke().catch(popupAjaxError);
+  }
 
-    undoRevokeKey(key) {
-      key.undoRevoke().catch(popupAjaxError);
-    },
+  @action
+  deleteKey(key) {
+    key
+      .destroyRecord()
+      .then(() => this.router.transitionTo("adminApiKeys.index"))
+      .catch(popupAjaxError);
+  }
 
-    showURLs(urls) {
-      return showModal("admin-api-key-urls", {
-        admin: true,
-        model: {
-          urls,
-        },
-      });
-    },
-  },
-});
+  @action
+  undoRevokeKey(key) {
+    key.undoRevoke().catch(popupAjaxError);
+  }
+
+  @action
+  showURLs(urls) {
+    return showModal("admin-api-key-urls", {
+      admin: true,
+      model: {
+        urls,
+      },
+    });
+  }
+}

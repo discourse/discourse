@@ -1,10 +1,13 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 
-export default DiscourseRoute.extend({
-  queryParams: {
+export default class AdminLogsStaffActionLogsRoute extends DiscourseRoute {
+  @service router;
+
+  queryParams = {
     filters: { refreshModel: true },
-  },
+  };
 
   beforeModel(transition) {
     const params = transition.to.queryParams;
@@ -12,15 +15,15 @@ export default DiscourseRoute.extend({
     if (controller.filters === null || params.force_refresh) {
       controller.resetFilters();
     }
-  },
+  }
 
   deserializeQueryParam(value, urlKey, defaultValueType) {
-    if (urlKey === "filters") {
+    if (urlKey === "filters" && value) {
       return EmberObject.create(JSON.parse(decodeURIComponent(value)));
     }
 
-    return this._super(value, urlKey, defaultValueType);
-  },
+    return super.deserializeQueryParam(value, urlKey, defaultValueType);
+  }
 
   serializeQueryParam(value, urlKey, defaultValueType) {
     if (urlKey === "filters") {
@@ -31,18 +34,13 @@ export default DiscourseRoute.extend({
       }
     }
 
-    return this._super(value, urlKey, defaultValueType);
-  },
+    return super.serializeQueryParam(value, urlKey, defaultValueType);
+  }
 
-  actions: {
-    onFiltersChange(filters) {
-      if (filters && Object.keys(filters) === 0) {
-        this.transitionTo("adminLogs.staffActionLogs");
-      } else {
-        this.transitionTo("adminLogs.staffActionLogs", {
-          queryParams: { filters },
-        });
-      }
-    },
-  },
-});
+  @action
+  onFiltersChange(filters) {
+    this.router.transitionTo("adminLogs.staffActionLogs", {
+      queryParams: { filters },
+    });
+  }
+}

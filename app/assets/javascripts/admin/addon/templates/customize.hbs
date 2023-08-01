@@ -45,6 +45,13 @@
       @label="admin.embedding.title"
       @class="admin-customize-embedding"
     />
+    {{#if this.siteSettings.experimental_form_templates}}
+      <NavItem
+        @route="adminCustomizeFormTemplates"
+        @label="admin.form_templates.nav_title"
+        @class="admin-customize-form-templates"
+      />
+    {{/if}}
   {{/if}}
   <NavItem
     @route="adminWatchedWords"

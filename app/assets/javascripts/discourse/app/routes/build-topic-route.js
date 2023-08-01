@@ -56,7 +56,7 @@ async function findTopicList(
     session.set("topicList", null);
   } else {
     // Clear the cache
-    session.setProperties({ topicList: null, topicListScrollPosition: null });
+    session.setProperties({ topicList: null });
   }
 
   if (!list) {
@@ -146,6 +146,7 @@ export default function (filter, extras) {
         };
 
         this.controllerFor("discovery/topics").setProperties(topicOpts);
+
         this.controllerFor("navigation/default").set(
           "canCreateTopic",
           model.get("can_create_topic")
@@ -154,6 +155,7 @@ export default function (filter, extras) {
 
       renderTemplate() {
         this.render("navigation/default", { outlet: "navigation-bar" });
+
         this.render("discovery/topics", {
           controller: "discovery/topics",
           outlet: "list-container",

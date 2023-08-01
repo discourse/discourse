@@ -73,7 +73,12 @@ class SystemMessage
 
     post = I18n.with_locale(@recipient.effective_locale) { creator.create }
 
-    DiscourseEvent.trigger(:system_message_sent, post: post, message_type: type)
+    DiscourseEvent.trigger(
+      :system_message_sent,
+      post: post,
+      message_type: type,
+      recipient: @recipient,
+    )
 
     raise StandardError, creator.errors.full_messages.join(" ") if creator.errors.present?
 
@@ -88,6 +93,8 @@ class SystemMessage
     {
       site_name: SiteSetting.title,
       username: @recipient.username,
+      name: @recipient.name,
+      name_or_username: @recipient.name.presence || @recipient.username,
       user_preferences_url: "#{@recipient.full_url}/preferences",
       new_user_tips:
         I18n.with_locale(@recipient.effective_locale) do

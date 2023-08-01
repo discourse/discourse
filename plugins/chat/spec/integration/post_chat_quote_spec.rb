@@ -16,12 +16,10 @@ describe "chat bbcode quoting in posts" do
       <div class="chat-transcript-username">
       martin</div>
       <div class="chat-transcript-datetime">
-      <span title="2022-01-25T05:40:39Z"></span>
-      </div>
+      <span title="2022-01-25T05:40:39Z"></span></div>
       </div>
       <div class="chat-transcript-messages">
-      <p>This is a chat message.</p>
-      </div>
+      <p>This is a chat message.</p></div>
       </div>
     COOKED
   end
@@ -34,19 +32,16 @@ describe "chat bbcode quoting in posts" do
     expect(post.cooked.chomp).to eq(<<~COOKED.chomp)
       <div class="chat-transcript" data-message-id="2321" data-username="martin" data-datetime="2022-01-25T05:40:39Z" data-channel-name="Cool Cats Club" data-channel-id="1234">
       <div class="chat-transcript-meta">
-      Originally sent in <a href="/chat/channel/1234/-">Cool Cats Club</a>
-      </div>
+      Originally sent in <a href="/chat/c/-/1234">Cool Cats Club</a></div>
       <div class="chat-transcript-user">
       <div class="chat-transcript-user-avatar"></div>
       <div class="chat-transcript-username">
       martin</div>
       <div class="chat-transcript-datetime">
-      <a href="/chat/channel/1234/-?messageId=2321" title="2022-01-25T05:40:39Z"></a>
-      </div>
+      <a href="/chat/c/-/1234/2321" title="2022-01-25T05:40:39Z"></a></div>
       </div>
       <div class="chat-transcript-messages">
-      <p>This is a chat message.</p>
-      </div>
+      <p>This is a chat message.</p></div>
       </div>
     COOKED
   end
@@ -63,14 +58,11 @@ describe "chat bbcode quoting in posts" do
       <div class="chat-transcript-username">
       martin</div>
       <div class="chat-transcript-datetime">
-      <a href="/chat/channel/1234/-?messageId=2321" title="2022-01-25T05:40:39Z"></a>
-      </div>
-      <a class="chat-transcript-channel" href="/chat/channel/1234/-">
-      #Cool Cats Club</a>
-      </div>
+      <a href="/chat/c/-/1234/2321" title="2022-01-25T05:40:39Z"></a></div>
+      <a class="chat-transcript-channel" href="/chat/c/-/1234">
+      #Cool Cats Club</a></div>
       <div class="chat-transcript-messages">
-      <p>This is a chat message.</p>
-      </div>
+      <p>This is a chat message.</p></div>
       </div>
     COOKED
   end
@@ -87,14 +79,11 @@ describe "chat bbcode quoting in posts" do
       <div class="chat-transcript-username">
       martin</div>
       <div class="chat-transcript-datetime">
-      <a href="/chat/channel/1234/-?messageId=2321" title="2022-01-25T05:40:39Z"></a>
-      </div>
-      <a class="chat-transcript-channel" href="/chat/channel/1234/-">
-      #Cool Cats Club</a>
-      </div>
+      <a href="/chat/c/-/1234/2321" title="2022-01-25T05:40:39Z"></a></div>
+      <a class="chat-transcript-channel" href="/chat/c/-/1234">
+      #Cool Cats Club</a></div>
       <div class="chat-transcript-messages">
-      <p>This is a chat message.</p>
-      </div>
+      <p>This is a chat message.</p></div>
       </div>
     COOKED
   end
@@ -107,19 +96,16 @@ describe "chat bbcode quoting in posts" do
     expect(post.cooked.chomp).to eq(<<~COOKED.chomp)
       <div class="chat-transcript" data-message-id="2321" data-username="martin" data-datetime="2022-01-25T05:40:39Z" data-channel-name="Cool Cats Club" data-channel-id="1234">
       <div class="chat-transcript-meta">
-      Originally sent in <a href="/chat/channel/1234/-">Cool Cats Club</a>
-      </div>
+      Originally sent in <a href="/chat/c/-/1234">Cool Cats Club</a></div>
       <div class="chat-transcript-user">
       <div class="chat-transcript-user-avatar"></div>
       <div class="chat-transcript-username">
       martin</div>
       <div class="chat-transcript-datetime">
-      <span title="2022-01-25T05:40:39Z"></span>
-      </div>
+      <span title="2022-01-25T05:40:39Z"></span></div>
       </div>
       <div class="chat-transcript-messages">
-      <p>This is a chat message.</p>
-      </div>
+      <p>This is a chat message.</p></div>
       </div>
     COOKED
   end
@@ -137,14 +123,11 @@ describe "chat bbcode quoting in posts" do
       <div class="chat-transcript-username">
       martin</div>
       <div class="chat-transcript-datetime">
-      <a href="/chat/channel/1234/-?messageId=2321" title="2022-01-25T05:40:39Z"></a>
-      </div>
-      <a class="chat-transcript-channel" href="/chat/channel/1234/-">
-      #Cool Cats Club</a>
-      </div>
+      <a href="/chat/c/-/1234/2321" title="2022-01-25T05:40:39Z"></a></div>
+      <a class="chat-transcript-channel" href="/chat/c/-/1234">
+      #Cool Cats Club</a></div>
       <div class="chat-transcript-messages">
-      <p>This is a chat message.</p>
-      <div class="chat-transcript-reactions">
+      <p>This is a chat message.</p><div class="chat-transcript-reactions">
       <div class="chat-transcript-reaction">
       <img width="20" height="20" src="/images/emoji/twitter/+1.png?v=12" title="+1" loading="lazy" alt="+1" class="emoji"> 1</div>
       <div class="chat-transcript-reaction">
@@ -198,12 +181,10 @@ This is an inline onebox https://en.wikipedia.org/wiki/Hyperlink.
 <div class="chat-transcript-username">
 martin</div>
 <div class="chat-transcript-datetime">
-<span title="2022-01-25T05:40:39Z"></span>
-</div>
+<span title="2022-01-25T05:40:39Z"></span></div>
 </div>
 <div class="chat-transcript-messages">
-<p>This is a chat message.</p>
-</div>
+<p>This is a chat message.</p></div>
 </div>
 #{full_onebox_html}
 <p>This is an inline onebox <a href="https://en.wikipedia.org/wiki/Hyperlink" class="inline-onebox-loading" rel="noopener nofollow ugc">https://en.wikipedia.org/wiki/Hyperlink</a>.</p>
@@ -220,14 +201,14 @@ martin</div>
     message1 = Fabricate(:chat_message, chat_channel: channel, user: post.user)
     message2 = Fabricate(:chat_message, chat_channel: channel, user: post.user)
     md =
-      ChatTranscriptService.new(
+      Chat::TranscriptService.new(
         channel,
         message2.user,
         messages_or_ids: [message2.id],
       ).generate_markdown
     message1.update!(message: md)
     md_for_post =
-      ChatTranscriptService.new(
+      Chat::TranscriptService.new(
         channel,
         message1.user,
         messages_or_ids: [message1.id],
@@ -237,35 +218,27 @@ martin</div>
 <div class="chat-transcript" data-message-id="#{message1.id}" data-username="#{message1.user.username}" data-datetime="#{message1.created_at.iso8601}" data-channel-name="#{channel.name}" data-channel-id="#{channel.id}">
 <div class="chat-transcript-user">
 <div class="chat-transcript-user-avatar">
-<img loading="lazy" alt="" width="20" height="20" src="//test.localhost#{post.user.avatar_template.gsub("{size}", "40")}" class="avatar">
-</div>
+<img loading="lazy" alt="" width="24" height="24" src="//test.localhost#{post.user.avatar_template.gsub("{size}", "48")}" class="avatar"></div>
 <div class="chat-transcript-username">
 #{message1.user.username}</div>
 <div class="chat-transcript-datetime">
-<a href="/chat/channel/#{channel.id}/-?messageId=#{message1.id}" title="#{message1.created_at.iso8601}"></a>
-</div>
-<a class="chat-transcript-channel" href="/chat/channel/#{channel.id}/-">
-##{channel.name}</a>
-</div>
+<a href="/chat/c/-/#{channel.id}/#{message1.id}" title="#{message1.created_at.iso8601}"></a></div>
+<a class="chat-transcript-channel" href="/chat/c/-/#{channel.id}">
+##{channel.name}</a></div>
 <div class="chat-transcript-messages">
 <div class="chat-transcript" data-message-id="#{message2.id}" data-username="#{message2.user.username}" data-datetime="#{message2.created_at.iso8601}" data-channel-name="#{channel.name}" data-channel-id="#{channel.id}">
 <div class="chat-transcript-user">
 <div class="chat-transcript-user-avatar">
-<img loading="lazy" alt="" width="20" height="20" src="//test.localhost#{post.user.avatar_template.gsub("{size}", "40")}" class="avatar">
-</div>
+<img loading="lazy" alt="" width="24" height="24" src="//test.localhost#{post.user.avatar_template.gsub("{size}", "48")}" class="avatar"></div>
 <div class="chat-transcript-username">
 #{message2.user.username}</div>
 <div class="chat-transcript-datetime">
-<a href="/chat/channel/#{channel.id}/-?messageId=#{message2.id}" title="#{message1.created_at.iso8601}"></a>
-</div>
-<a class="chat-transcript-channel" href="/chat/channel/#{channel.id}/-">
-##{channel.name}</a>
-</div>
+<a href="/chat/c/-/#{channel.id}/#{message2.id}" title="#{message1.created_at.iso8601}"></a></div>
+<a class="chat-transcript-channel" href="/chat/c/-/#{channel.id}">
+##{channel.name}</a></div>
 <div class="chat-transcript-messages">
-<p>#{message2.message}</p>
-</div>
-</div>
-</div>
+<p>#{message2.message}</p></div>
+</div></div>
 </div>
     COOKED
   end

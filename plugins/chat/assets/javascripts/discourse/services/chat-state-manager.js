@@ -3,17 +3,31 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
 import KeyValueStore from "discourse/lib/key-value-store";
 import Site from "discourse/models/site";
+import getURL from "discourse-common/lib/get-url";
 
 const PREFERRED_MODE_KEY = "preferred_mode";
 const PREFERRED_MODE_STORE_NAMESPACE = "discourse_chat_";
 const FULL_PAGE_CHAT = "FULL_PAGE_CHAT";
 const DRAWER_CHAT = "DRAWER_CHAT";
 
+let chatDrawerStateCallbacks = [];
+
+export function addChatDrawerStateCallback(callback) {
+  chatDrawerStateCallbacks.push(callback);
+}
+
+export function resetChatDrawerStateCallbacks() {
+  chatDrawerStateCallbacks = [];
+}
 export default class ChatStateManager extends Service {
   @service chat;
+  @service chatHistory;
   @service router;
-  isDrawerExpanded = false;
-  isDrawerActive = false;
+
+  @tracked isSidePanelExpanded = false;
+  @tracked isDrawerExpanded = false;
+  @tracked isDrawerActive = false;
+
   @tracked _chatURL = null;
   @tracked _appURL = null;
 
@@ -33,37 +47,49 @@ export default class ChatStateManager extends Service {
     this._store.setObject({ key: PREFERRED_MODE_KEY, value: DRAWER_CHAT });
   }
 
-  didOpenDrawer(URL = null) {
-    this.set("isDrawerActive", true);
-    this.set("isDrawerExpanded", true);
+  openSidePanel() {
+    this.isSidePanelExpanded = true;
+  }
 
-    if (URL) {
-      this.storeChatURL(URL);
+  closeSidePanel() {
+    this.isSidePanelExpanded = false;
+  }
+
+  didOpenDrawer(url = null) {
+    this.isDrawerActive = true;
+    this.isDrawerExpanded = true;
+
+    if (url) {
+      this.storeChatURL(url);
     }
 
     this.chat.updatePresence();
+    this.#publishStateChange();
   }
 
   didCloseDrawer() {
-    this.set("isDrawerActive", false);
-    this.set("isDrawerExpanded", false);
+    this.isDrawerActive = false;
+    this.isDrawerExpanded = false;
     this.chat.updatePresence();
+    this.#publishStateChange();
   }
 
   didExpandDrawer() {
-    this.set("isDrawerActive", true);
-    this.set("isDrawerExpanded", true);
+    this.isDrawerActive = true;
+    this.isDrawerExpanded = true;
     this.chat.updatePresence();
   }
 
   didCollapseDrawer() {
-    this.set("isDrawerActive", true);
-    this.set("isDrawerExpanded", false);
+    this.isDrawerActive = true;
+    this.isDrawerExpanded = false;
+    this.#publishStateChange();
   }
 
   didToggleDrawer() {
-    this.set("isDrawerExpanded", !this.isDrawerExpanded);
-    this.set("isDrawerActive", true);
+    this.isDrawerExpanded = !this.isDrawerExpanded;
+    this.isDrawerActive = true;
+    this.#publishStateChange();
   }
 
   get isFullPagePreferred() {
@@ -90,12 +116,18 @@ export default class ChatStateManager extends Service {
     return this.isFullPageActive || this.isDrawerActive;
   }
 
-  storeAppURL(URL = null) {
-    this._appURL = URL || this.router.currentURL;
+  storeAppURL(url = null) {
+    if (url) {
+      this._appURL = url;
+    } else if (this.router.currentURL?.startsWith("/chat")) {
+      this._appURL = "/";
+    } else {
+      this._appURL = this.router.currentURL;
+    }
   }
 
-  storeChatURL(URL = null) {
-    this._chatURL = URL || this.router.currentURL;
+  storeChatURL(url) {
+    this._chatURL = url;
   }
 
   get lastKnownAppURL() {
@@ -104,10 +136,19 @@ export default class ChatStateManager extends Service {
       url = this.router.urlFor(`discovery.${defaultHomepage()}`);
     }
 
-    return url;
+    return getURL(url);
   }
 
   get lastKnownChatURL() {
-    return this._chatURL || "/chat";
+    return getURL(this._chatURL || "/chat");
+  }
+
+  #publishStateChange() {
+    const state = {
+      isDrawerActive: this.isDrawerActive,
+      isDrawerExpanded: this.isDrawerExpanded,
+    };
+
+    chatDrawerStateCallbacks.forEach((callback) => callback(state));
   }
 }

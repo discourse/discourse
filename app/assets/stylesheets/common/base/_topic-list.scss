@@ -260,9 +260,34 @@
       padding-top: 0;
       padding-bottom: 0;
     }
-    .discourse-tag.simple:after,
     .discourse-tag.box {
       margin-right: 0.25em;
+    }
+
+    .participant-group-wrapper {
+      display: flex;
+      margin-left: 0.5em;
+
+      .participant-group {
+        padding: 0 5px;
+        border: 1px solid var(--primary-low);
+        border-radius: 0.25em;
+        min-width: 3em;
+        @include ellipsis;
+
+        > a {
+          display: flex;
+          align-items: center;
+          height: 1.25em;
+          color: var(--primary-high);
+          .mobile-view & {
+            height: 1.1em;
+          }
+          .d-icon {
+            margin-right: 5px;
+          }
+        }
+      }
     }
   }
 

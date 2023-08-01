@@ -34,10 +34,10 @@ RSpec.describe Onebox::Engine::GoogleMapsOnebox do
     },
     unresolveable: {
       test:
-        "https://www.google.com/maps/place/Den+Abattoir/@51.2285173,4.4336702,17z/data=!4m7!1m4!3m3!1s0x47c3f7a5ac48e237:0x63d716018f584a33!2zUGnDqXRyYWlu!3b1!3m1!1s0x0000000000000000:0xfbfac0c41c32471a",
+        "https://www.google.com/maps/place/Den+Abattoir/@51.2285173,4.4336702,17.5z/data=!4m7!1m4!3m3!1s0x47c3f7a5ac48e237:0x63d716018f584a33!2zUGnDqXRyYWlu!3b1!3m1!1s0x0000000000000000:0xfbfac0c41c32471a",
       redirect: [
         302,
-        "https://www.google.com/maps/place/Den+Abattoir/@51.2285173,4.4336702,17z/data=!4m7!1m4!3m3!1s0x47c3f7a5ac48e237:0x63d716018f584a33!2zUGnDqXRyYWlu!3b1!3m1!1s0x0000000000000000:0xfbfac0c41c32471a?dg=dbrw&newdg=1",
+        "https://www.google.com/maps/place/Den+Abattoir/@51.2285173,4.4336702,17.5z/data=!4m7!1m4!3m3!1s0x47c3f7a5ac48e237:0x63d716018f584a33!2zUGnDqXRyYWlu!3b1!3m1!1s0x0000000000000000:0xfbfac0c41c32471a?dg=dbrw&newdg=1",
       ],
       expect:
         "https://maps.google.com/maps?ll=51.2285173,4.4336702&z=17&output=embed&dg=ntvb&q=Den+Abattoir&cid=18157036796216755994",
@@ -53,6 +53,16 @@ RSpec.describe Onebox::Engine::GoogleMapsOnebox do
   }
 
   # Register URL redirects
+  # Prevent sleep from wasting our time when we test with strange redirects
+  subject(:onebox) do
+    described_class
+      .send(:allocate)
+      .tap do |obj|
+        obj.stubs(:sleep)
+        obj.send(:initialize, link)
+      end
+  end
+
   before do
     URLS.values.each do |t|
       status, location = *t[:redirect]
@@ -62,27 +72,17 @@ RSpec.describe Onebox::Engine::GoogleMapsOnebox do
     end
   end
 
-  # Prevent sleep from wasting our time when we test with strange redirects
-  subject do
-    described_class
-      .send(:allocate)
-      .tap do |obj|
-        obj.stubs(:sleep)
-        obj.send(:initialize, link)
-      end
-  end
-
-  let(:data) { Onebox::Helpers.symbolize_keys(subject.send(:data)) }
+  let(:data) { Onebox::Helpers.symbolize_keys(onebox.send(:data)) }
   let(:link) { |example| URLS[example.metadata[:urltype] || :short][:test] }
 
   include_context "an engine", urltype: :short
 
   URLS.each do |kind, t|
     it "processes #{kind.to_s} url correctly", urltype: kind do
-      expect(subject.url).to eq t[:expect]
-      expect(subject.streetview?).to t[:streetview] ? be_truthy : be_falsey
-      expect(subject.to_html).to include("<iframe")
-      expect(subject.placeholder_html).to include("placeholder-icon map")
+      expect(onebox.url).to eq t[:expect]
+      expect(onebox.streetview?).to t[:streetview] ? be_truthy : be_falsey
+      expect(onebox.to_html).to include("<iframe")
+      expect(onebox.placeholder_html).to include("placeholder-icon map")
     end
   end
 end

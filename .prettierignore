@@ -3,6 +3,7 @@ plugins/**/assets/stylesheets/vendor/
 plugins/**/assets/javascripts/vendor/
 plugins/**/config/locales/**/*.yml
 plugins/**/config/*.yml
+documentation/
 package.json
 config/locales/**/*.yml
 !config/locales/**/*.en*.yml

@@ -8,6 +8,8 @@ module EmailControllerHelper
 
       topic = unsubscribe_key.associated_topic
 
+      return if topic.blank?
+
       controller.instance_variable_set(:@topic, topic)
       controller.instance_variable_set(
         :@watching_topic,

@@ -378,7 +378,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
       AttachmentPatterns.each do |p|
         pattern, emitter = *p
         body.gsub!(pattern) do |s|
-          next s unless (num = $~[:num].to_i - 1) >= 0
+          next s if (num = $~[:num].to_i - 1) < 0
           next s unless (upload = attachments[num]).present?
           use_count[num] += 1
           instance_exec(upload, &emitter)

@@ -43,6 +43,15 @@ export default DropdownSelectBoxComponent.extend({
           icon: "shield-alt",
         });
       }
+    } else if (this.canEditGroup && !this.member.owner) {
+      items.push({
+        id: "makeOwner",
+        name: I18n.t("groups.members.make_owner"),
+        description: I18n.t("groups.members.make_owner_description", {
+          username: this.get("member.username"),
+        }),
+        icon: "shield-alt",
+      });
     }
 
     if (this.currentUser.staff) {

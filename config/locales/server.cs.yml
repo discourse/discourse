@@ -361,21 +361,6 @@ cs:
   meta_category_description: "Diskutuje tento web, jeho organizaci, jak funguje a jak ho vylepšit."
   staff_category_name: "Redakce"
   staff_category_description: "Privátní kategorie pro diskuze redakce. Témata jsou viditelná pouze pro moderátory a správce."
-  discourse_welcome_topic:
-    body: |2
-
-      První odstavec tohoto připnutého tématu se zobrazí na domovské stránce jako uvítací zpráva pro všechny nové návštěvníky. Je to důležité!
-
-      **Upravte tento text** do stručného popisu Vaší komunity:
-
-      - Pro koho tu je?
-      - Co zde lze nalézt?
-      - Proč by sem měli lidé chodit?
-      - Kde se lze dozvědět víc (odkazy, zdroje, atd.)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Možná budete chtít toto téma v administraci (vpravo nahoře a dole) zavřít, aby se nehromadily odpovědi na oznámeních.
   category:
     topic_prefix: "O kategorii %{category}"
     post_template: "%{replace_paragraph}\n\nPoužijte následující odstavce pro delší popis, nebo pro vytvoření pokynů ke kategorii nebo pravidel:\n\n- Proč by lidé měli používat tuto kategorii? K čemu slouží?\n\n- Jak přesně je tato kategorie odlišná od ostatních, které již máme?\n\n- Co by měly témata v této kategorii obvykle obsahovat?\n\n- Potřebujeme tuto kategorii? Můžeme ji sloučit s jinou kategorií nebo subkategorií?\n"
@@ -960,15 +945,6 @@ cs:
         few: "%{count} users waiting for approval"
         many: "%{count} users waiting for approval"
         other: "%{count} users waiting for approval"
-    dashboard_problems:
-      title: "Problémy s administrační nástěnkou"
-      subject_template: "Nové rady na administrační nástěnce vašeho webu"
-      text_body_template: |
-        Máme pro vás několik nových rad a doporučení na základě aktuálního nastavení webu.
-
-        [Navštivte administrační nástěnku webu] (%{base_url}/admin), abyste si je mohli prohlédnout.
-
-        Pokud na vaší administrační nástěnce není nic vidět, možná již podle této rady postupoval jiný člen redakce. Seznam akcí redaktorů najdete ve vašich [protokolech akcí redakce] (%{base_url}/admin/logs/staff_action_logs).
   unsubscribe_link: |
     Pro zrušení zasílání těchto emailů [klikněte zde](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -979,9 +955,6 @@ cs:
     Pro zrušení zasílání těchto emailů [klikněte zde](%{unsubscribe_url}).
   user_notifications:
     previous_discussion: "Předchozí diskuze"
-    unsubscribe:
-      title: "Odhlásit z odběru emailů"
-      description: "Nechcete již od nás dostávat emaily? Žádný problém! Klikněte na odkaz níže pro okamžité odhlášení z odběru emailů:"
     reply_by_email: "K odpovědi [navštivte téma](%{base_url}%{url}) nebo odepište na tento email."
     visit_link_to_respond: "K odpovědi [navštivte téma](%{base_url}%{url})."
     posted_by: "Zaslal uživatel %{username} dne %{post_date}"
@@ -1020,8 +993,6 @@ cs:
     see_more: "Více"
     search_title: "Hledat na tomto webu"
     search_button: "Vyhledat"
-  deleted: "smazáno"
-  image: "obrázek"
   upload:
     unauthorized: "Bohužel, soubor, který se snažíte nahrát, není povolený (povolené přípony: %{authorized_extensions})."
     pasted_image_filename: "Vložený obrázek"
@@ -1162,7 +1133,6 @@ cs:
         title: "Pozvi redaktory"
       finished:
         title: "Váš Discourse je připraven!"
-  joined: "Účet vytvořen"
   discourse_push_notifications:
     popup:
       mentioned: 'Uživatel %{username} vás zmínil v "%{topic}" - %{site_title}'
@@ -1181,28 +1151,24 @@ cs:
       medium: "Střední"
       high: "Vysoká"
     actions:
-      agree_and_keep:
-        title: "Uchovat příspěvek"
-        description: "Schválit nahlášení a zanechat příspěvek nepozměněný. "
+      agree:
+        title: "Ano"
       agree_and_suspend:
-        title: "Zakázat uživatele"
         description: "Schválit nahlášení a pozastavit uživatele."
       agree_and_silence:
-        title: "Ztišit uživatele"
         description: "Schválit nahlášení a ztišit uživatele."
       agree_and_restore:
         description: "Obnov příspěvek, aby ho mohli vidět všichni ostatní uživatelé."
-      agree_and_hide:
-        title: "Schovat příspěvek"
-        description: "Schovat tento příspěvek a automaticky poslat uživateli zprávu, aby ho urychleně upravil."
       delete_single:
         title: "Smazat"
       disagree_and_restore:
         description: "Obnov příspěvek, aby ho mohli vidět všichni ostatní uživatelé."
       disagree:
-        title: "Neschvaluji"
+        title: "Ne"
       ignore:
         title: "ignorovat"
+      ignore_and_do_nothing:
+        title: "Nic nedělat"
       approve:
         title: "Schválit"
       reject_user:

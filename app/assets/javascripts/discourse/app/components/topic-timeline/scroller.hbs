@@ -18,7 +18,7 @@
         </div>
       {{/if}}
       {{#if (and @showDockedButton (not @dragging))}}
-        <TopicTimeline::BackButton @onClick={{@goBack}} />
+        <TopicTimeline::BackButton @onGoBack={{@onGoBack}} />
       {{/if}}
     </div>
     <div class="timeline-handle"></div>
@@ -34,7 +34,7 @@
         </div>
       {{/if}}
       {{#if (and @showDockedButton (not @dragging))}}
-        <TopicTimeline::BackButton @onClick={{@goBack}} />
+        <TopicTimeline::BackButton @onGoBack={{@onGoBack}} />
       {{/if}}
     </div>
   {{/if}}

@@ -5,81 +5,16 @@ RSpec.describe Email::MessageIdService do
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:second_post) { Fabricate(:post, topic: topic) }
 
-  subject { described_class }
-
-  describe "#generate_for_post" do
-    it "generates for the post using the message_id on the post's incoming_email" do
-      Fabricate(:incoming_email, message_id: "test@test.localhost", post: post)
-      post.reload
-      expect(subject.generate_for_post(post, use_incoming_email_if_present: true)).to eq(
-        "<test@test.localhost>",
-      )
-    end
-
-    it "generates for the post without an incoming_email record" do
-      expect(subject.generate_for_post(post)).to match(subject.message_id_post_id_regexp)
-      expect(subject.generate_for_post(post, use_incoming_email_if_present: true)).to match(
-        subject.message_id_post_id_regexp,
-      )
-    end
-  end
-
-  describe "#generate_for_topic" do
-    it "generates for the topic using the message_id on the first post's incoming_email" do
-      Fabricate(
-        :incoming_email,
-        message_id: "test213428@somemailservice.com",
-        post: post,
-        created_via: IncomingEmail.created_via_types[:handle_mail],
-      )
-      post.reload
-      expect(subject.generate_for_topic(topic, use_incoming_email_if_present: true)).to eq(
-        "<test213428@somemailservice.com>",
-      )
-    end
-
-    it "does not use the first post's incoming email if it was created via group_smtp, only handle_mail" do
-      incoming =
-        Fabricate(
-          :incoming_email,
-          message_id: "test213428@somemailservice.com",
-          post: post,
-          created_via: IncomingEmail.created_via_types[:group_smtp],
-        )
-      post.reload
-      expect(subject.generate_for_topic(topic, use_incoming_email_if_present: true)).to match(
-        subject.message_id_topic_id_regexp,
-      )
-      incoming.update(created_via: IncomingEmail.created_via_types[:handle_mail])
-      expect(subject.generate_for_topic(topic, use_incoming_email_if_present: true)).to eq(
-        "<test213428@somemailservice.com>",
-      )
-    end
-
-    it "generates for the topic without an incoming_email record" do
-      expect(subject.generate_for_topic(topic)).to match(subject.message_id_topic_id_regexp)
-      expect(subject.generate_for_topic(topic, use_incoming_email_if_present: true)).to match(
-        subject.message_id_topic_id_regexp,
-      )
-    end
-
-    it "generates canonical for the topic" do
-      canonical_topic_id = subject.generate_for_topic(topic, canonical: true)
-      expect(canonical_topic_id).to match(subject.message_id_topic_id_regexp)
-      expect(canonical_topic_id).to eq("<topic/#{topic.id}@test.localhost>")
-    end
-  end
-
   describe "#generate_or_use_existing" do
     it "does not override a post's existing outbound_message_id" do
       post.update!(outbound_message_id: "blah@host.test")
-      result = subject.generate_or_use_existing(post.id)
+      result = described_class.generate_or_use_existing(post.id)
       expect(result).to eq(["<blah@host.test>"])
     end
 
     it "generates an outbound_message_id in the correct format if it's blank for the post" do
       post.update!(outbound_message_id: nil)
-      result = subject.generate_or_use_existing(post.id)
+      result = described_class.generate_or_use_existing(post.id)
       expect(result).to eq(["<discourse/post/#{post.id}@#{Email::MessageIdService.host}>"])
     end
 
@@ -102,7 +37,7 @@ RSpec.describe Email::MessageIdService do
         )
       post_bulk4 = Fabricate(:post, topic: topic, created_at: 3.days.ago, outbound_message_id: nil)
       result =
-        subject.generate_or_use_existing(
+        described_class.generate_or_use_existing(
           [post_bulk1.id, post_bulk2.id, post_bulk3.id, post_bulk4.id],
         )
       expect(result).to eq(
@@ -126,36 +61,43 @@ RSpec.describe Email::MessageIdService do
     end
 
     it "finds a post based only on a post-format message id" do
-      expect(subject.find_post_from_message_ids([post_format_message_id])).to eq(post)
+      expect(described_class.find_post_from_message_ids([post_format_message_id])).to eq(post)
     end
 
     it "finds a post based only on a topic-format message id" do
-      expect(subject.find_post_from_message_ids([topic_format_message_id])).to eq(post)
+      expect(described_class.find_post_from_message_ids([topic_format_message_id])).to eq(post)
     end
 
     it "finds a post based only on a discourse-format message id" do
-      expect(subject.find_post_from_message_ids([discourse_format_message_id])).to eq(post)
+      expect(described_class.find_post_from_message_ids([discourse_format_message_id])).to eq(post)
     end
 
     it "finds a post from the post's outbound_message_id" do
-      post.update!(outbound_message_id: subject.message_id_clean(discourse_format_message_id))
-      expect(subject.find_post_from_message_ids([discourse_format_message_id])).to eq(post)
+      post.update!(
+        outbound_message_id: described_class.message_id_clean(discourse_format_message_id),
+      )
+      expect(described_class.find_post_from_message_ids([discourse_format_message_id])).to eq(post)
     end
 
     it "finds a post from the email log" do
       email_log =
-        Fabricate(:email_log, message_id: subject.message_id_clean(default_format_message_id))
-      expect(subject.find_post_from_message_ids([default_format_message_id])).to eq(email_log.post)
+        Fabricate(
+          :email_log,
+          message_id: described_class.message_id_clean(default_format_message_id),
+        )
+      expect(described_class.find_post_from_message_ids([default_format_message_id])).to eq(
+        email_log.post,
+      )
     end
 
     it "finds a post from the incoming email log" do
       incoming_email =
         Fabricate(
           :incoming_email,
-          message_id: subject.message_id_clean(gmail_format_message_id),
+          message_id: described_class.message_id_clean(gmail_format_message_id),
           post: Fabricate(:post),
         )
-      expect(subject.find_post_from_message_ids([gmail_format_message_id])).to eq(
+      expect(described_class.find_post_from_message_ids([gmail_format_message_id])).to eq(
         incoming_email.post,
       )
     end
@@ -164,16 +106,16 @@ RSpec.describe Email::MessageIdService do
       incoming_email =
         Fabricate(
           :incoming_email,
-          message_id: subject.message_id_clean(post_format_message_id),
+          message_id: described_class.message_id_clean(post_format_message_id),
           post: Fabricate(:post, created_at: 10.days.ago),
         )
-      expect(subject.find_post_from_message_ids([post_format_message_id])).to eq(post)
+      expect(described_class.find_post_from_message_ids([post_format_message_id])).to eq(post)
     end
   end
 
   describe "#discourse_generated_message_id?" do
     def check_format(message_id)
-      subject.discourse_generated_message_id?(message_id)
+      described_class.discourse_generated_message_id?(message_id)
     end
 
     it "works correctly for the different possible formats" do

@@ -242,7 +242,7 @@ class PostAction < ActiveRecord::Base
       end
     end
 
-    topic_id = Post.with_deleted.where(id: post_id).pluck_first(:topic_id)
+    topic_id = Post.with_deleted.where(id: post_id).pick(:topic_id)
 
     # topic_user
     if post_action_type_key == :like

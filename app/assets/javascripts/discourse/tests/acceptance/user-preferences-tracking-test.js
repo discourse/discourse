@@ -4,9 +4,7 @@ import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("User Preferences - Tracking", function (needs) {
-  needs.user({
-    redesigned_user_page_nav_enabled: true,
-  });
+  needs.user();
 
   let putRequestData;
 
@@ -196,6 +194,22 @@ acceptance("User Preferences - Tracking", function (needs) {
       "watched_category_ids[]": ["3"],
       "watched_first_post_category_ids[]": ["-1"],
     });
+  });
+
+  test("additional precedence option when one category is watched and tag is muted", async function (assert) {
+    this.siteSettings.tagging_enabled = true;
+
+    await visit("/u/eviltrout/preferences/tracking");
+
+    const mutedTagsSelector = selectKit(
+      ".tracking-controls__muted-tags .tag-chooser"
+    );
+
+    assert.dom(".user-preferences__watched-precedence-over-muted").doesNotExist;
+    await mutedTagsSelector.expand();
+    await mutedTagsSelector.selectRowByValue("dog");
+
+    assert.dom(".user-preferences__watched-precedence-over-muted").exists();
   });
 
   test("tracking category which is set to regular notification level for user when mute_all_categories_by_default site setting is disabled", async function (assert) {

@@ -1,5 +1,5 @@
 <div class="sidebar-sections">
-  <Sidebar::User::CommunitySection @collapsable={{@collapsableSections}} />
+  <Sidebar::User::CustomSections @collapsable={{@collapsableSections}} />
   <Sidebar::User::CategoriesSection @collapsable={{@collapsableSections}} />
 
   {{#if this.currentUser.display_sidebar_tags}}
@@ -10,45 +10,5 @@
     <Sidebar::User::MessagesSection @collapsable={{@collapsableSections}} />
   {{/if}}
 
-  {{#each this.customSections as |customSection|}}
-    <Sidebar::Section
-      @sectionName={{customSection.name}}
-      @headerLinkText={{customSection.text}}
-      @headerLinkTitle={{customSection.title}}
-      @headerActionsIcon={{customSection.actionsIcon}}
-      @headerActions={{customSection.actions}}
-      @willDestroy={{customSection.willDestroy}}
-      @collapsable={{@collapsableSections}}
-      @displaySection={{customSection.displaySection}}
-    >
-
-      {{#each customSection.links as |link|}}
-        <Sidebar::SectionLink
-          @linkName={{link.name}}
-          @class={{link.classNames}}
-          @route={{link.route}}
-          @model={{link.model}}
-          @models={{link.models}}
-          @title={{link.title}}
-          @contentCSSClass={{link.contentCSSClass}}
-          @prefixColor={{link.prefixColor}}
-          @prefixBadge={{link.prefixBadge}}
-          @prefixType={{link.prefixType}}
-          @prefixValue={{link.prefixValue}}
-          @prefixCSSClass={{link.prefixCSSClass}}
-          @suffixType={{link.suffixType}}
-          @suffixValue={{link.suffixValue}}
-          @suffixCSSClass={{link.suffixCSSClass}}
-          @hoverType={{link.hoverType}}
-          @hoverValue={{link.hoverValue}}
-          @hoverAction={{link.hoverAction}}
-          @hoverTitle={{link.hoverTitle}}
-          @currentWhen={{link.currentWhen}}
-          @didInsert={{link.didInsert}}
-          @willDestroy={{link.willDestroy}}
-          @content={{link.text}}
-        />
-      {{/each}}
-    </Sidebar::Section>
-  {{/each}}
+  <Sidebar::ApiSections @collapsable={{@collapsableSections}} />
 </div>

@@ -35,17 +35,17 @@ class TranslationOverride < ActiveRecord::Base
       optional_cat
       optional_tags
     ],
+    %w[system_messages.welcome_user] => %w[username name name_or_username],
   }
 
   include HasSanitizableFields
-  include ActiveSupport::Deprecation::DeprecatedConstantAccessor
-  deprecate_constant "CUSTOM_INTERPOLATION_KEYS_WHITELIST",
-                     "TranslationOverride::ALLOWED_CUSTOM_INTERPOLATION_KEYS"
 
   validates_uniqueness_of :translation_key, scope: :locale
   validates_presence_of :locale, :translation_key, :value
 
   validate :check_interpolation_keys
+
+  enum :status, %i[up_to_date outdated invalid_interpolation_keys deprecated]
 
   def self.upsert!(locale, key, value)
     params = { locale: locale, translation_key: key }
@@ -53,8 +53,10 @@ class TranslationOverride < ActiveRecord::Base
     translation_override = find_or_initialize_by(params)
     sanitized_value =
       translation_override.sanitize_field(value, additional_attributes: ["data-auto-route"])
+    original_translation =
+      I18n.overrides_disabled { I18n.t(transform_pluralized_key(key), locale: :en) }
 
-    data = { value: sanitized_value }
+    data = { value: sanitized_value, original_translation: original_translation }
     if key.end_with?("_MF")
       _, filename = JsLocaleHelper.find_message_format_locale([locale], fallback_to_english: false)
       data[:compiled_js] = JsLocaleHelper.compile_message_format(filename, locale, sanitized_value)
@@ -107,48 +109,76 @@ class TranslationOverride < ActiveRecord::Base
     true
   end
 
+  # We use English as the source of truth when extracting interpolation keys,
+  # but some languages, like Arabic, have plural forms (zero, two, few, many)
+  # which don't exist in English (one, other), so we map that here in order to
+  # find the correct, English translation key in which to look.
+  def self.transform_pluralized_key(key)
+    match = key.match(/(.*)\.(zero|two|few|many)\z/)
+    match ? match.to_a.second + ".other" : key
+  end
+
+  def self.custom_interpolation_keys(translation_key)
+    ALLOWED_CUSTOM_INTERPOLATION_KEYS.find do |keys, value|
+      break value if keys.any? { |k| translation_key.start_with?(k) }
+    end || []
+  end
+
   private_class_method :reload_locale!
   private_class_method :clear_cached_keys!
   private_class_method :i18n_changed
   private_class_method :expire_cache
 
-  private
-
-  def check_interpolation_keys
-    transformed_key = transform_pluralized_key(translation_key)
-
-    original_text = I18n.overrides_disabled { I18n.t(transformed_key, locale: :en) }
-
-    if original_text
-      original_interpolation_keys = I18nInterpolationKeysFinder.find(original_text)
-      new_interpolation_keys = I18nInterpolationKeysFinder.find(value)
-      custom_interpolation_keys = []
-
-      ALLOWED_CUSTOM_INTERPOLATION_KEYS.select do |keys, value|
-        custom_interpolation_keys = value if keys.any? { |key| transformed_key.start_with?(key) }
-      end
-
-      invalid_keys =
-        (original_interpolation_keys | new_interpolation_keys) - original_interpolation_keys -
-          custom_interpolation_keys
-
-      if invalid_keys.present?
-        self.errors.add(
-          :base,
-          I18n.t(
-            "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
-            keys: invalid_keys.join(", "),
-          ),
-        )
-
-        false
-      end
-    end
+  def original_translation_deleted?
+    !I18n.overrides_disabled { I18n.t!(transformed_key, locale: :en) }.is_a?(String)
+  rescue I18n::MissingTranslationData
+    true
   end
 
-  def transform_pluralized_key(key)
-    match = key.match(/(.*)\.(zero|two|few|many)$/)
-    match ? match.to_a.second + ".other" : key
+  def original_translation_updated?
+    return false if original_translation.blank?
+
+    original_translation != current_default
+  end
+
+  def invalid_interpolation_keys
+    return [] if current_default.blank?
+
+    original_interpolation_keys = I18nInterpolationKeysFinder.find(current_default)
+    new_interpolation_keys = I18nInterpolationKeysFinder.find(value)
+    custom_interpolation_keys = []
+
+    ALLOWED_CUSTOM_INTERPOLATION_KEYS.select do |keys, value|
+      custom_interpolation_keys = value if keys.any? { |key| transformed_key.start_with?(key) }
+    end
+
+    (original_interpolation_keys | new_interpolation_keys) - original_interpolation_keys -
+      custom_interpolation_keys
+  end
+
+  def current_default
+    I18n.overrides_disabled { I18n.t(transformed_key, locale: :en) }
+  end
+
+  private
+
+  def transformed_key
+    @transformed_key ||= self.class.transform_pluralized_key(translation_key)
+  end
+
+  def check_interpolation_keys
+    invalid_keys = invalid_interpolation_keys
+
+    return if invalid_keys.blank?
+
+    self.errors.add(
+      :base,
+      I18n.t(
+        "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
+        keys: invalid_keys.join(I18n.t("word_connector.comma")),
+        count: invalid_keys.size,
+      ),
+    )
   end
 end
 
@@ -156,13 +186,15 @@ end
 #
 # Table name: translation_overrides
 #
-#  id              :integer          not null, primary key
-#  locale          :string           not null
-#  translation_key :string           not null
-#  value           :string           not null
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  compiled_js     :text
+#  id                   :integer          not null, primary key
+#  locale               :string           not null
+#  translation_key      :string           not null
+#  value                :string           not null
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  compiled_js          :text
+#  original_translation :text
+#  status               :integer          default("up_to_date"), not null
 #
 # Indexes
 #

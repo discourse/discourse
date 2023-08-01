@@ -611,6 +611,7 @@ RSpec.describe Upload do
   describe "#dominant_color" do
     let(:white_image) { Fabricate(:image_upload, color: "white") }
     let(:red_image) { Fabricate(:image_upload, color: "red") }
+    let(:high_color_image) { Fabricate(:image_upload, color: "#000A00F00", color_depth: 16) }
     let(:not_an_image) do
       upload = Fabricate(:upload)
 
@@ -640,6 +641,14 @@ RSpec.describe Upload do
       expect(red_image.dominant_color).to eq(nil)
       expect(red_image.dominant_color(calculate_if_missing: true)).to eq("FF0000")
       expect(red_image.dominant_color).to eq("FF0000")
+
+      expect(high_color_image.dominant_color).to eq(nil)
+      # original is: #000A00F00
+      # downsamples to: #009FEF
+      # A00 is closer to 9F than A0
+      # EF is closer to F00 than F0
+      expect(high_color_image.dominant_color(calculate_if_missing: true)).to eq("009FEF")
+      expect(high_color_image.dominant_color).to eq("009FEF")
     end
 
     it "can be backfilled" do

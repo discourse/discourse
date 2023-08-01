@@ -69,6 +69,7 @@ task "qunit:test", %i[timeout qunit_path filter] do |_, args|
       theme_name
       theme_url
       theme_id
+      target
     ].each { |arg| options[arg] = ENV[arg.upcase] if ENV[arg.upcase].present? }
 
     options["report_requests"] = "1" if report_requests
@@ -90,7 +91,7 @@ task "qunit:test", %i[timeout qunit_path filter] do |_, args|
       Net::HTTP.get(uri)
     rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL, Net::ReadTimeout, EOFError
       sleep 1
-      retry unless elapsed() > 60
+      retry if elapsed() <= 60
       puts "Timed out. Can not connect to forked server!"
       exit 1
     end

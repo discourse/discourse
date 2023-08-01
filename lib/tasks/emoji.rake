@@ -277,6 +277,8 @@ end
 
 desc "update emoji images"
 task "emoji:update" do
+  abort("This task can't be run on production.") if Rails.env.production?
+
   copy_emoji_db
 
   json_db = File.read(File.join(GENERATED_PATH, "db.json"))
@@ -459,7 +461,7 @@ end
 def codepoints_to_code(codepoints, fitzpatrick_scale)
   codepoints = codepoints.map { |c| c.to_s(16).rjust(4, "0") }.join("_").downcase
 
-  codepoints.gsub!(/_fe0f$/, "") if !fitzpatrick_scale
+  codepoints.gsub!(/_fe0f\z/, "") if !fitzpatrick_scale
 
   codepoints
 end
@@ -473,7 +475,7 @@ def confirm_overwrite(path)
   STDIN.gets.chomp
 end
 
-class TestEmojiUpdate < MiniTest::Test
+class TestEmojiUpdate < Minitest::Test
   def self.run_and_summarize
     puts "Runnings tests..."
     reporter = Minitest::SummaryReporter.new

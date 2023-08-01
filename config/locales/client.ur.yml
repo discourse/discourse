@@ -164,11 +164,6 @@ ur:
     software_update_prompt:
       message: "ہم نے اس سائٹ کواپڈیٹ کردیا <span>براہ مہربانی ریفریش کریں</span> ، یا آپ کا تجربہ غیر متوقع ہو سکتا ہے۔"
       dismiss: "بر خاست کریں"
-    bootstrap_mode_enabled:
-      one: "اپنی نئی سائٹ کو شروع کرنے کوآسان بنانے کے لیے، آپ بوٹسٹریپ موڈ میں ہیں۔ تمام نئے صارفین کو اعتماد کی سطح 1 دی جائے گی اور روزانہ ای میل سمری ای میلز کو فعال کیا جائے گا۔ %{count} صارف کے شامل ہونے پر یہ خود بخود بند ہو جائے گا۔"
-      other: "اپنی نئی سائٹ کو شروع کرنے کوآسان بنانے کے لیے، آپ بوٹسٹریپ موڈ میں ہیں۔ تمام نئے صارفین کو اعتماد کی سطح 1 دی جائے گی اور روزانہ ای میل سمری ای میلز کو فعال کیا جائے گا۔ %{count} صارفین کے شامل ہونے پر یہ خود بخود بند ہو جائے گا۔"
-    bootstrap_mode_disabled: "بُوٹسٹرَیپ مَوڈ 24 گھنٹوں کے اندر غیر فعال کر دیا جائے گا۔"
-    bootstrap_invite_button_title: "دعوت بھیجیں"
     themes:
       default_description: "ڈِیفالٹ"
       broken_theme_alert: "ہو سکتا ہے آپ کی سائٹ کام نہ کرے کیونکہ تھیم/جزو میں خامیاں ہیں۔"
@@ -279,11 +274,8 @@ ur:
       edit_bookmark: "بک مارک میں ترمیم کریں"
       clear_bookmarks: "بک مارکس ختم کریں"
       help:
-        bookmark: "اِس ٹاپک کی پہلی پوسٹ بُک مارک کرنے کے لئے کلک کریں"
-        edit_bookmark: "اس موضوع پر بک مارک میں ترمیم کرنے کے لیے کلک کریں"
         edit_bookmark_for_topic: "اس موضوع پر بک مارک میں ترمیم کرنے کے لیے کلک کریں"
         unbookmark: "اِس ٹاپک کے تمام بُک مارک ہٹانے کے لئے کلک کریں"
-        unbookmark_with_reminder: "اس موضوع میں تمام بک مارکس اور یاد دہانیوں کو مٹانے کے لیے کلک کریں۔"
     bookmarks:
       created: "آپ نے اس %{name} پوسٹ کو بک مارک کیا ہے۔"
       create: "بک مارک بنائیں"
@@ -325,7 +317,6 @@ ur:
       new_topic: "نئے ٹاپک کا ڈرافٹ"
       new_private_message: "نیے ذاتی پیغام کا مسودہ"
       abandon:
-        confirm: "آپ کے پاس اس عنوان کے لئے ایک مسودہ ہے۔ آپ اس کے ساتھ کیا کرنا چاہیں گے؟"
         yes_value: "منسوخ"
         no_value: "ترمیم دوبارہ شروع کریں"
     topic_count_categories:
@@ -497,11 +488,9 @@ ur:
       scores:
         about: "یہ اسکور رپورٹ کرنے والے کے ٹرسٹ لَیول پر مبنی ہے، اُن کے سابق فلَیگز کی درستگی، اور رپورٹ کردہ چیز کی ترجیح پر۔"
         score: "اسکور"
-        date: "تاریخ"
-        type: "قِسم"
+        type: "وجہ"
         status: "سٹیٹس"
-        submitted_by: "کی طرف سے شائع کردہ"
-        reviewed_by: "کی طرف سے جائزہ کردہ"
+        submitted_by: "کی طرف سے رپورٹ کردہ"
       statuses:
         pending:
           title: "زیرِاِلتوَاء"
@@ -509,14 +498,12 @@ ur:
           title: "منظورشدہ"
         rejected:
           title: "مسترد کر دی گئی"
-        ignored:
-          title: "نظر انداز کردہ"
-        deleted:
-          title: "مٹائیں"
         reviewed:
-          title: "(تمام جائزہ کردہ)"
+          title: "تمام جائزہ کردہ"
         all:
-          title: "(تمام)"
+          title: "تمام"
+      context_question:
+        delimiter: "یا"
       types:
         reviewable_flagged_post:
           title: "فلَیگ کردہ پوسٹ"
@@ -817,6 +804,7 @@ ur:
         make_all_primary_description: "اس کو تمام منتخب کردہ صارفین کے لئے بنیادی گروپ بنائیں"
         remove_all_primary: "بطور بنیادی ہٹائیں"
         remove_all_primary_description: "اس گروپ کو بنیادی طور پر ہٹا دیں"
+        status: "سٹیٹس"
         owner: "مالِک"
         primary: "بنیادی"
         forbidden: "آپ کو ممبران دیکھنے کی اجازت نہیں ہے۔"
@@ -942,11 +930,6 @@ ur:
       profile: "پروفائل"
       mute: "خاموش کردیں"
       edit: "ترجیحات میں ترمیم کردیں"
-      download_archive:
-        button_text: "تمام ڈاؤن لوڈ کریں"
-        confirm: "کیا آپ واقعی اپنی پوسٹس ڈاؤن لوڈ کرنا چاہتے ہیں؟"
-        success: "ڈاؤن لوڈ کا آغاز کر دیا گیا ہے، عمل مکمل ہونے پر آپ کو پیغام کے ذریعے مطلع کر دیا جائے گا۔"
-        rate_limit_error: "پوسٹس فی دن ایک بار ہی ڈاؤن لوڈ کی جا سکتی ہیں، براہ مہربانی کل دوبارہ کوشش کریں۔"
       new_private_message: "نیا پیغام"
       private_message: "پیغام"
       private_messages: "پیغامات"
@@ -1127,13 +1110,6 @@ ur:
       save_to_change_theme: 'آپ کے "%{save_text}" پر کلک کرنے کے بعد تھیم کو اپ ڈیٹ کر دیا جائے گا۔'
       home: "ڈیفالٹ ہوم پیج"
       staged: "سٹَیجڈ"
-      staff_counters:
-        flags_given: "مدد گار فلَیگ"
-        flagged_posts: "فلَیگ کی گئی پوسٹس"
-        deleted_posts: "مٹائی گئی پوسٹس"
-        suspensions: "معطلیاں"
-        warnings_received: "تنبیہات"
-        rejected_posts: "مسترد شدہ پوسٹس"
       messages:
         all: "تمام ان باکسز"
         inbox: "اِن باکس"
@@ -1183,11 +1159,9 @@ ur:
         title: "دو فیکٹر بیک اپ کوڈز"
         regenerate: "دوبارہ تخلیق کریں"
         disable: "غیر فعال کریں"
-        enable: "فعال کریں"
-        enable_long: "بیک اپ کوڈ فعال کریں"
         manage:
-          one: "بیک اپ کوڈز کا نظم کریں۔ آپ کے پاس <strong>%{count}</strong> بیک اپ کوڈ باقی ہے۔"
-          other: "بیک اپ کوڈز کا نظم کریں۔ آپ کے پاس <strong>%{count}</strong> بیک اپ کوڈز باقی ہیں۔"
+          one: "آپ کے <strong>%{count}</strong> بیک اپ کوڈ باقی ہے۔"
+          other: "آپ کے <strong>%{count}</strong> بیک اپ کوڈز باقی ہیں۔"
         copy_to_clipboard: "کلِپ بورڈ میں کاپی کریں"
         copy_to_clipboard_error: "کلِپ بورڈ میں ڈیٹا کاپی کرنے پر خرابی کا سامنا کر نا پرا"
         copied_to_clipboard: "کلِپ بورڈ میں کاپی کر لیا گیا"
@@ -1651,16 +1625,12 @@ ur:
       hidden_for_session: "ٹھیک ہے ، ہم کل آپ سے پوچھیں گے۔ آپ ہمیشہ بھی ایک اکاؤنٹ بنانے کے لئے 'لاگ ان' کا استعمال کرسکتے ہیں۔"
       intro: "ہیلو! ایسا لگتا ہے کہ آپ بحث سے لطف اندوز ہو رہے ہیں، لیکن آپ نے اکاؤنٹ کے لئے سائن اَپ نہیں کیا۔"
     summary:
-      enabled_description: "آپ اس ٹاپک کا خلاصہ ملاحظہ کررہے ہیں: سب سے دلچسپ پوسٹ کمیونٹی کی طرف سے متعین کی جاتی ہیں۔"
       description:
         one: "یہاں<b>%{count}</b> جواب ہے۔"
         other: "یہاں<b>%{count}</b> جوابات ہیں۔"
       description_time_MF: |
         وہاں {replyCount, plural, one { <b>#</b> جواب ہے} other { <b>#</b> جوابات ہیں}} ایک متوقع مطالعہ <b>{readingTime, plural, one {# منٹ} other {# منٹ}}</b>۔
-      enable: "اس ڑاپک کا خلاصہ کریں"
       disable: "تمام پوسٹیں دکھائیں"
-      short_label: "خلاصہ"
-      short_title: "اس موضوع کا خلاصہ دکھائیں: سب سے دلچسپ پوسٹس جیسا کہ کمیونٹی کے ذریعہ طے کیا گیا ہے۔"
     deleted_filter:
       enabled_description: "اِس ٹاپک میں حذف شدہ پوسٹ شامل ہیں، جو چھپا دی گئی ہیں۔"
       disabled_description: "ٹاپک کی حذف شدہ پوسٹ دکھائی گئی ہیں۔"
@@ -1929,8 +1899,6 @@ ur:
         topic_template_not_modified: "براہ مہربانی ٹاپک ٹَیمپلیٹ میں ترمیم کرکے اپنے ٹاپک میں تفصیلات اور مخصوصیات شامل کریں۔"
       save_edit: "ترمیم محفوظ کریں"
       overwrite_edit: "دوسری ترمیم کے اوپر لکھ ڈالیں"
-      reply_original: "حقیقی ٹاپک پر جواب دیں"
-      reply_here: "یہاں جواب دیں"
       reply: "جواب"
       cancel: "منسوخ"
       create_topic: "ٹاپک بنائیں"
@@ -2080,6 +2048,7 @@ ur:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - مکمل"
+      admin_problems: "آپ کی سائٹ ڈَیش بورڈ پر نیا مشورہ"
       dismiss_confirmation:
         body:
           default:
@@ -2329,7 +2298,6 @@ ur:
         top: "کوئی ٹاپ ٹاپک موجود نہیں ہیں۔"
         educate:
           new: '<p>آپ کے نئے عنوانات یہاں ظاہر ہوں گے۔ پہلے سے طے شدہ طور پر، عنوانات کو نئے تصور کیا جاتا ہے اور اگر وہ پچھلے 2 دنوں میں بنائے گئے تھے تو وہ <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> دکھائے گا۔</p><p>اسے تبدیل کرنے کے لیے اپنی <a href="%{userPrefsUrl}">ترجیحات</a> دیکھیں۔</p>'
-          unread: "<p>آپ کے بغیر پڑھے ہوئے موضوعات یہاں ظاہر ہوتے ہیں۔</p><p>پہلے سے طے شدہ طور پر، عنوانات کو بغیر پڑھے ہوئے سمجھا جاتا ہے اور یہ بغیر پڑھے ہوئے شماروں کو دکھائے گا اگر آپ: <span class=\"badge unread-posts badge-notification\"></p></span> موضوع بنایا<li><ul>موضوع کا جواب دیا<li></li>موضوع</li><p><li></li></ul>نے واضح طور پر ہر عنوان میں \U0001F514 کے ذریعے موضوع کو ٹریک یا دیکھا گیا پر سیٹ کریں۔</p><p>اسے تبدیل کرنے کے لیے اپنی <a href=\"%{userPrefsUrl}\">ترجیحات</a> دیکھیں۔</p>"
       bottom:
         latest: "کوئی مزید تازہ ترین ٹاپک موجود نہیں ہیں۔"
         posted: "کوئی مزید پوسٹ کیے گئے ٹاپک موجود نہیں ہیں۔"
@@ -2391,8 +2359,6 @@ ur:
       expand_details: "موضوع کی تفصیلات کو پھیلائیں"
       unread_indicator: "کسی ممبر نے ابھی تک اِس ٹاپک کی آخری پوسٹ نہیں پڑھی ہے۔"
       suggest_create_topic: <a href>نئی گفتگو شروع</a> کرنے کے لیے تیار ہیں؟
-      jump_reply_up: اِس سے پرانے جواب پر جائیں
-      jump_reply_down: اِس سے نئے جواب پر جائیں
       deleted: "ٹاپک مٹادیا گیا ہے"
       slow_mode_update:
         title: "سست موڈ"
@@ -2946,7 +2912,6 @@ ur:
       filtered_replies:
         viewing_posts_by: "%{post_count} پوسٹس دیکھ رہے ہیں بذریعہ"
         viewing_subset: "کچھ جوابات سمٹ گئے"
-        viewing_summary: "اس موضوع کا خلاصہ دیکھنا"
         post_number: "%{username}، پوسٹ نمبر%{post_number}"
         show_all: "تمام دکھائیں"
       share:
@@ -2962,7 +2927,6 @@ ur:
       back: "واپس زمرے میں"
       general: "عام"
       settings: "سیٹِنگ"
-      topic_template: "ٹاپک ٹَیمپلیٹ"
       tags: "ٹیگز"
       tags_allowed_tags: "اس زُمرہ میں اِن ٹیگز کو محدود کریں:"
       tags_allowed_tag_groups: "اس زُمرہ میں اِن ٹیگ گروپس کو محدود کریں:"
@@ -3016,8 +2980,6 @@ ur:
       images: "تصاویر"
       email_in: "اپنی مرضی کا اِنکَمِنگ اِیمیل ایڈریس:"
       email_in_allow_strangers: "اکاؤنٹس نہ رکھنے والے گمنام صارفین کی طرف سے اِیمیلز کو قبول کریں"
-      email_in_disabled: "ای میل کے ذریعے نئے عنوانات پوسٹ کرنا سائٹ کی ترتیبات میں غیر فعال ہے۔ ای میل کے ذریعے نئے عنوانات کی اشاعت کو فعال کرنے کے لیے، "
-      email_in_disabled_click: 'سیٹِنگ میں "اِیمیل اِن" فعال کریں۔'
       mailinglist_mirror: "زُمرہ میلنگ فہرست کا عکس ہے"
       show_subcategory_list: "اس زمرہ میں ذیلی زمرہ جات کی فہرست ٹاپکس سے مندرجہ بالا دکھائیں۔"
       read_only_banner: "بینر ٹیکسٹ جب کوئی صارف اس زمرے میں موضوع نہیں بنا سکتا:"
@@ -3224,6 +3186,10 @@ ur:
     filters:
       with_topics: "%{filter} ٹاپک"
       with_category: "%{filter} %{category} ٹاپک"
+      filter:
+        title: "فِلٹر"
+        button:
+          label: "فِلٹر"
       latest:
         title: "تازہ ترین"
         title_with_count:
@@ -3307,6 +3273,9 @@ ur:
       close: "بند (Esc)"
       content_load_error: '<a href="%url%">مواد</a> لوڈ نہیں کیا جا سکا۔'
       image_load_error: '<a href="%url%">تصویر</a> لوڈ نہیں کی جا سکی۔'
+    experimental_lightbox:
+      buttons:
+        close: "بند (Esc)"
     cannot_render_video: اس ویڈیو کو رینڈر نہیں کیا جا سکتا کیونکہ آپ کا براؤزر کوڈیک کو سپورٹ نہیں کرتا ہے۔
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: "، "
@@ -3397,7 +3366,6 @@ ur:
         one: "یہ بَیج %{count} دفعہ حاصل کیا"
         other: "یہ بَیج %{count} مرتبہ حاصل کیا"
       granted_on: "عطا کیا گیا %{date}"
-      others_count: "دوسرے جن کے پاس یہ بَیج ہے (%{count})"
       title: بَیج
       allow_title: "آپ اِس بَیج کو عنوان کے طور پر استعمال کر سکتے ہیں"
       multiple_grant: "آپ اِس کو ایک سے زیادہ مرتبہ حاصل کر سکتے ہیں"
@@ -3573,13 +3541,11 @@ ur:
       enabled: "سیف موڈ فعال ہے، سیف موڈ سے باہر نکلنے کے لئے اِس براؤزر وِنڈو کو بند کریں"
     image_removed: "(تصویر ہٹا دی گئی)"
     pause_notifications:
-      remaining: "%{remaining} باقی رہتا ہے..."
       options:
         half_hour: "30 منٹ"
         one_hour: "1 گھنٹہ"
         two_hours: "2 گھنٹے"
         tomorrow: "کل تک"
-        custom: "اپنی مرضی کا"
       set_schedule: "اطلاع کا شیڈول مرتب کریں"
     trust_levels:
       names:
@@ -3619,7 +3585,21 @@ ur:
         other: "%{count} نئے"
       more: "مزید"
       all_categories: "تمام زُمرَہ جات"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "تمام"
       sections:
+        custom:
+          save: "محفوظ کریں"
+          delete: "مٹائیں"
+          links:
+            reset: "دوبارہ پہلے جیسا کر دیں"
+            icon:
+              label: "آئیکن"
+            name:
+              label: "نام"
+            value:
+              label: "لنک"
         about:
           header_link_text: "بارے میں"
         messages:
@@ -3637,7 +3617,8 @@ ur:
         categories:
           header_link_text: "زُمرَہ جات"
         community:
-          header_link_text: "کمیونٹی"
+          edit_section:
+            header_dropdown: "مرضی کے مطابق بنائیں"
           links:
             about:
               content: "بارے میں"
@@ -3645,8 +3626,8 @@ ur:
               content: "ایڈمن"
             badges:
               content: "بَیج"
-            everything:
-              content: "تمام"
+            topics:
+              content: "ٹاپکس"
             faq:
               content: "عمومی سوالات"
             groups:
@@ -3658,6 +3639,11 @@ ur:
             review:
               content: "جائزہ لیں"
     until: "جب تک:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "براہ کرم، ایک قابلِ قبول قدر درج کریں۔"
+          email: "براہ کرم، ایک قابلِ قبول ایِ میل ایڈریس درج کریں."
   admin_js:
     type_to_filter: "فِلٹر کرنے کے لئے ٹائپ کریں..."
     admin:
@@ -3878,7 +3864,6 @@ ur:
             topics:
               read: اس میں کوئی موضوع یا کوئی مخصوص پوسٹ پڑھیں۔ آر ایس ایس کی بھی حمایت حاصل ہے۔
               write: ایک نیا موضوع بنائیں یا موجودہ موضوع پر پوسٹ کریں۔
-              update: ایک موضوع کو اپ ڈیٹ کریں۔ عنوان، زمرہ، ٹیگز وغیرہ تبدیل کریں۔
               read_lists: ٹاپک، نیا، تازہ ترین، وغیرہ جیسے عنوانات کی فہرستیں پڑھیں۔ RSS بھی تعاون یافتہ ہے۔
             posts:
               edit: کسی بھی پوسٹ یا مخصوص میں ترمیم کریں۔
@@ -3966,9 +3951,6 @@ ur:
         user_promoted_event:
           name: "یوزر پروموٹڈ ایونٹ"
           details: "جب کسی صارف کو ایک اعتماد کی سطح سے دوسری سطح پر ترقی دی جاتی ہے۔"
-        user_badge_event:
-          name: "بیج گرانٹ ایونٹ"
-          details: "جب صارف کو بیج ملتا ہے۔"
         group_user_event:
           name: "گروپ یوزر ایونٹ"
           details: "جب کسی صارف کو گروپ میں شامل یا ہٹا دیا جاتا ہے۔"
@@ -4011,7 +3993,6 @@ ur:
         enabled: "فعال؟"
         is_enabled: "Y"
         not_enabled: "N"
-        change_settings: "سیٹنگ تبدیل کریں"
         change_settings_short: "سیٹِنگ"
         howto: "میں پلَگ اِنز کیسے انسٹال کروں؟"
         official: "آفیشل پلَگ اِن"
@@ -4333,6 +4314,8 @@ ur:
           love:
             name: "محبت"
             description: "لائیک بٹن کا رنگ۔"
+          selected:
+            name: "منتخب کیا ہوا"
         robots:
           title: "آپ کی سائٹ کی robots.txt فائل کی جگہ لے لیتی ہے:"
           warning: "یہ مستقل طور پر کسی بھی متعلقہ سائٹ ترتیبات کی جگہ لے لیگی۔"
@@ -4613,14 +4596,8 @@ ur:
           silence: "خاموش کریں"
           link: "لنک"
         action_descriptions:
-          block: "اِن الفاظ پر مشتمل پوسٹس شائع ہونے سے روکیں۔ جب صارف اپنی پوسٹ شائع کرنے کی کوشش کرے گا تو اُسے ایک خرابی کا پیغام دکھایا جائے گا۔"
-          censor: "اِن الفاظ پر مشتمل پوسٹس کوشائع ہونے دیں، لیکن سینسر کیے گئے الفاظ کو چھپانے والے حروف کے ساتھ تبدیل کریں۔"
-          require_approval: "اِن الفاظ پر مشتمل پوسٹس کے نظر آنے سے پہلے اسٹاف کی طرف سے منظوری کی ضرورت ہوگی۔"
-          flag: "اِن الفاظ پر مشتمل پوسٹس کوشائع ہونے دیں، لیکن ان کو غیر مناسب کے طور پر فلَیگ کریں تاکہ منتظمین ان کا جائزہ لے سکیں۔"
-          replace: "پوسٹس میں الفاظ کو دوسرے الفاظ سے بدلیں"
-          tag: "پہلی پوسٹ کی بنیاد پر موضوعات کو خودکار طور پر ٹیگ کریں"
-          silence: "ان الفاظ پر مشتمل صارفین کی پہلی پوسٹس کو دیکھنے سے پہلے عملے کی منظوری درکار ہوگی اور صارف خود بخود خاموش ہو جائے گا۔"
-          link: "پوسٹس میں الفاظ کو لنکس سے بدلیں"
+          replace: "پوسٹس میں الفاظ کو دوسرے الفاظ سے بدلیں."
+          link: "پوسٹس میں الفاظ کو لنکس سے بدلیں."
         form:
           label: "لفظ یا جملہ ہے۔"
           placeholder: "لفظ یا جملہ درج کریں (* سب کیلیے )"
@@ -4641,6 +4618,37 @@ ur:
           description: "نظر رکھے ہوئے الفاظ کے ساتھ مَیچ چَیک کرنے کیلئے نیچے ٹَیکسٹ درج کریں۔"
           found_matches: "ملے مَیچ:"
           no_matches: "کوئی میل نہیں ملے"
+      form_templates:
+        nav_title: "ٹَیمپلیٹ"
+        list_table:
+          headings:
+            name: "نام"
+            actions: "عمل"
+        view_template:
+          close: "بند کریں"
+          edit: "ترمیم کریں"
+          delete: "مٹائیں"
+        new_template_form:
+          submit: "محفوظ کریں"
+          cancel: "منسوخ"
+          preview: "پیشگی دیکھیں"
+        quick_insert_fields:
+          add_new_field: "اضافہ کریں"
+          dropdown: "ڈراپ ڈاؤن"
+        validations_modal:
+          table_headers:
+            key: "کی"
+            type: "قِسم"
+            description: "تفصیل"
+          validations:
+            required:
+              key: "درکار ہے"
+            minimum:
+              key: "کم از کم"
+            maximum:
+              key: "زیادہ سے زیادہ"
+            type:
+              key: "قِسم"
       impersonate:
         title: "نقالی"
         help: "ڈِیبَگ مقاصد کیلئے اِس آلے کو استعمال کر کہ ایک صارف کے اکاؤنٹ کی نقالی کریں۔ کام ختم ہونے کے بعد آپ کے ایک دفعہ لاگ آؤٹ کرنا ہو گا۔"
@@ -4653,6 +4661,7 @@ ur:
         not_found: "معذرت، وہ صارف نام ہمارے سِسٹم میں موجود نہیں ہے۔"
         id_not_found: "معذرت، وہ صارف ID ہمارے سِسٹم میں موجود نہیں ہے۔"
         active: "فعال کردہ"
+        status: "سٹیٹس"
         show_emails: "اِیمیل دکھائیں"
         hide_emails: "ای میلز چھپائیں"
         nav:
@@ -4734,7 +4743,6 @@ ur:
         staged: "سٹَیجڈ؟"
         show_admin_profile: "ایڈمن"
         show_public_profile: "پبلک پروفائل دکھائیں"
-        impersonate: "نقالی"
         action_logs: "عوامل کے لاگز"
         ip_lookup: "IP کا سراغ"
         log_out: "لاگ آُوٹ"
@@ -4960,6 +4968,8 @@ ur:
         show_overriden: "صرف اووَر رائیڈ ہوئے دکھائیں"
         locale: "زبان:"
         more_than_50_results: "50 سے زائد نتائج ہیں۔ برائے مہربانی اپنی تلاش کو تنگ کریں۔"
+        outdated:
+          dismiss: "بر خاست کریں"
       settings:
         show_overriden: "صرف اووَر رائیڈ ہوئے دکھائیں"
         history: "تبدیلی کی تاریخ دیکھیں"
@@ -4972,7 +4982,6 @@ ur:
             label: "ایموجی شامل کریں"
         title: "سیٹِنگ"
         no_results: "کوئی نتائج نہیں پائے گئے۔"
-        more_than_30_results: "30 سے زائد نتائج ہیں۔ برائے مہربانی اپنی تلاش کو تنگ کریں یا ایک زمرہ منتخب کریں۔"
         clear_filter: "صاف کریں"
         add_url: "URL شامل کریں"
         add_host: "ہَوسٹ شامل کریں"
@@ -5059,7 +5068,7 @@ ur:
         allow_title: عنوان کے طور پر بَیج وں کے استعمال کی اجازت دیں
         multiple_grant: ایک سے زیادہ مرتبہ عطا کیا جا سکتا ہے
         listable: پبلک بَیجز کے صفحے پر بَیج دکھائیں
-        enabled: بَیج فعال کریں
+        disabled: غیر فعال
         icon: آئیکن
         image: تصویر
         graphic: گرافک
@@ -5131,7 +5140,6 @@ ur:
         confirm_delete: "کیا آپ واقعی اس ہَوسٹ کو حذف کرنا چاہتے ہیں؟"
         title: "اَیمبَیڈ کرنا"
         host: "اجازت یافتہ ہَوسٹ"
-        class_name: "کلاس کا نام"
         allowed_paths: "پاتھ کی اجازت کی فہرست"
         edit: "ترمیم"
         category: "زمرہ میں پوسٹ کریں"

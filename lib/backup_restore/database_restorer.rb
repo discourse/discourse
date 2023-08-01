@@ -164,7 +164,7 @@ module BackupRestore
 
       DatabaseRestorer.core_migration_files.each do |path|
         require path
-        class_name = File.basename(path, ".rb").sub(/^\d+_/, "").camelize
+        class_name = File.basename(path, ".rb").sub(/\A\d+_/, "").camelize
         migration_class = class_name.constantize
 
         if migration_class.const_defined?(:DROPPED_TABLES)

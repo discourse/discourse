@@ -15,6 +15,7 @@ bg:
           actions:
             chat_channel_status_change: "Статусът на чат канала е променен"
             chat_channel_delete: "Чат каналът е изтрит"
+            chat_auto_remove_membership: "Членството е автоматично премахнато от каналите"
       api:
         scopes:
           descriptions:
@@ -39,28 +40,42 @@ bg:
       move_to_channel:
         title: "Преместване на съобщенията в канал"
         instructions:
-          one: "Вие премествате <strong>%{count}</strong> съобщение. Изберете целеви канал. Заместващо съобщение ще бъде създадено в канала <strong>%{channelTitle}</strong> , за да покаже, че това съобщение е преместено."
-          other: "Вие премествате <strong>%{count}</strong> съобщения. Изберете целеви канал. Заместващо съобщение ще бъде създадено в канала <strong>%{channelTitle}</strong> , за да покаже, че тези съобщения са били преместени."
+          one: "Вие премествате <strong>%{count}</strong> съобщение. Изберете целеви канал. Заместващо съобщение ще бъде създадено в канала <strong>%{channelTitle}</strong> , за да покаже, че това съобщение е преместено. Обърнете внимание, че веригите за отговори няма да бъдат запазени в новия канал и съобщенията в стария канал вече няма да се показват като отговарящи на преместени съобщения."
+          other: "Вие премествате <strong>%{count}</strong> съобщения. Изберете целеви канал. Заместващо съобщение ще бъде създадено в канала <strong>%{channelTitle}</strong> , за да покаже, че тези съобщения са били преместени. Обърнете внимание, че веригите за отговори няма да бъдат запазени в новия канал и съобщенията в стария канал вече няма да се показват като отговарящи на преместени съобщения."
         confirm_move: "Преместване на съобщения"
       channel_settings:
         edit: "Редактирай"
         add: "Добави "
         join: "Влизане"
         leave: "Напусни"
+      channel_delete:
+        instructions: "<p>Изтрива канала <strong>%{name}</strong> и историята на чата. Всички съобщения и свързани с тях данни, като реакции и качвания, ще бъдат изтрити за постоянно. Ако искате да запазите историята на канала и да го деактивирате, може вместо това да архивирате канала.</p> <p>Сигурни ли сте, че искате да <strong>изтриете окончателно</strong> канала? За да потвърдите, въведете името на канала в полето по-долу.</p>"
       close: "Затвори"
+      expand: "Разгънете чекмеджето за чат"
+      deleted:
+        one: "Едно съобщение беше изтрито. [view]"
+        other: "%{count} съобщения бяха изтрити. [виж всички]"
       delete: "Изтрий"
       muted: "заглуши"
       joined: "присъединен"
       email_frequency:
         never: "Никога"
+      header_indicator_preference:
+        title: "Показване на индикатора за активност в хедъра"
+        all_new: "Всички нови съобщения"
+        dm_and_mentions: "Директни съобщения и споменавания"
+        never: "Никога"
       flag: "Сигнализиране"
       join: "Влизане"
+      last_visit: "последно посещение"
+      summarization:
+        summarize: "Обобщаване"
       mention_warning:
         dismiss: "отмени"
-        groups:
-          users_limit:
-            one: "%{count} потребител"
-            other: "%{count} потребители"
+        cannot_see: "%{username} няма достъп до този канал и не е уведомен."
+        cannot_see_multiple:
+          one: "%{username} и %{count} друг потребител нямат достъп до този канал и не са били уведомени."
+          other: "%{username} и %{count} други потребители нямат достъп до този канал и не са били уведомени."
       reply: "Отговорете"
       edit: "Редактирай"
       rebake_message: "Прегенерирай HTML "
@@ -106,6 +121,8 @@ bg:
       settings:
         follow: "Влизане"
         followed: "Присъединен"
+        threading_enabled: "Да е включен"
+        threading_disabled: "Деактивирани"
         notifications: "Известия"
         save: "Запази "
         saved: "Запазено"
@@ -134,6 +151,21 @@ bg:
         activities: "Дейности"
         flags: "Сигнали"
         symbols: "Символи"
+      thread:
+        title: "Заглавие"
+        replies:
+          one: "%{count} отговор"
+          other: "%{count} отговора"
+        settings: "Настройки"
+        last_reply: "последен отговор"
+        notifications:
+          regular:
+            title: "Нормален"
+          tracking:
+            title: "Следене"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Ново Съобщение"
         cancel: "Прекрати"
@@ -143,7 +175,7 @@ bg:
           fields:
             message:
               label: Съобщение
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Означено от"
+    styleguide:
+      sections:
+        chat:
+          title: Чат

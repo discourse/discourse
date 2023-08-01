@@ -56,6 +56,7 @@ export default createWidget("post-edits-indicator", {
       translatedTitle: title,
       className,
       action: "onPostEditsIndicatorClick",
+      translatedAriaLabel: I18n.t("post.edit_history"),
       translatedLabel: attrs.version > 1 ? attrs.version - 1 : "",
     });
   },

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Flag message", type: :system, js: true do
+RSpec.describe "Flag message", type: :system do
   fab!(:current_user) { Fabricate(:user) }
 
   let(:chat) { PageObjects::Pages::Chat.new }
@@ -32,13 +32,13 @@ RSpec.describe "Flag message", type: :system, js: true do
 
   context "when direct message channel" do
     fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user]) }
-    fab!(:message_1) { Fabricate(:chat_message, chat_channel: dm_channel_1, user: current_user) }
+    fab!(:message_1) { Fabricate(:chat_message, chat_channel: dm_channel_1) }
 
-    it "doesn’t allow to flag a message" do
+    it "allows to flag a message" do
       chat.visit_channel(dm_channel_1)
       channel.expand_message_actions(message_1)
 
-      expect(page).to have_no_css("[data-value='flag']")
+      expect(page).to have_css("[data-value='flag']")
     end
   end
 end

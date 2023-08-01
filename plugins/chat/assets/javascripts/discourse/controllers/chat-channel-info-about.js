@@ -1,19 +1,25 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
-import showModal from "discourse/lib/show-modal";
+import { inject as service } from "@ember/service";
+import ChatModalEditChannelDescription from "discourse/plugins/chat/discourse/components/chat/modal/edit-channel-description";
+import ChatModalEditChannelName from "discourse/plugins/chat/discourse/components/chat/modal/edit-channel-name";
 
 export default class ChatChannelInfoAboutController extends Controller.extend(
   ModalFunctionality
 ) {
+  @service modal;
+
   @action
   onEditChatChannelName() {
-    showModal("chat-channel-edit-name", { model: this.model });
+    return this.modal.show(ChatModalEditChannelName, {
+      model: this.model,
+    });
   }
 
   @action
   onEditChatChannelDescription() {
-    showModal("chat-channel-edit-description", {
+    return this.modal.show(ChatModalEditChannelDescription, {
       model: this.model,
     });
   }

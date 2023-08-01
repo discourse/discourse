@@ -109,8 +109,8 @@
     }
   }
   .setting.overridden {
-    input {
-      background-color: var(--highlight-medium);
+    .values input {
+      background-color: var(--highlight-bg);
     }
     h3 {
       position: relative;
@@ -122,7 +122,7 @@
         width: 0.5rem;
         height: 0.5rem;
         border-radius: 100%;
-        background-color: var(--highlight-high);
+        background-color: var(--quaternary-low);
       }
     }
   }
@@ -130,7 +130,7 @@
     input[type="text"],
     input[type="password"],
     textarea {
-      background-color: var(--highlight-medium);
+      background-color: var(--highlight-bg);
     }
   }
   .warning {

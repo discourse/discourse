@@ -80,7 +80,7 @@ module BackupRestore
         expires_in: expires_in,
         opts: {
           metadata: metadata,
-          acl: "private",
+          acl: SiteSetting.s3_use_acls ? "private" : nil,
         },
       )
     end
@@ -115,7 +115,7 @@ module BackupRestore
         existing_external_upload_key,
         File.join(s3_helper.s3_bucket_folder_path, original_filename),
         options: {
-          acl: "private",
+          acl: SiteSetting.s3_use_acls ? "private" : nil,
           apply_metadata_to_destination: true,
         },
       )
@@ -173,7 +173,7 @@ module BackupRestore
             path = Regexp.quote(path)
           end
 
-          %r{^#{path}[^/]*\.t?gz$}i
+          %r{\A#{path}[^/]*\.t?gz\z}i
         end
     end
 

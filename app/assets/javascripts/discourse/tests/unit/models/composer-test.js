@@ -9,6 +9,10 @@ import AppEvents from "discourse/services/app-events";
 import { module, test } from "qunit";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { setupTest } from "ember-qunit";
+import pretender, {
+  parsePostData,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 
 function createComposer(opts = {}) {
   opts.user ??= currentUser();
@@ -317,6 +321,20 @@ module("Unit | Model | composer", function (hooks) {
     );
   });
 
+  test("initial category when creating PM and there is a default composer category", function (assert) {
+    this.siteSettings.default_composer_category = 2;
+    const composer = openComposer.call(this, {
+      action: PRIVATE_MESSAGE,
+      draftKey: "abcd",
+      draftSequence: 1,
+    });
+    assert.strictEqual(
+      composer.categoryId,
+      null,
+      "it doesn't save the category"
+    );
+  });
+
   test("open with a quote", function (assert) {
     const quote =
       '[quote="neil, post:5, topic:413"]\nSimmer down you two.\n[/quote]';
@@ -425,5 +443,42 @@ module("Unit | Model | composer", function (hooks) {
       { name: "staff", type: "group" },
       { name: "foo@bar.com", type: "email" },
     ]);
+  });
+
+  test("can add meta_data", async function (assert) {
+    let saved = false;
+    pretender.post("/posts", function (request) {
+      const data = parsePostData(request.requestBody);
+
+      assert.equal(data.meta_data.some_custom_field, "some_value");
+      saved = true;
+
+      return response(200, {
+        success: true,
+        action: "create_post",
+        post: {
+          id: 12345,
+          topic_id: 280,
+          topic_slug: "internationalization-localization",
+        },
+      });
+    });
+    const composer = createComposer.call(this, {});
+
+    await composer.open({
+      action: CREATE_TOPIC,
+      title: "some topic title here",
+      categoryId: 1,
+      reply: "some reply here some reply here some reply here",
+      draftKey: "abcd",
+      draftSequence: 1,
+    });
+
+    assert.equal(composer.loading, false);
+
+    composer.metaData = { some_custom_field: "some_value" };
+    await composer.save({});
+
+    assert.equal(saved, true);
   });
 });

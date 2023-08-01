@@ -448,8 +448,6 @@ lv:
     see_more: "Vairāk"
     search_title: "Meklēt šajā vietnē"
     search_button: "Meklēt"
-  deleted: "dzēsts"
-  image: "bilde"
   upload:
     unauthorized: "Atvainojiet, fails, ko mēģināt augšuplādēt, nav atļauts (atļautie paplašinājumi: %{authorized_extensions})."
   color_schemes:
@@ -496,7 +494,6 @@ lv:
                 label: "Sadaļas un jaunākās tēmas"
               categories_and_top_topics:
                 label: "Kategorijas un populārākās tēmas"
-  joined: "Pievienojās"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} pieminēja jūs "%{topic}" - %{site_title}'
@@ -517,12 +514,12 @@ lv:
       medium: "Vidējs"
       high: "Augsta"
     actions:
-      agree_and_suspend:
-        title: "Apturētie lietotāji"
+      agree:
+        title: "Jā"
       delete_single:
         title: "Dzēst"
       disagree:
-        title: "Nepiekrist"
+        title: "Nē"
       ignore:
         title: "Ignorēt"
       approve:

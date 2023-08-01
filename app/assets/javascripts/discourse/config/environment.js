@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = function (environment) {
-  let ENV = {
+  const ENV = {
     modulePrefix: "discourse",
     environment,
     rootURL: process.env.DISCOURSE_RELATIVE_URL_ROOT || "/",
@@ -16,8 +16,6 @@ module.exports = function (environment) {
         // Prevent Ember Data from overriding Date.parse.
         Date: false,
       },
-      // This is easier to toggle than the flag in ember-cli-deprecation-workflow.
-      RAISE_ON_DEPRECATION: false,
     },
     exportApplicationGlobal: true,
 
@@ -27,13 +25,20 @@ module.exports = function (environment) {
     },
   };
 
+  if (process.env.EMBER_RAISE_ON_DEPRECATION === "1") {
+    ENV.EmberENV.RAISE_ON_DEPRECATION = true;
+  } else if (process.env.EMBER_RAISE_ON_DEPRECATION === "0") {
+    ENV.EmberENV.RAISE_ON_DEPRECATION = false;
+  } else {
+    // Default (normally false; true in core qunit runs)
+  }
+
   if (environment === "development") {
     // ENV.APP.LOG_RESOLVER = true;
     // ENV.APP.LOG_ACTIVE_GENERATION = true;
     // ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     // ENV.APP.LOG_VIEW_LOOKUPS = true;
-    ENV.EmberENV.RAISE_ON_DEPRECATION = false;
   }
 
   if (environment === "test") {
@@ -46,8 +51,6 @@ module.exports = function (environment) {
 
     ENV.APP.rootElement = "#ember-testing";
     ENV.APP.autoboot = false;
-
-    ENV.EmberENV.RAISE_ON_DEPRECATION = false;
   }
 
   if (environment === "production") {

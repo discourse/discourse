@@ -5,6 +5,8 @@ class ThemeField < ActiveRecord::Base
   has_one :javascript_cache, dependent: :destroy
   has_one :upload_reference, as: :target, dependent: :destroy
 
+  validates :value, { length: { maximum: 1024**2 } }
+
   after_save do
     if self.type_id == ThemeField.types[:theme_upload_var] && saved_change_to_upload_id?
       UploadReference.ensure_exist!(upload_ids: [self.upload_id], target: self)
@@ -42,6 +44,11 @@ class ThemeField < ActiveRecord::Base
             .filter_locale_fields(locale_codes)
             .reorder("X.theme_sort_column", "Y.locale_sort_column")
             .select("DISTINCT ON (X.theme_sort_column) *")
+        }
+
+  scope :svg_sprite_fields,
+        -> {
+          where(type_id: ThemeField.theme_var_type_ids, name: SvgSprite.theme_sprite_variable_name)
         }
 
   def self.types
@@ -94,7 +101,7 @@ class ThemeField < ActiveRecord::Base
       .css('script[type="text/x-handlebars"]')
       .each do |node|
         name = node["name"] || node["data-template-name"] || "broken"
-        is_raw = name =~ /\.(raw|hbr)$/
+        is_raw = name =~ /\.(raw|hbr)\z/
         hbs_template = node.inner_html
 
         begin
@@ -332,7 +339,7 @@ class ThemeField < ActiveRecord::Base
   end
 
   def self.html_fields
-    @html_fields ||= %w[body_tag head_tag header footer after_header]
+    @html_fields ||= %w[body_tag head_tag header footer after_header embedded_header]
   end
 
   def self.scss_fields
@@ -387,22 +394,22 @@ class ThemeField < ActiveRecord::Base
         translation_field? ? process_translation : process_html(self.value)
       self.error = nil unless self.error.present?
       self.compiler_version = Theme.compiler_version
-      DB.after_commit { CSP::Extension.clear_theme_extensions_cache! }
+      CSP::Extension.clear_theme_extensions_cache!
     elsif extra_js_field? || js_tests_field?
       self.error = nil
       self.value_baked = "baked"
       self.compiler_version = Theme.compiler_version
     elsif basic_scss_field?
       ensure_scss_compiles!
-      DB.after_commit { Stylesheet::Manager.clear_theme_cache! }
+      Stylesheet::Manager.clear_theme_cache!
     elsif settings_field?
       validate_yaml!
-      DB.after_commit { CSP::Extension.clear_theme_extensions_cache! }
-      DB.after_commit { SvgSprite.expire_cache }
+      CSP::Extension.clear_theme_extensions_cache!
+      SvgSprite.expire_cache
       self.value_baked = "baked"
       self.compiler_version = Theme.compiler_version
     elsif svg_sprite_field?
-      DB.after_commit { SvgSprite.expire_cache }
+      SvgSprite.expire_cache
       self.error = validate_svg_sprite_xml
       self.value_baked = "baked"
       self.compiler_version = Theme.compiler_version
@@ -455,7 +462,7 @@ class ThemeField < ActiveRecord::Base
       else
         self.error = nil unless error.nil?
       end
-    rescue SassC::SyntaxError => e
+    rescue SassC::SyntaxError, SassC::NotRenderedError => e
       self.error = e.message unless self.destroyed?
     end
     self.compiler_version = Theme.compiler_version
@@ -518,63 +525,63 @@ class ThemeField < ActiveRecord::Base
   FILE_MATCHERS = [
     ThemeFileMatcher.new(
       regex:
-        %r{^(?<target>(?:mobile|desktop|common))/(?<name>(?:head_tag|header|after_header|body_tag|footer))\.html$},
+        %r{\A(?<target>(?:mobile|desktop|common))/(?<name>(?:head_tag|header|after_header|body_tag|footer))\.html\z},
       targets: %i[mobile desktop common],
       names: %w[head_tag header after_header body_tag footer],
       types: :html,
       canonical: ->(h) { "#{h[:target]}/#{h[:name]}.html" },
     ),
     ThemeFileMatcher.new(
-      regex: %r{^(?<target>(?:mobile|desktop|common))/(?:\k<target>)\.scss$},
+      regex: %r{\A(?<target>(?:mobile|desktop|common))/(?:\k<target>)\.scss\z},
       targets: %i[mobile desktop common],
       names: "scss",
       types: :scss,
       canonical: ->(h) { "#{h[:target]}/#{h[:target]}.scss" },
     ),
     ThemeFileMatcher.new(
-      regex: %r{^common/embedded\.scss$},
+      regex: %r{\Acommon/embedded\.scss\z},
       targets: :common,
       names: "embedded_scss",
       types: :scss,
       canonical: ->(h) { "common/embedded.scss" },
     ),
     ThemeFileMatcher.new(
-      regex: %r{^common/color_definitions\.scss$},
+      regex: %r{\Acommon/color_definitions\.scss\z},
       targets: :common,
       names: "color_definitions",
       types: :scss,
       canonical: ->(h) { "common/color_definitions.scss" },
     ),
     ThemeFileMatcher.new(
-      regex: %r{^(?:scss|stylesheets)/(?<name>.+)\.scss$},
+      regex: %r{\A(?:scss|stylesheets)/(?<name>.+)\.scss\z},
       targets: :extra_scss,
       names: nil,
       types: :scss,
       canonical: ->(h) { "stylesheets/#{h[:name]}.scss" },
     ),
     ThemeFileMatcher.new(
-      regex: %r{^javascripts/(?<name>.+)$},
+      regex: %r{\Ajavascripts/(?<name>.+)\z},
       targets: :extra_js,
       names: nil,
       types: :js,
       canonical: ->(h) { "javascripts/#{h[:name]}" },
     ),
     ThemeFileMatcher.new(
-      regex: %r{^test/(?<name>.+)$},
+      regex: %r{\Atest/(?<name>.+)\z},
       targets: :tests_js,
       names: nil,
       types: :js,
       canonical: ->(h) { "test/#{h[:name]}" },
     ),
     ThemeFileMatcher.new(
-      regex: /^settings\.ya?ml$/,
+      regex: /\Asettings\.ya?ml\z/,
       names: "yaml",
       types: :yaml,
       targets: :settings,
       canonical: ->(h) { "settings.yml" },
     ),
     ThemeFileMatcher.new(
-      regex: %r{^locales/(?<name>(?:#{I18n.available_locales.join("|")}))\.yml$},
+      regex: %r{\Alocales/(?<name>(?:#{I18n.available_locales.join("|")}))\.yml\z},
       names: I18n.available_locales.map(&:to_s),
       types: :yaml,
       targets: :translations,
@@ -651,9 +658,41 @@ class ThemeField < ActiveRecord::Base
     end
   end
 
-  after_save { dependent_fields.each(&:invalidate_baked!) }
+  def upsert_svg_sprite!
+    begin
+      content = upload.content
+    rescue => e
+      Discourse.warn_exception(e, message: "Failed to fetch svg sprite for theme field #{id}")
+    else
+      if content.length > 4 * 1024**2
+        Rails.logger.warn(
+          "can't store theme svg sprite for theme #{theme_id} and upload #{upload_id}, sprite too big",
+        )
+      else
+        ThemeSvgSprite.upsert(
+          { theme_id: theme_id, upload_id: upload_id, sprite: content },
+          unique_by: :theme_id,
+        )
+      end
+    end
+  end
 
-  after_destroy { DB.after_commit { SvgSprite.expire_cache } if svg_sprite_field? }
+  after_save do
+    dependent_fields.each(&:invalidate_baked!)
+
+    if upload && svg_sprite_field?
+      upsert_svg_sprite!
+      SvgSprite.expire_cache
+    end
+  end
+
+  after_destroy do
+    if svg_sprite_field?
+      ThemeSvgSprite.where(theme_id: theme_id).delete_all
+
+      SvgSprite.expire_cache
+    end
+  end
 
   private
 

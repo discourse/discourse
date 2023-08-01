@@ -68,6 +68,8 @@ export default Controller.extend(CanCheckEmails, {
     };
   }),
 
+  isTrustLevelZero: equal("model.trust_level", 0),
+  hasTrustLevel: or("isTrustLevelZero", "model.trust_level"),
   showStaffCounters: or(
     "hasGivenFlags",
     "hasFlaggedPosts",
@@ -194,11 +196,8 @@ export default Controller.extend(CanCheckEmails, {
     if (!this.currentUser?.staff) {
       return false;
     }
-    if (this.currentUser?.redesigned_user_page_nav_enabled) {
-      return this.site.desktopView;
-    } else {
-      return true;
-    }
+
+    return this.site.desktopView;
   },
 
   @action

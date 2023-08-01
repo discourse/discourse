@@ -54,16 +54,30 @@ pl_PL:
     deleted_chat_username: usunięte
     errors:
       channel_exists_for_category: "Istnieje już kanał dla tej kategorii i nazwy"
-      channel_new_message_disallowed: "Kanał jest %{status}, nie można wysyłać nowych wiadomości."
-      channel_modify_message_disallowed: "Kanał jest %{status}, żadne wiadomości nie mogą być edytowane ani usuwane"
+      channel_new_message_disallowed:
+        archived: "Kanał jest zarchiwizowany, nie można wysyłać nowych wiadomości"
+        closed: "Kanał jest zamknięty, nie można wysyłać nowych wiadomości"
+        read_only: "Kanał jest tylko do odczytu, nie można wysyłać nowych wiadomości"
+      channel_modify_message_disallowed:
+        archived: "Kanał jest zarchiwizowany, nie można edytować ani usuwać żadnych wiadomości"
+        closed: "Kanał jest zamknięty, nie można edytować ani usuwać żadnych wiadomości"
+        read_only: "Kanał jest tylko do odczytu, nie można edytować ani usuwać żadnych wiadomości"
       user_cannot_send_message: "W tej chwili nie możesz wysyłać wiadomości."
       rate_limit_exceeded: "Przekroczono limit wiadomości na czacie, które można wysłać w ciągu 30 sekund"
       auto_silence_from_flags: "Wiadomość na czacie oflagowana z wynikiem wystarczającym do wyciszenia użytkownika."
       channel_cannot_be_archived: "Kanał nie może być w tej chwili zarchiwizowany, musi być zamknięty lub otwarty do archiwizacji."
       duplicate_message: "Zbyt niedawno opublikowałeś identyczną wiadomość."
       delete_channel_failed: "Nie udało się usunąć kanału, spróbuj ponownie."
-      minimum_length_not_met: "Wiadomość jest za krótka, musi mieć co najmniej %{minimum} znaków."
-      message_too_long: "Wiadomość jest za długa, wiadomości mogą mieć maksymalnie %{maximum} znaków."
+      minimum_length_not_met:
+        one: "Wiadomość jest za krótka, musi mieć co najmniej %{count} znak."
+        few: "Wiadomość jest za krótka, musi mieć co najmniej %{count} znaki."
+        many: "Wiadomość jest za krótka, musi mieć co najmniej %{count} znaków."
+        other: "Wiadomość jest za krótka, musi mieć co najmniej %{count} znaków."
+      message_too_long:
+        one: "Wiadomość jest za długa, wiadomości mogą mieć maksymalnie %{count} znaków."
+        few: "Wiadomość jest za długa, wiadomości mogą mieć maksymalnie %{count} znaków."
+        many: "Wiadomość jest za długa, wiadomości mogą mieć maksymalnie %{count} znaków."
+        other: "Wiadomość jest za długa, wiadomości mogą mieć maksymalnie %{count} znaków."
       draft_too_long: "Wersja robocza jest za długa."
       max_reactions_limit_reached: "Nowe reakcje nie są dozwolone w tej wiadomości."
       message_move_invalid_channel: "Kanał źródłowy i docelowy muszą być kanałami publicznymi."
@@ -75,11 +89,15 @@ pl_PL:
       actor_disallowed_dms: "Zdecydowałeś się uniemożliwić użytkownikom wysyłanie Ci wiadomości prywatnych i bezpośrednich, więc nie możesz tworzyć nowych wiadomości bezpośrednich."
       actor_preventing_target_user_from_dm: "Zdecydowałeś się uniemożliwić %{username} wysyłanie Ci prywatnych i bezpośrednich wiadomości, więc nie możesz tworzyć nowych bezpośrednich wiadomości do niego."
       user_cannot_send_direct_messages: "Przepraszamy, nie możesz wysyłać bezpośrednich wiadomości."
+      over_chat_max_direct_message_users_allow_self: "Możesz utworzyć bezpośrednią wiadomość tylko z samym sobą."
       over_chat_max_direct_message_users:
-        one: "Możesz utworzyć bezpośrednią wiadomość tylko z samym sobą."
-        few: "Nie można utworzyć wiadomości bezpośredniej z więcej niż %{count} innymi użytkownikami."
-        many: "Nie można utworzyć wiadomości bezpośredniej z więcej niż %{count} innymi użytkownikami."
-        other: "Nie można utworzyć wiadomości bezpośredniej z więcej niż %{count} innymi użytkownikami."
+        one: "Nie możesz utworzyć bezpośredniej wiadomości z więcej niż %{count} innym użytkownikiem."
+        few: "Nie możesz utworzyć bezpośredniej wiadomości z więcej niż %{count} innymi użytkownikami."
+        many: "Nie możesz utworzyć bezpośredniej wiadomości z więcej niż %{count} innymi użytkownikami."
+        other: "Nie możesz utworzyć bezpośredniej wiadomości z więcej niż %{count} innymi użytkownikami."
+      original_message_not_found: "Nie można znaleźć przodka wiadomości, na którą odpowiadasz, lub został on usunięty."
+      thread_invalid_for_channel: "Wątek nie jest częścią udostępnionego kanału."
+      thread_does_not_match_parent: "Wątek nie pasuje do wiadomości nadrzędnej."
     reviewables:
       message_already_handled: "Dziękujemy, ale sprawdziliśmy już tę wiadomość i ustaliliśmy, że nie trzeba jej ponownie oznaczać."
       actions:
@@ -116,11 +134,6 @@ pl_PL:
         transcript_title: "Transkrypcja poprzednich wiadomości w %{channel_name}"
         transcript_body: "Aby dać Ci więcej kontekstu, zamieściliśmy transkrypcję poprzednich wiadomości w tej rozmowie (do dziesięciu):\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "Tylko do odczytu"
-        archived: "Zarchiwizowany"
-        closed: "Zamknięte"
-        open: "Otwórz"
       archive:
         first_post_raw: "Ten temat jest archiwum kanału czatu [%{channel_name}](%{channel_url})."
       messages_moved:
@@ -129,9 +142,13 @@ pl_PL:
         many: "@%{acting_username} przeniósł %{count} wiadomości do kanału [%{channel_name}](%{first_moved_message_url})."
         other: "@%{acting_username} przeniósł %{count} wiadomości do kanału [%{channel_name}](%{first_moved_message_url})."
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} i %{leftover} innych"
+        single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} i %{count} inny"
+          few: "%{comma_separated_usernames} i %{count} inni"
+          many: "%{comma_separated_usernames} i %{count} innych"
+          other: "%{comma_separated_usernames} i %{count} innych"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "zawiera znaki inne niż ascii"

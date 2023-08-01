@@ -3,7 +3,7 @@ import discourseComputed, {
   observes,
 } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import DiscourseURL from "discourse/lib/url";
+import DiscourseURL, { groupPath } from "discourse/lib/url";
 import I18n from "I18n";
 import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
 import { alias } from "@ember/object/computed";
@@ -13,6 +13,7 @@ import { schedule } from "@ember/runloop";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { htmlSafe } from "@ember/template";
+import { inject as service } from "@ember/service";
 
 export function showEntrance(e) {
   let target = $(e.target);
@@ -34,12 +35,23 @@ export function showEntrance(e) {
 }
 
 export function navigateToTopic(topic, href) {
-  this.appEvents.trigger("header:update-topic", topic);
+  if (this.siteSettings.page_loading_indicator !== "slider") {
+    // With the slider, it feels nicer for the header to update once the rest of the topic content loads,
+    // so skip setting it early.
+    this.appEvents.trigger("header:update-topic", topic);
+  }
+
+  this.session.set("lastTopicIdViewed", {
+    topicId: topic.id,
+    historyUuid: this.router.location.getState?.().uuid,
+  });
+
   DiscourseURL.routeTo(href || topic.get("url"));
   return false;
 }
 
 export default Component.extend({
+  router: service(),
   tagName: "tr",
   classNameBindings: [":topic-list-item", "unboundClassNames", "topic.visited"],
   attributeBindings: ["data-topic-id", "role", "ariaLevel:aria-level"],
@@ -59,6 +71,9 @@ export default Component.extend({
         htmlSafe(template(this, RUNTIME_OPTIONS))
       );
       schedule("afterRender", () => {
+        if (this.isDestroyed || this.isDestroying) {
+          return;
+        }
         if (this.selected && this.selected.includes(this.topic)) {
           this.element.querySelector("input.bulk-select").checked = true;
         }
@@ -113,6 +128,17 @@ export default Component.extend({
     ).classList;
 
     nodeClassList.toggle("read", !data.show_indicator);
+  },
+
+  @discourseComputed("topic.participant_groups")
+  participantGroups(groupNames) {
+    if (!groupNames) {
+      return [];
+    }
+
+    return groupNames.map((name) => {
+      return { name, url: groupPath(name) };
+    });
   },
 
   @discourseComputed("topic.id")
@@ -219,17 +245,19 @@ export default Component.extend({
     }
 
     const topic = this.topic;
-    if (e.target.classList.contains("bulk-select")) {
+    const target = e.target;
+    const classList = target.classList;
+    if (classList.contains("bulk-select")) {
       const selected = this.selected;
 
-      if (e.target.checked) {
+      if (target.checked) {
         selected.addObject(topic);
 
         if (this.lastChecked && e.shiftKey) {
           const bulkSelects = Array.from(
               document.querySelectorAll("input.bulk-select")
             ),
-            from = bulkSelects.indexOf(e.target),
+            from = bulkSelects.indexOf(target),
             to = bulkSelects.findIndex((el) => el.id === this.lastChecked.id),
             start = Math.min(from, to),
             end = Math.max(from, to);
@@ -242,27 +270,27 @@ export default Component.extend({
             });
         }
 
-        this.set("lastChecked", e.target);
+        this.set("lastChecked", target);
       } else {
         selected.removeObject(topic);
         this.set("lastChecked", null);
       }
     }
 
-    if (e.target.classList.contains("raw-topic-link")) {
+    if (classList.contains("raw-topic-link")) {
       if (wantsNewWindow(e)) {
         return true;
       }
       e.preventDefault();
-      return this.navigateToTopic(topic, e.target.getAttribute("href"));
+      return this.navigateToTopic(topic, target.getAttribute("href"));
     }
 
     // make full row click target on mobile, due to size constraints
     if (
       this.site.mobileView &&
-      (e.target.classList.contains("right") ||
-        e.target.classList.contains("topic-item-stats") ||
-        e.target.classList.contains("main-link"))
+      e.target.matches(
+        ".topic-list-data, .main-link, .right, .topic-item-stats, .topic-item-stats__category-tags, .discourse-tags"
+      )
     ) {
       if (wantsNewWindow(e)) {
         return true;
@@ -271,7 +299,10 @@ export default Component.extend({
       return this.navigateToTopic(topic, topic.lastUnreadUrl);
     }
 
-    if (e.target.closest("a.topic-status")) {
+    if (
+      classList.contains("d-icon-thumbtack") &&
+      target.closest("a.topic-status")
+    ) {
       this.topic.togglePinnedForUser();
       return false;
     }
@@ -305,7 +336,14 @@ export default Component.extend({
 
   _highlightIfNeeded: on("didInsertElement", function () {
     // highlight the last topic viewed
-    if (this.session.get("lastTopicIdViewed") === this.get("topic.id")) {
+    const lastViewedTopicInfo = this.session.get("lastTopicIdViewed");
+
+    const isLastViewedTopic =
+      lastViewedTopicInfo?.topicId === this.topic.id &&
+      lastViewedTopicInfo?.historyUuid ===
+        this.router.location.getState?.().uuid;
+
+    if (isLastViewedTopic) {
       this.session.set("lastTopicIdViewed", null);
       this.highlight({ isLastViewedTopic: true });
     } else if (this.get("topic.highlight")) {

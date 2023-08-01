@@ -1,0 +1,51 @@
+<div
+  class="chat-selection-management"
+  data-last-copy-successful={{this.lastCopySuccessful}}
+>
+  <div class="chat-selection-management__buttons">
+    <DButton
+      @id="chat-quote-btn"
+      @icon="quote-left"
+      @label="chat.selection.quote_selection"
+      @disabled={{not this.anyMessagesSelected}}
+      @action={{this.quoteMessages}}
+    />
+
+    {{#if this.site.desktopView}}
+      <DButton
+        @id="chat-copy-btn"
+        @icon="copy"
+        @label="chat.selection.copy"
+        @disabled={{not this.anyMessagesSelected}}
+        @action={{this.copyMessages}}
+      />
+    {{/if}}
+
+    {{#if this.enableMove}}
+      <DButton
+        @id="chat-move-to-channel-btn"
+        @icon="sign-out-alt"
+        @label="chat.selection.move_selection_to_channel"
+        @disabled={{not this.anyMessagesSelected}}
+        @action={{this.openMoveMessageModal}}
+      />
+    {{/if}}
+
+    <DButton
+      @id="chat-cancel-selection-btn"
+      @icon="times"
+      @class="btn-secondary cancel-btn"
+      @label="chat.selection.cancel"
+      @action={{@pane.cancelSelecting}}
+    />
+  </div>
+
+  {{#if this.showCopySuccess}}
+    <span
+      class="chat-selection-management__copy-success"
+      {{chat/on-animation-end (fn (mut this.showCopySuccess) false)}}
+    >
+      {{i18n "chat.quote.copy_success"}}
+    </span>
+  {{/if}}
+</div>

@@ -15,13 +15,16 @@ permissions:
 
 jobs:
   build:
-    if: "!(github.event_name == 'push' && github.repository == 'discourse/discourse-private-mirror')"
+    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: run
     runs-on: ubuntu-latest
     container: discourse/discourse_test:slim
     timeout-minutes: 30
 
     steps:
+      - name: Set working directory owner
+        run: chown root:root .
+
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
@@ -36,8 +39,7 @@ jobs:
         with:
           path: vendor/bundle
           key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gem-
+          restore-keys: ${{ runner.os }}-gem-
 
       - name: Setup gems
         run: |
@@ -58,11 +60,10 @@ jobs:
         with:
           path: ${{ steps.yarn-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          restore-keys: ${{ runner.os }}-yarn-
 
       - name: Yarn install
-        run: yarn install
+        run: yarn install --frozen-lockfile
 
       - name: Rubocop
         if: ${{ !cancelled() }}
@@ -70,33 +71,27 @@ jobs:
 
       - name: syntax_tree
         if: ${{ !cancelled() }}
-        run: bundle exec stree check Gemfile $(git ls-files '*.rb') $(git ls-files '*.rake')
+        run: |
+          set -E
+          bundle exec stree check Gemfile $(git ls-files '*.rb') $(git ls-files '*.rake')
 
       - name: ESLint (core)
         if: ${{ !cancelled() }}
-        run: yarn eslint app/assets/javascripts
+        run: yarn lint:js
 
       - name: ESLint (core plugins)
         if: ${{ !cancelled() }}
-        run: yarn eslint plugins
+        run: yarn lint:js-plugins
 
       - name: Prettier
         if: ${{ !cancelled() }}
         run: |
           yarn prettier -v
-          yarn pprettier --list-different \
-            "app/assets/stylesheets/**/*.scss" \
-            "app/assets/javascripts/**/*.js" \
-            "plugins/**/assets/stylesheets/**/*.scss" \
-            "plugins/**/assets/javascripts/**/*.js"
+          yarn lint:prettier
 
       - name: Ember template lint
         if: ${{ !cancelled() }}
-        run: |
-          yarn ember-template-lint \
-            --no-error-on-unmatched-pattern \
-            "app/assets/javascripts/**/*.hbs" \
-            "plugins/**/assets/javascripts/**/*.hbs"
+        run: yarn lint:hbs
 
       - name: English locale lint (core)
         if: ${{ !cancelled() }}

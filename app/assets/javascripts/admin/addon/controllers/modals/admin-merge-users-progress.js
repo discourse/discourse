@@ -4,16 +4,18 @@ import I18n from "I18n";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { bind } from "discourse-common/utils/decorators";
 
-export default Controller.extend(ModalFunctionality, {
-  message: I18n.t("admin.user.merging_user"),
+export default class AdminMergeUsersProgressController extends Controller.extend(
+  ModalFunctionality
+) {
+  message = I18n.t("admin.user.merging_user");
 
   onShow() {
     this.messageBus.subscribe("/merge_user", this.onMessage);
-  },
+  }
 
   onClose() {
     this.messageBus.unsubscribe("/merge_user", this.onMessage);
-  },
+  }
 
   @bind
   onMessage(data) {
@@ -30,5 +32,5 @@ export default Controller.extend(ModalFunctionality, {
     } else if (data.failed) {
       this.set("message", I18n.t("admin.user.merge_failed"));
     }
-  },
-});
+  }
+}

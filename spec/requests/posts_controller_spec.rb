@@ -865,6 +865,25 @@ RSpec.describe PostsController do
         expect(response.body).to eq(original)
       end
 
+      it "returns a valid JSON response when the post is enqueued" do
+        SiteSetting.approve_unless_trust_level = 4
+
+        master_key = Fabricate(:api_key).key
+
+        post "/posts.json",
+             params: {
+               raw: "this is test post #{SecureRandom.alphanumeric}",
+               title: "this is a test title #{SecureRandom.alphanumeric}",
+             },
+             headers: {
+               HTTP_API_USERNAME: user.username,
+               HTTP_API_KEY: master_key,
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["action"]).to eq("enqueued")
+      end
+
       it "allows to create posts in import_mode" do
         Jobs.run_immediately!
         NotificationEmailer.enable
@@ -1086,7 +1105,7 @@ RSpec.describe PostsController do
           user.reload
           expect(user).to be_silenced
 
-          rp = ReviewableQueuedPost.find_by(created_by: user)
+          rp = ReviewableQueuedPost.find_by(target_created_by: user)
           expect(rp.payload["typing_duration_msecs"]).to eq(100)
           expect(rp.payload["composer_open_duration_msecs"]).to eq(204)
           expect(rp.payload["reply_to_post_number"]).to eq(123)
@@ -1180,7 +1199,7 @@ RSpec.describe PostsController do
         parsed = response.parsed_body
 
         expect(parsed["action"]).to eq("enqueued")
-        reviewable = ReviewableQueuedPost.find_by(created_by: user)
+        reviewable = ReviewableQueuedPost.find_by(target_created_by: user)
         score = reviewable.reviewable_scores.first
         expect(score.reason).to eq("auto_silence_regex")
 
@@ -1203,7 +1222,7 @@ RSpec.describe PostsController do
         parsed = response.parsed_body
 
         expect(parsed["action"]).to eq("enqueued")
-        reviewable = ReviewableQueuedPost.find_by(created_by: user)
+        reviewable = ReviewableQueuedPost.find_by(target_created_by: user)
         score = reviewable.reviewable_scores.first
         expect(score.reason).to eq("auto_silence_regex")
 
@@ -1578,10 +1597,30 @@ RSpec.describe PostsController do
         end
       end
 
-      context "with mentions" do
+      context "when `enable_user_status` site setting is enabled" do
         fab!(:user_to_mention) { Fabricate(:user) }
 
+        before { SiteSetting.enable_user_status = true }
+
+        it "does not return mentioned users when `enable_user_status` site setting is disabled" do
+          SiteSetting.enable_user_status = false
+
+          post "/posts.json",
+               params: {
+                 raw: "I am mentioning @#{user_to_mention.username}",
+                 topic_id: topic.id,
+               }
+
+          expect(response.status).to eq(200)
+
+          json = response.parsed_body
+
+          expect(json["mentioned_users"]).to eq(nil)
+        end
+
         it "returns mentioned users" do
+          user_to_mention.set_status!("off to dentist", "tooth")
+
           post "/posts.json",
                params: {
                  raw: "I am mentioning @#{user_to_mention.username}",
@@ -1596,6 +1635,11 @@ RSpec.describe PostsController do
           expect(mentioned_user["id"]).to be(user_to_mention.id)
           expect(mentioned_user["name"]).to eq(user_to_mention.name)
           expect(mentioned_user["username"]).to eq(user_to_mention.username)
+
+          status = mentioned_user["status"]
+          expect(status).to be_present
+          expect(status["emoji"]).to eq(user_to_mention.user_status.emoji)
+          expect(status["description"]).to eq(user_to_mention.user_status.description)
         end
 
         it "returns an empty list of mentioned users if nobody was mentioned" do
@@ -1610,43 +1654,6 @@ RSpec.describe PostsController do
 
           expect(response.status).to eq(200)
           expect(response.parsed_body["mentioned_users"].length).to be(0)
-        end
-
-        it "doesn't return user status on mentions by default" do
-          user_to_mention.set_status!("off to dentist", "tooth")
-
-          post "/posts.json",
-               params: {
-                 raw: "I am mentioning @#{user_to_mention.username}",
-                 topic_id: topic.id,
-               }
-
-          expect(response.status).to eq(200)
-          json = response.parsed_body
-          expect(json["mentioned_users"].length).to be(1)
-
-          status = json["mentioned_users"][0]["status"]
-          expect(status).to be_nil
-        end
-
-        it "returns user status on mentions if status is enabled in site settings" do
-          SiteSetting.enable_user_status = true
-          user_to_mention.set_status!("off to dentist", "tooth")
-
-          post "/posts.json",
-               params: {
-                 raw: "I am mentioning @#{user_to_mention.username}",
-                 topic_id: topic.id,
-               }
-
-          expect(response.status).to eq(200)
-          json = response.parsed_body
-          expect(json["mentioned_users"].length).to be(1)
-
-          status = json["mentioned_users"][0]["status"]
-          expect(status).to be_present
-          expect(status["emoji"]).to eq(user_to_mention.user_status.emoji)
-          expect(status["description"]).to eq(user_to_mention.user_status.description)
         end
       end
     end
@@ -1985,7 +1992,7 @@ RSpec.describe PostsController do
       it "throws an exception for users" do
         sign_in(user)
         get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
-        expect(response.status).to eq(404)
+        expect(response.status).to eq(403)
       end
 
       it "works for admins" do
@@ -2045,6 +2052,76 @@ RSpec.describe PostsController do
 
         get "/posts/#{post_revision.post_id}/revisions/latest.json"
         expect(response.status).to eq(200)
+      end
+    end
+  end
+
+  describe "#permanently_delete_revisions" do
+    before { SiteSetting.can_permanently_delete = true }
+
+    fab!(:post) do
+      Fabricate(
+        :post,
+        user: Fabricate(:user),
+        raw: "Lorem ipsum dolor sit amet, cu nam libris tractatos, ancillae senserit ius ex",
+      )
+    end
+
+    fab!(:post_with_no_revisions) do
+      Fabricate(
+        :post,
+        user: Fabricate(:user),
+        raw: "Lorem ipsum dolor sit amet, cu nam libris tractatos, ancillae senserit ius ex",
+      )
+    end
+
+    fab!(:post_revision) { Fabricate(:post_revision, post: post) }
+    fab!(:post_revision_2) { Fabricate(:post_revision, post: post) }
+
+    let(:post_id) { post.id }
+
+    describe "when logged in as a regular user" do
+      it "does not delete revisions" do
+        sign_in(user)
+        delete "/posts/#{post_id}/revisions/permanently_delete.json"
+        expect(response).to_not be_successful
+      end
+    end
+
+    describe "when logged in as staff" do
+      before { sign_in(admin) }
+
+      it "fails when post record is not found" do
+        delete "/posts/#{post_id + 1}/revisions/permanently_delete.json"
+        expect(response).to_not be_successful
+      end
+
+      it "fails when no post revisions are found" do
+        delete "/posts/#{post_with_no_revisions.id}/revisions/permanently_delete.json"
+        expect(response).to_not be_successful
+      end
+
+      it "fails when 'can_permanently_delete' setting is false" do
+        SiteSetting.can_permanently_delete = false
+        delete "/posts/#{post_id}/revisions/permanently_delete.json"
+        expect(response).to_not be_successful
+      end
+
+      it "permanently deletes revisions from post and adds a staff log" do
+        delete "/posts/#{post_id}/revisions/permanently_delete.json"
+        expect(response.status).to eq(200)
+
+        # It creates a staff log
+        logs =
+          UserHistory.find_by(
+            action: UserHistory.actions[:permanently_delete_post_revisions],
+            acting_user_id: admin.id,
+            post_id: post_id,
+          )
+        expect(logs).to be_present
+
+        # ensure post revisions are deleted
+        expect(PostRevision.where(post: post)).to eq([])
       end
     end
   end
@@ -2162,44 +2239,6 @@ RSpec.describe PostsController do
       get "/posts/#{post.id}/expand-embed.json"
       expect(response.status).to eq(200)
       expect(response.parsed_body["cooked"]).to eq("full content")
-    end
-  end
-
-  describe "#flagged_posts" do
-    include_examples "action requires login", :get, "/posts/system/flagged.json"
-
-    describe "when logged in" do
-      it "raises an error if the user doesn't have permission to see the flagged posts" do
-        sign_in(user)
-        get "/posts/system/flagged.json"
-        expect(response).to be_forbidden
-      end
-
-      it "can see the flagged posts when authorized" do
-        sign_in(moderator)
-        get "/posts/system/flagged.json"
-        expect(response.status).to eq(200)
-      end
-
-      it "only shows agreed and deferred flags" do
-        post_agreed = create_post(user: user)
-        post_deferred = create_post(user: user)
-        post_disagreed = create_post(user: user)
-
-        r0 = PostActionCreator.spam(moderator, post_agreed).reviewable
-        r1 = PostActionCreator.off_topic(moderator, post_deferred).reviewable
-        r2 = PostActionCreator.inappropriate(moderator, post_disagreed).reviewable
-
-        r0.perform(admin, :agree_and_keep)
-        r1.perform(admin, :ignore)
-        r2.perform(admin, :disagree)
-
-        sign_in(Fabricate(:moderator))
-        get "/posts/#{user.username}/flagged.json"
-        expect(response.status).to eq(200)
-
-        expect(response.parsed_body.length).to eq(2)
-      end
     end
   end
 

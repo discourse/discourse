@@ -21,13 +21,13 @@ th:
       joined: "สมัครสมาชิกเมื่อ"
       email_frequency:
         never: "ไม่เคย"
+      header_indicator_preference:
+        never: "ไม่เคย"
       flag: "ธง"
       join: "เข้าร่วม"
+      last_visit: "เยี่ยมชมครั้งล่าสุด"
       mention_warning:
         dismiss: "ซ่อน"
-        groups:
-          users_limit:
-            other: "%{count} ผู้ใช้"
       reply: "ตอบ"
       edit: "แก้ไข"
       bookmark_message: "บุ๊คมาร์ค"
@@ -67,11 +67,13 @@ th:
       composer:
         italic_text: "ตัวอักษรเอียง"
         bold_text: "ตัวอักษรหนา"
+        send: "ส่ง"
       notification_levels:
         never: "ไม่เคย"
       settings:
         follow: "เข้าร่วม"
         followed: "สมัครสมาชิกเมื่อ"
+        threading_disabled: "ปิดใช้งานแล้ว"
         notifications: "การแจ้งเตือน"
         preview: "แสดงตัวอย่าง"
         save: "บันทึก"
@@ -103,6 +105,17 @@ th:
         activities: "กิจกรรม"
         flags: "ธง"
         symbols: "สัญลักษณ์"
+      thread:
+        title: "ชื่อเรื่อง"
+        replies:
+          other: "%{count} ตอบ"
+        settings: "การตั้งค่า"
+        last_reply: "การตอบล่าสุด"
+        notifications:
+          regular:
+            title: "ปกติ"
+          tracking:
+            title: "ติดตาม"
       draft_channel_screen:
         header: "สร้างข้อความใหม่"
         cancel: "ยกเลิก"
@@ -114,7 +127,3 @@ th:
           fields:
             message:
               label: ข้อความ
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "ถูกปักธงโดย"

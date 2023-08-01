@@ -1,28 +1,23 @@
-import Component from "@ember/component";
-import { computed } from "@ember/object";
+import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
+import { inject as service } from "@ember/service";
 import { escapeExpression } from "discourse/lib/utilities";
 import domFromString from "discourse-common/lib/dom-from-string";
 import I18n from "I18n";
 
 export default class ChatMessageCollapser extends Component {
-  tagName = "";
-  collapsed = false;
-  uploads = null;
-  cooked = null;
+  @service siteSettings;
 
-  @computed("uploads")
   get hasUploads() {
-    return hasUploads(this.uploads);
+    return hasUploads(this.args.uploads);
   }
 
-  @computed("uploads")
   get uploadsHeader() {
     let name = "";
-    if (this.uploads.length === 1) {
-      name = this.uploads[0].original_filename;
+    if (this.args.uploads.length === 1) {
+      name = this.args.uploads[0].original_filename;
     } else {
-      name = I18n.t("chat.uploaded_files", { count: this.uploads.length });
+      name = I18n.t("chat.uploaded_files", { count: this.args.uploads.length });
     }
     return htmlSafe(
       `<span class="chat-message-collapser-link-small">${escapeExpression(
@@ -31,12 +26,13 @@ export default class ChatMessageCollapser extends Component {
     );
   }
 
-  @computed("cooked")
   get cookedBodies() {
-    const elements = Array.prototype.slice.call(domFromString(this.cooked));
+    const elements = Array.prototype.slice.call(
+      domFromString(this.args.cooked)
+    );
 
-    if (hasYoutube(elements)) {
-      return this.youtubeCooked(elements);
+    if (hasLazyVideo(elements)) {
+      return this.lazyVideoCooked(elements);
     }
 
     if (hasImageOnebox(elements)) {
@@ -54,20 +50,26 @@ export default class ChatMessageCollapser extends Component {
     return [];
   }
 
-  youtubeCooked(elements) {
+  lazyVideoCooked(elements) {
     return elements.reduce((acc, e) => {
-      if (youtubePredicate(e)) {
-        const id = e.dataset.youtubeId;
-        const link = `https://www.youtube.com/watch?v=${escapeExpression(id)}`;
-        const title = escapeExpression(e.dataset.youtubeTitle);
-        const header = htmlSafe(
-          `<a target="_blank" class="chat-message-collapser-link" rel="noopener noreferrer" href="${link}">${title}</a>`
-        );
-        const body = document.createElement("div");
-        body.className = "chat-message-collapser-youtube";
-        body.appendChild(e);
+      if (this.siteSettings.lazy_videos_enabled && lazyVideoPredicate(e)) {
+        const getVideoAttributes = requirejs(
+          "discourse/plugins/discourse-lazy-videos/lib/lazy-video-attributes"
+        ).default;
 
-        acc.push({ header, body, needsCollapser: true });
+        const videoAttributes = getVideoAttributes(e);
+
+        if (this.siteSettings[`lazy_${videoAttributes.providerName}_enabled`]) {
+          const link = escapeExpression(videoAttributes.url);
+          const title = videoAttributes.title;
+          const header = htmlSafe(
+            `<a target="_blank" class="chat-message-collapser-link" rel="noopener noreferrer" href="${link}">${title}</a>`
+          );
+
+          acc.push({ header, body: e, videoAttributes, needsCollapser: true });
+        } else {
+          acc.push({ body: e, needsCollapser: false });
+        }
       } else {
         acc.push({ body: e, needsCollapser: false });
       }
@@ -132,16 +134,12 @@ export default class ChatMessageCollapser extends Component {
   }
 }
 
-function youtubePredicate(e) {
-  return (
-    e.classList.length &&
-    e.classList.contains("onebox") &&
-    e.classList.contains("lazyYT-container")
-  );
+function lazyVideoPredicate(e) {
+  return e.classList.contains("lazy-video-container");
 }
 
-function hasYoutube(elements) {
-  return elements.some((e) => youtubePredicate(e));
+function hasLazyVideo(elements) {
+  return elements.some((e) => lazyVideoPredicate(e));
 }
 
 function animatedImagePredicate(e) {
@@ -205,7 +203,7 @@ export function isCollapsible(cooked, uploads) {
   const elements = Array.prototype.slice.call(domFromString(cooked));
 
   return (
-    hasYoutube(elements) ||
+    hasLazyVideo(elements) ||
     hasImageOnebox(elements) ||
     hasUploads(uploads) ||
     hasImage(elements) ||

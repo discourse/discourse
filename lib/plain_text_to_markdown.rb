@@ -100,7 +100,7 @@ class PlainTextToMarkdown
 
   # @param line [Line]
   def remove_quote_level_indicators!(line)
-    match_data = line.text.match(/^(?<indicators>>+)\s?(?<text>.*)/)
+    match_data = line.text.match(/\A(?<indicators>>+)\s?(?<text>.*)/)
 
     if match_data
       line.text = match_data[:text]
@@ -128,7 +128,7 @@ class PlainTextToMarkdown
   def classify_line_as_code!(line, previous_line)
     line.code_block = previous_line.code_block unless previous_line.nil? ||
       previous_line.valid_code_block?
-    return unless line.text =~ /^\s{0,3}```/
+    return unless line.text =~ /\A\s{0,3}```/
 
     if line.code_block.present?
       line.code_block.end_line = line
@@ -173,7 +173,7 @@ class PlainTextToMarkdown
   end
 
   def indent_with_non_breaking_spaces(text)
-    text.sub(/^\s+/) do |s|
+    text.sub(/\A\s+/) do |s|
       # replace tabs with 2 spaces
       s.gsub!("\t", "  ")
 

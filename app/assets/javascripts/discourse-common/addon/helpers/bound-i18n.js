@@ -1,4 +1,6 @@
 import I18n from "I18n";
-import { htmlHelper } from "discourse-common/lib/helpers";
+import { htmlSafe } from "@ember/template";
 
-export default htmlHelper((key, params) => I18n.t(key, params.hash));
+export default function boundI18n(key, options) {
+  return htmlSafe(I18n.t(key, options));
+}

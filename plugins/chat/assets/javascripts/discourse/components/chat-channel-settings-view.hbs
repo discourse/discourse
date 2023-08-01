@@ -1,58 +1,62 @@
 <div class="chat-form__section">
-  <div class="chat-form__field">
+  <div class="chat-form__field -mute">
     <label class="chat-form__label">
       <span>{{i18n "chat.settings.mute"}}</span>
       <ChatChannelSettingsSavedIndicator
-        @property={{this.channel.currentUserMembership.muted}}
+        @property={{@channel.currentUserMembership.muted}}
       />
     </label>
     <div class="chat-form__control">
       <ComboBox
         @content={{this.mutedOptions}}
-        @value={{this.channel.currentUserMembership.muted}}
+        @value={{@channel.currentUserMembership.muted}}
         @valueProperty="value"
-        @class="channel-settings-view__muted-selector"
-        @onChange={{action (fn this.saveNotificationSettings "muted")}}
+        @class="channel-settings-view__selector"
+        @onChange={{fn this.saveNotificationSettings "muted" "muted"}}
       />
     </div>
   </div>
 
-  {{#unless this.channel.currentUserMembership.muted}}
-    <div class="chat-form__field">
+  {{#unless @channel.currentUserMembership.muted}}
+    <div class="chat-form__field -desktop-notification-level">
       <label class="chat-form__label">
         <span>{{i18n "chat.settings.desktop_notification_level"}}</span>
         <ChatChannelSettingsSavedIndicator
-          @property={{this.channel.currentUserMembership.desktop_notification_level}}
+          @property={{@channel.currentUserMembership.desktopNotificationLevel}}
         />
       </label>
       <div class="chat-form__control">
         <ComboBox
           @content={{this.notificationLevels}}
-          @value={{this.channel.currentUserMembership.desktop_notification_level}}
+          @value={{@channel.currentUserMembership.desktopNotificationLevel}}
           @valueProperty="value"
-          @class="channel-settings-view__desktop-notification-level-selector"
-          @onChange={{action
-            (fn this.saveNotificationSettings "desktop_notification_level")
+          @class="channel-settings-view__selector"
+          @onChange={{fn
+            this.saveNotificationSettings
+            "desktopNotificationLevel"
+            "desktop_notification_level"
           }}
         />
       </div>
     </div>
 
-    <div class="chat-form__field">
+    <div class="chat-form__field -mobile-notification-level">
       <label class="chat-form__label">
         <span>{{i18n "chat.settings.mobile_notification_level"}}</span>
         <ChatChannelSettingsSavedIndicator
-          @property={{this.channel.currentUserMembership.mobile_notification_level}}
+          @property={{@channel.currentUserMembership.mobileNotificationLevel}}
         />
       </label>
       <div class="chat-form__control">
         <ComboBox
           @content={{this.notificationLevels}}
-          @value={{this.channel.currentUserMembership.mobile_notification_level}}
+          @value={{@channel.currentUserMembership.mobileNotificationLevel}}
           @valueProperty="value"
-          @class="channel-settings-view__mobile-notification-level-selector"
-          @onChange={{action
-            (fn this.saveNotificationSettings "mobile_notification_level")
+          @class="channel-settings-view__selector"
+          @onChange={{fn
+            this.saveNotificationSettings
+            "mobileNotificationLevel"
+            "mobile_notification_level"
           }}
         />
       </div>
@@ -60,10 +64,7 @@
   {{/unless}}
   <div class="chat-retention-info">
     {{d-icon "info-circle"}}
-    {{i18n
-      "chat.settings.retention_info"
-      days=this.siteSettings.chat_channel_retention_days
-    }}
+    <ChatRetentionReminderText @channel={{@channel}} />
   </div>
 </div>
 
@@ -71,28 +72,29 @@
   <h3 class="chat-form__section-admin-title">
     {{i18n "chat.settings.admin_title"}}
   </h3>
+
   {{#if this.autoJoinAvailable}}
-    <div class="chat-form__section">
+    <div class="chat-form__section -autojoin">
       <div class="chat-form__field">
         <label class="chat-form__label">
           <span>{{i18n "chat.settings.auto_join_users_label"}}</span>
           <ChatChannelSettingsSavedIndicator
-            @property={{this.channel.auto_join_users}}
+            @property={{@channel.autoJoinUsers}}
           />
         </label>
         <ComboBox
           @content={{this.autoAddUsersOptions}}
-          @value={{this.channel.auto_join_users}}
+          @value={{@channel.autoJoinUsers}}
           @valueProperty="value"
-          @class="channel-settings-view__auto-join-selector"
+          @class="channel-settings-view__selector"
           @onChange={{action
-            (fn this.onToggleAutoJoinUsers this.channel.auto_join_users)
+            (fn this.onToggleAutoJoinUsers @channel.autoJoinUsers)
           }}
         />
-        <p class="chat-form__description -autojoin">
+        <p class="chat-form__description">
           {{i18n
             "chat.settings.auto_join_users_info"
-            category=this.channel.chatable.name
+            category=@channel.chatable.name
           }}
         </p>
       </div>
@@ -100,36 +102,60 @@
   {{/if}}
 
   {{#if this.togglingChannelWideMentionsAvailable}}
-    <div class="chat-form__section">
+    <div class="chat-form__section -channel-wide-mentions">
       <div class="chat-form__field">
         <label class="chat-form__label">
           <span>{{i18n "chat.settings.channel_wide_mentions_label"}}</span>
           <ChatChannelSettingsSavedIndicator
-            @property={{this.channel.allow_channel_wide_mentions}}
+            @property={{@channel.allowChannelWideMentions}}
           />
         </label>
         <ComboBox
           @content={{this.channelWideMentionsOptions}}
-          @value={{this.channel.allow_channel_wide_mentions}}
+          @value={{@channel.allowChannelWideMentions}}
           @valueProperty="value"
-          @class="channel-settings-view__channel-wide-mentions-selector"
+          @class="channel-settings-view__selector"
           @onChange={{this.onToggleChannelWideMentions}}
         />
-        <p class="chat-form__description -channel-wide-mentions">
+        <p class="chat-form__description">
           {{i18n
             "chat.settings.channel_wide_mentions_description"
-            channel=this.channel.title
+            channel=@channel.title
           }}
         </p>
       </div>
     </div>
   {{/if}}
+
+  <div class="chat-form__section -threading">
+    <div class="chat-form__field">
+      <label class="chat-form__label">
+        <span>{{i18n "chat.settings.channel_threading_label"}}</span>
+        <span class="channel-settings-view__channel-threading-tooltip">
+          {{d-icon "info-circle"}}
+          <DTooltip>
+            {{i18n "chat.settings.channel_threading_description"}}
+          </DTooltip>
+        </span>
+        <ChatChannelSettingsSavedIndicator
+          @property={{@channel.threadingEnabled}}
+        />
+      </label>
+      <ComboBox
+        @content={{this.threadingEnabledOptions}}
+        @value={{@channel.threadingEnabled}}
+        @valueProperty="value"
+        @class="channel-settings-view__selector"
+        @onChange={{this.onToggleThreadingEnabled}}
+      />
+    </div>
+  </div>
 {{/if}}
 
-{{#unless this.channel.isDirectMessageChannel}}
+{{#unless @channel.isDirectMessageChannel}}
   <div class="chat-form__section">
     {{#if (chat-guardian "can-edit-chat-channel")}}
-      {{#if (chat-guardian "can-archive-channel" this.channel)}}
+      {{#if (chat-guardian "can-archive-channel" @channel)}}
         <div class="chat-form__field">
           <DButton
             @action={{action "onArchiveChannel"}}
@@ -140,7 +166,7 @@
         </div>
       {{/if}}
 
-      {{#if this.channel.isClosed}}
+      {{#if @channel.isClosed}}
         <div class="chat-form__field">
           <DButton
             @action={{action "onToggleChannelState"}}

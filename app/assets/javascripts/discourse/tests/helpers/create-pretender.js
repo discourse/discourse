@@ -1,6 +1,7 @@
 import Pretender from "pretender";
 import User from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
+import { cloneJSON } from "discourse-common/lib/object";
 
 export function parsePostData(query) {
   const result = {};
@@ -37,6 +38,10 @@ export function response(code, obj) {
 
 export function success() {
   return response({ success: true });
+}
+
+export function OK(resp = {}, headers = {}) {
+  return [200, headers, resp];
 }
 
 const loggedIn = () => !!User.current();
@@ -77,17 +82,18 @@ export function applyDefaultHandlers(pretender) {
   );
 
   pretender.get("/latest.json", () => {
-    const json = fixturesByUrl["/latest.json"];
+    const json = cloneJSON(fixturesByUrl["/latest.json"]);
 
     if (loggedIn()) {
       // Stuff to let us post
       json.topic_list.can_create_topic = true;
     }
+
     return response(json);
   });
 
   pretender.get("/c/bug/1/l/latest.json", () => {
-    const json = fixturesByUrl["/c/bug/1/l/latest.json"];
+    const json = cloneJSON(fixturesByUrl["/c/bug/1/l/latest.json"]);
 
     if (loggedIn()) {
       // Stuff to let us post
@@ -100,8 +106,20 @@ export function applyDefaultHandlers(pretender) {
     return response({
       tags: [
         { id: "eviltrout", count: 1 },
-        { id: "planned", text: "planned", count: 7, pm_only: false },
-        { id: "private", text: "private", count: 0, pm_only: true },
+        {
+          id: "planned",
+          name: "planned",
+          text: "planned",
+          count: 7,
+          pm_only: false,
+        },
+        {
+          id: "private",
+          name: "private",
+          text: "private",
+          count: 0,
+          pm_only: true,
+        },
       ],
       extras: {
         tag_groups: [
@@ -109,24 +127,60 @@ export function applyDefaultHandlers(pretender) {
             id: 2,
             name: "Ford Cars",
             tags: [
-              { id: "Escort", text: "Escort", count: 1, pm_only: false },
-              { id: "focus", text: "focus", count: 3, pm_only: false },
+              {
+                id: "Escort",
+                name: "Escort",
+                text: "Escort",
+                count: 1,
+                pm_only: false,
+              },
+              {
+                id: "focus",
+                name: "focus",
+                text: "focus",
+                count: 3,
+                pm_only: false,
+              },
             ],
           },
           {
             id: 1,
             name: "Honda Cars",
             tags: [
-              { id: "civic", text: "civic", count: 4, pm_only: false },
-              { id: "accord", text: "accord", count: 2, pm_only: false },
+              {
+                id: "civic",
+                name: "civic",
+                text: "civic",
+                count: 4,
+                pm_only: false,
+              },
+              {
+                id: "accord",
+                name: "accord",
+                text: "accord",
+                count: 2,
+                pm_only: false,
+              },
             ],
           },
           {
             id: 1,
             name: "Makes",
             tags: [
-              { id: "ford", text: "ford", count: 5, pm_only: false },
-              { id: "honda", text: "honda", count: 6, pm_only: false },
+              {
+                id: "ford",
+                name: "ford",
+                text: "ford",
+                count: 5,
+                pm_only: false,
+              },
+              {
+                id: "honda",
+                name: "honda",
+                text: "honda",
+                count: 6,
+                pm_only: false,
+              },
             ],
           },
         ],
@@ -184,7 +238,7 @@ export function applyDefaultHandlers(pretender) {
   );
 
   pretender.get("/u/eviltrout.json", () => {
-    const json = fixturesByUrl["/u/eviltrout.json"];
+    const json = cloneJSON(fixturesByUrl["/u/eviltrout.json"]);
     json.user.can_edit = loggedIn();
     return response(json);
   });
@@ -220,7 +274,40 @@ export function applyDefaultHandlers(pretender) {
 
   pretender.get("/u/eviltrout/invited.json", () => {
     return response({
-      invites: [],
+      invites: [
+        {
+          id: 8,
+          invite_key: "hMFT8G1oKP",
+          link: "http://localhost:3000/invites/hMFT8G1oKP",
+          email: "steak@cat.com",
+          domain: null,
+          emailed: false,
+          can_delete_invite: true,
+          custom_message: null,
+          created_at: "2023-06-01T04:47:13.195Z",
+          updated_at: "2023-06-01T04:47:13.195Z",
+          expires_at: "2023-08-30T04:47:00.000Z",
+          expired: false,
+          topics: [],
+          groups: [],
+        },
+        {
+          id: 9,
+          invite_key: "hMFT8G1WHA",
+          link: "http://localhost:3000/invites/hMFT8G1WHA",
+          email: "tomtom@cat.com",
+          domain: null,
+          emailed: false,
+          can_delete_invite: false,
+          custom_message: null,
+          created_at: "2023-06-01T04:47:13.195Z",
+          updated_at: "2023-06-01T04:47:13.195Z",
+          expires_at: "2023-08-30T04:47:00.000Z",
+          expired: false,
+          topics: [],
+          groups: [],
+        },
+      ],
       can_see_invite_details: true,
       counts: {
         pending: 0,
@@ -1043,11 +1130,21 @@ export function applyDefaultHandlers(pretender) {
         },
         {
           id: 9,
+          name: "an_extra_field",
+          type: "plugin",
+          enabled: false,
+          automatic_position: null,
+          position: 8,
+          icon: null,
+          user_field: null,
+        },
+        {
+          id: 10,
           name: null,
           type: "user_field",
           enabled: false,
           automatic_position: null,
-          position: 8,
+          position: 9,
           icon: null,
           user_field: {
             id: 3,

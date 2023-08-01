@@ -4,47 +4,28 @@ const EmberApp = require("ember-cli/lib/broccoli/ember-app");
 const resolve = require("path").resolve;
 const mergeTrees = require("broccoli-merge-trees");
 const concat = require("broccoli-concat");
-const prettyTextEngine = require("./lib/pretty-text-engine");
 const { createI18nTree } = require("./lib/translation-plugin");
 const { parsePluginClientSettings } = require("./lib/site-settings-plugin");
 const discourseScss = require("./lib/discourse-scss");
 const generateScriptsTree = require("./lib/scripts");
 const funnel = require("broccoli-funnel");
+const DeprecationSilencer = require("deprecation-silencer");
+const generateWorkboxTree = require("./lib/workbox-tree-builder");
 
-const SILENCED_WARN_PREFIXES = [
-  "Setting the `jquery-integration` optional feature flag",
-  "The Ember Classic edition has been deprecated",
-  "Setting the `template-only-glimmer-components` optional feature flag to `false`",
-  "DEPRECATION: Invoking the `<LinkTo>` component with positional arguments is deprecated",
-];
+process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
 module.exports = function (defaults) {
-  let discourseRoot = resolve("../../../..");
-  let vendorJs = discourseRoot + "/vendor/assets/javascripts/";
+  const discourseRoot = resolve("../../../..");
+  const vendorJs = discourseRoot + "/vendor/assets/javascripts/";
 
-  // Silence the warnings listed in SILENCED_WARN_PREFIXES
-  const ui = defaults.project.ui;
-  const oldWriteWarning = ui.writeWarnLine.bind(ui);
-  ui.writeWarnLine = (message, ...args) => {
-    if (!SILENCED_WARN_PREFIXES.some((prefix) => message.startsWith(prefix))) {
-      return oldWriteWarning(message, ...args);
-    }
-  };
-
-  // Silence warnings which go straight to console.warn (e.g. template compiler deprecations)
-  /* eslint-disable no-console */
-  const oldConsoleWarn = console.warn.bind(console);
-  console.warn = (message, ...args) => {
-    if (!SILENCED_WARN_PREFIXES.some((prefix) => message.startsWith(prefix))) {
-      return oldConsoleWarn(message, ...args);
-    }
-  };
-  /* eslint-enable no-console */
+  // Silence deprecations which we are aware of - see `lib/deprecation-silencer.js`
+  DeprecationSilencer.silence(console, "warn");
+  DeprecationSilencer.silence(defaults.project.ui, "writeWarnLine");
 
   const isProduction = EmberApp.env().includes("production");
   const isTest = EmberApp.env().includes("test");
 
-  let app = new EmberApp(defaults, {
+  const app = new EmberApp(defaults, {
     autoRun: false,
     "ember-qunit": {
       insertContentForTestBody: false,
@@ -68,6 +49,8 @@ module.exports = function (defaults) {
           fallback: {
             // Sinon needs a `util` polyfill
             util: require.resolve("util/"),
+            // Also for sinon
+            timers: false,
           },
         },
         module: {
@@ -108,6 +91,14 @@ module.exports = function (defaults) {
       ],
     },
 
+    "ember-cli-babel": {
+      throwUnlessParallelizable: true,
+    },
+
+    babel: {
+      plugins: [require.resolve("deprecation-silencer")],
+    },
+
     // We need to build tests in prod for theme tests
     tests: true,
 
@@ -136,7 +127,7 @@ module.exports = function (defaults) {
       annotation: "TreeMerger (appTestTrees)",
     });
 
-    let tests = concat(appTestTrees, {
+    const tests = concat(appTestTrees, {
       inputFiles: ["**/tests/**/*-test.js"],
       headerFiles: ["vendor/ember-cli/tests-prefix.js"],
       footerFiles: ["vendor/ember-cli/app-config.js"],
@@ -145,7 +136,7 @@ module.exports = function (defaults) {
       sourceMapConfig: false,
     });
 
-    let testHelpers = concat(appTestTrees, {
+    const testHelpers = concat(appTestTrees, {
       inputFiles: [
         "**/tests/test-boot-ember-cli.js",
         "**/tests/helpers/**/*.js",
@@ -191,32 +182,36 @@ module.exports = function (defaults) {
     .findAddonByName("discourse-plugins")
     .generatePluginsTree();
 
-  const terserPlugin = app.project.findAddonByName("ember-cli-terser");
-  const applyTerser = (tree) => terserPlugin.postprocessTree("all", tree);
+  const adminTree = app.project.findAddonByName("admin").treeForAddonBundle();
 
-  return mergeTrees([
+  const wizardTree = app.project.findAddonByName("wizard").treeForAddonBundle();
+
+  const markdownItBundleTree = app.project
+    .findAddonByName("pretty-text")
+    .treeForMarkdownItBundle();
+
+  return app.toTree([
     createI18nTree(discourseRoot, vendorJs),
     parsePluginClientSettings(discourseRoot, vendorJs, app),
-    app.toTree(),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
     funnel(`${vendorJs}/highlightjs`, {
       files: ["highlight-test-bundle.min.js"],
       destDir: "assets/highlightjs",
     }),
-    applyTerser(
-      concat(mergeTrees([app.options.adminTree]), {
-        inputFiles: ["**/*.js"],
-        outputFile: `assets/admin.js`,
-      })
-    ),
-    applyTerser(
-      concat(mergeTrees([app.options.wizardTree]), {
-        inputFiles: ["**/*.js"],
-        outputFile: `assets/wizard.js`,
-      })
-    ),
-    applyTerser(prettyTextEngine(app)),
+    generateWorkboxTree(),
+    concat(adminTree, {
+      inputFiles: ["**/*.js"],
+      outputFile: `assets/admin.js`,
+    }),
+    concat(wizardTree, {
+      inputFiles: ["**/*.js"],
+      outputFile: `assets/wizard.js`,
+    }),
+    concat(markdownItBundleTree, {
+      inputFiles: ["**/*.js"],
+      outputFile: `assets/markdown-it-bundle.js`,
+    }),
     generateScriptsTree(app),
-    applyTerser(discoursePluginsTree),
+    discoursePluginsTree,
   ]);
 };

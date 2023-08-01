@@ -1,0 +1,26 @@
+{{#if this.setting.textarea}}
+  <Textarea @value={{this.value}} class="input-setting-textarea" />
+{{else if this.setting.json_schema}}
+  <DButton
+    @action={{fn (mut this.showJsonEditorModal) true}}
+    @icon="pencil-alt"
+    @label="admin.site_settings.json_schema.edit"
+  />
+{{else if this.isSecret}}
+  <Input @type="password" @value={{this.value}} class="input-setting-string" />
+{{else}}
+  <TextField @value={{this.value}} @classNames="input-setting-string" />
+{{/if}}
+
+<SettingValidationMessage @message={{this.validationMessage}} />
+<div class="desc">{{html-safe this.setting.description}}</div>
+
+{{#if this.showJsonEditorModal}}
+  <Modal::JsonSchemaEditor
+    @updateValue={{fn (mut this.value)}}
+    @value={{this.value}}
+    @settingName={{this.setting.setting}}
+    @jsonSchema={{this.setting.json_schema}}
+    @closeModal={{fn (mut this.showJsonEditorModal) false}}
+  />
+{{/if}}

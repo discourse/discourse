@@ -81,6 +81,7 @@ class ReviewablesController < ApplicationController
           Reviewable.user_menu_list_for(current_user),
           current_user,
         ).as_json,
+      reviewable_count: current_user.reviewable_count,
     }
     render_json_dump(json, rest_serializer: true)
   end
@@ -154,10 +155,21 @@ class ReviewablesController < ApplicationController
   end
 
   def destroy
-    reviewable = Reviewable.find_by(id: params[:reviewable_id], created_by: current_user)
+    user =
+      if is_api?
+        if @guardian.is_admin?
+          fetch_user_from_params
+        else
+          raise Discourse::InvalidAccess
+        end
+      else
+        current_user
+      end
+
+    reviewable = Reviewable.find_by(id: params[:reviewable_id], created_by: user)
     raise Discourse::NotFound.new if reviewable.blank?
 
-    reviewable.perform(current_user, :delete)
+    reviewable.perform(current_user, :delete, { guardian: @guardian })
 
     render json: success_json
   end

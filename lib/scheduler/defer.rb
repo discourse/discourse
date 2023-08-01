@@ -4,6 +4,7 @@ require "weakref"
 module Scheduler
   module Deferrable
     DEFAULT_TIMEOUT ||= 90
+    STATS_CACHE_SIZE ||= 100
 
     def initialize
       @async = !Rails.env.test?
@@ -13,10 +14,12 @@ module Scheduler
         )
 
       @mutex = Mutex.new
+      @stats_mutex = Mutex.new
       @paused = false
       @thread = nil
       @reactor = nil
       @timeout = DEFAULT_TIMEOUT
+      @stats = LruRedux::ThreadSafeCache.new(STATS_CACHE_SIZE)
     end
 
     def timeout=(t)
@@ -25,6 +28,10 @@ module Scheduler
 
     def length
       @queue.size
+    end
+
+    def stats
+      @stats_mutex.synchronize { @stats.to_a }
     end
 
     def pause
@@ -42,6 +49,11 @@ module Scheduler
     end
 
     def later(desc = nil, db = RailsMultisite::ConnectionManagement.current_db, force: true, &blk)
+      @stats_mutex.synchronize do
+        stats = (@stats[desc] ||= { queued: 0, finished: 0, duration: 0, errors: 0 })
+        stats[:queued] += 1
+      end
+
       if @async
         start_thread if !@thread&.alive? && !@paused
         @queue.push({ key: db, task: [db, blk, desc] }, force: force)
@@ -71,13 +83,19 @@ module Scheduler
     def start_thread
       @mutex.synchronize do
         @reactor = MessageBus::TimerThread.new if !@reactor
-        @thread = Thread.new { do_work while true } if !@thread&.alive?
+        @thread =
+          Thread.new do
+            @thread.abort_on_exception = true if Rails.env.test?
+            do_work while true
+          end if !@thread&.alive?
       end
     end
 
     # using non_block to match Ruby #deq
     def do_work(non_block = false)
       db, job, desc = @queue.shift(block: !non_block)[:task]
+
+      start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
       db ||= RailsMultisite::ConnectionManagement::DEFAULT
 
       RailsMultisite::ConnectionManagement.with_connection(db) do
@@ -88,6 +106,10 @@ module Scheduler
             end if !non_block
           job.call
         rescue => ex
+          @stats_mutex.synchronize do
+            stats = @stats[desc]
+            stats[:errors] += 1 if stats
+          end
           Discourse.handle_job_exception(ex, message: "Running deferred code '#{desc}'")
         ensure
           warning_job&.cancel
@@ -97,6 +119,15 @@ module Scheduler
       Discourse.handle_job_exception(ex, message: "Processing deferred code queue")
     ensure
       ActiveRecord::Base.connection_handler.clear_active_connections!
+      if start
+        @stats_mutex.synchronize do
+          stats = @stats[desc]
+          if stats
+            stats[:finished] += 1
+            stats[:duration] += Process.clock_gettime(Process::CLOCK_MONOTONIC) - start
+          end
+        end
+      end
     end
   end
 

@@ -680,8 +680,8 @@ RSpec.describe Stylesheet::Manager do
           manager: manager,
         ).compile(force: true)
 
-      expect(stylesheet).not_to include("--primary: #c00;")
-      expect(stylesheet).to include("--primary: #222;") # from base scheme
+      expect(stylesheet).not_to include("--primary: #CC0000;")
+      expect(stylesheet).to include("--primary: #222222;") # from base scheme
     end
 
     it "uses the correct scheme when a valid scheme id is used" do
@@ -726,7 +726,7 @@ RSpec.describe Stylesheet::Manager do
       stylesheet2 = builder2.compile
 
       expect(stylesheet).not_to eq(stylesheet2)
-      expect(stylesheet2).to include("--primary: #c00;")
+      expect(stylesheet2).to include("--primary: #CC0000;")
     end
 
     it "includes updated font definitions" do
@@ -877,7 +877,11 @@ RSpec.describe Stylesheet::Manager do
     end
   end
 
-  describe ".precompile css" do
+  describe ".precompile_css" do
+    let(:core_targets) do
+      %w[desktop mobile admin wizard desktop_rtl mobile_rtl admin_rtl wizard_rtl]
+    end
+
     before { STDERR.stubs(:write) }
 
     after do
@@ -888,7 +892,6 @@ RSpec.describe Stylesheet::Manager do
     it "correctly generates precompiled CSS" do
       scheme1 = ColorScheme.create!(name: "scheme1")
       scheme2 = ColorScheme.create!(name: "scheme2")
-      core_targets = %i[desktop mobile desktop_rtl mobile_rtl admin wizard]
       theme_targets = %i[desktop_theme mobile_theme]
 
       Theme.update_all(user_selectable: false)
@@ -922,7 +925,7 @@ RSpec.describe Stylesheet::Manager do
       output = capture_output(:stderr) { Stylesheet::Manager.precompile_css }
 
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(core_targets.size)
+      expect(results).to contain_exactly(*core_targets)
 
       StylesheetCache.destroy_all
 
@@ -937,7 +940,7 @@ RSpec.describe Stylesheet::Manager do
       # themes + core
       Stylesheet::Manager.precompile_css
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(28) # 9 core targets + 9 theme + 10 color schemes
+      expect(results.size).to eq(30) # 11 core targets + 9 theme + 10 color schemes
 
       theme_targets.each do |tar|
         expect(
@@ -952,7 +955,7 @@ RSpec.describe Stylesheet::Manager do
       Stylesheet::Manager.precompile_css
       Stylesheet::Manager.precompile_theme_css
       results = StylesheetCache.pluck(:target)
-      expect(results.size).to eq(28) # 9 core targets + 9 theme + 10 color schemes
+      expect(results.size).to eq(30) # 11 core targets + 9 theme + 10 color schemes
 
       expect(results).to include("color_definitions_#{scheme1.name}_#{scheme1.id}_#{user_theme.id}")
       expect(results).to include(
@@ -969,7 +972,6 @@ RSpec.describe Stylesheet::Manager do
       upload = UploadCreator.new(image, "logo.png").create_for(-1)
 
       scheme = ColorScheme.create!(name: "scheme")
-      core_targets = %i[desktop mobile desktop_rtl mobile_rtl admin wizard]
       theme_targets = %i[desktop_theme mobile_theme]
 
       default_theme =
@@ -1008,6 +1010,69 @@ RSpec.describe Stylesheet::Manager do
         )
       css = File.read(theme_builder.stylesheet_fullpath)
       expect(css).to include("border:3px solid green}")
+    end
+
+    context "when there are enabled plugins" do
+      let(:plugin1) do
+        plugin1 = plugin_from_fixtures("my_plugin")
+        plugin1.register_css "body { padding: 1px 2px 3px 4px; }"
+        plugin1
+      end
+
+      let(:plugin2) do
+        plugin2 = plugin_from_fixtures("scss_plugin")
+        plugin2
+      end
+
+      before do
+        Discourse.plugins << plugin1
+        Discourse.plugins << plugin2
+        plugin1.activate!
+        plugin2.activate!
+        Stylesheet::Importer.register_imports!
+        StylesheetCache.destroy_all
+      end
+
+      after do
+        Discourse.plugins.delete(plugin1)
+        Discourse.plugins.delete(plugin2)
+        Stylesheet::Importer.register_imports!
+        DiscoursePluginRegistry.reset!
+      end
+
+      it "generates LTR and RTL CSS for plugins" do
+        output = capture_output(:stderr) { Stylesheet::Manager.precompile_css }
+
+        results = StylesheetCache.pluck(:target)
+        expect(results).to contain_exactly(
+          *core_targets,
+          "my_plugin",
+          "my_plugin_rtl",
+          "scss_plugin",
+          "scss_plugin_rtl",
+        )
+
+        expect(output.scan(/my_plugin$/).length).to eq(1)
+        expect(output.scan(/my_plugin_rtl$/).length).to eq(1)
+        expect(output.scan(/scss_plugin$/).length).to eq(1)
+        expect(output.scan(/scss_plugin_rtl$/).length).to eq(1)
+
+        plugin1_ltr_css = StylesheetCache.where(target: "my_plugin").pluck(:content).first
+        plugin1_rtl_css = StylesheetCache.where(target: "my_plugin_rtl").pluck(:content).first
+
+        expect(plugin1_ltr_css).to include("body{padding:1px 2px 3px 4px}")
+        expect(plugin1_ltr_css).not_to include("body{padding:1px 4px 3px 2px}")
+        expect(plugin1_rtl_css).to include("body{padding:1px 4px 3px 2px}")
+        expect(plugin1_rtl_css).not_to include("body{padding:1px 2px 3px 4px}")
+
+        plugin2_ltr_css = StylesheetCache.where(target: "scss_plugin").pluck(:content).first
+        plugin2_rtl_css = StylesheetCache.where(target: "scss_plugin_rtl").pluck(:content).first
+
+        expect(plugin2_ltr_css).to include(".pull-left{float:left}")
+        expect(plugin2_ltr_css).not_to include(".pull-left{float:right}")
+        expect(plugin2_rtl_css).to include(".pull-left{float:right}")
+        expect(plugin2_rtl_css).not_to include(".pull-left{float:left}")
+      end
     end
   end
 

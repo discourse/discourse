@@ -4,10 +4,6 @@ def list_files(base_dir, pattern = "*")
   Dir[File.join("#{base_dir}", pattern)]
 end
 
-def list_js_files(base_dir)
-  list_files(base_dir, "**/*.es6")
-end
-
 def grep_files(files, regex)
   files.select { |file| grep_file(file, regex) }
 end
@@ -18,21 +14,6 @@ def grep_file(file, regex)
 end
 
 RSpec.describe "Coding style" do
-  describe "Javascript" do
-    it 'prevents this.get("foo") pattern' do
-      js_files = list_js_files("app/assets/javascripts")
-      offenses = grep_files(js_files, /this\.get\("\w+"\)/)
-
-      expect(offenses).to be_empty, <<~TEXT
-        Do not use this.get("foo") accessor for single property, instead
-        prefer to use this.foo
-
-        Offenses:
-        #{offenses.join("\n")}
-      TEXT
-    end
-  end
-
   describe "Post Migrations" do
     def check_offenses(files, method_name, constant_name)
       method_name_regex = /#{Regexp.escape(method_name)}/
@@ -62,6 +43,21 @@ RSpec.describe "Coding style" do
 
       check_offenses(migration_files, "ColumnDropper.execute_drop", "DROPPED_COLUMNS")
       check_offenses(migration_files, "TableDropper.execute_drop", "DROPPED_TABLES")
+    end
+  end
+
+  describe "non-colocated component templates" do
+    {
+      "discourse" => "app/assets/javascripts/discourse/app/templates/components",
+      "admin" => "app/assets/javascripts/admin/addon/templates/components",
+      "wizard" => "app/assets/javascripts/wizard/addon/templates/components",
+      "chat/discourse" => "plugins/chat/assets/javascripts/discourse/templates/components",
+      "chat/admin" => "plugins/chat/assets/javascripts/admin/templates/components",
+      "styleguide" => "plugins/styleguide/assets/javascripts/discourse/templates/components",
+    }.each_pair do |name, dir|
+      it "do not exist for #{name}" do
+        expect(list_files(dir)).to eq([])
+      end
     end
   end
 end

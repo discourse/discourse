@@ -21,16 +21,15 @@ lt:
       joined: "prisijungė"
       email_frequency:
         never: "Niekada"
+      header_indicator_preference:
+        never: "Niekada"
       flag: "Pranešti"
       join: "Prisijungti"
+      last_visit: "paskutinis apsilankymas"
+      summarization:
+        summarize: "Apibendrinti"
       mention_warning:
         dismiss: "praleisti"
-        groups:
-          users_limit:
-            one: "%{count} vartotojas"
-            few: "%{count} vartotojų"
-            many: "%{count} vartotojų"
-            other: "%{count} vartotojų"
       reply: "Atsakyti"
       edit: "Redaguoti"
       rebake_message: "Perkurti HTML"
@@ -60,6 +59,8 @@ lt:
           about: Apie
           members: Nariai
           settings: Nustatymai
+      new_message_modal:
+        no_items: "Nėra elementų"
       direct_message_creator:
         title: Nauja žinutė
         prefix: "Kam:"
@@ -71,11 +72,14 @@ lt:
       composer:
         italic_text: "pasviras tekstas"
         bold_text: "paryškintas tekstas"
+        send: "Siųsti"
       notification_levels:
         never: "Niekada"
       settings:
         follow: "Prisijungti"
         followed: "Prisijungė"
+        threading_enabled: "Galimas"
+        threading_disabled: "Uždrausta"
         notifications: "Pranešimai"
         preview: "Peržiūrėti"
         save: "Išsaugoti"
@@ -107,6 +111,25 @@ lt:
         activities: "Veikla"
         flags: "Pažymėk!"
         symbols: "Simboliai"
+      thread:
+        title: "Antraštė"
+        replies:
+          one: "%{count} atsakymas"
+          few: "%{count} atsakymai"
+          many: "%{count} atsakymai"
+          other: "%{count} atsakymai"
+        settings: "Nustatymai"
+        last_reply: "Paskutinis atsakymas"
+        notifications:
+          regular:
+            title: "Įprastas"
+          tracking:
+            title: "Seku"
+        participants_other_count:
+          one: "+%{count}"
+          few: "+%{count}"
+          many: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Nauja žinutė"
         cancel: "Atšaukti"
@@ -118,7 +141,3 @@ lt:
           fields:
             message:
               label: Žinutės
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Pažymėjo"

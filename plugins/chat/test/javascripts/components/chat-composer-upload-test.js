@@ -86,8 +86,6 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
     );
 
     assert.true(exists("img.preview-img[src='/images/avatar.png']"));
-    assert.strictEqual(query(".file-name").innerText.trim(), "bar_image.png");
-    assert.strictEqual(query(".extension-pill").innerText.trim(), "png");
   });
 
   test("removing completed upload", async function (assert) {
@@ -106,7 +104,7 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
       hbs`<ChatComposerUpload @isDone={{true}} @upload={{this.upload}} @onCancel={{fn this.removeUpload this.upload}} />`
     );
 
-    await click(".remove-upload");
+    await click(".chat-composer-upload__remove-btn");
     assert.strictEqual(this.uploadRemoved, true);
   });
 
@@ -126,7 +124,7 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
       hbs`<ChatComposerUpload @upload={{this.upload}} @onCancel={{fn this.removeUpload this.upload}} />`
     );
 
-    await click(".remove-upload");
+    await click(".chat-composer-upload__remove-btn");
     assert.strictEqual(this.uploadRemoved, true);
   });
 });

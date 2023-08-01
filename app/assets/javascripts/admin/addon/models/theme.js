@@ -13,11 +13,13 @@ export const THEMES = "themes";
 export const COMPONENTS = "components";
 const SETTINGS_TYPE_ID = 5;
 
-const Theme = RestModel.extend({
-  isActive: or("default", "user_selectable"),
-  isPendingUpdates: gt("remote_theme.commits_behind", 0),
-  hasEditedFields: gt("editedFields.length", 0),
-  hasParents: gt("parent_themes.length", 0),
+class Theme extends RestModel {
+  @or("default", "user_selectable") isActive;
+  @gt("remote_theme.commits_behind", 0) isPendingUpdates;
+  @gt("editedFields.length", 0) hasEditedFields;
+  @gt("parent_themes.length", 0) hasParents;
+
+  changed = false;
 
   @discourseComputed("theme_fields.[]")
   targets() {
@@ -45,7 +47,7 @@ const Theme = RestModel.extend({
       target["error"] = this.hasError(target.name);
       return target;
     });
-  },
+  }
 
   @discourseComputed("theme_fields.[]")
   fieldNames() {
@@ -67,7 +69,12 @@ const Theme = RestModel.extend({
     }
 
     return {
-      common: [...common, "embedded_scss", "color_definitions"],
+      common: [
+        ...common,
+        "color_definitions",
+        "embedded_scss",
+        "embedded_header",
+      ],
       desktop: common,
       mobile: common,
       settings: ["yaml"],
@@ -79,7 +86,7 @@ const Theme = RestModel.extend({
       ],
       extra_scss: scss_fields,
     };
-  },
+  }
 
   @discourseComputed(
     "fieldNames",
@@ -113,7 +120,7 @@ const Theme = RestModel.extend({
       });
     });
     return hash;
-  },
+  }
 
   @discourseComputed("theme_fields")
   themeFields(fields) {
@@ -129,7 +136,7 @@ const Theme = RestModel.extend({
       }
     });
     return hash;
-  },
+  }
 
   @discourseComputed("theme_fields", "theme_fields.[]")
   uploads(fields) {
@@ -139,32 +146,32 @@ const Theme = RestModel.extend({
     return fields.filter(
       (f) => f.target === "common" && f.type_id === THEME_UPLOAD_VAR
     );
-  },
+  }
 
   @discourseComputed("theme_fields", "theme_fields.@each.error")
   isBroken(fields) {
     return (
       fields && fields.any((field) => field.error && field.error.length > 0)
     );
-  },
+  }
 
   @discourseComputed("theme_fields.[]")
   editedFields(fields) {
     return fields.filter(
       (field) => !isBlank(field.value) && field.type_id !== SETTINGS_TYPE_ID
     );
-  },
+  }
 
   @discourseComputed("remote_theme.last_error_text")
   remoteError(errorText) {
     if (errorText && errorText.length > 0) {
       return errorText;
     }
-  },
+  }
 
   getKey(field) {
     return `${field.target} ${field.name}`;
-  },
+  }
 
   hasEdited(target, name) {
     if (name) {
@@ -175,27 +182,27 @@ const Theme = RestModel.extend({
         (field) => field.target === target && !isEmpty(field.value)
       );
     }
-  },
+  }
 
   hasError(target, name) {
     return this.theme_fields
       .filter((f) => f.target === target && (!name || name === f.name))
       .any((f) => f.error);
-  },
+  }
 
   getError(target, name) {
     let themeFields = this.themeFields;
     let key = this.getKey({ target, name });
     let field = themeFields[key];
     return field ? field.error : "";
-  },
+  }
 
   getField(target, name) {
     let themeFields = this.themeFields;
     let key = this.getKey({ target, name });
     let field = themeFields[key];
     return field ? field.value : "";
-  },
+  }
 
   removeField(field) {
     this.set("changed", true);
@@ -204,7 +211,7 @@ const Theme = RestModel.extend({
     field.value = null;
 
     return this.saveChanges("theme_fields");
-  },
+  }
 
   setField(target, name, value, upload_id, type_id) {
     this.set("changed", true);
@@ -244,25 +251,25 @@ const Theme = RestModel.extend({
         this.notifyPropertyChange("theme_fields.[]");
       }
     }
-  },
+  }
 
   @discourseComputed("childThemes.[]")
   child_theme_ids(childThemes) {
     if (childThemes) {
       return childThemes.map((theme) => get(theme, "id"));
     }
-  },
+  }
 
   @discourseComputed("recentlyInstalled", "component", "hasParents")
   warnUnassignedComponent(recent, component, hasParents) {
     return recent && component && !hasParents;
-  },
+  }
 
   removeChildTheme(theme) {
     const childThemes = this.childThemes;
     childThemes.removeObject(theme);
     return this.saveChanges("child_theme_ids");
-  },
+  }
 
   addChildTheme(theme) {
     let childThemes = this.childThemes;
@@ -273,7 +280,7 @@ const Theme = RestModel.extend({
     childThemes.removeObject(theme);
     childThemes.pushObject(theme);
     return this.saveChanges("child_theme_ids");
-  },
+  }
 
   addParentTheme(theme) {
     let parentThemes = this.parentThemes;
@@ -282,38 +289,26 @@ const Theme = RestModel.extend({
       this.set("parentThemes", parentThemes);
     }
     parentThemes.addObject(theme);
-  },
+  }
 
   checkForUpdates() {
     return this.save({ remote_check: true }).then(() =>
       this.set("changed", false)
     );
-  },
+  }
 
   updateToLatest() {
     return this.save({ remote_update: true }).then(() =>
       this.set("changed", false)
     );
-  },
-
-  changed: false,
+  }
 
   saveChanges() {
     const hash = this.getProperties.apply(this, arguments);
     return this.save(hash)
       .finally(() => this.set("changed", false))
       .catch(popupAjaxError);
-  },
-
-  saveSettings(name, value) {
-    const settings = {};
-    settings[name] = value;
-    return this.save({ settings });
-  },
-
-  saveTranslation(name, value) {
-    return this.save({ translations: { [name]: value } });
-  },
-});
+  }
+}
 
 export default Theme;

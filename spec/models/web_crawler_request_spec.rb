@@ -6,7 +6,10 @@ RSpec.describe WebCrawlerRequest do
     CachedCounting.enable
   end
 
-  after { CachedCounting.disable }
+  after do
+    CachedCounting.reset
+    CachedCounting.disable
+  end
 
   it "can log crawler requests" do
     freeze_time

@@ -61,6 +61,10 @@ export default Component.extend({
   },
 
   @observes("computedConfig.{from,to,options}", "options", "isValid", "isRange")
+  configChanged() {
+    this._renderPreview();
+  },
+
   @debounce(INPUT_DELAY)
   async _renderPreview() {
     if (this.markup) {

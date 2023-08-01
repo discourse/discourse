@@ -1,37 +1,45 @@
+import { action } from "@ember/object";
 import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
+import { inject as service } from "@ember/service";
 let lastSearch;
 
-export default Controller.extend({
-  searching: false,
-  siteTexts: null,
-  preferred: false,
-  queryParams: ["q", "overridden", "locale"],
-  locale: null,
+export default class AdminSiteTextIndexController extends Controller {
+  @service router;
+  @service siteSettings;
 
-  q: null,
-  overridden: false,
+  searching = false;
+  siteTexts = null;
+  preferred = false;
+  queryParams = ["q", "overridden", "outdated", "locale"];
+  locale = null;
+  q = null;
+  overridden = false;
+  outdated = false;
 
   init() {
-    this._super(...arguments);
+    super.init(...arguments);
 
     this.set("locale", this.siteSettings.default_locale);
-  },
+  }
 
   _performSearch() {
     this.store
-      .find("site-text", this.getProperties("q", "overridden", "locale"))
+      .find(
+        "site-text",
+        this.getProperties("q", "overridden", "outdated", "locale")
+      )
       .then((results) => {
         this.set("siteTexts", results);
       })
       .finally(() => this.set("searching", false));
-  },
+  }
 
   @discourseComputed()
   availableLocales() {
     return JSON.parse(this.siteSettings.available_locales);
-  },
+  }
 
   @discourseComputed("locale")
   fallbackLocaleFullName() {
@@ -40,39 +48,48 @@ export default Controller.extend({
         return l.value === this.siteTexts.extras.fallback_locale;
       }).name;
     }
-  },
+  }
 
-  actions: {
-    edit(siteText) {
-      this.transitionToRoute("adminSiteText.edit", siteText.get("id"), {
-        queryParams: {
-          locale: this.locale,
-        },
-      });
-    },
+  @action
+  edit(siteText) {
+    this.router.transitionTo("adminSiteText.edit", siteText.get("id"), {
+      queryParams: {
+        locale: this.locale,
+      },
+    });
+  }
 
-    toggleOverridden() {
-      this.toggleProperty("overridden");
+  @action
+  toggleOverridden() {
+    this.toggleProperty("overridden");
+    this.set("searching", true);
+    discourseDebounce(this, this._performSearch, 400);
+  }
+
+  @action
+  toggleOutdated() {
+    this.toggleProperty("outdated");
+    this.set("searching", true);
+    discourseDebounce(this, this._performSearch, 400);
+  }
+
+  @action
+  search() {
+    const q = this.q;
+    if (q !== lastSearch) {
       this.set("searching", true);
       discourseDebounce(this, this._performSearch, 400);
-    },
+      lastSearch = q;
+    }
+  }
 
-    search() {
-      const q = this.q;
-      if (q !== lastSearch) {
-        this.set("searching", true);
-        discourseDebounce(this, this._performSearch, 400);
-        lastSearch = q;
-      }
-    },
+  @action
+  updateLocale(value) {
+    this.setProperties({
+      searching: true,
+      locale: value,
+    });
 
-    updateLocale(value) {
-      this.setProperties({
-        searching: true,
-        locale: value,
-      });
-
-      discourseDebounce(this, this._performSearch, 400);
-    },
-  },
-});
+    discourseDebounce(this, this._performSearch, 400);
+  }
+}

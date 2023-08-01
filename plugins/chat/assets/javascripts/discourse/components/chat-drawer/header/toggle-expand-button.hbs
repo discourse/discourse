@@ -1,0 +1,14 @@
+<DButton
+  @icon={{if
+    this.chatStateManager.isDrawerExpanded
+    "angle-double-down"
+    "angle-double-up"
+  }}
+  @class="btn-flat btn-link chat-drawer-header__expand-btn"
+  @action={{@toggleExpand}}
+  @title={{if
+    this.chatStateManager.isDrawerExpanded
+    "chat.collapse"
+    "chat.expand"
+  }}
+/>

@@ -15,6 +15,7 @@ uk:
           actions:
             chat_channel_status_change: "Статус каналу чату змінено"
             chat_channel_delete: "Канал чату видалено"
+            chat_auto_remove_membership: "Підписки автоматично видаляються з каналів"
       api:
         scopes:
           descriptions:
@@ -39,10 +40,10 @@ uk:
       move_to_channel:
         title: "Перенести повідомлення в канал"
         instructions:
-          one: "Ви переміщуєте <strong>%{count}</strong> повідомлення. Виберіть канал призначення. Буде створено повідомлення в каналі <strong>%{channelTitle}</strong> про те, що це повідомлення було переміщено."
-          few: "Ви переміщуєте <strong>%{count}</strong> повідомлення. Виберіть канал призначення. Буде створено повідомлення в каналі <strong>%{channelTitle}</strong> про те, що ці повідомлення були переміщені."
-          many: "Ви переміщуєте <strong>%{count}</strong> повідомлень. Виберіть канал призначення. Буде створено повідомлення в каналі <strong>%{channelTitle}</strong> про те, що ці повідомлення були переміщені."
-          other: "Ви переміщуєте <strong>%{count}</strong> повідомлень. Виберіть канал призначення. Буде створено повідомлення в каналі <strong>%{channelTitle}</strong> про те, що ці повідомлення були переміщені."
+          one: "Ви переміщуєте повідомлення <strong>%{count}</strong> . Виберіть канал призначення. У каналі <strong>%{channelTitle}</strong> буде створено повідомлення-заповнювач, яке вказуватиме на те, що це повідомлення було переміщено. Зверніть увагу, що ланцюжки відповідей не будуть збережені в новому каналі, а повідомлення в старому каналі більше не будуть відображатися як відповіді на переміщені повідомлення."
+          few: "Ви переміщуєте <strong>%{count}</strong> повідомлень. Виберіть канал призначення. У каналі <strong>%{channelTitle}</strong> будуть створені повідомлення-заповнювачі, які вказуватимуть на те, що ці повідомлення було переміщено. Зверніть увагу, що ланцюжки відповідей не будуть збережені в новому каналі, а повідомлення в старому каналі більше не будуть відображатися як відповіді на переміщені повідомлення."
+          many: "Ви переміщуєте <strong>%{count}</strong> повідомлень. Виберіть канал призначення. У каналі <strong>%{channelTitle}</strong> будуть створені повідомлення-заповнювачі, які вказуватимуть на те, що ці повідомлення було переміщено. Зверніть увагу, що ланцюжки відповідей не будуть збережені в новому каналі, а повідомлення в старому каналі більше не будуть відображатися як відповіді на переміщені повідомлення."
+          other: "Ви переміщуєте <strong>%{count}</strong> повідомлень. Виберіть канал призначення. У каналі <strong>%{channelTitle}</strong> будуть створені повідомлення-заповнювачі, які вказуватимуть на те, що ці повідомлення було переміщено. Зверніть увагу, що ланцюжки відповідей не будуть збережені в новому каналі, а повідомлення в старому каналі більше не будуть відображатися як відповіді на переміщені повідомлення."
         confirm_move: "Перемістити повідомлення"
       channel_settings:
         title: "Налаштування каналу"
@@ -73,7 +74,7 @@ uk:
         instructions: "Закриття каналу забороняє стороннім користувачам надсилати нові повідомлення або редагувати наявні повідомлення. Ви впевнені, що хочете закрити цей канал?"
       channel_delete:
         title: "Видалити канал"
-        instructions: "<p>Видаляє <strong>%{name}</strong> канал і історію чату. Усі повідомлення та пов'язані з ними дані, такі як реакції та завантаження, будуть остаточно видалені. Якщо ви хочете зберегти історію каналу та вивести її з експлуатації, ви можете заархівувати канал замість цього.</p> <p>Ви впевнені, що хочете <strong>назавжди видалити</strong> канал? Для підтвердження введіть назву каналу в поле нижче.</p>"
+        instructions: "<p>Видаляє канал <strong>%{name}</strong> і історію чату. Усі повідомлення та пов’язані з ними дані, як-от реакції та завантаження, буде остаточно видалено. Якщо ви хочете зберегти історію каналу та вивести його з експлуатації, ви можете натомість заархівувати канал.</p> <p>Ви впевнені, що бажаєте <strong>остаточно видалити</strong> канал? Для підтвердження введіть назву каналу в поле нижче.</p>"
         confirm: "Я розумію наслідки, видаліть канал"
         confirm_channel_name: "Введіть назву каналу"
         process_started: "Процес видалення каналу розпочався. Це спливаюче вікно закриється найближчим часом, ви більше не побачите видалений канал."
@@ -83,8 +84,13 @@ uk:
       click_to_join: "Натисніть тут, щоб переглянути доступні канали."
       close: "Закрити"
       collapse: "Згорнути вікно чату"
+      expand: "Розгорнути вікно чату"
       confirm_flag: "Ви впевнені, що хочете позначити прапором повідомлення %{username}?"
-      deleted: "Повідомлення було видалено. [view]"
+      deleted:
+        one: "Повідомлення було видалено. [view]"
+        few: "%{count} повідомлення видалено. [view all]"
+        many: "%{count} повідомлень видалено. [view all]"
+        other: "%{count} повідомлень видалено. [view all]"
       hidden: "Повідомлення було приховано. [view]"
       delete: "Видалити"
       edited: "відредагований"
@@ -99,6 +105,11 @@ uk:
         never: "Ніколи"
         title: "Сповіщення електронною поштою"
         when_away: "Тільки коли офлайн"
+      header_indicator_preference:
+        title: "Показувати індикатор активності в заголовку"
+        all_new: "Усі нові повідомлення"
+        dm_and_mentions: "Прямі повідомлення та згадки"
+        never: "Ніколи"
       enable: "Увімкнути чат"
       flag: "Поскаржитися"
       emoji: "Вставити емодзі"
@@ -108,68 +119,70 @@ uk:
       in_reply_to: "У відповідь на"
       heading: "Чат"
       join: "Приєднатися"
-      new_messages: "нові повідомлення"
+      last_visit: "останнє відвідування"
+      summarization:
+        title: "Підсумкове повідомлення"
+        description: "Виберіть опцію нижче, щоб підсумувати розмову, надіслану протягом визначеного періоду."
+        summarize: "Підсумок"
+        since:
+          one: "Остання година"
+          few: "Останні %{count} години"
+          many: "Останні %{count} годин"
+          other: "Останні %{count} годин"
       mention_warning:
         dismiss: "відкласти"
-        cannot_see:
-          one: "%{username} не має доступу до цього каналу і не був сповіщений про це."
-          few: "%{username} і ще %{others} інших не мають доступу до цього каналу і не були сповіщені про це."
-          many: "%{username} і ще %{others} інших не мають доступу до цього каналу і не були сповіщені про це."
-          other: "%{username} і ще %{others} інших не мають доступу до цього каналу і не були сповіщені про це."
+        cannot_see: "%{username} не має доступу до цього каналу і не отримав сповіщення."
+        cannot_see_multiple:
+          one: "%{username} і %{count} інший користувач не мають доступу до цього каналу та не отримали сповіщення."
+          few: "%{username} і %{count} інші користувачі не мають доступу до цього каналу та не отримали сповіщення."
+          many: "%{username} та %{count} інших користувачів не мають доступу до цього каналу та не отримали сповіщення."
+          other: "%{username} та %{count} інших користувачів не мають доступу до цього каналу та не отримали сповіщення."
         invite: "Запросити до каналу"
-        without_membership:
-          one: "%{username} не приєднався до цього каналу."
-          few: "%{username} та ще %{others} інших не приєдналися до цього каналу."
-          many: "%{username} та ще %{others} інших не приєдналися до цього каналу."
-          other: "%{username} та ще %{others} інших не приєдналися до цього каналу."
-        group_mentions_disabled:
-          one: "%{group_name} не дозволяє згадувати"
-          few: "%{group_name} та %{others} інших не дозволяє згадувати"
-          many: "%{group_name} та %{others} інших не дозволяє згадувати"
-          other: "%{group_name} та %{others} інших не дозволяє згадувати"
-        too_many_members:
-          one: "%{group_name} має занадто багато членів. Нікого не було повідомлено"
-          few: "%{group_name} і %{others} інших мають занадто багато членів. Нікого не було повідомлено"
-          many: "%{group_name} і %{others} інших не дозволяє згадувати"
-          other: "%{group_name} і %{others} мають забагато учасників. Нікого не повідомили"
-        warning_multiple:
-          one: "%{count} інший"
-          few: "%{count} інших"
-          many: "%{count} інших"
-          other: "%{count} інших"
+        without_membership: "%{username} не приєднався до цього каналу."
+        without_membership_multiple:
+          one: "%{username} і ще %{count} користувач не приєдналися до цього каналу."
+          few: "%{username} і ще %{count} користувачі не приєдналися до цього каналу."
+          many: "%{username} і ще %{count} користувачів не приєдналися до цього каналу."
+          other: "%{username} і ще %{count} користувачів не приєдналися до цього каналу."
+        group_mentions_disabled: "%{group_name} не дозволяє згадки."
+        group_mentions_disabled_multiple:
+          one: "%{group_name} та %{count} інша група забороняють згадки."
+          few: "%{group_name} та %{count} інші групи забороняють згадки."
+          many: "%{group_name} та %{count} інших груп забороняють згадки."
+          other: "%{group_name} та %{count} інших груп забороняють згадки."
+        too_many_members: "%{group_name} має занадто багато учасників. Ніхто не був повідомлений."
+        too_many_members_multiple:
+          one: "%{group_name} та %{count} інша група мають занадто багато членів. Ніхто не був сповіщений."
+          few: "%{group_name} та %{count} інші групи мають занадто багато членів. Ніхто не був сповіщений."
+          many: "%{group_name} та %{count} інших груп мають занадто багато членів. Ніхто не був сповіщений."
+          other: "%{group_name} та %{count} інших груп мають занадто багато членів. Ніхто не був сповіщений."
         groups:
           header:
             some: "Деякі користувачі не отримають сповіщення"
             all: "Ніхто не буде повідомлений"
-          unreachable:
-            one: "@%{group} не дозволяє згадувати"
-            few: "@%{group} та @%{group_2} не дозволяють згадувати"
-            many: "@%{group} та @%{group_2} не дозволяють згадувати"
-            other: "@%{group} та @%{group_2} не дозволяють згадувати"
-          unreachable_multiple: "@%{group} та %{count} інші не дозволяють згадувати"
-          too_many_members:
-            one: "Згадка @%{group} перевищує %{notification_limit} із %{limit}"
-            few: "Згадка @%{group} чи @%{group_2} перевищує %{notification_limit} із %{limit}"
-            many: "Згадка @%{group} чи @%{group_2} перевищує %{notification_limit} із %{limit}"
-            other: "Згадка @%{group} чи @%{group_2} перевищує %{notification_limit} із %{limit}"
-          too_many_members_multiple: "Ці %{count} групи перевищили %{notification_limit} з %{limit}"
-          users_limit:
-            one: "%{count} користувач"
-            few: "%{count} користувача"
-            many: "%{count} користувача"
-            other: "%{count} користувача"
-          notification_limit: "ліміт сповіщень"
-        too_many_mentions: "Це повідомлення перевищує %{notification_limit} з %{limit}"
-        mentions_limit:
-          one: "%{count} згадка"
-          few: "%{count} згадки"
-          many: "%{count} згадок"
-          other: "%{count} згадок"
+          unreachable_1: "@%{group} не дозволяє згадки."
+          unreachable_2: "@%{group1} і @%{group2} не дозволяють згадувати."
+          unreachable_multiple:
+            one: "@%{group} та %{count} інша група забороняють згадки."
+            few: "@%{group} та %{count} інші групи забороняють згадки."
+            many: "@%{group} та %{count} інших груп забороняють згадки."
+            other: "@%{group} та %{count} інших груп забороняють згадки."
+        too_many_mentions:
+          one: "Це повідомлення перевищує ліміт сповіщень у %{count} згадку."
+          few: "Це повідомлення перевищує ліміт сповіщень у %{count} згадки."
+          many: "Це повідомлення перевищує ліміт сповіщень у %{count} згадок."
+          other: "Це повідомлення перевищує ліміт сповіщень у %{count} згадок."
+        too_many_mentions_admin:
+          one: 'Це повідомлення перевищує обмеження <a href="%{siteSettingUrl}" target="_blank">сповіщень</a> із %{count} згадок.'
+          few: 'Це повідомлення перевищує обмеження <a href="%{siteSettingUrl}" target="_blank">сповіщень</a> із %{count} згадок.'
+          many: 'Це повідомлення перевищує обмеження <a href="%{siteSettingUrl}" target="_blank">сповіщень</a> із %{count} згадок.'
+          other: 'Це повідомлення перевищує обмеження <a href="%{siteSettingUrl}" target="_blank">сповіщень</a> із %{count} згадок.'
       aria_roles:
         header: "Заголовок чату"
         composer: "Редактор чату"
         channels_list: "Список каналів чату"
       no_public_channels: "Ви не приєдналися до жодного каналу."
+      kicked_from_channel: "Ви більше не можете отримати доступ до цього каналу."
       only_chat_push_notifications:
         title: "Надсилати лише push-сповіщення в чаті"
         description: "Заблокувати всі push-сповіщення, не пов’язані з чатом"
@@ -181,10 +194,16 @@ uk:
       close_full_page: "Закрити повноекранний чат"
       open_message: "Відкрити повідомлення в чаті"
       placeholder_self: "Запишіть щось"
-      placeholder_others: "Чат з %{messageRecipient}"
-      placeholder_new_message_disallowed: "Канал %{status}, зараз ви не можете надсилати нові повідомлення."
+      placeholder_channel: "Чат в %{channelName}"
+      placeholder_thread: "Чат в гілці"
+      placeholder_users: "Чат з %{commaSeparatedNames}"
+      placeholder_new_message_disallowed:
+        archived: "Канал заархівований, зараз ви не можете надсилати нові повідомлення."
+        closed: "Канал закритий, зараз ви не можете надсилати нові повідомлення."
+        read_only: "Канал доступний лише для читання, зараз ви не можете надсилати нові повідомлення."
       placeholder_silenced: "В даний момент ви не можете надсилати повідомлення."
-      placeholder_start_conversation: Почати розмову з %{usernames}
+      placeholder_start_conversation: "Почніть розмову з..."
+      placeholder_start_conversation_users: "Почніть розмову з %{commaSeparatedUsernames}"
       remove_upload: "Видалити файл"
       react: "Реагувати з emoji"
       reply: "Відповідь"
@@ -200,8 +219,13 @@ uk:
       restore: "Відновити видалене повідомлення"
       save: "Зберегти"
       select: "Вибрати"
-      silence: "Заблокувати користувача"
       return_to_list: "Повернутися до списку каналів"
+      return_to_threads_list: "Повернутися до поточних дискусій"
+      unread_threads_count:
+        one: "У вас %{count} непрочитане обговорення"
+        few: "У вас %{count} непрочитаних обговорень"
+        many: "У вас %{count} непрочитані обговорення"
+        other: "У вас %{count} непрочитані обговорення"
       scroll_to_bottom: "Прокрутити вниз"
       scroll_to_new_messages: "Переглянути нові повідомлення"
       sound:
@@ -213,6 +237,8 @@ uk:
       title: "чат"
       title_capitalized: "Чат"
       upload: "Прикріпити файл"
+      upload_to_channel: "Завантажити до %{title}"
+      upload_to_thread: "Завантажити в гілку"
       uploaded_files:
         one: "%{count} файл"
         few: "%{count} файли"
@@ -258,10 +284,23 @@ uk:
           about: Про
           members: Учасники
           settings: Налаштування
-      channel_edit_name_modal:
-        title: Редагувати назву
+      new_message_modal:
+        title: Надіслати повідомлення
+        add_user_long: <kbd>shift + click</kbd> or <kbd>shift + enter</kbd><span>Додати @%{username}</span>
+        add_user_short: <span>Додати користувача</span>
+        open_channel: <span>Відкрити канал</span>
+        default_search_placeholder: "#канал, @хтось або щось"
+        default_channel_search_placeholder: "#канал"
+        default_user_search_placeholder: "@хтось"
+        user_search_placeholder: "...додати більше користувачів"
+        disabled_user: "вимкнув чат"
+        no_items: "Немає елементів"
+      channel_edit_name_slug_modal:
+        title: Редагувати канал
         input_placeholder: Додайте назву
-        description: Дайте своєму каналу коротку описову назву
+        slug_description: Замість назви каналу в URL-адресі використовується slug каналу
+        name: Назва каналу
+        slug: Slug каналу (опціонально)
       channel_edit_description_modal:
         title: Редагувати опис
         input_placeholder: Додати опис
@@ -271,9 +310,6 @@ uk:
         prefix: "До:"
         no_results: Немає результатів
         selected_user_title: "Зніміть позначку з %{username}"
-      channel_selector:
-        title: "Перейти на канал"
-        no_channels: "Немає каналів, які відповідають вашому запиту"
       channel:
         no_memberships: Цей канал не має учасників
         no_memberships_found: Учасників не знайдено
@@ -283,20 +319,69 @@ uk:
           many: "%{count} учасників"
           other: "%{count} учасників"
       create_channel:
+        threading:
+          label: "Увімкнути потоки/ланцюжки"
         auto_join_users:
           public_category_warning: "%{category} є публічною категорією. Автоматично додавати всіх нещодавно активних користувачів до цього каналу?"
-          warning_groups:
-            one: Автоматично додати %{members_count} користувача з %{group}?
-            few: Автоматично додати %{members_count} користувачі з %{group}?
-            many: Автоматично додати %{members_count} користувачів з %{group}?
-            other: Автоматично додати %{members_count} користувачів з %{group} та %{group_2}?
-          warning_multiple_groups: Автоматично додавати %{members_count} користувачів з %{group_1} і %{count} інших?
+          warning_1_group:
+            one: "Автоматично додати %{count} користувача з %{group}?"
+            few: "Автоматично додати %{count} користувачі із %{group}?"
+            many: "Автоматично додати %{count} користувачів із %{group}?"
+            other: "Автоматично додати %{count} користувачів із %{group}?"
+          warning_2_groups:
+            one: "Автоматично додати %{count} користувача з %{group1} та %{group2}?"
+            few: "Автоматично додати %{count} користувачі з %{group1} та %{group2}?"
+            many: "Автоматично додати %{count} користувачів з %{group1} та %{group2}?"
+            other: "Автоматично додати %{count} користувачів з %{group1} та %{group2}?"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                one {
+                      { userCount, plural,
+                          one {Автоматично додавати {userCount} користувача з {groupName} і {groupCount} інших груп?}
+                          few {Автоматично додавати {userCount} користувачі з {groupName} і {groupCount} інших груп?}
+                          many {Автоматично додавати {userCount} користувачів з {groupName} і {groupCount} інших груп?}
+                          other {Автоматично додавати {userCount} користувачів з {groupName} і {groupCount} інших груп?}
+                      }
+                    }
+              few {
+                      { userCount, plural,
+                          one {Автоматично додавати {userCount} користувача із {groupName} і {groupCount} інші групи?}
+                          few {Автоматично додавати {userCount} користувачі з {groupName} і {groupCount} інші групи?}
+                          many {Автоматично додавати {userCount} користувачів з {groupName} і {groupCount} інші групи?}
+                          other {Автоматично додавати {userCount} користувачів з {groupName} і {groupCount} інші групи?}
+                      }
+                    }
+                many {
+                      { userCount, plural,
+                          one {Автоматично додавати {userCount} користувача із {groupName} і {groupCount} інших груп?}
+                          few {Автоматично додавати {userCount} користувачі із {groupName} і {groupCount} інших груп?}
+                          many {Автоматично додавати {userCount} користувачів із {groupName} і {groupCount} інших груп?}
+                          other {Автоматично додавати {userCount} користувачів із {groupName} і {groupCount} інших груп?}
+                      }
+                    }
+              other {
+                      { userCount, plural,
+                          one {Автоматично додавати {userCount} користувача із {groupName} і {groupCount} інших груп?}
+                          few {Автоматично додавати {userCount} користувачі із {groupName} і {groupCount} інших груп?}
+                          many {Автоматично додавати {userCount} користувачів із {groupName} і {groupCount} інших груп?}
+                          other {Автоматично додавати {userCount} користувачів із {groupName} і {groupCount} інших груп?}
+                      }
+                    }
+            }
         choose_category:
           label: "Оберіть категорію"
           none: "виберіть..."
+          hint_1_group: 'Користувачі в %{group} матимуть доступ до цього каналу відповідно до <a href="%{settingLink}" target="_blank">налаштувань безпеки</a>'
+          hint_2_groups: 'Користувачі в %{group1} і %{group2} матимуть доступ до цього каналу відповідно до <a href="%{settingLink}" target="_blank">параметрів безпеки</a>'
+          hint_multiple_groups:
+            one: 'Користувачі в %{group} і %{count} іншій групі матимуть доступ до цього каналу відповідно до <a href="%{settingLink}" target="_blank">налаштувань безпеки</a>'
+            few: 'Користувачі в %{group} і %{count} інших групах матимуть доступ до цього каналу відповідно до <a href="%{settingLink}" target="_blank">налаштувань безпеки</a>'
+            many: 'Користувачі в %{group} і %{count} інших групах матимуть доступ до цього каналу відповідно до <a href="%{settingLink}" target="_blank">налаштувань безпеки</a>'
+            other: 'Користувачі в %{group} і %{count} інших групах матимуть доступ до цього каналу відповідно до <a href="%{settingLink}" target="_blank">налаштувань безпеки</a>'
         create: "Створити канал"
         description: "Опис (необов'язково)"
         name: "Назва каналу"
+        slug: "Slug каналу (опціонально)"
         title: "Новий канал"
         type: "Тип"
         types:
@@ -306,15 +391,26 @@ uk:
         type: "Повідомлення чату"
       reactions:
         only_you: "Ви відреагували :%{emoji}:"
-        and_others: "Ви та %{usernames} відреагували :%{emoji}:"
-        only_others: "%{usernames} відреагував :%{emoji}:"
-        others_and_more: "%{usernames} і ще %{more} відреагували :%{emoji}:"
-        you_others_and_more: "Ви, %{usernames} та %{more} інших відреагували :%{emoji}:"
+        you_and_single_user: "Ви та %{username} відреагували :%{emoji}:"
+        you_and_multiple_users: "Ви, %{commaSeparatedUsernames} і %{username} відреагували :%{emoji}:"
+        you_multiple_users_and_more:
+          one: "Ви, %{commaSeparatedUsernames} та %{count} інший відреагували:%{emoji}:"
+          few: "Ви, %{commaSeparatedUsernames} та %{count} інших відреагували:%{emoji}:"
+          many: "Ви, %{commaSeparatedUsernames} та %{count} інших відреагували:%{emoji}:"
+          other: "Ви, %{commaSeparatedUsernames} та %{count} інших відреагували:%{emoji}:"
+        single_user: "%{username} відреагував:%{emoji}:"
+        multiple_users: "%{commaSeparatedUsernames} і %{username} відреагували:%{emoji}:"
+        multiple_users_and_more:
+          one: "%{commaSeparatedUsernames} і ще %{count} відреагували :%{emoji}:"
+          few: "%{commaSeparatedUsernames} і ще %{count} відреагували :%{emoji}:"
+          many: "%{commaSeparatedUsernames} і ще %{count} відреагували :%{emoji}:"
+          other: "%{commaSeparatedUsernames} і ще %{count} відреагували :%{emoji}:"
       composer:
         toggle_toolbar: "Перемикання панелі інструментів"
         italic_text: "виділення тексту курсивом"
         bold_text: "Сильне виділення тексту"
         code_text: "текст коду"
+        send: "Надіслати"
       quote:
         original_channel: 'Спочатку надіслано в <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Цитату чату скопійовано в буфер обміну"
@@ -325,15 +421,19 @@ uk:
       settings:
         channel_wide_mentions_label: "Дозволити згадки @all та @here"
         channel_wide_mentions_description: "Дозволити користувачам сповіщати всіх учасників #%{channel} за допомогою @all або лише тих, хто активний на даний момент, за допомогою @here"
+        channel_threading_label: "Потоки/ланцюжки"
+        channel_threading_description: "Якщо ланцюжки увімкнено, відповіді на повідомлення чату створюватимуть окрему бесіду, яка існуватиме поряд з основним каналом."
         auto_join_users_label: "Автоматично додавати користувачів"
-        auto_join_users_info: "Щогодини перевіряйте, які користувачі були активними протягом останніх 3 місяців, і, якщо вони мають доступ до категорії %{category} , додайте їх до цього каналу."
-        enable_auto_join_users: "Автоматично додавати всіх нещодавно активних користувачів"
+        auto_join_users_info: "Перевіряйте погодинно, які користувачі були активними протягом останніх 3 місяців. Додайте їх до цього каналу, якщо вони мають доступ до категорії %{category}."
+        auto_join_users_info_no_category: "Погодинно перевіряйте, які користувачі були активними протягом останніх 3 місяців. Додайте їх до цього каналу, якщо вони мають доступ до обраної категорії."
         auto_join_users_warning: "Кожен користувач, який не є учасником цього каналу і має доступ до категорії %{category} , приєднається до нього. Ви впевнені?"
         desktop_notification_level: "Сповіщення на робочому столі"
         follow: "Приєднатися"
         followed: "Приєднався(лась)"
         mobile_notification_level: "Мобільні push-сповіщення"
         mute: "Вимкнути канал"
+        threading_enabled: "Включено"
+        threading_disabled: "Вимкнено"
         muted_on: "Увімк"
         muted_off: "Вимк."
         notifications: "Сповіщення"
@@ -342,7 +442,12 @@ uk:
         saved: "Збережено"
         unfollow: "Покинути"
         admin_title: "Адміністратор"
-        retention_info: "Історія чату зберігатиметься %{days} днів."
+      admin:
+        export_messages:
+          title: "Експорт повідомлень чату"
+          description: "Наразі експорт обмежено до 10 000 повідомлень за останні 6 місяців."
+          create_export: "Створити експорт"
+          export_has_started: "Експорт почався. Ви отримаєте ПП коли він буде готовий."
       incoming_webhooks:
         back: "Назад"
         description: "Опис"
@@ -388,8 +493,18 @@ uk:
           many: "%{commaSeparatedUsernames} та %{count} інших набирають текст"
           other: "%{commaSeparatedUsernames} та %{count} інших набирають текст"
       retention_reminders:
-        public: "Історія каналу зберігається %{days} днів."
-        dm: "Особиста історія чату зберігається %{days} днів."
+        public_none: "Історія каналу зберігається нескінченно довго."
+        public:
+          one: "Історія каналу зберігається протягом %{count} дня."
+          few: "Історія каналу зберігається протягом %{count} днів."
+          many: "Історія каналу зберігається протягом %{count} днів."
+          other: "Історія каналу зберігається протягом %{count} днів."
+        dm_none: "Історія особистого чату зберігається безстроково."
+        dm:
+          one: "Особиста історія чату зберігається %{count} день."
+          few: "Особиста історія чату зберігається %{count} дні."
+          many: "Особиста історія чату зберігається %{count} днів."
+          other: "Особиста історія чату зберігається %{count} днів."
       flags:
         off_topic: "Це повідомлення не має відношення до поточної дискусії як визначено назвою каналів, і, ймовірно, має бути переміщене в інше місце."
         inappropriate: "Це повідомлення містить вміст, який розумна людина вважає образливим або порушенням <a href=\"%{basePath}/guidelines\">наших правил спільноти</a>."
@@ -411,6 +526,37 @@ uk:
         symbols: "Атрибутика"
         search_placeholder: "Пошук за назвою та псевдонімом emoji..."
         no_results: "Немає результатів"
+      thread:
+        title: "Назва"
+        view_thread: Відкрити діалог
+        default_title: "Нитка"
+        replies:
+          one: "%{count} відповідь"
+          few: "%{count} відповіді"
+          many: "%{count} відповідь"
+          other: "%{count} відповідь"
+        label: Нитка
+        close: "Закрити тему"
+        original_message:
+          started_by: "Розпочато"
+        settings: "Налаштування"
+        last_reply: "остання відповідь"
+        notifications:
+          regular:
+            title: "Нормальний"
+            description: "Ви отримаєте сповіщення, якщо хтось згадає ваш @name у цій темі."
+          tracking:
+            title: "Стежити"
+            description: "Кількість нових відповідей для цього ланцюжка буде показано в списку ланцюжків і на каналі. Ви отримаєте сповіщення, якщо хтось згадає ваше @name у цій темі."
+        participants_other_count:
+          one: "+%{count}"
+          few: "+%{count}"
+          many: "+%{count}"
+          other: "+%{count}"
+      threads:
+        open: "Відкрийте тему"
+        list: "Поточні обговорення"
+        none: "Ви не берете участі в жодній темі на цьому каналі."
       draft_channel_screen:
         header: "Нове повідомлення"
         cancel: "Скасувати"
@@ -455,9 +601,8 @@ uk:
       transcript:
         view: "Показати попередні повідомлення"
       types:
-        reviewable_chat_message:
-          title: "Повідомлення чату на перевірці"
-          flagged_by: "Позначено"
+        chat_reviewable_message:
+          title: "Позначене повідомлення чату"
     keyboard_shortcuts_help:
       chat:
         title: "Чат"
@@ -470,6 +615,7 @@ uk:
           composer_code: "%{shortcut} Код (тільки в редакторі)"
           drawer_open: "%{shortcut} Відкрити панель чату"
           drawer_close: "%{shortcut} Закрийте панель чату"
+          mark_all_channels_read: "%{shortcut} Позначити всі канали як прочитані"
     topic_statuses:
       chat:
         help: "Чат увімкнено для цієї теми"
@@ -486,3 +632,7 @@ uk:
           few: "Повідомлення чату – %{count} непрочитані повідомлення"
           many: "Повідомлення чату – %{count} непрочитаних повідомлень"
           other: "Повідомлення чату – %{count} непрочитаних повідомлень"
+    styleguide:
+      sections:
+        chat:
+          title: Чат

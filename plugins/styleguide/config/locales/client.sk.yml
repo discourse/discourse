@@ -92,3 +92,6 @@ sk:
           description: "Popis"
           header: "Hlavička"
           hover_to_see: "Ak chcete zobraziť nápovedu, prejdite myšou"
+        char_counter:
+          title: "Počítadlo znakov"
+          placeholder: "Tu zadajte svoj text..."

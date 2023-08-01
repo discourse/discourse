@@ -68,7 +68,7 @@ class QuotedPost < ActiveRecord::Base
 
     if post.reply_to_post_number
       reply_post_id =
-        Post.where(topic_id: post.topic_id, post_number: post.reply_to_post_number).pluck_first(:id)
+        Post.where(topic_id: post.topic_id, post_number: post.reply_to_post_number).pick(:id)
       reply_quoted =
         reply_post_id.present? &&
           QuotedPost.where(post_id: post.id, quoted_post_id: reply_post_id).count > 0

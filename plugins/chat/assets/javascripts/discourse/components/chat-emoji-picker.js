@@ -1,4 +1,4 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { htmlSafe } from "@ember/template";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
@@ -40,22 +40,26 @@ export default class ChatEmojiPicker extends Component {
   @service chatEmojiPickerManager;
   @service emojiPickerScrollObserver;
   @service chatEmojiReactionStore;
+  @service capabilities;
+  @service site;
+
   @tracked filteredEmojis = null;
   @tracked isExpandedFitzpatrickScale = false;
-  tagName = "";
 
   fitzpatrickModifiers = FITZPATRICK_MODIFIERS;
 
   get groups() {
     const emojis = this.chatEmojiPickerManager.emojis;
     const favorites = {
-      favorites: this.chatEmojiReactionStore.favorites.map((name) => {
-        return {
-          name,
-          group: "favorites",
-          url: emojiUrlFor(name),
-        };
-      }),
+      favorites: this.chatEmojiReactionStore.favorites
+        .filter((f) => !this.site.denied_emojis?.includes(f))
+        .map((name) => {
+          return {
+            name,
+            group: "favorites",
+            url: emojiUrlFor(name),
+          };
+        }),
     };
 
     return {
@@ -65,6 +69,10 @@ export default class ChatEmojiPicker extends Component {
   }
 
   get flatEmojis() {
+    if (!this.chatEmojiPickerManager.emojis) {
+      return [];
+    }
+
     // eslint-disable-next-line no-unused-vars
     let { favorites, ...rest } = this.chatEmojiPickerManager.emojis;
     return Object.values(rest).flat();
@@ -159,7 +167,7 @@ export default class ChatEmojiPicker extends Component {
       }
     }
 
-    this.toggleProperty("isExpandedFitzpatrickScale");
+    this.isExpandedFitzpatrickScale = !this.isExpandedFitzpatrickScale;
   }
 
   @action
@@ -195,23 +203,20 @@ export default class ChatEmojiPicker extends Component {
   }
 
   @action
-  didInputFilter(event) {
-    if (!event.target.value.length) {
+  didInputFilter(value) {
+    if (!value?.length) {
       this.filteredEmojis = null;
       return;
     }
 
-    discourseDebounce(
-      this,
-      this.debouncedDidInputFilter,
-      event.target.value,
-      INPUT_DELAY
-    );
+    discourseDebounce(this, this.debouncedDidInputFilter, value, INPUT_DELAY);
   }
 
   @action
   focusFilter(target) {
-    target.focus();
+    schedule("afterRender", () => {
+      target?.focus();
+    });
   }
 
   debouncedDidInputFilter(filter = "") {
@@ -237,6 +242,15 @@ export default class ChatEmojiPicker extends Component {
   }
 
   @action
+  onSectionsKeyDown(event) {
+    if (event.key === "Enter") {
+      this.didSelectEmoji(event);
+    } else {
+      this.didNavigateSection(event);
+    }
+  }
+
+  @action
   didNavigateSection(event) {
     const sectionsEmojis = (section) => [...section.querySelectorAll(".emoji")];
     const focusSectionsLastEmoji = (section) => {
@@ -252,7 +266,7 @@ export default class ChatEmojiPicker extends Component {
     };
     const allEmojis = () => [
       ...document.querySelectorAll(
-        ".chat-emoji-picker__scrollable-content .emoji"
+        ".chat-emoji-picker__section:not(.hidden) .emoji"
       ),
     ];
 
@@ -339,17 +353,8 @@ export default class ChatEmojiPicker extends Component {
         emoji = `${emoji}:t${diversity}`;
       }
 
-      this.chatEmojiPickerManager.didSelectEmoji(emoji);
-      this.appEvents.trigger("chat:focus-composer");
+      this.args.didSelectEmoji?.(emoji);
     }
-  }
-
-  @action
-  didFocusFirstEmoji(event) {
-    event.preventDefault();
-    const section = event.target.closest(".chat-emoji-picker__section").dataset
-      .section;
-    this.didRequestSection(section);
   }
 
   @action
@@ -374,13 +379,18 @@ export default class ChatEmojiPicker extends Component {
     }
 
     schedule("afterRender", () => {
-      document
-        .querySelector(`.chat-emoji-picker__section[data-section="${section}"]`)
-        .scrollIntoView({
-          behavior: "auto",
-          block: "start",
-          inline: "nearest",
-        });
+      const firstEmoji = document.querySelector(
+        `.chat-emoji-picker__section[data-section="${section}"] .emoji:nth-child(1)`
+      );
+
+      const targetEmoji =
+        [
+          ...document.querySelectorAll(
+            `.chat-emoji-picker__section[data-section="${section}"] .emoji`
+          ),
+        ].find((emoji) => emoji.offsetTop > firstEmoji.offsetTop) || firstEmoji;
+
+      targetEmoji.focus();
 
       later(() => {
         // iOS hack to avoid blank div when requesting section during momentum

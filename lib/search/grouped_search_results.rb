@@ -24,6 +24,7 @@ class Search
       :search_context,
       :more_full_page_results,
       :error,
+      :use_pg_headlines_for_excerpt,
     )
 
     attr_accessor :search_log_id
@@ -36,7 +37,8 @@ class Search
       search_context:,
       blurb_length: nil,
       blurb_term: nil,
-      is_header_search: false
+      is_header_search: false,
+      use_pg_headlines_for_excerpt: SiteSetting.use_pg_headlines_for_excerpt
     )
       @type_filter = type_filter
       @term = term
@@ -50,6 +52,7 @@ class Search
       @groups = []
       @error = nil
       @is_header_search = is_header_search
+      @use_pg_headlines_for_excerpt = use_pg_headlines_for_excerpt
     end
 
     def error=(error)
@@ -71,9 +74,9 @@ class Search
     def blurb(post)
       opts = { term: @blurb_term, blurb_length: @blurb_length }
 
-      if post.post_search_data.version > SearchIndexer::MIN_POST_REINDEX_VERSION &&
+      if post.post_search_data.version >= SearchIndexer::MIN_POST_BLURB_INDEX_VERSION &&
            !Search.segment_chinese? && !Search.segment_japanese?
-        if SiteSetting.use_pg_headlines_for_excerpt
+        if use_pg_headlines_for_excerpt
           scrubbed_headline = post.headline.gsub(SCRUB_HEADLINE_REGEXP, '\1')
           prefix_omission = scrubbed_headline.start_with?(post.leading_raw_data) ? "" : OMISSION
           postfix_omission = scrubbed_headline.end_with?(post.trailing_raw_data) ? "" : OMISSION

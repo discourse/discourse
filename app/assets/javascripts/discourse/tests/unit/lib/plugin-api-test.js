@@ -87,4 +87,33 @@ module("Unit | Utility | plugin-api", function (hooks) {
     assert.strictEqual(thingy.keep, "hey!");
     assert.strictEqual(thingy.prop, "g'day");
   });
+
+  test("modifyClass works with getters", function (assert) {
+    let Base = EmberObject.extend({
+      get foo() {
+        throw new Error("base getter called");
+      },
+    });
+
+    getOwner(this).register("test-class:main", Base, {
+      instantiate: false,
+    });
+
+    // Performing this lookup triggers `factory._onLookup`. In DEBUG builds, that invokes injectedPropertyAssertion()
+    // https://github.com/emberjs/ember.js/blob/36505f1b42/packages/%40ember/-internals/runtime/lib/system/core_object.js#L1144-L1163
+    // Which in turn invokes `factory.proto()`.
+    // This puts things in a state which will trigger https://github.com/emberjs/ember.js/issues/18860 when a native getter is overridden.
+    withPluginApi("1.1.0", (api) => {
+      api.modifyClass("test-class:main", {
+        get foo() {
+          return "modified getter";
+        },
+      });
+    });
+
+    const obj = Base.create();
+    assert.true(true, "no error thrown while merging mixin with getter");
+
+    assert.strictEqual(obj.foo, "modified getter", "returns correct result");
+  });
 });

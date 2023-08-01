@@ -1,5 +1,5 @@
 {{#if this.canChangeBio}}
-  <div class="control-group pref-bio">
+  <div class="control-group pref-bio" data-setting-name="user-bio">
     <label class="control-label">{{i18n "user.bio"}}</label>
     <div class="controls bio-composer input-xxlarge">
       <DEditor @value={{this.model.bio_raw}} />
@@ -7,7 +7,7 @@
   </div>
 {{/if}}
 
-<div class="control-group pref-timezone">
+<div class="control-group pref-timezone" data-setting-name="user-timezone">
   <label class="control-label">{{i18n "user.timezone"}}</label>
   <TimezoneInput
     @value={{this.model.user_option.timezone}}
@@ -23,7 +23,7 @@
 </div>
 
 {{#if this.model.can_change_location}}
-  <div class="control-group pref-location">
+  <div class="control-group pref-location" data-setting-name="user-location">
     <label class="control-label" for="edit-location">{{i18n
         "user.location"
       }}</label>
@@ -39,7 +39,7 @@
 {{/if}}
 
 {{#if this.model.can_change_website}}
-  <div class="control-group pref-website">
+  <div class="control-group pref-website" data-setting-name="user-website">
     <label class="control-label" for="edit-website">{{i18n
         "user.website"
       }}</label>
@@ -55,7 +55,7 @@
 {{/if}}
 
 {{#each this.userFields as |uf|}}
-  <div class="control-group">
+  <div class="control-group" data-setting-name="user-user-fields">
     <UserField @field={{uf.field}} @value={{uf.value}} />
   </div>
 {{/each}}
@@ -63,7 +63,10 @@
 
 {{#if this.siteSettings.allow_profile_backgrounds}}
   {{#if this.canUploadProfileHeader}}
-    <div class="control-group pref-profile-bg">
+    <div
+      class="control-group pref-profile-bg"
+      data-setting-name="user-profile-bg"
+    >
       <label class="control-label">{{i18n
           "user.change_profile_background.title"
         }}</label>
@@ -80,7 +83,7 @@
     </div>
   {{/if}}
   {{#if this.canUploadUserCardBackground}}
-    <div class="control-group pref-profile-bg">
+    <div class="control-group pref-profile-bg" data-setting-name="user-card-bg">
       <label class="control-label">{{i18n
           "user.change_card_background.title"
         }}</label>
@@ -99,7 +102,7 @@
 {{/if}}
 
 {{#if this.siteSettings.allow_featured_topic_on_user_profiles}}
-  <div class="control-group">
+  <div class="control-group" data-setting-name="user-featured-topic">
     <label class="control-label">{{i18n "user.featured_topic"}}</label>
     {{#if this.model.featured_topic}}
       <label class="featured-topic-link">
@@ -110,7 +113,7 @@
             this.model.featured_topic.id
           }}
         >
-          {{html-safe (replace-emoji this.model.featured_topic.fancy_title)}}
+          {{replace-emoji (html-safe this.model.featured_topic.fancy_title)}}
         </LinkTo>
       </label>
     {{/if}}
@@ -136,7 +139,7 @@
 {{/if}}
 
 {{#if this.canChangeDefaultCalendar}}
-  <div class="control-group">
+  <div class="control-group" data-setting-name="user-default-calendar">
     <label class="control-label">{{i18n
         "download_calendar.default_calendar"
       }}</label>
@@ -155,28 +158,31 @@
   </div>
 {{/if}}
 
-<PluginOutlet
-  @name="user-preferences-profile"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model save=(action "save")}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-preferences-profile"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model save=(action "save")}}
+  />
+</span>
 
-<PluginOutlet
-  @name="user-custom-preferences"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-custom-preferences"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
+</span>
 
 <br />
 
-<PluginOutlet
-  @name="user-custom-controls"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-custom-controls"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
+</span>
 
 <SaveControls
   @model={{this.model}}

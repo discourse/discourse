@@ -1,23 +1,26 @@
+import { inject as service } from "@ember/service";
 import Controller, { inject as controller } from "@ember/controller";
 import I18n from "I18n";
 import { action } from "@ember/object";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { inject as service } from "@ember/service";
 
-export default Controller.extend(bufferedProperty("emailTemplate"), {
-  adminCustomizeEmailTemplates: controller(),
-  dialog: service(),
-  emailTemplate: null,
-  saved: false,
+export default class AdminCustomizeEmailTemplatesEditController extends Controller.extend(
+  bufferedProperty("emailTemplate")
+) {
+  @service dialog;
+  @controller adminCustomizeEmailTemplates;
+
+  emailTemplate = null;
+  saved = false;
 
   @discourseComputed("buffered.body", "buffered.subject")
   saveDisabled(body, subject) {
     return (
       this.emailTemplate.body === body && this.emailTemplate.subject === subject
     );
-  },
+  }
 
   @discourseComputed("buffered")
   hasMultipleSubjects(buffered) {
@@ -26,7 +29,7 @@ export default Controller.extend(bufferedProperty("emailTemplate"), {
     } else {
       return buffered.getProperties("id")["id"];
     }
-  },
+  }
 
   @action
   saveChanges() {
@@ -38,7 +41,7 @@ export default Controller.extend(bufferedProperty("emailTemplate"), {
         this.set("saved", true);
       })
       .catch(popupAjaxError);
-  },
+  }
 
   @action
   revertChanges() {
@@ -57,5 +60,5 @@ export default Controller.extend(bufferedProperty("emailTemplate"), {
           .catch(popupAjaxError);
       },
     });
-  },
-});
+  }
+}

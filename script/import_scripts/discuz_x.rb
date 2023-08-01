@@ -429,7 +429,6 @@ class ImportScripts::DiscuzX < ImportScripts::Base
               FROM #{posts_table} p
               JOIN #{posts_table} p2 ON p2.first AND p2.tid = p.tid
               JOIN #{topics_table} t ON t.tid = p.tid
-              where t.tid < 10000
              ORDER BY id ASC, topic_id ASC
              LIMIT #{BATCH_SIZE}
             OFFSET #{offset};
@@ -887,7 +886,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
                               LIMIT 1",
         )
 
-      return discuzx_link unless results.size > 0
+      return discuzx_link if results.size.zero?
 
       linked_post_id = results.first["pid"]
       lookup = topic_lookup_from_imported_post_id(linked_post_id)

@@ -20,7 +20,12 @@ RSpec.describe EmailSettingsValidator do
       net_imap_stub.stubs(:logout).returns(true)
       net_imap_stub.stubs(:disconnect).returns(true)
       expect {
-        subject.class.validate_imap(host: host, port: port, username: username, password: password)
+        described_class.validate_imap(
+          host: host,
+          port: port,
+          username: username,
+          password: password,
+        )
       }.not_to raise_error
     end
 
@@ -30,7 +35,7 @@ RSpec.describe EmailSettingsValidator do
         stub(data: stub(text: "no response")),
       )
       expect {
-        subject.class.validate_imap(
+        described_class.validate_imap(
           host: host,
           port: port,
           username: username,
@@ -51,7 +56,7 @@ RSpec.describe EmailSettingsValidator do
         .with(regexp_matches(/\[EmailSettingsValidator\] Error encountered/))
         .at_least_once
       expect {
-        subject.class.validate_imap(
+        described_class.validate_imap(
           host: host,
           port: port,
           username: username,
@@ -77,14 +82,19 @@ RSpec.describe EmailSettingsValidator do
 
     it "is valid if no error is raised" do
       expect {
-        subject.class.validate_pop3(host: host, port: port, username: username, password: password)
+        described_class.validate_pop3(
+          host: host,
+          port: port,
+          username: username,
+          password: password,
+        )
       }.not_to raise_error
     end
 
     it "is invalid if an error is raised" do
       net_pop3_stub.stubs(:auth_only).raises(Net::POPAuthenticationError, "invalid credentials")
       expect {
-        subject.class.validate_pop3(
+        described_class.validate_pop3(
           host: host,
           port: port,
           username: username,
@@ -102,7 +112,7 @@ RSpec.describe EmailSettingsValidator do
         .at_least_once
       net_pop3_stub.stubs(:auth_only).raises(Net::POPAuthenticationError, "invalid credentials")
       expect {
-        subject.class.validate_pop3(
+        described_class.validate_pop3(
           host: host,
           port: port,
           username: username,
@@ -117,7 +127,12 @@ RSpec.describe EmailSettingsValidator do
       SiteSetting.pop3_polling_openssl_verify = true
       net_pop3_stub.expects(:enable_ssl).with(max_version: OpenSSL::SSL::TLS1_2_VERSION)
       expect {
-        subject.class.validate_pop3(host: host, port: port, username: username, password: password)
+        described_class.validate_pop3(
+          host: host,
+          port: port,
+          username: username,
+          password: password,
+        )
       }.not_to raise_error
     end
 
@@ -126,7 +141,12 @@ RSpec.describe EmailSettingsValidator do
       SiteSetting.pop3_polling_openssl_verify = false
       net_pop3_stub.expects(:enable_ssl).with(OpenSSL::SSL::VERIFY_NONE)
       expect {
-        subject.class.validate_pop3(host: host, port: port, username: username, password: password)
+        described_class.validate_pop3(
+          host: host,
+          port: port,
+          username: username,
+          password: password,
+        )
       }.not_to raise_error
     end
   end
@@ -151,7 +171,7 @@ RSpec.describe EmailSettingsValidator do
 
     it "is valid if no error is raised" do
       expect {
-        subject.class.validate_smtp(
+        described_class.validate_smtp(
           host: host,
           port: port,
           username: username,
@@ -164,7 +184,7 @@ RSpec.describe EmailSettingsValidator do
     it "is invalid if an error is raised" do
       net_smtp_stub.stubs(:start).raises(Net::SMTPAuthenticationError, "invalid credentials")
       expect {
-        subject.class.validate_smtp(
+        described_class.validate_smtp(
           host: host,
           port: port,
           username: username,
@@ -185,7 +205,7 @@ RSpec.describe EmailSettingsValidator do
         stub(message: "invalid credentials"),
       )
       expect {
-        subject.class.validate_smtp(
+        described_class.validate_smtp(
           host: host,
           port: port,
           username: username,
@@ -199,7 +219,7 @@ RSpec.describe EmailSettingsValidator do
     it "uses the correct ssl verify params for enable_tls if those settings are enabled" do
       net_smtp_stub.expects(:enable_tls)
       expect {
-        subject.class.validate_smtp(
+        described_class.validate_smtp(
           host: host,
           port: 465,
           username: username,
@@ -215,7 +235,7 @@ RSpec.describe EmailSettingsValidator do
     it "uses the correct ssl verify params for enable_starttls_auto if those settings are enabled" do
       net_smtp_stub.expects(:enable_starttls_auto)
       expect {
-        subject.class.validate_smtp(
+        described_class.validate_smtp(
           host: host,
           port: 587,
           username: username,
@@ -230,7 +250,7 @@ RSpec.describe EmailSettingsValidator do
 
     it "raises an ArgumentError if both enable_tls is true and enable_starttls_auto is true" do
       expect {
-        subject.class.validate_smtp(
+        described_class.validate_smtp(
           host: host,
           port: port,
           username: username,
@@ -244,7 +264,7 @@ RSpec.describe EmailSettingsValidator do
 
     it "raises an ArgumentError if a bad authentication method is used" do
       expect {
-        subject.class.validate_smtp(
+        described_class.validate_smtp(
           host: host,
           port: port,
           username: username,
@@ -259,7 +279,7 @@ RSpec.describe EmailSettingsValidator do
       let(:domain) { nil }
       it "gets the domain from the host" do
         net_smtp_stub.expects(:start).with("gmail.com", username, password, :plain)
-        subject.class.validate_smtp(
+        described_class.validate_smtp(
           host: host,
           port: port,
           username: username,
@@ -272,7 +292,7 @@ RSpec.describe EmailSettingsValidator do
       it "uses localhost when in development mode" do
         Rails.env.stubs(:development?).returns(true)
         net_smtp_stub.expects(:start).with("localhost", username, password, :plain)
-        subject.class.validate_smtp(
+        described_class.validate_smtp(
           host: host,
           port: port,
           username: username,

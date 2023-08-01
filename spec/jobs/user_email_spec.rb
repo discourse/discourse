@@ -423,37 +423,76 @@ RSpec.describe Jobs::UserEmail do
       end
 
       context "when user is suspended" do
-        it "doesn't send email for a pm from a regular user" do
-          Jobs::UserEmail.new.execute(
-            type: :user_private_message,
-            user_id: suspended.id,
-            post_id: post.id,
-          )
+        context "when topic is a private message" do
+          subject(:send_email) do
+            described_class.new.execute(
+              type: :user_private_message,
+              user_id: suspended.id,
+              post_id: post.id,
+              notification_id: pm_notification.id,
+            )
+          end
 
-          expect(ActionMailer::Base.deliveries).to eq([])
-        end
-
-        it "does send an email for a pm from a staff user" do
-          pm_from_staff = Fabricate(:post, user: Fabricate(:moderator))
-          pm_from_staff.topic.topic_allowed_users.create!(user_id: suspended.id)
-
-          pm_notification =
+          let(:pm_notification) do
             Fabricate(
               :notification,
               user: suspended,
-              topic: pm_from_staff.topic,
-              post_number: pm_from_staff.post_number,
-              data: { original_post_id: pm_from_staff.id }.to_json,
+              topic: post.topic,
+              post_number: post.post_number,
+              data: { original_post_id: post.id }.to_json,
             )
+          end
+          fab!(:moderator) { Fabricate(:moderator) }
+          fab!(:regular_user) { Fabricate(:user) }
 
-          Jobs::UserEmail.new.execute(
-            type: :user_private_message,
-            user_id: suspended.id,
-            post_id: pm_from_staff.id,
-            notification_id: pm_notification.id,
-          )
+          context "when this is not a group PM" do
+            let(:post) { Fabricate(:private_message_post, user: user, recipient: suspended) }
 
-          expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(suspended.email)
+            context "when post is from a staff user" do
+              let(:user) { moderator }
+
+              it "does send an email" do
+                send_email
+                expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(suspended.email)
+              end
+            end
+
+            context "when post is from a regular user" do
+              let(:user) { regular_user }
+
+              it "doesn't send email" do
+                send_email
+                expect(ActionMailer::Base.deliveries).to be_empty
+              end
+            end
+          end
+
+          context "when this is a group PM" do
+            fab!(:group) { Fabricate(:group) }
+            fab!(:users) { Fabricate.times(2, :user) }
+
+            let(:post) { Fabricate(:group_private_message_post, user: user, recipients: group) }
+
+            before { group.users << [suspended, *users] }
+
+            context "when post is from a staff user" do
+              let(:user) { moderator }
+
+              it "does not send an email" do
+                send_email
+                expect(ActionMailer::Base.deliveries).to be_empty
+              end
+            end
+
+            context "when post is from a regular user" do
+              let(:user) { regular_user }
+
+              it "does not send an email" do
+                send_email
+                expect(ActionMailer::Base.deliveries).to be_empty
+              end
+            end
+          end
         end
 
         it "doesn't send PM from system user" do
@@ -524,7 +563,7 @@ RSpec.describe Jobs::UserEmail do
           Jobs::UserEmail.new.message_for_email(
             user,
             post,
-            :user_mentioned,
+            "user_mentioned",
             notification,
             notification_type: notification.notification_type,
             notification_data_hash: notification.data_hash,
@@ -808,7 +847,7 @@ RSpec.describe Jobs::UserEmail do
             Jobs::UserEmail.new.message_for_email(
               suspended,
               Fabricate.build(:post),
-              :user_private_message,
+              "user_private_message",
               notification,
             )
 
@@ -834,7 +873,7 @@ RSpec.describe Jobs::UserEmail do
             Jobs::UserEmail.new.message_for_email(
               suspended,
               @pm_from_staff,
-              :user_private_message,
+              "user_private_message",
               @pm_notification,
             )
           end
@@ -888,6 +927,25 @@ RSpec.describe Jobs::UserEmail do
           )
 
           expect(ActionMailer::Base.deliveries).to eq([])
+        end
+      end
+    end
+
+    context "without post" do
+      context "when user is suspended" do
+        subject(:send_email) do
+          described_class.new.execute(
+            type: :account_suspended,
+            user_id: suspended.id,
+            user_history_id: user_history.id,
+          )
+        end
+
+        let(:user_history) { Fabricate(:user_history, action: UserHistory.actions[:suspend_user]) }
+
+        it "does send an email" do
+          send_email
+          expect(ActionMailer::Base.deliveries.first.to).to contain_exactly(suspended.email)
         end
       end
     end

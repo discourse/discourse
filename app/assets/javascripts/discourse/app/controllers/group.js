@@ -4,6 +4,7 @@ import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { capitalize } from "@ember/string";
 import { inject as service } from "@ember/service";
+import GroupDeleteDialog from "discourse/components/dialog-messages/group-delete";
 
 const Tab = EmberObject.extend({
   init() {
@@ -19,6 +20,9 @@ const Tab = EmberObject.extend({
 export default Controller.extend({
   application: controller(),
   dialog: service(),
+  currentUser: service(),
+  router: service(),
+
   counts: null,
   showing: "members",
   destroying: null,
@@ -137,22 +141,15 @@ export default Controller.extend({
     this.set("destroying", true);
 
     const model = this.model;
-    const title = I18n.t("admin.groups.delete_confirm");
-    let message = null;
-
-    if (model.has_messages && model.message_count > 0) {
-      message = I18n.t("admin.groups.delete_with_messages_confirm", {
-        count: model.message_count,
-      });
-    }
 
     this.dialog.deleteConfirm({
-      title,
-      message,
+      title: I18n.t("admin.groups.delete_confirm", { group: model.name }),
+      bodyComponent: GroupDeleteDialog,
+      bodyComponentModel: model,
       didConfirm: () => {
         model
           .destroy()
-          .then(() => this.transitionToRoute("groups.index"))
+          .then(() => this.router.transitionTo("groups.index"))
           .catch((error) => {
             // eslint-disable-next-line no-console
             console.error(error);

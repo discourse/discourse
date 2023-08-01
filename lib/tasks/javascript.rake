@@ -87,32 +87,6 @@ def dependencies
       source: "@discourse/moment-timezone-names-translations/locales/.",
       destination: "moment-timezone-names-locale",
     },
-    { source: "workbox-sw/build/.", destination: "workbox", public: true, skip_versioning: true },
-    {
-      source: "workbox-routing/build/.",
-      destination: "workbox",
-      public: true,
-      skip_versioning: true,
-    },
-    { source: "workbox-core/build/.", destination: "workbox", public: true, skip_versioning: true },
-    {
-      source: "workbox-strategies/build/.",
-      destination: "workbox",
-      public: true,
-      skip_versioning: true,
-    },
-    {
-      source: "workbox-expiration/build/.",
-      destination: "workbox",
-      public: true,
-      skip_versioning: true,
-    },
-    {
-      source: "workbox-cacheable-response/build/.",
-      destination: "workbox",
-      skip_versioning: true,
-      public: true,
-    },
     {
       source: "squoosh/codecs/mozjpeg/enc/mozjpeg_enc.js",
       destination: "squoosh",
@@ -163,6 +137,16 @@ task "javascript:update_constants" => :environment do
     export const SEARCH_PRIORITIES = #{Searchable::PRIORITIES.to_json};
 
     export const SEARCH_PHRASE_REGEXP = '#{Search::PHRASE_MATCH_REGEXP_PATTERN}';
+
+    export const SIDEBAR_URL = {
+      max_icon_length: #{SidebarUrl::MAX_ICON_LENGTH},
+      max_name_length: #{SidebarUrl::MAX_NAME_LENGTH},
+      max_value_length: #{SidebarUrl::MAX_VALUE_LENGTH}
+    }
+
+    export const SIDEBAR_SECTION = {
+      max_title_length: #{SidebarSection::MAX_TITLE_LENGTH},
+    }
   JS
 
   pretty_notifications = Notification.types.map { |n| "  #{n[0]}: #{n[1]}," }.join("\n")
@@ -182,6 +166,32 @@ task "javascript:update_constants" => :environment do
     export const replacements = #{Emoji.unicode_replacements_json};
   JS
 
+  langs = []
+  Dir
+    .glob("vendor/assets/javascripts/highlightjs/languages/*.min.js")
+    .each { |f| langs << File.basename(f, ".min.js") }
+  bundle = HighlightJs.bundle(langs)
+
+  ctx = MiniRacer::Context.new
+  hljs_aliases = ctx.eval(<<~JS)
+    #{bundle}
+
+    let aliases = {};
+    hljs.listLanguages().forEach((lang) => {
+      if (hljs.getLanguage(lang).aliases) {
+        aliases[lang] = hljs.getLanguage(lang).aliases;
+      }
+    });
+
+    aliases;
+  JS
+
+  write_template("pretty-text/addon/highlightjs-aliases.js", task_name, <<~JS)
+    export const HLJS_ALIASES = #{hljs_aliases.to_json};
+  JS
+
+  ctx.dispose
+
   write_template("pretty-text/addon/emoji/version.js", task_name, <<~JS)
     export const IMAGE_VERSION = "#{Emoji::EMOJI_VERSION}";
   JS
@@ -196,7 +206,7 @@ task "javascript:update_constants" => :environment do
 
   emoji_sections = groups_json.map { |group| html_for_section(group) }
 
-  components_dir = "discourse/app/templates/components"
+  components_dir = "discourse/app/components"
   write_hbs_template("#{components_dir}/emoji-group-buttons.hbs", task_name, emoji_buttons.join)
   write_hbs_template("#{components_dir}/emoji-group-sections.hbs", task_name, emoji_sections.join)
 end
@@ -213,10 +223,10 @@ task "javascript:update" => "clean_up" do
   dependencies.each do |f|
     src = "#{library_src}/#{f[:source]}"
 
-    unless f[:destination]
-      filename = f[:source].split("/").last
-    else
+    if f[:destination]
       filename = f[:destination]
+    else
+      filename = f[:source].split("/").last
     end
 
     if src.include? "highlightjs"
@@ -257,6 +267,7 @@ task "javascript:update" => "clean_up" do
         mode-html
         mode-scss
         mode-sql
+        mode-yaml
         theme-chrome
         theme-chaos
         worker-html
@@ -267,11 +278,7 @@ task "javascript:update" => "clean_up" do
 
     STDERR.puts "New dependency added: #{dest}" unless File.exist?(dest)
 
-    if f[:uglify]
-      File.write(dest, Uglifier.new.compile(File.read(src)))
-    else
-      FileUtils.cp_r(src, dest)
-    end
+    FileUtils.cp_r(src, dest)
   end
 
   write_template("discourse/app/lib/public-js-versions.js", "update", <<~JS)

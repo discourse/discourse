@@ -12,7 +12,11 @@ new_user_narrative_badge = Badge.find_by(name: DiscourseNarrativeBot::NewUserNar
 
 unless new_user_narrative_badge
   new_user_narrative_badge =
-    Badge.create!(name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME, badge_type_id: 3)
+    Badge.create!(
+      name: DiscourseNarrativeBot::NewUserNarrative::BADGE_NAME,
+      badge_type_id: 3,
+      icon: "stamp",
+    )
 end
 
 advanced_user_narrative_badge =
@@ -20,7 +24,11 @@ advanced_user_narrative_badge =
 
 unless advanced_user_narrative_badge
   advanced_user_narrative_badge =
-    Badge.create!(name: DiscourseNarrativeBot::AdvancedUserNarrative::BADGE_NAME, badge_type_id: 2)
+    Badge.create!(
+      name: DiscourseNarrativeBot::AdvancedUserNarrative::BADGE_NAME,
+      badge_type_id: 2,
+      icon: "stamp",
+    )
 end
 
 badge_grouping = BadgeGrouping.find(1)
@@ -29,5 +37,10 @@ badge_grouping = BadgeGrouping.find(1)
   [new_user_narrative_badge, I18n.t("badges.certified.description")],
   [advanced_user_narrative_badge, I18n.t("badges.licensed.description")],
 ].each do |badge, description|
-  badge.update!(badge_grouping: badge_grouping, description: description, system: true)
+  badge.update!(
+    badge_grouping: badge_grouping,
+    description: description,
+    system: true,
+    icon: "stamp",
+  )
 end

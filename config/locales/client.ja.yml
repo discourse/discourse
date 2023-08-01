@@ -156,11 +156,6 @@ ja:
     software_update_prompt:
       message: "このサイトを更新したので、<span>再読み込みしてください</span>。再読み込みしない場合、予期しない動作が発生する可能性があります。"
       dismiss: "閉じる"
-    bootstrap_mode_enabled:
-      other: "新しいサイトを簡単に立ち上げられるように、ブートストラップモードになっています。すべての新規ユーザーの信頼レベルは 1 となり、要約メールを毎日受け取るように設定されています。この設定は %{count} 名のユーザーが参加すると自動的に無効になります。"
-    bootstrap_mode_disabled: "ブートストラップモードは 24 時間以内に無効になります。"
-    bootstrap_invite_button_title: "招待を送信"
-    bootstrap_wizard_link_title: "セットアップウィザードの終了"
     themes:
       default_description: "デフォルト"
       broken_theme_alert: "テーマ/コンポーネントにエラーがあるため、サイトが動作しない可能性があります。"
@@ -270,11 +265,8 @@ ja:
       edit_bookmark: "ブックマークを編集"
       clear_bookmarks: "ブックマークをクリア"
       help:
-        bookmark: "クリックしてこのトピックの最初の投稿をブックマークします"
-        edit_bookmark: "クリックしてこのトピックのブックマークを編集します"
         edit_bookmark_for_topic: "クリックしてこのトピックのブックマークを編集します"
         unbookmark: "クリックしてこのトピック内のすべてのブックマークを削除します"
-        unbookmark_with_reminder: "クリックしてこのトピック内のすべてのブックマークとリマインダーを削除します。"
     bookmarks:
       created: "この投稿をブックマークしました。%{name}"
       created_generic: "これをブックマークしました。%{name}"
@@ -318,7 +310,6 @@ ja:
       new_topic: "新しいトピックの下書き"
       new_private_message: "新しい個人メッセージの下書き"
       abandon:
-        confirm: "このトピックの作成中の下書きがあります。どうしますか？"
         yes_value: "破棄"
         no_value: "編集を再開"
     topic_count_categories:
@@ -479,11 +470,9 @@ ja:
       scores:
         about: "このスコアは、報告者の信頼レベル、以前のフラグの正確性、および報告されている項目の優先度に基づいて計算されます。"
         score: "スコア"
-        date: "日付"
-        type: "タイプ"
+        type: "理由"
         status: "ステータス"
-        submitted_by: "送信者:"
-        reviewed_by: "レビュー者:"
+        submitted_by: "報告者:"
       statuses:
         pending:
           title: "保留中"
@@ -491,14 +480,12 @@ ja:
           title: "承認済み"
         rejected:
           title: "却下"
-        ignored:
-          title: "無視"
-        deleted:
-          title: "削除済み"
         reviewed:
-          title: "(すべてレビュー済み)"
+          title: "すべてレビュー済み"
         all:
-          title: "(全ステータス)"
+          title: "すべて"
+      context_question:
+        delimiter: "または"
       types:
         reviewable_flagged_post:
           title: "通報された投稿"
@@ -797,6 +784,7 @@ ja:
         make_all_primary_description: "これを選択したすべてのユーザーのプライマリーグループにします"
         remove_all_primary: "プライマリーとして削除"
         remove_all_primary_description: "このグループをプライマリーとして削除します"
+        status: "ステータス"
         owner: "オーナー"
         primary: "プライマリー"
         forbidden: "メンバーの表示は許可されていません。"
@@ -919,11 +907,6 @@ ja:
       profile: "プロファイル"
       mute: "ミュート"
       edit: "プロファイルを編集"
-      download_archive:
-        button_text: "すべてダウンロード"
-        confirm: "投稿をダウンロードしてもよろしいですか？"
-        success: "ダウンロードが始まりました。処理が完了するとメッセージで通知されます。"
-        rate_limit_error: "投稿のダウンロードは 1 日に 1 回のみ可能です。明日再度お試しください。"
       new_private_message: "新規メッセージ"
       private_message: "メッセージ"
       private_messages: "メッセージ"
@@ -995,7 +978,7 @@ ja:
         perm_denied_expl: "通知へのアクセスが拒否されました。ブラウザの設定から通知を許可してください。"
         disable: "通知を無効にする"
         enable: "通知を有効にする"
-        each_browser_note: '注意: 使用するすべてのブラウザでこの設定を変更する必要があります。ユーザーメニューから通知を一時停止にした場合、この設定に関係なくすべての通知が無効になります。'
+        each_browser_note: "注意: 使用するすべてのブラウザでこの設定を変更する必要があります。ユーザーメニューから通知を一時停止にした場合、この設定に関係なくすべての通知が無効になります。"
         consent_prompt: "あなたの投稿に返信があったときライブ通知しますか？"
       dismiss: "閉じる"
       dismiss_notifications: "すべて閉じる"
@@ -1046,14 +1029,7 @@ ja:
       experimental_sidebar:
         enable: "サイドバーを有効にする"
         options: "オプション"
-        categories_section: "カテゴリセクション"
-        categories_section_instruction: "選択されたカテゴリは、サイドバーのカテゴリセクションに表示されます。"
-        tags_section: "タグセクション"
-        tags_section_instruction: "選択されたタグは、サイドバーのタグセクションに表示されます。"
         navigation_section: "ナビゲーション"
-        list_destination_instruction: "サイドバーに新しいコンテンツがある場合..."
-        list_destination_default: "デフォルトのリンクを使用して新しい項目のバッジを表示する"
-        list_destination_unread_new: "未読/新規にリンクし、新しい項目の件数を表示する"
       change: "変更"
       featured_topic: "注目のトピック"
       moderator: "%{user} はモデレーターです"
@@ -1123,13 +1099,6 @@ ja:
       save_to_change_theme: '「%{save_text}」をクリックするとテーマが更新されます'
       home: "デフォルトのホームページ"
       staged: "ステージング"
-      staff_counters:
-        flags_given: "役に立った通報"
-        flagged_posts: "通報された投稿"
-        deleted_posts: "削除された投稿"
-        suspensions: "凍結"
-        warnings_received: "警告"
-        rejected_posts: "拒否された投稿"
       messages:
         all: "すべての受信トレイ"
         inbox: "受信トレイ"
@@ -1212,7 +1181,6 @@ ja:
         tags: "タグ"
         interface: "表示設定"
         apps: "アプリ連携"
-        sidebar: "サイドバー"
       change_password:
         success: "(メール送信済み)"
         in_progress: "(メール送信中)"
@@ -1226,10 +1194,8 @@ ja:
         title: "二要素認証のバックアップコード"
         regenerate: "再生成"
         disable: "無効化"
-        enable: "有効化"
-        enable_long: "バックアップコードを有効にする"
         manage:
-          other: "バックアップコードを管理してください。 <strong>%{count}</strong> 個のバックアップコードが残っています。"
+          other: "<strong>%{count}</strong> 個のバックアップコードが残っています。"
         copy_to_clipboard: "クリップボードにコピー"
         copy_to_clipboard_error: "データをクリップボードにコピーする際にエラーが発生しました"
         copied_to_clipboard: "クリップボードにコピーしました"
@@ -1656,8 +1622,7 @@ ja:
       pause_notifications: "通知を停止する"
       remove_status: "ステータスを削除する"
     user_tips:
-      primary: "了解！"
-      secondary: "これらのヒントを表示しない"
+      button: "了解！"
       first_notification:
         title: "はじめての通知です！"
         content: "通知は、コミュニティーで起きていることに関する最新情報を提供するために使用されます。"
@@ -1707,28 +1672,6 @@ ja:
       logout_disabled: "閲覧専用モードのため、ログアウトできません。"
     staff_writes_only_mode:
       enabled: "このサイトはスタッフ専用モードになっています。このまま閲覧できますが、返信や「いいね！」、その他の操作はスタッフメンバーのみに制限されています。"
-    too_few_topics_and_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">ディスカッションを始めましょう！</a>現在、{ currentTopics, plural,
-          other {<strong>#</strong> 件のトピック}
-      }と{ currentPosts, plural,
-          other {<strong>#</strong> 件の投稿}
-      }があります。訪問者が読んで返信するトピックと投稿がもっと必要です。少なくとも { requiredTopics, plural,
-          other {<strong>#</strong> 件のトピック}
-      }と { requiredPosts, plural,
-          other {<strong>#</strong> 件の投稿}
-      }を用意することをお勧めします。このメッセージはスタッフのみに表示されます。
-    too_few_topics_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">ディスカッションを始めましょう！</a>現在、{ currentTopics, plural,
-          other {<strong>#</strong> 件のトピック}
-      }があります。訪問者が読んで返信できるトピックがもっと必要です。少なくとも { requiredTopics, plural,
-          other {<strong>#</strong> 件のトピック}
-      }を用意することをお勧めします。このメッセージはスタッフのみに表示されます。
-    too_few_posts_notice_MF: |
-      <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">ディスカッションを始めましょう！</a>現在、{ currentPosts, plural,
-          other {<strong>#</strong> 件の投稿}
-      }があります。訪問者が読んで返信できる投稿がもっと必要です。少なくとも { requiredPosts, plural,
-          other {<strong>#</strong> 件の投稿}
-      }を用意することをお勧めします。このメッセージはスタッフのみに表示されます。
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, other {1 時間当たりのエラー件数 (#)}}</a> がサイトで設定されている{limit, plural, other {エラー件数 (#)}} の制限に達しました。
@@ -1758,15 +1701,11 @@ ja:
       intro: "こんにちは！ ディスカッションを楽しんでいるようですね。ですが、アカウント登録はまだのようです。"
       value_prop: "同じ投稿をスクロールするのにうんざりしていませんか？アカウントを作成すると、中断した場所にいつでも戻ることができます。アカウントを使うと、新しい返信の通知を受け取ったり、ブックマークを保存したり、「いいね！」を使って感謝の気持ちを伝えたりすることも可能です。このコミュニティーを一緒に盛り上げていきましょう。:heart:"
     summary:
-      enabled_description: "このトピックの要約を閲覧しています。コミュニティーが最も面白いとした投稿のまとめです。"
       description:
         other: "<b>%{count}</b> 件の返信があります。"
       description_time_MF: |
         {replyCount, plural, other {<b>#</b> 件の返信}}があります。読了目安時間は <b>{readingTime, plural, other {# 分}}</b>です。
-      enable: "このトピックを要約する"
       disable: "すべての投稿を表示"
-      short_label: "要約"
-      short_title: "このトピックの要約を表示: コミュニティーが最も面白いと判断した投稿"
     deleted_filter:
       enabled_description: "削除された投稿は非表示になっています。"
       disabled_description: "削除された投稿は表示されています。"
@@ -2051,8 +1990,6 @@ ja:
         topic_template_not_modified: "トピックテンプレートを編集して、トピックに詳細を追加してください。"
       save_edit: "編集内容を保存"
       overwrite_edit: "上書き編集"
-      reply_original: "オリジナルトピックへ返信"
-      reply_here: "ここに返信"
       reply: "返信"
       cancel: "キャンセル"
       create_topic: "トピックを作成"
@@ -2208,6 +2145,7 @@ ja:
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
       votes_released: "%{description} - 完了"
       new_features: "新機能が公開されました！"
+      admin_problems: "サイトダッシュボードに関する新しいアドバイス"
       dismiss_confirmation:
         body:
           default:
@@ -2493,7 +2431,7 @@ ja:
         top: "人気のトピックはありません。"
         educate:
           new: '<p>新しいトピックがここに表示されます。デフォルトでは、2 日以内に作成されたトピックは新しいトピックとみなされ、<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> が表示されます。</p><p>この設定はユーザー<a href="%{userPrefsUrl}">設定</a>で変更できます。</p>'
-          unread: "<p>新しいトピックがここに表示されます。</p><p>デフォルトでは次の場合にトピックは未読とされ未読数 <span class=\"badge unread-posts badge-notification\">1</span> が表示されます。</p><ul><li>トピックを作成した場合</li><li>トピックに返信した場合</li><li>トピックを 4 分以上閲覧した場合</li></ul><p>または各トピックの \U0001F514 を通じて明示的にトピックを「追跡」または「ウォッチ中」に設定した場合</p><p>これを変更するには、<a href=\"%{userPrefsUrl}\">設定</a>にアクセスしてください。</p>"
+          unread: "<p>新しいトピックがここに表示されます。</p><p>デフォルトでは次の場合にトピックは未読とされ未読数 <span class=\"badge unread-posts badge-notification\">1</span> が表示されます。</p><ul><li>トピックを作成した場合</li><li>トピックに返信した場合</li><li>トピックを 5 分以上閲覧した場合</li></ul><p>または各トピックの \U0001F514 を通じて明示的にトピックを「追跡」または「ウォッチ中」に設定した場合</p><p>これを変更するには、<a href=\"%{userPrefsUrl}\">設定</a>にアクセスしてください。</p>"
       bottom:
         latest: "最新のトピックは以上です。"
         posted: "投稿のあるトピックは以上です。"
@@ -2587,8 +2525,6 @@ ja:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>すべてのカテゴリを閲覧</a>するか、<a href='%{basePath}/latest'>最新のトピックを表示</a>するか、トップを見ます。"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>すべてのタグを閲覧</a>するか<a href='%{basePath}/latest'>最新のトピックを表示</a>します。"
       suggest_create_topic: <a href>新しい会話を開始しますか？</a>
-      jump_reply_up: 以前の返信へジャンプ
-      jump_reply_down: 以後の返信へジャンプ
       deleted: "トピックは削除されました"
       slow_mode_update:
         title: "低速モード"
@@ -2938,8 +2874,6 @@ ja:
       collapse: "折りたたむ"
       sr_collapse_replies: "埋め込まれた返信を折りたたむ"
       sr_date: "投稿日"
-      sr_expand_replies:
-        other: "この投稿には %{count} 件の返信があります。クリックして展開"
       expand_collapse: "展開/折りたたむ"
       sr_below_embedded_posts_description: "投稿 #%{post_number} の返信"
       sr_embedded_reply_description: "投稿 #%{post_number} に対する @%{username} からの返信"
@@ -3133,7 +3067,6 @@ ja:
       filtered_replies:
         viewing_posts_by: "次の投稿者の %{post_count} 件の投稿を閲覧中"
         viewing_subset: "一部の返信は折りたたまれています"
-        viewing_summary: "このトピックの要約を表示中"
         post_number: "%{username}、投稿 #%{post_number}"
         show_all: "すべて表示"
       share:
@@ -3150,7 +3083,6 @@ ja:
       back: "カテゴリに戻る"
       general: "一般"
       settings: "設定"
-      topic_template: "トピックテンプレート"
       tags: "タグ"
       tags_allowed_tags: "これらのタグをこのカテゴリに制限する:"
       tags_allowed_tag_groups: "これらのタググループをこのカテゴリに制限する:"
@@ -3209,8 +3141,6 @@ ja:
       email_in: "カスタム受信メールアドレス:"
       email_in_tooltip: "複数のメールアドレスは「|」文字で区切ることができます。"
       email_in_allow_strangers: "登録されていない匿名のユーザーからのメールを受け取る"
-      email_in_disabled: "メールによる新しいトピックの投稿は、サイトの設定で無効になっています。メールによる新しいトピックの投稿を有効にするには、 "
-      email_in_disabled_click: '"email in" 設定を有効にする。'
       mailinglist_mirror: "カテゴリはメーリングリストを反映"
       show_subcategory_list: "このカテゴリのトピックの上にサブカテゴリのリストを表示します。"
       read_only_banner: "ユーザーがこのカテゴリにトピックを作成できない場合のバナーテキスト:"
@@ -3409,6 +3339,10 @@ ja:
     filters:
       with_topics: "%{filter} トピック"
       with_category: "%{filter} %{category} トピック"
+      filter:
+        title: "フィルタ"
+        button:
+          label: "フィルタ"
       latest:
         title: "最新"
         title_with_count:
@@ -3473,7 +3407,6 @@ ja:
         this_week: "今週"
         today: "今日"
     browser_update: '残念ながら、<a href="https://www.discourse.org/faq/#browser">あなたのブラウザはサポートされていません</a>。リッチコンテンツを表示するには<a href="https://browsehappy.com">サポートされているブラウザに切り替え</a>てから、ログインして返信してください。'
-    safari_13_warning: このサイトは、まもなく iOS と Safari バージョン 13 以下のサポートを終了します。簡易版の読み取り専用バージョンは、引き続き利用可能です。(<a href="https://meta.discourse.org/t/224747">詳細</a>)
     permission_types:
       full: "作成 / 返信 / 閲覧"
       create_post: "返信 / 閲覧"
@@ -3488,6 +3421,9 @@ ja:
       close: "閉じる (Esc)"
       content_load_error: '<a href="%url%">コンテンツ</a>を読み込めませんでした。'
       image_load_error: '<a href="%url%">画像</a>を読み込めませんでした。'
+    experimental_lightbox:
+      buttons:
+        close: "閉じる (Esc)"
     cannot_render_video: ブラウザがコーデックをサポートしていないため、この動画をレンダリングできません。
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: "、"
@@ -3579,7 +3515,6 @@ ja:
       earned_n_times:
         other: "このバッジを %{count} 回獲得しました"
       granted_on: "%{date} にゲット！"
-      others_count: "このバッジを獲得した他のユーザー (%{count})"
       title: バッジ
       allow_title: "このバッジをタグラインとして使用できます"
       multiple_grant: "これは何度でも獲得できます"
@@ -3750,13 +3685,11 @@ ja:
     pause_notifications:
       title: "次の通知を停止する..."
       label: "通知を停止する"
-      remaining: "残り %{remaining}"
       options:
         half_hour: "30 分"
         one_hour: "１時間"
         two_hours: "２時間"
         tomorrow: "明日まで"
-        custom: "カスタム"
       set_schedule: "通知スケジュールを設定する"
     trust_levels:
       names:
@@ -3803,7 +3736,21 @@ ja:
       more: "もっと"
       all_categories: "すべてのカテゴリ"
       all_tags: "すべてのタグ"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "すべて"
       sections:
+        custom:
+          save: "保存"
+          delete: "削除"
+          links:
+            reset: "デフォルトにリセット"
+            icon:
+              label: "アイコン"
+            name:
+              label: "名前"
+            value:
+              label: "リンク"
         about:
           header_link_text: "サイト情報"
         messages:
@@ -3818,28 +3765,20 @@ ja:
             unread_with_count: "未読 (%{count})"
             archive: "アーカイブ"
         tags:
-          links:
-            add_tags:
-              content: "タグを追加"
-              title: "タグをまだ追加していません。クリックして始めましょう。"
           none: "追加したタグはまだありません"
           click_to_get_started: "ここをクリックして開始してください。"
           header_link_text: "タグ"
           header_action_title: "サイドバーのタグを編集"
           configure_defaults: "デフォルトの構成"
         categories:
-          links:
-            add_categories:
-              content: "カテゴリを追加"
-              title: "カテゴリをまだ追加していません。クリックして始めましょう。"
           none: "追加したカテゴリはありません"
           click_to_get_started: "ここをクリックして開始してください。"
           header_link_text: "カテゴリ"
           header_action_title: "サイドバーのカテゴリを編集"
           configure_defaults: "デフォルトの構成"
         community:
-          header_link_text: "コミュニティー"
-          header_action_title: "トピックの作成"
+          edit_section:
+            header_dropdown: "カスタマイズ"
           links:
             about:
               content: "サイト情報"
@@ -3850,8 +3789,8 @@ ja:
             badges:
               content: "バッジ"
               title: "獲得可能なすべてのバッジ"
-            everything:
-              content: "すべて"
+            topics:
+              content: "トピック"
               title: "すべてのトピック"
             faq:
               content: "FAQ"
@@ -3877,6 +3816,11 @@ ja:
       description: "ウェルカムトピックは、新しいメンバーが最初に読むものです。「エレベーターピッチ」や「ミッションステートメント」と考えると良いでしょう。このコミュニティーの対象者、ここで期待できること、最初にしてほしいことを伝えましょう。"
       button_title: "編集を開始"
     until: "終了日:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "有効な値を入力してください。"
+          email: "正しいメールアドレスを入力してください."
   admin_js:
     type_to_filter: "フィルタの種類..."
     admin:
@@ -4033,9 +3977,6 @@ ja:
         about: "グループのメンバーシップとグループ名を編集"
         group_members: "グループメンバー"
         delete: "削除"
-        delete_confirm: "このグループを削除してもよろしいですか？"
-        delete_with_messages_confirm:
-          other: "このグループを削除すると %{count} 件のメッセージが孤立し、グループメンバーがアクセスできなくなります。"
         delete_failed: "グループを削除できません。自動作成グループを削除することはできません。"
         delete_automatic_group: これは自動グループであるため削除できません。
         delete_owner_confirm: "'%{username}' のオーナー権限を削除しますか？"
@@ -4101,7 +4042,6 @@ ja:
             topics:
               read: トピックまたはその中の特定の投稿を読み取ります。RSS もサポートされています。
               write: 新しいトピックまたは既存のトピックに投稿を作成します。
-              update: トピックを更新します。タイトル、カテゴリ、タグなどを変更します。
               read_lists: 人気、新規、最新などのトピックリストを読み取ります。RSS もサポートされています。
             posts:
               edit: 任意の投稿または特定の投稿を編集します。
@@ -4198,9 +4138,6 @@ ja:
         user_promoted_event:
           name: "ユーザー昇格イベント"
           details: "ユーザーがある信頼レベルから別の信頼レベルに昇格したとき。"
-        user_badge_event:
-          name: "バッジ付与イベント"
-          details: "ユーザーがバッジを受け取った場合。"
         group_user_event:
           name: "グループユーザーイベント"
           details: "ユーザーがグループに追加またはグループから削除された場合。"
@@ -4241,7 +4178,6 @@ ja:
         enabled: "有効化？"
         is_enabled: "はい"
         not_enabled: "いいえ"
-        change_settings: "設定を変更"
         change_settings_short: "設定"
         howto: "プラグインをインストールするには？"
         official: "公式プラグイン"
@@ -4572,6 +4508,8 @@ ja:
           love:
             name: "ラブ"
             description: "「いいね！」ボタンの色。"
+          selected:
+            name: "選択済み"
         robots:
           title: "サイトの robots.txt ファイルをオーバーライド:"
           warning: "これにより、関連するすべてのサイト設定が永久にオーバーライドされます。"
@@ -4855,14 +4793,8 @@ ja:
           silence: "投稿禁止"
           link: "リンク"
         action_descriptions:
-          block: "これらの語を含む投稿が投稿されないようにします。投稿しようとすると、エラーメッセージが表示されます。"
-          censor: "これらの語を含む投稿を許可しますが、検閲された語を非表示にする文字に置き換えられます。"
-          require_approval: "これらの語を含む投稿は、表示される前にスタッフによる承認が必要です。"
-          flag: "これらの言葉を含む投稿を許可しますが、モデレーターがこれをレビューできるよう、不適切として通報されます。"
-          replace: "投稿内の語を他の語に置き換えます"
-          tag: "最初の投稿に基づいてトピックに自動的にタグを付けます"
-          silence: "これらの語を含むユーザーの最初の投稿には、表示される前とユーザーが自動的に投稿禁止になる前にスタッフによる承認が必要です。"
-          link: "投稿内の語をリンクに置き換える"
+          replace: "投稿内の語を他の語に置き換えます."
+          link: "投稿内の語をリンクに置き換える."
         form:
           label: "語またはフレーズがある"
           placeholder: "語またはフレーズを入力してください (* はワイルカード)"
@@ -4885,6 +4817,37 @@ ja:
           description: "テキストを入力して、ウォッチ語に一致しているかどうかを確認します"
           found_matches: "見つかった一致:"
           no_matches: "一致する項目が見つかりませんでした"
+      form_templates:
+        nav_title: "テンプレート"
+        list_table:
+          headings:
+            name: "名前"
+            actions: "操作"
+        view_template:
+          close: "クローズ"
+          edit: "編集"
+          delete: "削除"
+        new_template_form:
+          submit: "保存"
+          cancel: "キャンセル"
+          preview: "プレビュー"
+        quick_insert_fields:
+          add_new_field: "追加"
+          dropdown: "ドロップダウン"
+        validations_modal:
+          table_headers:
+            key: "キー"
+            type: "タイプ"
+            description: "説明"
+          validations:
+            required:
+              key: "必須"
+            minimum:
+              key: "最小"
+            maximum:
+              key: "最大"
+            type:
+              key: "タイプ"
       impersonate:
         title: "代理操作"
         help: "このツールを使用して、デバッグ目的でユーザーアカウントを代理操作します。作業を終了したら、ログアウトしてください。"
@@ -4897,6 +4860,7 @@ ja:
         not_found: "申し訳ありません。そのユーザー名はシステムに存在しません。"
         id_not_found: "申し訳ありません。そのユーザー ID はシステムに存在しません。"
         active: "有効"
+        status: "ステータス"
         show_emails: "メールアドレスを表示"
         hide_emails: "メールを非表示"
         nav:
@@ -4985,7 +4949,6 @@ ja:
         show_admin_profile: "管理者"
         manage_user: "ユーザーの管理"
         show_public_profile: "公開プロファイルを表示"
-        impersonate: "代理操作"
         action_logs: "操作ログ"
         ip_lookup: "IP アドレスを検索"
         log_out: "ログアウト"
@@ -5218,6 +5181,8 @@ ja:
         show_overriden: "上書き部分のみ表示"
         locale: "言語:"
         more_than_50_results: "結果が 50 件以上あります。検索を絞り込んでください。"
+        outdated:
+          dismiss: "閉じる"
       settings:
         show_overriden: "上書き部分のみ表示"
         history: "変更履歴を表示する"
@@ -5230,7 +5195,6 @@ ja:
             label: "絵文字を追加"
         title: "設定"
         no_results: "何も見つかりませんでした。"
-        more_than_30_results: "結果が 30 件以上あります。検索を絞り込むかカテゴリを選択してください。"
         clear_filter: "クリア"
         add_url: "URL を追加"
         add_host: "ホストを追加"
@@ -5317,7 +5281,7 @@ ja:
         allow_title: バッジをタグラインとして使用することを許可する
         multiple_grant: 何度でも付与できる
         listable: バッジの公開ページにバッジを表示する
-        enabled: バッジを有効にする
+        disabled: 無効
         icon: アイコン
         image: 画像
         graphic: グラフィック
@@ -5386,10 +5350,8 @@ ja:
       embedding:
         get_started: "ほかのウェブサイトに Discourse を埋め込む場合は、まずホストを追加してください。"
         confirm_delete: "このホストを削除してもよろしいですか？"
-        sample: "次の HTML コードをサイトに貼り付けて、Discourse のトピックを作成して埋め込みます。<b>REPLACE_ME</b> を埋め込み先の正規 URL に置き換えてください。"
         title: "埋め込み"
         host: "許可されたホスト"
-        class_name: "クラス名"
         allowed_paths: "パスのホワイトリスト"
         edit: "編集"
         category: "カテゴリへ投稿"

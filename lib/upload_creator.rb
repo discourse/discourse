@@ -31,9 +31,6 @@ class UploadCreator
     use
   ].each(&:freeze)
 
-  include ActiveSupport::Deprecation::DeprecatedConstantAccessor
-  deprecate_constant "WHITELISTED_SVG_ELEMENTS", "UploadCreator::ALLOWED_SVG_ELEMENTS"
-
   # Available options
   #  - type (string)
   #  - origin (string)
@@ -57,9 +54,6 @@ class UploadCreator
         true
       end
     )
-
-    # TODO (martin) Validate @opts[:type] to make sure only blessed types are passed
-    # in, since the clientside can pass any type it wants.
   end
 
   def create_for(user_id)
@@ -77,15 +71,16 @@ class UploadCreator
     is_image = FileHelper.is_supported_image?(@filename)
     is_image ||= @image_info && FileHelper.is_supported_image?("test.#{@image_info.type}")
     is_image = false if @opts[:for_theme]
+    is_thumbnail = SiteSetting.video_thumbnails_enabled && @opts[:type] == "thumbnail"
 
-    # if this is present then it means we are creating an upload record from
+    # If this is present then it means we are creating an upload record from
     # an external_upload_stub and the file is > ExternalUploadManager::DOWNLOAD_LIMIT,
     # so we have not downloaded it to a tempfile. no modifications can be made to the
     # file in this case because it does not exist; we simply move it to its new location
     # in S3
     #
-    # TODO (martin) I've added a bunch of external_upload_too_big checks littered
-    # throughout the UploadCreator code. It would be better to have two seperate
+    # FIXME: I've added a bunch of external_upload_too_big checks littered
+    # throughout the UploadCreator code. It would be better to have two separate
     # classes with shared methods, rather than doing all these checks all over the
     # place. Needs a refactor.
     external_upload_too_big = @opts[:external_upload_too_big]
@@ -122,13 +117,17 @@ class UploadCreator
       # compute the sha of the file and generate a unique hash
       # which is only used for secure uploads
       sha1 = Upload.generate_digest(@file) if !external_upload_too_big
-      unique_hash = generate_fake_sha1_hash if SiteSetting.secure_uploads || external_upload_too_big
+      unique_hash = generate_fake_sha1_hash if SiteSetting.secure_uploads ||
+        external_upload_too_big || is_thumbnail
 
       # we do not check for duplicate uploads if secure uploads is
       # enabled because we use a unique access hash to differentiate
       # between uploads instead of the sha1, and to get around various
       # access/permission issues for uploads
-      if !SiteSetting.secure_uploads && !external_upload_too_big
+      # We do not check for duplicate uploads for video thumbnails because
+      # their filename needs to match with their corresponding video. This also
+      # enables rebuilding the html on a topic to regenerate a thumbnail.
+      if !SiteSetting.secure_uploads && !external_upload_too_big && !is_thumbnail
         # do we already have that upload?
         @upload = Upload.find_by(sha1: sha1)
 
@@ -166,7 +165,14 @@ class UploadCreator
       @upload.user_id = user_id
       @upload.original_filename = fixed_original_filename || @filename
       @upload.filesize = filesize
-      @upload.sha1 = (SiteSetting.secure_uploads? || external_upload_too_big) ? unique_hash : sha1
+      @upload.sha1 =
+        (
+          if (SiteSetting.secure_uploads? || external_upload_too_big || is_thumbnail)
+            unique_hash
+          else
+            sha1
+          end
+        )
       @upload.original_sha1 = SiteSetting.secure_uploads? ? sha1 : nil
       @upload.url = ""
       @upload.origin = @opts[:origin][0...1000] if @opts[:origin]
@@ -389,7 +395,7 @@ class UploadCreator
   end
 
   def convert_heif_to_jpeg?
-    File.extname(@filename).downcase.match?(/\.hei(f|c)$/)
+    File.extname(@filename).downcase.match?(/\.hei(f|c)\z/)
   end
 
   def convert_heif!
@@ -597,7 +603,7 @@ class UploadCreator
   def should_optimize?
     # GIF is too slow (plus, we'll soon be converting them to MP4)
     # Optimizing SVG is useless
-    return false if @file.path =~ /\.(gif|svg)$/i
+    return false if @file.path =~ /\.(gif|svg)\z/i
     # Safeguard for large PNGs
     return pixels < 2_000_000 if @file.path =~ /\.png/i
     # Everything else is fine!
@@ -653,7 +659,7 @@ class UploadCreator
         if is_animated != nil
           # FastImage will return nil if it cannot determine if animated
           is_animated
-        elsif type == "gif" || type == "webp"
+        elsif %w[gif webp avif].include?(type)
           # Only GIFs, WEBPs and a few other unsupported image types can be animated
           OptimizedImage.ensure_safe_paths!(@file.path)
 

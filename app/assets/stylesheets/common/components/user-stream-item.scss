@@ -13,7 +13,7 @@
     list-style: none;
 
     &.moderator-action {
-      background-color: var(--highlight-medium);
+      background-color: var(--highlight-bg);
     }
 
     &.deleted {
@@ -35,6 +35,12 @@
     flex-grow: 1;
   }
 
+  .user-stream-item__metadata {
+    align-items: end;
+    display: flex;
+    flex-direction: column;
+  }
+
   .type,
   span.name {
     color: var(--primary);
@@ -49,13 +55,23 @@
     padding-top: 5px;
   }
 
+  .delete-info {
+    align-items: center;
+    display: flex;
+
+    .d-icon {
+      font-size: var(--font-0);
+      margin-right: 0.5rem;
+    }
+
+    .avatar {
+      margin-right: 0.25rem;
+    }
+  }
+
   .notification .time {
     margin-left: auto;
     float: none;
-  }
-
-  .delete-info .d-icon {
-    font-size: var(--font-0);
   }
 
   .expand-item,
@@ -78,7 +94,7 @@
   }
 
   .edit-reason {
-    background-color: var(--highlight-medium);
+    background-color: var(--highlight-bg);
     padding: 3px 5px 5px 5px;
   }
 

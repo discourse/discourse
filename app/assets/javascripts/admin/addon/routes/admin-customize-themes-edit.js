@@ -1,9 +1,11 @@
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 import I18n from "I18n";
 import Route from "@ember/routing/route";
-import { inject as service } from "@ember/service";
 
-export default Route.extend({
-  dialog: service(),
+export default class AdminCustomizeThemesEditRoute extends Route {
+  @service dialog;
+  @service router;
 
   model(params) {
     const all = this.modelFor("adminCustomizeThemes");
@@ -15,7 +17,7 @@ export default Route.extend({
           field_name: params.field_name,
         }
       : this.replaceWith("adminCustomizeThemes.index");
-  },
+  }
 
   serialize(wrapper) {
     return {
@@ -24,18 +26,18 @@ export default Route.extend({
       field_name: wrapper.field_name || "scss",
       theme_id: wrapper.model.get("id"),
     };
-  },
+  }
 
   setupController(controller, wrapper) {
     const fields = wrapper.model
       .get("fields")
       [wrapper.target].map((f) => f.name);
     if (wrapper.model.remote_theme && wrapper.model.remote_theme.is_git) {
-      this.transitionTo("adminCustomizeThemes.index");
+      this.router.transitionTo("adminCustomizeThemes.index");
       return;
     }
     if (!fields.includes(wrapper.field_name)) {
-      this.transitionTo(
+      this.router.transitionTo(
         "adminCustomizeThemes.edit",
         wrapper.model.id,
         wrapper.target,
@@ -48,27 +50,26 @@ export default Route.extend({
     controller.set("fieldName", wrapper.field_name || "scss");
     this.controllerFor("adminCustomizeThemes").set("editingTheme", true);
     this.set("shouldAlertUnsavedChanges", true);
-  },
+  }
 
-  actions: {
-    willTransition(transition) {
-      if (
-        this.get("controller.model.changed") &&
-        this.shouldAlertUnsavedChanges &&
-        transition.intent.name !== this.routeName
-      ) {
-        transition.abort();
+  @action
+  willTransition(transition) {
+    if (
+      this.get("controller.model.changed") &&
+      this.shouldAlertUnsavedChanges &&
+      transition.intent.name !== this.routeName
+    ) {
+      transition.abort();
 
-        this.dialog.confirm({
-          message: I18n.t("admin.customize.theme.unsaved_changes_alert"),
-          confirmButtonLabel: "admin.customize.theme.discard",
-          cancelButtonLabel: "admin.customize.theme.stay",
-          didConfirm: () => {
-            this.set("shouldAlertUnsavedChanges", false);
-            transition.retry();
-          },
-        });
-      }
-    },
-  },
-});
+      this.dialog.confirm({
+        message: I18n.t("admin.customize.theme.unsaved_changes_alert"),
+        confirmButtonLabel: "admin.customize.theme.discard",
+        cancelButtonLabel: "admin.customize.theme.stay",
+        didConfirm: () => {
+          this.set("shouldAlertUnsavedChanges", false);
+          transition.retry();
+        },
+      });
+    }
+  }
+}

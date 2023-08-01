@@ -1,0 +1,143 @@
+<ConditionalLoadingSpinner @condition={{this.loading}}>
+  <LoadMore
+    @selector=".bookmark-list .bookmark-list-item"
+    @action={{this.loadMore}}
+  >
+    <table class="topic-list bookmark-list">
+      <thead class="topic-list-header">
+        {{#unless this.site.mobileView}}
+          <th class="topic-list-data">{{i18n "topic.title"}}</th>
+          <th class="topic-list-data">&nbsp;</th>
+          <th class="post-metadata topic-list-data">{{i18n
+              "post.bookmarks.updated"
+            }}</th>
+          <th class="post-metadata topic-list-data">{{i18n "activity"}}</th>
+          <th>&nbsp;</th>
+        {{/unless}}
+      </thead>
+      <tbody class="topic-list-body">
+        {{#each this.content as |bookmark|}}
+          <tr class="topic-list-item bookmark-list-item">
+            <th scope="row" class="main-link topic-list-data">
+              <span class="link-top-line">
+                <div class="bookmark-metadata">
+                  {{#if bookmark.reminder_at}}
+                    <span
+                      class="bookmark-metadata-item bookmark-reminder
+                        {{if
+                          bookmark.reminderAtExpired
+                          'bookmark-expired-reminder'
+                        }}"
+                    >
+                      {{d-icon "far-clock"}}{{bookmark.formattedReminder}}
+                    </span>
+                  {{/if}}
+                  {{#if bookmark.name}}
+                    <span class="bookmark-metadata-item">
+                      {{d-icon "info-circle"}}<span>{{bookmark.name}}</span>
+                    </span>
+                  {{/if}}
+                </div>
+                <div class="bookmark-status-with-link">
+                  {{#if bookmark.pinned}}
+                    {{d-icon "thumbtack" class="bookmark-pinned"}}
+                  {{/if}}
+                  {{#if bookmark.bookmarkableTopicAlike}}
+                    <TopicStatus @topic={{bookmark.topicStatus}} />
+                    {{topic-link bookmark.topicForList}}
+                  {{else}}
+                    <a
+                      href={{bookmark.bookmarkable_url}}
+                      role="heading"
+                      aria-level="2"
+                      class="title"
+                      data-topic-id="${topic.id}"
+                    >
+                      {{bookmark.fancy_title}}
+                    </a>
+                  {{/if}}
+                </div>
+              </span>
+              {{#if bookmark.bookmarkableTopicAlike}}
+                <div class="link-bottom-line">
+                  {{category-link bookmark.category}}
+                  {{discourse-tags
+                    bookmark
+                    mode="list"
+                    tagsForUser=this.tagsForUser
+                  }}
+                </div>
+              {{/if}}
+              {{#if
+                (and
+                  this.site.mobileView
+                  bookmark.excerpt
+                  bookmark.user.avatar_template
+                )
+              }}
+                <a
+                  href={{bookmark.bookmarkableUser.path}}
+                  data-user-card={{bookmark.user.username}}
+                  class="avatar"
+                >
+                  {{avatar
+                    bookmark.bookmarkableUser
+                    avatarTemplatePath="avatar_template"
+                    usernamePath="username"
+                    namePath="name"
+                    imageSize="small"
+                  }}
+                </a>
+              {{/if}}
+
+              {{! template-lint-disable no-invalid-interactive }}
+              <p
+                class="post-excerpt"
+                {{on "click" this.screenExcerptForExternalLink}}
+              >{{html-safe bookmark.excerpt}}</p>
+            </th>
+            {{#unless this.site.mobileView}}
+              <td class="topic-list-data">
+                {{#if bookmark.user.avatar_template}}
+                  <a
+                    href={{bookmark.user.path}}
+                    data-user-card={{bookmark.user.username}}
+                    class="avatar"
+                  >
+                    {{avatar
+                      bookmark.user
+                      avatarTemplatePath="avatar_template"
+                      usernamePath="username"
+                      namePath="name"
+                      imageSize="small"
+                    }}
+                  </a>
+                {{/if}}
+              </td>
+              <td class="post-metadata topic-list-data">{{format-date
+                  bookmark.updated_at
+                  format="tiny"
+                }}</td>
+              {{raw
+                "list/activity-column"
+                topic=bookmark
+                class="num post-metadata"
+                tagName="td"
+              }}
+            {{/unless}}
+            <td class="topic-list-data">
+              <BookmarkActionsDropdown
+                @bookmark={{bookmark}}
+                @removeBookmark={{action "removeBookmark"}}
+                @editBookmark={{action "editBookmark"}}
+                @clearBookmarkReminder={{action "clearBookmarkReminder"}}
+                @togglePinBookmark={{action "togglePinBookmark"}}
+              />
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    <ConditionalLoadingSpinner @condition={{this.loadingMore}} />
+  </LoadMore>
+</ConditionalLoadingSpinner>

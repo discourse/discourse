@@ -4,11 +4,12 @@
   @action={{action "createAccount"}}
 >
   {{#unless this.complete}}
-    <PluginOutlet
-      @name="create-account-before-modal-body"
-      @tagName="span"
-      @connectorTagName="div"
-    />
+    <span>
+      <PluginOutlet
+        @name="create-account-before-modal-body"
+        @connectorTagName="div"
+      />
+    </span>
     <DModalBody
       @class={{this.modalBodyClasses}}
       @preventModalAlertHiding={{true}}
@@ -93,8 +94,8 @@
                     @value={{this.accountName}}
                     @id="new-account-name"
                     @class={{value-entered this.accountName}}
-                    @aria-describedby="fullname-validation"
-                    @aria-invalid={{this.nameValidation.failed}}
+                    aria-describedby="fullname-validation"
+                    aria-invalid={{this.nameValidation.failed}}
                   />
                   <label class="alt-placeholder" for="new-account-name">
                     {{i18n "user.name.title"}}
@@ -115,7 +116,7 @@
 
               <PluginOutlet
                 @name="create-account-before-password"
-                @args={{hash
+                @outletArgs={{hash
                   accountName=this.accountName
                   accountUsername=this.accountUsername
                   accountPassword=this.accountPassword
@@ -133,8 +134,8 @@
                     id="new-account-password"
                     @autocomplete="current-password"
                     @capsLockOn={{this.capsLockOn}}
-                    @aria-describedby="password-validation"
-                    @aria-invalid={{this.passwordValidation.failed}}
+                    aria-describedby="password-validation"
+                    aria-invalid={{this.passwordValidation.failed}}
                   />
                   <label class="alt-placeholder" for="new-account-password">
                     {{i18n "user.password.title"}}
@@ -200,7 +201,7 @@
 
               <PluginOutlet
                 @name="create-account-after-password"
-                @args={{hash
+                @outletArgs={{hash
                   accountName=this.accountName
                   accountUsername=this.accountUsername
                   accountPassword=this.accountPassword

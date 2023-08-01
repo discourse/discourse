@@ -28,6 +28,14 @@ class Emoji
     Discourse.cache.fetch(cache_key("standard_emojis")) { load_standard }
   end
 
+  def self.allowed
+    Discourse.cache.fetch(cache_key("allowed_emojis")) { load_allowed }
+  end
+
+  def self.denied
+    Discourse.cache.fetch(cache_key("denied_emojis")) { load_denied }
+  end
+
   def self.aliases
     db["aliases"]
   end
@@ -59,25 +67,22 @@ class Emoji
 
   def self.[](name)
     name = name.delete_prefix(":").delete_suffix(":")
-    is_toned = name.match?(/.+:t[1-6]/)
-    normalized_name = name.gsub(/(.+):t[1-6]/, '\1')
+    is_toned = name.match?(/\A.+:t[1-6]\z/)
+    normalized_name = name.gsub(/\A(.+):t[1-6]\z/, '\1')
 
     found_emoji = nil
 
     [[global_emoji_cache, :standard], [site_emoji_cache, :custom]].each do |cache, list_key|
-      cache_postfix, found_emoji =
+      found_emoji =
         cache.defer_get_set(normalized_name) do
-          emoji =
+          [
             Emoji
               .public_send(list_key)
-              .detect { |e| e.name == normalized_name && (!is_toned || (is_toned && e.tonable)) }
-          [self.cache_postfix, emoji]
-        end
-
-      if found_emoji && (cache_postfix != self.cache_postfix)
-        cache.delete(normalized_name)
-        redo
-      end
+              .detect { |e| e.name == normalized_name && (!is_toned || (is_toned && e.tonable)) },
+          ]
+        end[
+          0
+        ]
 
       break if found_emoji
     end
@@ -117,7 +122,7 @@ class Emoji
   end
 
   def self.clear_cache
-    %w[custom standard translations all].each do |key|
+    %w[custom standard translations allowed denied all].each do |key|
       Discourse.cache.delete(cache_key("#{key}_emojis"))
     end
     global_emoji_cache.clear
@@ -153,6 +158,26 @@ class Emoji
     db["emojis"].map { |e| Emoji.create_from_db_item(e) }.compact
   end
 
+  def self.load_allowed
+    denied_emojis = denied
+    all_emojis = load_standard + load_custom
+
+    if denied_emojis.present?
+      all_emojis.reject { |e| denied_emojis.include?(e.name) }
+    else
+      all_emojis
+    end
+  end
+
+  def self.load_denied
+    if SiteSetting.emoji_deny_list.present?
+      denied_emoji = SiteSetting.emoji_deny_list.split("|")
+      if denied_emoji.size > 0
+        denied_emoji.concat(denied_emoji.flat_map { |e| Emoji.aliases[e] }.compact)
+      end
+    end
+  end
+
   def self.load_custom
     result = []
 
@@ -173,7 +198,7 @@ class Emoji
       emojis.each do |name, url|
         result << Emoji.new.tap do |e|
           e.name = name
-          url = (Discourse.base_path + url) if url[%r{^/[^/]}]
+          url = (Discourse.base_path + url) if url[%r{\A/[^/]}]
           e.url = url
           e.group = group || DEFAULT_GROUP
         end
@@ -232,7 +257,6 @@ class Emoji
         replacements["\u{263B}"] = "slight_smile"
         replacements["\u{2661}"] = "heart"
         replacements["\u{2665}"] = "heart"
-        replacements["\u{263A}"] = "relaxed"
 
         replacements
       end
@@ -247,6 +271,8 @@ class Emoji
   end
 
   def self.lookup_unicode(name)
+    return "" if denied&.include?(name)
+
     @reverse_map ||=
       begin
         map = {}

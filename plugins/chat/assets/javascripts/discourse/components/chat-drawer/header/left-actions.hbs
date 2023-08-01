@@ -1,0 +1,10 @@
+{{#if this.chatStateManager.isDrawerExpanded}}
+  <div class="chat-drawer-header__left-actions">
+    <div class="chat-drawer-header__top-line">
+      <ChatDrawer::Header::BackLink
+        @route="chat"
+        @title={{i18n "chat.return_to_list"}}
+      />
+    </div>
+  </div>
+{{/if}}

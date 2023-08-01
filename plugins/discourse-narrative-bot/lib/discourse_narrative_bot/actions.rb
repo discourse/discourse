@@ -49,7 +49,7 @@ module DiscourseNarrativeBot
           SiteSetting.rate_limit_create_post
         end
 
-      return unless duration > 0
+      return if duration <= 0
 
       data = DiscourseNarrativeBot::Store.get(user.id.to_s)
       return unless data

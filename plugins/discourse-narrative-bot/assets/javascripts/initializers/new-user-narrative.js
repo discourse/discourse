@@ -15,9 +15,9 @@ export default {
     this.appEvents = container.lookup("service:app-events");
 
     withPluginApi("0.8.7", (api) => {
-      const currentUser = api.getCurrentUser();
+      this.currentUser = api.getCurrentUser();
 
-      if (!currentUser) {
+      if (!this.currentUser) {
         return;
       }
 
@@ -41,17 +41,19 @@ export default {
       );
 
       this.messageBus.subscribe(
-        "/new_user_narrative/tutorial_search",
+        `/new_user_narrative/tutorial_search/${this.currentUser.id}`,
         this.onMessage
       );
     });
   },
 
   teardown() {
-    this.messageBus?.unsubscribe(
-      "/new_user_narrative/tutorial_search",
-      this.onMessage
-    );
+    if (this.currentUser) {
+      this.messageBus?.unsubscribe(
+        `/new_user_narrative/tutorial_search/${this.currentUser.id}`,
+        this.onMessage
+      );
+    }
   },
 
   @bind

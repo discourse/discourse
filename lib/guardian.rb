@@ -1,26 +1,28 @@
 # frozen_string_literal: true
 
+require "guardian/bookmark_guardian"
 require "guardian/category_guardian"
 require "guardian/ensure_magic"
+require "guardian/group_guardian"
 require "guardian/post_guardian"
-require "guardian/bookmark_guardian"
+require "guardian/post_revision_guardian"
+require "guardian/sidebar_guardian"
+require "guardian/tag_guardian"
 require "guardian/topic_guardian"
 require "guardian/user_guardian"
-require "guardian/post_revision_guardian"
-require "guardian/group_guardian"
-require "guardian/tag_guardian"
 
 # The guardian is responsible for confirming access to various site resources and operations
 class Guardian
-  include EnsureMagic
-  include CategoryGuardian
-  include PostGuardian
   include BookmarkGuardian
+  include CategoryGuardian
+  include EnsureMagic
+  include GroupGuardian
+  include PostGuardian
+  include PostRevisionGuardian
+  include SidebarGuardian
+  include TagGuardian
   include TopicGuardian
   include UserGuardian
-  include PostRevisionGuardian
-  include GroupGuardian
-  include TagGuardian
 
   class AnonymousUser
     def blank?
@@ -160,7 +162,7 @@ class Guardian
   def can_see?(obj)
     if obj
       see_method = method_name_for :see, obj
-      (see_method ? public_send(see_method, obj) : true)
+      see_method && public_send(see_method, obj)
     end
   end
 
@@ -230,7 +232,11 @@ class Guardian
   end
 
   def can_delete_reviewable_queued_post?(reviewable)
-    reviewable.present? && authenticated? && reviewable.created_by_id == @user.id
+    return false if reviewable.blank?
+    return false if !authenticated?
+    return true if is_api? && is_admin?
+
+    reviewable.created_by_id == @user.id
   end
 
   def can_see_group?(group)
@@ -295,7 +301,7 @@ class Guardian
 
   # Can we impersonate this user?
   def can_impersonate?(target)
-    target &&
+    GlobalSetting.allow_impersonation && target &&
       # You must be an admin to impersonate
       is_admin? &&
       # You may not impersonate other admins unless you are a dev
@@ -366,8 +372,7 @@ class Guardian
 
   def can_use_flair_group?(user, group_id = nil)
     return false if !user || !group_id || !user.group_ids.include?(group_id.to_i)
-    flair_icon, flair_upload_id =
-      Group.where(id: group_id.to_i).pluck_first(:flair_icon, :flair_upload_id)
+    flair_icon, flair_upload_id = Group.where(id: group_id.to_i).pick(:flair_icon, :flair_upload_id)
     flair_icon.present? || flair_upload_id.present?
   end
 
@@ -615,10 +620,14 @@ class Guardian
   private
 
   def is_my_own?(obj)
-    unless anonymous?
-      return obj.user_id == @user.id if obj.respond_to?(:user_id) && obj.user_id && @user.id
-      return obj.user == @user if obj.respond_to?(:user)
+    if anonymous?
+      return(
+        SiteSetting.allow_anonymous_likes? && obj.class == PostAction && obj.is_like? &&
+          obj.user_id == @user.id
+      )
     end
+    return obj.user_id == @user.id if obj.respond_to?(:user_id) && obj.user_id && @user.id
+    return obj.user == @user if obj.respond_to?(:user)
 
     false
   end
@@ -647,6 +656,10 @@ class Guardian
     else
       false
     end
+  end
+
+  def is_api?
+    @user && request&.env&.dig(Auth::DefaultCurrentUserProvider::API_KEY_ENV)
   end
 
   protected

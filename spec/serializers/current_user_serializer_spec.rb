@@ -251,28 +251,6 @@ RSpec.describe CurrentUserSerializer do
     end
   end
 
-  describe "#redesigned_user_page_nav_enabled" do
-    fab!(:group) { Fabricate(:group) }
-    fab!(:group2) { Fabricate(:group) }
-
-    it "is false when enable_new_user_profile_nav_groups site setting has not been set" do
-      expect(serializer.as_json[:redesigned_user_page_nav_enabled]).to eq(false)
-    end
-
-    it "is false if user does not belong to any of the configured groups in the enable_new_user_profile_nav_groups site setting" do
-      SiteSetting.enable_new_user_profile_nav_groups = "#{group.id}|#{group2.id}"
-
-      expect(serializer.as_json[:redesigned_user_page_nav_enabled]).to eq(false)
-    end
-
-    it "is true if user belongs one of the configured groups in the enable_new_user_profile_nav_groups site setting" do
-      SiteSetting.enable_new_user_profile_nav_groups = "#{group.id}|#{group2.id}"
-      group.add(user)
-
-      expect(serializer.as_json[:redesigned_user_page_nav_enabled]).to eq(true)
-    end
-  end
-
   describe "#associated_account_ids" do
     before do
       UserAssociatedAccount.create(
@@ -305,10 +283,10 @@ RSpec.describe CurrentUserSerializer do
       )
     end
 
-    it "isn't included when navigation menu is legacy" do
+    it "is included when navigation menu is legacy" do
       SiteSetting.navigation_menu = "legacy"
 
-      expect(serializer.as_json[:new_personal_messages_notifications_count]).to be_nil
+      expect(serializer.as_json[:new_personal_messages_notifications_count]).to eq(1)
     end
 
     it "is included when sidebar is enabled" do
@@ -319,4 +297,44 @@ RSpec.describe CurrentUserSerializer do
   end
 
   include_examples "User Sidebar Serializer Attributes", described_class
+
+  describe "#sidebar_sections" do
+    fab!(:group) { Fabricate(:group) }
+    fab!(:sidebar_section) { Fabricate(:sidebar_section, user: user) }
+
+    it "eager loads sidebar_urls" do
+      custom_sidebar_section_link_1 =
+        Fabricate(:custom_sidebar_section_link, user: user, sidebar_section: sidebar_section)
+
+      # warmup
+      described_class.new(user, scope: Guardian.new(user), root: false).as_json
+
+      initial_count =
+        track_sql_queries do
+          serialized = described_class.new(user, scope: Guardian.new(user), root: false).as_json
+
+          expect(serialized[:sidebar_sections].count).to eq(2)
+
+          expect(serialized[:sidebar_sections].last.links.map { |link| link.id }).to eq(
+            [custom_sidebar_section_link_1.linkable.id],
+          )
+        end.count
+
+      custom_sidebar_section_link_2 =
+        Fabricate(:custom_sidebar_section_link, user: user, sidebar_section: sidebar_section)
+
+      final_count =
+        track_sql_queries do
+          serialized = described_class.new(user, scope: Guardian.new(user), root: false).as_json
+
+          expect(serialized[:sidebar_sections].count).to eq(2)
+
+          expect(serialized[:sidebar_sections].last.links.map { |link| link.id }).to eq(
+            [custom_sidebar_section_link_1.linkable.id, custom_sidebar_section_link_2.linkable.id],
+          )
+        end.count
+
+      expect(initial_count).to eq(final_count)
+    end
+  end
 end

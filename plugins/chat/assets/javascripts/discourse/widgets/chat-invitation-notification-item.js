@@ -38,7 +38,7 @@ createWidgetFrom(DefaultNotificationItem, "chat-invitation-notification-item", {
       title: data.chat_channel_title,
       slug: data.chat_channel_slug,
     });
-    return `/chat/channel/${data.chat_channel_id}/${slug || "-"}?messageId=${
+    return `/chat/c/${slug || "-"}/${data.chat_channel_id}/${
       data.chat_message_id
     }`;
   },

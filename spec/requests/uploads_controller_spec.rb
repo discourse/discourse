@@ -776,11 +776,14 @@ RSpec.describe UploadsController do
         expect(result["url"]).not_to include("&x-amz-meta-blah=wontbeincluded")
       end
 
-      it "rate limits" do
-        RateLimiter.enable
-        RateLimiter.clear_all!
+      describe "rate limiting" do
+        before { RateLimiter.enable }
 
-        stub_const(ExternalUploadHelpers, "PRESIGNED_PUT_RATE_LIMIT_PER_MINUTE", 1) do
+        use_redis_snapshotting
+
+        it "rate limits" do
+          SiteSetting.max_presigned_put_per_minute = 1
+
           post "/uploads/generate-presigned-put.json",
                params: {
                  file_name: "test.png",
@@ -793,8 +796,9 @@ RSpec.describe UploadsController do
                  type: "card_background",
                  file_size: 1024,
                }
+
+          expect(response.status).to eq(429)
         end
-        expect(response.status).to eq(429)
       end
     end
 
@@ -850,6 +854,16 @@ RSpec.describe UploadsController do
         expect(response.status).to eq(422)
         expect(response.body).to include(
           I18n.t("upload.attachments.too_large_humanized", max_size: "1 MB"),
+        )
+      end
+
+      it "returns 422 when the file is an gif and it's too big, since gifs cannot be resized on client" do
+        SiteSetting.max_image_size_kb = 1024
+        post "/uploads/create-multipart.json",
+             **{ params: { file_name: "test.gif", file_size: 9_999_999, upload_type: "composer" } }
+        expect(response.status).to eq(422)
+        expect(response.body).to include(
+          I18n.t("upload.images.too_large_humanized", max_size: "1 MB"),
         )
       end
 
@@ -934,12 +948,15 @@ RSpec.describe UploadsController do
         expect(response.status).to eq(200)
       end
 
-      it "rate limits" do
-        RateLimiter.enable
-        RateLimiter.clear_all!
+      describe "rate limiting" do
+        before { RateLimiter.enable }
 
-        stub_create_multipart_request
-        stub_const(ExternalUploadHelpers, "CREATE_MULTIPART_RATE_LIMIT_PER_MINUTE", 1) do
+        use_redis_snapshotting
+
+        it "rate limits" do
+          SiteSetting.max_create_multipart_per_minute = 1
+
+          stub_create_multipart_request
           post "/uploads/create-multipart.json",
                params: {
                  file_name: "test.png",
@@ -1108,27 +1125,31 @@ RSpec.describe UploadsController do
         )
       end
 
-      it "rate limits" do
-        RateLimiter.enable
-        RateLimiter.clear_all!
-        SiteSetting.max_batch_presign_multipart_per_minute = 1
+      describe "rate limiting" do
+        before { RateLimiter.enable }
 
-        stub_list_multipart_request
-        post "/uploads/batch-presign-multipart-parts.json",
-             params: {
-               unique_identifier: external_upload_stub.unique_identifier,
-               part_numbers: [1, 2, 3],
-             }
+        use_redis_snapshotting
 
-        expect(response.status).to eq(200)
+        it "rate limits" do
+          SiteSetting.max_batch_presign_multipart_per_minute = 1
 
-        post "/uploads/batch-presign-multipart-parts.json",
-             params: {
-               unique_identifier: external_upload_stub.unique_identifier,
-               part_numbers: [1, 2, 3],
-             }
+          stub_list_multipart_request
+          post "/uploads/batch-presign-multipart-parts.json",
+               params: {
+                 unique_identifier: external_upload_stub.unique_identifier,
+                 part_numbers: [1, 2, 3],
+               }
 
-        expect(response.status).to eq(429)
+          expect(response.status).to eq(200)
+
+          post "/uploads/batch-presign-multipart-parts.json",
+               params: {
+                 unique_identifier: external_upload_stub.unique_identifier,
+                 part_numbers: [1, 2, 3],
+               }
+
+          expect(response.status).to eq(429)
+        end
       end
     end
 
@@ -1331,11 +1352,14 @@ RSpec.describe UploadsController do
         expect(result[:upload]).to eq(JSON.parse(UploadSerializer.new(upload).to_json)[:upload])
       end
 
-      it "rate limits" do
-        RateLimiter.enable
-        RateLimiter.clear_all!
+      describe "rate limiting" do
+        before { RateLimiter.enable }
 
-        stub_const(ExternalUploadHelpers, "COMPLETE_MULTIPART_RATE_LIMIT_PER_MINUTE", 1) do
+        use_redis_snapshotting
+
+        it "rate limits" do
+          SiteSetting.max_complete_multipart_per_minute = 1
+
           post "/uploads/complete-multipart.json",
                params: {
                  unique_identifier: "blah",
@@ -1346,8 +1370,9 @@ RSpec.describe UploadsController do
                  unique_identifier: "blah",
                  parts: [{ part_number: 1, etag: "test1" }, { part_number: 2, etag: "test2" }],
                }
+
+          expect(response.status).to eq(429)
         end
-        expect(response.status).to eq(429)
       end
     end
 

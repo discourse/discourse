@@ -1,15 +1,15 @@
+import { action, computed } from "@ember/object";
 import Category from "discourse/models/category";
 import Component from "@ember/component";
-import { computed } from "@ember/object";
 
-export default Component.extend({
-  selectedCategories: computed("value", function () {
+export default class CategoryList extends Component {
+  @computed("value")
+  get selectedCategories() {
     return Category.findByIds(this.value.split("|").filter(Boolean));
-  }),
+  }
 
-  actions: {
-    onChangeSelectedCategories(value) {
-      this.set("value", (value || []).mapBy("id").join("|"));
-    },
-  },
-});
+  @action
+  onChangeSelectedCategories(value) {
+    this.set("value", (value || []).mapBy("id").join("|"));
+  }
+}

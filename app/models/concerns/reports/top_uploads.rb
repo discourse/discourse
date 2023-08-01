@@ -66,7 +66,7 @@ module Reports::TopUploads
       builder.where("up.created_at < :end_date", end_date: report.end_date)
 
       if extension_filter
-        builder.where("up.extension = :extension", extension: extension_filter.sub(/^\./, ""))
+        builder.where("up.extension = :extension", extension: extension_filter.sub(/\A\./, ""))
       end
 
       builder.query.each do |row|

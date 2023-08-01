@@ -42,7 +42,8 @@
           </td>
           <td class="version">
             <div class="label">{{i18n "admin.plugins.version"}}</div>
-            {{plugin.version}}
+            {{plugin.version}}<br />
+            <PluginCommitHash @plugin={{plugin}} />
           </td>
           <td class="col-enabled">
             <div class="label">{{i18n "admin.plugins.enabled"}}</div>
@@ -81,9 +82,10 @@
     href="https://meta.discourse.org/t/install-a-plugin/19157"
   >{{i18n "admin.plugins.howto"}}</a></p>
 
-<PluginOutlet
-  @name="admin-below-plugins-index"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="admin-below-plugins-index"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
+</span>

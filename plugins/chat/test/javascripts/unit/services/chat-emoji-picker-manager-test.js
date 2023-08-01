@@ -22,46 +22,6 @@ module(
       this.manager.close();
     });
 
-    test("startFromMessageReactionList", async function (assert) {
-      const callback = () => {};
-      this.manager.startFromMessageReactionList({ id: 1 }, false, callback);
-
-      assert.ok(this.manager.loading);
-      assert.ok(this.manager.opened);
-      assert.strictEqual(this.manager.context, "chat-message");
-      assert.strictEqual(this.manager.callback, callback);
-      assert.deepEqual(this.manager.visibleSections, [
-        "favorites",
-        "smileys_&_emotion",
-      ]);
-      assert.strictEqual(this.manager.lastVisibleSection, "favorites");
-
-      await settled();
-
-      assert.deepEqual(this.manager.emojis, emojisReponse());
-      assert.strictEqual(this.manager.loading, false);
-    });
-
-    test("startFromMessageActions", async function (assert) {
-      const callback = () => {};
-      this.manager.startFromMessageReactionList({ id: 1 }, false, callback);
-
-      assert.ok(this.manager.loading);
-      assert.ok(this.manager.opened);
-      assert.strictEqual(this.manager.context, "chat-message");
-      assert.strictEqual(this.manager.callback, callback);
-      assert.deepEqual(this.manager.visibleSections, [
-        "favorites",
-        "smileys_&_emotion",
-      ]);
-      assert.strictEqual(this.manager.lastVisibleSection, "favorites");
-
-      await settled();
-
-      assert.deepEqual(this.manager.emojis, emojisReponse());
-      assert.strictEqual(this.manager.loading, false);
-    });
-
     test("addVisibleSections", async function (assert) {
       this.manager.addVisibleSections(["favorites", "objects"]);
 
@@ -75,7 +35,7 @@ module(
     test("sections", async function (assert) {
       assert.deepEqual(this.manager.sections, []);
 
-      this.manager.startFromComposer(() => {});
+      this.manager.open({});
 
       assert.deepEqual(this.manager.sections, []);
 
@@ -84,14 +44,12 @@ module(
       assert.deepEqual(this.manager.sections, ["favorites"]);
     });
 
-    test("startFromComposer", async function (assert) {
-      const callback = () => {};
-      this.manager.startFromComposer(callback);
+    test("open", async function (assert) {
+      this.manager.open({ context: "chat-composer" });
 
       assert.ok(this.manager.loading);
-      assert.ok(this.manager.opened);
-      assert.strictEqual(this.manager.context, "chat-composer");
-      assert.strictEqual(this.manager.callback, callback);
+      assert.ok(this.manager.picker);
+      assert.strictEqual(this.manager.picker.context, "chat-composer");
       assert.deepEqual(this.manager.visibleSections, [
         "favorites",
         "smileys_&_emotion",
@@ -105,19 +63,15 @@ module(
     });
 
     test("closeExisting", async function (assert) {
-      const callback = () => {
-        return;
-      };
-
-      this.manager.startFromComposer(() => {});
+      this.manager.open({ context: "channel-composer", trigger: "foo" });
       this.manager.addVisibleSections("objects");
       this.manager.lastVisibleSection = "objects";
-      this.manager.startFromComposer(callback);
+      this.manager.open({ context: "thread-composer", trigger: "bar" });
 
       assert.strictEqual(
-        this.manager.callback,
-        callback,
-        "it resets the callback to latest picker"
+        this.manager.picker.context,
+        "thread-composer",
+        "it resets the picker to latest picker"
       );
       assert.deepEqual(
         this.manager.visibleSections,
@@ -131,39 +85,21 @@ module(
       );
     });
 
-    test("didSelectEmoji", async function (assert) {
-      let value;
-      const callback = (emoji) => {
-        value = emoji.name;
-      };
-      this.manager.startFromComposer(callback);
-      this.manager.didSelectEmoji({ name: "joy" });
-
-      assert.notOk(this.manager.callback);
-      assert.strictEqual(value, "joy");
-
-      await settled();
-
-      assert.notOk(this.manager.opened, "it closes the picker after selection");
-    });
-
     test("close", async function (assert) {
-      this.manager.startFromComposer(() => {});
+      this.manager.open({ context: "channel-composer" });
 
-      assert.ok(this.manager.opened);
-      assert.ok(this.manager.callback);
+      assert.ok(this.manager.picker);
 
       this.manager.addVisibleSections("objects");
       this.manager.lastVisibleSection = "objects";
       this.manager.close();
 
-      assert.notOk(this.manager.callback);
       assert.ok(this.manager.closing);
-      assert.ok(this.manager.opened);
+      assert.ok(this.manager.picker);
 
       await settled();
 
-      assert.notOk(this.manager.opened);
+      assert.notOk(this.manager.picker);
       assert.notOk(this.manager.closing);
       assert.deepEqual(
         this.manager.visibleSections,

@@ -46,8 +46,8 @@ es:
       invalid: |-
         Lo siento, es matemáticamente imposible tirar esa combinación de dados. :confounded:
       not_enough_dice:
-        one: "Solo tengo %{count} dado. [Vergonzoso](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), ¡lo sé!"
-        other: "Solo tengo %{count} dados. [Vergonzoso](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), ¡lo sé!"
+        one: "Solo tengo %{count} dado. ¡Vergonzoso, lo sé!"
+        other: "Solo tengo %{count} dados. ¡Vergonzoso, lo sé!"
       out_of_range: |-
         ¿Sabías que [el número máximo de lados](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) que un dado matemáticamente correcto puede tener es 120?
       results: |-

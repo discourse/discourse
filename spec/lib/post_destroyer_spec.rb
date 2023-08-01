@@ -94,7 +94,7 @@ RSpec.describe PostDestroyer do
       expect(reply1.deleted_at).to eq(nil)
 
       # ignore the flag, we should be able to delete the stub
-      reviewable.perform(Discourse.system_user, :ignore)
+      reviewable.perform(Discourse.system_user, :ignore_and_do_nothing)
       PostDestroyer.destroy_stubs
 
       reply1.reload
@@ -735,20 +735,20 @@ RSpec.describe PostDestroyer do
     end
 
     context "as an admin" do
-      subject { PostDestroyer.new(admin, post).destroy }
+      subject(:destroyer) { PostDestroyer.new(admin, post).destroy }
 
       it "deletes the post" do
-        subject
+        destroyer
         expect(post.deleted_at).to be_present
         expect(post.deleted_by).to eq(admin)
       end
 
       it "creates a new user history entry" do
-        expect { subject }.to change { UserHistory.count }.by(1)
+        expect { destroyer }.to change { UserHistory.count }.by(1)
       end
 
       it "triggers a extensibility event" do
-        events = DiscourseEvent.track_events { subject }
+        events = DiscourseEvent.track_events { destroyer }
 
         expect(events[0][:event_name]).to eq(:post_destroyed)
         expect(events[0][:params].first).to eq(post)
@@ -768,34 +768,34 @@ RSpec.describe PostDestroyer do
     end
 
     context "as a moderator" do
-      subject { PostDestroyer.new(moderator, reply).destroy }
+      subject(:destroyer) { PostDestroyer.new(moderator, reply).destroy }
 
       it "deletes the reply" do
-        subject
+        destroyer
         expect(reply.deleted_at).to be_present
         expect(reply.deleted_by).to eq(moderator)
       end
 
       it "doesn't decrement post_count again" do
-        expect { subject }.to_not change { author.user_stat.post_count }
+        expect { destroyer }.to_not change { author.user_stat.post_count }
       end
     end
 
     context "as an admin" do
-      subject { PostDestroyer.new(admin, reply).destroy }
+      subject(:destroyer) { PostDestroyer.new(admin, reply).destroy }
 
       it "deletes the post" do
-        subject
+        destroyer
         expect(reply.deleted_at).to be_present
         expect(reply.deleted_by).to eq(admin)
       end
 
       it "doesn't decrement post_count again" do
-        expect { subject }.to_not change { author.user_stat.post_count }
+        expect { destroyer }.to_not change { author.user_stat.post_count }
       end
 
       it "creates a new user history entry" do
-        expect { subject }.to change { UserHistory.count }.by(1)
+        expect { destroyer }.to change { UserHistory.count }.by(1)
       end
     end
   end
@@ -938,7 +938,7 @@ RSpec.describe PostDestroyer do
 
     it "should not send the flags_agreed_and_post_deleted message if flags were ignored" do
       expect(ReviewableFlaggedPost.pending.count).to eq(1)
-      flag_result.reviewable.perform(moderator, :ignore)
+      flag_result.reviewable.perform(moderator, :ignore_and_do_nothing)
       second_post.reload
       expect(ReviewableFlaggedPost.pending.count).to eq(0)
 
@@ -1116,13 +1116,32 @@ RSpec.describe PostDestroyer do
       expect(post_revision.reload.persisted?).to be true
     end
 
-    it "always destroy the post when the force_destroy option is passed" do
+    it "destroys the post when force_destroy is true for soft deleted topics" do
+      post = Fabricate(:post)
+      topic = post.topic
+
+      PostDestroyer.new(moderator, post).destroy
+      post = Post.with_deleted.find_by(id: post.id)
+      expect(post).not_to eq(nil)
+
+      PostDestroyer.new(moderator, post, force_destroy: true).destroy
+      post = Post.with_deleted.find_by(id: post.id)
+      expect(post).to eq(nil)
+
+      topic = Topic.with_deleted.find_by(id: topic.id)
+      expect(topic).to eq(nil)
+    end
+
+    it "destroys the post when force_destroy is true for regular posts" do
       PostDestroyer.new(moderator, reply, force_destroy: true).destroy
       expect { reply.reload }.to raise_error(ActiveRecord::RecordNotFound)
 
       regular_post = Fabricate(:post)
+      topic = regular_post.topic
+
       PostDestroyer.new(moderator, regular_post, force_destroy: true).destroy
       expect { regular_post.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { topic.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 

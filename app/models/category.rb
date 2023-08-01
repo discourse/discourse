@@ -46,7 +46,13 @@ class Category < ActiveRecord::Base
   has_many :topic_timers, dependent: :destroy
   has_many :upload_references, as: :target, dependent: :destroy
 
+  has_one :category_setting, dependent: :destroy
+
+  delegate :auto_bump_cooldown_days, to: :category_setting, allow_nil: true
+
   has_and_belongs_to_many :web_hooks
+
+  accepts_nested_attributes_for :category_setting, update_only: true
 
   validates :user_id, presence: true
 
@@ -73,6 +79,12 @@ class Category < ActiveRecord::Base
   validate :ensure_slug
   validate :permissions_compatibility_validator
 
+  validates :default_slow_mode_seconds,
+            numericality: {
+              only_integer: true,
+              greater_than: 0,
+            },
+            allow_nil: true
   validates :auto_close_hours,
             numericality: {
               greater_than: 0,
@@ -88,6 +100,7 @@ class Category < ActiveRecord::Base
   before_save :apply_permissions
   before_save :downcase_email
   before_save :downcase_name
+  before_save :ensure_category_setting
 
   after_save :publish_discourse_stylesheet
   after_save :publish_category
@@ -125,12 +138,19 @@ class Category < ActiveRecord::Base
 
   has_many :category_tags, dependent: :destroy
   has_many :tags, through: :category_tags
+  has_many :none_synonym_tags,
+           -> { where(target_tag_id: nil) },
+           through: :category_tags,
+           source: :tag
   has_many :category_tag_groups, dependent: :destroy
   has_many :tag_groups, through: :category_tag_groups
 
   has_many :category_required_tag_groups, -> { order(order: :asc) }, dependent: :destroy
   has_many :sidebar_section_links, as: :linkable, dependent: :delete_all
   has_many :embeddable_hosts, dependent: :destroy
+
+  has_many :category_form_templates, dependent: :destroy
+  has_many :form_templates, through: :category_form_templates
 
   belongs_to :reviewable_by_group, class_name: "Group"
 
@@ -184,21 +204,65 @@ class Category < ActiveRecord::Base
   @topic_id_cache = DistributedCache.new("category_topic_ids")
 
   def self.topic_ids
-    @topic_id_cache["ids"] || reset_topic_ids_cache
+    @topic_id_cache.defer_get_set("ids") { Set.new(Category.pluck(:topic_id).compact) }
   end
 
   def self.reset_topic_ids_cache
-    @topic_id_cache["ids"] = Set.new(Category.pluck(:topic_id).compact)
+    @topic_id_cache.clear
   end
 
   def reset_topic_ids_cache
     Category.reset_topic_ids_cache
   end
 
+  # Accepts an array of slugs with each item in the array
+  # Returns the category ids of the last slug in the array. The slugs array has to follow the proper category
+  # nesting hierarchy. If any of the slug in the array is invalid or if the slugs array does not follow the proper
+  # category nesting hierarchy, nil is returned.
+  #
+  # When only a single slug is provided, the category id of all the categories with that slug is returned.
+  def self.ids_from_slugs(slugs)
+    return [] if slugs.blank?
+
+    params = {}
+    params_index = 0
+
+    sqls =
+      slugs.map do |slug|
+        category_slugs =
+          slug.split(":").first(SiteSetting.max_category_nesting).map { Slug.for(_1, "") }
+
+        sql = ""
+
+        if category_slugs.length == 1
+          params[:"slug_#{params_index}"] = category_slugs.first
+          sql = "SELECT id FROM categories WHERE slug = :slug_#{params_index}"
+          params_index += 1
+        else
+          category_slugs.each_with_index do |category_slug, index|
+            params[:"slug_#{params_index}"] = category_slug
+
+            sql =
+              if index == 0
+                "SELECT id FROM categories WHERE slug = :slug_#{params_index} AND parent_category_id IS NULL"
+              else
+                "SELECT id FROM categories WHERE parent_category_id = (#{sql}) AND slug = :slug_#{params_index}"
+              end
+
+            params_index += 1
+          end
+        end
+
+        sql
+      end
+
+    DB.query_single(sqls.join("\nUNION ALL\n"), params)
+  end
+
   @@subcategory_ids = DistributedCache.new("subcategory_ids")
 
   def self.subcategory_ids(category_id)
-    @@subcategory_ids[category_id] ||= begin
+    @@subcategory_ids.defer_get_set(category_id.to_s) do
       sql = <<~SQL
             WITH RECURSIVE subcategories AS (
                 SELECT :category_id id, 1 depth
@@ -373,7 +437,7 @@ class Category < ActiveRecord::Base
     @@cache_text ||= LruRedux::ThreadSafeCache.new(1000)
     @@cache_text.getset(self.description) do
       text = Nokogiri::HTML5.fragment(self.description).text.strip
-      Rack::Utils.escape_html(text).html_safe
+      ERB::Util.html_escape(text).html_safe
     end
   end
 
@@ -421,7 +485,7 @@ class Category < ActiveRecord::Base
     end
 
     # only allow to use category itself id.
-    match_id = /^(\d+)-category/.match(self.slug)
+    match_id = /\A(\d+)-category/.match(self.slug)
     if match_id.present?
       errors.add(:slug, :invalid) if new_record? || (match_id[1] != self.id.to_s)
     end
@@ -667,7 +731,7 @@ class Category < ActiveRecord::Base
         .exclude_scheduled_bump_topics
         .where(category_id: self.id)
         .where("id <> ?", self.topic_id)
-        .where("bumped_at < ?", 1.day.ago)
+        .where("bumped_at < ?", (self.auto_bump_cooldown_days || 1).days.ago)
         .where("pinned_at IS NULL AND NOT closed AND NOT archived")
         .order("bumped_at ASC")
         .limit(1)
@@ -778,9 +842,8 @@ class Category < ActiveRecord::Base
 
   def self.query_parent_category(parent_slug)
     encoded_parent_slug = CGI.escape(parent_slug) if SiteSetting.slug_generation_method == "encoded"
-    self.where(slug: (encoded_parent_slug || parent_slug), parent_category_id: nil).pluck_first(
-      :id,
-    ) || self.where(id: parent_slug.to_i).pluck_first(:id)
+    self.where(slug: (encoded_parent_slug || parent_slug), parent_category_id: nil).pick(:id) ||
+      self.where(id: parent_slug.to_i).pick(:id)
   end
 
   def self.query_category(slug_or_id, parent_category_id)
@@ -828,16 +891,6 @@ class Category < ActiveRecord::Base
     @@url_cache.defer_get_set(self.id) do
       "#{Discourse.base_path}/c/#{slug_path.join("/")}/#{self.id}"
     end
-  end
-
-  def url_with_id
-    Discourse.deprecate(
-      "Category#url_with_id is deprecated. Use `Category#url` instead.",
-      output_in_test: true,
-      drop_from: "2.9.0",
-    )
-
-    url
   end
 
   # If the name changes, try and update the category definition topic too if it's an exact match
@@ -897,7 +950,7 @@ class Category < ActiveRecord::Base
       slug_path.inject(nil) do |parent_id, slug|
         category = Category.where(slug: slug, parent_category_id: parent_id)
 
-        if match_id = /^(\d+)-category/.match(slug).presence
+        if match_id = /\A(\d+)-category/.match(slug).presence
           category = category.or(Category.where(id: match_id[1], parent_category_id: parent_id))
         end
 
@@ -1025,6 +1078,10 @@ class Category < ActiveRecord::Base
   end
 
   private
+
+  def ensure_category_setting
+    self.build_category_setting if self.category_setting.blank?
+  end
 
   def should_update_reviewables?
     SiteSetting.enable_category_group_moderation? && saved_change_to_reviewable_by_group_id?

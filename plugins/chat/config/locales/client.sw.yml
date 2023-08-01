@@ -20,14 +20,13 @@ sw:
       joined: "alijiunga"
       email_frequency:
         never: "Kamwe"
+      header_indicator_preference:
+        never: "Kamwe"
       flag: "Bendera"
       join: "Jiunge"
+      last_visit: "Mara ya mwisho imetembelewa"
       mention_warning:
         dismiss: "ondosha..."
-        groups:
-          users_limit:
-            one: "Mtumiaji mmoja"
-            other: "%{count} watumiaji"
       reply: "Jibu"
       edit: "Hariri"
       rebake_message: "Tengeneza upya HTML"
@@ -67,11 +66,14 @@ sw:
       composer:
         italic_text: "Maneno yaliyo tiliwa mkazo"
         bold_text: "Maneno yaliyokolezwa"
+        send: "Tuma"
       notification_levels:
         never: "Kamwe"
       settings:
         follow: "Jiunge"
         followed: "Alijiunga"
+        threading_enabled: "Imeruhusiwa"
+        threading_disabled: "Imezuiwa"
         notifications: "Taarifa"
         preview: "Kihakiki"
         save: "Hifadhi"
@@ -99,6 +101,18 @@ sw:
       emoji_picker:
         objects: "Vitu"
         flags: "Bendera"
+      thread:
+        title: "Kichwa cha Habari"
+        replies:
+          one: "%{count} jibu"
+          other: "%{count} majibu"
+        settings: "Mipangilio"
+        last_reply: "jibu la mwisho"
+        notifications:
+          regular:
+            title: "Kawaida"
+          tracking:
+            title: "Fuatilia"
       draft_channel_screen:
         header: "Ujumbe Mpya"
         cancel: "Ghairi"

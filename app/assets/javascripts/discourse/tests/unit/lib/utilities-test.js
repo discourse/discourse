@@ -1,6 +1,4 @@
 import {
-  avatarImg,
-  avatarUrl,
   caretRowCol,
   clipboardCopyAsync,
   defaultHomepage,
@@ -8,7 +6,6 @@ import {
   escapeExpression,
   extractDomainFromUrl,
   fillMissingDates,
-  getRawSize,
   inCodeBlock,
   initializeDefaultHomepage,
   mergeSortedLists,
@@ -25,7 +22,6 @@ import { chromeTest } from "discourse/tests/helpers/qunit-helpers";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import { setupURL } from "discourse-common/lib/get-url";
 import { setupTest } from "ember-qunit";
 import { getOwner } from "discourse-common/lib/get-owner";
 
@@ -84,76 +80,6 @@ module("Unit | Utilities", function (hooks) {
       "localhost",
       "works for localhost"
     );
-  });
-
-  test("avatarUrl", function (assert) {
-    let rawSize = getRawSize;
-    assert.blank(avatarUrl("", "tiny"), "no template returns blank");
-    assert.strictEqual(
-      avatarUrl("/fake/template/{size}.png", "tiny"),
-      "/fake/template/" + rawSize(20) + ".png",
-      "simple avatar url"
-    );
-    assert.strictEqual(
-      avatarUrl("/fake/template/{size}.png", "large"),
-      "/fake/template/" + rawSize(45) + ".png",
-      "different size"
-    );
-
-    setupURL("https://app-cdn.example.com", "https://example.com", "");
-
-    assert.strictEqual(
-      avatarUrl("/fake/template/{size}.png", "large"),
-      "https://app-cdn.example.com/fake/template/" + rawSize(45) + ".png",
-      "uses CDN if present"
-    );
-  });
-
-  let setDevicePixelRatio = function (value) {
-    if (Object.defineProperty && !window.hasOwnProperty("devicePixelRatio")) {
-      Object.defineProperty(window, "devicePixelRatio", { value: 2 });
-    } else {
-      window.devicePixelRatio = value;
-    }
-  };
-
-  test("avatarImg", function (assert) {
-    let oldRatio = window.devicePixelRatio;
-    setDevicePixelRatio(2);
-
-    let avatarTemplate = "/path/to/avatar/{size}.png";
-    assert.strictEqual(
-      avatarImg({ avatarTemplate, size: "tiny" }),
-      "<img loading='lazy' alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar'>",
-      "it returns the avatar html"
-    );
-
-    assert.strictEqual(
-      avatarImg({
-        avatarTemplate,
-        size: "tiny",
-        title: "evilest trout",
-      }),
-      "<img loading='lazy' alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar' title='evilest trout' aria-label='evilest trout'>",
-      "it adds a title if supplied"
-    );
-
-    assert.strictEqual(
-      avatarImg({
-        avatarTemplate,
-        size: "tiny",
-        extraClasses: "evil fish",
-      }),
-      "<img loading='lazy' alt='' width='20' height='20' src='/path/to/avatar/40.png' class='avatar evil fish'>",
-      "it adds extra classes if supplied"
-    );
-
-    assert.blank(
-      avatarImg({ avatarTemplate: "", size: "tiny" }),
-      "it doesn't render avatars for invalid avatar template"
-    );
-
-    setDevicePixelRatio(oldRatio);
   });
 
   test("defaultHomepage via meta tag", function (assert) {

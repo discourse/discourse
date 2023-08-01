@@ -1,13 +1,17 @@
+import { action } from "@ember/object";
 import Route from "@ember/routing/route";
+import { inject as service } from "@ember/service";
 
-export default Route.extend({
-  actions: {
-    show(apiKey) {
-      this.transitionTo("adminApiKeys.show", apiKey.id);
-    },
+export default class AdminApiKeysRoute extends Route {
+  @service router;
 
-    new() {
-      this.transitionTo("adminApiKeys.new");
-    },
-  },
-});
+  @action
+  show(apiKey) {
+    this.router.transitionTo("adminApiKeys.show", apiKey.id);
+  }
+
+  @action
+  new() {
+    this.router.transitionTo("adminApiKeys.new");
+  }
+}

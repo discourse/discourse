@@ -45,6 +45,11 @@ uk:
       trigger: "крутити"
       invalid: |-
         Вибачте, комбінація кубиків математично неможлива. :confounded:
+      not_enough_dice:
+        one: "У мене тільки %{count} життя. Соромно, я знаю!"
+        few: "Мені залишилося тільки %{count} раз померти. Соромно, я знаю!"
+        many: "У мене тільки %{count} життів. Соромно, я знаю!"
+        other: "У мене тільки %{count} життів. Соромно, я знаю!"
       out_of_range: |-
         Чи знаєте ви, що [максимальна кількість сторін](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) в кубиках може бути 120?
       results: |-

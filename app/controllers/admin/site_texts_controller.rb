@@ -20,17 +20,18 @@ class Admin::SiteTextsController < Admin::AdminController
 
   def index
     overridden = params[:overridden] == "true"
+    outdated = params[:outdated] == "true"
     extras = {}
 
     query = params[:q] || ""
 
     locale = fetch_locale(params[:locale])
 
-    if query.blank? && !overridden
+    if query.blank? && !overridden && !outdated
       extras[:recommended] = true
       results = self.class.preferred_keys.map { |k| record_for(key: k, locale: locale) }
     else
-      results = find_translations(query, overridden, locale)
+      results = find_translations(query, overridden, outdated, locale)
 
       if results.any?
         extras[:regex] = I18n::Backend::DiscourseI18n.create_search_regexp(query, as_string: true)
@@ -127,6 +128,26 @@ class Admin::SiteTextsController < Admin::AdminController
     render_serialized(site_text, SiteTextSerializer, root: "site_text", rest_serializer: true)
   end
 
+  def dismiss_outdated
+    locale = fetch_locale(params[:locale])
+    override = TranslationOverride.find_by(locale: locale, translation_key: params[:id])
+
+    raise Discourse::NotFound if override.blank?
+
+    if override.outdated?
+      override.update!(
+        status: "up_to_date",
+        original_translation:
+          I18n.overrides_disabled do
+            I18n.t(TranslationOverride.transform_pluralized_key(params[:id]), locale: :en)
+          end,
+      )
+      render json: success_json
+    else
+      render json: failed_json.merge(message: "Can only dismiss outdated translations"), status: 422
+    end
+  end
+
   def get_reseed_options
     render_json_dump(
       categories: SeedData::Categories.with_default_locale.reseed_options,
@@ -156,11 +177,15 @@ class Admin::SiteTextsController < Admin::AdminController
   end
 
   def record_for(key:, value: nil, locale:)
+    en_key = TranslationOverride.transform_pluralized_key(key)
     value ||= I18n.with_locale(locale) { I18n.t(key) }
-    { id: key, value: value, locale: locale }
+    interpolation_keys =
+      I18nInterpolationKeysFinder.find(I18n.overrides_disabled { I18n.t(en_key, locale: :en) })
+    custom_keys = TranslationOverride.custom_interpolation_keys(en_key)
+    { id: key, value: value, locale: locale, interpolation_keys: interpolation_keys + custom_keys }
   end
 
-  PLURALIZED_REGEX = /(.*)\.(zero|one|two|few|many|other)$/
+  PLURALIZED_REGEX = /(.*)\.(zero|one|two|few|many|other)\z/
 
   def find_site_text(locale)
     if self.class.restricted_keys.include?(params[:id])
@@ -184,9 +209,17 @@ class Admin::SiteTextsController < Admin::AdminController
     raise Discourse::NotFound
   end
 
-  def find_translations(query, overridden, locale)
+  def find_translations(query, overridden, outdated, locale)
     translations = Hash.new { |hash, key| hash[key] = {} }
     search_results = I18n.with_locale(locale) { I18n.search(query, only_overridden: overridden) }
+
+    if outdated
+      outdated_keys =
+        TranslationOverride.where(status: %i[outdated invalid_interpolation_keys]).pluck(
+          :translation_key,
+        )
+      search_results.select! { |k, _| outdated_keys.include?(k) }
+    end
 
     search_results.each do |key, value|
       if PLURALIZED_REGEX.match(key)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "List channels | sidebar", type: :system, js: true do
+RSpec.describe "List channels | sidebar", type: :system do
   fab!(:current_user) { Fabricate(:user) }
 
   let(:chat) { PageObjects::Pages::Chat.new }
@@ -22,7 +22,7 @@ RSpec.describe "List channels | sidebar", type: :system, js: true do
         end
 
         it "shows the channel in the correct section" do
-          expect(page.find(".sidebar-section-chat-channels")).to have_content(
+          expect(page.find(".sidebar-section[data-section-name='chat-channels']")).to have_content(
             category_channel_1.name,
           )
         end
@@ -42,15 +42,15 @@ RSpec.describe "List channels | sidebar", type: :system, js: true do
     end
 
     context "when multiple category channels are present" do
-      fab!(:channel_1) { Fabricate(:category_channel, name: "b channel") }
-      fab!(:channel_2) { Fabricate(:category_channel, name: "a channel") }
+      fab!(:channel_1) { Fabricate(:category_channel, name: ":art: b channel") }
+      fab!(:channel_2) { Fabricate(:category_channel, name: ":art: a channel") }
 
       before do
         channel_1.add(current_user)
         channel_2.add(current_user)
       end
 
-      it "sorts them alphabetically" do
+      it "sorts them by slug" do
         visit("/")
 
         expect(page.find("#sidebar-section-content-chat-channels li:nth-child(1)")).to have_css(
@@ -70,7 +70,9 @@ RSpec.describe "List channels | sidebar", type: :system, js: true do
         before { visit("/") }
 
         it "shows the channel in the correct section" do
-          expect(page.find(".sidebar-section-chat-dms")).to have_content(current_user.username)
+          expect(page.find(".sidebar-section[data-section-name='chat-dms']")).to have_content(
+            current_user.username,
+          )
         end
       end
 
@@ -87,7 +89,7 @@ RSpec.describe "List channels | sidebar", type: :system, js: true do
   context "when no category channels" do
     it "doesn’t show the section" do
       visit("/")
-      expect(page).to have_no_css(".sidebar-section-chat-channels")
+      expect(page).to have_no_css(".sidebar-section[data-section-name='chat-channels']")
     end
 
     context "when user can create channels" do
@@ -95,7 +97,7 @@ RSpec.describe "List channels | sidebar", type: :system, js: true do
 
       it "shows the section" do
         visit("/")
-        expect(page).to have_css(".sidebar-section-chat-channels")
+        expect(page).to have_css(".sidebar-section[data-section-name='chat-channels']")
       end
     end
   end
@@ -104,7 +106,7 @@ RSpec.describe "List channels | sidebar", type: :system, js: true do
     before { visit("/") }
 
     it "shows the section" do
-      expect(page).to have_css(".sidebar-section-chat-dms")
+      expect(page).to have_css(".sidebar-section[data-section-name='chat-dms']")
     end
   end
 
@@ -115,8 +117,8 @@ RSpec.describe "List channels | sidebar", type: :system, js: true do
     end
 
     it "doesn’t show the sections" do
-      expect(page).to have_no_css(".sidebar-section-chat-channels")
-      expect(page).to have_no_css(".sidebar-section-chat-dms")
+      expect(page).to have_no_css(".sidebar-section[data-section-name='chat-channels']")
+      expect(page).to have_no_css(".sidebar-section[data-section-name='chat-dms']")
     end
   end
 
@@ -128,8 +130,8 @@ RSpec.describe "List channels | sidebar", type: :system, js: true do
     end
 
     it "doesn’t show the sections" do
-      expect(page).to have_no_css(".sidebar-section-chat-channels")
-      expect(page).to have_no_css(".sidebar-section-chat-dms")
+      expect(page).to have_no_css(".sidebar-section[data-section-name='chat-channels']")
+      expect(page).to have_no_css(".sidebar-section[data-section-name='chat-dms']")
     end
   end
 

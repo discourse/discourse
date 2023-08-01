@@ -1,7 +1,10 @@
 import Route from "@ember/routing/route";
+import { inject as service } from "@ember/service";
 
-export default Route.extend({
+export default class AdminApiIndexRoute extends Route {
+  @service router;
+
   beforeModel() {
-    this.transitionTo("adminApiKeys");
-  },
-});
+    this.router.transitionTo("adminApiKeys");
+  }
+}

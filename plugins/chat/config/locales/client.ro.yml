@@ -6,6 +6,11 @@
 
 ro:
   js:
+    admin:
+      logs:
+        staff_actions:
+          actions:
+            chat_auto_remove_membership: "Membrii sunt eliminați automat din canale"
     chat:
       create: "Creează"
       cancel: "Anulare"
@@ -14,21 +19,33 @@ ro:
         add: "Adaugă"
         join: "Alătură-te"
         leave: "Părăsește"
+      channel_delete:
+        instructions: "<p>Șterge canalul <strong>%{name}</strong> și istoricul de chat. Toate mesajele și datele asociate, cum ar fi reacțiile și încărcările, vor fi șterse permanent. Dacă doriți să păstrați istoricul canalului și să-l decomisionați, s-ar putea să doriți să arhivați canalul în schimb.</p> <p>Sunteți sigur că doriți să ștergeți <strong>permanent</strong> canalul? Pentru a confirma, tastați numele canalului în caseta de mai jos.</p>"
       close: "Închide sondajul"
+      expand: "Extinde sertarul de chat"
       delete: "Șterge"
       muted: "silențios"
       joined: "înscris"
       email_frequency:
         never: "Niciodată"
+      header_indicator_preference:
+        title: "Afișați indicatorul de activitate în antet"
+        all_new: "Toate mesajele noi"
+        dm_and_mentions: "Mesaje directe și mențiuni"
+        never: "Niciodată"
       flag: "Marchează cu marcaj de avertizare"
       join: "Alătură-te"
+      last_visit: "ultima vizită"
+      summarization:
+        title: "Rezumați mesajele"
+        description: "Selectați o opțiune de mai jos pentru a rezuma conversația trimisă în intervalul de timp dorit."
+        summarize: "Rezumat"
       mention_warning:
         dismiss: "renunță"
-        groups:
-          users_limit:
-            one: "%{count} utilizator"
-            few: "%{count} utilizatori"
-            other: "%{count} utilizatori"
+        cannot_see: "%{username} nu poate accesa acest canal și nu a fost notificat."
+        without_membership: "%{username} nu s-a alăturat acestui canal."
+        group_mentions_disabled: "%{group_name} nu permite mențiuni."
+        too_many_members: "%{group_name} are prea mulți membri. Nimeni nu a fost anunțat."
       reply: "Răspunde"
       edit: "Modifică"
       rebake_message: "Reconstruieşte HTML"
@@ -69,11 +86,13 @@ ro:
       composer:
         italic_text: "text italic"
         bold_text: "text aldin"
+        send: "Trimite"
       notification_levels:
         never: "Niciodată"
       settings:
         follow: "Alătură-te"
         followed: "Înscris"
+        threading_enabled: "Activat"
         notifications: "Notificări"
         preview: "Previzualizează"
         save: "Salvare"
@@ -101,6 +120,19 @@ ro:
       emoji_picker:
         objects: "Obiecte"
         flags: "Marcaje de avertizare"
+      thread:
+        title: "Titlu"
+        replies:
+          one: "%{count} răspuns"
+          few: "%{count} răspunsuri"
+          other: "%{count} răspunsuri"
+        settings: "Opțiuni"
+        last_reply: "Ultimul răspuns"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Urmărire"
       draft_channel_screen:
         header: "Mesaj nou"
         cancel: "Anulare"
@@ -112,7 +144,3 @@ ro:
           fields:
             message:
               label: Mesaj
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Semnalat de"

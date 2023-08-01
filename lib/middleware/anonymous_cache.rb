@@ -25,8 +25,8 @@ module Middleware
     def self.compile_key_builder
       method = +"def self.__compiled_key_builder(h)\n  \""
       cache_key_segments.each do |k, v|
-        raise "Invalid key name" unless k =~ /^[a-z]+$/
-        raise "Invalid method name" unless v =~ /^key_[a-z_\?]+$/
+        raise "Invalid key name" unless k =~ /\A[a-z]+\z/
+        raise "Invalid method name" unless v =~ /\Akey_[a-z_\?]+\z/
         method << "|#{k}=#\{h.#{v}}"
       end
       method << "\"\nend"

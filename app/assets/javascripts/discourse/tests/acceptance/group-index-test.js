@@ -20,7 +20,7 @@ acceptance("Group Members - Anonymous", function () {
       1,
       "it displays the group's avatar flair"
     );
-    assert.ok(exists(".group-members tr"), "it lists group members");
+    assert.ok(exists(".group-members .group-member"), "it lists group members");
 
     assert.ok(
       !exists(".group-member-dropdown"),
@@ -39,7 +39,7 @@ acceptance("Group Members", function (needs) {
   needs.user();
 
   needs.pretender((server, helper) => {
-    server.put("/admin/groups/47/owners.json", () => {
+    server.put("/groups/47/owners.json", () => {
       return helper.response({ success: true });
     });
   });
@@ -137,7 +137,7 @@ acceptance("Group Members", function (needs) {
     );
 
     await click("button.bulk-select");
-    await click(".bulk-select-buttons button:nth-child(1)");
+    await click(".bulk-select-all");
 
     assert.ok(
       exists(".bulk-select-buttons-wrap details"),

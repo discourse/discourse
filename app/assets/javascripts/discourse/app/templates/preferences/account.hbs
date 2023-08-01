@@ -1,10 +1,10 @@
-<div class="control-group pref-username">
+<div class="control-group pref-username" data-setting-name="user-username">
   <label class="control-label">{{i18n "user.username.title"}}</label>
   <UsernamePreference @user={{this.model}} />
 </div>
 
 {{#unless this.siteSettings.discourse_connect_overrides_avatar}}
-  <div class="control-group pref-avatar">
+  <div class="control-group pref-avatar" data-setting-name="user-avatar">
     <label class="control-label" id="profile-picture">{{i18n
         "user.avatar.title"
       }}</label>
@@ -22,7 +22,7 @@
 {{/unless}}
 
 {{#if this.canCheckEmails}}
-  <div class="control-group pref-email">
+  <div class="control-group pref-email" data-setting-name="user-email">
     <label class="control-label">{{i18n "user.email.title"}}</label>
     {{#if this.model.email}}
       {{#if this.siteSettings.enable_secondary_emails}}
@@ -67,7 +67,7 @@
           {{/each}}
         </div>
 
-        {{#if this.model.can_edit_email}}
+        {{#if this.canAddEmail}}
           <LinkTo
             @route="preferences.email"
             @query={{hash new=1}}
@@ -111,7 +111,10 @@
 {{/if}}
 
 {{#if this.canUpdateAssociatedAccounts}}
-  <div class="control-group pref-associated-accounts">
+  <div
+    class="control-group pref-associated-accounts"
+    data-setting-name="user-associated-accounts"
+  >
     <label class="control-label">{{i18n
         "user.associated_accounts.title"
       }}</label>
@@ -175,7 +178,7 @@
 {{/if}}
 
 {{#if this.canEditName}}
-  <div class="control-group pref-name">
+  <div class="control-group pref-name" data-setting-name="user-name">
     <label class="control-label">{{i18n "user.name.title"}}</label>
     <div class="controls">
       {{#if this.model.can_edit_name}}
@@ -195,7 +198,7 @@
 {{/if}}
 
 {{#if this.canSelectTitle}}
-  <div class="control-group pref-title">
+  <div class="control-group pref-title" data-setting-name="user-title">
     <label class="control-label">{{i18n "user.title.title"}}</label>
     <div class="controls">
       <ComboBox
@@ -212,7 +215,7 @@
 {{/if}}
 
 {{#if this.canSelectFlair}}
-  <div class="control-group pref-flair">
+  <div class="control-group pref-flair" data-setting-name="user-flair">
     <label class="control-label">{{i18n "user.flair.title"}}</label>
     <div class="controls">
       <FlairChooser
@@ -229,7 +232,7 @@
 {{/if}}
 
 {{#if this.canSelectUserStatus}}
-  <div class="control-group pref-user-status">
+  <div class="control-group pref-user-status" data-setting-name="user-status">
     <label class="control-label">{{i18n "user.status.title"}}</label>
     <div class="controls">
       {{#if this.newStatus}}
@@ -251,7 +254,10 @@
 {{/if}}
 
 {{#if this.canSelectPrimaryGroup}}
-  <div class="control-group pref-primary-group">
+  <div
+    class="control-group pref-primary-group"
+    data-setting-name="user-primary-group"
+  >
     <label class="control-label">{{i18n "user.primary_group.title"}}</label>
     <div class="controls">
       <ComboBox
@@ -263,21 +269,43 @@
   </div>
 {{/if}}
 
-<PluginOutlet
-  @name="user-preferences-account"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model save=(action "save")}}
-/>
+{{#if this.canDownloadPosts}}
+  <div
+    class="control-group pref-data-export"
+    data-setting-name="user-data-export"
+  >
+    <label class="control-label">{{i18n "user.download_archive.title"}}</label>
+    <div class="controls">
+      <DButton
+        @action={{action "exportUserArchive"}}
+        @class="btn-default btn-request-archive"
+        @label="user.download_archive.button_text"
+        @icon="download"
+      />
+    </div>
+    <div class="instructions">
+      {{i18n "user.download_archive.description"}}
+    </div>
+  </div>
+{{/if}}
+
+<span>
+  <PluginOutlet
+    @name="user-preferences-account"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model save=(action "save")}}
+  />
+</span>
 
 <br />
 
-<PluginOutlet
-  @name="user-custom-controls"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash model=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="user-custom-controls"
+    @connectorTagName="div"
+    @outletArgs={{hash model=this.model}}
+  />
+</span>
 
 {{#if this.canSaveUser}}
   <SaveControls

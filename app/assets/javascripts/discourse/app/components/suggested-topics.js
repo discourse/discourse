@@ -5,9 +5,12 @@ import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import { inject as service } from "@ember/service";
 
 export default Component.extend({
   tagName: "",
+  moreTopicsPreferenceTracking: service(),
+  listId: "suggested-topics",
 
   suggestedTitleLabel: computed("topic", function () {
     const href = this.currentUser && this.currentUser.pmPath(this.topic);
@@ -17,6 +20,11 @@ export default Component.extend({
       return "suggested_topics.title";
     }
   }),
+
+  @discourseComputed("moreTopicsPreferenceTracking.preference")
+  hidden(preference) {
+    return this.site.mobileView && preference !== this.listId;
+  },
 
   @discourseComputed(
     "topic",

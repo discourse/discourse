@@ -26,7 +26,7 @@ import { applyModelTransformations } from "discourse/lib/model-transformers";
 
 export function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
-  const url = `${getURL("/t/")}${topic.id}`;
+  const url = `/t/${topic.id}`;
   const jsonUrl = (data.nearPost ? `${url}/${data.nearPost}` : url) + ".json";
 
   delete data.nearPost;
@@ -183,12 +183,15 @@ const Topic = RestModel.extend({
     return postsCount - 1;
   },
 
-  @discourseComputed
-  details() {
-    return this.store.createRecord("topicDetails", {
+  get details() {
+    return (this._details ??= this.store.createRecord("topicDetails", {
       id: this.id,
       topic: this,
-    });
+    }));
+  },
+
+  set details(value) {
+    return (this._details = value);
   },
 
   @discourseComputed("visible")
@@ -453,7 +456,7 @@ const Topic = RestModel.extend({
   },
 
   // Delete this topic
-  destroy(deleted_by, opts) {
+  destroy(deleted_by, opts = {}) {
     return ajax(`/t/${this.id}`, {
       data: { context: window.location.pathname, ...opts },
       type: "DELETE",
@@ -468,14 +471,15 @@ const Topic = RestModel.extend({
             this.siteSettings.can_permanently_delete && deleted_by.admin,
         });
         if (
-          !deleted_by.staff &&
-          !deleted_by.groups.some(
-            (group) => group.name === this.category.reviewable_by_group_name
-          ) &&
-          !(
-            this.siteSettings.tl4_delete_posts_and_topics &&
-            deleted_by.trust_level >= 4
-          )
+          opts.force_destroy ||
+          (!deleted_by.staff &&
+            !deleted_by.groups.some(
+              (group) => group.name === this.category?.reviewable_by_group_name
+            ) &&
+            !(
+              this.siteSettings.tl4_delete_posts_and_topics &&
+              deleted_by.trust_level >= 4
+            ))
         ) {
           DiscourseURL.redirectTo("/");
         }
@@ -845,6 +849,18 @@ Topic.reopenClass({
     }
     if (topicIds) {
       data.topic_ids = topicIds;
+    }
+
+    if (opts.dismissPosts) {
+      data.dismiss_posts = opts.dismissPosts;
+    }
+
+    if (opts.dismissTopics) {
+      data.dismiss_topics = opts.dismissTopics;
+    }
+
+    if (opts.untrack) {
+      data.untrack = opts.untrack;
     }
 
     return ajax("/topics/reset-new", { type: "PUT", data });

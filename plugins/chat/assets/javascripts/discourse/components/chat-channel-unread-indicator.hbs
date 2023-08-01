@@ -1,16 +1,12 @@
-{{#if (gt @channel.currentUserMembership.unread_count 0)}}
+{{#if this.showUnreadIndicator}}
   <div
     class={{concat-class
       "chat-channel-unread-indicator"
-      (if
-        (or
-          @channel.isDirectMessageChannel
-          (gt @channel.currentUserMembership.unread_mentions 0)
-        )
-        "urgent"
-      )
+      (if this.isUrgent "-urgent")
     }}
   >
-    <div class="number">{{@channel.currentUserMembership.unread_count}}</div>
+    <div class="chat-channel-unread-indicator__number">{{#if
+        this.showUnreadCount
+      }}{{this.unreadCount}}{{else}}&nbsp;{{/if}}</div>
   </div>
 {{/if}}

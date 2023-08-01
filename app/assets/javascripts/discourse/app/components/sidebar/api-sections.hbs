@@ -1,0 +1,6 @@
+{{#each this.sections as |sectionConfig|}}
+  <Sidebar::ApiSection
+    @sectionConfig={{sectionConfig}}
+    @collapsable={{@collapsable}}
+  />
+{{/each}}

@@ -29,7 +29,7 @@ module Jobs
   end
 
   def self.num_email_retry_jobs
-    Sidekiq::RetrySet.new.count { |job| job.klass =~ /Email$/ }
+    Sidekiq::RetrySet.new.count { |job| job.klass =~ /Email\z/ }
   end
 
   class Base
@@ -161,6 +161,15 @@ module Jobs
 
     include Sidekiq::Worker
 
+    def self.cluster_concurrency(val)
+      raise ArgumentError, "cluster_concurrency must be 1 or nil" if val != 1 && val != nil
+      @cluster_concurrency = val
+    end
+
+    def self.get_cluster_concurrency
+      @cluster_concurrency
+    end
+
     def log(*args)
       args.each do |arg|
         Rails.logger.info "#{Time.now.to_formatted_s(:db)}: [#{self.class.name.upcase}] #{arg}"
@@ -216,7 +225,41 @@ module Jobs
       end
     end
 
+    def self.cluster_concurrency_redis_key
+      "cluster_concurrency:#{self}"
+    end
+
+    def self.clear_cluster_concurrency_lock!
+      Discourse.redis.without_namespace.del(cluster_concurrency_redis_key)
+    end
+
+    def self.acquire_cluster_concurrency_lock!
+      !!Discourse.redis.without_namespace.set(cluster_concurrency_redis_key, 0, nx: true, ex: 120)
+    end
+
     def perform(*args)
+      requeued = false
+      keepalive_thread = nil
+      finished = false
+
+      if self.class.get_cluster_concurrency
+        if !self.class.acquire_cluster_concurrency_lock!
+          self.class.perform_in(10.seconds, *args)
+          requeued = true
+          return
+        end
+        parent_thread = Thread.current
+        cluster_concurrency_redis_key = self.class.cluster_concurrency_redis_key
+
+        keepalive_thread =
+          Thread.new do
+            while parent_thread.alive? && !finished
+              Discourse.redis.without_namespace.expire(cluster_concurrency_redis_key, 120)
+              sleep 60
+            end
+          end
+      end
+
       opts = args.extract_options!.with_indifferent_access
 
       Sidekiq.redis { |r| r.set("last_job_perform_at", Time.now.to_i) } if ::Jobs.run_later?
@@ -278,6 +321,12 @@ module Jobs
 
       nil
     ensure
+      if self.class.get_cluster_concurrency && !requeued
+        finished = true
+        keepalive_thread.wakeup
+        keepalive_thread.join
+        self.class.clear_cluster_concurrency_lock!
+      end
       ActiveRecord::Base.connection_handler.clear_active_connections!
     end
   end

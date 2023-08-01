@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Plugin::Instance do
+  subject(:plugin_instance) { described_class.new }
+
   after { DiscoursePluginRegistry.reset! }
 
   describe "find_all" do
@@ -11,6 +13,13 @@ RSpec.describe Plugin::Instance do
 
       expect(plugin.name).to eq("plugin-name")
       expect(plugin.path).to eq("#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb")
+
+      git_repo = plugin.git_repo
+      plugin.git_repo.stubs(:latest_local_commit).returns("123456")
+      plugin.git_repo.stubs(:url).returns("http://github.com/discourse/discourse-plugin")
+
+      expect(plugin.commit_hash).to eq("123456")
+      expect(plugin.commit_url).to eq("http://github.com/discourse/discourse-plugin/commit/123456")
     end
 
     it "does not blow up on missing directory" do
@@ -75,6 +84,14 @@ RSpec.describe Plugin::Instance do
 
         # Serializer
         @plugin.add_to_serializer(:trout, :scales) { 1024 }
+        @plugin.add_to_serializer(:trout, :unconditional_scales, respect_plugin_enabled: false) do
+          2048
+        end
+        @plugin.add_to_serializer(
+          :trout,
+          :conditional_scales,
+          include_condition: -> { !!object.data&.[](:has_scales) },
+        ) { 4096 }
 
         @serializer = TroutSerializer.new(@trout)
         @child_serializer = TroutJuniorSerializer.new(@trout)
@@ -100,11 +117,31 @@ RSpec.describe Plugin::Instance do
         expect(@hello_count).to eq(1)
         expect(@serializer.scales).to eq(1024)
         expect(@serializer.include_scales?).to eq(false)
+        expect(@serializer.include_unconditional_scales?).to eq(true)
         expect(@serializer.name).to eq("a trout")
 
         expect(@child_serializer.scales).to eq(1024)
         expect(@child_serializer.include_scales?).to eq(false)
         expect(@child_serializer.name).to eq("a trout jr")
+      end
+
+      it "can control the include_* implementation" do
+        @plugin.enabled = true
+
+        expect(@serializer.scales).to eq(1024)
+        expect(@serializer.include_scales?).to eq(true)
+
+        expect(@serializer.unconditional_scales).to eq(2048)
+        expect(@serializer.include_unconditional_scales?).to eq(true)
+
+        expect(@serializer.include_conditional_scales?).to eq(false)
+        @trout.data = { has_scales: true }
+        expect(@serializer.include_conditional_scales?).to eq(true)
+
+        @plugin.enabled = false
+        expect(@serializer.include_scales?).to eq(false)
+        expect(@serializer.include_unconditional_scales?).to eq(true)
+        expect(@serializer.include_conditional_scales?).to eq(false)
       end
 
       it "only returns HTML if enabled" do
@@ -215,8 +252,7 @@ RSpec.describe Plugin::Instance do
     end
 
     it "can activate plugins correctly" do
-      plugin = Plugin::Instance.new
-      plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+      plugin = plugin_from_fixtures("my_plugin")
       junk_file = "#{plugin.auto_generated_path}/junk"
 
       plugin.ensure_directory(junk_file)
@@ -232,8 +268,7 @@ RSpec.describe Plugin::Instance do
     end
 
     it "registers auth providers correctly" do
-      plugin = Plugin::Instance.new
-      plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+      plugin = plugin_from_fixtures("my_plugin")
       plugin.activate!
       expect(DiscoursePluginRegistry.auth_providers.count).to eq(0)
       plugin.notify_before_auth
@@ -243,8 +278,7 @@ RSpec.describe Plugin::Instance do
     end
 
     it "finds all the custom assets" do
-      plugin = Plugin::Instance.new
-      plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+      plugin = plugin_from_fixtures("my_plugin")
 
       plugin.register_asset("test.css")
       plugin.register_asset("test2.scss")
@@ -369,8 +403,8 @@ RSpec.describe Plugin::Instance do
   end
 
   describe "locales" do
-    let(:plugin_path) { "#{Rails.root}/spec/fixtures/plugins/custom_locales" }
-    let!(:plugin) { Plugin::Instance.new(nil, "#{plugin_path}/plugin.rb") }
+    let!(:plugin) { plugin_from_fixtures("custom_locales") }
+    let(:plugin_path) { File.dirname(plugin.path) }
     let(:plural) do
       {
         keys: %i[one few other],
@@ -555,6 +589,14 @@ RSpec.describe Plugin::Instance do
       expect(custom_emoji.url).to eq("/baz/bar.png")
       expect(custom_emoji.group).to eq("baz")
     end
+
+    it "sanitizes emojis' names" do
+      Plugin::Instance.new.register_emoji("?", "/baz/bar.png", "baz")
+      Plugin::Instance.new.register_emoji("?test?!!", "/foo/bar.png", "baz")
+
+      expect(Emoji.custom.first.name).to eq("_")
+      expect(Emoji.custom.second.name).to eq("_test_")
+    end
   end
 
   describe "#replace_flags" do
@@ -569,7 +611,7 @@ RSpec.describe Plugin::Instance do
       highest_flag_id = ReviewableScore.types.values.max
       flag_name = :new_flag
 
-      subject.replace_flags(settings: original_flags) do |settings, next_flag_id|
+      plugin_instance.replace_flags(settings: original_flags) do |settings, next_flag_id|
         settings.add(next_flag_id, flag_name)
       end
 
@@ -581,7 +623,7 @@ RSpec.describe Plugin::Instance do
       highest_flag_id = ReviewableScore.types.values.max
       new_score_type = :new_score_type
 
-      subject.replace_flags(
+      plugin_instance.replace_flags(
         settings: original_flags,
         score_type_names: [new_score_type],
       ) { |settings, next_flag_id| settings.add(next_flag_id, :new_flag) }
@@ -597,7 +639,7 @@ RSpec.describe Plugin::Instance do
 
     it "adds a custom api key scope" do
       actions = %w[admin/groups#create]
-      subject.add_api_key_scope(:groups, create: { actions: actions })
+      plugin_instance.add_api_key_scope(:groups, create: { actions: actions })
 
       expect(ApiKeyScope.scope_mappings.dig(:groups, :create, :actions)).to contain_exactly(
         *actions,
@@ -769,7 +811,7 @@ RSpec.describe Plugin::Instance do
   describe "#register_about_stat_group" do
     let(:plugin) { Plugin::Instance.new }
 
-    after { About.clear_plugin_stat_groups }
+    after { DiscoursePluginRegistry.reset! }
 
     it "registers an about stat group correctly" do
       stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
@@ -788,6 +830,13 @@ RSpec.describe Plugin::Instance do
       stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
       plugin.register_about_stat_group("some_group") { stats }
       expect(About.displayed_plugin_stat_groups).to eq([])
+    end
+
+    it "does not allow duplicate named stat groups" do
+      stats = { :last_day => 1, "7_days" => 10, "30_days" => 100, :count => 1000 }
+      plugin.register_about_stat_group("some_group") { stats }
+      plugin.register_about_stat_group("some_group") { stats }
+      expect(DiscoursePluginRegistry.about_stat_groups.count).to eq(1)
     end
   end
 
@@ -818,6 +867,19 @@ RSpec.describe Plugin::Instance do
       UserDestroyer.new(Discourse.system_user).destroy(user, {})
 
       expect(callback_called).to eq(false)
+    end
+  end
+
+  describe "#register_modifier" do
+    let(:plugin) { Plugin::Instance.new }
+
+    after { DiscoursePluginRegistry.clear_modifiers! }
+
+    it "allows modifier registration" do
+      plugin.register_modifier(:magic_sum_modifier) { |a, b| a + b }
+
+      sum = DiscoursePluginRegistry.apply_modifier(:magic_sum_modifier, 1, 2)
+      expect(sum).to eq(3)
     end
   end
 end

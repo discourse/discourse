@@ -496,22 +496,6 @@ lt:
   meta_category_description: "Diskusijos apie svetainę, jos organizavimą, kaip ji veikia ir kaip galima ja dar patobulinti."
   staff_category_name: "Personalas"
   staff_category_description: "Privati kategorija personalo diskusijoms. Temos matomos tik administratoriams ir moderatoriams."
-  discourse_welcome_topic:
-    body: |2
-
-      Pirmoji šios prisegtos temos pastraipa bus matoma kaip sveikinimo žinutė visiems naujiems pagrindinio puslapio lankytojams. Tai svarbu!
-
-      **Redaguokite tai** į trumpą savo bendruomenės aprašymą:
-
-      – Kam tai skirta?
-      – Ką jie čia gali rasti?
-      – Kodėl jie turėtų čia ateiti?
-      – Kur jie gali skaityti daugiau (nuorodos, šaltiniai ir pan.)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Galbūt norėsite uždaryti šią temą per administratorių :wrench: (viršuje dešinėje ir apačioje), kad atsakymai nesikauptų ant skelbimo.
-  admin_quick_start_title: "PERSKAITYKITE PIRMIAUSIA: administratoriaus greitas pradžios vadovas"
   category:
     topic_prefix: "Viskas apie %{category} kategoriją"
     post_template: "%{replace_paragraph}\n\nNaudokite šias pastraipas ilgesniam aprašymui arba kategorijų gairėms ar taisyklėms nustatyti:\n\n– Kodėl žmonės turėtų naudoti šią kategoriją? Kam tai?\n\n– Kuo tai skiriasi nuo kitų jau turimų kategorijų?\n\n– Kas apskritai turėtų būti šios kategorijos temose?\n\n– Ar mums reikia šios kategorijos? Ar galime sujungti su kita kategorija ar subkategorija?\n"
@@ -991,7 +975,7 @@ lt:
       title: "DAU/MAU"
       xaxis: "Diena"
       yaxis: "DAU/MAU"
-      description: "Paskutinę dieną prisijungusių narių skaičius, padalytas iš narių, prisijungusių per pastarąjį mėnesį, skaičiaus – pateikiamas %, kuris rodo bendruomenės „lipnumą“. Siekite >30 proc."
+      description: "Paskutinę dieną prisijungusių narių skaičius, padalytas iš narių, prisijungusių per pastarąjį mėnesį, skaičiaus – pateikiamas %, kuris rodo bendruomenės „lipnumą“. Siekite >20 proc."
     daily_engaged_users:
       title: "Kasdien dalyvaujantys vartotojai"
       xaxis: "Diena"
@@ -1324,7 +1308,6 @@ lt:
     min_admin_password_length: "Minimalus administratoriaus slaptažodžio ilgis."
     password_unique_characters: "Mažiausias unikalių simbolių skaičius, kurį turi turėti slaptažodis."
     block_common_passwords: "Neleiskite slaptažodžių, kurie yra 10 000 dažniausiai naudojamų slaptažodžių."
-    discourse_connect_url: "„DiscourseConnect“ galutinio taško URL (turi būti http:// arba https://)"
     discourse_connect_secret: "Slapta eilutė, naudojama „DiscourseConnect“ informacijos kriptografiniam autentifikavimui, įsitikinkite, kad ji yra 10 simbolių ar ilgesnė"
     discourse_connect_not_approved_url: "Peradresuoti nepatvirtintas DiscourseConnect paskyras į šį URL"
     allow_new_registrations: "Leisti naujų vartotojų registracijas. Atžymėkite šį žymėjimą, kad niekas negalėtų sukurti naujos paskyros."
@@ -1440,7 +1423,6 @@ lt:
     max_notifications_per_user: "Maksimalus vieno vartotojo pranešimų skaičius, jei šis skaičius viršijamas, senieji pranešimai bus ištrinti. Taikoma kas savaitę. Norėdami išjungti, nustatykite 0"
     disable_avatar_education_message: "Išjungti švietimo pranešimą keičiant avataras."
     header_dropdown_category_count: "Kiek kategorijų gali būti rodoma antraštės išskleidžiamajame meniu."
-    disable_category_edit_notifications: "Išjungti pranešimus apie temų kategorijų redagavimą."
     automatically_unpin_topics: "Automatiškai atsegti temas, kai vartotojas pasiekia apačią."
     read_time_word_count: "Žodžių skaičius per minutę apskaičiuojant numatomą skaitymo laiką."
     full_name_required: "Pilnas vardas yra būtinas vartotojo profilio laukas."
@@ -1479,7 +1461,6 @@ lt:
     default_title_count_mode: "Numatytasis puslapio pavadinimo skaitiklio režimas"
     allow_user_api_keys: "Leisti generuoti vartotojo API raktus"
     allow_user_api_key_scopes: "Leidžiamų naudotojo API raktų apimčių sąrašas"
-    min_trust_level_for_user_api_key: "Patikimumo lygis, reikalingas generuoti vartotojo API raktus"
     allowed_user_api_auth_redirects: "Leidžiamas vartotojo API raktų autentifikavimo peradresavimo URL. Pakaitos simbolis * gali būti naudojamas norint atitikti bet kurią jo dalį (pvz., www.example.com/*)."
     allowed_user_api_push_urls: "Leidžiami serverio siuntimo naudotojui API URL adresai"
     tagging_enabled: "Įgalinti žymas temose?"
@@ -1923,14 +1904,6 @@ lt:
         Tai automatinis pranešimas nuo %{site_name} , informuojantis, kad jūsų paskyra nebėra sulaikyta po darbuotojų peržiūros.
 
         Dabar galite vėl kurti naujus atsakymus ir temas. Ačiū už kantrybę.
-    dashboard_problems:
-      subject_template: "Nauji patarimai jūsų svetainės informacijos suvestinėje"
-      text_body_template: |
-        Atsižvelgdami į dabartinius svetainės nustatymus, turime jums keletą naujų patarimų ir rekomendacijų.
-
-        [Apsilankykite savo svetainės informacijos suvestinėje](%{base_url}/admin), kad ją pamatytumėte.
-
-        Jei suvestinėje nieko nematote, kitas darbuotojas jau galėjo pasinaudoti šiuo patarimu. Personalo veiksmų sąrašą galite rasti [Personalo veiksmų%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Jūs esate naujas mėnesio vartotojas!"
       subject_template: "Jūs esate naujas mėnesio vartotojas!"
@@ -1950,9 +1923,6 @@ lt:
   user_notifications:
     previous_discussion: "Ankstesni atsakymai"
     in_reply_to: "Atsakant į"
-    unsubscribe:
-      title: "Nebeprenumeruoti"
-      description: "Nenorite gauti šių el. laiškų? Jokiu problemu! Spustelėkite žemiau, jei norite iš karto atsisakyti prenumeratos:"
     only_reply_by_email: "Norėdami atsakyti, atsakykite į šį el. laišką."
     visit_link_to_respond_pm: "[Apsilankykite žinutėje] (%{base_url}%{url}), kad atsakytumėte į %{participants}."
     posted_by: "Paskelbė %{username} %{post_date}"
@@ -2159,7 +2129,6 @@ lt:
       liked_received: "Gauta patikimų"
       new_users: "Nauji nariai"
       popular_topics: "Populiarios temos"
-      follow_topic: "Sekti šią temą"
       join_the_discussion: "Skaityti daugiau"
       popular_posts: "Populiarūs įrašai"
       more_new: "Jūs dar neskaitėte"
@@ -2348,12 +2317,6 @@ lt:
   offline:
     title: "Nepavyko įkelti programos"
     offline_page_message: "Atrodo, kad esate neprisijungę! Patikrinkite tinklo ryšį ir bandykite dar kartą."
-  login_required:
-    welcome_message: |
-      ## [Sveiki atvykę į %{title}] (#sveiki atvykę)
-      Būtina paskyra. Jei norite tęsti, sukurkite paskyrą arba prisijunkite.
-  deleted: "ištrintas"
-  image: "paveikslėlis"
   upload:
     edit_reason: "atsiųsti mano pranešimų archyvą"
     unauthorized: "Atsiprašome, failas, kurį bandote įkelti, nėra autorizuotas (įgalioti plėtiniai: %{authorized_extensions})."
@@ -2692,8 +2655,6 @@ lt:
       title: "Persiųsti patvirtinimo laišką"
   safe_mode:
     title: "Įeikite į saugųjį režimą"
-    no_unofficial_plugins: "Išjungti neoficialius įskiepius"
-    no_plugins: "Išjungti visus įskiepius"
     enter: "Įeikite į saugųjį režimą"
     must_select: "Norėdami įjungti saugųjį režimą, turite pasirinkti bent vieną parinktį."
   wizard:
@@ -2747,7 +2708,6 @@ lt:
         title: "Jūsų Discourse paruoštas!"
   search_logs:
     graph_title: "Ieškoti kontakto"
-  joined: "Prisijungė"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} paminėjo tave "%{topic}" - %{site_title}'
@@ -2792,44 +2752,27 @@ lt:
         category: kategorijos nustatymai
     actions:
       agree:
-        title: "Sutinku..."
-      agree_and_keep:
-        title: "Palikti įrašą"
-      agree_and_keep_hidden:
-        title: "Laikyti paslėptą įrašą"
-      agree_and_suspend:
-        title: "Suspenduoti narį"
+        title: "Taip"
       agree_and_silence:
-        title: "Nutildyti narį"
         description: "Sutikti su pranešimu ir nutildyti narį."
       agree_and_restore:
-        title: "Atkurti įrašą"
         description: "Atkurkite įrašą, kad visi vartotojai jį matytų."
-      agree_and_hide:
-        title: "Paslėpti įrašą"
       delete_single:
         title: "Pašalinti"
       delete:
         title: "Ištrinti..."
-      delete_and_ignore:
-        title: "Ištrinti įrašą ir ignoruoti"
-        description: "Ištrinti įrašą; jei pirmasis įrašas, taip pat ištrinkite temą"
       delete_and_ignore_replies:
-        description: "Ištrinti įrašą ir visus jo atsakymus; jei pirmasis įrašas, taip pat ištrinkite temą"
         confirm: "Ar tikrai norite ištrinti ir įrašo atsakymus?"
-      delete_and_agree:
-        title: "Ištrinti įrašą ir sutikti"
-        description: "Ištrinti įrašą; jei pirmasis įrašas, taip pat ištrinkite temą"
       delete_and_agree_replies:
-        description: "Ištrinti įrašą ir visus jo atsakymus; jei pirmasis įrašas, taip pat ištrinkite temą"
         confirm: "Ar tikrai norite ištrinti ir įrašo atsakymus?"
       disagree_and_restore:
-        title: "Nesutikti ir atkurti įrašą"
         description: "Atkurkite įrašą, kad visi vartotojai jį matytų."
       disagree:
-        title: "Nesutinka"
+        title: "Ne"
       ignore:
         title: "Ignoruoti"
+      ignore_and_do_nothing:
+        title: "Nieko nedaryti"
       approve:
         title: "Patvirtinti"
       approve_post:

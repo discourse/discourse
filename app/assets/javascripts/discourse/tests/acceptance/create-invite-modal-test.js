@@ -1,7 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import {
   acceptance,
-  count,
   exists,
   fakeTime,
   loggedInUser,
@@ -57,15 +56,15 @@ acceptance("Invites - Create & Edit Invite Modal", function (needs) {
     await visit("/u/eviltrout/invited/pending");
     await click(".user-invite-buttons .btn:first-child");
 
-    assert.ok(!exists("tbody tr"), "does not show invite before saving");
+    assert
+      .dom("table.user-invite-list tbody tr")
+      .exists({ count: 2 }, "is seeded with two rows");
 
     await click(".btn-primary");
 
-    assert.strictEqual(
-      count("tbody tr"),
-      1,
-      "adds invite to list after saving"
-    );
+    assert
+      .dom("table.user-invite-list tbody tr")
+      .exists({ count: 3 }, "gets added to the list");
   });
 
   test("copying saves invite", async function (assert) {
@@ -155,7 +154,7 @@ acceptance("Invites - Email Invites", function (needs) {
       "sends skip_email to server"
     );
 
-    await fillIn("#invite-email", "test2@example.com");
+    await fillIn("#invite-email", "test2@example.com ");
     assert.ok(exists(".send-invite"), "shows save and send email button");
     await click(".send-invite");
     assert.ok(

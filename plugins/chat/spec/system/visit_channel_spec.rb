@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Visit channel", type: :system, js: true do
+RSpec.describe "Visit channel", type: :system do
   fab!(:category) { Fabricate(:category) }
   fab!(:topic) { Fabricate(:topic) }
   fab!(:post) { Fabricate(:post, topic: topic) }
@@ -11,6 +11,9 @@ RSpec.describe "Visit channel", type: :system, js: true do
   fab!(:inaccessible_dm_channel_1) { Fabricate(:direct_message_channel) }
 
   let(:chat) { PageObjects::Pages::Chat.new }
+  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
+  let(:channel_page) { PageObjects::Pages::ChatChannel.new }
+  let(:dialog) { PageObjects::Components::Dialog.new }
 
   before { chat_system_bootstrap }
 
@@ -61,7 +64,7 @@ RSpec.describe "Visit channel", type: :system, js: true do
 
       context "when channel is not found" do
         it "shows an error" do
-          visit("/chat/channel/999/-")
+          visit("/chat/c/-/999")
 
           expect(page).to have_content("Not Found") # this is not a translated key
         end
@@ -69,7 +72,7 @@ RSpec.describe "Visit channel", type: :system, js: true do
 
       context "when loading a non existing message of a channel" do
         it "shows an error" do
-          visit("/chat/channel/#{category_channel_1.id}/-?messageId=-999")
+          visit("/chat/c/-/#{category_channel_1.id}/-999")
 
           expect(page).to have_content(I18n.t("not_found"))
         end
@@ -90,6 +93,30 @@ RSpec.describe "Visit channel", type: :system, js: true do
 
             expect(page).to have_content(I18n.t("invalid_access"))
           end
+        end
+      end
+
+      context "when category channel is read-only" do
+        fab!(:restricted_category) { Fabricate(:category, read_restricted: true) }
+        fab!(:readonly_group_1) { Fabricate(:group, users: [current_user]) }
+        fab!(:readonly_category_channel_1) do
+          Fabricate(:category_channel, chatable: restricted_category)
+        end
+        fab!(:message_1) { Fabricate(:chat_message, chat_channel: readonly_category_channel_1) }
+
+        before do
+          Fabricate(
+            :category_group,
+            category: restricted_category,
+            group: readonly_group_1,
+            permission_type: CategoryGroup.permission_types[:readonly],
+          )
+        end
+
+        it "shows an error" do
+          chat.visit_channel(inaccessible_dm_channel_1)
+
+          expect(page).to have_content(I18n.t("invalid_access"))
         end
       end
 
@@ -119,13 +146,7 @@ RSpec.describe "Visit channel", type: :system, js: true do
           it "allows to join it" do
             chat.visit_channel(dm_channel_1)
 
-            expect(page).to have_content(I18n.t("js.chat.channel_settings.join_channel"))
-          end
-
-          it "shows a preview of the channel" do
-            chat.visit_channel(dm_channel_1)
-
-            expect(chat).to have_message(message_1)
+            expect(channel_page.composer).to be_enabled
           end
         end
       end
@@ -151,11 +172,33 @@ RSpec.describe "Visit channel", type: :system, js: true do
 
           context "when URL doesn’t contain slug" do
             it "redirects to correct URL" do
-              visit("/chat/channel/#{category_channel_1.id}/-")
+              visit("/chat/c/-/#{category_channel_1.id}")
 
               expect(page).to have_current_path(
-                "/chat/channel/#{category_channel_1.id}/#{category_channel_1.slug}",
+                "/chat/c/#{category_channel_1.slug}/#{category_channel_1.id}",
               )
+            end
+          end
+
+          context "when visiting a specific channel message ID then navigating to another channel" do
+            fab!(:early_message) { Fabricate(:chat_message, chat_channel: category_channel_1) }
+            fab!(:other_channel) do
+              Fabricate(:category_channel, category: category_channel_1.chatable)
+            end
+            fab!(:other_channel_message) { Fabricate(:chat_message, chat_channel: other_channel) }
+
+            before do
+              30.times { Fabricate(:chat_message, chat_channel: category_channel_1) }
+              other_channel.add(current_user)
+            end
+
+            it "does not error" do
+              visit(early_message.url)
+              expect(channel_page).to have_no_loading_skeleton
+              expect(channel_page).to have_message(id: early_message.id)
+              sidebar_page.open_channel(other_channel)
+              expect(dialog).to be_closed
+              expect(channel_page).to have_message(id: other_channel_message.id)
             end
           end
         end
@@ -179,10 +222,10 @@ RSpec.describe "Visit channel", type: :system, js: true do
 
           context "when URL doesn’t contain slug" do
             it "redirects to correct URL" do
-              visit("/chat/channel/#{dm_channel_1.id}/-")
+              visit("/chat/c/-/#{dm_channel_1.id}")
 
               expect(page).to have_current_path(
-                "/chat/channel/#{dm_channel_1.id}/#{Slug.for(dm_channel_1.title(current_user))}",
+                "/chat/c/#{Slug.for(dm_channel_1.title(current_user))}/#{dm_channel_1.id}",
               )
             end
           end

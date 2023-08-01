@@ -24,8 +24,9 @@ function RGBToHex(rgb) {
   return "#" + r + g + b;
 }
 
-export default Component.extend({
-  valid: computed("value", function () {
+export default class Color extends Component {
+  @computed("value")
+  get valid() {
     let value = this.value.toLowerCase();
 
     let testColor = new Option().style;
@@ -43,10 +44,10 @@ export default Component.extend({
     }
 
     return testColor.color && hexifiedColor === value;
-  }),
+  }
 
   @action
   onChangeColor(color) {
     this.set("value", color);
-  },
-});
+  }
+}

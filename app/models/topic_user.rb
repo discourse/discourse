@@ -275,8 +275,7 @@ class TopicUser < ActiveRecord::Base
             attrs[:notification_level] = notification_levels[:watching]
           end
         else
-          auto_track_after =
-            UserOption.where(user_id: user_id).pluck_first(:auto_track_topics_after_msecs)
+          auto_track_after = UserOption.where(user_id: user_id).pick(:auto_track_topics_after_msecs)
           auto_track_after ||= SiteSetting.default_other_auto_track_topics_after_msecs
 
           if auto_track_after >= 0 && auto_track_after <= (attrs[:total_msecs_viewed].to_i || 0)
@@ -583,6 +582,7 @@ end
 #
 # Indexes
 #
-#  index_topic_users_on_topic_id_and_user_id  (topic_id,user_id) UNIQUE
-#  index_topic_users_on_user_id_and_topic_id  (user_id,topic_id) UNIQUE
+#  index_topic_users_on_topic_id_and_notification_level  (topic_id,notification_level)
+#  index_topic_users_on_topic_id_and_user_id             (topic_id,user_id) UNIQUE
+#  index_topic_users_on_user_id_and_topic_id             (user_id,topic_id) UNIQUE
 #

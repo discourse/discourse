@@ -1,6 +1,6 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { render } from "@ember/test-helpers";
+import { click, render, triggerKeyEvent } from "@ember/test-helpers";
 import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 import { hbs } from "ember-cli-htmlbars";
@@ -145,6 +145,86 @@ module(
         ),
         ["bar"]
       );
+    });
+  }
+);
+
+module(
+  "Integration | Component | select-kit/mini-tag-chooser useHeaderFilter=true",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.set("subject", selectKit());
+    });
+
+    test("displays tags and filter in header", async function (assert) {
+      this.set("value", ["apple", "orange", "potato"]);
+
+      await render(
+        hbs`<MiniTagChooser @value={{this.value}} @options={{hash filterable=true useHeaderFilter=true}} />`
+      );
+
+      assert.strictEqual(this.subject.header().value(), "apple,orange,potato");
+
+      assert.dom(".select-kit-header--filter").exists();
+      assert.dom(".select-kit-header button[data-name='apple']").exists();
+      assert.dom(".select-kit-header button[data-name='orange']").exists();
+      assert.dom(".select-kit-header button[data-name='potato']").exists();
+
+      const filterInput = ".select-kit-header .filter-input";
+      await click(filterInput);
+
+      await triggerKeyEvent(filterInput, "keydown", "ArrowDown");
+      await triggerKeyEvent(filterInput, "keydown", "Enter");
+
+      assert.dom(".select-kit-header button[data-name='monkey']").exists();
+
+      await triggerKeyEvent(filterInput, "keydown", "Backspace");
+
+      assert
+        .dom(".select-kit-header button[data-name='monkey']")
+        .doesNotExist();
+
+      await this.subject.fillInFilter("foo");
+      await triggerKeyEvent(filterInput, "keydown", "Backspace");
+
+      assert.dom(".select-kit-header button[data-name='potato']").exists();
+    });
+
+    test("removing a tag does not display the dropdown", async function (assert) {
+      this.set("value", ["apple", "orange", "potato"]);
+
+      await render(
+        hbs`<MiniTagChooser @value={{this.value}} @options={{hash filterable=true useHeaderFilter=true}} />`
+      );
+
+      assert.strictEqual(this.subject.header().value(), "apple,orange,potato");
+
+      await click(".select-kit-header button[data-name='apple']");
+
+      assert.dom(".select-kit-collection").doesNotExist();
+      assert.dom(".select-kit-header button[data-name='apple']").doesNotExist();
+      assert.strictEqual(this.subject.header().value(), "orange,potato");
+
+      assert
+        .dom(".select-kit-header .filter-input")
+        .hasAttribute(
+          "placeholder",
+          "",
+          "Placeholder is empty when there is a selection"
+        );
+
+      await click(".select-kit-header button[data-name='orange']");
+      await click(".select-kit-header button[data-name='potato']");
+
+      assert
+        .dom(".select-kit-header .filter-input")
+        .hasAttribute(
+          "placeholder",
+          "Search...",
+          "Placeholder is back to default when there is no selection"
+        );
     });
   }
 );

@@ -1,0 +1,66 @@
+<div class="inner-wrapper">
+  <span>
+    <PluginOutlet
+      @name="admin-customize-themes-list-item"
+      @connectorTagName="span"
+      @outletArgs={{hash theme=this.theme}}
+    />
+  </span>
+
+  <div class="info">
+    <span class="name">
+      {{this.theme.name}}
+    </span>
+
+    <span class="icons">
+      {{#if this.theme.selected}}
+        {{d-icon "caret-right"}}
+      {{else}}
+        {{#if this.theme.default}}
+          {{d-icon
+            "check"
+            class="default-indicator"
+            title="admin.customize.theme.default_theme_tooltip"
+          }}
+        {{/if}}
+        {{#if this.theme.isPendingUpdates}}
+          {{d-icon
+            "sync"
+            title="admin.customize.theme.updates_available_tooltip"
+            class="light-grey-icon"
+          }}
+        {{/if}}
+        {{#if this.theme.isBroken}}
+          {{d-icon
+            "exclamation-circle"
+            class="broken-indicator"
+            title="admin.customize.theme.broken_theme_tooltip"
+          }}
+        {{/if}}
+        {{#unless this.theme.enabled}}
+          {{d-icon
+            "ban"
+            class="light-grey-icon"
+            title="admin.customize.theme.disabled_component_tooltip"
+          }}
+        {{/unless}}
+      {{/if}}
+    </span>
+  </div>
+
+  {{#if this.displayComponents}}
+    <div class="components-list">
+      <span class="components">{{html-safe this.childrenString}}</span>
+
+      {{#if this.displayHasMore}}
+        <a href {{on "click" this.toggleChildrenExpanded}} class="others-count">
+          {{#if this.childrenExpanded}}
+            {{i18n "admin.customize.theme.collapse"}}
+          {{else}}
+            {{i18n "admin.customize.theme.and_x_more" count=this.moreCount}}
+          {{/if}}
+        </a>
+      {{/if}}
+    </div>
+  {{/if}}
+</div>

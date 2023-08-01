@@ -176,6 +176,13 @@ div.edit-category {
       margin-bottom: 1em;
     }
   }
+
+  .edit-category-tab-topic-template {
+    .select-category-template__info {
+      margin-block: 0.25rem;
+      font-size: var(--font-down-1);
+    }
+  }
 }
 
 .category-permissions-table {

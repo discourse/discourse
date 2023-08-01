@@ -643,8 +643,6 @@ te:
     see_more: "ఇంకా"
     search_title: "ఈ సైట్ వెదుకు"
     search_button: "వెతుకు"
-  deleted: "తొలగించారు"
-  image: "బొమ్మ"
   upload:
     images:
       size_not_found: "క్షమించండి, కానీ మేము చిత్రం యొక్క పరిమాణం నిర్ణయించలేదు. బహుశా మీ చిత్రం పాడై ఉండవచ్చు?"
@@ -736,15 +734,14 @@ te:
             choices:
               categories_only:
                 label: "వర్గాలు మాత్రమే"
-  joined: "చేరినారు"
   reviewables:
     actions:
-      agree_and_suspend:
-        title: "సభ్యుడిని సస్పెండు చేయి"
+      agree:
+        title: "అవును"
       delete_single:
         title: "తొలగించు"
       disagree:
-        title: "ఒప్పుకోకు"
+        title: "లేదు"
       approve:
         title: "అంగీకరించు"
       reject_user:

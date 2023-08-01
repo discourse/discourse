@@ -24,11 +24,8 @@ zh_TW:
         ignore:
           title: "忽略"
     channel:
-      statuses:
-        read_only: "唯讀"
-        archived: "已封存"
-        closed: "不公開"
-        open: "開啟"
+      dm_title:
+        single_user: "%{username}"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

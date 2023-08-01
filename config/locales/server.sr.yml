@@ -381,7 +381,6 @@ sr:
     warn_reviving_old_topic_age: "Kada neko krene da odgovara na temu u kojoj je poslednji odgovor stariji od ovoliko dana, biće prikazano upozorenje. Onemogućite postavljanjem vrednosti 0. "
     autohighlight_all_code: "Forsiraj primenu označavanja koda za sve preformatirane blokove koda i kada nije eksplicitno naveden jezik."
     embed_username_required: "Korisničko ime je obavezno za kreiranje teme."
-    show_create_topics_notice: "Ako sajt ima manje od 5 javnih tema, prikaži poruku koja sugeriše administratorima da kreiraju neke teme."
     delete_drafts_older_than_n_days: "Izbriši radne verzije poruka starije od (n) dana"
     enable_emoji: "Omogući emotikone"
     emoji_set: "Koliko bi ste želeli vas emoji?"
@@ -423,7 +422,6 @@ sr:
   page_not_found:
     see_more: "Više"
     search_button: "Pretraži"
-  image: "slika"
   color_schemes:
     default_theme_name: "zadato"
   csv_export:
@@ -493,7 +491,6 @@ sr:
             placeholder: "Mesto gde Milena i njene prijateljice ćaskaju o kul stvarima"
       finished:
         title: "Vaš Discource je spreman!"
-  joined: "Pridružen"
   reviewables:
     priorities:
       medium: "Srednje"
@@ -502,12 +499,12 @@ sr:
       medium: "Srednje"
       high: "Visoko"
     actions:
-      agree_and_suspend:
-        title: "Suspenduj Korisnika"
+      agree:
+        title: "Da"
       delete_single:
         title: "Obriši"
       disagree:
-        title: "Odbaci"
+        title: "Ne"
       approve:
         title: "Odobri"
       reject_user:

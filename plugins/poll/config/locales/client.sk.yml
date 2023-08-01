@@ -31,19 +31,19 @@ sk:
           title: "Výsledky sa zobrazujú len <strong>zamestnancom</strong>."
       multiple:
         help:
-          between_min_and_max_options: "Vyberte od <strong>%{min}</strong> do <strong>%{max}</strong> možností."
+          between_min_and_max_options: "Vyberte od <strong>%{min} do %{max} možností</strong>."
       cast-votes:
         title: "Hlasovať"
         label: "Hlasuj teraz!"
       show-results:
         title: "Zobraziť výsledky hlasovania"
-        label: "Zobraz výsledky"
+        label: "Výsledky"
       remove-vote:
         title: "Odstrániť hlas"
-        label: "Odstrániť hlas"
+        label: "Zrušiť hlas"
       hide-results:
         title: "Návrat na odovzdané hlasy"
-        label: "Zobraziť hlasovanie"
+        label: "Hlasovať"
       group-results:
         title: "Zoskupenie hlasov podľa poľa používateľa"
         label: "Zobraziť sumár"
@@ -67,6 +67,8 @@ sk:
         breakdown: "Sumár"
         percentage: "Percento"
         count: "Počet"
+      options:
+        label: "Možnosti"
       error_while_toggling_status: "Ľutujeme, nastala chyba pri prepínaní stavu tohto hlasovania."
       error_while_casting_votes: "Ľutujeme, nastala chyba pri prideľovaní Vašich hlasov."
       error_while_fetching_voters: "Ľutujeme, nastala chyba pri zobrazení účastníkov."

@@ -45,7 +45,7 @@ acceptance("Discourse Chat - Composer", function (needs) {
   });
 
   skip("when pasting html in composer", async function (assert) {
-    await visit("/chat/channel/11/another-category");
+    await visit("/chat/c/another-category/11");
 
     const clipboardEvent = new Event("paste", { bubbles: true });
     clipboardEvent.clipboardData = {
@@ -58,12 +58,12 @@ acceptance("Discourse Chat - Composer", function (needs) {
     };
 
     document
-      .querySelector(".chat-composer-input")
+      .querySelector(".chat-composer__input")
       .dispatchEvent(clipboardEvent);
 
     await settled();
 
-    assert.equal(document.querySelector(".chat-composer-input").value, "Foo");
+    assert.equal(document.querySelector(".chat-composer__input").value, "Foo");
   });
 });
 
@@ -96,20 +96,20 @@ acceptance("Discourse Chat - Composer - unreliable network", function (needs) {
   });
 
   skip("Sending a message with unreliable network", async function (assert) {
-    await visit("/chat/channel/11/-");
-    await fillIn(".chat-composer-input", "network-error-message");
-    await click(".send-btn");
+    await visit("/chat/c/-/11");
+    await fillIn(".chat-composer__input", "network-error-message");
+    await click(".chat-composer-button.-send");
 
     assert.ok(
       exists(".chat-message-container[data-id='1'] .retry-staged-message-btn"),
       "it adds a retry button"
     );
 
-    await fillIn(".chat-composer-input", "network-error-message");
-    await click(".send-btn");
+    await fillIn(".chat-composer__input", "network-error-message");
+    await click(".chat-composer-button.-send");
     await publishToMessageBus(`/chat/11`, {
       type: "sent",
-      stagedId: 1,
+      staged_id: 1,
       chat_message: {
         cooked: "network-error-message",
         id: 175,
@@ -126,14 +126,14 @@ acceptance("Discourse Chat - Composer - unreliable network", function (needs) {
       "it sends the message"
     );
     assert.strictEqual(
-      query(".chat-composer-input").value,
+      query(".chat-composer__input").value,
       "",
       "it clears the input"
     );
   });
 
   skip("Draft with unreliable network", async function (assert) {
-    await visit("/chat/channel/11/-");
+    await visit("/chat/c/-/11");
     this.chatService.set("isNetworkUnreliable", true);
     await settled();
 

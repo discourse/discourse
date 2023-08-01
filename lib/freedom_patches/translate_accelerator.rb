@@ -39,7 +39,7 @@ module I18n
 
         if @loaded_locales.empty?
           # load all rb files
-          I18n.backend.load_translations(I18n.load_path.grep(/\.rb$/))
+          I18n.backend.load_translations(I18n.load_path.grep(/\.rb\z/))
 
           # load plural rules from plugins
           DiscoursePluginRegistry.locales.each do |plugin_locale, options|
@@ -50,14 +50,14 @@ module I18n
         end
 
         # load it
-        I18n.backend.load_translations(I18n.load_path.grep(/\.#{Regexp.escape locale}\.yml$/))
+        I18n.backend.load_translations(I18n.load_path.grep(/\.#{Regexp.escape locale}\.yml\z/))
 
         if Discourse.allow_dev_populate?
           I18n.backend.load_translations(
-            I18n.load_path.grep(%r{.*faker.*/#{Regexp.escape locale}\.yml$}),
+            I18n.load_path.grep(%r{.*faker.*/#{Regexp.escape locale}\.yml\z}),
           )
           I18n.backend.load_translations(
-            I18n.load_path.grep(%r{.*faker.*/#{Regexp.escape locale}/.*\.yml$}),
+            I18n.load_path.grep(%r{.*faker.*/#{Regexp.escape locale}/.*\.yml\z}),
           )
         end
 
@@ -148,7 +148,7 @@ module I18n
       elsif should_raise
         raise I18n::MissingTranslationData.new(locale, key)
       else
-        -"translation missing: #{locale}.#{key}"
+        -"Translation missing: #{locale}.#{key}"
       end
     end
 

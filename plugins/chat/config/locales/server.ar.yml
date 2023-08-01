@@ -54,16 +54,19 @@ ar:
     deleted_chat_username: تم الحذف
     errors:
       channel_exists_for_category: "توجد قناة بالفعل في هذه الفئة وبهذا الاسم"
-      channel_new_message_disallowed: "القناة %{status}، لا يمكن إرسال رسائل جديدة"
-      channel_modify_message_disallowed: "القناة %{status}، لا يمكن تعديل أو حذف أي رسائل"
       user_cannot_send_message: "لا يمكنك إرسال رسائل في الوقت الحالي."
       rate_limit_exceeded: "تم تجاوز حد رسائل الدردشة التي يمكن إرسالها خلال 30 ثانية"
       auto_silence_from_flags: "تم الإبلاغ عن الرسالة عددًا كافيًا من المرات لكتم المستخدم."
       channel_cannot_be_archived: "لا يمكن أرشفة القناة في الوقت الحالي، يجب أن تكون إما مغلقة أو مفتوحة للأرشفة."
       duplicate_message: "لقد نشرت رسالة مماثلة مؤخرًا."
       delete_channel_failed: "فشل حذف القناة، يُرجى إعادة المحاولة."
-      minimum_length_not_met: "الرسالة قصيرة جدًا، ويجب ألا تقل عن %{minimum} من الأحرف."
-      message_too_long: "الرسالة طويلة جدًا، يجب ألا يزيد عدد أحرف الرسائل عن %{maximum} من الأحرف."
+      message_too_long:
+        zero: "الرسالة طويلة جدًا، يجب ألا يزيد عدد أحرف الرسائل عن %{count} حرف."
+        one: "الرسالة طويلة جدًا، يجب ألا يزيد عدد أحرف الرسائل عن حرف واحد (%{count})."
+        two: "الرسالة طويلة جدًا، يجب ألا يزيد عدد أحرف الرسائل عن حرفين (%{count})."
+        few: "الرسالة طويلة جدًا، يجب ألا يزيد عدد أحرف الرسائل عن %{count} أحرف."
+        many: "الرسالة طويلة جدًا، يجب ألا يزيد عدد أحرف الرسائل عن %{count} حرفًا."
+        other: "الرسالة طويلة جدًا، يجب ألا يزيد عدد أحرف الرسائل عن %{count} حرف."
       max_reactions_limit_reached: "غير مسموح بتفاعلات جديدة على هذه الرسالة."
       message_move_invalid_channel: "يجب أن تكون القناة المصدر والمستهدفة قناتين عامتين."
       message_move_no_messages_found: "لم يتم العثور على رسائل بمعرِّفات الرسائل المقدَّمة."
@@ -74,13 +77,7 @@ ar:
       actor_disallowed_dms: "لقد اخترت منع المستخدمين من إرسال رسائل خاصة ومباشرة إليك؛ لذا لا يمكنك إنشاء رسائل مباشرة جديدة."
       actor_preventing_target_user_from_dm: "لقد اخترت منع %{username} من إرسال رسائل خاصة ومباشرة إليك؛ لذا لا يمكنك إنشاء رسائل مباشرة جديدة إليه."
       user_cannot_send_direct_messages: "عذرًا، لا يمكنك إرسال الرسائل المباشرة."
-      over_chat_max_direct_message_users:
-        zero: "يمكنك إرسال رسالة مباشرة إلى نفسك و%{count} مستخدم آخر."
-        one: "يمكنك إرسال رسالة مباشرة إلى نفسك فقط."
-        two: "يمكنك إرسال رسالة مباشرة إلى نفسك ومستخدمَين (%{count}) آخرين."
-        few: "يمكنك إرسال رسالة مباشرة إلى نفسك و%{count} مستخدمين آخرين."
-        many: "يمكنك إرسال رسالة مباشرة إلى نفسك و%{count} مستخدمًا آخر."
-        other: "يمكنك إرسال رسالة مباشرة إلى نفسك و%{count} مستخدم آخر."
+      over_chat_max_direct_message_users_allow_self: "يمكنك إرسال رسالة مباشرة إلى نفسك فقط."
     reviewables:
       message_already_handled: "شكرًا، لكننا راجعنا هذه الرسالة بالفعل وقرَّرنا أنك لست بحاجة إلى الإبلاغ عنها مرة أخرى."
       actions:
@@ -117,11 +114,6 @@ ar:
         transcript_title: "نص الرسائل السابقة في %{channel_name}"
         transcript_body: "لمنحك مزيدًا من السياق، فقد ضمَّنا نسخة من الرسائل السابقة في هذه المحادثة (حتى عشر رسائل):\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "للقراءة فقط"
-        archived: "مؤرشفة"
-        closed: "مغلقة"
-        open: "مفتوحة"
       archive:
         first_post_raw: "هذا الموضوع عبارة عن أرشيف لقناة الدردشة [%{channel_name}] (%{channel_url})."
       messages_moved:
@@ -132,9 +124,14 @@ ar:
         many: "نقل @%{acting_username} %{count} رسائل إلى القناة [%{channel_name}](%{first_moved_message_url})."
         other: "نقل @%{acting_username} %{count} رسائل إلى القناة [%{channel_name}](%{first_moved_message_url})."
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} و%{leftover} آخرين"
+        single_user: "%{username}"
+        multi_user_truncated:
+          zero: "%{comma_separated_usernames} و%{count} آخرين"
+          one: "%{comma_separated_usernames} وواحد (%{count}) آخر"
+          two: "%{comma_separated_usernames} واثنان (%{count}) آخران"
+          few: "%{comma_separated_usernames} و%{count} آخرين"
+          many: "%{comma_separated_usernames} و%{count} آخرين"
+          other: "%{comma_separated_usernames} و%{count} آخرين"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "يتضمَّن حروفًا لا تنتمي إلى ترميز ASCII"

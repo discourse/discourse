@@ -165,8 +165,6 @@ ca:
     software_update_prompt:
       message: "Hem actualitzat aquest lloc, <span>si us plau actualitzeu</span>, o podeu experimentar un comportament inesperat."
       dismiss: "Descarta-ho"
-    bootstrap_mode_disabled: "El mode d'arrencada serà desactivat d'aquí a 24 hores."
-    bootstrap_invite_button_title: "Envia invitacions"
     themes:
       default_description: "Per defecte"
     s3:
@@ -273,11 +271,9 @@ ca:
       edit_bookmark: "Edita el marcador"
       clear_bookmarks: "Neteja preferits"
       help:
-        bookmark: "Feu clic per a marcar com a preferit la primera publicació d'aquest tema"
-        edit_bookmark: "Feu clic per editar el marcador sobre aquest tema"
         edit_bookmark_for_topic: "Cliqueu per editar el marcador d'aquest tema"
         unbookmark: "Feu clic per a eliminar tots els preferits d'aquest tema"
-        unbookmark_with_reminder: "Feu clic per eliminar tots els marcadors i recordatoris d’aquest tema."
+        unbookmark_with_reminder: "Feu clic per eliminar tots els marcadors i recordatoris d’aquest tema"
     bookmarks:
       created: "Heu marcat com a preferida aquesta publicació. %{name}"
       create: "Crea un marcador"
@@ -311,7 +307,6 @@ ca:
       new_topic: "Esborrany de tema nou"
       new_private_message: "Nou esborrany de missatge personal"
       abandon:
-        confirm: "Teniu un esborrany en curs per a aquest tema. Què t'agradaria fer-hi?"
         yes_value: "Descarta"
         no_value: "Reprèn l'edició"
     topic_count_categories:
@@ -479,11 +474,9 @@ ca:
       scores:
         about: "Aquesta puntuació es calcula en funció del nivell de confiança del reportador, de l'exactitud de les banderes prèvies i de la prioritat de l'element del qual es reporta."
         score: "Puntuació"
-        date: "Data"
-        type: "Tipus"
+        type: "Motiu"
         status: "Estat"
-        submitted_by: "Enviat per"
-        reviewed_by: "Revisat per"
+        submitted_by: "Reportat per"
       statuses:
         pending:
           title: "Pendent"
@@ -491,14 +484,12 @@ ca:
           title: "Aprovat"
         rejected:
           title: "Rebutjat"
-        ignored:
-          title: "Ignorat"
-        deleted:
-          title: "Suprimit"
         reviewed:
-          title: "(tots revisats)"
+          title: "Tots revisats"
         all:
-          title: "(qualsevol cosa)"
+          title: "Qualsevol cosa"
+      context_question:
+        delimiter: "o"
       types:
         reviewable_flagged_post:
           title: "Publicació amb bandera"
@@ -728,6 +719,7 @@ ca:
         make_owner_description: "Fes <b>%{username}</b> propietari del grup"
         remove_owner: "Elimina com a propietari"
         remove_owner_description: "Elimina <b>%{username}</b> com a propietari del grup"
+        status: "Estat"
         owner: "Propietari"
         forbidden: "No teniu permís per a veure els membres."
       topics: "Temes"
@@ -838,11 +830,6 @@ ca:
       profile: "Perfil"
       mute: "Silencia"
       edit: "Edita preferències"
-      download_archive:
-        button_text: "Descarrega-ho tot"
-        confirm: "Esteu segur que voleu descarregar les vostres publicacions?"
-        success: "Descàrrega iniciada. Quan el procés s'acabi, us ho notificarem amb un missatge."
-        rate_limit_error: "Les publicacions es poden descarregar una vegada al dia. Torneu a provar-ho demà."
       new_private_message: "Missatge nou"
       private_message: "Missatge"
       private_messages: "Missatges"
@@ -979,12 +966,6 @@ ca:
       theme: "Aparença"
       home: "Pàgina d'inici per defecte"
       staged: "Fictici"
-      staff_counters:
-        flags_given: "banderes útils"
-        flagged_posts: "publicacions amb banderes"
-        deleted_posts: "publicacions suprimides"
-        suspensions: "suspensions"
-        warnings_received: "avisos"
       messages:
         inbox: "Safata d'entrada"
         latest: "Més recents"
@@ -1027,8 +1008,6 @@ ca:
       second_factor_backup:
         regenerate: "Regenera"
         disable: "Desactiva"
-        enable: "Activa"
-        enable_long: "Activa els codis de còpia de seguretat"
         copy_to_clipboard: "Copia al porta-retalls"
         copy_to_clipboard_error: "Error copiant dades al porta-retalls"
         copied_to_clipboard: "Copiat al porta-retalls."
@@ -1403,8 +1382,6 @@ ca:
       hide_forever: "no, gràcies"
       intro: "Bon dia! Sembla que gaudiu de la discussió, però no heu registrat un compte."
     summary:
-      enabled_description: "Ara veieu un resum del tema: les publicacions més interessants segons la comunitat."
-      enable: "Resumeix aquest tema"
       disable: "Mostra totes les publicacions"
     deleted_filter:
       enabled_description: "Aquest tema conté publicacions suprimides, que han estat amagades."
@@ -1610,8 +1587,6 @@ ca:
         topic_template_not_modified: "Afegiu detalls i especificacions al tema editant la plantilla."
       save_edit: "Desa l'edició"
       overwrite_edit: "Sobreescriu l'edició"
-      reply_original: "Respon en el tema original"
-      reply_here: "Respon aquí"
       reply: "Respon"
       cancel: "Cancel·la"
       create_topic: "Crea un tema"
@@ -1738,6 +1713,7 @@ ca:
       membership_request_accepted: "Membre acceptat en '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      admin_problems: "Nou consell al tauler de control del vostre lloc web"
       dismiss_confirmation:
         dismiss: "Descarta-ho"
         cancel: "Cancel·la"
@@ -1969,8 +1945,6 @@ ca:
       options: "Opcions del tema"
       show_links: "mostra enllaços dins d'aquest tema"
       unread_indicator: "Cap membre encara no ha llegit la darrera publicació d'aquest tema."
-      jump_reply_up: salta a la resposta anterior
-      jump_reply_down: salta a la resposta posterior
       deleted: "El tema ha estat suprimit"
       slow_mode_update:
         enable: "Activa"
@@ -2400,7 +2374,6 @@ ca:
       view: "Mostra temes per categories"
       general: "General"
       settings: "Configuració"
-      topic_template: "Plantilla de tema"
       tags: "Etiquetes"
       tags_allowed_tags: "Restringeix aquestes etiquetes per a aquesta categoria:"
       tags_allowed_tag_groups: "Restringeix aquests grups d'etiquetes a aquesta categoria:"
@@ -2446,8 +2419,6 @@ ca:
       images: "Imatges"
       email_in: "Adreça de correu electrònic entrant personalitzada:"
       email_in_allow_strangers: "Accepta missatges de correu d'usuaris anònims sense compte"
-      email_in_disabled: "Les publicacions des del correu electrònic estan desactivades en les preferències del lloc web. Per a activar les publicacions des del correu electrònic, "
-      email_in_disabled_click: 'activa l''opció "email in".'
       mailinglist_mirror: "Una categoria reflecteix una llista de correu"
       show_subcategory_list: "Mostra la llista de subcategories de temes en aquesta categoria. "
       num_featured_topics: "Nombre de temes mostrats en la pàgina de categories:"
@@ -2623,6 +2594,10 @@ ca:
     filters:
       with_topics: "%{filter} temes"
       with_category: "%{filter} %{category} temes"
+      filter:
+        title: "Filtre"
+        button:
+          label: "Filtre"
       latest:
         title: "Més recents"
         title_with_count:
@@ -2701,6 +2676,9 @@ ca:
       close: "Tanca (Esc)"
       content_load_error: 'No s''ha pogut carregar <a href="%url%">el contingut</a>. '
       image_load_error: 'No s''ha pogut carregar la <a href="%url%">imatge</a>.'
+    experimental_lightbox:
+      buttons:
+        close: "Tanca (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -2768,7 +2746,6 @@ ca:
         one: "Ha rebut aquesta insígnia %{count} vegada."
         other: "Ha rebut aquesta insígnia%{count} vegades."
       granted_on: "Concedit %{date}"
-      others_count: "Altres amb aquesta insígnia (%{count})"
       title: Insígnies
       allow_title: "Podeu fer servir aquesta insígnia com a títol"
       multiple_grant: "Podeu guanyar-la diverses vegades"
@@ -2883,10 +2860,6 @@ ca:
       dismiss: "Descarta-ho"
     safe_mode:
       enabled: "El mode segur està activat. Per a sortir-ne tanqueu aquesta finestra del navegador."
-    pause_notifications:
-      remaining: "%{remaining} restant"
-      options:
-        custom: "Personalitzat"
     trust_levels:
       names:
         newuser: "usuari nou"
@@ -2903,7 +2876,19 @@ ca:
         other: "%{count} nous"
       more: "Més"
       all_categories: "Totes les categories"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Tot"
       sections:
+        custom:
+          save: "Desa"
+          delete: "Suprimeix"
+          links:
+            reset: "Restableix el valor predeterminat"
+            icon:
+              label: "Icona"
+            name:
+              label: "Nom"
         about:
           header_link_text: "Quant a"
         messages:
@@ -2921,7 +2906,8 @@ ca:
         categories:
           header_link_text: "Categories"
         community:
-          header_link_text: "Comunitat"
+          edit_section:
+            header_dropdown: "Personalitza"
           links:
             about:
               content: "Quant a"
@@ -2929,8 +2915,8 @@ ca:
               content: "Administració"
             badges:
               content: "Insígnies"
-            everything:
-              content: "Qualsevol cosa"
+            topics:
+              content: "Temes"
             faq:
               content: "PMF"
             groups:
@@ -2942,6 +2928,11 @@ ca:
             review:
               content: "Revisa"
     until: "Fins a:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Introduïu un valor vàlid."
+          email: "Introduïu una adreça vàlida de correu electrònic."
   admin_js:
     type_to_filter: "escriu per a filtrar..."
     admin:
@@ -3217,7 +3208,6 @@ ca:
         enabled: "Activat?"
         is_enabled: "S"
         not_enabled: "N"
-        change_settings: "Canvia la configuració"
         change_settings_short: "Configuració"
         howto: "Com s'instal·len els connectors?"
         official: "Connector (plugin) oficial"
@@ -3490,6 +3480,8 @@ ca:
           love:
             name: "amor"
             description: "El color del botó M'agrada"
+          selected:
+            name: "seleccionat"
         robots:
           title: "Substitueix el fitxer robots.txt del lloc web:"
           warning: "Això substituirà permanentment qualsevol configuració del lloc web relacionada."
@@ -3741,11 +3733,6 @@ ca:
           flag: "Bandera"
           replace: "Reemplaça"
           silence: "Silencia"
-        action_descriptions:
-          block: "Impedeix que es publiquin texts que continguin aquestes paraules. L'usuari veurà un missatge d'error quan intenti enviar la publicació. "
-          censor: "Permet publicacions que contenen aquestes paraules, però reemplaça-les amb caràcters que amaguin les paraules censurades."
-          require_approval: "Les publicacions que continguin aquestes paraules requeriran aprovació per l'equip responsable abans que puguin ser vistes. "
-          flag: "Permet publicacions que contenen aquestes paraules, però senyala-les amb bandera com a inapropiades de manera que els moderadors puguin revisar-les"
         form:
           placeholder_regexp: "expressió regular"
           link_placeholder: "https://example.com"
@@ -3759,6 +3746,33 @@ ca:
           description: "Introduïu un text per a comprovar coincidències amb paraules vigilades."
           found_matches: "Coincidències trobades:"
           no_matches: "No s'han trobat coincidències"
+      form_templates:
+        nav_title: "Plantilles"
+        list_table:
+          headings:
+            name: "Nom"
+            actions: "Accions"
+        view_template:
+          close: "Tanca"
+          edit: "Edita"
+          delete: "Suprimeix"
+        new_template_form:
+          submit: "Desa"
+          cancel: "Cancel·la"
+          preview: "Previsualitza"
+        quick_insert_fields:
+          add_new_field: "Afegeix"
+          dropdown: "Desplega"
+        validations_modal:
+          table_headers:
+            key: "Clau"
+            type: "Tipus"
+            description: "Descripció"
+          validations:
+            required:
+              key: "necessari"
+            type:
+              key: "tipus"
       impersonate:
         title: "Suplanta"
         help: "Feu servir aquesta eina per a suplantar comptes amb l'objectiu de depurar. Haureu de tancar la sessió quan acabeu."
@@ -3771,6 +3785,7 @@ ca:
         not_found: "Aquest nom d'usuari no existeix en el nostre sistema. "
         id_not_found: "Aquest ID d'usuari no existeix en el nostre sistema. "
         active: "Activat"
+        status: "Estat"
         show_emails: "Mostra correus"
         hide_emails: "Amaga els correus "
         nav:
@@ -3842,7 +3857,6 @@ ca:
         staged: "Fictici?"
         show_admin_profile: "Administració"
         show_public_profile: "Mostra el perfil públic"
-        impersonate: "Suplanta"
         action_logs: "Registres d'accions (logs)"
         ip_lookup: "Cerca IP"
         log_out: "Tanca la sessió"
@@ -4025,6 +4039,8 @@ ca:
         recommended: "Recomanem personalitzar el text següent segons us convingui:"
         show_overriden: "Mostra sols texts editats"
         more_than_50_results: "Hi ha més de 50 resultats. Restringiu la cerca."
+        outdated:
+          dismiss: "Descarta-ho"
       settings:
         show_overriden: "Mostra només els sobreescrits"
         reset: "restableix"
@@ -4032,7 +4048,6 @@ ca:
       site_settings:
         title: "Configuració"
         no_results: "Sense resultats"
-        more_than_30_results: "Hi ha més de 30 resultats. Restringiu la cerca o seleccioneu una categoria."
         clear_filter: "Neteja"
         add_url: "afegeix URL"
         add_host: "afegeix amfitrió"
@@ -4114,7 +4129,8 @@ ca:
         allow_title: Permet que es faci servir la insígnia com a títol
         multiple_grant: Pot concedir-se moltes vegades
         listable: Mostra la insígnia en la pàgina pública d'insígnies
-        enabled: Activa la insígnia
+        enabled: activat
+        disabled: desactivat
         icon: Icona
         image: Imatge
         icon_help: "Introduïu un nom d'icona Awesome Font (feu servir el prefix \"far-\" per a les icones normals i \"fab-\" per a les icones de marca)"
@@ -4165,7 +4181,6 @@ ca:
         confirm_delete: "Esteu segur que voleu suprimir aquest amfitrió?"
         title: "Incrustant"
         host: "Amfitrions permesos"
-        class_name: "Nom de la classe"
         edit: "edita"
         category: "Publica en la categoria"
         add_host: "Afegeix amfitrió"

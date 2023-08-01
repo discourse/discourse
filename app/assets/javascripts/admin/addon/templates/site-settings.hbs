@@ -1,5 +1,4 @@
 <div class="admin-controls">
-
   <div class="controls">
     <div class="inline-form">
       <DButton
@@ -21,9 +20,14 @@
       />
     </div>
   </div>
+
   <div class="search controls">
     <label>
-      <Input @type="checkbox" @checked={{this.onlyOverridden}} />
+      <Input
+        @type="checkbox"
+        @checked={{this.onlyOverridden}}
+        class="toggle-overridden"
+      />
       {{i18n "admin.settings.show_overriden"}}
     </label>
   </div>
@@ -37,11 +41,12 @@
           @route="adminSiteSettingsCategory"
           @model={{category.nameKey}}
           class={{category.nameKey}}
+          title={{category.name}}
         >
           {{category.name}}
-          {{#if category.count}}<span
-              class="count"
-            >({{category.count}})</span>{{/if}}
+          {{#if category.count}}
+            <span class="count">({{category.count}})</span>
+          {{/if}}
         </LinkTo>
       </li>
     {{/each}}

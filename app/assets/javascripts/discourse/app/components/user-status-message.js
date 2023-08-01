@@ -13,7 +13,7 @@ export default class UserStatusMessage extends Component {
     }
 
     const timezone = this.currentUser
-      ? this.currentUser.timezone
+      ? this.currentUser.user_option?.timezone
       : moment.tz.guess();
 
     return until(this.status.ends_at, timezone, this.currentUser?.locale);

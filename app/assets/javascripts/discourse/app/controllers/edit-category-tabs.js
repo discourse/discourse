@@ -6,12 +6,15 @@ import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import PermissionType from "discourse/models/permission-type";
-import { extractError } from "discourse/lib/ajax-error";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { underscore } from "@ember/string";
 import { inject as service } from "@ember/service";
 
 export default Controller.extend({
   dialog: service(),
+  site: service(),
+  router: service(),
+
   selectedTab: "general",
   saving: false,
   deleting: false,
@@ -109,11 +112,11 @@ export default Controller.extend({
               notification_level: NotificationLevels.REGULAR,
             });
             this.site.updateCategory(model);
-            this.transitionToRoute("editCategory", Category.slugFor(model));
+            this.router.transitionTo("editCategory", Category.slugFor(model));
           }
         })
         .catch((error) => {
-          this.dialog.alert(extractError(error));
+          popupAjaxError(error);
           this.set("saving", false);
         });
     },
@@ -126,7 +129,7 @@ export default Controller.extend({
           this.model
             .destroy()
             .then(() => {
-              this.transitionToRoute("discovery.categories");
+              this.router.transitionTo("discovery.categories");
             })
             .catch(() => {
               this.displayErrors([I18n.t("category.delete_error")]);

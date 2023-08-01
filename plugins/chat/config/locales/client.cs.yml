@@ -20,16 +20,13 @@ cs:
       joined: "účet vytvořen"
       email_frequency:
         never: "Nikdy"
+      header_indicator_preference:
+        never: "Nikdy"
       flag: "Nahlášení"
       join: "Přidat se ke skupině"
+      last_visit: "poslední návštěva"
       mention_warning:
         dismiss: "označit jako přečtené"
-        groups:
-          users_limit:
-            one: "%{count} uživatel"
-            few: "%{count} uživatelů"
-            many: "%{count} uživatelů"
-            other: "%{count} uživatelů"
       reply: "Odpověď"
       edit: "Upravit"
       rebake_message: "Obnovit HTML"
@@ -70,11 +67,14 @@ cs:
       composer:
         italic_text: "text kurzívou"
         bold_text: "tučný text"
+        send: "Poslat"
       notification_levels:
         never: "Nikdy"
       settings:
         follow: "Přidat se ke skupině"
         followed: "Účet vytvořen"
+        threading_enabled: "Zapnutý"
+        threading_disabled: "Vypnuto"
         notifications: "Upozornění"
         preview: "Náhled"
         save: "Uložit"
@@ -102,6 +102,20 @@ cs:
       emoji_picker:
         objects: "Objekty"
         flags: "Nahlášení"
+      thread:
+        title: "Nadpis"
+        replies:
+          one: "%{count} odpověď"
+          few: "%{count} odpovědí"
+          many: "%{count} odpovědí"
+          other: "%{count} odpovědí"
+        settings: "Nastavení"
+        last_reply: "poslední odpověď"
+        notifications:
+          regular:
+            title: "Normální"
+          tracking:
+            title: "Sledované"
       draft_channel_screen:
         header: "Nová zpráva"
         cancel: "Zrušit"
@@ -113,7 +127,3 @@ cs:
           fields:
             message:
               label: Zpráva
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Nahlásil"

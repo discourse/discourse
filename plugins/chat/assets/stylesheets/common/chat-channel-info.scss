@@ -32,14 +32,22 @@
   color: var(--primary-medium);
 }
 
-.channel-settings-view__desktop-notification-level-selector,
-.channel-settings-view__mobile-notification-level-selector,
-.channel-settings-view__muted-selector,
-.channel-settings-view__auto-join-selector,
-.channel-settings-view__channel-wide-mentions-selector {
+.channel-info-about-view__slug {
+  color: var(--primary-medium);
+  font-size: var(--font-down-2);
+}
+
+.channel-settings-view__selector {
   width: 220px;
 }
 
+.channel-settings-view__channel-threading-tooltip {
+  padding-left: 0.25rem;
+  color: var(--tertiary);
+  cursor: pointer;
+}
+
+.channel-settings-view__muted-selector,
 .chat-form__btn.delete-btn {
   .d-icon {
     color: var(--danger);
@@ -96,10 +104,6 @@ input.channel-members-view__search-input {
   flex-direction: column;
   margin-top: 1em;
   box-sizing: border-box;
-  min-height: 1px;
-  overflow-y: auto;
-  height: 100%;
-  @include chat-scrollbar(var(--secondary));
 }
 
 .channel-members-view__list-item {
@@ -107,9 +111,8 @@ input.channel-members-view__search-input {
   align-items: center;
   padding: 0.5rem 0 0.5rem 1px;
 
-  &:hover {
-    background-color: var(--tertiary-very-low);
-    border-radius: 0.25rem;
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--primary-low);
   }
 
   .chat-user-avatar {
@@ -117,28 +120,22 @@ input.channel-members-view__search-input {
   }
 }
 
-// Channel info edit name modal
-.chat-channel-edit-name-modal__name-input {
-  display: flex;
-  margin: 0;
-  width: 100%;
+// Channel info edit name and slug modal
+.chat-channel-edit-name-slug-modal {
+  .modal-inner-container {
+    width: 300px;
+  }
+
+  &__name-input,
+  &__slug-input {
+    display: flex;
+    margin: 0;
+    width: 100%;
+  }
 }
 
-.chat-channel-edit-name-modal__description {
+.chat-channel-edit-name-slug-modal__description {
   display: flex;
   padding: 0.5rem 0;
-  color: var(--primary-medium);
-}
-
-// Channel info edit description modal
-.chat-channel-edit-description-modal__description-input {
-  display: flex;
-  margin: 0;
-  min-height: 200px;
-}
-
-.chat-channel-edit-description-modal__description {
-  display: flex;
-  padding: 0.75rem 0 0.5rem;
   color: var(--primary-medium);
 }

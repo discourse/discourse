@@ -4,13 +4,12 @@ import { ajax } from "discourse/lib/ajax";
 import highlightSearch from "discourse/lib/highlight-search";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { isValidLink } from "discourse/lib/click-track";
-import { number, until } from "discourse/lib/formatter";
+import { number } from "discourse/lib/formatter";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { escape } from "pretty-text/sanitizer";
 import domFromString from "discourse-common/lib/dom-from-string";
 import getURL from "discourse-common/lib/get-url";
-import { emojiUnescape } from "discourse/lib/text";
-import { escapeExpression } from "discourse/lib/utilities";
+import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
 
 let _beforeAdoptDecorators = [];
 let _afterAdoptDecorators = [];
@@ -37,6 +36,7 @@ function createDetachedElement(nodeName) {
 
 export default class PostCooked {
   originalQuoteContents = null;
+  tippyInstances = [];
 
   constructor(attrs, decoratorHelper, currentUser) {
     this.attrs = attrs;
@@ -77,6 +77,7 @@ export default class PostCooked {
 
   destroy() {
     this._stopTrackingMentionedUsersStatus();
+    this._destroyTippyInstances();
   }
 
   _decorateAndAdopt(cooked) {
@@ -381,7 +382,14 @@ export default class PostCooked {
     }
   }
 
+  _destroyTippyInstances() {
+    this.tippyInstances.forEach((instance) => {
+      instance.destroy();
+    });
+  }
+
   _rerenderUserStatusOnMentions() {
+    this._destroyTippyInstances();
     this._post()?.mentioned_users?.forEach((user) =>
       this._rerenderUserStatusOnMention(this.cookedDiv, user)
     );
@@ -392,41 +400,8 @@ export default class PostCooked {
     const mentions = postElement.querySelectorAll(`a.mention[href="${href}"]`);
 
     mentions.forEach((mention) => {
-      this._updateUserStatus(mention, user.status);
+      updateUserStatusOnMention(mention, user.status, this.tippyInstances);
     });
-  }
-
-  _updateUserStatus(mention, status) {
-    this._removeUserStatus(mention);
-    if (status) {
-      this._insertUserStatus(mention, status);
-    }
-  }
-
-  _insertUserStatus(mention, status) {
-    const emoji = escapeExpression(`:${status.emoji}:`);
-    const statusHtml = emojiUnescape(emoji, {
-      class: "user-status",
-      title: this._userStatusTitle(status),
-    });
-    mention.insertAdjacentHTML("beforeend", statusHtml);
-  }
-
-  _removeUserStatus(mention) {
-    mention.querySelector("img.user-status")?.remove();
-  }
-
-  _userStatusTitle(status) {
-    if (!status.ends_at) {
-      return status.description;
-    }
-
-    const until_ = until(
-      status.ends_at,
-      this.currentUser.timezone,
-      this.currentUser.locale
-    );
-    return escapeExpression(`${status.description} ${until_}`);
   }
 
   _trackMentionedUsersStatus() {

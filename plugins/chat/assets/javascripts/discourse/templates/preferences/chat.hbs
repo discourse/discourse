@@ -1,6 +1,6 @@
 <label class="control-label">{{i18n "chat.title_capitalized"}}</label>
 
-<div class="control-group chat-setting">
+<div class="control-group chat-setting" data-setting-name="user_chat_enabled">
   <label class="controls">
     <Input
       id="user_chat_enabled"
@@ -11,7 +11,10 @@
   </label>
 </div>
 
-<div class="control-group chat-setting">
+<div
+  class="control-group chat-setting"
+  data-setting-name="user_chat_only_push_notifications"
+>
   <label class="controls">
     <Input
       id="user_chat_only_push_notifications"
@@ -25,7 +28,10 @@
   </span>
 </div>
 
-<div class="control-group chat-setting">
+<div
+  class="control-group chat-setting"
+  data-setting-name="user_chat_ignore_channel_wide_mention"
+>
   <label class="controls">
     <Input
       id="user_chat_ignore_channel_wide_mention"
@@ -39,7 +45,10 @@
   </span>
 </div>
 
-<div class="control-group chat-setting controls-dropdown">
+<div
+  class="control-group chat-setting controls-dropdown"
+  data-setting-name="user_chat_sounds"
+>
   <label for="user_chat_sounds">{{i18n "chat.sound.title"}}</label>
   <ComboBox
     @options={{hash none="chat.sounds.none"}}
@@ -51,7 +60,10 @@
   />
 </div>
 
-<div class="control-group chat-setting controls-dropdown">
+<div
+  class="control-group chat-setting controls-dropdown"
+  data-setting-name="user_chat_email_frequency"
+>
   <label for="user_chat_email_frequency">
     {{i18n "chat.email_frequency.title"}}
   </label>
@@ -67,6 +79,24 @@
       {{i18n "chat.email_frequency.description"}}
     </div>
   {{/if}}
+</div>
+
+<div
+  class="control-group chat-setting controls-dropdown"
+  data-setting-name="user_chat_header_indicator_preference"
+>
+  <label for="user_chat_header_indicator_preference">
+    {{i18n "chat.header_indicator_preference.title"}}
+  </label>
+  <ComboBox
+    @valueProperty="value"
+    @content={{this.headerIndicatorOptions}}
+    @value={{this.model.user_option.chat_header_indicator_preference}}
+    @id="user_chat_header_indicator_preference"
+    @onChange={{action
+      (mut this.model.user_option.chat_header_indicator_preference)
+    }}
+  />
 </div>
 
 <SaveControls

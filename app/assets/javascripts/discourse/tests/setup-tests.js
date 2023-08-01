@@ -39,6 +39,7 @@ import { addModuleExcludeMatcher } from "ember-cli-test-loader/test-support/inde
 import SiteSettingService from "discourse/services/site-settings";
 import jQuery from "jquery";
 import { setupDeprecationCounter } from "discourse/tests/helpers/deprecation-counter";
+import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
@@ -124,31 +125,39 @@ function setupToolbar() {
     )
   );
 
-  QUnit.config.urlConfig.push({
-    id: "qunit_skip_core",
-    label: "Skip Core",
-    value: "1",
-  });
-
-  QUnit.config.urlConfig.push({
-    id: "qunit_skip_plugins",
-    label: "Skip Plugins",
-    value: "1",
-  });
-
   const pluginNames = new Set();
 
-  Object.keys(requirejs.entries).forEach((moduleName) => {
-    const found = moduleName.match(/\/plugins\/([\w-]+)\//);
-    if (found && moduleName.match(/\-test/)) {
-      pluginNames.add(found[1]);
-    }
-  });
+  document
+    .querySelector("#dynamic-test-js")
+    ?.content.querySelectorAll("script[data-discourse-plugin]")
+    .forEach((script) => pluginNames.add(script.dataset.discoursePlugin));
 
   QUnit.config.urlConfig.push({
-    id: "qunit_single_plugin",
-    label: "Plugin",
-    value: Array.from(pluginNames),
+    id: "target",
+    label: "Target",
+    value: ["core", "plugins", "all", "-----", ...Array.from(pluginNames)],
+  });
+
+  QUnit.begin(() => {
+    const select = document.querySelector(
+      `#qunit-testrunner-toolbar [name=target]`
+    );
+
+    const testingThemeId = parseInt(
+      document.querySelector("script[data-theme-id]")?.dataset.themeId,
+      10
+    );
+    if (testingThemeId) {
+      select.innerHTML = `<option selected>theme id ${testingThemeId}</option>`;
+      select.disabled = true;
+      return;
+    }
+
+    select.value ||= "core";
+    select.querySelector("option:not([value])").remove();
+    select.querySelector("option[value=-----]").disabled = true;
+    select.querySelector("option[value=all]").innerText =
+      "all (not recommended)";
   });
 
   // Abort tests when the qunit controls are clicked
@@ -201,6 +210,7 @@ export default function setupTests(config) {
   setupDeprecationCounter(QUnit);
 
   QUnit.config.hidepassed = true;
+  QUnit.config.testTimeout = 60_000;
 
   sinon.config = {
     injectIntoThis: false,
@@ -344,20 +354,9 @@ export default function setupTests(config) {
     QUnit.config.autostart = false;
   }
 
-  let skipCore =
-    getUrlParameter("qunit_single_plugin") ||
-    getUrlParameter("qunit_skip_core") === "1";
+  handleLegacyParameters();
 
-  let singlePlugin = getUrlParameter("qunit_single_plugin");
-  let skipPlugins = !singlePlugin && getUrlParameter("qunit_skip_plugins");
-
-  if (skipCore && !getUrlParameter("qunit_skip_core")) {
-    replaceUrlParameter("qunit_skip_core", "1");
-  }
-
-  if (!skipPlugins && getUrlParameter("qunit_skip_plugins")) {
-    replaceUrlParameter("qunit_skip_plugins", null);
-  }
+  const target = getUrlParameter("target") || "core";
 
   const shouldLoadModule = (name) => {
     if (!/\-test/.test(name)) {
@@ -368,13 +367,15 @@ export default function setupTests(config) {
     const isCore = !isPlugin;
     const pluginName = name.match(/\/plugins\/([\w-]+)\//)?.[1];
 
-    if (skipCore && isCore) {
+    const loadCore = target === "core" || target === "all";
+    const loadAllPlugins = target === "plugins" || target === "all";
+
+    if (isCore && !loadCore) {
       return false;
-    } else if (skipPlugins && isPlugin) {
-      return false;
-    } else if (singlePlugin && singlePlugin !== pluginName) {
+    } else if (isPlugin && !(loadAllPlugins || pluginName === target)) {
       return false;
     }
+
     return true;
   };
 
@@ -386,33 +387,18 @@ export default function setupTests(config) {
   setupToolbar();
   reportMemoryUsageAfterTests();
   patchFailedAssertion();
+
+  const hasPluginJs = !!document.querySelector("script[data-discourse-plugin]");
+  const hasThemeJs = !!document.querySelector("script[data-theme-id]");
+
+  if (!hasPluginJs && !hasThemeJs) {
+    configureRaiseOnDeprecation();
+  }
 }
 
 function getUrlParameter(name) {
   const queryParams = new URLSearchParams(window.location.search);
   return queryParams.get(name);
-}
-
-function replaceUrlParameter(name, value) {
-  const queryParams = new URLSearchParams(window.location.search);
-  if (value === null) {
-    queryParams.delete(name);
-  } else {
-    queryParams.set(name, value);
-  }
-  history.replaceState(null, null, "?" + queryParams.toString());
-
-  QUnit.begin(() => {
-    QUnit.config[name] = value;
-    const formElement = document.querySelector(
-      `#qunit-testrunner-toolbar [name=${name}]`
-    );
-    if (formElement?.type === "checkbox") {
-      formElement.checked = !!value;
-    } else if (formElement) {
-      formElement.value = value;
-    }
-  });
 }
 
 function patchFailedAssertion() {
@@ -429,4 +415,20 @@ function patchFailedAssertion() {
 
     oldPushResult.call(this, resultInfo);
   };
+}
+
+function handleLegacyParameters() {
+  for (const param of [
+    "qunit_single_plugin",
+    "qunit_skip_core",
+    "qunit_skip_plugins",
+  ]) {
+    if (getUrlParameter(param)) {
+      QUnit.begin(() => {
+        throw new Error(
+          `${param} is no longer supported. Use the 'target' parameter instead`
+        );
+      });
+    }
+  }
 }

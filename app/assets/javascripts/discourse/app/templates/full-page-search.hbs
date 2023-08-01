@@ -137,19 +137,20 @@
       {{/if}}
     {{/if}}
 
-    <PluginOutlet
-      @name="full-page-search-below-search-info"
-      @tagName="span"
-      @connectorTagName="div"
-      @args={{hash search=this.searchTerm}}
-    />
+    <span>
+      <PluginOutlet
+        @name="full-page-search-below-search-info"
+        @connectorTagName="div"
+        @outletArgs={{hash search=this.searchTerm}}
+      />
+    </span>
 
     {{#if this.searching}}
       {{loading-spinner size="medium"}}
     {{else}}
       <div class="search-results" role="region">
         <LoadMore @selector=".fps-result" @action={{action "loadMore"}}>
-          {{#if this.usingDefaultSearchType}}
+          {{#if (or this.usingDefaultSearchType this.customSearchType)}}
             <SearchResultEntries
               @posts={{this.model.posts}}
               @bulkSelectEnabled={{this.bulkSelectEnabled}}

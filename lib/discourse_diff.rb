@@ -160,7 +160,7 @@ class DiscourseDiff
     while i < text.size
       if text[i] =~ /\w/
         t << text[i]
-      elsif text[i] =~ /[ \t]/ && t.join =~ /^\w+$/
+      elsif text[i] =~ /[ \t]/ && t.join =~ /\A\w+\z/
         begin
           t << text[i]
           i += 1

@@ -1,64 +1,49 @@
-{{#if this.shouldDisplay}}
-  <Sidebar::Section
-    @sectionName="categories"
-    @headerLinkText={{i18n "sidebar.sections.categories.header_link_text"}}
-    @headerActions={{array
-      (hash
-        action=this.editTracked
-        title=(i18n "sidebar.sections.categories.header_action_title")
-      )
-    }}
-    @headerActionsIcon="pencil-alt"
-    @collapsable={{@collapsable}}
-  >
+<Sidebar::Section
+  @sectionName="categories"
+  @headerLinkText={{i18n "sidebar.sections.categories.header_link_text"}}
+  @headerActions={{array
+    (hash
+      action=this.showModal
+      title=(i18n "sidebar.sections.categories.header_action_title")
+    )
+  }}
+  @headerActionsIcon="pencil-alt"
+  @collapsable={{@collapsable}}
+>
 
-    {{#if (gt this.sectionLinks.length 0)}}
-      {{#each this.sectionLinks as |sectionLink|}}
-        <Sidebar::SectionLink
-          @linkName={{sectionLink.name}}
-          @route={{sectionLink.route}}
-          @query={{sectionLink.query}}
-          @title={{sectionLink.title}}
-          @content={{sectionLink.text}}
-          @currentWhen={{sectionLink.currentWhen}}
-          @model={{sectionLink.model}}
-          @badgeText={{sectionLink.badgeText}}
-          @prefixBadge={{sectionLink.prefixBadge}}
-          @prefixType={{sectionLink.prefixType}}
-          @prefixValue={{sectionLink.prefixValue}}
-          @prefixColor={{sectionLink.prefixColor}}
-          @prefixElementColors={{sectionLink.prefixElementColors}}
-          @suffixCSSClass={{sectionLink.suffixCSSClass}}
-          @suffixValue={{sectionLink.suffixValue}}
-          @suffixType={{sectionLink.suffixType}}
-        />
-      {{/each}}
-    {{else}}
+  {{#if (gt this.sectionLinks.length 0)}}
+    {{#each this.sectionLinks as |sectionLink|}}
       <Sidebar::SectionLink
-        @linkName="configure-categories"
-        @route="preferences.sidebar"
-        @prefixType="icon"
-        @prefixValue="pencil-alt"
-        @model={{this.currentUser}}
-        @content={{i18n
-          "sidebar.sections.categories.links.add_categories.content"
-        }}
-        @title={{i18n "sidebar.sections.categories.links.add_categories.title"}}
+        @route={{sectionLink.route}}
+        @query={{sectionLink.query}}
+        @title={{sectionLink.title}}
+        @content={{sectionLink.text}}
+        @currentWhen={{sectionLink.currentWhen}}
+        @model={{sectionLink.model}}
+        @badgeText={{sectionLink.badgeText}}
+        @prefixBadge={{sectionLink.prefixBadge}}
+        @prefixType={{sectionLink.prefixType}}
+        @prefixValue={{sectionLink.prefixValue}}
+        @prefixColor={{sectionLink.prefixColor}}
+        @suffixCSSClass={{sectionLink.suffixCSSClass}}
+        @suffixValue={{sectionLink.suffixValue}}
+        @suffixType={{sectionLink.suffixType}}
+        data-category-id={{sectionLink.category.id}}
       />
-    {{/if}}
+    {{/each}}
+  {{/if}}
 
-    <Sidebar::Common::AllCategoriesSectionLink />
+  <Sidebar::Common::AllCategoriesSectionLink />
 
-    {{#if (and this.currentUser.admin (not this.hasDefaultSidebarCategories))}}
-      <Sidebar::SectionLink
-        @linkName="configure-default-sidebar-categories"
-        @content={{i18n "sidebar.sections.categories.configure_defaults"}}
-        @prefixType="icon"
-        @prefixValue="wrench"
-        @route="adminSiteSettingsCategory"
-        @model="sidebar"
-        @query={{hash filter="default_sidebar_categories"}}
-      />
-    {{/if}}
-  </Sidebar::Section>
-{{/if}}
+  {{#if this.shouldDisplayDefaultConfig}}
+    <Sidebar::SectionLink
+      @linkName="configure-default-navigation-menu-categories"
+      @content={{i18n "sidebar.sections.categories.configure_defaults"}}
+      @prefixType="icon"
+      @prefixValue="wrench"
+      @route="adminSiteSettingsCategory"
+      @model="sidebar"
+      @query={{hash filter="default_navigation_menu_categories"}}
+    />
+  {{/if}}
+</Sidebar::Section>

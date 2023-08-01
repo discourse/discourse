@@ -45,9 +45,6 @@ hu:
       trigger: "kockadobás"
       invalid: |-
         Sajnálom, matematikailag lehetetlen ezt a kockakombinációt dobni. :confounded:
-      not_enough_dice:
-        one: "Csak %{count} kockám van. [Szégyenletes](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), tudom!"
-        other: "Csak %{count} kockám van. [Szégyenletes](https://www.toplessrobot.com/2009/04/the_10_most_shameful_rpg_dice.php), tudom!"
       out_of_range: |-
         Tudta, hogy a [legtöbb oldallal rendelkező](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) matematikailag fair kocka 120 oldalas?
       results: |-

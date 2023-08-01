@@ -233,7 +233,7 @@ RSpec.describe UserMerger do
     [group1, group2, group3].each do |g|
       owner = [group1, group3].include?(g)
       expect(GroupUser.where(group_id: g.id, user_id: target_user.id, owner: owner).count).to eq(1)
-      expect(Group.where(id: g.id).pluck_first(:user_count)).to eq(2)
+      expect(Group.where(id: g.id).pick(:user_count)).to eq(2)
     end
     expect(GroupUser.where(user_id: source_user.id).count).to eq(0)
   end

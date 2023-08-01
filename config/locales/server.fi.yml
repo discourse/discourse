@@ -52,6 +52,11 @@ fi:
   remove_posts_deleted_by_author: "Kirjoittajan poistama"
   redirect_warning: "Emme pystyneet varmistamaan, että klikkaamasi linkki on oikeasti lähetetty foorumille. Jos haluat silti jatkaa, klikkaa alla olevaa linkkiä."
   on_another_topic: "Toisessa ketjussa"
+  topic_category_changed: "Alueelta %{from} alueelle %{to}"
+  topic_tag_changed:
+    added_and_removed: "Lisättiin %{added} ja poistettiin %{removed}"
+    added: "Lisättiin %{added}"
+    removed: "Poistettu tunniste %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} käyttäjältä %{username}"
@@ -191,8 +196,8 @@ fi:
       invalid_site_setting: "Asetusta nimeltä \"%{name}\" ei ole olemassa"
       invalid_category_id: "Määritit alueen, jota ei ole olemassa"
       invalid_choice:
-        one: "Määrittämäsi valinta ei kelpaa %{name}"
-        other: "Määrittämäsi valinnat eivät kelpaa %{name}"
+        one: "'%{name}' on virheellinen valinta."
+        other: "'%{name}' ovat virheellisiä valintoja."
       default_categories_already_selected: "Et voi valita aluetta, joka on käytössä toisella listalla."
       default_tags_already_selected: "Et voi valita tunnistetta, joka on käytössä toisella listalla."
       s3_upload_bucket_is_required: "Et voi ottaa latauksia S3:een käyttöön, ellet ole määrittänyt 's3_upload_bucket'-määritettä."
@@ -200,7 +205,6 @@ fi:
       page_publishing_requirements: "Sivun julkaisua ei voida ottaa käyttöön, jos suojattu media on käytössä."
       s3_backup_requires_s3_settings: "Et voi käyttää S3:a varmuuskopiosijaintina, ellei %{setting_name} ei ole määritetty."
       s3_bucket_reused: "Sama säiliö ei voi olla sekä 's3_upload_bucket' että 's3_backup_bucket'. Valitse eri säiliö tai määritä eri polku jokaiselle säiliölle."
-      secure_uploads_requirements: "S3-lataukset täytyy ottaa käyttöön ennen suojattujen latausten käyttöönottoa."
       share_quote_facebook_requirements: "Facebook-sovellustunnus on määritettävä, jotta lainausten jakaminen Facebookiin on mahdollista."
       second_factor_cannot_enforce_with_socials: "Et voi pakottaa 2FA-asetusta käyttöön, kun yhteisökirjautuminen on aktiivisena. Poista yhteisökirjautuminen käytöstä täällä: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Et voi pakottaa kaksivaiheista tunnistusta, jos paikallinen kirjautuminen on pois käytöstä."
@@ -502,6 +506,7 @@ fi:
       On helpompaa lukea ketjua, jossa on vähemmän pidempiä vastauksia kuin sellaista, jossa on paljon lyhyitä yksittäisiä vastauksia.
     dominating_topic: Olet kirjoittanut paljon tähän ketjuun! Voisit antaa muille mahdollisuuden vastata täällä ja keskustella asioista myös keskenään.
     get_a_room: Olet vastannut käyttäjälle @%{reply_username} %{count} kertaa, tiesitkö, että voit lähettää hänelle yksityisviestin?
+    dont_feed_the_trolls: Tästä viestistä on jo ilmoitettu ylläpidolle. Haluatko varmasti vastata siihen? Vastaukset negatiiviseen sisältöön rohkaisevat negatiivisempaan käyttäytymiseen.
     too_many_replies: |
       ### Olet kirjoittanut enimmäismäärän vastauksia tähän ketjuun
 
@@ -588,10 +593,6 @@ fi:
             duration_minutes:
               cannot_be_zero: "täytyy olla suurempi kuin 0."
               exceeds_maximum: "voi olla enintään 20 vuotta."
-        translation_overrides:
-          attributes:
-            value:
-              invalid_interpolation_keys: 'Nämä interpolaatioavaimet eivät kelpaa: "%{keys}"'
         watched_word:
           attributes:
             word:
@@ -612,22 +613,7 @@ fi:
   staff_category_name: "Henkilökunta"
   staff_category_description: "Yksityinen alue henkilökunnan keskusteluille. Ketjut näkyvät ainoastaan ylläpitäjille ja valvojille."
   discourse_welcome_topic:
-    title: "Tervetuloa yhteisöömme!"
-    body: |2
-
-      Tämän kiinnitetyn ketjun ensimmäinen kappale on sivustolla vierailevalle näkyvä tervetulotoivotus. Se on tärkeä!
-
-      **Muokkaa tästä** tiivis kuvaus yhteisöstäsi:
-
-      – Kenelle se on suunnattu?
-      – Mistä täällä keskustellaan?
-      – Miksi heidän kannattaa käydä täällä?
-      – Mistä he löytävät lisätietoa (linkkejä, ohjeita jne.)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Saattaa olla hyvä sulkea tämä ketju ylläpitäjän :wrench: -valikon kautta (oikealla ylhäällä sekä sivun alaosassa), jottei vastauksia kasaannu ilmoituksen alle.
-  admin_quick_start_title: "LUE ENSIN: Ylläpitäjän pika-aloitusopas"
+    title: "Tervetuloa sivustolle %{site_title}! :wave:"
   category:
     topic_prefix: "Tietoa alueesta %{category}"
     replace_paragraph: "(Korvaa tämä kappale lyhyellä kuvauksella uudesta alueesta. Tämä kuvaus näytetään alueen valinnan yhteydessä, joten yritä pitää se alle 200 merkin pituisena.)"
@@ -1109,7 +1095,7 @@ fi:
       title: "PAK/KAK"
       xaxis: "Päivä"
       yaxis: "PAK/KAK"
-      description: "Käyttäjät, jotka kirjautuivat sisään viimeisen päivän aikana, jaettuna käyttäjillä, jotka kirjautuivat sisään viimeisen kuukauden aikana – tuottaa prosenttiarvon, joka ilmaisee yhteisön sitoutuneisuutta. Tähtää yli 30 prosenttiin."
+      description: "Käyttäjät, jotka kirjautuivat sisään viimeisen päivän aikana, jaettuna käyttäjillä, jotka kirjautuivat sisään viimeisen kuukauden aikana – tuottaa prosenttiarvon, joka ilmaisee yhteisön sitoutuneisuutta. Tähtää yli 20 prosenttiin."
     daily_engaged_users:
       title: "Sitoutuneet päivittäiskäyttäjät"
       xaxis: "Päivä"
@@ -1378,6 +1364,7 @@ fi:
     image_magick_warning: 'Palvelin on konfiguroitu luomaan esikatselukuvia suurista kuvista, mutta ImageMagickia ei ole asennettu. Asenna ImageMagick paketinhallinnasta tai <a href="https://www.imagemagick.org/script/download.php" target="_blank">lataa uusin versio</a>.'
     failing_emails_warning: '%{num_failed_jobs} sähköpostitehtävää on epäonnistunut. Tarkista app.yml ja varmista, että sähköpostipalvelimen asetukset ovat kunnossa. <a href="%{base_path}/sidekiq/retries" target="_blank">Katsele epäonnistuneita tehtäviä Sidekiqissa</a>.'
     subfolder_ends_in_slash: "Alihakemiston asetuksesi ei kelpaa; DISCOURSE_RELATIVE_URL_ROOT päättyy vinoviivaan."
+    outdated_translations_warning: "Jotkin käännösohituksistasi ovat vanhentuneet. Tarkista <a href='%{base_path}/admin/customize/site_texts?outdated=true'>tekstimukautuksesi</a>."
     email_polling_errored_recently:
       one: "Sähköpostin pollaus on aiheuttanut virheen edellisten 24 tunnin aikana. Tarkastele <a href='%{base_path}/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
       other: "Sähköpostin pollaus aiheutti %{count} virhettä edellisten 24 tunnin aikana. Tarkastele <a href='%{base_path}/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
@@ -1456,6 +1443,7 @@ fi:
     exclude_rel_nofollow_domains: "Luettelo verkkotunnuksista, joihin osoittaviin linkkeihin nofollow'ta ei lisätä. Esimerkki.fi sallii automaattisesti myös verkkotunnuksen sub.esimerkki.fi. Sinun tulisi vähintäänkin lisätä tämän sivuston verkkotunnus, jotta hakurobotit löytävät kaiken sisällön. Jos sivustosi muita osia on toisen verkkotunnuksen alaisuudessa, lisää nekin."
     post_excerpt_maxlength: "Viestin katkelman tai yhteenvedon merkkien maksimimäärä."
     topic_excerpt_maxlength: "Ketjun katkelman tai yhteenvedon enimmäispituus, luodaan ketjun ensimmäisestä viestistä."
+    default_subcategory_on_read_only_category: "Ottaa käyttöön \"Uusi aihe\" -painikkeen ja valitsee oletusarvoisen alikategorian, jota käytetään julkaisuun kategorioissa, joissa käyttäjä ei saa luoda uutta aihetta."
     show_pinned_excerpt_mobile: "Näytä katkelma kiinnitetyistä ketjuista mobiilinäkymässä."
     show_pinned_excerpt_desktop: "Näytä katkelma kiinnitetyistä ketjuista työpöytänäkymässä."
     post_onebox_maxlength: "Discourse-viestin Onebox-esikatselun merkkien maksimimäärä."
@@ -1477,7 +1465,6 @@ fi:
     manifest_icon: "Kuva, jota käytetään logo-/splash-kuvana Androidissa. Skaalataan automaattisesti kokoon 512×512. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään."
     manifest_screenshots: "Näyttökuvat, jotka esittelevät esiintymäsi ominaisuuksia ja toimintoja sen asennuskehotussivulla. Kaikkien kuvien täytyy olla paikallisia ja samankokoisia."
     favicon: "Sivuston favicon, ks. <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Täytyy olla png, jotta toimii CDN:n kanssa. Skaalataan kokoon 32x32. Jos jätetty tyhjäksi, large_icon-kuvaketta käytetään."
-    apple_touch_icon: "Applen kosketuslaitteissa käytettävä kuvake. Skaalataan automaattisesti kokoon 180x180. Jos jätetään tyhjäksi, large_icon-kuvaketta käytetään."
     opengraph_image: "Oletuksena käytettävä opengraph-kuva, käytetään, kun sivulla ei ole muita sopivia kuvia. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään"
     twitter_summary_large_image: "Twitter-kortin \"summary large image\" (leveys vähintään 280 ja korkeus vähintään 150, ei voi olla .svg). Jos jätetty tyhjäksi, tavallisen kortin metatiedot luodaan käyttämällä opengraph_image-kuvaa, kunhan se ei ole myös .svg."
     notification_email: "Sähköpostiosoite, josta kaikki tärkeät järjestelmän lähettämät sähköpostiviestit lähetetään. Tässä määritetyn verkkotunnuksen SPF, DKIM ja käänteiset PTR-tietueet täytyy olla asetettu oikein, jotta sähköpostit menevät perille."
@@ -1585,6 +1572,7 @@ fi:
     enable_badges: "Ota kunniamerkkijärjestelmä käyttöön"
     max_favorite_badges: "Enimmäismäärä kunniamerkkejä, jonka käyttäjä voi valita"
     whispers_allowed_groups: "Salli tiettyjen ryhmien jäsenten yksityinen viestintä ketjuissa."
+    hidden_post_visible_groups: "Salli näiden ryhmien jäsenten tarkastella piilotettuja viestejä. Ylläpidon jäsenet voivat aina tarkastella piilotettuja viestejä."
     allow_index_in_robots_txt: "Määritä robots.txt-tiedostossa, että hakurobotit saavat indeksoida tätä sivustoa. Poikkeuksellisissa tapauksissa voit <a href='%{base_path}/admin/customize/robots'>ohittaa robots.txt:n</a> pysyvästi."
     normalize_emails: "Tarkista, onko normalisoitu sähköpostiosoite yksilöllinen. Normalisoitu sähköpostiosoite poistaa kaikki pisteet käyttäjätunnuksesta ja kaiken +- ja @-symbolien väliltä."
     hide_email_address_taken: "Älä ilmoita käyttäjille rekisteröitymisen tai unohtuneen salasanan palautuksen aikana, että annetulla sähköpostiosoitteella on olemassa tili. Vaadi täydellinen sähköpostiosoite unohtuneen salasanan pyynnöissä."
@@ -1608,7 +1596,6 @@ fi:
     enable_discourse_connect: "Ota käyttöön kirjautuminen DiscourseConnectin (aikaisemmin \"Discourse SSO\") kautta (VAROITUS: KÄYTTÄJIEN SÄHKÖPOSTIEN OSOITTEET *ON TARKISTETTAVA* ULKOISELLA SIVUSTOLLA!)"
     verbose_discourse_connect_logging: "Kirjaa yksityiskohtaiset DiscourseConnect-diagnostiikat lokiin <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_discourse_connect_provider: "Käytä DiscourseConnectin (aikaisemmin '\"Discourse SSO\") palveluntarjoajaprotokollaa /session/sso_provider-päätepisteessä, edellyttää discourse_connect_provider_secretsin asettamista"
-    discourse_connect_url: "DiscourseConnectin päätepisteen URL (täytyy sisältää http:// tai https://)"
     discourse_connect_secret: "Salausavain, jolla todennetaan DiscourseConnectin tiedot, varmista, että se on vähintään 10 merkkiä pitkä"
     discourse_connect_provider_secrets: "Luettelo verkkotunnus-salausavain-pareista, jotka käyttävät DiscourseConnectia. Varmista, että DiscourseConnectin salausavain on vähintään 10 merkin pituinen. Jokerimerkkiä * voi käyttää kelpuuttamaan mikä tahansa verkkotunnus tai verkkotunnuksen osa (esim. *.esimerkki.fi)."
     discourse_connect_overrides_bio: "Syrjäyttää käyttäjän kuvauksen itsestään käyttäjäprofiilissa ja estää sen muokkaamisen"
@@ -1622,7 +1609,6 @@ fi:
     discourse_connect_overrides_profile_background: "Korvaa käyttäjän profiilin taustakuvan arvolla DiscourseConnectin tiedoista."
     discourse_connect_overrides_card_background: "Korvaa käyttäjän kortin taustakuvan arvolla DiscourseConnectin tiedoista."
     discourse_connect_not_approved_url: "Uudelleenohjaa hyväksymättömät DiscourseConnect-tilit tähän URL-osoitteeseen"
-    discourse_connect_allows_all_return_paths: "Älä rajoita DiscourseConnectin antamien palautuspolkujen verkkotunnusta (oletuksena palautuspolun on oltava nykyisellä sivustolla)"
     enable_local_logins: "Salli kirjautuminen paikallisesti käyttäjätunnuksen ja salasanan avulla. VAROITUS: jos tämä ei ole käytössä, voi sinun olla mahdotonta kirjautua sisään, jollet ole aiemmin määritellyt ainakin yhtä muuta kirjautumistapaa."
     enable_local_logins_via_email: "Salli käyttäjän pyytää klikattava kirjautumislinkki, joka lähetetään hänen sähköpostiinsa."
     allow_new_registrations: "Salli uusien käyttäjien rekisteröityminen. Poista tämä asetus käytöstä estääksesi uusien tilien luomisen."
@@ -1707,6 +1693,7 @@ fi:
     s3_secret_access_key: "Amazon S3:n secret access key, jota käytetään ladattaessa kuvia, liitteitä ja varmuuskopioita."
     s3_region: "Amazon S3:n alueen nimi, jota käytetään ladattaessa kuvia ja varmuuskopioita."
     s3_cdn_url: "CDN:n URL, jota käytetään S3:ssa sijaitseville tiedostoille (esimerkiksi https://cdn.jossain.com). VAROITUS: tämän asetuksen muuttamisen jälkeen sinun täytyy rakentaa uudelleen kaikki vanhat viestit."
+    s3_use_cdn_url_for_all_uploads: "Käytä sisällynjakeluverkon URL-osoitetta kaikille s3:een ladatuille tiedostoille, eikä vain kuvatiedostoille."
     avatar_sizes: "Avatareista automaattisesti luotavat koot."
     external_system_avatars_enabled: "Käytä ulkopuolista avatarpalvelua."
     external_system_avatars_url: "Ulkoisen avatarpalvelun URL. Sallitut vaihdokset ovat {username} {first_letter} {color} {size}"
@@ -1726,7 +1713,6 @@ fi:
     composer_media_optimization_image_bytes_optimization_threshold: "Kuvatiedoston vähimmäiskoko, joka laukaisee optimoinnin asiakkaan päässä"
     composer_media_optimization_image_resize_dimensions_threshold: "Kuvan vähimmäisleveys, joka laukaisee koon muuttamisen asiakkaan päässä"
     composer_media_optimization_image_resize_width_target: "Kuvat, joiden leveys on suurempi kuin \"composer_media_optimization_image_dimensions_resize_threshold\", muunnetaan tähän leveyteen. Täytyy olla suurempi tai yhtä suuri kuin \"composer_media_optimization_image_dimensions_resize_threshold\"."
-    composer_media_optimization_image_encode_quality: "Uudelleenkoodausprosessissa käytetty JPEG-koodauslaatu."
     min_ratio_to_crop: "Suhde, jolla korkeat kuvat rajataan. Syötä tulos leveys/korkeus-suhteena."
     simultaneous_uploads: "Kuinka monta tiedostoa voi enintään vetää ja pudottaa viestieditoriin"
     default_invitee_trust_level: "Oletusluottamustaso (0–4) kutsutuille käyttäjille."
@@ -1755,7 +1741,8 @@ fi:
     tl3_requires_likes_given: "Montako tykkäystä käyttäjän täytyy olla vähintään antanut viimeisten (tl3 time period) päivän aikana voidakseen saavuttaa luottamustason 3."
     tl3_requires_likes_received: "Montako tykkäystä käyttäjän täytyy olla vähintään saanut viimeisten (tl3 time period) päivän aikana voidakseen saavuttaa luottamustason 3."
     tl3_links_no_follow: "Älä poista rel=nofollow-määritettä linkeistä luottamustason 3 käyttäjiltä."
-    trusted_users_can_edit_others: "Salli korkean luottamustason käyttäjän muokata toisten käyttäjien viestien sisältöjä"
+    edit_all_topic_groups: "Salli ryhmän käyttäjien muokata muiden käyttäjien aiheotsikoita, tunnisteita ja kategorioita"
+    edit_all_post_groups: "Salli tämän ryhmän käyttäjien muokata muiden käyttäjien julkaisuja"
     min_trust_to_create_topic: "Ketjun aloittamiseen vaadittava luottamustaso."
     allow_flagging_staff: "Jos käytössä, käyttäjät voivat merkitä henkilökunnan viestejä."
     min_trust_to_edit_wiki_post: "Wiki-viestin muokkaamiseen vaadittava luottamustaso."
@@ -1791,7 +1778,7 @@ fi:
     title_min_entropy: "Ketjun otsikossa vaadittava minimientropia (uniikkeja merkkejä, muilla kuin englannin kielen merkeillä on suurempi painotus)."
     body_min_entropy: "Ketjun leipätekstissä vaadittava minimientropia (uniikkeja merkkejä, muilla kuin englannin kielen merkeillä on suurempi painotus)."
     allow_uppercase_posts: "Salli pelkillä isoilla kirjaimilla kirjoittaminen otsikossa tai viestin leipätekstissä."
-    max_consecutive_replies: "Kuinka monta perättäistä viestiä käyttäjä voi kirjoittaa ketjuun ennen kuin häntä estetään lähettämästä uutta vastausta"
+    max_consecutive_replies: "Peräkkäisten viestien määrä, jonka käyttäjä voi julkaista ketjussa ennen kuin vastaaminen estetään. Rajoitus ei koske ketjun omistajaa, sivuston ylläpitoa tai alueen valvojia."
     enable_filtered_replies_view: '"(n) vastausta" -painike kutistaa kaikki muut viestit ja näyttää vain nykyisen viestin ja sen vastaukset.'
     title_fancy_entities: "Muunna tavalliset ASCII-merkit hienommiksi HTML-merkinnöiksi ketjujen otsikoissa SmartyPantsin avulla <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Ketjun otsikon minimipituus, kunnes sitä verrataan muihin samankaltaisiin ketjuihin."
@@ -1898,7 +1885,7 @@ fi:
     pop3_polling_password: "Sen POP3-tilin salasana, jolta pollataan sähköposteja."
     pop3_polling_delete_from_server: "Poista sähköpostit palvelimelta. HUOM: Jos poistat tämän käytöstä, sinun täytyy siivota saapuvien sähköpostien kansio manuaalisesti"
     log_mail_processing_failures: "Kirjaa kaikki sähköpostin käsittelyvirheet lokiin: <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: 'Salli käyttäjien aloittaa uusia ketjuja sähköpostitse (vaatii manuaalisen tai pop3-pollauksen). Määritä osoitteet jokaiselle alueelle erikseen niiden Asetukset-välilehdiltä. '
+    email_in: "Salli käyttäjien julkaista uusia aiheita sähköpostitse. Kun asetustus on käytössä, voidaan ryhmille ja kategorioille määrittää vastaanottoon käytettävät sähköpostiosoitteet."
     email_in_min_trust: "Vähimmäisluottamustaso, jonka käyttäjä tarvitsee uuden ketjun aloittamiseen sähköpostitse."
     email_in_authserv_id: "Saapuvien sähköpostien todennustarkistukset suorittavan palvelun tunniste. Katso ohjeet tämän määrittämiseen osoitteesta <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a>."
     email_in_spam_header: "Sähköpostin otsikkotiedot roskapostin tunnistamiseksi."
@@ -1962,6 +1949,7 @@ fi:
     allow_profile_backgrounds: "Salli käyttäjien ladata profiilin taustakuva."
     sequential_replies_threshold: "Kuinka monen peräkkäisen viestin jälkeen yhdessä ketjussa käyttäjää muistutetaan liian monesta peräkkäisestä vastauksesta."
     get_a_room_threshold: "Kuinka monta viestiä tulee kohdistaa samalle käyttäjälle samassa ketjussa, jotta näytetään varoitus."
+    dont_feed_the_trolls_threshold: "Muiden käyttäjien tekemä ilmoitusmäärä, josta seuraa varoitus."
     enable_mobile_theme: "Mobiililaitteet käyttävät mobiiliystävällistä teemaa, jonka voi vaihtaa koko sivustoon. Poista asetus käytöstä, jos haluat käyttää omaa tyylitiedostoa, joka on mukautuva eri laitteille."
     dominating_topic_minimum_percent: "Kuinka monta prosenttia ketjun viesteistä käyttäjän täytyy kirjoittaa, ennen kuin häntä muistutetaan ketjun dominoinnista."
     disable_avatar_education_message: "Poista opastusviesti käytöstä, joka näytetään kun profiilikuvaa vaihdetaan."
@@ -1971,22 +1959,17 @@ fi:
     permalink_normalizations: "Sovella tätä säännöllistä lauseketta ennen pysyvien linkkien sovittamista, esim. /(topic.*)\\?.*/\\1 poistaa hakulausekkeet ketjujen reiteistä. Muoto on regex+string, \\1 jne. avulla pääset käsiksi captureihin."
     global_notice: "Näytä kaikilla sivuilla kaikille käyttäjille KIIREELLISESTÄ HÄTÄTAPAUKSESTA kertova banneri, jota ei voi piilottaa. Vaihda tyhjäksi piilottaaksesi sen (HTML sallittu)."
     disable_system_edit_notifications: "Poistaa järjestelmäkäyttäjän muokkausilmoitukset käytöstä, kun 'download_remote_images_to_local' on asetettu."
-    disable_category_edit_notifications: "Poista käytöstä alueiden muokkausilmoitukset ketjuissa."
-    disable_tags_edit_notifications: "Poista käytöstä tunnisteiden muokkausilmoitukset ketjuissa."
     notification_consolidation_threshold: "Kuinka monta tykkäys- tai jäsenhakemusilmoitusta tulee saada, jotta ne yhdistetään yhdeksi. Arvo 0 poistaa käytöstä."
     likes_notification_consolidation_window_mins: "Kesto minuutteina, jonka aikana tykkäysilmoitukset yhdistetään yhdeksi ilmoitukseksi, kun raja on saavutettu. Rajan voi määrittää asetuksella `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Poista ketjun kiinnitys automaattisesti, kun käyttäjä on sen lopussa."
     read_time_word_count: "Sanamäärä minuutissa, jota käytetään lukuajan arviointiin."
     topic_page_title_includes_category: "Ketjusivun <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>otsikkotunniste</a> sisältää alueen nimen."
-    native_app_install_banner_ios: "Näyttää DiscourseHub-sovelluksen bannerin iOS-laitteilla tavallisille käyttäjille (luottamustasosta 1 ylöspäin)."
-    native_app_install_banner_android: "Näyttää DiscourseHub-sovelluksen bannerin Android-laitteilla tavallisille käyttäjille (luottamustasosta 1 ylöspäin)."
     app_association_android: "<a href='%{base_path}/.well-known/assetlinks.json'>.well-known/assetlinks.json</a>-päätepisteen sisältö, käytetään Googlen Digital Asset Links APIssa."
     app_association_ios: "Contents of <a href='%{base_path}/apple-app-site-association'>apple-app-site-association</a>-päätepisteen sisältö, käytetään universaalien linkkien luomiseen tämän sivuston ja iOS-sovellusten välille."
     share_anonymized_statistics: "Julkaise yksilöimättömät käyttötilastot."
     auto_handle_queued_age: "Käsittele automaattisesti asiat, jotka ovat odottaneet käsittelyä näin monta päivää. Liput ohitetaan. Jonossa olevat viestit ja käyttäjät ohitetaan. Jos asetat 0:ksi, ominaisuus ei ole käytössä."
     penalty_step_hours: "Oletusrangaistukset käyttäjien hiljentämisestä tai hyllyttämisestä tunneissa. Ensimmäisen rikkeen oletusarvo on ensimmäinen arvo, toisen rikkeen toinen jne."
     svg_icon_subset: "Lisää ylimääräisiä FontAwesome 5 -kuvakkeita, jotka haluat sisällyttää käytettäviisi. Käytä etuliitettä \"fa-\", kun haluat täytetyn kuvakkeen, \"far-\", kun haluat tavallisen ja \"fab-\", kun haluat brändikuvakkeen."
-    max_prints_per_hour_per_user: "Tulostuspyyntöjen (/print) enimmäismäärä (aseta 0 poistaaksesi käytöstä)"
     full_name_required: "Koko nimi on käyttäjäprofiilin pakollinen kenttä."
     enable_names: "Näytä käyttäjän koko nimi profiilissa, käyttäjäkortissa ja sähköposteissa. Poista käytöstä piilottaaksesi koko nimen kaikkialla."
     display_name_on_posts: "Näytä käyttäjän koko nimi viesteissä @käyttäjätunnuksen lisäksi."
@@ -2007,17 +1990,13 @@ fi:
     allowed_href_schemes: "Linkeissä sallitut skeemat http:n ja https:n lisäksi."
     embed_post_limit: "Upotettavien viestien maksimimäärä."
     embed_username_required: "Käyttäjätunnus vaaditaan ketjun luomiseksi."
-    notify_about_flags_after: "Jos merkintöjä on ollut käsittelemättä näin monen tunnin ajan, lähetä yksityisviesti valvojille. Poista käytöstä asettamalla 0."
-    show_create_topics_notice: "Jos sivustolla on vähemmän kuin 5 julkista ketjua, kehota ylläpitäjiä aloittamaan ketjuja."
+    notify_about_reviewable_item_after: "Jos tarkastettavia kohteita ei ole käsitelty määritetyn tuntimäärän sisällä, ilmoita valvojille yksityisviesteillä. Poista käytöstä arvolla 0."
     delete_drafts_older_than_n_days: "Poista yli (n) päivää vanhat luonnokset."
     delete_merged_stub_topics_after_days: "Kuinka montaa päivää odotetaan ennen kuin täysin yhdistetyt tynkäketjut poistetaan automaattisesti. Jos asetat arvoksi 0, tynkäketjuja ei poistetan koskaan."
-    bootstrap_mode_min_users: "Vähimmäismäärä käyttäjiä, joka vaaditaan aloitustilan poistamiseen (aseta 0 poistaaksesi käytöstä)"
+    bootstrap_mode_min_users: "Vähimmäismäärä käyttäjiä, joka vaaditaan aloitustilan poistamiseen (poista käytöstä arvolla 0, voi kestää jopa 24 tuntia)"
     prevent_anons_from_downloading_files: "Estä tuntemattomia käyttäjiä lataamasta liitteitä."
-    secure_media: "VANHENTUNUT: Käytä tämän sijaan secure_uploads-asetusta, poistetaan Discourse 3.0:ssa."
     secure_uploads: 'Rajoittaa pääsyä KAIKKIIN latauksiin (kuvat, videot, äänet, tekstit, pdf-tiedostot, zip-tiedostot ja muut). Jos "sisäänkirjautuminen vaaditaan" on käytössä, vain kirjautuneilla käyttäjillä on pääsy latauksiin. Muussa tapauksessa pääsy rajoitetaan vain yksityisviesteihin ja yksityisiin alueisiin ladattuihin mediatiedostoihin. VAROITUS: Tämä asetus on monimutkainen ja vaatii syvällistä hallinnollista ymmärrystä. Katso lisätietoja <a target="_blank" href="https://meta.discourse.org/t/-/140017">turvallisia latauksia palvelimeen käsittelevästä ketjusta Metassa</a>.'
-    secure_media_allow_embed_images_in_emails: "VANHENTUNUT: Käytä \"secure_uploads_allow_embed_images_in_emails\"-asetusta, poistetaan Discourse 3.0:ssa."
     secure_uploads_allow_embed_images_in_emails: "Sallii turvallisten kuvien upottamisen, jotka normaalisti karsittaisiin sähköposteissa, jos niiden koko on pienempi kuin \"secure uploads max email embed image size kb\" -asetus."
-    secure_media_max_email_embed_image_size_kb: "VANHENTUNUT: Käytä \"secure_uploads_max_email_embed_image_size_kb\"-asetusta, poistetaan Discourse 3.0:ssa."
     secure_uploads_max_email_embed_image_size_kb: "Sähköposteihin upotettavien turvallisten kuvien kokoraja, jos \"secure uploads allow embed in emails\" -asetus on käytössä. Ilman kyseistä asetusta tällä asetuksella ei ole vaikutusta."
     slug_generation_method: "Valitse polkutunnuksen luomisen metodi, 'encoded' käyttää prosenttikoodausta, 'none' poistaa polkutunnukset käytöstä."
     enable_emoji: "Ota emoji käyttöön"
@@ -2025,6 +2004,7 @@ fi:
     emoji_set: "Millaiset emojit haluat?"
     emoji_autocomplete_min_chars: "Kuinka monta merkkiä vaaditaan, jotta sanantäydentävä emojivalitsin aukeaa"
     enable_inline_emoji_translation: "Ota käyttöön emojien kääntäminen merkkijonojen keskeltä (ei väliä tai välimerkkejä ennen emojia)"
+    emoji_deny_list: "Nämä emojit eivät ole käytettävissä valikoista tai lyhytkoodeilla."
     approve_post_count: "Viestien lukumäärä, joka uusilta käyttäjiltä ja haastajilta täytyy hyväksyä"
     approve_unless_trust_level: "Tätä luottamustasoa alhaisempien käyttäjien viestit täytyy hyväksyä"
     approve_new_topics_unless_trust_level: "Tätä luottamustasoa alhaisempien käyttäjien aloittamat ketjut täytyy hyväksyä"
@@ -2079,12 +2059,18 @@ fi:
     default_tags_watching_first_post: "Luettelo tunnisteista, jonka sisältävien ketjujen ensimmäisiä viestejä tarkkaillaan oletuksena."
     default_text_size: "Tekstikoon oletusvalinta"
     default_title_count_mode: "Sivun otsikon laskurin oletusasetus"
+    enable_offline_indicator: "Näytä käyttäjille viesti, kun havaitaan, ettei heillä ole verkkoyhteyttä."
+    default_sidebar_link_to_filtered_list: "Kohdista navigointivalikon linkit oletusarvoisesti suodatettuihin listauksiin."
+    default_sidebar_show_count_of_new_items: "Määritä navigointivalikon linkit näyttämään oletusarvoisten korostusmerkkien sijaan uusien kohteiden lukumäärä."
+    default_sidebar_switch_panel_position: "Sivupalkin kytkinpaneelin painikkeiden sijainti"
     retain_web_hook_events_period_days: "Kuinka monta päivää tietoa webhook-tapahtumista säilötään."
     retry_web_hook_events: "Yritä uudelleen epäonnistuneita webhook-tapahtumia neljästi. Aikavälit yritysten välillä ovat 1, 5, 25 ja 125 minuuttia."
     revoke_api_keys_days: "Kuinka monen päivän kuluttua käyttämätön API-avain mitätöidään automaattisesti (0 tarkoittaa ei koskaan)"
     allow_user_api_keys: "Salli käyttäjä-API-avainten muodostaminen"
     allow_user_api_key_scopes: "Luettelo käyttäjä-API-avaimiin liittyvistä oikeuksista"
-    min_trust_level_for_user_api_key: "Vähimmäisluottamustaso, joka vaaditaan käyttäjä-API-avainten muodostamiseen"
+    min_trust_level_for_user_api_key: |
+      Käyttäjän API-avaimien luomiseen vaadittu luottamustaso.<br>
+      <b>VAROITUS:</b> Luottamustason muuttaminen estää matalamman luottamustason käyttäjiä kirjautumasta sisään Discourse Hubin kautta.
     allowed_user_api_auth_redirects: "Sallittu URL-osoite käyttäjän API-avainten todennuksen uudelleenohjaukselle. Jokerimerkkiä * voidaan käyttää vastaamaan mitä tahansa sen osaa (esim. www.esimerkki.fi/*)."
     allowed_user_api_push_urls: "Sallitut URL-osoitteet palvelimen työnnöille käyttäjä-APIin"
     expire_user_api_keys_days: "Kuinka monessa päivässä käyttäjä-API-avain vanhenee automaattisesti (0 tarkoittaa ei koskaan)"
@@ -2102,6 +2088,7 @@ fi:
     suppress_overlapping_tags_in_list: "Jos tunniste esiintyy sanana täsmälleen ketjun otsikossa, älä näytä tunnistetta"
     remove_muted_tags_from_latest: "Jos ketjulla on vain vaimennettuja tunnisteita, älä näytä ketjua Tuoreimmat-ketjuluettelossa."
     force_lowercase_tags: "Salli vain pienet kirjaimet uusissa tunnisteissa."
+    create_post_for_category_and_tag_changes: "Luo pieni tapahtumaviesti ketjun alueiden tai tunnisteiden muuttuessa"
     company_name: "Yrityksen nimi"
     governing_law: "Sovellettava lainsäädäntö"
     city_for_disputes: "Kaupunki, jonka oikeudessa riidat ratkotaan"
@@ -2116,7 +2103,7 @@ fi:
     enable_sitemap: "Luo sivustokartta sivustollesi ja sisällytä se robots.txt-tiedostoon."
     sitemap_page_size: "Kuhunkin sivustokartan sivuun lisättävien URL-osoitteiden määrä. Enintään 50 000."
     enable_user_status: "(kokeellinen) Salli käyttäjien asettaa mukautettu tilaviesti (emoji + kuvaus)."
-    enable_user_tips: "(kokeellinen) Ota käyttöön uuden käyttäjän vinkit, jotka kuvaavat keskeisiä ominaisuuksia käyttäjille"
+    enable_user_tips: "Käytä keskeisiä ominaisuuksia uusille käyttäjille kuvaavat vinkit"
     short_title: "Lyhyttä nimeä käytetään käyttäjän aloitusnäytöllä, käynnistysruudussa ja muissa tilanteissa, joissa tilaa on rajallisesti. Sen tulisi olla enintään 12 merkin pituinen."
     dashboard_hidden_reports: "Salli tiettyjen raporttien piilottaminen hallintapaneelista."
     dashboard_visible_tabs: "Valitse mitkä hallintapaneelin välilehdet ovat näkyvillä."
@@ -2133,11 +2120,9 @@ fi:
     suggest_weekends_in_date_pickers: "Sisällytä viikonloput (lauantai ja sunnuntai) päivämäärävalitsimen ehdotuksiin (poista tämä käytöstä, jos käytät Discoursea vain arkipäivisin maanantaista perjantaihin)."
     splash_screen: "Näyttää väliaikaisen latausnäytön sivuston resurssien latautuessa"
     navigation_menu: "Määritä käytettävä navigointivalikko. Sivupalkin ja yläpalkin navigointi ovat käyttäjien mukautettavissa. Vanha vaihtoehto on käytettävissä yhteensopivuuden varmistamiseksi vanhojen versioiden kanssa."
-    default_sidebar_categories: "Valitut alueet näkyvät sivupalkin Alueet-osiossa oletuksena."
-    default_sidebar_tags: "Valitut tunnisteet näkyvät sivupalkin Tunnisteet-osiossa oletuksena."
-    enable_new_user_profile_nav_groups: "KOKEELLINEN: valittujen ryhmien käyttäjille näytetään uusi käyttäjäprofiilin navigointivalikko"
-    enable_experimental_topic_timeline_groups: "KOKEELLINEN: valittujen ryhmien käyttäjille näytetään uudelleenmuotoiltu ketjun aikajana"
     enable_experimental_hashtag_autocomplete: "KOKEELLINEN: käytä alueille ja tunnisteille uutta automaattista #hashtag-täydennysjärjestelmää, jotka hahmontaa valitun kohteen eri tavalla ja on parantanut hakua"
+    experimental_topics_filter: "KOKEELLINEN: Ottaa käyttöön kokeellisen aiheiden suodatuspolun osoitteella /filter"
+    enable_experimental_lightbox: "KOKEELLINEN: Korvaa kuvien oletusarvoinen lightbox-tehoste uudistetulla tyylillä."
     errors:
       invalid_css_color: "Virheellinen väri. Anna värin nimi tai heksadesimaaliarvo."
       invalid_email: "Sähköpostiosoite ei kelpaa."
@@ -2163,7 +2148,6 @@ fi:
       pop3_polling_password_is_empty: "Sinun täytyy asettaa 'pop3 polling password' ennen POP3-pollauksen käyttöönottoa."
       pop3_polling_authentication_failed: "POP3-todennus epäonnistui. Tarkista pop3-tunnistetiedot."
       reply_by_email_address_is_empty: "'Reply by email address' täytyy olla asetettuna ennen sähköpostivastausten ottamista käyttöön."
-      email_polling_disabled: "Sinun täytyy ottaa käyttöön joko manuaalinen tai POP3-pollaus ennen sähköpostivastausten käyttöönottoa."
       user_locale_not_enabled: "'Allow user locale' täytyy olla asetettuna ennen tämän asetuksen ottamista käyttöön."
       personal_message_enabled_groups_invalid: "Sinun täytyy määrittää vähintään yksi ryhmä tälle asetukselle. Jos et halua muiden kuin henkilökunnan lähettävän yksityisviestejä, valitse henkilökunnan ryhmä."
       invalid_regex: "Säännöllinen lauseke ei kelpaa tai ei ole sallittu."
@@ -2172,7 +2156,6 @@ fi:
       staged_users_disabled: "Esikäyttäjät on otettava käyttöön ennen tämän asetuksen käyttöönottoa."
       reply_by_email_disabled: "Vastaus sähköpostilla täytyy ottaa käyttöön ennen tämän asetuksen käyttöönottoa."
       discourse_connect_url_is_empty: "Sinun täytyy määrittää \"discourse connect url'\" ennen kuin otat tämän asetuksen käyttöön."
-      discourse_connect_invite_only: "DiscourseConnect ja vain kutsulla -tila eivät voi olla käytössä samaan aikaan."
       enable_local_logins_disabled: "Paikalliset kirjautumiset täytyy ottaa käyttöön ennen tämän asetuksen käyttöönottoa."
       min_username_length_exists: "Käyttäjätunnuksen vähimmäispituus ei voi olla suurempi kuin lyhin käyttäjätunnus (%{username})."
       min_username_length_range: "Vähimmäisarvo ei voi olla suurempi kuin enimmäisarvo."
@@ -2194,7 +2177,6 @@ fi:
       search_tokenize_japanese_enabled: "\"search_tokenize_japanese\" on poistettava käytöstä ennen tämän asetuksen käyttöönottoa."
       discourse_connect_cannot_be_enabled_if_second_factor_enforced: "Et voi ottaa DiscourseConnectia käyttöön, jos 2FA on pakotettu."
       delete_rejected_email_after_days: "Tämä asetus ei voi olla pienempi kuin delete_email_logs_after_days-asetus tai suurempi kuin %{max}"
-      invalid_uncategorized_category_setting: "Luokittelemattomat-aluetta ei voi valita, jos luokittelemattomia ketjuja ei ole sallittu"
     placeholder:
       discourse_connect_provider_secrets:
         key: "www.example.com"
@@ -2389,7 +2371,6 @@ fi:
     activated_by_staff: "Henkilökunta aktivoi"
     new_user_typed_too_fast: "Uusi käyttäjä näppäili liian nopeasti"
     content_matches_auto_silence_regex: "Sisältö vastaa automaattisesti hiljennettävää säännöllistä lauseketta"
-    content_matches_auto_block_regex: "Sisältö vastaa automaattisesti estettävää säännöllistä lauseketta"
     username:
       short: "täytyy olla vähintään %{min} merkkiä"
       long: "ei saa olla yli %{max} merkkiä"
@@ -3123,14 +3104,6 @@ fi:
     user_automatically_silenced:
       title: "Käyttäjä hiljennettiin automaattisesti"
       subject_template: "Yhteisön merkinnät hiljensivät uuden käyttäjän %{username}"
-      text_body_template: |
-        Tämä on automaattinen viesti.
-
-        Uusi käyttäjä [%{username}](%{user_url}) hiljennettiin automaattisesti, koska useampi käyttäjä on liputtanut käyttäjän %{username} viestejä.
-
-        [Tarkasta liputukset](%{base_url}/admin/flags). Jos %{username} hiljennettiin ilman syytä, kumoa hiljennys klikkaamalla painiketta [käyttäjän ylläpitosivulla](%{user_url}).
-
-        Rajaa voi muuttaa sivustoasetuksella `silence_new_user.
     spam_post_blocked:
       title: "Roskapostiviesti estettiin"
       subject_template: "Uuden käyttäjän %{username} viestit estettiin toistuvien linkkien vuoksi"
@@ -3164,15 +3137,6 @@ fi:
       title: "Linkattujen kuvien lataaminen on poistettu käytöstä"
       subject_template: "Linkattujen kuvien lataaminen on poistettu käytöstä"
       text_body_template: "Asetus `download_remote_images_to_local` on poistettu käytöstä, koska vapaan tilan rajoitus `download_remote_images_threshold` saavutettiin."
-    dashboard_problems:
-      title: "Hallintapaneelissa ongelmia"
-      subject_template: "Uusia neuvoja sivustosi hallintapaneelissa"
-      text_body_template: |
-        Meillä on joitakin neuvoja ja suosituksiasi nykyisiin sivustoasetuksiisi pohjautuen.
-
-        Katsele niitä [sivustosi hallintapaneelissa](%{base_url}/admin).
-
-        Jos hallintapaneelissa ei näy mitään, toinen henkilökuntalainen on voinut jo ottaa vinkistä vaarin. Luettelo henkilökunnan toimista löytyy [henkilökuntalokista](%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Olet kuukauden tulokas!"
       subject_template: "Olet kuukauden tulokas!"
@@ -3209,9 +3173,6 @@ fi:
       one: "Huom. Olemme lähettäneet jo yhden sähköpostin tänään, mikä on enimmäismäärä. Käy sivustolla, jottet jää mistään paitsi. PS. Kiitos kun olet niin suosittu!"
       other: "Huom. Olemme lähettäneet jo %{count} sähköpostia tänään, mikä on enimmäismäärä. Käy sivustolla, jottet jää mistään paitsi. PS. Kiitos kun olet niin suosittu!"
     in_reply_to: "Vastauksena"
-    unsubscribe:
-      title: "Peru tilaus"
-      description: "Etkö halua vastaanottaa näitä sähköposteja? Ei hätää! Klikkaa alta peruaksesi tilauksen välittömästi:"
     reply_by_email: "Vastaa [vierailemalla ketjussa](%{base_url}%{url}) tai vastaamalla tähän sähköpostiin."
     reply_by_email_pm: "Vastaa käyttäjille %{participants} [vierailemalla keskustelussa](%{base_url}%{url}) tai vastaa vain tähän sähköpostiin."
     only_reply_by_email: "Vastaa vastaamalla tähän sähköpostiin."
@@ -3508,7 +3469,6 @@ fi:
       liked_received: "Saatua tykkäystä"
       new_users: "Uutta käyttäjää"
       popular_topics: "Suosittuja ketjuja"
-      follow_topic: "Seuraa tätä ketjua"
       join_the_discussion: "Lue lisää"
       popular_posts: "Suosittuja viestejä"
       more_new: "Uutta sinulle"
@@ -3704,14 +3664,7 @@ fi:
     title: "Sovellusta ei voida ladata"
     offline_page_message: "Yhteydessäsi vaikuttaa olevan vikaa! Tarkista verkkoyhteytesi ja yritä uudelleen."
   login_required:
-    welcome_message: |
-      ## [Tervetuloa sivustolle %{title}](#welcome)
-      Käyttäjätili tarvitaan. Luo tili tai kirjaudu sisään.
-    welcome_message_invite_only: |
-      ## [Tervetuloa sivustolle %{title}](#welcome)
-      Käyttäjätili vaaditaan. Pyydä yhteisön jäsentä kutsumaan sinut tai kirjaudu sisään.
-  deleted: "poistettu"
-  image: "kuva"
+    welcome_message: "# [Tervetuloa foorumille %{title}](#welcome)"
   upload:
     edit_reason: "lataa kuvista paikalliset kopiot"
     unauthorized: "Tiedosto, jota yrität ladata, ei ole sallittu (sallitut päätteet: %{authorized_extensions})."
@@ -3912,262 +3865,8 @@ fi:
       Kyllä, lakiteksti on tylsää, mutta meidän täytyy suojata itseämme ja sitä kautta sinua sekä tietojasi pahantahtoisilta ihmisiltä. Meillä on [käyttöehdot](%{base_path}/tos), joissa kuvataan sinun (ja meidän) toimintaamme ja oikeuksiamme sisällön, tietosuojan ja lakien osalta. Tämän palvelun käyttämiseksi sinun täytyy hyväksyä [käyttöehtomme](%{base_path}/tos).
   tos_topic:
     title: "Käyttöehdot"
-    body: |
-      Nämä ehdot säätelevät Internet-foorumin käyttöä osoitteessa <%{base_url}>. Käyttääksesi foorumia sinun on hyväksyttävä nämä ehdot yrityksen %{company_name} kanssa, joka on foorumia ylläpitävä yritys.
-
-      Yritys voi tarjota muita tuotteita ja palveluita eri ehdoilla. Näitä ehtoja sovelletaan vain foorumin käyttöön.
-
-      Siirry kohtaan:
-
-      – [Tärkeät ehdot](#heading--important-terms)
-      – [Lupasi käyttää foorumia](#heading--permission)
-      – [Foorumin käytön ehdot](#heading--conditions)
-      – [Hyväksyttävä käyttö](#heading--acceptable-use)
-      – [Sisältöstandardit](#heading--content-standards)
-      – [Täytäntöönpano](#heading--enforcement)
-      – [Tilisi](#heading--your-account)
-      – [Sisältösi](#heading--your-content)
-      – [Vastuusi](#heading--responsibility)
-      – [Vastuuvapausilmoitukset](#heading--disclaimers)
-      – [Vastuurajoitukset](#heading--liability)
-      – [Palaute](#heading--feedback)
-      – [Päättäminen](#heading--termination)
-      – [Riidat](#heading--disputes)
-      – [Yleiset ehdot](#heading--general)
-      – [Yhteydenotto](#heading--contact)
-      – [Muutokset](#heading--changes)
-
-      <h2 id="heading--important-terms"><a href="#heading--important-terms">Tärkeät ehdot</a></h2>
-
-      ***Nämä ehdot sisältävät tärkeitä ehtoja, jotka vaikuttavat oikeuksiisi ja vastuihisi, kuten [vastuuvapausilmoitukset](#heading--disclaimers), yrityksen vastuun rajoitukset sinua kohtaan kohdassa [vastuurajoitukset](#heading--liability), suostumuksesi vastata yritykselle foorumin väärinkäytöstäsi aiheutuneista vahingoista kohdassa [vastuu käytöstäsi](#heading--responsibility) sekä suostumuksesi ratkaista riidat välimiesmenettylyllä kohdassa [riidat](#heading--disputes).***
-
-      <h2 id="heading--permission"><a href="#heading--permission">Lupasi käyttää foorumia</a></h2>
-
-      Yritys antaa sinulle luvan käyttää foorumia näiden ehtojen mukaisesti. Kaikkien on hyväksyttävä nämä ehdot käyttääkseen foorumia.
-
-      <h2 id="heading--conditions"><a href="#heading--conditions">Foorumin käytön ehdot</a></h2>
-
-      Lupasi käyttää foorumia edellyttää seuraavien ehtojen täyttymistä:
-
-      1. Sinun on oltava vähintään 13-vuotias.
-
-      2. Sinun ei tule enää käyttää foorumia, jos yritys ottaa sinuun suoraan yhteyttä ja ilmoittaa sinulle, ettei sinun tule tehdä näin.
-
-      3. Sinun tulee käyttää foorumia [hyväksyttävän käytön](#heading--acceptable-use) ja [sisältöstandardien](#heading--content-standards) mukaisesti.
-
-      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Hyväksyttävä käyttö</a></h2>
-
-      1. Sinun ei tule rikkoa lakia käyttäessäsi foorumia.
-
-      2. Sinun ei tule käyttää tai yrittää käyttää toisen henkilön tiliä foorumilla ilman hänen nimenomaista lupaansa.
-
-      3. Sinun ei tule ostaa, myydä tai muutoin vaihtaa käyttäjätunnuksia tai muita yksilöllisiä tunnisteita foorumilla.
-
-      4. Sinun ei tule lähettää mainoksia, ketjukirjeitä tai muita myyntiyhteydenottoja foorumin kautta tai käyttää foorumia osoitteiden tai muiden henkilötietojen keräämiseen kaupallisia postituslistoja tai tietokantoja varten.
-
-      5. Sinun ei tule automatisoida pääsyä foorumille tai tarkkailla foorumia, kuten hakurobotilla, selaimen lisäosalla tai laajennuksella tai muulla tietokoneohjelmalla, joka ei ole verkkoselain. Voit indeksoida foorumia julkisesti saatavilla olevalle hakukoneelle, jos ylläpidät sellaista.
-
-      6. Sinun ei tule käyttää foorumia lähettääksesi sähköpostia jakeluluetteloille, uutisryhmille tai ryhmäpostialiaksille.
-
-      7. Sinun ei tule virheellisesti antaa ymmärtää, että olet sidoksissa yritykseen tai yrityksen hyväksymä.
-
-      8. Sinun ei tule hyperlinkittää kuviin tai muuhun hyperlinkittämättömään sisältöön foorumilla tai muilla verkkosivuilla.
-
-      9. Sinun ei tule poistaa omistusoikeuden osoittavia merkkejä aineistoista, joita lataat foorumilta.
-
-      10. Sinun ei tule näyttää mitään foorumin osaa muilla verkkosivustoilla <iframe>-kehyksissä.
-
-      11. Sinun ei tule poistaa käytöstä, välttää tai kiertää foorumin turvallisuus- tai pääsyrajoituksia.
-
-      12. Sinun ei tule kuormittaa foorumin infrastruktuuria kohtuuttomalla määrällä pyyntöjä tai pyynnöillä, jotka on suunniteltu asettamaan kohtuuton kuormitus foorumin taustalla oleville tietojärjestelmille.
-
-      13. Sinun ei tule tekeytyä muiksi foorumin kautta.
-
-      14. Sinun ei tule kannustaa tai auttaa ketään näiden ehtojen rikkomisessa.
-
-      <h2 id="heading--content-standards"><a href="#heading--content-standards">Sisältöstandardit</a></h2>
-
-      1. Sinun ei tule lähettää foorumille sisältöä, joka on laitonta, loukkaavaa tai muutoin haitallista muille. Tähän sisältyy sisältö, joka on häiritsevää, sopimatonta, loukkaavaa tai vihamielistä toimintaa.
-
-      2. Sinun ei tule lähettää foorumille sisältöä, joka rikkoo lakia, loukkaa jonkun immateriaalioikeuksia, loukkaa jonkun yksityisyyttä tai rikkoo sopimuksia, joita sinulle on muiden kanssa.
-
-      3. Sinun ei tule lähettää foorumille sisältöä, joka sisältää haitallista tietokonekoodia, kuten tietokoneviruksia tai vakoiluohjelmia.
-
-      4. Sinun ei tule lähettää foorumille sisältöä pelkkänä paikkamerkkinä tietyn osoitteen, käyttäjätunnuksen tai muun yksilöllisen tunnisteen pitämiseksi.
-
-      5. Sinun ei tule käyttää foorumia sellaisten tietojen paljastamiseen, joita sinulla ei ole oikeus paljastaa, kuten muiden luottamuksellisia tai henkilökohtaisia tietoja.
-
-      <h2 id="heading--enforcement"><a href="#heading--enforcement">Täytäntöönpano</a></h2>
-
-      Yritys voi tutkia näiden ehtojen rikkomukset ja panna ne syytteeseen täydessä oikeudellisessa laajuudessa. Yritys voi ilmoittaa lainvalvontaviranomaisille ja tehdä niiden kanssa yhteistyötä lain ja näiden ehtojen rikkomusten syytteeseenpanossa.
-
-      Yritys pidättää oikeuden muuttaa, muokata ja poistaa sisältöä foorumilla mistä tahansa syystä. Jos uskot, että joku on lähettänyt foorumille sisältöä näiden ehtojen vastaisesti, [ota meihin yhteyttä välittömästi](#heading--contact).
-
-      <h2 id="heading--your-account"><a href="#heading--your-account">Tilisi</a></h2>
-
-      Sinun tulee luoda tili ja kirjautua sille käyttääksesi joitakin foorumin ominaisuuksia.
-
-      Luodaksesi tilin sinun on annettava joitakin tietoja itsestäsi. Jos luot tilin, hyväksyt antavasi vähimmillään kelvollisen sähköpostiosoitteen ja pitäväsi tämän osoitteen ajan tasalla. Voit sulkea tilisi milloin tahansa lähettämällä sähköpostiviestin osoitteeseen <%{contact_email}>.
-
-      Hyväksyt olevasi vastuussa kaikista tiliäsi käyttämällä tehdyistä toimista rippumatta siitä, ovatko ne valtuuttamiasi vai ei, kunnes joko suljet tilisi tai ilmoitat yritykselle, että tilisi on vaarantunut. Hyväksyt ilmoittavasi yritykselle välittömästi, jos epäilet, että tilisi on vaarantunut. Hyväksyt valitsevasi turvallisen salasanan tilillesi ja pitäväsi sen salassa.
-
-      Yritys voi rajoittaa tiliäsi, asettaa sen käyttökieltoon tai sulkea sen foorumilla tekijänoikeuksiin liittyvien poistopyyntöjen käsittelyä koskevan käytäntönsä mukaisesti tai jos yritys uskoo kohtuudella, että olet rikkonut näiden ehtojen sääntöä.
-
-      <h2 id="heading--your-content"><a href="#heading--your-content">Sisältösi</a></h2>
-
-      Mikään näissä ehdoissa ei anna yritykselle omistusoikeuksia henkiseen omaisuuteen, jota jaat foorumilla, kuten tilitietoihisi, viesteihisi tai muuhun sisältöön, jota lähetät foorumille. Mikään näissä ehdoissa ei myöskään anna sinulle omistusoikeuksia yrityksen henkiseen omaisuuteen.
-
-      Sinun ja yrityksen välillä sinä pysyt täysin vastuussa sisällöstä, jota lähetät foorumille. Hyväksyt, ettet anna virheellisesti ymmärtää väärin, että foorumille lähettämäsi sisältö on yrityksen sponsoroimaa tai hyväksymää. Nämä ehdot eivät velvoita yritystä tallentamaan, säilyttämään tai tarjoamaan kopioita lähettämästäsi sisällöstä ja muuttamaan sitä näiden ehtojen mukaisesti.
-
-      Foorumille lähettämäsi sisältö kuuluu sinulle, ja sinä päätät, mitä lupia annat muille siihen. Vähimmillään lisensoit yrityksen tarjoamaan foorumille lähettämääsi sisältöä muille foorumin käyttäjille. Tämä erikoislisenssi sallii yrityksen kopioivan, julkaisevan ja analysoivan foorumille lähettämääsi sisältöä.
-
-      Kun lähettämäsi sisältö poistetaan foorumilta joko sinun tai yrityksen toimesta, yrityksen erikoislisenssi päättyy, kun viimeinen kopio katoaa yrityksen varmuuskopioista, välimuisteista ja muista järjestelmistä. Muut lisenssit, joita sovellat lähettämääsi sisältöön, kuten [Creative Commons](https://creativecommons.org) -lisenssit, saattavat jatkua sisältösi poistamisen jälkeen. Nämä lisenssit voivat antaa muille tai yritykselle itselleen oikeuden jakaa sisältöäsi foorumin kautta uudelleen.
-
-      Muut, jotka saavat foorumille lähettämääsi sisältöä, saattavat rikkoa ehtoja, joiden mukaan lisensoit sisältösi. Hyväksyt, että yritys ei ole vastuussa sinulle näistä rikkomuksista tai niiden seurauksista.
-
-      <h2 id="heading--responsibility"><a href="#heading--responsibility">Vastuusi</a></h2>
-
-      Hyväksyt suojaavasi yritystä muiden oikeudellisilta vaateilta, jotka liittyvät näiden ehtojen rikkomiseesi tai näiden ehtojen rikkomiseen muiden toimesta tiliäsi käyttämällä foorumilla. Sekä sinä että yritys hyväksytte ilmoittavanne toiselle osapuolelle oikeudellisista vaateista, joissa saatat joutua suojaamaan yritystä, mahdollisimman pian. Jos yritys ei ilmoita sinulle oikeudellisesta vaateesta viipymättä, sinun ei tarvitse suojata yritystä vahingoilta, joita vastaan olisit voinut puolustautua tai jotka olisit voinut välttää saadessasi ilmoituksen viipymättä. Hyväksyt sallivasi yrityksen hallita niiden oikeudellisten vaateiden tutkintaa, puolustusta ja ratkaisua, joissa sinun täytyisi suojata yritystä, ja tekeväsi yhteistyötä näissä pyrkimyksissä. Yritys hyväksyy, ettei se hyväksy ratkaisua, joka hyväksyy vahinkosi tai asettaa sinulle velvollisuuksia, ilman etukäteistä hyväksyntääsi.
-
-      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Vastuuvapausilmoitukset</a></h2>
-
-      ***Hyväksyt kaiken foorumin käytön ja foorumin sisällön riskin . Lain sallimassa laajuudessa yritys ja sen toimittajat tarjoavat foorumin sellaisenaan ilman minkäänlaisia takuita.***
-
-      Foorumi voi sisältää hyperlinkkejä muiden ylläpitämille foorumeille ja palveluihin sekä integroida niitä. Yritys ei anna takuita muiden ylläpitämistä palveluista eikä niiden mahdollisesti tarjoamasta sisällöstä. Muiden ylläpitämien palveluiden käyttöön voidaan soveltaa muita sinun ja palvelua ylläpitävän tahon välisiä sopimuksia.
-
-      <h2 id="heading--liability"><a href="#heading--liability">Vastuurajoitukset</a></h2>
-
-      ***Yritys tai sen toimittajat eivät ole vastuussa sinulle sopimusrikkomusvahingoista, joita heidän henkilöstönsä ei olisi voinut kohtuudella ennakoida, kun hyväksyit nämä ehdot.***
-
-      ***Lain sallimassa laajuudessa kokonaisvastuu sinulle kaikista foorumiin tai foorumin sisältöön liittyvistä vaateista on rajoitettu 50 dollariin.***
-
-      <h2 id="heading--feedback"><a href="#heading--feedback">Palaute</a></h2>
-
-      Yritys ottaa mielellään vastaan palautettasi ja ehdotuksia foorumin osalta. Katso tapoja ottaa meihin yhteyttä jäljempänä [Yhteydenotto](#heading--contact)-osasta.
-
-      Hyväksyt, että yritys voi toimia vapaasti antamasi palautteen ja ehdotusten perusteella, ja että yrityksen ei tarvitse ilmoittaa sinulle, että palautettasi käytettiin, saada lupaasi käyttää sitä tai maksaa sinulle. Hyväksyt, ettet lähetä palautetta tai ehdotuksia, joiden uskot olevan luottamuksellisia tai yksinoikeudellisia, sinulle tai muille.
-
-      <h2 id="heading--termination"><a href="#heading--termination">Päättäminen</a></h2>
-
-      Joko sinä tai yritys voitte päättää näissä ehdoissa kuvatun sopimuksen milloin tahansa. Kun sopimuksemme päättyy, lupasi käyttää foorumia päättyy myös.
-
-      Seurravat ehdot jäävät voimaan sopimuksemme päättymisen jälkeen: [Sisältösi](#heading--your-content), [Palaute](#heading--feedback), [Vastuusi](#heading--responsibility), [Vastuuvapausilmoitukset](#heading--disclaimers), [Vastuurajoitukset](#heading--liability) ja [Yleiset ehdot](#heading--general).
-
-      <h2 id="heading--disputes"><a href="#heading--disputes">Riidat</a></h2>
-
-      %{governing_law} on näihin ehtoihin tai foorumin käyttöösi liittyviin riitoihin sovellettava laki.
-
-      Sinä ja yritys hyväksytte tekevänne näihin ehtoihin liittyviä kanteita vain kohteen %{city_for_disputes} osavaltion tai liittovaltion tuomioistuimessa. Sinä tai yritys ette vastusta näiden tuomioistuinten toimivaltaa tai niitä käsittelypaikkana.
-
-      ***Muutoin kuin Computer Fraud and Abuse Act -lain mukaisissa kanteissa sinä ja yritys ratkaisette kaikki riidat sitovalla Yhdysvaltain sovitteluelinten yhdistyksen (American Arbitration Association) välimiesmenettely. Välimiesmenettely noudattaa AAA:n kaupallisia välimiesmenettelysääntöjä ja lisäkäytänteitä kuluttajiin liittyvissä riidoissa. Välimiesmenettely tapahtumapaikka on %{city_for_disputes}. Ratkaiset kaikki riidat yksilönä, et osana ryhmäkannetta tai muuta edustusmenettelyä, joko kantajana tai ryhmän jäsenenä. Välimies ei yhdistä riitaa toiseen riitaan ilman yrityksen lupaa.***
-
-      Välitystuomio sisältää välimiesmenettelyn kustannukset, kohtuulliset asianajajan palkkiot ja kohtuulliset todistajien kustannukset. Sinä ja yritys voitte saada välitystuomion missä tahansa toimivaltaisessa tuomioistuimessa.
-
-      <h2 id="heading--general"><a href="#heading--general">Yleiset ehdot</a></h2>
-
-      Jos näiden ehtojen ehto on täytäntöönpanokelvoton kirjoitusmuodossaan, mutta se voitaisiin muuttaa täytäntöönpanokelpoiseksi, tätä ehtoa tulisi muuttaa vähimmässä määrin, mikä on tarpeellista sen tekemiseksi täytäntöönpanokelpoiseksi. Muutoin tämä ehto tulisi poistaa.
-
-      Et voi siirtää sopimustasi yrityksen kanssa. Yritys voi siirtää sopimuksesi yrityksen sidosryhmälle tai muulle yritykselle, joka saa yrityksen hallinnan, tai muulle yritykselle, joka ostaa yrityksen foorumiin liittyvät omaisuuserät. Näiden ehtojen vastaisilla siirtoyrityksillä ei ole laillista vaikutusta.
-
-      Minkä tahansa tämän sopimuksen mukaisen oikeuden käyttäminen tai tämän sopimuksen rikkomuksesta luopuminen ei mitätöi muita tämän sopimuksen rikkomuksia.
-
-      Nämä ehdot käsittävät kaikki sinun ja yrityksen välisen sopimuksen ehdot foorumin käyttöä koskien. Nämä ehdot korvaavat kokonaan muut sopimukset foorumin käyttöäsi koskien riippumatta siitä, ovatko ne kirjallisia.
-
-      <h2 id="heading--contact"><a href="#heading--contact">Yhteydenotto</a></h2>
-
-      Voit antaa yritykselle näiden ehtojen mukaisen ilmoituksen ja lähettää kysymyksiä yritykselle osoitteeseen <%{contact_email}>.
-
-      Yritys voi antaa sinulle näiden ehtojen mukaisen ilmoituksen käyttämällä sähköpostiosoitetta, jonka annat tilillesi foorumilla, tai lähettämällä viestin foorumin aloitussivulle tai tilisivullesi.
-
-      <h2 id="heading--changes"><a href="#heading--changes">Muutokset</a></h2>
-
-      Yritys päivitti näitä ehtoja viimeksi 12.7.2018 ja voi päivittää näitä ehtoja uudelleen. Yritys julkaisee kaikki päivitykset foorumille. Päivityksistä, jotka sisältävät merkittäviä muutoksia, yritys suostuu lähettävänsä sinulle sähköpostiviestin, jos olet luonut tilin ja antanut kelvollisen sähköpostiosoitteen. Yritys voi myös ilmoittaa päivityksistä erikoisviesteillä tai hälytyksillä foorumilla.
-
-      Kun saat ilmoituksen näiden ehtojen päivityksestä, sinun on hyväksyttävä uudet ehdot, jotta voit jatkaa foorumin käyttöä.
   privacy_topic:
     title: "Tietosuojaseloste"
-    body: |
-      <a name="collect"></a>
-
-      ## [Mitä tietoja keräämme?](#collect)
-
-      Tallennamme tietoa sinusta, kun rekisteröidyt sivustolle, ja keräämme tietoa toimistasi palstalla: lukemisestasi, kirjoittamisestasi ja siitä, miten reagoit täällä jaettuun sisältöön.
-
-      Kun rekisteröidyt sivustolle, sinua voidaan pyytää antamaan nimesi ja sähköpostiosoitteesi. Voit kuitenkin halutessasi vierailla sivustolla rekisteröitymättä. Sähköpostiosoitteesi varmistetaan ainutkertaisen linkin sisältävän sähköpostiviestin avulla. Kun linkkiä klikataan, tiedämme sinun hallinnoivan antamaasi sähköpostiosoitetta.
-
-      Kun olet rekisteröitynyt ja kirjoitat, tallennamme IP-osoitteen, josta viesti lähtee. Voimme myös ylläpitää palvelinlokia, joka sisältää jokaista palvelimellemme lähetettyä pyyntöä vastaavan IP-osoitteen.
-
-      <a name="use"></a>
-
-      ## [Mihin käytämme sinusta kerättyä tietoa?](#use)
-
-      Mitä tahansa sinusta kerättyä tietoa voidaan käyttää jollakin näistä tavoista:
-
-      * Tarjotaksemme yksilöllisen kokemuksen &mdash; tietojen avulla vastaamme sinun henkilökohtaisiin tarpeisiisi.
-      * Parantaaksemme sivustoa &mdash; pyrimme jatkuvasti parantamaan sivuston toimintaa kerätyn tiedon ja käyttäjäpalautteen perusteella.
-      * Parantaaksemme asiakaspalvelua &mdash; tiedot auttavat tarjoamaan tehokkaampaa asiakaspalvelua ja teknistä tukea.
-      * Lähettääksemme ajoittain sähköpostiviestejä &mdash; antamaasi sähköpostiosoitteeseen voidaan lähettää tietoa, valitsemiasi ilmoituksia tapahtumista eri ketjuissa tai käyttäjänimeesi liittyen tai vastineita tiedusteluihisi, pyyntöihisi tai kysymyksiisi.
-
-      <a name="protect"></a>
-
-      ## [Miten suojaamme tietojasi?](#protect)
-
-      Meillä on liuta erilaisia turvallisuuskäytänteitä, joilla pidämme henkilötietosi turvassa kun syötät, tallennat tai tarkastelet tietoa.
-
-      <a name="data-retention"></a>
-
-      ## [Miten tietoja säilötään?](#data-retention)
-
-      Pyrimme parhaamme mukaan:
-
-      * Säilömään kaikkia pyyntöjä vastaavan IP-osoitteen sisältävän palvelinlokin enintään 90 päivän ajan.
-      * Säilömään rekisteröityneeseen käyttäjään ja hänen viesteihinsä liittyvät IP-osoitteet enintään 5 vuoden ajan.
-
-      <a name="cookies"></a>
-
-      ## [Käytämmekö evästeitä?](#cookies)
-
-      Kyllä. Evästeet ovat pieniä tiedostoja, jotka sivusto tai sen palveluntarjoaja siirtää tietokoneesi kiintolevylle verkkoselaimesi kautta (jos sallit sen). Nämä evästeet mahdollistavat selaimesi tunnistamisen, ja jos olet rekisteröitynyt käyttäjä, sen yhdistämisen käyttäjätunnukseesi.
-
-      Evästeiden avulla tunnistamme ja tallennamme asetuksia tulevia vierailuja varten ja keräämme yleisluontoista tietoa sivuston liikennemääristä ja sivustolla liikkumisesta, jotta voimme tarjota tulevaisuudessa paremman käyttökokemuksen ja hyödyllisiä toimintoja. Voimme tehdä yhteistyötä kolmansien osapuolien kanssa ymmärtääksemme paremmin sivustolla vierailevia. Näillä palveluntarjoajilla ei ole lupaa käyttää keräämäämme tietoa muuhun kuin palvelumme kehittämiseen.
-
-      <a name="disclose"></a>
-
-      ## [Paljastammeko tietoa ulkopuolisille tahoille?](#disclose)
-
-      Emme myy, vaihda tai muutoin käy kauppaa ulkopuolisten tahojen kanssa yksilöllisesti tunnistettavilla tiedoilla. Tähän poikkeus on luotetut kolmannet osapuolet, jotka auttavat sivustomme ja toimintamme pyörittämisessä tai sinun palvelemisessa; vaadimme näitä tahoja pitämään tiedot luottamuksellisina. Voimme myös jakaa tietojasi, jos uskomme sen olevan tarpeen lain, sivustomme käytäntöjen, omien tai muiden tahojen oikeuksien tai omaisuuden tai turvallisuuden kannalta. Yksilöimättömiä tietoja voidaan kuitenkin jakaa muiden tahojen kanssa kaupankäynnin tai markkinoinnin avuksi tai muuhun käyttöön.
-
-      <a name="third-party"></a>
-
-      ## [Linkit kolmansien tahojen sivustoille](#third-party)
-
-      Joissain tapauksissa, harkintamme mukaan, voimme sallia tai tarjota kolmannen osapuolen tuotteita tai palveluita sivustollamme. Näillä kolmannen osapuolen sivustoilla on erilliset itsenäiset tietosuojaselosteensa. Emme ole vastuussa sisällöstä tai toiminnasta näillä linkitetyillä sivustoilla. Joka tapauksessa pyrimme vaalimaan sivustomme kunniallisuutta ja otamme ilolla vastaan kaikenlaisen palautteen näitä sivustoja koskien.
-
-      <a name="coppa"></a>
-
-      ## [Lapsen yksilönsuoja internetissä -lain noudattaminen](#coppa)
-
-      Sivustomme, tuotteemme ja palvelumme on suunnattu 13-vuotiaille ja sitä vanhemmille. Jos tämä palvelin on Yhdysvalloissa ja olet alle 13-vuotias, COPPA-lain ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)) nojalla älä käytä tätä sivustoa.
-
-      <a name="online"></a>
-
-      ## [Tietosuojaseloste koskee vain internetiä](#online)
-
-      Tämä tietosuojaseloste koskee vain sivustomme kautta kerättyä tietoa eikä siten koske verkon ulkopuolelta kerättyä tietoa.
-
-      <a name="consent"></a>
-
-      ## [Suostumuksesi](#consent)
-
-      Käyttämällä sivustoa hyväksyt sivustomme tietosuojaselosteen.
-
-      <a name="changes"></a>
-
-      ## [Muutokset tietosuojaselosteeseen](#changes)
-
-      Jos päätämme muuttaa tietosuojaselostettamme, muutokset ovat nähtävissä tällä sivulla.
-
-      Tämä tiedosto on CC-BY-SA-lisensoitu. Viimeksi päivitetty 31.5.2013.
   badges:
     mass_award:
       errors:
@@ -4454,6 +4153,7 @@ fi:
     required_tags_from_group:
       one: "Sinun täytyy lisätä vähintään %{count} ryhmän %{tag_group_name} tunniste. Tämän ryhmän tunnisteet ovat: %{tags}."
       other: "Sinun täytyy lisätä vähintään %{count} ryhmän %{tag_group_name} tunnistetta. Tämän ryhmän tunnisteet ovat: %{tags}."
+    limited_to_one_tag_from_group: "Tunnisteiden %{tags} samanaikainen käyttö ei ole mahdollista. Sisällytä vain yksi."
     invalid_target_tag: "ei voi olla synonyymin synonyymi"
     synonyms_exist: "ei ole sallittua, kun synonyymejä on olemassa"
   rss_by_tag: "Ketjut tunnisteella %{tag}"
@@ -4472,10 +4172,7 @@ fi:
       message: "<p>Lähetimme uuden aktivointiviestin osoitteeseen <b>%{email}</b>"
   safe_mode:
     title: "Siirry vikasietotilaan"
-    description: "Vikasietotilassa voit testata sivustoasi ilman lisäosia ja teemoja."
     no_themes: "Poista teemat ja teeman komponentit käytöstä"
-    no_unofficial_plugins: "Poista epäviralliset lisäosat käytöstä"
-    no_plugins: "Poista kaikki lisäosat käytöstä"
     enter: "Siirry vikasietotilaan"
     must_select: "Ainakin yksi on valittava, jotta voi siirtyä vikasietotilaan."
   wizard:
@@ -4590,7 +4287,6 @@ fi:
           <p>Onnittelut, ja pidä hauskaa <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>rakentaessasi uutta yhteisöäsi!</a></p>
   search_logs:
     graph_title: "Hakujen määrä"
-  joined: "Liittyi"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mainitsi sinut ketjussa "%{topic}" – %{site_title}'
@@ -4653,15 +4349,9 @@ fi:
         category: alueen asetukset
     actions:
       agree:
-        title: "Hyväksy..."
-      agree_and_keep:
-        title: "Säilytä viesti"
-        description: "Hyväksy merkintä ja pidä viesti ennallaan."
-      agree_and_keep_hidden:
-        title: "Jätä viesti piiloon"
-        description: "Hyväksy merkintä ja jätä viesti piiloon."
+        title: "Kyllä"
       agree_and_suspend:
-        title: "Hyllytä käyttäjä"
+        title: "Jäädytä käyttäjä"
         description: "Hyväksy merkintä ja hyllytä käyttäjä."
       agree_and_silence:
         title: "Hiljennä käyttäjä"
@@ -4671,32 +4361,26 @@ fi:
         description: "Palauta viesti, niin kaikki käyttäjät näkevät sen."
       agree_and_hide:
         title: "Piilota viesti"
-        description: "Piilota viesti ja lähetä käyttäjälle yksityisviesti, jossa pyydetään käyttäjää muokkaamaan viestiä."
+        description: "Hyväksy liputtamalla ja piilota julkaisu + lähetä käyttäjälle automattisesti yksityisviesti, jossa häntä pyydetään muokkaamaan sitä."
       delete_single:
         title: "Poista"
       delete:
         title: "Poista..."
-      delete_and_ignore:
-        title: "Poista viesti ja ohita"
-        description: "Poista viesti: jos on viesti on ketjun ensimmäinen, poista myös ketju"
       delete_and_ignore_replies:
-        title: "Poista viesti + vastaukset ja sivuuta"
-        description: "Poista viesti ja kaikki sen vastaukset; jos viesti on ensimmäinen, poista koko ketju"
         confirm: "Oletko varma, että haluat poistaa myös viestin vastaukset?"
       delete_and_agree:
-        title: "Poista viesti ja hyväksy merkintä"
-        description: "Poista viesti; jos on viesti on ketjun ensimmäinen, poista myös ketju"
+        title: "Poista viesti"
       delete_and_agree_replies:
-        title: "Poista viesti + vastaukset ja hyväksy merkintä"
-        description: "Poista viesti ja kaikki sen vastaukset; jos viesti on ensimmäinen, poista koko ketju"
+        title: "Poista viesti ja vastaukset"
         confirm: "Oletko varma, että haluat poistaa myös viestin vastaukset?"
       disagree_and_restore:
-        title: "Hylkää merkintä ja palauta viesti"
         description: "Palauta viesti, niin kaikki käyttäjät näkevät sen."
       disagree:
-        title: "Hylkää"
+        title: "Ei"
       ignore:
         title: "Sivuuta"
+      ignore_and_do_nothing:
+        title: "Älä tee mitään"
       approve:
         title: "Hyväksy"
       approve_post:

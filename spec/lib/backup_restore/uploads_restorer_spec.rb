@@ -4,9 +4,9 @@
 require_relative "shared_context_for_backup_restore"
 
 RSpec.describe BackupRestore::UploadsRestorer do
-  include_context "with shared stuff"
+  subject(:restorer) { BackupRestore::UploadsRestorer.new(logger) }
 
-  subject { BackupRestore::UploadsRestorer.new(logger) }
+  include_context "with shared stuff"
 
   def with_temp_uploads_directory(name: "default", with_optimized: false)
     Dir.mktmpdir do |directory|
@@ -93,7 +93,7 @@ RSpec.describe BackupRestore::UploadsRestorer do
 
   def setup_and_restore(directory, metadata)
     metadata.each { |d| BackupMetadata.create!(d) }
-    subject.restore(directory)
+    restorer.restore(directory)
   end
 
   def uploads_path(database)
@@ -119,15 +119,15 @@ RSpec.describe BackupRestore::UploadsRestorer do
     let(:target_site_name) { target_site_type == multisite ? "second" : "default" }
     let(:target_hostname) { target_site_type == multisite ? "test2.localhost" : "test.localhost" }
 
-    shared_context "with no uploads" do
+    shared_examples "with no uploads" do
       it "does nothing when temporary uploads directory is missing or empty" do
         store_class.any_instance.expects(:copy_from).never
 
         Dir.mktmpdir do |directory|
-          subject.restore(directory)
+          restorer.restore(directory)
 
           FileUtils.mkdir(File.join(directory, "uploads"))
-          subject.restore(directory)
+          restorer.restore(directory)
         end
       end
     end
@@ -176,7 +176,7 @@ RSpec.describe BackupRestore::UploadsRestorer do
         with_temp_uploads_directory do |directory, path|
           store_class.any_instance.expects(:copy_from).with(path).once
 
-          expect { subject.restore(directory) }.to change { OptimizedImage.count }.by_at_most(
+          expect { restorer.restore(directory) }.to change { OptimizedImage.count }.by_at_most(
             -1,
           ).and change { Jobs::CreateAvatarThumbnails.jobs.size }.by(1).and change {
                         Post.where(baked_version: nil).count
@@ -190,7 +190,7 @@ RSpec.describe BackupRestore::UploadsRestorer do
         with_temp_uploads_directory(with_optimized: true) do |directory, path|
           store_class.any_instance.expects(:copy_from).with(path).once
 
-          expect { subject.restore(directory) }.to not_change {
+          expect { restorer.restore(directory) }.to not_change {
             OptimizedImage.count
           }.and not_change { Jobs::CreateAvatarThumbnails.jobs.size }.and change {
                         Post.where(baked_version: nil).count
@@ -609,14 +609,14 @@ RSpec.describe BackupRestore::UploadsRestorer do
     Discourse.stubs(:store).returns(Object.new)
 
     with_temp_uploads_directory do |directory|
-      expect { subject.restore(directory) }.to raise_error(BackupRestore::UploadsRestoreError)
+      expect { restorer.restore(directory) }.to raise_error(BackupRestore::UploadsRestoreError)
     end
   end
 
   it "raises an exception when there are multiple folders in the uploads directory" do
     with_temp_uploads_directory do |directory|
       FileUtils.mkdir_p(File.join(directory, "uploads", "foo"))
-      expect { subject.restore(directory) }.to raise_error(BackupRestore::UploadsRestoreError)
+      expect { restorer.restore(directory) }.to raise_error(BackupRestore::UploadsRestoreError)
     end
   end
 

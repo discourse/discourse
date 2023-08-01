@@ -1,74 +1,83 @@
 <section class="user-navigation user-navigation-primary">
-  <HorizontalOverflowNav @className="main-nav nav user-nav">
+  <HorizontalOverflowNav
+    @className="main-nav nav user-nav"
+    @ariaLabel="User primary"
+  >
     {{#unless @user.profile_hidden}}
-      <li class="summary">
-        <LinkTo @route="user.summary">
-          {{d-icon "user"}}
-          <span>{{i18n "user.summary.title"}}</span>
-        </LinkTo>
-      </li>
+      <DNavigationItem @route="user.summary" class="user-nav__summary">
+        {{d-icon "user"}}
+        <span>{{i18n "user.summary.title"}}</span>
+      </DNavigationItem>
 
-      <li class="user-activity">
-        <LinkTo @route="userActivity">
-          {{d-icon "stream"}}
-          <span>{{i18n "user.activity_stream"}}</span>
-        </LinkTo>
-      </li>
+      <DNavigationItem
+        @route="userActivity"
+        @ariaCurrentContext="parentNav"
+        class="user-nav__activity"
+      >
+        {{d-icon "stream"}}
+        <span>{{i18n "user.activity_stream"}}</span>
+      </DNavigationItem>
+
     {{/unless}}
 
     {{#if @showNotificationsTab}}
-      <li class="user-notifications">
-        <LinkTo @route="userNotifications">
-          {{d-icon "bell" class="glyph"}}
-          <span>{{i18n "user.notifications"}}</span>
-        </LinkTo>
-      </li>
+      <DNavigationItem
+        @route="userNotifications"
+        @ariaCurrentContext="parentNav"
+        class="user-nav__notifications"
+      >
+        {{d-icon "bell" class="glyph"}}
+        <span>{{i18n "user.notifications"}}</span>
+      </DNavigationItem>
     {{/if}}
 
     {{#if @showPrivateMessages}}
-      <li class="private-messages">
-        <LinkTo @route="userPrivateMessages">
-          {{d-icon "envelope"}}
-          <span>{{i18n "user.private_messages"}}</span>
-        </LinkTo>
-      </li>
+      <DNavigationItem
+        @route="userPrivateMessages"
+        @ariaCurrentContext="parentNav"
+        class="user-nav__personal-messages"
+      >
+        {{d-icon "envelope"}}
+        <span>{{i18n "user.private_messages"}}</span>
+      </DNavigationItem>
     {{/if}}
 
     {{#if @canInviteToForum}}
-      <li class="invited">
-        <LinkTo @route="userInvited">
-          {{d-icon "user-plus"}}
-          <span>{{i18n "user.invited.title"}}</span>
-        </LinkTo>
-      </li>
+      <DNavigationItem
+        @route="userInvited"
+        @ariaCurrentContext="parentNav"
+        class="user-nav__invites"
+      >
+        {{d-icon "user-plus"}}
+        <span>{{i18n "user.invited.title"}}</span>
+      </DNavigationItem>
     {{/if}}
 
     {{#if @showBadges}}
-      <li class="badges">
-        <LinkTo @route="user.badges">
-          {{d-icon "certificate"}}
-          <span>{{i18n "badges.title"}}</span>
-        </LinkTo>
-      </li>
+      <DNavigationItem @route="user.badges" class="user-nav__badges">
+        {{d-icon "certificate"}}
+        <span>{{i18n "badges.title"}}</span>
+      </DNavigationItem>
     {{/if}}
 
     <PluginOutlet
       @name="user-main-nav"
       @connectorTagName="li"
-      @args={{hash model=@user}}
+      @outletArgs={{hash model=@user}}
     />
 
     {{#if @user.can_edit}}
-      <li class="preferences">
-        <LinkTo @route="preferences">
-          {{d-icon "cog"}}
-          <span>{{i18n "user.preferences"}}</span>
-        </LinkTo>
-      </li>
+      <DNavigationItem
+        @route="preferences"
+        @ariaCurrentContext="parentNav"
+        class="user-nav__preferences"
+      >
+        {{d-icon "cog"}}
+        <span>{{i18n "user.preferences"}}</span>
+      </DNavigationItem>
     {{/if}}
-
-    {{#if (and this.site.mobileView this.currentUser.staff)}}
-      <li class="admin">
+    {{#if (and @isMobileView @isStaff)}}
+      <li class="user-nav__admin">
         <a href={{@user.adminPath}}>
           {{d-icon "wrench"}}
           <span>{{i18n "admin.user.manage_user"}}</span>

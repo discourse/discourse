@@ -23,7 +23,7 @@ const IMAGE_FIXTURE = {
 
 const VIDEO_FIXTURE = {
   id: 290,
-  url: null, // Nulled out to avoid actually setting the img src - avoids an HTTP request
+  url: null, // Nulled out to avoid actually setting the src - avoids an HTTP request
   original_filename: "video.mp4",
   filesize: 172214,
   width: 1024,
@@ -33,6 +33,22 @@ const VIDEO_FIXTURE = {
   extension: "mp4",
   short_url: "upload://mnCnqY5tunCFw2qMgtPnu1mu1C9.mp4",
   short_path: "/uploads/short-url/mnCnqY5tunCFw2qMgtPnu1mu1C9.mp4",
+  retain_hours: null,
+  human_filesize: "168 KB",
+};
+
+const AUDIO_FIXTURE = {
+  id: 290,
+  url: null, // Nulled out to avoid actually setting the src - avoids an HTTP request
+  original_filename: "song.mp3",
+  filesize: 172214,
+  width: 1024,
+  height: 768,
+  thumbnail_width: 666,
+  thumbnail_height: 500,
+  extension: "mp3",
+  short_url: "upload://mnCnqY5tunCFw2qMgtPnu1mu1C9.mp3",
+  short_path: "/uploads/short-url/mnCnqY5tunCFw2qMgtPnu1mu1C9.mp3",
   retain_hours: null,
   human_filesize: "168 KB",
 };
@@ -89,6 +105,21 @@ module("Discourse Chat | Component | chat-upload", function (hooks) {
       video.getAttribute("preload"),
       "metadata",
       "video has correct preload settings"
+    );
+  });
+
+  test("with a audio", async function (assert) {
+    this.set("upload", AUDIO_FIXTURE);
+
+    await render(hbs`<ChatUpload @upload={{this.upload}} />`);
+
+    assert.true(exists("audio.chat-audio-upload"), "displays as an audio");
+    const audio = query("audio.chat-audio-upload");
+    assert.true(audio.hasAttribute("controls"), "has audio controls");
+    assert.strictEqual(
+      audio.getAttribute("preload"),
+      "metadata",
+      "audio has correct preload settings"
     );
   });
 

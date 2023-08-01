@@ -1,0 +1,13 @@
+{{#if (and @message.newest (not @message.formattedFirstMessageDate))}}
+  <div class="chat-message-separator-new">
+    <div class="chat-message-separator__text-container">
+      <span class="chat-message-separator__text">
+        {{i18n "chat.last_visit"}}
+      </span>
+    </div>
+
+    <div class="chat-message-separator__line-container">
+      <div class="chat-message-separator__line"></div>
+    </div>
+  </div>
+{{/if}}

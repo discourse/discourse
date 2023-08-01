@@ -34,11 +34,11 @@
   </div>
 {{/if}}
 
-{{#if (and (not @fullscreen) @currentUser)}}
+{{#if (and (not @fullscreen) this.currentUser)}}
   <div class="timeline-controls">
     <PluginOutlet
       @name="timeline-controls-before"
-      @args={{hash model=@model}}
+      @outletArgs={{hash model=@model}}
     />
     <TopicAdminMenuButton
       @topic={{@model}}
@@ -82,7 +82,7 @@
       <TopicTimeline::Scroller
         @current={{this.current}}
         @total={{this.total}}
-        @goBack={{this.goBack}}
+        @onGoBack={{this.onGoBack}}
         @fullscreen={{@fullscreen}}
         @showDockedButton={{this.showDockedButton}}
         @date={{this.date}}
@@ -96,24 +96,18 @@
         onClick={{this.updatePercentage}}
       ></div>
 
-      {{#if this.hasBackPosition}}
+      {{#if (and this.hasBackPosition this.showButton)}}
         <div class="timeline-last-read" style={{this.lastReadStyle}}>
           {{d-icon "minus" class="progress"}}
-          {{#if this.showButton}}
-            <TopicTimeline::BackButton @onClick={{this.goBack}} />
-          {{/if}}
+          <TopicTimeline::BackButton @onGoBack={{this.goBack}} />
         </div>
       {{/if}}
     </div>
 
     <div class="timeline-date-wrapper">
-      <a
-        class="now-date"
-        onClick={{this.updatePercentage}}
-        title={{this.nowDate}}
-      >
+      <a class="now-date" onClick={{this.updatePercentage}}>
         <span>
-          {{this.nowDate}}
+          {{age-with-tooltip this.nowDate this.nowDateOptions}}
         </span>
       </a>
     </div>
@@ -123,16 +117,16 @@
     {{#if this.displaySummary}}
       <button
         type="button"
-        class="show-summary btn-small"
-        label={{i18n "summary.short_label"}}
+        class="show-summary btn btn-small"
         title={{i18n "summary.short_title"}}
-        {{on "click" @showSummary}}
+        {{on "click" @showTopReplies}}
       >
         {{d-icon "layer-group"}}
+        {{i18n "summary.short_label"}}
       </button>
     {{/if}}
 
-    {{#if (and @currentUser (not @fullscreen))}}
+    {{#if (and this.currentUser (not @fullscreen))}}
       {{#if this.canCreatePost}}
         <button
           type="button"
@@ -148,8 +142,7 @@
     {{#if @fullscreen}}
       <button
         type="button"
-        {{! we need to keep this a widget-button to not close the modal when opening form }}
-        class="widget-button btn btn-text jump-to-post"
+        class="timeline-open-jump-to-post-prompt-btn btn btn-text jump-to-post"
         title={{i18n "topic.progress.jump_prompt_long"}}
         {{on "click" @jumpToPostPrompt}}
       >
@@ -159,7 +152,7 @@
       </button>
     {{/if}}
 
-    {{#if @currentUser}}
+    {{#if this.currentUser}}
       <TopicNotificationsButton
         @notificationLevel={{@model.details.notification_level}}
         @topic={{@model}}
@@ -178,7 +171,7 @@
     {{/if}}
     <PluginOutlet
       @name="timeline-footer-controls-after"
-      @args={{hash model=@model}}
+      @outletArgs={{hash model=@model}}
     />
   </div>
 {{/if}}

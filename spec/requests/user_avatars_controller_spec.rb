@@ -60,7 +60,7 @@ RSpec.describe UserAvatarsController do
 
     it "handles non local content correctly" do
       setup_s3
-      SiteSetting.avatar_sizes = "100|49"
+      SiteSetting.avatar_sizes = "100|98|49"
       SiteSetting.unicode_usernames = true
       SiteSetting.s3_cdn_url = "http://cdn.com"
 
@@ -111,7 +111,7 @@ RSpec.describe UserAvatarsController do
     it "redirects to external store when enabled" do
       global_setting :redirect_avatar_requests, true
       setup_s3
-      SiteSetting.avatar_sizes = "100|49"
+      SiteSetting.avatar_sizes = "100|98|49"
       SiteSetting.s3_cdn_url = "https://s3-cdn.example.com"
       set_cdn_url("https://app-cdn.example.com")
 
@@ -139,7 +139,9 @@ RSpec.describe UserAvatarsController do
 
       expect(response.status).to eq(302)
       expect(response.location).to eq("https://s3-cdn.example.com/optimized/path")
-      expect(response.headers["Cache-Control"]).to eq("max-age=3600, public, immutable")
+      expect(response.headers["Cache-Control"]).to eq(
+        "max-age=3600, public, immutable, stale-while-revalidate=86400",
+      )
     end
 
     it "serves new version for old urls" do

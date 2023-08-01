@@ -92,3 +92,6 @@ id:
           description: "Deskripsi"
           header: "Header"
           hover_to_see: "Arahkan kursor untuk melihat tooltip"
+        char_counter:
+          title: "Penghitung Karakter"
+          placeholder: "Masukkan teks Anda di sini..."

@@ -119,6 +119,11 @@ class UserHistory < ActiveRecord::Base
         watched_word_create: 97,
         watched_word_destroy: 98,
         delete_group: 99,
+        permanently_delete_post_revisions: 100,
+        create_public_sidebar_section: 101,
+        update_public_sidebar_section: 102,
+        destroy_public_sidebar_section: 103,
+        reset_bounce_score: 104,
       )
   end
 
@@ -213,6 +218,17 @@ class UserHistory < ActiveRecord::Base
       watched_word_create
       watched_word_destroy
       delete_group
+      permanently_delete_post_revisions
+      create_public_sidebar_section
+      update_public_sidebar_section
+      destroy_public_sidebar_section
+      reset_bounce_score
+      update_directory_columns
+      deleted_unused_tags
+      renamed_tag
+      deleted_tag
+      chat_channel_status_change
+      chat_auto_remove_membership
     ]
   end
 

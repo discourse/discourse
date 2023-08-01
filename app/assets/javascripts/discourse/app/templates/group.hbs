@@ -1,9 +1,10 @@
-<PluginOutlet
-  @name="before-group-container"
-  @tagName="span"
-  @connectorTagName="div"
-  @args={{hash group=this.model}}
-/>
+<span>
+  <PluginOutlet
+    @name="before-group-container"
+    @connectorTagName="div"
+    @outletArgs={{hash group=this.model}}
+  />
+</span>
 
 <div class="container group group-{{this.model.name}}">
   {{#if this.showTooltip}}
@@ -73,12 +74,13 @@
         {{/if}}
       </div>
 
-      <PluginOutlet
-        @name="group-details-after"
-        @tagName="span"
-        @connectorTagName="div"
-        @args={{hash model=this.model}}
-      />
+      <span>
+        <PluginOutlet
+          @name="group-details-after"
+          @connectorTagName="div"
+          @outletArgs={{hash model=this.model}}
+        />
+      </span>
     </div>
 
     {{#if this.model.bio_cooked}}

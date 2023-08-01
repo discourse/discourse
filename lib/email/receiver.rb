@@ -107,7 +107,7 @@ module Email
 
           Email::Validator.ensure_valid!(@mail)
 
-          @from_email, @from_display_name = parse_from_field
+          @from_email, @from_display_name = parse_from_field(@mail)
           @from_user = User.find_by_email(@from_email)
           @incoming_email = create_incoming_email
 
@@ -381,9 +381,9 @@ module Email
       @mail[:precedence].to_s[/list|junk|bulk|auto_reply/i] ||
         @mail[:from].to_s[/(mailer[\-_]?daemon|post[\-_]?master|no[\-_]?reply)@/i] ||
         @mail[:subject].to_s[
-          /^\s*(Auto:|Automatic reply|Autosvar|Automatisk svar|Automatisch antwoord|Abwesenheitsnotiz|Risposta Non al computer|Automatisch antwoord|Auto Response|Respuesta automática|Fuori sede|Out of Office|Frånvaro|Réponse automatique)/i
+          /\A\s*(Auto:|Automatic reply|Autosvar|Automatisk svar|Automatisch antwoord|Abwesenheitsnotiz|Risposta Non al computer|Automatisch antwoord|Auto Response|Respuesta automática|Fuori sede|Out of Office|Frånvaro|Réponse automatique)/i
         ] ||
-        @mail.header.to_s[
+        @mail.header.reject { |h| h.name.downcase == "x-auto-response-suppress" }.to_s[
           /auto[\-_]?(response|submitted|replied|reply|generated|respond)|holidayreply|machinegenerated/i
         ]
     end
@@ -393,7 +393,7 @@ module Email
       when "X-Spam-Flag"
         @mail[:x_spam_flag].to_s[/YES/i]
       when "X-Spam-Status"
-        @mail[:x_spam_status].to_s[/^Yes, /i]
+        @mail[:x_spam_status].to_s[/\AYes, /i]
       when "X-SES-Spam-Verdict"
         @mail[:x_ses_spam_verdict].to_s[/FAIL/i]
       else
@@ -639,7 +639,7 @@ module Email
           .uniq
 
       @previous_replies_regex ||=
-        /^--[- ]\n\*(?:#{strings.map { |x| Regexp.escape(x) }.join("|")})\*\n/im
+        /\A--[- ]\n\*(?:#{strings.map { |x| Regexp.escape(x) }.join("|")})\*\n/im
     end
 
     def reply_above_line_regex
@@ -660,14 +660,15 @@ module Email
       reply.split(reply_above_line_regex)[0]
     end
 
-    def parse_from_field(mail = nil)
-      mail ||= @mail
-
+    def parse_from_field(mail, process_forwarded_emails: true)
       if email_log.present?
         email = email_log.to_address || email_log.user&.email
         return email, email_log.user&.username
       elsif mail.bounced?
-        Array.wrap(mail.final_recipient).each { |from| return extract_from_address_and_name(from) }
+        # "Final-Recipient" has a specific format (<name> ; <address>)
+        # cf. https://www.ietf.org/rfc/rfc2298.html#section-3.2.4
+        address_type, generic_address = mail.final_recipient.to_s.split(";").map { _1.to_s.strip }
+        return generic_address, nil if generic_address.include?("@") && address_type == "rfc822"
       end
 
       return unless mail[:from]
@@ -675,87 +676,81 @@ module Email
       # For forwarded emails, where the from address matches a group incoming
       # email, we want to use the from address of the original email sender,
       # which we can extract from embedded_email_raw.
-      if has_been_forwarded?
-        if mail[:from].to_s =~ group_incoming_emails_regex && embedded_email[:from].errors.blank?
-          from_address, from_display_name = extract_from_fields_from_header(embedded_email, :from)
-          return from_address, from_display_name if from_address
+      if process_forwarded_emails && has_been_forwarded?
+        if mail[:from].to_s =~ group_incoming_emails_regex
+          if embedded_email && embedded_email[:from].errors.blank?
+            from_address, from_display_name =
+              Email::Receiver.extract_email_address_and_name(embedded_email[:from])
+            return from_address, from_display_name if from_address
+          end
         end
+      end
+
+      # extract proper sender when using mailman mailing list
+      if mail[:x_mailman_version].present?
+        address, name = Email::Receiver.extract_email_address_and_name_from_mailman(mail)
+        return address, name if address
       end
 
       # For now we are only using the Reply-To header if the email has
       # been forwarded via Google Groups, which is why we are checking the
       # X-Original-From header too. In future we may want to use the Reply-To
       # header in more cases.
-      if mail["X-Original-From"].present?
-        if mail[:reply_to] && mail[:reply_to].errors.blank?
-          from_address, from_display_name =
-            extract_from_fields_from_header(
-              mail,
-              :reply_to,
-              comparison_headers: ["X-Original-From"],
-            )
-          return from_address, from_display_name if from_address
-        end
+      if mail[:x_original_from].present? && mail[:reply_to].present?
+        original_from_address, _ =
+          Email::Receiver.extract_email_address_and_name(mail[:x_original_from])
+        reply_to_address, reply_to_name =
+          Email::Receiver.extract_email_address_and_name(mail[:reply_to])
+        return reply_to_address, reply_to_name if original_from_address == reply_to_address
       end
 
-      if mail[:from].errors.blank?
-        from_address, from_display_name = extract_from_fields_from_header(mail, :from)
-        return from_address, from_display_name if from_address
-      end
-
-      return extract_from_address_and_name(mail.from) if mail.from.is_a? String
-
-      if mail.from.is_a? Mail::AddressContainer
-        mail.from.each do |from|
-          from_address, from_display_name = extract_from_address_and_name(from)
-          return from_address, from_display_name if from_address
-        end
-      end
-
-      nil
+      Email::Receiver.extract_email_address_and_name(mail[:from])
     rescue StandardError
       nil
     end
 
-    def extract_from_fields_from_header(mail_object, header, comparison_headers: [])
-      mail_object[header].each do |address_field|
-        from_address = address_field.address
-        from_display_name = address_field.display_name&.to_s
+    def self.extract_email_address_and_name_from_mailman(mail)
+      list_address, _ = Email::Receiver.extract_email_address_and_name(mail[:list_post])
+      list_address, _ =
+        Email::Receiver.extract_email_address_and_name(mail[:x_beenthere]) if list_address.blank?
 
-        comparison_failed = false
-        comparison_headers.each do |comparison_header|
-          comparison_header_address = mail_object[comparison_header].to_s[/<([^>]+)>/, 1]
-          if comparison_header_address != from_address
-            comparison_failed = true
-            break
-          end
+      return if list_address.blank?
+
+      # the CC header often includes the name of the sender
+      address_to_name = mail[:cc]&.element&.addresses&.to_h { [_1.address, _1.name] } || {}
+
+      %i[from reply_to x_mailfrom x_original_from].each do |header|
+        next if mail[header].blank?
+        email, name = Email::Receiver.extract_email_address_and_name(mail[header])
+        if email.present? && email != list_address
+          return email, name.presence || address_to_name[email]
         end
-
-        next if comparison_failed
-        next if !from_address&.include?("@")
-        return from_address&.downcase, from_display_name&.strip
       end
-
-      [nil, nil]
     end
 
-    def extract_from_address_and_name(value)
-      if value[";"]
-        from_display_name, from_address = value.split(";")
-        return from_address&.strip&.downcase, from_display_name&.strip
+    def self.extract_email_address_and_name(value)
+      begin
+        # ensure the email header value is a string
+        value = value.to_s
+        # in embedded emails, converts [mailto:foo@bar.com] to <foo@bar.com>
+        value = value.gsub(/\[mailto:([^\[\]]+?)\]/, "<\\1>")
+        # 'mailto:' suffix isn't supported by Mail::Address parsing
+        value = value.gsub("mailto:", "")
+        # parse the email header value
+        parsed = Mail::Address.new(value)
+        # extract the email address and name
+        mail = parsed.address.to_s.downcase.strip
+        name = parsed.name.to_s.strip
+        # ensure the email address is "valid"
+        if mail.include?("@")
+          # remove surrounding quotes from the name
+          name = name[1...-1] if name.size > 2 && name[/\A(['"]).+(\1)\z/]
+          # return the email address and name
+          [mail, name]
+        end
+      rescue Mail::Field::ParseError, Mail::Field::IncompleteParseError => e
+        # something went wrong parsing the email header value, return nil
       end
-
-      if value[/<[^>]+>/]
-        from_address = value[/<([^>]+)>/, 1]
-        from_display_name = value[/^([^<]+)/, 1]
-      end
-
-      if (from_address.blank? || !from_address["@"]) && value[/\[mailto:[^\]]+\]/]
-        from_address = value[/\[mailto:([^\]]+)\]/, 1]
-        from_display_name = value[/^([^\[]+)/, 1]
-      end
-
-      [from_address&.downcase, from_display_name&.strip]
     end
 
     def subject
@@ -1016,7 +1011,7 @@ module Email
     end
 
     def has_been_forwarded?
-      subject[/^[[:blank:]]*(fwd?|tr)[[:blank:]]?:/i] && embedded_email_raw.present?
+      subject[/\A[[:blank:]]*(fwd?|tr)[[:blank:]]?:/i] && embedded_email_raw.present?
     end
 
     def embedded_email_raw
@@ -1089,24 +1084,28 @@ module Email
     end
 
     def forwarded_email_create_replies(destination, user)
-      embedded = Mail.new(embedded_email_raw)
-      email, display_name = parse_from_field(embedded)
+      forwarded_by_address, forwarded_by_name =
+        Email::Receiver.extract_email_address_and_name(@mail[:from])
 
       if forwarded_by_address && forwarded_by_name
         @forwarded_by_user = stage_sender_user(forwarded_by_address, forwarded_by_name)
       end
 
-      return false if email.blank? || !email["@"]
+      email_address, display_name =
+        parse_from_field(embedded_email, process_forwarded_emails: false)
+
+      return false if email_address.blank? || !email_address.include?("@")
 
       post =
         forwarded_email_create_topic(
           destination: destination,
           user: user,
-          raw: try_to_encode(embedded.decoded, "UTF-8").presence || embedded.to_s,
-          title: embedded.subject.presence || subject,
-          date: embedded.date,
-          embedded_user: lambda { find_or_create_user(email, display_name) },
+          raw: try_to_encode(embedded_email.decoded, "UTF-8").presence || embedded_email.to_s,
+          title: embedded_email.subject.presence || subject,
+          date: embedded_email.date,
+          embedded_user: lambda { find_or_create_user(email_address, display_name) },
         )
+
       return false unless post
 
       if post.topic
@@ -1143,25 +1142,12 @@ module Email
       true
     end
 
-    def forwarded_by_sender
-      @forwarded_by_sender ||= extract_from_fields_from_header(@mail, :from)
-    end
-
-    def forwarded_by_address
-      @forwarded_by_address ||= forwarded_by_sender&.first
-    end
-
-    def forwarded_by_name
-      @forwarded_by_name ||= forwarded_by_sender&.first
-    end
-
     def forwarded_email_quote_forwarded(destination, user)
-      embedded = embedded_email_raw
       raw = <<~MD
         #{@before_embedded}
 
         [quote]
-        #{PlainTextToMarkdown.new(embedded).to_markdown}
+        #{PlainTextToMarkdown.new(@embedded_email_raw).to_markdown}
         [/quote]
       MD
 
@@ -1510,7 +1496,8 @@ module Email
 
     def self.elided_html(elided)
       html = +"\n\n" << "<details class='elided'>" << "\n"
-      html << "<summary title='#{I18n.t("emails.incoming.show_trimmed_content")}'>&#183;&#183;&#183;</summary>" << "\n\n"
+      html << "<summary title='#{I18n.t("emails.incoming.show_trimmed_content")}'>&#183;&#183;&#183;</summary>" <<
+        "\n\n"
       html << elided << "\n\n"
       html << "</details>" << "\n"
       html
@@ -1527,7 +1514,7 @@ module Email
             address_field.decoded
             email = address_field.address.downcase
             display_name = address_field.display_name.try(:to_s)
-            next unless email["@"]
+            next if !email.include?("@")
 
             if should_invite?(email)
               user = User.find_by_email(email)

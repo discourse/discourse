@@ -1,72 +1,64 @@
-{{#if this.currentUser.redesigned_user_page_nav_enabled}}
-  <DSection @pageClass="user-notifications" />
+<DSection @pageClass="user-notifications" />
 
-  <div class="user-navigation user-navigation-secondary">
-    <HorizontalOverflowNav>
-      <UserNav::NotificationsNav
-        @model={{this.model}}
-        @siteSettings={{this.siteSettings}}
-      />
-    </HorizontalOverflowNav>
-
-    {{#if this.model}}
-      <div class="navigation-controls">
-        <DButton
-          @title="user.dismiss_notifications_tooltip"
-          @class="btn btn-default dismiss-notifications"
-          @action={{action "resetNew"}}
-          @label="user.dismiss_notifications"
-          @icon="check"
-          @disabled={{this.allNotificationsRead}}
-        />
-      </div>
-    {{/if}}
-  </div>
-{{else}}
-  <DSection @pageClass="user-notifications" @class="user-secondary-navigation">
-    <MobileNav
-      @class="notifications-nav"
-      @desktopClass="notification-list action-list nav-stacked"
+<div class="user-navigation user-navigation-secondary">
+  <HorizontalOverflowNav @ariaLabel="User secondary - notifications">
+    <DNavigationItem
+      @route="userNotifications.index"
+      @ariaCurrentContext="subNav"
+      class="user-nav__notifications-all"
     >
-      <li>
-        <LinkTo @route="userNotifications.index">
-          {{i18n "user.filters.all"}}
-        </LinkTo>
-      </li>
-      <li>
-        <LinkTo @route="userNotifications.responses">
-          {{i18n "user_action_groups.6"}}
-        </LinkTo>
-      </li>
-      <li>
-        <LinkTo @route="userNotifications.likesReceived">
-          {{i18n "user_action_groups.2"}}
-        </LinkTo>
-      </li>
-      {{#if this.siteSettings.enable_mentions}}
-        <li>
-          <LinkTo @route="userNotifications.mentions">
-            {{i18n "user_action_groups.7"}}
-          </LinkTo>
-        </li>
-      {{/if}}
-      <li>
-        <LinkTo @route="userNotifications.edits">
-          {{i18n "user_action_groups.11"}}
-        </LinkTo>
-      </li>
-      <PluginOutlet
-        @name="user-notifications-bottom"
-        @tagName="span"
-        @connectorTagName="li"
-        @args={{hash model=this.model}}
-      />
-    </MobileNav>
+      {{d-icon "bell"}}
+      <span>{{i18n "user.filters.all"}}</span>
+    </DNavigationItem>
 
-  </DSection>
+    <DNavigationItem
+      @route="userNotifications.responses"
+      @ariaCurrentContext="subNav"
+      class="user-nav__notifications-responses"
+    >
+      {{d-icon "reply"}}
+      <span>{{i18n "user_action_groups.6"}}</span>
+    </DNavigationItem>
+
+    <DNavigationItem
+      @route="userNotifications.likesReceived"
+      @ariaCurrentContext="subNav"
+      class="user-nav__notifications-likes"
+    >
+      {{d-icon "heart"}}
+      <span>{{i18n "user_action_groups.2"}}</span>
+    </DNavigationItem>
+
+    {{#if this.siteSettings.enable_mentions}}
+      <DNavigationItem
+        @route="userNotifications.mentions"
+        @ariaCurrentContext="subNav"
+        class="user-nav__notifications-mentions"
+      >
+        {{d-icon "at"}}
+        <span>{{i18n "user_action_groups.7"}}</span>
+      </DNavigationItem>
+    {{/if}}
+
+    <DNavigationItem
+      @route="userNotifications.edits"
+      @ariaCurrentContext="subNav"
+      class="user-nav__notifications-edits"
+    >
+      {{d-icon "pencil-alt"}}
+      <span>{{i18n "user_action_groups.11"}}</span>
+    </DNavigationItem>
+
+    <PluginOutlet
+      @name="user-notifications-bottom"
+      @connectorTagName="li"
+      @outletArgs={{hash model=this.model}}
+    />
+
+  </HorizontalOverflowNav>
 
   {{#if this.model}}
-    <section class="user-additional-controls">
+    <div class="navigation-controls">
       <DButton
         @title="user.dismiss_notifications_tooltip"
         @class="btn btn-default dismiss-notifications"
@@ -75,11 +67,11 @@
         @icon="check"
         @disabled={{this.allNotificationsRead}}
       />
-    </section>
+    </div>
   {{/if}}
-{{/if}}
+</div>
 
-<section class="user-content">
+<section class="user-content" id="user-content">
   <LoadMore
     @class="notification-history user-stream"
     @selector=".user-stream .notification"

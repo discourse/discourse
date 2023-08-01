@@ -2,10 +2,9 @@
 
 class EditDirectoryColumnsController < ApplicationController
   requires_login
+  before_action :ensure_staff
 
   def index
-    raise Discourse::NotFound unless guardian.is_staff?
-
     ensure_user_fields_have_columns
 
     columns = DirectoryColumn.includes(:user_field).all
@@ -13,7 +12,6 @@ class EditDirectoryColumnsController < ApplicationController
   end
 
   def update
-    raise Discourse::NotFound unless guardian.is_staff?
     params.require(:directory_columns)
     directory_column_params = params.permit(directory_columns: {})
     directory_columns = DirectoryColumn.all
@@ -26,16 +24,35 @@ class EditDirectoryColumnsController < ApplicationController
       raise Discourse::InvalidParameters, "Must have at least one column enabled"
     end
 
+    new_values = ""
+    previous_values = ""
+    staff_action_logger = StaffActionLogger.new(current_user)
+
     directory_column_params[:directory_columns].values.each do |column_data|
       existing_column = directory_columns.detect { |c| c.id == column_data[:id].to_i }
       if (
-           existing_column.enabled != column_data[:enabled] ||
+           existing_column.enabled != ActiveModel::Type::Boolean.new.cast(column_data[:enabled]) ||
              existing_column.position != column_data[:position].to_i
          )
-        existing_column.update(enabled: column_data[:enabled], position: column_data[:position])
+        new_value, previous_value =
+          staff_action_logger.edit_directory_columns_details(column_data, existing_column)
+
+        new_values += new_value
+        previous_values += previous_value
+
+        existing_column.update(
+          enabled: column_data[:enabled],
+          position: column_data[:position].to_i,
+        )
       end
     end
 
+    details = {}
+
+    staff_action_logger.log_custom(
+      "update_directory_columns",
+      { previous_value: previous_values, new_value: new_values },
+    )
     render json: success_json
   end
 
@@ -48,7 +65,7 @@ class EditDirectoryColumnsController < ApplicationController
         .where(directory_column: { user_field_id: nil })
         .where("show_on_profile=? OR show_on_user_card=?", true, true)
 
-    return unless user_fields_without_column.count > 0
+    return if user_fields_without_column.count <= 0
 
     next_position = DirectoryColumn.maximum("position") + 1
 

@@ -1,0 +1,31 @@
+<div class="control-group form-template-field" data-field-type="multi-select">
+  {{#if @attributes.label}}
+    <label class="form-template-field__label">
+      {{@attributes.label}}
+      {{#if @validations.required}}
+        {{d-icon "asterisk" class="form-template-field__required-indicator"}}
+      {{/if}}
+    </label>
+  {{/if}}
+
+  {{! TODO(@keegan): Update implementation to use <MultiSelect/> instead }}
+  {{! Current using <select multiple> as it integrates easily with FormData (will update in v2) }}
+  <select
+    name={{@attributes.label}}
+    class="form-template-field__multi-select"
+    required={{if @validations.required "required" ""}}
+    multiple="multiple"
+  >
+    {{#if @attributes.none_label}}
+      <option
+        class="form-template-field__multi-select-placeholder"
+        value=""
+        disabled
+        hidden
+      >{{@attributes.none_label}}</option>
+    {{/if}}
+    {{#each @choices as |choice|}}
+      <option value={{choice}}>{{choice}}</option>
+    {{/each}}
+  </select>
+</div>

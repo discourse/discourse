@@ -28,6 +28,9 @@ acceptance("Admin - Plugins", function (needs) {
             enabled_setting: "testplugin_enabled",
             has_settings: true,
             is_official: true,
+            commit_hash: "1234567890abcdef",
+            commit_url:
+              "https://github.com/username/some-test-plugin/commit/1234567890abcdef",
           },
         ],
       })
@@ -44,8 +47,14 @@ acceptance("Admin - Plugins", function (needs) {
     );
 
     assert.true(
-      exists(".admin-plugins .admin-detail .alert-error"),
+      exists(".admin-plugins .admin-container .alert-error"),
       "displays an error for unknown routes"
+    );
+
+    assert.strictEqual(
+      table.querySelector("tr .version a.commit-hash").href,
+      "https://github.com/username/some-test-plugin/commit/1234567890abcdef",
+      "displays a commit hash with a link to commit url"
     );
   });
 });

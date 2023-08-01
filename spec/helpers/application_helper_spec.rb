@@ -640,6 +640,38 @@ RSpec.describe ApplicationHelper do
         expect(helper.crawlable_meta_data).not_to include("twitter:image")
       end
     end
+
+    context "with breadcrumbs" do
+      subject(:metadata) { helper.crawlable_meta_data(breadcrumbs: breadcrumbs) }
+
+      let(:breadcrumbs) do
+        [{ name: "section1", color: "ff0000" }, { name: "section2", color: "0000ff" }]
+      end
+      let(:tags) { <<~HTML.strip }
+        <meta property="og:article:section" content="section1" />
+        <meta property="og:article:section:color" content="ff0000" />
+        <meta property="og:article:section" content="section2" />
+        <meta property="og:article:section:color" content="0000ff" />
+        HTML
+
+      it "generates section and color tags" do
+        expect(metadata).to include tags
+      end
+    end
+
+    context "with tags" do
+      subject(:metadata) { helper.crawlable_meta_data(tags: tags) }
+
+      let(:tags) { %w[tag1 tag2] }
+      let(:output_tags) { <<~HTML.strip }
+        <meta property="og:article:tag" content="tag1" />
+        <meta property="og:article:tag" content="tag2" />
+        HTML
+
+      it "generates tag tags" do
+        expect(metadata).to include output_tags
+      end
+    end
   end
 
   describe "discourse_color_scheme_stylesheets" do
@@ -651,8 +683,7 @@ RSpec.describe ApplicationHelper do
     end
 
     it "returns two color scheme link tags when dark mode is enabled" do
-      SiteSetting.default_dark_mode_color_scheme_id =
-        ColorScheme.where(name: "Dark").pluck_first(:id)
+      SiteSetting.default_dark_mode_color_scheme_id = ColorScheme.where(name: "Dark").pick(:id)
       cs_stylesheets = helper.discourse_color_scheme_stylesheets
 
       expect(cs_stylesheets).to include("(prefers-color-scheme: dark)")
@@ -708,8 +739,7 @@ RSpec.describe ApplicationHelper do
         helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
         @new_cs = Fabricate(:color_scheme, name: "Custom Color Scheme")
 
-        SiteSetting.default_dark_mode_color_scheme_id =
-          ColorScheme.where(name: "Dark").pluck_first(:id)
+        SiteSetting.default_dark_mode_color_scheme_id = ColorScheme.where(name: "Dark").pick(:id)
       end
 
       it "returns no dark scheme stylesheet when user has disabled that option" do

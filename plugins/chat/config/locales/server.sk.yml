@@ -12,7 +12,19 @@ sk:
   chat:
     deleted_chat_username: vymazané
     errors:
+      channel_new_message_disallowed:
+        archived: "Kanál je archivovaný, nie je možné posielať nové správy"
+        closed: "Kanál je uzavretý, nie je možné posielať nové správy"
+        read_only: "Kanál je len na čítanie, nie je možné odosielať nové správy"
+      channel_modify_message_disallowed:
+        archived: "Kanál je archivovaný, správy nie je možné upravovať ani vymazávať"
+        closed: "Kanál je uzavretý, správy nie je možné upravovať ani odstraňovať"
+        read_only: "Kanál je len na čítanie, správy nie je možné upravovať ani vymazávať"
       draft_too_long: "Koncept je príliš dlhý."
+      over_chat_max_direct_message_users_allow_self: "Súkromnú správu môžete vytvoriť len sami so sebou."
+      original_message_not_found: "Tvorca správy, na ktorú odpovedáte, nemožno nájsť alebo bol vymazaný."
+      thread_invalid_for_channel: "Vlákno nie je súčasťou zvoleného kanála."
+      thread_does_not_match_parent: "Vlákno nezodpovedá nadradenej správe."
     reviewables:
       actions:
         agree_and_suspend:
@@ -22,9 +34,11 @@ sk:
         disagree:
           title: "Nesúhlasiť"
     channel:
-      statuses:
-        closed: "Zatvorené"
-        open: "Zahájiť"
+      dm_title:
+        single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+    summaries:
+      no_targets: "Počas vybraného obdobia neboli zaznamenané žiadne správy."
   discourse_push_notifications:
     popup:
       chat_mention:

@@ -19,13 +19,13 @@ const externalResources = [
   },
 ];
 
-export default Route.extend({
+export default class AdminCustomizeThemesIndexRoute extends Route {
   setupController(controller) {
-    this._super(...arguments);
+    super.setupController(...arguments);
     this.controllerFor("adminCustomizeThemes").set("editingTheme", false);
     controller.setProperties({
       externalResources,
       womanArtistEmojiURL: emojiUrlFor("woman_artist:t5"),
     });
-  },
-});
+  }
+}

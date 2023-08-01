@@ -2,7 +2,7 @@
 
 // This is executed in mini_racer to provide the JS logic for lib/discourse_js_processor.rb
 
-const makeEmberTemplateCompilerPlugin =
+const HTMLBarsInlinePrecompile =
   require("babel-plugin-ember-template-compilation").default;
 const colocatedBabelPlugin = require("colocated-babel-plugin").default;
 const precompile = require("ember-template-compiler").precompile;
@@ -38,9 +38,10 @@ function buildEmberTemplateManipulatorPlugin(themeId) {
 }
 
 function buildTemplateCompilerBabelPlugins({ themeId }) {
-  let compileFunction = precompile;
+  const compiler = { precompile };
+
   if (themeId) {
-    compileFunction = (src, opts) => {
+    compiler.precompile = (src, opts) => {
       return precompile(src, {
         ...opts,
         plugins: {
@@ -54,8 +55,11 @@ function buildTemplateCompilerBabelPlugins({ themeId }) {
     colocatedBabelPlugin,
     require("widget-hbs-compiler").WidgetHbsCompiler,
     [
-      makeEmberTemplateCompilerPlugin(() => compileFunction),
-      { enableLegacyModules: ["ember-cli-htmlbars"] },
+      HTMLBarsInlinePrecompile,
+      {
+        compiler,
+        enableLegacyModules: ["ember-cli-htmlbars"],
+      },
     ],
   ];
 }

@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-RSpec.describe "Sidebar navigation menu", type: :system, js: true do
+RSpec.describe "Sidebar navigation menu", type: :system do
+  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
+  let(:sidebar_component) { PageObjects::Components::NavigationMenu::Sidebar.new }
+
   fab!(:current_user) { Fabricate(:user) }
 
   before do
@@ -18,8 +21,8 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
     it "displays correct channels section title" do
       visit("/")
 
-      expect(page).to have_css(
-        ".sidebar-section-chat-channels .sidebar-section-header-text",
+      expect(sidebar_page.channels_section).to have_css(
+        ".sidebar-section-header-text",
         text: I18n.t("js.chat.chat_channels"),
       )
     end
@@ -27,18 +30,15 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
     it "displays the correct hash icon prefix" do
       visit("/")
 
-      expect(page).to have_css(
-        ".sidebar-section-chat-channels .sidebar-section-link-#{channel_1.slug} .sidebar-section-link-prefix svg.prefix-icon.d-icon-hashtag",
+      expect(sidebar_page.channels_section).to have_css(
+        ".sidebar-section-link[data-link-name='#{channel_1.slug}'] .sidebar-section-link-prefix svg.prefix-icon.d-icon-d-chat",
       )
     end
 
     it "channel link has the correct href" do
       visit("/")
 
-      expect(page).to have_link(
-        channel_1.name,
-        href: "/chat/channel/#{channel_1.id}/#{channel_1.slug}",
-      )
+      expect(page).to have_link(channel_1.name, href: "/chat/c/#{channel_1.slug}/#{channel_1.id}")
     end
 
     context "when the category is private" do
@@ -53,8 +53,8 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
       it "has a lock badge" do
         visit("/")
 
-        expect(page).to have_css(
-          ".sidebar-section-chat-channels .sidebar-section-link-#{private_channel_1.slug} .sidebar-section-link-prefix svg.prefix-badge.d-icon-lock",
+        expect(sidebar_page.channels_section).to have_css(
+          ".sidebar-section-link[data-link-name='#{private_channel_1.slug}'] .sidebar-section-link-prefix svg.prefix-badge.d-icon-lock",
         )
       end
     end
@@ -67,8 +67,8 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
       it "unescapes the emoji" do
         visit("/")
 
-        expect(page).to have_css(
-          ".sidebar-section-chat-channels .sidebar-section-link-#{channel_1.slug} .emoji",
+        expect(sidebar_page.channels_section).to have_css(
+          ".sidebar-section-link[data-link-name='#{channel_1.slug}'] .emoji",
         )
       end
     end
@@ -88,8 +88,8 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
       it "has a muted class" do
         visit("/")
 
-        expect(page).to have_css(
-          ".sidebar-section-chat-channels .sidebar-section-link-#{channel_2.slug}.sidebar-section-link--muted",
+        expect(sidebar_page.channels_section).to have_css(
+          ".sidebar-section-link[data-link-name='#{channel_2.slug}'].sidebar-section-link--muted",
         )
       end
     end
@@ -101,7 +101,9 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
         visit("/")
 
         expect(
-          page.find(".sidebar-section-chat-channels .sidebar-section-link-#{channel_1.slug}")[
+          sidebar_page.channels_section.find(
+            ".sidebar-section-link[data-link-name='#{channel_1.slug}']",
+          )[
             "title"
           ],
         ).to eq("&lt;script&gt;alert(&#x27;hello&#x27;)&lt;/script&gt;")
@@ -118,8 +120,8 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
         visit("/")
 
         expect(
-          page.find(
-            ".sidebar-section-chat-dms a.sidebar-section-link:nth-child(1) .sidebar-section-link-prefix img",
+          sidebar_page.dms_section.find(
+            "a.sidebar-section-link:nth-child(1) .sidebar-section-link-prefix img",
           )[
             "src"
           ],
@@ -130,7 +132,7 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
         visit("/")
 
         expect(
-          page.find(".sidebar-section-chat-dms a.sidebar-section-link:nth-child(1)"),
+          sidebar_page.dms_section.find("a.sidebar-section-link:nth-child(1)"),
         ).to have_content(other_user.username)
       end
 
@@ -143,27 +145,27 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
         it "displays the status" do
           visit("/")
 
-          expect(
-            page.find(".sidebar-section-chat-dms a.sidebar-section-link:nth-child(1)"),
-          ).to have_css(".user-status")
+          expect(sidebar_page.dms_section.find("a.sidebar-section-link:nth-child(1)")).to have_css(
+            ".user-status-message",
+          )
         end
       end
     end
 
     context "when channel has more than 2 participants" do
-      fab!(:user_1) { Fabricate(:user) }
-      fab!(:user_2) { Fabricate(:user) }
+      fab!(:user_1) { Fabricate(:user, username: "zoesmith") }
+      fab!(:user_2) { Fabricate(:user, username: "alansmith") }
       fab!(:dm_channel_1) do
         Fabricate(:direct_message_channel, users: [current_user, user_1, user_2])
       end
 
-      it "displays all participants names" do
+      it "displays all participants names in alphabetical order" do
         visit("/")
         expect(
-          page.find(
-            ".sidebar-section-chat-dms a.sidebar-section-link:nth-child(1) .sidebar-section-link-content-text",
+          sidebar_page.dms_section.find(
+            "a.sidebar-section-link:nth-child(1) .sidebar-section-link-content-text",
           ),
-        ).to have_content("#{user_1.username}, #{user_2.username}")
+        ).to have_content("alansmith, zoesmith")
       end
     end
 
@@ -179,8 +181,8 @@ RSpec.describe "Sidebar navigation menu", type: :system, js: true do
       it "escapes the title attribute using it" do
         visit("/")
 
-        expect(page.find(".sidebar-section-chat-dms .channel-#{dm_channel_1.id}")["title"]).to eq(
-          "Chat with @&lt;script&gt;alert(&#x27;hello&#x27;)&lt;/script&gt;",
+        expect(sidebar_page.dms_section.find(".channel-#{dm_channel_1.id}")["title"]).to eq(
+          "Chat in @&lt;script&gt;alert(&#x27;hello&#x27;)&lt;/script&gt;",
         )
       end
     end

@@ -16,6 +16,7 @@ RSpec.describe TopicQuery do
   fab!(:creator) { Fabricate(:user) }
   let(:topic_query) { TopicQuery.new(user) }
 
+  fab!(:tl4_user) { Fabricate(:trust_level_4) }
   fab!(:moderator) { Fabricate(:moderator) }
   fab!(:admin) { Fabricate(:admin) }
 
@@ -803,8 +804,11 @@ RSpec.describe TopicQuery do
         # includes the invisible topic if you're a moderator
         expect(TopicQuery.new(moderator).list_latest.topics.include?(invisible_topic)).to eq(true)
 
-        # includes the invisible topic if you're an admin" do
+        # includes the invisible topic if you're an admin
         expect(TopicQuery.new(admin).list_latest.topics.include?(invisible_topic)).to eq(true)
+
+        # includes the invisible topic if you're a TL4 user
+        expect(TopicQuery.new(tl4_user).list_latest.topics.include?(invisible_topic)).to eq(true)
       end
 
       context "with sort_order" do
@@ -1361,7 +1365,7 @@ RSpec.describe TopicQuery do
     end
   end
 
-  describe "suggested_for" do
+  describe "#list_suggested_for" do
     def clear_cache!
       Discourse.redis.keys("random_topic_cache*").each { |k| Discourse.redis.del k }
     end
@@ -1374,6 +1378,10 @@ RSpec.describe TopicQuery do
 
       it "should return the new topic" do
         expect(TopicQuery.new.list_suggested_for(topic).topics).to eq([new_topic])
+      end
+
+      it "should return the nothing when random topics excluded" do
+        expect(TopicQuery.new.list_suggested_for(topic, include_random: false).topics).to eq([])
       end
     end
 
@@ -1389,12 +1397,175 @@ RSpec.describe TopicQuery do
       end
     end
 
+    context "with a custom suggested provider registered" do
+      let!(:topic1) { Fabricate(:topic) }
+      let!(:topic2) { Fabricate(:topic) }
+      let!(:topic3) { Fabricate(:topic) }
+      let!(:topic4) { Fabricate(:topic) }
+      let!(:topic5) { Fabricate(:topic) }
+      let!(:topic6) { Fabricate(:topic) }
+      let!(:topic7) { Fabricate(:topic) }
+
+      let(:plugin_class) do
+        Class.new(Plugin::Instance) do
+          attr_accessor :enabled
+          def enabled?
+            true
+          end
+
+          def self.custom_suggested_topics(topic, pm_params, topic_query)
+            { result: Topic.order("id desc").limit(1), params: {} }
+          end
+        end
+      end
+
+      let(:plugin) { plugin_class.new }
+
+      it "should return suggested defined by the custom provider" do
+        DiscoursePluginRegistry.register_list_suggested_for_provider(
+          plugin_class.method(:custom_suggested_topics),
+          plugin,
+        )
+
+        expect(TopicQuery.new.list_suggested_for(topic1).topics).to include(Topic.last)
+
+        DiscoursePluginRegistry.reset_register!(:list_suggested_for_providers)
+      end
+    end
+
+    context "when logged in and user is part of the `experimental_new_new_view_groups` site setting groups" do
+      fab!(:group) { Fabricate(:group) }
+      fab!(:topic) { Fabricate(:topic) }
+
+      before do
+        SiteSetting.experimental_new_new_view_groups = group.name
+        group.add(user)
+      end
+
+      after { clear_cache! }
+
+      context "when there are no new topics for user" do
+        it "should return random topics excluding topics that are muted by user and not older than `suggested_topics_max_days_old` site setting" do
+          topic2 = Fabricate(:topic, user: user)
+          topic3 = Fabricate(:topic, user: user)
+          topic4 = Fabricate(:topic, user: user, created_at: 8.days.ago)
+          topic5 = Fabricate(:topic).tap { |t| TopicNotifier.new(t).mute!(user) }
+
+          SiteSetting.suggested_topics_max_days_old = 7
+
+          expect(topic_query.list_suggested_for(topic).topics.map(&:id)).to eq(
+            [topic3.id, topic2.id],
+          )
+        end
+      end
+
+      context "when there are new topics for user" do
+        fab!(:category) { Fabricate(:category) }
+        fab!(:category2) { Fabricate(:category) }
+
+        fab!(:topic_in_category_that_user_created_and_has_partially_read) do
+          Fabricate(:topic, user: user, category:).tap do |t|
+            first_post = Fabricate(:post, topic: t)
+            second_post = Fabricate(:post, topic: t)
+
+            TopicUser.change(
+              user.id,
+              t.id,
+              notification_level: TopicUser.notification_levels[:tracking],
+            )
+
+            TopicUser.update_last_read(user, t.id, second_post.post_number - 1, 1, 1)
+          end
+        end
+
+        fab!(:topic_in_category2_that_user_created_and_has_partially_read) do
+          Fabricate(:topic, user: user, category: category2).tap do |t|
+            first_post = Fabricate(:post, topic: t)
+            second_post = Fabricate(:post, topic: t)
+
+            TopicUser.change(
+              user.id,
+              t.id,
+              notification_level: TopicUser.notification_levels[:tracking],
+            )
+
+            TopicUser.update_last_read(user, t.id, second_post.post_number - 1, 1, 1)
+          end
+        end
+
+        fab!(:topic_in_category_that_user_has_partially_read) do
+          Fabricate(:topic, category:).tap do |t|
+            first_post = Fabricate(:post, topic: t)
+            second_post = Fabricate(:post, topic: t)
+
+            TopicUser.change(
+              user.id,
+              t.id,
+              notification_level: TopicUser.notification_levels[:tracking],
+            )
+
+            TopicUser.update_last_read(user, t.id, second_post.post_number - 1, 1, 1)
+          end
+        end
+
+        fab!(:topic_in_category2_that_user_has_partially_read) do
+          Fabricate(:topic, category: category2).tap do |t|
+            first_post = Fabricate(:post, topic: t)
+            second_post = Fabricate(:post, topic: t)
+
+            TopicUser.change(
+              user.id,
+              t.id,
+              notification_level: TopicUser.notification_levels[:tracking],
+            )
+
+            TopicUser.update_last_read(user, t.id, second_post.post_number - 1, 1, 1)
+          end
+        end
+
+        fab!(:topic_in_category_that_user_has_not_read) { Fabricate(:topic, category:) }
+        fab!(:topic_in_category2_that_user_has_not_read) { Fabricate(:topic, category: category2) }
+
+        before { topic.update!(category:) }
+
+        it "should return new topics for user ordered by topics that user has created first, in the same category as the topic and then topic's bumped at" do
+          expect(
+            topic_query.list_suggested_for(topic, include_random: false).topics.map(&:id),
+          ).to eq(
+            [
+              topic_in_category_that_user_created_and_has_partially_read.id,
+              topic_in_category2_that_user_created_and_has_partially_read.id,
+              topic_in_category_that_user_has_not_read.id,
+              topic_in_category_that_user_has_partially_read.id,
+              topic_in_category2_that_user_has_not_read.id,
+            ],
+          )
+
+          SiteSetting.suggested_topics = 6
+
+          expect(
+            topic_query.list_suggested_for(topic, include_random: false).topics.map(&:id),
+          ).to eq(
+            [
+              topic_in_category_that_user_created_and_has_partially_read.id,
+              topic_in_category2_that_user_created_and_has_partially_read.id,
+              topic_in_category_that_user_has_not_read.id,
+              topic_in_category_that_user_has_partially_read.id,
+              topic_in_category2_that_user_has_not_read.id,
+              topic_in_category2_that_user_has_partially_read.id,
+            ],
+          )
+        end
+      end
+    end
+
     context "when logged in" do
       def suggested_for(topic)
         topic_query.list_suggested_for(topic)&.topics&.map { |t| t.id }
       end
 
       let(:topic) { Fabricate(:topic) }
+
       let(:suggested_topics) do
         tt = topic
         # lets clear cache once category is created - working around caching is hard
@@ -1724,6 +1895,282 @@ RSpec.describe TopicQuery do
       it "does not remove topics from unread" do
         expect(TopicQuery.new(admin).list_latest.topics).not_to include(partially_read) # Check we set up the topic/category correctly
         expect(TopicQuery.new(admin).list_unread.topics).to include(partially_read)
+      end
+    end
+  end
+
+  describe "#new_and_unread_results" do
+    fab!(:unread_topic) { Fabricate(:post).topic }
+    fab!(:new_topic) { Fabricate(:post).topic }
+    fab!(:read_topic) { Fabricate(:post).topic }
+
+    before do
+      unread_post = Fabricate(:post, topic: unread_topic)
+      read_post = Fabricate(:post, topic: read_topic)
+
+      TopicUser.change(
+        user.id,
+        unread_topic.id,
+        notification_level: TopicUser.notification_levels[:tracking],
+      )
+      TopicUser.change(
+        user.id,
+        read_topic.id,
+        notification_level: TopicUser.notification_levels[:tracking],
+      )
+      TopicUser.update_last_read(user, unread_topic.id, unread_post.post_number - 1, 1, 1)
+      TopicUser.update_last_read(user, read_topic.id, read_post.post_number, 1, 1)
+    end
+
+    it "includes unread and new topics for the user" do
+      expect(TopicQuery.new(user).new_and_unread_results.pluck(:id)).to contain_exactly(
+        unread_topic.id,
+        new_topic.id,
+      )
+    end
+
+    it "doesn't include deleted topics" do
+      unread_topic.trash!
+      expect(TopicQuery.new(user).new_and_unread_results.pluck(:id)).to contain_exactly(
+        new_topic.id,
+      )
+    end
+
+    it "doesn't include muted topics with unread posts" do
+      TopicUser.change(
+        user.id,
+        unread_topic.id,
+        notification_level: TopicUser.notification_levels[:muted],
+      )
+      expect(TopicQuery.new(user).new_and_unread_results.pluck(:id)).to contain_exactly(
+        new_topic.id,
+      )
+    end
+
+    it "doesn't include muted new topics" do
+      TopicUser.change(
+        user.id,
+        new_topic.id,
+        notification_level: TopicUser.notification_levels[:muted],
+      )
+      expect(TopicQuery.new(user).new_and_unread_results.pluck(:id)).to contain_exactly(
+        unread_topic.id,
+      )
+    end
+
+    it "doesn't include new topics in muted category" do
+      CategoryUser.create!(
+        user_id: user.id,
+        category_id: new_topic.category.id,
+        notification_level: CategoryUser.notification_levels[:muted],
+      )
+      expect(TopicQuery.new(user).new_and_unread_results.pluck(:id)).to contain_exactly(
+        unread_topic.id,
+      )
+    end
+
+    it "includes unread and trakced topics even if they're in a muted category" do
+      new_topic.update!(category: Fabricate(:category))
+      CategoryUser.create!(
+        user_id: user.id,
+        category_id: unread_topic.category.id,
+        notification_level: CategoryUser.notification_levels[:muted],
+      )
+      expect(TopicQuery.new(user).new_and_unread_results.pluck(:id)).to contain_exactly(
+        unread_topic.id,
+        new_topic.id,
+      )
+    end
+
+    it "doesn't include new topics that have a muted tag(s)" do
+      SiteSetting.tagging_enabled = true
+
+      tag = Fabricate(:tag)
+      new_topic.tags << tag
+      new_topic.save!
+
+      TagUser.create!(
+        tag_id: tag.id,
+        user_id: user.id,
+        notification_level: NotificationLevels.all[:muted],
+      )
+      expect(TopicQuery.new(user).new_and_unread_results.pluck(:id)).to contain_exactly(
+        unread_topic.id,
+      )
+    end
+
+    it "includes unread and tracked topics even if they have a muted tag(s)" do
+      SiteSetting.tagging_enabled = true
+
+      tag = Fabricate(:tag)
+      unread_topic.tags << tag
+      unread_topic.save!
+
+      TagUser.create!(
+        tag_id: tag.id,
+        user_id: user.id,
+        notification_level: NotificationLevels.all[:muted],
+      )
+      expect(TopicQuery.new(user).new_and_unread_results.pluck(:id)).to contain_exactly(
+        unread_topic.id,
+        new_topic.id,
+      )
+    end
+
+    it "doesn't include topics in restricted categories that user cannot access" do
+      category = Fabricate(:category_with_definition)
+      group = Fabricate(:group)
+      category.set_permissions(group => :full)
+      category.save!
+
+      unread_topic.update!(category: category)
+      new_topic.update!(category: category)
+
+      expect(TopicQuery.new(user).new_and_unread_results.pluck(:id)).to be_blank
+    end
+
+    it "doesn't include dismissed topics" do
+      DismissedTopicUser.create!(
+        user_id: user.id,
+        topic_id: new_topic.id,
+        created_at: Time.zone.now,
+      )
+      expect(TopicQuery.new(user).new_and_unread_results.pluck(:id)).to contain_exactly(
+        unread_topic.id,
+      )
+    end
+  end
+
+  describe "show_category_definitions_in_topic_lists setting" do
+    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:subcategory) { Fabricate(:category_with_definition, parent_category: category) }
+    fab!(:subcategory_regular_topic) { Fabricate(:topic, category: subcategory) }
+
+    it "excludes subcategory definition topics by default" do
+      expect(
+        TopicQuery.new(nil, category: category.id).list_latest.topics.map(&:id),
+      ).to contain_exactly(category.topic_id, subcategory_regular_topic.id)
+    end
+
+    it "works when topic_id is null" do
+      subcategory.topic.destroy!
+      subcategory.update!(topic_id: nil)
+      expect(
+        TopicQuery.new(nil, category: category.id).list_latest.topics.map(&:id),
+      ).to contain_exactly(category.topic_id, subcategory_regular_topic.id)
+    end
+
+    it "includes subcategory definition when setting enabled" do
+      SiteSetting.show_category_definitions_in_topic_lists = true
+      expect(
+        TopicQuery.new(nil, category: category.id).list_latest.topics.map(&:id),
+      ).to contain_exactly(category.topic_id, subcategory.topic_id, subcategory_regular_topic.id)
+    end
+  end
+
+  describe "with topic_query_create_list_topics modifier" do
+    fab!(:topic1) { Fabricate(:topic, created_at: 3.days.ago, bumped_at: 1.hour.ago) }
+    fab!(:topic2) { Fabricate(:topic, created_at: 2.days.ago, bumped_at: 3.hour.ago) }
+
+    after { DiscoursePluginRegistry.clear_modifiers! }
+
+    it "allows changing" do
+      original_topic_query = TopicQuery.new(user)
+
+      Plugin::Instance
+        .new
+        .register_modifier(:topic_query_create_list_topics) do |topics, options, topic_query|
+          expect(topic_query).to eq(topic_query)
+          topic_query.options[:order] = "created"
+          topics
+        end
+
+      expect(original_topic_query.list_latest.topics.map(&:id)).to eq([topic1, topic2].map(&:id))
+
+      DiscoursePluginRegistry.clear_modifiers!
+
+      expect(original_topic_query.list_latest.topics.map(&:id)).to eq([topic2, topic1].map(&:id))
+    end
+  end
+
+  describe "precedence of categories and tag setting" do
+    fab!(:watched_category) do
+      Fabricate(:category).tap do |category|
+        CategoryUser.create!(
+          user: user,
+          category: category,
+          notification_level: CategoryUser.notification_levels[:watching],
+        )
+      end
+    end
+    fab!(:muted_category) do
+      Fabricate(:category).tap do |category|
+        CategoryUser.create!(
+          user: user,
+          category: category,
+          notification_level: CategoryUser.notification_levels[:muted],
+        )
+      end
+    end
+    fab!(:watched_tag) do
+      Fabricate(:tag).tap do |tag|
+        TagUser.create!(
+          user: user,
+          tag: tag,
+          notification_level: TagUser.notification_levels[:watching],
+        )
+      end
+    end
+    fab!(:muted_tag) do
+      Fabricate(:tag).tap do |tag|
+        TagUser.create!(
+          user: user,
+          tag: tag,
+          notification_level: TagUser.notification_levels[:muted],
+        )
+      end
+    end
+    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic_in_watched_category_and_muted_tag) do
+      Fabricate(:topic, category: watched_category, tags: [muted_tag])
+    end
+    fab!(:topic_in_muted_category_and_watched_tag) do
+      Fabricate(:topic, category: muted_category, tags: [watched_tag])
+    end
+    fab!(:topic_in_watched_and_muted_tag) { Fabricate(:topic, tags: [watched_tag, muted_tag]) }
+    fab!(:topic_in_muted_category) { Fabricate(:topic, category: muted_category) }
+    fab!(:topic_in_muted_tag) { Fabricate(:topic, tags: [muted_tag]) }
+
+    context "when enabled" do
+      it "returns topics even if category or tag is muted but another tag or category is watched" do
+        SiteSetting.watched_precedence_over_muted = true
+        query = TopicQuery.new(user).list_latest
+        expect(query.topics.map(&:id)).to contain_exactly(
+          topic.id,
+          topic_in_watched_category_and_muted_tag.id,
+          topic_in_muted_category_and_watched_tag.id,
+        )
+      end
+    end
+
+    context "when disabled" do
+      it "returns topics without muted category or tag" do
+        SiteSetting.watched_precedence_over_muted = false
+        query = TopicQuery.new(user).list_latest
+        expect(query.topics.map(&:id)).to contain_exactly(topic.id)
+      end
+    end
+
+    context "when disabled but overridden by user" do
+      it "returns topics even if category or tag is muted but another tag or category is watched" do
+        SiteSetting.watched_precedence_over_muted = false
+        user.user_option.update!(watched_precedence_over_muted: true)
+        query = TopicQuery.new(user).list_latest
+        expect(query.topics.map(&:id)).to contain_exactly(
+          topic.id,
+          topic_in_watched_category_and_muted_tag.id,
+          topic_in_muted_category_and_watched_tag.id,
+        )
       end
     end
   end

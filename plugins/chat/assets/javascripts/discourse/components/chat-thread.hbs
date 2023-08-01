@@ -1,0 +1,62 @@
+<div
+  class={{concat-class
+    "chat-thread"
+    (if this.messagesLoader.loading "loading")
+    (if @thread.staged "staged")
+  }}
+  data-id={{@thread.id}}
+  {{did-insert this.setUploadDropZone}}
+  {{did-insert this.didUpdateThread}}
+  {{did-update this.didUpdateThread @thread.id}}
+  {{will-destroy this.teardown}}
+>
+  {{#if @includeHeader}}
+    <Chat::Thread::Header @channel={{@thread.channel}} @thread={{@thread}} />
+  {{/if}}
+
+  <div
+    class="chat-thread__body popper-viewport chat-messages-scroll"
+    {{did-insert this.setScrollable}}
+    {{chat/scrollable-list
+      (hash onScroll=this.onScroll onScrollEnd=this.onScrollEnd reverse=true)
+    }}
+  >
+    <div
+      class="chat-messages-container"
+      {{chat/on-resize this.didResizePane (hash delay=100 immediate=true)}}
+    >
+      {{#each this.messagesManager.messages key="id" as |message|}}
+        <ChatMessage
+          @message={{message}}
+          @disableMouseEvents={{this.isScrolling}}
+          @resendStagedMessage={{this.resendStagedMessage}}
+          @context="thread"
+        />
+      {{/each}}
+
+      {{#unless this.messagesLoader.fetchedOnce}}
+        {{#if this.messagesLoader.loading}}
+          <ChatSkeleton />
+        {{/if}}
+      {{/unless}}
+    </div>
+  </div>
+
+  <Chat::ScrollToBottomArrow
+    @onScrollToBottom={{this.scrollToLatestMessage}}
+    @isVisible={{this.needsArrow}}
+  />
+
+  {{#if this.chatThreadPane.selectingMessages}}
+    <Chat::SelectionManager @pane={{this.chatThreadPane}} />
+  {{else}}
+    <Chat::Composer::Thread
+      @channel={{@channel}}
+      @thread={{@thread}}
+      @onSendMessage={{this.onSendMessage}}
+      @uploadDropZone={{this.uploadDropZone}}
+    />
+  {{/if}}
+
+  <ChatUploadDropZone @model={{@thread}} />
+</div>

@@ -5,17 +5,16 @@ import { inject as service } from "@ember/service";
 
 export default class ChatMessageRoute extends DiscourseRoute {
   @service chat;
+  @service router;
 
   async model(params) {
     return ajax(`/chat/message/${params.messageId}.json`)
       .then((response) => {
-        this.transitionTo(
-          "chat.channel",
-          response.chat_channel_id,
+        this.router.transitionTo(
+          "chat.channel.near-message",
           response.chat_channel_title,
-          {
-            queryParams: { messageId: params.messageId },
-          }
+          response.chat_channel_id,
+          params.messageId
         );
       })
       .catch(() => this.replaceWith("/404"));
@@ -23,7 +22,7 @@ export default class ChatMessageRoute extends DiscourseRoute {
 
   beforeModel() {
     if (!this.chat.userCanChat) {
-      return this.transitionTo(`discovery.${defaultHomepage()}`);
+      return this.router.transitionTo(`discovery.${defaultHomepage()}`);
     }
   }
 }

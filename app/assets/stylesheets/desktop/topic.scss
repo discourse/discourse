@@ -101,7 +101,7 @@
 }
 
 #topic-filter {
-  background-color: var(--highlight-medium);
+  background-color: var(--highlight-bg);
   padding: 8px;
   bottom: 0;
   position: fixed;
@@ -133,5 +133,28 @@
 @media all and (max-width: 485px) {
   #topic-footer-main-buttons {
     max-width: 100%;
+  }
+}
+
+.more-content-wrapper {
+  display: flex;
+  justify-content: space-around;
+
+  .topic-list-header,
+  .posts-map,
+  .views {
+    display: none;
+  }
+
+  .topic-list-body {
+    border-top: none;
+
+    .topic-list-item {
+      padding-left: 5px;
+    }
+
+    .topic-list-item:last-of-type {
+      border-bottom: none;
+    }
   }
 }

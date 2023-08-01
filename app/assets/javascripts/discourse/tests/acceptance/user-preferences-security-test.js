@@ -64,9 +64,8 @@ acceptance("User Preferences - Security", function (needs) {
     );
   });
 
-  test("Viewing user api keys when user has redesign user page navigation enabled", async function (assert) {
+  test("Viewing user api keys", async function (assert) {
     updateCurrentUser({
-      redesigned_user_page_nav_enabled: true,
       user_api_keys: [
         {
           id: 1,

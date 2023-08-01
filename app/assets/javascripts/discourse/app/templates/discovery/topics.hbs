@@ -31,7 +31,6 @@
   @autoAddTopicsToBulkSelect={{this.autoAddTopicsToBulkSelect}}
   @bulkSelectEnabled={{this.bulkSelectEnabled}}
   @addTopicsToBulkSelect={{action "addTopicsToBulkSelect"}}
-  as |discoveryTopicList|
 >
   {{#if this.top}}
     <div class="top-lists">
@@ -59,12 +58,13 @@
       </div>
     {{/if}}
   {{/if}}
-  <PluginOutlet
-    @name="before-topic-list"
-    @tagName="span"
-    @connectorTagName="div"
-    @args={{hash category=this.category}}
-  />
+  <span>
+    <PluginOutlet
+      @name="before-topic-list"
+      @connectorTagName="div"
+      @outletArgs={{hash category=this.category}}
+    />
+  </span>
 
   {{#if this.hasTopics}}
     <TopicList
@@ -89,18 +89,17 @@
       @category={{this.category}}
       @topics={{this.model.topics}}
       @discoveryList={{true}}
-      @scrollOnLoad={{true}}
-      @onScroll={{discoveryTopicList.saveScrollPosition}}
       @focusLastVisitedTopic={{true}}
     />
   {{/if}}
 
-  <PluginOutlet
-    @name="after-topic-list"
-    @tagName="span"
-    @connectorTagName="div"
-    @args={{hash category=this.category}}
-  />
+  <span>
+    <PluginOutlet
+      @name="after-topic-list"
+      @connectorTagName="div"
+      @outletArgs={{hash category=this.category}}
+    />
+  </span>
 </DiscoveryTopicsList>
 
 <footer class="topic-list-bottom">

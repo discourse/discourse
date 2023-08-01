@@ -54,16 +54,23 @@ pt_BR:
     deleted_chat_username: excluído
     errors:
       channel_exists_for_category: "Já existe um canal para este nome e categoria"
-      channel_new_message_disallowed: "O canal está %{status}, nenhuma mensagem nova pode ser enviada"
-      channel_modify_message_disallowed: "O canal está %{status}, nenhuma mensagem pode ser editada ou excluída"
+      channel_new_message_disallowed:
+        archived: "O canal está arquivado, nenhuma mensagem nova pode ser enviada"
+        closed: "O canal está fechado, nenhuma nova mensagem pode ser enviada"
+        read_only: "O canal é somente para leitura, nenhuma nova mensagem pode ser enviada"
+      channel_modify_message_disallowed:
+        archived: "O canal está arquivado, nenhuma mensagem pode ser editada ou excluída"
+        closed: "O canal está fechado, nenhuma mensagem pode ser editada ou excluída"
+        read_only: "O canal é somente para leitura, nenhuma mensagem pode ser editada ou excluída"
       user_cannot_send_message: "Você não pode enviar mensagens neste momento."
       rate_limit_exceeded: "Excedeu o limite de mensagens de chat que podem ser enviadas em 30 segundos"
       auto_silence_from_flags: "Mensagem de chat sinalizada com pontuação alta o suficiente para silenciar o(a) usuário(a)."
       channel_cannot_be_archived: "O canal não pode ser arquivado no momento, ele deve estar fechado ou aberto para arquivar."
       duplicate_message: "Você postou uma mensagem idêntica muito recentemente."
       delete_channel_failed: "Falha ao excluir canal. Tente novamente."
-      minimum_length_not_met: "A mensagem é muito curta, deve ter no mínimo %{minimum} caracteres."
-      message_too_long: "A mensagem é muito longa; as mensagens devem ter no máximo %{maximum} caracteres."
+      message_too_long:
+        one: "A mensagem é muito longa; as mensagens devem ter no máximo %{count} caracteres."
+        other: "A mensagem é muito longa; as mensagens devem ter no máximo %{count} caracteres."
       draft_too_long: "O rascunho é muito longo."
       max_reactions_limit_reached: "Novas reações não são permitidas nesta mensagem."
       message_move_invalid_channel: "O canal de origem e de destino deve ser canais públicos."
@@ -75,9 +82,11 @@ pt_BR:
       actor_disallowed_dms: "Você optou por impedir que os(as) usuários(as) enviem mensagens privadas e diretas, portanto, você não pode criar novas mensagens diretas."
       actor_preventing_target_user_from_dm: "Você optou por impedir que %{username} envie mensagens privadas e diretas, portanto, você não pode criar novas mensagens diretas para ele(a)."
       user_cannot_send_direct_messages: "Desculpe, você não pode enviar mensagens diretas."
+      over_chat_max_direct_message_users_allow_self: "Você poderá criar uma mensagem direta apenas consigo mesmo(a)."
       over_chat_max_direct_message_users:
-        one: "Você poderá criar uma mensagem direta apenas consigo mesmo(a)."
+        one: "Você não poderá criar uma mensagem direta com mais de %{count} outro(a) usuário(a)."
         other: "Você não poderá criar uma mensagem direta com mais de %{count} outros(as) usuários(as)."
+      original_message_not_found: "A mensagem que você está respondendo não pode ser encontrada ou foi excluída."
     reviewables:
       message_already_handled: "Obrigado, mas já analisamos esta mensagem e determinamos que ela não precisa ser sinalizada novamente."
       actions:
@@ -114,20 +123,17 @@ pt_BR:
         transcript_title: "Transcrição de mensagens anteriores em %{channel_name}"
         transcript_body: "Para dar mais contexto, incluímos uma transcrição das mensagens anteriores nesta conversa (até dez):\n\n%{transcript}"
     channel:
-      statuses:
-        read_only: "Somente leitura"
-        archived: "Arquivados"
-        closed: "Fechados"
-        open: "Aberto"
       archive:
         first_post_raw: "Este tópico é um arquivo do canal do chat [%{channel_name}](%{channel_url})."
       messages_moved:
         one: "@%{acting_username} moveu uma mensagem para o canal [%{channel_name}](%{first_moved_message_url})."
         other: "@%{acting_username} moveu %{count} mensagens para o canal [%{channel_name}](%{first_moved_message_url})."
       dm_title:
-        single_user: "%{user}"
-        multi_user: "%{users}"
-        multi_user_truncated: "%{users} e %{leftover} outros"
+        single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
+        multi_user_truncated:
+          one: "%{comma_separated_usernames} e %{count} outro"
+          other: "%{comma_separated_usernames} e %{count} outros"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "contém caracteres não ascii"

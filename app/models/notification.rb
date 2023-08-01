@@ -152,9 +152,11 @@ class Notification < ActiveRecord::Base
         question_answer_user_commented: 35, # Used by https://github.com/discourse/discourse-question-answer
         watching_category_or_tag: 36,
         new_features: 37,
+        admin_problems: 38,
         following: 800, # Used by https://github.com/discourse/discourse-follow
         following_created_topic: 801, # Used by https://github.com/discourse/discourse-follow
         following_replied: 802, # Used by https://github.com/discourse/discourse-follow
+        circles_activity: 900, # Used by https://github.com/discourse/discourse-circles
       )
   end
 
@@ -277,7 +279,6 @@ class Notification < ActiveRecord::Base
     notifications.to_a
   end
 
-  # TODO(osama): deprecate this method when redesigned_user_menu_enabled is removed
   def self.recent_report(user, count = nil, types = [])
     return unless user && user.user_option
 
@@ -347,7 +348,7 @@ class Notification < ActiveRecord::Base
   end
 
   def post_id
-    Post.where(topic: topic_id, post_number: post_number).pluck_first(:id)
+    Post.where(topic: topic_id, post_number: post_number).pick(:id)
   end
 
   protected

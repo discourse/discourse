@@ -20,8 +20,11 @@ if Rails.env.development? && !Rails.configuration.cache_classes && Discourse.run
 
       not_autoloaded =
         files.filter_map do |file|
-          autoloaded = Rails.autoloaders.main.autoloads.key? file
-          Pathname.new(file).relative_path_from(Rails.root) if !autoloaded
+          autoloaded = Rails.autoloaders.main.__autoloads.key? file
+
+          if !autoloaded && !file.match(%r{/spec/})
+            Pathname.new(file).relative_path_from(Rails.root)
+          end
         end
 
       if not_autoloaded.length > 0

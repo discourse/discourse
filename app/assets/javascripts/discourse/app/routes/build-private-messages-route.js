@@ -80,7 +80,16 @@ export default (inboxType, path, filter) => {
         group: null,
       });
 
-      this.searchService.set("contextType", "private_messages");
+      // Private messages don't have a unique search context instead
+      // it is built upon the user search context and then tweaks the `type`.
+      // Since this is the only model in which we set a custom `type` we don't
+      // want to create a stand-alone `setSearchType` on the search service so
+      // we can instead explicitly set the search context and pass in the `type`
+      const pmSearchContext = {
+        ...this.controllerFor("user").get("model.searchContext"),
+        type: "private_messages",
+      };
+      this.searchService.searchContext = pmSearchContext;
     },
 
     emptyState() {
@@ -97,9 +106,8 @@ export default (inboxType, path, filter) => {
     deactivate() {
       this.controllerFor("user-topics-list").unsubscribe();
 
-      this.searchService.set(
-        "searchContext",
-        this.controllerFor("user").get("model.searchContext")
+      this.searchService.searchContext = this.controllerFor("user").get(
+        "model.searchContext"
       );
     },
 

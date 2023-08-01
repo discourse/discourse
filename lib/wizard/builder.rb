@@ -86,7 +86,7 @@ class Wizard
           step.add_field(
             id: "chat_enabled",
             type: "checkbox",
-            icon: "comment",
+            icon: "d-chat",
             value: SiteSetting.chat_enabled,
           )
         end

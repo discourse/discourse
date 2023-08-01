@@ -803,12 +803,12 @@ class ImportScripts::Lithium < ImportScripts::Base
             import_mode: true,
           }
 
-          unless topic_id
+          if topic_id
+            msg[:topic_id] = topic_id
+          else
             msg[:title] = @htmlentities.decode(topic["subject"]).strip[0...255]
             msg[:archetype] = Archetype.private_message
             msg[:target_usernames] = usernames.join(",")
-          else
-            msg[:topic_id] = topic_id
           end
 
           msg
@@ -994,11 +994,7 @@ SQL
                 end
 
               if l["href"]
-                if permalink && permalink.target_url
-                  l["href"] = permalink.target_url
-                elsif l["href"] =~ %r{^/gartner/attachments/gartner/([^.]*).(\w*)}
-                  linked_upload = "#{$1}.#{$2}"
-                end
+                l["href"] = permalink.target_url if permalink && permalink.target_url
               end
             elsif l["src"]
               # we need an upload here

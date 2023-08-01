@@ -1,12 +1,8 @@
 .chat-reply {
-  display: contents;
   align-items: center;
-  box-sizing: border-box;
+  display: grid;
   font-size: var(--font-down-1);
-  padding-left: 0.5em;
-  height: 100%;
-  width: 100%;
-  white-space: nowrap;
+  grid: 1fr / auto-flow;
 
   .d-icon {
     color: var(--primary-low-mid);

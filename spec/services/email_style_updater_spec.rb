@@ -47,7 +47,7 @@ RSpec.describe EmailStyleUpdater do
         false,
       )
       expect(updater.errors).to_not be_empty
-      expect(updater.errors.first).to include("Invalid CSS after")
+      expect(updater.errors.first).to include('Error: expected "}".')
       expect_settings_to_be_unset
     end
   end

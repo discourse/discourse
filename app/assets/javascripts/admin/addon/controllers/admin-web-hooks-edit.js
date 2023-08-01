@@ -1,23 +1,27 @@
+import { inject as service } from "@ember/service";
+import { alias } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
-import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { inject as service } from "@ember/service";
 
-export default Controller.extend({
-  adminWebHooks: controller(),
-  dialog: service(),
-  eventTypes: alias("adminWebHooks.eventTypes"),
-  defaultEventTypes: alias("adminWebHooks.defaultEventTypes"),
-  contentTypes: alias("adminWebHooks.contentTypes"),
+export default class AdminWebHooksEditController extends Controller {
+  @service dialog;
+  @service router;
+  @service siteSettings;
+
+  @controller adminWebHooks;
+
+  @alias("adminWebHooks.eventTypes") eventTypes;
+  @alias("adminWebHooks.defaultEventTypes") defaultEventTypes;
+  @alias("adminWebHooks.contentTypes") contentTypes;
 
   @discourseComputed
   showTagsFilter() {
     return this.siteSettings.tagging_enabled;
-  },
+  }
 
   @discourseComputed("model.isSaving", "saved", "saveButtonDisabled")
   savingStatus(isSaving, saved, saveButtonDisabled) {
@@ -29,14 +33,14 @@ export default Controller.extend({
     // Use side effect of validation to clear saved text
     this.set("saved", false);
     return "";
-  },
+  }
 
   @discourseComputed("model.isNew")
   saveButtonText(isNew) {
     return isNew
       ? I18n.t("admin.web_hooks.create")
       : I18n.t("admin.web_hooks.save");
-  },
+  }
 
   @discourseComputed("model.secret")
   secretValidation(secret) {
@@ -55,7 +59,7 @@ export default Controller.extend({
         });
       }
     }
-  },
+  }
 
   @discourseComputed("model.wildcard_web_hook", "model.web_hook_event_types.[]")
   eventTypeValidation(isWildcard, eventTypes) {
@@ -65,7 +69,7 @@ export default Controller.extend({
         reason: I18n.t("admin.web_hooks.event_type_missing"),
       });
     }
-  },
+  }
 
   @discourseComputed(
     "model.isSaving",
@@ -82,7 +86,7 @@ export default Controller.extend({
     return isSaving
       ? false
       : secretValidation || eventTypeValidation || isEmpty(payloadUrl);
-  },
+  }
 
   @action
   async save() {
@@ -93,9 +97,9 @@ export default Controller.extend({
 
       this.set("saved", true);
       this.adminWebHooks.model.addObject(this.model);
-      this.transitionToRoute("adminWebHooks.show", this.model);
+      this.router.transitionTo("adminWebHooks.show", this.model);
     } catch (e) {
       popupAjaxError(e);
     }
-  },
-});
+  }
+}

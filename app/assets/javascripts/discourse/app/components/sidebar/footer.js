@@ -1,12 +1,17 @@
 import Component from "@glimmer/component";
-import { getOwner } from "discourse-common/lib/get-owner";
 import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
+import SidebarSectionForm from "discourse/components/modal/sidebar-section-form";
 
 export default class SidebarFooter extends Component {
+  @service capabilities;
+  @service currentUser;
+  @service modal;
   @service site;
   @service siteSettings;
 
-  get capabilities() {
-    return getOwner(this).lookup("capabilities:main");
+  @action
+  addSection() {
+    this.modal.show(SidebarSectionForm);
   }
 }

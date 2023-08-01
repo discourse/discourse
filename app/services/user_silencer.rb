@@ -23,42 +23,39 @@ class UserSilencer
 
   def silence
     hide_posts unless @opts[:keep_posts]
-    unless @user.silenced_till.present?
-      @user.silenced_till = @opts[:silenced_till] || 1000.years.from_now
-      if @user.save
-        message_type = @opts[:message] || :silenced_by_staff
+    return false if @user.silenced_till.present?
+    @user.silenced_till = @opts[:silenced_till] || 1000.years.from_now
+    if @user.save
+      message_type = @opts[:message] || :silenced_by_staff
 
-        details = StaffMessageFormat.new(:silence, @opts[:reason], @opts[:message_body]).format
+      details = StaffMessageFormat.new(:silence, @opts[:reason], @opts[:message_body]).format
 
-        context = "#{message_type}: #{@opts[:reason]}"
+      context = "#{message_type}: #{@opts[:reason]}"
 
-        if @by_user
-          log_params = { context: context, details: details }
-          log_params[:post_id] = @opts[:post_id].to_i if @opts[:post_id]
+      if @by_user
+        log_params = { context: context, details: details }
+        log_params[:post_id] = @opts[:post_id].to_i if @opts[:post_id]
 
-          @user_history = StaffActionLogger.new(@by_user).log_silence_user(@user, log_params)
-        end
-
-        silence_message_params = {}
-        DiscourseEvent.trigger(
-          :user_silenced,
-          user: @user,
-          silenced_by: @by_user,
-          reason: @opts[:reason],
-          message: @opts[:message_body],
-          user_history: @user_history,
-          post_id: @opts[:post_id],
-          silenced_till: @user.silenced_till,
-          silenced_at: DateTime.now,
-          silence_message_params: silence_message_params,
-        )
-
-        silence_message_params.merge!(post_alert_options: { skip_send_email: true })
-        SystemMessage.create(@user, message_type, silence_message_params)
-        true
+        @user_history = StaffActionLogger.new(@by_user).log_silence_user(@user, log_params)
       end
-    else
-      false
+
+      silence_message_params = {}
+      DiscourseEvent.trigger(
+        :user_silenced,
+        user: @user,
+        silenced_by: @by_user,
+        reason: @opts[:reason],
+        message: @opts[:message_body],
+        user_history: @user_history,
+        post_id: @opts[:post_id],
+        silenced_till: @user.silenced_till,
+        silenced_at: DateTime.now,
+        silence_message_params: silence_message_params,
+      )
+
+      silence_message_params.merge!(post_alert_options: { skip_send_email: true })
+      SystemMessage.create(@user, message_type, silence_message_params)
+      true
     end
   end
 

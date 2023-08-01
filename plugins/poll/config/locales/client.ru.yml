@@ -29,36 +29,16 @@ ru:
           title: "Результаты будут показаны после <strong>завершения опроса</strong>."
         staff:
           title: "Результаты будут показаны только <strong>персоналу</strong>."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Выберите как минимум <strong>%{count}</strong> вариант ответа."
-            few: "Выберите как минимум <strong>%{count}</strong> варианта ответа."
-            many: "Выберите как минимум <strong>%{count}</strong> вариантов ответа."
-            other: "Выберите как минимум <strong>%{count}</strong> варианта ответа."
-          up_to_max_options:
-            one: "Выберите не более <strong>%{count}</strong> варианта ответа."
-            few: "Выберите не более <strong>%{count}</strong> вариантов ответа."
-            many: "Выберите не более <strong>%{count}</strong> вариантов ответа."
-            other: "Выберите не более <strong>%{count}</strong> варианта ответа."
-          x_options:
-            one: "Выберите <strong>%{count}</strong> вариант ответа."
-            few: "Выберите <strong>%{count}</strong> варианта ответа."
-            many: "Выберите <strong>%{count}</strong> вариантов ответа."
-            other: "Выберите <strong>%{count}</strong> варианта ответа."
-          between_min_and_max_options: "Выберите варианты ответов в диапазоне от <strong>%{min}</strong> до <strong>%{max}</strong>."
       cast-votes:
         title: "Проголосуйте"
         label: "Проголосовать!"
       show-results:
         title: "Показать результаты опроса"
-        label: "Показывать результаты"
+        label: "Результаты"
       remove-vote:
         title: "Удалить свой голос"
-        label: "Удалить голос"
       hide-results:
         title: "Вернуться к опросу"
-        label: "Скрыть результаты"
       group-results:
         title: "Группировать голоса по пользователям"
         label: "Показать распределение"
@@ -82,6 +62,8 @@ ru:
         breakdown: "Распределение"
         percentage: "Процент"
         count: "Количество"
+      options:
+        label: "Параметры"
       error_while_toggling_status: "Произошла ошибка при смене статуса опроса."
       error_while_casting_votes: "Произошла ошибка в процессе обработки вашего голоса."
       error_while_fetching_voters: "Произошла ошибка в процессе получения списка проголосовавших."

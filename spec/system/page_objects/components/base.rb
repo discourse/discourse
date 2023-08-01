@@ -5,6 +5,7 @@ module PageObjects
     class Base
       include Capybara::DSL
       include RSpec::Matchers
+      include SystemHelpers
     end
   end
 end

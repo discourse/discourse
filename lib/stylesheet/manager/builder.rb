@@ -35,11 +35,11 @@ class Stylesheet::Manager::Builder
       end
     end
 
-    rtl = @target.to_s =~ /_rtl$/
+    rtl = @target.to_s.end_with?("_rtl")
     css, source_map =
       with_load_paths do |load_paths|
         Stylesheet::Compiler.compile_asset(
-          @target,
+          @target.to_s.gsub(/_rtl\z/, "").to_sym,
           rtl: rtl,
           theme_id: theme&.id,
           theme_variables: theme&.scss_variables.to_s,
@@ -47,7 +47,7 @@ class Stylesheet::Manager::Builder
           color_scheme_id: @color_scheme&.id,
           load_paths: load_paths,
         )
-      rescue SassC::SyntaxError => e
+      rescue SassC::SyntaxError, SassC::NotRenderedError => e
         if Stylesheet::Importer::THEME_TARGETS.include?(@target.to_s)
           # no special errors for theme, handled in theme editor
           ["", nil]

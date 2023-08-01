@@ -826,7 +826,7 @@ RSpec.describe SessionController do
     end
 
     it "redirects to random url if it is allowed" do
-      SiteSetting.discourse_connect_allows_all_return_paths = true
+      SiteSetting.discourse_connect_allowed_redirect_domains = "gusundtrout.com|foobar.com"
 
       sso = get_sso("https://gusundtrout.com")
       sso.external_id = "666"
@@ -836,6 +836,32 @@ RSpec.describe SessionController do
 
       get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
       expect(response).to redirect_to("https://gusundtrout.com")
+    end
+
+    it "allows wildcard character to redirect to any domain" do
+      SiteSetting.discourse_connect_allowed_redirect_domains = "*|foo.com"
+
+      sso = get_sso("https://foobar.com")
+      sso.external_id = "666"
+      sso.email = "bob@bob.com"
+      sso.name = "Sam Saffron"
+      sso.username = "sam"
+
+      get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+      expect(response).to redirect_to("https://foobar.com")
+    end
+
+    it "does not allow wildcard character in domains" do
+      SiteSetting.discourse_connect_allowed_redirect_domains = "*.foobar.com|foobar.com"
+
+      sso = get_sso("https://sub.foobar.com")
+      sso.external_id = "666"
+      sso.email = "bob@bob.com"
+      sso.name = "Sam Saffron"
+      sso.username = "sam"
+
+      get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+      expect(response).to redirect_to("/")
     end
 
     it "redirects to root if the host of the return_path is different" do
@@ -2324,10 +2350,12 @@ RSpec.describe SessionController do
     end
 
     context "when rate limited" do
+      before { RateLimiter.enable }
+
+      use_redis_snapshotting
+
       it "rate limits login" do
         SiteSetting.max_logins_per_ip_per_hour = 2
-        RateLimiter.enable
-        RateLimiter.clear_all!
         EmailToken.confirm(email_token.token)
 
         2.times do
@@ -2345,9 +2373,6 @@ RSpec.describe SessionController do
       end
 
       it "rate limits second factor attempts by IP" do
-        RateLimiter.enable
-        RateLimiter.clear_all!
-
         6.times do |x|
           post "/session.json",
                params: {
@@ -2374,8 +2399,6 @@ RSpec.describe SessionController do
       end
 
       it "rate limits second factor attempts by login" do
-        RateLimiter.enable
-        RateLimiter.clear_all!
         EmailToken.confirm(email_token.token)
 
         6.times do |x|
@@ -2618,44 +2641,47 @@ RSpec.describe SessionController do
       )
     end
 
-    it "should correctly rate limits" do
-      RateLimiter.enable
-      RateLimiter.clear_all!
+    describe "rate limiting" do
+      before { RateLimiter.enable }
 
-      user = Fabricate(:user)
+      use_redis_snapshotting
 
-      3.times do
+      it "should correctly rate limits" do
+        user = Fabricate(:user)
+
+        3.times do
+          post "/session/forgot_password.json", params: { login: user.username }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).not_to be_present
+        end
+
         post "/session/forgot_password.json", params: { login: user.username }
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["error"]).not_to be_present
-      end
+        expect(response.status).to eq(422)
 
-      post "/session/forgot_password.json", params: { login: user.username }
-      expect(response.status).to eq(422)
+        3.times do
+          post "/session/forgot_password.json",
+               params: {
+                 login: user.username,
+               },
+               headers: {
+                 "REMOTE_ADDR" => "10.1.1.1",
+               }
 
-      3.times do
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).not_to be_present
+        end
+
         post "/session/forgot_password.json",
              params: {
                login: user.username,
              },
              headers: {
-               "REMOTE_ADDR" => "10.1.1.1",
+               "REMOTE_ADDR" => "100.1.1.1",
              }
 
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["error"]).not_to be_present
+        # not allowed, max 6 a day
+        expect(response.status).to eq(422)
       end
-
-      post "/session/forgot_password.json",
-           params: {
-             login: user.username,
-           },
-           headers: {
-             "REMOTE_ADDR" => "100.1.1.1",
-           }
-
-      # not allowed, max 6 a day
-      expect(response.status).to eq(422)
     end
 
     context "for a non existant username" do

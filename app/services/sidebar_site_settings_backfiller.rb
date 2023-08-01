@@ -13,9 +13,9 @@ class SidebarSiteSettingsBackfiller
 
     @linkable_klass, previous_ids, new_ids =
       case setting_name
-      when "default_sidebar_categories"
+      when "default_navigation_menu_categories"
         [Category, previous_value.split("|"), new_value.split("|")]
-      when "default_sidebar_tags"
+      when "default_navigation_menu_tags"
         klass = Tag
 
         [
@@ -81,7 +81,7 @@ class SidebarSiteSettingsBackfiller
       FROM users
       WHERE users.id NOT IN (
         SELECT
-          sidebar_section_links.user_id
+          DISTINCT(sidebar_section_links.user_id)
         FROM sidebar_section_links
         WHERE sidebar_section_links.linkable_type = '#{@linkable_klass.to_s}'
         AND sidebar_section_links.linkable_id IN (#{@added_ids.join(",")})

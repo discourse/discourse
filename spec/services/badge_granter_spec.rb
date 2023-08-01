@@ -22,14 +22,12 @@ RSpec.describe BadgeGranter do
       BadgeGranter.revoke_ungranted_titles!
       user.reload
       expect(user.title).to eq(badge.name)
-      expect(user.user_profile.badge_granted_title).to eq(true)
       expect(user.user_profile.granted_title_badge_id).to eq(badge.id)
 
       badge.update_column(:allow_title, false)
       BadgeGranter.revoke_ungranted_titles!
       user.reload
       expect(user.title).to be_blank
-      expect(user.user_profile.badge_granted_title).to eq(false)
       expect(user.user_profile.granted_title_badge_id).to be_nil
     end
 
@@ -40,14 +38,12 @@ RSpec.describe BadgeGranter do
       BadgeGranter.revoke_ungranted_titles!
       user.reload
       expect(user.title).to eq(badge.name)
-      expect(user.user_profile.badge_granted_title).to eq(true)
       expect(user.user_profile.granted_title_badge_id).to eq(badge.id)
 
       badge.update_column(:enabled, false)
       BadgeGranter.revoke_ungranted_titles!
       user.reload
       expect(user.title).to be_blank
-      expect(user.user_profile.badge_granted_title).to eq(false)
       expect(user.user_profile.granted_title_badge_id).to be_nil
     end
 
@@ -58,14 +54,12 @@ RSpec.describe BadgeGranter do
       BadgeGranter.revoke_ungranted_titles!
       user.reload
       expect(user.title).to eq(badge.name)
-      expect(user.user_profile.badge_granted_title).to eq(true)
       expect(user.user_profile.granted_title_badge_id).to eq(badge.id)
 
       BadgeGranter.revoke(user.user_badges.first)
       BadgeGranter.revoke_ungranted_titles!
       user.reload
       expect(user.title).to be_blank
-      expect(user.user_profile.badge_granted_title).to eq(false)
       expect(user.user_profile.granted_title_badge_id).to be_nil
     end
 
@@ -91,13 +85,11 @@ RSpec.describe BadgeGranter do
 
       user.reload
       expect(user.title).to eq(badge_name)
-      expect(user.user_profile.badge_granted_title).to eq(true)
       expect(user.user_profile.granted_title_badge_id).to eq(badge.id)
 
       BadgeGranter.revoke_ungranted_titles!
       user.reload
       expect(user.title).to eq(badge_name)
-      expect(user.user_profile.badge_granted_title).to eq(true)
       expect(user.user_profile.granted_title_badge_id).to eq(badge.id)
     end
   end

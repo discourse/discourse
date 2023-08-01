@@ -29,6 +29,10 @@ export default UserActivityStreamRoute.extend({
     return { title, body };
   },
 
+  titleToken() {
+    return I18n.t("user_action_groups.5");
+  },
+
   @action
   didTransition() {
     this.controllerFor("application").set("showFooter", true);

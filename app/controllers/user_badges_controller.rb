@@ -22,14 +22,13 @@ class UserBadgesController < ApplicationController
     grant_count = nil
 
     if params[:username]
-      user_id = User.where(username_lower: params[:username].downcase).pluck_first(:id)
+      user_id = User.where(username_lower: params[:username].downcase).pick(:id)
       user_badges = user_badges.where(user_id: user_id) if user_id
       grant_count = badge.user_badges.where(user_id: user_id).count
     end
 
-    if offset = params[:offset]
-      user_badges = user_badges.offset(offset.to_i)
-    end
+    offset = fetch_int_from_params(:offset, default: 0)
+    user_badges = user_badges.offset(offset) if offset > 0
 
     user_badges_topic_ids = user_badges.map { |user_badge| user_badge.post&.topic_id }.compact
 
