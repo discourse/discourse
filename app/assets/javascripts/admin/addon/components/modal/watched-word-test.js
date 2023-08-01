@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
 import {
   createWatchedWordRegExp,
   toWatchedWord,
@@ -10,13 +9,13 @@ export default class WatchedWordTest extends Component {
   @tracked value;
 
   get isReplace() {
-    return this.args.model.nameKey === "replace";
+    return this.args.model.watchedWord.nameKey === "replace";
   }
   get isTag() {
-    return this.args.model.nameKey === "tag";
+    return this.args.model.watchedWord.nameKey === "tag";
   }
   get isLink() {
-    return this.args.model.nameKey === "link";
+    return this.args.model.watchedWord.nameKey === "link";
   }
 
   get matches() {
@@ -43,7 +42,7 @@ export default class WatchedWordTest extends Component {
       return matches;
     } else if (this.isTag) {
       const matches = {};
-      this.args.model.watchedWords.words.forEach((word) => {
+      this.args.model.watchedWord.words.forEach((word) => {
         const regexp = createWatchedWordRegExp(word);
         let match;
 
