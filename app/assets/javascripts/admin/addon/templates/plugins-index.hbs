@@ -48,13 +48,12 @@
           <td class="col-enabled">
             <div class="label">{{i18n "admin.plugins.enabled"}}</div>
             {{#if plugin.enabled_setting}}
-              {{#if plugin.enabled}}
-                {{i18n "admin.plugins.is_enabled"}}
-              {{else}}
-                {{i18n "admin.plugins.not_enabled"}}
-              {{/if}}
+              <DToggleSwitch
+                @state={{plugin.enabled}}
+                {{on "click" (fn this.togglePluginEnabled plugin)}}
+              />
             {{else}}
-              {{i18n "admin.plugins.is_enabled"}}
+              <DToggleSwitch @state={{plugin.enabled}} @disabled={{true}} />
             {{/if}}
           </td>
           <td class="settings">
