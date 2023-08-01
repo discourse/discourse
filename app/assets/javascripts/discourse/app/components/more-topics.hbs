@@ -1,5 +1,6 @@
 <div
-  class="more-content-wrapper {{if this.singleList 'single-list'}}"
+  class="more-content-wrapper
+    {{if this.showTitleOnMobile 'mobile-single-list'}}"
   {{did-insert this.buildListPills}}
 >
   {{#if this.showTopicListsNav}}
