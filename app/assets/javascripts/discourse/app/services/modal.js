@@ -51,7 +51,6 @@ const KNOWN_LEGACY_MODALS = [
   "topic-summary",
   "user-status",
   "admin-merge-users-prompt",
-  "admin-start-backup",
   "admin-watched-word-test",
   "admin-api-key-urls",
   "admin-delete-user-posts-progress",
