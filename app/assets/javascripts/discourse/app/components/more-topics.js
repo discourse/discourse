@@ -15,10 +15,6 @@ export default class MoreTopics extends Component {
     return this.site.mobileView && !this.singleList;
   }
 
-  get showTitleOnMobile() {
-    return this.site.mobileView && this.singleList;
-  }
-
   @action
   rememberTopicListPreference(value) {
     this.moreTopicsPreferenceTracking.updatePreference(value);
@@ -28,10 +24,6 @@ export default class MoreTopics extends Component {
 
   @action
   buildListPills() {
-    if (!this.site.mobileView) {
-      return;
-    }
-
     next(() => {
       const pills = Array.from(
         document.querySelectorAll(".more-content-topics")
@@ -44,6 +36,9 @@ export default class MoreTopics extends Component {
 
       if (pills.length <= 1) {
         this.singleList = true;
+      }
+
+      if (this.singleList || !this.site.mobileView) {
         return;
       }
 
