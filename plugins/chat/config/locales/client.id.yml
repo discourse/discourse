@@ -74,6 +74,7 @@ id:
       sounds:
         none: "Tidak ada"
       channel_status:
+        archive_failed: "Arsip kanal gagal. %{completed}/%{total} pesan telah diarsipkan. <a target=\"_blank\" href=\"%{topic_url}\">Topik tujuan</a> telah dibuat. Tekan coba lagi untuk mencoba menyelesaikan arsip."
         closed: "Tertutup"
         open: "Buka"
       browse:
@@ -147,6 +148,7 @@ id:
         default_title: "Utas"
         replies:
           other: "%{count} balasan"
+        label: Utas
         original_message:
           started_by: "Dimulai oleh"
         settings: "Pengaturan"

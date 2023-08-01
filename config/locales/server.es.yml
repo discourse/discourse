@@ -2012,8 +2012,6 @@ es:
     permalink_normalizations: "Aplicar la siguiente expresión regular antes de hacer coincidir los permalinks, por ejemplo: /(topic.*)\\?.*/\\1 despojará las cadenas de consulta de las rutas de los temas. El formato es regex+string usa \\1 etc. para acceder a capturas"
     global_notice: "Mostrar a todos los visitantes un mensaje global para URGENCIAS o EMERGENCIAS que no se pueda ocultar. Deja este campo en blanco para quitarlo (puedes usar HTML)."
     disable_system_edit_notifications: "Desactivar editar notificaciones por el usuario del sistema cuando «download_remote_images_to_local» este activo."
-    disable_category_edit_notifications: "Desactiva las notificaciones para las ediciones de categorías de temas."
-    disable_tags_edit_notifications: "Desactiva las notificaciones para las ediciones de etiquetas de temas."
     notification_consolidation_threshold: "Cantidad de me gusta o notificaciones de solicitud de membresía recibidas antes de que las notificaciones se consoliden en una sola. Establece el valor en 0 para desactivar."
     likes_notification_consolidation_window_mins: "Minutos durante los que las notificaciones se consolidan en una sola notificación una vez que se haya alcanzado el limite. El límite se puede configurar en «SiteSetting.notification_consolidation_threshold»."
     automatically_unpin_topics: "Desanclar automáticamente cuando el usuario llega al final del tema."

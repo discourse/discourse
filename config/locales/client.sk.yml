@@ -261,8 +261,8 @@ sk:
       other: "%{count} znakov"
     related_messages:
       title: "Príbuzné správy"
+      pill: "Príbuzné správy"
     suggested_topics:
-      title: "Odporúčané témy"
       pm_title: "Odporúčané správy"
     about:
       simple_title: "O fóre"
@@ -392,6 +392,8 @@ sk:
           title: "Schválený"
         rejected:
           title: "Zamietnuté"
+        all:
+          title: "Všetko"
       context_question:
         delimiter: "alebo"
       types:
@@ -572,6 +574,7 @@ sk:
         make_owner_description: "Nastaviť <b>%{username}</b> ako vlastníka tejto skupiny"
         remove_owner: "Odobrať ako vlastníka"
         remove_owner_description: "Odobrať <b>%{username}</b> ako vlastníka tejto skupiny"
+        status: "Stav"
         owner: "Vlastník"
       topics: "Témy"
       posts: "Príspevky"
@@ -2195,11 +2198,6 @@ sk:
         few: "+%{count} Ďalší"
         many: "+%{count} Ďalší"
         other: "+%{count} Ďalší"
-      granted:
-        one: "%{count} udelený"
-        few: "%{count} udelené"
-        many: "%{count} udelených"
-        other: "%{count} udelených"
       select_badge_for_title: Vyberte odznak, ktorý chcete použiť ako Váš titul
       none: "(žiadne)"
       badge_grouping:
@@ -2337,6 +2335,8 @@ sk:
               content: "Používatelia"
             my_posts:
               content: "Moje príspevky"
+    form_template_chooser:
+      select_template: "Výber šablón formulárov"
     form_templates:
       errors:
         typeMismatch:
@@ -2582,6 +2582,7 @@ sk:
           create: "Vytvoriť:"
           create_type: "Typ"
           create_name: "Meno"
+          save: "Uložiť"
           long_title: "Upraviť farby, CSS a obsah HTML Vašej stránky"
           edit: "Upraviť"
           common: "Spoločné"

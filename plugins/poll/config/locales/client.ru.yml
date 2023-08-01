@@ -29,6 +29,24 @@ ru:
           title: "Результаты будут показаны после <strong>завершения опроса</strong>."
         staff:
           title: "Результаты будут показаны только <strong>персоналу</strong>."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Выберите как минимум <strong>%{count} вариант</strong>."
+            few: "Выберите как минимум <strong>%{count} варианта</strong>."
+            many: "Выберите как минимум <strong>%{count} вариантов</strong>."
+            other: "Выберите как минимум <strong>%{count} варианта</strong>."
+          up_to_max_options:
+            one: "Выберите максимум <strong>%{count} вариант</strong>."
+            few: "Выберите максимум <strong>%{count} варианта</strong>."
+            many: "Выберите максимум <strong>%{count} вариантов</strong>."
+            other: "Выберите максимум <strong>%{count} варианта</strong>."
+          x_options:
+            one: "Выберите <strong>%{count} вариант</strong>."
+            few: "Выберите <strong>%{count} варианта</strong>."
+            many: "Выберите <strong>%{count} вариантов</strong>."
+            other: "Выберите <strong>%{count} варианта</strong>."
+          between_min_and_max_options: "Выберите <strong>варианты в количестве от %{min} до %{max}</strong>."
       cast-votes:
         title: "Проголосуйте"
         label: "Проголосовать!"
@@ -37,8 +55,10 @@ ru:
         label: "Результаты"
       remove-vote:
         title: "Удалить свой голос"
+        label: "Забрать голос"
       hide-results:
         title: "Вернуться к опросу"
+        label: "Проголосовать"
       group-results:
         title: "Группировать голоса по пользователям"
         label: "Показать распределение"

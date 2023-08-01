@@ -92,3 +92,6 @@ ar:
           description: "الوصف"
           header: "الرأس"
           hover_to_see: "مرِّر فوق الأقسام لرؤية تلميح"
+        char_counter:
+          title: "عداد الأحرف"
+          placeholder: "أدخل نصك هنا..."

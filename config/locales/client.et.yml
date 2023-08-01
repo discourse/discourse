@@ -222,9 +222,9 @@ et:
       other: "%{count} sümbolit"
     related_messages:
       title: "Seotud sõnumid"
+      pill: "Seotud sõnumid"
       see_all: 'Vaata <a href="%{path}">kõiki sõnumeid</a> kasutajalt @%{username}...'
     suggested_topics:
-      title: "Soovitatud teemad"
       pm_title: "Soovitatud sõnumid"
     about:
       simple_title: "Teave"
@@ -2408,9 +2408,6 @@ et:
       more_badges:
         one: "+%{count} veel"
         other: "+%{count} veel"
-      granted:
-        one: "%{count} lubatud"
-        other: "%{count} lubatud"
       select_badge_for_title: Vali märgis, mida kasutada oma pealkirjana
       none: "(pole)"
       badge_grouping:
@@ -2865,6 +2862,7 @@ et:
           create: "Loo"
           create_type: "Liik"
           create_name: "Nimi"
+          save: "Salvesta"
           edit: "Muuda"
           common: "Tavaline"
           desktop: "Töölaud"
