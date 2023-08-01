@@ -49,7 +49,6 @@ const KNOWN_LEGACY_MODALS = [
   "topic-summary",
   "user-status",
   "admin-watched-word-test",
-  "admin-delete-user-posts-progress",
   "admin-install-theme",
   "admin-penalize-user",
   "admin-theme-change",
