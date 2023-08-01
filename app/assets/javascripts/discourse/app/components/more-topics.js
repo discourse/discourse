@@ -34,18 +34,21 @@ export default class MoreTopics extends Component {
         };
       });
 
-      if (pills.length <= 1) {
-        this.singleList = true;
-      }
-
-      if (this.singleList || !this.site.mobileView) {
+      if (pills.length === 0) {
         return;
+      } else if (pills.length === 1) {
+        this.singleList = true;
       }
 
       let preference = this.moreTopicsPreferenceTracking.preference;
 
       if (!preference) {
-        this.moreTopicsPreferenceTracking.updatePreference(pills[0].id);
+        const rememberPref = this.site.mobileView && !this.singleList;
+
+        this.moreTopicsPreferenceTracking.updatePreference(
+          pills[0].id,
+          rememberPref
+        );
         preference = pills[0].id;
       }
 

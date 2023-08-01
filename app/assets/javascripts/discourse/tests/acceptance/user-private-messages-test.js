@@ -764,12 +764,9 @@ acceptance(
 
       await publishUnreadToMessageBus({ userId: 5, topicId: 2 });
 
-      assert.ok(
-        query(".suggested-topics-message")
-          .innerText.trim()
-          .match(
-            /There is 1 unread\s+ and 1 new message remaining, or browse other personal messages/
-          ),
+      assert.strictEqual(
+        query(".suggested-topics-message").innerText.trim(),
+        "There is 1 unread and 1 new message remaining, or browse other personal messages",
         "displays the right browse more message"
       );
 
@@ -816,7 +813,7 @@ acceptance(
         query(".suggested-topics-message")
           .innerText.trim()
           .match(
-            /There is 1 unread\s+ and 1 new message remaining, or browse other messages in\s+awesome_group/
+            /There is 1 unread and 1 new message remaining, or browse other messages in\s+awesome_group/
           ),
         "displays the right browse more message"
       );
