@@ -292,9 +292,9 @@ lt:
       aria_label: "Filtruoti pagal laikotarpį"
     related_messages:
       title: "Susiję pranešimai"
+      pill: "Susiję pranešimai"
       see_all: 'Žiūrėti <a href="%{path}">visų pranešimų</a> iš @%{username}...'
     suggested_topics:
-      title: "Siūlomos Temos"
       pm_title: "Rekomenduojamos žinutės"
     about:
       simple_title: "Apie"
@@ -3344,11 +3344,6 @@ lt:
         few: "+%{count}Daugiau"
         many: "+%{count}Daugiau"
         other: "+%{count}Daugiau"
-      granted:
-        one: "%{count} suteikta"
-        few: "%{count} suteikta"
-        many: "%{count} suteikta"
-        other: "%{count} suteikta"
       select_badge_for_title: Pasirinkti trofėjų ir naudoti, kaip antraštę
       none: "(nieko)"
       successfully_granted: "Sėkmingai suteiktas ženklelis %{badge} nariui %{username}"
@@ -4006,6 +4001,7 @@ lt:
           create: "Sukurti"
           create_type: "Tipas"
           create_name: "Vardas"
+          save: "Išsaugoti"
           long_title: "Pakeiskite savo svetainės spalvas, CSS ir HTML turinį"
           edit: "Redaguoti"
           update_confirm: "Šie vietiniai pakeitimai bus ištrinti atnaujinus. Ar tikrai norite tęsti?"

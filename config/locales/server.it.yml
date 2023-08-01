@@ -628,20 +628,6 @@ it:
   staff_category_description: "Categoria privata per discussioni dello staff. Gli argomenti sono visibili solo agli amministratori e ai moderatori."
   discourse_welcome_topic:
     title: "Benvenuto su %{site_title}! :wave:"
-    body: |
-      Siamo lieti che tu abbia voluto partecipare con noi.
-
-      %{site_info_quote}
-
-      Ecco alcune cose che puoi fare per iniziare:
-
-      :speaking_head: **Presentati** aggiungendo la tua foto e informazioni su di te e sui tuoi interessi al [tuo profilo](%{base_path}/my/preferences/account). Qual è una cosa che vorresti che ti chiedessero?
-
-      :open_book: **Scopri la community** [sfogliando le discussioni](%{base_path}/top) che si stanno già svolgendo qui. Quando trovi un messaggio interessante, informativo o divertente, usa :heart: per mostrare il tuo apprezzamento o supporto!
-
-      :handshake: **Contribuisci** commentando, condividendo il tuo punto di vista, ponendo domande o offrendo feedback durante la discussione. Prima di rispondere o iniziare nuovi argomenti, consulta le [Linee guida della community](%{base_path}/faq).
-
-      > Se hai bisogno di aiuto o hai un suggerimento, non esitare a chiedere in [#feedback](%{base_path}/c/site-feedback) o [contatta gli amministratori](%{base_path}/about).
   admin_quick_start_title: "Guida dell'amministratore: come iniziare"
   category:
     topic_prefix: "Definizione della categoria %{category}"
@@ -2012,8 +1998,6 @@ it:
     permalink_normalizations: "Applicare il seguente regex prima di accedere ai permalink, ad esempio: /(topic.*)\\?.*/\\1 eliminerà le stringhe query dalla route degli argomenti. Il formato è regex+string use \\1 ecc. per accedere alle acquisizioni"
     global_notice: "Mostra un banner di avviso globale URGENTE, EMERGENZA, non eliminabile a tutti i visitatori, impostare l'opzione vuota per nasconderlo (HTML consentito)."
     disable_system_edit_notifications: "Disabilita le notifiche di modifica dall'utente system quando 'download_remote_images_to_local' è attivo."
-    disable_category_edit_notifications: "Disabilita le notifiche per le modifiche alle categorie di argomenti."
-    disable_tags_edit_notifications: "Disabilita le notifiche per le modifiche ai tag dell'argomento."
     notification_consolidation_threshold: "Il numero di notifiche per richieste di adesione o di \"Mi piace\" ricevuti prima che le notifiche vengano raccolte in una sola. Impostare il valore a 0 per disabilitare l'opzione."
     likes_notification_consolidation_window_mins: "Durata in minuti del periodo in cui le notifiche dei \"mi piace\" sono raccolte in un'unica notifica una volta raggiunta la soglia definita. La soglia può essere configurata tramite l'impostazione `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Spunta automaticamente gli argomenti quando l'utente arriva in fondo."

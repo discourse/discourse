@@ -229,9 +229,9 @@ th:
       aria_label: "กรองตามช่วงเวลา"
     related_messages:
       title: "ข้อความที่เกี่ยวข้อง"
+      pill: "ข้อความที่เกี่ยวข้อง"
       see_all: 'ดู<a href="%{path}">ข้อความทั้งหมด</a>จาก @%{username}'
     suggested_topics:
-      title: "กระทู้แนะนำ"
       pm_title: "ข้อความแนะนำ"
     about:
       simple_title: "เกี่ยวกับ"
@@ -2681,6 +2681,7 @@ th:
           create: "สร้าง"
           create_type: "ชนิด"
           create_name: "ชื่อ"
+          save: "บันทึก"
           edit: "แก้ไข"
           mobile: "โทรศัพท์"
           settings: "การตั้งค่า"

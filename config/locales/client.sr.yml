@@ -270,9 +270,9 @@ sr:
       other: "%{count} karaktera"
     related_messages:
       title: "Povezane Poruke"
+      pill: "Povezane Poruke"
       see_all: 'Prikaži <a href="%{path}">sve poruke</a> od @%{username}...'
     suggested_topics:
-      title: "Predložene Teme"
       pm_title: "Predložene poruke"
     about:
       simple_title: "O nama"
@@ -2034,6 +2034,7 @@ sr:
           customize_desc: "Prilagođavanje:"
           create_type: "Tip"
           create_name: "Ime foruma"
+          save: "Sačuvaj"
           edit: "Izmeni"
           settings: "Podešavanje"
           upload: "Učitaj"

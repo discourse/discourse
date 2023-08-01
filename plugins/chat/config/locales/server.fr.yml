@@ -7,6 +7,7 @@
 fr:
   site_settings:
     chat_enabled: "Activer l'extension de discussion."
+    enable_public_channels: "Activer les canaux publics en fonction des catégories."
     chat_allowed_groups: "Les utilisateurs de ces groupes peuvent discuter. Notez que les responsables peuvent toujours accéder à la discussion."
     chat_channel_retention_days: "Les messages de discussion dans les canaux ordinaires seront conservés pendant ce nombre de jours. Fixez cette valeur sur « 0 » pour conserver les messages indéfiniment."
     chat_dm_retention_days: "Les messages de discussion dans les discussions privées seront conservés pendant ce nombre de jours. Fixez cette valeur sur « 0 » pour conserver les messages indéfiniment."
@@ -54,15 +55,27 @@ fr:
     deleted_chat_username: supprimé
     errors:
       channel_exists_for_category: "Un canal existe déjà pour cette catégorie et ce nom"
+      channel_new_message_disallowed:
+        archived: "Le canal est archivé, aucun nouveau message ne peut être envoyé"
+        closed: "Le canal est fermé, aucun nouveau message ne peut être envoyé"
+        read_only: "Le canal est en lecture seule, aucun nouveau message ne peut être envoyé"
+      channel_modify_message_disallowed:
+        archived: "Le canal est archivé, aucun message ne peut être modifié ou supprimé."
+        closed: "Le canal est fermé, aucun message ne peut être modifié ou supprimé"
+        read_only: "Le canal est en lecture seule, aucun message ne peut être modifié ou supprimé"
       user_cannot_send_message: "Vous ne pouvez pas envoyer de messages pour le moment."
       rate_limit_exceeded: "Dépassement de la limite de messages de discussion pouvant être envoyés dans les 30 secondes"
       auto_silence_from_flags: "Message de discussion marqué avec un score suffisamment élevé pour mettre l'utilisateur en sourdine."
       channel_cannot_be_archived: "Le canal ne peut pas être archivé pour le moment, il doit être soit fermé, soit ouvert à l'archivage."
       duplicate_message: "Vous avez publié un message identique trop récemment."
       delete_channel_failed: "Échec de la suppression du canal, veuillez réessayer."
+      minimum_length_not_met:
+        one: "Le message est trop court. Il doit comporter au moins %{count} caractère."
+        other: "Le message est trop court. Il doit comporter au moins %{count} caractères."
       message_too_long:
-        one: "Le message est trop long, les messages doivent comporter au maximum %{count} caractères."
+        one: "Le message est trop long, les messages doivent comporter au maximum %{count} caractère."
         other: "Le message est trop long, les messages doivent comporter au maximum %{count} caractères."
+      draft_too_long: "Le brouillon est trop long."
       max_reactions_limit_reached: "Les nouvelles réactions ne sont pas autorisées sur ce message."
       message_move_invalid_channel: "Le canal source et le canal de destination doivent être des canaux publics."
       message_move_no_messages_found: "Aucun message n'a été trouvé avec les ID de message fournis."
@@ -74,6 +87,12 @@ fr:
       actor_preventing_target_user_from_dm: "Vous avez choisi d'empêcher %{username} de vous envoyer des messages privés et directs, vous ne pouvez donc pas lui envoyer de nouveaux messages privés."
       user_cannot_send_direct_messages: "Nous sommes désolés, vous ne pouvez pas envoyer de messages privés."
       over_chat_max_direct_message_users_allow_self: "Vous ne pouvez créer un message privé qu'avec vous-même."
+      over_chat_max_direct_message_users:
+        one: "Vous ne pouvez pas créer de message privé avec plus de %{count} autre utilisateur."
+        other: "Vous ne pouvez pas créer de message privé avec plus de %{count} autres utilisateurs."
+      original_message_not_found: "L'ancêtre du message auquel vous répondez est introuvable ou a été supprimé."
+      thread_invalid_for_channel: "Le fil ne fait pas partie du canal fourni."
+      thread_does_not_match_parent: "Le fil ne correspond pas au message parent."
     reviewables:
       message_already_handled: "Merci, mais nous avons déjà examiné ce message et déterminé qu'il n'a pas besoin d'être signalé à nouveau."
       actions:
@@ -117,8 +136,9 @@ fr:
         other: "@%{acting_username} a déplacé %{count} messages vers le canal [%{channel_name}](%{first_moved_message_url})."
       dm_title:
         single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
         multi_user_truncated:
-          one: "%{comma_separated_usernames} et %{count} autre participant"
+          one: "%{comma_separated_usernames} et %{count} autre utilisateur"
           other: "%{comma_separated_usernames} et %{count} autres utilisateurs"
     category_channel:
       errors:
@@ -137,6 +157,8 @@ fr:
       and_x_others:
         one: "et %{count} autre utilisateur"
         other: "et %{count} autres utilisateurs"
+    summaries:
+      no_targets: "Il n'y a eu aucun message pendant la période sélectionnée."
   discourse_push_notifications:
     popup:
       chat_mention:

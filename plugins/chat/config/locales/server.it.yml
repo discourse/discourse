@@ -63,9 +63,6 @@ it:
       channel_cannot_be_archived: "Il canale non può essere archiviato in questo momento, deve essere chiuso o aperto per l'archiviazione."
       duplicate_message: "Hai pubblicato un messaggio identico troppo di recente."
       delete_channel_failed: "Eliminazione del canale non riuscita, riprova."
-      message_too_long:
-        one: "Il messaggio è troppo lungo. I messaggi devono contenere al massimo %{count} caratteri."
-        other: "Il messaggio è troppo lungo. I messaggi devono contenere al massimo %{count} caratteri."
       draft_too_long: "La bozza è troppo lunga."
       max_reactions_limit_reached: "Non sono consentite nuove reazioni su questo messaggio."
       message_move_invalid_channel: "I canali di origine e di destinazione devono essere canali pubblici."
@@ -78,7 +75,6 @@ it:
       actor_preventing_target_user_from_dm: "Hai scelto di impedire a %{username} di inviarti messaggi privati e diretti, quindi non puoi creare nuovi messaggi diretti per questo destinatario."
       user_cannot_send_direct_messages: "Spiacenti, non puoi inviare messaggi diretti."
       over_chat_max_direct_message_users_allow_self: "Puoi creare solo un messaggio diretto a te stesso."
-      original_message_not_found: "L'antenato del messaggio a cui stai rispondendo non è stato trovato o è stato eliminato."
       thread_invalid_for_channel: "Il thread non fa parte del canale fornito."
       thread_does_not_match_parent: "Il thread non corrisponde al messaggio principale."
     reviewables:

@@ -261,8 +261,8 @@ sk:
       other: "%{count} znakov"
     related_messages:
       title: "Príbuzné správy"
+      pill: "Príbuzné správy"
     suggested_topics:
-      title: "Odporúčané témy"
       pm_title: "Odporúčané správy"
     about:
       simple_title: "O fóre"
@@ -2195,11 +2195,6 @@ sk:
         few: "+%{count} Ďalší"
         many: "+%{count} Ďalší"
         other: "+%{count} Ďalší"
-      granted:
-        one: "%{count} udelený"
-        few: "%{count} udelené"
-        many: "%{count} udelených"
-        other: "%{count} udelených"
       select_badge_for_title: Vyberte odznak, ktorý chcete použiť ako Váš titul
       none: "(žiadne)"
       badge_grouping:
@@ -2582,6 +2577,7 @@ sk:
           create: "Vytvoriť:"
           create_type: "Typ"
           create_name: "Meno"
+          save: "Uložiť"
           long_title: "Upraviť farby, CSS a obsah HTML Vašej stránky"
           edit: "Upraviť"
           common: "Spoločné"
