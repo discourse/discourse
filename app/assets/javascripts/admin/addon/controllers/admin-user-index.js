@@ -11,7 +11,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import showModal from "discourse/lib/show-modal";
+import AdminUser from "admin/models/admin-user";
 import MergeUsersConfirmationModal from "../components/modal/merge-users-confirmation";
 import MergeUsersPromptModal from "../components/modal/merge-users-prompt";
 import MergeUsersProgressModal from "../components/modal/merge-users-progress";
