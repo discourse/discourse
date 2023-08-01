@@ -8,7 +8,7 @@ import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 import { fmt } from "discourse/lib/computed";
 import { schedule } from "@ember/runloop";
-import showModal from "discourse/lib/show-modal";
+import WatchedWordTestModal from "admin/components/modal/watched-word-test";
 
 export default class AdminWatchedWordsActionController extends Controller {
   @service dialog;
@@ -91,9 +91,8 @@ export default class AdminWatchedWordsActionController extends Controller {
   test() {
     WatchedWord.findAll().then((data) => {
       this.adminWatchedWords.set("model", data);
-      showModal("admin-watched-word-test", {
-        admin: true,
-        model: this.currentAction,
+      this.modal.show(WatchedWordTestModal, {
+        model: { watchedWord: this.currentAction },
       });
     });
   }
