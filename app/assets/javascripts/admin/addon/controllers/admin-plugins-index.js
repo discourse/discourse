@@ -5,7 +5,7 @@ import SiteSetting from "admin/models/site-setting";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default class AdminPluginsIndexController extends Controller {
-  @service store;
+  @service session;
 
   @action
   async togglePluginEnabled(plugin) {
@@ -15,6 +15,7 @@ export default class AdminPluginsIndexController extends Controller {
     try {
       await SiteSetting.update(enabledSettingName, !enabled);
       set(plugin, "enabled", !enabled);
+      this.session.requiresRefresh = true;
     } catch (e) {
       popupAjaxError(e);
     }
