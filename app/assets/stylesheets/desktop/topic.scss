@@ -135,21 +135,3 @@
     max-width: 100%;
   }
 }
-
-.more-content-wrapper {
-  display: flex;
-
-  .topic-list-header,
-  .posts-map,
-  .views {
-    display: none;
-  }
-
-  .topic-list-body {
-    border-top: none;
-
-    .topic-list-item:last-of-type {
-      border-bottom: none;
-    }
-  }
-}

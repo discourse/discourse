@@ -1,17 +1,9 @@
 import Component from "@ember/component";
 import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
-import { inject as service } from "@ember/service";
 
 export default Component.extend({
   tagName: "",
-  moreTopicsPreferenceTracking: service(),
-  listId: "related-Messages",
-
-  @discourseComputed("moreTopicsPreferenceTracking.preference")
-  hidden(preference) {
-    return this.site.mobileView && preference !== this.listId;
-  },
 
   @discourseComputed("topic")
   targetUser(topic) {
