@@ -12,6 +12,7 @@ import WatchedWordTestModal from "admin/components/modal/watched-word-test";
 
 export default class AdminWatchedWordsActionController extends Controller {
   @service dialog;
+  @service modal;
   @controller adminWatchedWords;
 
   actionNameKey = null;
