@@ -9,7 +9,7 @@ GEM
     prettier_print (1.2.0)
     rainbow (3.1.1)
     regexp_parser (2.6.0)
-    rexml (3.2.5)
+    rexml (3.2.6)
     rubocop (1.36.0)
       json (~> 2.3)
       parallel (~> 1.10)
