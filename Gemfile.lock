@@ -463,7 +463,7 @@ GEM
       google-protobuf (~> 3.23)
     sass-embedded (1.64.1-x86_64-linux-gnu)
       google-protobuf (~> 3.23)
-    selenium-webdriver (4.10.0)
+    selenium-webdriver (4.11.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
@@ -515,10 +515,6 @@ GEM
       hkdf (~> 1.0)
       jwt (~> 2.0)
       openssl (~> 3.0)
-    webdrivers (5.3.1)
-      nokogiri (~> 1.6)
-      rubyzip (>= 1.3.0)
-      selenium-webdriver (~> 4.0, < 4.11)
     webmock (3.18.1)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
@@ -672,7 +668,6 @@ DEPENDENCIES
   unf
   unicorn
   web-push
-  webdrivers
   webmock
   yaml-lint
   yard
