@@ -11,9 +11,11 @@ export default class WatchedWordTest extends Component {
   get isReplace() {
     return this.args.model.watchedWord.nameKey === "replace";
   }
+
   get isTag() {
     return this.args.model.watchedWord.nameKey === "tag";
   }
+
   get isLink() {
     return this.args.model.watchedWord.nameKey === "link";
   }
@@ -28,7 +30,7 @@ export default class WatchedWordTest extends Component {
 
     if (this.isReplace || this.isLink) {
       const matches = [];
-      this.args.model.watchedWords.words.forEach((word) => {
+      this.args.model.watchedWord.words.forEach((word) => {
         const regexp = createWatchedWordRegExp(word);
         let match;
 
