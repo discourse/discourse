@@ -301,12 +301,10 @@ en:
 
     related_messages:
       title: "Related Messages"
-      pill: "Related Messages"
       see_all: 'See <a href="%{path}">all messages</a> from @%{username}...'
 
     suggested_topics:
-      title: "New & Unread Topics"
-      pill: "Suggested"
+      title: "Suggested Topics"
       pm_title: "Suggested Messages"
 
     about:
