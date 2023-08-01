@@ -1433,7 +1433,7 @@ RSpec.describe PostAlerter do
             end
         end
 
-      expect(events.size).to eq(2)
+      expect(events.size).to eq(3)
       expect(messages.size).to eq(0)
       expect(Jobs::PushNotification.jobs.size).to eq(1)
     end
