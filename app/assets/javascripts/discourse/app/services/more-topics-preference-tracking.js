@@ -13,8 +13,11 @@ export default class MoreTopicsPreferenceTracking extends Service {
     this.preference = this.keyValueStore.get(TOPIC_LIST_PREFERENCE_KEY);
   }
 
-  updatePreference(value) {
-    this.keyValueStore.set({ key: TOPIC_LIST_PREFERENCE_KEY, value });
+  updatePreference(value, rememberPref = false) {
+    if (!rememberPref) {
+      this.keyValueStore.set({ key: TOPIC_LIST_PREFERENCE_KEY, value });
+    }
+
     this.preference = value;
   }
 }
