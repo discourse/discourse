@@ -662,14 +662,6 @@ class User < ActiveRecord::Base
     results.to_h
   end
 
-  def unread_private_messages
-    Discourse.deprecate(
-      "#unread_private_messages is deprecated, use #unread_high_priority_notifications instead.",
-      drop_from: "2.5.0",
-    )
-    @unread_pms ||= unread_high_priority_notifications
-  end
-
   def unread_high_priority_notifications
     @unread_high_prios ||= unread_notifications_of_priority(high_priority: true)
   end
@@ -852,7 +844,6 @@ class User < ActiveRecord::Base
 
     payload = {
       unread_notifications: unread_notifications,
-      unread_private_messages: unread_private_messages,
       unread_high_priority_notifications: unread_high_priority_notifications,
       read_first_notification: read_first_notification?,
       last_notification: json,
