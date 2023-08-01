@@ -41,8 +41,11 @@ export default class MoreTopics extends Component {
       }
 
       let preference = this.moreTopicsPreferenceTracking.preference;
+      // Scenario where we have a preference, but there
+      // are no more elements in it.
+      const listPresent = pills.find((pill) => pill.id === preference);
 
-      if (!preference) {
+      if (!listPresent) {
         const rememberPref = this.site.mobileView && !this.singleList;
 
         this.moreTopicsPreferenceTracking.updatePreference(
