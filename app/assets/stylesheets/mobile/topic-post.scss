@@ -253,10 +253,14 @@ a.reply-to-tab {
 }
 
 .more-content-wrapper {
-  &:not(.mobile-single-list) {
+  &:not(.single-list) {
     .more-topics-title {
       display: none;
     }
+  }
+
+  .topic-list-data {
+    padding-left: 5px;
   }
 }
 
