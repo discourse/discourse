@@ -362,17 +362,11 @@ pre.codeblock-buttons:hover {
   }
 }
 
-.more-content-wrapper.single-list {
-  .more-content-topics {
-    width: 100%;
-  }
-}
+.suggested-topics {
+  margin: 4.5em 0 1em;
 
-.more-content-topics {
-  margin-top: 2em;
-
-  .suggested-topics-message {
-    display: none;
+  table {
+    margin-top: 10px;
   }
 }
 

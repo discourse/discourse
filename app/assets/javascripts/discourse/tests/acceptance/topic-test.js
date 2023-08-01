@@ -204,7 +204,7 @@ acceptance("Topic", function (needs) {
     await visit("/t/internationalization-localization/280");
 
     assert.strictEqual(
-      query("#suggested-topics-title").innerText.trim(),
+      query("#suggested-topics .suggested-topics-title").innerText.trim(),
       I18n.t("suggested_topics.title")
     );
   });

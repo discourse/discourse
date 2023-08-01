@@ -1,14 +1,12 @@
 <div
   id="suggested-topics"
-  class="more-content-topics {{if this.hidden 'hidden'}}"
+  class="suggested-topics"
   role="complementary"
   aria-labelledby="suggested-topics-title"
-  data-mobile-title={{i18n "suggested_topics.pill"}}
-  data-list-id={{this.listId}}
 >
   <UserTip @id="suggested_topics" @selector=".user-tip-reference" />
 
-  <h3 id="suggested-topics-title" class="more-topics-title">
+  <h3 id="suggested-topics-title" class="suggested-topics-title">
     {{i18n this.suggestedTitleLabel}}
   </h3>
 
@@ -28,3 +26,11 @@
     {{html-safe this.browseMoreMessage}}
   </h3>
 </div>
+
+<span>
+  <PluginOutlet
+    @name="below-suggested-topics"
+    @connectorTagName="div"
+    @outletArgs={{hash topic=this.topic}}
+  />
+</span>
