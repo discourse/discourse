@@ -4,13 +4,38 @@
       {{d-icon "filter" class="topic-query-filter__icon"}}
       <Input
         class="topic-query-filter__filter-term"
-        @value={{this.queryString}}
+        @value={{this.newQueryString}}
         @enter={{action
           this.discoveryFilter.updateTopicsListQueryParams
-          this.queryString
+          this.newQueryString
         }}
         @type="text"
+        id="queryStringInput"
+        autocomplete="off"
+      />
+      {{! EXPERIMENTAL OUTLET - don't use because it will be removed soon  }}
+      <PluginOutlet
+        @name="below-filter-input"
+        @outletArgs={{hash newQueryString=this.newQueryString}}
       />
     </div>
+    {{#if this.newQueryString}}
+      <div class="topic-query-filter__controls">
+        <DButton
+          @icon="times"
+          @action={{action this.clearInput}}
+          @disabled={{unless this.newQueryString "true"}}
+        />
+
+        {{#if this.discoveryFilter.q}}
+          <DButton
+            @icon={{this.copyIcon}}
+            @class={{this.copyClass}}
+            @action={{this.copyQueryString}}
+            @disabled={{unless this.newQueryString "true"}}
+          />
+        {{/if}}
+      </div>
+    {{/if}}
   </div>
 </DSection>
