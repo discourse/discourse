@@ -641,7 +641,7 @@ de:
 
       :handshake: **Trage zur Diskussion bei**, indem du kommentierst, deine eigene Sichtweise teilst, Fragen stellst oder Feedback gibst. Bevor du antwortest oder neue Themen beginnst, lies bitte die [Community-Richtlinien](%{base_path}/faq).
 
-      > Wenn du Hilfe brauchst oder einen Vorschlag hast, kannst du unter [#feedback](%{base_path}/c/site-feedback) fragen oder [die Administratoren kontaktiern](%{base_path}/about).
+      > Wenn du Hilfe brauchst oder einen Vorschlag hast, kannst du unter [#feedback](%{base_path}/c/site-feedback) fragen oder [die Administratoren kontaktieren](%{base_path}/about).
   admin_quick_start_title: "Administratorhandbuch: Erste Schritte"
   category:
     topic_prefix: "Über die Kategorie %{category}"
@@ -2012,8 +2012,8 @@ de:
     permalink_normalizations: "Diesen regulären Ausdruck anwenden, bevor Permalinks verarbeitet werden; Beispiel: /(topic.*)\\?.*/\\1 wird Query-Strings von Themen-Routen entfernen. Format: regulärer Ausdruck + String, benutze \\1 usw., um Teilausdrücke zu verwenden"
     global_notice: "Zeigt allen Besuchern eine DRINGENDE NOTFALL-Meldung in Form eines nicht ausblendbaren, global sichtbaren Banners an. Leere den Inhalt, um sie wieder auszublenden (HTML ist erlaubt)."
     disable_system_edit_notifications: "Unterdrückt Bearbeitungsbenachrichtigungen durch den System-Benutzer, wenn die „download_remote_images_to_local“-Einstellung aktiviert ist."
-    disable_category_edit_notifications: "Benachrichtigungen für die Bearbeitung von Themenkategorien deaktivieren."
-    disable_tags_edit_notifications: "Benachrichtigungen für die Bearbeitung von Themenschlagwörtern deaktivieren."
+    disable_category_edit_notifications: "Deaktiviere Benachrichtigungen für Änderungen an Themenkategorien. Hierzu zählen auch Themen, die „veröffentlicht“ sind (z. B. geteilte Entwürfe)."
+    disable_tags_edit_notifications: "Deaktiviere Benachrichtigungen für Änderungen an Themenschlagwörtern. Hierzu zählen auch Themen, die „veröffentlicht“ sind (z. B. geteilte Entwürfe)."
     notification_consolidation_threshold: "Anzahl von „Gefällt mir“- oder Mitgliedschaftsanfragen-Benachrichtigungen, bevor die Benachrichtigungen zu einer einzelnen zusammengefasst werden. Zum Deaktivieren auf 0 setzen."
     likes_notification_consolidation_window_mins: "Zeitfenster in Minuten, in dem mehrere „Gefällt mir“-Benachrichtigungen zu einer einzelnen Benachrichtigung zusammengefasst werden, sobald der Schwellenwert erreicht wird. Der Schwellenwert kann mittels `SiteSetting.notification_consolidation_threshold` eingestellt werden."
     automatically_unpin_topics: "Themen automatisch loslösen, wenn ein Benutzer das Ende erreicht."

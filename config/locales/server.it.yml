@@ -2012,8 +2012,6 @@ it:
     permalink_normalizations: "Applicare il seguente regex prima di accedere ai permalink, ad esempio: /(topic.*)\\?.*/\\1 eliminerà le stringhe query dalla route degli argomenti. Il formato è regex+string use \\1 ecc. per accedere alle acquisizioni"
     global_notice: "Mostra un banner di avviso globale URGENTE, EMERGENZA, non eliminabile a tutti i visitatori, impostare l'opzione vuota per nasconderlo (HTML consentito)."
     disable_system_edit_notifications: "Disabilita le notifiche di modifica dall'utente system quando 'download_remote_images_to_local' è attivo."
-    disable_category_edit_notifications: "Disabilita le notifiche per le modifiche alle categorie di argomenti."
-    disable_tags_edit_notifications: "Disabilita le notifiche per le modifiche ai tag dell'argomento."
     notification_consolidation_threshold: "Il numero di notifiche per richieste di adesione o di \"Mi piace\" ricevuti prima che le notifiche vengano raccolte in una sola. Impostare il valore a 0 per disabilitare l'opzione."
     likes_notification_consolidation_window_mins: "Durata in minuti del periodo in cui le notifiche dei \"mi piace\" sono raccolte in un'unica notifica una volta raggiunta la soglia definita. La soglia può essere configurata tramite l'impostazione `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Spunta automaticamente gli argomenti quando l'utente arriva in fondo."

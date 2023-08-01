@@ -40,8 +40,8 @@ pt_BR:
       move_to_channel:
         title: "Mover mensagens para o canal"
         instructions:
-          one: "Você está movendo <strong>%{count}</strong> mensagem. Selecione o canal de destino. Uma mensagem de placeholder será criada no canal <strong>%{channelTitle}</strong> para indicar que esta mensagem foi movida. Note que as respostas não serão movidas junto para o novo canal, e mensagens no antigo canal não serão mais exibidas como respostas às mensagens movidas."
-          other: "Você está movendo <strong>%{count}</strong> mensagens. Selecione o canal de destino. Uma mensagem de placeholder será criada no canal <strong>%{channelTitle}</strong> para indicar que estas mensagens foram movidas. Note que as respostas não serão movidas junto para o novo canal, e mensagens no antigo canal não serão mais exibidas como respostas às mensagens movidas."
+          one: "Você está movendo <strong>%{count}</strong> mensagem. Selecione o canal de destino. Uma mensagem de espaço reservado será criada no canal <strong>%{channelTitle}</strong> para indicar que esta mensagem foi movida. Note que as respostas não serão movidas junto para o novo canal, e mensagens no antigo canal não serão mais exibidas como respostas às mensagens movidas."
+          other: "Você está movendo <strong>%{count}</strong> mensagens. Selecione o canal de destino. Uma mensagem de espaço reservado será criada no canal <strong>%{channelTitle}</strong> para indicar que estas mensagens foram movidas. Note que as respostas não serão movidas junto para o novo canal, e mensagens no antigo canal não serão mais exibidas como respostas às mensagens movidas."
         confirm_move: "Mover mensagens"
       channel_settings:
         title: "Definições do canal"
@@ -84,6 +84,9 @@ pt_BR:
       collapse: "Recolher gaveta de chat"
       expand: "Expandir Chat"
       confirm_flag: "Tem certeza de que deseja sinalizar a mensagem de %{username}?"
+      deleted:
+        one: "Uma mensagem foi excluída. [view]"
+        other: "%{count} mensagens foram excluídas. [ver todas]"
       hidden: "Uma mensagem foi ocultada. [view]"
       delete: "Excluir"
       edited: "editou"
@@ -122,7 +125,7 @@ pt_BR:
           other: "Últimas %{count} horas"
       mention_warning:
         dismiss: "ignorar"
-        cannot_see: "%{username} não pode acessar este canal e não foi notificado."
+        cannot_see: "%{username} não pode acessar este canal e não foi notificado(a)."
         cannot_see_multiple:
           one: "%{username} e %{count} outro usuário não podem acessar este canal e não foram notificados"
           other: "%{username} e %{count} outros usuários não podem acessar este canal e não foram notificados"
@@ -133,7 +136,7 @@ pt_BR:
         without_membership: "%{username} não entrou neste canal."
         without_membership_multiple:
           one: "%{username} e %{count} outro usuário não se juntaram a este canal"
-          other: "%{username} e %{count} outros usuários não se juntaram a este canal"
+          other: "%{username} e %{count} outros(as) usuários(as) não se juntaram a este canal"
         group_mentions_disabled: "%{group_name} não permite menções."
         group_mentions_disabled_multiple:
           one: "%{group_name} e %{count} outro grupo não permitem menções"
@@ -151,6 +154,66 @@ pt_BR:
           unreachable_multiple:
             one: "@%{group} e %{count} outro grupo não permitem menções"
             other: "@%{group} e %{count} outros grupos não permitem menções"
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {As menções de @{group1} excedem o <a href="{siteSettingUrl}" target="_blank">limite de notificações</a> de # usuário(a).}
+                              other {As menções de @{group1} excedem o <a href="{siteSettingUrl}" target="_blank">limite de notificações</a> de # usuários(as).}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {As menções de @{group1} excedem o limite de notificações de # usuário(a).}
+                              other {As menções de @{group1} excedem o limite de notificações de # usuários(as).}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {As menções de @{group1} e @{group2} excedem o <a href="{siteSettingUrl}" target="_blank">limite de notificações</a> de # usuário(a).}
+                            other {As menções de @{group1} e @{group2} excedem o <a href="{siteSettingUrl}" target="_blank">limite de notificações</a> de # usuários(as).}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {As menções de @{group1} e @{group2} excedem o limite de notificações de # usuário(a).}
+                            other {As menções de @{group1} e @{group2} excedem o limite de notificações de # usuários(as).}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {As menções destes {groupCount} grupos excedem o <a href="{siteSettingUrl}" target="_blank">limite de notificações</a> de # usuário(a).}
+                            other {As menções destes {groupCount} grupos excedem o <a href="{siteSettingUrl}" target="_blank">limite de notificações</a> de # usuários(as).}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {As menções destes {groupCount} grupos excedem o limite de notificações de # usuário(a).}
+                            other {As menções destes {groupCount} grupos excedem o limite de notificações de # usuários(as).}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
+        too_many_mentions:
+          one: "Esta mensagem excete o limite de notificações de %{count} menção."
+          other: "Esta mensagem excede o limite de notificações de %{count} menções."
+        too_many_mentions_admin:
+          one: 'Esta mensagem excede o <a href="%{siteSettingUrl}" target="_blank">limite de notificações</a> de %{count} menção.'
+          other: 'Esta mensagem excede o <a href="%{siteSettingUrl}" target="_blank">limite de notificações</a> de %{count} menções.'
       aria_roles:
         header: "Cabeçalho do chat"
         composer: "Compositor de chat"
@@ -195,6 +258,9 @@ pt_BR:
       select: "Selecionar"
       return_to_list: "Retornar para lista de canais"
       return_to_threads_list: "Retornar às discussões em andamento"
+      unread_threads_count:
+        one: "Você tem %{count} discussão não lida"
+        other: "Você tem %{count} discussões não lidas"
       scroll_to_bottom: "Rolar para a parte inferior"
       scroll_to_new_messages: "Ver novas mensagens"
       sound:
@@ -206,6 +272,8 @@ pt_BR:
       title: "chat"
       title_capitalized: "Chat"
       upload: "Anexar arquivo"
+      upload_to_channel: "Enviar para %{title}"
+      upload_to_thread: "Enviar para tópico"
       uploaded_files:
         one: "%{count} arquivo"
         other: "%{count} arquivos"
@@ -216,7 +284,7 @@ pt_BR:
         read_only: "Somente leitura"
         archived_header: "O canal está arquivado"
         archived: "Arquivados"
-        archive_failed: "Falha no canal de arquivamento. %{completed}/%{total} mensagens foram arquivadas. <a target=\"_blank\" href=\"%{topic_url}\">tópico de destino</a>. Pressione repetir para tentar concluir o arquivo."
+        archive_failed: "Falha no canal de arquivamento. %{completed}/%{total} mensagens foram arquivadas. <a target=\"_blank\" href=\"%{topic_url}\">O tópico de destino</a> foi criado. Pressione repetir para tentar concluir o arquivo."
         archive_failed_no_topic: "Falha no canal de arquivamento. %{completed}/%{total} mensagens foram arquivadas. O tópico de destino não foi criado. Pressione repetir para tentar concluir o arquivo."
         archive_completed: "Veja <a target=\"_blank\" href=\"%{topic_url}\">o tópico de arquivo</a>"
         closed_header: "Canal fechado"
@@ -250,9 +318,22 @@ pt_BR:
           members: Membros
           settings: Definições
       new_message_modal:
+        title: Enviar mensagem
+        add_user_long: <kbd>shift + clique</kbd> ou <kbd>shift + enter</kbd><span>Adicionar @%{username}</span>
+        add_user_short: <span>Adicionar usuário(a)</span>
+        open_channel: <span>Abrir canal</span>
+        default_search_placeholder: "#a-channel, @alguém ou alguma coisa"
+        default_channel_search_placeholder: "#a-channel"
+        default_user_search_placeholder: "@alguém"
+        user_search_placeholder: "... adicionar mais usuários"
+        disabled_user: "desativou o chat"
         no_items: "Nenhum item"
       channel_edit_name_slug_modal:
+        title: Editar canal
+        input_placeholder: Adicionar um nome
+        slug_description: Um slug de canal é usado na URL em vez do nome do canal
         name: Nome do canal
+        slug: Slug do canal (opcional)
       channel_edit_description_modal:
         title: Editar descrição
         input_placeholder: Adicione uma descrição
@@ -269,15 +350,44 @@ pt_BR:
           one: "%{count} membro"
           other: "%{count} membros"
       create_channel:
+        threading:
+          label: "Ativar discussões"
         auto_join_users:
           public_category_warning: "%{category} é uma categoria pública. Deseja adicionar automaticamente todos os(as) usuários(as) recentemente ativos(as) a este canal?"
+          warning_1_group:
+            one: "Adicionar automaticamente %{count} usuário(a) de %{group}?"
+            other: "Adicionar automaticamente %{count} usuários(as) de %{group}?"
+          warning_2_groups:
+            one: "Adicionar automaticamente %{count} usuário(a) de %{group1} e %{group2}?"
+            other: "Adicionar automaticamente %{count} usuários(as) de %{group1} e %{group2}?"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                one {
+                      { userCount, plural,
+                          one {Adicionar automaticamente {userCount} usuário de {groupName} e {groupCount} outro grupo?}
+                        other {Adicionar automaticamente {userCount} usuários de {groupName} e {groupCount} outro grupo?}
+                      }
+                    }
+              other {
+                      { userCount, plural,
+                          one {Adicionar automaticamente {userCount} usuário de {groupName} e {groupCount} outros grupos?}
+                        other {Adicionar automaticamente {userCount} usuários de {groupName} e {groupCount} outros grupos?}
+                      }
+                    }
+            }
         choose_category:
           label: "Escolha uma categoria"
           none: "selecionar um..."
           default_hint: Gerencie o acesso ao acessar as <a href=%{link} target="_blank">%{category} configurações de segurança</a>
+          hint_1_group: 'Os(as) usuários(as) em %{group} terão acesso a este canal de acordo com as <a href=%{settingLink} target="_blank">configurações de segurança</a>'
+          hint_2_groups: 'Os(as) usuários(as) em %{group1} e %{group2} terão acesso a este canal de acordo com as <a href=%{settingLink} target="_blank">configurações de segurança</a>'
+          hint_multiple_groups:
+            one: 'Os(as) usuários(as) em %{group} e %{count} outro grupo terão acesso a este canal de acordo com as <a href="%{settingLink}" target="_blank">configurações de segurança</a>'
+            other: 'Os(as) usuários(as) em %{group} e %{count} outros grupos terão acesso a este canal de acordo com as <a href="%{settingLink}" target="_blank">configurações de segurança</a>'
         create: "Criar canal"
         description: "Descrição (opcional)"
         name: "Nome do canal"
+        slug: "Slug do canal (opcional)"
         title: "Novo canal"
         type: "Tipo"
         types:
@@ -287,7 +397,16 @@ pt_BR:
         type: "Mensagem de chat"
       reactions:
         only_you: "Você reagiu com :%{emoji}:"
+        you_and_single_user: "Você e %{username} reagiram com :%{emoji}:"
+        you_and_multiple_users: "Você, %{commaSeparatedUsernames} e %{username} reagiram com :%{emoji}:"
+        you_multiple_users_and_more:
+          one: "Você, %{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
+          other: "Você, %{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
         single_user: "%{username} reagiu com :%{emoji}:"
+        multiple_users: "%{commaSeparatedUsernames} e %{username} reagiram com :%{emoji}:"
+        multiple_users_and_more:
+          one: "%{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
+          other: "%{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
       composer:
         toggle_toolbar: "Ativar/desativar barra de ferramentas"
         italic_text: "texto enfatizado"
@@ -305,7 +424,10 @@ pt_BR:
         channel_wide_mentions_label: "Permitir menções @all e @here"
         channel_wide_mentions_description: "Permitir que os usuários notifiquem todos os membros de #%{channel} com @all ou apenas aqueles que estão ativos no momento com @here"
         channel_threading_label: "Discussões"
+        channel_threading_description: "Quando o tópico está ativado, as respostas a uma mensagem de chat criarão uma conversa separada, que existirá junto com o canal principal."
         auto_join_users_label: "Adicionar usuários(as) automaticamente"
+        auto_join_users_info: "Verifique a cada hora quais usuários(as) estiveram ativos(as) nos últimos três meses. Adicione-os(as) a este canal se tiverem acesso à categoria %{category}."
+        auto_join_users_info_no_category: "Verifique a cada hora quais usuários(as) estiveram ativos(as) nos últimos três meses. Adicione-os(as) a este canal se tiverem acesso à categoria selecionada."
         auto_join_users_warning: "Todos(as) os(as) usuários(as) que não são membros deste canal e têm acesso à categoria %{category} participarão. Tem certeza?"
         desktop_notification_level: "Notificações do desktop"
         follow: "Participar"
@@ -326,6 +448,9 @@ pt_BR:
         title: "Chat"
         export_messages:
           title: "Exportar mensagens do chat"
+          description: "A exportação está atualmente limitada a 10.000 mensagens mais recentes nos últimos 6 meses."
+          create_export: "Criar exportação"
+          export_has_started: "A exportação foi iniciada. Você receberá uma MP quando estiver pronta."
       direct_messages:
         title: "Chat pessoal"
         new: "Criar um chat pessoal"
@@ -388,6 +513,15 @@ pt_BR:
         many_users:
           one: "%{commaSeparatedUsernames} e mais %{count} estão digitando"
           other: "%{commaSeparatedUsernames} e mais %{count} estão digitando"
+      retention_reminders:
+        public_none: "O histórico do canal é mantido indefinidamente."
+        public:
+          one: "O histórico do canal é mantido por %{count} dia."
+          other: "O histórico do canal é mantido por %{count} dias."
+        dm_none: "O histórico do chat pessoal é mantido indefinidamente."
+        dm:
+          one: "O histórico do chat pessoal é mantido por %{count} dia."
+          other: "O histórico do chat pessoal é mantido por %{count} dias."
       flags:
         off_topic: "Esta mensagem não é relevante para a discussão atual, conforme definido pelo título do canal, e provavelmente deve ser movida para outro lugar."
         inappropriate: "Esta mensagem contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo ou uma violação de <a href=\"%{basePath}/guidelines\">nossas diretrizes da comunidade</a>."
@@ -411,11 +545,13 @@ pt_BR:
         no_results: "Nenhum resultado"
       thread:
         title: "Título"
+        view_thread: Visualizar tópico
         default_title: "Tópico"
         replies:
           one: "%{count} resposta"
           other: "%{count} respostas"
         label: Tópico
+        close: "Fechar tópico"
         original_message:
           started_by: "Iniciado por"
         settings: "Definições"
@@ -423,13 +559,17 @@ pt_BR:
         notifications:
           regular:
             title: "Normal"
+            description: "Você receberá notificação se alguém mencionar seu @nome neste tópico."
           tracking:
             title: "Monitorando"
+            description: "Uma contagem de novas respostas para este tópico será mostrada na lista de tópicos e no canal. Você receberá uma notificação se algúem mencionar seu @nome neste tópico."
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
       threads:
         open: "Tópico Aberto"
+        list: "Discussões em andamento"
+        none: "Você não está participando de nenhum tópico neste canal."
       draft_channel_screen:
         header: "Novas mensagens"
         cancel: "Cancelar"

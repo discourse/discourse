@@ -274,9 +274,9 @@ es:
       aria_label: "Filtrar por periodo"
     related_messages:
       title: "Mensajes relacionados"
+      pill: "Mensajes relacionados"
       see_all: 'Ver <a href="%{path}">todos los mensajes</a> de @%{username}...'
     suggested_topics:
-      title: "Temas sugeridos"
       pm_title: "Mensajes sugeridos"
     about:
       simple_title: "Acerca de"
@@ -1210,16 +1210,16 @@ es:
           one: '<span class="%{className}">%{count}</span> publicación denunciada'
           other: '<span class="%{className}">%{count}</span> publicaciones denunciadas'
         deleted_posts:
-          one: '<span class="%{className}">%{cuenta}</span> publicación eliminada'
-          other: '<span class="%{className}">%{cuenta}</span> publicaciones eliminadas'
+          one: '<span class="%{className}">%{count}</span> publicación eliminada'
+          other: '<span class="%{className}">%{count}</span> publicaciones eliminadas'
         suspensions:
-          one: '<span class="%{className}">%{cuenta}</span> suspensión'
+          one: '<span class="%{className}">%{count}</span> suspensión'
           other: '<span class="%{className}">%{count}</span> suspensiones'
         warnings_received:
           one: '<span class="%{className}">%{count}</span> advertencia'
           other: '<span class="%{className}">%{count}</span> advertencias'
         rejected_posts:
-          one: '<span class="%{className}">%{cuenta}</span> publicación rechazada'
+          one: '<span class="%{className}">%{count}</span> publicación rechazada'
           other: '<span class="%{className}">%{count}</span> publicaciones rechazadas'
       messages:
         all: "todas las bandejas de entrada"
@@ -1789,8 +1789,7 @@ es:
         content: "Estos son algunos de los temas que creemos que te gustaría leer a continuación."
       admin_guide:
         title: "¡Te damos la bienvenida a tu nuevo sitio!"
-        content: "Lee la guía del administrador para seguir construyendo tu sitio y tu comunidad."
-        button: "¡Vamos!"
+        content_no_url: "Lee la guía del administrador para seguir construyendo tu sitio y tu comunidad."
     loading: "Cargando..."
     errors:
       prev_page: "mientras se intentaba cargar"
@@ -1858,7 +1857,7 @@ es:
       no_internet: "Sin conexión a Internet."
       refresh_page: "Actualizar página"
     summary:
-      in_progress: "Resumir tema utilizando IA..."
+      in_progress: "Resumir tema utilizando IA"
       summarized_on: "Resumido con AI el %{date}"
       model_used: "IA utilizada: %{model}"
       outdated: "El resumen está obsoleto"
@@ -3839,10 +3838,6 @@ es:
       more_badges:
         one: "+%{count} Más"
         other: "+%{count} Más"
-      granted:
-        one: "%{count} concedida"
-        other: "%{count} concedidas"
-      awarded: concedido
       select_badge_for_title: Selecciona una insignia para utilizar como tu título
       none: "(ninguna)"
       successfully_granted: "%{badge} concedida exitosamente a %{username}"
@@ -4454,7 +4449,6 @@ es:
               update: Actualiza un tema. Cambia el título, la categoría, las etiquetas, el estado, el arquetipo, el enlace_destacado, etc.
               delete: Eliminar un tema.
               read_lists: Lea listas de temas como destacados, nuevos, recientes, etc. También se admite RSS.
-              status: "Actualiza el estado de un tema. Estado: cerrado, archivado, visible, anclado. Activado: verdadero, falso. Especifica un category_id aquí y en la carga útil de la solicitud para permitir solo cambios de estado en temas de esa categoría."
             posts:
               edit: Edita cualquier publicación o una específica.
               delete: Eliminar una publicación.
@@ -4731,6 +4725,7 @@ es:
           create: "Crear"
           create_type: "Tipo"
           create_name: "Nombre"
+          save: "Guardar"
           long_title: "Modificar los colores, CSS y contenidos HTML de su sitio"
           edit: "Editar"
           edit_confirm: "Este es un tema remoto, si editas CSS/HTML, los cambios se eliminarán la próxima vez que actualices el tema."

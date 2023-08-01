@@ -310,7 +310,7 @@ he:
         read_only: "לקריאה בלבד"
         archived_header: "הערוץ בארכיון"
         archived: "בארכיון"
-        archive_failed: "העברת הערוץ לארכיון נכשלה. %{completed}/%{total} הודעות הועברו לארכיון. <a target=\"_blank\" href=\"%{topic_url}\">נושא היעד</a>. יש ללחוץ על לנסות שוב כדי לנסות להעביר שוב לארכיון."
+        archive_failed: "העברת הערוץ לארכיון נכשלה. %{completed}/%{total} הודעות הועברו לארכיון. <a target=\"_blank\" href=\"%{topic_url}\">נושא היעד</a> נוצר. יש ללחוץ על לנסות שוב כדי לנסות להשלים את ההעברה לארכיון."
         archive_failed_no_topic: "העברת הערוץ לארכיון נכשלה. %{completed}/%{total} הודעות הועברו לארכיון, נושא היעד לא נוצר. יש ללחוץ על לנסות שוב כדי לנסות להעביר שוב לארכיון."
         archive_completed: "אפשר לעיין ב<a target=\"_blank\" href=\"%{topic_url}\">ארכיון הנושא</a>"
         closed_header: "הערוץ סגור"

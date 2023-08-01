@@ -78,9 +78,12 @@ zh_TW:
       heading: "聊天"
       join: "加入"
       last_visit: "上次到訪"
+      summarization:
+        since:
+          other: "前 %{count} 小時"
       mention_warning:
         dismiss: "忽略"
-      placeholder_start_conversation_users: "從 %{commaSeparatedUsernames}開始對話"
+      placeholder_start_conversation_users: "與 %{commaSeparatedUsernames} 開始聊天"
       remove_upload: "移除檔案"
       react: "用表情符號反應"
       reply: "回覆"
@@ -103,6 +106,7 @@ zh_TW:
         none: "無"
       title: "聊天"
       title_capitalized: "聊天"
+      upload_to_channel: "上傳至 %{title}"
       exit: "上一步"
       channel_status:
         read_only_header: "頻道為唯讀"
@@ -135,7 +139,12 @@ zh_TW:
           members: 成員
           settings: 設定
       new_message_modal:
-        no_items: "沒有物件"
+        title: 傳送訊息
+        add_user_short: <span>新增使用者</span>
+        open_channel: <span>開啟頻道</span>
+        no_items: "沒有項目"
+      channel_edit_name_slug_modal:
+        title: 編輯頻道
       channel_edit_description_modal:
         title: 編輯描述
         input_placeholder: 新增描述
@@ -149,10 +158,12 @@ zh_TW:
         types:
           category: "分類"
           topic: "話題"
+      reactions:
+        single_user: "%{username} 以 :%{emoji}: 回應"
       composer:
         italic_text: "斜體字"
         bold_text: "粗體字"
-        send: "發送"
+        send: "傳送"
       notification_levels:
         never: "永不"
       settings:
@@ -168,6 +179,9 @@ zh_TW:
         admin_title: "管理員"
       admin:
         title: "聊天"
+        export_messages:
+          title: "匯出聊天訊息"
+          create_export: "建立匯出"
       incoming_webhooks:
         back: "上一步"
         description: "簡述"
@@ -196,8 +210,12 @@ zh_TW:
         no_results: "沒有結果"
       thread:
         title: "標題"
+        view_thread: 檢視討論串
+        default_title: "討論串"
         replies:
           other: "%{count}個回覆"
+        label: 討論串
+        close: "關閉討論串"
         settings: "設定"
         last_reply: "最新回覆"
         notifications:
@@ -205,6 +223,11 @@ zh_TW:
             title: "一般"
           tracking:
             title: "跟蹤"
+        participants_other_count:
+          other: "+%{count}"
+      threads:
+        open: "開啟討論串"
+        list: "進行中的討論"
       draft_channel_screen:
         header: "新訊息"
         cancel: "取消"

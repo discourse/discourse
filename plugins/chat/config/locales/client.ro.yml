@@ -14,6 +14,11 @@ ro:
     chat:
       create: "Creează"
       cancel: "Anulare"
+      move_to_channel:
+        instructions:
+          one: "Mutați <strong>%{count}</strong> mesaj. Selectați un canal de destinație. Un mesaj placeholder va fi creat în canalul <strong>%{channelTitle}</strong> pentru a indica faptul că acest mesaj a fost mutat. Retineți că lanțurile de răspuns nu vor fi păstrate în noul canal, iar mesajele din vechiul canal nu vor mai apărea ca raspunsuri la mesajele mutate."
+          few: "Mutați <strong>%{count}</strong> mesaje. Selectați un canal destinație. Un mesaj substitut va fi creat în canalul <strong>%{channelTitle}</strong> pentru a indica faptul că aceste mesaje au fost mutate. Rețineți că lanțurile de răspunsuri nu vor fi păstrate în noul canal, iar mesajele din vechiul canal nu vor mai apărea ca răspunsuri la mesajele mutate."
+          other: "Mutați <strong>%{count}</strong> mesaje. Selectați un canal destinație. Un mesaj substitut va fi creat în canalul <strong>%{channelTitle}</strong> pentru a indica faptul că aceste mesaje au fost mutate. Rețineți că lanțurile de răspunsuri nu vor fi păstrate în noul canal, iar mesajele din vechiul canal nu vor mai apărea ca răspunsuri la mesajele mutate."
       channel_settings:
         edit: "Modifică"
         add: "Adaugă"
@@ -44,8 +49,22 @@ ro:
         dismiss: "renunță"
         cannot_see: "%{username} nu poate accesa acest canal și nu a fost notificat."
         without_membership: "%{username} nu s-a alăturat acestui canal."
+        without_membership_multiple:
+          one: "%{username} și încă %{count} utilizator nu s-au alăturat acestui canal."
+          few: "%{username} și alți %{count} utilizatori nu s-au alăturat acestui canal."
+          other: "%{username} și alți %{count} utilizatori nu s-au alăturat acestui canal."
         group_mentions_disabled: "%{group_name} nu permite mențiuni."
+        group_mentions_disabled_multiple:
+          one: "%{group_name} și %{count} alt grup nu permit mențiuni."
+          few: "%{group_name} și %{count} alte grupuri nu permit mențiuni."
+          other: "%{group_name} și %{count} alte grupuri nu permit mențiuni."
         too_many_members: "%{group_name} are prea mulți membri. Nimeni nu a fost anunțat."
+        groups:
+          unreachable_1: "@%{group} nu permite mențiuni."
+          unreachable_multiple:
+            one: "@%{group} și %{count} alt grup nu permit mențiuni."
+            few: "@%{group} și %{count} alte grupuri nu permit mențiuni."
+            other: "@%{group} și %{count} alte grupuri nu permit mențiuni."
       reply: "Răspunde"
       edit: "Modifică"
       rebake_message: "Reconstruieşte HTML"

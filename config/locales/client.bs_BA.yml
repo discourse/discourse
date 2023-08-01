@@ -257,9 +257,9 @@ bs_BA:
       other: "%{count} karaktera"
     related_messages:
       title: "Povezane Poruke"
+      pill: "Povezane Poruke"
       see_all: 'Prikaži <a href="%{path}">sve poruke</a> od @ %{username} ...'
     suggested_topics:
-      title: "Preporučene teme"
       pm_title: "Preporučene Poruke"
     about:
       simple_title: "O nama"
@@ -2884,10 +2884,6 @@ bs_BA:
         one: "+ Još %{count}"
         few: "+ Još %{count}"
         other: "+ Još %{count}"
-      granted:
-        one: "%{count} odobreno"
-        few: "%{count} odobreno"
-        other: "%{count} odobreno"
       select_badge_for_title: Izaveri bedž za svoj naslov
       none: "(ništa)"
       successfully_granted: "Uspješno dodijeljen %{badge} za %{username}"
@@ -3488,6 +3484,7 @@ bs_BA:
           create: "napravi"
           create_type: "Tip"
           create_name: "Ime"
+          save: "Save"
           long_title: "Izmijenite boje, CSS i HTML sadržaj Vaše web lokacije"
           edit: "Izmijeni"
           edit_confirm: "Ovo je udaljena tema, ako uredite CSS / HTML, vaše izmene će biti izbrisane sledeći put kada ažurirate temu."

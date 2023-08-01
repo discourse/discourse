@@ -270,9 +270,9 @@ bg:
       aria_label: "Филтриране по период"
     related_messages:
       title: "Свързани съобщения"
+      pill: "Свързани съобщения"
       see_all: 'See <a href="%{path}">всички съобщения</a> от @%{username}...'
     suggested_topics:
-      title: "Подобни теми"
       pm_title: "Предложени съобщения"
     about:
       simple_title: "Относно"
@@ -3258,7 +3258,6 @@ bg:
       more_badges:
         one: "+Още %{count}"
         other: "+Още %{count}"
-      awarded: присъдени
       select_badge_for_title: Изберете значка за титла?
       none: "(никой)"
       successfully_granted: "Успешно дадохте %{badge}на %{username}"
@@ -3643,6 +3642,7 @@ bg:
           customize_desc: "Персонализация:"
           create_type: "Тип"
           create_name: "Име"
+          save: "Запази "
           edit: "Редактирай"
           mobile: "Мобилен"
           settings: "Настройки"

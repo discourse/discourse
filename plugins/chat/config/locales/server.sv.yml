@@ -73,8 +73,8 @@ sv:
         one: "Meddelandet är för kort. Det måste innehålla minst %{count} tecken."
         other: "Meddelandet är för kort. Det måste innehålla minst %{count} tecken."
       message_too_long:
-        one: "Meddelandet är för långt, måste ha högst %{count} tecken."
-        other: "Meddelandet är för långt, måste ha högst %{count} tecken."
+        one: "Meddelandet är för långt. Meddelanden får högst innehålla %{count} tecken."
+        other: "Meddelandet är för långt. Meddelanden får högst innehålla %{count} tecken."
       draft_too_long: "Utkastet är för långt."
       max_reactions_limit_reached: "Nya reaktioner är inte tillåtna för detta meddelande."
       message_move_invalid_channel: "Käll- och destinationskanalen måste vara offentliga kanaler."
@@ -90,7 +90,7 @@ sv:
       over_chat_max_direct_message_users:
         one: "Du kan inte skapa ett direktmeddelande med fler än %{count} annan användare."
         other: "Du kan inte skapa ett direktmeddelande med fler än %{count} andra användare."
-      original_message_not_found: "Det första meddelandet i meddelandekedjan som du svarar på kan inte hittas eller har tagits bort."
+      original_message_not_found: "Det första meddelandet i meddelandekedjan som du svarar på kan inte hittas eller har raderats."
       thread_invalid_for_channel: "Tråden är inte en del av angiven kanal."
       thread_does_not_match_parent: "Tråden matchar inte överordnat meddelande."
     reviewables:

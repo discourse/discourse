@@ -23,6 +23,11 @@ sk:
         instructions: "<p>Odstráni kanál <strong>%{name}</strong> a históriu chatu. Všetky správy a súvisiace údaje, ako sú reakcie a médiá, budú natrvalo vymazané. Ak chcete zachovať históriu kanála a vyradiť ho z prevádzky, môžete namiesto toho kanál archivovať.</p> <p>Ste si istí, že chcete kanál <strong>natrvalo odstrániť</strong>? Pre potvrdenie zadajte názov kanála do poľa nižšie.</p>"
       close: "Zavrieť"
       expand: "Rozbaliť chat"
+      deleted:
+        one: "Správa bola vymazaná. [view]"
+        few: "%{count} správ bolo vymazaných. [zobraziť všetky]"
+        many: "%{count} správ bolo vymazaných. [zobraziť všetky]"
+        other: "%{count} správ bolo vymazaných. [zobraziť všetky]"
       delete: "Odstrániť"
       muted: "ignorovaní"
       joined: "vytvorený"
@@ -40,9 +45,15 @@ sk:
         title: "Zhrnutie správ"
         description: "Ak chcete zhrnúť konverzáciu odoslanú počas požadovaného časového obdobia, vyberte nižšie uvedenú možnosť."
         summarize: "Zhrnúť"
+        since:
+          one: "Posledná hodina"
+          few: "Posledných %{count} hodín"
+          many: "Posledných %{count} hodín"
+          other: "Posledných %{count} hodín"
       mention_warning:
         dismiss: "zahodiť"
         cannot_see: "%{username} nemá prístup k tomuto kanálu a nebol upozornený."
+        group_mentions_disabled: "%{group_name} nepovoľuje označovanie."
         groups:
           unreachable_1: "@%{group} nepovoľuje označovanie."
           unreachable_2: "@%{group1} a @%{group2} nepovoľujú oznčovanie."
@@ -62,6 +73,11 @@ sk:
       bookmark_message: "Záložka"
       save: "Uložiť"
       return_to_threads_list: "Návrat k prebiehajúcim diskusiám"
+      unread_threads_count:
+        one: "Máte %{count} neprečítanú diskusiu"
+        few: "Máte %{count} neprečítaných diskusií"
+        many: "Máte %{count} neprečítaných diskusií"
+        other: "Máte %{count} neprečítaných diskusií"
       sounds:
         none: "Žiadny"
       upload_to_channel: "Nahrať do %{title}"
@@ -163,6 +179,11 @@ sk:
       retention_reminders:
         public_none: "História kanálov sa uchováva na neurčito."
         dm_none: "História osobných chatov sa uchováva na neurčito."
+        dm:
+          one: "História súkromných správ sa uchováva na %{count} deň."
+          few: "História súkromných správ sa uchováva počas %{count} dní."
+          many: "História súkromných správ sa uchováva počas %{count} dní."
+          other: "História súkromných správ sa uchováva počas %{count} dní."
       emoji_picker:
         objects: "Objekty"
         flags: "Označenia"
@@ -188,6 +209,11 @@ sk:
           tracking:
             title: "Pozorovať"
             description: "Počet nových odpovedí na toto vlákno sa zobrazí v zozname vlákien a v kanáli. Budete upozornení, ak niekto v tomto vlákne spomenie vaše @meno."
+        participants_other_count:
+          one: "+%{count}"
+          few: "+%{count}"
+          many: "+%{count}"
+          other: "+%{count}"
       threads:
         open: "Otvoriť vlákno"
         list: "Prebiehajúca diskusia"

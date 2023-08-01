@@ -236,9 +236,9 @@ zh_TW:
       aria_label: "按期間篩選"
     related_messages:
       title: "相關訊息"
+      pill: "相關訊息"
       see_all: '參閱 @%{username} 的 <a href="%{path}">所有訊息</a>...'
     suggested_topics:
-      title: "建議的話題"
       pm_title: "推薦訊息"
     about:
       simple_title: "關於"
@@ -2725,8 +2725,6 @@ zh_TW:
         other: "%{count} 徽章"
       more_badges:
         other: "+%{count} 更多"
-      granted:
-        other: "%{count} 授予"
       select_badge_for_title: 選擇一個徽章作為你的頭銜使用
       none: "(無)"
       successfully_granted: "已成功將%{badge}徽章給予%{username}"
@@ -3294,6 +3292,7 @@ zh_TW:
           create: "建立"
           create_type: "類型"
           create_name: "名稱"
+          save: "保存"
           long_title: "修改網站上的CSS顏色、HTML內容"
           edit: "編輯"
           edit_confirm: "這是一個遠端佈景主題，因此您對CSS/HTML所做的變更將會在您下次更新佈景主題時消失。"

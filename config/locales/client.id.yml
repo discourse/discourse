@@ -243,9 +243,11 @@ id:
       aria_label: "Filter berdasarkan periode"
     related_messages:
       title: "Pesan Terkait"
+      pill: "Pesan Terkait"
       see_all: 'Lihat <a href="%{path}">semua pesan</a> dari @ %{username} ...'
     suggested_topics:
-      title: "Topik Yang Disarankan"
+      title: "Topik Baru & Belum Dibaca"
+      pill: "Disarankan"
       pm_title: "Pesan Yang Disarankan"
     about:
       simple_title: "Tentang"
@@ -1340,8 +1342,8 @@ id:
       button: "Mengerti!"
       admin_guide:
         title: "Selamat datang di situs baru Anda!"
-        content: "Baca panduan admin untuk terus membangun situs dan komunitas Anda."
-        button: "Ayo berangkat!"
+        content: "<a href='%{admin_guide_url}'>Baca panduan admin</a> untuk terus membangun situs dan komunitas Anda."
+        content_no_url: "Baca panduan admin untuk terus membangun situs dan komunitas Anda."
     loading: "Diproses..."
     errors:
       reasons:
@@ -1383,7 +1385,7 @@ id:
       no_internet: "Tidak ada koneksi internet."
       refresh_page: "Segarkan halaman"
     summary:
-      in_progress: "Meringkas topik menggunakan AI..."
+      in_progress: "Meringkas topik menggunakan AI"
       summarized_on: "Dirangkum dengan AI pada %{date}"
       model_used: "AI yang digunakan: %{model}"
       outdated: "Ringkasan sudah usang"
@@ -1911,6 +1913,8 @@ id:
         other: "Diberi kepada orang lain %{count} kali"
       more_badges:
         other: "+%{count} lainnya"
+      awarded:
+        other: "%{number} diberikan"
       none: "(kosong)"
       badge_grouping:
         trust_level:
@@ -2116,6 +2120,8 @@ id:
         scopes:
           action: Aksi
           descriptions:
+            topics:
+              status: "Memperbarui status topik. Status: ditutup, arsip, terlihat, disematkan. Diaktifkan: benar, salah. Tentukan kategori_id di sini dan di dalam muatan permintaan untuk hanya mengizinkan perubahan status pada topik-topik di dalam kategori tersebut."
             posts:
               list: Daftar post terbaru dan post pribadi. RSS juga didukung.
       web_hooks:
@@ -2162,6 +2168,7 @@ id:
           theme: "Tema"
           create_type: "Tipe"
           create_name: "Nama"
+          save: "Simpan"
           edit: "Ubah"
           settings: "Pengaturan"
           collapse: Persempit
@@ -2180,6 +2187,8 @@ id:
           revert: "Dibalik"
           primary:
             name: "utama"
+          selected:
+            name: "dipilih"
       email:
         title: "Surel"
         settings: "Pengaturan"
@@ -2269,6 +2278,7 @@ id:
         validations_modal:
           table_headers:
             type: "Tipe"
+            description: "Deskripsi"
           validations:
             minimum:
               description: "Untuk bidang teks, tentukan jumlah minimum karakter yang diperbolehkan."
@@ -2280,6 +2290,8 @@ id:
               key: "tipe"
               type: "string"
               description: "Untuk bidang input, Anda dapat menentukan jenis masukan yang diharapkan (teks|email|tanggal|nomor|url|tel|warna)"
+        edit_category:
+          select_template: "Pilih templat formulir"
       users:
         title: "Pengguna"
         last_emailed: "Terakhir Surel Dikirimkan"
@@ -2389,6 +2401,7 @@ id:
         revoke: Cabut
         reason: Alasan
         expand: Perluas &hellip;
+        enabled: diaktifkan
         disabled: dinonaktifkan
       emoji:
         uploading: "Mengunggah..."

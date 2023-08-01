@@ -247,9 +247,9 @@ ur:
       aria_label: "مدت کے لحاظ سے فلٹر کریں"
     related_messages:
       title: "متعلقہ پیغامات"
+      pill: "متعلقہ پیغامات"
       see_all: '@%{username} کی طرف سے <a href="%{path}">تمام پیغامات</a> دیکھیں...'
     suggested_topics:
-      title: "تجویز کیے گئے ٹاپک"
       pm_title: "تجویز کیے گئے پیغامات"
     about:
       simple_title: "بارے میں"
@@ -3375,9 +3375,6 @@ ur:
       more_badges:
         one: "+%{count} مزید"
         other: "+%{count} مزید"
-      granted:
-        one: "%{count} عطا کیا گیا"
-        other: "%{count} عطا کیے گئے"
       select_badge_for_title: اپنے عنوان کے طور پر استعمال کرنے کے لئے ایک بیج منتخب کریں
       none: "(کوئی نہیں)"
       successfully_granted: "%{username}کو کامیابی سے %{badge} عطا کیا"
@@ -4110,6 +4107,7 @@ ur:
           create: "بنائیں"
           create_type: "قِسم"
           create_name: "نام"
+          save: "محفوظ کریں"
           long_title: "اپنی سائٹ کے رنگ، سی ایس ایس اور ایچ ٹی ایم ایل میں ترمیم کریں"
           edit: "ترمیم"
           edit_confirm: "یہ ایک ریمَوٹ تِھیم ہے، اگر آپ سی ایس ایس / ایچ ٹی ایم ایل میں ترمیم کرتے ہیں تو اگلی دفعہ تِھیم اَپ ڈیٹ ہونے پر یہ تبدیلیاں مٹا دی جائیں گی۔"

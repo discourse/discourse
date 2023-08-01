@@ -15,6 +15,7 @@ fi:
           actions:
             chat_channel_status_change: "Chat-kanavan tila muuttui"
             chat_channel_delete: "Chat-kanava poistettu"
+            chat_auto_remove_membership: "Jäsenyydet poistetaan automaattisesti kanavilta"
       api:
         scopes:
           descriptions:
@@ -38,6 +39,9 @@ fi:
       browse_all_channels: "Selaa kaikkia kanavia"
       move_to_channel:
         title: "Siirrä viestit kanavalle"
+        instructions:
+          one: "Olet siirtämässä <strong>%{count}</strong> viestin. Valitse kohdekanava. Kanavalle <strong>%{channelTitle}</strong> luodaan paikkamerkkiviesti, joka osoittaa, että tämä viesti on siirretty. Huomaa, että vastausketjut eivät säily uudella kanavalla, eikä vanhan kanavan viestejä enää näytetä vastauksina siirrettyihin viesteihin."
+          other: "Olet siirtämässä <strong>%{count}</strong> viestiä. Valitse kohdekanava. Kanavalle <strong>%{channelTitle}</strong> luodaan paikkamerkkiviesti, joka osoittaa, että tämä viesti on siirretty. Huomaa, että vastausketjut eivät säily uudella kanavalla, eikä vanhan kanavan viestejä enää näytetä vastauksina siirrettyihin viesteihin."
         confirm_move: "Siirrä viestit"
       channel_settings:
         title: "Kanavan asetukset"
@@ -68,6 +72,7 @@ fi:
         instructions: "Kanavan sulkeminen estää muita kuin henkilökunnan käyttäjiä lähettämästä uusia viestejä tai muokkaamasta olemassa olevia viestejä. Haluatko varmasti sulkea tämän kanavan?"
       channel_delete:
         title: "Poista kanava"
+        instructions: "<p>Poistaa kanavan <strong>%{name}</strong> ja keskusteluhistorian. Kaikki viestit ja niihin liittyvät tiedot, kuten reaktiot ja lataukset, poistetaan pysyvästi. Jos haluat säilyttää kanavan historian ja poistaa sen käytöstä, voit sen sijaan arkistoida kanavan.</p> <p>Haluatko varmasti <strong>poistaa kanavan pysyvästi</strong>? Vahvista kirjoittamalla kanavan nimi alla olevaan ruutuun.</p>"
         confirm: "Ymmärrän seuraukset, poista kanava"
         confirm_channel_name: "Anna kanavan nimi"
         process_started: "Kanavan poistoprosessi on alkanut. Tämä modaalinen ikkuna sulkeutuu pian, etkä näe enää poistettua kanavaa missään."
@@ -97,7 +102,9 @@ fi:
         title: "Sähköposti-ilmoitukset"
         when_away: "Vain poissa ollessa"
       header_indicator_preference:
+        title: "Näytä aktiivisuusilmaisin yläpalkissa"
         all_new: "Kaikki uudet viestit"
+        dm_and_mentions: "Yksityisviestit ja maininnat"
         never: "Ei koskaan"
       enable: "Ota chat käyttöön"
       flag: "Liputa"
@@ -110,25 +117,56 @@ fi:
       join: "Liity"
       last_visit: "edellinen vierailu"
       summarization:
+        title: "Tee yhteenveto viesteistä"
+        description: "Valitse vaihtoehto alla yhteenvedon tekemiseksi haluttuna ajanjaksona lähetetystä keskustelusta."
         summarize: "Tee yhteenveto"
+        since:
+          one: "Viimeinen tunti"
+          other: "Viimeiset %{count} tuntia"
       mention_warning:
         dismiss: "hylkää"
+        cannot_see: "%{username} ei voi käyttää tätä kanavaa, eikä hänelle ilmoitettu."
+        cannot_see_multiple:
+          one: "%{username} ja %{count} muu käyttäjä eivät voi käyttää tätä kanavaa, eikä heille ilmoitettu."
+          other: "%{username} ja %{count} muuta käyttäjää eivät voi käyttää tätä kanavaa, eikä heille ilmoitettu."
         invitations_sent:
           one: "Kutsu lähetetty"
           other: "Kutsut lähetettiin"
         invite: "Kutsu kanavalle"
         without_membership: "%{username} ei ole liittynyt tälle kanavalle."
+        without_membership_multiple:
+          one: "%{username} ja %{count} muu käyttäjä eivät ole liittyneet tälle kanavalle."
+          other: "%{username} ja %{count} muuta käyttäjää eivät ole liittyneet tälle kanavalle."
         group_mentions_disabled: "%{group_name} ei salli mainintoja."
+        group_mentions_disabled_multiple:
+          one: "%{group_name} ja %{count} muu ryhmä eivät salli mainintoja."
+          other: "%{group_name} ja %{count} muuta ryhmää eivät salli mainintoja."
+        too_many_members: "Ryhmässä %{group_name} on liian monta jäsentä. Kukaan ei saanut ilmoitusta."
+        too_many_members_multiple:
+          one: "Ryhmässä %{group_name} ja %{count} muussa ryhmässä on liikaa jäseniä. Kukaan ei saanut ilmoitusta."
+          other: "Ryhmässä %{group_name} ja %{count} muussa ryhmässä on liikaa jäseniä. Kukaan ei saanut ilmoitusta."
         groups:
           header:
             some: "Osa käyttäjistä ei saa ilmoitusta"
             all: "Kukaan ei saa ilmoitusta"
           unreachable_1: "@%{group} ei salli mainintoja."
+          unreachable_2: "@%{group1} ja @%{group2} eivät salli mainintoja."
+          unreachable_multiple:
+            one: "@%{group} ja %{count} muu ryhmä eivät salli mainintoja."
+            other: "@%{group} ja %{count} muuta ryhmää eivät salli mainintoja."
+          too_many_members_MF: "{ groupCount, plural,\n     =1 {\n          { isAdmin, select,\n            true {\n              { notificationLimit, plural,\n                  one {Ryhmän @{group1} mainitseminen ylittää # käyttäjän <a href=\"{siteSettingUrl}\" target=\"_blank\">ilmoitusrajan</a>.}\n                  other {Ryhmän @{group1} mainitseminen ylittää # käyttäjän <a href=\"{siteSettingUrl}\" target=\"_blank\">ilmoitusrajan</a>.}\n              }\n            }\n            false {\n              { notificationLimit, plural,\n                  one {Ryhmän @{group1} mainitseminen ylittää # käyttäjän ilmoitusrajan.}\n                  other {Ryhmän @{group1} mainitseminen ylittää # käyttäjän ilmoitusrajan.}\n              }\n            }\n            other {}\n          }\n        }\n     =2 {\n          { isAdmin, select,\n            true {\n              { notificationLimit, plural,\n                  one {Ryhmien @{group1} ja @{group2} mainitseminen ylittää # käyttäjän <a href=\"{siteSettingUrl}\" target=\"_blank\">ilmoitusrajan</a>.}\n                other {Ryhmien @{group1} ja @{group2} mainitseminen ylittää # käyttäjän <a href=\"{siteSettingUrl}\" target=\"_blank\">ilmoitusrajan</a>.}\n              }\n            }\n            false {\n              { notificationLimit, plural,\n                  one {Ryhmien @{group1} ja @{group2} mainitseminen ylittää # käyttäjän ilmoitusrajan.}\n                other {Ryhmien @{group1} ja @{group2} mainitseminen ylittää # käyttäjän ilmoitusrajan.}\n              }\n            }\n            other {}\n          }\n        }\n  other {\n          { isAdmin, select,\n            true {\n              { notificationLimit, plural,\n                  one {Näiden {groupCount} ryhmän mainitseminen ylittää # käyttäjän <a href=\"{siteSettingUrl}\" target=\"_blank\">ilmoitusrajan</a>.}\n                other {Näiden {groupCount} ryhmän mainitseminen ylittää # käyttäjän <a href=\"{siteSettingUrl}\" target=\"_blank\">ilmoitusrajan</a>.}\n              }\n            }\n            false {\n              { notificationLimit, plural,\n                  one {Näiden {groupCount} ryhmän mainitseminen ylittää # käyttäjän ilmoitusrajan.}\n                other {Näiden {groupCount} ryhmän mainitseminen ylittää # käyttäjän ilmoitusrajan.}\n              }\n            }\n            other {}\n          }\n        }\n}\t\n"
+        too_many_mentions:
+          one: "Tämä viesti ylittää %{count} maininnan ilmoitusrajan."
+          other: "Tämä viesti ylittää %{count} maininnan ilmoitusrajan."
+        too_many_mentions_admin:
+          one: 'Tämä viesti ylittää %{count} maininnan <a href="%{siteSettingUrl}" target="_blank">ilmoitusrajan</a>.'
+          other: 'Tämä viesti ylittää %{count} maininnan <a href="%{siteSettingUrl}" target="_blank">ilmoitusrajan</a>.'
       aria_roles:
         header: "Chatin ylätunniste"
         composer: "Chatin tekstieditori"
         channels_list: "Chat-kanavien luettelo"
       no_public_channels: "Et ole liittynyt kanaville."
+      kicked_from_channel: "Et voi enää käyttää tätä kanavaa."
       only_chat_push_notifications:
         title: "Lähetä vain chatin push-ilmoituksia"
         description: "Estä kaikkien muiden kuin chatin push-ilmoitusten lähettäminen"
@@ -143,7 +181,12 @@ fi:
       placeholder_channel: "Keskustelu kanavalla %{channelName}"
       placeholder_thread: "Keskustelu ketjussa"
       placeholder_users: "Chat-keskustelu käyttäjän %{commaSeparatedNames} kanssa"
+      placeholder_new_message_disallowed:
+        archived: "Kanava on arkistoitu, et voi lähettää uusia viestejä juuri nyt."
+        closed: "Kanava on suljettu, et voi lähettää uusia viestejä juuri nyt."
+        read_only: "Kanava on vain luettavissa, et voi lähettää uusia viestejä juuri nyt."
       placeholder_silenced: "Et voi lähettää viestejä tällä hetkellä."
+      placeholder_start_conversation: "Aloita keskustelu..."
       placeholder_start_conversation_users: "Aloita keskustelu käyttäjän %{commaSeparatedUsernames} kanssa"
       remove_upload: "Poista tiedosto"
       react: "Reagoi emojilla"
@@ -188,6 +231,8 @@ fi:
         read_only: "Vain luku"
         archived_header: "Kanava on arkistoitu"
         archived: "Arkistoitu"
+        archive_failed: "Kanavan arkistointi epäonnistui. %{completed}/%{total} viestiä arkistoitiin <a target=\"_blank\" href=\"%{topic_url}\">kohdeaiheeseen</a>. Yritä täydentää arkisto uudelleen painamalla \"Yritä uudelleen\"."
+        archive_failed_no_topic: "Kanavan arkistointi epäonnistui. %{completed}/%{total} viestiä on arkistoitu, kohdeketjua ei luotu. Yritä arkistoinnin viimeistelyä uudelleen painamalla Yritä uudelleen -painiketta."
         archive_completed: "Katso <a target=\"_blank\" href=\"%{topic_url}\">arkistoketju</a>"
         closed_header: "Kanava on suljettu"
         closed: "Suljettu"
@@ -220,13 +265,22 @@ fi:
           members: Jäsenet
           settings: Asetukset
       new_message_modal:
+        title: Lähetä viesti
+        add_user_long: <kbd>vaihto + napsautus</kbd> tai <kbd>vaihto + enter</kbd><span>Lisää @%{username}</span>
+        add_user_short: <span>Lisää käyttäjä</span>
+        open_channel: <span>Avaa kanava</span>
+        default_search_placeholder: "#a-kanava, @joku tai mitä tahansa"
         default_channel_search_placeholder: "#a-kanava"
         default_user_search_placeholder: "@joku"
+        user_search_placeholder: "...lisää käyttäjiä"
+        disabled_user: "on poistanut chatin käytöstä"
         no_items: "Ei kohteita"
       channel_edit_name_slug_modal:
         title: Muokkaa kanavaa
         input_placeholder: Lisää nimi
+        slug_description: URL-osoitteessa käytetään kanavan polkutunnusta kanavan nimen sijaan
         name: Kanavan nimi
+        slug: Kanavan polkutunnus (valinnainen)
       channel_edit_description_modal:
         title: Muokkaa kuvausta
         input_placeholder: Lisää kuvaus
@@ -243,15 +297,44 @@ fi:
           one: "%{count} jäsen"
           other: "%{count} jäsentä"
       create_channel:
+        threading:
+          label: "Käytä ketjutusta"
         auto_join_users:
           public_category_warning: "%{category} on julkinen alue. Lisätäänkö kaikki hiljattain aktiiviset käyttäjät automaattisesti tälle kanavalle?"
+          warning_1_group:
+            one: "Lisätäänkö %{count} käyttäjä automaattisesti ryhmästä %{group}?"
+            other: "Lisätäänkö %{count} käyttäjää automaattisesti ryhmästä %{group}?"
+          warning_2_groups:
+            one: "Lisätäänkö %{count} käyttäjä automaattisesti ryhmistä %{group1} ja %{group2}?"
+            other: "Lisätäänkö %{count} käyttäjää automaattisesti ryhmistä %{group1} ja %{group2}?"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                one {
+                      { userCount, plural,
+                          one {Lisätäänkö {userCount} käyttäjä ryhmästä {groupName} ja {groupCount} muusta ryhmästä automaattisesti?}
+                        other {Lisätäänkö {userCount} käyttäjää ryhmästä {groupName} ja {groupCount} muusta ryhmästä automaattisesti?}
+                      }
+                    }
+              other {
+                      { userCount, plural,
+                          one {Lisätäänkö {userCount} käyttäjä ryhmästä {groupName} ja {groupCount} muusta ryhmästä automaattisesti??}
+                        other {Lisätäänkö {userCount} käyttäjä ryhmästä {groupName} ja {groupCount} muusta ryhmästä automaattisesti?}
+                      }
+                    }
+            }
         choose_category:
           label: "Valitse alue"
           none: "valitse yksi..."
           default_hint: Hallinnoi käyttöoikeutta <a href=%{link} target="_blank">alueen %{category} turvallisuusasetuksissa</a>
+          hint_1_group: 'Ryhmän %{group} käyttäjillä on pääsy tälle kanavalle <a href="%{settingLink}" target="_blank">turvallisuusasetusten</a> mukaan'
+          hint_2_groups: 'Ryhmien %{group1} ja %{group2} käyttäjillä on pääsy tälle kanavalle <a href="%{settingLink}" target="_blank">turvallisuusasetusten</a> mukaan'
+          hint_multiple_groups:
+            one: 'Ryhmän %{group} ja %{count} muun ryhmän käyttäjillä on pääsy tälle kanavalle <a href="%{settingLink}" target="_blank">turvallisuusasetusten</a> mukaan'
+            other: 'Ryhmän %{group} ja %{count} muun ryhmän käyttäjillä on pääsy tälle kanavalle <a href="%{settingLink}" target="_blank">turvallisuusasetusten</a> mukaan'
         create: "Luo kanava"
         description: "Kuvaus (valinnainen)"
         name: "Kanavan nimi"
+        slug: "Kanavan polkutunnus (valinnainen)"
         title: "Uusi kanava"
         type: "Tyyppi"
         types:
@@ -261,7 +344,16 @@ fi:
         type: "Chat-viesti"
       reactions:
         only_you: "Reagoit emojilla :%{emoji}:"
+        you_and_single_user: "Sinä ja %{username} reagoitte emojilla :%{emoji}:"
+        you_and_multiple_users: "Sinä, %{commaSeparatedUsernames} ja %{username} reagoitte emojilla :%{emoji}:"
+        you_multiple_users_and_more:
+          one: "Sinä, %{commaSeparatedUsernames} ja %{count} muu reagoitte emojilla :%{emoji}:"
+          other: "Sinä, %{commaSeparatedUsernames} ja %{count} muuta reagoitte emojilla :%{emoji}:"
         single_user: "%{username} reagoivat emojilla :%{emoji}:"
+        multiple_users: "%{commaSeparatedUsernames} ja %{username} reagoivat emojilla :%{emoji}:"
+        multiple_users_and_more:
+          one: "%{commaSeparatedUsernames} ja %{count} muu reagoivat emojilla :%{emoji}:"
+          other: "%{commaSeparatedUsernames} ja %{count} muuta reagoivat emojilla :%{emoji}:"
       composer:
         toggle_toolbar: "Vaihda työkalupalkki"
         italic_text: "korostettu teksti"
@@ -278,14 +370,18 @@ fi:
       settings:
         channel_wide_mentions_label: "Salli @all- ja @here-maininnat"
         channel_wide_mentions_description: "Salli käyttäjien ilmoittaa kaikille kanavan #%{channel} käyttäjille @all-maininnalla tai niille, jotka ovat aktiivisia kyseisellä hetkellä, @here-maininnalla"
+        channel_threading_label: "Ketjutus"
+        channel_threading_description: "Kun ketjutus on käytössä, chat-viestin vastaukset luovat erillisen keskustelun, joka on olemassa pääkanavan rinnalla."
         auto_join_users_label: "Lisää käyttäjiä automaattisesti"
+        auto_join_users_info: "Tarkista tunnin välein, ketkä käyttäjät ovat olleet aktiivisia viimeisten kolmen kuukauden aikana. Lisää heidät tälle kanavalle, jos heillä on pääsy alueelle %{category}."
+        auto_join_users_info_no_category: "Tarkista tunnin välein, ketkä käyttäjät ovat olleet aktiivisia viimeisten kolmen kuukauden aikana. Lisää heidät tälle kanavalle, jos heillä on pääsy valitulle alueelle."
         auto_join_users_warning: "Jokainen käyttäjä, joka ei ole tämän kanavan jäsen ja jolla on pääsy alueelle %{category}, liittyy. Oletko varma?"
         desktop_notification_level: "Työpöytäilmoitukset"
         follow: "Liity"
         followed: "Liittyi"
         mobile_notification_level: "Mobiili-push-ilmoitukset"
         mute: "Vaimenna kanava"
-        threading_enabled: "Otettu käyttöön"
+        threading_enabled: "Käytössä"
         threading_disabled: "Pois käytöstä"
         muted_on: "Käytössä"
         muted_off: "Pois käytöstä"
@@ -297,6 +393,11 @@ fi:
         admin_title: "Ylläpitäjä"
       admin:
         title: "Chat"
+        export_messages:
+          title: "Vie chat-viestit"
+          description: "Vienti on tällä hetkellä rajoitettu 10 000:een viimeisimpään viestiin viimeisen kuuden kuukauden ajalta."
+          create_export: "Luo vienti"
+          export_has_started: "Vienti on alkanut. Saat yksityisviestin, kun se on valmis."
       direct_messages:
         title: "Henkilökohtainen chat"
         new: "Luo yksityis-chat"
@@ -359,6 +460,15 @@ fi:
         many_users:
           one: "%{commaSeparatedUsernames} ja %{count} muu kirjoittavat"
           other: "%{commaSeparatedUsernames} ja %{count} muuta kirjoittavat"
+      retention_reminders:
+        public_none: "Kanavan historia säilytetään ikuisesti."
+        public:
+          one: "Kanavan historia säilytetään %{count} päivän ajan."
+          other: "Kanavan historia säilytetään %{count} päivän ajan."
+        dm_none: "Henkilökohtainen chat-historia säilytetään ikuisesti."
+        dm:
+          one: "Henkilökohtainen chat-historia säilytetään %{count} päivän ajan."
+          other: "Henkilökohtainen chat-historia säilytetään %{count} päivän ajan."
       flags:
         off_topic: "Tämä viesti ei liity nykyiseen keskusteluun kanavan otsikon mukaan, ja se pitäisi todennäköisesti siirtää muualle."
         inappropriate: "Tämä viesti sisältää sisältöä, jota kohtuullinen henkilö pitäisi loukkaavana, herjaavana tai <a href=\"%{basePath}/guidelines\">yhteisömme ohjeiden vastaisena</a>."
@@ -383,9 +493,11 @@ fi:
       thread:
         title: "Otsikko"
         view_thread: Näytä ketju
+        default_title: "Ketju"
         replies:
           one: "%{count} vastaus"
           other: "%{count} vastausta"
+        label: Ketju
         close: "Sulje ketju"
         original_message:
           started_by: "Aloittanut"
@@ -394,8 +506,10 @@ fi:
         notifications:
           regular:
             title: "Normaali"
+            description: "Saat ilmoituksen, jos joku mainitsee @nimesi tässä ketjussa."
           tracking:
             title: "Seuranta"
+            description: "Tämän ketjun uusien vastausten määrä näkyy ketjuluettelossa ja kanavassa. Saat ilmoituksen, jos joku mainitsee @nimesi tässä ketjussa."
         participants_other_count:
           one: "+%{count}"
           other: "+%{count}"
@@ -461,6 +575,7 @@ fi:
           composer_code: "%{shortcut} Koodi (vain tekstieditori)"
           drawer_open: "%{shortcut} Avaa chat-laatikko"
           drawer_close: "%{shortcut} Sulje chat-laatikko"
+          mark_all_channels_read: "%{shortcut} Merkitse kaikki kanavat luetuiksi"
     topic_statuses:
       chat:
         help: "Chat on käytössä tässä ketjussa"

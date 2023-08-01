@@ -274,9 +274,9 @@ it:
       aria_label: "Filtra per periodo"
     related_messages:
       title: "Messaggi correlati"
+      pill: "Messaggi correlati"
       see_all: 'Vedi <a href="%{path}">tutti i messaggi</a> di @ %{username} ...'
     suggested_topics:
-      title: "Argomenti Suggeriti"
       pm_title: "Messaggi Suggeriti"
     about:
       simple_title: "Informazioni"
@@ -1157,6 +1157,7 @@ it:
       watched_first_post_categories_instructions: "Riceverai la notifica per il primo messaggio di ogni nuovo argomento in queste categorie."
       watched_first_post_tags: "Osservazione Primo Messaggio"
       watched_first_post_tags_instructions: "Riceverai la notifica per il primo messaggio di ogni nuovo argomento con queste etichette."
+      watched_precedence_over_muted: "Inviami notifiche sugli argomenti nelle categorie o nei tag che sto osservando anche se appartengono a un oggetto silenziato"
       muted_categories: "Silenziate"
       muted_categories_instructions: "Non riceverai notifiche riguardanti i contenuti di queste categorie, e non appariranno nelle pagine delle Categorie o dei Recenti."
       muted_categories_instructions_dont_hide: "Non riceverai alcuna notifica relativa a nuovi argomenti in queste categorie."
@@ -1750,7 +1751,8 @@ it:
         title: "Continua a leggere!"
         content: "Ecco alcuni argomenti che riteniamo gradiresti leggere in seguito."
       admin_guide:
-        button: "Andiamo!"
+        content: "<a href='%{admin_guide_url}'>Leggi la guida dell'amministratore</a> per continuare a costruire il tuo sito e la tua community."
+        content_no_url: "Leggi la guida dell'amministratore per continuare a costruire il tuo sito e la tua community."
     loading: " Caricamento..."
     errors:
       prev_page: "durante il caricamento"
@@ -1815,7 +1817,7 @@ it:
       intro: "Ciao! Sembra che la discussione ti interessi, ma non hai ancora registrato un account."
       value_prop: "Non ti piace dover scorrere gli stessi messaggi? Quando crei un account, riprenderai sempre dall'ultimo messaggio letto. Potrai anche ricevere notifiche di nuove risposte, salvare segnalibri e usare i \"mi piace\" per ringraziare gli altri. Possiamo lavorare tutti insieme per rendere questa community un posto fantastico. :heart:"
     summary:
-      in_progress: "Riepilogo dell'argomento utilizzando l'AI in corso..."
+      in_progress: "Riepilogo dell'argomento utilizzando l'AI in corso"
       outdated: "Il riepilogo è obsoleto"
       outdated_posts:
         one: "(%{count} messaggio mancante)"
@@ -3763,9 +3765,9 @@ it:
       more_badges:
         one: "+%{count} altro"
         other: "+ altri %{count}"
-      granted:
-        one: "%{count} assegnato"
-        other: "%{count} assegnati"
+      awarded:
+        one: "%{number} assegnato"
+        other: "%{number} assegnati"
       select_badge_for_title: Seleziona un distintivo da usare come tuo titolo
       none: "(nessuno)"
       successfully_granted: "Distintivo %{badge} assegnato con successo a %{username}"
@@ -4329,6 +4331,7 @@ it:
               read: Leggi un argomento o un messaggio specifico in esso. È supportato anche RSS.
               write: Crea un nuovo argomento o pubblica un messaggio su uno esistente.
               read_lists: Leggi liste di argomenti come Popolari, Nuovi, Recenti, ecc. E' supportato anche l'RSS.
+              status: "Aggiorna lo stato di un argomento. Stato: chiuso, archiviato, visibile, bloccato. Abilitato: vero, falso. Specifica un category_id qui e nel payload della richiesta per consentire solo modifiche di stato sugli argomenti in quella categoria."
             posts:
               edit: Modifica qualsiasi messaggio o uno specifico.
             categories:
@@ -4588,6 +4591,7 @@ it:
           create: "Crea"
           create_type: "Tipo"
           create_name: "Nome"
+          save: "Salva"
           long_title: "Modifica i colori e i contenuti CSS e HTML del tuo sito"
           edit: "Modifica"
           edit_confirm: "Questo è un tema remoto, se modifichi il CSS o l'HTML i cambiamenti verranno cancellati la prossima volta che aggiorni il tema."
