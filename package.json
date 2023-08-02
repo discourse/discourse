@@ -23,7 +23,7 @@
     "diffhtml": "1.0.0-beta.20",
     "ember-template-lint": "5.10.3",
     "eslint": "^8.37.0",
-    "eslint-config-discourse": "https://github.com/discourse/eslint-config-discourse#decorator-position",
+    "eslint-config-discourse": "^3.6.0",
     "eslint-plugin-ember": "11.8.0",
     "eslint-plugin-sort-class-members": "1.18.0",
     "jsdoc": "^4.0.0",

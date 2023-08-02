@@ -1753,9 +1753,10 @@ escape-string-regexp@^4.0.0:
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-4.0.0.tgz#14ba83a5d373e3d311e5afca29cf5bfad965bf34"
   integrity sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==
 
-"eslint-config-discourse@https://github.com/discourse/eslint-config-discourse#decorator-position":
+eslint-config-discourse@^3.6.0:
   version "3.6.0"
-  resolved "https://github.com/discourse/eslint-config-discourse#2cdf6154336444b5e72ceef3f72a0f77cd6eb258"
+  resolved "https://registry.yarnpkg.com/eslint-config-discourse/-/eslint-config-discourse-3.6.0.tgz#bceb472ca66fb969600587aa0722d428798e0d4f"
+  integrity sha512-w4q0D+FtLyYPIgu2ec0SIaY8vNKmj5dPV8AgWqmXLNX2rjFdWXcQQBZRsq4U+JJrOT7v4uNMz+B5mFRMGxOiQw==
   dependencies:
     "@babel/core" "^7.22.5"
     "@babel/eslint-parser" "^7.22.5"
