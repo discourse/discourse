@@ -4704,6 +4704,7 @@ en:
             email: Email
             incoming_email: "Custom incoming email address"
             incoming_email_placeholder: "enter email address"
+            incoming_email_tooltip: "You can separate multiple email addresses with the | character."
             visibility: Visibility
             visibility_levels:
               title: "Who can see this group?"
