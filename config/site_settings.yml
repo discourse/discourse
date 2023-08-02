@@ -2148,7 +2148,7 @@ developer:
   max_sidebar_section_links:
     default: 50
     hidden: true
-  track_gc_stat_per_request:
+  instrument_gc_stat_per_request:
     default: false
     hidden: true
 
