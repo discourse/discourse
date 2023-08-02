@@ -184,7 +184,7 @@ describe Chat::ReviewQueue do
         expect(pm_topic.title).to eq("Your chat message in \"#{chat_channel.title(message.user)}\"")
       end
 
-      it "doesn't create a revieable" do
+      it "doesn't create a reviewable" do
         queue.flag_message(message, guardian, ReviewableScore.types[:notify_user])
 
         reviewable = Chat::ReviewableMessage.find_by(target: message)
