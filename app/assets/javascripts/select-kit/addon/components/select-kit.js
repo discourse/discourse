@@ -1048,15 +1048,15 @@ export default Component.extend(
         return;
       }
 
-      // setting focus early is best for iOS
-      // because render/promise delays
-      // may cause the keyboard to not show
+      // setting focus as early as possible is best for iOS
+      // because render/promise delays may cause keyboard not to show
       if (!forceHeader) {
         this._focusFilterInput();
       }
 
       this._safeAfterRender(() => {
-        if (!forceHeader) {
+        const input = this.getFilterInput();
+        if (!forceHeader && input) {
           this._focusFilterInput();
         } else if (!this.selectKit.options.preventHeaderFocus) {
           const headerContainer = this.getHeader();
