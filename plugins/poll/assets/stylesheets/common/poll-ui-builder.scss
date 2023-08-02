@@ -67,13 +67,13 @@
     margin-bottom: 15px;
 
     .poll-option-value {
-      align-items: center;
+      align-items: flex-start;
       display: flex;
       justify-content: space-between;
-      margin-bottom: 3px;
+      margin-bottom: 0;
 
       button {
-        margin-left: 3px;
+        margin-left: 0.5rem;
       }
     }
 
