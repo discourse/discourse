@@ -16,9 +16,7 @@
         <Chat::ThreadList::Item
           @thread={{thread}}
           {{(modifier
-            (if
-              (eq (add index 1) this.sortedThreads.length) "chat/track-message"
-            )
+            (if (eq thread this.lastThread) "chat/track-message")
             this.loadThreads
           )}}
         />
