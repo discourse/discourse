@@ -29,17 +29,10 @@ export default class extends Controller {
 
   @action
   copyQueryString() {
-    // hacky way to copy to clipboard
-    // that also works in development enviro
-    let temp = document.createElement("textarea");
-    temp.value = window.location;
-    document.body.appendChild(temp);
-    temp.select();
-    document.execCommand("copy");
-    document.body.removeChild(temp);
-
     this.copyIcon = "check";
     this.copyClass = "btn-default ok";
+
+    navigator.clipboard.writeText(window.location);
 
     discourseDebounce(this._restoreButton, 3000);
   }
