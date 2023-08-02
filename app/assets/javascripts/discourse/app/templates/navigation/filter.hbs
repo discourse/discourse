@@ -16,7 +16,10 @@
       {{! EXPERIMENTAL OUTLET - don't use because it will be removed soon  }}
       <PluginOutlet
         @name="below-filter-input"
-        @outletArgs={{hash newQueryString=this.newQueryString}}
+        @outletArgs={{hash
+          updateQueryString=this.updateQueryString
+          newQueryString=this.newQueryString
+        }}
       />
     </div>
     {{#if this.newQueryString}}

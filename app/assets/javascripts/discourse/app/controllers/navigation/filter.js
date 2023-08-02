@@ -16,6 +16,11 @@ export default class extends Controller {
     this.newQueryString = this.discoveryFilter.q;
   }
 
+  @bind
+  updateQueryString(string) {
+    this.newQueryString = string;
+  }
+
   @action
   clearInput() {
     this.newQueryString = "";
