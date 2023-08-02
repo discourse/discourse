@@ -253,6 +253,15 @@ a.reply-to-tab {
 }
 
 .more-content-wrapper {
+  margin-top: 2em;
+
+  .nav {
+    button.active {
+      color: var(--secondary);
+      background-color: var(--tertiary);
+    }
+  }
+
   &:not(.single-list) {
     .more-topics-title {
       display: none;
@@ -266,7 +275,7 @@ a.reply-to-tab {
 
 .more-content-topics {
   clear: left;
-  padding: 20px 0 15px 0;
+  padding-bottom: 15px;
 
   a.badge-category,
   a.badge-category-parent {
