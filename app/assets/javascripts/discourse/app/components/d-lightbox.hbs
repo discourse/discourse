@@ -15,6 +15,7 @@
       class="d-lightbox__content"
       style={{this.CSSVars}}
       aria-labelledby={{this.titleElementId}}
+      {{on "keydown" this.onKeydown passive=false capture=true}}
       {{on "keyup" this.onKeyup passive=true capture=true}}
     >
       <div class="d-lightbox__focus-trap" tabindex="0"></div>
