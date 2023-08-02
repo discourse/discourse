@@ -491,7 +491,7 @@ class Search
   end
 
   advanced_filter(/\Acreated:@(.*)\z/i) do |posts, match|
-    user_id = User.where(username: match.downcase).pick(:id)
+    user_id = User.where(username_lower: match.downcase).pick(:id)
     posts.where(user_id: user_id, post_number: 1)
   end
 
