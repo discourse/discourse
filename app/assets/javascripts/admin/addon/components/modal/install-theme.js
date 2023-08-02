@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import { alias, equal, match } from "@ember/object/computed";
+import { action, set } from "@ember/object";
+import { match } from "@ember/object/computed";
 import { COMPONENTS, THEMES } from "admin/models/theme";
 import { POPULAR_THEMES } from "discourse-common/lib/popular-themes";
 import { ajax } from "discourse/lib/ajax";
@@ -10,25 +10,37 @@ import I18n from "I18n";
 const MIN_NAME_LENGTH = 4;
 
 export default class InstallTheme extends Component {
-  @alias("args.adminCustomizeThemes") themesController;
-  @alias("themesController.currentTab") selectedType;
-  @equal("selectedType", COMPONENTS) component;
-
-  @tracked selection = "popular";
-  @tracked loading = false;
-  @tracked keyGenUrl = "/admin/themes/generate_key_pair";
-  @tracked importUrl = "/admin/themes/import";
-  @tracked recordType = "theme";
-  @tracked checkPrivate = null;
-  @tracked localFile = null;
-  @tracked uploadUrl = null;
-  @tracked uploadName = null;
+  @tracked selection = this.args.model.selection || "popular";
+  @tracked uploadUrl = this.args.model.uploadUrl;
+  @tracked uploadName = this.args.model.uploadName;
   @tracked advancedVisible = false;
-  @tracked publicKey = null;
-  @tracked branch = null;
-  @tracked duplicateRemoteThemeWarning = null;
+  @tracked loading = false;
+  @tracked localFile;
+  @tracked publicKey;
+  @tracked branch;
+  @tracked duplicateRemoteThemeWarning;
+  @tracked flash;
+  @tracked themeCannotBeInstalled;
+
+  recordType = "theme";
+  importUrl = "/admin/themes/import";
+  keyGenUrl = "/admin/themes/generate_key_pair";
 
   @match("uploadUrl", /^ssh:\/\/.+@.+$|.+@.+:.+$/) checkPrivate;
+
+  get submitLabel() {
+    if (this.themeCannotBeInstalled) {
+      return "admin.customize.theme.create_placeholder";
+    }
+
+    return `admin.customize.theme.${
+      this.selection === "create" ? "create" : "install"
+    }`;
+  }
+
+  get component() {
+    this.args.model.selectedType === COMPONENTS;
+  }
 
   get local() {
     return this.selection === "local";
@@ -74,7 +86,7 @@ export default class InstallTheme extends Component {
   get themes() {
     return POPULAR_THEMES.map((t) => {
       if (
-        this.themesController.installedThemes.some((theme) =>
+        this.args.model.installedThemes.some((theme) =>
           this.themeHasSameUrl(theme, t.value)
         )
       ) {
@@ -114,18 +126,17 @@ export default class InstallTheme extends Component {
     this.advancedVisible = !this.advancedVisible;
   }
 
-  @action
-  onClose() {
-    this.duplicateRemoteThemeWarning = null;
-    this.localFile = null;
-    this.uploadUrl = null;
-    this.publicKey = null;
-    this.branch = null;
-    this.selection = "popular";
+  // willDestroy() {
+  //   this.duplicateRemoteThemeWarning = null;
+  //   this.localFile = null;
+  //   this.uploadUrl = null;
+  //   this.publicKey = null;
+  //   this.branch = null;
+  //   this.selection = "popular";
 
-    this.themesController.repoName = null;
-    this.themesController.repoUrl = null;
-  }
+  //   this.themesController.repoName = null;
+  //   this.themesController.repoUrl = null;
+  // }
 
   @action
   uploadLocaleFile() {
@@ -139,19 +150,19 @@ export default class InstallTheme extends Component {
   }
 
   @action
-  installTheme() {
+  async installTheme() {
     if (this.create) {
       this.loading = true;
       const theme = this.store.createRecord(this.recordType);
-      theme
-        .save({ name: this.name, component: this.component })
-        .then(() => {
-          this.themesController.addTheme(theme);
-          this.modalFunctionality.send("closeModal");
-        })
-        .catch(popupAjaxError)
-        .finally(() => (this.loading = false));
-
+      try {
+        await theme.save({ name: this.name, component: this.component });
+        this.args.model.addTheme(theme);
+        this.args.closeModal();
+      } catch (e) {
+        this.flash = e.jqXHR.responseJSON.errors[0];
+      } finally {
+        this.loading = false;
+      }
       return;
     }
 
@@ -167,7 +178,7 @@ export default class InstallTheme extends Component {
     }
 
     if (this.remote || this.popular || this.directRepoInstall) {
-      const duplicate = this.themesController.model.content.find((theme) =>
+      const duplicate = this.args.model.content.find((theme) =>
         this.themeHasSameUrl(theme, this.uploadUrl)
       );
       if (duplicate && !this.duplicateRemoteThemeWarning) {
@@ -189,31 +200,28 @@ export default class InstallTheme extends Component {
     if (this.themeCannotBeInstalled) {
       options.data["force"] = true;
     }
-
     if (this.model.user_id) {
       // Used by theme-creator
       options.data["user_id"] = this.model.user_id;
     }
-
     this.loading = true;
-    ajax(this.importUrl, options)
-      .then((result) => {
-        const theme = this.store.createRecord(this.recordType, result.theme);
-        this.themesController.addTheme(theme);
-        this.modalFunctionality.send("closeModal");
-      })
-      .then(() => {
-        this.publicKey = null;
-      })
-      .catch((error) => {
-        if (!this.publicKey || this.themeCannotBeInstalled) {
-          return popupAjaxError(error);
-        }
 
-        this.themeCannotBeInstalled = I18n.t(
-          "admin.customize.theme.force_install"
-        );
-      })
-      .finally(() => (this.loading = false));
+    try {
+      const result = await ajax(this.importUrl, options);
+      const theme = this.store.createRecord(this.recordType, result.theme);
+      this.args.model.addTheme(theme);
+      this.args.closeModal();
+      this.publicKey = null;
+    } catch (e) {
+      if (!this.publicKey || this.themeCannotBeInstalled) {
+        // look into this
+        this.flash = e.jqXHR.responseJSON.errors[0];
+      }
+      this.themeCannotBeInstalled = I18n.t(
+        "admin.customize.theme.force_install"
+      );
+    } finally {
+      this.loading = false;
+    }
   }
 }

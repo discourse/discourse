@@ -1,13 +1,13 @@
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import Route from "@ember/routing/route";
-import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
-import { next } from "@ember/runloop";
+import InstallThemeModal from "../components/modal/install-theme";
 
 export default class AdminCustomizeThemesRoute extends Route {
   @service dialog;
   @service router;
+  @service modal;
 
   queryParams = {
     repoUrl: null,
@@ -28,14 +28,15 @@ export default class AdminCustomizeThemesRoute extends Route {
     controller.set("editingTheme", false);
 
     if (controller.repoUrl) {
-      next(() => {
-        showModal("admin-install-theme", {
-          admin: true,
-        }).setProperties({
+      this.modal.show(InstallThemeModal, {
+        model: {
           uploadUrl: controller.repoUrl,
           uploadName: controller.repoName,
           selection: "directRepoInstall",
-        });
+          selectedType: controller.currentTab,
+          installedThemes: controller.installedThemes,
+          addTheme: this.addTheme,
+        },
       });
     }
   }
@@ -48,11 +49,26 @@ export default class AdminCustomizeThemesRoute extends Route {
         message: I18n.t("admin.customize.theme.unsaved_parent_themes"),
         didConfirm: () => {
           currentTheme.set("recentlyInstalled", false);
-          showModal("admin-install-theme", { admin: true });
+          this.modal.show(InstallThemeModal, {
+            model: {
+              selectedType: this.currentTab,
+              installedThemes: this.installedThemes,
+              content: this.currentModel.content,
+              addTheme: this.addTheme,
+            },
+          });
         },
       });
     } else {
-      showModal("admin-install-theme", { admin: true });
+      console.log(currentTheme);
+      this.modal.show(InstallThemeModal, {
+        model: {
+          selectedType: this.controller.currentTab,
+          installedThemes: this.controller.installedThemes,
+          content: this.currentModel.content,
+          addTheme: this.addTheme,
+        },
+      });
     }
   }
 
