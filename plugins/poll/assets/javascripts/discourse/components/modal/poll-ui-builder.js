@@ -349,29 +349,29 @@ export default class PollUiBuilderModal extends Component {
   }
 
   @action
-  addOption(beforeOption, value, e) {
-    if (value !== "") {
-      const idx = this.pollOptions.indexOf(beforeOption) + 1;
-      const option = EmberObject.create({ value: "" });
-      this.pollOptions.insertAt(idx, option);
+  addOption(beforeOption, value, event) {
+    event?.preventDefault();
 
-      let lastOptionIdx = 0;
-      this.pollOptions.forEach((o) => o.set("idx", lastOptionIdx++));
+    if (value === "") {
+      return;
+    }
 
-      next(() => {
-        const pollOptions = document.getElementsByClassName("poll-options");
-        if (pollOptions) {
-          const inputs = pollOptions[0].getElementsByTagName("input");
-          if (option.idx < inputs.length) {
-            inputs[option.idx].focus();
-          }
+    const idx = this.pollOptions.indexOf(beforeOption) + 1;
+    const option = EmberObject.create({ value: "" });
+    this.pollOptions.insertAt(idx, option);
+
+    let lastOptionIdx = 0;
+    this.pollOptions.forEach((o) => o.set("idx", lastOptionIdx++));
+
+    next(() => {
+      const pollOptions = document.getElementsByClassName("poll-options");
+      if (pollOptions) {
+        const inputs = pollOptions[0].getElementsByTagName("input");
+        if (option.idx < inputs.length) {
+          inputs[option.idx].focus();
         }
-      });
-    }
-
-    if (e) {
-      e.preventDefault();
-    }
+      }
+    });
   }
 
   @action

@@ -81,7 +81,7 @@
               class="btn-default poll-option-add"
               @icon="plus"
               @label="poll.ui_builder.poll_options.add"
-              @action={{action "addOption" this.pollOptions.lastObject}}
+              @action={{fn this.addOption this.pollOptions.lastObject}}
             />
             {{#if
               (and
