@@ -257,9 +257,9 @@ bs_BA:
       other: "%{count} karaktera"
     related_messages:
       title: "Povezane Poruke"
+      pill: "Povezane Poruke"
       see_all: 'Prikaži <a href="%{path}">sve poruke</a> od @ %{username} ...'
     suggested_topics:
-      title: "Preporučene teme"
       pm_title: "Preporučene Poruke"
     about:
       simple_title: "O nama"
@@ -1438,7 +1438,6 @@ bs_BA:
       hide_forever: "ne hvala"
       intro: "Zdravo! Čini se da uživate u raspravi, ali još se niste prijavili za račun."
     summary:
-      enabled_description: "Trenutno gledate sažetak ove teme: objave koje drugi članovi smatraju kao najinteresantnije."
       disable: "Prikaži sve objave"
     deleted_filter:
       enabled_description: "Ova tema sadrži obrisane objave, vidljive za administratore dok su za ostale korisnike skrivene."
@@ -2785,6 +2784,9 @@ bs_BA:
       close: "Zatvori (Esc)"
       content_load_error: '<a href="%url%">Sadržaj</a> nije moguće učitati.'
       image_load_error: '<a href="%url%">Slika</a> se ne može učitati.'
+    experimental_lightbox:
+      buttons:
+        close: "Zatvori (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", \\ T"
       shortcut_key_delimiter_plus: "+"
@@ -2882,10 +2884,6 @@ bs_BA:
         one: "+ Još %{count}"
         few: "+ Još %{count}"
         other: "+ Još %{count}"
-      granted:
-        one: "%{count} odobreno"
-        few: "%{count} odobreno"
-        other: "%{count} odobreno"
       select_badge_for_title: Izaveri bedž za svoj naslov
       none: "(ništa)"
       successfully_granted: "Uspješno dodijeljen %{badge} za %{username}"
@@ -3486,6 +3484,7 @@ bs_BA:
           create: "napravi"
           create_type: "Tip"
           create_name: "Ime"
+          save: "Save"
           long_title: "Izmijenite boje, CSS i HTML sadržaj Vaše web lokacije"
           edit: "Izmijeni"
           edit_confirm: "Ovo je udaljena tema, ako uredite CSS / HTML, vaše izmene će biti izbrisane sledeći put kada ažurirate temu."
@@ -4191,6 +4190,8 @@ bs_BA:
         recommended: "Preporučujemo da prilagodite sledeći tekst tako da odgovara vašim potrebama:"
         show_overriden: "Only show overridden"
         more_than_50_results: "Postoji više od 50 rezultata. Pročistite pretraživanje."
+        outdated:
+          dismiss: "Odbaci"
       settings:
         show_overriden: "Only show overridden"
         reset: "reset"

@@ -1,0 +1,72 @@
+.chat-scroll-to-bottom {
+  display: flex;
+  justify-content: center;
+  margin: 0 1rem;
+  position: relative;
+
+  &__arrow {
+    display: flex;
+    background: var(--primary-medium);
+    border-radius: 100%;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    width: 32px;
+    position: relative;
+  }
+
+  &__button {
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    flex-direction: column;
+    bottom: -25px;
+    background: none;
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.5s ease;
+    transform: scale(0.1);
+    padding: 0;
+    z-index: z("dropdown");
+
+    .d-icon {
+      color: var(--secondary);
+      margin-left: 1px; // "fixes" the 1px svg shift
+    }
+
+    > * {
+      pointer-events: none;
+    }
+
+    &:hover,
+    &:active,
+    &:focus {
+      background: none !important;
+      .d-icon {
+        color: var(--secondary) !important;
+      }
+    }
+
+    .no-touch & {
+      &:hover {
+        opacity: 1;
+
+        .d-icon {
+          color: var(--primary-very-high) !important;
+        }
+      }
+    }
+
+    &.visible {
+      transform: translateY(-32px) scale(1);
+      opacity: 0.8;
+
+      &:hover {
+        transform: translateY(-32px) scale(1);
+
+        &:active {
+          transform: translateY(-32px) scale(0.8);
+        }
+      }
+    }
+  }
+}

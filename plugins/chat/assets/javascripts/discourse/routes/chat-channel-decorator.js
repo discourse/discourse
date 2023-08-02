@@ -25,7 +25,6 @@ export default function withChatChannel(extendedClass) {
     afterModel(model) {
       super.afterModel?.(...arguments);
 
-      this.controllerFor("chat-channel").set("targetMessageId", null);
       this.chat.activeChannel = model;
 
       if (!model) {
@@ -48,11 +47,24 @@ export default function withChatChannel(extendedClass) {
         const threadId = this.paramsFor("chat.channel.thread").threadId;
 
         if (threadId) {
-          this.router.replaceWith(
-            "chat.channel.thread",
-            ...model.routeModels,
-            threadId
-          );
+          const threadMessageId = this.paramsFor(
+            "chat.channel.thread.near-message"
+          ).messageId;
+
+          if (threadMessageId) {
+            this.router.replaceWith(
+              "chat.channel.thread.near-message",
+              ...model.routeModels,
+              threadId,
+              threadMessageId
+            );
+          } else {
+            this.router.replaceWith(
+              "chat.channel.thread",
+              ...model.routeModels,
+              threadId
+            );
+          }
         } else if (messageId) {
           this.router.replaceWith(
             "chat.channel.near-message",
@@ -62,6 +74,8 @@ export default function withChatChannel(extendedClass) {
         } else {
           this.router.replaceWith("chat.channel", ...model.routeModels);
         }
+      } else {
+        this.controllerFor("chat-channel").set("targetMessageId", null);
       }
     }
   };

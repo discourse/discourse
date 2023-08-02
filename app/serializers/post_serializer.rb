@@ -315,8 +315,14 @@ class PostSerializer < BasicPostSerializer
         summary.delete(:can_act)
       end
 
+      if actions.present? && SiteSetting.allow_anonymous_likes && sym == :like &&
+           !scope.can_delete_post_action?(actions[id])
+        summary.delete(:can_act)
+      end
+
       if actions.present? && actions.has_key?(id)
         summary[:acted] = true
+
         summary[:can_undo] = true if scope.can_delete?(actions[id])
       end
 

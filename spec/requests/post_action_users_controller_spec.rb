@@ -4,6 +4,14 @@ RSpec.describe PostActionUsersController do
   fab!(:user) { Fabricate(:user) }
   let(:post) { Fabricate(:post, user: sign_in(user)) }
 
+  describe "index" do
+    describe "when limit params is invalid" do
+      include_examples "invalid limit params",
+                       "/post_action_users.json",
+                       described_class::INDEX_LIMIT
+    end
+  end
+
   context "with render" do
     it "always allows you to see your own actions" do
       notify_mod = PostActionType.types[:notify_moderators]

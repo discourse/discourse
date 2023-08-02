@@ -7,6 +7,7 @@
 de:
   site_settings:
     chat_enabled: "Chat-Plug-in aktivieren."
+    enable_public_channels: "Öffentliche Kanäle basierend auf Kategorien aktivieren."
     chat_allowed_groups: "Benutzer in diesen Gruppen können chatten. Bitte beachte, dass Teammitglieder jederzeit auf den Chat zugreifen können."
     chat_channel_retention_days: "Chat-Nachrichten in regulären Kanälen werden so viele Tage lang aufbewahrt. Auf „0“ setzen, um Nachrichten für immer aufzubewahren."
     chat_dm_retention_days: "Chat-Nachrichten in persönlichen Chat-Kanälen werden so viele Tage lang aufbewahrt. Auf „0“ setzen, um Nachrichten für immer aufzubewahren."
@@ -26,7 +27,6 @@ de:
     max_mentions_per_chat_message: "Maximale Anzahl von @name-Benachrichtigungen, die ein Benutzer in einer Chat-Nachricht verwenden kann."
     chat_max_direct_message_users: "Benutzer können nicht mehr als diese Anzahl anderer Benutzer hinzufügen, wenn sie eine neue Direktnachricht erstellen. Auf 0 setzen, um nur Nachrichten an sich selbst zuzulassen. Teammitglieder sind von dieser Einstellung ausgenommen."
     chat_allow_archiving_channels: "Dem Team erlauben, Nachrichten zu einem Thema zu archivieren, wenn sie einen Kanal schließen."
-    enable_experimental_chat_threaded_discussions: "EXPERIMENTELL: Erlaube den Mitarbeitenden, Threads in Chat-Kanälen zu aktivieren, damit parallele Diskussionen in einem Kanal stattfinden können, wenn Benutzer/innen einander antworten."
     errors:
       chat_default_channel: "Der Standard-Chat-Kanal muss ein öffentlicher Kanal sein."
       direct_message_enabled_groups_invalid: "Du musst mindestens eine Gruppe für diese Einstellung angeben. Wenn du nicht möchtest, dass andere Personen als Teammitglieder Direktnachrichten senden, wähle die Gruppe für Teammitglieder aus."
@@ -50,7 +50,7 @@ de:
 
           %{topic_validation_errors}
 
-        Besuche den Kanal unter %{channel_url} , um es erneut zu versuchen.
+        Besuche den Kanal unter %{channel_url}, um es erneut zu versuchen.
   chat:
     deleted_chat_username: gelöscht
     errors:
@@ -88,9 +88,9 @@ de:
       user_cannot_send_direct_messages: "Du kannst leider keine Direktnachrichten senden."
       over_chat_max_direct_message_users_allow_self: "Du kannst nur eine Direktnachricht an dich selbst erstellen."
       over_chat_max_direct_message_users:
-        one: "Du kannst keine Direktnachricht an mehr als %{count} andere Benutzer erstellen."
+        one: "Du kannst keine Direktnachricht an mehr als %{count} anderen Benutzer erstellen."
         other: "Du kannst keine Direktnachricht an mehr als %{count} andere Benutzer erstellen."
-      original_message_not_found: "Der Vorgänger der Nachricht, die du beantwortest, kann nicht gefunden werden oder wurde gelöscht."
+      original_message_not_found: "Der Vorgänger der Nachricht, auf die du antwortest, kann nicht gefunden werden oder wurde gelöscht."
       thread_invalid_for_channel: "Der Thread ist nicht Teil des bereitgestellten Kanals."
       thread_does_not_match_parent: "Der Thread stimmt nicht mit der übergeordneten Nachricht überein."
     reviewables:
@@ -138,7 +138,7 @@ de:
         single_user: "%{username}"
         multi_user: "%{comma_separated_usernames}"
         multi_user_truncated:
-          one: "%{comma_separated_usernames} und %{count} anderer"
+          one: "%{comma_separated_usernames} und %{count} andere Person"
           other: "%{comma_separated_usernames} und %{count} andere"
     category_channel:
       errors:
@@ -157,6 +157,8 @@ de:
       and_x_others:
         one: "und %{count} andere Person"
         other: "und %{count} andere"
+    summaries:
+      no_targets: "Im ausgewählten Zeitraum gab es keine Nachrichten."
   discourse_push_notifications:
     popup:
       chat_mention:

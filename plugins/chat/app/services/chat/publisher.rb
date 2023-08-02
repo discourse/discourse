@@ -32,7 +32,7 @@ module Chat
     end
 
     def self.allow_publish_to_thread?(channel)
-      SiteSetting.enable_experimental_chat_threaded_discussions && channel.threading_enabled
+      channel.threading_enabled
     end
 
     def self.publish_new!(chat_channel, chat_message, staged_id, staged_thread_id: nil)
@@ -161,8 +161,7 @@ module Chat
     def self.publish_delete!(chat_channel, chat_message)
       message_bus_targets = calculate_publish_targets(chat_channel, chat_message)
       latest_not_deleted_message_id =
-        if chat_message.thread_reply? && chat_channel.threading_enabled &&
-             SiteSetting.enable_experimental_chat_threaded_discussions
+        if chat_message.thread_reply? && chat_channel.threading_enabled
           chat_message.thread.latest_not_deleted_message_id(anchor_message_id: chat_message.id)
         else
           chat_channel.latest_not_deleted_message_id(anchor_message_id: chat_message.id)
@@ -297,15 +296,13 @@ module Chat
       # and a message is sent in the thread. We also need to pass the actual
       # thread tracking state.
       if channel.threading_enabled && message.thread_reply?
-        data[:unread_thread_ids] = ::Chat::TrackingStateReportQuery
-          .call(
-            guardian: user.guardian,
-            channel_ids: [channel.id],
-            include_threads: true,
-            include_read: false,
-          )
-          .find_channel_threads(channel.id)
-          .keys
+        data[:unread_thread_overview] = ::Chat::TrackingStateReportQuery.call(
+          guardian: user.guardian,
+          channel_ids: [channel.id],
+          include_threads: true,
+          include_read: false,
+          include_last_reply_details: true,
+        ).find_channel_thread_overviews(channel.id)
 
         data[:thread_tracking] = ::Chat::TrackingStateReportQuery.call(
           guardian: user.guardian,

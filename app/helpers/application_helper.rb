@@ -64,8 +64,10 @@ module ApplicationHelper
     google_universal_analytics_json
   end
 
-  def self.google_tag_manager_nonce(env)
-    env[:discourse_content_security_policy_nonce] ||= SecureRandom.hex
+  def google_tag_manager_nonce_placeholder
+    placeholder = "[[csp_nonce_placeholder_#{SecureRandom.hex}]]"
+    response.headers["Discourse-GTM-Nonce-Placeholder"] = placeholder
+    placeholder
   end
 
   def shared_session_key

@@ -838,27 +838,6 @@ aside.quote {
       margin-left: 0.25em;
     }
   }
-
-  .toggle-summary {
-    .summarization-buttons {
-      display: flex;
-    }
-
-    .placeholder-summary {
-      padding-top: 0.5em;
-    }
-
-    .placeholder-summary-text {
-      display: inline-block;
-      height: 1em;
-      margin-top: 0.6em;
-      width: 100%;
-    }
-
-    .summarized-on {
-      text-align: right;
-    }
-  }
 }
 
 .topic-avatar,
@@ -1432,7 +1411,7 @@ span.mention {
   box-sizing: border-box;
   max-width: calc(var(--topic-body-width) + 4.5em);
   padding: 3em 5em 2em
-    calc(var(--topic-avatar-width + var(--topic-body-width-padding)));
+    calc(var(--topic-avatar-width) + var(--topic-body-width-padding));
   @include breakpoint(mobile-extra-large) {
     padding: 1.5em 1.5em 0.25em;
   }

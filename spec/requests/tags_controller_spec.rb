@@ -1103,22 +1103,10 @@ RSpec.describe TagsController do
         )
       end
 
-      it "returns error 400 for negative limit" do
-        get "/tags/filter/search.json", params: { q: "", limit: -1 }
-
-        expect(response.status).to eq(400)
-        expect(response.parsed_body["errors"].first).to eq(
-          I18n.t("invalid_params", message: "limit"),
-        )
-      end
-
-      it "returns error 400 for suspicious limit" do
-        get "/tags/filter/search.json", params: { q: "", limit: "1; SELECT 1" }
-
-        expect(response.status).to eq(400)
-        expect(response.parsed_body["errors"].first).to eq(
-          I18n.t("invalid_params", message: "limit"),
-        )
+      describe "when limit params is invalid" do
+        include_examples "invalid limit params",
+                         "/tags/filter/search.json",
+                         SiteSetting.max_tag_search_results
       end
 
       it "includes required tag group information" do
@@ -1443,19 +1431,15 @@ RSpec.describe TagsController do
   end
 
   describe "#list" do
-    fab!(:tag3) do
-      Fabricate(:tag, name: "tag3").tap { |tag| Fabricate.times(1, :topic, tags: [tag]) }
-    end
+    fab!(:tag3) { Fabricate(:tag, name: "tag3") }
+    fab!(:tag2) { Fabricate(:tag, name: "tag2") }
+    fab!(:tag1) { Fabricate(:tag, name: "tag") }
 
-    fab!(:tag2) do
-      Fabricate(:tag, name: "tag2").tap { |tag| Fabricate.times(1, :topic, tags: [tag]) }
-    end
+    fab!(:staff_only_tag) { Fabricate(:tag, name: "tag4") }
 
-    fab!(:tag1) do
-      Fabricate(:tag, name: "tag").tap { |tag| Fabricate.times(1, :topic, tags: [tag]) }
+    let!(:staff_tag_group) do
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [staff_only_tag.name])
     end
-
-    fab!(:tag_not_used_in_topics) { Fabricate(:tag, name: "tag4") }
 
     it "should return 403 for an anonymous user" do
       get "/tags/list.json"
@@ -1473,7 +1457,7 @@ RSpec.describe TagsController do
       expect(response.status).to eq(404)
     end
 
-    it "should only return tags used in topics for non admin users" do
+    it "should only return tags that are visible to the user for non admin users" do
       stub_const(TagsController, "LIST_LIMIT", 2) do
         sign_in(user)
 
@@ -1525,7 +1509,7 @@ RSpec.describe TagsController do
         expect(response.status).to eq(200)
 
         expect(response.parsed_body["list_tags"].map { |tag| tag["name"] }).to eq(
-          [tag3.name, tag_not_used_in_topics.name],
+          [tag3.name, staff_only_tag.name],
         )
 
         expect(response.parsed_body["meta"]["total_rows_list_tags"]).to eq(4)

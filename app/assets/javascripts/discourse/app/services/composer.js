@@ -1,5 +1,4 @@
 import Composer, { SAVE_ICONS, SAVE_LABELS } from "discourse/models/composer";
-import Controller from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
 import {
@@ -26,7 +25,7 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import { isTesting } from "discourse-common/config/environment";
-import { inject as service } from "@ember/service";
+import Service, { inject as service } from "@ember/service";
 import { shortDate } from "discourse/lib/formatter";
 import showModal from "discourse/lib/show-modal";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
@@ -34,6 +33,7 @@ import renderTags from "discourse/lib/render-tags";
 import { htmlSafe } from "@ember/template";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import prepareFormTemplateData from "discourse/lib/form-template-validation";
+import DiscardDraftModal from "discourse/components/modal/discard-draft";
 
 async function loadDraft(store, opts = {}) {
   let { draft, draftKey, draftSequence } = opts;
@@ -94,13 +94,14 @@ export function addComposerSaveErrorCallback(callback) {
   _composerSaveErrorCallbacks.push(callback);
 }
 
-export default class ComposerController extends Controller {
+export default class ComposerService extends Service {
   @service router;
   @service dialog;
   @service site;
   @service store;
   @service appEvents;
   @service capabilities;
+  @service modal;
 
   checkedMessages = false;
   messageCount = null;
@@ -1498,34 +1499,32 @@ export default class ComposerController extends Controller {
 
     return new Promise((resolve) => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
-        const modal = showModal("discard-draft", {
-          model: this.model,
-          modalClass: "discard-draft-modal",
-        });
         const overridesDraft =
           this.model.composeState === Composer.OPEN &&
           this.model.draftKey === opts.draftKey &&
           [Composer.EDIT_SHARED_DRAFT, Composer.EDIT].includes(opts.action);
         const showSaveDraftButton = this.model.canSaveDraft && !overridesDraft;
-        modal.setProperties({
-          showSaveDraftButton,
-          onDestroyDraft: () => {
-            return this.destroyDraft()
-              .then(() => {
-                this.model.clearState();
-                this.close();
-              })
-              .finally(() => {
-                this.appEvents.trigger("composer:cancelled");
-                resolve();
-              });
-          },
-          onSaveDraft: () => {
-            this._saveDraft();
-            this.model.clearState();
-            this.close();
-            this.appEvents.trigger("composer:cancelled");
-            return resolve();
+        this.modal.show(DiscardDraftModal, {
+          model: {
+            showSaveDraftButton,
+            onDestroyDraft: () => {
+              return this.destroyDraft()
+                .then(() => {
+                  this.model.clearState();
+                  this.close();
+                })
+                .finally(() => {
+                  this.appEvents.trigger("composer:cancelled");
+                  resolve();
+                });
+            },
+            onSaveDraft: () => {
+              this._saveDraft();
+              this.model.clearState();
+              this.close();
+              this.appEvents.trigger("composer:cancelled");
+              return resolve();
+            },
           },
         });
       } else {
@@ -1681,3 +1680,7 @@ export default class ComposerController extends Controller {
     this.set("lastValidatedAt", null);
   }
 }
+
+// For compatibility with themes/plugins which use `modifyClass` as if this is a controller
+// https://api.emberjs.com/ember/5.1/classes/Service/properties/mergedProperties?anchor=mergedProperties
+ComposerService.prototype.mergedProperties = ["actions"];

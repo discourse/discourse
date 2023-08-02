@@ -522,9 +522,11 @@ RSpec.describe Jobs::ExportUserArchive do
 
   describe "queued posts" do
     let(:component) { "queued_posts" }
-    let(:reviewable_post) { Fabricate(:reviewable_queued_post, topic: topic, created_by: user) }
+    let(:reviewable_post) do
+      Fabricate(:reviewable_queued_post, topic: topic, target_created_by: user)
+    end
     let(:reviewable_topic) do
-      Fabricate(:reviewable_queued_post_topic, category: category, created_by: user)
+      Fabricate(:reviewable_queued_post_topic, category: category, target_created_by: user)
     end
 
     it "correctly exports queued posts" do

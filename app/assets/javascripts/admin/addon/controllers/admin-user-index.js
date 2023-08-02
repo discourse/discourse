@@ -3,7 +3,6 @@ import { inject as service } from "@ember/service";
 import { and, notEmpty } from "@ember/object/computed";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { fmt, propertyNotEqual, setting } from "discourse/lib/computed";
-import AdminUser from "admin/models/admin-user";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import Controller from "@ember/controller";
 import I18n from "I18n";
@@ -11,8 +10,13 @@ import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 import getURL from "discourse-common/lib/get-url";
 import { htmlSafe } from "@ember/template";
-import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
-import showModal from "discourse/lib/show-modal";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import AdminUser from "admin/models/admin-user";
+import MergeUsersConfirmationModal from "../components/modal/merge-users-confirmation";
+import MergeUsersPromptModal from "../components/modal/merge-users-prompt";
+import MergeUsersProgressModal from "../components/modal/merge-users-progress";
+import DeletePostsConfirmationModal from "../components/modal/delete-posts-confirmation";
+import DeleteUserPostsProgressModal from "../components/modal/delete-user-posts-progress";
 
 export default class AdminUserIndexController extends Controller.extend(
   CanCheckEmails
@@ -20,6 +24,7 @@ export default class AdminUserIndexController extends Controller.extend(
   @service router;
   @service dialog;
   @service adminTools;
+  @service modal;
 
   originalPrimaryGroupId = null;
   customGroupIdsBuffer = null;
@@ -436,19 +441,21 @@ export default class AdminUserIndexController extends Controller.extend(
 
   @action
   promptTargetUser() {
-    showModal("admin-merge-users-prompt", {
-      admin: true,
-      model: this.model,
+    this.modal.show(MergeUsersPromptModal, {
+      model: {
+        user: this.model,
+        showMergeConfirmation: this.showMergeConfirmation,
+      },
     });
   }
 
   @action
   showMergeConfirmation(targetUsername) {
-    showModal("admin-merge-users-confirmation", {
-      admin: true,
+    this.modal.show(MergeUsersConfirmationModal, {
       model: {
         username: this.model.username,
         targetUsername,
+        merge: this.merge,
       },
     });
   }
@@ -468,10 +475,7 @@ export default class AdminUserIndexController extends Controller.extend(
       .merge(formData)
       .then((response) => {
         if (response.success) {
-          showModal("admin-merge-users-progress", {
-            admin: true,
-            model: this.model,
-          });
+          this.modal.show(MergeUsersProgressModal);
         } else {
           this.dialog.alert(I18n.t("admin.user.merge_failed"));
         }
@@ -619,48 +623,23 @@ export default class AdminUserIndexController extends Controller.extend(
 
   @action
   showDeletePostsConfirmation() {
-    showModal("admin-delete-posts-confirmation", {
-      admin: true,
-      model: this.model,
+    this.modal.show(DeletePostsConfirmationModal, {
+      model: { user: this.model, deleteAllPosts: this.deleteAllPosts },
     });
   }
 
   @action
+  updateUserPostCount(count) {
+    this.model.set("post_count", count);
+  }
+
+  @action
   deleteAllPosts() {
-    let deletedPosts = 0;
-    let deletedPercentage = 0;
-    const user = this.model;
-
-    const performDelete = (progressModal) => {
-      this.model
-        .deleteAllPosts()
-        .then(({ posts_deleted }) => {
-          if (posts_deleted === 0) {
-            user.set("post_count", 0);
-            progressModal.send("closeModal");
-          } else {
-            deletedPosts += posts_deleted;
-            deletedPercentage = Math.floor(
-              (deletedPosts * 100) / user.get("post_count")
-            );
-            progressModal.setProperties({
-              deletedPercentage,
-            });
-            performDelete(progressModal);
-          }
-        })
-        .catch((e) => {
-          progressModal.send("closeModal");
-          let error;
-          AdminUser.find(user.get("id")).then((u) => user.setProperties(u));
-          error = extractError(e, I18n.t("admin.user.delete_posts_failed"));
-          this.dialog.alert(error);
-        });
-    };
-
-    const progressModal = showModal("admin-delete-user-posts-progress", {
-      admin: true,
+    this.modal.show(DeleteUserPostsProgressModal, {
+      model: {
+        user: this.model,
+        updateUserPostCount: this.updateUserPostCount,
+      },
     });
-    performDelete(progressModal);
   }
 }

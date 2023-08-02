@@ -671,6 +671,9 @@ users:
   allow_anonymous_posting:
     default: false
     client: true
+  allow_anonymous_likes:
+    default: false
+    client: true
   anonymous_posting_min_trust_level:
     default: 1
     enum: "TrustLevelSetting"
@@ -2145,6 +2148,9 @@ developer:
   max_sidebar_section_links:
     default: 50
     hidden: true
+  instrument_gc_stat_per_request:
+    default: false
+    hidden: true
 
 navigation:
   navigation_menu:
@@ -2160,6 +2166,13 @@ navigation:
     type: tag_list
     default: ""
     client: true
+  default_sidebar_switch_panel_position:
+    default: "bottom"
+    type: enum
+    client: true
+    choices:
+      - "top"
+      - "bottom"
 
 embedding:
   embed_by_username:
@@ -2377,7 +2390,7 @@ uncategorized:
     client: true
     type: group_list
     list_type: compact
-    default: "3|14" # 3: @staff, 14: @trust_level_4
+    default: "3|13" # 3: @staff, 13: @trust_level_3
 
   automatic_topic_heat_values: true
 

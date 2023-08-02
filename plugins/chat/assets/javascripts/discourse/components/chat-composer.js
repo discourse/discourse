@@ -214,10 +214,17 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  async onSend() {
+  trapMouseDown(event) {
+    event?.preventDefault();
+  }
+
+  @action
+  async onSend(event) {
     if (!this.sendEnabled) {
       return;
     }
+
+    event?.preventDefault();
 
     if (
       this.currentMessage.editing &&
@@ -232,15 +239,8 @@ export default class ChatComposer extends Component {
       return;
     }
 
-    if (this.site.mobileView) {
-      // prevents to hide the keyboard after sending a message
-      // we use direct DOM manipulation here because textareaInteractor.focus()
-      // is using the runloop which is too late
-      this.composer.textarea.textarea.focus();
-    }
-
     await this.args.onSendMessage(this.currentMessage);
-    this.composer.focus({ refreshHeight: true });
+    this.composer.textarea.refreshHeight();
   }
 
   reportReplyingPresence() {
@@ -276,9 +276,9 @@ export default class ChatComposer extends Component {
       return;
     }
 
-    // hack to prevent the whole viewport
-    // to move on focus input
-    textarea = document.querySelector(".chat-composer__input");
+    // hack to prevent the whole viewport to move on focus input
+    // we need access to native node
+    textarea = this.composer.textarea.textarea;
     textarea.style.transform = "translateY(-99999px)";
     textarea.focus();
     window.requestAnimationFrame(() => {

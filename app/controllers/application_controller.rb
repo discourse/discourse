@@ -1084,4 +1084,33 @@ class ApplicationController < ActionController::Base
         end
       end
   end
+
+  def fetch_limit_from_params(params: self.params, default:, max:)
+    fetch_int_from_params(:limit, params: params, default: default, max: max)
+  end
+
+  def fetch_int_from_params(key, params: self.params, default:, min: 0, max: nil)
+    key = key.to_sym
+
+    if default.present? && ((max.present? && default > max) || (min.present? && default < min))
+      raise "default #{key.inspect} is not between #{min.inspect} and #{max.inspect}"
+    end
+
+    if params.has_key?(key)
+      value =
+        begin
+          Integer(params[key])
+        rescue ArgumentError
+          raise Discourse::InvalidParameters.new(key)
+        end
+
+      if (min.present? && value < min) || (max.present? && value > max)
+        raise Discourse::InvalidParameters.new(key)
+      end
+
+      value
+    else
+      default
+    end
+  end
 end

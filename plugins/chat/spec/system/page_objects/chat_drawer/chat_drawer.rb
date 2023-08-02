@@ -4,6 +4,11 @@ module PageObjects
   module Pages
     class ChatDrawer < PageObjects::Pages::Base
       VISIBLE_DRAWER = ".chat-drawer.is-expanded"
+
+      def channel_index
+        @channel_index ||= ::PageObjects::Components::Chat::ChannelIndex.new(VISIBLE_DRAWER)
+      end
+
       def open_browse
         mouseout
         find("#{VISIBLE_DRAWER} .open-browse-page-btn").click
@@ -20,10 +25,16 @@ module PageObjects
       end
 
       def open_channel(channel)
-        find(
-          "#{VISIBLE_DRAWER} .channels-list .chat-channel-row[data-chat-channel-id='#{channel.id}']",
-        ).click
+        channel_index.open_channel(channel)
         has_no_css?(".chat-skeleton")
+      end
+
+      def has_unread_channel?(channel)
+        channel_index.has_unread_channel?(channel)
+      end
+
+      def has_no_unread_channel?(channel)
+        channel_index.has_no_unread_channel?(channel)
       end
 
       def maximize

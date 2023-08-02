@@ -1,0 +1,185 @@
+.topic-map .toggle-summary {
+  .summarization-buttons {
+    display: flex;
+  }
+
+  .ai-summary {
+    &__list {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      padding: 0;
+      margin: 0;
+    }
+    &__list-item {
+      background: var(--primary-300);
+      border-radius: var(--d-border-radius);
+      margin-right: 8px;
+      margin-bottom: 8px;
+      height: 18px;
+      opacity: 0;
+      display: block;
+      &:nth-child(1) {
+        width: 10%;
+      }
+
+      &:nth-child(2) {
+        width: 12%;
+      }
+
+      &:nth-child(3) {
+        width: 18%;
+      }
+
+      &:nth-child(4) {
+        width: 14%;
+      }
+
+      &:nth-child(5) {
+        width: 18%;
+      }
+
+      &:nth-child(6) {
+        width: 14%;
+      }
+
+      &:nth-child(7) {
+        width: 22%;
+      }
+
+      &:nth-child(8) {
+        width: 05%;
+      }
+
+      &:nth-child(9) {
+        width: 25%;
+      }
+
+      &:nth-child(10) {
+        width: 14%;
+      }
+
+      &:nth-child(11) {
+        width: 18%;
+      }
+
+      &:nth-child(12) {
+        width: 12%;
+      }
+
+      &:nth-child(13) {
+        width: 22%;
+      }
+
+      &:nth-child(14) {
+        width: 18%;
+      }
+
+      &:nth-child(15) {
+        width: 13%;
+      }
+
+      &:nth-child(16) {
+        width: 22%;
+      }
+
+      &:nth-child(17) {
+        width: 19%;
+      }
+
+      &:nth-child(18) {
+        width: 13%;
+      }
+
+      &:nth-child(19) {
+        width: 22%;
+      }
+
+      &:nth-child(20) {
+        width: 25%;
+      }
+      &.is-shown {
+        opacity: 1;
+      }
+      &.show {
+        animation: appear 0.5s cubic-bezier(0.445, 0.05, 0.55, 0.95) 0s forwards;
+      }
+      &.blink {
+        animation: blink 0.5s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
+      }
+    }
+    &__generating-text {
+      display: inline-block;
+      margin-left: 3px;
+    }
+    &__indicator-wave {
+      flex: 0 0 auto;
+      display: inline-flex;
+    }
+    &__indicator-dot {
+      display: inline-block;
+      animation: ai-summary__indicator-wave 1.8s linear infinite;
+      &:nth-child(2) {
+        animation-delay: -1.6s;
+      }
+      &:nth-child(3) {
+        animation-delay: -1.4s;
+      }
+    }
+  }
+
+  .placeholder-summary {
+    padding-top: 0.5em;
+  }
+
+  .placeholder-summary-text {
+    display: inline-block;
+    height: 1em;
+    margin-top: 0.6em;
+    width: 100%;
+  }
+
+  .summarized-on {
+    text-align: right;
+
+    .info-icon {
+      margin-left: 3px;
+    }
+  }
+
+  .outdated-summary {
+    color: var(--primary-medium);
+  }
+}
+
+@keyframes ai-summary__indicator-wave {
+  0%,
+  60%,
+  100% {
+    transform: initial;
+  }
+  30% {
+    transform: translateY(-0.2em);
+  }
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

@@ -6,13 +6,11 @@ desc "install all official plugins (use GIT_WRITE=1 to pull with write access)"
 task "plugin:install_all_official" do
   skip = Set.new(%w[customer-flair poll])
 
-  map = { "Canned Replies" => "https://github.com/discourse/discourse-canned-replies" }
-
   STDERR.puts "Allowing write to all repos!" if ENV["GIT_WRITE"]
 
   Plugin::Metadata::OFFICIAL_PLUGINS.each do |name|
     next if skip.include? name
-    repo = map[name] || "https://github.com/discourse/#{name}"
+    repo = "https://github.com/discourse/#{name}"
     dir = repo.split("/").last
     path = File.expand_path("plugins/" + dir)
 

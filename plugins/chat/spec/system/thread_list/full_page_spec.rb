@@ -13,7 +13,6 @@ describe "Thread list in side panel | full page", type: :system do
   let(:thread_list_page) { PageObjects::Components::Chat::ThreadList.new }
 
   before do
-    SiteSetting.enable_experimental_chat_threaded_discussions = true
     chat_system_bootstrap(current_user, [channel])
     sign_in(current_user)
   end
@@ -23,6 +22,50 @@ describe "Thread list in side panel | full page", type: :system do
       chat_page.visit_channel(channel)
       channel_page.open_thread_list
       expect(page).to have_content(I18n.t("js.chat.threads.none"))
+    end
+  end
+
+  context "for threads the user is not a participant in" do
+    fab!(:thread_om) { Fabricate(:chat_message, chat_channel: channel) }
+
+    before { chat_system_user_bootstrap(user: other_user, channel: channel) }
+
+    it "does not show existing threads in the channel if the user is not tracking them" do
+      Fabricate(:chat_thread, original_message: thread_om, channel: channel)
+      chat_page.visit_channel(channel)
+      channel_page.open_thread_list
+      expect(page).to have_content(I18n.t("js.chat.threads.none"))
+    end
+
+    it "does not show new threads in the channel in the thread list if the user is not tracking them" do
+      chat_page.visit_channel(channel)
+
+      using_session(:other_user) do |session|
+        sign_in(other_user)
+        chat_page.visit_channel(channel)
+        channel_page.reply_to(thread_om)
+        thread_page.send_message("hey everyone!")
+        expect(channel_page).to have_thread_indicator(thread_om)
+        session.quit
+      end
+
+      channel_page.open_thread_list
+      expect(page).to have_content(I18n.t("js.chat.threads.none"))
+    end
+
+    describe "when the user creates a new thread" do
+      it "does not double up the staged thread and the actual thread in the list" do
+        chat_page.visit_channel(channel)
+        channel_page.reply_to(thread_om)
+        thread_page.send_message("hey everyone!")
+        expect(channel_page).to have_thread_indicator(thread_om)
+        thread_page.close
+        channel_page.open_thread_list
+        expect(page).to have_css(
+          thread_list_page.item_by_id_selector(thread_om.reload.thread_id),
+          count: 1,
+        )
+      end
     end
   end
 
@@ -90,6 +133,14 @@ describe "Thread list in side panel | full page", type: :system do
     end
 
     describe "deleting and restoring the original message of the thread" do
+      fab!(:thread_1) do
+        chat_thread_chain_bootstrap(
+          channel: channel,
+          messages_count: 2,
+          users: [current_user, other_user],
+        )
+      end
+
       before do
         thread_1.update!(original_message_user: other_user)
         thread_1.original_message.update!(user: other_user)

@@ -26,6 +26,7 @@
         "avatar_template": { "type": "string" },
         "username": { "type": "string" }
       }
-    }
+    },
+    "last_viewed_at": { "type": "datetime" }
   }
 }

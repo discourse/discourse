@@ -15,6 +15,7 @@ ar:
           actions:
             chat_channel_status_change: "تم تغيير حالة قناة الدردشة"
             chat_channel_delete: "تم حذف قناة الدردشة"
+            chat_auto_remove_membership: "إزالة عضويات تلقائيًا من القنوات"
       api:
         scopes:
           descriptions:
@@ -38,6 +39,13 @@ ar:
       browse_all_channels: "استعراض كل القنوات"
       move_to_channel:
         title: "نقل الرسائل إلى القناة"
+        instructions:
+          zero: "أنت بصدد نقل <strong>%{count}</strong> رسالة. حدِّد القناة الوجهة. سيتم إنشاء رسالة عنصر نائب في القناة <strong>%{channelTitle}</strong> للإشارة إلى أن هذه الرسائل قد تم نقلها. لاحظ أنه لن يتم الاحتفاظ بسلاسل الردود في القناة الجديدة، ولن يتم عرض الرسائل في القناة القديمة كردٍ على أي رسائل تم نقلها."
+          one: "أنت بصدد نقل رسالة واحدة (<strong>%{count}</strong>). حدِّد القناة الوجهة. سيتم إنشاء رسالة عنصر نائب في القناة <strong>%{channelTitle}</strong> للإشارة إلى أن هذه الرسائل قد تم نقلها. لاحظ أنه لن يتم الاحتفاظ بسلاسل الردود في القناة الجديدة، ولن يتم عرض الرسائل في القناة القديمة كردٍ على أي رسائل تم نقلها."
+          two: "أنت بصدد نقل رسالتين (<strong>%{count}</strong>). حدِّد القناة الوجهة. سيتم إنشاء رسالة عنصر نائب في القناة <strong>%{channelTitle}</strong> للإشارة إلى أن هذه الرسائل قد تم نقلها. لاحظ أنه لن يتم الاحتفاظ بسلاسل الردود في القناة الجديدة، ولن يتم عرض الرسائل في القناة القديمة كردٍ على أي رسائل تم نقلها."
+          few: "أنت بصدد نقل <strong>%{count}</strong> رسائل. حدِّد القناة الوجهة. سيتم إنشاء رسالة عنصر نائب في القناة <strong>%{channelTitle}</strong> للإشارة إلى أن هذه الرسائل قد تم نقلها. لاحظ أنه لن يتم الاحتفاظ بسلاسل الردود في القناة الجديدة، ولن يتم عرض الرسائل في القناة القديمة كردٍ على أي رسائل تم نقلها."
+          many: "أنت بصدد نقل <strong>%{count}</strong> رسالة. حدِّد القناة الوجهة. سيتم إنشاء رسالة عنصر نائب في القناة <strong>%{channelTitle}</strong> للإشارة إلى أن هذه الرسائل قد تم نقلها. لاحظ أنه لن يتم الاحتفاظ بسلاسل الردود في القناة الجديدة، ولن يتم عرض الرسائل في القناة القديمة كردٍ على أي رسائل تم نقلها."
+          other: "أنت بصدد نقل <strong>%{count}</strong> رسالة. حدِّد القناة الوجهة. سيتم إنشاء رسالة عنصر نائب في القناة <strong>%{channelTitle}</strong> للإشارة إلى أن هذه الرسائل قد تم نقلها. لاحظ أنه لن يتم الاحتفاظ بسلاسل الردود في القناة الجديدة، ولن يتم عرض الرسائل في القناة القديمة كردٍ على أي رسائل تم نقلها."
         confirm_move: "نقل الرسائل"
       channel_settings:
         title: "إعدادات القناة"
@@ -68,6 +76,7 @@ ar:
         instructions: "يمنع إغلاق القناة المستخدمين من غير فريق العمل من إرسال رسائل جديدة أو تعديل الرسائل الحالية. هل تريد بالتأكيد إغلاق هذه القناة؟"
       channel_delete:
         title: "حذف القناة"
+        instructions: "<p>يحذف القناة <strong>%{name}</strong> وسجل الدردشة. سيتم حذف كل الرسائل والبيانات المتعلقة بها، مثل التفاعلات والتحميلات، نهائيًا. إذا كنت تريد الاحتفاظ بسجل القناة وإيقاف تشغيلها، فقد ترغب في أرشفة القناة بدلًا من ذلك.</p> <p>هل تريد بالتأكيد <strong>الحذف النهائي</strong> للقناة؟ للتأكيد، اكتب اسم القناة في المربع أدناه.</p>"
         confirm: "أتفهم العواقب، احذف القناة"
         confirm_channel_name: "أدخل اسم القناة"
         process_started: "لقد بدأت عملية حذف القناة. سيتم إغلاق هذا النموذج بعد قليل، ولن يصبح بإمكانك رؤية القناة المحذوفة في أي مكان."
@@ -77,7 +86,15 @@ ar:
       click_to_join: "انقر هنا لعرض القنوات المتاحة"
       close: "إغلاق"
       collapse: "طي ساحب الدردشة"
+      expand: "توسيع درج الدردشة"
       confirm_flag: "هل تريد بالتأكيد الإبلاغ عن رسالة %{username}؟"
+      deleted:
+        zero: "تم حذف %{count} رسالة."
+        one: "تم حذف رسالة واحدة. [view]"
+        two: "تم حذف رسالتين (%{count}) [view all]"
+        few: "تم حذف %{count} رسائل. [view all]"
+        many: "تم حذف %{count} رسالة. [view all]"
+        other: "تم حذف %{count} رسالة. [view all]"
       hidden: "تم حذف إحدى الرسائل. [view]"
       delete: "حذف"
       edited: "تم التعديل"
@@ -93,6 +110,9 @@ ar:
         title: "إشعارات البريد الإلكتروني"
         when_away: "عندما أكون غائبًا فقط"
       header_indicator_preference:
+        title: "إظهار مؤشر النشاط في الرأس"
+        all_new: "كل الرسائل الجديدة"
+        dm_and_mentions: "الرسائل المباشرة والإشارات"
         never: "أبدًا"
       enable: "تفعيل الدردشة"
       flag: "الإبلاغ"
@@ -105,9 +125,26 @@ ar:
       join: "الانضمام"
       last_visit: "آخر زيارة"
       summarization:
+        title: "تلخيص الرسائل"
+        description: "حدِّد خيارًا أدناه لتلخيص المحادثة المُرسَلة خلال الإطار الزمني المطلوب."
         summarize: "تلخيص"
+        since:
+          zero: "آخر ساعة"
+          one: "آخر ساعة"
+          two: "آخر ساعتين (%{count})"
+          few: "آخر %{count} ساعات"
+          many: "آخر %{count} ساعة"
+          other: "آخر %{count} ساعة"
       mention_warning:
         dismiss: "تجاهل"
+        cannot_see: "لا يمكن للمستخدم %{username} الوصول إلى هذه القناة ولم يتلقَّ إشعارًا."
+        cannot_see_multiple:
+          zero: "لا يمكن للمستخدم %{username} و%%{count} مستخدم آخر الوصول إلى هذه القناة ولم يتلقوا إشعارات."
+          one: "لا يمكن للمستخدم %{username} ومستخدم (%{count}) آخر الوصول إلى هذه القناة ولم يتلقيا إشعارات."
+          two: "لا يمكن للمستخدم %{username} ومستخدمَين (%{count}) آخرين الوصول إلى هذه القناة ولم يتلقوا إشعارات."
+          few: "لا يمكن للمستخدم %{username} و%{count} مستخدمين آخر الوصول إلى هذه القناة ولم يتلقوا إشعارات."
+          many: "لا يمكن للمستخدم %{username} و%%{count} مستخدمًا آخر الوصول إلى هذه القناة ولن يتلقوا إشعارات."
+          other: "لا يمكن للمستخدم %{username} و%{count} مستخدم آخر الوصول إلى هذه القناة ولم يتلقوا إشعارات."
         invitations_sent:
           zero: "تم إرسال دعوات"
           one: "تم إرسال دعوة"
@@ -116,15 +153,117 @@ ar:
           many: "تم إرسال دعوات"
           other: "تم إرسال دعوات"
         invite: "دعوة إلى القناة"
+        without_membership: "لم ينضم المستخدم %{username} إلى هذه القناة."
+        without_membership_multiple:
+          zero: "لم ينضم %{username} و%{count} مستخدم آخر إلى هذه القناة."
+          one: "لم ينضم %{username} ومستخدم (%{count}) آخر إلى هذه القناة."
+          two: "لم ينضم %{username} ومستخدمان (%{count}) آخران إلى هذه القناة."
+          few: "لم ينضم %{username} و%{count} مستخدمين آخرين إلى هذه القناة."
+          many: "لم ينضم %{username} و%{count} مستخدمًا آخر إلى هذه القناة."
+          other: "لم ينضم %{username} و%{count} مستخدم آخر إلى هذه القناة."
+        group_mentions_disabled: "لا تسمح المجموعة %{group_name} بالإشارات."
+        group_mentions_disabled_multiple:
+          zero: "لا تسمح المجموعة @%{group_name} و%{count} مجموعة أخرى بالإشارات"
+          one: "لا تسمح المجموعة @%{group_name} ومجموعة واحدة (%{count}) أخرى بالإشارات."
+          two: "لا تسمح المجموعة @%{group_name} ومجموعتان (%{count}) أخرتان بالإشارات."
+          few: "لا تسمح المجموعة @%{group_name} و%{count} مجموعات أخرى بالإشارات."
+          many: "لا تسمح المجموعة @%{group_name} و%{count} مجموعةً أخرى بالإشارات."
+          other: "لا تسمح المجموعة @%{group_name} و%{count} مجموعة أخرى بالإشارات."
+        too_many_members: "تحتوي المجموعة %{group_name} على أعضاء كثيرين. لم يتلقَّ أحد الإشعارات."
+        too_many_members_multiple:
+          zero: "تحتوي المجموعة %{group_name} و%{count} مجموعة أخرى على أعضاء كثيرين. لم يتلقَّ أحد الإشعارات."
+          one: "تحتوي المجموعة %{group_name} ومجموعة واحدة (%{count}) أخرى على أعضاء كثيرين. لم يتلقَّ أحد الإشعارات."
+          two: "تحتوي المجموعة %{group_name} ومجموعتان (%{count}) أخرتان على أعضاء كثيرين. لم يتلقَّ أحد الإشعارات."
+          few: "تحتوي المجموعة %{group_name} و%{count} مجموعات أخرى على أعضاء كثيرين. لم يتلقَّ أحد الإشعارات."
+          many: "تحتوي المجموعة %{group_name} و%{count} مجموعةً أخرى على أعضاء كثيرين. لم يتلقَّ أحد الإشعارات."
+          other: "تحتوي المجموعة %{group_name} و%{count} مجموعة أخرى على أعضاء كثيرين. لم يتلقَّ أحد الإشعارات."
         groups:
           header:
             some: "لن يتلقى بعض المستخدمين الإشعارات"
             all: "لن يتلقى أحد الإشعارات"
+          unreachable_1: "لا تسمح المجموعة %{group}@ بالإشارات."
+          unreachable_2: "لا تسمح المجموعة @%{group1} و@%{group2} بالإشارات."
+          unreachable_multiple:
+            zero: "لا تسمح المجموعة @%{group} و%{count} مجموعة أخرى بالإشارات."
+            one: "لا تسمح المجموعة %{group}@ ومجموعة واحدة (%{count}) أخرى بالإشارات."
+            two: "لا تسمح المجموعة @%{group} ومجموعتان (%{count}) أخرتان بالإشارات."
+            few: "لا تسمح المجموعة @%{group} و%{count} مجموعات أخرى بالإشارات."
+            many: "لا تسمح المجموعة @%{group} و%{count} مجموعةً أخرى بالإشارات."
+            other: "لا تسمح المجموعة @%{group} و%{count} مجموعة أخرى بالإشارات."
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {الإشارة إلى المجموعة @{group1} تتجاوز <a href=“{siteSettingUrl}” target=“_blank”>حد الإشعارات</a> لمستخدم واحد.}
+                              other {الإشارة إلى المجموعة @{group1} تتجاوز <a href=“{siteSettingUrl}” target=“_blank”>حد الإشعارات</a> لعدد # من المستخدمين.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {الإشارة إلى المجموعة @{group1} تتجاوز حد الإشعارات لمستخدم واحد.}
+                              other {الإشارة إلى المجموعة @{group1} تتجاوز حد الإشعارات لعدد # من المستخدمين.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {الإشارة إلى المجموعة @{group1} و@{group2} تتجاوز <a href=“{siteSettingUrl}” target=“_blank”>حد الإشعارات</a> لمستخدم واحد.}
+                            other {الإشارة إلى المجموعة @{group1} و@{group2} تتجاوز <a href=“{siteSettingUrl}” target=“_blank”>حد الإشعارات</a> لعدد # من المستخدمين.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {الإشارة إلى المجموعة @{group1} و@{group2} تتجاوز حد الإشعارات لمستخدم واحد.}
+                            other {الإشارة إلى المجموعة @{group1} و@{group2} تتجاوز حد الإشعارات لعدد # من المستخدمين.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {الإشارة إلى تلك المجموعات البالغ عددها {groupCount} تتجاوز <a href=“{siteSettingUrl}” target=“_blank”>حد الإشعارات</a> لمستخدم واحد.}
+                            other {الإشارة إلى تلك المجموعات البالغ عددها {groupCount} تتجاوز <a href=“{siteSettingUrl}” target=“_blank”>حد الإشعارات</a> لعدد # من المستخدمين.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {الإشارة إلى تلك المجموعات البالغ عددها {groupCount} تتجاوز حد الإشعارات لمستخدم واحد.}
+                            other {الإشارة إلى تلك المجموعات البالغ عددها {groupCount} تتجاوز حد الإشعارات لعدد # من المستخدمين.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
+        too_many_mentions:
+          zero: "هذه الرسالة تتجاوز حد الإشعارات البالغ %{count} إشارة."
+          one: "هذه الرسالة تتجاوز حد الإشعارات البالغ إشارة واحدة (%{count})."
+          two: "هذه الرسالة تتجاوز حد الإشعارات البالغ إشارتين (%{count})."
+          few: "هذه الرسالة تتجاوز حد الإشعارات البالغ %{count} إشارات."
+          many: "هذه الرسالة تتجاوز حد الإشعارات البالغ %{count} إشارة."
+          other: "هذه الرسالة تتجاوز حد الإشعارات البالغ %{count} إشارة."
+        too_many_mentions_admin:
+          zero: 'هذه الرسالة تتجاوز <a href="%{siteSettingUrl}" target="_blank">حد الإشعارات</a> البالغ %{count} إشارة.'
+          one: 'هذه الرسالة تتجاوز <a href="%{siteSettingUrl}" target="_blank">حد الإشعارات</a> البالغ إشارة واحدة (%{count}).'
+          two: 'هذه الرسالة تتجاوز <a href="%{siteSettingUrl}" target="_blank">حد الإشعارات</a> البالغ إشارتين (%{count}).'
+          few: 'هذه الرسالة تتجاوز <a href="%{siteSettingUrl}" target="_blank">حد الإشعارات</a> البالغ %{count} إشارات.'
+          many: 'هذه الرسالة تتجاوز <a href="%{siteSettingUrl}" target="_blank">حد الإشعارات</a> البالغ %{count} إشارة.'
+          other: 'هذه الرسالة تتجاوز <a href="%{siteSettingUrl}" target="_blank">حد الإشعارات</a> البالغ %{count} إشارة.'
       aria_roles:
         header: "رأس الدردشة"
         composer: "أداة إنشاء الدردشة"
         channels_list: "قائمة قنوات الدردشة"
       no_public_channels: "لم تنضم إلى أي قنوات."
+      kicked_from_channel: "لم يعُد بإمكانك الوصول إلى هذه القناة."
       only_chat_push_notifications:
         title: "إرسال الإشعارات الفورية للدردشة فقط"
         description: "حظر إرسال جميع الإشعارات الفورية غير المتعلقة بالدردشة"
@@ -136,6 +275,13 @@ ar:
       close_full_page: "إغلاق الدردشة في وضع الشاشة الكاملة"
       open_message: "فتح رسالة في الدردشة"
       placeholder_self: "تدوين شيء ما"
+      placeholder_channel: "الدردشة في %{channelName}"
+      placeholder_thread: "الدردشة في سلسلة"
+      placeholder_users: "الدردشة مع %{commaSeparatedNames}"
+      placeholder_new_message_disallowed:
+        archived: "القناة مؤرشفة، ولا يمكنك إرسال رسائل جديدة الآن."
+        closed: "القناة مغلقة، ولا يمكنك إرسال رسائل جديدة الآن."
+        read_only: "القناة للقراءة فقط، لا يمكنك إرسال رسائل جديدة الآن."
       placeholder_silenced: "لا يمكنك إرسال رسائل في الوقت الحالي."
       remove_upload: "إزالة ملف"
       react: "التفاعل برمز تعبيري"
@@ -153,6 +299,14 @@ ar:
       save: "حفظ"
       select: "تحديد"
       return_to_list: "العودة إلى قائمة القنوات"
+      return_to_threads_list: "العودة إلى المناقشات الجارية"
+      unread_threads_count:
+        zero: "لديك %{count} مناقشة غير مقروءة"
+        one: "لديك مناقشة واحدة (%{count}) غير مقروءة"
+        two: "لديك مناقشتان (%{count}) غير مقروءتين"
+        few: "لديك %{count} مناقشات غير مقروءة"
+        many: "لديك %{count} مناقشة غير مقروءة"
+        other: "لديك %{count} مناقشة غير مقروءة"
       scroll_to_bottom: "التمرير إلى الأسفل"
       scroll_to_new_messages: "عرض الرسائل الجديدة"
       sound:
@@ -164,6 +318,8 @@ ar:
       title: "دردشة"
       title_capitalized: "الدردشة"
       upload: "إرفاق ملف"
+      upload_to_channel: "التحميل إلى %{title}"
+      upload_to_thread: "التحميل إلى سلسلة دردشة"
       uploaded_files:
         zero: "%{count} ملفًا"
         one: "ملف واحد (%{count})"
@@ -178,7 +334,7 @@ ar:
         read_only: "للقراءة فقط"
         archived_header: "القناة مؤرشفة"
         archived: "مؤرشفة"
-        archive_failed: "فشلت أرشفة القناة. تمت أرشفة %{completed}/%{total} من الرسائل. <a target=\"_blank\" href=\"%{topic_url}\">موضوع الوجهة</a>. اضغط على \"إعادة المحاولة\" لمحاولة إكمال الأرشيف."
+        archive_failed: "Archive channel failed. %{completed}/%{total} messages have been archived. <a target=\"_blank\" href=\"%{topic_url}\">The destination topic</a> was created. Press retry to attempt to complete the archive."
         archive_failed_no_topic: "فشلت أرشفة القناة. تمت أرشفة %{completed}/%{total} من الرسائل، ولم يتم إنشاء موضوع الوجهة. اضغط على \"إعادة المحاولة\" لمحاولة إكمال الأرشيف."
         archive_completed: "راجع <a target=\"_blank\" href=\"%{topic_url}\">موضوع الأرشيف</a>"
         closed_header: "القناة مغلقة"
@@ -212,7 +368,22 @@ ar:
           members: الأعضاء
           settings: الإعدادات
       new_message_modal:
+        title: إرسال رسالة
+        add_user_long: <kbd>مفتاح Shift + نقرة</kbd> أو <kbd>مفتاح Shift + مفتاح Enter</kbd><span>أضِف @%{username}</span>
+        add_user_short: <span>إضافة مستخدم</span>
+        open_channel: <span>فتح قناة</span>
+        default_search_placeholder: "#a-channel، @شخص أو شيء"
+        default_channel_search_placeholder: "#a-channel"
+        default_user_search_placeholder: "@شخص"
+        user_search_placeholder: "...إضافة المزيد من المستخدمين"
+        disabled_user: "عطَّل الدردشة"
         no_items: "لا توجد عناصر"
+      channel_edit_name_slug_modal:
+        title: تعديل القناة
+        input_placeholder: أضِف اسمًا
+        slug_description: يتم استخدام مسار للقناة في عنوان URL بدلًا من اسم القناة
+        name: اسم القناة
+        slug: مسار القناة (اختياري)
       channel_edit_description_modal:
         title: تعديل الوصف
         input_placeholder: أضِف وصفًا
@@ -233,15 +404,56 @@ ar:
           many: "%{count} عضوًا"
           other: "%{count} عضوًا"
       create_channel:
+        threading:
+          label: "تفعيل سلاسل الدردشة"
         auto_join_users:
           public_category_warning: "%{category} هي فئة عامة. هل تريد إضافة كل المستخدمين النشطين مؤخرًا إلى هذه القناة؟"
+          warning_1_group:
+            zero: "هل تريد إضافة %{count} مستخدم تلقائيًا من %{group}؟"
+            one: "هل تريد إضافة مستخدم واحد (%{count}) تلقائيًا من %{group}؟"
+            two: "هل تريد إضافة مستخدمين (%{count}) تلقائيًا من %{group}؟"
+            few: "هل تريد إضافة %{count} مستخدمين تلقائيًا من %{group}؟"
+            many: "هل تريد إضافة %{count} مستخدمًا تلقائيًا من %{group}؟"
+            other: "هل تريد إضافة %{count} مستخدم تلقائيًا من %{group}؟"
+          warning_2_groups:
+            zero: "هل تريد إضافة %{count} مستخدم تلقائيًا من %{group1} و%{group2}؟"
+            one: "هل تريد إضافة مستخدم واحد (%{count}) تلقائيًا من %{group1} و%{group2}؟"
+            two: "هل تريد إضافة مستخدمَين (%{count}) تلقائيًا من %{group1} و%{group2}؟"
+            few: "هل تريد إضافة %{count} مستخدمين تلقائيًا من %{group1} و%{group2}؟"
+            many: "هل تريد إضافة %{count} مستخدمًا تلقائيًا من %{group1} و%{group2}؟"
+            other: "هل تريد إضافة %{count} مستخدم تلقائيًا من %{group1} و%{group2}؟"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                one {
+                      { userCount, plural,
+                          one {هل تريد إضافة مستخدم واحد ({userCount}) تلقائيًا من المجموعة {groupName} ومجموعة واحدة ({groupCount}) أخرى؟}
+                        other {هل تريد إضافة {userCount} من المستخدمين تلقائيًا من المجموعة {groupName} ومجموعة واحدة ({groupCount}) أخرى؟}
+                      }
+                    }
+              other {
+                      { userCount, plural,
+                          one {هل تريد إضافة مستخدم واحد ({userCount}) تلقائيًا من المجموعة {groupName} و{groupCount} من المجموعات الأخرى؟}
+                        other {هل تريد إضافة {userCount} من المستخدمين تلقائيًا من المجموعة {groupName} و{groupCount} من المجموعات الأخرى؟}
+                      }
+                    }
+            }
         choose_category:
           label: "اختيار فئة"
           none: "اختر واحدة..."
           default_hint: إدارة الوصول بالانتقال إلى <a href=%{link} target="_blank">%{category} إعدادات الأمان</a>
+          hint_1_group: 'سيتمكن المستخدمون في %{group} من الوصول إلى هذه القناة وفقًا <a href="%{settingLink}" target="_blank">لإعدادات الأمان</a>'
+          hint_2_groups: 'سيتمكن المستخدمون في %{group1} و%{group2} من الوصول إلى هذه القناة وفقًا <a href="%{settingLink}" target="_blank">لإعدادات الأمان</a>'
+          hint_multiple_groups:
+            zero: 'سيتمكن المستخدمون في %{group} و%{count} مجموعة أخرى من الوصول إلى هذه القناة وفقًا <a href="%{settingLink}" target="_blank">لإعدادات الأمان</a>'
+            one: 'سيتمكن المستخدمون في %{group} ومجموعة واحدة (%{count}) أخرى من الوصول إلى هذه القناة وفقًا <a href="%{settingLink}" target="_blank">لإعدادات الأمان</a>'
+            two: 'سيتمكن المستخدمون في %{group} ومجموعتين (%{count}) أخرتين من الوصول إلى هذه القناة وفقًا <a href="%{settingLink}" target="_blank">لإعدادات الأمان</a>'
+            few: 'سيتمكن المستخدمون في %{group} و%{count} مجموعات أخرى من الوصول إلى هذه القناة وفقًا <a href="%{settingLink}" target="_blank">لإعدادات الأمان</a>'
+            many: 'سيتمكن المستخدمون في %{group} و%{count} مجموعة أخرى من الوصول إلى هذه القناة وفقًا <a href="%{settingLink}" target="_blank">لإعدادات الأمان</a>'
+            other: 'سيتمكن المستخدمون في %{group} و%{count} مجموعة أخرى من الوصول إلى هذه القناة وفقًا <a href="%{settingLink}" target="_blank">لإعدادات الأمان</a>'
         create: "إنشاء قناة"
         description: "الوصف (اختياري)"
         name: "اسم القناة"
+        slug: "مسار القناة (اختياري)"
         title: "قناة جديدة"
         type: "النوع"
         types:
@@ -251,6 +463,24 @@ ar:
         type: "رسالة دردشة"
       reactions:
         only_you: "لقد تفاعلت باستخدام :%{emoji}:"
+        you_and_single_user: "لقد تفاعلت أنت و%{username} بالرمز التعبيري :%{emoji}:"
+        you_and_multiple_users: "لقد تفاعلت أنت و%{commaSeparatedUsernames} و%{username} بالرمز التعبيري :%{emoji}:"
+        you_multiple_users_and_more:
+          zero: "لقد تفاعلت أنت و%{commaSeparatedUsernames} و%{count} مستخدم آخر بالرمز التعبيري :%{emoji}:"
+          one: "لقد تفاعلت أنت و%{commaSeparatedUsernames} ومستخدم واحد (%{count}) آخر بالرمز التعبيري :%{emoji}:"
+          two: "لقد تفاعلت أنت و%{commaSeparatedUsernames} ومستخدمان (%{count}) آخران بالرمز التعبيري :%{emoji}:"
+          few: "لقد تفاعلت أنت و%{commaSeparatedUsernames} و%{count} مستخدمين آخرين بالرمز التعبيري :%{emoji}:"
+          many: "لقد تفاعلت أنت و%{commaSeparatedUsernames} و%{count} مستخدمًا آخر بالرمز التعبيري :%{emoji}:"
+          other: "لقد تفاعلت أنت و%{commaSeparatedUsernames} و%{count} مستخدم آخر بالرمز التعبيري :%{emoji}:"
+        single_user: "لقد تفاعل المستخدم %{username} بالرمز التعبيري :%{emoji}:"
+        multiple_users: "لقد تفاعل %{commaSeparatedUsernames} و%{username} بالرمز التعبيري :%{emoji}:"
+        multiple_users_and_more:
+          zero: "لقد تفاعل %{commaSeparatedUsernames} و%{count} مستخدم آخر بالرمز التعبيري :%{emoji}:"
+          one: "لقد تفاعل %{commaSeparatedUsernames} ومستخدم واحد (%{count}) آخر بالرمز التعبيري :%{emoji}:"
+          two: "لقد تفاعل %{commaSeparatedUsernames} ومستخدمان (%{count}) آخران بالرمز التعبيري :%{emoji}:"
+          few: "لقد تفاعل %{commaSeparatedUsernames} و%{count} مستخدمين آخرين بالرمز التعبيري :%{emoji}:"
+          many: "لقد تفاعل %{commaSeparatedUsernames} و%{count} مستخدمًا آخر بالرمز التعبيري :%{emoji}:"
+          other: "لقد تفاعل %{commaSeparatedUsernames} و%{count} مستخدم آخر بالرمز التعبيري :%{emoji}:"
       composer:
         toggle_toolbar: "تشغيل شريط الأدوات"
         italic_text: "نص بارز"
@@ -267,13 +497,18 @@ ar:
       settings:
         channel_wide_mentions_label: "السماح بإشارات @الكل و@هنا"
         channel_wide_mentions_description: "السماح للمستخدمين بإرسال إشعارات إلى جميع أعضاء #%{channel} باستخدام @الكل، أو المستخدمين النشطين في الوقت الحالي فقط باستخدام @هنا"
+        channel_threading_label: "سلاسل الدردشة"
+        channel_threading_description: "عند تفعيل سلاسل الدردشة، ستؤدي الردود على رسالة الدردشة إلى إنشاء محادثة منفصلة، والتي ستكون موجودة بجانب القناة الرئيسية."
         auto_join_users_label: "إضافة المستخدمين تلقائيًا"
+        auto_join_users_info: "تحقَّق كل ساعة من المستخدمين الذين كانوا نشطين في الأشهر الثلاثة الماضية. قم بإضافتهم إلى هذه القناة إذا كان لديهم وصول إلى الفئة %{category}."
+        auto_join_users_info_no_category: "تحقَّق كل ساعة من المستخدمين الذين كانوا نشطين في الأشهر الثلاثة الماضية. قم بإضافتهم إلى هذه القناة إذا كان لديهم وصول إلى الفئة المحدَّدة."
         auto_join_users_warning: "سينضم كل المستخدمين الذين ليسوا أعضاءً في هذه القناة ولديهم وصول إلى فئة %{category}. هل أنت متأكد؟"
         desktop_notification_level: "إشعارات سطح المكتب"
         follow: "الانضمام"
         followed: "انضم"
         mobile_notification_level: "الإشعارات الفورية للجوَّال"
         mute: "كتم القناة"
+        threading_enabled: "مفعَّلة"
         threading_disabled: "متوقفة"
         muted_on: "تشغيل"
         muted_off: "إيقاف"
@@ -285,6 +520,11 @@ ar:
         admin_title: "مسؤول"
       admin:
         title: "الدردشة"
+        export_messages:
+          title: "تصدير رسائل الدردشة"
+          description: "التصدير مقتصر حاليًا على أحدث 10000 رسالة في آخر 6 أشهر."
+          create_export: "إنشاء تصدير"
+          export_has_started: "بدأ التصدير. ستتلقى رسالة خاصة عندما يصبح جاهزًا."
       direct_messages:
         title: "الدردشة الشخصية"
         new: "إنشاء دردشة شخصية"
@@ -363,6 +603,23 @@ ar:
           few: "%{commaSeparatedUsernames} و%{count} آخرون يكتبون"
           many: "%{commaSeparatedUsernames} و%{count} آخرون يكتبون"
           other: "%{commaSeparatedUsernames} و%{count} آخرون يكتبون"
+      retention_reminders:
+        public_none: "يتم الاحتفاظ بسجل القناة إلى أجلٍ غير مسمى."
+        public:
+          zero: "يتم الاحتفاظ بسجل القناة لمدة %{count} يوم."
+          one: "يتم الاحتفاظ بسجل القناة لمدة يوم واحد (%{count})."
+          two: "يتم الاحتفاظ بسجل القناة لمدة يومين (%{count})."
+          few: "يتم الاحتفاظ بسجل القناة لمدة %{count} أيام."
+          many: "يتم الاحتفاظ بسجل القناة لمدة %{count} يومًا."
+          other: "يتم الاحتفاظ بسجل القناة لمدة %{count} يوم."
+        dm_none: "يتم الاحتفاظ بسجل الدردشة الشخصية إلى أجلٍ غير مسمى."
+        dm:
+          zero: "يتم الاحتفاظ بسجل الدردشة الشخصية لمدة %{count} يوم."
+          one: "يتم الاحتفاظ بسجل الدردشة الشخصية لمدة يوم واحد (%{count})."
+          two: "يتم الاحتفاظ بسجل الدردشة الشخصية لمدة يومين (%{count})."
+          few: "يتم الاحتفاظ بسجل الدردشة الشخصية لمدة %{count} أيام."
+          many: "يتم الاحتفاظ بسجل الدردشة الشخصية لمدة %{count} يومًا."
+          other: "يتم الاحتفاظ بسجل الدردشة الشخصية لمدة %{count} يوم."
       flags:
         off_topic: "هذه الرسالة ليست ذات صلة بالمناقشة الحالية كما هو محدَّد في عنوان القناة، وربما ينبغي نقلها إلى مكانٍ آخر."
         inappropriate: "تحتوي هذه الرسالة على محتوى قد يعتبره الشخص العاقل مسيئًا أو مهينًا أو ينتهك <a href=\"%{basePath}/guidelines\">إرشادات المجتمع</a> لدينا."
@@ -386,20 +643,28 @@ ar:
         no_results: "لا توجد نتائج"
       thread:
         title: "العنوان"
+        view_thread: عرض سلسلة الدردشة
+        default_title: "سلسلة الدردشة"
         replies:
-          zero: "%{count} ردًا"
+          zero: "%{count} رد"
           one: "رد واحد (%{count})"
           two: "ردَّان (%{count})"
           few: "%{count} ردود"
-          many: "%{count} ردود"
-          other: "%{count} ردًا"
+          many: "%{count} ردًا"
+          other: "%{count} رد"
+        label: سلسلة الدردشة
+        close: "إغلاق سلسلة الدردشة"
+        original_message:
+          started_by: "بدأها"
         settings: "الإعدادات"
         last_reply: "آخر رد"
         notifications:
           regular:
-            title: "عادية"
+            title: "طبيعية"
+            description: "سنُرسل إليك إشعارًا إذا أشار أحد إلى @اسمك في سلسلة الدردشة هذه."
           tracking:
             title: "التتبُّع"
+            description: "سيتم عرض عدد الردود الجديدة لهذا الموضوع في قائمة سلسلة الدردشة والقناة. سيتم إرسال إشعار إليك إذا أشار شخص ما إلى @اسمك في سلسلة الدردشة هذه."
         participants_other_count:
           zero: "+%{count}"
           one: "+%{count}"
@@ -407,6 +672,10 @@ ar:
           few: "+%{count}"
           many: "+%{count}"
           other: "+%{count}"
+      threads:
+        open: "فتح سلسلة دردشة"
+        list: "المناقشات الجارية"
+        none: "أنت لا تشارك في أي سلاسل دردشة في هذه القناة."
       draft_channel_screen:
         header: "رسالة جديدة"
         cancel: "إلغاء"
@@ -450,6 +719,9 @@ ar:
     review:
       transcript:
         view: "عرض نص الرسائل السابقة"
+      types:
+        chat_reviewable_message:
+          title: "رسالة دردشة تم الإبلاغ عنها"
     keyboard_shortcuts_help:
       chat:
         title: "الدردشة"
@@ -462,6 +734,7 @@ ar:
           composer_code: "%{shortcut} رمز برمجي (أداة الإنشاء فقط)"
           drawer_open: "%{shortcut} فتح درج الدردشة"
           drawer_close: "%{shortcut} إغلاق درج الدردشة"
+          mark_all_channels_read: "%{shortcut} وضع علامة \"مقروءة\" على كل القنوات"
     topic_statuses:
       chat:
         help: "الدردشة مفعَّلة لهذا الموضوع"

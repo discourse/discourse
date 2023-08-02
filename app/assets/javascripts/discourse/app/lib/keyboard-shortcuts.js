@@ -106,7 +106,10 @@ const DEFAULT_BINDINGS = {
   "shift+k": { handler: "prevSection", anonymous: true },
   "shift+p": { handler: "pinUnpinTopic" },
   "shift+r": { handler: "replyToTopic" },
-  "shift+s": { click: "#topic-footer-buttons button.share", anonymous: true }, // share topic
+  "shift+s": {
+    click: "#topic-footer-buttons button.share-and-invite",
+    anonymous: true,
+  }, // share topic
   "shift+l": { handler: "goToUnreadPost" },
   "shift+z shift+z": { handler: "logout" },
   "shift+f11": { handler: "fullscreenComposer", global: true },
@@ -314,7 +317,7 @@ export default {
   },
 
   quoteReply() {
-    if (this.isPostTextSelected()) {
+    if (this.isPostTextSelected) {
       this.appEvents.trigger("quote-button:quote");
       return false;
     }
@@ -330,7 +333,7 @@ export default {
   },
 
   editPost() {
-    if (this.siteSettings.enable_fast_edit && this.isPostTextSelected()) {
+    if (this.siteSettings.enable_fast_edit && this.isPostTextSelected) {
       this.appEvents.trigger("quote-button:edit");
       return false;
     } else {
@@ -357,7 +360,7 @@ export default {
   },
 
   goToFirstSuggestedTopic() {
-    const el = document.querySelector(".suggested-topics a.raw-topic-link");
+    const el = document.querySelector("#suggested-topics a.raw-topic-link");
     if (el) {
       el.click();
     } else {
@@ -556,9 +559,9 @@ export default {
     }
   },
 
-  isPostTextSelected() {
+  get isPostTextSelected() {
     const topicController = getOwner(this).lookup("controller:topic");
-    return !!topicController?.get("quoteState")?.postId;
+    return !!topicController.quoteState.postId;
   },
 
   sendToSelectedPost(action, elem) {
@@ -728,9 +731,20 @@ export default {
       }
     }
 
-    article = articles[index + direction];
-    if (!article) {
-      return;
+    let newIndex = index;
+    while (true) {
+      newIndex += direction;
+      article = articles[newIndex];
+
+      // Element doesn't exist
+      if (!article) {
+        return;
+      }
+
+      // Element is visible
+      if (article.getBoundingClientRect().height > 0) {
+        break;
+      }
     }
 
     for (const a of articles) {

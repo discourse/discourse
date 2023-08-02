@@ -13,15 +13,6 @@ class DiscourseEvent
   end
 
   def self.on(event_name, &block)
-    if event_name == :site_setting_saved
-      Discourse.deprecate(
-        "The :site_setting_saved event is deprecated. Please use :site_setting_changed instead",
-        since: "2.3.0beta8",
-        drop_from: "2.4",
-        raise_error: true,
-      )
-    end
-
     if event_name == :user_badge_removed
       Discourse.deprecate(
         "The :user_badge_removed event is deprecated. Please use :user_badge_revoked instead",

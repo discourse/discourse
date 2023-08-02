@@ -1,14 +1,22 @@
 # frozen_string_literal: true
 
 RSpec.describe DraftsController do
+  fab!(:user) { Fabricate(:user) }
+
   describe "#index" do
     it "requires you to be logged in" do
       get "/drafts.json"
       expect(response.status).to eq(403)
     end
 
+    describe "when limit params is invalid" do
+      before { sign_in(user) }
+
+      include_examples "invalid limit params", "/drafts.json", described_class::INDEX_LIMIT
+    end
+
     it "returns correct stream length after adding a draft" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
       Draft.set(user, "xxx", 0, "{}")
       get "/drafts.json"
       expect(response.status).to eq(200)
@@ -17,7 +25,7 @@ RSpec.describe DraftsController do
     end
 
     it "has empty stream after deleting last draft" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
       Draft.set(user, "xxx", 0, "{}")
       Draft.clear(user, "xxx", 0)
       get "/drafts.json"
@@ -46,7 +54,7 @@ RSpec.describe DraftsController do
 
   describe "#show" do
     it "returns a draft if requested" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
       Draft.set(user, "hello", 0, "test")
 
       get "/drafts/hello.json"
@@ -62,7 +70,7 @@ RSpec.describe DraftsController do
     end
 
     it "saves a draft" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
 
       post "/drafts.json", params: { draft_key: "xyz", data: { my: "data" }.to_json, sequence: 0 }
 
@@ -77,7 +85,7 @@ RSpec.describe DraftsController do
     end
 
     it "checks for an conflict on update" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
       post = Fabricate(:post, user: user)
 
       post "/drafts.json",
@@ -103,7 +111,7 @@ RSpec.describe DraftsController do
     end
 
     it "cant trivially resolve conflicts without interaction" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
 
       DraftSequence.next!(user, "abc")
 
@@ -120,7 +128,7 @@ RSpec.describe DraftsController do
     end
 
     it "has a clean protocol for ownership handover" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
 
       post "/drafts.json",
            params: {
@@ -170,7 +178,7 @@ RSpec.describe DraftsController do
     end
 
     it "raises an error for out-of-sequence draft setting" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
       seq = DraftSequence.next!(user, "abc")
       Draft.set(user, "abc", seq, { b: "test" }.to_json)
 
@@ -230,7 +238,7 @@ RSpec.describe DraftsController do
 
   describe "#destroy" do
     it "destroys drafts when required" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
       Draft.set(user, "xxx", 0, "hi")
       delete "/drafts/xxx.json", params: { sequence: 0 }
 

@@ -225,4 +225,12 @@ RSpec.describe Hijack do
 
     expect(ran).to eq(false)
   end
+
+  it "handles the queue being full" do
+    Scheduler::Defer.stubs(:later).raises(WorkQueue::WorkQueueFull.new)
+
+    tester.hijack_test {}
+
+    expect(tester.response.status).to eq(503)
+  end
 end

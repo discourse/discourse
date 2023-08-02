@@ -13,7 +13,7 @@ RSpec.describe User do
 
   it do
     is_expected.to have_many(:pending_posts).class_name("ReviewableQueuedPost").with_foreign_key(
-      :created_by_id,
+      :target_created_by_id,
     )
   end
 
@@ -52,74 +52,16 @@ RSpec.describe User do
         SiteSetting.default_navigation_menu_tags = "#{tag.name}|#{hidden_tag.name}"
       end
 
-      it "creates the right sidebar section link records for categories and tags that a user can see" do
+      it "creates sidebar section link records for categories and tags that have been configured as defaults" do
         user = Fabricate(:user)
 
         expect(
           SidebarSectionLink.where(linkable_type: "Category", user_id: user.id).pluck(:linkable_id),
-        ).to contain_exactly(category.id)
-
-        expect(
-          SidebarSectionLink.where(linkable_type: "Tag", user_id: user.id).pluck(:linkable_id),
-        ).to contain_exactly(tag.id)
-
-        admin = Fabricate(:admin)
-
-        expect(
-          SidebarSectionLink.where(linkable_type: "Category", user_id: admin.id).pluck(
-            :linkable_id,
-          ),
         ).to contain_exactly(category.id, secured_category.id)
 
         expect(
-          SidebarSectionLink.where(linkable_type: "Tag", user_id: admin.id).pluck(:linkable_id),
+          SidebarSectionLink.where(linkable_type: "Tag", user_id: user.id).pluck(:linkable_id),
         ).to contain_exactly(tag.id, hidden_tag.id)
-      end
-
-      it "should create and remove the right sidebar section link records when user is promoted/demoted as an admin" do
-        user = Fabricate(:user)
-        another_category = Fabricate(:category)
-        another_tag = Fabricate(:tag)
-
-        # User has customized their sidebar categories and tags
-        SidebarSectionLink.where(user: user).delete_all
-        SidebarSectionLinksUpdater.update_category_section_links(
-          user,
-          category_ids: [another_category.id],
-        )
-        SidebarSectionLinksUpdater.update_tag_section_links(user, tag_names: [another_tag.name])
-
-        # A user promoted to admin now has any default categories/tags they didn't previously have access to
-        user.update(admin: true)
-        expect(
-          SidebarSectionLink.where(linkable_type: "Category", user_id: user.id).pluck(:linkable_id),
-        ).to contain_exactly(another_category.id, secured_category.id)
-        expect(
-          SidebarSectionLink.where(linkable_type: "Tag", user_id: user.id).pluck(:linkable_id),
-        ).to contain_exactly(another_tag.id, hidden_tag.id)
-
-        # User still has their customized sidebar categories and tags after demotion
-        user.update(admin: false)
-        expect(
-          SidebarSectionLink.where(linkable_type: "Category", user_id: user.id).pluck(:linkable_id),
-        ).to contain_exactly(another_category.id)
-        expect(
-          SidebarSectionLink.where(linkable_type: "Tag", user_id: user.id).pluck(:linkable_id),
-        ).to contain_exactly(another_tag.id)
-      end
-
-      it "should not receive any new categories w/ suppress secured categories from admin enabled" do
-        SiteSetting.suppress_secured_categories_from_admin = true
-        user = Fabricate(:user)
-        SidebarSectionLink.where(user: user).delete_all # User has customized their sidebar categories
-        user.update(admin: true)
-        expect(
-          SidebarSectionLink.where(linkable_type: "Category", user_id: user.id).pluck(:linkable_id),
-        ).to be_empty
-        user.update(admin: false)
-        expect(
-          SidebarSectionLink.where(linkable_type: "Category", user_id: user.id).pluck(:linkable_id),
-        ).to be_empty
       end
 
       it "should not create any sidebar section link records when navigation_menu site setting is still legacy" do
@@ -605,7 +547,7 @@ RSpec.describe User do
     fab!(:posts) { [post1, post2, post3] }
     fab!(:post_ids) { [post1.id, post2.id, post3.id] }
     let(:guardian) { Guardian.new(Fabricate(:admin)) }
-    fab!(:reviewable_queued_post) { Fabricate(:reviewable_queued_post, created_by: user) }
+    fab!(:reviewable_queued_post) { Fabricate(:reviewable_queued_post, target_created_by: user) }
 
     it "deletes only one batch of posts" do
       post2
@@ -2039,29 +1981,64 @@ RSpec.describe User do
 
     describe "#number_of_rejected_posts" do
       it "counts rejected posts" do
-        Fabricate(:reviewable_queued_post, created_by: user, status: Reviewable.statuses[:rejected])
+        Fabricate(
+          :reviewable_queued_post,
+          target_created_by: user,
+          status: Reviewable.statuses[:rejected],
+        )
 
         expect(user.number_of_rejected_posts).to eq(1)
       end
 
       it "ignore non-rejected posts" do
-        Fabricate(:reviewable_queued_post, created_by: user, status: Reviewable.statuses[:approved])
+        Fabricate(
+          :reviewable_queued_post,
+          target_created_by: user,
+          status: Reviewable.statuses[:approved],
+        )
 
         expect(user.number_of_rejected_posts).to eq(0)
       end
     end
 
     describe "#number_of_flagged_posts" do
-      it "counts flagged posts from the user" do
-        Fabricate(:reviewable_flagged_post, target_created_by: user)
+      fab!(:admin) { Fabricate(:admin) }
 
-        expect(user.number_of_flagged_posts).to eq(1)
+      it "counts only approved standard flagged posts from the user" do
+        %i[disagree ignore delete_and_ignore].each do |review_action|
+          PostActionCreator
+            .off_topic(admin, Fabricate(:post, user: user))
+            .reviewable
+            .perform(admin, review_action)
+        end
+        %i[agree_and_keep delete_and_agree].each do |approval_action|
+          PostActionCreator
+            .off_topic(admin, Fabricate(:post, user: user))
+            .reviewable
+            .perform(admin, approval_action)
+        end
+
+        expect(user.number_of_flagged_posts).to eq 2
+      end
+
+      it "ignores custom flags from the user" do
+        PostActionCreator
+          .notify_moderators(admin, Fabricate(:post, user: user))
+          .reviewable
+          .perform(admin, :agree_and_keep)
+        expect(user.number_of_flagged_posts).to be_zero
       end
 
       it "ignores flagged posts from another user" do
-        Fabricate(:reviewable_flagged_post, target_created_by: Fabricate(:user))
+        other_user = Fabricate(:user)
+        %i[disagree ignore delete_and_ignore agree_and_keep].each do |review_action|
+          PostActionCreator
+            .off_topic(admin, Fabricate(:post, user: other_user))
+            .reviewable
+            .perform(admin, review_action)
+        end
 
-        expect(user.number_of_flagged_posts).to eq(0)
+        expect(user.number_of_flagged_posts).to be_zero
       end
     end
   end
@@ -2364,9 +2341,6 @@ RSpec.describe User do
           .first
 
       expect(message.data[:unread_notifications]).to eq(1)
-      # NOTE: because of deprecation this will be equal to unread_high_priority_notifications,
-      #       to be removed in 2.5
-      expect(message.data[:unread_private_messages]).to eq(2)
       expect(message.data[:unread_high_priority_notifications]).to eq(2)
     end
 
@@ -3369,6 +3343,29 @@ RSpec.describe User do
 
       expect(user.bump_last_seen_notification!).to eq(true)
       expect(user.reload.seen_notification_id).to eq(last_notification.id)
+    end
+  end
+
+  describe "#secured_sidebar_category_ids" do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:category) { Fabricate(:category) }
+    fab!(:group) { Fabricate(:group) }
+    fab!(:secured_category) { Fabricate(:private_category, group: group) }
+
+    fab!(:category_sidebar_section_link) do
+      Fabricate(:category_sidebar_section_link, user: user, linkable: category)
+    end
+
+    fab!(:secured_category_sidebar_section_link) do
+      Fabricate(:category_sidebar_section_link, user: user, linkable: secured_category)
+    end
+
+    it "should only return the category ids of category sidebar section link records that the user is allowed to see" do
+      expect(user.secured_sidebar_category_ids).to contain_exactly(category.id)
+
+      user.update!(admin: true)
+
+      expect(user.secured_sidebar_category_ids).to contain_exactly(category.id, secured_category.id)
     end
   end
 

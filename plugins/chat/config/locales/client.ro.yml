@@ -42,6 +42,10 @@ ro:
         summarize: "Rezumat"
       mention_warning:
         dismiss: "renunță"
+        cannot_see: "%{username} nu poate accesa acest canal și nu a fost notificat."
+        without_membership: "%{username} nu s-a alăturat acestui canal."
+        group_mentions_disabled: "%{group_name} nu permite mențiuni."
+        too_many_members: "%{group_name} are prea mulți membri. Nimeni nu a fost anunțat."
       reply: "Răspunde"
       edit: "Modifică"
       rebake_message: "Reconstruieşte HTML"

@@ -20,6 +20,12 @@ RSpec.describe Admin::ApiController do
         expect(response.parsed_body["keys"].length).to eq(3)
       end
 
+      describe "when limit params is invalid" do
+        include_examples "invalid limit params",
+                         "/admin/api/keys.json",
+                         described_class::INDEX_LIMIT
+      end
+
       it "can paginate results" do
         get "/admin/api/keys.json?offset=0&limit=2"
 

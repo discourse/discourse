@@ -63,6 +63,8 @@ require "webdrivers"
 require "selenium-webdriver"
 require "capybara/rails"
 
+Webdrivers::Chromedriver.required_version = "114.0.5735.90"
+
 # The shoulda-matchers gem no longer detects the test framework
 # you're using or mixes itself into that framework automatically.
 Shoulda::Matchers.configure do |config|
@@ -76,6 +78,7 @@ end
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+Dir[Rails.root.join("spec/requests/examples/*.rb")].each { |f| require f }
 
 Dir[Rails.root.join("spec/system/helpers/**/*.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/system/page_objects/**/base.rb")].each { |f| require f }
@@ -147,6 +150,8 @@ module TestSetup
     BadgeGranter.disable_queue
 
     OmniAuth.config.test_mode = false
+
+    Middleware::AnonymousCache.disable_anon_cache
   end
 end
 
@@ -322,6 +327,9 @@ RSpec.configure do |config|
     else
       DB.exec "SELECT setval('uploads_id_seq', 1)"
     end
+
+    # Prevents 500 errors for site setting URLs pointing to test.localhost in system specs.
+    SiteIconManager.clear_cache!
   end
 
   class TestLocalProcessProvider < SiteSettings::LocalProcessProvider
@@ -673,7 +681,22 @@ def apply_base_chrome_options(options)
   options.add_argument("--no-sandbox")
   options.add_argument("--disable-dev-shm-usage")
   options.add_argument("--mute-audio")
-  options.add_argument("--force-device-scale-factor=1")
+
+  # A file that contains just a list of paths like so:
+  #
+  # /home/me/.config/google-chrome/Default/Extensions/bmdblncegkenkacieihfhpjfppoconhi/4.9.1_0
+  #
+  # These paths can be found for each individual extension via the
+  # chrome://extensions/ page.
+  if ENV["CHROME_LOAD_EXTENSIONS_MANIFEST"].present?
+    File
+      .readlines(ENV["CHROME_LOAD_EXTENSIONS_MANIFEST"])
+      .each { |path| options.add_argument("--load-extension=#{path}") }
+  end
+
+  if ENV["CHROME_DISABLE_FORCE_DEVICE_SCALE_FACTOR"].blank?
+    options.add_argument("--force-device-scale-factor=1")
+  end
 end
 
 class SpecSecureRandom

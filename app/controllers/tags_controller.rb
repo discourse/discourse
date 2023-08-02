@@ -104,7 +104,7 @@ class TagsController < ::ApplicationController
 
   def list
     offset = params[:offset].to_i || 0
-    tags = guardian.can_admin_tags? ? Tag.all : Tag.used_tags_in_regular_topics(guardian)
+    tags = guardian.can_admin_tags? ? Tag.all : Tag.visible(guardian)
 
     load_more_query_params = { offset: offset + 1 }
 
@@ -292,13 +292,8 @@ class TagsController < ::ApplicationController
       exclude_has_synonyms: params[:excludeHasSynonyms],
     }
 
-    if params[:limit]
-      begin
-        filter_params[:limit] = Integer(params[:limit])
-        raise Discourse::InvalidParameters.new(:limit) if !filter_params[:limit].positive?
-      rescue ArgumentError
-        raise Discourse::InvalidParameters.new(:limit)
-      end
+    if limit = fetch_limit_from_params(default: nil, max: SiteSetting.max_tag_search_results)
+      filter_params[:limit] = limit
     end
 
     filter_params[:category] = Category.find_by_id(params[:categoryId]) if params[:categoryId]

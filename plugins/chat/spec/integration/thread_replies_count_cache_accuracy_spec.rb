@@ -6,10 +6,7 @@ RSpec.describe "Chat::Thread replies_count cache accuracy" do
   fab!(:user) { Fabricate(:user) }
   fab!(:thread) { Fabricate(:chat_thread) }
 
-  before do
-    SiteSetting.chat_enabled = true
-    SiteSetting.enable_experimental_chat_threaded_discussions = true
-  end
+  before { SiteSetting.chat_enabled = true }
 
   it "keeps an accurate replies_count cache" do
     freeze_time

@@ -1,0 +1,44 @@
+<Sidebar::Section
+  @sectionName={{this.section.name}}
+  @headerLinkText={{this.section.text}}
+  @headerLinkTitle={{this.section.title}}
+  @headerActionsIcon={{this.section.actionsIcon}}
+  @headerActions={{this.section.actions}}
+  @willDestroy={{this.section.willDestroy}}
+  @collapsable={{@collapsable}}
+  @displaySection={{this.section.displaySection}}
+>
+
+  {{#each this.section.links as |link|}}
+    <Sidebar::SectionLink
+      @linkName={{link.name}}
+      @class={{link.classNames}}
+      @route={{link.route}}
+      @model={{link.model}}
+      @models={{link.models}}
+      @href={{link.href}}
+      @title={{link.title}}
+      @contentCSSClass={{link.contentCSSClass}}
+      @prefixColor={{link.prefixColor}}
+      @prefixBadge={{link.prefixBadge}}
+      @prefixType={{link.prefixType}}
+      @prefixValue={{link.prefixValue}}
+      @prefixCSSClass={{link.prefixCSSClass}}
+      @suffixType={{link.suffixType}}
+      @suffixValue={{link.suffixValue}}
+      @suffixCSSClass={{link.suffixCSSClass}}
+      @hoverType={{link.hoverType}}
+      @hoverValue={{link.hoverValue}}
+      @hoverAction={{link.hoverAction}}
+      @hoverTitle={{link.hoverTitle}}
+      @currentWhen={{link.currentWhen}}
+      @didInsert={{link.didInsert}}
+      @willDestroy={{link.willDestroy}}
+      @content={{link.text}}
+      @contentComponent={{component
+        link.contentComponent
+        status=link.contentComponentArgs
+      }}
+    />
+  {{/each}}
+</Sidebar::Section>

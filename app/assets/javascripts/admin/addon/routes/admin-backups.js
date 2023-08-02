@@ -9,13 +9,16 @@ import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import getURL from "discourse-common/lib/get-url";
-import showModal from "discourse/lib/show-modal";
 import { bind } from "discourse-common/utils/decorators";
+import StartBackupModal from "admin/components/modal/start-backup";
 
 const LOG_CHANNEL = "/admin/backups/logs";
 
 export default class AdminBackupsRoute extends DiscourseRoute {
   @service dialog;
+  @service router;
+  @service messageBus;
+  @service modal;
 
   activate() {
     this.messageBus.subscribe(LOG_CHANNEL, this.onMessage);
@@ -66,12 +69,14 @@ export default class AdminBackupsRoute extends DiscourseRoute {
 
   @action
   showStartBackupModal() {
-    showModal("admin-start-backup", { admin: true });
+    this.modal.show(StartBackupModal, {
+      model: { startBackup: this.startBackup },
+    });
   }
 
   @action
   startBackup(withUploads) {
-    this.transitionTo("admin.backups.logs");
+    this.router.transitionTo("admin.backups.logs");
     Backup.start(withUploads).then((result) => {
       if (!result.success) {
         this.dialog.alert(result.message);
@@ -100,7 +105,7 @@ export default class AdminBackupsRoute extends DiscourseRoute {
     this.dialog.yesNoConfirm({
       message: I18n.t("admin.backups.operations.restore.confirm"),
       didConfirm: () => {
-        this.transitionTo("admin.backups.logs");
+        this.router.transitionTo("admin.backups.logs");
         backup.restore();
       },
     });

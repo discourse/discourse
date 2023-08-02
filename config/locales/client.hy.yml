@@ -228,9 +228,9 @@ hy:
       other: "%{count} սիմվոլ"
     related_messages:
       title: " Առնչվող Հաղորդագրություններ"
+      pill: " Առնչվող Հաղորդագրություններ"
       see_all: 'Տեսնել %{username}-ի @<a href="%{path}">բոլոր նամակները</a>'
     suggested_topics:
-      title: "Առաջարկվող Թեմաներ"
       pm_title: "Առաջարկվող Հաղորդագրություններ"
     about:
       simple_title: "Մեր Մասին"
@@ -1296,7 +1296,6 @@ hy:
       hide_forever: "ոչ, շնորհակալություն"
       intro: "Ողջույն! Կարծես թե Դուք վայելում եք քննարկումը, սակայն դեռևս հաշիվ չեք գրանցել:"
     summary:
-      enabled_description: "Դուք դիտում եք այս թեմայի ամփոփումը՝ համայնքի կողմից որոշված ամենահետաքրքիր գրառումները:"
       disable: "Ցուցադրել Բոլոր Գրառումները"
     deleted_filter:
       enabled_description: "Այս թեման պարունակում է հեռացված գրառումներ, որոնք թաքցվել են:"
@@ -2623,6 +2622,9 @@ hy:
       close: "Փակել (Esc)"
       content_load_error: '<a href="%url%"> Բովանդակությունը </a> հնարավոր չէ բեռնել:'
       image_load_error: '<a href="%url%"> Պատկերը </a> հնարավոր չէ բեռնել:'
+    experimental_lightbox:
+      buttons:
+        close: "Փակել (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ","
       shortcut_key_delimiter_plus: "+"
@@ -2717,9 +2719,6 @@ hy:
       more_badges:
         one: "+%{count} Ավելի"
         other: "+ևս %{count}"
-      granted:
-        one: "%{count} շնորհված"
-        other: "%{count} շնորհված"
       select_badge_for_title: Ընտրեք կրծքանշան՝ որպես Ձեր վերնագիր օգտագործելու համար
       none: "(ոչ մի)"
       successfully_granted: "%{badge}-ը հաջողությամբ շնորհված է %{username}-ին"
@@ -3300,6 +3299,7 @@ hy:
           create: "Ստեղծել"
           create_type: "Տիպ"
           create_name: "Անուն"
+          save: "Պահպանել"
           long_title: "Փոփոխել Ձեր կայքի գույները, CSS և HTML բովանդակությունը"
           edit: "Խմբագրել"
           edit_confirm: "Սա հեռադիր թեմա է, եթե Դուք խմբագրեք CSS/HTML-ը, Ձեր փոփոխությունները կկորչեն թեմայի հաջորդ թարմացման ժամանակ:"
@@ -4049,6 +4049,8 @@ hy:
         recommended: "Մենք խորհուրդ ենք տալիս անհատականացնել հետևյալ տեքստը՝ Ձեր պահանջներին համապատասխանեցնելու համար՝ "
         show_overriden: "Ցուցադրել միայն վերասահմանվածները"
         more_than_50_results: "Կա 50-ից ավել արդյունք: Խնդրում ենք հստակեցնել Ձեր որոնումը:"
+        outdated:
+          dismiss: "Չեղարկել"
       settings:
         show_overriden: "Ցուցադրել միայն վերասահմանվածները"
         reset: "վերահաստատել"

@@ -248,9 +248,9 @@ lv:
       other: "%{count} zīmes"
     related_messages:
       title: "Saistītās ziņas"
+      pill: "Saistītās ziņas"
       see_all: 'Skatīt <a href="%{path}">visus ziņojumus</a> no @%{username}...'
     suggested_topics:
-      title: "Ieteiktās tēmas"
       pm_title: "Ieteiktās ziņas"
     about:
       simple_title: "Par"
@@ -1485,7 +1485,6 @@ lv:
       hide_forever: "nē, paldies"
       hidden_for_session: "Labi, mēs jums jautāsim rīt. Jūs vienmēr varat izmantot arī “Pieteikties”, lai izveidotu kontu."
     summary:
-      enabled_description: "Jūs skatāties šīs tēmas kopsavilkumu: pašus interesantākos ierakstus, pēc kopienas domām."
       disable: "Parādīt visus ierakstus"
     deleted_filter:
       enabled_description: "Šī tēma satur dzēstus ierakstus, kuri ir paslēpti."
@@ -2681,10 +2680,6 @@ lv:
         zero: "+Vēl %{count}"
         one: "+Vēl %{count}"
         other: "+Vēl %{count}"
-      granted:
-        zero: "%{count} piešķirti"
-        one: "%{count} piešķirts"
-        other: "%{count} piešķirti"
       select_badge_for_title: Izvēlieties žetonu, ko lietot kā jūsu titulu
       none: "(neviens)"
       badge_grouping:
@@ -3094,6 +3089,7 @@ lv:
           create: "Izveidot"
           create_type: "Tips"
           create_name: "Vārds"
+          save: "Saglabāt"
           long_title: "Labot jūsu vietnes krāsas, CSS un HTML saturu"
           edit: "Labot"
           edit_confirm: "Šis ir attālināts dizains; ja jūs mainīsiet CSS/HTML, jūsu veiktās izmaiņas tiks izdzēsta nākošajā atjaunināšanas reizē."
@@ -3579,6 +3575,8 @@ lv:
         go_back: "Atpakaļ pie meklētāja"
         recommended: "Iesakām pielāgot šo tekstu jūsu vajadzībām:"
         show_overriden: "Rādīt tikai aizstātos"
+        outdated:
+          dismiss: "Nerādīt"
       settings:
         show_overriden: "Rādīt tikai aizstātos"
         reset: "atiestatīt"

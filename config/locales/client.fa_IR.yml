@@ -246,9 +246,9 @@ fa_IR:
       aria_label: "فیلتر بر اساس دوره زمانی"
     related_messages:
       title: "پیام‌های مرتبط"
+      pill: "پیام‌های مرتبط"
       see_all: '<a href="%{path}">تمام پیام‌های</a> از طرف %{username}@ را ببینید'
     suggested_topics:
-      title: "موضوعات پیشنهادی"
       pm_title: "پیام‌های پیشنهادی"
     about:
       simple_title: "درباره"
@@ -1536,8 +1536,7 @@ fa_IR:
       pause_notifications: "مکث کردن آگاه‌سازی‌ها"
       remove_status: "حذف وضعیت"
     user_tips:
-      primary: "فهمیدم!"
-      secondary: "این نکات را به من نشان نده"
+      button: "فهمیدم!"
       first_notification:
         title: "اولین آگاه‌سازی شما!"
         content: "آگاه‌سازی‌ها برای این است که هر آنچه در انجمن اتفاق می‌افتد را به شما اطلاع بدهد، مورد استفاده قرار می‌گیرد."
@@ -1613,10 +1612,11 @@ fa_IR:
       hide_forever: "نه ممنون"
       intro: "سلام! :heart_eyes: به نظر میاد شما از بحث لذت می‌برید، اما هنوز برای یک حساب کاربری ثبت نام نکرده‌اید."
     summary:
-      enabled_description: "شما خلاصه ای از این موضوع را می بینید: بالاترین‌ نوشته‌هایی که توسط انجمن انتخاب شده."
       description:
         one: "<b>%{count}</b> پاسخ داده شده."
         other: "<b>%{count}</b> پاسخ داده شده."
+      buttons:
+        hide: "پنهان کردن خلاصه"
       disable: "نمایش همه‌ی نوشته‌ها"
     deleted_filter:
       enabled_description: "این موضوع شامل نوشته‌های حذف شده‌ای است، که مخفی شده‌اند."
@@ -3108,6 +3108,9 @@ fa_IR:
       next: "بعدی (مکان‌نمای راست)"
       counter: "%curr% از %total%"
       close: "بستن (خروج)"
+    experimental_lightbox:
+      buttons:
+        close: "بستن (خروج)"
     cannot_render_video: این ویدیو قابل ارائه نیست، چون مرورگر شما از کدک پشتیبانی نمی‌کند.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -3198,10 +3201,6 @@ fa_IR:
       more_badges:
         one: "+%{count} بیشتر"
         other: "+%{count} بیشتر"
-      granted:
-        one: "%{count} اعطا شده"
-        other: "%{count} اعطا شده"
-      awarded: اعطا شده
       select_badge_for_title: انتخاب یک نشان برای استفاده در عنوان خود
       none: "(هیچی)"
       successfully_granted: "%{badge} به %{username} با موفقیت اعطا شد"
@@ -3428,6 +3427,9 @@ fa_IR:
             review:
               content: "بازنگری"
               pending_count: "%{count} در انتظار"
+      panels:
+        forum:
+          label: انجمن
     until: "تا وقتی که:"
     form_templates:
       errors:
@@ -3809,6 +3811,7 @@ fa_IR:
           create: "ایجاد"
           create_type: "نوع"
           create_name: "نام"
+          save: "ذخیره"
           long_title: "اصلاح رنگ، CSS و HTML محتوای سایت."
           edit: "ویرایش"
           edit_confirm: "این قالب راه‌دور است، در صورت ویرایش HTML/CSS تغییرات شما بعد از به‌روز‌رسانی از بین خواهد رفت."
@@ -3821,6 +3824,7 @@ fa_IR:
           translations: "ترجمه‌ها"
           extra_scss: "SCSS‌های بیشتر"
           preview: "پیش‌نمایش"
+          settings_editor: "تنظیمات ویرایشگر"
           show_advanced: "نمایش فیلد‌های پیشرفته"
           hide_advanced: "مخفی‌کردن فیلد‌های پیشرفته"
           hide_unused_fields: "مخفی‌کردن فیلد‌های بلااستفاده"
@@ -4413,6 +4417,8 @@ fa_IR:
         recommended: "ما پیشنهاد میکنیم این متن را بر اساس نیاز های خود ویرایش کنید:"
         show_overriden: "تنها بازنویسی‌شده‌ها را نمایش بده"
         locale: "زبان:"
+        outdated:
+          dismiss: "رد کردن"
       settings:
         show_overriden: "تنها بازنویسی‌شده‌ها را نمایش بده"
         history: "مشاهده تاریخچه تغییر"

@@ -2,9 +2,13 @@ import { action } from "@ember/object";
 import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
+import { inject as service } from "@ember/service";
 let lastSearch;
 
 export default class AdminSiteTextIndexController extends Controller {
+  @service router;
+  @service siteSettings;
+
   searching = false;
   siteTexts = null;
   preferred = false;
@@ -48,7 +52,7 @@ export default class AdminSiteTextIndexController extends Controller {
 
   @action
   edit(siteText) {
-    this.transitionToRoute("adminSiteText.edit", siteText.get("id"), {
+    this.router.transitionTo("adminSiteText.edit", siteText.get("id"), {
       queryParams: {
         locale: this.locale,
       },

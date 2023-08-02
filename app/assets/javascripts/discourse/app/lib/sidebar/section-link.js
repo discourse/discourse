@@ -82,14 +82,29 @@ export default class SectionLink {
 
   @bind
   dragMove(event) {
-    this.startMouseY = this.#calcMouseY(event);
+    const moveMouseY = this.#calcMouseY(event);
+
+    if (this.willDrag && moveMouseY !== this.startMouseY && !this.drag) {
+      /**
+       * If mouse position is different, it means that it is a scroll and not drag and drop action.
+       * In that case, we want to do nothing and keep original behaviour.
+       */
+      this.willDrag = false;
+      return;
+    } else {
+      /**
+       * Otherwise, event propagation should be stopped as we have our own handler for drag and drop.
+       */
+      event.stopPropagation();
+      event.preventDefault();
+    }
+
+    this.startMouseY = moveMouseY;
 
     if (!this.drag) {
       return;
     }
 
-    event.stopPropagation();
-    event.preventDefault();
     const currentMouseY = this.#calcMouseY(event);
     const distance = currentMouseY - this.mouseY;
 

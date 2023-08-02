@@ -4,7 +4,6 @@ import discourseLater from "discourse-common/lib/later";
 import { Promise } from "rsvp";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { h } from "virtual-dom";
-import showModal from "discourse/lib/show-modal";
 import { smallUserAtts } from "discourse/widgets/actions-summary";
 import I18n from "I18n";
 import {
@@ -12,6 +11,7 @@ import {
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
 import { isTesting } from "discourse-common/config/environment";
+import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
@@ -447,6 +447,7 @@ function replaceButton(buttons, find, replace) {
 
 export default createWidget("post-menu", {
   tagName: "section.post-menu-area.clearfix",
+  services: ["modal"],
 
   settings: {
     collapseButtons: true,
@@ -712,7 +713,7 @@ export default createWidget("post-menu", {
   },
 
   showDeleteTopicModal() {
-    showModal("delete-topic-disallowed");
+    this.modal.show(DeleteTopicDisallowedModal);
   },
 
   showMoreActions() {

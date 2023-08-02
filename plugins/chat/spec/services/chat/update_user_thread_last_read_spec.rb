@@ -9,7 +9,8 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
   describe ".call" do
     subject(:result) { described_class.call(params) }
 
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:chatters) { Fabricate(:group) }
+    fab!(:current_user) { Fabricate(:user, group_ids: [chatters.id]) }
     fab!(:channel) { Fabricate(:chat_channel) }
     fab!(:thread) { Fabricate(:chat_thread, channel: channel, old_om: true) }
     fab!(:thread_reply_1) { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
@@ -17,6 +18,8 @@ RSpec.describe Chat::UpdateUserThreadLastRead do
 
     let(:guardian) { Guardian.new(current_user) }
     let(:params) { { guardian: guardian, channel_id: channel.id, thread_id: thread.id } }
+
+    before { SiteSetting.chat_allowed_groups = [chatters] }
 
     context "when params are not valid" do
       before { params.delete(:thread_id) }

@@ -244,9 +244,9 @@ ca:
       aria_label: "Filtra per període"
     related_messages:
       title: "Missatges relacionats"
+      pill: "Missatges relacionats"
       see_all: 'Mostra <a href="%{path}">tots els missatges</a> de @%{username}...'
     suggested_topics:
-      title: "Temes recomanats"
       pm_title: "Missatges recomanats"
     about:
       simple_title: "Quant a"
@@ -1382,7 +1382,6 @@ ca:
       hide_forever: "no, gràcies"
       intro: "Bon dia! Sembla que gaudiu de la discussió, però no heu registrat un compte."
     summary:
-      enabled_description: "Ara veieu un resum del tema: les publicacions més interessants segons la comunitat."
       disable: "Mostra totes les publicacions"
     deleted_filter:
       enabled_description: "Aquest tema conté publicacions suprimides, que han estat amagades."
@@ -2677,6 +2676,9 @@ ca:
       close: "Tanca (Esc)"
       content_load_error: 'No s''ha pogut carregar <a href="%url%">el contingut</a>. '
       image_load_error: 'No s''ha pogut carregar la <a href="%url%">imatge</a>.'
+    experimental_lightbox:
+      buttons:
+        close: "Tanca (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -2753,9 +2755,6 @@ ca:
       more_badges:
         one: "+%{count} Més"
         other: "+%{count} Més"
-      granted:
-        one: "%{count} concedit"
-        other: "%{count} concedits"
       select_badge_for_title: Trieu una insígnia per a fer-la servir com a títol vostre
       none: "(cap)"
       successfully_granted: "S'ha concedit amb èxit %{badge} a %{username}"
@@ -3320,6 +3319,7 @@ ca:
           create: "Crea"
           create_type: "Tipus"
           create_name: "Nom"
+          save: "Desa"
           long_title: "Modifiqueu els continguts de colors, CSS i HTML del vostre lloc web"
           edit: "Edita"
           edit_confirm: "Aquest és una aparença remota. Si editeu CSS/HTML, els vostres canvis s'esborraran la pròxima vegada que actualitzeu l'aparença."
@@ -4037,6 +4037,8 @@ ca:
         recommended: "Recomanem personalitzar el text següent segons us convingui:"
         show_overriden: "Mostra sols texts editats"
         more_than_50_results: "Hi ha més de 50 resultats. Restringiu la cerca."
+        outdated:
+          dismiss: "Descarta-ho"
       settings:
         show_overriden: "Mostra només els sobreescrits"
         reset: "restableix"

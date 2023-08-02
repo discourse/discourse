@@ -25,7 +25,7 @@ RSpec.describe "Topic summarization", type: :system, js: true do
 
     find(".topic-strategy-summarization").click
 
-    summary = find(".summary-box p").text
+    summary = find(".summary-box .generated-summary p").text
 
     expect(summary).to eq(expected_summary)
   end

@@ -1,6 +1,9 @@
 import DiscourseRoute from "discourse/routes/discourse";
+import { inject as service } from "@ember/service";
 
 export default DiscourseRoute.extend({
+  router: service(),
+
   beforeModel() {
     const { currentUser } = this;
     const viewingMe =
@@ -14,7 +17,7 @@ export default DiscourseRoute.extend({
     if (this.site.mobileView) {
       this.replaceWith(destination);
     } else {
-      this.transitionTo(destination);
+      this.router.transitionTo(destination);
     }
   },
 });

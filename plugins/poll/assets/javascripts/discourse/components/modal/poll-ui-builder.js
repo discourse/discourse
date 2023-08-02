@@ -1,7 +1,6 @@
 import { gt, or } from "@ember/object/computed";
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
-import { next } from "@ember/runloop";
 import discourseComputed from "discourse-common/utils/decorators";
 import { observes } from "@ember-decorators/object";
 import I18n from "I18n";
@@ -322,12 +321,9 @@ export default class PollUiBuilderModal extends Component {
 
   @action
   onOptionsTextChange(e) {
-    let idx = 0;
     this.set(
       "pollOptions",
-      e.target.value
-        .split("\n")
-        .map((value) => EmberObject.create({ idx: idx++, value }))
+      e.target.value.split("\n").map((value) => EmberObject.create({ value }))
     );
   }
 
@@ -349,29 +345,30 @@ export default class PollUiBuilderModal extends Component {
   }
 
   @action
-  addOption(beforeOption, value, e) {
-    if (value !== "") {
-      const idx = this.pollOptions.indexOf(beforeOption) + 1;
-      const option = EmberObject.create({ value: "" });
-      this.pollOptions.insertAt(idx, option);
+  updateValue(option, event) {
+    option.set("value", event.target.value);
+  }
 
-      let lastOptionIdx = 0;
-      this.pollOptions.forEach((o) => o.set("idx", lastOptionIdx++));
+  @action
+  onInputKeydown(index, event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      event.stopPropagation();
 
-      next(() => {
-        const pollOptions = document.getElementsByClassName("poll-options");
-        if (pollOptions) {
-          const inputs = pollOptions[0].getElementsByTagName("input");
-          if (option.idx < inputs.length) {
-            inputs[option.idx].focus();
-          }
-        }
-      });
+      if (event.target.value !== "") {
+        this.addOption(index + 1);
+      }
+    }
+  }
+
+  @action
+  addOption(atIndex) {
+    if (atIndex === -1) {
+      atIndex = this.pollOptions.length;
     }
 
-    if (e) {
-      e.preventDefault();
-    }
+    const option = EmberObject.create({ value: "" });
+    this.pollOptions.insertAt(atIndex, option);
   }
 
   @action

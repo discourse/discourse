@@ -10,12 +10,17 @@ import { setTopicId } from "discourse/lib/topic-list-tracker";
 import showModal from "discourse/lib/show-modal";
 import TopicFlag from "discourse/lib/flag-targets/topic-flag";
 import PostFlag from "discourse/lib/flag-targets/post-flag";
+import HistoryModal from "discourse/components/modal/history";
+import PublishPageModal from "discourse/components/modal/publish-page";
+import EditSlowModeModal from "discourse/components/modal/edit-slow-mode";
+import ChangeTimestampModal from "discourse/components/modal/change-timestamp";
 
 const SCROLL_DELAY = 500;
 
 const TopicRoute = DiscourseRoute.extend({
   composer: service(),
   screenTrack: service(),
+  modal: service(),
 
   scheduledReplace: null,
   lastScrollPos: null,
@@ -110,9 +115,8 @@ const TopicRoute = DiscourseRoute.extend({
   @action
   showPagePublish() {
     const model = this.modelFor("topic");
-    showModal("publish-page", {
+    this.modal.show(PublishPageModal, {
       model,
-      title: "topic.publish_page.title",
     });
   },
 
@@ -129,16 +133,15 @@ const TopicRoute = DiscourseRoute.extend({
 
   @action
   showTopicSlowModeUpdate() {
-    const model = this.modelFor("topic");
-
-    showModal("edit-slow-mode", { model });
+    this.modal.show(EditSlowModeModal, {
+      model: { topic: this.modelFor("topic") },
+    });
   },
 
   @action
   showChangeTimestamp() {
-    showModal("change-timestamp", {
-      model: this.modelFor("topic"),
-      title: "topic.change_timestamp.title",
+    this.modal.show(ChangeTimestampModal, {
+      model: { topic: this.modelFor("topic") },
     });
   },
 
@@ -153,13 +156,14 @@ const TopicRoute = DiscourseRoute.extend({
 
   @action
   showHistory(model, revision) {
-    let historyController = showModal("history", {
-      model,
-      modalClass: "history-modal",
+    this.modal.show(HistoryModal, {
+      model: {
+        postId: model.id,
+        postVersion: revision || "latest",
+        post: model,
+        editPost: (post) => this.controllerFor("topic").send("editPost", post),
+      },
     });
-    historyController.refresh(model.get("id"), revision || "latest");
-    historyController.set("post", model);
-    historyController.set("topicController", this.controllerFor("topic"));
   },
 
   @action

@@ -15,7 +15,7 @@ zh_CN:
           actions:
             chat_channel_status_change: "聊天频道状态已更改"
             chat_channel_delete: "聊天频道已删除"
-            chat_auto_remove_membership: "从频道自动移除成员"
+            chat_auto_remove_membership: "成员资格已从频道自动移除"
       api:
         scopes:
           descriptions:
@@ -71,7 +71,7 @@ zh_CN:
         instructions: "关闭该频道会阻止非管理人员用户发送新消息或编辑现有消息。确定要关闭此频道吗？"
       channel_delete:
         title: "删除频道"
-        instructions: "<p>删除<strong>%{name}</strong>频道和聊天历史。所有消息和相关数据，例如回应和上传，将被永久删除。如果您想保留频道历史记录，并将其停用，您可能想要归档频道。</p> <p>确定要<strong>永久删除</strong>该频道吗？要确认，请在下面的框中输入频道的名称。</p>"
+        instructions: "<p>删除 <strong>%{name}</strong> 频道和聊天历史记录。所有消息和相关数据，例如回应和上传，将被永久删除。如果您希望保留频道历史记录，并将其停用，您可能需要归档频道。</p> <p>确定要<strong>永久删除</strong>该频道吗？要确认，请在下面的框中输入频道的名称。</p>"
         confirm: "我明白后果，删除频道"
         confirm_channel_name: "输入频道名称"
         process_started: "删除频道的过程已经开始。此对话框将很快关闭，您将无法再查看被删除的频道。"
@@ -115,42 +115,100 @@ zh_CN:
       join: "加入"
       last_visit: "上次访问"
       summarization:
-        summarize: "摘要"
+        title: "总结消息"
+        description: "选择以下选项，以总结在所需时间范围内发送的对话。"
+        summarize: "总结"
+        since:
+          other: "过去 %{count} 小时"
       mention_warning:
         dismiss: "忽略"
-        cannot_see: "%{username} 无法访问此频道且未被通知。"
+        cannot_see: "%{username} 无法访问此频道且没有收到通知。"
         cannot_see_multiple:
-          other: "%{username} 和 %{count} 位其他用户无法访问此频道且未被通知。"
+          other: "%{username} 和 %{count} 位其他用户无法访问此频道且没有收到通知。"
         invitations_sent:
           other: "已发送邀请"
         invite: "邀请加入频道"
         without_membership: "%{username} 尚未加入此频道。"
         without_membership_multiple:
           other: "%{username} 和其他 %{count} 位用户尚未加入此频道。"
-        group_mentions_disabled: "%{group_name} 不允许被提及。"
+        group_mentions_disabled: "%{group_name} 不允许提及。"
         group_mentions_disabled_multiple:
-          other: "%{group_name} 和其他 %{count} 个群组不允许被提及."
-        too_many_members: "%{group_name} 的成员过多。没有人被通知。"
+          other: "%{group_name} 和其他 %{count} 个群组不允许提及。"
+        too_many_members: "%{group_name} 的成员过多。任何人都没有收到通知。"
         too_many_members_multiple:
-          other: "%{group_name} 和 其他%{count} 个群组的成员过多。没有人被通知。"
+          other: "%{group_name} 和其他 %{count} 个群组的成员过多。任何人都没有收到通知。"
         groups:
           header:
             some: "某些用户不会收到通知"
             all: "任何人都不会收到通知"
-          unreachable_1: "%{group} 不允许被提及。"
-          unreachable_2: "@%{group1} 和 @%{group2} 不允许被提及."
+          unreachable_1: "%{group} 不允许提及。"
+          unreachable_2: "@%{group1} 和 @%{group2} 不允许提及。"
           unreachable_multiple:
-            other: "@%{group} 和其他 %{count} 个群组不允许被提及。"
+            other: "@%{group} 和其他 %{count} 个群组不允许提及。"
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {提及 @{group1} 超出了 # 个用户的<a href="{siteSettingUrl}" target="_blank">通知限制</a>。}
+                              other {提及 @{group1} 超出了 # 个用户的<a href="{siteSettingUrl}" target="_blank">通知限制</a>。}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {提及 @{group1} 超出了 # 个用户的通知限制。}
+                              other {提及 @{group1} 超出了 # 个用户的通知限制。}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {提及 @{group1} 和 @{group2} 超出了 # 个用户的<a href="{siteSettingUrl}" target="_blank">通知限制</a>。}
+                            other {提及 @{group1} 和 @{group2} 超出了 # 个用户的<a href="{siteSettingUrl}" target="_blank">通知限制</a>。}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {提及 @{group1} 和 @{group2} 超出了 # 个用户的通知限制。}
+                            other {提及 @{group1} 和 @{group2} 超出了 # 个用户的通知限制。}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {提及这 {groupCount} 个群组超出了 # 个用户的<a href="{siteSettingUrl}" target="_blank">通知限制</a>。}
+                            other {提及这 {groupCount} 个群组超出了 # 个用户的<a href="{siteSettingUrl}" target="_blank">通知限制</a>。}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {提及这 {groupCount} 个群组超出了 # 个用户的通知限制。}
+                            other {提及这 {groupCount} 个群组超出了 # 个用户的通知限制。}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
         too_many_mentions:
-          other: "此消息超过了 %{count} 次提及的通知限制。"
+          other: "此消息超出了 %{count} 个提及的通知限制。"
         too_many_mentions_admin:
-          other: '此消息超过了 <a href="%{siteSettingUrl}" target="_blank">通知限制</a> （共 %{count} 次）。'
+          other: '此消息超出了 %{count} 个提及的<a href="%{siteSettingUrl}" target="_blank">通知限制</a>。'
       aria_roles:
         header: "聊天标题"
         composer: "聊天输入框"
         channels_list: "聊天频道列表"
       no_public_channels: "您还没有加入任何频道。"
-      kicked_from_channel: "你不能再访问这个频道了。"
+      kicked_from_channel: "您无法再访问此频道。"
       only_chat_push_notifications:
         title: "只发送聊天推送通知"
         description: "阻止发送所有非聊天推送通知"
@@ -162,16 +220,14 @@ zh_CN:
       close_full_page: "关闭全屏聊天"
       open_message: "在聊天中打开消息"
       placeholder_self: "做些记录"
-      placeholder_channel: "在 %{channelName} 聊天"
-      placeholder_thread: "在话题中聊天"
-      placeholder_users: "在 %{commaSeparatedNames} 聊天"
+      placeholder_channel: "在 %{channelName} 中聊天"
+      placeholder_thread: "在对话中聊天"
+      placeholder_users: "与 %{commaSeparatedNames} 聊天"
       placeholder_new_message_disallowed:
-        archived: "频道已归档，你无法在此发送新信息。"
-        closed: "频道已关闭，你无法在此发送新信息。"
-        read_only: "频道为只读，您现在不能发送新消息。"
+        archived: "频道已归档，您现在无法发送新消息。"
+        closed: "频道已关闭，您现在无法发送新消息。"
+        read_only: "频道为只读，您现在无法发送新消息。"
       placeholder_silenced: "您目前无法发送消息。"
-      placeholder_start_conversation: "与...开始对话"
-      placeholder_start_conversation_users: "开始与 %{commaSeparatedUsernames} 的对话"
       remove_upload: "移除文件"
       react: "使用表情符号回复"
       reply: "回复"
@@ -190,7 +246,7 @@ zh_CN:
       return_to_list: "返回频道列表"
       return_to_threads_list: "返回正在进行的讨论"
       unread_threads_count:
-        other: "你有 %{count} 个未读的讨论"
+        other: "您有 %{count} 条未读讨论"
       scroll_to_bottom: "滚动到底部"
       scroll_to_new_messages: "查看新消息"
       sound:
@@ -203,7 +259,7 @@ zh_CN:
       title_capitalized: "聊天"
       upload: "附加文件"
       upload_to_channel: "上传到 %{title}"
-      upload_to_thread: "上传到话题"
+      upload_to_thread: "上传到对话"
       uploaded_files:
         other: "%{count} 个文件"
       you_flagged: "您已举报此消息"
@@ -213,8 +269,8 @@ zh_CN:
         read_only: "只读"
         archived_header: "频道已被归档"
         archived: "已归档"
-        archive_failed: "频道归档失败。 %{completed}/%{total} 消息已存档。 <a target=\"_blank\" href=\"%{topic_url}\">目的地话题</a>．按重试以尝试完成存档。"
-        archive_failed_no_topic: "频道归档失败。 %{completed}/%{total} 消息已存档。 目的地话题未创建．按重试以尝试完成存档。"
+        archive_failed: "频道归档失败。%{completed}/%{total} 条消息已归档。<a target=\"_blank\" href=\"%{topic_url}\">目标话题</a>已创建。按重试以尝试完成归档。"
+        archive_failed_no_topic: "频道归档失败。%{completed}/%{total} 条消息已归档。目标话题未创建。按重试以尝试完成归档。"
         archive_completed: "请参阅<a target=\"_blank\" href=\"%{topic_url}\">归档话题</a>"
         closed_header: "频道已被关闭"
         closed: "已关闭"
@@ -247,13 +303,22 @@ zh_CN:
           members: 成员
           settings: 设置
       new_message_modal:
+        title: 发送消息
+        add_user_long: <kbd>shift + 点击</kbd>或 <kbd>shift + enter</kbd><span>添加 @%{username}</span>
+        add_user_short: <span>添加用户</span>
+        open_channel: <span>打开频道</span>
+        default_search_placeholder: "#一个频道、@ 某人或任何内容"
+        default_channel_search_placeholder: "#一个频道"
+        default_user_search_placeholder: "@ 某人"
+        user_search_placeholder: "…添加更多用户"
+        disabled_user: "已禁用聊天"
         no_items: "无条目"
       channel_edit_name_slug_modal:
         title: 编辑频道
-        input_placeholder: 添加一个名字
+        input_placeholder: 添加名称
         slug_description: 在 URL 中使用频道 slug 而不是频道名称
         name: 频道名称
-        slug: 频道 slug (可选)
+        slug: 频道 slug（可选）
       channel_edit_description_modal:
         title: 编辑描述
         input_placeholder: 添加描述
@@ -269,24 +334,34 @@ zh_CN:
         memberships_count:
           other: "%{count} 个成员"
       create_channel:
+        threading:
+          label: "启用整理"
         auto_join_users:
           public_category_warning: "%{category}是公共类别。是否自动将所有最近活跃的用户添加到此频道？"
           warning_1_group:
-            other: "自动从 %{group} 添加 %{count} 用户？"
+            other: "自动添加来自 %{group} 的 %{count} 个用户？"
           warning_2_groups:
-            other: "自动从%{group1}和%{group2}添加 %{count} 个用户？"
+            other: "自动从 %{group1} 和 %{group2} 添加 %{count} 个用户？"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                other {
+                      { userCount, plural,
+                          other {是否自动添加 {userCount} 个来自 {groupName} 和其他 {groupCount} 个群组的用户？}
+                      }
+                    }
+            }
         choose_category:
           label: "选择一个类别"
           none: "选择一个…"
           default_hint: 访问<a href=%{link} target="_blank">%{category}安全设置</a>管理访问权限
-          hint_1_group: '%{group} 中的用户根据 <a href="%{settingLink}" target="_blank">安全设置</a>可以访问这个频道'
-          hint_2_groups: '%{group1} 和 %{group2} 中的用户根据 <a href="%{settingLink}" target="_blank">安全设置</a>可以访问这个频道'
+          hint_1_group: '%{group} 中的用户将根据<a href="%{settingLink}" target="_blank">安全设置</a>访问此频道'
+          hint_2_groups: '%{group1} 和 %{group2} 中的用户将根据<a href="%{settingLink}" target="_blank">安全设置</a>访问此频道'
           hint_multiple_groups:
-            other: '%{group} 和 %{count} 其他组的用户根据 <a href="%{settingLink}" target="_blank">安全</a>可以设置访问这个频道'
+            other: '%{group} 和其他 %{count} 个群组中的用户将根据<a href="%{settingLink}" target="_blank">安全</a>访问此频道'
         create: "创建频道"
         description: "描述（可选）"
         name: "频道名称"
-        slug: "频道 slug (可选)"
+        slug: "频道 slug（可选）"
         title: "新建频道"
         type: "类型"
         types:
@@ -296,12 +371,12 @@ zh_CN:
         type: "聊天消息"
       reactions:
         only_you: "您回应了 :%{emoji}:"
-        you_and_single_user: "你和 %{username} 的回应了: %{emoji}:"
-        you_and_multiple_users: "你、%{commaSeparatedUsernames} 和 %{username} 回应了 :%{emoji}:"
+        you_and_single_user: "您和 %{username} 回应了 :%{emoji}:"
+        you_and_multiple_users: "您、%{commaSeparatedUsernames} 和 %{username} 回应了 :%{emoji}:"
         you_multiple_users_and_more:
           other: "您、%{commaSeparatedUsernames} 和其他 %{count} 人回应了 :%{emoji}:"
         single_user: "%{username} 回应了 :%{emoji}:"
-        multiple_users: "%{commaSeparatedUsernames} 和 %{username} 回应 :%{emoji}:"
+        multiple_users: "%{commaSeparatedUsernames} 和 %{username} 回应了 :%{emoji}:"
         multiple_users_and_more:
           other: "%{commaSeparatedUsernames} 和其他 %{count} 人回应了 :%{emoji}:"
       composer:
@@ -320,15 +395,18 @@ zh_CN:
       settings:
         channel_wide_mentions_label: "允许 @all 和 @here 提及"
         channel_wide_mentions_description: "允许用户使用 @all 通知#%{channel} 的所有成员，或仅使用 @here 通知当前活跃的成员"
+        channel_threading_label: "整理"
+        channel_threading_description: "启用整理后，对聊天消息的回复将创建一个单独的对话，该对话将与主频道并存。"
         auto_join_users_label: "自动添加用户"
-        auto_join_users_info: "每小时检查哪些用户在过去3个月中是活跃的。如果他们有权限进入 %{category} 类别，就把他们添加到这个频道。"
-        auto_join_users_info_no_category: "每小时检查哪些用户在过去 3 个月内处于活跃状态。如果他们有权访问所选类别，则将他们添加到此频道。"
+        auto_join_users_info: "每小时检查哪些用户在过去 3 个月中活跃。如果他们可以访问%{category}类别，请将其添加到此频道。"
+        auto_join_users_info_no_category: "每小时检查哪些用户在过去 3 个月中活跃。如果他们可以访问所选类别，请将其添加到此频道。"
         auto_join_users_warning: "所有不是此频道成员且有权访问“%{category}”类别的用户都将加入。确定吗？"
         desktop_notification_level: "桌面通知"
         follow: "加入"
         followed: "已加入"
         mobile_notification_level: "移动推送通知"
         mute: "将频道设为免打扰"
+        threading_enabled: "已启用"
         threading_disabled: "已禁用"
         muted_on: "开"
         muted_off: "关"
@@ -340,6 +418,11 @@ zh_CN:
         admin_title: "管理员"
       admin:
         title: "聊天"
+        export_messages:
+          title: "导出聊天消息"
+          description: "目前只能导出过去 6 个月内的 10000 条最新消息。"
+          create_export: "创建导出"
+          export_has_started: "导出已开始。导出完成后，您将收到一条私信。"
       direct_messages:
         title: "个人聊天"
         new: "创建个人聊天"
@@ -402,9 +485,9 @@ zh_CN:
         public_none: "频道历史记录会被永久保留。"
         public:
           other: "频道历史记录保留 %{count} 天。"
-        dm_none: "个人聊天记录将会被永久保留。"
+        dm_none: "个人聊天历史记录会被永久保留。"
         dm:
-          other: "个人聊天记录保留 %{count} 天。"
+          other: "个人聊天历史记录保留 %{count} 天。"
       flags:
         off_topic: "此消息与频道标题定义的当前讨论无关，可能应当移至其他地方。"
         inappropriate: "此消息包含理性的人会认为具有攻击性、辱骂性或违反<a href=\"%{basePath}/guidelines\">我们的社区准则</a>的内容。"
@@ -429,26 +512,28 @@ zh_CN:
       thread:
         title: "标题"
         view_thread: 查看对话
-        default_title: "话题"
+        default_title: "对话"
         replies:
           other: "%{count} 个回复"
-        label: 话题
-        close: "关闭话题"
+        label: 对话
+        close: "关闭对话"
         original_message:
-          started_by: "开始于"
+          started_by: "发起人"
         settings: "设置"
         last_reply: "最后回复"
         notifications:
           regular:
             title: "正常"
+            description: "如果其他人在此对话中提及 (@) 您的名字，您将收到通知。"
           tracking:
             title: "跟踪"
+            description: "此对话将在对话列表和频道中显示的新回复数。如果其他人在此对话中提及 (@) 您的名字，您将收到通知。"
         participants_other_count:
           other: "+%{count}"
       threads:
-        open: "打开主题"
+        open: "打开对话"
         list: "正在进行的讨论"
-        none: "你没有参与这个频道中的任何话题。"
+        none: "您没有参与此频道中的任何对话。"
       draft_channel_screen:
         header: "新消息"
         cancel: "取消"
@@ -494,7 +579,7 @@ zh_CN:
         view: "查看以前的消息副本"
       types:
         chat_reviewable_message:
-          title: "举报的聊天消息"
+          title: "被举报的聊天消息"
     keyboard_shortcuts_help:
       chat:
         title: "聊天"
@@ -507,7 +592,7 @@ zh_CN:
           composer_code: "%{shortcut} 代码（仅输入框）"
           drawer_open: "%{shortcut} 打开聊天抽屉"
           drawer_close: "%{shortcut} 关闭聊天抽屉"
-          mark_all_channels_read: "%{shortcut} 标记所有频道已读"
+          mark_all_channels_read: "%{shortcut} 将所有频道标记为已读"
     topic_statuses:
       chat:
         help: "已为此话题启用聊天"

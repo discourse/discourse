@@ -68,6 +68,8 @@ export default Controller.extend(CanCheckEmails, {
     };
   }),
 
+  isTrustLevelZero: equal("model.trust_level", 0),
+  hasTrustLevel: or("isTrustLevelZero", "model.trust_level"),
   showStaffCounters: or(
     "hasGivenFlags",
     "hasFlaggedPosts",

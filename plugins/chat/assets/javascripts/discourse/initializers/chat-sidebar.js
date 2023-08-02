@@ -93,7 +93,13 @@ export default {
               }
 
               get suffixValue() {
-                return this.channel.tracking.unreadCount > 0 ? "circle" : "";
+                return this.channel.tracking.unreadCount > 0 ||
+                  // We want to do this so we don't show a blue dot if the user is inside
+                  // the channel and a new unread thread comes in.
+                  (this.chatService.activeChannel?.id !== this.channel.id &&
+                    this.channel.unreadThreadsCountSinceLastViewed > 0)
+                  ? "circle"
+                  : "";
               }
 
               get suffixCSSClass() {
@@ -104,10 +110,11 @@ export default {
             };
 
             const SidebarChatChannelsSection = class extends BaseCustomSidebarSection {
+              @service currentUser;
               @tracked currentUserCanJoinPublicChannels =
-                this.sidebar.currentUser &&
-                (this.sidebar.currentUser.staff ||
-                  this.sidebar.currentUser.has_joinable_public_channels);
+                this.currentUser &&
+                (this.currentUser.staff ||
+                  this.currentUser.has_joinable_public_channels);
 
               constructor() {
                 super(...arguments);

@@ -263,4 +263,15 @@ module("Unit | Service | store", function (hooks) {
     assert.true(Array.isArray(result.topics));
     assert.strictEqual(result.filter, "topics/created-by/trout");
   });
+
+  test("Spec incompliant embedded record name", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const fruit = await store.find("fruit", 4);
+
+    assert.propContains(
+      fruit.other_fruit_ids,
+      { apple: 1, banana: 2 },
+      "embedded record remains unhydrated"
+    );
+  });
 });

@@ -1042,7 +1042,9 @@ RSpec.describe CookedPostProcessor do
 
       doc = Nokogiri::HTML5.fragment(cpp.html)
       expect(doc.css(".lightbox-wrapper").size).to eq(0)
-      expect(doc.css("img").first["srcset"]).to_not eq(nil)
+      expect(doc.css("img").first["srcset"]).to eq(nil)
+      expect(doc.css("img").first["src"]).to include("optimized")
+      expect(doc.css("img").first["src"]).to include("512x384")
     end
   end
 

@@ -4,10 +4,9 @@ globalThis.deprecationWorkflow.config = {
   // `throwOnUnhandled` here since it is easier to toggle.
   workflow: [
     { handler: "silence", matchId: "route-render-template" },
-    { handler: "silence", matchId: "routing.transition-methods" },
     { handler: "silence", matchId: "route-disconnect-outlet" },
+    { handler: "silence", matchId: "routing.transition-methods" },
     { handler: "silence", matchId: "this-property-fallback" },
     { handler: "silence", matchId: "discourse.select-kit" },
-    { handler: "silence", matchId: "discourse.modal-controllers" },
   ],
 };

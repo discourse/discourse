@@ -90,6 +90,12 @@ function parsePluginName(pluginRbPath) {
 module.exports = {
   name: require("./package").name,
 
+  options: {
+    babel: {
+      plugins: [require.resolve("deprecation-silencer")],
+    },
+  },
+
   pluginInfos() {
     const root = path.resolve("../../../../plugins");
     const pluginDirectories = fs

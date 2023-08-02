@@ -2,6 +2,14 @@
 
 class SummarySection < ActiveRecord::Base
   belongs_to :target, polymorphic: true
+
+  def mark_as_outdated
+    @outdated = true
+  end
+
+  def outdated
+    @outdated || false
+  end
 end
 
 # == Schema Information

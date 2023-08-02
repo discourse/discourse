@@ -3,7 +3,8 @@ import { bind } from "discourse-common/utils/decorators";
 import showModal from "discourse/lib/show-modal";
 import ChatMessageFlag from "discourse/plugins/chat/discourse/lib/chat-message-flag";
 import Bookmark from "discourse/models/bookmark";
-import { openBookmarkModal } from "discourse/controllers/bookmark";
+import BookmarkModal from "discourse/components/modal/bookmark";
+import { BookmarkFormData } from "discourse/lib/bookmark";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
@@ -42,6 +43,7 @@ export default class ChatMessageInteractor {
   @service currentUser;
   @service site;
   @service router;
+  @service modal;
   @service capabilities;
 
   @tracked message = null;
@@ -242,7 +244,7 @@ export default class ChatMessageInteractor {
 
     let url;
     if (this.context === MESSAGE_CONTEXT_THREAD && threadId) {
-      url = getURL(`/chat/c/-/${channelId}/t/${threadId}`);
+      url = getURL(`/chat/c/-/${channelId}/t/${threadId}/${this.message.id}`);
     } else {
       url = getURL(`/chat/c/-/${channelId}/${this.message.id}`);
     }
@@ -305,11 +307,17 @@ export default class ChatMessageInteractor {
 
   @action
   toggleBookmark() {
-    return openBookmarkModal(
-      this.message.bookmark ||
-        Bookmark.createFor(this.currentUser, "Chat::Message", this.message.id),
-      {
-        onAfterSave: (savedData) => {
+    this.modal.show(BookmarkModal, {
+      model: {
+        bookmark: new BookmarkFormData(
+          this.message.bookmark ||
+            Bookmark.createFor(
+              this.currentUser,
+              "Chat::Message",
+              this.message.id
+            )
+        ),
+        afterSave: (savedData) => {
           const bookmark = Bookmark.create(savedData);
           this.message.bookmark = bookmark;
           this.appEvents.trigger(
@@ -318,11 +326,11 @@ export default class ChatMessageInteractor {
             bookmark.attachedTo()
           );
         },
-        onAfterDelete: () => {
+        afterDelete: () => {
           this.message.bookmark = null;
         },
-      }
-    );
+      },
+    });
   }
 
   @action

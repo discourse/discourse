@@ -1062,13 +1062,17 @@ class TopicsController < ApplicationController
     if tag_name = params[:tag_id]
       tag_name = DiscourseTagging.visible_tags(guardian).where(name: tag_name).pluck(:name).first
     end
+
     topic_scope =
       if params[:category_id].present?
-        category_ids = [params[:category_id].to_i]
-        if ActiveModel::Type::Boolean.new.cast(params[:include_subcategories])
-          category_ids =
-            category_ids.concat(Category.where(parent_category_id: params[:category_id]).pluck(:id))
-        end
+        category_id = params[:category_id].to_i
+
+        category_ids =
+          if ActiveModel::Type::Boolean.new.cast(params[:include_subcategories])
+            Category.subcategory_ids(category_id)
+          else
+            [category_id]
+          end
 
         category_ids &= guardian.allowed_category_ids
         if category_ids.blank?
@@ -1179,9 +1183,20 @@ class TopicsController < ApplicationController
 
     RateLimiter.new(current_user, "summary", 6, 5.minutes).performed! if current_user
 
+    opts = params.permit(:skip_age_check)
+
     hijack do
-      summary = TopicSummarization.new(strategy).summarize(topic, current_user)
-      render json: { summary: summary&.summarized_text, summarized_on: summary&.updated_at }
+      summary = TopicSummarization.new(strategy).summarize(topic, current_user, opts)
+
+      render json: {
+               summary: summary.summarized_text,
+               summarized_on: summary.updated_at,
+               summarized_by: summary.algorithm,
+               outdated: summary.outdated,
+               can_regenerate: Summarization::Base.can_request_summary_for?(current_user),
+               new_posts_since_summary:
+                 topic.highest_post_number.to_i - summary.content_range&.max.to_i,
+             }
     end
   end
 
@@ -1381,17 +1396,18 @@ class TopicsController < ApplicationController
           topic_query.joined_topic_user,
           whisperer: guardian.is_whisperer?,
         ).listable_topics
+
       topics = TopicQuery.tracked_filter(topics, current_user.id) if params[:tracked].to_s == "true"
 
       if params[:category_id]
-        if params[:include_subcategories]
-          topics = topics.where(<<~SQL, category_id: params[:category_id])
-            category_id in (select id FROM categories WHERE parent_category_id = :category_id) OR
-            category_id = :category_id
-          SQL
-        else
-          topics = topics.where("category_id = ?", params[:category_id])
-        end
+        category_ids =
+          if params[:include_subcategories]
+            Category.subcategory_ids(params[:category_id].to_i)
+          else
+            params[:category_id]
+          end
+
+        topics = topics.where(category_id: category_ids)
       end
 
       if params[:tag_name].present?

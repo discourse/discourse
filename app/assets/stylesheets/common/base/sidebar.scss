@@ -281,3 +281,10 @@
     }
   }
 }
+
+.sidebar__panel-switch-button {
+  margin: 1em 1.3em 0 1.3em;
+  &:last-of-type {
+    margin-bottom: 1em;
+  }
+}

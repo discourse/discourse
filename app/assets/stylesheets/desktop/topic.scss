@@ -135,3 +135,36 @@
     max-width: 100%;
   }
 }
+
+.more-content-wrapper {
+  display: flex;
+  justify-content: space-around;
+  clear: both;
+
+  &:not(.single-list) {
+    column-gap: 0.75em;
+
+    .topic-list-header,
+    .posts-map,
+    .views,
+    .suggested-topics-message {
+      display: none;
+    }
+  }
+
+  .more-content-topics {
+    flex: 1 1 0;
+  }
+
+  .topic-list-body {
+    border-top: none;
+
+    .topic-list-item {
+      padding-left: 5px;
+    }
+
+    .topic-list-item:last-of-type {
+      border-bottom: none;
+    }
+  }
+}

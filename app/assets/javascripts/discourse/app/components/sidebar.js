@@ -5,7 +5,9 @@ import { inject as service } from "@ember/service";
 export default class Sidebar extends Component {
   @service appEvents;
   @service site;
+  @service siteSettings;
   @service currentUser;
+  @service sidebarState;
 
   constructor() {
     super(...arguments);
@@ -13,6 +15,24 @@ export default class Sidebar extends Component {
     if (this.site.mobileView) {
       document.addEventListener("click", this.collapseSidebar);
     }
+  }
+
+  get showSwitchPanelButtonsOnTop() {
+    return this.siteSettings.default_sidebar_switch_panel_position === "top";
+  }
+
+  get switchPanelButtons() {
+    if (
+      this.sidebarState.combinedMode ||
+      this.sidebarState.panels.length === 1 ||
+      !this.currentUser
+    ) {
+      return [];
+    }
+
+    return this.sidebarState.panels.filter(
+      (panel) => panel !== this.sidebarState.currentPanel
+    );
   }
 
   @bind
