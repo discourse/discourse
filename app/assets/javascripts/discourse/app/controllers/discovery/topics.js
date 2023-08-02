@@ -1,60 +1,68 @@
+import { inject as controller } from "@ember/controller";
+import { inject as service } from "@ember/service";
 import { alias, empty, equal, gt, not, readOnly } from "@ember/object/computed";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import DismissTopics from "discourse/mixins/dismiss-topics";
 import DiscoveryController from "discourse/controllers/discovery";
 import I18n from "I18n";
 import Topic from "discourse/models/topic";
-import { inject as controller } from "@ember/controller";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
 import { endWith } from "discourse/lib/computed";
 import { routeAction } from "discourse/helpers/route-action";
-import { inject as service } from "@ember/service";
 import { userPath } from "discourse/lib/url";
 import { action } from "@ember/object";
 
-const controllerOpts = {
-  discovery: controller(),
-  router: service(),
+export default class TopicsController extends DiscoveryController.extend(
+  BulkTopicSelection,
+  DismissTopics
+) {
+  @service router;
+  @controller discovery;
 
-  period: null,
-  canCreateTopicOnCategory: null,
+  period = null;
+  canCreateTopicOnCategory = null;
+  selected = null;
+  expandGloballyPinned = false;
+  expandAllPinned = false;
 
-  canStar: alias("currentUser.id"),
-  showTopicPostBadges: not("new"),
-  redirectedReason: alias("currentUser.user_option.redirected_to_top.reason"),
+  @alias("currentUser.id") canStar;
+  @not("new") showTopicPostBadges;
+  @alias("currentUser.user_option.redirected_to_top.reason") redirectedReason;
+  @readOnly("model.params.order") order;
+  @readOnly("model.params.ascending") ascending;
+  @gt("model.topics.length", 0) hasTopics;
+  @empty("model.more_topics_url") allLoaded;
+  @endWith("model.filter", "latest") latest;
+  @endWith("model.filter", "top") top;
+  @equal("period", "yearly") yearly;
+  @equal("period", "quarterly") quarterly;
+  @equal("period", "monthly") monthly;
+  @equal("period", "weekly") weekly;
+  @equal("period", "daily") daily;
 
-  expandGloballyPinned: false,
-  expandAllPinned: false,
-
-  order: readOnly("model.params.order"),
-  ascending: readOnly("model.params.ascending"),
-
-  selected: null,
-
-  // Remove these actions which are defined in `DiscoveryController`
+  // Remove these loading actions which are defined in `DiscoveryController`
   // We want them to bubble in DiscoveryTopicsController
   @action
   loadingBegan() {
     this.set("application.showFooter", false);
     return true;
-  },
-
+  }
   @action
   loadingComplete() {
     this.set("application.showFooter", this.loadedAllItems);
     return true;
-  },
+  }
 
   @discourseComputed("model.filter", "model.topics.length")
   showDismissRead(filter, topicsLength) {
     return this._isFilterPage(filter, "unread") && topicsLength > 0;
-  },
+  }
 
   @discourseComputed("model.filter", "model.topics.length")
   showResetNew(filter, topicsLength) {
     return this._isFilterPage(filter, "new") && topicsLength > 0;
-  },
+  }
 
   callResetNew(dismissPosts = false, dismissTopics = false, untrack = false) {
     const tracked =
@@ -80,7 +88,7 @@ const controllerOpts = {
         tracked ? { skipResettingParams: ["filter", "f"] } : {}
       );
     });
-  },
+  }
 
   // Show newly inserted topics
   @action
@@ -91,26 +99,25 @@ const controllerOpts = {
     // Move inserted into topics
     this.model.loadBefore(tracker.get("newIncoming"), true);
     tracker.resetTracking();
-  },
+  }
 
-  actions: {
-    changeSort() {
-      deprecated(
-        "changeSort has been changed from an (action) to a (route-action)",
-        {
-          since: "2.6.0",
-          dropFrom: "2.7.0",
-          id: "discourse.topics.change-sort",
-        }
-      );
-      return routeAction("changeSort", this.router._router, ...arguments)();
-    },
-  },
+  @action
+  changeSort() {
+    deprecated(
+      "changeSort has been changed from an (action) to a (route-action)",
+      {
+        since: "2.6.0",
+        dropFrom: "2.7.0",
+        id: "discourse.topics.change-sort",
+      }
+    );
+    return routeAction("changeSort", this.router._router, ...arguments)();
+  }
 
   @action
   refresh() {
     this.send("triggerRefresh");
-  },
+  }
 
   afterRefresh(filter, list, listModel = list) {
     this.setProperties({ model: listModel });
@@ -121,22 +128,12 @@ const controllerOpts = {
     }
 
     this.send("loadingComplete");
-  },
-
-  hasTopics: gt("model.topics.length", 0),
-  allLoaded: empty("model.more_topics_url"),
-  latest: endWith("model.filter", "latest"),
-  top: endWith("model.filter", "top"),
-  yearly: equal("period", "yearly"),
-  quarterly: equal("period", "quarterly"),
-  monthly: equal("period", "monthly"),
-  weekly: equal("period", "weekly"),
-  daily: equal("period", "daily"),
+  }
 
   @discourseComputed("model.filter")
   new(filter) {
     return filter?.endsWith("new") && !this.currentUser?.new_new_view_enabled;
-  },
+  }
 
   @discourseComputed("allLoaded", "model.topics.length")
   footerMessage(allLoaded, topicsLength) {
@@ -161,7 +158,7 @@ const controllerOpts = {
         });
       }
     }
-  },
+  }
 
   @discourseComputed("allLoaded", "model.topics.length")
   footerEducation(allLoaded, topicsLength) {
@@ -186,11 +183,5 @@ const controllerOpts = {
         `${this.currentUser.get("username_lower")}/preferences/tracking`
       ),
     });
-  },
-};
-
-export default DiscoveryController.extend(
-  controllerOpts,
-  BulkTopicSelection,
-  DismissTopics
-);
+  }
+}
