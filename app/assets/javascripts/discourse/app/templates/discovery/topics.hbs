@@ -94,9 +94,13 @@
       @topics={{this.model.topics}}
       @discoveryList={{true}}
       @focusLastVisitedTopic={{true}}
+      @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
+      @newListScope={{this.model.params.s}}
+      @changeNewListScope={{route-action "changeNewListScope"}}
+      @newRepliesCount={{this.newRepliesCount}}
+      @newTopicsCount={{this.newTopicsCount}}
     />
   {{/if}}
-
   <span>
     <PluginOutlet
       @name="after-topic-list"

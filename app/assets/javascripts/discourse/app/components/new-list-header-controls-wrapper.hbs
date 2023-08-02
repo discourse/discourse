@@ -1,0 +1,12 @@
+<div
+  class="topic-replies-toggle-wrapper"
+  {{on "click" (action this.click)}}
+  {{! template-lint-disable no-invalid-interactive  }}
+>
+  {{raw
+    "list/new-list-header-controls"
+    current=@current
+    newRepliesCount=@newRepliesCount
+    newTopicsCount=@newTopicsCount
+  }}
+</div>

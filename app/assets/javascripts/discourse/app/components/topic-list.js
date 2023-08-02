@@ -184,6 +184,17 @@ export default Component.extend(LoadMore, {
         },
       });
     });
+
+    onClick("button.topics-replies-toggle", (element) => {
+      if (element.classList.contains("all")) {
+        this.changeNewListScope(null);
+      } else if (element.classList.contains("topics")) {
+        this.changeNewListScope("topics");
+      } else if (element.classList.contains("replies")) {
+        this.changeNewListScope("replies");
+      }
+      this.rerender();
+    });
   },
 
   keyDown(e) {

@@ -53,6 +53,7 @@ class TopicQuery
       search
       q
       f
+      s
       group_name
       tags
       match_all_tags
@@ -304,7 +305,17 @@ class TopicQuery
 
   def list_new
     if @user&.new_new_view_enabled?
-      create_list(:new, { unordered: true }, new_and_unread_results)
+      new_list_scope = @options[:s]
+      list =
+        case new_list_scope
+        when "topics"
+          new_results
+        when "replies"
+          unread_results
+        else
+          new_and_unread_results
+        end
+      create_list(:new, { unordered: true }, list)
     else
       create_list(:new, { unordered: true }, new_results)
     end

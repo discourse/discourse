@@ -1,6 +1,7 @@
 import { inject as service } from "@ember/service";
 import { Promise, all } from "rsvp";
 import {
+  changeNewListScope,
   changeSort,
   queryParams,
   resetParams,
@@ -216,6 +217,11 @@ class AbstractCategoryRoute extends DiscourseRoute {
   @action
   changeSort(sortBy) {
     changeSort.call(this, sortBy);
+  }
+
+  @action
+  changeNewListScope(newScope) {
+    changeNewListScope.call(this, newScope);
   }
 
   @action

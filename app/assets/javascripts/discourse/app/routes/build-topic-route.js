@@ -1,4 +1,5 @@
 import {
+  changeNewListScope,
   changeSort,
   queryParams,
   resetParams,
@@ -163,6 +164,11 @@ class AbstractTopicRoute extends DiscourseRoute {
   @action
   changeSort(sortBy) {
     changeSort.call(this, sortBy);
+  }
+
+  @action
+  changeNewListScope(newScope) {
+    changeNewListScope.call(this, newScope);
   }
 
   @action

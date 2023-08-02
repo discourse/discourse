@@ -101,9 +101,45 @@ export default class TagShowController extends DiscoverySortableController.exten
     return this._isFilterPage(filter, "unread") && topicsLength > 0;
   }
 
-  @discourseComputed("list.filter", "list.topics.length")
-  showResetNew(filter, topicsLength) {
-    return this._isFilterPage(filter, "new") && topicsLength > 0;
+  @discourseComputed("list.filter")
+  new(filter) {
+    return this._isFilterPage(filter, "new");
+  }
+
+  @discourseComputed("new")
+  showTopicsAndRepliesToggle(isNew) {
+    return isNew && this.currentUser?.new_new_view_enabled;
+  }
+
+  @discourseComputed("topicTrackingState.messageCount")
+  newRepliesCount() {
+    if (this.currentUser?.new_new_view_enabled) {
+      return this.topicTrackingState.countUnread({
+        categoryId: this.category?.id,
+        noSubcategories: this.noSubcategories,
+        tagId: this.tag?.id,
+      });
+    } else {
+      return 0;
+    }
+  }
+
+  @discourseComputed("topicTrackingState.messageCount")
+  newTopicsCount() {
+    if (this.currentUser?.new_new_view_enabled) {
+      return this.topicTrackingState.countNew({
+        categoryId: this.category?.id,
+        noSubcategories: this.noSubcategories,
+        tagId: this.tag?.id,
+      });
+    } else {
+      return 0;
+    }
+  }
+
+  @discourseComputed("new", "list.topics.length")
+  showResetNew(isNew, topicsLength) {
+    return isNew && topicsLength > 0;
   }
 
   callResetNew(dismissPosts = false, dismissTopics = false, untrack = false) {

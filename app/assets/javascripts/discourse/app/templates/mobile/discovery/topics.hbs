@@ -40,6 +40,14 @@
     {{/if}}
   {{/if}}
 
+  {{#if this.showTopicsAndRepliesToggle}}
+    <NewListHeaderControlsWrapper
+      @current={{this.newListScope}}
+      @newRepliesCount={{this.newRepliesCount}}
+      @newTopicsCount={{this.newTopicsCount}}
+      @changeNewListScope={{route-action "changeNewListScope"}}
+    />
+  {{/if}}
   {{#if this.hasTopics}}
     <TopicList
       @ascending={{this.ascending}}

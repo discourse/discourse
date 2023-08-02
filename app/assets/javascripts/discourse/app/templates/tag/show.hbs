@@ -127,6 +127,14 @@
                 {{/if}}
               {{/if}}
 
+              {{#if (and this.showTopicsAndRepliesToggle this.site.mobileView)}}
+                <NewListHeaderControlsWrapper
+                  @current={{this.newListScope}}
+                  @newRepliesCount={{this.newRepliesCount}}
+                  @newTopicsCount={{this.newTopicsCount}}
+                  @changeNewListScope={{action "changeNewListScope"}}
+                />
+              {{/if}}
               {{#if this.list.topics}}
                 <TopicList
                   @topics={{this.list.topics}}
@@ -144,6 +152,11 @@
                   @ascending={{this.ascending}}
                   @changeSort={{action "changeSort"}}
                   @focusLastVisitedTopic={{true}}
+                  @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
+                  @newListScope={{this.newListScope}}
+                  @changeNewListScope={{action "changeNewListScope"}}
+                  @newRepliesCount={{this.newRepliesCount}}
+                  @newTopicsCount={{this.newTopicsCount}}
                 />
               {{/if}}
             </DiscoveryTopicsList>

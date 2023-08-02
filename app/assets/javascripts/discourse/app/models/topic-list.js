@@ -67,6 +67,18 @@ const TopicList = RestModel.extend({
     this.set("params", params);
   },
 
+  updateNewListScopeParam(newScope) {
+    let params = Object.assign({}, this.params || {});
+
+    if (params.q) {
+      params = { q: params.q };
+    } else {
+      params.s = newScope;
+    }
+
+    this.set("params", params);
+  },
+
   loadMore() {
     if (this.loadingMore) {
       return Promise.resolve();

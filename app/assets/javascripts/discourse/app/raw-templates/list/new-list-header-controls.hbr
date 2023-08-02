@@ -1,0 +1,9 @@
+<button class="topics-replies-toggle all{{#if view.allActive}} active{{/if}}">
+  {{view.allButtonLabel}}
+</button>
+<button class="topics-replies-toggle topics{{#if view.topicsActive}} active{{/if}}">
+  {{view.topicsButtonLabel}}
+</button>
+<button class="topics-replies-toggle replies{{#if view.repliesActive}} active{{/if}}">
+  {{view.repliesButtonLabel}}
+</button>

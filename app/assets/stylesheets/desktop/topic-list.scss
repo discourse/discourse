@@ -32,6 +32,9 @@
     &:last-of-type {
       padding-right: 10px;
     }
+    th & {
+      border-bottom: 3px solid var(--primary-low);
+    }
   }
 
   button.bulk-select {
@@ -49,6 +52,22 @@
     }
     + .main-link {
       padding-left: 0;
+    }
+  }
+
+  .topic-replies-toggle-wrapper {
+    position: relative;
+    top: 0;
+    user-select: none;
+  }
+
+  .topics-replies-toggle {
+    background: none;
+    border: none;
+    line-height: var(--line-height-large);
+
+    &.active {
+      background: red;
     }
   }
 

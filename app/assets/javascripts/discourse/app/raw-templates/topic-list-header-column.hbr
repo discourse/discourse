@@ -13,7 +13,13 @@
       </span>
     {{/if ~}}
   {{/if ~}}
-  <span>{{view.localizedName}}</span>
+  {{~#if view.showTopicsAndRepliesToggle}}
+    <span class="topic-replies-toggle-wrapper">
+      {{raw "list/new-list-header-controls" current=newListScope newRepliesCount=newRepliesCount newTopicsCount=newTopicsCount}}
+    </span>
+  {{else}}
+    <span>{{view.localizedName}}</span>
+  {{/if ~}}
   {{~#if view.isSorting}}
     {{d-icon view.sortIcon}}
   {{/if ~}}
