@@ -361,6 +361,7 @@ export default class DLightbox extends Component {
   onKeydown(event) {
     if (event.key === KEYBOARD_SHORTCUTS.CLOSE) {
       event.preventDefault();
+      event.stopPropagation();
       return this.close();
     }
   }
