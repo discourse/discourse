@@ -30,7 +30,6 @@ class Plugin::Metadata
         "discourse-category-experts",
         "discourse-characters-required",
         "discourse-chat-integration",
-        "discourse-checklist",
         "discourse-code-review",
         "discourse-crowd",
         "discourse-data-explorer",
@@ -99,6 +98,7 @@ class Plugin::Metadata
         "chat",
         "poll",
         "styleguide",
+        "checklist",
       ],
     )
 
