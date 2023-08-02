@@ -1680,3 +1680,7 @@ export default class ComposerController extends Service {
     this.set("lastValidatedAt", null);
   }
 }
+
+// For compatibility with themes/plugins which use `modifyClass` as if this is a controller
+// https://api.emberjs.com/ember/5.1/classes/Service/properties/mergedProperties?anchor=mergedProperties
+ComposerController.prototype.mergedProperties = ["actions"];
