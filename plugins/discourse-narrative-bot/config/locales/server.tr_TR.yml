@@ -45,6 +45,9 @@ tr_TR:
       trigger: "zar at"
       invalid: |-
         Üzgünüm, bu zar kombinasyonunu tutturmak matematiksel olarak imkansız. :confounded:
+      not_enough_dice:
+        one: "Sadece %{count} zarım var. Utanç verici, biliyorum!"
+        other: "Sadece %{count} zarım var. Utanç verici, biliyorum!"
       out_of_range: |-
         Matematiksel olarak adil bir zar için [maksimum kenar sayısının](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) 120 olduğunu biliyor muydunuz?
       results: |-
@@ -374,8 +377,18 @@ tr_TR:
           Gönderinizde kategorilere ve etiketlere atıfta bulunabileceğinizi biliyor muydunuz? Örneğin, %{category} kategorisini gördünüz mü?
 
           Bir cümlenin ortasına "#" yazın ve herhangi bir kategori veya etiketi seçin.
+        instructions_experimental: |-
+          Gönderinizde kategorilere ve etiketlere atıfta bulunabileceğinizi biliyor muydunuz? Mesela %{category} kategorisini gördünüz mü?
+
+          Cümle içinde herhangi bir yere `#` yazın ve herhangi bir kategori veya etiketi seçin.
         not_found: |-
           Hmm, orada hiçbir yerde bir kategori göremiyorum. İlk karakterin "#" olamayacağını unutmayın. Bunu bir sonraki yanıtınıza kopyalayabilir misiniz?
+
+          ```text
+          # aracılığıyla kategori bağlantısı oluşturabilirim
+          ```
+        not_found_experimental: |-
+          Hmm, orada hiçbir yerde bir kategori göremiyorum. Bunu bir sonraki yanıtınıza kopyalayabilir misiniz?
 
           ```text
           # aracılığıyla kategori bağlantısı oluşturabilirim

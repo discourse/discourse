@@ -2254,6 +2254,14 @@ RSpec.describe PostsController do
         expect(response).to be_forbidden
       end
 
+      describe "when limit params is invalid" do
+        before { sign_in(moderator) }
+
+        include_examples "invalid limit params",
+                         "/posts/system/deleted.json",
+                         described_class::DELETED_POSTS_MAX_LIMIT
+      end
+
       it "can see the deleted posts when authorized" do
         sign_in(moderator)
         get "/posts/system/deleted.json"

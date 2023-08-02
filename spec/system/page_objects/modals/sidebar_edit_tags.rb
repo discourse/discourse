@@ -6,8 +6,9 @@ module PageObjects
   module Modals
     class SidebarEditTags < SidebarEditNavigationModal
       def has_tag_checkboxes?(tags)
-        find(".sidebar-tags-form").has_content?(
+        expect(form).to have_content(
           tags.map { |tag| "#{tag.name} (#{tag.public_topic_count})" }.join("\n"),
+          exact: true,
         )
       end
 
@@ -25,6 +26,18 @@ module PageObjects
         ).click
 
         self
+      end
+
+      def scroll_to_tag(tag)
+        page.execute_script(
+          "document.querySelector('.sidebar-tags-form__tag[data-tag-name=\"#{tag.name}\"]').scrollIntoView()",
+        )
+      end
+
+      private
+
+      def form
+        find(".sidebar-tags-form")
       end
     end
   end

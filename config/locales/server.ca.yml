@@ -1394,7 +1394,6 @@ ca:
     title_min_entropy: "Entropia mínima (caràcters únics; els caràcters amb diacrítics compten més) necessària per al títol d'un tema."
     body_min_entropy: "Entropia mínima (caràcters únics; els caràcters amb diacrítics compten més) necessària per al cos d'una publicació."
     allow_uppercase_posts: "Permet tot majúscules en el títol o en el cos d'una publicació."
-    max_consecutive_replies: "Nombre de publicacions que un usuari ha de fer d'una tirada en un tema abans que se li impedeixi afegir una altra resposta."
     title_fancy_entities: "Converteix els caràcters comuns ASCII a entitats HTML en títols de temes, a l'estil SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Longitud mínima d'un títol abans que sigui consultat per a temes semblants."
     desktop_category_page_style: "Estil visual per a la pàgina /categories."

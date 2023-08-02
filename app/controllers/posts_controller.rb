@@ -662,13 +662,15 @@ class PostsController < ApplicationController
     render body: nil
   end
 
+  DELETED_POSTS_MAX_LIMIT = 100
+
   def deleted_posts
     params.permit(:offset, :limit)
     guardian.ensure_can_see_deleted_posts!
 
     user = fetch_user_from_params
     offset = [params[:offset].to_i, 0].max
-    limit = [(params[:limit] || 60).to_i, 100].min
+    limit = fetch_limit_from_params(default: 60, max: DELETED_POSTS_MAX_LIMIT)
 
     posts = user_posts(guardian, user.id, offset: offset, limit: limit).where.not(deleted_at: nil)
 

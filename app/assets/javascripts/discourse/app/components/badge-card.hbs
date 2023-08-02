@@ -47,8 +47,13 @@
           @model={{this.badge}}
           class="badge-granted"
         >
-          {{number this.displayCount}}
-          {{i18n "badges.awarded"}}
+          {{html-safe
+            (i18n
+              "badges.awarded"
+              count=this.displayCount
+              number=(number this.displayCount)
+            )
+          }}
         </LinkTo>
 
       {{/if}}

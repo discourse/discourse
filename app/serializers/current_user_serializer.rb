@@ -6,7 +6,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   attributes :name,
              :unread_notifications,
-             :unread_private_messages,
              :unread_high_priority_notifications,
              :all_unread_notifications_count,
              :read_first_notification?,

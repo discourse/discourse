@@ -10,6 +10,7 @@ import { A } from "@ember/array";
 import { SIDEBAR_SECTION, SIDEBAR_URL } from "discourse/lib/constants";
 import { bind } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
+import RouteInfoHelper from "discourse/lib/sidebar/route-info-helper";
 
 const FULL_RELOAD_LINKS_REGEX = [
   /^\/my\/[a-z_\-\/]+$/,
@@ -227,8 +228,10 @@ class SectionLink {
   }
 
   #validInternal() {
+    const routeInfoHelper = new RouteInfoHelper(this.router, this.path);
+
     return (
-      this.router.recognize(this.path).name !== "unknown" ||
+      routeInfoHelper.route !== "unknown" ||
       FULL_RELOAD_LINKS_REGEX.some((regex) => this.path.match(regex))
     );
   }

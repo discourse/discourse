@@ -214,10 +214,17 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  async onSend() {
+  trapMouseDown(event) {
+    event?.preventDefault();
+  }
+
+  @action
+  async onSend(event) {
     if (!this.sendEnabled) {
       return;
     }
+
+    event?.preventDefault();
 
     if (
       this.currentMessage.editing &&
@@ -232,15 +239,8 @@ export default class ChatComposer extends Component {
       return;
     }
 
-    if (this.site.mobileView) {
-      // prevents to hide the keyboard after sending a message
-      // we use direct DOM manipulation here because textareaInteractor.focus()
-      // is using the runloop which is too late
-      this.composer.textarea.textarea.focus();
-    }
-
     await this.args.onSendMessage(this.currentMessage);
-    this.composer.focus({ refreshHeight: true });
+    this.composer.textarea.refreshHeight();
   }
 
   reportReplyingPresence() {

@@ -229,9 +229,9 @@ th:
       aria_label: "กรองตามช่วงเวลา"
     related_messages:
       title: "ข้อความที่เกี่ยวข้อง"
+      pill: "ข้อความที่เกี่ยวข้อง"
       see_all: 'ดู<a href="%{path}">ข้อความทั้งหมด</a>จาก @%{username}'
     suggested_topics:
-      title: "กระทู้แนะนำ"
       pm_title: "ข้อความแนะนำ"
     about:
       simple_title: "เกี่ยวกับ"
@@ -1176,7 +1176,6 @@ th:
       sign_up: "สมัครสมาชิก"
       hide_forever: "ไม่เป็นไร"
     summary:
-      enabled_description: "คุณกำลังดูสรุปของกระทู้นี้ : นี่คือโพสที่น่าสนใจที่สุดที่หลายๆคนแนะนำ"
       description:
         other: "มี <b>%{count}</b> คำตอบ"
       disable: "แสดงโพสต์ทั้งหมด"
@@ -2250,6 +2249,9 @@ th:
     lightbox:
       download: "ดาวน์โหลด"
       close: "ปิด (Esc)"
+    experimental_lightbox:
+      buttons:
+        close: "ปิด (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ","
       shortcut_key_delimiter_plus: "+"
@@ -2679,6 +2681,7 @@ th:
           create: "สร้าง"
           create_type: "ชนิด"
           create_name: "ชื่อ"
+          save: "บันทึก"
           edit: "แก้ไข"
           mobile: "โทรศัพท์"
           settings: "การตั้งค่า"
@@ -3074,6 +3077,8 @@ th:
         revert_confirm: "คุณแน่ใจหรือว่าจะย้อนกลับการแก้ไข"
         go_back: "กลับไปค้นหา"
         recommended: "เราแนะนำให้คุณแก้ไขข้อความให้ตรงกับความต้องการของคุณ:"
+        outdated:
+          dismiss: "ซ่อน"
       settings:
         reset: "ล้าง"
         none: "ไม่มี"

@@ -38,6 +38,17 @@ RSpec.describe GroupsController do
       expect(body["load_more_groups"]).to eq("/groups?page=2")
     end
 
+    it "only accepts valid page numbers" do
+      get "/groups.json", params: { page: -1 }
+      expect(response.status).to eq(400)
+
+      get "/groups.json", params: { page: 0 }
+      expect(response.status).to eq(200)
+
+      get "/groups.json", params: { page: 1 }
+      expect(response.status).to eq(200)
+    end
+
     context "when group directory is disabled" do
       before { SiteSetting.enable_group_directory = false }
 

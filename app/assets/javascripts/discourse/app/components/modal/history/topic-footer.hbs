@@ -53,20 +53,20 @@
       @disabled={{@loading}}
     />
 
-    {{#if (not @model.previous_hidden)}}
-      <DButton
-        @action={{@hideVersion}}
-        @icon="far-eye-slash"
-        @label="post.revisions.controls.hide"
-        class="btn-danger hide-revision"
-        @disabled={{@loading}}
-      />
-    {{else}}
+    {{#if @model.previous_hidden}}
       <DButton
         @action={{@showVersion}}
         @icon="far-eye"
         @label="post.revisions.controls.show"
         class="btn-default show-revision"
+        @disabled={{@loading}}
+      />
+    {{else}}
+      <DButton
+        @action={{@hideVersion}}
+        @icon="far-eye-slash"
+        @label="post.revisions.controls.hide"
+        class="btn-danger hide-revision"
         @disabled={{@loading}}
       />
     {{/if}}

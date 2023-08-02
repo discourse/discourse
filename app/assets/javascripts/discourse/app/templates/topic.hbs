@@ -72,6 +72,8 @@
                   filterable=true
                   categoryId=this.buffered.category_id
                   minimum=this.minimumRequiredTags
+                  filterPlaceholder="tagging.choose_for_topic"
+                  useHeaderFilter=true
                 }}
               />
             {{/if}}
@@ -541,20 +543,8 @@
           @outletArgs={{hash model=this.model}}
         />
       </span>
-      <div
-        class="{{if
-            this.model.relatedMessages.length
-            'related-messages-wrapper'
-          }}
-          {{if this.model.suggestedTopics.length 'suggested-topics-wrapper'}}"
-      >
-        {{#if this.model.relatedMessages.length}}
-          <RelatedMessages @topic={{this.model}} />
-        {{/if}}
-        {{#if this.model.suggestedTopics.length}}
-          <SuggestedTopics @topic={{this.model}} />
-        {{/if}}
-      </div>
+
+      <MoreTopics @topic={{this.model}} />
     {{/if}}
   {{else}}
     <div class="container">
@@ -593,6 +583,5 @@
     @selectText={{action "selectText"}}
     @editPost={{action "editPost"}}
     @topic={{this.model}}
-    @composerVisible={{this.composer.visible}}
   />
 </DiscourseTopic>

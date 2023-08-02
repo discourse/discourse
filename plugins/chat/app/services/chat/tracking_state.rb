@@ -34,7 +34,6 @@ module Chat
     #   @return [Service::Base::Context]
 
     contract
-    policy :threaded_discussions_settings_ok
     step :cast_thread_and_channel_ids_to_integer
     model :report
 
@@ -48,11 +47,6 @@ module Chat
     end
 
     private
-
-    def threaded_discussions_settings_ok(contract:, **)
-      return true if !contract.include_threads
-      SiteSetting.enable_experimental_chat_threaded_discussions
-    end
 
     def cast_thread_and_channel_ids_to_integer(contract:, **)
       contract.thread_ids = contract.thread_ids.map(&:to_i)

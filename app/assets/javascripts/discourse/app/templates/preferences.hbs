@@ -76,7 +76,7 @@
       <span>{{i18n "user.preferences_nav.interface"}}</span>
     </DNavigationItem>
 
-    {{#if (not (eq this.siteSettings.navigation_menu "legacy"))}}
+    {{#if (not-eq this.siteSettings.navigation_menu "legacy")}}
       <DNavigationItem
         @route="preferences.navigation-menu"
         @ariaCurrentContext="subNav"

@@ -76,9 +76,7 @@ module Chat
       allowed_channel_ids = generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: true)
 
       Chat::Channel
-        .joins(
-          "LEFT JOIN categories ON categories.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'Category'",
-        )
+        .with_categories
         .where(chatable_type: Chat::Channel.public_channel_chatable_types)
         .where("chat_channels.id IN (#{allowed_channel_ids})")
         .where("chat_channels.slug IN (:slugs)", slugs: slugs)
@@ -95,9 +93,7 @@ module Chat
 
       channels =
         channels
-          .joins(
-            "LEFT JOIN categories ON categories.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'Category'",
-          )
+          .with_categories
           .where(chatable_type: Chat::Channel.public_channel_chatable_types)
           .where("chat_channels.id IN (#{allowed_channel_ids})")
 
@@ -245,35 +241,18 @@ module Chat
         channel_ids: channel_ids,
         guardian: guardian,
         include_missing_memberships: true,
-        include_threads:
-          SiteSetting.enable_experimental_chat_threaded_discussions && include_threads,
+        include_threads: include_threads,
       ).report
     end
 
-    def self.find_with_access_check(channel_id_or_name, guardian)
-      begin
-        channel_id_or_name = Integer(channel_id_or_name)
-      rescue ArgumentError
-      end
-
-      base_channel_relation =
-        Chat::Channel.includes(:chatable).joins(
-          "LEFT JOIN categories ON categories.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'Category'",
-        )
+    def self.find_with_access_check(channel_id_or_slug, guardian)
+      base_channel_relation = Chat::Channel.includes(:chatable)
 
       if guardian.user.staff?
         base_channel_relation = base_channel_relation.includes(:chat_channel_archive)
       end
 
-      if channel_id_or_name.is_a? Integer
-        chat_channel = base_channel_relation.find_by(id: channel_id_or_name)
-      else
-        chat_channel =
-          base_channel_relation.find_by(
-            "LOWER(categories.name) = :name OR LOWER(chat_channels.name) = :name",
-            name: channel_id_or_name.downcase,
-          )
-      end
+      chat_channel = base_channel_relation.find_by_id_or_slug(channel_id_or_slug)
 
       raise Discourse::NotFound if chat_channel.blank?
       raise Discourse::InvalidAccess if !guardian.can_join_chat_channel?(chat_channel)

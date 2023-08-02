@@ -128,6 +128,14 @@ acceptance("Admin - Site Settings", function (needs) {
     assert.strictEqual(count(".row.setting"), 1);
   });
 
+  test("filtering overridden settings", async function (assert) {
+    await visit("/admin/site_settings");
+    assert.dom(".row.setting").exists({ count: 4 });
+
+    await click(".toggle-overridden");
+    assert.dom(".row.setting").exists({ count: 2 });
+  });
+
   test("filter settings by plugin name", async function (assert) {
     await visit("/admin/site_settings");
 

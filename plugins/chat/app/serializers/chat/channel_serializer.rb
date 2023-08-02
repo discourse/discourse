@@ -25,10 +25,6 @@ module Chat
 
     has_one :last_message, serializer: Chat::LastMessageSerializer, embed: :objects
 
-    def threading_enabled
-      SiteSetting.enable_experimental_chat_threaded_discussions && object.threading_enabled
-    end
-
     def initialize(object, opts)
       super(object, opts)
 
@@ -124,6 +120,15 @@ module Chat
       else
         data[:can_join_chat_channel] = scope.can_join_chat_channel?(object)
       end
+
+      data[:can_flag] = scope.can_flag_in_chat_channel?(
+        object,
+        post_allowed_category_ids: @opts[:post_allowed_category_ids],
+      )
+      data[:user_silenced] = !scope.can_create_chat_message?
+      data[:can_moderate] = scope.can_moderate_chat?(object.chatable)
+      data[:can_delete_self] = scope.can_delete_own_chats?(object.chatable)
+      data[:can_delete_others] = scope.can_delete_other_chats?(object.chatable)
 
       data
     end

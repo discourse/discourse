@@ -2148,6 +2148,9 @@ developer:
   max_sidebar_section_links:
     default: 50
     hidden: true
+  instrument_gc_stat_per_request:
+    default: false
+    hidden: true
 
 navigation:
   navigation_menu:

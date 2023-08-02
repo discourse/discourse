@@ -284,7 +284,7 @@ sv:
         read_only: "Endast läsning"
         archived_header: "Kanalen är arkiverad"
         archived: "Arkiverad"
-        archive_failed: "Arkivkanalen misslyckades. %{completed}/%{total} meddelanden har arkiverats. <a target=\"_blank\" href=\"%{topic_url}\">målämnet</a>. Tryck på försök igen för att försöka slutföra arkiveringen."
+        archive_failed: "Arkivering av kanalen misslyckades. %{completed}/%{total} meddelanden har arkiverats. <a target=\"_blank\" href=\"%{topic_url}\">Målämnet</a> skapades. Tryck på försök igen för att försöka slutföra arkivet."
         archive_failed_no_topic: "Arkivkanalen misslyckades. %{completed}/%{total} meddelanden har arkiverats. Målämnet skapades inte. Tryck på försök igen för att försöka slutföra arkiveringen."
         archive_completed: "Se det <a target=\"_blank\" href=\"%{topic_url}\">arkiverade ämnet</a>"
         closed_header: "Kanalen är stängd"
@@ -323,6 +323,8 @@ sv:
         add_user_short: <span>Lägg till användare</span>
         open_channel: <span>Öppna kanal</span>
         default_search_placeholder: "#a-kanal, @någon eller något"
+        default_channel_search_placeholder: "#en-kanal"
+        default_user_search_placeholder: "@någon"
         user_search_placeholder: "...lägg till fler användare"
         disabled_user: "har inaktiverat chatten"
         no_items: "Inga objekt"

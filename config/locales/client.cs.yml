@@ -295,9 +295,9 @@ cs:
       aria_label: "Filtrovat dle období"
     related_messages:
       title: "Související zprávy"
+      pill: "Související zprávy"
       see_all: 'Zobrazit <a href="%{path}">všechny zprávy</a>od @%{username}'
     suggested_topics:
-      title: "Doporučená témata"
       pm_title: "Doporučené zprávy"
     about:
       simple_title: "O fóru"
@@ -1524,7 +1524,6 @@ cs:
       hide_forever: "děkuji, ne"
       intro: "Zdravíčko! Vypadá to, že si užíváte naše diskuze, ale ještě nemáte vlastní účet."
     summary:
-      enabled_description: "Čtete shrnutí tohoto tématu: nejzajímavější příspěvky podle komunity."
       disable: "Přepnout na normální zobrazení"
     deleted_filter:
       enabled_description: "Toto téma obsahuje schované smazané příspěvky."
@@ -2856,6 +2855,9 @@ cs:
       close: "Zavřít (Esc)"
       content_load_error: '<a href="%url%">Obsah</a> se nepodařilo načíst.'
       image_load_error: '<a href="%url%">Obrázek</a> se nepodařilo načíst.'
+    experimental_lightbox:
+      buttons:
+        close: "Zavřít (Esc)"
     cannot_render_video: Toto video nelze zobrazit, protože váš prohlížeč nepodporuje daný kodek.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -2942,11 +2944,6 @@ cs:
         few: "+%{count} další"
         many: "+%{count} dalších"
         other: "+%{count} dalších"
-      granted:
-        one: "%{count} přidělen"
-        few: "%{count} přidělen"
-        many: "%{count} přidělen"
-        other: "%{count} přidělen"
       select_badge_for_title: Vyberte odznak, který chcete použít jako svůj titul
       none: "(žádný)"
       successfully_granted: "Úspěšně přidělený %{badge}uživateli%{username}"
@@ -3475,6 +3472,7 @@ cs:
           create: "Vytvoř"
           create_type: "Typ"
           create_name: "Jméno"
+          save: "Uložit"
           long_title: "Změnit barvy, CSS a HTML obsahy na vaší stránce"
           edit: "Upravit"
           edit_confirm: "Toto je vzdálené téma, pokud upravíš CSS/HTML tvoje změny budou vymazány při dalším updatu motivu."
@@ -4081,6 +4079,8 @@ cs:
         go_back: "Zpět na hledání"
         recommended: "Doporučujeme uzpůsobit následující text tak, aby vám vyhovoval:"
         show_overriden: "Zobrazit pouze změněná nastavení"
+        outdated:
+          dismiss: "Označit jako přečtené"
       settings:
         show_overriden: "Zobrazit pouze přepsané"
         reset: "resetovat"

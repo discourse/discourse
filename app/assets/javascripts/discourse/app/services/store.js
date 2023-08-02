@@ -6,6 +6,7 @@ import ResultSet from "discourse/models/result-set";
 import { ajax } from "discourse/lib/ajax";
 import { getRegister } from "discourse-common/lib/get-owner";
 import { underscore } from "@ember/string";
+import { warn } from "@ember/debug";
 
 let _identityMap;
 
@@ -325,9 +326,18 @@ export default Service.extend({
         const subType = m[1];
 
         if (m[2]) {
+          if (!Array.isArray(obj[k])) {
+            warn(`Expected an array of resource ids for ${type}.${k}`, {
+              id: "discourse.store.hydrate-embedded",
+            });
+
+            return;
+          }
+
           const hydrated = obj[k].map((id) =>
             this._lookupSubType(subType, type, id, root)
           );
+
           obj[this.pluralize(subType)] = hydrated || [];
           delete obj[k];
         } else {

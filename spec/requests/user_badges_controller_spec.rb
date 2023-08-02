@@ -31,6 +31,14 @@ RSpec.describe UserBadgesController do
       get "/user_badges.json", params: { badge_id: badge.id }
       expect(response.status).to eq(404)
     end
+
+    it "only accepts valid offset params" do
+      get "/user_badges.json", params: { badge_id: badge.id, offset: -1 }
+      expect(response.status).to eq(400)
+
+      get "/user_badges.json", params: { badge_id: badge.id, offset: 100 }
+      expect(response.status).to eq(200)
+    end
   end
 
   describe "#index" do

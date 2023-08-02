@@ -162,7 +162,7 @@ export function selectedText() {
   return toMarkdown($div.html());
 }
 
-export function selectedElement() {
+export function selectedNode() {
   return selectedRange()?.commonAncestorContainer;
 }
 

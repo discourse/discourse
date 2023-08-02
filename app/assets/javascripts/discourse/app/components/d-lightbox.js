@@ -47,6 +47,7 @@ export default class DLightbox extends Component {
   elementId = LIGHTBOX_ELEMENT_ID;
   titleElementId = TITLE_ELEMENT_ID;
   animationDuration = ANIMATION_DURATION;
+  scrollPosition = 0;
 
   get layoutType() {
     return window.innerWidth > window.innerHeight
@@ -201,6 +202,7 @@ export default class DLightbox extends Component {
 
     this.isLoading = true;
     this.isVisible = true;
+    this.scrollPosition = window.scrollY;
 
     this.#setCurrentItem(this.currentIndex);
 
@@ -356,6 +358,14 @@ export default class DLightbox extends Component {
   }
 
   @bind
+  onKeydown(event) {
+    if (event.key === KEYBOARD_SHORTCUTS.CLOSE) {
+      event.preventDefault();
+      return this.close();
+    }
+  }
+
+  @bind
   onKeyup({ key }) {
     if (KEYBOARD_SHORTCUTS.PREVIOUS.includes(key)) {
       return this.showPreviousItem();
@@ -363,10 +373,6 @@ export default class DLightbox extends Component {
 
     if (KEYBOARD_SHORTCUTS.NEXT.includes(key)) {
       return this.showNextItem();
-    }
-
-    if (key === KEYBOARD_SHORTCUTS.CLOSE) {
-      return this.close();
     }
 
     if (key === KEYBOARD_SHORTCUTS.ZOOM) {
@@ -462,10 +468,22 @@ export default class DLightbox extends Component {
       this.isVisible = false;
       this.willClose = false;
 
+      this.resetScrollPosition();
+
       this.callbacks.onCleanup?.();
 
       this.callbacks = {};
       this.options = {};
+    }
+  }
+
+  resetScrollPosition() {
+    if (window.scrollY !== this.scrollPosition) {
+      window.scrollTo({
+        left: 0,
+        top: parseInt(this.scrollPosition, 10),
+        behavior: "instant",
+      });
     }
   }
 

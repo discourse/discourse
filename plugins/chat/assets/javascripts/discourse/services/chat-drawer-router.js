@@ -16,6 +16,25 @@ const ROUTES = {
       };
     },
   },
+  "chat.channel.thread.index": {
+    name: ChatDrawerThread,
+    extractParams: (route) => {
+      return {
+        channelId: route.parent.params.channelId,
+        threadId: route.params.threadId,
+      };
+    },
+  },
+  "chat.channel.thread.near-message": {
+    name: ChatDrawerThread,
+    extractParams: (route) => {
+      return {
+        channelId: route.parent.parent.params.channelId,
+        threadId: route.parent.params.threadId,
+        messageId: route.params.messageId,
+      };
+    },
+  },
   "chat.channel.threads": {
     name: ChatDrawerThreads,
     extractParams: (route) => {

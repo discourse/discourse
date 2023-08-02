@@ -258,7 +258,7 @@ export function createData(store) {
 
     userWithUnread: createUser({
       unread_notifications: 3,
-      unread_private_messages: 7,
+      unread_high_priority_notifications: 7,
     }),
 
     lorem: cooked,
@@ -282,6 +282,8 @@ export function createData(store) {
     colors: "f49|c89|564897",
 
     charCounterContent: "",
+
+    selectedTags: ["apple", "orange", "potato"],
   };
 
   return _data;
