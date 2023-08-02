@@ -54,8 +54,6 @@ sk:
         archived: "Kanál je archivovaný, nie je možné posielať nové správy."
         closed: "Kanál je zatvorený, nie je možné posielať nové správy."
         read_only: "Kanál je len na čítanie, nie je možné posielať nové správy."
-      placeholder_start_conversation: "Začnite konverzáciu s ..."
-      placeholder_start_conversation_users: "Začnite konverzáciu s %{commaSeparatedUsernames}"
       reply: "Odpoveď"
       edit: "Upraviť"
       rebake_message: "Pregenerovať HTML"

@@ -228,8 +228,6 @@ zh_CN:
         closed: "频道已关闭，您现在无法发送新消息。"
         read_only: "频道为只读，您现在无法发送新消息。"
       placeholder_silenced: "您目前无法发送消息。"
-      placeholder_start_conversation: "开始对话…"
-      placeholder_start_conversation_users: "开始与 %{commaSeparatedUsernames} 的对话"
       remove_upload: "移除文件"
       react: "使用表情符号回复"
       reply: "回复"

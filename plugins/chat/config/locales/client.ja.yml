@@ -228,8 +228,6 @@ ja:
         closed: "チャンネルは閉鎖されているため、新しいメッセージを送信できません。"
         read_only: "チャンネルは読み取り専用であるため、新しいメッセージを送信できません。"
       placeholder_silenced: "現在、メッセージを送信できません。"
-      placeholder_start_conversation: "会話を始める..."
-      placeholder_start_conversation_users: "%{commaSeparatedUsernames} と会話を始める"
       remove_upload: "ファイルを削除する"
       react: "絵文字でリアクション"
       reply: "返信"

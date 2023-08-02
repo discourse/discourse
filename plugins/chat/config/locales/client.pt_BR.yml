@@ -239,8 +239,6 @@ pt_BR:
         closed: "Canal fechado, não é possível enviar novas mensagens no momento."
         read_only: "Canal somente para leitura, não é possível enviar novas mensagens no momento."
       placeholder_silenced: "Você não pode enviar mensagens neste momento."
-      placeholder_start_conversation: "Iniciar uma conversa com ..."
-      placeholder_start_conversation_users: "Iniciar uma conversa com %{commaSeparatedUsernames}"
       remove_upload: "Remover arquivo"
       react: "Reagir com emoji"
       reply: "Responder"
