@@ -42,6 +42,8 @@ class PostAlerter
       end
 
       push_notification(user, payload)
+
+      # deprecated. use push_notification instead
       DiscourseEvent.trigger(:post_notification_alert, user, payload)
     end
   end
@@ -80,6 +82,8 @@ class PostAlerter
         Jobs.enqueue(:push_notification, clients: clients, payload: payload, user_id: user.id)
       end
     end
+
+    DiscourseEvent.trigger(:push_notification, user, payload)
   end
 
   def initialize(default_opts = {})
