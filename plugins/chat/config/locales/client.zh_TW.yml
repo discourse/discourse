@@ -83,7 +83,6 @@ zh_TW:
           other: "前 %{count} 小時"
       mention_warning:
         dismiss: "忽略"
-      placeholder_start_conversation_users: "與 %{commaSeparatedUsernames} 開始聊天"
       remove_upload: "移除檔案"
       react: "用表情符號反應"
       reply: "回覆"

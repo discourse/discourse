@@ -186,8 +186,6 @@ fi:
         closed: "Kanava on suljettu, et voi lähettää uusia viestejä juuri nyt."
         read_only: "Kanava on vain luettavissa, et voi lähettää uusia viestejä juuri nyt."
       placeholder_silenced: "Et voi lähettää viestejä tällä hetkellä."
-      placeholder_start_conversation: "Aloita keskustelu..."
-      placeholder_start_conversation_users: "Aloita keskustelu käyttäjän %{commaSeparatedUsernames} kanssa"
       remove_upload: "Poista tiedosto"
       react: "Reagoi emojilla"
       reply: "Vastaa"

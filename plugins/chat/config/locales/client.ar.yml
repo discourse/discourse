@@ -283,8 +283,6 @@ ar:
         closed: "القناة مغلقة، ولا يمكنك إرسال رسائل جديدة الآن."
         read_only: "القناة للقراءة فقط، لا يمكنك إرسال رسائل جديدة الآن."
       placeholder_silenced: "لا يمكنك إرسال رسائل في الوقت الحالي."
-      placeholder_start_conversation: "ابدأ محادثة مع..."
-      placeholder_start_conversation_users: "ابدأ محادثة مع %{commaSeparatedUsernames}"
       remove_upload: "إزالة ملف"
       react: "التفاعل برمز تعبيري"
       reply: "رد"

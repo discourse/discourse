@@ -202,8 +202,6 @@ uk:
         closed: "Канал закритий, зараз ви не можете надсилати нові повідомлення."
         read_only: "Канал доступний лише для читання, зараз ви не можете надсилати нові повідомлення."
       placeholder_silenced: "В даний момент ви не можете надсилати повідомлення."
-      placeholder_start_conversation: "Почніть розмову з..."
-      placeholder_start_conversation_users: "Почніть розмову з %{commaSeparatedUsernames}"
       remove_upload: "Видалити файл"
       react: "Реагувати з emoji"
       reply: "Відповідь"

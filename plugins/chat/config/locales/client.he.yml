@@ -261,8 +261,6 @@ he:
         closed: "הערוץ סגור, אי אפשר לשלוח אליו הודעות חדשות כעת."
         read_only: "הערוץ לקריאה בלבד, אי אפשר לשלוח אליו הודעות חדשות כעת."
       placeholder_silenced: "אין לך אפשרות לשלוח הודעות כרגע."
-      placeholder_start_conversation: "פציחה בשיחה עם…"
-      placeholder_start_conversation_users: "פציחה בשיחה עם %{commaSeparatedUsernames}"
       remove_upload: "הסרת קובץ"
       react: "להגיב עם אמוג׳י"
       reply: "להגיב"

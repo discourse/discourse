@@ -239,8 +239,6 @@ es:
         closed: "El canal está cerrado, no puedes enviar nuevos mensajes en este momento."
         read_only: "El canal es de solo lectura, no puedes enviar nuevos mensajes en este momento."
       placeholder_silenced: "No puedes enviar mensajes en este momento."
-      placeholder_start_conversation: "Iniciar una conversación con ..."
-      placeholder_start_conversation_users: "Iniciar una conversación con %{commaSeparatedUsernames}"
       remove_upload: "Eliminar archivo"
       react: "Reaccionar con emojis"
       reply: "Responder"
