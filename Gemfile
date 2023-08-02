@@ -145,6 +145,11 @@ group :test do
   gem "test-prof"
   gem "webdrivers", require: false
   gem "rails-dom-testing", require: false
+
+  gem "minio_runner",
+      require: false,
+      git: "git@github.com:discourse/minio_runner.git",
+      branch: "dev/initial-gem-code"
 end
 
 group :test, :development do

@@ -23,6 +23,7 @@ require "fabrication"
 require "mocha/api"
 require "certified"
 require "webmock/rspec"
+require "minio_runner"
 
 class RspecErrorTracker
   def self.last_exception=(ex)
@@ -337,6 +338,13 @@ RSpec.configure do |config|
 
     # Prevents 500 errors for site setting URLs pointing to test.localhost in system specs.
     SiteIconManager.clear_cache!
+
+    MinioRunner.config do |minio_runner_config|
+      minio_runner_config.minio_domain = "minio.local"
+      minio_runner_config.buckets = ["discoursetest"]
+      minio_runner_config.public_buckets = ["discoursetest"]
+    end
+    MinioRunner.start
   end
 
   class TestLocalProcessProvider < SiteSettings::LocalProcessProvider
@@ -366,6 +374,7 @@ RSpec.configure do |config|
   config.after(:suite) do
     FileUtils.remove_dir(concurrency_safe_tmp_dir, true) if SpecSecureRandom.value
     Downloads.clear
+    MinioRunner.stop
   end
 
   config.around :each do |example|
