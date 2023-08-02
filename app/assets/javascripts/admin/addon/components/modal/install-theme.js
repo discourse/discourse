@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action, set } from "@ember/object";
-import { match } from "@ember/object/computed";
 import { COMPONENTS, THEMES } from "admin/models/theme";
 import { POPULAR_THEMES } from "discourse-common/lib/popular-themes";
 import { ajax } from "discourse/lib/ajax";
@@ -24,7 +23,6 @@ export default class InstallTheme extends Component {
   @tracked publicKey;
   @tracked branch;
   @tracked duplicateRemoteThemeWarning;
-  @tracked flash;
   @tracked themeCannotBeInstalled;
   @tracked name;
 
@@ -101,7 +99,7 @@ export default class InstallTheme extends Component {
           this.themeHasSameUrl(theme, t.value)
         )
       ) {
-        set(t, "installed", true);
+        t.installed = true;
       }
       return t;
     });
@@ -114,6 +112,10 @@ export default class InstallTheme extends Component {
       url &&
       url.replace(/\.git$/, "") === themeUrl.replace(/\.git$/, "")
     );
+  }
+
+  willDestroy() {
+    this.args.model.clearParams?.();
   }
 
   @action
@@ -133,19 +135,9 @@ export default class InstallTheme extends Component {
     this.advancedVisible = !this.advancedVisible;
   }
 
-  willDestroy() {
-    // this.duplicateRemoteThemeWarning = null;
-    // this.localFile = null;
-    // this.uploadUrl = null;
-    // this.publicKey = null;
-    // this.branch = null;
-    // this.selection = "popular";
-    this.args.model.clearParams?.();
-  }
-
   @action
-  uploadLocaleFile() {
-    this.localFile = document.getElementById("file-input").files[0];
+  uploadLocaleFile(event) {
+    this.localFile = event.target.files[0];
   }
 
   @action
@@ -169,8 +161,8 @@ export default class InstallTheme extends Component {
         await theme.save({ name: this.name, component: this.component });
         this.args.model.addTheme(theme);
         this.args.closeModal();
-      } catch (e) {
-        popupAjaxError(e);
+      } catch {
+        popupAjaxError;
       } finally {
         this.loading = false;
       }

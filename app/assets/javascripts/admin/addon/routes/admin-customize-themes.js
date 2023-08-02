@@ -19,11 +19,6 @@ export default class AdminCustomizeThemesRoute extends Route {
     return this.store.findAll("theme");
   }
 
-  @action
-  routeRefreshModel() {
-    this.refresh();
-  }
-
   setupController(controller, model) {
     super.setupController(controller, model);
     controller.set("editingTheme", false);
@@ -34,17 +29,28 @@ export default class AdminCustomizeThemesRoute extends Route {
             uploadUrl: controller.repoUrl,
             uploadName: controller.repoName,
             selection: "directRepoInstall",
-            selectedType: controller.currentTab,
-            userId: model.userId,
-            installedThemes: controller.installedThemes,
-            addTheme: this.addTheme,
-            updateSelectedType: this.updateSelectedType,
-            content: model.content,
             clearParams: this.clearParams,
+            ...this.installThemeOptions(model),
           },
         });
       });
     }
+  }
+
+  installThemeOptions(model) {
+    return {
+      selectedType: this.controller.currentTab,
+      userId: model.userId,
+      content: model.content,
+      installedThemes: this.controller.installedThemes,
+      addTheme: this.addTheme,
+      updateSelectedType: this.updateSelectedType,
+    };
+  }
+
+  @action
+  routeRefreshModel() {
+    this.refresh();
   }
 
   @action
@@ -56,27 +62,13 @@ export default class AdminCustomizeThemesRoute extends Route {
         didConfirm: () => {
           currentTheme.set("recentlyInstalled", false);
           this.modal.show(InstallThemeModal, {
-            model: {
-              selectedType: this.currentTab,
-              installedThemes: this.installedThemes,
-              content: currentTheme.content,
-              userId: currentTheme.userId,
-              addTheme: this.addTheme,
-              updateSelectedType: this.updateSelectedType,
-            },
+            model: { ...this.installThemeOptions(currentTheme) },
           });
         },
       });
     } else {
       this.modal.show(InstallThemeModal, {
-        model: {
-          selectedType: this.controller.currentTab,
-          installedThemes: this.controller.installedThemes,
-          content: currentTheme.content,
-          userId: currentTheme.userId,
-          addTheme: this.addTheme,
-          updateSelectedType: this.updateSelectedType,
-        },
+        model: { ...this.installThemeOptions(currentTheme) },
       });
     }
   }
