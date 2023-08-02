@@ -576,7 +576,23 @@ RSpec.describe "users" do
                 }
       parameter name: :asc, in: :query, schema: { type: :string, enum: ["true"] }
       parameter name: :page, in: :query, type: :integer
-      parameter name: :show_emails, in: :query, type: :boolean
+      parameter name: :show_emails,
+                in: :query,
+                type: :boolean,
+                description:
+                  "Include user email addresses in response. These requests will be logged in the staff action logs."
+      parameter name: :stats,
+                in: :query,
+                type: :boolean,
+                description: "Include user stats information"
+      parameter name: :email,
+                in: :query,
+                type: :string,
+                description: "Filter to the user with this email address"
+      parameter name: :ip,
+                in: :query,
+                type: :string,
+                description: "Filter to users with this IP address"
 
       produces "application/json"
       response "200", "response" do
@@ -585,6 +601,9 @@ RSpec.describe "users" do
         let(:asc) { "true" }
         let(:page) { 0 }
         let(:show_emails) { false }
+        let(:stats) { nil }
+        let(:email) { nil }
+        let(:ip) { nil }
 
         expected_response_schema = load_spec_schema("admin_user_list_response")
         schema(expected_response_schema)
