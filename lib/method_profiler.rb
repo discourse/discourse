@@ -89,13 +89,8 @@ class MethodProfiler
   end
 
   def self.start(transfer = nil)
-    Thread.current[:_method_profiler] = if transfer
-      transfer
-    else
-      data = { __start: Process.clock_gettime(Process::CLOCK_MONOTONIC) }
-      data[:gc_stat] = GC.stat if SiteSetting.track_gc_stat_per_request
-      data
-    end
+    Thread.current[:_method_profiler] = transfer ||
+      { __start: Process.clock_gettime(Process::CLOCK_MONOTONIC) }
   end
 
   def self.clear
@@ -109,15 +104,6 @@ class MethodProfiler
       Thread.current[:_method_profiler] = nil
       start = data.delete(:__start)
       data[:total_duration] = finish - start
-
-      if start_gc_stat = data.delete(:gc_stat)
-        end_gc_stat = GC.stat
-
-        data[:gc] ||= {}
-        data[:gc][:time] = (end_gc_stat[:time] - start_gc_stat[:time]) / 1000.0
-        data[:gc][:major_count] = end_gc_stat[:major_gc_count] - start_gc_stat[:major_gc_count]
-        data[:gc][:minor_count] = end_gc_stat[:minor_gc_count] - start_gc_stat[:minor_gc_count]
-      end
     end
 
     data
