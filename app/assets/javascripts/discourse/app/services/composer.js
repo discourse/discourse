@@ -94,7 +94,7 @@ export function addComposerSaveErrorCallback(callback) {
   _composerSaveErrorCallbacks.push(callback);
 }
 
-export default class ComposerController extends Service {
+export default class ComposerService extends Service {
   @service router;
   @service dialog;
   @service site;
@@ -1683,4 +1683,4 @@ export default class ComposerController extends Service {
 
 // For compatibility with themes/plugins which use `modifyClass` as if this is a controller
 // https://api.emberjs.com/ember/5.1/classes/Service/properties/mergedProperties?anchor=mergedProperties
-ComposerController.prototype.mergedProperties = ["actions"];
+ComposerService.prototype.mergedProperties = ["actions"];
