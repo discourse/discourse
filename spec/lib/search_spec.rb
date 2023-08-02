@@ -1980,6 +1980,18 @@ RSpec.describe Search do
       expect(
         Search.execute("test in:tracking", guardian: Guardian.new(topic.user)).posts.length,
       ).to eq(1)
+
+      another_user = Fabricate(:user, username: "AnotherUser")
+      post4 = Fabricate(:post, raw: "test by uppercase username", user: another_user)
+      topic4 = post4.topic
+      topic4.update(category: public_category)
+
+      expect(
+        Search
+          .execute("test created:@#{another_user.username}", guardian: Guardian.new())
+          .posts
+          .length,
+      ).to eq(1)
     end
 
     it "can find posts with images" do
