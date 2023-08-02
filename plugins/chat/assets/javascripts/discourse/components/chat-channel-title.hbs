@@ -7,7 +7,7 @@
             {{@channel.chatable.users.length}}
           </span>
         {{else}}
-          <Chat::UserAvatar @user={{@channel.chatable.users.firstObject}} />
+          <Chat::UserAvatar @user={{get @channel.chatable.users "0"}} />
         {{/if}}
       </div>
     {{/if}}
@@ -18,12 +18,12 @@
           {{#if this.multiDm}}
             <span class="chat-channel-title__name">{{this.usernames}}</span>
           {{else}}
-            {{#let @channel.chatable.users.firstObject as |user|}}
+            {{#let (get @channel.chatable.users "0") as |user|}}
               <span class="chat-channel-title__name">{{user.username}}</span>
               {{#if this.showUserStatus}}
                 <UserStatusMessage
                   @class="chat-channel-title__user-status-message"
-                  @status={{@channel.chatable.users.firstObject.status}}
+                  @status={{get @channel.chatable.users "0.status"}}
                   @showDescription={{if this.site.mobileView "true"}}
                 />
               {{/if}}
