@@ -5,7 +5,9 @@ export default class AutoFocusModifier extends Modifier {
 
   modify(element) {
     if (!this.didFocus) {
+      element.autofocus = true;
       element.focus();
+
       this.didFocus = true;
     }
   }

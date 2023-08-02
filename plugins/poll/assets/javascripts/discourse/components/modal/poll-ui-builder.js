@@ -345,16 +345,19 @@ export default class PollUiBuilderModal extends Component {
   }
 
   @action
-  onInputKeydown(index, option, event) {
+  updateValue(option, event) {
+    option.set("value", event.target.value);
+  }
+
+  @action
+  onInputKeydown(index, event) {
     if (event.key === "Enter") {
       event.preventDefault();
       event.stopPropagation();
 
       if (event.target.value !== "") {
-        this.addOption(index);
+        this.addOption(index + 1);
       }
-    } else {
-      option.set("value", event.target.value);
     }
   }
 
