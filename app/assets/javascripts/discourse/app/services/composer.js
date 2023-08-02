@@ -1,5 +1,4 @@
 import Composer, { SAVE_ICONS, SAVE_LABELS } from "discourse/models/composer";
-import Controller from "@ember/controller";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
 import {
@@ -26,7 +25,7 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import { isTesting } from "discourse-common/config/environment";
-import { inject as service } from "@ember/service";
+import Service, { inject as service } from "@ember/service";
 import { shortDate } from "discourse/lib/formatter";
 import showModal from "discourse/lib/show-modal";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
@@ -95,7 +94,7 @@ export function addComposerSaveErrorCallback(callback) {
   _composerSaveErrorCallbacks.push(callback);
 }
 
-export default class ComposerController extends Controller {
+export default class ComposerController extends Service {
   @service router;
   @service dialog;
   @service site;
