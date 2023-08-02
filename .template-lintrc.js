@@ -15,9 +15,6 @@ module.exports = {
         "directory-item-label",
       ],
     },
-    "no-implicit-this": {
-      allow: ["loading-spinner"],
-    },
     "require-mandatory-role-attributes": false,
     "require-media-caption": false,
     // Begin prettier compatibility
