@@ -1,7 +1,6 @@
 import { gt, or } from "@ember/object/computed";
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
-import { next } from "@ember/runloop";
 import discourseComputed from "discourse-common/utils/decorators";
 import { observes } from "@ember-decorators/object";
 import I18n from "I18n";
@@ -322,12 +321,9 @@ export default class PollUiBuilderModal extends Component {
 
   @action
   onOptionsTextChange(e) {
-    let idx = 0;
     this.set(
       "pollOptions",
-      e.target.value
-        .split("\n")
-        .map((value) => EmberObject.create({ idx: idx++, value }))
+      e.target.value.split("\n").map((value) => EmberObject.create({ value }))
     );
   }
 
@@ -349,30 +345,27 @@ export default class PollUiBuilderModal extends Component {
   }
 
   @action
-  addOption(atIndex, value, event) {
-    event?.preventDefault();
+  onInputKeydown(index, option, event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      event.stopPropagation();
 
-    if (value === "") {
-      return;
+      if (event.target.value !== "") {
+        this.addOption(index);
+      }
+    } else {
+      option.set("value", event.target.value);
     }
+  }
 
+  @action
+  addOption(atIndex) {
     if (atIndex === -1) {
       atIndex = this.pollOptions.length;
     }
 
     const option = EmberObject.create({ value: "" });
     this.pollOptions.insertAt(atIndex, option);
-    this.pollOptions.forEach((o, index) => o.set("idx", index));
-
-    // next(() => {
-    //   const pollOptions = document.querySelector(".poll-options");
-    //   if (pollOptions) {
-    //     const inputs = pollOptions.querySelectorAll("input");
-    //     if (option.idx < inputs.length) {
-    //       inputs[option.idx].focus();
-    //     }
-    //   }
-    // });
   }
 
   @action

@@ -64,8 +64,10 @@
           {{#each this.pollOptions as |option index|}}
             <div class="input-group poll-option-value">
               <Input
-                @value={{option.value}}
-                @enter={{fn this.addOption (add index 1)}}
+                value={{option.value}}
+                autofocus="autofocus"
+                {{auto-focus}}
+                {{on "keydown" (fn this.onInputKeydown (add index 1) option)}}
               />
               {{#if this.canRemoveOption}}
                 <DButton
