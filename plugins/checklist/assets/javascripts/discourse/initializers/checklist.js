@@ -39,13 +39,16 @@ function addUlClasses(boxes) {
     ) {
       parent = parent.parentElement;
     }
-    if (parent.nodeName === "LI" && parent.parentElement.nodeName === "UL") {
-      if (!hasPrecedingContent(val)) {
-        parent.classList.add("has-checkbox");
-        val.classList.add("list-item-checkbox");
-        if (!val.nextSibling) {
-          val.insertAdjacentHTML("afterend", "&#8203;"); // Ensure otherwise empty <li> does not collapse height
-        }
+
+    if (
+      parent.nodeName === "LI" &&
+      parent.parentElement.nodeName === "UL" &&
+      !hasPrecedingContent(val)
+    ) {
+      parent.classList.add("has-checkbox");
+      val.classList.add("list-item-checkbox");
+      if (!val.nextSibling) {
+        val.insertAdjacentHTML("afterend", "&#8203;"); // Ensure otherwise empty <li> does not collapse height
       }
     }
   });
@@ -67,8 +70,8 @@ export function checklistSyntax(elem, postDecorator) {
   }
 
   boxes.forEach((val, idx) => {
-    val.onclick = function (ev) {
-      const box = ev.currentTarget;
+    val.onclick = async (event) => {
+      const box = event.currentTarget;
       const classList = box.classList;
 
       if (classList.contains("permanent") || classList.contains("readonly")) {
@@ -83,88 +86,82 @@ export function checklistSyntax(elem, postDecorator) {
       box.classList.add("hidden");
       boxes.forEach((e) => e.classList.add("readonly"));
 
-      ajax(`/posts/${postModel.id}`, { type: "GET", cache: false })
-        .then((result) => {
-          const blocks = [];
+      try {
+        const post = await ajax(`/posts/${postModel.id}`);
+        const blocks = [];
 
-          // Computing offsets where checkbox are not evaluated (i.e. inside
-          // code blocks).
-          [
-            // inline code
-            /`[^`\n]*\n?[^`\n]*`/gm,
-            // multi-line code
-            /^```[^]*?^```/gm,
-            // bbcode
-            /\[code\][^]*?\[\/code\]/gm,
-            // italic/bold
-            /_(?=\S).*?\S_/gm,
-            // strikethrough
-            /~~(?=\S).*?\S~~/gm,
-          ].forEach((regex) => {
-            let match;
-            while ((match = regex.exec(result.raw)) != null) {
-              blocks.push([match.index, match.index + match[0].length]);
-            }
-          });
+        // Computing offsets where checkbox are not evaluated (i.e. inside
+        // code blocks).
+        [
+          // inline code
+          /`[^`\n]*\n?[^`\n]*`/gm,
+          // multi-line code
+          /^```[^]*?^```/gm,
+          // bbcode
+          /\[code\][^]*?\[\/code\]/gm,
+          // italic/bold
+          /_(?=\S).*?\S_/gm,
+          // strikethrough
+          /~~(?=\S).*?\S~~/gm,
+        ].forEach((regex) => {
+          let match;
+          while ((match = regex.exec(post.raw)) != null) {
+            blocks.push([match.index, match.index + match[0].length]);
+          }
+        });
 
-          [
-            // italic/bold
-            /([^\[\n]|^)\*\S.+?\S\*(?=[^\]\n]|$)/gm,
-          ].forEach((regex) => {
-            let match;
-            while ((match = regex.exec(result.raw)) != null) {
-              // Simulate lookbehind - skip the first character
-              blocks.push([match.index + 1, match.index + match[0].length]);
-            }
-          });
+        [
+          // italic/bold
+          /([^\[\n]|^)\*\S.+?\S\*(?=[^\]\n]|$)/gm,
+        ].forEach((regex) => {
+          let match;
+          while ((match = regex.exec(post.raw)) != null) {
+            // Simulate lookbehind - skip the first character
+            blocks.push([match.index + 1, match.index + match[0].length]);
+          }
+        });
 
-          // make the first run go to index = 0
-          let nth = -1;
-          let found = false;
-          const newRaw = result.raw.replace(
-            /\[(\s|\_|\-|\x|\\?\*)?\]/gi,
-            (match, ignored, off) => {
-              if (found) {
-                return match;
-              }
-
-              nth += blocks.every(
-                (b) => b[0] >= off + match.length || off > b[1]
-              );
-
-              if (nth === idx) {
-                found = true; // Do not replace any further matches
-                return newValue;
-              }
-
+        // make the first run go to index = 0
+        let nth = -1;
+        let found = false;
+        const newRaw = post.raw.replace(
+          /\[(\s|\_|\-|\x|\\?\*)?\]/gi,
+          (match, ignored, off) => {
+            if (found) {
               return match;
             }
-          );
 
-          const save = postModel.save({
-            raw: newRaw,
-            edit_reason: I18n.t("checklist.edit_reason"),
-          });
+            nth += blocks.every(
+              (b) => b[0] >= off + match.length || off > b[1]
+            );
 
-          if (save && save.then) {
-            save
-              .then(() => {
-                postWidget.attrs.isSaving = false;
-                postWidget.scheduleRerender();
-              })
-              .finally(() => removeReadonlyClass(boxes));
-          } else {
-            removeReadonlyClass(boxes);
+            if (nth === idx) {
+              found = true; // Do not replace any further matches
+              return newValue;
+            }
+
+            return match;
           }
-        })
-        .catch(() => removeReadonlyClass(boxes));
+        );
+
+        await postModel.save({
+          raw: newRaw,
+          edit_reason: I18n.t("checklist.edit_reason"),
+        });
+
+        postWidget.attrs.isSaving = false;
+        postWidget.scheduleRerender();
+      } finally {
+        removeReadonlyClass(boxes);
+      }
     };
   });
 }
 
 export default {
   name: "checklist",
-  initialize: function () {
+
+  initialize() {
     withPluginApi("0.1", (api) => initializePlugin(api));
   },
 };
