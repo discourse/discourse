@@ -1004,6 +1004,10 @@ export default Component.extend(
           this.selectKit.options.filterable || this.selectKit.options.allowAny,
       });
 
+      if (this.selectKit.options.useHeaderFilter) {
+        this._focusFilterInput();
+      }
+
       this.triggerSearch();
 
       this._safeAfterRender(() => {
@@ -1044,19 +1048,33 @@ export default Component.extend(
         return;
       }
 
-      this._safeAfterRender(() => {
-        const input = this.getFilterInput();
-        if (!forceHeader && input) {
-          input.focus({ preventScroll: true });
+      // setting focus early is best for iOS
+      // because render/promise delays
+      // may cause the keyboard to not show
+      if (!forceHeader) {
+        this._focusFilterInput();
+      }
 
-          if (typeof input.selectionStart === "number") {
-            input.selectionStart = input.selectionEnd = input.value.length;
-          }
+      this._safeAfterRender(() => {
+        if (!forceHeader) {
+          this._focusFilterInput();
         } else if (!this.selectKit.options.preventHeaderFocus) {
           const headerContainer = this.getHeader();
           headerContainer && headerContainer.focus({ preventScroll: true });
         }
       });
+    },
+
+    _focusFilterInput() {
+      const input = this.getFilterInput();
+
+      if (input && document.activeElement !== input) {
+        input.focus({ preventScroll: true });
+
+        if (typeof input.selectionStart === "number") {
+          input.selectionStart = input.selectionEnd = input.value.length;
+        }
+      }
     },
 
     getFilterInput() {
