@@ -1,3 +1,4 @@
+import { inject as service } from "@ember/service";
 import { Promise, all } from "rsvp";
 import {
   changeSort,
@@ -16,11 +17,11 @@ import PermissionType from "discourse/models/permission-type";
 import TopicList from "discourse/models/topic-list";
 import { action } from "@ember/object";
 import PreloadStore from "discourse/lib/preload-store";
-import { inject as service } from "@ember/service";
 
-const AbstractCategoryRoute = DiscourseRoute.extend({
-  queryParams,
-  composer: service(),
+class AbstractCategoryRoute extends DiscourseRoute {
+  @service composer;
+
+  queryParams = queryParams;
 
   model(modelParams) {
     const category = Category.findBySlugPathWithID(
@@ -44,7 +45,7 @@ const AbstractCategoryRoute = DiscourseRoute.extend({
     if (category) {
       return { category, modelParams };
     }
-  },
+  }
 
   afterModel(model, transition) {
     if (!model) {
@@ -73,13 +74,13 @@ const AbstractCategoryRoute = DiscourseRoute.extend({
       this._createSubcategoryList(category),
       this._retrieveTopicList(category, transition, modelParams),
     ]);
-  },
+  }
 
   filter(category) {
     return this.routeConfig?.filter === "default"
       ? category.get("default_view") || "latest"
       : this.routeConfig?.filter;
-  },
+  }
 
   _setupNavigation(category) {
     const noSubcategories =
@@ -91,7 +92,7 @@ const AbstractCategoryRoute = DiscourseRoute.extend({
       filterType,
       noSubcategories,
     });
-  },
+  }
 
   _createSubcategoryList(category) {
     this._categoryList = null;
@@ -104,7 +105,7 @@ const AbstractCategoryRoute = DiscourseRoute.extend({
 
     // If we're not loading a subcategory list just resolve
     return Promise.resolve();
-  },
+  }
 
   _retrieveTopicList(category, transition, modelParams) {
     const findOpts = filterQueryParams(modelParams, this.routeConfig);
@@ -127,7 +128,7 @@ const AbstractCategoryRoute = DiscourseRoute.extend({
       this.set("topics", list);
       return list;
     });
-  },
+  }
 
   titleToken() {
     const category = this.currentModel.category;
@@ -147,7 +148,7 @@ const AbstractCategoryRoute = DiscourseRoute.extend({
       filter: filterText,
       category: categoryName,
     });
-  },
+  }
 
   setupController(controller, model) {
     const topics = this.topics,
@@ -207,7 +208,7 @@ const AbstractCategoryRoute = DiscourseRoute.extend({
     this.controllerFor("discovery/topics").setProperties(topicOpts);
     this.searchService.searchContext = category.get("searchContext");
     this.set("topics", null);
-  },
+  }
 
   renderTemplate() {
     this.render("navigation/category", { outlet: "navigation-bar" });
@@ -224,37 +225,39 @@ const AbstractCategoryRoute = DiscourseRoute.extend({
       controller: "discovery/topics",
       outlet: "list-container",
     });
-  },
+  }
 
   deactivate() {
-    this._super(...arguments);
+    super.deactivate(...arguments);
 
     this.composer.set("prioritizedCategoryId", null);
     this.searchService.searchContext = null;
-  },
+  }
 
   @action
   setNotification(notification_level) {
     this.currentModel.setNotification(notification_level);
-  },
+  }
 
   @action
   triggerRefresh() {
     this.refresh();
-  },
+  }
 
   @action
   changeSort(sortBy) {
     changeSort.call(this, sortBy);
-  },
+  }
 
   @action
   resetParams(skipParams = []) {
     resetParams.call(this, skipParams);
-  },
-});
+  }
+}
 
 // A helper function to create a category route with parameters
 export default function buildCategoryRoute(routeConfig) {
-  return AbstractCategoryRoute.extend({ routeConfig });
+  return class extends AbstractCategoryRoute {
+    routeConfig = routeConfig;
+  };
 }
