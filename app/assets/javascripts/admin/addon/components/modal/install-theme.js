@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { action, set } from "@ember/object";
+import { action } from "@ember/object";
 import { COMPONENTS, THEMES } from "admin/models/theme";
 import { POPULAR_THEMES } from "discourse-common/lib/popular-themes";
 import { ajax } from "discourse/lib/ajax";
