@@ -18,9 +18,8 @@ export default class extends Component {
   @tracked onlySelected = false;
   @tracked onlyUnselected = false;
 
-  @tracked selectedSidebarCategoryIds = [
-    ...this.currentUser.sidebar_category_ids,
-  ];
+  @tracked
+  selectedSidebarCategoryIds = [...this.currentUser.sidebar_category_ids];
 
   categoryGroupings = [];
 
