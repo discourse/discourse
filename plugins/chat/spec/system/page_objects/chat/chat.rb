@@ -50,6 +50,7 @@ module PageObjects
 
       def visit_thread(thread)
         visit(thread.url)
+        has_css?(".chat-skeleton")
         has_no_css?(".chat-skeleton")
       end
 

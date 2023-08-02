@@ -88,7 +88,7 @@ class GroupsController < ApplicationController
     # count the total before doing pagination
     total = groups.count
 
-    page = params[:page].to_i
+    page = fetch_int_from_params(:page, default: 0)
     page_size = MobileDetection.mobile_device?(request.user_agent) ? 15 : 36
     groups = groups.offset(page * page_size).limit(page_size)
 
@@ -230,15 +230,16 @@ class GroupsController < ApplicationController
     render "posts/latest", formats: [:rss]
   end
 
+  MEMBERS_LIMIT = 1_000
+
   def members
     group = find_group(:group_id)
 
     guardian.ensure_can_see_group_members!(group)
 
-    limit = (params[:limit] || 50).to_i
+    limit = fetch_limit_from_params(default: 50, max: MEMBERS_LIMIT)
     offset = params[:offset].to_i
 
-    raise Discourse::InvalidParameters.new(:limit) if limit < 0 || limit > 1000
     raise Discourse::InvalidParameters.new(:offset) if offset < 0
 
     dir = (params[:asc] && params[:asc].present?) ? "ASC" : "DESC"

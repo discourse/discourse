@@ -7,12 +7,16 @@ module Discourse
   # work around reloader
   unless defined?(::Discourse::VERSION)
     module VERSION #:nodoc:
-      MAJOR = 3
-      MINOR = 1
-      TINY = 0
-      PRE = "beta6"
+      STRING = "3.2.0.beta1-dev"
 
-      STRING = [MAJOR, MINOR, TINY, PRE].compact.join(".")
+      PARTS = STRING.split(".")
+      private_constant :PARTS
+
+      MAJOR = PARTS[0].to_i
+      MINOR = PARTS[1].to_i
+      TINY = PARTS[2].to_i
+      PRE = PARTS[3]&.split("-", 2)&.first
+      DEV = PARTS[3]&.split("-", 2)&.second
     end
   end
 

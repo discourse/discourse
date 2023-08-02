@@ -35,6 +35,8 @@ import { inject as service } from "@ember/service";
 import showModal from "discourse/lib/show-modal";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { BookmarkFormData } from "discourse/lib/bookmark";
+import DeleteTopicConfirmModal from "discourse/components/modal/delete-topic-confirm";
+import ConvertToPublicTopicModal from "discourse/components/modal/convert-to-public-topic";
 
 let customPostMessageCallbacks = {};
 
@@ -448,7 +450,7 @@ export default Controller.extend(bufferedProperty("model"), {
         } else if (composer.get("model.viewDraft")) {
           const model = composer.get("model");
           model.set("reply", model.get("reply") + "\n" + quotedText);
-          composer.send("openIfDraft");
+          composer.openIfDraft();
         } else {
           composer.open(composerOpts);
         }
@@ -1184,9 +1186,8 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     convertToPublicTopic() {
-      showModal("convert-to-public-topic", {
-        model: this.model,
-        modalClass: "convert-to-public-topic",
+      this.modal.show(ConvertToPublicTopicModal, {
+        model: { topic: this.model },
       });
     },
 
@@ -1569,10 +1570,7 @@ export default Controller.extend(bufferedProperty("model"), {
   },
 
   deleteTopicModal() {
-    showModal("delete-topic-confirm", {
-      model: this.model,
-      title: "topic.actions.delete",
-    });
+    this.modal.show(DeleteTopicConfirmModal, { model: { topic: this.model } });
   },
 
   retryOnRateLimit(times, promise, topicId) {

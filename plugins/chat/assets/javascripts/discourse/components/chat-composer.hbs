@@ -96,6 +96,7 @@
           disabled={{or this.disabled (not this.sendEnabled)}}
           tabindex={{if this.sendEnabled 0 -1}}
           {{on "click" this.onSend}}
+          {{on "mousedown" this.trapMouseDown}}
           {{on "focus" (fn this.computeIsFocused true)}}
           {{on "blur" (fn this.computeIsFocused false)}}
         />

@@ -31,6 +31,7 @@ module Chat
           # have been fetched with [Chat::ChannelFetcher], which only returns channels that
           # the user has access to based on category permissions.
           can_join_chat_channel: true,
+          post_allowed_category_ids: @options[:post_allowed_category_ids],
         )
       end
     end

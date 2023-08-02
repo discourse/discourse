@@ -42,6 +42,7 @@
 !/plugins/chat/
 !/plugins/poll/
 !/plugins/styleguide
+!/plugins/checklist/
 /plugins/*/auto_generated/
 
 /spec/fixtures/plugins/my_plugin/auto_generated

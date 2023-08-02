@@ -101,7 +101,8 @@ class Reviewable < ActiveRecord::Base
     created_by:,
     payload: nil,
     reviewable_by_moderator: false,
-    potential_spam: true
+    potential_spam: true,
+    target_created_by: nil
   )
     reviewable =
       new(
@@ -111,6 +112,7 @@ class Reviewable < ActiveRecord::Base
         reviewable_by_moderator: reviewable_by_moderator,
         payload: payload,
         potential_spam: potential_spam,
+        target_created_by: target_created_by,
       )
     reviewable.created_new!
 

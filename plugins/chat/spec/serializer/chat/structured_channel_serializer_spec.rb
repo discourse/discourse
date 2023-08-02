@@ -179,6 +179,7 @@ RSpec.describe Chat::StructuredChannelSerializer do
             kick_message_bus_last_id: 0,
             channel_message_bus_last_id: 0,
             can_join_chat_channel: true,
+            post_allowed_category_ids: nil,
           )
           .once
         described_class.new(data, scope: guardian).as_json

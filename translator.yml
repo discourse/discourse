@@ -72,3 +72,10 @@ files:
   - source_path: plugins/styleguide/config/locales/server.en.yml
     destination_path: plugins/styleguide/server.yml
     label: styleguide
+
+  - source_path: plugins/checklist/config/locales/client.en.yml
+    destination_path: plugins/checklist/client.yml
+    label: checklist
+  - source_path: plugins/checklist/config/locales/server.en.yml
+    destination_path: plugins/checklist/server.yml
+    label: checklist

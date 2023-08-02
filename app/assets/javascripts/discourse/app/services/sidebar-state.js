@@ -8,6 +8,7 @@ import {
 
 const COMBINED_MODE = "combined";
 const SEPARATED_MODE = "separated";
+const MAIN_PANEL = "main";
 
 export default class SidebarState extends Service {
   @tracked currentPanelKey = currentPanelKey;
@@ -35,7 +36,7 @@ export default class SidebarState extends Service {
 
   setCombinedMode() {
     this.mode = COMBINED_MODE;
-    this.currentPanelKey = "main";
+    this.currentPanelKey = MAIN_PANEL;
   }
 
   get combinedMode() {
@@ -43,7 +44,7 @@ export default class SidebarState extends Service {
   }
 
   get showMainPanel() {
-    return this.currentPanelKey === "main";
+    return this.currentPanelKey === MAIN_PANEL;
   }
 
   #reset() {

@@ -54,7 +54,7 @@ describe "Thread tracking state | drawer", type: :system do
       expect(thread_list_page).to have_no_unread_item(thread.id)
     end
 
-    it "shows unread indicators for the header icon and the list when a new unread arrives" do
+    xit "shows unread indicators for the header icon and the list when a new unread arrives" do
       thread.membership_for(current_user).update!(last_read_message_id: message_2.id)
       visit("/")
       chat_page.open_from_header

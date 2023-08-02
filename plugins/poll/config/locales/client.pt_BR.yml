@@ -25,6 +25,18 @@ pt_BR:
           title: "Resultados serão mostrados quando a votação <strong>terminar</strong>."
         staff:
           title: "Resultados são mostrados apenas para membros da <strong>equipe</strong>."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Escolha pelo menos <strong>%{count} opção</strong>."
+            other: "Escolha pelo menos <strong>%{count} opções</strong>."
+          up_to_max_options:
+            one: "Escolha até <strong>%{count} opção</strong>."
+            other: "Escolha até <strong>%{count} opções</strong>."
+          x_options:
+            one: "Escolha <strong>%{count} opção</strong>."
+            other: "Escolha <strong>%{count} opções</strong>."
+          between_min_and_max_options: "Escolha entre <strong>%{min} e %{max} opções</strong>."
       cast-votes:
         title: "Participe da enquete"
         label: "Votar agora!"
@@ -33,8 +45,10 @@ pt_BR:
         label: "Resultados"
       remove-vote:
         title: "Remover seu voto"
+        label: "Desfazer votação"
       hide-results:
         title: "Voltar para os seus votos"
+        label: "Votar"
       group-results:
         title: "Agrupar votos por campo de usuário(a)"
         label: "Mostrar divisão"

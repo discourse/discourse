@@ -4,7 +4,7 @@
   class="history-modal"
 >
   <:body>
-    <ConditionalLoadingSpinner @condition={{this.loading}}>
+    <ConditionalLoadingSpinner @condition={{this.initialLoad}}>
       <Modal::History::Revision
         @model={{this.postRevision}}
         @mobileView={{this.site.mobileView}}

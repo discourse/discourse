@@ -258,7 +258,7 @@ export function createData(store) {
 
     userWithUnread: createUser({
       unread_notifications: 3,
-      unread_private_messages: 7,
+      unread_high_priority_notifications: 7,
     }),
 
     lorem: cooked,

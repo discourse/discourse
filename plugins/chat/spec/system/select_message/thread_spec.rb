@@ -3,6 +3,7 @@
 RSpec.describe "Chat | Select message | thread", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
+  fab!(:thread_1) { Fabricate(:chat_thread, channel: channel_1) }
   fab!(:original_message) { Fabricate(:chat_message, chat_channel: channel_1) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
@@ -16,19 +17,33 @@ RSpec.describe "Chat | Select message | thread", type: :system do
   end
 
   fab!(:thread_message_1) do
-    Fabricate(:chat_message, chat_channel: channel_1, in_reply_to: original_message)
+    Fabricate(
+      :chat_message,
+      thread_id: thread_1.id,
+      chat_channel: channel_1,
+      in_reply_to: original_message,
+    )
   end
   fab!(:thread_message_2) do
-    Fabricate(:chat_message, chat_channel: channel_1, in_reply_to: original_message)
+    Fabricate(
+      :chat_message,
+      thread_id: thread_1.id,
+      chat_channel: channel_1,
+      in_reply_to: original_message,
+    )
   end
   fab!(:thread_message_3) do
-    Fabricate(:chat_message, chat_channel: channel_1, in_reply_to: original_message)
+    Fabricate(
+      :chat_message,
+      thread_id: thread_1.id,
+      chat_channel: channel_1,
+      in_reply_to: original_message,
+    )
   end
 
-  before { channel_1.update!(threading_enabled: true) }
-
   it "can select multiple messages" do
-    chat_page.visit_thread(thread_message_1.thread)
+    chat_page.visit_thread(thread_1)
+
     thread_page.messages.select(thread_message_1)
     thread_page.messages.select(thread_message_2)
 
@@ -36,7 +51,7 @@ RSpec.describe "Chat | Select message | thread", type: :system do
   end
 
   it "can shift + click to select messages between the first and last" do
-    chat_page.visit_thread(thread_message_1.thread)
+    chat_page.visit_thread(thread_1)
     thread_page.messages.select(thread_message_1)
     thread_page.messages.shift_select(thread_message_3)
 

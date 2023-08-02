@@ -12,12 +12,15 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
     fab!(:category) { Fabricate(:category) }
     fab!(:category_2) { Fabricate(:category) }
     fab!(:private_category) { Fabricate(:private_category, group: group) }
+
     fab!(:category_sidebar_section_link) do
       Fabricate(:category_sidebar_section_link, user: user, linkable: category)
     end
+
     fab!(:category_sidebar_section_link_2) do
       Fabricate(:category_sidebar_section_link, user: user, linkable: category_2)
     end
+
     fab!(:category_sidebar_section_link_3) do
       Fabricate(:category_sidebar_section_link, user: user, linkable: private_category)
     end
@@ -47,19 +50,25 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
 
   describe "#sidebar_tags" do
     fab!(:tag) { Fabricate(:tag, name: "foo", description: "foo tag") }
+
     fab!(:pm_tag) do
       Fabricate(:tag, name: "bar", pm_topic_count: 5, staff_topic_count: 0, public_topic_count: 0)
     end
+
     fab!(:hidden_tag) { Fabricate(:tag, name: "secret") }
+
     fab!(:staff_tag_group) do
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["secret"])
     end
+
     fab!(:tag_sidebar_section_link) do
       Fabricate(:tag_sidebar_section_link, user: user, linkable: tag)
     end
+
     fab!(:tag_sidebar_section_link_2) do
       Fabricate(:tag_sidebar_section_link, user: user, linkable: pm_tag)
     end
+
     fab!(:tag_sidebar_section_link_3) do
       Fabricate(:tag_sidebar_section_link, user: user, linkable: hidden_tag)
     end

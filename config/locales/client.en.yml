@@ -301,10 +301,12 @@ en:
 
     related_messages:
       title: "Related Messages"
+      pill: "Related Messages"
       see_all: 'See <a href="%{path}">all messages</a> from @%{username}...'
 
     suggested_topics:
-      title: "Suggested Topics"
+      title: "New & Unread Topics"
+      pill: "Suggested"
       pm_title: "Suggested Messages"
 
     about:
@@ -1933,8 +1935,8 @@ en:
 
       admin_guide:
         title: "Welcome to your new site!"
-        content: "Read the admin guide to continue building your site and community."
-        button: "Let's go!"
+        content: "<a href='%{admin_guide_url}'>Read the admin guide</a> to continue building your site and community."
+        content_no_url: "Read the admin guide to continue building your site and community."
 
     loading: "Loading..."
     errors:
@@ -2040,7 +2042,7 @@ en:
       refresh_page: "Refresh page"
 
     summary:
-      in_progress: "Summarizing topic using AI..."
+      in_progress: "Summarizing topic using AI"
       summarized_on: "Summarized with AI on %{date}"
       model_used: "AI used: %{model}"
       outdated: "Summary is outdated"
@@ -3900,8 +3902,6 @@ en:
       personal_message:
         title: "This topic is a personal message"
         help: "This topic is a personal message"
-    topic_edit:
-      tag_filter_placeholder: "+ tag"
     posts: "Posts"
     pending_posts:
       label: "Pending"
@@ -4170,10 +4170,9 @@ en:
       more_badges:
         one: "+%{count} More"
         other: "+%{count} More"
-      granted:
-        one: "%{count} granted"
-        other: "%{count} granted"
-      awarded: awarded
+      awarded:
+        one: "%{number} awarded"
+        other: "%{number} awarded"
       select_badge_for_title: Select a badge to use as your title
       none: "(none)"
       successfully_granted: "Successfully granted %{badge} to %{username}"
@@ -4705,6 +4704,7 @@ en:
             email: Email
             incoming_email: "Custom incoming email address"
             incoming_email_placeholder: "enter email address"
+            incoming_email_tooltip: "You can separate multiple email addresses with the | character."
             visibility: Visibility
             visibility_levels:
               title: "Who can see this group?"
@@ -5065,6 +5065,11 @@ en:
         title: "Customize"
         preview: "preview"
         explain_preview: "See the site with this theme enabled"
+        syntax_error: "Syntax Error"
+        settings_editor: "Settings Editor"
+        validation_settings_keys: "Each item must have only a 'setting' key and a 'value' key."
+        validation_settings_deleted: "These settings were deleted. Please restore them and try again."
+        validation_settings_added: "These settings were added. Please remove them and try again."
         save: "Save"
         new: "New"
         new_style: "New Style"
@@ -5103,6 +5108,7 @@ en:
           create: "Create"
           create_type: "Type"
           create_name: "Name"
+          save: "Save"
           long_title: "Amend colors, CSS and HTML contents of your site"
           edit: "Edit"
           edit_confirm: "This is a remote theme, if you edit CSS/HTML your changes will be erased next time you update the theme."
@@ -5118,6 +5124,7 @@ en:
           extra_files_upload: "Export theme to view these files."
           extra_files_remote: "Export theme or check the git repository to view these files."
           preview: "Preview"
+          settings_editor: "Settings Editor"
           show_advanced: "Show advanced fields"
           hide_advanced: "Hide advanced fields"
           hide_unused_fields: "Hide unused fields"

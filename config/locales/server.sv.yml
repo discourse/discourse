@@ -628,20 +628,6 @@ sv:
   staff_category_description: "Privat kategori för personaldiskussioner. Ämnen är bara synliga för administratörer och moderatorer."
   discourse_welcome_topic:
     title: "Välkommen till %{site_title}! :wave:"
-    body: |
-      Vi är så glada över att du kom till oss.
-
-      %{site_info_quote}
-
-      Här är några saker du kan göra för att komma igång:
-
-      :speaking_head: **Presentera dig** genom att lägga till en bild och information om dig själv och dina intressen i [din profil](%{base_path}/my/preferences/account). Vad skulle du vilja få frågor om?
-
-      :open_book: **Lär känna forumet** genom att [bläddra i diskussioner](%{base_path}/top) som redan pågår här. När du tycker att ett inlägg är intressant, informativt eller underhållande, använd :heart: för att visa din uppskattning eller ditt stöd!
-
-      :handshake: **Bidra** genom att kommentera, dela med dig av ditt perspektiv, ställa frågor eller ge feedback i diskussionen. Innan du svarar eller startar nya ämnen bör du läsa igenom [forumets riktlinjer](%{base_path}/faq).
-
-      > Om du behöver hjälp eller har ett förslag, fråga gärna i [#feedback](%{base_path}/c/site-feedback) eller [kontakta administratörerna](%{base_path}/about).
   admin_quick_start_title: "Administratörsguide: Komma igång"
   category:
     topic_prefix: "Om kategorin %{category}"
@@ -2012,8 +1998,8 @@ sv:
     permalink_normalizations: "Tillämpa följande regex innan matchning av permalänkar, till exempel: /(topic.*)\\?.*/\\1 kommer att rensa bort söksträngar från ämnesvägen. Formatet är regex+sträng, använd \\1 osv. för att komma åt grupperingar."
     global_notice: "Visa ett BRÅDSKANDE, icke-stängningsbart globalt banderollmeddelande för alla besökare, ändra till blankt för att dölja det (HTML tillåts)."
     disable_system_edit_notifications: "Inaktivera redigering av aviseringar av systemanvändaren när 'download_remote_images_to_local' har aktiverats."
-    disable_category_edit_notifications: "Inaktivera aviseringar för redigeringar av ämneskategorier."
-    disable_tags_edit_notifications: "Inaktivera aviseringar för redigeringar av ämnestaggar."
+    disable_category_edit_notifications: "Inaktivera aviseringar för redigeringar av ämneskategorier. Detta inkluderar ämnen som är \"publicerade\" (t.ex. delade utkast)."
+    disable_tags_edit_notifications: "Inaktivera aviseringar för redigeringar av ämnestaggar. Detta inkluderar ämnen som är \"publicerade\" (t.ex. delade utkast)."
     notification_consolidation_threshold: "Antal meddelanden om gillad eller medlemskapsbegäran innan meddelandena konsolideras till en enda. Ställ in till 0 för att inaktivera."
     likes_notification_consolidation_window_mins: "Varaktighet i minuter efter vilken gillad-aviseringar konsolideras till en enda avisering då tröskeln har uppnåtts. Tröskeln kan konfigureras via `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Ta automatiskt ned ämnen när användaren når botten."
@@ -2777,7 +2763,7 @@ sv:
     tl2_promotion_message:
       subject_template: "Grattis till din högre förtroendenivå!"
       text_body_template: |
-        Vi har uppgraderat dig till en högre [förtroendenivå] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+        Vi har uppgraderat dig till en högre [förtroendenivå](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
 
         Att uppnå förtroendenivå 2 betyder att du har läst och aktivt deltagit tillräckligt för att anses vara medlem i denna grupp.
 

@@ -22,6 +22,8 @@ export default class ChatRoute extends DiscourseRoute {
     const INTERCEPTABLE_ROUTES = [
       "chat.channel",
       "chat.channel.thread",
+      "chat.channel.thread.index",
+      "chat.channel.thread.near-message",
       "chat.channel.threads",
       "chat.channel.index",
       "chat.channel.near-message",

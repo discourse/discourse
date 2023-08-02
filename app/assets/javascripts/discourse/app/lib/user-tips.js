@@ -90,7 +90,9 @@ export function showUserTip(options) {
       options.content ||
       `<div class='user-tip__container'>
         <div class='user-tip__title'>${escape(options.titleText)}</div>
-        <div class='user-tip__content'>${escape(options.contentText)}</div>
+        <div class='user-tip__content'>${
+          options.contentHtml || escape(options.contentText)
+        }</div>
         <div class='user-tip__buttons'>
           <button class="btn btn-primary">${buttonText}</button>
         </div>

@@ -159,8 +159,6 @@ hr:
         archived: "Kanal je arhiviran, trenutno ne možete slati nove poruke."
         closed: "Kanal je zatvoren, trenutno ne možete slati nove poruke."
         read_only: "Kanal je samo za čitanje, trenutno ne možete slati nove poruke."
-      placeholder_start_conversation: "Započnite razgovor s..."
-      placeholder_start_conversation_users: "Započnite razgovor s %{commaSeparatedUsernames}"
       reply: "Odgovor"
       edit: "Uredi"
       rebake_message: "Popravi HTML"
@@ -180,7 +178,6 @@ hr:
       upload_to_thread: "Prenesi u nit"
       exit: "natrag"
       channel_status:
-        archive_failed: "Arhiviranje kanala nije uspjelo. %{completed}/%{total} poruke su arhivirane. <a target=\"_blank\" href=\"%{topic_url}\">tema odredišta</a>. Pritisnite ponovno za pokušaj dovršetka arhiviranja."
         archive_failed_no_topic: "Arhiviranje kanala nije uspjelo. %{completed}/%{total} poruka je arhivirano, odredišna tema nije kreirana. Pritisnite ponovno za pokušaj dovršetka arhiviranja."
         closed: "Zatvoreno"
         open: "Otvori"

@@ -27,7 +27,6 @@ tr_TR:
     max_mentions_per_chat_message: "Bir kullanıcının bir sohbet mesajında kullanabileceği maksimum @name bildirimi sayısı."
     chat_max_direct_message_users: "Kullanıcılar, yeni bir doğrudan mesaj oluştururken bu sayıdan daha fazla kullanıcı ekleyemez. Yalnızca kendisine mesaj gönderilmesine izin vermek için 0 olarak ayarlayın. Personel bu ayardan muaftır."
     chat_allow_archiving_channels: "Personelin bir kanalı kapatırken mesajları bir konuya arşivlemesine izin verin."
-    enable_experimental_chat_threaded_discussions: "DENEYSEL: Personelin sohbet kanallarında ileti dizisini etkinleştirmesine izin verin; bu, kullanıcılar birbirlerine yanıt verdiklerinde bir kanalda paralel tartışmaların gerçekleşmesine olanak tanır."
     errors:
       chat_default_channel: "Varsayılan sohbet kanalı genel bir kanal olmalıdır."
       direct_message_enabled_groups_invalid: "Bu ayar için en az bir grup belirtmelisiniz. Personel dışında kimsenin doğrudan mesaj göndermesini istemiyorsanız personel grubunu seçin."
@@ -74,9 +73,9 @@ tr_TR:
         one: "Mesaj çok kısa, en az %{count} karakter içermeli."
         other: "Mesaj çok kısa, en az %{count} karakter içermeli."
       message_too_long:
-        one: "Mesaj çok uzun, mesajlar en çok %{count} karakter olmalı."
-        other: "Mesaj çok uzun, mesajlar en çok %{count} karakter olmalı."
-      draft_too_long: "Taslak pek uzun."
+        one: "Mesaj çok uzun, mesajlar en fazla %{count} karakter olmalı."
+        other: "Mesaj çok uzun, mesajlar en fazla %{count} karakter olmalı."
+      draft_too_long: "Taslak fazla uzun."
       max_reactions_limit_reached: "Bu mesajda yeni tepkilere izin verilmiyor."
       message_move_invalid_channel: "Kaynak ve hedef kanal herkese açık kanallar olmalıdır."
       message_move_no_messages_found: "Sağlanan mesaj kimlikleriyle mesaj bulunamadı."
@@ -87,11 +86,11 @@ tr_TR:
       actor_disallowed_dms: "Kullanıcıların size özel ve doğrudan mesaj göndermesini engellemeyi seçtiniz, dolayısıyla yeni doğrudan mesaj oluşturamazsınız."
       actor_preventing_target_user_from_dm: "%{username} adlı kullanıcının size özel ve doğrudan mesaj göndermesini engellemeyi seçtiniz, dolayısıyla ona yeni doğrudan mesaj oluşturamazsınız."
       user_cannot_send_direct_messages: "Üzgünüz, doğrudan mesaj gönderemezsiniz."
-      over_chat_max_direct_message_users_allow_self: "Yalnızca kendinizle bir doğrudan mesaj oluşturabilirsiniz."
+      over_chat_max_direct_message_users_allow_self: "Yalnızca kendinize doğrudan mesaj oluşturabilirsiniz."
       over_chat_max_direct_message_users:
         one: "%{count} üzeri başka kullanıcıyla doğrudan mesaj oluşturamazsınız."
         other: "%{count} üzeri başka kullanıcıyla doğrudan mesaj oluşturamazsınız."
-      original_message_not_found: "Yanıtladığınız iletinin atası bulunamıyor veya silinmiş."
+      original_message_not_found: "Yanıtladığınız mesajın atası bulunamıyor veya silinmiş."
       thread_invalid_for_channel: "Konu, sağlanan kanalın bir parçası değildir."
       thread_does_not_match_parent: "Konu ana mesajla eşleşmiyor."
     reviewables:
@@ -159,7 +158,7 @@ tr_TR:
         one: "ve %{count} üye daha"
         other: "ve %{count} üye daha"
     summaries:
-      no_targets: "Seçilen dönemde hiç mesaj yok."
+      no_targets: "Seçilen dönemde mesaj yok."
   discourse_push_notifications:
     popup:
       chat_mention:

@@ -43,6 +43,7 @@ Rails.autoloaders.each do |autoloader|
     "json" => "JSON",
     "ssrf_detector" => "SSRFDetector",
     "http" => "HTTP",
+    "gc_stat_instrumenter" => "GCStatInstrumenter",
   )
 end
 Rails.autoloaders.main.ignore(

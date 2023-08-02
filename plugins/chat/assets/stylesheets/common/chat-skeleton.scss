@@ -1,5 +1,3 @@
-$radius: var(--d-border-radius);
-
 .chat-skeleton {
   height: auto;
 
@@ -42,7 +40,7 @@ $radius: var(--d-border-radius);
     margin-bottom: 0.25rem;
     width: 70px;
     height: 20px;
-    border-radius: $radius;
+    border-radius: var(--d-border-radius);
 
     .chat-skeleton__body:nth-of-type(odd) & {
       background-color: var(--primary-100);
@@ -67,7 +65,7 @@ $radius: var(--d-border-radius);
     background-color: var(--primary-100);
     width: 32px;
     height: 18px;
-    border-radius: $radius;
+    border-radius: var(--d-border-radius);
 
     & + & {
       margin-left: 0.5rem;
@@ -82,7 +80,7 @@ $radius: var(--d-border-radius);
 
   &__message-msg {
     height: 10px;
-    border-radius: $radius;
+    border-radius: var(--d-border-radius);
     margin: 2px 0;
 
     .chat-skeleton__body:nth-of-type(odd) & {
@@ -95,7 +93,7 @@ $radius: var(--d-border-radius);
 
   &__message-img {
     height: 80px;
-    border-radius: $radius;
+    border-radius: var(--d-border-radius);
     margin: 2px 0;
     width: 200px;
     background-color: var(--primary-100);

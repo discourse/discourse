@@ -243,9 +243,9 @@ da:
       aria_label: "Filtrer efter periode"
     related_messages:
       title: "Relaterede beskeder"
+      pill: "Relaterede beskeder"
       see_all: 'Se <a href="%{path}">alle beskeder</a> fra @ %{username} ...'
     suggested_topics:
-      title: "Foreslåede emner"
       pm_title: "Foreslåede beskeder"
     about:
       simple_title: "Om"
@@ -3366,9 +3366,6 @@ da:
       more_badges:
         one: "+%{count} Mere"
         other: "+%{count} Flere"
-      granted:
-        one: "%{count} tildelt"
-        other: "%{count} tildelt"
       select_badge_for_title: Vælg et emblem, du vil bruge som din titel
       none: "(ingen)"
       successfully_granted: "Vellykket tildeling af %{badge} til %{username}"
@@ -4086,6 +4083,7 @@ da:
           create: "Opret"
           create_type: "Type"
           create_name: "Navn"
+          save: "Gem"
           long_title: "Tilpas farver, CSS og HTML-indholdet for dit site"
           edit: "Redigér"
           edit_confirm: "Dette er et fjerntbeliggende tema - hvis du redigerer CSS/HTML, så vil dine ændringer blive slettet næste gang du opdaterer temaet."

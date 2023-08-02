@@ -268,9 +268,9 @@ hu:
       aria_label: "Szűrés időszak szerint"
     related_messages:
       title: "Kapcsolódó üzenetek"
+      pill: "Kapcsolódó üzenetek"
       see_all: 'Az <a href="%{path}">összes üzenet</a> megjelenítése @%{username} felhasználótól…'
     suggested_topics:
-      title: "Ajánlott témák"
       pm_title: "Ajánlott üzenetek"
     about:
       simple_title: "Névjegy"
@@ -3451,10 +3451,6 @@ hu:
       more_badges:
         one: "+Még %{count}"
         other: "+Még %{count}"
-      granted:
-        one: "%{count} kiadva"
-        other: "%{count} kiadva"
-      awarded: elnyerte
       select_badge_for_title: Válassz egy jelvényt, hogy címként használd
       none: "(semmi)"
       successfully_granted: "Sikeresen megadta a(z) %{badge} jelvényt %{username} számára"
@@ -4154,6 +4150,7 @@ hu:
           create: "Létrehoz"
           create_type: "Típus"
           create_name: "Név"
+          save: "Mentés"
           edit: "Szerkesztés"
           update_confirm: "Ezeket a helyi módosításokat a frissítés törli. Biztos, hogy folytatni szeretné?"
           update_confirm_yes: "Igen, folytassa a frissítést"
