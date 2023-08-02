@@ -1433,7 +1433,11 @@ RSpec.describe PostAlerter do
             end
         end
 
-      expect(events.size).to eq(3)
+      expect(events.map { |event| event[:event_name] }).to include(
+        :pre_notification_alert,
+        :push_notification,
+        :post_notification_alert,
+      )
       expect(messages.size).to eq(0)
       expect(Jobs::PushNotification.jobs.size).to eq(1)
     end
