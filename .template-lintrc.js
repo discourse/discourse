@@ -3,7 +3,6 @@ module.exports = {
   extends: "discourse:recommended",
 
   rules: {
-    "no-action-modifiers": true,
     "no-capital-arguments": false, // TODO: we extensively use `args` argument name
     "no-curly-component-invocation": {
       allow: [
