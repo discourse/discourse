@@ -50,6 +50,7 @@
             {{#if plugin.enabled_setting}}
               <DToggleSwitch
                 @state={{plugin.enabled}}
+                @isLoading={{this.isLoading}}
                 {{on "click" (fn this.togglePluginEnabled plugin)}}
               />
             {{else}}
