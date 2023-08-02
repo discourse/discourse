@@ -3,6 +3,7 @@
     <DToggleSwitch
       @state={{this.buffered.enabled}}
       @label={{this.badgeEnabledLabel}}
+      @isLoading={{@saving}}
       {{on "click" this.toggleBadge}}
     />
   </div>
