@@ -30,8 +30,6 @@ export default class InstallTheme extends Component {
 
   recordType = "theme";
 
-  @match("uploadUrl", /^ssh:\/\/.+@.+$|.+@.+:.+$/) checkPrivate;
-
   get createTypes() {
     return [
       { name: I18n.t("admin.customize.theme.theme"), value: THEMES },
@@ -39,14 +37,16 @@ export default class InstallTheme extends Component {
     ];
   }
 
+  get showPublicKey() {
+    return this.checkPrivate() && this.publicKey;
+  }
+
   get submitLabel() {
     if (this.themeCannotBeInstalled) {
       return "admin.customize.theme.create_placeholder";
     }
 
-    return `admin.customize.theme.${
-      this.selection === "create" ? "create" : "install"
-    }`;
+    return `admin.customize.theme.${this.create ? "create" : "install"}`;
   }
 
   get component() {
@@ -117,8 +117,9 @@ export default class InstallTheme extends Component {
   }
 
   @action
-  async privateWasChecked() {
-    if (this.checkPrivate && !this._keyLoading && !this.publicKey) {
+  async checkPrivate() {
+    const check = this.uploadUrl?.match(/^ssh:\/\/.+@.+$|.+@.+:.+$/);
+    if (check && !this._keyLoading && !this.publicKey) {
       try {
         this._keyLoading = true;
         const pair = await ajax("/admin/themes/generate_key_pair", {
@@ -138,17 +139,15 @@ export default class InstallTheme extends Component {
     this.advancedVisible = !this.advancedVisible;
   }
 
-  // willDestroy() {
-  //   this.duplicateRemoteThemeWarning = null;
-  //   this.localFile = null;
-  //   this.uploadUrl = null;
-  //   this.publicKey = null;
-  //   this.branch = null;
-  //   this.selection = "popular";
-
-  //   this.themesController.repoName = null;
-  //   this.themesController.repoUrl = null;
-  // }
+  willDestroy() {
+    // this.duplicateRemoteThemeWarning = null;
+    // this.localFile = null;
+    // this.uploadUrl = null;
+    // this.publicKey = null;
+    // this.branch = null;
+    // this.selection = "popular";
+    this.args.model.clearParams?.();
+  }
 
   @action
   uploadLocaleFile() {
@@ -229,8 +228,8 @@ export default class InstallTheme extends Component {
       const result = await ajax("/admin/themes/import", options);
       const theme = this.store.createRecord(this.recordType, result.theme);
       this.args.model.addTheme(theme);
-      this.publicKey = null;
       this.args.closeModal();
+      // this.publicKey = null;
     } catch (e) {
       if (!this.publicKey || this.themeCannotBeInstalled) {
         return popupAjaxError(e);

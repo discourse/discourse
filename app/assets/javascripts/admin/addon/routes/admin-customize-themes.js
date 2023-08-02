@@ -3,6 +3,7 @@ import { inject as service } from "@ember/service";
 import Route from "@ember/routing/route";
 import I18n from "I18n";
 import InstallThemeModal from "../components/modal/install-theme";
+import { next } from "@ember/runloop";
 
 export default class AdminCustomizeThemesRoute extends Route {
   @service dialog;
@@ -26,19 +27,22 @@ export default class AdminCustomizeThemesRoute extends Route {
   setupController(controller, model) {
     super.setupController(controller, model);
     controller.set("editingTheme", false);
-
     if (controller.repoUrl) {
-      this.modal.show(InstallThemeModal, {
-        model: {
-          uploadUrl: controller.repoUrl,
-          uploadName: controller.repoName,
-          selection: "directRepoInstall",
-          selectedType: controller.currentTab,
-          userId: model.userId,
-          installedThemes: controller.installedThemes,
-          addTheme: this.addTheme,
-          updateSelectedType: this.updateSelectedType,
-        },
+      next(() => {
+        this.modal.show(InstallThemeModal, {
+          model: {
+            uploadUrl: controller.repoUrl,
+            uploadName: controller.repoName,
+            selection: "directRepoInstall",
+            selectedType: controller.currentTab,
+            userId: model.userId,
+            installedThemes: controller.installedThemes,
+            addTheme: this.addTheme,
+            updateSelectedType: this.updateSelectedType,
+            content: model.content,
+            clearParams: this.clearParams,
+          },
+        });
       });
     }
   }
@@ -80,6 +84,14 @@ export default class AdminCustomizeThemesRoute extends Route {
   @action
   updateSelectedType(type) {
     this.controller.set("currentTab", type);
+  }
+
+  @action
+  clearParams() {
+    this.controller.setProperties({
+      repoUrl: null,
+      repoName: null,
+    });
   }
 
   @action
