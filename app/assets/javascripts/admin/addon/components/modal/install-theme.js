@@ -6,10 +6,14 @@ import { COMPONENTS, THEMES } from "admin/models/theme";
 import { POPULAR_THEMES } from "discourse-common/lib/popular-themes";
 import { ajax } from "discourse/lib/ajax";
 import I18n from "I18n";
+import { inject as service } from "@ember/service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 const MIN_NAME_LENGTH = 4;
 
 export default class InstallTheme extends Component {
+  @service store;
+
   @tracked selection = this.args.model.selection || "popular";
   @tracked uploadUrl = this.args.model.uploadUrl;
   @tracked uploadName = this.args.model.uploadName;
@@ -23,8 +27,6 @@ export default class InstallTheme extends Component {
   @tracked themeCannotBeInstalled;
 
   recordType = "theme";
-  importUrl = "/admin/themes/import";
-  keyGenUrl = "/admin/themes/generate_key_pair";
 
   @match("uploadUrl", /^ssh:\/\/.+@.+$|.+@.+:.+$/) checkPrivate;
 
@@ -106,18 +108,19 @@ export default class InstallTheme extends Component {
   }
 
   @action
-  privateWasChecked() {
-    const checked = this.checkPrivate;
-    if (checked && !this._keyLoading && !this.publicKey) {
-      this._keyLoading = true;
-      ajax(this.keyGenUrl, { type: "POST" })
-        .then((pair) => {
-          this.publicKey = pair.public_key;
-        })
-        .catch(popupAjaxError)
-        .finally(() => {
-          this._keyLoading = false;
+  async privateWasChecked() {
+    if (this.checkPrivate && !this._keyLoading && !this.publicKey) {
+      try {
+        this._keyLoading = true;
+        const pair = await ajax("/admin/themes/generate_key_pair", {
+          type: "POST",
         });
+        this.publicKey = pair.public_key;
+      } catch (e) {
+        popupAjaxError(e);
+      } finally {
+        this._keyLoading = false;
+      }
     }
   }
 
@@ -159,7 +162,7 @@ export default class InstallTheme extends Component {
         this.args.model.addTheme(theme);
         this.args.closeModal();
       } catch (e) {
-        this.flash = e.jqXHR.responseJSON.errors[0];
+        popupAjaxError(e);
       } finally {
         this.loading = false;
       }
@@ -200,22 +203,23 @@ export default class InstallTheme extends Component {
     if (this.themeCannotBeInstalled) {
       options.data["force"] = true;
     }
-    if (this.model.user_id) {
-      // Used by theme-creator
-      options.data["user_id"] = this.model.user_id;
+
+    // Used by theme-creator
+    if (this.args.model.userId) {
+      options.data["user_id"] = this.args.model.userId;
     }
-    this.loading = true;
 
     try {
-      const result = await ajax(this.importUrl, options);
+      this.loading = true;
+      console.log(options);
+      const result = await ajax("/admin/themes/import", options);
       const theme = this.store.createRecord(this.recordType, result.theme);
       this.args.model.addTheme(theme);
-      this.args.closeModal();
       this.publicKey = null;
+      this.args.closeModal();
     } catch (e) {
       if (!this.publicKey || this.themeCannotBeInstalled) {
-        // look into this
-        this.flash = e.jqXHR.responseJSON.errors[0];
+        return popupAjaxError(e);
       }
       this.themeCannotBeInstalled = I18n.t(
         "admin.customize.theme.force_install"

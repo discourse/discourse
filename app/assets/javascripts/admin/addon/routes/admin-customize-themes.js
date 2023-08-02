@@ -43,8 +43,8 @@ export default class AdminCustomizeThemesRoute extends Route {
 
   @action
   installModal() {
-    const currentTheme = this.controllerFor("adminCustomizeThemes.show").model;
-    if (currentTheme?.warnUnassignedComponent) {
+    const currentTheme = this.modelFor("adminCustomizeThemes");
+    if (this.currentModel?.warnUnassignedComponent) {
       this.dialog.yesNoConfirm({
         message: I18n.t("admin.customize.theme.unsaved_parent_themes"),
         didConfirm: () => {
@@ -53,19 +53,20 @@ export default class AdminCustomizeThemesRoute extends Route {
             model: {
               selectedType: this.currentTab,
               installedThemes: this.installedThemes,
-              content: this.currentModel.content,
+              content: currentTheme.content,
+              userId: currentTheme.userId,
               addTheme: this.addTheme,
             },
           });
         },
       });
     } else {
-      console.log(currentTheme);
       this.modal.show(InstallThemeModal, {
         model: {
           selectedType: this.controller.currentTab,
           installedThemes: this.controller.installedThemes,
-          content: this.currentModel.content,
+          content: currentTheme.content,
+          userId: currentTheme.userId,
           addTheme: this.addTheme,
         },
       });
