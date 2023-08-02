@@ -38,7 +38,7 @@ export default class InstallTheme extends Component {
   }
 
   get showPublicKey() {
-    return this.checkPrivate() && this.publicKey;
+    return this.uploadUrl?.match?.(/^ssh:\/\/.+@.+$|.+@.+:.+$/);
   }
 
   get submitLabel() {
@@ -117,20 +117,14 @@ export default class InstallTheme extends Component {
   }
 
   @action
-  async checkPrivate() {
-    const check = this.uploadUrl?.match(/^ssh:\/\/.+@.+$|.+@.+:.+$/);
-    if (check && !this._keyLoading && !this.publicKey) {
-      try {
-        this._keyLoading = true;
-        const pair = await ajax("/admin/themes/generate_key_pair", {
-          type: "POST",
-        });
-        this.publicKey = pair.public_key;
-      } catch (e) {
-        popupAjaxError(e);
-      } finally {
-        this._keyLoading = false;
-      }
+  async generatePublicKey() {
+    try {
+      const pair = await ajax("/admin/themes/generate_key_pair", {
+        type: "POST",
+      });
+      this.publicKey = pair.public_key;
+    } catch (e) {
+      popupAjaxError(e);
     }
   }
 

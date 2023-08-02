@@ -130,6 +130,7 @@
                   class="public-key-value"
                   readonly={{true}}
                   @value={{this.publicKey}}
+                  {{did-insert this.generatePublicKey}}
                 />
                 <CopyButton @selector="textarea.public-key-value" />
               </div>
