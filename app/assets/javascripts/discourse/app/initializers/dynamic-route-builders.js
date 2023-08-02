@@ -23,18 +23,17 @@ export default {
       DiscoverySortableController.extend()
     );
 
-    app.register("route:discovery.category", buildCategoryRoute("default"));
+    app.register(
+      "route:discovery.category",
+      buildCategoryRoute({ filter: "default" })
+    );
     app.register(
       "route:discovery.category-none",
-      buildCategoryRoute("default", {
-        no_subcategories: true,
-      })
+      buildCategoryRoute({ filter: "default", no_subcategories: true })
     );
     app.register(
       "route:discovery.category-all",
-      buildCategoryRoute("default", {
-        no_subcategories: false,
-      })
+      buildCategoryRoute({ filter: "default", no_subcategories: false })
     );
 
     const site = Site.current();
@@ -83,11 +82,11 @@ export default {
 
       app.register(
         `route:discovery.${filterDasherized}-category`,
-        buildCategoryRoute(filter)
+        buildCategoryRoute({ filter })
       );
       app.register(
         `route:discovery.${filterDasherized}-category-none`,
-        buildCategoryRoute(filter, { no_subcategories: true })
+        buildCategoryRoute({ filter, no_subcategories: true })
       );
     });
 
