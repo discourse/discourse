@@ -17,6 +17,7 @@ export default class InstallTheme extends Component {
   @tracked selection = this.args.model.selection || "popular";
   @tracked uploadUrl = this.args.model.uploadUrl;
   @tracked uploadName = this.args.model.uploadName;
+  @tracked selectedType = this.args.model.selectedType;
   @tracked advancedVisible = false;
   @tracked loading = false;
   @tracked localFile;
@@ -25,10 +26,18 @@ export default class InstallTheme extends Component {
   @tracked duplicateRemoteThemeWarning;
   @tracked flash;
   @tracked themeCannotBeInstalled;
+  @tracked name;
 
   recordType = "theme";
 
   @match("uploadUrl", /^ssh:\/\/.+@.+$|.+@.+:.+$/) checkPrivate;
+
+  get createTypes() {
+    return [
+      { name: I18n.t("admin.customize.theme.theme"), value: THEMES },
+      { name: I18n.t("admin.customize.theme.component"), value: COMPONENTS },
+    ];
+  }
 
   get submitLabel() {
     if (this.themeCannotBeInstalled) {
@@ -41,7 +50,7 @@ export default class InstallTheme extends Component {
   }
 
   get component() {
-    this.args.model.selectedType === COMPONENTS;
+    return this.selectedType === COMPONENTS;
   }
 
   get local() {
@@ -147,6 +156,12 @@ export default class InstallTheme extends Component {
   }
 
   @action
+  updateSelectedType(type) {
+    this.args.model.updateSelectedType(type);
+    this.selectedType = type;
+  }
+
+  @action
   installThemeFromList(url) {
     this.uploadUrl = url;
     this.installTheme();
@@ -211,7 +226,6 @@ export default class InstallTheme extends Component {
 
     try {
       this.loading = true;
-      console.log(options);
       const result = await ajax("/admin/themes/import", options);
       const theme = this.store.createRecord(this.recordType, result.theme);
       this.args.model.addTheme(theme);

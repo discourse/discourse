@@ -34,8 +34,10 @@ export default class AdminCustomizeThemesRoute extends Route {
           uploadName: controller.repoName,
           selection: "directRepoInstall",
           selectedType: controller.currentTab,
+          userId: model.userId,
           installedThemes: controller.installedThemes,
           addTheme: this.addTheme,
+          updateSelectedType: this.updateSelectedType,
         },
       });
     }
@@ -56,6 +58,7 @@ export default class AdminCustomizeThemesRoute extends Route {
               content: currentTheme.content,
               userId: currentTheme.userId,
               addTheme: this.addTheme,
+              updateSelectedType: this.updateSelectedType,
             },
           });
         },
@@ -68,9 +71,15 @@ export default class AdminCustomizeThemesRoute extends Route {
           content: currentTheme.content,
           userId: currentTheme.userId,
           addTheme: this.addTheme,
+          updateSelectedType: this.updateSelectedType,
         },
       });
     }
+  }
+
+  @action
+  updateSelectedType(type) {
+    this.controller.set("currentTab", type);
   }
 
   @action

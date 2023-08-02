@@ -146,7 +146,7 @@
             @valueProperty="value"
             @content={{this.createTypes}}
             @value={{this.selectedType}}
-            @onChange={{action (mut this.selectedType)}}
+            @onChange={{this.updateSelectedType}}
           />
         </div>
       {{/if}}
