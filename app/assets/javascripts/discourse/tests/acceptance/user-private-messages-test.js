@@ -736,10 +736,9 @@ acceptance(
 );
 
 acceptance(
-  "User Private Messages - user with group messages - Mobile",
+  "User Private Messages - user with group messages - browse more message",
   function (needs) {
     withGroupMessagesSetup(needs);
-    needs.mobileView();
 
     test("suggested messages without new or unread", async function (assert) {
       await visit("/t/12");
@@ -793,7 +792,6 @@ acceptance(
     });
 
     test("suggested messages for group messages with new and unread", async function (assert) {
-      needs.mobileView();
       await visit("/t/13");
 
       await publishGroupNewToMessageBus({ groupIds: [14], topicId: 1 });
