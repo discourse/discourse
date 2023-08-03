@@ -127,22 +127,16 @@ export default class PollBreakdownChart extends Component {
 
         // wrapping setHighlightedOption in next block as hover can create many events
         // prevents two sets to happen in the same computation
-        onHover: (event, activeElements) => {
+        onHover: (_, activeElements) => {
           if (!activeElements.length) {
-            next(() => {
-              this.setHighlightedOption(null);
-            });
+            next(() => this.setHighlightedOption(null));
             return;
           }
-
           const sliceIndex = activeElements[0].index;
           const optionIndex = Object.keys(this._optionToSlice).find(
             (option) => this._optionToSlice[option] === sliceIndex
           );
-
-          next(() => {
-            this.setHighlightedOption(Number(optionIndex));
-          });
+          next(() => this.setHighlightedOption(Number(optionIndex)));
         },
       },
     };

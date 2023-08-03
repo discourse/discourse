@@ -544,7 +544,7 @@ createWidget("discourse-poll-info", {
       instructions.push(
         new RawHtml({
           html: `<li>
-                  ${iconHTML("far-eye")} 
+                  ${iconHTML("far-eye")}
                   <span>${I18n.t("poll.public.title")}</span>
                  </li>`,
         })
@@ -575,8 +575,7 @@ createWidget("discourse-poll-pie-canvas", {
       });
 
       const el = document.getElementById(`poll-results-chart-${attrs.id}`);
-      // eslint-disable-next-line no-undef
-      this._chart = new Chart(el.getContext("2d"), config);
+      this._chart = new window.Chart(el.getContext("2d"), config);
     });
   },
 
