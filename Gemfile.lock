@@ -339,7 +339,7 @@ GEM
       rack
     rack-test (2.1.0)
       rack (>= 1.3)
-    rails-dom-testing (2.1.1)
+    rails-dom-testing (2.2.0)
       activesupport (>= 5.0.0)
       minitest
       nokogiri (>= 1.6)
