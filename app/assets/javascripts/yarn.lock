@@ -4213,10 +4213,10 @@ ember-exam@^8.0.0:
     semver "^7.3.2"
     silent-error "^1.1.1"
 
-ember-functions-as-helper-polyfill@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/ember-functions-as-helper-polyfill/-/ember-functions-as-helper-polyfill-2.1.1.tgz#25240db29b4cd0366a2d2954d2ea26ce0872ff8f"
-  integrity sha512-vZ2w9G/foohwtPm99Jos1m6bhlXyyyiJ4vhLbxyjWB4wh7bcpRzXPgCewDRrwefZQ2BwtHg3c9zvVMlI0g+o2Q==
+ember-functions-as-helper-polyfill@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/ember-functions-as-helper-polyfill/-/ember-functions-as-helper-polyfill-2.1.2.tgz#5f7a7c7f87b87d4df785c53d1ee0810693c89b6b"
+  integrity sha512-yvW6xykvZEIYzzwlrC/g9yu6LtLkkj5F+ho6U+BDxN1uREMgoMOZnji7sSILn5ITVpaJ055DPcO+utEFD7IZOA==
   dependencies:
     ember-cli-babel "^7.26.11"
     ember-cli-typescript "^5.0.0"
