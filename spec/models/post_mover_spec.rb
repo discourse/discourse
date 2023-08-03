@@ -875,6 +875,18 @@ RSpec.describe PostMover do
             expect(TopicUser.find_by(topic: destination_topic, user: user).liked).to eq(true)
           end
 
+          it "copies the post revisions from first post to the new post" do
+            p1.revise(another_user, { raw: "A different raw content" })
+
+            moved_to = topic.move_posts(user, [p1.id], destination_topic_id: destination_topic.id)
+            new_post = moved_to.posts.last
+
+            expect(new_post.id).not_to eq(p1.id)
+            expect(new_post.version).to eq(2)
+            expect(new_post.public_version).to eq(2)
+            expect(new_post.post_revisions.size).to eq(1)
+          end
+
           context "with read state and other stats per user" do
             def create_topic_user(user, topic, opts = {})
               notification_level = opts.delete(:notification_level) || :regular
@@ -1221,6 +1233,18 @@ RSpec.describe PostMover do
             new_topic = topic.move_posts(user, [p1.id], title: "new testing topic name")
 
             expect(new_topic.first_post.custom_fields).to eq(custom_fields)
+          end
+
+          it "preserves the post revisions in the new post" do
+            p1.revise(another_user, { raw: "A different raw content" })
+
+            new_topic = topic.move_posts(user, [p1.id], title: "new testing topic name")
+            new_post = new_topic.posts.where(post_number: 1).first
+
+            expect(new_post.id).not_to eq(p1.id)
+            expect(new_post.version).to eq(2)
+            expect(new_post.public_version).to eq(2)
+            expect(new_post.post_revisions.size).to eq(1)
           end
 
           include_examples "moves email related stuff" do
