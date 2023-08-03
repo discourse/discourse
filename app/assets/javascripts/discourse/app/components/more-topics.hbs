@@ -37,3 +37,9 @@
 
   <PluginOutlet @name="topic-more-content" @outletArgs={{hash model=@topic}} />
 </div>
+
+{{#if @topic.suggestedTopics.length}}
+  <h3 class="suggested-topics-message">
+    {{html-safe this.browseMoreMessage}}
+  </h3>
+{{/if}}
