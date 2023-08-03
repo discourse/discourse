@@ -67,7 +67,7 @@ acceptance("Admin - Suspend User", function (needs) {
     assert.strictEqual(count(".dialog-body:visible"), 1);
 
     await click(".dialog-footer .btn-primary");
-    ssert.ok(!exists(".suspend-user-modal:visible"));
+    assert.ok(!exists(".suspend-user-modal:visible"));
     assert.ok(!exists(".dialog-body:visible"));
   });
 
