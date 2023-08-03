@@ -3,9 +3,9 @@ import I18n from "I18n";
 import Route from "@ember/routing/route";
 import { ajax } from "discourse/lib/ajax";
 import { action, get } from "@ember/object";
-import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
 import EditBadgeGroupingsModal from "../../components/modal/edit-badge-groupings";
+import BadgePreviewModal from "../../components/modal/badge-preview";
 
 export default class AdminBadgesShowRoute extends Route {
   @service dialog;
@@ -53,26 +53,25 @@ export default class AdminBadgesShowRoute extends Route {
   }
 
   @action
-  preview(badge, explain) {
-    badge.set("preview_loading", true);
-    ajax("/admin/badges/preview.json", {
-      type: "POST",
-      data: {
-        sql: badge.get("query"),
-        target_posts: !!badge.get("target_posts"),
-        trigger: badge.get("trigger"),
-        explain,
-      },
-    })
-      .then(function (model) {
-        badge.set("preview_loading", false);
-        showModal("admin-badge-preview", { model, admin: true });
-      })
-      .catch(function (error) {
-        badge.set("preview_loading", false);
-        // eslint-disable-next-line no-console
-        console.error(error);
-        this.dialog.alert("Network error");
+  async preview(badge, explain) {
+    try {
+      badge.set("preview_loading", true);
+      const model = await ajax("/admin/badges/preview.json", {
+        type: "POST",
+        data: {
+          sql: badge.get("query"),
+          target_posts: !!badge.get("target_posts"),
+          trigger: badge.get("trigger"),
+          explain,
+        },
       });
+      badge.set("preview_loading", false);
+      this.modal.show(BadgePreviewModal, { model: { badge: model } });
+    } catch (e) {
+      badge.set("preview_loading", false);
+      // eslint-disable-next-line no-console
+      console.error(e);
+      this.dialog.alert("Network error");
+    }
   }
 }
