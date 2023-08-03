@@ -6,8 +6,13 @@ import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { scheduleOnce } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
+import { inject as service } from "@ember/service";
+import ThemeChangeModal from "../components/modal/theme-change";
 
 export default class AdminLogsStaffActionLogsController extends Controller {
+  @service modal;
+  @service store;
+
   queryParams = ["filters"];
   model = null;
   filters = null;
@@ -161,10 +166,6 @@ export default class AdminLogsStaffActionLogsController extends Controller {
   @action
   showCustomDetailsModal(model, event) {
     event?.preventDefault();
-    this.modal.show(ThemeChangeModal, {
-      model: { staffActionLog: model },
-      modalClass: "history-modal",
-    });
-    modal.loadDiff();
+    this.modal.show(ThemeChangeModal, { model: { staffActionLog: model } });
   }
 }
