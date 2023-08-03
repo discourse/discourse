@@ -3,31 +3,23 @@ import { action, set } from "@ember/object";
 import { inject as service } from "@ember/service";
 import SiteSetting from "admin/models/site-setting";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { TrackedMap } from "@ember-compat/tracked-built-ins";
 
 export default class AdminPluginsIndexController extends Controller {
   @service session;
-  loading = new TrackedMap();
 
   @action
   async togglePluginEnabled(plugin) {
     const enabledSettingName = plugin.enabled_setting;
-    const enabled = plugin.enabled;
-    this.loading.set(plugin, true);
 
+    const oldValue = plugin.enabled;
+    const newValue = !oldValue;
     try {
-      await SiteSetting.update(enabledSettingName, !enabled);
-      set(plugin, "enabled", !enabled);
+      set(plugin, "enabled", newValue);
+      await SiteSetting.update(enabledSettingName, newValue);
       this.session.requiresRefresh = true;
     } catch (e) {
+      set(plugin, "enabled", oldValue);
       popupAjaxError(e);
-    } finally {
-      this.loading.delete(plugin);
     }
-  }
-
-  @action
-  isLoading(plugin) {
-    return !!this.loading.get(plugin);
   }
 }

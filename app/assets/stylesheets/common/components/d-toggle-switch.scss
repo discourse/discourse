@@ -2,57 +2,6 @@
   --toggle-switch-width: 45px;
   --toggle-switch-height: 24px;
 
-  [disabled]:not(.is-loading) + .d-toggle-switch__checkbox-slider,
-  .disabled:not(.is-loading) + .d-toggle-switch__checkbox-slider {
-    cursor: not-allowed;
-    opacity: 0.4;
-    &::before,
-    &::after {
-      cursor: not-allowed;
-    }
-  }
-
-  &__checkbox-loading {
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.25s;
-  }
-
-  &.is-loading {
-    .d-toggle-switch__checkbox-loading {
-      opacity: 1;
-      visibility: visible;
-      display: flex;
-      height: 100%;
-      width: calc(100% - 0.5em);
-      justify-content: space-around;
-      align-items: center;
-      padding: 0 0.25em;
-      &-dot {
-        display: block;
-        width: 5px;
-        height: 5px;
-        border-radius: 5px;
-        background-color: #ffffff;
-        animation: checkbox-loading-dot 1.8s linear infinite;
-        &:nth-child(2) {
-          animation-delay: -1.6s;
-        }
-        &:nth-child(3) {
-          animation-delay: -1.4s;
-        }
-      }
-    }
-    .d-toggle-switch__checkbox-slider {
-      &::before,
-      &::after,
-      .d-icon {
-        opacity: 0;
-        visibility: hidden;
-      }
-    }
-  }
-
   &:focus {
     .d-toggle-switch__checkbox-slider {
       outline: 2px solid var(--tertiary);
@@ -129,16 +78,5 @@
     top: 3.5px;
     left: 4px;
     transition: left 0.25s;
-  }
-}
-
-@keyframes checkbox-loading-dot {
-  0%,
-  60%,
-  100% {
-    opacity: initial;
-  }
-  30% {
-    opacity: 0.5;
   }
 }

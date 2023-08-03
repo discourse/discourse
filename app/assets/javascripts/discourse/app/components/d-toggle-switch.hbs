@@ -1,4 +1,4 @@
-<div class={{concat-class "d-toggle-switch" (if @loading "is-loading")}}>
+<div class="d-toggle-switch">
   <label class="d-toggle-switch--label">
     {{! template-lint-disable no-redundant-role }}
     <button
@@ -11,11 +11,6 @@
     {{! template-lint-enable no-redundant-role }}
 
     <span class="d-toggle-switch__checkbox-slider">
-      <div class="d-toggle-switch__checkbox-loading">
-        <span class="d-toggle-switch__checkbox-loading-dot"></span>
-        <span class="d-toggle-switch__checkbox-loading-dot"></span>
-        <span class="d-toggle-switch__checkbox-loading-dot"></span>
-      </div>
       {{#if @state}}
         {{d-icon "check"}}
       {{/if}}
