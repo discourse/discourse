@@ -296,6 +296,18 @@ module PrettyText
       JS
   end
 
+  def self.count_emoji(string)
+    return unless string
+
+    protect { v8.eval(<<~JS) }
+        __countEmoji(#{string.inspect}, {
+          enableEmojiShortcuts: #{SiteSetting.enable_emoji_shortcuts},
+          inlineEmoji: #{SiteSetting.enable_inline_emoji_translation},
+          customEmoji: new Set(#{Emoji.custom.map { |e| e.name }.to_json})
+        });
+      JS
+  end
+
   def self.cook(text, opts = {})
     options = opts.dup
     working_text = text.dup

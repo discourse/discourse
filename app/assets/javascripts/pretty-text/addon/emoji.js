@@ -39,7 +39,7 @@ Object.entries(aliases).forEach(([name, list]) => {
   list.forEach((alias) => aliasMap.set(alias, name));
 });
 
-function isReplacableInlineEmoji(string, index, inlineEmoji) {
+function isReplaceableInlineEmoji(string, index, inlineEmoji) {
   if (inlineEmoji) {
     return true;
   }
@@ -95,7 +95,7 @@ export function performEmojiUnescape(string, opts) {
 
     const isReplacable =
       (isEmoticon || hasEndingColon || isUnicodeEmoticon) &&
-      isReplacableInlineEmoji(string, index, opts.inlineEmoji);
+      isReplaceableInlineEmoji(string, index, opts.inlineEmoji);
 
     const title = opts.title ?? emojiVal;
     const tabIndex = opts.tabIndex ? ` tabindex='${opts.tabIndex}'` : "";
@@ -121,7 +121,7 @@ export function performEmojiEscape(string, opts) {
   );
 
   const replacementFunction = (m, index) => {
-    if (isReplacableInlineEmoji(string, index, opts.inlineEmoji)) {
+    if (isReplaceableInlineEmoji(string, index, opts.inlineEmoji)) {
       if (!!allTranslations[m]) {
         return opts.emojiShortcuts ? `:${allTranslations[m]}:` : m;
       } else if (!!replacements[m]) {
@@ -178,6 +178,52 @@ export function buildEmojiUrl(code, opts) {
   }
 
   return url;
+}
+
+export function countEmoji(string, opts) {
+  const allTranslations = Object.assign(
+    {},
+    translations,
+    opts.customEmojiTranslation || {}
+  );
+
+  const isEmoji = (m, index) => {
+    if (isReplaceableInlineEmoji(string, index, opts.inlineEmoji)) {
+      // :)
+      if (opts.enableEmojiShortcuts && !!allTranslations[m]) {
+        return true;
+      }
+
+      // :smile: or :custom_smile:
+      const code = m.slice(1, m.length - 1);
+      if (
+        emojiExists(code) ||
+        (opts.customEmoji && opts.customEmoji.has(code))
+      ) {
+        return true;
+      }
+    }
+
+    // ☻
+    // Emojis can have "variation selectors" and slicing only the first
+    // character selects only that emoji
+    return !!replacements[m] || !!replacements[m[0]];
+  };
+
+  let match;
+  let count = 0;
+
+  let regex = new RegExp(emojiReplacementRegex, "g");
+  while ((match = regex.exec(string)) !== null) {
+    count += isEmoji(match[0], match.index);
+  }
+
+  regex = textEmojiRegex(opts.inlineEmoji);
+  while ((match = regex.exec(string)) !== null) {
+    count += isEmoji(match[0], match.index);
+  }
+
+  return count;
 }
 
 export function emojiExists(code) {
