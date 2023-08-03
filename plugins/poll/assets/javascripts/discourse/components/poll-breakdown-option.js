@@ -49,13 +49,4 @@ export default class PollBreakdownOption extends Component {
 
     return htmlSafe(`background: ${color};`);
   }
-
-  @action
-  onHover(active) {
-    if (active) {
-      this.onMouseOver();
-    } else {
-      this.onMouseOut();
-    }
-  }
 }
