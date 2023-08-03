@@ -215,7 +215,6 @@ export default class InstallTheme extends Component {
       const theme = this.store.createRecord(this.recordType, result.theme);
       this.args.model.addTheme(theme);
       this.args.closeModal();
-      // this.publicKey = null;
     } catch (e) {
       if (!this.publicKey || this.themeCannotBeInstalled) {
         return popupAjaxError(e);
