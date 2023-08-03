@@ -46,21 +46,9 @@ module("Integration | Component | Widget | discourse-poll", function (hooks) {
     });
   });
 
-  const template = hbs`
-    <MountWidget
-      @widget="discourse-poll"
-      @args={{hash
-        id=this.id
-        post=this.post
-        poll=this.poll
-        vote=this.vote
-        groupableUserFields=this.groupableUserFields
-      }}
-    />
-  `;
-
   test("can vote", async function (assert) {
-    this.setProperties({
+    this.set("args", {
+      id: 171,
       post: EmberObject.create({
         id: 42,
         topic: {
@@ -81,9 +69,12 @@ module("Integration | Component | Widget | discourse-poll", function (hooks) {
       }),
       vote: [],
       groupableUserFields: [],
+      hasSavedVote: false,
     });
 
-    await render(template);
+    await render(hbs`
+      <MountWidget @widget="discourse-poll" @args={{this.args}} />
+    `);
 
     requests = 0;
 
@@ -103,7 +94,8 @@ module("Integration | Component | Widget | discourse-poll", function (hooks) {
   });
 
   test("cannot vote if not member of the right group", async function (assert) {
-    this.setProperties({
+    this.set("args", {
+      id: 172,
       post: EmberObject.create({
         id: 42,
         topic: {
@@ -125,9 +117,12 @@ module("Integration | Component | Widget | discourse-poll", function (hooks) {
       }),
       vote: [],
       groupableUserFields: [],
+      hasSavedVote: false,
     });
 
-    await render(template);
+    await render(hbs`
+      <MountWidget @widget="discourse-poll" @args={{this.args}} />
+    `);
 
     requests = 0;
 
@@ -141,7 +136,8 @@ module("Integration | Component | Widget | discourse-poll", function (hooks) {
   });
 
   test("voting on a multiple poll with no min attribute", async function (assert) {
-    this.setProperties({
+    this.set("args", {
+      id: 173,
       post: EmberObject.create({
         id: 42,
         topic: {
@@ -163,9 +159,13 @@ module("Integration | Component | Widget | discourse-poll", function (hooks) {
       }),
       vote: [],
       groupableUserFields: [],
+      hasSavedVote: false,
     });
 
-    await render(template);
+    await render(hbs`
+      <MountWidget @widget="discourse-poll" @args={{this.args}} />
+    `);
+
     assert.ok(exists(".poll-buttons .cast-votes[disabled=true]"));
 
     await click("li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']");
