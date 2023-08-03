@@ -10,120 +10,87 @@
       flex-wrap: wrap;
       padding: 0;
       margin: 0;
+      position: relative;
+      overflow: hidden;
     }
+
     &__list-item {
       background: var(--primary-300);
       border-radius: var(--d-border-radius);
       margin-right: 8px;
       margin-bottom: 8px;
       height: 18px;
-      opacity: 0;
       display: block;
+      animation: motion-up 1.5s infinite linear;
+
       &:nth-child(1) {
-        width: 10%;
+        width: 100%;
       }
 
       &:nth-child(2) {
-        width: 12%;
+        width: 85%;
       }
 
       &:nth-child(3) {
-        width: 18%;
+        width: 90%;
       }
 
       &:nth-child(4) {
-        width: 14%;
-      }
-
-      &:nth-child(5) {
-        width: 18%;
-      }
-
-      &:nth-child(6) {
-        width: 14%;
-      }
-
-      &:nth-child(7) {
-        width: 22%;
-      }
-
-      &:nth-child(8) {
-        width: 05%;
-      }
-
-      &:nth-child(9) {
-        width: 25%;
-      }
-
-      &:nth-child(10) {
-        width: 14%;
-      }
-
-      &:nth-child(11) {
-        width: 18%;
-      }
-
-      &:nth-child(12) {
-        width: 12%;
-      }
-
-      &:nth-child(13) {
-        width: 22%;
-      }
-
-      &:nth-child(14) {
-        width: 18%;
-      }
-
-      &:nth-child(15) {
-        width: 13%;
-      }
-
-      &:nth-child(16) {
-        width: 22%;
-      }
-
-      &:nth-child(17) {
-        width: 19%;
-      }
-
-      &:nth-child(18) {
-        width: 13%;
-      }
-
-      &:nth-child(19) {
-        width: 22%;
-      }
-
-      &:nth-child(20) {
-        width: 25%;
-      }
-      &.is-shown {
-        opacity: 1;
-      }
-      &.show {
-        animation: appear 0.5s cubic-bezier(0.445, 0.05, 0.55, 0.95) 0s forwards;
-      }
-      &.blink {
-        animation: blink 0.5s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
+        width: 95%;
       }
     }
-    &__generating-text {
-      display: inline-block;
-      margin-left: 3px;
+
+    &__shimmer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(
+        100deg,
+        rgba(255, 255, 255, 0) 20%,
+        rgba(255, 255, 255, 0.5) 50%,
+        rgba(255, 255, 255, 0) 80%
+      );
+
+      animation: ai-shimmer 1.5s infinite linear;
     }
-    &__indicator-wave {
-      flex: 0 0 auto;
-      display: inline-flex;
+
+    &__status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
-    &__indicator-dot {
-      display: inline-block;
-      animation: ai-summary__indicator-wave 1.8s linear infinite;
-      &:nth-child(2) {
-        animation-delay: -1.6s;
-      }
-      &:nth-child(3) {
-        animation-delay: -1.4s;
+
+    &__sparkles {
+      position: relative;
+      width: 30px;
+      height: 30px;
+
+      svg {
+        margin: 0;
+        padding: 0;
+        position: absolute;
+
+        path {
+          position: absolute;
+          transform-origin: center;
+          scale: 0.9;
+          opacity: 0.5;
+          fill: var(--tertiary);
+          &:nth-child(1) {
+            animation: sparkle 2.25s infinite
+              cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          }
+          &:nth-child(2) {
+            animation: sparkle 3.25s infinite
+              cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          }
+          &:nth-child(3) {
+            animation: sparkle 4.25s infinite
+              cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          }
+        }
       }
     }
   }
@@ -152,34 +119,24 @@
   }
 }
 
-@keyframes ai-summary__indicator-wave {
-  0%,
-  60%,
-  100% {
-    transform: initial;
+@keyframes ai-shimmer {
+  0% {
+    transform: translateX(-200%);
   }
-  30% {
-    transform: translateY(-0.2em);
+  100% {
+    transform: translateX(200%);
   }
 }
 
-@keyframes appear {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes blink {
-  0% {
-    opacity: 1;
-  }
-  50% {
+@keyframes sparkle {
+  75% {
+    transform: scale(0.9);
     opacity: 0.5;
+    fill: var(--tertiary-medium);
   }
   100% {
+    transform: scale(1);
     opacity: 1;
+    fill: var(--tertiary);
   }
 }

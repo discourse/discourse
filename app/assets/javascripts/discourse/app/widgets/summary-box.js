@@ -54,7 +54,7 @@ export default createWidget("summary-box", {
     return new RenderGlimmer(
       this,
       "div.ai-summary__container",
-      hbs`{{ai-summary-skeleton}}`
+      hbs`<AiSummarySkeleton />`
     );
   },
 
