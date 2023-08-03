@@ -31,12 +31,6 @@ export default class SidebarUserCategoriesSection extends SidebarCommonCategorie
     super.willDestroy(...arguments);
 
     this.topicTrackingState.offStateChange(this.callbackId);
-
-    this.appEvents.off(
-      REFRESH_COUNTS_APP_EVENT_NAME,
-      this,
-      this._refreshCounts
-    );
   }
 
   // TopicTrackingState changes or plugins can trigger this function so we debounce to ensure we're not refreshing

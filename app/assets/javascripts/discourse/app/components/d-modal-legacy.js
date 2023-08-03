@@ -74,9 +74,9 @@ export default class DModal extends Component {
 
   @action
   setupListeners(element) {
-    this.appEvents.on("modal:body-shown", this._modalBodyShown);
-    this.appEvents.on("modal-body:flash", this._flash);
-    this.appEvents.on("modal-body:clearFlash", this._clearFlash);
+    this.appEvents.on("modal:body-shown", this, this._modalBodyShown);
+    this.appEvents.on("modal-body:flash", this, this._flash);
+    this.appEvents.on("modal-body:clearFlash", this, this._clearFlash);
     document.documentElement.addEventListener(
       "keydown",
       this._handleModalEvents
@@ -86,9 +86,6 @@ export default class DModal extends Component {
 
   @action
   cleanupListeners() {
-    this.appEvents.off("modal:body-shown", this._modalBodyShown);
-    this.appEvents.off("modal-body:flash", this._flash);
-    this.appEvents.off("modal-body:clearFlash", this._clearFlash);
     document.documentElement.removeEventListener(
       "keydown",
       this._handleModalEvents

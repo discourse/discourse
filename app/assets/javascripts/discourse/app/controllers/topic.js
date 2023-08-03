@@ -108,12 +108,6 @@ export default Controller.extend(bufferedProperty("model"), {
     });
   },
 
-  willDestroy() {
-    this._super(...arguments);
-
-    this.appEvents.off("post:show-revision", this, "_showRevision");
-  },
-
   canRemoveTopicFeaturedLink: and(
     "canEditTopicFeaturedLink",
     "buffered.featured_link"

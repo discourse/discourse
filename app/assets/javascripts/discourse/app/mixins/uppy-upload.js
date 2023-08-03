@@ -51,18 +51,12 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
 
   @on("willDestroyElement")
   _destroy() {
-    if (this.messageBus) {
-      this.messageBus.unsubscribe(`/uploads/${this.type}`);
-    }
+    this.messageBus?.unsubscribe(`/uploads/${this.type}`);
     this.fileInputEl?.removeEventListener(
       "change",
       this.fileInputEventListener
     );
-    this.appEvents.off(`upload-mixin:${this.id}:add-files`, this._addFiles);
-    this.appEvents.off(
-      `upload-mixin:${this.id}:cancel-upload`,
-      this._cancelSingleUpload
-    );
+
     this._uppyInstance?.close();
     this._uppyInstance = null;
   },
@@ -309,9 +303,14 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
       }
     });
 
-    this.appEvents.on(`upload-mixin:${this.id}:add-files`, this._addFiles);
+    this.appEvents.on(
+      `upload-mixin:${this.id}:add-files`,
+      this,
+      this._addFiles
+    );
     this.appEvents.on(
       `upload-mixin:${this.id}:cancel-upload`,
+      this,
       this._cancelSingleUpload
     );
     this._uppyReady();

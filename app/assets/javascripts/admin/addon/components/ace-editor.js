@@ -77,10 +77,6 @@ export default class AceEditor extends Component {
       this._editor.destroy();
       this._editor = null;
     }
-    if (this.appEvents) {
-      // xxx: don't run during qunit tests
-      this.appEvents.off("ace:resize", this, "resize");
-    }
 
     $(window).off("ace:resize");
   }
@@ -140,10 +136,7 @@ export default class AceEditor extends Component {
           .off("ace:resize")
           .on("ace:resize", () => this.appEvents.trigger("ace:resize"));
 
-        if (this.appEvents) {
-          // xxx: don't run during qunit tests
-          this.appEvents.on("ace:resize", this, "resize");
-        }
+        this.appEvents.on("ace:resize", this, "resize");
 
         if (this.autofocus) {
           this.send("focus");

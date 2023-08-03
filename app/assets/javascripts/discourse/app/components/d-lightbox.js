@@ -182,14 +182,8 @@ export default class DLightbox extends Component {
 
   @bind
   registerAppEventListeners() {
-    this.appEvents.on(LIGHTBOX_APP_EVENT_NAMES.OPEN, this.open);
-    this.appEvents.on(LIGHTBOX_APP_EVENT_NAMES.CLOSE, this.close);
-  }
-
-  @bind
-  deregisterAppEventListners() {
-    this.appEvents.off(LIGHTBOX_APP_EVENT_NAMES.OPEN, this.open);
-    this.appEvents.off(LIGHTBOX_APP_EVENT_NAMES.CLOSE, this.close);
+    this.appEvents.on(LIGHTBOX_APP_EVENT_NAMES.OPEN, this, this.open);
+    this.appEvents.on(LIGHTBOX_APP_EVENT_NAMES.CLOSE, this, this.close);
   }
 
   @bind

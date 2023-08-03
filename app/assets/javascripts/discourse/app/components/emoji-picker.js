@@ -84,9 +84,7 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
 
-    this._sectionObserver && this._sectionObserver.disconnect();
-
-    this.appEvents.off("emoji-picker:close", this, "onClose");
+    this._sectionObserver?.disconnect();
   },
 
   @action

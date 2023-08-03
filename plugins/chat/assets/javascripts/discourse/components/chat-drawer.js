@@ -55,28 +55,11 @@ export default Component.extend({
 
     window.removeEventListener("resize", this._checkSize);
 
-    if (this.appEvents) {
-      this.appEvents.off("chat:open-url", this, "openURL");
-      this.appEvents.off("chat:toggle-close", this, "close");
-      this.appEvents.off("composer:closed", this, "_checkSize");
-      this.appEvents.off("composer:opened", this, "_checkSize");
-      this.appEvents.off("composer:resized", this, "_checkSize");
-      this.appEvents.off("composer:div-resizing", this, "_dynamicCheckSize");
-      this.appEvents.off(
-        "composer:resize-started",
-        this,
-        "_startDynamicCheckSize"
-      );
-      this.appEvents.off(
-        "composer:resize-ended",
-        this,
-        "_clearDynamicCheckSize"
-      );
-    }
     if (this.sizeTimer) {
       cancel(this.sizeTimer);
       this.sizeTimer = null;
     }
+
     if (this.rafTimer) {
       window.cancelAnimationFrame(this.rafTimer);
     }

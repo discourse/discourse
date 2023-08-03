@@ -294,8 +294,8 @@ export default class QuoteButton extends Component {
     document.addEventListener("mouseup", this.mouseup);
     document.addEventListener("selectionchange", this.selectionchange);
 
-    this.appEvents.on("quote-button:quote", this, "insertQuote");
-    this.appEvents.on("quote-button:edit", this, "toggleFastEditForm");
+    this.appEvents.on("quote-button:quote", this, this.insertQuote);
+    this.appEvents.on("quote-button:edit", this, this.toggleFastEditForm);
   }
 
   willDestroy() {
@@ -306,8 +306,6 @@ export default class QuoteButton extends Component {
     document.removeEventListener("mouseup", this.mouseup);
     document.removeEventListener("selectionchange", this.selectionchange);
 
-    this.appEvents.off("quote-button:quote", this, "insertQuote");
-    this.appEvents.off("quote-button:edit", this, "toggleFastEditForm");
     this.teardownSelectionListeners();
   }
 

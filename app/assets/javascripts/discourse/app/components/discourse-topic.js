@@ -127,9 +127,6 @@ export default Component.extend(
 
       // this happens after route exit, stuff could have trickled in
       this._hideTopicInHeader();
-      this.appEvents.off("discourse:focus-changed", this, "gotFocus");
-      this.appEvents.off("post:highlight", this, "_highlightPost");
-      this.appEvents.off("header:update-topic", this, "_updateTopic");
     },
 
     gotFocus(hasFocus) {

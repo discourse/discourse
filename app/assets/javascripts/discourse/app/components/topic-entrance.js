@@ -156,10 +156,6 @@ export default Component.extend(CleansUp, {
     this._releaseFocus();
   },
 
-  willDestroyElement() {
-    this.appEvents.off("topic-entrance:show", this, "_show");
-  },
-
   _jumpTo(destination) {
     this.cleanUp();
     DiscourseURL.routeTo(destination);

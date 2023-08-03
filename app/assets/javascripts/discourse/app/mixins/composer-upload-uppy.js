@@ -67,21 +67,12 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
       "change",
       this.fileInputEventListener
     );
-
     this.editorEl?.removeEventListener("paste", this.pasteEventListener);
-
-    this.appEvents.off(`${this.composerEventPrefix}:add-files`, this._addFiles);
-    this.appEvents.off(
-      `${this.composerEventPrefix}:cancel-upload`,
-      this._cancelSingleUpload
-    );
 
     this._reset();
 
-    if (this._uppyInstance) {
-      this._uppyInstance.close();
-      this._uppyInstance = null;
-    }
+    this._uppyInstance?.close();
+    this._uppyInstance = null;
 
     this.uploadTargetBound = false;
   },
@@ -100,9 +91,14 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     this.fileInputEl = document.getElementById(this.fileUploadElementId);
     const isPrivateMessage = this.get("composerModel.privateMessage");
 
-    this.appEvents.on(`${this.composerEventPrefix}:add-files`, this._addFiles);
+    this.appEvents.on(
+      `${this.composerEventPrefix}:add-files`,
+      this,
+      this._addFiles
+    );
     this.appEvents.on(
       `${this.composerEventPrefix}:cancel-upload`,
+      this,
       this._cancelSingleUpload
     );
 

@@ -9,10 +9,4 @@ export default {
 
     this.appEvents.on("url:refresh", this, "refresh");
   },
-
-  willDestroyElement() {
-    this._super(...arguments);
-
-    this.appEvents.off("url:refresh", this, "refresh");
-  },
 };

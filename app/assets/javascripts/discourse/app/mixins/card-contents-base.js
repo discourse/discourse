@@ -299,16 +299,6 @@ export default Mixin.create({
         .removeEventListener("click", this.boundCardClickHandler);
     });
 
-    const previewClickEvent = this.previewClickEvent;
-    this.appEvents.off(previewClickEvent, this, "_previewClick");
-
-    this.appEvents.off(
-      `topic-header:trigger-${this.elementId}`,
-      this,
-      "_topicHeaderTrigger"
-    );
-
-    this.appEvents.off("card:close", this, "_close");
     this._hide();
   },
 

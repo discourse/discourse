@@ -43,12 +43,12 @@ export default class TopicTimelineScrollArea extends Component {
 
     if (!this.args.mobileView) {
       // listen for scrolling event to update timeline
-      this.appEvents.on("topic:current-post-scrolled", this.postScrolled);
+      this.appEvents.on("topic:current-post-scrolled", this, this.postScrolled);
       // listen for composer sizing changes to update timeline
-      this.appEvents.on("composer:opened", this.calculatePosition);
-      this.appEvents.on("composer:resized", this.calculatePosition);
-      this.appEvents.on("composer:closed", this.calculatePosition);
-      this.appEvents.on("post-stream:posted", this.calculatePosition);
+      this.appEvents.on("composer:opened", this, this.calculatePosition);
+      this.appEvents.on("composer:resized", this, this.calculatePosition);
+      this.appEvents.on("composer:closed", this, this.calculatePosition);
+      this.appEvents.on("post-stream:posted", this, this.calculatePosition);
     }
 
     this.intersectionObserver = new IntersectionObserver((entries) => {
@@ -370,12 +370,6 @@ export default class TopicTimelineScrollArea extends Component {
     if (!this.args.mobileView) {
       this.intersectionObserver?.disconnect();
       this.intersectionObserver = null;
-
-      this.appEvents.off("composer:opened", this.calculatePosition);
-      this.appEvents.off("composer:resized", this.calculatePosition);
-      this.appEvents.off("composer:closed", this.calculatePosition);
-      this.appEvents.off("topic:current-post-scrolled", this.postScrolled);
-      this.appEvents.off("post-stream:posted", this.calculatePosition);
     }
   }
 

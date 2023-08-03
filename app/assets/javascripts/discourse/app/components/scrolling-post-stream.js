@@ -351,7 +351,6 @@ export default MountWidget.extend({
 
     document.removeEventListener("touchmove", this._debouncedScroll);
     window.removeEventListener("scroll", this._debouncedScroll);
-    this.appEvents.off("post-stream:refresh", this, "_debouncedScroll");
     this.element.removeEventListener(
       "mouseenter",
       this._handleWidgetButtonHoverState
@@ -360,8 +359,6 @@ export default MountWidget.extend({
       "mouseleave",
       this._removeWidgetButtonHoverState
     );
-    this.appEvents.off("post-stream:refresh", this, "_refresh");
-    this.appEvents.off("post-stream:posted", this, "_posted");
   },
 
   didUpdateAttrs() {

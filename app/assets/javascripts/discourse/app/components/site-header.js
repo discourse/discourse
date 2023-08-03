@@ -316,19 +316,6 @@ const SiteHeaderComponent = MountWidget.extend(
 
       window.removeEventListener("resize", this._resizeDiscourseMenuPanel);
 
-      this.appEvents.off("header:show-topic", this, "setTopic");
-      this.appEvents.off("header:hide-topic", this, "setTopic");
-      this.appEvents.off("dom:clean", this, "_cleanDom");
-      this.appEvents.off("user-menu:rendered", this, "_animateMenu");
-
-      if (this._dropDownHeaderEnabled()) {
-        this.appEvents.off(
-          "sidebar-hamburger-dropdown:rendered",
-          this,
-          "_animateMenu"
-        );
-      }
-
       if (this.currentUser) {
         this.currentUser.off("status-changed", this, "queueRerender");
       }
@@ -504,6 +491,5 @@ export default SiteHeaderComponent.extend({
     this._super(...arguments);
     window.removeEventListener("scroll", this.onScroll);
     this._resizeObserver?.disconnect();
-    this.appEvents.off("site-header:force-refresh", this, "queueRerender");
   },
 });

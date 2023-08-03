@@ -354,18 +354,6 @@ export default Component.extend(TextareaTextManipulation, {
 
   @on("willDestroyElement")
   _shutDown() {
-    if (this.composerEvents) {
-      this.appEvents.off("composer:insert-block", this, "insertBlock");
-      this.appEvents.off("composer:insert-text", this, "insertText");
-      this.appEvents.off("composer:replace-text", this, "replaceText");
-      this.appEvents.off("composer:apply-surround", this, "_applySurround");
-      this.appEvents.off(
-        "composer:indent-selected-text",
-        this,
-        "indentSelection"
-      );
-    }
-
     this._itsatrap?.destroy();
     this._itsatrap = null;
 

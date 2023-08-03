@@ -36,12 +36,6 @@ export default Component.extend({
     document.removeEventListener("visibilitychange", this._focusChanged);
     document.removeEventListener("resume", this._focusChanged);
     document.removeEventListener("freeze", this._focusChanged);
-
-    this.appEvents.off(
-      "notifications:changed",
-      this,
-      this._updateNotifications
-    );
   },
 
   _updateNotifications(opts) {

@@ -54,12 +54,6 @@ export default class SidebarUserMessagesSection extends Component {
   }
 
   willDestroy() {
-    this.appEvents.off(
-      "page:changed",
-      this,
-      this._refreshSectionLinksDisplayState
-    );
-
     this.pmTopicTrackingState.offStateChange(
       this._pmTopicTrackingStateKey,
       this._refreshSectionLinkCounts

@@ -41,16 +41,6 @@ export default class ComposerMessages extends Component {
     this.reset();
   }
 
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-
-    this.appEvents.off("composer:typed-reply", this, this._typedReply);
-    this.appEvents.off("composer:opened", this, this._findMessages);
-    this.appEvents.off("composer:find-similar", this, this._findSimilar);
-    this.appEvents.off("composer-messages:close", this, this._closeTop);
-    this.appEvents.off("composer-messages:create", this, this._create);
-  }
-
   _closeTop() {
     if (this.isDestroying || this.isDestroyed) {
       return;

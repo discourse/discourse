@@ -243,9 +243,6 @@ export default Component.extend(PanEvents, {
 
     if (!this.site.mobileView) {
       $(window).off("resize.discourse-topic-navigation");
-      this.appEvents.off("composer:opened", this, this.composerOpened);
-      this.appEvents.off("composer:resize-ended", this, this.composerOpened);
-      this.appEvents.off("composer:closed", this, this.composerClosed);
       $("#reply-control").off("div-resized.discourse-topic-navigation");
     }
   },

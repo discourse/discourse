@@ -7,8 +7,4 @@ export default Mixin.create({
   _initializeChooser: on("didInsertElement", function () {
     this.appEvents.on("dom:clean", this, "cleanUp");
   }),
-
-  _clearChooser: on("willDestroyElement", function () {
-    this.appEvents.off("dom:clean", this, "cleanUp");
-  }),
 });

@@ -50,20 +50,12 @@ const FooterNavComponent = MountWidget.extend(
 
     willDestroyElement() {
       this._super(...arguments);
-      this.appEvents.off("page:changed", this, "_routeChanged");
-
-      if (this.capabilities.isAppWebview) {
-        this.appEvents.off("modal:body-shown", this, "_modalOn");
-        this.appEvents.off("modal:body-removed", this, "_modalOff");
-      }
 
       if (this.capabilities.isIpadOS) {
         document.body.classList.remove("footer-nav-ipad");
       } else {
         this.unbindScrolling();
         window.removeEventListener("resize", this.scrolled);
-        this.appEvents.off("composer:opened", this, "_composerOpened");
-        this.appEvents.off("composer:closed", this, "_composerClosed");
       }
     },
 
