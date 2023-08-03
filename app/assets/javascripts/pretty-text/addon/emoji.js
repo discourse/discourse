@@ -39,7 +39,7 @@ Object.entries(aliases).forEach(([name, list]) => {
   list.forEach((alias) => aliasMap.set(alias, name));
 });
 
-function isReplacableInlineEmoji(string, index, inlineEmoji) {
+function isReplaceableInlineEmoji(string, index, inlineEmoji) {
   if (inlineEmoji) {
     return true;
   }
@@ -68,13 +68,13 @@ export function performEmojiUnescape(string, opts) {
 
   const replacementFunction = (m, index) => {
     const isEmoticon = opts.enableEmojiShortcuts && !!allTranslations[m];
-    const isUnicodeEmoticon = !!replacements[m];
+    const isUnicodeEmoticon = !!replacements[m] || !!replacements[m[0]];
     let emojiVal;
 
     if (isEmoticon) {
       emojiVal = allTranslations[m];
     } else if (isUnicodeEmoticon) {
-      emojiVal = replacements[m];
+      emojiVal = replacements[m] || replacements[m[0]];
     } else {
       emojiVal = m.slice(1, m.length - 1);
     }
@@ -95,7 +95,7 @@ export function performEmojiUnescape(string, opts) {
 
     const isReplacable =
       (isEmoticon || hasEndingColon || isUnicodeEmoticon) &&
-      isReplacableInlineEmoji(string, index, opts.inlineEmoji);
+      isReplaceableInlineEmoji(string, index, opts.inlineEmoji);
 
     const title = opts.title ?? emojiVal;
     const tabIndex = opts.tabIndex ? ` tabindex='${opts.tabIndex}'` : "";
@@ -121,11 +121,13 @@ export function performEmojiEscape(string, opts) {
   );
 
   const replacementFunction = (m, index) => {
-    if (isReplacableInlineEmoji(string, index, opts.inlineEmoji)) {
+    if (isReplaceableInlineEmoji(string, index, opts.inlineEmoji)) {
       if (!!allTranslations[m]) {
         return opts.emojiShortcuts ? `:${allTranslations[m]}:` : m;
       } else if (!!replacements[m]) {
         return `:${replacements[m]}:`;
+      } else if (!!replacements[m[0]]) {
+        return `:${replacements[m[0]]}:`;
       }
     }
 
