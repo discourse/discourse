@@ -750,7 +750,9 @@ class TopicQuery
     end
 
     if SiteSetting.tagging_enabled
-      result = result.includes(:tags)
+      # Use `preload` here instead since `includes` can end up calling `eager_load` which can unnecessarily lead to
+      # joins on the `topic_tags` and `tags` table leading to a much slower query.
+      result = result.preload(:tags)
       result = filter_by_tags(result)
     end
 
