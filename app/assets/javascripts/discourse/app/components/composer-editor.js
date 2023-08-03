@@ -26,7 +26,7 @@ import {
   fetchUnseenMentions,
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
-import { next, schedule, throttle } from "@ember/runloop";
+import { schedule, throttle } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import Component from "@ember/component";
 import Composer from "discourse/models/composer";
@@ -38,7 +38,6 @@ import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import { isTesting } from "discourse-common/config/environment";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import userSearch from "discourse/lib/user-search";
@@ -798,13 +797,13 @@ export default Component.extend(
     _composerClosed() {
       this._unbindMobileUploadButton();
       this.appEvents.trigger(`${this.composerEventPrefix}:will-close`);
-      next(() => {
-        // need to wait a bit for the "slide down" transition of the composer
-        discourseLater(
-          () => this.appEvents.trigger(`${this.composerEventPrefix}:closed`),
-          isTesting() ? 0 : 400
-        );
-      });
+
+      // need to wait a bit for the "slide down" transition of the composer
+      discourseLater(() => {
+        if (!this.isDestroying && !this.isDestroyed) {
+          this.appEvents.trigger(`${this.composerEventPrefix}:closed`);
+        }
+      }, 400);
 
       this.element
         .querySelector(".d-editor-input")

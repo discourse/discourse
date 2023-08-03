@@ -211,10 +211,9 @@ export default Component.extend(PanEvents, {
 
     this._lastTopicId = this.topic.id;
 
-    this.appEvents
-      .on("topic:current-post-scrolled", this, this._topicScrolled)
-      .on("topic:jump-to-post", this, this._collapseFullscreen)
-      .on("topic:keyboard-trigger", this, this.keyboardTrigger);
+    this.appEvents.on("topic:current-post-scrolled", this, this._topicScrolled);
+    this.appEvents.on("topic:jump-to-post", this, this._collapseFullscreen);
+    this.appEvents.on("topic:keyboard-trigger", this, this.keyboardTrigger);
 
     if (!this.site.mobileView) {
       $(window).on("resize.discourse-topic-navigation", () =>
@@ -233,11 +232,6 @@ export default Component.extend(PanEvents, {
 
   willDestroyElement() {
     this._super(...arguments);
-
-    this.appEvents
-      .off("topic:current-post-scrolled", this, this._topicScrolled)
-      .off("topic:jump-to-post", this, this._collapseFullscreen)
-      .off("topic:keyboard-trigger", this, this.keyboardTrigger);
 
     $(window).off("click.hide-fullscreen");
 

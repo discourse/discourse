@@ -13,15 +13,15 @@ export default {
     const router = owner.lookup("router:main");
     router.on("routeWillChange", this.handleRouteWillChange);
 
-    let appEvents = owner.lookup("service:app-events");
-    let documentTitle = owner.lookup("service:document-title");
+    const appEvents = owner.lookup("service:app-events");
+    const documentTitle = owner.lookup("service:document-title");
 
     startPageTracking(router, appEvents, documentTitle);
 
     // Out of the box, Discourse tries to track google analytics
     // if it is present
     if (typeof window._gaq !== "undefined") {
-      appEvents.on("page:changed", (data) => {
+      appEvents.on("page:changed", this, (data) => {
         if (!data.replacedOnlyQueryParams) {
           window._gaq.push(["_set", "title", data.title]);
           window._gaq.push(["_trackPageview", data.url]);
@@ -35,7 +35,7 @@ export default {
       typeof window.ga !== "undefined" &&
       typeof window.gtag === "undefined"
     ) {
-      appEvents.on("page:changed", (data) => {
+      appEvents.on("page:changed", this, (data) => {
         if (!data.replacedOnlyQueryParams) {
           window.ga("send", "pageview", { page: data.url, title: data.title });
         }
@@ -44,7 +44,7 @@ export default {
 
     // And Universal Analytics v4 if we're upgraded
     if (typeof window.gtag !== "undefined") {
-      appEvents.on("page:changed", (data) => {
+      appEvents.on("page:changed", this, (data) => {
         if (!data.replacedOnlyQueryParams) {
           window.gtag("event", "page_view", {
             page_location: data.url,
@@ -56,7 +56,7 @@ export default {
 
     // Google Tag Manager too
     if (typeof window.dataLayer !== "undefined") {
-      appEvents.on("page:changed", (data) => {
+      appEvents.on("page:changed", this, (data) => {
         if (!data.replacedOnlyQueryParams) {
           googleTagManagerPageChanged(data);
         }

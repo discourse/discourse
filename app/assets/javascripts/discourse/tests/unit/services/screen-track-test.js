@@ -42,7 +42,7 @@ module("Unit | Service | screen-track", function (hooks) {
 
     const done = assert.async();
 
-    appEvents.on("topic:timings-sent", () => {
+    appEvents.on("topic:timings-sent", this, () => {
       assert.ok(true);
       done();
     });

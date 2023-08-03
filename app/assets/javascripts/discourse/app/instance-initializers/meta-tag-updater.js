@@ -13,7 +13,7 @@ export default {
     const canonicalUrl = document.querySelector("link[rel='canonical']");
 
     const appEvents = owner.lookup("service:app-events");
-    appEvents.on("page:changed", ({ title, url }) => {
+    appEvents.on("page:changed", this, ({ title, url }) => {
       const absoluteUrl = getAbsoluteURL(url);
 
       ogTitle?.setAttribute("content", title);

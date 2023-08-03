@@ -24,7 +24,10 @@ export default Mixin.create({
   didInsertElement() {
     this._super(...arguments);
 
-    this.appEvents.on("do-not-disturb:changed", () => this.queueRerender());
+    this.appEvents.on("do-not-disturb:changed", this, () =>
+      this.queueRerender()
+    );
+
     if (!isTesting()) {
       this.listenForDoNotDisturbChanges();
     }

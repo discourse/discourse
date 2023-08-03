@@ -734,7 +734,7 @@ class PluginApi {
    **/
   onAppEvent(name, fn) {
     const appEvents = this._lookupContainer("service:app-events");
-    appEvents && appEvents.on(name, fn);
+    appEvents?.on(name, this, fn);
   }
 
   /**

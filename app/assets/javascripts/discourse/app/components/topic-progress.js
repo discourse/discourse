@@ -67,9 +67,8 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    this.appEvents
-      .on("composer:resized", this, this._composerEvent)
-      .on("topic:current-post-scrolled", this, this._topicScrolled);
+    this.appEvents.on("composer:resized", this, this._composerEvent);
+    this.appEvents.on("topic:current-post-scrolled", this, this._topicScrolled);
 
     if (this.prevEvent) {
       scheduleOnce("afterRender", this, this._topicScrolled, this.prevEvent);
@@ -84,9 +83,6 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
     this._topicBottomObserver?.disconnect();
-    this.appEvents
-      .off("composer:resized", this, this._composerEvent)
-      .off("topic:current-post-scrolled", this, this._topicScrolled);
   },
 
   @bind

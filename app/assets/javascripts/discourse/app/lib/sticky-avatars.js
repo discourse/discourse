@@ -26,9 +26,9 @@ export default class StickyAvatars {
     }
 
     const appEvents = getOwner(this).lookup("service:app-events");
-    appEvents.on("topic:current-post-scrolled", this._handlePostNodes);
-    appEvents.on("topic:scrolled", this._handleScroll);
-    appEvents.on("page:topic-loaded", this._initIntersectionObserver);
+    appEvents.on("topic:current-post-scrolled", this, this._handlePostNodes);
+    appEvents.on("topic:scrolled", this, this._handleScroll);
+    appEvents.on("page:topic-loaded", this, this._initIntersectionObserver);
 
     addWidgetCleanCallback("post-stream", this._clearIntersectionObserver);
 

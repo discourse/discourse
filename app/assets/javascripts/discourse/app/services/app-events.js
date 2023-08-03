@@ -1,8 +1,11 @@
+/* eslint-disable no-console */
 import Service from "@ember/service";
 import { registerDestructor } from "@ember/destroyable";
+import { DEBUG } from "@glimmer/env";
 
 export default class AppEvents extends Service {
   #listeners = new Map();
+  #usage = new Map();
 
   constructor() {
     super(...arguments);
@@ -13,18 +16,47 @@ export default class AppEvents extends Service {
     }
   }
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+
+    if (DEBUG) {
+      setTimeout(() => {
+        if (this.#usage.size > 0) {
+          console.log("Leftover app-events listeners:");
+          for (const [name, count] of this.#usage) {
+            console.log(name, count);
+          }
+
+          this.#usage.clear();
+          this.#listeners.clear();
+        }
+      }, 1);
+    } else {
+      this.#listeners.clear();
+    }
+  }
+
   on(name, target, method, { once = false } = {}) {
     const listeners = this.#listeners.get(name) || [];
 
     if (typeof target === "object") {
       registerDestructor(target, () => this.off(name, target, method));
     } else {
+      if (DEBUG) {
+        console.log(
+          `Called appEvents.on("${name}", ...) without a target argument`
+        );
+      }
+
       method = target;
       target = globalThis;
     }
 
     listeners.push({ target, method, once });
     this.#listeners.set(name, listeners);
+
+    const count = this.#usage.get(name) || 0;
+    this.#usage.set(name, count + 1);
 
     return this;
   }
@@ -67,9 +99,23 @@ export default class AppEvents extends Service {
     }
 
     const newListeners = listeners.filter(
-      ({ _target, _method }) => !(target === _target && method === _method)
+      (listener) => !(target === listener.target && method === listener.method)
     );
-    this.#listeners.set(name, newListeners);
+
+    if (listeners.length === newListeners.length) {
+      console.warn(
+        "Trying to remove an app-event listener that doesn't exist:",
+        name
+      );
+    }
+
+    if (newListeners.length > 0) {
+      this.#listeners.set(name, newListeners);
+      this.#usage.set(name, newListeners.length);
+    } else {
+      this.#listeners.delete(name);
+      this.#usage.delete(name);
+    }
 
     return this;
   }

@@ -124,7 +124,7 @@ module("Unit | Service | Experimental Lightbox", function (hooks) {
 
     const expectedEvent = LIGHTBOX_APP_EVENT_NAMES.OPEN;
 
-    this.appEvents.on(LIGHTBOX_APP_EVENT_NAMES.OPEN, (args) => {
+    this.appEvents.on(LIGHTBOX_APP_EVENT_NAMES.OPEN, this, (args) => {
       assert.deepEqual(args, expectedObject);
       done();
     });
@@ -142,7 +142,7 @@ module("Unit | Service | Experimental Lightbox", function (hooks) {
 
     await this.lightbox.setupLightboxes({ container, selector });
 
-    this.appEvents.on(LIGHTBOX_APP_EVENT_NAMES.CLOSE, () => {
+    this.appEvents.on(LIGHTBOX_APP_EVENT_NAMES.CLOSE, this, () => {
       assert.ok(true);
       done();
     });

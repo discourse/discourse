@@ -25,7 +25,6 @@ export default Component.extend({
   _widgetClass: null,
   _renderCallback: null,
   _childEvents: null,
-  _dispatched: null,
   dirtyKeys: null,
 
   init() {
@@ -49,7 +48,6 @@ export default Component.extend({
     this._childEvents = [];
     this._connected = [];
     this._childComponents = ArrayProxy.create({ content: [] });
-    this._dispatched = [];
     this.dirtyKeys = new DirtyKeys(name);
   },
 
@@ -76,10 +74,6 @@ export default Component.extend({
   },
 
   willDestroyElement() {
-    this._dispatched.forEach((evt) => {
-      const [eventName, caller] = evt;
-      this.appEvents.off(eventName, this, caller);
-    });
     cancel(this._timeout);
   },
 
@@ -99,10 +93,9 @@ export default Component.extend({
   dispatch(eventName, key) {
     this._childEvents.push(eventName);
 
-    const caller = (refreshArg) =>
-      this.eventDispatched(eventName, key, refreshArg);
-    this._dispatched.push([eventName, caller]);
-    this.appEvents.on(eventName, this, caller);
+    this.appEvents.on(eventName, this, (refreshArg) =>
+      this.eventDispatched(eventName, key, refreshArg)
+    );
   },
 
   queueRerender(callback) {
