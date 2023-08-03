@@ -161,9 +161,8 @@ export default class AdminLogsStaffActionLogsController extends Controller {
   @action
   showCustomDetailsModal(model, event) {
     event?.preventDefault();
-    let modal = showModal("admin-theme-change", {
-      model,
-      admin: true,
+    this.modal.show(ThemeChangeModal, {
+      model: { staffActionLog: model },
       modalClass: "history-modal",
     });
     modal.loadDiff();
