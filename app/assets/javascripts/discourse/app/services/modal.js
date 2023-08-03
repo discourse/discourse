@@ -49,7 +49,6 @@ const KNOWN_LEGACY_MODALS = [
   "topic-summary",
   "user-status",
   "admin-penalize-user",
-  "site-setting-default-categories",
   "admin-badge-preview",
   "admin-edit-badge-groupings",
   "admin-reseed",

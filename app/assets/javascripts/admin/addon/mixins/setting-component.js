@@ -7,10 +7,11 @@ import { ajax } from "discourse/lib/ajax";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { htmlSafe } from "@ember/template";
-import showModal from "discourse/lib/show-modal";
 import { warn } from "@ember/debug";
 import { action } from "@ember/object";
 import { splitString } from "discourse/lib/utilities";
+import { inject as service } from "@ember/service";
+import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-default-categories";
 
 const CUSTOM_TYPES = [
   "bool",
@@ -74,6 +75,8 @@ const DEFAULT_USER_PREFERENCES = [
 ];
 
 export default Mixin.create({
+  modal: service(),
+  site: service(),
   attributeBindings: ["setting.setting:data-setting"],
   classNameBindings: [":row", ":setting", "overridden", "typeClass"],
   validationMessage: null,
@@ -190,20 +193,22 @@ export default Mixin.create({
     });
 
     const count = result.user_count;
-
     if (count > 0) {
-      const controller = showModal("site-setting-default-categories", {
-        model: { count, key: key.replaceAll("_", " ") },
-        admin: true,
+      await this.modal.show(SiteSettingDefaultCategoriesModal, {
+        model: {
+          siteSetting: { count, key: key.replaceAll("_", " ") },
+          setUpdateExistingUsers: this.setUpdateExistingUsers,
+        },
       });
-
-      controller.set("onClose", () => {
-        this.updateExistingUsers = controller.updateExistingUsers;
-        this.save();
-      });
+      this.save();
     } else {
       await this.save();
     }
+  },
+
+  @action
+  setUpdateExistingUsers(value) {
+    this.updateExistingUsers = value;
   },
 
   @action
