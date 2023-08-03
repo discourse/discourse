@@ -48,7 +48,6 @@ const KNOWN_LEGACY_MODALS = [
   "tag-upload",
   "topic-summary",
   "user-status",
-  "admin-install-theme",
   "admin-penalize-user",
   "admin-theme-change",
   "site-setting-default-categories",
