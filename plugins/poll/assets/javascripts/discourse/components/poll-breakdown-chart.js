@@ -86,6 +86,7 @@ export default class PollBreakdownChart extends Component {
             data: transformedData,
             backgroundColor: colors,
             hoverBorderColor: computedStyle.getPropertyValue("--secondary"),
+            hoverOffset: 4,
           },
         ],
       },
@@ -121,7 +122,7 @@ export default class PollBreakdownChart extends Component {
         },
         responsive: true,
         aspectRatio: 1.1,
-        animation: { duration: 0 },
+        animation: false,
 
         // wrapping setHighlightedOption in next block as hover can create many events
         // prevents two sets to happen in the same computation
