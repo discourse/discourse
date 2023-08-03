@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { next } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
 import { inject as service } from "@ember/service";
 import { extractError } from "discourse/lib/ajax-error";
