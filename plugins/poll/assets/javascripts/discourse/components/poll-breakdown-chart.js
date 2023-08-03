@@ -71,6 +71,7 @@ export default class PollBreakdownChart extends Component {
       }
     });
 
+    const computedStyle = getComputedStyle(document.body);
     const totalVotes = transformedData.reduce((sum, votes) => sum + votes, 0);
     const colors = getColors(data.length).filter(
       (color, index) => data[index] > 0
@@ -84,10 +85,7 @@ export default class PollBreakdownChart extends Component {
           {
             data: transformedData,
             backgroundColor: colors,
-            // TODO: It's a workaround for Chart.js' terrible hover styling.
-            // It will break on non-white backgrounds.
-            // Should be updated after #10341 lands
-            hoverBorderColor: "#fff",
+            hoverBorderColor: computedStyle.getPropertyValue("--secondary"),
           },
         ],
       },
@@ -99,7 +97,7 @@ export default class PollBreakdownChart extends Component {
             backgroundColor: "rgba(255, 255, 255, 0.5)",
             borderRadius: 2,
             font: {
-              family: getComputedStyle(document.body).fontFamily,
+              family: computedStyle.fontFamily,
               size: 16,
             },
             padding: {
