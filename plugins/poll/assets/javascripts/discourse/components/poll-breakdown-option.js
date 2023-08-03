@@ -2,7 +2,6 @@ import { tagName } from "@ember-decorators/component";
 import { equal } from "@ember/object/computed";
 import Component from "@ember/component";
 import I18n from "I18n";
-import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 import { htmlSafe } from "@ember/template";
