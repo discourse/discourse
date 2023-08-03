@@ -1,4 +1,5 @@
 import Service from "@ember/service";
+import { registerDestructor } from "@ember/destroyable";
 
 export default class AppEvents extends Service {
   #listeners = new Map();
@@ -15,7 +16,9 @@ export default class AppEvents extends Service {
   on(name, target, method, { once = false } = {}) {
     const listeners = this.#listeners.get(name) || [];
 
-    if (typeof target !== "object") {
+    if (typeof target === "object") {
+      registerDestructor(target, () => this.off(name, target, method));
+    } else {
       method = target;
       target = globalThis;
     }
