@@ -262,6 +262,10 @@ RSpec.configure do |config|
         Webdrivers::Chromedriver.base_url,
         "http://discoursetest.minio.local:9000",
         "http://minio.local:9000",
+        MinioRunner::McBinary.platform_binary_url,
+        MinioRunner::McBinary.platform_sha256sum_url,
+        MinioRunner::MinioBinary.platform_binary_url,
+        MinioRunner::MinioBinary.platform_sha256sum_url,
       ],
     )
 

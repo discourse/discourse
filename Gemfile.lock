@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:discourse/minio_runner.git
-  revision: b3cdde5fd193380658fb16567383ba049b58f398
+  revision: 943c47cce34b9857f9a8bbc170b0c25a05f87b2d
   branch: dev/initial-gem-code
   specs:
     minio_runner (0.1.0)
