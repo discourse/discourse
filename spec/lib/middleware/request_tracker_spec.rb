@@ -778,6 +778,7 @@ RSpec.describe Middleware::RequestTracker do
       expect(@data[:timing][:gc][:time]).to be > 0.0
       expect(@data[:timing][:gc][:major_count]).to eq(1)
       expect(@data[:timing][:gc][:minor_count]).to eq(1)
+      expect(@data[:timing][:gc]).to have_key(:major_by)
     end
 
     it "can correctly log messagebus request types" do

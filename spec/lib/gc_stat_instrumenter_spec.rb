@@ -13,6 +13,7 @@ RSpec.describe GCStatInstrumenter do
       expect(result[:gc][:time]).to be >= 0.0
       expect(result[:gc][:major_count]).to eq(1)
       expect(result[:gc][:minor_count]).to eq(1)
+      expect(result[:gc]).to have_key(:major_by)
     end
   end
 end
