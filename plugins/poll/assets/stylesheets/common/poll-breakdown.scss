@@ -1,4 +1,4 @@
-.poll-breakdown-modal {
+.poll-breakdown.modal {
   .modal-inner-container {
     max-width: unset;
     width: 90vw;
@@ -11,7 +11,7 @@
   .modal-body {
     display: grid;
     height: 80vh;
-    grid: auto-flow / 1fr 2fr;
+    grid: auto-flow / 2fr 5fr;
     padding: 0;
   }
 }
