@@ -17,6 +17,8 @@ describe "Uploading files to S3", type: :system do
 
     SiteSetting.content_security_policy = false
 
+    MinioRunner.start
+
     sign_in(current_user)
   end
 

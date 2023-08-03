@@ -256,12 +256,17 @@ RSpec.configure do |config|
 
     SiteSetting.provider = TestLocalProcessProvider.new
 
+    MinioRunner.config do |minio_runner_config|
+      minio_runner_config.minio_domain = "minio.local"
+      minio_runner_config.buckets = ["discoursetest"]
+      minio_runner_config.public_buckets = ["discoursetest"]
+    end
+
     WebMock.disable_net_connect!(
       allow_localhost: true,
       allow: [
         Webdrivers::Chromedriver.base_url,
-        "http://discoursetest.minio.local:9000",
-        "http://minio.local:9000",
+        *MinioRunner.config.minio_server_urls,
         URI(MinioRunner::MinioBinary.platform_binary_url).host,
       ],
     )
@@ -339,13 +344,6 @@ RSpec.configure do |config|
 
     # Prevents 500 errors for site setting URLs pointing to test.localhost in system specs.
     SiteIconManager.clear_cache!
-
-    MinioRunner.config do |minio_runner_config|
-      minio_runner_config.minio_domain = "minio.local"
-      minio_runner_config.buckets = ["discoursetest"]
-      minio_runner_config.public_buckets = ["discoursetest"]
-    end
-    MinioRunner.start
   end
 
   class TestLocalProcessProvider < SiteSettings::LocalProcessProvider
