@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { bind } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
 
-export default class extends Controller {
+export default class NavigationFilterController extends Controller {
   @controller("discovery/filter") discoveryFilter;
 
   @tracked copyIcon = "link";
