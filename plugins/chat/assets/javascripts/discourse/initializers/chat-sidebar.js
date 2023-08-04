@@ -111,7 +111,9 @@ export default {
 
             const SidebarChatChannelsSection = class extends BaseCustomSidebarSection {
               @service currentUser;
-              @tracked currentUserCanJoinPublicChannels =
+
+              @tracked
+              currentUserCanJoinPublicChannels =
                 this.currentUser &&
                 (this.currentUser.staff ||
                   this.currentUser.has_joinable_public_channels);
@@ -344,8 +346,9 @@ export default {
             @service site;
             @service modal;
             @service router;
-            @tracked userCanDirectMessage =
-              this.chatService.userCanDirectMessage;
+
+            @tracked
+            userCanDirectMessage = this.chatService.userCanDirectMessage;
 
             constructor() {
               super(...arguments);

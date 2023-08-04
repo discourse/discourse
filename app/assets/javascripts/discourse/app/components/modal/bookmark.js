@@ -38,17 +38,13 @@ export default class BookmarkModal extends Component {
   @tracked userTimezone = this.currentUser.user_option.timezone;
   @tracked showOptions = this.args.model.bookmark.id ? true : false;
 
-  @notEmpty("userTimezone")
-  userHasTimezoneSet;
+  @notEmpty("userTimezone") userHasTimezoneSet;
 
-  @notEmpty("bookmark.id")
-  showDelete;
+  @notEmpty("bookmark.id") showDelete;
 
-  @notEmpty("bookmark.id")
-  editingExistingBookmark;
+  @notEmpty("bookmark.id") editingExistingBookmark;
 
-  @and("bookmark.id", "bookmark.reminderAt")
-  existingBookmarkHasReminder;
+  @and("bookmark.id", "bookmark.reminderAt") existingBookmarkHasReminder;
 
   @tracked _closeWithoutSaving = false;
   @tracked _savingBookmarkManually = false;

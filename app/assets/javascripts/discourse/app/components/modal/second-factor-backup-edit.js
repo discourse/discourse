@@ -9,9 +9,10 @@ export default class SecondFactorBackupEdit extends Component {
   @tracked loading = false;
   @tracked errorMessage;
   @tracked successMessage;
-  @tracked backupEnabled =
-    this.args.model.secondFactor.second_factor_backup_enabled;
-  @tracked remainingCodes =
+  @tracked
+  backupEnabled = this.args.model.secondFactor.second_factor_backup_enabled;
+  @tracked
+  remainingCodes =
     this.args.model.secondFactor.second_factor_remaining_backup_codes;
   @tracked backupCodes;
   @tracked secondFactorMethod = SECOND_FACTOR_METHODS.TOTP;
