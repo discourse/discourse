@@ -33,7 +33,10 @@ class ExternalUploadManager
 
     upload_stub =
       ExternalUploadStub.create!(
-        key: key,
+        # TODO (martin): Need to figure out a better way of doing this; the key is
+        # doubling up the bucket in the path and we don't want to store it in the
+        # DB that way.
+        key: key.gsub("#{SiteSetting.s3_upload_bucket}/", ""),
         created_by: current_user,
         original_filename: file_name,
         upload_type: upload_type,
@@ -196,6 +199,9 @@ class ExternalUploadManager
       max_file_size: DOWNLOAD_LIMIT,
       tmp_file_name: "discourse-upload-#{type}",
       follow_redirect: true,
+      # TODO (martin): Had to do this because FinalDestination enforces certain ports based
+      # on URI scheme, probably a better way.
+      validate_uri: false,
     )
   end
 end

@@ -1,4 +1,11 @@
 GIT
+  remote: https://github.com/discourse/minio_runner.git
+  revision: 072668f29573aacff800e6ef007dbc8061d3db33
+  branch: dev/initial-gem-code
+  specs:
+    minio_runner (0.1.0)
+
+GIT
   remote: https://github.com/rails/sprockets
   revision: f4d3dae71ef29c44b75a49cfbf8032cce07b423a
   branch: 3.x
@@ -607,6 +614,7 @@ DEPENDENCIES
   mini_scheduler
   mini_sql
   mini_suffix
+  minio_runner!
   minitest
   mocha
   multi_json

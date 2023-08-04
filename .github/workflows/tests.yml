@@ -30,6 +30,12 @@ jobs:
       PGPASSWORD: discourse
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
+      MINIO_RUNNER_LOG_LEVEL: DEBUG
+      MINIO_RUNNER_MINIO_ROOT_USER: minioadmin
+      MINIO_RUNNER_MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_RUNNER_MINIO_DOMAIN: minio.local
+      MINIO_RUNNER_BUCKETS: "discoursetest"
+      MINIO_RUNNER_PUBLIC_BUCKETS: "discoursetest"
 
     strategy:
       fail-fast: false
@@ -105,6 +111,11 @@ jobs:
       - name: Pull compatible versions of plugins
         if: matrix.target == 'plugins'
         run: bin/rake plugin:pull_compatible_all
+
+      - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
+        run: |
+          sudo echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
+          sudo echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
 
       - name: Fetch app state cache
         uses: actions/cache@v3

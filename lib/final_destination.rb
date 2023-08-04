@@ -114,7 +114,11 @@ class FinalDestination
       "User-Agent" => @user_agent,
       "Accept" => "*/*",
       "Accept-Language" => "*",
-      "Host" => @uri.hostname,
+      # TODO (martin)
+      # For some reason this was causing a 403 error when doing a GET for the presigned URL on minio:
+      # The request signature we calculated does not match the signature you provided. Check your key and signing method.
+      # If I remove this and the other Host header below (for the 127.0.0.1 address) it works fine...
+      # "Host" => @uri.hostname,
     }
 
     result["Cookie"] = @cookie if @cookie
@@ -451,8 +455,11 @@ class FinalDestination
     headers_subset = Struct.new(:location, :set_cookie).new
 
     safe_session(uri) do |http|
-      headers = request_headers.merge("Accept-Encoding" => "gzip", "Host" => uri.host)
+      # TODO (martin) Figure out why this host header needs to be changed for minio to work.
+      # headers = request_headers.merge("Accept-Encoding" => "gzip", "Host" => uri.host)
+      headers = request_headers.merge("Accept-Encoding" => "gzip")
 
+      # TODO (martin) Not sure but might need @uri here for some reason?
       req = FinalDestination::HTTP::Get.new(uri.request_uri, headers)
 
       http.request(req) do |resp|

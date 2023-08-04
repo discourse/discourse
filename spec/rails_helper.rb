@@ -23,6 +23,7 @@ require "fabrication"
 require "mocha/api"
 require "certified"
 require "webmock/rspec"
+require "minio_runner"
 
 class RspecErrorTracker
   def self.last_exception=(ex)
@@ -255,7 +256,34 @@ RSpec.configure do |config|
 
     SiteSetting.provider = TestLocalProcessProvider.new
 
-    WebMock.disable_net_connect!(allow_localhost: true, allow: [Webdrivers::Chromedriver.base_url])
+    MinioRunner.config do |minio_runner_config|
+      minio_runner_config.minio_domain = ENV["MINIO_RUNNER_MINIO_DOMAIN"] || "minio.local"
+      minio_runner_config.buckets =
+        (
+          if ENV["MINIO_RUNNER_BUCKETS"].present?
+            ENV["MINIO_RUNNER_BUCKETS"]&.split(",")
+          else
+            ["discoursetest"]
+          end
+        )
+      minio_runner_config.public_buckets =
+        (
+          if ENV["MINIO_RUNNER_PUBLIC_BUCKETS"].present?
+            ENV["MINIO_RUNNER_PUBLIC_BUCKETS"]&.split(",")
+          else
+            ["discoursetest"]
+          end
+        )
+    end
+
+    WebMock.disable_net_connect!(
+      allow_localhost: true,
+      allow: [
+        Webdrivers::Chromedriver.base_url,
+        *MinioRunner.config.minio_urls,
+        URI(MinioRunner::MinioBinary.platform_binary_url).host,
+      ],
+    )
 
     if ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].present?
       Capybara.default_max_wait_time = ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].to_i
@@ -359,6 +387,7 @@ RSpec.configure do |config|
   config.after(:suite) do
     FileUtils.remove_dir(concurrency_safe_tmp_dir, true) if SpecSecureRandom.value
     Downloads.clear
+    MinioRunner.stop
   end
 
   config.around :each do |example|

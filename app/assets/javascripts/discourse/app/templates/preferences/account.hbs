@@ -8,6 +8,12 @@
     <label class="control-label" id="profile-picture">{{i18n
         "user.avatar.title"
       }}</label>
+    <input
+      type="hidden"
+      id="user-avatar-uploads"
+      data-custom-avatar-upload-id={{this.model.custom_avatar_upload_id}}
+      data-system-avatar-upload-id={{this.model.system_avatar_upload_id}}
+    />
     <div class="controls">
       {{! we want the "huge" version even though we're downsizing it in CSS }}
       {{bound-avatar this.model "huge"}}
@@ -16,6 +22,7 @@
         @actionParam={{this.model}}
         @class="btn-default pad-left"
         @icon="pencil-alt"
+        @id="edit-avatar"
       />
     </div>
   </div>

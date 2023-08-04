@@ -52,7 +52,12 @@ class FileHelper
     retain_on_max_file_size_exceeded: false
   )
     url = "https:" + url if url.start_with?("//")
-    raise Discourse::InvalidParameters.new(:url) unless url =~ %r{\Ahttps?://}
+
+    # Certain system tests need to download files from http:// URLs (e.g. minio S3 tests)
+    # which are hosted on localhost.
+    if Rails.env.production?
+      raise Discourse::InvalidParameters.new(:url) unless url =~ %r{\Ahttps?://}
+    end
 
     tmp = nil
 
