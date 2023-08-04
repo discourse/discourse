@@ -4568,10 +4568,18 @@ en:
           tel: "Please enter a valid telephone number."
           text: "Please enter a text value."
           url: "Please enter a valid URL."
-        tooShort: "The input must be %{minLength} characters or longer."
-        tooLong: "The input must be less than %{maxLength} characters."
-        rangeOverflow: "The input must be less than %{max}."
-        rangeUnderflow: "The input must be more than %{min}."
+        tooShort:
+          one: "The input must be %{count} character or longer."
+          other: "The input must be %{count} characters or longer."
+        tooLong:
+          one: "The input must be less than %{count} character."
+          other: "The input must be less than %{count} characters."
+        rangeOverflow:
+          one: "The input must be less than %{count}."
+          other: "The input must be less than %{count}."
+        rangeUnderflow:
+          one: "The input must be more than %{count}."
+          other: "The input must be more than %{count}."
         patternMismatch: "Please match the requested format."
         badInput: "Please enter a valid input."
 
