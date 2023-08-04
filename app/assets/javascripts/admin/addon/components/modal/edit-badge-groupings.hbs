@@ -11,17 +11,20 @@
             <div class="badge-grouping">
               {{#if wc.editing}}
                 <Input @value={{wc.name}} class="badge-grouping-name-input" />
-                <DButton @action={{fn this.save wc}} @icon="check" />
               {{else}}
                 <span>{{wc.displayName}}</span>
               {{/if}}
             </div>
             <div class="actions">
-              <DButton
-                @action={{fn this.edit wc}}
-                @disabled={{wc.system}}
-                @icon="pencil-alt"
-              />
+              {{#if wc.editing}}
+                <DButton @action={{fn (mut wc.editing) false}} @icon="check" />
+              {{else}}
+                <DButton
+                  @action={{fn (mut wc.editing) true}}
+                  @disabled={{wc.system}}
+                  @icon="pencil-alt"
+                />
+              {{/if}}
               <DButton @action={{fn this.up wc}} @icon="chevron-up" />
               <DButton @action={{fn this.down wc}} @icon="chevron-down" />
               <DButton
