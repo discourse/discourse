@@ -716,7 +716,6 @@ RSpec.describe CategoriesController do
         it "updates per-category settings correctly" do
           category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = false
           category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = false
-          category.custom_fields[Category::NUM_AUTO_BUMP_DAILY] = 0
 
           category.navigate_to_first_post_after_read = false
           category.save!
@@ -730,6 +729,8 @@ RSpec.describe CategoriesController do
                 custom_fields: {
                   require_reply_approval: true,
                   require_topic_approval: true,
+                },
+                category_setting_attributes: {
                   num_auto_bump_daily: 10,
                 },
               }
