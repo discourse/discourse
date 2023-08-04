@@ -14,7 +14,7 @@ describe "Composer Form Template Validations", type: :system, js: true do
   validations:
     required: true
     type: email
-    min: 10",
+    minimum: 10",
     )
   end
 
@@ -92,7 +92,7 @@ describe "Composer Form Template Validations", type: :system, js: true do
     composer.create
     composer.fill_form_template_field("input", "b@b.com")
     expect(composer).to have_form_template_field_error(
-      I18n.t("js.form_templates.errors.tooShort", minLength: 10),
+      I18n.t("js.form_templates.errors.tooShort", count: 10),
     )
   end
 
