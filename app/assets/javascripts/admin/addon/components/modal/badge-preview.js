@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
 import I18n from "I18n";
 import { escapeExpression } from "discourse/lib/utilities";
 
