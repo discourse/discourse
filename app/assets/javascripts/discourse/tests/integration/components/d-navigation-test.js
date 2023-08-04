@@ -20,7 +20,7 @@ module("Integration | Component | d-navigation", function (hooks) {
   });
 
   test("filters indirectly muted categories", async function (assert) {
-    await render(hbs`<DNavigation @filterType="categories" />`);
+    await render(hbs`<DNavigation @filterMode="categories" />`);
     await click(".category-drop .select-kit-header-wrapper");
 
     assert.strictEqual(
