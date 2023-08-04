@@ -2,12 +2,14 @@ import Badge from "discourse/models/badge";
 import I18n from "I18n";
 import Route from "@ember/routing/route";
 import { ajax } from "discourse/lib/ajax";
-import { action, get } from "@ember/object";
+import { action, get, set } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
+import EditBadgeGroupingsModal from "../../components/modal/edit-badge-groupings";
 
 export default class AdminBadgesShowRoute extends Route {
   @service dialog;
+  @service modal;
 
   serialize(m) {
     return { badge_id: get(m, "id") || "new" };
@@ -37,7 +39,18 @@ export default class AdminBadgesShowRoute extends Route {
   @action
   editGroupings() {
     const model = this.controllerFor("admin-badges").get("badgeGroupings");
-    showModal("admin-edit-badge-groupings", { model, admin: true });
+    this.modal.show(EditBadgeGroupingsModal, {
+      model: {
+        badgeGroupings: model,
+        clearBadgeGroupings: this.clearBadgeGroupings,
+      },
+    });
+  }
+
+  @action
+  clearBadgeGroupings() {
+    const model = this.controllerFor("admin-badges");
+    set(model, null);
   }
 
   @action
