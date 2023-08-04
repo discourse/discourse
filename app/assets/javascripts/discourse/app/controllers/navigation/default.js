@@ -3,7 +3,7 @@ import Controller, { inject as controller } from "@ember/controller";
 import FilterModeMixin from "discourse/mixins/filter-mode";
 import { TRACKED_QUERY_PARAM_VALUE } from "discourse/lib/topic-list-tracked-filter";
 
-export default class DefaultController extends Controller.extend(
+export default class NavigationDefaultController extends Controller.extend(
   FilterModeMixin
 ) {
   @service router;
