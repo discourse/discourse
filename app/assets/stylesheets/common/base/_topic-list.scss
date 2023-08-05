@@ -121,13 +121,13 @@
 .latest-topic-list-item.visited,
 .category-topic-link.visited {
   a.title:not(.badge-notification) {
-    color: var(--primary-medium);
+    color: var(--primary-700);
   }
   span.badge-category {
-    color: var(--primary-medium);
+    color: var(--primary-700);
   }
   a.discourse-tag {
-    color: var(--primary-medium);
+    color: var(--primary-700);
   }
 }
 
@@ -214,7 +214,7 @@
   }
 
   td {
-    color: var(--primary-medium);
+    color: var(--primary-high);
     font-size: var(--font-0);
   }
 
@@ -336,21 +336,21 @@
 .heatmap-high a,
 .heatmap-high .d-icon,
 .heatmap-high .d-button-label {
-  color: #fe7a15 !important;
+  color: #7E6804 !important;
 }
 
 .heatmap-med,
 .heatmap-med a,
 .heatmap-med .d-icon,
 .heatmap-med .d-button-label {
-  color: #cf7721 !important;
+  color: #B95B00 !important;
 }
 
 .heatmap-low,
 .heatmap-low a,
 .heatmap-low .d-icon,
 .heatmap-low .d-button-label {
-  color: #9b764f !important;
+  color: #846900 !important;
 }
 
 .topic-list .heatmap-high {
