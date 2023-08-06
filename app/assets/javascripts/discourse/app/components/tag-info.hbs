@@ -49,7 +49,7 @@
           {{/if}}
         </div>
         <div class="tag-description-wrapper">
-          {{this.tagInfo.description}}
+        {{html-safe this.tagInfo.description}}
         </div>
       {{/if}}
     </div>
@@ -79,10 +79,10 @@
       <div class="synonyms-list">
         <h3>{{i18n "tagging.synonyms"}}</h3>
         <div>{{html-safe
-            (i18n
-              "tagging.synonyms_description" base_tag_name=this.tagInfo.name
-            )
-          }}</div>
+          (i18n
+            "tagging.synonyms_description" base_tag_name=this.tagInfo.name
+          )
+        }}</div>
         <div class="tag-list">
           {{#each this.tagInfo.synonyms as |tag|}}
             <div class="tag-box">
