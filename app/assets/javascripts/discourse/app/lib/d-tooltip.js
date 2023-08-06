@@ -1,22 +1,35 @@
 import tippy from "tippy.js";
 
-function stopPropagation(instance, event) {
-  event.preventDefault();
-  event.stopPropagation();
-}
-function hasTouchCapabilities() {
-  return navigator.maxTouchPoints > 1 || "ontouchstart" in window;
-}
+export class DTooltip {
+  #tippyInstance;
 
-export default function createDTooltip(target, content) {
-  return tippy(target, {
-    interactive: false,
-    content,
-    trigger: hasTouchCapabilities() ? "click" : "mouseenter",
-    theme: "d-tooltip",
-    arrow: false,
-    placement: "bottom-start",
-    onTrigger: stopPropagation,
-    onUntrigger: stopPropagation,
-  });
+  constructor(target, content) {
+    this.#tippyInstance = this.#initTippy(target, content);
+  }
+
+  destroy() {
+    this.#tippyInstance.destroy();
+  }
+
+  #initTippy(target, content) {
+    return tippy(target, {
+      interactive: false,
+      content,
+      trigger: this.#hasTouchCapabilities() ? "click" : "mouseenter",
+      theme: "d-tooltip",
+      arrow: false,
+      placement: "bottom-start",
+      onTrigger: this.#stopPropagation,
+      onUntrigger: this.#stopPropagation,
+    });
+  }
+
+  #hasTouchCapabilities() {
+    return navigator.maxTouchPoints > 1 || "ontouchstart" in window;
+  }
+
+  #stopPropagation(instance, event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
 }
