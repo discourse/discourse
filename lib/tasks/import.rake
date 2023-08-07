@@ -11,6 +11,7 @@ task "import:ensure_consistency" => :environment do
   insert_topic_views
   insert_user_actions
   insert_user_options
+  insert_user_profiles
   insert_user_stats
   insert_user_visits
   insert_draft_sequences
@@ -195,6 +196,17 @@ def insert_user_options
                FROM users u
           LEFT JOIN user_options uo ON uo.user_id = u.id
               WHERE uo.user_id IS NULL
+  SQL
+end
+
+def insert_user_profiles
+  log "Inserting user profiles..."
+
+  DB.exec <<-SQL
+    INSERT INTO user_profiles (user_id)
+         SELECT id
+           FROM users
+    ON CONFLICT DO NOTHING
   SQL
 end
 
