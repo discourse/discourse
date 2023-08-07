@@ -397,6 +397,10 @@ a.badge-category {
   max-width: 150px;
 }
 
+.more-content-wrapper {
+  padding-bottom: max(env(safe-area-inset-bottom), 1em);
+}
+
 .more-content-topics {
   .topic-list-body {
     border-top: none;
