@@ -43,29 +43,34 @@
       <label class="subscription-choice">
         <RadioButton
           @name="subscription-choice"
-          @value="individual"
-          @selection={{this.model.webhookType}}
+          @value="false"
+          @selection={{this.model.wildcard_web_hook}}
         />
         {{i18n "admin.web_hooks.individual_event"}}
         <InputTip @validation={{this.eventTypeValidation}} />
       </label>
 
-      {{#unless this.model.wildcard_web_hook}}
+      {{#if (eq this.model.wildcard_web_hook "false")}}
         <div class="event-selector">
-          {{#each this.eventTypes as |type|}}
-            <WebhookEventChooser
-              @type={{type}}
-              @eventTypes={{this.model.web_hook_event_types}}
-            />
-          {{/each}}
+          {{#each-in this.groupedEventTypes as |group eventTypes|}}
+            <div class="event-group">
+              {{i18n (concat "admin.web_hooks.groups." group)}}
+              {{#each eventTypes as |type|}}
+                <WebhookEventChooser
+                  @type={{type}}
+                  @eventTypes={{this.model.web_hook_event_types}}
+                />
+              {{/each}}
+            </div>
+          {{/each-in}}
         </div>
-      {{/unless}}
+      {{/if}}
 
       <label class="subscription-choice">
         <RadioButton
           @name="subscription-choice"
-          @value="wildcard"
-          @selection={{this.model.webhookType}}
+          @value="true"
+          @selection={{this.model.wildcard_web_hook}}
         />
         {{i18n "admin.web_hooks.wildcard_event"}}
       </label>

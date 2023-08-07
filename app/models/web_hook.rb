@@ -32,7 +32,7 @@ class WebHook < ActiveRecord::Base
   end
 
   def self.default_event_types
-    [WebHookEventType.find(WebHookEventType::POST)]
+    WebHookEventType.where(id: WebHookEventType::TYPES[:post].values)
   end
 
   def strip_url

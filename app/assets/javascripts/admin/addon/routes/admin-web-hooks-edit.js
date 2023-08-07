@@ -16,6 +16,8 @@ export default class AdminWebHooksEditRoute extends DiscourseRoute {
   setupController(controller, model) {
     super.setupController(...arguments);
 
+    model.set("wildcard_web_hook", model.wildcard_web_hook ? "true" : "false");
+
     if (model.get("isNew")) {
       model.set(
         "web_hook_event_types",
