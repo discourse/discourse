@@ -284,7 +284,10 @@ export default Component.extend({
       }
     }
 
-    if (classList.contains("raw-topic-link")) {
+    if (
+      classList.contains("raw-topic-link") ||
+      classList.contains("post-activity")
+    ) {
       if (wantsNewWindow(e)) {
         return true;
       }

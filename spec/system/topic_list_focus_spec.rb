@@ -50,7 +50,7 @@ describe "Topic list focus", type: :system do
   it "refocusses properly when navigating via the 'last activity' link" do
     visit("/latest")
 
-    # Visit topic via keyboard
+    # Visit topic via activity column and keyboard
     discovery.topic_list.visit_topic_last_reply_via_keyboard(topics[2])
     expect(topic).to have_topic_title(topics[2].title)
 
