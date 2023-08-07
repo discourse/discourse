@@ -130,6 +130,10 @@
         {{/if}}
       {{/if}}
     {{/if}}
+    <PluginOutlet
+      @name="reviewable-item-actions"
+      @connectorTagName="div"
+      @outletArgs={{hash reviewable=this.reviewable}}
+    />
   </div>
-
 </div>

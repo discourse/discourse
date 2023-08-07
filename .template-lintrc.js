@@ -5,7 +5,6 @@ module.exports = {
   rules: {
     "no-action-modifiers": true,
     "no-args-paths": true,
-    "no-array-prototype-extensions": false,
     "no-attrs-in-components": true,
     "no-capital-arguments": false, // TODO: we extensively use `args` argument name
     "no-curly-component-invocation": {
@@ -22,7 +21,6 @@ module.exports = {
     "no-implicit-this": {
       allow: ["loading-spinner"],
     },
-    "no-obscure-array-access": false,
     "require-mandatory-role-attributes": false,
     "require-media-caption": false,
     // Begin prettier compatibility

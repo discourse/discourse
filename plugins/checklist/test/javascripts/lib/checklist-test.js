@@ -11,8 +11,10 @@ async function prepare(raw) {
   const cooked = await cookAsync(raw, {
     siteSettings: { checklist_enabled: true },
   });
+
+  const widget = { attrs: {}, scheduleRerender() {} };
   const model = Post.create({ id: 42, can_edit: true });
-  const decoratorHelper = { getModel: () => model };
+  const decoratorHelper = { widget, getModel: () => model };
 
   const $elem = $(`<div>${cooked.string}</div>`);
   checklistSyntax($elem[0], decoratorHelper);
@@ -20,7 +22,7 @@ async function prepare(raw) {
   currentRaw = raw;
 
   const updated = new Promise((resolve) => {
-    model.save = (fields) => resolve(fields.raw);
+    model.save = async (fields) => resolve(fields.raw);
   });
 
   return [$elem, updated];

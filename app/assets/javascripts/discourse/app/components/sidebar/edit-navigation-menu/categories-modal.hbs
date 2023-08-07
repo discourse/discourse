@@ -23,7 +23,7 @@
       {{#each this.filteredCategoriesGroupings as |categories|}}
         <div
           class="sidebar-categories-form__row"
-          style={{html-safe (border-color categories.0.color "left")}}
+          style={{border-color (get categories "0.color") "left"}}
         >
 
           {{#each categories as |category|}}
