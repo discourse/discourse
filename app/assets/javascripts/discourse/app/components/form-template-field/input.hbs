@@ -6,7 +6,6 @@
         {{d-icon "asterisk" class="form-template-field__required-indicator"}}
       {{/if}}
     </label>
-
   {{/if}}
 
   <Input
@@ -16,7 +15,7 @@
     placeholder={{@attributes.placeholder}}
     required={{if @validations.required "required" ""}}
     pattern={{@validations.pattern}}
-    minLength={{@validations.min}}
-    maxLength={{@validations.max}}
+    minlength={{@validations.minimum}}
+    maxlength={{@validations.maximum}}
   />
 </div>
