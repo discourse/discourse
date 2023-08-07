@@ -1,3 +1,3 @@
 import DefaultNavigation from "./default";
 
-export default class Categories extends DefaultNavigation {}
+export default class NavigationCategories extends DefaultNavigation {}

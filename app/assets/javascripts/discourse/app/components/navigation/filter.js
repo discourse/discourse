@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { bind } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
 
-export default class extends Component {
+export default class NavigationFilter extends Component {
   @tracked copyIcon = "link";
   @tracked copyClass = "btn-default";
   @tracked newQueryString = "";
