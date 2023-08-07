@@ -71,7 +71,6 @@ class AbstractCategoryRoute extends DiscourseRoute {
       );
     }
 
-    this._setupNavigation(category);
     return all([
       this._createSubcategoryList(category),
       this._retrieveTopicList(category, transition, modelParams),
@@ -84,16 +83,16 @@ class AbstractCategoryRoute extends DiscourseRoute {
       : this.routeConfig?.filter;
   }
 
-  _setupNavigation(category) {
+  _navigationArgs(category) {
     const noSubcategories =
         this.routeConfig && !!this.routeConfig.no_subcategories,
       filterType = this.filter(category).split("/")[0];
 
-    this.controllerFor("navigation/category").setProperties({
+    return {
       category,
       filterType,
       noSubcategories,
-    });
+    };
   }
 
   _createSubcategoryList(category) {
@@ -200,7 +199,7 @@ class AbstractCategoryRoute extends DiscourseRoute {
         topics.get("for_period") ||
         (model.modelParams && model.modelParams.period),
       // selected: [],
-      noSubcategories: params && !!params.no_subcategories,
+      noSubcategories: !!this.routeConfig?.no_subcategories,
       expandAllPinned: true,
       canCreateTopic,
       canCreateTopicOnCategory: this.canCreateTopicOnCategory,
