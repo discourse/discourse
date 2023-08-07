@@ -95,10 +95,10 @@ export async function findTopicList(
   return list;
 }
 
-const AbstractTopicRoute = DiscourseRoute.extend({
-  screenTrack: service(),
-  queryParams,
-  templateName: "discovery/topic-route", // TODO change
+class AbstractTopicRoute extends DiscourseRoute {
+  @service screenTrack;
+  queryParams = queryParams;
+  templateName = "discovery/topic-route"; // TODO change
 
   model(data, transition) {
     // attempt to stop early cause we need this to be called before .sync
@@ -114,7 +114,7 @@ const AbstractTopicRoute = DiscourseRoute.extend({
       findOpts,
       findExtras
     );
-  },
+  }
 
   titleToken() {
     if (this.routeConfig.filter === defaultHomepage()) {
@@ -125,7 +125,7 @@ const AbstractTopicRoute = DiscourseRoute.extend({
       "filters." + this.routeConfig.filter.replace("/", ".") + ".title"
     );
     return I18n.t("filters.with_topics", { filter: filterText });
-  },
+  }
 
   setupController(controller, model) {
     // const topicOpts = {
@@ -148,8 +148,8 @@ const AbstractTopicRoute = DiscourseRoute.extend({
       expandGloballyPinned: true,
     });
 
-    this._super(...arguments);
-  },
+    super.setupController(...arguments);
+  }
 
   renderTemplate() {
     // this.render("navigation/default", { outlet: "navigation-bar" });
@@ -159,17 +159,17 @@ const AbstractTopicRoute = DiscourseRoute.extend({
     //   outlet: "list-container",
     // });
     this.render();
-  },
+  }
 
   @action
   changeSort(sortBy) {
     changeSort.call(this, sortBy);
-  },
+  }
 
   @action
   resetParams(skipParams = []) {
     resetParams.call(this, skipParams);
-  },
+  }
 
   @action
   willTransition() {
@@ -179,10 +179,12 @@ const AbstractTopicRoute = DiscourseRoute.extend({
         User.currentProp("user_option.redirected_to_top.reason", null);
       }
     }
-    return this._super(...arguments);
-  },
-});
+    return super.willTransition(...arguments);
+  }
+}
 
 export default function buildTopicRoute(filter) {
-  return AbstractTopicRoute.extend({ routeConfig: { filter } });
+  return class extends AbstractTopicRoute {
+    routeConfig = { filter };
+  };
 }
