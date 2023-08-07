@@ -1,6 +1,16 @@
-<ConditionalInElement @element={{this.discovery.navigationBarWrapper}}>
-  <Navigation::Filter
-    @queryString={{this.q}}
-    @updateTopicsListQueryParams={{this.updateTopicsListQueryParams}}
-  />
-</ConditionalInElement>
+<Discovery::Layout>
+  <:navigation>
+    <Navigation::Filter
+      @queryString={{this.q}}
+      @updateTopicsListQueryParams={{this.updateTopicsListQueryParams}}
+    />
+  </:navigation>
+  <:list>
+    <Discovery::Topics
+      @period={{this.period}}
+      @expandAllPinned={{this.expandAllPinned}}
+      @expandAllGloballyPinned={{this.expandAllGloballyPinned}}
+      @model={{this.model}}
+    />
+  </:list>
+</Discovery::Layout>

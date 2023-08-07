@@ -11,7 +11,7 @@ export default class extends Component {
 
   constructor() {
     super(...arguments);
-    this.newQueryString = this.discoveryFilter.q;
+    this.newQueryString = this.args.queryString;
   }
 
   @bind
