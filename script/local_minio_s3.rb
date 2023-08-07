@@ -28,6 +28,9 @@ def puts_current(setting)
   SiteSetting.send(setting)
 end
 
+puts "Starting minio..."
+MinioRunner.start
+
 puts "Temporarily using minio config for S3. Current settings:"
 current_s3_endpoint = puts_current(:s3_endpoint)
 current_s3_upload_bucket = puts_current(:s3_upload_bucket)

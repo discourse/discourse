@@ -33,10 +33,7 @@ class ExternalUploadManager
 
     upload_stub =
       ExternalUploadStub.create!(
-        # TODO (martin): Need to figure out a better way of doing this; the key is
-        # doubling up the bucket in the path and we don't want to store it in the
-        # DB that way.
-        key: key.gsub("#{SiteSetting.s3_upload_bucket}/", ""),
+        key: key,
         created_by: current_user,
         original_filename: file_name,
         upload_type: upload_type,
