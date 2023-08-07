@@ -328,6 +328,9 @@
   .num.activity {
     a {
       padding: 15px 5px;
+      span.relative-date {
+        pointer-events: none;
+      }
     }
   }
 }

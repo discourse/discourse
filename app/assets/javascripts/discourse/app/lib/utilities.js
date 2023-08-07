@@ -76,6 +76,9 @@ export function highlightPost(postNumber) {
   if (!container) {
     return;
   }
+
+  container.querySelector(".tabLoc")?.focus();
+
   const element = container.querySelector(".topic-body");
   if (!element || element.classList.contains("highlighted")) {
     return;
@@ -88,7 +91,6 @@ export function highlightPost(postNumber) {
     element.removeEventListener("animationend", removeHighlighted);
   };
   element.addEventListener("animationend", removeHighlighted);
-  container.querySelector(".tabLoc").focus();
 }
 
 export function emailValid(email) {
