@@ -28,7 +28,7 @@ class ExternalUploadManager
 
   def self.create_direct_upload(current_user:, file_name:, file_size:, upload_type:, metadata: {})
     store = store_for_upload_type(upload_type)
-    url = store.signed_url_for_temporary_upload(file_name, metadata: metadata)
+    url, signed_headers = store.signed_request_for_temporary_upload(file_name, metadata: metadata)
     key = store.s3_helper.path_from_url(url)
 
     upload_stub =
@@ -43,7 +43,12 @@ class ExternalUploadManager
         filesize: file_size,
       )
 
-    { url: url, key: key, unique_identifier: upload_stub.unique_identifier }
+    {
+      url: url,
+      key: key,
+      unique_identifier: upload_stub.unique_identifier,
+      signed_headers: signed_headers,
+    }
   end
 
   def self.create_direct_multipart_upload(
@@ -199,9 +204,6 @@ class ExternalUploadManager
       max_file_size: DOWNLOAD_LIMIT,
       tmp_file_name: "discourse-upload-#{type}",
       follow_redirect: true,
-      # TODO (martin): Had to do this because FinalDestination enforces certain ports based
-      # on URI scheme, probably a better way.
-      validate_uri: false,
     )
   end
 end

@@ -260,7 +260,7 @@ RSpec.configure do |config|
       minio_runner_config.minio_domain = ENV["MINIO_RUNNER_MINIO_DOMAIN"] || "minio.local"
       minio_runner_config.buckets =
         (
-          if ENV["MINIO_RUNNER_BUCKETS"].present?
+          if ENV["MINIO_RUNNER_BUCKETS"]
             ENV["MINIO_RUNNER_BUCKETS"]&.split(",")
           else
             ["discoursetest"]
@@ -268,13 +268,19 @@ RSpec.configure do |config|
         )
       minio_runner_config.public_buckets =
         (
-          if ENV["MINIO_RUNNER_PUBLIC_BUCKETS"].present?
+          if ENV["MINIO_RUNNER_PUBLIC_BUCKETS"]
             ENV["MINIO_RUNNER_PUBLIC_BUCKETS"]&.split(",")
           else
             ["discoursetest"]
           end
         )
     end
+
+    SiteSetting.allowed_internal_hosts =
+      (
+        SiteSetting.allowed_internal_hosts.to_s.split("|") +
+          MinioRunner.config.minio_urls.map { |url| URI.parse(url).host }
+      ).join("|")
 
     WebMock.disable_net_connect!(
       allow_localhost: true,

@@ -401,7 +401,11 @@ class FinalDestination
   def validate_uri_format
     return false unless @uri && @uri.host
     return false unless %w[https http].include?(@uri.scheme)
-    return false if @uri.scheme == "http" && @uri.port != 80
+
+    # In development or test environments we may want to point to a http URL which is local
+    # on a different port than 80 (e.g. for local S3 providers like minio)
+    return false if @uri.scheme == "http" && (Rails.env.production? && @uri.port != 80)
+
     return false if @uri.scheme == "https" && @uri.port != 443
 
     # Disallow IP based crawling
@@ -459,7 +463,6 @@ class FinalDestination
       # headers = request_headers.merge("Accept-Encoding" => "gzip", "Host" => uri.host)
       headers = request_headers.merge("Accept-Encoding" => "gzip")
 
-      # TODO (martin) Not sure but might need @uri here for some reason?
       req = FinalDestination::HTTP::Get.new(uri.request_uri, headers)
 
       http.request(req) do |resp|
