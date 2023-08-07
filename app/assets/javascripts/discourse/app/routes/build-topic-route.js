@@ -12,9 +12,10 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import { isEmpty } from "@ember/utils";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
+import User from "discourse/models/user";
 
 // A helper to build a topic route for a filter
-function filterQueryParams(params, defaultParams) {
+export function filterQueryParams(params, defaultParams) {
   const findOpts = Object.assign({}, defaultParams || {});
 
   if (params) {
@@ -27,7 +28,7 @@ function filterQueryParams(params, defaultParams) {
   return findOpts;
 }
 
-async function findTopicList(
+export async function findTopicList(
   store,
   tracking,
   filter,
@@ -94,87 +95,94 @@ async function findTopicList(
   return list;
 }
 
-export default function (filter, extras) {
-  extras = extras || {};
-  return DiscourseRoute.extend(
-    {
-      screenTrack: service(),
-      queryParams,
-      templateName: "discovery/topic-route", // TODO change
+const AbstractTopicRoute = DiscourseRoute.extend({
+  screenTrack: service(),
+  queryParams,
+  templateName: "discovery/topic-route", // TODO change
 
-      model(data, transition) {
-        // attempt to stop early cause we need this to be called before .sync
-        this.screenTrack.stop();
+  model(data, transition) {
+    // attempt to stop early cause we need this to be called before .sync
+    this.screenTrack.stop();
 
-        const findOpts = filterQueryParams(data),
-          findExtras = { cached: this.isPoppedState(transition) };
+    const findOpts = filterQueryParams(data),
+      findExtras = { cached: this.isPoppedState(transition) };
 
-        return findTopicList(
-          this.store,
-          this.topicTrackingState,
-          filter,
-          findOpts,
-          findExtras
-        );
-      },
+    return findTopicList(
+      this.store,
+      this.topicTrackingState,
+      this.routeConfig.filter,
+      findOpts,
+      findExtras
+    );
+  },
 
-      titleToken() {
-        if (filter === defaultHomepage()) {
-          return;
-        }
+  titleToken() {
+    if (this.routeConfig.filter === defaultHomepage()) {
+      return;
+    }
 
-        const filterText = I18n.t(
-          "filters." + filter.replace("/", ".") + ".title"
-        );
-        return I18n.t("filters.with_topics", { filter: filterText });
-      },
+    const filterText = I18n.t(
+      "filters." + this.routeConfig.filter.replace("/", ".") + ".title"
+    );
+    return I18n.t("filters.with_topics", { filter: filterText });
+  },
 
-      setupController(controller, model) {
-        // const topicOpts = {
-        //   model,
-        //   category: null,
-        //   period: model.get("for_period") || model.get("params.period"),
-        //   selected: [],
-        //   expandAllPinned: false,
-        //   expandGloballyPinned: true,
-        // };
+  setupController(controller, model) {
+    // const topicOpts = {
+    //   model,
+    //   category: null,
+    //   period: model.get("for_period") || model.get("params.period"),
+    //   selected: [],
+    //   expandAllPinned: false,
+    //   expandGloballyPinned: true,
+    // };
 
-        // this.controllerFor("discovery/topics").setProperties(topicOpts);
+    // this.controllerFor("discovery/topics").setProperties(topicOpts);
 
-        controller.setProperties({
-          discovery: this.controllerFor("discovery"),
-          filterType: filter.split("/")[0],
-          period: model.get("for_period") || model.get("params.period"),
-          // selected: [],
-          expandAllPinned: false,
-          expandGloballyPinned: true,
-        });
+    controller.setProperties({
+      discovery: this.controllerFor("discovery"),
+      filterType: this.routeConfig.filter.split("/")[0],
+      period: model.get("for_period") || model.get("params.period"),
+      // selected: [],
+      expandAllPinned: false,
+      expandGloballyPinned: true,
+    });
 
-        this._super(...arguments);
-      },
+    this._super(...arguments);
+  },
 
-      renderTemplate() {
-        // this.render("navigation/default", { outlet: "navigation-bar" });
+  renderTemplate() {
+    // this.render("navigation/default", { outlet: "navigation-bar" });
 
-        // this.render("discovery/topics", {
-        //   controller: "discovery/topics",
-        //   outlet: "list-container",
-        // });
-        this.render();
-      },
+    // this.render("discovery/topics", {
+    //   controller: "discovery/topics",
+    //   outlet: "list-container",
+    // });
+    this.render();
+  },
 
-      @action
-      changeSort(sortBy) {
-        changeSort.call(this, sortBy);
-      },
+  @action
+  changeSort(sortBy) {
+    changeSort.call(this, sortBy);
+  },
 
-      @action
-      resetParams(skipParams = []) {
-        resetParams.call(this, skipParams);
-      },
-    },
-    extras
-  );
+  @action
+  resetParams(skipParams = []) {
+    resetParams.call(this, skipParams);
+  },
+
+  @action
+  willTransition() {
+    if (this.routeConfig.filter === "top") {
+      User.currentProp("user_option.should_be_redirected_to_top", false);
+      if (User.currentProp("user_option.redirected_to_top")) {
+        User.currentProp("user_option.redirected_to_top.reason", null);
+      }
+    }
+    return this._super(...arguments);
+  },
+});
+
+export default function buildTopicRoute(filter) {
+  return AbstractTopicRoute.extend({ routeConfig: { filter } });
 }
-
-export { filterQueryParams, findTopicList };

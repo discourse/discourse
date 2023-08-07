@@ -1,7 +1,6 @@
 import DiscoverySortableController from "discourse/controllers/discovery-sortable";
 import Site from "discourse/models/site";
 import TagShowRoute from "discourse/routes/tag-show";
-import User from "discourse/models/user";
 import buildCategoryRoute from "discourse/routes/build-category-route";
 import buildTopicRoute from "discourse/routes/build-topic-route";
 import { dasherize } from "@ember/string";
@@ -52,33 +51,10 @@ export default {
         DiscoverySortableController.extend()
       );
 
-      if (filter === "top") {
-        app.register(
-          "route:discovery.top",
-          buildTopicRoute("top", {
-            actions: {
-              willTransition() {
-                User.currentProp(
-                  "user_option.should_be_redirected_to_top",
-                  false
-                );
-                if (User.currentProp("user_option.redirected_to_top")) {
-                  User.currentProp(
-                    "user_option.redirected_to_top.reason",
-                    null
-                  );
-                }
-                return this._super(...arguments);
-              },
-            },
-          })
-        );
-      } else {
-        app.register(
-          `route:discovery.${filterDasherized}`,
-          buildTopicRoute(filter)
-        );
-      }
+      app.register(
+        `route:discovery.${filterDasherized}`,
+        buildTopicRoute(filter)
+      );
 
       app.register(
         `route:discovery.${filterDasherized}-category`,
