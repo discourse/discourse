@@ -196,11 +196,18 @@ class ExternalUploadManager
 
   def download(key, type)
     url = @store.signed_url_for_path(external_upload_stub.key)
+    uri = URI(url)
     FileHelper.download(
       url,
       max_file_size: DOWNLOAD_LIMIT,
       tmp_file_name: "discourse-upload-#{type}",
       follow_redirect: true,
+      # Local S3 servers (like minio) do not use port 80, and the Aws::Sigv4::Signer
+      # includes the port number in the Host header when presigning URLs if the
+      # port is not 80, so we have to make sure the Host header sent by
+      # FinalDestination includes the port, otherwise we will get a
+      # `SignatureDoesNotMatch` error.
+      use_port_for_host_header: uri.scheme == "http" && uri.port != 80,
     )
   end
 end

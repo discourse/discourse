@@ -49,6 +49,7 @@ class FinalDestination
     @default_user_agent = @opts[:default_user_agent] || DEFAULT_USER_AGENT
     @opts[:max_redirects] ||= 5
     @https_redirect_ignore_limit = @opts[:initial_https_redirect_ignore_limit]
+    @use_port_for_host_header = @opts[:use_port_for_host_header] || false
 
     @max_redirects = @opts[:max_redirects]
     @limit = @max_redirects
@@ -114,11 +115,7 @@ class FinalDestination
       "User-Agent" => @user_agent,
       "Accept" => "*/*",
       "Accept-Language" => "*",
-      # TODO (martin)
-      # For some reason this was causing a 403 error when doing a GET for the presigned URL on minio:
-      # The request signature we calculated does not match the signature you provided. Check your key and signing method.
-      # If I remove this and the other Host header below (for the 127.0.0.1 address) it works fine...
-      # "Host" => @uri.hostname,
+      "Host" => @uri.hostname + (@use_port_for_host_header ? ":#{@uri.port}" : ""),
     }
 
     result["Cookie"] = @cookie if @cookie
@@ -459,9 +456,11 @@ class FinalDestination
     headers_subset = Struct.new(:location, :set_cookie).new
 
     safe_session(uri) do |http|
-      # TODO (martin) Figure out why this host header needs to be changed for minio to work.
-      # headers = request_headers.merge("Accept-Encoding" => "gzip", "Host" => uri.host)
-      headers = request_headers.merge("Accept-Encoding" => "gzip")
+      headers =
+        request_headers.merge(
+          "Accept-Encoding" => "gzip",
+          "Host" => uri.hostname + (@use_port_for_host_header ? ":#{uri.port}" : ""),
+        )
 
       req = FinalDestination::HTTP::Get.new(uri.request_uri, headers)
 
