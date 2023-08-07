@@ -8,6 +8,7 @@ import {
   addButton,
   apiExtraButtons,
   removeButton,
+  replaceButton,
 } from "discourse/widgets/post-menu";
 import {
   addExtraIconRenderer,
@@ -654,6 +655,26 @@ class PluginApi {
    **/
   removePostMenuButton(name, callback) {
     removeButton(name, callback);
+  }
+
+  /**
+   * Replace existing button with a passed in widget
+   *
+   * Example:
+   * ```
+   * api.replacePostMenuButton("like", {
+   *   name: "widget-name",
+   *   buildAttrs: (widget) => {
+   *     return { post: widget.findAncestorModel() };
+   *   },
+   *   shouldRender: (widget) => {
+   *     const post = widget.findAncestorModel();
+   *     return post.id === 1
+   *   }
+   * });
+   **/
+  replacePostMenuButton(name, widget) {
+    replaceButton(name, widget);
   }
 
   /**
