@@ -546,12 +546,17 @@ RSpec.describe FinalDestination do
       expect(fd(nil).validate_uri_format).to eq(false)
     end
 
-    it "returns false for invalid ports" do
-      expect(fd("http://eviltrout.com:21").validate_uri_format).to eq(false)
+    it "returns false for invalid https ports" do
       expect(fd("https://eviltrout.com:8000").validate_uri_format).to eq(false)
     end
 
-    it "returns true for valid ports" do
+    it "returns false for invalid http ports in production" do
+      expect(fd("http://eviltrout.com:21").validate_uri_format).to eq(true)
+      Rails.env.stubs(:production?).returns(true)
+      expect(fd("http://eviltrout.com:21").validate_uri_format).to eq(false)
+    end
+
+    it "returns true for valid http and https ports" do
       expect(fd("http://eviltrout.com:80").validate_uri_format).to eq(true)
       expect(fd("https://eviltrout.com:443").validate_uri_format).to eq(true)
     end

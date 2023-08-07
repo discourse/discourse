@@ -756,7 +756,7 @@ RSpec.describe UploadsController do
         expect(result["url"]).to include("Amz-Expires")
       end
 
-      it "includes accepted metadata in the presigned url when provided" do
+      it "includes accepted metadata in the response when provided" do
         post "/uploads/generate-presigned-put.json",
              **{
                params: {
@@ -772,8 +772,12 @@ RSpec.describe UploadsController do
         expect(response.status).to eq(200)
 
         result = response.parsed_body
-        expect(result["url"]).to include("&x-amz-meta-sha1-checksum=testing")
+        expect(result["url"]).not_to include("&x-amz-meta-sha1-checksum=testing")
         expect(result["url"]).not_to include("&x-amz-meta-blah=wontbeincluded")
+        expect(result["signed_headers"]).to eq(
+          "x-amz-acl" => "private",
+          "x-amz-meta-sha1-checksum" => "testing",
+        )
       end
 
       describe "rate limiting" do
