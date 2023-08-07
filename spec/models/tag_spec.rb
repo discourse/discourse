@@ -382,4 +382,13 @@ RSpec.describe Tag do
       expect(Tag.topic_count_column(Guardian.new(user))).to eq("staff_topic_count")
     end
   end
+
+  describe "description" do
+    it "uses the PermitScrubber to remove all tags except a tags, and all attributes except href attributes" do
+      tag.description =
+        "<div/> <a onclick='const a=0;' href=\"https://www.discourse.org\">discoure</a>"
+      tag.save!
+      expect(tag.description.strip).to eq("<a href=\"https://www.discourse.org\">discoure</a>")
+    end
+  end
 end
