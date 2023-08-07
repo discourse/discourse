@@ -68,6 +68,10 @@
         color: Highlight;
       }
     }
+
+    &:focus-visible {
+      @include darken-background($hover-bg-color, 0.1);
+    }
   }
   &[href] {
     color: $text-color;
