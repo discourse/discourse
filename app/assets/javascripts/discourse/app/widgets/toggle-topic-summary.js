@@ -100,7 +100,7 @@ export default createWidget("toggle-topic-summary", {
     const icon = canRegenerate ? "sync" : "magic";
 
     return this.attach("button", {
-      className: "btn btn-primary topic-strategy-summarization",
+      className: "btn topic-strategy-summarization",
       icon,
       title: I18n.t(title),
       translatedTitle: I18n.t(title),
@@ -112,7 +112,7 @@ export default createWidget("toggle-topic-summary", {
 
   hideSummaryButton() {
     return this.attach("button", {
-      className: "btn btn-primary topic-strategy-summarization",
+      className: "btn topic-strategy-summarization",
       icon: "chevron-up",
       title: "summary.buttons.hide",
       label: "summary.buttons.hide",
