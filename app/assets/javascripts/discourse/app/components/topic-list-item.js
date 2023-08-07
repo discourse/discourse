@@ -14,6 +14,7 @@ import { topicTitleDecorators } from "discourse/components/topic-title";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { htmlSafe } from "@ember/template";
 import { inject as service } from "@ember/service";
+import { getOwner } from "@ember/application";
 
 export function showEntrance(e) {
   let target = $(e.target);
@@ -35,15 +36,21 @@ export function showEntrance(e) {
 }
 
 export function navigateToTopic(topic, href) {
-  if (this.siteSettings.page_loading_indicator !== "slider") {
+  const owner = getOwner(this);
+  const siteSettings = owner.lookup("service:site-settings");
+  const router = owner.lookup("service:router");
+  const session = owner.lookup("service:session");
+  const appEvents = owner.lookup("service:appEvents");
+
+  if (siteSettings.page_loading_indicator !== "slider") {
     // With the slider, it feels nicer for the header to update once the rest of the topic content loads,
     // so skip setting it early.
-    this.appEvents.trigger("header:update-topic", topic);
+    appEvents.trigger("header:update-topic", topic);
   }
 
-  this.session.set("lastTopicIdViewed", {
+  session.set("lastTopicIdViewed", {
     topicId: topic.id,
-    historyUuid: this.router.location.getState?.().uuid,
+    historyUuid: router.location.getState?.().uuid,
   });
 
   DiscourseURL.routeTo(href || topic.get("url"));
