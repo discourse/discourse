@@ -364,6 +364,24 @@ RSpec.describe SearchController do
       expect(SearchLog.where(term: "bantha")).to be_blank
     end
 
+    it "works when using a tag context" do
+      tag = Fabricate(:tag, name: "awesome")
+      awesome_topic.tags << tag
+      SearchIndexer.index(awesome_topic, force: true)
+
+      get "/search.json",
+          params: {
+            q: "awesome",
+            context: "tag",
+            context_id: "awesome",
+            skip_context: false,
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"].length).to eq(1)
+      expect(response.parsed_body["posts"][0]["id"]).to eq(awesome_post.id)
+    end
+
     context "when rate limited" do
       before { RateLimiter.enable }
 

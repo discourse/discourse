@@ -215,7 +215,7 @@ class SearchController < ApplicationController
     search_context = params[:search_context]
     unless search_context
       if (context = params[:context]) && (id = params[:context_id])
-        search_context = { type: context, id: id }
+        search_context = { type: context, id: id, name: id }
       end
     end
 
