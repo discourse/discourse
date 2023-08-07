@@ -123,7 +123,10 @@ export function selectedText() {
   const div = document.createElement("div");
   for (let r = 0; r < selection.rangeCount; r++) {
     const range = selection.getRangeAt(r);
-    const ancestor = range.commonAncestorContainer.parentElement;
+    const ancestor =
+      range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
+        ? range.commonAncestorContainer
+        : range.commonAncestorContainer.parentElement;
 
     // ensure we never quote text in the post menu area
     const postMenuArea = ancestor.querySelector(".post-menu-area");

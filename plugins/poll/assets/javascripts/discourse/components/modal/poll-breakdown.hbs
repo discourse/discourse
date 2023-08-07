@@ -1,18 +1,22 @@
 {{! template-lint-disable no-invalid-interactive }}
-<DModal @title={{i18n "poll.breakdown.title"}} class="has-tabs">
+<DModal
+  @title={{i18n "poll.breakdown.title"}}
+  @closeModal={{@closeModal}}
+  class="poll-breakdown has-tabs"
+>
   <:headerBelowTitle>
     <ul class="modal-tabs">
       <li
         class={{concat-class
           "modal-tab percentage"
-          (if (eq this.displayMode "percentage") "active")
+          (if (eq this.displayMode "percentage") "is-active")
         }}
         {{on "click" (fn (mut this.displayMode) "percentage")}}
       >{{i18n "poll.breakdown.percentage"}}</li>
       <li
         class={{concat-class
           "modal-tab count"
-          (if (eq this.displayMode "count") "active")
+          (if (eq this.displayMode "count") "is-active")
         }}
         {{on "click" (fn (mut this.displayMode) "count")}}
       >{{i18n "poll.breakdown.count"}}</li>

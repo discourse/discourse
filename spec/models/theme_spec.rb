@@ -1093,4 +1093,30 @@ HTML
       expect(messages.count).to eq(0)
     end
   end
+
+  describe "development experience" do
+    it "sends 'development-mode-theme-changed event when non-css fields are updated" do
+      Theme.any_instance.stubs(:should_refresh_development_clients?).returns(true)
+
+      theme.set_field(target: :common, name: :scss, value: "body {background: green;}")
+
+      messages =
+        MessageBus
+          .track_publish { theme.save! }
+          .filter { |m| m.channel == "/file-change" }
+          .map(&:data)
+
+      expect(messages).not_to include("development-mode-theme-changed")
+
+      theme.set_field(target: :common, name: :header, value: "<p>Hello world</p>")
+
+      messages =
+        MessageBus
+          .track_publish { theme.save! }
+          .filter { |m| m.channel == "/file-change" }
+          .map(&:data)
+
+      expect(messages).to include(["development-mode-theme-changed"])
+    end
+  end
 end

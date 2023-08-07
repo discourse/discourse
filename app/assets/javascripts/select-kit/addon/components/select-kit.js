@@ -988,10 +988,9 @@ export default Component.extend(
               enabled: !!(inModal && this.site.mobileView),
               phase: "afterWrite",
               fn: ({ state }) => {
-                const modalBody = inModal.querySelector(".modal-body");
-                modalBody.style = "";
-                modalBody.style.height =
-                  modalBody.clientHeight + state.rects.popper.height + "px";
+                inModal.style = "";
+                inModal.style.height =
+                  inModal.clientHeight + state.rects.popper.height + "px";
               },
             },
           ],

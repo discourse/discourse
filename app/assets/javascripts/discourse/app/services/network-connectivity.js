@@ -13,8 +13,6 @@ export default class NetworkConnectivity extends Service {
   constructor() {
     super(...arguments);
 
-    this.setConnectivity(navigator.onLine);
-
     window.addEventListener("offline", () => {
       this.setConnectivity(false);
       this.startTimerToCheckNavigator();
@@ -23,6 +21,10 @@ export default class NetworkConnectivity extends Service {
     window.addEventListener("online", this.pingServerAndSetConnectivity);
 
     window.addEventListener("visibilitychange", this.onFocus);
+
+    if (!navigator.onLine) {
+      this.pingServerAndSetConnectivity();
+    }
   }
 
   @bind

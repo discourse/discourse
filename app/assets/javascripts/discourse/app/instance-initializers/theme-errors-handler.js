@@ -52,7 +52,7 @@ export default {
     reportToLogster(source.name, error);
 
     const message = I18n.t("themes.broken_theme_alert");
-    this.displayErrorNotice(this.currentUser, message, source);
+    this.displayErrorNotice(message, source);
   },
 
   reportGenericError(e) {
