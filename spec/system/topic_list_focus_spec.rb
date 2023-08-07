@@ -58,6 +58,15 @@ describe "Topic list focus", type: :system do
     page.go_back
     expect(page).to have_css("body.navigation-topics")
     expect(focussed_topic_id).to eq(topics[2].id)
+
+    # Visit topic via keyboard using posts map (OP button)
+    discovery.topic_list.visit_topic_first_reply_via_keyboard(topics[4])
+    expect(topic).to have_topic_title(topics[4].title)
+
+    # Going back to the topic-list should re-focus
+    page.go_back
+    expect(page).to have_css("body.navigation-topics")
+    expect(focussed_topic_id).to eq(topics[4].id)
   end
 
   it "does not refocus topic when visiting via something other than topic list" do
