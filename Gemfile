@@ -259,6 +259,11 @@ if ENV["IMPORT"] == "1"
   gem "parallel", require: false
 end
 
+if ENV["GENERIC_IMPORT"] == "1"
+  gem "sqlite3"
+  gem "redcarpet"
+end
+
 gem "web-push"
 gem "colored2", require: false
 gem "maxminddb"
