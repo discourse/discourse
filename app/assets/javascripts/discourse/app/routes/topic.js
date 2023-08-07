@@ -21,6 +21,7 @@ const TopicRoute = DiscourseRoute.extend({
   composer: service(),
   screenTrack: service(),
   modal: service(),
+  router: service(),
 
   scheduledReplace: null,
   lastScrollPos: null,
@@ -327,6 +328,12 @@ const TopicRoute = DiscourseRoute.extend({
   activate() {
     this._super(...arguments);
     this.set("isTransitioning", false);
+
+    const topic = this.modelFor("topic");
+    this.session.set("lastTopicIdViewed", {
+      topicId: parseInt(topic.get("id"), 10),
+      historyUuid: this.router.location.getState?.().uuid,
+    });
   },
 
   deactivate() {

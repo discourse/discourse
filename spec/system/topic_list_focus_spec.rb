@@ -36,5 +36,14 @@ describe "Topic list focus", type: :system do
     find(".sidebar-section-link[data-link-name='everything']").click
     expect(page).to have_css("body.navigation-topics")
     expect(focussed_topic_id).to eq(nil)
+
+    # Visit topic via keyboard
+    discovery.topic_list.visit_topic_last_reply_via_keyboard(topics[2])
+    expect(topic).to have_topic_title(topics[2].title)
+
+    # Going back to the topic-list should re-focus
+    page.go_back
+    expect(page).to have_css("body.navigation-topics")
+    expect(focussed_topic_id).to eq(topics[2].id)
   end
 end

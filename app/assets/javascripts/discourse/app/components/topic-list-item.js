@@ -38,8 +38,6 @@ export function showEntrance(e) {
 export function navigateToTopic(topic, href) {
   const owner = getOwner(this);
   const siteSettings = owner.lookup("service:site-settings");
-  const router = owner.lookup("service:router");
-  const session = owner.lookup("service:session");
   const appEvents = owner.lookup("service:appEvents");
 
   if (siteSettings.page_loading_indicator !== "slider") {
@@ -47,11 +45,6 @@ export function navigateToTopic(topic, href) {
     // so skip setting it early.
     appEvents.trigger("header:update-topic", topic);
   }
-
-  session.set("lastTopicIdViewed", {
-    topicId: topic.id,
-    historyUuid: router.location.getState?.().uuid,
-  });
 
   DiscourseURL.routeTo(href || topic.get("url"));
   return false;
