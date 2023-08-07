@@ -40,7 +40,7 @@ export default class ChatComposerWarningsTracker extends Service {
     this.tooManyMentions = false;
     this.channelWideMentionDisallowed = false;
     this.mentionsCount = 0;
-    this.mentionsTimer = null;
+    cancel(this.mentionsTimer);
   }
 
   @bind
