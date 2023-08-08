@@ -18,7 +18,7 @@ nb_NO:
       no_day: "%Y %B"
   date:
     month_names:
-    - null
+    -
     - januar
     - februar
     - mars

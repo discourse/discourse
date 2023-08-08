@@ -315,9 +315,9 @@ ja:
       channel_edit_name_slug_modal:
         title: チャンネルを編集する
         input_placeholder: 名前を追加してください
-        slug_description: チャンネルスラグはチャンネル名の代わりに URL で使用されます
+        slug_description: チャンネルスラッグはチャンネル名の代わりに URL で使用されます
         name: チャンネル名
-        slug: チャンネルスラグ (オプション)
+        slug: チャンネルスラッグ (オプション)
       channel_edit_description_modal:
         title: 説明を編集する
         input_placeholder: 説明を追加する
@@ -360,7 +360,7 @@ ja:
         create: "チャンネルを作成"
         description: "説明 (オプション)"
         name: "チャンネル名"
-        slug: "チャンネルスラグ (オプション)"
+        slug: "チャンネルスラッグ (オプション)"
         title: "新しいチャンネル"
         type: "タイプ"
         types:

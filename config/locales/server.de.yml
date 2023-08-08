@@ -19,7 +19,7 @@ de:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - Januar
     - Februar
     - März
@@ -2149,7 +2149,7 @@ de:
     remove_muted_tags_from_latest: "Themen, die nur mit stummgeschalteten Tags versehen sind, nicht in der Liste der aktuellen Themen anzeigen"
     force_lowercase_tags: "Kleinschreibung für alle neuen Schlagwörter erzwingen."
     create_post_for_category_and_tag_changes: "Einen kleinen Aktionsbeitrag erstellen, wenn sich die Kategorie oder die Schlagwörter eines Themas ändern"
-    watched_precedence_over_muted: "Benachrichtige mich über Themen in Kategorien oder Schlagwörtern, die ich beobachte und die auch zu einem Thema gehören, das ich stummgeschaltet habe"
+    watched_precedence_over_muted: "Benachrichtige mich über Themen in Kategorien oder mit Schlagwörtern, die ich beobachte und die auch zu einem Thema gehören, das ich stummgeschaltet habe"
     company_name: "Firmenname"
     governing_law: "Anzuwendendes Recht"
     city_for_disputes: "Stadt für Rechtsstreitigkeiten"

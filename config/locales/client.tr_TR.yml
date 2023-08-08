@@ -277,6 +277,8 @@ tr_TR:
       pill: "İlgili Mesajlar"
       see_all: '@%{username} adlı kullanıcıdan gelen <a href="%{path}">bütün mesajları</a> gör...'
     suggested_topics:
+      title: "Yeni ve Okunmamış Konular"
+      pill: "Önerilen"
       pm_title: "Önerilen Mesajlar"
     about:
       simple_title: "Hakkında"
@@ -1789,6 +1791,7 @@ tr_TR:
         content: "İşte daha sonra okumak isteyebileceğinizi düşündüğümüz bazı konular."
       admin_guide:
         title: "Yeni sitenize hoş geldiniz!"
+        content: "Sitenizi ve topluluğunuzu oluşturmaya devam etmek için <a href='%{admin_guide_url}'>yönetici kılavuzunu okuyun</a>."
         content_no_url: "Sitenizi ve topluluğunuzu oluşturmaya devam etmek için yönetici kılavuzunu okuyun."
     loading: "Yükleniyor..."
     errors:
@@ -4213,10 +4216,18 @@ tr_TR:
           tel: "Lütfen geçerli bir telefon numarası girin."
           text: "Lütfen bir metin değeri girin."
           url: "Lütfen geçerli bir URL girin."
-        tooShort: "Girdi %{minLength} karakter veya daha uzun olmalıdır."
-        tooLong: "Girdi %{maxLength} karakterden az olmalıdır."
-        rangeOverflow: "Girdi en fazla %{max} olmalıdır"
-        rangeUnderflow: "Girdi en az %{min} olmalıdır."
+        tooShort:
+          one: "Girdi %{count} karakter veya daha uzun olmalıdır."
+          other: "Girdi %{count} karakter veya daha uzun olmalıdır."
+        tooLong:
+          one: "Girdi %{count} karakterden az olmalıdır."
+          other: "Girdi %{count} karakterden az olmalıdır."
+        rangeOverflow:
+          one: "Girdi en fazla %{count} olmalıdır"
+          other: "Girdi en fazla %{count} olmalıdır"
+        rangeUnderflow:
+          one: "Girdi en az %{count} olmalıdır."
+          other: "Girdi en az %{count} olmalıdır."
         patternMismatch: "Lütfen istenen formata uyun."
         badInput: "Lütfen geçerli bir girdi girin."
   admin_js:
@@ -4341,6 +4352,7 @@ tr_TR:
             email: E-posta
             incoming_email: "Özel gelen e-posta adresi"
             incoming_email_placeholder: "e-posta adresi gir"
+            incoming_email_tooltip: "Birden fazla e-posta adresini | karakteri ile ayırabilirsiniz."
             visibility: Görünürlük
             visibility_levels:
               title: "Bu grubu kimler görebilir?"

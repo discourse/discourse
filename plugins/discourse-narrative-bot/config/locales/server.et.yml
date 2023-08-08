@@ -37,7 +37,6 @@ et:
     magic_8_ball:
       answers:
         "1": "See on kindel"
-        "2": "It is decidedly so"
         "3": "Kahtlemata"
         "4": "Jah, kindlasti"
         "5": "Võid sellele loota"
@@ -45,16 +44,12 @@ et:
         "7": "Tõenäoliselt"
         "8": "Väljavaade on hea"
         "9": "Jah"
-        "10": "Signs point to yes"
-        "11": "Reply hazy, try again"
         "12": "Küsi hiljem uuesti"
-        "13": "Better not tell you now"
         "14": "Ei suuda praegu ennustada"
         "15": "Keskendu ning küsi uuesti"
         "16": "Sellele ära looda"
         "17": "Minu vastus on ei"
         "18": "Minu allikad ütlevad ei"
-        "19": "Outlook not so good"
         "20": "Väga kahtlane"
       result: |-
         > :crystal_ball: %{result}

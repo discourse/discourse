@@ -19,7 +19,7 @@ pt_BR:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - Janeiro
     - Fevereiro
     - Março
@@ -249,7 +249,7 @@ pt_BR:
     user_exists: "Não há necessidade de convidar <b>%{email}</b>, visto que já têm uma conta!"
     invite_exists: "Você já convidou <b>%{email}</b>"
     invalid_email: "%{email}' não é um endereço de e-mail válido."
-    generic_error_response: "Houve um problema com sua requisição"
+    generic_error_response: "Houve um problema com seu pedido"
     rate_limit:
       one: "Você já enviou %{count} convite no último dia, aguarde %{time_left} antes de tentar novamente."
       other: "Você já enviou %{count} convites no último dia, aguarde %{time_left} antes de tentar novamente."
@@ -257,7 +257,7 @@ pt_BR:
     cant_invite_to_group: "Você não tem permissão para convidar usuários(as) para grupos específicos. Verifique se você e o proprietário do grupo(a) para o qual você está convidando."
     disabled_errors:
       discourse_connect_enabled: "Convites estão desativados porque o DiscourseConnect está ativado."
-      invalid_access: "Você não tem permissão para visualizar o recurso solicitado."
+      invalid_access: "Você não tem permissão para visualizar o recurso pedido."
     requires_groups: "O convite não foi salvo porque o tópico especificado está inacessível. Adicione um dos seguintes grupos: %{groups}."
     domain_not_allowed: "Seu e-mail não pode ser usado para resgatar este convite."
     max_redemptions_allowed_one: "para convites por e-mail, deve ser 1."
@@ -288,7 +288,7 @@ pt_BR:
   invalid_params: "Você forneceu parâmetros inválidos para o pedido %{message}"
   not_logged_in: "Você precisa entrar com sua conta para fazer isto."
   not_found: "A URL ou recurso pedido não pôde ser encontrada."
-  invalid_access: "Você não tem permissão para ver o recurso solicitado."
+  invalid_access: "Você não tem permissão para ver o recurso pedido."
   authenticator_not_found: "O método de autenticação não existe ou foi desativado."
   authenticator_no_connect: "Este provedor de autenticação não permite conexão com uma conta de forum que já existe."
   invalid_api_credentials: "Você não tem permissão para visualizar o recurso pedido. O nome do(a) usuário(a) ou a chave da API é inválida."
@@ -628,6 +628,20 @@ pt_BR:
   staff_category_description: "Categoria particular para discussões da equipe. Tópicos só são visíveis para administradores(as) e moderadores(as)."
   discourse_welcome_topic:
     title: "Boas-vindas ao %{site_title}! :wave:"
+    body: |
+      Estamos felizes que você se juntou à nossa comunidade.
+
+      %{site_info_quote}
+
+      Confira alguma coisas que você pode fazer para começar:
+
+      :speaking_head: **Apresente-se** adicionando sua imagem e informações sobre si e seus interesses ao [seu perfil](%{base_path}/my/preferences/account). O que você gostaria que perguntassem a você?
+
+      :open_book: **Conheça a comunidade** [navegando pelas discussões](%{base_path}/top) que já estão acontecendo. Quando você achar uma postagem interessante, informativa ou divertida, use o :heart: para mostrar que gostou ou apoia!
+
+      :handshake: **Contribua** comentando, compartilhando seu próprio ponto de vista, fazendo perguntas ou comentando na discussão. Antes de responder ou começar tópicos novos, consulte as [Diretrizes da Comunidade](%{base_path}/faq).
+
+      > Se precisar de ajuda ou tiver alguma sugestão, pergunte em %{feedback_category} ou [fale com a administração](%{base_path}/about). quando quiser.
   admin_quick_start_title: "Guia de Administração: primeiros passos"
   category:
     topic_prefix: "Sobre a categoria %{category} "
@@ -773,12 +787,12 @@ pt_BR:
         one: "há quase %{count} ano"
         other: "há quase %{count} anos"
   password_reset:
-    no_token: 'Ops! O link que você usou não funciona mais. Agora você poderá <a href="%{base_url}/login">Log In</a>. Se tiver esquecido sua senha, você poderá <a href="%{base_url}/password-reset">solicitar um link</a> para redefini-la.'
+    no_token: 'Ops! O link que você usou não funciona mais. Agora você poderá <a href="%{base_url}/login">Log In</a>. Se tiver esquecido sua senha, você poderá <a href="%{base_url}/password-reset">pedir um link</a> para redefini-la.'
     title: "Redefinir senha"
     success: "Sua senha foi modificada com êxito e você já entrou com a sua conta."
     success_unapproved: "Senha modificada com êxito."
   email_login:
-    invalid_token: 'Ops! O link que você usou não funciona mais. Agora você poderá <a href="%{base_url}/login">fazer login</a>. Se tiver esquecido sua senha, você poderá <a href="%{base_url}/password-reset">solicitar um link</a> para redefini-la.'
+    invalid_token: 'Ops! O link que você usou não funciona mais. Agora você poderá <a href="%{base_url}/login">fazer login</a>. Se tiver esquecido sua senha, você poderá <a href="%{base_url}/password-reset">pedir um link</a> para redefini-la.'
     title: "E-mail para entrar"
   user_auth_tokens:
     browser:
@@ -1101,12 +1115,12 @@ pt_BR:
         author: Autor(a)
         edit_reason: Motivo
     consolidated_api_requests:
-      title: "Solicitações de API consolidadas"
+      title: "Pedidos de API consolidados"
       xaxis:
         api: "API"
         user_api: "API de usuário(a)"
       yaxis: "Dia"
-      description: "Solicitações de API para chaves de API regulares e chaves de API do usuário."
+      description: "Pedidos de API para chaves de API regulares e chaves de API do usuário."
     dau_by_mau:
       title: "DAU/MAU"
       xaxis: "Dia"
@@ -1273,7 +1287,7 @@ pt_BR:
     http_2xx_reqs:
       title: "Status 2xx (OK)"
       xaxis: "Dia"
-      yaxis: "Solicitações bem-sucedidas (Status 2xx)"
+      yaxis: "Pedidos bem-sucedidos (Status 2xx)"
     http_3xx_reqs:
       title: "HTTP 3xx (Redirecionamento)"
       xaxis: "Dia"
@@ -1289,7 +1303,7 @@ pt_BR:
     http_total_reqs:
       title: "Total"
       xaxis: "Dia"
-      yaxis: "Solicitações totais"
+      yaxis: "Pedidos totais"
     time_to_first_response:
       title: "Tempo para primeira resposta"
       xaxis: "Dia"
@@ -1396,7 +1410,7 @@ pt_BR:
     legacy_navigation_menu_deprecated: "Atualmente, seu Discourse está usando o menu de navegação herdado, que <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>será removido no lançamento da primeira versão beta do Discourse 3.2</a>. Migre para o novo menu de navegação ao atualizar as <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>configurações do site do menu de navegação</a> para \"barra lateral\" ou \"menu de cascada do cabeçalho\"."
   site_settings:
     allow_bulk_invite: "Permitir convites em massa com o uso de um arquivo CSV"
-    disabled: "desativado"
+    disabled: "desativado(a)"
     display_local_time_in_user_card: "Exiba a hora local baseada no fuso horário(a) do usuário(a) quando seu cartão de usuário(a) estiver disponível."
     censored_words: "Palavras que serão substituídas automaticamente por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Exclua automaticamente todas as postagens ocultas que permanecerem ocultas por mais de 30 dias."
@@ -1597,7 +1611,7 @@ pt_BR:
     enable_badges: "Ativar o sistema de emblemas"
     max_favorite_badges: "Quantidade máxima de emblemas que o(a) usuário(a) pode selecionar"
     whispers_allowed_groups: "Permitir comunicação privada dentro de tópicos para membros de grupos especificados."
-    hidden_post_visible_groups: "Permita que membros destes grupos visualizem postagens ocultas. Usuários(as) da equipe sempre podem ser postagens ocultas."
+    hidden_post_visible_groups: "Permita que membros destes grupos visualizem postagens ocultas. Usuários(as) da equipe sempre podem visualizar postagens ocultas."
     allow_index_in_robots_txt: "Especifique em robots.txt que este site tem permissão para ser indexado por mecanismos de busca da web. Em casos excepcionais, é possível <a href='%{base_path}/admin/customize/robots'>substituir robots.txt</a>."
     blocked_email_domains: "Uma lista de domínios de e-mail determinada por barras com que os usuários não têm permissão para registrar contas. Os subdomínios são tratados para os domínios específicos. Os símbolos-curinga * e ? não são compatíveis. Exemplo: mailinator.com|trashmail.net"
     allowed_email_domains: "Uma lista de domínios de e-mail determinada por barras com que os usuários DEVEM registrar contas. Os subdomínios são tratados para os domínios específicos. Os símbolos-curinga * e ? não são compatíveis. AVISO: usuários(as) com domínios de e-mail que não sejam os listados aqui não são permitidos(as)!"
@@ -1685,8 +1699,8 @@ pt_BR:
     previous_visit_timeout_hours: "Tempo de duração do acesso antes de ser considerado \"última visita', em horas."
     top_topics_formula_log_views_multiplier: "valor do multiplicador de visualizações com conta conectada (n) na fórmula dos melhores tópicos: \"log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count/posts_count, 3) + 10 + log(posts_count)\""
     top_topics_formula_first_post_likes_multiplier: "valor do multiplicador de curtidas da primeira postagem (n) na fórmula dos melhores tópicos: \"log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)\""
-    top_topics_formula_least_likes_per_post_multiplier: "valor do multiplicador da menor quantidade de curtidas por publicação (n) na fórmula de melhores tópicos: \"log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)\""
-    enable_safe_mode: "Permitir que os(as) usuários(as) insiram o modo de segurança para depurar plug-ins."
+    top_topics_formula_least_likes_per_post_multiplier: "valor do multiplicador da menor quantidade de curtidas por postagem (n) na fórmula de melhores tópicos: \"log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)\""
+    enable_safe_mode: "Permitir que os(as) usuários(as) insiram o modo de segurança para depurar plugins."
     rate_limit_create_topic: "Após criar um tópico, os(as) usuários(as) devem aguardar (n) segundos antes de criar um outro tópico."
     rate_limit_create_post: "Após postar, os(as) usuários(as) devem aguardar (n) segundos antes de criar outra postagem."
     rate_limit_new_user_create_topic: "Após criar um tópico, novos(as) usuários(as) devem aguardar (n) segundos antes de criar outro tópico."
@@ -1923,7 +1937,7 @@ pt_BR:
     pop3_polling_password: "A senha da conta POP3 para sondar por e-mail."
     pop3_polling_delete_from_server: "Apagar e-mails do servidor. OBSERVAÇÃO: Se você desativar isso, será preciso limpar manualmente sua caixa de entrada"
     log_mail_processing_failures: "Registrar todas as falhas de processamento de e-mail em <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in: "Permita que os usuários publiquem novos tópicos por e-mail. Depois de ativar esta configuração, você poderá configurar os endereços de e-mail recebidos para grupos e categorias."
+    email_in: "Permita que os usuários postem novos tópicos por e-mail. Depois de ativar esta configuração, você poderá configurar os endereços de e-mail recebidos para grupos e categorias."
     email_in_min_trust: "O nível de confiança mínimo que um(a) usuário(a) precisa ter para ter permissão para postar novos tópicos via e-mail."
     email_in_authserv_id: "O identificador do serviço realizando verificações de autenticação em e-mails recebidos. Confira <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obter instruções de como configurar isso."
     email_in_spam_header: "O cabeçalho do e-mail para detectar spam."
@@ -1998,6 +2012,8 @@ pt_BR:
     permalink_normalizations: "Aplique o seguinte regex antes de combinar permalinks, por exemplo: /(topic.*)\\?.*/\\1 irá retirar as linhas de consulta das rotas de tópicos. O formato é regex + string use \\ 1 etc. para acessar capturas"
     global_notice: "Exibir um aviso global em banner URGENTE, EMERGENCIAL e que não pode ser fechado para todos os visitantes, deixe em branco para ocultá-lo (permitido por HTML)."
     disable_system_edit_notifications: "Desative a edição de notificações do(a) usuário(a) do sistema quando \"download_remote_images_to_local\" estiver ativado."
+    disable_category_edit_notifications: "Desative as notificações para edições de categorias de tópico, inclusive tópicos que foram \"publicados\" (ex.: rascunhos compartilhados)."
+    disable_tags_edit_notifications: "Desative as notificações para edições de etiquetas de tópico, inclusive tópicos que foram \"publicados\" (ex.: rascunhos compartilhados)."
     notification_consolidation_threshold: "Quantidade de notificações de pedidos de associação ou curtidas recebidas antes que as notificações sejam agrupadas. Defina como 0 para desativar."
     likes_notification_consolidation_window_mins: "Duração em minutos durante a qual as notificações curtidas são agrupadas em uma notificação única após alcançar o limite. É possível configurar o limite acessando \"SiteSetting.notification_consolidation_threshold\"."
     automatically_unpin_topics: "Desafixe automaticamente os tópicos quando o(a) usuário(a) atinge à parte inferior."
@@ -2171,7 +2187,7 @@ pt_BR:
     experimental_new_new_view_groups: 'EXPERIMENTAL: ative uma nova lista de tópicos que combina tópicos novos e não lidos e faz o link "Tudo", localizado na barra lateral, apontar para ela.'
     enable_custom_sidebar_sections: "EXPERIMENTAL: ative seções personalizadas da barra lateral"
     experimental_topics_filter: "EXPERIMENTAL: ative a rota do filtro de tópicos experimentais em /filter"
-    experimental_search_menu_groups: "EXPERIMENTAL: ativa o novo menu de busca que foi atualizado para usar o glimmer"
+    experimental_search_menu_groups: "EXPERIMENTAL: ativa o novo menu de pesquisa que foi atualizado para usar o glimmer"
     enable_experimental_lightbox: "EXPERIMENTAL: substitua a lightbox da imagem padrão pelo design renovado."
     page_loading_indicator: "Configure o indicador de carregamento mostrado durante as navegações da página no Discourse. O \"Controle giratório\" é um indicador de página completo. O \"Controle deslizante\" mostra uma barra estreita no topo da tela."
     errors:
@@ -2993,7 +3009,7 @@ pt_BR:
 
         Para promover conversas mais complexas, respostas muito curtas não são permitidas. Você pode responder com pelo menos %{count} caracteres? Como alternativa, também é possível curtir uma postagem por e-mail respondendo com "+1".
     email_reject_invalid_post_action:
-      title: "E-mail rejeitado por publicação de ação inválida"
+      title: "E-mail rejeitado por postagem de ação inválida"
       subject_template: "[%{email_prefix}] Problema no e-mail, ação de postagem inválida"
       text_body_template: |
         Desculpe, mas sua mensagem de e-mail para %{destination} (com o título de %{former_title}) não funcionou.
@@ -3164,7 +3180,7 @@ pt_BR:
 
         O(a) novo(a) usuário(a) [%{username}](%{user_url}) foi silenciado(a) automaticamente porque usuários(as) sinalizaram as postagens de %{username}.
 
-        [Revise os sinalizadores](%{base_url}/admin/flags). Se o(a) usuário(a) %{username} tiver sido silenciado(a) por engano, clique no botão de ativar som do(a) usuário(a) na [página de administração do(a) usuário(a)](%{user_url}).
+        [Revise os sinalizadores](%{base_url}/admin/flags). Se o(a) usuário(a) %{username} tiver sido silenciado(a) para não postar, clique no botão de ativar som do(a) usuário(a) na [página de administração do(a) usuário(a)](%{user_url}).
 
         Este limite pode ser alterado nas configurações do site "silence_new_user".
     spam_post_blocked:
@@ -4690,7 +4706,7 @@ pt_BR:
         description: "Restaure a postagem para que todos os(as) usuários(as) possam ver."
       agree_and_hide:
         title: "Ocultar postagem"
-        description: "Aceite a sinalização, oculte esta publicação e envie automaticamente ao(à) usuário(a) uma mensagem solicitando edição."
+        description: "Aceite a sinalização, oculte esta postagem e envie automaticamente ao(à) usuário(a) uma mensagem solicitando edição."
       delete_single:
         title: "Excluir"
       delete:

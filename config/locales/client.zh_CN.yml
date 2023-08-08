@@ -2486,9 +2486,9 @@ zh_CN:
         also_dismiss_topics: "停止跟踪这些话题，以便它们不再显示为我的未读话题"
         dismiss_new: "忽略新话题"
         dismiss_new_modal:
-          title: "关闭新话题"
-          topics: "关闭新话题"
-          posts: "关闭新帖子"
+          title: "忽略新话题"
+          topics: "忽略新话题"
+          posts: "忽略新帖子"
           untrack: "停止跟踪这些话题，以便它们不再出现在我的新列表中"
         dismiss_new_with_selected:
           other: "忽略新话题（%{count} 个）…"
@@ -2827,7 +2827,7 @@ zh_CN:
           other: "当前全站置顶的话题数：<strong class='badge badge-notification unread'>%{count}</strong>"
         make_banner: "将此话题设为在所有页面顶部显示的横幅。"
         remove_banner: "移除在所有页面顶部显示的横幅。"
-        banner_note: "用户可以通过关闭话题来忽略横幅。任何时候都只能将一个话题设为横幅。"
+        banner_note: "用户可以通过忽略话题来忽略横幅。任何时候都只能将一个话题设为横幅。"
         no_banner_exists: "没有横幅话题。"
         banner_exists: "当前设置了<strong class='badge badge-notification unread'>一个</strong>横幅话题。"
       inviting: "正在邀请…"
@@ -4012,10 +4012,14 @@ zh_CN:
           tel: "请输入一个有效的电话号码。"
           text: "请输入一个文本值。"
           url: "请输入一个有效的 URL。"
-        tooShort: "输入的内容必须至少为 %{minLength} 个字符。"
-        tooLong: "输入的内容必须少于 %{maxLength} 个字符。"
-        rangeOverflow: "输入必须小于 %{max}。"
-        rangeUnderflow: "输入必须大于 %{min}。"
+        tooShort:
+          other: "输入的内容必须至少为 %{count} 个字符。"
+        tooLong:
+          other: "输入的内容必须少于 %{count} 个字符。"
+        rangeOverflow:
+          other: "输入必须小于 %{count}。"
+        rangeUnderflow:
+          other: "输入必须大于 %{count}。"
         patternMismatch: "请匹配要求的格式。"
         badInput: "请输入有效的输入。"
   admin_js:
@@ -4139,6 +4143,7 @@ zh_CN:
             email: 电子邮件
             incoming_email: "自定义传入电子邮件地址"
             incoming_email_placeholder: "输入电子邮件地址"
+            incoming_email_tooltip: "您可以使用 | 字符分隔多个电子邮件地址。"
             visibility: 公开范围
             visibility_levels:
               title: "谁能看到此群组？"
@@ -5036,13 +5041,13 @@ zh_CN:
           silence: "禁言"
           link: "链接"
         action_descriptions:
-          block: "试图创建包含这些字词的帖子时，将显示一条错误信息。"
+          block: "试图创建包含这些字词的帖子时，将显示一条错误消息。"
           censor: "允许包含这些字词的帖子，但将其替换为隐藏敏感字词的字符。"
           require_approval: "包含这些字词的帖子需要管理人员批准后才能被其他人看到。"
           flag: "允许包含这些字词的帖子，但将它们举报为不当言论以供版主审核。"
           replace: "使用其他字词替换帖子中的字词。"
           tag: "如果第一篇帖子包含特定字词，则自动为话题添加标签。"
-          silence: "如果新帐户的第一篇帖子包含这些字词，则将其禁言。该帖子将被自动隐藏，直到工作人员批准。"
+          silence: "如果新帐户的第一篇帖子包含这些字词，则将其禁言。该帖子将被自动隐藏，直到管理人员批准。"
           link: "使用链接替换帖子中的字词。"
         form:
           label: "包含字词或短语"
@@ -5488,7 +5493,7 @@ zh_CN:
           description: "自此替换创建以来，此键的默认翻译已更改。请在下面检查您的翻译是否与对原始意图所做的任何更改相符。"
           old_default: "旧默认值"
           new_default: "新默认值"
-          dismiss: "关闭"
+          dismiss: "忽略"
       settings:
         show_overriden: "只显示被替换"
         history: "查看变更历史记录"

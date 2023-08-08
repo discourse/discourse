@@ -254,6 +254,7 @@ pl_PL:
         read_only: "Tylko do odczytu"
         archived_header: "Kanał został zarchiwizowany"
         archived: "Zarchiwizowany"
+        archive_failed: "Archiwizacja kanału nie powiodła się. %{completed}/%{total} wiadomości zostało zarchiwizowanych. <a target=\"_blank\" href=\"%{topic_url}\">Temat docelowy</a> został utworzony. Naciśnij przycisk ponów, aby spróbować zakończyć archiwizację."
         archive_failed_no_topic: "Archiwizacja kanału nie powiodła się. %{completed}/%{total} wiadomości zostało zarchiwizowanych, temat docelowy nie został utworzony. Naciśnij przycisk ponów, aby spróbować zakończyć archiwizację."
         archive_completed: "Zobacz <a target=\"_blank\" href=\"%{topic_url}\">temat archiwum</a>"
         closed_header: "Kanał jest zamknięty"
@@ -292,6 +293,7 @@ pl_PL:
         add_user_short: <span>Dodaj użytkownika</span>
         open_channel: <span>Otwórz kanał</span>
         default_search_placeholder: "#kanał, @ktoś lub cokolwiek"
+        default_channel_search_placeholder: "#kanał"
         default_user_search_placeholder: "@ktoś"
         user_search_placeholder: "...dodaj więcej użytkowników"
         disabled_user: "wyłączył czat"
@@ -419,6 +421,7 @@ pl_PL:
       direct_messages:
         title: "Czat osobisty"
         new: "Utwórz osobisty czat"
+        create: "Utwórz"
         leave: "Opuść ten osobisty czat"
         cannot_create: "Przepraszamy, nie możesz wysyłać bezpośrednich wiadomości."
       incoming_webhooks:

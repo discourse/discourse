@@ -1170,7 +1170,7 @@ es:
       watched_first_post_categories_instructions: "Se te notificará la primera publicación en cada tema nuevo en estas categorías."
       watched_first_post_tags: "Vigilando la primera publicación"
       watched_first_post_tags_instructions: "Se te notificará la primera publicación en cada tema nuevo con estas etiquetas."
-      watched_precedence_over_muted: "Notificarme sobre temas en categorías o etiquetas que estoy viendo y que también pertenezcan a una que haya silenciado"
+      watched_precedence_over_muted: "Notificarme sobre temas en categorías o etiquetas que estoy observando y que también pertenezcan a una que haya silenciado"
       muted_categories: "Silenciado"
       muted_categories_instructions: "No se te notificará acerca de ningún tema en estas categorías y no aparecerán en la página de categorías o mensajes recientes."
       muted_categories_instructions_dont_hide: "No se te notificará nada acerca de temas nuevos en estas categorías."
@@ -2653,7 +2653,7 @@ es:
         educate:
           new: '<p>Tus nuevos temas aparecerán aquí. Por defecto, los temas se consideran nuevos y mostrarán un <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> indicador si se crearon hace menos de 2 días.</p><p>Visita tus <a href="%{userPrefsUrl}">preferencias</a> para cambiarlo.</p>'
           unread: "<p>Los temas sin leer aparecerán aquí.</p><p>Por defecto, se consideran sin leer y tendrán un marcador <span class=\"badge unread-posts badge-notification\">1</span> si:</p><ul><li>Has creado el tema</li><li>Has respondido al tema</li><li>Has leído el tema durante más de 5 minutos</li></ul><p>O si has seguido o vigilado el tema a través de la \U0001F514 individualmente en cada tema.</p><p>Visita tus <a href=\"%{userPrefsUrl}\">preferencias</a> para cambiar esto.</p>"
-          new_new: "<p>Tus temas nuevos aparecerán aquí, y también se mostrarán tus temas no leídos. Por defecto, los temas se consideran nuevos y mostrarán un indicador <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> si se han creado en los últimos 2 días. Los temas no leídos tendrán un marcador <pan class=\"badge unread-posts badge-notification\">1</span> si: has creado el tema, has respondido al tema, has leído el tema durante más de 5 minutos, o si has seguido o vigilado el tema a través de la \U0001F514 individualmente en cada tema.</p><p>Visita tus <a href=\"%{userPrefsUrl}\">preferencias</a> para cambiar esto.</p>"
+          new_new: "<p>Tus temas nuevos aparecerán aquí, y también se mostrarán tus temas no leídos. Por defecto, los temas se consideran nuevos y mostrarán un indicador <span class=\"badge new-topic badge-notification\" style=\"vertical-align:middle;line-height:inherit;\"></span> si se han creado en los últimos 2 días. Los temas no leídos tendrán un marcador <span class=\"badge unread-posts badge-notification\">1</span> si: has creado el tema, has respondido al tema, has leído el tema durante más de 5 minutos, o si has seguido o vigilado el tema a través de la \U0001F514 individualmente en cada tema.</p><p>Visita tus <a href=\"%{userPrefsUrl}\">preferencias</a> para cambiar esto.</p>"
       bottom:
         latest: "No hay más temas recientes."
         posted: "No hay más temas publicados."
@@ -2759,8 +2759,8 @@ es:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Explorar todas las categorías</a>, <a href='%{basePath}/latest'>ver los temas más recientes</a> o ver la parte superior:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Explorar todas las etiquetas</a> o <a href='%{basePath}/latest'>ver los temas más recientes</a>."
       suggest_create_topic: '¿Listo para <a href>iniciar una nueva conversación?</a>'
-      jump_reply: "Saltar a la ubicación original del mensaje"
-      jump_reply_aria: "Saltar al mensaje de @%{username} en su ubicación original"
+      jump_reply: "Saltar a la ubicación original de la publicación"
+      jump_reply_aria: "Saltar a la publicación de @%{username} en su ubicación original"
       deleted: "El tema ha sido eliminado"
       slow_mode_update:
         title: "Modo lento"
@@ -3128,8 +3128,8 @@ es:
       sr_collapse_replies: "Contraer respuestas inscrustadas"
       sr_date: "Fecha de publicación"
       sr_expand_replies:
-        one: "Este mensaje tiene %{count} respuesta"
-        other: "Este mensaje tiene %{count} respuestas"
+        one: "Esta publicación tiene %{count} respuesta"
+        other: "Esta publicación tiene %{count} respuestas"
       expand_collapse: "expandir/contraer"
       sr_below_embedded_posts_description: "respuestas de la publicación n.º %{post_number}"
       sr_embedded_reply_description: "respuesta de @%{username} a la publicación n.º %{post_number}"
@@ -4191,7 +4191,7 @@ es:
     char_counter:
       exceeded: "Se ha superado el número máximo de caracteres permitidos."
     form_template_chooser:
-      select_template: "Seleccionar plantillas de formulario"
+      select_template: "Seleccionar plantillas de formularios"
     form_templates:
       errors:
         valueMissing:
@@ -4210,10 +4210,12 @@ es:
           tel: "Introduce un número de teléfono válido."
           text: "Introduce un valor de texto."
           url: "Introduce una URL válida."
-        tooShort: "La entrada debe tener %{minLength} caracteres o más."
-        tooLong: "La entrada debe tener menos de %{maxLength} caracteres."
-        rangeOverflow: "La entrada debe ser menor que %{max}."
-        rangeUnderflow: "La entrada debe ser mayor que %{min}."
+        rangeOverflow:
+          one: "La entrada debe ser menor que %{count}."
+          other: "La entrada debe ser menor que %{count}."
+        rangeUnderflow:
+          one: "La entrada debe ser mayor que %{count}."
+          other: "La entrada debe ser mayor que %{count}."
         patternMismatch: "Utiliza el formato solicitado."
         badInput: "Introduce una entrada válida."
   admin_js:
@@ -4338,6 +4340,7 @@ es:
             email: Correo electrónico
             incoming_email: "Dirección de correo electrónico entrante personalizada"
             incoming_email_placeholder: "introduce la dirección de correo electrónico"
+            incoming_email_tooltip: "Puedes separar varias direcciones de correo electrónico con el carácter |."
             visibility: Visibilidad
             visibility_levels:
               title: "¿Quién puede ver este grupo?"
@@ -5239,7 +5242,7 @@ es:
           require_approval: "Requiere la aprobación del personal para las publicaciones que contengan estas palabras antes de que puedan ser visibles para los demás."
           flag: "Permitir las publicaciones que contengan estas palabras, pero marcarlas como inapropiadas para que las revisen los moderadores."
           replace: "Reemplazar palabras en publicaciones por otras palabras."
-          tag: "Etiquetar temas automáticamente si el primer mensaje contiene una palabra específica."
+          tag: "Etiquetar temas automáticamente si la primera publicación contiene una palabra específica."
           silence: "Silenciar las cuentas nuevas si su primera publicación contiene alguna de estas palabras. La publicación se ocultará automáticamente hasta que el personal la apruebe."
           link: "Reemplazar palabras en publicaciones por enlaces."
         form:
@@ -5865,11 +5868,11 @@ es:
         get_started: "Si quieres insertar Discourse en otro sitio web, empieza por añadir su host."
         confirm_delete: "¿Seguro que quieres eliminar este host?"
         sample: |
-          <p>Pega el siguiente código HTML en tu sitio para crear e incrustar temas de Discourse. Sustituye <b>EMBED_URL</b> por la URL canónica de la página en la que lo vas a incrustar.
+          <p>Pega el siguiente código HTML en tu sitio para crear e incrustar temas de Discourse. Sustituye <b>EMBED_URL</b> por la URL canónica de la página en la que lo vas a incrustar.</p>
 
-          <p>Si quieres personalizar el estilo, descomenta y sustituye <b>CLASS_NAME</b> por una clase CSS definida en el <i>Embedded CSS</i> de tu tema.</p> <p>
+          <p>Si quieres personalizar el estilo, descomenta y sustituye <b>CLASS_NAME</b> por una clase CSS definida en el <i>Embedded CSS</i> de tu tema.</p>
 
-          <p>Sustituye <b>DISCOURSE_USERNAME</b> por el nombre de usuario de Discourse del autor que debe crear el tema. Discourse buscará automáticamente al usuario por el atributo <code>content</code> de las etiquetas <code>&lt;meta&gt;</code> con el atributo <code>name</code> establecido en <code>discourse-username</code> o <code>author</code>. El parámetro <code>discourseUserName</code> ha quedado obsoleto y será eliminado en Discourse 3.2.</p> <p>
+          <p>Sustituye <b>DISCOURSE_USERNAME</b> por el nombre de usuario de Discourse del autor que debe crear el tema. Discourse buscará automáticamente al usuario por el atributo <code>content</code> de las etiquetas <code>&lt;meta&gt;</code> con el atributo <code>name</code> establecido en <code>discourse-username</code> o <code>author</code>. El parámetro <code>discourseUserName</code> ha quedado obsoleto y será eliminado en Discourse 3.2.</p>
         title: "Incrustado"
         host: "Hosts permitidos"
         allowed_paths: "Lista de rutas permitidas"
