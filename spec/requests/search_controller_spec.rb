@@ -382,6 +382,32 @@ RSpec.describe SearchController do
       expect(response.parsed_body["posts"][0]["id"]).to eq(awesome_post.id)
     end
 
+    context "with restricted tags" do
+      let(:tag_group) { Fabricate.build(:tag_group) }
+      let(:tag_group_permission) { Fabricate.build(:tag_group_permission, tag_group: tag_group) }
+      let(:restricted_tag) { Fabricate(:tag) }
+
+      before do
+        tag_group.tag_group_permissions << tag_group_permission
+        tag_group.save!
+        tag_group_permission.tag_group.tags << restricted_tag
+        awesome_topic.tags << restricted_tag
+        SearchIndexer.index(awesome_topic, force: true)
+      end
+
+      it "doesn’t expose restricted tags in search" do
+        get "/search.json",
+            params: {
+              q: "awesome",
+              context: "tag",
+              context_id: "awesome",
+              skip_context: false,
+            }
+
+        expect(response.status).to eq(403)
+      end
+    end
+
     context "when rate limited" do
       before { RateLimiter.enable }
 
