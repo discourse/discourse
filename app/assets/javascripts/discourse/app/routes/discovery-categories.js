@@ -2,7 +2,6 @@ import CategoryList from "discourse/models/category-list";
 import DiscourseRoute from "discourse/routes/discourse";
 import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
-import OpenComposer from "discourse/mixins/open-composer";
 import PreloadStore from "discourse/lib/preload-store";
 import TopicList from "discourse/models/topic-list";
 import { ajax } from "discourse/lib/ajax";
@@ -13,9 +12,7 @@ import showModal from "discourse/lib/show-modal";
 import Session from "discourse/models/session";
 import { inject as service } from "@ember/service";
 
-export default class DiscoveryCategoriesRoute extends DiscourseRoute.extend(
-  OpenComposer
-) {
+export default class DiscoveryCategoriesRoute extends DiscourseRoute {
   @service router;
 
   renderTemplate() {
@@ -155,15 +152,6 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute.extend(
   @action
   reorderCategories() {
     showModal("reorder-categories");
-  }
-
-  @action
-  createTopic() {
-    if (this.get("currentUser.has_topic_draft")) {
-      this.openTopicDraft();
-    } else {
-      this.openComposer(this.controllerFor("discovery/categories"));
-    }
   }
 
   @action

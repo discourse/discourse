@@ -8,10 +8,12 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { groupPath } from "discourse/lib/url";
 import { setting } from "discourse/lib/computed";
 import { modKeysPressed } from "discourse/lib/utilities";
+import { inject as service } from "@ember/service";
 
 const maxMembersToDisplay = 10;
 
 export default Component.extend(CardContentsBase, CleansUp, {
+  composer: service(),
   elementId: "group-card",
   mentionSelector: "a.mention-group",
   classNames: ["no-bg", "group-card"],
@@ -105,7 +107,7 @@ export default Component.extend(CardContentsBase, CleansUp, {
     },
 
     messageGroup() {
-      this.createNewMessageViaParams({
+      this.composer.openNewMessage({
         recipients: this.get("group.name"),
         hasGroups: true,
       });
