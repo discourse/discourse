@@ -463,6 +463,8 @@ RSpec.configure do |config|
     end
 
     page.execute_script("if (typeof MessageBus !== 'undefined') { MessageBus.stop(); }")
+    MessageBus.backend_instance.reset! # Clears all existing backlog from memory backend
+    Scheduler::Defer.do_all_work # Process everything that was added to the defer queue when running the test
     Capybara.reset_sessions!
     Capybara.use_default_driver
     Discourse.redis.flushdb
