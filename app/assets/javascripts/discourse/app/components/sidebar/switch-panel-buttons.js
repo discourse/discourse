@@ -7,14 +7,12 @@ export default class SwitchPanelButtons extends Component {
   @service sidebarState;
 
   @action
-  switchPanel(currentPanel, panel) {
+  switchPanel(panel) {
     this.sidebarState.currentPanel.lastKnownURL = this.router.currentURL;
-    this.sidebarState.setPanel(panel.key);
     const url = panel.lastKnownURL || panel.switchButtonDefaultUrl;
-    if (url === "/") {
-      this.router.transitionTo("discovery.latest");
-    } else {
-      this.router.transitionTo(url);
-    }
+    const destination = url === "/" ? "discovery.latest" : url;
+    this.router
+      .transitionTo(destination)
+      .then(() => this.sidebarState.setPanel(panel.key));
   }
 }
