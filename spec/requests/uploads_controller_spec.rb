@@ -1521,7 +1521,9 @@ RSpec.describe UploadsController do
                unique_identifier: external_upload_stub.unique_identifier,
              }
         expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.failed"))
+        expect(response.parsed_body["errors"].first).to eq(
+          I18n.t("upload.checksum_mismatch_failure"),
+        )
       end
 
       it "handles SizeMismatchError" do
@@ -1534,7 +1536,9 @@ RSpec.describe UploadsController do
                unique_identifier: external_upload_stub.unique_identifier,
              }
         expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.failed"))
+        expect(response.parsed_body["errors"].first).to eq(
+          I18n.t("upload.size_mismatch_failure", additional_detail: "expected: 10, actual: 1000"),
+        )
       end
 
       it "handles CannotPromoteError" do
@@ -1547,7 +1551,7 @@ RSpec.describe UploadsController do
                unique_identifier: external_upload_stub.unique_identifier,
              }
         expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.failed"))
+        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.cannot_promote_failure"))
       end
 
       it "handles DownloadFailedError and Aws::S3::Errors::NotFound" do
@@ -1560,7 +1564,7 @@ RSpec.describe UploadsController do
                unique_identifier: external_upload_stub.unique_identifier,
              }
         expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.failed"))
+        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.download_failure"))
         ExternalUploadManager
           .any_instance
           .stubs(:transform!)
@@ -1570,7 +1574,7 @@ RSpec.describe UploadsController do
                unique_identifier: external_upload_stub.unique_identifier,
              }
         expect(response.status).to eq(422)
-        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.failed"))
+        expect(response.parsed_body["errors"].first).to eq(I18n.t("upload.download_failure"))
       end
 
       it "handles a generic upload failure" do
