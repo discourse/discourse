@@ -6,15 +6,17 @@ import { tracked } from "@glimmer/tracking";
 export default class SwitchPanelButtons extends Component {
   @service router;
   @service sidebarState;
-  @tracked switching = false;
+  @tracked isSwitching = false;
 
   @action
   switchPanel(panel) {
-    this.switching = true;
+    this.isSwitching = true;
     this.sidebarState.currentPanel.lastKnownURL = this.router.currentURL;
     const url = panel.lastKnownURL || panel.switchButtonDefaultUrl;
     const destination = url === "/" ? "discovery.latest" : url;
-    this.router.transitionTo(destination).then(() => (this.switching = false));
+    this.router
+      .transitionTo(destination)
+      .then(() => (this.isSwitching = false));
     this.sidebarState.setPanel(panel.key);
   }
 }
