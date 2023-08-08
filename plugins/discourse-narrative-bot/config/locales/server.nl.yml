@@ -376,18 +376,8 @@ nl:
         instructions: |-
           Wist je dat je in je bericht kunt verwijzen naar categorieën en tags? Heb je bijvoorbeeld categorie %{category} gezien?
 
-          Typ '#' middenin een zin en selecteer een categorie of tag.
-        instructions_experimental: |-
-          Wist je dat je in je bericht kunt verwijzen naar categorieën en tags? Heb je bijvoorbeeld categorie %{category} gezien?
-
           Typ '#' ergens in een zin en selecteer een categorie of tag.
         not_found: |-
-          Hmm, ik zie nergens een categorie. Merk op dat '#' mag niet het eerste teken zijn. Kun je dit kopiëren in je volgende antwoord?
-
-          ```tekst
-          Ik kan een categorielink maken met #
-          ```
-        not_found_experimental: |-
           Hmm, ik zie nergens een categorie. Kun je dit kopiëren in je volgende antwoord?
 
           ```tekst

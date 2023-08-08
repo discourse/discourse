@@ -4090,7 +4090,7 @@ fr:
           reset_confirm: "Voulez-vous vraiment réinitialiser cette section par défaut ?"
           public: "Rendre cette section publique et la rendre visible pour tous"
           always_public: "Le contenu de cette section est toujours public"
-          more_menu: "Plus de menus"
+          more_menu: "Plus"
           links:
             add: "Ajouter un autre lien"
             delete: "Supprimer le lien"
@@ -4099,7 +4099,7 @@ fr:
               label: "Icône"
               validation:
                 blank: "L'icône ne peut pas être vide"
-                maximum: "L'icône doit être inférieure à %{count} caractères"
+                maximum: "Le nom de l'icône doit être inférieur à %{count} caractères"
             name:
               label: "Nom"
               validation:
@@ -4210,10 +4210,12 @@ fr:
           tel: "Veuillez saisir un numéro de téléphone valide."
           text: "Veuillez saisir une valeur de texte."
           url: "Veuillez saisir une URL valide."
-        tooShort: "La saisie doit comporter %{minLength} caractères ou plus."
-        tooLong: "La saisie doit comporter moins de %{maxLength} caractères."
-        rangeOverflow: "La saisie doit comporter moins de %{max}."
-        rangeUnderflow: "La saisie doit comporter plus de %{min}."
+        rangeOverflow:
+          one: "La saisie doit comporter moins de %{count}."
+          other: "La saisie doit comporter moins de %{count}."
+        rangeUnderflow:
+          one: "La saisie doit comporter plus de %{count}."
+          other: "La saisie doit comporter plus de %{count}."
         patternMismatch: "Veuillez respecter le format demandé."
         badInput: "Veuillez saisir une entrée valide."
   admin_js:
@@ -4338,6 +4340,7 @@ fr:
             email: E-mail
             incoming_email: "Adresse e-mail entrante personnalisée"
             incoming_email_placeholder: "saisissez une adresse e-mail"
+            incoming_email_tooltip: "Vous pouvez séparer plusieurs adresses e-mail avec le caractère | ."
             visibility: Visibilité
             visibility_levels:
               title: "Qui peut voir ce groupe ?"

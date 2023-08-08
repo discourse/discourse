@@ -277,6 +277,8 @@ sv:
       pill: "Relaterade meddelanden"
       see_all: 'Visa <a href="%{path}">alla meddelanden</a> från @%{username}...'
     suggested_topics:
+      title: "Nya och olästa ämnen"
+      pill: "Föreslagna"
       pm_title: "Föreslagna meddelanden"
     about:
       simple_title: "Om"
@@ -4213,10 +4215,12 @@ sv:
           tel: "Ange ett giltigt telefonnummer."
           text: "Ange ett textvärde."
           url: "Ange en giltig URL."
-        tooShort: "Inmatningen måste vara %{minLength} tecken eller längre."
-        tooLong: "Inmatningen måste vara kortare än %{maxLength} tecken."
-        rangeOverflow: "Inmatningen måste vara mindre än %{max}."
-        rangeUnderflow: "Inmatningen måste vara mer än %{min}."
+        rangeOverflow:
+          one: "Inmatningen måste vara mindre än %{count}."
+          other: "Inmatningen måste vara mindre än %{count}."
+        rangeUnderflow:
+          one: "Inmatningen måste vara mer än %{count}."
+          other: "Inmatningen måste vara mer än %{count}."
         patternMismatch: "Matcha det begärda formatet."
         badInput: "Ange en giltig inmatning."
   admin_js:
@@ -4341,6 +4345,7 @@ sv:
             email: E-post
             incoming_email: "Egenvald inkommande e-postadress"
             incoming_email_placeholder: "Ange e-postadress"
+            incoming_email_tooltip: "Du kan skilja på flera e-postadresser med tecknet |."
             visibility: Synlighet
             visibility_levels:
               title: "Vem kan se denna grupp?"

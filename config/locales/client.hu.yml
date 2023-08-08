@@ -3844,6 +3844,7 @@ hu:
             email: Email
             incoming_email: "Egyéni bejövő email cím"
             incoming_email_placeholder: "Add meg az email címed"
+            incoming_email_tooltip: "Több e-mail címet elválaszthat a | karakterrel."
             visibility: Láthatóság
             visibility_levels:
               title: "Ki láthatja ezt a csoportot?"

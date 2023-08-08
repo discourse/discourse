@@ -18,7 +18,7 @@ ca:
       no_day: "%B %Y"
   date:
     month_names:
-    - null
+    -
     - gener
     - febrer
     - març

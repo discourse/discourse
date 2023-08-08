@@ -45,7 +45,7 @@ pt_BR:
         label: "Resultados"
       remove-vote:
         title: "Remover seu voto"
-        label: "Desfazer votação"
+        label: "Cancelar voto"
       hide-results:
         title: "Voltar para os seus votos"
         label: "Votar"

@@ -18,7 +18,7 @@ sw:
       no_day: "%Y %B"
   date:
     month_names:
-    - null
+    -
     - Mwezi wa kwanza
     - Mwezi wa pili
     - Mwezi wa tatu
