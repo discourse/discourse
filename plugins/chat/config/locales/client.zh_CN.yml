@@ -318,9 +318,9 @@ zh_CN:
       channel_edit_name_slug_modal:
         title: 编辑频道
         input_placeholder: 添加名称
-        slug_description: 在 URL 中使用频道 slug 而不是频道名称
+        slug_description: 在 URL 中使用频道缩略名而不是频道名称
         name: 频道名称
-        slug: 频道 slug（可选）
+        slug: 频道缩略名（可选）
       channel_edit_description_modal:
         title: 编辑描述
         input_placeholder: 添加描述
@@ -363,7 +363,7 @@ zh_CN:
         create: "创建频道"
         description: "描述（可选）"
         name: "频道名称"
-        slug: "频道 slug（可选）"
+        slug: "频道缩略名（可选）"
         title: "新建频道"
         type: "类型"
         types:

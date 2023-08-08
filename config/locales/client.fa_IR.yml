@@ -246,9 +246,9 @@ fa_IR:
       aria_label: "فیلتر بر اساس دوره زمانی"
     related_messages:
       title: "پیام‌های مرتبط"
-      pill: "پیام‌های مرتبط"
       see_all: '<a href="%{path}">تمام پیام‌های</a> از طرف %{username}@ را ببینید'
     suggested_topics:
+      title: "موضوعات پیشنهادی"
       pm_title: "پیام‌های پیشنهادی"
     about:
       simple_title: "درباره"

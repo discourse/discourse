@@ -235,9 +235,9 @@ vi:
       aria_label: "Lọc theo khoảng thời gian"
     related_messages:
       title: "Tin nhắn liên quan"
-      pill: "Tin nhắn liên quan"
       see_all: 'Xem <a href="%{path}"> toàn bộ tin nhắn </a> từ %{username}...'
     suggested_topics:
+      title: "Chủ đề tương tự"
       pm_title: "Tin nhắn gợi ý"
     about:
       simple_title: "Giới thiệu"

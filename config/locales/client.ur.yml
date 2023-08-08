@@ -247,9 +247,9 @@ ur:
       aria_label: "مدت کے لحاظ سے فلٹر کریں"
     related_messages:
       title: "متعلقہ پیغامات"
-      pill: "متعلقہ پیغامات"
       see_all: '@%{username} کی طرف سے <a href="%{path}">تمام پیغامات</a> دیکھیں...'
     suggested_topics:
+      title: "تجویز کردہ موضوعات"
       pm_title: "تجویز کیے گئے پیغامات"
     about:
       simple_title: "بارے میں"

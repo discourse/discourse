@@ -19,7 +19,7 @@ zh_CN:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - 1 月
     - 2 月
     - 3 月

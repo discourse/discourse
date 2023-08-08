@@ -274,9 +274,9 @@ sv:
       aria_label: "Filtrera efter period"
     related_messages:
       title: "Relaterade meddelanden"
-      pill: "Relaterade meddelanden"
       see_all: 'Visa <a href="%{path}">alla meddelanden</a> från @%{username}...'
     suggested_topics:
+      title: "Föreslagna ämnen"
       pm_title: "Föreslagna meddelanden"
     about:
       simple_title: "Om"

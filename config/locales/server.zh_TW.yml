@@ -19,7 +19,7 @@ zh_TW:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - 一月
     - 二月
     - 三月
@@ -545,6 +545,7 @@ zh_TW:
       unknown: "\\b不知名的瀏覽器"
     device:
       android: "安卓裝置"
+      chromebook: "Chrome OS"
       ipad: "iPad"
       iphone: "iPhone"
       ipod: "iPod"
@@ -555,6 +556,7 @@ zh_TW:
       unknown: "不知名的裝置"
     os:
       android: "安卓"
+      chromeos: "Chrome OS"
       ios: "iOS"
       linux: "Linux"
       macos: "macOS"
@@ -762,6 +764,11 @@ zh_TW:
       yaxis: "新的參與者數量"
       description: "這段期間第一次發文的使用者數量。"
     trust_level_growth:
+      xaxis:
+        tl1_reached: "達到信任等級 1"
+        tl2_reached: "達到信任等級 2"
+        tl3_reached: "達到信任等級 3"
+        tl4_reached: "達到信任等級 4"
       yaxis: "天"
     consolidated_page_views:
       title: "綜合瀏覽量"
@@ -1023,6 +1030,7 @@ zh_TW:
     top_users_by_likes_received_from_inferior_trust_level:
       labels:
         user: 使用者
+        trust_level: 信任等級
         qtt_like: 收到的讚
     top_users_by_likes_received_from_a_variety_of_people:
       labels:
@@ -1048,6 +1056,7 @@ zh_TW:
     force_https_warning: "伺服器設置使用SSL，但<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>並未在伺服器設置中啟用。"
     out_of_date_themes: "以下主題可更新："
     unreachable_themes: "我們無法檢查以下主題是否可更新："
+    v3_analytics_deprecated: "您的 Discourse 目前正在使用 Google Analytics 3，將在 2023 年 7 月後失去支援。 <a href='https://meta.discourse.org/t/260498'>立即升級到 Google Analytics 4</a> 以繼續接收有關您網站性能的寶貴見解和分析。"
   site_settings:
     disabled: "停用"
     censored_words: "將被自動替換為 &#9632;&#9632;&#9632;&#9632;"
@@ -1589,6 +1598,7 @@ zh_TW:
   original_poster: "原始作者"
   most_recent_poster: "當前大部分貼文作者"
   frequent_poster: "頻繁發文者"
+  poster_description_joiner: "、"
   redirected_to_top_reasons:
     new_user: "歡迎來到我們的社群！這是最近的熱門主題。"
     not_seen_in_a_month: "歡迎回來！我們已經好久沒見到你了。這些是你不在時的最熱門主題。"
@@ -1694,6 +1704,7 @@ zh_TW:
       must_not_contain_two_special_chars_in_seq: "必須不包括連續的 2 個或更多的特殊字元（.-_）"
       must_not_end_with_confusing_suffix: "不能以難以分辨的尾碼結尾，比如 .json 或者 .png 等"
     email:
+      invalid: "無效。"
       not_allowed: "本站不允許使用該郵箱服務商提供的電子郵箱，請使用其它郵箱位址。"
       blocked: "不被允許。"
       revoked: "在%{date}之前不發送郵件至“%{email}”"
@@ -1815,6 +1826,21 @@ zh_TW:
   new_version_mailer_with_notes:
     title: "包含提醒的新版本 Mailer"
     subject_template: "[%{email_prefix}] 有得更新了"
+    text_body_template: |
+      好耶，[Discourse](https://www.discourse.org) 有新版本了！
+
+      您的版本：%{installed_version}
+      新版本：**%{new_version}**
+
+      - 使用我們的**[一鍵瀏覽器升級](%{base_url}/admin/upgrade)**來輕鬆升級
+
+      - 閱讀[版本資訊](https://meta.discourse.org/tag/release-notes)以了解有什麼新功能，或查看 [GitHub 原始變更日誌](https://github.com/discourse/discourse/commits/main)
+
+      - 前往 [meta.discourse.org](https://meta.discourse.org) 以查看新聞，參與討論，或取得支援。
+
+      ### 版本資訊
+
+      %{notes}
   flag_reasons:
     off_topic: "你的貼文被標記為 **偏離主題**：鑒於當前的主題標題和第一個貼文，社群成員們感覺它不適合處于這個主題中。"
     spam: "你的貼文被標記為 **廣告**：社群成員覺得它是廣告，像是在過度地推廣着什麼，而不是預期中與主題有關的內容。"
@@ -2510,6 +2536,18 @@ zh_TW:
     suspicious_login:
       title: "新登入提醒"
       subject_template: "[%{site_name}] 新登入來自%{location}"
+      text_body_template: |
+        您好，
+
+        我們注意到您從不常使用的裝置或地點登入。這是你嗎？
+
+         -地點：%{location} (%{client_ip})
+         -瀏覽器：%{browser}
+         -裝置：%{device} - %{os}
+
+        如果這是您，那太好了！您無需做任何操作。
+
+        如果這不是您，請檢查[您現有的工作階段](%{base_url}/my/preferences/security)，並考慮變更密碼。
     post_approved:
       title: "你的貼文已通過"
   page_not_found:
@@ -2876,11 +2914,15 @@ zh_TW:
             placeholder: "小明的論壇"
           site_description:
             placeholder: "小明和他的朋友討論酷東西的論壇"
+          default_locale:
+            label: "語言"
       privacy:
         fields:
           login_required:
             placeholder: "私密"
             extra_description: "使用者必須登入後才能訪問此社群"
+          invite_only:
+            placeholder: "僅限邀請"
           must_approve_users:
             extra_description: "使用者必須經過工作人員的批准"
           enable_sidebar:
@@ -2906,6 +2948,7 @@ zh_TW:
           governing_law:
             placeholder: "加州法律"
           contact_url:
+            label: "網頁"
             placeholder: "https://www.example.com/contact-us"
           city_for_disputes:
             placeholder: "舊金山，加洲（California）"

@@ -234,9 +234,9 @@ gl:
       other: "%{count} caracteres"
     related_messages:
       title: "Mensaxes relacionadas"
-      pill: "Mensaxes relacionadas"
       see_all: 'Ver <a href="%{path}">todas as mensaxes</a> de @%{username}...'
     suggested_topics:
+      title: "Temas suxeridos"
       pm_title: "Mensaxes suxeridas"
     about:
       simple_title: "Verbo de"

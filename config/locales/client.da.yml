@@ -243,9 +243,9 @@ da:
       aria_label: "Filtrer efter periode"
     related_messages:
       title: "Relaterede beskeder"
-      pill: "Relaterede beskeder"
       see_all: 'Se <a href="%{path}">alle beskeder</a> fra @ %{username} ...'
     suggested_topics:
+      title: "Foreslåede emner"
       pm_title: "Foreslåede beskeder"
     about:
       simple_title: "Om"

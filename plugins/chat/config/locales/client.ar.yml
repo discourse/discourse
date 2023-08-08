@@ -117,7 +117,7 @@ ar:
       enable: "تفعيل الدردشة"
       flag: "الإبلاغ"
       emoji: "إدراج رمز تعبيري"
-      flagged: "لقد تم الإبلاغ عن الرسالة للمراجعة"
+      flagged: "لقد تم الإبلاغ عن هذه الرسالة للمراجعة"
       invalid_access: "ليس لديك إذن الوصول لعرض قناة الدردشة هذه"
       invitation_notification: "دعاك <span>%{username}</span> <span>للانضمام إلى قناة دردشة</span>"
       in_reply_to: "ردًا على"

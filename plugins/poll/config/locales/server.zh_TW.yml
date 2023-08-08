@@ -9,6 +9,7 @@ zh_TW:
     poll_maximum_options: "投票允許的最大選項數。"
     poll_edit_window_mins: "投票創建後多少分鐘內可以編輯？"
   poll:
+    poll: "投票"
     multiple_polls_without_name: "有多個投票沒有名字。使用“<code>name</code>”屬性區分各投票。"
     multiple_polls_with_same_name: "有多個投票的名字相同：<strong>%{name}</strong>。使用“<code>name</code>”屬性區分各投票。"
     default_poll_must_have_less_options:
@@ -28,3 +29,5 @@ zh_TW:
     only_staff_or_op_can_toggle_status: "只有管理人員或者發佈投票的人才能改變投票狀態。"
     email:
       link_to_poll: "點擊查看投票。"
+    user_field:
+      no_data: "無資料"

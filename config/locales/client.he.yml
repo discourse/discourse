@@ -336,11 +336,9 @@ he:
       aria_label: "סינון לפי תקופה"
     related_messages:
       title: "הודעות קשורות"
-      pill: "הודעות קשורות"
       see_all: 'להציג את <a href="%{path}">כל ההודעות</a> מאת ‎@%{username}‎…'
     suggested_topics:
-      title: "נושאים חדשים ולא נקראו"
-      pill: "מוצע"
+      title: "נושאים מוצעים"
       pm_title: "הודעות מוצעות"
     about:
       simple_title: "על אודות"

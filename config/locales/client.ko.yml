@@ -236,9 +236,9 @@ ko:
       aria_label: "기간별 필터링"
     related_messages:
       title: "관련 메시지"
-      pill: "관련 메시지"
       see_all: '@%{username} 님의 <a href="%{path}">모든 메시지</a> 보기…'
     suggested_topics:
+      title: "주요 글"
       pm_title: "제안된 메시지"
     about:
       simple_title: "정보"

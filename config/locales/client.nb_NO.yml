@@ -239,9 +239,9 @@ nb_NO:
       other: "%{count} tegn"
     related_messages:
       title: "Relaterte meldinger"
-      pill: "Relaterte meldinger"
       see_all: 'se <a href="%{path}">alle meldinger</a> fra @%{username} …'
     suggested_topics:
+      title: "Anbefalte emner"
       pm_title: "Anbefalte meldinger"
     about:
       simple_title: "Om"

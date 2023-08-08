@@ -19,7 +19,7 @@ de:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - Januar
     - Februar
     - März

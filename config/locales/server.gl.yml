@@ -18,7 +18,7 @@ gl:
       no_day: "%B %Y"
   date:
     month_names:
-    - null
+    -
     - Xaneiro
     - Febreiro
     - Marzo

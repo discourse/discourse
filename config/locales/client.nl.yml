@@ -274,9 +274,9 @@ nl:
       aria_label: "Filteren op periode"
     related_messages:
       title: "Gerelateerde berichten"
-      pill: "Gerelateerde berichten"
       see_all: '<a href="%{path}">Alle berichten</a> van @%{username} weergeven...'
     suggested_topics:
+      title: "Voorgestelde topics"
       pm_title: "Voorgestelde berichten"
     about:
       simple_title: "Over"
@@ -671,7 +671,7 @@ nl:
       edit_columns:
         title: "Mapkolommen bewerken"
         save: "Opslaan"
-        reset_to_default: "Standaard herstellen"
+        reset_to_default: "Resetten"
       group:
         all: "alle groepen"
       sort:
@@ -1114,7 +1114,7 @@ nl:
         default_description: "Standaard voor thema"
         disable_dark_scheme: "Hetzelfde als normaal"
         dark_instructions: "Je kunt een voorbeeld van het kleurenschema van de donkere modus bekijken door de donkere modus van je apparaat in te schakelen."
-        undo: "Herstellen"
+        undo: "Resetten"
         regular: "Normaal"
         dark: "Donkere modus"
         default_dark_scheme: "(standaard voor website)"

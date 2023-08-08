@@ -91,6 +91,7 @@ pl_PL:
         few: "Nie możesz utworzyć bezpośredniej wiadomości z więcej niż %{count} innymi użytkownikami."
         many: "Nie możesz utworzyć bezpośredniej wiadomości z więcej niż %{count} innymi użytkownikami."
         other: "Nie możesz utworzyć bezpośredniej wiadomości z więcej niż %{count} innymi użytkownikami."
+      original_message_not_found: "Nie można znaleźć przodka wiadomości, na którą odpowiadasz, lub został on usunięty."
       thread_invalid_for_channel: "Wątek nie jest częścią udostępnionego kanału."
       thread_does_not_match_parent: "Wątek nie pasuje do wiadomości nadrzędnej."
     reviewables:

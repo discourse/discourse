@@ -274,9 +274,9 @@ fi:
       aria_label: "Suodata ajanjakson mukaan"
     related_messages:
       title: "Aiheeseen liittyviä viestejä"
-      pill: "Aiheeseen liittyviä viestejä"
       see_all: 'Katso <a href="%{path}">kaikki viestit</a> käyttäjältä @%{username}...'
     suggested_topics:
+      title: "Ehdotettuja ketjuja"
       pm_title: "Viestiehdotuksia"
     about:
       simple_title: "Tietoa"
@@ -2224,7 +2224,7 @@ fi:
       ulist_title: "Luettelomerkillinen luettelo"
       list_item: "Luettelokohde"
       toggle_direction: "Vaihda suuntaa"
-      help: "Markdown-mukkausohje"
+      help: "Markdown-muokkausohje"
       collapse: "pienennä kirjoituspaneeli"
       open: "avaa kirjoituspaneeli"
       abandon: "sulje kirjoitustila ja hylkää luonnos"
