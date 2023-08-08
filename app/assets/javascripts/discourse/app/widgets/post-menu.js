@@ -65,14 +65,12 @@ export function buildButton(name, widget) {
 
   // Look for a button replacement, build and return widget attrs if present
   let replacement = _buttonsToReplace[name];
-  if (replacement) {
-    if (replacement.shouldRender(widget)) {
-      return {
-        replaced: true,
-        name: replacement.name,
-        attrs: replacement.buildAttrs(widget),
-      };
-    }
+  if (replacement && replacement?.shouldRender(widget)) {
+    return {
+      replaced: true,
+      name: replacement.name,
+      attrs: replacement.buildAttrs(widget),
+    };
   }
 
   let builder = _builders[name];
