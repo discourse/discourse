@@ -77,7 +77,7 @@ export default DiscourseRoute.extend(OpenComposer, {
     if (this.get("currentUser.has_topic_draft")) {
       this.openTopicDraft();
     } else {
-      // this.openComposer(this.controllerFor("discovery/topics"));
+      this.openComposer(this.controllerFor("discovery/topics"));
     }
   },
 
