@@ -18,6 +18,6 @@ export default class SwitchPanelButtons extends Component {
     const destination = url === "/" ? "discovery.latest" : url;
     this.router
       .transitionTo(destination)
-      .then(() => (this.isSwitching = false));
+      .finally(() => (this.isSwitching = false));
   }
 }
