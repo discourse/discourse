@@ -130,7 +130,7 @@ import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-export const PLUGIN_API_VERSION = "1.8.0";
+export const PLUGIN_API_VERSION = "1.8.1";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -658,7 +658,7 @@ class PluginApi {
   }
 
   /**
-   * Replace existing button with a passed in widget
+   * Replace an existing button with a widget
    *
    * Example:
    * ```
