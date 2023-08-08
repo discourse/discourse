@@ -5,9 +5,6 @@ RSpec.describe "CommonMark" do
     SiteSetting.enable_markdown_typographer = false
     SiteSetting.highlighted_languages = "ruby|aa"
 
-    # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
-    SiteSetting.enable_experimental_hashtag_autocomplete = false
-
     html, state, md = nil
     failed = 0
 
@@ -34,7 +31,7 @@ RSpec.describe "CommonMark" do
           cooked = PrettyText.markdown(md, sanitize: false)
           cooked.strip!
           cooked.gsub!(" class=\"lang-auto\"", "")
-          cooked.gsub!(%r{<span class="hashtag">(.*)</span>}, "\\1")
+          cooked.gsub!(%r{<span class="hashtag-raw">(.*)</span>}, "\\1")
           cooked.gsub!(%r{<a name="(.*)" class="anchor" href="#\1*"></a>}, "")
           # we support data-attributes which is not in the spec
           cooked.gsub!("<pre data-code-startline=\"3\">", "<pre>")

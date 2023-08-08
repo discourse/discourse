@@ -2,7 +2,7 @@
 
 describe "Using #hashtag autocompletion to search for and lookup categories and tags",
          type: :system do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:current_user) { Fabricate(:user) }
   fab!(:category) do
     Fabricate(:category, name: "Cool Category", slug: "cool-cat", topic_count: 3234)
   end
@@ -16,10 +16,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
   let(:uncategorized_category) { Category.find(SiteSetting.uncategorized_category_id) }
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
-  before do
-    SiteSetting.enable_experimental_hashtag_autocomplete = true
-    sign_in user
-  end
+  before { sign_in(current_user) }
 
   def visit_topic_and_initiate_autocomplete(initiation_text: "something #co", expected_count: 2)
     topic_page.visit_topic_and_open_composer(topic)

@@ -1722,50 +1722,6 @@ RSpec.describe PrettyText do
   end
 
   it "produces hashtag links" do
-    # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
-    SiteSetting.enable_experimental_hashtag_autocomplete = false
-
-    category = Fabricate(:category, name: "testing")
-    category2 = Fabricate(:category, name: "known")
-    Fabricate(:topic, tags: [Fabricate(:tag, name: "known")])
-
-    cooked = PrettyText.cook(" #unknown::tag #known #known::tag #testing")
-
-    [
-      "<span class=\"hashtag\">#unknown::tag</span>",
-      "<a class=\"hashtag\" href=\"#{category2.url}\">#<span>known</span></a>",
-      "<a class=\"hashtag\" href=\"/tag/known\">#<span>known</span></a>",
-      "<a class=\"hashtag\" href=\"#{category.url}\">#<span>testing</span></a>",
-    ].each { |element| expect(cooked).to include(element) }
-
-    cooked = PrettyText.cook("[`a` #known::tag here](http://example.com)")
-
-    html = <<~HTML
-      <p><a href="http://example.com" rel="noopener nofollow ugc"><code>a</code> #known::tag here</a></p>
-    HTML
-
-    expect(cooked).to eq(html.strip)
-
-    cooked = PrettyText.cook("<a href='http://example.com'>`a` #known::tag here</a>")
-
-    expect(cooked).to eq(html.strip)
-
-    cooked = PrettyText.cook("<A href='/a'>test</A> #known::tag")
-    html = <<~HTML
-      <p><a href="/a">test</a> <a class="hashtag" href="/tag/known">#<span>known</span></a></p>
-    HTML
-
-    expect(cooked).to eq(html.strip)
-
-    # ensure it does not fight with the autolinker
-    expect(PrettyText.cook(" http://somewhere.com/#known")).not_to include("hashtag")
-    expect(PrettyText.cook(" http://somewhere.com/?#known")).not_to include("hashtag")
-    expect(PrettyText.cook(" http://somewhere.com/?abc#known")).not_to include("hashtag")
-  end
-
-  it "produces hashtag links when enable_experimental_hashtag_autocomplete is enabled" do
-    SiteSetting.enable_experimental_hashtag_autocomplete = true
-
     user = Fabricate(:user)
     category = Fabricate(:category, name: "testing", slug: "testing")
     category2 = Fabricate(:category, name: "known", slug: "known")
@@ -2059,11 +2015,8 @@ HTML
     end
 
     it "does not replace hashtags and mentions" do
-      # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
-      SiteSetting.enable_experimental_hashtag_autocomplete = false
-
       Fabricate(:user, username: "test")
-      category = Fabricate(:category, slug: "test")
+      category = Fabricate(:category, slug: "test", name: "test")
       Fabricate(
         :watched_word,
         action: WatchedWord.actions[:replace],
@@ -2071,19 +2024,25 @@ HTML
         replacement: "discourse",
       )
 
-      expect(PrettyText.cook("@test #test test")).to match_html(<<~HTML)
-        <p>
-          <a class="mention" href="/u/test">@test</a>
-          <a class="hashtag" href="/c/test/#{category.id}">#<span>test</span></a>
-          discourse
-        </p>
-      HTML
+      cooked = PrettyText.cook("@test #test test")
+      expect(cooked).to have_tag("a", text: "@test", with: { class: "mention", href: "/u/test" })
+      expect(cooked).to have_tag(
+        "a",
+        text: "test",
+        with: {
+          class: "hashtag-cooked",
+          href: "/c/test/#{category.id}",
+          "data-type": "category",
+          "data-slug": category.slug,
+          "data-id": category.id,
+        },
+      ) do
+        with_tag("span", with: { class: "hashtag-icon-placeholder" })
+      end
+      expect(cooked).to include("discourse")
     end
 
     it "does not replace hashtags and mentions when watched words are regular expressions" do
-      # TODO (martin) Remove when enable_experimental_hashtag_autocomplete is default for all sites
-      SiteSetting.enable_experimental_hashtag_autocomplete = false
-
       SiteSetting.watched_words_regular_expressions = true
 
       Fabricate(:user, username: "test")
@@ -2095,19 +2054,6 @@ HTML
         replacement: "discourse",
       )
 
-      cooked = PrettyText.cook("@test #test test")
-      expect(cooked).to have_tag("a", text: "@test", with: { class: "mention", href: "/u/test" })
-      expect(cooked).to have_tag(
-        "a",
-        text: "#test",
-        with: {
-          class: "hashtag",
-          href: "/c/test/#{category.id}",
-        },
-      )
-      expect(cooked).to include("tdiscourset")
-
-      SiteSetting.enable_experimental_hashtag_autocomplete = true
       cooked = PrettyText.cook("@test #test test")
       expect(cooked).to have_tag("a", text: "@test", with: { class: "mention", href: "/u/test" })
       expect(cooked).to have_tag(

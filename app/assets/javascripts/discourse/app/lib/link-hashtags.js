@@ -1,3 +1,6 @@
+// TODO (martin) Delete this after core PR and any other PRs that depend
+// on this file (e.g. discourse-encrypt) are merged.
+
 import deprecated from "discourse-common/lib/deprecated";
 import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
 import { ajax } from "discourse/lib/ajax";
