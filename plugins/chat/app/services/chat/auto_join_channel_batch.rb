@@ -62,7 +62,7 @@ module Chat
     end
 
     def publish_new_channel(channel:, added_user_ids:, **)
-      ::Chat::Publisher.publish_new_channel(channel.reload, User.where(id: added_user_ids))
+      ::Chat::Publisher.publish_new_channel(channel, User.where(id: added_user_ids))
     end
   end
 end
