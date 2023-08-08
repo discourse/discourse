@@ -195,6 +195,28 @@ RSpec.describe ListController do
 
       expect(new_sql_queries_count).to be <= initial_sql_queries_count
     end
+
+    context "with topics with tags" do
+      let(:tag_group) { Fabricate.build(:tag_group) }
+      let(:tag_group_permission) { Fabricate.build(:tag_group_permission, tag_group: tag_group) }
+      let(:restricted_tag) { Fabricate(:tag) }
+      let(:public_tag) { Fabricate(:tag) }
+
+      before do
+        tag_group.tag_group_permissions << tag_group_permission
+        tag_group.save!
+        tag_group_permission.tag_group.tags << restricted_tag
+        topic.tags << [public_tag, restricted_tag]
+      end
+
+      it "does not show hidden tags" do
+        get "/latest"
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include(public_tag.name)
+        expect(response.body).not_to include(restricted_tag.name)
+      end
+    end
   end
 
   describe "categories and X" do

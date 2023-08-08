@@ -1,37 +1,37 @@
-import Controller, { inject as controller } from "@ember/controller";
+import { inject as service } from "@ember/service";
 import { alias, equal, not } from "@ember/object/computed";
+import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import Category from "discourse/models/category";
 import DiscourseURL from "discourse/lib/url";
-import { inject as service } from "@ember/service";
 
-export default Controller.extend({
-  discoveryTopics: controller("discovery/topics"),
-  navigationCategory: controller("navigation/category"),
-  application: controller(),
-  router: service(),
-  viewingCategoriesList: equal(
-    "router.currentRouteName",
-    "discovery.categories"
-  ),
-  loading: false,
+export default class DiscoveryController extends Controller {
+  @service router;
 
-  category: alias("navigationCategory.category"),
-  noSubcategories: alias("navigationCategory.noSubcategories"),
+  @controller("discovery/topics") discoveryTopics;
+  @controller("navigation/category") navigationCategory;
+  @controller application;
 
-  loadedAllItems: not("discoveryTopics.model.canLoadMore"),
+  @equal("router.currentRouteName", "discovery.categories")
+  viewingCategoriesList;
+
+  @alias("navigationCategory.category") category;
+  @alias("navigationCategory.noSubcategories") noSubcategories;
+  @not("discoveryTopics.model.canLoadMore") loadedAllItems;
+
+  loading = false;
 
   @action
   loadingBegan() {
     this.set("loading", true);
     this.set("application.showFooter", false);
-  },
+  }
 
   @action
   loadingComplete() {
     this.set("loading", false);
     this.set("application.showFooter", this.loadedAllItems);
-  },
+  }
 
   showMoreUrl(period) {
     let url = "",
@@ -58,18 +58,17 @@ export default Controller.extend({
     urlSearchParams.set("period", period);
 
     return `${url}?${urlSearchParams.toString()}`;
-  },
+  }
 
   get showLoadingSpinner() {
     return (
       this.get("loading") &&
       this.siteSettings.page_loading_indicator === "spinner"
     );
-  },
+  }
 
-  actions: {
-    changePeriod(p) {
-      DiscourseURL.routeTo(this.showMoreUrl(p));
-    },
-  },
-});
+  @action
+  changePeriod(p) {
+    DiscourseURL.routeTo(this.showMoreUrl(p));
+  }
+}

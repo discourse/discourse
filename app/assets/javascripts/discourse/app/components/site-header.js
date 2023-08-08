@@ -486,7 +486,7 @@ export default SiteHeaderComponent.extend({
       this._resizeObserver = new ResizeObserver((entries) => {
         for (let entry of entries) {
           if (entry.contentRect) {
-            const headerTop = this.header.offsetTop;
+            const headerTop = this.header?.offsetTop;
             document.documentElement.style.setProperty(
               "--header-top",
               `${headerTop}px`

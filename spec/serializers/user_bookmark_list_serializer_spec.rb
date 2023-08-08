@@ -18,7 +18,7 @@ RSpec.describe UserBookmarkListSerializer do
     let(:user_bookmark) { Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:user)) }
 
     def run_serializer
-      bookmark_list = UserBookmarkList.new(user: user, guardian: Guardian.new(user), params: {})
+      bookmark_list = UserBookmarkList.new(user: user, guardian: Guardian.new(user))
       bookmark_list.load
       UserBookmarkListSerializer.new(bookmark_list)
     end

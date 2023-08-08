@@ -75,7 +75,7 @@
       {{#if this.group.members}}
         <div class="card-row third-row">
           <div class="members metadata">
-            {{#each this.group.members as |user|}}
+            {{#each this.highlightedMembers as |user|}}
               <a
                 {{on "click" this.close}}
                 href={{user.path}}

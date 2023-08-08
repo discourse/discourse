@@ -4,9 +4,11 @@ class Admin::ApiController < Admin::AdminController
   # Note: in the REST API, ApiKeys are referred to simply as "key"
   # If we used "api_key", then our user provider would try to use the value for authentication
 
+  INDEX_LIMIT = 50
+
   def index
     offset = (params[:offset] || 0).to_i
-    limit = (params[:limit] || 50).to_i.clamp(1, 50)
+    limit = fetch_limit_from_params(default: INDEX_LIMIT, max: INDEX_LIMIT)
 
     keys =
       ApiKey

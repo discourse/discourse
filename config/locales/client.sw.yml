@@ -201,7 +201,6 @@ sw:
       one: "Herufi %{count}"
       other: "Herufi %{count}"
     suggested_topics:
-      title: "Mada Zilizopendekezwa"
       pm_title: "Ujumbe Uliopendekezwa"
     about:
       simple_title: "Kuhusu "
@@ -2588,6 +2587,7 @@ sw:
           create: "Tengeneza"
           create_type: "Aina"
           create_name: "Jina"
+          save: "Hifadhi"
           long_title: "Boresha rangi, taarifa za CSS na HTML zilipo ndani ya tovuti yako"
           edit: "Hariri"
           edit_confirm: "Mandhari hii ni kutoka nje, ukihariri CSS/HTML mabadiliko yatafutwa mara ukisasisha mandhari."

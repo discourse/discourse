@@ -140,8 +140,6 @@ te:
     character_count:
       one: "%{count} అక్షరం"
       other: "%{count} అక్షరాలు"
-    suggested_topics:
-      title: "సూచించే విషయాలు"
     about:
       simple_title: "గురించి"
       title: "%{title} గురించి"
@@ -1568,6 +1566,7 @@ te:
           title: "అలంకారాలు"
           create_type: "రకం"
           create_name: "పేరు"
+          save: "భద్రపరుచు"
           edit: "సవరించు"
           settings: "అమరికలు"
           upload: "ఎక్కించు"

@@ -248,9 +248,9 @@ lv:
       other: "%{count} zīmes"
     related_messages:
       title: "Saistītās ziņas"
+      pill: "Saistītās ziņas"
       see_all: 'Skatīt <a href="%{path}">visus ziņojumus</a> no @%{username}...'
     suggested_topics:
-      title: "Ieteiktās tēmas"
       pm_title: "Ieteiktās ziņas"
     about:
       simple_title: "Par"
@@ -2680,10 +2680,6 @@ lv:
         zero: "+Vēl %{count}"
         one: "+Vēl %{count}"
         other: "+Vēl %{count}"
-      granted:
-        zero: "%{count} piešķirti"
-        one: "%{count} piešķirts"
-        other: "%{count} piešķirti"
       select_badge_for_title: Izvēlieties žetonu, ko lietot kā jūsu titulu
       none: "(neviens)"
       badge_grouping:
@@ -3093,6 +3089,7 @@ lv:
           create: "Izveidot"
           create_type: "Tips"
           create_name: "Vārds"
+          save: "Saglabāt"
           long_title: "Labot jūsu vietnes krāsas, CSS un HTML saturu"
           edit: "Labot"
           edit_confirm: "Šis ir attālināts dizains; ja jūs mainīsiet CSS/HTML, jūsu veiktās izmaiņas tiks izdzēsta nākošajā atjaunināšanas reizē."

@@ -235,9 +235,9 @@ vi:
       aria_label: "Lọc theo khoảng thời gian"
     related_messages:
       title: "Tin nhắn liên quan"
+      pill: "Tin nhắn liên quan"
       see_all: 'Xem <a href="%{path}"> toàn bộ tin nhắn </a> từ %{username}...'
     suggested_topics:
-      title: "Chủ đề tương tự"
       pm_title: "Tin nhắn gợi ý"
     about:
       simple_title: "Giới thiệu"
@@ -3323,8 +3323,6 @@ vi:
         other: "%{count} huy hiệu"
       more_badges:
         other: "+%{count} Khác"
-      granted:
-        other: "%{count} được cấp"
       select_badge_for_title: Chọn huy hiệu để sử dụng như là tên
       none: "(không có gì)"
       successfully_granted: "Đã cấp %{badge} cho %{username}"
@@ -4065,6 +4063,7 @@ vi:
           create: "Tạo"
           create_type: "Loại"
           create_name: "Tên"
+          save: "Lưu lại"
           long_title: "Sửa đổi màu sắc, nội dung CSS và HTML của trang web của bạn"
           edit: "Sửa"
           edit_confirm: "Đây là một Theme từ xa, nếu bạn chỉnh sửa CSS / HTML, các thay đổi của bạn sẽ bị xóa trong lần cập nhật Theme tiếp theo."

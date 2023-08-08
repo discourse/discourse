@@ -86,6 +86,7 @@ export default class DModal extends Component {
     }
 
     if (event.key === "Escape" && this.dismissable) {
+      event.stopPropagation();
       this.args.closeModal({ initiatedBy: CLOSE_INITIATED_BY_ESC });
     }
 

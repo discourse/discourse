@@ -141,8 +141,8 @@ be:
       other: "%{Count} сімвалаў"
     related_messages:
       title: "падобныя паведамленні"
+      pill: "падобныя паведамленні"
     suggested_topics:
-      title: "Прапанаваныя тэмы"
       pm_title: "прапанаваныя паведамленні"
     about:
       simple_title: "Аб сайце"
@@ -1310,7 +1310,6 @@ be:
         mark_tracking: "%{shortcut}Сачыць за тэмай"
     badges:
       title: значкі
-      awarded: узнагароджаны
       select_badge_for_title: Выберыце значок, будзе вашым званнем
       badge_grouping:
         community:
@@ -1626,6 +1625,7 @@ be:
           create: "стварыць"
           create_type: "тып"
           create_name: "Назва"
+          save: "захаваць"
           edit: "рэдагаваць"
           mobile: "Мабільны"
           settings: "Налады"

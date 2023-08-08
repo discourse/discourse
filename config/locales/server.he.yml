@@ -693,7 +693,7 @@ he:
 
       :handshake: **תרומה** על ידי תגובה, שיתוף נקודת המבט שלך, פרסום שאלות או הצעת משוב בדיון. בטרם פרסום תגובות או נושאים חדשים, נא לעיין ב[כללי הקהילה](%{base_path}/faq).
 
-      > לקבלת עזרה או הגשת הצעה, אפשר לשאול אותנו דרך [‎#feedback](%{base_path}/c/site-feedback) או [ליצור קשר עם המנהלים](%{base_path}/about).
+      > לקבלת עזרה או הגשת הצעה, אפשר לשאול אותנו דרך %{feedback_category} או [ליצור קשר עם המנהלים](%{base_path}/about).
   admin_quick_start_title: "מדריך למנהלים: איך מתחילים"
   category:
     topic_prefix: "על הקטגוריה %{category}"
@@ -2118,8 +2118,8 @@ he:
     permalink_normalizations: "החילו את הביטויים הרגולריים האלו לפני שמתאימים קישורים-קבועים, למשל: /(topic.*)\\?.*/\\1 יסיר מחרוזות שאילתה מנתיבי נושאים. הפורמט הוא regex+string משתמש ב \\1 וכד׳ כדי לגשת להתאמות"
     global_notice: "הצגת מודעה גלובלית דחופה בגדר חירום לכל המבקרים, יש להחליף בתוכן ריק כדי להסתיר אותה (מותר HTML)."
     disable_system_edit_notifications: "ביטול התראות עריכה על ידי משתמש המערכת כאשר 'download_remote_images_to_local' פעיל."
-    disable_category_edit_notifications: "השבתת התראות על עריכות של קטגוריות נושא."
-    disable_tags_edit_notifications: "השבתת התראות על עריכות של תגיות נושא."
+    disable_category_edit_notifications: "השבתת התראות על עריכות קטגוריות של נושאים. כולל נושאים ש‚פורסמו’ (למשל: טיוטות משותפות)."
+    disable_tags_edit_notifications: "השבתת התראות על עריכות תגיות של נושאים. כולל נושאים ש‚פורסמו’ (למשל: טיוטות משותפות)."
     notification_consolidation_threshold: "מספר ההתראות שסומנו בלייק או בקשות שהתקבלו לפני שההתראות קובצו להתראה אחת. יש להגדיר ל־0 כדי להשבית."
     likes_notification_consolidation_window_mins: "משך הזמן בשניות בו התראות מקובצות להתראה אחת לאחר שהגיעו לסף הזה. ניתן להגדיר את הסף דרך `SiteSetting.notification_consolidation_threshold` (סף קיבוץ התראות)."
     automatically_unpin_topics: "הסרת נעיצה אוטומטית של נושאים כאשר המשתמשים מגיעים לתחתית."

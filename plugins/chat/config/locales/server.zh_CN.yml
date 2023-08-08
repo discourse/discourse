@@ -7,7 +7,7 @@
 zh_CN:
   site_settings:
     chat_enabled: "启用聊天插件。"
-    enable_public_channels: "根据类别启用公共频道。"
+    enable_public_channels: "基于类别启用公开频道。"
     chat_allowed_groups: "这些群组中的用户可以聊天。请注意，管理人员始终可以访问聊天。"
     chat_channel_retention_days: "常规频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
     chat_dm_retention_days: "个人聊天频道中的聊天消息将保留此天数。设置为 0 将永久保留消息。"
@@ -36,32 +36,32 @@ zh_CN:
       title: "聊天频道归档完成"
       subject_template: "聊天频道归档成功完成"
       text_body_template: |
-        存档聊天频道 %{channel_hashtag_or_name} 已成功完成。这些消息已复制到主题 [%{topic_title}](%{topic_url}) 中。
+        归档聊天频道 %{channel_hashtag_or_name} 已成功完成。这些消息已复制到话题 [%{topic_title}](%{topic_url}) 中。
     chat_channel_archive_failed:
       title: "聊天频道归档失败"
       subject_template: "聊天频道归档失败"
       text_body_template: |
-        存档聊天频道 %{channel_hashtag_or_name} 失败。 %{messages_archived} 消息已存档。部分归档的消息被复制到主题 [%{topic_title}](%{topic_url}) 中。访问 %{channel_url} 的频道重试。
+        归档聊天频道 %{channel_hashtag_or_name} 失败。%{messages_archived} 条消息已归档。部分归档的消息被复制到话题 [%{topic_title}](%{topic_url}) 中。访问 %{channel_url} 下的频道以重试。
     chat_channel_archive_failed_no_topic:
       title: "聊天频道归档失败"
       subject_template: "聊天频道归档失败"
       text_body_template: |
-        存档聊天频道 %{channel_hashtag_or_name} 失败。没有消息被存档。话题创建不成功，原因如下：
+        归档聊天频道 %{channel_hashtag_or_name} 失败。没有消息被归档。话题创建未成功，原因如下：
 
           %{topic_validation_errors}
 
-        访问 %{channel_url} 频道重试。
+        访问 %{channel_url} 下的频道以重试。
   chat:
     deleted_chat_username: 已删除
     errors:
       channel_exists_for_category: "此类别和名称的频道已经存在"
       channel_new_message_disallowed:
-        archived: "该频道已被存档，无法发送新消息"
+        archived: "该频道已被归档，无法发送新消息"
         closed: "该频道已关闭，无法发送新消息"
-        read_only: "该频道是只读的，不能发送新消息"
+        read_only: "该频道为只读频道，无法发送新消息"
       channel_modify_message_disallowed:
-        archived: "频道已关闭，无法编辑或删除任何消息"
-        closed: "频道已关闭，无法编辑或删除任何消息"
+        archived: "该频道已关闭，无法编辑或删除任何消息"
+        closed: "该频道已关闭，无法编辑或删除任何消息"
         read_only: "该频道为只读频道，无法编辑或删除任何消息"
       user_cannot_send_message: "您目前无法发送消息。"
       rate_limit_exceeded: "超过了 30 秒内可发送的聊天消息的上限"
@@ -70,10 +70,10 @@ zh_CN:
       duplicate_message: "您在短时间内发布了一条相同的消息。"
       delete_channel_failed: "删除频道失败，请重试。"
       minimum_length_not_met:
-        other: "消息太短，必须至少有 %{count} 个字符。"
+        other: "消息过短，必须至少有 %{count} 个字符。"
       message_too_long:
         other: "消息过长，最多只能包含 %{count} 个字符。"
-      draft_too_long: "草稿太长了。"
+      draft_too_long: "草稿过长。"
       max_reactions_limit_reached: "此消息不允许有新的回应。"
       message_move_invalid_channel: "源频道和目标频道必须是公共频道。"
       message_move_no_messages_found: "找不到带有提供的消息 ID 的消息。"
@@ -84,12 +84,12 @@ zh_CN:
       actor_disallowed_dms: "您已选择阻止用户向您发送私人和直接消息，因此您无法创建新的直接消息。"
       actor_preventing_target_user_from_dm: "您已选择阻止 %{username} 向您发送私人和直接消息，因此您无法创建给他们的新直接消息。"
       user_cannot_send_direct_messages: "抱歉，您无法发送直接消息。"
-      over_chat_max_direct_message_users_allow_self: "你只能创建一个与自己的直接信息。"
+      over_chat_max_direct_message_users_allow_self: "您只能创建一个与自己的直接消息。"
       over_chat_max_direct_message_users:
         other: "您无法创建与超过 %{count} 个其他用户的直接消息。"
-      original_message_not_found: "无法找到您要回复信息的内容，或已被删除。"
-      thread_invalid_for_channel: "该聊天串不是所提供频道的一部分。"
-      thread_does_not_match_parent: "聊天串与父消息不匹配。"
+      original_message_not_found: "找不到您要回复信息的上级内容，或相关内容已被删除。"
+      thread_invalid_for_channel: "该对话不是所提供频道的一部分。"
+      thread_does_not_match_parent: "对话与父消息不匹配。"
     reviewables:
       message_already_handled: "谢谢，但我们已经审核此消息，并确定它不需要被再次举报。"
       actions:

@@ -25,6 +25,18 @@ nl:
           title: "Resultaten worden weergegeven zodra <strong>gesloten</strong>."
         staff:
           title: "Resultaten worden alleen aan <strong>medewerkers</strong> weergegeven."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Kies minimaal <strong>%{count} optie</strong>."
+            other: "Kies minimaal <strong>%{count} opties</strong>."
+          up_to_max_options:
+            one: "Kies maximaal <strong>%{count} optie</strong>."
+            other: "Kies maximaal <strong>%{count} opties</strong>."
+          x_options:
+            one: "Kies <strong>%{count} optie</strong>."
+            other: "Kies <strong>%{count} opties</strong>."
+          between_min_and_max_options: "Kies <strong>%{min} tot %{max} opties</strong>."
       cast-votes:
         title: "Je stemmen uitbrengen"
         label: "Stem nu!"
@@ -33,8 +45,10 @@ nl:
         label: "Resultaten"
       remove-vote:
         title: "Verwijder je stem"
+        label: "Stem ongedaan maken"
       hide-results:
         title: "Terug naar je stemmen"
+        label: "Stemmen"
       group-results:
         title: "Stemmen groeperen op gebruikersveld"
         label: "Verdeling weergeven"

@@ -244,9 +244,9 @@ ca:
       aria_label: "Filtra per període"
     related_messages:
       title: "Missatges relacionats"
+      pill: "Missatges relacionats"
       see_all: 'Mostra <a href="%{path}">tots els missatges</a> de @%{username}...'
     suggested_topics:
-      title: "Temes recomanats"
       pm_title: "Missatges recomanats"
     about:
       simple_title: "Quant a"
@@ -2755,9 +2755,6 @@ ca:
       more_badges:
         one: "+%{count} Més"
         other: "+%{count} Més"
-      granted:
-        one: "%{count} concedit"
-        other: "%{count} concedits"
       select_badge_for_title: Trieu una insígnia per a fer-la servir com a títol vostre
       none: "(cap)"
       successfully_granted: "S'ha concedit amb èxit %{badge} a %{username}"
@@ -3322,6 +3319,7 @@ ca:
           create: "Crea"
           create_type: "Tipus"
           create_name: "Nom"
+          save: "Desa"
           long_title: "Modifiqueu els continguts de colors, CSS i HTML del vostre lloc web"
           edit: "Edita"
           edit_confirm: "Aquest és una aparença remota. Si editeu CSS/HTML, els vostres canvis s'esborraran la pròxima vegada que actualitzeu l'aparença."

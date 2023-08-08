@@ -1,0 +1,45 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import DiscourseURL from "discourse/lib/url";
+import { action } from "@ember/object";
+import { next } from "@ember/runloop";
+import { isEmpty } from "@ember/utils";
+import I18n from "I18n";
+import Topic from "discourse/models/topic";
+
+// Modal related to changing the timestamp of posts
+export default class ChangeTimestamp extends Component {
+  @tracked saving = false;
+  @tracked date = moment().format("YYYY-MM-DD");
+  @tracked time;
+  @tracked flash;
+
+  get createdAt() {
+    return moment(`${this.date} ${this.time}`, "YYYY-MM-DD HH:mm:ss");
+  }
+
+  get validTimestamp() {
+    return moment().diff(this.createdAt, "minutes") < 0;
+  }
+
+  get buttonDisabled() {
+    return this.saving || this.validTimestamp || isEmpty(this.date);
+  }
+
+  @action
+  async changeTimestamp() {
+    this.saving = true;
+    try {
+      await Topic.changeTimestamp(
+        this.args.model.topic.id,
+        this.createdAt.unix()
+      );
+      this.args.closeModal();
+      next(() => DiscourseURL.routeTo(this.args.model.topic.url));
+    } catch {
+      this.flash = I18n.t("topic.change_timestamp.error");
+    } finally {
+      this.saving = false;
+    }
+  }
+}

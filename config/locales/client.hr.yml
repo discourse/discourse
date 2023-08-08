@@ -299,9 +299,9 @@ hr:
       aria_label: "Filtrirajte po razdoblju"
     related_messages:
       title: "Vezane poruke"
+      pill: "Vezane poruke"
       see_all: 'Pregledajte <a href="%{path}">sve poruke</a> od @%{username}...'
     suggested_topics:
-      title: "Preporučene teme"
       pm_title: "Predložene poruke"
     about:
       simple_title: "O nama"
@@ -3889,10 +3889,6 @@ hr:
         one: "+ još %{count}"
         few: "+%{count} više"
         other: "+%{count} više"
-      granted:
-        one: "%{count} odobreno"
-        few: "%{count} odobreno"
-        other: "%{count} odobreno"
       select_badge_for_title: Odaberi značku koju češ koristit kao titulu
       none: "(ništa)"
       successfully_granted: "Uspješno dodijeljeno %{badge} korisniku %{username}"
@@ -4728,6 +4724,7 @@ hr:
           create: "Kreiraj"
           create_type: "Tip"
           create_name: "Ime"
+          save: "Spremi"
           long_title: "Izmjena boja, CSS i HTML sadržaja vaše stranice"
           edit: "Izmijeni"
           edit_confirm: "Ovo je udaljena tema. Ako uredite CSS/HTML, vaše će se izmjene izbrisati pri sljedećem ažuriranju teme."

@@ -662,14 +662,6 @@ class User < ActiveRecord::Base
     results.to_h
   end
 
-  def unread_private_messages
-    Discourse.deprecate(
-      "#unread_private_messages is deprecated, use #unread_high_priority_notifications instead.",
-      drop_from: "2.5.0",
-    )
-    @unread_pms ||= unread_high_priority_notifications
-  end
-
   def unread_high_priority_notifications
     @unread_high_prios ||= unread_notifications_of_priority(high_priority: true)
   end
@@ -852,7 +844,6 @@ class User < ActiveRecord::Base
 
     payload = {
       unread_notifications: unread_notifications,
-      unread_private_messages: unread_private_messages,
       unread_high_priority_notifications: unread_high_priority_notifications,
       read_first_notification: read_first_notification?,
       last_notification: json,
@@ -1202,13 +1193,6 @@ class User < ActiveRecord::Base
     user_warnings.count
   end
 
-  def flags_received_count
-    posts
-      .includes(:post_actions)
-      .where("post_actions.post_action_type_id" => PostActionType.flag_types_without_custom.values)
-      .count
-  end
-
   def private_topics_count
     topics_allowed.where(archetype: Archetype.private_message).count
   end
@@ -1539,11 +1523,17 @@ class User < ActiveRecord::Base
   end
 
   def number_of_flagged_posts
-    ReviewableFlaggedPost.where(target_created_by: self.id).count
+    posts
+      .with_deleted
+      .includes(:post_actions)
+      .where("post_actions.post_action_type_id" => PostActionType.flag_types_without_custom.values)
+      .where("post_actions.agreed_at IS NOT NULL")
+      .count
   end
+  alias_method :flags_received_count, :number_of_flagged_posts
 
   def number_of_rejected_posts
-    ReviewableQueuedPost.rejected.where(created_by_id: self.id).count
+    ReviewableQueuedPost.rejected.where(target_created_by_id: self.id).count
   end
 
   def number_of_flags_given

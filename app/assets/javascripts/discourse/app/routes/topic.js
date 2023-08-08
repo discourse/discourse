@@ -12,6 +12,8 @@ import TopicFlag from "discourse/lib/flag-targets/topic-flag";
 import PostFlag from "discourse/lib/flag-targets/post-flag";
 import HistoryModal from "discourse/components/modal/history";
 import PublishPageModal from "discourse/components/modal/publish-page";
+import EditSlowModeModal from "discourse/components/modal/edit-slow-mode";
+import ChangeTimestampModal from "discourse/components/modal/change-timestamp";
 
 const SCROLL_DELAY = 500;
 
@@ -131,16 +133,15 @@ const TopicRoute = DiscourseRoute.extend({
 
   @action
   showTopicSlowModeUpdate() {
-    const model = this.modelFor("topic");
-
-    showModal("edit-slow-mode", { model });
+    this.modal.show(EditSlowModeModal, {
+      model: { topic: this.modelFor("topic") },
+    });
   },
 
   @action
   showChangeTimestamp() {
-    showModal("change-timestamp", {
-      model: this.modelFor("topic"),
-      title: "topic.change_timestamp.title",
+    this.modal.show(ChangeTimestampModal, {
+      model: { topic: this.modelFor("topic") },
     });
   },
 

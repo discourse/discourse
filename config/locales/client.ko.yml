@@ -112,8 +112,8 @@ ko:
       topic_html: '주제: <span class="topic-title">%{topicTitle}</span>'
       post: "@%{username}님의 글 #%{postNumber}"
       close: "닫기"
-      twitter: "Twitter에 공유"
-      facebook: "Facebook에 공유"
+      twitter: "트위터에 공유"
+      facebook: "페이스북에 공유"
       email: "이메일로 공유"
       url: "URL 복사 및 공유"
     action_codes:
@@ -152,11 +152,12 @@ ko:
     topic_admin_menu: "주제 관리"
     skip_to_main_content: "메인 콘텐츠로 건너뛰기"
     emails_are_disabled: "관리자에 의해 모든 이메일의 발신이 비활성화되었습니다. 어떤 종류의 이메일 알림도 전송되지 않습니다."
+    emails_are_disabled_non_staff: "직원이 아닌 사용자의 발신 이메일이 비활성화되었습니다."
     software_update_prompt:
       message: "사이트가 업데이트되어 <span>새로고침</span>이 필요합니다. 그렇지 않으면 예기치 않은 동작이 발생할 수 있습니다."
       dismiss: "무시"
     themes:
-      default_description: "디폴트"
+      default_description: "기본"
       broken_theme_alert: "테마/구성 요소에 오류가 있어 사이트가 작동하지 않을 수 있습니다."
       error_caused_by: "'%{name}' 테마에서 오류가 발생하였습니다. <a target='blank' href='%{path}'>여기</a>를 클릭해 업데이트, 재설정 혹은 테마 사용을 중지하세요."
       only_admins: "(이 메시지는 사이트 관리자에게만 표시됩니다)"
@@ -210,10 +211,10 @@ ko:
     faq: "자주하는 질문"
     guidelines: "가이드라인"
     privacy_policy: "개인정보 취급방침"
-    privacy: "개인정보"
-    tos: "이용약관"
+    privacy: "개인정보 처리방침"
+    tos: "이용 약관"
     rules: "규칙"
-    conduct: "준수 사항"
+    conduct: "행동 강령"
     mobile_view: "모바일 보기"
     desktop_view: "데스크톱 보기"
     now: "방금"
@@ -235,13 +236,13 @@ ko:
       aria_label: "기간별 필터링"
     related_messages:
       title: "관련 메시지"
-      see_all: '@%{username} 님의 <a href="%{path}">모든 메시지</a>보기…'
+      pill: "관련 메시지"
+      see_all: '@%{username} 님의 <a href="%{path}">모든 메시지</a> 보기…'
     suggested_topics:
-      title: "제안된 주제"
       pm_title: "제안된 메시지"
     about:
       simple_title: "정보"
-      title: "정보: %{title}"
+      title: "%{title}에 대해"
       stats: "사이트 통계"
       our_admins: "관리자"
       our_moderators: "관리자"
@@ -268,6 +269,7 @@ ko:
         unbookmark_with_reminder: "이 항목의 모든 북마크 및 미리 알림을 제거하려면 클릭하십시오"
     bookmarks:
       created: "이 게시물을 북마크했습니다. %{name}"
+      created_generic: "%{name}을 북마크했습니다."
       create: "북마크 만들기"
       edit: "북마크 편집"
       not_bookmarked: "이 게시물 북마크하기"
@@ -338,7 +340,7 @@ ko:
     switch_to_anon: "익명 모드 시작"
     switch_from_anon: "익명 모드 종료"
     banner:
-      close: "이 배너 해제"
+      close: "이 배너 닫기"
       edit: "편집"
     pwa:
       install_banner: "<a href>이 디바이스에 %{title} 배너를 설치할까요?</a>"
@@ -371,7 +373,7 @@ ko:
           name: "사용자 정확도"
           title: "신고가 수락된 경우 신고자에게 보너스가 주어집니다."
         trust_level_bonus:
-          name: "신뢰 레벨"
+          name: "회원 레벨"
           title: "신뢰 레벨이 더 높은 사용자가 만든 검토 가능 항목은 더 높은 점수를 받습니다."
         type_bonus:
           name: "유형 보너스"
@@ -521,6 +523,7 @@ ko:
       in_one_hour: "한 시간 내에"
       in_two_hours: "두 시간 내에"
       later_today: "오늘 중"
+      two_days: "이틀"
       next_business_day: "다음 영업일"
       tomorrow: "내일"
       post_local_date: "게시 날짜"
@@ -556,7 +559,7 @@ ko:
       posted_by_user: "<a href='%{userUrl}'>%{user}</a> 님이 게시함"
       posted_by_you: "<a href='%{userUrl}'>내가</a> 게시함"
       sent_by_user: "<a href='%{userUrl}'>%{user}</a> 님이 전송함"
-      sent_by_you: "<a href='%{userUrl}'>내가</a> 전송함"
+      sent_by_you: "<a href='%{userUrl}'>내가</a> 보냄"
     directory:
       username: "아이디"
       filter_name: "아이디로 필터링"
@@ -3313,8 +3316,6 @@ ko:
         other: "%{count}개의 배지"
       more_badges:
         other: "+%{count}개 이상"
-      granted:
-        other: "%{count}개 획득"
       select_badge_for_title: 타이틀로 사용할 배지 선택
       none: "(없음)"
       successfully_granted: "%{username} 님에게 %{badge} 배지를 부여함"
@@ -3985,11 +3986,11 @@ ko:
         backup_storage_error: "백업 스토리지에 액세스하지 못했습니다. %{error_message}"
       export_csv:
         success: "Export initiated, you will be notified via message when the process is complete."
-        failed: "익스포트에 실패했습니다. 로그를 확인하세요."
-        button_text: "익스포트"
+        failed: "내보내기에 실패했습니다. 로그를 확인해주세요"
+        button_text: "내보내기"
         button_title:
-          user: "전체 사용자 목록을 CSV 포맷으로 익스포트합니다."
-          staff_action: "전체 운영진 활동 로그를 CSV 포맷으로 익스포트합니다."
+          user: "CSV 형식으로 전체 사용자 목록을 내보냅니다."
+          staff_action: "전체 운영진 활동 로그를 CSV 형식으로 내보냅니다."
           screened_email: "전체 스크린된 이메일 목록을 CSV 포맷으로 익스포트합니다."
           screened_ip: "전체 스크린된 IP 목록을 CSV 포맷으로 익스포트합니다."
           screened_url: "전체 스크린된 URL 목록을 CSV 포맷으로 익스포트합니다."
@@ -4038,6 +4039,7 @@ ko:
           create: "생성"
           create_type: "유형"
           create_name: "이름"
+          save: "저장"
           long_title: "사이트의 색상, CSS, HTML 콘텐츠 수정"
           edit: "편집"
           edit_confirm: "이 테마는 원격 테마입니다. CSS/HTML을 편집하면 다음에 테마를 업데이트할 때 변경사항이 지워집니다."
@@ -4050,8 +4052,8 @@ ko:
           translations: "번역"
           extra_scss: "추가 SCSS"
           extra_files: "추가 파일"
-          extra_files_upload: "이 파일을 보려면 테마를 익스포트하세요."
-          extra_files_remote: "이 파일을 보려면 테마를 익스포트하거나 Git 저장소를 확인하세요."
+          extra_files_upload: "이 파일을 보려면 테마를 내보내세요."
+          extra_files_remote: "이 파일을 보려면 테마를 내보내거나 Git 저장소를 확인하세요."
           preview: "미리보기"
           show_advanced: "고급 필드 표시"
           hide_advanced: "고급 필드 숨기기"

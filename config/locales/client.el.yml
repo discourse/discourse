@@ -243,9 +243,9 @@ el:
       aria_label: "Φίλτρο ανά περίοδο"
     related_messages:
       title: "Σχετικά μηνύματα"
+      pill: "Σχετικά μηνύματα"
       see_all: 'Δείτε <a href="%{path}">όλα τα μηνύματα</a> από @%{username}...'
     suggested_topics:
-      title: "Προτεινόμενα θέματα"
       pm_title: "Προτεινόμενα μηνύματα"
     about:
       simple_title: "Σχετικά"
@@ -3130,9 +3130,6 @@ el:
       more_badges:
         one: "+%{count} Περισσότερα"
         other: "+%{count} Περισσότερα"
-      granted:
-        one: "%{count} χορηγήθηκε"
-        other: "%{count} χορηγήθηκε"
       select_badge_for_title: Επίλεξε ένα παράσημο για να χρησιμοποιήσεις ως τίτλο
       none: "(κανένα)"
       successfully_granted: "Επιτυχής χορήγηση %{badge} προς %{username}"
@@ -3789,6 +3786,7 @@ el:
           create: "Δημιουργία"
           create_type: "Τύπος"
           create_name: "Όνομα"
+          save: "Αποθήκευση"
           long_title: "Τροποποίησε τα χρώματα, CSS και HTML περιεχόμενο της ιστοσελίδας"
           edit: "Επεξεργασία"
           edit_confirm: "Αυτό είναι ένα απομακρυσμένο θέμα. Αν επεξεργαστείτε το CSS/HTML οι αλλαγές σας θα διαγραφούν την επόμενη φορά που θα ενημερώσετε το θέμα."

@@ -30,9 +30,15 @@ export default Component.extend(CardContentsBase, CleansUp, {
 
   group: null,
 
-  @discourseComputed("group.user_count", "group.members.length")
-  moreMembersCount: (memberCount, maxMemberDisplay) =>
-    memberCount - maxMemberDisplay,
+  @discourseComputed("group.members.[]")
+  highlightedMembers(members) {
+    return members.slice(0, maxMembersToDisplay);
+  },
+
+  @discourseComputed("group.user_count", "group.members.[]")
+  moreMembersCount(memberCount) {
+    return Math.max(memberCount - maxMembersToDisplay, 0);
+  },
 
   @discourseComputed("group.name")
   groupClass: (name) => (name ? `group-card-${name}` : ""),

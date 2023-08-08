@@ -976,10 +976,10 @@ RSpec.describe Category do
       category =
         Fabricate(
           :category_with_definition,
-          num_auto_bump_daily: 2,
           created_at: 1.minute.ago,
           category_setting_attributes: {
             auto_bump_cooldown_days: 1,
+            num_auto_bump_daily: 2,
           },
         )
       category.clear_auto_bump_cache!

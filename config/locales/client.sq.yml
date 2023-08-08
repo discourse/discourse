@@ -198,7 +198,6 @@ sq:
       one: "%{count} shkronjë"
       other: "%{count} shkronja"
     suggested_topics:
-      title: "Temat e sugjeruara"
       pm_title: "Mesazhet e sugjeruara"
     about:
       simple_title: "Rreth Faqes"
@@ -1832,9 +1831,6 @@ sq:
       more_badges:
         one: "+%{count} tjetër"
         other: "+%{count} të tjera"
-      granted:
-        one: "%{count} e akorduar"
-        other: "%{count} të akorduara"
       select_badge_for_title: Zgjidhni një stemë për ta përdorur si titullin tuaj
       none: "(asnjë)"
       badge_grouping:
@@ -2189,6 +2185,7 @@ sq:
           customize_desc: "Personalizo:"
           create_type: "Lloji"
           create_name: "Emri"
+          save: "Ruaj"
           edit: "Redakto"
           mobile: "Mobile"
           settings: "Rregullimet"

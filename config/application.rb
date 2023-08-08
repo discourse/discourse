@@ -167,6 +167,9 @@ module Discourse
     config.middleware.swap ActionDispatch::ContentSecurityPolicy::Middleware,
                            ContentSecurityPolicy::Middleware
 
+    require "middleware/gtm_script_nonce_injector"
+    config.middleware.insert_after(ActionDispatch::Flash, Middleware::GtmScriptNonceInjector)
+
     require "middleware/discourse_public_exceptions"
     config.exceptions_app = Middleware::DiscoursePublicExceptions.new(Rails.public_path)
 

@@ -7,6 +7,7 @@
 ja:
   site_settings:
     chat_enabled: "チャットプラグインを有効にします。"
+    enable_public_channels: "カテゴリに基づいて公開チャンネルを有効にします。"
     chat_allowed_groups: "これらのグループのユーザーがチャットできます。スタッフはいつでもチャットにアクセスできることに注意してください。"
     chat_channel_retention_days: "通常のチャンネルのチャットメッセージは、この日数の間保持されます。メッセージを永久に保持するには、'0' に設定します。"
     chat_dm_retention_days: "パーソナルチャットチャンネルのチャットメッセージは、この日数の間保持されます。メッセージを永久に保持するには、'0' に設定します。"
@@ -34,16 +35,34 @@ ja:
     chat_channel_archive_complete:
       title: "チャットチャンネルのアーカイブ完了"
       subject_template: "チャットチャンネルのアーカイブが正常に完了しました"
+      text_body_template: |
+        チャットチャンネル %{channel_hashtag_or_name} のアーカイブが正常に完了しました。メッセージはトピック [%{topic_title}](%{topic_url}) にコピーされました。
     chat_channel_archive_failed:
       title: "チャットチャンネルのアーカイブ失敗"
       subject_template: "チャットチャンネルのアーカイブに失敗しました"
+      text_body_template: |
+        チャットチャンネル %{channel_hashtag_or_name} のアーカイブに失敗しました。%{messages_archived} 件のメッセージがアーカイブされました。部分的にアーカイブされたメッセージは、トピック [%{topic_title}](%{topic_url}) にコピーされました。%{channel_url} よりチャンネルにアクセスして、再試行してください。
     chat_channel_archive_failed_no_topic:
       title: "チャットチャンネルのアーカイブ失敗"
       subject_template: "チャットチャンネルのアーカイブに失敗しました"
+      text_body_template: |
+        チャットチャンネル %{channel_hashtag_or_name} のアーカイブに失敗しました。アーカイブされたメッセージはありません。次の理由により、トピックは正常に作成されませんでした:
+
+          %{topic_validation_errors}
+
+        %{channel_url} からチャンネルにアクセスして再試行してください。
   chat:
     deleted_chat_username: 削除済み
     errors:
       channel_exists_for_category: "このカテゴリと名前のチャンネルはすでに存在します"
+      channel_new_message_disallowed:
+        archived: "チャンネルはアーカイブされているため、新しいメッセージを送信できません"
+        closed: "チャンネルは閉鎖されているため、新しいメッセージを送信できません"
+        read_only: "チャンネルは読み取り専用であるため、新しいメッセージを送信できません"
+      channel_modify_message_disallowed:
+        archived: "チャンネルはアーカイブされているため、メッセージを編集または削除できません"
+        closed: "チャンネルは閉鎖されているため、メッセージを編集または削除できません"
+        read_only: "チャンネルは読み取り専用であるため、メッセージを編集または削除できません"
       user_cannot_send_message: "現在、メッセージを送信できません。"
       rate_limit_exceeded: "30 秒間で送信できるチャットメッセージの件数制限を超えました"
       auto_silence_from_flags: "ユーザーを投稿禁止にするのに十分なスコアで通報されたチャットメッセージ。"
@@ -54,6 +73,7 @@ ja:
         other: "メッセージが短すぎます。最低 %{count} 文字が必要です。"
       message_too_long:
         other: "メッセージが長すぎます。メッセージは最大 %{count} 文字までです。"
+      draft_too_long: "下書きが長すぎます。"
       max_reactions_limit_reached: "このメッセージでは、新しいリアクションは許可されていません。"
       message_move_invalid_channel: "移動元と移動先のチャンネルは公開チャンネルである必要があります。"
       message_move_no_messages_found: "指定されたメッセージ ID を持つメッセージは見つかりませんでした。"
@@ -64,8 +84,11 @@ ja:
       actor_disallowed_dms: "ユーザーがあなたにプライベートメッセージやダイレクトメッセージを送信できないように選択しているため、新しいダイレクトメッセージを作成できません。"
       actor_preventing_target_user_from_dm: "%{username} があなたにプライベートメッセージやダイレクトメッセージを送信できないように選択しているため、新しいダイレクトメッセージを作成できません。"
       user_cannot_send_direct_messages: "ダイレクトメッセージを送信できません。"
+      over_chat_max_direct_message_users_allow_self: "自分自身へのダイレクトメッセージのみを作成できます。"
       over_chat_max_direct_message_users:
         other: "%{count} 人を超えるユーザーを含むダイレクトメッセージを作成できません。"
+      thread_invalid_for_channel: "スレッドは指定されたチャンネルの一部ではありません。"
+      thread_does_not_match_parent: "スレッドは親メッセージに一致しません。"
     reviewables:
       message_already_handled: "ありがとうございます。ただ、このメッセージはすでにレビュー済みで、通報の必要がないと判断されています。"
       actions:
@@ -108,6 +131,7 @@ ja:
         other: "@%{acting_username} が %{count} 件のメッセージを [%{channel_name}](%{first_moved_message_url}) チャンネルに移動しました。"
       dm_title:
         single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
         multi_user_truncated:
           other: "%{comma_separated_usernames} および他 %{count} 人"
     category_channel:
@@ -125,6 +149,8 @@ ja:
         other: "%{count} 人のメンバー"
       and_x_others:
         other: "および他 %{count} 人"
+    summaries:
+      no_targets: "選択された期間中にメッセージはありませんでした。"
   discourse_push_notifications:
     popup:
       chat_mention:

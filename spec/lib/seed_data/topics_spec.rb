@@ -16,6 +16,9 @@ RSpec.describe SeedData::Topics do
 
   describe "#create" do
     it "creates a missing topic" do
+      staff_category = Fabricate(:category, name: "Feedback")
+      SiteSetting.meta_category_id = staff_category.id
+
       expect { create_topic }.to change { Topic.count }.by(1).and change { Post.count }.by(1)
 
       topic = Topic.last
@@ -29,6 +32,7 @@ RSpec.describe SeedData::Topics do
           site_title: SiteSetting.title,
           site_description: SiteSetting.site_description,
           site_info_quote: "",
+          feedback_category: "#feedback",
         ).rstrip,
       )
       expect(topic.category_id).to eq(SiteSetting.general_category_id)
@@ -133,6 +137,7 @@ RSpec.describe SeedData::Topics do
           site_title: SiteSetting.title,
           site_description: SiteSetting.site_description,
           site_info_quote: "",
+          feedback_category: "#site-feedback",
         ).rstrip,
       )
     end

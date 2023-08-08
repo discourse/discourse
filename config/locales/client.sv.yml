@@ -274,9 +274,9 @@ sv:
       aria_label: "Filtrera efter period"
     related_messages:
       title: "Relaterade meddelanden"
+      pill: "Relaterade meddelanden"
       see_all: 'Visa <a href="%{path}">alla meddelanden</a> från @%{username}...'
     suggested_topics:
-      title: "Föreslagna ämnen"
       pm_title: "Föreslagna meddelanden"
     about:
       simple_title: "Om"
@@ -1788,8 +1788,8 @@ sv:
         content: "Här är några ämnen som vi tror att du kanske vill läsa härnäst."
       admin_guide:
         title: "Välkommen till din nya webbplats!"
-        content: "Läs administratörshandboken för att fortsätta bygga upp din webbplats och ditt forum."
-        button: "Nu kör vi!"
+        content: "<a href='%{admin_guide_url}'>Läs administratörsguiden</a> för att fortsätta bygga din webbplats och ditt forum."
+        content_no_url: "Läs administratörshandboken för att fortsätta bygga upp din webbplats och ditt forum."
     loading: "Laddar..."
     errors:
       prev_page: "medan vi försökte ladda"
@@ -1857,7 +1857,7 @@ sv:
       no_internet: "Ingen internetanslutning."
       refresh_page: "Uppdatera sida"
     summary:
-      in_progress: "Sammanfatta ämne med hjälp av AI..."
+      in_progress: "Sammanfatta ämne med hjälp av AI"
       summarized_on: "Sammanfattat med AI på %{date}"
       model_used: "AI som används: %{model}"
       outdated: "Sammanfattningen är inaktuell"
@@ -3838,10 +3838,9 @@ sv:
       more_badges:
         one: "+%{count} till"
         other: "+%{count} till"
-      granted:
-        one: "%{count} utfärdad"
-        other: "%{count} utfärdade"
-      awarded: tilldelad
+      awarded:
+        one: "%{number} har tilldelats"
+        other: "%{number} har tilldelats"
       select_badge_for_title: Välj en utmärkelse att använda som din titel
       none: "(ingen)"
       successfully_granted: "Beviljade %{badge} till %{username}"
@@ -4694,6 +4693,11 @@ sv:
         title: "Anpassa"
         preview: "förhandsgranska"
         explain_preview: "Visa sidan med detta tema aktiverat"
+        syntax_error: "Syntaxfel"
+        settings_editor: "Inställningar för redigerare"
+        validation_settings_keys: "Varje objekt får bara ha en \"inställning\"-nyckel och en \"värde\"-nyckel."
+        validation_settings_deleted: "Dessa inställningar raderades. Återställ dem och försök igen."
+        validation_settings_added: "Dessa inställningar lades till. Ta bort dem och försök igen."
         save: "Spara"
         new: "Ny"
         new_style: "Ny stil"
@@ -4731,6 +4735,7 @@ sv:
           create: "Skapa"
           create_type: "Typ"
           create_name: "Namn"
+          save: "Spara"
           long_title: "Ändra färger, CSS och HTML-innehåll för din sida"
           edit: "Redigera"
           edit_confirm: "Detta är ett fjärrtema och om du redigerar CSS/HTML kommer dina ändringar att raderas nästa gång du uppdaterar temat."
@@ -4746,6 +4751,7 @@ sv:
           extra_files_upload: "Exportera temat för att visa dessa filer."
           extra_files_remote: "Exportera temat eller kontrollera gitförvaringen för att visa dessa filer."
           preview: "Förhandsgranska"
+          settings_editor: "Inställningar för redigerare"
           show_advanced: "Visa avancerade fält"
           hide_advanced: "Dölj avancerade fält"
           hide_unused_fields: "Dölj oanvända fält"

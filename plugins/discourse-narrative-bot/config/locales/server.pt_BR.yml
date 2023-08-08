@@ -46,7 +46,7 @@ pt_BR:
       invalid: |-
         Sinto muito, é matematicamente impossível rolar essa combinação de dados. :confounded:
       not_enough_dice:
-        one: "Só tenho %{count} dado. Vergonhoso, eu sei!"
+        one: "Só tenho %{count} dados. Vergonhoso, eu sei!"
         other: "Só tenho %{count} dados. Vergonhoso, eu sei!"
       out_of_range: |-
         Você sabia que [a quantidade máxima de lados](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) para um dado matematicamente justo é 120?
@@ -161,7 +161,7 @@ pt_BR:
       hello:
         title: "Saudações!"
         message: |-
-          Obrigado por participar de %{title}, boas-vindas!
+          Obrigado(a) por participar de %{title}, boas-vindas!
 
           - Eu sou apenas um robô, mas [nossa equipe prestativa](%{base_uri}/about) também está aqui para ajudar se você precisar falar com uma pessoa.
 

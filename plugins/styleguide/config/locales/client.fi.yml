@@ -93,4 +93,5 @@ fi:
           header: "Yläpalkki"
           hover_to_see: "Katso työkaluvihje osoittamalla"
         char_counter:
+          title: "Merkkilaskuri"
           placeholder: "Kirjoita tekstisi tähän..."

@@ -7,6 +7,7 @@
 pl_PL:
   site_settings:
     chat_enabled: "Włącz wtyczkę czatu."
+    enable_public_channels: "Włącz kanały publiczne na podstawie kategorii."
     chat_allowed_groups: "Użytkownicy w tych grupach mogą rozmawiać. Pamiętaj, że personel zawsze ma dostęp do czatu."
     chat_channel_retention_days: "Wiadomości czatu w zwykłych kanałach będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
     chat_dm_retention_days: "Wiadomości czatu w osobistych kanałach czatu będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
@@ -73,11 +74,6 @@ pl_PL:
         few: "Wiadomość jest za krótka, musi mieć co najmniej %{count} znaki."
         many: "Wiadomość jest za krótka, musi mieć co najmniej %{count} znaków."
         other: "Wiadomość jest za krótka, musi mieć co najmniej %{count} znaków."
-      message_too_long:
-        one: "Wiadomość jest za długa, wiadomości mogą mieć maksymalnie %{count} znaków."
-        few: "Wiadomość jest za długa, wiadomości mogą mieć maksymalnie %{count} znaków."
-        many: "Wiadomość jest za długa, wiadomości mogą mieć maksymalnie %{count} znaków."
-        other: "Wiadomość jest za długa, wiadomości mogą mieć maksymalnie %{count} znaków."
       draft_too_long: "Wersja robocza jest za długa."
       max_reactions_limit_reached: "Nowe reakcje nie są dozwolone w tej wiadomości."
       message_move_invalid_channel: "Kanał źródłowy i docelowy muszą być kanałami publicznymi."
@@ -95,7 +91,6 @@ pl_PL:
         few: "Nie możesz utworzyć bezpośredniej wiadomości z więcej niż %{count} innymi użytkownikami."
         many: "Nie możesz utworzyć bezpośredniej wiadomości z więcej niż %{count} innymi użytkownikami."
         other: "Nie możesz utworzyć bezpośredniej wiadomości z więcej niż %{count} innymi użytkownikami."
-      original_message_not_found: "Nie można znaleźć przodka wiadomości, na którą odpowiadasz, lub został on usunięty."
       thread_invalid_for_channel: "Wątek nie jest częścią udostępnionego kanału."
       thread_does_not_match_parent: "Wątek nie pasuje do wiadomości nadrzędnej."
     reviewables:
@@ -170,6 +165,8 @@ pl_PL:
         few: "i %{count} inne"
         many: "i %{count} innych"
         other: "i %{count} innych"
+    summaries:
+      no_targets: "W wybranym okresie nie było żadnych wiadomości."
   discourse_push_notifications:
     popup:
       chat_mention:
