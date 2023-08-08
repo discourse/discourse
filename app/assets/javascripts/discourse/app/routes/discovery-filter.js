@@ -3,7 +3,7 @@ import I18n from "I18n";
 import DiscourseRoute from "discourse/routes/discourse";
 import { action } from "@ember/object";
 
-export default class extends DiscourseRoute {
+export default class DiscoveryFilterRoute extends DiscourseRoute {
   queryParams = {
     q: { replace: true, refreshModel: true },
   };
