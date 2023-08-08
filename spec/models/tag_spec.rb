@@ -386,9 +386,9 @@ RSpec.describe Tag do
   describe "description" do
     it "uses the PermitScrubber to remove all tags except a tags, and all attributes except href attributes" do
       tag.description =
-        "<div/> <a onclick='const a=0;' href=\"https://www.discourse.org\">discoure</a>"
+        "<div/> <a onclick='const a=0;' href=\"https://www.discourse.org\">discourse</a>"
       tag.save!
-      expect(tag.description.strip).to eq("<a href=\"https://www.discourse.org\">discoure</a>")
+      expect(tag.description.strip).to eq("<a href=\"https://www.discourse.org\">discourse</a>")
     end
   end
 end
