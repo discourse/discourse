@@ -37,9 +37,9 @@ export function showEntrance(e) {
 
 export function navigateToTopic(topic, href) {
   const owner = getOwner(this);
-  const siteSettings = owner.lookup("service:site-settings");
   const router = owner.lookup("service:router");
   const session = owner.lookup("service:session");
+  const siteSettings = owner.lookup("service:site-settings");
   const appEvents = owner.lookup("service:appEvents");
 
   if (siteSettings.page_loading_indicator !== "slider") {
@@ -284,7 +284,10 @@ export default Component.extend({
       }
     }
 
-    if (classList.contains("raw-topic-link")) {
+    if (
+      classList.contains("raw-topic-link") ||
+      classList.contains("post-activity")
+    ) {
       if (wantsNewWindow(e)) {
         return true;
       }
@@ -318,6 +321,13 @@ export default Component.extend({
   },
 
   unhandledRowClick() {},
+
+  keyDown(e) {
+    if (e.key === "Enter" && e.target.classList.contains("post-activity")) {
+      e.preventDefault();
+      return this.navigateToTopic(this.topic, e.target.getAttribute("href"));
+    }
+  },
 
   navigateToTopic,
 
