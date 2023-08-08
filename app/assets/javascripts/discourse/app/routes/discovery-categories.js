@@ -13,13 +13,15 @@ import showModal from "discourse/lib/show-modal";
 import Session from "discourse/models/session";
 import { inject as service } from "@ember/service";
 
-const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
-  router: service(),
+export default class DiscoveryCategoriesRoute extends DiscourseRoute.extend(
+  OpenComposer
+) {
+  @service router;
 
   renderTemplate() {
     this.render("navigation/categories", { outlet: "navigation-bar" });
     this.render("discovery/categories", { outlet: "list-container" });
-  },
+  }
 
   findCategories() {
     let style =
@@ -39,7 +41,7 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
     }
 
     return CategoryList.list(this.store);
-  },
+  }
 
   model() {
     return this.findCategories().then((model) => {
@@ -50,7 +52,7 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
       }
       return model;
     });
-  },
+  }
 
   _loadBefore(store) {
     return function (topic_ids, storeInSession) {
@@ -79,7 +81,7 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
         }
       });
     };
-  },
+  }
 
   _findCategoriesAndTopics(filter) {
     return hash({
@@ -122,14 +124,14 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
         });
       });
     });
-  },
+  }
 
   titleToken() {
     if (defaultHomepage() === "categories") {
       return;
     }
     return I18n.t("filters.categories.title");
-  },
+  }
 
   setupController(controller, model) {
     controller.set("model", model);
@@ -138,22 +140,22 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
       showCategoryAdmin: model.get("can_create_category"),
       canCreateTopic: model.get("can_create_topic"),
     });
-  },
+  }
 
   @action
   triggerRefresh() {
     this.refresh();
-  },
+  }
 
   @action
   createCategory() {
     this.router.transitionTo("newCategory");
-  },
+  }
 
   @action
   reorderCategories() {
     showModal("reorder-categories");
-  },
+  }
 
   @action
   createTopic() {
@@ -162,13 +164,11 @@ const DiscoveryCategoriesRoute = DiscourseRoute.extend(OpenComposer, {
     } else {
       this.openComposer(this.controllerFor("discovery/categories"));
     }
-  },
+  }
 
   @action
   didTransition() {
     next(() => this.controllerFor("application").set("showFooter", true));
     return true;
-  },
-});
-
-export default DiscoveryCategoriesRoute;
+  }
+}
