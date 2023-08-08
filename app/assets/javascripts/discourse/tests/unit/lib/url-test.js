@@ -90,6 +90,19 @@ module("Unit | Utility | url", function () {
     );
   });
 
+  test("routeTo does not rewrite routes started with /my", async function (assert) {
+    logIn();
+    sinon.stub(DiscourseURL, "router").get(() => {
+      return { currentURL: "/" };
+    });
+    sinon.stub(DiscourseURL, "handleURL");
+    DiscourseURL.routeTo("/myfeed");
+    assert.ok(
+      DiscourseURL.handleURL.calledWith(`/myfeed`),
+      "it should navigate to the unmodified route"
+    );
+  });
+
   test("prefixProtocol", async function (assert) {
     assert.strictEqual(
       prefixProtocol("mailto:mr-beaver@aol.com"),
