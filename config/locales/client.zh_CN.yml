@@ -243,11 +243,9 @@ zh_CN:
       aria_label: "按期间筛选"
     related_messages:
       title: "相关消息"
-      pill: "相关消息"
       see_all: '查看来自 @%{username} 的<a href="%{path}">所有消息</a>…'
     suggested_topics:
-      title: "新的和未读的主题"
-      pill: "建议"
+      title: "建议的话题"
       pm_title: "建议的消息"
     about:
       simple_title: "关于"
@@ -2827,7 +2825,7 @@ zh_CN:
           other: "当前全站置顶的话题数：<strong class='badge badge-notification unread'>%{count}</strong>"
         make_banner: "将此话题设为在所有页面顶部显示的横幅。"
         remove_banner: "移除在所有页面顶部显示的横幅。"
-        banner_note: "用户可以通过关闭话题来忽略横幅。任何时候都只能将一个话题设为横幅。"
+        banner_note: "用户可以通过忽略话题来忽略横幅。任何时候都只能将一个话题设为横幅。"
         no_banner_exists: "没有横幅话题。"
         banner_exists: "当前设置了<strong class='badge badge-notification unread'>一个</strong>横幅话题。"
       inviting: "正在邀请…"

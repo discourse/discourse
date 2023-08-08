@@ -299,9 +299,9 @@ hr:
       aria_label: "Filtrirajte po razdoblju"
     related_messages:
       title: "Vezane poruke"
-      pill: "Vezane poruke"
       see_all: 'Pregledajte <a href="%{path}">sve poruke</a> od @%{username}...'
     suggested_topics:
+      title: "Preporučene teme"
       pm_title: "Predložene poruke"
     about:
       simple_title: "O nama"

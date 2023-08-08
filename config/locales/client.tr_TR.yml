@@ -274,9 +274,9 @@ tr_TR:
       aria_label: "Döneme göre filtrele"
     related_messages:
       title: "İlgili Mesajlar"
-      pill: "İlgili Mesajlar"
       see_all: '@%{username} adlı kullanıcıdan gelen <a href="%{path}">bütün mesajları</a> gör...'
     suggested_topics:
+      title: "Önerilen Konular"
       pm_title: "Önerilen Mesajlar"
     about:
       simple_title: "Hakkında"
@@ -1789,6 +1789,7 @@ tr_TR:
         content: "İşte daha sonra okumak isteyebileceğinizi düşündüğümüz bazı konular."
       admin_guide:
         title: "Yeni sitenize hoş geldiniz!"
+        content: "Sitenizi ve topluluğunuzu oluşturmaya devam etmek için <a href='%{admin_guide_url}'>yönetici kılavuzunu okuyun</a>."
         content_no_url: "Sitenizi ve topluluğunuzu oluşturmaya devam etmek için yönetici kılavuzunu okuyun."
     loading: "Yükleniyor..."
     errors:

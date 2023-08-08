@@ -265,9 +265,9 @@ ro:
       other: "%{count} de caractere"
     related_messages:
       title: "Mesaje legate de"
-      pill: "Mesaje legate de"
       see_all: 'Vezi <a href="%{path}">toate mesajele</a> de la @%{username}...'
     suggested_topics:
+      title: "Subiecte sugerate"
       pm_title: "Mesaje sugerate"
     about:
       simple_title: "Despre"

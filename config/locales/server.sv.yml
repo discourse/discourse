@@ -19,7 +19,7 @@ sv:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - Januari
     - Februari
     - Mars
@@ -2777,11 +2777,11 @@ sv:
     tl2_promotion_message:
       subject_template: "Grattis till din högre förtroendenivå!"
       text_body_template: |
-        Vi har uppgraderat dig till en högre [förtroendenivå] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
+        Vi har uppgraderat dig till en högre [förtroendenivå](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)!
 
         Att uppnå förtroendenivå 2 betyder att du har läst och aktivt deltagit tillräckligt för att anses vara medlem i denna grupp.
 
-        Som erfaren användare kanske du uppskattar [denna lista med praktiska tips och tricks] (https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+        Som erfaren användare kanske du uppskattar [denna lista med praktiska tips och tricks](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
         Vi hoppas verkligen att du fortsätter engagera dig — allt blir med bättre med dig här.
     backup_succeeded:

@@ -274,11 +274,9 @@ de:
       aria_label: "Filtern nach Zeitraum"
     related_messages:
       title: "Verwandte Nachrichten"
-      pill: "Verwandte Nachrichten"
       see_all: 'Siehe <a href="%{path}">alle Nachrichten</a> von @%{username} …'
     suggested_topics:
-      title: "Neue und ungelesene Themen"
-      pill: "Empfohlen"
+      title: "Vorgeschlagene Themen"
       pm_title: "Vorgeschlagene Nachrichten"
     about:
       simple_title: "Über uns"

@@ -243,11 +243,9 @@ id:
       aria_label: "Filter berdasarkan periode"
     related_messages:
       title: "Pesan Terkait"
-      pill: "Pesan Terkait"
       see_all: 'Lihat <a href="%{path}">semua pesan</a> dari @ %{username} ...'
     suggested_topics:
-      title: "Topik Baru & Belum Dibaca"
-      pill: "Disarankan"
+      title: "Topik Yang Disarankan"
       pm_title: "Pesan Yang Disarankan"
     about:
       simple_title: "Tentang"
@@ -1697,11 +1695,8 @@ id:
         jump_prompt_or: "atau"
       notifications:
         reasons:
-          "3": "You will receive notifications because you are watching this topic."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Anda akan diberitahu jika seseorang membalas anda @name atau balasan untuk anda."
           "1": "Anda akan diberitahu jika seseorang membalas anda @name atau balasan untuk anda."
-          "0": "You are ignoring all notifications on this topic."
         watching_pm:
           title: "Melihat"
         watching:

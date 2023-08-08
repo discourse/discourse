@@ -268,9 +268,9 @@ hu:
       aria_label: "Szűrés időszak szerint"
     related_messages:
       title: "Kapcsolódó üzenetek"
-      pill: "Kapcsolódó üzenetek"
       see_all: 'Az <a href="%{path}">összes üzenet</a> megjelenítése @%{username} felhasználótól…'
     suggested_topics:
+      title: "Ajánlott témák"
       pm_title: "Ajánlott üzenetek"
     about:
       simple_title: "Névjegy"

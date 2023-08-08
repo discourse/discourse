@@ -44,7 +44,7 @@ pt_BR:
           other: "Você está movendo <strong>%{count}</strong> mensagens. Selecione o canal de destino. Uma mensagem de espaço reservado será criada no canal <strong>%{channelTitle}</strong> para indicar que estas mensagens foram movidas. Note que as respostas não serão movidas junto para o novo canal, e mensagens no antigo canal não serão mais exibidas como respostas às mensagens movidas."
         confirm_move: "Mover mensagens"
       channel_settings:
-        title: "Definições do canal"
+        title: "Configurações do canal"
         edit: "Editar"
         add: "Adicionar"
         close_channel: "Fechar canal"
@@ -87,7 +87,7 @@ pt_BR:
       deleted:
         one: "Uma mensagem foi excluída. [view]"
         other: "%{count} mensagens foram excluídas. [ver todas]"
-      hidden: "Uma mensagem foi ocultada. [view]"
+      hidden: "Uma mensagem foi ocultada. [visualizar]"
       delete: "Excluir"
       edited: "editou"
       muted: "silenciado(a)"
@@ -316,7 +316,7 @@ pt_BR:
         tabs:
           about: Sobre
           members: Membros
-          settings: Definições
+          settings: Configurações
       new_message_modal:
         title: Enviar mensagem
         add_user_long: <kbd>shift + clique</kbd> ou <kbd>shift + enter</kbd><span>Adicionar @%{username}</span>

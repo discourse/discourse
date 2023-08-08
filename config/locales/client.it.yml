@@ -274,9 +274,9 @@ it:
       aria_label: "Filtra per periodo"
     related_messages:
       title: "Messaggi correlati"
-      pill: "Messaggi correlati"
       see_all: 'Vedi <a href="%{path}">tutti i messaggi</a> di @ %{username} ...'
     suggested_topics:
+      title: "Argomenti suggeriti"
       pm_title: "Messaggi Suggeriti"
     about:
       simple_title: "Informazioni"

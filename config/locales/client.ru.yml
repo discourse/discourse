@@ -336,9 +336,9 @@ ru:
       aria_label: "Фильтр по периоду"
     related_messages:
       title: "Связанные сообщения"
-      pill: "Связанные сообщения"
       see_all: 'Показать <a href="%{path}">все сообщения</a> от @%{username}…'
     suggested_topics:
+      title: "Похожие темы"
       pm_title: "Похожие сообщения"
     about:
       simple_title: "О форуме"
@@ -1014,7 +1014,7 @@ ru:
       flair_bg_color_placeholder: "(Необязательно) Hex-код цвета"
       flair_color: "Цвет отметки"
       flair_color_placeholder: "(Необязательно) Hex-код цвета"
-      flair_preview_icon: "Предпросмотр иконки"
+      flair_preview_icon: "Предпросмотр значка"
       flair_preview_image: "Предпросмотр изображения"
       flair_type:
         icon: "Выбрать иконку"
@@ -6247,12 +6247,12 @@ ru:
         listable: Отображать награду на публичной странице наград
         enabled: включён
         disabled: отключён
-        icon: Иконка
+        icon: Значок
         image: Изображение
         graphic: Иконка награды
         icon_help: "Введите имя иконки из коллекции Font Awesome (используйте префикс «far-» для обычных значков и «fab-» для значков брендов)"
         image_help: "Вместо иконки будет использоваться загруженное изображение, если используются обе настройки."
-        select_an_icon: "Выбрать иконку"
+        select_an_icon: "Выбрать значок"
         upload_an_image: "Загрузить изображение"
         read_only_setting_help: "Настроить текст"
         query: Выборка награды (SQL)

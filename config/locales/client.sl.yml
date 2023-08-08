@@ -283,9 +283,9 @@ sl:
       other: "%{count} znakov"
     related_messages:
       title: "Povezana sporočila"
-      pill: "Povezana sporočila"
       see_all: 'Poglej <a href="%{path}">vsa sporočila</a> od @%{username}...'
     suggested_topics:
+      title: "Predlagane teme"
       pm_title: "Predlagana sporočila"
     about:
       simple_title: "O nas"

@@ -45,6 +45,11 @@ pl_PL:
       trigger: "przewiń"
       invalid: |-
         Przykro mi, ale jest to matematycznie niemożliwe, aby rzucić taką kombinacją kostki. :confounded:
+      not_enough_dice:
+        one: "Mam tylko %{count} kostkę. Wstyd, wiem!"
+        few: "Mam tylko %{count} kostki. Wstyd, wiem!"
+        many: "Mam tylko %{count} kostek. Wstyd, wiem!"
+        other: "Mam tylko %{count} kostek. Wstyd, wiem!"
       out_of_range: |-
         Czy wiesz, że [maksymalna ilość ścian](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) na sprawiedliwej kostce do gry to 120?
       results: |-

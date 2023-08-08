@@ -292,9 +292,9 @@ lt:
       aria_label: "Filtruoti pagal laikotarpį"
     related_messages:
       title: "Susiję pranešimai"
-      pill: "Susiję pranešimai"
       see_all: 'Žiūrėti <a href="%{path}">visų pranešimų</a> iš @%{username}...'
     suggested_topics:
+      title: "Siūlomos Temos"
       pm_title: "Rekomenduojamos žinutės"
     about:
       simple_title: "Apie"
