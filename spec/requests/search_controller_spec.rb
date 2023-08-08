@@ -383,24 +383,35 @@ RSpec.describe SearchController do
     end
 
     context "with restricted tags" do
-      let(:tag_group) { Fabricate.build(:tag_group) }
-      let(:tag_group_permission) { Fabricate.build(:tag_group_permission, tag_group: tag_group) }
       let(:restricted_tag) { Fabricate(:tag) }
+      let(:admin) { Fabricate(:admin) }
 
       before do
-        tag_group.tag_group_permissions << tag_group_permission
-        tag_group.save!
-        tag_group_permission.tag_group.tags << restricted_tag
+        tag_group =
+          Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [restricted_tag.name])
         awesome_topic.tags << restricted_tag
         SearchIndexer.index(awesome_topic, force: true)
       end
 
-      it "doesn’t expose restricted tags in search" do
+      it "works for user with tag group permision" do
+        sign_in(admin)
         get "/search.json",
             params: {
               q: "awesome",
               context: "tag",
-              context_id: "awesome",
+              context_id: restricted_tag.name,
+              skip_context: false,
+            }
+
+        expect(response.status).to eq(200)
+      end
+
+      it "doesn’t work for user without tag group permission" do
+        get "/search.json",
+            params: {
+              q: "awesome",
+              context: "tag",
+              context_id: restricted_tag.name,
               skip_context: false,
             }
 
