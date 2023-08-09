@@ -285,8 +285,11 @@ RSpec.configure do |config|
 
     module CapybaraTimeoutExtension
       class CapybaraTimedOut < StandardError
-        def initialize(wait_time)
-          super "Capybara waited for the full wait duration (#{wait_time}s). " +
+        attr_reader :cause
+
+        def initialize(wait_time, cause)
+          @cause = cause
+          super "This spec passed, but capybara waited for the full wait duration (#{wait_time}s) at least once. " +
                   "This will slow down the test suite. " +
                   "Beware of negating the result of selenium's RSpec matchers."
         end
@@ -299,8 +302,16 @@ RSpec.configure do |config|
         rescue StandardError => e
           seconds = session_options.default_max_wait_time if [nil, true].include? seconds
           if catch_error?(e, errors) && seconds != 0
-            # This error will only have been raised if the timer expired. Raise our own error instead.
-            raise CapybaraTimedOut.new(seconds)
+            # This error will only have been raised if the timer expired
+            timeout_error = CapybaraTimedOut.new(seconds, e)
+            if RSpec.current_example
+              # Store timeout for later, we'll only raise it if the test otherwise passes
+              RSpec.current_example.metadata[:_capybara_timeout_exception] ||= timeout_error
+              raise # re-raise original error
+            else
+              # Outside an example... maybe a `before(:all)` hook?
+              raise timeout_error
+            end
           else
             raise
           end
@@ -309,6 +320,14 @@ RSpec.configure do |config|
     end
 
     Capybara::Node::Base.prepend(CapybaraTimeoutExtension)
+
+    config.after(:each, type: :system) do |example|
+      # If test passed, but we had a capybara finder timeout, raise it now
+      if example.exception.nil? &&
+           (capybara_timout_error = example.metadata[:_capybara_timeout_exception])
+        raise capybara_timout_error
+      end
+    end
 
     # possible values: OFF, SEVERE, WARNING, INFO, DEBUG, ALL
     browser_log_level = ENV["SELENIUM_BROWSER_LOG_LEVEL"] || "SEVERE"
