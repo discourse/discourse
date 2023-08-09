@@ -363,11 +363,11 @@ module ExternalUploadHelpers
   end
 
   def external_store_check
-    return render_404 if !Discourse.store.external?
+    render_404 if !Discourse.store.external?
   end
 
   def direct_s3_uploads_check
-    return render_404 if !SiteSetting.enable_direct_s3_uploads
+    render_404 if !SiteSetting.enable_direct_s3_uploads
   end
 
   def can_upload_external?
