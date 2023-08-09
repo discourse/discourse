@@ -75,7 +75,7 @@
     "ember-functions-as-helper-polyfill": "^2.1.2",
     "ember-load-initializers": "^2.1.1",
     "ember-modifier": "^4.1.0",
-    "ember-on-resize-modifier": "^1.1.0",
+    "ember-on-resize-modifier": "^2.0.2",
     "ember-production-deprecations": "1.0.0",
     "ember-qunit": "^6.2.0",
     "ember-template-imports": "^3.4.2",
