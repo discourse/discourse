@@ -31,6 +31,11 @@ export default class ForgotPassword extends Component {
   }
 
   @action
+  updateEmailOrUsername(event) {
+    this.emailOrUsername = event.target.value;
+  }
+
+  @action
   help() {
     this.offerHelp = I18n.t("forgot_password.help", { basePath: getURL("") });
     this.helpSeen = true;
