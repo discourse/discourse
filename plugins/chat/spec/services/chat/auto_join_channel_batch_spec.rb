@@ -94,7 +94,10 @@ describe Chat::AutoJoinChannelBatch do
           end
 
           it "publishes an event for each user" do
-            messages = MessageBus.track_publish(::Chat::Publisher::NEW_CHANNEL_MESSAGE_BUS_CHANNEL) { result }
+            messages =
+              MessageBus.track_publish(::Chat::Publisher::NEW_CHANNEL_MESSAGE_BUS_CHANNEL) do
+                result
+              end
             expect(messages.length).to eq(2)
           end
         end
@@ -106,7 +109,10 @@ describe Chat::AutoJoinChannelBatch do
           end
 
           it "publishes an event" do
-            messages = MessageBus.track_publish(::Chat::Publisher::NEW_CHANNEL_MESSAGE_BUS_CHANNEL) { result }
+            messages =
+              MessageBus.track_publish(::Chat::Publisher::NEW_CHANNEL_MESSAGE_BUS_CHANNEL) do
+                result
+              end
             expect(messages.length).to eq(1)
           end
         end
