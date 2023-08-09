@@ -2,16 +2,13 @@
   <img src="images/discourse-readme-logo.png" width="300px">
 </a>
 
-Discourse is the 100% open source discussion platform built for the next decade of the Internet. Use it as a:
+Discourse is the online home for your community. We offer an open source community platform for groups who want complete control over how and where their site is run.
 
-- mailing list
-- discussion forum
-- long-form chat room
+Our platform has been battle-tested for over a decade and continues to evolve to meet users’ needs with a powerful combination of discussion and real-time chat, and an ever-growing number of official and community themes and plugins for things from chatbots with Discourse AI to things like SQL analysis with the Data Explorer plugin.
 
-To learn more about the philosophy and goals of the project, [visit **discourse.org**](https://www.discourse.org).
+To learn more [visit **discourse.org**](https://www.discourse.org).
 
 ## Screenshots
-
 
 <a href="https://bbs.boingboing.net"><img alt="Boing Boing" src="https://user-images.githubusercontent.com/1681963/52239245-04ad8280-289c-11e9-9c88-8c173d4a0422.png" width="720px"></a>
 <a href="https://twittercommunity.com/"><img src="https://user-images.githubusercontent.com/1681963/52239250-04ad8280-289c-11e9-9e42-574f6eaab9d7.png" width="720px"></a>
@@ -27,6 +24,7 @@ To get your environment setup, follow the community setup guide for your operati
 1. If you're on macOS, try the [macOS development guide](https://meta.discourse.org/t/beginners-guide-to-install-discourse-on-macos-for-development/15772).
 1. If you're on Ubuntu, try the [Ubuntu development guide](https://meta.discourse.org/t/beginners-guide-to-install-discourse-on-ubuntu-for-development/14727).
 1. If you're on Windows, try the [Windows 10 development guide](https://meta.discourse.org/t/beginners-guide-to-install-discourse-on-windows-10-for-development/75149).
+1. If you're looking to use a simpler Docker-based install, try the [Docker development guide](https://meta.discourse.org/t/install-discourse-for-development-using-docker/102009).
 
 If you're familiar with how Rails works and are comfortable setting up your own environment, you can also try out the [**Discourse Advanced Developer Guide**](docs/DEVELOPER-ADVANCED.md), which is aimed primarily at Ubuntu and macOS environments.
 
@@ -36,7 +34,7 @@ Before you get started, ensure you have the following minimum versions: [Ruby 3.
 
 If you want to set up a Discourse forum for production use, see our [**Discourse Install Guide**](docs/INSTALL.md).
 
-If you're looking for business class hosting, see [discourse.org/buy](https://www.discourse.org/buy/).
+If you're looking for official hosting, see [discourse.org/pricing](https://www.discourse.org/pricing/).
 
 ## Requirements
 
