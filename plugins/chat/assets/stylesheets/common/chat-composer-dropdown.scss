@@ -18,6 +18,7 @@
 }
 
 .chat-composer-dropdown__trigger-btn {
+  transition: transform 0.1s ease-in-out;
   .d-icon {
     padding: 5px;
     transition: transform 0.1s ease-in-out;
