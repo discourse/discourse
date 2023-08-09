@@ -86,7 +86,5 @@ export default class ForgotPassword extends Component {
     } finally {
       this.disabled = false;
     }
-
-    return false;
   }
 }
