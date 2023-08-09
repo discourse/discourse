@@ -71,62 +71,7 @@ after_initialize do
 
   if Oneboxer.respond_to?(:register_local_handler)
     Oneboxer.register_local_handler("chat/chat") do |url, route|
-      if route[:message_id].present?
-        message = Chat::Message.find_by(id: route[:message_id])
-        next if !message
-
-        chat_channel = message.chat_channel
-        user = message.user
-        next if !chat_channel || !user
-      else
-        chat_channel = Chat::Channel.find_by(id: route[:channel_id])
-        next if !chat_channel
-      end
-
-      next if !Guardian.new.can_preview_chat_channel?(chat_channel)
-
-      name = (chat_channel.name if chat_channel.name.present?)
-
-      users =
-        chat_channel
-          .user_chat_channel_memberships
-          .includes(:user)
-          .where(user: User.activated.not_suspended.not_staged)
-          .limit(10)
-          .map do |membership|
-            {
-              username: membership.user.username,
-              avatar_url: membership.user.avatar_template_url.gsub("{size}", "60"),
-            }
-          end
-
-      remaining_user_count_str =
-        if chat_channel.user_count > users.size
-          I18n.t("chat.onebox.and_x_others", count: chat_channel.user_count - users.size)
-        end
-
-      args = {
-        url: url,
-        channel_id: chat_channel.id,
-        channel_name: name,
-        description: chat_channel.description,
-        user_count_str: I18n.t("chat.onebox.x_members", count: chat_channel.user_count),
-        users: users,
-        remaining_user_count_str: remaining_user_count_str,
-        is_category: chat_channel.chatable_type == "Category",
-        color: chat_channel.chatable_type == "Category" ? chat_channel.chatable.color : nil,
-      }
-
-      if message.present?
-        args[:message_id] = message.id
-        args[:username] = message.user.username
-        args[:avatar_url] = message.user.avatar_template_url.gsub("{size}", "20")
-        args[:cooked] = message.cooked
-        args[:created_at] = message.created_at
-        args[:created_at_str] = message.created_at.iso8601
-      end
-
-      Mustache.render(Chat.onebox_template, args)
+      Chat::OneboxHandler.handle(url, route)
     end
   end
 
