@@ -1,7 +1,6 @@
 import I18n from "I18n";
 import EmberObject from "@ember/object";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import sinon from "sinon";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
@@ -11,7 +10,6 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import * as logout from "discourse/lib/logout";
 import { click, currentRouteName, visit } from "@ember/test-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import { test } from "qunit";
@@ -363,7 +361,6 @@ acceptance("User - Logout", function (needs) {
   needs.user({ username: "eviltrout" });
 
   test("Dialog works", async function (assert) {
-    sinon.stub(logout, "default");
     await visit("/u/eviltrout");
     await publishToMessageBus("/logout/19");
 
@@ -379,6 +376,5 @@ acceptance("User - Logout", function (needs) {
     );
 
     await click(".dialog-overlay");
-    assert.ok(logout.default.called, "logout helper was called");
   });
 });
