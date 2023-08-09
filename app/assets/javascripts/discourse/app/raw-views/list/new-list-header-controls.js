@@ -49,4 +49,19 @@ export default EmberObject.extend({
       return I18n.t("filters.new.topics");
     }
   },
+
+  @discourseComputed
+  staticLabel() {
+    if (this.noStaticLabel) {
+      return null;
+    }
+    if (this.newTopicsCount > 0 && this.newRepliesCount > 0) {
+      return null;
+    }
+    if (this.newTopicsCount > 0) {
+      return this.topicsButtonLabel;
+    } else {
+      return this.repliesButtonLabel;
+    }
+  },
 });

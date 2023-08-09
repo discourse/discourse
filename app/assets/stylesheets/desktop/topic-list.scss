@@ -55,19 +55,15 @@
     }
   }
 
-  .topic-replies-toggle-wrapper {
-    position: relative;
-    top: 0;
-    user-select: none;
-  }
-
   .topics-replies-toggle {
     background: none;
     border: none;
     line-height: var(--line-height-large);
+    min-height: 30px;
 
     &.active {
-      background: red;
+      background: var(--quaternary);
+      color: var(--secondary);
     }
   }
 

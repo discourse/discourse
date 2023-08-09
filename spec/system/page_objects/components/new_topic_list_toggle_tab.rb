@@ -17,6 +17,10 @@ module PageObjects
         has_no_css?("#{@selector}.active") && has_css?(@selector)
       end
 
+      def visible?
+        has_css?(@selector)
+      end
+
       def has_count?(count)
         expected_label =
           (
