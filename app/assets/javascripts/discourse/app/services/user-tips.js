@@ -154,8 +154,6 @@ export default class UserTips extends Service {
     }
   }
 
-  // PRIV
-
   #destroyInstance(instance) {
     if (instance.showTimer) {
       cancel(instance.showTimer);
