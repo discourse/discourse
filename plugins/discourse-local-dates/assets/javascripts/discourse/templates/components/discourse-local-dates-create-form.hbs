@@ -66,38 +66,17 @@
       </div>
 
       <div class="picker-panel">
-        <Input class="fake-input" />
-        <div class="date-picker" id="picker-container-{{this.elementId}}"></div>
-
-        {{#if this.fromSelected}}
-          <div class="time-pickers">
-            {{d-icon "far-clock"}}
-            <Input
-              maxlength={{5}}
-              placeholder="hh:mm"
-              @type="time"
-              @value={{this.time}}
-              class="time-picker"
-              {{on "input" (action "setTime")}}
-            />
-          </div>
-        {{/if}}
-
-        {{#if this.toSelected}}
-          {{#if this.toDate}}
-            <div class="time-pickers">
-              {{d-icon "far-clock"}}
-              <Input
-                maxlength={{5}}
-                placeholder="hh:mm"
-                @type="time"
-                @value={{this.toTime}}
-                class="time-picker"
-                {{on "input" (action "setToTime")}}
-              />
-            </div>
-          {{/if}}
-        {{/if}}
+        <CalendarDateTimeInput
+          @datePickerId="local-date-create-form"
+          @date={{this.selectedDate}}
+          @time={{this.selectedTime}}
+          @minDate={{this.minDate}}
+          @timeFormat={{this.timeFormat}}
+          @dateFormat={{this.dateFormat}}
+          @dateTimeFormat={{this.dateTimeFormat}}
+          @onChangeDate={{action this.changeSelectedDate}}
+          @onChangeTime={{action this.changeSelectedTime}}
+        />
       </div>
 
       {{#if this.site.mobileView}}
@@ -210,7 +189,7 @@
 
   <DButton
     @class="btn-default advanced-mode-btn"
-    @action={{action "advancedMode"}}
+    @action={{action "toggleAdvancedMode"}}
     @icon="cog"
     @label={{this.toggleModeBtnLabel}}
   />
