@@ -982,7 +982,7 @@ en:
     pm_title: "Backup Drafts from ongoing topics"
     pm_body: "Topic containing backup drafts"
   user_activity:
-    no_log_search_queries: "Search log queries are currently disabled (an administrator can enable them in site settings)."
+    no_log_search_queries: "Search queries logs are currently disabled (an administrator can enable them in site settings)."
 
   email_settings:
     pop3_authentication_error: "There was an issue with the POP3 credentials provided, check the username and password and try again."
