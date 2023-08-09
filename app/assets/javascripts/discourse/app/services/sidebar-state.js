@@ -14,6 +14,7 @@ export default class SidebarState extends Service {
   @tracked currentPanelKey = currentPanelKey;
   @tracked panels = panels;
   @tracked mode = COMBINED_MODE;
+  @tracked displaySwitchPanelButtons = false;
 
   constructor() {
     super(...arguments);
@@ -23,7 +24,7 @@ export default class SidebarState extends Service {
 
   setPanel(name) {
     this.currentPanelKey = name;
-    this.mode = SEPARATED_MODE;
+    this.setSeparatedMode();
   }
 
   get currentPanel() {
@@ -32,11 +33,21 @@ export default class SidebarState extends Service {
 
   setSeparatedMode() {
     this.mode = SEPARATED_MODE;
+    this.showSwitchPanelButtons();
   }
 
   setCombinedMode() {
     this.mode = COMBINED_MODE;
     this.currentPanelKey = MAIN_PANEL;
+    this.hideSwitchPanelButtons();
+  }
+
+  showSwitchPanelButtons() {
+    this.displaySwitchPanelButtons = true;
+  }
+
+  hideSwitchPanelButtons() {
+    this.displaySwitchPanelButtons = false;
   }
 
   get combinedMode() {
