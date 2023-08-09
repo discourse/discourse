@@ -1,6 +1,7 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
-import { action, computed } from "@ember/object";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import cookie from "discourse/lib/cookie";
@@ -13,44 +14,26 @@ import { htmlSafe } from "@ember/template";
 export default class ForgotPassword extends Component {
   @service siteSettings;
 
-  emailOrUsername = this.args.model.emailOrUsername;
-  disabled = false;
-  helpSeen = false;
-  offerHelp;
-  flash;
+  @tracked emailOrUsername = cookie("email") || this.args.model.emailOrUsername;
+  @tracked disabled = false;
+  @tracked helpSeen = false;
+  @tracked offerHelp;
+  @tracked flash;
 
-  @computed("emailOrUsername", "disabled")
   get submitDisabled() {
     if (this.disabled) {
       return true;
-    }
-
-    if (this.siteSettings.hide_email_address_taken) {
+    } else if (this.siteSettings.hide_email_address_taken) {
       return !(this.emailOrUsername || "").includes("@");
     } else {
       return isEmpty((this.emailOrUsername || "").trim());
     }
   }
 
-  onShow() {
-    if (cookie("email")) {
-      this.set("emailOrUsername", cookie("email"));
-    }
-  }
-
-  @action
-  ok() {
-    this.args.closeModal();
-  }
-
   @action
   help() {
-    this.setProperties({
-      offerHelp: I18n.t("forgot_password.help", {
-        basePath: getURL(""),
-      }),
-      helpSeen: true,
-    });
+    this.offerHelp = I18n.t("forgot_password.help", { basePath: getURL("") });
+    this.helpSeen = true;
   }
 
   @action
@@ -59,9 +42,8 @@ export default class ForgotPassword extends Component {
       return false;
     }
 
-    this.set("disabled", true);
-
-    this.set("flash", null);
+    this.disabled = true;
+    this.flash = null;
 
     try {
       const data = await ajax("/session/forgot_password", {
@@ -77,32 +59,27 @@ export default class ForgotPassword extends Component {
       if (data.user_found === false) {
         key += "_not_found";
 
-        this.set(
-          "flash",
-          htmlSafe(
-            I18n.t(key, {
-              email: emailOrUsername,
-              username: emailOrUsername,
-            })
-          )
-        );
-      } else {
-        key += data.user_found ? "_found" : "";
-
-        this.set("emailOrUsername", "");
-        this.set(
-          "offerHelp",
+        this.flash = htmlSafe(
           I18n.t(key, {
             email: emailOrUsername,
             username: emailOrUsername,
           })
         );
-        this.set("helpSeen", !data.user_found);
+      } else {
+        key += data.user_found ? "_found" : "";
+
+        this.emailOrUsername = "";
+        this.offerHelp = I18n.t(key, {
+          email: emailOrUsername,
+          username: emailOrUsername,
+        });
+
+        this.helpSeen = !data.user_found;
       }
     } catch (error) {
-      this.set("flash", extractError(error));
+      this.flash = extractError(error);
     } finally {
-      this.set("disabled", false);
+      this.disabled = false;
     }
 
     return false;
