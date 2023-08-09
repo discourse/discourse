@@ -4,7 +4,10 @@ describe "Local dates", type: :system do
   fab!(:topic) { Fabricate(:topic) }
   fab!(:current_user) { Fabricate(:user) }
   let(:year) { Time.zone.now.year + 1 }
+  let(:month) { Time.zone.now.month }
   let(:bookmark_modal) { PageObjects::Modals::Bookmark.new }
+  let(:composer) { PageObjects::Components::Composer.new }
+  let(:insert_datetime_modal) { PageObjects::Modals::InsertDateTime.new }
 
   before do
     create_post(user: current_user, topic: topic, title: "Date range test post", raw: <<~RAW)
@@ -65,6 +68,62 @@ describe "Local dates", type: :system do
       expect(tippy_date).to have_text(
         "#{formatted_date_for_year(12, 22)} 11:57 AM → #{formatted_date_for_year(12, 23)} 11:58 AM",
         exact: true,
+      )
+    end
+  end
+
+  describe "insert modal" do
+    let(:timezone) { "Australia/Brisbane" }
+
+    before do
+      current_user.user_option.update!(timezone: timezone)
+      sign_in(current_user)
+    end
+
+    it "allows selecting a date without a time and inserts into the post" do
+      topic_page.visit_topic_and_open_composer(topic)
+      expect(topic_page).to have_expanded_composer
+      composer.click_toolbar_button("local-dates")
+      expect(insert_datetime_modal).to be_open
+      insert_datetime_modal.calendar_date_time_picker.select_year(year)
+      insert_datetime_modal.calendar_date_time_picker.select_day(16)
+      insert_datetime_modal.click_primary_button
+      expect(composer.composer_input.value).to have_content(
+        "[date=#{Date.parse("#{year}-#{month}-16").strftime("%Y-%m-%d")} timezone=\"#{timezone}\"]",
+      )
+    end
+
+    it "allows selecting a date with a time and inserts into the post" do
+      topic_page.visit_topic_and_open_composer(topic)
+      expect(topic_page).to have_expanded_composer
+      composer.click_toolbar_button("local-dates")
+      expect(insert_datetime_modal).to be_open
+      insert_datetime_modal.calendar_date_time_picker.select_year(year)
+      insert_datetime_modal.calendar_date_time_picker.select_day(16)
+      insert_datetime_modal.calendar_date_time_picker.fill_time("11:45")
+      insert_datetime_modal.click_primary_button
+      expect(composer.composer_input.value).to have_content(
+        "[date=#{Date.parse("#{year}-#{month}-16").strftime("%Y-%m-%d")} time=11:45:00 timezone=\"#{timezone}\"]",
+      )
+    end
+
+    it "allows selecting a start date and time and an end date and time" do
+      topic_page.visit_topic_and_open_composer(topic)
+      expect(topic_page).to have_expanded_composer
+      composer.click_toolbar_button("local-dates")
+      expect(insert_datetime_modal).to be_open
+      insert_datetime_modal.calendar_date_time_picker.select_year(year)
+      insert_datetime_modal.calendar_date_time_picker.select_day(16)
+      insert_datetime_modal.calendar_date_time_picker.fill_time("11:45")
+      insert_datetime_modal.select_to
+
+      insert_datetime_modal.calendar_date_time_picker.select_year(year)
+      insert_datetime_modal.calendar_date_time_picker.select_day(23)
+      insert_datetime_modal.calendar_date_time_picker.fill_time("12:45")
+
+      insert_datetime_modal.click_primary_button
+      expect(composer.composer_input.value).to have_content(
+        "[date-range from=#{Date.parse("#{year}-#{month}-16").strftime("%Y-%m-%d")}T11:45:00 to=#{Date.parse("#{year}-#{month}-23").strftime("%Y-%m-%d")}T12:45:00 timezone=\"#{timezone}\"]",
       )
     end
   end
