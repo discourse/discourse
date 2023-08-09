@@ -25,9 +25,14 @@
     border-radius: 100%;
   }
 
-  &.has-active-panel {
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &[aria-expanded="true"] {
     .d-icon {
       transform: rotate(45deg);
+      transform-origin: center;
     }
   }
 }

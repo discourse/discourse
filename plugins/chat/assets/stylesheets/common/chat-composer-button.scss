@@ -72,6 +72,9 @@
   }
 
   &.-emoji {
+    &:hover {
+      transform: scale(1.1);
+    }
     .d-icon {
       .is-focused & {
         color: var(--tertiary);
