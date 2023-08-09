@@ -257,6 +257,11 @@ module Onebox
       end
 
       def article_html
+        if data[:image]
+          data[:thumbnail_width] ||= data[:image_width] || data[:width]
+          data[:thumbnail_height] ||= data[:image_height] || data[:height]
+        end
+
         layout.to_html
       end
 
