@@ -368,6 +368,7 @@ GEM
       msgpack (>= 0.4.3)
       optimist (>= 3.0.0)
     rchardet (1.8.0)
+    redcarpet (3.6.0)
     redis (4.8.1)
     redis-namespace (1.11.0)
       redis (>= 4)
@@ -484,6 +485,12 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
+    sqlite3 (1.6.4)
+      mini_portile2 (~> 2.8.0)
+    sqlite3 (1.6.4-aarch64-linux)
+    sqlite3 (1.6.4-arm64-darwin)
+    sqlite3 (1.6.4-x86_64-darwin)
+    sqlite3 (1.6.4-x86_64-linux)
     sshkey (3.0.0)
     stackprof (0.2.25)
     syntax_tree (6.1.1)
@@ -632,6 +639,7 @@ DEPENDENCIES
   rb-fsevent
   rbtrace
   rchardet
+  redcarpet
   redis
   redis-namespace
   rinku
@@ -654,6 +662,7 @@ DEPENDENCIES
   simplecov
   sprockets!
   sprockets-rails
+  sqlite3
   sshkey
   stackprof
   syntax_tree

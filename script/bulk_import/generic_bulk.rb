@@ -34,7 +34,7 @@ class BulkImport::Generic < BulkImport::Base
     import_topic_allowed_users
     import_likes
     import_user_stats
-    import_tags
+    # import_tags
   end
 
   def import_categories
@@ -42,21 +42,21 @@ class BulkImport::Generic < BulkImport::Base
 
     categories = query(<<~SQL)
       WITH RECURSIVE tree(id, parent_category_id, name, description, color, text_color, read_restricted, slug,
-                          old_relative_url, existing_id, level, rowid) AS (
+                          old_relative_url, existing_id, level) AS (
           SELECT c.id, c.parent_category_id, c.name, c.description, c.color, c.text_color, c.read_restricted, c.slug,
-                 c.old_relative_url, c.existing_id, 0 AS level, c.ROWID
+                 c.old_relative_url, c.existing_id, 0 AS level
           FROM categories c
           WHERE c.parent_category_id IS NULL
           UNION
           SELECT c.id, c.parent_category_id, c.name, c.description, c.color, c.text_color, c.read_restricted, c.slug,
-                 c.old_relative_url, c.existing_id, tree.level + 1 AS level, c.ROWID
+                 c.old_relative_url, c.existing_id, tree.level + 1 AS level
           FROM categories c,
                tree
           WHERE c.parent_category_id = tree.id
       )
       SELECT *
       FROM tree
-      ORDER BY level, rowid
+      ORDER BY level, id
     SQL
 
     create_categories(categories) do |row|
@@ -76,9 +76,9 @@ class BulkImport::Generic < BulkImport::Base
     puts "Importing users..."
 
     users = query(<<~SQL)
-      SELECT ROWID, *
+      SELECT *
       FROM users
-      ORDER BY ROWID
+      ORDER BY id
     SQL
 
     create_users(users) do |row|
@@ -109,9 +109,9 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing user emails..."
 
     users = query(<<~SQL)
-      SELECT ROWID, id, email, created_at
+      SELECT id, email, created_at
       FROM users
-      ORDER BY ROWID
+      ORDER BY id
     SQL
 
     create_user_emails(users) do |row|
@@ -129,10 +129,10 @@ class BulkImport::Generic < BulkImport::Base
     puts "", "Importing SSO records..."
 
     users = query(<<~SQL)
-      SELECT ROWID, id, sso_record
+      SELECT id, sso_record
       FROM users
       WHERE sso_record IS NOT NULL
-      ORDER BY ROWID
+      ORDER BY id
     SQL
 
     create_single_sign_on_records(users) do |row|
@@ -148,9 +148,9 @@ class BulkImport::Generic < BulkImport::Base
     puts "Importing topics..."
 
     topics = query(<<~SQL)
-      SELECT ROWID, *
+      SELECT *
       FROM topics
-      ORDER BY ROWID
+      ORDER BY id
     SQL
 
     create_topics(topics) do |row|
@@ -171,10 +171,10 @@ class BulkImport::Generic < BulkImport::Base
     puts "Importing topic_allowed_users..."
 
     topics = query(<<~SQL)
-      SELECT ROWID, *
+      SELECT *
       FROM topics
       WHERE private_message IS NOT NULL
-      ORDER BY ROWID
+      ORDER BY id
     SQL
 
     added = 0
@@ -198,7 +198,7 @@ class BulkImport::Generic < BulkImport::Base
     puts "Importing posts..."
 
     posts = query(<<~SQL)
-      SELECT ROWID, *
+      SELECT *
       FROM posts
       ORDER BY topic_id, post_number
     SQL
@@ -214,6 +214,8 @@ class BulkImport::Generic < BulkImport::Base
         created_at: to_datetime(row["created_at"]),
         raw: row["raw"],
         like_count: row["like_count"],
+        reply_to_post_number:
+          row["reply_to_post_id"] ? post_number_from_imported_id(row["reply_to_post_id"]) : nil,
       }
     end
   end
@@ -279,21 +281,21 @@ class BulkImport::Generic < BulkImport::Base
         first_post_created_at: to_datetime(row["first_post"]),
       }
 
-      likes_received = @db.execute(<<~SQL)
-        SELECT COUNT(l.id) AS likes_received
-        FROM likes l JOIN posts p ON l.post_id = p.id
-        WHERE p.user_id = #{row["user_id"]}
-      SQL
-
-      user[:likes_received] = row["likes_received"] if likes_received
-
-      likes_given = @db.execute(<<~SQL)
-        SELECT COUNT(l.id) AS likes_given
-        FROM likes l
-        WHERE l.user_id = #{row["user_id"]}
-      SQL
-
-      user[:likes_given] = row["likes_given"] if likes_given
+      # likes_received = @db.execute(<<~SQL)
+      #   SELECT COUNT(l.id) AS likes_received
+      #   FROM likes l JOIN posts p ON l.post_id = p.id
+      #   WHERE p.user_id = #{row["user_id"]}
+      # SQL
+      #
+      # user[:likes_received] = row["likes_received"] if likes_received
+      #
+      # likes_given = @db.execute(<<~SQL)
+      #   SELECT COUNT(l.id) AS likes_given
+      #   FROM likes l
+      #   WHERE l.user_id = #{row["user_id"]}
+      # SQL
+      #
+      # user[:likes_given] = row["likes_given"] if likes_given
 
       user
     end
