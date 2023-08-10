@@ -26,6 +26,7 @@ import {
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
 import ChatModalChannelSummary from "discourse/plugins/chat/discourse/components/chat/modal/channel-summary";
+import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 
 export default class ChatComposer extends Component {
   @service capabilities;
@@ -347,10 +348,12 @@ export default class ChatComposer extends Component {
 
     const selected = this.composer.textarea.getSelected("", { lineVal: true });
     const linkText = selected?.value;
-    showModal("insert-hyperlink").setProperties({
-      linkText,
-      toolbarEvent: {
-        addText: (text) => this.composer.textarea.addText(selected, text),
+    this.modal.show(InsertHyperlink, {
+      model: {
+        linkText,
+        toolbarEvent: {
+          addText: (text) => this.composer.textarea.addText(selected, text),
+        },
       },
     });
   }

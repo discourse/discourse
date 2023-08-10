@@ -82,5 +82,11 @@
         @moreButtonIcon={{this.section.moreSectionButtonIcon}}
       />
     {{/if}}
+  {{else if this.section.moreSectionButtonAction}}
+    <Sidebar::SectionLinkButton
+      @action={{this.section.moreSectionButtonAction}}
+      @icon={{this.section.moreSectionButtonIcon}}
+      @text={{this.section.moreSectionButtonText}}
+    />
   {{/if}}
 </Sidebar::Section>

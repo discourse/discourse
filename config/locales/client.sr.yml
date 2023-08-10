@@ -270,9 +270,9 @@ sr:
       other: "%{count} karaktera"
     related_messages:
       title: "Povezane Poruke"
+      pill: "Povezane Poruke"
       see_all: 'Prikaži <a href="%{path}">sve poruke</a> od @%{username}...'
     suggested_topics:
-      title: "Predložene Teme"
       pm_title: "Predložene poruke"
     about:
       simple_title: "O nama"
@@ -603,7 +603,6 @@ sr:
       "3": "Markirano"
       "4": "Teme"
       "5": "Odgovori"
-      "6": "Responses"
       "7": "Spomeni"
       "9": "Citati"
       "11": "Izmene"
@@ -1287,7 +1286,6 @@ sr:
           "3_2": "Primaćete obaveštenja jer posmatrate temu."
           "3_1": "Primaćete obaveštenja jer ste vi otvorili temu."
           "3": "Primaćete obaveštenja jer posmatrate temu."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Bićete obavešteni kada neko pomene vaše @ime ili vam odgovori"
           "1": "Bićete obavešteni kada neko pomene vaše @ime ili vam odgovori"
           "0_7": "Ignorirate sva obaveštenja iz ove kategorije."
@@ -2034,6 +2032,7 @@ sr:
           customize_desc: "Prilagođavanje:"
           create_type: "Tip"
           create_name: "Ime foruma"
+          save: "Sačuvaj"
           edit: "Izmeni"
           settings: "Podešavanje"
           upload: "Učitaj"

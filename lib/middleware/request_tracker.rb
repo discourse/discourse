@@ -201,6 +201,7 @@ class Middleware::RequestTracker
   def call(env)
     result = nil
     info = nil
+    gc_stat_timing = nil
 
     # doing this as early as possible so we have an
     # accurate counter
@@ -225,7 +226,13 @@ class Middleware::RequestTracker
     env["discourse.request_tracker"] = self
 
     MethodProfiler.start
-    result = @app.call(env)
+
+    if SiteSetting.instrument_gc_stat_per_request
+      gc_stat_timing = GCStatInstrumenter.instrument { result = @app.call(env) }
+    else
+      result = @app.call(env)
+    end
+
     info = MethodProfiler.stop
 
     # possibly transferred?
@@ -263,7 +270,11 @@ class Middleware::RequestTracker
         end
       end
     end
-    log_request_info(env, result, info, request) if !env["discourse.request_tracker.skip"]
+
+    if !env["discourse.request_tracker.skip"]
+      info.merge!(gc_stat_timing) if gc_stat_timing
+      log_request_info(env, result, info, request)
+    end
   end
 
   def log_later(data)

@@ -38,6 +38,10 @@ export default class RouteScrollManager extends Service {
 
   @bind
   routeDidChange(transition) {
+    if (transition.isAborted) {
+      return;
+    }
+
     const newUuid = this.router.location.getState?.().uuid;
 
     if (newUuid === this.uuid) {

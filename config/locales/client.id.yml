@@ -243,9 +243,11 @@ id:
       aria_label: "Filter berdasarkan periode"
     related_messages:
       title: "Pesan Terkait"
+      pill: "Pesan Terkait"
       see_all: 'Lihat <a href="%{path}">semua pesan</a> dari @ %{username} ...'
     suggested_topics:
-      title: "Topik Yang Disarankan"
+      title: "Topik Baru & Belum Dibaca"
+      pill: "Disarankan"
       pm_title: "Pesan Yang Disarankan"
     about:
       simple_title: "Tentang"
@@ -1340,8 +1342,8 @@ id:
       button: "Mengerti!"
       admin_guide:
         title: "Selamat datang di situs baru Anda!"
-        content: "Baca panduan admin untuk terus membangun situs dan komunitas Anda."
-        button: "Ayo berangkat!"
+        content: "<a href='%{admin_guide_url}'>Baca panduan admin</a> untuk terus membangun situs dan komunitas Anda."
+        content_no_url: "Baca panduan admin untuk terus membangun situs dan komunitas Anda."
     loading: "Diproses..."
     errors:
       reasons:
@@ -1383,7 +1385,7 @@ id:
       no_internet: "Tidak ada koneksi internet."
       refresh_page: "Segarkan halaman"
     summary:
-      in_progress: "Meringkas topik menggunakan AI..."
+      in_progress: "Meringkas topik menggunakan AI"
       summarized_on: "Dirangkum dengan AI pada %{date}"
       model_used: "AI yang digunakan: %{model}"
       outdated: "Ringkasan sudah usang"
@@ -1695,11 +1697,8 @@ id:
         jump_prompt_or: "atau"
       notifications:
         reasons:
-          "3": "You will receive notifications because you are watching this topic."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Anda akan diberitahu jika seseorang membalas anda @name atau balasan untuk anda."
           "1": "Anda akan diberitahu jika seseorang membalas anda @name atau balasan untuk anda."
-          "0": "You are ignoring all notifications on this topic."
         watching_pm:
           title: "Melihat"
         watching:
@@ -1911,6 +1910,8 @@ id:
         other: "Diberi kepada orang lain %{count} kali"
       more_badges:
         other: "+%{count} lainnya"
+      awarded:
+        other: "%{number} diberikan"
       none: "(kosong)"
       badge_grouping:
         trust_level:
@@ -2049,10 +2050,14 @@ id:
           tel: "Harap masukkan nomor telepon yang valid."
           text: "Harap masukkan nilai teks."
           url: "Harap masukkan URL yang valid."
-        tooShort: "Input harus %{minLength} karakter atau lebih."
-        tooLong: "Input harus kurang dari %{maxLength} karakter."
-        rangeOverflow: "Masukan harus kurang dari %{max}."
-        rangeUnderflow: "Masukan harus lebih dari %{min}."
+        tooShort:
+          other: "Input harus %{count} karakter atau lebih."
+        tooLong:
+          other: "Input harus kurang dari %{count} karakter."
+        rangeOverflow:
+          other: "Masukan harus kurang dari %{count}."
+        rangeUnderflow:
+          other: "Masukan harus lebih dari %{count}."
         patternMismatch: "Harap sesuaikan dengan format yang diminta."
         badInput: "Harap masukkan masukan yang valid."
   admin_js:
@@ -2092,6 +2097,7 @@ id:
         manage:
           interaction:
             email: Email
+            incoming_email_tooltip: "Anda dapat memisahkan beberapa alamat email dengan karakter |."
             visibility_levels:
               title: "Siapa yang bisa melihat kelompok ini?"
               public: "Semua orang"
@@ -2116,6 +2122,8 @@ id:
         scopes:
           action: Aksi
           descriptions:
+            topics:
+              status: "Memperbarui status topik. Status: ditutup, arsip, terlihat, disematkan. Diaktifkan: benar, salah. Tentukan kategori_id di sini dan di dalam muatan permintaan untuk hanya mengizinkan perubahan status pada topik-topik di dalam kategori tersebut."
             posts:
               list: Daftar post terbaru dan post pribadi. RSS juga didukung.
       web_hooks:
@@ -2162,6 +2170,7 @@ id:
           theme: "Tema"
           create_type: "Tipe"
           create_name: "Nama"
+          save: "Simpan"
           edit: "Ubah"
           settings: "Pengaturan"
           collapse: Persempit

@@ -193,10 +193,10 @@ class UsersController < ApplicationController
   def update
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
-    attributes = user_params
 
-    # We can't update the username via this route. Use the username route
-    attributes.delete(:username)
+    # Exclude some attributes that are only for user creation because they have
+    # dedicated update routes.
+    attributes = user_params.except(:username, :email, :password)
 
     if params[:user_fields].present?
       attributes[:custom_fields] ||= {}

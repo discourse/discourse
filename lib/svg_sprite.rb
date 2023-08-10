@@ -34,6 +34,7 @@ module SvgSprite
         book
         book-reader
         bookmark
+        bookmark-delete
         briefcase
         bullseye
         calendar-alt

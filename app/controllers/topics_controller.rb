@@ -1396,17 +1396,18 @@ class TopicsController < ApplicationController
           topic_query.joined_topic_user,
           whisperer: guardian.is_whisperer?,
         ).listable_topics
+
       topics = TopicQuery.tracked_filter(topics, current_user.id) if params[:tracked].to_s == "true"
 
       if params[:category_id]
-        if params[:include_subcategories]
-          topics = topics.where(<<~SQL, category_id: params[:category_id])
-            category_id in (select id FROM categories WHERE parent_category_id = :category_id) OR
-            category_id = :category_id
-          SQL
-        else
-          topics = topics.where("category_id = ?", params[:category_id])
-        end
+        category_ids =
+          if params[:include_subcategories]
+            Category.subcategory_ids(params[:category_id].to_i)
+          else
+            params[:category_id]
+          end
+
+        topics = topics.where(category_id: category_ids)
       end
 
       if params[:tag_name].present?

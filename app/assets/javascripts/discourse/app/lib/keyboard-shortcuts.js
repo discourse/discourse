@@ -360,7 +360,7 @@ export default {
   },
 
   goToFirstSuggestedTopic() {
-    const el = document.querySelector(".suggested-topics a.raw-topic-link");
+    const el = document.querySelector("#suggested-topics a.raw-topic-link");
     if (el) {
       el.click();
     } else {

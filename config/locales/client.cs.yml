@@ -295,9 +295,9 @@ cs:
       aria_label: "Filtrovat dle období"
     related_messages:
       title: "Související zprávy"
+      pill: "Související zprávy"
       see_all: 'Zobrazit <a href="%{path}">všechny zprávy</a>od @%{username}'
     suggested_topics:
-      title: "Doporučená témata"
       pm_title: "Doporučené zprávy"
     about:
       simple_title: "O fóru"
@@ -2122,7 +2122,6 @@ cs:
           "2_8": "Uvidíte počet nových odpovědí, jelikož sledujete tuto kategorii."
           "2_4": "Uvidíte počet nových odpovědí, jelikož jste přispěli do tohoto tématu."
           "2_2": "Uvidíte počet nových odpovědí, jelikož sledujete toto téma."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
           "1": "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
           "0_7": "Ignorujete všechna oznámení v této kategorii."
@@ -2944,11 +2943,6 @@ cs:
         few: "+%{count} další"
         many: "+%{count} dalších"
         other: "+%{count} dalších"
-      granted:
-        one: "%{count} přidělen"
-        few: "%{count} přidělen"
-        many: "%{count} přidělen"
-        other: "%{count} přidělen"
       select_badge_for_title: Vyberte odznak, který chcete použít jako svůj titul
       none: "(žádný)"
       successfully_granted: "Úspěšně přidělený %{badge}uživateli%{username}"
@@ -3477,6 +3471,7 @@ cs:
           create: "Vytvoř"
           create_type: "Typ"
           create_name: "Jméno"
+          save: "Uložit"
           long_title: "Změnit barvy, CSS a HTML obsahy na vaší stránce"
           edit: "Upravit"
           edit_confirm: "Toto je vzdálené téma, pokud upravíš CSS/HTML tvoje změny budou vymazány při dalším updatu motivu."

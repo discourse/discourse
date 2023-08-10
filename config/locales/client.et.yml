@@ -222,9 +222,9 @@ et:
       other: "%{count} sümbolit"
     related_messages:
       title: "Seotud sõnumid"
+      pill: "Seotud sõnumid"
       see_all: 'Vaata <a href="%{path}">kõiki sõnumeid</a> kasutajalt @%{username}...'
     suggested_topics:
-      title: "Soovitatud teemad"
       pm_title: "Soovitatud sõnumid"
     about:
       simple_title: "Teave"
@@ -1710,7 +1710,6 @@ et:
           "3_2": "Sulle saabuvad teavitused kuna jälgid seda teemat."
           "3_1": "Sulle saabuvad teavitused kuna lõid selle teema."
           "3": "Sulle saabuvad teavitused kuna jälgid seda teemat."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Sind teavitatakse, kui keegi Teie @name mainib või Teile vastab."
           "1": "Sind teavitatakse, kui keegi Sinu @name mainib või Sulle vastab."
           "0_7": "Eirad kõiki teavitusi selles foorumis."
@@ -2408,9 +2407,6 @@ et:
       more_badges:
         one: "+%{count} veel"
         other: "+%{count} veel"
-      granted:
-        one: "%{count} lubatud"
-        other: "%{count} lubatud"
       select_badge_for_title: Vali märgis, mida kasutada oma pealkirjana
       none: "(pole)"
       badge_grouping:
@@ -2865,6 +2861,7 @@ et:
           create: "Loo"
           create_type: "Liik"
           create_name: "Nimi"
+          save: "Salvesta"
           edit: "Muuda"
           common: "Tavaline"
           desktop: "Töölaud"

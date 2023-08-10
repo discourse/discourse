@@ -45,6 +45,9 @@ fi:
       trigger: "heitä"
       invalid: |-
         Pahoittelen, mutta on matemaattinen mahdottomuus heittää noppia pyytämälläsi tavalla. :confounded:
+      not_enough_dice:
+        one: "Minulla on vain %{count} noppa. Häpeällistä, tiedän!"
+        other: "Minulla on vain %{count} noppaa. Häpeällistä, tiedän!"
       out_of_range: |-
         Tiesitkö, että [suurin mahdollinen määrä sivuja](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) matemaattisesti tasapuolisessa nopassa on 120?
       results: |-
@@ -373,9 +376,9 @@ fi:
         instructions: |-
           Tiesitkö, että viesteissä voi viitata alueisiin ja tunnisteisiin? Esimerkiksi, oletko käynyt alueella %{category}?
 
-          Näppäile lauseen keskellä `#` ja valitse mieleinen alue tai tunniste.
+          Kirjoita # mihin tahansa kohtaan lauseessa ja valitse mieleinen alue tai tunniste.
         not_found: |-
-          Höh, en näe viittauksia alueisiin. Huomioi, ettei `#` saa olla rivinsä ensimmäinen merkki. Kopioisitko tämän seuraavaan vastaukseesi?
+          Höh, en näe viittauksia alueisiin. Kopioisitko tämän seuraavaan vastaukseesi?
 
           ```text
           Voin luoda aluelinkin käyttäen risuaitaa #

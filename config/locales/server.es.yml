@@ -19,7 +19,7 @@ es:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - Enero
     - Febrero
     - Marzo
@@ -514,7 +514,7 @@ es:
       Es más fácil leer temas que tengan menos respuestas (aunque más profundas), que tener que leer muchas respuestas individuales.
     dominating_topic: '¡Has publicado mucho en este tema! Considera la posibilidad de dar a los demás la oportunidad de responder aquí y debatir también entre ellos.'
     get_a_room: Has respondido a @%{reply_username} %{count} veces, ¿sabías que también puedes enviarle un mensaje personal directamente?
-    dont_feed_the_trolls: Este mensaje ya ha sido marcado para llamar la atención del moderador. ¿Seguro que deseas responder a él? Las respuestas a contenido negativo tienden a fomentar un comportamiento más negativo.
+    dont_feed_the_trolls: Esta publicación ya ha sido marcada para llamar la atención del moderador. ¿Seguro que deseas responder a ella? Las respuestas a contenido negativo tienden a fomentar un comportamiento más negativo.
     too_many_replies: |
       ### Has llegado al límite de respuestas en este tema
 
@@ -628,20 +628,6 @@ es:
   staff_category_description: "Categoría privada para debates entre moderadores y administradores. Los temas solo serán visibles para miembros del equipo."
   discourse_welcome_topic:
     title: "¡Te damos la bienvenida a %{site_title}! :wave:"
-    body: |
-      Nos alegra mucho que te hayas unido a nosotros.
-
-      %{site_info_quote}
-
-      Aquí tienes algunas cosas que puedes hacer para empezar:
-
-      :speaking_head: **Preséntate** añadiendo tu foto e información sobre ti y tus intereses a [tu perfil](%{base_path}/my/preferences/account). ¿Qué te gustaría que te preguntaran?
-
-      :open_book: **Conoce a la comunidad** [navegando por los debates](%{base_path}/top) que ya se están produciendo aquí. Cuando encuentres una publicación interesante, informativa o entretenida, utiliza :heart: para mostrar tu agradecimiento o apoyo.
-
-      :handshake: **Contribuye** comentando, compartiendo tu propia perspectiva, haciendo preguntas u ofreciendo tu opinión en el debate. Antes de responder o iniciar nuevos temas, revisa las [Directrices de la Comunidad](%{base_path}/faq).
-
-      > Si necesitas ayuda o tienes alguna sugerencia, no dudes en preguntar en [#feedback](%{base_path}/c/site-feedback) o [contacta con los administradores](%{base_path}/about).
   admin_quick_start_title: "Guía del administrador: Primeros pasos"
   category:
     topic_prefix: "Acerca de la categoría %{category}"
@@ -2012,8 +1998,6 @@ es:
     permalink_normalizations: "Aplicar la siguiente expresión regular antes de hacer coincidir los permalinks, por ejemplo: /(topic.*)\\?.*/\\1 despojará las cadenas de consulta de las rutas de los temas. El formato es regex+string usa \\1 etc. para acceder a capturas"
     global_notice: "Mostrar a todos los visitantes un mensaje global para URGENCIAS o EMERGENCIAS que no se pueda ocultar. Deja este campo en blanco para quitarlo (puedes usar HTML)."
     disable_system_edit_notifications: "Desactivar editar notificaciones por el usuario del sistema cuando «download_remote_images_to_local» este activo."
-    disable_category_edit_notifications: "Desactiva las notificaciones para las ediciones de categorías de temas."
-    disable_tags_edit_notifications: "Desactiva las notificaciones para las ediciones de etiquetas de temas."
     notification_consolidation_threshold: "Cantidad de me gusta o notificaciones de solicitud de membresía recibidas antes de que las notificaciones se consoliden en una sola. Establece el valor en 0 para desactivar."
     likes_notification_consolidation_window_mins: "Minutos durante los que las notificaciones se consolidan en una sola notificación una vez que se haya alcanzado el limite. El límite se puede configurar en «SiteSetting.notification_consolidation_threshold»."
     automatically_unpin_topics: "Desanclar automáticamente cuando el usuario llega al final del tema."
@@ -2164,7 +2148,7 @@ es:
     enable_sitemap: "Generar un sitemap para el sitio e incluirlo en el archivo robots.txt."
     sitemap_page_size: "Número de URLs que incluir en cada página del sitemap. Máximo de 50.000"
     enable_user_status: "(experimental) Permitir a los usuarios establecer un mensaje de estado personalizado (emoji + descripción)."
-    enable_user_tips: "Habilitar nuevos consejos de usuario que describan las funciones clave a los usuarios"
+    enable_user_tips: "Activar nuevos consejos de usuario que describan las funciones clave a los usuarios"
     short_title: "El título corto se utilizará en la pantalla de inicio del usuario, el iniciador u otros lugares donde el espacio puede ser limitado. Debe limitarse a 12 caracteres."
     dashboard_hidden_reports: "Permitir ocultar los informes especificados del panel de control."
     dashboard_visible_tabs: "Elige qué pestañas del panel de control se mostrarán."
@@ -2184,8 +2168,8 @@ es:
     default_navigation_menu_categories: "Las categorías seleccionadas se mostrarán por defecto en la sección Categorías del Menú de navegación."
     default_navigation_menu_tags: "Las etiquetas seleccionadas se mostrarán por defecto en la sección Etiquetas del Menú de navegación."
     enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Utiliza el nuevo sistema de autocompletado #hashtag para categorías y etiquetas que muestra el elemento seleccionado de forma diferente y ha mejorado la búsqueda"
-    experimental_new_new_view_groups: 'EXPERIMENTAL: Habilita una nueva lista de temas que combine los no leídos y los nuevos y haz que el enlace «Todo» de la barra lateral enlace a ella.'
-    enable_custom_sidebar_sections: "EXPERIMENTAL: Habilita secciones personalizadas de la barra lateral"
+    experimental_new_new_view_groups: 'EXPERIMENTAL: Activa una nueva lista de temas que combine los no leídos y los nuevos y haz que el enlace «Todo» de la barra lateral enlace a ella.'
+    enable_custom_sidebar_sections: "EXPERIMENTAL: Activa secciones personalizadas de la barra lateral"
     experimental_topics_filter: "EXPERIMENTAL: Habilita la ruta del filtro de temas experimentales en /filter"
     experimental_search_menu_groups: "EXPERIMENTAL: Habilita el nuevo menú de búsqueda que se ha actualizado para utilizar glimmer"
     enable_experimental_lightbox: "EXPERIMENTAL: Sustituye el lightbox de imágenes por defecto por el diseño renovado."
@@ -4715,7 +4699,7 @@ es:
         description: "Restaurar la publicación para que los usuarios puedan verla."
       agree_and_hide:
         title: "Ocultar publicación"
-        description: "Aceptar la denuncia y ocultar esta entrada + enviar automáticamente al usuario un mensaje instándole a editarla."
+        description: "Aceptar la denuncia y ocultar esta publicación + enviar automáticamente al usuario un mensaje instándole a editarla."
       delete_single:
         title: "Eliminar"
       delete:

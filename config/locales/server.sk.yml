@@ -17,7 +17,7 @@ sk:
       no_day: "%Y %B"
   date:
     month_names:
-    - null
+    -
     - Január
     - Február
     - Marec

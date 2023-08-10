@@ -1,3 +1,4 @@
+import "./loader-shims";
 import {
   cook as cookIt,
   setup as setupIt,
@@ -28,7 +29,6 @@ export function buildOptions(state) {
     getTopicInfo,
     topicId,
     forceQuoteLink,
-    categoryHashtagLookup,
     userId,
     getCurrentUser,
     currentUser,
@@ -67,7 +67,6 @@ export function buildOptions(state) {
     getTopicInfo,
     topicId,
     forceQuoteLink,
-    categoryHashtagLookup,
     userId,
     getCurrentUser,
     currentUser,

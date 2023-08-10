@@ -16,6 +16,7 @@ import showModal from "discourse/lib/show-modal";
 import { action } from "@ember/object";
 import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
 import NotActivatedModal from "../components/modal/not-activated";
+import ForgotPassword from "discourse/components/modal/forgot-password";
 
 function unlessReadOnly(method, message) {
   return function () {
@@ -148,11 +149,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     ),
 
     showForgotPassword() {
-      getOwner(this).lookup("controller:forgot-password").setProperties({
-        offerHelp: null,
-        helpSeen: false,
-      });
-      showModal("forgot-password", { title: "forgot_password.title" });
+      this.modal.show(ForgotPassword);
     },
 
     showNotActivated(props) {

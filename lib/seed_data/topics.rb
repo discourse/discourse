@@ -109,6 +109,10 @@ module SeedData
               ""
             end
 
+          feedback_category = Category.find_by(id: SiteSetting.meta_category_id)
+          feedback_category_hashtag =
+            feedback_category ? "##{feedback_category.slug}" : "#site-feedback"
+
           topics << {
             site_setting_name: "welcome_topic_id",
             title: I18n.t("discourse_welcome_topic.title", site_title: SiteSetting.title),
@@ -119,6 +123,7 @@ module SeedData
                 site_title: SiteSetting.title,
                 site_description: SiteSetting.site_description,
                 site_info_quote: site_info_quote,
+                feedback_category: feedback_category_hashtag,
               ),
             category: general_category,
             after_create: proc { |post| post.topic.update_pinned(true, true) },

@@ -98,6 +98,9 @@ class Theme < ActiveRecord::Base
     changed_colors.clear
     changed_schemes.clear
 
+    any_non_css_fields_changed =
+      changed_fields.any? { |f| !(f.basic_scss_field? || f.extra_scss_field?) }
+
     changed_fields.each(&:save!)
     changed_fields.clear
 
@@ -126,6 +129,14 @@ class Theme < ActiveRecord::Base
         self.theme_setting_requests_refresh = false
       end
     end
+
+    if any_non_css_fields_changed && should_refresh_development_clients?
+      MessageBus.publish "/file-change", ["development-mode-theme-changed"]
+    end
+  end
+
+  def should_refresh_development_clients?
+    Rails.env.development?
   end
 
   def update_child_components
@@ -513,18 +524,20 @@ class Theme < ActiveRecord::Base
           changed_fields << field
         end
       end
-      field
     else
       if value.present? || upload_id.present?
-        theme_fields.build(
-          target_id: target_id,
-          value: value,
-          name: name,
-          type_id: type_id,
-          upload_id: upload_id,
-        )
+        field =
+          theme_fields.build(
+            target_id: target_id,
+            value: value,
+            name: name,
+            type_id: type_id,
+            upload_id: upload_id,
+          )
+        changed_fields << field
       end
     end
+    field
   end
 
   def child_theme_ids=(theme_ids)

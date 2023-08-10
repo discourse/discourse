@@ -198,7 +198,6 @@ sq:
       one: "%{count} shkronjë"
       other: "%{count} shkronja"
     suggested_topics:
-      title: "Temat e sugjeruara"
       pm_title: "Mesazhet e sugjeruara"
     about:
       simple_title: "Rreth Faqes"
@@ -453,7 +452,6 @@ sq:
       "12": "Të dërguar"
       "13": "Inbox"
       "14": "Në pritje"
-      "15": "Drafts"
     categories:
       all: "kategoritë"
       all_subcategories: "të gjitha"
@@ -1257,7 +1255,6 @@ sq:
           "2_8": "Ju do të shikoni numrin e përgjigjeve të reja sepse jeni duke gjurmuar këtë kategori. "
           "2_4": "Ju do të shikoni numrin e përgjigjeve të reja sepse ju postuat një përgjigje në këtë temë. "
           "2_2": "Ju do të shikoni numrin e përgjigjeve të reja sepse jeni duke gjurmuar këtë temë. "
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. "
           "1": "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. "
           "0_7": "Ju nuk do të merrni asnjë njoftim për temat në këtë kategori. "
@@ -1832,9 +1829,6 @@ sq:
       more_badges:
         one: "+%{count} tjetër"
         other: "+%{count} të tjera"
-      granted:
-        one: "%{count} e akorduar"
-        other: "%{count} të akorduara"
       select_badge_for_title: Zgjidhni një stemë për ta përdorur si titullin tuaj
       none: "(asnjë)"
       badge_grouping:
@@ -2189,6 +2183,7 @@ sq:
           customize_desc: "Personalizo:"
           create_type: "Lloji"
           create_name: "Emri"
+          save: "Ruaj"
           edit: "Redakto"
           mobile: "Mobile"
           settings: "Rregullimet"

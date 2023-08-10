@@ -267,9 +267,9 @@ pt:
       aria_label: "Filtrar por período"
     related_messages:
       title: "Mensagens Relacionadas"
+      pill: "Mensagens Relacionadas"
       see_all: 'Ver <a href="%{path}">todas as mensagens</a> de @%{username}...'
     suggested_topics:
-      title: "Tópicos Sugeridos"
       pm_title: "Mensagens Sugeridas"
     about:
       simple_title: "Acerca"
@@ -3293,9 +3293,6 @@ pt:
       more_badges:
         one: "+%{count} Mais"
         other: "+%{count} Mais"
-      granted:
-        one: "%{count} concedido"
-        other: "%{count} concedidos"
       select_badge_for_title: Selecione um crachá para usar como seu título
       none: "(nenhum)"
       successfully_granted: "%{badge} atribuído a %{username} com sucesso"
@@ -3920,6 +3917,7 @@ pt:
           create: "Criar"
           create_type: "Tipo"
           create_name: "Nome"
+          save: "Guardar"
           long_title: "Altere as cores, CSS e conteúdos HTML do seu site"
           edit: "Editar"
           edit_confirm: "Este é um tema remoto, se você editar CSS/HTML suas alterações serão apagadas na próxima vez que você atualizar o tema."

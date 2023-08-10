@@ -125,7 +125,6 @@ class GlobalSetting
     %w[
       pool
       connect_timeout
-      timeout
       socket
       host
       backup_host

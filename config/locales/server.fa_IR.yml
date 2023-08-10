@@ -18,7 +18,7 @@ fa_IR:
       no_day: "%B %Y"
   date:
     month_names:
-    - null
+    -
     - ژانویه
     - فوریه
     - مارس

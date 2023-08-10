@@ -75,14 +75,11 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
 
   @service router;
 
-  @notEmpty("args.icon")
-  btnIcon;
+  @notEmpty("args.icon") btnIcon;
 
-  @equal("args.display", "link")
-  btnLink;
+  @equal("args.display", "link") btnLink;
 
-  @empty("computedLabel")
-  noText;
+  @empty("computedLabel") noText;
 
   constructor() {
     super(...arguments);

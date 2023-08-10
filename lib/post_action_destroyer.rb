@@ -54,6 +54,13 @@ class PostActionDestroyer
       GivenDailyLike.decrement_for(@destroyed_by.id)
     end
 
+    case @post_action_type_id
+    when *PostActionType.notify_flag_type_ids
+      DiscourseEvent.trigger(:flag_destroyed, post_action, self)
+    when PostActionType.types[:like]
+      DiscourseEvent.trigger(:like_destroyed, post_action, self)
+    end
+
     UserActionManager.post_action_destroyed(post_action)
     PostActionNotifier.post_action_deleted(post_action)
     result.success = true

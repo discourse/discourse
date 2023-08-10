@@ -1194,13 +1194,30 @@ RSpec.describe PostAlerter do
       it "does not send push notifications when a filters returns false" do
         Plugin::Instance.new.register_push_notification_filter { |user, payload| false }
         expect { mention_post }.not_to change { Jobs::PushNotification.jobs.count }
+
+        events = DiscourseEvent.track_events { mention_post }
+        expect(events.find { |event| event[:event_name] == :push_notification }).not_to be_present
+
         DiscoursePluginRegistry.reset!
       end
+    end
+
+    it "triggers the push notification event" do
+      events = DiscourseEvent.track_events { mention_post }
+
+      push_notification_event = events.find { |event| event[:event_name] == :push_notification }
+      expect(push_notification_event).to be_present
+      expect(push_notification_event[:params][0].username).to eq("eviltrout")
+      expect(push_notification_event[:params][1][:username]).to eq(user.username)
+      expect(push_notification_event[:params][1][:excerpt]).to eq("Hello @eviltrout ❤")
     end
 
     it "pushes nothing to suspended users" do
       evil_trout.update_columns(suspended_till: 1.year.from_now)
       expect { mention_post }.to_not change { Jobs::PushNotification.jobs.count }
+
+      events = DiscourseEvent.track_events { mention_post }
+      expect(events.find { |event| event[:event_name] == :push_notification }).not_to be_present
     end
 
     it "pushes nothing when the user is in 'do not disturb'" do
@@ -1212,6 +1229,9 @@ RSpec.describe PostAlerter do
       )
 
       expect { mention_post }.to_not change { Jobs::PushNotification.jobs.count }
+
+      events = DiscourseEvent.track_events { mention_post }
+      expect(events.find { |event| event[:event_name] == :push_notification }).not_to be_present
     end
 
     it "correctly pushes notifications if configured correctly" do
@@ -1312,8 +1332,7 @@ RSpec.describe PostAlerter do
       expect(JSON.parse(body)).to eq(payload)
     end
 
-    it "does not have invalid HTML in the excerpt when enable_experimental_hashtag_autocomplete is enabled" do
-      SiteSetting.enable_experimental_hashtag_autocomplete = true
+    it "does not have invalid HTML in the excerpt" do
       Fabricate(:category, slug: "random")
       Jobs.run_immediately!
       body = nil
@@ -1413,7 +1432,11 @@ RSpec.describe PostAlerter do
             end
         end
 
-      expect(events.size).to eq(2)
+      expect(events.map { |event| event[:event_name] }).to include(
+        :pre_notification_alert,
+        :push_notification,
+        :post_notification_alert,
+      )
       expect(messages.size).to eq(0)
       expect(Jobs::PushNotification.jobs.size).to eq(1)
     end

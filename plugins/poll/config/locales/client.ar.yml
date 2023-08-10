@@ -33,6 +33,30 @@ ar:
           title: "ستظهر النتائج بعد <strong>إغلاق الاستطلاع</strong>."
         staff:
           title: "تظهر النتائج لأعضاء <strong>فريق العمل</strong> فقط."
+      multiple:
+        help:
+          at_least_min_options:
+            zero: "اختر <strong>%{count} خيار</strong> على الأقل."
+            one: "اختر <strong>خيارًا واحدًا (%{count})</strong> على الأقل."
+            two: "اختر <strong>خيارَين (%{count})</strong> على الأقل."
+            few: "اختر <strong>%{count} خيارات</strong> على الأقل."
+            many: "اختر <strong>%{count} خيارًا</strong> على الأقل."
+            other: "اختر <strong>%{count} خيار</strong> على الأقل."
+          up_to_max_options:
+            zero: "اختر ما يصل إلى <strong>%{count} خيار</strong>."
+            one: "اختر ما يصل إلى <strong>خيار واحد (%{count})</strong>."
+            two: "اختر ما يصل إلى <strong>خيارَين (%{count})</strong>."
+            few: "اختر ما يصل إلى <strong>%{count} خيارات</strong>."
+            many: "اختر ما يصل إلى <strong>%{count} خيارًا</strong>."
+            other: "اختر ما يصل إلى <strong>%{count} خيار</strong>."
+          x_options:
+            zero: "اختر <strong>%{count} خيار</strong>."
+            one: "اختر <strong>خيارًا واحدًا (%{count})</strong>."
+            two: "اختر <strong>خيارَين (%{count})</strong>."
+            few: "اختر <strong>%{count} خيارات</strong>."
+            many: "اختر <strong>%{count} خيارًا</strong>."
+            other: "اختر <strong>%{count} خيار</strong>."
+          between_min_and_max_options: "اختر بين <strong>%{min} و%{max} من الخيارات</strong>."
       cast-votes:
         title: "الإدلاء بصوتك"
         label: "صوِّت اﻵن!"
@@ -41,8 +65,10 @@ ar:
         label: "النتائج"
       remove-vote:
         title: "إزالة صوتك"
+        label: "التراجع عن التصويت"
       hide-results:
         title: "العودة إلى تصويتاتك"
+        label: "تصويت"
       group-results:
         title: "تجميع الأصوات حسب حقل المستخدم"
         label: "عرض التفاصيل"

@@ -5,7 +5,6 @@ import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-me
 import Bookmark from "discourse/models/bookmark";
 import I18n from "I18n";
 import { generateCookFunction } from "discourse/lib/text";
-import simpleCategoryHashMentionTransform from "discourse/plugins/chat/discourse/lib/simple-category-hash-mention-transform";
 import { getOwner } from "discourse-common/lib/get-owner";
 import discourseLater from "discourse-common/lib/later";
 import { parseMentionedUsernames } from "discourse/lib/parse-mentions";
@@ -196,10 +195,7 @@ export default class ChatMessage {
     } else {
       const cookFunction = await generateCookFunction(markdownOptions);
       ChatMessage.cookFunction = (raw) => {
-        return simpleCategoryHashMentionTransform(
-          cookFunction(raw),
-          this.site.categories
-        );
+        return cookFunction(raw);
       };
 
       this.cooked = ChatMessage.cookFunction(this.message);

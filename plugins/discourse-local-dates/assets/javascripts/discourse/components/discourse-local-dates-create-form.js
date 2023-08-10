@@ -427,7 +427,6 @@ export default Component.extend({
   },
 
   _closeModal() {
-    const composer = getOwner(this).lookup("controller:composer");
-    composer.send("closeModal");
+    getOwner(this).lookup("service:modal").close();
   },
 });

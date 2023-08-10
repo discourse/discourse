@@ -92,3 +92,6 @@ nl:
           description: "Beschrijving"
           header: "Koptekst"
           hover_to_see: "Plaats de aanwijzer om een tooltip te zien"
+        char_counter:
+          title: "Tekensteller"
+          placeholder: "Voer hier je tekst in..."

@@ -7,7 +7,6 @@ export default {
       avatar_template: "/user_avatar/localhost/eviltrout/{size}/5275.png",
       name: "Robin Ward",
       unread_notifications: 0,
-      unread_private_messages: 0,
       unread_high_priority_notifications: 0,
       admin: true,
       notification_channel_position: null,

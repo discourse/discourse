@@ -88,7 +88,7 @@ class GroupsController < ApplicationController
     # count the total before doing pagination
     total = groups.count
 
-    page = params[:page].to_i
+    page = fetch_int_from_params(:page, default: 0)
     page_size = MobileDetection.mobile_device?(request.user_agent) ? 15 : 36
     groups = groups.offset(page * page_size).limit(page_size)
 

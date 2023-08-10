@@ -724,8 +724,11 @@ createWidget("post-article", {
     return `post_${attrs.post_number}`;
   },
 
-  buildClasses(attrs) {
+  buildClasses(attrs, state) {
     let classNames = [];
+    if (state.repliesAbove.length) {
+      classNames.push("replies-above");
+    }
     if (attrs.via_email) {
       classNames.push("via-email");
     }

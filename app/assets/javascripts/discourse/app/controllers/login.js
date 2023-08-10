@@ -20,6 +20,7 @@ import showModal from "discourse/lib/show-modal";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import ForgotPassword from "discourse/components/modal/forgot-password";
 
 // This is happening outside of the app via popup
 const AuthErrors = [
@@ -32,7 +33,6 @@ const AuthErrors = [
 
 export default Controller.extend(ModalFunctionality, {
   createAccount: controller(),
-  forgotPassword: controller(),
   application: controller(),
   dialog: service(),
 
@@ -190,11 +190,12 @@ export default Controller.extend(ModalFunctionality, {
   @action
   handleForgotPassword(event) {
     event?.preventDefault();
-    const forgotPasswordController = this.forgotPassword;
-    if (forgotPasswordController) {
-      forgotPasswordController.set("accountEmailOrUsername", this.loginName);
-    }
-    this.send("showForgotPassword");
+
+    this.modal.show(ForgotPassword, {
+      model: {
+        emailOrUsername: this.loginName,
+      },
+    });
   },
 
   @action

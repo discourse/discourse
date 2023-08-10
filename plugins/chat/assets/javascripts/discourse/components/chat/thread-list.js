@@ -57,6 +57,10 @@ export default class ChatThreadList extends Component {
       });
   }
 
+  get lastThread() {
+    return this.sortedThreads[this.sortedThreads.length - 1];
+  }
+
   get shouldRender() {
     return !!this.args.channel;
   }

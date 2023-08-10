@@ -295,6 +295,12 @@
         {{/if}}
       </TopicNavigation>
 
+      <PluginOutlet
+        @name="after-topic-navigation"
+        @connectorTagName="div"
+        @outletArgs={{hash model=this.model}}
+      />
+
       <div class="row">
         <section class="topic-area" id="topic" data-topic-id={{this.model.id}}>
 
@@ -543,20 +549,8 @@
           @outletArgs={{hash model=this.model}}
         />
       </span>
-      <div
-        class="{{if
-            this.model.relatedMessages.length
-            'related-messages-wrapper'
-          }}
-          {{if this.model.suggestedTopics.length 'suggested-topics-wrapper'}}"
-      >
-        {{#if this.model.relatedMessages.length}}
-          <RelatedMessages @topic={{this.model}} />
-        {{/if}}
-        {{#if this.model.suggestedTopics.length}}
-          <SuggestedTopics @topic={{this.model}} />
-        {{/if}}
-      </div>
+
+      <MoreTopics @topic={{this.model}} />
     {{/if}}
   {{else}}
     <div class="container">

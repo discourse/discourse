@@ -283,9 +283,9 @@ sl:
       other: "%{count} znakov"
     related_messages:
       title: "Povezana sporočila"
+      pill: "Povezana sporočila"
       see_all: 'Poglej <a href="%{path}">vsa sporočila</a> od @%{username}...'
     suggested_topics:
-      title: "Predlagane teme"
       pm_title: "Predlagana sporočila"
     about:
       simple_title: "O nas"
@@ -3180,11 +3180,6 @@ sl:
         two: "+%{count} več"
         few: "+%{count} več"
         other: "+%{count} več"
-      granted:
-        one: "%{count} podeljena"
-        two: "%{count} podeljeni"
-        few: "%{count} podeljene"
-        other: "%{count} podeljenih"
       select_badge_for_title: Izberite značko za svoj naziv
       none: "(brez)"
       successfully_granted: "%{badge} uspešno podeljena %{username}"
@@ -3685,6 +3680,7 @@ sl:
           create: "Ustvari"
           create_type: "Tip"
           create_name: "Polno ime"
+          save: "Shrani"
           edit: "Uredi"
           update_confirm: "Te lokalne spremembe bodo izbrisane po nadgradnji. Ali ste prepričani, da želite nadaljevati?"
           update_confirm_yes: "Da, nadaljuj z nadgradnjo"

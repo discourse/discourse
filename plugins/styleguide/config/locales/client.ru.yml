@@ -25,7 +25,7 @@ ru:
         colors:
           title: "Цвета"
         icons:
-          title: "Иконки"
+          title: "Значки"
           full_list: "См. полный список значков Font Awesome"
         input_fields:
           title: "Поля ввода"
@@ -92,3 +92,6 @@ ru:
           description: "Описание"
           header: "Заголовок"
           hover_to_see: "Наведите курсор, чтобы увидеть всплывающую подсказку"
+        char_counter:
+          title: "Счетчик символов"
+          placeholder: "Введите текст..."

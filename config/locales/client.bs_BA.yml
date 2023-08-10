@@ -257,9 +257,9 @@ bs_BA:
       other: "%{count} karaktera"
     related_messages:
       title: "Povezane Poruke"
+      pill: "Povezane Poruke"
       see_all: 'Prikaži <a href="%{path}">sve poruke</a> od @ %{username} ...'
     suggested_topics:
-      title: "Preporučene teme"
       pm_title: "Preporučene Poruke"
     about:
       simple_title: "O nama"
@@ -2082,7 +2082,6 @@ bs_BA:
           "2_8": "Vidjet ćete broj novih odgovora jer pratite ovu kategoriju."
           "2_4": "Vidjet ćete broj novih odgovora jer ste objavili odgovor na ovu temu."
           "2_2": "Vidjet ćete broj novih odgovora jer pratite ovu temu."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Dobiti ćete obavijest kada neko spomene tvoje @korisničko-ime ili odgovori na tvoj post."
           "1": "Dobiti ćete obavjest kada neko spomene tvoje @korisničko-ime ili odgovori na tvoj post."
           "0_7": "Ignorišete sve notifikacije u ovoj kategoriji."
@@ -2884,10 +2883,6 @@ bs_BA:
         one: "+ Još %{count}"
         few: "+ Još %{count}"
         other: "+ Još %{count}"
-      granted:
-        one: "%{count} odobreno"
-        few: "%{count} odobreno"
-        other: "%{count} odobreno"
       select_badge_for_title: Izaveri bedž za svoj naslov
       none: "(ništa)"
       successfully_granted: "Uspješno dodijeljen %{badge} za %{username}"
@@ -3488,6 +3483,7 @@ bs_BA:
           create: "napravi"
           create_type: "Tip"
           create_name: "Ime"
+          save: "Save"
           long_title: "Izmijenite boje, CSS i HTML sadržaj Vaše web lokacije"
           edit: "Izmijeni"
           edit_confirm: "Ovo je udaljena tema, ako uredite CSS / HTML, vaše izmene će biti izbrisane sledeći put kada ažurirate temu."

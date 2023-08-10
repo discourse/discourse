@@ -18,6 +18,8 @@ module SystemHelpers
             GlobalSetting.relative_url_root || "",
             "/session/#{user.encoded_username}/become.json?redirect=false",
           )
+
+    expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
   end
 
   def sign_out

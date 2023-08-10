@@ -516,6 +516,15 @@ to serve API requests. For example:
       return false;
     }
 
+    // All JS assets are served by Ember CLI, except for
+    // plugin assets which end in _extra.js
+    if (
+      request.path.startsWith(`${baseURL}assets/`) &&
+      !request.path.endsWith("_extra.js")
+    ) {
+      return false;
+    }
+
     if (request.path.startsWith(`${baseURL}_lr/`)) {
       return false;
     }

@@ -11,6 +11,7 @@ task "import:ensure_consistency" => :environment do
   insert_topic_views
   insert_user_actions
   insert_user_options
+  insert_user_profiles
   insert_user_stats
   insert_user_visits
   insert_draft_sequences
@@ -195,6 +196,17 @@ def insert_user_options
                FROM users u
           LEFT JOIN user_options uo ON uo.user_id = u.id
               WHERE uo.user_id IS NULL
+  SQL
+end
+
+def insert_user_profiles
+  log "Inserting user profiles..."
+
+  DB.exec <<-SQL
+    INSERT INTO user_profiles (user_id)
+         SELECT id
+           FROM users
+    ON CONFLICT DO NOTHING
   SQL
 end
 
@@ -572,4 +584,73 @@ task "import:update_first_post_created_at" => :environment do
   SQL
 
   log "Done"
+end
+
+desc "Update avatars from external_avatar_url in SSO records"
+task "import:update_avatars_from_sso" => :environment do
+  log "Updating avatars from SSO records"
+
+  sql = <<~SQL
+    SELECT user_id, external_avatar_url
+    FROM single_sign_on_records s
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM user_avatars a
+      WHERE a.user_id = s.user_id
+    )
+  SQL
+
+  queue = SizedQueue.new(1000)
+  threads = []
+
+  threads << Thread.new do ||
+    DB.query_each(sql) { |row| queue << { user_id: row.user_id, url: row.external_avatar_url } }
+    queue.close
+  end
+
+  max_count = DB.query_single(<<~SQL).first
+    SELECT COUNT(*)
+    FROM single_sign_on_records s
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM user_avatars a
+      WHERE a.user_id = s.user_id
+    )
+  SQL
+
+  status_queue = Queue.new
+  status_thread =
+    Thread.new do
+      error_count = 0
+      current_count = 0
+
+      while !(status = status_queue.pop).nil?
+        error_count += 1 if !status
+        current_count += 1
+
+        print "\r%7d / %7d (%d errors)" % [current_count, max_count, error_count]
+      end
+    end
+
+  20.times do
+    threads << Thread.new do
+      while row = queue.pop
+        begin
+          UserAvatar.import_url_for_user(
+            row[:url],
+            User.find(row[:user_id]),
+            override_gravatar: true,
+            skip_rate_limit: true,
+          )
+          status_queue << true
+        rescue StandardError
+          status_queue << false
+        end
+      end
+    end
+  end
+
+  threads.each(&:join)
+  status_queue.close
+  status_thread.join
 end

@@ -23,6 +23,15 @@ ja:
           title: "結果は投票が<strong>クローズ</strong>になると表示されます。"
         staff:
           title: "結果は<strong>スタッフ</strong>メンバーにのみ表示されます。"
+      multiple:
+        help:
+          at_least_min_options:
+            other: "少なくとも <strong>%{count} 個のオプション</strong>を選択してください。"
+          up_to_max_options:
+            other: "最大 <strong>%{count} 個のオプション</strong>を選択してください。"
+          x_options:
+            other: "<strong>%{count} 個のオプション</strong>を選択してください。"
+          between_min_and_max_options: "<strong>%{min} 個から %{max} 個までのオプション</strong>を選択してください。"
       cast-votes:
         title: "投票する"
         label: "今すぐ投票！"
@@ -31,8 +40,10 @@ ja:
         label: "結果"
       remove-vote:
         title: "投票の削除"
+        label: "投票を取り消す"
       hide-results:
         title: "自分の投票に戻る"
+        label: "投票"
       group-results:
         title: "ユーザーフィールド別に投票をグループ化"
         label: "内訳を表示する"
