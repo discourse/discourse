@@ -126,6 +126,28 @@ describe "Local dates", type: :system do
         "[date-range from=#{Date.parse("#{year}-#{month}-16").strftime("%Y-%m-%d")}T11:45:00 to=#{Date.parse("#{year}-#{month}-23").strftime("%Y-%m-%d")}T12:45:00 timezone=\"#{timezone}\"]",
       )
     end
+
+    it "allows clearing the end date and time" do
+      topic_page.visit_topic_and_open_composer(topic)
+      expect(topic_page).to have_expanded_composer
+      composer.click_toolbar_button("local-dates")
+      expect(insert_datetime_modal).to be_open
+
+      insert_datetime_modal.calendar_date_time_picker.select_year(year)
+      insert_datetime_modal.calendar_date_time_picker.select_day(16)
+      insert_datetime_modal.calendar_date_time_picker.fill_time("11:45")
+      insert_datetime_modal.select_to
+
+      insert_datetime_modal.calendar_date_time_picker.select_year(year)
+      insert_datetime_modal.calendar_date_time_picker.select_day(23)
+      insert_datetime_modal.calendar_date_time_picker.fill_time("12:45")
+      insert_datetime_modal.delete_to
+
+      insert_datetime_modal.click_primary_button
+      expect(composer.composer_input.value).to have_content(
+        "[date=#{Date.parse("#{year}-#{month}-16").strftime("%Y-%m-%d")} time=11:45:00 timezone=\"#{timezone}\"]",
+      )
+    end
   end
 
   describe "bookmarks" do

@@ -334,7 +334,11 @@ export default Component.extend({
 
   @action
   eraseToDateTime() {
-    this.setProperties({ toDate: null, toTime: null });
+    this.setProperties({
+      toDate: null,
+      toTime: null,
+    });
+    this.focusFrom();
   },
 
   @action

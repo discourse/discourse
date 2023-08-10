@@ -17,6 +17,10 @@ module PageObjects
       def select_from
         find(".date-time-control.from").click
       end
+
+      def delete_to
+        find(".delete-to-date").click
+      end
     end
   end
 end
