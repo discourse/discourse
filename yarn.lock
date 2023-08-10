@@ -1469,10 +1469,10 @@ devtools-protocol@0.0.981744:
   resolved "https://registry.yarnpkg.com/devtools-protocol/-/devtools-protocol-0.0.981744.tgz#9960da0370284577d46c28979a0b32651022bacf"
   integrity sha512-0cuGS8+jhR67Fy7qG3i3Pc7Aw494sb9yG9QgpG97SFVWwolgYjlhJg7n+UaHxOQT30d1TYu/EYe9k01ivLErIg==
 
-diffhtml@1.0.0-beta.20:
-  version "1.0.0-beta.20"
-  resolved "https://registry.yarnpkg.com/diffhtml/-/diffhtml-1.0.0-beta.20.tgz#129b403fa152276c9b876188980ca0f9b2540351"
-  integrity sha512-xSSwGb2dkQsTc7Bl910iySH65PkzsCtowfVGMfrmc2fEwvYrhJUpIEIx+3mpZ1wMWVt+t/0ltVwrjQkMJotxLg==
+diffhtml@1.0.0-beta.30:
+  version "1.0.0-beta.30"
+  resolved "https://registry.yarnpkg.com/diffhtml/-/diffhtml-1.0.0-beta.30.tgz#725c0a5941bd825675f8a62b701a12a67e7516c7"
+  integrity sha512-yrBteaq309reltj+kAnGqsnpJyQSqmCkd5LAJNAcWNmlgvu+PbiUm9bNxdRYi21BQsQsljTxrjs+AWeeHHghWA==
 
 dir-glob@^3.0.1:
   version "3.0.1"

@@ -459,9 +459,6 @@ export default Component.extend(TextareaTextManipulation, {
         previewPromise = loadScript("/javascripts/diffhtml.min.js").then(() => {
           const previewElement =
             this.element.querySelector(".d-editor-preview");
-          // This is a workaround for a known bug in diffHTML
-          // https://github.com/tbranyen/diffhtml/issues/217#issuecomment-1479956332
-          window.diff.release(previewElement);
           window.diff.innerHTML(previewElement, cookedElement.innerHTML);
         });
       }
