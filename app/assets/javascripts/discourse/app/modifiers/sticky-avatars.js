@@ -1,54 +1,77 @@
-import { addWidgetCleanCallback } from "discourse/components/mount-widget";
-import Site from "discourse/models/site";
+import Modifier from "ember-modifier";
+import { inject as service } from "@ember/service";
+import { registerDestructor } from "@ember/destroyable";
 import { bind } from "discourse-common/utils/decorators";
+import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import { getOwner, setOwner } from "@ember/application";
 import { schedule } from "@ember/runloop";
 
-export default class StickyAvatars {
-  static init(owner) {
-    return new this(owner).init();
-  }
+const STICKY_CLASS = "sticky-avatar";
+const TOPIC_POST_SELECTOR = ".post-stream .topic-post";
 
-  stickyClass = "sticky-avatar";
-  topicPostSelector = "#topic .post-stream .topic-post";
-  intersectionObserver = null;
+export default class StickyAvatars extends Modifier {
+  @service site;
+  @service appEvents;
+
+  element;
+  intersectionObserver;
   direction = "⬇️";
   prevOffset = -1;
 
-  constructor(owner) {
-    setOwner(this, owner);
+  constructor() {
+    super(...arguments);
+    registerDestructor(this, (instance) => instance.cleanup());
   }
 
-  init() {
-    if (Site.currentProp("mobileView") || !("IntersectionObserver" in window)) {
+  modify(element) {
+    if (this.site.mobileView || !("IntersectionObserver" in window)) {
       return;
     }
 
-    const appEvents = getOwner(this).lookup("service:app-events");
-    appEvents.on("topic:current-post-scrolled", this._handlePostNodes);
-    appEvents.on("topic:scrolled", this._handleScroll);
-    appEvents.on("page:topic-loaded", this._initIntersectionObserver);
+    this.element = element;
+
+    this.appEvents.on(
+      "topic:current-post-scrolled",
+      this,
+      this._handlePostNodes
+    );
+    this.appEvents.on("topic:scrolled", this, this._handleScroll);
+    this.appEvents.on(
+      "page:topic-loaded",
+      this,
+      this._initIntersectionObserver
+    );
 
     addWidgetCleanCallback("post-stream", this._clearIntersectionObserver);
-
-    return this;
   }
 
-  destroy() {}
+  cleanup() {
+    this.appEvents.off(
+      "topic:current-post-scrolled",
+      this,
+      this._handlePostNodes
+    );
+    this.appEvents.off("topic:scrolled", this, this._handleScroll);
+    this.appEvents.off(
+      "page:topic-loaded",
+      this,
+      this._initIntersectionObserver
+    );
+  }
 
   @bind
   _handleScroll(offset) {
     if (offset <= 0) {
       this.direction = "⬇️";
-      document
-        .querySelectorAll(`${this.topicPostSelector}.${this.stickyClass}`)
-        .forEach((node) => node.classList.remove(this.stickyClass));
+      this.element
+        .querySelectorAll(`${TOPIC_POST_SELECTOR}.${STICKY_CLASS}`)
+        .forEach((node) => node.classList.remove(STICKY_CLASS));
     } else if (offset > this.prevOffset) {
       this.direction = "⬇️";
     } else {
       this.direction = "⬆️";
     }
+
     this.prevOffset = offset;
   }
 
@@ -58,7 +81,7 @@ export default class StickyAvatars {
     this._initIntersectionObserver();
 
     schedule("afterRender", () => {
-      document.querySelectorAll(this.topicPostSelector).forEach((postNode) => {
+      this.element.querySelectorAll(TOPIC_POST_SELECTOR).forEach((postNode) => {
         this.intersectionObserver.observe(postNode);
 
         const topicAvatarNode = postNode.querySelector(".topic-avatar");
@@ -70,6 +93,7 @@ export default class StickyAvatars {
         if (!topicMapNode) {
           return;
         }
+
         topicAvatarNode.style.marginBottom = `${topicMapNode.clientHeight}px`;
       });
     });
@@ -78,14 +102,14 @@ export default class StickyAvatars {
   @bind
   _initIntersectionObserver() {
     schedule("afterRender", () => {
-      const headerOffsetInPx =
-        headerOffset() <= 0 ? "0px" : `-${headerOffset()}px`;
+      const offset = headerOffset();
+      const headerOffsetInPx = offset <= 0 ? "0px" : `-${offset}px`;
 
       this.intersectionObserver = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             if (!entry.isIntersecting || entry.intersectionRatio === 1) {
-              entry.target.classList.remove(this.stickyClass);
+              entry.target.classList.remove(STICKY_CLASS);
               return;
             }
 
@@ -93,9 +117,9 @@ export default class StickyAvatars {
               entry.target.querySelector(".contents")?.clientHeight;
             if (
               this.direction === "⬆️" ||
-              postContentHeight > window.innerHeight - headerOffset()
+              postContentHeight > window.innerHeight - offset
             ) {
-              entry.target.classList.add(this.stickyClass);
+              entry.target.classList.add(STICKY_CLASS);
             }
           });
         },
