@@ -1,4 +1,5 @@
 import "./global-compat";
+import "./loader-shims";
 
 import require from "require";
 import Application from "@ember/application";

@@ -138,7 +138,7 @@ class Typepad < Thor
       type = clean_type!(Regexp.last_match[1])
       value = section.split("\n")[1..-1].join("\n")
       value.strip!
-      return [type.to_sym, value] if value.present?
+      [type.to_sym, value] if value.present?
     end
   end
 

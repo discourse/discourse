@@ -117,6 +117,7 @@ class UserProfile < ActiveRecord::Base
         max_file_size: SiteSetting.max_image_size_kb.kilobytes,
         tmp_file_name: "sso-profile-background",
         follow_redirect: true,
+        skip_rate_limit: true,
       )
 
     return unless tempfile

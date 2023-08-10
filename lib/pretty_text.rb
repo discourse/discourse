@@ -41,7 +41,7 @@ module PrettyText
     return erb_name if File.file?("#{root}#{erb_name}")
 
     erb_name = "#{filename}.js.erb"
-    return erb_name if File.file?("#{root}#{erb_name}")
+    erb_name if File.file?("#{root}#{erb_name}")
   end
 
   def self.apply_es6_file(ctx, root_path, part_name)

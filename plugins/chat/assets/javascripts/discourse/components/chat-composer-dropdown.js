@@ -7,12 +7,17 @@ import { tracked } from "@glimmer/tracking";
 
 export default class ChatComposerDropdown extends Component {
   @tracked isExpanded = false;
+  @tracked tippyInstance = null;
 
   trigger = null;
 
   @action
   setupTrigger(element) {
     this.trigger = element;
+  }
+
+  get ariaControls() {
+    return this.tippyInstance?.popper?.id;
   }
 
   @action
@@ -26,13 +31,13 @@ export default class ChatComposerDropdown extends Component {
 
   @action
   onButtonClick(button) {
-    this._tippyInstance.hide();
+    this.tippyInstance.hide();
     button.action();
   }
 
   @action
   setupPanel(element) {
-    this._tippyInstance = tippy(this.trigger, {
+    this.tippyInstance = tippy(this.trigger, {
       theme: "chat-composer-dropdown",
       trigger: "click",
       zIndex: 1400,
@@ -53,11 +58,11 @@ export default class ChatComposerDropdown extends Component {
       },
     });
 
-    this._tippyInstance.show();
+    this.tippyInstance.show();
   }
 
   @action
   teardownPanel() {
-    this._tippyInstance?.destroy();
+    this.tippyInstance?.destroy();
   }
 }

@@ -28,7 +28,6 @@ const KNOWN_LEGACY_MODALS = [
   "feature-topic-on-profile",
   "feature-topic",
   "flag",
-  "forgot-password",
   "grant-badge",
   "group-default-notifications",
   "history",
