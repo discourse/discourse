@@ -46,6 +46,10 @@ export default class StickyAvatars extends Modifier {
   }
 
   cleanup() {
+    if (this.site.mobileView || !("IntersectionObserver" in window)) {
+      return;
+    }
+
     this.appEvents.off(
       "topic:current-post-scrolled",
       this,
