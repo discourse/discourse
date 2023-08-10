@@ -1251,7 +1251,7 @@ class User < ActiveRecord::Base
   end
 
   def full_suspend_reason
-    return suspend_record.try(:details) if suspended?
+    suspend_record.try(:details) if suspended?
   end
 
   def suspend_reason
