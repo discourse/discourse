@@ -2,7 +2,10 @@ import Modifier from "ember-modifier";
 import { inject as service } from "@ember/service";
 import { registerDestructor } from "@ember/destroyable";
 import { bind } from "discourse-common/utils/decorators";
-import { addWidgetCleanCallback } from "discourse/components/mount-widget";
+import {
+  addWidgetCleanCallback,
+  removeWidgetCleanCallback,
+} from "discourse/components/mount-widget";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { schedule } from "@ember/runloop";
 
@@ -61,6 +64,8 @@ export default class StickyAvatars extends Modifier {
       this,
       this._initIntersectionObserver
     );
+
+    removeWidgetCleanCallback("post-stream", this._clearIntersectionObserver);
   }
 
   @bind
