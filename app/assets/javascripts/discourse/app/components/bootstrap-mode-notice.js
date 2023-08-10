@@ -10,12 +10,7 @@ export default class BootstrapModeNotice extends Component {
   @service currentUser;
   @service siteSettings;
 
-  @tracked showUserTip = false;
-
-  @action
-  setupUserTip() {
-    this.showUserTip = this.currentUser?.canSeeUserTip("admin_guide");
-  }
+  @tracked showUserTip = this.currentUser?.canSeeUserTip("admin_guide");
 
   @action
   routeToAdminGuide() {

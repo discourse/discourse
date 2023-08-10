@@ -26,6 +26,7 @@ import { h } from "virtual-dom";
 import { isProduction } from "discourse-common/config/environment";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import { getOwner, setOwner } from "@ember/application";
+import { camelize } from "@ember/string";
 
 const _registry = {};
 
@@ -161,7 +162,7 @@ export default class Widget {
 
     // We can inject services into widgets by passing a `services` parameter on creation
     (this.services || []).forEach((s) => {
-      this[s] = register.lookup(`service:${s}`);
+      this[camelize(s)] = register.lookup(`service:${s}`);
     });
 
     this.init(this.attrs);

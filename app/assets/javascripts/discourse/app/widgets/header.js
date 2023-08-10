@@ -12,7 +12,6 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { hbs } from "ember-cli-htmlbars";
-import { hideUserTip } from "discourse/lib/user-tips";
 import { SEARCH_BUTTON_ID } from "discourse/components/search-menu";
 
 let _extraHeaderIcons = [];
@@ -47,6 +46,8 @@ export const dropdown = {
 };
 
 createWidget("header-notifications", {
+  services: ["user-tips"],
+
   settings: {
     avatarSize: "medium",
   },
@@ -169,11 +170,11 @@ createWidget("header-notifications", {
   },
 
   destroy() {
-    hideUserTip("first_notification");
+    this.userTips.hideTip("first_notification");
   },
 
   willRerenderWidget() {
-    hideUserTip("first_notification");
+    this.userTips.hideTip("first_notification");
   },
 });
 
