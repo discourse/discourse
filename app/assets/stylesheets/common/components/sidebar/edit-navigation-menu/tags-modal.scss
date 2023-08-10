@@ -4,6 +4,7 @@
   gap: 0 0.5em;
   margin: 0;
   grid-template-columns: repeat(auto-fill, minmax(12em, 1fr));
+  align-items: flex-start;
   &__no-tags {
     grid-column-start: 1;
     grid-column-end: -1;
