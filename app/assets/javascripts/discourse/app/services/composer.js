@@ -1324,16 +1324,15 @@ export default class ComposerService extends Service {
     ) {
       this.set("model.composeState", Composer.OPEN);
     } else {
-      Draft.get(Composer.NEW_TOPIC_KEY).then((data) => {
-        if (data.draft) {
-          return this.open({
-            action: Composer.CREATE_TOPIC,
-            draft: data.draft,
-            draftKey: Composer.NEW_TOPIC_KEY,
-            draftSequence: data.draft_sequence,
-          });
-        }
-      });
+      const data = await Draft.get(Composer.NEW_TOPIC_KEY);
+      if (data.draft) {
+        return this.open({
+          action: Composer.CREATE_TOPIC,
+          draft: data.draft,
+          draftKey: Composer.NEW_TOPIC_KEY,
+          draftSequence: data.draft_sequence,
+        });
+      }
     }
   }
 
