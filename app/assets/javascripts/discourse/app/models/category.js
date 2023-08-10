@@ -350,7 +350,7 @@ const Category = RestModel.extend({
     return this.permission === PermissionType.FULL;
   },
 
-  get canCreateTopicSubcategory() {
+  get subcategoryWithCreateTopicPermission() {
     return this.subcategories?.find(
       (subcategory) => subcategory.canCreateTopic
     );

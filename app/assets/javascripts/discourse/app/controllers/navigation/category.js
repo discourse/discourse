@@ -26,7 +26,7 @@ export default class NavigationCategoryController extends NavigationDefaultContr
     }
 
     if (this.siteSettings.default_subcategory_on_read_only_category) {
-      return this.category?.canCreateTopicSubcategory;
+      return this.category?.subcategoryWithCreateTopicPermission;
     }
   }
 
