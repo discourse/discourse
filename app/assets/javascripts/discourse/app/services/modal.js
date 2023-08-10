@@ -33,7 +33,6 @@ const KNOWN_LEGACY_MODALS = [
   "history",
   "ignore-duration-with-username",
   "ignore-duration",
-  "jump-to-post",
   "login",
   "move-to-topic",
   "post-enqueued",
