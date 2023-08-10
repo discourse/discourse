@@ -258,6 +258,12 @@ export default class ChatMessage extends Component {
     return this.chat.userCanInteractWithChat && this.site.desktopView;
   }
 
+  get secondaryActionsIsExpanded() {
+    return document.querySelector(
+      ".more-buttons.secondary-actions.is-expanded"
+    );
+  }
+
   @action
   expand() {
     const recursiveExpand = (message) => {
@@ -382,11 +388,13 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    this._onMouseEnterMessageDebouncedHandler = discourseDebounce(
-      this,
-      this._debouncedOnHoverMessage,
-      250
-    );
+    if (!this.secondaryActionsIsExpanded) {
+      this._onMouseEnterMessageDebouncedHandler = discourseDebounce(
+        this,
+        this._debouncedOnHoverMessage,
+        250
+      );
+    }
   }
 
   @action
@@ -399,7 +407,9 @@ export default class ChatMessage extends Component {
       return;
     }
 
-    this._setActiveMessage();
+    if (!this.secondaryActionsIsExpanded) {
+      this._setActiveMessage();
+    }
   }
 
   @action
@@ -417,8 +427,9 @@ export default class ChatMessage extends Component {
     ) {
       return;
     }
-
-    this.chat.activeMessage = null;
+    if (!this.secondaryActionsIsExpanded) {
+      this.chat.activeMessage = null;
+    }
   }
 
   @bind
