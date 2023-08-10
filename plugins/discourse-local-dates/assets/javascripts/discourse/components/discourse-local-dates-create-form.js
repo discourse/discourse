@@ -42,7 +42,7 @@ export default Component.extend({
       formats: (this.siteSettings.discourse_local_dates_default_formats || "")
         .split("|")
         .filter((f) => f),
-      timezone: moment.tz.guess(),
+      timezone: this.currentUserTimezone,
       date: moment().format(this.dateFormat),
     });
   },
@@ -186,7 +186,7 @@ export default Component.extend({
 
   @computed
   currentUserTimezone() {
-    return moment.tz.guess();
+    return this.currentUser.user_option.timezone || moment.tz.guess();
   },
 
   @computed
