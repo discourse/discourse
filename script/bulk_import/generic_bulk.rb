@@ -340,7 +340,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def create_connection(path)
-    sqlite = SQLite3::Database.new(path, results_as_hash: true, readonly: true)
+    sqlite = SQLite3::Database.new(path, results_as_hash: true)
     sqlite.busy_timeout = 60_000 # 60 seconds
     sqlite.journal_mode = "wal"
     sqlite.synchronous = "normal"
