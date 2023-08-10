@@ -1,7 +1,7 @@
 "use strict";
 
 const EmberApp = require("ember-cli/lib/broccoli/ember-app");
-const { resolve, join } = require("path");
+const path = require("path");
 const mergeTrees = require("broccoli-merge-trees");
 const concat = require("broccoli-concat");
 const { createI18nTree } = require("./lib/translation-plugin");
@@ -15,7 +15,7 @@ const generateWorkboxTree = require("./lib/workbox-tree-builder");
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
 module.exports = function (defaults) {
-  const discourseRoot = resolve("../../../..");
+  const discourseRoot = path.resolve("../../../..");
   const vendorJs = discourseRoot + "/vendor/assets/javascripts/";
 
   // Silence deprecations which we are aware of - see `lib/deprecation-silencer.js`
@@ -179,21 +179,36 @@ module.exports = function (defaults) {
       "/app/assets/javascripts/discourse/public/assets/scripts/module-shims.js"
   );
 
+  // Some of these trees need to access the @embroider/macros config to set up babel
   // See: https://github.com/embroider-build/embroider/issues/1574
-  // Specifically, markdownItBundleTree is triggering the MacrosConfig error
-  finalizeEmbroiderMacrosConfigs(app, resolve("."), app.project);
 
-  const discoursePluginsTree = app.project
-    .findAddonByName("discourse-plugins")
-    .generatePluginsTree();
+  const discoursePluginsTree = Lazy(() =>
+    app.project.findAddonByName("discourse-plugins").generatePluginsTree()
+  );
 
-  const adminTree = app.project.findAddonByName("admin").treeForAddonBundle();
+  const adminTree = Lazy(() =>
+    concat(app.project.findAddonByName("admin").treeForAddonBundle(), {
+      inputFiles: ["**/*.js"],
+      outputFile: `assets/admin.js`,
+    })
+  );
 
-  const wizardTree = app.project.findAddonByName("wizard").treeForAddonBundle();
+  const wizardTree = Lazy(() =>
+    concat(app.project.findAddonByName("wizard").treeForAddonBundle(), {
+      inputFiles: ["**/*.js"],
+      outputFile: `assets/wizard.js`,
+    })
+  );
 
-  const markdownItBundleTree = app.project
-    .findAddonByName("pretty-text")
-    .treeForMarkdownItBundle();
+  const markdownItBundleTree = Lazy(() =>
+    concat(
+      app.project.findAddonByName("pretty-text").treeForMarkdownItBundle(),
+      {
+        inputFiles: ["**/*.js"],
+        outputFile: `assets/markdown-it-bundle.js`,
+      }
+    )
+  );
 
   return app.toTree([
     createI18nTree(discourseRoot, vendorJs),
@@ -204,37 +219,50 @@ module.exports = function (defaults) {
       destDir: "assets/highlightjs",
     }),
     generateWorkboxTree(),
-    concat(adminTree, {
-      inputFiles: ["**/*.js"],
-      outputFile: `assets/admin.js`,
-    }),
-    concat(wizardTree, {
-      inputFiles: ["**/*.js"],
-      outputFile: `assets/wizard.js`,
-    }),
-    concat(markdownItBundleTree, {
-      inputFiles: ["**/*.js"],
-      outputFile: `assets/markdown-it-bundle.js`,
-    }),
+    adminTree,
+    wizardTree,
+    markdownItBundleTree,
     generateScriptsTree(app),
     discoursePluginsTree,
   ]);
 };
 
-// See: https://github.com/embroider-build/embroider/issues/1574
-function finalizeEmbroiderMacrosConfigs(appInstance, appRoot, parent) {
-  parent.initializeAddons?.();
+// Takes a callback and return a Proxy
+// One first interaction with the Proxy, the callback will be called once
+// and its return value will be memoized and used as the Proxy's target.
+// Essentially it lets you defer the callback until the value is needed.
+function Lazy(callback) {
+  let value;
+  let initialized = false;
 
-  for (let addon of parent.addons) {
-    if (addon.name === "@embroider/macros") {
-      const MacrosConfig = require(join(
-        addon.packageRoot,
-        "src",
-        "macros-config"
-      )).default;
-      MacrosConfig.for(appInstance, appRoot).finalize();
-    } else {
-      finalizeEmbroiderMacrosConfigs(appInstance, appRoot, addon);
+  let target = () => {
+    if (!initialized) {
+      value = callback();
+      initialized = true;
     }
+
+    return value;
+  };
+
+  let traps = [
+    "getPrototypeOf",
+    "setPrototypeOf",
+    "isExtensible",
+    "preventExtensions",
+    "getOwnPropertyDescriptor",
+    "defineProperty",
+    "has",
+    "get",
+    "set",
+    "deleteProperty",
+    "ownKeys",
+  ];
+
+  let handler = {};
+
+  for (let trap of traps) {
+    handler[trap] = (_, ...args) => Reflect[trap](target(), ...args);
   }
+
+  return new Proxy({}, handler);
 }
