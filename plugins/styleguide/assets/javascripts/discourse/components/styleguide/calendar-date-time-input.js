@@ -12,10 +12,6 @@ export default class StyleguideCalendarDateTimeInput extends Component {
   @tracked time = null;
   @tracked minDate = null;
 
-  constructor() {
-    super(...arguments);
-  }
-
   @action
   changeDate(date) {
     this.date = date;
