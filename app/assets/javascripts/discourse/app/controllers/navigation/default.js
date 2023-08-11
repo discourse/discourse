@@ -7,6 +7,7 @@ import { tracked } from "@glimmer/tracking";
 
 export default class NavigationDefaultController extends Controller {
   @service router;
+  @service composer;
   @controller discovery;
 
   @tracked category;

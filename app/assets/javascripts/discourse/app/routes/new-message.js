@@ -7,6 +7,7 @@ import { inject as service } from "@ember/service";
 
 export default DiscourseRoute.extend({
   dialog: service(),
+  composer: service(),
 
   beforeModel(transition) {
     const params = transition.to.queryParams;
@@ -14,12 +15,12 @@ export default DiscourseRoute.extend({
     const groupName = params.groupname || params.group_name;
 
     if (this.currentUser) {
-      this.replaceWith("discovery.latest").then((e) => {
+      this.replaceWith("discovery.latest").then(() => {
         if (params.username) {
-          e.send("createNewMessageViaParams", {
+          this.composer.openNewMessage({
             recipients: params.username,
-            topicTitle: params.title,
-            topicBody: params.body,
+            title: params.title,
+            body: params.body,
           });
         } else if (groupName) {
           // send a message to a group
@@ -27,10 +28,10 @@ export default DiscourseRoute.extend({
             .then((result) => {
               if (result.messageable) {
                 next(() =>
-                  e.send("createNewMessageViaParams", {
+                  this.composer.openNewMessage({
                     recipients: groupName,
-                    topicTitle: params.title,
-                    topicBody: params.body,
+                    title: params.title,
+                    body: params.body,
                   })
                 );
               } else {
@@ -41,9 +42,9 @@ export default DiscourseRoute.extend({
             })
             .catch(() => this.dialog.alert(I18n.t("generic_error")));
         } else {
-          e.send("createNewMessageViaParams", {
-            topicTitle: params.title,
-            topicBody: params.body,
+          this.composer.openNewMessage({
+            title: params.title,
+            body: params.body,
           });
         }
       });
