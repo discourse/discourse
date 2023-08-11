@@ -10,6 +10,7 @@ import { ajax } from "discourse/lib/ajax";
 
 export default class CookText extends Component {
   <template>
+    {{! template-lint-disable modifier-name-case }}
     <div
       ...attributes
       {{didUpdate this.buildOneboxes this.cooked}}
