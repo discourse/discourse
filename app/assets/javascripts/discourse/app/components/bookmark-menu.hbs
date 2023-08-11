@@ -43,8 +43,18 @@
         />
       </li>
     {{else}}
-      <li class="bookmark-menu__row">
-        <span class="bookmark-menu__row-title">Set a reminder?</span>
+      {{#each this.noReminderAtOptions as |option|}}
+        <li class={{concat-class "bookmark-menu__row" option.class}}>
+          <DButton
+            @translatedLabel={{option.name}}
+            @action={{fn this.onChooseOption option}}
+            @class="bookmark-menu__row-btn btn-flat"
+            {{did-insert (fn this.autoFocusButton option)}}
+          />
+        </li>
+      {{/each}}
+      <li class="bookmark-menu__row bookmark-menu__row-title-row">
+        <span class="bookmark-menu__row-title">Reminder me in:</span>
       </li>
       {{#each this.reminderAtOptions as |option|}}
         <li class={{concat-class "bookmark-menu__row" option.class}}>
@@ -52,7 +62,6 @@
             @translatedLabel={{option.name}}
             @action={{fn this.onChooseOption option}}
             @class="bookmark-menu__row-btn btn-flat"
-            {{did-insert (fn this.autoFocusButton option)}}
           />
         </li>
       {{/each}}

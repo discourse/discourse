@@ -15,13 +15,16 @@ export default class DiscourseBookmarkMenu extends Component {
   @service modal;
   @service currentUser;
 
+  noReminderAtOptions = [
+    { id: 5, name: "No reminder", class: "-no-reminder", autofocus: true },
+  ];
+
   // TODO Replace these (except none/custom) with time shortcuts from time-shortcut
   reminderAtOptions = [
-    { id: 1, name: "In two hours" },
+    { id: 1, name: "Two hours" },
     { id: 2, name: "Tomorrow" },
-    { id: 3, name: "In three days" },
+    { id: 3, name: "Three days" },
     { id: 4, name: "Custom..." },
-    { id: 5, name: "No reminder", class: "-no-reminder", autofocus: true },
   ];
 
   @action
