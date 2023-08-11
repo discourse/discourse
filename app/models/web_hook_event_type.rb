@@ -15,6 +15,7 @@ class WebHookEventType < ActiveRecord::Base
   GROUP_USER = 14
   LIKE = 15
   USER_PROMOTED = 16
+  TOPIC_UPVOTE = 17
 
   has_and_belongs_to_many :web_hooks
 
@@ -29,6 +30,9 @@ class WebHookEventType < ActiveRecord::Base
     end
     unless defined?(SiteSetting.assign_enabled) && SiteSetting.assign_enabled
       ids_to_exclude << ASSIGN
+    end
+    unless defined?(SiteSetting.voting_enabled) && SiteSetting.voting_enabled
+      ids_to_exclude << TOPIC_UPVOTE
     end
 
     self.where.not(id: ids_to_exclude)
