@@ -37,6 +37,7 @@ import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { BookmarkFormData } from "discourse/lib/bookmark";
 import DeleteTopicConfirmModal from "discourse/components/modal/delete-topic-confirm";
 import ConvertToPublicTopicModal from "discourse/components/modal/convert-to-public-topic";
+import JumpToPost from "discourse/components/modal/jump-to-post";
 
 let customPostMessageCallbacks = {};
 
@@ -880,15 +881,12 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     jumpToPostPrompt() {
-      const topic = this.model;
-      const modal = showModal("jump-to-post", {
-        modalClass: "jump-to-post-modal",
-      });
-      modal.setProperties({
-        topic,
-        postNumber: null,
-        jumpToIndex: (index) => this.send("jumpToIndex", index),
-        jumpToDate: (date) => this.send("jumpToDate", date),
+      this.modal.show(JumpToPost, {
+        model: {
+          topic: this.model,
+          jumpToIndex: (index) => this.send("jumpToIndex", index),
+          jumpToDate: (date) => this.send("jumpToDate", date),
+        },
       });
     },
 

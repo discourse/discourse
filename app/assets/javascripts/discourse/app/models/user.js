@@ -36,11 +36,6 @@ import Evented from "@ember/object/evented";
 import { cancel } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { isTesting } from "discourse-common/config/environment";
-import {
-  hideUserTip,
-  showNextUserTip,
-  showUserTip,
-} from "discourse/lib/user-tips";
 import { dependentKeyCompat } from "@ember/object/compat";
 
 export const SECOND_FACTOR_METHODS = {
@@ -1180,7 +1175,7 @@ const User = RestModel.extend({
     if (!userTips[id]) {
       if (!isTesting()) {
         // eslint-disable-next-line no-console
-        console.warn("Cannot show user tip with type =", id);
+        console.warn("Cannot show user tip with id", id);
       }
       return false;
     }
@@ -1195,7 +1190,7 @@ const User = RestModel.extend({
 
   showUserTip(options) {
     if (this.canSeeUserTip(options.id)) {
-      showUserTip({
+      this.userTips.showTip({
         ...options,
         onDismiss: () => {
           options.onDismiss?.();
@@ -1214,13 +1209,13 @@ const User = RestModel.extend({
     // Empty userTipId means all user tips.
     if (!userTips[userTipId]) {
       // eslint-disable-next-line no-console
-      console.warn("Cannot hide user tip with type =", userTipId);
+      console.warn("Cannot hide user tip with id", userTipId);
       return;
     }
 
     // Hide user tips and maybe show the next one.
-    hideUserTip(userTipId, true);
-    showNextUserTip();
+    this.userTips.hideTip(userTipId, true);
+    this.userTips.showNextTip();
 
     // Update list of seen user tips.
     let seenUserTips = this.user_option?.seen_popups || [];
@@ -1353,6 +1348,10 @@ User.reopenClass(Singleton, {
   create(args) {
     args = args || {};
     this.deleteStatusTrackingFields(args);
+
+    const owner = getOwner(this);
+    args.userTips = owner.lookup("service:user-tips");
+
     return this._super(args);
   },
 

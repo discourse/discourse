@@ -32,7 +32,6 @@ import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import loadScript from "discourse/lib/load-script";
 import { resolveCachedShortUrls } from "pretty-text/upload-short-url";
 import { inject as service } from "@ember/service";
-import showModal from "discourse/lib/show-modal";
 import { siteDir } from "discourse/lib/text-direction";
 import { translations } from "pretty-text/emoji/data";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -40,6 +39,7 @@ import { action, computed } from "@ember/object";
 import TextareaTextManipulation, {
   getHead,
 } from "discourse/mixins/textarea-text-manipulation";
+import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 
 function getButtonLabel(labelKey, defaultLabel) {
   // use the Font Awesome icon if the label matches the default
@@ -218,6 +218,9 @@ export function onToolbarCreate(func) {
 }
 
 export default Component.extend(TextareaTextManipulation, {
+  emojiStore: service("emoji-store"),
+  modal: service(),
+
   classNames: ["d-editor"],
   ready: false,
   lastSel: null,
@@ -225,7 +228,6 @@ export default Component.extend(TextareaTextManipulation, {
   showLink: true,
   emojiPickerIsActive: false,
   emojiFilter: "",
-  emojiStore: service("emoji-store"),
   isEditorFocused: false,
   processPreview: true,
   composerFocusSelector: "#reply-control .d-editor-input",
@@ -770,9 +772,11 @@ export default Component.extend(TextareaTextManipulation, {
         linkText = this._lastSel.value;
       }
 
-      showModal("insert-hyperlink").setProperties({
-        linkText,
-        toolbarEvent,
+      this.modal.show(InsertHyperlink, {
+        model: {
+          linkText,
+          toolbarEvent,
+        },
       });
     },
 
