@@ -186,5 +186,17 @@ describe TopicSummarization do
         end
       end
     end
+
+    describe "stream partial updates" do
+      let(:summary) { { summary: "This is the final summary", chunks: [] } }
+
+      it "receives a blk that is passed to the underlying strategy and called with partial summaries" do
+        partial_result = nil
+
+        summarization.summarize(topic, user) { |partial_summary| partial_result = partial_summary }
+
+        expect(partial_result).to eq(summary[:summary])
+      end
+    end
   end
 end

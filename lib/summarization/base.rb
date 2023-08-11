@@ -72,6 +72,8 @@ module Summarization
     #  - content_title (optional): Provides guidance about what the content is about.
     #  - contents (required): Array of hashes with content to summarize (e.g. [{ poster: "asd", id: 1, text: "This is a text" }])
     #    All keys are required.
+    # @param &on_partial_blk { Block - Optional } - If the strategy supports it, the passed block
+    # will get called with partial summarized text as its generated.
     #
     # @returns { Hash } - The summarized content, plus chunks if the content couldn't be summarized in one pass. Example:
     #   {
