@@ -12,6 +12,7 @@ export default DiscourseRoute.extend({
     asc: { refreshModel: true },
     name: { refreshModel: false, replace: true },
     group: { refreshModel: true },
+    exclude_groups: { refreshModel: true },
     exclude_usernames: { refreshModel: true },
   },
 
@@ -28,6 +29,7 @@ export default DiscourseRoute.extend({
         name: "",
         group: null,
         exclude_usernames: null,
+        exclude_groups: null,
         lastUpdatedAt: null,
       });
     }
