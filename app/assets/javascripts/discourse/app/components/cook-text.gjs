@@ -35,6 +35,10 @@ export default class CookText extends Component {
 
   @action
   calculateOffsetHeight(element) {
+    if (!this.args.onOffsetHeightCalculated) {
+      return;
+    }
+
     return this.args.onOffsetHeightCalculated(element?.offsetHeight);
   }
 
