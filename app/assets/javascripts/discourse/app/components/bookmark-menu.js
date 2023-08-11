@@ -20,7 +20,7 @@ export default class DiscourseBookmarkMenu extends Component {
     { id: 1, name: "In two hours" },
     { id: 2, name: "Tomorrow" },
     { id: 3, name: "In three days" },
-    { id: 4, name: "Custom" },
+    { id: 4, name: "Custom..." },
     { id: 5, name: "No reminder", class: "-no-reminder", autofocus: true },
   ];
 
