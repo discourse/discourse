@@ -4,8 +4,8 @@
   class={{@class}}
   ...attributes
 >
-  {{#if @model}}
-    <LinkTo @route={{@route}} @model={{@model}}>
+  {{#if this.models}}
+    <LinkTo @route={{@route}} @models={{this.models}}>
       {{yield}}
     </LinkTo>
   {{else}}

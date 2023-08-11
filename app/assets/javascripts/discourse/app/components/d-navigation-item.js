@@ -26,4 +26,8 @@ export default class DNavigationItem extends Component {
       return "page";
     }
   }
+
+  get models() {
+    return this.args.models || (this.args.model ? [this.args.model] : null);
+  }
 }
