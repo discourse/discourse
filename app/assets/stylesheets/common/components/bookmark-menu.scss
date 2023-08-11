@@ -35,14 +35,14 @@
   .bookmark-menu {
     &__text {
       display: flex;
-      align-items: center;
+      align-items: left;
     }
 
     &__row {
       border-bottom: 1px solid var(--primary-low);
       width: 100%;
       display: flex;
-      align-items: center;
+      align-items: left;
 
       &:hover,
       &:focus {
@@ -54,6 +54,7 @@
         padding: 0.75em !important;
         width: 100%;
         text-align: left;
+        justify-content: left;
 
         .d-icon {
           color: var(--primary);
