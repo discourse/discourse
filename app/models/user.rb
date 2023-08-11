@@ -1805,6 +1805,10 @@ class User < ActiveRecord::Base
     in_any_groups?(SiteSetting.experimental_search_menu_groups_map)
   end
 
+  def experimental_bookmark_redesign_enabled?
+    in_any_groups?(SiteSetting.enable_experimental_bookmark_redesign_groups_map)
+  end
+
   def watched_precedence_over_muted
     if user_option.watched_precedence_over_muted.nil?
       SiteSetting.watched_precedence_over_muted

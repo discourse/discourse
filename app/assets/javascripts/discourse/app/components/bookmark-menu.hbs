@@ -1,0 +1,62 @@
+<DPopover
+  @options={{hash
+    arrow=false
+    trigger="click"
+    placement="right-start"
+    offset=(array -5 10)
+  }}
+>
+  <DButton
+    class={{concat-class
+      "bookmark with-reminder widget-button btn-flat no-text btn-icon bookmark-menu__trigger"
+      (if @post.bookmarked "-bookmarked")
+    }}
+  >
+    {{#if @post.bookmarkReminderAt}}
+      {{d-icon "discourse-bookmark-clock"}}
+    {{else}}
+      {{d-icon "bookmark"}}
+    {{/if}}
+  </DButton>
+
+  <ul class="bookmark-menu__body">
+    {{#if @post.bookmarked}}
+      <li class="bookmark-menu__row -edit">
+        <DButton
+          @icon="pencil-alt"
+          @translatedLabel="Edit"
+          @action={{this.onEditReminder}}
+          @class="bookmark-menu__row-btn btn-flat"
+        />
+      </li>
+      <li
+        class="bookmark-menu__row -remove"
+        role="button"
+        tabindex="0"
+        {{on "click" this.onRemoveBookmark}}
+      >
+        <DButton
+          @icon="trash-alt"
+          @translatedLabel="Delete"
+          @action={{this.onRemoveBookmark}}
+          @class="bookmark-menu__row-btn btn-flat"
+        />
+      </li>
+    {{else}}
+      <li class="bookmark-menu__row">
+        <span class="bookmark-menu__row-title">Set a reminder?</span>
+      </li>
+      {{#each this.reminderAtOptions as |option|}}
+        <li class={{concat-class "bookmark-menu__row" option.class}}>
+          <DButton
+            @translatedLabel={{option.name}}
+            @action={{fn this.onChooseOption option}}
+            @class="bookmark-menu__row-btn btn-flat"
+            {{did-insert (fn this.autoFocusButton option)}}
+          />
+        </li>
+      {{/each}}
+
+    {{/if}}
+  </ul>
+</DPopover>

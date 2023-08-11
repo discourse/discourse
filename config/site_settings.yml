@@ -2151,6 +2151,13 @@ developer:
   instrument_gc_stat_per_request:
     default: false
     hidden: true
+  enable_experimental_bookmark_redesign_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
 
 navigation:
   navigation_menu:

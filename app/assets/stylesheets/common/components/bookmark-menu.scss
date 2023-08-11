@@ -1,0 +1,100 @@
+.bookmark-menu-shim {
+  .tippy-box {
+    margin: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+
+    .tippy-content {
+      padding: 0;
+    }
+  }
+
+  .bookmark-menu__trigger {
+    &.-bookmarked {
+      .d-icon {
+        color: var(--tertiary);
+      }
+    }
+  }
+
+  .bookmark-menu__body {
+    border: 1px solid var(--primary-low);
+    z-index: z("dropdown");
+    box-shadow: var(--shadow-menu-panel);
+    background: var(--secondary);
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    color: var(--primary);
+    width: 200px;
+    text-align: left;
+    margin: 0;
+  }
+
+  .bookmark-menu {
+    &__text {
+      display: flex;
+      align-items: center;
+    }
+
+    &__row {
+      border-bottom: 1px solid var(--primary-low);
+      width: 100%;
+      display: flex;
+      align-items: center;
+
+      &:hover,
+      &:focus {
+        background: var(--tertiary-very-low) !important;
+      }
+
+      &-btn {
+        margin: 0 !important;
+        padding: 0.75em !important;
+        width: 100%;
+        text-align: left;
+
+        .d-icon {
+          color: var(--primary);
+        }
+
+        .d-button-label {
+          color: var(--primary);
+          font-size: var(--font-down-1);
+        }
+      }
+
+      &.-edit {
+        .d-icon {
+          margin-right: 5px;
+        }
+      }
+
+      &.-remove {
+        .d-icon {
+          color: var(--danger);
+        }
+
+        &:hover,
+        &:focus {
+          background: var(--danger-low) !important;
+        }
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &.-no-reminder {
+        border-bottom: none;
+        border-top: 1px solid var(--primary-low);
+      }
+    }
+  }
+
+  .bookmark-menu__row-title {
+    font-weight: 900;
+    padding: 0.75em;
+  }
+}
