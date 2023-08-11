@@ -54,8 +54,16 @@ RSpec.describe WebHook do
 
     it "includes enabled plugin web_hooks" do
       SiteSetting.stubs(:solved_enabled).returns(true)
-      web_hook_event_types = WebHookEventType.active.where(name: "solved")
-      expect(web_hook_event_types.count).to eq(1)
+      solved_event_types = WebHookEventType.active.where(name: "solved")
+      expect(solved_event_types.count).to eq(1)
+
+      SiteSetting.stubs(:assign_enabled).returns(true)
+      assign_event_types = WebHookEventType.active.where(name: "assign")
+      expect(assign_event_types.count).to eq(1)
+
+      SiteSetting.stubs(:voting_enabled).returns(true)
+      voting_event_types = WebHookEventType.active.where(name: "topic_voting")
+      expect(voting_event_types.count).to eq(1)
     end
 
     describe "#active_web_hooks" do
