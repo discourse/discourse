@@ -71,6 +71,6 @@ WebHookEventType.seed do |b|
 end
 
 WebHookEventType.seed do |b|
-  b.id = WebHookEventType::TOPIC_UPVOTE
-  b.name = "topic_upvote"
+  b.id = WebHookEventType::TOPIC_VOTING
+  b.name = "topic_voting"
 end

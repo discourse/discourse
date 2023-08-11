@@ -62,7 +62,7 @@ RSpec.describe WebHook do
       expect(assign_event_types.count).to eq(1)
 
       SiteSetting.stubs(:voting_enabled).returns(true)
-      voting_event_types = WebHookEventType.active.where(name: "topic_upvote")
+      voting_event_types = WebHookEventType.active.where(name: "topic_voting")
       expect(voting_event_types.count).to eq(1)
     end
 
