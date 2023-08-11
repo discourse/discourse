@@ -363,8 +363,11 @@ en:
         when_reminder_sent: "Delete bookmark"
         on_owner_reply: "Delete bookmark, once I reply"
         clear_reminder: "Keep bookmark and clear reminder"
+        after_reminder_label: "After reminding you we should..."
+        after_reminder_checkbox: "Set this as default for all future bookmark reminders"
       search_placeholder: "Search bookmarks by name, topic title, or post content"
       search: "Search"
+      bookmark: "Bookmark"
       reminders:
         today_with_time: "today at %{time}"
         tomorrow_with_time: "tomorrow at %{time}"

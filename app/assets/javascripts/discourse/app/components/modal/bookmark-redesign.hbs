@@ -48,7 +48,7 @@
 
     <div class="control-group bookmark-auto-delete-wrap">
       <label class="control-label" for="bookmark_auto_delete_preference">{{i18n
-          "bookmarks.auto_delete_preference.label"
+          "bookmarks.auto_delete_preference.after_reminder_label"
         }}</label>
 
       <ComboBox
@@ -58,13 +58,22 @@
         @id="bookmark-after-notification-mode"
         @onChange={{action (mut this.bookmark.autoDeletePreference)}}
       />
+
+      <label>
+        <Input
+          @type="checkbox"
+          @checked={{this.defaultFutureAutoDeletePreference}}
+          class="toggle-overridden"
+        />
+        {{i18n "bookmarks.auto_delete_preference.after_reminder_checkbox"}}
+      </label>
     </div>
   </:body>
 
   <:footer>
     <DButton
       id="save-bookmark"
-      @label={{theme-prefix "bookmarks.save_bookmark"}}
+      @label={{i18n "bookmarks.bookmark"}}
       class="btn-primary"
       @action={{this.saveAndClose}}
     />

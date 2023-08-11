@@ -26,6 +26,7 @@ export default class BookmarkRedesignModal extends Component {
   @tracked showOptions = this.args.model.bookmark.id ? true : false;
   @tracked reminderDate = null;
   @tracked reminderTime = null;
+  @tracked defaultFutureAutoDeletePreference = false;
 
   @notEmpty("userTimezone") userHasTimezoneSet;
 
