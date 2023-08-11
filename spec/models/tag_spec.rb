@@ -384,11 +384,13 @@ RSpec.describe Tag do
   end
 
   describe "description" do
-    it "uses the PermitScrubber to remove all tags except a tags, and all attributes except href attributes" do
+    it "uses the HTMLSanitizer to remove unsafe tags and attributes" do
       tag.description =
-        "<div/> <a onclick='const a=0;' href=\"https://www.discourse.org\">discourse</a>"
+        "<div>hi</div><script>a=0;</script> <a onclick='const a=0;' href=\"https://www.discourse.org\">discourse</a>"
       tag.save!
-      expect(tag.description.strip).to eq("<a href=\"https://www.discourse.org\">discourse</a>")
+      expect(tag.description.strip).to eq(
+        "<div>hi</div>a=0; <a href=\"https://www.discourse.org\">discourse</a>",
+      )
     end
   end
 end

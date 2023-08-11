@@ -3,7 +3,7 @@
 class Tag < ActiveRecord::Base
   include Searchable
   include HasDestroyedWebHook
-  include HasScrubbableFields
+  include HasSanitizableFields
 
   self.ignored_columns = [
     "topic_count", # TODO(tgxworld): Remove on 1 July 2023
@@ -57,7 +57,7 @@ class Tag < ActiveRecord::Base
   has_many :synonyms, class_name: "Tag", foreign_key: "target_tag_id", dependent: :destroy
   has_many :sidebar_section_links, as: :linkable, dependent: :delete_all
 
-  before_save :scrub_description
+  before_save :sanitize_description
 
   after_save :index_search
   after_save :update_synonym_associations
@@ -247,8 +247,8 @@ class Tag < ActiveRecord::Base
 
   private
 
-  def scrub_description
-    self.description = scrub_field(self.description, ["a"], ["href"]) if description_changed?
+  def sanitize_description
+    self.description = sanitize_field(self.description) if description_changed?
   end
   def name_validator
     errors.add(:name, :invalid) if name.present? && RESERVED_TAGS.include?(self.name.strip.downcase)
