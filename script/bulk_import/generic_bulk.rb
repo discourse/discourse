@@ -93,10 +93,12 @@ class BulkImport::Generic < BulkImport::Base
       {
         imported_id: row["id"],
         username: row["username"],
+        original_username: row["original_username"],
         name: row["name"],
         email: row["email"],
         external_id: sso_record&.fetch("external_id"),
         created_at: to_datetime(row["created_at"]),
+        last_seen_at: to_datetime(row["last_seen_at"]),
         admin: row["admin"],
         moderator: row["moderator"],
         suspended_at: suspended_at,

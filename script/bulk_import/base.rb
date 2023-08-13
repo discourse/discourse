@@ -324,6 +324,7 @@ class BulkImport::Base
     primary_group_id
     suspended_at
     suspended_till
+    last_seen_at
     last_emailed_at
     created_at
     updated_at
@@ -531,7 +532,7 @@ class BulkImport::Base
 
     @users[user[:imported_id].to_i] = user[:id] = @last_user_id += 1
 
-    imported_username = user[:username].dup
+    imported_username = user[:original_username].presence || user[:username].dup
 
     user[:username] = fix_name(user[:username]).presence || random_username
 
@@ -940,6 +941,7 @@ class BulkImport::Base
   def fix_name(name)
     name.scrub! if name && !name.valid_encoding?
     return if name.blank?
+    # TODO Support Unicode if allowed in site settings and try to reuse logic from UserNameSuggester if possible
     name = ActiveSupport::Inflector.transliterate(name)
     name.gsub!(/[^\w.-]+/, "_")
     name.gsub!(/^\W+/, "")
