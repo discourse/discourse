@@ -2,7 +2,7 @@
 require "cbor"
 require "cose"
 
-module Webauthn
+module DiscourseWebauthn
   class SecurityKeyRegistrationService < SecurityKeyBaseValidationService
     ##
     # See https://w3c.github.io/webauthn/#sctn-registering-a-new-credential for
@@ -10,7 +10,7 @@ module Webauthn
     # place in the step flow to make the process clearer.
     def register_second_factor_security_key
       # 4. Verify that the value of C.type is webauthn.create.
-      validate_webauthn_type(::Webauthn::ACCEPTABLE_REGISTRATION_TYPE)
+      validate_webauthn_type(::DiscourseWebauthn::ACCEPTABLE_REGISTRATION_TYPE)
 
       # 5. Verify that the value of C.challenge equals the base64url encoding of options.challenge.
       validate_challenge
@@ -51,7 +51,7 @@ module Webauthn
       #     codes.
       credential_public_key, credential_public_key_bytes, credential_id =
         extract_public_key_and_credential_from_attestation(auth_data)
-      if ::Webauthn::SUPPORTED_ALGORITHMS.exclude?(credential_public_key.alg)
+      if ::DiscourseWebauthn::SUPPORTED_ALGORITHMS.exclude?(credential_public_key.alg)
         raise(
           UnsupportedPublicKeyAlgorithmError,
           I18n.t("webauthn.validation.unsupported_public_key_algorithm_error"),
@@ -72,7 +72,7 @@ module Webauthn
       #     name [WebAuthn-Registries].
       # 16. Verify that attStmt is a correct attestation statement, conveying a valid attestation signature,
       #     by using the attestation statement format fmt’s verification procedure given attStmt, authData and hash.
-      if ::Webauthn::VALID_ATTESTATION_FORMATS.exclude?(attestation["fmt"]) ||
+      if ::DiscourseWebauthn::VALID_ATTESTATION_FORMATS.exclude?(attestation["fmt"]) ||
            attestation["fmt"] != "none"
         raise(
           UnsupportedAttestationFormatError,
