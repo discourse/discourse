@@ -13,7 +13,6 @@ export default {
 
     if (lastAuthResult) {
       const router = owner.lookup("router:main");
-
       debugger;
       router.one("didTransition", () => {
         next(() => {

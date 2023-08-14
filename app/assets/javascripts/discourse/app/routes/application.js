@@ -17,7 +17,7 @@ import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts
 import NotActivatedModal from "../components/modal/not-activated";
 import ForgotPassword from "discourse/components/modal/forgot-password";
 import deprecated from "discourse-common/lib/deprecated";
-import LoginModal from "discourse/components/login";
+import LoginModal from "discourse/components/modal/login";
 
 function unlessReadOnly(method, message) {
   return function () {
@@ -49,9 +49,15 @@ const ApplicationRoute = DiscourseRoute.extend({
   loadingSlider: service(),
   router: service(),
 
-  get externalLoginMethodPresent() {
-    const methods = findAll();
-    return !this.siteSettings.enable_local_logins && methods.length === 1;
+  get includeExternalLoginMethods() {
+    return (
+      !this.siteSettings.enable_local_logins &&
+      externalLoginMethods.length === 1
+    );
+  },
+
+  get externalLoginMethods() {
+    return findAll();
   },
 
   @action
@@ -233,12 +239,11 @@ const ApplicationRoute = DiscourseRoute.extend({
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      console.log(this.externalLoginMethodPresent);
       this.modal.show(LoginModal, {
-        ...(this.externalLoginMethodPresent && {
+        ...(this.includeExternalLoginMethods && {
           model: {
             isExternalLogin: true,
-            externalLoginMethod: methods[0],
+            externalLoginMethod: this.externalLoginMethods[0],
           },
         }),
       });
@@ -250,11 +255,11 @@ const ApplicationRoute = DiscourseRoute.extend({
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      if (this.externalLoginMethodPresent) {
+      if (this.includeExternalLoginMethods) {
         this.modal.show(LoginModal, {
           model: {
             isExternalLogin: true,
-            externalLoginMethod: methods[0],
+            externalLoginMethod: this.externalLoginMethods[0],
             signup: true,
           },
         });
@@ -264,30 +269,6 @@ const ApplicationRoute = DiscourseRoute.extend({
           titleAriaElementId: "create-account-title",
         });
       }
-    }
-  },
-
-  _autoLogin(
-    modal,
-    {
-      modalClass = undefined,
-      notAuto = null,
-      signup = false,
-      titleAriaElementId = null,
-    } = {}
-  ) {
-    const methods = findAll();
-    if (!this.siteSettings.enable_local_logins && methods.length === 1) {
-      this.modal.show(LoginModal, {
-        model: {
-          isExternalLogin: true,
-          externalLoginMethod: methods[0],
-          signup,
-        },
-      });
-    } else {
-      showModal(modal, { modalClass, titleAriaElementId });
-      notAuto?.();
     }
   },
 
