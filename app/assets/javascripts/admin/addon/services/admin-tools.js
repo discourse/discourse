@@ -44,11 +44,9 @@ export default class AdminToolsService extends Service {
   @action
   async showControlModal(type, user, opts) {
     opts = opts || {};
-
-    const userLookup = user.adminUserView
-      ? Promise.resolve(user)
-      : AdminUser.find(user.get("id"));
-    const loadedUser = await userLookup;
+    const loadedUser = user.adminUserView
+      ? user
+      : await AdminUser.find(user.get("id"));
     this.modal.show(PenalizeUserModal, {
       model: {
         penaltyType: type,
