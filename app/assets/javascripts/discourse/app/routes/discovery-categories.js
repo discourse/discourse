@@ -12,13 +12,9 @@ import Session from "discourse/models/session";
 import { inject as service } from "@ember/service";
 
 export default class DiscoveryCategoriesRoute extends DiscourseRoute {
-  templateName = "discovery/categories-route";
   @service router;
 
-  renderTemplate() {
-    this.render("navigation/categories", { outlet: "navigation-bar" });
-    this.render("discovery/categories", { outlet: "list-container" });
-  }
+  templateName = "discovery/categories-route";
 
   findCategories() {
     let style =
