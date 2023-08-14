@@ -30,6 +30,7 @@ class BulkImport::Generic < BulkImport::Base
     import_user_emails
     import_user_profiles
     import_user_options
+    import_user_fields
     import_single_sign_on_records
     import_topics
     import_posts
@@ -181,6 +182,27 @@ class BulkImport::Generic < BulkImport::Base
         imported_user_id: row["id"],
         timezone: row["timezone"],
       }
+    end
+  end
+
+  def import_user_fields
+    puts "", "Importing user fields..."
+
+    user_fields = query(<<~SQL)
+      SELECT *
+      FROM user_fields
+      ORDER BY ROWID
+    SQL
+
+    user_fields.each do |row|
+      next if UserField.exists?(name: row["name"])
+
+      options = row.delete("options")
+      field = UserField.create!(row)
+
+      if options.present?
+        JSON.parse(options).each { |option| field.user_field_options.create!(value: option) }
+      end
     end
   end
 
