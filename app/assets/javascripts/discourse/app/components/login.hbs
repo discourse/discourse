@@ -1,13 +1,12 @@
-<LoginModal
-  @loginName={{this.loginName}}
-  @loginPassword={{this.loginPassword}}
-  @secondFactorToken={{this.secondFactorToken}}
-  @action={{action "login"}}
+<DModal
+  class="login-modal"
+  @bodyClass={{this.modalBodyClasses}}
+  @closeModal={{@closeModal}}
+  {{did-insert this.doTheThing}}
 >
-  <PluginOutlet @name="login-before-modal-body" @connectorTagName="div" />
-  <DModalBody @class={{this.modalBodyClasses}}>
-
-    {{#if this.canLoginLocal}}
+  <:body>
+    <PluginOutlet @name="login-before-modal-body" @connectorTagName="div" />
+    {{#unless this.canLoginLocal}}
       <div class="login-left-side">
         <div class="login-welcome-header">
           <h1 class="login-title">{{i18n "login.header_title"}}</h1>
@@ -32,7 +31,7 @@
               <label class="alt-placeholder" for="login-account-name">{{i18n
                   "login.email_placeholder"
                 }}</label>
-              {{#if this.showLoginWithEmailLink}}
+              {{#if this.canLoginLocalWithEmail}}
                 <a
                   href
                   class={{if this.loginName "" "no-login-filled"}}
@@ -93,7 +92,7 @@
                 @showSecondFactor={{this.showSecondFactor}}
                 @secondFactorMethod={{this.secondFactorMethod}}
                 @otherMethodAllowed={{this.otherMethodAllowed}}
-                @action={{action "authenticateSecurityKey"}}
+                @action={{this.authenticateSecurityKey}}
               />
             {{else}}
               <SecondFactorInput
@@ -105,40 +104,11 @@
             {{/if}}
           </SecondFactorForm>
         </form>
-        <div class="modal-footer">
-          {{#if this.canLoginLocal}}
-            {{#unless this.showSecurityKey}}
-              <DButton
-                @action={{action "login"}}
-                @id="login-button"
-                @form="login-form"
-                @icon="unlock"
-                @label={{this.loginButtonLabel}}
-                @disabled={{this.loginDisabled}}
-                @class="btn btn-large btn-primary"
-                @tabindex="2"
-              />
-            {{/unless}}
-
-            {{#if this.showSignupLink}}
-              <DButton
-                @class="btn-large"
-                @id="new-account-link"
-                @action={{action "createAccount"}}
-                @label="create_account.title"
-                @tabindex="3"
-              />
-            {{/if}}
-          {{/if}}
-          <ConditionalLoadingSpinner
-            @condition={{this.showSpinner}}
-            @size="small"
-          />
-        </div>
       </div>
-    {{/if}}
+    {{/unless}}
+
     {{#if this.showLoginButtons}}
-      {{#if this.noLoginLocal}}
+      {{#unless this.canLoginLocal}}
         <div class="login-left-side">
           <div class="login-welcome-header">
             <h1 class="login-title">{{i18n "login.header_title"}}</h1>
@@ -146,15 +116,39 @@
             <p class="login-subheader">{{i18n "login.subheader_title"}}</p>
           </div>
         </div>
-      {{/if}}
+      {{/unless}}
 
       <div class="login-right-side">
-        <LoginButtons @externalLogin={{action "externalLogin"}} />
+        <LoginButtons @externalLogin={{this.externalLogin}} />
       </div>
     {{/if}}
-  </DModalBody>
+  </:body>
+  <:footer>
+    {{#unless this.canLoginLocal}}
+      {{#unless this.showSecurityKey}}
+        <DButton
+          @action={{this.login}}
+          @id="login-button"
+          @form="login-form"
+          @icon="unlock"
+          @label={{this.loginButtonLabel}}
+          @disabled={{this.loginDisabled}}
+          @class="btn btn-large btn-primary"
+          @tabindex="2"
+        />
+      {{/unless}}
 
-  <PluginOutlet @name="login-after-modal-footer" @connectorTagName="div" />
-
-  <div class={{this.alertClass}} id="login-alert">{{this.alert}}</div>
-</LoginModal>
+      {{#if this.showSignupLink}}
+        <DButton
+          @class="btn-large"
+          @id="new-account-link"
+          @action={{this.createAccount}}
+          @label="create_account.title"
+          @tabindex="3"
+        />
+      {{/if}}
+    {{/unless}}
+    <ConditionalLoadingSpinner @condition={{this.showSpinner}} @size="small" />
+    <PluginOutlet @name="login-after-modal-footer" @connectorTagName="div" />
+  </:footer>
+</DModal>

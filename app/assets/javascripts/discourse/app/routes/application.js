@@ -17,6 +17,7 @@ import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts
 import NotActivatedModal from "../components/modal/not-activated";
 import ForgotPassword from "discourse/components/modal/forgot-password";
 import deprecated from "discourse-common/lib/deprecated";
+import LoginModal from "discourse/components/login";
 
 function unlessReadOnly(method, message) {
   return function () {
@@ -47,6 +48,11 @@ const ApplicationRoute = DiscourseRoute.extend({
   modal: service(),
   loadingSlider: service(),
   router: service(),
+
+  get externalLoginMethodPresent() {
+    const methods = findAll();
+    return !this.siteSettings.enable_local_logins && methods.length === 1;
+  },
 
   @action
   loading(transition) {
@@ -227,8 +233,14 @@ const ApplicationRoute = DiscourseRoute.extend({
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      this._autoLogin("login", {
-        notAuto: () => getOwner(this).lookup("controller:login").resetForm(),
+      console.log(this.externalLoginMethodPresent);
+      this.modal.show(LoginModal, {
+        ...(this.externalLoginMethodPresent && {
+          model: {
+            isExternalLogin: true,
+            externalLoginMethod: methods[0],
+          },
+        }),
       });
     }
   },
@@ -238,11 +250,20 @@ const ApplicationRoute = DiscourseRoute.extend({
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      this._autoLogin("create-account", {
-        modalClass: "create-account",
-        signup: true,
-        titleAriaElementId: "create-account-title",
-      });
+      if (this.externalLoginMethodPresent) {
+        this.modal.show(LoginModal, {
+          model: {
+            isExternalLogin: true,
+            externalLoginMethod: methods[0],
+            signup: true,
+          },
+        });
+      } else {
+        showModal("create-account", {
+          modalClass: "create-account",
+          titleAriaElementId: "create-account-title",
+        });
+      }
     }
   },
 
@@ -256,13 +277,14 @@ const ApplicationRoute = DiscourseRoute.extend({
     } = {}
   ) {
     const methods = findAll();
-
     if (!this.siteSettings.enable_local_logins && methods.length === 1) {
-      getOwner(this)
-        .lookup("controller:login")
-        .send("externalLogin", methods[0], {
+      this.modal.show(LoginModal, {
+        model: {
+          isExternalLogin: true,
+          externalLoginMethod: methods[0],
           signup,
-        });
+        },
+      });
     } else {
       showModal(modal, { modalClass, titleAriaElementId });
       notAuto?.();
