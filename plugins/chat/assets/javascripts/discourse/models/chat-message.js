@@ -192,10 +192,7 @@ export default class ChatMessage {
     } else {
       const cookFunction = await generateCookFunction(markdownOptions);
       ChatMessage.cookFunction = (raw) => {
-        return simpleCategoryHashMentionTransform(
-          cookFunction(raw),
-          site.categories
-        );
+        return simpleCategoryHashMentionTransform(cookFunction(raw));
       };
 
       this.cooked = ChatMessage.cookFunction(this.message);
