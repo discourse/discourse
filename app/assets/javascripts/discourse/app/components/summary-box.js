@@ -7,11 +7,13 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cookAsync } from "discourse/lib/text";
 import { shortDateNoYear } from "discourse/lib/formatter";
+import { bind } from "discourse-common/utils/decorators";
 
 const MIN_POST_READ_TIME = 4;
 
 export default class SummaryBox extends Component {
   @service siteSettings;
+  @service messageBus;
 
   @tracked summary = "";
   @tracked summarizedOn = null;
@@ -24,6 +26,40 @@ export default class SummaryBox extends Component {
   @tracked showSummaryBox = false;
   @tracked canCollapseSummary = false;
   @tracked loadingSummary = false;
+
+  @bind
+  subscribe() {
+    const channel = `/summaries/topic/${this.args.postAttrs.topicId}`;
+    this.messageBus.subscribe(channel, this._updateSummary);
+  }
+
+  @bind
+  unsubscribe() {
+    this.messageBus.unsubscribe("/summaries/topic/*", this._updateSummary);
+  }
+
+  @bind
+  _updateSummary(update) {
+    const topicSummary = update.topic_summary;
+
+    if (topicSummary.summarized_text) {
+      cookAsync(topicSummary.summarized_text).then((cooked) => {
+        this.summary = cooked;
+        this.loadingSummary = false;
+      });
+    }
+
+    if (update.done) {
+      this.summarizedOn = shortDateNoYear(topicSummary.summarized_on);
+      this.summarizedBy = topicSummary.algorithm;
+      this.newPostsSinceSummary = topicSummary.new_posts_since_summary;
+      this.outdated = topicSummary.outdated;
+      this.newPostsSinceSummary = topicSummary.new_posts_since_summary;
+      this.canRegenerate = topicSummary.outdated && topicSummary.can_regenerate;
+
+      this.canCollapseSummary = !this.canRegenerate;
+    }
+  }
 
   get generateSummaryTitle() {
     const title = this.canRegenerate
@@ -130,27 +166,12 @@ export default class SummaryBox extends Component {
       this.loadingSummary = true;
     }
 
-    let fetchURL = `/t/${this.args.postAttrs.topicId}/strategy-summary`;
+    let fetchURL = `/t/${this.args.postAttrs.topicId}/strategy-summary?stream=true`;
 
     if (this.canRegenerate) {
-      fetchURL += "?skip_age_check=true";
+      fetchURL += "&skip_age_check=true";
     }
 
-    ajax(fetchURL)
-      .then((data) => {
-        cookAsync(data.summary).then((cooked) => {
-          this.summary = cooked;
-          this.summarizedOn = shortDateNoYear(data.summarized_on);
-          this.summarizedBy = data.summarized_by;
-          this.newPostsSinceSummary = data.new_posts_since_summary;
-          this.outdated = data.outdated;
-          this.newPostsSinceSummary = data.new_posts_since_summary;
-          this.canRegenerate = data.outdated && data.can_regenerate;
-
-          this.canCollapseSummary = !this.canRegenerate;
-        });
-      })
-      .catch(popupAjaxError)
-      .finally(() => (this.loadingSummary = false));
+    ajax(fetchURL).catch(popupAjaxError);
   }
 }

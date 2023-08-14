@@ -5508,9 +5508,9 @@ RSpec.describe TopicsController do
   describe "#summary" do
     fab!(:topic) { Fabricate(:topic) }
     let(:plugin) { Plugin::Instance.new }
+    let(:strategy) { DummyCustomSummarization.new({ summary: "dummy", chunks: [] }) }
 
     before do
-      strategy = DummyCustomSummarization.new("dummy")
       plugin.register_summarization_strategy(strategy)
       SiteSetting.summarization_strategy = strategy.model
     end
@@ -5536,14 +5536,17 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(200)
 
         summary = response.parsed_body
-        expect(summary["summary"]).to eq(section.summarized_text)
+        expect(summary.dig("topic_summary", "summarized_text")).to eq(section.summarized_text)
       end
     end
 
     context "when the user is a member of an allowlisted group" do
       fab!(:user) { Fabricate(:leader) }
 
-      before { sign_in(user) }
+      before do
+        sign_in(user)
+        Group.find(Group::AUTO_GROUPS[:trust_level_3]).add(user)
+      end
 
       it "returns a 404 if there is no topic" do
         invalid_topic_id = 999
@@ -5559,6 +5562,20 @@ RSpec.describe TopicsController do
         get "/t/#{pm.id}/strategy-summary.json"
 
         expect(response.status).to eq(403)
+      end
+
+      it "returns a summary" do
+        get "/t/#{topic.id}/strategy-summary.json"
+
+        expect(response.status).to eq(200)
+        summary = response.parsed_body["topic_summary"]
+        section = SummarySection.last
+
+        expect(summary["summarized_text"]).to eq(section.summarized_text)
+        expect(summary["algorithm"]).to eq(strategy.model)
+        expect(summary["outdated"]).to eq(false)
+        expect(summary["can_regenerate"]).to eq(true)
+        expect(summary["new_posts_since_summary"]).to be_zero
       end
     end
 
@@ -5587,7 +5604,7 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(200)
 
         summary = response.parsed_body
-        expect(summary["summary"]).to eq(section.summarized_text)
+        expect(summary.dig("topic_summary", "summarized_text")).to eq(section.summarized_text)
       end
     end
   end
