@@ -6,6 +6,7 @@ import { calculateFilterMode } from "discourse/lib/filter-mode";
 export default class NavigationDefault extends Component {
   @service router;
   @service currentUser;
+  @service composer;
 
   get filterMode() {
     return calculateFilterMode({
