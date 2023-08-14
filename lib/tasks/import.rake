@@ -26,6 +26,8 @@ task "import:ensure_consistency" => :environment do
   update_topic_users
   create_category_definitions
 
+  run_jobs
+
   log "Done!"
 end
 
@@ -653,4 +655,13 @@ task "import:update_avatars_from_sso" => :environment do
   threads.each(&:join)
   status_queue.close
   status_thread.join
+end
+
+def run_jobs
+  Jobs::DirectoryRefreshOlder.new.execute({})
+  Jobs::DirectoryRefreshDaily.new.execute({})
+  Jobs::ReindexSearch.new.execute({})
+  Jobs::TopRefreshToday.new.execute({})
+  Jobs::TopRefreshOlder.new.execute({})
+  Jobs::Weekly.new.execute({})
 end

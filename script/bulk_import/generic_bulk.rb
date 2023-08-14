@@ -28,6 +28,8 @@ class BulkImport::Generic < BulkImport::Base
     import_categories
     import_users
     import_user_emails
+    import_user_profiles
+    import_user_options
     import_single_sign_on_records
     import_topics
     import_posts
@@ -90,6 +92,20 @@ class BulkImport::Generic < BulkImport::Base
         suspended_till = suspension["suspended_till"]
       end
 
+      if row["anonymized"]
+        while true
+          anon_suffix = (SecureRandom.random_number * 100_000_000).to_i
+          break if !@anonymized_user_suffixes.include?(anon_suffix)
+        end
+
+        row["username"] = "anon_#{anon_suffix}"
+        row["email"] = "#{row["username"]}#{UserAnonymizer::EMAIL_SUFFIX}"
+        row["name"] = nil
+        row["registration_ip_address"] = nil
+
+        @anonymized_user_suffixes << anon_suffix
+      end
+
       {
         imported_id: row["id"],
         username: row["username"],
@@ -103,6 +119,7 @@ class BulkImport::Generic < BulkImport::Base
         moderator: row["moderator"],
         suspended_at: suspended_at,
         suspended_till: suspended_till,
+        registration_ip_address: row["registration_ip_address"],
       }
     end
   end
@@ -123,6 +140,46 @@ class BulkImport::Generic < BulkImport::Base
         imported_user_id: row["id"],
         email: row["email"],
         created_at: to_datetime(row["created_at"]),
+      }
+    end
+  end
+
+  def import_user_profiles
+    puts "", "Importing user profiles..."
+
+    users = query(<<~SQL)
+      SELECT id, bio
+      FROM users
+      WHERE bio IS NOT NULL
+      ORDER BY id
+    SQL
+
+    create_user_profiles(users) do |row|
+      {
+        # FIXME: using both "imported_id" and "imported_user_id" and should be replaced by just "imported_id"
+        imported_id: row["id"],
+        imported_user_id: row["id"],
+        bio: row["bio"],
+      }
+    end
+  end
+
+  def import_user_options
+    puts "", "Importing user options..."
+
+    users = query(<<~SQL)
+      SELECT id, timezone
+      FROM users
+      WHERE timezone IS NOT NULL
+      ORDER BY id
+    SQL
+
+    create_user_options(users) do |row|
+      {
+        # FIXME: using both "imported_id" and "imported_user_id" and should be replaced by just "imported_id"
+        imported_id: row["id"],
+        imported_user_id: row["id"],
+        timezone: row["timezone"],
       }
     end
   end

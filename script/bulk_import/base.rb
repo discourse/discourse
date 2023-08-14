@@ -206,6 +206,10 @@ class BulkImport::Base
     @emails = UserEmail.pluck(:email, :user_id).to_h
     @external_ids = SingleSignOnRecord.pluck(:external_id, :user_id).to_h
     @usernames_lower = User.unscoped.pluck(:username_lower).to_set
+    @anonymized_user_suffixes =
+      DB.query_single(
+        "SELECT SUBSTRING(username_lower, 5)::INT FROM users WHERE username_lower ~* '^anon\\d+$'",
+      ).to_set
     @mapped_usernames =
       UserCustomField
         .joins(:user)
@@ -367,6 +371,32 @@ class BulkImport::Base
     external_card_background_url
   ]
 
+  USER_OPTION_COLUMNS ||= %i[
+    user_id
+    mailing_list_mode,
+    mailing_list_mode_frequency,
+    email_level,
+    email_messages_level,
+    email_previous_replies,
+    email_in_reply_to,
+    email_digests,
+    digest_after_minutes,
+    include_tl0_in_digests,
+    automatically_unpin_topics,
+    enable_quoting,
+    external_links_in_new_tab,
+    dynamic_favicon,
+    new_topic_duration_minutes,
+    auto_track_topics_after_msecs,
+    notification_level_when_replying,
+    like_notification_frequency,
+    skip_new_user_tips,
+    hide_profile_and_presence,
+    sidebar_link_to_filtered_list,
+    sidebar_show_count_of_new_items
+    timezone
+  ]
+
   GROUP_USER_COLUMNS ||= %i[group_id user_id created_at updated_at]
 
   CATEGORY_COLUMNS ||= %i[
@@ -459,33 +489,47 @@ class BulkImport::Base
   def create_user_emails(rows, &block)
     create_records(rows, "user_email", USER_EMAIL_COLUMNS, &block)
   end
+
   def create_user_stats(rows, &block)
     create_records(rows, "user_stat", USER_STAT_COLUMNS, &block)
   end
+
   def create_user_profiles(rows, &block)
     create_records(rows, "user_profile", USER_PROFILE_COLUMNS, &block)
   end
+
+  def create_user_options(rows, &block)
+    create_records(rows, "user_option", USER_OPTION_COLUMNS, &block)
+  end
+
   def create_single_sign_on_records(rows, &block)
     create_records(rows, "single_sign_on_record", USER_SSO_RECORD_COLUMNS, &block)
   end
+
   def create_group_users(rows, &block)
     create_records(rows, "group_user", GROUP_USER_COLUMNS, &block)
   end
+
   def create_categories(rows, &block)
     create_records(rows, "category", CATEGORY_COLUMNS, &block)
   end
+
   def create_topics(rows, &block)
     create_records(rows, "topic", TOPIC_COLUMNS, &block)
   end
+
   def create_posts(rows, &block)
     create_records(rows, "post", POST_COLUMNS, &block)
   end
+
   def create_post_actions(rows, &block)
     create_records(rows, "post_action", POST_ACTION_COLUMNS, &block)
   end
+
   def create_topic_allowed_users(rows, &block)
     create_records(rows, "topic_allowed_user", TOPIC_ALLOWED_USER_COLUMNS, &block)
   end
+
   def create_topic_tags(rows, &block)
     create_records(rows, "topic_tag", TOPIC_TAG_COLUMNS, &block)
   end
@@ -606,12 +650,49 @@ class BulkImport::Base
   end
 
   def process_user_profile(user_profile)
-    return { skip: true } if @pre_existing_user_ids.include?(user_profile[:user_id])
+    user_id = @users[user_profile[:imported_user_id].to_i]
+    return { skip: true } if @pre_existing_user_ids.include?(user_id)
 
+    user_profile[:user_id] = user_id
     user_profile[:bio_raw] = (user_profile[:bio_raw].presence || "").scrub.strip.presence
     user_profile[:bio_cooked] = pre_cook(user_profile[:bio_raw]) if user_profile[:bio_raw].present?
     user_profile[:views] ||= 0
     user_profile
+  end
+
+  USER_OPTION_DEFAULTS = {
+    mailing_list_mode: SiteSetting.default_email_mailing_list_mode,
+    mailing_list_mode_frequency: SiteSetting.default_email_mailing_list_mode_frequency,
+    email_level: SiteSetting.default_email_level,
+    email_messages_level: SiteSetting.default_email_messages_level,
+    email_previous_replies: SiteSetting.default_email_previous_replies,
+    email_in_reply_to: SiteSetting.default_email_in_reply_to,
+    email_digests: SiteSetting.default_email_digest_frequency.to_i > 0,
+    digest_after_minutes: SiteSetting.default_email_digest_frequency,
+    include_tl0_in_digests: SiteSetting.default_include_tl0_in_digests,
+    automatically_unpin_topics: SiteSetting.default_topics_automatic_unpin,
+    enable_quoting: SiteSetting.default_other_enable_quoting,
+    external_links_in_new_tab: SiteSetting.default_other_external_links_in_new_tab,
+    dynamic_favicon: SiteSetting.default_other_dynamic_favicon,
+    new_topic_duration_minutes: SiteSetting.default_other_new_topic_duration_minutes,
+    auto_track_topics_after_msecs: SiteSetting.default_other_auto_track_topics_after_msecs,
+    notification_level_when_replying: SiteSetting.default_other_notification_level_when_replying,
+    like_notification_frequency: SiteSetting.default_other_like_notification_frequency,
+    skip_new_user_tips: SiteSetting.default_other_skip_new_user_tips,
+    hide_profile_and_presence: SiteSetting.default_hide_profile_and_presence,
+    sidebar_link_to_filtered_list: SiteSetting.default_sidebar_link_to_filtered_list,
+    sidebar_show_count_of_new_items: SiteSetting.default_sidebar_show_count_of_new_items,
+  }
+
+  def process_user_option(user_option)
+    user_id = @users[user_option[:imported_user_id].to_i]
+    return { skip: true } if @pre_existing_user_ids.include?(user_id)
+
+    user_option[:user_id] = user_id
+
+    USER_OPTION_DEFAULTS.each { |key, value| user_option[key] = value if user_option[key].nil? }
+
+    user_option
   end
 
   def process_single_sign_on_record(sso_record)
