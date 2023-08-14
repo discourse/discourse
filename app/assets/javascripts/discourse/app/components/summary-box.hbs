@@ -11,7 +11,7 @@
       {{#if this.canCollapseSummary}}
         <DButton
           @class="btn-primary topic-strategy-summarization"
-          @action={{this.toggleSummary}}
+          @action={{this.collapseSummary}}
           @title="summary.buttons.hide"
           @label="summary.buttons.hide"
           @icon="chevron-up"
@@ -41,7 +41,7 @@
 
   {{#if this.showSummaryBox}}
     <article class="summary-box">
-      {{#if this.loadingSummary}}
+      {{#if (and this.loadingSummary (not this.summary))}}
         <AiSummarySkeleton />
       {{else}}
         <div class="generated-summary">{{this.summary}}</div>
