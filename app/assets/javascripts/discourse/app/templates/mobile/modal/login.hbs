@@ -32,7 +32,7 @@
             <label class="alt-placeholder" for="login-account-name">{{i18n
                 "login.email_placeholder"
               }}</label>
-            {{#if this.showLoginWithEmailLink}}
+            {{#if this.canLoginLocalWithEmail}}
               <a href id="email-login-link" {{on "click" this.emailLogin}}>
                 {{i18n "email_login.login_link"}}
               </a>

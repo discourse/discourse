@@ -14,13 +14,16 @@ export default {
     if (lastAuthResult) {
       const router = owner.lookup("router:main");
 
+      debugger;
       router.one("didTransition", () => {
-        const controllerName =
-          router.currentPath === "invites.show" ? "invites-show" : "login";
-
         next(() => {
-          let controller = owner.lookup(`controller:${controllerName}`);
-          controller.authenticationComplete(JSON.parse(lastAuthResult));
+          const lookupPath =
+            router.currentPath === "invites.show"
+              ? "controller:invites-show"
+              : "component:login";
+          owner
+            .lookup(lookupPath)
+            .authenticationComplete(JSON.parse(lastAuthResult));
         });
       });
     }
