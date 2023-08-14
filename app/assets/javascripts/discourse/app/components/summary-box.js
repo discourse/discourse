@@ -45,7 +45,6 @@ export default class SummaryBox extends Component {
     if (topicSummary.summarized_text) {
       cookAsync(topicSummary.summarized_text).then((cooked) => {
         this.summary = cooked;
-        this.loadingSummary = false;
       });
     }
 
@@ -58,6 +57,7 @@ export default class SummaryBox extends Component {
       this.canRegenerate = topicSummary.outdated && topicSummary.can_regenerate;
 
       this.canCollapseSummary = !this.canRegenerate;
+      this.loadingSummary = false;
     }
   }
 
