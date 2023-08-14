@@ -1,3 +1,9 @@
+{{#let this.model.postStream as |postStream|}}
+  {{#unless (and postStream.loaded postStream.loadedAllPosts)}}
+    {{hide-application-footer}}
+  {{/unless}}
+{{/let}}
+
 <DiscourseTopic
   @multiSelect={{this.multiSelect}}
   @enteredAt={{this.enteredAt}}

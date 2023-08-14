@@ -1,3 +1,7 @@
+{{#if this.model.canLoadMore}}
+  {{hide-application-footer}}
+{{/if}}
+
 {{#if this.noContent}}
   <EmptyState
     @title={{this.model.emptyState.title}}

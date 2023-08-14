@@ -1,5 +1,5 @@
 import { inject as service } from "@ember/service";
-import { alias, equal, not } from "@ember/object/computed";
+import { alias, equal } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import Category from "discourse/models/category";
@@ -8,7 +8,6 @@ import DiscourseURL from "discourse/lib/url";
 export default class DiscoveryController extends Controller {
   @service router;
 
-  // @controller("discovery/topics") discoveryTopics;
   // @controller("navigation/category") navigationCategory;
   @controller application;
 
@@ -17,20 +16,17 @@ export default class DiscoveryController extends Controller {
 
   // @alias("navigationCategory.category") category;
   // @alias("navigationCategory.noSubcategories") noSubcategories;
-  @not("discoveryTopics.model.canLoadMore") loadedAllItems;
 
   loading = false;
 
   @action
   loadingBegan() {
     this.set("loading", true);
-    this.set("application.showFooter", false);
   }
 
   @action
   loadingComplete() {
     this.set("loading", false);
-    this.set("application.showFooter", this.loadedAllItems);
   }
 
   showMoreUrl(period) {

@@ -5,17 +5,8 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import deprecated from "discourse-common/lib/deprecated";
 
 const DiscourseRoute = Route.extend({
-  showFooter: false,
-
   willTransition() {
     seenUser();
-  },
-
-  activate() {
-    this._super(...arguments);
-    if (this.showFooter) {
-      this.controllerFor("application").set("showFooter", true);
-    }
   },
 
   _refreshTitleOnce() {

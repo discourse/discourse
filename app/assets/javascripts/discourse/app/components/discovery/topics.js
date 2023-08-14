@@ -41,19 +41,6 @@ export default class DiscoveryTopics extends Component.extend(
   @equal("period", "weekly") weekly;
   @equal("period", "daily") daily;
 
-  // Remove these loading actions which are defined in `DiscoveryController`
-  // We want them to bubble in DiscoveryTopicsController
-  @action
-  loadingBegan() {
-    this.set("application.showFooter", false);
-    return true;
-  }
-  @action
-  loadingComplete() {
-    this.set("application.showFooter", this.loadedAllItems);
-    return true;
-  }
-
   @discourseComputed("model.filter", "model.topics.length")
   showDismissRead(filter, topicsLength) {
     return this._isFilterPage(filter, "unread") && topicsLength > 0;

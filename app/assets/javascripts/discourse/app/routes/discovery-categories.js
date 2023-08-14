@@ -7,7 +7,6 @@ import TopicList from "discourse/models/topic-list";
 import { ajax } from "discourse/lib/ajax";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { hash } from "rsvp";
-import { next } from "@ember/runloop";
 import showModal from "discourse/lib/show-modal";
 import Session from "discourse/models/session";
 import { inject as service } from "@ember/service";
@@ -152,11 +151,5 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
   @action
   reorderCategories() {
     showModal("reorder-categories");
-  }
-
-  @action
-  didTransition() {
-    next(() => this.controllerFor("application").set("showFooter", true));
-    return true;
   }
 }
