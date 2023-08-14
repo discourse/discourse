@@ -3,7 +3,7 @@ import getURL from "discourse-common/lib/get-url";
 const domParser = new DOMParser();
 
 export default function transform(cooked, categories) {
-  let html = domParser.parseFromString(cooked, "text/html");
+  const html = domParser.parseFromString(cooked, "text/html");
   transformMentions(html);
   return html.body.innerHTML;
 }
