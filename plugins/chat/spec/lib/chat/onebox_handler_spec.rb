@@ -4,50 +4,28 @@ require "rails_helper"
 
 describe Chat::OneboxHandler do
   fab!(:chat_channel) { Fabricate(:category_channel) }
-  fab!(:user) { Fabricate(:user, active: true) }
+  fab!(:user) { Fabricate(:user) }
   fab!(:user_2) { Fabricate(:user, active: false) }
   fab!(:user_3) { Fabricate(:user, staged: true) }
   fab!(:user_4) { Fabricate(:user, suspended_till: 3.weeks.from_now) }
 
-  let!(:chat_message) do
-    Chat::MessageCreator.create(
-      chat_channel: chat_channel,
-      user: user,
-      in_reply_to_id: nil,
-      content: "Hello world!",
-      upload_ids: [],
-    ).chat_message
+  fab!(:chat_message) do
+    Fabricate(:chat_message, chat_channel: chat_channel, user: user, message: "Hello world!")
   end
 
   let(:chat_url) { "#{Discourse.base_url}/chat/c/-/#{chat_channel.id}" }
 
-  context "when inline" do
-    it "renders channel" do
-      results = InlineOneboxer.new([chat_url], skip_cache: true).process
-      expect(results).to be_present
-      expect(results[0][:url]).to eq(chat_url)
-      expect(results[0][:title]).to eq("Chat ##{chat_channel.name}")
-    end
-
-    it "renders messages" do
-      results = InlineOneboxer.new(["#{chat_url}/#{chat_message.id}"], skip_cache: true).process
-      expect(results).to be_present
-      expect(results[0][:url]).to eq("#{chat_url}/#{chat_message.id}")
-      expect(results[0][:title]).to eq(
-        "Message ##{chat_message.id} by #{chat_message.user.username} – ##{chat_channel.name}",
-      )
-    end
-  end
-
-  context "when regular" do
+  context "when regular onebox" do
     it "renders channel, excluding inactive, staged, and suspended users" do
-      user.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
-      user_2.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
-      user_3.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
-      user_4.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
+      chat_channel.add(user)
+      chat_channel.add(user_2)
+      chat_channel.add(user_3)
+      chat_channel.add(user_4)
       Chat::Channel.ensure_consistency!
 
-      expect(Oneboxer.preview(chat_url)).to match_html <<~HTML
+      onebox_html = Chat::OneboxHandler.handle(chat_url, { channel_id: chat_channel.id })
+
+      expect(onebox_html).to match_html <<~HTML
         <aside class="onebox chat-onebox">
           <article class="onebox-body chat-onebox-body">
             <h3 class="chat-onebox-title">
@@ -71,7 +49,13 @@ describe Chat::OneboxHandler do
     end
 
     it "renders messages" do
-      expect(Oneboxer.preview("#{chat_url}/#{chat_message.id}")).to match_html <<~HTML
+      onebox_html =
+        Chat::OneboxHandler.handle(
+          "#{chat_url}/#{chat_message.id}",
+          { channel_id: chat_channel.id, message_id: chat_message.id },
+        )
+
+      expect(onebox_html).to match_html <<~HTML
         <div class="chat-transcript" data-message-id="#{chat_message.id}" data-username="#{user.username}" data-datetime="#{chat_message.created_at.iso8601}" data-channel-name="#{chat_channel.name}" data-channel-id="#{chat_channel.id}">
         <div class="chat-transcript-user">
           <div class="chat-transcript-user-avatar">
