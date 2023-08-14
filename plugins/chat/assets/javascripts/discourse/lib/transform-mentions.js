@@ -2,13 +2,13 @@ import getURL from "discourse-common/lib/get-url";
 
 const domParser = new DOMParser();
 
-export default function transform(cooked) {
+export default function transformMentions(cooked) {
   const html = domParser.parseFromString(cooked, "text/html");
-  transformMentions(html);
+  transform(html);
   return html.body.innerHTML;
 }
 
-function transformMentions(html) {
+function transform(html) {
   (html.querySelectorAll("span.mention") || []).forEach((mentionSpan) => {
     let mentionLink = document.createElement("a");
     let mentionText = document.createTextNode(mentionSpan.innerText);
