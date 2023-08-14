@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
+import { makeArray } from "discourse-common/lib/helpers";
 
 export default class DNavigationItem extends Component {
   @service router;
@@ -25,5 +26,9 @@ export default class DNavigationItem extends Component {
     } else {
       return "page";
     }
+  }
+
+  get models() {
+    return makeArray(this.args.models || this.args.model);
   }
 }
