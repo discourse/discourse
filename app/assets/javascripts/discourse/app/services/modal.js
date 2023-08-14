@@ -47,7 +47,6 @@ const KNOWN_LEGACY_MODALS = [
   "user-status",
   "admin-penalize-user",
   "admin-badge-preview",
-  "admin-edit-badge-groupings",
   "admin-reseed",
   "admin-theme-item",
   "admin-color-scheme-select-base",
