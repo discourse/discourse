@@ -9,6 +9,8 @@ import { calculateFilterMode } from "discourse/lib/filter-mode";
 
 export default class NavigationCategory extends Component {
   @service router;
+  @service composer;
+  @service currentUser;
 
   @tracked category;
   @tracked filterType;
@@ -30,5 +32,23 @@ export default class NavigationCategory extends Component {
       filterType: this.filterType,
       noSubcategories: this.noSubcategories,
     });
+  }
+
+  get createTopicTargetCategory() {
+    if (this.category?.canCreateTopic) {
+      return this.category;
+    }
+
+    if (this.siteSettings.default_subcategory_on_read_only_category) {
+      return this.category?.subcategoryWithCreateTopicPermission;
+    }
+  }
+
+  get enableCreateTopicButton() {
+    return !!this.createTopicTargetCategory;
+  }
+
+  get canCreateTopic() {
+    return this.currentUser?.can_create_topic;
   }
 }

@@ -1,9 +1,8 @@
-import Composer from "discourse/models/composer";
-import Draft from "discourse/models/draft";
 import Route from "@ember/routing/route";
 import { once } from "@ember/runloop";
 import { seenUser } from "discourse/lib/user-presence";
 import { getOwner } from "discourse-common/lib/get-owner";
+import deprecated from "discourse-common/lib/deprecated";
 
 const DiscourseRoute = Route.extend({
   showFooter: false,
@@ -54,24 +53,14 @@ const DiscourseRoute = Route.extend({
   },
 
   openTopicDraft() {
-    const composer = getOwner(this).lookup("service:composer");
-
-    if (
-      composer.get("model.action") === Composer.CREATE_TOPIC &&
-      composer.get("model.draftKey") === Composer.NEW_TOPIC_KEY
-    ) {
-      composer.set("model.composeState", Composer.OPEN);
-    } else {
-      Draft.get(Composer.NEW_TOPIC_KEY).then((data) => {
-        if (data.draft) {
-          composer.open({
-            action: Composer.CREATE_TOPIC,
-            draft: data.draft,
-            draftKey: Composer.NEW_TOPIC_KEY,
-            draftSequence: data.draft_sequence,
-          });
-        }
-      });
+    deprecated(
+      "DiscourseRoute#openTopicDraft is deprecated. Inject the composer service and call openNewTopic instead",
+      { id: "discourse.open-topic-draft" }
+    );
+    if (this.currentUser?.has_topic_draft) {
+      return getOwner(this)
+        .lookup("service:composer")
+        .openNewTopic({ preferDraft: true });
     }
   },
 

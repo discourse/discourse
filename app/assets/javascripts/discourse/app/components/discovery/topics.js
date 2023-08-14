@@ -18,10 +18,10 @@ export default class DiscoveryTopics extends Component.extend(
   DismissTopics
 ) {
   @service router;
+  @service composer;
   // @controller discovery;
 
   period = null;
-  canCreateTopicOnCategory = null;
   selected = null;
   expandGloballyPinned = false;
   expandAllPinned = false;

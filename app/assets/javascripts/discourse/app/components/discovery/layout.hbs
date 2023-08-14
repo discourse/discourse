@@ -3,7 +3,7 @@
   {{#unless this.viewingCategoriesList}}
     <CategoryReadOnlyBanner
       @category={{this.category}}
-      @readOnly={{this.navigationCategory.cannotCreateTopicOnCategory}}
+      @readOnly={{not this.navigationCategory.enableCreateTopicButton}}
     />
   {{/unless}}
 </div>

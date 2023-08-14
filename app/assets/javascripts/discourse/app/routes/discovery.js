@@ -1,5 +1,4 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import OpenComposer from "discourse/mixins/open-composer";
 import User from "discourse/models/user";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import { action } from "@ember/object";
@@ -9,9 +8,7 @@ import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
   The parent route for all discovery routes.
   Handles the logic for showing the loading spinners.
 **/
-export default class DiscoveryRoute extends DiscourseRoute.extend(
-  OpenComposer
-) {
+export default class DiscoveryRoute extends DiscourseRoute {
   queryParams = {
     filter: { refreshModel: true },
   };
@@ -72,15 +69,6 @@ export default class DiscoveryRoute extends DiscourseRoute.extend(
   @action
   clearPin(topic) {
     topic.clearPin();
-  }
-
-  @action
-  createTopic() {
-    if (this.get("currentUser.has_topic_draft")) {
-      this.openTopicDraft();
-    } else {
-      this.openComposer(this.controllerFor("discovery/topics"));
-    }
   }
 
   @action
