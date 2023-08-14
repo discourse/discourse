@@ -23,6 +23,8 @@ import { notEmpty } from "@ember/object/computed";
 import { setting } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
+import { inject as service } from "@ember/service";
+import LoginModal from "discourse/components/modal/login";
 
 export default Controller.extend(
   ModalFunctionality,
@@ -31,7 +33,7 @@ export default Controller.extend(
   NameValidation,
   UserFieldsValidation,
   {
-    login: controller(),
+    modal: service(),
 
     complete: false,
     accountChallenge: 0,
@@ -444,7 +446,13 @@ export default Controller.extend(
 
     actions: {
       externalLogin(provider) {
-        this.login.send("externalLogin", provider, { signup: true });
+        this.modal.show(LoginModal, {
+          model: {
+            isExternalLogin: true,
+            externalLoginMethod: provider,
+            signup: true,
+          },
+        });
       },
 
       createAccount() {
