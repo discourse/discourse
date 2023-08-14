@@ -373,26 +373,26 @@ class BulkImport::Base
 
   USER_OPTION_COLUMNS ||= %i[
     user_id
-    mailing_list_mode,
-    mailing_list_mode_frequency,
-    email_level,
-    email_messages_level,
-    email_previous_replies,
-    email_in_reply_to,
-    email_digests,
-    digest_after_minutes,
-    include_tl0_in_digests,
-    automatically_unpin_topics,
-    enable_quoting,
-    external_links_in_new_tab,
-    dynamic_favicon,
-    new_topic_duration_minutes,
-    auto_track_topics_after_msecs,
-    notification_level_when_replying,
-    like_notification_frequency,
-    skip_new_user_tips,
-    hide_profile_and_presence,
-    sidebar_link_to_filtered_list,
+    mailing_list_mode
+    mailing_list_mode_frequency
+    email_level
+    email_messages_level
+    email_previous_replies
+    email_in_reply_to
+    email_digests
+    digest_after_minutes
+    include_tl0_in_digests
+    automatically_unpin_topics
+    enable_quoting
+    external_links_in_new_tab
+    dynamic_favicon
+    new_topic_duration_minutes
+    auto_track_topics_after_msecs
+    notification_level_when_replying
+    like_notification_frequency
+    skip_new_user_tips
+    hide_profile_and_presence
+    sidebar_link_to_filtered_list
     sidebar_show_count_of_new_items
     timezone
   ]
