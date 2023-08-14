@@ -626,7 +626,7 @@ acceptance("Experimental Lightbox - interaction", function (needs) {
     requestFullscreenStub.restore();
     exitFullscreenStub.restore();
 
-    await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keyup", "Escape");
+    await triggerKeyEvent(SELECTORS.LIGHTBOX_CONTENT, "keydown", "Escape");
 
     assert.dom(SELECTORS.LIGHTBOX_CONTENT).doesNotExist();
   });

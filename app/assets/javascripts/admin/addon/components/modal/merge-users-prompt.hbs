@@ -23,10 +23,7 @@
   <:footer>
     <DButton
       class="btn-primary"
-      @action={{fn
-        @model.showMergeConfirmation
-        this.targetUsername.firstObject
-      }}
+      @action={{fn @model.showMergeConfirmation (get this.targetUsername "0")}}
       @icon="trash-alt"
       @disabled={{this.mergeDisabled}}
       @translatedLabel={{i18n

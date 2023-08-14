@@ -225,7 +225,7 @@ en:
       local_login_cannot_be_disabled_if_second_factor_enforced: "You cannot disable local login if 2FA is enforced. Disable enforced 2FA before disabling local logins."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "You cannot enable S3 uploads because S3 uploads are already globally enabled, and enabling this site-level could cause critical issues with uploads"
       cors_origins_should_not_have_trailing_slash: "You should not add the trailing slash (/) to CORS origins."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "User agents must be at least 3 characters long to avoid incorrectly rate limiting human users."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "User agents must be at least 3 characters long to avoid accidentally rate-limiting legitimate users."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "You cannot add any of the following values to the setting: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "You cannot disable strip image metadata if 'composer media optimization image enabled' is enabled. Disable 'composer media optimization image enabled' before disabling strip image metadata."
       twitter_summary_large_image_no_svg: "Twitter summary images used for twitter:image metadata cannot be an .svg image."
@@ -741,7 +741,7 @@ en:
     media_placeholder:
       blocked_hotlinked_title: "Media hosted on another site. Click to open in a new tab."
       blocked_hotlinked: "External Media"
-    hidden_bidi_character: "Bidirectional characters can change the order that text is rendered. This could be used to obscure malicious code."
+    hidden_bidi_character: "Bidirectional control characters can change the order in which text is rendered. This could be used to obscure malicious code."
     has_likes:
       one: "%{count} Like"
       other: "%{count} Likes"
@@ -982,7 +982,7 @@ en:
     pm_title: "Backup Drafts from ongoing topics"
     pm_body: "Topic containing backup drafts"
   user_activity:
-    no_log_search_queries: "Search log queries are currently disabled (an administrator can enable them in site settings)."
+    no_log_search_queries: "Search queries logs are currently disabled (an administrator can enable them in site settings)."
 
   email_settings:
     pop3_authentication_error: "There was an issue with the POP3 credentials provided, check the username and password and try again."
@@ -1462,7 +1462,7 @@ en:
       description: "Top 10 users who have had likes from a wide range of people."
 
   dashboard:
-    group_email_credentials_warning: 'There was an issue with the email credentials for the group <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. No emails will send from the group inbox until this problem is addressed. %{error}'
+    group_email_credentials_warning: 'There was an issue with the email credentials for the group <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. No emails will be sent from the group inbox until this problem is addressed. %{error}'
     rails_env_warning: "Your server is running in %{env} mode."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by Sidekiq. Please ensure at least one Sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'

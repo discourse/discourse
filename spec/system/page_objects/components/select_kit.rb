@@ -13,6 +13,14 @@ module PageObjects
         find(@context)
       end
 
+      def visible?
+        has_css?(@context)
+      end
+
+      def hidden?
+        has_no_css?(@context)
+      end
+
       def expanded_component
         expand_if_needed
         find(@context + ".is-expanded")

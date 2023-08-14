@@ -239,8 +239,6 @@ tr_TR:
         closed: "Kanal kapalı, şu anda yeni mesaj gönderemezsiniz."
         read_only: "Kanal salt okunurdur, şu anda yeni mesaj gönderemezsiniz."
       placeholder_silenced: "Şu anda mesaj gönderemezsiniz."
-      placeholder_start_conversation: "Şu kişiyle konuşma başlatın:"
-      placeholder_start_conversation_users: "%{commaSeparatedUsernames} ile konuşma başlatın"
       remove_upload: "Dosyayı kaldır"
       react: "Emoji ile tepki ver"
       reply: "Yanıtla"

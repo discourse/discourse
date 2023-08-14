@@ -11,11 +11,18 @@ export default class AdminUserFieldsController extends Controller {
   @service dialog;
 
   fieldTypes = null;
+  fieldSortOrder = ["position"];
 
   @gte("model.length", MAX_FIELDS) createDisabled;
   @sort("model", "fieldSortOrder") sortedFields;
 
-  fieldSortOrder = ["position"];
+  get firstField() {
+    return this.sortedFields[0];
+  }
+
+  get lastField() {
+    return this.sortedFields[this.sortedFields.length - 1];
+  }
 
   @action
   createField() {

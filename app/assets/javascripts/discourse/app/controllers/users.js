@@ -9,7 +9,15 @@ import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   application: controller(),
-  queryParams: ["period", "order", "asc", "name", "group", "exclude_usernames"],
+  queryParams: [
+    "period",
+    "order",
+    "asc",
+    "name",
+    "group",
+    "exclude_usernames",
+    "exclude_groups",
+  ],
   period: "weekly",
   order: "",
   asc: null,
@@ -17,6 +25,7 @@ export default Controller.extend({
   group: null,
   nameInput: null,
   exclude_usernames: null,
+  exclude_groups: null,
   isLoading: false,
   columns: null,
   groupOptions: null,

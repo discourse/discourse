@@ -9,21 +9,6 @@ te:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
-  date:
-    month_names:
-    - null
-    - January
-    - February
-    - March
-    - April
-    - May
-    - June
-    - July
-    - August
-    - September
-    - October
-    - November
-    - December
   title: "డిస్కోర్స్"
   topics: "విషయాలు"
   posts: "టపాలు"

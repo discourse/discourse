@@ -976,10 +976,10 @@ RSpec.describe Category do
       category =
         Fabricate(
           :category_with_definition,
-          num_auto_bump_daily: 2,
           created_at: 1.minute.ago,
           category_setting_attributes: {
             auto_bump_cooldown_days: 1,
+            num_auto_bump_daily: 2,
           },
         )
       category.clear_auto_bump_cache!
@@ -1448,6 +1448,39 @@ RSpec.describe Category do
         category.reload
         category.allowed_tags = [tag.name, synonym.name, tag2.name]
         expect_same_tag_names(category.reload.tags, [tag.name, synonym.name, tag2.name])
+      end
+    end
+  end
+
+  describe "#slug_ref" do
+    fab!(:category) { Fabricate(:category, slug: "foo") }
+
+    it "returns the slug for categories without parents" do
+      expect(category.slug_ref).to eq("foo")
+    end
+
+    context "for category with parent" do
+      fab!(:subcategory) { Fabricate(:category, parent_category: category, slug: "bar") }
+
+      it "returns the parent and child slug ref with separator" do
+        expect(subcategory.slug_ref).to eq("foo#{Category::SLUG_REF_SEPARATOR}bar")
+      end
+    end
+
+    context "for category with multiple parents" do
+      let(:subcategory_1) { Fabricate(:category, parent_category: category, slug: "bar") }
+      let(:subcategory_2) { Fabricate(:category, parent_category: subcategory_1, slug: "boo") }
+
+      before { SiteSetting.max_category_nesting = 3 }
+
+      it "returns the parent and child slug ref with separator" do
+        expect(subcategory_2.slug_ref(depth: 2)).to eq(
+          "foo#{Category::SLUG_REF_SEPARATOR}bar#{Category::SLUG_REF_SEPARATOR}boo",
+        )
+      end
+
+      it "allows limiting depth" do
+        expect(subcategory_2.slug_ref(depth: 1)).to eq("bar#{Category::SLUG_REF_SEPARATOR}boo")
       end
     end
   end

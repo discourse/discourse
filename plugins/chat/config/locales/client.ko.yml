@@ -123,8 +123,6 @@ ko:
       placeholder_new_message_disallowed:
         archived: "채널이 보관되어 메시지를 보낼 수 없습니다."
         read_only: "채널이 읽기 전용이므로 메시지를 보낼 수 없습니다."
-      placeholder_start_conversation: "대화 시작..."
-      placeholder_start_conversation_users: "%{commaSeparatedUsernames}과 대화 시작"
       remove_upload: "파일 제거"
       reply: "댓글쓰기"
       edit: "편집"

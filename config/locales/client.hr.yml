@@ -4231,10 +4231,14 @@ hr:
           tel: "Unesite valjani telefonski broj."
           text: "Unesite tekstualnu vrijednost."
           url: "Unesite valjanu URL adresu."
-        tooShort: "Unos mora imati %{minLength} znakova ili više."
-        tooLong: "Unos mora imati manje od %{maxLength} znakova."
-        rangeOverflow: "Unos mora biti manji od %{max}."
-        rangeUnderflow: "Unos mora biti veći od %{min}."
+        rangeOverflow:
+          one: "Unos mora biti manji od %{count}."
+          few: "Unos mora biti manji od %{count}."
+          other: "Unos mora biti manji od %{count}."
+        rangeUnderflow:
+          one: "Unos mora biti veći od %{count}."
+          few: "Unos mora biti veći od %{count}."
+          other: "Unos mora biti veći od %{count}."
         patternMismatch: "Molimo uskladite s traženim formatom."
         badInput: "Unesite valjani unos."
   admin_js:
@@ -4360,6 +4364,7 @@ hr:
             email: Email
             incoming_email: "Prilagođena dolazna adresa e-pošte"
             incoming_email_placeholder: "unesite adresu e-pošte"
+            incoming_email_tooltip: "Možete odvojiti na više adresa e-pošte s | znakom."
             visibility: Vidljivost
             visibility_levels:
               title: "Tko može vidjeti ovu grupu?"

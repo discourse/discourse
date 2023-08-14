@@ -159,8 +159,6 @@ hr:
         archived: "Kanal je arhiviran, trenutno ne možete slati nove poruke."
         closed: "Kanal je zatvoren, trenutno ne možete slati nove poruke."
         read_only: "Kanal je samo za čitanje, trenutno ne možete slati nove poruke."
-      placeholder_start_conversation: "Započnite razgovor s..."
-      placeholder_start_conversation_users: "Započnite razgovor s %{commaSeparatedUsernames}"
       reply: "Odgovor"
       edit: "Uredi"
       rebake_message: "Popravi HTML"

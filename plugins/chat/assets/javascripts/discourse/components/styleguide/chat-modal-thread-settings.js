@@ -1,6 +1,6 @@
 import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import Component from "@glimmer/component";
-import ChatModalThreadSettings from "discourse/plugins/chat/discourse/components/modal/chat/thread-settings";
+import ChatModalThreadSettings from "discourse/plugins/chat/discourse/components/chat/modal/thread-settings";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 

@@ -239,8 +239,6 @@ sv:
         closed: "Kanalen är stängd, och du kan inte skicka nya meddelanden just nu."
         read_only: "Kanalen är lässkyddad, och du kan inte skicka nya meddelanden just nu."
       placeholder_silenced: "Du kan inte skicka meddelanden just nu."
-      placeholder_start_conversation: "Inled ett samtal med ..."
-      placeholder_start_conversation_users: "Inled ett samtal med %{commaSeparatedUsernames}"
       remove_upload: "Ta bort fil"
       react: "Reagera med emoji"
       reply: "Svara"

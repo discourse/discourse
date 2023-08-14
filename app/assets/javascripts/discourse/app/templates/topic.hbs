@@ -295,6 +295,12 @@
         {{/if}}
       </TopicNavigation>
 
+      <PluginOutlet
+        @name="after-topic-navigation"
+        @connectorTagName="div"
+        @outletArgs={{hash model=this.model}}
+      />
+
       <div class="row">
         <section class="topic-area" id="topic" data-topic-id={{this.model.id}}>
 

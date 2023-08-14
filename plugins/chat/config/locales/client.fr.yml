@@ -239,8 +239,6 @@ fr:
         closed: "Le canal est fermé, vous ne pouvez pas envoyer de nouveaux messages pour le moment."
         read_only: "Le canal est en lecture seule, vous ne pouvez pas envoyer de nouveaux messages pour le moment."
       placeholder_silenced: "Vous ne pouvez pas envoyer de messages pour le moment."
-      placeholder_start_conversation: "Démarrer une conversation avec ..."
-      placeholder_start_conversation_users: "Démarrer une conversation avec %{commaSeparatedUsernames}"
       remove_upload: "Supprimer le fichier"
       react: "Réagir avec un émoji"
       reply: "Répondre"

@@ -135,13 +135,10 @@ export default class PollBreakdownChart extends Component {
             return;
           }
 
-          const sliceIndex = activeElements[0]._index;
+          const sliceIndex = activeElements[0].index;
           const optionIndex = Object.keys(this._optionToSlice).find(
             (option) => this._optionToSlice[option] === sliceIndex
           );
-
-          // Clear the array to avoid issues in Chart.js
-          activeElements.length = 0;
 
           next(() => {
             this.setHighlightedOption(Number(optionIndex));
@@ -163,28 +160,17 @@ export default class PollBreakdownChart extends Component {
   }
 
   _updateHighlight() {
-    const meta = this._chart.getDatasetMeta(0);
+    const activeElements = [];
 
-    if (this._previousHighlightedSliceIndex !== null) {
-      const slice = meta.data[this._previousHighlightedSliceIndex];
-      meta.controller.removeHoverStyle(slice);
-      this._chart.draw();
+    if (this.highlightedOption) {
+      const index = this._optionToSlice[this.highlightedOption];
+
+      if (index !== undefined) {
+        activeElements.push({ datasetIndex: 0, index });
+      }
     }
 
-    if (this.highlightedOption === null) {
-      this._previousHighlightedSliceIndex = null;
-      return;
-    }
-
-    const sliceIndex = this._optionToSlice[this.highlightedOption];
-    if (typeof sliceIndex === "undefined") {
-      this._previousHighlightedSliceIndex = null;
-      return;
-    }
-
-    const slice = meta.data[sliceIndex];
-    this._previousHighlightedSliceIndex = sliceIndex;
-    meta.controller.setHoverStyle(slice);
-    this._chart.draw();
+    this._chart.setActiveElements(activeElements);
+    this._chart.update();
   }
 }

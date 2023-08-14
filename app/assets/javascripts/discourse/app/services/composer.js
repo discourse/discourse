@@ -1,5 +1,9 @@
-import Composer, { SAVE_ICONS, SAVE_LABELS } from "discourse/models/composer";
-import Controller from "@ember/controller";
+import Composer, {
+  CREATE_TOPIC,
+  NEW_TOPIC_KEY,
+  SAVE_ICONS,
+  SAVE_LABELS,
+} from "discourse/models/composer";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
 import {
@@ -26,7 +30,7 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import { isTesting } from "discourse-common/config/environment";
-import { inject as service } from "@ember/service";
+import Service, { inject as service } from "@ember/service";
 import { shortDate } from "discourse/lib/formatter";
 import showModal from "discourse/lib/show-modal";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
@@ -95,7 +99,7 @@ export function addComposerSaveErrorCallback(callback) {
   _composerSaveErrorCallbacks.push(callback);
 }
 
-export default class ComposerController extends Controller {
+export default class ComposerService extends Service {
   @service router;
   @service dialog;
   @service site;
@@ -566,33 +570,6 @@ export default class ComposerController extends Controller {
   @action
   closeComposer() {
     this.close();
-  }
-
-  @action
-  async openComposer(options, post, topic) {
-    await this.open(options);
-
-    let url = post?.url || topic?.url;
-    const topicTitle = topic?.title;
-
-    if (!url || !topicTitle) {
-      return;
-    }
-
-    url = `${location.protocol}//${location.host}${url}`;
-    const link = `[${escapeExpression(topicTitle)}](${url})`;
-    const continueDiscussion = I18n.t("post.continue_discussion", {
-      postLink: link,
-    });
-
-    const reply = this.get("model.reply");
-    if (reply?.includes(continueDiscussion)) {
-      return;
-    }
-
-    this.model.prependText(continueDiscussion, {
-      new_line: true,
-    });
   }
 
   @action
@@ -1340,6 +1317,62 @@ export default class ComposerController extends Controller {
     }
   }
 
+  async #openNewTopicDraft() {
+    if (
+      this.model?.action === Composer.CREATE_TOPIC &&
+      this.model?.draftKey === Composer.NEW_TOPIC_KEY
+    ) {
+      this.set("model.composeState", Composer.OPEN);
+    } else {
+      const data = await Draft.get(Composer.NEW_TOPIC_KEY);
+      if (data.draft) {
+        return this.open({
+          action: Composer.CREATE_TOPIC,
+          draft: data.draft,
+          draftKey: Composer.NEW_TOPIC_KEY,
+          draftSequence: data.draft_sequence,
+        });
+      }
+    }
+  }
+
+  @action
+  async openNewTopic({
+    title,
+    body,
+    category,
+    tags,
+    preferDraft = false,
+  } = {}) {
+    if (preferDraft && this.currentUser.has_topic_draft) {
+      return this.#openNewTopicDraft();
+    } else {
+      return this.open({
+        prioritizedCategoryId: category?.id,
+        topicCategoryId: category?.id,
+        topicTitle: title,
+        topicBody: body,
+        topicTags: tags,
+        action: CREATE_TOPIC,
+        draftKey: NEW_TOPIC_KEY,
+        draftSequence: 0,
+      });
+    }
+  }
+
+  @action
+  async openNewMessage({ title, body, recipients, hasGroups }) {
+    return this.open({
+      action: Composer.PRIVATE_MESSAGE,
+      recipients,
+      topicTitle: title,
+      topicBody: body,
+      archetypeId: "private_message",
+      draftKey: Composer.NEW_PRIVATE_MESSAGE_KEY,
+      hasGroups,
+    });
+  }
+
   // Given a potential instance and options, set the model for this composer.
   async _setModel(optionalComposerModel, opts) {
     this.set("linkLookup", null);
@@ -1405,6 +1438,12 @@ export default class ComposerController extends Controller {
 
     if (opts.topicBody) {
       this.model.set("reply", opts.topicBody);
+    }
+
+    if (opts.prependText && !this.model.reply?.includes(opts.prependText)) {
+      this.model.prependText(opts.prependText, {
+        new_line: true,
+      });
     }
 
     const defaultComposerHeight = this._getDefaultComposerHeight();
@@ -1681,3 +1720,7 @@ export default class ComposerController extends Controller {
     this.set("lastValidatedAt", null);
   }
 }
+
+// For compatibility with themes/plugins which use `modifyClass` as if this is a controller
+// https://api.emberjs.com/ember/5.1/classes/Service/properties/mergedProperties?anchor=mergedProperties
+ComposerService.prototype.mergedProperties = ["actions"];

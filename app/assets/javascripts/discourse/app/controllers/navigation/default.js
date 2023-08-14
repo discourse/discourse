@@ -1,15 +1,29 @@
-import Controller, { inject as controller } from "@ember/controller";
-import FilterModeMixin from "discourse/mixins/filter-mode";
-import discourseComputed from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
+import Controller, { inject as controller } from "@ember/controller";
 import { TRACKED_QUERY_PARAM_VALUE } from "discourse/lib/topic-list-tracked-filter";
+import { calculateFilterMode } from "discourse/lib/filter-mode";
+import { dependentKeyCompat } from "@ember/object/compat";
+import { tracked } from "@glimmer/tracking";
 
-export default Controller.extend(FilterModeMixin, {
-  discovery: controller(),
-  router: service(),
+export default class NavigationDefaultController extends Controller {
+  @service router;
+  @service composer;
+  @controller discovery;
 
-  @discourseComputed("router.currentRoute.queryParams.f")
-  skipCategoriesNavItem(filterParamValue) {
-    return filterParamValue === TRACKED_QUERY_PARAM_VALUE;
-  },
-});
+  @tracked category;
+  @tracked filterType;
+  @tracked noSubcategories;
+
+  @dependentKeyCompat
+  get filterMode() {
+    return calculateFilterMode({
+      category: this.category,
+      filterType: this.filterType,
+      noSubcategories: this.noSubcategories,
+    });
+  }
+
+  get skipCategoriesNavItem() {
+    return this.router.currentRoute.queryParams.f === TRACKED_QUERY_PARAM_VALUE;
+  }
+}

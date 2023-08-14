@@ -260,7 +260,13 @@ class PostMover
 
     PostAction.copy(post, new_post)
 
-    attrs_to_update = { reply_count: @reply_count[1] || 0 }
+    PostRevision.copy(post, new_post)
+
+    attrs_to_update = {
+      reply_count: @reply_count[1] || 0,
+      version: post.version,
+      public_version: post.public_version,
+    }
 
     if new_post.post_number != @move_map[post.post_number]
       attrs_to_update[:post_number] = @move_map[post.post_number]

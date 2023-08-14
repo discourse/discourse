@@ -239,8 +239,6 @@ de:
         closed: "Der Kanal ist geschlossen, du kannst im Moment keine neuen Nachrichten senden."
         read_only: "Der Kanal ist schreibgeschützt, du kannst im Moment keine neuen Nachrichten senden."
       placeholder_silenced: "Du kannst derzeit keine Nachrichten senden."
-      placeholder_start_conversation: "Unterhaltung beginnen mit …"
-      placeholder_start_conversation_users: "Unterhaltung mit %{commaSeparatedUsernames} beginnen"
       remove_upload: "Datei löschen"
       react: "Mit Emoji reagieren"
       reply: "Antworten"

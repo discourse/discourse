@@ -1014,7 +1014,7 @@ ru:
       flair_bg_color_placeholder: "(Необязательно) Hex-код цвета"
       flair_color: "Цвет отметки"
       flair_color_placeholder: "(Необязательно) Hex-код цвета"
-      flair_preview_icon: "Предпросмотр иконки"
+      flair_preview_icon: "Предпросмотр значка"
       flair_preview_image: "Предпросмотр изображения"
       flair_type:
         icon: "Выбрать иконку"
@@ -4500,7 +4500,7 @@ ru:
             delete: "Удалить ссылку"
             reset: "Сбросить на значения по умолчанию"
             icon:
-              label: "Иконка"
+              label: "Значок"
               validation:
                 blank: "Значок не может быть пустым"
                 maximum: "Максимум символов в значке: %{count}"
@@ -4616,10 +4616,16 @@ ru:
           tel: "Введите действительный номер телефона."
           text: "Введите текстовое значение."
           url: "Введите действительный URL-адрес."
-        tooShort: "Минимум символов — %{minLength}."
-        tooLong: "Максимум символов — %{maxLength}."
-        rangeOverflow: "Максимум — %{max}."
-        rangeUnderflow: "Минимум — %{min}."
+        rangeOverflow:
+          one: "Максимум — %{count}."
+          few: "Максимум — %{count}."
+          many: "Максимум — %{count}."
+          other: "Максимум — %{count}."
+        rangeUnderflow:
+          one: "Минимум — %{count}."
+          few: "Минимум — %{count}."
+          many: "Минимум — %{count}."
+          other: "Минимум — %{count}."
         patternMismatch: "Введите в указанном формате."
         badInput: "Введите корректное значение."
   admin_js:
@@ -4746,6 +4752,7 @@ ru:
             email: Эл. почта
             incoming_email: "Специальный адрес для входящих писем"
             incoming_email_placeholder: "Введите адрес эл. почты"
+            incoming_email_tooltip: "Адреса электронной почты разделяются символом вертикальной черты «|»."
             visibility: Видимость
             visibility_levels:
               title: "Кто может видеть эту группу?"
@@ -6247,12 +6254,12 @@ ru:
         listable: Отображать награду на публичной странице наград
         enabled: включён
         disabled: отключён
-        icon: Иконка
+        icon: Значок
         image: Изображение
         graphic: Иконка награды
         icon_help: "Введите имя иконки из коллекции Font Awesome (используйте префикс «far-» для обычных значков и «fab-» для значков брендов)"
         image_help: "Вместо иконки будет использоваться загруженное изображение, если используются обе настройки."
-        select_an_icon: "Выбрать иконку"
+        select_an_icon: "Выбрать значок"
         upload_an_image: "Загрузить изображение"
         read_only_setting_help: "Настроить текст"
         query: Выборка награды (SQL)

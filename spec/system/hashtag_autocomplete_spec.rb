@@ -2,7 +2,7 @@
 
 describe "Using #hashtag autocompletion to search for and lookup categories and tags",
          type: :system do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:current_user) { Fabricate(:user) }
   fab!(:category) do
     Fabricate(:category, name: "Cool Category", slug: "cool-cat", topic_count: 3234)
   end
@@ -16,10 +16,7 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
   let(:uncategorized_category) { Category.find(SiteSetting.uncategorized_category_id) }
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
-  before do
-    SiteSetting.enable_experimental_hashtag_autocomplete = true
-    sign_in user
-  end
+  before { sign_in(current_user) }
 
   def visit_topic_and_initiate_autocomplete(initiation_text: "something #co", expected_count: 2)
     topic_page.visit_topic_and_open_composer(topic)
@@ -149,6 +146,49 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
           class: "fa d-icon d-icon-tag svg-icon hashtag-color--tag-#{tag.id} svg-string",
         },
       ) { with_tag("use", with: { href: "#tag" }) }
+    end
+  end
+
+  it "decorates post small actions with hashtags in the custom message" do
+    post =
+      Fabricate(:small_action, raw: "this is a #cool-cat category and a #cooltag tag", topic: topic)
+    topic_page.visit_topic(topic)
+    expect(topic_page).to have_post_number(post.post_number)
+    expect(find(".small-action-custom-message")["innerHTML"]).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: tag.url,
+        "data-type": "tag",
+        "data-slug": tag.name,
+        "data-id": tag.id,
+        "aria-label": tag.name,
+      },
+    ) do
+      with_tag(
+        "svg",
+        with: {
+          class: "fa d-icon d-icon-tag svg-icon hashtag-color--tag-#{tag.id} svg-string",
+        },
+      ) { with_tag("use", with: { href: "#tag" }) }
+    end
+    expect(find(".small-action-custom-message")["innerHTML"]).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: category.url,
+        "data-type": "category",
+        "data-slug": category.slug,
+        "data-id": category.id,
+        "aria-label": category.name,
+      },
+    ) do
+      with_tag(
+        "span",
+        with: {
+          class: "hashtag-category-badge hashtag-color--category-#{category.id}",
+        },
+      )
     end
   end
 

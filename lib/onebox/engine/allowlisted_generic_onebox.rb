@@ -191,7 +191,8 @@ module Onebox
         return image_html if is_image?
         return embedded_html if is_embedded?
         return card_html if is_card?
-        return article_html if (has_text? || is_image_article?)
+
+        article_html if (has_text? || is_image_article?)
       end
 
       def is_card?
@@ -257,6 +258,11 @@ module Onebox
       end
 
       def article_html
+        if data[:image]
+          data[:thumbnail_width] ||= data[:image_width] || data[:width]
+          data[:thumbnail_height] ||= data[:image_height] || data[:height]
+        end
+
         layout.to_html
       end
 

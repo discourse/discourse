@@ -185,8 +185,6 @@ it:
         closed: "Il canale è chiuso, non puoi inviare nuovi messaggi in questo momento."
         read_only: "Il canale è in sola lettura, non è possibile inviare nuovi messaggi in questo momento."
       placeholder_silenced: "In questo momento non puoi inviare messaggi."
-      placeholder_start_conversation: "Inizia una conversazione con..."
-      placeholder_start_conversation_users: "Inizia una conversazione con %{commaSeparatedUsernames}"
       remove_upload: "Rimuovi file"
       react: "Reagisci con delle emoji"
       reply: "Rispondi"

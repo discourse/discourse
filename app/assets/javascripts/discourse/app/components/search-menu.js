@@ -44,8 +44,8 @@ export default class SearchMenu extends Component {
   @tracked loading = false;
   @tracked results = {};
   @tracked noResults = false;
-  @tracked inPMInboxContext =
-    this.search.searchContext?.type === "private_messages";
+  @tracked
+  inPMInboxContext = this.search.searchContext?.type === "private_messages";
   @tracked typeFilter = DEFAULT_TYPE_FILTER;
   @tracked suggestionKeyword = false;
   @tracked suggestionResults = [];

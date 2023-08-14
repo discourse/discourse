@@ -19,7 +19,7 @@ vi:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - Tháng Một
     - Tháng Hai
     - Tháng Ba

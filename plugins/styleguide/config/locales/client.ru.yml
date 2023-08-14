@@ -25,7 +25,7 @@ ru:
         colors:
           title: "Цвета"
         icons:
-          title: "Иконки"
+          title: "Значки"
           full_list: "См. полный список значков Font Awesome"
         input_fields:
           title: "Поля ввода"

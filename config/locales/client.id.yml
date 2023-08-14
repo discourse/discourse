@@ -1697,11 +1697,8 @@ id:
         jump_prompt_or: "atau"
       notifications:
         reasons:
-          "3": "You will receive notifications because you are watching this topic."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Anda akan diberitahu jika seseorang membalas anda @name atau balasan untuk anda."
           "1": "Anda akan diberitahu jika seseorang membalas anda @name atau balasan untuk anda."
-          "0": "You are ignoring all notifications on this topic."
         watching_pm:
           title: "Melihat"
         watching:
@@ -2053,10 +2050,14 @@ id:
           tel: "Harap masukkan nomor telepon yang valid."
           text: "Harap masukkan nilai teks."
           url: "Harap masukkan URL yang valid."
-        tooShort: "Input harus %{minLength} karakter atau lebih."
-        tooLong: "Input harus kurang dari %{maxLength} karakter."
-        rangeOverflow: "Masukan harus kurang dari %{max}."
-        rangeUnderflow: "Masukan harus lebih dari %{min}."
+        tooShort:
+          other: "Input harus %{count} karakter atau lebih."
+        tooLong:
+          other: "Input harus kurang dari %{count} karakter."
+        rangeOverflow:
+          other: "Masukan harus kurang dari %{count}."
+        rangeUnderflow:
+          other: "Masukan harus lebih dari %{count}."
         patternMismatch: "Harap sesuaikan dengan format yang diminta."
         badInput: "Harap masukkan masukan yang valid."
   admin_js:
@@ -2096,6 +2097,7 @@ id:
         manage:
           interaction:
             email: Email
+            incoming_email_tooltip: "Anda dapat memisahkan beberapa alamat email dengan karakter |."
             visibility_levels:
               title: "Siapa yang bisa melihat kelompok ini?"
               public: "Semua orang"

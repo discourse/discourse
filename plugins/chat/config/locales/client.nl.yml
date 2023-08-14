@@ -239,8 +239,6 @@ nl:
         closed: "Kanaal is gesloten, je kunt momenteel geen nieuwe berichten sturen."
         read_only: "Kanaal is alleen-lezen, je kunt momenteel geen nieuwe berichten sturen."
       placeholder_silenced: "Je kunt op dit moment geen berichten sturen."
-      placeholder_start_conversation: "Begin een gesprek met ..."
-      placeholder_start_conversation_users: "Begin een gesprek met %{commaSeparatedUsernames}"
       remove_upload: "Bestand verwijderen"
       react: "Reageren met emoji"
       reply: "Antwoorden"

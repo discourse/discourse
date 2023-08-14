@@ -53,6 +53,23 @@ RSpec.describe "Editing Sidebar Community Section", type: :system do
     )
   end
 
+  it "allows admin to edit community section when no secondary section links" do
+    SidebarSection
+      .where(title: "Community")
+      .first
+      .sidebar_section_links
+      .where.not(position: 0)
+      .destroy_all
+
+    sign_in(admin)
+
+    visit("/latest")
+
+    modal = sidebar.click_customize_community_section_button
+
+    expect(modal).to be_visible
+  end
+
   it "should allow admins to open modal to edit the section when `navigation_menu` site setting is `header dropdown`" do
     SiteSetting.navigation_menu = "header dropdown"
 

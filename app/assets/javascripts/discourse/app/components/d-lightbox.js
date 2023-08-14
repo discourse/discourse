@@ -358,6 +358,15 @@ export default class DLightbox extends Component {
   }
 
   @bind
+  onKeydown(event) {
+    if (event.key === KEYBOARD_SHORTCUTS.CLOSE) {
+      event.preventDefault();
+      event.stopPropagation();
+      return this.close();
+    }
+  }
+
+  @bind
   onKeyup({ key }) {
     if (KEYBOARD_SHORTCUTS.PREVIOUS.includes(key)) {
       return this.showPreviousItem();
@@ -365,10 +374,6 @@ export default class DLightbox extends Component {
 
     if (KEYBOARD_SHORTCUTS.NEXT.includes(key)) {
       return this.showNextItem();
-    }
-
-    if (key === KEYBOARD_SHORTCUTS.CLOSE) {
-      return this.close();
     }
 
     if (key === KEYBOARD_SHORTCUTS.ZOOM) {

@@ -273,8 +273,6 @@ ru:
         closed: "Канал закрыт, вы не можете отправлять новые сообщения."
         read_only: "Канал в режиме «только для чтения», вы не можете отправлять новые сообщения."
       placeholder_silenced: "В настоящее время вы не можете отправлять сообщения."
-      placeholder_start_conversation: "Начать беседу с пользователем…"
-      placeholder_start_conversation_users: "Начать беседу с пользователем %{commaSeparatedUsernames}"
       remove_upload: "Удалить файл"
       react: "Реакция с помощью эмодзи"
       reply: "Ответить"

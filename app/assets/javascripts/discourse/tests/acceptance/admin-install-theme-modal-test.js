@@ -30,6 +30,7 @@ acceptance("Admin - Themes - Install modal", function (needs) {
 
     await click(".create-actions .btn-primary");
     await click("#remote");
+    await click(".install-theme-content .inputs .advanced-repo");
     assert.strictEqual(query(urlInput).value, "", "url input is reset");
     assert.strictEqual(query(branchInput).value, "", "branch input is reset");
     assert.notOk(query(publicKey), "hide public key");
