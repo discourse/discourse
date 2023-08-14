@@ -2378,7 +2378,7 @@ RSpec.describe Topic do
           user: user,
           topic: topic,
           notification_level: TopicUser.notification_levels[:regular],
-          )
+        )
 
         expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
       end
