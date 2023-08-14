@@ -19,7 +19,7 @@ sv:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - Januari
     - Februari
     - Mars
@@ -628,6 +628,20 @@ sv:
   staff_category_description: "Privat kategori för personaldiskussioner. Ämnen är bara synliga för administratörer och moderatorer."
   discourse_welcome_topic:
     title: "Välkommen till %{site_title}! :wave:"
+    body: |
+      Vi är så glada över att du kom till oss.
+
+      %{site_info_quote}
+
+      Här är några saker du kan göra för att komma igång:
+
+      :speaking_head: **Presentera dig** genom att lägga till en bild och information om dig själv och dina intressen i [din profil](%{base_path}/my/preferences/account). Vad skulle du vilja få frågor om?
+
+      :open_book: **Lär känna forumet** genom att [bläddra i diskussioner](%{base_path}/top) som redan pågår här. När du tycker att ett inlägg är intressant, informativt eller underhållande, använd :heart: för att visa din uppskattning eller ditt stöd!
+
+      :handshake: **Bidra** genom att kommentera, dela med dig av ditt perspektiv, ställa frågor eller ge feedback i diskussionen. Innan du svarar eller startar nya ämnen bör du läsa igenom [forumets riktlinjer](%{base_path}/faq).
+
+      > Om du behöver hjälp eller har ett förslag, fråga gärna i %{feedback_category} eller [kontakta administratörerna](%{base_path}/about).
   admin_quick_start_title: "Administratörsguide: Komma igång"
   category:
     topic_prefix: "Om kategorin %{category}"
@@ -2767,7 +2781,7 @@ sv:
 
         Att uppnå förtroendenivå 2 betyder att du har läst och aktivt deltagit tillräckligt för att anses vara medlem i denna grupp.
 
-        Som erfaren användare kanske du uppskattar [denna lista med praktiska tips och tricks] (https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+        Som erfaren användare kanske du uppskattar [denna lista med praktiska tips och tricks](https://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
         Vi hoppas verkligen att du fortsätter engagera dig — allt blir med bättre med dig här.
     backup_succeeded:

@@ -4100,10 +4100,12 @@ it:
           tel: "Per favore inserisci un numero di telefono valido."
           text: "Per favore inserisci un valore testuale."
           url: "Per favore, inserisci un URL valido."
-        tooShort: "L'input deve contenere almeno %{minLength} caratteri."
-        tooLong: "L'input deve contenere meno di %{maxLength} caratteri."
-        rangeOverflow: "L'input deve essere minore di %{max}."
-        rangeUnderflow: "L'input deve essere maggiore di %{min}."
+        rangeOverflow:
+          one: "L'input deve essere minore di %{count}."
+          other: "L'input deve essere minore di %{count}."
+        rangeUnderflow:
+          one: "L'input deve essere maggiore di %{count}."
+          other: "L'input deve essere maggiore di %{count}."
         patternMismatch: "Per favore, rispetta il formato richiesto."
         badInput: "Per favore, inserisci un input valido."
   admin_js:
@@ -4228,6 +4230,7 @@ it:
             email: Email
             incoming_email: "Indirizzo email personalizzato"
             incoming_email_placeholder: "inserisci indirizzo email"
+            incoming_email_tooltip: "Puoi separare più indirizzi e-mail con il carattere |."
             visibility: Visibilità
             visibility_levels:
               title: "Chi può vedere questo Gruppo?"

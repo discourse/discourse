@@ -122,6 +122,28 @@ RSpec.describe PostActionCreator do
 
       expect(Notification.where(notification_type: Notification.types[:liked]).exists?).to eq(false)
     end
+
+    it "triggers the right flag events" do
+      events = DiscourseEvent.track_events { PostActionCreator.create(user, post, :inappropriate) }
+      event_names = events.map { |event| event[:event_name] }
+      expect(event_names).to include(:flag_created)
+      expect(event_names).not_to include(:like_created)
+    end
+
+    it "triggers the right like events" do
+      events = DiscourseEvent.track_events { PostActionCreator.create(user, post, :like) }
+      event_names = events.map { |event| event[:event_name] }
+      expect(event_names).to include(:like_created)
+      expect(event_names).not_to include(:flag_created)
+    end
+
+    it "sends the right event arguments" do
+      events = DiscourseEvent.track_events { PostActionCreator.create(user, post, :like) }
+      event = events.find { |e| e[:event_name] == :like_created }
+      expect(event.present?).to eq(true)
+      expect(event[:params].first).to be_instance_of(PostAction)
+      expect(event[:params].second).to be_instance_of(PostActionCreator)
+    end
   end
 
   describe "flags" do

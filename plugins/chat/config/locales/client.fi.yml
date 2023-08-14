@@ -264,7 +264,7 @@ fi:
           settings: Asetukset
       new_message_modal:
         title: Lähetä viesti
-        add_user_long: <kbd>vaihto + napsautus</kbd> tai <kbd>vaihto + enter</kbd><span>Lisää @%{username}</span>
+        add_user_long: <kbd>vaihto + klikkaus</kbd> tai <kbd>vaihto + enter</kbd><span>Lisää @%{username}</span>
         add_user_short: <span>Lisää käyttäjä</span>
         open_channel: <span>Avaa kanava</span>
         default_search_placeholder: "#a-kanava, @joku tai mitä tahansa"

@@ -354,16 +354,6 @@ gl:
 
           Teña en conta que só ten %{deletion_after} hora(s) para recuperar unha publicación.
       category_hashtag:
-        instructions: |-
-          Sabía que pode referenciar categorías e etiquetas na súa publicación? Por exemplo, viu a categoría %{category} ?
-
-          Escriba `#` no medio dunha frase e seleccione calquera categoría ou etiqueta.
-        not_found: |-
-          Umm, non vexo ningunha categoría alí. Teña en conta que `#` non pode ser o primeiro personaxe. Pode copiar isto na súa próxima resposta?
-
-          ```texto
-          Podo crear unha ligazón de categoría co número #
-          ```
         reply: |-
           Excelente! Lembre que isto funciona para ambas as categorías _e_ etiquetas, se as etiquetas están activadas.
       change_topic_notification_level:

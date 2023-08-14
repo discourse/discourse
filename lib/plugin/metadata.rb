@@ -41,6 +41,7 @@ class Plugin::Metadata
         discourse-graphviz
         discourse-group-tracker
         discourse-invite-tokens
+        discourse-jira
         discourse-lazy-videos
         discourse-local-dates
         discourse-login-with-amazon

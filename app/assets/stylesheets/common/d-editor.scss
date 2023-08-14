@@ -64,6 +64,7 @@
   overflow: auto;
   cursor: default;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .d-editor-input,
@@ -83,6 +84,7 @@
   padding: 10px;
   height: 100%;
   overflow-x: hidden;
+  overscroll-behavior: contain;
   resize: none;
 }
 

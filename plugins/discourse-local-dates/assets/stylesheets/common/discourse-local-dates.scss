@@ -70,25 +70,6 @@ div[data-tippy-root] {
   flex-direction: row;
   padding: 0.5em;
 
-  .picker-panel {
-    padding: 5px;
-    border: 1px solid var(--primary-low);
-  }
-
-  .date-picker {
-    display: flex;
-    flex-direction: column;
-    width: auto;
-    box-sizing: border-box;
-
-    .pika-single {
-      position: relative !important;
-      flex: 1;
-      display: flex;
-      border: 0;
-    }
-  }
-
   .form {
     flex: 1 0 0px;
 
@@ -210,37 +191,6 @@ div[data-tippy-root] {
       .inputs-panel {
         flex: 1;
       }
-
-      .picker-panel {
-        z-index: 1;
-        background: var(--secondary);
-        width: 200px;
-        box-sizing: border-box;
-        margin-left: 1em;
-      }
-
-      .time-pickers {
-        display: flex;
-        justify-content: center;
-        flex: 1;
-        margin-top: 1em;
-        align-items: center;
-        padding: 0.25em;
-        border-top: 1px solid var(--primary-low-mid);
-        box-sizing: border-box;
-
-        .d-icon {
-          color: var(--primary-medium);
-          margin-right: 0.5em;
-        }
-
-        .time-picker {
-          box-shadow: none;
-          margin: 0;
-          box-sizing: border-box;
-          width: 100%;
-        }
-      }
     }
 
     .preview {
@@ -318,17 +268,17 @@ html.mobile-view {
       flex-direction: column;
     }
 
-    .picker-panel {
+    .calendar-date-time-input {
       width: 100%;
       margin: 0 0 1em 0;
 
       .pika-single {
         justify-content: center;
       }
-    }
 
-    .time-picker {
-      padding-top: 6px;
+      .time-picker {
+        padding-top: 6px;
+      }
     }
   }
 }

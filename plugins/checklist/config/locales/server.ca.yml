@@ -6,4 +6,4 @@
 
 ca:
   site_settings:
-    checklist_enabled: 'Voleu activar el connector de llista de verificació?'
+    checklist_enabled: "Voleu activar el connector de llista de verificació?"

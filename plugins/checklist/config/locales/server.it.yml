@@ -6,4 +6,4 @@
 
 it:
   site_settings:
-    checklist_enabled: 'Attivare il plugin checklist?'
+    checklist_enabled: "Attivare il plugin checklist?"

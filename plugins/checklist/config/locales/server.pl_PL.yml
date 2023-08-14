@@ -6,4 +6,4 @@
 
 pl_PL:
   site_settings:
-    checklist_enabled: 'Włączyć wtyczkę checklist?'
+    checklist_enabled: "Włączyć wtyczkę checklist?"

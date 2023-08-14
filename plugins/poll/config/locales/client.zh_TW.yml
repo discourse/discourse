@@ -33,6 +33,7 @@ zh_TW:
         title: "移除您的投票"
       hide-results:
         title: "返回到你的投票"
+        label: "投票"
       group-results:
         title: "按用戶字段分組投票"
         label: "顯示細分"

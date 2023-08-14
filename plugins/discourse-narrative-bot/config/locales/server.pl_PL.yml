@@ -45,6 +45,11 @@ pl_PL:
       trigger: "przewiń"
       invalid: |-
         Przykro mi, ale jest to matematycznie niemożliwe, aby rzucić taką kombinacją kostki. :confounded:
+      not_enough_dice:
+        one: "Mam tylko %{count} kostkę. Wstyd, wiem!"
+        few: "Mam tylko %{count} kostki. Wstyd, wiem!"
+        many: "Mam tylko %{count} kostek. Wstyd, wiem!"
+        other: "Mam tylko %{count} kostek. Wstyd, wiem!"
       out_of_range: |-
         Czy wiesz, że [maksymalna ilość ścian](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) na sprawiedliwej kostce do gry to 120?
       results: |-
@@ -373,20 +378,10 @@ pl_PL:
           Pamiętaj, że masz tylko %{deletion_after}godzin, by przywrócić post.
       category_hashtag:
         instructions: |-
-          Czy wiesz, że możesz się odwoływać do kategorii i tagów w swoim poście? Na przykład, czy widziałeś/łaś kategorię %{category}?
-
-          Wpisz '#' w środku zdania i wybierz kategorię lub tag.
-        instructions_experimental: |-
           Czy wiesz, że w swoim poście możesz odwoływać się do kategorii i tagów? Na przykład, czy widziałeś kategorię %{category} ?
 
           Wpisz `#` w dowolnym miejscu zdania i wybierz dowolną kategorię lub tag.
         not_found: |-
-          Hmm, nie widzę nigdzie kategorii. Pamiętaj, że '#' nie może być pierwszym znakiem. Czy możesz skopiować tą część w następnej odpowiedzi?
-
-          '''tekst
-          Mogę stworzyć link do kategorii poprzez #
-          '''
-        not_found_experimental: |-
           Hmm, nie widzę tam nigdzie kategorii. Czy możesz to skopiować w swojej następnej odpowiedzi?
 
           ``text
