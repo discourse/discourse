@@ -1,6 +1,5 @@
 import DiscoverySortableController from "discourse/controllers/discovery-sortable";
-import { inject as controller } from "@ember/controller";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import DismissTopics from "discourse/mixins/dismiss-topics";
 import I18n from "I18n";
@@ -19,7 +18,6 @@ export default DiscoverySortableController.extend(
   DismissTopics,
 
   {
-    application: controller(),
     dialog: service(),
     router: service(),
     currentUser: service(),
@@ -77,11 +75,6 @@ export default DiscoverySortableController.extend(
         noSubcategories,
         siteSettings: this.siteSettings,
       });
-    },
-
-    @observes("list.canLoadMore")
-    _showFooter() {
-      this.set("application.showFooter", !this.list?.canLoadMore);
     },
 
     @discourseComputed("navMode", "list.topics.length", "loading")

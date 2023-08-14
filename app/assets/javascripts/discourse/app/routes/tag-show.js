@@ -260,12 +260,6 @@ export default DiscourseRoute.extend({
     resetParams.call(this, skipParams);
   },
 
-  @action
-  didTransition() {
-    this.controllerFor("tag.show")._showFooter();
-    return true;
-  },
-
   _controllerTags(controller) {
     return [controller.get("model.id"), ...makeArray(controller.additionalTags)]
       .filter(Boolean)

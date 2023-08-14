@@ -24,7 +24,6 @@ export function buildGroupPage(type) {
         type,
         canLoadMore: !loadedAll,
       });
-      this.controllerFor("application").set("showFooter", loadedAll);
     },
 
     @action

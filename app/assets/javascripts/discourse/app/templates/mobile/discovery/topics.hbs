@@ -1,3 +1,7 @@
+{{#if (or this.loading this.model.canLoadMore)}}
+  {{hide-application-footer}}
+{{/if}}
+
 <TopicDismissButtons
   @position="top"
   @selectedTopics={{this.selected}}
@@ -101,5 +105,7 @@
         }}
       {{/if}}
     </FooterMessage>
+  {{else}}
+    {{hide-application-footer}}
   {{/if}}
 </footer>

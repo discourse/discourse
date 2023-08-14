@@ -6,8 +6,6 @@ export default RestrictedUserRoute.extend({
   currentUser: service(),
   siteSettings: service(),
 
-  showFooter: true,
-
   model() {
     return this.modelFor("user");
   },
