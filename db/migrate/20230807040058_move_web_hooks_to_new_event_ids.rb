@@ -16,6 +16,9 @@ class MoveWebHooksToNewEventIds < ActiveRecord::Migration[7.0]
       SELECT 104, web_hook_id FROM web_hook_event_types_hooks WHERE web_hook_event_types_hooks.web_hook_event_type_id = 1;
 
       INSERT INTO web_hook_event_types_hooks(web_hook_event_type_id, web_hook_id)
+      SELECT 105, web_hook_id FROM web_hook_event_types_hooks WHERE web_hook_event_types_hooks.web_hook_event_type_id = 1;
+
+      INSERT INTO web_hook_event_types_hooks(web_hook_event_type_id, web_hook_id)
       SELECT 201, web_hook_id FROM web_hook_event_types_hooks WHERE web_hook_event_types_hooks.web_hook_event_type_id = 2;
 
       INSERT INTO web_hook_event_types_hooks(web_hook_event_type_id, web_hook_id)
@@ -44,6 +47,9 @@ class MoveWebHooksToNewEventIds < ActiveRecord::Migration[7.0]
 
       INSERT INTO web_hook_event_types_hooks(web_hook_event_type_id, web_hook_id)
       SELECT 306, web_hook_id FROM web_hook_event_types_hooks WHERE web_hook_event_types_hooks.web_hook_event_type_id = 3;
+
+      INSERT INTO web_hook_event_types_hooks(web_hook_event_type_id, web_hook_id)
+      SELECT 307, web_hook_id FROM web_hook_event_types_hooks WHERE web_hook_event_types_hooks.web_hook_event_type_id = 3;
 
       INSERT INTO web_hook_event_types_hooks(web_hook_event_type_id, web_hook_id)
       SELECT 401, web_hook_id FROM web_hook_event_types_hooks WHERE web_hook_event_types_hooks.web_hook_event_type_id = 4;
@@ -91,6 +97,9 @@ class MoveWebHooksToNewEventIds < ActiveRecord::Migration[7.0]
       SELECT 1301, web_hook_id FROM web_hook_event_types_hooks WHERE web_hook_event_types_hooks.web_hook_event_type_id = 13;
 
       INSERT INTO web_hook_event_types_hooks(web_hook_event_type_id, web_hook_id)
+      SELECT 1302, web_hook_id FROM web_hook_event_types_hooks WHERE web_hook_event_types_hooks.web_hook_event_type_id = 13;
+
+      INSERT INTO web_hook_event_types_hooks(web_hook_event_type_id, web_hook_id)
       SELECT 1401, web_hook_id FROM web_hook_event_types_hooks WHERE web_hook_event_types_hooks.web_hook_event_type_id = 14;
 
       INSERT INTO web_hook_event_types_hooks(web_hook_event_type_id, web_hook_id)
@@ -101,6 +110,9 @@ class MoveWebHooksToNewEventIds < ActiveRecord::Migration[7.0]
 
       INSERT INTO web_hook_event_types_hooks(web_hook_event_type_id, web_hook_id)
       SELECT 1601, web_hook_id FROM web_hook_event_types_hooks WHERE web_hook_event_types_hooks.web_hook_event_type_id = 16;
+
+      INSERT INTO web_hook_event_types_hooks(web_hook_event_type_id, web_hook_id)
+      SELECT 1701, web_hook_id FROM web_hook_event_types_hooks WHERE web_hook_event_types_hooks.web_hook_event_type_id = 17;
 
       DELETE FROM web_hook_event_types WHERE id < 100;
     SQL

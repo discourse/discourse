@@ -22,44 +22,46 @@ class WebHookEventType < ActiveRecord::Base
     topic: {
       created: 101,
       revised: 102,
-      changed: 103,
-      deleted: 104,
+      edited: 103,
+      destroyed: 104,
+      recovered: 105,
     },
     post: {
       created: 201,
-      updated: 202,
-      deleted: 203,
+      edited: 202,
+      destroyed: 203,
       recovered: 204,
     },
     user: {
       logged_in: 301,
       logged_out: 302,
-      CONFIRMED_EMAIL: 303,
+      confirmed_email: 303,
       created: 304,
       approved: 305,
       updated: 306,
+      destroyed: 307,
     },
     group: {
       created: 401,
       updated: 402,
-      deleted: 403,
+      destroyed: 403,
     },
     category: {
       created: 501,
       updated: 502,
-      deleted: 503,
+      destroyed: 503,
     },
     tag: {
       created: 601,
       updated: 602,
-      deleted: 603,
+      destroyed: 603,
     },
     reviewable: {
-      ready: 901,
+      created: 901,
       updated: 902,
     },
     notification: {
-      user_receives: 1001,
+      created: 1001,
     },
     solved: {
       accept_unaccept: 1101,
@@ -69,6 +71,7 @@ class WebHookEventType < ActiveRecord::Base
     },
     user_badge: {
       granted: 1301,
+      revoked: 1302,
     },
     group_user: {
       added: 1401,
@@ -79,6 +82,12 @@ class WebHookEventType < ActiveRecord::Base
     },
     user_promoted: {
       created: 1601,
+    },
+    voting: {
+      voted_unvoted: 1701,
+    },
+    chat: {
+      message: 1801,
     },
   }
 
@@ -91,13 +100,13 @@ class WebHookEventType < ActiveRecord::Base
   def self.active
     ids_to_exclude = []
     unless defined?(SiteSetting.solved_enabled) && SiteSetting.solved_enabled
-      ids_to_exclude << SOLVED
+      ids_to_exclude << TYPES[:solved][:accept_unaccept]
     end
     unless defined?(SiteSetting.assign_enabled) && SiteSetting.assign_enabled
-      ids_to_exclude << ASSIGN
+      ids_to_exclude << TYPES[:assign][:assign_unassign]
     end
     unless defined?(SiteSetting.voting_enabled) && SiteSetting.voting_enabled
-      ids_to_exclude << TOPIC_VOTING
+      ids_to_exclude << TYPES[:voting][:added_removed]
     end
     unless defined?(SiteSetting.chat_enabled) && SiteSetting.chat_enabled
       ids_to_exclude << CHAT_MESSAGE

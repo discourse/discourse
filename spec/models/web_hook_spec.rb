@@ -43,20 +43,16 @@ RSpec.describe WebHook do
     end
 
     it "excludes disabled plugin web_hooks" do
-      web_hook_event_types = WebHookEventType.active.find_by(name: "solved")
-      expect(web_hook_event_types).to eq(nil)
+      web_hook_event_types = WebHookEventType.active.where(name: "solved_accept_unaccept")
+      expect(web_hook_event_types).to be_empty
     end
 
     it "includes non-plugin web_hooks" do
-      web_hook_event_types = WebHookEventType.active.where(name: "topic")
-      expect(web_hook_event_types.count).to eq(1)
+      web_hook_event_types = WebHookEventType.active.where(group: "topic")
+      expect(web_hook_event_types.count).to eq(5)
     end
 
     it "includes enabled plugin web_hooks" do
-      SiteSetting.stubs(:solved_enabled).returns(true)
-      solved_event_types = WebHookEventType.active.where(name: "solved")
-      expect(solved_event_types.count).to eq(1)
-
       SiteSetting.stubs(:assign_enabled).returns(true)
       assign_event_types = WebHookEventType.active.where(name: "assign")
       expect(assign_event_types.count).to eq(1)
@@ -65,6 +61,9 @@ RSpec.describe WebHook do
       voting_event_types = WebHookEventType.active.where(name: "topic_voting")
       expect(voting_event_types.count).to eq(1)
 
+      web_hook_event_types = WebHookEventType.active.where(name: "solved_accept_unaccept")
+      expect(web_hook_event_types.count).to eq(1)
+
       SiteSetting.stubs(:chat_enabled).returns(true)
       chat_enabled_types = WebHookEventType.active.where("name LIKE 'chat_%'")
       expect(chat_enabled_types.count).to eq(1)
@@ -72,22 +71,22 @@ RSpec.describe WebHook do
 
     describe "#active_web_hooks" do
       it "returns unique hooks" do
-        post_hook.web_hook_event_types << WebHookEventType.find_by(name: "topic")
+        post_hook.web_hook_event_types << WebHookEventType.find_by(group: "topic")
         post_hook.update!(wildcard_web_hook: true)
 
-        expect(WebHook.active_web_hooks(:post)).to eq([post_hook])
+        expect(WebHook.active_web_hooks(:post_created)).to eq([post_hook])
       end
 
       it "find relevant hooks" do
-        expect(WebHook.active_web_hooks(:post)).to eq([post_hook])
-        expect(WebHook.active_web_hooks(:topic)).to eq([topic_hook])
+        expect(WebHook.active_web_hooks(:post_created)).to eq([post_hook])
+        expect(WebHook.active_web_hooks(:topic_created)).to eq([topic_hook])
       end
 
       it "excludes inactive hooks" do
         post_hook.update!(active: false)
 
-        expect(WebHook.active_web_hooks(:post)).to eq([])
-        expect(WebHook.active_web_hooks(:topic)).to eq([topic_hook])
+        expect(WebHook.active_web_hooks(:post_created)).to eq([])
+        expect(WebHook.active_web_hooks(:topic_created)).to eq([topic_hook])
       end
 
       describe "wildcard web hooks" do
@@ -96,9 +95,15 @@ RSpec.describe WebHook do
         it "should include wildcard hooks" do
           expect(WebHook.active_web_hooks(:wildcard)).to eq([wildcard_hook])
 
-          expect(WebHook.active_web_hooks(:post)).to contain_exactly(post_hook, wildcard_hook)
+          expect(WebHook.active_web_hooks(:post_created)).to contain_exactly(
+            post_hook,
+            wildcard_hook,
+          )
 
-          expect(WebHook.active_web_hooks(:topic)).to contain_exactly(topic_hook, wildcard_hook)
+          expect(WebHook.active_web_hooks(:topic_created)).to contain_exactly(
+            topic_hook,
+            wildcard_hook,
+          )
         end
       end
     end

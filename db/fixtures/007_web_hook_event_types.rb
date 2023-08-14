@@ -11,13 +11,18 @@ WebHookEventType.seed do |b|
   b.group = "topic"
 end
 WebHookEventType.seed do |b|
-  b.id = WebHookEventType::TYPES[:topic][:changed]
-  b.name = "topic_changed"
+  b.id = WebHookEventType::TYPES[:topic][:edited]
+  b.name = "topic_edited"
   b.group = "topic"
 end
 WebHookEventType.seed do |b|
-  b.id = WebHookEventType::TYPES[:topic][:deleted]
-  b.name = "topic_deleted"
+  b.id = WebHookEventType::TYPES[:topic][:destroyed]
+  b.name = "topic_destroyed"
+  b.group = "topic"
+end
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::TYPES[:topic][:recovered]
+  b.name = "topic_recovered"
   b.group = "topic"
 end
 WebHookEventType.seed do |b|
@@ -26,13 +31,13 @@ WebHookEventType.seed do |b|
   b.group = "post"
 end
 WebHookEventType.seed do |b|
-  b.id = WebHookEventType::TYPES[:post][:updated]
-  b.name = "post_updated"
+  b.id = WebHookEventType::TYPES[:post][:edited]
+  b.name = "post_edited"
   b.group = "post"
 end
 WebHookEventType.seed do |b|
-  b.id = WebHookEventType::TYPES[:post][:deleted]
-  b.name = "post_deleted"
+  b.id = WebHookEventType::TYPES[:post][:destroyed]
+  b.name = "post_destroyed"
   b.group = "post"
 end
 WebHookEventType.seed do |b|
@@ -51,7 +56,7 @@ WebHookEventType.seed do |b|
   b.group = "user"
 end
 WebHookEventType.seed do |b|
-  b.id = WebHookEventType::TYPES[:user][:CONFIRMED_EMAIL]
+  b.id = WebHookEventType::TYPES[:user][:confirmed_email]
   b.name = "user_confirmed_email"
   b.group = "user"
 end
@@ -71,6 +76,11 @@ WebHookEventType.seed do |b|
   b.group = "user"
 end
 WebHookEventType.seed do |b|
+  b.id = WebHookEventType::TYPES[:user][:destroyed]
+  b.name = "user_destroyed"
+  b.group = "user"
+end
+WebHookEventType.seed do |b|
   b.id = WebHookEventType::TYPES[:group][:created]
   b.name = "group_created"
   b.group = "group"
@@ -81,8 +91,8 @@ WebHookEventType.seed do |b|
   b.group = "group"
 end
 WebHookEventType.seed do |b|
-  b.id = WebHookEventType::TYPES[:group][:deleted]
-  b.name = "group_deleted"
+  b.id = WebHookEventType::TYPES[:group][:destroyed]
+  b.name = "group_destroyed"
   b.group = "group"
 end
 WebHookEventType.seed do |b|
@@ -96,8 +106,8 @@ WebHookEventType.seed do |b|
   b.group = "category"
 end
 WebHookEventType.seed do |b|
-  b.id = WebHookEventType::TYPES[:category][:deleted]
-  b.name = "category_deleted"
+  b.id = WebHookEventType::TYPES[:category][:destroyed]
+  b.name = "category_destroyed"
   b.group = "category"
 end
 WebHookEventType.seed do |b|
@@ -111,13 +121,13 @@ WebHookEventType.seed do |b|
   b.group = "tag"
 end
 WebHookEventType.seed do |b|
-  b.id = WebHookEventType::TYPES[:tag][:deleted]
-  b.name = "tag_deleted"
+  b.id = WebHookEventType::TYPES[:tag][:destroyed]
+  b.name = "tag_destroyed"
   b.group = "tag"
 end
 WebHookEventType.seed do |b|
-  b.id = WebHookEventType::TYPES[:reviewable][:ready]
-  b.name = "reviewable_ready"
+  b.id = WebHookEventType::TYPES[:reviewable][:created]
+  b.name = "reviewable_created"
   b.group = "reviewable"
 end
 WebHookEventType.seed do |b|
@@ -126,8 +136,8 @@ WebHookEventType.seed do |b|
   b.group = "reviewable"
 end
 WebHookEventType.seed do |b|
-  b.id = WebHookEventType::TYPES[:notification][:user_receives]
-  b.name = "notification_user_receives"
+  b.id = WebHookEventType::TYPES[:notification][:created]
+  b.name = "notification_created"
   b.group = "notification"
 end
 WebHookEventType.seed do |b|
@@ -146,29 +156,34 @@ WebHookEventType.seed do |b|
   b.group = "user_badge"
 end
 WebHookEventType.seed do |b|
+  b.id = WebHookEventType::TYPES[:user_badge][:revoked]
+  b.name = "user_badge_revoked"
+  b.group = "user_badge"
+end
+WebHookEventType.seed do |b|
   b.id = WebHookEventType::TYPES[:group_user][:added]
-  b.name = "group_user_added"
+  b.name = "user_added_to_group"
   b.group = "group_user"
 end
 WebHookEventType.seed do |b|
   b.id = WebHookEventType::TYPES[:group_user][:removed]
-  b.name = "group_user_removed"
+  b.name = "user_removed_from_group"
   b.group = "group_user"
 end
 WebHookEventType.seed do |b|
   b.id = WebHookEventType::TYPES[:like][:created]
-  b.name = "like_created"
+  b.name = "post_liked"
   b.group = "like"
 end
 WebHookEventType.seed do |b|
   b.id = WebHookEventType::TYPES[:user_promoted][:created]
-  b.name = "user_promoted_created"
+  b.name = "user_promoted"
   b.group = "user_promoted"
 end
-
 WebHookEventType.seed do |b|
-  b.id = WebHookEventType::TOPIC_VOTING
-  b.name = "topic_voting"
+  b.id = WebHookEventType::TYPES[:voting][:voted_unvoted]
+  b.name = "voted_unvoted"
+  b.group = "voting"
 end
 
 WebHookEventType.seed do |b|
