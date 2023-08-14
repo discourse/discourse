@@ -106,7 +106,7 @@ class WebHookEventType < ActiveRecord::Base
       ids_to_exclude << TYPES[:assign][:assign_unassign]
     end
     unless defined?(SiteSetting.voting_enabled) && SiteSetting.voting_enabled
-      ids_to_exclude << TYPES[:voting][:added_removed]
+      ids_to_exclude << TYPES[:voting][:voted_unvoted]
     end
     unless defined?(SiteSetting.chat_enabled) && SiteSetting.chat_enabled
       ids_to_exclude << CHAT_MESSAGE
