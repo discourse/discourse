@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 describe TopicSummarization do
-  fab!(:topic) { Fabricate(:topic) }
   fab!(:user) { Fabricate(:admin) }
-  fab!(:post_1) { Fabricate(:post, topic: topic) }
-  fab!(:post_2) { Fabricate(:post, topic: topic) }
+  fab!(:topic) { Fabricate(:topic, highest_post_number: 2) }
+  fab!(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
+  fab!(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
 
   shared_examples "includes only public-visible topics" do
     subject { described_class.new(DummyCustomSummarization.new({})) }

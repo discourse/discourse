@@ -5506,7 +5506,9 @@ RSpec.describe TopicsController do
   end
 
   describe "#summary" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic) { Fabricate(:topic, highest_post_number: 2) }
+    fab!(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
+    fab!(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
     let(:plugin) { Plugin::Instance.new }
     let(:strategy) { DummyCustomSummarization.new({ summary: "dummy", chunks: [] }) }
 
@@ -5514,6 +5516,8 @@ RSpec.describe TopicsController do
       plugin.register_summarization_strategy(strategy)
       SiteSetting.summarization_strategy = strategy.model
     end
+
+    after { DiscoursePluginRegistry.reset_register!(:summarization_strategies) }
 
     context "for anons" do
       it "returns a 404 if there is no cached summary" do
@@ -5576,6 +5580,20 @@ RSpec.describe TopicsController do
         expect(summary["outdated"]).to eq(false)
         expect(summary["can_regenerate"]).to eq(true)
         expect(summary["new_posts_since_summary"]).to be_zero
+      end
+
+      it "signals the summary is outdated" do
+        get "/t/#{topic.id}/strategy-summary.json"
+
+        Fabricate(:post, topic: topic, post_number: 3)
+        topic.update!(highest_post_number: 3)
+
+        get "/t/#{topic.id}/strategy-summary.json"
+        expect(response.status).to eq(200)
+        summary = response.parsed_body["topic_summary"]
+
+        expect(summary["outdated"]).to eq(true)
+        expect(summary["new_posts_since_summary"]).to eq(1)
       end
     end
 
