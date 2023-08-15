@@ -9,10 +9,14 @@ class TopicSummarySerializer < ApplicationSerializer
 
   def new_posts_since_summary
     # Postgres uses discrete range types for int4range, which means
-    # an inclusive [1,2] ranges is stored as [1,3). To work around this
-    # an provide an accurate count, we do the following:
-    range_end = [object.content_range&.end.to_i - 1, 0].max
+    # (1..2) is stored as (1...3).
+    #
+    # We use Range#max to work around this, which in the case above always returns 2.
+    # Be careful with using Range#end here, it could lead to unexpected results as:
+    #
+    # (1..2).end => 2
+    # (1...3).end => 3
 
-    object.target.highest_post_number.to_i - range_end
+    object.target.highest_post_number.to_i - object.content_range&.max.to_i
   end
 end
