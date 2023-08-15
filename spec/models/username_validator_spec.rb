@@ -27,7 +27,12 @@ RSpec.describe UsernameValidator do
     end
   end
 
-  let(:max_username_length) { User.maximum("length(username)") }
+  let(:max_username_length) do
+    [
+      User.maximum("length(username)"),
+      MaxUsernameLengthValidator::MAX_USERNAME_LENGTH_RANGE.begin,
+    ].max
+  end
   let(:min_username_length) { User.minimum("length(username)") }
 
   shared_examples "ASCII username" do
