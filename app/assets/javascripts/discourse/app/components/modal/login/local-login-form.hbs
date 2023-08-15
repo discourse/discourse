@@ -24,7 +24,7 @@
           class={{if @loginName "" "no-login-filled"}}
           tabindex="3"
           id="email-login-link"
-          {{on "keyup" this.emailLogin}}
+          {{on "click" this.emailLogin}}
         >
           {{i18n "email_login.login_link"}}
         </a>

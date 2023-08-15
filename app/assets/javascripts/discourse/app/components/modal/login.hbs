@@ -10,12 +10,7 @@
     <PluginOutlet @name="login-before-modal-body" @connectorTagName="div" />
     {{#if this.canLoginLocal}}
       <div class="login-left-side">
-        <div class="login-welcome-header">
-          <h1 class="login-title">{{i18n "login.header_title"}}</h1>
-          <img src={{this.wavingHandURL}} alt="" class="waving-hand" />
-          <p class="login-subheader">{{i18n "login.subheader_title"}}</p>
-        </div>
-
+        <Modal::Login::WelcomeHeader @wavingHandURL={{this.wavingHandURL}} />
         <Modal::Login::LocalLoginForm
           @loginName={{this.loginName}}
           @loginNameChanged={{this.loginNameChanged}}
@@ -34,55 +29,25 @@
           @flashTypeChanged={{this.flashTypeChanged}}
           @securityKeyCredentialChanged={{this.securityKeyCredentialChanged}}
         />
-
-        <div class="modal-footer">
-          {{#if this.canLoginLocal}}
-            {{#unless this.showSecurityKey}}
-              <DButton
-                @action={{this.login}}
-                @id="login-button"
-                @form="login-form"
-                @icon="unlock"
-                @label={{this.loginButtonLabel}}
-                @disabled={{this.loginDisabled}}
-                @class="btn btn-large btn-primary"
-                @tabindex="2"
-              />
-            {{/unless}}
-
-            {{#if this.showSignupLink}}
-              <DButton
-                @class="btn-large"
-                @id="new-account-link"
-                @action={{this.createAccount}}
-                @label="create_account.title"
-                @tabindex="3"
-              />
-            {{/if}}
-          {{/if}}
-          <ConditionalLoadingSpinner
-            @condition={{this.loggingIn}}
-            @size="small"
-          />
-          <PluginOutlet
-            @name="login-after-modal-footer"
-            @connectorTagName="div"
-          />
-        </div>
+        <Modal::Login::Footer
+          @canLoginLocal={{this.canLoginLocal}}
+          @showSecurityKey={{this.showSecurityKey}}
+          @login={{this.login}}
+          @loginButtonLabel={{this.loginButtonLabel}}
+          @loginDisabled={{this.loginDisabled}}
+          @showSignupLink={{this.showSignupLink}}
+          @createAccount={{this.createAccount}}
+          @loggingIn={{this.loggingIn}}
+        />
       </div>
     {{/if}}
 
     {{#if this.showLoginButtons}}
       {{#unless this.canLoginLocal}}
         <div class="login-left-side">
-          <div class="login-welcome-header">
-            <h1 class="login-title">{{i18n "login.header_title"}}</h1>
-            <img src={{this.wavingHandURL}} alt="" class="waving-hand" />
-            <p class="login-subheader">{{i18n "login.subheader_title"}}</p>
-          </div>
+          <Modal::Login::WelcomeHeader @wavingHandURL={{this.wavingHandURL}} />
         </div>
       {{/unless}}
-
       <div class="login-right-side">
         <LoginButtons @externalLogin={{this.externalLogin}} />
       </div>
