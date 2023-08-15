@@ -24,6 +24,22 @@ module PageObjects
         page.has_current_path?("/u/#{user.username}/messages/warnings")
       end
 
+      def has_primary_navigation_item?(name)
+        page.has_css?(".user-navigation-primary li.user-nav__#{name}")
+      end
+
+      def has_no_primary_navigation_item?(name)
+        page.has_no_css?(".user-navigation-primary li.user-nav__#{name}")
+      end
+
+      def has_secondary_navigation_item?(name)
+        page.has_css?(".user-navigation-secondary li.user-nav__#{name}")
+      end
+
+      def has_no_secondary_navigation_item?(name)
+        page.has_no_css?(".user-navigation-secondary li.user-nav__#{name}")
+      end
+
       def click_staff_info_warnings_link(user, warnings_count: 0)
         staff_counters = page.find(".staff-counters")
         staff_counters.find("a[href='/u/#{user.username}/messages/warnings']").click
