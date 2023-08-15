@@ -8,6 +8,9 @@ class TopicSummarySerializer < ApplicationSerializer
   end
 
   def new_posts_since_summary
-    object.target.highest_post_number.to_i - object.content_range&.end.to_i
+    range_end = object.content_range&.end || 0
+    range_end = 0 if range_end.infinite?
+
+    object.target.highest_post_number.to_i - range_end.to_i
   end
 end
