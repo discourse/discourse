@@ -45,6 +45,12 @@ it:
     chat_channel_archive_failed_no_topic:
       title: "Archiviazione canale chat non riuscita"
       subject_template: "Archiviazione canale chat non riuscita"
+      text_body_template: |
+        L'archiviazione del canale di chat %{channel_hashtag_or_name} non è andata a buon fine. Nessun messaggio è stato archiviato. L'argomento non è stato creato correttamente per i seguenti motivi:
+
+          %{topic_validation_errors}
+
+        Visita il canale su %{channel_url} per riprovare.
   chat:
     deleted_chat_username: eliminato
     errors:
@@ -75,6 +81,7 @@ it:
       actor_preventing_target_user_from_dm: "Hai scelto di impedire a %{username} di inviarti messaggi privati e diretti, quindi non puoi creare nuovi messaggi diretti per questo destinatario."
       user_cannot_send_direct_messages: "Spiacenti, non puoi inviare messaggi diretti."
       over_chat_max_direct_message_users_allow_self: "Puoi creare solo un messaggio diretto a te stesso."
+      original_message_not_found: "L'antenato del messaggio a cui stai rispondendo non è stato trovato o è stato eliminato."
       thread_invalid_for_channel: "Il thread non fa parte del canale fornito."
       thread_does_not_match_parent: "Il thread non corrisponde al messaggio principale."
     reviewables:
