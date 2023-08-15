@@ -87,6 +87,7 @@ nl:
       over_chat_max_direct_message_users:
         one: "Je kunt geen direct bericht met meer dan %{count} andere gebruiker maken."
         other: "Je kunt geen direct bericht met meer dan %{count} andere gebruikers maken."
+      original_message_not_found: "Het bovenliggende bericht van het bericht waarop je antwoordt, kan niet worden gevonden of is verwijderd."
       thread_invalid_for_channel: "Thread maakt geen deel uit van het opgegeven kanaal."
       thread_does_not_match_parent: "Thread komt niet overeen met het bovenliggende bericht."
     reviewables:

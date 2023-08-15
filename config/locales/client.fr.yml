@@ -1789,6 +1789,7 @@ fr:
         content: "Voici quelques sujets que vous pourriez vouloir lire ensuite."
       admin_guide:
         title: "Bienvenue sur votre nouveau site !"
+        content: "<a href='%{admin_guide_url}'>Lisez le guide d'administration</a> pour continuer à développer votre site et votre communauté."
         content_no_url: "Lisez le guide d'administration pour continuer à développer votre site et votre communauté."
     loading: "Chargement…"
     errors:
@@ -3838,6 +3839,9 @@ fr:
       more_badges:
         one: "+%{count} autre"
         other: "+%{count} autres"
+      awarded:
+        one: "%{number} décerné"
+        other: "%{number} décernés"
       select_badge_for_title: Sélectionnez un badge qui vous servira de titre
       none: "(aucun)"
       successfully_granted: "%{badge} attribué à %{username} avec succès"

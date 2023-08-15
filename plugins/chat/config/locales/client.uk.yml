@@ -172,6 +172,72 @@ uk:
             few: "@%{group} та %{count} інші групи забороняють згадки."
             many: "@%{group} та %{count} інших груп забороняють згадки."
             other: "@%{group} та %{count} інших груп забороняють згадки."
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Згадування @{group1} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> користувача.}
+                              few {Згадування @{group1} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
+                              many {Згадування @{group1} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
+                              other {Згадування @{group1} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Згадування @{group1} перевищує ліміт повідомлень # користувача.}
+                              few {Згадування @{group1} перевищує ліміт повідомлень # користувачів.}
+                              many {Згадування @{group1} перевищує ліміт повідомлень # користувачів.}
+                              other {Згадування @{group1} перевищує ліміт повідомлень # користувачів.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Згадування @{group1} та @{group2} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувача.}
+                              few {Згадування @{group1} та @{group2} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
+                              many {Згадування @{group1} та @{group2} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
+                              other {Згадування @{group1} та @{group2} перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Згадування @{group1} та @{group2} перевищує ліміт повідомлень # користувача.}
+                              few {Згадування @{group1} та @{group2} перевищує ліміт повідомлень # користувачів.}
+                              many {Згадування @{group1} та @{group2} перевищує ліміт повідомлень # користувачів.}
+                              other {Згадування @{group1} та @{group2} перевищує ліміт повідомлень # користувачів.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                             one {Згадування цих {groupCount} груп перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувача.}
+                             few {Згадування цих {groupCount} груп перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
+                             many {Згадування цих {groupCount} груп перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
+                             other {Згадування цих {groupCount} груп перевищує <a href="{siteSettingUrl}" target="_blank">ліміт повідомлень</a> # користувачів.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                            one {Згадування цих {groupCount} груп перевищує ліміт повідомлень # користувача.}
+                            few {Згадування цих {groupCount} груп перевищує ліміт повідомлень # користувачів.}
+                            many {Згадування цих {groupCount} груп перевищує ліміт повідомлень # користувачів.}
+                            other {Згадування цих {groupCount} груп перевищує ліміт повідомлень # користувачів.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
         too_many_mentions:
           one: "Це повідомлення перевищує ліміт сповіщень у %{count} згадку."
           few: "Це повідомлення перевищує ліміт сповіщень у %{count} згадки."

@@ -87,6 +87,7 @@ ja:
       over_chat_max_direct_message_users_allow_self: "自分自身へのダイレクトメッセージのみを作成できます。"
       over_chat_max_direct_message_users:
         other: "%{count} 人を超えるユーザーを含むダイレクトメッセージを作成できません。"
+      original_message_not_found: "返信しようとしているメッセージの先祖が見つからないか、削除されています。"
       thread_invalid_for_channel: "スレッドは指定されたチャンネルの一部ではありません。"
       thread_does_not_match_parent: "スレッドは親メッセージに一致しません。"
     reviewables:

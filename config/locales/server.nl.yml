@@ -2012,6 +2012,8 @@ nl:
     permalink_normalizations: "De volgende reguliere expressie toepassen voordat permalinks worden verwerkt. Voorbeeld: /(topic.*)\\?.*/\\1 verwijdert querystrings uit topicroutes. Notatie is regex+strings, gebruik \\1 etc. voor deeluitdrukkingen."
     global_notice: "Toon een algemene niet te sluiten DRINGENDE NOOD-bannermelding voor alle gebruikers. Laat dit leeg om te verbergen (HTML toegestaan)."
     disable_system_edit_notifications: "Schakelt bewerkingsmeldingen van de systeemgebruiker uit als 'download_remote_images_to_local' actief is."
+    disable_category_edit_notifications: "Schakel meldingen voor bewerkingen van categorietags uit. Dit geldt ook voor topics die 'gepubliceerd' zijn (bijvoorbeeld gedeelde concepten)."
+    disable_tags_edit_notifications: "Schakel meldingen voor bewerkingen van topictags uit. Dit geldt ook voor topics die 'gepubliceerd' zijn (bijvoorbeeld gedeelde concepten)."
     notification_consolidation_threshold: "Aantal ontvangen meldingen van likes of lidmaatschapsverzoeken voordat de meldingen in één melding worden samengevoegd. Stel dit in op 0 om uit te schakelen."
     likes_notification_consolidation_window_mins: "Tijdsduur in minuten waarin like-meldingen in één melding worden samengevoegd zodra de drempel is bereikt. De drempel kan worden geconfigureerd via 'SiteSetting.notification_consolidation_threshold'."
     automatically_unpin_topics: "Topics automatisch losmaken wanneer de gebruiker de onderkant bereikt."

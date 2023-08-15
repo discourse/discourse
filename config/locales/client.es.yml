@@ -1789,6 +1789,7 @@ es:
         content: "Estos son algunos de los temas que creemos que te gustaría leer a continuación."
       admin_guide:
         title: "¡Te damos la bienvenida a tu nuevo sitio!"
+        content: "<a href='%{admin_guide_url}'>Lee la guía del administrador</a> para seguir construyendo tu sitio y tu comunidad."
         content_no_url: "Lee la guía del administrador para seguir construyendo tu sitio y tu comunidad."
     loading: "Cargando..."
     errors:
@@ -3838,6 +3839,9 @@ es:
       more_badges:
         one: "+%{count} Más"
         other: "+%{count} Más"
+      awarded:
+        one: "%{number} otorgado"
+        other: "%{number} otorgados"
       select_badge_for_title: Selecciona una insignia para utilizar como tu título
       none: "(ninguna)"
       successfully_granted: "%{badge} concedida exitosamente a %{username}"
@@ -4449,6 +4453,7 @@ es:
               update: Actualiza un tema. Cambia el título, la categoría, las etiquetas, el estado, el arquetipo, el enlace_destacado, etc.
               delete: Eliminar un tema.
               read_lists: Lea listas de temas como destacados, nuevos, recientes, etc. También se admite RSS.
+              status: "Actualiza el estado de un tema. Estado: cerrado, archivado, visible, anclado. Activado: verdadero, falso. Especifica un category_id aquí y en la carga útil de la solicitud para permitir solo cambios de estado en temas de esa categoría."
             posts:
               edit: Edita cualquier publicación o una específica.
               delete: Eliminar una publicación.
@@ -4688,6 +4693,11 @@ es:
         title: "Personalizar"
         preview: "vista previa"
         explain_preview: "Ver el sitio con este tema activado"
+        syntax_error: "Error de sintaxis"
+        settings_editor: "Editor de ajustes"
+        validation_settings_keys: "Cada elemento debe tener solo una clave «settings» y una clave «value»."
+        validation_settings_deleted: "Estos ajustes se han eliminado. Restablécelos e inténtalo de nuevo."
+        validation_settings_added: "Se han añadido estos ajustes. Elimínalos e inténtalo de nuevo."
         save: "Guardar"
         new: "Nuevo"
         new_style: "Nuevo estilo"
@@ -4741,6 +4751,7 @@ es:
           extra_files_upload: "Exporta el tema para ver estos archivos."
           extra_files_remote: "Exporta el tema o consulta el repositorio de git para ver estos archivos."
           preview: "Vista previa"
+          settings_editor: "Editor de ajustes"
           show_advanced: "Mostrar campos avanzados"
           hide_advanced: "Ocultar campos avanzados"
           hide_unused_fields: "Ocultar campos sin uso"
