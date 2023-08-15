@@ -19,7 +19,7 @@ ja:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - 1 月
     - 2 月
     - 3 月
@@ -1398,7 +1398,7 @@ ja:
     tl2_post_edit_time_limit: "TL2 以上の作成者は投稿後 (n) 分間、投稿を編集できる。0 に設定すると永久に編集できます。"
     edit_history_visible_to_public: "編集した投稿の前のバージョンをすべてのユーザーが閲覧することを許可する。無効である場合、スタッフメンバーのみが閲覧できます。"
     delete_removed_posts_after: "作成者が削除した投稿は (n) 時間後に自動的に削除される。0 に設置すると、投稿は直ちに削除されます。"
-    notify_users_after_responses_deleted_on_flagged_post: "投稿にフラグが立てられてから削除されると、投稿に返信した後にそれが削除されたすべてのユーザーに通知されます。"
+    notify_users_after_responses_deleted_on_flagged_post: "投稿が通報されてから削除されると、投稿に返信した後にそれが削除されたすべてのユーザーに通知されます。"
     max_image_width: "投稿内の画像サムネイルの最大幅。これより大きい画像はサイズ変更され、ライトボックス化されます。"
     max_image_height: "投稿内の画像サムネイルの最大高さ。これより大きい画像はサイズ変更され、ライトボックス化されます。"
     responsive_post_image_sizes: "ライトボックスのプレビュー画像のサイズを変更して、次のピクセル比の DPI の高いスクリーンを可能にします。レスポンシブ画像を無効にするには、すべての値を削除します。"
@@ -1470,9 +1470,9 @@ ja:
     tl2_additional_edits_per_day_multiplier: "TL2 (メンバー) の 1 日あたりの編集数の上限をこの数を倍数として増加する"
     tl3_additional_edits_per_day_multiplier: "TL3 (レギュラー) の 1 日あたりの編集数の上限をこの数を倍数として増加する"
     tl4_additional_edits_per_day_multiplier: "TL4 (リーダー) の 1 日あたりの編集数の上限をこの数を倍数として増加する"
-    tl2_additional_flags_per_day_multiplier: "TL2 (メンバー) の 1 日あたりのフラグ数の上限をこの数を倍数として増加する"
-    tl3_additional_flags_per_day_multiplier: "TL3 (レギュラー) の 1 日あたりのフラグ数の上限をこの数を倍数として増加する"
-    tl4_additional_flags_per_day_multiplier: "TL4 (リーダー) の 1 日あたりのフラグ数の上限をこの数を倍数として増加する"
+    tl2_additional_flags_per_day_multiplier: "TL2 (メンバー) の 1 日あたりの通報数の上限をこの数を倍数として増加する"
+    tl3_additional_flags_per_day_multiplier: "TL3 (レギュラー) の 1 日あたりの通報数の上限をこの数を倍数として増加する"
+    tl4_additional_flags_per_day_multiplier: "TL4 (リーダー) の 1 日あたりの通報数の上限をこの数を倍数として増加する"
     num_users_to_silence_new_user: "新しいユーザーの投稿がこの数のユーザーから num_spam_flags_to_silence_new_user 件の迷惑通報を受けると、そのユーザーのすべての投稿を非表示にして、以降で投稿できないようにします。0 を指定すると無効になります。"
     num_tl3_flags_to_silence_new_user: "新しいユーザーの投稿が num_tl3_users_to_silence_new_user 人の信頼レベル 3 ユーザーからこの件数の通報を受けると、そのユーザーのすべての投稿を非表示にして、以降で投稿できないようにします。0 を指定すると、無効になります。"
     num_tl3_users_to_silence_new_user: "新しいユーザーの投稿がこの数の信頼レベル 3 ユーザーから num_tl3_flags_to_silence_new_user 件の迷惑通報を受けると、そのユーザーのすべての投稿を非表示にして、以降で投稿できないようにします。0 を指定すると無効になります。"
@@ -1870,7 +1870,7 @@ ja:
     pop3_polling_password: "ポーリングを行う POP3 アカウントのパスワードです。"
     pop3_polling_delete_from_server: "サーバーからメールを削除する。注意: これを無効にした場合、メールの受信トレイを手動でクリーンアップする必要があります"
     log_mail_processing_failures: "すべてのメール処理の失敗を <a href='%{base_path}/logs' target='_blank'>/logs</a> に記録する"
-    email_in: "ユーザーがメール経由で新規トピックを作成できるようにします。この設定を有効にすると、グループとカテゴリの受信メールアドレスを構成できるようになります。"
+    email_in: "ユーザーがメール経由で新規トピックを投稿できるようにします。この設定を有効にすると、グループとカテゴリの受信メールアドレスを構成できるようになります。"
     email_in_min_trust: "メールでのトピック作成を許可する最低信頼レベル"
     email_in_authserv_id: "受信メールに認証チェックを実行するサービスの識別子。この構成方法については、<a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> をご覧ください。"
     email_in_spam_header: "迷惑を検出するためのメールヘッダー。"
@@ -2120,7 +2120,7 @@ ja:
     experimental_topics_filter: "実験的: /filter で実験的なトピックフィルターのルートを有効にします"
     experimental_search_menu_groups: "実験的: glimmer を使用するようにアップグレードされた新しい検索メニューを有効にします"
     enable_experimental_lightbox: "実験的: デフォルトの画像ライトボックスを改良されたデザインに置き換えます。"
-    page_loading_indicator: "Discourse 内のページナビゲーション中に表示される読み込みインジケーターを構成します。「スピナー」はページ全体のインジケーターです。「スライダー」は画面上部に細いバーを表示します。"
+    page_loading_indicator: "Discourse 内のページナビゲーション中に表示される読み込みインジケーターを構成します。'Spinner' はページ全体のインジケーターです。'Slider' は画面上部に細いバーを表示します。"
     errors:
       invalid_css_color: "無効な色です。色名または 16 進数値を入力してください。"
       invalid_email: "無効なメールアドレスです。"

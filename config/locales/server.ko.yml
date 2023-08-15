@@ -19,7 +19,7 @@ ko:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - 1월
     - 2월
     - 3월

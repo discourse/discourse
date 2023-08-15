@@ -1451,4 +1451,37 @@ RSpec.describe Category do
       end
     end
   end
+
+  describe "#slug_ref" do
+    fab!(:category) { Fabricate(:category, slug: "foo") }
+
+    it "returns the slug for categories without parents" do
+      expect(category.slug_ref).to eq("foo")
+    end
+
+    context "for category with parent" do
+      fab!(:subcategory) { Fabricate(:category, parent_category: category, slug: "bar") }
+
+      it "returns the parent and child slug ref with separator" do
+        expect(subcategory.slug_ref).to eq("foo#{Category::SLUG_REF_SEPARATOR}bar")
+      end
+    end
+
+    context "for category with multiple parents" do
+      let(:subcategory_1) { Fabricate(:category, parent_category: category, slug: "bar") }
+      let(:subcategory_2) { Fabricate(:category, parent_category: subcategory_1, slug: "boo") }
+
+      before { SiteSetting.max_category_nesting = 3 }
+
+      it "returns the parent and child slug ref with separator" do
+        expect(subcategory_2.slug_ref(depth: 2)).to eq(
+          "foo#{Category::SLUG_REF_SEPARATOR}bar#{Category::SLUG_REF_SEPARATOR}boo",
+        )
+      end
+
+      it "allows limiting depth" do
+        expect(subcategory_2.slug_ref(depth: 1)).to eq("bar#{Category::SLUG_REF_SEPARATOR}boo")
+      end
+    end
+  end
 end

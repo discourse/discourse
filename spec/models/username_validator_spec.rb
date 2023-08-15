@@ -1,23 +1,27 @@
 # frozen_string_literal: true
 
 RSpec.describe UsernameValidator do
-  def expect_valid(*usernames)
+  def expect_valid(*usernames, failure_reason: "")
     usernames.each do |username|
       validator = UsernameValidator.new(username)
 
+      message = "expected '#{username}' to be valid"
+      message = "#{message}, #{failure_reason}" if failure_reason.present?
       aggregate_failures do
-        expect(validator.valid_format?).to eq(true), "expected '#{username}' to be valid"
+        expect(validator.valid_format?).to eq(true), message
         expect(validator.errors).to be_empty
       end
     end
   end
 
-  def expect_invalid(*usernames, error_message:)
+  def expect_invalid(*usernames, error_message:, failure_reason: "")
     usernames.each do |username|
       validator = UsernameValidator.new(username)
 
+      message = "expected '#{username}' to be invalid"
+      message = "#{message}, #{failure_reason}" if failure_reason.present?
       aggregate_failures do
-        expect(validator.valid_format?).to eq(false), "expected '#{username}' to be invalid"
+        expect(validator.valid_format?).to eq(false), message
         expect(validator.errors).to include(error_message)
       end
     end
@@ -43,13 +47,20 @@ RSpec.describe UsernameValidator do
     it "is invalid when the username is too long" do
       SiteSetting.max_username_length = 8
 
-      expect_invalid("abcdefghi", error_message: I18n.t(:"user.username.long", max: 8))
+      expect_invalid(
+        "abcdefghi",
+        error_message: I18n.t(:"user.username.long", max: 8),
+        failure_reason: "Should be invalid as username length > #{SiteSetting.max_username_length}",
+      )
     end
 
     it "is valid when the username has the maximum length" do
       SiteSetting.max_username_length = 8
 
-      expect_valid("abcdefgh")
+      expect_valid(
+        "abcdefgh",
+        failure_reason: "Should be valid as username length = #{SiteSetting.max_username_length}",
+      )
     end
 
     it "is valid when the username contains alphanumeric characters, dots, underscores and dashes" do
@@ -142,13 +153,20 @@ RSpec.describe UsernameValidator do
           "חוטב_עצים",
           "Holzfäller",
           error_message: I18n.t(:"user.username.long", max: 8),
+          failure_reason:
+            "Should be invalid as username length are > #{SiteSetting.max_username_length}",
         )
       end
 
       it "is valid when the username has the maximum length" do
         SiteSetting.max_username_length = 9
 
-        expect_valid("Дровосек", "چوب-لباسی", "தமிழ்-தமிழ்")
+        expect_valid(
+          "Дровосек",
+          "چوب-لباسی",
+          "தமிழ்-தமிழ்",
+          failure_reason: "Should be valid as usernames are <= #{SiteSetting.max_username_length}",
+        )
       end
 
       it "is invalid when the username has too many Unicode codepoints" do

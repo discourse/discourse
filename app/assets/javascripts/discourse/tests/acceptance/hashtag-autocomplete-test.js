@@ -9,7 +9,6 @@ acceptance("#hashtag autocompletion in composer", function (needs) {
   needs.user();
   needs.settings({
     tagging_enabled: true,
-    enable_experimental_hashtag_autocomplete: true,
   });
   needs.pretender((server, helper) => {
     server.get("/hashtags", () => {

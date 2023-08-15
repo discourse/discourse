@@ -1,20 +1,23 @@
+import Component from "@ember/component";
+import { inject as service } from "@ember/service";
 import PanEvents, {
   SWIPE_DISTANCE_THRESHOLD,
   SWIPE_VELOCITY_THRESHOLD,
 } from "discourse/mixins/pan-events";
-import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { next } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { observes } from "discourse-common/utils/decorators";
-import showModal from "discourse/lib/show-modal";
+import JumpToPost from "./modal/jump-to-post";
 
 const MIN_WIDTH_TIMELINE = 924,
   MIN_HEIGHT_TIMELINE = 325;
 
 export default Component.extend(PanEvents, {
+  modal: service(),
+
   classNameBindings: [
     "info.topicProgressExpanded:topic-progress-expanded",
     "info.renderTimeline:with-timeline:with-topic-progress",
@@ -132,13 +135,12 @@ export default Component.extend(PanEvents, {
 
   keyboardTrigger(e) {
     if (e.type === "jump") {
-      const controller = showModal("jump-to-post", {
-        modalClass: "jump-to-post-modal",
-      });
-      controller.setProperties({
-        topic: this.topic,
-        jumpToIndex: this.attrs.jumpToIndex,
-        jumpToDate: this.attrs.jumpToDate,
+      this.modal.show(JumpToPost, {
+        model: {
+          topic: this.topic,
+          jumpToIndex: this.attrs.jumpToIndex,
+          jumpToDate: this.attrs.jumpToDate,
+        },
       });
     }
   },

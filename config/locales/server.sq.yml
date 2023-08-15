@@ -18,7 +18,7 @@ sq:
       no_day: "%Y %B"
   date:
     month_names:
-    - null
+    -
     - Janar
     - Shkurt
     - Mars

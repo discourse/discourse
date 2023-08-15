@@ -160,16 +160,12 @@ class PostRevisor
       user,
       I18n.t(
         "topic_category_changed",
-        from: category_name_raw(old_category),
-        to: category_name_raw(new_category),
+        from: "##{old_category.slug_ref}",
+        to: "##{new_category.slug_ref}",
       ),
       post_type: Post.types[:small_action],
       action_code: "category_changed",
     )
-  end
-
-  def self.category_name_raw(category)
-    "##{CategoryHashtagDataSource.category_to_hashtag_item(category).ref}"
   end
 
   def self.create_small_action_for_tag_changes(topic:, user:, added_tags:, removed_tags:)

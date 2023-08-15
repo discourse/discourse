@@ -158,7 +158,9 @@ module Chat
     end
 
     def update_membership_last_viewed_at(guardian:, **)
-      context.membership&.update!(last_viewed_at: Time.zone.now)
+      Scheduler::Defer.later "Chat::ListChannelMessages - defer update_membership_last_viewed_at" do
+        context.membership&.update!(last_viewed_at: Time.zone.now)
+      end
     end
   end
 end

@@ -41,7 +41,7 @@ module PrettyText
     return erb_name if File.file?("#{root}#{erb_name}")
 
     erb_name = "#{filename}.js.erb"
-    return erb_name if File.file?("#{root}#{erb_name}")
+    erb_name if File.file?("#{root}#{erb_name}")
   end
 
   def self.apply_es6_file(ctx, root_path, part_name)
@@ -197,7 +197,6 @@ module PrettyText
         __optInput.lookupPrimaryUserGroup = __lookupPrimaryUserGroup;
         __optInput.formatUsername = __formatUsername;
         __optInput.getTopicInfo = __getTopicInfo;
-        __optInput.categoryHashtagLookup = __categoryLookup;
         __optInput.hashtagLookup = __hashtagLookup;
         __optInput.customEmoji = #{custom_emoji.to_json};
         __optInput.customEmojiTranslation = #{Plugin::CustomEmoji.translations.to_json};
@@ -471,10 +470,7 @@ module PrettyText
     DiscourseEvent.trigger(:reduce_excerpt, doc, options)
     strip_image_wrapping(doc)
     strip_oneboxed_media(doc)
-
-    if SiteSetting.enable_experimental_hashtag_autocomplete && options[:plain_hashtags]
-      convert_hashtag_links_to_plaintext(doc)
-    end
+    convert_hashtag_links_to_plaintext(doc) if options[:plain_hashtags]
 
     html = doc.to_html
     ExcerptParser.get_excerpt(html, max_length, options)

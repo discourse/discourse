@@ -15,6 +15,8 @@ export default class UserStatusPicker extends Component {
     if (!this.status) {
       this.set("status", {});
     }
+
+    document.querySelector(".user-status-description")?.focus();
   }
 
   @computed("status.emoji")

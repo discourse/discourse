@@ -382,10 +382,10 @@ ja:
         score_to_hide: "投稿を非表示にするスコア"
         take_action_bonus:
           name: "対応済み"
-          title: "スタッフが対応すると、フラグにボーナスが与えられます。"
+          title: "スタッフが対応すると、通報にボーナスが与えられます。"
         user_accuracy_bonus:
           name: "ユーザーの正確性"
-          title: "過去に同意を得たフラグを報告したユーザーにはボーナスが与えられます。"
+          title: "過去に同意を得た通報を報告したユーザーにはボーナスが与えられます。"
         trust_level_bonus:
           name: "信頼レベル"
           title: "レビュー待ち項目を作成したユーザーの信頼レベルが高いほど、その項目のスコアが高くなります。"
@@ -480,7 +480,7 @@ ja:
       conversation:
         view_full: "会話をすべて表示"
       scores:
-        about: "このスコアは、報告者の信頼レベル、以前のフラグの正確性、および報告されている項目の優先度に基づいて計算されます。"
+        about: "このスコアは、報告者の信頼レベル、以前の通報の正確性、および報告されている項目の優先度に基づいて計算されます。"
         score: "スコア"
         date: "報告日"
         type: "理由"
@@ -494,7 +494,7 @@ ja:
         approved:
           title: "承認済み"
         approved_flag:
-          title: "フラグが承認されました"
+          title: "通報が承認されました"
         approved_user:
           title: "ユーザーが承認されました"
         approved_post:
@@ -4007,10 +4007,14 @@ ja:
           tel: "有効な電話番号を入力してください。"
           text: "テキスト値を入力してください。"
           url: "有効な URL を入力してください。"
-        tooShort: "入力は %{minLength} 文字以上である必要があります。"
-        tooLong: "入力は %{maxLength} 文字未満である必要があります。"
-        rangeOverflow: "入力は %{max} 未満である必要があります。"
-        rangeUnderflow: "入力は %{min} 以上である必要があります。"
+        tooShort:
+          other: "入力は %{count} 文字以上である必要があります。"
+        tooLong:
+          other: "入力は %{count} 文字未満である必要があります。"
+        rangeOverflow:
+          other: "入力は %{count} 未満である必要があります。"
+        rangeUnderflow:
+          other: "入力は %{count} 以上である必要があります。"
         patternMismatch: "要求されたフォーマットに一致させてください。"
         badInput: "有効な入力を入力してください。"
   admin_js:
@@ -4134,6 +4138,7 @@ ja:
             email: メール
             incoming_email: "カスタム受信メールアドレス"
             incoming_email_placeholder: "メールアドレスを入力"
+            incoming_email_tooltip: "複数のメールアドレスは「|」文字で区切ることができます。"
             visibility: 表示状態
             visibility_levels:
               title: "誰がこのグループを閲覧できますか？"

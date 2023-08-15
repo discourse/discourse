@@ -2272,6 +2272,23 @@ RSpec.describe UsersController do
           expect(user.card_background_upload).to eq(upload)
         end
 
+        it "does not allow updating attributes specific to user creation" do
+          put "/u/#{user.username}.json",
+              params: {
+                username: "jimtom2",
+                email: "newemail@example.com",
+                password: "123456789",
+              }
+
+          expect(response.status).to eq(200)
+
+          user.reload
+
+          expect(user.username).not_to eq "jimtop2"
+          expect(user.password).not_to eq "123456789"
+          expect(user.email).not_to eq "newemail@example.com"
+        end
+
         it "updates watched tags in everyone tag group" do
           SiteSetting.tagging_enabled = true
           tags = [Fabricate(:tag), Fabricate(:tag)]

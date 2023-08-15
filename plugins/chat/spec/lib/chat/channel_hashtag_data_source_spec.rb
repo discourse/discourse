@@ -27,7 +27,6 @@ RSpec.describe Chat::ChannelHashtagDataSource do
   let!(:guardian) { Guardian.new(user) }
 
   before do
-    SiteSetting.enable_experimental_hashtag_autocomplete = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
     Group.refresh_automatic_groups!
   end

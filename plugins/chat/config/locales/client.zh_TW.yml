@@ -73,12 +73,15 @@ zh_TW:
       email_frequency:
         never: "永不"
       header_indicator_preference:
+        all_new: "所有新訊息"
         never: "永不"
       flag: "檢舉"
       heading: "聊天"
       join: "加入"
       last_visit: "上次到訪"
       summarization:
+        title: "摘要訊息"
+        summarize: "總結"
         since:
           other: "前 %{count} 小時"
       mention_warning:
@@ -103,6 +106,7 @@ zh_TW:
         title: "桌面聊天通知聲音"
       sounds:
         none: "無"
+        bell: "鐘聲"
       title: "聊天"
       title_capitalized: "聊天"
       upload_to_channel: "上傳至 %{title}"
@@ -144,6 +148,7 @@ zh_TW:
         no_items: "沒有項目"
       channel_edit_name_slug_modal:
         title: 編輯頻道
+        name: 變更名稱
       channel_edit_description_modal:
         title: 編輯描述
         input_placeholder: 新增描述
@@ -157,6 +162,8 @@ zh_TW:
         types:
           category: "分類"
           topic: "話題"
+      reviewable:
+        type: "聊天訊息"
       reactions:
         single_user: "%{username} 以 :%{emoji}: 回應"
       composer:
@@ -170,6 +177,8 @@ zh_TW:
         followed: "建立日期"
         threading_enabled: "啟用"
         threading_disabled: "停用"
+        muted_on: "開啟"
+        muted_off: "關閉"
         notifications: "通知"
         preview: "預覽"
         save: "保存"
@@ -181,14 +190,18 @@ zh_TW:
         export_messages:
           title: "匯出聊天訊息"
           create_export: "建立匯出"
+      direct_messages:
+        create: "開始"
       incoming_webhooks:
         back: "上一步"
         description: "簡述"
         delete: "刪除"
         emoji: "Emoji"
         name: "姓名"
+        name_placeholder: "名字..."
         save: "保存"
         edit: "編輯"
+        select_emoji: "選擇表情符號"
         system: "系統"
         url: "網址"
         username: "使用者名稱"
@@ -201,6 +214,8 @@ zh_TW:
           title: "移至已存在的話題"
         new_message:
           title: "移動到新訊息"
+      flagging:
+        action: "檢舉訊息"
       emoji_picker:
         objects: "物品"
         activities: "活動"

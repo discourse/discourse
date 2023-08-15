@@ -4,6 +4,7 @@ import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { scheduleOnce } from "@ember/runloop";
+import { inject as service } from "@ember/service";
 
 function entranceDate(dt, showTime) {
   const today = new Date();
@@ -29,6 +30,8 @@ function entranceDate(dt, showTime) {
 }
 
 export default Component.extend(CleansUp, {
+  router: service(),
+  session: service(),
   elementId: "topic-entrance",
   classNameBindings: ["visible::hidden"],
   topic: null,
@@ -161,6 +164,11 @@ export default Component.extend(CleansUp, {
   },
 
   _jumpTo(destination) {
+    this.session.set("lastTopicIdViewed", {
+      topicId: this.topic.id,
+      historyUuid: this.router.location.getState?.().uuid,
+    });
+
     this.cleanUp();
     DiscourseURL.routeTo(destination);
   },

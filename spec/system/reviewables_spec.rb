@@ -8,7 +8,7 @@ describe "Reviewables", type: :system do
 
   before { sign_in(admin) }
 
-  describe "when there is a reviewable with a long post" do
+  describe "when there is a flagged post reviewable with a long post" do
     fab!(:long_reviewable) { Fabricate(:reviewable_flagged_post, target: long_post) }
 
     it "should show a button to expand/collapse the post content" do
@@ -22,13 +22,37 @@ describe "Reviewables", type: :system do
     end
   end
 
-  describe "when there is a reviewable with a short post" do
+  describe "when there is a flagged post reviewable with a short post" do
     fab!(:short_reviewable) { Fabricate(:reviewable_flagged_post) }
 
     it "should not show a button to expand/collapse the post content" do
       visit("/review")
       expect(review_page).to have_no_post_body_collapsed
       expect(review_page).to have_no_post_body_toggle
+    end
+  end
+
+  describe "when there is a queued post reviewable with a short post" do
+    fab!(:short_queued_reviewable) { Fabricate(:reviewable_queued_post) }
+
+    it "should not show a button to expand/collapse the post content" do
+      visit("/review")
+      expect(review_page).to have_no_post_body_collapsed
+      expect(review_page).to have_no_post_body_toggle
+    end
+  end
+
+  describe "when there is a queued post reviewable with a long post" do
+    fab!(:long_queued_reviewable) { Fabricate(:reviewable_queued_long_post) }
+
+    it "should show a button to expand/collapse the post content" do
+      visit("/review")
+      expect(review_page).to have_post_body_collapsed
+      expect(review_page).to have_post_body_toggle
+      review_page.click_post_body_toggle
+      expect(review_page).to have_no_post_body_collapsed
+      review_page.click_post_body_toggle
+      expect(review_page).to have_post_body_collapsed
     end
   end
 

@@ -6,4 +6,4 @@
 
 gl:
   site_settings:
-    checklist_enabled: 'Queres activar o complemento da lista de verificación?'
+    checklist_enabled: "Queres activar o complemento da lista de verificación?"
