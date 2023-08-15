@@ -25,19 +25,19 @@ module PageObjects
       end
 
       def has_primary_navigation_item?(name)
-        page.has_css?(".user-navigation-primary li.user-nav__#{name}")
+        page.has_css?(primary_navigation_selector(name))
       end
 
       def has_no_primary_navigation_item?(name)
-        page.has_no_css?(".user-navigation-primary li.user-nav__#{name}")
+        page.has_no_css?(primary_navigation_selector(name))
       end
 
       def has_secondary_navigation_item?(name)
-        page.has_css?(".user-navigation-secondary li.user-nav__#{name}")
+        page.has_css?(secondary_navigation_selector(name))
       end
 
       def has_no_secondary_navigation_item?(name)
-        page.has_no_css?(".user-navigation-secondary li.user-nav__#{name}")
+        page.has_no_css?(secondary_navigation_selector(name))
       end
 
       def click_staff_info_warnings_link(user, warnings_count: 0)
@@ -72,6 +72,16 @@ module PageObjects
 
       def has_no_staff_info_flagged_posts_counter?
         page.has_no_css?(".staff-counters .flagged-posts")
+      end
+
+      private
+
+      def primary_navigation_selector(name)
+        ".new-user-wrapper .user-navigation-primary li.user-nav__#{name}"
+      end
+
+      def secondary_navigation_selector(name)
+        ".new-user-wrapper .user-navigation-secondary li.user-nav__#{name}"
       end
     end
   end
