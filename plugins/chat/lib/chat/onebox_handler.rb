@@ -47,11 +47,8 @@ module Chat
 
     def self.render_channel_onebox(args, chat_channel)
       users =
-        chat_channel
-          .user_chat_channel_memberships
-          .includes(:user)
-          .where(user: User.activated.not_suspended.not_staged)
-          .limit(10)
+        Chat::ChannelMembershipsQuery
+          .call(channel: chat_channel, limit: 10)
           .map do |membership|
             {
               username: membership.user.username,
