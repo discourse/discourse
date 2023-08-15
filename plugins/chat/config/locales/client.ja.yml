@@ -269,6 +269,7 @@ ja:
         read_only: "読み取り専用"
         archived_header: "チャンネルはアーカイブされています"
         archived: "アーカイブ済み"
+        archive_failed: "チャンネルのアーカイブに失敗しました。%{completed} / 全 %{total} 件のメッセージがアーカイブされました。<a target=\"_blank\" href=\"%{topic_url}\">アーカイブ先のトピック</a>が作成されました。再試行を押して、アーカイブの完了を試してください。"
         archive_failed_no_topic: "チャンネルのアーカイブに失敗しました。%{completed} / 全 %{total} 件のメッセージがアーカイブされました。アーカイブ先のトピックは作成されていません。再試行を押して、アーカイブの完了を試してください。"
         archive_completed: "<a target=\"_blank\" href=\"%{topic_url}\">アーカイブ済みのトピック</a>を見る"
         closed_header: "チャンネルは閉鎖されています"

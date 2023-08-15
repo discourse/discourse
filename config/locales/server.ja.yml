@@ -207,7 +207,6 @@ ja:
       local_login_cannot_be_disabled_if_second_factor_enforced: "2FA が適用されている場合、ローカルログインを無効にすることはできません。ローカルログインを無効にする前に、適用されている 2FA を無効にしてください。"
       cannot_enable_s3_uploads_when_s3_enabled_globally: "S3 アップロードはすでにグローバルに有効になっているため、S3 アップロードを有効にできません。サイトレベルでこれを有効にすると、アップロードで重大な問題が発生する可能性があります。"
       cors_origins_should_not_have_trailing_slash: "CORS オリジンに末尾のスラッシュ (/) を追加しないでください。"
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "ユーザーエージェントは、人間のユーザーを誤ってレート制限しないように、3 文字以上である必要があります。"
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "設定に次の値を追加することはできません: %{values}。"
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "'composer media optimization image enabled' が有効である場合、画像メタデータの削除を無効にすることはできません。画像メタデータの削除を無効にする前に、'composer media optimization image enabled' を無効にしてください。"
       twitter_summary_large_image_no_svg: "twitter:image メタデータに使用される Twitter の要約画像に .svg 画像を使用できません。"
@@ -641,7 +640,6 @@ ja:
     media_placeholder:
       blocked_hotlinked_title: "別のサイトにホストされているメディアです。クリックすると新しいタブで開きます。"
       blocked_hotlinked: "外部メディア"
-    hidden_bidi_character: "双方向テキストは、テキストがレンダリングされる順序を変更できます。これは、悪意のあるコードを隠すために使用される可能性があります。"
     has_likes:
       other: "「いいね！」 %{count}"
     cannot_permanently_delete:
@@ -842,8 +840,6 @@ ja:
   draft_backup:
     pm_title: "進行中のトピックのバックアップ下書き"
     pm_body: "バックアップの下書きを含むトピック"
-  user_activity:
-    no_log_search_queries: "検索ログクエリは現在無効になっています (管理者はサイト設定で有効にできます)。"
   email_settings:
     pop3_authentication_error: "指定された POP3 の資格情報に問題がありました。ユーザー名とパスワードを確認して、もう一度お試しください。"
     imap_authentication_error: "指定された IMAP の資格情報に問題がありました。ユーザー名とパスワードを確認して、もう一度お試しください。"
@@ -1312,7 +1308,6 @@ ja:
         qtt_like: '「いいね！」された数'
       description: "広範な人から「いいね！」を受け取った上位 10 人のユーザーです。"
   dashboard:
-    group_email_credentials_warning: 'グループ <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a> のメールの資格情報に問題がありました。この問題が解決されるまで、このグループの受信トレイからメールを送信できません。%{error}'
     rails_env_warning: "サーバーは %{env} モードで実行中です。"
     host_names_warning: "現在 config/database.yml ファイルは、デフォルトの localhost をホスト名として使用しています。あなたのサイトのホスト名に更新してください。"
     sidekiq_warning: 'Sidekiq が実行していません。メール送信などの多くのタスクは sidekiq により非同期に実行されます。少なくとも 1 つの sidekiq プロセスが実行していることを確認してください。<a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq についてはこちらをご覧ください</a>。'
@@ -1945,6 +1940,8 @@ ja:
     permalink_normalizations: "パーマリンクを照合する前に、次の正規表現を適用する。例: /(topic.*)\\?.*/\\1 はトピックルートからクエリ文字列を削除します。形式は正規表現+文字列です。キャプチャにアクセスするには \\1 などを使用します"
     global_notice: "すべての訪問者に緊急で非常の閉じられないグローバルバナー通知を表示する。空白にすると非表示になります (HTML 可)。"
     disable_system_edit_notifications: "download_remote_images_to_local' が有効である場合、システムユーザーによる編集の通知を無効にします。"
+    disable_category_edit_notifications: "トピックカテゴリの編集に関する通知を無効にします。これには、「公開中」のトピック (共有の下書きなど) が含まれます。"
+    disable_tags_edit_notifications: "トピックタグの編集に関する通知を無効にします。これには、「公開中」のトピック (共有の下書きなど) が含まれます。"
     notification_consolidation_threshold: "複数の通知が 1 つの通知に統合される前に受信した「いいね！」またはメンバーシップリクエストの通知の数。"
     likes_notification_consolidation_window_mins: "しきい値に達すると「いいね！」された複数の通知が 1 つの通知に統合される期間 (分)。しきい値は `SiteSetting.notification_consolidation_threshold` で構成できます。"
     automatically_unpin_topics: "ユーザーが最後に達したら、自動的にトピックの固定表示を解除する。"

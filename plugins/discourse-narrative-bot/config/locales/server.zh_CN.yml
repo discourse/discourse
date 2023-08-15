@@ -169,7 +169,7 @@ zh_CN:
           - 我们始终相信[文明社区行为](%{base_uri}/guidelines)。
       onebox:
         instructions: |-
-          接下来，你能与我分享其中一个链接吗？以**一行一个链接的形式**回复，然后它会自动展开为包含一个漂亮的摘要。
+          接下来，你能与我分享其中一个链接吗？以**一行一个链接的形式**回复，然后它会自动展开为包含一个漂亮的总结。
 
           要复制链接，在移动端设备上按住链接，或者右键点击你的鼠标：
 
@@ -429,7 +429,7 @@ zh_CN:
           [details=点这里查看运作方式！]
           1. 点击编辑器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 齿轮图标。
           2. 选择“隐藏详细信息”。
-          3. 编辑详细信息摘要并添加内容。
+          3. 编辑详细信息总结并添加内容。
           [/details]
 
           你可以使用编辑器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 齿轮图标在你的下一个回复中添加详细信息部分吗？

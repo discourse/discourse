@@ -15,7 +15,7 @@ ru:
           actions:
             chat_channel_status_change: "Изменение статуса канала чата"
             chat_channel_delete: "Удаление канала чата"
-            chat_auto_remove_membership: "Участники автоматически удаляются из каналов"
+            chat_auto_remove_membership: "Участники автоматически удалены из каналов"
       api:
         scopes:
           descriptions:
@@ -363,7 +363,7 @@ ru:
         default_user_search_placeholder: "@пользователь"
         user_search_placeholder: "...добавить пользователей"
         disabled_user: "отключил(а) чат"
-        no_items: "Нет компонентов"
+        no_items: "Ничего не найдено"
       channel_edit_name_slug_modal:
         title: Изменение канала
         input_placeholder: Укажите название

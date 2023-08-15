@@ -85,7 +85,7 @@ es:
       expand: "Ampliar el cajón de chat"
       confirm_flag: "¿Seguro que quieres denunciar el mensaje de %{username}?"
       deleted:
-        one: "Se eliminó un mensaje. [view]"
+        one: "Se eliminó un mensaje. [ver]"
         other: "Se han eliminado %{count} mensajes. [ver todos]"
       hidden: "Se ha ocultado un mensaje. [ver]"
       delete: "Eliminar"
@@ -282,6 +282,7 @@ es:
         read_only: "Solo lectura"
         archived_header: "El canal está archivado"
         archived: "Archivado"
+        archive_failed: "Error al archivar el canal. Se han archivado %{completed}/%{total} mensajes. Se ha creado <a target=\"_blank\" href=\"%{topic_url}\">el tema de destino</a>. Pulsa reintentar para intentar completar el archivo."
         archive_failed_no_topic: "Error al archivar el canal. Se han archivado %{completed}/%{total} mensajes, no se ha creado el tema de destino. Pulsa reintentar para intentar completar el archivo."
         archive_completed: "Ver <a target=\"_blank\" href=\"%{topic_url}\">el tema del archivo</a>"
         closed_header: "El canal está cerrado"

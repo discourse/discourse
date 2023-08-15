@@ -194,8 +194,8 @@ zh_CN:
         chat_channel_more:
           other: "[%{email_prefix}] %{channel} 和其他 %{count} 个频道的新消息"
         chat_channel_and_direct_message: "[%{email_prefix}] %{channel} 中和来自 %{username} 的新消息"
-      unsubscribe: "此聊天摘要在您离开时从%{site_link}发送。更改您的%{email_preferences_link}，或者%{unsubscribe_link}以退订。"
-      unsubscribe_no_link: "此聊天摘要在您离开时从%{site_link}发送。更改您的%{email_preferences_link}。"
+      unsubscribe: "此聊天总结在您离开时从%{site_link}发送。更改您的%{email_preferences_link}，或者%{unsubscribe_link}以退订。"
+      unsubscribe_no_link: "此聊天总结在您离开时从%{site_link}发送。更改您的%{email_preferences_link}。"
       view_messages:
         other: "查看 %{count} 条消息"
       view_more:
@@ -203,7 +203,7 @@ zh_CN:
       your_chat_settings: "聊天电子邮件频率偏好设置"
   unsubscribe:
     chat_summary:
-      select_title: "将聊天摘要电子邮件频率设置为："
+      select_title: "将聊天总结电子邮件频率设置为："
       never: 永不
       when_away: 仅在离开时
   category:
