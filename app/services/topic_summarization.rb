@@ -116,10 +116,7 @@ class TopicSummarization
       )
     end
 
-    # Calling reload here ensures Postgres' discrete range type is applied.
-    # an inclusive [1,2] ranges is stored as [1,3).
-    # Read more about this here: https://www.postgresql.org/docs/current/rangetypes.html#RANGETYPES-DISCRETE
-    main_summary.reload
+    main_summary
   end
 
   def build_sha(ids)
