@@ -5009,7 +5009,6 @@ en:
           user_added_to_group: "An user is added to a group"
           user_removed_from_group: "An user is removed from a group"
           user_promoted: "An user is promoted"
-          voted_unvoted: "Voted or unvoted"
         groups:
           topic: "Topic Events"
           post: "Post Events"
@@ -5023,7 +5022,6 @@ en:
           user_badge: "Badge Events"
           group_user: "Group User Events"
           like: "Like Events"
-          voting: "Voting"
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"

@@ -64,7 +64,8 @@ class WebHookEventType < ActiveRecord::Base
       created: 1001,
     },
     solved: {
-      accept_unaccept: 1101,
+      accepted_solution: 1101,
+      unaccepted_solution: 1102,
     },
     assign: {
       assigned: 1201,
@@ -85,7 +86,7 @@ class WebHookEventType < ActiveRecord::Base
       created: 1601,
     },
     voting: {
-      voted_unvoted: 1701,
+      topic_upvote: 1701,
     },
     chat: {
       message: 1801,

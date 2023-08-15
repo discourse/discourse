@@ -141,13 +141,23 @@ WebHookEventType.seed do |b|
   b.group = "notification"
 end
 WebHookEventType.seed do |b|
-  b.id = WebHookEventType::TYPES[:solved][:accept_unaccept]
-  b.name = "solved_accept_unaccept"
+  b.id = WebHookEventType::TYPES[:solved][:accepted_solution]
+  b.name = "accepted_solution"
   b.group = "solved"
 end
 WebHookEventType.seed do |b|
-  b.id = WebHookEventType::TYPES[:assign][:assign]
-  b.name = "assign"
+  b.id = WebHookEventType::TYPES[:solved][:unaccepted_solution]
+  b.name = "unaccepted_solution"
+  b.group = "solved"
+end
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::TYPES[:assign][:assigned]
+  b.name = "assigned"
+  b.group = "assign"
+end
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::TYPES[:assign][:unassigned]
+  b.name = "unassigned"
   b.group = "assign"
 end
 WebHookEventType.seed do |b|
@@ -181,8 +191,8 @@ WebHookEventType.seed do |b|
   b.group = "user_promoted"
 end
 WebHookEventType.seed do |b|
-  b.id = WebHookEventType::TYPES[:voting][:voted_unvoted]
-  b.name = "voted_unvoted"
+  b.id = WebHookEventType::TYPES[:voting][:topic_upvote]
+  b.name = "topic_upvote"
   b.group = "voting"
 end
 

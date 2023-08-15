@@ -91,7 +91,13 @@ class MoveWebHooksToNewEventIds < ActiveRecord::Migration[7.0]
       SELECT 1101, web_hook_id FROM web_hook_event_types_hooks WHERE web_hook_event_types_hooks.web_hook_event_type_id = 11;
 
       INSERT INTO web_hook_event_types_hooks(web_hook_event_type_id, web_hook_id)
+      SELECT 1102, web_hook_id FROM web_hook_event_types_hooks WHERE web_hook_event_types_hooks.web_hook_event_type_id = 11;
+
+      INSERT INTO web_hook_event_types_hooks(web_hook_event_type_id, web_hook_id)
       SELECT 1201, web_hook_id FROM web_hook_event_types_hooks WHERE web_hook_event_types_hooks.web_hook_event_type_id = 12;
+
+      INSERT INTO web_hook_event_types_hooks(web_hook_event_type_id, web_hook_id)
+      SELECT 1202, web_hook_id FROM web_hook_event_types_hooks WHERE web_hook_event_types_hooks.web_hook_event_type_id = 12;
 
       INSERT INTO web_hook_event_types_hooks(web_hook_event_type_id, web_hook_id)
       SELECT 1301, web_hook_id FROM web_hook_event_types_hooks WHERE web_hook_event_types_hooks.web_hook_event_type_id = 13;
