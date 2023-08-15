@@ -14,7 +14,8 @@ import { setting } from "discourse/lib/computed";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { next, schedule } from "@ember/runloop";
-import { cookie } from "discourse/lib/cookie";
+import cookie, { removeCookie } from "discourse/lib/cookie";
+import { isEmpty } from "@ember/utils";
 
 // This is happening outside of the app via popup
 const AuthErrors = [
@@ -82,15 +83,15 @@ export default class Login extends Component {
       this.loginName = cookie("email");
     }
 
-    schedule("afterRender", () => {
-      $(
-        "#login-account-password, #login-account-name, #login-second-factor"
-      ).keydown((e) => {
-        if (e.key === "Enter") {
-          this.login();
-        }
-      });
-    });
+    // schedule("afterRender", () => {
+    //   $(
+    //     "#login-account-password, #login-account-name, #login-second-factor"
+    //   ).keydown((e) => {
+    //     if (e.key === "Enter") {
+    //       this.login();
+    //     }
+    //   });
+    // });
   }
 
   get wavingHandURL() {
@@ -308,7 +309,6 @@ export default class Login extends Component {
 
     try {
       this.loggingIn = true;
-      // I added this, do we really want to keep the modal open while we redirect?
       await loginMethod.doLogin({ signup });
       this.args.closeModal();
     } catch {
