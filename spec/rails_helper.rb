@@ -256,6 +256,7 @@ RSpec.configure do |config|
 
     SiteSetting.provider = TestLocalProcessProvider.new
 
+    # Used for S3 system specs, see also setup_s3_system_test.
     MinioRunner.config do |minio_runner_config|
       minio_runner_config.minio_domain = ENV["MINIO_RUNNER_MINIO_DOMAIN"] || "minio.local"
       minio_runner_config.buckets =

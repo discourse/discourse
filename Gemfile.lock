@@ -1,11 +1,4 @@
 GIT
-  remote: https://github.com/discourse/minio_runner.git
-  revision: 072668f29573aacff800e6ef007dbc8061d3db33
-  branch: dev/initial-gem-code
-  specs:
-    minio_runner (0.1.0)
-
-GIT
   remote: https://github.com/rails/sprockets
   revision: f4d3dae71ef29c44b75a49cfbf8032cce07b423a
   branch: 3.x
@@ -250,6 +243,7 @@ GEM
     mini_sql (1.4.0)
     mini_suffix (0.3.3)
       ffi (~> 1.9)
+    minio_runner (0.1.0)
     minitest (5.19.0)
     mocha (2.1.0)
       ruby2_keywords (>= 0.0.5)
@@ -616,7 +610,7 @@ DEPENDENCIES
   mini_scheduler
   mini_sql
   mini_suffix
-  minio_runner!
+  minio_runner
   minitest
   mocha
   multi_json
