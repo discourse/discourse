@@ -132,5 +132,20 @@ RSpec.describe Chat::Admin::IncomingWebhooksController do
         Chat::IncomingWebhook.count
       }.by(-1)
     end
+
+    it "destroys webhook events records" do
+      sign_in(admin)
+
+      Chat::MessageCreator.create(
+        chat_channel: existing.chat_channel,
+        user: Discourse.system_user,
+        content: "foo",
+        incoming_chat_webhook: existing,
+      )
+
+      expect { delete "/admin/plugins/chat/hooks/#{existing.id}.json" }.to change {
+        Chat::WebhookEvent.count
+      }.by(-1)
+    end
   end
 end
