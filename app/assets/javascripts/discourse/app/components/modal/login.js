@@ -8,12 +8,10 @@ import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
 import { findAll } from "discourse/models/login-method";
 import showModal from "discourse/lib/show-modal";
-import getWebauthnCredential from "discourse/lib/webauthn";
 import { areCookiesEnabled, escapeExpression } from "discourse/lib/utilities";
 import { flashAjaxError } from "discourse/lib/ajax-error";
 import { setting } from "discourse/lib/computed";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
-import ForgotPassword from "discourse/components/modal/forgot-password";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { next, schedule } from "@ember/runloop";
 import { cookie } from "discourse/lib/cookie";
@@ -35,14 +33,14 @@ export default class Login extends Component {
 
   @tracked loggingIn = false;
   @tracked loggedIn = false;
-  @tracked processingEmailLink = false;
   @tracked showLoginButtons = true;
   @tracked showSecondFactor = false;
   @tracked awaitingApproval = false;
-  @tracked maskPassword = true;
   @tracked loginPassword = "";
   @tracked loginName = "";
   @tracked securityKeyCredential = null;
+  @tracked flash;
+  @tracked flashType;
 
   @tracked canLoginLocal = this.siteSettings.enable_local_logins;
   @tracked canLoginLocalWithEmail =
@@ -68,11 +66,9 @@ export default class Login extends Component {
       loggingIn: false,
       loggedIn: false,
       secondFactorRequired: false,
-      showSecondFactor: false,
       showSecurityKey: false,
       showLoginButtons: true,
       awaitingApproval: false,
-      maskPassword: true,
     });
   }
 
@@ -95,14 +91,6 @@ export default class Login extends Component {
         }
       });
     });
-  }
-
-  get credentialsClass() {
-    return this.showSecondFactor || this.showSecurityKey ? "hidden" : "";
-  }
-
-  get secondFactorClass() {
-    return this.showSecondFactor || this.showSecurityKey ? "" : "hidden";
   }
 
   get wavingHandURL() {
@@ -130,10 +118,6 @@ export default class Login extends Component {
     return classes.join(" ");
   }
 
-  get disableLoginFields() {
-    return this.showSecondFactor || this.showSecurityKey;
-  }
-
   get hasAtLeastOneLoginButton() {
     return findAll().length > 0;
   }
@@ -150,75 +134,23 @@ export default class Login extends Component {
   }
 
   @action
-  emailLogin(event) {
-    event?.preventDefault();
-
-    if (this.processingEmailLink) {
-      return;
-    }
-
-    if (isEmpty(this.loginName)) {
-      this.flash(I18n.t("login.blank_username"), "info");
-      return;
-    }
-
-    this.set("processingEmailLink", true);
-
-    ajax("/u/email-login", {
-      data: { login: this.loginName.trim() },
-      type: "POST",
-    })
-      .then((data) => {
-        const loginName = escapeExpression(this.loginName);
-        const isEmail = loginName.match(/@/);
-        let key = isEmail
-          ? "email_login.complete_email"
-          : "email_login.complete_username";
-        if (data.user_found === false) {
-          this.flash(
-            htmlSafe(
-              I18n.t(`${key}_not_found`, {
-                email: loginName,
-                username: loginName,
-              })
-            ),
-            "error"
-          );
-        } else {
-          let postfix = data.hide_taken ? "" : "_found";
-          this.flash(
-            htmlSafe(
-              I18n.t(`${key}${postfix}`, {
-                email: loginName,
-                username: loginName,
-              })
-            )
-          );
-        }
-      })
-      .catch(flashAjaxError(this))
-      .finally(() => this.set("processingEmailLink", false));
+  securityKeyCredentialChanged(value) {
+    this.securityKeyCredential = value;
   }
 
   @action
-  handleForgotPassword(event) {
-    event?.preventDefault();
-
-    this.modal.show(ForgotPassword, {
-      model: {
-        emailOrUsername: this.loginName,
-      },
-    });
+  flashChanged(value) {
+    this.flash = value;
   }
 
   @action
-  togglePasswordMask() {
-    this.toggleProperty("maskPassword");
+  flashTypeChanged(value) {
+    this.flashType = value;
   }
 
   @action
-  forgotPassword() {
-    this.handleForgotPassword();
+  loginNameChanged(value) {
+    this.loginName = event.target.value;
   }
 
   @action
@@ -239,6 +171,7 @@ export default class Login extends Component {
       data: {
         login: this.loginName,
         password: this.loginPassword,
+        // secondFactorToken is not getting set anywhere, looks like a problem
         second_factor_token:
           this.securityKeyCredential || this.secondFactorToken,
         second_factor_method: this.secondFactorMethod,
@@ -282,19 +215,20 @@ export default class Login extends Component {
 
             return;
           } else if (result.reason === "not_activated") {
-            this.send("showNotActivated", {
+            this.applicationController.send("showNotActivated", {
               username: this.loginName,
               sentTo: escape(result.sent_to_email),
               currentEmail: escape(result.current_email),
             });
           } else if (result.reason === "suspended") {
-            this.send("closeModal");
+            this.args.closeModal();
             this.dialog.alert(result.error);
           } else {
-            this.flash(result.error, "error");
+            this.flash = result.error;
+            this.flashType = "error";
           }
         } else {
-          this.set("loggedIn", true);
+          this.loggedIn = true;
           // Trigger the browser's password manager using the hidden static login form:
           const hiddenLoginForm = document.getElementById("hidden-login-form");
           const applyHiddenFormInputValue = (value, key) => {
@@ -395,19 +329,6 @@ export default class Login extends Component {
   //   }
   //   this.send("showCreateAccount");
   // }
-
-  @action
-  authenticateSecurityKey() {
-    getWebauthnCredential(
-      this.securityKeyChallenge,
-      this.securityKeyAllowedCredentialIds,
-      (credentialData) => {
-        this.securityKeyCredential = credentialData;
-        this.login();
-      },
-      (error) => (this.flash = error)
-    );
-  }
 
   // @action
   // authenticationComplete(options) {

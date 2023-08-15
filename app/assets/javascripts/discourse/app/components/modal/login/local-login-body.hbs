@@ -5,7 +5,7 @@
     <p class="login-subheader">{{i18n "login.subheader_title"}}</p>
   </div>
   <form id="login-form" method="post">
-    <div id="credentials" class={{@credentialsClass}}>
+    <div id="credentials" class={{this.credentialsClass}}>
       <div class="input-group">
         <Input
           @value={{@loginName}}
@@ -18,17 +18,18 @@
           disabled={{@showSecondFactor}}
           autofocus="autofocus"
           tabindex="1"
+          {{on "input" @loginNameChanged}}
         />
-        <label class="alt-placeholder" for="login-account-name">{{i18n
-            "login.email_placeholder"
-          }}</label>
+        <label class="alt-placeholder" for="login-account-name">
+          {{i18n "login.email_placeholder"}}
+        </label>
         {{#if @canLoginLocalWithEmail}}
           <a
             href
             class={{if @loginName "" "no-login-filled"}}
             tabindex="3"
             id="email-login-link"
-            {{on "click" @emailLogin}}
+            {{on "click" this.emailLogin}}
           >
             {{i18n "email_login.login_link"}}
           </a>
@@ -37,41 +38,42 @@
       <div class="input-group">
         <PasswordField
           @value={{@loginPassword}}
-          @type={{if @maskPassword "password" "text"}}
+          @type={{if this.maskPassword "password" "text"}}
           class={{value-entered @loginPassword}}
           id="login-account-password"
           autocomplete="current-password"
           maxlength="200"
-          @capsLockOn={{@capsLockOn}}
-          disabled={{@disableLoginFields}}
+          @capsLockOn={{this.capsLockOn}}
+          disabled={{this.disableLoginFields}}
           tabindex="1"
         />
-        <label class="alt-placeholder" for="login-account-password">{{i18n
-            "login.password"
-          }}</label>
+        <label class="alt-placeholder" for="login-account-password">
+          {{i18n "login.password"}}
+        </label>
         <div class="login__password-links">
           <a
             href
             id="forgot-password-link"
             tabindex="3"
-            {{on "click" @handleForgotPassword}}
-          >{{i18n "forgot_password.action"}}</a>
+            {{on "click" this.handleForgotPassword}}
+          >
+            {{i18n "forgot_password.action"}}
+          </a>
           <TogglePasswordMask
-            @maskPassword={{@maskPassword}}
-            @togglePasswordMask={{@togglePasswordMask}}
+            @maskPassword={{this.maskPassword}}
+            @togglePasswordMask={{this.togglePasswordMask}}
             tabindex="3"
           />
         </div>
-        <div class="caps-lock-warning {{unless @capsLockOn 'hidden'}}">{{d-icon
-            "exclamation-triangle"
-          }}
+        <div class="caps-lock-warning {{unless this.capsLockOn 'hidden'}}">
+          {{d-icon "exclamation-triangle"}}
           {{i18n "login.caps_lock_warning"}}</div>
       </div>
     </div>
     <SecondFactorForm
       @secondFactorMethod={{@secondFactorMethod}}
       @secondFactorToken={{@secondFactorToken}}
-      @class={{@secondFactorClass}}
+      @class={{this.secondFactorClass}}
       @backupEnabled={{@backupEnabled}}
       @isLogin={{true}}
     >
@@ -83,7 +85,7 @@
           @showSecondFactor={{@showSecondFactor}}
           @secondFactorMethod={{@secondFactorMethod}}
           @otherMethodAllowed={{@otherMethodAllowed}}
-          @action={{@authenticateSecurityKey}}
+          @action={{this.authenticateSecurityKey}}
         />
       {{else}}
         <SecondFactorInput

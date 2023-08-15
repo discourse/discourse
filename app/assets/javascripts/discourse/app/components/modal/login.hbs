@@ -2,6 +2,8 @@
   class="login-modal"
   @bodyClass={{this.modalBodyClasses}}
   @closeModal={{@closeModal}}
+  @flash={{this.flash}}
+  @flashType={{this.flashType}}
   {{did-insert this.doTheThing}}
 >
   <:body>
@@ -9,25 +11,22 @@
     {{#if this.canLoginLocal}}
       <Modal::Login::LocalLoginBody
         @wavingHandURL={{this.wavingHandURL}}
-        @credentialsClass={{this.credentialsClass}}
         @loginName={{this.loginName}}
-        @showSecondFactor={{this.showSecondFactor}}
+        @loginNameChanged={{this.loginNameChanged}}
         @canLoginLocalWithEmail={{this.canLoginLocalWithEmail}}
         @loginPassword={{this.loginPassword}}
-        @maskPassword={{this.maskPassword}}
-        @capsLockOn={{this.capsLockOn}}
-        @disableLoginFields={{this.disableLoginFields}}
         @secondFactorMethod={{this.secondFactorMethod}}
         @secondFactorToken={{this.secondFactorToken}}
-        @secondFactorClass={{this.secondFactorClass}}
         @backupEnabled={{this.backupEnabled}}
         @securityKeyAllowedCredentialIds={{this.securityKeyAllowedCredentialIds}}
         @securityKeyChallenge={{this.securityKeyChallenge}}
         @showSecurityKey={{this.showSecurityKey}}
         @otherMethodAllowed={{this.otherMethodAllowed}}
-        @authenticateSecurityKey={{this.authenticateSecurityKey}}
-        @emailLogin={{this.emailLogin}}
         @handleForgotPassword={{this.handleForgotPassword}}
+        @login={{this.login}}
+        @flashChanged={{this.flashChanged}}
+        @flashTypeChanged={{this.flashTypeChanged}}
+        @securityKeyCredentialChanged={{this.securityKeyCredentialChanged}}
       />
     {{/if}}
 
