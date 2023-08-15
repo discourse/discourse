@@ -4,7 +4,9 @@ RSpec.describe Jobs::StreamTopicSummary do
   subject(:job) { described_class.new }
 
   describe "#execute" do
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic) { Fabricate(:topic, highest_post_number: 2) }
+    fab!(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
+    fab!(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
     let(:plugin) { Plugin::Instance.new }
     let(:strategy) { DummyCustomSummarization.new({ summary: "dummy", chunks: [] }) }
     fab!(:user) { Fabricate(:leader) }
@@ -15,6 +17,8 @@ RSpec.describe Jobs::StreamTopicSummary do
       plugin.register_summarization_strategy(strategy)
       SiteSetting.summarization_strategy = strategy.model
     end
+
+    after { DiscoursePluginRegistry.reset_register!(:summarization_strategies) }
 
     describe "validates params" do
       it "does nothing if there is no topic" do
