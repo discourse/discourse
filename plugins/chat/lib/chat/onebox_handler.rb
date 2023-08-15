@@ -21,8 +21,8 @@ module Chat
         url: url,
         channel_id: chat_channel.id,
         channel_name: chat_channel.name,
-        is_category: chat_channel.chatable_type == "Category",
-        color: chat_channel.chatable_type == "Category" ? chat_channel.chatable.color : nil,
+        is_category: chat_channel.category_channel?,
+        color: chat_channel.category_channel? ? chat_channel.chatable.color : nil,
       }
 
       if message.present?
