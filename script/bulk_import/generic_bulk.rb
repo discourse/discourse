@@ -31,6 +31,7 @@ class BulkImport::Generic < BulkImport::Base
     import_user_profiles
     import_user_options
     import_user_fields
+    import_user_custom_field_values
     import_single_sign_on_records
     import_topics
     import_posts
@@ -203,6 +204,34 @@ class BulkImport::Generic < BulkImport::Base
       if options.present?
         JSON.parse(options).each { |option| field.user_field_options.create!(value: option) }
       end
+    end
+  end
+
+  def import_user_custom_field_values
+    puts "", "Importing user custom field values..."
+
+    discourse_field_mapping = UserField.pluck(:name, :id).to_h
+    field_id_mapping =
+      @db
+        .query("SELECT id, name FROM user_fields")
+        .map do |row|
+          discourse_field_id = discourse_field_mapping[row["name"]]
+          field_name = "#{User::USER_FIELD_PREFIX}#{discourse_field_id}"
+          [row["id"], field_name]
+        end
+        .to_h
+
+    values = query(<<~SQL)
+      SELECT *
+        FROM user_custom_field_values
+    SQL
+
+    create_user_custom_fields(values) do |row|
+      {
+        user_id: user_id_from_imported_id(row["user_id"]),
+        name: field_id_mapping[row["field_id"]],
+        value: row["value"],
+      }
     end
   end
 

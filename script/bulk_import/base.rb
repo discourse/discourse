@@ -279,6 +279,11 @@ class BulkImport::Base
     if @last_post_action_id > 0
       @raw_connection.exec("SELECT setval('#{PostAction.sequence_name}', #{@last_post_action_id})")
     end
+    if @last_user_custom_field_id > 0
+      @raw_connection.exec(
+        "SELECT setval('#{UserCustomField.sequence_name}', #{@last_user_custom_field_id})",
+      )
+    end
   end
 
   def group_id_from_imported_id(id)
@@ -399,6 +404,8 @@ class BulkImport::Base
 
   GROUP_USER_COLUMNS ||= %i[group_id user_id created_at updated_at]
 
+  USER_CUSTOM_FIELD_COLUMNS ||= %i[id user_id name value created_at updated_at]
+
   CATEGORY_COLUMNS ||= %i[
     id
     name
@@ -504,6 +511,11 @@ class BulkImport::Base
 
   def create_single_sign_on_records(rows, &block)
     create_records(rows, "single_sign_on_record", USER_SSO_RECORD_COLUMNS, &block)
+  end
+
+  def create_user_custom_fields(rows, &block)
+    @last_user_custom_field_id = last_id(UserCustomField)
+    create_records(rows, "user_custom_field", USER_CUSTOM_FIELD_COLUMNS, &block)
   end
 
   def create_group_users(rows, &block)
@@ -955,6 +967,13 @@ class BulkImport::Base
     raw.gsub!(/\[\*=1\]/, "")
 
     raw
+  end
+
+  def process_user_custom_field(field)
+    field[:id] ||= @last_user_custom_field_id += 1
+    field[:created_at] ||= NOW
+    field[:updated_at] ||= NOW
+    field
   end
 
   def create_records(rows, name, columns)
