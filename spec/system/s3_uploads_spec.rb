@@ -4,17 +4,18 @@ describe "Uploading files to S3", type: :system do
   fab!(:current_user) { Fabricate(:admin) }
 
   let(:modal) { PageObjects::Modals::Base.new }
-
-  before do
-    setup_s3_system_test
-    sign_in(current_user)
-  end
+  let(:composer) { PageObjects::Components::Composer.new }
 
   describe "direct S3 uploads" do
     before { SiteSetting.enable_direct_s3_uploads = true }
 
     describe "single part uploads" do
       it "uploads custom avatars to S3" do
+        skip_s3_system_spec?
+
+        setup_s3_system_test
+        sign_in(current_user)
+
         visit "/my/preferences/account"
 
         find("#edit-avatar").click
@@ -37,6 +38,18 @@ describe "Uploading files to S3", type: :system do
 
     describe "multipart uploads" do
       it "uploads a file in the post composer" do
+        skip_s3_system_spec?
+
+        setup_s3_system_test
+        sign_in(current_user)
+
+        visit "/new-topic"
+
+        file_path = file_from_fixtures("logo.png", "images").path
+        attach_file(file_path) { composer.click_toolbar_button("upload") }
+
+        expect(page).to have_no_css("#file-uploading")
+        expect(composer.preview).to have_css(".image-wrapper")
       end
     end
   end

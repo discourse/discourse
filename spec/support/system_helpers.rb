@@ -151,4 +151,12 @@ module SystemHelpers
 
     MinioRunner.start
   end
+
+  def skip_s3_system_spec?
+    if !ENV["CI"] && !ENV["RUN_S3_SYSTEM_SPECS"]
+      skip(
+        "S3 system specs are disabled in this environment, set CI=1 or RUN_S3_SYSTEM_SPECS=1 to enable them.",
+      )
+    end
+  end
 end
