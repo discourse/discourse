@@ -168,9 +168,7 @@ const path = require("path");
   });
 
   await exec("click on the 1st user", () => {
-    return page.evaluate(() => {
-      document.querySelector(".topic-meta-data a:first-of-type").click();
-    });
+    return page.click(".topic-meta-data a:first-of-type");
   });
 
   await exec("user has details", () => {
