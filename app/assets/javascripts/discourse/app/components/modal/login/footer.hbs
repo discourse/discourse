@@ -3,20 +3,20 @@
     {{#unless @showSecurityKey}}
       <DButton
         @action={{@login}}
-        @id="login-button"
+        id="login-button"
         @form="login-form"
         @icon="unlock"
         @label={{@loginButtonLabel}}
         @disabled={{@loginDisabled}}
-        @class="btn btn-large btn-primary"
+        class="btn btn-large btn-primary"
         @tabindex="2"
       />
     {{/unless}}
 
     {{#if @showSignupLink}}
       <DButton
-        @class="btn-large"
-        @id="new-account-link"
+        class="btn-large"
+        id="new-account-link"
         @action={{@createAccount}}
         @label="create_account.title"
         @tabindex="3"
