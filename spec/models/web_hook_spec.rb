@@ -241,6 +241,24 @@ RSpec.describe WebHook do
       expect(payload["tags"]).to contain_exactly(tag.name)
     end
 
+    it "should enqueue granular hooks for topic" do
+      topic_web_hook.web_hook_event_types.delete(
+        WebHookEventType.where(name: "topic_destroyed").last,
+      )
+
+      post = PostCreator.create(user, raw: "post", title: "topic", skip_validations: true)
+      topic_id = post.topic.id
+      job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+
+      expect(job_args["event_name"]).to eq("topic_created")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["id"]).to eq(topic_id)
+
+      expect { PostDestroyer.new(user, post).destroy }.not_to change {
+        Jobs::EmitWebHookEvent.jobs.count
+      }
+    end
+
     it "should not log a personal message view when processing new topic" do
       SiteSetting.log_personal_messages_views = true
       Fabricate(:topic_web_hook)
