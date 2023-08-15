@@ -32,10 +32,10 @@ export class UserStatusMessage {
     html.innerHTML = this.#emojiHtml(status.emoji);
 
     if (opts?.showDescription) {
-      const messageDescription = document.createElement("span");
-      messageDescription.classList.add("user-status-message-description");
-      messageDescription.innerText = status.description;
-      html.appendChild(messageDescription);
+      const description = document.createElement("span");
+      description.classList.add("user-status-message-description");
+      description.innerText = status.description;
+      html.appendChild(description);
     }
 
     return html;
@@ -46,10 +46,10 @@ export class UserStatusMessage {
     html.classList.add("user-status-message-tooltip");
     html.innerHTML = this.#emojiHtml(status.emoji);
 
-    const tooltipDescription = document.createElement("span");
-    tooltipDescription.classList.add("user-status-tooltip-description");
-    tooltipDescription.innerText = status.description;
-    html.appendChild(tooltipDescription);
+    const description = document.createElement("span");
+    description.classList.add("user-status-tooltip-description");
+    description.innerText = status.description;
+    html.appendChild(description);
 
     if (status.ends_at) {
       const untilElement = document.createElement("div");
