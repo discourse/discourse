@@ -60,11 +60,12 @@ module("Integration | Component | admin-user-field-item", function (hooks) {
       I18n.t("admin.user_fields.field_types.text")
     );
 
-    assert.strictEqual(
-      query(".user-field-flags").innerText,
-      `${I18n.t("admin.user_fields.show_on_profile.enabled")}, ${I18n.t(
-        "admin.user_fields.show_on_user_card.enabled"
-      )}, ${I18n.t("admin.user_fields.searchable.enabled")}`
-    );
+    assert
+      .dom(".user-field-flags")
+      .hasText(
+        `${I18n.t("admin.user_fields.show_on_profile.enabled")}, ${I18n.t(
+          "admin.user_fields.show_on_user_card.enabled"
+        )}, ${I18n.t("admin.user_fields.searchable.enabled")}`
+      );
   });
 });
