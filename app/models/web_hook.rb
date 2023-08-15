@@ -43,6 +43,8 @@ class WebHook < ActiveRecord::Base
     /\Atopic_\w+_status_updated\z/ => "topic_edited",
     "reviewable_score_updated" => "reviewable_updated",
     "reviewable_transitioned_to" => "reviewable_updated",
+    "assigned" => "assign",
+    "unassigned" => "assign",
   }
 
   def self.translate_event_name_to_type(event_name)

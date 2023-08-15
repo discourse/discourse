@@ -67,7 +67,8 @@ class WebHookEventType < ActiveRecord::Base
       accept_unaccept: 1101,
     },
     assign: {
-      assign_unassign: 1201,
+      assigned: 1201,
+      unassigned: 1202,
     },
     user_badge: {
       granted: 1301,

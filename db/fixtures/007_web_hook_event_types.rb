@@ -146,8 +146,8 @@ WebHookEventType.seed do |b|
   b.group = "solved"
 end
 WebHookEventType.seed do |b|
-  b.id = WebHookEventType::TYPES[:assign][:assign_unassign]
-  b.name = "assign_unassign"
+  b.id = WebHookEventType::TYPES[:assign][:assign]
+  b.name = "assign"
   b.group = "assign"
 end
 WebHookEventType.seed do |b|
