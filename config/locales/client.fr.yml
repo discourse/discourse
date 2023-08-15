@@ -277,6 +277,8 @@ fr:
       pill: "Messages connexes"
       see_all: 'Voir <a href="%{path}">tous les messages</a> de @%{username}…'
     suggested_topics:
+      title: "Sujets nouveaux et non lus"
+      pill: "Suggérés"
       pm_title: "Messages suggérés"
     about:
       simple_title: "À propos"
@@ -1789,6 +1791,7 @@ fr:
         content: "Voici quelques sujets que vous pourriez vouloir lire ensuite."
       admin_guide:
         title: "Bienvenue sur votre nouveau site !"
+        content: "<a href='%{admin_guide_url}'>Lisez le guide d'administration</a> pour continuer à développer votre site et votre communauté."
         content_no_url: "Lisez le guide d'administration pour continuer à développer votre site et votre communauté."
     loading: "Chargement…"
     errors:
@@ -3838,6 +3841,9 @@ fr:
       more_badges:
         one: "+%{count} autre"
         other: "+%{count} autres"
+      awarded:
+        one: "%{number} décerné"
+        other: "%{number} décernés"
       select_badge_for_title: Sélectionnez un badge qui vous servira de titre
       none: "(aucun)"
       successfully_granted: "%{badge} attribué à %{username} avec succès"
@@ -4099,7 +4105,7 @@ fr:
               label: "Icône"
               validation:
                 blank: "L'icône ne peut pas être vide"
-                maximum: "Le nom de l'icône doit être inférieur à %{count} caractères"
+                maximum: "Le nom de l'icône doit comporter moins de %{count} caractères"
             name:
               label: "Nom"
               validation:
@@ -4210,12 +4216,18 @@ fr:
           tel: "Veuillez saisir un numéro de téléphone valide."
           text: "Veuillez saisir une valeur de texte."
           url: "Veuillez saisir une URL valide."
+        tooShort:
+          one: "La saisie doit comporter %{count} caractère ou plus."
+          other: "La saisie doit comporter %{count} caractères ou plus."
+        tooLong:
+          one: "La saisie doit comporter moins de %{count} caractère."
+          other: "La saisie doit comporter moins de %{count} caractères."
         rangeOverflow:
-          one: "La saisie doit comporter moins de %{count}."
-          other: "La saisie doit comporter moins de %{count}."
+          one: "La saisie doit être inférieure à %{count}."
+          other: "La saisie doit être inférieure à %{count}."
         rangeUnderflow:
-          one: "La saisie doit comporter plus de %{count}."
-          other: "La saisie doit comporter plus de %{count}."
+          one: "La saisie doit être supérieure à %{count}."
+          other: "La saisie doit être supérieure à %{count}."
         patternMismatch: "Veuillez respecter le format demandé."
         badInput: "Veuillez saisir une entrée valide."
   admin_js:
@@ -4340,7 +4352,7 @@ fr:
             email: E-mail
             incoming_email: "Adresse e-mail entrante personnalisée"
             incoming_email_placeholder: "saisissez une adresse e-mail"
-            incoming_email_tooltip: "Vous pouvez séparer plusieurs adresses e-mail avec le caractère | ."
+            incoming_email_tooltip: "Vous pouvez séparer plusieurs adresses e-mail avec le caractère « | »."
             visibility: Visibilité
             visibility_levels:
               title: "Qui peut voir ce groupe ?"

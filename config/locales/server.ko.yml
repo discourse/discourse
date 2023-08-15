@@ -781,8 +781,6 @@ ko:
   draft_backup:
     pm_title: "진행 중인 주제의 백업 초안"
     pm_body: "백업 초안이 포함된 주제"
-  user_activity:
-    no_log_search_queries: "검색 로그 쿼리는 현재 비활성화되어 있습니다(관리자가 사이트 설정에서 활성화할 수 있음)."
   email_settings:
     pop3_authentication_error: "제공된 POP3 크리덴셜에 문제가 있습니다. 아이디와 비밀번호를 확인하고 다시 시도하세요."
     imap_authentication_error: "제공된 IMAP 크리덴셜에 문제가 있습니다. 아이디와 비밀번호를 확인하고 다시 시도하세요."

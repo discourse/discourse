@@ -199,7 +199,6 @@ ur:
       local_login_cannot_be_disabled_if_second_factor_enforced: "اگر 2FA نافذ ہے تو آپ مقامی لاگ ان کو غیر فعال نہیں کر سکتے۔ مقامی لاگ ان کو غیر فعال کرنے سے پہلے نافذ شدہ 2FA کو غیر فعال کریں۔"
       cannot_enable_s3_uploads_when_s3_enabled_globally: "آپ S3 اپ لوڈز کو فعال نہیں کر سکتے کیونکہ S3 اپ لوڈز پہلے سے ہی عالمی سطح پر فعال ہیں، اور اس سائٹ کی سطح کو فعال کرنے سے اپ لوڈز میں اہم مسائل پیدا ہو سکتے ہیں۔"
       cors_origins_should_not_have_trailing_slash: "آپ کو ذَیل سلیش (/) کو CORS کےآغاز میں شامل نہیں کرنا چاہیے۔"
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "صارف کے ایجنٹوں کو کم از کم 3 حروف کا ہونا ضروری ہے تاکہ انسانی صارفین کو محدود کرنے کی غلط شرح سے بچا جا سکے۔"
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "آپ ترتیب میں درج ذیل میں سے کوئی بھی قدر شامل نہیں کر سکتے ہیں: %{values}۔"
     conflicting_google_user_id: 'اِس اکاؤنٹ کے لئے گُوگَل اکاؤنٹ ID تبدیل ہوگئی ہے؛ سیکیورٹی وجوہات کی بناہ پر اسٹاف کی مداخلت کی ضرورت ہے۔ براہ مہربانی اسٹاف سے رابطہ کریں اور اُنہیں اشارہ کریں <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
@@ -608,7 +607,6 @@ ur:
   post:
     image_placeholder:
       broken: "یہ تصویر ٹوٹی ہوئی ہے"
-    hidden_bidi_character: "دو طرفہ حروف اس ترتیب کو تبدیل کر سکتے ہیں جس میں متن پیش کیا جاتا ہے۔ یہ بدنیتی پر مبنی خطرناک کوڈ کو غیر واضح کرنے کے لیے استعمال کیا جا سکتا ہے۔"
     has_likes:
       one: "%{count} لائیک"
       other: "%{count} لائیکس"
@@ -829,8 +827,6 @@ ur:
   draft_backup:
     pm_title: "جاری عنوانات سے بیک اپ ڈرافٹ"
     pm_body: "بیک اپ ڈرافٹ پر مشتمل موضوع"
-  user_activity:
-    no_log_search_queries: "تلاش کے لاگ کے سوالات فی الحال غیر فعال ہیں (ایڈمنسٹریٹر انہیں سائٹ کی ترتیبات میں فعال کر سکتا ہے)۔"
   email_settings:
     pop3_authentication_error: "فراہم کردہ POP3 شناخت میں ایک مسئلہ تھا، صارف نام اور پاس ورڈ چیک کریں اور دوبارہ کوشش کریں۔"
     imap_authentication_error: "فراہم کردہ IMAP شناخت کے ساتھ ایک مسئلہ تھا، صارف نام اور پاس ورڈ چیک کریں اور دوبارہ کوشش کریں۔"
@@ -1293,7 +1289,6 @@ ur:
         qtt_like: لائیکس موصول ہوے
       description: "سرفہرست 10 صارفین جنہیں لوگوں کی ایک وسیع رینج سے پسندیدگی ملی ہے۔"
   dashboard:
-    group_email_credentials_warning: 'گروپ <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a> کےلیے ای میل شناخت کے ساتھ ایک مسئلہ تھا۔ گروپ ان باکس سے اس وقت تک کوئی ای میل نہیں بھیجے جائیں گے جب تک اس مسئلے کو حل نہیں کیا جاتا۔ %{error}'
     rails_env_warning: "آپ کا سرور %{env} مَوڈ میں چل رہا ہے۔"
     host_names_warning: "آپ کی config/database.yml فائل ڈیفالٹ localhost نام استعمال کر رہا ہے۔ اِسے اپنے سائیٹ ہوسٹ کے نام پر اپ ڈیٹ کریں۔"
     sidekiq_warning: 'Sidekiq نہیں چل رہا۔ بہت سے کام، جیسا کہ ای میل بھیجنا، sidekq کی طرف سے اےسِنکرونسلی مکمل کیے جاتے ہیں۔ براہ کرم یقینی بنائیں کہ کم ازکم ایک sidekq پراسیس چل رہا ہے۔ <a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq کے بارے میں یہاں سے جانیے</a>۔'

@@ -72,6 +72,9 @@ es:
       minimum_length_not_met:
         one: "El mensaje es demasiado corto, debe tener un mínimo de %{count} carácter."
         other: "El mensaje es demasiado corto, debe tener un mínimo de %{count} caracteres."
+      message_too_long:
+        one: "El mensaje es demasiado largo, los mensajes deben tener un máximo de %{count} carácter."
+        other: "El mensaje es demasiado largo, los mensajes deben tener un máximo de %{count} caracteres."
       draft_too_long: "El borrador es demasiado largo."
       max_reactions_limit_reached: "No se permiten nuevas reacciones en este mensaje."
       message_move_invalid_channel: "El canal de origen y el de destino deben ser canales públicos."
@@ -87,6 +90,7 @@ es:
       over_chat_max_direct_message_users:
         one: "No puedes crear un mensaje directo con más de %{count} usuario."
         other: "No puedes crear un mensaje directo con más de %{count} usuarios."
+      original_message_not_found: "El antecesor del mensaje al que estás respondiendo no se encuentra o ha sido eliminado."
       thread_invalid_for_channel: "El hilo no forma parte del canal proporcionado."
       thread_does_not_match_parent: "El hilo no coincide con el mensaje principal."
     reviewables:

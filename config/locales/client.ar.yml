@@ -4593,6 +4593,13 @@ ar:
         few: "+%{count} شارات أخرى"
         many: "+%{count} شارة أخرى"
         other: "+%{count} شارة أخرى"
+      awarded:
+        zero: "تم منح %{number} شارة"
+        one: "شارة واحدة (%{number}) تم منحها"
+        two: "شارتان (%{number}) تم منحهما"
+        few: "%{number} شارات تم منحها"
+        many: "%{number} شارة تم منحها"
+        other: "%{number} شارة تم منحها"
       select_badge_for_title: حدِّد شارة لاستخدامها كلقب لك
       none: "(لا يوجد)"
       successfully_granted: "تم منح %{username} الشارة %{badge} بنجاح"

@@ -246,6 +246,8 @@ ja:
       pill: "関連メッセージ"
       see_all: '@%{username} からの<a href="%{path}">すべてのメッセージ</a>を表示...'
     suggested_topics:
+      title: "新規と未読のトピック"
+      pill: "提案"
       pm_title: "推奨メッセージ"
     about:
       simple_title: "サイト情報"
@@ -1705,6 +1707,7 @@ ja:
         content: "次に読むことをお勧めするトピックをいくつかご紹介します。"
       admin_guide:
         title: "新しいサイトへようこそ！"
+        content: "サイトとコミュニティーの構築を続けるには、<a href='%{admin_guide_url}'>管理者ガイドをお読みください</a>。"
         content_no_url: "管理者ガイドを読み、サイトとコミュニティの構築を続けましょう。"
     loading: "読み込み中..."
     errors:
@@ -3647,6 +3650,8 @@ ja:
         other: "%{count} 個のバッジ"
       more_badges:
         other: "他 %{count}"
+      awarded:
+        other: "%{number} 獲得"
       select_badge_for_title: タグラインとして使用するバッジを選択
       none: "(なし)"
       successfully_granted: "%{badge} を %{username} に正常に付与しました"
@@ -4486,6 +4491,11 @@ ja:
         title: "カスタマイズ"
         preview: "プレビュー"
         explain_preview: "このテーマを有効にした状態でサイトを見る"
+        syntax_error: "構文エラー"
+        settings_editor: "設定エディター"
+        validation_settings_keys: "各項目には、'setting' キーと 'value' キーのみが必要です。"
+        validation_settings_deleted: "これらの設定は削除されました。復元してからもう一度お試しください。"
+        validation_settings_added: "これらの設定が追加されました。削除してからもう一度お試しください。"
         save: "保存"
         new: "新規"
         new_style: "新規スタイル"
@@ -4539,6 +4549,7 @@ ja:
           extra_files_upload: "これらのファイルを表示するにはテーマをエクスポートします。"
           extra_files_remote: "これらのファイルを表示するには、テーマをエクスポートするか、Git リポジトリをチェックします。"
           preview: "プレビュー"
+          settings_editor: "設定エディター"
           show_advanced: "高度なフィールドを表示"
           hide_advanced: "高度なフィールドを非表示"
           hide_unused_fields: "未使用のフィールドを非表示"

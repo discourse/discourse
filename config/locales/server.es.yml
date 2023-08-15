@@ -214,7 +214,6 @@ es:
       local_login_cannot_be_disabled_if_second_factor_enforced: "No puede desactivar el inicio de sesión local si se aplica 2FA. Deshabilite 2FA antes de desactivar los inicios de sesión locales."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "No puedes activar las cargas S3 porque las cargas S3 ya están activadas globalmente, y activar este nivel de sitio podría causar problemas críticos con las cargas."
       cors_origins_should_not_have_trailing_slash: "No deberías añadir una barra al final (/) a los CORS origins."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Los agentes de usuario deben tener al menos 3 caracteres para evitar limitar la velocidad a usuarios humanos por error."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "No puedes añadir ninguno de los siguientes valores a este ajuste: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "No es posible desactivar «strip image metadata» si el ajuste «composer media optimization image enabled» está activado. Desactiva «composer media optimization image enabled» antes de desactivar «strip image metadata»."
       twitter_summary_large_image_no_svg: "Las imágenes de resumen de Twitter usadas para los metadatos de twitter:image no pueden ser .svg"
@@ -668,7 +667,6 @@ es:
     media_placeholder:
       blocked_hotlinked_title: "Medio alojado en otro sitio. Haz clic para abrir en una nueva pestaña."
       blocked_hotlinked: "Medio externo"
-    hidden_bidi_character: "Los caracteres bidireccionales pueden cambiar el orden en el que se muestra el texto. Esto podría usarse para ocultar código malintencionado."
     has_likes:
       one: "%{count} me gusta"
       other: "%{count} Me gusta"
@@ -894,8 +892,6 @@ es:
   draft_backup:
     pm_title: "Borradores de respaldo de temas en curso"
     pm_body: "Tema que contiene borradores de respaldo"
-  user_activity:
-    no_log_search_queries: "Los registros de búsquedas están desactivados (un administrador los puede activar en los ajustes)"
   email_settings:
     pop3_authentication_error: "Ha habido un problema con las credenciales POP3 proporcionadas, comprueba el nombre de usuario y la contraseña e inténtalo de nuevo."
     imap_authentication_error: "Ha habido un problema con las credenciales IMAP proporcionadas, comprueba el nombre de usuario y la contraseña e inténtalo de nuevo."
@@ -1364,7 +1360,6 @@ es:
         qtt_like: Me gusta recibidos
       description: "Los 10 usuarios que han recibido más me gusta de varias personas."
   dashboard:
-    group_email_credentials_warning: 'Hay un problema con las credenciales del correo electrónico del grupo <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. No se enviarán mensajes desde la bandeja de entrada del grupo hasta que se solucione el problema. %{error}'
     rails_env_warning: "Tu servidor está funcionando en modo de %{env}."
     host_names_warning: "Tu archivo config/database.yml está utilizando el hostname localhost predeterminado. Actualízalo para usar el hostname de tu sitio."
     sidekiq_warning: 'Sidekiq no está funcionando. Muchas tareas, tal como el envío de correos electrónicos, se están ejecutando de forma desincronizada por sidekiq. Asegúrate de que por lo menos un proceso de sidekiq está funcionando. <a href="https://github.com/mperham/sidekiq" target="_blank">Puedes obtener más información sobre Sidekiq aquí</a>.'
@@ -1998,6 +1993,8 @@ es:
     permalink_normalizations: "Aplicar la siguiente expresión regular antes de hacer coincidir los permalinks, por ejemplo: /(topic.*)\\?.*/\\1 despojará las cadenas de consulta de las rutas de los temas. El formato es regex+string usa \\1 etc. para acceder a capturas"
     global_notice: "Mostrar a todos los visitantes un mensaje global para URGENCIAS o EMERGENCIAS que no se pueda ocultar. Deja este campo en blanco para quitarlo (puedes usar HTML)."
     disable_system_edit_notifications: "Desactivar editar notificaciones por el usuario del sistema cuando «download_remote_images_to_local» este activo."
+    disable_category_edit_notifications: "Desactiva las notificaciones para las ediciones de categorías de temas. Esto incluye los temas «publicados» (por ejemplo, borradores compartidos)."
+    disable_tags_edit_notifications: "Desactiva las notificaciones para las ediciones de etiquetas de temas. Esto incluye los temas «publicados» (por ejemplo, borradores compartidos)."
     notification_consolidation_threshold: "Cantidad de me gusta o notificaciones de solicitud de membresía recibidas antes de que las notificaciones se consoliden en una sola. Establece el valor en 0 para desactivar."
     likes_notification_consolidation_window_mins: "Minutos durante los que las notificaciones se consolidan en una sola notificación una vez que se haya alcanzado el limite. El límite se puede configurar en «SiteSetting.notification_consolidation_threshold»."
     automatically_unpin_topics: "Desanclar automáticamente cuando el usuario llega al final del tema."
