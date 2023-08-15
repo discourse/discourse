@@ -167,7 +167,15 @@ export default class ComposerService extends Service {
       return null;
     }
 
+    if (this._formTemplateIds) {
+      return this._formTemplateIds;
+    }
+
     return this.model.category?.get("form_template_ids");
+  }
+
+  set formTemplateIds(value) {
+    return this.set("_formTemplateIds", value);
   }
 
   @discourseComputed("showPreview")
@@ -991,12 +999,12 @@ export default class ComposerService extends Service {
             ? `<span class="topic-status">${iconHTML("envelope")}</span>`
             : "";
 
-        return `<div class='topic-title'>
+        return `<div class="topic-title">
                   <div class="topic-title__top-line">
-                    <span class='topic-statuses'>
+                    <span class="topic-statuses">
                       ${topicPM}${topicBookmarked}${topicClosed}${topicPinned}
                     </span>
-                    <span class='fancy-title'>
+                    <span class="fancy-title">
                       ${topicOption.fancyTitle}
                     </span>
                   </div>
@@ -1180,23 +1188,23 @@ export default class ComposerService extends Service {
   }
 
   /**
-    Open the composer view
+   Open the composer view
 
-    @method open
-    @param {Object} opts Options for creating a post
-      @param {String} opts.action The action we're performing: edit, reply, createTopic, createSharedDraft, privateMessage
-      @param {String} opts.draftKey
-      @param {Post} [opts.post] The post we're replying to
-      @param {Topic} [opts.topic] The topic we're replying to
-      @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
-      @param {Boolean} [opts.ignoreIfChanged]
-      @param {Boolean} [opts.disableScopedCategory]
-      @param {Number} [opts.categoryId] Sets `scopedCategoryId` and `categoryId` on the Composer model
-      @param {Number} [opts.prioritizedCategoryId]
-      @param {String} [opts.draftSequence]
-      @param {Boolean} [opts.skipDraftCheck]
-      @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
-  **/
+   @method open
+   @param {Object} opts Options for creating a post
+   @param {String} opts.action The action we're performing: edit, reply, createTopic, createSharedDraft, privateMessage
+   @param {String} opts.draftKey
+   @param {Post} [opts.post] The post we're replying to
+   @param {Topic} [opts.topic] The topic we're replying to
+   @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
+   @param {Boolean} [opts.ignoreIfChanged]
+   @param {Boolean} [opts.disableScopedCategory]
+   @param {Number} [opts.categoryId] Sets `scopedCategoryId` and `categoryId` on the Composer model
+   @param {Number} [opts.prioritizedCategoryId]
+   @param {String} [opts.draftSequence]
+   @param {Boolean} [opts.skipDraftCheck]
+   @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
+   **/
   async open(opts = {}) {
     if (!opts.draftKey) {
       throw new Error("composer opened without a proper draft key");
