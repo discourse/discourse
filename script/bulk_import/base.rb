@@ -734,10 +734,20 @@ class BulkImport::Base
 
     category[:id] ||= @last_category_id += 1
     @categories[category[:imported_id].to_i] ||= category[:id]
-    category[:name] = category[:name][0...50].scrub.strip
-    # TODO: unique name
-    category[:name_lower] = category[:name].downcase
-    category[:slug] ||= Slug.ascii_generator(category[:name_lower])
+
+    next_number = 1
+    original_name = name = category[:name][0...50].scrub.strip
+
+    while Category.exists?(name: name, parent_category_id: category[:parent_category_id])
+      name = "#{original_name[0...50 - next_number.to_s.length]}#{next_number}"
+      next_number += 1
+    end
+
+    name_lower = name.downcase
+
+    category[:name] = name
+    category[:name_lower] = name_lower
+    category[:slug] ||= Slug.ascii_generator(name_lower)
     category[:description] = (category[:description] || "").scrub.strip.presence
     category[:user_id] ||= Discourse::SYSTEM_USER_ID
     category[:created_at] ||= NOW
