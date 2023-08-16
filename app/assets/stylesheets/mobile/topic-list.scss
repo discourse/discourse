@@ -189,6 +189,7 @@
 
   .topic-item-stats__category-tags {
     margin-right: 0.5em;
+    max-width: 90%;
 
     .discourse-tags {
       display: inline;
@@ -205,6 +206,7 @@
     }
 
     .badge-wrapper {
+      max-width: 100%;
       vertical-align: bottom;
     }
 

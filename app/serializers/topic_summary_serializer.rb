@@ -8,6 +8,15 @@ class TopicSummarySerializer < ApplicationSerializer
   end
 
   def new_posts_since_summary
-    object.target.highest_post_number.to_i - object.content_range&.end.to_i
+    # Postgres uses discrete range types for int4range, which means
+    # (1..2) is stored as (1...3).
+    #
+    # We use Range#max to work around this, which in the case above always returns 2.
+    # Be careful with using Range#end here, it could lead to unexpected results as:
+    #
+    # (1..2).end => 2
+    # (1...3).end => 3
+
+    object.target.highest_post_number.to_i - object.content_range&.max.to_i
   end
 end

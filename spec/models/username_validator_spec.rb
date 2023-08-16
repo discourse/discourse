@@ -27,39 +27,52 @@ RSpec.describe UsernameValidator do
     end
   end
 
+  let(:max_username_length) do
+    [
+      User.maximum("length(username)"),
+      MaxUsernameLengthValidator::MAX_USERNAME_LENGTH_RANGE.begin,
+    ].max
+  end
+  let(:min_username_length) { User.minimum("length(username)") }
+
   shared_examples "ASCII username" do
     it "is invalid when the username is blank" do
       expect_invalid("", error_message: I18n.t(:"user.username.blank"))
     end
 
     it "is invalid when the username is too short" do
-      SiteSetting.min_username_length = 4
+      SiteSetting.min_username_length = min_username_length
 
-      expect_invalid("a", "ab", "abc", error_message: I18n.t(:"user.username.short", min: 4))
+      usernames = min_username_length.times.map { |i| "a" * i }.filter(&:present?)
+
+      expect_invalid(
+        *usernames,
+        error_message: I18n.t(:"user.username.short", min: min_username_length),
+      )
     end
 
     it "is valid when the username has the minimum length" do
-      SiteSetting.min_username_length = 4
+      SiteSetting.min_username_length = min_username_length
 
-      expect_valid("abcd")
+      expect_valid("a" * min_username_length)
     end
 
     it "is invalid when the username is too long" do
-      SiteSetting.max_username_length = 8
+      SiteSetting.max_username_length = max_username_length
 
       expect_invalid(
-        "abcdefghi",
-        error_message: I18n.t(:"user.username.long", max: 8),
-        failure_reason: "Should be invalid as username length > #{SiteSetting.max_username_length}",
+        "a" * (max_username_length + 1),
+        error_message: I18n.t(:"user.username.long", max: max_username_length),
+        failure_reason: "Should be invalid as username length > #{max_username_length}",
       )
     end
 
     it "is valid when the username has the maximum length" do
-      SiteSetting.max_username_length = 8
+      SiteSetting.max_username_length = max_username_length
 
       expect_valid(
-        "abcdefgh",
-        failure_reason: "Should be valid as username length = #{SiteSetting.max_username_length}",
+        "a" * max_username_length,
+        failure_reason: "Should be valid as username length = #{max_username_length}",
       )
     end
 
@@ -135,37 +148,41 @@ RSpec.describe UsernameValidator do
       before { SiteSetting.min_username_length = 1 }
 
       it "is invalid when the username is too short" do
-        SiteSetting.min_username_length = 3
+        SiteSetting.min_username_length = min_username_length
 
-        expect_invalid("鳥", "পাখি", error_message: I18n.t(:"user.username.short", min: 3))
+        usernames = min_username_length.times.map { |i| "鳥" * i }.filter(&:present?)
+
+        expect_invalid(
+          *usernames,
+          error_message: I18n.t(:"user.username.short", min: min_username_length),
+        )
       end
 
       it "is valid when the username has the minimum length" do
-        SiteSetting.min_username_length = 2
+        SiteSetting.min_username_length = min_username_length
 
-        expect_valid("পাখি", "طائر")
+        expect_valid("ط" * min_username_length)
       end
 
       it "is invalid when the username is too long" do
-        SiteSetting.max_username_length = 8
+        SiteSetting.max_username_length = max_username_length
 
         expect_invalid(
-          "חוטב_עצים",
-          "Holzfäller",
-          error_message: I18n.t(:"user.username.long", max: 8),
-          failure_reason:
-            "Should be invalid as username length are > #{SiteSetting.max_username_length}",
+          "ם" * (max_username_length + 1),
+          "äl" * (max_username_length + 1),
+          error_message: I18n.t(:"user.username.long", max: max_username_length),
+          failure_reason: "Should be invalid as username length are > #{max_username_length}",
         )
       end
 
       it "is valid when the username has the maximum length" do
-        SiteSetting.max_username_length = 9
+        SiteSetting.max_username_length = max_username_length
 
         expect_valid(
-          "Дровосек",
-          "چوب-لباسی",
-          "தமிழ்-தமிழ்",
-          failure_reason: "Should be valid as usernames are <= #{SiteSetting.max_username_length}",
+          "Д" * (max_username_length),
+          "س" * (max_username_length),
+          "மி" * (max_username_length),
+          failure_reason: "Should be valid as usernames are <= #{max_username_length}",
         )
       end
 

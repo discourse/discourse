@@ -277,6 +277,8 @@ fi:
       pill: "Aiheeseen liittyviä viestejä"
       see_all: 'Katso <a href="%{path}">kaikki viestit</a> käyttäjältä @%{username}...'
     suggested_topics:
+      title: "Uudet ja lukemattomat ketjut"
+      pill: "Ehdotettu"
       pm_title: "Viestiehdotuksia"
     about:
       simple_title: "Tietoa"

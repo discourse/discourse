@@ -214,7 +214,7 @@ fi:
       local_login_cannot_be_disabled_if_second_factor_enforced: "Et voi poistaa paikallista kirjautumista käytöstä, jos kaksivaiheinen tunnistus on pakollinen. Kun poistat kaksivaiheisen tunnistuksen pakollisuuden, voit ottaa käyttöön paikallisen kirjautumisen."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Et voi ottaa S3-latauksia käyttöön, koska S3-lataukset ovat käytössä globaalisti, ja käyttöönotto sivustonlaajuisesti voi aiheuttaa kriittisiä latauksiin liittyviä ongelmia"
       cors_origins_should_not_have_trailing_slash: "CORS-poluissa ei tulisi olla kauttaviivaa (/) lopussa."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Käyttäjäagenttien täytyy olla vähintään kolmen merkin pituisia ihmiskäyttäjien virheellisen rajoittamisen välttämiseksi."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Käyttäjäagenttien täytyy sisältää vähintään kolme merkkiä aitojen käyttäjien virheellisen rajoittamisen välttämiseksi."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Et voi lisätä asetukseen mitään seuraavista arvoista: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Et voi poistaa kuvan metatietojen poistoa käytöstä, jos 'composer media optimization image enabled' on käytössä. Poista 'composer media optimization image enabled' käytöstä ennen kuvien metatietojen poiston poistamista käytöstä."
       twitter_summary_large_image_no_svg: "Twitterin yhteenvetokuvat, joita käytetään twitter:image-metatiedoissa, eivät voi olla .svg-kuvia."
@@ -628,6 +628,20 @@ fi:
   staff_category_description: "Yksityinen alue henkilökunnan keskusteluille. Ketjut näkyvät ainoastaan ylläpitäjille ja valvojille."
   discourse_welcome_topic:
     title: "Tervetuloa sivustolle %{site_title}! :wave:"
+    body: |
+      Mukavaa, että liityit joukkoomme.
+
+      %{site_info_quote}
+
+      Tässä muutamia asioita, joita voit tehdä päästäksesi alkuun:
+
+      :speaking_head: **Esittele itsesi** lisäämällä kuvasi ja tietoa itsestäsi ja kiinnostuksen kohteistasi [profiiliisi](%{base_path}/my/preferences/account). Mikä on päällimmäinen asia, josta haluaisit ihmisten kysyvän sinulta?
+
+      :open_book: **Tutustu yhteisöön** [selaamalla keskusteluita](%{base_path}/top), joita on jo käynnissä. Kun viesti on mielestäsi kiinnostava, informatiivinen tai viihdyttävä, osoita arvostuksesi tai tukesi käyttämällä :heart:-painiketta!
+
+      :handshake: **Osallistu** kommentoimalla, jakamalla oman näkökantasi, kysymällä kysymyksiä tai tarjoamalla palautetta keskustelussa. Ennen kuin vastaat tai aloitat uusia ketjuja, tutustu [yhteisön sääntöihin](%{base_path}/faq).
+
+      > Jos tarvitset apua tai sinulla on ehdotus, voit esittää kysymyksesi alueella %{feedback_category} tai [ottaa yhteyttä ylläpitäjiin](%{base_path}/about).
   admin_quick_start_title: "Ylläpitäjän opas: aloittaminen"
   category:
     topic_prefix: "Tietoa alueesta %{category}"
@@ -668,7 +682,7 @@ fi:
     media_placeholder:
       blocked_hotlinked_title: "Mediasisältö on isännöity toisella sivustolla. Avaa se uudessa välilehdessä klikkaamalla."
       blocked_hotlinked: "Ulkoinen mediasisältö"
-    hidden_bidi_character: "Kaksisuuntaiset merkit voivat muuttaa tekstin esitysjärjestystä. Tätä voidaan käyttää haitallisen koodin peittämiseen."
+    hidden_bidi_character: "Kaksisuuntaiset ohjausmerkit voivat muuttaa tekstin esitysjärjestystä. Tätä voidaan käyttää haitallisen koodin peittämiseen."
     has_likes:
       one: "%{count} tykkäys"
       other: "%{count} tykkäystä"
@@ -895,7 +909,7 @@ fi:
     pm_title: "Varmuuskopiot käynnissä olevien ketjujen luonnoksista"
     pm_body: "Ketju, joka sisältää varmuuskopioluonnoksia"
   user_activity:
-    no_log_search_queries: "Hakulokikyselyt eivät ole tällä hetkellä käytössä (ylläpitäjä voi ottaa ne käyttöön sivuston asetuksissa)."
+    no_log_search_queries: "Haun kyselylokit eivät ole tällä hetkellä käytössä (ylläpitäjä voi ottaa ne käyttöön sivuston asetuksista)."
   email_settings:
     pop3_authentication_error: "Annetuissa POP3-tunnistetiedoissa oli ongelma, tarkista käyttäjätunnus ja salasana ja yritä uudelleen."
     imap_authentication_error: "Annetuissa IMAP-tunnistetiedoissa oli ongelma, tarkista käyttäjätunnus ja salasana ja yritä uudelleen."
@@ -1364,7 +1378,7 @@ fi:
         qtt_like: Saatuja tykkäyksiä
       description: "10 käyttäjää, jotka ovat saaneet eniten tykkäyksiä monilta erilaisilta ihmisiltä."
   dashboard:
-    group_email_credentials_warning: 'Ryhmän <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a> sähköpostitunnistetiedoissa oli ongelma. Ryhmän postilaatikosta ei lähetetä sähköposteja, ennen kuin tämä ongelma on ratkaistu. %{error}'
+    group_email_credentials_warning: 'Ryhmän <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a> sähköpostitunnistetiedoissa havaittiin ongelma, eikä ryhmän postilaatikosta lähetetä viestejä ennen kuin se on korjattu. %{error}'
     rails_env_warning: "Palvelintasi ajetaan tilassa %{env}."
     host_names_warning: "Sivuston config/database.yml tiedosto käyttää oletusarvoista localhost-isäntänimeä. Päivitä se käyttämään sivuston isäntänimeä."
     sidekiq_warning: 'Sidekiq ei ole käynnissä. Monet tehtävät, kuten sähköpostien lähettäminen, suoritetaan asynkronisesti sidekiqin avulla. Varmista, että vähintään yksi sidekiq-prosessi on käynnissä. <a href="https://github.com/mperham/sidekiq" target="_blank">Lue lisää Sidekiqista täällä</a>.'
@@ -1998,8 +2012,8 @@ fi:
     permalink_normalizations: "Sovella tätä säännöllistä lauseketta ennen pysyvien linkkien sovittamista, esim. /(topic.*)\\?.*/\\1 poistaa hakulausekkeet ketjujen reiteistä. Muoto on regex+string, \\1 jne. avulla pääset käsiksi captureihin."
     global_notice: "Näytä kaikilla sivuilla kaikille käyttäjille KIIREELLISESTÄ HÄTÄTAPAUKSESTA kertova banneri, jota ei voi piilottaa. Vaihda tyhjäksi piilottaaksesi sen (HTML sallittu)."
     disable_system_edit_notifications: "Poistaa järjestelmäkäyttäjän muokkausilmoitukset käytöstä, kun 'download_remote_images_to_local' on asetettu."
-    disable_category_edit_notifications: "Poista aiheiden kategorioiden muokkausilmoitukset käytöstä. Tämä aiheet, jotka on ns. 'julkaistu' (esim. jaetut luonnokset)."
-    disable_tags_edit_notifications: "Poista aiheiden tunnisteiden muokkausilmoitukset käytöstä. Tämä aiheet, jotka on ns. 'julkaistu' (esim. jaetut luonnokset)."
+    disable_category_edit_notifications: "Poista ketjujen alueiden muokkausilmoitukset käytöstä. Tämä sisältää ketjut, jotka on ns. \"julkaistu\" (esim. jaetut luonnokset)."
+    disable_tags_edit_notifications: "Poista ketjujen tunnisteiden muokkausilmoitukset käytöstä. Tämä sisältää ketjut, jotka on ns. \"julkaistu\" (esim. jaetut luonnokset)."
     notification_consolidation_threshold: "Kuinka monta tykkäys- tai jäsenhakemusilmoitusta tulee saada, jotta ne yhdistetään yhdeksi. Arvo 0 poistaa käytöstä."
     likes_notification_consolidation_window_mins: "Kesto minuutteina, jonka aikana tykkäysilmoitukset yhdistetään yhdeksi ilmoitukseksi, kun raja on saavutettu. Rajan voi määrittää asetuksella `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Poista ketjun kiinnitys automaattisesti, kun käyttäjä on sen lopussa."

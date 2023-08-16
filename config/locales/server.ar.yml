@@ -242,7 +242,6 @@ ar:
       local_login_cannot_be_disabled_if_second_factor_enforced: "لا يمكنك إيقاف تسجيل الدخول المحلي في حال فرض المصادقة الثنائية. أوقف المصادقة الثنائية المفروضة قبل إيقاف عمليات تسجيل الدخول المحلية."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "لا يمكنك تفعيل تحميلات S3 لأن تحميلات S3 مفعَّلة بشكلٍ عام بالفعل، وقد يتسبب تفعيل مستوى الموقع هذا في حدوث مشكلات خطيرة في التحميلات"
       cors_origins_should_not_have_trailing_slash: "يجب عدم إضافة الشرطة المائلة اللاحقة (/) إلى مصادر CORS."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "يجب أن يكون طول وكلاء المستخدم 3 أحرف على الأقل لتجنُّب تقييد المستخدمين البشريين بشكلٍ غير صحيح."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "لا يمكنك إضافة أيٍّ من القيم التالية إلى الإعداد: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "لا يمكنك إيقاف إزالة البيانات الوصفية للصورة إذا كان 'composer media optimization image enabled' مفعلًا. أوقف 'composer media optimization image enabled' قبل إيقاف إزالة البيانات الوصفية للصورة."
       twitter_summary_large_image_no_svg: "لا يمكن أن تكون صور ملخص Twitter المُستخدَمة في البيانات الوصفية لـ twitter:image بتنسيق svg."
@@ -790,7 +789,6 @@ ar:
     media_placeholder:
       blocked_hotlinked_title: "وسائط مستضافة على موقع آخر. انقر للفتح في علامة تبويب جديدة."
       blocked_hotlinked: "وسائط خارجية"
-    hidden_bidi_character: "يمكن للأحرف ثنائية الاتجاه تغيير ترتيب عرض النص. ويمكن استخدام ذلك لإخفاء الرموز البرمجية الضارة."
     has_likes:
       zero: "%{count} إعجاب"
       one: "إعجاب واحد (%{count})"
@@ -1116,8 +1114,6 @@ ar:
   draft_backup:
     pm_title: "المسودات الاحتياطية من الموضوعات الجارية"
     pm_body: "موضوع يحتوي على مسودات احتياطية"
-  user_activity:
-    no_log_search_queries: "استعلامات سجل البحث متوقفة حاليًا (يمكن للمسؤول تفعيلها في إعدادات الموقع)."
   email_settings:
     pop3_authentication_error: "حدثت مشكلة في بيانات اعتماد POP3 المقدَّمة، تحقَّق من اسم المستخدم وكلمة المرور وحاول مرة أخرى."
     imap_authentication_error: "حدثت مشكلة في بيانات اعتماد IMAP المقدَّمة، تحقَّق من اسم المستخدم وكلمة المرور وحاول مرة أخرى."
@@ -1586,7 +1582,6 @@ ar:
         qtt_like: تسجيلات الإعجاب المتلقاة
       description: "أبرز 10 مستخدمين حصلوا على إعجابات من مجموعة واسعة من الأشخاص."
   dashboard:
-    group_email_credentials_warning: 'حدثت مشكلة في بيانات اعتماد البريد الإلكتروني للمجموعة <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. لن يتم إرسال أي رسائل بريد إلكتروني من صندوق الوارد الخاص بالمجموعة حتى تتم معالجة هذه المشكلة. %{error}'
     rails_env_warning: "الخادم يعمل في وضع %{env}."
     host_names_warning: "يستخدم ملف config/database.yml اسم المضيف الافتراضي localhost. حدِّثه لاستخدام اسم مضيف موقعك."
     sidekiq_warning: 'Sidekiq ليس قيد التشغيل! يتم تنفيذ العديد من المهام، مثل إرسال الرسائل الإلكترونية، بشكلٍ غير متزامن من خلال sidekiq. يُرجى التأكد من وجود عملية sidekiq واحدة على الأقل قيد التشغيل. <a href="https://github.com/mperham/sidekiq" target="_blank">معرفة المزيد عن Sidekiq من هنا</a>.'
@@ -2224,6 +2219,8 @@ ar:
     permalink_normalizations: "تطبيق التعبير العادي التالي قبل مطابقة الروابط الثابتة، على سبيل المثال: سيؤدي استخدام /(topic.*)\\?.*/\\1 إلى إزالة سلاسل الاستعلام من مسارات الموضوع. التنسيق هو regex+string. استخدم \\1 وما إلى ذلك للوصول إلى الالتقاطات."
     global_notice: "عرض بانر عام عاجل وطارئ وغير قابل للتجاهل لجميع الزائرين. قم بالتغيير إلى قيمة فارغة لإخفائه (مسموح باستخدام HTML)."
     disable_system_edit_notifications: "إيقاف إشعارات التعديل بواسطة مستخدم النظام عندما يكون \"download_remote_images_to_local\" نشطًا."
+    disable_category_edit_notifications: "إيقاف الإشعارات لتعديلات فئة الموضوع. يتضمن ذلك الموضوعات \"المنشورة\" (مثل المسودات المشتركة)."
+    disable_tags_edit_notifications: "إيقاف الإشعارات لتعديلات فئة الوسم. يتضمن ذلك الموضوعات \"المنشورة\" (مثل المسودات المشتركة)."
     notification_consolidation_threshold: "عدد إشعارات الإعجاب أو طلبات العضوية المتلقاة قبل دمج الإشعارات في رسالة واحدة. اتعيين القيمة على 0 للإيقاف."
     likes_notification_consolidation_window_mins: "المدة بالدقائق التي يتم فيها دمج إشعارات الإعجاب في إشعار واحد بمجرد الوصول إلى الحد الأقصى. يمكن إعداد الحد الأقصى عبر `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "إلغاء تثبيت الموضوعات تلقائيًا عندما يصل المستخدم إلى النهاية"

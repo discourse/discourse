@@ -229,7 +229,7 @@ fi:
         read_only: "Vain luku"
         archived_header: "Kanava on arkistoitu"
         archived: "Arkistoitu"
-        archive_failed: "Kanavan arkistointi epäonnistui. %{completed}/%{total} viestiä arkistoitiin <a target=\"_blank\" href=\"%{topic_url}\">kohdeaiheeseen</a>. Yritä täydentää arkisto uudelleen painamalla \"Yritä uudelleen\"."
+        archive_failed: "Kanavan arkistointi epäonnistui. %{completed}/%{total} viestiä arkistoitiin <a target=\"_blank\" href=\"%{topic_url}\">kohdeketjuun</a>. Yritä täydentää arkisto uudelleen painamalla \"Yritä uudelleen\"."
         archive_failed_no_topic: "Kanavan arkistointi epäonnistui. %{completed}/%{total} viestiä on arkistoitu, kohdeketjua ei luotu. Yritä arkistoinnin viimeistelyä uudelleen painamalla Yritä uudelleen -painiketta."
         archive_completed: "Katso <a target=\"_blank\" href=\"%{topic_url}\">arkistoketju</a>"
         closed_header: "Kanava on suljettu"
