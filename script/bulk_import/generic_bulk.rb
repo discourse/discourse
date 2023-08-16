@@ -222,8 +222,10 @@ class BulkImport::Generic < BulkImport::Base
         .to_h
 
     values = query(<<~SQL)
-      SELECT *
-        FROM user_custom_field_values
+      SELECT v.*
+        FROM user_custom_field_values v
+             JOIN users u ON v.user_id = u.id
+       WHERE u.anonymized = FALSE
     SQL
 
     create_user_custom_fields(values) do |row|
