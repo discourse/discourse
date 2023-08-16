@@ -87,7 +87,7 @@
     "js-yaml": "^4.1.0",
     "jsdom": "^22.1.0",
     "loader.js": "^4.7.0",
-    "message-bus-client": "^4.3.7",
+    "message-bus-client": "^4.3.8",
     "messageformat": "0.1.5",
     "pretender": "^3.4.7",
     "qunit": "^2.19.4",
@@ -108,7 +108,8 @@
     "workbox-expiration": "^7.0.0",
     "workbox-routing": "^7.0.0",
     "workbox-strategies": "^7.0.0",
-    "workbox-sw": "^7.0.0"
+    "workbox-sw": "^7.0.0",
+    "xss": "^1.0.14"
   },
   "engines": {
     "node": "16.* || >= 18",

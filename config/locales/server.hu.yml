@@ -178,7 +178,6 @@ hu:
       local_login_cannot_be_disabled_if_second_factor_enforced: "A helyi bejelentkezés nem tiltható le, ha a 2FA kényszerítve van. A helyi bejelentkezések letiltása előtt tiltsa le a kényszerített 2FA-t."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Nem engedélyezheti az S3 feltöltést, mivel az S3 feltöltés már globálisan engedélyezve van, és a helyszintű engedélyezés kritikus problémákat okozna a feltöltésekkel kapcsolatban."
       cors_origins_should_not_have_trailing_slash: "A CORS-eredethez nem szabad hozzáadni az utolsóként használt perjelet (/)."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "A felhasználói ügynököknek legalább 3 karakteresnek kell lenniük, hogy elkerülje az emberi felhasználók téves korlátozását."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "A következő értékek egyikét sem adhatja hozzá a beállításhoz: %{values}."
       twitter_summary_large_image_no_svg: "A twitter:image metaadatokhoz használt Twitter összefoglaló képek nem lehetnek .svg képek."
     onebox:
@@ -435,7 +434,6 @@ hu:
   post:
     image_placeholder:
       broken: "Ez a kép hibás"
-    hidden_bidi_character: "A kétirányú karakterek megváltoztathatják a szöveg megjelenítési sorrendjét. Ez felhasználható rosszindulatú kódok elrejtésére is."
     has_likes:
       one: "%{count} kedvelés"
       other: "%{count} kedvelés"

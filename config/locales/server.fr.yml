@@ -214,7 +214,6 @@ fr:
       local_login_cannot_be_disabled_if_second_factor_enforced: "Vous ne pouvez pas désactiver les connexions locales lorsque l'authentification à deux facteurs est obligatoire. Veuillez désactiver l'obligation d'authentification à deux facteurs avant de désactiver les connexions locales."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Il n'est pas possible d'activer l'envoi de fichiers sur S3 car il est déjà activé globalement, et l'activer au niveau du site pourrait provoquer des problèmes majeurs avec les fichiers envoyés."
       cors_origins_should_not_have_trailing_slash: "Vous ne devez pas ajouter la barre oblique finale (/) aux origines CORS."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Les agents utilisateurs doivent comporter au moins 3 caractères pour éviter de limiter incorrectement le débit des utilisateurs humains."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Vous ne pouvez ajouter aucune des valeurs suivantes au paramètre : %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Vous ne pouvez pas désactiver le retrait des métadonnées de l'image si l'option « Image d’optimisation des médias du compositeur activée » est activée. Désactivez cette option avant de désactiver les métadonnées de l'image."
       twitter_summary_large_image_no_svg: "Les images de résumé Twitter utilisées pour les métadonnées twitter:image ne peuvent pas être des images .svg."
@@ -628,6 +627,20 @@ fr:
   staff_category_description: "Catégorie privée pour les discussions entre responsables. Les sujets ne sont visibles que pour les administrateurs et les modérateurs."
   discourse_welcome_topic:
     title: "Bienvenue sur %{site_title} ! :wave:"
+    body: |
+      Nous sommes ravis que vous nous ayez rejoint.
+
+      %{site_info_quote}
+
+      Voici certaines choses que vous pouvez faire pour commencer :
+
+      :speaking_head: **Présentez-vous** en ajoutant votre photo et des informations vous concernant et concernant vos centres d'intérêt à [votre profil](%{base_path}/my/preferences/account). Quelle est le sujet sur lequel vous aimeriez qu'on vous pose des questions ?
+
+      :open_book: **Apprenez à connaître la communauté** en [parcourant les discussions](%{base_path}/top) qui ont déjà lieu ici. Lorsque vous trouvez un message intéressant, informatif ou divertissant, utilisez le :heart: pour montrer votre appréciation ou votre soutien !
+
+      :handshake: **Contribuez** en commentant, en partageant votre propre point de vue, en posant des questions ou en publiant des commentaires dans la discussion. Avant de répondre ou de commencer de nouveaux sujets, veuillez consulter notre [Charte communautaire](%{base_path}/faq).
+
+      Si vous avez besoin d'aide ou des suggestions à apporter, n'hésitez pas à poser vos questions dans %{feedback_category} ou [contactez les administrateurs](%{base_path}/about).
   admin_quick_start_title: "Guide de l'administrateur : premiers pas"
   category:
     topic_prefix: "À propos de la catégorie %{category}"
@@ -668,7 +681,6 @@ fr:
     media_placeholder:
       blocked_hotlinked_title: "Contenu multimédia hébergé sur un autre site. Cliquez pour ouvrir dans un nouvel onglet."
       blocked_hotlinked: "Contenu multimédia externe"
-    hidden_bidi_character: "Les caractères de contrôle bidirectionnels permettent de modifier l'ordre dans lequel les éléments d'un texte seront affichés. Ceci pourrait servir à dissimuler du code informatique malveillant."
     has_likes:
       one: "%{count} « J'aime »"
       other: "%{count} « J'aime »"
@@ -894,8 +906,6 @@ fr:
   draft_backup:
     pm_title: "Brouillons relatifs à des sujets en cours de discussion."
     pm_body: "Sujet contenant des brouillons enregistrés"
-  user_activity:
-    no_log_search_queries: "La journalisation des recherches effectuées par les utilisateurs est désactivée. (Les administrateurs ont la possibilité de les activer dans les paramètres du site.)"
   email_settings:
     pop3_authentication_error: "L'authentification auprès du serveur POP3 a échoué. Vérifiez le nom d'utilisateur et le mot de passe avant de réessayer."
     imap_authentication_error: "L'authentification auprès du serveur IMAP a échoué. Vérifiez le nom d'utilisateur et le mot de passe avant de réessayer."
@@ -1364,7 +1374,6 @@ fr:
         qtt_like: '« J''aime » reçus'
       description: "Liste des 10 utilisateurs ayant reçu le plus de J'aime de la part d'une grande diversité de personnes différentes."
   dashboard:
-    group_email_credentials_warning: 'L''authentification auprès du serveur de messagerie a échoué avec les identifiants spécifiés pour le groupe <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Les e-mails liés à ce groupe ne pourront pas être expédiés tant que ce problème ne sera pas résolu. %{error}'
     rails_env_warning: "Votre serveur fonctionne dans l'environnement de %{env}."
     host_names_warning: "Votre fichier config/database.yml utilise le nom d'hôte par défaut. Veuillez renseigner votre nom d'hôte."
     sidekiq_warning: 'Sidekiq n''est pas en cours d''exécution. De nombreuses tâches, comme l''envoi d''e-mails, sont exécutées de manière asynchrone par Sidekiq. Assurez-vous d''avoir au moins un processus Sidekiq en exécution. <a href="https://github.com/mperham/sidekiq" target="_blank">En savoir plus sur Sidekiq</a>.'
@@ -3943,8 +3952,267 @@ fr:
       Le jargon juridique est ennuyeux, certes, mais nous devons veiller à nous protéger (et par extension, à vous protéger, ainsi que vos données) contre les individus mal intentionnés. Nous avons des [conditions générales d'utilisation](%{base_path}/tos) qui décrivent vos droits et devoirs (ainsi que les nôtres) ayant trait au contenu, à la protection de la vie privée et à la législation. Pour utiliser ce service, vous devez respecter nos [CGU](%{base_path}/tos).
   tos_topic:
     title: "Conditions générales d'utilisation"
+    body: |
+      <h2 id="heading--change-me"><a href="#heading--change-me">Modifiez-moi</a></h2>
+
+      Admin du forum, veuillez trouver ci-dessous un exemple de modèle de départ d'une politique de confidentialité que vous devriez personnaliser en fonction des besoins de votre site.
+
+      Ces conditions ne régissent pas, mais pourraient régir un jour, l'utilisation du forum Internet à l'adresse <%{base_url}>. Dans ce cas, vous devrez accepter ces conditions avec %{company_name}, la société qui gère le forum, pour utiliser le forum.
+
+      La société peut proposer d'autres produits et services qui sont soumis à des conditions différentes. Ces conditions s'appliquent uniquement à l'utilisation du forum.
+
+      Passer à :
+
+      - [Conditions importantes](#heading--important-terms)
+      - [Votre autorisation d'utiliser le forum](#heading--permission)
+      - [Conditions d'utilisation du Forum](#heading--conditions)
+      - [Utilisation acceptable](#heading--acceptable-use)
+      - [Normes liées au contenu](#heading--content-standards)
+      - [Application](#heading--enforcement)
+      - [Votre compte](#heading--your-account)
+      - [Votre contenu](#heading--your-content)
+      - [Votre responsabilité](#heading--responsibility)
+      - [Avis de non-responsabilité](#heading--disclaimers)
+      - [Limites de responsabilité](#heading--liability)
+      - [Commentaires](#heading--feedback)
+      - [Résiliation](#heading--termination)
+      - [Litiges](#heading--disputes)
+      - [Conditions générales](#heading--general)
+      - [Contact](#heading--contact)
+      - [Modifications](#heading--changes)
+
+      <h2 id="heading--important-terms"><a href="#heading--important-terms">Conditions importantes</a></h2>
+
+      ***Ces conditions comprennent un certain nombre de dispositions importantes qui affectent vos droits et responsabilités, telles que les avis de non-responsabilité dans [Avis de non-responsabilité](#heading--disclaimers), limitent la responsabilité de la société envers vous dans [Limites de responsabilité](##heading--liability), votre accord pour couvrir la société concernant les dommages causés par votre mauvaise utilisation du forum dans [Responsabilité de votre utilisation](#heading--responsibility), et un accord pour arbitrer les différends dans [Litiges](#heading--disputes).***
+
+      <h2 id="heading--permission"><a href="#heading--permission">Votre autorisation d'utiliser le forum</a></h2>
+
+      Sous réserve des présentes conditions, la société vous autorise à utiliser le forum. Chaque utilisateur doit accepter ces conditions avant de pouvoir utiliser le forum.
+
+      <h2 id="heading--conditions"><a href="#heading--conditions">Conditions d'utilisation du forum</a></h2>
+
+      Votre autorisation d'utiliser le forum est soumise aux conditions suivantes :
+
+      1. Vous devez avoir au moins treize ans.
+
+      2. Vous ne pouvez plus utiliser le forum si la société vous contacte directement pour vous indiquer que vous devez cesser votre utilisation.
+
+      3. Vous devez utiliser le forum conformément à l'[Utilisation acceptable](#heading-acceptable-use) et aux [Normes liées au contenu](#heading--content-standards).
+
+      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Utilisation acceptable</a></h2>
+
+      1. Vous ne pouvez pas enfreindre la loi en utilisant le forum.
+
+      2. Vous ne pouvez pas utiliser ou essayer d'utiliser le compte d'une autre personne sur le forum sans son autorisation spécifique.
+
+      3. Vous ne pouvez pas acheter, vendre ou autrement échanger des noms d'utilisateur ou d'autres identifiants uniques sur le forum.
+
+      4. Vous ne pouvez pas envoyer de publicités, de chaînes de lettres ou d'autres sollicitations via le forum, ou utiliser le forum pour recueillir des adresses ou d'autres données personnelles pour des listes de diffusion commerciales ou des bases de données.
+
+      5. Vous ne pouvez pas automatiser l'accès au forum ou surveiller le forum, p. ex., avec un robot d'indexation, une extension de navigateur ou un module, ou un autre programme informatique qui n'est pas un navigateur Web. Vous pouvez explorer le forum pour l'indexer pour un moteur de recherche accessible au public, si vous en gérez un.
+
+      6. Vous ne pouvez pas utiliser le forum pour envoyer des e-mails à des listes de distribution, des groupes de discussion ou des alias de messagerie de groupe.
+
+      7. Vous ne pouvez pas insinuer à tort que vous êtes affilié(e) ou approuvé(e) par la société.
+
+      8. Vous ne pouvez pas créer d'hyperliens vers des images ou d'autres contenus sans hypertexte sur le forum ou d'autres pages Web.
+
+      9. Vous ne pouvez pas supprimer les marques indiquant la propriété exclusive des documents que vous téléchargez à partir du forum.
+
+      10. Vous ne pouvez pas afficher une partie du forum sur d'autres sites Web via l'utilisation de <iframe>.
+
+      11. Vous ne pouvez pas désactiver, éviter ou contourner les restrictions de sécurité ou d'accès du forum.
+
+      12. Vous ne pouvez pas forcer l'infrastructure du forum avec un volume déraisonnable de demandes, ou des demandes conçues pour imposer une charge déraisonnable sur les systèmes informatiques sous-jacents du forum.
+
+      13. Vous ne pouvez pas usurper l'identité d'autrui via le forum.
+
+      14. Vous ne pouvez pas encourager ou aider quiconque à enfreindre ces conditions.
+
+      <h2 id="heading--content-standards"><a href="#heading--content-standards">Normes liées au contenu</a></h2>
+
+      1. Vous ne pouvez pas soumettre de contenu illégal, offensant ou nuisible à autrui sur le forum. Cela comprend les contenus de harcèlement, inappropriés, abusifs ou haineux.
+
+      2. Vous ne pouvez pas soumettre sur le forum de contenu qui viole la loi, viole les droits de propriété intellectuelle d'autrui, viole la vie privée d'autrui ou viole les accords que vous avez conclus avec autrui.
+
+      3. Vous ne pouvez pas soumettre sur le forum du contenu comprenant du code informatique malveillant, tel que des virus informatiques ou des logiciels espions.
+
+      4. Vous ne pouvez pas soumettre sur le forum du contenu en tant que simple espace réservé, pour contenir une adresse particulière, un nom d'utilisateur ou un autre identifiant unique.
+
+      5. Vous ne pouvez pas utiliser le forum pour divulguer des informations que vous n'avez pas le droit de divulguer, comme les informations confidentielles ou personnelles d'autres personnes.
+
+      <h2 id="heading--enforcement"><a href="#heading--enforcement">Application</a></h2>
+
+      La société peut enquêter et poursuivre les violations de ces conditions dans toute la mesure légale. La société peut notifier et coopérer avec les autorités chargées de l'application de la loi en cas de violation de la loi et des présentes conditions.
+
+      La société se réserve le droit de modifier, caviarder et supprimer du contenu sur le forum pour quelque raison que ce soit. Si vous pensez que quelqu'un a soumis du contenu sur le forum en violation de ces conditions, [contactez-nous immédiatement](#heading--contact).
+
+      <h2 id="heading--your-account"><a href="#heading--your-account">Votre compte</a></h2>
+
+      Vous devez créer et vous connecter à un compte pour utiliser certaines fonctionnalités du forum.
+
+      Pour créer un compte, vous devez fournir certaines informations vous concernant. Si vous créez un compte, vous acceptez de fournir, au minimum, une adresse e-mail valide et de garder cette adresse à jour. Vous pouvez fermer votre compte à tout moment en envoyant un e-mail à <%{contact_email}>.
+
+      Vous acceptez d'être responsable de toutes les mesures prises en utilisant votre compte, que vous l'ayez autorisé ou non, jusqu'à ce que vous fermiez votre compte ou informiez la société que votre compte a été compromis. Vous acceptez d'informer immédiatement la société si vous soupçonnez que votre compte a été compromis. Vous acceptez de sélectionner un mot de passe sécurisé pour votre compte et de le garder secret.
+
+      La société peut restreindre, suspendre ou fermer votre compte sur le forum conformément à sa politique de traitement des demandes de retrait liées au droit d'auteur, ou si la société croit raisonnablement que vous avez enfreint une règle des présentes conditions.
+
+      <h2 id="heading--your-content"><a href="#heading--your-content">Votre contenu</a></h2>
+
+      Rien dans les présentes conditions ne confère à la société des droits de propriété intellectuelle que vous partagez avec le forum, tels que les informations de votre compte, les publications ou tout autre contenu que vous soumettez sur le forum. Rien dans les présentes conditions ne vous donne des droits de propriété sur la propriété intellectuelle de la société.
+
+      Entre vous et la société, vous restez seul(e) responsable du contenu que vous soumettez sur le forum. Vous acceptez de ne pas laisser entendre à tort que le contenu que vous soumettez sur le forum est sponsorisé ou approuvé par la société. Les présentes conditions n'obligent pas la société à stocker, maintenir ou fournir des copies du contenu que vous soumettez et à le modifier, conformément à ces conditions.
+
+      Le contenu que vous soumettez sur le forum vous appartient et vous décidez des permissions à accorder aux autres utilisateurs concernant votre contenu. Mais au minimum, vous autorisez la société à fournir le contenu que vous soumettez sur le forum aux autres utilisateurs du forum. Cette licence spéciale permet à la société de copier, publier et analyser le contenu que vous soumettez sur le forum.
+
+      Lorsque le contenu que vous soumettez est supprimé du forum, que ce soit par vous ou par la société, la licence spéciale de la société se termine lorsque la dernière copie disparaît des sauvegardes, des caches et des autres systèmes de la société. D'autres licences que vous appliquez au contenu que vous soumettez, telles que les licences [Creative Commons] (https://creativecommons.org), peuvent continuer après la suppression de votre contenu. Ces licences peuvent donner à d'autres personnes, ou à la société elle-même, le droit de partager à nouveau votre contenu via le forum.
+
+      Les autres personnes qui reçoivent le contenu que vous soumettez sur le forum peuvent violer les conditions de licence de votre contenu. Vous acceptez que la société ne sera pas responsable envers vous pour ces violations ou leurs conséquences.
+
+      <h2 id="heading--responsibility"><a href="#heading--responsibility">Votre responsabilité</a></h2>
+
+      Vous acceptez d'indemniser la société contre les réclamations légales d'autres personnes liées à votre violation de ces conditions, ou violation de ces conditions par d'autres personnes utilisant votre compte sur le forum. Vous et la société acceptez d'informer l'autre partie de toute réclamation légale pour laquelle vous pourriez avoir à indemniser la société dès que possible. Si la société ne vous informe pas rapidement d'une réclamation légale, vous n'aurez pas à indemniser la société pour les dommages que vous auriez pu défendre ou atténuer par le biais d'un préavis rapide. Vous acceptez de permettre à la société de contrôler l'enquête, la défense et le règlement des réclamations juridiques pour lesquelles vous devriez indemniser la société, et de coopérer dans le cadre de ces efforts. La société s'engage à ne pas accepter de règlement qui admet votre faute ou vous impose des obligations sans votre accord préalable.
+
+      <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Avis de non-responsabilité</a></h2>
+
+      ***Vous acceptez tous les risques liés à l'utilisation du forum et de son contenu. Dans la mesure où la loi le permet, la société et ses fournisseurs fournissent le forum tel quel, sans aucune garantie.***
+
+      Le forum peut créer des hyperliens vers des forums et des services gérés par d'autres et les intégrer. La société ne donne aucune garantie sur les services gérés par d'autres, ou sur le contenu qu'ils peuvent fournir. L'utilisation de services gérés par des tiers peut être régie par d'autres conditions entre vous et le service concerné.
+
+      <h2 id="heading--liability"><a href="#heading--liability">Limites de responsabilité</a></h2>
+
+      ***Ni la société ni ses fournisseurs ne pourront être tenus responsables envers vous des dommages résultant d'une rupture de contrat que leur personnel n'aurait pas raisonnablement pu prévoir lorsque vous avez accepté ces conditions.***
+
+      ***Dans la mesure où la loi le permet, la responsabilité totale envers vous pour les réclamations de toute nature qui sont liées au forum ou au contenu du forum sera limitée à 50 $.***
+
+      <h2 id="heading--feedback"><a href="#heading--feedback">Commentaires</a></h2>
+
+      La société est heureuse de recevoir vos commentaires et suggestions concernant le forum. Consultez la section [Contact] (#heading--contact) ci-dessous pour savoir comment nous contacter.
+
+      Vous convenez que la société sera libre d'agir en fonction des commentaires et des suggestions que vous lui fournirez, et qu'elle n'aura pas à vous informer que vos commentaires ont été utilisés, à obtenir votre permission de les utiliser ou à vous payer. Vous acceptez de ne pas soumettre de commentaires ou de suggestions que vous croyez être confidentiels ou exclusifs, à vous ou à toute autre personne.
+
+      <h2 id="heading--termination"><a href="#heading--termination">Résiliation</a></h2>
+
+      Vous ou la société pouvez mettre fin au contrat décrit dans les présentes conditions à tout moment. Lorsque notre accord prend fin, votre permission d'utiliser le forum prend également fin.
+
+      Les dispositions suivantes survivent à la fin de notre entente : [Votre contenu](#heading--your-content), [Commentaires](#heading--feedback), [Votre responsabilité](#heading--responsibility), [Avis de non-responsabilité](#heading--disclaimers), [Limites de responsabilité](#heading--liability) et [Conditions générales](#heading--general).
+
+      <h2 id="heading--disputes"><a href="#heading--disputes">Litiges</a></h2>
+
+      %{governing_law} régira tout litige lié aux présentes conditions ou à votre utilisation du forum.
+
+      Vous et la société acceptez de demander des injonctions liées à ces conditions uniquement devant la cour d'État ou fédérale de %{city_for_disputes}. Ni vous ni la société ne vous opposerez à la compétence, au forum ou au lieu de ces tribunaux.
+
+      ***Sauf pour demander une injonction ou pour des réclamations en vertu de la Computer Fraud and Abuse Act, vous et la société résoudrez tout différend par arbitrage exécutoire de l'American Arbitration Association. L'arbitrage suivra les règles d'arbitrage commercial et les procédures supplémentaires de l'AAA pour les litiges liés aux consommateurs. L'arbitrage aura lieu à %{city_for_disputes}. Vous réglerez tout différend à titre individuel, et non dans le cadre d'un recours collectif ou d'une autre procédure de représentation, que ce soit à titre de demandeur ou de membre du groupe. Aucun arbitre ne consolidera un différend avec un autre arbitrage sans la permission de la société.***
+
+      Toute sentence d'arbitrage comprendra les coûts de l'arbitrage, les honoraires raisonnables des avocats et les coûts raisonnables pour les témoins. Vous et la société pouvez soumettre des sentences d'arbitrage à tout tribunal compétent.
+
+      <h2 id="heading--general"><a href="#heading--general">Conditions générales</a></h2>
+
+      Si une disposition de ces conditions n'est pas exécutoire telle qu'elle est rédigée, mais qu'elle pourrait être modifiée pour devenir exécutoire, cette disposition devra être modifiée dans la mesure minimale nécessaire pour la rendre exécutoire. Sinon, cette disposition devra être supprimée.
+
+      Vous ne pouvez pas céder votre accord avec la société. La société peut céder votre accord à toute filiale de la société, toute autre société qui obtient le contrôle de la société, ou toute autre société qui achète des actifs de la société liée au forum. Toute tentative de cession concernant ces conditions n'a aucun effet juridique.
+
+      Ni l'exercice d'un droit en vertu du présent Contrat, ni la renonciation à toute violation du présent Contrat, ne constitue une renonciation à toute autre violation du présent Contrat.
+
+      Ces conditions incarnent toutes les conditions de l'accord conclu entre vous et la société concernant l'utilisation du forum. Ces conditions remplacent entièrement tout autre accord concernant votre utilisation du forum, écrit ou non.
+
+      <h2 id="heading--contact"><a href="#heading--contact">Contact</a></h2>
+
+      Vous pouvez informer la société en vertu des présentes conditions et lui poser des questions à l'adresse <%{contact_email}>.
+
+      La société peut vous informer concernant les présentes conditions en utilisant l'adresse e-mail que vous fournissez pour votre compte sur le forum, ou en publiant un message sur la page d'accueil du forum ou sur la page de votre compte.
+
+      <h2 id="heading--changes"><a href="#heading--changes">Modifications</a></h2>
+
+      La société a mis à jour ces conditions pour la dernière fois le [INSÉRER LA DATE DE LA DERNIÈRE MISE À JOUR ICI] et peut les mettre à jour à nouveau. La société publiera toutes les mises à jour sur le forum. Pour les mises à jour qui contiennent des modifications substantielles, la société accepte de vous envoyer un e-mail, si vous avez créé un compte et fourni une adresse e-mail valide. La société peut également annoncer des mises à jour par le biais de messages spéciaux ou d'alertes sur le forum.
+
+      Une fois que vous recevez un avis de mise à jour des présentes conditions, vous devez accepter les nouvelles conditions afin de continuer à utiliser le forum.
   privacy_topic:
     title: "Politique de confidentialité"
+    body: |
+      ## [Admin du forum, veuillez trouver ci-dessous un exemple de modèle de départ d'une politique de confidentialité que vous devriez personnaliser en fonction de votre site.]
+
+      <a name="collect"></a>
+
+      ## [Quels renseignements recueillons-nous ? ](#collect)
+
+      Nous recueillons des informations auprès de vous lorsque vous vous inscrivez sur notre site et recueillons des données lorsque vous participez au forum en lisant, en écrivant et en évaluant le contenu partagé ici.
+
+      Lors de votre inscription sur notre site, vous serez peut-être invité(e) à saisir votre nom et votre adresse e-mail. Vous pouvez toutefois visiter notre site sans vous inscrire. Votre adresse e-mail sera vérifiée par un e-mail contenant un lien unique. Si ce lien est activé, nous saurons que vous contrôlez l'adresse e-mail.
+
+      Lors de l'enregistrement et des publications, nous enregistrons l'adresse IP à l'origine de la publication. Nous pouvons également conserver les journaux de serveur qui incluent l'adresse IP de chaque demande à notre serveur.
+
+      <a name="use"></a>
+
+      ## [Quelle utilisation faisons-nous de vos informations ?](#use)
+
+      Les renseignements que nous recueillons auprès de vous peuvent être utilisés de l'une des façons suivantes :
+
+      * Pour personnaliser votre expérience : vos informations nous aident à mieux répondre à vos besoins individuels.
+      * Pour améliorer notre site : nous nous efforçons continuellement d'améliorer nos offres en fonction des informations et des commentaires que nous recevons de votre part.
+      * Pour améliorer le service à la clientèle : vos renseignements nous aident à répondre plus efficacement à vos demandes de service à la clientèle et à vos besoins d'assistance.
+      * Pour envoyer des e-mails périodiques : l'adresse e-mail que vous fournissez peut être utilisée pour vous envoyer des renseignements, des avis que vous demandez au sujet des changements apportés aux sujets ou en réponse à votre nom d'utilisateur, vos demandes et/ou d'autres demandes ou questions.
+
+      <a name="protect"></a>
+
+      ## [Comment protégeons-nous vos informations ?](#protect)
+
+      Nous mettons en œuvre diverses mesures pour maintenir la sécurité de vos informations personnelles lorsque vous entrez, soumettez ou accédez à vos informations personnelles.
+
+      <a name="data-retention"></a>
+
+      ## [Quelle est votre politique de conservation des données ?](#data-retention)
+
+      Nous ferons un effort de bonne foi pour :
+
+      * Conserver les journaux du serveur contenant l'adresse IP de toutes les demandes adressées à ce serveur pendant un délai inférieur à [NOMBRE DE JOURS] jours.
+
+      <a name="cookies"></a>
+
+      ## [Utilisons-nous des cookies ?](#cookies)
+
+      Oui. Les cookies sont de petits fichiers qu'un site ou son fournisseur de services transfère sur le disque dur de votre ordinateur via votre navigateur Web (si vous le permettez). Ces cookies permettent au site de reconnaître votre navigateur et, si vous avez un compte enregistré, de l'associer à votre compte enregistré.
+
+      Nous utilisons des cookies pour comprendre et enregistrer vos préférences pour les visites futures, et compiler des données agrégées sur le trafic du site et l'interaction du site afin de pouvoir offrir de meilleures expériences et outils à l'avenir. Nous pouvons conclure des contrats avec des fournisseurs de services tiers pour nous aider à mieux comprendre les visiteurs de notre site. Ces fournisseurs de services ne sont pas autorisés à utiliser les renseignements recueillis en notre nom, sauf pour nous aider à mener et à améliorer nos activités.
+
+      <a name="disclose"></a>
+
+      ## [Divulguons-nous des renseignements à des tiers ?](#disclose)
+
+      Nous ne vendons pas, n'échangeons pas et ne transférons pas vos données personnelles à des tiers. Cela n'inclut pas les tiers de confiance qui nous aident à exploiter notre site, à mener nos activités ou à vous assister, tant que ces parties acceptent de garder ces informations confidentielles. Nous pouvons également divulguer vos informations lorsque nous pensons que la divulgation est appropriée pour nous conformer à la loi, appliquer les politiques de notre site ou protéger nos droits, la propriété ou la sécurité. Cependant, des informations non personnellement identifiables concernant les visiteurs peuvent être fournies à d'autres parties à des fins de marketing, de publicité ou d'autres utilisations.
+
+      <a name="third-party"></a>
+
+      ## [Liens de tiers](#third-party)
+
+      Occasionnellement, à notre discrétion, nous pouvons inclure ou offrir des produits ou services de tiers sur notre site. Ces sites tiers ont des politiques de confidentialité distinctes et indépendantes. Nous n'avons donc aucune responsabilité concernant le contenu et les activités de ces sites liés. Néanmoins, nous cherchons à protéger l'intégrité de notre site et nous serions ravis de recevoir vos commentaires concernant ces sites.
+
+      <a name="coppa"></a>
+
+      ## [Conformité à la Loi sur la protection de la vie privée en ligne des enfants](#coppa)
+
+      Notre site, nos produits et nos services sont tous destinés à des personnes âgées d'au moins 13 ans. Si ce serveur se trouve aux États-Unis et que vous avez moins de 13 ans, conformément aux exigences de la COPPA ([Children’s Online Privacy Protection Act](https://fr.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), n'utilisez pas ce site.
+
+      <a name="online"></a>
+
+      ## [Politique de confidentialité en ligne seulement](#online)
+
+      Cette politique de confidentialité en ligne s'applique uniquement aux informations collectées via notre site et non aux informations collectées hors ligne.
+
+      <a name="consent"></a>
+
+      ## [Votre consentement](#consent)
+
+      En utilisant notre site, vous consentez à notre politique de confidentialité.
+
+      <a name="changes"></a>
+
+      ## [Modifications apportées à notre Politique de confidentialité](#changes)
+
+      Si nous décidons de modifier notre Politique de confidentialité, nous publierons ces modifications sur cette page.
+
+      Ce document est CC-BY-SA. Il a été mis à jour pour la dernière fois le [INSÉRER LA DATE DE LA DERNIÈRE MISE À JOUR ICI].
   badges:
     mass_award:
       errors:

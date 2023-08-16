@@ -214,7 +214,7 @@ de:
       local_login_cannot_be_disabled_if_second_factor_enforced: "Du kannst die lokale Anmeldung nicht deaktivieren, wenn 2FA erzwungen wird. Deaktiviere die erzwungene 2FA vor dem Deaktivieren lokaler Anmeldungen."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Du kannst S3-Uploads nicht aktivieren, weil S3-Uploads bereits global aktiviert sind. Aktivieren auf Website-Ebene kann zu kritischen Problemen mit Uploads führen"
       cors_origins_should_not_have_trailing_slash: "Du solltest den abschließenden Schrägstrich (/) nicht zu CORS-Ursprüngen hinzufügen."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Browserkennungen müssen mindestens 3 Zeichen lang sein, um zu verhindern, dass menschliche Benutzer fälschlicherweise einer Durchsatzratenbegrenzung unterworfen werden."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Browserkennungen müssen mindestens 3 Zeichen lang sein, um zu verhindern, dass legitime Benutzer versehentlich einer Durchsatzratenbegrenzung unterworfen werden."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Du kannst keinen der folgenden Werte zu der Einstellung hinzufügen: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Du kannst das Entfernen der Bild-Metadaten nicht deaktivieren, wenn „composer media optimization image enabled“ aktiviert ist. Deaktiviere „composer media optimization image enabled“, bevor du das Entfernen der Bild-Metadaten deaktivierst."
       twitter_summary_large_image_no_svg: "Twitter-Zusammenfassungsbilder, die für twitter:image-Metadaten verwendet werden, können keine .svg-Bilder sein."
@@ -682,7 +682,7 @@ de:
     media_placeholder:
       blocked_hotlinked_title: "Die Medien werden auf einer anderen Website gehostet. Anklicken, um sie in einer neuen Registerkarte zu öffnen."
       blocked_hotlinked: "Externe Medien"
-    hidden_bidi_character: "Bidirektionale Zeichen können die Reihenfolge ändern, in der der Text gerendert wird. Dies könnte dazu genutzt werden, bösartigen Code zu verschleiern."
+    hidden_bidi_character: "Bidirektionale Kontrollzeichen können die Reihenfolge ändern, in der der Text gerendert wird. Dies könnte dazu genutzt werden, bösartigen Code zu verschleiern."
     has_likes:
       one: "%{count} „Gefällt mir“"
       other: "%{count} „Gefällt mir“"

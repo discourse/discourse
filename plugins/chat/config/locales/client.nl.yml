@@ -282,6 +282,7 @@ nl:
         read_only: "Alleen-lezen"
         archived_header: "Kanaal is gearchiveerd"
         archived: "Gearchiveerd"
+        archive_failed: "Archiveren van kanaal mislukt. %{completed}/%{total} berichten zijn gearchiveerd. Het <a target=\"_blank\" href=\"%{topic_url}\">bestemmingstopic</a> is gemaakt. Druk op Opnieuw proberen om te proberen de archivering te voltooien."
         archive_failed_no_topic: "Archiveren van kanaal mislukt. %{completed}/%{total} berichten zijn gearchiveerd. Het bestemmingstopic is niet gemaakt. Druk op Opnieuw proberen om te proberen de archivering te voltooien."
         archive_completed: "Zie <a target=\"_blank\" href=\"%{topic_url}\">het archieftopic</a>"
         closed_header: "Kanaal is gesloten"

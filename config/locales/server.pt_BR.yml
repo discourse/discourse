@@ -214,7 +214,6 @@ pt_BR:
       local_login_cannot_be_disabled_if_second_factor_enforced: "Não é possível desativar a entrada com conta em modo local se o 2FA estiver aplicado. Desative o 2FA aplicado antes de desativar entradas com conta em modo local."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Não possível ativar envios S3 porque os envios S3 já estão ativados globalmente, e ativar este nível do site pode causar problemas críticos com os envios."
       cors_origins_should_not_have_trailing_slash: "Você não deve adicionar a barra à direita (/) às origens CORS."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Agentes de usuário(a) devem ter pelo menos três caracteres para evitar limitação de taxa incorreta de usuários(as) humanos(as)."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Não é possível adicionar nenhum dos valores a seguir à configuração: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Você não pode desativar a remoção de metadados de imagem se 'a imagem de otimização de mídia do compositor habilitada' estiver ativada. Desative a 'imagem de otimização de mídia do compositor ativada' antes de desativar a remoção dos metadados da imagem."
       twitter_summary_large_image_no_svg: "Imagens de resumo do Twitter usadas para metadados twitter:image não podem ser uma imagem .svg."
@@ -682,7 +681,6 @@ pt_BR:
     media_placeholder:
       blocked_hotlinked_title: "Mídia hospedada em outro site. Clique para abrir em uma nova guia."
       blocked_hotlinked: "Mídia Externa"
-    hidden_bidi_character: "Caracteres bidirecionais podem alterar a ordem de renderização do texto. Isso pode ser usado para ocultar códigos maliciosos."
     has_likes:
       one: "%{count} curtida"
       other: "%{count} curtidas"
@@ -908,8 +906,6 @@ pt_BR:
   draft_backup:
     pm_title: "Rascunhos de backup de tópicos em andamento"
     pm_body: "Tópico contendo rascunhos salvos"
-  user_activity:
-    no_log_search_queries: "Consultas de registros de pesqusa estão desativadas (um(a) administrador(a) pode ativá-las nas configurações do site)."
   email_settings:
     pop3_authentication_error: "Ocorreu um problema com as credenciais POP3 informadas, verifique o nome do(a) usuário(a) e a senha e tente novamente."
     imap_authentication_error: "Ocorreu um problema com as credenciais IMAP informadas, verifique o nome do(a) usuário(a) e a senha e tente novamente."
@@ -1378,7 +1374,6 @@ pt_BR:
         qtt_like: Curtidas recebidas
       description: "Melhores dez usuários(as) que receberam curtidas de uma ampla variedade de pessoas."
   dashboard:
-    group_email_credentials_warning: 'Houve um problema nas credenciais do e-mail do grupo <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Nenhum e-mail será enviado a partir da caixa de entrada do grupo até este problema ser resolvido. %{error}'
     rails_env_warning: "Seu servidor está rodando no modo %{env}."
     host_names_warning: "O arquivo config/database.yml está usando hostname do localhost padrão. Modifique para usar o hostname do seu site."
     sidekiq_warning: 'O Sidekiq não está em execução. Muitas tarefas, como envio de e-mails, são executadas de forma assíncrona pelo Sidekiq. Verifique-se que pelo menos um processo sidekiq esteja em execução. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprenda sobre Sidekiq aqui</a>.'

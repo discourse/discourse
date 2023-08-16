@@ -186,7 +186,6 @@ vi:
       local_login_cannot_be_disabled_if_second_factor_enforced: "Bạn không thể tắt đăng nhập cục bộ nếu 2FA được thực thi. Tắt 2FA được thực thi trước khi tắt đăng nhập cục bộ."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Bạn không thể bật tải lên S3 vì tải lên S3 đã được bật trên toàn cầu và việc bật cấp trang web này có thể gây ra các vấn đề nghiêm trọng với tải lên"
       cors_origins_should_not_have_trailing_slash: "Bạn không nên thêm dấu gạch chéo (/) vào nguồn gốc CORS."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Tác nhân người dùng phải dài ít nhất 3 ký tự để tránh xếp hạng không chính xác giới hạn người dùng."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Bạn không thể thêm bất kỳ giá trị nào sau đây vào cài đặt: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Bạn không thể tắt siêu dữ liệu hình ảnh dải nếu bật 'hình ảnh tối ưu hóa phương tiện tổng hợp' được bật. Tắt 'đã bật hình ảnh tối ưu hóa phương tiện tổng hợp' trước khi tắt siêu dữ liệu hình ảnh dải."
       twitter_summary_large_image_no_svg: "Hình ảnh tóm tắt trên Twitter được sử dụng cho twitter: siêu dữ liệu hình ảnh không được là hình ảnh .svg."

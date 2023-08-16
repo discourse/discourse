@@ -5789,6 +5789,7 @@ pl_PL:
         field_placeholders:
           validations: "wprowadź walidacje tutaj"
           label: "Wprowadź etykietę tutaj"
+          placeholder: "Wpisz tutaj symbol zastępczy"
           none_label: "Wybierz element"
           choices:
             first: "Opcja 1"

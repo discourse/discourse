@@ -1,12 +1,13 @@
-<DModalBody @title={{this.modalTitle}}>
-  <ConditionalLoadingSpinner @condition={{this.loadingUser}}>
-    {{#if this.errorMessage}}
-      <div class="alert alert-error">{{this.errorMessage}}</div>
-    {{/if}}
-
+<DModal
+  class="{{@model.penaltyType}}-user-modal"
+  @title={{i18n this.modalTitle}}
+  @closeModal={{this.warnBeforeClosing}}
+  @flash={{this.flash}}
+>
+  <:body>
     {{#if this.canPenalize}}
       <div class="penalty-duration-controls">
-        {{#if (eq this.penaltyType "suspend")}}
+        {{#if (eq @model.penaltyType "suspend")}}
           <FutureDateInput
             @class="suspend-until"
             @label="admin.user.suspend_duration"
@@ -14,7 +15,7 @@
             @input={{this.penalizeUntil}}
             @onChangeInput={{action (mut this.penalizeUntil)}}
           />
-        {{else if (eq this.penaltyType "silence")}}
+        {{else if (eq @model.penaltyType "silence")}}
           <FutureDateInput
             @class="silence-until"
             @label="admin.user.silence_duration"
@@ -24,8 +25,7 @@
           />
         {{/if}}
       </div>
-
-      {{#if (eq this.penaltyType "suspend")}}
+      {{#if (eq @model.penaltyType "suspend")}}
         <div class="penalty-reason-visibility">
           {{#if this.siteSettings.hide_suspension_reasons}}
             {{html-safe (i18n "admin.user.suspend_reason_hidden_label")}}
@@ -34,48 +34,46 @@
           {{/if}}
         </div>
       {{/if}}
-
       <AdminPenaltyReason
-        @penaltyType={{this.penaltyType}}
+        @penaltyType={{@model.penaltyType}}
         @reason={{this.reason}}
         @message={{this.message}}
       />
-
-      {{#if this.postId}}
+      {{#if @model.postId}}
         <AdminPenaltyPostAction
-          @postId={{this.postId}}
+          @postId={{@model.postId}}
           @postAction={{this.postAction}}
           @postEdit={{this.postEdit}}
         />
       {{/if}}
-
       {{#if this.user.similar_users}}
         <AdminPenaltySimilarUsers
-          @penaltyType={{this.penaltyType}}
+          @penaltyType={{@model.penaltyType}}
           @user={{this.user}}
           @selectedUserIds={{this.otherUserIds}}
         />
       {{/if}}
-
     {{else}}
-      {{#if (eq this.penaltyType "suspend")}}
+      {{#if (eq @model.penaltyType "suspend")}}
         <div class="cant-suspend">{{i18n "admin.user.cant_suspend"}}</div>
-      {{else if (eq this.penaltyType "silence")}}
+      {{else if (eq @model.penaltyType "silence")}}
         <div class="cant-silence">{{i18n "admin.user.cant_silence"}}</div>
       {{/if}}
     {{/if}}
     <div class="penalty-history">{{html-safe this.penaltyHistory}}</div>
-  </ConditionalLoadingSpinner>
-</DModalBody>
-
-<div class="modal-footer">
-  <DButton
-    @class="btn-danger perform-penalize"
-    @action={{this.penalizeUser}}
-    @disabled={{this.submitDisabled}}
-    @icon="ban"
-    @label={{this.buttonLabel}}
-  />
-  <DModalCancel @close={{route-action "closeModal"}} />
-  <ConditionalLoadingSpinner @condition={{this.loading}} @size="small" />
-</div>
+  </:body>
+  <:footer>
+    <DButton
+      class="btn-danger perform-penalize"
+      @action={{this.penalizeUser}}
+      @disabled={{this.submitDisabled}}
+      @icon="ban"
+      @label={{this.buttonLabel}}
+    />
+    <DButton
+      class="btn-flat d-modal-cancel"
+      @action={{this.warnBeforeClosing}}
+      @label="cancel"
+    />
+  </:footer>
+</DModal>

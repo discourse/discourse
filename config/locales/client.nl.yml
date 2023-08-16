@@ -277,6 +277,8 @@ nl:
       pill: "Gerelateerde berichten"
       see_all: '<a href="%{path}">Alle berichten</a> van @%{username} weergeven...'
     suggested_topics:
+      title: "Nieuwe en ongelezen topics"
+      pill: "Voorgesteld"
       pm_title: "Voorgestelde berichten"
     about:
       simple_title: "Over"
@@ -1789,6 +1791,7 @@ nl:
         content: "Hier zijn enkele topics waarvan we denken dat je ze misschien leuk vindt om te lezen."
       admin_guide:
         title: "Welkom op je nieuwe site!"
+        content: "<a href='%{admin_guide_url}'>Lees de beheerdersgids</a> om door te gaan met het bouwen van je site en community."
         content_no_url: "Lees de beheerdersgids om door te gaan met het bouwen van je site en community."
     loading: "Laden..."
     errors:
@@ -3838,6 +3841,9 @@ nl:
       more_badges:
         one: "+nog %{count}"
         other: "+nog %{count}"
+      awarded:
+        one: "%{number} toegekend"
+        other: "%{number} toegekend"
       select_badge_for_title: Kies een badge om als je titel te gebruiken
       none: "(geen)"
       successfully_granted: "%{badge} toegekend aan %{username}"
@@ -4210,6 +4216,12 @@ nl:
           tel: "Voer een geldig telefoonnummer in."
           text: "Voer een tekstwaarde in."
           url: "Voer een geldige URL in."
+        tooShort:
+          one: "De invoer moet %{count} teken of langer zijn."
+          other: "De invoer moet %{count} tekens of langer zijn."
+        tooLong:
+          one: "De invoer moet minder dan %{count} teken zijn."
+          other: "De invoer moet minder dan %{count} tekens zijn."
         rangeOverflow:
           one: "De invoer moet kleiner zijn dan %{count}."
           other: "De invoer moet kleiner zijn dan %{count}."

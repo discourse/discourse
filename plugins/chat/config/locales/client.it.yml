@@ -154,6 +154,60 @@ it:
           unreachable_multiple:
             one: "@%{group} e %{count} altro gruppo non consentono menzioni."
             other: "@%{group} e %{count} altri gruppi non consentono menzioni."
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {La menzione di @{group1} supera il <a href="{siteSettingUrl}" target="_blank">limite di notifica</a> di # utente.}
+                              other {La menzione di @{group1} supera il <a href="{siteSettingUrl}" target="_blank">limite di notifica</a> di # utenti.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {La menzione di @{group1} supera il limite di notifica di # utente.}
+                              other {La menzione di @{group1} supera il limite di notifica di # utenti.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {La menzione di @{group1} e @{group2} supera il <a href="{siteSettingUrl}" target="_blank">limite di notifica</a> di # utente.}
+                            other {La menzione di @{group1} e @{group2} supera il <a href="{siteSettingUrl}" target="_blank">limite di notifica</a> di # utenti.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {La menzione di @{group1} e @{group2} supera il limite di notifica di # utente.}
+                            other {La menzione di @{group1} e @{group2} supera il limite di notifica di # utenti.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {La menzione di questi {groupCount} gruppi supera il <a href="{siteSettingUrl}" target="_blank">limite di notifica</a> di # utente.}
+                            other {La menzione di questi {groupCount} gruppi supera il <a href="{siteSettingUrl}" target="_blank">limite di notifica</a> di # utenti.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {La menzione di questi {groupCount} gruppi supera il limite di notifica di # utente.}
+                            other {La menzione di questi {groupCount} gruppi supera il limite di notifica di # utenti.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
         too_many_mentions:
           one: "Questo messaggio supera il limite di notifica di %{count} menzione."
           other: "Questo messaggio supera il limite di notifica di %{count} menzioni."
@@ -228,6 +282,7 @@ it:
         read_only: "Sola lettura"
         archived_header: "Il canale è archiviato"
         archived: "Archiviati"
+        archive_failed: "Archiviazione del canale non riuscita. %{completed}/%{total} messaggi sono stati archiviati. <a target=\"_blank\" href=\"%{topic_url}\">L'argomento di destinazione</a> è stato creato. Premi Riprova per tentare di completare l'archiviazione."
         archive_failed_no_topic: "Archiviazione del canale non riuscita. %{completed}/%{total} messaggi sono stati archiviati e l'argomento di destinazione non è stato creato. Premi Riprova per tentare di completare l'archiviazione."
         archive_completed: "Vedi <a target=\"_blank\" href=\"%{topic_url}\">l'argomento di archiviazione</a>"
         closed_header: "Il canale è chiuso"
@@ -313,8 +368,8 @@ it:
                     }
               other {
                       { userCount, plural,
-                          one {Aggiungere automaticamente {userCount} utente di {groupName} e di {groupCount} altri gruppi?}
-                        other {Aggiungere automaticamente {userCount} utenti di {groupName} e di {groupCount} altri gruppi?}
+                          one {Aggiungere automaticamente {userCount} utente di {groupName} e di altri {groupCount} gruppi?}
+                        other {Aggiungere automaticamente {userCount} utenti di {groupName} e di altri {groupCount} gruppi?}
                       }
                     }
             }

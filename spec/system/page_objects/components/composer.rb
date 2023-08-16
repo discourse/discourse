@@ -77,6 +77,10 @@ module PageObjects
         find(AUTOCOMPLETE_MENU)
       end
 
+      def category_chooser
+        Components::SelectKit.new(".category-chooser")
+      end
+
       def switch_category(category_name)
         find(".category-chooser").click
         find(".category-row[data-name='#{category_name}']").click

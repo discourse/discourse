@@ -1,7 +1,7 @@
 "use strict";
 
 const EmberApp = require("ember-cli/lib/broccoli/ember-app");
-const { resolve, join } = require("path");
+const path = require("path");
 const mergeTrees = require("broccoli-merge-trees");
 const concat = require("broccoli-concat");
 const { createI18nTree } = require("./lib/translation-plugin");
@@ -15,7 +15,7 @@ const generateWorkboxTree = require("./lib/workbox-tree-builder");
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
 module.exports = function (defaults) {
-  const discourseRoot = resolve("../../../..");
+  const discourseRoot = path.resolve("../../../..");
   const vendorJs = discourseRoot + "/vendor/assets/javascripts/";
 
   // Silence deprecations which we are aware of - see `lib/deprecation-silencer.js`
@@ -179,10 +179,6 @@ module.exports = function (defaults) {
       "/app/assets/javascripts/discourse/public/assets/scripts/module-shims.js"
   );
 
-  // See: https://github.com/embroider-build/embroider/issues/1574
-  // Specifically, markdownItBundleTree is triggering the MacrosConfig error
-  finalizeEmbroiderMacrosConfigs(app, resolve("."), app.project);
-
   const discoursePluginsTree = app.project
     .findAddonByName("discourse-plugins")
     .generatePluginsTree();
@@ -220,21 +216,3 @@ module.exports = function (defaults) {
     discoursePluginsTree,
   ]);
 };
-
-// See: https://github.com/embroider-build/embroider/issues/1574
-function finalizeEmbroiderMacrosConfigs(appInstance, appRoot, parent) {
-  parent.initializeAddons?.();
-
-  for (let addon of parent.addons) {
-    if (addon.name === "@embroider/macros") {
-      const MacrosConfig = require(join(
-        addon.packageRoot,
-        "src",
-        "macros-config"
-      )).default;
-      MacrosConfig.for(appInstance, appRoot).finalize();
-    } else {
-      finalizeEmbroiderMacrosConfigs(appInstance, appRoot, addon);
-    }
-  }
-}
