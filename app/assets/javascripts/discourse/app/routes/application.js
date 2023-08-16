@@ -38,11 +38,12 @@ const ApplicationRoute = DiscourseRoute.extend({
   modal: service(),
   loadingSlider: service(),
   router: service(),
+  siteSettings: service(),
 
   get includeExternalLoginMethods() {
     return (
       !this.siteSettings.enable_local_logins &&
-      externalLoginMethods.length === 1
+      this.externalLoginMethods.length === 1
     );
   },
 
@@ -232,7 +233,6 @@ const ApplicationRoute = DiscourseRoute.extend({
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      const createAccountController = this.controllerFor("createAccount");
       this.modal.show(LoginModal, {
         model: {
           ...(this.includeExternalLoginMethods && {

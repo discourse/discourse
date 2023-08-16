@@ -1,13 +1,8 @@
-import {
-  acceptance,
-  count,
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
-acceptance("Create Account Fields - From Login Form", function (needs) {
+acceptance("Create Account Fields - From Login Form", function () {
   test("autofills email field with login form value", async function (assert) {
     await visit("/");
     await click("header .login-button");

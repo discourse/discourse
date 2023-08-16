@@ -7,10 +7,10 @@ import { ajax } from "discourse/lib/ajax";
 import { findAll } from "discourse/models/login-method";
 import { areCookiesEnabled } from "discourse/lib/utilities";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
-import { getOwner } from "discourse-common/lib/get-owner";
-import { next, schedule } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { isEmpty } from "@ember/utils";
+import I18n from "I18n";
 
 export default class Login extends Component {
   @service dialog;
@@ -25,7 +25,6 @@ export default class Login extends Component {
   @tracked securityKeyCredential = null;
   @tracked flash = this.args.model?.flash;
   @tracked flashType = this.args.model?.flashType;
-
   @tracked canLoginLocal = this.siteSettings.enable_local_logins;
   @tracked canLoginLocalWithEmail =
     this.siteSettings.enable_local_logins_via_email;
@@ -120,7 +119,7 @@ export default class Login extends Component {
   }
 
   @action
-  loginNameChanged(value) {
+  loginNameChanged(event) {
     this.loginName = event.target.value;
   }
 
