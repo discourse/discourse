@@ -1,4 +1,4 @@
-import Controller, { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import discourseComputed, {
   observes,
