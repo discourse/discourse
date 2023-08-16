@@ -37,7 +37,6 @@
     <div class="full-width">
       <div id="header-list-area">
         {{yield to="header-list"}}
-        {{!-- {{outlet "header-list-container"}} --}}
         <PluginOutlet
           @name="header-list-container-bottom"
           @outletArgs={{hash category=this.category}}
