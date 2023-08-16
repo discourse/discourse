@@ -32,7 +32,7 @@ export default {
         next(() => {
           if (router.currentPath === "invites.show") {
             owner
-              .lookup("invites.show")
+              .lookup("controller:invites-show")
               .authenticationComplete(JSON.parse(lastAuthResult));
           } else {
             const options = JSON.parse(JSON.parse(lastAuthResult));

@@ -26,8 +26,8 @@ export default class Login extends Component {
   @tracked flash = this.args.model?.flash;
   @tracked flashType = this.args.model?.flashType;
   @tracked canLoginLocal = this.siteSettings.enable_local_logins;
-  @tracked canLoginLocalWithEmail =
-    this.siteSettings.enable_local_logins_via_email;
+  @tracked
+  canLoginLocalWithEmail = this.siteSettings.enable_local_logins_via_email;
   @tracked secondFactorMethod = SECOND_FACTOR_METHODS.TOTP;
 
   constructor() {
