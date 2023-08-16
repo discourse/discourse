@@ -224,7 +224,7 @@ class BulkImport::Base
       Category
         .unscoped
         .pluck(:parent_category_id, :name)
-        .map { |pci, name| "#{pci}-#{name}" }
+        .map { |pci, name| "#{pci}-#{name.downcase}" }
         .to_set
 
     puts "Loading topics indexes..."
@@ -738,11 +738,12 @@ class BulkImport::Base
     next_number = 1
     original_name = name = category[:name][0...50].scrub.strip
 
-    while Category.exists?(name: name, parent_category_id: category[:parent_category_id])
+    while @category_names.include?("#{category[:parent_category_id]}-#{name.downcase}")
       name = "#{original_name[0...50 - next_number.to_s.length]}#{next_number}"
       next_number += 1
     end
 
+    @category_names << "#{category[:parent_category_id]}-#{name.downcase}"
     name_lower = name.downcase
 
     category[:name] = name
