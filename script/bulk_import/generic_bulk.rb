@@ -94,7 +94,7 @@ class BulkImport::Generic < BulkImport::Base
         suspended_till = suspension["suspended_till"]
       end
 
-      if row["anonymized"]
+      if row["anonymized"] == 1
         while true
           anon_suffix = (SecureRandom.random_number * 100_000_000).to_i
           break if !@anonymized_user_suffixes.include?(anon_suffix)
