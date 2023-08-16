@@ -35,12 +35,11 @@ export default class Login extends Component {
   @tracked loggedIn = false;
   @tracked showLoginButtons = true;
   @tracked showSecondFactor = false;
-  @tracked awaitingApproval = false;
   @tracked loginPassword = "";
   @tracked loginName = "";
   @tracked securityKeyCredential = null;
-  @tracked flash;
-  @tracked flashType;
+  @tracked flash = this.args.model?.flash;
+  @tracked flashType = this.args.model?.flashType;
 
   @tracked canLoginLocal = this.siteSettings.enable_local_logins;
   @tracked canLoginLocalWithEmail =
@@ -57,19 +56,16 @@ export default class Login extends Component {
     }
   }
 
-  get loginDisabled() {
-    return this.loggingIn || this.loggedIn;
+  get awaitingApproval() {
+    return (
+      this.args.model?.awaitingApproval &&
+      !this.canLoginLocal &&
+      !this.canLoginLocalWithEmail
+    );
   }
 
-  resetForm() {
-    this.setProperties({
-      loggingIn: false,
-      loggedIn: false,
-      secondFactorRequired: false,
-      showSecurityKey: false,
-      showLoginButtons: true,
-      awaitingApproval: false,
-    });
+  get loginDisabled() {
+    return this.loggingIn || this.loggedIn;
   }
 
   @action
@@ -81,16 +77,6 @@ export default class Login extends Component {
     } else if (cookie("email")) {
       this.loginName = cookie("email");
     }
-
-    // schedule("afterRender", () => {
-    //   $(
-    //     "#login-account-password, #login-account-name, #login-second-factor"
-    //   ).keydown((e) => {
-    //     if (e.key === "Enter") {
-    //       this.login();
-    //     }
-    //   });
-    // });
   }
 
   get wavingHandURL() {
@@ -313,96 +299,14 @@ export default class Login extends Component {
       this.loggingIn = false;
     }
   }
-
-  // @action
-  // createAccount() {
-  //   const createAccountController = this.createAccount;
-  //   if (createAccountController) {
-  //     createAccountController.resetForm();
-  //     if (this.loginName && this.loginName.indexOf("@") > 0) {
-  //       createAccountController.set("accountEmail", this.loginName);
-  //     } else {
-  //       createAccountController.set("accountUsername", this.loginName);
-  //     }
-  //   }
-  //   this.send("showCreateAccount");
-  // }
-
-  // @action
-  // authenticationComplete(options) {
-  //   const loginError = (errorMsg, className, callback) => {
-  //     showModal("login");
-
-  //     next(() => {
-  //       if (callback) {
-  //         callback();
-  //       }
-  //       this.flash(errorMsg, className || "success");
-  //     });
-  //   };
-
-  //   if (
-  //     options.awaiting_approval &&
-  //     !this.canLoginLocal &&
-  //     !this.canLoginLocalWithEmail
-  //   ) {
-  //     this.set("awaitingApproval", true);
-  //   }
-
-  //   if (options.omniauth_disallow_totp) {
-  //     return loginError(I18n.t("login.omniauth_disallow_totp"), "error", () => {
-  //       this.setProperties({
-  //         loginName: options.email,
-  //         showLoginButtons: false,
-  //       });
-
-  //       document.getElementById("login-account-password").focus();
-  //     });
-  //   }
-
-  //   for (let i = 0; i < AuthErrors.length; i++) {
-  //     const cond = AuthErrors[i];
-  //     if (options[cond]) {
-  //       return loginError(I18n.t(`login.${cond}`));
-  //     }
-  //   }
-
-  //   if (options.suspended) {
-  //     return loginError(options.suspended_message, "error");
-  //   }
-
-  //   // Reload the page if we're authenticated
-  //   if (options.authenticated) {
-  //     const destinationUrl =
-  //       cookie("destination_url") || options.destination_url;
-  //     if (destinationUrl) {
-  //       // redirect client to the original URL
-  //       removeCookie("destination_url");
-  //       window.location.href = destinationUrl;
-  //     } else if (window.location.pathname === getURL("/login")) {
-  //       window.location = getURL("/");
-  //     } else {
-  //       window.location.reload();
-  //     }
-  //     return;
-  //   }
-
-  //   const skipConfirmation = this.siteSettings.auth_skip_create_confirm;
-  //   const createAccountController = this.createAccount;
-
-  //   createAccountController.setProperties({
-  //     accountEmail: options.email,
-  //     accountUsername: options.username,
-  //     accountName: options.name,
-  //     authOptions: EmberObject.create(options),
-  //     skipConfirmation,
-  //   });
-
-  //   next(() => {
-  //     showModal("create-account", {
-  //       modalClass: "create-account",
-  //       titleAriaElementId: "create-account-title",
-  //     });
-  //   });
-  // }
+  @action
+  createAccount() {
+    let createAccountProps = {};
+    if (this.loginName && this.loginName.indexOf("@") > 0) {
+      createAccountProps.accountEmail = this.loginName;
+    } else {
+      createAccountProps.accountUsername = this.loginName;
+    }
+    this.args.model.showCreateAccount(createAccountProps);
+  }
 }

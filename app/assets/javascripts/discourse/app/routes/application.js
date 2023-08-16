@@ -19,16 +19,6 @@ import ForgotPassword from "discourse/components/modal/forgot-password";
 import deprecated from "discourse-common/lib/deprecated";
 import LoginModal from "discourse/components/modal/login";
 
-function unlessReadOnly(method, message) {
-  return function () {
-    if (this.site.isReadOnly) {
-      this.dialog.alert(message);
-    } else {
-      this[method]();
-    }
-  };
-}
-
 function unlessStrictlyReadOnly(method, message) {
   return function () {
     if (this.site.isReadOnly && !this.site.isStaffWritesOnly) {
@@ -155,10 +145,13 @@ const ApplicationRoute = DiscourseRoute.extend({
       I18n.t("read_only_mode.login_disabled")
     ),
 
-    showCreateAccount: unlessReadOnly(
-      "handleShowCreateAccount",
-      I18n.t("read_only_mode.login_disabled")
-    ),
+    showCreateAccount(createAccountProps = {}) {
+      if (this.site.isReadOnly) {
+        this.dialog.alert(I18n.t("read_only_mode.login_disabled"));
+      } else {
+        this.handleShowCreateAccount(createAccountProps);
+      }
+    },
 
     showForgotPassword() {
       this.modal.show(ForgotPassword);
@@ -239,21 +232,21 @@ const ApplicationRoute = DiscourseRoute.extend({
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      // this.send("showCreateAccount", {});
+      const createAccountController = this.controllerFor("createAccount");
       this.modal.show(LoginModal, {
         model: {
           ...(this.includeExternalLoginMethods && {
             isExternalLogin: true,
             externalLoginMethod: this.externalLoginMethods[0],
           }),
-          showNotActivated: this.showNotActivated,
-          showCreateAccount: (e) => this.send("showCreateAccount", e),
+          showNotActivated: (props) => this.send("showNotActivated", props),
+          showCreateAccount: (props) => this.send("showCreateAccount", props),
         },
       });
     }
   },
 
-  handleShowCreateAccount() {
+  handleShowCreateAccount(createAccountProps) {
     if (this.siteSettings.enable_discourse_connect) {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
@@ -264,15 +257,16 @@ const ApplicationRoute = DiscourseRoute.extend({
             isExternalLogin: true,
             externalLoginMethod: this.externalLoginMethods[0],
             signup: true,
-            showNotActivated: this.showNotActivated,
-            showCreateAccount: this.showCreateAccount,
+            showNotActivated: (props) => this.send("showNotActivated", props),
+            showCreateAccount: (props) => this.send("showCreateAccount", props),
           },
         });
       } else {
-        showModal("create-account", {
+        const createAccount = showModal("create-account", {
           modalClass: "create-account",
           titleAriaElementId: "create-account-title",
         });
+        createAccount.setProperties(createAccountProps);
       }
     }
   },
