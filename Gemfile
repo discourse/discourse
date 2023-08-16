@@ -141,9 +141,8 @@ group :test do
   gem "fakeweb", require: false
   gem "minitest", require: false
   gem "simplecov", require: false
-  gem "selenium-webdriver", require: false
+  gem "selenium-webdriver", "~> 4.11", require: false
   gem "test-prof"
-  gem "webdrivers", require: false
   gem "rails-dom-testing", require: false
 end
 
