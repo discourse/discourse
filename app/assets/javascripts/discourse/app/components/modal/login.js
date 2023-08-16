@@ -1,33 +1,18 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { alias, not, or, readOnly } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
 import { findAll } from "discourse/models/login-method";
-import showModal from "discourse/lib/show-modal";
-import { areCookiesEnabled, escapeExpression } from "discourse/lib/utilities";
-import { setting } from "discourse/lib/computed";
+import { areCookiesEnabled } from "discourse/lib/utilities";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { next, schedule } from "@ember/runloop";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { isEmpty } from "@ember/utils";
 
-// This is happening outside of the app via popup
-const AuthErrors = [
-  "requires_invite",
-  "awaiting_approval",
-  "awaiting_activation",
-  "admin_not_allowed_from_ip_address",
-  "not_allowed_from_ip_address",
-];
-
 export default class Login extends Component {
-  // createAccount controller(),
-  // application controller(),
   @service dialog;
   @service siteSettings;
 
@@ -44,7 +29,6 @@ export default class Login extends Component {
   @tracked canLoginLocal = this.siteSettings.enable_local_logins;
   @tracked canLoginLocalWithEmail =
     this.siteSettings.enable_local_logins_via_email;
-  @tracked loginRequired = alias("application.loginRequired");
   @tracked secondFactorMethod = SECOND_FACTOR_METHODS.TOTP;
 
   constructor() {
@@ -66,17 +50,6 @@ export default class Login extends Component {
 
   get loginDisabled() {
     return this.loggingIn || this.loggedIn;
-  }
-
-  @action
-  doTheThing() {
-    const prefillUsername = $("#hidden-login-form input[name=username]").val();
-    if (prefillUsername) {
-      this.loginName = prefillUsername;
-      this.loginPassword = $("#hidden-login-form input[name=password]").val();
-    } else if (cookie("email")) {
-      this.loginName = cookie("email");
-    }
   }
 
   get wavingHandURL() {
@@ -113,10 +86,22 @@ export default class Login extends Component {
   }
 
   get showSignupLink() {
-    return (
-      getOwner(this).lookup("controller:application").canSignUp &&
-      !this.loggingIn
-    );
+    return this.args.model.canSignUp && !this.loggingIn;
+  }
+
+  @action
+  preloadLogin() {
+    const prefillUsername = document.querySelector(
+      "#hidden-login-form input[name=username]"
+    )?.value;
+    if (prefillUsername) {
+      this.loginName = prefillUsername;
+      this.loginPassword = document.querySelector(
+        "#hidden-login-form input[name=password]"
+      ).value;
+    } else if (cookie("email")) {
+      this.loginName = cookie("email");
+    }
   }
 
   @action
@@ -299,6 +284,7 @@ export default class Login extends Component {
       this.loggingIn = false;
     }
   }
+
   @action
   createAccount() {
     let createAccountProps = {};
