@@ -353,6 +353,9 @@ RSpec.configure do |config|
         .new(logging_prefs: { "browser" => browser_log_level, "driver" => "ALL" })
         .tap do |options|
           options.add_emulation(device_name: "iPhone 12 Pro")
+          options.add_argument(
+            '--user-agent="--user-agent="Mozilla/5.0 (Windows Phone 10.0; Android 4.2.1; Microsoft; Lumia 640 XL LTE) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Mobile Safari/537.36 Edge/12.10166"',
+          )
           apply_base_chrome_options(options)
         end
 
