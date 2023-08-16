@@ -59,11 +59,8 @@ require "shoulda-matchers"
 require "sidekiq/testing"
 require "test_prof/recipes/rspec/let_it_be"
 require "test_prof/before_all/adapters/active_record"
-require "webdrivers"
 require "selenium-webdriver"
 require "capybara/rails"
-
-Webdrivers::Chromedriver.required_version = "114.0.5735.90"
 
 # The shoulda-matchers gem no longer detects the test framework
 # you're using or mixes itself into that framework automatically.
@@ -255,7 +252,7 @@ RSpec.configure do |config|
 
     SiteSetting.provider = TestLocalProcessProvider.new
 
-    WebMock.disable_net_connect!(allow_localhost: true, allow: [Webdrivers::Chromedriver.base_url])
+    WebMock.disable_net_connect!(allow_localhost: true)
 
     if ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].present?
       Capybara.default_max_wait_time = ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].to_i
@@ -356,6 +353,9 @@ RSpec.configure do |config|
         .new(logging_prefs: { "browser" => browser_log_level, "driver" => "ALL" })
         .tap do |options|
           options.add_emulation(device_name: "iPhone 12 Pro")
+          options.add_argument(
+            '--user-agent="--user-agent="Mozilla/5.0 (iPhone; CPU iPhone OS 14_7_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) FxiOS/36.0  Mobile/15E148 Safari/605.1.15"',
+          )
           apply_base_chrome_options(options)
         end
 
