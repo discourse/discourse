@@ -54,27 +54,6 @@ export default Controller.extend(
       return (hasAuthOptions || canCreateLocal) && !skipConfirmation;
     },
 
-    resetForm() {
-      // We wrap the fields in a structure so we can assign a value
-      this.setProperties({
-        accountName: "",
-        accountEmail: "",
-        accountUsername: "",
-        accountPassword: "",
-        serverAccountEmail: null,
-        serverEmailValidation: null,
-        authOptions: null,
-        complete: false,
-        formSubmitted: false,
-        rejectedEmails: [],
-        rejectedPasswords: [],
-        prefilledUsername: null,
-        isDeveloper: false,
-        maskPassword: true,
-      });
-      this._createUserFields();
-    },
-
     @discourseComputed("formSubmitted")
     submitDisabled() {
       if (this.formSubmitted) {
