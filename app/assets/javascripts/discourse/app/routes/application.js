@@ -239,13 +239,16 @@ const ApplicationRoute = DiscourseRoute.extend({
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
+      // this.send("showCreateAccount", {});
       this.modal.show(LoginModal, {
-        ...(this.includeExternalLoginMethods && {
-          model: {
+        model: {
+          ...(this.includeExternalLoginMethods && {
             isExternalLogin: true,
             externalLoginMethod: this.externalLoginMethods[0],
-          },
-        }),
+          }),
+          showNotActivated: this.showNotActivated,
+          showCreateAccount: (e) => this.send("showCreateAccount", e),
+        },
       });
     }
   },
@@ -261,6 +264,8 @@ const ApplicationRoute = DiscourseRoute.extend({
             isExternalLogin: true,
             externalLoginMethod: this.externalLoginMethods[0],
             signup: true,
+            showNotActivated: this.showNotActivated,
+            showCreateAccount: this.showCreateAccount,
           },
         });
       } else {

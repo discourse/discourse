@@ -61,19 +61,21 @@ export default class LocalLoginBody extends Component {
       });
       const loginName = escapeExpression(this.args.loginName);
       const isEmail = loginName.match(/@/);
-      let key = isEmail
+      const key = isEmail
         ? "email_login.complete_email"
         : "email_login.complete_username";
       if (data.user_found === false) {
-        this.args.flashChanged = htmlSafe(
-          I18n.t(`${key}_not_found`, {
-            email: loginName,
-            username: loginName,
-          })
+        this.args.flashChanged(
+          htmlSafe(
+            I18n.t(`${key}_not_found`, {
+              email: loginName,
+              username: loginName,
+            })
+          )
         );
-        this.args.flashTypeChanged = "error";
+        this.args.flashTypeChanged("error");
       } else {
-        let postfix = data.hide_taken ? "" : "_found";
+        const postfix = data.hide_taken ? "" : "_found";
         this.args.flashChanged(
           htmlSafe(
             I18n.t(`${key}${postfix}`, {
