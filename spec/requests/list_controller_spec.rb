@@ -1416,46 +1416,61 @@ RSpec.describe ListController do
       response.parsed_body["topic_list"]["topics"].map { |topics| topics["id"] }
     end
 
+    def make_topic_with_unread_replies(topic, user)
+      TopicUser.change(
+        user.id,
+        topic.id,
+        notification_level: TopicUser.notification_levels[:tracking],
+      )
+      TopicUser.update_last_read(user, topic.id, 1, 1, 1)
+      Fabricate(:post, topic: topic)
+      topic
+    end
+
+    def make_topic_read(topic, user)
+      TopicUser.update_last_read(user, topic.id, 1, 1, 1)
+      topic
+    end
+
     context "when the user is part of the `experimental_new_new_view_groups` site setting group" do
       fab!(:category) { Fabricate(:category) }
       fab!(:tag) { Fabricate(:tag) }
 
-      fab!(:new_reply) { Fabricate(:post).topic }
+      fab!(:new_reply) { make_topic_with_unread_replies(Fabricate(:post).topic, user) }
       fab!(:new_topic) { Fabricate(:post).topic }
-      fab!(:old_topic) { Fabricate(:post).topic }
+      fab!(:old_topic) { make_topic_read(Fabricate(:post).topic, user) }
 
       fab!(:new_reply_in_category) do
-        Fabricate(:post, topic: Fabricate(:topic, category: category)).topic
+        make_topic_with_unread_replies(
+          Fabricate(:post, topic: Fabricate(:topic, category: category)).topic,
+          user,
+        )
       end
       fab!(:new_topic_in_category) do
         Fabricate(:post, topic: Fabricate(:topic, category: category)).topic
       end
       fab!(:old_topic_in_category) do
-        Fabricate(:post, topic: Fabricate(:topic, category: category)).topic
+        make_topic_read(Fabricate(:post, topic: Fabricate(:topic, category: category)).topic, user)
       end
 
-      fab!(:new_reply_with_tag) { Fabricate(:post, topic: Fabricate(:topic, tags: [tag])).topic }
+      fab!(:new_reply_with_tag) do
+        make_topic_with_unread_replies(
+          Fabricate(:post, topic: Fabricate(:topic, tags: [tag])).topic,
+          user,
+        )
+      end
       fab!(:new_topic_with_tag) { Fabricate(:post, topic: Fabricate(:topic, tags: [tag])).topic }
-      fab!(:old_topic_with_tag) { Fabricate(:post, topic: Fabricate(:topic, tags: [tag])).topic }
+      fab!(:old_topic_with_tag) do
+        make_topic_read(Fabricate(:post, topic: Fabricate(:topic, tags: [tag])).topic, user)
+      end
 
       before do
+        make_topic_read(topic, user)
+
         SiteSetting.experimental_new_new_view_groups = group.name
         group.add(user)
+
         sign_in(user)
-
-        [topic, old_topic, old_topic_in_category, old_topic_with_tag].each do |topic|
-          TopicUser.update_last_read(user, topic.id, 1, 1, 1)
-        end
-
-        [new_reply, new_reply_in_category, new_reply_with_tag].each do |topic|
-          TopicUser.change(
-            user.id,
-            topic.id,
-            notification_level: TopicUser.notification_levels[:tracking],
-          )
-          TopicUser.update_last_read(user, topic.id, 1, 1, 1)
-          Fabricate(:post, topic: topic)
-        end
       end
 
       it "returns new topics and topics with new replies" do

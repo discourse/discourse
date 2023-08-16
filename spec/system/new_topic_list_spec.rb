@@ -65,10 +65,6 @@ describe "New topic list", type: :system do
         expect(tabs_toggle.all_tab).to have_count(6)
         expect(tabs_toggle.replies_tab).to have_count(3)
         expect(tabs_toggle.topics_tab).to have_count(3)
-      end
-
-      it "the All tab is the default is the default tab" do
-        visit("/new")
 
         expect(tabs_toggle.all_tab).to be_active
         expect(tabs_toggle.replies_tab).to be_inactive
@@ -172,9 +168,8 @@ describe "New topic list", type: :system do
         it "shows new topics and replies in the category" do
           visit("/c/#{category.slug}/#{category.id}/l/new")
           expect(topic_list).to have_topics(count: 2)
-          [new_reply_in_category, new_topic_in_category].each do |topic|
-            expect(topic_list).to have_topic(topic)
-          end
+          expect(topic_list).to have_topic(new_reply_in_category)
+          expect(topic_list).to have_topic(new_topic_in_category)
 
           expect(tabs_toggle.all_tab).to be_active
           expect(tabs_toggle.replies_tab).to be_inactive
