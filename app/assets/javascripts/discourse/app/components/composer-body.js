@@ -36,6 +36,7 @@ export default Component.extend(KeyEnterEscape, {
     "composer.sharedDraft:composing-shared-draft",
     "showPreview:show-preview:hide-preview",
     "currentUserPrimaryGroupClass",
+    "classNames",
   ],
 
   @discourseComputed("composer.action")

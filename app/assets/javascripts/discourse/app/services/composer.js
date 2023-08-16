@@ -121,6 +121,7 @@ export default class ComposerService extends Service {
   linkLookup = null;
   showPreview = true;
   composerHeight = null;
+  stateChangeCallbacks = [];
 
   @and("site.mobileView", "showPreview") forcePreview;
   @or("isWhispering", "model.unlistTopic") whisperOrUnlistTopic;
@@ -1725,6 +1726,17 @@ export default class ComposerService extends Service {
 
   clearLastValidatedAt() {
     this.set("lastValidatedAt", null);
+  }
+
+  @observes("visible", "model.action", "model.composerState")
+  _stateChange() {
+    this.stateChangeCallbacks.forEach((callback) => {
+      callback();
+    });
+  }
+
+  onStateChange(callback) {
+    this.stateChangeCallbacks.push(callback);
   }
 }
 

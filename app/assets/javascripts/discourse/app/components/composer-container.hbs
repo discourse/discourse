@@ -5,6 +5,7 @@
   @typed={{this.composer.typed}}
   @cancelled={{this.composer.cancelled}}
   @save={{this.composer.saveAction}}
+  @classNames={{this.composerContainerState.bodyClassNames}}
 >
   <div class="grippie"></div>
 
@@ -44,10 +45,12 @@
         <div class="reply-to">
           {{#unless this.composer.model.viewFullscreen}}
             <div class="reply-details">
-              <ComposerActionTitle
-                @model={{this.composer.model}}
-                @canWhisper={{this.composer.canWhisper}}
-              />
+              {{#if this.composerContainerState.shouldDisplayActionTitle}}
+                <ComposerActionTitle
+                  @model={{this.composer.model}}
+                  @canWhisper={{this.composer.canWhisper}}
+                />
+              {{/if}}
 
               <PluginOutlet
                 @name="composer-action-after"
@@ -126,103 +129,105 @@
           @disableTextarea={{this.composer.disableTextarea}}
           @formTemplateIds={{this.composer.formTemplateIds}}
         >
-          <div class="composer-fields">
-            <PluginOutlet
-              @name="before-composer-fields"
-              @outletArgs={{hash model=this.composer.model}}
-            />
-            {{#unless this.composer.model.viewFullscreen}}
-              {{#if this.composer.model.canEditTitle}}
-                {{#if this.composer.model.creatingPrivateMessage}}
-                  <div class="user-selector">
-                    <ComposerUserSelector
-                      @topicId={{this.composer.topicModel.id}}
-                      @recipients={{this.composer.model.targetRecipients}}
-                      @hasGroups={{this.composer.model.hasTargetGroups}}
-                      @focusTarget={{this.composer.focusTarget}}
-                      @class={{concat
-                        "users-input"
-                        (if this.composer.showWarning " can-warn")
-                      }}
-                    />
-                    {{#if this.composer.showWarning}}
-                      <label class="add-warning">
-                        <Input
-                          @type="checkbox"
-                          @checked={{this.composer.model.isWarning}}
-                        />
-                        <span>{{i18n "composer.add_warning"}}</span>
-                      </label>
-                    {{/if}}
-                  </div>
-                {{/if}}
-
-                <div
-                  class="title-and-category
-                    {{if this.composer.showPreview 'with-preview'}}"
-                >
-                  <ComposerTitle
-                    @composer={{this.composer.model}}
-                    @lastValidatedAt={{this.composer.lastValidatedAt}}
-                    @focusTarget={{this.composer.focusTarget}}
-                  />
-
-                  {{#if this.composer.model.showCategoryChooser}}
-                    <div class="category-input">
-                      <CategoryChooser
-                        @value={{this.composer.model.categoryId}}
-                        @onChange={{this.composer.updateCategory}}
-                        @options={{hash
-                          disabled=this.composer.disableCategoryChooser
-                          scopedCategoryId=this.composer.scopedCategoryId
-                          prioritizedCategoryId=this.composer.prioritizedCategoryId
+          {{#if this.composerContainerState.shouldDisplayFields}}
+            <div class="composer-fields">
+              <PluginOutlet
+                @name="before-composer-fields"
+                @outletArgs={{hash model=this.composer.model}}
+              />
+              {{#unless this.composer.model.viewFullscreen}}
+                {{#if this.composer.model.canEditTitle}}
+                  {{#if this.composer.model.creatingPrivateMessage}}
+                    <div class="user-selector">
+                      <ComposerUserSelector
+                        @topicId={{this.composer.topicModel.id}}
+                        @recipients={{this.composer.model.targetRecipients}}
+                        @hasGroups={{this.composer.model.hasTargetGroups}}
+                        @focusTarget={{this.composer.focusTarget}}
+                        @class={{concat
+                          "users-input"
+                          (if this.composer.showWarning " can-warn")
                         }}
                       />
-                      <PopupInputTip
-                        @validation={{this.composer.categoryValidation}}
-                      />
+                      {{#if this.composer.showWarning}}
+                        <label class="add-warning">
+                          <Input
+                            @type="checkbox"
+                            @checked={{this.composer.model.isWarning}}
+                          />
+                          <span>{{i18n "composer.add_warning"}}</span>
+                        </label>
+                      {{/if}}
                     </div>
                   {{/if}}
 
-                  {{#if this.composer.canEditTags}}
-                    <MiniTagChooser
-                      @value={{this.composer.model.tags}}
-                      @onChange={{action (mut this.composer.model.tags)}}
-                      @options={{hash
+                  <div
+                    class="title-and-category
+                      {{if this.composer.showPreview 'with-preview'}}"
+                  >
+                    <ComposerTitle
+                      @composer={{this.composer.model}}
+                      @lastValidatedAt={{this.composer.lastValidatedAt}}
+                      @focusTarget={{this.composer.focusTarget}}
+                    />
+
+                    {{#if this.composer.model.showCategoryChooser}}
+                      <div class="category-input">
+                        <CategoryChooser
+                          @value={{this.composer.model.categoryId}}
+                          @onChange={{this.composer.updateCategory}}
+                          @options={{hash
+                            disabled=this.composer.disableCategoryChooser
+                            scopedCategoryId=this.composer.scopedCategoryId
+                            prioritizedCategoryId=this.composer.prioritizedCategoryId
+                          }}
+                        />
+                        <PopupInputTip
+                          @validation={{this.composer.categoryValidation}}
+                        />
+                      </div>
+                    {{/if}}
+
+                    {{#if this.composer.canEditTags}}
+                      <MiniTagChooser
+                        @value={{this.composer.model.tags}}
+                        @onChange={{action (mut this.composer.model.tags)}}
+                        @options={{hash
+                          disabled=this.composer.disableTagsChooser
+                          categoryId=this.composer.model.categoryId
+                          minimum=this.composer.model.minimumRequiredTags
+                        }}
+                      />
+                      <PopupInputTip
+                        @validation={{this.composer.tagValidation}}
+                      />
+                    {{/if}}
+
+                    <PluginOutlet
+                      @name="after-title-and-category"
+                      @outletArgs={{hash
+                        model=this.composer.model
+                        tagValidation=this.composer.tagValidation
+                        canEditTags=this.composer.canEditTags
                         disabled=this.composer.disableTagsChooser
-                        categoryId=this.composer.model.categoryId
-                        minimum=this.composer.model.minimumRequiredTags
                       }}
                     />
-                    <PopupInputTip
-                      @validation={{this.composer.tagValidation}}
-                    />
-                  {{/if}}
+                  </div>
+                {{/if}}
 
+                <span>
                   <PluginOutlet
-                    @name="after-title-and-category"
+                    @name="composer-fields"
+                    @connectorTagName="div"
                     @outletArgs={{hash
                       model=this.composer.model
-                      tagValidation=this.composer.tagValidation
-                      canEditTags=this.composer.canEditTags
-                      disabled=this.composer.disableTagsChooser
+                      showPreview=this.composer.showPreview
                     }}
                   />
-                </div>
-              {{/if}}
-
-              <span>
-                <PluginOutlet
-                  @name="composer-fields"
-                  @connectorTagName="div"
-                  @outletArgs={{hash
-                    model=this.composer.model
-                    showPreview=this.composer.showPreview
-                  }}
-                />
-              </span>
-            {{/unless}}
-          </div>
+                </span>
+              {{/unless}}
+            </div>
+          {{/if}}
         </ComposerEditor>
 
         <span>
