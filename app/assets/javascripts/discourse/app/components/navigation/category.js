@@ -1,46 +1,37 @@
-import { getOwner } from "@ember/application";
-import discourseComputed from "discourse-common/utils/decorators";
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { TRACKED_QUERY_PARAM_VALUE } from "discourse/lib/topic-list-tracked-filter";
-import { dependentKeyCompat } from "@ember/object/compat";
-import { tracked } from "@glimmer/tracking";
 import { calculateFilterMode } from "discourse/lib/filter-mode";
+import { action } from "@ember/object";
+import DiscourseURL from "discourse/lib/url";
+import Category from "discourse/models/category";
 
 export default class NavigationCategory extends Component {
   @service router;
   @service composer;
   @service currentUser;
 
-  @tracked category;
-  @tracked filterType;
-  @tracked noSubcategories;
-
-  get discovery() {
-    return getOwner(this).lookup("controller:discovery");
+  get skipCategoriesNavItem() {
+    return (
+      this.router.currentRoute.queryParams?.f === TRACKED_QUERY_PARAM_VALUE
+    );
   }
 
-  @discourseComputed("router.currentRoute.queryParams.f")
-  skipCategoriesNavItem(filterParamValue) {
-    return filterParamValue === TRACKED_QUERY_PARAM_VALUE;
-  }
-
-  @dependentKeyCompat
   get filterMode() {
     return calculateFilterMode({
-      category: this.category,
-      filterType: this.filterType,
-      noSubcategories: this.noSubcategories,
+      category: this.args.category,
+      filterType: this.args.filterType,
+      noSubcategories: this.args.noSubcategories,
     });
   }
 
   get createTopicTargetCategory() {
-    if (this.category?.canCreateTopic) {
-      return this.category;
+    if (this.args.category?.canCreateTopic) {
+      return this.args.category;
     }
 
     if (this.siteSettings.default_subcategory_on_read_only_category) {
-      return this.category?.subcategoryWithCreateTopicPermission;
+      return this.args.category?.subcategoryWithCreateTopicPermission;
     }
   }
 
@@ -50,5 +41,10 @@ export default class NavigationCategory extends Component {
 
   get canCreateTopic() {
     return this.currentUser?.can_create_topic;
+  }
+
+  @action
+  editCategory() {
+    DiscourseURL.routeTo(`/c/${Category.slugFor(this.args.category)}/edit`);
   }
 }

@@ -1,10 +1,10 @@
-<AddCategoryTagClasses @category={{this.category}} />
+<AddCategoryTagClasses @category={{@category}} />
 
 <section class="category-heading">
-  {{#if this.category.uploaded_logo.url}}
-    <CategoryLogo @category={{this.category}} />
-    {{#if this.category.description}}
-      <p>{{dir-span this.category.description htmlSafe="true"}}</p>
+  {{#if @category.uploaded_logo.url}}
+    <CategoryLogo @category={{@category}} />
+    {{#if @category.description}}
+      <p>{{dir-span @category.description htmlSafe="true"}}</p>
     {{/if}}
   {{/if}}
 
@@ -12,16 +12,16 @@
     <PluginOutlet
       @name="category-heading"
       @connectorTagName="div"
-      @outletArgs={{hash category=this.category}}
+      @outletArgs={{hash category=@category}}
     />
   </span>
 </section>
 
 <DSection @class="navigation-container category-navigation">
   <DNavigation
-    @category={{this.category}}
+    @category={{@category}}
     @filterMode={{this.filterMode}}
-    @noSubcategories={{this.noSubcategories}}
+    @noSubcategories={{@noSubcategories}}
     @canCreateTopic={{this.canCreateTopic}}
     @createTopic={{fn
       this.composer.openNewTopic
@@ -29,12 +29,12 @@
     }}
     @createTopicDisabled={{not this.enableCreateTopicButton}}
     @hasDraft={{this.currentUser.has_topic_draft}}
-    @editCategory={{route-action "editCategory" this.category}}
+    @editCategory={{this.editCategory}}
   />
 
   <PluginOutlet
     @name="category-navigation"
     @connectorTagName="div"
-    @outletArgs={{hash category=this.category}}
+    @outletArgs={{hash category=@category}}
   />
 </DSection>
