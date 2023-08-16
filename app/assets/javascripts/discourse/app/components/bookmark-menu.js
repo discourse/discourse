@@ -1,45 +1,76 @@
-import { later } from "@ember/runloop";
 import {
   CLOSE_INITIATED_BY_BUTTON,
   CLOSE_INITIATED_BY_ESC,
 } from "discourse/components/d-modal";
-import { getOwner } from "discourse-common/lib/get-owner";
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import { inject as controller } from "@ember/controller";
 import Bookmark from "discourse/models/bookmark";
 import { BookmarkFormData } from "discourse/lib/bookmark";
 import BookmarkRedesignModal from "../components/modal/bookmark-redesign";
+import { tracked } from "@glimmer/tracking";
+import discourseLater from "discourse-common/lib/later";
+import { modifier } from "ember-modifier";
+import { cancel } from "@ember/runloop";
 
 export default class DiscourseBookmarkMenu extends Component {
   @service modal;
   @service currentUser;
 
-  noReminderAtOptions = [
-    { id: 5, name: "No reminder", class: "-no-reminder", autofocus: true },
-  ];
+  @controller("topic") topicController;
+
+  @tracked bookmarkedNotice = false;
+  @tracked slideOutBookmarkNotice = false;
+
+  scheduleSlideOut = modifier(() => {
+    const handler = discourseLater(() => {
+      this.slideOutBookmarkNotice = true;
+    }, 1000);
+
+    return () => {
+      cancel(handler);
+    };
+  });
+
+  scheduleRemove = modifier(() => {
+    const handler = discourseLater(() => {
+      this.bookmarkedNotice = false;
+    }, 2500);
+
+    return () => {
+      cancel(handler);
+    };
+  });
 
   // TODO Replace these (except none/custom) with time shortcuts from time-shortcut
   reminderAtOptions = [
-    { id: 1, name: "Two hours" },
+    { id: 1, name: "In two hours" },
     { id: 2, name: "Tomorrow" },
-    { id: 3, name: "Three days" },
+    { id: 3, name: "in three days" },
     { id: 4, name: "Custom..." },
   ];
 
-  @action
-  autoFocusButton(option, target) {
-    later(() => {
-      if (option.autofocus) {
-        target.focus();
-      }
-    }, 500);
+  get existingBookmark() {
+    return this.topicController.model.bookmarks.find(
+      (bookmark) =>
+        bookmark.bookmarkable_id === this.args.post.id &&
+        bookmark.bookmarkable_type === "Post"
+    );
   }
 
   @action
-  onBookmark() {
+  onBookmark(event) {
     // eslint-disable-next-line no-console
     console.log("on bookmark");
+    event.target.blur();
+
+    if (this.existingBookmark) {
+      // handle remove bookmark, maybe?
+    } else {
+      this.slideOutBookmarkNotice = false;
+      this.bookmarkedNotice = true;
+    }
   }
 
   @action
@@ -68,14 +99,9 @@ export default class DiscourseBookmarkMenu extends Component {
     // TODO (martin) This will need to be changed when using the bookmark menu
     // with chat.
     const post = this.args.post;
-    const topicController = getOwner(this).lookup("controller:topic");
-    const bookmarkForPost = topicController.model.bookmarks.find(
-      (bookmark) =>
-        bookmark.bookmarkable_id === post.id &&
-        bookmark.bookmarkable_type === "Post"
-    );
     const bookmark =
-      bookmarkForPost || Bookmark.createFor(this.currentUser, "Post", post.id);
+      this.existingBookmark ||
+      Bookmark.createFor(this.currentUser, "Post", post.id);
 
     // TODO (martin) Really all this needs to be redone/cleaned up, it's only
     // here to launch the new modal so it can be seen.

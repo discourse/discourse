@@ -1,8 +1,13 @@
 {{! template-lint-disable no-invalid-interactive }}
 <div
-  {{on "click" (action "close")}}
+  {{on "click" this.close}}
   id={{this.componentId}}
-  class="d-popover {{this.class}} {{if this.isExpanded 'is-expanded'}}"
+  class={{concat-class
+    "d-popover"
+    this.class
+    (if this.isExpanded "is-expanded")
+  }}
+  ...attributes
 >
   {{yield (hash isExpanded=this.isExpanded)}}
 </div>

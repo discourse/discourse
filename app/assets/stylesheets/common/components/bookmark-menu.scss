@@ -1,108 +1,145 @@
-.bookmark-menu-shim {
-  .tippy-box {
-    margin: 0;
-    border: 0;
-    background: none;
-    box-shadow: none;
+@keyframes slide {
+  0% {
+  }
+  100% {
+    transform: translateY(100%) translateX(-50%);
+    opacity: 0;
+  }
+}
 
-    .tippy-content {
-      padding: 0;
+.bookmark-menu {
+  position: relative;
+
+  &__notice {
+    position: absolute;
+    top: -1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--tertiary);
+    padding: 0.25rem 0.5rem;
+    white-space: nowrap;
+    opacity: 1;
+
+    &.-slide-out {
+      animation: slide 1s cubic-bezier(0, 0, 0, 2) forwards;
     }
   }
 
-  .bookmark-menu__trigger {
-    &.-bookmarked {
-      .d-icon {
-        color: var(--tertiary);
+  &-shim {
+    .tippy-box {
+      margin: 0;
+      border: 0;
+
+      .tippy-content {
+        padding: 0;
       }
     }
-  }
 
-  .bookmark-menu__body {
-    border: 1px solid var(--primary-low);
-    z-index: z("dropdown");
-    box-shadow: var(--shadow-menu-panel);
-    background: var(--secondary);
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    color: var(--primary);
-    width: 200px;
-    text-align: left;
-    margin: 0;
-  }
-
-  .bookmark-menu {
-    &__text {
-      display: flex;
-      align-items: left;
+    .tippy-svg-arrow {
+      top: 1px !important;
+      z-index: z("dropdown") + 1;
     }
 
-    &__row {
-      border-bottom: 1px solid var(--primary-low);
-      width: 100%;
-      display: flex;
-      align-items: left;
-
-      &:hover,
-      &:focus {
-        background: var(--tertiary-very-low) !important;
-      }
-
-      &-title-row {
-        background: var(--primary-100) !important;
-      }
-
-      &-btn {
-        margin: 0 !important;
-        padding: 0.75em !important;
-        width: 100%;
-        text-align: left;
-        justify-content: left;
-
+    .bookmark-menu__trigger {
+      &.-bookmarked {
         .d-icon {
-          color: var(--primary);
+          color: var(--tertiary);
         }
+      }
+    }
 
-        .d-button-label {
-          color: var(--primary);
-          font-size: var(--font-down-1);
-        }
+    .bookmark-menu__body {
+      border: 1px solid var(--primary-low);
+      z-index: z("dropdown");
+      background: var(--secondary);
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      color: var(--primary);
+      width: max-content;
+      max-width: 200px;
+      text-align: left;
+      margin: 0;
+
+      .bookmark-menu__actions {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+    }
+
+    .bookmark-menu {
+      &__text {
+        display: flex;
+        align-items: left;
+      }
+
+      &__row {
+        border-bottom: 1px solid var(--primary-low);
+        width: 100%;
+        display: flex;
+        align-items: left;
+
         &:hover,
         &:focus {
           background: var(--tertiary-very-low) !important;
         }
-      }
 
-      &.-edit {
-        .d-icon {
-          margin-right: 5px;
-        }
-      }
-
-      &.-remove {
-        .d-icon {
-          color: var(--danger);
+        &-title-row {
+          background: var(--primary-100) !important;
         }
 
-        &:hover,
-        &:focus {
-          background: var(--danger-low) !important;
+        &-btn {
+          margin: 0 !important;
+          padding: 0.75em !important;
+          width: 100%;
+          text-align: left;
+          justify-content: left;
+
+          .d-icon {
+            color: var(--primary);
+          }
+
+          .d-button-label {
+            color: var(--primary);
+            font-size: var(--font-down-1);
+          }
+          &:hover,
+          &:focus {
+            background: var(--tertiary-very-low) !important;
+          }
         }
-      }
 
-      &:last-child {
-        border-bottom: none;
-      }
+        &.-edit {
+          .d-icon {
+            margin-right: 5px;
+          }
+        }
 
-      &.-no-reminder {
-        border-bottom: 2px solid var(--primary-low);
+        &.-remove {
+          .d-icon {
+            color: var(--danger);
+          }
+
+          &:hover,
+          &:focus {
+            background: var(--danger-low) !important;
+          }
+        }
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &.-no-reminder {
+          border-bottom: 2px solid var(--primary-low);
+        }
       }
     }
-  }
 
-  .bookmark-menu__row-title {
-    font-weight: 900;
-    padding: 0.75em;
+    .bookmark-menu__row-title {
+      font-weight: 900;
+      padding: 0.75em;
+    }
   }
 }
