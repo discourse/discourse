@@ -2366,12 +2366,13 @@ RSpec.describe Topic do
       it "doesn't return topics from suppressed tags" do
         category = Fabricate(:category_with_definition, created_at: 2.minutes.ago)
         topic = Fabricate(:topic, category: category, created_at: 1.minute.ago)
+        topic2 = Fabricate(:topic, category: category, created_at: 1.minute.ago)
         tag = Fabricate(:tag)
         Fabricate(:topic_tag, topic: topic, tag: tag)
 
         SiteSetting.digest_suppress_tags = "#{tag.id}"
         topics = Topic.for_digest(user, 1.year.ago, top_order: true)
-        expect(topics).to be_blank
+        expect(topics).to eq([topic2])
 
         Fabricate(
           :topic_user,
@@ -2380,7 +2381,7 @@ RSpec.describe Topic do
           notification_level: TopicUser.notification_levels[:regular],
         )
 
-        expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
+        expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to eq([topic2])
       end
 
       it "doesn't return topics from TL0 users" do

@@ -587,8 +587,8 @@ class Topic < ActiveRecord::Base
     end
     if SiteSetting.digest_suppress_tags.present?
       topics =
-        topics.joins("JOIN topic_tags tg ON topics.id = tg.topic_id").where(
-          "tg.tag_id NOT IN (?)",
+        topics.joins("LEFT JOIN topic_tags tg ON topics.id = tg.topic_id").where(
+          "tg.tag_id NOT IN (?) OR tg.tag_id IS NULL",
           SiteSetting.digest_suppress_tags.split("|").map(&:to_i),
         )
     end
