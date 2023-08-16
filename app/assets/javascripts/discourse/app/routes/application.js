@@ -241,6 +241,7 @@ const ApplicationRoute = DiscourseRoute.extend({
           }),
           showNotActivated: (props) => this.send("showNotActivated", props),
           showCreateAccount: (props) => this.send("showCreateAccount", props),
+          canSignUp: this.controller.canSignUp,
         },
       });
     }
@@ -259,6 +260,7 @@ const ApplicationRoute = DiscourseRoute.extend({
             signup: true,
             showNotActivated: (props) => this.send("showNotActivated", props),
             showCreateAccount: (props) => this.send("showCreateAccount", props),
+            canSignUp: this.controller.canSignUp,
           },
         });
       } else {
