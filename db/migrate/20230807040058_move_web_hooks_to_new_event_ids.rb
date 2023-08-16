@@ -126,7 +126,7 @@ class MoveWebHooksToNewEventIds < ActiveRecord::Migration[7.0]
 
   def down
     execute <<~SQL
-      DELETE FROM web_hook_event_types_hooks WHERE web_hook_event_type_id > 10
+      DELETE FROM web_hook_event_types_hooks WHERE web_hook_event_type_id > 100
     SQL
   end
 end
