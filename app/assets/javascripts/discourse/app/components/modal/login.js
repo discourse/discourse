@@ -214,7 +214,7 @@ export default class Login extends Component {
 
           return;
         } else if (result.reason === "not_activated") {
-          this.applicationController.send("showNotActivated", {
+          this.args.model.showNotActivated({
             username: this.loginName,
             sentTo: escape(result.sent_to_email),
             currentEmail: escape(result.current_email),
