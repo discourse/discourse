@@ -1127,13 +1127,14 @@ export default Component.extend(
     },
 
     _deprecateMutations() {
-      this.actions = this.actions || {};
-      this.attrs = this.attrs || {};
-
-      if (!this.attrs.onChange && !this.actions.onChange) {
+      if (!this.attrs?.onChange && !this.actions?.onChange) {
         this._deprecated(
           "Implicit mutation has been deprecated, please use `onChange` handler"
         );
+
+        if (!this.actions) {
+          return;
+        }
 
         this.actions.onChange =
           this.attrs.onSelect ||
