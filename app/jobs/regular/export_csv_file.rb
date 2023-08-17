@@ -168,17 +168,17 @@ module Jobs
     def screened_email_export
       return enum_for(:screened_email_export) unless block_given?
 
-      ScreenedEmail
-        .order("last_match_at DESC")
-        .find_each { |screened_email| yield get_screened_email_fields(screened_email) }
+      ScreenedEmail.find_each(order: :desc) do |screened_email|
+        yield get_screened_email_fields(screened_email)
+      end
     end
 
     def screened_ip_export
       return enum_for(:screened_ip_export) unless block_given?
 
-      ScreenedIpAddress
-        .order("id DESC")
-        .each { |screened_ip| yield get_screened_ip_fields(screened_ip) }
+      ScreenedIpAddress.find_each(order: :desc) do |screened_ip|
+        yield get_screened_ip_fields(screened_ip)
+      end
     end
 
     def screened_url_export
