@@ -63,18 +63,15 @@ module Jobs
       @extra = HashWithIndifferentAccess.new(args[:args]) if args[:args]
       @current_user = User.find_by(id: args[:user_id])
 
-      entities = [{ name: @entity }]
+      entity = { name: @entity }
+      entity[:method] = :"#{entity[:name]}_export"
+      raise Discourse::InvalidParameters.new(:entity) unless respond_to?(entity[:method])
 
-      entities.each do |entity|
-        entity[:method] = :"#{entity[:name]}_export"
-        raise Discourse::InvalidParameters.new(:entity) unless respond_to?(entity[:method])
-
-        @timestamp ||= Time.now.strftime("%y%m%d-%H%M%S")
-        entity[:filename] = if entity[:name] == "report" && @extra[:name].present?
-          "#{@extra[:name].dasherize}-#{@timestamp}"
-        else
-          "#{entity[:name].dasherize}-#{@timestamp}"
-        end
+      @timestamp ||= Time.now.strftime("%y%m%d-%H%M%S")
+      entity[:filename] = if entity[:name] == "report" && @extra[:name].present?
+        "#{@extra[:name].dasherize}-#{@timestamp}"
+      else
+        "#{entity[:name].dasherize}-#{@timestamp}"
       end
 
       export_title =
@@ -84,11 +81,11 @@ module Jobs
           @entity.gsub("_", " ").titleize
         end
 
-      filename = entities[0][:filename] # use first entity as a name for this export
+      filename = entity[:filename]
       user_export = UserExport.create(file_name: filename, user_id: @current_user.id)
       filename = "#{filename}-#{user_export.id}"
 
-      zip_filename = write_to_csv_and_zip(filename, entities)
+      zip_filename = write_to_csv_and_zip(filename, entity)
 
       # create upload
       upload = nil
@@ -461,15 +458,13 @@ module Jobs
       post
     end
 
-    def write_to_csv_and_zip(filename, entities)
+    def write_to_csv_and_zip(filename, entity)
       dirname = "#{UserExport.base_directory}/#{filename}"
       FileUtils.mkdir_p(dirname) unless Dir.exist?(dirname)
       begin
-        entities.each do |entity|
-          CSV.open("#{dirname}/#{entity[:filename]}.csv", "w") do |csv|
-            csv << get_header(entity[:name]) if entity[:name] != "report"
-            public_send(entity[:method]) { |d| csv << d }
-          end
+        CSV.open("#{dirname}/#{entity[:filename]}.csv", "w") do |csv|
+          csv << get_header(entity[:name]) if entity[:name] != "report"
+          public_send(entity[:method]) { |d| csv << d }
         end
 
         Compression::Zip.new.compress(UserExport.base_directory, filename)
