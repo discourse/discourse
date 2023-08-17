@@ -1,7 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
 
-let QUERY_PARAMS_FROZEN = false;
-
 // Just add query params here to have them automatically passed to topic list filters.
 export const queryParams = {
   order: { replace: true, refreshModel: true },
@@ -45,12 +43,9 @@ export function resetParams(skipParams = []) {
   });
 }
 
-export const addDiscoveryQueryParam = function (p, opts) {
-  if (!queryParams[p] && QUERY_PARAMS_FROZEN) {
-    throw `DiscoverySortableController has already been initialized, new query parameters cannot be introduced (tried to introduce ${p})`;
-  }
+export function addDiscoveryQueryParam(p, opts) {
   queryParams[p] = opts;
-};
+}
 
 export default class DiscoverySortableController extends Controller {
   @controller("discovery/topics") discoveryTopics;
@@ -62,6 +57,5 @@ export default class DiscoverySortableController extends Controller {
     this.queryParams.forEach((p) => {
       this[p] = queryParams[p].default;
     });
-    QUERY_PARAMS_FROZEN = true;
   }
 }
