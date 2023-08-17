@@ -131,13 +131,13 @@ describe "New topic list", type: :system do
 
         expect(tabs_toggle.all_tab).to be_inactive
         expect(tabs_toggle.replies_tab).to be_active
-        try_until_success { expect(current_url).to end_with("/new?subset=replies") }
+        expect(current_url).to end_with("/new?subset=replies")
 
         tabs_toggle.all_tab.click
 
         expect(tabs_toggle.all_tab).to be_active
         expect(tabs_toggle.replies_tab).to be_inactive
-        try_until_success { expect(current_url).to end_with("/new") }
+        expect(current_url).to end_with("/new")
       end
 
       it "live-updates the counts shown on the tabs" do
