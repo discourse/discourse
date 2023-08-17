@@ -38,7 +38,7 @@ export default {
             const options = JSON.parse(lastAuthResult);
             const modal = owner.lookup("service:modal");
             const siteSettings = owner.lookup("service:site-settings");
-            const applicationRouter = owner.lookup("application:main");
+            const applicationRouter = owner.lookup("route:application");
             const applicationController = owner.lookup(
               "controller:application"
             );
@@ -47,13 +47,9 @@ export default {
               modal.show(LoginModal, {
                 model: {
                   showNotActivated: (props) =>
-                    applicationRouter
-                      .send("showNotActivated", props)
-                      .bind(owner),
+                    applicationRouter.send("showNotActivated", props),
                   showCreateAccount: (props) =>
-                    applicationRouter
-                      .send("showCreateAccount", props)
-                      .bind(owner),
+                    applicationRouter.send("showCreateAccount", props),
                   canSignUp: applicationController.canSignUp,
                   flash: errorMsg,
                   flashType: className || "success",
