@@ -1,5 +1,5 @@
 import {
-  changeNewListScope,
+  changeNewListSubset,
   changeSort,
   queryParams,
   resetParams,
@@ -167,8 +167,8 @@ class AbstractTopicRoute extends DiscourseRoute {
   }
 
   @action
-  changeNewListScope(newScope) {
-    changeNewListScope.call(this, newScope);
+  changeNewListSubset(subset) {
+    changeNewListSubset.call(this, subset);
   }
 
   @action

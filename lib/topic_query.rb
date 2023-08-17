@@ -53,7 +53,7 @@ class TopicQuery
       search
       q
       f
-      s
+      subset
       group_name
       tags
       match_all_tags
@@ -305,9 +305,8 @@ class TopicQuery
 
   def list_new
     if @user&.new_new_view_enabled?
-      new_list_scope = @options[:s]
       list =
-        case new_list_scope
+        case @options[:subset]
         when "topics"
           new_results
         when "replies"

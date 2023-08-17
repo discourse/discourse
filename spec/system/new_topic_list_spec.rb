@@ -71,14 +71,14 @@ describe "New topic list", type: :system do
         expect(tabs_toggle.topics_tab).to be_inactive
       end
 
-      it "respects the s (scope) query param and activates the appropriate tab" do
-        visit("/new?s=topics")
+      it "respects the subset query param and activates the appropriate tab" do
+        visit("/new?subset=topics")
 
         expect(tabs_toggle.all_tab).to be_inactive
         expect(tabs_toggle.replies_tab).to be_inactive
         expect(tabs_toggle.topics_tab).to be_active
 
-        visit("/new?s=replies")
+        visit("/new?subset=replies")
 
         expect(tabs_toggle.all_tab).to be_inactive
         expect(tabs_toggle.replies_tab).to be_active
@@ -102,7 +102,7 @@ describe "New topic list", type: :system do
         expect(tabs_toggle.replies_tab).to have_count(3)
         expect(tabs_toggle.topics_tab).to have_count(3)
 
-        expect(current_url).to end_with("/new?s=topics")
+        expect(current_url).to end_with("/new?subset=topics")
       end
 
       it "shows only topics with new replies when the user switches to the Replies tab" do
@@ -122,16 +122,16 @@ describe "New topic list", type: :system do
         expect(tabs_toggle.replies_tab).to have_count(3)
         expect(tabs_toggle.topics_tab).to have_count(3)
 
-        expect(current_url).to end_with("/new?s=replies")
+        expect(current_url).to end_with("/new?subset=replies")
       end
 
-      it "strips out the s (scope) query params when switching back to the All tab from any of the other tabs" do
+      it "strips out the subset query params when switching back to the All tab from any of the other tabs" do
         visit("/new")
         tabs_toggle.replies_tab.click
 
         expect(tabs_toggle.all_tab).to be_inactive
         expect(tabs_toggle.replies_tab).to be_active
-        try_until_success { expect(current_url).to end_with("/new?s=replies") }
+        try_until_success { expect(current_url).to end_with("/new?subset=replies") }
 
         tabs_toggle.all_tab.click
 
@@ -195,7 +195,7 @@ describe "New topic list", type: :system do
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(1)
 
-          expect(current_url).to end_with("/c/#{category.slug}/#{category.id}/l/new?s=topics")
+          expect(current_url).to end_with("/c/#{category.slug}/#{category.id}/l/new?subset=topics")
         end
 
         it "shows only topics with new replies in the category when the user switches to the Replies tab" do
@@ -213,17 +213,17 @@ describe "New topic list", type: :system do
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(1)
 
-          expect(current_url).to end_with("/c/#{category.slug}/#{category.id}/l/new?s=replies")
+          expect(current_url).to end_with("/c/#{category.slug}/#{category.id}/l/new?subset=replies")
         end
 
-        it "respects the s (scope) query param and activates the appropriate tab" do
-          visit("/c/#{category.slug}/#{category.id}/l/new?s=topics")
+        it "respects the subset query param and activates the appropriate tab" do
+          visit("/c/#{category.slug}/#{category.id}/l/new?subset=topics")
 
           expect(tabs_toggle.all_tab).to be_inactive
           expect(tabs_toggle.replies_tab).to be_inactive
           expect(tabs_toggle.topics_tab).to be_active
 
-          visit("/c/#{category.slug}/#{category.id}/l/new?s=replies")
+          visit("/c/#{category.slug}/#{category.id}/l/new?subset=replies")
 
           expect(tabs_toggle.all_tab).to be_inactive
           expect(tabs_toggle.replies_tab).to be_active
@@ -281,7 +281,7 @@ describe "New topic list", type: :system do
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(1)
 
-          expect(current_url).to end_with("/tag/#{tag.name}/l/new?s=topics")
+          expect(current_url).to end_with("/tag/#{tag.name}/l/new?subset=topics")
         end
 
         it "shows only topics with new replies with the tag when the user switches to the Replies tab" do
@@ -300,17 +300,17 @@ describe "New topic list", type: :system do
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(1)
 
-          expect(current_url).to end_with("/tag/#{tag.name}/l/new?s=replies")
+          expect(current_url).to end_with("/tag/#{tag.name}/l/new?subset=replies")
         end
 
-        it "respects the s (scope) query param and activates the appropriate tab" do
-          visit("/tag/#{tag.name}/l/new?s=topics")
+        it "respects the subset query param and activates the appropriate tab" do
+          visit("/tag/#{tag.name}/l/new?subset=topics")
 
           expect(tabs_toggle.all_tab).to be_inactive
           expect(tabs_toggle.replies_tab).to be_inactive
           expect(tabs_toggle.topics_tab).to be_active
 
-          visit("/tag/#{tag.name}/l/new?s=replies")
+          visit("/tag/#{tag.name}/l/new?subset=replies")
 
           expect(tabs_toggle.all_tab).to be_inactive
           expect(tabs_toggle.replies_tab).to be_active

@@ -43,5 +43,5 @@ export default class DiscoveryFilterRoute extends DiscourseRoute {
   changeSort() {}
 
   @action
-  changeNewListScope() {}
+  changeNewListSubset() {}
 }

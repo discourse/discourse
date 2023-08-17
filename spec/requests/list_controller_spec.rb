@@ -1487,9 +1487,9 @@ RSpec.describe ListController do
         )
       end
 
-      context "when the s (scope) param is set to topics" do
+      context "when the subset param is set to topics" do
         it "returns only new topics" do
-          get "/new.json", params: { s: "topics" }
+          get "/new.json", params: { subset: "topics" }
 
           ids = extract_topic_ids(response)
           expect(ids).to contain_exactly(
@@ -1500,9 +1500,9 @@ RSpec.describe ListController do
         end
       end
 
-      context "when the s (scope) param is set to replies" do
+      context "when the subset param is set to replies" do
         it "returns only topics with new replies" do
-          get "/new.json", params: { s: "replies" }
+          get "/new.json", params: { subset: "replies" }
 
           ids = extract_topic_ids(response)
           expect(ids).to contain_exactly(
@@ -1521,13 +1521,13 @@ RSpec.describe ListController do
           expect(ids).to contain_exactly(new_topic_in_category.id, new_reply_in_category.id)
         end
 
-        it "respects the s (scope) param" do
-          get "/c/#{category.slug}/#{category.id}/l/new.json", params: { s: "topics" }
+        it "respects the subset param" do
+          get "/c/#{category.slug}/#{category.id}/l/new.json", params: { subset: "topics" }
 
           ids = extract_topic_ids(response)
           expect(ids).to contain_exactly(new_topic_in_category.id)
 
-          get "/c/#{category.slug}/#{category.id}/l/new.json", params: { s: "replies" }
+          get "/c/#{category.slug}/#{category.id}/l/new.json", params: { subset: "replies" }
 
           ids = extract_topic_ids(response)
           expect(ids).to contain_exactly(new_reply_in_category.id)
@@ -1542,13 +1542,13 @@ RSpec.describe ListController do
           expect(ids).to contain_exactly(new_topic_with_tag.id, new_reply_with_tag.id)
         end
 
-        it "respects the s (scope) param" do
-          get "/tag/#{tag.name}/l/new.json", params: { s: "topics" }
+        it "respects the subset param" do
+          get "/tag/#{tag.name}/l/new.json", params: { subset: "topics" }
 
           ids = extract_topic_ids(response)
           expect(ids).to contain_exactly(new_topic_with_tag.id)
 
-          get "/tag/#{tag.name}/l/new.json", params: { s: "replies" }
+          get "/tag/#{tag.name}/l/new.json", params: { subset: "replies" }
 
           ids = extract_topic_ids(response)
           expect(ids).to contain_exactly(new_reply_with_tag.id)

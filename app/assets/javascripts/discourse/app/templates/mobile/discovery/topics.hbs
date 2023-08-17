@@ -42,10 +42,10 @@
 
   {{#if this.showTopicsAndRepliesToggle}}
     <NewListHeaderControlsWrapper
-      @current={{this.newListScope}}
+      @current={{this.model.params.subset}}
       @newRepliesCount={{this.newRepliesCount}}
       @newTopicsCount={{this.newTopicsCount}}
-      @changeNewListScope={{route-action "changeNewListScope"}}
+      @changeNewListSubset={{route-action "changeNewListSubset"}}
     />
   {{/if}}
   {{#if this.hasTopics}}

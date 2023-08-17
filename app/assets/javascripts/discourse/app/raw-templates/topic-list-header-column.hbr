@@ -14,7 +14,7 @@
     {{/if ~}}
   {{/if ~}}
   {{~#if view.showTopicsAndRepliesToggle}}
-    {{raw "list/new-list-header-controls" current=newListScope newRepliesCount=newRepliesCount newTopicsCount=newTopicsCount}}
+    {{raw "list/new-list-header-controls" current=newListSubset newRepliesCount=newRepliesCount newTopicsCount=newTopicsCount}}
   {{else}}
     <span>{{view.localizedName}}</span>
   {{/if ~}}

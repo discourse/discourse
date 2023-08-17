@@ -28,7 +28,6 @@ export default class TopicsController extends DiscoveryController.extend(
 
   @alias("currentUser.id") canStar;
   @alias("currentUser.user_option.redirected_to_top.reason") redirectedReason;
-  @alias("model.params.s") newListScope;
   @readOnly("model.params.order") order;
   @readOnly("model.params.ascending") ascending;
   @gt("model.topics.length", 0) hasTopics;

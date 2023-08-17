@@ -67,13 +67,13 @@ const TopicList = RestModel.extend({
     this.set("params", params);
   },
 
-  updateNewListScopeParam(newScope) {
+  updateNewListSubsetParam(subset) {
     let params = Object.assign({}, this.params || {});
 
     if (params.q) {
       params = { q: params.q };
     } else {
-      params.s = newScope;
+      params.subset = subset;
     }
 
     this.set("params", params);

@@ -129,10 +129,10 @@
 
               {{#if (and this.showTopicsAndRepliesToggle this.site.mobileView)}}
                 <NewListHeaderControlsWrapper
-                  @current={{this.newListScope}}
+                  @current={{this.subset}}
                   @newRepliesCount={{this.newRepliesCount}}
                   @newTopicsCount={{this.newTopicsCount}}
-                  @changeNewListScope={{action "changeNewListScope"}}
+                  @changeNewListSubset={{action "changeNewListSubset"}}
                 />
               {{/if}}
               {{#if this.list.topics}}
@@ -153,8 +153,8 @@
                   @changeSort={{action "changeSort"}}
                   @focusLastVisitedTopic={{true}}
                   @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
-                  @newListScope={{this.newListScope}}
-                  @changeNewListScope={{action "changeNewListScope"}}
+                  @newListSubset={{this.subset}}
+                  @changeNewListSubset={{action "changeNewListSubset"}}
                   @newRepliesCount={{this.newRepliesCount}}
                   @newTopicsCount={{this.newTopicsCount}}
                 />
