@@ -240,7 +240,7 @@ GEM
       libv8-node (~> 18.16.0.0)
     mini_scheduler (0.16.0)
       sidekiq (>= 4.2.3, < 7.0)
-    mini_sql (1.4.0)
+    mini_sql (1.5.0)
     mini_suffix (0.3.3)
       ffi (~> 1.9)
     minitest (5.19.0)
