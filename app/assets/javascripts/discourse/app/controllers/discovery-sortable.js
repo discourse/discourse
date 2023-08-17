@@ -47,7 +47,7 @@ export function resetParams(skipParams = []) {
 
 export const addDiscoveryQueryParam = function (p, opts) {
   if (!queryParams[p] && QUERY_PARAMS_FROZEN) {
-    throw "DiscoverySortableController has already been initialized, new query parameters cannot be introduced";
+    throw `DiscoverySortableController has already been initialized, new query parameters cannot be introduced (tried to introduce ${p})`;
   }
   queryParams[p] = opts;
 };
