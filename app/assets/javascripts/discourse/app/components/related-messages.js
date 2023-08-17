@@ -1,20 +1,21 @@
-import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@glimmer/component";
+import { computed } from "@ember/object";
 import getURL from "discourse-common/lib/get-url";
 import { inject as service } from "@ember/service";
 
-export default Component.extend({
-  tagName: "",
-  moreTopicsPreferenceTracking: service(),
-  listId: "related-Messages",
+export default class RelatedMessages extends Component {
+  @service moreTopicsPreferenceTracking;
 
-  @discourseComputed("moreTopicsPreferenceTracking.preference")
-  hidden(preference) {
-    return this.site.mobileView && preference !== this.listId;
-  },
+  listId = "related-Messages";
 
-  @discourseComputed("topic")
-  targetUser(topic) {
+  @computed("moreTopicsPreferenceTracking.preference")
+  get hidden() {
+    return this.moreTopicsPreferenceTracking.preference !== this.listId;
+  }
+
+  get targetUser() {
+    const topic = this.args.topic;
+
     if (!topic || !topic.isPrivateMessage) {
       return;
     }
@@ -30,12 +31,11 @@ export default Component.extend({
     ) {
       return allowedUsers.find((u) => u.username !== this.currentUser.username);
     }
-  },
+  }
 
-  @discourseComputed
-  searchLink() {
+  get searchLink() {
     return getURL(
       `/search?expanded=true&q=%40${this.targetUser.username}%20in%3Apersonal-direct`
     );
-  },
-});
+  }
+}

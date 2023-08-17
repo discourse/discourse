@@ -18,13 +18,13 @@ export default class MoreTopics extends Component {
   @tracked availablePills = [];
   @tracked singleList = false;
 
-  get showTopicListsNav() {
-    return this.site.mobileView && !this.singleList;
-  }
-
   @action
   rememberTopicListPreference(value) {
-    this.moreTopicsPreferenceTracking.updatePreference(value);
+    // Don't change the preference when selecting related PMs.
+    // It messes with the topics pref.
+    const rememberPref = value !== "related-messages";
+
+    this.moreTopicsPreferenceTracking.updatePreference(value, rememberPref);
 
     this.buildListPills();
   }
@@ -33,7 +33,7 @@ export default class MoreTopics extends Component {
   buildListPills() {
     next(() => {
       const pills = Array.from(
-        document.querySelectorAll(".more-content-topics")
+        document.querySelectorAll(".more-topics__list")
       ).map((topicList) => {
         return {
           name: topicList.dataset.mobileTitle,
@@ -53,7 +53,7 @@ export default class MoreTopics extends Component {
       const listPresent = pills.find((pill) => pill.id === preference);
 
       if (!listPresent) {
-        const rememberPref = this.site.mobileView && !this.singleList;
+        const rememberPref = false;
 
         this.moreTopicsPreferenceTracking.updatePreference(
           pills[0].id,

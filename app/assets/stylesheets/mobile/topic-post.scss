@@ -252,32 +252,6 @@ a.reply-to-tab {
   }
 }
 
-.more-topics-lists {
-  &:not(.single-list) {
-    .more-topics-title {
-      display: none;
-    }
-  }
-
-  .topic-list-data {
-    padding-left: 5px;
-  }
-}
-
-.more-content-topics {
-  clear: left;
-  padding: 20px 0 15px 0;
-
-  a.badge-category,
-  a.badge-category-parent {
-    font-size: var(--font-down-1);
-    vertical-align: top;
-  }
-  .suggested-topics-message {
-    margin-top: 1em;
-  }
-}
-
 span.post-count {
   background: var(--primary);
   color: var(--secondary);
