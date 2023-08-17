@@ -7,8 +7,6 @@ import Category from "discourse/models/category";
 export default class DiscoveryController extends Controller {
   @service router;
 
-  @controller application;
-
   @equal("router.currentRouteName", "discovery.categories")
   viewingCategoriesList;
 
