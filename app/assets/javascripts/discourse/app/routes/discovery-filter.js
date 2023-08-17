@@ -1,7 +1,6 @@
 import I18n from "I18n";
 
 import DiscourseRoute from "discourse/routes/discourse";
-import { action } from "@ember/object";
 
 export default class DiscoveryFilterRoute extends DiscourseRoute {
   queryParams = {
@@ -19,21 +18,4 @@ export default class DiscoveryFilterRoute extends DiscourseRoute {
     const filterText = I18n.t("filters.filter.title");
     return I18n.t("filters.with_topics", { filter: filterText });
   }
-
-  // setupController(_controller, model) {
-  //   this.controllerFor("discovery/topics").setProperties({ model });
-  // }
-
-  // renderTemplate() {
-  //   this.render("discovery/topics", {
-  //     controller: "discovery/topics",
-  //     outlet: "list-container",
-  //   });
-  //   this.render(); // Render own template to {{outlet}}
-  // }
-
-  // TODO(tgxworld): This action is required by the `discovery/topics` controller which is not necessary for this route.
-  // Figure out a way to remove this.
-  @action
-  changeSort() {}
 }
