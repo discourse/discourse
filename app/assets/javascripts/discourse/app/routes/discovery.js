@@ -1,6 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import User from "discourse/models/user";
-import { setTopicList } from "discourse/lib/topic-list-tracker";
 import { action } from "@ember/object";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 
@@ -60,9 +59,6 @@ export default class DiscoveryRoute extends DiscourseRoute {
   @action
   didTransition() {
     this.send("loadingComplete");
-
-    // const model = this.controllerFor("discovery/topics").get("model");
-    // setTopicList(model);
   }
 
   // clear a pinned topic

@@ -1,10 +1,11 @@
-import Controller, { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import discourseComputed from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { inject as service } from "@ember/service";
+import { setTopicList } from "discourse/lib/topic-list-tracker";
 
 let queryParamsFrozen = false;
 
@@ -117,5 +118,10 @@ export default class DiscoverySortableController extends Controller.extend(
   get createTopicDisabled() {
     // We are in a category route, but user does not have permission for the category
     return this.category && !this.createTopicTargetCategory;
+  }
+
+  @action
+  setTrackingTopicList(model) {
+    setTopicList(model);
   }
 }
