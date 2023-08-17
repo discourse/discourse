@@ -1,3 +1,7 @@
+{{#if (or this.loading this.model.canLoadMore)}}
+  {{hide-application-footer}}
+{{/if}}
+
 {{#if this.redirectedReason}}
   <div class="alert alert-info">{{this.redirectedReason}}</div>
 {{/if}}

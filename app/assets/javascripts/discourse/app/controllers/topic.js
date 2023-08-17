@@ -1,5 +1,5 @@
 import Category from "discourse/models/category";
-import Controller, { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { alias, and, not, or } from "@ember/object/computed";
 import discourseComputed, {
@@ -57,7 +57,6 @@ export function registerCustomPostMessageCallback(type, callback) {
 
 export default Controller.extend(bufferedProperty("model"), {
   composer: service(),
-  application: controller(),
   dialog: service(),
   documentTitle: service(),
   screenTrack: service(),
@@ -1805,13 +1804,5 @@ export default Controller.extend(bufferedProperty("model"), {
         }
       }
     }
-  },
-
-  @observes("model.postStream.loaded", "model.postStream.loadedAllPosts")
-  _showFooter() {
-    const showFooter =
-      this.get("model.postStream.loaded") &&
-      this.get("model.postStream.loadedAllPosts");
-    this.set("application.showFooter", showFooter);
   },
 });
