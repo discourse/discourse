@@ -1,6 +1,6 @@
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
-import { click, tab, visit } from "@ember/test-helpers";
+import { click, fillIn, tab, visit } from "@ember/test-helpers";
 import I18n from "I18n";
 
 acceptance("Modal - Login", function () {
