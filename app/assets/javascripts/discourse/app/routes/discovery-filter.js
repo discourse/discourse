@@ -22,6 +22,10 @@ export default class DiscoveryFilterRoute extends DiscourseRoute {
 
   setupController(_controller, model) {
     this.controllerFor("discovery/topics").setProperties({ model });
+
+    this.controllerFor("navigation/filter").setProperties({
+      newQueryString: this.paramsFor("discovery.filter").q,
+    });
   }
 
   renderTemplate() {
