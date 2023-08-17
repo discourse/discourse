@@ -5,6 +5,7 @@ import { inject as service } from "@ember/service";
 
 export default class RelatedMessages extends Component {
   @service moreTopicsPreferenceTracking;
+  @service currentUser;
 
   listId = "related-Messages";
 
