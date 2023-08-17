@@ -8,9 +8,19 @@
 >
   <:body>
     <PluginOutlet @name="login-before-modal-body" @connectorTagName="div" />
+
+    {{#if this.site.mobileView}}
+      <Modal::Login::WelcomeHeader @wavingHandURL={{this.wavingHandURL}} />
+      {{#if this.showLoginButtons}}
+        <LoginButtons @externalLogin={{this.externalLogin}} />
+      {{/if}}
+    {{/if}}
+
     {{#if this.canLoginLocal}}
-      <div class="login-left-side">
-        <Modal::Login::WelcomeHeader @wavingHandURL={{this.wavingHandURL}} />
+      <div class={{if this.site.desktopView "login-left-side"}}>
+        {{#if this.site.desktopView}}
+          <Modal::Login::WelcomeHeader @wavingHandURL={{this.wavingHandURL}} />
+        {{/if}}
         <Modal::Login::LocalLoginForm
           @loginName={{this.loginName}}
           @loginNameChanged={{this.loginNameChanged}}
@@ -43,7 +53,7 @@
       </div>
     {{/if}}
 
-    {{#if this.showLoginButtons}}
+    {{#if (and this.showLoginButtons this.site.desktopView)}}
       {{#unless this.canLoginLocal}}
         <div class="login-left-side">
           <Modal::Login::WelcomeHeader @wavingHandURL={{this.wavingHandURL}} />
