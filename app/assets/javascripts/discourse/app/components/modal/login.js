@@ -16,6 +16,7 @@ import { escape } from "pretty-text/sanitizer";
 export default class Login extends Component {
   @service dialog;
   @service siteSettings;
+  @service site;
 
   @tracked loggingIn = false;
   @tracked loggedIn = false;
