@@ -6,7 +6,7 @@ Discourse is the online home for your community. We offer a 100% open source com
 
 Our platform has been battle-tested for over a decade and continues to evolve to meet users’ needs for a powerful community platform. Discourse allows you to create discussion topics and connect using real-time chat, as well as access an ever-growing number of official and community themes. In addition, we offer a wide variety of plugins for features ranging from chatbots powered by [Discourse AI](https://meta.discourse.org/t/discourse-ai/259214) to functionalities like SQL analysis using the [Data Explorer](https://meta.discourse.org/t/discourse-data-explorer/32566) plugin.
 
-To learn more, visit [**discourse.org**](https://www.discourse.org) and join the Discourse support community at [meta.discourse.org](meta.discourse.org).
+To learn more, visit [**discourse.org**](https://www.discourse.org) and join our support community at [meta.discourse.org](meta.discourse.org).
 
 ## Screenshots
 
