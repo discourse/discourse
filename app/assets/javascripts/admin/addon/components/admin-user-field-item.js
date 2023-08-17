@@ -51,10 +51,10 @@ export default Component.extend(bufferedProperty("userField"), {
     if (userField.required) {
       ret.push(I18n.t("admin.user_fields.required.enabled"));
     }
-    if (userField.showOnProfile) {
+    if (userField.show_on_profile) {
       ret.push(I18n.t("admin.user_fields.show_on_profile.enabled"));
     }
-    if (userField.showOnUserCard) {
+    if (userField.show_on_user_card) {
       ret.push(I18n.t("admin.user_fields.show_on_user_card.enabled"));
     }
     if (userField.searchable) {

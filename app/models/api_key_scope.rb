@@ -174,7 +174,7 @@ class ApiKeyScope < ActiveRecord::Base
         },
         groups: {
           manage_groups: {
-            actions: %w[groups#members groups#add_members groups#remove_members],
+            actions: %w[groups#members groups#add_members groups#remove_member],
             params: %i[id],
           },
           administer_groups: {

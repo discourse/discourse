@@ -214,7 +214,6 @@ nl:
       local_login_cannot_be_disabled_if_second_factor_enforced: "Je kunt lokale aanmelding niet uitschakelen als 2FA wordt afgedwongen. Schakel afgedwongen 2FA uit voordat je lokale aanmeldingen uitschakelt."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Je kunt geen S3-uploads inschakelen, omdat S3-uploads al globaal zijn ingeschakeld, en inschakelen hiervan op websiteniveau kan kritieke problemen met uploads veroorzaken"
       cors_origins_should_not_have_trailing_slash: "Voeg geen schuine streep (/) toe aan CORS-oorsprongen."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "User agents moeten minimaal 3 tekens lang zijn om te voorkomen dat de snelheid van menselijke gebruikers onterecht wordt beperkt."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Je kunt de volgende waarden niet toevoegen aan de instelling: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Je kunt megagegevens van afbeeldingen strippen niet uitschakelen als 'composer media optimization image enabled' is ingeschakeld. Schakel 'composer media optimization image enabled' uit voordat je megagegevens van afbeeldingen strippen uitschakelt."
       twitter_summary_large_image_no_svg: "Twitter-samenvattingsafbeeldingen die worden gebruikt voor twitter:image-metadata mogen geen .svg-afbeelding zijn."
@@ -628,6 +627,20 @@ nl:
   staff_category_description: "Privécategorie voor medewerkergesprekken. Topics zijn alleen zichtbaar voor beheerders en moderators."
   discourse_welcome_topic:
     title: "Welkom bij %{site_title}! :wave:"
+    body: |
+      We zijn erg blij dat je je bij ons hebt aangesloten.
+
+      %{site_info_quote}
+
+      Hier zijn enkele dingen die je kunt doen om te beginnen:
+
+      :speaking_head: **Stel jezelf voor** door je foto, informatie over jezelf en je interesses toe te voegen aan [je profiel](%{base_path}/my/preferences/account). Wat is iets waar je graag naar gevraagd wilt worden?
+
+      :open_book: **Maak kennis met de community** door [discussies te bekijken](%{base_path}/top) die hier al plaatsvinden. Als je een bericht interessant, informatief of onderhoudend vindt, gebruik dan de :heart: om je waardering of steun te laten blijken!
+
+      :handshake: **Lever een bijdrage** door te reageren, je eigen perspectief te delen, vragen te stellen of feedback te geven in de discussie. Lees voordat je reageert of nieuwe topics start de [Communityrichtlijnen](%{base_path}/faq).
+
+      > Als je hulp nodig hebt of een suggestie wilt doen, vraag het dan gerust in %{feedback_category} of [neem contact op met de beheerders](%{base_path}/about).
   admin_quick_start_title: "Beheerdersgids: Aan de slag"
   category:
     topic_prefix: "Over de categorie %{category}"
@@ -668,7 +681,6 @@ nl:
     media_placeholder:
       blocked_hotlinked_title: "Mediabestand gehost op een andere website. Klik om te openen in een nieuw tabblad."
       blocked_hotlinked: "Externe media"
-    hidden_bidi_character: "Bidirectionele tekens kunnen de volgorde wijzigen waarin tekst wordt weergegeven. Dit kan worden gebruikt om kwaadaardige code te verbergen."
     has_likes:
       one: "%{count} like"
       other: "%{count} likes"
@@ -894,8 +906,6 @@ nl:
   draft_backup:
     pm_title: "Back-upconcepten van actieve topics"
     pm_body: "Topic dat back-upconcepten bevat"
-  user_activity:
-    no_log_search_queries: "Zoeken in zoeklogs is momenteel uitgeschakeld (een beheerder kan het inschakelen in de website-instellingen)."
   email_settings:
     pop3_authentication_error: "Er was een probleem met de opgegeven POP3-aanmeldgegevens. Controleer de gebruikersnaam en het wachtwoord en probeer het opnieuw."
     imap_authentication_error: "Er was een probleem met de opgegeven IMAP-aanmeldgegevens. Controleer de gebruikersnaam en het wachtwoord en probeer het opnieuw."
@@ -1364,7 +1374,6 @@ nl:
         qtt_like: Ontvangen likes
       description: "Top 10 gebruikers die likes hebben ontvangen van een breed scala aan mensen."
   dashboard:
-    group_email_credentials_warning: 'Er was een probleem met de e-mailaanmeldgegevens voor de groep <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Er worden geen e-mails gestuurd vanuit de groepsinbox totdat dit probleem is verholpen. %{error}'
     rails_env_warning: "Je server werkt in de modus voor %{env}."
     host_names_warning: "Je bestand config/database.yml gebruikt de standaardhostnaam localhost. Werk deze bij naar de hostnaam van je website."
     sidekiq_warning: 'Sidekiq is niet actief. Veel taken, zoals het verzenden van e-mail, worden door Sidekiq asynchroon uitgevoerd. Zorg dat er minstens één Sidekiq-proces actief is. <a href="https://github.com/mperham/sidekiq" target="_blank">Lees hier meer over Sidekiq</a>.'
@@ -1998,6 +2007,8 @@ nl:
     permalink_normalizations: "De volgende reguliere expressie toepassen voordat permalinks worden verwerkt. Voorbeeld: /(topic.*)\\?.*/\\1 verwijdert querystrings uit topicroutes. Notatie is regex+strings, gebruik \\1 etc. voor deeluitdrukkingen."
     global_notice: "Toon een algemene niet te sluiten DRINGENDE NOOD-bannermelding voor alle gebruikers. Laat dit leeg om te verbergen (HTML toegestaan)."
     disable_system_edit_notifications: "Schakelt bewerkingsmeldingen van de systeemgebruiker uit als 'download_remote_images_to_local' actief is."
+    disable_category_edit_notifications: "Schakel meldingen voor bewerkingen van categorietags uit. Dit geldt ook voor topics die 'gepubliceerd' zijn (bijvoorbeeld gedeelde concepten)."
+    disable_tags_edit_notifications: "Schakel meldingen voor bewerkingen van topictags uit. Dit geldt ook voor topics die 'gepubliceerd' zijn (bijvoorbeeld gedeelde concepten)."
     notification_consolidation_threshold: "Aantal ontvangen meldingen van likes of lidmaatschapsverzoeken voordat de meldingen in één melding worden samengevoegd. Stel dit in op 0 om uit te schakelen."
     likes_notification_consolidation_window_mins: "Tijdsduur in minuten waarin like-meldingen in één melding worden samengevoegd zodra de drempel is bereikt. De drempel kan worden geconfigureerd via 'SiteSetting.notification_consolidation_threshold'."
     automatically_unpin_topics: "Topics automatisch losmaken wanneer de gebruiker de onderkant bereikt."

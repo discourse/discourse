@@ -402,7 +402,6 @@ fa_IR:
     media_placeholder:
       blocked_hotlinked_title: "این رسانه در سایت دیگری میزبانی شده است، کلیک کنید تا در یک زبانه جدید باز شود."
       blocked_hotlinked: "رسانه خارجی"
-    hidden_bidi_character: "کارکترهای دو جهته می‌توانند، ترتیب رندر شدن متن را تغییر دهند. این می‌تواند برای پنهان کردن کدهای مخرب استفاده شود."
     has_likes:
       one: "%{count} پسندیده"
       other: "%{count} پسندیده"

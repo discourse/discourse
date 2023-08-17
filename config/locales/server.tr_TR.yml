@@ -214,7 +214,6 @@ tr_TR:
       local_login_cannot_be_disabled_if_second_factor_enforced: "2 adımlı kimlik doğrulama zorlanmışsa yerel girişi devre dışı bırakamazsınız. Yerel girişleri devre dışı bırakmadan önce zorunlu 2 adımlı kimlik doğrulamayı devre dışı bırakın."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "S3 yüklemelerini etkinleştiremezsiniz çünkü S3 yüklemeleri zaten genel olarak etkindir ve bu site seviyesini etkinleştirmek yüklemelerle ilgili kritik sorunlara neden olabilir"
       cors_origins_should_not_have_trailing_slash: "CORS kaynaklarına sondaki eğik çizgiyi (/) eklememelisiniz."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Kullanıcı aracıları, insan kullanıcıların yanlış bir şekilde sınırlandırılmasını önlemek için en az 3 karakter uzunluğunda olmalıdır."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Ayara şu değerlerden herhangi birini ekleyemezsiniz: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "\"Besteci medya optimizasyonu görüntüsü etkin\" etkinleştirilmişse şerit görüntü meta verilerini devre dışı bırakamazsınız. Şerit görüntü meta verilerini devre dışı bırakmadan önce \"besteci medya optimizasyonu görüntüsü etkin\" seçeneğini devre dışı bırakın."
       twitter_summary_large_image_no_svg: "twitter:image meta verileri için kullanılan Twitter özet görüntüleri .svg görüntüsü olamaz."
@@ -621,6 +620,20 @@ tr_TR:
   staff_category_description: "Personel tartışmaları için özel kategori. Konular sadece yöneticiler ve moderatörler tarafından görülebilir."
   discourse_welcome_topic:
     title: "%{site_title} sitesine hoş geldiniz! :wave:"
+    body: |
+      Bize katıldığınız için çok mutluyuz.
+
+      %{site_info_quote}
+
+      Başlamak için yapabileceğiniz bazı şeyler:
+
+      :speaking_head: Resminizi, kendiniz ve ilgi alanlarınız hakkındaki bilgileri [profilinize](%{base_path}/my/preferences/account) ekleyerek **kendinizi tanıtın**. Size sorulmasını istediğiniz tek bir soru olsa bu ne olurdu?
+
+      :open_book: Zaten başlamış olan [tartışmalara göz atarak](%{base_path}/top) **topluluğu tanıyın**. Bir gönderiyi ilginç, bilgilendirici veya eğlenceli bulduğunuzda, takdirinizi veya desteğinizi göstermek için :heart: kullanın!
+
+      :handshake: Tartışmalara yorum yaparak, kendi bakış açınızı paylaşarak, sorular sorarak veya geri bildirimde bulunarak **katkıda bulunun**. Yanıt vermeden veya yeni konulara başlamadan önce lütfen [Topluluk Kurallarını](%{base_path}/sss) inceleyin.
+
+      > Yardıma ihtiyacınız olursa veya öneriniz varsa %{feedback_category} bölümünde veya [yöneticilerle ile iletişime geçerek](%{base_path}/about) bunu paylaşabilirsiniz.
   admin_quick_start_title: "Yönetici Kılavuzu: Başlarken"
   category:
     topic_prefix: "%{category} kategorisi hakkında"
@@ -661,7 +674,6 @@ tr_TR:
     media_placeholder:
       blocked_hotlinked_title: "Medya başka bir sitede barındırılıyor. Yeni bir sekmede açmak için tıklayın."
       blocked_hotlinked: "Harici Medya"
-    hidden_bidi_character: "Çift yönlü karakterler metnin oluşturulma sırasını değiştirebilir. Bu, kötü amaçlı kodları gizlemek için kullanılabilir."
     has_likes:
       one: "%{count} Beğeni"
       other: "%{count} Beğeni"
@@ -887,8 +899,6 @@ tr_TR:
   draft_backup:
     pm_title: "Açık konulardaki Taslakları yedekle"
     pm_body: "Yedek taslak içeren konu"
-  user_activity:
-    no_log_search_queries: "Arama günlüğü sorguları şu anda devre dışı (bir yönetici bunları site ayarlarından etkinleştirebilir)."
   email_settings:
     pop3_authentication_error: "Sağlanan POP3 kimlik bilgileriyle ilgili bir sorun oluştu, kullanıcı adı ve parolayı kontrol edip tekrar deneyin."
     imap_authentication_error: "Sağlanan IMAP kimlik bilgileriyle ilgili bir sorun oluştu, kullanıcı adı ve şifreyi kontrol edip tekrar deneyin."
@@ -1357,7 +1367,6 @@ tr_TR:
         qtt_like: Alınan Beğeniler
       description: "Çok çeşitli kişilerden beğeni alan En Popüler 10 kullanıcı."
   dashboard:
-    group_email_credentials_warning: '<a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>grubu için e-posta giriş bilgileriyle ilgili bir sorun vardı. Bu sorun giderilene kadar grup gelen kutusundan hiçbir e-posta gönderilmeyecek. %{error}'
     rails_env_warning: "Sunucunuz %{env} modunda çalışıyor."
     host_names_warning: "config/database.yml dosyanız varsayılan localhost sunucu adını kullanıyor. Sitenizin sunucu adını kullanmak için bunu güncelleyin."
     sidekiq_warning: 'Sidekiq çalışmıyor. E-posta göndermek gibi birçok görev Sidekiq tarafından eşzamansız olarak yürütülür. Lütfen en az bir Sidekiq işleminin çalıştığından emin olun. <a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq hakkında buradan bilgi edinin</a>.'

@@ -246,8 +246,8 @@ zh_CN:
       pill: "相关消息"
       see_all: '查看来自 @%{username} 的<a href="%{path}">所有消息</a>…'
     suggested_topics:
-      title: "新的和未读的主题"
-      pill: "建议"
+      title: "新话题和未读话题"
+      pill: "推荐"
       pm_title: "建议的消息"
     about:
       simple_title: "关于"
@@ -1089,12 +1089,12 @@ zh_CN:
       suspended_permanently: "此用户已被封禁。"
       suspended_reason: "原因："
       github_profile: "GitHub"
-      email_activity_summary: "活动摘要"
+      email_activity_summary: "活动总结"
       mailing_list_mode:
         label: "邮寄名单模式"
         enabled: "启用邮寄名单模式"
         instructions: |
-          此设置将替换活动摘要。<br />
+          此设置将替换活动总结。<br />
           已设为免打扰的话题和类别将不会被包含在这些电子邮件中。
         individual: "为每个新帖子发送一封电子邮件"
         individual_no_echo: "为除了我发表的新帖子之外的每个新帖子发送一封电子邮件"
@@ -1482,7 +1482,7 @@ zh_CN:
         always: "始终"
         never: "从不"
       email_digests:
-        title: "当我不访问这里时，向我发送热门话题和回复的电子邮件摘要"
+        title: "当我不访问这里时，向我发送热门话题和回复的电子邮件总结"
         every_30_minutes: "每 30 分钟"
         every_hour: "每小时"
         daily: "每天"
@@ -1495,7 +1495,7 @@ zh_CN:
         only_when_away: "只在离开时"
         never: "从不"
       email_messages_level: "当我收到个人消息时给我发电子邮件"
-      include_tl0_in_digests: "在摘要电子邮件中包含来自新用户的内容"
+      include_tl0_in_digests: "在总结电子邮件中包含来自新用户的内容"
       email_in_reply_to: "在电子邮件中包含帖子回复节选"
       other_settings: "其他"
       categories_settings: "类别"
@@ -1612,7 +1612,7 @@ zh_CN:
         instructions: "至少 %{count} 个字符"
         required: "请输入密码"
       summary:
-        title: "摘要"
+        title: "总结"
         stats: "统计信息"
         time_read: "阅读时间"
         time_read_title: "%{duration}（所有时间）"
@@ -1707,7 +1707,7 @@ zh_CN:
         content: "下面是我们认为您接下来可能想要阅读的一些话题。"
       admin_guide:
         title: "欢迎来到您的新站点！"
-        content: "<a href='%{admin_guide_url}'>阅读管理指南</a> 以继续构建你的网站和社区。"
+        content: "<a href='%{admin_guide_url}'>阅读管理指南</a>以继续建设您的站点和社区。"
         content_no_url: "阅读管理指南以继续建设您的站点和社区。"
     loading: "正在加载…"
     errors:
@@ -1776,18 +1776,18 @@ zh_CN:
       refresh_page: "刷新页面"
     summary:
       in_progress: "使用 AI 总结话题"
-      summarized_on: "已在 %{date} 使用 AI 总结"
+      summarized_on: "已在 %{date}使用 AI 总结"
       model_used: "使用的 AI：%{model}"
-      outdated: "摘要已过时"
+      outdated: "总结已过时"
       outdated_posts:
         other: "（%{count} 篇帖子缺失）"
       enabled_description: "您正在浏览的是此话题的热门回复：由社区决定的最有趣的帖子。"
       description:
         other: "有 <b>%{count}</b> 个回复。"
       buttons:
-        hide: "隐藏摘要"
+        hide: "隐藏总结"
         generate: "使用 AI 总结"
-        regenerate: "重新生成摘要"
+        regenerate: "重新生成总结"
       description_time_MF: |
         有 {replyCount, plural, one {<b>#</b> 个回复} other {<b>#</b> 个回复}}，预计阅读时间为 <b>{readingTime, plural,one {# 分钟}other {# 分钟}}</b>。
       enable: "显示热门回复"
@@ -2420,7 +2420,7 @@ zh_CN:
     hamburger_menu: "菜单"
     new_item: "新"
     go_back: "返回"
-    not_logged_in_user: "包含当前活动和偏好设置摘要的用户页面"
+    not_logged_in_user: "包含当前活动和偏好设置总结的用户页面"
     current_user: "转到您的用户页面"
     view_all: "查看所有%{tab}"
     user_menu:
@@ -3379,7 +3379,7 @@ zh_CN:
       action: "举报话题"
       notify_action: "消息"
     topic_map:
-      title: "话题摘要"
+      title: "话题总结"
       participants_title: "频繁发帖人"
       links_title: "热门链接"
       links_shown: "显示更多链接…"
@@ -4769,7 +4769,7 @@ zh_CN:
         title: "电子邮件"
         settings: "设置"
         templates: "模板"
-        preview_digest: "预览摘要"
+        preview_digest: "预览总结"
         advanced_test:
           title: "高级测试"
           desc: "了解 Discourse 如何处理收到的电子邮件。为了能够正确处理电子邮件，请将整个原始电子邮件消息粘贴到下方。"
@@ -4795,7 +4795,7 @@ zh_CN:
         send_test: "发送测试电子邮件"
         sent_test: "已发送！"
         delivery_method: "投递方式"
-        preview_digest_desc: "预览发送给停用用户的摘要电子邮件的内容。"
+        preview_digest_desc: "预览发送给停用用户的总结电子邮件的内容。"
         refresh: "刷新"
         send_digest_label: "将此结果发送至："
         send_digest: "发送"
@@ -4805,7 +4805,7 @@ zh_CN:
         text: "文本"
         html_preview: "电子邮件内容预览"
         last_seen_user: "最后活动："
-        no_result: "没有找到摘要的结果。"
+        no_result: "没有找到总结的结果。"
         reply_key: "回复键"
         post_link_with_smtp: "POST 和 SMTP 详细信息"
         skipped_reason: "跳过原因"
