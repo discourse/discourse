@@ -230,6 +230,21 @@ RSpec.configure do |config|
       raise "There are pending migrations, run RAILS_ENV=test bin/rake db:migrate"
     end
 
+    # Use a file system lock to get `selenium-manager` to download the `chromedriver` binary that is requried for
+    # system tests to support running system tests in multiple processes. If we don't download the `chromedriver` binary
+    # before running system tests in multiple processes, each process will end up calling the `selenium-manager` binary
+    # to download the `chromedriver` binary at the same time but the problem is that the binary is being downloaded to
+    # the same location and this can interfere with the running tests in another process.
+    #
+    # The long term fix here is to get `selenium-manager` to download the `chromedriver` binary to a unique path for each
+    # process but the `--cache-path` option for `selenium-manager` is currently not supported in `selenium-webdriver`.
+    if !File.directory?("~/.cache/selenium")
+      File.open("#{Rails.root}/tmp/chrome_driver_flock", "w") do |file|
+        file.flock(File::LOCK_EX)
+        `#{Selenium::WebDriver::SeleniumManager.send(:binary)} --browser chrome`
+      end
+    end
+
     Sidekiq.error_handlers.clear
 
     # Ugly, but needed until we have a user creator
