@@ -24,6 +24,10 @@
 
 <ConditionalLoadingSpinner @condition={{this.showLoadingSpinner}} />
 
+{{#if this.loading}}
+  {{hide-application-footer}}
+{{/if}}
+
 <span>
   <PluginOutlet @name="discovery-above" @connectorTagName="div" />
 </span>

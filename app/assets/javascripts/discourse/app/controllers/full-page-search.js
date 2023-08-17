@@ -245,11 +245,6 @@ export default Controller.extend({
     );
   },
 
-  @observes("loading")
-  _showFooter() {
-    this.set("application.showFooter", !this.loading);
-  },
-
   @discourseComputed("resultCount", "noSortQ")
   resultCountLabel(count, term) {
     const plus = count % 50 === 0 ? "+" : "";
@@ -437,7 +432,6 @@ export default Controller.extend({
   },
 
   _afterTransition() {
-    this._showFooter();
     if (Object.keys(this.model).length === 0) {
       this.reset();
     }

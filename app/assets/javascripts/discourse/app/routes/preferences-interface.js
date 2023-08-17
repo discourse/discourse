@@ -2,8 +2,6 @@ import RestrictedUserRoute from "discourse/routes/restricted-user";
 import { currentThemeId } from "discourse/lib/theme-selector";
 
 export default RestrictedUserRoute.extend({
-  showFooter: true,
-
   setupController(controller, user) {
     controller.setProperties({
       model: user,

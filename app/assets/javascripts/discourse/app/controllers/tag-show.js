@@ -1,9 +1,7 @@
-import { inject as controller } from "@ember/controller";
 import { inject as service } from "@ember/service";
 import { readOnly } from "@ember/object/computed";
 import DiscoverySortableController from "discourse/controllers/discovery-sortable";
 import discourseComputed from "discourse-common/utils/decorators";
-import { observes } from "@ember-decorators/object";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import DismissTopics from "discourse/mixins/dismiss-topics";
 import I18n from "I18n";
@@ -23,7 +21,6 @@ export default class TagShowController extends DiscoverySortableController.exten
   @service router;
   @service currentUser;
   @service siteSettings;
-  @controller application;
 
   @tracked category;
   @tracked filterType;
@@ -80,11 +77,6 @@ export default class TagShowController extends DiscoverySortableController.exten
       noSubcategories,
       siteSettings: this.siteSettings,
     });
-  }
-
-  @observes("list.canLoadMore")
-  _showFooter() {
-    this.set("application.showFooter", !this.list?.canLoadMore);
   }
 
   @discourseComputed("navMode", "list.topics.length", "loading")
