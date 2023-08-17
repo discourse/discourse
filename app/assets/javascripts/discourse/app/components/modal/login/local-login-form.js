@@ -55,7 +55,7 @@ export default class LocalLoginBody extends Component {
 
     try {
       this.processingEmailLink = true;
-      const data = ajax("/u/email-login", {
+      const data = await ajax("/u/email-login", {
         data: { login: this.args.loginName.trim() },
         type: "POST",
       });
@@ -87,6 +87,7 @@ export default class LocalLoginBody extends Component {
         this.args.flashTypeChanged("success");
       }
     } catch (e) {
+      console.log(e);
       popupAjaxError(e);
     } finally {
       this.processingEmailLink = false;
@@ -95,8 +96,7 @@ export default class LocalLoginBody extends Component {
 
   @action
   loginOnEnter(event) {
-    event.preventDefault();
-    if (event.keyCode === 13) {
+    if (event.key === "Enter") {
       this.args.login();
     }
   }

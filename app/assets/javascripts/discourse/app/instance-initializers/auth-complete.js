@@ -35,7 +35,7 @@ export default {
               .lookup("controller:invites-show")
               .authenticationComplete(JSON.parse(lastAuthResult));
           } else {
-            const options = JSON.parse(JSON.parse(lastAuthResult));
+            const options = JSON.parse(lastAuthResult);
             const modal = owner.lookup("service:modal");
             const siteSettings = owner.lookup("service:site-settings");
             const applicationRouter = owner.lookup("application:main");
