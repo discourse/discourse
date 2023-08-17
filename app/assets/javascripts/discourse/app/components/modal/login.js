@@ -32,10 +32,8 @@ export default class Login extends Component {
   @tracked securityKeyCredential;
   @tracked otherMethodAllowed;
   @tracked secondFactorRequired;
-  @tracked showLoginButtons;
   @tracked backupEnabled;
   @tracked totpEnabled;
-  @tracked showSecondFactor;
   @tracked showSecurityKey;
   @tracked securityKeyChallenge;
   @tracked securityKeyAllowedCredentialIds;
