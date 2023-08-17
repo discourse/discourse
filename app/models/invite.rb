@@ -134,7 +134,7 @@ class Invite < ActiveRecord::Base
 
   def self.generate(invited_by, opts = nil)
     opts ||= {}
-    Time.zone = invited_by.user_option.timezone if invited_by&.user_option&.timezone
+    time_zone = Time.find_zone(invited_by&.user_option&.timezone) || Time.zone
     email = Email.downcase(opts[:email]) if opts[:email].present?
 
     raise UserExists.new(new.user_exists_error_msg(email)) if find_user_by_email(email)
@@ -170,7 +170,7 @@ class Invite < ActiveRecord::Base
       invite.update_columns(
         created_at: Time.zone.now,
         updated_at: Time.zone.now,
-        expires_at: opts[:expires_at] || Time.zone.now + SiteSetting.invite_expiry_days.days,
+        expires_at: opts[:expires_at] || time_zone.now + SiteSetting.invite_expiry_days.days,
         emailed_status: emailed_status,
       )
     else
@@ -180,7 +180,7 @@ class Invite < ActiveRecord::Base
       create_args[:email] = email
       create_args[:emailed_status] = emailed_status
       create_args[:expires_at] = opts[:expires_at] ||
-        Time.zone.now + SiteSetting.invite_expiry_days.days
+        time_zone.now + SiteSetting.invite_expiry_days.days
 
       invite = Invite.create!(create_args)
     end
