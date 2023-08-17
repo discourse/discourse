@@ -98,7 +98,7 @@ export async function findTopicList(
 class AbstractTopicRoute extends DiscourseRoute {
   @service screenTrack;
   queryParams = queryParams;
-  templateName = "discovery/list"; // TODO change
+  templateName = "discovery/list";
 
   model(data, transition) {
     // attempt to stop early cause we need this to be called before .sync
