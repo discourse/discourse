@@ -2,11 +2,11 @@
   <img src="images/discourse-readme-logo.png" width="300px">
 </a>
 
-Discourse is the online home for your community. We offer an open source community platform for groups who want complete control over how and where their site is run.
+Discourse is the online home for your community. We offer a 100% open source community platform to those who want complete control over how and where their site is run.
 
-Our platform has been battle-tested for over a decade and continues to evolve to meet users’ needs with a powerful combination of discussion and real-time chat, and an ever-growing number of official and community themes and plugins for things from chatbots with Discourse AI to things like SQL analysis with the Data Explorer plugin.
+Our platform has been battle-tested for over a decade and continues to evolve to meet users’ needs for a powerful community platform. Discourse allows you to create discussion topics and connect using real-time chat, as well as access an ever-growing number of official and community themes. In addition, we offer a wide variety of plugins for features ranging from chatbots powered by [Discourse AI](https://meta.discourse.org/t/discourse-ai/259214) to functionalities like SQL analysis using the [Data Explorer](https://meta.discourse.org/t/discourse-data-explorer/32566) plugin.
 
-To learn more [visit **discourse.org**](https://www.discourse.org).
+To learn more [visit **discourse.org**](https://www.discourse.org) and join the Discourse support community at [meta.discourse.org](meta.discourse.org).
 
 ## Screenshots
 
