@@ -13,7 +13,7 @@
         autofocus="autofocus"
         tabindex="1"
         {{on "input" @loginNameChanged}}
-        {{on "keyup" this.loginOnEnter}}
+        {{on "keydown" this.loginOnEnter}}
       />
       <label class="alt-placeholder" for="login-account-name">
         {{i18n "login.email_placeholder"}}
@@ -41,7 +41,7 @@
         @capsLockOn={{this.capsLockOn}}
         disabled={{this.disableLoginFields}}
         tabindex="1"
-        {{on "keyup" this.loginOnEnter}}
+        {{on "keydown" this.loginOnEnter}}
       />
       <label class="alt-placeholder" for="login-account-password">
         {{i18n "login.password"}}
@@ -91,7 +91,7 @@
         @inputId="login-second-factor"
         @secondFactorMethod={{@secondFactorMethod}}
         @backupEnabled={{@backupEnabled}}
-        {{on "keyup" this.loginOnEnter}}
+        {{on "keydown" this.loginOnEnter}}
       />
     {{/if}}
   </SecondFactorForm>
