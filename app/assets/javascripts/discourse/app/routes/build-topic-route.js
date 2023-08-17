@@ -128,39 +128,17 @@ class AbstractTopicRoute extends DiscourseRoute {
   }
 
   setupController(controller, model) {
-    // const topicOpts = {
-    //   model,
-    //   category: null,
-    //   period: model.get("for_period") || model.get("params.period"),
-    //   selected: [],
-    //   expandAllPinned: false,
-    //   expandGloballyPinned: true,
-    // };
-
-    // this.controllerFor("discovery/topics").setProperties(topicOpts);
-
     const filterType = this.routeConfig.filter.split("/")[0];
     controller.setProperties({
       discovery: this.controllerFor("discovery"),
       filterType,
       period: model.get("for_period") || model.get("params.period"),
-      // selected: [],
       expandAllPinned: false,
       expandGloballyPinned: true,
       navigationArgs: { filterType },
     });
 
     super.setupController(...arguments);
-  }
-
-  renderTemplate() {
-    // this.render("navigation/default", { outlet: "navigation-bar" });
-
-    // this.render("discovery/topics", {
-    //   controller: "discovery/topics",
-    //   outlet: "list-container",
-    // });
-    this.render();
   }
 
   @action

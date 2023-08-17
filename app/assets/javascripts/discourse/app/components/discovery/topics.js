@@ -1,7 +1,5 @@
-import { inject as controller } from "@ember/controller";
 import { inject as service } from "@ember/service";
 import { alias, empty, equal, gt, not, readOnly } from "@ember/object/computed";
-import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import DismissTopics from "discourse/mixins/dismiss-topics";
 import I18n from "I18n";
 import Topic from "discourse/models/topic";
@@ -13,13 +11,9 @@ import DiscourseURL, { userPath } from "discourse/lib/url";
 import { action } from "@ember/object";
 import Component from "@ember/component";
 
-export default class DiscoveryTopics extends Component.extend(
-  // BulkTopicSelection,
-  DismissTopics
-) {
+export default class DiscoveryTopics extends Component.extend(DismissTopics) {
   @service router;
   @service composer;
-  // @controller discovery;
 
   period = null;
   selected = null;

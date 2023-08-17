@@ -150,15 +150,6 @@ class AbstractCategoryRoute extends DiscourseRoute {
     });
   }
 
-  get canCreateTopicOnCategory() {
-    const topics = this.topics,
-      category = this.model.category,
-      canCreateTopic = topics.get("can_create_topic");
-    return (
-      canCreateTopic && category?.get("permission") === PermissionType.FULL
-    );
-  }
-
   setupController(controller, model) {
     const topics = this.topics,
       category = model.category;
@@ -174,7 +165,6 @@ class AbstractCategoryRoute extends DiscourseRoute {
       period:
         topics.get("for_period") ||
         (model.modelParams && model.modelParams.period),
-      // selected: [],
       noSubcategories: !!this.routeConfig?.no_subcategories,
       expandAllPinned: true,
     };
@@ -189,27 +179,10 @@ class AbstractCategoryRoute extends DiscourseRoute {
       }
     }
 
-    // this.controllerFor("discovery/topics").setProperties(topicOpts);
     this.searchService.searchContext = category.get("searchContext");
     this.set("topics", null);
 
     controller.setProperties(topicOpts);
-  }
-
-  renderTemplate() {
-    if (this._categoryList) {
-      // this.render("discovery/categories", {
-      //   outlet: "header-list-container",
-      //   model: this._categoryList,
-      // });
-    } else {
-      // this.disconnectOutlet({ outlet: "header-list-container" });
-    }
-    // this.render("discovery/topics", {
-    //   controller: "discovery/topics",
-    //   outlet: "list-container",
-    // });
-    this.render();
   }
 
   deactivate() {
