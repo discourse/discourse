@@ -138,14 +138,4 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
   triggerRefresh() {
     this.refresh();
   }
-
-  @action
-  createCategory() {
-    this.router.transitionTo("newCategory");
-  }
-
-  @action
-  reorderCategories() {
-    showModal("reorder-categories");
-  }
 }

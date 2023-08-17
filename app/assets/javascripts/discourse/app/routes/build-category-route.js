@@ -22,7 +22,7 @@ class AbstractCategoryRoute extends DiscourseRoute {
 
   queryParams = queryParams;
 
-  templateName = "discovery/category";
+  templateName = "discovery/list";
 
   model(modelParams) {
     const category = Category.findBySlugPathWithID(

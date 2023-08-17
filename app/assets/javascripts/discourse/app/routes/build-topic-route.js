@@ -98,7 +98,7 @@ export async function findTopicList(
 class AbstractTopicRoute extends DiscourseRoute {
   @service screenTrack;
   queryParams = queryParams;
-  templateName = "discovery/topic-route"; // TODO change
+  templateName = "discovery/list"; // TODO change
 
   model(data, transition) {
     // attempt to stop early cause we need this to be called before .sync
@@ -139,13 +139,15 @@ class AbstractTopicRoute extends DiscourseRoute {
 
     // this.controllerFor("discovery/topics").setProperties(topicOpts);
 
+    const filterType = this.routeConfig.filter.split("/")[0];
     controller.setProperties({
       discovery: this.controllerFor("discovery"),
-      filterType: this.routeConfig.filter.split("/")[0],
+      filterType,
       period: model.get("for_period") || model.get("params.period"),
       // selected: [],
       expandAllPinned: false,
       expandGloballyPinned: true,
+      navigationArgs: { filterType },
     });
 
     super.setupController(...arguments);

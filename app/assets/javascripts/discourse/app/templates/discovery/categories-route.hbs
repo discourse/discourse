@@ -1,8 +1,9 @@
 <Discovery::Layout>
   <:navigation>
-    <Navigation::Categories
+    <Navigation::Default
       @showCategoryAdmin={{this.model.show_category_admin}}
       @canCreateTopic={{this.model.can_create_topic}}
+      @filterType="categories"
     />
   </:navigation>
   <:list>

@@ -2,6 +2,10 @@ import { inject as service } from "@ember/service";
 import Component from "@glimmer/component";
 import { TRACKED_QUERY_PARAM_VALUE } from "discourse/lib/topic-list-tracked-filter";
 import { calculateFilterMode } from "discourse/lib/filter-mode";
+import { action } from "@ember/object";
+import DiscourseURL from "discourse/lib/url";
+import Category from "discourse/models/category";
+import showModal from "discourse/lib/show-modal";
 
 export default class NavigationDefault extends Component {
   @service router;
@@ -18,5 +22,48 @@ export default class NavigationDefault extends Component {
 
   get skipCategoriesNavItem() {
     return this.router.currentRoute.queryParams.f === TRACKED_QUERY_PARAM_VALUE;
+  }
+
+  get createTopicTargetCategory() {
+    if (this.args.category?.canCreateTopic) {
+      return this.args.category;
+    }
+
+    if (this.siteSettings.default_subcategory_on_read_only_category) {
+      return this.args.category?.subcategoryWithCreateTopicPermission;
+    }
+  }
+
+  get enableCreateTopicButton() {
+    return !this.args.category || !!this.createTopicTargetCategory;
+  }
+
+  get canCreateTopic() {
+    return this.currentUser?.can_create_topic;
+  }
+
+  get bodyClass() {
+    if (this.filterMode === "categories") {
+      return "navigation-categories";
+    } else if (this.category) {
+      return "navigation-category";
+    } else {
+      return "navigation-topics";
+    }
+  }
+
+  @action
+  editCategory() {
+    DiscourseURL.routeTo(`/c/${Category.slugFor(this.args.category)}/edit`);
+  }
+
+  @action
+  createCategory() {
+    this.router.transitionTo("newCategory");
+  }
+
+  @action
+  reorderCategories() {
+    showModal("reorder-categories");
   }
 }
