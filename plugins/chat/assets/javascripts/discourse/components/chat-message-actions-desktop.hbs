@@ -70,7 +70,11 @@
       }}
         <DropdownSelectBox
           @class="more-buttons secondary-actions"
-          @options={{hash icon="ellipsis-v" placement="left"}}
+          @options={{hash
+            icon="ellipsis-v"
+            placement="left"
+            customStyle="true"
+          }}
           @content={{this.messageInteractor.secondaryActions}}
           @onChange={{action this.messageInteractor.handleSecondaryActions}}
         />

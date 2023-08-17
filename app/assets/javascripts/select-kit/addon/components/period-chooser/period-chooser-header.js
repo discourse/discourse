@@ -2,7 +2,7 @@ import DropdownSelectBoxHeaderComponent from "select-kit/components/dropdown-sel
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default DropdownSelectBoxHeaderComponent.extend({
-  classNames: ["period-chooser-header"],
+  classNames: ["period-chooser-header", "btn-flat"],
 
   @discourseComputed("selectKit.isExpanded")
   caretIcon(isExpanded) {
