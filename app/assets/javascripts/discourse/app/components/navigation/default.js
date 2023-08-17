@@ -24,20 +24,6 @@ export default class NavigationDefault extends Component {
     return this.router.currentRoute.queryParams.f === TRACKED_QUERY_PARAM_VALUE;
   }
 
-  get createTopicTargetCategory() {
-    if (this.args.category?.canCreateTopic) {
-      return this.args.category;
-    }
-
-    if (this.siteSettings.default_subcategory_on_read_only_category) {
-      return this.args.category?.subcategoryWithCreateTopicPermission;
-    }
-  }
-
-  get enableCreateTopicButton() {
-    return !this.args.category || !!this.createTopicTargetCategory;
-  }
-
   get canCreateTopic() {
     return this.currentUser?.can_create_topic;
   }

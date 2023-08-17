@@ -1,21 +1,16 @@
 import { inject as service } from "@ember/service";
-import { alias, equal } from "@ember/object/computed";
+import { equal } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import Category from "discourse/models/category";
-import DiscourseURL from "discourse/lib/url";
 
 export default class DiscoveryController extends Controller {
   @service router;
 
-  // @controller("navigation/category") navigationCategory;
   @controller application;
 
   @equal("router.currentRouteName", "discovery.categories")
   viewingCategoriesList;
-
-  // @alias("navigationCategory.category") category;
-  // @alias("navigationCategory.noSubcategories") noSubcategories;
 
   loading = false;
 

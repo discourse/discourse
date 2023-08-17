@@ -31,11 +31,8 @@
     @filterMode={{this.filterMode}}
     @noSubcategories={{@noSubcategories}}
     @canCreateTopic={{this.canCreateTopic}}
-    @createTopic={{fn
-      this.composer.openNewTopic
-      (hash category=this.createTopicTargetCategory preferDraft=true)
-    }}
-    @createTopicDisabled={{not this.enableCreateTopicButton}}
+    @createTopic={{@createTopic}}
+    @createTopicDisabled={{@createTopicDisabled}}
     @hasDraft={{this.currentUser.has_topic_draft}}
     @editCategory={{this.editCategory}}
     @showCategoryAdmin={{@showCategoryAdmin}}

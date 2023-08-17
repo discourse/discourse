@@ -3,6 +3,8 @@ import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import discourseComputed from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { inject as service } from "@ember/service";
 
 let queryParamsFrozen = false;
 
@@ -56,10 +58,15 @@ export const addDiscoveryQueryParam = function (p, opts) {
   queryParams[p] = opts;
 };
 
+@disableImplicitInjections
 export default class DiscoverySortableController extends Controller.extend(
   BulkTopicSelection
 ) {
+  @service currentUser;
+  @service composer;
+
   @tracked bulkSelectEnabled = false;
+  @tracked category;
 
   queryParams = Object.keys(queryParams);
 
@@ -87,5 +94,28 @@ export default class DiscoverySortableController extends Controller.extend(
   @action
   toggleBulkSelect() {
     this.bulkSelectEnabled = !this.bulkSelectEnabled;
+  }
+
+  @action
+  createTopic() {
+    this.composer.openNewTopic({
+      category: this.createTopicTargetCategory,
+      preferDraft: true,
+    });
+  }
+
+  get createTopicTargetCategory() {
+    if (this.category?.canCreateTopic) {
+      return this.category;
+    }
+
+    if (this.siteSettings.default_subcategory_on_read_only_category) {
+      return this.category?.subcategoryWithCreateTopicPermission;
+    }
+  }
+
+  get createTopicDisabled() {
+    // We are in a category route, but user does not have permission for the category
+    return this.category && !this.createTopicTargetCategory;
   }
 }

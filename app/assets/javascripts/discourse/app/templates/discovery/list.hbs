@@ -1,4 +1,7 @@
-<Discovery::Layout>
+<Discovery::Layout
+  @category={{this.category}}
+  @createTopicDisabled={{this.createTopicDisabled}}
+>
   <:navigation>
     <Navigation::Default
       @category={{this.navigationArgs.category}}
@@ -6,6 +9,8 @@
       @noSubcategories={{this.navigationArgs.noSubcategories}}
       @canBulkSelect={{this.canBulkSelect}}
       @toggleBulkSelect={{this.toggleBulkSelect}}
+      @createTopic={{this.createTopic}}
+      @createTopicDisabled={{this.createTopicDisabled}}
     />
   </:navigation>
   <:list>

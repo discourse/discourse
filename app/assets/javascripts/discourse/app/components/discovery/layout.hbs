@@ -1,11 +1,11 @@
 <div class="container">
   <DiscourseBanner @user={{this.currentUser}} @banner={{this.site.banner}} />
-  {{#unless this.viewingCategoriesList}}
+  {{#if this.category}}
     <CategoryReadOnlyBanner
       @category={{this.category}}
-      @readOnly={{not this.navigationCategory.enableCreateTopicButton}}
+      @readOnly={{@createTopicDisabled}}
     />
-  {{/unless}}
+  {{/if}}
 </div>
 
 <span>
@@ -39,7 +39,7 @@
         {{yield to="header-list"}}
         <PluginOutlet
           @name="header-list-container-bottom"
-          @outletArgs={{hash category=this.category}}
+          @outletArgs={{hash category=@category}}
         />
       </div>
     </div>
@@ -51,7 +51,7 @@
         <PluginOutlet
           @name="discovery-list-container-top"
           @connectorTagName="span"
-          @outletArgs={{hash category=this.category listLoading=this.loading}}
+          @outletArgs={{hash category=@category listLoading=this.loading}}
         />
         {{yield to="list"}}
       </div>
