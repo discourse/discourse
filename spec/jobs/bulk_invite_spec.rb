@@ -60,7 +60,7 @@ RSpec.describe Jobs::BulkInvite do
         freeze_time DateTime.parse("2023-10-31 06:00:00 -0400")
         described_class.new.execute(current_user_id: east_coast_user.id, invites: invites)
         invite = Invite.first
-        expect(invite.expires_at.localtime.hour).to equal(6)
+        expect(invite.expires_at.hour).to equal(6)
       end
     end
 
