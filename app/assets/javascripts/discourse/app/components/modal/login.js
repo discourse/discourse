@@ -23,13 +23,23 @@ export default class Login extends Component {
   @tracked showSecondFactor = false;
   @tracked loginPassword = "";
   @tracked loginName = "";
-  @tracked securityKeyCredential = null;
   @tracked flash = this.args.model?.flash;
   @tracked flashType = this.args.model?.flashType;
   @tracked canLoginLocal = this.siteSettings.enable_local_logins;
   @tracked
   canLoginLocalWithEmail = this.siteSettings.enable_local_logins_via_email;
   @tracked secondFactorMethod = SECOND_FACTOR_METHODS.TOTP;
+  @tracked securityKeyCredential;
+  @tracked otherMethodAllowed;
+  @tracked secondFactorRequired;
+  @tracked showLoginButtons;
+  @tracked backupEnabled;
+  @tracked totpEnabled;
+  @tracked showSecondFactor;
+  @tracked showSecurityKey;
+  @tracked securityKeyChallenge;
+  @tracked securityKeyAllowedCredentialIds;
+  @tracked secondFactorToken;
 
   constructor() {
     super(...arguments);
@@ -143,7 +153,6 @@ export default class Login extends Component {
         data: {
           login: this.loginName,
           password: this.loginPassword,
-          // secondFactorToken is not getting set anywhere, looks like a problem
           second_factor_token:
             this.securityKeyCredential || this.secondFactorToken,
           second_factor_method: this.secondFactorMethod,
@@ -158,20 +167,18 @@ export default class Login extends Component {
           (result.security_key_enabled || result.totp_enabled) &&
           !this.secondFactorRequired
         ) {
-          this.setProperties({
-            otherMethodAllowed: result.multiple_second_factor_methods,
-            secondFactorRequired: true,
-            showLoginButtons: false,
-            backupEnabled: result.backup_enabled,
-            totpEnabled: result.totp_enabled,
-            showSecondFactor: result.totp_enabled,
-            showSecurityKey: result.security_key_enabled,
-            secondFactorMethod: result.security_key_enabled
-              ? SECOND_FACTOR_METHODS.SECURITY_KEY
-              : SECOND_FACTOR_METHODS.TOTP,
-            securityKeyChallenge: result.challenge,
-            securityKeyAllowedCredentialIds: result.allowed_credential_ids,
-          });
+          this.otherMethodAllowed = result.multiple_second_factor_methods;
+          this.secondFactorRequired = true;
+          this.showLoginButtons = false;
+          this.backupEnabled = result.backup_enabled;
+          this.totpEnabled = result.totp_enabled;
+          this.showSecondFactor = result.totp_enabled;
+          this.showSecurityKey = result.security_key_enabled;
+          this.secondFactorMethod = result.security_key_enabled
+            ? SECOND_FACTOR_METHODS.SECURITY_KEY
+            : SECOND_FACTOR_METHODS.TOTP;
+          this.securityKeyChallenge = result.challenge;
+          this.securityKeyAllowedCredentialIds = result.allowed_credential_ids;
 
           // only need to focus the 2FA input for TOTP
           if (!this.showSecurityKey) {
@@ -266,10 +273,6 @@ export default class Login extends Component {
     }
   }
 
-  // I don't think this lives in the right place, this feels like it should live in some kind of auth service / controller
-  // and then be called in routes/application.js
-  // we render the login modal but then immediately redirect to the external auth service
-  // I think we can skip the login modal and just redirect to the external auth service
   @action
   async externalLogin(loginMethod, { signup = false } = {}) {
     if (this.loginDisabled) {
@@ -290,8 +293,10 @@ export default class Login extends Component {
     let createAccountProps = {};
     if (this.loginName && this.loginName.indexOf("@") > 0) {
       createAccountProps.accountEmail = this.loginName;
+      createAccountProps.accountUsername = null;
     } else {
       createAccountProps.accountUsername = this.loginName;
+      createAccountProps.accountEmail = null;
     }
     this.args.model.showCreateAccount(createAccountProps);
   }

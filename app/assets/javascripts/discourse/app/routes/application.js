@@ -253,14 +253,12 @@ const ApplicationRoute = DiscourseRoute.extend({
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
       if (this.includeExternalLoginMethods) {
+        // we will automatically redirect to the external auth service
         this.modal.show(LoginModal, {
           model: {
             isExternalLogin: true,
             externalLoginMethod: this.externalLoginMethods[0],
             signup: true,
-            showNotActivated: (props) => this.send("showNotActivated", props),
-            showCreateAccount: (props) => this.send("showCreateAccount", props),
-            canSignUp: this.controller.canSignUp,
           },
         });
       } else {

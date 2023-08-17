@@ -425,6 +425,7 @@ export default Controller.extend(
 
     actions: {
       externalLogin(provider) {
+        // we will automatically redirect to the external auth service
         this.modal.show(LoginModal, {
           model: {
             isExternalLogin: true,
