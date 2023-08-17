@@ -363,6 +363,9 @@ class BulkImport::Generic < BulkImport::Base
   def import_user_stats
     puts "Importing user stats..."
 
+    # TODO Figure out if we can do this with a INSERT INTO SELECT statement.
+    # TODO We also need to figure out how to get the likes_received and likes_given columns.
+
     users = query(<<~SQL)
       WITH posts_counts AS (
         SELECT COUNT(p.id) AS count, p.user_id

@@ -658,10 +658,12 @@ task "import:update_avatars_from_sso" => :environment do
 end
 
 def run_jobs
+  log "Running jobs"
+
   Jobs::DirectoryRefreshOlder.new.execute({})
   Jobs::DirectoryRefreshDaily.new.execute({})
   Jobs::ReindexSearch.new.execute({})
   Jobs::TopRefreshToday.new.execute({})
   Jobs::TopRefreshOlder.new.execute({})
-  Jobs::Weekly.new.execute({})
+  # Jobs::Weekly.new.execute({})
 end
