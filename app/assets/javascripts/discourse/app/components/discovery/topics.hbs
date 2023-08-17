@@ -31,9 +31,9 @@
   @model={{this.model}}
   @refresh={{action "refresh"}}
   @incomingCount={{this.topicTrackingState.incomingCount}}
-  @autoAddTopicsToBulkSelect={{this.autoAddTopicsToBulkSelect}}
-  @bulkSelectEnabled={{this.bulkSelectEnabled}}
-  @addTopicsToBulkSelect={{action "addTopicsToBulkSelect"}}
+  @autoAddTopicsToBulkSelect={{@autoAddTopicsToBulkSelect}}
+  @bulkSelectEnabled={{@bulkSelectEnabled}}
+  @addTopicsToBulkSelect={{@addTopicsToBulkSelect}}
 >
   {{#if this.top}}
     <div class="top-lists">
@@ -75,18 +75,16 @@
       @top={{this.top}}
       @showTopicPostBadges={{this.showTopicPostBadges}}
       @showPosters={{true}}
-      @canBulkSelect={{this.canBulkSelect}}
+      @canBulkSelect={{@canBulkSelect}}
       @changeSort={{route-action "changeSort"}}
-      @toggleBulkSelect={{action "toggleBulkSelect"}}
-      @updateAutoAddTopicsToBulkSelect={{action
-        "updateAutoAddTopicsToBulkSelect"
-      }}
+      @toggleBulkSelect={{@toggleBulkSelect}}
+      @updateAutoAddTopicsToBulkSelect={{this.updateAutoAddTopicsToBulkSelect}}
       @hideCategory={{this.model.hideCategory}}
       @order={{this.order}}
       @ascending={{this.ascending}}
-      @bulkSelectEnabled={{this.bulkSelectEnabled}}
+      @bulkSelectEnabled={{@bulkSelectEnabled}}
       @bulkSelectAction={{action "refresh"}}
-      @selected={{this.selected}}
+      @selected={{@selected}}
       @expandGloballyPinned={{this.expandGloballyPinned}}
       @expandAllPinned={{this.expandAllPinned}}
       @category={{this.category}}

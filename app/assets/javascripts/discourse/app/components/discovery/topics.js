@@ -14,7 +14,7 @@ import { action } from "@ember/object";
 import Component from "@ember/component";
 
 export default class DiscoveryTopics extends Component.extend(
-  BulkTopicSelection,
+  // BulkTopicSelection,
   DismissTopics
 ) {
   @service router;
@@ -40,16 +40,6 @@ export default class DiscoveryTopics extends Component.extend(
   @equal("period", "monthly") monthly;
   @equal("period", "weekly") weekly;
   @equal("period", "daily") daily;
-
-  @discourseComputed("model.filter", "model.topics.length")
-  showDismissRead(filter, topicsLength) {
-    return this._isFilterPage(filter, "unread") && topicsLength > 0;
-  }
-
-  @discourseComputed("model.filter", "model.topics.length")
-  showResetNew(filter, topicsLength) {
-    return this._isFilterPage(filter, "new") && topicsLength > 0;
-  }
 
   callResetNew(dismissPosts = false, dismissTopics = false, untrack = false) {
     const tracked =

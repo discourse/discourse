@@ -142,12 +142,6 @@ export default Component.extend({
     return filterType !== "categories";
   },
 
-  @discourseComputed()
-  canBulk() {
-    // const controller = getOwner(this).lookup("controller:discovery/topics");
-    // return controller.canBulkSelect;
-  },
-
   actions: {
     changeCategoryNotificationLevel(notificationLevel) {
       this.category.setNotification(notificationLevel);

@@ -4,6 +4,8 @@
       @category={{this.navigationArgs.category}}
       @filterType={{this.navigationArgs.filterType}}
       @noSubcategories={{this.navigationArgs.noSubcategories}}
+      @canBulkSelect={{this.canBulkSelect}}
+      @toggleBulkSelect={{this.toggleBulkSelect}}
     />
   </:navigation>
   <:list>
@@ -12,6 +14,10 @@
       @expandAllPinned={{this.expandAllPinned}}
       @expandAllGloballyPinned={{this.expandAllGloballyPinned}}
       @model={{this.model}}
+      @bulkSelectEnabled={{this.bulkSelectEnabled}}
+      @selected={{this.selected}}
+      @canBulkSelect={{this.canBulkSelect}}
+      @toggleBulkSelect={{this.toggleBulkSelect}}
     />
   </:list>
 </Discovery::Layout>

@@ -1,4 +1,10 @@
 import Controller, { inject as controller } from "@ember/controller";
+import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
+import discourseComputed from "discourse-common/utils/decorators";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+
+let queryParamsFrozen = false;
 
 // Just add query params here to have them automatically passed to topic list filters.
 export const queryParams = {
@@ -23,17 +29,6 @@ export const queryParams = {
   exclude_tag: { replace: true, refreshModel: true },
 };
 
-// Basic controller options
-const controllerOpts = {
-  // discoveryTopics: controller("discovery/topics"),
-  queryParams: Object.keys(queryParams),
-};
-
-// Default to `undefined`
-controllerOpts.queryParams.forEach((p) => {
-  controllerOpts[p] = queryParams[p].default;
-});
-
 export function changeSort(sortBy) {
   let model = this.controllerFor("discovery.topics").model;
 
@@ -47,21 +42,50 @@ export function changeSort(sortBy) {
 }
 
 export function resetParams(skipParams = []) {
-  controllerOpts.queryParams.forEach((p) => {
+  Object.keys(queryParams).forEach((p) => {
     if (!skipParams.includes(p)) {
       this.controller.set(p, queryParams[p].default);
     }
   });
 }
 
-const SortableController = Controller.extend(controllerOpts);
-
 export const addDiscoveryQueryParam = function (p, opts) {
+  if (queryParamsFrozen) {
+    throw "DiscoverySortableController has already been initialized, new query parameters cannot be introduced";
+  }
   queryParams[p] = opts;
-  const cOpts = {};
-  cOpts[p] = null;
-  cOpts["queryParams"] = Object.keys(queryParams);
-  SortableController.reopen(cOpts);
 };
 
-export default SortableController;
+export default class DiscoverySortableController extends Controller.extend(
+  BulkTopicSelection
+) {
+  @tracked bulkSelectEnabled = false;
+
+  queryParams = Object.keys(queryParams);
+
+  constructor() {
+    super(...arguments);
+    this.queryParams.forEach((p) => {
+      this[p] = queryParams[p].default;
+    });
+    queryParamsFrozen = true;
+    this.resetSelected();
+  }
+
+  @discourseComputed("model.filter", "model.topics.length")
+  showDismissRead(filter, topicsLength) {
+    return (
+      this._isFilterPage(this.model.get("filter"), "unread") && topicsLength > 0
+    );
+  }
+
+  @discourseComputed("model.filter", "model.topics.length")
+  showResetNew(filter, topicsLength) {
+    return this._isFilterPage(filter, "new") && topicsLength > 0;
+  }
+
+  @action
+  toggleBulkSelect() {
+    this.bulkSelectEnabled = !this.bulkSelectEnabled;
+  }
+}

@@ -30,6 +30,8 @@
     @createTopicDisabled={{not this.enableCreateTopicButton}}
     @hasDraft={{this.currentUser.has_topic_draft}}
     @editCategory={{this.editCategory}}
+    @canBulkSelect={{@canBulkSelect}}
+    @toggleBulkSelect={{@toggleBulkSelect}}
   />
 
   <PluginOutlet
