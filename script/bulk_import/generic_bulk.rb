@@ -38,6 +38,7 @@ class BulkImport::Generic < BulkImport::Base
     import_topic_allowed_users
     import_likes
     import_user_stats
+    import_muted_users
     # import_tags
   end
 
@@ -413,6 +414,22 @@ class BulkImport::Generic < BulkImport::Base
       # user[:likes_given] = row["likes_given"] if likes_given
 
       user
+    end
+  end
+
+  def import_muted_users
+    puts "Importing muted users..."
+
+    muted_users = query(<<~SQL)
+      SELECT *
+        FROM muted_users
+    SQL
+
+    create_muted_users(muted_users) do |row|
+      {
+        user_id: user_id_from_imported_id(row["user_id"]),
+        muted_user_id: user_id_from_imported_id(row["muted_user_id"]),
+      }
     end
   end
 

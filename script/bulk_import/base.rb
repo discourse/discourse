@@ -216,6 +216,7 @@ class BulkImport::Base
         .where(name: "import_username")
         .pluck("user_custom_fields.value", "users.username")
         .to_h
+    @last_muted_user_id = last_id(MutedUser)
 
     puts "Loading categories indexes..."
     @last_category_id = last_id(Category)
@@ -283,6 +284,9 @@ class BulkImport::Base
       @raw_connection.exec(
         "SELECT setval('#{UserCustomField.sequence_name}', #{@last_user_custom_field_id})",
       )
+    end
+    if @last_muted_user_id > 0
+      @raw_connection.exec("SELECT setval('#{MutedUser.sequence_name}', #{@last_muted_user_id})")
     end
   end
 
@@ -406,6 +410,8 @@ class BulkImport::Base
 
   USER_CUSTOM_FIELD_COLUMNS ||= %i[id user_id name value created_at updated_at]
 
+  MUTED_USER_COLUMNS ||= %i[id user_id muted_user_id created_at updated_at]
+
   CATEGORY_COLUMNS ||= %i[
     id
     name
@@ -516,6 +522,10 @@ class BulkImport::Base
   def create_user_custom_fields(rows, &block)
     @last_user_custom_field_id = last_id(UserCustomField)
     create_records(rows, "user_custom_field", USER_CUSTOM_FIELD_COLUMNS, &block)
+  end
+
+  def create_muted_users(rows, &block)
+    create_records(rows, "muted_user", MUTED_USER_COLUMNS, &block)
   end
 
   def create_group_users(rows, &block)
@@ -659,6 +669,13 @@ class BulkImport::Base
     user_stat[:bounce_score] ||= 0
     user_stat[:digest_attempted_at] ||= NOW
     user_stat
+  end
+
+  def process_muted_user(muted_user)
+    muted_user[:id] = @last_muted_user_id += 1
+    muted_user[:created_at] ||= NOW
+    muted_user[:updated_at] ||= NOW
+    muted_user
   end
 
   def process_user_profile(user_profile)
