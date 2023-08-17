@@ -11,6 +11,7 @@ import { schedule } from "@ember/runloop";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { isEmpty } from "@ember/utils";
 import I18n from "I18n";
+import { escape } from "pretty-text/sanitizer";
 
 export default class Login extends Component {
   @service dialog;

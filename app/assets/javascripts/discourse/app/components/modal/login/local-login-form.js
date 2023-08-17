@@ -87,7 +87,6 @@ export default class LocalLoginBody extends Component {
         this.args.flashTypeChanged("success");
       }
     } catch (e) {
-      console.log(e);
       popupAjaxError(e);
     } finally {
       this.processingEmailLink = false;
