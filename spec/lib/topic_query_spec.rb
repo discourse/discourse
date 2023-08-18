@@ -1366,11 +1366,11 @@ RSpec.describe TopicQuery do
   end
 
   describe "#list_suggested_for" do
+    use_redis_snapshotting
+
     def clear_cache!
       Discourse.redis.keys("random_topic_cache*").each { |k| Discourse.redis.del k }
     end
-
-    before { clear_cache! }
 
     context "when anonymous" do
       let(:topic) { Fabricate(:topic) }
