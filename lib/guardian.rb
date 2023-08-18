@@ -236,7 +236,7 @@ class Guardian
     return false if !authenticated?
     return true if is_api? && is_admin?
 
-    reviewable.created_by_id == @user.id
+    reviewable.target_created_by_id == @user.id
   end
 
   def can_see_group?(group)

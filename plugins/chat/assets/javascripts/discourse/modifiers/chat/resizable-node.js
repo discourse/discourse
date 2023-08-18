@@ -1,13 +1,10 @@
 import Modifier from "ember-modifier";
 import { registerDestructor } from "@ember/destroyable";
 import { bind } from "discourse-common/utils/decorators";
-import { inject as service } from "@ember/service";
 
 const MINIMUM_SIZE = 20;
 
 export default class ResizableNode extends Modifier {
-  @service capabilities;
-
   element = null;
   resizerSelector = null;
   didResizeContainer = null;
@@ -34,27 +31,21 @@ export default class ResizableNode extends Modifier {
       options
     );
 
-    if (this.capabilities.touch) {
-      this.element
-        .querySelector(this.resizerSelector)
-        ?.addEventListener("touchstart", this._startResize);
-    } else {
-      this.element
-        .querySelector(this.resizerSelector)
-        ?.addEventListener("mousedown", this._startResize);
-    }
+    this.element
+      .querySelector(this.resizerSelector)
+      ?.addEventListener("touchstart", this._startResize);
+    this.element
+      .querySelector(this.resizerSelector)
+      ?.addEventListener("mousedown", this._startResize);
   }
 
   cleanup() {
-    if (this.capabilities.touch) {
-      this.element
-        .querySelector(this.resizerSelector)
-        ?.addEventListener("touchstart", this._startResize);
-    } else {
-      this.element
-        .querySelector(this.resizerSelector)
-        ?.removeEventListener("mousedown", this._startResize);
-    }
+    this.element
+      .querySelector(this.resizerSelector)
+      ?.addEventListener("touchstart", this._startResize);
+    this.element
+      .querySelector(this.resizerSelector)
+      ?.removeEventListener("mousedown", this._startResize);
   }
 
   @bind
@@ -77,13 +68,10 @@ export default class ResizableNode extends Modifier {
     this._originalPageX = this._eventValueForProperty(event, "pageX");
     this._originalPageY = this._eventValueForProperty(event, "pageY");
 
-    if (this.capabilities.touch) {
-      window.addEventListener("touchmove", this._resize);
-      window.addEventListener("touchend", this._stopResize);
-    } else {
-      window.addEventListener("mousemove", this._resize);
-      window.addEventListener("mouseup", this._stopResize);
-    }
+    window.addEventListener("touchmove", this._resize);
+    window.addEventListener("touchend", this._stopResize);
+    window.addEventListener("mousemove", this._resize);
+    window.addEventListener("mouseup", this._stopResize);
   }
 
   /*
@@ -154,17 +142,14 @@ export default class ResizableNode extends Modifier {
 
   @bind
   _stopResize() {
-    if (this.capabilities.touch) {
-      window.removeEventListener("touchmove", this._resize);
-      window.removeEventListener("touchend", this._stopResize);
-    } else {
-      window.removeEventListener("mousemove", this._resize);
-      window.removeEventListener("mouseup", this._stopResize);
-    }
+    window.removeEventListener("touchmove", this._resize);
+    window.removeEventListener("touchend", this._stopResize);
+    window.removeEventListener("mousemove", this._resize);
+    window.removeEventListener("mouseup", this._stopResize);
   }
 
   _eventValueForProperty(event, property) {
-    if (this.capabilities.touch) {
+    if (event.changedTouches) {
       return event.changedTouches[0][property];
     } else {
       return event[property];

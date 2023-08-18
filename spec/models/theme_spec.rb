@@ -254,7 +254,7 @@ HTML
 
       expect(javascript_cache.content).to include("if ('define' in window) {")
       expect(javascript_cache.content).to include(
-        "define(\"discourse/theme-#{field.theme_id}/initializers/theme-field-#{field.id}-mobile-html-script-1\"",
+        "define(\"discourse/theme-#{field.theme_id}/discourse/initializers/theme-field-#{field.id}-mobile-html-script-1\"",
       )
       expect(javascript_cache.content).to include(
         "settings = require(\"discourse/lib/theme-settings-store\").getObjectForTheme(#{field.theme_id});",
@@ -406,7 +406,7 @@ HTML
       )
       expect(theme_field.javascript_cache.content).to include("if ('define' in window) {")
       expect(theme_field.javascript_cache.content).to include(
-        "define(\"discourse/theme-#{theme_field.theme.id}/initializers/theme-field-#{theme_field.id}-common-html-script-1\",",
+        "define(\"discourse/theme-#{theme_field.theme.id}/discourse/initializers/theme-field-#{theme_field.id}-common-html-script-1\",",
       )
       expect(theme_field.javascript_cache.content).to include(
         "name: \"theme-field-#{theme_field.id}-common-html-script-1\",",

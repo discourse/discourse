@@ -17,6 +17,12 @@ module PageObjects
         )
       end
 
+      def prefers_drawer
+        page.execute_script(
+          "window.localStorage.setItem('discourse_chat_preferred_mode', '\"DRAWER_CHAT\"');",
+        )
+      end
+
       def open_from_header
         find(".chat-header-icon").click
       end

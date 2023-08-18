@@ -6,11 +6,13 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 71
+  BASE_COMPILER_VERSION = 73
 
   attr_accessor :child_components
 
-  @cache = DistributedCache.new("theme:compiler:#{BASE_COMPILER_VERSION}")
+  def self.cache
+    @cache ||= DistributedCache.new("theme:compiler:#{BASE_COMPILER_VERSION}")
+  end
 
   belongs_to :user
   belongs_to :color_scheme
@@ -202,7 +204,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.get_set_cache(key, &blk)
-    @cache.defer_get_set(key, &blk)
+    cache.defer_get_set(key, &blk)
   end
 
   def self.theme_ids
@@ -369,7 +371,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.clear_cache!
-    @cache.clear
+    cache.clear
   end
 
   def self.targets

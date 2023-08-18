@@ -1,7 +1,7 @@
 import { inject as service } from "@ember/service";
 import Component from "@glimmer/component";
 import getURL from "discourse-common/lib/get-url";
-
+import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
 export default class ChatHeaderIcon extends Component {
   @service currentUser;
   @service site;
@@ -12,6 +12,10 @@ export default class ChatHeaderIcon extends Component {
     return this.args.currentUserInDnD || this.currentUser.isInDoNotDisturb();
   }
 
+  get chatSeparateSidebarMode() {
+    return getUserChatSeparateSidebarMode(this.currentUser);
+  }
+
   get isActive() {
     return (
       this.args.isActive ||
@@ -20,13 +24,38 @@ export default class ChatHeaderIcon extends Component {
     );
   }
 
+  get title() {
+    if (
+      this.chatStateManager.isFullPageActive &&
+      !this.chatSeparateSidebarMode.never
+    ) {
+      return "sidebar.panels.forum.label";
+    }
+
+    return "chat.title_capitalized";
+  }
+
+  get icon() {
+    if (
+      this.chatStateManager.isFullPageActive &&
+      !this.chatSeparateSidebarMode.never
+    ) {
+      return "random";
+    }
+
+    return "d-chat";
+  }
+
   get href() {
-    if (this.chatStateManager.isFullPageActive) {
-      if (this.site.mobileView) {
-        return getURL("/chat");
-      } else {
-        return getURL(this.router.currentURL);
-      }
+    if (this.site.mobileView && this.chatStateManager.isFullPageActive) {
+      return getURL("/chat");
+    }
+
+    if (
+      this.chatStateManager.isFullPageActive &&
+      !this.chatSeparateSidebarMode.never
+    ) {
+      return getURL(this.chatStateManager.lastKnownAppURL || "/");
     }
 
     if (this.chatStateManager.isDrawerActive) {
