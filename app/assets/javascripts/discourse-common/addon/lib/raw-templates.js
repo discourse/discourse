@@ -31,17 +31,18 @@ export function findRawTemplate(name) {
   );
 }
 
-export function buildRawConnectorCache(findOutlets) {
+export function buildRawConnectorCache() {
   let result = {};
-  findOutlets(
-    Object.keys(__DISCOURSE_RAW_TEMPLATES),
-    (outletName, resource) => {
+  Object.keys(__DISCOURSE_RAW_TEMPLATES).forEach((resource) => {
+    const segments = resource.split("/");
+    if (segments.includes("connectors")) {
+      const outletName = segments[segments.length - 2];
       result[outletName] ??= [];
       result[outletName].push({
         template: __DISCOURSE_RAW_TEMPLATES[resource],
       });
     }
-  );
+  });
   return result;
 }
 
