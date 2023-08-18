@@ -51,7 +51,7 @@ function unColocateConnectors(tree) {
       if (
         match &&
         match.groups.extension === "js" &&
-        match.groups.prefix.split("/").pop() === "templates"
+        match.groups.prefix.endsWith("/templates")
       ) {
         // Some plugins are colocating connector JS under `/templates`
         const { prefix, connector } = match.groups;
