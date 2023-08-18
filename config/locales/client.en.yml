@@ -3995,6 +3995,12 @@ en:
           one: "New (%{count})"
           other: "New (%{count})"
         help: "topics created in the last few days"
+        all: "All"
+        all_with_count: "All (%{count})"
+        topics: "Topics"
+        topics_with_count: "Topics (%{count})"
+        replies: "Replies"
+        replies_with_count: "Replies (%{count})"
       posted:
         title: "My Posts"
         help: "topics you have posted in"

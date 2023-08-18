@@ -13,6 +13,7 @@ export const queryParams = {
   before: { replace: true, refreshModel: true },
   bumped_before: { replace: true, refreshModel: true },
   f: { replace: true, refreshModel: true },
+  subset: { replace: true, refreshModel: true },
   period: { replace: true, refreshModel: true },
   topic_ids: { replace: true, refreshModel: true },
   group_name: { replace: true, refreshModel: true },
@@ -33,6 +34,13 @@ export function changeSort(sortBy) {
     this.controller.setProperties({ order: sortBy, ascending: false });
     model.updateSortParams(sortBy, false);
   }
+}
+
+export function changeNewListSubset(subset) {
+  this.controller.set("subset", subset);
+
+  let model = this.controllerFor("discovery.topics").model;
+  model.updateNewListSubsetParam(subset);
 }
 
 export function resetParams(skipParams = []) {

@@ -40,6 +40,14 @@
     {{/if}}
   {{/if}}
 
+  {{#if this.showTopicsAndRepliesToggle}}
+    <NewListHeaderControlsWrapper
+      @current={{this.model.params.subset}}
+      @newRepliesCount={{this.newRepliesCount}}
+      @newTopicsCount={{this.newTopicsCount}}
+      @changeNewListSubset={{route-action "changeNewListSubset"}}
+    />
+  {{/if}}
   {{#if this.hasTopics}}
     <TopicList
       @ascending={{this.ascending}}
