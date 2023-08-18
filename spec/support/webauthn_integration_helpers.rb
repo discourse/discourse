@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module WebauthnIntegrationHelpers
+module DiscourseWebauthnIntegrationHelpers
   ##
   # Usage notes:
   #
@@ -10,8 +10,8 @@ module WebauthnIntegrationHelpers
   #
   # To make this all work together you need to
   # create a UserSecurityKey for a user using valid_security_key_data,
-  # and you override Webauthn::ChallengeGenerator.generate to return
-  # a Webauthn::ChallengeGenerator::ChallengeSession object using
+  # and you override DiscourseWebauthn::ChallengeGenerator.generate to return
+  # a DiscourseWebauthn::ChallengeGenerator::ChallengeSession object using
   # valid_security_key_challenge_data.
   #
   # This is because the challenge is embedded
@@ -64,8 +64,8 @@ module WebauthnIntegrationHelpers
 
   def simulate_localhost_webauthn_challenge
     stub_as_dev_localhost
-    Webauthn::ChallengeGenerator.stubs(:generate).returns(
-      Webauthn::ChallengeGenerator::ChallengeSession.new(
+    DiscourseWebauthn::ChallengeGenerator.stubs(:generate).returns(
+      DiscourseWebauthn::ChallengeGenerator::ChallengeSession.new(
         challenge: valid_security_key_challenge_data[:challenge],
         rp_id: Discourse.current_hostname,
       ),

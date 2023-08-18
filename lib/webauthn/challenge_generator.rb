@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module Webauthn
+module DiscourseWebauthn
   class ChallengeGenerator
     class ChallengeSession
       attr_reader :challenge, :rp_id, :rp_name
