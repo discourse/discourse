@@ -2149,6 +2149,7 @@ en:
     digest_min_excerpt_length: "Minimum post excerpt in the email summary, in characters."
     suppress_digest_email_after_days: "Suppress summary emails for users not seen on the site for more than (n) days."
     digest_suppress_categories: "Suppress these categories from summary emails."
+    digest_suppress_tags: "Suppress these tags from summary emails."
     disable_digest_emails: "Disable summary emails for all users."
     apply_custom_styles_to_digest: "Custom email template and css are applied to summary emails."
     email_accent_bg_color: "The accent color to be used as the background of some elements in HTML emails. Enter a color name ('red') or hex value ('#FF0000')."
