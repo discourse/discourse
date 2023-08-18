@@ -57,7 +57,7 @@ module BulkImport
 
               copy_to_tempfile(path) do |file|
                 upload =
-                  UploadCreator.new(file, row["filename"], type: "avatar").create_for(
+                  UploadCreator.new(file, row["filename"], type: row["type"]).create_for(
                     Discourse::SYSTEM_USER_ID,
                   )
 
