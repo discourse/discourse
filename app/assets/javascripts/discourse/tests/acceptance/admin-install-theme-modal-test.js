@@ -111,7 +111,7 @@ acceptance("Admin - Themes - Install modal", function (needs) {
 
     assert.ok(
       query(
-        '.popular-theme-item[data-name="Minima"] .popular-theme-buttons button'
+        '.popular-theme-item[data-name="Mint"] .popular-theme-buttons button'
       ),
       "install button is shown for not installed themes"
     );
