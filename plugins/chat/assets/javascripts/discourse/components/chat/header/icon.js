@@ -25,7 +25,10 @@ export default class ChatHeaderIcon extends Component {
   }
 
   get title() {
-    if (this.chatStateManager.isFullPageActive && !this.chatSeparateSidebarMode.never) {
+    if (
+      this.chatStateManager.isFullPageActive &&
+      !this.chatSeparateSidebarMode.never
+    ) {
       return "sidebar.panels.forum.label";
     }
 
@@ -33,7 +36,10 @@ export default class ChatHeaderIcon extends Component {
   }
 
   get icon() {
-    if (this.chatStateManager.isFullPageActive && !this.chatSeparateSidebarMode.never) {
+    if (
+      this.chatStateManager.isFullPageActive &&
+      !this.chatSeparateSidebarMode.never
+    ) {
       return "random";
     }
 
@@ -45,7 +51,10 @@ export default class ChatHeaderIcon extends Component {
       return getURL("/chat");
     }
 
-    if (this.chatStateManager.isFullPageActive && !this.chatSeparateSidebarMode.never) {
+    if (
+      this.chatStateManager.isFullPageActive &&
+      !this.chatSeparateSidebarMode.never
+    ) {
       return getURL(this.chatStateManager.lastKnownAppURL || "/");
     }
 
