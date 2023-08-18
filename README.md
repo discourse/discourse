@@ -10,8 +10,8 @@ To learn more, visit [**discourse.org**](https://www.discourse.org) and join our
 
 ## Screenshots
 
-<a href="https://blog.discourse.org/2023/08/discourse-3-1-is-here/"><img alt="Discourse 3.1" src="https://github.com/discourse/discourse/assets/5862206/ae95f963-5ab4-4509-b87a-f9f6e9a109bf" width="720px"></a>
-<a href="https://bbs.boingboing.net"><img alt="Boing Boing" src="https://user-images.githubusercontent.com/1681963/52239245-04ad8280-289c-11e9-9c88-8c173d4a0422.png" width="720px"></a>
+<a><img alt="Discourse 3.1" src="https://github.com/discourse/discourse/assets/5862206/ae95f963-5ab4-4509-b87a-f9f6e9a109bf" width="720px"></a>
+<a href="https://bbs.boingboing.net"><img alt="Boing Boing" src="https://github.com/discourse/discourse/assets/5862206/1413ac96-5d08-40b2-bc8e-27c3f2d3bfe6" width="1440"></a>
 <a href="https://twittercommunity.com/"><img src="https://user-images.githubusercontent.com/1681963/52239250-04ad8280-289c-11e9-9e42-574f6eaab9d7.png" width="720px"></a>
 <img src="https://user-images.githubusercontent.com/1681963/52239118-b304f800-289b-11e9-9904-16450680d9ec.jpg" alt="Mobile" width="414">
 
