@@ -33,7 +33,7 @@ export default class ChatHeaderIcon extends Component {
   }
 
   get icon() {
-    if (this.chatStateManager.isFullPageActive && !this.mode.never) {
+    if (this.chatStateManager.isFullPageActive && !this.chatSeparateSidebarMode.never) {
       return "random";
     }
 
