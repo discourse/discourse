@@ -35,8 +35,10 @@ export function buildRawConnectorCache() {
   let result = {};
   Object.keys(__DISCOURSE_RAW_TEMPLATES).forEach((resource) => {
     const segments = resource.split("/");
-    if (segments.includes("connectors")) {
-      const outletName = segments[segments.length - 2];
+    const connectorIndex = segments.indexOf("connectors");
+
+    if (connectorIndex >= 0) {
+      const outletName = segments[connectorIndex + 1];
       result[outletName] ??= [];
       result[outletName].push({
         template: __DISCOURSE_RAW_TEMPLATES[resource],
