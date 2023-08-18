@@ -37,10 +37,12 @@ export default {
       );
 
       const currentUser = api.getCurrentUser();
-      if (getUserChatSeparateSidebarMode(currentUser).fullscreen) {
+      const chatSeparateSidebarMode = getUserChatSeparateSidebarMode(currentUser);
+      
+      if (chatSeparateSidebarMode.fullscreen) {
         api.setCombinedSidebarMode();
         api.showSidebarSwitchPanelButtons();
-      } else if (getUserChatSeparateSidebarMode(currentUser).always) {
+      } else if (chatSeparateSidebarMode.always) {
         api.setSeparatedSidebarMode();
       } else {
         api.hideSidebarSwitchPanelButtons();
