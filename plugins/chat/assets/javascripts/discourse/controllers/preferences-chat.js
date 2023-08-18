@@ -65,7 +65,7 @@ export default class PreferencesChatController extends Controller {
   headerIndicatorOptions = HEADER_INDICATOR_OPTIONS;
   chatSeparateSidebarModeOptions = CHAT_SEPARATE_SIDEBAR_MODE_OPTIONS;
 
-  get chatSeparateSidebarModeValue() {
+  get chatSeparateSidebarMode() {
     const mode = this.model.get("user_option.chat_separate_sidebar_mode");
     if (mode === "default") {
       return this.siteSettings.chat_separate_sidebar_mode;
