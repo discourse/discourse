@@ -12,6 +12,7 @@ import { until } from "discourse/lib/formatter";
 import { inject as service } from "@ember/service";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import getURL from "discourse-common/lib/get-url";
+import { initSidebarState } from "discourse/plugins/chat/discourse/lib/init-sidebar-state";
 
 export default {
   name: "chat-sidebar",
@@ -34,6 +35,8 @@ export default {
             switchButtonDefaultUrl = getURL("/chat");
           }
       );
+
+      initSidebarState(api, api.getCurrentUser());
     });
 
     withPluginApi("1.3.0", (api) => {
