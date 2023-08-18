@@ -37,8 +37,8 @@ export default {
       );
 
       const currentUser = api.getCurrentUser();
-      const chatSeparateSidebarMode = getUserChatSeparateSidebarMode(currentUser);
-      
+      const chatSeparateSidebarMode =
+        getUserChatSeparateSidebarMode(currentUser);
       if (chatSeparateSidebarMode.fullscreen) {
         api.setCombinedSidebarMode();
         api.showSidebarSwitchPanelButtons();
