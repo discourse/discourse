@@ -1127,8 +1127,8 @@ export default Component.extend(
     },
 
     _deprecateMutations() {
-      this.actions = this.actions || {};
-      this.attrs = this.attrs || {};
+      this.actions ??= {};
+      this.attrs ??= {};
 
       if (!this.attrs.onChange && !this.actions.onChange) {
         this._deprecated(
