@@ -163,9 +163,6 @@ class AbstractCategoryRoute extends DiscourseRoute {
     let topicOpts = {
       model: topics,
       category,
-      period:
-        topics.get("for_period") ||
-        (model.modelParams && model.modelParams.period),
       noSubcategories: !!this.routeConfig?.no_subcategories,
       expandAllPinned: true,
     };

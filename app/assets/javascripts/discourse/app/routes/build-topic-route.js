@@ -128,12 +128,10 @@ class AbstractTopicRoute extends DiscourseRoute {
     return I18n.t("filters.with_topics", { filter: filterText });
   }
 
-  setupController(controller, model) {
+  setupController(controller) {
     const filterType = this.routeConfig.filter.split("/")[0];
     controller.setProperties({
-      discovery: this.controllerFor("discovery"),
       filterType,
-      period: model.get("for_period") || model.get("params.period"),
       expandAllPinned: false,
       expandGloballyPinned: true,
       navigationArgs: { filterType },
