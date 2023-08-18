@@ -2,11 +2,17 @@ import DiscourseRoute from "discourse/routes/discourse";
 import User from "discourse/models/user";
 import { action } from "@ember/object";
 import { bind } from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
 
 export default DiscourseRoute.extend({
+  router: service(),
+  searchService: service("search"),
+  appEvents: service("app-events"),
+  messageBus: service("message-bus"),
+
   beforeModel() {
     if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
-      this.replaceWith("discovery");
+      this.router.replaceWith("discovery");
     }
   },
 
@@ -31,7 +37,7 @@ export default DiscourseRoute.extend({
       .findDetails()
       .then(() => user.findStaffInfo())
       .then(() => user.trackStatus())
-      .catch(() => this.replaceWith("/404"));
+      .catch(() => this.router.replaceWith("/404"));
   },
 
   serialize(model) {

@@ -3,9 +3,11 @@ import { inject as service } from "@ember/service";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { next } from "@ember/runloop";
 import StaticPage from "discourse/models/static-page";
+import { action } from "@ember/object";
 
 export default class LoginRoute extends DiscourseRoute {
   @service siteSettings;
+  @service router;
 
   // `login-page` because `login` controller is the one for
   // the login modal
@@ -13,13 +15,19 @@ export default class LoginRoute extends DiscourseRoute {
 
   beforeModel() {
     if (!this.siteSettings.login_required) {
-      this.replaceWith(`/${defaultHomepage()}`).then((e) => {
-        next(() => e.send("showLogin"));
-      });
+      this.showLogin();
     }
   }
 
   model() {
     return StaticPage.find("login");
+  }
+
+  @action
+  async showLogin() {
+    const route = await this.router
+      .replaceWith(`/${defaultHomepage()}`)
+      .followRedirects();
+    next(() => route.send("showLogin"));
   }
 }

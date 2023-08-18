@@ -6,35 +6,44 @@ import { inject as service } from "@ember/service";
 
 export default class extends DiscourseRoute {
   @service composer;
+  @service router;
+  @service currentUser;
+  @service site;
 
   beforeModel(transition) {
     if (this.currentUser) {
       const category = this.parseCategoryFromTransition(transition);
 
       if (category) {
-        this.replaceWith("discovery.category", {
-          category,
-          id: category.id,
-        }).then(() => {
-          if (this.currentUser.can_create_topic) {
-            this.openComposer({ transition, category });
-          }
-        });
+        this.router
+          .replaceWith("discovery.category", {
+            category,
+            id: category.id,
+          })
+          .followRedirects()
+          .then(() => {
+            if (this.currentUser.can_create_topic) {
+              this.openComposer({ transition, category });
+            }
+          });
       } else if (transition.from) {
         // Navigation from another ember route
         transition.abort();
         this.openComposer({ transition });
       } else {
-        this.replaceWith("discovery.latest").then(() => {
-          if (this.currentUser.can_create_topic) {
-            this.openComposer({ transition });
-          }
-        });
+        this.router
+          .replaceWith("discovery.latest")
+          .followRedirects()
+          .then(() => {
+            if (this.currentUser.can_create_topic) {
+              this.openComposer({ transition });
+            }
+          });
       }
     } else {
       // User is not logged in
       cookie("destination_url", window.location.href);
-      this.replaceWith("login");
+      this.router.replaceWith("login");
     }
   }
 
