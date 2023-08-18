@@ -6,37 +6,8 @@ describe "New topic list", type: :system do
   fab!(:category) { Fabricate(:category) }
   fab!(:tag) { Fabricate(:tag) }
 
-  fab!(:new_reply) { Fabricate(:post).topic }
-  fab!(:new_topic) { Fabricate(:post).topic }
-  fab!(:old_topic) { Fabricate(:post).topic }
-
-  fab!(:new_reply_in_category) do
-    Fabricate(:post, topic: Fabricate(:topic, category: category)).topic
-  end
-
-  fab!(:new_topic_in_category) do
-    Fabricate(:post, topic: Fabricate(:topic, category: category)).topic
-  end
-
-  fab!(:old_topic_in_category) do
-    Fabricate(:post, topic: Fabricate(:topic, category: category)).topic
-  end
-
-  fab!(:new_reply_with_tag) { Fabricate(:post, topic: Fabricate(:topic, tags: [tag])).topic }
-  fab!(:new_topic_with_tag) { Fabricate(:post, topic: Fabricate(:topic, tags: [tag])).topic }
-  fab!(:old_topic_with_tag) { Fabricate(:post, topic: Fabricate(:topic, tags: [tag])).topic }
-
-  let(:topic_list) { PageObjects::Components::TopicList.new }
-  let(:tabs_toggle) { PageObjects::Components::NewTopicListToggle.new }
-
-  before do
-    sign_in(user)
-
-    [old_topic, old_topic_in_category, old_topic_with_tag].each do |topic|
-      TopicUser.update_last_read(user, topic.id, 1, 1, 1)
-    end
-
-    [new_reply, new_reply_in_category, new_reply_with_tag].each do |topic|
+  fab!(:new_reply) do
+    Fabricate(:post).topic.tap do |topic|
       TopicUser.change(
         user.id,
         topic.id,
@@ -46,6 +17,59 @@ describe "New topic list", type: :system do
       Fabricate(:post, topic: topic)
     end
   end
+
+  fab!(:new_topic) { Fabricate(:post).topic }
+
+  fab!(:old_topic) do
+    Fabricate(:post).topic.tap { |topic| TopicUser.update_last_read(user, topic.id, 1, 1, 1) }
+  end
+
+  fab!(:new_reply_in_category) do
+    Fabricate(:post, topic: Fabricate(:topic, category: category)).topic.tap do |topic|
+      TopicUser.change(
+        user.id,
+        topic.id,
+        notification_level: TopicUser.notification_levels[:tracking],
+      )
+      TopicUser.update_last_read(user, topic.id, 1, 1, 1)
+      Fabricate(:post, topic: topic)
+    end
+  end
+
+  fab!(:new_topic_in_category) do
+    Fabricate(:post, topic: Fabricate(:topic, category: category)).topic
+  end
+
+  fab!(:old_topic_in_category) do
+    Fabricate(:post, topic: Fabricate(:topic, category: category)).topic.tap do |topic|
+      TopicUser.update_last_read(user, topic.id, 1, 1, 1)
+    end
+  end
+
+  fab!(:new_reply_with_tag) do
+    Fabricate(:post, topic: Fabricate(:topic, tags: [tag])).topic.tap do |topic|
+      TopicUser.change(
+        user.id,
+        topic.id,
+        notification_level: TopicUser.notification_levels[:tracking],
+      )
+      TopicUser.update_last_read(user, topic.id, 1, 1, 1)
+      Fabricate(:post, topic: topic)
+    end
+  end
+
+  fab!(:new_topic_with_tag) { Fabricate(:post, topic: Fabricate(:topic, tags: [tag])).topic }
+
+  fab!(:old_topic_with_tag) do
+    Fabricate(:post, topic: Fabricate(:topic, tags: [tag])).topic.tap do |topic|
+      TopicUser.update_last_read(user, topic.id, 1, 1, 1)
+    end
+  end
+
+  let(:topic_list) { PageObjects::Components::TopicList.new }
+  let(:tabs_toggle) { PageObjects::Components::NewTopicListToggle.new }
+
+  before { sign_in(user) }
 
   shared_examples "new list new topics and replies toggle" do
     context "when the new new view is enabled" do
