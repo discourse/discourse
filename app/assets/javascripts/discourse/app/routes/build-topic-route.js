@@ -1,4 +1,5 @@
 import {
+  changeNewListSubset,
   changeSort,
   queryParams,
   resetParams,
@@ -144,6 +145,11 @@ class AbstractTopicRoute extends DiscourseRoute {
   @action
   changeSort(sortBy) {
     changeSort.call(this, sortBy);
+  }
+
+  @action
+  changeNewListSubset(subset) {
+    changeNewListSubset.call(this, subset);
   }
 
   @action

@@ -13,7 +13,11 @@
       </span>
     {{/if ~}}
   {{/if ~}}
-  <span>{{view.localizedName}}</span>
+  {{~#if view.showTopicsAndRepliesToggle}}
+    {{raw "list/new-list-header-controls" current=newListSubset newRepliesCount=newRepliesCount newTopicsCount=newTopicsCount}}
+  {{else}}
+    <span>{{view.localizedName}}</span>
+  {{/if ~}}
   {{~#if view.isSorting}}
     {{d-icon view.sortIcon}}
   {{/if ~}}

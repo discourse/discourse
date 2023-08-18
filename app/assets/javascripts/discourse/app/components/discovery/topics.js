@@ -21,7 +21,6 @@ export default class DiscoveryTopics extends Component.extend(DismissTopics) {
   expandAllPinned = false;
 
   @alias("currentUser.id") canStar;
-  @not("new") showTopicPostBadges;
   @alias("currentUser.user_option.redirected_to_top.reason") redirectedReason;
   @readOnly("model.params.order") order;
   @readOnly("model.params.ascending") ascending;
@@ -103,7 +102,41 @@ export default class DiscoveryTopics extends Component.extend(DismissTopics) {
 
   @discourseComputed("model.filter")
   new(filter) {
-    return filter?.endsWith("new") && !this.currentUser?.new_new_view_enabled;
+    return filter?.endsWith("new");
+  }
+
+  @discourseComputed("new")
+  showTopicsAndRepliesToggle(isNew) {
+    return isNew && this.currentUser?.new_new_view_enabled;
+  }
+
+  @discourseComputed("topicTrackingState.messageCount")
+  newRepliesCount() {
+    if (this.currentUser?.new_new_view_enabled) {
+      return this.topicTrackingState.countUnread({
+        categoryId: this.category?.id,
+        noSubcategories: this.noSubcategories,
+      });
+    } else {
+      return 0;
+    }
+  }
+
+  @discourseComputed("topicTrackingState.messageCount")
+  newTopicsCount() {
+    if (this.currentUser?.new_new_view_enabled) {
+      return this.topicTrackingState.countNew({
+        categoryId: this.category?.id,
+        noSubcategories: this.noSubcategories,
+      });
+    } else {
+      return 0;
+    }
+  }
+
+  @discourseComputed("new")
+  showTopicPostBadges(isNew) {
+    return !isNew || this.currentUser?.new_new_view_enabled;
   }
 
   @discourseComputed("allLoaded", "model.topics.length")
