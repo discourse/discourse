@@ -12,7 +12,6 @@ import { until } from "discourse/lib/formatter";
 import { inject as service } from "@ember/service";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import getURL from "discourse-common/lib/get-url";
-import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
 
 export default {
   name: "chat-sidebar",
@@ -35,18 +34,6 @@ export default {
             switchButtonDefaultUrl = getURL("/chat");
           }
       );
-
-      const currentUser = api.getCurrentUser();
-      const chatSeparateSidebarMode =
-        getUserChatSeparateSidebarMode(currentUser);
-      if (chatSeparateSidebarMode.fullscreen) {
-        api.setCombinedSidebarMode();
-        api.showSidebarSwitchPanelButtons();
-      } else if (chatSeparateSidebarMode.always) {
-        api.setSeparatedSidebarMode();
-      } else {
-        api.hideSidebarSwitchPanelButtons();
-      }
     });
 
     withPluginApi("1.3.0", (api) => {
