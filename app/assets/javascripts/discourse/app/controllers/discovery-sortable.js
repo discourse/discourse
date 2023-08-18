@@ -1,13 +1,9 @@
 import Controller from "@ember/controller";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import discourseComputed from "discourse-common/utils/decorators";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import { inject as service } from "@ember/service";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
-
-let queryParamsFrozen = false;
 
 // Just add query params here to have them automatically passed to topic list filters.
 export const queryParams = {
@@ -52,23 +48,14 @@ export function resetParams(skipParams = []) {
   });
 }
 
-export const addDiscoveryQueryParam = function (p, opts) {
-  if (queryParamsFrozen) {
-    throw "DiscoverySortableController has already been initialized, new query parameters cannot be introduced";
-  }
+export function addDiscoveryQueryParam(p, opts) {
   queryParams[p] = opts;
-};
+}
 
 @disableImplicitInjections
 export default class DiscoverySortableController extends Controller.extend(
   BulkTopicSelection
 ) {
-  @service currentUser;
-  @service composer;
-
-  @tracked bulkSelectEnabled = false;
-  @tracked category;
-
   queryParams = Object.keys(queryParams);
 
   constructor() {
@@ -76,7 +63,7 @@ export default class DiscoverySortableController extends Controller.extend(
     this.queryParams.forEach((p) => {
       this[p] = queryParams[p].default;
     });
-    queryParamsFrozen = true;
+
     this.resetSelected();
   }
 
