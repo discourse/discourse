@@ -19,6 +19,9 @@ RSpec.describe "Navigation", type: :system do
 
   before do
     chat_system_bootstrap(current_user, [category_channel, category_channel_2])
+    current_user.user_option.update(
+      chat_separate_sidebar_mode: UserOption.chat_separate_sidebar_modes[:never],
+    )
     sign_in(current_user)
   end
 
@@ -40,17 +43,6 @@ RSpec.describe "Navigation", type: :system do
       chat_page.open_from_header
 
       expect(page).to have_current_path(chat_path)
-    end
-  end
-
-  context "when clicking chat icon on desktop and is viewing channel" do
-    it "stays on channel page" do
-      chat_page.visit_channel(category_channel_2)
-      chat_page.open_from_header
-
-      expect(page).to have_current_path(
-        chat.channel_path(category_channel_2.slug, category_channel_2.id),
-      )
     end
   end
 
