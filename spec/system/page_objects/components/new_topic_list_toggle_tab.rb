@@ -31,7 +31,7 @@ module PageObjects
             end
           )
 
-        find(@selector, text: expected_label)
+        has_selector?(@selector, text: expected_label)
       end
 
       def click
