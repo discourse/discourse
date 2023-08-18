@@ -21,15 +21,15 @@ export default DiscourseRoute.extend({
   },
 
   @action
-  async redirectToAccount() {
+  async redirectToAccount(params) {
     await this.router
       .replaceWith(`preferences.account`, this.currentUser)
       .followRedirects();
-    next(() => this.showAssociateAccount());
+    next(() => this.showAssociateAccount(params));
   },
 
   @action
-  async showAssociateAccount() {
+  async showAssociateAccount(params) {
     try {
       const model = await ajax(
         `/associate/${encodeURIComponent(params.token)}.json`
