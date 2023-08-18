@@ -5,7 +5,9 @@ import { inject as service } from "@ember/service";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { schedule } from "@ember/runloop";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { initSidebarState } from "discourse/plugins/chat/discourse/lib/init-sidebar-state";
 import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
+
 export default class ChatRoute extends DiscourseRoute {
   @service chat;
   @service router;
@@ -81,20 +83,7 @@ export default class ChatRoute extends DiscourseRoute {
 
   deactivate(transition) {
     withPluginApi("1.8.0", (api) => {
-      api.setSidebarPanel("main");
-
-      const chatSeparateSidebarMode = getUserChatSeparateSidebarMode(
-        this.currentUser
-      );
-      if (chatSeparateSidebarMode.fullscreen) {
-        api.setCombinedSidebarMode();
-        api.showSidebarSwitchPanelButtons();
-      } else if (chatSeparateSidebarMode.always) {
-        api.setSeparatedSidebarMode();
-      } else {
-        api.setCombinedSidebarMode();
-        api.hideSidebarSwitchPanelButtons();
-      }
+      initSidebarState(api, this.currentUser);
     });
 
     if (transition) {
