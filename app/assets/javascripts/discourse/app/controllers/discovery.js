@@ -1,6 +1,6 @@
 import { inject as service } from "@ember/service";
 import { equal } from "@ember/object/computed";
-import Controller, { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import Category from "discourse/models/category";
 

@@ -7,7 +7,6 @@ import TopicList from "discourse/models/topic-list";
 import { ajax } from "discourse/lib/ajax";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { hash } from "rsvp";
-import showModal from "discourse/lib/show-modal";
 import Session from "discourse/models/session";
 import { inject as service } from "@ember/service";
 

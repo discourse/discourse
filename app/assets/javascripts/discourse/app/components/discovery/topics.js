@@ -1,5 +1,5 @@
 import { inject as service } from "@ember/service";
-import { alias, empty, equal, gt, not, readOnly } from "@ember/object/computed";
+import { alias, empty, equal, gt, readOnly } from "@ember/object/computed";
 import DismissTopics from "discourse/mixins/dismiss-topics";
 import I18n from "I18n";
 import Topic from "discourse/models/topic";
