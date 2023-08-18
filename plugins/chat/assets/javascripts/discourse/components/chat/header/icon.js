@@ -12,7 +12,7 @@ export default class ChatHeaderIcon extends Component {
     return this.args.currentUserInDnD || this.currentUser.isInDoNotDisturb();
   }
 
-  get mode() {
+  get chatSeparateSidebarMode() {
     return getUserChatSeparateSidebarMode(this.currentUser);
   }
 
