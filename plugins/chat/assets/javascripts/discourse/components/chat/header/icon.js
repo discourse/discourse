@@ -45,7 +45,7 @@ export default class ChatHeaderIcon extends Component {
       return getURL("/chat");
     }
 
-    if (this.chatStateManager.isFullPageActive && !this.mode.never) {
+    if (this.chatStateManager.isFullPageActive && !this.chatSeparateSidebarMode.never) {
       return getURL(this.chatStateManager.lastKnownAppURL || "/");
     }
 
