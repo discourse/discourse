@@ -13,9 +13,11 @@ describe "New topic list", type: :system do
   fab!(:new_reply_in_category) do
     Fabricate(:post, topic: Fabricate(:topic, category: category)).topic
   end
+
   fab!(:new_topic_in_category) do
     Fabricate(:post, topic: Fabricate(:topic, category: category)).topic
   end
+
   fab!(:old_topic_in_category) do
     Fabricate(:post, topic: Fabricate(:topic, category: category)).topic
   end
@@ -102,7 +104,7 @@ describe "New topic list", type: :system do
         expect(tabs_toggle.replies_tab).to have_count(3)
         expect(tabs_toggle.topics_tab).to have_count(3)
 
-        expect(current_url).to end_with("/new?subset=topics")
+        expect(page).to have_current_path("/new?subset=topics")
       end
 
       it "shows only topics with new replies when the user switches to the Replies tab" do
@@ -122,7 +124,7 @@ describe "New topic list", type: :system do
         expect(tabs_toggle.replies_tab).to have_count(3)
         expect(tabs_toggle.topics_tab).to have_count(3)
 
-        expect(current_url).to end_with("/new?subset=replies")
+        expect(page).to have_current_path("/new?subset=replies")
       end
 
       it "strips out the subset query params when switching back to the All tab from any of the other tabs" do
@@ -131,13 +133,14 @@ describe "New topic list", type: :system do
 
         expect(tabs_toggle.all_tab).to be_inactive
         expect(tabs_toggle.replies_tab).to be_active
-        expect(current_url).to end_with("/new?subset=replies")
+
+        expect(page).to have_current_path("/new?subset=replies")
 
         tabs_toggle.all_tab.click
 
         expect(tabs_toggle.all_tab).to be_active
         expect(tabs_toggle.replies_tab).to be_inactive
-        expect(current_url).to end_with("/new")
+        expect(page).to have_current_path("/new")
       end
 
       it "live-updates the counts shown on the tabs" do
@@ -149,19 +152,15 @@ describe "New topic list", type: :system do
 
         TopicUser.update_last_read(user, new_reply_in_category.id, 2, 1, 1)
 
-        try_until_success do
-          expect(tabs_toggle.all_tab).to have_count(5)
-          expect(tabs_toggle.replies_tab).to have_count(2)
-          expect(tabs_toggle.topics_tab).to have_count(3)
-        end
+        expect(tabs_toggle.all_tab).to have_count(5)
+        expect(tabs_toggle.replies_tab).to have_count(2)
+        expect(tabs_toggle.topics_tab).to have_count(3)
 
         TopicUser.update_last_read(user, new_topic.id, 1, 1, 1)
 
-        try_until_success do
-          expect(tabs_toggle.all_tab).to have_count(4)
-          expect(tabs_toggle.replies_tab).to have_count(2)
-          expect(tabs_toggle.topics_tab).to have_count(2)
-        end
+        expect(tabs_toggle.all_tab).to have_count(4)
+        expect(tabs_toggle.replies_tab).to have_count(2)
+        expect(tabs_toggle.topics_tab).to have_count(2)
       end
 
       context "when the /new topic list is scoped to a category" do
@@ -195,7 +194,9 @@ describe "New topic list", type: :system do
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(1)
 
-          expect(current_url).to end_with("/c/#{category.slug}/#{category.id}/l/new?subset=topics")
+          expect(page).to have_current_path(
+            "/c/#{category.slug}/#{category.id}/l/new?subset=topics",
+          )
         end
 
         it "shows only topics with new replies in the category when the user switches to the Replies tab" do
@@ -213,7 +214,9 @@ describe "New topic list", type: :system do
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(1)
 
-          expect(current_url).to end_with("/c/#{category.slug}/#{category.id}/l/new?subset=replies")
+          expect(page).to have_current_path(
+            "/c/#{category.slug}/#{category.id}/l/new?subset=replies",
+          )
         end
 
         it "respects the subset query param and activates the appropriate tab" do
@@ -241,11 +244,9 @@ describe "New topic list", type: :system do
 
           TopicUser.update_last_read(user, new_topic_in_category.id, 1, 1, 1)
 
-          try_until_success do
-            expect(tabs_toggle.all_tab).to have_count(2)
-            expect(tabs_toggle.replies_tab).to have_count(1)
-            expect(tabs_toggle.topics_tab).to have_count(1)
-          end
+          expect(tabs_toggle.all_tab).to have_count(2)
+          expect(tabs_toggle.replies_tab).to have_count(1)
+          expect(tabs_toggle.topics_tab).to have_count(1)
         end
       end
 
@@ -281,7 +282,7 @@ describe "New topic list", type: :system do
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(1)
 
-          expect(current_url).to end_with("/tag/#{tag.name}/l/new?subset=topics")
+          expect(page).to have_current_path("/tag/#{tag.name}/l/new?subset=topics")
         end
 
         it "shows only topics with new replies with the tag when the user switches to the Replies tab" do
@@ -300,7 +301,7 @@ describe "New topic list", type: :system do
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(1)
 
-          expect(current_url).to end_with("/tag/#{tag.name}/l/new?subset=replies")
+          expect(page).to have_current_path("/tag/#{tag.name}/l/new?subset=replies")
         end
 
         it "respects the subset query param and activates the appropriate tab" do
@@ -328,11 +329,9 @@ describe "New topic list", type: :system do
 
           TopicUser.update_last_read(user, new_topic_with_tag.id, 1, 1, 1)
 
-          try_until_success do
-            expect(tabs_toggle.all_tab).to have_count(2)
-            expect(tabs_toggle.replies_tab).to have_count(1)
-            expect(tabs_toggle.topics_tab).to have_count(1)
-          end
+          expect(tabs_toggle.all_tab).to have_count(2)
+          expect(tabs_toggle.replies_tab).to have_count(1)
+          expect(tabs_toggle.topics_tab).to have_count(1)
         end
       end
     end

@@ -30,7 +30,8 @@ module PageObjects
               I18n.t("js.filters.new.#{@name}")
             end
           )
-        find(@selector).text == expected_label
+
+        find(@selector, text: expected_label)
       end
 
       def click
