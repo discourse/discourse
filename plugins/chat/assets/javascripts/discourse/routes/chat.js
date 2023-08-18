@@ -4,11 +4,13 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import { inject as service } from "@ember/service";
 import { scrollTop } from "discourse/mixins/scroll-top";
 import { schedule } from "@ember/runloop";
-
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
 export default class ChatRoute extends DiscourseRoute {
   @service chat;
   @service router;
   @service chatStateManager;
+  @service currentUser;
 
   titleToken() {
     return I18n.t("chat.title_capitalized");
@@ -57,6 +59,16 @@ export default class ChatRoute extends DiscourseRoute {
   }
 
   activate() {
+    withPluginApi("1.8.0", (api) => {
+      api.setSidebarPanel("chat");
+      if (getUserChatSeparateSidebarMode(this.currentUser).never) {
+        api.setCombinedSidebarMode();
+        api.hideSidebarSwitchPanelButtons();
+      } else {
+        api.setSeparatedSidebarMode();
+      }
+    });
+
     this.chatStateManager.storeAppURL();
     this.chat.updatePresence();
 
@@ -68,6 +80,20 @@ export default class ChatRoute extends DiscourseRoute {
   }
 
   deactivate(transition) {
+    withPluginApi("1.8.0", (api) => {
+      api.setSidebarPanel("main");
+
+      if (getUserChatSeparateSidebarMode(this.currentUser).fullscreen) {
+        api.setCombinedSidebarMode();
+        api.showSidebarSwitchPanelButtons();
+      } else if (getUserChatSeparateSidebarMode(this.currentUser).always) {
+        api.setSeparatedSidebarMode();
+      } else {
+        api.setCombinedSidebarMode();
+        api.hideSidebarSwitchPanelButtons();
+      }
+    });
+
     if (transition) {
       const url = this.router.urlFor(transition.from.name);
       this.chatStateManager.storeChatURL(url);

@@ -4,6 +4,8 @@ import { tracked } from "@glimmer/tracking";
 import KeyValueStore from "discourse/lib/key-value-store";
 import Site from "discourse/models/site";
 import getURL from "discourse-common/lib/get-url";
+import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 const PREFERRED_MODE_KEY = "preferred_mode";
 const PREFERRED_MODE_STORE_NAMESPACE = "discourse_chat_";
@@ -56,6 +58,16 @@ export default class ChatStateManager extends Service {
   }
 
   didOpenDrawer(url = null) {
+    withPluginApi("1.8.0", (api) => {
+      if (getUserChatSeparateSidebarMode(this.currentUser).always) {
+        api.setSidebarPanel("main");
+        api.setSeparatedSidebarMode();
+        api.hideSidebarSwitchPanelButtons();
+      } else {
+        api.setCombinedSidebarMode();
+      }
+    });
+
     this.isDrawerActive = true;
     this.isDrawerExpanded = true;
 
@@ -68,6 +80,21 @@ export default class ChatStateManager extends Service {
   }
 
   didCloseDrawer() {
+    withPluginApi("1.8.0", (api) => {
+      api.setSidebarPanel("main");
+
+      if (getUserChatSeparateSidebarMode(this.currentUser).fullscreen) {
+        api.setCombinedSidebarMode();
+        api.showSidebarSwitchPanelButtons();
+      } else if (getUserChatSeparateSidebarMode(this.currentUser).always) {
+        api.setSeparatedSidebarMode();
+        api.showSidebarSwitchPanelButtons();
+      } else {
+        api.setCombinedSidebarMode();
+        api.hideSidebarSwitchPanelButtons();
+      }
+    });
+
     this.isDrawerActive = false;
     this.isDrawerExpanded = false;
     this.chat.updatePresence();

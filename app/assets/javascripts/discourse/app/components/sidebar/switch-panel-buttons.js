@@ -16,9 +16,13 @@ export default class SwitchPanelButtons extends Component {
 
     const url = panel.lastKnownURL || panel.switchButtonDefaultUrl;
     const destination = url === "/" ? `discovery.${defaultHomepage()}` : url;
-    this.router.transitionTo(destination).finally(() => {
-      this.isSwitching = false;
-      this.sidebarState.setPanel(panel.key);
-    });
+    this.router
+      .transitionTo(destination)
+      .then(() => {
+        this.sidebarState.setPanel(panel.key);
+      })
+      .finally(() => {
+        this.isSwitching = false;
+      });
   }
 }

@@ -14,18 +14,31 @@ module Chat
         @chat_email_frequencies ||= { never: 0, when_away: 1 }
       end
 
+      # Avoid attempting to override when autoloading
+      if !base.method_defined?(:send_chat_email_never?)
+        base.enum :chat_email_frequency, base.chat_email_frequencies, prefix: "send_chat_email"
+      end
+
       def base.chat_header_indicator_preferences
         @chat_header_indicator_preferences ||= { all_new: 0, dm_and_mentions: 1, never: 2 }
       end
 
-      if !base.method_defined?(:send_chat_email_never?) # Avoid attempting to override when autoloading
-        base.enum :chat_email_frequency, base.chat_email_frequencies, prefix: "send_chat_email"
-      end
-
-      if !base.method_defined?(:chat_header_indicator_never?) # Avoid attempting to override when autoloading
+      # Avoid attempting to override when autoloading
+      if !base.method_defined?(:chat_header_indicator_never?)
         base.enum :chat_header_indicator_preference,
                   base.chat_header_indicator_preferences,
                   prefix: "chat_header_indicator"
+      end
+
+      def base.chat_separate_sidebar_mode
+        @chat_separate_sidebar_mode ||= { default: 0, never: 1, always: 2, fullscreen: 3 }
+      end
+
+      # Avoid attempting to override when autoloading
+      if !base.method_defined?(:chat_separate_sidebar_mode_default?)
+        base.enum :chat_separate_sidebar_mode,
+                  base.chat_separate_sidebar_mode,
+                  prefix: "chat_separate_sidebar_mode"
       end
     end
   end
