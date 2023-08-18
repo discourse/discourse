@@ -220,8 +220,8 @@ class AbstractCategoryRoute extends DiscourseRoute {
   }
 
   @action
-  changeNewListSubset(newScope) {
-    changeNewListSubset.call(this, newScope);
+  changeNewListSubset(subset) {
+    changeNewListSubset.call(this, subset);
   }
 
   @action

@@ -185,6 +185,11 @@ export default class TagShowController extends DiscoverySortableController.exten
   }
 
   @action
+  changeNewListSubset(subset) {
+    this.set("subset", subset);
+  }
+
+  @action
   changePeriod(p) {
     this.set("period", p);
   }
