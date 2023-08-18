@@ -25,7 +25,7 @@ export default class ChatHeaderIcon extends Component {
   }
 
   get title() {
-    if (this.chatStateManager.isFullPageActive && !this.mode.never) {
+    if (this.chatStateManager.isFullPageActive && !this.chatSeparateSidebarMode.never) {
       return "sidebar.panels.forum.label";
     }
 
