@@ -471,9 +471,52 @@ module PrettyText
     strip_image_wrapping(doc)
     strip_oneboxed_media(doc)
     convert_hashtag_links_to_plaintext(doc) if options[:plain_hashtags]
+    if options[:keep_images] && options[:convert_images_to_thumbnails]
+      convert_images_to_thumbnails(doc)
+    end
 
     html = doc.to_html
     ExcerptParser.get_excerpt(html, max_length, options)
+  end
+
+  def self.convert_images_to_thumbnails(doc)
+    # get all elements with img css
+    # images = doc.css("img")
+    # REFACTOR: if not going for single thumbnail approach,
+    # should render inline all images in excerpt and therefore apply following logic with images.map;
+    # possibly optimize with a single query for a collection of all matching Uploads & OptimizedImages
+    full_url = doc.css("img").first.attributes["src"].value
+    # prefix_path can be protocol//hostname:port or protocol//hostname
+    # or //asset_host:port on dev
+    # --
+    # upload_path -> /uploads/#{site db} or /uploads/#{site db}/test_#{test_number} or subfolder/uploads/default
+    # --
+    # relative_path /path (this includes either `original` or `optimized` - see Upload|OptimizedImage::URL_REGEX)
+
+    # NOTE: Discourse.base_url does not work for dev as the frontend asset origin differs from the server-side base_url
+    # Discourse.base_url may also not be compatible with subfolder url pattern
+    # Hence we use upload_path as the pivot point here for URL partitioning
+    prefix_path, upload_path, relative_path =
+      full_url.partition(%r{\/#{Discourse.store.upload_path}})
+
+    upload_url = "#{upload_path}#{relative_path}"
+    upload =
+      Upload
+        .find_by(url: upload_url)
+        .tap do |original_upload|
+          if original_upload
+            # IMPT TODO: cover edge case for SiteSettings thumbnails not enabled, what do we do then?
+            # Change the option to convert to normal inline markdown?
+            original_upload.create_thumbnail!(
+              original_upload.thumbnail_width,
+              original_upload.thumbnail_height,
+            )
+          end
+        end || OptimizedImage.find_by(url: upload_url)
+
+    thumbnail_url = upload.try(:thumbnail).try(:url) || upload.url
+    doc.css("img").first["src"] = "#{prefix_path}#{thumbnail_url}"
+    doc.css("img").first["class"] = "thumbnail"
   end
 
   def self.convert_hashtag_links_to_plaintext(doc)

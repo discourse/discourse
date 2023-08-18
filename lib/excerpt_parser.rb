@@ -2,7 +2,6 @@
 
 class ExcerptParser < Nokogiri::XML::SAX::Document
   attr_reader :excerpt
-
   CUSTOM_EXCERPT_REGEX = /<\s*(span|div)[^>]*class\s*=\s*['"]excerpt['"][^>]*>/
 
   def initialize(length, options = nil)
@@ -16,6 +15,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @markdown_images = options[:markdown_images] == true
     @keep_newlines = options[:keep_newlines] == true
     @keep_emoji_images = options[:keep_emoji_images] == true
+    @keep_images = options[:keep_images] == true
     @keep_onebox_source = options[:keep_onebox_source] == true
     @keep_onebox_body = options[:keep_onebox_body] == true
     @keep_quotes = options[:keep_quotes] == true
@@ -79,6 +79,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
       end
 
       unless @strip_images
+        return include_tag(name, attributes) if @keep_images
         # If include_images is set, include the image in markdown
         characters("!") if @markdown_images
 

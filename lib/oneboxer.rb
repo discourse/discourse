@@ -405,7 +405,6 @@ module Oneboxer
 
   def self.local_topic_html(url, route, opts)
     return unless topic = local_topic(url, route, opts)
-
     post_number = route[:post_number].to_i
 
     post =
@@ -419,11 +418,19 @@ module Oneboxer
 
     return if !post || post.hidden || !allowed_post_types.include?(post.post_type)
 
+    # BREAKPOINT -> see ExcerptParser.get_excerpt - we escape out images there -> specifically in ExcerptParser.start_element for img elements
+    excerpt =
+      post.excerpt(
+        SiteSetting.post_onebox_maxlength,
+        keep_svg: true,
+        keep_images: true,
+        convert_images_to_thumbnails: true,
+        strip_images: false,
+      )
+
     if post_number > 1 && opts[:topic_id] == topic.id
-      excerpt = post.excerpt(SiteSetting.post_onebox_maxlength, keep_svg: true)
       excerpt.gsub!(/[\r\n]+/, " ")
       excerpt.gsub!("[/quote]", "[quote]") # don't break my quote
-
       quote =
         "[quote=\"#{post.user.username}, topic:#{topic.id}, post:#{post.post_number}\"]\n#{excerpt}\n[/quote]"
 
@@ -436,10 +443,7 @@ module Oneboxer
         original_url: url,
         title: PrettyText.unescape_emoji(CGI.escapeHTML(topic.title)),
         category_html: CategoryBadge.html_for(topic.category),
-        quote:
-          PrettyText.unescape_emoji(
-            post.excerpt(SiteSetting.post_onebox_maxlength, keep_svg: true),
-          ),
+        quote: PrettyText.unescape_emoji(excerpt),
       }
 
       template = template("discourse_topic_onebox")

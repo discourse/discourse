@@ -565,12 +565,12 @@ RSpec.describe PrettyText do
     context "with pretty_text_extract_mentions modifier" do
       it "allows changing the mentions extracted" do
         cooked_html = <<~HTML
-        <p>
-          <a class="mention" href="/u/test">@test</a>,
-          <a class="mention-group" href="/g/test-group">@test-group</a>,
-          <a class="custom-mention" href="/custom-mention">@test-custom</a>,
-          this is a test
-        </p>
+          <p>
+            <a class="mention" href="/u/test">@test</a>,
+            <a class="mention-group" href="/g/test-group">@test-group</a>,
+            <a class="custom-mention" href="/custom-mention">@test-custom</a>,
+            this is a test
+          </p>
         HTML
 
         extracted_mentions = PrettyText.extract_mentions(Nokogiri::HTML5.fragment(cooked_html))
@@ -605,11 +605,11 @@ RSpec.describe PrettyText do
   describe "code fences" do
     it "indents code correctly" do
       code = <<~MD
-         X
-         ```
-              #
-              x
-         ```
+        X
+        ```
+             #
+             x
+        ```
       MD
       cooked = PrettyText.cook(code)
 
@@ -710,13 +710,13 @@ RSpec.describe PrettyText do
 
     it "strips out unicode bidirectional (bidi) override characters and replaces with a highlighted span" do
       code = <<~MD
-         X
-         ```auto
-         var isAdmin = false;
-         /*‮ begin admin only */⁦ if (isAdmin) ⁩ ⁦ {
-         console.log("You are an admin.");
-         /* end admins only ‮*/⁦ }
-         ```
+        X
+        ```auto
+        var isAdmin = false;
+        /*‮ begin admin only */⁦ if (isAdmin) ⁩ ⁦ {
+        console.log("You are an admin.");
+        /* end admins only ‮*/⁦ }
+        ```
       MD
       cooked = PrettyText.cook(code)
       hidden_bidi_title = I18n.t("post.hidden_bidi_character")
@@ -747,9 +747,9 @@ RSpec.describe PrettyText do
       ]
       bad_bidi.each do |bidi|
         code = <<~MD
-        ```
-        #{bidi}
-        ```
+          ```
+          #{bidi}
+          ```
         MD
         cooked = PrettyText.cook(code)
         formatted_bidi = format("&lt;U+%04X&gt;", bidi.ord)
@@ -775,7 +775,7 @@ RSpec.describe PrettyText do
       ]
       bad_bidi.each do |bidi|
         code = <<~MD
-        <code>#{bidi}</code>
+          <code>#{bidi}</code>
         MD
         cooked = PrettyText.cook(code)
         formatted_bidi = format("&lt;U+%04X&gt;", bidi.ord)
@@ -786,7 +786,7 @@ RSpec.describe PrettyText do
       end
       bad_bidi.each do |bidi|
         code = <<~MD
-        <pre>#{bidi}</pre>
+          <pre>#{bidi}</pre>
         MD
         cooked = PrettyText.cook(code)
         formatted_bidi = format("&lt;U+%04X&gt;", bidi.ord)
@@ -954,6 +954,17 @@ RSpec.describe PrettyText do
             strip_images: true,
           ),
         ).to eq("Hello world!")
+      end
+
+      it "should keep images when option is set" do
+        image_upload = Fabricate(:large_image_upload)
+        image_upload.create_thumbnail!(image_upload.thumbnail_width, image_upload.thumbnail_height)
+        html = "<img src=\"#{Discourse.base_url}#{image_upload.url}\"> Hello world!"
+        expected_html =
+          "<img src=\"#{Discourse.base_url}#{image_upload.thumbnail.url}\" class=\"thumbnail\"> Hello world!"
+        expect(
+          PrettyText.excerpt(html, 100, keep_images: true, convert_images_to_thumbnails: true),
+        ).to eq expected_html
       end
 
       it "should strip images, but keep emojis when option is set" do
@@ -1166,10 +1177,10 @@ RSpec.describe PrettyText do
 
     it "handles custom bbcode excerpt" do
       raw = <<~MD
-      [excerpt]
-      hello [site](https://site.com)
-      [/excerpt]
-      more stuff
+        [excerpt]
+        hello [site](https://site.com)
+        [/excerpt]
+        more stuff
       MD
 
       post = Fabricate(:post, raw: raw)
@@ -1440,7 +1451,7 @@ RSpec.describe PrettyText do
       it "replaces secure uploads within a link with a placeholder, keeping the url in an attribute" do
         url = "#{Discourse.base_url}\/secure-uploads/original/1X/testimage.png"
         html = <<~HTML
-        <a href=\"#{url}\"><img src=\"/secure-uploads/original/1X/testimage.png\"></a>
+          <a href=\"#{url}\"><img src=\"/secure-uploads/original/1X/testimage.png\"></a>
         HTML
         md = PrettyText.format_for_email(html, post)
         expect(md).not_to include("<img")
@@ -1451,7 +1462,7 @@ RSpec.describe PrettyText do
       it "does not create nested redactions from double processing because of the view media link" do
         url = "#{Discourse.base_url}\/secure-uploads/original/1X/testimage.png"
         html = <<~HTML
-        <a href=\"#{url}\"><img src=\"/secure-uploads/original/1X/testimage.png\"></a>
+          <a href=\"#{url}\"><img src=\"/secure-uploads/original/1X/testimage.png\"></a>
         HTML
         md = PrettyText.format_for_email(html, post)
         md = PrettyText.format_for_email(md, post)
@@ -1463,7 +1474,7 @@ RSpec.describe PrettyText do
       it "replaces secure images with a placeholder, keeping the url in an attribute" do
         url = "/secure-uploads/original/1X/testimage.png"
         html = <<~HTML
-        <img src=\"#{url}\" width=\"20\" height=\"20\">
+          <img src=\"#{url}\" width=\"20\" height=\"20\">
         HTML
         md = PrettyText.format_for_email(html, post)
         expect(md).not_to include("<img")
@@ -1477,26 +1488,26 @@ RSpec.describe PrettyText do
 
   it "Is smart about linebreaks and IMG tags" do
     raw = <<~MD
-    a <img>
-    <img>
+      a <img>
+      <img>
 
-    <img>
-    <img>
+      <img>
+      <img>
 
-    <img>
-    a
+      <img>
+      a
 
-    <img>
-    - li
+      <img>
+      - li
 
-    <img>
-    ```
-    test
-    ```
+      <img>
+      ```
+      test
+      ```
 
-    ```
-    test
-    ```
+      ```
+      test
+      ```
     MD
 
     html = <<~HTML
@@ -2345,28 +2356,28 @@ HTML
       upload = Fabricate(:upload)
 
       raw = <<~RAW
-      ![upload](#{upload.short_url})
+        ![upload](#{upload.short_url})
 
-      ![upload](#{upload.short_url} "some title to test")
+        ![upload](#{upload.short_url} "some title to test")
 
-      - ![upload](#{upload.short_url})
+        - ![upload](#{upload.short_url})
 
-      - test
-          - ![upload](#{upload.short_url})
+        - test
+            - ![upload](#{upload.short_url})
 
-      ![upload](#{upload.short_url.gsub(".png", "")})
+        ![upload](#{upload.short_url.gsub(".png", "")})
 
-      Inline img <img src="#{upload.short_url}">
+        Inline img <img src="#{upload.short_url}">
 
-      <div>
-        Block img <img src="#{upload.short_url}">
-      </div>
+        <div>
+          Block img <img src="#{upload.short_url}">
+        </div>
 
-      [some attachment](#{upload.short_url})
+        [some attachment](#{upload.short_url})
 
-      [some attachment|attachment](#{upload.short_url})
+        [some attachment|attachment](#{upload.short_url})
 
-      [some attachment|random](#{upload.short_url})
+        [some attachment|random](#{upload.short_url})
       RAW
 
       cdn_url = Discourse.store.cdn_url(upload.url)
@@ -2400,14 +2411,14 @@ HTML
 
     it "can place a blank image if we can not find the upload" do
       raw = <<~MD
-      ![upload](upload://abcABC.png)
+        ![upload](upload://abcABC.png)
 
-      [some attachment|attachment](upload://abcdefg.png)
+        [some attachment|attachment](upload://abcdefg.png)
       MD
 
       cooked = <<~HTML
-      <p><img src="/images/transparent.png" alt="upload" data-orig-src="upload://abcABC.png"></p>
-      <p><a class="attachment" href="/404" data-orig-href="upload://abcdefg.png">some attachment</a></p>
+        <p><img src="/images/transparent.png" alt="upload" data-orig-src="upload://abcABC.png"></p>
+        <p><a class="attachment" href="/404" data-orig-href="upload://abcdefg.png">some attachment</a></p>
       HTML
 
       expect(PrettyText.cook(raw)).to eq(cooked.strip)
@@ -2463,7 +2474,7 @@ HTML
 
     cooked = PrettyText.cook(md)
     html = <<~HTML
-    <p>www.cnn.com <a href="http://test.it" rel="noopener nofollow ugc">test.it</a> <a href="http://test.com" rel="noopener nofollow ugc">http://test.com</a> <a href="https://test.ab" rel="noopener nofollow ugc">https://test.ab</a> <a href="https://a" rel="noopener nofollow ugc">https://a</a></p>
+      <p>www.cnn.com <a href="http://test.it" rel="noopener nofollow ugc">test.it</a> <a href="http://test.com" rel="noopener nofollow ugc">http://test.com</a> <a href="https://test.ab" rel="noopener nofollow ugc">https://test.ab</a> <a href="https://a" rel="noopener nofollow ugc">https://a</a></p>
     HTML
 
     expect(cooked).to eq(html.strip)

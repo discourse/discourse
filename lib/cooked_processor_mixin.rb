@@ -31,6 +31,8 @@ module CookedProcessorMixin
             invalidate_oneboxes: !!@opts[:invalidate_oneboxes],
             user_id: @model&.user_id,
             category_id: @category_id,
+            keep_images: true,
+            convert_images_to_thumbnails: true,
           )
 
         @has_oneboxes = true if onebox.present?
