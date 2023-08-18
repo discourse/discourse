@@ -36,7 +36,6 @@ RSpec.describe "Navigation", type: :system do
 
   context "when clicking chat icon on mobile and is viewing channel" do
     it "navigates to index", mobile: true do
-      visit("/chat")
       chat_page.visit_channel(category_channel_2)
       chat_page.open_from_header
 
@@ -46,7 +45,6 @@ RSpec.describe "Navigation", type: :system do
 
   context "when clicking chat icon on desktop and is viewing channel" do
     it "stays on channel page" do
-      visit("/chat")
       chat_page.visit_channel(category_channel_2)
       chat_page.open_from_header
 
