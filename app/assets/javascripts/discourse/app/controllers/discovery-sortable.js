@@ -4,6 +4,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
+import { inject as service } from "@ember/service";
 
 // Just add query params here to have them automatically passed to topic list filters.
 export const queryParams = {
@@ -64,6 +65,9 @@ export function addDiscoveryQueryParam(p, opts) {
 export default class DiscoverySortableController extends Controller.extend(
   BulkTopicSelection
 ) {
+  @service composer;
+  @service siteSettings;
+
   queryParams = Object.keys(queryParams);
 
   constructor() {
