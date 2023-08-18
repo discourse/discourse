@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class ThemeJavascriptCompiler
-  COLOCATED_CONNECTOR_REGEX =
-    %r{\A(?<prefix>.*/?)connectors/(?<outlet>[^/]+)/(?<name>[^/\.]+)\.(?<extension>.+)\z}
+  COLOCATED_CONNECTOR_REGEX = %r{\A(?<prefix>.*/?)connectors/(?<connector>.+)\.(?<extension>.+)\z}
 
   class CompileError < StandardError
   end
@@ -119,9 +118,9 @@ class ThemeJavascriptCompiler
       is_in_templates_directory = match[:prefix].split("/").last == "templates"
 
       if is_template && !is_in_templates_directory
-        "#{match[:prefix]}templates/connectors/#{match[:outlet]}/#{match[:name]}.#{match[:extension]}"
+        "#{match[:prefix]}templates/connectors/#{match[:connector]}.#{match[:extension]}"
       elsif !is_template && is_in_templates_directory
-        "#{match[:prefix].chomp("templates/")}connectors/#{match[:outlet]}/#{match[:name]}.#{match[:extension]}"
+        "#{match[:prefix].chomp("templates/")}connectors/#{match[:connector]}.#{match[:extension]}"
       else
         filename
       end

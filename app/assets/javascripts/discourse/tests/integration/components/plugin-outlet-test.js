@@ -316,3 +316,23 @@ module(
     });
   }
 );
+
+module(
+  "Integration | Component | plugin-outlet | definitions without subdirectory",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      registerTemporaryModule(
+        `${TEMPLATE_PREFIX}/test-name`,
+        hbs`<span class='no-subdir-test'>Hello world</span>`
+      );
+    });
+
+    test("detects a connector in the root of the connectors directory", async function (assert) {
+      await render(hbs`<PluginOutlet @name="test-name" />`);
+
+      assert.dom(".no-subdir-test").hasText("Hello world");
+    });
+  }
+);

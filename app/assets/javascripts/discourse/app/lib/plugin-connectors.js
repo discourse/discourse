@@ -22,7 +22,7 @@ export function extraConnectorClass(name, obj) {
 }
 
 const OUTLET_REGEX =
-  /^discourse(\/[^\/]+)*?(?<template>\/templates)?\/connectors\/(?<outlet>[^\/]+)\/(?<name>[^\/\.]+)$/;
+  /^discourse(\/[^\/]+)*?(?<template>\/templates)?\/connectors\/(?<outlet>[^\/]+)(?:\/(?<name>[^\/\.]+))?$/;
 
 function findOutlets(keys, callback) {
   return keys.forEach((res) => {

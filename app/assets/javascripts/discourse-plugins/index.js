@@ -31,7 +31,7 @@ function fixLegacyExtensions(tree) {
 }
 
 const COLOCATED_CONNECTOR_REGEX =
-  /^(?<prefix>.*)\/connectors\/(?<outlet>[^\/]+)\/(?<name>[^\/\.]+)\.(?<extension>.+)$/;
+  /^(?<prefix>.*)\/connectors\/(?<connector>.+)\.(?<extension>.+)$/;
 
 // Having connector templates and js in the same directory causes a clash
 // when outputting es6 modules. This shim separates colocated connectors
@@ -45,8 +45,8 @@ function unColocateConnectors(tree) {
         match.groups.extension === "hbs" &&
         match.groups.prefix.split("/").pop() !== "templates"
       ) {
-        const { prefix, outlet, name } = match.groups;
-        return `${prefix}/templates/connectors/${outlet}/${name}.hbs`;
+        const { prefix, connector } = match.groups;
+        return `${prefix}/templates/connectors/${connector}.hbs`;
       }
       if (
         match &&
@@ -54,9 +54,9 @@ function unColocateConnectors(tree) {
         match.groups.prefix.split("/").pop() === "templates"
       ) {
         // Some plugins are colocating connector JS under `/templates`
-        const { prefix, outlet, name } = match.groups;
+        const { prefix, connector } = match.groups;
         const newPrefix = prefix.slice(0, -"/templates".length);
-        return `${newPrefix}/connectors/${outlet}/${name}.js`;
+        return `${newPrefix}/connectors/${connector}.js`;
       }
       return relativePath;
     },
