@@ -13,7 +13,6 @@
 
 <DiscoveryTopicsList
   @model={{this.model}}
-  @refresh={{action "refresh"}}
   @incomingCount={{this.topicTrackingState.incomingCount}}
 >
   {{#if this.top}}
@@ -61,7 +60,6 @@
       @hideCategory={{this.model.hideCategory}}
       @order={{this.order}}
       @bulkSelectEnabled={{this.bulkSelectEnabled}}
-      @bulkSelectAction={{action "refresh"}}
       @selected={{this.selected}}
       @expandGloballyPinned={{this.expandGloballyPinned}}
       @expandAllPinned={{this.expandAllPinned}}

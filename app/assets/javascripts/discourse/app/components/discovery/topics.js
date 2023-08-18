@@ -84,22 +84,6 @@ export default class DiscoveryTopics extends Component.extend(DismissTopics) {
     return routeAction("changeSort", this.router._router, ...arguments)();
   }
 
-  @action
-  refresh() {
-    this.send("triggerRefresh");
-  }
-
-  afterRefresh(filter, list, listModel = list) {
-    this.setProperties({ model: listModel });
-    this.resetSelected();
-
-    if (this.topicTrackingState) {
-      this.topicTrackingState.sync(list, filter);
-    }
-
-    this.send("loadingComplete");
-  }
-
   @discourseComputed("model.filter")
   new(filter) {
     return filter?.endsWith("new");

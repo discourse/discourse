@@ -1,10 +1,9 @@
 import { observes, on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import LoadMore from "discourse/mixins/load-more";
-import UrlRefresh from "discourse/mixins/url-refresh";
 import { inject as service } from "@ember/service";
 
-export default Component.extend(UrlRefresh, LoadMore, {
+export default Component.extend(LoadMore, {
   classNames: ["contents"],
   eyelineSelector: ".topic-list-item",
   documentTitle: service(),
@@ -46,9 +45,6 @@ export default Component.extend(UrlRefresh, LoadMore, {
         }
         if (moreTopicsUrl && $(window).height() >= $(document).height()) {
           this.send("loadMore");
-        }
-        if (this.loadingComplete) {
-          this.loadingComplete();
         }
       });
     },

@@ -259,7 +259,7 @@ const DiscourseURL = EmberObject.extend({
     if (oldPath === path) {
       // If navigating to the same path send an app event.
       // Views can watch it and tell their controllers to refresh
-      this.appEvents.trigger("url:refresh");
+      this.routerService.refresh();
     }
 
     // TODO: Extract into rules we can inject into the URL handler
@@ -399,7 +399,7 @@ const DiscourseURL = EmberObject.extend({
       (path === "/" || path === "/" + homepage) &&
       (oldPath === "/" || oldPath === "/" + homepage)
     ) {
-      this.appEvents.trigger("url:refresh");
+      this.routerService.refresh();
       return true;
     }
 
@@ -418,6 +418,10 @@ const DiscourseURL = EmberObject.extend({
 
   get router() {
     return this.container.lookup("router:main");
+  },
+
+  get routerService() {
+    return this.container.lookup("service:router");
   },
 
   get appEvents() {

@@ -1,9 +1,8 @@
 import Component from "@ember/component";
-import UrlRefresh from "discourse/mixins/url-refresh";
 
 const CATEGORIES_LIST_BODY_CLASS = "categories-list";
 
-export default Component.extend(UrlRefresh, {
+export default Component.extend({
   classNames: ["contents"],
 
   didInsertElement() {

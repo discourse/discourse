@@ -1,7 +1,6 @@
 import { inject as service } from "@ember/service";
 import { equal } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
 import Category from "discourse/models/category";
 
 export default class DiscoveryController extends Controller {
@@ -9,18 +8,6 @@ export default class DiscoveryController extends Controller {
 
   @equal("router.currentRouteName", "discovery.categories")
   viewingCategoriesList;
-
-  loading = false;
-
-  @action
-  loadingBegan() {
-    this.set("loading", true);
-  }
-
-  @action
-  loadingComplete() {
-    this.set("loading", false);
-  }
 
   showMoreUrl(period) {
     let url = "",

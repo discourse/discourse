@@ -29,7 +29,6 @@
 
 <DiscoveryTopicsList
   @model={{this.model}}
-  @refresh={{action "refresh"}}
   @incomingCount={{this.topicTrackingState.incomingCount}}
   @autoAddTopicsToBulkSelect={{@autoAddTopicsToBulkSelect}}
   @bulkSelectEnabled={{@bulkSelectEnabled}}
@@ -83,7 +82,6 @@
       @order={{this.order}}
       @ascending={{this.ascending}}
       @bulkSelectEnabled={{@bulkSelectEnabled}}
-      @bulkSelectAction={{action "refresh"}}
       @selected={{@selected}}
       @expandGloballyPinned={{this.expandGloballyPinned}}
       @expandAllPinned={{this.expandAllPinned}}
