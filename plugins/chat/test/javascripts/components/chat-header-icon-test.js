@@ -41,4 +41,17 @@ module("Discourse Chat | Component | chat-header-icon", function (hooks) {
 
     assert.dom(".d-icon-random").exists();
   });
+
+  test("mobile", async function (assert) {
+    this.site.mobileView = true;
+
+    await render(hbs`<Chat::Header::Icon />`);
+
+    assert
+      .dom(".icon.btn-flat")
+      .hasAttribute("title", I18n.t("chat.title_capitalized"))
+      .hasAttribute("href", "/chat");
+
+    assert.dom(".d-icon-d-chat").exists();
+  });
 });
