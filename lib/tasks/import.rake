@@ -406,9 +406,9 @@ def update_users
       GROUP BY p.user_id
     )
     UPDATE users
-       SET first_seen_at  = X.min_created_at
-         , last_seen_at   = X.max_created_at
-         , last_posted_at = X.max_created_at
+       SET first_seen_at  = LEAST(first_seen_at, X.min_created_at)
+         , last_seen_at   = GREATEST(last_seen_at, X.max_created_at)
+         , last_posted_at = GREATEST(last_posted_at, X.max_created_at)
       FROM X
      WHERE id = X.user_id
        AND (COALESCE(first_seen_at, '1970-01-01')  <> X.min_created_at

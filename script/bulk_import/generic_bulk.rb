@@ -162,7 +162,7 @@ class BulkImport::Generic < BulkImport::Base
         # FIXME: using both "imported_id" and "imported_user_id" and should be replaced by just "imported_id"
         imported_id: row["id"],
         imported_user_id: row["id"],
-        bio: row["bio"],
+        bio_raw: row["bio"],
       }
     end
   end
