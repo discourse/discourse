@@ -1,5 +1,6 @@
 en:
   site_settings:
+    chat_separate_sidebar_mode: "Show separate sidebar modes for forum and chat."
     chat_enabled: "Enable the chat plugin."
     enable_public_channels: "Enable public channels based on categories."
     chat_allowed_groups: "Users in these groups can chat. Note that staff can always access chat."

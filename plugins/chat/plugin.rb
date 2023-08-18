@@ -47,6 +47,7 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:ignore_channel_wide_mention)
   UserUpdater::OPTION_ATTR.push(:chat_email_frequency)
   UserUpdater::OPTION_ATTR.push(:chat_header_indicator_preference)
+  UserUpdater::OPTION_ATTR.push(:chat_separate_sidebar_mode)
 
   register_reviewable_type Chat::ReviewableMessage
 
@@ -295,6 +296,12 @@ after_initialize do
 
   add_to_serializer(:current_user_option, :chat_header_indicator_preference) do
     object.chat_header_indicator_preference
+  end
+
+  add_to_serializer(:user_option, :chat_separate_sidebar_mode) { object.chat_separate_sidebar_mode }
+
+  add_to_serializer(:current_user_option, :chat_separate_sidebar_mode) do
+    object.chat_separate_sidebar_mode
   end
 
   RETENTION_SETTINGS_TO_USER_OPTION_FIELDS = {
