@@ -61,7 +61,7 @@ module BulkImport
                     Discourse::SYSTEM_USER_ID,
                   )
 
-                if upload.present? && upload.persisted?
+                if upload.present? && upload.persisted? && upload.errors.blank?
                   status_queue << { id: row["id"], upload: upload.attributes.to_json }
                 else
                   status_queue << false
