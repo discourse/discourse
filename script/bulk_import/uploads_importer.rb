@@ -48,7 +48,7 @@ module BulkImport
           end
         end
 
-      (Etc.nprocessors / 2).times do
+      (Etc.nprocessors * 2.5).to_i.times do
         threads << Thread.new do
           while (row = queue.pop)
             begin
