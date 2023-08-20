@@ -16,6 +16,10 @@ module BulkImport
     end
 
     def run
+      SiteSetting.authorized_extensions = "*"
+      SiteSetting.max_attachment_size_kb = 102_400
+      SiteSetting.max_image_size_kb = 102_400
+
       queue = SizedQueue.new(1000)
       threads = []
 
@@ -48,7 +52,7 @@ module BulkImport
           end
         end
 
-      (Etc.nprocessors * 2.5).to_i.times do
+      (Etc.nprocessors * 1.5).to_i.times do
         threads << Thread.new do
           while (row = queue.pop)
             begin
