@@ -63,7 +63,8 @@ module BulkImport
 
                 status_queue << { id: row["id"], upload: upload.attributes.to_json }
               end
-            rescue StandardError
+            rescue StandardError => e
+              puts e
               status_queue << false
             end
           end
