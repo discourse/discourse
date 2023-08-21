@@ -3,7 +3,6 @@ import { inject as service } from "@ember/service";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { next } from "@ember/runloop";
 import StaticPage from "discourse/models/static-page";
-import { action } from "@ember/object";
 
 export default class LoginRoute extends DiscourseRoute {
   @service siteSettings;
