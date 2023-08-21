@@ -134,7 +134,7 @@ RSpec.describe "Visit channel", type: :system do
             chat.visit_channel(category_channel_1)
 
             expect(page).to have_content(category_channel_1.name)
-            expect(chat).to have_message(message_1)
+            expect(channel_page.messages).to have_message(message_1)
           end
         end
 
@@ -167,7 +167,7 @@ RSpec.describe "Visit channel", type: :system do
             chat.visit_channel(category_channel_1)
 
             expect(page).to have_content(category_channel_1.name)
-            expect(chat).to have_message(message_1)
+            expect(channel_page.messages).to have_message(message_1)
           end
 
           context "when URL doesn’t contain slug" do
@@ -217,7 +217,7 @@ RSpec.describe "Visit channel", type: :system do
           it "shows a preview of the channel" do
             chat.visit_channel(dm_channel_1)
 
-            expect(chat).to have_message(message_1)
+            expect(channel_page.messages).to have_message(message_1)
           end
 
           context "when URL doesn’t contain slug" do
