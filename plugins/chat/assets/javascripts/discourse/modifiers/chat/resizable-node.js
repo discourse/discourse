@@ -42,7 +42,7 @@ export default class ResizableNode extends Modifier {
   cleanup() {
     this.element
       .querySelector(this.resizerSelector)
-      ?.addEventListener("touchstart", this._startResize);
+      ?.removeEventListener("touchstart", this._startResize);
     this.element
       .querySelector(this.resizerSelector)
       ?.removeEventListener("mousedown", this._startResize);
