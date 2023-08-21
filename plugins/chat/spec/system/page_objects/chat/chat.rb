@@ -86,12 +86,6 @@ module PageObjects
         find(".open-drawer-btn").click
       end
 
-      def has_message?(message)
-        container = find(".chat-message-container[data-id=\"#{message.id}\"]")
-        container.has_content?(message.message)
-        container.has_content?(message.user.username)
-      end
-
       NEW_CHANNEL_BUTTON_SELECTOR = ".new-channel-btn"
 
       def new_channel_button
