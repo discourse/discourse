@@ -54,7 +54,7 @@ const TopicList = RestModel.extend({
   },
 
   updateSortParams(order, ascending) {
-    let params = Object.assign({}, this.params || {});
+    let params = { ...(this.params || {}) };
 
     if (params.q) {
       // search is unique, nothing else allowed with it
@@ -62,6 +62,18 @@ const TopicList = RestModel.extend({
     } else {
       params.order = order || params.order;
       params.ascending = ascending;
+    }
+
+    this.set("params", params);
+  },
+
+  updateNewListSubsetParam(subset) {
+    let params = { ...(this.params || {}) };
+
+    if (params.q) {
+      params = { q: params.q };
+    } else {
+      params.subset = subset;
     }
 
     this.set("params", params);

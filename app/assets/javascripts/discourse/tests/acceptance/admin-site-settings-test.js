@@ -27,7 +27,7 @@ acceptance("Admin - Site Settings", function (needs) {
     });
     server.get("/admin/site_settings", () => {
       const fixtures = siteSettingFixture["/admin/site_settings"].site_settings;
-      const titleSetting = Object.assign({}, fixtures[0]);
+      const titleSetting = { ...fixtures[0] };
 
       if (updatedTitle) {
         titleSetting.value = updatedTitle;
@@ -126,6 +126,14 @@ acceptance("Admin - Site Settings", function (needs) {
     // navigate back to the "Settings" page
     await click(".nav.nav-pills li:nth-child(2) a");
     assert.strictEqual(count(".row.setting"), 1);
+  });
+
+  test("filtering overridden settings", async function (assert) {
+    await visit("/admin/site_settings");
+    assert.dom(".row.setting").exists({ count: 4 });
+
+    await click(".toggle-overridden");
+    assert.dom(".row.setting").exists({ count: 2 });
   });
 
   test("filter settings by plugin name", async function (assert) {

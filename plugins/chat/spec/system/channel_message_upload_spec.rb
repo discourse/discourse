@@ -21,7 +21,7 @@ RSpec.describe "Channel message selection", type: :system do
     chat_system_bootstrap
     channel_1.add(current_user)
     sign_in(current_user)
-    message_1.attach_uploads([image])
+    message_1.uploads = [image]
   end
 
   it "can collapse/expand an image and still have lightbox working" do

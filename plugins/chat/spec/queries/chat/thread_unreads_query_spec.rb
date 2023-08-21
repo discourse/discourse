@@ -29,7 +29,6 @@ describe Chat::ThreadUnreadsQuery do
 
   before do
     SiteSetting.chat_enabled = true
-    SiteSetting.enable_experimental_chat_threaded_discussions = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
     channel_1.add(current_user)
     channel_2.add(current_user)

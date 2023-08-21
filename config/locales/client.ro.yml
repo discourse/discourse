@@ -265,9 +265,9 @@ ro:
       other: "%{count} de caractere"
     related_messages:
       title: "Mesaje legate de"
+      pill: "Mesaje legate de"
       see_all: 'Vezi <a href="%{path}">toate mesajele</a> de la @%{username}...'
     suggested_topics:
-      title: "Subiecte sugerate"
       pm_title: "Mesaje sugerate"
     about:
       simple_title: "Despre"
@@ -1470,7 +1470,6 @@ ro:
       hide_forever: "Nu, mulțumesc"
       intro: "Salut! Se pare că îți place discuția, dar încă nu te-ai înscris pentru un cont."
     summary:
-      enabled_description: "Vizualizezi un rezumat al acestui subiect: cea mai interesantă postare, așa cum a fost desemnată de comunitate. "
       disable: "Arată toate postările"
     deleted_filter:
       enabled_description: "Acest subiect conține postări șterse, care au fost ascunse. "
@@ -2794,10 +2793,6 @@ ro:
         one: "Încă una"
         few: " Alte %{count}"
         other: " Alte %{count}"
-      granted:
-        one: "%{count} acordat"
-        few: "%{count} acordate"
-        other: "%{count} acordate"
       select_badge_for_title: Selectați un ecuson pentru a-l folosi ca titlu
       none: "(nimic)"
       badge_grouping:
@@ -3262,6 +3257,7 @@ ro:
           create: "Creează"
           create_type: "Tip"
           create_name: "Nume"
+          save: "Salvare"
           long_title: "Modifică culori, CSS și conținutul HTML al site-ului"
           edit: "Modifică"
           common: "Comun"
@@ -3818,6 +3814,8 @@ ro:
         go_back: "Înapoi la căutare"
         recommended: "Îți recomandăm să personalizezi următorul text pentru a se adapta nevoilor tale:"
         show_overriden: "Arată doar ignorate"
+        outdated:
+          dismiss: "Renunță"
       settings:
         show_overriden: "Arată doar ignorate"
         reset: "Resetează"

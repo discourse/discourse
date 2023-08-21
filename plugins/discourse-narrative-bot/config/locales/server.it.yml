@@ -45,6 +45,9 @@ it:
       trigger: "tira il dado"
       invalid: |-
         Mi dispiace, è matematicamente impossibile lanciare quella combinazione di dadi. :confounded:
+      not_enough_dice:
+        one: "Ho solo %{count} tentativo. Purtroppo lo so!"
+        other: "Ho solo %{count} tentativi. Purtroppo lo so!"
       out_of_range: |-
         Lo sapevi che [il numero massimo di lati](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) per avere un dado matematicamente ben bilanciato è 120?
       results: |-
@@ -373,12 +376,12 @@ it:
         instructions: |-
           Lo sapevi che è possibile fare riferimento a categorie ed etichette in un messaggio? Per esempio, hai visto la categoria %{category}?
 
-          Digita `#` nel mezzo di una frase e seleziona una categoria o un'etichetta.
+          Digita "#" nel mezzo di una frase e seleziona una categoria o un'etichetta.
         not_found: |-
-          Uhm, non vedo nessuna categoria nel tuo messaggio. Nota che `#` non può essere il primo carattere di una riga. Puoi copiare questo nella tua prossima risposta?
+          Uhm, non vedo nessuna categoria qui. Puoi copiare questo nella tua prossima risposta?
 
-          ```text
-          Posso creare un collegamento ad una categoria digitando #
+          ```testo
+          Posso creare un collegamento a una categoria digitando #
           ```
         reply: |-
           Eccellente! Ricorda che ciò funziona sia per le categorie _sia_ per le etichette, se queste etichette sono abilitate.

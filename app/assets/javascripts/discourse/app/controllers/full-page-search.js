@@ -136,7 +136,7 @@ export default Controller.extend({
       return (!skip && context) || skip === "false";
     },
     set(val) {
-      this.set("skip_context", val ? "false" : "true");
+      this.set("skip_context", !val);
     },
   },
 
@@ -243,11 +243,6 @@ export default Controller.extend({
           `personal_messages:${this.currentUser.get("username_lower")}`
         ))
     );
-  },
-
-  @observes("loading")
-  _showFooter() {
-    this.set("application.showFooter", !this.loading);
   },
 
   @discourseComputed("resultCount", "noSortQ")
@@ -437,7 +432,6 @@ export default Controller.extend({
   },
 
   _afterTransition() {
-    this._showFooter();
     if (Object.keys(this.model).length === 0) {
       this.reset();
     }

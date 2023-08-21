@@ -1,3 +1,9 @@
+{{#let this.model.postStream as |postStream|}}
+  {{#unless (and postStream.loaded postStream.loadedAllPosts)}}
+    {{hide-application-footer}}
+  {{/unless}}
+{{/let}}
+
 <DiscourseTopic
   @multiSelect={{this.multiSelect}}
   @enteredAt={{this.enteredAt}}
@@ -72,6 +78,8 @@
                   filterable=true
                   categoryId=this.buffered.category_id
                   minimum=this.minimumRequiredTags
+                  filterPlaceholder="tagging.choose_for_topic"
+                  useHeaderFilter=true
                 }}
               />
             {{/if}}
@@ -291,6 +299,12 @@
             />
           </TopicProgress>
         {{/if}}
+
+        <PluginOutlet
+          @name="topic-navigation-bottom"
+          @connectorTagName="div"
+          @outletArgs={{hash model=this.model}}
+        />
       </TopicNavigation>
 
       <div class="row">
@@ -534,6 +548,8 @@
         {{/if}}
       {{/if}}
 
+      <br />
+
       <span>
         <PluginOutlet
           @name="topic-above-suggested"
@@ -541,20 +557,8 @@
           @outletArgs={{hash model=this.model}}
         />
       </span>
-      <div
-        class="{{if
-            this.model.relatedMessages.length
-            'related-messages-wrapper'
-          }}
-          {{if this.model.suggestedTopics.length 'suggested-topics-wrapper'}}"
-      >
-        {{#if this.model.relatedMessages.length}}
-          <RelatedMessages @topic={{this.model}} />
-        {{/if}}
-        {{#if this.model.suggestedTopics.length}}
-          <SuggestedTopics @topic={{this.model}} />
-        {{/if}}
-      </div>
+
+      <MoreTopics @topic={{this.model}} />
     {{/if}}
   {{else}}
     <div class="container">
@@ -593,6 +597,5 @@
     @selectText={{action "selectText"}}
     @editPost={{action "editPost"}}
     @topic={{this.model}}
-    @composerVisible={{this.composer.visible}}
   />
 </DiscourseTopic>

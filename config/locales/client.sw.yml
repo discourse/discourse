@@ -201,7 +201,6 @@ sw:
       one: "Herufi %{count}"
       other: "Herufi %{count}"
     suggested_topics:
-      title: "Mada Zilizopendekezwa"
       pm_title: "Ujumbe Uliopendekezwa"
     about:
       simple_title: "Kuhusu "
@@ -536,7 +535,6 @@ sw:
       "12": "Vilivyotumwa"
       "13": "kisanduku pokezi"
       "14": "Inasubiri"
-      "15": "Drafts"
     categories:
       all: "kategoria zote"
       all_subcategories: "Zote"
@@ -1028,7 +1026,6 @@ sw:
       sign_up: "Jiunge"
       hide_forever: "hapana asante"
     summary:
-      enabled_description: "Unaangalia muhtasari wa hii mada; machapisho yote yanayovutia yanachaguliwa na jukwaa."
       disable: "Onyesha Machapisho Yote"
     deleted_filter:
       enabled_description: "Mada hii ina machapisho yaliyofutwa, ambayo yamefichwa."
@@ -1563,7 +1560,6 @@ sw:
           "2_8": "Utaona jumla ya majibu mapya kwa sababu unafuatilia kategoria hii."
           "2_4": "Utaweza kuona jumla ya majibu mapya kwa sababu ulichapisha jibu kwenye mada hii."
           "2_2": "Utaweza kuona jumla ya majibu mapya kwa sababu unafuatilia mada hii."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Utajulishwa kama mtu akitaja @jina lako au akikujibu."
           "1": "Utajulishwa kama mtu akitaja @jina lako au akikujibu."
           "0_7": "Unapuuzia taarifa za kategoria hii."
@@ -2589,6 +2585,7 @@ sw:
           create: "Tengeneza"
           create_type: "Aina"
           create_name: "Jina"
+          save: "Hifadhi"
           long_title: "Boresha rangi, taarifa za CSS na HTML zilipo ndani ya tovuti yako"
           edit: "Hariri"
           edit_confirm: "Mandhari hii ni kutoka nje, ukihariri CSS/HTML mabadiliko yatafutwa mara ukisasisha mandhari."
@@ -3167,6 +3164,8 @@ sw:
         go_back: "Rudi kwenye Utafiti"
         recommended: "Tunakushauri ugeuze maneno yafuatayo yaweze kufaa mahitaji yako:"
         show_overriden: "Onyesha vilivyobatilishwa pekee"
+        outdated:
+          dismiss: "Ondosha..."
       settings:
         show_overriden: "Onyesha vilivyobatilishwa pekee"
         reset: "weka au anza upya"

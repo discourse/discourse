@@ -50,7 +50,7 @@ acceptance("Implicit injections shims", function () {
     assert.strictEqual(
       newModel.appEvents,
       "overridden app events",
-      "overriden app events are passed though when creating from another objects"
+      "overridden app events are passed though when creating from another objects"
     );
   });
 });

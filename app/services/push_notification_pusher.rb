@@ -157,6 +157,8 @@ class PushNotificationPusher
       end
     rescue Timeout::Error => e
       handle_generic_error(subscription, e, user, endpoint, message)
+    rescue OpenSSL::SSL::SSLError => e
+      handle_generic_error(subscription, e, user, endpoint, message)
     end
   end
 

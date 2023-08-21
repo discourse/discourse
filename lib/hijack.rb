@@ -23,13 +23,25 @@ module Hijack
 
       transfer_timings = MethodProfiler.transfer
 
-      io = hijack.call
+      scheduled = Concurrent::Promises.resolvable_event
+
+      begin
+        Scheduler::Defer.later(
+          "hijack #{params["controller"]} #{params["action"]} #{info}",
+          force: false,
+          &scheduled.method(:resolve)
+        )
+      rescue WorkQueue::WorkQueueFull
+        return render plain: "", status: 503
+      end
 
       # duplicate headers so other middleware does not mess with it
       # on the way down the stack
       original_headers = response.headers.dup
 
-      Scheduler::Defer.later("hijack #{params["controller"]} #{params["action"]} #{info}") do
+      io = hijack.call
+
+      scheduled.on_resolution! do
         MethodProfiler.start(transfer_timings)
         begin
           Thread.current[Logster::Logger::LOGSTER_ENV] = env
@@ -148,6 +160,7 @@ module Hijack
           tempfiles&.each(&:close!)
         end
       end
+
       # not leaked out, we use 418 ... I am a teapot to denote that we are hijacked
       render plain: "", status: 418
     else

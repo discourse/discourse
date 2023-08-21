@@ -5,24 +5,21 @@ RSpec.describe "Editing sidebar tags navigation", type: :system do
   fab!(:tag1) { Fabricate(:tag, name: "tag").tap { |tag| Fabricate.times(3, :topic, tags: [tag]) } }
 
   fab!(:tag2) do
-    Fabricate(:tag, name: "tag2").tap { |tag| Fabricate.times(2, :topic, tags: [tag]) }
+    Fabricate(:tag, name: "tag 2").tap { |tag| Fabricate.times(2, :topic, tags: [tag]) }
   end
 
   fab!(:tag3) do
-    Fabricate(:tag, name: "tag3").tap { |tag| Fabricate.times(1, :topic, tags: [tag]) }
+    Fabricate(:tag, name: "tag 3").tap { |tag| Fabricate.times(1, :topic, tags: [tag]) }
   end
 
   fab!(:tag4) do
-    Fabricate(:tag, name: "tag4").tap do |tag|
+    Fabricate(:tag, name: "tag 4").tap do |tag|
       Fabricate.times(1, :topic, tags: [tag])
 
       # Ensures tags in tag groups are shown as well
       Fabricate(:tag_group, tags: [tag])
     end
   end
-
-  # This tag should not be displayed in the modal as it has not been used in a topic
-  fab!(:tag5) { Fabricate(:tag, name: "tag5") }
 
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
@@ -99,7 +96,7 @@ RSpec.describe "Editing sidebar tags navigation", type: :system do
 
     expect(modal).to have_tag_checkboxes([tag1, tag2, tag3, tag4])
 
-    modal.filter("tag2")
+    modal.filter("tag 2")
 
     expect(modal).to have_tag_checkboxes([tag2])
 
@@ -164,7 +161,7 @@ RSpec.describe "Editing sidebar tags navigation", type: :system do
 
     expect(modal).to have_tag_checkboxes([tag1, tag2])
 
-    modal.filter("tag2")
+    modal.filter("tag 2")
 
     expect(modal).to have_tag_checkboxes([tag2])
 
@@ -178,14 +175,25 @@ RSpec.describe "Editing sidebar tags navigation", type: :system do
   end
 
   it "loads more tags when the user scrolls views the last tag in the modal and there is more tags to load" do
-    stub_const(TagsController, "LIST_LIMIT", 2) do
-      visit "/latest"
+    Tag.delete_all
 
-      expect(sidebar).to have_tags_section
+    tags =
+      (TagsController::LIST_LIMIT + 1).times.map.with_index do |index|
+        Fabricate(:tag, name: "Tag #{sprintf("%03d", index)}")
+      end
 
-      modal = sidebar.click_edit_tags_button
+    visit "/latest"
 
-      expect(modal).to have_tag_checkboxes([tag1, tag2, tag3, tag4])
-    end
+    expect(sidebar).to have_tags_section
+
+    modal = sidebar.click_edit_tags_button
+
+    first_page_tags = tags.first(TagsController::LIST_LIMIT)
+
+    expect(modal).to have_tag_checkboxes(first_page_tags)
+
+    modal.scroll_to_tag(first_page_tags.last)
+
+    expect(modal).to have_tag_checkboxes(tags)
   end
 end

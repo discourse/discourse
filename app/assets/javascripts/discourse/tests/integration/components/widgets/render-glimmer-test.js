@@ -133,6 +133,11 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
       "div.my-wrapper",
       hbs`<span class='shim-content'>{{@data.attr1}}</span>`
     );
+    registerWidgetShim(
+      "render-glimmer-test-wrapper-attrs",
+      "div.initial-wrapper-class",
+      hbs`{{@setWrapperElementAttrs class=(concat-class "static-extra-class" @data.extraClass) data-some-attr=@data.dataAttrValue}}`
+    );
   });
 
   hooks.afterEach(function () {
@@ -140,6 +145,7 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
     this.registry.unregister("widget:toggle-demo-widget");
     this.registry.unregister("component:demo-component");
     deleteFromRegistry("render-glimmer-test-shim");
+    deleteFromRegistry("render-glimmer-test-wrapper-attrs");
   });
 
   test("argument handling", async function (assert) {
@@ -314,5 +320,32 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
 
     assert.dom("div.my-wrapper span.shim-content").exists();
     assert.dom("div.my-wrapper span.shim-content").hasText("val1");
+  });
+
+  test("setWrapperElementAttrs API", async function (assert) {
+    await render(
+      hbs`<MountWidget @widget="render-glimmer-test-wrapper-attrs" @args={{hash extraClass=this.extraClass dataAttrValue=this.dataAttrValue}} />`
+    );
+
+    assert.dom("div.initial-wrapper-class").exists();
+    assert
+      .dom("div.initial-wrapper-class")
+      .hasAttribute("class", "initial-wrapper-class static-extra-class");
+    assert
+      .dom("div.initial-wrapper-class")
+      .doesNotHaveAttribute("data-some-attr");
+
+    this.set("extraClass", "dynamic-extra-class");
+    this.set("dataAttrValue", "hello world");
+
+    assert
+      .dom("div.initial-wrapper-class")
+      .hasAttribute(
+        "class",
+        "initial-wrapper-class static-extra-class dynamic-extra-class"
+      );
+    assert
+      .dom("div.initial-wrapper-class")
+      .hasAttribute("data-some-attr", "hello world");
   });
 });

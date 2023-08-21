@@ -25,6 +25,18 @@ fr:
           title: "Les résultats sont affichés après la <strong>fermeture</strong> du sondage."
         staff:
           title: "Les résultats ne sont montrés qu'aux <strong>responsables</strong>."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Choisissez au moins <strong>%{count} option</strong>."
+            other: "Choisissez au moins <strong>%{count} options</strong>."
+          up_to_max_options:
+            one: "Choisissez jusqu'à <strong>%{count} option</strong>."
+            other: "Choisissez jusqu'à <strong>%{count} options</strong>."
+          x_options:
+            one: "Choisissez <strong>%{count} option</strong>."
+            other: "Choisissez <strong>%{count} options</strong>."
+          between_min_and_max_options: "Choisissez entre <strong>%{min} et %{max} options</strong>."
       cast-votes:
         title: "Distribuez vos votes"
         label: "Votez maintenant !"
@@ -33,8 +45,10 @@ fr:
         label: "Résultats"
       remove-vote:
         title: "Supprimer votre vote"
+        label: "Annuler le vote"
       hide-results:
         title: "Retourner au vote"
+        label: "Vote"
       group-results:
         title: "Grouper les votes par champ utilisateur"
         label: "Afficher les détails"

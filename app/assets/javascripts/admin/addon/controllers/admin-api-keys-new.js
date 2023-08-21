@@ -5,12 +5,13 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { isBlank } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { action, get } from "@ember/object";
-import showModal from "discourse/lib/show-modal";
 import { ajax } from "discourse/lib/ajax";
 import { inject as service } from "@ember/service";
+import ApiKeyUrlsModal from "../components/modal/api-key-urls";
 
 export default class AdminApiKeysNewController extends Controller {
   @service router;
+  @service modal;
 
   userModes = [
     { id: "all", name: I18n.t("admin.api.all_users") },
@@ -84,8 +85,7 @@ export default class AdminApiKeysNewController extends Controller {
 
   @action
   showURLs(urls) {
-    return showModal("admin-api-key-urls", {
-      admin: true,
+    this.modal.show(ApiKeyUrlsModal, {
       model: { urls },
     });
   }

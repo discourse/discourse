@@ -279,9 +279,9 @@ class PostActionCreator
     if post_action
       case @post_action_type_id
       when *PostActionType.notify_flag_type_ids
-        DiscourseEvent.trigger(:flag_created, post_action)
+        DiscourseEvent.trigger(:flag_created, post_action, self)
       when PostActionType.types[:like]
-        DiscourseEvent.trigger(:like_created, post_action)
+        DiscourseEvent.trigger(:like_created, post_action, self)
       end
     end
 

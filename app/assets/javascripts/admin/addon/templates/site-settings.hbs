@@ -1,5 +1,4 @@
 <div class="admin-controls">
-
   <div class="controls">
     <div class="inline-form">
       <DButton
@@ -21,9 +20,14 @@
       />
     </div>
   </div>
+
   <div class="search controls">
     <label>
-      <Input @type="checkbox" @checked={{this.onlyOverridden}} />
+      <Input
+        @type="checkbox"
+        @checked={{this.onlyOverridden}}
+        class="toggle-overridden"
+      />
       {{i18n "admin.settings.show_overriden"}}
     </label>
   </div>

@@ -17,6 +17,12 @@ module PageObjects
         )
       end
 
+      def prefers_drawer
+        page.execute_script(
+          "window.localStorage.setItem('discourse_chat_preferred_mode', '\"DRAWER_CHAT\"');",
+        )
+      end
+
       def open_from_header
         find(".chat-header-icon").click
       end
@@ -50,7 +56,7 @@ module PageObjects
 
       def visit_thread(thread)
         visit(thread.url)
-        has_no_css?(".chat-skeleton")
+        has_css?(".chat-thread:not(.loading)[data-id=\"#{thread.id}\"]")
       end
 
       def visit_channel_settings(channel)

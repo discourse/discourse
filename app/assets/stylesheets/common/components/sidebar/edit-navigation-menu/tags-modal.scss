@@ -1,8 +1,12 @@
 .sidebar-tags-form {
+  height: 100%;
   display: grid;
   gap: 0 0.5em;
   margin: 0;
   grid-template-columns: repeat(auto-fill, minmax(12em, 1fr));
+  align-items: flex-start;
+  grid-auto-rows: min-content;
+
   &__no-tags {
     grid-column-start: 1;
     grid-column-end: -1;
@@ -11,6 +15,7 @@
   .sidebar-tags-form__tag {
     display: flex;
     align-items: center;
+    margin-bottom: 0.5rem;
 
     .sidebar-tags-form__tag-label {
       margin-bottom: 0;

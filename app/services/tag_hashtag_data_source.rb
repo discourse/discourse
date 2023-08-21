@@ -5,7 +5,7 @@
 # tags via the # autocomplete character.
 class TagHashtagDataSource
   def self.enabled?
-    SiteSetting.enable_experimental_hashtag_autocomplete && SiteSetting.tagging_enabled
+    SiteSetting.tagging_enabled
   end
 
   def self.icon

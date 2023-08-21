@@ -3,7 +3,6 @@ import { inject as service } from "@ember/service";
 
 export default RestrictedUserRoute.extend({
   router: service(),
-  showFooter: true,
 
   redirect() {
     this.router.transitionTo("preferences.account");

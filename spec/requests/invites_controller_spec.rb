@@ -984,6 +984,27 @@ RSpec.describe InvitesController do
         Fabricate(:invite, email: nil, emailed_status: Invite.emailed_status_types[:not_required])
       end
 
+      it "does not create multiple users for a single use invite" do
+        user_count = User.count
+
+        2
+          .times
+          .map do
+            Thread.new do
+              put "/invites/show/#{invite.invite_key}.json",
+                  params: {
+                    email: "test@example.com",
+                    password: "verystrongpassword",
+                  }
+            end
+          end
+          .each(&:join)
+
+        expect(invite.reload.max_redemptions_allowed).to eq(1)
+        expect(invite.reload.redemption_count).to eq(1)
+        expect(User.count).to eq(user_count + 1)
+      end
+
       it "sends an activation email and does not activate the user" do
         expect {
           put "/invites/show/#{invite.invite_key}.json",

@@ -39,12 +39,16 @@ module Chat
     validate :ensure_slug_ok, if: :slug_changed?
     before_validation :generate_auto_slug
 
+    scope :with_categories,
+          -> {
+            joins(
+              "LEFT JOIN categories ON categories.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'Category'",
+            )
+          }
     scope :public_channels,
           -> {
-            where(chatable_type: public_channel_chatable_types).where(
+            with_categories.where(chatable_type: public_channel_chatable_types).where(
               "categories.id IS NOT NULL",
-            ).joins(
-              "LEFT JOIN categories ON categories.id = chat_channels.chatable_id AND chat_channels.chatable_type = 'Category'",
             )
           }
 
@@ -73,6 +77,14 @@ module Chat
 
       def chatable_types
         public_channel_chatable_types + direct_channel_chatable_types
+      end
+
+      def find_by_id_or_slug(id)
+        with_categories.find_by(
+          "chat_channels.id = :id OR categories.slug = :slug OR chat_channels.slug = :slug",
+          id: Integer(id, exception: false),
+          slug: id.to_s.downcase,
+        )
       end
     end
 
@@ -188,9 +200,7 @@ module Chat
     end
 
     def mark_all_threads_as_read(user: nil)
-      if !(self.threading_enabled || SiteSetting.enable_experimental_chat_threaded_discussions)
-        return
-      end
+      return if !self.threading_enabled
 
       DB.exec(<<~SQL, channel_id: self.id)
         UPDATE user_chat_thread_memberships

@@ -79,39 +79,13 @@ class Chat::Api::ChannelsController < Chat::ApiController
   end
 
   def show
-    if should_build_channel_view?
-      with_service(
-        Chat::ChannelViewBuilder,
-        **params.permit(
-          :channel_id,
-          :target_message_id,
-          :thread_id,
-          :target_date,
-          :page_size,
-          :direction,
-          :fetch_from_last_read,
-        ).slice(
-          :channel_id,
-          :target_message_id,
-          :thread_id,
-          :target_date,
-          :page_size,
-          :direction,
-          :fetch_from_last_read,
-        ),
-      ) do
-        on_success { render_serialized(result.view, Chat::ViewSerializer, root: false) }
-        on_failed_policy(:target_message_exists) { raise Discourse::NotFound }
-        on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
-      end
-    else
-      render_serialized(
-        channel_from_params,
-        Chat::ChannelSerializer,
-        membership: channel_from_params.membership_for(current_user),
-        root: "channel",
-      )
-    end
+    render_serialized(
+      channel_from_params,
+      Chat::ChannelSerializer,
+      membership: channel_from_params.membership_for(current_user),
+      root: "channel",
+      include_extra_info: true,
+    )
   end
 
   def update
@@ -171,10 +145,5 @@ class Chat::Api::ChannelsController < Chat::ApiController
     permitted_params = CHANNEL_EDITABLE_PARAMS
     permitted_params += CATEGORY_CHANNEL_EDITABLE_PARAMS if channel.category_channel?
     params.require(:channel).permit(*permitted_params)
-  end
-
-  def should_build_channel_view?
-    params[:target_message_id].present? || params[:target_date].present? ||
-      params[:include_messages].present? || params[:fetch_from_last_read].present?
   end
 end

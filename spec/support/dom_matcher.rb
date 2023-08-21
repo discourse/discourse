@@ -5,7 +5,7 @@ RSpec::Matchers.define :be_same_dom do |expected|
   match do |actual|
     begin
       assert_dom_equal(expected, actual)
-    rescue MiniTest::Assertion
+    rescue Minitest::Assertion
       false
     end
   end

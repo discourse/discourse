@@ -475,7 +475,7 @@ def confirm_overwrite(path)
   STDIN.gets.chomp
 end
 
-class TestEmojiUpdate < MiniTest::Test
+class TestEmojiUpdate < Minitest::Test
   def self.run_and_summarize
     puts "Runnings tests..."
     reporter = Minitest::SummaryReporter.new

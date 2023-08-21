@@ -17,7 +17,7 @@ bg:
       no_day: "%Y %B"
   date:
     month_names:
-    - null
+    -
     - January
     - February
     - March

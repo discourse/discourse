@@ -3,6 +3,7 @@
     {{did-insert this.setup}}
     {{did-update this.setup this.chat.activeMessage.model.id}}
     {{on "mouseleave" this.onMouseleave}}
+    {{on "wheel" this.onWheel passive=true}}
     {{will-destroy this.teardown}}
     class={{concat-class
       "chat-message-actions-container"

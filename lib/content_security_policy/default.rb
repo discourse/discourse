@@ -5,9 +5,8 @@ class ContentSecurityPolicy
   class Default
     attr_reader :directives
 
-    def initialize(base_url:, env: {})
+    def initialize(base_url:)
       @base_url = base_url
-      @env = env
       @directives =
         {}.tap do |directives|
           directives[:upgrade_insecure_requests] = [] if SiteSetting.force_https
@@ -86,7 +85,6 @@ class ContentSecurityPolicy
         end
         if SiteSetting.gtm_container_id.present?
           sources << "https://www.googletagmanager.com/gtm.js"
-          sources << "'nonce-#{ApplicationHelper.google_tag_manager_nonce(@env)}'"
         end
 
         sources << "'#{SplashScreenHelper.fingerprint}'" if SiteSetting.splash_screen

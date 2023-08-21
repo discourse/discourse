@@ -40,7 +40,9 @@ module("Chat | Unit | Utility | plugin-api", function (hooks) {
         instantiate: false,
       });
 
-      const message = fabricators.message({ user: currentUser });
+      const message = fabricators.message({
+        user: currentUser,
+      });
       const context = "channel";
       const interactor = new ChatMessageInteractor(
         getOwner(this),

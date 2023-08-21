@@ -11,7 +11,7 @@ import { inject as service } from "@ember/service";
 export default class AdminSiteSettingsController extends Controller {
   @service router;
 
-  filter = null;
+  filter = "";
 
   @alias("model") allSiteSettings;
 

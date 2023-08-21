@@ -5,7 +5,6 @@ module.exports = {
   rules: {
     "no-action-modifiers": true,
     "no-args-paths": true,
-    "no-array-prototype-extensions": false,
     "no-attrs-in-components": true,
     "no-capital-arguments": false, // TODO: we extensively use `args` argument name
     "no-curly-component-invocation": {
@@ -17,13 +16,12 @@ module.exports = {
         "directory-table-header-title",
         "loading-spinner",
         "directory-item-label",
+        "hide-application-footer",
       ],
     },
     "no-implicit-this": {
-      allow: ["loading-spinner"],
+      allow: ["loading-spinner", "hide-application-footer"],
     },
-    "no-negated-condition": false,
-    "no-obscure-array-access": false,
     "require-mandatory-role-attributes": false,
     "require-media-caption": false,
     // Begin prettier compatibility

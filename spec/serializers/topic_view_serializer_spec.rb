@@ -357,7 +357,8 @@ RSpec.describe TopicViewSerializer do
           payload: {
             raw: "hello my raw contents",
           },
-          created_by: user,
+          created_by: Discourse.system_user,
+          target_created_by: user,
         )
       end
 

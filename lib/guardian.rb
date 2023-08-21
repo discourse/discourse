@@ -236,7 +236,7 @@ class Guardian
     return false if !authenticated?
     return true if is_api? && is_admin?
 
-    reviewable.created_by_id == @user.id
+    reviewable.target_created_by_id == @user.id
   end
 
   def can_see_group?(group)
@@ -646,7 +646,7 @@ class Guardian
 
   def method_name_for(action, obj)
     method_name = :"can_#{action}_#{obj.class.name.underscore}?"
-    return method_name if respond_to?(method_name)
+    method_name if respond_to?(method_name)
   end
 
   def can_do?(action, obj)

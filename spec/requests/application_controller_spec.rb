@@ -637,36 +637,63 @@ RSpec.describe ApplicationController do
 
     it "when GTM is enabled it adds the same nonce to the policy and the GTM tag" do
       SiteSetting.content_security_policy = true
+      SiteSetting.content_security_policy_report_only = true
       SiteSetting.gtm_container_id = "GTM-ABCDEF"
 
       get "/latest"
 
-      expect(response.headers).to include("Content-Security-Policy")
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
+      report_only_script_src =
+        parse(response.headers["Content-Security-Policy-Report-Only"])["script-src"]
+
       nonce = extract_nonce_from_script_src(script_src)
+      report_only_nonce = extract_nonce_from_script_src(report_only_script_src)
+
+      expect(nonce).to eq(report_only_nonce)
 
       gtm_meta_tag = Nokogiri::HTML5.fragment(response.body).css("#data-google-tag-manager").first
       expect(gtm_meta_tag["data-nonce"]).to eq(nonce)
     end
 
-    it "doesn't reuse CSP nonces between requests" do
+    it "doesn't reuse nonces between requests" do
+      global_setting :anon_cache_store_threshold, 1
+      Middleware::AnonymousCache.enable_anon_cache
+      Middleware::AnonymousCache.clear_all_cache!
+
       SiteSetting.content_security_policy = true
+      SiteSetting.content_security_policy_report_only = true
       SiteSetting.gtm_container_id = "GTM-ABCDEF"
 
       get "/latest"
 
-      expect(response.headers).to include("Content-Security-Policy")
+      expect(response.headers["X-Discourse-Cached"]).to eq("store")
+      expect(response.headers).not_to include("Discourse-GTM-Nonce-Placeholder")
+
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
+      report_only_script_src =
+        parse(response.headers["Content-Security-Policy-Report-Only"])["script-src"]
+
       first_nonce = extract_nonce_from_script_src(script_src)
+      first_report_only_nonce = extract_nonce_from_script_src(report_only_script_src)
+
+      expect(first_nonce).to eq(first_report_only_nonce)
 
       gtm_meta_tag = Nokogiri::HTML5.fragment(response.body).css("#data-google-tag-manager").first
       expect(gtm_meta_tag["data-nonce"]).to eq(first_nonce)
 
       get "/latest"
 
-      expect(response.headers).to include("Content-Security-Policy")
+      expect(response.headers["X-Discourse-Cached"]).to eq("true")
+      expect(response.headers).not_to include("Discourse-GTM-Nonce-Placeholder")
+
       script_src = parse(response.headers["Content-Security-Policy"])["script-src"]
+      report_only_script_src =
+        parse(response.headers["Content-Security-Policy-Report-Only"])["script-src"]
+
       second_nonce = extract_nonce_from_script_src(script_src)
+      second_report_only_nonce = extract_nonce_from_script_src(report_only_script_src)
+
+      expect(second_nonce).to eq(second_report_only_nonce)
 
       expect(first_nonce).not_to eq(second_nonce)
       gtm_meta_tag = Nokogiri::HTML5.fragment(response.body).css("#data-google-tag-manager").first

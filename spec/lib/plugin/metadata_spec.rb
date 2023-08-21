@@ -45,7 +45,6 @@ TEXT
     official("discourse-adplugin")
     official("discourse-akismet")
     official("discourse-cakeday")
-    official("Canned Replies")
     official("discourse-data-explorer")
     unofficial("babble")
   end

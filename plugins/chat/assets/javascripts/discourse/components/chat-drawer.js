@@ -171,8 +171,8 @@ export default Component.extend({
   @action
   openURL(url = null) {
     this.chat.activeChannel = null;
-    this.chatStateManager.didOpenDrawer(url);
     this.chatDrawerRouter.stateFor(this._routeFromURL(url));
+    this.chatStateManager.didOpenDrawer(url);
   },
 
   _routeFromURL(url) {

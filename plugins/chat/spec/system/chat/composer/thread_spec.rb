@@ -13,7 +13,6 @@ RSpec.describe "Chat | composer | thread", type: :system, js: true do
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
 
   before do
-    SiteSetting.enable_experimental_chat_threaded_discussions = true
     chat_system_bootstrap
     channel_1.add(current_user)
     sign_in(current_user)

@@ -244,7 +244,7 @@ export default class ChatMessageInteractor {
 
     let url;
     if (this.context === MESSAGE_CONTEXT_THREAD && threadId) {
-      url = getURL(`/chat/c/-/${channelId}/t/${threadId}`);
+      url = getURL(`/chat/c/-/${channelId}/t/${threadId}/${this.message.id}`);
     } else {
       url = getURL(`/chat/c/-/${channelId}/${this.message.id}`);
     }

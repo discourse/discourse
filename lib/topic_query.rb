@@ -53,6 +53,7 @@ class TopicQuery
       search
       q
       f
+      subset
       group_name
       tags
       match_all_tags
@@ -304,7 +305,16 @@ class TopicQuery
 
   def list_new
     if @user&.new_new_view_enabled?
-      create_list(:new, { unordered: true }, new_and_unread_results)
+      list =
+        case @options[:subset]
+        when "topics"
+          new_results
+        when "replies"
+          unread_results
+        else
+          new_and_unread_results
+        end
+      create_list(:new, { unordered: true }, list)
     else
       create_list(:new, { unordered: true }, new_results)
     end
@@ -750,7 +760,9 @@ class TopicQuery
     end
 
     if SiteSetting.tagging_enabled
-      result = result.includes(:tags)
+      # Use `preload` here instead since `includes` can end up calling `eager_load` which can unnecessarily lead to
+      # joins on the `topic_tags` and `tags` table leading to a much slower query.
+      result = result.preload(:tags)
       result = filter_by_tags(result)
     end
 

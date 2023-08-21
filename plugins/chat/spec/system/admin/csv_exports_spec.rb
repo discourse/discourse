@@ -11,7 +11,10 @@ RSpec.describe "Chat CSV exports", type: :system do
   end
 
   xit "exports chat messages" do
-    message = Fabricate(:chat_message)
+    message_1 = Fabricate(:chat_message, created_at: 12.months.ago)
+    message_2 = Fabricate(:chat_message, created_at: 6.months.ago)
+    message_3 = Fabricate(:chat_message, created_at: 1.months.ago)
+    message_4 = Fabricate(:chat_message, created_at: Time.now)
 
     visit "/admin/plugins/chat"
     click_button "Create export"
@@ -39,8 +42,17 @@ RSpec.describe "Chat CSV exports", type: :system do
       ],
     )
 
+    assert_message(exported_data.second, message_1)
+    assert_message(exported_data.third, message_2)
+    assert_message(exported_data.fourth, message_3)
+    assert_message(exported_data.fifth, message_4)
+  ensure
+    csv_export_pm_page.clear_downloads
+  end
+
+  def assert_message(exported_message, message)
     time_format = "%Y-%m-%d %H:%M:%S UTC"
-    expect(exported_data.second).to eq(
+    expect(exported_message).to eq(
       [
         message.id.to_s,
         message.chat_channel.id.to_s,
@@ -57,7 +69,5 @@ RSpec.describe "Chat CSV exports", type: :system do
         message.last_editor.username,
       ],
     )
-  ensure
-    csv_export_pm_page.clear_downloads
   end
 end

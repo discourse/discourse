@@ -51,7 +51,7 @@ export default class AdminCustomizeThemesEditController extends Controller {
 
   @action
   fieldAdded(target, name) {
-    this.router.replaceRoute(
+    this.router.replaceWith(
       this.editRouteName,
       this.get("model.id"),
       target,
@@ -68,7 +68,7 @@ export default class AdminCustomizeThemesEditController extends Controller {
           (f) => f.edited
         );
 
-        this.router.replaceRoute(
+        this.router.replaceWith(
           this.editRouteName,
           this.get("model.id"),
           firstTarget.name,
@@ -80,6 +80,6 @@ export default class AdminCustomizeThemesEditController extends Controller {
 
   @action
   goBack() {
-    this.router.replaceRoute(this.showRouteName, this.model.id);
+    this.router.replaceWith(this.showRouteName, this.model.id);
   }
 }

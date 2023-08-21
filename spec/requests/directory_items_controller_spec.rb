@@ -30,21 +30,16 @@ RSpec.describe DirectoryItemsController do
       expect(json["directory_items"].length).to eq(2)
     end
 
-    it "does not exceed PAGE_SIZE if limit parameter is more than PAGE_SIZE" do
-      large_limit = DirectoryItemsController::PAGE_SIZE + 10
-      get "/directory_items.json", params: { period: "all", limit: large_limit }
+    include_examples "invalid limit params", "/directory_items.json", described_class::PAGE_SIZE
+  end
+
+  context "with page parameter" do
+    it "only accepts valid page numbers" do
+      get "/directory_items.json", params: { period: "all", page: -1 }
+      expect(response.status).to eq(400)
+
+      get "/directory_items.json", params: { period: "all", page: 0 }
       expect(response.status).to eq(200)
-      json = response.parsed_body
-
-      expect(json["directory_items"].length).to eq(DirectoryItemsController::PAGE_SIZE)
-    end
-
-    it "handles invalid limit parameters gracefully" do
-      get "/directory_items.json", params: { period: "all", limit: "invalid_limit" }
-      expect(response.status).to eq(200)
-      json = response.parsed_body
-
-      expect(json["directory_items"]).not_to be_empty
     end
   end
 

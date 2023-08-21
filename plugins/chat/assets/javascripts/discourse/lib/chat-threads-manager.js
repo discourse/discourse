@@ -57,6 +57,7 @@ export default class ChatThreadsManager {
 
   async find(channelId, threadId, options = { fetchIfNotFound: true }) {
     const existingThread = this.#getFromCache(threadId);
+
     if (existingThread) {
       return Promise.resolve(existingThread);
     } else if (options.fetchIfNotFound) {
@@ -87,10 +88,7 @@ export default class ChatThreadsManager {
       this.#cache(model);
     }
 
-    if (
-      threadObject.meta?.message_bus_last_ids?.thread_message_bus_last_id !==
-      undefined
-    ) {
+    if (threadObject?.meta?.message_bus_last_ids?.thread_message_bus_last_id) {
       model.threadMessageBusLastId =
         threadObject.meta.message_bus_last_ids.thread_message_bus_last_id;
     }

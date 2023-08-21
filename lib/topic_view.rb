@@ -575,7 +575,7 @@ class TopicView
 
   def pending_posts
     @pending_posts ||=
-      ReviewableQueuedPost.pending.where(created_by: @user, topic: @topic).order(:created_at)
+      ReviewableQueuedPost.pending.where(target_created_by: @user, topic: @topic).order(:created_at)
   end
 
   def actions_summary

@@ -585,6 +585,13 @@ class Topic < ActiveRecord::Base
           SiteSetting.digest_suppress_categories.split("|").map(&:to_i),
         )
     end
+    if SiteSetting.digest_suppress_tags.present?
+      topics =
+        topics.joins("LEFT JOIN topic_tags tg ON topics.id = tg.topic_id").where(
+          "tg.tag_id NOT IN (?) OR tg.tag_id IS NULL",
+          SiteSetting.digest_suppress_tags.split("|").map(&:to_i),
+        )
+    end
     remove_category_ids << SiteSetting.shared_drafts_category if SiteSetting.shared_drafts_enabled?
     if remove_category_ids.present?
       remove_category_ids.uniq!
@@ -2043,6 +2050,10 @@ class Topic < ActiveRecord::Base
 
   def group_pm?
     private_message? && all_allowed_users.count > 2
+  end
+
+  def visible_tags(guardian)
+    tags.reject { |tag| guardian.hidden_tag_names.include?(tag[:name]) }
   end
 
   private

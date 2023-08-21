@@ -15,7 +15,7 @@ module Chat
     belongs_to :user
     belongs_to :in_reply_to, class_name: "Chat::Message"
     belongs_to :last_editor, class_name: "User"
-    belongs_to :thread, class_name: "Chat::Thread"
+    belongs_to :thread, class_name: "Chat::Thread", optional: true
 
     has_many :replies,
              class_name: "Chat::Message",
@@ -73,9 +73,11 @@ module Chat
 
     before_save { ensure_last_editor_id }
 
+    validate :validate_message
+
     def self.polymorphic_class_mapping = { "ChatMessage" => Chat::Message }
 
-    def validate_message(has_uploads:)
+    def validate_message
       self.message =
         TextCleaner.clean(self.message, strip_whitespaces: true, strip_zero_width_spaces: true)
 
@@ -85,7 +87,7 @@ module Chat
         Chat::DuplicateMessageValidator.new(self).validate
       end
 
-      if !has_uploads && message_too_short?
+      if uploads.empty? && message_too_short?
         self.errors.add(
           :base,
           I18n.t(
@@ -101,23 +103,6 @@ module Chat
           I18n.t("chat.errors.message_too_long", count: SiteSetting.chat_maximum_message_length),
         )
       end
-    end
-
-    def attach_uploads(uploads)
-      return if uploads.blank? || self.new_record?
-
-      now = Time.now
-      ref_record_attrs =
-        uploads.map do |upload|
-          {
-            upload_id: upload.id,
-            target_id: self.id,
-            target_type: self.class.polymorphic_name,
-            created_at: now,
-            updated_at: now,
-          }
-        end
-      UploadReference.insert_all!(ref_record_attrs)
     end
 
     def excerpt(max_length: 50)

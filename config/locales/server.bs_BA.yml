@@ -18,7 +18,7 @@ bs_BA:
       no_day: "% B% Y"
   date:
     month_names:
-    - null
+    -
     - Januar
     - Februar
     - Mart

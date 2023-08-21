@@ -4,6 +4,10 @@ en:
       site_settings:
         categories:
           chat: Chat
+        chat_separate_sidebar_mode:
+          always: "Always"
+          fullscreen: "When chat is in fullscreen"
+          never: "Never"
       logs:
         staff_actions:
           actions:
@@ -104,6 +108,8 @@ en:
         all_new: "All New Messages"
         dm_and_mentions: "Direct Messages and Mentions"
         never: "Never"
+      separate_sidebar_mode:
+        title: "Show separate sidebar modes for forum and chat"
       enable: "Enable chat"
       flag: "Flag"
       emoji: "Insert emoji"
@@ -241,8 +247,6 @@ en:
         closed: "Channel is closed, you cannot send new messages right now."
         read_only: "Channel is read only, you cannot send new messages right now."
       placeholder_silenced: "You cannot send messages at this time."
-      placeholder_start_conversation: "Start a conversation with ..."
-      placeholder_start_conversation_users: "Start a conversation with %{commaSeparatedUsernames}"
       remove_upload: "Remove file"
       react: "React with emoji"
       reply: "Reply"
@@ -286,7 +290,7 @@ en:
         read_only: "Read Only"
         archived_header: "Channel is archived"
         archived: "Archived"
-        archive_failed: "Archive channel failed. %{completed}/%{total} messages have been archived. <a target=\"_blank\" href=\"%{topic_url}\">the destination topic</a>. Press retry to attempt to complete the archive."
+        archive_failed: "Archive channel failed. %{completed}/%{total} messages have been archived. <a target=\"_blank\" href=\"%{topic_url}\">The destination topic</a> was created. Press retry to attempt to complete the archive."
         archive_failed_no_topic: "Archive channel failed. %{completed}/%{total} messages have been archived, the destination topic was not created. Press retry to attempt to complete the archive."
         archive_completed: "See <a target=\"_blank\" href=\"%{topic_url}\">the archive topic</a>"
         closed_header: "Channel is closed"
@@ -688,3 +692,8 @@ en:
       sections:
         chat:
           title: Chat
+
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

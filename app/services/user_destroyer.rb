@@ -137,6 +137,14 @@ class UserDestroyer
           reviewable.perform(@actor, :agree_and_keep)
         end
       end
+
+    ReviewablePost
+      .where(target_created_by: user)
+      .find_each do |reviewable|
+        if reviewable.actions_for(@guardian).has?(:reject_and_delete)
+          reviewable.perform(@actor, :reject_and_delete)
+        end
+      end
   end
 
   def delete_posts(user, category_topic_ids, opts)

@@ -8,28 +8,38 @@ describe "Custom sidebar sections", type: :system do
 
   before { user.user_option.update!(external_links_in_new_tab: true) }
 
-  it "allows the user to create custom section" do
-    visit("/latest")
+  shared_examples "creating custom sections" do |relative_root_url|
+    it "allows the user to create custom section" do
+      visit("#{relative_root_url}/latest")
 
-    expect(sidebar).to have_no_add_section_button
+      expect(sidebar).to have_no_add_section_button
 
-    sign_in user
-    visit("/latest")
-    sidebar.click_add_section_button
+      sign_in user
+      visit("#{relative_root_url}/latest")
+      sidebar.click_add_section_button
 
-    expect(section_modal).to be_visible
-    expect(section_modal).to have_disabled_save
-    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
+      expect(section_modal).to be_visible
+      expect(section_modal).to have_disabled_save
+      expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
 
-    section_modal.fill_name("My section")
+      section_modal.fill_name("My section")
 
-    section_modal.fill_link("Sidebar Tags", "/tags")
-    expect(section_modal).to have_enabled_save
+      section_modal.fill_link("Sidebar Tags", "/tags")
+      expect(section_modal).to have_enabled_save
 
-    section_modal.save
+      section_modal.save
 
-    expect(sidebar).to have_section("My section")
-    expect(sidebar).to have_section_link("Sidebar Tags")
+      expect(sidebar).to have_section("My section")
+      expect(sidebar).to have_section_link("Sidebar Tags")
+    end
+  end
+
+  include_examples "creating custom sections"
+
+  context "when subfolder install" do
+    before { set_subfolder "/community" }
+
+    include_examples "creating custom sections", "/community"
   end
 
   it "allows the user to create custom section with /my link" do

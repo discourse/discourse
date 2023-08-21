@@ -141,8 +141,8 @@ be:
       other: "%{Count} сімвалаў"
     related_messages:
       title: "падобныя паведамленні"
+      pill: "падобныя паведамленні"
     suggested_topics:
-      title: "Прапанаваныя тэмы"
       pm_title: "прапанаваныя паведамленні"
     about:
       simple_title: "Аб сайце"
@@ -396,7 +396,6 @@ be:
       "3": "закладкі"
       "4": "тэмы"
       "5": "адказы"
-      "6": "Responses"
       "7": "згадкі"
       "9": "цытаты"
       "11": "рэдагаванне"
@@ -1008,8 +1007,6 @@ be:
           "3_2": "Вы будзеце атрымліваць апавяшчэнні, таму што вы сочыце за гэтай тэмай."
           "3_1": "Вы будзеце атрымліваць апавяшчэнні, таму што вы стварылі гэтую тэму."
           "3": "Вы будзеце атрымліваць апавяшчэнні, таму што вы сочыце за гэтай тэмай."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
-          "1": "You will be notified if someone mentions your @name or replies to you."
           "0_7": "Вы ігнаруеце ўсе паведамленні ў гэтай катэгорыі."
           "0_2": "Вы ігнаруеце ўсе паведамлення па гэтай тэме."
           "0": "Вы ігнаруеце ўсе паведамлення па гэтай тэме."
@@ -1310,7 +1307,6 @@ be:
         mark_tracking: "%{shortcut}Сачыць за тэмай"
     badges:
       title: значкі
-      awarded: узнагароджаны
       select_badge_for_title: Выберыце значок, будзе вашым званнем
       badge_grouping:
         community:
@@ -1626,6 +1622,7 @@ be:
           create: "стварыць"
           create_type: "тып"
           create_name: "Назва"
+          save: "захаваць"
           edit: "рэдагаваць"
           mobile: "Мабільны"
           settings: "Налады"

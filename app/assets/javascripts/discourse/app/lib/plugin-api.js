@@ -8,6 +8,7 @@ import {
   addButton,
   apiExtraButtons,
   removeButton,
+  replaceButton,
 } from "discourse/widgets/post-menu";
 import {
   addExtraIconRenderer,
@@ -108,7 +109,6 @@ import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/s
 import {
   addSidebarPanel,
   addSidebarSection,
-  setSidebarPanel,
 } from "discourse/lib/sidebar/custom-sections";
 import {
   registerCustomCategoryLockIcon,
@@ -130,7 +130,7 @@ import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-export const PLUGIN_API_VERSION = "1.8.0";
+export const PLUGIN_API_VERSION = "1.9.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -655,6 +655,26 @@ class PluginApi {
    **/
   removePostMenuButton(name, callback) {
     removeButton(name, callback);
+  }
+
+  /**
+   * Replace an existing button with a widget
+   *
+   * Example:
+   * ```
+   * api.replacePostMenuButton("like", {
+   *   name: "widget-name",
+   *   buildAttrs: (widget) => {
+   *     return { post: widget.findAncestorModel() };
+   *   },
+   *   shouldRender: (widget) => {
+   *     const post = widget.findAncestorModel();
+   *     return post.id === 1
+   *   }
+   * });
+   **/
+  replacePostMenuButton(name, widget) {
+    replaceButton(name, widget);
   }
 
   /**
@@ -2068,7 +2088,39 @@ class PluginApi {
    * Support for setting a Sidebar panel.
    */
   setSidebarPanel(name) {
-    setSidebarPanel(name);
+    this._lookupContainer("service:sidebar-state").setPanel(name);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Set combined sidebar section mode. In this mode, sections from all panels are displayed together.
+   */
+  setCombinedSidebarMode() {
+    this._lookupContainer("service:sidebar-state").setCombinedMode();
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Set separated sidebar section mode. In this mode, only sections from the current panel are displayed.
+   */
+  setSeparatedSidebarMode() {
+    this._lookupContainer("service:sidebar-state").setSeparatedMode();
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Show sidebar switch panels buttons in separated mode.
+   */
+  showSidebarSwitchPanelButtons() {
+    this._lookupContainer("service:sidebar-state").showSwitchPanelButtons();
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Hide sidebar switch panels buttons in separated mode.
+   */
+  hideSidebarSwitchPanelButtons() {
+    this._lookupContainer("service:sidebar-state").hideSwitchPanelButtons();
   }
 
   /**

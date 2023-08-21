@@ -1,7 +1,7 @@
-import Controller, { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import I18n from "I18n";
 import { htmlSafe } from "@ember/template";
@@ -10,14 +10,8 @@ import DismissNotificationConfirmationModal from "discourse/components/modal/dis
 
 export default Controller.extend({
   modal: service(),
-  application: controller(),
   queryParams: ["filter"],
   filter: "all",
-
-  @observes("model.canLoadMore")
-  _showFooter() {
-    this.set("application.showFooter", !this.get("model.canLoadMore"));
-  },
 
   @discourseComputed("filter")
   isFiltered() {

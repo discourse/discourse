@@ -146,6 +146,12 @@ module PageObjects
         @fast_edit_component.fast_edit_input
       end
 
+      def click_mention(post, mention)
+        within post_by_number(post) do
+          find("a.mention-group", text: mention).click
+        end
+      end
+
       private
 
       def topic_footer_button_id(button)

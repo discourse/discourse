@@ -13,8 +13,8 @@ export default class ChatThreadPane extends ChatChannelPane {
     return this.router.currentRoute.name === "chat.channel.thread";
   }
 
-  get selectedMessages() {
-    return this.thread?.selectedMessages;
+  get selectedMessageIds() {
+    return this.thread.messagesManager.selectedMessages.mapBy("id");
   }
 
   async close() {

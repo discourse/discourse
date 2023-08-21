@@ -114,6 +114,7 @@ export default Component.extend(
           highlightPrevious: bind(this, this._highlightPrevious),
           highlightLast: bind(this, this._highlightLast),
           highlightFirst: bind(this, this._highlightFirst),
+          deselectLast: bind(this, this._deselectLast),
           change: bind(this, this._onChangeWrapper),
           select: bind(this, this.select),
           deselect: bind(this, this.deselect),
@@ -295,6 +296,7 @@ export default Component.extend(
       minimum: null,
       autoInsertNoneItem: true,
       closeOnChange: true,
+      useHeaderFilter: false,
       limitMatches: null,
       placement: isDocumentRTL() ? "bottom-end" : "bottom-start",
       verticalOffset: 3,
@@ -801,6 +803,12 @@ export default Component.extend(
       }
     },
 
+    _deselectLast() {
+      if (this.selectKit.hasSelection) {
+        this.deselectByValue(this.value[this.value.length - 1]);
+      }
+    },
+
     select(value, item) {
       if (!isPresent(value)) {
         this._onClearSelection();
@@ -852,7 +860,7 @@ export default Component.extend(
 
       this.clearErrors();
 
-      const inModal = this.element.closest("#discourse-modal");
+      const inModal = this.element.closest(".fixed-modal");
       if (inModal && this.site.mobileView) {
         const modalBody = inModal.querySelector(".modal-body");
         modalBody.style = "";
@@ -876,7 +884,7 @@ export default Component.extend(
       this.selectKit.onOpen(event);
 
       if (!this.popper) {
-        const inModal = this.element.closest("#discourse-modal .modal-body");
+        const inModal = this.element.closest(".fixed-modal .modal-body");
         const anchor = document.querySelector(
           `#${this.selectKit.uniqueID}-header`
         );
@@ -940,7 +948,7 @@ export default Component.extend(
               fn: ({ state }) => {
                 if (inModal) {
                   const innerModal = document.querySelector(
-                    "#discourse-modal div.modal-inner-container"
+                    ".fixed-modal div.modal-inner-container"
                   );
 
                   if (innerModal) {
@@ -980,10 +988,9 @@ export default Component.extend(
               enabled: !!(inModal && this.site.mobileView),
               phase: "afterWrite",
               fn: ({ state }) => {
-                const modalBody = inModal.querySelector(".modal-body");
-                modalBody.style = "";
-                modalBody.style.height =
-                  modalBody.clientHeight + state.rects.popper.height + "px";
+                inModal.style = "";
+                inModal.style.height =
+                  inModal.clientHeight + state.rects.popper.height + "px";
               },
             },
           ],
@@ -995,6 +1002,10 @@ export default Component.extend(
         isFilterExpanded:
           this.selectKit.options.filterable || this.selectKit.options.allowAny,
       });
+
+      if (this.selectKit.options.useHeaderFilter) {
+        this._focusFilterInput();
+      }
 
       this.triggerSearch();
 
@@ -1036,19 +1047,33 @@ export default Component.extend(
         return;
       }
 
+      // setting focus as early as possible is best for iOS
+      // because render/promise delays may cause keyboard not to show
+      if (!forceHeader) {
+        this._focusFilterInput();
+      }
+
       this._safeAfterRender(() => {
         const input = this.getFilterInput();
         if (!forceHeader && input) {
-          input.focus({ preventScroll: true });
-
-          if (typeof input.selectionStart === "number") {
-            input.selectionStart = input.selectionEnd = input.value.length;
-          }
+          this._focusFilterInput();
         } else if (!this.selectKit.options.preventHeaderFocus) {
           const headerContainer = this.getHeader();
           headerContainer && headerContainer.focus({ preventScroll: true });
         }
       });
+    },
+
+    _focusFilterInput() {
+      const input = this.getFilterInput();
+
+      if (input && document.activeElement !== input) {
+        input.focus({ preventScroll: true });
+
+        if (typeof input.selectionStart === "number") {
+          input.selectionStart = input.selectionEnd = input.value.length;
+        }
+      }
     },
 
     getFilterInput() {
@@ -1102,8 +1127,8 @@ export default Component.extend(
     },
 
     _deprecateMutations() {
-      this.actions = this.actions || {};
-      this.attrs = this.attrs || {};
+      this.actions ??= {};
+      this.attrs ??= {};
 
       if (!this.attrs.onChange && !this.actions.onChange) {
         this._deprecated(

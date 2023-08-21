@@ -800,6 +800,9 @@
     },
     "denied_emojis" : {
       "type": "array"
+    },
+    "navigation_menu_site_top_tags": {
+      "type": "array"
     }
   },
   "required": [

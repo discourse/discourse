@@ -382,4 +382,15 @@ RSpec.describe Tag do
       expect(Tag.topic_count_column(Guardian.new(user))).to eq("staff_topic_count")
     end
   end
+
+  describe "description" do
+    it "uses the HTMLSanitizer to remove unsafe tags and attributes" do
+      tag.description =
+        "<div>hi</div><script>a=0;</script> <a onclick='const a=0;' href=\"https://www.discourse.org\">discourse</a>"
+      tag.save!
+      expect(tag.description.strip).to eq(
+        "<div>hi</div>a=0; <a href=\"https://www.discourse.org\">discourse</a>",
+      )
+    end
+  end
 end

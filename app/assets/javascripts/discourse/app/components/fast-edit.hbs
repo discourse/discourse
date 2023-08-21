@@ -1,4 +1,6 @@
-<div class="fast-edit-container">
+{{! template-lint-disable no-pointer-down-event-binding }}
+{{! template-lint-disable no-invalid-interactive }}
+<div class="fast-edit-container" {{on "keydown" this.onKeydown}}>
   <textarea
     {{auto-focus}}
     {{on "input" this.updateValue}}
@@ -12,6 +14,6 @@
     @label="composer.save_edit"
     @translatedTitle={{this.buttonTitle}}
     @isLoading={{this.isSaving}}
-    @disabled={{eq @initialValue this.value}}
+    @disabled={{this.disabled}}
   />
 </div>

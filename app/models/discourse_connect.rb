@@ -267,7 +267,16 @@ class DiscourseConnect < DiscourseConnectBase
           ReviewableUser.set_approved_fields!(user, Discourse.system_user)
         end
 
-        user.save!
+        begin
+          user.save!
+        rescue ActiveRecord::RecordInvalid => e
+          if SiteSetting.verbose_discourse_connect_logging
+            Rails.logger.error(
+              "Verbose SSO log: User creation failed. External id: #{external_id}, New User (user_id: #{user.id}) Params: #{user_params} User Params: #{user.attributes} User Errors: #{user.errors.full_messages} Email: #{user.primary_email.attributes} Email Error: #{user.primary_email.errors.full_messages}",
+            )
+          end
+          raise e
+        end
 
         if SiteSetting.verbose_discourse_connect_logging
           Rails.logger.warn(

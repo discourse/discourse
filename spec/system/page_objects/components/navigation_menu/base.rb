@@ -25,12 +25,29 @@ module PageObjects
         def has_no_section_link?(name, href: nil, active: false)
           section_link_present?(name, href: href, active: active, present: false)
         end
+
         def has_section?(name)
           has_css?(".sidebar-sections [data-section-name='#{name.parameterize}']")
         end
 
         def has_no_section?(name)
           has_no_css?(".sidebar-sections [data-section-name='#{name.parameterize}']")
+        end
+
+        def has_switch_button?(key = nil)
+          if key
+            page.has_css?(".sidebar__panel-switch-button[data-key='#{key.parameterize}']")
+          else
+            page.has_css?(".sidebar__panel-switch-button")
+          end
+        end
+
+        def has_no_switch_button?(key = nil)
+          if key
+            page.has_no_css?(".sidebar__panel-switch-button[data-key='#{key.parameterize}']")
+          else
+            page.has_no_css?(".sidebar__panel-switch-button")
+          end
         end
 
         def has_categories_section?
@@ -59,6 +76,15 @@ module PageObjects
             )
 
           expect(tag_section_links.map(&:text)).to eq(tag_names)
+        end
+
+        def has_tag_section_link_with_title?(tag, title)
+          section_link =
+            find(
+              ".sidebar-section[data-section-name='tags'] .sidebar-section-link-wrapper[data-tag-name='#{tag.name}'] .sidebar-section-link",
+            )
+
+          expect(section_link["title"]).to eq(title)
         end
 
         def primary_section_links(slug)

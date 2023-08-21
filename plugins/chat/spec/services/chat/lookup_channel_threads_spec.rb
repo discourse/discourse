@@ -15,16 +15,6 @@ RSpec.describe ::Chat::LookupChannelThreads do
   let(:offset) { 0 }
   let(:params) { { guardian: guardian, channel_id: channel_id, limit: limit, offset: offset } }
 
-  before { SiteSetting.enable_experimental_chat_threaded_discussions = true }
-
-  describe "policy - threaded_discussions_enabled" do
-    context "when disabled" do
-      before { SiteSetting.enable_experimental_chat_threaded_discussions = false }
-
-      it { is_expected.to fail_a_policy(:threaded_discussions_enabled) }
-    end
-  end
-
   describe "step - set_limit" do
     fab!(:channel_1) { Fabricate(:chat_channel) }
     let(:channel_id) { channel_1.id }

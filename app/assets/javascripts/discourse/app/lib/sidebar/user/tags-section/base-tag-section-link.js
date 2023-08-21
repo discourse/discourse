@@ -1,3 +1,5 @@
+import { escape } from "pretty-text/sanitizer";
+
 let customTagSectionLinkPrefixIcons = {};
 
 export function registerCustomTagSectionLinkPrefixIcon({
@@ -20,8 +22,9 @@ export function resetCustomTagSectionLinkPrefixIcons() {
 }
 
 export default class BaseTagSectionLink {
-  constructor({ tagName, currentUser }) {
-    this.tagName = tagName;
+  constructor({ tag, currentUser }) {
+    this.tag = tag;
+    this.tagName = tag.name;
     this.currentUser = currentUser;
   }
 
@@ -31,6 +34,10 @@ export default class BaseTagSectionLink {
 
   get text() {
     return this.tagName;
+  }
+
+  get title() {
+    return escape(this.tag.description);
   }
 
   get prefixType() {

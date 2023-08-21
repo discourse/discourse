@@ -104,25 +104,23 @@
       </div>
     {{/if}}
 
-    {{#if this.threadingAvailable}}
-      <div class="chat-modal-create-channel__control -threading-toggle">
-        <label class="chat-modal-create-channel__label">
-          <Input
-            name="threading_enabled"
-            @type="checkbox"
-            @checked={{this.threadingEnabled}}
-          />
-          <div class="threading-channel">
-            <span class="chat-modal-create-channel__label-title">
-              {{i18n "chat.create_channel.threading.label"}}
-            </span>
-            <p class="chat-modal-create-channel__label-description">
-              {{i18n "chat.settings.channel_threading_description"}}
-            </p>
-          </div>
-        </label>
-      </div>
-    {{/if}}
+    <div class="chat-modal-create-channel__control -threading-toggle">
+      <label class="chat-modal-create-channel__label">
+        <Input
+          name="threading_enabled"
+          @type="checkbox"
+          @checked={{this.threadingEnabled}}
+        />
+        <div class="threading-channel">
+          <span class="chat-modal-create-channel__label-title">
+            {{i18n "chat.create_channel.threading.label"}}
+          </span>
+          <p class="chat-modal-create-channel__label-description">
+            {{i18n "chat.settings.channel_threading_description"}}
+          </p>
+        </div>
+      </label>
+    </div>
   </:body>
   <:footer>
     <button

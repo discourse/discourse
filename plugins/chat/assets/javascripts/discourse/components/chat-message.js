@@ -134,6 +134,7 @@ export default class ChatMessage extends Component {
     cancel(this._invitationSentTimer);
     cancel(this._disableMessageActionsHandler);
     cancel(this._makeMessageActiveHandler);
+    cancel(this._debounceDecorateCookedMessageHandler);
     this.#teardownMentionedUsers();
   }
 
@@ -163,27 +164,36 @@ export default class ChatMessage extends Component {
   @action
   didInsertMessage(element) {
     this.messageContainer = element;
-    this.decorateCookedMessage();
+    this.debounceDecorateCookedMessage();
     this.refreshStatusOnMentions();
   }
 
   @action
   didUpdateMessageId() {
-    this.decorateCookedMessage();
+    this.debounceDecorateCookedMessage();
   }
 
   @action
   didUpdateMessageVersion() {
-    this.decorateCookedMessage();
+    this.debounceDecorateCookedMessage();
     this.refreshStatusOnMentions();
     this.initMentionedUsers();
   }
 
+  debounceDecorateCookedMessage() {
+    this._debounceDecorateCookedMessageHandler = discourseDebounce(
+      this,
+      this.decorateCookedMessage,
+      this.args.message,
+      100
+    );
+  }
+
   @action
-  decorateCookedMessage() {
+  decorateCookedMessage(message) {
     schedule("afterRender", () => {
       _chatMessageDecorators.forEach((decorator) => {
-        decorator.call(this, this.messageContainer, this.args.message.channel);
+        decorator.call(this, this.messageContainer, message.channel);
       });
     });
   }
@@ -264,6 +274,10 @@ export default class ChatMessage extends Component {
   }
 
   _setActiveMessage() {
+    if (this.args.disableMouseEvents) {
+      return;
+    }
+
     cancel(this._onMouseEnterMessageDebouncedHandler);
 
     if (!this.chat.userCanInteractWithChat) {

@@ -13,10 +13,6 @@ module DiscourseDev
     end
 
     def data
-      if !SiteSetting.enable_experimental_chat_threaded_discussions
-        raise "You need to enable_experimental_chat_threaded_discussions to run this task"
-      end
-
       channel = ::Chat::Channel.find(@channel_id)
       return if !channel
 

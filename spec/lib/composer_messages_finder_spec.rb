@@ -339,6 +339,7 @@ RSpec.describe ComposerMessagesFinder do
     fab!(:self_flagged_post) { Fabricate(:post, topic: topic, user: author) }
     fab!(:under_flagged_post) { Fabricate(:post, topic: topic, user: author) }
     fab!(:over_flagged_post) { Fabricate(:post, topic: topic, user: author) }
+    fab!(:resolved_flag_post) { Fabricate(:post, topic: topic, user: author) }
 
     before { SiteSetting.dont_feed_the_trolls_threshold = 2 }
 
@@ -379,6 +380,20 @@ RSpec.describe ComposerMessagesFinder do
           composer_action: "reply",
           topic_id: topic.id,
           post_id: under_flagged_post.id,
+        )
+      expect(finder.check_dont_feed_the_trolls).to be_blank
+    end
+
+    it "does not show a message when the flag has already been resolved" do
+      SiteSetting.dont_feed_the_trolls_threshold = 1
+
+      Fabricate(:flag, post: resolved_flag_post, user: other_user, disagreed_at: 1.hour.ago)
+      finder =
+        ComposerMessagesFinder.new(
+          user,
+          composer_action: "reply",
+          topic_id: topic.id,
+          post_id: resolved_flag_post.id,
         )
       expect(finder.check_dont_feed_the_trolls).to be_blank
     end

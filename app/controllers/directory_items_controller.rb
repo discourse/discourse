@@ -58,7 +58,7 @@ class DirectoryItemsController < ApplicationController
     end
 
     result = result.includes(:user_stat) if period_type == DirectoryItem.period_types[:all]
-    page = params[:page].to_i
+    page = fetch_int_from_params(:page, default: 0)
 
     user_ids = nil
     if params[:name].present?
@@ -81,8 +81,7 @@ class DirectoryItemsController < ApplicationController
       end
     end
 
-    limit = [params[:limit].to_i, PAGE_SIZE].min if params[:limit].to_i > 0
-    limit ||= PAGE_SIZE
+    limit = fetch_limit_from_params(default: PAGE_SIZE, max: PAGE_SIZE)
 
     result_count = result.count
     result = result.limit(limit).offset(limit * page).to_a

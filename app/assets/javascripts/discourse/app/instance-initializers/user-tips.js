@@ -33,8 +33,6 @@ export default {
       return;
     }
 
-    this.currentUser.set("seen_popups", seenUserTips);
-
     if (!this.currentUser.user_option) {
       this.currentUser.set("user_option", {});
     }

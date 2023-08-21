@@ -411,7 +411,7 @@ class CategoriesController < ApplicationController
             :read_only_banner,
             :default_list_filter,
             :reviewable_by_group_id,
-            category_setting_attributes: %i[auto_bump_cooldown_days],
+            category_setting_attributes: %i[auto_bump_cooldown_days num_auto_bump_daily],
             custom_fields: [custom_field_params],
             permissions: [*p.try(:keys)],
             allowed_tags: [],

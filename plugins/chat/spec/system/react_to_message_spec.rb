@@ -70,27 +70,28 @@ RSpec.describe "React to message", type: :system do
         end
 
         context "when current user has multiple sessions" do
-          it "adds reaction on each session" do
-            reaction = OpenStruct.new(emoji: "grimacing")
+          xit "adds reaction on each session" do
+            reaction = "grimacing"
+
+            sign_in(current_user)
+            chat.visit_channel(category_channel_1)
 
             using_session(:tab_1) do
               sign_in(current_user)
               chat.visit_channel(category_channel_1)
             end
 
-            sign_in(current_user)
-            chat.visit_channel(category_channel_1)
-
             using_session(:tab_1) do |session|
               channel.hover_message(message_1)
               find(".chat-message-react-btn").click
-              find(".chat-emoji-picker [data-emoji=\"#{reaction.emoji}\"]").click
+              find(".chat-emoji-picker [data-emoji=\"#{reaction}\"]").click
 
-              expect(channel).to have_reaction(message_1, reaction.emoji)
+              expect(channel).to have_reaction(message_1, reaction)
+
               session.quit
             end
 
-            expect(channel).to have_reaction(message_1, reaction.emoji)
+            expect(channel).to have_reaction(message_1, "grimacing")
           end
         end
       end

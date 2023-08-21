@@ -345,6 +345,16 @@ const Category = RestModel.extend({
   isUncategorizedCategory(id) {
     return Category.isUncategorized(id);
   },
+
+  get canCreateTopic() {
+    return this.permission === PermissionType.FULL;
+  },
+
+  get subcategoryWithCreateTopicPermission() {
+    return this.subcategories?.find(
+      (subcategory) => subcategory.canCreateTopic
+    );
+  },
 });
 
 let _uncategorized;

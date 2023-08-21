@@ -252,24 +252,6 @@ a.reply-to-tab {
   }
 }
 
-.suggested-topics {
-  clear: left;
-  padding: 20px 0 15px 0;
-  th.views,
-  td.views,
-  td.activity,
-  th.activity,
-  th.likes,
-  td.likes {
-    display: none;
-  }
-  a.badge-category,
-  a.badge-category-parent {
-    font-size: var(--font-down-1);
-    vertical-align: top;
-  }
-}
-
 span.post-count {
   background: var(--primary);
   color: var(--secondary);

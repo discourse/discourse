@@ -33,7 +33,8 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
           ::Chat::ThreadSerializer,
           root: "thread",
           membership: result.membership,
-          include_preview: true,
+          include_thread_preview: true,
+          include_thread_original_message: true,
           participants: result.participants,
         )
       end

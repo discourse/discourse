@@ -162,4 +162,14 @@
       (fn (mut @dummy.toggleSwitchState) (not @dummy.toggleSwitchState))
     }}
   />
+  <DToggleSwitch
+    disabled="true"
+    @state={{true}}
+    title="Disabled with state=true"
+  />
+  <DToggleSwitch
+    disabled="true"
+    @state={{false}}
+    title="Disabled with state=false"
+  />
 </StyleguideExample>

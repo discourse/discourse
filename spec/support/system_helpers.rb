@@ -14,11 +14,16 @@ module SystemHelpers
   end
 
   def sign_in(user)
-    visit "/session/#{user.encoded_username}/become.json?redirect=false"
+    visit File.join(
+            GlobalSetting.relative_url_root || "",
+            "/session/#{user.encoded_username}/become.json?redirect=false",
+          )
+
+    expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
   end
 
   def sign_out
-    delete "/session"
+    delete File.join(GlobalSetting.relative_url_root || "", "/session")
   end
 
   def setup_system_test

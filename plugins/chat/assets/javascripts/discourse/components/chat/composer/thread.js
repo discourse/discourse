@@ -39,7 +39,7 @@ export default class ChatComposerThread extends ChatComposer {
   }
 
   lastUserMessage(user) {
-    return this.args.thread.lastUserMessage(user);
+    return this.args.thread.messagesManager.findLastUserMessage(user);
   }
 
   handleEscape(event) {

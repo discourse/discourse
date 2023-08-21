@@ -227,14 +227,14 @@ const DiscourseURL = EmberObject.extend({
     path = path.replace(/(https?\:)?\/\/[^\/]+/, "");
 
     // Rewrite /my/* urls
-    let myPath = getURL("/my");
+    let myPath = getURL("/my/");
     const fullPath = getURL(path);
     if (fullPath.startsWith(myPath)) {
       const currentUser = User.current();
       if (currentUser) {
         path = fullPath.replace(
           myPath,
-          userPath(currentUser.get("username_lower"))
+          `${userPath(currentUser.get("username_lower"))}/`
         );
       } else {
         return this.redirectTo("/login-preferences");

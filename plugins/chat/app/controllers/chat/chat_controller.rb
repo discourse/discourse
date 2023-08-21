@@ -139,7 +139,8 @@ module Chat
 
       message =
         (
-          if chat_message_creator.chat_message.in_thread?
+          if @user_chat_channel_membership.last_read_message_id &&
+               chat_message_creator.chat_message.in_thread?
             Chat::Message.find(@user_chat_channel_membership.last_read_message_id)
           else
             chat_message_creator.chat_message
@@ -147,7 +148,8 @@ module Chat
         )
 
       Chat::Publisher.publish_user_tracking_state!(current_user, @chat_channel, message)
-      render json: success_json.merge(message_id: message.id)
+
+      render json: success_json.merge(message_id: chat_message_creator.chat_message.id)
     end
 
     def edit_message

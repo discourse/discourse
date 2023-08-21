@@ -1,5 +1,9 @@
-import Composer, { SAVE_ICONS, SAVE_LABELS } from "discourse/models/composer";
-import Controller from "@ember/controller";
+import Composer, {
+  CREATE_TOPIC,
+  NEW_TOPIC_KEY,
+  SAVE_ICONS,
+  SAVE_LABELS,
+} from "discourse/models/composer";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
 import {
@@ -26,7 +30,7 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import { isTesting } from "discourse-common/config/environment";
-import { inject as service } from "@ember/service";
+import Service, { inject as service } from "@ember/service";
 import { shortDate } from "discourse/lib/formatter";
 import showModal from "discourse/lib/show-modal";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
@@ -34,6 +38,7 @@ import renderTags from "discourse/lib/render-tags";
 import { htmlSafe } from "@ember/template";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import prepareFormTemplateData from "discourse/lib/form-template-validation";
+import DiscardDraftModal from "discourse/components/modal/discard-draft";
 
 async function loadDraft(store, opts = {}) {
   let { draft, draftKey, draftSequence } = opts;
@@ -94,13 +99,14 @@ export function addComposerSaveErrorCallback(callback) {
   _composerSaveErrorCallbacks.push(callback);
 }
 
-export default class ComposerController extends Controller {
+export default class ComposerService extends Service {
   @service router;
   @service dialog;
   @service site;
   @service store;
   @service appEvents;
   @service capabilities;
+  @service modal;
 
   checkedMessages = false;
   messageCount = null;
@@ -156,8 +162,12 @@ export default class ComposerController extends Controller {
     return this.set("_disableSubmit", value);
   }
 
+  @computed("model.category", "skipFormTemplate")
   get formTemplateIds() {
-    if (!this.siteSettings.experimental_form_templates) {
+    if (
+      !this.siteSettings.experimental_form_templates ||
+      this.skipFormTemplate
+    ) {
       return null;
     }
 
@@ -564,33 +574,6 @@ export default class ComposerController extends Controller {
   @action
   closeComposer() {
     this.close();
-  }
-
-  @action
-  async openComposer(options, post, topic) {
-    await this.open(options);
-
-    let url = post?.url || topic?.url;
-    const topicTitle = topic?.title;
-
-    if (!url || !topicTitle) {
-      return;
-    }
-
-    url = `${location.protocol}//${location.host}${url}`;
-    const link = `[${escapeExpression(topicTitle)}](${url})`;
-    const continueDiscussion = I18n.t("post.continue_discussion", {
-      postLink: link,
-    });
-
-    const reply = this.get("model.reply");
-    if (reply?.includes(continueDiscussion)) {
-      return;
-    }
-
-    this.model.prependText(continueDiscussion, {
-      new_line: true,
-    });
   }
 
   @action
@@ -1012,12 +995,12 @@ export default class ComposerController extends Controller {
             ? `<span class="topic-status">${iconHTML("envelope")}</span>`
             : "";
 
-        return `<div class='topic-title'>
+        return `<div class="topic-title">
                   <div class="topic-title__top-line">
-                    <span class='topic-statuses'>
+                    <span class="topic-statuses">
                       ${topicPM}${topicBookmarked}${topicClosed}${topicPinned}
                     </span>
-                    <span class='fancy-title'>
+                    <span class="fancy-title">
                       ${topicOption.fancyTitle}
                     </span>
                   </div>
@@ -1201,23 +1184,24 @@ export default class ComposerController extends Controller {
   }
 
   /**
-    Open the composer view
+   Open the composer view
 
-    @method open
-    @param {Object} opts Options for creating a post
-      @param {String} opts.action The action we're performing: edit, reply, createTopic, createSharedDraft, privateMessage
-      @param {String} opts.draftKey
-      @param {Post} [opts.post] The post we're replying to
-      @param {Topic} [opts.topic] The topic we're replying to
-      @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
-      @param {Boolean} [opts.ignoreIfChanged]
-      @param {Boolean} [opts.disableScopedCategory]
-      @param {Number} [opts.categoryId] Sets `scopedCategoryId` and `categoryId` on the Composer model
-      @param {Number} [opts.prioritizedCategoryId]
-      @param {String} [opts.draftSequence]
-      @param {Boolean} [opts.skipDraftCheck]
-      @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
-  **/
+   @method open
+   @param {Object} opts Options for creating a post
+   @param {String} opts.action The action we're performing: edit, reply, createTopic, createSharedDraft, privateMessage
+   @param {String} opts.draftKey
+   @param {Post} [opts.post] The post we're replying to
+   @param {Topic} [opts.topic] The topic we're replying to
+   @param {String} [opts.quote] If we're opening a reply from a quote, the quote we're making
+   @param {Boolean} [opts.ignoreIfChanged]
+   @param {Boolean} [opts.disableScopedCategory]
+   @param {Number} [opts.categoryId] Sets `scopedCategoryId` and `categoryId` on the Composer model
+   @param {Number} [opts.prioritizedCategoryId]
+   @param {String} [opts.draftSequence]
+   @param {Boolean} [opts.skipDraftCheck]
+   @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
+   @param {Boolean} [opts.skipFormTemplate] Option to skip the form template even if configured for the category
+   **/
   async open(opts = {}) {
     if (!opts.draftKey) {
       throw new Error("composer opened without a proper draft key");
@@ -1242,6 +1226,8 @@ export default class ComposerController extends Controller {
     });
 
     this.set("skipJumpOnSave", !!opts.skipJumpOnSave);
+
+    this.set("skipFormTemplate", !!opts.skipFormTemplate);
 
     // Scope the categories drop down to the category we opened the composer with.
     if (opts.categoryId && !opts.disableScopedCategory) {
@@ -1338,6 +1324,62 @@ export default class ComposerController extends Controller {
     }
   }
 
+  async #openNewTopicDraft() {
+    if (
+      this.model?.action === Composer.CREATE_TOPIC &&
+      this.model?.draftKey === Composer.NEW_TOPIC_KEY
+    ) {
+      this.set("model.composeState", Composer.OPEN);
+    } else {
+      const data = await Draft.get(Composer.NEW_TOPIC_KEY);
+      if (data.draft) {
+        return this.open({
+          action: Composer.CREATE_TOPIC,
+          draft: data.draft,
+          draftKey: Composer.NEW_TOPIC_KEY,
+          draftSequence: data.draft_sequence,
+        });
+      }
+    }
+  }
+
+  @action
+  async openNewTopic({
+    title,
+    body,
+    category,
+    tags,
+    preferDraft = false,
+  } = {}) {
+    if (preferDraft && this.currentUser.has_topic_draft) {
+      return this.#openNewTopicDraft();
+    } else {
+      return this.open({
+        prioritizedCategoryId: category?.id,
+        topicCategoryId: category?.id,
+        topicTitle: title,
+        topicBody: body,
+        topicTags: tags,
+        action: CREATE_TOPIC,
+        draftKey: NEW_TOPIC_KEY,
+        draftSequence: 0,
+      });
+    }
+  }
+
+  @action
+  async openNewMessage({ title, body, recipients, hasGroups }) {
+    return this.open({
+      action: Composer.PRIVATE_MESSAGE,
+      recipients,
+      topicTitle: title,
+      topicBody: body,
+      archetypeId: "private_message",
+      draftKey: Composer.NEW_PRIVATE_MESSAGE_KEY,
+      hasGroups,
+    });
+  }
+
   // Given a potential instance and options, set the model for this composer.
   async _setModel(optionalComposerModel, opts) {
     this.set("linkLookup", null);
@@ -1403,6 +1445,12 @@ export default class ComposerController extends Controller {
 
     if (opts.topicBody) {
       this.model.set("reply", opts.topicBody);
+    }
+
+    if (opts.prependText && !this.model.reply?.includes(opts.prependText)) {
+      this.model.prependText(opts.prependText, {
+        new_line: true,
+      });
     }
 
     const defaultComposerHeight = this._getDefaultComposerHeight();
@@ -1498,34 +1546,32 @@ export default class ComposerController extends Controller {
 
     return new Promise((resolve) => {
       if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
-        const modal = showModal("discard-draft", {
-          model: this.model,
-          modalClass: "discard-draft-modal",
-        });
         const overridesDraft =
           this.model.composeState === Composer.OPEN &&
           this.model.draftKey === opts.draftKey &&
           [Composer.EDIT_SHARED_DRAFT, Composer.EDIT].includes(opts.action);
         const showSaveDraftButton = this.model.canSaveDraft && !overridesDraft;
-        modal.setProperties({
-          showSaveDraftButton,
-          onDestroyDraft: () => {
-            return this.destroyDraft()
-              .then(() => {
-                this.model.clearState();
-                this.close();
-              })
-              .finally(() => {
-                this.appEvents.trigger("composer:cancelled");
-                resolve();
-              });
-          },
-          onSaveDraft: () => {
-            this._saveDraft();
-            this.model.clearState();
-            this.close();
-            this.appEvents.trigger("composer:cancelled");
-            return resolve();
+        this.modal.show(DiscardDraftModal, {
+          model: {
+            showSaveDraftButton,
+            onDestroyDraft: () => {
+              return this.destroyDraft()
+                .then(() => {
+                  this.model.clearState();
+                  this.close();
+                })
+                .finally(() => {
+                  this.appEvents.trigger("composer:cancelled");
+                  resolve();
+                });
+            },
+            onSaveDraft: () => {
+              this._saveDraft();
+              this.model.clearState();
+              this.close();
+              this.appEvents.trigger("composer:cancelled");
+              return resolve();
+            },
           },
         });
       } else {
@@ -1681,3 +1727,7 @@ export default class ComposerController extends Controller {
     this.set("lastValidatedAt", null);
   }
 }
+
+// For compatibility with themes/plugins which use `modifyClass` as if this is a controller
+// https://api.emberjs.com/ember/5.1/classes/Service/properties/mergedProperties?anchor=mergedProperties
+ComposerService.prototype.mergedProperties = ["actions"];

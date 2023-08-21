@@ -64,6 +64,7 @@ class Post < ActiveRecord::Base
   has_many :reviewables, as: :target, dependent: :destroy
 
   validates_with PostValidator, unless: :skip_validation
+  validates :edit_reason, length: { maximum: 1000 }
 
   after_commit :index_search
 
@@ -584,13 +585,10 @@ class Post < ActiveRecord::Base
 
     hiding_again = hidden_at.present?
 
-    self.hidden = true
-    self.hidden_at = Time.zone.now
-    self.hidden_reason_id = reason
-    self.skip_unique_check = true
-
     Post.transaction do
-      save!
+      self.skip_validation = true
+
+      update!(hidden: true, hidden_at: Time.zone.now, hidden_reason_id: reason)
 
       Topic.where(
         "id = :topic_id AND NOT EXISTS(SELECT 1 FROM POSTS WHERE topic_id = :topic_id AND NOT hidden)",
@@ -1320,6 +1318,7 @@ end
 #  index_posts_on_id_topic_id_where_not_deleted_or_empty  (id,topic_id) WHERE ((deleted_at IS NULL) AND (raw <> ''::text))
 #  index_posts_on_image_upload_id                         (image_upload_id)
 #  index_posts_on_reply_to_post_number                    (reply_to_post_number)
+#  index_posts_on_topic_id_and_created_at                 (topic_id,created_at)
 #  index_posts_on_topic_id_and_percent_rank               (topic_id,percent_rank)
 #  index_posts_on_topic_id_and_post_number                (topic_id,post_number) UNIQUE
 #  index_posts_on_topic_id_and_sort_order                 (topic_id,sort_order)

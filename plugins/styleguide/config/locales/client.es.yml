@@ -92,3 +92,6 @@ es:
           description: "Descripción"
           header: "Encabezado"
           hover_to_see: "Pase el cursor para ver una información sobre herramientas"
+        char_counter:
+          title: "Contador de caracteres"
+          placeholder: "Introduce aquí tu texto..."

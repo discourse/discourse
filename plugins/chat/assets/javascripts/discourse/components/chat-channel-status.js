@@ -17,7 +17,10 @@ export default class ChatChannelStatus extends Component {
   }
 
   get shouldRender() {
-    return this.args.channel.status !== CHANNEL_STATUSES.open;
+    return (
+      this.channelStatusIcon &&
+      this.args.channel.status !== CHANNEL_STATUSES.open
+    );
   }
 
   get channelStatusMessage() {

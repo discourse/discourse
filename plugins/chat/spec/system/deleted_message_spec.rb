@@ -104,34 +104,48 @@ RSpec.describe "Deleted message", type: :system do
     let(:open_thread) { PageObjects::Pages::ChatThread.new }
 
     fab!(:other_user) { Fabricate(:user) }
+
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, user: other_user) }
     fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel_1, user: other_user) }
     fab!(:message_3) { Fabricate(:chat_message, chat_channel: channel_1, user: other_user) }
+    fab!(:thread_1) { Fabricate(:chat_thread, channel: channel_1, original_message: message_3) }
 
-    fab!(:thread) { Fabricate(:chat_thread, channel: channel_1) }
     fab!(:message_4) do
-      Fabricate(:chat_message, chat_channel: channel_1, user: other_user, thread: thread)
+      Fabricate(
+        :chat_message,
+        in_reply_to_id: message_3.id,
+        chat_channel: channel_1,
+        user: other_user,
+        thread_id: thread_1.id,
+      )
     end
     fab!(:message_5) do
-      Fabricate(:chat_message, chat_channel: channel_1, user: other_user, thread: thread)
+      Fabricate(
+        :chat_message,
+        in_reply_to_id: message_3.id,
+        chat_channel: channel_1,
+        user: other_user,
+        thread_id: thread_1.id,
+      )
     end
 
     before do
       channel_1.update!(threading_enabled: true)
-      SiteSetting.enable_experimental_chat_threaded_discussions = true
       chat_system_user_bootstrap(user: other_user, channel: channel_1)
       Chat::Thread.update_counts
+      thread_1.add(current_user)
     end
 
     it "hides the deleted messages" do
       chat_page.visit_channel(channel_1)
-      channel_page.message_thread_indicator(thread.original_message).click
-      expect(side_panel).to have_open_thread(thread)
+
+      channel_page.message_thread_indicator(message_3).click
+      expect(side_panel).to have_open_thread(message_3.thread)
 
       expect(channel_page.messages).to have_message(id: message_2.id)
       expect(channel_page.messages).to have_message(id: message_1.id)
-      expect(open_thread.messages).to have_message(thread_id: thread.id, id: message_4.id)
-      expect(open_thread.messages).to have_message(thread_id: thread.id, id: message_5.id)
+      expect(open_thread.messages).to have_message(thread_id: thread_1.id, id: message_4.id)
+      expect(open_thread.messages).to have_message(thread_id: thread_1.id, id: message_5.id)
 
       Chat::Publisher.publish_bulk_delete!(
         channel_1,
@@ -140,7 +154,7 @@ RSpec.describe "Deleted message", type: :system do
 
       expect(channel_page.messages).to have_no_message(id: message_1.id)
       expect(channel_page.messages).to have_deleted_message(message_2, count: 2)
-      expect(open_thread.messages).to have_no_message(thread_id: thread.id, id: message_4.id)
+      expect(open_thread.messages).to have_no_message(thread_id: thread_1.id, id: message_4.id)
       expect(open_thread.messages).to have_deleted_message(message_5, count: 2)
     end
   end

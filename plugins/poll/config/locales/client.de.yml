@@ -28,15 +28,15 @@ de:
       multiple:
         help:
           at_least_min_options:
-            one: "Wählen Sie mindestens <strong>%{count} Option</strong>."
-            other: "Wähle mindestens <strong>%{count} Optionen</strong>."
+            one: "Wähle mindestens <strong>%{count} Option</strong> aus."
+            other: "Wähle mindestens <strong>%{count} Optionen</strong> aus."
           up_to_max_options:
-            one: "Wähle bis zu <strong>%{count} Option</strong>."
-            other: "Wähle bis zu <strong>%{count} Optionen</strong>."
+            one: "Wähle bis zu <strong>%{count} Option</strong> aus."
+            other: "Wähle bis zu <strong>%{count} Optionen</strong> aus."
           x_options:
-            one: "Wähle die Option <strong>%{count}</strong>."
-            other: "Wähle <strong>%{count} Optionen</strong>."
-          between_min_and_max_options: "Wähle zwischen den Optionen <strong>%{min} und %{max}</strong>."
+            one: "Wähle <strong>%{count} Option</strong> aus."
+            other: "Wähle <strong>%{count} Optionen</strong> aus."
+          between_min_and_max_options: "Wähle zwischen <strong>%{min} und %{max} Optionen</strong> aus."
       cast-votes:
         title: "Gib deine Stimmen ab"
         label: "Jetzt abstimmen!"

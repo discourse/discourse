@@ -2,8 +2,9 @@
   href={{this.href}}
   tabindex="0"
   class={{concat-class "icon" "btn-flat" (if this.isActive "active")}}
+  title={{i18n this.title}}
 >
-  {{d-icon "d-chat"}}
+  {{d-icon this.icon}}
   {{#unless this.currentUserInDnD}}
     <Chat::Header::Icon::UnreadIndicator
       @urgentCount={{@urgentCount}}

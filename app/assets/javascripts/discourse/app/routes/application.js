@@ -3,7 +3,6 @@ import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
-import OpenComposer from "discourse/mixins/open-composer";
 import { ajax } from "discourse/lib/ajax";
 import { findAll } from "discourse/models/login-method";
 import { getOwner } from "discourse-common/lib/get-owner";
@@ -16,6 +15,8 @@ import showModal from "discourse/lib/show-modal";
 import { action } from "@ember/object";
 import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
 import NotActivatedModal from "../components/modal/not-activated";
+import ForgotPassword from "discourse/components/modal/forgot-password";
+import deprecated from "discourse-common/lib/deprecated";
 
 function unlessReadOnly(method, message) {
   return function () {
@@ -37,7 +38,7 @@ function unlessStrictlyReadOnly(method, message) {
   };
 }
 
-const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
+const ApplicationRoute = DiscourseRoute.extend({
   siteTitle: setting("title"),
   shortSiteDescription: setting("short_site_description"),
   documentTitle: service(),
@@ -148,11 +149,7 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
     ),
 
     showForgotPassword() {
-      getOwner(this).lookup("controller:forgot-password").setProperties({
-        offerHelp: null,
-        helpSeen: false,
-      });
-      showModal("forgot-password", { title: "forgot_password.title" });
+      this.modal.show(ForgotPassword);
     },
 
     showNotActivated(props) {
@@ -193,14 +190,17 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       user.checkEmail();
     },
 
-    createNewTopicViaParams(title, body, category_id, tags) {
-      this.openComposerWithTopicParams(
-        this.controllerFor("discovery/topics"),
+    createNewTopicViaParams(title, body, categoryId, tags) {
+      deprecated(
+        "createNewTopicViaParam on the application route is deprecated. Use the composer service instead",
+        { id: "discourse.createNewTopicViaParams" }
+      );
+      getOwner(this).lookup("service:composer").openNewTopic({
         title,
         body,
-        category_id,
-        tags
-      );
+        categoryId,
+        tags,
+      });
     },
 
     createNewMessageViaParams({
@@ -209,10 +209,14 @@ const ApplicationRoute = DiscourseRoute.extend(OpenComposer, {
       topicBody = "",
       hasGroups = false,
     } = {}) {
-      this.openComposerWithMessageParams({
+      deprecated(
+        "createNewMessageViaParams on the application route is deprecated. Use the composer service instead",
+        { id: "discourse.createNewMessageViaParams" }
+      );
+      getOwner(this).lookup("service:composer").openNewMessage({
         recipients,
-        topicTitle,
-        topicBody,
+        title: topicTitle,
+        body: topicBody,
         hasGroups,
       });
     },

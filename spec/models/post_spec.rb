@@ -61,6 +61,7 @@ RSpec.describe Post do
   end
 
   it { is_expected.to validate_presence_of :raw }
+  it { is_expected.to validate_length_of(:edit_reason).is_at_most(1000) }
 
   # Min/max body lengths, respecting padding
   it { is_expected.not_to allow_value("x").for(:raw) }
@@ -1440,17 +1441,12 @@ RSpec.describe Post do
 
     after { Discourse.redis.flushdb }
 
-    it "should ignore the unique post validator when hiding a post with similar content as a recent post" do
-      post_2 = Fabricate(:post, user: post.user)
-      SiteSetting.unique_posts_mins = 10
-      post.store_unique_post_key
+    it "should not run post validations" do
+      PostValidator.any_instance.expects(:validate).never
 
-      expect(post_2.valid?).to eq(false)
-      expect(post_2.errors.full_messages.to_s).to include(I18n.t(:just_posted_that))
-
-      post_2.hide!(PostActionType.types[:off_topic])
-
-      expect(post_2.reload.hidden).to eq(true)
+      expect { post.hide!(PostActionType.types[:off_topic]) }.to change { post.reload.hidden }.from(
+        false,
+      ).to(true)
     end
 
     it "should decrease user_stat topic_count for first post" do

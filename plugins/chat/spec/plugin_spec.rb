@@ -369,6 +369,27 @@ describe Chat do
         expect(serializer.chat_channels[:public_channels][0].id).to eq(channel.id)
       end
     end
+
+    context "when the category is restricted and user has readonly persmissions" do
+      fab!(:channel_1) { Fabricate(:chat_channel) }
+      fab!(:group_1) { Fabricate(:group) }
+      fab!(:private_channel_1) { Fabricate(:private_category_channel, group: group_1) }
+
+      before do
+        private_channel_1.chatable.category_groups.first.update!(
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
+        group_1.add(user)
+        channel_1.add(user)
+        private_channel_1.add(user)
+      end
+
+      it "doesn’t list the associated channel" do
+        expect(serializer.chat_channels[:public_channels].map(&:id)).to contain_exactly(
+          channel_1.id,
+        )
+      end
+    end
   end
 
   describe "current_user_serializer#has_joinable_public_channels" do

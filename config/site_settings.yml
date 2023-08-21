@@ -1156,6 +1156,9 @@ email:
   digest_suppress_categories:
     type: category_list
     default: ""
+  digest_suppress_tags:
+    type: tag_list
+    default: ""
   disable_digest_emails:
     default: false
     client: true
@@ -2147,6 +2150,9 @@ developer:
     refresh: true
   max_sidebar_section_links:
     default: 50
+    hidden: true
+  instrument_gc_stat_per_request:
+    default: false
     hidden: true
 
 navigation:

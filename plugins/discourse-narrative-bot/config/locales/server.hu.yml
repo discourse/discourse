@@ -370,16 +370,6 @@ hu:
 
           Ne feledje, hogy csak %{deletion_after} órája van a bejegyzés törlésének visszavonására.
       category_hashtag:
-        instructions: |-
-          Tudta, hogy a bejegyzésében hivatkozhat kategóriákra és címkékre? Látta például a(z) %{category} kategóriát?
-
-          Írja be a „#” karaktert a mondat közepén, és válasszon egy kategóriát vagy címkét.
-        not_found: |-
-          Hmm, sehol nem látok kategóriát. Vegye figyelembe, hogy a „#” nem lehet az első karakter. Be tudja másolni ezt a következő válaszába?
-
-          ```text
-          Kategóriahivatkozásokat tudok létrehozni a # használatával
-          ```
         reply: |-
           Kiváló! Ne feledje, hogy ez a kategóriákkal _és_ címkékkel is működik, ha a címkék engedélyezettek.
       change_topic_notification_level:

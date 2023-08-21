@@ -25,6 +25,18 @@ tr_TR:
           title: "Sonuçlar <strong>kapandığında</strong> gösterilir."
         staff:
           title: "Sonuçlar sadece <strong>personel</strong> üyelerine gösterilir."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "En az <strong>%{count} seçenek</strong> belirleyin."
+            other: "En az <strong>%{count} seçenek</strong> belirleyin."
+          up_to_max_options:
+            one: "En fazla <strong>%{count} seçenek</strong> belirleyin."
+            other: "En fazla <strong>%{count} seçenek</strong> belirleyin."
+          x_options:
+            one: "<strong>%{count} seçenek</strong> belirleyin."
+            other: "<strong>%{count} seçenek</strong> belirleyin."
+          between_min_and_max_options: "<strong>%{min} ila %{max} seçenek</strong> arasından seçim yapın."
       cast-votes:
         title: "Oylarınızı kullanın"
         label: "Hemen oy verin!"
@@ -33,8 +45,10 @@ tr_TR:
         label: "Sonuçlar"
       remove-vote:
         title: "Oyunuzu kaldırın"
+        label: "Oyu geri al"
       hide-results:
         title: "Oylarınıza dönün"
+        label: "Oy ver"
       group-results:
         title: "Kullanıcı alanına göre oyları gruplandır"
         label: "Dağılımı göster"

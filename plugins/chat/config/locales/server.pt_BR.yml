@@ -7,6 +7,7 @@
 pt_BR:
   site_settings:
     chat_enabled: "Ative o plugin do bate-papo."
+    enable_public_channels: "Ative canais públicos baseados em categorias."
     chat_allowed_groups: "Os(as) usuários(as) desses grupos podem conversar. Observe que a equipe sempre pode acessar o chat."
     chat_channel_retention_days: "Mensagens de chat em canais regulares serão mantidas por essa quantidade de dias. Defina para '0' para manter mensagens para sempre."
     chat_dm_retention_days: "Mensagens de chat em canais pessoais serão mantidas por essa quantidade de dias. Defina para '0' para manter mensagens para sempre."
@@ -68,8 +69,11 @@ pt_BR:
       channel_cannot_be_archived: "O canal não pode ser arquivado no momento, ele deve estar fechado ou aberto para arquivar."
       duplicate_message: "Você postou uma mensagem idêntica muito recentemente."
       delete_channel_failed: "Falha ao excluir canal. Tente novamente."
+      minimum_length_not_met:
+        one: "A mensagem é muito curta, deve ter no mínimo %{count} caracteres."
+        other: "A mensagem é muito curta, deve ter no mínimo %{count} caracteres."
       message_too_long:
-        one: "A mensagem é muito longa; as mensagens devem ter no máximo %{count} caracteres."
+        one: "A mensagem é muito longa; as mensagens devem ter no máximo %{count} caractere."
         other: "A mensagem é muito longa; as mensagens devem ter no máximo %{count} caracteres."
       draft_too_long: "O rascunho é muito longo."
       max_reactions_limit_reached: "Novas reações não são permitidas nesta mensagem."
@@ -86,7 +90,9 @@ pt_BR:
       over_chat_max_direct_message_users:
         one: "Você não poderá criar uma mensagem direta com mais de %{count} outro(a) usuário(a)."
         other: "Você não poderá criar uma mensagem direta com mais de %{count} outros(as) usuários(as)."
-      original_message_not_found: "A mensagem que você está respondendo não pode ser encontrada ou foi excluída."
+      original_message_not_found: "O ancestral da mensagem à qual você está respondendo não pode ser encontrado ou foi excluído."
+      thread_invalid_for_channel: "O tópico não faz parte do canal informado."
+      thread_does_not_match_parent: "O tópico não corresponde à mensagem pai."
     reviewables:
       message_already_handled: "Obrigado, mas já analisamos esta mensagem e determinamos que ela não precisa ser sinalizada novamente."
       actions:
@@ -133,7 +139,7 @@ pt_BR:
         multi_user: "%{comma_separated_usernames}"
         multi_user_truncated:
           one: "%{comma_separated_usernames} e %{count} outro"
-          other: "%{comma_separated_usernames} e %{count} outros"
+          other: "%{comma_separated_usernames} e %{count} outros(as)"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "contém caracteres não ascii"
@@ -151,6 +157,8 @@ pt_BR:
       and_x_others:
         one: "e %{count} outro"
         other: "e %{count} outros"
+    summaries:
+      no_targets: "Não houve mensagens durante o período selecionado."
   discourse_push_notifications:
     popup:
       chat_mention:

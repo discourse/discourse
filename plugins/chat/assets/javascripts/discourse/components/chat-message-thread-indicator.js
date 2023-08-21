@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
-import { escapeExpression } from "discourse/lib/utilities";
 import { action } from "@ember/object";
 import { bind } from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
@@ -83,9 +82,5 @@ export default class ChatMessageThreadIndicator extends Component {
       "chat.channel.thread",
       ...this.args.message.thread.routeModels
     );
-  }
-
-  get threadTitle() {
-    return escapeExpression(this.args.message.threadTitle);
   }
 }

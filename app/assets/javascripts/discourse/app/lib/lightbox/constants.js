@@ -52,8 +52,7 @@ export const SELECTORS = {
 };
 
 export const LIGHTBOX_APP_EVENT_NAMES = {
-  // this cannot use dom:clean else #cleanupLightboxes will be called after #setupLighboxes
-  CLEAN: "lightbox:clean",
+  CLEAN: "dom:clean",
   CLOSE: "lightbox:close",
   CLOSED: "lightbox:closed",
   ITEM_DID_CHANGE: "lightbox:item-did-change",

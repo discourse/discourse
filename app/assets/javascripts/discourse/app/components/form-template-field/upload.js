@@ -12,7 +12,8 @@ export default class FormTemplateFieldUpload extends Component.extend(
   @tracked uploadComplete = false;
   @tracked uploadedFiles = [];
   @tracked disabled = this.uploading;
-  @tracked fileUploadElementId = this.attributes?.label
+  @tracked
+  fileUploadElementId = this.attributes?.label
     ? `${dasherize(this.attributes.label)}-uploader`
     : `${this.elementId}-uploader`;
   @tracked fileInputSelector = `#${this.fileUploadElementId}`;

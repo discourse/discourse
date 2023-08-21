@@ -12,23 +12,25 @@
     @selectKit={{this.selectKit}}
     @id={{concat this.selectKit.uniqueID "-body"}}
   >
-    {{component
-      this.selectKit.options.filterComponent
-      selectKit=this.selectKit
-      id=(concat this.selectKit.uniqueID "-filter")
-    }}
+    {{#unless this.selectKit.options.useHeaderFilter}}
+      {{component
+        this.selectKit.options.filterComponent
+        selectKit=this.selectKit
+        id=(concat this.selectKit.uniqueID "-filter")
+      }}
 
-    {{#if this.selectedContent.length}}
-      <div class="selected-content">
-        {{#each this.selectedContent as |item|}}
-          {{component
-            this.selectKit.options.selectedChoiceComponent
-            item=item
-            selectKit=this.selectKit
-          }}
-        {{/each}}
-      </div>
-    {{/if}}
+      {{#if this.selectedContent.length}}
+        <div class="selected-content">
+          {{#each this.selectedContent as |item|}}
+            {{component
+              this.selectKit.options.selectedChoiceComponent
+              item=item
+              selectKit=this.selectKit
+            }}
+          {{/each}}
+        </div>
+      {{/if}}
+    {{/unless}}
 
     {{#each this.collections as |collection|}}
       {{component

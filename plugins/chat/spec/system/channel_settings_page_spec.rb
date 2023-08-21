@@ -178,7 +178,6 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
         end
 
         it "can enable threading" do
-          SiteSetting.enable_experimental_chat_threaded_discussions = true
           chat_page.visit_channel_settings(channel_1)
 
           expect {

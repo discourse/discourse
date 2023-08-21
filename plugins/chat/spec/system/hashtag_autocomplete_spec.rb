@@ -15,8 +15,6 @@ describe "Using #hashtag autocompletion to search for and lookup channels", type
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
   before do
-    SiteSetting.enable_experimental_hashtag_autocomplete = true
-
     chat_system_bootstrap(user, [channel1, channel2])
     sign_in(user)
   end
@@ -64,7 +62,9 @@ describe "Using #hashtag autocompletion to search for and lookup channels", type
         )
       expect(message).not_to eq(nil)
     end
-    expect(chat_channel_page).to have_message(id: message.id)
+    expect(chat_channel_page.messages).to have_message(id: message.id)
+
+    expect(page).to have_css(".hashtag-cooked[aria-label]", count: 3)
 
     cooked_hashtags = page.all(".hashtag-cooked", count: 3)
 
@@ -158,11 +158,13 @@ describe "Using #hashtag autocompletion to search for and lookup channels", type
 
     it "shows a default color and css class for the channel icon in a post" do
       topic_page.visit_topic(topic, post_number: post_with_private_category.post_number)
+      expect(page).to have_css(".hashtag-cooked")
       expect(page).to have_css(".hashtag-cooked .hashtag-missing")
     end
 
     it "shows a default color and css class for the channel icon in a channel" do
       chat_page.visit_channel(channel1)
+      expect(page).to have_css(".hashtag-cooked")
       expect(page).to have_css(".hashtag-cooked .hashtag-missing")
     end
   end

@@ -9,7 +9,6 @@ import {
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import DiscourseRoute from "discourse/routes/discourse";
-import FilterModeMixin from "discourse/mixins/filter-mode";
 import I18n from "I18n";
 import PermissionType from "discourse/models/permission-type";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -23,7 +22,7 @@ import { inject as service } from "@ember/service";
 const NONE = "none";
 const ALL = "all";
 
-export default DiscourseRoute.extend(FilterModeMixin, {
+export default DiscourseRoute.extend({
   composer: service(),
   navMode: "latest",
 
@@ -247,10 +246,11 @@ export default DiscourseRoute.extend(FilterModeMixin, {
     const categoryId = controller.category?.id;
 
     if (categoryId) {
-      options = Object.assign({}, options, {
+      options = {
+        ...options,
         categoryId,
         includeSubcategories: !controller.noSubcategories,
-      });
+      };
     }
 
     controller.send("dismissRead", operationType, options);
@@ -259,12 +259,6 @@ export default DiscourseRoute.extend(FilterModeMixin, {
   @action
   resetParams(skipParams = []) {
     resetParams.call(this, skipParams);
-  },
-
-  @action
-  didTransition() {
-    this.controllerFor("tag.show")._showFooter();
-    return true;
   },
 
   _controllerTags(controller) {

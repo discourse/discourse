@@ -99,7 +99,7 @@ export default {
       const summarizationAllowedGroups =
         this.siteSettings.custom_summarization_allowed_groups
           .split("|")
-          .map(parseInt);
+          .map((id) => parseInt(id, 10));
 
       const canSummarize =
         this.siteSettings.summarization_strategy &&

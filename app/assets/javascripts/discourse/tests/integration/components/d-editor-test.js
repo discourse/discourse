@@ -2,7 +2,6 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, fillIn, render, settled } from "@ember/test-helpers";
 import {
-  chromeTest,
   exists,
   paste,
   query,
@@ -71,7 +70,7 @@ module("Integration | Component | d-editor", function (hooks) {
   }
 
   function testCase(title, testFunc) {
-    chromeTest(title, async function (assert) {
+    test(title, async function (assert) {
       this.set("value", "hello world.");
 
       await render(hbs`<DEditor @value={{this.value}} />`);

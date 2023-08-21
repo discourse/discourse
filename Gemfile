@@ -18,7 +18,7 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  rails_version = "7.0.5.1"
+  rails_version = "7.0.7"
   gem "actionmailer", rails_version
   gem "actionpack", rails_version
   gem "actionview", rails_version
@@ -141,9 +141,8 @@ group :test do
   gem "fakeweb", require: false
   gem "minitest", require: false
   gem "simplecov", require: false
-  gem "selenium-webdriver", require: false
+  gem "selenium-webdriver", "~> 4.11", require: false
   gem "test-prof"
-  gem "webdrivers", require: false
   gem "rails-dom-testing", require: false
 end
 
@@ -158,7 +157,7 @@ group :test, :development do
 
   gem "rspec-rails"
 
-  gem "shoulda-matchers", require: false
+  gem "shoulda-matchers", require: false, github: "thoughtbot/shoulda-matchers"
   gem "rspec-html-matchers"
   gem "byebug", require: ENV["RM_INFO"].nil?, platform: :mri
   gem "rubocop-discourse", require: false
@@ -257,6 +256,11 @@ if ENV["IMPORT"] == "1"
   gem "csv"
 
   gem "parallel", require: false
+end
+
+if ENV["GENERIC_IMPORT"] == "1"
+  gem "sqlite3"
+  gem "redcarpet"
 end
 
 gem "web-push"

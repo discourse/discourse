@@ -21,6 +21,7 @@ export default SelectKitComponent.extend({
     autoFilterable: true,
     caretDownIcon: "caretIcon",
     caretUpIcon: "caretIcon",
+    useHeaderFilter: false,
   },
 
   caretIcon: computed("value.[]", function () {

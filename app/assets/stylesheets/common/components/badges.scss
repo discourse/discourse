@@ -44,7 +44,6 @@
     span.badge-category {
       color: var(--primary-high);
       overflow: hidden;
-      text-overflow: ellipsis;
       .extra-info-wrapper & {
         color: var(--header-primary);
       }

@@ -2,10 +2,7 @@
 
 module Chat
   # Updates a thread. The thread_id and channel_id must
-  # match. For now we do not want to allow updating threads if the
-  # enable_experimental_chat_threaded_discussions hidden site setting
-  # is not turned on, and the channel must specifically have threading
-  # enabled.
+  # match, and the channel must specifically have threading enabled.
   #
   # Only the thread title can be updated.
   #
@@ -22,7 +19,6 @@ module Chat
     #   @option params_to_edit [String,nil] title
     #   @return [Service::Base::Context]
 
-    policy :threaded_discussions_enabled
     contract
     model :thread, :fetch_thread
     policy :can_view_channel
@@ -42,10 +38,6 @@ module Chat
     end
 
     private
-
-    def threaded_discussions_enabled
-      SiteSetting.enable_experimental_chat_threaded_discussions
-    end
 
     def fetch_thread(contract:, **)
       Chat::Thread.find_by(id: contract.thread_id, channel_id: contract.channel_id)

@@ -118,7 +118,6 @@ describe Chat::TranscriptService do
 
   it "generates image / attachment / video / audio markdown inside the [chat] bbcode for upload-only messages" do
     SiteSetting.authorized_extensions = "mp4|mp3|pdf|jpg"
-    message = Fabricate(:chat_message, user: user1, chat_channel: channel, message: "")
     video = Fabricate(:upload, original_filename: "test_video.mp4", extension: "mp4")
     audio = Fabricate(:upload, original_filename: "test_audio.mp3", extension: "mp3")
     attachment = Fabricate(:upload, original_filename: "test_file.pdf", extension: "pdf")
@@ -130,10 +129,14 @@ describe Chat::TranscriptService do
         original_filename: "test_img.jpg",
         extension: "jpg",
       )
-    UploadReference.create(target: message, created_at: 10.seconds.ago, upload: video)
-    UploadReference.create(target: message, created_at: 9.seconds.ago, upload: audio)
-    UploadReference.create(target: message, created_at: 8.seconds.ago, upload: attachment)
-    UploadReference.create(target: message, created_at: 7.seconds.ago, upload: image)
+    message =
+      Fabricate(
+        :chat_message,
+        user: user1,
+        chat_channel: channel,
+        message: "",
+        uploads: [video, audio, attachment, image],
+      )
     video_markdown = UploadMarkdown.new(video).to_markdown
     audio_markdown = UploadMarkdown.new(audio).to_markdown
     attachment_markdown = UploadMarkdown.new(attachment).to_markdown

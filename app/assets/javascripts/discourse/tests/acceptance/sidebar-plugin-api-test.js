@@ -915,7 +915,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
     }
   });
 
-  test("New custom sidebar panel and option to set default", async function (assert) {
+  test("New custom sidebar panel and option to set default and show/hide switch buttons", async function (assert) {
     withPluginApi(PLUGIN_API_VERSION, (api) => {
       api.addSidebarPanel((BaseCustomSidebarPanel) => {
         const ChatSidebarPanel = class extends BaseCustomSidebarPanel {
@@ -1049,5 +1049,38 @@ acceptance("Sidebar - Plugin API", function (needs) {
     assert
       .dom("#d-sidebar .sidebar__panel-switch-button + .sidebar-sections")
       .exists();
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-text"
+      )
+      .doesNotExist();
+
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.setCombinedSidebarMode();
+    });
+    await visit("/");
+    assert.dom(".sidebar__panel-switch-button").doesNotExist();
+
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='test-chat-channels'] .sidebar-section-header-text"
+      )
+      .exists();
+
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.setSidebarPanel("new-panel");
+      api.hideSidebarSwitchPanelButtons();
+    });
+    await visit("/");
+    assert.dom(".sidebar__panel-switch-button").doesNotExist();
+
+    withPluginApi(PLUGIN_API_VERSION, (api) => {
+      api.setSidebarPanel("new-panel");
+      api.hideSidebarSwitchPanelButtons();
+      api.showSidebarSwitchPanelButtons();
+    });
+    await visit("/");
+    assert.dom(".sidebar__panel-switch-button").exists();
   });
 });

@@ -114,7 +114,11 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
       @in_quote = !@keep_onebox_source if attributes.include?(%w[class source])
     when "div", "span"
       attributes = Hash[*attributes.flatten]
-      if attributes["class"]&.include?("excerpt")
+
+      # Only match "excerpt" class if it does not specifically equal "excerpt
+      # hidden" in order to prevent internal links with GitHub oneboxes from
+      # being empty https://meta.discourse.org/t/269436
+      if attributes["class"]&.include?("excerpt") && !attributes["class"]&.match?("excerpt hidden")
         @excerpt = +""
         @current_length = 0
         @start_excerpt = true

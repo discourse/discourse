@@ -39,10 +39,7 @@
       this.onLongPressEnd
       this.onLongPressCancel
     }}
-    {{chat/track-message
-      (fn (mut @message.visible) true)
-      (fn (mut @message.visible) false)
-    }}
+    ...attributes
   >
     {{#if this.show}}
       {{#if this.pane.selectingMessages}}

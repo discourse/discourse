@@ -1,22 +1,21 @@
-/**
-  The parent route for all discovery routes.
-  Handles the logic for showing the loading spinners.
-**/
 import DiscourseRoute from "discourse/routes/discourse";
-import OpenComposer from "discourse/mixins/open-composer";
 import User from "discourse/models/user";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import { action } from "@ember/object";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 
-export default DiscourseRoute.extend(OpenComposer, {
-  queryParams: {
+/**
+  The parent route for all discovery routes.
+  Handles the logic for showing the loading spinners.
+**/
+export default class DiscoveryRoute extends DiscourseRoute {
+  queryParams = {
     filter: { refreshModel: true },
-  },
+  };
 
   redirect() {
     return this.redirectIfLoginRequired();
-  },
+  }
 
   beforeModel(transition) {
     const url = transition.intent.url;
@@ -43,7 +42,7 @@ export default DiscourseRoute.extend(OpenComposer, {
         });
       }
     }
-  },
+  }
 
   @action
   loading() {
@@ -51,12 +50,12 @@ export default DiscourseRoute.extend(OpenComposer, {
 
     // We don't want loading to bubble
     return true;
-  },
+  }
 
   @action
   loadingComplete() {
     this.controllerFor("discovery").loadingComplete();
-  },
+  }
 
   @action
   didTransition() {
@@ -64,28 +63,19 @@ export default DiscourseRoute.extend(OpenComposer, {
 
     const model = this.controllerFor("discovery/topics").get("model");
     setTopicList(model);
-  },
+  }
 
   // clear a pinned topic
   @action
   clearPin(topic) {
     topic.clearPin();
-  },
-
-  @action
-  createTopic() {
-    if (this.get("currentUser.has_topic_draft")) {
-      this.openTopicDraft();
-    } else {
-      this.openComposer(this.controllerFor("discovery/topics"));
-    }
-  },
+  }
 
   @action
   dismissReadTopics(dismissTopics) {
     const operationType = dismissTopics ? "topics" : "posts";
     this.send("dismissRead", operationType);
-  },
+  }
 
   @action
   dismissRead(operationType) {
@@ -94,15 +84,15 @@ export default DiscourseRoute.extend(OpenComposer, {
       categoryId: controller.get("category.id"),
       includeSubcategories: !controller.noSubcategories,
     });
-  },
+  }
 
   refresh() {
     resetCachedTopicList(this.session);
-    this._super();
-  },
+    super.refresh();
+  }
 
   @action
   triggerRefresh() {
     this.refresh();
-  },
-});
+  }
+}

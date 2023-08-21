@@ -1,6 +1,6 @@
 import EmberObject, { action } from "@ember/object";
 import Controller, { inject as controller } from "@ember/controller";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import Badge from "discourse/models/badge";
 import I18n from "I18n";
 import UserBadge from "discourse/models/user-badge";
@@ -61,11 +61,6 @@ export default Controller.extend({
   @discourseComputed("user", "model.grant_count")
   canShowOthers(user, grantCount) {
     return !!user && grantCount > 1;
-  },
-
-  @observes("canLoadMore")
-  _showFooter() {
-    this.set("application.showFooter", !this.canLoadMore);
   },
 
   @action

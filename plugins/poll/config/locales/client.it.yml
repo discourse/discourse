@@ -25,6 +25,18 @@ it:
           title: "I risultati saranno mostrati a sondaggio <strong>chiuso</strong>."
         staff:
           title: "I risultati saranno mostrati solo ai membri dello <strong>staff</strong>"
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Scegli almeno <strong>%{count}</strong> opzione."
+            other: "Scegli almeno <strong>%{count}</strong> opzioni."
+          up_to_max_options:
+            one: "Scegli fino a <strong>%{count}</strong> opzione."
+            other: "Scegli fino a <strong>%{count}</strong> opzioni."
+          x_options:
+            one: "Scegli <strong>%{count}</strong> opzione."
+            other: "Scegli <strong>%{count}</strong> opzioni."
+          between_min_and_max_options: "Scegli tra <strong>%{min} e %{max} opzioni</strong>."
       cast-votes:
         title: "Vota"
         label: "Vota ora!"
@@ -33,8 +45,10 @@ it:
         label: "Risultati"
       remove-vote:
         title: "Annulla il tuo voto"
+        label: "Annulla il voto"
       hide-results:
         title: "Torna ai sondaggi"
+        label: "Vota"
       group-results:
         title: "Voti raggruppati per campo utente"
         label: "Mostra la suddivisione"

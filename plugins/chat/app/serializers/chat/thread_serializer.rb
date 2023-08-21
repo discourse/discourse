@@ -22,6 +22,10 @@ module Chat
       @current_user_membership = opts[:membership]
     end
 
+    def include_original_message?
+      @opts[:include_thread_original_message].presence || true
+    end
+
     def meta
       { message_bus_last_ids: { thread_message_bus_last_id: thread_message_bus_last_id } }
     end
@@ -31,7 +35,7 @@ module Chat
     end
 
     def include_preview?
-      @opts[:include_preview]
+      @opts[:include_thread_preview]
     end
 
     def preview

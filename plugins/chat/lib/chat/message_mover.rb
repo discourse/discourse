@@ -25,8 +25,7 @@
 # into a new channel, they end up as just a flat series of messages that are
 # not in a chain. If the original message of a thread and N other messages
 # in that thread, then any messages left behind just get placed into a new
-# thread. Message moving will be disabled in the thread UI while
-# enable_experimental_chat_threaded_discussions is present, its too complicated
+# thread. Message moving will be disabled in the thread UI, its too complicated
 # to have end users reason about for now, and we may want a standalone
 # "Move Thread" UI later on.
 module Chat

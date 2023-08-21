@@ -29,7 +29,7 @@ export default class DModalBody extends Component {
 
   @action
   didInsert(element) {
-    if (element.closest(".d-modal:not(.d-modal-legacy")) {
+    if (element.closest(".d-modal:not(.d-modal-legacy)")) {
       // eslint-disable-next-line no-console
       console.error(LEGACY_ERROR);
       if (DEBUG) {

@@ -12,7 +12,6 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { hbs } from "ember-cli-htmlbars";
-import { hideUserTip } from "discourse/lib/user-tips";
 import { SEARCH_BUTTON_ID } from "discourse/components/search-menu";
 
 let _extraHeaderIcons = [];
@@ -47,6 +46,8 @@ export const dropdown = {
 };
 
 createWidget("header-notifications", {
+  services: ["user-tips"],
+
   settings: {
     avatarSize: "medium",
   },
@@ -82,9 +83,7 @@ createWidget("header-notifications", {
     if (user.isInDoNotDisturb()) {
       contents.push(h("div.do-not-disturb-background", iconNode("moon")));
     } else {
-      let ringClass = null;
       if (user.new_personal_messages_notifications_count) {
-        ringClass = "personal-messages";
         contents.push(
           this.attach("link", {
             action: attrs.action,
@@ -122,7 +121,6 @@ createWidget("header-notifications", {
           })
         );
       } else if (user.all_unread_notifications_count) {
-        ringClass = "regular-notifications";
         contents.push(
           this.attach("link", {
             action: attrs.action,
@@ -136,9 +134,6 @@ createWidget("header-notifications", {
             },
           })
         );
-      }
-      if (ringClass && this._shouldHighlightAvatar()) {
-        contents.push(h(`span.ring.revamped.${ringClass}`));
       }
     }
     return contents;
@@ -168,18 +163,18 @@ createWidget("header-notifications", {
       reference: document
         .querySelector(".d-header .badge-notification")
         ?.parentElement?.querySelector(".avatar"),
-      appendTo: document.querySelector(".d-header .panel"),
+      appendTo: document.querySelector(".d-header"),
 
       placement: "bottom-end",
     });
   },
 
   destroy() {
-    hideUserTip("first_notification");
+    this.userTips.hideTip("first_notification");
   },
 
   willRerenderWidget() {
-    hideUserTip("first_notification");
+    this.userTips.hideTip("first_notification");
   },
 });
 
@@ -563,7 +558,7 @@ export default createWidget("header", {
 
     return h(
       "div.wrap",
-      this.attach("header-contents", Object.assign({}, attrs, contentsAttrs))
+      this.attach("header-contents", { ...attrs, ...contentsAttrs })
     );
   },
 

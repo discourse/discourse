@@ -127,31 +127,29 @@
     </div>
   {{/if}}
 
-  {{#if this.togglingThreadingAvailable}}
-    <div class="chat-form__section -threading">
-      <div class="chat-form__field">
-        <label class="chat-form__label">
-          <span>{{i18n "chat.settings.channel_threading_label"}}</span>
-          <span class="channel-settings-view__channel-threading-tooltip">
-            {{d-icon "info-circle"}}
-            <DTooltip>
-              {{i18n "chat.settings.channel_threading_description"}}
-            </DTooltip>
-          </span>
-          <ChatChannelSettingsSavedIndicator
-            @property={{@channel.threadingEnabled}}
-          />
-        </label>
-        <ComboBox
-          @content={{this.threadingEnabledOptions}}
-          @value={{@channel.threadingEnabled}}
-          @valueProperty="value"
-          @class="channel-settings-view__selector"
-          @onChange={{this.onToggleThreadingEnabled}}
+  <div class="chat-form__section -threading">
+    <div class="chat-form__field">
+      <label class="chat-form__label">
+        <span>{{i18n "chat.settings.channel_threading_label"}}</span>
+        <span class="channel-settings-view__channel-threading-tooltip">
+          {{d-icon "info-circle"}}
+          <DTooltip>
+            {{i18n "chat.settings.channel_threading_description"}}
+          </DTooltip>
+        </span>
+        <ChatChannelSettingsSavedIndicator
+          @property={{@channel.threadingEnabled}}
         />
-      </div>
+      </label>
+      <ComboBox
+        @content={{this.threadingEnabledOptions}}
+        @value={{@channel.threadingEnabled}}
+        @valueProperty="value"
+        @class="channel-settings-view__selector"
+        @onChange={{this.onToggleThreadingEnabled}}
+      />
     </div>
-  {{/if}}
+  </div>
 {{/if}}
 
 {{#unless @channel.isDirectMessageChannel}}

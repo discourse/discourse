@@ -5,11 +5,17 @@ class DraftsController < ApplicationController
 
   skip_before_action :check_xhr, :preload_json
 
+  INDEX_LIMIT = 50
+
   def index
     params.permit(:offset)
-    params.permit(:limit)
 
-    stream = Draft.stream(user: current_user, offset: params[:offset], limit: params[:limit])
+    stream =
+      Draft.stream(
+        user: current_user,
+        offset: params[:offset],
+        limit: fetch_limit_from_params(default: nil, max: INDEX_LIMIT),
+      )
 
     render json: { drafts: stream ? serialize_data(stream, DraftSerializer) : [] }
   end

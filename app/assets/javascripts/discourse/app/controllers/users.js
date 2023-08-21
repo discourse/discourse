@@ -1,15 +1,21 @@
-import Controller, { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import Group from "discourse/models/group";
 import { action } from "@ember/object";
 import discourseDebounce from "discourse-common/lib/debounce";
 import showModal from "discourse/lib/show-modal";
 import { and, equal } from "@ember/object/computed";
 import { longDate } from "discourse/lib/formatter";
-import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
-  application: controller(),
-  queryParams: ["period", "order", "asc", "name", "group", "exclude_usernames"],
+  queryParams: [
+    "period",
+    "order",
+    "asc",
+    "name",
+    "group",
+    "exclude_usernames",
+    "exclude_groups",
+  ],
   period: "weekly",
   order: "",
   asc: null,
@@ -17,6 +23,7 @@ export default Controller.extend({
   group: null,
   nameInput: null,
   exclude_usernames: null,
+  exclude_groups: null,
   isLoading: false,
   columns: null,
   groupOptions: null,
@@ -104,11 +111,6 @@ export default Controller.extend({
       "params.name": username,
     });
     this.loadUsers();
-  },
-
-  @observes("model.canLoadMore")
-  _showFooter() {
-    this.set("application.showFooter", !this.get("model.canLoadMore"));
   },
 
   @action

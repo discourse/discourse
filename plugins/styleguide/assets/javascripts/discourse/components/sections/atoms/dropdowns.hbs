@@ -1,6 +1,6 @@
 <StyleguideExample
   @title="<ComboBox>"
-  @initialValue={{@dummy.options.0.name}}
+  @initialValue={{get @dummy "options.0.name"}}
   as |value|
 >
   <ComboBox
@@ -12,7 +12,7 @@
 
 <StyleguideExample
   @title="filterable <ComboBox>"
-  @initialValue={{@dummy.categories.0.name}}
+  @initialValue={{get @dummy "categories.0.name"}}
   as |value|
 >
   <ComboBox
@@ -25,7 +25,7 @@
 
 <StyleguideExample
   @title="<ComboBox> with a default state"
-  @initialValue={{@dummy.options.0.name}}
+  @initialValue={{get @dummy "options.0.name"}}
   as |value|
 >
   <ComboBox
@@ -38,7 +38,7 @@
 
 <StyleguideExample
   @title="<ComboBox> clearable"
-  @initialValue={{@dummy.options.0.name}}
+  @initialValue={{get @dummy "options.0.name"}}
   as |value|
 >
   <ComboBox
@@ -68,7 +68,7 @@
 
 <StyleguideExample
   @title="<CategoryChooser>"
-  @initialValue={{@categories.0.name}}
+  @initialValue={{get @categories "0" "name"}}
   as |value|
 >
   <CategoryChooser @value={{value}} @onChange={{fn (mut value)}} />
@@ -88,7 +88,7 @@
 
 <StyleguideExample @title="<CategoryNotificationsButton>">
   <CategoryNotificationsButton
-    @category={{get @dummy.categories 0}}
+    @category={{get @dummy "categories.0"}}
     @value={{1}}
     @onChange={{@dummyAction}}
   />
@@ -121,6 +121,28 @@
 
 <StyleguideExample @title="<MultiSelect>">
   <MultiSelect @content={{@dummy.options}} @onChange={{@dummyAction}} />
+</StyleguideExample>
+
+<StyleguideExample @title="<MiniTagChooser>">
+  <div class="inline-form">
+    <MiniTagChooser
+      @value={{@dummy.selectedTags}}
+      @options={{hash filterable=true}}
+    />
+  </div>
+</StyleguideExample>
+
+<StyleguideExample @title="<MiniTagChooser> with useHeaderFilter=true">
+  <div class="inline-form">
+    <MiniTagChooser
+      @value={{@dummy.selectedTags}}
+      @options={{hash
+        filterable=true
+        filterPlaceholder="tagging.choose_for_topic"
+        useHeaderFilter=true
+      }}
+    />
+  </div>
 </StyleguideExample>
 
 <StyleguideExample @title="admin <GroupChooser>">

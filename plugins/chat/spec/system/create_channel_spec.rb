@@ -33,8 +33,6 @@ RSpec.describe "Create channel", type: :system do
       end
 
       it "shows threading toggle" do
-        SiteSetting.enable_experimental_chat_threaded_discussions = true
-
         chat_page.visit_browse
         chat_page.new_channel_button.click
         channel_modal.select_category(category_1)

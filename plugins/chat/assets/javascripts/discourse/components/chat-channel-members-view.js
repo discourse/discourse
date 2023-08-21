@@ -36,10 +36,6 @@ export default class ChatChannelMembersView extends Component {
     this.appEvents.off("chat:refresh-channel-members", this, "onFilterMembers");
   }
 
-  get chatProgressBarContainer() {
-    return document.querySelector("#chat-progress-bar-container");
-  }
-
   @action
   onFilterMembers(username) {
     this.set("filter", username);

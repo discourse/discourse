@@ -1,19 +1,28 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
+import { tracked } from "@glimmer/tracking";
+import { defaultHomepage } from "discourse/lib/utilities";
 
 export default class SwitchPanelButtons extends Component {
   @service router;
+  @service sidebarState;
+  @tracked isSwitching = false;
 
   @action
-  switchPanel(currentPanel, panel) {
-    currentPanel.lastKnownURL = this.router.currentURL;
-    this.args.setCurrentPanelKey(panel.key);
+  switchPanel(panel) {
+    this.isSwitching = true;
+    this.sidebarState.currentPanel.lastKnownURL = this.router.currentURL;
+
     const url = panel.lastKnownURL || panel.switchButtonDefaultUrl;
-    if (url === "/") {
-      this.router.transitionTo("discovery.latest");
-    } else {
-      this.router.transitionTo(url);
-    }
+    const destination = url === "/" ? `discovery.${defaultHomepage()}` : url;
+    this.router
+      .transitionTo(destination)
+      .then(() => {
+        this.sidebarState.setPanel(panel.key);
+      })
+      .finally(() => {
+        this.isSwitching = false;
+      });
   }
 }

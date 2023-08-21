@@ -21,85 +21,75 @@ RSpec.describe Chat::UpdateThread do
       { guardian: guardian, thread_id: thread.id, channel_id: thread.channel_id, title: title }
     end
 
-    context "when enable_experimental_chat_threaded_discussions is disabled" do
-      before { SiteSetting.enable_experimental_chat_threaded_discussions = false }
+    context "when all steps pass" do
+      it "sets the service result as successful" do
+        expect(result).to be_a_success
+      end
 
-      it { is_expected.to fail_a_policy(:threaded_discussions_enabled) }
+      it "updates the title of the thread" do
+        result
+        expect(thread.reload.title).to eq(title)
+      end
+
+      it "publishes a MessageBus message" do
+        message =
+          MessageBus
+            .track_publish(Chat::Publisher.root_message_bus_channel(thread.channel_id)) { result }
+            .first
+
+        expect(message.data["type"]).to eq("update_thread_original_message")
+      end
     end
 
-    context "when enable_experimental_chat_threaded_discussions is enabled" do
-      before { SiteSetting.enable_experimental_chat_threaded_discussions = true }
+    context "when params are not valid" do
+      before { params.delete(:thread_id) }
 
-      context "when all steps pass" do
-        it "sets the service result as successful" do
-          expect(result).to be_a_success
-        end
+      it { is_expected.to fail_a_contract }
+    end
 
-        it "updates the title of the thread" do
-          result
-          expect(thread.reload.title).to eq(title)
-        end
+    context "when title is too long" do
+      let(:title) { "a" * Chat::Thread::MAX_TITLE_LENGTH + "a" }
 
-        it "publishes a MessageBus message" do
-          message =
-            MessageBus
-              .track_publish(Chat::Publisher.root_message_bus_channel(thread.channel_id)) { result }
-              .first
+      it { is_expected.to fail_a_contract }
+    end
 
-          expect(message.data["type"]).to eq("update_thread_original_message")
-        end
+    context "when thread is not found because the channel ID differs" do
+      before { params[:thread_id] = other_thread.id }
+
+      it { is_expected.to fail_to_find_a_model(:thread) }
+    end
+
+    context "when thread is not found" do
+      before { thread.destroy! }
+
+      it { is_expected.to fail_to_find_a_model(:thread) }
+    end
+
+    context "when user cannot see channel" do
+      before { thread.update!(channel: private_channel) }
+
+      it { is_expected.to fail_a_policy(:can_view_channel) }
+    end
+
+    context "when user is not the thread original message creator" do
+      before { thread.update!(original_message_user: Fabricate(:user)) }
+
+      it { is_expected.to fail_a_policy(:can_edit_thread) }
+    end
+
+    context "when user is not the thread original message creator but they are staff" do
+      before do
+        thread.original_message.update!(user: Fabricate(:user))
+        current_user.update!(admin: true)
       end
 
-      context "when params are not valid" do
-        before { params.delete(:thread_id) }
+      it { is_expected.not_to fail_a_policy(:can_edit_thread) }
+    end
 
-        it { is_expected.to fail_a_contract }
-      end
+    context "when threading is not enabled for the channel" do
+      before { channel.update!(threading_enabled: false) }
 
-      context "when title is too long" do
-        let(:title) { "a" * Chat::Thread::MAX_TITLE_LENGTH + "a" }
-
-        it { is_expected.to fail_a_contract }
-      end
-
-      context "when thread is not found because the channel ID differs" do
-        before { params[:thread_id] = other_thread.id }
-
-        it { is_expected.to fail_to_find_a_model(:thread) }
-      end
-
-      context "when thread is not found" do
-        before { thread.destroy! }
-
-        it { is_expected.to fail_to_find_a_model(:thread) }
-      end
-
-      context "when user cannot see channel" do
-        before { thread.update!(channel: private_channel) }
-
-        it { is_expected.to fail_a_policy(:can_view_channel) }
-      end
-
-      context "when user is not the thread original message creator" do
-        before { thread.update!(original_message_user: Fabricate(:user)) }
-
-        it { is_expected.to fail_a_policy(:can_edit_thread) }
-      end
-
-      context "when user is not the thread original message creator but they are staff" do
-        before do
-          thread.original_message.update!(user: Fabricate(:user))
-          current_user.update!(admin: true)
-        end
-
-        it { is_expected.not_to fail_a_policy(:can_edit_thread) }
-      end
-
-      context "when threading is not enabled for the channel" do
-        before { channel.update!(threading_enabled: false) }
-
-        it { is_expected.to fail_a_policy(:threading_enabled_for_channel) }
-      end
+      it { is_expected.to fail_a_policy(:threading_enabled_for_channel) }
     end
   end
 end

@@ -19,10 +19,10 @@ class Category < ActiveRecord::Base
   REQUIRE_TOPIC_APPROVAL = "require_topic_approval"
   REQUIRE_REPLY_APPROVAL = "require_reply_approval"
   NUM_AUTO_BUMP_DAILY = "num_auto_bump_daily"
+  SLUG_REF_SEPARATOR = ":"
 
   register_custom_field_type(REQUIRE_TOPIC_APPROVAL, :boolean)
   register_custom_field_type(REQUIRE_REPLY_APPROVAL, :boolean)
-  register_custom_field_type(NUM_AUTO_BUMP_DAILY, :integer)
 
   belongs_to :topic
   belongs_to :topic_only_relative_url,
@@ -48,7 +48,11 @@ class Category < ActiveRecord::Base
 
   has_one :category_setting, dependent: :destroy
 
-  delegate :auto_bump_cooldown_days, to: :category_setting, allow_nil: true
+  delegate :auto_bump_cooldown_days,
+           :num_auto_bump_daily,
+           :num_auto_bump_daily=,
+           to: :category_setting,
+           allow_nil: true
 
   has_and_belongs_to_many :web_hooks
 
@@ -201,14 +205,16 @@ class Category < ActiveRecord::Base
   # Allows us to skip creating the category definition topic in tests.
   attr_accessor :skip_category_definition
 
-  @topic_id_cache = DistributedCache.new("category_topic_ids")
+  def self.topic_id_cache
+    @topic_id_cache ||= DistributedCache.new("category_topic_ids")
+  end
 
   def self.topic_ids
-    @topic_id_cache.defer_get_set("ids") { Set.new(Category.pluck(:topic_id).compact) }
+    topic_id_cache.defer_get_set("ids") { Set.new(Category.pluck(:topic_id).compact) }
   end
 
   def self.reset_topic_ids_cache
-    @topic_id_cache.clear
+    topic_id_cache.clear
   end
 
   def reset_topic_ids_cache
@@ -673,14 +679,6 @@ class Category < ActiveRecord::Base
     custom_fields[REQUIRE_REPLY_APPROVAL]
   end
 
-  def num_auto_bump_daily
-    custom_fields[NUM_AUTO_BUMP_DAILY]
-  end
-
-  def num_auto_bump_daily=(v)
-    custom_fields[NUM_AUTO_BUMP_DAILY] = v
-  end
-
   def auto_bump_limiter
     return nil if num_auto_bump_daily.to_i == 0
     RateLimiter.new(nil, "auto_bump_limit_#{self.id}", 1, 86_400 / num_auto_bump_daily.to_i)
@@ -691,22 +689,11 @@ class Category < ActiveRecord::Base
   end
 
   def self.auto_bump_topic!
-    bumped = false
-
-    auto_bumps =
-      CategoryCustomField
-        .where(name: Category::NUM_AUTO_BUMP_DAILY)
-        .where('NULLIF(value, \'\')::int > 0')
-        .pluck(:category_id)
-
-    if (auto_bumps.length > 0)
-      auto_bumps.shuffle.each do |category_id|
-        bumped = Category.find_by(id: category_id)&.auto_bump_topic!
-        break if bumped
-      end
-    end
-
-    bumped
+    Category
+      .joins(:category_setting)
+      .where("category_settings.num_auto_bump_daily > 0")
+      .shuffle
+      .any?(&:auto_bump_topic!)
   end
 
   # will automatically bump a single topic
@@ -1051,6 +1038,20 @@ class Category < ActiveRecord::Base
       slug_path
     else
       [self.slug_for_url]
+    end
+  end
+
+  def slug_ref(depth: 1)
+    if self.parent_category_id.present?
+      built_ref = [self.slug]
+      parent = self.parent_category
+      while parent.present? && (built_ref.length < depth + 1)
+        built_ref << parent.slug
+        parent = parent.parent_category
+      end
+      built_ref.reverse.join(Category::SLUG_REF_SEPARATOR)
+    else
+      self.slug
     end
   end
 

@@ -23,7 +23,7 @@
     "diffhtml": "1.0.0-beta.20",
     "ember-template-lint": "5.10.3",
     "eslint": "^8.37.0",
-    "eslint-config-discourse": "^3.5.0",
+    "eslint-config-discourse": "^3.6.0",
     "eslint-plugin-ember": "11.8.0",
     "eslint-plugin-sort-class-members": "1.18.0",
     "jsdoc": "^4.0.0",
@@ -36,7 +36,7 @@
     "moment-timezone": "0.5.43",
     "prettier-plugin-ember-template-tag": "^0.3.2",
     "pikaday": "1.8.2",
-    "puppeteer-core": "^13.7.0",
+    "puppeteer-core": "^21.0.3",
     "squoosh": "discourse/squoosh#dc9649d",
     "tidy-jsdoc": "^1.4.1",
     "typescript": "^5.1.3"

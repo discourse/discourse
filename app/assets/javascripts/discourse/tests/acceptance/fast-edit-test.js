@@ -1,5 +1,6 @@
 import {
   acceptance,
+  metaModifier,
   query,
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -28,11 +29,9 @@ acceptance("Fast Edit", function (needs) {
     await click(".quote-button .quote-edit-label");
 
     assert.dom("#fast-edit-input").exists();
-    assert.strictEqual(
-      query("#fast-edit-input").value,
-      "Any plans",
-      "contains selected text"
-    );
+    assert
+      .dom("#fast-edit-input")
+      .hasValue("Any plans", "contains selected text");
 
     await fillIn("#fast-edit-input", "My edit");
     await click(".save-fast-edit");
@@ -49,15 +48,22 @@ acceptance("Fast Edit", function (needs) {
     await triggerKeyEvent(document, "keypress", "E");
 
     assert.dom("#fast-edit-input").exists();
-    assert.strictEqual(
-      query("#fast-edit-input").value,
-      "Any plans",
-      "contains selected text"
-    );
+    assert
+      .dom("#fast-edit-input")
+      .hasValue("Any plans", "contains selected text");
 
+    // Saving
     await fillIn("#fast-edit-input", "My edit");
-    await click(".save-fast-edit");
+    await triggerKeyEvent("#fast-edit-input", "keydown", "Enter", metaModifier);
 
+    assert.dom("#fast-edit-input").doesNotExist();
+
+    // Closing
+    await selectText(textNode, 9);
+    await triggerKeyEvent(document, "keypress", "E");
+    assert.dom("#fast-edit-input").exists();
+
+    await triggerKeyEvent("#fast-edit-input", "keydown", "Escape");
     assert.dom("#fast-edit-input").doesNotExist();
   });
 

@@ -5,8 +5,6 @@ import { action } from "@ember/object";
 import I18n from "I18n";
 
 export default RestrictedUserRoute.extend({
-  showFooter: true,
-
   model() {
     const user = this.modelFor("user");
     if (this.siteSettings.enable_badges) {

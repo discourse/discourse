@@ -1,5 +1,5 @@
-import Controller, { inject as controller } from "@ember/controller";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Controller from "@ember/controller";
+import discourseComputed from "discourse-common/utils/decorators";
 import { reads } from "@ember/object/computed";
 import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import { action } from "@ember/object";
@@ -12,8 +12,6 @@ import {
 
 // Lists of topics on a user's page.
 export default Controller.extend(BulkTopicSelection, {
-  application: controller(),
-
   hideCategory: false,
   showPosters: false,
   channel: null,
@@ -23,11 +21,6 @@ export default Controller.extend(BulkTopicSelection, {
   @discourseComputed("model.topics.length", "incomingCount")
   noContent(topicsLength, incomingCount) {
     return topicsLength === 0 && incomingCount === 0;
-  },
-
-  @observes("model.canLoadMore")
-  _showFooter() {
-    this.set("application.showFooter", !this.get("model.canLoadMore"));
   },
 
   @discourseComputed("filter", "model.topics.length")

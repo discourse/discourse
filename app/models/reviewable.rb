@@ -101,7 +101,8 @@ class Reviewable < ActiveRecord::Base
     created_by:,
     payload: nil,
     reviewable_by_moderator: false,
-    potential_spam: true
+    potential_spam: true,
+    target_created_by: nil
   )
     reviewable =
       new(
@@ -111,6 +112,7 @@ class Reviewable < ActiveRecord::Base
         reviewable_by_moderator: reviewable_by_moderator,
         payload: payload,
         potential_spam: potential_spam,
+        target_created_by: target_created_by,
       )
     reviewable.created_new!
 
@@ -713,6 +715,15 @@ class Reviewable < ActiveRecord::Base
     else
       partial_result.where(status: statuses[status])
     end
+  end
+
+  def self.find_by_flagger_or_queued_post_creator(id:, user_id:)
+    Reviewable.find_by(
+      "id = :id AND (created_by_id = :user_id
+       OR (target_created_by_id = :user_id AND type = 'ReviewableQueuedPost'))",
+      id: id,
+      user_id: user_id,
+    )
   end
 
   private

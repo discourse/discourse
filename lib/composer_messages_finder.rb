@@ -238,7 +238,7 @@ class ComposerMessagesFinder
 
     return if post.blank?
 
-    flags = post.flags.group(:user_id).count
+    flags = post.flags.active.group(:user_id).count
     flagged_by_replier = flags[@user.id].to_i > 0
     flagged_by_others = flags.values.sum >= SiteSetting.dont_feed_the_trolls_threshold
 
