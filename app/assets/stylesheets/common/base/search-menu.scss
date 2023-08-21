@@ -372,7 +372,13 @@ $search-pad-horizontal: 0.5em;
     margin-right: 0 !important;
   }
 
-  .search-item-user img.avatar {
-    margin-right: 0 !important;
+  .search-item-user {
+    .username {
+      margin-right: 0.33rem;
+    }
+
+    img.avatar {
+      margin-right: 0 !important;
+    }
   }
 }

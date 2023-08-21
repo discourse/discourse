@@ -16,6 +16,7 @@ export default class SearchTerm extends Component {
   @service appEvents;
 
   @tracked lastEnterTimestamp = null;
+  @tracked searchCleared = false;
 
   // make constant available in template
   get inputId() {
@@ -28,6 +29,10 @@ export default class SearchTerm extends Component {
       this.search.activeGlobalSearchTerm,
       input.target.value
     );
+
+    if (this.search.activeGlobalSearchTerm) {
+      this.searchCleared = false;
+    }
   }
 
   @action
@@ -70,9 +75,13 @@ export default class SearchTerm extends Component {
 
     if (e.key === "Backspace") {
       if (!e.target.value) {
-        this.args.clearTopicContext();
-        this.args.clearPMInboxContext();
-        this.focus(e.target);
+        // only clear context if we're not in the middle of a search
+        if (this.searchCleared) {
+          this.args.clearTopicContext();
+          this.args.clearPMInboxContext();
+          this.focus(e.target);
+        }
+        this.searchCleared = true;
       }
     }
 
