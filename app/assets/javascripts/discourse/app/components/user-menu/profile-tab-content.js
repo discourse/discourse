@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
-import showModal from "discourse/lib/show-modal";
 import DoNotDisturb from "discourse/lib/do-not-disturb";
 import DoNotDisturbModal from "discourse/components/modal/do-not-disturb";
+import UserStatusModal from "discourse/components/modal/user-status";
 
 const _extraItems = [];
 
@@ -81,9 +81,8 @@ export default class UserMenuProfileTabContent extends Component {
   @action
   setUserStatusClick() {
     this.args.closeUserMenu();
-    showModal("user-status", {
-      title: "user_status.set_custom_status",
-      modalClass: "user-status",
+
+    this.modal.show(UserStatusModal, {
       model: {
         status: this.currentUser.status,
         pauseNotifications: this.currentUser.isInDoNotDisturb(),
