@@ -24,12 +24,6 @@ export default (inboxType, path, filter) => {
       ];
     },
 
-    @action
-    didTransition() {
-      this.controllerFor("user-topics-list")._showFooter();
-      return true;
-    },
-
     model() {
       const topicListFilter =
         "topics/" + path + "/" + this.modelFor("user").get("username_lower");

@@ -25,22 +25,32 @@ RSpec.describe "User chat preferences", type: :system do
 
   it "can select chat sound" do
     visit("/u/#{current_user.username}/preferences/chat")
-    find("#user_chat_sounds .select-kit-header[data-value]").click
-    find("[data-value='bell']").click
+    select_kit = PageObjects::Components::SelectKit.new("#user_chat_sounds")
+    select_kit.expand
+    select_kit.select_row_by_value("bell")
     find(".save-changes").click
 
-    expect(page).to have_css("#user_chat_sounds .select-kit-header[data-value='bell']")
+    expect(select_kit).to have_selected_value("bell")
   end
 
   it "can select header_indicator_preference" do
     visit("/u/#{current_user.username}/preferences/chat")
-    find("#user_chat_header_indicator_preference .select-kit-header[data-value]").click
-    find("[data-value='dm_and_mentions']").click
+    select_kit = PageObjects::Components::SelectKit.new("#user_chat_header_indicator_preference")
+    select_kit.expand
+    select_kit.select_row_by_value("dm_and_mentions")
     find(".save-changes").click
 
-    expect(page).to have_css(
-      "#user_chat_header_indicator_preference .select-kit-header[data-value='dm_and_mentions']",
-    )
+    expect(select_kit).to have_selected_value("dm_and_mentions")
+  end
+
+  it "can select separate sidebar mode" do
+    visit("/u/#{current_user.username}/preferences/chat")
+    select_kit = PageObjects::Components::SelectKit.new("#user_chat_separate_sidebar_mode")
+    select_kit.expand
+    select_kit.select_row_by_value("fullscreen")
+    find(".save-changes").click
+
+    expect(select_kit).to have_selected_value("fullscreen")
   end
 
   context "as an admin on another user's preferences" do

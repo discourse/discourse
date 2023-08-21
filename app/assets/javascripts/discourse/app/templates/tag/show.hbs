@@ -1,3 +1,7 @@
+{{#if this.list.canLoadMore}}
+  {{hide-application-footer}}
+{{/if}}
+
 <DSection
   @tagName=""
   @pageClass="tags"
@@ -123,6 +127,14 @@
                 {{/if}}
               {{/if}}
 
+              {{#if (and this.showTopicsAndRepliesToggle this.site.mobileView)}}
+                <NewListHeaderControlsWrapper
+                  @current={{this.subset}}
+                  @newRepliesCount={{this.newRepliesCount}}
+                  @newTopicsCount={{this.newTopicsCount}}
+                  @changeNewListSubset={{action "changeNewListSubset"}}
+                />
+              {{/if}}
               {{#if this.list.topics}}
                 <TopicList
                   @topics={{this.list.topics}}
@@ -140,6 +152,11 @@
                   @ascending={{this.ascending}}
                   @changeSort={{action "changeSort"}}
                   @focusLastVisitedTopic={{true}}
+                  @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
+                  @newListSubset={{this.subset}}
+                  @changeNewListSubset={{action "changeNewListSubset"}}
+                  @newRepliesCount={{this.newRepliesCount}}
+                  @newTopicsCount={{this.newTopicsCount}}
                 />
               {{/if}}
             </DiscoveryTopicsList>

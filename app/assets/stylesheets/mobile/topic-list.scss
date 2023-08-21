@@ -569,3 +569,22 @@ td .main-link {
     align-items: center;
   }
 }
+
+.topic-replies-toggle-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  .topics-replies-toggle {
+    flex-grow: 1;
+    background: none;
+    border: none;
+    padding: 0.75em;
+    box-shadow: 0 3px 0 var(--primary-low);
+
+    &.active {
+      color: var(--quaternary);
+      box-shadow: 0 3px 0 var(--quaternary);
+    }
+  }
+}

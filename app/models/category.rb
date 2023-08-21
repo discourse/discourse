@@ -205,14 +205,16 @@ class Category < ActiveRecord::Base
   # Allows us to skip creating the category definition topic in tests.
   attr_accessor :skip_category_definition
 
-  @topic_id_cache = DistributedCache.new("category_topic_ids")
+  def self.topic_id_cache
+    @topic_id_cache ||= DistributedCache.new("category_topic_ids")
+  end
 
   def self.topic_ids
-    @topic_id_cache.defer_get_set("ids") { Set.new(Category.pluck(:topic_id).compact) }
+    topic_id_cache.defer_get_set("ids") { Set.new(Category.pluck(:topic_id).compact) }
   end
 
   def self.reset_topic_ids_cache
-    @topic_id_cache.clear
+    topic_id_cache.clear
   end
 
   def reset_topic_ids_cache

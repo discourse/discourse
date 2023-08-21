@@ -4,7 +4,6 @@ import { hbs } from "ember-cli-htmlbars";
 
 export default createWidget("chat-header-icon", {
   tagName: "li.header-dropdown-toggle.chat-header-icon",
-  title: "chat.title_capitalized",
 
   services: ["chat"],
 

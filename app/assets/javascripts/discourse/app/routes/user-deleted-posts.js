@@ -1,7 +1,6 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
-import { action } from "@ember/object";
 
 export default class UserDeletedPosts extends DiscourseRoute {
   templateName = "user/posts";
@@ -25,11 +24,5 @@ export default class UserDeletedPosts extends DiscourseRoute {
         item.set("title", emojiUnescape(escapeExpression(item.title)));
       }
     });
-  }
-
-  @action
-  didTransition() {
-    this.controller._showFooter();
-    return true;
   }
 }

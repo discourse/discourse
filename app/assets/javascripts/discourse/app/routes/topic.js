@@ -248,7 +248,6 @@ const TopicRoute = DiscourseRoute.extend({
   @action
   didTransition() {
     const controller = this.controllerFor("topic");
-    controller._showFooter();
     const topicId = controller.get("model.id");
     setTopicId(topicId);
     return true;

@@ -18,7 +18,7 @@
 }
 
 .chat-composer-dropdown__trigger-btn {
-  transition: transform 0.1s ease-in-out;
+  transition: transform 0.25s ease-in-out;
   .d-icon {
     padding: 5px;
     transition: transform 0.1s ease-in-out;
@@ -32,7 +32,7 @@
 
   &[aria-expanded="true"] {
     .d-icon {
-      transform: rotate(45deg);
+      transform: rotate(135deg);
       transform-origin: center;
     }
   }

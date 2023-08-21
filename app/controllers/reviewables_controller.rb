@@ -166,7 +166,11 @@ class ReviewablesController < ApplicationController
         current_user
       end
 
-    reviewable = Reviewable.find_by(id: params[:reviewable_id], created_by: user)
+    reviewable =
+      Reviewable.find_by_flagger_or_queued_post_creator(
+        id: params[:reviewable_id],
+        user_id: user.id,
+      )
     raise Discourse::NotFound.new if reviewable.blank?
 
     reviewable.perform(current_user, :delete, { guardian: @guardian })

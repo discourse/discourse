@@ -1,3 +1,7 @@
+{{#if this.model.canLoadMore}}
+  {{hide-application-footer}}
+{{/if}}
+
 <DSection @pageClass="users">
   <LoadMore
     @selector=".directory-table .directory-table__cell"
