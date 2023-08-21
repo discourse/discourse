@@ -2,6 +2,15 @@
   @category={{this.category}}
   @createTopicDisabled={{this.createTopicDisabled}}
 >
+  <:header>
+    {{#if this.subcategoriesComponent}}
+      {{! TODO: More HTML wrappers required here for theme compat? Previously this was rendering the entire discovery/categories controller}}
+      <this.subcategoriesComponent
+        @categories={{this.subcategoryList.categories}}
+      />
+    {{/if}}
+  </:header>
+
   <:navigation>
     <Navigation::Default
       @category={{this.navigationArgs.category}}

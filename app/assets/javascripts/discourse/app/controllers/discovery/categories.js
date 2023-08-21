@@ -17,6 +17,30 @@ const mobileCompatibleViews = [
   "subcategories_with_featured_topics",
 ];
 
+// Todo: make this return a component class instead of string
+export function categoriesComponent({ site, siteSettings, parentCategory }) {
+  let style = siteSettings.desktop_category_page_style;
+
+  if (site.mobileView && !mobileCompatibleViews.includes(style)) {
+    style = mobileCompatibleViews[0];
+  }
+
+  if (parentCategory) {
+    style =
+      subcategoryStyleComponentNames[
+        parentCategory.get("subcategory_list_style")
+      ] || style;
+  }
+
+  const componentName =
+    parentCategory &&
+    (style === "categories_and_latest_topics" ||
+      style === "categories_and_latest_topics_created_date")
+      ? "categories_only"
+      : style;
+  return dasherize(componentName);
+}
+
 export default class CategoriesController extends Controller {
   @service router;
 
@@ -29,26 +53,11 @@ export default class CategoriesController extends Controller {
 
   @discourseComputed("model.parentCategory")
   categoryPageStyle(parentCategory) {
-    let style = this.siteSettings.desktop_category_page_style;
-
-    if (this.site.mobileView && !mobileCompatibleViews.includes(style)) {
-      style = mobileCompatibleViews[0];
-    }
-
-    if (parentCategory) {
-      style =
-        subcategoryStyleComponentNames[
-          parentCategory.get("subcategory_list_style")
-        ] || style;
-    }
-
-    const componentName =
-      parentCategory &&
-      (style === "categories_and_latest_topics" ||
-        style === "categories_and_latest_topics_created_date")
-        ? "categories_only"
-        : style;
-    return dasherize(componentName);
+    return categoriesComponent({
+      site: this.site,
+      siteSettings: this.siteSettings,
+      parentCategory,
+    });
   }
 
   @action
