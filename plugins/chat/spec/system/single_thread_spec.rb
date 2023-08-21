@@ -93,7 +93,10 @@ describe "Single thread in side panel", type: :system do
         channel_page.message_thread_indicator(thread.original_message).click
         expect(side_panel).to have_open_thread(thread)
         thread_page.send_message("new thread message")
-        expect(thread_page).to have_message(thread_id: thread.id, text: "new thread message")
+        expect(thread_page.messages).to have_message(
+          thread_id: thread.id,
+          text: "new thread message",
+        )
         thread_message = thread.last_message
         expect(thread_message.chat_channel_id).to eq(channel.id)
         expect(thread_message.thread.channel_id).to eq(channel.id)
@@ -104,7 +107,10 @@ describe "Single thread in side panel", type: :system do
         channel_page.message_thread_indicator(thread.original_message).click
         expect(side_panel).to have_open_thread(thread)
         thread_page.send_message("new thread message")
-        expect(thread_page).to have_message(thread_id: thread.id, text: "new thread message")
+        expect(thread_page.messages).to have_message(
+          thread_id: thread.id,
+          text: "new thread message",
+        )
         thread_message = thread.reload.replies.last
         expect(channel_page).not_to have_css(channel_page.message_by_id_selector(thread_message.id))
       end
@@ -136,18 +142,30 @@ describe "Single thread in side panel", type: :system do
 
         thread_page.send_message("the other user message")
 
-        expect(thread_page).to have_message(thread_id: thread.id, text: "the other user message")
+        expect(thread_page.messages).to have_message(
+          thread_id: thread.id,
+          text: "the other user message",
+        )
 
         using_session(:tab_1) do
           expect(side_panel).to have_open_thread(thread)
-          expect(thread_page).to have_message(thread_id: thread.id, text: "the other user message")
+          expect(thread_page.messages).to have_message(
+            thread_id: thread.id,
+            text: "the other user message",
+          )
 
           thread_page.send_message("this is a test message")
 
-          expect(thread_page).to have_message(thread_id: thread.id, text: "this is a test message")
+          expect(thread_page.messages).to have_message(
+            thread_id: thread.id,
+            text: "this is a test message",
+          )
         end
 
-        expect(thread_page).to have_message(thread_id: thread.id, text: "this is a test message")
+        expect(thread_page.messages).to have_message(
+          thread_id: thread.id,
+          text: "this is a test message",
+        )
       end
 
       it "does not mark the channel unread if another user sends a message in the thread" do
