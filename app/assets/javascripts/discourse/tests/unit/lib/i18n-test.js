@@ -8,7 +8,7 @@ module("Unit | Utility | i18n", function (hooks) {
     this._fallbackLocale = I18n.fallbackLocale;
     this._translations = I18n.translations;
     this._extras = I18n.extras;
-    this._pluralizationRules = Object.assign({}, I18n.pluralizationRules);
+    this._pluralizationRules = { ...I18n.pluralizationRules };
 
     I18n.locale = "fr";
 
@@ -71,7 +71,7 @@ module("Unit | Utility | i18n", function (hooks) {
     };
 
     // fake pluralization rules
-    I18n.pluralizationRules = Object.assign({}, I18n.pluralizationRules);
+    I18n.pluralizationRules = { ...I18n.pluralizationRules };
     I18n.pluralizationRules.fr = function (n) {
       if (n === 0) {
         return "zero";
