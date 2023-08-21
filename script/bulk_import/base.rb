@@ -1110,6 +1110,7 @@ class BulkImport::Base
   def pre_cook(raw)
     cooked = raw
 
+    # TODO Check if this is still up-to-date
     # Convert YouTube URLs to lazyYT DOMs before being transformed into links
     cooked.gsub!(%r{\nhttps\://www.youtube.com/watch\?v=(\w+)\n}) do
       video_id = $1

@@ -334,6 +334,10 @@ class BulkImport::Generic < BulkImport::Base
     end
   end
 
+  def process_raw(original_raw)
+    original_raw
+  end
+
   def import_likes
     puts "Importing likes..."
 
