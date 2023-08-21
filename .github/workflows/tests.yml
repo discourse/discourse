@@ -31,11 +31,6 @@ jobs:
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 10
       MINIO_RUNNER_LOG_LEVEL: DEBUG
-      MINIO_RUNNER_MINIO_ROOT_USER: minioadmin
-      MINIO_RUNNER_MINIO_ROOT_PASSWORD: minioadmin
-      MINIO_RUNNER_MINIO_DOMAIN: minio.local
-      MINIO_RUNNER_BUCKETS: "discoursetest"
-      MINIO_RUNNER_PUBLIC_BUCKETS: "discoursetest"
 
     strategy:
       fail-fast: false

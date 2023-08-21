@@ -50,7 +50,7 @@ class FileHelper
     verbose: false,
     validate_uri: true,
     retain_on_max_file_size_exceeded: false,
-    use_port_for_host_header: false
+    include_port_in_host_header: false
   )
     url = "https:" + url if url.start_with?("//")
 
@@ -70,7 +70,7 @@ class FileHelper
         verbose: verbose,
         validate_uri: validate_uri,
         timeout: read_timeout,
-        use_port_for_host_header: use_port_for_host_header,
+        include_port_in_host_header: include_port_in_host_header,
       )
 
     fd.get do |response, chunk, uri|

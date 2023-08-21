@@ -550,15 +550,26 @@ RSpec.describe FinalDestination do
       expect(fd("https://eviltrout.com:8000").validate_uri_format).to eq(false)
     end
 
-    it "returns false for invalid http ports in production" do
-      expect(fd("http://eviltrout.com:21").validate_uri_format).to eq(true)
-      Rails.env.stubs(:production?).returns(true)
-      expect(fd("http://eviltrout.com:21").validate_uri_format).to eq(false)
-    end
-
     it "returns true for valid http and https ports" do
       expect(fd("http://eviltrout.com:80").validate_uri_format).to eq(true)
       expect(fd("https://eviltrout.com:443").validate_uri_format).to eq(true)
+    end
+
+    it "returns false for invalid http port" do
+      expect(fd("http://eviltrout.com:21").validate_uri_format).to eq(false)
+    end
+
+    context "when s3_endpoint defined" do
+      before { SiteSetting.s3_endpoint = "http://minio.local:9000" }
+
+      it "returns false if the host is not in allowed_internal_hosts" do
+        expect(fd("http://discoursetest.minio.local:9000").validate_uri_format).to eq(false)
+      end
+
+      it "returns true if the host is in allowed_internal_hosts" do
+        SiteSetting.allowed_internal_hosts = %w[minio.local discoursetest.minio.local].join("|")
+        expect(fd("http://discoursetest.minio.local:9000").validate_uri_format).to eq(true)
+      end
     end
   end
 

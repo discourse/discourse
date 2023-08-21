@@ -207,7 +207,7 @@ class ExternalUploadManager
       # port is not 80, so we have to make sure the Host header sent by
       # FinalDestination includes the port, otherwise we will get a
       # `SignatureDoesNotMatch` error.
-      use_port_for_host_header: uri.scheme == "http" && uri.port != 80,
+      include_port_in_host_header: uri.scheme == "http" && uri.port != 80,
     )
   end
 end

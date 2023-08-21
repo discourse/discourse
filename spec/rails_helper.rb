@@ -289,12 +289,6 @@ RSpec.configure do |config|
         )
     end
 
-    SiteSetting.allowed_internal_hosts =
-      (
-        SiteSetting.allowed_internal_hosts.to_s.split("|") +
-          MinioRunner.config.minio_urls.map { |url| URI.parse(url).host }
-      ).join("|")
-
     WebMock.disable_net_connect!(
       allow_localhost: true,
       allow: [

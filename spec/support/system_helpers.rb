@@ -35,6 +35,11 @@ module SystemHelpers
     SiteSetting.disable_avatar_education_message = true
     SiteSetting.enable_user_tips = false
     SiteSetting.splash_screen = false
+    SiteSetting.allowed_internal_hosts =
+      (
+        SiteSetting.allowed_internal_hosts.to_s.split("|") +
+          MinioRunner.config.minio_urls.map { |url| URI.parse(url).host }
+      ).join("|")
   end
 
   def try_until_success(timeout: Capybara.default_max_wait_time, frequency: 0.01)
@@ -152,7 +157,7 @@ module SystemHelpers
     MinioRunner.start
   end
 
-  def skip_s3_system_spec?
+  def skip_unless_s3_system_specs_enabled!
     if !ENV["CI"] && !ENV["RUN_S3_SYSTEM_SPECS"]
       skip(
         "S3 system specs are disabled in this environment, set CI=1 or RUN_S3_SYSTEM_SPECS=1 to enable them.",

@@ -11,7 +11,7 @@ describe "Uploading files to S3", type: :system do
 
     describe "single part uploads" do
       it "uploads custom avatars to S3" do
-        skip_s3_system_spec?
+        skip_unless_s3_system_specs_enabled!
 
         setup_s3_system_test
         sign_in(current_user)
@@ -38,7 +38,7 @@ describe "Uploading files to S3", type: :system do
 
     describe "multipart uploads" do
       it "uploads a file in the post composer" do
-        skip_s3_system_spec?
+        skip_unless_s3_system_specs_enabled!
 
         setup_s3_system_test
         sign_in(current_user)
