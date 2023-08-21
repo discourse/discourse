@@ -6,6 +6,7 @@ import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { escapeExpression } from "discourse/lib/utilities";
 import DiscourseURL from "discourse/lib/url";
+import getURL from "discourse-common/lib/get-url";
 
 export default Component.extend({
   tagName: "",
@@ -176,7 +177,7 @@ export default Component.extend({
   },
 
   _routeFromURL(url) {
-    let route = this.router.recognize(url || "/");
+    let route = this.router.recognize(getURL(url || "/"));
 
     // ember might recognize the index subroute
     if (route.localName === "index") {
