@@ -1,6 +1,6 @@
-import { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
+import { inject as service } from "@ember/service";
 import { reads } from "@ember/object/computed";
-import DiscoveryController from "discourse/controllers/discovery";
 import { action } from "@ember/object";
 import { dasherize } from "@ember/string";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -17,11 +17,8 @@ const mobileCompatibleViews = [
   "subcategories_with_featured_topics",
 ];
 
-export default class CategoriesController extends DiscoveryController {
-  @controller discovery;
-
-  // this makes sure the composer isn't scoping to a specific category
-  category = null;
+export default class CategoriesController extends Controller {
+  @service router;
 
   @reads("currentUser.staff") canEdit;
 
