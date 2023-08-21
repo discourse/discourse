@@ -49,7 +49,7 @@ export async function joinChannel(name, user) {
     await publishToMessageBus(
       `/presence${name}`,
       {
-        entering_users: [Object.assign({}, user)],
+        entering_users: [{ ...user }],
       },
       0,
       channel.last_message_id

@@ -339,6 +339,8 @@ ru:
       pill: "Связанные сообщения"
       see_all: 'Показать <a href="%{path}">все сообщения</a> от @%{username}…'
     suggested_topics:
+      title: "Новые и непрочитанные темы"
+      pill: "Похожие"
       pm_title: "Похожие сообщения"
     about:
       simple_title: "О форуме"
@@ -1957,6 +1959,7 @@ ru:
         content: "Вот темы, которые вам может быть интересно прочитать в следующий раз."
       admin_guide:
         title: "Приветствуем на вашем новом сайте!"
+        content: "Чтобы продолжить создание сайта и формирование сообщества, <a href='%{admin_guide_url}'>прочтите руководство администратора</a>."
         content_no_url: "Чтобы продолжить создание сайта и формирование сообщества, прочтите руководство администратора."
     loading: "Загрузка…"
     errors:
@@ -2986,7 +2989,7 @@ ru:
       read_more_in_category: "Хотите почитать что-нибудь ещё? Можно просмотреть темы в категории %{categoryLink} или <a href='%{latestLink}'>ознакомиться с последними темами</a>."
       read_more: "Хотите почитать что-нибудь ещё? Можно <a href='%{categoryLink}'>просмотреть все категории</a> или <a href='%{latestLink}'>ознакомиться с последними темами</a>."
       unread_indicator: "Никто ещё не дочитал до конца этой темы."
-      participant_groups: "Группы участников"
+      participant_groups: "Группы-участники"
       read_more_MF: |
         { HAS_UNREAD_AND_NEW, select,
           true {
@@ -4220,6 +4223,11 @@ ru:
         few: "+ ещё %{count}"
         many: "+ ещё %{count}"
         other: "+ ещё %{count}"
+      awarded:
+        one: "Выдана %{number} награда"
+        few: "Выданы %{number} награды"
+        many: "Выдано %{number} наград"
+        other: "Выдано %{number} награды"
       select_badge_for_title: Использовать награду в качестве титула
       none: "(нет)"
       successfully_granted: "Награда %{badge} выдана пользователю %{username}"
@@ -5117,7 +5125,7 @@ ru:
         explain_preview: "Предпросмотр сайта с новым оформлением"
         syntax_error: "Ошибка синтаксиса"
         settings_editor: "Редактор настроек"
-        validation_settings_keys: "Каждый элемент должен иметь только ключи «настройка» и «значение»."
+        validation_settings_keys: "Каждый элемент должен иметь только ключи «setting» и «value»."
         validation_settings_deleted: "Эти настройки были удалены. Восстановите их и повторите попытку."
         validation_settings_added: "Эти настройки были добавлены. Удалите их и повторите попытку."
         save: "Сохранить"
@@ -5604,7 +5612,7 @@ ru:
             watched_word_destroy: "Удаление контролируемого слова"
             create_public_sidebar_section: "создать публичный раздел боковой панели"
             update_public_sidebar_section: "обновить публичный раздел боковой панели"
-            destroy_public_sidebar_section: "уничтожить публичный раздел боковой панели"
+            destroy_public_sidebar_section: "удалить публичный раздел боковой панели"
             reset_bounce_score: "сбросить число возвратов"
         screened_emails:
           title: "Проверяемые адреса электронной почты"
@@ -5737,7 +5745,7 @@ ru:
           input: "Короткий ответ"
           textarea: "Длинный ответ"
           dropdown: "Выпадающий список"
-          upload: "Загрузка файла"
+          upload: "Загрузить файл"
           multiselect: "Множественный выбор"
         validations_modal:
           button_title: "Проверки"

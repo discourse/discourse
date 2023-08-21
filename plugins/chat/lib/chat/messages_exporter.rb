@@ -37,31 +37,33 @@ module Chat
     private
 
     def export(from, to)
-      Chat::Message
-        .unscoped
-        .where(created_at: from..to)
-        .includes(:chat_channel)
-        .includes(:user)
-        .includes(:last_editor)
-        .find_each do |chat_message|
-          yield(
-            [
-              chat_message.id,
-              chat_message.chat_channel.id,
-              chat_message.chat_channel.name,
-              chat_message.user.id,
-              chat_message.user.username,
-              chat_message.message,
-              chat_message.cooked,
-              chat_message.created_at,
-              chat_message.updated_at,
-              chat_message.deleted_at,
-              chat_message.in_reply_to&.id,
-              chat_message.last_editor&.id,
-              chat_message.last_editor&.username,
-            ]
-          )
-        end
+      Chat::Channel.unscoped do
+        Chat::Message
+          .unscoped
+          .where(created_at: from..to)
+          .includes(:chat_channel)
+          .includes(:user)
+          .includes(:last_editor)
+          .find_each do |chat_message|
+            yield(
+              [
+                chat_message.id,
+                chat_message.chat_channel.id,
+                chat_message.chat_channel.name,
+                chat_message.user.id,
+                chat_message.user.username,
+                chat_message.message,
+                chat_message.cooked,
+                chat_message.created_at,
+                chat_message.updated_at,
+                chat_message.deleted_at,
+                chat_message.in_reply_to&.id,
+                chat_message.last_editor&.id,
+                chat_message.last_editor&.username,
+              ]
+            )
+          end
+      end
     end
   end
 end

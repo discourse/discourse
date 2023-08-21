@@ -805,7 +805,7 @@ RSpec.describe ReviewablesController do
 
       it "returns 200 if the user can delete the reviewable" do
         sign_in(user)
-        queued_post = Fabricate(:reviewable_queued_post, created_by: user)
+        queued_post = Fabricate(:reviewable_queued_post, target_created_by: user)
         delete "/review/#{queued_post.id}.json"
         expect(response.code).to eq("200")
         expect(queued_post.reload).to be_deleted
@@ -813,7 +813,7 @@ RSpec.describe ReviewablesController do
 
       it "denies attempts to destroy unowned reviewables" do
         sign_in(admin)
-        queued_post = Fabricate(:reviewable_queued_post, created_by: user)
+        queued_post = Fabricate(:reviewable_queued_post, target_created_by: user)
         delete "/review/#{queued_post.id}.json"
         expect(response.status).to eq(404)
         # Reviewable is not deleted because request is not via API
@@ -823,7 +823,7 @@ RSpec.describe ReviewablesController do
       shared_examples "for a passed user" do
         it "deletes reviewable" do
           api_key = Fabricate(:api_key).key
-          queued_post = Fabricate(:reviewable_queued_post, created_by: recipient)
+          queued_post = Fabricate(:reviewable_queued_post, target_created_by: recipient)
           delete "/review/#{queued_post.id}.json",
                  params: {
                    username: recipient.username,

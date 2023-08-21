@@ -1,6 +1,6 @@
 <div
   id="suggested-topics"
-  class="more-content-topics {{if this.hidden 'hidden'}}"
+  class="more-topics__list {{if this.hidden 'hidden'}}"
   role="complementary"
   aria-labelledby="suggested-topics-title"
   data-mobile-title={{i18n "suggested_topics.pill"}}
@@ -8,19 +8,19 @@
 >
   <UserTip @id="suggested_topics" @selector=".user-tip-reference" />
 
-  <h3 id="suggested-topics-title" class="more-topics-title">
+  <h3 id="suggested-topics-title" class="more-topics__list-title">
     {{i18n this.suggestedTitleLabel}}
   </h3>
 
   <div class="topics">
-    {{#if this.topic.isPrivateMessage}}
+    {{#if @topic.isPrivateMessage}}
       <BasicTopicList
         @hideCategory="true"
         @showPosters="true"
-        @topics={{this.topic.suggestedTopics}}
+        @topics={{@topic.suggestedTopics}}
       />
     {{else}}
-      <BasicTopicList @topics={{this.topic.suggestedTopics}} />
+      <BasicTopicList @topics={{@topic.suggestedTopics}} />
     {{/if}}
   </div>
 </div>

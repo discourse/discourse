@@ -207,10 +207,9 @@ zh_CN:
       local_login_cannot_be_disabled_if_second_factor_enforced: "如果强制执行双重身份验证，则无法禁用本地登录。先禁用强制双重身份验证，然后再禁用本地登录。"
       cannot_enable_s3_uploads_when_s3_enabled_globally: "您无法启用 S3 上传，因为 S3 上传已全局启用，启用此站点级设置可能会导致上传出现严重问题"
       cors_origins_should_not_have_trailing_slash: "您不应该将尾部反斜杠 (/) 添加到 CORS 源。"
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "用户代理的长度必须至少为 3 个字符，以避免错误地限制人类用户的速率。"
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "您不能将以下任何值添加到设置中：%{values}。"
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "如果启用了 'composer media optimization image enabled'，则无法禁用带状图片元数据。在禁用带状图片元数据之前，禁用 'composer media optimization image enabled'。"
-      twitter_summary_large_image_no_svg: "用于 twitter:image 元数据的 Twitter 摘要图片不能是 .svg 图片。"
+      twitter_summary_large_image_no_svg: "用于 twitter:image 元数据的 Twitter 总结图片不能是 .svg 图片。"
     conflicting_google_user_id: '此帐户的 Google 帐号 ID 已更改；出于安全原因，需要管理人员干预。请联系管理人员并将他们指向 <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
       invalid_address: "抱歉，我们无法为此网页生成预览，因为找不到服务器 '%{hostname}'。您的帖子中只会显示链接，而不会显示预览。:cry:"
@@ -642,7 +641,6 @@ zh_CN:
     media_placeholder:
       blocked_hotlinked_title: "媒体托管在另一个站点上。点击以在新标签页中打开。"
       blocked_hotlinked: "外部媒体"
-    hidden_bidi_character: "双向字符可以更改文本的呈现顺序。这可以用来掩盖恶意代码。"
     has_likes:
       other: "%{count} 个赞"
     cannot_permanently_delete:
@@ -843,8 +841,6 @@ zh_CN:
   draft_backup:
     pm_title: "正在进行的话题的备份草稿"
     pm_body: "包含备份草稿的话题"
-  user_activity:
-    no_log_search_queries: "搜索日志查询当前已被禁用（管理员可以在站点设置中启用它们）。"
   email_settings:
     pop3_authentication_error: "提供的 POP3 凭据存在问题，请检查用户名和密码并重试。"
     imap_authentication_error: "提供的 IMAP 凭据存在问题，请检查用户名和密码并重试。"
@@ -923,9 +919,9 @@ zh_CN:
     log_out: "退出"
     submit: "保存偏好设置"
     digest_frequency:
-      title: "您将%{frequency}接收摘要电子邮件"
-      never_title: "您将不再接收摘要电子邮件"
-      select_title: "将接收摘要电子邮件的频率设为："
+      title: "您将%{frequency}接收总结电子邮件"
+      never_title: "您将不再接收总结电子邮件"
+      select_title: "将接收总结电子邮件的频率设为："
       never: "从不"
       every_30_minutes: "每 30 分钟"
       every_hour: "每小时"
@@ -1313,7 +1309,6 @@ zh_CN:
         qtt_like: 获赞
       description: "从各种用户收到赞最多的前 10 名用户。"
   dashboard:
-    group_email_credentials_warning: '群组 <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a> 的电子邮件凭据有问题。在此问题解决之前，不会从群组收件箱发送电子邮件。%{error}'
     rails_env_warning: "您的服务器正在以%{env}模式运行。"
     host_names_warning: "您的 config/database.yml 文件使用的是默认的 localhost 主机名。请更新为您的站点主机名。"
     sidekiq_warning: 'Sidekiq 未运行。许多任务，例如发送电子邮件，是通过 Sidekiq 异步执行的。请确保至少运行一个 Sidekiq进程。<a href="https://github.com/mperham/sidekiq" target="_blank">在此处了解 Sidekiq</a>。'
@@ -1409,8 +1404,8 @@ zh_CN:
     exclude_rel_nofollow_domains: "不应将 nofollow 添加到链接的网域列表。example.com 也会自动允许 sub.example.com。至少，您应该添加此站点的网域以帮助网络抓取工具查找所有内容。如果您的网站的其他部分位于其他网域，也可以添加这些部分。"
     max_form_template_title_length: "表单模板标题允许的最大长度。"
     max_form_template_content_length: "表单模板内容允许的最大长度。"
-    post_excerpt_maxlength: "帖子摘录/摘要的最大长度。"
-    topic_excerpt_maxlength: "从话题中的第一个帖子生成的话题摘录/摘要的最大长度。"
+    post_excerpt_maxlength: "帖子摘录/总结的最大长度。"
+    topic_excerpt_maxlength: "从话题中的第一个帖子生成的话题摘录/总结的最大长度。"
     default_subcategory_on_read_only_category: "在用户无法创建新话题的类别中，启用“新话题”按钮并选择一个默认子类别进行发布。"
     show_pinned_excerpt_mobile: "在移动视图中显示置顶话题的摘录。"
     show_pinned_excerpt_desktop: "在桌面视图中显示置顶话题的摘录。"
@@ -1424,7 +1419,7 @@ zh_CN:
     facebook_app_access_token: "从您的 Facebook 应用 ID 和密钥生成的令牌。用于生成 Instagram Onebox。"
     logo: "您的站点左上角的徽标图片。使用高度为 120 且宽高比大于 3:1 的宽矩形图片。如果留空，将显示站点标题文本。"
     logo_small: "您的站点左上角的小徽标图片，向下滚动后可见。使用 120×120 的方形图片。如果留空，将显示首页标志符号。"
-    digest_logo: "在您站点的电子邮件摘要顶部使用的备用徽标图片。使用宽矩形图片。不要使用 SVG 图片。如果留空，则使用 `logo` 设置中的图片。"
+    digest_logo: "在您站点的电子邮件总结顶部使用的备用徽标图片。使用宽矩形图片。不要使用 SVG 图片。如果留空，则使用 `logo` 设置中的图片。"
     mobile_logo: "您移动版本的站点上使用的徽标。使用高度为 120 且纵横比大于 3:1 的宽矩形图像。如果留空，将使用 `logo` 设置中的图片。"
     logo_dark: "'logo' 站点设置的深色方案替代选择。"
     logo_small_dark: "'logo small' 站点设置的深色方案替代选择。"
@@ -1533,7 +1528,7 @@ zh_CN:
     remove_full_quote: "如果 (a) 引号出现在帖子的开头，(b) 是整个帖子的引号，以及 (c) 来自紧接帖子的引号，则自动删除引号。有关详细信息，请参阅<a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>从直接回复中移除完整引号</a>"
     suppress_reply_when_quoting: "发布引用回复时，不在帖子上显示可展开的“回复给”字段。"
     max_reply_history: "展开“回复给”字段时要展开的最大回复数"
-    topics_per_period_in_top_summary: "默认热门话题摘要中显示的热门话题数。"
+    topics_per_period_in_top_summary: "默认热门话题总结中显示的热门话题数。"
     topics_per_period_in_top_page: "在展开的“显示更多”热门话题中显示的热门话题数。"
     redirect_users_to_top_page: "自动将新用户和长期缺席的用户重定向到热门页面。"
     top_page_default_timeframe: "热门页面的默认时间范围。"
@@ -1897,14 +1892,14 @@ zh_CN:
     allow_uploaded_avatars: "允许用户上传自定义个人资料照片。"
     default_avatars: "在更改前新用户默认使用的头像的 URL。"
     automatically_download_gravatars: "在创建帐户或更改电子邮件时为用户下载 Gravatar。"
-    digest_topics: "要在电子邮件摘要中显示的最大热门话题数。"
-    digest_posts: "要在电子邮件摘要中显示的热门帖子的最大数量。"
-    digest_other_topics: "在电子邮件摘要的“您关注的新话题和类别”部分中显示的最大话题数。"
-    digest_min_excerpt_length: "电子邮件摘要中的最少帖子摘录，以字符为单位。"
-    suppress_digest_email_after_days: "禁止向超过 (n) 天未在站点上看到的用户发送摘要电子邮件。"
-    digest_suppress_categories: "从摘要电子邮件中禁止这些类别。"
-    disable_digest_emails: "禁用所有用户的摘要电子邮件。"
-    apply_custom_styles_to_digest: "自定义电子邮件模板和 CSS 应用于摘要电子邮件。"
+    digest_topics: "要在电子邮件总结中显示的最大热门话题数。"
+    digest_posts: "要在电子邮件总结中显示的热门帖子的最大数量。"
+    digest_other_topics: "在电子邮件总结的“您关注的新话题和类别”部分中显示的最大话题数。"
+    digest_min_excerpt_length: "电子邮件总结中的最少帖子摘录，以字符为单位。"
+    suppress_digest_email_after_days: "禁止向超过 (n) 天未在站点上看到的用户发送总结电子邮件。"
+    digest_suppress_categories: "从总结电子邮件中禁止这些类别。"
+    disable_digest_emails: "禁用所有用户的总结电子邮件。"
+    apply_custom_styles_to_digest: "自定义电子邮件模板和 CSS 应用于总结电子邮件。"
     email_accent_bg_color: "用作 HTML 电子邮件中某些元素背景的强调色。输入颜色名称 ('red') 或十六进制值 ('#FF0000')。"
     email_accent_fg_color: "HTML 电子邮件中电子邮件背景颜色上呈现的文本颜色。输入颜色名称 ('white') 或十六进制值 ('#FFFFFF')。"
     email_link_color: "HTML 电子邮件中链接的颜色。输入颜色名称 ('blue') 或十六进制值 ('#0000FF')。"
@@ -1946,8 +1941,8 @@ zh_CN:
     permalink_normalizations: "在匹配永久链接之前应用以下正则表达式，例如：/(topic.*)\\?.*/\\1 将从话题路由中去除查询字符串。格式为正则表达式+字符串。使用 \\1 等访问捕获"
     global_notice: "向所有访客显示紧急、突发、不可忽略的全局横幅通知，更改为空将隐藏（允许使用 HTML）。"
     disable_system_edit_notifications: "当 'download_remote_images_to_local' 启用时禁用系统用户的编辑通知。"
-    disable_category_edit_notifications: "禁用主题类别编辑通知。包括 “已发布” 的主题(例如共享草稿)。"
-    disable_tags_edit_notifications: "禁用主题标签编辑的通知。包括“已发布”的主题(例如共享草稿)。"
+    disable_category_edit_notifications: "禁用话题类别编辑的通知。包括“已发布”的话题（例如，共享草稿）。"
+    disable_tags_edit_notifications: "禁用话题标签编辑的通知。包括“已发布”的话题（例如，共享草稿）。"
     notification_consolidation_threshold: "合并通知前，收到的赞或成员资格请求通知的数量。设置为 0 将禁用。"
     likes_notification_consolidation_window_mins: "以分钟计的持续时间，被赞的通知在达到此阈值后会被合并到单个通知中。可以通过 `SiteSetting.notification_consolidation_threshold` 配置阈值。"
     automatically_unpin_topics: "当用户到达底部时自动取消置顶话题。"
@@ -2019,8 +2014,8 @@ zh_CN:
     enable_page_publishing: "允许管理人员使用自己的样式将话题发布到新 URL。"
     show_published_pages_login_required: "即使需要登录，匿名用户也可以查看已发布的页面。"
     skip_auto_delete_reply_likes: "自动删除旧回复时，跳过删除赞数达到或超过此数值的帖子。"
-    default_email_digest_frequency: "用户默认收到摘要电子邮件的频率。"
-    default_include_tl0_in_digests: "在摘要电子邮件中默认包含来自新用户的帖子。用户可以在他们的偏好设置中更改此设置。"
+    default_email_digest_frequency: "用户默认收到总结电子邮件的频率。"
+    default_include_tl0_in_digests: "在总结电子邮件中默认包含来自新用户的帖子。用户可以在他们的偏好设置中更改此设置。"
     default_email_level: "设置常规话题的默认电子邮件通知级别。"
     default_email_messages_level: "设置有人发消息给用户时的默认电子邮件通知级别"
     default_email_mailing_list_mode: "默认为每篇新帖子发送一封电子邮件。"
@@ -2999,12 +2994,12 @@ zh_CN:
 
         您没有权限回复该话题。如果您有异议，请[联系管理人员](%{base_url}/about)。
     email_reject_reply_to_digest:
-      title: "电子邮件被拒：回复摘要"
-      subject_template: "[%{email_prefix}] 电子邮件问题 - 回复摘要"
+      title: "电子邮件被拒：回复总结"
+      subject_template: "[%{email_prefix}] 电子邮件问题 - 回复总结"
       text_body_template: |
         抱歉，但是您向 %{destination}（名为 %{former_title}）发送的电子邮件未成功。
 
-        我们不接受回复摘要电子邮件。
+        我们不接受回复总结电子邮件。
 
         如果您有异议，请[联系管理人员](%{base_url}/about)。
     email_reject_too_many_recipients:
@@ -3448,7 +3443,7 @@ zh_CN:
 
         如果您有任何问题，请[联系我们友好的管理人员](%{base_url}/about)。
     digest:
-      why: "自 %{last_seen_at} 您上次访问后 %{site_link} 的简短摘要"
+      why: "自 %{last_seen_at} 您上次访问后 %{site_link} 的简短总结"
       since_last_visit: "自从您上次访问以来"
       new_topics: "新话题"
       unread_notifications: "未读通知"
@@ -3459,12 +3454,12 @@ zh_CN:
       join_the_discussion: "阅读更多"
       popular_posts: "热门帖子"
       more_new: "新摘要"
-      subject_template: "[%{email_prefix}] 摘要"
-      unsubscribe: "此摘要发送自 %{site_link}，我们已经有一段时间没有看到您了。更改%{email_preferences_link}或%{unsubscribe_link}以退订。"
+      subject_template: "[%{email_prefix}] 总结"
+      unsubscribe: "此总结发送自 %{site_link}，我们已经有一段时间没有看到您了。更改%{email_preferences_link}或%{unsubscribe_link}以退订。"
       your_email_settings: "您的电子邮件设置"
       click_here: "点击此处"
       from: "%{site_name}"
-      preheader: "自 %{last_seen_at} 您上次访问后的简短摘要"
+      preheader: "自 %{last_seen_at} 您上次访问后的简短总结"
     forgot_password:
       title: "忘记密码"
       subject_template: "[%{email_prefix}] 密码重置"
@@ -4334,7 +4329,7 @@ zh_CN:
       name: 首个 Onebox
       description: 发布了一个 Onebox 链接
       long_description: |
-        当您第一次在一行上单独发布链接时，将授予此徽章。该链接会自动扩展为带有摘要、标题和图片（如果可用）的 Onebox。
+        当您第一次在一行上单独发布链接时，将授予此徽章。该链接会自动扩展为带有总结、标题和图片（如果可用）的 Onebox。
     first_reply_by_email:
       name: 第一次通过电子邮件回复
       description: 通过电子邮件回复帖子

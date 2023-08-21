@@ -248,7 +248,6 @@ const TopicRoute = DiscourseRoute.extend({
   @action
   didTransition() {
     const controller = this.controllerFor("topic");
-    controller._showFooter();
     const topicId = controller.get("model.id");
     setTopicId(topicId);
     return true;
@@ -316,7 +315,7 @@ const TopicRoute = DiscourseRoute.extend({
       this.setupParams(topic, queryParams);
       return topic;
     } else {
-      let props = Object.assign({}, params);
+      let props = { ...params };
       delete props.username_filters;
       delete props.filter;
       topic = this.store.createRecord("topic", props);

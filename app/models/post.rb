@@ -585,13 +585,10 @@ class Post < ActiveRecord::Base
 
     hiding_again = hidden_at.present?
 
-    self.hidden = true
-    self.hidden_at = Time.zone.now
-    self.hidden_reason_id = reason
-    self.skip_unique_check = true
-
     Post.transaction do
-      save!
+      self.skip_validation = true
+
+      update!(hidden: true, hidden_at: Time.zone.now, hidden_reason_id: reason)
 
       Topic.where(
         "id = :topic_id AND NOT EXISTS(SELECT 1 FROM POSTS WHERE topic_id = :topic_id AND NOT hidden)",

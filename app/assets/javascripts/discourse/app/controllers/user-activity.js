@@ -3,31 +3,14 @@ import I18n from "I18n";
 import { alias } from "@ember/object/computed";
 import { exportUserArchive } from "discourse/lib/export-csv";
 import { inject as service } from "@ember/service";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   dialog: service(),
-  application: controller(),
   user: controller(),
   userActionType: null,
 
   canDownloadPosts: alias("user.viewingSelf"),
-
-  @observes("userActionType", "model.stream.itemsLoaded")
-  _showFooter() {
-    let showFooter;
-    if (this.userActionType) {
-      const stat = (this.get("model.stats") || []).find(
-        (s) => s.action_type === this.userActionType
-      );
-      showFooter = stat && stat.count <= this.get("model.stream.itemsLoaded");
-    } else {
-      showFooter =
-        this.get("model.statsCountNonPM") <=
-        this.get("model.stream.itemsLoaded");
-    }
-    this.set("application.showFooter", showFooter);
-  },
 
   @discourseComputed("currentUser.draft_count")
   draftLabel(count) {

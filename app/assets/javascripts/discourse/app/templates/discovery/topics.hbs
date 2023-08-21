@@ -1,3 +1,7 @@
+{{#if (or this.loading this.model.canLoadMore)}}
+  {{hide-application-footer}}
+{{/if}}
+
 {{#if this.redirectedReason}}
   <div class="alert alert-info">{{this.redirectedReason}}</div>
 {{/if}}
@@ -90,9 +94,13 @@
       @topics={{this.model.topics}}
       @discoveryList={{true}}
       @focusLastVisitedTopic={{true}}
+      @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
+      @newListSubset={{this.model.params.subset}}
+      @changeNewListSubset={{route-action "changeNewListSubset"}}
+      @newRepliesCount={{this.newRepliesCount}}
+      @newTopicsCount={{this.newTopicsCount}}
     />
   {{/if}}
-
   <span>
     <PluginOutlet
       @name="after-topic-list"
@@ -119,9 +127,12 @@
       @message={{this.footerMessage}}
     >
       {{#if this.latest}}
-        {{#if this.canCreateTopicOnCategory}}
+        {{#if this.category.canCreateTopic}}
           <DiscourseLinkedText
-            @action={{route-action "createTopic"}}
+            @action={{fn
+              this.composer.openNewTopic
+              (hash category=this.category preferDraft=true)
+            }}
             @text="topic.suggest_create_topic"
           />
         {{/if}}

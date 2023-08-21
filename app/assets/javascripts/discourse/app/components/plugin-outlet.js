@@ -3,6 +3,7 @@ import ClassicComponent from "@ember/component";
 
 import {
   buildArgsWithDeprecations,
+  connectorsExist,
   renderedConnectorsFor,
 } from "discourse/lib/plugin-connectors";
 import { helperContext } from "discourse-common/lib/helpers";
@@ -84,6 +85,10 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
       this.outletArgsWithDeprecations,
       this.context
     );
+  }
+
+  get connectorsExist() {
+    return connectorsExist(this.args.name);
   }
 
   // Traditionally, pluginOutlets had an argument named 'args'. However, that name is reserved

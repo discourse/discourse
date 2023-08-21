@@ -717,6 +717,15 @@ class Reviewable < ActiveRecord::Base
     end
   end
 
+  def self.find_by_flagger_or_queued_post_creator(id:, user_id:)
+    Reviewable.find_by(
+      "id = :id AND (created_by_id = :user_id
+       OR (target_created_by_id = :user_id AND type = 'ReviewableQueuedPost'))",
+      id: id,
+      user_id: user_id,
+    )
+  end
+
   private
 
   def update_flag_stats(status:, user_ids:)

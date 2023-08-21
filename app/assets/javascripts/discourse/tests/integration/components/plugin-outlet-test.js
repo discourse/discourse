@@ -10,8 +10,10 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import Component from "@glimmer/component";
 import templateOnly from "@ember/component/template-only";
 import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
+import { setComponentTemplate } from "@glimmer/manager";
 
-const PREFIX = "discourse/plugins/some-plugin/templates/connectors";
+const TEMPLATE_PREFIX = "discourse/plugins/some-plugin/templates/connectors";
+const CLASS_PREFIX = "discourse/plugins/some-plugin/connectors";
 
 module("Integration | Component | plugin-outlet", function (hooks) {
   setupRenderingTest(hooks);
@@ -52,19 +54,19 @@ module("Integration | Component | plugin-outlet", function (hooks) {
     });
 
     registerTemporaryModule(
-      `${PREFIX}/test-name/hello`,
+      `${TEMPLATE_PREFIX}/test-name/hello`,
       hbs`<span class='hello-username'>{{this.username}}</span>
         <button class='say-hello' {{on "click" (action "sayHello")}}></button>
         <button class='say-hello-using-this' {{on "click" this.sayHello}}></button>
         <span class='hello-result'>{{this.hello}}</span>`
     );
     registerTemporaryModule(
-      `${PREFIX}/test-name/hi`,
+      `${TEMPLATE_PREFIX}/test-name/hi`,
       hbs`<button class='say-hi' {{on "click" (action "sayHi")}}></button>
         <span class='hi-result'>{{this.hi}}</span>`
     );
     registerTemporaryModule(
-      `${PREFIX}/test-name/conditional-render`,
+      `${TEMPLATE_PREFIX}/test-name/conditional-render`,
       hbs`<span class="conditional-render">I only render sometimes</span>`
     );
   });
@@ -158,7 +160,7 @@ module(
 
     hooks.beforeEach(function () {
       registerTemporaryModule(
-        `${PREFIX}/test-name/my-connector`,
+        `${TEMPLATE_PREFIX}/test-name/my-connector`,
         hbs`<span class='outletArgHelloValue'>{{@outletArgs.hello}}</span><span class='thisHelloValue'>{{this.hello}}</span>`
       );
     });
@@ -287,6 +289,30 @@ module(
       await settled();
 
       assert.dom(".outletArgHelloValue").doesNotExist();
+    });
+  }
+);
+
+module(
+  "Integration | Component | plugin-outlet | gjs class definitions",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      const template = hbs`<span class='gjs-test'>Hello world</span>`;
+      const component = templateOnly();
+      setComponentTemplate(template, component);
+
+      registerTemporaryModule(
+        `${CLASS_PREFIX}/test-name/my-connector`,
+        component
+      );
+    });
+
+    test("detects a gjs connector with no associated template file", async function (assert) {
+      await render(hbs`<PluginOutlet @name="test-name" />`);
+
+      assert.dom(".gjs-test").hasText("Hello world");
     });
   }
 );

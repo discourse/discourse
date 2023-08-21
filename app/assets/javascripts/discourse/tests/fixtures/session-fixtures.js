@@ -14,6 +14,7 @@ export default {
       moderator: true,
       staff: true,
       can_create_group: true,
+      can_create_topic: true,
       title: "co-founder",
       reply_count: 859,
       topic_count: 36,

@@ -3,7 +3,6 @@ import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { Promise } from "rsvp";
-import { action } from "@ember/object";
 
 export default DiscourseRoute.extend({
   queryParams: {
@@ -12,6 +11,7 @@ export default DiscourseRoute.extend({
     asc: { refreshModel: true },
     name: { refreshModel: false, replace: true },
     group: { refreshModel: true },
+    exclude_groups: { refreshModel: true },
     exclude_usernames: { refreshModel: true },
   },
 
@@ -28,6 +28,7 @@ export default DiscourseRoute.extend({
         name: "",
         group: null,
         exclude_usernames: null,
+        exclude_groups: null,
         lastUpdatedAt: null,
       });
     }
@@ -57,11 +58,5 @@ export default DiscourseRoute.extend({
       controller.loadGroups(),
       controller.loadUsers(model.params),
     ]);
-  },
-
-  @action
-  didTransition() {
-    this.controllerFor("users")._showFooter();
-    return true;
   },
 });

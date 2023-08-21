@@ -4,6 +4,10 @@ en:
       site_settings:
         categories:
           chat: Chat
+        chat_separate_sidebar_mode:
+          always: "Always"
+          fullscreen: "When chat is in fullscreen"
+          never: "Never"
       logs:
         staff_actions:
           actions:
@@ -104,6 +108,8 @@ en:
         all_new: "All New Messages"
         dm_and_mentions: "Direct Messages and Mentions"
         never: "Never"
+      separate_sidebar_mode:
+        title: "Show separate sidebar modes for forum and chat"
       enable: "Enable chat"
       flag: "Flag"
       emoji: "Insert emoji"
@@ -685,3 +691,8 @@ en:
       sections:
         chat:
           title: Chat
+
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

@@ -1,5 +1,5 @@
 import Category from "discourse/models/category";
-import Controller, { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { alias, and, not, or } from "@ember/object/computed";
 import discourseComputed, {
@@ -37,6 +37,7 @@ import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { BookmarkFormData } from "discourse/lib/bookmark";
 import DeleteTopicConfirmModal from "discourse/components/modal/delete-topic-confirm";
 import ConvertToPublicTopicModal from "discourse/components/modal/convert-to-public-topic";
+import JumpToPost from "discourse/components/modal/jump-to-post";
 
 let customPostMessageCallbacks = {};
 
@@ -56,7 +57,6 @@ export function registerCustomPostMessageCallback(type, callback) {
 
 export default Controller.extend(bufferedProperty("model"), {
   composer: service(),
-  application: controller(),
   dialog: service(),
   documentTitle: service(),
   screenTrack: service(),
@@ -880,15 +880,12 @@ export default Controller.extend(bufferedProperty("model"), {
     },
 
     jumpToPostPrompt() {
-      const topic = this.model;
-      const modal = showModal("jump-to-post", {
-        modalClass: "jump-to-post-modal",
-      });
-      modal.setProperties({
-        topic,
-        postNumber: null,
-        jumpToIndex: (index) => this.send("jumpToIndex", index),
-        jumpToDate: (date) => this.send("jumpToDate", date),
+      this.modal.show(JumpToPost, {
+        model: {
+          topic: this.model,
+          jumpToIndex: (index) => this.send("jumpToIndex", index),
+          jumpToDate: (date) => this.send("jumpToDate", date),
+        },
       });
     },
 
@@ -1807,13 +1804,5 @@ export default Controller.extend(bufferedProperty("model"), {
         }
       }
     }
-  },
-
-  @observes("model.postStream.loaded", "model.postStream.loadedAllPosts")
-  _showFooter() {
-    const showFooter =
-      this.get("model.postStream.loaded") &&
-      this.get("model.postStream.loadedAllPosts");
-    this.set("application.showFooter", showFooter);
   },
 });

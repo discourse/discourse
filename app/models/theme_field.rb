@@ -108,7 +108,10 @@ class ThemeField < ActiveRecord::Base
           if is_raw
             js_compiler.append_raw_template(name, hbs_template)
           else
-            js_compiler.append_ember_template("discourse/templates/#{name}", hbs_template)
+            js_compiler.append_ember_template(
+              "discourse/templates/#{name.delete_prefix("/")}",
+              hbs_template,
+            )
           end
         rescue ThemeJavascriptCompiler::CompileError => ex
           js_compiler.append_js_error("discourse/templates/#{name}", ex.message)

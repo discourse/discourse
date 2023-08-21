@@ -15,13 +15,18 @@ function fixLegacyExtensions(tree) {
     getDestinationPath: function (relativePath) {
       if (relativePath.endsWith(".es6")) {
         return relativePath.slice(0, -4);
-      } else if (relativePath.includes("/templates/")) {
-        if (relativePath.endsWith(".raw.hbs")) {
-          relativePath = relativePath.replace(".raw.hbs", ".hbr");
-        }
+      } else if (relativePath.endsWith(".raw.hbs")) {
+        relativePath = relativePath.replace(".raw.hbs", ".hbr");
+      }
 
-        if (relativePath.endsWith(".hbr")) {
-          return relativePath.replace("/templates/", "/raw-templates/");
+      if (relativePath.endsWith(".hbr")) {
+        if (relativePath.includes("/templates/")) {
+          relativePath = relativePath.replace("/templates/", "/raw-templates/");
+        } else if (relativePath.includes("/connectors/")) {
+          relativePath = relativePath.replace(
+            "/connectors/",
+            "/raw-templates/connectors/"
+          );
         }
       }
 

@@ -4,7 +4,7 @@ require "webauthn/security_key_base_validation_service"
 require "webauthn/security_key_registration_service"
 require "webauthn/security_key_authentication_service"
 
-module Webauthn
+module DiscourseWebauthn
   ACCEPTABLE_REGISTRATION_TYPE = "webauthn.create"
   ACCEPTABLE_AUTHENTICATION_TYPE = "webauthn.get"
 
@@ -51,7 +51,7 @@ module Webauthn
   # they must respond with a valid webauthn response and
   # credentials.
   def self.stage_challenge(user, secure_session)
-    ::Webauthn::ChallengeGenerator.generate.commit_to_session(secure_session, user)
+    ::DiscourseWebauthn::ChallengeGenerator.generate.commit_to_session(secure_session, user)
   end
 
   def self.allowed_credentials(user, secure_session)
@@ -60,19 +60,25 @@ module Webauthn
     {
       allowed_credential_ids: credential_ids,
       challenge:
-        secure_session[Webauthn::ChallengeGenerator::ChallengeSession.session_challenge_key(user)],
+        secure_session[
+          DiscourseWebauthn::ChallengeGenerator::ChallengeSession.session_challenge_key(user)
+        ],
     }
   end
 
   def self.rp_id(user, secure_session)
-    secure_session[Webauthn::ChallengeGenerator::ChallengeSession.session_rp_id_key(user)]
+    secure_session[DiscourseWebauthn::ChallengeGenerator::ChallengeSession.session_rp_id_key(user)]
   end
 
   def self.rp_name(user, secure_session)
-    secure_session[Webauthn::ChallengeGenerator::ChallengeSession.session_rp_name_key(user)]
+    secure_session[
+      DiscourseWebauthn::ChallengeGenerator::ChallengeSession.session_rp_name_key(user)
+    ]
   end
 
   def self.challenge(user, secure_session)
-    secure_session[Webauthn::ChallengeGenerator::ChallengeSession.session_challenge_key(user)]
+    secure_session[
+      DiscourseWebauthn::ChallengeGenerator::ChallengeSession.session_challenge_key(user)
+    ]
   end
 end

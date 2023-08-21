@@ -4389,7 +4389,7 @@ RSpec.describe Guardian do
 
     context "when attempting to destroy your own reviewable" do
       it "returns true" do
-        queued_post = Fabricate(:reviewable_queued_post, created_by: user)
+        queued_post = Fabricate(:reviewable_queued_post, target_created_by: user)
         env =
           create_request_env(path: "/review/#{queued_post.id}.json").merge(
             { "REQUEST_METHOD" => "DELETE" },

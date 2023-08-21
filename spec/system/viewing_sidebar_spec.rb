@@ -162,7 +162,7 @@ describe "Viewing sidebar as logged in user", type: :system do
       expect(sidebar).to have_tags_section
       expect(sidebar).to have_tag_section_links([tag3, tag2, tag4, tag5, tag1])
       expect(sidebar).to have_tag_section_link_with_title(tag3, "tag 3 description")
-      expect(sidebar).to have_tag_section_link_with_title(tag1, "tag 1 description &lt;script&gt;")
+      expect(sidebar).to have_tag_section_link_with_title(tag1, "tag 1 description ")
       expect(sidebar).to have_all_tags_section_link
     end
 
@@ -177,7 +177,7 @@ describe "Viewing sidebar as logged in user", type: :system do
       expect(sidebar).to have_tags_section
       expect(sidebar).to have_tag_section_links([tag1, tag2, tag3])
       expect(sidebar).to have_tag_section_link_with_title(tag3, "tag 3 description")
-      expect(sidebar).to have_tag_section_link_with_title(tag1, "tag 1 description &lt;script&gt;")
+      expect(sidebar).to have_tag_section_link_with_title(tag1, "tag 1 description ")
       expect(sidebar).to have_all_tags_section_link
     end
   end

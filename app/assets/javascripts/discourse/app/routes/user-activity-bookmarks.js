@@ -53,12 +53,6 @@ export default DiscourseRoute.extend({
   },
 
   @action
-  didTransition() {
-    this.controllerFor("user-activity")._showFooter();
-    return true;
-  },
-
-  @action
   triggerRefresh() {
     this.refresh();
   },
