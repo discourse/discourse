@@ -363,3 +363,16 @@ $search-pad-horizontal: 0.5em;
     }
   }
 }
+
+// these styles will become the default once the glimmer search menu
+// is enabled for all users, and the old search menu is removed
+// we can then drop any '!important' rules
+.search-menu.glimmer-search-menu {
+  .search-item-tag .d-icon {
+    margin-right: 0 !important;
+  }
+
+  .search-item-user img.avatar {
+    margin-right: 0 !important;
+  }
+}
