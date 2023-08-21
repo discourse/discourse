@@ -39,6 +39,7 @@
 
   button.bulk-select {
     padding: 0;
+    margin-right: 0.5em;
     line-height: var(--line-height-large);
   }
 
@@ -59,8 +60,8 @@
     background: none;
     border: none;
     line-height: var(--line-height-large);
-    min-height: 30px;
-
+    padding-left: 0.5em;
+    padding-right: 0.5em;
     &.active {
       background: var(--quaternary);
       color: var(--secondary);

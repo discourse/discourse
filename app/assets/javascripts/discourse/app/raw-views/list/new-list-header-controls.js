@@ -19,16 +19,6 @@ export default EmberObject.extend({
   },
 
   @discourseComputed
-  allButtonLabel() {
-    const count = this.newRepliesCount + this.newTopicsCount;
-    if (count > 0) {
-      return I18n.t("filters.new.all_with_count", { count });
-    } else {
-      return I18n.t("filters.new.all");
-    }
-  },
-
-  @discourseComputed
   repliesButtonLabel() {
     if (this.newRepliesCount > 0) {
       return I18n.t("filters.new.replies_with_count", {
