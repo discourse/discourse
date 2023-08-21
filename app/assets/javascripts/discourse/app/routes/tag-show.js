@@ -246,10 +246,11 @@ export default DiscourseRoute.extend({
     const categoryId = controller.category?.id;
 
     if (categoryId) {
-      options = Object.assign({}, options, {
+      options = {
+        ...options,
         categoryId,
         includeSubcategories: !controller.noSubcategories,
-      });
+      };
     }
 
     controller.send("dismissRead", operationType, options);

@@ -186,11 +186,11 @@ export default Component.extend(LoadMore, {
     });
 
     onClick("button.topics-replies-toggle", (element) => {
-      if (element.classList.contains("all")) {
+      if (element.classList.contains("--all")) {
         this.changeNewListSubset(null);
-      } else if (element.classList.contains("topics")) {
+      } else if (element.classList.contains("--topics")) {
         this.changeNewListSubset("topics");
-      } else if (element.classList.contains("replies")) {
+      } else if (element.classList.contains("--replies")) {
         this.changeNewListSubset("replies");
       }
       this.rerender();

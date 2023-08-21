@@ -17,7 +17,7 @@ import User from "discourse/models/user";
 
 // A helper to build a topic route for a filter
 export function filterQueryParams(params, defaultParams) {
-  const findOpts = Object.assign({}, defaultParams || {});
+  const findOpts = { ...(defaultParams || {}) };
 
   if (params) {
     Object.keys(queryParams).forEach(function (opt) {

@@ -558,7 +558,7 @@ export default createWidget("header", {
 
     return h(
       "div.wrap",
-      this.attach("header-contents", Object.assign({}, attrs, contentsAttrs))
+      this.attach("header-contents", { ...attrs, ...contentsAttrs })
     );
   },
 

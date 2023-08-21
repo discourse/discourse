@@ -38,15 +38,16 @@
       </a>
     {{/if}}
   {{/if}}
-
-  {{#if this.showTopicsAndRepliesToggle}}
-    <NewListHeaderControlsWrapper
-      @current={{this.model.params.subset}}
-      @newRepliesCount={{this.newRepliesCount}}
-      @newTopicsCount={{this.newTopicsCount}}
-      @changeNewListSubset={{route-action "changeNewListSubset"}}
-    />
-  {{/if}}
+  {{#unless this.bulkSelectEnabled}}
+    {{#if this.showTopicsAndRepliesToggle}}
+      <NewListHeaderControlsWrapper
+        @current={{this.model.params.subset}}
+        @newRepliesCount={{this.newRepliesCount}}
+        @newTopicsCount={{this.newTopicsCount}}
+        @changeNewListSubset={{route-action "changeNewListSubset"}}
+      />
+    {{/if}}
+  {{/unless}}
   {{#if this.hasTopics}}
     <TopicList
       @ascending={{this.ascending}}

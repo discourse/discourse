@@ -126,15 +126,18 @@
                   </div>
                 {{/if}}
               {{/if}}
-
-              {{#if (and this.showTopicsAndRepliesToggle this.site.mobileView)}}
-                <NewListHeaderControlsWrapper
-                  @current={{this.subset}}
-                  @newRepliesCount={{this.newRepliesCount}}
-                  @newTopicsCount={{this.newTopicsCount}}
-                  @changeNewListSubset={{action "changeNewListSubset"}}
-                />
-              {{/if}}
+              {{#unless this.bulkSelectEnabled}}
+                {{#if
+                  (and this.showTopicsAndRepliesToggle this.site.mobileView)
+                }}
+                  <NewListHeaderControlsWrapper
+                    @current={{this.subset}}
+                    @newRepliesCount={{this.newRepliesCount}}
+                    @newTopicsCount={{this.newTopicsCount}}
+                    @changeNewListSubset={{action "changeNewListSubset"}}
+                  />
+                {{/if}}
+              {{/unless}}
               {{#if this.list.topics}}
                 <TopicList
                   @topics={{this.list.topics}}
