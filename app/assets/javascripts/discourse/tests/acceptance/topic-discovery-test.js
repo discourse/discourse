@@ -4,9 +4,7 @@ import {
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import DiscourseURL from "discourse/lib/url";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import sinon from "sinon";
 import { skip, test } from "qunit";
 import { click, currentURL, settled, visit } from "@ember/test-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
@@ -128,19 +126,13 @@ acceptance("Topic Discovery", function (needs) {
   });
 
   test("Using period chooser when query params are present", async function (assert) {
-    await visit("/top?f=foo&d=bar");
-
-    sinon.stub(DiscourseURL, "routeTo");
+    await visit("/top?status=closed");
 
     const periodChooser = selectKit(".period-chooser");
-
     await periodChooser.expand();
     await periodChooser.selectRowByValue("yearly");
 
-    assert.ok(
-      DiscourseURL.routeTo.calledWith("/top?f=foo&d=bar&period=yearly"),
-      "it keeps the query params"
-    );
+    assert.strictEqual(currentURL(), "/top?period=yearly&status=closed");
   });
 
   test("switching between tabs", async function (assert) {

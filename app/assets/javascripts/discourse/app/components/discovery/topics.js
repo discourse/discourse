@@ -7,7 +7,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
 import { endWith } from "discourse/lib/computed";
 import { routeAction } from "discourse/helpers/route-action";
-import DiscourseURL, { userPath } from "discourse/lib/url";
+import { userPath } from "discourse/lib/url";
 import { action } from "@ember/object";
 import Component from "@ember/component";
 
@@ -171,10 +171,5 @@ export default class DiscoveryTopics extends Component.extend(DismissTopics) {
         `${this.currentUser.get("username_lower")}/preferences/tracking`
       ),
     });
-  }
-
-  @action
-  changePeriod(p) {
-    DiscourseURL.routeTo(this.showMoreUrl(p));
   }
 }

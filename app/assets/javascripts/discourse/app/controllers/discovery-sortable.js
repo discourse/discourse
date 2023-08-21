@@ -123,4 +123,9 @@ export default class DiscoverySortableController extends Controller.extend(
   setTrackingTopicList(model) {
     setTopicList(model);
   }
+
+  @action
+  changePeriod(p) {
+    this.set("period", p);
+  }
 }
