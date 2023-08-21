@@ -21,38 +21,39 @@ module BulkImport
       SiteSetting.max_image_size_kb = 102_400
 
       queue = SizedQueue.new(1000)
-      threads = []
+      consumer_threads = []
 
       existing_ids = Set.new
       query("SELECT id FROM uploads", @output_db).each { |row| existing_ids << row["id"] }
-      max_count = @source_db.get_first_value("SELECT COUNT(*) FROM uploads") - existing_ids.size
+      max_count = @source_db.get_first_value("SELECT COUNT(*) FROM uploads")
 
-      threads << Thread.new do
-        query("SELECT * FROM uploads", @source_db).each do |row|
-          queue << row unless existing_ids.include?(row["id"])
+      puts "Found #{existing_ids.size} existing uploads, #{max_count} total"
+      max_count -= existing_ids.size
+
+      producer_thread =
+        Thread.new do
+          query("SELECT * FROM uploads", @source_db).each do |row|
+            queue << row unless existing_ids.include?(row["id"])
+          end
         end
-        queue.close
-      end
 
-      status_queue = Queue.new
+      status_queue = SizedQueue.new(1000)
       status_thread =
         Thread.new do
           error_count = 0
           current_count = 0
 
           while !(params = status_queue.pop).nil?
-            if params == false
+            begin
+              error_count += 1 if params[:upload].nil?
+
+              @output_db.execute(<<~SQL, params)
+                INSERT INTO uploads (id, upload)
+                VALUES (:id, :upload)
+              SQL
+            rescue StandardError
+              puts "Failed to insert upload: #{params}"
               error_count += 1
-            else
-              begin
-                @output_db.execute(<<~SQL, params)
-                  INSERT INTO uploads (id, upload)
-                  VALUES (:id, :upload)
-                SQL
-              rescue StandardError
-                puts "Failed to insert upload: #{params}"
-                error_count += 1
-              end
             end
 
             current_count += 1
@@ -62,7 +63,7 @@ module BulkImport
         end
 
       (Etc.nprocessors * 1.5).to_i.times do
-        threads << Thread.new do
+        consumer_threads << Thread.new do
           while (row = queue.pop)
             begin
               path = File.join(@root_path, row["relative_path"], row["filename"])
@@ -87,7 +88,7 @@ module BulkImport
                     status_queue << { id: row["id"], upload: upload.attributes.to_json }
                     break
                   elsif retry_count >= 3
-                    status_queue << false
+                    status_queue << { id: row["id"], upload: nil }
                     break
                   end
 
@@ -95,13 +96,15 @@ module BulkImport
                 end
               end
             rescue StandardError => e
-              status_queue << false
+              status_queue << { id: row["id"], upload: nil }
             end
           end
         end
       end
 
-      threads.each(&:join)
+      producer_thread.join
+      queue.close
+      consumer_threads.each(&:join)
       status_queue.close
       status_thread.join
     end
