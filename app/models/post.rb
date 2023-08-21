@@ -868,7 +868,8 @@ class Post < ActiveRecord::Base
     start_date,
     end_date,
     category_id = nil,
-    include_subcategories = false
+    include_subcategories = false,
+    group_ids = nil
   )
     result =
       public_posts.where(
@@ -883,6 +884,13 @@ class Post < ActiveRecord::Base
       else
         result = result.where("topics.category_id = ?", category_id)
       end
+    end
+    if group_ids
+      result =
+        result
+          .joins("INNER JOIN users ON users.id = posts.user_id")
+          .joins("INNER JOIN group_users ON group_users.user_id = users.id")
+          .where("group_users.group_id IN (?)", group_ids)
     end
 
     result.group("date(posts.created_at)").order("date(posts.created_at)").count
