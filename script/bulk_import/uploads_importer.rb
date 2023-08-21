@@ -24,7 +24,11 @@ module BulkImport
       threads = []
 
       threads << Thread.new do ||
-        query("SELECT * FROM uploads").each { |row| queue << row }
+        existing_ids = Set.new
+        query("SELECT id FROM uploads", @output_db).each { |row| existing_ids << row["id"] }
+        query("SELECT * FROM uploads", @source_db).each do |row|
+          queue << row unless existing_ids.include?(row["id"])
+        end
         queue.close
       end
 
@@ -40,10 +44,15 @@ module BulkImport
             if params == false
               error_count += 1
             else
-              @output_db.execute(<<~SQL, params)
-                INSERT INTO uploads (id, upload)
-                VALUES (:id, :upload)
-              SQL
+              begin
+                @output_db.execute(<<~SQL, params)
+                  INSERT INTO uploads (id, upload)
+                  VALUES (:id, :upload)
+                SQL
+              rescue StandardError
+                puts "Failed to insert upload: #{params}"
+                error_count += 1
+              end
             end
 
             current_count += 1
@@ -60,20 +69,32 @@ module BulkImport
               next unless File.exist?(path)
 
               copy_to_tempfile(path) do |file|
-                upload =
-                  UploadCreator.new(file, row["filename"], type: row["type"]).create_for(
-                    Discourse::SYSTEM_USER_ID,
-                  )
+                retry_count = 0
 
-                if upload.present? && upload.persisted? && upload.errors.blank?
-                  status_queue << { id: row["id"], upload: upload.attributes.to_json }
-                else
-                  status_queue << false
-                  puts upload.errors.inspect if upload
+                loop do
+                  upload =
+                    begin
+                      UploadCreator.new(file, row["filename"], type: row["type"]).create_for(
+                        Discourse::SYSTEM_USER_ID,
+                      )
+                    rescue StandardError
+                      nil
+                    end
+
+                  upload_okay = upload.present? && upload.persisted? && upload.errors.blank?
+
+                  if upload_okay
+                    status_queue << { id: row["id"], upload: upload.attributes.to_json }
+                    break
+                  elsif retry_count >= 3
+                    status_queue << false
+                    break
+                  end
+
+                  retry_count += 1
                 end
               end
             rescue StandardError => e
-              puts e
               status_queue << false
             end
           end
@@ -95,8 +116,8 @@ module BulkImport
       sqlite
     end
 
-    def query(sql)
-      @source_db.prepare(sql).execute
+    def query(sql, db)
+      db.prepare(sql).execute
     end
 
     def initialize_output_db
