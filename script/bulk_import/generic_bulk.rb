@@ -8,9 +8,10 @@ class BulkImport::Generic < BulkImport::Base
   AVATAR_DIRECTORY = ENV["AVATAR_DIRECTORY"]
   UPLOAD_DIRECTORY = ENV["UPLOAD_DIRECTORY"]
 
-  def initialize(db_path)
+  def initialize(db_path, uploads_db_path = nil)
     super()
-    @db = create_connection(db_path)
+    @source_db = create_connection(db_path)
+    @uploads_db = create_connection(uploads_db_path) if uploads_db_path
   end
 
   def start
@@ -33,14 +34,21 @@ class BulkImport::Generic < BulkImport::Base
     import_user_fields
     import_user_custom_field_values
     import_single_sign_on_records
+    import_user_stats
+    import_muted_users
+    import_user_histories
+
+    import_uploads
+    import_user_avatars
+
     import_topics
     import_posts
     import_topic_allowed_users
     import_likes
-    import_user_stats
-    import_muted_users
-    import_user_histories
     # import_tags
+
+    @source_db.close
+    @uploads_db.close if @uploads_db
   end
 
   def import_categories
@@ -214,8 +222,7 @@ class BulkImport::Generic < BulkImport::Base
 
     discourse_field_mapping = UserField.pluck(:name, :id).to_h
     field_id_mapping =
-      @db
-        .query("SELECT id, name FROM user_fields")
+      query("SELECT id, name FROM user_fields")
         .map do |row|
           discourse_field_id = discourse_field_mapping[row["name"]]
           field_name = "#{User::USER_FIELD_PREFIX}#{discourse_field_id}"
@@ -456,6 +463,42 @@ class BulkImport::Generic < BulkImport::Base
     end
   end
 
+  def import_uploads
+    return if !@uploads_db
+
+    puts "Importing uploads..."
+
+    uploads = query(<<~SQL, db: @uploads_db)
+      SELECT id, upload
+        FROM uploads
+       ORDER BY id
+    SQL
+
+    create_uploads(uploads) do |row|
+      upload = JSON.parse(row["upload"], symbolize_names: true)
+      upload[:original_id] = row["id"]
+      upload
+    end
+  end
+
+  def import_user_avatars
+    return if !@uploads_db
+
+    avatars = query(<<~SQL)
+      SELECT id, avatar_upload_id
+        FROM users
+       WHERE avatar_upload_id
+       ORDER BY id
+    SQL
+
+    create_user_avatars(avatars) do |row|
+      {
+        user_id: user_id_from_imported_id(row["id"]),
+        custom_upload_id: upload_id_from_original_id(row["avatar_upload_id"]),
+      }
+    end
+  end
+
   def import_tags
     puts "", "Importing tags..."
 
@@ -502,8 +545,8 @@ class BulkImport::Generic < BulkImport::Base
     sqlite
   end
 
-  def query(sql)
-    @db.prepare(sql).execute
+  def query(sql, db: @source_db)
+    db.prepare(sql).execute
   end
 
   def to_date(text)
@@ -519,4 +562,4 @@ class BulkImport::Generic < BulkImport::Base
   end
 end
 
-BulkImport::Generic.new(ARGV.first).start
+BulkImport::Generic.new(ARGV[0], ARGV[1]).start

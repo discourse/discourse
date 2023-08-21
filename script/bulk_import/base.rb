@@ -95,6 +95,7 @@ class BulkImport::Base
     puts "Starting..."
     Rails.logger.level = 3 # :error, so that we don't create log files that are many GB
     preload_i18n
+    create_migration_mappings_table
     fix_highest_post_numbers
     load_imported_ids
     load_indexes
@@ -109,6 +110,20 @@ class BulkImport::Base
     I18n.locale = ENV.fetch("LOCALE") { SiteSettings::DefaultsProvider::DEFAULT_LOCALE }.to_sym
     I18n.t("test")
     ActiveSupport::Inflector.transliterate("test")
+  end
+
+  MAPPING_TYPES = Enum.new(upload: 1)
+
+  def create_migration_mappings_table
+    puts "Creating migration mappings table..."
+    @raw_connection.exec <<~SQL
+      CREATE TABLE IF NOT EXISTS migration_mappings (
+        original_id VARCHAR(255) NOT NULL,
+        type INTEGER NOT NULL,
+        discourse_id VARCHAR(255) NOT NULL,
+        PRIMARY KEY (original_id, type)
+      )
+    SQL
   end
 
   def fix_highest_post_numbers
@@ -194,6 +209,21 @@ class BulkImport::Base
     map
   end
 
+  def load_index(type)
+    map = {}
+
+    @raw_connection.send_query(
+      "SELECT original_id, discourse_id FROM migration_mappings WHERE type = #{type}",
+    )
+    @raw_connection.set_single_row_mode
+
+    @raw_connection.get_result.stream_each { |row| map[row["original_id"]] = row["discourse_id"] }
+
+    @raw_connection.get_result
+
+    map
+  end
+
   def load_indexes
     puts "Loading groups indexes..."
     @last_group_id = last_id(Group)
@@ -208,7 +238,7 @@ class BulkImport::Base
     @usernames_lower = User.unscoped.pluck(:username_lower).to_set
     @anonymized_user_suffixes =
       DB.query_single(
-        "SELECT SUBSTRING(username_lower, 5)::INT FROM users WHERE username_lower ~* '^anon\\d+$'",
+        "SELECT SUBSTRING(username_lower, 5)::BIGINT FROM users WHERE username_lower ~* '^anon\\d+$'",
       ).to_set
     @mapped_usernames =
       UserCustomField
@@ -218,6 +248,8 @@ class BulkImport::Base
         .to_h
     @last_muted_user_id = last_id(MutedUser)
     @last_user_history_id = last_id(UserHistory)
+    @last_user_avatar_id = last_id(UserAvatar)
+    @last_upload_id = last_id(Upload)
 
     puts "Loading categories indexes..."
     @last_category_id = last_id(Category)
@@ -240,6 +272,9 @@ class BulkImport::Base
 
     puts "Loading post actions indexes..."
     @last_post_action_id = last_id(PostAction)
+
+    puts "Loading upload indexes..."
+    @uploads_mapping = load_index(MAPPING_TYPES[:upload])
   end
 
   def use_bbcode_to_md?
@@ -294,6 +329,12 @@ class BulkImport::Base
         "SELECT setval('#{UserHistory.sequence_name}', #{@last_user_history_id})",
       )
     end
+    if @last_user_avatar_id > 0
+      @raw_connection.exec("SELECT setval('#{UserAvatar.sequence_name}', #{@last_user_avatar_id})")
+    end
+    if @last_upload_id > 0
+      @raw_connection.exec("SELECT setval('#{Upload.sequence_name}', #{@last_upload_id})")
+    end
   end
 
   def group_id_from_imported_id(id)
@@ -314,6 +355,10 @@ class BulkImport::Base
 
   def post_id_from_imported_id(id)
     @posts[id.to_i]
+  end
+
+  def upload_id_from_original_id(id)
+    @uploads_mapping[id.to_s]&.to_i
   end
 
   def post_number_from_imported_id(id)
@@ -370,6 +415,8 @@ class BulkImport::Base
   ]
 
   USER_HISTORY_COLUMNS ||= %i[id action acting_user_id target_user_id details created_at updated_at]
+
+  USER_AVATAR_COLUMNS ||= %i[id user_id custom_upload_id created_at updated_at]
 
   USER_PROFILE_COLUMNS ||= %i[user_id location website bio_raw bio_cooked views]
 
@@ -493,6 +540,33 @@ class BulkImport::Base
 
   TOPIC_TAG_COLUMNS ||= %i[topic_id tag_id created_at updated_at]
 
+  UPLOAD_COLUMNS ||= %i[
+    id
+    user_id
+    original_filename
+    filesize
+    width
+    height
+    url
+    created_at
+    updated_at
+    sha1
+    origin
+    retain_hours
+    extension
+    thumbnail_width
+    thumbnail_height
+    etag
+    secure
+    access_control_post_id
+    original_sha1
+    animated
+    verification_status
+    security_last_changed_at
+    security_last_changed_reason
+    dominant_color
+  ]
+
   def create_groups(rows, &block)
     create_records(rows, "group", GROUP_COLUMNS, &block)
   end
@@ -517,6 +591,10 @@ class BulkImport::Base
 
   def create_user_histories(rows, &block)
     create_records(rows, "user_history", USER_HISTORY_COLUMNS, &block)
+  end
+
+  def create_user_avatars(rows, &block)
+    create_records(rows, "user_avatar", USER_AVATAR_COLUMNS, &block)
   end
 
   def create_user_profiles(rows, &block)
@@ -566,6 +644,12 @@ class BulkImport::Base
 
   def create_topic_tags(rows, &block)
     create_records(rows, "topic_tag", TOPIC_TAG_COLUMNS, &block)
+  end
+
+  def create_uploads(rows, &block)
+    @imported_uploads = {}
+    create_records(rows, "upload", UPLOAD_COLUMNS, &block)
+    store_mappings(MAPPING_TYPES[:upload], @imported_uploads)
   end
 
   def process_group(group)
@@ -688,6 +772,13 @@ class BulkImport::Base
     history[:created_at] ||= NOW
     history[:updated_at] ||= NOW
     history
+  end
+
+  def process_user_avatar(avatar)
+    avatar[:id] = @last_user_avatar_id += 1
+    avatar[:created_at] ||= NOW
+    avatar[:updated_at] ||= NOW
+    avatar
   end
 
   def process_muted_user(muted_user)
@@ -866,6 +957,20 @@ class BulkImport::Base
     topic_tag[:created_at] = NOW
     topic_tag[:updated_at] = NOW
     topic_tag
+  end
+
+  def process_upload(upload)
+    return { skip: true } if @uploads_mapping.has_key?(upload[:original_id])
+
+    upload[:id] = @last_upload_id += 1
+    upload[:user_id] ||= Discourse::SYSTEM_USER_ID
+    upload[:created_at] ||= NOW
+    upload[:updated_at] ||= NOW
+
+    @imported_uploads[upload[:original_id]] = upload[:id]
+    @uploads_mapping[upload[:original_id]] = upload[:id]
+
+    upload
   end
 
   def process_raw(original_raw)
@@ -1073,6 +1178,17 @@ class BulkImport::Base
       rows.each do |row|
         next unless cf = yield(row)
         @raw_connection.put_copy_data [cf[:record_id], name, cf[:value], NOW, NOW]
+      end
+    end
+  end
+
+  def store_mappings(type, rows)
+    return if rows.empty?
+
+    sql = "COPY migration_mappings (original_id, type, discourse_id) FROM STDIN"
+    @raw_connection.copy_data(sql, @encoder) do
+      rows.each do |original_id, discourse_id|
+        @raw_connection.put_copy_data [original_id, type, discourse_id]
       end
     end
   end
