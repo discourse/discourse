@@ -40,7 +40,7 @@ module BulkImport
           error_count = 0
           current_count = 0
 
-          while (params = status_queue.pop).present?
+          while !(params = status_queue.pop).nil?
             if params == false
               error_count += 1
             else
