@@ -23,16 +23,16 @@ module BulkImport
       queue = SizedQueue.new(1000)
       threads = []
 
-      threads << Thread.new do ||
-        existing_ids = Set.new
-        query("SELECT id FROM uploads", @output_db).each { |row| existing_ids << row["id"] }
+      existing_ids = Set.new
+      query("SELECT id FROM uploads", @output_db).each { |row| existing_ids << row["id"] }
+      max_count = @source_db.get_first_value("SELECT COUNT(*) FROM uploads") - existing_ids.size
+
+      threads << Thread.new do
         query("SELECT * FROM uploads", @source_db).each do |row|
           queue << row unless existing_ids.include?(row["id"])
         end
         queue.close
       end
-
-      max_count = @source_db.get_first_value("SELECT COUNT(*) FROM uploads")
 
       status_queue = Queue.new
       status_thread =
