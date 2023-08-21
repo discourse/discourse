@@ -215,11 +215,16 @@ end
 def insert_user_stats
   log "Inserting user stats..."
 
-  DB.exec <<-SQL
+  DB.exec <<~SQL
     INSERT INTO user_stats (user_id, new_since)
-         SELECT id, created_at
-           FROM users
-    ON CONFLICT DO NOTHING
+    SELECT id, created_at
+      FROM users u
+     WHERE NOT EXISTS (
+       SELECT 1
+         FROM user_stats us
+        WHERE us.user_id = u.id
+     )
+        ON CONFLICT DO NOTHING
   SQL
 end
 

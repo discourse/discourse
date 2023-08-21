@@ -18,10 +18,10 @@ class BulkImport::Generic < BulkImport::Base
 
     # Now that the migration is complete, do some more work:
 
-    Discourse::Application.load_tasks
-
-    puts "running 'import:ensure_consistency' rake task."
-    Rake::Task["import:ensure_consistency"].invoke
+    # Discourse::Application.load_tasks
+    #
+    # puts "running 'import:ensure_consistency' rake task."
+    # Rake::Task["import:ensure_consistency"].invoke
   end
 
   def execute
@@ -365,57 +365,54 @@ class BulkImport::Generic < BulkImport::Base
   def import_user_stats
     puts "Importing user stats..."
 
-    # TODO Figure out if we can do this with a INSERT INTO SELECT statement.
-    # TODO We also need to figure out how to get the likes_received and likes_given columns.
+    start_time = Time.now
 
-    users = query(<<~SQL)
-      WITH posts_counts AS (
-        SELECT COUNT(p.id) AS count, p.user_id
-        FROM posts p GROUP BY p.user_id
-      ),
-      topic_counts AS (
-        SELECT COUNT(t.id) AS count, t.user_id
-        FROM topics t GROUP BY t.user_id
-      ),
-      first_post AS (
-        SELECT MIN(p.created_at) AS created_at, p.user_id
-        FROM posts p GROUP BY p.user_id ORDER BY p.created_at ASC
-      )
-      SELECT u.id AS user_id, u.created_at, pc.count AS posts, tc.count AS topics, fp.created_at AS first_post
-      FROM users u
-      JOIN posts_counts pc ON u.id = pc.user_id
-      JOIN topic_counts tc ON u.id = tc.user_id
-      JOIN first_post fp ON u.id = fp.user_id
+    # TODO Add likes received and likes given from `post_actions` table
+
+    DB.exec(<<~SQL)
+        WITH
+          posts_counts AS (
+            SELECT COUNT(p.id) AS count, p.user_id FROM posts p GROUP BY p.user_id
+          ),
+          topic_counts AS (
+            SELECT COUNT(t.id) AS count, t.user_id FROM topics t GROUP BY t.user_id
+          ),
+          first_post AS (
+            SELECT MIN(p.created_at) AS created_at, p.user_id FROM posts p GROUP BY p.user_id
+          )
+      INSERT
+        INTO user_stats (user_id, new_since, post_count, topic_count, first_post_created_at)
+      SELECT u.id, u.created_at AS new_since, COALESCE(pc.count, 0) AS post_count, COALESCE(tc.count, 0) AS topic_count,
+             fp.created_at AS first_post_created_at
+        FROM users u
+             LEFT JOIN posts_counts pc ON u.id = pc.user_id
+             LEFT JOIN topic_counts tc ON u.id = tc.user_id
+             LEFT JOIN first_post fp ON u.id = fp.user_id
+       WHERE NOT EXISTS (
+         SELECT 1
+           FROM user_stats us
+          WHERE us.user_id = u.id
+       )
+          ON CONFLICT DO NOTHING
     SQL
 
-    create_user_stats(users) do |row|
-      user = {
-        imported_id: row["user_id"],
-        imported_user_id: row["user_id"],
-        new_since: to_datetime(row["created_at"]),
-        post_count: row["posts"],
-        topic_count: row["topics"],
-        first_post_created_at: to_datetime(row["first_post"]),
-      }
+    puts "  Imported user stats in #{Time.now - start_time} seconds."
 
-      # likes_received = @db.execute(<<~SQL)
-      #   SELECT COUNT(l.id) AS likes_received
-      #   FROM likes l JOIN posts p ON l.post_id = p.id
-      #   WHERE p.user_id = #{row["user_id"]}
-      # SQL
-      #
-      # user[:likes_received] = row["likes_received"] if likes_received
-      #
-      # likes_given = @db.execute(<<~SQL)
-      #   SELECT COUNT(l.id) AS likes_given
-      #   FROM likes l
-      #   WHERE l.user_id = #{row["user_id"]}
-      # SQL
-      #
-      # user[:likes_given] = row["likes_given"] if likes_given
-
-      user
-    end
+    # likes_received = @db.execute(<<~SQL)
+    #   SELECT COUNT(l.id) AS likes_received
+    #   FROM likes l JOIN posts p ON l.post_id = p.id
+    #   WHERE p.user_id = #{row["user_id"]}
+    # SQL
+    #
+    # user[:likes_received] = row["likes_received"] if likes_received
+    #
+    # likes_given = @db.execute(<<~SQL)
+    #   SELECT COUNT(l.id) AS likes_given
+    #   FROM likes l
+    #   WHERE l.user_id = #{row["user_id"]}
+    # SQL
+    #
+    # user[:likes_given] = row["likes_given"] if likes_given
   end
 
   def import_muted_users
