@@ -15,11 +15,10 @@ export default class extends DiscourseRoute {
       const category = this.parseCategoryFromTransition(transition);
 
       if (category) {
+        // Using URL-based transition to avoid bug with dynamic segments and refreshModel query params
+        // https://github.com/emberjs/ember.js/issues/16992
         this.router
-          .replaceWith("discovery.category", {
-            category,
-            id: category.id,
-          })
+          .replaceWith(`/c/${category.id}`)
           .followRedirects()
           .then(() => {
             if (this.currentUser.can_create_topic) {
