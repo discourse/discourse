@@ -26,25 +26,25 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def execute
-    import_categories
-    import_users
-    import_user_emails
-    import_user_profiles
-    import_user_options
-    import_user_fields
-    import_user_custom_field_values
-    import_single_sign_on_records
-    import_user_stats
-    import_muted_users
+    # import_categories
+    # import_users
+    # import_user_emails
+    # import_user_profiles
+    # import_user_options
+    # import_user_fields
+    # import_user_custom_field_values
+    # import_single_sign_on_records
+    # import_user_stats
+    # import_muted_users
     import_user_histories
 
     import_uploads
     import_user_avatars
-
-    import_topics
-    import_posts
-    import_topic_allowed_users
-    import_likes
+    #
+    # import_topics
+    # import_posts
+    # import_topic_allowed_users
+    # import_likes
     # import_tags
 
     @source_db.close
@@ -83,6 +83,8 @@ class BulkImport::Generic < BulkImport::Base
           row["parent_category_id"] ? category_id_from_imported_id(row["parent_category_id"]) : nil,
         slug: row["slug"],
       }
+
+      categories.close
     end
   end
 
@@ -96,6 +98,8 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     create_users(users) do |row|
+      next if user_id_from_imported_id(row["id"]).present?
+
       sso_record = JSON.parse(row["sso_record"]) if row["sso_record"].present?
 
       if row["suspension"].present?
@@ -134,6 +138,8 @@ class BulkImport::Generic < BulkImport::Base
         registration_ip_address: row["registration_ip_address"],
       }
     end
+
+    users.close
   end
 
   def import_user_emails
@@ -146,6 +152,8 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     create_user_emails(users) do |row|
+      next if user_id_from_imported_id(row["id"]).present?
+
       {
         # FIXME: using both "imported_id" and "imported_user_id" and should be replaced by just "imported_id"
         imported_id: row["id"],
@@ -154,6 +162,8 @@ class BulkImport::Generic < BulkImport::Base
         created_at: to_datetime(row["created_at"]),
       }
     end
+
+    users.close
   end
 
   def import_user_profiles
@@ -167,6 +177,8 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     create_user_profiles(users) do |row|
+      next if user_id_from_imported_id(row["id"]).present?
+
       {
         # FIXME: using both "imported_id" and "imported_user_id" and should be replaced by just "imported_id"
         imported_id: row["id"],
@@ -174,6 +186,8 @@ class BulkImport::Generic < BulkImport::Base
         bio_raw: row["bio"],
       }
     end
+
+    users.close
   end
 
   def import_user_options
@@ -187,6 +201,8 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     create_user_options(users) do |row|
+      next if user_id_from_imported_id(row["id"]).present?
+
       {
         # FIXME: using both "imported_id" and "imported_user_id" and should be replaced by just "imported_id"
         imported_id: row["id"],
@@ -194,6 +210,8 @@ class BulkImport::Generic < BulkImport::Base
         timezone: row["timezone"],
       }
     end
+
+    users.close
   end
 
   def import_user_fields
@@ -215,20 +233,27 @@ class BulkImport::Generic < BulkImport::Base
         JSON.parse(options).each { |option| field.user_field_options.create!(value: option) }
       end
     end
+
+    user_fields.close
   end
 
   def import_user_custom_field_values
     puts "", "Importing user custom field values..."
 
     discourse_field_mapping = UserField.pluck(:name, :id).to_h
+
+    user_fields = query("SELECT id, name FROM user_fields")
+
     field_id_mapping =
-      query("SELECT id, name FROM user_fields")
+      user_fields
         .map do |row|
           discourse_field_id = discourse_field_mapping[row["name"]]
           field_name = "#{User::USER_FIELD_PREFIX}#{discourse_field_id}"
           [row["id"], field_name]
         end
         .to_h
+
+    user_fields.close
 
     values = query(<<~SQL)
       SELECT v.*
@@ -238,12 +263,16 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     create_user_custom_fields(values) do |row|
+      next if user_id_from_imported_id(row["id"]).present?
+
       {
         user_id: user_id_from_imported_id(row["user_id"]),
         name: field_id_mapping[row["field_id"]],
         value: row["value"],
       }
     end
+
+    values.close
   end
 
   def import_single_sign_on_records
@@ -257,12 +286,16 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     create_single_sign_on_records(users) do |row|
+      next if user_id_from_imported_id(row["id"]).present?
+
       sso_record = JSON.parse(row["sso_record"], symbolize_names: true)
       # FIXME: using both "imported_id" and "imported_user_id" and should be replaced by just "imported_id"
       sso_record[:imported_id] = row["id"]
       sso_record[:imported_user_id] = row["id"]
       sso_record
     end
+
+    users.close
   end
 
   def import_topics
@@ -286,6 +319,8 @@ class BulkImport::Generic < BulkImport::Base
         views: row["views"],
       }
     end
+
+    topics.close
   end
 
   def import_topic_allowed_users
@@ -311,6 +346,8 @@ class BulkImport::Generic < BulkImport::Base
         user_id: user_id,
       }
     end
+
+    topics.close
 
     puts "", "Added #{added} topic_allowed_users records."
   end
@@ -339,6 +376,8 @@ class BulkImport::Generic < BulkImport::Base
           row["reply_to_post_id"] ? post_number_from_imported_id(row["reply_to_post_id"]) : nil,
       }
     end
+
+    posts.close
   end
 
   def process_raw(original_raw)
@@ -371,6 +410,8 @@ class BulkImport::Generic < BulkImport::Base
         created_at: to_datetime(row["created_at"]),
       }
     end
+
+    likes.close
   end
 
   def import_user_stats
@@ -435,11 +476,16 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     create_muted_users(muted_users) do |row|
+      next if user_id_from_imported_id(row["user_id"]).present?
+
       {
+        imported_user_id: row["id"],
         user_id: user_id_from_imported_id(row["user_id"]),
         muted_user_id: user_id_from_imported_id(row["muted_user_id"]),
       }
     end
+
+    muted_users.close
   end
 
   def import_user_histories
@@ -454,13 +500,18 @@ class BulkImport::Generic < BulkImport::Base
     action_id = UserHistory.actions[:suspend_user]
 
     create_user_histories(user_histories) do |row|
+      next if user_id_from_imported_id(row["id"]).present?
+
       {
+        imported_user_id: row["id"],
         action: action_id,
         acting_user_id: Discourse::SYSTEM_USER_ID,
         target_user_id: user_id_from_imported_id(row["id"]),
         details: row["reason"],
       }
     end
+
+    user_histories.close
   end
 
   def import_uploads
@@ -475,14 +526,20 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     create_uploads(uploads) do |row|
+      next if upload_id_from_original_id(row["id"]).present?
+
       upload = JSON.parse(row["upload"], symbolize_names: true)
       upload[:original_id] = row["id"]
       upload
     end
+
+    uploads.close
   end
 
   def import_user_avatars
     return if !@uploads_db
+
+    puts "Importing user avatars..."
 
     avatars = query(<<~SQL)
       SELECT id, avatar_upload_id
@@ -492,23 +549,56 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     create_user_avatars(avatars) do |row|
+      next if user_id_from_imported_id(row["id"]).present?
+
       {
         user_id: user_id_from_imported_id(row["id"]),
         custom_upload_id: upload_id_from_original_id(row["avatar_upload_id"]),
       }
     end
+
+    avatars.close
+  end
+
+  def import_upload_references
+    return if !@uploads_db
+
+    puts "Importing upload references..."
+
+    upload_references = query(<<~SQL)
+      SELECT id, avatar_upload_id
+        FROM users
+       WHERE avatar_upload_id
+       ORDER BY id
+    SQL
+
+    target_type = "UserAvatar"
+
+    create_upload_references(upload_references) do |row|
+      {
+        upload_id: upload_id_from_original_id(row["upload_id"]),
+        user_id: user_id_from_imported_id(row["id"]),
+        target_type: target_type,
+      }
+    end
+
+    upload_references.close
   end
 
   def import_tags
     puts "", "Importing tags..."
 
+    topics = query("SELECT id as topic_id, tags FROM topics")
+
     tags =
-      query("SELECT id as topic_id, tags FROM topics")
+      topics
         .map do |r|
           next unless r["tags"]
           [r["topic_id"], JSON.parse(r["tags"]).uniq]
         end
         .compact
+
+    topics.close
 
     tag_mapping = {}
 

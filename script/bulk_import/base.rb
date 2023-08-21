@@ -275,6 +275,7 @@ class BulkImport::Base
 
     puts "Loading upload indexes..."
     @uploads_mapping = load_index(MAPPING_TYPES[:upload])
+    @uploads_by_sha1 = Upload.pluck(:sha1, :id).to_h
   end
 
   def use_bbcode_to_md?
@@ -316,7 +317,7 @@ class BulkImport::Base
     if @last_post_action_id > 0
       @raw_connection.exec("SELECT setval('#{PostAction.sequence_name}', #{@last_post_action_id})")
     end
-    if @last_user_custom_field_id > 0
+    if @last_user_custom_field_id && @last_user_custom_field_id > 0
       @raw_connection.exec(
         "SELECT setval('#{UserCustomField.sequence_name}', #{@last_user_custom_field_id})",
       )
@@ -359,6 +360,10 @@ class BulkImport::Base
 
   def upload_id_from_original_id(id)
     @uploads_mapping[id.to_s]&.to_i
+  end
+
+  def upload_id_from_sha1(sha1)
+    @uploads_by_sha1[sha1]
   end
 
   def post_number_from_imported_id(id)
@@ -768,20 +773,19 @@ class BulkImport::Base
   end
 
   def process_user_history(history)
+    user_id = @users[history[:imported_user_id].to_i]
+    return { skip: true } if @pre_existing_user_ids.include?(user_id)
+
     history[:id] = @last_user_history_id += 1
     history[:created_at] ||= NOW
     history[:updated_at] ||= NOW
     history
   end
 
-  def process_user_avatar(avatar)
-    avatar[:id] = @last_user_avatar_id += 1
-    avatar[:created_at] ||= NOW
-    avatar[:updated_at] ||= NOW
-    avatar
-  end
-
   def process_muted_user(muted_user)
+    user_id = @users[muted_user[:imported_user_id].to_i]
+    return { skip: true } if @pre_existing_user_ids.include?(user_id)
+
     muted_user[:id] = @last_muted_user_id += 1
     muted_user[:created_at] ||= NOW
     muted_user[:updated_at] ||= NOW
@@ -960,7 +964,11 @@ class BulkImport::Base
   end
 
   def process_upload(upload)
-    return { skip: true } if @uploads_mapping.has_key?(upload[:original_id])
+    if (existing_upload_id = upload_id_from_sha1(upload[:sha1]))
+      @imported_uploads[upload[:original_id]] = existing_upload_id
+      @uploads_mapping[upload[:original_id]] = existing_upload_id
+      return { skip: true }
+    end
 
     upload[:id] = @last_upload_id += 1
     upload[:user_id] ||= Discourse::SYSTEM_USER_ID
@@ -969,8 +977,16 @@ class BulkImport::Base
 
     @imported_uploads[upload[:original_id]] = upload[:id]
     @uploads_mapping[upload[:original_id]] = upload[:id]
+    @uploads_by_sha1[upload[:sha1]] = upload[:id]
 
     upload
+  end
+
+  def process_user_avatar(avatar)
+    avatar[:id] = @last_user_avatar_id += 1
+    avatar[:created_at] ||= NOW
+    avatar[:updated_at] ||= NOW
+    avatar
   end
 
   def process_raw(original_raw)
