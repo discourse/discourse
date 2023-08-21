@@ -65,7 +65,7 @@ RSpec.describe "Chat channel", type: :system do
         end
 
         using_session(:tab_2) do |session|
-          expect(channel_page).to have_message(text: "test_message")
+          expect(channel_page.messages).to have_message(text: "test_message")
           session.quit
         end
       end

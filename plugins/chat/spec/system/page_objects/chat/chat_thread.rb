@@ -114,24 +114,6 @@ module PageObjects
         find(".chat-thread .chat-composer.is-send-enabled .chat-composer-button.-send").click
       end
 
-      def has_message?(text: nil, id: nil, thread_id: nil)
-        check_message_presence(exists: true, text: text, id: id, thread_id: thread_id)
-      end
-
-      def has_no_message?(text: nil, id: nil, thread_id: nil)
-        check_message_presence(exists: false, text: text, id: id, thread_id: thread_id)
-      end
-
-      def check_message_presence(exists: true, text: nil, id: nil, thread_id: nil)
-        css_method = exists ? :has_css? : :has_no_css?
-        selector = thread_id ? ".chat-thread[data-id=\"#{thread_id}\"]" : ".chat-thread"
-        if text
-          find(selector).send(css_method, ".chat-message-text", text: text, wait: 5)
-        elsif id
-          find(selector).send(css_method, ".chat-message-container[data-id=\"#{id}\"]", wait: 10)
-        end
-      end
-
       def expand_deleted_message(message)
         message_by_id(message.id).find(".chat-message-expand").click
       end

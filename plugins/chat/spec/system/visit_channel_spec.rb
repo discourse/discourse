@@ -195,10 +195,10 @@ RSpec.describe "Visit channel", type: :system do
             it "does not error" do
               visit(early_message.url)
               expect(channel_page).to have_no_loading_skeleton
-              expect(channel_page).to have_message(id: early_message.id)
+              expect(channel_page.messages).to have_message(id: early_message.id)
               sidebar_page.open_channel(other_channel)
               expect(dialog).to be_closed
-              expect(channel_page).to have_message(id: other_channel_message.id)
+              expect(channel_page.messages).to have_message(id: other_channel_message.id)
             end
           end
         end
