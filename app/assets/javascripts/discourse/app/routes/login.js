@@ -15,19 +15,14 @@ export default class LoginRoute extends DiscourseRoute {
 
   beforeModel() {
     if (!this.siteSettings.login_required) {
-      this.showLogin();
+      this.router
+        .replaceWith(`/${defaultHomepage()}`)
+        .followRedirects()
+        .then((e) => next(() => e.send("showLogin")));
     }
   }
 
   model() {
     return StaticPage.find("login");
-  }
-
-  @action
-  async showLogin() {
-    const route = await this.router
-      .replaceWith(`/${defaultHomepage()}`)
-      .followRedirects();
-    next(() => route.send("showLogin"));
   }
 }
