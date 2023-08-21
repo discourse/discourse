@@ -16,7 +16,7 @@ export default class SearchTerm extends Component {
   @service appEvents;
 
   @tracked lastEnterTimestamp = null;
-  @tracked searchCleared = false;
+  @tracked searchCleared = !this.search.activeGlobalSearchTerm;
 
   // make constant available in template
   get inputId() {
@@ -30,9 +30,7 @@ export default class SearchTerm extends Component {
       input.target.value
     );
 
-    if (this.search.activeGlobalSearchTerm) {
-      this.searchCleared = false;
-    }
+    this.searchCleared = this.search.activeGlobalSearchTerm ? false : true;
   }
 
   @action
