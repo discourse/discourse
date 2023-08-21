@@ -22,7 +22,7 @@
       {{/if}}
     {{/each}}
   </this.wrapperComponent>
-{{else}}
+{{else if this.connectorsExist}}
   {{! The modern path: no wrapper element = no classic component }}
   {{#each this.connectors as |c|}}
     {{#if c.componentClass}}
