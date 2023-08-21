@@ -84,7 +84,7 @@ RSpec.describe "Mentions warnings", type: :system do
         end
       end
 
-      it "Retains warnings when loading drafts or changing channels with no draft" do
+      it "retains warnings when loading drafts or changing channels with no draft" do
         Chat::Draft.create!(
           chat_channel: channel_1,
           user: current_user,

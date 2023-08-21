@@ -44,27 +44,26 @@ export default class ChatComposerWarningsTracker extends Service {
   }
 
   @bind
-  trackMentions(message, allowChannelWideMentions, skipDebounce) {
+  trackMentions(currentMessage, skipDebounce) {
     if (skipDebounce) {
-      return this._trackMentions(message, allowChannelWideMentions);
+      return this._trackMentions(currentMessage);
     }
 
     this.mentionsTimer = discourseDebounce(
       this,
       this._trackMentions,
-      message,
-      allowChannelWideMentions,
+      currentMessage,
       MENTION_DEBOUNCE_MS
     );
   }
 
   @bind
-  _trackMentions(message, allowChannelWideMentions) {
+  _trackMentions(currentMessage) {
     if (!this.siteSettings.enable_mentions) {
       return;
     }
 
-    const mentions = this._extractMentions(message);
+    const mentions = this._extractMentions(currentMessage.message);
     this.mentionsCount = mentions?.length;
 
     if (this.mentionsCount > 0) {
@@ -77,7 +76,7 @@ export default class ChatComposerWarningsTracker extends Service {
         );
 
         this.channelWideMentionDisallowed =
-          !allowChannelWideMentions &&
+          !currentMessage.channel.allowChannelWideMentions &&
           (mentions.includes("here") || mentions.includes("all"));
 
         if (newMentions?.length > 0) {

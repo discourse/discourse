@@ -376,8 +376,7 @@ export default class ChatComposer extends Component {
   captureMentions(opts = { skipDebounce: false }) {
     if (this.hasContent) {
       this.chatComposerWarningsTracker.trackMentions(
-        this.currentMessage.message,
-        this.args.channel.allowChannelWideMentions,
+        this.currentMessage,
         opts.skipDebounce
       );
     } else {

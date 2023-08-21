@@ -99,7 +99,7 @@ module(
         .exists();
     });
 
-    test("global mentions disabled", async function (assert) {
+    test("displays a warning when global mentions are disabled", async function (assert) {
       this.message = fabricators.message();
       this.message.mentionWarning = fabricators.messageMentionWarning(
         this.message,

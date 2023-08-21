@@ -227,9 +227,6 @@ module Chat
     def notify_creator_of_inaccessible_mentions(inaccessible)
       group_mentions_disabled = @parsed_mentions.groups_with_disabled_mentions.to_a
       too_many_members = @parsed_mentions.groups_with_too_many_members.to_a
-      global_mentions_disabled =
-        (@parsed_mentions.has_global_mention || @parsed_mentions.has_here_mention) &&
-          !@chat_channel.allow_channel_wide_mentions
       if inaccessible.values.all?(&:blank?) && group_mentions_disabled.empty? &&
            too_many_members.empty? && !global_mentions_disabled
         return
@@ -244,6 +241,14 @@ module Chat
         group_mentions_disabled,
         global_mentions_disabled,
       )
+    end
+
+    def global_mentions_disabled
+      return @global_mentions_disabled if defined?(@global_mentions_disabled)
+
+      @global_mentions_disabled =
+        (@parsed_mentions.has_global_mention || @parsed_mentions.has_here_mention) &&
+          !@chat_channel.allow_channel_wide_mentions
     end
 
     # Filters out users from global, here, group, and direct mentions that are
