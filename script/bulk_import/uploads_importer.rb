@@ -107,6 +107,9 @@ module BulkImport
       consumer_threads.each(&:join)
       status_queue.close
       status_thread.join
+
+      @source_db.close
+      @output_db.close
     end
 
     private
