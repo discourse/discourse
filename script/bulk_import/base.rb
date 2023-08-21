@@ -217,6 +217,7 @@ class BulkImport::Base
         .pluck("user_custom_fields.value", "users.username")
         .to_h
     @last_muted_user_id = last_id(MutedUser)
+    @last_user_history_id = last_id(UserHistory)
 
     puts "Loading categories indexes..."
     @last_category_id = last_id(Category)
@@ -287,6 +288,11 @@ class BulkImport::Base
     end
     if @last_muted_user_id > 0
       @raw_connection.exec("SELECT setval('#{MutedUser.sequence_name}', #{@last_muted_user_id})")
+    end
+    if @last_user_history_id > 0
+      @raw_connection.exec(
+        "SELECT setval('#{UserHistory.sequence_name}', #{@last_user_history_id})",
+      )
     end
   end
 
@@ -362,6 +368,8 @@ class BulkImport::Base
     reset_bounce_score_after
     digest_attempted_at
   ]
+
+  USER_HISTORY_COLUMNS ||= %i[id action acting_user_id target_user_id details created_at updated_at]
 
   USER_PROFILE_COLUMNS ||= %i[user_id location website bio_raw bio_cooked views]
 
@@ -505,6 +513,10 @@ class BulkImport::Base
 
   def create_user_stats(rows, &block)
     create_records(rows, "user_stat", USER_STAT_COLUMNS, &block)
+  end
+
+  def create_user_histories(rows, &block)
+    create_records(rows, "user_history", USER_HISTORY_COLUMNS, &block)
   end
 
   def create_user_profiles(rows, &block)
@@ -669,6 +681,13 @@ class BulkImport::Base
     user_stat[:bounce_score] ||= 0
     user_stat[:digest_attempted_at] ||= NOW
     user_stat
+  end
+
+  def process_user_history(history)
+    history[:id] = @last_user_history_id += 1
+    history[:created_at] ||= NOW
+    history[:updated_at] ||= NOW
+    history
   end
 
   def process_muted_user(muted_user)

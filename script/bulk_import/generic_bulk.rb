@@ -39,6 +39,7 @@ class BulkImport::Generic < BulkImport::Base
     import_likes
     import_user_stats
     import_muted_users
+    import_user_histories
     # import_tags
   end
 
@@ -429,6 +430,27 @@ class BulkImport::Generic < BulkImport::Base
       {
         user_id: user_id_from_imported_id(row["user_id"]),
         muted_user_id: user_id_from_imported_id(row["muted_user_id"]),
+      }
+    end
+  end
+
+  def import_user_histories
+    puts "Importing user histories..."
+
+    user_histories = query(<<~SQL)
+      SELECT id, JSON_EXTRACT(suspension, '$.reason') AS reason
+        FROM users
+       WHERE suspension IS NOT NULL
+    SQL
+
+    action_id = UserHistory.actions[:suspend_user]
+
+    create_user_histories(user_histories) do |row|
+      {
+        action: action_id,
+        acting_user_id: Discourse::SYSTEM_USER_ID,
+        target_user_id: user_id_from_imported_id(row["id"]),
+        details: row["reason"],
       }
     end
   end
