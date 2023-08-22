@@ -100,6 +100,7 @@ class DiscourseJsProcessor
   class Transpiler
     @mutex = Mutex.new
     @ctx_init = Mutex.new
+    @processor_mutex = Mutex.new
 
     def self.mutex
       @mutex
@@ -116,7 +117,12 @@ class DiscourseJsProcessor
     end
 
     def self.generate_js_processor
-      puts `yarn --silent esbuild --bundle app/assets/javascripts/gizmo.js --external:fs --define:process='{"env":{}}' --outfile=app/assets/javascripts/compiled-js-processor.js`
+      @processor_mutex.synchronize do
+        if Rails.env.development? ||
+             !File.exist?("#{Rails.root}/app/assets/javascripts/compiled-js-processor.js")
+          puts `yarn --silent esbuild --bundle app/assets/javascripts/gizmo.js --external:fs --define:process='{"env":{}}' --outfile=app/assets/javascripts/compiled-js-processor.js`
+        end
+      end
     end
 
     def self.create_new_context
@@ -129,11 +135,7 @@ class DiscourseJsProcessor
       ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
 
       # Theme template AST transformation plugins
-      if Rails.env.development? ||
-           !File.exist?("#{Rails.root}/app/assets/javascripts/compiled-js-processor.js")
-        generate_js_processor
-      end
-
+      generate_js_processor
       load_file_in_context(ctx, "compiled-js-processor.js")
 
       ctx
