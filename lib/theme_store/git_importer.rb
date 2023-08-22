@@ -1,16 +1,14 @@
 # frozen_string_literal: true
 
-module ThemeStore
-end
-
-class ThemeStore::GitImporter
+class ThemeStore::GitImporter < ThemeStore::Importer
   COMMAND_TIMEOUT_SECONDS = 20
 
   attr_reader :url
 
   def initialize(url, private_key: nil, branch: nil)
+    super
+
     @url = GitUrl.normalize(url)
-    @temp_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{SecureRandom.hex}"
     @private_key = private_key
     @branch = branch
   end
@@ -58,30 +56,6 @@ class ThemeStore::GitImporter
 
   def cleanup!
     FileUtils.rm_rf(@temp_folder)
-  end
-
-  def real_path(relative)
-    fullpath = "#{@temp_folder}/#{relative}"
-    return nil unless File.exist?(fullpath)
-
-    # careful to handle symlinks here, don't want to expose random data
-    fullpath = Pathname.new(fullpath).realpath.to_s
-
-    if fullpath && fullpath.start_with?(@temp_folder)
-      fullpath
-    else
-      nil
-    end
-  end
-
-  def all_files
-    Dir.glob("**/*", base: @temp_folder).reject { |f| File.directory?(File.join(@temp_folder, f)) }
-  end
-
-  def [](value)
-    fullpath = real_path(value)
-    return nil unless fullpath
-    File.read(fullpath)
   end
 
   protected

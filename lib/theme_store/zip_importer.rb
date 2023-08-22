@@ -2,14 +2,12 @@
 
 require "compression/engine"
 
-module ThemeStore
-end
-
-class ThemeStore::ZipImporter
+class ThemeStore::ZipImporter < ThemeStore::Importer
   attr_reader :url
 
   def initialize(filename, original_filename)
-    @temp_folder = "#{Pathname.new(Dir.tmpdir).realpath}/discourse_theme_#{SecureRandom.hex}"
+    super
+
     @filename = filename
     @original_filename = original_filename
   end
@@ -43,29 +41,5 @@ class ThemeStore::ZipImporter
     if root_files.size == 1 && File.directory?(root_files[0])
       FileUtils.mv(Dir.glob("#{@temp_folder}/*/*"), @temp_folder)
     end
-  end
-
-  def real_path(relative)
-    fullpath = "#{@temp_folder}/#{relative}"
-    return nil unless File.exist?(fullpath)
-
-    # careful to handle symlinks here, don't want to expose random data
-    fullpath = Pathname.new(fullpath).realpath.to_s
-
-    if fullpath && fullpath.start_with?(@temp_folder)
-      fullpath
-    else
-      nil
-    end
-  end
-
-  def all_files
-    Dir.glob("**/**", base: @temp_folder).reject { |f| File.directory?(File.join(@temp_folder, f)) }
-  end
-
-  def [](value)
-    fullpath = real_path(value)
-    return nil unless fullpath
-    File.read(fullpath)
   end
 end
