@@ -300,7 +300,7 @@ task "assets:precompile:compress_js" do
   Rails.application.assets_manifest.reload
 end
 
-task "assets:precompile:js_processor": "environment"
+task "assets:precompile:js_processor": "environment" do
   DiscourseJsProcessor.generate_js_processor
 end
 
