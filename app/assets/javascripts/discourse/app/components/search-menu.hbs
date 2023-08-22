@@ -1,0 +1,25 @@
+<MenuPanel @animationClass={{@animationClass}}>
+  <SearchMenu::MenuPanelContents
+    @inTopicContext={{this.inTopicContext}}
+    @clearTopicContext={{this.clearTopicContext}}
+    @clearPMInboxContext={{this.clearPMInboxContext}}
+    @inPMInboxContext={{this.inPMInboxContext}}
+    @searchTermChanged={{this.searchTermChanged}}
+    @loading={{this.loading}}
+    @fullSearchUrl={{this.fullSearchUrl}}
+    @fullSearch={{this.fullSearch}}
+    @triggerSearch={{this.triggerSearch}}
+    @clearSearch={{this.clearSearch}}
+    @includesTopics={{this.includesTopics}}
+    @noResults={{this.noResults}}
+    @results={{this.results}}
+    @invalidTerm={{this.invalidTerm}}
+    @suggestionKeyword={{this.suggestionKeyword}}
+    @suggestionResults={{this.suggestionResults}}
+    @searchTopics={{this.includesTopics}}
+    @typeFilter={{this.typeFilter}}
+    @updateTypeFilter={{this.updateTypeFilter}}
+    @toggleSearchMenu={{@toggleSearchMenu}}
+    @closeSearchMenu={{@closeSearchMenu}}
+  />
+</MenuPanel>

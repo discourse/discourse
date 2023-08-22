@@ -3,7 +3,7 @@
     <div class="sidebar-footer-actions">
       <PluginOutlet @name="sidebar-footer-actions" />
 
-      {{#if this.currentUser.custom_sidebar_sections_enabled}}
+      {{#if this.currentUser}}
         <DButton
           @icon="plus"
           @action={{action this.addSection}}

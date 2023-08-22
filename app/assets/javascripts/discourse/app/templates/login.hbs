@@ -1,0 +1,32 @@
+<DSection @bodyClass="static-login" @class="container">
+  <div class="contents clearfix body-page">
+    <div class="login-welcome">
+      <PluginOutlet @name="above-login" @outletArgs={{hash model=this.model}} />
+      <PluginOutlet @name="above-static" />
+
+      <div class="login-content">
+        {{html-safe this.model.html}}
+      </div>
+
+      <PluginOutlet @name="below-static" />
+      <PluginOutlet @name="below-login" @outletArgs={{hash model=this.model}} />
+
+      <div class="body-page-button-container">
+        {{#if this.application.canSignUp}}
+          <DButton
+            @action={{route-action "showCreateAccount"}}
+            @class="btn-primary sign-up-button"
+            @label="sign_up"
+          />
+        {{/if}}
+
+        <DButton
+          @action={{route-action "showLogin"}}
+          @class="btn-primary login-button"
+          @icon="user"
+          @label="log_in"
+        />
+      </div>
+    </div>
+  </div>
+</DSection>

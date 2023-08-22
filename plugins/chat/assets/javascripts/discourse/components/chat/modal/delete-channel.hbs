@@ -1,0 +1,32 @@
+<DModal
+  @closeModal={{@closeModal}}
+  class="chat-modal-delete-channel"
+  @inline={{@inline}}
+  @title={{i18n "chat.channel_delete.title"}}
+  @flash={{this.flash}}
+  @flashType={{this.flashType}}
+>
+  <:body>
+    <p class="chat-modal-delete-channel__instructions">
+      {{this.instructionsText}}
+    </p>
+
+    <TextField
+      @value={{this.channelNameConfirmation}}
+      @id="channel-delete-confirm-name"
+      @placeholderKey="chat.channel_delete.confirm_channel_name"
+      @autocorrect="off"
+      @autocapitalize="off"
+    />
+  </:body>
+  <:footer>
+    <DButton
+      @disabled={{this.buttonDisabled}}
+      @class="btn-danger"
+      @action={{this.deleteChannel}}
+      @label="chat.channel_delete.confirm"
+      @id="chat-confirm-delete-channel"
+    />
+    <DButton @label="cancel" @class="btn-flat" @action={{@closeModal}} />
+  </:footer>
+</DModal>

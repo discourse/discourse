@@ -10,7 +10,7 @@ import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 import { escape } from "pretty-text/sanitizer";
-import { extractError } from "discourse/lib/ajax-error";
+import { flashAjaxError } from "discourse/lib/ajax-error";
 import { findAll } from "discourse/models/login-method";
 import getURL from "discourse-common/lib/get-url";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
@@ -19,6 +19,8 @@ import { setting } from "discourse/lib/computed";
 import showModal from "discourse/lib/show-modal";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
 import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import ForgotPassword from "discourse/components/modal/forgot-password";
 
 // This is happening outside of the app via popup
 const AuthErrors = [
@@ -31,7 +33,6 @@ const AuthErrors = [
 
 export default Controller.extend(ModalFunctionality, {
   createAccount: controller(),
-  forgotPassword: controller(),
   application: controller(),
   dialog: service(),
 
@@ -157,37 +158,44 @@ export default Controller.extend(ModalFunctionality, {
       .then((data) => {
         const loginName = escapeExpression(this.loginName);
         const isEmail = loginName.match(/@/);
-        let key = `email_login.complete_${isEmail ? "email" : "username"}`;
+        let key = isEmail
+          ? "email_login.complete_email"
+          : "email_login.complete_username";
         if (data.user_found === false) {
           this.flash(
-            I18n.t(`${key}_not_found`, {
-              email: loginName,
-              username: loginName,
-            }),
+            htmlSafe(
+              I18n.t(`${key}_not_found`, {
+                email: loginName,
+                username: loginName,
+              })
+            ),
             "error"
           );
         } else {
           let postfix = data.hide_taken ? "" : "_found";
           this.flash(
-            I18n.t(`${key}${postfix}`, {
-              email: loginName,
-              username: loginName,
-            })
+            htmlSafe(
+              I18n.t(`${key}${postfix}`, {
+                email: loginName,
+                username: loginName,
+              })
+            )
           );
         }
       })
-      .catch((e) => this.flash(extractError(e), "error"))
+      .catch(flashAjaxError(this))
       .finally(() => this.set("processingEmailLink", false));
   },
 
   @action
   handleForgotPassword(event) {
     event?.preventDefault();
-    const forgotPasswordController = this.forgotPassword;
-    if (forgotPasswordController) {
-      forgotPasswordController.set("accountEmailOrUsername", this.loginName);
-    }
-    this.send("showForgotPassword");
+
+    this.modal.show(ForgotPassword, {
+      model: {
+        emailOrUsername: this.loginName,
+      },
+    });
   },
 
   @action

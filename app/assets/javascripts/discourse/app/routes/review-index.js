@@ -95,9 +95,7 @@ export default DiscourseRoute.extend({
   },
 
   get _reviewableCountsChannel() {
-    return this.currentUser.redesigned_user_menu_enabled
-      ? `/reviewable_counts/${this.currentUser.id}`
-      : "/reviewable_counts";
+    return `/reviewable_counts/${this.currentUser.id}`;
   },
 
   @action

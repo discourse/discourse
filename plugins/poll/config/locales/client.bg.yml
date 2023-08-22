@@ -25,30 +25,16 @@ bg:
           title: "Резултатите ще бъдат показани при <strong>затваряне</strong>."
         staff:
           title: "Резултатите се показват само на членове на <strong>екипа</strong>."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Изберете поне <strong>%{count}</strong> опция."
-            other: "Изберете поне <strong>%{count}</strong> опции."
-          up_to_max_options:
-            one: "Изберете <strong>%{count}</strong> опция."
-            other: "Изберете до <strong>%{count}</strong> опции."
-          x_options:
-            one: "Изберете <strong>%{count}</strong> опция."
-            other: "Изберете <strong>%{count}</strong> опции."
-          between_min_and_max_options: "Изберете между <strong>%{min}</strong> и <strong>%{max}</strong> опции."
       cast-votes:
         title: "Изчислете вашите гласове"
         label: "Гласувай сега!"
       show-results:
         title: "Покажи резултатите от гласуването"
-        label: "Покажи резултатите"
+        label: "Резултати"
       remove-vote:
         title: "Премахнете гласа си"
-        label: "Премахване на гласуването"
       hide-results:
         title: "Обратно към вашите гласове"
-        label: "Покажи гласуването"
       group-results:
         title: "Групиране на гласовете по потребител"
         label: "Показване на разбивка"
@@ -72,6 +58,8 @@ bg:
         breakdown: "Разбивка"
         percentage: "Процент"
         count: "Брой"
+      options:
+        label: "Опции"
       error_while_toggling_status: "Съжаляваме, получи се грешка при превключване статуса на тази анкета."
       error_while_casting_votes: "Получи се грешка при подаването на гласа ви."
       error_while_fetching_voters: "Получи се грешка при показването на гласовете."

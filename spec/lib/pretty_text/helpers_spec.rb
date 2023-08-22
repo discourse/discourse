@@ -16,37 +16,6 @@ RSpec.describe PrettyText::Helpers do
     end
   end
 
-  describe ".category_tag_hashtag_lookup" do
-    fab!(:tag) { Fabricate(:tag, name: "somecooltag") }
-    fab!(:category) do
-      Fabricate(:category, name: "Some Awesome Category", slug: "someawesomecategory")
-    end
-
-    it "handles tags based on slug with TAG_HASHTAG_POSTFIX" do
-      expect(
-        PrettyText::Helpers.category_tag_hashtag_lookup(
-          +"somecooltag#{PrettyText::Helpers::TAG_HASHTAG_POSTFIX}",
-        ),
-      ).to eq([tag.url, "somecooltag"])
-    end
-
-    it "handles categories based on slug" do
-      expect(PrettyText::Helpers.category_tag_hashtag_lookup("someawesomecategory")).to eq(
-        [category.url, "someawesomecategory"],
-      )
-    end
-
-    it "handles tags based on slug without TAG_HASHTAG_POSTFIX" do
-      expect(PrettyText::Helpers.category_tag_hashtag_lookup(+"somecooltag")).to eq(
-        [tag.url, "somecooltag"],
-      )
-    end
-
-    it "returns nil when no tag or category that matches exists" do
-      expect(PrettyText::Helpers.category_tag_hashtag_lookup("blah")).to eq(nil)
-    end
-  end
-
   describe ".hashtag_lookup" do
     fab!(:tag) { Fabricate(:tag, name: "somecooltag", description: "Coolest things ever") }
     fab!(:category) do
@@ -68,6 +37,7 @@ RSpec.describe PrettyText::Helpers do
           text: "somecooltag",
           description: "Coolest things ever",
           icon: "tag",
+          id: tag.id,
           slug: "somecooltag",
           ref: "somecooltag::tag",
           type: "tag",
@@ -85,6 +55,7 @@ RSpec.describe PrettyText::Helpers do
           text: "Some Awesome Category",
           description: "Really great stuff here",
           icon: "folder",
+          id: category.id,
           slug: "someawesomecategory",
           ref: "someawesomecategory::category",
           type: "category",
@@ -101,6 +72,7 @@ RSpec.describe PrettyText::Helpers do
           text: "Some Awesome Category",
           description: "Really great stuff here",
           icon: "folder",
+          id: category.id,
           slug: "someawesomecategory",
           ref: "someawesomecategory",
           type: "category",
@@ -115,6 +87,7 @@ RSpec.describe PrettyText::Helpers do
           text: "somecooltag",
           description: "Coolest things ever",
           icon: "tag",
+          id: tag.id,
           slug: "somecooltag",
           ref: "somecooltag",
           type: "tag",
@@ -128,6 +101,7 @@ RSpec.describe PrettyText::Helpers do
           text: "Some Awesome Category",
           description: "Really great stuff here",
           icon: "folder",
+          id: category.id,
           slug: "someawesomecategory",
           ref: "someawesomecategory",
           type: "category",
@@ -150,11 +124,19 @@ RSpec.describe PrettyText::Helpers do
           text: "Manager Hideout",
           description: nil,
           icon: "folder",
+          id: private_category.id,
           slug: "secretcategory",
           ref: "secretcategory",
           type: "category",
         },
       )
+    end
+
+    it "does not return any results for disabled types" do
+      SiteSetting.tagging_enabled = false
+      expect(
+        PrettyText::Helpers.hashtag_lookup("somecooltag::tag", user.id, %w[category tag]),
+      ).to eq(nil)
     end
 
     it "returns nil when no tag or category that matches exists" do

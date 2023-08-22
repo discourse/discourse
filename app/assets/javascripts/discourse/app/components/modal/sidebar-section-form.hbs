@@ -1,0 +1,137 @@
+<DModal
+  @closeModal={{@closeModal}}
+  @flash={{this.flash}}
+  @flashType={{this.flashType}}
+  @title={{i18n this.header}}
+  class="sidebar-section-form-modal"
+>
+  <:body>
+    <form class="form-horizontal sidebar-section-form">
+      {{#unless this.transformedModel.hideTitleInput}}
+        <div class="sidebar-section-form__input-wrapper">
+          <label for="section-name">
+            {{i18n "sidebar.sections.custom.title.label"}}
+          </label>
+
+          <Input
+            name="section-name"
+            @type="text"
+            @value={{this.transformedModel.title}}
+            class={{this.transformedModel.titleCssClass}}
+            {{on
+              "input"
+              (action (mut this.transformedModel.title) value="target.value")
+            }}
+          />
+
+          {{#if this.transformedModel.invalidTitleMessage}}
+            <div class="title warning">
+              {{this.transformedModel.invalidTitleMessage}}
+            </div>
+          {{/if}}
+        </div>
+      {{/unless}}
+
+      <div class="row-wrapper header">
+        <div class="input-group link-icon">
+          <label>{{i18n "sidebar.sections.custom.links.icon.label"}}</label>
+        </div>
+
+        <div class="input-group link-name">
+          <label>{{i18n "sidebar.sections.custom.links.name.label"}}</label>
+        </div>
+
+        <div class="input-group link-url">
+          <label>{{i18n "sidebar.sections.custom.links.value.label"}}</label>
+        </div>
+      </div>
+
+      {{#each this.activeLinks as |link|}}
+        <Sidebar::SectionFormLink
+          @link={{link}}
+          @deleteLink={{this.deleteLink}}
+          @reorderCallback={{this.reorder}}
+        />
+      {{/each}}
+      <DButton
+        @action={{action "addLink"}}
+        @class="btn-flat btn-text add-link"
+        @title="sidebar.sections.custom.links.add"
+        @icon="plus"
+        @label="sidebar.sections.custom.links.add"
+        @ariaLabel="sidebar.sections.custom.links.add"
+      />
+      {{#if this.transformedModel.sectionType}}
+        <hr />
+        <h3>{{i18n "sidebar.sections.custom.more_menu"}}</h3>
+        {{#each this.activeSecondaryLinks as |link|}}
+          <Sidebar::SectionFormLink
+            @link={{link}}
+            @deleteLink={{this.deleteLink}}
+            @reorderCallback={{this.reorder}}
+          />
+        {{/each}}
+        <DButton
+          @action={{action "addSecondaryLink"}}
+          @class="btn-flat btn-text add-link"
+          @title="sidebar.sections.custom.links.add"
+          @icon="plus"
+          @label="sidebar.sections.custom.links.add"
+          @ariaLabel="sidebar.sections.custom.links.add"
+        />
+
+      {{/if}}
+      {{#if (and this.currentUser.staff)}}
+        <div
+          class="row-wrapper mark-public-wrapper
+            {{if this.transformedModel.sectionType '-disabled'}}"
+        >
+          <label class="checkbox-label">
+            {{#if this.transformedModel.sectionType}}
+              <DTooltip @placement="top-start">
+                {{i18n "sidebar.sections.custom.always_public"}}
+              </DTooltip>
+            {{/if}}
+            <Input
+              @type="checkbox"
+              @checked={{this.transformedModel.public}}
+              class="mark-public"
+              disabled={{this.transformedModel.sectionType}}
+            />
+            {{i18n "sidebar.sections.custom.public"}}
+          </label>
+        </div>
+      {{/if}}
+    </form>
+  </:body>
+  <:footer>
+    <DButton
+      @id="save-section"
+      @action={{action "save"}}
+      @class="btn-primary"
+      @label="sidebar.sections.custom.save"
+      @ariaLabel="sidebar.sections.custom.save"
+      @disabled={{not this.transformedModel.valid}}
+    />
+    {{#if this.canDelete}}
+      <DButton
+        @icon="trash-alt"
+        @id="delete-section"
+        @class="btn-danger delete"
+        @action={{action "delete"}}
+        @label="sidebar.sections.custom.delete"
+        @ariaLabel="sidebar.sections.custom.delete"
+      />
+    {{/if}}
+    {{#if this.transformedModel.sectionType}}
+      <DButton
+        @action={{action "resetToDefault"}}
+        @class="btn-flat btn-text reset-link"
+        @icon="undo"
+        @title="sidebar.sections.custom.links.reset"
+        @label="sidebar.sections.custom.links.reset"
+        @ariaLabel="sidebar.sections.custom.links.reset"
+      />
+    {{/if}}
+  </:footer>
+</DModal>

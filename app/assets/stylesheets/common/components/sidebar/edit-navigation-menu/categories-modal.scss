@@ -1,0 +1,71 @@
+.sidebar-categories-form {
+  .sidebar-categories-form__row {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--primary-low);
+    border-left: 4px solid;
+    margin-bottom: 1em;
+    padding: 0;
+  }
+
+  .sidebar-categories-form__category-row[data-category-level="0"]:not(
+      :only-child
+    ) {
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  .sidebar-categories-form__category-row[data-category-level="1"] {
+    margin-left: 1em;
+  }
+
+  .sidebar-categories-form__category-row[data-category-level="1"]:not(
+      :nth-of-type(2)
+    ) {
+    border-top: 1px solid var(--primary-low);
+  }
+
+  .sidebar-categories-form__category-row[data-category-level="2"] {
+    margin-left: 2em;
+    border-top: 1px solid var(--primary-low);
+  }
+
+  .sidebar-categories-form__category-label {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75em 1em;
+    margin: 0;
+    flex-grow: 1;
+    input[type="checkbox"] {
+      margin-right: 0;
+    }
+  }
+
+  .sidebar-categories-form__category-wrapper {
+    min-width: 0;
+  }
+
+  .sidebar-categories-form__category-badge {
+    .badge-wrapper {
+      width: 100%;
+    }
+
+    .badge-category {
+      white-space: normal;
+      word-wrap: break-word;
+    }
+
+    .category-name {
+      color: var(--primary);
+      font-size: var(--font-up-1);
+      @include ellipsis;
+    }
+  }
+
+  .sidebar-categories-form__category-description {
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+    margin: 0.25em 0;
+    // avoids long words (like urls) from breaking the layou
+    word-break: break-word;
+  }
+}

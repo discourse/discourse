@@ -329,7 +329,9 @@ module JsLocaleHelper
         @ctx ||=
           begin
             ctx = MiniRacer::Context.new(timeout: 15_000, ensure_gc_after_idle: 2000)
-            ctx.load("#{Rails.root}/lib/javascripts/messageformat.js")
+            ctx.load(
+              "#{Rails.root}/app/assets/javascripts/node_modules/messageformat/messageformat.js",
+            )
             ctx
           end
       )

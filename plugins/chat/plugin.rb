@@ -32,6 +32,7 @@ module ::Chat
 end
 
 require_relative "lib/chat/engine"
+require_relative "lib/chat/types/array"
 
 after_initialize do
   register_seedfu_fixtures(Rails.root.join("plugins", "chat", "db", "fixtures"))
@@ -46,6 +47,7 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:ignore_channel_wide_mention)
   UserUpdater::OPTION_ATTR.push(:chat_email_frequency)
   UserUpdater::OPTION_ATTR.push(:chat_header_indicator_preference)
+  UserUpdater::OPTION_ATTR.push(:chat_separate_sidebar_mode)
 
   register_reviewable_type Chat::ReviewableMessage
 
@@ -63,6 +65,7 @@ after_initialize do
     User.prepend Chat::UserExtension
     Jobs::UserEmail.prepend Chat::UserEmailExtension
     Plugin::Instance.prepend Chat::PluginInstanceExtension
+    Jobs::ExportCsvFile.class_eval { prepend Chat::MessagesExporter }
   end
 
   if Oneboxer.respond_to?(:register_local_handler)
@@ -181,31 +184,48 @@ after_initialize do
     scope.user.id != object.id && scope.can_chat? && Guardian.new(object).can_chat?
   end
 
-  add_to_serializer(:current_user, :can_chat) { true }
+  add_to_serializer(
+    :current_user,
+    :can_chat,
+    include_condition: -> do
+      return @can_chat if defined?(@can_chat)
+      @can_chat = SiteSetting.chat_enabled && scope.can_chat?
+    end,
+  ) { true }
 
-  add_to_serializer(:current_user, :include_can_chat?) do
-    return @can_chat if defined?(@can_chat)
+  add_to_serializer(
+    :current_user,
+    :has_chat_enabled,
+    include_condition: -> do
+      return @has_chat_enabled if defined?(@has_chat_enabled)
+      @has_chat_enabled = include_can_chat? && object.user_option.chat_enabled
+    end,
+  ) { true }
 
-    @can_chat = SiteSetting.chat_enabled && scope.can_chat?
-  end
+  add_to_serializer(
+    :current_user,
+    :chat_sound,
+    include_condition: -> { include_has_chat_enabled? && object.user_option.chat_sound },
+  ) { object.user_option.chat_sound }
 
-  add_to_serializer(:current_user, :has_chat_enabled) { true }
+  add_to_serializer(
+    :current_user,
+    :needs_channel_retention_reminder,
+    include_condition: -> do
+      include_has_chat_enabled? && object.staff? &&
+        !object.user_option.dismissed_channel_retention_reminder &&
+        !SiteSetting.chat_channel_retention_days.zero?
+    end,
+  ) { true }
 
-  add_to_serializer(:current_user, :include_has_chat_enabled?) do
-    return @has_chat_enabled if defined?(@has_chat_enabled)
-
-    @has_chat_enabled = include_can_chat? && object.user_option.chat_enabled
-  end
-
-  add_to_serializer(:current_user, :chat_sound) { object.user_option.chat_sound }
-
-  add_to_serializer(:current_user, :include_chat_sound?) do
-    include_has_chat_enabled? && object.user_option.chat_sound
-  end
-
-  add_to_serializer(:current_user, :needs_channel_retention_reminder) { true }
-
-  add_to_serializer(:current_user, :needs_dm_retention_reminder) { true }
+  add_to_serializer(
+    :current_user,
+    :needs_dm_retention_reminder,
+    include_condition: -> do
+      include_has_chat_enabled? && !object.user_option.dismissed_dm_retention_reminder &&
+        !SiteSetting.chat_dm_retention_days.zero?
+    end,
+  ) { true }
 
   add_to_serializer(:current_user, :has_joinable_public_channels) do
     Chat::ChannelFetcher.secured_public_channel_search(
@@ -218,21 +238,32 @@ after_initialize do
 
   add_to_serializer(:current_user, :chat_channels) do
     structured = Chat::ChannelFetcher.structured(self.scope)
-    Chat::ChannelIndexSerializer.new(structured, scope: self.scope, root: false).as_json
+
+    structured[:unread_thread_overview] = ::Chat::TrackingStateReportQuery.call(
+      guardian: self.scope,
+      channel_ids: structured[:public_channels].map(&:id),
+      include_threads: true,
+      include_read: false,
+      include_last_reply_details: true,
+    ).thread_unread_overview_by_channel
+
+    category_ids = structured[:public_channels].map { |c| c.chatable_id }
+    post_allowed_category_ids =
+      Category.post_create_allowed(self.scope).where(id: category_ids).pluck(:id)
+
+    Chat::ChannelIndexSerializer.new(
+      structured,
+      scope: self.scope,
+      root: false,
+      post_allowed_category_ids: post_allowed_category_ids,
+    ).as_json
   end
 
-  add_to_serializer(:current_user, :include_needs_channel_retention_reminder?) do
-    include_has_chat_enabled? && object.staff? &&
-      !object.user_option.dismissed_channel_retention_reminder &&
-      !SiteSetting.chat_channel_retention_days.zero?
-  end
-
-  add_to_serializer(:current_user, :include_needs_dm_retention_reminder?) do
-    include_has_chat_enabled? && !object.user_option.dismissed_dm_retention_reminder &&
-      !SiteSetting.chat_dm_retention_days.zero?
-  end
-
-  add_to_serializer(:current_user, :chat_drafts) do
+  add_to_serializer(
+    :current_user,
+    :chat_drafts,
+    include_condition: -> { include_has_chat_enabled? },
+  ) do
     Chat::Draft
       .where(user_id: object.id)
       .order(updated_at: :desc)
@@ -241,13 +272,13 @@ after_initialize do
       .map { |row| { channel_id: row[0], data: row[1] } }
   end
 
-  add_to_serializer(:current_user, :include_chat_drafts?) { include_has_chat_enabled? }
-
   add_to_serializer(:user_option, :chat_enabled) { object.chat_enabled }
 
-  add_to_serializer(:user_option, :chat_sound) { object.chat_sound }
-
-  add_to_serializer(:user_option, :include_chat_sound?) { !object.chat_sound.blank? }
+  add_to_serializer(
+    :user_option,
+    :chat_sound,
+    include_condition: -> { !object.chat_sound.blank? },
+  ) { object.chat_sound }
 
   add_to_serializer(:user_option, :only_chat_push_notifications) do
     object.only_chat_push_notifications
@@ -265,6 +296,12 @@ after_initialize do
 
   add_to_serializer(:current_user_option, :chat_header_indicator_preference) do
     object.chat_header_indicator_preference
+  end
+
+  add_to_serializer(:user_option, :chat_separate_sidebar_mode) { object.chat_separate_sidebar_mode }
+
+  add_to_serializer(:current_user_option, :chat_separate_sidebar_mode) do
+    object.chat_separate_sidebar_mode
   end
 
   RETENTION_SETTINGS_TO_USER_OPTION_FIELDS = {
@@ -388,7 +425,6 @@ after_initialize do
   end
 
   on(:category_updated) do |category|
-    # TODO(roman): remove early return after 2.9 release.
     # There's a bug on core where this event is triggered with an `#update` result (true/false)
     if category.is_a?(Category) && category_channel = Chat::Channel.find_by(chatable: category)
       if category_channel.auto_join_users

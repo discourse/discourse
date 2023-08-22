@@ -201,7 +201,6 @@ sw:
       one: "Herufi %{count}"
       other: "Herufi %{count}"
     suggested_topics:
-      title: "Mada Zilizopendekezwa"
       pm_title: "Ujumbe Uliopendekezwa"
     about:
       simple_title: "Kuhusu "
@@ -536,7 +535,6 @@ sw:
       "12": "Vilivyotumwa"
       "13": "kisanduku pokezi"
       "14": "Inasubiri"
-      "15": "Drafts"
     categories:
       all: "kategoria zote"
       all_subcategories: "Zote"
@@ -690,12 +688,6 @@ sw:
       theme: "Mandhari"
       home: "Chaguo-msingi mwanzo"
       staged: "Sehemu ya kujaribu"
-      staff_counters:
-        flags_given: "bendera za usaidizi"
-        flagged_posts: "Machapisho yenye bendera."
-        deleted_posts: "Machapisho yaliyofutwa"
-        suspensions: "masitisho"
-        warnings_received: "maonyo"
       messages:
         inbox: "Kisanduku-pokezi"
         latest: "Hivi Karibuni"
@@ -735,8 +727,6 @@ sw:
       second_factor_backup:
         regenerate: "Tengeneza Upya"
         disable: "Sitisha"
-        enable: "Wezesha"
-        enable_long: "Wezesha kodi za backup"
         copy_to_clipboard: "Umenakili kwenye Ubao Nakili"
         copy_to_clipboard_error: "Makosa kwenye Kunakili"
         copied_to_clipboard: "Nakili"
@@ -1036,8 +1026,6 @@ sw:
       sign_up: "Jiunge"
       hide_forever: "hapana asante"
     summary:
-      enabled_description: "Unaangalia muhtasari wa hii mada; machapisho yote yanayovutia yanachaguliwa na jukwaa."
-      enable: "Tengeneza Muhtasari wa Hii Mada."
       disable: "Onyesha Machapisho Yote"
     deleted_filter:
       enabled_description: "Mada hii ina machapisho yaliyofutwa, ambayo yamefichwa."
@@ -1572,7 +1560,6 @@ sw:
           "2_8": "Utaona jumla ya majibu mapya kwa sababu unafuatilia kategoria hii."
           "2_4": "Utaweza kuona jumla ya majibu mapya kwa sababu ulichapisha jibu kwenye mada hii."
           "2_2": "Utaweza kuona jumla ya majibu mapya kwa sababu unafuatilia mada hii."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Utajulishwa kama mtu akitaja @jina lako au akikujibu."
           "1": "Utajulishwa kama mtu akitaja @jina lako au akikujibu."
           "0_7": "Unapuuzia taarifa za kategoria hii."
@@ -2150,7 +2137,6 @@ sw:
         print: "%{shortcut} Chapisha mada:"
     badges:
       granted_on: "Imetolewa %{date}"
-      others_count: "Wengine wenye hii beji (%{count})"
       title: Beji
       allow_title: "Unaweza kutumia beji hii kama cheo"
       multiple_grant: "Unaweza kuipata mara nyingi"
@@ -2253,6 +2239,9 @@ sw:
         other: "Mada mpya %{count} "
       more: "Zaidi"
       all_categories: "Kategoria Zote"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Vyote"
       sections:
         custom:
           save: "Hifadhi"
@@ -2278,7 +2267,8 @@ sw:
         categories:
           header_link_text: "Kategoria"
         community:
-          header_link_text: "Jumuiya"
+          edit_section:
+            header_dropdown: "Geuza Kukufaa"
           links:
             about:
               content: "Kuhusu"
@@ -2286,6 +2276,8 @@ sw:
               content: "Msimamizi"
             badges:
               content: "Beji"
+            topics:
+              content: "Mada"
             faq:
               content: "FAQ"
             groups:
@@ -2294,6 +2286,11 @@ sw:
               content: "Watumiaji"
             my_posts:
               content: "Machapisho Yangu"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Tafadhali andika thamani sahihi."
+          email: "Andika barua pepe iliyo sahihi."
   admin_js:
     type_to_filter: "andika kuchuja..."
     admin:
@@ -2588,6 +2585,7 @@ sw:
           create: "Tengeneza"
           create_type: "Aina"
           create_name: "Jina"
+          save: "Hifadhi"
           long_title: "Boresha rangi, taarifa za CSS na HTML zilipo ndani ya tovuti yako"
           edit: "Hariri"
           edit_confirm: "Mandhari hii ni kutoka nje, ukihariri CSS/HTML mabadiliko yatafutwa mara ukisasisha mandhari."
@@ -2920,6 +2918,8 @@ sw:
           validations:
             required:
               key: "muhimu"
+            type:
+              key: "aina"
       impersonate:
         title: "Iga Utambulisho"
         help: "Tumia kifaa hiki kuiga utambulisho wa mtumiaji ili uweze kutatua matatizo. Itabidi utoke ukishamaliza."
@@ -3164,6 +3164,8 @@ sw:
         go_back: "Rudi kwenye Utafiti"
         recommended: "Tunakushauri ugeuze maneno yafuatayo yaweze kufaa mahitaji yako:"
         show_overriden: "Onyesha vilivyobatilishwa pekee"
+        outdated:
+          dismiss: "Ondosha..."
       settings:
         show_overriden: "Onyesha vilivyobatilishwa pekee"
         reset: "weka au anza upya"

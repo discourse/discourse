@@ -44,19 +44,9 @@ module Chat
       build_summary_for(user)
       @preferences_path = "#{Discourse.base_url}/my/preferences/chat"
 
-      # TODO(roman): Remove after the 2.9 release
-      add_unsubscribe_link = UnsubscribeKey.respond_to?(:get_unsubscribe_strategy_for)
-
-      if add_unsubscribe_link
-        unsubscribe_key = UnsubscribeKey.create_key_for(@user, "chat_summary")
-        @unsubscribe_link = "#{Discourse.base_url}/email/unsubscribe/#{unsubscribe_key}"
-        opts[:unsubscribe_url] = @unsubscribe_link
-      end
-
       opts = {
         from_alias: I18n.t("user_notifications.chat_summary.from", site_name: Email.site_title),
         subject: summary_subject(user, @grouped_messages),
-        add_unsubscribe_link: add_unsubscribe_link,
       }
 
       build_email(user.email, opts)
@@ -73,7 +63,7 @@ module Chat
       # Prioritize messages from regular channels over direct messages
       if channels.any?
         channel_notification_text(
-          channels.sort_by { |channel| [channel.last_message_sent_at, channel.created_at] },
+          channels.sort_by { |channel| [channel.last_message.created_at, channel.created_at] },
           dm_users,
         )
       else

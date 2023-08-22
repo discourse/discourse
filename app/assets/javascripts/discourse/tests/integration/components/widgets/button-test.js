@@ -63,4 +63,12 @@ module("Integration | Component | Widget | button", function (hooks) {
 
     assert.strictEqual(query("button").title, "foo bar");
   });
+
+  test("translatedLabel skips no-text class in icon", async function (assert) {
+    this.set("args", { icon: "plus", translatedLabel: "foo bar" });
+
+    await render(hbs`<MountWidget @widget="button" @args={{this.args}} />`);
+
+    assert.ok(!exists("button.btn.btn-icon.no-text"), "skips no-text class");
+  });
 });

@@ -6,7 +6,7 @@ import ModalFunctionality from "discourse/mixins/modal-functionality";
 import UserBadge from "discourse/models/user-badge";
 import { all } from "rsvp";
 import discourseComputed from "discourse-common/utils/decorators";
-import { extractError } from "discourse/lib/ajax-error";
+import { flashAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend(ModalFunctionality, GrantBadgeController, {
   topicController: controller("topic"),
@@ -64,21 +64,16 @@ export default Controller.extend(ModalFunctionality, GrantBadgeController, {
         this.get("post.username"),
         this.badgeReason
       )
-        .then(
-          (newBadge) => {
-            this.set("selectedBadgeId", null);
-            this.flash(
-              I18n.t("badges.successfully_granted", {
-                username: this.get("post.username"),
-                badge: newBadge.get("badge.name"),
-              }),
-              "success"
-            );
-          },
-          (error) => {
-            this.flash(extractError(error), "error");
-          }
-        )
+        .then((newBadge) => {
+          this.set("selectedBadgeId", null);
+          this.flash(
+            I18n.t("badges.successfully_granted", {
+              username: this.get("post.username"),
+              badge: newBadge.get("badge.name"),
+            }),
+            "success"
+          );
+        }, flashAjaxError(this))
         .finally(() => this.set("saving", false));
     },
   },

@@ -206,7 +206,9 @@ class AdminDashboardData
                       :out_of_date_themes,
                       :unreachable_themes,
                       :watched_words_check,
-                      :google_analytics_version_check
+                      :google_analytics_version_check,
+                      :translation_overrides_check,
+                      :legacy_navigation_menu_check
 
     register_default_scheduled_problem_checks
 
@@ -357,6 +359,18 @@ class AdminDashboardData
     if (GlobalSetting.use_s3? || SiteSetting.enable_s3_uploads) &&
          SiteSetting.Upload.s3_cdn_url.blank?
       I18n.t("dashboard.s3_cdn_warning")
+    end
+  end
+
+  def translation_overrides_check
+    if TranslationOverride.exists?(status: %i[outdated invalid_interpolation_keys])
+      I18n.t("dashboard.outdated_translations_warning", base_path: Discourse.base_path)
+    end
+  end
+
+  def legacy_navigation_menu_check
+    if SiteSetting.navigation_menu == "legacy"
+      I18n.t("dashboard.legacy_navigation_menu_deprecated", base_path: Discourse.base_path)
     end
   end
 

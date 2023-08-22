@@ -309,16 +309,6 @@ class Theme extends RestModel {
       .finally(() => this.set("changed", false))
       .catch(popupAjaxError);
   }
-
-  saveSettings(name, value) {
-    const settings = {};
-    settings[name] = value;
-    return this.save({ settings });
-  }
-
-  saveTranslation(name, value) {
-    return this.save({ translations: { [name]: value } });
-  }
 }
 
 export default Theme;

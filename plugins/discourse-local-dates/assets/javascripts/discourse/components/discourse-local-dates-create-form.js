@@ -1,4 +1,3 @@
-/* global Pikaday:true */
 import computed, {
   debounce,
   observes,
@@ -7,10 +6,7 @@ import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import { Promise } from "rsvp";
 import { cookAsync } from "discourse/lib/text";
-import { isEmpty } from "@ember/utils";
-import loadScript from "discourse/lib/load-script";
 import { notEmpty } from "@ember/object/computed";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { schedule } from "@ember/runloop";
@@ -46,18 +42,14 @@ export default Component.extend({
       formats: (this.siteSettings.discourse_local_dates_default_formats || "")
         .split("|")
         .filter((f) => f),
-      timezone: moment.tz.guess(),
+      timezone: this.currentUserTimezone,
       date: moment().format(this.dateFormat),
     });
   },
 
   didInsertElement() {
     this._super(...arguments);
-
-    this._setupPicker().then((picker) => {
-      this._picker = picker;
-      this.send("focusFrom");
-    });
+    this.send("focusFrom");
   },
 
   @observes("computedConfig.{from,to,options}", "options", "isValid", "isRange")
@@ -194,7 +186,7 @@ export default Component.extend({
 
   @computed
   currentUserTimezone() {
-    return moment.tz.guess();
+    return this.currentUser.user_option.timezone || moment.tz.guess();
   },
 
   @computed
@@ -312,122 +304,82 @@ export default Component.extend({
     this.set("format", format);
   },
 
-  actions: {
-    setTime(event) {
-      this._setTimeIfValid(event.target.value, "time");
-    },
+  @computed("fromSelected", "toSelected")
+  selectedDate(fromSelected) {
+    return fromSelected ? this.date : this.toDate;
+  },
 
-    setToTime(event) {
-      this._setTimeIfValid(event.target.value, "toTime");
-    },
+  @computed("fromSelected", "toSelected")
+  selectedTime(fromSelected) {
+    return fromSelected ? this.time : this.toTime;
+  },
 
-    eraseToDateTime() {
-      this.setProperties({ toDate: null, toTime: null });
-      this._setPickerDate(null);
-    },
+  @action
+  changeSelectedDate(date) {
+    if (this.fromSelected) {
+      this.set("date", date);
+    } else {
+      this.set("toDate", date);
+    }
+  },
 
-    focusFrom() {
-      this.setProperties({ fromSelected: true, toSelected: false });
-      this._setPickerDate(this.get("fromConfig.date"));
-      this._setPickerMinDate(null);
-    },
+  @action
+  changeSelectedTime(time) {
+    if (this.fromSelected) {
+      this.set("time", time);
+    } else {
+      this.set("toTime", time);
+    }
+  },
 
-    focusTo() {
-      this.setProperties({ toSelected: true, fromSelected: false });
-      this._setPickerDate(this.get("toConfig.date"));
-      this._setPickerMinDate(this.get("fromConfig.date"));
-    },
+  @action
+  eraseToDateTime() {
+    this.setProperties({
+      toDate: null,
+      toTime: null,
+    });
+    this.focusFrom();
+  },
 
-    advancedMode() {
-      this.toggleProperty("advancedMode");
-    },
+  @action
+  focusFrom() {
+    this.setProperties({
+      fromSelected: true,
+      toSelected: false,
+      minDate: null,
+    });
+  },
 
-    save() {
-      const markup = this.markup;
+  @action
+  focusTo() {
+    this.setProperties({
+      toSelected: true,
+      fromSelected: false,
+      minDate: this.get("fromConfig.date"),
+    });
+  },
 
-      if (markup) {
-        this._closeModal();
-        this.insertDate(markup);
-      }
-    },
+  @action
+  toggleAdvancedMode() {
+    this.toggleProperty("advancedMode");
+  },
 
-    cancel() {
+  @action
+  save() {
+    const markup = this.markup;
+
+    if (markup) {
       this._closeModal();
-    },
-  },
-
-  _setTimeIfValid(time, key) {
-    if (isEmpty(time)) {
-      this.set(key, null);
-      return;
-    }
-
-    if (/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(time)) {
-      this.set(key, time);
+      this.insertDate(markup);
     }
   },
 
-  _setupPicker() {
-    return new Promise((resolve) => {
-      loadScript("/javascripts/pikaday.js").then(() => {
-        const options = {
-          field: this.element.querySelector(".fake-input"),
-          container: this.element.querySelector(
-            `#picker-container-${this.elementId}`
-          ),
-          bound: false,
-          format: "YYYY-MM-DD",
-          reposition: false,
-          firstDay: 1,
-          setDefaultDate: true,
-          keyboardInput: false,
-          i18n: {
-            previousMonth: I18n.t("dates.previous_month"),
-            nextMonth: I18n.t("dates.next_month"),
-            months: moment.months(),
-            weekdays: moment.weekdays(),
-            weekdaysShort: moment.weekdaysMin(),
-          },
-          onSelect: (date) => {
-            const formattedDate = moment(date).format("YYYY-MM-DD");
-
-            if (this.fromSelected) {
-              this.set("date", formattedDate);
-            }
-
-            if (this.toSelected) {
-              this.set("toDate", formattedDate);
-            }
-          },
-        };
-
-        resolve(new Pikaday(options));
-      });
-    });
-  },
-
-  _setPickerMinDate(date) {
-    schedule("afterRender", () => {
-      if (moment(date, this.dateFormat).isValid()) {
-        this._picker.setMinDate(moment(date, this.dateFormat).toDate());
-      } else {
-        this._picker.setMinDate(null);
-      }
-    });
-  },
-
-  _setPickerDate(date) {
-    schedule("afterRender", () => {
-      if (moment(date, this.dateFormat).isValid()) {
-        this._picker.setDate(moment.utc(date), true);
-      } else {
-        this._picker.setDate(null);
-      }
-    });
+  @action
+  cancel() {
+    this._closeModal();
   },
 
   _closeModal() {
-    const composer = getOwner(this).lookup("controller:composer");
-    composer.send("closeModal");
+    getOwner(this).lookup("service:modal").close();
   },
 });

@@ -69,3 +69,10 @@
     {{/if}}
   </div>
 </div>
+
+{{#if this.showFormTemplateFormPreview}}
+  <Modal::FormTemplateFormPreview
+    @closeModal={{fn (mut this.showFormTemplateFormPreview) false}}
+    @content={{this.templateContent}}
+  />
+{{/if}}

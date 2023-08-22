@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Navigation", type: :system, js: true do
+RSpec.describe "Navigation", type: :system do
   fab!(:category) { Fabricate(:category) }
   fab!(:topic) { Fabricate(:topic) }
   fab!(:post) { Fabricate(:post, topic: topic) }
@@ -8,6 +8,7 @@ RSpec.describe "Navigation", type: :system, js: true do
   fab!(:category_channel) { Fabricate(:category_channel) }
   fab!(:category_channel_2) { Fabricate(:category_channel) }
   let(:chat_page) { PageObjects::Pages::Chat.new }
+  let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
 
   before do
     chat_system_bootstrap(user, [category_channel, category_channel_2])
@@ -38,6 +39,16 @@ RSpec.describe "Navigation", type: :system, js: true do
         chat_page.visit_channel(category_channel_2)
 
         expect(page).to have_no_css("#d-sidebar")
+      end
+    end
+
+    context "when public channels are disabled" do
+      before { SiteSetting.enable_public_channels = false }
+
+      it "has public channels section" do
+        visit("/")
+
+        expect(sidebar_page).to have_no_public_channels_section
       end
     end
   end

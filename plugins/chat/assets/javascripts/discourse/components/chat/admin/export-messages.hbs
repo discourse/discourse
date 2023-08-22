@@ -1,0 +1,10 @@
+<section class="admin-section">
+  <h3>{{i18n "chat.admin.export_messages.title"}}</h3>
+  <p>{{i18n "chat.admin.export_messages.description"}}</p>
+  <DButton
+    @label="chat.admin.export_messages.create_export"
+    @title="chat.admin.export_messages.create_export"
+    @class="btn-primary"
+    @action={{this.exportMessages}}
+  />
+</section>

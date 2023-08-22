@@ -2,11 +2,12 @@ import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import Site from "discourse/models/site";
 import { bind } from "discourse-common/utils/decorators";
 import { headerOffset } from "discourse/lib/offset-calculator";
+import { getOwner, setOwner } from "@ember/application";
 import { schedule } from "@ember/runloop";
 
 export default class StickyAvatars {
-  static init(container) {
-    return new this(container).init();
+  static init(owner) {
+    return new this(owner).init();
   }
 
   stickyClass = "sticky-avatar";
@@ -15,8 +16,8 @@ export default class StickyAvatars {
   direction = "⬇️";
   prevOffset = -1;
 
-  constructor(container) {
-    this.container = container;
+  constructor(owner) {
+    setOwner(this, owner);
   }
 
   init() {
@@ -24,7 +25,7 @@ export default class StickyAvatars {
       return;
     }
 
-    const appEvents = this.container.lookup("service:app-events");
+    const appEvents = getOwner(this).lookup("service:app-events");
     appEvents.on("topic:current-post-scrolled", this._handlePostNodes);
     appEvents.on("topic:scrolled", this._handleScroll);
     appEvents.on("page:topic-loaded", this._initIntersectionObserver);
@@ -34,9 +35,7 @@ export default class StickyAvatars {
     return this;
   }
 
-  destroy() {
-    this.container = null;
-  }
+  destroy() {}
 
   @bind
   _handleScroll(offset) {

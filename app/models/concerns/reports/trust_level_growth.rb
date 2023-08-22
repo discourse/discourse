@@ -49,16 +49,12 @@ module Reports::TrustLevelGrowth
         end
       end
 
-      tertiary = ColorScheme.hex_for_name("tertiary") || "0088cc"
-      quaternary = ColorScheme.hex_for_name("quaternary") || "e45735"
-
       requests =
         filters.map do |filter|
-          color = report.rgba_color(quaternary)
-
-          color = report.lighten_color(tertiary, 0.25) if filter == "tl1_reached"
-          color = report.rgba_color(tertiary) if filter == "tl2_reached"
-          color = report.lighten_color(quaternary, 0.25) if filter == "tl3_reached"
+          color = report.colors[0]
+          color = report.colors[1] if filter == "tl1_reached"
+          color = report.colors[2] if filter == "tl2_reached"
+          color = report.colors[3] if filter == "tl3_reached"
 
           {
             req: filter,

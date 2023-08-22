@@ -28,7 +28,7 @@ class Topic < ActiveRecord::Base
   def_delegator :notifier, :mute!, :notify_muted!
   def_delegator :notifier, :toggle_mute, :toggle_mute
 
-  attr_accessor :allowed_user_ids, :tags_changed, :includes_destination_category
+  attr_accessor :allowed_user_ids, :allowed_group_ids, :tags_changed, :includes_destination_category
 
   def self.max_fancy_title_length
     400
@@ -293,6 +293,7 @@ class Topic < ActiveRecord::Base
 
   attr_accessor :posters # TODO: can replace with posters_summary once we remove old list code
   attr_accessor :participants
+  attr_accessor :participant_groups
   attr_accessor :topic_list
   attr_accessor :meta_data
   attr_accessor :include_last_poster
@@ -582,6 +583,13 @@ class Topic < ActiveRecord::Base
         topics.where(
           "topics.category_id NOT IN (?)",
           SiteSetting.digest_suppress_categories.split("|").map(&:to_i),
+        )
+    end
+    if SiteSetting.digest_suppress_tags.present?
+      topics =
+        topics.joins("LEFT JOIN topic_tags tg ON topics.id = tg.topic_id").where(
+          "tg.tag_id NOT IN (?) OR tg.tag_id IS NULL",
+          SiteSetting.digest_suppress_tags.split("|").map(&:to_i),
         )
     end
     remove_category_ids << SiteSetting.shared_drafts_category if SiteSetting.shared_drafts_enabled?
@@ -968,7 +976,7 @@ class Topic < ActiveRecord::Base
       old_category = category
 
       if self.category_id != new_category.id
-        self.update_attribute(:category_id, new_category.id)
+        self.update(category_id: new_category.id)
 
         if old_category
           Category.where(id: old_category.id).update_all("topic_count = topic_count - 1")
@@ -1236,7 +1244,11 @@ class Topic < ActiveRecord::Base
       )
 
     if opts[:destination_topic_id]
-      topic = post_mover.to_topic(opts[:destination_topic_id], participants: opts[:participants])
+      topic =
+        post_mover.to_topic(
+          opts[:destination_topic_id],
+          **opts.slice(:participants, :chronological_order),
+        )
 
       DiscourseEvent.trigger(:topic_merged, post_mover.original_topic, post_mover.destination_topic)
 
@@ -1268,6 +1280,10 @@ class Topic < ActiveRecord::Base
 
   def participants_summary(options = {})
     @participants_summary ||= TopicParticipantsSummary.new(self, options).summary
+  end
+
+  def participant_groups_summary(options = {})
+    @participant_groups_summary ||= TopicParticipantGroupsSummary.new(self, options).summary
   end
 
   def make_banner!(user, bannered_until = nil)
@@ -2034,6 +2050,10 @@ class Topic < ActiveRecord::Base
 
   def group_pm?
     private_message? && all_allowed_users.count > 2
+  end
+
+  def visible_tags(guardian)
+    tags.reject { |tag| guardian.hidden_tag_names.include?(tag[:name]) }
   end
 
   private

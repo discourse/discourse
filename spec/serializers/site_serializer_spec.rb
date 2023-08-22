@@ -15,6 +15,8 @@ RSpec.describe SiteSerializer do
     end
 
     it "is not included if enable_user_tips is disabled" do
+      SiteSetting.enable_user_tips = false
+
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
       expect(serialized[:user_tips]).to eq(nil)
     end
@@ -129,24 +131,12 @@ RSpec.describe SiteSerializer do
     expect(serialized[:shared_drafts_category_id]).to eq(nil)
   end
 
-  it "includes show_welcome_topic_banner" do
-    admin = Fabricate(:admin)
-    admin_guardian = Guardian.new(admin)
-    UserAuthToken.generate!(user_id: admin.id)
-
-    first_post = Fabricate(:post, created_at: 25.days.ago)
-    SiteSetting.welcome_topic_id = first_post.topic.id
-
-    serialized =
-      described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
-    expect(serialized[:show_welcome_topic_banner]).to eq(true)
-  end
-
-  describe "#anonymous_default_sidebar_tags" do
+  describe "#anonymous_default_navigation_menu_tags" do
     fab!(:user) { Fabricate(:user) }
-    fab!(:tag) { Fabricate(:tag, name: "dev") }
+    fab!(:tag) { Fabricate(:tag, name: "dev", description: "some description") }
     fab!(:tag2) { Fabricate(:tag, name: "random") }
     fab!(:hidden_tag) { Fabricate(:tag, name: "secret") }
+
     fab!(:staff_tag_group) do
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
     end
@@ -154,7 +144,7 @@ RSpec.describe SiteSerializer do
     before do
       SiteSetting.navigation_menu = "sidebar"
       SiteSetting.tagging_enabled = true
-      SiteSetting.default_sidebar_tags = "#{tag.name}|#{tag2.name}|#{hidden_tag.name}"
+      SiteSetting.default_navigation_menu_tags = "#{tag.name}|#{tag2.name}|#{hidden_tag.name}"
     end
 
     it "is not included in the serialised object when tagging is not enabled" do
@@ -162,33 +152,39 @@ RSpec.describe SiteSerializer do
       guardian = Guardian.new(user)
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-      expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
+      expect(serialized[:anonymous_default_navigation_menu_tags]).to eq(nil)
     end
 
     it "is not included in the serialised object when navigation menu is legacy" do
       SiteSetting.navigation_menu = "legacy"
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-      expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
+      expect(serialized[:anonymous_default_navigation_menu_tags]).to eq(nil)
     end
 
     it "is not included in the serialised object when user is not anonymous" do
       guardian = Guardian.new(user)
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-      expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
+      expect(serialized[:anonymous_default_navigation_menu_tags]).to eq(nil)
     end
 
     it "is not included in the serialisd object when default sidebar tags have not been configured" do
-      SiteSetting.default_sidebar_tags = ""
+      SiteSetting.default_navigation_menu_tags = ""
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-      expect(serialized[:anonymous_default_sidebar_tags]).to eq(nil)
+      expect(serialized[:anonymous_default_navigation_menu_tags]).to eq(nil)
     end
 
     it "includes only tags user can see in the serialised object when user is anonymous" do
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-      expect(serialized[:anonymous_default_sidebar_tags]).to eq(%w[dev random])
+
+      expect(serialized[:anonymous_default_navigation_menu_tags]).to eq(
+        [
+          { name: "dev", description: "some description", pm_only: false },
+          { name: "random", description: tag2.description, pm_only: false },
+        ],
+      )
     end
   end
 
@@ -209,7 +205,9 @@ RSpec.describe SiteSerializer do
 
     it "includes only public sidebar sections serialised object when user is anonymous" do
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-      expect(serialized[:anonymous_sidebar_sections].map(&:title)).to eq(["Public section"])
+      expect(serialized[:anonymous_sidebar_sections].map(&:title)).to eq(
+        ["Community", "Public section"],
+      )
     end
 
     it "eager loads sidebar_urls" do
@@ -222,11 +220,9 @@ RSpec.describe SiteSerializer do
         track_sql_queries do
           serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 
-          expect(
-            serialized[:anonymous_sidebar_sections].map { |sidebar_section| sidebar_section.id },
-          ).to eq([public_sidebar_section.id])
+          expect(serialized[:anonymous_sidebar_sections].count).to eq(2)
 
-          expect(serialized[:anonymous_sidebar_sections].first.links.map { |link| link.id }).to eq(
+          expect(serialized[:anonymous_sidebar_sections].last.links.map { |link| link.id }).to eq(
             [public_section_link.linkable.id],
           )
         end.count
@@ -240,11 +236,9 @@ RSpec.describe SiteSerializer do
         track_sql_queries do
           serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 
-          expect(
-            serialized[:anonymous_sidebar_sections].map { |sidebar_section| sidebar_section.id },
-          ).to eq([public_sidebar_section.id])
+          expect(serialized[:anonymous_sidebar_sections].count).to eq(2)
 
-          expect(serialized[:anonymous_sidebar_sections].first.links.map { |link| link.id }).to eq(
+          expect(serialized[:anonymous_sidebar_sections].last.links.map { |link| link.id }).to eq(
             [
               public_section_link.linkable.id,
               public_section_link_2.linkable.id,
@@ -309,6 +303,64 @@ RSpec.describe SiteSerializer do
 
         expect(serialized[:top_tags]).to eq([tag3.name, tag2.name])
       end
+    end
+  end
+
+  describe "#navigation_menu_site_top_tags" do
+    fab!(:tag1) do
+      Fabricate(:tag, name: "tag 1").tap { |tag| Fabricate.times(2, :topic, tags: [tag]) }
+    end
+
+    fab!(:tag2) do
+      Fabricate(:tag, name: "tag 2").tap { |tag| Fabricate.times(1, :topic, tags: [tag]) }
+    end
+
+    fab!(:tag3) do
+      Fabricate(:tag, name: "tag 3").tap { |tag| Fabricate.times(3, :topic, tags: [tag]) }
+    end
+
+    fab!(:hidden_tag) do
+      Fabricate(:tag, name: "tag 4").tap { |tag| Fabricate.times(4, :topic, tags: [tag]) }
+    end
+
+    fab!(:staff_tag_group) do
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
+    end
+
+    it "should return the site's top tags as the default tags for sidebar" do
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized[:navigation_menu_site_top_tags]).to eq(
+        [
+          { name: tag3.name, description: tag2.description, pm_only: false },
+          { name: tag1.name, description: tag1.description, pm_only: false },
+          { name: tag2.name, description: tag3.description, pm_only: false },
+        ],
+      )
+    end
+
+    it "should not be serialized if `navigation_menu` site setting is set to `legacy`" do
+      SiteSetting.set(:navigation_menu, "legacy")
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized[:navigation_menu_site_top_tags]).to eq(nil)
+    end
+
+    it "should not be serialized if `tagging_enabled` site setting is set to false" do
+      SiteSetting.set(:tagging_enabled, false)
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized[:navigation_menu_site_top_tags]).to eq(nil)
+    end
+
+    it "should return an empty array if site has no top tags" do
+      Tag.delete_all
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized[:navigation_menu_site_top_tags]).to eq([])
     end
   end
 

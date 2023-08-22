@@ -254,7 +254,7 @@ HTML
 
       expect(javascript_cache.content).to include("if ('define' in window) {")
       expect(javascript_cache.content).to include(
-        "define(\"discourse/theme-#{field.theme_id}/initializers/theme-field-#{field.id}-mobile-html-script-1\"",
+        "define(\"discourse/theme-#{field.theme_id}/discourse/initializers/theme-field-#{field.id}-mobile-html-script-1\"",
       )
       expect(javascript_cache.content).to include(
         "settings = require(\"discourse/lib/theme-settings-store\").getObjectForTheme(#{field.theme_id});",
@@ -406,7 +406,7 @@ HTML
       )
       expect(theme_field.javascript_cache.content).to include("if ('define' in window) {")
       expect(theme_field.javascript_cache.content).to include(
-        "define(\"discourse/theme-#{theme_field.theme.id}/initializers/theme-field-#{theme_field.id}-common-html-script-1\",",
+        "define(\"discourse/theme-#{theme_field.theme.id}/discourse/initializers/theme-field-#{theme_field.id}-common-html-script-1\",",
       )
       expect(theme_field.javascript_cache.content).to include(
         "name: \"theme-field-#{theme_field.id}-common-html-script-1\",",
@@ -1091,6 +1091,32 @@ HTML
           .filter { |m| m.channel == "/global/asset-version" }
 
       expect(messages.count).to eq(0)
+    end
+  end
+
+  describe "development experience" do
+    it "sends 'development-mode-theme-changed event when non-css fields are updated" do
+      Theme.any_instance.stubs(:should_refresh_development_clients?).returns(true)
+
+      theme.set_field(target: :common, name: :scss, value: "body {background: green;}")
+
+      messages =
+        MessageBus
+          .track_publish { theme.save! }
+          .filter { |m| m.channel == "/file-change" }
+          .map(&:data)
+
+      expect(messages).not_to include("development-mode-theme-changed")
+
+      theme.set_field(target: :common, name: :header, value: "<p>Hello world</p>")
+
+      messages =
+        MessageBus
+          .track_publish { theme.save! }
+          .filter { |m| m.channel == "/file-change" }
+          .map(&:data)
+
+      expect(messages).to include(["development-mode-theme-changed"])
     end
   end
 end

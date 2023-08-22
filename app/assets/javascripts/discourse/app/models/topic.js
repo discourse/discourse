@@ -26,7 +26,7 @@ import { applyModelTransformations } from "discourse/lib/model-transformers";
 
 export function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
-  const url = `${getURL("/t/")}${topic.id}`;
+  const url = `/t/${topic.id}`;
   const jsonUrl = (data.nearPost ? `${url}/${data.nearPost}` : url) + ".json";
 
   delete data.nearPost;
@@ -849,6 +849,18 @@ Topic.reopenClass({
     }
     if (topicIds) {
       data.topic_ids = topicIds;
+    }
+
+    if (opts.dismissPosts) {
+      data.dismiss_posts = opts.dismissPosts;
+    }
+
+    if (opts.dismissTopics) {
+      data.dismiss_topics = opts.dismissTopics;
+    }
+
+    if (opts.untrack) {
+      data.untrack = opts.untrack;
     }
 
     return ajax("/topics/reset-new", { type: "PUT", data });

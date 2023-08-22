@@ -263,6 +263,27 @@ module("Unit | Model | category", function (hooks) {
     });
 
     assert.strictEqual(quux.minimumRequiredTags, null);
+
+    const foobar = store.createRecord("category", {
+      id: 1,
+      slug: "foo",
+      minimum_required_tags: 2,
+      required_tag_groups: [{ name: "bar", min_count: 1 }],
+    });
+
+    assert.strictEqual(foobar.minimumRequiredTags, 2);
+
+    const barfoo = store.createRecord("category", {
+      id: 1,
+      slug: "foo",
+      minimum_required_tags: 2,
+      required_tag_groups: [
+        { name: "foo", min_count: 1 },
+        { name: "bar", min_count: 2 },
+      ],
+    });
+
+    assert.strictEqual(barfoo.minimumRequiredTags, 3);
   });
 
   test("search with category name", function (assert) {

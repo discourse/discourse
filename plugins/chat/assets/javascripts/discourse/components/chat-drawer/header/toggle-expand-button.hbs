@@ -6,5 +6,9 @@
   }}
   @class="btn-flat btn-link chat-drawer-header__expand-btn"
   @action={{@toggleExpand}}
-  @title="chat.collapse"
+  @title={{if
+    this.chatStateManager.isDrawerExpanded
+    "chat.collapse"
+    "chat.expand"
+  }}
 />

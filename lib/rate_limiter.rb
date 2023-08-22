@@ -23,11 +23,6 @@ class RateLimiter
     @disabled
   end
 
-  # Only used in test, only clears current namespace, does not clear globals
-  def self.clear_all!
-    Discourse.redis.delete_prefixed(RateLimiter.key_prefix)
-  end
-
   def self.clear_all_global!
     Discourse
       .redis

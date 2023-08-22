@@ -11,7 +11,12 @@ import {
   mergeSettings,
 } from "discourse/tests/helpers/site-settings";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
-import { getApplication, settled } from "@ember/test-helpers";
+import {
+  fillIn,
+  getApplication,
+  settled,
+  triggerKeyEvent,
+} from "@ember/test-helpers";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { run } from "@ember/runloop";
 import { setupApplicationTest } from "ember-qunit";
@@ -21,7 +26,10 @@ import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import deprecated from "discourse-common/lib/deprecated";
 import { restoreBaseUri } from "discourse-common/lib/get-url";
-import { initSearchData } from "discourse/widgets/search-menu";
+import {
+  initSearchData,
+  resetOnKeyDownCallbacks,
+} from "discourse/widgets/search-menu";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { isEmpty } from "@ember/utils";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
@@ -36,6 +44,7 @@ import { resetUserSearchCache } from "discourse/lib/user-search";
 import { resetCardClickListenerSelector } from "discourse/mixins/card-contents-base";
 import { resetComposerCustomizations } from "discourse/models/composer";
 import { resetQuickSearchRandomTips } from "discourse/widgets/search-menu-results";
+import { resetUserMenuProfileTabItems } from "discourse/components/user-menu/profile-tab-content";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import {
   resetHighestReadCache,
@@ -43,9 +52,11 @@ import {
 } from "discourse/lib/topic-list-tracker";
 import sinon from "sinon";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
-import { clearExtraKeyboardShortcutHelp } from "discourse/lib/keyboard-shortcuts";
+import {
+  PLATFORM_KEY_MODIFIER,
+  clearExtraKeyboardShortcutHelp,
+} from "discourse/lib/keyboard-shortcuts";
 import { clearResolverOptions } from "discourse-common/resolver";
-import { clearResolverOptions as clearLegacyResolverOptions } from "discourse-common/lib/legacy-resolver";
 import { clearNavItems } from "discourse/models/nav-item";
 import {
   cleanUpComposerUploadHandler,
@@ -72,13 +83,14 @@ import {
 import { clearTagsHtmlCallbacks } from "discourse/lib/render-tags";
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import { clearExtraHeaderIcons } from "discourse/widgets/header";
-import { resetSidebarSection } from "discourse/lib/sidebar/custom-sections";
 import { resetNotificationTypeRenderers } from "discourse/lib/notification-types-manager";
+import { resetSidebarPanels } from "discourse/lib/sidebar/custom-sections";
 import { resetUserMenuTabs } from "discourse/lib/user-menu/tab";
 import { reset as resetLinkLookup } from "discourse/lib/link-lookup";
 import { resetMentions } from "discourse/lib/link-mentions";
 import { resetModelTransformers } from "discourse/lib/model-transformers";
 import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper";
+import { clearBulkButtons } from "discourse/components/modal/topic-bulk-actions";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -181,6 +193,7 @@ export function testCleanup(container, app) {
   resetComposerCustomizations();
   resetQuickSearchRandomTips();
   resetPostMenuExtraButtons();
+  resetUserMenuProfileTabItems();
   clearExtraKeyboardShortcutHelp();
   clearNavItems();
   setTopicList(null);
@@ -202,18 +215,19 @@ export function testCleanup(container, app) {
   clearBlockDecorateCallbacks();
   clearTextDecorateCallbacks();
   clearResolverOptions();
-  clearLegacyResolverOptions();
   clearTagsHtmlCallbacks();
   clearToolbarCallbacks();
-  resetSidebarSection();
   resetNotificationTypeRenderers();
+  resetSidebarPanels();
   clearExtraHeaderIcons();
+  resetOnKeyDownCallbacks();
   resetUserMenuTabs();
   resetLinkLookup();
   resetModelTransformers();
   resetMentions();
   cleanupTemporaryModuleRegistrations();
   cleanupCssGeneratorTags();
+  clearBulkButtons();
 }
 
 function cleanupCssGeneratorTags() {
@@ -319,7 +333,7 @@ export function acceptance(name, optionsOrCallback) {
           updateCurrentUser(userChanges);
         }
 
-        User.current().appEvents = getOwner(this).lookup("service:appEvents");
+        User.current().appEvents = getOwner(this).lookup("service:app-events");
         User.current().trackStatus();
       }
 
@@ -577,6 +591,17 @@ export async function paste(element, text, otherClipboardData = {}) {
   return e;
 }
 
+export async function emulateAutocomplete(inputSelector, text) {
+  await triggerKeyEvent(inputSelector, "keydown", "Backspace");
+  await fillIn(inputSelector, `${text} `);
+  await triggerKeyEvent(inputSelector, "keyup", "Backspace");
+
+  await triggerKeyEvent(inputSelector, "keydown", "Backspace");
+  await fillIn(inputSelector, text);
+  await triggerKeyEvent(inputSelector, "keyup", "Backspace");
+  await settled();
+}
+
 // The order of attributes can vary in different browsers. When comparing
 // HTML strings from the DOM, this function helps to normalize them to make
 // comparison work cross-browser
@@ -585,3 +610,5 @@ export function normalizeHtml(html) {
   resultElement.innerHTML = html;
   return resultElement.innerHTML;
 }
+
+export const metaModifier = { [`${PLATFORM_KEY_MODIFIER}Key`]: true };

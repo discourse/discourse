@@ -73,8 +73,8 @@ html.rtl {
     background: var(--secondary);
     border: 1px solid var(--primary-low);
     border-bottom: 0;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+    border-top-left-radius: var(--d-border-radius-large);
+    border-top-right-radius: var(--d-border-radius-large);
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.125);
     box-sizing: border-box;
     display: flex;
@@ -94,24 +94,25 @@ html.rtl {
     height: auto !important;
   }
 
-  .chat-live-pane {
+  .chat-channel,
+  .chat-thread,
+  .chat-thread-list {
     height: 100%;
   }
 }
 
 .chat-drawer-header__left-actions {
   display: flex;
-  height: 100%;
+  height: 2rem;
 }
 
 .chat-drawer-header__right-actions {
   display: flex;
-  height: 100%;
+  height: 2rem;
   margin-left: auto;
 }
 
 .chat-drawer-header__top-line {
-  height: 2.5rem;
   display: flex;
   align-items: center;
 }
@@ -125,25 +126,38 @@ html.rtl {
 .chat-drawer-header__title {
   @include ellipsis;
   display: flex;
-  flex-direction: column;
-  width: 100%;
+  width: auto;
   font-weight: 700;
-  padding: 0 0.5rem 0 1rem;
+  padding: 0 0.5rem 0 0;
   cursor: pointer;
+  height: 2rem;
+  align-items: center;
 
-  .chat-channel-title {
-    padding: 0;
+  .chat-drawer-header__top-line {
+    padding: 0.25rem;
+    width: 100%;
+  }
+}
+
+a.chat-drawer-header__title {
+  &:hover {
+    .chat-drawer-header__top-line {
+      background: var(--primary-low);
+      border-radius: var(--d-border-radius);
+    }
   }
 }
 
 .chat-drawer-header {
   box-sizing: border-box;
   border-bottom: solid 1px var(--primary-low);
-  border-radius: 8px 8px 0 0;
+  border-radius: var(--d-border-radius-large) var(--d-border-radius-large) 0 0;
   background: var(--primary-very-low);
   width: 100%;
   display: flex;
   align-items: flex-start;
+  cursor: pointer;
+  padding: 0.25rem;
 
   .btn {
     height: 100%;
@@ -192,19 +206,24 @@ html.rtl {
   }
 
   &__close-btn,
-  &__return-to-channels-btn,
+  &__back-btn,
   &__full-screen-btn,
+  &__thread-list-btn,
   &__expand-btn {
-    max-height: 2.5rem;
-    height: 100%;
-    min-width: 40px;
-    width: 40px;
+    height: 30px;
+    width: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: 100%;
+
+    &:hover:active {
+      background: var(--primary-low);
+    }
 
     .d-icon {
       color: var(--primary-low-mid);
+      margin-right: 0;
     }
 
     &:visited {
@@ -219,15 +238,19 @@ html.rtl {
 
       .d-icon {
         background: none;
-        color: var(--primary-low-mid);
+        color: var(--primary);
       }
     }
 
     &:hover {
       .d-icon {
-        color: var(--primary-high);
+        color: var(--primary);
       }
     }
+  }
+
+  &__thread-list-btn.has-unreads {
+    margin-right: 0.5rem;
   }
 }
 
@@ -236,4 +259,5 @@ html.rtl {
   height: 100%;
   min-height: 1px;
   padding-bottom: 0.25em;
+  position: relative;
 }

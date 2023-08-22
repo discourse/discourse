@@ -144,7 +144,7 @@ class Upload < ActiveRecord::Base
     external_copy = nil
 
     if original_path.blank?
-      external_copy = Discourse.store.download(self)
+      external_copy = Discourse.store.download!(self)
       original_path = external_copy.path
     end
 
@@ -160,13 +160,8 @@ class Upload < ActiveRecord::Base
       # this is relatively cheap once cached
       original_path = Discourse.store.path_for(self)
       if original_path.blank?
-        external_copy =
-          begin
-            Discourse.store.download(self)
-          rescue StandardError
-            nil
-          end
-        original_path = external_copy.try(:path)
+        external_copy = Discourse.store.download_safe(self)
+        original_path = external_copy&.path
       end
 
       image_info =
@@ -273,14 +268,14 @@ class Upload < ActiveRecord::Base
   def fix_dimensions!
     return if !FileHelper.is_supported_image?("image.#{extension}")
 
-    path =
-      if local?
-        Discourse.store.path_for(self)
-      else
-        Discourse.store.download(self).path
-      end
-
     begin
+      path =
+        if local?
+          Discourse.store.path_for(self)
+        else
+          Discourse.store.download!(self).path
+        end
+
       if extension == "svg"
         w, h =
           begin
@@ -361,13 +356,7 @@ class Upload < ActiveRecord::Base
         if local?
           Discourse.store.path_for(self)
         else
-          begin
-            Discourse.store.download(self)&.path
-          rescue OpenURI::HTTPError => e
-            # Some issue with downloading the image from a remote store.
-            # Assume the upload is broken and save an empty string to prevent re-evaluation
-            nil
-          end
+          Discourse.store.download_safe(self)&.path
         end
 
       if local_path.nil?

@@ -2,9 +2,10 @@ import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import { buildPermissionDescription } from "discourse/models/permission-type";
+import { inject as service } from "@ember/service";
 
 export default DiscourseRoute.extend({
-  showFooter: true,
+  router: service(),
 
   titleToken() {
     return I18n.t("groups.permissions.title");
@@ -23,7 +24,7 @@ export default DiscourseRoute.extend({
         return { permissions };
       })
       .catch(() => {
-        this.transitionTo("group.members", group);
+        this.router.transitionTo("group.members", group);
       });
   },
 

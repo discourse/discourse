@@ -24,20 +24,22 @@ module PageObjects
         find(".dialog-footer .btn-primary")
       end
 
-      def add_synonyms_select_field
-        find("#add-synonyms")
+      def add_synonyms_dropdown
+        PageObjects::Components::SelectKit.new("#add-synonyms")
       end
 
-      def search_tags(search)
-        find("#add-synonyms-filter input").fill_in(with: search)
+      def search_tags(query)
+        add_synonyms_dropdown.search(query)
       end
 
-      def has_search_result?(tag)
-        page.has_selector?(".select-kit-row[data-name='#{tag}']")
-      end
-
-      def search_result(index)
-        find(".select-kit-collection li:nth-child(#{index})")
+      def select_tag(value: nil, index: nil, name: nil)
+        if value
+          add_synonyms_dropdown.select_row_by_value(value)
+        elsif name
+          add_synonyms_dropdown.select_row_by_name(name)
+        elsif index
+          add_synonyms_dropdown.select_row_by_index(index)
+        end
       end
 
       def tag_box(tag)

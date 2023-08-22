@@ -49,7 +49,6 @@ module CategoryGuardian
     return false unless category
     return false if is_anonymous?
     return true if is_admin?
-    return true if !category.read_restricted
     Category.post_create_allowed(self).exists?(id: category.id)
   end
 

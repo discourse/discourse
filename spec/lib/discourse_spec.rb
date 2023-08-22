@@ -13,28 +13,8 @@ RSpec.describe Discourse do
 
   describe "avatar_sizes" do
     it "returns a list of integers" do
-      expect(Discourse.avatar_sizes).to contain_exactly(
-        20,
-        25,
-        30,
-        32,
-        37,
-        40,
-        45,
-        48,
-        50,
-        60,
-        64,
-        67,
-        75,
-        90,
-        96,
-        120,
-        135,
-        180,
-        240,
-        360,
-      )
+      SiteSetting.avatar_sizes = "10|20|30"
+      expect(Discourse.avatar_sizes).to contain_exactly(10, 20, 30)
     end
   end
 

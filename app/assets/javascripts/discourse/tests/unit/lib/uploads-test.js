@@ -1,4 +1,3 @@
-import * as Utilities from "discourse/lib/utilities";
 import {
   allowsAttachments,
   allowsImages,
@@ -236,14 +235,16 @@ module("Unit | Utility | uploads", function (hooks) {
   });
 
   test("isImage", function (assert) {
-    ["png", "webp", "jpg", "jpeg", "gif", "ico"].forEach((extension) => {
-      let image = "image." + extension;
-      assert.ok(isImage(image), image + " is recognized as an image");
-      assert.ok(
-        isImage("http://foo.bar/path/to/" + image),
-        image + " is recognized as an image"
-      );
-    });
+    ["png", "webp", "jpg", "jpeg", "gif", "ico", "avif"].forEach(
+      (extension) => {
+        let image = "image." + extension;
+        assert.ok(isImage(image), image + " is recognized as an image");
+        assert.ok(
+          isImage("http://foo.bar/path/to/" + image),
+          image + " is recognized as an image"
+        );
+      }
+    );
     assert.notOk(isImage("file.txt"));
     assert.notOk(isImage("http://foo.bar/path/to/file.txt"));
     assert.notOk(isImage(""));
@@ -346,7 +347,8 @@ module("Unit | Utility | uploads", function (hooks) {
       "![8F2B469B-6B2C-4213-BC68-57B4876365A0|100x200](/uploads/123/abcdef.ext)"
     );
 
-    sinon.stub(Utilities, "isAppleDevice").returns(true);
+    const capabilities = getOwner(this).lookup("service:capabilities");
+    sinon.stub(capabilities, "isIOS").get(() => true);
     assert.strictEqual(
       testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),
       "![image|100x200](/uploads/123/abcdef.ext)"

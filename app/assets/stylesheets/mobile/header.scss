@@ -37,7 +37,8 @@
   }
 
   // Hide header avatar + icons while topic title is visible in mobile header
-  .extra-info-wrapper + .panel {
+  .extra-info-wrapper ~ .panel {
+    .before-header-panel-outlet,
     .header-buttons,
     .d-header-icons {
       display: none;

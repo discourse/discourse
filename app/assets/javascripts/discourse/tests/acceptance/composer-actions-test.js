@@ -12,7 +12,7 @@ import I18n from "I18n";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import sinon from "sinon";
 import { test } from "qunit";
-import { toggleCheckDraftPopup } from "discourse/controllers/composer";
+import { toggleCheckDraftPopup } from "discourse/services/composer";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 

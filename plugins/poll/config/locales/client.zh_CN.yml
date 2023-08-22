@@ -26,24 +26,24 @@ zh_CN:
       multiple:
         help:
           at_least_min_options:
-            other: "至少选择 <strong>%{count}</strong> 个选项。"
+            other: "至少选择 <strong>%{count} 个选项</strong>。"
           up_to_max_options:
-            other: "最多选择 <strong>%{count}</strong> 个选项。"
+            other: "最多选择 <strong>%{count} 个选项</strong>。"
           x_options:
-            other: "选择 <strong>%{count}</strong> 个选项。"
-          between_min_and_max_options: "选择 <strong>%{min}</strong> 到 <strong>%{max}</strong> 个选项。"
+            other: "选择 <strong>%{count} 个选项</strong>。"
+          between_min_and_max_options: "选择 <strong>%{min} 到 %{max} 个选项</strong>。"
       cast-votes:
         title: "投票"
         label: "立即投票！"
       show-results:
         title: "显示投票结果"
-        label: "显示结果"
+        label: "结果"
       remove-vote:
         title: "移除您的投票"
-        label: "移除投票"
+        label: "撤消投票"
       hide-results:
         title: "回到您的投票"
-        label: "显示投票"
+        label: "投票"
       group-results:
         title: "按用户字段将投票分组"
         label: "显示细分"
@@ -67,6 +67,8 @@ zh_CN:
         breakdown: "细分"
         percentage: "百分比"
         count: "计数"
+      options:
+        label: "选项"
       error_while_toggling_status: "抱歉，切换此投票的状态时出错。"
       error_while_casting_votes: "抱歉，投票时出错。"
       error_while_fetching_voters: "抱歉，显示投票人时出错。"

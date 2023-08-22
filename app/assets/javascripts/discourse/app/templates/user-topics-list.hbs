@@ -1,3 +1,7 @@
+{{#if this.model.canLoadMore}}
+  {{hide-application-footer}}
+{{/if}}
+
 {{#if this.noContent}}
   <EmptyState
     @title={{this.model.emptyState.title}}
@@ -43,9 +47,7 @@
       @bulkSelectAction={{action "refresh"}}
       @selected={{this.selected}}
       @tagsForUser={{this.tagsForUser}}
-      @onScroll={{this.saveScrollPosition}}
       @canBulkSelect={{this.canBulkSelect}}
-      @scrollOnLoad={{true}}
       @toggleBulkSelect={{action "toggleBulkSelect"}}
       @updateAutoAddTopicsToBulkSelect={{action
         "updateAutoAddTopicsToBulkSelect"

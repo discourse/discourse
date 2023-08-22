@@ -4,6 +4,8 @@
 RSpec.describe Category do
   fab!(:user) { Fabricate(:user) }
 
+  it_behaves_like "it has custom fields"
+
   it { is_expected.to validate_presence_of :user_id }
   it { is_expected.to validate_presence_of :name }
 
@@ -51,8 +53,8 @@ RSpec.describe Category do
 
       expect { category_sidebar_section_link.linkable.destroy! }.to change {
         SidebarSectionLink.count
-      }.from(3).to(1)
-      expect(SidebarSectionLink.first).to eq(tag_sidebar_section_link)
+      }.from(12).to(10)
+      expect(SidebarSectionLink.last).to eq(tag_sidebar_section_link)
     end
   end
 
@@ -554,13 +556,13 @@ RSpec.describe Category do
   end
 
   describe "new" do
-    subject { Fabricate.build(:category, user: Fabricate(:user)) }
+    subject(:category) { Fabricate.build(:category, user: Fabricate(:user)) }
 
     it "triggers a extensibility event" do
-      event = DiscourseEvent.track_events { subject.save! }.last
+      event = DiscourseEvent.track_events { category.save! }.last
 
       expect(event[:event_name]).to eq(:category_created)
-      expect(event[:params].first).to eq(subject)
+      expect(event[:params].first).to eq(category)
     end
   end
 
@@ -974,10 +976,10 @@ RSpec.describe Category do
       category =
         Fabricate(
           :category_with_definition,
-          num_auto_bump_daily: 2,
           created_at: 1.minute.ago,
           category_setting_attributes: {
             auto_bump_cooldown_days: 1,
+            num_auto_bump_daily: 2,
           },
         )
       category.clear_auto_bump_cache!
@@ -1423,6 +1425,63 @@ RSpec.describe Category do
         subcategory.id,
         subcategory2.id,
       )
+    end
+  end
+
+  describe "allowed_tags=" do
+    let(:category) { Fabricate(:category) }
+    fab!(:tag) { Fabricate(:tag) }
+    fab!(:tag2) { Fabricate(:tag) }
+
+    before { SiteSetting.tagging_enabled = true }
+
+    it "can use existing tags for category tags" do
+      category.allowed_tags = [tag.name]
+      expect_same_tag_names(category.reload.tags, [tag])
+    end
+
+    context "with synonyms" do
+      fab!(:synonym) { Fabricate(:tag, name: "synonym", target_tag: tag) }
+
+      it "can use existing tags for category tags" do
+        category.allowed_tags = [tag.name, synonym.name]
+        category.reload
+        category.allowed_tags = [tag.name, synonym.name, tag2.name]
+        expect_same_tag_names(category.reload.tags, [tag.name, synonym.name, tag2.name])
+      end
+    end
+  end
+
+  describe "#slug_ref" do
+    fab!(:category) { Fabricate(:category, slug: "foo") }
+
+    it "returns the slug for categories without parents" do
+      expect(category.slug_ref).to eq("foo")
+    end
+
+    context "for category with parent" do
+      fab!(:subcategory) { Fabricate(:category, parent_category: category, slug: "bar") }
+
+      it "returns the parent and child slug ref with separator" do
+        expect(subcategory.slug_ref).to eq("foo#{Category::SLUG_REF_SEPARATOR}bar")
+      end
+    end
+
+    context "for category with multiple parents" do
+      let(:subcategory_1) { Fabricate(:category, parent_category: category, slug: "bar") }
+      let(:subcategory_2) { Fabricate(:category, parent_category: subcategory_1, slug: "boo") }
+
+      before { SiteSetting.max_category_nesting = 3 }
+
+      it "returns the parent and child slug ref with separator" do
+        expect(subcategory_2.slug_ref(depth: 2)).to eq(
+          "foo#{Category::SLUG_REF_SEPARATOR}bar#{Category::SLUG_REF_SEPARATOR}boo",
+        )
+      end
+
+      it "allows limiting depth" do
+        expect(subcategory_2.slug_ref(depth: 1)).to eq("bar#{Category::SLUG_REF_SEPARATOR}boo")
+      end
     end
   end
 end

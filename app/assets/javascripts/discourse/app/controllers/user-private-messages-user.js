@@ -22,7 +22,8 @@ export default class extends Controller {
 
   @computed(
     "pmTopicTrackingState.newIncoming.[]",
-    "pmTopicTrackingState.statesModificationCounter"
+    "pmTopicTrackingState.statesModificationCounter",
+    "pmTopicTrackingState.isTracking"
   )
   get newLinkText() {
     return this.#linkText("new");
@@ -30,7 +31,8 @@ export default class extends Controller {
 
   @computed(
     "pmTopicTrackingState.newIncoming.[]",
-    "pmTopicTrackingState.statesModificationCounter"
+    "pmTopicTrackingState.statesModificationCounter",
+    "pmTopicTrackingState.isTracking"
   )
   get unreadLinkText() {
     return this.#linkText("unread");

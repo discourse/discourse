@@ -23,7 +23,6 @@ cs:
         label: "Hlasovat nyní!"
       show-results:
         title: "Zobrazit výsledky hlasování"
-        label: "Ukaž výsledky"
       hide-results:
         title: "Zpět k hlasování"
       export-results:
@@ -36,6 +35,8 @@ cs:
         title: "Zavřít hlasování"
         label: "Zavřít"
         confirm: "Opravdu chcete uzavřít toto hlasování?"
+      options:
+        label: "Možnosti"
       error_while_toggling_status: "Došlo k chybě při změně statusu hlasování"
       error_while_casting_votes: "Došlo k chybě při odesílání vašeho hlasu."
       error_while_fetching_voters: "Došlo k chybě při zobrazování hlasujících."

@@ -9,6 +9,9 @@ class BadgeGrouping < ActiveRecord::Base
 
   has_many :badges
 
+  validates :name, length: { maximum: 100 }
+  validates :description, length: { maximum: 500 }
+
   def system?
     id && id <= 5
   end

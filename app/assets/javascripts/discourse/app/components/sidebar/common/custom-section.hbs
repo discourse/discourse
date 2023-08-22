@@ -1,0 +1,92 @@
+<Sidebar::Section
+  @sectionName={{this.section.slug}}
+  @headerLinkText={{this.section.decoratedTitle}}
+  @indicatePublic={{this.section.indicatePublic}}
+  @collapsable={{@collapsable}}
+  @headerActions={{this.section.headerActions}}
+  @headerActionsIcon={{this.section.headerActionIcon}}
+  @class={{this.section.dragCss}}
+  @hideSectionHeader={{this.section.hideSectionHeader}}
+>
+  {{#each this.section.links as |link|}}
+    {{#if link.externalOrFullReload}}
+      <Sidebar::SectionLink
+        @shouldDisplay={{link.shouldDisplay}}
+        @linkName={{link.name}}
+        @content={{replace-emoji link.text}}
+        @prefixType="icon"
+        @prefixValue={{link.prefixValue}}
+        @fullReload={{link.fullReload}}
+        @href={{link.value}}
+        @class={{link.linkDragCss}}
+        {{(if
+          this.section.reorderable
+          (modifier
+            "draggable"
+            didStartDrag=link.didStartDrag
+            didEndDrag=link.didEndDrag
+            dragMove=link.dragMove
+          )
+        )}}
+      />
+    {{else}}
+      <Sidebar::SectionLink
+        @shouldDisplay={{link.shouldDisplay}}
+        @href={{link.href}}
+        @title={{link.title}}
+        @linkName={{link.name}}
+        @route={{link.route}}
+        @model={{link.model}}
+        @models={{link.models}}
+        @query={{link.query}}
+        @content={{replace-emoji link.text}}
+        @badgeText={{link.badgeText}}
+        @prefixType="icon"
+        @prefixValue={{link.prefixValue}}
+        @suffixCSSClass={{link.suffixCSSClass}}
+        @suffixValue={{link.suffixValue}}
+        @suffixType={{link.suffixType}}
+        @currentWhen={{link.currentWhen}}
+        @class={{link.linkDragCss}}
+        {{(if
+          this.section.reorderable
+          (modifier
+            "draggable"
+            didStartDrag=link.didStartDrag
+            didEndDrag=link.didEndDrag
+            dragMove=link.dragMove
+          )
+        )}}
+      />
+    {{/if}}
+  {{/each}}
+
+  {{#if this.section.moreLinks}}
+    {{#if this.navigationMenu.isDesktopDropdownMode}}
+      {{#each this.section.moreLinks as |sectionLink|}}
+        <Sidebar::MoreSectionLink @sectionLink={{sectionLink}} />
+      {{/each}}
+
+      {{#if this.section.moreSectionButtonAction}}
+        <Sidebar::SectionLinkButton
+          @action={{this.section.moreSectionButtonAction}}
+          @icon={{this.section.moreSectionButtonIcon}}
+          @text={{this.section.moreSectionButtonText}}
+        />
+      {{/if}}
+    {{else if this.section.moreLinks}}
+      <Sidebar::MoreSectionLinks
+        @sectionLinks={{this.section.moreLinks}}
+        @moreButtonAction={{this.section.moreSectionButtonAction}}
+        @moreButtonText={{this.section.moreSectionButtonText}}
+        @moreButtonIcon={{this.section.moreSectionButtonIcon}}
+      />
+    {{/if}}
+  {{else if this.section.moreSectionButtonAction}}
+    <Sidebar::SectionLinkButton
+      @action={{this.section.moreSectionButtonAction}}
+      @icon={{this.section.moreSectionButtonIcon}}
+      @text={{this.section.moreSectionButtonText}}
+    />
+  {{/if}}
+</Sidebar::Section>

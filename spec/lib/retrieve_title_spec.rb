@@ -203,7 +203,7 @@ RSpec.describe RetrieveTitle do
     end
 
     it "ignores SSRF lookup errors" do
-      subject.stubs(:fetch_title).raises(FinalDestination::SSRFDetector::LookupFailedError)
+      described_class.stubs(:fetch_title).raises(FinalDestination::SSRFDetector::LookupFailedError)
 
       expect(RetrieveTitle.crawl("https://example.com")).to eq(nil)
     end

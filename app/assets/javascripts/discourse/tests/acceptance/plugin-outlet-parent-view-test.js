@@ -9,7 +9,7 @@ acceptance("Plugin Outlet - Deprecated parentView", function (needs) {
   needs.hooks.beforeEach(function () {
     registerTemporaryModule(
       "discourse/templates/connectors/user-profile-primary/hello",
-      hbs`<span class='hello-username'>{{parentView.parentView.class}}</span>`
+      hbs`<span class='hello-username'>{{this.parentView.parentView.class}}</span>`
     );
   });
 

@@ -1,0 +1,49 @@
+<StyleguideExample @title="<ChatMessage>">
+  <Styleguide::Component>
+    <ChatMessage @message={{this.message}} @context="channel" />
+  </Styleguide::Component>
+
+  <Styleguide::Controls>
+    <Styleguide::Controls::Row @name="Last Visit">
+      <DToggleSwitch
+        @state={{this.message.newest}}
+        {{on "click" this.toggleLastVisit}}
+      />
+    </Styleguide::Controls::Row>
+    <Styleguide::Controls::Row @name="Deleted">
+      <DToggleSwitch
+        @state={{not (not this.message.deletedAt)}}
+        {{on "click" this.toggleDeleted}}
+      />
+    </Styleguide::Controls::Row>
+    <Styleguide::Controls::Row @name="Bookmark">
+      <DToggleSwitch
+        @state={{not (not this.message.bookmark)}}
+        {{on "click" this.toggleBookmarked}}
+      />
+    </Styleguide::Controls::Row>
+    <Styleguide::Controls::Row @name="Thread">
+      <DToggleSwitch
+        @state={{not (not this.message.thread)}}
+        {{on "click" this.toggleThread}}
+      />
+    </Styleguide::Controls::Row>
+    <Styleguide::Controls::Row @name="Reactions">
+      <DToggleSwitch
+        @state={{not (not this.message.reactions)}}
+        {{on "click" this.toggleReaction}}
+      />
+    </Styleguide::Controls::Row>
+    <Styleguide::Controls::Row @name="Upload">
+      <DToggleSwitch
+        @state={{not (not this.message.uploads)}}
+        {{on "click" this.toggleUpload}}
+      />
+    </Styleguide::Controls::Row>
+    <Styleguide::Controls::Row @name="Message">
+      <textarea
+        {{on "input" this.updateMessage}}
+      >{{this.message.message}}</textarea>
+    </Styleguide::Controls::Row>
+  </Styleguide::Controls>
+</StyleguideExample>

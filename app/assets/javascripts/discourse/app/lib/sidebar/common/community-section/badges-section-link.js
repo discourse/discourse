@@ -16,14 +16,17 @@ export default class BadgesSectionLink extends BaseSectionLink {
   }
 
   get text() {
-    return I18n.t("sidebar.sections.community.links.badges.content");
+    return I18n.t(
+      `sidebar.sections.community.links.${this.overridenName.toLowerCase()}.content`,
+      { defaultValue: this.overridenName }
+    );
   }
 
   get shouldDisplay() {
     return this.siteSettings.enable_badges;
   }
 
-  get prefixValue() {
+  get defaultPrefixValue() {
     return "certificate";
   }
 }

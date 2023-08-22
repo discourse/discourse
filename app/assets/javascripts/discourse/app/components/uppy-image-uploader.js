@@ -1,10 +1,15 @@
 import Component from "@ember/component";
+import { action } from "@ember/object";
 import { or } from "@ember/object/computed";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
-import lightbox from "discourse/lib/lightbox";
+import {
+  cleanupLightboxes,
+  default as lightbox,
+  setupLightboxes,
+} from "discourse/lib/lightbox";
 import { next } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { authorizesOneOrMoreExtensions } from "discourse/lib/uploads";
@@ -13,6 +18,11 @@ import I18n from "I18n";
 export default Component.extend(UppyUploadMixin, {
   classNames: ["image-uploader"],
   disabled: or("notAllowed", "uploading", "processing"),
+
+  @discourseComputed("siteSettings.enable_experimental_lightbox")
+  experimentalLightboxEnabled(experimentalLightboxEnabled) {
+    return experimentalLightboxEnabled;
+  },
 
   @discourseComputed("disabled", "notAllowed")
   disabledReason(disabled, notAllowed) {
@@ -97,21 +107,33 @@ export default Component.extend(UppyUploadMixin, {
 
   @on("didRender")
   _applyLightbox() {
-    next(() => lightbox(this.element, this.siteSettings));
+    if (this.experimentalLightboxEnabled) {
+      setupLightboxes({
+        container: this.element,
+        selector: ".lightbox",
+      });
+    } else {
+      next(() => lightbox(this.element, this.siteSettings));
+    }
   },
 
   @on("willDestroyElement")
   _closeOnRemoval() {
-    if ($.magnificPopup?.instance) {
-      $.magnificPopup.instance.close();
+    if (this.experimentalLightboxEnabled) {
+      cleanupLightboxes();
+    } else {
+      if ($.magnificPopup?.instance) {
+        $.magnificPopup.instance.close();
+      }
     }
   },
 
-  actions: {
-    toggleLightbox() {
-      $(this.element.querySelector("a.lightbox"))?.magnificPopup("open");
-    },
+  @action
+  toggleLightbox() {
+    $(this.element.querySelector("a.lightbox"))?.magnificPopup("open");
+  },
 
+  actions: {
     trash() {
       // uppy needs to be reset to allow for more uploads
       this._reset();

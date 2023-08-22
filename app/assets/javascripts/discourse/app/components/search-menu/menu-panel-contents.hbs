@@ -1,0 +1,65 @@
+<div class="search-input">
+  {{#if @inTopicContext}}
+    <DButton
+      @icon="times"
+      @label="search.in_this_topic"
+      @title="search.in_this_topic_tooltip"
+      class="btn btn-small search-context"
+      @action={{@clearTopicContext}}
+      @iconRight={{true}}
+    />
+  {{else if @inPMInboxContext}}
+    <DButton
+      @icon="times"
+      @label="search.in_messages"
+      @title="search.in_messages_tooltip"
+      @class="btn btn-small search-context"
+      @action={{@clearPMInboxContext}}
+      @iconRight={{true}}
+    />
+  {{/if}}
+
+  <SearchMenu::SearchTerm
+    @searchTermChanged={{@searchTermChanged}}
+    @typeFilter={{@typeFilter}}
+    @updateTypeFilter={{@updateTypeFilter}}
+    @triggerSearch={{@triggerSearch}}
+    @fullSearch={{@fullSearch}}
+    @clearPMInboxContext={{@clearPMInboxContext}}
+    @clearTopicContext={{@clearTopicContext}}
+    @closeSearchMenu={{@closeSearchMenu}}
+  />
+
+  {{#if @loading}}
+    <div class="searching">
+      {{loading-spinner}}
+    </div>
+  {{else}}
+    <div class="searching">
+      {{#if this.search.activeGlobalSearchTerm}}
+        <SearchMenu::ClearButton @clearSearch={{@clearSearch}} />
+      {{/if}}
+      <SearchMenu::AdvancedButton @href={{this.advancedSearchButtonHref}} />
+    </div>
+  {{/if}}
+</div>
+
+{{#if (and @inTopicContext (not @includesTopics))}}
+  <SearchMenu::BrowserSearchTip />
+{{else}}
+  {{#unless @loading}}
+    <SearchMenu::Results
+      @noResults={{@noResults}}
+      @results={{@results}}
+      @invalidTerm={{@invalidTerm}}
+      @suggestionKeyword={{@suggestionKeyword}}
+      @suggestionResults={{@suggestionResults}}
+      @searchTopics={{@includesTopics}}
+      @inPMInboxContext={{@inPMInboxContext}}
+      @triggerSearch={{@triggerSearch}}
+      @updateTypeFilter={{@updateTypeFilter}}
+      @closeSearchMenu={{@closeSearchMenu}}
+      @searchTermChanged={{@searchTermChanged}}
+    />
+  {{/unless}}
+{{/if}}

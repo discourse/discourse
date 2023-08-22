@@ -17,6 +17,7 @@ const MOUSE_OVER_ATTRIBUTE_NAME = "_discourse_mouse_over_widget";
 const MOUSE_OUT_ATTRIBUTE_NAME = "_discourse_mouse_out_widget";
 const TOUCH_START_ATTRIBUTE_NAME = "_discourse_touch_start_widget";
 const TOUCH_END_ATTRIBUTE_NAME = "_discourse_touch_end_widget";
+const TOUCH_MOVE_ATTRIBUTE_NAME = "_discourse_touch_move_widget";
 
 class WidgetBaseHook {
   constructor(widget) {
@@ -73,6 +74,9 @@ export const WidgetTouchEndHook = buildHook(TOUCH_END_ATTRIBUTE_NAME);
 function touchStartHandler(e) {
   return e.currentTarget[TOUCH_START_ATTRIBUTE_NAME].touchStart(e);
 }
+function touchMoveHandler(e) {
+  return e.currentTarget[TOUCH_MOVE_ATTRIBUTE_NAME].touchMove(e);
+}
 
 export class WidgetTouchStartHook extends WidgetBaseHook {
   hook(node, propertyName, previousValue) {
@@ -89,6 +93,24 @@ export class WidgetTouchStartHook extends WidgetBaseHook {
     if (!newValue) {
       // Element removed from DOM
       node.removeEventListener("touchstart", touchStartHandler);
+    }
+  }
+}
+export class WidgetTouchMoveHook extends WidgetBaseHook {
+  hook(node, propertyName, previousValue) {
+    node[TOUCH_MOVE_ATTRIBUTE_NAME] = this.widget;
+    if (!previousValue) {
+      // Element added to DOM
+      node.addEventListener("touchmove", touchMoveHandler, {
+        passive: false,
+      });
+    }
+  }
+
+  unhook(node, propertyName, newValue) {
+    if (!newValue) {
+      // Element removed from DOM
+      node.removeEventListener("touchmove", touchMoveHandler);
     }
   }
 }
@@ -263,13 +285,20 @@ WidgetClickHook.setupDocumentCallback = function () {
   });
 
   $(document).on("mousedown.discourse-widget", (e) => {
-    nodeCallback(e.target, MOUSE_DOWN_ATTRIBUTE_NAME, (w) => {
-      w.mouseDown(e);
-    });
+    nodeCallback(
+      e.target,
+      MOUSE_DOWN_ATTRIBUTE_NAME,
+      (w) => {
+        w.mouseDown(e);
+      },
+      { rerender: false }
+    );
   });
 
   $(document).on("mouseup.discourse-widget", (e) => {
-    nodeCallback(e.target, MOUSE_UP_ATTRIBUTE_NAME, (w) => w.mouseUp(e));
+    nodeCallback(e.target, MOUSE_UP_ATTRIBUTE_NAME, (w) => w.mouseUp(e), {
+      rerender: false,
+    });
   });
 
   $(document).on("mousemove.discourse-widget", (e) => {

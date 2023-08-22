@@ -15,13 +15,7 @@ describe ListController do
       Fabricate(:direct_message_channel, users: [current_user, user_1])
       public_channel_1 = Fabricate(:chat_channel)
       public_channel_2 = Fabricate(:chat_channel)
-
-      Fabricate(
-        :user_chat_channel_membership,
-        user: current_user,
-        chat_channel: public_channel_1,
-        following: true,
-      )
+      public_channel_1.add(current_user)
 
       # warm up
       get "/latest.html"
@@ -41,12 +35,7 @@ describe ListController do
           end
         end.count
 
-      Fabricate(
-        :user_chat_channel_membership,
-        user: current_user,
-        chat_channel: public_channel_2,
-        following: true,
-      )
+      public_channel_2.add(current_user)
       user_2 = Fabricate(:user)
       Fabricate(:direct_message_channel, users: [current_user, user_2])
 

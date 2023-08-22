@@ -3,9 +3,7 @@ import { setupTest } from "ember-qunit";
 import sinon from "sinon";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import EmberObject from "@ember/object";
-import * as showModal from "discourse/lib/show-modal";
 import User from "discourse/models/user";
-import I18n from "I18n";
 
 module("Unit | Controller | user-notifications", function (hooks) {
   setupTest(hooks);
@@ -57,30 +55,5 @@ module("Unit | Controller | user-notifications", function (hooks) {
     controller.send("resetNew");
 
     assert.strictEqual(markRead, true);
-  });
-
-  test("Shows modal when has high priority notifications", function (assert) {
-    let capturedProperties;
-    sinon
-      .stub(showModal, "default")
-      .withArgs("dismiss-notification-confirmation")
-      .returns({
-        setProperties: (properties) => (capturedProperties = properties),
-      });
-
-    const currentUser = User.create({ unread_high_priority_notifications: 1 });
-    const controller = this.owner.lookup("controller:user-notifications");
-    controller.setProperties({ currentUser });
-    const markReadFake = sinon.fake();
-    sinon.stub(controller, "markRead").callsFake(markReadFake);
-
-    controller.send("resetNew");
-
-    assert.strictEqual(
-      capturedProperties.confirmationMessage,
-      I18n.t("notifications.dismiss_confirmation.body.default", { count: 1 })
-    );
-    capturedProperties.dismissNotifications();
-    assert.strictEqual(markReadFake.callCount, 1);
   });
 });

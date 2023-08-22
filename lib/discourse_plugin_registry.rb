@@ -72,6 +72,7 @@ class DiscoursePluginRegistry
   define_register :seedfu_filter, Set
   define_register :demon_processes, Set
   define_register :groups_callback_for_users_search_controller_action, Hash
+  define_register :mail_pollers, Set
 
   define_filtered_register :staff_user_custom_fields
   define_filtered_register :public_user_custom_fields
@@ -113,8 +114,14 @@ class DiscoursePluginRegistry
 
   define_filtered_register :list_suggested_for_providers
 
+  define_filtered_register :summarization_strategies
+
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider
+  end
+
+  def self.register_mail_poller(mail_poller)
+    self.mail_pollers << mail_poller
   end
 
   def register_js(filename, options = {})
@@ -247,6 +254,9 @@ class DiscoursePluginRegistry
   end
 
   def self.clear_modifiers!
+    if Rails.env.test? && GlobalSetting.load_plugins?
+      raise "Clearing modifiers during a plugin spec run will affect all future specs. Use unregister_modifier instead."
+    end
     @modifiers = nil
   end
 
@@ -254,6 +264,18 @@ class DiscoursePluginRegistry
     @modifiers ||= {}
     modifiers = @modifiers[name] ||= []
     modifiers << [plugin_instance, blk]
+  end
+
+  def self.unregister_modifier(plugin_instance, name, &blk)
+    raise "unregister_modifier can only be used in tests" if !Rails.env.test?
+
+    modifiers_for_name = @modifiers&.[](name)
+    raise "no #{name} modifiers found" if !modifiers_for_name
+
+    i = modifiers_for_name.find_index { |info| info == [plugin_instance, blk] }
+    raise "no modifier found for that plugin/block combination" if !i
+
+    modifiers_for_name.delete_at(i)
   end
 
   def self.apply_modifier(name, arg, *more_args)

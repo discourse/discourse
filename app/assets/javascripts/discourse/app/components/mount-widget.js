@@ -166,4 +166,8 @@ export default Component.extend({
   unmountChildComponent(info) {
     this._childComponents.removeObject(info);
   },
+
+  didUpdateAttrs() {
+    this.queueRerender();
+  },
 });

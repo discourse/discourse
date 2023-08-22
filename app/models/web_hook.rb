@@ -68,7 +68,7 @@ class WebHook < ActiveRecord::Base
     if active_web_hooks("topic").exists? && topic.present?
       payload ||=
         begin
-          topic_view = TopicView.new(topic.id, Discourse.system_user)
+          topic_view = TopicView.new(topic.id, Discourse.system_user, skip_staff_action: true)
           WebHook.generate_payload(:topic, topic_view, WebHookTopicViewSerializer)
         end
 

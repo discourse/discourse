@@ -26,6 +26,12 @@ module("Integration | Component | user-status-picker", function (hooks) {
     );
   });
 
+  test("it focuses the input on insert", async function (assert) {
+    await render(hbs`<UserStatusPicker />`);
+
+    assert.dom(".user-status-description").isFocused();
+  });
+
   test("it picks emoji", async function (assert) {
     const status = {
       emoji: "tooth",

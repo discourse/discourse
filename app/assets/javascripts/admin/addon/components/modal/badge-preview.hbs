@@ -1,0 +1,53 @@
+<DModal
+  @closeModal={{@closeModal}}
+  @title={{i18n "admin.badges.preview.modal_title"}}
+  class="badge-query-preview"
+>
+  <:body>
+    {{#if @model.badge.errors}}
+      <p class="error-header">{{i18n
+          "admin.badges.preview.sql_error_header"
+        }}</p>
+      <pre class="badge-errors">{{@model.badge.errors}}</pre>
+    {{else}}
+      <p class="grant-count">
+        {{#if this.count}}
+          {{html-safe
+            (i18n "admin.badges.preview.grant_count" count=@model.badge.count)
+          }}
+        {{else}}
+          {{html-safe (i18n "admin.badges.preview.no_grant_count")}}
+        {{/if}}
+      </p>
+
+      {{#if this.countWarning}}
+        <div class="count-warning">
+          <p class="heading">
+            {{d-icon "exclamation-triangle"}}
+            {{i18n "admin.badges.preview.bad_count_warning.header"}}
+          </p>
+          <p class="body">
+            {{i18n "admin.badges.preview.bad_count_warning.text"}}
+          </p>
+        </div>
+      {{/if}}
+
+      {{#if this.sample}}
+        <p class="sample">
+          {{i18n "admin.badges.preview.sample"}}
+        </p>
+        <ul>
+          {{#each this.processedSample as |html|}}
+            <li>{{html-safe html}}</li>
+          {{/each}}
+        </ul>
+      {{/if}}
+
+      {{#if this.hasQueryPlan}}
+        <div class="badge-query-plan">
+          {{html-safe this.queryPlanHtml}}
+        </div>
+      {{/if}}
+    {{/if}}
+  </:body>
+</DModal>

@@ -1,0 +1,20 @@
+<DModal
+  @closeModal={{@closeModal}}
+  class="chat-modal-toggle-channel-status"
+  @inline={{@inline}}
+  @title={{i18n this.modalTitle}}
+>
+  <:body>
+    <p
+      class="chat-modal-toggle-channel-status__instructions"
+    >{{this.instructions}}</p>
+  </:body>
+  <:footer>
+    <DButton
+      @class="btn-primary"
+      @action={{this.onStatusChange}}
+      @label={{this.buttonLabel}}
+      @id="chat-channel-toggle-btn"
+    />
+  </:footer>
+</DModal>

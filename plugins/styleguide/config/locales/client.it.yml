@@ -92,3 +92,6 @@ it:
           description: "Descrizione"
           header: "Intestazione"
           hover_to_see: "Passa il mouse per vedere una descrizione"
+        char_counter:
+          title: "Contatore di caratteri"
+          placeholder: "Inserisci qui il tuo testo..."

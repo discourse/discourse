@@ -16,6 +16,13 @@ module EmberCli
         assets +=
           Dir.glob("app/assets/javascripts/discourse/scripts/*.js").map { |f| File.basename(f) }
 
+        if workbox_dir_name
+          assets +=
+            Dir
+              .glob("app/assets/javascripts/discourse/dist/assets/#{workbox_dir_name}/*")
+              .map { |f| "#{workbox_dir_name}/#{File.basename(f)}" }
+        end
+
         Discourse
           .find_plugin_js_assets(include_disabled: true)
           .each do |file|
@@ -60,6 +67,15 @@ module EmberCli
         ember_source_package_raw =
           File.read("#{Rails.root}/app/assets/javascripts/node_modules/ember-source/package.json")
         JSON.parse(ember_source_package_raw)["version"]
+      end
+  end
+
+  def self.workbox_dir_name
+    return @workbox_base_dir if defined?(@workbox_base_dir)
+
+    @workbox_base_dir =
+      if (full_path = Dir.glob("app/assets/javascripts/discourse/dist/assets/workbox-*")[0])
+        File.basename(full_path)
       end
   end
 end

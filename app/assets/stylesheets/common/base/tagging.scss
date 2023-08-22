@@ -114,7 +114,7 @@
 .list-tags,
 .search-category {
   .discourse-tag.simple:not(:last-child):after {
-    content: ", ";
+    content: ",\00a0";
     margin-left: 1px;
   }
 }
@@ -160,7 +160,7 @@ header .discourse-tag {
 }
 
 #topic-title {
-  .discourse-tags .discourse-tag {
+  .discourse-tags .discourse-tag.box {
     margin-right: 0.35em;
   }
 }

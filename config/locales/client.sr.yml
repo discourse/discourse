@@ -270,9 +270,9 @@ sr:
       other: "%{count} karaktera"
     related_messages:
       title: "Povezane Poruke"
+      pill: "Povezane Poruke"
       see_all: 'Prikaži <a href="%{path}">sve poruke</a> od @%{username}...'
     suggested_topics:
-      title: "Predložene Teme"
       pm_title: "Predložene poruke"
     about:
       simple_title: "O nama"
@@ -603,7 +603,6 @@ sr:
       "3": "Markirano"
       "4": "Teme"
       "5": "Odgovori"
-      "6": "Responses"
       "7": "Spomeni"
       "9": "Citati"
       "11": "Izmene"
@@ -712,12 +711,6 @@ sr:
       muted_users: "Utišano"
       tracked_topics_link: "Prikaži"
       api_approved: "Potvrđenji:"
-      staff_counters:
-        flags_given: "pomoćne oznake"
-        flagged_posts: "označene poruke"
-        deleted_posts: "obrisane poruke"
-        suspensions: "suspenzije"
-        warnings_received: "upozorenja"
       messages:
         inbox: "Primljeno"
         latest: "Poslednje"
@@ -750,7 +743,6 @@ sr:
       second_factor_backup:
         regenerate: "Regeneriši"
         disable: "Onemogući"
-        enable: "Omogući"
       second_factor:
         name: "Ime foruma"
         disable: "Onemogući"
@@ -1010,8 +1002,6 @@ sr:
     signup_cta:
       sign_up: "Registrujte se"
     summary:
-      enabled_description: "Gledate pregled ove teme: najzanimljivije poruke su odabrane od strane zajednice."
-      enable: "Sumirajte Ovu Temu"
       disable: "Prikaži Sve Poruke"
     deleted_filter:
       enabled_description: "Ova tema sadrži brisane poruke, koji su skriveni."
@@ -1296,7 +1286,6 @@ sr:
           "3_2": "Primaćete obaveštenja jer posmatrate temu."
           "3_1": "Primaćete obaveštenja jer ste vi otvorili temu."
           "3": "Primaćete obaveštenja jer posmatrate temu."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Bićete obavešteni kada neko pomene vaše @ime ili vam odgovori"
           "1": "Bićete obavešteni kada neko pomene vaše @ime ili vam odgovori"
           "0_7": "Ignorirate sva obaveštenja iz ove kategorije."
@@ -1815,6 +1804,9 @@ sr:
         few: "%{count} novih"
         other: "%{count} nova"
       more: "Više"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "sve"
       sections:
         custom:
           save: "Sačuvaj"
@@ -1839,7 +1831,8 @@ sr:
         categories:
           header_link_text: "Kategorije"
         community:
-          header_link_text: "Zajednica"
+          edit_section:
+            header_dropdown: "Prilagođavanje"
           links:
             about:
               content: "O nama"
@@ -1847,6 +1840,8 @@ sr:
               content: "Admin"
             badges:
               content: "Značke"
+            topics:
+              content: "Teme"
             faq:
               content: "FAQ (često postavljana pitanja)"
             groups:
@@ -1855,6 +1850,11 @@ sr:
               content: "Korisnici"
             my_posts:
               content: "Moje poruke"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Molimo unesite validnu vrednost"
+          email: "Molimo unesite validnu e-mail adresu."
   admin_js:
     type_to_filter: "upiši za filtriranje"
     admin:
@@ -2032,6 +2032,7 @@ sr:
           customize_desc: "Prilagođavanje:"
           create_type: "Tip"
           create_name: "Ime foruma"
+          save: "Sačuvaj"
           edit: "Izmeni"
           settings: "Podešavanje"
           upload: "Učitaj"
@@ -2234,6 +2235,8 @@ sr:
           validations:
             required:
               key: "potrebno"
+            type:
+              key: "tip"
       impersonate:
         title: "Predstavi se kao"
         help: "Koristite ovaj alat da se predstavite kao određeni korisnički nalog za potrebe ispravljanja grešaka. Moraćete se odjaviti kad završite."
@@ -2419,6 +2422,8 @@ sr:
       site_text:
         edit: "izmeni"
         show_overriden: "Pokazuj samo promenjeno"
+        outdated:
+          dismiss: "Одбаци"
       settings:
         show_overriden: "Pokazuj samo promenjeno"
         reset: "resetuj"

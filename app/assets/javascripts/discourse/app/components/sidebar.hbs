@@ -1,12 +1,24 @@
-<DSection
-  @pageClass="has-sidebar"
-  @id="d-sidebar"
-  @class="sidebar-container"
-  @scrollTop={{false}}
->
-  <Sidebar::Sections
-    @currentUser={{this.currentUser}}
-    @collapsableSections={{true}}
-  />
+<DSection @pageClass="has-sidebar" @id="d-sidebar" @class="sidebar-container">
+  {{#if this.showSwitchPanelButtonsOnTop}}
+    <Sidebar::SwitchPanelButtons @buttons={{this.switchPanelButtons}} />
+  {{/if}}
+
+  {{#if this.sidebarState.showMainPanel}}
+    <Sidebar::Sections
+      @currentUser={{this.currentUser}}
+      @collapsableSections={{true}}
+      @panel={{this.currentPanel}}
+    />
+  {{else}}
+    <Sidebar::ApiPanels
+      @currentUser={{this.currentUser}}
+      @collapsableSections={{true}}
+    />
+  {{/if}}
+
+  {{#unless this.showSwitchPanelButtonsOnTop}}
+    <Sidebar::SwitchPanelButtons @buttons={{this.switchPanelButtons}} />
+  {{/unless}}
+
   <Sidebar::Footer />
 </DSection>

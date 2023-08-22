@@ -35,6 +35,14 @@ RSpec.describe DiscourseJsProcessor do
     it "returns false if the header is not present" do
       expect(DiscourseJsProcessor.skip_module?("// just some JS\nconsole.log()")).to eq(false)
     end
+
+    it "works end-to-end" do
+      source = <<~JS.chomp
+        // discourse-skip-module
+        console.log("hello world");
+      JS
+      expect(DiscourseJsProcessor.transpile(source, "test", "test")).to eq(source)
+    end
   end
 
   it "passes through modern JS syntaxes which are supported in our target browsers" do

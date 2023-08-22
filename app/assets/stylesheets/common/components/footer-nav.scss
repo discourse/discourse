@@ -30,7 +30,7 @@ body.footer-nav-visible {
 
 .footer-nav {
   background-color: rgba(var(--header_background-rgb), 0.9);
-  box-shadow: shadow("footer-nav");
+  box-shadow: var(--shadow-footer-nav);
   height: var(--footer-nav-height);
   position: fixed;
   bottom: calc(var(--footer-nav-height) * -1);

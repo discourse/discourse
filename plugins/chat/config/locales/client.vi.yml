@@ -26,6 +26,8 @@ vi:
       flag: "Gắn cờ"
       join: "Tham gia"
       last_visit: "lần thăm cuối"
+      summarization:
+        summarize: "Tóm tắt"
       mention_warning:
         dismiss: "bỏ qua"
         groups:
@@ -61,6 +63,8 @@ vi:
           about: Giới thiệu
           members: Các thành viên
           settings: Cài đặt
+      new_message_modal:
+        no_items: "Không có mẫu nào"
       direct_message_creator:
         title: Tin nhắn mới
         prefix: "Tới:"
@@ -72,11 +76,13 @@ vi:
       composer:
         italic_text: "văn bản nhấn mạnh"
         bold_text: "chữ in đậm"
+        send: "Gửi"
       notification_levels:
         never: "Không bao giờ"
       settings:
         follow: "Tham gia"
         followed: "Đã tham gia"
+        threading_disabled: "Vô hiệu hóa"
         notifications: "Thông báo"
         preview: "Xem trước"
         save: "Lưu lại"
@@ -110,6 +116,19 @@ vi:
         activities: "Hoạt động"
         flags: "Dấu cờ - Flags"
         symbols: "Ký hiệu"
+      thread:
+        title: "Tiêu đề"
+        replies:
+          other: "%{count} trả lời"
+        settings: "Cài đặt"
+        last_reply: "trả lời cuối cùng"
+        notifications:
+          regular:
+            title: "Bình thường"
+          tracking:
+            title: "Đang theo dõi"
+        participants_other_count:
+          other: "+%{count}"
       draft_channel_screen:
         header: "Tin nhắn mới"
         cancel: "Huỷ"
@@ -121,7 +140,3 @@ vi:
           fields:
             message:
               label: Tin nhắn
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Gắn cờ bởi"

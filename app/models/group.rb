@@ -89,6 +89,10 @@ class Group < ActiveRecord::Base
   validate :incoming_email_validator
   validate :can_allow_membership_requests, if: :allow_membership_requests
   validate :validate_grant_trust_level, if: :will_save_change_to_grant_trust_level?
+  validates :automatic_membership_email_domains, length: { maximum: 1000 }
+  validates :bio_raw, length: { maximum: 3000 }
+  validates :membership_request_template, length: { maximum: 5000 }
+  validates :full_name, length: { maximum: 100 }
 
   AUTO_GROUPS = {
     everyone: 0,
@@ -161,7 +165,18 @@ class Group < ActiveRecord::Base
             if user.blank?
               sql = "groups.visibility_level = :public"
             elsif is_staff
-              sql = "groups.visibility_level IN (:public, :logged_on_users, :members, :staff)"
+              sql = <<~SQL
+                groups.visibility_level IN (:public, :logged_on_users, :members, :staff)
+                OR
+                groups.id IN (
+                  SELECT g.id
+                    FROM groups g
+                    JOIN group_users gu ON gu.group_id = g.id
+                    AND gu.user_id = :user_id
+                    AND gu.owner
+                  WHERE g.visibility_level = :owners
+                )
+              SQL
             else
               sql = <<~SQL
           groups.id IN (
@@ -205,8 +220,18 @@ class Group < ActiveRecord::Base
             if user.blank?
               sql = "groups.members_visibility_level = :public"
             elsif is_staff
-              sql =
-                "groups.members_visibility_level IN (:public, :logged_on_users, :members, :staff)"
+              sql = <<~SQL
+                groups.members_visibility_level IN (:public, :logged_on_users, :members, :staff)
+                OR
+                groups.id IN (
+                  SELECT g.id
+                    FROM groups g
+                    JOIN group_users gu ON gu.group_id = g.id
+                    AND gu.user_id = :user_id
+                    AND gu.owner
+                  WHERE g.members_visibility_level = :owners
+                )
+              SQL
             else
               sql = <<~SQL
           groups.id IN (
@@ -250,12 +275,12 @@ class Group < ActiveRecord::Base
   scope :messageable,
         lambda { |user|
           where(
-            "messageable_level in (:levels) OR
+            "groups.messageable_level in (:levels) OR
           (
-            messageable_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
+            groups.messageable_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND groups.id in (
             SELECT group_id FROM group_users WHERE user_id = :user_id)
           ) OR (
-            messageable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]} AND id in (
+            groups.messageable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]} AND groups.id in (
             SELECT group_id FROM group_users WHERE user_id = :user_id AND owner IS TRUE)
           )",
             levels: alias_levels(user),
@@ -265,14 +290,14 @@ class Group < ActiveRecord::Base
 
   def self.mentionable_sql_clause(include_public: true)
     clause = +<<~SQL
-      mentionable_level in (:levels)
+      groups.mentionable_level in (:levels)
       OR (
-        mentionable_level = #{ALIAS_LEVELS[:members_mods_and_admins]}
-        AND id in (
+        groups.mentionable_level = #{ALIAS_LEVELS[:members_mods_and_admins]}
+        AND groups.id in (
           SELECT group_id FROM group_users WHERE user_id = :user_id)
       ) OR (
-        mentionable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]}
-        AND id in (
+        groups.mentionable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]}
+        AND groups.id in (
           SELECT group_id FROM group_users WHERE user_id = :user_id AND owner IS TRUE)
       )
       SQL
@@ -653,14 +678,17 @@ class Group < ActiveRecord::Base
     groups ||= Group
 
     relation =
-      groups.where("name ILIKE :term_like OR full_name ILIKE :term_like", term_like: "%#{name}%")
+      groups.where(
+        "groups.name ILIKE :term_like OR groups.full_name ILIKE :term_like",
+        term_like: "%#{name}%",
+      )
 
     if sort == :auto
       prefix = "#{name.gsub("_", "\\_")}%"
       relation =
         relation.reorder(
           DB.sql_fragment(
-            "CASE WHEN name ILIKE :like OR full_name ILIKE :like THEN 0 ELSE 1 END ASC, name ASC",
+            "CASE WHEN groups.name ILIKE :like OR groups.full_name ILIKE :like THEN 0 ELSE 1 END ASC, groups.name ASC",
             like: prefix,
           ),
         )
@@ -682,7 +710,7 @@ class Group < ActiveRecord::Base
 
   def self.lookup_groups(group_ids: [], group_names: [])
     if group_ids.present?
-      group_ids = group_ids.split(",") if group_ids.is_a?(String)
+      group_ids = group_ids.to_s.split(",") if !group_ids.is_a?(Array)
       group_ids.map!(&:to_i)
       groups = Group.where(id: group_ids) if group_ids.present?
     end
@@ -810,6 +838,7 @@ class Group < ActiveRecord::Base
       :user_removed_from_group,
       id: group_user.id,
       payload: payload,
+      group_ids: [self.id],
     )
   end
 
@@ -951,15 +980,19 @@ class Group < ActiveRecord::Base
   end
 
   def flair_type
-    return :icon if flair_icon.present?
-    return :image if flair_upload.present?
+    if flair_icon.present?
+      :icon
+    elsif flair_upload.present?
+      :image
+    end
   end
 
   def flair_url
-    return flair_icon if flair_type == :icon
-    return upload_cdn_path(flair_upload.url) if flair_type == :image
-
-    nil
+    if flair_type == :icon
+      flair_icon
+    elsif flair_type == :image
+      upload_cdn_path(flair_upload.url)
+    end
   end
 
   %i[muted regular tracking watching watching_first_post].each do |level|

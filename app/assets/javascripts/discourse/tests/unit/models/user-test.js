@@ -6,7 +6,6 @@ import { settled } from "@ember/test-helpers";
 import User from "discourse/models/user";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { getOwner } from "discourse-common/lib/get-owner";
-import * as userTips from "discourse/lib/user-tips";
 
 module("Unit | Model | user", function (hooks) {
   setupTest(hooks);
@@ -224,27 +223,17 @@ module("Unit | Model | user", function (hooks) {
 
   test("hideUserTipForever() can hide the user tip", async function (assert) {
     const site = getOwner(this).lookup("service:site");
-    site.set("user_tips", { first_notification: 1 });
     const store = getOwner(this).lookup("service:store");
+    const userTips = getOwner(this).lookup("service:user-tips");
+
+    site.set("user_tips", { first_notification: 1 });
     const user = store.createRecord("user", { username: "eviltrout" });
 
-    const hideSpy = sinon.spy(userTips, "hideUserTip");
-    const showNextSpy = sinon.spy(userTips, "showNextUserTip");
+    const hideSpy = sinon.spy(userTips, "hideTip");
+    const showNextSpy = sinon.spy(userTips, "showNextTip");
     await user.hideUserTipForever("first_notification");
 
-    assert.ok(hideSpy.calledWith("first_notification"));
-    assert.ok(showNextSpy.calledWith());
-  });
-
-  test("hideUserTipForever() can hide all the user tips", async function (assert) {
-    const site = getOwner(this).lookup("service:site");
-    site.set("user_tips", { first_notification: 1 });
-    const store = getOwner(this).lookup("service:store");
-    const user = store.createRecord("user", { username: "eviltrout" });
-
-    const hideAllSpy = sinon.spy(userTips, "hideAllUserTips");
-    await user.hideUserTipForever();
-
-    assert.ok(hideAllSpy.calledWith());
+    assert.true(hideSpy.calledWith("first_notification"));
+    assert.true(showNextSpy.calledWith());
   });
 });

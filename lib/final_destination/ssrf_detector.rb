@@ -2,9 +2,9 @@
 
 class FinalDestination
   module SSRFDetector
-    class DisallowedIpError < SocketError
+    class DisallowedIpError < SSRFError
     end
-    class LookupFailedError < SocketError
+    class LookupFailedError < SSRFError
     end
 
     # This is a list of private IPv4 IP ranges that are not allowed to be globally reachable as given by

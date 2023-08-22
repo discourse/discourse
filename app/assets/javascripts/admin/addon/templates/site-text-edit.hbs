@@ -7,11 +7,33 @@
     <h4>{{i18n "admin.site_text.locale"}} {{this.localeFullName}}</h4>
   </div>
 
+  {{#if this.isOutdated}}
+    <div class="outdated">
+      <h4>{{i18n "admin.site_text.outdated.title"}}</h4>
+      <p>{{i18n "admin.site_text.outdated.description"}}</p>
+      <h5>{{i18n "admin.site_text.outdated.old_default"}}</h5>
+      <p>{{this.siteText.old_default}}</p>
+      <h5>{{i18n "admin.site_text.outdated.new_default"}}</h5>
+      <p>{{this.siteText.new_default}}</p>
+      <DButton
+        @class="btn-default"
+        @action={{action "dismissOutdated"}}
+        @label="admin.site_text.outdated.dismiss"
+      />
+    </div>
+  {{/if}}
+
   <ExpandingTextArea
     @value={{this.buffered.value}}
     @rows="1"
     @class="site-text-value"
   />
+
+  {{#if this.siteText.has_interpolation_keys}}
+    <div class="desc">{{i18n "admin.site_text.interpolation_keys"}}
+      {{this.interpolationKeys}}
+    </div>
+  {{/if}}
 
   <SaveControls
     @model={{this.siteText}}

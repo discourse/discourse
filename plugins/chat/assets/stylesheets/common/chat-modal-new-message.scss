@@ -1,0 +1,34 @@
+.chat-modal-new-message {
+  & + .modal-backdrop {
+    opacity: 1;
+    background: transparent;
+  }
+
+  .modal-body {
+    padding: 0;
+  }
+
+  .modal-header {
+    display: none;
+  }
+
+  .modal-inner-container {
+    width: var(--modal-max-width);
+    box-shadow: var(--shadow-dropdown);
+    overflow: hidden;
+  }
+
+  .mobile-device & {
+    .modal-inner-container {
+      border-radius: 0;
+      margin: 0 auto auto auto;
+      box-shadow: var(--shadow-modal);
+    }
+  }
+
+  .not-mobile-device & {
+    .modal-inner-container {
+      margin: 10px auto auto auto;
+    }
+  }
+}

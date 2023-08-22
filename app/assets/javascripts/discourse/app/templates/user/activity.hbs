@@ -4,8 +4,8 @@
   <HorizontalOverflowNav @ariaLabel="User secondary - activity">
     <DNavigationItem
       @route="userActivity.index"
-      @class="user-nav__activity-all"
       @ariaCurrentContext="subNav"
+      class="user-nav__activity-all"
     >
       {{d-icon "stream"}}
       <span>{{i18n "user.filters.all"}}</span>
@@ -13,16 +13,16 @@
 
     <DNavigationItem
       @route="userActivity.topics"
-      @class="user-nav__activity-topics"
       @ariaCurrentContext="subNav"
+      class="user-nav__activity-topics"
     >
       {{d-icon "list-ul"}}
       <span>{{i18n "user_action_groups.4"}}</span>
     </DNavigationItem>
     <DNavigationItem
       @route="userActivity.replies"
-      @class="user-nav__activity-replies"
       @ariaCurrentContext="subNav"
+      class="user-nav__activity-replies"
     >
       {{d-icon "reply"}}
       <span>{{i18n "user_action_groups.5"}}</span>
@@ -31,9 +31,9 @@
     {{#if this.user.showRead}}
       <DNavigationItem
         @route="userActivity.read"
-        @class="user-nav__activity-read"
-        @title={{i18n "user.read_help"}}
         @ariaCurrentContext="subNav"
+        class="user-nav__activity-read"
+        title={{i18n "user.read_help"}}
       >
         {{d-icon "history"}}
         <span>{{i18n "user.read"}}</span>
@@ -43,8 +43,8 @@
     {{#if this.user.showDrafts}}
       <DNavigationItem
         @route="userActivity.drafts"
-        @class="user-nav__activity-drafts"
         @ariaCurrentContext="subNav"
+        class="user-nav__activity-drafts"
       >
         {{d-icon "pencil-alt"}}
         <span>{{this.draftLabel}}</span>
@@ -54,8 +54,8 @@
     {{#if (gt this.model.pending_posts_count 0)}}
       <DNavigationItem
         @route="userActivity.pending"
-        @class="user-nav__activity-pending"
         @ariaCurrentContext="subNav"
+        class="user-nav__activity-pending"
       >
         {{d-icon "clock"}}
         <span>{{this.pendingLabel}}</span>
@@ -64,8 +64,8 @@
 
     <DNavigationItem
       @route="userActivity.likesGiven"
-      @class="user-nav__activity-likes"
       @ariaCurrentContext="subNav"
+      class="user-nav__activity-likes"
     >
       {{d-icon "heart"}}
       <span>{{i18n "user_action_groups.1"}}</span>
@@ -74,8 +74,8 @@
     {{#if this.user.showBookmarks}}
       <DNavigationItem
         @route="userActivity.bookmarks"
-        @class="user-nav__activity-bookmarks"
         @ariaCurrentContext="subNav"
+        class="user-nav__activity-bookmarks"
       >
         {{d-icon "bookmark"}}
         <span>{{i18n "user_action_groups.3"}}</span>

@@ -1,0 +1,49 @@
+<DModal
+  @closeModal={{@closeModal}}
+  class="user-status"
+  @title={{i18n "user_status.set_custom_status"}}
+>
+  <:body>
+    <div class="control-group">
+      <UserStatusPicker @status={{this.status}} />
+    </div>
+    {{#unless this.hidePauseNotifications}}
+      <div class="control-group pause-notifications">
+        <label class="checkbox-label">
+          <Input @type="checkbox" @checked={{this.pauseNotifications}} />
+          {{i18n "user_status.pause_notifications"}}
+        </label>
+      </div>
+    {{/unless}}
+    <div class="control-group control-group-remove-status">
+      <label class="control-label">
+        {{i18n "user_status.remove_status"}}
+      </label>
+
+      <TimeShortcutPicker
+        @timeShortcuts={{this.timeShortcuts}}
+        @hiddenOptions={{this.hiddenTimeShortcutOptions}}
+        @customLabels={{this.customTimeShortcutLabels}}
+        @prefilledDatetime={{this.prefilledDateTime}}
+        @onTimeSelected={{this.onTimeSelected}}
+        @_itsatrap={{this._itsatrap}}
+      />
+    </div>
+  </:body>
+  <:footer>
+    <DButton
+      @label="user_status.save"
+      @class="btn-primary"
+      @disabled={{not this.statusIsSet}}
+      @action={{this.saveAndClose}}
+    />
+    <DModalCancel @close={{@closeModal}} />
+    {{#if this.showDeleteButton}}
+      <DButton
+        @icon="trash-alt"
+        @class="delete-status btn-danger"
+        @action={{this.delete}}
+      />
+    {{/if}}
+  </:footer>
+</DModal>

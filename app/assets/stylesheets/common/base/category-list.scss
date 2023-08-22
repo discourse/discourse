@@ -58,7 +58,7 @@
     border-width: 0;
     border-left-width: 6px;
     border-style: solid;
-    border-color: var(--primary-low);
+    border-color: var(--category-color, var(--primary-low));
 
     .mobile-view & {
       width: 100%;

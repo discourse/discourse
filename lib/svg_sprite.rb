@@ -34,6 +34,7 @@ module SvgSprite
         book
         book-reader
         bookmark
+        bookmark-delete
         briefcase
         bullseye
         calendar-alt
@@ -72,6 +73,7 @@ module SvgSprite
         discourse-emojis
         discourse-expand
         discourse-other-tab
+        discourse-threads
         download
         ellipsis-h
         ellipsis-v
@@ -81,6 +83,7 @@ module SvgSprite
         exclamation-circle
         exclamation-triangle
         external-link-alt
+        eye
         fab-android
         fab-apple
         fab-chrome
@@ -147,6 +150,7 @@ module SvgSprite
         hourglass-start
         id-card
         image
+        images
         inbox
         info-circle
         italic
@@ -185,6 +189,8 @@ module SvgSprite
         reply
         rocket
         search
+        search-plus
+        search-minus
         share
         shield-alt
         sign-in-alt
@@ -202,6 +208,7 @@ module SvgSprite
         tag
         tags
         tasks
+        th
         thermometer-three-quarters
         thumbs-down
         thumbs-up

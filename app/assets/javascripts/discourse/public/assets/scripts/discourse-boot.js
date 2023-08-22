@@ -10,11 +10,6 @@
   // https://github.com/emberjs/ember.js/blob/0c5518ea7b/packages/%40ember/-internals/glimmer/lib/helper.ts#L134-L138
   require("ember");
 
-  window.__widget_helpers = require("discourse-widget-hbs/helpers").default;
-
-  // TODO: Eliminate this global
-  window.virtualDom = require("virtual-dom");
-
   let element = document.querySelector(
     `meta[name="discourse/config/environment"]`
   );

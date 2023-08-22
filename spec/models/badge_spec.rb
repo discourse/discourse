@@ -1,6 +1,17 @@
 # frozen_string_literal: true
 
 RSpec.describe Badge do
+  describe "Validations" do
+    subject(:badge) { Fabricate.build(:badge) }
+
+    it { is_expected.to validate_length_of(:name).is_at_most(100) }
+    it { is_expected.to validate_length_of(:description).is_at_most(500) }
+    it { is_expected.to validate_length_of(:long_description).is_at_most(1000) }
+    it { is_expected.to validate_presence_of(:name) }
+    it { is_expected.to validate_presence_of(:badge_type) }
+    it { is_expected.to validate_uniqueness_of(:name) }
+  end
+
   it "has a valid system attribute for new badges" do
     expect(Badge.create!(name: "test", badge_type_id: 1).system?).to be false
   end
@@ -33,11 +44,17 @@ RSpec.describe Badge do
   end
 
   it "can ensure consistency" do
-    b = Badge.first
+    b = Badge.find_by_name("Basic User")
+
     b.grant_count = 100
     b.save
 
-    UserBadge.create!(user_id: -100, badge_id: b.id, granted_at: 1.minute.ago, granted_by_id: -1)
+    UserBadge.create!(
+      user_id: User.minimum(:id) - 1,
+      badge_id: b.id,
+      granted_at: 1.minute.ago,
+      granted_by_id: -1,
+    )
     UserBadge.create!(
       user_id: User.first.id,
       badge_id: b.id,

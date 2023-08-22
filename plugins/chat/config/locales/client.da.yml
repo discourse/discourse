@@ -128,12 +128,11 @@ da:
           about: Om
           members: Brugere
           settings: Indstillinger
+      new_message_modal:
+        no_items: "Ingen punkter"
       direct_message_creator:
         title: Ny Besked
         prefix: "Til:"
-      channel_selector:
-        title: "Hop til kanal"
-        no_channels: "Ingen kanaler matcher din søgning"
       create_channel:
         choose_category:
           label: "Vælg en kategori"
@@ -154,6 +153,7 @@ da:
         italic_text: "kursiv skrift"
         bold_text: "fed skrift"
         code_text: "kode tekst"
+        send: "Send"
       quote:
         copy_success: "Chat-citat kopieret til udklipsholderen"
       notification_levels:
@@ -161,6 +161,8 @@ da:
       settings:
         follow: "Tilslut"
         followed: "Tilmeldt"
+        threading_enabled: "Aktiveret"
+        threading_disabled: "Deaktiveret"
         notifications: "Notifikationer"
         preview: "Forhåndsvisning"
         save: "Gem"
@@ -199,6 +201,21 @@ da:
         activities: "Aktiviteter"
         flags: "Flag"
         symbols: "Symboler"
+      thread:
+        title: "Titel"
+        replies:
+          one: "%{count} svar"
+          other: "%{count} svar"
+        settings: "Indstillinger"
+        last_reply: "seneste svar"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Følger"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Ny Besked"
         cancel: "Annuller"
@@ -234,10 +251,6 @@ da:
             sender:
               label: Afsender
               description: Standard er system
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Markeret af"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"

@@ -251,7 +251,7 @@ export default RestModel.extend({
     });
   },
 
-  showSummary() {
+  showTopReplies() {
     this.cancelFilter();
     this.set("filter", "summary");
     return this.refreshAndJumpToSecondVisible();

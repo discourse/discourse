@@ -228,9 +228,9 @@ hy:
       other: "%{count} սիմվոլ"
     related_messages:
       title: " Առնչվող Հաղորդագրություններ"
+      pill: " Առնչվող Հաղորդագրություններ"
       see_all: 'Տեսնել %{username}-ի @<a href="%{path}">բոլոր նամակները</a>'
     suggested_topics:
-      title: "Առաջարկվող Թեմաներ"
       pm_title: "Առաջարկվող Հաղորդագրություններ"
     about:
       simple_title: "Մեր Մասին"
@@ -883,13 +883,6 @@ hy:
       theme: "Թեմա"
       home: "Լռելյայն Գլխավոր Էջ"
       staged: "Աստիճանավորված (Staged)"
-      staff_counters:
-        flags_given: "օգտակար դրոշակավորում"
-        flagged_posts: "դրոշակավորված գրառում"
-        deleted_posts: "ջնջված գրառում"
-        suspensions: "սառեցում"
-        warnings_received: "զգուշացում"
-        rejected_posts: "մերժված հաղորդագրություներ"
       messages:
         inbox: "Մուտքերի արկղ"
         latest: "Վերջինները"
@@ -933,8 +926,6 @@ hy:
       second_factor_backup:
         regenerate: "Վերագեներացնել"
         disable: "Անջատել"
-        enable: "Միացնել"
-        enable_long: "Միացնել պահուստային կոդերը"
         copy_to_clipboard: "Կրկնօրինակել Փոխանակման Հարթակում"
         copy_to_clipboard_error: "Փոխանակման հարթակում տվյալների կրկնօրինակման սխալ"
         copied_to_clipboard: "Կրնօրինակված է Փոխանակման հարթակում"
@@ -1305,8 +1296,6 @@ hy:
       hide_forever: "ոչ, շնորհակալություն"
       intro: "Ողջույն! Կարծես թե Դուք վայելում եք քննարկումը, սակայն դեռևս հաշիվ չեք գրանցել:"
     summary:
-      enabled_description: "Դուք դիտում եք այս թեմայի ամփոփումը՝ համայնքի կողմից որոշված ամենահետաքրքիր գրառումները:"
-      enable: "Ամփոփել Այս Թեման"
       disable: "Ցուցադրել Բոլոր Գրառումները"
     deleted_filter:
       enabled_description: "Այս թեման պարունակում է հեռացված գրառումներ, որոնք թաքցվել են:"
@@ -1643,6 +1632,7 @@ hy:
       membership_request_accepted: "Անդամակցության հարցումը ընդունվել է՝ '%{group_name}'"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
+      admin_problems: "Նոր խորհուրդ Ձեր կայքի կառավարման հարթակում"
       dismiss_confirmation:
         dismiss: "Չեղարկել"
         cancel: "Չեղարկել"
@@ -1946,7 +1936,6 @@ hy:
           "2_8": "Դուք կտեսնեք նոր պատասխանների քանակը, քանի որ հետևում եք այս կատեգորիային:"
           "2_4": "Դուք կտեսնեք նոր պատասխանների քանակը, քանի որ հրապարակել եք պատասխան այս թեմայում:"
           "2_2": "Դուք կտեսնեք նոր պատասխանների քանակը, քանի որ հետևում եք այս թեմային:"
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Դուք ծանուցում կստանաք, եթե որևէ մեկը հիշատակի Ձեր @անունը կամ պատասխանի Ձեզ:"
           "1": "Դուք ծանուցում կստանաք, եթե որևէ մեկը հիշատակի Ձեր @անունը կամ պատասխանի Ձեզ:"
           "0_7": "Դուք անտեսում եք այս կատեգորիայի բոլոր ծանուցումները:"
@@ -2632,6 +2621,9 @@ hy:
       close: "Փակել (Esc)"
       content_load_error: '<a href="%url%"> Բովանդակությունը </a> հնարավոր չէ բեռնել:'
       image_load_error: '<a href="%url%"> Պատկերը </a> հնարավոր չէ բեռնել:'
+    experimental_lightbox:
+      buttons:
+        close: "Փակել (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ","
       shortcut_key_delimiter_plus: "+"
@@ -2717,7 +2709,6 @@ hy:
         one: "Վաստակել է այս կրծքանշանը %{count} անգամ"
         other: "Վաստակել է այս կրծքանշանը %{count} անգամ"
       granted_on: "Շնորհված է %{date}"
-      others_count: "Այս կրծքանշանով այլոք (%{count})"
       title: Կրծքանշաններ
       allow_title: "Դուք կարող եք օգտագործել այս կրծքանշանը որպես վերնագիր"
       multiple_grant: "Դուք կարող եք վաստակել սա բազմակի անգամ"
@@ -2727,9 +2718,6 @@ hy:
       more_badges:
         one: "+%{count} Ավելի"
         other: "+ևս %{count}"
-      granted:
-        one: "%{count} շնորհված"
-        other: "%{count} շնորհված"
       select_badge_for_title: Ընտրեք կրծքանշան՝ որպես Ձեր վերնագիր օգտագործելու համար
       none: "(ոչ մի)"
       successfully_granted: "%{badge}-ը հաջողությամբ շնորհված է %{username}-ին"
@@ -2859,11 +2847,15 @@ hy:
         other: "%{count} նոր"
       more: "Ավելին"
       all_categories: "Բոլոր կատեգորիաները"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Բոլորը"
       sections:
         custom:
           save: "Պահպանել"
           delete: "Ջնջել"
           links:
+            reset: "Վերականգնել լռելյայն"
             icon:
               label: "Պատկերակ"
             name:
@@ -2885,7 +2877,8 @@ hy:
         categories:
           header_link_text: "Կատեգորիաներ"
         community:
-          header_link_text: "Համայնք"
+          edit_section:
+            header_dropdown: "Անհատականացնել"
           links:
             about:
               content: "Մասին"
@@ -2893,8 +2886,8 @@ hy:
               content: "Ադմին"
             badges:
               content: "Կրծքանշաններ"
-            everything:
-              content: "Բոլորը"
+            topics:
+              content: "Թեմա"
             faq:
               content: "ՀՏՀ"
             groups:
@@ -2905,6 +2898,11 @@ hy:
               content: "Իմ Գրառումները"
             review:
               content: "Վերանայում"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Խնդրում ենք մուտքագրել վավեր արժեք:"
+          email: "Խնդրում ենք մուտքագրել վավեր էլ. հասցե."
   admin_js:
     type_to_filter: "գրեք ֆիլտրելու համար..."
     admin:
@@ -3149,9 +3147,6 @@ hy:
         notification_event:
           name: "Ծանուցման Իրադարձություն"
           details: "Երբ օգտատերը ծանուցումների ժապավենին նոր էլեմենտի ավելացման մասին ծանուցում է ստանում:"
-        user_badge_event:
-          name: "Կրծքանշանի Պարգևատրման Իրադարձություն"
-          details: "Երբ օգտատերը ստանում է կրծքանշան:"
         delivery_status:
           title: "Ուղարկման Կարգավիճակը"
           inactive: "Ոչ ակտիվ"
@@ -3303,6 +3298,7 @@ hy:
           create: "Ստեղծել"
           create_type: "Տիպ"
           create_name: "Անուն"
+          save: "Պահպանել"
           long_title: "Փոփոխել Ձեր կայքի գույները, CSS և HTML բովանդակությունը"
           edit: "Խմբագրել"
           edit_confirm: "Սա հեռադիր թեմա է, եթե Դուք խմբագրեք CSS/HTML-ը, Ձեր փոփոխությունները կկորչեն թեմայի հաջորդ թարմացման ժամանակ:"
@@ -3767,6 +3763,8 @@ hy:
           validations:
             required:
               key: "պարտադիր է"
+            type:
+              key: "տիպը"
       impersonate:
         title: "Նմանակել"
         help: "Օգտագործեք այս գործիքը՝ վրիպազերծման նպատակով օգտատիրոջ հաշիվը նմանակելու համար: Դուք պետք է ավարտելուց հետո դուրս գրվեք:"
@@ -4050,6 +4048,8 @@ hy:
         recommended: "Մենք խորհուրդ ենք տալիս անհատականացնել հետևյալ տեքստը՝ Ձեր պահանջներին համապատասխանեցնելու համար՝ "
         show_overriden: "Ցուցադրել միայն վերասահմանվածները"
         more_than_50_results: "Կա 50-ից ավել արդյունք: Խնդրում ենք հստակեցնել Ձեր որոնումը:"
+        outdated:
+          dismiss: "Չեղարկել"
       settings:
         show_overriden: "Ցուցադրել միայն վերասահմանվածները"
         reset: "վերահաստատել"
@@ -4057,7 +4057,6 @@ hy:
       site_settings:
         title: "Կարգավորումներ"
         no_results: "Արդյունքներ չեն գտնվել:"
-        more_than_30_results: "Կա 30-ից ավելի արդյունք: Խնդրում ենք հստակեցնել Ձեր որոնումը կամ ընտրել կատեգորիա:"
         clear_filter: "Ջնջել"
         add_url: "ավելացնել URL"
         add_host: "ավելացնել հոսթ"

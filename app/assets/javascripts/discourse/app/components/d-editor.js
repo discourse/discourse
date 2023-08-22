@@ -1,4 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
+import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import {
   caretPosition,
   inCodeBlock,
@@ -17,26 +18,28 @@ import I18n from "I18n";
 import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
 import { SKIP } from "discourse/lib/autocomplete";
-import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
+import {
+  linkSeenHashtagsInContext,
+  setupHashtagAutocomplete,
+} from "discourse/lib/hashtag-autocomplete";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { getRegister } from "discourse-common/lib/get-owner";
 import { isTesting } from "discourse-common/config/environment";
-import { linkSeenHashtags } from "discourse/lib/link-hashtags";
 import { linkSeenMentions } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import loadScript from "discourse/lib/load-script";
 import { resolveCachedShortUrls } from "pretty-text/upload-short-url";
 import { inject as service } from "@ember/service";
-import showModal from "discourse/lib/show-modal";
 import { siteDir } from "discourse/lib/text-direction";
 import { translations } from "pretty-text/emoji/data";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import TextareaTextManipulation, {
   getHead,
 } from "discourse/mixins/textarea-text-manipulation";
+import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
 
 function getButtonLabel(labelKey, defaultLabel) {
   // use the Font Awesome icon if the label matches the default
@@ -180,15 +183,14 @@ class Toolbar {
 
     const title = I18n.t(button.title || `composer.${button.id}_title`);
     if (button.shortcut) {
-      const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
-      const mod = mac ? "Meta" : "Ctrl";
-
-      const shortcutTitle = `${translateModKey(mod + "+")}${translateModKey(
-        button.shortcut
-      )}`;
+      const shortcutTitle = `${translateModKey(
+        PLATFORM_KEY_MODIFIER + "+"
+      )}${translateModKey(button.shortcut)}`;
 
       createdButton.title = `${title} (${shortcutTitle})`;
-      this.shortcuts[`${mod}+${button.shortcut}`.toLowerCase()] = createdButton;
+      this.shortcuts[
+        `${PLATFORM_KEY_MODIFIER}+${button.shortcut}`.toLowerCase()
+      ] = createdButton;
     } else {
       createdButton.title = title;
     }
@@ -216,6 +218,9 @@ export function onToolbarCreate(func) {
 }
 
 export default Component.extend(TextareaTextManipulation, {
+  emojiStore: service("emoji-store"),
+  modal: service(),
+
   classNames: ["d-editor"],
   ready: false,
   lastSel: null,
@@ -223,10 +228,38 @@ export default Component.extend(TextareaTextManipulation, {
   showLink: true,
   emojiPickerIsActive: false,
   emojiFilter: "",
-  emojiStore: service("emoji-store"),
   isEditorFocused: false,
   processPreview: true,
   composerFocusSelector: "#reply-control .d-editor-input",
+
+  selectedFormTemplateId: computed("formTemplateIds", {
+    get() {
+      if (this._selectedFormTemplateId) {
+        return this._selectedFormTemplateId;
+      }
+
+      return this.formTemplateIds?.[0];
+    },
+
+    set(key, value) {
+      return (this._selectedFormTemplateId = value);
+    },
+  }),
+
+  @action
+  updateSelectedFormTemplateId(formTemplateId) {
+    this.selectedFormTemplateId = formTemplateId;
+  },
+
+  @discourseComputed("formTemplateIds", "replyingToTopic", "editingPost")
+  showFormTemplateForm(formTemplateIds, replyingToTopic, editingPost) {
+    // TODO(@keegan): Remove !editingPost once we add edit/draft support for form templates
+    if (formTemplateIds?.length > 0 && !replyingToTopic && !editingPost) {
+      return true;
+    }
+
+    return false;
+  },
 
   @discourseComputed("placeholder")
   placeholderTranslated(placeholder) {
@@ -275,11 +308,9 @@ export default Component.extend(TextareaTextManipulation, {
 
     this._itsatrap.bind("tab", () => this.indentSelection("right"));
     this._itsatrap.bind("shift+tab", () => this.indentSelection("left"));
-
-    const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
-    const mod = mac ? "meta" : "ctrl";
-
-    this._itsatrap.bind(`${mod}+shift+.`, () => this.send("insertCurrentTime"));
+    this._itsatrap.bind(`${PLATFORM_KEY_MODIFIER}+shift+.`, () =>
+      this.send("insertCurrentTime")
+    );
 
     // disable clicking on links in the preview
     this.element
@@ -290,6 +321,7 @@ export default Component.extend(TextareaTextManipulation, {
       this.appEvents.on("composer:insert-block", this, "insertBlock");
       this.appEvents.on("composer:insert-text", this, "insertText");
       this.appEvents.on("composer:replace-text", this, "replaceText");
+      this.appEvents.on("composer:apply-surround", this, "_applySurround");
       this.appEvents.on(
         "composer:indent-selected-text",
         this,
@@ -330,6 +362,7 @@ export default Component.extend(TextareaTextManipulation, {
       this.appEvents.off("composer:insert-block", this, "insertBlock");
       this.appEvents.off("composer:insert-text", this, "insertText");
       this.appEvents.off("composer:replace-text", this, "replaceText");
+      this.appEvents.off("composer:apply-surround", this, "_applySurround");
       this.appEvents.off(
         "composer:indent-selected-text",
         this,
@@ -409,8 +442,10 @@ export default Component.extend(TextareaTextManipulation, {
       if (this.siteSettings.enable_diffhtml_preview) {
         const cookedElement = document.createElement("div");
         cookedElement.innerHTML = cooked;
-
-        linkSeenHashtags(cookedElement);
+        linkSeenHashtagsInContext(
+          this.site.hashtag_configurations["topic-composer"],
+          cookedElement
+        );
         linkSeenMentions(cookedElement, this.siteSettings);
         resolveCachedShortUrls(this.siteSettings, cookedElement);
         loadOneboxes(
@@ -424,10 +459,12 @@ export default Component.extend(TextareaTextManipulation, {
         );
 
         previewPromise = loadScript("/javascripts/diffhtml.min.js").then(() => {
-          window.diff.innerHTML(
-            this.element.querySelector(".d-editor-preview"),
-            cookedElement.innerHTML
-          );
+          const previewElement =
+            this.element.querySelector(".d-editor-preview");
+          // This is a workaround for a known bug in diffHTML
+          // https://github.com/tbranyen/diffhtml/issues/217#issuecomment-1479956332
+          window.diff.release(previewElement);
+          window.diff.innerHTML(previewElement, cookedElement.innerHTML);
         });
       }
 
@@ -530,7 +567,11 @@ export default Component.extend(TextareaTextManipulation, {
 
           if (term === "") {
             if (this.emojiStore.favorites.length) {
-              return resolve(this.emojiStore.favorites.slice(0, 5));
+              return resolve(
+                this.emojiStore.favorites
+                  .filter((f) => !this.site.denied_emojis?.includes(f))
+                  .slice(0, 5)
+              );
             } else {
               return resolve([
                 "slight_smile",
@@ -555,12 +596,13 @@ export default Component.extend(TextareaTextManipulation, {
             return resolve([allTranslations[full]]);
           }
 
+          const emojiDenied = this.get("site.denied_emojis") || [];
           const match = term.match(/^:?(.*?):t([2-6])?$/);
           if (match) {
             const name = match[1];
             const scale = match[2];
 
-            if (isSkinTonableEmoji(name)) {
+            if (isSkinTonableEmoji(name) && !emojiDenied.includes(name)) {
               if (scale) {
                 return resolve([`${name}:t${scale}`]);
               } else {
@@ -572,6 +614,7 @@ export default Component.extend(TextareaTextManipulation, {
           const options = emojiSearch(term, {
             maxResults: 5,
             diversity: this.emojiStore.diversity,
+            exclude: emojiDenied,
           });
 
           return resolve(options);
@@ -619,6 +662,11 @@ export default Component.extend(TextareaTextManipulation, {
       this.set("value", `${preLines}${number}${post}`);
       this.selectText(preLines.length, number.length);
     }
+  },
+
+  _applySurround(head, tail, exampleKey, opts) {
+    const selected = this.getSelected();
+    this.applySurround(selected, head, tail, exampleKey, opts);
   },
 
   _toggleDirection() {
@@ -724,9 +772,11 @@ export default Component.extend(TextareaTextManipulation, {
         linkText = this._lastSel.value;
       }
 
-      showModal("insert-hyperlink").setProperties({
-        linkText,
-        toolbarEvent,
+      this.modal.show(InsertHyperlink, {
+        model: {
+          linkText,
+          toolbarEvent,
+        },
       });
     },
 

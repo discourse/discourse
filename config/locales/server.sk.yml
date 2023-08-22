@@ -17,7 +17,7 @@ sk:
       no_day: "%Y %B"
   date:
     month_names:
-    - null
+    -
     - Január
     - Február
     - Marec
@@ -998,7 +998,6 @@ sk:
     embed_truncate: "Orezať vkladané príspevky."
     embed_post_limit: "Maximálny počet príspevkov na vloženie."
     embed_username_required: "Na vytvorenie téme je vyžadované používateľské meno."
-    show_create_topics_notice: "Zobraz výzvu žiadajúcu administrátorov o vytvorenie nejakých tém, ak majú stránky menej ako 5 verejných tém."
     delete_drafts_older_than_n_days: "Vymazať návrhy staršie ako (n) dní."
     slug_generation_method: "Vybrať metódu generovania koncovej časti adresy. 'encoded' vygeneruje percentami zakódovaní reťazec. 'none' vypne koncovú časť adresy úplne."
     enable_emoji: "Zapnúť emoji"
@@ -1016,7 +1015,6 @@ sk:
     default_categories_watching: "Štandardný zoznam kategórií, ktoré sú pozerané."
     default_categories_tracking: "Štandardný zoznam kategórií, ktoré sú sledované."
     default_categories_muted: "Štandardný zoznam kategórií, ktoré sú vypnuté."
-    min_trust_level_for_user_api_key: "Stupeň dôvery potrebný na generovanie používateľských API kľúčov"
     min_trust_to_create_tag: "Minimálny stupeň dôvery potrebný na vytvorenie štítku"
     min_trust_level_to_tag_topics: "Minimálny stupeň dôvery potrebný na štítkovanie tém"
     errors:

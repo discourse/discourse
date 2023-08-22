@@ -7,14 +7,22 @@
 <%- end %>
 
 <%- if staff? %>
-  <%= discourse_stylesheet_link_tag(:admin) %>
+  <%- if rtl? %>
+    <%= discourse_stylesheet_link_tag(:admin_rtl) %>
+  <%- else %>
+    <%= discourse_stylesheet_link_tag(:admin) %>
+  <%- end %>
 <%- end %>
 
 <%- if admin? %>
-  <%= discourse_stylesheet_link_tag(:wizard) %>
+  <%- if rtl? %>
+    <%= discourse_stylesheet_link_tag(:wizard_rtl) %>
+  <%- else %>
+    <%= discourse_stylesheet_link_tag(:wizard) %>
+  <%- end %>
 <%- end %>
 
-<%- Discourse.find_plugin_css_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, mobile_view: mobile_view?, desktop_view: !mobile_view?, request: request).each do |file| %>
+<%- Discourse.find_plugin_css_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, mobile_view: mobile_view?, desktop_view: !mobile_view?, request: request, rtl: rtl?).each do |file| %>
   <%= discourse_stylesheet_link_tag(file) %>
 <%- end %>
 

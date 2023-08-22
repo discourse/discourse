@@ -101,6 +101,12 @@
           "null"
         ]
       },
+      "flair_group_id": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
       "version": {
         "type": "integer"
       },
@@ -111,6 +117,9 @@
         "type": "boolean"
       },
       "can_recover": {
+        "type": "boolean"
+      },
+      "can_see_hidden_post": {
         "type": "boolean"
       },
       "can_wiki": {
@@ -246,6 +255,7 @@
       "can_edit",
       "can_delete",
       "can_recover",
+      "can_see_hidden_post",
       "can_wiki",
       "user_title",
       "reply_to_user",

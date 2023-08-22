@@ -1,0 +1,9 @@
+{{#if this.commitHash}}
+  <a
+    href={{@plugin.commit_url}}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="current commit-hash"
+    title={{this.commitHash}}
+  >{{this.shortCommitHash}}</a>
+{{/if}}

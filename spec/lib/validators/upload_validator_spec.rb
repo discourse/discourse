@@ -45,7 +45,7 @@ RSpec.describe UploadValidator do
             original_filename: "test.png",
             filesize: 2_097_152,
           )
-        subject.validate(upload)
+        validator.validate(upload)
         expect(upload.errors.full_messages.first).to eq(
           "Filesize #{I18n.t("upload.images.too_large_humanized", max_size: "1.5 MB")}",
         )
@@ -62,7 +62,7 @@ RSpec.describe UploadValidator do
             for_private_message: true,
           )
 
-        expect(subject.validate(upload)).to eq(true)
+        expect(validator.validate(upload)).to eq(true)
       end
 
       describe "for a normal user" do
@@ -75,7 +75,7 @@ RSpec.describe UploadValidator do
               for_private_message: true,
             )
 
-          expect(subject.validate(upload)).to eq(nil)
+          expect(validator.validate(upload)).to eq(nil)
         end
       end
     end
@@ -91,13 +91,13 @@ RSpec.describe UploadValidator do
 
       describe "for admin user" do
         it "should allow the upload" do
-          expect(subject.validate(upload)).to eq(true)
+          expect(validator.validate(upload)).to eq(true)
         end
 
         describe "when filename is invalid" do
           it "should not allow the upload" do
             upload.original_filename = "test.txt"
-            expect(subject.validate(upload)).to eq(nil)
+            expect(validator.validate(upload)).to eq(nil)
           end
         end
       end
@@ -106,7 +106,7 @@ RSpec.describe UploadValidator do
         fab!(:user) { Fabricate(:user) }
 
         it "should not allow the upload" do
-          expect(subject.validate(upload)).to eq(nil)
+          expect(validator.validate(upload)).to eq(nil)
         end
       end
     end

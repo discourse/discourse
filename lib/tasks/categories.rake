@@ -24,6 +24,7 @@ task "categories:move_topics", %i[from_category to_category] => [:environment] d
 
     puts "Updating category stats..."
     Category.update_stats
+    CategoryTagStat.update_topic_counts
   end
 
   puts "", "Done!", ""

@@ -3,13 +3,16 @@
 require "rails_helper"
 
 RSpec.describe Chat::GuardianExtensions do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:chatters) { Fabricate(:group) }
+  fab!(:user) { Fabricate(:user, group_ids: [chatters.id]) }
   fab!(:staff) { Fabricate(:user, admin: true) }
   fab!(:chat_group) { Fabricate(:group) }
   fab!(:channel) { Fabricate(:category_channel) }
   fab!(:dm_channel) { Fabricate(:direct_message_channel) }
   let(:guardian) { Guardian.new(user) }
   let(:staff_guardian) { Guardian.new(staff) }
+
+  before { SiteSetting.chat_allowed_groups = [chatters] }
 
   it "cannot chat if the user is not in the Chat.allowed_group_ids" do
     SiteSetting.chat_allowed_groups = ""
@@ -125,6 +128,112 @@ RSpec.describe Chat::GuardianExtensions do
       end
     end
 
+    describe "#can_post_in_chatable?" do
+      alias_matcher :be_able_to_post_in_chatable, :be_can_post_in_chatable
+
+      context "when channel is a category channel" do
+        context "when post_allowed_category_ids given" do
+          context "when no chatable given" do
+            it "returns false" do
+              expect(guardian).not_to be_able_to_post_in_chatable(
+                nil,
+                post_allowed_category_ids: [channel.chatable.id],
+              )
+            end
+          end
+
+          context "when user is anonymous" do
+            it "returns false" do
+              expect(Guardian.new).not_to be_able_to_post_in_chatable(
+                channel.chatable,
+                post_allowed_category_ids: [channel.chatable.id],
+              )
+            end
+          end
+
+          context "when user is admin" do
+            it "returns true" do
+              guardian = Fabricate(:admin).guardian
+              expect(guardian).to be_able_to_post_in_chatable(
+                channel.chatable,
+                post_allowed_category_ids: [channel.chatable.id],
+              )
+            end
+          end
+
+          context "when chatable id is part of allowed ids" do
+            it "returns true" do
+              expect(guardian).to be_able_to_post_in_chatable(
+                channel.chatable,
+                post_allowed_category_ids: [channel.chatable.id],
+              )
+            end
+          end
+
+          context "when chatable id is not part of allowed ids" do
+            it "returns false" do
+              expect(guardian).not_to be_able_to_post_in_chatable(
+                channel.chatable,
+                post_allowed_category_ids: [-1],
+              )
+            end
+          end
+        end
+
+        context "when no post_allowed_category_ids given" do
+          context "when no chatable given" do
+            it "returns false" do
+              expect(guardian).not_to be_able_to_post_in_chatable(nil)
+            end
+          end
+
+          context "when user is anonymous" do
+            it "returns false" do
+              expect(Guardian.new).not_to be_able_to_post_in_chatable(channel.chatable)
+            end
+          end
+
+          context "when user is admin" do
+            it "returns true" do
+              guardian = Fabricate(:admin).guardian
+              expect(guardian).to be_able_to_post_in_chatable(channel.chatable)
+            end
+          end
+
+          context "when chatable id is part of allowed ids" do
+            it "returns true" do
+              expect(guardian).to be_able_to_post_in_chatable(channel.chatable)
+            end
+          end
+
+          context "when user can't post in chatable" do
+            fab!(:group) { Fabricate(:group) }
+            fab!(:channel) { Fabricate(:private_category_channel, group: group) }
+
+            before do
+              channel.chatable.category_groups.first.update!(
+                permission_type: CategoryGroup.permission_types[:readonly],
+              )
+              group.add(user)
+              channel.add(user)
+            end
+
+            it "returns false" do
+              expect(guardian).not_to be_able_to_post_in_chatable(channel.chatable)
+            end
+          end
+        end
+      end
+
+      context "when channel is a direct message channel" do
+        let(:channel) { Fabricate(:direct_message_channel) }
+
+        it "returns true" do
+          expect(guardian).to be_able_to_post_in_chatable(channel.chatable)
+        end
+      end
+    end
+
     describe "#can_flag_in_chat_channel?" do
       alias_matcher :be_able_to_flag_in_chat_channel, :be_can_flag_in_chat_channel
 
@@ -236,8 +345,14 @@ RSpec.describe Chat::GuardianExtensions do
       context "when chatable is a direct message" do
         fab!(:chatable) { Chat::DirectMessage.create! }
 
-        it "allows owner to restore" do
+        it "allows owner to restore when deleted by owner" do
+          message.trash!(guardian.user)
           expect(guardian.can_restore_chat?(message, chatable)).to eq(true)
+        end
+
+        it "disallow owner to restore when deleted by staff" do
+          message.trash!(staff_guardian.user)
+          expect(guardian.can_restore_chat?(message, chatable)).to eq(false)
         end
 
         it "allows staff to restore" do
@@ -323,8 +438,14 @@ RSpec.describe Chat::GuardianExtensions do
             expect(staff_guardian.can_restore_chat?(message, chatable)).to eq(true)
           end
 
-          it "allows owner to restore" do
+          it "allows owner to restore when deleted by owner" do
+            message.trash!(guardian.user)
             expect(guardian.can_restore_chat?(message, chatable)).to eq(true)
+          end
+
+          it "disallow owner to restore when deleted by staff" do
+            message.trash!(staff_guardian.user)
+            expect(guardian.can_restore_chat?(message, chatable)).to eq(false)
           end
         end
       end

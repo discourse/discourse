@@ -2,16 +2,21 @@ import { action } from "@ember/object";
 import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
+import { inject as service } from "@ember/service";
 let lastSearch;
 
 export default class AdminSiteTextIndexController extends Controller {
+  @service router;
+  @service siteSettings;
+
   searching = false;
   siteTexts = null;
   preferred = false;
-  queryParams = ["q", "overridden", "locale"];
+  queryParams = ["q", "overridden", "outdated", "locale"];
   locale = null;
   q = null;
   overridden = false;
+  outdated = false;
 
   init() {
     super.init(...arguments);
@@ -21,7 +26,10 @@ export default class AdminSiteTextIndexController extends Controller {
 
   _performSearch() {
     this.store
-      .find("site-text", this.getProperties("q", "overridden", "locale"))
+      .find(
+        "site-text",
+        this.getProperties("q", "overridden", "outdated", "locale")
+      )
       .then((results) => {
         this.set("siteTexts", results);
       })
@@ -44,7 +52,7 @@ export default class AdminSiteTextIndexController extends Controller {
 
   @action
   edit(siteText) {
-    this.transitionToRoute("adminSiteText.edit", siteText.get("id"), {
+    this.router.transitionTo("adminSiteText.edit", siteText.get("id"), {
       queryParams: {
         locale: this.locale,
       },
@@ -54,6 +62,13 @@ export default class AdminSiteTextIndexController extends Controller {
   @action
   toggleOverridden() {
     this.toggleProperty("overridden");
+    this.set("searching", true);
+    discourseDebounce(this, this._performSearch, 400);
+  }
+
+  @action
+  toggleOutdated() {
+    this.toggleProperty("outdated");
     this.set("searching", true);
     discourseDebounce(this, this._performSearch, 400);
   }

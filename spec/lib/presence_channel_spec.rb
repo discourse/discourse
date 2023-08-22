@@ -65,6 +65,12 @@ RSpec.describe PresenceChannel do
     expect(channel3.count).to eq(0)
   end
 
+  it "does not raise error when getting channel config under readonly" do
+    PresenceChannel.redis.stubs(:set).raises(Redis::CommandError.new("READONLY")).once
+    channel = PresenceChannel.new("/test/public1")
+    expect(channel.user_ids).to eq([])
+  end
+
   it "can automatically expire users" do
     channel = PresenceChannel.new("/test/public1")
 

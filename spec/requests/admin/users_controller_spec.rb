@@ -302,7 +302,7 @@ RSpec.describe Admin::UsersController do
             "user.already_suspended",
             staff: admin.username,
             time_ago:
-              FreedomPatches::Rails4.time_ago_in_words(
+              AgeWords.time_ago_in_words(
                 user.suspend_record.created_at,
                 true,
                 scope: :"datetime.distance_in_words_verbose",
@@ -1430,7 +1430,7 @@ RSpec.describe Admin::UsersController do
     end
 
     shared_examples "user log out not allowed" do
-      it "prevents loging out of user with a 404 response" do
+      it "prevents logging out of user with a 404 response" do
         post "/admin/users/#{reg_user.id}/log_out.json"
 
         expect(response.status).to eq(404)
@@ -1539,7 +1539,7 @@ RSpec.describe Admin::UsersController do
             "user.already_silenced",
             staff: admin.username,
             time_ago:
-              FreedomPatches::Rails4.time_ago_in_words(
+              AgeWords.time_ago_in_words(
                 user.silenced_record.created_at,
                 true,
                 scope: :"datetime.distance_in_words_verbose",

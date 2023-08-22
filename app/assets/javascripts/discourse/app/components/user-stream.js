@@ -6,16 +6,14 @@ import I18n from "I18n";
 import LoadMore from "discourse/mixins/load-more";
 import Post from "discourse/models/post";
 import { NEW_TOPIC_KEY } from "discourse/models/composer";
-import { getOwner } from "discourse-common/lib/get-owner";
-import { observes } from "discourse-common/utils/decorators";
 import { on } from "@ember/object/evented";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { next, schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 
 export default Component.extend(LoadMore, {
   tagName: "ul",
   dialog: service(),
+  composer: service(),
   _lastDecoratedElement: null,
 
   _initialize: on("init", function () {
@@ -32,14 +30,7 @@ export default Component.extend(LoadMore, {
   eyelineSelector: ".user-stream .item",
   classNames: ["user-stream"],
 
-  @observes("stream.user.id")
-  _scrollTopOnModelChange() {
-    schedule("afterRender", () => $(document).scrollTop(0));
-  },
-
   _inserted: on("didInsertElement", function () {
-    $(window).on("resize.discourse-on-scroll", () => this.scrolled());
-
     $(this.element).on(
       "click.details-disabled",
       "details.disabled",
@@ -49,12 +40,10 @@ export default Component.extend(LoadMore, {
       return ClickTrack.trackClick(e, this.siteSettings);
     });
     this._updateLastDecoratedElement();
-    this._scrollToLastPosition();
   }),
 
   // This view is being removed. Shut down operations
   _destroyed: on("willDestroyElement", function () {
-    $(window).unbind("resize.discourse-on-scroll");
     $(this.element).off("click.details-disabled", "details.disabled");
 
     // Unbind link tracking
@@ -73,22 +62,6 @@ export default Component.extend(LoadMore, {
     this._lastDecoratedElement = lastElement;
   },
 
-  _scrollToLastPosition() {
-    const scrollTo = this.session.userStreamScrollPosition;
-    if (scrollTo >= 0) {
-      schedule("afterRender", () => {
-        if (this.element && !this.isDestroying && !this.isDestroyed) {
-          next(() => window.scrollTo(0, scrollTo));
-        }
-      });
-    }
-  },
-
-  scrolled() {
-    this._super(...arguments);
-    this.session.set("userStreamScrollPosition", window.scrollY);
-  },
-
   actions: {
     removeBookmark(userAction) {
       const stream = this.stream;
@@ -100,9 +73,8 @@ export default Component.extend(LoadMore, {
     },
 
     resumeDraft(item) {
-      const composer = getOwner(this).lookup("controller:composer");
-      if (composer.get("model.viewOpen")) {
-        composer.close();
+      if (this.composer.get("model.viewOpen")) {
+        this.composer.close();
       }
       if (item.get("postUrl")) {
         DiscourseURL.routeTo(item.get("postUrl"));
@@ -114,7 +86,7 @@ export default Component.extend(LoadMore, {
               return;
             }
 
-            composer.open({
+            this.composer.open({
               draft,
               draftKey: item.draft_key,
               draftSequence: d.draft_sequence,

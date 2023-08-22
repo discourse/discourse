@@ -341,7 +341,7 @@ export default Controller.extend({
 
           this.homeChanged();
 
-          if (this.themeId !== this.currentThemeId) {
+          if (this.themeId && this.themeId !== this.currentThemeId) {
             reload();
           }
         })

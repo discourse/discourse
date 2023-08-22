@@ -23,6 +23,41 @@ RSpec.describe TopicEmbed do
       expect(TopicEmbed.count).to eq(0)
     end
 
+    it "Allows figure and figcaption HTML tags" do
+      html = <<~HTML
+        <html>
+        <head>
+           <title>Some title</title>
+        </head>
+        <body>
+          <div class='content'>
+            <p>some content</p>
+            <figure>
+              <img src="/a.png">
+              <figcaption>Some caption</figcaption>
+            <figure>
+          </div>
+        </body>
+        </html>
+      HTML
+
+      parsed = TopicEmbed.parse_html(html, "https://blog.discourse.com/somepost.html")
+
+      # div inception is inserted by the readability gem
+      expected = <<~HTML
+        <div><div>
+          <div>
+            <p>some content</p>
+            <figure>
+              <img src="https://blog.discourse.com/a.png">
+              <figcaption>Some caption</figcaption>
+            <figure>
+          </figure></figure></div>
+        </div></div>
+      HTML
+      expect(parsed.body.strip).to eq(expected.strip)
+    end
+
     context "when creating a post" do
       let!(:post) { TopicEmbed.import(user, url, title, contents) }
       let(:topic_embed) { TopicEmbed.find_by(post: post) }
@@ -121,6 +156,17 @@ RSpec.describe TopicEmbed do
           )
         expect(imported_post.topic.category).not_to eq(embeddable_host.category)
         expect(imported_post.topic.category).to eq(category)
+      end
+
+      it "does not create duplicate topics with different protocols in the embed_url" do
+        Jobs.run_immediately!
+        expect {
+          TopicEmbed.import(user, "http://eviltrout.com/abcd", title, "some random content")
+        }.to change { Topic.all.count }.by(1)
+
+        expect {
+          TopicEmbed.import(user, "https://eviltrout.com/abcd", title, "some random content")
+        }.to_not change { Topic.all.count }
       end
 
       it "creates the topic with the tag passed as a parameter" do
@@ -395,21 +441,53 @@ RSpec.describe TopicEmbed do
     end
 
     context "with canonical links" do
+      fab!(:user) { Fabricate(:user) }
+      let(:title) { "How to turn a fish from good to evil in 30 seconds" }
       let(:url) { "http://eviltrout.com/123?asd" }
       let(:canonical_url) { "http://eviltrout.com/123" }
+      let(:url2) { "http://eviltrout.com/blog?post=1&canonical=false" }
+      let(:canonical_url2) { "http://eviltrout.com/blog?post=1" }
       let(:content) { "<head><link rel=\"canonical\" href=\"#{canonical_url}\"></head>" }
+      let(:content2) { "<head><link rel=\"canonical\" href=\"#{canonical_url2}\"></head>" }
       let(:canonical_content) { "<title>Canonical</title><body></body>" }
 
       before do
         stub_request(:get, url).to_return(status: 200, body: content)
         stub_request(:head, canonical_url)
         stub_request(:get, canonical_url).to_return(status: 200, body: canonical_content)
+
+        stub_request(:get, url2).to_return(status: 200, body: content2)
+        stub_request(:head, canonical_url2)
+        stub_request(:get, canonical_url2).to_return(status: 200, body: canonical_content)
       end
 
-      it "a" do
+      it "fetches canonical content" do
         response = TopicEmbed.find_remote(url)
 
         expect(response.title).to eq("Canonical")
+        expect(response.url).to eq(canonical_url)
+      end
+
+      it "does not create duplicate topics when url differs from canonical_url" do
+        Jobs.run_immediately!
+        expect { TopicEmbed.import_remote(canonical_url, { title: title, user: user }) }.to change {
+          Topic.all.count
+        }.by(1)
+
+        expect { TopicEmbed.import_remote(url, { title: title, user: user }) }.to_not change {
+          Topic.all.count
+        }
+      end
+
+      it "does not create duplicate topics when url contains extra params" do
+        Jobs.run_immediately!
+        expect {
+          TopicEmbed.import_remote(canonical_url2, { title: title, user: user })
+        }.to change { Topic.all.count }.by(1)
+
+        expect { TopicEmbed.import_remote(url2, { title: title, user: user }) }.to_not change {
+          Topic.all.count
+        }
       end
     end
   end
@@ -456,6 +534,16 @@ RSpec.describe TopicEmbed do
 
       I18n.locale = :de
       expect(TopicEmbed.imported_from_html("some_url")).to eq(expected_html)
+    end
+
+    it "normalize_encodes the url" do
+      html =
+        TopicEmbed.imported_from_html(
+          'http://www.discourse.org/%23<%2Fa><img%20src%3Dx%20onerror%3Dalert("document.domain")%3B>',
+        )
+      expected_html =
+        "\n<hr>\n<small>This is a companion discussion topic for the original entry at <a href='http://www.discourse.org/%23%3C/a%3E%3Cimg%20src=x%20onerror=alert(%22document.domain%22);%3E'>http://www.discourse.org/%23%3C/a%3E%3Cimg%20src=x%20onerror=alert(%22document.domain%22);%3E</a></small>\n"
+      expect(html).to eq(expected_html)
     end
   end
 end

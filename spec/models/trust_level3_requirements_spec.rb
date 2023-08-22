@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe TrustLevel3Requirements do
-  fab!(:user) { Fabricate(:user) }
   subject(:tl3_requirements) { described_class.new(user) }
-  fab!(:moderator) { Fabricate(:moderator) }
 
+  fab!(:user) { Fabricate(:user) }
+  fab!(:moderator) { Fabricate(:moderator) }
   fab!(:topic1) { Fabricate(:topic) }
   fab!(:topic2) { Fabricate(:topic) }
   fab!(:topic3) { Fabricate(:topic) }

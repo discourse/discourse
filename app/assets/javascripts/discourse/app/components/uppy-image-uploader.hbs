@@ -25,14 +25,14 @@
         @icon="far-trash-alt"
         @type="button"
       />
-
       <DButton
         @icon="discourse-expand"
         @title="expand"
         @type="button"
         @class="image-uploader-lightbox-btn no-text"
-        @action={{action "toggleLightbox"}}
         @disabled={{this.loadingLightbox}}
+        @action={{unless this.experimentalLightboxEnabled this.toggleLightbox}}
+        data-lightbox-trigger={{if this.experimentalLightboxEnabled "true"}}
       />
     {{/if}}
 

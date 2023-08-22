@@ -1,6 +1,3 @@
-$wizard-bg: absolute-image-url("/branded-background.svg");
-$wizard-mobile-bg: absolute-image-url("/branded-background-mobile.svg");
-
 @keyframes bump {
   0% {
     transform: scale(1);
@@ -16,11 +13,7 @@ $wizard-mobile-bg: absolute-image-url("/branded-background-mobile.svg");
 }
 
 body.wizard {
-  background: $wizard-bg;
-  background-size: 110vw 110vh; // crops better than cover at various viewport sizes
-  background-repeat: no-repeat;
-  background-position: bottom;
-  background-color: var(--secondary);
+  background-color: var(--primary-50);
   color: var(--primary-very-high);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, Arial, sans-serif;
@@ -50,13 +43,6 @@ body.wizard {
         display: none;
       }
     }
-  }
-
-  @include breakpoint("mobile-extra-large") {
-    background: $wizard-mobile-bg;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: bottom;
   }
 }
 
@@ -704,6 +690,7 @@ body.wizard {
   .finish-installation {
     .wizard-congratulations-wrap {
       display: flex;
+      gap: 1em;
       @media screen and (max-width: 750px) {
         flex-direction: column-reverse;
       }
@@ -717,13 +704,9 @@ body.wizard {
       margin: 0 auto 1em 0;
     }
 
-    &-image {
-      margin-bottom: 1em;
-    }
-
     .tada {
       height: 15vw;
-      max-height: 10em;
+      max-height: 9em;
     }
 
     .help-text {

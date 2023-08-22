@@ -93,8 +93,7 @@ RSpec.describe BootstrapController do
 
   context "with a plugin asset filter" do
     let :plugin do
-      plugin = Plugin::Instance.new
-      plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+      plugin = plugin_from_fixtures("my_plugin")
       plugin.register_asset_filter do |type, request|
         next true if request.path == "/mypluginroute"
         false

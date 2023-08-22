@@ -1,30 +1,31 @@
 "use strict";
 
 const EmberApp = require("ember-cli/lib/broccoli/ember-app");
-const resolve = require("path").resolve;
+const path = require("path");
 const mergeTrees = require("broccoli-merge-trees");
 const concat = require("broccoli-concat");
-const prettyTextEngine = require("./lib/pretty-text-engine");
 const { createI18nTree } = require("./lib/translation-plugin");
 const { parsePluginClientSettings } = require("./lib/site-settings-plugin");
 const discourseScss = require("./lib/discourse-scss");
 const generateScriptsTree = require("./lib/scripts");
 const funnel = require("broccoli-funnel");
-const DeprecationSilencer = require("./lib/deprecation-silencer");
+const DeprecationSilencer = require("deprecation-silencer");
+const generateWorkboxTree = require("./lib/workbox-tree-builder");
+
+process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
 module.exports = function (defaults) {
-  let discourseRoot = resolve("../../../..");
-  let vendorJs = discourseRoot + "/vendor/assets/javascripts/";
+  const discourseRoot = path.resolve("../../../..");
+  const vendorJs = discourseRoot + "/vendor/assets/javascripts/";
 
   // Silence deprecations which we are aware of - see `lib/deprecation-silencer.js`
-  const ui = defaults.project.ui;
-  DeprecationSilencer.silenceUiWarn(ui);
-  DeprecationSilencer.silenceConsoleWarn();
+  DeprecationSilencer.silence(console, "warn");
+  DeprecationSilencer.silence(defaults.project.ui, "writeWarnLine");
 
   const isProduction = EmberApp.env().includes("production");
   const isTest = EmberApp.env().includes("test");
 
-  let app = new EmberApp(defaults, {
+  const app = new EmberApp(defaults, {
     autoRun: false,
     "ember-qunit": {
       insertContentForTestBody: false,
@@ -36,9 +37,6 @@ module.exports = function (defaults) {
       enabled: true,
     },
     autoImport: {
-      alias: {
-        "virtual-dom": "@discourse/virtual-dom",
-      },
       forbidEval: true,
       insertScriptsAt: "ember-auto-import-scripts",
       webpack: {
@@ -51,6 +49,8 @@ module.exports = function (defaults) {
           fallback: {
             // Sinon needs a `util` polyfill
             util: require.resolve("util/"),
+            // Also for sinon
+            timers: false,
           },
         },
         module: {
@@ -96,7 +96,7 @@ module.exports = function (defaults) {
     },
 
     babel: {
-      plugins: [DeprecationSilencer.generateBabelPlugin()],
+      plugins: [require.resolve("deprecation-silencer")],
     },
 
     // We need to build tests in prod for theme tests
@@ -127,7 +127,7 @@ module.exports = function (defaults) {
       annotation: "TreeMerger (appTestTrees)",
     });
 
-    let tests = concat(appTestTrees, {
+    const tests = concat(appTestTrees, {
       inputFiles: ["**/tests/**/*-test.js"],
       headerFiles: ["vendor/ember-cli/tests-prefix.js"],
       footerFiles: ["vendor/ember-cli/app-config.js"],
@@ -136,8 +136,9 @@ module.exports = function (defaults) {
       sourceMapConfig: false,
     });
 
-    let testHelpers = concat(appTestTrees, {
+    const testHelpers = concat(appTestTrees, {
       inputFiles: [
+        "**/tests/loader-shims.js",
         "**/tests/test-boot-ember-cli.js",
         "**/tests/helpers/**/*.js",
         "**/tests/fixtures/**/*.js",
@@ -163,16 +164,6 @@ module.exports = function (defaults) {
     }
   };
 
-  // @ember/jquery introduces a shim which triggers the ember-global deprecation.
-  // We remove that shim, and re-implement ourselves in the deprecate-jquery-integration pre-initializer
-  const vendorScripts = app._scriptOutputFiles["/assets/vendor.js"];
-  const componentDollarShimIndex = vendorScripts.indexOf(
-    "vendor/jquery/component.dollar.js"
-  );
-  if (componentDollarShimIndex) {
-    vendorScripts.splice(componentDollarShimIndex, 1);
-  }
-
   // WARNING: We should only import scripts here if they are not in NPM.
   // For example: our very specific version of bootstrap-modal.
   app.import(vendorJs + "bootbox.js");
@@ -192,32 +183,36 @@ module.exports = function (defaults) {
     .findAddonByName("discourse-plugins")
     .generatePluginsTree();
 
-  const terserPlugin = app.project.findAddonByName("ember-cli-terser");
-  const applyTerser = (tree) => terserPlugin.postprocessTree("all", tree);
+  const adminTree = app.project.findAddonByName("admin").treeForAddonBundle();
 
-  return mergeTrees([
+  const wizardTree = app.project.findAddonByName("wizard").treeForAddonBundle();
+
+  const markdownItBundleTree = app.project
+    .findAddonByName("pretty-text")
+    .treeForMarkdownItBundle();
+
+  return app.toTree([
     createI18nTree(discourseRoot, vendorJs),
     parsePluginClientSettings(discourseRoot, vendorJs, app),
-    app.toTree(),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
     funnel(`${vendorJs}/highlightjs`, {
       files: ["highlight-test-bundle.min.js"],
       destDir: "assets/highlightjs",
     }),
-    applyTerser(
-      concat(mergeTrees([app.options.adminTree]), {
-        inputFiles: ["**/*.js"],
-        outputFile: `assets/admin.js`,
-      })
-    ),
-    applyTerser(
-      concat(mergeTrees([app.options.wizardTree]), {
-        inputFiles: ["**/*.js"],
-        outputFile: `assets/wizard.js`,
-      })
-    ),
-    applyTerser(prettyTextEngine(app)),
+    generateWorkboxTree(),
+    concat(adminTree, {
+      inputFiles: ["**/*.js"],
+      outputFile: `assets/admin.js`,
+    }),
+    concat(wizardTree, {
+      inputFiles: ["**/*.js"],
+      outputFile: `assets/wizard.js`,
+    }),
+    concat(markdownItBundleTree, {
+      inputFiles: ["**/*.js"],
+      outputFile: `assets/markdown-it-bundle.js`,
+    }),
     generateScriptsTree(app),
-    applyTerser(discoursePluginsTree),
+    discoursePluginsTree,
   ]);
 };

@@ -1,12 +1,13 @@
-import Controller, { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend({
-  application: controller(),
+  router: service(),
   queryParams: ["order", "asc", "filter", "type"],
   order: null,
   asc: null,
@@ -35,10 +36,6 @@ export default Controller.extend({
       .findAll("group", params)
       .then((groups) => {
         this.set("groups", groups);
-
-        if (groups.canLoadMore) {
-          this.set("application.showFooter", !groups.canLoadMore);
-        }
       })
       .finally(() => this.set("isLoading", false));
   },
@@ -55,7 +52,7 @@ export default Controller.extend({
 
   @action
   new() {
-    this.transitionToRoute("groups.new");
+    this.router.transitionTo("groups.new");
   },
 
   _debouncedFilter(filter) {

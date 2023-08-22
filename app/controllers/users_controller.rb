@@ -110,12 +110,15 @@ class UsersController < ApplicationController
 
     @user =
       fetch_user_from_params(
-        include_inactive:
-          current_user.try(:staff?) || (current_user && SiteSetting.show_inactive_accounts),
+        include_inactive: current_user&.staff? || for_card || SiteSetting.show_inactive_accounts,
       )
 
     user_serializer = nil
-    if guardian.can_see_profile?(@user)
+    if !current_user&.staff? && !@user.active?
+      user_serializer = InactiveUserSerializer.new(@user, scope: guardian, root: "user")
+    elsif !guardian.can_see_profile?(@user)
+      user_serializer = HiddenProfileSerializer.new(@user, scope: guardian, root: "user")
+    else
       serializer_class = for_card ? UserCardSerializer : UserSerializer
       user_serializer = serializer_class.new(@user, scope: guardian, root: "user")
 
@@ -125,8 +128,6 @@ class UsersController < ApplicationController
           topic_id => Post.secured(guardian).where(topic_id: topic_id, user_id: @user.id).count,
         }
       end
-    else
-      user_serializer = HiddenProfileSerializer.new(@user, scope: guardian, root: "user")
     end
 
     track_visit_to_user_profile if !params[:skip_track_visit] && (@user != current_user)
@@ -191,10 +192,10 @@ class UsersController < ApplicationController
   def update
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
-    attributes = user_params
 
-    # We can't update the username via this route. Use the username route
-    attributes.delete(:username)
+    # Exclude some attributes that are only for user creation because they have
+    # dedicated update routes.
+    attributes = user_params.except(:username, :email, :password)
 
     if params[:user_fields].present?
       attributes[:custom_fields] ||= {}
@@ -812,11 +813,11 @@ class UsersController < ApplicationController
       format.html do
         return render "password_reset", layout: "no_ember" if @error
 
-        Webauthn.stage_challenge(@user, secure_session)
+        DiscourseWebauthn.stage_challenge(@user, secure_session)
         store_preloaded(
           "password_reset",
           MultiJson.dump(
-            security_params.merge(Webauthn.allowed_credentials(@user, secure_session)),
+            security_params.merge(DiscourseWebauthn.allowed_credentials(@user, secure_session)),
           ),
         )
 
@@ -826,8 +827,9 @@ class UsersController < ApplicationController
       format.json do
         return render json: { message: @error } if @error
 
-        Webauthn.stage_challenge(@user, secure_session)
-        render json: security_params.merge(Webauthn.allowed_credentials(@user, secure_session))
+        DiscourseWebauthn.stage_challenge(@user, secure_session)
+        render json:
+                 security_params.merge(DiscourseWebauthn.allowed_credentials(@user, secure_session))
       end
     end
   end
@@ -894,7 +896,7 @@ class UsersController < ApplicationController
       format.html do
         return render "password_reset", layout: "no_ember" if @error
 
-        Webauthn.stage_challenge(@user, secure_session)
+        DiscourseWebauthn.stage_challenge(@user, secure_session)
 
         security_params = {
           is_developer: UsernameCheckerService.is_developer?(@user.email),
@@ -903,7 +905,7 @@ class UsersController < ApplicationController
           security_key_required: @user.security_keys_enabled?,
           backup_enabled: @user.backup_codes_enabled?,
           multiple_second_factor_methods: @user.has_multiple_second_factor_methods?,
-        }.merge(Webauthn.allowed_credentials(@user, secure_session))
+        }.merge(DiscourseWebauthn.allowed_credentials(@user, secure_session))
 
         store_preloaded("password_reset", MultiJson.dump(security_params))
 
@@ -1181,6 +1183,8 @@ class UsersController < ApplicationController
     end
   end
 
+  SEARCH_USERS_LIMIT = 50
+
   def search_users
     term = params[:term].to_s.strip
 
@@ -1203,10 +1207,11 @@ class UsersController < ApplicationController
       params[:include_staged_users],
     )
     options[:last_seen_users] = !!ActiveModel::Type::Boolean.new.cast(params[:last_seen_users])
-    if params[:limit].present?
-      options[:limit] = params[:limit].to_i
-      raise Discourse::InvalidParameters.new(:limit) if options[:limit] <= 0
+
+    if limit = fetch_limit_from_params(default: nil, max: SEARCH_USERS_LIMIT)
+      options[:limit] = limit
     end
+
     options[:topic_id] = topic_id if topic_id
     options[:category_id] = category_id if category_id
 
@@ -1233,6 +1238,11 @@ class UsersController < ApplicationController
         groups = block.call(groups, current_user) if params[param_name.to_s]
       end
 
+      # the plugin registry callbacks above are only evaluated when a param
+      # is present matching the name of the callback. Any modifier registered using
+      # register_modifier(:groups_for_users_search) will be evaluated without needing the
+      # param.
+      groups = DiscoursePluginRegistry.apply_modifier(:groups_for_users_search, groups)
       groups = Group.search_groups(term, groups: groups, sort: :auto)
 
       to_render[:groups] = groups.map { |m| { name: m.name, full_name: m.full_name } }
@@ -1536,13 +1546,13 @@ class UsersController < ApplicationController
   end
 
   def create_second_factor_security_key
-    challenge_session = Webauthn.stage_challenge(current_user, secure_session)
+    challenge_session = DiscourseWebauthn.stage_challenge(current_user, secure_session)
     render json:
              success_json.merge(
                challenge: challenge_session.challenge,
                rp_id: challenge_session.rp_id,
                rp_name: challenge_session.rp_name,
-               supported_algorithms: ::Webauthn::SUPPORTED_ALGORITHMS,
+               supported_algorithms: ::DiscourseWebauthn::SUPPORTED_ALGORITHMS,
                user_secure_id: current_user.create_or_fetch_secure_identifier,
                existing_active_credential_ids:
                  current_user.second_factor_security_key_credential_ids,
@@ -1554,15 +1564,15 @@ class UsersController < ApplicationController
     params.require(:attestation)
     params.require(:clientData)
 
-    ::Webauthn::SecurityKeyRegistrationService.new(
+    ::DiscourseWebauthn::SecurityKeyRegistrationService.new(
       current_user,
       params,
-      challenge: Webauthn.challenge(current_user, secure_session),
-      rp_id: Webauthn.rp_id(current_user, secure_session),
+      challenge: DiscourseWebauthn.challenge(current_user, secure_session),
+      rp_id: DiscourseWebauthn.rp_id(current_user, secure_session),
       origin: Discourse.base_url,
     ).register_second_factor_security_key
     render json: success_json
-  rescue ::Webauthn::SecurityKeyError => err
+  rescue ::DiscourseWebauthn::SecurityKeyError => err
     render json: failed_json.merge(error: err.message)
   end
 
@@ -1727,6 +1737,8 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
+  BOOKMARKS_LIMIT = 20
+
   def bookmarks
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
@@ -1734,7 +1746,15 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       format.json do
-        bookmark_list = UserBookmarkList.new(user: user, guardian: guardian, params: params)
+        bookmark_list =
+          UserBookmarkList.new(
+            user: user,
+            guardian: guardian,
+            search_term: params[:q],
+            page: params[:page],
+            per_page: fetch_limit_from_params(default: nil, max: BOOKMARKS_LIMIT),
+          )
+
         bookmark_list.load
 
         if bookmark_list.bookmarks.empty?
@@ -1783,10 +1803,9 @@ class UsersController < ApplicationController
         UserBookmarkList.new(
           user: current_user,
           guardian: guardian,
-          params: {
-            per_page: USER_MENU_LIST_LIMIT - reminder_notifications.size,
-          },
+          per_page: USER_MENU_LIST_LIMIT - reminder_notifications.size,
         )
+
       bookmark_list.load do |query|
         if exclude_bookmark_ids.present?
           query.where("bookmarks.id NOT IN (?)", exclude_bookmark_ids)
@@ -2013,12 +2032,31 @@ class UsersController < ApplicationController
       result.merge!(params.permit(:active, :staged, :approved))
     end
 
-    modify_user_params(result)
+    deprecate_modify_user_params_method
+    result = modify_user_params(result)
+    DiscoursePluginRegistry.apply_modifier(
+      :users_controller_update_user_params,
+      result,
+      current_user,
+      params,
+    )
   end
 
   # Plugins can use this to modify user parameters
   def modify_user_params(attrs)
     attrs
+  end
+
+  def deprecate_modify_user_params_method
+    # only issue a deprecation warning if the method is overriden somewhere
+    if method(:modify_user_params).source_location[0] !=
+         "#{Rails.root}/app/controllers/users_controller.rb"
+      Discourse.deprecate(
+        "`UsersController#modify_user_params` method is deprecated. Please use the `users_controller_update_user_params` modifier instead.",
+        since: "3.1.0.beta4",
+        drop_from: "3.2.0",
+      )
+    end
   end
 
   def fail_with(key)

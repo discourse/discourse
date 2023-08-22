@@ -22,6 +22,55 @@ RSpec.describe ::Jobs::Base do
     end
   end
 
+  class ConcurrentJob < ::Jobs::Base
+    cluster_concurrency 1
+
+    def self.stop!
+      @stop = true
+    end
+
+    def self.stop
+      @stop
+    end
+
+    def self.running?
+      @running
+    end
+
+    def self.running=(val)
+      @running = val
+    end
+
+    def execute(args)
+      self.class.running = true
+      sleep 0.0001 while !self.class.stop
+    ensure
+      self.class.running = false
+    end
+  end
+
+  it "handles job concurrency" do
+    ConcurrentJob.clear_cluster_concurrency_lock!
+
+    expect(ConcurrentJob.get_cluster_concurrency).to eq(1)
+    expect(BadJob.get_cluster_concurrency).to eq(nil)
+
+    expect(Sidekiq::Queues["default"].size).to eq(0)
+
+    thread = Thread.new { ConcurrentJob.new.perform({ "test" => 100 }) }
+
+    wait_for { ConcurrentJob.running? }
+
+    ConcurrentJob.new.perform({ "test" => 100 })
+    expect(Sidekiq::Queues["default"].size).to eq(1)
+
+    expect(Sidekiq::Queues["default"][0]["args"][0]).to eq("test" => 100)
+
+    ConcurrentJob.stop!
+
+    thread.join
+  end
+
   it "handles correct jobs" do
     job = GoodJob.new
     job.perform({})

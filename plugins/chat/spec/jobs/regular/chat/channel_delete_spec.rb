@@ -62,7 +62,10 @@ describe Jobs::Chat::ChannelDelete do
       revisions: Chat::MessageRevision.where(chat_message_id: @message_ids).count,
       mentions: Chat::Mention.where(chat_message_id: @message_ids).count,
       upload_references:
-        UploadReference.where(target_id: @message_ids, target_type: Chat::Message.sti_name).count,
+        UploadReference.where(
+          target_id: @message_ids,
+          target_type: Chat::Message.polymorphic_name,
+        ).count,
       messages: Chat::Message.where(id: @message_ids).count,
       reactions: Chat::MessageReaction.where(chat_message_id: @message_ids).count,
     }

@@ -5,6 +5,8 @@ class ThemeField < ActiveRecord::Base
   has_one :javascript_cache, dependent: :destroy
   has_one :upload_reference, as: :target, dependent: :destroy
 
+  validates :value, { length: { maximum: 1024**2 } }
+
   after_save do
     if self.type_id == ThemeField.types[:theme_upload_var] && saved_change_to_upload_id?
       UploadReference.ensure_exist!(upload_ids: [self.upload_id], target: self)
@@ -106,7 +108,10 @@ class ThemeField < ActiveRecord::Base
           if is_raw
             js_compiler.append_raw_template(name, hbs_template)
           else
-            js_compiler.append_ember_template("discourse/templates/#{name}", hbs_template)
+            js_compiler.append_ember_template(
+              "discourse/templates/#{name.delete_prefix("/")}",
+              hbs_template,
+            )
           end
         rescue ThemeJavascriptCompiler::CompileError => ex
           js_compiler.append_js_error("discourse/templates/#{name}", ex.message)
@@ -189,13 +194,8 @@ class ThemeField < ActiveRecord::Base
       end
 
     if Discourse.store.external?
-      external_copy =
-        begin
-          Discourse.store.download(upload)
-        rescue StandardError
-          nil
-        end
-      path = external_copy.try(:path)
+      external_copy = Discourse.store.download_safe(upload)
+      path = external_copy&.path
     else
       path = Discourse.store.path_for(upload)
     end
@@ -397,22 +397,22 @@ class ThemeField < ActiveRecord::Base
         translation_field? ? process_translation : process_html(self.value)
       self.error = nil unless self.error.present?
       self.compiler_version = Theme.compiler_version
-      DB.after_commit { CSP::Extension.clear_theme_extensions_cache! }
+      CSP::Extension.clear_theme_extensions_cache!
     elsif extra_js_field? || js_tests_field?
       self.error = nil
       self.value_baked = "baked"
       self.compiler_version = Theme.compiler_version
     elsif basic_scss_field?
       ensure_scss_compiles!
-      DB.after_commit { Stylesheet::Manager.clear_theme_cache! }
+      Stylesheet::Manager.clear_theme_cache!
     elsif settings_field?
       validate_yaml!
-      DB.after_commit { CSP::Extension.clear_theme_extensions_cache! }
-      DB.after_commit { SvgSprite.expire_cache }
+      CSP::Extension.clear_theme_extensions_cache!
+      SvgSprite.expire_cache
       self.value_baked = "baked"
       self.compiler_version = Theme.compiler_version
     elsif svg_sprite_field?
-      DB.after_commit { SvgSprite.expire_cache }
+      SvgSprite.expire_cache
       self.error = validate_svg_sprite_xml
       self.value_baked = "baked"
       self.compiler_version = Theme.compiler_version
@@ -685,7 +685,7 @@ class ThemeField < ActiveRecord::Base
 
     if upload && svg_sprite_field?
       upsert_svg_sprite!
-      DB.after_commit { SvgSprite.expire_cache }
+      SvgSprite.expire_cache
     end
   end
 
@@ -693,7 +693,7 @@ class ThemeField < ActiveRecord::Base
     if svg_sprite_field?
       ThemeSvgSprite.where(theme_id: theme_id).delete_all
 
-      DB.after_commit { SvgSprite.expire_cache }
+      SvgSprite.expire_cache
     end
   end
 

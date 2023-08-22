@@ -4,9 +4,9 @@
   .chat-message-thread-btn,
   .bookmark-btn {
     border: 1px solid transparent;
-    border-bottom-color: var(--primary-low);
+    border-bottom-color: var(--primary-300);
     border-radius: 0;
-    border-top-color: var(--primary-low);
+    border-top-color: var(--primary-300);
 
     &:hover {
       background: var(--primary-low);

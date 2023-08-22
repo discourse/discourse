@@ -4,7 +4,6 @@ import discourseLater from "discourse-common/lib/later";
 import { Promise } from "rsvp";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import { h } from "virtual-dom";
-import showModal from "discourse/lib/show-modal";
 import { smallUserAtts } from "discourse/widgets/actions-summary";
 import I18n from "I18n";
 import {
@@ -12,6 +11,7 @@ import {
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
 import { isTesting } from "discourse-common/config/environment";
+import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
@@ -20,6 +20,7 @@ const _builders = {};
 export let apiExtraButtons = {};
 let _extraButtons = {};
 let _buttonsToRemoveCallbacks = {};
+let _buttonsToReplace = {};
 
 export function addButton(name, builder) {
   _extraButtons[name] = builder;
@@ -32,12 +33,17 @@ export function resetPostMenuExtraButtons() {
 
   _extraButtons = {};
   _buttonsToRemoveCallbacks = {};
+  _buttonsToReplace = {};
 }
 
 export function removeButton(name, callback) {
   // 🏌️
   _buttonsToRemoveCallbacks[name] ??= [];
   _buttonsToRemoveCallbacks[name].push(callback || (() => true));
+}
+
+export function replaceButton(name, replaceWith) {
+  _buttonsToReplace[name] = replaceWith;
 }
 
 function registerButton(name, builder) {
@@ -47,17 +53,28 @@ function registerButton(name, builder) {
 export function buildButton(name, widget) {
   let { attrs, state, siteSettings, settings, currentUser } = widget;
 
-  let shouldAddButton = true;
-
-  if (_buttonsToRemoveCallbacks[name]) {
-    shouldAddButton = !_buttonsToRemoveCallbacks[name].some((c) =>
+  // Return early if the button is supposed to be removed via the plugin API
+  if (
+    _buttonsToRemoveCallbacks[name] &&
+    _buttonsToRemoveCallbacks[name].some((c) =>
       c(attrs, state, siteSettings, settings, currentUser)
-    );
+    )
+  ) {
+    return;
+  }
+
+  // Look for a button replacement, build and return widget attrs if present
+  let replacement = _buttonsToReplace[name];
+  if (replacement && replacement?.shouldRender(widget)) {
+    return {
+      replaced: true,
+      name: replacement.name,
+      attrs: replacement.buildAttrs(widget),
+    };
   }
 
   let builder = _builders[name];
-
-  if (shouldAddButton && builder) {
+  if (builder) {
     let button = builder(attrs, state, siteSettings, settings, currentUser);
     if (button && !button.id) {
       button.id = name;
@@ -438,7 +455,7 @@ registerButton("delete", (attrs) => {
   }
 });
 
-function replaceButton(buttons, find, replace) {
+function _replaceButton(buttons, find, replace) {
   const idx = buttons.indexOf(find);
   if (idx !== -1) {
     buttons[idx] = replace;
@@ -447,6 +464,7 @@ function replaceButton(buttons, find, replace) {
 
 export default createWidget("post-menu", {
   tagName: "section.post-menu-area.clearfix",
+  services: ["modal"],
 
   settings: {
     collapseButtons: true,
@@ -467,6 +485,13 @@ export default createWidget("post-menu", {
 
   attachButton(name) {
     let buttonAtts = buildButton(name, this);
+
+    // If the button is replaced via the plugin API, we need to render the
+    // replacement rather than a button
+    if (buttonAtts?.replaced) {
+      return this.attach(buttonAtts.name, buttonAtts.attrs);
+    }
+
     if (buttonAtts) {
       let button = this.attach(this.settings.buttonType, buttonAtts);
       if (buttonAtts.before) {
@@ -508,8 +533,8 @@ export default createWidget("post-menu", {
 
     // If the post is a wiki, make Edit more prominent
     if (attrs.wiki && attrs.canEdit) {
-      replaceButton(orderedButtons, "edit", "reply-small");
-      replaceButton(orderedButtons, "reply", "wiki-edit");
+      _replaceButton(orderedButtons, "edit", "reply-small");
+      _replaceButton(orderedButtons, "reply", "wiki-edit");
     }
 
     orderedButtons.forEach((i) => {
@@ -712,7 +737,7 @@ export default createWidget("post-menu", {
   },
 
   showDeleteTopicModal() {
-    showModal("delete-topic-disallowed");
+    this.modal.show(DeleteTopicDisallowedModal);
   },
 
   showMoreActions() {

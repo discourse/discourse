@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require "webauthn"
+require "discourse_webauthn"
 require "webauthn/security_key_registration_service"
 
 ##
@@ -37,7 +37,9 @@ require "webauthn/security_key_registration_service"
 #
 # The origin params just need to be whatever your localhost URL for Discourse is.
 
-RSpec.describe Webauthn::SecurityKeyAuthenticationService do
+RSpec.describe DiscourseWebauthn::SecurityKeyAuthenticationService do
+  subject(:service) { described_class.new(current_user, params, challenge_params) }
+
   let(:security_key_user) { current_user }
   let!(:security_key) do
     Fabricate(
@@ -91,24 +93,23 @@ RSpec.describe Webauthn::SecurityKeyAuthenticationService do
   let(:challenge_params_origin) { "http://localhost:3000" }
   let(:challenge_params) { { challenge: challenge, rp_id: rp_id, origin: challenge_params_origin } }
   let(:current_user) { Fabricate(:user) }
-  let(:subject) { described_class.new(current_user, params, challenge_params) }
 
   it "updates last_used when the security key and params are valid" do
-    expect(subject.authenticate_security_key).to eq(true)
+    expect(service.authenticate_security_key).to eq(true)
     expect(security_key.reload.last_used).not_to eq(nil)
   end
 
   context "when params is blank" do
     let(:params) { nil }
     it "returns false with no validation" do
-      expect(subject.authenticate_security_key).to eq(false)
+      expect(service.authenticate_security_key).to eq(false)
     end
   end
 
   context "when params is not blank and not a hash" do
     let(:params) { "test" }
     it "returns false with no validation" do
-      expect(subject.authenticate_security_key).to eq(false)
+      expect(service.authenticate_security_key).to eq(false)
     end
   end
 
@@ -116,8 +117,8 @@ RSpec.describe Webauthn::SecurityKeyAuthenticationService do
     before { security_key.destroy }
 
     it "raises a NotFoundError" do
-      expect { subject.authenticate_security_key }.to raise_error(
-        Webauthn::NotFoundError,
+      expect { service.authenticate_security_key }.to raise_error(
+        DiscourseWebauthn::NotFoundError,
         I18n.t("webauthn.validation.not_found_error"),
       )
     end
@@ -127,8 +128,8 @@ RSpec.describe Webauthn::SecurityKeyAuthenticationService do
     let(:security_key_user) { Fabricate(:user) }
 
     it "raises an OwnershipError" do
-      expect { subject.authenticate_security_key }.to raise_error(
-        Webauthn::OwnershipError,
+      expect { service.authenticate_security_key }.to raise_error(
+        DiscourseWebauthn::OwnershipError,
         I18n.t("webauthn.validation.ownership_error"),
       )
     end
@@ -138,8 +139,8 @@ RSpec.describe Webauthn::SecurityKeyAuthenticationService do
     let(:client_data_webauthn_type) { "webauthn.explode" }
 
     it "raises an InvalidTypeError" do
-      expect { subject.authenticate_security_key }.to raise_error(
-        Webauthn::InvalidTypeError,
+      expect { service.authenticate_security_key }.to raise_error(
+        DiscourseWebauthn::InvalidTypeError,
         I18n.t("webauthn.validation.invalid_type_error"),
       )
     end
@@ -149,8 +150,8 @@ RSpec.describe Webauthn::SecurityKeyAuthenticationService do
     let(:client_data_challenge) { Base64.strict_encode64("invalid challenge") }
 
     it "raises a ChallengeMismatchError" do
-      expect { subject.authenticate_security_key }.to raise_error(
-        Webauthn::ChallengeMismatchError,
+      expect { service.authenticate_security_key }.to raise_error(
+        DiscourseWebauthn::ChallengeMismatchError,
         I18n.t("webauthn.validation.challenge_mismatch_error"),
       )
     end
@@ -160,8 +161,8 @@ RSpec.describe Webauthn::SecurityKeyAuthenticationService do
     let(:client_data_origin) { "https://someothersite.com" }
 
     it "raises a InvalidOriginError" do
-      expect { subject.authenticate_security_key }.to raise_error(
-        Webauthn::InvalidOriginError,
+      expect { service.authenticate_security_key }.to raise_error(
+        DiscourseWebauthn::InvalidOriginError,
         I18n.t("webauthn.validation.invalid_origin_error"),
       )
     end
@@ -171,8 +172,8 @@ RSpec.describe Webauthn::SecurityKeyAuthenticationService do
     let(:rp_id) { "bad_rp_id" }
 
     it "raises a InvalidRelyingPartyIdError" do
-      expect { subject.authenticate_security_key }.to raise_error(
-        Webauthn::InvalidRelyingPartyIdError,
+      expect { service.authenticate_security_key }.to raise_error(
+        DiscourseWebauthn::InvalidRelyingPartyIdError,
         I18n.t("webauthn.validation.invalid_relying_party_id_error"),
       )
     end
@@ -182,8 +183,8 @@ RSpec.describe Webauthn::SecurityKeyAuthenticationService do
     let(:signature) { Base64.strict_encode64("badsig") }
 
     it "raises a PublicKeyError" do
-      expect { subject.authenticate_security_key }.to raise_error(
-        Webauthn::PublicKeyError,
+      expect { service.authenticate_security_key }.to raise_error(
+        DiscourseWebauthn::PublicKeyError,
         I18n.t("webauthn.validation.public_key_error"),
       )
     end
@@ -193,8 +194,8 @@ RSpec.describe Webauthn::SecurityKeyAuthenticationService do
     before { COSE::Algorithm.expects(:find).returns(nil) }
 
     it "raises a UnknownCOSEAlgorithmError" do
-      expect { subject.authenticate_security_key }.to raise_error(
-        Webauthn::UnknownCOSEAlgorithmError,
+      expect { service.authenticate_security_key }.to raise_error(
+        DiscourseWebauthn::UnknownCOSEAlgorithmError,
         I18n.t("webauthn.validation.unknown_cose_algorithm_error"),
       )
     end
@@ -230,12 +231,14 @@ RSpec.describe Webauthn::SecurityKeyAuthenticationService do
     end
 
     it "updates last_used when the security key and params are valid" do
-      expect(subject.authenticate_security_key).to eq(true)
+      expect(service.authenticate_security_key).to eq(true)
       expect(security_key.reload.last_used).not_to eq(nil)
     end
   end
 
   it "all supported algorithms are implemented" do
-    Webauthn::SUPPORTED_ALGORITHMS.each { |alg| expect(COSE::Algorithm.find(alg)).not_to be_nil }
+    DiscourseWebauthn::SUPPORTED_ALGORITHMS.each do |alg|
+      expect(COSE::Algorithm.find(alg)).not_to be_nil
+    end
   end
 end

@@ -1,25 +1,19 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import Component from "@ember/component";
-import { equal } from "@ember/object/computed";
+import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
-import { CHATABLE_TYPES } from "discourse/plugins/chat/discourse/models/chat-channel";
+import { isPresent } from "@ember/utils";
+export default class ChatChannelLeaveBtn extends Component {
+  @service chat;
+  @service site;
 
-export default Component.extend({
-  tagName: "",
-  channel: null,
-  chat: service(),
+  get shouldRender() {
+    return !this.site.mobileView && isPresent(this.args.channel);
+  }
 
-  isDirectMessageRow: equal(
-    "channel.chatable_type",
-    CHATABLE_TYPES.directMessageChannel
-  ),
-
-  @discourseComputed("isDirectMessageRow")
-  leaveChatTitleKey(isDirectMessageRow) {
-    if (isDirectMessageRow) {
+  get leaveChatTitleKey() {
+    if (this.args.channel.isDirectMessageChannel) {
       return "chat.direct_messages.leave";
     } else {
       return "chat.leave";
     }
-  },
-});
+  }
+}

@@ -48,9 +48,15 @@ const chatNotificationItem = {
       title: data.chat_channel_title,
       slug: data.chat_channel_slug,
     });
-    return `/chat/c/${slug || "-"}/${data.chat_channel_id}/${
-      data.chat_message_id
-    }`;
+
+    let notificationRoute = `/chat/c/${slug || "-"}/${data.chat_channel_id}`;
+    if (data.chat_thread_id) {
+      notificationRoute += `/t/${data.chat_thread_id}`;
+    } else {
+      notificationRoute += `/${data.chat_message_id}`;
+    }
+
+    return notificationRoute;
   },
 };
 

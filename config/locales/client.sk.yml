@@ -261,8 +261,8 @@ sk:
       other: "%{count} znakov"
     related_messages:
       title: "Príbuzné správy"
+      pill: "Príbuzné správy"
     suggested_topics:
-      title: "Odporúčané témy"
       pm_title: "Odporúčané správy"
     about:
       simple_title: "O fóre"
@@ -781,12 +781,6 @@ sk:
       theme: "Téma"
       home: "Predvolená domovská stránka"
       staged: "Dočasný"
-      staff_counters:
-        flags_given: "nápomocné značky"
-        flagged_posts: "označkované príspevky"
-        deleted_posts: "vymazané príspevky"
-        suspensions: "pozastavenia"
-        warnings_received: "varovania"
       messages:
         inbox: "Prijatá pošta"
         latest: "Najnovšie"
@@ -833,8 +827,6 @@ sk:
       second_factor_backup:
         regenerate: "Znovu vygenerovať"
         disable: "Zakázať"
-        enable: "Povoliť"
-        enable_long: "Povoliť kódy zálohy"
         copy_to_clipboard_error: "Chyba pri kopírovaní dát do schránky"
         copied_to_clipboard: "Skopírované do schránky"
         codes:
@@ -1155,8 +1147,6 @@ sk:
       sign_up: "Registrovať sa"
       hide_forever: "nie, ďakujem"
     summary:
-      enabled_description: "Pozeráte sa na zhrnutie tejto témy: najzaujímavejšie príspevky podľa výberu komunity."
-      enable: "Zhrnutie tejto témy"
       disable: "Zobraziť všetky príspevky"
     deleted_filter:
       enabled_description: "Táto téma obsahuje zmazané príspevky, ktoré boli skryté."
@@ -1578,7 +1568,6 @@ sk:
           "3_2": "Budete dostávať upozornenia, pretože sledujete túto tému."
           "3_1": "Budete dostávať upozornenia, pretože ste vytvorili túto tému."
           "3": "Budete dostávať upozornenia, pretože sledujete túto tému."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie."
           "1": "Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie."
           "0_7": "Ignorujete všetky upozornenia v tejto kategórii."
@@ -2199,18 +2188,12 @@ sk:
         many: "Získal tento odkaz %{count}-krát"
         other: "Získal tento odkaz %{count}-krát"
       granted_on: "Udelený dňa %{date}"
-      others_count: "Ostatní s týmto odznakom (%{count})"
       title: Odznaky
       more_badges:
         one: "+%{count} Ďalší"
         few: "+%{count} Ďalší"
         many: "+%{count} Ďalší"
         other: "+%{count} Ďalší"
-      granted:
-        one: "%{count} udelený"
-        few: "%{count} udelené"
-        many: "%{count} udelených"
-        other: "%{count} udelených"
       select_badge_for_title: Vyberte odznak, ktorý chcete použiť ako Váš titul
       none: "(žiadne)"
       badge_grouping:
@@ -2300,6 +2283,9 @@ sk:
         other: "%{count} nových"
       more: "Viac"
       all_categories: "Všetky kategórie"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Všetky"
       sections:
         custom:
           save: "Uložiť"
@@ -2326,7 +2312,8 @@ sk:
         categories:
           header_link_text: "Kategórie"
         community:
-          header_link_text: "Komunita"
+          edit_section:
+            header_dropdown: "Upraviť"
           links:
             about:
               content: "O stránke"
@@ -2334,8 +2321,8 @@ sk:
               content: "Administrátor"
             badges:
               content: "Odznaky"
-            everything:
-              content: "Všetko"
+            topics:
+              content: "Témy"
             faq:
               content: "Časté otázky"
             groups:
@@ -2344,6 +2331,11 @@ sk:
               content: "Používatelia"
             my_posts:
               content: "Moje príspevky"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Prosím zadajte platnú hodnotu."
+          email: "Zadajte prosím platný email."
   admin_js:
     type_to_filter: "zadajte, čo chcete filtrovať ..."
     admin:
@@ -2584,6 +2576,7 @@ sk:
           create: "Vytvoriť:"
           create_type: "Typ"
           create_name: "Meno"
+          save: "Uložiť"
           long_title: "Upraviť farby, CSS a obsah HTML Vašej stránky"
           edit: "Upraviť"
           common: "Spoločné"
@@ -2849,6 +2842,11 @@ sk:
           validations:
             required:
               key: "povinné"
+            type:
+              key: "typ"
+        edit_category:
+          select_template: "Výber šablón formulárov"
+          select_template_help: "Pridanie/úprava šablón formulárov"
       impersonate:
         title: "Privlastniť"
         help: "Použite tento nástroj na privlastnenie si používateľského účtu na účely debugovania. Po skončení sa budete musieť odhlásiť."
@@ -2860,6 +2858,7 @@ sk:
         last_emailed: "Posledný odemailovaný"
         not_found: "Prepáčte, toto používateľské meno sa nenachádza v našom systéme."
         id_not_found: "Prepáčte, toto používateľské id sa nenachádza v našom systéme."
+        status: "Stav"
         show_emails: "Ukázať Emaily"
         nav:
           new: "Nový"
@@ -3056,6 +3055,13 @@ sk:
         go_back: "Návrat na vyhľadávanie"
         recommended: "Odporúčame prispôsobenie nasledujúceho textu podľa vašich potrieb:"
         show_overriden: "Ukázať iba zmenené"
+        show_outdated: "Zobraziť len neaktuálne/neplatné"
+        interpolation_keys: "Dostupné interpolačné kľúče:"
+        outdated:
+          title: "Tento preklad je zastaraný"
+          old_default: "Staré predvolené nastavenie"
+          new_default: "Nové predvolené nastavenie"
+          dismiss: "Zahodiť"
       settings:
         show_overriden: "Ukázať iba zmenené"
         reset: "zrušiť"

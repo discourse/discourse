@@ -260,6 +260,9 @@ module("Unit | Utility | formatter", function (hooks) {
     assert.strictEqual(elem.dataset.time, d.getTime().toString());
     assert.strictEqual(elem.title, "");
     assert.strictEqual(elem.innerHTML, "1 day");
+
+    elem = domFromString(autoUpdatingRelativeAge(d, { prefix: "test" }))[0];
+    assert.strictEqual(elem.innerHTML, "test 1d");
   });
 
   test("updateRelativeAge", function (assert) {

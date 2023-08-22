@@ -10,7 +10,7 @@
       @title="admin.form_templates.list_table.actions.view"
       @icon="far-eye"
       @class="btn-view-template"
-      @action={{this.viewTemplate}}
+      @action={{fn (mut this.showViewTemplateModal) true}}
     />
     <DButton
       @title="admin.form_templates.list_table.actions.edit"
@@ -26,3 +26,11 @@
     />
   </td>
 </tr>
+
+{{#if this.showViewTemplateModal}}
+  <Modal::CustomizeFormTemplateView
+    @closeModal={{fn (mut this.showViewTemplateModal) false}}
+    @model={{@template}}
+    @refreshModel={{@refreshModel}}
+  />
+{{/if}}

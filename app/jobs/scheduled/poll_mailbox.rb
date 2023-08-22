@@ -12,6 +12,12 @@ module Jobs
     def execute(args)
       @args = args
       poll_pop3 if should_poll?
+
+      DiscoursePluginRegistry.mail_pollers.each do |poller|
+        return if !poller.enabled?
+
+        poller.poll_mailbox(method(:process_popmail))
+      end
     end
 
     def should_poll?

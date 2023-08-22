@@ -26,7 +26,11 @@ We recommend creating an [API Key][sg2] instead of using your SendGrid username 
 
 #### [Mailjet][jet] &mdash; 6k emails/month (200 max/day)
 
-Go to [My Account page](https://app.mailjet.com/account) and click on the ["SMTP and SEND API Settings"](https://app.mailjet.com/account/setup) link.
+Go to [My Account page](https://app.mailjet.com/account) and click on the ["SMTP and SEND API Settings"](https://app.mailjet.com/account/relay) link to generate a secret key and get the SMTP server address.
+
+    SMTP server address? [Mailjet SMTP server address]
+    SMTP username?       [Mailjet API key]
+    SMTP password?       [Mailjet secret key]
 
 #### [Elastic Email][ee]
 

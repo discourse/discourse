@@ -15,8 +15,12 @@ export function setTransientHeader(key, value) {
   _transientHeader = { key, value };
 }
 
-export function viewTrackingRequired() {
+export function trackNextAjaxAsPageview() {
   _trackView = true;
+}
+
+export function resetAjax() {
+  _trackView = false;
 }
 
 export function setLogoffCallback(cb) {

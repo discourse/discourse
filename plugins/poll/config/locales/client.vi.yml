@@ -14,20 +14,12 @@ vi:
       average_rating: "Trung bình: <strong>%{average}</strong>."
       public:
         title: "Bình chọn <strong>công khai</strong>"
-      multiple:
-        help:
-          at_least_min_options:
-            other: "Chọn ít nhất <strong>%{count}</strong> tùy chọn."
-          up_to_max_options:
-            other: "Chọn tối đa <strong>%{count}</strong> tùy chọn."
-          x_options:
-            other: "Chọn <strong>%{count}</strong> tùy chọn."
       cast-votes:
         title: "Thay đổi bình chọn của bạn"
         label: "Bình chọn ngay!"
       show-results:
         title: "Hiển thị kết quả thăm dò"
-        label: "Hiện kết quả"
+        label: "Kết quả"
       hide-results:
         title: "Trở lại bình chọn của bạn"
       export-results:
@@ -49,6 +41,8 @@ vi:
         votes: "%{count} phiếu bầu"
         percentage: "Phần trăm"
         count: "Đếm"
+      options:
+        label: "Tùy chọn"
       error_while_toggling_status: "Đã có lỗi xảy ra khi chuyển trạng thái của thăm dò."
       error_while_casting_votes: "Đã có lỗi xảy ra làm ảnh hưởng đến bình chọn của bạn."
       error_while_fetching_voters: "Đã có lỗi xảy ra khi hiển thị những người tham gia bình chọn."

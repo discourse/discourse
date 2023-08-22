@@ -28,27 +28,27 @@ es:
       multiple:
         help:
           at_least_min_options:
-            one: "Selecciona al menos <strong>%{count}</strong> opción."
-            other: "Selecciona al menos <strong>%{count}</strong> opciones."
+            one: "Elige al menos <strong>%{count}</strong> opción."
+            other: "Elige al menos <strong>%{count} opciones</strong>."
           up_to_max_options:
-            one: "Selecciona como máximo <strong>%{count}</strong> opción."
-            other: "Selecciona como máximo <strong>%{count}</strong> opciones."
+            one: "Elige hasta <strong>%{count} opción</strong>."
+            other: "Elige hasta <strong>%{count} opciones</strong>."
           x_options:
-            one: "Selecciona <strong>%{count}</strong> opción."
-            other: "Selecciona <strong>%{count}</strong> opciones."
-          between_min_and_max_options: "Selecciona de <strong>%{min}</strong> a <strong>%{max}</strong> opciones."
+            one: "Elige <strong>%{count}</strong> opción."
+            other: "Elige <strong>%{count} opciones</strong>."
+          between_min_and_max_options: "Elige entre <strong>%{min} y %{max} opciones</strong>."
       cast-votes:
         title: "Emite tus votos"
         label: "Votar"
       show-results:
         title: "Mostrar los resultados de la encuesta"
-        label: "Mostrar resultados"
+        label: "Resultados"
       remove-vote:
         title: "Retirar tu voto"
-        label: "Retirar voto"
+        label: "Deshacer voto"
       hide-results:
         title: "Volver a tus votos"
-        label: "Mostrar votos"
+        label: "Votar"
       group-results:
         title: "Agrupar votos por campo de usuario"
         label: "Mostrar desglose"
@@ -72,6 +72,8 @@ es:
         breakdown: "Desglose"
         percentage: "Porcentaje"
         count: "Cantidad"
+      options:
+        label: "Opciones"
       error_while_toggling_status: "Lo sentimos, se ha producido un error al cambiar el estado de esta encuesta."
       error_while_casting_votes: "Lo sentimos, se ha producido un error al emitir tus votos."
       error_while_fetching_voters: "Lo sentimos, se produjo un error al mostrar los votantes."

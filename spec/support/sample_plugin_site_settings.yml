@@ -1,0 +1,7 @@
+site_settings:
+  plugin_setting:
+    default: "some value"
+  test_some_topic_id:
+    default: 0
+  test_some_other_topic_id:
+    default: 0

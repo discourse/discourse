@@ -3,7 +3,12 @@
 
 RSpec.describe ThemeField do
   fab!(:theme) { Fabricate(:theme) }
-  before { ThemeJavascriptCompiler.disable_terser! }
+
+  before do
+    SvgSprite.clear_plugin_svg_sprite_cache!
+    ThemeJavascriptCompiler.disable_terser!
+  end
+
   after { ThemeJavascriptCompiler.enable_terser! }
 
   describe "scope: find_by_theme_ids" do
@@ -254,10 +259,10 @@ HTML
     )
     expect(theme.javascript_cache.content).to include('addRawTemplate("discovery"')
     expect(theme.javascript_cache.content).to include(
-      "define(\"discourse/theme-#{theme.id}/controllers/discovery\"",
+      "define(\"discourse/theme-#{theme.id}/discourse/controllers/discovery\"",
     )
     expect(theme.javascript_cache.content).to include(
-      "define(\"discourse/theme-#{theme.id}/controllers/discovery-2\"",
+      "define(\"discourse/theme-#{theme.id}/discourse/controllers/discovery-2\"",
     )
     expect(theme.javascript_cache.content).to include("const settings =")
     expect(theme.javascript_cache.content).to include(

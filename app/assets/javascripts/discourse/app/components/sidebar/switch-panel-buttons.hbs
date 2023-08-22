@@ -1,0 +1,10 @@
+{{#each @buttons as |button|}}
+  <DButton
+    @action={{action "switchPanel" button}}
+    @class="btn-default sidebar__panel-switch-button"
+    @icon={{button.switchButtonIcon}}
+    @disabled={{this.isSwitching}}
+    @translatedLabel={{button.switchButtonLabel}}
+    data-key={{button.key}}
+  />
+{{/each}}

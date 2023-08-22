@@ -18,7 +18,7 @@ sw:
       no_day: "%Y %B"
   date:
     month_names:
-    - null
+    -
     - Mwezi wa kwanza
     - Mwezi wa pili
     - Mwezi wa tatu
@@ -855,7 +855,6 @@ sw:
     tl3_promotion_min_duration: "Siku ambazo lazima zipite kwa mtumiaji aliyepanda cheo kufika kiwango cha 3 cha uaminifu kabla hajarudishwa kwenye kiwango cha 2 cha uaminifu."
     tl3_requires_likes_given: "Kiwango cha chini cha upendo unaotakiwa kutolewa ndani ya siku (tl3 time period) ili mtu afuzu kufika kiwango cha 3 cha uaminifu."
     tl3_requires_likes_received: "Kiwango cha chini cha upendo unaotakiwa kupokelewa ndani ya siku (tl3 time period) ili mtu afuzu kufika kiwango cha 3 cha uaminifu."
-    trusted_users_can_edit_others: "Ruhusu watumiaji wenye viwango vya juu vya uaminifu kuhariri maandishi ya watumiaji wengine"
     min_trust_to_create_topic: "kiwango cha chini cha uaminifu kinachohitajika kabla ya kutengeneza mada mpya."
     allow_flagging_staff: "Kama ikiruhusiwa, watumiaji wanaweza kuweka bendera kwenye machapisho kutoka kwenye akaunti za wasaidizi."
     min_trust_to_edit_wiki_post: "Kiwango cha chini cha uaminifu kinachohitajika kuhariri machapisho ambayo ni wiki."
@@ -905,7 +904,6 @@ sw:
     embed_support_markdown: "Ruhusu umbizo wa Markdown kwa ajili ya machapisho yaliyoambatanishwa."
     embed_post_limit: "Kiwango cha juu cha machapisho yakuambatanisha."
     embed_username_required: "Jina la mtumiaji kwa ajili ya kutengeneza mada linahitajika."
-    show_create_topics_notice: "Kama tovuti ina machapisho chini ya 5, onyesha notisi kuwaambia viongozi kutengeneza mada mpya."
     delete_drafts_older_than_n_days: "Futa mswadajaribio zenye umri zaidi ya siku (n)."
     enable_emoji: "Ruhusu ishara"
     emoji_set: "Ungependa ishara yako iwe vipi?"
@@ -926,7 +924,6 @@ sw:
     default_categories_watching: "Orodha ya kategoria zinazoangaliwa kama chaguo-msingi."
     default_categories_tracking: "Orodha ya kategoria zinazofuatiliwa kama chaguo-msingi."
     default_categories_muted: "Orodha ya kategoria zinazonyamazishwa kama chaguo-msingi."
-    min_trust_level_for_user_api_key: "Kiwango cha uaminifu kinachohitajika kutengeneza funguo za API za mtumiaji"
     tagging_enabled: "Ruhusu lebo kwenye mada?"
     min_trust_to_create_tag: "kiwango cha chini cha uaminifu kinachohitajika kutengeneza lebo."
     max_tags_per_topic: "Kiwango cha juu cha lebo ambazo zinaweza kuwekwa kwenye mada."
@@ -1401,8 +1398,6 @@ sw:
         Unaweza kuandika majibu na mada tena. Asante kwa uvumilivu wako.
     pending_users_reminder:
       title: "Ukumbusho wa Watumiaji Waliosubirishwa"
-    dashboard_problems:
-      title: "Matatizo ya Ubao"
     new_user_of_the_month:
       title: "Wewe ni Mtumiaji Mpya wa Mwezi!"
       subject_template: "Wewe ni Mtumiaji Mpya wa Mwezi!"

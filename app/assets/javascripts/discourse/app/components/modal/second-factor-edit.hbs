@@ -1,0 +1,24 @@
+<DModal
+  @title={{i18n "user.second_factor.edit_title"}}
+  @closeModal={{@closeModal}}
+>
+  <:body>
+    <div class="input-group">
+      <label for="authenticator-name">{{i18n
+          "user.second_factor.edit_description"
+        }}</label>
+      <Input
+        name="authenticator-name"
+        @type="text"
+        @value={{@model.secondFactor.name}}
+      />
+    </div>
+  </:body>
+  <:footer>
+    <DButton
+      @action={{this.editSecondFactor}}
+      class="btn-primary"
+      @label="user.second_factor.save"
+    />
+  </:footer>
+</DModal>

@@ -51,7 +51,7 @@ export const templateFormFields = [
     type: "upload",
     structure: `- type: upload
   attributes:
-    file_types: "jpg, png, gif"
+    file_types: ".jpg, .png, .gif"
     allow_multiple: false
     label: "${I18n.t("admin.form_templates.field_placeholders.label")}"
   validations:

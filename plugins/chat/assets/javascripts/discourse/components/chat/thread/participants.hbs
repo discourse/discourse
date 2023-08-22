@@ -1,0 +1,21 @@
+{{#if (gt @thread.preview.participantUsers.length 1)}}
+  <div class="chat-thread-participants">
+    <div class="chat-thread-participants__avatar-group">
+      {{#each @thread.preview.participantUsers as |user|}}
+        <Chat::UserAvatar
+          @user={{user}}
+          @avatarSize="tiny"
+          @showPresence={{false}}
+        />
+      {{/each}}
+    </div>
+    {{#if @thread.preview.otherParticipantCount}}
+      <div class="chat-thread-participants__other-count">
+        {{i18n
+          "chat.thread.participants_other_count"
+          count=@thread.preview.otherParticipantCount
+        }}
+      </div>
+    {{/if}}
+  </div>
+{{/if}}

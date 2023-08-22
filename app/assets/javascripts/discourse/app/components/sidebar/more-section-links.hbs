@@ -2,19 +2,17 @@
   <Sidebar::MoreSectionLink @sectionLink={{this.activeSectionLink}} />
 {{/if}}
 
-<details
-  class="sidebar-more-section-links-details"
-  {{on "toggle" this.toggleSectionLinks}}
->
-  <summary class="sidebar-more-section-links-details-summary sidebar-row">
-    <span class="sidebar-more-section-links-icon-wrapper">
-      {{d-icon "ellipsis-v"}}
-    </span>
+<li class="sidebar-section-link-wrapper">
+  <DButton
+    @icon="ellipsis-v"
+    @action={{action this.toggleSectionLinks}}
+    @class="btn-flat sidebar-more-section-links-details-summary"
+    @label="sidebar.more"
+  />
+</li>
 
-    {{i18n "sidebar.more"}}
-  </summary>
-
-  {{#if this.shouldDisplaySectionLinks}}
+{{#if this.open}}
+  <div class="sidebar-more-section-links-details">
     <div
       class="sidebar-more-section-links-details-content-wrapper"
       {{did-insert this.registerClickListener}}
@@ -22,20 +20,22 @@
     >
 
       <div class="sidebar-more-section-links-details-content">
-        <div class="sidebar-more-section-links-details-content-main">
+        <ul class="sidebar-more-section-links-details-content-main">
           {{#each this.sectionLinks as |sectionLink|}}
             <Sidebar::MoreSectionLink @sectionLink={{sectionLink}} />
           {{/each}}
-        </div>
+        </ul>
 
-        {{#if (gt this.secondarySectionLinks.length 0)}}
-          <div class="sidebar-more-section-links-details-content-secondary">
-            {{#each this.secondarySectionLinks as |sectionLink|}}
-              <Sidebar::MoreSectionLink @sectionLink={{sectionLink}} />
-            {{/each}}
+        {{#if @moreButtonAction}}
+          <div class="sidebar-more-section-links-details-content-footer">
+            <Sidebar::SectionLinkButton
+              @action={{@moreButtonAction}}
+              @icon={{@moreButtonIcon}}
+              @text={{@moreButtonText}}
+            />
           </div>
         {{/if}}
       </div>
     </div>
-  {{/if}}
-</details>
+  </div>
+{{/if}}

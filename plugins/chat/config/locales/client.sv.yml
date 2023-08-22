@@ -82,8 +82,11 @@ sv:
       click_to_join: "Klicka här för att se tillgängliga kanaler."
       close: "Stäng"
       collapse: "Komprimera chattruta"
+      expand: "Expandera chattlådan"
       confirm_flag: "Är du säker på att du vill flagga %{username}:s meddelande?"
-      deleted: "Ett meddelande raderades. [view]"
+      deleted:
+        one: "Ett meddelande raderades. [view]"
+        other: "%{count} meddelanden raderades. [visa alla]"
       hidden: "Ett meddelande doldes. [view]"
       delete: "Radera"
       edited: "redigerad"
@@ -113,6 +116,13 @@ sv:
       heading: "Chatt"
       join: "Gå med"
       last_visit: "senaste besök"
+      summarization:
+        title: "Sammanfatta meddelanden"
+        description: "Välj ett alternativ nedan för att sammanfatta samtalet som skickades under den önskade tidsramen."
+        summarize: "Sammanfatta"
+        since:
+          one: "Senaste timmen"
+          other: "Senaste %{count} timmarna"
       mention_warning:
         dismiss: "avfärda"
         cannot_see: "%{username} kan inte komma åt den här kanalen och har inte aviserats."
@@ -221,15 +231,14 @@ sv:
       close_full_page: "Stäng helskärmschatt"
       open_message: "Öppna meddelande i chatten"
       placeholder_self: "Gör en anteckning"
-      placeholder_channel: "Chatta med %{channelName}"
+      placeholder_channel: "Chatta i %{channelName}"
+      placeholder_thread: "Chatta i tråden"
       placeholder_users: "Chatta med %{commaSeparatedNames}"
       placeholder_new_message_disallowed:
         archived: "Kanalen är arkiverad, och du kan inte skicka nya meddelanden just nu."
         closed: "Kanalen är stängd, och du kan inte skicka nya meddelanden just nu."
         read_only: "Kanalen är lässkyddad, och du kan inte skicka nya meddelanden just nu."
       placeholder_silenced: "Du kan inte skicka meddelanden just nu."
-      placeholder_start_conversation: "Inled ett samtal med ..."
-      placeholder_start_conversation_users: "Inled ett samtal med %{commaSeparatedUsernames}"
       remove_upload: "Ta bort fil"
       react: "Reagera med emoji"
       reply: "Svara"
@@ -246,6 +255,10 @@ sv:
       save: "Spara"
       select: "Välj"
       return_to_list: "Återgå till listan över kanaler"
+      return_to_threads_list: "Gå tillbaka till pågående diskussioner"
+      unread_threads_count:
+        one: "Du har %{count} oläst diskussion"
+        other: "Du har %{count} olästa diskussioner"
       scroll_to_bottom: "Scrolla till botten"
       scroll_to_new_messages: "Se nya meddelanden"
       sound:
@@ -257,6 +270,8 @@ sv:
       title: "chatt"
       title_capitalized: "Chatt"
       upload: "Bifoga en fil"
+      upload_to_channel: "Ladda upp till %{title}"
+      upload_to_thread: "Ladda upp till tråd"
       uploaded_files:
         one: "%{count} fil"
         other: "%{count} filer"
@@ -267,7 +282,7 @@ sv:
         read_only: "Endast läsning"
         archived_header: "Kanalen är arkiverad"
         archived: "Arkiverad"
-        archive_failed: "Arkivkanalen misslyckades. %{completed}/%{total} meddelanden har arkiverats. <a target=\"_blank\" href=\"%{topic_url}\">målämnet</a>. Tryck på försök igen för att försöka slutföra arkiveringen."
+        archive_failed: "Arkivering av kanalen misslyckades. %{completed}/%{total} meddelanden har arkiverats. <a target=\"_blank\" href=\"%{topic_url}\">Målämnet</a> skapades. Tryck på försök igen för att försöka slutföra arkivet."
         archive_failed_no_topic: "Arkivkanalen misslyckades. %{completed}/%{total} meddelanden har arkiverats. Målämnet skapades inte. Tryck på försök igen för att försöka slutföra arkiveringen."
         archive_completed: "Se det <a target=\"_blank\" href=\"%{topic_url}\">arkiverade ämnet</a>"
         closed_header: "Kanalen är stängd"
@@ -300,6 +315,17 @@ sv:
           about: Om
           members: Medlemmar
           settings: Inställningar
+      new_message_modal:
+        title: Skicka meddelande
+        add_user_long: <kbd>skift + klicka</kbd> eller <kbd>skift + enter</kbd><span>Lägg till @%{username}</span>
+        add_user_short: <span>Lägg till användare</span>
+        open_channel: <span>Öppna kanal</span>
+        default_search_placeholder: "#a-kanal, @någon eller något"
+        default_channel_search_placeholder: "#en-kanal"
+        default_user_search_placeholder: "@någon"
+        user_search_placeholder: "...lägg till fler användare"
+        disabled_user: "har inaktiverat chatten"
+        no_items: "Inga objekt"
       channel_edit_name_slug_modal:
         title: Redigera kanal
         input_placeholder: Lägg till ett namn
@@ -315,9 +341,6 @@ sv:
         prefix: "Till:"
         no_results: Inga resultat
         selected_user_title: "Avmarkera %{username}"
-      channel_selector:
-        title: "Byt till kanal"
-        no_channels: "Inga kanaler matchar din sökning"
       channel:
         no_memberships: Denna kanal har inga medlemmar
         no_memberships_found: Inga medlemmar hittades
@@ -325,6 +348,8 @@ sv:
           one: "%{count} medlem"
           other: "%{count} medlemmar"
       create_channel:
+        threading:
+          label: "Aktivera trådning"
         auto_join_users:
           public_category_warning: "%{category} är en offentlig kategori. Vill du automatiskt lägga till alla nyligen aktiva användare till den här kanalen?"
           warning_1_group:
@@ -385,6 +410,7 @@ sv:
         italic_text: "kursiv text"
         bold_text: "fet text"
         code_text: "kod text"
+        send: "Skicka"
       quote:
         original_channel: 'Ursprungligen skickad i <a href="%{channelLink}">%{channel}</a>'
         copy_success: "Chattcitat kopierat till urklipp"
@@ -395,6 +421,8 @@ sv:
       settings:
         channel_wide_mentions_label: "Tillåt @all och @here omnämnanden"
         channel_wide_mentions_description: "Tillåt användare att avisera alla #%{channel}-medlemmar med @all eller bara de som är aktiva för tillfället med @here"
+        channel_threading_label: "Trådning"
+        channel_threading_description: "När trådning är aktiverat kommer svar på ett chattmeddelande att skapa ett separat samtal som existerar parallellt med huvudkanalen."
         auto_join_users_label: "Lägg till användare automatiskt"
         auto_join_users_info: "Kontrollera varje timme vilka användare som har varit aktiva under de senaste 3 månaderna. Lägg till dem till den här kanalen om de har tillgång till kategorin %{category}."
         auto_join_users_info_no_category: "Kontrollera varje timme vilka användare som har varit aktiva under de senaste 3 månaderna. Lägg till dem till den här kanalen om de har tillgång till vald kategori."
@@ -404,6 +432,8 @@ sv:
         followed: "Gick med"
         mobile_notification_level: "Mobila push-meddelanden"
         mute: "Tysta kanal"
+        threading_enabled: "Aktiverad"
+        threading_disabled: "Inaktiverad"
         muted_on: "På"
         muted_off: "Av"
         notifications: "Aviseringar"
@@ -414,6 +444,11 @@ sv:
         admin_title: "Admin"
       admin:
         title: "Chatt"
+        export_messages:
+          title: "Exportera chattmeddelanden"
+          description: "Exporten är för närvarande begränsad till de 10 000 senaste meddelanden under de senaste 6 månaderna."
+          create_export: "Skapa export"
+          export_has_started: "Exporten har börjat. Du får ett PM när det är klart."
       direct_messages:
         title: "Personlig chatt"
         new: "Skapa en personlig chatt"
@@ -506,10 +541,33 @@ sv:
         symbols: "Symboler"
         search_placeholder: "Sök efter emojinamn och alias..."
         no_results: "Inga resultat"
+      thread:
+        title: "Rubrik"
+        view_thread: Visa tråd
+        default_title: "Tråd"
+        replies:
+          one: "%{count} svar"
+          other: "%{count} svar"
+        label: Tråd
+        close: "Stäng tråd"
+        original_message:
+          started_by: "Startad av"
+        settings: "Webbplatsinställningar"
+        last_reply: "senaste svar"
+        notifications:
+          regular:
+            title: "Normal"
+            description: "Du aviseras om någon nämner ditt @namn i den här tråden."
+          tracking:
+            title: "Följer"
+            description: "Ett antal nya svar för denna tråd kommer att visas i trådlistan och kanalen. Du aviseras om någon nämner ditt @namn i denna tråd."
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       threads:
-        op_said: "OP sa:"
-        started_by: "Startad av"
         open: "Öppna tråd"
+        list: "Pågående diskussioner"
+        none: "Du deltar inte i några trådar i den här kanalen."
       draft_channel_screen:
         header: "Nytt meddelande"
         cancel: "Avbryt"
@@ -554,9 +612,8 @@ sv:
       transcript:
         view: "Visa tidigare meddelandens avskrift"
       types:
-        reviewable_chat_message:
+        chat_reviewable_message:
           title: "Flaggat chattmeddelande"
-          flagged_by: "Flaggat av"
     keyboard_shortcuts_help:
       chat:
         title: "Chatt"
@@ -588,3 +645,7 @@ sv:
         chat_notifications_with_unread:
           one: "Chattaviseringar - %{count} oläst avisering"
           other: "Chattaviseringar - %{count} olästa aviseringar"
+    styleguide:
+      sections:
+        chat:
+          title: Chatt

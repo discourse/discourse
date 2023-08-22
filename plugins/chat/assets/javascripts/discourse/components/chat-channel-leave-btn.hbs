@@ -1,8 +1,8 @@
-{{#unless this.site.mobileView}}
+{{#if this.shouldRender}}
   <DButton
     @icon="times"
-    @action={{this.onLeaveChannel}}
+    @action={{@onLeaveChannel}}
     @class="btn-flat chat-channel-leave-btn"
     @title={{this.leaveChatTitleKey}}
   />
-{{/unless}}
+{{/if}}

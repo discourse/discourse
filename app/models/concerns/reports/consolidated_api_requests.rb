@@ -9,12 +9,9 @@ module Reports::ConsolidatedApiRequests
 
       report.modes = [:stacked_chart]
 
-      tertiary = ColorScheme.hex_for_name("tertiary") || "0088cc"
-      danger = ColorScheme.hex_for_name("danger") || "e45735"
-
       requests =
         filters.map do |filter|
-          color = filter == "api" ? report.rgba_color(tertiary) : report.rgba_color(danger)
+          color = filter == "api" ? report.colors[0] : report.colors[1]
 
           {
             req: filter,

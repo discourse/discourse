@@ -1,7 +1,7 @@
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
-import fabricators from "../helpers/fabricators";
+import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { CHATABLE_TYPES } from "discourse/plugins/chat/discourse/models/chat-channel";
 import { module, test } from "qunit";
 import { render } from "@ember/test-helpers";
@@ -10,12 +10,9 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
   setupRenderingTest(hooks);
 
   test("category channel", async function (assert) {
-    this.set(
-      "channel",
-      fabricators.chatChannel({
-        chatable_type: CHATABLE_TYPES.categoryChannel,
-      })
-    );
+    this.channel = fabricators.channel({
+      chatable_type: CHATABLE_TYPES.categoryChannel,
+    });
 
     await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
 
@@ -30,13 +27,10 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
   });
 
   test("category channel - escapes title", async function (assert) {
-    this.set(
-      "channel",
-      fabricators.chatChannel({
-        chatable_type: CHATABLE_TYPES.categoryChannel,
-        title: "<div class='xss'>evil</div>",
-      })
-    );
+    this.channel = fabricators.channel({
+      chatable_type: CHATABLE_TYPES.categoryChannel,
+      title: "<div class='xss'>evil</div>",
+    });
 
     await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
 
@@ -44,13 +38,10 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
   });
 
   test("category channel - read restricted", async function (assert) {
-    this.set(
-      "channel",
-      fabricators.chatChannel({
-        chatable_type: CHATABLE_TYPES.categoryChannel,
-        chatable: { read_restricted: true },
-      })
-    );
+    this.channel = fabricators.channel({
+      chatable_type: CHATABLE_TYPES.categoryChannel,
+      chatable: { read_restricted: true },
+    });
 
     await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
 
@@ -58,13 +49,10 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
   });
 
   test("category channel - not read restricted", async function (assert) {
-    this.set(
-      "channel",
-      fabricators.chatChannel({
-        chatable_type: CHATABLE_TYPES.categoryChannel,
-        chatable: { read_restricted: false },
-      })
-    );
+    this.channel = fabricators.channel({
+      chatable_type: CHATABLE_TYPES.categoryChannel,
+      chatable: { read_restricted: false },
+    });
 
     await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
 
@@ -72,14 +60,18 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
   });
 
   test("direct message channel - one user", async function (assert) {
-    this.set("channel", fabricators.directMessageChatChannel());
+    this.channel = fabricators.directMessageChannel({
+      chatable: fabricators.directMessage({
+        users: [fabricators.user()],
+      }),
+    });
 
     await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
 
     const user = this.channel.chatable.users[0];
 
     assert.true(
-      exists(`.chat-user-avatar-container .avatar[title="${user.username}"]`)
+      exists(`.chat-user-avatar__container .avatar[title="${user.username}"]`)
     );
 
     assert.strictEqual(
@@ -89,7 +81,7 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
   });
 
   test("direct message channel - multiple users", async function (assert) {
-    const channel = fabricators.directMessageChatChannel();
+    const channel = fabricators.directMessageChannel();
 
     channel.chatable.users.push({
       id: 2,
@@ -98,7 +90,7 @@ module("Discourse Chat | Component | chat-channel-title", function (hooks) {
       avatar_template: "/letter_avatar_proxy/v3/letter/t/31188e/{size}.png",
     });
 
-    this.set("channel", channel);
+    this.channel = channel;
 
     await render(hbs`<ChatChannelTitle @channel={{this.channel}} />`);
 

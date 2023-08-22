@@ -7,6 +7,8 @@ RSpec.describe Post do
 
   before { Oneboxer.stubs :onebox }
 
+  it_behaves_like "it has custom fields"
+
   it { is_expected.to have_many(:reviewables).dependent(:destroy) }
 
   describe "#hidden_reasons" do
@@ -59,6 +61,7 @@ RSpec.describe Post do
   end
 
   it { is_expected.to validate_presence_of :raw }
+  it { is_expected.to validate_length_of(:edit_reason).is_at_most(1000) }
 
   # Min/max body lengths, respecting padding
   it { is_expected.not_to allow_value("x").for(:raw) }
@@ -1438,17 +1441,12 @@ RSpec.describe Post do
 
     after { Discourse.redis.flushdb }
 
-    it "should ignore the unique post validator when hiding a post with similar content as a recent post" do
-      post_2 = Fabricate(:post, user: post.user)
-      SiteSetting.unique_posts_mins = 10
-      post.store_unique_post_key
+    it "should not run post validations" do
+      PostValidator.any_instance.expects(:validate).never
 
-      expect(post_2.valid?).to eq(false)
-      expect(post_2.errors.full_messages.to_s).to include(I18n.t(:just_posted_that))
-
-      post_2.hide!(PostActionType.types[:off_topic])
-
-      expect(post_2.reload.hidden).to eq(true)
+      expect { post.hide!(PostActionType.types[:off_topic]) }.to change { post.reload.hidden }.from(
+        false,
+      ).to(true)
     end
 
     it "should decrease user_stat topic_count for first post" do
@@ -1547,6 +1545,8 @@ RSpec.describe Post do
 
     let(:post) { Fabricate(:post, raw: raw_video) }
 
+    before { SiteSetting.video_thumbnails_enabled = true }
+
     it "has a topic thumbnail" do
       # Thumbnails are tied to a specific video file by using the
       # video's sha1 as the image filename
@@ -1560,6 +1560,39 @@ RSpec.describe Post do
 
     it "only applies for video uploads" do
       image_upload.original_filename = "#{image_upload_2.sha1}.png"
+      image_upload.save!
+      post.link_post_uploads
+
+      post.topic.reload
+      expect(post.topic.topic_thumbnails.length).to eq(0)
+    end
+
+    it "does not overwrite existing thumbnails" do
+      image_upload.original_filename = "#{video_upload.sha1}.png"
+      image_upload.save!
+      post.topic.image_upload_id = image_upload_2.id
+      post.topic.save!
+      post.link_post_uploads
+
+      post.topic.reload
+      expect(post.topic.image_upload_id).to eq(image_upload_2.id)
+    end
+
+    it "uses the newest thumbnail" do
+      image_upload.original_filename = "#{video_upload.sha1}.png"
+      image_upload.save!
+      image_upload_2.original_filename = "#{video_upload.sha1}.png"
+      image_upload_2.save!
+      post.link_post_uploads
+
+      post.topic.reload
+      expect(post.topic.topic_thumbnails.length).to eq(1)
+      expect(post.topic.image_upload_id).to eq(image_upload_2.id)
+    end
+
+    it "does not create thumbnails when disabled" do
+      SiteSetting.video_thumbnails_enabled = false
+      image_upload.original_filename = "#{video_upload.sha1}.png"
       image_upload.save!
       post.link_post_uploads
 

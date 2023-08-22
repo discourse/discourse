@@ -1,6 +1,15 @@
 div.poll {
+  > * {
+    box-sizing: border-box;
+  }
   margin: 1em 0;
   border: 1px solid var(--primary-low);
+  display: grid;
+  grid-template-areas: "poll" "info" "buttons";
+  @include breakpoint("mobile-extra-large", min-width) {
+    grid-template-columns: 1fr 10em;
+    grid-template-areas: "poll info" "buttons buttons";
+  }
 
   ul,
   ol {
@@ -9,11 +18,6 @@ div.poll {
     list-style: none;
     display: inline-block;
     width: 100%;
-  }
-
-  li {
-    cursor: pointer;
-    font-size: var(--font-up-1);
   }
 
   li[data-poll-option-id] {
@@ -34,38 +38,228 @@ div.poll {
   }
 
   .poll-info {
+    grid-area: info;
+    display: flex;
+    line-height: var(--line-height-medium);
     color: var(--primary-medium);
-    vertical-align: middle;
-    padding: 1em 0;
 
-    .info-label {
-      font-size: var(--font-up-4);
-      line-height: var(--line-height-medium);
+    @include breakpoint("mobile-extra-large") {
+      border-top: 1px solid var(--primary-low);
+      flex-direction: row-reverse;
+      &_counts,
+      &_instructions {
+        padding: 1em;
+      }
+    }
+
+    @include breakpoint("mobile-extra-large", min-width) {
+      gap: 0 1em;
+      padding: 1em;
+      border-left: 1px solid var(--primary-low);
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &_counts {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.25em 0;
+
+      @include breakpoint("mobile-extra-large", min-width) {
+        justify-content: center;
+      }
+
+      @include breakpoint("mobile-extra-large") {
+        flex: 1 1 auto;
+      }
+
+      &-count {
+        gap: 0.25em;
+        line-height: 1;
+        white-space: nowrap;
+        text-align: left;
+
+        .info-label,
+        .info-number {
+          display: inline;
+          margin-right: 0.25em;
+          text-align: center;
+        }
+
+        @include breakpoint("mobile-extra-large") {
+          &:not(:last-child) {
+            margin-right: 0.75em;
+          }
+        }
+
+        @include breakpoint("mobile-extra-large", min-width) {
+          &:not(:last-child) {
+            margin-bottom: 0.25em;
+          }
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          + .poll-info_counts-count {
+            margin-top: 0.5em;
+            display: block;
+            .info-number {
+              margin-right: 0.33em;
+            }
+            .info-number,
+            .info-label {
+              font-size: var(--font-up-1);
+            }
+          }
+        }
+      }
+      @include breakpoint("mobile-extra-large", min-width) {
+        + .poll-info_instructions:not(:empty) {
+          margin-top: 1.25em;
+        }
+      }
+    }
+
+    &_instructions {
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-self: start;
+      &:empty {
+        display: none;
+      }
+
+      @include breakpoint("mobile-extra-large", min-width) {
+        padding-top: 1.25em;
+        &:not(:empty) {
+          border-top: 1px solid var(--primary-low);
+        }
+      }
+
+      @include breakpoint("mobile-extra-large") {
+        padding-right: 1em;
+        height: 100%;
+        flex: 1 1 auto;
+        &:not(:empty) {
+          border-right: 1px solid var(--primary-low);
+        }
+      }
+
+      li {
+        display: flex;
+        gap: 0.5em;
+        &:not(:last-child) {
+          margin-bottom: 0.5em;
+        }
+
+        @include breakpoint("mobile-extra-large", min-width) {
+          &:not(:last-child) {
+            margin-bottom: 1em;
+          }
+          &:not(:first-child:last-child) {
+            // only applied when there are multiple items
+            .d-icon {
+              width: 15%;
+            }
+            span {
+              width: 85%;
+            }
+          }
+          &:first-child:last-child {
+            // when there's a single item, it looks better centered
+            display: inline;
+            text-align: center;
+          }
+        }
+      }
+
+      .d-icon {
+        font-size: var(--font-down-1);
+        margin-top: 0.2em;
+      }
     }
 
     .info-text {
       margin: 0.25em 0;
       display: block;
     }
+
+    @include breakpoint("mobile-extra-large", min-width) {
+      .info-label {
+        font-size: var(--font-up-2);
+      }
+      .info-number {
+        font-size: var(--font-up-6);
+      }
+    }
   }
 
   .poll-container {
-    vertical-align: middle;
-    padding: 0.5em 1em;
+    grid-area: poll;
+    padding: 1em;
+    width: 100%;
+    overflow: hidden;
+    align-self: center;
+
+    li {
+      cursor: pointer;
+      font-size: var(--font-up-1);
+    }
 
     .poll-results-number-rating {
       font-size: var(--font-up-5);
     }
   }
 
+  .poll-title {
+    border-bottom: 1px solid var(--primary-low);
+    margin-bottom: 0.5em;
+    padding-bottom: 0.5em;
+  }
+
   .poll-buttons {
-    .info-text {
-      margin: 0.25em 0;
-      color: var(--primary-medium);
+    grid-area: buttons;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    width: 100%;
+    padding: 1em;
+    border-top: 1px solid var(--primary-low);
+
+    button {
+      white-space: nowrap;
+      align-self: start;
+      .d-button-label {
+        @include ellipsis;
+      }
+
+      @include breakpoint("tablet") {
+        flex: 1 1 0;
+        &:first-child:last-child {
+          // if there's only one button,
+          // don't expand the width
+          flex: 0 1 auto;
+        }
+        &.toggle-results:first-child {
+          // don't expand the back button
+          flex: 0 1 auto;
+          margin-right: auto;
+        }
+      }
+
+      @include breakpoint("mobile-large") {
+        &:first-child:last-child,
+        &.cast-votes {
+          // ok to expand button width on smaller screens
+          flex: 1 1 100%;
+        }
+      }
     }
-    .info-text + .info-text,
-    button + .info-text {
-      margin-left: 0.5em;
+
+    &:empty {
+      display: none;
     }
   }
 
@@ -85,6 +279,33 @@ div.poll {
     .spinner {
       margin-top: 0.25em;
     }
+  }
+
+  .poll-buttons-dropdown {
+    align-self: stretch;
+
+    .label {
+      display: none;
+    }
+    .widget-dropdown {
+      height: 100%;
+
+      &-header {
+        height: 100%;
+        .d-icon {
+          margin: 0;
+        }
+      }
+    }
+  }
+
+  .poll-buttons-dropdown,
+  .export-results,
+  .toggle-status,
+  .show-breakdown {
+    // we want these controls to be separated
+    // from voting controls
+    margin-left: auto;
   }
 
   .results {
@@ -160,19 +381,27 @@ div.poll {
     overflow-y: auto;
     overflow-x: hidden;
   }
-
-  .poll-show-breakdown {
-    margin-bottom: 0.25em;
-  }
 }
 
-div.poll.pie {
-  .poll-container {
-    display: inline-block;
-  }
-  .poll-info {
-    display: inline-block;
-    width: 150px;
+.d-editor-preview {
+  .poll {
+    li[data-poll-option-id]:before {
+      position: relative;
+      vertical-align: baseline;
+      border: 2px solid var(--primary);
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 0.5em;
+      width: 12px;
+      height: 12px;
+      content: "";
+    }
+
+    &[data-poll-type="multiple"] {
+      li[data-poll-option-id]:before {
+        border-radius: 3px;
+      }
+    }
   }
 }
 

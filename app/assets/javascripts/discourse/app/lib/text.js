@@ -19,6 +19,7 @@ function getOpts(opts) {
       currentUser: context.currentUser,
       censoredRegexp: context.site.censored_regexp,
       customEmojiTranslation: context.site.custom_emoji_translation,
+      emojiDenyList: context.site.denied_emojis,
       siteSettings: context.siteSettings,
       formatUsername,
       watchedWordsReplace: context.site.watched_words_replace,
@@ -96,6 +97,7 @@ function createPrettyText(options) {
 
 function emojiOptions() {
   let siteSettings = helperContext().siteSettings;
+  let context = helperContext();
   if (!siteSettings.enable_emoji) {
     return;
   }
@@ -105,6 +107,7 @@ function emojiOptions() {
     emojiSet: siteSettings.emoji_set,
     enableEmojiShortcuts: siteSettings.enable_emoji_shortcuts,
     inlineEmoji: siteSettings.enable_inline_emoji_translation,
+    emojiDenyList: context.site.denied_emojis,
     emojiCDNUrl: siteSettings.external_emoji_url,
   };
 }

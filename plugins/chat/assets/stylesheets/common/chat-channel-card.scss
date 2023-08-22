@@ -4,7 +4,7 @@
   position: relative;
   padding: 1.25rem;
   background-color: var(--primary-very-low);
-  border-radius: 5px;
+  border-radius: var(--d-border-radius);
   min-height: 0;
   min-width: 0;
   border-left: 5px solid transparent;

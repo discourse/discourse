@@ -16,6 +16,7 @@ export default Component.extend(UppyUploadMixin, {
   existingUploads: null,
   uploads: null,
   useMultipartUploadsIfAvailable: true,
+  uploadDropZone: null,
 
   init() {
     this._super(...arguments);
@@ -38,7 +39,7 @@ export default Component.extend(UppyUploadMixin, {
 
   didInsertElement() {
     this._super(...arguments);
-    this.composerInputEl = document.querySelector(".chat-composer-input");
+
     this.composerInputEl?.addEventListener("paste", this._pasteEventListener);
   },
 
@@ -66,8 +67,7 @@ export default Component.extend(UppyUploadMixin, {
     this.appEvents.trigger(`upload-mixin:${this.id}:cancel-upload`, {
       fileId: upload.id,
     });
-    this.uploads.removeObject(upload);
-    this._triggerUploadsChanged();
+    this.removeUpload(upload);
   },
 
   @action
@@ -77,19 +77,8 @@ export default Component.extend(UppyUploadMixin, {
   },
 
   _uploadDropTargetOptions() {
-    let targetEl;
-    if (this.chatStateManager.isFullPageActive) {
-      targetEl = document.querySelector(".full-page-chat");
-    } else {
-      targetEl = document.querySelector(".chat-drawer.is-expanded");
-    }
-
-    if (!targetEl) {
-      return this._super();
-    }
-
     return {
-      target: targetEl,
+      target: this.uploadDropZone || document.body,
     };
   },
 
@@ -135,8 +124,14 @@ export default Component.extend(UppyUploadMixin, {
     }
   },
 
+  onProgressUploadsChanged() {
+    this._triggerUploadsChanged(this.uploads, {
+      inProgressUploadsCount: this.inProgressUploads?.length,
+    });
+  },
+
   _triggerUploadsChanged() {
-    this.onUploadChanged(this.uploads, {
+    this.onUploadChanged?.(this.uploads, {
       inProgressUploadsCount: this.inProgressUploads?.length,
     });
   },

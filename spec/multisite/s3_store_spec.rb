@@ -202,7 +202,7 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
     end
   end
 
-  describe "secure uploadss" do
+  describe "secure uploads" do
     let(:store) { FileStore::S3Store.new }
     let(:client) { Aws::S3::Client.new(stub_responses: true) }
     let(:resource) { Aws::S3::Resource.new(client: client) }
@@ -401,7 +401,7 @@ RSpec.describe "Multisite s3 uploads", type: :multisite do
         )
       end
 
-      it "presigned url contans the metadata when provided" do
+      it "presigned url contains the metadata when provided" do
         url =
           store.signed_url_for_temporary_upload("test.png", metadata: { "test-meta": "testing" })
         expect(url).to include("&x-amz-meta-test-meta=testing")

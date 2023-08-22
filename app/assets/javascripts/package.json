@@ -1,8 +1,12 @@
 {
   "private": true,
+  "scripts": {
+    "postinstall": "patch-package"
+  },
   "workspaces": [
     "admin",
     "bootstrap-json",
+    "deprecation-silencer",
     "dialog-holder",
     "discourse",
     "discourse-common",
@@ -18,7 +22,11 @@
   ],
   "resolutions": {
     "**/babel-plugin-debug-macros": "npm:@discourse/babel-plugin-debug-macros@0.4.0-pre1",
-    "**/jsesc": "npm:jsesc@3.0.2"
+    "**/jsesc": "npm:jsesc@3.0.2",
+    "**/unset-value": "2.0.1"
   },
-  "dependencies": {}
+  "devDependencies": {
+    "patch-package": "^8.0.0",
+    "postinstall-postinstall": "^2.1.0"
+  }
 }

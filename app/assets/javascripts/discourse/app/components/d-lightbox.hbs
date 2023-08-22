@@ -1,0 +1,84 @@
+<DSection
+  tabIndex="-1"
+  id={{this.elementId}}
+  aria-hidden={{not this.isVisible}}
+  class={{this.HTMLClassList}}
+  @scrollTop={{false}}
+  {{did-insert this.registerAppEventListeners}}
+  {{will-destroy this.deregisterAppEventListners}}
+>
+  {{#if this.isVisible}}
+    <div
+      aria-hidden="false"
+      tabindex="0"
+      role="document"
+      class="d-lightbox__content"
+      style={{this.CSSVars}}
+      aria-labelledby={{this.titleElementId}}
+      {{on "keydown" this.onKeydown passive=false capture=true}}
+      {{on "keyup" this.onKeyup passive=true capture=true}}
+    >
+      <div class="d-lightbox__focus-trap" tabindex="0"></div>
+      <DLightbox::Header
+        @canDownload={{this.canDownload}}
+        @canFullscreen={{this.canFullscreen}}
+        @canNavigate={{this.canNavigate}}
+        @close={{this.close}}
+        @openInNewTab={{this.openInNewTab}}
+        @toggleCarousel={{this.toggleCarousel}}
+        @toggleFullScreen={{this.toggleFullScreen}}
+        @totalItemCount={{this.totalItemCount}}
+        @counterIndex={{this.counterIndex}}
+      />
+      <DLightbox::Body
+        @close={{this.close}}
+        @centerZoomedBackgroundPosition={{this.centerZoomedBackgroundPosition}}
+        @currentItem={{this.currentItem}}
+        @hasLoadingError={{this.hasLoadingError}}
+        @isLoading={{this.isLoading}}
+        @isZoomed={{this.isZoomed}}
+        @nextButtonIcon={{this.nextButtonIcon}}
+        @onTouchend={{this.onTouchend}}
+        @onTouchstart={{this.onTouchstart}}
+        @previousButtonIcon={{this.previousButtonIcon}}
+        @reloadImage={{this.reloadImage}}
+        @shouldDisplayMainImageArrows={{this.shouldDisplayMainImageArrows}}
+        @showNextItem={{this.showNextItem}}
+        @showPreviousItem={{this.showPreviousItem}}
+        @toggleZoom={{this.toggleZoom}}
+        @zoomOnMouseover={{this.zoomOnMouseover}}
+      />
+      {{#if this.shouldDisplayCarousel}}
+        <DLightbox::Carousel
+          @currentIndex={{this.currentIndex}}
+          @items={{this.items}}
+          @nextButtonIcon={{this.nextButtonIcon}}
+          @previousButtonIcon={{this.previousButtonIcon}}
+          @showNextItem={{this.showNextItem}}
+          @showPreviousItem={{this.showPreviousItem}}
+          @showSelectedImage={{this.showSelectedImage}}
+          @shouldDisplayCarouselArrows={{this.shouldDisplayCarouselArrows}}
+        />
+      {{/if}}
+      <DLightbox::Footer
+        @canDownload={{this.canDownload}}
+        @canRotate={{this.canRotate}}
+        @canZoom={{this.canZoom}}
+        @currentItem={{this.currentItem}}
+        @downloadImage={{this.downloadImage}}
+        @rotateImage={{this.rotateImage}}
+        @shouldDisplayTitle={{this.shouldDisplayTitle}}
+        @toggleExpandTitle={{this.toggleExpandTitle}}
+        @toggleZoom={{this.toggleZoom}}
+        @zoomButtonIcon={{this.zoomButtonIcon}}
+      />
+      <DLightbox::ScreenReaderAnnouncer
+        @currentItem={{this.currentItem}}
+        @counterIndex={{this.counterIndex}}
+        @totalItemCount={{this.totalItemCount}}
+        @titleElementId={{this.titleElementId}}
+      />
+      <div class="d-lightbox__focus-trap" tabindex="0"></div>
+    </div>
+  {{/if}}
+</DSection>

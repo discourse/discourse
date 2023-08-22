@@ -1,0 +1,12 @@
+{
+  "[gjs]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[gts]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "eslint.validate": [
+    "glimmer-js",
+    "glimmer-ts"
+  ]
+}

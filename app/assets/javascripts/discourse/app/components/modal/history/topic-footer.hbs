@@ -1,0 +1,84 @@
+<div id="revision-controls">
+  <DButton
+    class="btn-default first-revision"
+    @action={{@loadFirstVersion}}
+    @icon="fast-backward"
+    @title="post.revisions.controls.first"
+    @disabled={{@loadFirstDisabled}}
+  />
+  <DButton
+    class="btn-default previous-revision"
+    @action={{@loadPreviousVersion}}
+    @icon="backward"
+    @title="post.revisions.controls.previous"
+    @disabled={{@loadPreviousDisabled}}
+  />
+  <div id="revision-numbers" class={{unless @displayRevisions "invisible"}}>
+    <ConditionalLoadingSpinner @condition={{@loading}} @size="small">
+      {{html-safe @revisionsText}}
+    </ConditionalLoadingSpinner>
+  </div>
+  <DButton
+    class="btn-default next-revision"
+    @action={{@loadNextVersion}}
+    @icon="forward"
+    @title="post.revisions.controls.next"
+    @disabled={{@loadNextDisabled}}
+  />
+  <DButton
+    class="btn-default last-revision"
+    @action={{@loadLastVersion}}
+    @icon="fast-forward"
+    @title="post.revisions.controls.last"
+    @disabled={{@loadLastDisabled}}
+  />
+</div>
+
+<div id="revision-footer-buttons">
+  {{#if @displayEdit}}
+    <DButton
+      @action={{@editPost}}
+      @icon="pencil-alt"
+      class="btn-default edit-post"
+      @label={{@editButtonLabel}}
+    />
+  {{/if}}
+
+  {{#if @isStaff}}
+    <DButton
+      @action={{@revertToVersion}}
+      @icon="undo"
+      @translatedLabel={{@revertToRevisionText}}
+      class="btn-danger revert-to-version"
+      @disabled={{@loading}}
+    />
+
+    {{#if @model.previous_hidden}}
+      <DButton
+        @action={{@showVersion}}
+        @icon="far-eye"
+        @label="post.revisions.controls.show"
+        class="btn-default show-revision"
+        @disabled={{@loading}}
+      />
+    {{else}}
+      <DButton
+        @action={{@hideVersion}}
+        @icon="far-eye-slash"
+        @label="post.revisions.controls.hide"
+        class="btn-danger hide-revision"
+        @disabled={{@loading}}
+      />
+    {{/if}}
+
+    {{#if (and @canPermanentlyDelete @model.previous_hidden)}}
+      <DButton
+        @action={{@permanentlyDeleteVersions}}
+        @icon="far-trash-alt"
+        @label="post.revisions.controls.destroy"
+        class="btn-danger destroy-revision"
+        @disabled={{@loading}}
+      />
+    {{/if}}
+  {{/if}}
+</div>

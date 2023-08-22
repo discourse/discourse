@@ -11,9 +11,11 @@ import showModal from "discourse/lib/show-modal";
 import Invite from "discourse/models/invite";
 import I18n from "I18n";
 import { inject as service } from "@ember/service";
+import CreateInviteBulk from "discourse/components/modal/create-invite-bulk";
 
 export default Controller.extend({
   dialog: service(),
+  modal: service(),
   user: null,
   model: null,
   filter: null,
@@ -77,7 +79,7 @@ export default Controller.extend({
 
   @action
   createInviteCsv() {
-    showModal("create-invite-bulk");
+    this.modal.show(CreateInviteBulk);
   },
 
   @action

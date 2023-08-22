@@ -238,8 +238,7 @@ RSpec.describe SvgSprite do
 
     context "with a plugin" do
       let :plugin1 do
-        plugin1 = Plugin::Instance.new
-        plugin1.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+        plugin1 = plugin_from_fixtures("my_plugin")
         plugin1
       end
 

@@ -106,6 +106,19 @@ function buildImageDeleteButton() {
    </span>
   `;
 }
+
+function buildImageGalleryControl(imageCount) {
+  return `
+  <span class="wrap-image-grid-button" title="${I18n.t(
+    "composer.toggle_image_grid"
+  )}" data-image-count="${imageCount}">
+    <svg class="fa d-icon d-icon-th svg-icon svg-string" xmlns="http://www.w3.org/2000/svg">
+    <use href="#th"></use>
+    </svg>
+  </span>
+  `;
+}
+
 // We need this to load after `upload-protocol` which is priority 0
 export const priority = 1;
 
@@ -124,6 +137,12 @@ function ruleWithImageControls(oldRule) {
       result += oldRule(tokens, idx, options, env, slf);
 
       result += `<span class="button-wrapper" data-image-index="${index}">`;
+      if (idx === 0) {
+        const imageCount = tokens.filter((x) => x.type === "image").length;
+        if (imageCount > 1) {
+          result += buildImageGalleryControl(imageCount);
+        }
+      }
       result += buildImageShowAltTextControls(
         token.attrs[token.attrIndex("alt")][1]
       );
@@ -181,6 +200,11 @@ export function setup(helper) {
       "svg[class=fa d-icon d-icon-times svg-icon svg-string]",
       "svg[class=fa d-icon d-icon-trash-alt svg-icon svg-string]",
       "use[href=#times]",
+
+      "span.wrap-image-grid-button",
+      "span.wrap-image-grid-button[data-image-count]",
+      "svg[class=fa d-icon d-icon-th svg-icon svg-string]",
+      "use[href=#th]",
     ]);
 
     helper.registerPlugin((md) => {

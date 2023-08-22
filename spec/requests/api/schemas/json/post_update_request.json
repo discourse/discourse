@@ -1,0 +1,18 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "post": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "raw": {
+          "type": "string"
+        },
+        "edit_reason": {
+          "type": "string"
+        }
+      },
+      "required": ["raw"]
+    }
+  }
+}

@@ -25,7 +25,8 @@ document.addEventListener("discourse-booted", () => {
   }
 
   const params = new URLSearchParams(window.location.search);
-  const skipCore = params.get("qunit_skip_core") === "1";
+  const target = params.get("target");
+  const testingCore = !target || target === "core";
   const disableAutoStart = params.get("qunit_disable_auto_start") === "1";
 
   Ember.ENV.LOG_STACKTRACE_ON_DEPRECATION = false;
@@ -60,7 +61,7 @@ document.addEventListener("discourse-booted", () => {
     setupTestContainer: false,
     loadTests: false,
     startTests: !disableAutoStart,
-    setupEmberOnerrorValidation: !skipCore,
+    setupEmberOnerrorValidation: testingCore,
     setupTestIsolationValidation: true,
   });
 });

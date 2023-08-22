@@ -566,13 +566,12 @@ RSpec.describe Email::Sender do
     end
 
     it "changes the hashtags to the slug with a # symbol beforehand rather than the full name of the resource" do
-      SiteSetting.enable_experimental_hashtag_autocomplete = true
       category = Fabricate(:category, slug: "dev")
       reply.update!(raw: reply.raw + "\n wow this is #dev")
       reply.rebake!
       Email::Sender.new(message, :valid_type).send
       expected = <<~HTML
-      <a href=\"#{Discourse.base_url}#{category.url}\" data-type=\"category\" data-slug=\"dev\" style=\"text-decoration: none; font-weight: bold; color: #006699;\"><span>#dev</span>
+      <a href=\"#{Discourse.base_url}#{category.url}\" data-type=\"category\" data-slug=\"dev\" data-id=\"#{category.id}\" style=\"text-decoration: none; font-weight: bold; color: #006699;\"><span>#dev</span>
       HTML
       expect(message.html_part.body.to_s).to include(expected.chomp)
     end

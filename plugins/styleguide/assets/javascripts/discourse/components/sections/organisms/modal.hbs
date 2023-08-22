@@ -1,0 +1,66 @@
+{{! template-lint-disable no-potential-path-strings}}
+
+<StyleguideExample @title="<DModal>">
+  <Styleguide::Component>
+    <DModal
+      @closeModal={{fn (mut this.inline) true}}
+      @inline={{this.inline}}
+      @title={{this.title}}
+      @subtitle={{this.subtitle}}
+      @flash={{this.flash}}
+      @flashType={{this.flashType}}
+      @errors={{this.errors}}
+      @dismissable={{this.dismissable}}
+    >
+      <:body>
+        {{this.body}}
+      </:body>
+
+      <:footer>
+        {{i18n "styleguide.sections.modal.footer"}}
+      </:footer>
+    </DModal>
+  </Styleguide::Component>
+
+  <Styleguide::Controls>
+    <Styleguide::Controls::Row @name="@inline">
+      <DToggleSwitch @state={{this.inline}} {{on "click" this.toggleInline}} />
+    </Styleguide::Controls::Row>
+    <Styleguide::Controls::Row @name="@dismissable">
+      <DToggleSwitch
+        @state={{this.dismissable}}
+        {{on "click" this.toggleDismissable}}
+      />
+    </Styleguide::Controls::Row>
+    <Styleguide::Controls::Row @name="@tagName">
+      <ComboBox
+        @value={{this.modalTagName}}
+        @content={{this.modalTagNames}}
+        @onChange={{fn (mut this.modalTagName)}}
+        @valueProperty={{null}}
+        @nameProperty={{null}}
+      />
+    </Styleguide::Controls::Row>
+    <Styleguide::Controls::Row @name="@title">
+      <Input @value={{this.title}} />
+    </Styleguide::Controls::Row>
+    <Styleguide::Controls::Row @name="@subtitle">
+      <Input @value={{this.subtitle}} />
+    </Styleguide::Controls::Row>
+    <Styleguide::Controls::Row @name="<:body>">
+      <Textarea @value={{this.body}} />
+    </Styleguide::Controls::Row>
+    <Styleguide::Controls::Row @name="@flash">
+      <Input @value={{this.flash}} />
+    </Styleguide::Controls::Row>
+    <Styleguide::Controls::Row @name="@flashType">
+      <ComboBox
+        @value={{this.flashType}}
+        @content={{this.flashTypes}}
+        @onChange={{fn (mut this.flashType)}}
+        @valueProperty={{null}}
+        @nameProperty={{null}}
+      />
+    </Styleguide::Controls::Row>
+  </Styleguide::Controls>
+</StyleguideExample>

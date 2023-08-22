@@ -1,6 +1,6 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { click, render } from "@ember/test-helpers";
+import { click, render, settled } from "@ember/test-helpers";
 import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import widgetHbs from "discourse/widgets/hbs-compiler";
@@ -31,6 +31,24 @@ module("Integration | Component | Widget | base", function (hooks) {
     await render(hbs`<MountWidget @widget="hello-test" @args={{this.args}} />`);
 
     assert.strictEqual(query(".test").innerText, "Hello Robin");
+  });
+
+  test("widget rerenders when args change", async function (assert) {
+    createWidget("hello-test", {
+      tagName: "div.test",
+      template: widgetHbs`Hello {{attrs.name}}`,
+    });
+
+    this.set("args", { name: "Robin" });
+
+    await render(hbs`<MountWidget @widget="hello-test" @args={{this.args}} />`);
+
+    assert.strictEqual(query(".test").innerText, "Hello Robin");
+
+    this.set("args", { name: "David" });
+    await settled();
+
+    assert.strictEqual(query(".test").innerText, "Hello David");
   });
 
   test("widget services", async function (assert) {

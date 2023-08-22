@@ -189,16 +189,16 @@ RSpec.describe FileStore::BaseStore do
       # Net::HTTP always returns binary ASCII-8BIT encoding. File.read auto-detects the encoding
       # Make sure we File.read after downloading a file for consistency
 
-      first_encoding = store.download(upload_s3).read.encoding
+      first_encoding = store.download(upload_s3, print_deprecation: false).read.encoding
 
-      second_encoding = store.download(upload_s3).read.encoding
+      second_encoding = store.download(upload_s3, print_deprecation: false).read.encoding
 
       expect(first_encoding).to eq(Encoding::UTF_8)
       expect(second_encoding).to eq(Encoding::UTF_8)
     end
 
     it "should return the file" do
-      file = store.download(upload_s3)
+      file = store.download(upload_s3, print_deprecation: false)
 
       expect(file.class).to eq(File)
     end
@@ -210,7 +210,7 @@ RSpec.describe FileStore::BaseStore do
         body: "Hello world",
       )
 
-      file = store.download(upload_s3)
+      file = store.download(upload_s3, print_deprecation: true)
 
       expect(file.class).to eq(File)
     end
@@ -223,9 +223,41 @@ RSpec.describe FileStore::BaseStore do
       signed_url = Discourse.store.signed_url_for_path(upload_s3.url)
       stub_request(:get, signed_url).to_return(status: 200, body: "Hello world")
 
-      file = store.download(upload_s3)
+      file = store.download(upload_s3, print_deprecation: false)
 
       expect(file.class).to eq(File)
+    end
+  end
+
+  describe "#download!" do
+    before do
+      setup_s3
+      stub_request(:get, upload_s3.url).to_return(status: 200, body: "Hello world")
+    end
+
+    let(:upload_s3) { Fabricate(:upload_s3) }
+    let(:store) { FileStore::BaseStore.new }
+
+    it "does not raise an error when download fails" do
+      FileHelper.stubs(:download).raises(OpenURI::HTTPError.new("400 error", anything))
+
+      expect { store.download!(upload_s3) }.to raise_error(FileStore::DownloadError)
+    end
+  end
+
+  describe "#download_safe" do
+    before do
+      setup_s3
+      stub_request(:get, upload_s3.url).to_return(status: 200, body: "Hello world")
+    end
+
+    let(:upload_s3) { Fabricate(:upload_s3) }
+    let(:store) { FileStore::BaseStore.new }
+
+    it "does not raise an error when download fails" do
+      FileHelper.stubs(:download).raises(OpenURI::HTTPError.new("400 error", anything))
+
+      expect(store.download_safe(upload_s3)).to eq(nil)
     end
   end
 end

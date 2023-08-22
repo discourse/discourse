@@ -64,6 +64,12 @@ export default Component.extend(UtilsMixin, {
     event.preventDefault();
     event.stopPropagation();
 
+    if (
+      event.target?.classList.contains("selected-choice") ||
+      event.target.parentNode?.classList.contains("selected-choice")
+    ) {
+      return false;
+    }
     this.selectKit.toggle(event);
   },
 
@@ -74,7 +80,11 @@ export default Component.extend(UtilsMixin, {
   },
 
   keyDown(event) {
-    if (this.selectKit.isDisabled || this.selectKit.options.disabled) {
+    if (
+      this.selectKit.isDisabled ||
+      this.selectKit.options.disabled ||
+      this.selectKit.options.useHeaderFilter
+    ) {
       return;
     }
 

@@ -1,0 +1,92 @@
+@mixin thread-list-item {
+  display: flex;
+  flex-direction: row;
+  padding: 0.5rem;
+  border-radius: var(--d-border-radius);
+  background-color: var(--primary-very-low);
+  border: 1px solid transparent;
+}
+
+.chat-thread-list-item {
+  @include thread-list-item;
+  cursor: pointer;
+  margin: 0.25rem;
+
+  & + .chat-thread-list-item {
+    margin-top: 0;
+  }
+
+  .touch & {
+    &:active {
+      background-color: var(--d-hover);
+      border: 1px solid var(--primary-300);
+    }
+  }
+
+  .no-touch & {
+    &:hover,
+    &:active {
+      background-color: var(--d-hover);
+      border: 1px solid var(--primary-300);
+    }
+  }
+
+  &__main {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  &__body {
+    padding-bottom: 0.25rem;
+    word-break: break-word;
+    margin: 0.5rem 0rem;
+
+    > * {
+      pointer-events: none;
+    }
+  }
+
+  &__metadata {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &__last-reply {
+    color: var(--secondary-low);
+    font-size: var(--font-down-1);
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 0.25rem;
+  }
+
+  &__title {
+    flex: 1 1 auto;
+    font-weight: bold;
+  }
+
+  &__unread-indicator {
+    flex: 0 0 auto;
+  }
+
+  &__open-button {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    justify-content: center;
+    color: var(--primary);
+
+    &:hover,
+    &:visited {
+      color: var(--primary);
+    }
+  }
+
+  &__om-user-avatar {
+    margin-right: 0.5rem;
+    flex: 0 0 auto;
+  }
+}

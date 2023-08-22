@@ -5,7 +5,7 @@
 #     a separate PM.
 #   - is_warning: Staff can send warnings when using the notify_user flag.
 #   - take_action: Automatically approves the created reviewable and deletes the chat message.
-#   - queue_for_review: Adds a special reason to the reviwable score and creates the reviewable using
+#   - queue_for_review: Adds a special reason to the reviewable score and creates the reviewable using
 #     the force_review option.
 
 module Chat
@@ -46,36 +46,38 @@ module Chat
 
       queued_for_review = !!ActiveRecord::Type::Boolean.new.deserialize(opts[:queue_for_review])
 
-      reviewable =
-        Chat::ReviewableMessage.needs_review!(
-          created_by: guardian.user,
-          target: chat_message,
-          reviewable_by_moderator: true,
-          potential_spam: flag_type_id == ReviewableScore.types[:spam],
-          payload: payload,
-        )
-      reviewable.update(target_created_by: chat_message.user)
-      score =
-        reviewable.add_score(
-          guardian.user,
-          flag_type_id,
-          meta_topic_id: post&.topic_id,
-          take_action: opts[:take_action],
-          reason: queued_for_review ? "chat_message_queued_by_staff" : nil,
-          force_review: queued_for_review,
-        )
+      if !is_notify_type
+        reviewable =
+          Chat::ReviewableMessage.needs_review!(
+            created_by: guardian.user,
+            target: chat_message,
+            reviewable_by_moderator: true,
+            potential_spam: flag_type_id == ReviewableScore.types[:spam],
+            payload: payload,
+          )
+        reviewable.update(target_created_by: chat_message.user)
+        score =
+          reviewable.add_score(
+            guardian.user,
+            flag_type_id,
+            meta_topic_id: post&.topic_id,
+            take_action: opts[:take_action],
+            reason: queued_for_review ? "chat_message_queued_by_staff" : nil,
+            force_review: queued_for_review,
+          )
 
-      if opts[:take_action]
-        reviewable.perform(guardian.user, :agree_and_delete)
-        Chat::Publisher.publish_delete!(chat_message.chat_channel, chat_message)
-      else
-        enforce_auto_silence_threshold(reviewable)
-        Chat::Publisher.publish_flag!(chat_message, guardian.user, reviewable, score)
+        if opts[:take_action]
+          reviewable.perform(guardian.user, :agree_and_delete)
+          Chat::Publisher.publish_delete!(chat_message.chat_channel, chat_message)
+        else
+          enforce_auto_silence_threshold(reviewable)
+          Chat::Publisher.publish_flag!(chat_message, guardian.user, reviewable, score)
+        end
       end
 
       result.tap do |r|
         r[:success] = true
-        r[:reviewable] = reviewable
+        r[:reviewable] = reviewable if !is_notify_type
       end
     end
 
@@ -87,6 +89,7 @@ module Chat
       return if reviewable.score <= Chat::ReviewableMessage.score_to_silence_user
 
       user = reviewable.target_created_by
+      return if user.admin?
       return unless user
       return if user.silenced?
 

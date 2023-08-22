@@ -46,7 +46,7 @@
       transition: all 0.25s;
 
       &:hover {
-        box-shadow: shadow("card");
+        box-shadow: var(--shadow-card);
         border-color: var(--primary-low-mid-or-secondary-high);
       }
     }

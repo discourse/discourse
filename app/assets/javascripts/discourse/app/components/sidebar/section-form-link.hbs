@@ -1,0 +1,72 @@
+<div
+  class={{concat-class
+    "sidebar-section-form-link"
+    "row-wrapper"
+    this.dragCssClass
+  }}
+  draggable="true"
+  {{on "dragstart" this.dragHasStarted}}
+  {{on "dragover" this.dragOver}}
+  {{on "dragenter" this.dragEnter}}
+  {{on "dragleave" this.dragLeave}}
+  {{on "dragend" this.dragEnd}}
+  {{on "drop" this.dropItem}}
+>
+  <div class="draggable" data-link-name={{@link.name}}>
+    {{d-icon "grip-lines"}}
+  </div>
+  <div class="input-group">
+    <IconPicker
+      @name="icon"
+      @value={{@link.icon}}
+      @options={{hash
+        maximum=1
+        caretDownIcon="caret-down"
+        caretUpIcon="caret-up"
+        icons=@link.icon
+      }}
+      class={{@link.iconCssClass}}
+      @onlyAvailable={{true}}
+      @onChange={{action (mut @link.icon)}}
+    />
+    {{#if @link.invalidIconMessage}}
+      <div class="icon warning">
+        {{@link.invalidIconMessage}}
+      </div>
+    {{/if}}
+  </div>
+  <div class="input-group">
+    <Input
+      name="link-name"
+      @type="text"
+      @value={{@link.name}}
+      class={{@link.nameCssClass}}
+      {{on "input" (action (mut @link.name) value="target.value")}}
+    />
+    {{#if @link.invalidNameMessage}}
+      <div class="name warning">
+        {{@link.invalidNameMessage}}
+      </div>
+    {{/if}}
+  </div>
+  <div class="input-group">
+    <Input
+      name="link-url"
+      @type="text"
+      @value={{@link.value}}
+      class={{@link.valueCssClass}}
+      {{on "input" (action (mut @link.value) value="target.value")}}
+    />
+    {{#if @link.invalidValueMessage}}
+      <div class="value warning">
+        {{@link.invalidValueMessage}}
+      </div>
+    {{/if}}
+  </div>
+  <DButton
+    @icon="trash-alt"
+    @action={{action @deleteLink @link}}
+    @class="btn-flat delete-link"
+    @title="sidebar.sections.custom.links.delete"
+  />
+</div>

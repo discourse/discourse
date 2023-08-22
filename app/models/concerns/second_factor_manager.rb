@@ -146,7 +146,7 @@ module SecondFactorManager
     # if we have gotten down to this point without being
     # OK or invalid something has gone very weird.
     invalid_second_factor_method_result
-  rescue ::Webauthn::SecurityKeyError => err
+  rescue ::DiscourseWebauthn::SecurityKeyError => err
     invalid_security_key_result(err.message)
   end
 
@@ -163,11 +163,11 @@ module SecondFactorManager
   end
 
   def authenticate_security_key(secure_session, security_key_credential)
-    ::Webauthn::SecurityKeyAuthenticationService.new(
+    ::DiscourseWebauthn::SecurityKeyAuthenticationService.new(
       self,
       security_key_credential,
-      challenge: Webauthn.challenge(self, secure_session),
-      rp_id: Webauthn.rp_id(self, secure_session),
+      challenge: DiscourseWebauthn.challenge(self, secure_session),
+      rp_id: DiscourseWebauthn.rp_id(self, secure_session),
       origin: Discourse.base_url,
     ).authenticate_security_key
   end
@@ -263,12 +263,10 @@ module SecondFactorManager
   end
 
   def hash_backup_code(code, salt)
-    Pbkdf2.hash_password(
-      code,
-      salt,
-      Rails.configuration.pbkdf2_iterations,
-      Rails.configuration.pbkdf2_algorithm,
-    )
+    # Backup codes have high entropy, so we can afford to use
+    # a lower number of iterations than for user-specific passwords
+    iterations = Rails.env.test? ? 10 : 64_000
+    Pbkdf2.hash_password(code, salt, iterations, "sha256")
   end
 
   def require_rotp

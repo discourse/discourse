@@ -1,0 +1,34 @@
+<div
+  class={{concat-class
+    "chat-message-thread-indicator"
+    (if this.isActive "-active")
+  }}
+  {{did-insert this.setup}}
+  {{will-destroy this.teardown}}
+  role="button"
+  title={{i18n "chat.threads.open"}}
+>
+
+  <div class="chat-message-thread-indicator__last-reply-avatar">
+    <Chat::UserAvatar
+      @user={{@message.thread.preview.lastReplyUser}}
+      @avatarSize="small"
+    />
+  </div>
+
+  <div class="chat-message-thread-indicator__last-reply-info">
+    <span class="chat-message-thread-indicator__last-reply-username">
+      {{@message.thread.preview.lastReplyUser.username}}
+    </span>
+    <span class="chat-message-thread-indicator__last-reply-timestamp">
+      {{format-date @message.thread.preview.lastReplyCreatedAt leaveAgo="true"}}
+    </span>
+  </div>
+  <div class="chat-message-thread-indicator__replies-count">
+    {{i18n "chat.thread.replies" count=@message.thread.preview.replyCount}}
+  </div>
+  <Chat::Thread::Participants @thread={{@message.thread}} />
+  <div class="chat-message-thread-indicator__last-reply-excerpt">
+    {{replace-emoji (html-safe @message.thread.preview.lastReplyExcerpt)}}
+  </div>
+</div>

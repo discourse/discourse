@@ -25,12 +25,7 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
     containsExactly(
       assert,
       query("a").classList,
-      [
-        "ember-view",
-        "sidebar-row",
-        "sidebar-section-link",
-        "sidebar-section-link-test-meta",
-      ],
+      ["ember-view", "sidebar-row", "sidebar-section-link"],
       "has the right class attribute for the link"
     );
   });
@@ -43,14 +38,7 @@ module("Integration | Component | sidebar | section-link", function (hooks) {
     containsExactly(
       assert,
       query("a").classList,
-      [
-        "123",
-        "abc",
-        "ember-view",
-        "sidebar-row",
-        "sidebar-section-link",
-        "sidebar-section-link-test-meta",
-      ],
+      ["123", "abc", "ember-view", "sidebar-row", "sidebar-section-link"],
       "has the right class attribute for the link"
     );
   });

@@ -140,8 +140,6 @@ te:
     character_count:
       one: "%{count} అక్షరం"
       other: "%{count} అక్షరాలు"
-    suggested_topics:
-      title: "సూచించే విషయాలు"
     about:
       simple_title: "గురించి"
       title: "%{title} గురించి"
@@ -336,14 +334,12 @@ te:
       "3": "పేజీకలు"
       "4": "విషయాలు"
       "5": "జవాబులు"
-      "6": "Responses"
       "7": "ప్రస్తావనలు"
       "9": "కోట్ లు"
       "11": "సవరణలు"
       "12": "పంపిన అంశాలు"
       "13": "ఇన్ బాక్స్"
       "14": "పెండింగు"
-      "15": "Drafts"
     categories:
       all: "అన్ని వర్గాలు"
       all_subcategories: "అన్నీ"
@@ -430,12 +426,6 @@ te:
       muted_users: "నిశ్శబ్దం"
       tracked_topics_link: "చూపు"
       theme: "అలంకారం"
-      staff_counters:
-        flags_given: "సహాయకారి కేతనాలు"
-        flagged_posts: "కేతనించిన టపాలు"
-        deleted_posts: "తొగలించిన టపాలు"
-        suspensions: "సస్పెన్షన్లు"
-        warnings_received: "హెచ్చరికలు"
       messages:
         inbox: "ఇన్ బాక్స్"
         latest: "తాజా"
@@ -461,7 +451,6 @@ te:
       second_factor_backup:
         regenerate: "పునరుత్పత్తించు"
         disable: "అచేతనం"
-        enable: "చేతనం"
       second_factor:
         name: "పేరు"
         disable: "అచేతనం"
@@ -647,8 +636,6 @@ te:
     signup_cta:
       sign_up: "సైన్ అప్"
     summary:
-      enabled_description: "మీరు ఈ విషయపు సారాంశము చదువుతున్నారు. ఆసక్తికర టపాలు కమ్యునిటీ ఎంచుకుంటుంది. "
-      enable: "ఈ విషయాన్ని సంగ్రహించు"
       disable: "అన్ని టపాలూ చూపు"
     deleted_filter:
       enabled_description: "ఈ విషయం తొలగించిన టపాలు కలిగి ఉంది. అవి దాయబడ్డాయి."
@@ -898,8 +885,6 @@ te:
           "3_2": "మీకు ప్రకటనలు వస్తాయి, ఎందుకంటే మీరు ఈ విషయంపై కన్నేసారు."
           "3_1": "మీకు ప్రకటనలు వస్తాయి ఎందుకంటే మీరు ఈ విషయాన్ని సృష్టించారు."
           "3": "మీకు ప్రకటనలు వస్తాయి, ఎందుకంటే మీరు ఈ విషయంపై కన్నేసారు."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
-          "1": "You will be notified if someone mentions your @name or replies to you."
           "0_7": "ఈ వర్గంలోని అన్ని ప్రకటనలనూ మీరు విస్మరిస్తున్నారు."
           "0_2": "ఈ విషయంలోని అన్ని ప్రకటనలనూ మీరు విస్మరిస్తున్నారు."
           "0": "ఈ విషయంలోని అన్ని ప్రకటనలనూ మీరు విస్మరిస్తున్నారు."
@@ -1348,6 +1333,9 @@ te:
         one: "%{count} కొత్త"
         other: "%{count} కొత్త"
       more: "ఇంకా"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "అన్ని"
       sections:
         custom:
           save: "భద్రపరుచు"
@@ -1371,7 +1359,8 @@ te:
         categories:
           header_link_text: "వర్గాలు"
         community:
-          header_link_text: "కమ్యునిటీ"
+          edit_section:
+            header_dropdown: "కస్టమైజ్"
           links:
             about:
               content: "గురించి"
@@ -1379,6 +1368,8 @@ te:
               content: "అధికారి"
             badges:
               content: "బ్యాడ్జీలు"
+            topics:
+              content: "విషయాలు"
             faq:
               content: "తవసం"
             groups:
@@ -1387,6 +1378,10 @@ te:
               content: "సభ్యులు"
             my_posts:
               content: "నా టపాలు"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "దయచేసి చెల్లే విలువ రాయండి"
   admin_js:
     type_to_filter: "జల్లించుటకు రాయి..."
     admin:
@@ -1567,6 +1562,7 @@ te:
           title: "అలంకారాలు"
           create_type: "రకం"
           create_name: "పేరు"
+          save: "భద్రపరుచు"
           edit: "సవరించు"
           settings: "అమరికలు"
           upload: "ఎక్కించు"
@@ -1769,6 +1765,8 @@ te:
           validations:
             required:
               key: "కావాలి"
+            type:
+              key: "రకం"
       impersonate:
         title: "పరకాయప్రవేశించు"
         help: "అనుకరించిన వినియోగదారుని ఖాతా దోషవిశ్లేషణ ప్రయోజనాలకు ఈ ఉపకరణం వినియోగించండి.పూర్తి అయిన తర్వాత మీరు లాగవుట్ చేయండి."

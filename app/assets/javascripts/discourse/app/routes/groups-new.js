@@ -1,9 +1,10 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import Group from "discourse/models/group";
 import I18n from "I18n";
+import { inject as service } from "@ember/service";
 
 export default DiscourseRoute.extend({
-  showFooter: true,
+  router: service(),
 
   titleToken() {
     return I18n.t("admin.groups.new.title");
@@ -23,7 +24,7 @@ export default DiscourseRoute.extend({
 
   afterModel() {
     if (!this.get("currentUser.can_create_group")) {
-      this.transitionTo("groups");
+      this.router.transitionTo("groups");
     }
   },
 });

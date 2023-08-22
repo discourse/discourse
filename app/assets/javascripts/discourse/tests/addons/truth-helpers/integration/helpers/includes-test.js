@@ -11,14 +11,14 @@ module("Addons | truth-helpers | Integration | includes", function (hooks) {
     this.foo = [1];
     this.bar = 1;
     await render(
-      hbs`{{#if (includes foo bar)}}<span class="test"></span>{{/if}}`
+      hbs`{{#if (includes this.foo this.bar)}}<span class="test"></span>{{/if}}`
     );
 
     assert.ok(exists(".test"), "it returns true when element is found");
 
     this.bar = 2;
     await render(
-      hbs`{{#if (includes foo bar)}}<span class="test"></span>{{/if}}`
+      hbs`{{#if (includes this.foo this.bar)}}<span class="test"></span>{{/if}}`
     );
 
     assert.notOk(exists(".test"), "it returns false when element is not found");
@@ -28,14 +28,14 @@ module("Addons | truth-helpers | Integration | includes", function (hooks) {
     this.foo = "foo";
     this.bar = "f";
     await render(
-      hbs`{{#if (includes foo bar)}}<span class="test"></span>{{/if}}`
+      hbs`{{#if (includes this.foo this.bar)}}<span class="test"></span>{{/if}}`
     );
 
     assert.ok(exists(".test"), "it returns true when element is found");
 
     this.bar = "b";
     await render(
-      hbs`{{#if (includes foo bar)}}<span class="test"></span>{{/if}}`
+      hbs`{{#if (includes this.foo this.bar)}}<span class="test"></span>{{/if}}`
     );
 
     assert.notOk(exists(".test"), "it returns false when element is not found");

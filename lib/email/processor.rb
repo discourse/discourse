@@ -24,7 +24,7 @@ module Email
           raise
         end
       rescue => e
-        return handle_bounce(e) if @receiver.is_bounce?
+        return handle_bounce(e) if @receiver&.is_bounce?
 
         log_email_process_failure(@mail, e)
         incoming_email = @receiver.try(:incoming_email)
@@ -156,7 +156,7 @@ module Email
     end
 
     def can_send_rejection_email?(email, type)
-      return false if @receiver.sent_to_mailinglist_mirror?
+      return false if @receiver&.sent_to_mailinglist_mirror?
       return true if type == :email_reject_unrecognized_error
 
       key = "rejection_email:#{email}:#{type}:#{Date.today}"

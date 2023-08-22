@@ -1,0 +1,12 @@
+.chat-thread-header-unread-indicator,
+.chat-thread-list-item-unread-indicator {
+  @include chat-unread-indicator;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  padding: 0.21em 0.42em;
+  border-radius: 1em;
+  min-width: 0.6em;
+}

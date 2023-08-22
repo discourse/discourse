@@ -75,8 +75,8 @@ module("Integration | Component | select-kit/combo-box", function (hooks) {
         @value={{this.value}}
         @content={{this.content}}
         @options={{hash
-          caretUpIcon=caretUpIcon
-          caretDownIcon=caretDownIcon
+          caretUpIcon=this.caretUpIcon
+          caretDownIcon=this.caretDownIcon
         }}
       />
     `);

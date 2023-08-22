@@ -1,0 +1,11 @@
+<DModal
+  @closeModal={{this.closeModal}}
+  {{did-insert this.applyCodeblockButtons}}
+  class="fullscreen-code-modal"
+>
+  <:body>
+    <pre>
+      <code class={{@model.codeClasses}}>{{@model.code}}</code>
+    </pre>
+  </:body>
+</DModal>

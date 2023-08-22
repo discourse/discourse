@@ -472,25 +472,25 @@ RSpec.describe Jobs::PullHotlinkedImages do
   end
 
   describe "#should_download_image?" do
-    subject { described_class.new }
+    subject(:job) { described_class.new }
 
     describe "when url is invalid" do
       it "should return false" do
-        expect(subject.should_download_image?("null")).to eq(false)
-        expect(subject.should_download_image?("meta.discourse.org")).to eq(false)
+        expect(job.should_download_image?("null")).to eq(false)
+        expect(job.should_download_image?("meta.discourse.org")).to eq(false)
       end
     end
 
     describe "when url is valid" do
       it "should return true" do
-        expect(subject.should_download_image?("http://meta.discourse.org")).to eq(true)
-        expect(subject.should_download_image?("//meta.discourse.org")).to eq(true)
+        expect(job.should_download_image?("http://meta.discourse.org")).to eq(true)
+        expect(job.should_download_image?("//meta.discourse.org")).to eq(true)
       end
     end
 
     describe "when url is an upload" do
       it "should return false for original" do
-        expect(subject.should_download_image?(Fabricate(:upload).url)).to eq(false)
+        expect(job.should_download_image?(Fabricate(:upload).url)).to eq(false)
       end
 
       context "when secure uploads enabled" do
@@ -501,19 +501,19 @@ RSpec.describe Jobs::PullHotlinkedImages do
           upload = Fabricate(:upload_s3, secure: true)
           stub_s3(upload)
           url = Upload.secure_uploads_url_from_upload_url(upload.url)
-          expect(subject.should_download_image?(url)).to eq(false)
+          expect(job.should_download_image?(url)).to eq(false)
         end
       end
 
       it "should return true for optimized" do
         src = Discourse.store.get_path_for_optimized_image(Fabricate(:optimized_image))
-        expect(subject.should_download_image?(src)).to eq(true)
+        expect(job.should_download_image?(src)).to eq(true)
       end
     end
 
     it "returns false for emoji" do
       src = Emoji.url_for("testemoji.png")
-      expect(subject.should_download_image?(src)).to eq(false)
+      expect(job.should_download_image?(src)).to eq(false)
     end
 
     it "returns false for emoji when app and S3 CDNs configured" do
@@ -522,14 +522,14 @@ RSpec.describe Jobs::PullHotlinkedImages do
       set_cdn_url "https://mydomain.cdn/test"
 
       src = UrlHelper.cook_url(Emoji.url_for("testemoji.png"))
-      expect(subject.should_download_image?(src)).to eq(false)
+      expect(job.should_download_image?(src)).to eq(false)
     end
 
     it "returns false for emoji when emoji CDN configured" do
       SiteSetting.external_emoji_url = "https://emoji.cdn.com"
 
       src = UrlHelper.cook_url(Emoji.url_for("testemoji.png"))
-      expect(subject.should_download_image?(src)).to eq(false)
+      expect(job.should_download_image?(src)).to eq(false)
     end
 
     it "returns false for emoji when app, S3 *and* emoji CDNs configured" do
@@ -539,17 +539,17 @@ RSpec.describe Jobs::PullHotlinkedImages do
       set_cdn_url "https://mydomain.cdn/test"
 
       src = UrlHelper.cook_url(Emoji.url_for("testemoji.png"))
-      expect(subject.should_download_image?(src)).to eq(false)
+      expect(job.should_download_image?(src)).to eq(false)
     end
 
     it "returns false for plugin assets" do
       src = UrlHelper.cook_url("/plugins/discourse-amazing-plugin/myasset.png")
-      expect(subject.should_download_image?(src)).to eq(false)
+      expect(job.should_download_image?(src)).to eq(false)
     end
 
     it "returns false for local non-uploaded files" do
       src = UrlHelper.cook_url("/mycustomroute.png")
-      expect(subject.should_download_image?(src)).to eq(false)
+      expect(job.should_download_image?(src)).to eq(false)
     end
 
     context "when download_remote_images_to_local? is false" do
@@ -557,11 +557,11 @@ RSpec.describe Jobs::PullHotlinkedImages do
 
       it "still returns true for optimized" do
         src = Discourse.store.get_path_for_optimized_image(Fabricate(:optimized_image))
-        expect(subject.should_download_image?(src)).to eq(true)
+        expect(job.should_download_image?(src)).to eq(true)
       end
 
       it "returns false for valid remote URLs" do
-        expect(subject.should_download_image?("http://meta.discourse.org")).to eq(false)
+        expect(job.should_download_image?("http://meta.discourse.org")).to eq(false)
       end
     end
   end

@@ -23,10 +23,11 @@ RSpec.describe EmailStyle do
     end
 
     context "with invite" do
-      fab!(:invite) { Fabricate(:invite) }
-      let(:invite_mail) { InviteMailer.send_invite(invite) }
-
       subject(:mail_html) { Email::Renderer.new(invite_mail).html }
+
+      fab!(:invite) { Fabricate(:invite) }
+
+      let(:invite_mail) { InviteMailer.send_invite(invite) }
 
       it "applies customizations" do
         expect(mail_html.scan('<h1 style="color: red;">FOR YOU</h1>').count).to eq(1)
@@ -48,6 +49,8 @@ RSpec.describe EmailStyle do
     end
 
     context "when user_replied" do
+      subject(:mail_html) { Email::Renderer.new(mail).html }
+
       let(:response_by_user) { Fabricate(:user, name: "John Doe") }
       let(:category) { Fabricate(:category, name: "India") }
       let(:topic) { Fabricate(:topic, category: category, title: "Super cool topic") }
@@ -65,8 +68,6 @@ RSpec.describe EmailStyle do
         )
       end
 
-      subject(:mail_html) { Email::Renderer.new(mail).html }
-
       it "customizations are applied to html part of emails" do
         SiteSetting.default_email_in_reply_to = true
 
@@ -80,8 +81,9 @@ RSpec.describe EmailStyle do
     end
 
     context "with signup" do
-      let(:signup_mail) { UserNotifications.signup(Fabricate(:user)) }
       subject(:mail_html) { Email::Renderer.new(signup_mail).html }
+
+      let(:signup_mail) { UserNotifications.signup(Fabricate(:user)) }
 
       it "customizations are applied to html part of emails" do
         expect(mail_html.scan('<h1 style="color: red;">FOR YOU</h1>').count).to eq(1)
@@ -124,11 +126,13 @@ RSpec.describe EmailStyle do
     end
 
     context "with digest" do
+      subject(:mail_html) { Email::Renderer.new(summary_email).html }
+
       fab!(:popular_topic) do
         Fabricate(:topic, user: Fabricate(:coding_horror), created_at: 1.hour.ago)
       end
+
       let(:summary_email) { UserNotifications.digest(Fabricate(:user)) }
-      subject(:mail_html) { Email::Renderer.new(summary_email).html }
 
       it "customizations are applied to html part of emails" do
         expect(mail_html.scan('<h1 style="color: red;">FOR YOU</h1>').count).to eq(1)

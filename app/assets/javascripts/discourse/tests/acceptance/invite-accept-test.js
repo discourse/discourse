@@ -97,6 +97,17 @@ acceptance("Invite accept", function (needs) {
     });
 
     await visit("/invites/my-valid-invite-token");
+
+    assert.notOk(
+      document.body.classList.contains("has-sidebar-page"),
+      "does not display the sidebar on the invites page"
+    );
+
+    assert.notOk(
+      exists(".d-header"),
+      "does not display the site header on the invites page"
+    );
+
     assert.ok(exists("#new-account-email"), "shows the email input");
     assert.ok(exists("#new-account-username"), "shows the username input");
     assert.strictEqual(

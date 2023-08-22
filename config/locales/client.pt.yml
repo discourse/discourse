@@ -267,9 +267,9 @@ pt:
       aria_label: "Filtrar por período"
     related_messages:
       title: "Mensagens Relacionadas"
+      pill: "Mensagens Relacionadas"
       see_all: 'Ver <a href="%{path}">todas as mensagens</a> de @%{username}...'
     suggested_topics:
-      title: "Tópicos Sugeridos"
       pm_title: "Mensagens Sugeridas"
     about:
       simple_title: "Acerca"
@@ -1119,13 +1119,6 @@ pt:
       save_to_change_theme: 'O tema será atualizado após clicar em "%{save_text}"'
       home: "Página Principal Por Defeito"
       staged: "Não Confirmado"
-      staff_counters:
-        flags_given: "denúncias úteis"
-        flagged_posts: "publicações sinalizadas"
-        deleted_posts: "mensagens eliminadas"
-        suspensions: "suspensões"
-        warnings_received: "avisos"
-        rejected_posts: "mensagens rejeitadas"
       messages:
         all: "todas as caixas de entrada"
         inbox: "Caixa de Entrada"
@@ -1160,7 +1153,6 @@ pt:
         tags: "Etiquetas"
         interface: "Interface"
         apps: "Aplicações"
-        sidebar: "Barra Lateral"
       change_password:
         success: "(email enviado)"
         in_progress: "(a enviar email)"
@@ -1174,11 +1166,9 @@ pt:
         title: "Códigos de Reserva para Autenticação em Dois Passos"
         regenerate: "Regenerar"
         disable: "Desativar"
-        enable: "Ativar"
-        enable_long: "Ativar códigos de reserva"
         manage:
-          one: "Gerir códigos de reserva. Resta <strong>%{count}</strong> código de reserva."
-          other: "Gerir códigos de reserva. Restam <strong>%{count}</strong> códigos de reserva."
+          one: "Resta <strong>%{count}</strong> código de reserva."
+          other: "Restam <strong>%{count}</strong> códigos de reserva."
         copy_to_clipboard: "Copiar para a Área de Transferência"
         copy_to_clipboard_error: "Erro a copiar dados para a Área de Transferência"
         copied_to_clipboard: "Copiado para a Área de Transferência"
@@ -1591,8 +1581,7 @@ pt:
       pause_notifications: "Pausar notificações"
       remove_status: "Remover status"
     user_tips:
-      primary: "Entendi!"
-      secondary: "não me mostre essas dicas"
+      button: "Entendi!"
       first_notification:
         title: "Sua primeira notificação!"
       topic_timeline:
@@ -1654,11 +1643,7 @@ pt:
       hidden_for_session: "OK, perguntaremos a você amanhã. Você sempre pode usar 'Efetuar Login' para criar uma conta, também."
       intro: "Olá! Parece que está a gostar da conversa, mas ainda não tem uma conta."
     summary:
-      enabled_description: "Está a ver um resumo deste tópico: as respostas mais interessantes são determinadas pela comunidade."
-      enable: "Resumir Este Tópico"
       disable: "Mostrar Todas As Publicações"
-      short_label: "Resumir"
-      short_title: "Mostrar um resumo deste tópico: as discussões mais interessantes conforme determinado pela comunidade"
     deleted_filter:
       enabled_description: "Este tópico contém respostas eliminadas, que foram ocultadas."
       disabled_description: "As publicações eliminadas no tópico são exibidas."
@@ -2303,7 +2288,7 @@ pt:
         top: "Não existem tópicos recentes."
         educate:
           new: '<p>Os seus novos tópicos irão aparecer aqui. Por defeito, os tópicos são considerados novos e mostrarão o indicador <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> caso tenham sido criados nos últimos 2 dias.</p><p>Pode alterar isto nas suas <a href="%{userPrefsUrl}"> preferências</a>.</p>'
-          unread: "<p>As suas publicações não lidas aparecem aqui.</p><p>Por defeito, tópicos são considerados não lidos e mostrarão contadores de não lidos <span class=\"badge unread-posts badge-notification\">1</span> se você:</p><ul><li>Criou o tópico</li><li>Respondeu ao tópico</li><li>Leu o tópico durante mais de 4 minutos</li></ul><p>Ou marcou explicitamente o tópico como Seguido ou Vigiado através do \U0001F514 em cada tópico.</p><p>Visite as suas <a href=\"%{userPrefsUrl}\">preferências</a> para alterar isto.</p>"
+          unread: "<p>As suas publicações não lidas aparecem aqui.</p><p>Por defeito, tópicos são considerados não lidos e mostrarão contadores de não lidos <span class=\"badge unread-posts badge-notification\">1</span> se você:</p><ul><li>Criou o tópico</li><li>Respondeu ao tópico</li><li>Leu o tópico durante mais de 5 minutos</li></ul><p>Ou marcou explicitamente o tópico como Seguido ou Vigiado através do \U0001F514 em cada tópico.</p><p>Visite as suas <a href=\"%{userPrefsUrl}\">preferências</a> para alterar isto.</p>"
       bottom:
         latest: "Não existem mais tópicos recentes."
         posted: "Não existem mais tópicos publicados."
@@ -2888,7 +2873,6 @@ pt:
       filtered_replies:
         viewing_posts_by: "Visualizando %{post_count} posts por"
         viewing_subset: "Algumas respostas estão recolhidas"
-        viewing_summary: "Vendo um resumo deste tópico"
         post_number: "%{username}, post #%{post_number}"
         show_all: "Mostrar tudo"
     category:
@@ -3212,6 +3196,9 @@ pt:
       close: "Fechar (Esc)"
       content_load_error: '<a href="%url%">O conteúdo</a> não pôde ser carregado.'
       image_load_error: '<a href="%url%">A imagem</a> não pôde ser carregada.'
+    experimental_lightbox:
+      buttons:
+        close: "Fechar (Esc)"
     cannot_render_video: Este vídeo não pode ser renderizado porque seu navegador não suporta o codec.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -3297,7 +3284,6 @@ pt:
         one: "Ganhou este distintivo %{count} vez"
         other: "Ganhou este crachá %{count} vezes"
       granted_on: "Concedido %{date}"
-      others_count: "Outros com este crachá (%{count})"
       title: Crachás
       allow_title: "Pode usar este crachá como título"
       multiple_grant: "Você pode ganhar isto várias vezes"
@@ -3307,9 +3293,6 @@ pt:
       more_badges:
         one: "+%{count} Mais"
         other: "+%{count} Mais"
-      granted:
-        one: "%{count} concedido"
-        other: "%{count} concedidos"
       select_badge_for_title: Selecione um crachá para usar como seu título
       none: "(nenhum)"
       successfully_granted: "%{badge} atribuído a %{username} com sucesso"
@@ -3472,11 +3455,15 @@ pt:
         other: "%{count} novos"
       more: "Mais"
       all_categories: "Todas as categorias"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Tudo"
       sections:
         custom:
           save: "Guardar"
           delete: "Eliminar"
           links:
+            reset: "Restaurar ao padrão"
             icon:
               label: "Ícone"
             name:
@@ -3498,7 +3485,8 @@ pt:
         categories:
           header_link_text: "Categorias"
         community:
-          header_link_text: "Comunidade"
+          edit_section:
+            header_dropdown: "Personalizar"
           links:
             about:
               content: "Sobre"
@@ -3506,8 +3494,8 @@ pt:
               content: "Administrador"
             badges:
               content: "Crachás"
-            everything:
-              content: "Tudo"
+            topics:
+              content: "Tópicos"
             faq:
               content: "FAQ"
             groups:
@@ -3519,6 +3507,11 @@ pt:
             review:
               content: "Revisão"
     until: "Até:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Por favor introduza um valor válido."
+          email: "Por favor introduza um endereço de email válido."
   admin_js:
     type_to_filter: "digite para filtrar..."
     admin:
@@ -3924,6 +3917,7 @@ pt:
           create: "Criar"
           create_type: "Tipo"
           create_name: "Nome"
+          save: "Guardar"
           long_title: "Altere as cores, CSS e conteúdos HTML do seu site"
           edit: "Editar"
           edit_confirm: "Este é um tema remoto, se você editar CSS/HTML suas alterações serão apagadas na próxima vez que você atualizar o tema."
@@ -4325,6 +4319,8 @@ pt:
               key: "mínimo"
             maximum:
               key: "máximo"
+            type:
+              key: "tipo"
       impersonate:
         title: "Personificar"
         help: "Utilize este ferramenta de forma a personificar uma conta de utilizador para fins de depuração. Terá de encerrar a sessão assim que terminar."
@@ -4555,6 +4551,8 @@ pt:
         go_back: "De volta à Pesquisa"
         recommended: "Recomendamos personalizar o seguinte texto para que se aplique às suas necessidades."
         show_overriden: "Apenas mostrar valores alterados"
+        outdated:
+          dismiss: "Marcar Visto"
       settings:
         show_overriden: "Apenas mostrar valores alterados"
         history: "Ver histórico de alterações"

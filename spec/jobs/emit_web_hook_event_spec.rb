@@ -3,25 +3,27 @@
 require "excon"
 
 RSpec.describe Jobs::EmitWebHookEvent do
+  subject(:job) { described_class.new }
+
   fab!(:post_hook) { Fabricate(:web_hook) }
   fab!(:inactive_hook) { Fabricate(:inactive_web_hook) }
   fab!(:post) { Fabricate(:post) }
   fab!(:user) { Fabricate(:user) }
 
   it "raises an error when there is no web hook record" do
-    expect do subject.execute(event_type: "post", payload: {}) end.to raise_error(
+    expect { job.execute(event_type: "post", payload: {}) }.to raise_error(
       Discourse::InvalidParameters,
     )
   end
 
   it "raises an error when there is no event type" do
-    expect do subject.execute(web_hook_id: post_hook.id, payload: {}) end.to raise_error(
+    expect { job.execute(web_hook_id: post_hook.id, payload: {}) }.to raise_error(
       Discourse::InvalidParameters,
     )
   end
 
   it "raises an error when there is no payload" do
-    expect do subject.execute(web_hook_id: post_hook.id, event_type: "post") end.to raise_error(
+    expect { job.execute(web_hook_id: post_hook.id, event_type: "post") }.to raise_error(
       Discourse::InvalidParameters,
     )
   end
@@ -29,7 +31,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
   it "should not destroy webhook event in case of error" do
     stub_request(:post, post_hook.payload_url).to_return(status: 500)
 
-    subject.execute(
+    job.execute(
       web_hook_id: post_hook.id,
       payload: { id: post.id }.to_json,
       event_type: WebHookEventType::POST,
@@ -53,7 +55,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
 
       it "disables the webhook" do
         expect do
-          subject.execute(
+          job.execute(
             web_hook_id: post_hook.id,
             event_type: described_class::PING_EVENT,
             retry_count: described_class::MAX_RETRY_COUNT,
@@ -62,7 +64,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
       end
 
       it "logs webhook deactivation reason" do
-        subject.execute(
+        job.execute(
           web_hook_id: post_hook.id,
           event_type: described_class::PING_EVENT,
           retry_count: described_class::MAX_RETRY_COUNT,
@@ -86,7 +88,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
 
       it "retry if site setting is enabled" do
         expect do
-          subject.execute(web_hook_id: post_hook.id, event_type: described_class::PING_EVENT)
+          job.execute(web_hook_id: post_hook.id, event_type: described_class::PING_EVENT)
         end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(1)
       end
 
@@ -96,13 +98,13 @@ RSpec.describe Jobs::EmitWebHookEvent do
         expect(Jobs::EmitWebHookEvent::MAX_RETRY_COUNT + 1).to eq(5)
 
         expect do
-          subject.execute(web_hook_id: post_hook.id, event_type: described_class::PING_EVENT)
+          job.execute(web_hook_id: post_hook.id, event_type: described_class::PING_EVENT)
         end.to change { WebHookEvent.count }.by(Jobs::EmitWebHookEvent::MAX_RETRY_COUNT + 1)
       end
 
       it "does not retry for more than maximum allowed times" do
         expect do
-          subject.execute(
+          job.execute(
             web_hook_id: post_hook.id,
             event_type: described_class::PING_EVENT,
             retry_count: described_class::MAX_RETRY_COUNT,
@@ -114,13 +116,13 @@ RSpec.describe Jobs::EmitWebHookEvent do
         SiteSetting.retry_web_hook_events = false
 
         expect do
-          subject.execute(web_hook_id: post_hook.id, event_type: described_class::PING_EVENT)
+          job.execute(web_hook_id: post_hook.id, event_type: described_class::PING_EVENT)
         end.not_to change { Jobs::EmitWebHookEvent.jobs.size }
       end
 
       it "properly logs error on rescue" do
         stub_request(:post, post_hook.payload_url).to_raise("connection error")
-        subject.execute(web_hook_id: post_hook.id, event_type: described_class::PING_EVENT)
+        job.execute(web_hook_id: post_hook.id, event_type: described_class::PING_EVENT)
 
         event = WebHookEvent.last
         expect(event.payload).to eq(MultiJson.dump(ping: "OK"))
@@ -133,11 +135,11 @@ RSpec.describe Jobs::EmitWebHookEvent do
   it "does not raise an error for a ping event without payload" do
     stub_request(:post, post_hook.payload_url).to_return(body: "OK", status: 200)
 
-    subject.execute(web_hook_id: post_hook.id, event_type: described_class::PING_EVENT)
+    job.execute(web_hook_id: post_hook.id, event_type: described_class::PING_EVENT)
   end
 
   it "doesn't emit when the hook is inactive" do
-    subject.execute(
+    job.execute(
       web_hook_id: inactive_hook.id,
       event_type: "post",
       payload: { test: "some payload" }.to_json,
@@ -149,7 +151,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
       body: "{\"post\":{\"test\":\"some payload\"}}",
     ).to_return(body: "OK", status: 200)
 
-    subject.execute(
+    job.execute(
       web_hook_id: post_hook.id,
       event_type: "post",
       payload: { test: "some payload" }.to_json,
@@ -158,7 +160,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
 
   it "doesn't emit if the payload URL resolves to a disallowed IP" do
     FinalDestination::TestHelper.stub_to_fail do
-      subject.execute(
+      job.execute(
         web_hook_id: post_hook.id,
         event_type: "post",
         payload: { test: "some payload" }.to_json,
@@ -179,7 +181,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
     fab!(:topic_hook) { Fabricate(:topic_web_hook, categories: [category]) }
 
     it "doesn't emit when event is not related with defined categories" do
-      subject.execute(
+      job.execute(
         web_hook_id: topic_hook.id,
         event_type: "topic",
         category_id: topic.category.id,
@@ -192,7 +194,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
         body: "{\"topic\":{\"test\":\"some payload\"}}",
       ).to_return(body: "OK", status: 200)
 
-      subject.execute(
+      job.execute(
         web_hook_id: topic_hook.id,
         event_type: "topic",
         category_id: topic_with_category.category.id,
@@ -207,7 +209,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
     fab!(:topic_hook) { Fabricate(:topic_web_hook, tags: [tag]) }
 
     it "doesn't emit when event is not included any tags" do
-      subject.execute(
+      job.execute(
         web_hook_id: topic_hook.id,
         event_type: "topic",
         payload: { test: "some payload" }.to_json,
@@ -215,7 +217,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
     end
 
     it "doesn't emit when event is not related with defined tags" do
-      subject.execute(
+      job.execute(
         web_hook_id: topic_hook.id,
         event_type: "topic",
         tag_ids: [Fabricate(:tag).id],
@@ -228,7 +230,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
         body: "{\"topic\":{\"test\":\"some payload\"}}",
       ).to_return(body: "OK", status: 200)
 
-      subject.execute(
+      job.execute(
         web_hook_id: topic_hook.id,
         event_type: "topic",
         tag_ids: topic.tags.pluck(:id),
@@ -243,7 +245,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
     fab!(:like_hook) { Fabricate(:like_web_hook, groups: [group]) }
 
     it "doesn't emit when event is not included any groups" do
-      subject.execute(
+      job.execute(
         web_hook_id: like_hook.id,
         event_type: "like",
         payload: { test: "some payload" }.to_json,
@@ -251,7 +253,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
     end
 
     it "doesn't emit when event is not related with defined groups" do
-      subject.execute(
+      job.execute(
         web_hook_id: like_hook.id,
         event_type: "like",
         group_ids: [Fabricate(:group).id],
@@ -264,7 +266,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
         body: "{\"like\":{\"test\":\"some payload\"}}",
       ).to_return(body: "OK", status: 200)
 
-      subject.execute(
+      job.execute(
         web_hook_id: like_hook.id,
         event_type: "like",
         group_ids: user.groups.pluck(:id),
@@ -281,7 +283,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
       web_hook_id = Fabricate("#{topic_event_type.name}_web_hook").id
 
       expect do
-        subject.execute(
+        job.execute(
           web_hook_id: web_hook_id,
           event_type: topic_event_type.name,
           payload: { test: "some payload" }.to_json,
@@ -298,7 +300,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
         status: 200,
       )
 
-      subject.execute(
+      job.execute(
         web_hook_id: post_hook.id,
         event_type: described_class::PING_EVENT,
         event_name: described_class::PING_EVENT,
@@ -324,7 +326,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
     it "sets up proper request headers when an error raised" do
       stub_request(:post, post_hook.payload_url).to_raise("error")
 
-      subject.execute(
+      job.execute(
         web_hook_id: post_hook.id,
         event_type: described_class::PING_EVENT,
         event_name: described_class::PING_EVENT,

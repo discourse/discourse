@@ -2,6 +2,8 @@
 require "highline/import"
 
 module SystemHelpers
+  PLATFORM_KEY_MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
+
   def pause_test
     result =
       ask(
@@ -12,11 +14,16 @@ module SystemHelpers
   end
 
   def sign_in(user)
-    visit "/session/#{user.encoded_username}/become.json?redirect=false"
+    visit File.join(
+            GlobalSetting.relative_url_root || "",
+            "/session/#{user.encoded_username}/become.json?redirect=false",
+          )
+
+    expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
   end
 
   def sign_out
-    delete "/session"
+    delete File.join(GlobalSetting.relative_url_root || "", "/session")
   end
 
   def setup_system_test
@@ -26,9 +33,11 @@ module SystemHelpers
     SiteSetting.port = Capybara.server_port
     SiteSetting.external_system_avatars_enabled = false
     SiteSetting.disable_avatar_education_message = true
+    SiteSetting.enable_user_tips = false
+    SiteSetting.splash_screen = false
   end
 
-  def try_until_success(timeout: 2, frequency: 0.01)
+  def try_until_success(timeout: Capybara.default_max_wait_time, frequency: 0.01)
     start ||= Time.zone.now
     backoff ||= frequency
     yield
@@ -100,7 +109,10 @@ module SystemHelpers
 
     ENV["TZ"] = timezone
 
-    using_session(timezone) { freeze_time(&example) }
+    using_session(timezone) do |session|
+      freeze_time(&example)
+      session.quit
+    end
 
     ENV["TZ"] = previous_browser_timezone
   end

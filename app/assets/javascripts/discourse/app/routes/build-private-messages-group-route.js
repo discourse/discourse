@@ -23,7 +23,7 @@ export default (inboxType, filter) => {
 
     model() {
       const username = this.modelFor("user").get("username_lower");
-      const groupName = this.modelFor("userPrivateMessages.group");
+      const groupName = this.modelFor("userPrivateMessages.group").name;
 
       let topicListFilter = `topics/private-messages-group/${username}/${groupName}`;
 
@@ -60,9 +60,7 @@ export default (inboxType, filter) => {
         groupName = filters.pop();
       }
 
-      const group = this.modelFor("user")
-        .get("groups")
-        .filterBy("name", groupName)[0];
+      const group = this.modelFor("userPrivateMessages.group");
 
       this.setProperties({ groupName, group });
     },

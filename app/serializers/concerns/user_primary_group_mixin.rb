@@ -7,6 +7,7 @@ module UserPrimaryGroupMixin
                      :flair_url,
                      :flair_bg_color,
                      :flair_color,
+                     :flair_group_id,
                      :admin,
                      :moderator,
                      :trust_level
@@ -24,7 +25,7 @@ module UserPrimaryGroupMixin
     object&.flair_group&.name
   end
 
-  def include_flair_group_name?
+  def include_flair_name?
     object&.flair_group.present?
   end
 
@@ -42,6 +43,14 @@ module UserPrimaryGroupMixin
 
   def include_flair_bg_color?
     object&.flair_group&.flair_bg_color.present?
+  end
+
+  def flair_group_id
+    object&.flair_group_id
+  end
+
+  def include_flair_group_id?
+    object&.flair_group_id.present?
   end
 
   def flair_color

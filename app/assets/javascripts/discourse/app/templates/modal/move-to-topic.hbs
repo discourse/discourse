@@ -68,6 +68,18 @@
           @value={{this.participants}}
           @onChange={{action (mut this.participants)}}
         />
+
+        {{#if this.selectedTopicId}}
+          <hr />
+          <label for="chronological-order" class="checkbox-label">
+            <Input
+              id="chronological-order"
+              @type="checkbox"
+              @checked={{this.chronologicalOrder}}
+            />
+            {{i18n "topic.merge_topic.chronological_order"}}
+          </label>
+        {{/if}}
       </form>
     {{/if}}
 
@@ -118,6 +130,18 @@
           @currentTopicId={{this.model.id}}
           @selectedTopicId={{this.selectedTopicId}}
         />
+
+        {{#if this.selectedTopicId}}
+          <hr />
+          <label for="chronological-order" class="checkbox-label">
+            <Input
+              id="chronological-order"
+              @type="checkbox"
+              @checked={{this.chronologicalOrder}}
+            />
+            {{i18n "topic.merge_topic.chronological_order"}}
+          </label>
+        {{/if}}
       </form>
     {{/if}}
 

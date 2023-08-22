@@ -189,6 +189,7 @@
 
   .topic-item-stats__category-tags {
     margin-right: 0.5em;
+    max-width: 90%;
 
     .discourse-tags {
       display: inline;
@@ -205,6 +206,7 @@
     }
 
     .badge-wrapper {
+      max-width: 100%;
       vertical-align: bottom;
     }
 
@@ -565,5 +567,24 @@ td .main-link {
     height: 45px;
     justify-content: center;
     align-items: center;
+  }
+}
+
+.topic-replies-toggle-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  .topics-replies-toggle {
+    flex-grow: 1;
+    background: none;
+    border: none;
+    padding: 0.75em;
+    box-shadow: 0 3px 0 var(--primary-low);
+
+    &.active {
+      color: var(--quaternary);
+      box-shadow: 0 3px 0 var(--quaternary);
+    }
   }
 }

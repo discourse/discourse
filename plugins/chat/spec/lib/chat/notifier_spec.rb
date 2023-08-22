@@ -121,6 +121,28 @@ describe Chat::Notifier do
       include_examples "channel-wide mentions"
       include_examples "ensure only channel members are notified"
 
+      describe "editing a direct mention into a global mention" do
+        let(:mention) { "hello @#{user_2.username}!" }
+
+        it "doesn't send notifications with :all_mentioned_user_ids as an identifier" do
+          Jobs.run_immediately!
+          msg = build_cooked_msg(mention, user_1)
+
+          Chat::MessageUpdater.update(
+            guardian: user_1.guardian,
+            chat_message: msg,
+            new_content: "hello @all",
+          )
+
+          described_class.new(msg, msg.created_at).notify_edit
+
+          notifications = Notification.where(user: user_2)
+          notifications.each do |notification|
+            expect(notification.data).not_to include("\"identifier\":\"all_mentioned_user_ids\"")
+          end
+        end
+      end
+
       describe "users ignoring or muting the user creating the message" do
         it "does not send notifications to the user who is muting the acting user" do
           Fabricate(:muted_user, user: user_2, muted_user: user_1)
@@ -386,10 +408,13 @@ describe Chat::Notifier do
       context "when in a personal message" do
         let(:personal_chat_channel) do
           Group.refresh_automatic_groups!
-          Chat::DirectMessageChannelCreator.create!(
-            acting_user: user_1,
-            target_users: [user_1, user_2],
-          )
+          result =
+            Chat::CreateDirectMessageChannel.call(
+              guardian: user_1.guardian,
+              target_usernames: [user_1.username, user_2.username],
+            )
+          service_failed!(result) if result.failure?
+          result.channel
         end
 
         before { @chat_group.add(user_3) }

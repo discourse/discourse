@@ -4,11 +4,12 @@ import { test } from "qunit";
 
 acceptance("CSS Generator", function (needs) {
   needs.user();
+
   needs.site({
     categories: [
-      { id: 1, color: "ff0000" },
-      { id: 2, color: "333" },
-      { id: 4, color: "2B81AF", parentCategory: { id: 1 } },
+      { id: 1, color: "ff0000", name: "category1" },
+      { id: 2, color: "333", name: "category2" },
+      { id: 4, color: "2B81AF", parentCategory: { id: 1 }, name: "category3" },
     ],
   });
 
@@ -26,7 +27,7 @@ acceptance("CSS Generator", function (needs) {
     const cssTag = document.querySelector("style#hashtag-css-generator");
     assert.equal(
       cssTag.innerHTML,
-      ".hashtag-color--category-1 {\n  background: linear-gradient(90deg, var(--category-1-color) 50%, var(--category-1-color) 50%);\n}\n.hashtag-color--category-2 {\n  background: linear-gradient(90deg, var(--category-2-color) 50%, var(--category-2-color) 50%);\n}\n.hashtag-color--category-4 {\n  background: linear-gradient(90deg, var(--category-4-color) 50%, var(--category-1-color) 50%);\n}"
+      ".hashtag-color--category-1 {\n  background: linear-gradient(-90deg, var(--category-1-color) 50%, var(--category-1-color) 50%);\n}\n.hashtag-color--category-2 {\n  background: linear-gradient(-90deg, var(--category-2-color) 50%, var(--category-2-color) 50%);\n}\n.hashtag-color--category-4 {\n  background: linear-gradient(-90deg, var(--category-4-color) 50%, var(--category-1-color) 50%);\n}"
     );
   });
 });

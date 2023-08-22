@@ -243,7 +243,10 @@ class InviteRedeemer
     @invited_user_record = InvitedUser.create!(invite_id: invite.id, redeemed_at: Time.zone.now)
 
     if @invited_user_record.present?
-      Invite.increment_counter(:redemption_count, invite.id)
+      invite.with_lock("FOR UPDATE NOWAIT") do
+        Invite.increment_counter(:redemption_count, invite.id)
+        invite.save!
+      end
       delete_duplicate_invites
     end
 

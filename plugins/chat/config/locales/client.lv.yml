@@ -68,11 +68,14 @@ lv:
       composer:
         italic_text: "Uzsvērts teksts"
         bold_text: "treknrakstā"
+        send: "Sūtīt"
       notification_levels:
         never: "Nekad"
       settings:
         follow: "Pievienojieties"
         followed: "Pievienojās"
+        threading_enabled: "Ieslēgts"
+        threading_disabled: "Atslēgt"
         notifications: "Paziņojumi"
         preview: "Priekšskatījums"
         save: "Saglabāt"
@@ -102,6 +105,19 @@ lv:
         activities: "Aktivitātes"
         flags: "Sūdzības"
         symbols: "Simboli"
+      thread:
+        title: "Virsraksts"
+        replies:
+          zero: "%{count} atbildes"
+          one: "%{count} atbilde"
+          other: "%{count} atbildes"
+        settings: "Iestatījumi"
+        last_reply: "pēdējā atbilde"
+        notifications:
+          regular:
+            title: "Normāls"
+          tracking:
+            title: "Sekot"
       draft_channel_screen:
         header: "Jauns ziņa"
         cancel: "Atcelt"
@@ -111,7 +127,3 @@ lv:
           fields:
             message:
               label: Ziņa
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Atzīmēja"

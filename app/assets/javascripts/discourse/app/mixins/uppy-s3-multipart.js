@@ -5,6 +5,7 @@ import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import AwsS3Multipart from "@uppy/aws-s3-multipart";
 const RETRY_DELAYS = [0, 1000, 3000, 5000];
+const MB = 1024 * 1024;
 
 export default Mixin.create({
   _useS3MultipartUploads() {
@@ -20,6 +21,20 @@ export default Mixin.create({
       // the chunk size for larger files
       limit: 10,
       retryDelays: RETRY_DELAYS,
+
+      // When we get to really big files, it's better to not have thousands
+      // of small chunks, since we don't have a resume functionality if the
+      // upload fails. Better to try upload less chunks even if those chunks
+      // are bigger.
+      getChunkSize(file) {
+        if (file.size >= 500 * MB) {
+          return 20 * MB;
+        } else if (file.size >= 100 * MB) {
+          return 10 * MB;
+        } else {
+          return 5 * MB;
+        }
+      },
 
       createMultipartUpload: this._createMultipartUpload,
       prepareUploadParts: this._prepareUploadParts,

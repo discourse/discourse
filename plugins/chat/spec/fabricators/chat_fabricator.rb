@@ -49,13 +49,29 @@ Fabricator(:direct_message_channel, from: :chat_channel) do
   end
 end
 
-Fabricator(:chat_message, class_name: "Chat::Message") do
-  chat_channel
-  user
-  message "Beep boop"
-  cooked { |attrs| Chat::Message.cook(attrs[:message]) }
-  cooked_version Chat::Message::BAKED_VERSION
-  in_reply_to nil
+Fabricator(:chat_message, class_name: "Chat::MessageCreator") do
+  transient :chat_channel
+  transient :user
+  transient :message
+  transient :in_reply_to
+  transient :thread
+  transient :upload_ids
+
+  initialize_with do |transients|
+    user = transients[:user] || Fabricate(:user)
+    channel =
+      transients[:chat_channel] || transients[:thread]&.channel ||
+        transients[:in_reply_to]&.chat_channel || Fabricate(:chat_channel)
+
+    resolved_class.create(
+      chat_channel: channel,
+      user: user,
+      content: transients[:message] || Faker::Lorem.paragraph_by_chars(number: 500),
+      thread_id: transients[:thread]&.id,
+      in_reply_to_id: transients[:in_reply_to]&.id,
+      upload_ids: transients[:upload_ids],
+    ).chat_message
+  end
 end
 
 Fabricator(:chat_mention, class_name: "Chat::Mention") do
@@ -87,7 +103,6 @@ Fabricator(:chat_reviewable_message, class_name: "Chat::ReviewableMessage") do
   reviewable_by_moderator true
   type "ReviewableChatMessage"
   created_by { Fabricate(:user) }
-  target_type Chat::Message.sti_name
   target { Fabricate(:chat_message) }
   reviewable_scores { |p| [Fabricate.build(:reviewable_score, reviewable_id: p[:id])] }
 end
@@ -142,9 +157,41 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
     thread.channel = original_message.chat_channel
   end
 
+  transient :with_replies
   transient :channel
+  transient :original_message_user
+  transient :old_om
 
   original_message do |attrs|
-    Fabricate(:chat_message, chat_channel: attrs[:channel] || Fabricate(:chat_channel))
+    Fabricate(
+      :chat_message,
+      chat_channel: attrs[:channel] || Fabricate(:chat_channel),
+      user: attrs[:original_message_user] || Fabricate(:user),
+    )
+  end
+
+  after_create do |thread, transients|
+    attrs = { thread_id: thread.id }
+
+    # Sometimes we  make this older via created_at so any messages fabricated for this thread
+    # afterwards are not created earlier in time than the OM.
+    attrs[:created_at] = 1.week.ago if transients[:old_om]
+
+    thread.original_message.update!(**attrs)
+    thread.add(thread.original_message_user)
+
+    if transients[:with_replies]
+      Fabricate.times(transients[:with_replies], :chat_message, thread: thread)
+    end
+  end
+end
+
+Fabricator(:user_chat_thread_membership, class_name: "Chat::UserChatThreadMembership") do
+  user
+  after_create do |membership|
+    Chat::UserChatChannelMembership.find_or_create_by!(
+      user: membership.user,
+      chat_channel: membership.thread.channel,
+    ).update!(following: true)
   end
 end

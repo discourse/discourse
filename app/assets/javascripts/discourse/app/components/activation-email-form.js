@@ -1,3 +1,9 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { action } from "@ember/object";
 
-export default Component.extend({});
+export default class ActivationEmailForm extends Component {
+  @action
+  newEmailChanged(value) {
+    this.args.updateNewEmail?.(value);
+  }
+}

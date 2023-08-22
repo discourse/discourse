@@ -1,0 +1,15 @@
+<StyleguideExample @title="navigation">
+  <div class="list-controls">
+    <div class="container">
+      <DSection @class="navigation-container">
+        <BreadCrumbs @categories={{@dummy.categories}} />
+        <NavigationBar @navItems={{@dummy.navItems}} @filterMode="latest" />
+
+        <div class="navigation-controls">
+          <CategoriesAdminDropdown />
+          <CreateTopicButton @canCreateTopic={{true}} />
+        </div>
+      </DSection>
+    </div>
+  </div>
+</StyleguideExample>

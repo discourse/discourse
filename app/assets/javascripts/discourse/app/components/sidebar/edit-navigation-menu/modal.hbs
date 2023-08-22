@@ -1,0 +1,73 @@
+<DModal
+  class={{concat-class "sidebar__edit-navigation-menu__modal" @class}}
+  @title={{i18n @title}}
+  @closeModal={{@closeModal}}
+>
+  <:headerBelowTitle>
+    <p class="sidebar__edit-navigation-menu__deselect-wrapper">
+      <DButton
+        @class="btn-flat sidebar__edit-navigation-menu__deselect-button"
+        @label="sidebar.edit_navigation_modal_form.deselect_button_text"
+        @ariaLabel="sidebar.edit_navigation_modal_form.deselect_button_text"
+        @action={{@deselectAll}}
+      />
+
+      {{@deselectAllText}}
+    </p>
+  </:headerBelowTitle>
+
+  <:belowHeader>
+    <div class="sidebar__edit-navigation-menu__filter">
+      <div class="sidebar__edit-navigation-menu__filter-input">
+        {{d-icon
+          "search"
+          class="sidebar__edit-navigation-menu__filter-input-icon"
+        }}
+
+        <Input
+          class="sidebar__edit-navigation-menu__filter-input-field"
+          placeholder={{@inputFilterPlaceholder}}
+          @type="text"
+          @value={{this.filter}}
+          {{on "input" (action @onFilterInput value="target.value")}}
+          autofocus="true"
+        />
+      </div>
+
+      <div class="sidebar__edit-navigation-menu__filter-dropdown-wrapper">
+        <DropdownSelectBox
+          @class="sidebar__edit-navigation-menu__filter-dropdown"
+          @value={{this.filterDropdownValue}}
+          @content={{this.filterDropdownContent}}
+          @onChange={{this.onFilterDropdownChange}}
+          @options={{hash showCaret=true}}
+        />
+      </div>
+    </div>
+  </:belowHeader>
+
+  <:body>
+    {{yield}}
+  </:body>
+
+  <:footer>
+    <div class="sidebar__edit-navigation-menu__footer">
+      <DButton
+        @class="btn-primary sidebar__edit-navigation-menu__save-button"
+        @label="save"
+        @disabled={{@saving}}
+        @action={{@save}}
+      />
+
+      {{#if @showResetDefaultsButton}}
+        <DButton
+          @icon="undo"
+          @class="btn-flat btn-text sidebar__edit-navigation-menu__reset-defaults-button"
+          @label="sidebar.edit_navigation_modal_form.reset_to_defaults"
+          @disabled={{@saving}}
+          @action={{@resetToDefaults}}
+        />
+      {{/if}}
+    </div>
+  </:footer>
+</DModal>

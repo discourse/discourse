@@ -28,16 +28,23 @@ module Chat
         @chat_message.message = @new_content
         @chat_message.last_editor_id = @user.id
         upload_info = get_upload_info
-        validate_message!(has_uploads: upload_info[:uploads].any?)
+        @chat_message.uploads = upload_info[:uploads] if upload_info[:changed]
+        validate_message!
         @chat_message.cook
         @chat_message.save!
-        update_uploads(upload_info)
+
+        @chat_message.update_mentions
         revision = save_revision!
+
         @chat_message.reload
         Chat::Publisher.publish_edit!(@chat_channel, @chat_message)
         Jobs.enqueue(Jobs::Chat::ProcessMessage, { chat_message_id: @chat_message.id })
         Chat::Notifier.notify_edit(chat_message: @chat_message, timestamp: revision.created_at)
         DiscourseEvent.trigger(:chat_message_edited, @chat_message, @chat_channel, @user)
+
+        if @chat_message.thread.present?
+          Chat::Publisher.publish_thread_original_message_metadata!(@chat_message.thread)
+        end
       rescue => error
         @error = error
       end
@@ -56,11 +63,9 @@ module Chat
             )
     end
 
-    def validate_message!(has_uploads:)
-      @chat_message.validate_message(has_uploads: has_uploads)
-      if @chat_message.errors.present?
-        raise StandardError.new(@chat_message.errors.map(&:full_message).join(", "))
-      end
+    def validate_message!
+      return if @chat_message.valid?
+      raise StandardError.new(@chat_message.errors.map(&:full_message).join(", "))
     end
 
     def get_upload_info
@@ -76,13 +81,6 @@ module Chat
       existing_upload_ids = @chat_message.upload_ids
       difference = (existing_upload_ids + new_upload_ids) - (existing_upload_ids & new_upload_ids)
       { uploads: uploads, changed: difference.any? }
-    end
-
-    def update_uploads(upload_info)
-      return unless upload_info[:changed]
-
-      UploadReference.where(target: @chat_message).destroy_all
-      @chat_message.attach_uploads(upload_info[:uploads])
     end
 
     def save_revision!

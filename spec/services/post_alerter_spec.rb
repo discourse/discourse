@@ -124,6 +124,15 @@ RSpec.describe PostAlerter do
       fab!(:group) do
         Fabricate(:group, users: [user2], name: "TestGroup", default_notification_level: 2)
       end
+      fab!(:watching_first_post_group) do
+        Fabricate(
+          :group,
+          name: "some_group",
+          users: [evil_trout, coding_horror],
+          messageable_level: Group::ALIAS_LEVELS[:everyone],
+          default_notification_level: NotificationLevels.all[:watching_first_post],
+        )
+      end
       fab!(:pm) do
         Fabricate(:topic, archetype: "private_message", category_id: nil, allowed_groups: [group])
       end
@@ -333,6 +342,86 @@ RSpec.describe PostAlerter do
             post_type: Post.types[:whisper],
           )
         }.not_to change(user2.notifications, :count)
+      end
+
+      context "with watching_first_post notification level" do
+        it "notifies group members of first post" do
+          post =
+            PostCreator.create!(
+              user,
+              title: "Hi there, welcome to my topic",
+              raw: "This is my awesome message",
+              archetype: Archetype.private_message,
+              target_group_names: watching_first_post_group.name,
+            )
+
+          PostAlerter.new.after_save_post(post, true)
+
+          expect(
+            evil_trout
+              .notifications
+              .where(notification_type: Notification.types[:private_message])
+              .count,
+          ).to eq(1)
+          expect(
+            coding_horror
+              .notifications
+              .where(notification_type: Notification.types[:private_message])
+              .count,
+          ).to eq(1)
+        end
+
+        it "doesn't notify group members of replies" do
+          post =
+            PostCreator.create!(
+              user,
+              title: "Hi there, welcome to my topic",
+              raw: "This is my awesome message",
+              archetype: Archetype.private_message,
+              target_group_names: watching_first_post_group.name,
+            )
+
+          expect(
+            evil_trout
+              .notifications
+              .where(notification_type: Notification.types[:private_message])
+              .count,
+          ).to eq(0)
+          expect(
+            coding_horror
+              .notifications
+              .where(notification_type: Notification.types[:private_message])
+              .count,
+          ).to eq(0)
+
+          PostAlerter.new.after_save_post(post, true)
+
+          expect(
+            evil_trout
+              .notifications
+              .where(notification_type: Notification.types[:private_message])
+              .count,
+          ).to eq(1)
+          expect(
+            coding_horror
+              .notifications
+              .where(notification_type: Notification.types[:private_message])
+              .count,
+          ).to eq(1)
+
+          reply =
+            Fabricate(
+              :post,
+              raw: "Reply to PM",
+              user: user,
+              topic: post.topic,
+              reply_to_post_number: post.post_number,
+            )
+
+          expect do PostAlerter.new.after_save_post(reply, false) end.to_not change {
+            Notification.count
+          }
+        end
       end
     end
   end
@@ -1061,6 +1150,20 @@ RSpec.describe PostAlerter do
         params: [user, type, post, { revision_number: 1 }],
       )
     end
+
+    it "applies modifiers to notification_data" do
+      Plugin::Instance
+        .new
+        .register_modifier(:notification_data) do |notification_data|
+          notification_data[:silly_key] = "silly value"
+          notification_data
+        end
+
+      notification = PostAlerter.new.create_notification(user, type, post)
+      expect(notification.data_hash[:silly_key]).to eq("silly value")
+
+      DiscoursePluginRegistry.clear_modifiers!
+    end
   end
 
   describe ".push_notification" do
@@ -1091,13 +1194,30 @@ RSpec.describe PostAlerter do
       it "does not send push notifications when a filters returns false" do
         Plugin::Instance.new.register_push_notification_filter { |user, payload| false }
         expect { mention_post }.not_to change { Jobs::PushNotification.jobs.count }
+
+        events = DiscourseEvent.track_events { mention_post }
+        expect(events.find { |event| event[:event_name] == :push_notification }).not_to be_present
+
         DiscoursePluginRegistry.reset!
       end
+    end
+
+    it "triggers the push notification event" do
+      events = DiscourseEvent.track_events { mention_post }
+
+      push_notification_event = events.find { |event| event[:event_name] == :push_notification }
+      expect(push_notification_event).to be_present
+      expect(push_notification_event[:params][0].username).to eq("eviltrout")
+      expect(push_notification_event[:params][1][:username]).to eq(user.username)
+      expect(push_notification_event[:params][1][:excerpt]).to eq("Hello @eviltrout ❤")
     end
 
     it "pushes nothing to suspended users" do
       evil_trout.update_columns(suspended_till: 1.year.from_now)
       expect { mention_post }.to_not change { Jobs::PushNotification.jobs.count }
+
+      events = DiscourseEvent.track_events { mention_post }
+      expect(events.find { |event| event[:event_name] == :push_notification }).not_to be_present
     end
 
     it "pushes nothing when the user is in 'do not disturb'" do
@@ -1109,6 +1229,9 @@ RSpec.describe PostAlerter do
       )
 
       expect { mention_post }.to_not change { Jobs::PushNotification.jobs.count }
+
+      events = DiscourseEvent.track_events { mention_post }
+      expect(events.find { |event| event[:event_name] == :push_notification }).not_to be_present
     end
 
     it "correctly pushes notifications if configured correctly" do
@@ -1209,8 +1332,7 @@ RSpec.describe PostAlerter do
       expect(JSON.parse(body)).to eq(payload)
     end
 
-    it "does not have invalid HTML in the excerpt when enable_experimental_hashtag_autocomplete is enabled" do
-      SiteSetting.enable_experimental_hashtag_autocomplete = true
+    it "does not have invalid HTML in the excerpt" do
       Fabricate(:category, slug: "random")
       Jobs.run_immediately!
       body = nil
@@ -1310,7 +1432,11 @@ RSpec.describe PostAlerter do
             end
         end
 
-      expect(events.size).to eq(2)
+      expect(events.map { |event| event[:event_name] }).to include(
+        :pre_notification_alert,
+        :push_notification,
+        :post_notification_alert,
+      )
       expect(messages.size).to eq(0)
       expect(Jobs::PushNotification.jobs.size).to eq(1)
     end
@@ -1765,6 +1891,123 @@ RSpec.describe PostAlerter do
         TagUser.change(user.id, tag.id, TagUser.notification_levels[:watching])
 
         expect { PostAlerter.post_created(post) }.to change { Notification.count }.by(1)
+      end
+    end
+
+    context "with category and tags" do
+      fab!(:muted_category) do
+        Fabricate(:category).tap do |category|
+          CategoryUser.set_notification_level_for_category(
+            user,
+            CategoryUser.notification_levels[:muted],
+            category.id,
+          )
+        end
+      end
+      fab!(:muted_tag) do
+        Fabricate(:tag).tap do |tag|
+          TagUser.create!(
+            user: user,
+            tag: tag,
+            notification_level: TagUser.notification_levels[:muted],
+          )
+        end
+      end
+      fab!(:watched_tag) do
+        Fabricate(:tag).tap do |tag|
+          TagUser.create!(
+            user: user,
+            tag: tag,
+            notification_level: TagUser.notification_levels[:watching],
+          )
+        end
+      end
+      fab!(:topic_with_muted_tag_and_watched_category) do
+        Fabricate(:topic, category: category, tags: [muted_tag])
+      end
+      fab!(:topic_with_muted_category_and_watched_tag) do
+        Fabricate(:topic, category: muted_category, tags: [watched_tag])
+      end
+      fab!(:directly_watched_topic) do
+        Fabricate(:topic, category: muted_category, tags: [muted_tag])
+      end
+      fab!(:topic_user) do
+        Fabricate(
+          :topic_user,
+          topic: directly_watched_topic,
+          user: user,
+          notification_level: TopicUser.notification_levels[:watching],
+        )
+      end
+      fab!(:topic_with_watched_category) { Fabricate(:topic, category: category) }
+      fab!(:post) { Fabricate(:post, topic: topic_with_muted_tag_and_watched_category) }
+      fab!(:post_2) { Fabricate(:post, topic: topic_with_muted_category_and_watched_tag) }
+      fab!(:post_3) { Fabricate(:post, topic: topic_with_watched_category) }
+      fab!(:post_4) { Fabricate(:post, topic: directly_watched_topic) }
+
+      before do
+        CategoryUser.set_notification_level_for_category(
+          user,
+          CategoryUser.notification_levels[:watching],
+          category.id,
+        )
+      end
+
+      it "adds notification when watched_precedence_over_muted setting is true" do
+        SiteSetting.watched_precedence_over_muted = true
+        expect {
+          PostAlerter.post_created(topic_with_muted_tag_and_watched_category.posts.first)
+        }.to change { Notification.count }.by(1)
+        expect {
+          PostAlerter.post_created(topic_with_muted_category_and_watched_tag.posts.first)
+        }.to change { Notification.count }.by(1)
+        expect { PostAlerter.post_created(directly_watched_topic.posts.first) }.to change {
+          Notification.count
+        }.by(1)
+      end
+
+      it "respects user option even if watched_precedence_over_muted site setting is true" do
+        SiteSetting.watched_precedence_over_muted = true
+        user.user_option.update!(watched_precedence_over_muted: false)
+        expect {
+          PostAlerter.post_created(topic_with_muted_tag_and_watched_category.posts.first)
+        }.not_to change { Notification.count }
+        expect {
+          PostAlerter.post_created(topic_with_muted_category_and_watched_tag.posts.first)
+        }.not_to change { Notification.count }
+        expect { PostAlerter.post_created(directly_watched_topic.posts.first) }.to change {
+          Notification.count
+        }.by(1)
+      end
+
+      it "does not add notification when watched_precedence_over_muted setting is false" do
+        SiteSetting.watched_precedence_over_muted = false
+        expect {
+          PostAlerter.post_created(topic_with_muted_tag_and_watched_category.posts.first)
+        }.not_to change { Notification.count }
+        expect {
+          PostAlerter.post_created(topic_with_muted_category_and_watched_tag.posts.first)
+        }.not_to change { Notification.count }
+        expect { PostAlerter.post_created(topic_with_watched_category.posts.first) }.to change {
+          Notification.count
+        }.by(1)
+        expect { PostAlerter.post_created(directly_watched_topic.posts.first) }.to change {
+          Notification.count
+        }.by(1)
+      end
+
+      it "respects user option even if watched_precedence_over_muted site setting is false" do
+        SiteSetting.watched_precedence_over_muted = false
+        user.user_option.update!(watched_precedence_over_muted: true)
+        expect {
+          PostAlerter.post_created(topic_with_muted_tag_and_watched_category.posts.first)
+        }.to change { Notification.count }.by(1)
+        expect {
+          PostAlerter.post_created(topic_with_muted_category_and_watched_tag.posts.first)
+        }.to change { Notification.count }.by(1)
+        expect { PostAlerter.post_created(directly_watched_topic.posts.first) }.to change {
+          Notification.count
+        }.by(1)
       end
     end
 

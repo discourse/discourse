@@ -32,218 +32,6 @@ RSpec.describe Chat::ChatController do
     Chat::ReviewQueue.new.flag_message(message, Guardian.new(flagger), flag_type)[:reviewable]
   end
 
-  describe "#messages" do
-    let(:page_size) { 30 }
-
-    before do
-      sign_in(user)
-      Group.refresh_automatic_groups!
-    end
-
-    it "errors for user when they are not allowed to chat" do
-      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
-      get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
-      expect(response.status).to eq(403)
-    end
-
-    it "errors when page size is over 50" do
-      get "/chat/#{chat_channel.id}/messages.json", params: { page_size: 51 }
-      expect(response.status).to eq(400)
-    end
-
-    it "errors when page size is nil" do
-      get "/chat/#{chat_channel.id}/messages.json"
-      expect(response.status).to eq(400)
-    end
-
-    it "returns the latest messages in created_at, id order" do
-      get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
-      messages = response.parsed_body["chat_messages"]
-      expect(messages.count).to eq(page_size)
-      expect(messages.first["created_at"].to_time).to be < messages.last["created_at"].to_time
-    end
-
-    it "returns `can_flag=true` for public channels" do
-      get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
-      expect(response.parsed_body["meta"]["can_flag"]).to be true
-    end
-
-    it "returns `can_flag=true` for DM channels" do
-      get "/chat/#{dm_chat_channel.id}/messages.json", params: { page_size: page_size }
-      expect(response.parsed_body["meta"]["can_flag"]).to be true
-    end
-
-    it "returns `can_moderate=true` based on whether the user can moderate the chatable" do
-      1.upto(4) do |n|
-        user.update!(trust_level: n)
-        get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
-        expect(response.parsed_body["meta"]["can_moderate"]).to be false
-      end
-
-      get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
-      expect(response.parsed_body["meta"]["can_moderate"]).to be false
-
-      user.update!(admin: true)
-      get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
-      expect(response.parsed_body["meta"]["can_moderate"]).to be true
-      user.update!(admin: false)
-
-      SiteSetting.enable_category_group_moderation = true
-      group = Fabricate(:group)
-      group.add(user)
-      category.update!(reviewable_by_group: group)
-      get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
-      expect(response.parsed_body["meta"]["can_moderate"]).to be true
-    end
-
-    it "serializes `user_flag_status` for user who has a pending flag" do
-      chat_message = chat_channel.chat_messages.last
-      reviewable = flag_message(chat_message, user)
-      score = reviewable.reviewable_scores.last
-
-      get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
-
-      expect(response.parsed_body["chat_messages"].last["user_flag_status"]).to eq(
-        score.status_for_database,
-      )
-    end
-
-    it "doesn't serialize `reviewable_ids` for non-staff" do
-      reviewable = flag_message(chat_channel.chat_messages.last, admin)
-
-      get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
-
-      expect(response.parsed_body["chat_messages"].last["reviewable_id"]).to be_nil
-    end
-
-    it "serializes `reviewable_ids` correctly for staff" do
-      sign_in(admin)
-      reviewable = flag_message(chat_channel.chat_messages.last, admin)
-
-      get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
-      expect(response.parsed_body["chat_messages"].last["reviewable_id"]).to eq(reviewable.id)
-    end
-
-    it "correctly marks reactions as 'reacted' for the current_user" do
-      heart_emoji = ":heart:"
-      smile_emoji = ":smile"
-      last_message = chat_channel.chat_messages.last
-      last_message.reactions.create(user: user, emoji: heart_emoji)
-      last_message.reactions.create(user: admin, emoji: smile_emoji)
-
-      get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
-
-      reactions = response.parsed_body["chat_messages"].last["reactions"]
-      heart_reaction = reactions.find { |r| r["emoji"] == heart_emoji }
-      expect(heart_reaction["reacted"]).to be true
-      smile_reaction = reactions.find { |r| r["emoji"] == smile_emoji }
-      expect(smile_reaction["reacted"]).to be false
-    end
-
-    it "sends the last message bus id for the channel" do
-      get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
-      expect(response.parsed_body["meta"]["channel_message_bus_last_id"]).not_to eq(nil)
-    end
-
-    describe "scrolling to the past" do
-      it "returns the correct messages in created_at, id order" do
-        get "/chat/#{chat_channel.id}/messages.json",
-            params: {
-              message_id: message_40.id,
-              direction: described_class::PAST,
-              page_size: page_size,
-            }
-        messages = response.parsed_body["chat_messages"]
-        expect(messages.count).to eq(page_size)
-        expect(messages.first["created_at"].to_time).to eq_time(message_10.created_at)
-        expect(messages.last["created_at"].to_time).to eq_time(message_39.created_at)
-      end
-
-      it "returns 'can_load...' properly when there are more past messages" do
-        get "/chat/#{chat_channel.id}/messages.json",
-            params: {
-              message_id: message_40.id,
-              direction: described_class::PAST,
-              page_size: page_size,
-            }
-        expect(response.parsed_body["meta"]["can_load_more_past"]).to be true
-        expect(response.parsed_body["meta"]["can_load_more_future"]).to be_nil
-      end
-
-      it "returns 'can_load...' properly when there are no past messages" do
-        get "/chat/#{chat_channel.id}/messages.json",
-            params: {
-              message_id: message_3.id,
-              direction: described_class::PAST,
-              page_size: page_size,
-            }
-        expect(response.parsed_body["meta"]["can_load_more_past"]).to be false
-        expect(response.parsed_body["meta"]["can_load_more_future"]).to be_nil
-      end
-    end
-
-    describe "scrolling to the future" do
-      it "returns the correct messages in created_at, id order when there are many after" do
-        get "/chat/#{chat_channel.id}/messages.json",
-            params: {
-              message_id: message_10.id,
-              direction: described_class::FUTURE,
-              page_size: page_size,
-            }
-        messages = response.parsed_body["chat_messages"]
-        expect(messages.count).to eq(page_size)
-        expect(messages.first["created_at"].to_time).to eq_time(message_11.created_at)
-        expect(messages.last["created_at"].to_time).to eq_time(message_40.created_at)
-      end
-
-      it "return 'can_load..' properly when there are future messages" do
-        get "/chat/#{chat_channel.id}/messages.json",
-            params: {
-              message_id: message_10.id,
-              direction: described_class::FUTURE,
-              page_size: page_size,
-            }
-        expect(response.parsed_body["meta"]["can_load_more_past"]).to be_nil
-        expect(response.parsed_body["meta"]["can_load_more_future"]).to be true
-      end
-
-      it "returns 'can_load..' properly when there are no future messages" do
-        get "/chat/#{chat_channel.id}/messages.json",
-            params: {
-              message_id: message_60.id,
-              direction: described_class::FUTURE,
-              page_size: page_size,
-            }
-        expect(response.parsed_body["meta"]["can_load_more_past"]).to be_nil
-        expect(response.parsed_body["meta"]["can_load_more_future"]).to be false
-      end
-    end
-
-    describe "without direction (latest messages)" do
-      it "signals there are no future messages" do
-        get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
-
-        expect(response.parsed_body["meta"]["can_load_more_future"]).to eq(false)
-      end
-
-      it "signals there are more messages in the past" do
-        get "/chat/#{chat_channel.id}/messages.json", params: { page_size: page_size }
-
-        expect(response.parsed_body["meta"]["can_load_more_past"]).to eq(true)
-      end
-
-      it "signals there are no more messages" do
-        new_channel = Fabricate(:category_channel)
-        Fabricate(:chat_message, chat_channel: new_channel, user: other_user, message: "message")
-        chat_messages_qty = 1
-
-        get "/chat/#{new_channel.id}/messages.json", params: { page_size: chat_messages_qty + 1 }
-
-        expect(response.parsed_body["meta"]["can_load_more_past"]).to eq(false)
-      end
-    end
-  end
-
   describe "#enable_chat" do
     context "with category as chatable" do
       let!(:category) { Fabricate(:category) }
@@ -347,19 +135,98 @@ RSpec.describe Chat::ChatController do
         )
       end
 
-      it "sends a message for regular user when staff-only is disabled and they are following channel" do
-        sign_in(user)
-        Chat::UserChatChannelMembership.create(
-          user: user,
-          chat_channel: chat_channel,
-          following: true,
-        )
+      context "when the regular user is following the channel" do
+        fab!(:message_1) { Fabricate(:chat_message, chat_channel: chat_channel) }
+        fab!(:membership) do
+          Chat::UserChatChannelMembership.create(
+            user: user,
+            chat_channel: chat_channel,
+            following: true,
+            last_read_message_id: message_1.id,
+          )
+        end
 
-        expect { post "/chat/#{chat_channel.id}.json", params: { message: message } }.to change {
-          Chat::Message.count
-        }.by(1)
-        expect(response.status).to eq(200)
-        expect(Chat::Message.last.message).to eq(message)
+        it "sends a message for regular user when staff-only is disabled and they are following channel" do
+          sign_in(user)
+
+          expect { post "/chat/#{chat_channel.id}.json", params: { message: message } }.to change {
+            Chat::Message.count
+          }.by(1)
+          expect(response.status).to eq(200)
+          expect(Chat::Message.last.message).to eq(message)
+        end
+
+        it "updates the last_read_message_id for the user who sent the message" do
+          sign_in(user)
+          post "/chat/#{chat_channel.id}.json", params: { message: message }
+          expect(response.status).to eq(200)
+          expect(membership.reload.last_read_message_id).to eq(Chat::Message.last.id)
+        end
+
+        it "publishes user tracking state using the new chat message as the last_read_message_id" do
+          sign_in(user)
+          messages =
+            MessageBus.track_publish(
+              Chat::Publisher.user_tracking_state_message_bus_channel(user.id),
+            ) { post "/chat/#{chat_channel.id}.json", params: { message: message } }
+          expect(response.status).to eq(200)
+          expect(messages.first.data["last_read_message_id"]).to eq(Chat::Message.last.id)
+        end
+
+        context "when sending a message in a staged thread" do
+          it "creates the thread and publishes with the staged id" do
+            sign_in(user)
+            chat_channel.update!(threading_enabled: true)
+
+            messages =
+              MessageBus.track_publish do
+                post "/chat/#{chat_channel.id}.json",
+                     params: {
+                       message: message,
+                       in_reply_to_id: message_1.id,
+                       staged_thread_id: "stagedthreadid",
+                     }
+              end
+
+            expect(response.status).to eq(200)
+
+            thread_event = messages.find { |m| m.data["type"] == "thread_created" }
+            expect(thread_event.data["staged_thread_id"]).to eq("stagedthreadid")
+            expect(Chat::Thread.find(thread_event.data["thread_id"])).to be_persisted
+
+            sent_event = messages.find { |m| m.data["type"] == "sent" }
+            expect(sent_event.data["staged_thread_id"]).to eq("stagedthreadid")
+          end
+        end
+
+        context "when sending a message in a thread" do
+          fab!(:thread) do
+            Fabricate(:chat_thread, channel: chat_channel, original_message: message_1)
+          end
+
+          it "does not update the last_read_message_id for the user who sent the message" do
+            sign_in(user)
+            post "/chat/#{chat_channel.id}.json", params: { message: message, thread_id: thread.id }
+            expect(response.status).to eq(200)
+            expect(membership.reload.last_read_message_id).to eq(message_1.id)
+          end
+
+          it "publishes user tracking state using the old membership last_read_message_id" do
+            sign_in(user)
+            messages =
+              MessageBus.track_publish(
+                Chat::Publisher.user_tracking_state_message_bus_channel(user.id),
+              ) do
+                post "/chat/#{chat_channel.id}.json",
+                     params: {
+                       message: message,
+                       thread_id: thread.id,
+                     }
+              end
+            expect(response.status).to eq(200)
+            expect(messages.first.data["last_read_message_id"]).to eq(message_1.id)
+          end
+        end
       end
     end
 
@@ -379,6 +246,14 @@ RSpec.describe Chat::ChatController do
         post "/chat/#{direct_message_channel.id}.json", params: { message: message }
 
         expect(Chat::UserChatChannelMembership.find_by(user_id: user2.id).following).to be true
+      end
+
+      it "doesn’t call publish new channel when already following" do
+        Chat::Publisher.expects(:publish_new_channel).never
+
+        sign_in(user1)
+
+        post "/chat/#{direct_message_channel.id}.json", params: { message: message }
       end
 
       it "errors when the user is not part of the direct message channel" do
@@ -556,82 +431,6 @@ RSpec.describe Chat::ChatController do
           }
       expect(response.status).to eq(200)
       expect(chat_message.reload.message).to eq(new_message)
-    end
-  end
-
-  RSpec.shared_examples "chat_message_restoration" do
-    it "doesn't allow a user to restore another user's message" do
-      sign_in(other_user)
-
-      put "/chat/#{chat_channel.id}/restore/#{Chat::Message.unscoped.last.id}.json"
-      expect(response.status).to eq(403)
-    end
-
-    it "allows a user to restore their own posts" do
-      sign_in(user)
-
-      deleted_message = Chat::Message.unscoped.last
-      put "/chat/#{chat_channel.id}/restore/#{deleted_message.id}.json"
-      expect(response.status).to eq(200)
-      expect(deleted_message.reload.deleted_at).to be_nil
-    end
-
-    it "allows admin to restore others' posts" do
-      sign_in(admin)
-
-      deleted_message = Chat::Message.unscoped.last
-      put "/chat/#{chat_channel.id}/restore/#{deleted_message.id}.json"
-      expect(response.status).to eq(200)
-      expect(deleted_message.reload.deleted_at).to be_nil
-    end
-
-    it "does not allow message restore when chat channel is read_only" do
-      sign_in(Chat::Message.last.user)
-
-      chat_channel.update!(status: :read_only)
-
-      deleted_message = Chat::Message.unscoped.last
-      put "/chat/#{chat_channel.id}/restore/#{deleted_message.id}.json"
-      expect(response.status).to eq(403)
-      expect(deleted_message.reload.deleted_at).not_to be_nil
-
-      sign_in(admin)
-      put "/chat/#{chat_channel.id}/restore/#{deleted_message.id}.json"
-      expect(response.status).to eq(403)
-    end
-
-    it "only allows admin to restore when chat channel is closed" do
-      sign_in(admin)
-
-      chat_channel.update!(status: :read_only)
-
-      deleted_message = Chat::Message.unscoped.last
-      put "/chat/#{chat_channel.id}/restore/#{deleted_message.id}.json"
-      expect(response.status).to eq(403)
-      expect(deleted_message.reload.deleted_at).not_to be_nil
-
-      chat_channel.update!(status: :closed)
-      put "/chat/#{chat_channel.id}/restore/#{deleted_message.id}.json"
-      expect(response.status).to eq(200)
-      expect(deleted_message.reload.deleted_at).to be_nil
-    end
-  end
-
-  describe "#restore" do
-    fab!(:second_user) { Fabricate(:user) }
-
-    before do
-      message =
-        Chat::Message.create(user: user, message: "this is a message", chat_channel: chat_channel)
-      message.trash!
-    end
-
-    describe "for category" do
-      fab!(:chat_channel) { Fabricate(:category_channel, chatable: category) }
-
-      it_behaves_like "chat_message_restoration" do
-        let(:other_user) { second_user }
-      end
     end
   end
 
@@ -1126,65 +925,6 @@ RSpec.describe Chat::ChatController do
 
       sign_in(Fabricate(:user))
       get "/chat/message/#{message.id}.json"
-    end
-  end
-
-  describe "#lookup_message" do
-    let!(:message) { Fabricate(:chat_message, chat_channel: channel) }
-    let(:channel) { Fabricate(:direct_message_channel) }
-    let(:chatable) { channel.chatable }
-    fab!(:user) { Fabricate(:user) }
-
-    before { sign_in(user) }
-
-    it "ensures message's channel can be seen" do
-      Guardian.any_instance.expects(:can_join_chat_channel?).with(channel)
-      get "/chat/lookup/#{message.id}.json", params: { chat_channel_id: channel.id }
-    end
-
-    context "when the message doesn’t belong to the channel" do
-      let!(:message) { Fabricate(:chat_message) }
-
-      it "returns a 404" do
-        get "/chat/lookup/#{message.id}.json", params: { chat_channel_id: channel.id }
-
-        expect(response.status).to eq(404)
-      end
-    end
-
-    context "when the chat channel is for a category" do
-      let(:channel) { Fabricate(:category_channel) }
-
-      it "ensures the user can access that category" do
-        get "/chat/lookup/#{message.id}.json", params: { chat_channel_id: channel.id }
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["chat_messages"][0]["id"]).to eq(message.id)
-
-        group = Fabricate(:group)
-        chatable.update!(read_restricted: true)
-        Fabricate(:category_group, group: group, category: chatable)
-        get "/chat/lookup/#{message.id}.json", params: { chat_channel_id: channel.id }
-        expect(response.status).to eq(403)
-
-        GroupUser.create!(user: user, group: group)
-        get "/chat/lookup/#{message.id}.json", params: { chat_channel_id: channel.id }
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["chat_messages"][0]["id"]).to eq(message.id)
-      end
-    end
-
-    context "when the chat channel is for a direct message channel" do
-      let(:channel) { Fabricate(:direct_message_channel) }
-
-      it "ensures the user can access that direct message channel" do
-        get "/chat/lookup/#{message.id}.json", params: { chat_channel_id: channel.id }
-        expect(response.status).to eq(403)
-
-        Chat::DirectMessageUser.create!(user: user, direct_message: chatable)
-        get "/chat/lookup/#{message.id}.json", params: { chat_channel_id: channel.id }
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["chat_messages"][0]["id"]).to eq(message.id)
-      end
     end
   end
 end

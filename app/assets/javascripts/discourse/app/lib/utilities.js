@@ -1,13 +1,30 @@
-import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
+import getURL from "discourse-common/lib/get-url";
 import Handlebars from "handlebars";
 import I18n from "I18n";
-import { deepMerge } from "discourse-common/lib/object";
 import { escape } from "pretty-text/sanitizer";
-import { helperContext } from "discourse-common/lib/helpers";
 import toMarkdown from "discourse/lib/to-markdown";
 import deprecated from "discourse-common/lib/deprecated";
+import * as AvatarUtils from "discourse-common/lib/avatar-utils";
+import { capabilities } from "discourse/services/capabilities";
 
 let _defaultHomepage;
+
+function deprecatedAvatarUtil(name) {
+  return function () {
+    deprecated(
+      `${name} should be imported from discourse-common/lib/avatar-utils instead of discourse/lib/utilities`,
+      { id: "discourse.avatar-utils" }
+    );
+    return AvatarUtils[name](...arguments);
+  };
+}
+
+export const translateSize = deprecatedAvatarUtil("translateSize");
+export const getRawSize = deprecatedAvatarUtil("getRawSize");
+export const getRawAvatarSize = deprecatedAvatarUtil("getRawAvatarSize");
+export const avatarUrl = deprecatedAvatarUtil("avatarUrl");
+export const avatarImg = deprecatedAvatarUtil("avatarImg");
+export const tinyAvatar = deprecatedAvatarUtil("tinyAvatar");
 
 export function splitString(str, separator = ",") {
   if (typeof str === "string") {
@@ -15,24 +32,6 @@ export function splitString(str, separator = ",") {
   } else {
     return [];
   }
-}
-
-export function translateSize(size) {
-  switch (size) {
-    case "tiny":
-      return 20;
-    case "small":
-      return 25;
-    case "medium":
-      return 32;
-    case "large":
-      return 45;
-    case "extra_large":
-      return 60;
-    case "huge":
-      return 120;
-  }
-  return size;
 }
 
 export function escapeExpression(string) {
@@ -58,51 +57,6 @@ export function replaceFormatter(fn) {
   _usernameFormatDelegate = fn;
 }
 
-export function avatarUrl(template, size, { customGetURL } = {}) {
-  if (!template) {
-    return "";
-  }
-  const rawSize = getRawSize(translateSize(size));
-  const templatedPath = template.replace(/\{size\}/g, rawSize);
-  return (customGetURL || getURLWithCDN)(templatedPath);
-}
-
-export function getRawSize(size) {
-  const pixelRatio = window.devicePixelRatio || 1;
-  let rawSize = 1;
-  if (pixelRatio > 1.1 && pixelRatio < 2.1) {
-    rawSize = 2;
-  } else if (pixelRatio >= 2.1) {
-    rawSize = 3;
-  }
-  return size * rawSize;
-}
-
-export function avatarImg(options, customGetURL) {
-  const size = translateSize(options.size);
-  let url = avatarUrl(options.avatarTemplate, size, { customGetURL });
-
-  // We won't render an invalid url
-  if (!url) {
-    return "";
-  }
-
-  const classes =
-    "avatar" + (options.extraClasses ? " " + options.extraClasses : "");
-
-  let title = "";
-  if (options.title) {
-    const escaped = escapeExpression(options.title || "");
-    title = ` title='${escaped}' aria-label='${escaped}'`;
-  }
-
-  return `<img loading='lazy' alt='' width='${size}' height='${size}' src='${url}' class='${classes}'${title}>`;
-}
-
-export function tinyAvatar(avatarTemplate, options) {
-  return avatarImg(deepMerge({ avatarTemplate, size: "tiny" }, options));
-}
-
 export function postUrl(slug, topicId, postNumber) {
   let url = getURL("/t/");
   if (slug) {
@@ -122,6 +76,9 @@ export function highlightPost(postNumber) {
   if (!container) {
     return;
   }
+
+  container.querySelector(".tabLoc")?.focus();
+
   const element = container.querySelector(".topic-body");
   if (!element || element.classList.contains("highlighted")) {
     return;
@@ -134,7 +91,6 @@ export function highlightPost(postNumber) {
     element.removeEventListener("animationend", removeHighlighted);
   };
   element.addEventListener("animationend", removeHighlighted);
-  container.querySelector(".tabLoc").focus();
 }
 
 export function emailValid(email) {
@@ -166,49 +122,53 @@ export function selectedText() {
     return "";
   }
 
-  const $div = $("<div>");
+  const div = document.createElement("div");
   for (let r = 0; r < selection.rangeCount; r++) {
     const range = selection.getRangeAt(r);
-    const $ancestor = $(range.commonAncestorContainer);
+    const ancestor =
+      range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
+        ? range.commonAncestorContainer
+        : range.commonAncestorContainer.parentElement;
 
     // ensure we never quote text in the post menu area
-    const $postMenuArea = $ancestor.find(".post-menu-area")[0];
-    if ($postMenuArea) {
-      range.setEndBefore($postMenuArea);
+    const postMenuArea = ancestor.querySelector(".post-menu-area");
+    if (postMenuArea) {
+      range.setEndBefore(postMenuArea);
     }
 
-    const $oneboxTest = $ancestor.closest("aside.onebox[data-onebox-src]");
-    const $codeBlockTest = $ancestor.parents("pre");
-    if ($codeBlockTest.length) {
-      const $code = $("<code>");
-      $code.append(range.cloneContents());
+    const oneboxTest = ancestor.closest("aside.onebox[data-onebox-src]");
+    const codeBlockTest = ancestor.closest("pre");
+    if (codeBlockTest) {
+      const code = document.createElement("code");
+      code.append(range.cloneContents());
+
       // Even though this was a code block, produce a non-block quote if it's a single line.
-      if (/\n/.test($code.text())) {
-        const $pre = $("<pre>");
-        $pre.append($code);
-        $div.append($pre);
+      if (/\n/.test(code.innerText)) {
+        const pre = document.createElement("pre");
+        pre.append(code);
+        div.append(pre);
       } else {
-        $div.append($code);
+        div.append(code);
       }
-    } else if ($oneboxTest.length) {
+    } else if (oneboxTest) {
       // This is a partial quote from a onebox.
       // Treat it as though the entire onebox was quoted.
-      const oneboxUrl = $($oneboxTest).data("onebox-src");
-      $div.append(oneboxUrl);
+      const oneboxUrl = oneboxTest.dataset.oneboxSrc;
+      div.append(oneboxUrl);
     } else {
-      $div.append(range.cloneContents());
+      div.append(range.cloneContents());
     }
   }
 
-  $div.find("aside.onebox[data-onebox-src]").each(function () {
-    const oneboxUrl = $(this).data("onebox-src");
-    $(this).replaceWith(oneboxUrl);
+  div.querySelectorAll("aside.onebox[data-onebox-src]").forEach((element) => {
+    const oneboxUrl = element.dataset.oneboxSrc;
+    element.replaceWith(oneboxUrl);
   });
 
-  return toMarkdown($div.html());
+  return toMarkdown(div.outerHTML);
 }
 
-export function selectedElement() {
+export function selectedNode() {
   return selectedRange()?.commonAncestorContainer;
 }
 
@@ -257,14 +217,10 @@ export function setCaretPosition(ctrl, pos) {
 }
 
 export function initializeDefaultHomepage(siteSettings) {
-  let homepage;
-  let sel = document.querySelector("meta[name='discourse_current_homepage']");
-  if (sel) {
-    homepage = sel.getAttribute("content");
-  }
-  if (!homepage) {
-    homepage = siteSettings.top_menu.split("|")[0].split(",")[0];
-  }
+  const sel = document.querySelector("meta[name='discourse_current_homepage']");
+  const homepage =
+    sel?.getAttribute("content") ||
+    siteSettings.top_menu.split("|")[0].split(",")[0];
   setDefaultHomepage(homepage);
 }
 
@@ -314,7 +270,7 @@ export function determinePostReplaceSelection({
 export function isAppleDevice() {
   // IE has no DOMNodeInserted so can not get this hack despite saying it is like iPhone
   // This will apply hack on all iDevices
-  let caps = helperContext().capabilities;
+  let caps = capabilities;
   return caps.isIOS && !window.navigator.userAgent.match(/Trident/g);
 }
 
@@ -497,20 +453,22 @@ export function modKeysPressed(event) {
 }
 
 export function translateModKey(string) {
-  const { isApple } = helperContext().capabilities;
+  const { isApple } = capabilities;
   // Apple device users are used to glyphs for shortcut keys
   if (isApple) {
     string = string
-      .replace("Shift", "\u21E7")
-      .replace("Meta", "\u2318")
-      .replace("Alt", "\u2325")
+      .toLowerCase()
+      .replace("shift", "\u21E7")
+      .replace("meta", "\u2318")
+      .replace("alt", "\u2325")
       .replace(/\+/g, "");
   } else {
     string = string
-      .replace("Shift", I18n.t("shortcut_modifier_key.shift"))
-      .replace("Ctrl", I18n.t("shortcut_modifier_key.ctrl"))
-      .replace("Meta", I18n.t("shortcut_modifier_key.ctrl"))
-      .replace("Alt", I18n.t("shortcut_modifier_key.alt"));
+      .toLowerCase()
+      .replace("shift", I18n.t("shortcut_modifier_key.shift"))
+      .replace("ctrl", I18n.t("shortcut_modifier_key.ctrl"))
+      .replace("meta", I18n.t("shortcut_modifier_key.ctrl"))
+      .replace("alt", I18n.t("shortcut_modifier_key.alt"));
   }
 
   return string;
@@ -638,6 +596,3 @@ export function mergeSortedLists(list1, list2, comparator) {
   }
   return merged;
 }
-
-// This prevents a mini racer crash
-export default {};

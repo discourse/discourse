@@ -59,7 +59,8 @@ class GroupsController < ApplicationController
 
     if !guardian.is_staff?
       # hide automatic groups from all non stuff to de-clutter page
-      groups = groups.where("automatic IS FALSE OR groups.id = ?", Group::AUTO_GROUPS[:moderators])
+      groups =
+        groups.where("groups.automatic IS FALSE OR groups.id = ?", Group::AUTO_GROUPS[:moderators])
       type_filters.delete(:automatic)
     end
 
@@ -80,12 +81,14 @@ class GroupsController < ApplicationController
       type_filters = type_filters - %i[my owner]
     end
 
+    groups = DiscoursePluginRegistry.apply_modifier(:groups_index_query, groups, self)
+
     type_filters.delete(:non_automatic)
 
     # count the total before doing pagination
     total = groups.count
 
-    page = params[:page].to_i
+    page = fetch_int_from_params(:page, default: 0)
     page_size = MobileDetection.mobile_device?(request.user_agent) ? 15 : 36
     groups = groups.offset(page * page_size).limit(page_size)
 
@@ -122,7 +125,10 @@ class GroupsController < ApplicationController
         groups = Group.visible_groups(current_user)
         if !guardian.is_staff?
           groups =
-            groups.where("automatic IS FALSE OR groups.id = ?", Group::AUTO_GROUPS[:moderators])
+            groups.where(
+              "groups.automatic IS FALSE OR groups.id = ?",
+              Group::AUTO_GROUPS[:moderators],
+            )
         end
 
         render_json_dump(
@@ -224,26 +230,19 @@ class GroupsController < ApplicationController
     render "posts/latest", formats: [:rss]
   end
 
+  MEMBERS_LIMIT = 1_000
+
   def members
     group = find_group(:group_id)
 
     guardian.ensure_can_see_group_members!(group)
 
-    limit = (params[:limit] || 50).to_i
+    limit = fetch_limit_from_params(default: 50, max: MEMBERS_LIMIT)
     offset = params[:offset].to_i
 
-    raise Discourse::InvalidParameters.new(:limit) if limit < 0 || limit > 1000
     raise Discourse::InvalidParameters.new(:offset) if offset < 0
 
     dir = (params[:asc] && params[:asc].present?) ? "ASC" : "DESC"
-    if params[:desc]
-      Discourse.deprecate(
-        ":desc is deprecated please use :asc instead",
-        output_in_test: true,
-        drop_from: "2.9.0",
-      )
-      dir = (params[:desc] && params[:desc].present?) ? "DESC" : "ASC"
-    end
     order = "NOT group_users.owner"
 
     if params[:requesters]
@@ -613,10 +612,12 @@ class GroupsController < ApplicationController
         .order(:name)
 
     if (term = params[:term]).present?
-      groups = groups.where("name ILIKE :term OR full_name ILIKE :term", term: "%#{term}%")
+      groups =
+        groups.where("groups.name ILIKE :term OR groups.full_name ILIKE :term", term: "%#{term}%")
     end
 
     groups = groups.where(automatic: false) if params[:ignore_automatic].to_s == "true"
+    groups = DiscoursePluginRegistry.apply_modifier(:groups_search_query, groups, self)
 
     if Group.preloaded_custom_field_names.present?
       Group.preload_custom_fields(groups, Group.preloaded_custom_field_names)

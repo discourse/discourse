@@ -11,6 +11,12 @@
       font-weight: bold;
     }
   }
+  td.version {
+    .commit-hash {
+      color: var(--primary-low-mid);
+      font-size: var(--font-down-1);
+    }
+  }
   .grid {
     @media screen and (min-width: 550px) {
       tr {

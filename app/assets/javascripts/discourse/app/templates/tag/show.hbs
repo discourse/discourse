@@ -1,3 +1,7 @@
+{{#if this.list.canLoadMore}}
+  {{hide-application-footer}}
+{{/if}}
+
 <DSection
   @tagName=""
   @pageClass="tags"
@@ -95,7 +99,6 @@
               @autoAddTopicsToBulkSelect={{this.autoAddTopicsToBulkSelect}}
               @bulkSelectEnabled={{this.bulkSelectEnabled}}
               @addTopicsToBulkSelect={{action "addTopicsToBulkSelect"}}
-              as |discoveryTopicList|
             >
               {{#if this.top}}
                 <div class="top-lists">
@@ -123,7 +126,18 @@
                   </div>
                 {{/if}}
               {{/if}}
-
+              {{#unless this.bulkSelectEnabled}}
+                {{#if
+                  (and this.showTopicsAndRepliesToggle this.site.mobileView)
+                }}
+                  <NewListHeaderControlsWrapper
+                    @current={{this.subset}}
+                    @newRepliesCount={{this.newRepliesCount}}
+                    @newTopicsCount={{this.newTopicsCount}}
+                    @changeNewListSubset={{action "changeNewListSubset"}}
+                  />
+                {{/if}}
+              {{/unless}}
               {{#if this.list.topics}}
                 <TopicList
                   @topics={{this.list.topics}}
@@ -140,9 +154,12 @@
                   @order={{this.order}}
                   @ascending={{this.ascending}}
                   @changeSort={{action "changeSort"}}
-                  @onScroll={{discoveryTopicList.saveScrollPosition}}
-                  @scrollOnLoad={{true}}
                   @focusLastVisitedTopic={{true}}
+                  @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
+                  @newListSubset={{this.subset}}
+                  @changeNewListSubset={{action "changeNewListSubset"}}
+                  @newRepliesCount={{this.newRepliesCount}}
+                  @newTopicsCount={{this.newTopicsCount}}
                 />
               {{/if}}
             </DiscoveryTopicsList>

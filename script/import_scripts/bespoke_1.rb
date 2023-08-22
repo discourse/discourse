@@ -160,6 +160,8 @@ class ImportScripts::Bespoke < ImportScripts::Base
   end
 
   def normalize_raw!(raw)
+    return "<missing>" if raw.blank?
+
     # purple and #1223f3
     raw.gsub!(/\[color=[#a-z0-9]+\]/i, "")
     raw.gsub!(%r{\[/color\]}i, "")

@@ -45,6 +45,8 @@ zh_CN:
       trigger: "投掷"
       invalid: |-
         抱歉，数学上无法掷出该骰子组合。:confounded:
+      not_enough_dice:
+        other: "我的骰子只有 %{count} 点。羞，我知道！"
       out_of_range: |-
         你知道数学上公平的骰子[最多有 120 个面](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice)吗？
       results: |-
@@ -167,7 +169,7 @@ zh_CN:
           - 我们始终相信[文明社区行为](%{base_uri}/guidelines)。
       onebox:
         instructions: |-
-          接下来，你能与我分享其中一个链接吗？以**一行一个链接的形式**回复，然后它会自动展开为包含一个漂亮的摘要。
+          接下来，你能与我分享其中一个链接吗？以**一行一个链接的形式**回复，然后它会自动展开为包含一个漂亮的总结。
 
           要复制链接，在移动端设备上按住链接，或者右键点击你的鼠标：
 
@@ -371,21 +373,11 @@ zh_CN:
           注意，你只有 %{deletion_after} 小时的时间可以取消删除帖子。
       category_hashtag:
         instructions: |-
-          你知道你可以在你的帖子中引用类别和标签吗？例如，你看到过“%{category}”类别吗？
+          您知道您可以在帖子中引用类别和标签吗？例如，您有没有看到%{category}类别？
 
-          在句子中输入`#`，然后选择任意类别或标签。
-        instructions_experimental: |-
-          你知道可以在你的帖子中引用类别和标签吗？例如，你有没有看到 %{category} 类别？
-
-          在句子的任何地方输入`#`，然后选择任何类别或标签。
+          在句子中的任何地方输入`#`，然后选择任何类别或标签。
         not_found: |-
-          哈，我没有在任何地方看到类别。注意，`#` 不能是第一个字符。你能在下一个回复中复制它吗？
-
-          ```text
-          我可以通过 # 创建一个类别链接
-          ```
-        not_found_experimental: |-
-          嗯，我在那里没有看到一个类别。你能在下次回复中复制这个吗？
+          嗯，我在那里没有看到类别。你能在下一条回复中复制吗？
 
           ```text
           我可以通过输入 # 创建一个类别链接
@@ -437,7 +429,7 @@ zh_CN:
           [details=点这里查看运作方式！]
           1. 点击编辑器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 齿轮图标。
           2. 选择“隐藏详细信息”。
-          3. 编辑详细信息摘要并添加内容。
+          3. 编辑详细信息总结并添加内容。
           [/details]
 
           你可以使用编辑器中的 <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> 齿轮图标在你的下一个回复中添加详细信息部分吗？

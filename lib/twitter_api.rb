@@ -3,44 +3,48 @@
 # lightweight Twitter api calls
 class TwitterApi
   class << self
-    include ActionView::Helpers::NumberHelper
-
     BASE_URL = "https://api.twitter.com"
+    URL_PARAMS = %w[
+      tweet.fields=id,author_id,text,created_at,entities,referenced_tweets,public_metrics
+      user.fields=id,name,username,profile_image_url
+      media.fields=type,height,width,variants,preview_image_url,url
+      expansions=attachments.media_keys,referenced_tweets.id.author_id
+    ]
 
     def prettify_tweet(tweet)
-      text = tweet["full_text"].dup
-      if (entities = tweet["entities"]) && (urls = entities["urls"])
+      text = tweet[:data][:text].dup.to_s
+      if (entities = tweet[:data][:entities]) && (urls = entities[:urls])
         urls.each do |url|
-          text.gsub!(
-            url["url"],
-            "<a target='_blank' href='#{url["expanded_url"]}'>#{url["display_url"]}</a>",
-          )
+          if !url[:display_url].start_with?("pic.twitter.com")
+            text.gsub!(
+              url[:url],
+              "<a target='_blank' href='#{url[:expanded_url]}'>#{url[:display_url]}</a>",
+            )
+          else
+            text.gsub!(url[:url], "")
+          end
         end
       end
-
       text = link_hashtags_in link_handles_in text
-
       result = Rinku.auto_link(text, :all, 'target="_blank"').to_s
 
-      if tweet["extended_entities"] && media = tweet["extended_entities"]["media"]
+      if tweet[:includes] && media = tweet[:includes][:media]
         media.each do |m|
-          if m["type"] == "photo"
-            if large = m["sizes"]["large"]
-              result << "<div class='tweet-images'><img class='tweet-image' src='#{m["media_url_https"]}' width='#{large["w"]}' height='#{large["h"]}'></div>"
-            end
-          elsif m["type"] == "video" || m["type"] == "animated_gif"
+          if m[:type] == "photo"
+            result << "<div class='tweet-images'><img class='tweet-image' src='#{m[:url]}' width='#{m[:width]}' height='#{m[:height]}'></div>"
+          elsif m[:type] == "video" || m[:type] == "animated_gif"
             video_to_display =
-              m["video_info"]["variants"]
-                .select { |v| v["content_type"] == "video/mp4" }
-                .sort { |v| v["bitrate"] }
+              m[:variants]
+                .select { |v| v[:content_type] == "video/mp4" }
+                .sort { |v| v[:bit_rate] }
                 .last # choose highest bitrate
 
-            if video_to_display && url = video_to_display["url"]
-              width = m["sizes"]["large"]["w"]
-              height = m["sizes"]["large"]["h"]
+            if video_to_display && url = video_to_display[:url]
+              width = m[:width]
+              height = m[:height]
 
               attributes =
-                if m["type"] == "animated_gif"
+                if m[:type] == "animated_gif"
                   %w[playsinline loop muted autoplay disableRemotePlayback disablePictureInPicture]
                 else
                   %w[controls playsinline]
@@ -52,7 +56,7 @@ class TwitterApi
                     <video class='tweet-video' #{attributes}
                       width='#{width}'
                       height='#{height}'
-                      poster='#{m["media_url_https"]}'>
+                      poster='#{m[:preview_image_url]}'>
                       <source src='#{url}' type="video/mp4">
                     </video>
                   </div>
@@ -64,19 +68,6 @@ class TwitterApi
       end
 
       result
-    end
-
-    def prettify_number(count)
-      number_to_human(
-        count,
-        format: "%n%u",
-        precision: 2,
-        units: {
-          thousand: "K",
-          million: "M",
-          billion: "B",
-        },
-      )
     end
 
     def tweet_for(id)
@@ -111,7 +102,7 @@ class TwitterApi
     end
 
     def tweet_uri_for(id)
-      URI.parse "#{BASE_URL}/1.1/statuses/show.json?id=#{id}&tweet_mode=extended"
+      URI.parse "#{BASE_URL}/2/tweets/#{id}?#{URL_PARAMS.join("&")}"
     end
 
     def twitter_get(uri)

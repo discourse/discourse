@@ -1,0 +1,19 @@
+.chat-message-mention-warning {
+  position: relative;
+  margin-top: 0.25rem;
+  font-size: var(--font-down-1);
+
+  &__dismiss-btn {
+    position: absolute;
+    top: 7px;
+    right: 5px;
+  }
+
+  &__text {
+    margin: 0.25rem 0;
+  }
+
+  &__invite-sent {
+    color: var(--tertiary);
+  }
+}

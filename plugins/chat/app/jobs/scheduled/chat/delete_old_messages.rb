@@ -6,6 +6,8 @@ module Jobs
       daily at: 0.hours
 
       def execute(args = {})
+        return if !SiteSetting.chat_enabled
+
         delete_public_channel_messages
         delete_dm_channel_messages
       end

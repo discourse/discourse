@@ -54,7 +54,7 @@ task "release_note:plugins:generate", :from, :to, :plugin_glob, :org do |t, args
     end
 
     puts "### #{name}\n\n"
-    CHANGE_TYPES.each { |ct| print_changes_plugin(ct[:heading], changes[ct]) }
+    CHANGE_TYPES.each { |ct| print_changes(ct[:heading], changes[ct], "####") }
   end
 
   puts "(No changes found in #{no_changes_repos.join(", ")})"
@@ -98,14 +98,6 @@ def print_changes(heading, changes, importance)
 
   puts "#{importance} #{heading}", ""
   puts changes.to_a, ""
-end
-
-def print_changes_plugin(heading, changes)
-  return if changes.length == 0
-
-  puts "[details=\"#{heading}\"]\n", ""
-  puts changes.to_a, ""
-  puts "[/details]\n", ""
 end
 
 def better(line)

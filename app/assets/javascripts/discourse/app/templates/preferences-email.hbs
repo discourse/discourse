@@ -1,34 +1,23 @@
 <DSection @pageClass="user-preferences" @tagName="">
-  <section class="user-preferences solo-preference">
-    <form class="form-horizontal">
-
-      <div class="control-group">
-        <div class="controls">
-          <h3>{{i18n
-              (if this.new "user.add_email.title" "user.change_email.title")
-            }}</h3>
-        </div>
-      </div>
-
+  <section class="user-content user-preferences solo-preference">
+    <form class="form-vertical">
       {{#if this.success}}
-        <div class="control-group">
-          <div class="controls">
-            <div class="instructions">
-              <p>{{this.successMessage}}</p>
-            </div>
-          </div>
-        </div>
+        <div class="alert alert-success">{{this.successMessage}}</div>
+        <LinkTo @route="preferences.account" class="success-back">
+          {{d-icon "arrow-left"}}
+          {{i18n "user.change_email.back_to_preferences"}}
+        </LinkTo>
+
       {{else}}
         {{#if this.error}}
-          <div class="control-group">
-            <div class="controls">
-              <div class="alert alert-error">{{this.errorMessage}}</div>
-            </div>
-          </div>
+          <div class="alert alert-error">{{this.errorMessage}}</div>
         {{/if}}
-
         <div class="control-group">
-          <label class="control-label">{{i18n "user.email.title"}}</label>
+          <label class="control-label">
+            {{i18n
+              (if this.new "user.add_email.title" "user.change_email.title")
+            }}
+          </label>
           <div class="controls">
             <TextField
               @value={{this.newEmail}}
@@ -36,9 +25,6 @@
               @classNames="input-xxlarge"
               @autofocus="autofocus"
             />
-            <InputTip @validation={{this.emailValidation}} />
-          </div>
-          <div class="controls">
             <div class="instructions">
               {{#if this.taken}}
                 {{i18n "user.change_email.taken"}}
@@ -46,22 +32,23 @@
                 {{i18n "user.email.instructions"}}
               {{/if}}
             </div>
+            <InputTip @validation={{this.emailValidation}} />
           </div>
         </div>
-
-        <div class="control-group">
-          <div class="controls">
-            <DButton
-              @class="btn-primary"
-              @action={{action "saveEmail"}}
-              @type="submit"
-              @disabled={{this.saveDisabled}}
-              @translatedLabel={{this.saveButtonText}}
-            />
-          </div>
+        <div class="controls save-button">
+          <DButton
+            @class="btn-primary"
+            @action={{action "saveEmail"}}
+            @type="submit"
+            @disabled={{this.saveDisabled}}
+            @translatedLabel={{this.saveButtonText}}
+          />
+          <CancelLink
+            @route="preferences.account"
+            @args={{this.model.username}}
+          />
         </div>
       {{/if}}
-
     </form>
   </section>
 </DSection>

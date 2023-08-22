@@ -5,18 +5,15 @@ class SidebarSectionLinksUpdater
     if category_ids.blank?
       delete_section_links(user: user, linkable_type: "Category")
     else
-      category_ids = Category.secured(Guardian.new(user)).where(id: category_ids).pluck(:id)
+      category_ids = Category.where(id: category_ids).pluck(:id)
       update_section_links(user: user, linkable_type: "Category", new_linkable_ids: category_ids)
     end
   end
 
-  def self.update_tag_section_links(user, tag_names:)
-    if tag_names.blank?
+  def self.update_tag_section_links(user, tag_ids:)
+    if tag_ids.blank?
       delete_section_links(user: user, linkable_type: "Tag")
     else
-      tag_ids =
-        DiscourseTagging.filter_visible(Tag, Guardian.new(user)).where(name: tag_names).pluck(:id)
-
       update_section_links(user: user, linkable_type: "Tag", new_linkable_ids: tag_ids)
     end
   end
@@ -46,6 +43,7 @@ class SidebarSectionLinksUpdater
           linkable_id: to_delete,
         ).delete_all
       end
+
       SidebarSectionLink.insert_all(to_insert_attributes) if to_insert_attributes.present?
     end
   end

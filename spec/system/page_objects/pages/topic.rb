@@ -8,8 +8,10 @@ module PageObjects
         @fast_edit_component = PageObjects::Components::FastEditor.new
       end
 
-      def visit_topic(topic)
-        page.visit "/t/#{topic.id}"
+      def visit_topic(topic, post_number: nil)
+        url = "/t/#{topic.id}"
+        url += "/#{post_number}" if post_number
+        page.visit url
         self
       end
 
@@ -28,6 +30,10 @@ module PageObjects
         visit_topic(topic)
         click_reply_button
         self
+      end
+
+      def has_topic_title?(text)
+        has_css?("h1 .fancy-title", text: text)
       end
 
       def has_post_content?(post)
@@ -54,9 +60,11 @@ module PageObjects
       end
 
       def has_post_bookmarked?(post)
-        within post_by_number(post) do
-          has_css?(".bookmark.with-reminder.bookmarked")
-        end
+        is_post_bookmarked(post, bookmarked: true)
+      end
+
+      def has_no_post_bookmarked?(post)
+        is_post_bookmarked(post, bookmarked: false)
       end
 
       def expand_post_actions(post)
@@ -67,6 +75,8 @@ module PageObjects
         case button
         when :bookmark
           post_by_number(post).find(".bookmark.with-reminder").click
+        when :reply
+          post_by_number(post).find(".post-controls .reply").click
         end
       end
 
@@ -76,6 +86,10 @@ module PageObjects
 
       def has_topic_bookmarked?
         has_css?("#{topic_footer_button_id("bookmark")}.bookmarked", text: "Edit Bookmark")
+      end
+
+      def has_no_bookmarks?
+        has_no_css?("#{topic_footer_button_id("bookmark")}.bookmarked")
       end
 
       def find_topic_footer_button(button)
@@ -107,7 +121,12 @@ module PageObjects
         @composer_component.has_content?(content)
       end
 
-      def send_reply
+      def has_composer_popup_content?(content)
+        @composer_component.has_popup_content?(content)
+      end
+
+      def send_reply(content = nil)
+        fill_in_composer(content) if content
         find("#reply-control .save-or-cancel .create").click
       end
 
@@ -127,10 +146,25 @@ module PageObjects
         @fast_edit_component.fast_edit_input
       end
 
+      def click_mention(post, mention)
+        within post_by_number(post) do
+          find("a.mention-group", text: mention).click
+        end
+      end
+
       private
 
       def topic_footer_button_id(button)
         "#topic-footer-button-#{button}"
+      end
+
+      def is_post_bookmarked(post, bookmarked:)
+        within post_by_number(post) do
+          page.public_send(
+            bookmarked ? :has_css? : :has_no_css?,
+            ".bookmark.with-reminder.bookmarked",
+          )
+        end
       end
     end
   end

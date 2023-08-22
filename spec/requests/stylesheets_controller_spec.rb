@@ -60,6 +60,62 @@ RSpec.describe StylesheetsController do
     expect(response.status).to eq(200)
   end
 
+  context "when there are enabled plugins" do
+    fab!(:user) { Fabricate(:user) }
+
+    let(:plugin) do
+      plugin = plugin_from_fixtures("my_plugin")
+      plugin.register_css "body { padding: 1px 2px 3px 4px; }"
+      plugin
+    end
+
+    before do
+      Discourse.plugins << plugin
+      plugin.activate!
+      Stylesheet::Importer.register_imports!
+      StylesheetCache.destroy_all
+      SiteSetting.has_login_hint = false
+      SiteSetting.allow_user_locale = true
+      sign_in(user)
+    end
+
+    after do
+      Discourse.plugins.delete(plugin)
+      Stylesheet::Importer.register_imports!
+      DiscoursePluginRegistry.reset!
+    end
+
+    it "can lookup plugin specific css" do
+      get "/"
+
+      html = Nokogiri::HTML5.fragment(response.body)
+      expect(html.at("link[data-target=my_plugin_rtl]")).to eq(nil)
+
+      href = html.at("link[data-target=my_plugin]").attribute("href").value
+      get href
+
+      expect(response.status).to eq(200)
+      expect(response.headers["Content-Type"]).to eq("text/css")
+      expect(response.body).to include("body{padding:1px 2px 3px 4px}")
+      expect(response.body).not_to include("body{padding:1px 4px 3px 2px}")
+
+      user.locale = "ar" # RTL locale
+      user.save!
+      get "/"
+
+      html = Nokogiri::HTML5.fragment(response.body)
+      expect(html.at("link[data-target=my_plugin]")).to eq(nil)
+
+      href = html.at("link[data-target=my_plugin_rtl]").attribute("href").value
+      get href
+
+      expect(response.status).to eq(200)
+      expect(response.headers["Content-Type"]).to eq("text/css")
+      expect(response.body).to include("body{padding:1px 4px 3px 2px}")
+      expect(response.body).not_to include("body{padding:1px 2px 3px 4px}")
+    end
+  end
+
   it "ignores Accept header and does not include Vary header" do
     StylesheetCache.destroy_all
     manager = Stylesheet::Manager.new(theme_id: nil)

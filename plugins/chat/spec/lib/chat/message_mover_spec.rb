@@ -76,9 +76,9 @@ describe Chat::MessageMover do
       deleted_messages = Chat::Message.with_deleted.where(id: move_message_ids).order(:id)
       expect(deleted_messages.count).to eq(3)
       expect(messages.first.channel).to eq("/chat/#{source_channel.id}")
-      expect(messages.first.data[:typ]).to eq("bulk_delete")
-      expect(messages.first.data[:deleted_ids]).to eq(deleted_messages.map(&:id))
-      expect(messages.first.data[:deleted_at]).not_to eq(nil)
+      expect(messages.first.data["type"]).to eq("bulk_delete")
+      expect(messages.first.data["deleted_ids"]).to eq(deleted_messages.map(&:id))
+      expect(messages.first.data["deleted_at"]).not_to eq(nil)
     end
 
     it "creates a message in the source channel to indicate that the messages have been moved" do
@@ -181,6 +181,31 @@ describe Chat::MessageMover do
         move!([message2.id])
         expect(message3.reload.in_reply_to_id).to eq(nil)
         expect(message3.reload.thread).to eq(thread)
+      end
+
+      it "updates the tracking to the last non-deleted channel message for users whose last_read_message_id was the moved message" do
+        membership_1 =
+          Fabricate(
+            :user_chat_channel_membership,
+            chat_channel: source_channel,
+            last_read_message: message1,
+          )
+        membership_2 =
+          Fabricate(
+            :user_chat_channel_membership,
+            chat_channel: source_channel,
+            last_read_message: message2,
+          )
+        membership_3 =
+          Fabricate(
+            :user_chat_channel_membership,
+            chat_channel: source_channel,
+            last_read_message: message3,
+          )
+        move!([message2.id])
+        expect(membership_1.reload.last_read_message_id).to eq(message1.id)
+        expect(membership_2.reload.last_read_message_id).to eq(message3.id)
+        expect(membership_3.reload.last_read_message_id).to eq(message3.id)
       end
 
       context "when a thread original message is moved" do

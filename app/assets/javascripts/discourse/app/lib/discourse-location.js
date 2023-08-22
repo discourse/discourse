@@ -6,6 +6,17 @@ let popstateFired = false;
 const supportsHistoryState = window.history && "state" in window.history;
 const popstateCallbacks = [];
 
+function _uuid() {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    let r, v;
+    /* eslint-disable no-bitwise */
+    r = (Math.random() * 16) | 0;
+    v = c === "x" ? r : (r & 3) | 8;
+    /* eslint-enable no-bitwise */
+    return v.toString(16);
+  });
+}
+
 /**
   `Ember.DiscourseLocation` implements the location API using the browser's
   `history.pushState` API.
@@ -130,7 +141,7 @@ const DiscourseLocation = EmberObject.extend({
    @param path {String}
   */
   pushState(path) {
-    const state = { path };
+    const state = { path, uuid: _uuid() };
 
     // store state if browser doesn't support `history.state`
     if (!supportsHistoryState) {
@@ -152,7 +163,7 @@ const DiscourseLocation = EmberObject.extend({
    @param path {String}
   */
   replaceState(path) {
-    const state = { path };
+    const state = { path, uuid: _uuid() };
 
     // store state if browser doesn't support `history.state`
     if (!supportsHistoryState) {

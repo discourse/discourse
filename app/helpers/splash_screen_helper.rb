@@ -19,7 +19,7 @@ module SplashScreenHelper
 
   def self.load_js
     File.read("#{Rails.root}/app/assets/javascripts/discourse/dist/assets/splash-screen.js").sub(
-      "//# sourceMappingURL=splash-screen.map\n",
+      "//# sourceMappingURL=splash-screen.map",
       "",
     )
   rescue Errno::ENOENT

@@ -21,9 +21,11 @@ RSpec.describe WordWatcher do
       expect(described_class.words_for_action(:block)).to include(
         word1 => {
           case_sensitive: false,
+          word: word1,
         },
         word2 => {
           case_sensitive: true,
+          word: word2,
         },
       )
     end
@@ -40,6 +42,7 @@ RSpec.describe WordWatcher do
         word => {
           case_sensitive: false,
           replacement: "http://test.localhost/",
+          word: word,
         },
       )
     end
@@ -79,8 +82,8 @@ RSpec.describe WordWatcher do
 
         expect(regexps).to be_an(Array)
         expect(regexps.map(&:inspect)).to contain_exactly(
-          "/(?:\\W|^)(#{word1}|#{word2})(?=\\W|$)/i",
-          "/(?:\\W|^)(#{word3}|#{word4})(?=\\W|$)/",
+          "/(?:[^[:word:]]|^)(#{word1}|#{word2})(?=[^[:word:]]|$)/i",
+          "/(?:[^[:word:]]|^)(#{word3}|#{word4})(?=[^[:word:]]|$)/",
         )
       end
 

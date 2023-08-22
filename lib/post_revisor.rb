@@ -90,12 +90,7 @@ class PostRevisor
     elsif new_category.nil? || tc.guardian.can_move_topic_to_category?(new_category_id)
       tags = fields[:tags] || tc.topic.tags.map(&:name)
       if new_category &&
-           !DiscourseTagging.validate_min_required_tags_for_category(
-             tc.guardian,
-             tc.topic,
-             new_category,
-             tags,
-           )
+           !DiscourseTagging.validate_category_tags(tc.guardian, tc.topic, new_category, tags)
         tc.check_result(false)
         next
       end
@@ -165,16 +160,12 @@ class PostRevisor
       user,
       I18n.t(
         "topic_category_changed",
-        from: category_name_raw(old_category),
-        to: category_name_raw(new_category),
+        from: "##{old_category.slug_ref}",
+        to: "##{new_category.slug_ref}",
       ),
       post_type: Post.types[:small_action],
       action_code: "category_changed",
     )
-  end
-
-  def self.category_name_raw(category)
-    "##{CategoryHashtagDataSource.category_to_hashtag_item(category).ref}"
   end
 
   def self.create_small_action_for_tag_changes(topic:, user:, added_tags:, removed_tags:)
@@ -371,12 +362,16 @@ class PostRevisor
 
   def should_create_new_version?
     return false if @skip_revision
-    edited_by_another_user? || !grace_period_edit? || owner_changed? || force_new_version? ||
-      edit_reason_specified?
+    edited_by_another_user? || flagged? || !grace_period_edit? || owner_changed? ||
+      force_new_version? || edit_reason_specified?
   end
 
   def edit_reason_specified?
     @fields[:edit_reason].present? && @fields[:edit_reason] != @post.edit_reason
+  end
+
+  def flagged?
+    @post.is_flagged?
   end
 
   def edited_by_another_user?
@@ -422,7 +417,6 @@ class PostRevisor
 
   def grace_period_edit?
     return false if (@revised_at - @last_version_at) > SiteSetting.editing_grace_period.to_i
-    return false if @post.reviewable_flag.present?
 
     if new_raw = @fields[:raw]
       max_diff = SiteSetting.editing_grace_period_max_diff.to_i
@@ -691,7 +685,6 @@ class PostRevisor
 
     update_topic_excerpt
     update_category_description
-    hide_welcome_topic_banner
   end
 
   def update_topic_excerpt
@@ -711,15 +704,6 @@ class PostRevisor
     else
       @post.errors.add(:base, I18n.t("category.errors.description_incomplete"))
     end
-  end
-
-  def hide_welcome_topic_banner
-    return unless guardian.is_admin?
-    return unless @topic.id == SiteSetting.welcome_topic_id
-    return unless Discourse.cache.read(Site.welcome_topic_banner_cache_key(@editor.id))
-
-    Discourse.cache.write(Site.welcome_topic_banner_cache_key(@editor.id), false)
-    MessageBus.publish("/site/welcome-topic-banner", false)
   end
 
   def advance_draft_sequence
@@ -773,5 +757,18 @@ class PostRevisor
 
   def guardian
     @guardian ||= Guardian.new(@editor)
+  end
+
+  def raw_changed?
+    @fields.has_key?(:raw) && @fields[:raw] != cached_original_raw && @post_successfully_saved
+  end
+
+  def topic_title_changed?
+    topic_changed? && @fields.has_key?(:title) && topic_diff.has_key?(:title) &&
+      !@topic_changes.errored?
+  end
+
+  def reviewable_content_changed?
+    raw_changed? || topic_title_changed?
   end
 end

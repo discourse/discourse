@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::PurgeExpiredIgnoredUsers do
-  subject { Jobs::PurgeExpiredIgnoredUsers.new.execute({}) }
+  subject(:job) { Jobs::PurgeExpiredIgnoredUsers.new.execute({}) }
 
   context "with no ignored users" do
     it "does nothing" do
-      expect { subject }.to_not change { IgnoredUser.count }
+      expect { job }.to_not change { IgnoredUser.count }
     end
   end
 
@@ -21,7 +21,7 @@ RSpec.describe Jobs::PurgeExpiredIgnoredUsers do
 
     context "when no expired ignored users" do
       it "does nothing" do
-        expect { subject }.to_not change { IgnoredUser.count }
+        expect { job }.to_not change { IgnoredUser.count }
       end
     end
 
@@ -32,7 +32,7 @@ RSpec.describe Jobs::PurgeExpiredIgnoredUsers do
         Fabricate(:ignored_user, user: tarek, ignored_user: fred, expiring_at: 1.month.from_now)
 
         freeze_time(2.months.from_now) do
-          subject
+          job
           expect(IgnoredUser.find_by(ignored_user: fred)).to be_nil
         end
       end

@@ -1,7 +1,8 @@
 const dynamicJsTemplate = document.querySelector("#dynamic-test-js");
 
 const params = new URLSearchParams(document.location.search);
-const skipPlugins = params.get("qunit_skip_plugins");
+const target = params.get("target");
+const skipPlugins = !target || target === "core";
 
 (async function setup() {
   for (const element of dynamicJsTemplate.content.childNodes) {

@@ -59,9 +59,7 @@
       </div>
     {{else}}
       {{#component
-        this.reviewableComponent
-        reviewable=this.reviewable
-        tagName=""
+        this.reviewableComponent reviewable=this.reviewable tagName=""
       }}
         <ReviewableScores @reviewable={{this.reviewable}} @tagName="" />
       {{/component}}
@@ -132,6 +130,10 @@
         {{/if}}
       {{/if}}
     {{/if}}
+    <PluginOutlet
+      @name="reviewable-item-actions"
+      @connectorTagName="div"
+      @outletArgs={{hash reviewable=this.reviewable}}
+    />
   </div>
-
 </div>

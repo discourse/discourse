@@ -18,7 +18,7 @@ else
   # this allows us to include the bits of rails we use without pieces we do not.
   #
   # To issue a rails update bump the version number here
-  rails_version = "7.0.4.3"
+  rails_version = "7.0.7"
   gem "actionmailer", rails_version
   gem "actionpack", rails_version
   gem "actionview", rails_version
@@ -96,8 +96,7 @@ gem "omniauth-oauth2", require: false
 
 gem "omniauth-google-oauth2"
 
-# pending: https://github.com/ohler55/oj/issues/789
-gem "oj", "3.13.14"
+gem "oj"
 
 gem "pg"
 gem "mini_sql"
@@ -142,9 +141,9 @@ group :test do
   gem "fakeweb", require: false
   gem "minitest", require: false
   gem "simplecov", require: false
-  gem "selenium-webdriver", require: false
+  gem "selenium-webdriver", "~> 4.11", require: false
   gem "test-prof"
-  gem "webdrivers", require: false
+  gem "rails-dom-testing", require: false
 end
 
 group :test, :development do
@@ -158,7 +157,7 @@ group :test, :development do
 
   gem "rspec-rails"
 
-  gem "shoulda-matchers", require: false
+  gem "shoulda-matchers", require: false, github: "thoughtbot/shoulda-matchers"
   gem "rspec-html-matchers"
   gem "byebug", require: ENV["RM_INFO"].nil?, platform: :mri
   gem "rubocop-discourse", require: false
@@ -259,6 +258,11 @@ if ENV["IMPORT"] == "1"
   gem "parallel", require: false
 end
 
+if ENV["GENERIC_IMPORT"] == "1"
+  gem "sqlite3"
+  gem "redcarpet"
+end
+
 gem "web-push"
 gem "colored2", require: false
 gem "maxminddb"
@@ -271,9 +275,6 @@ gem "faraday-retry"
 # workaround for faraday-net_http, see
 # https://github.com/ruby/net-imap/issues/16#issuecomment-803086765
 gem "net-http"
-
-# workaround for prometheus-client
-gem "webrick", require: false
 
 # Workaround until Ruby ships with cgi version 0.3.6 or higher.
 gem "cgi", ">= 0.3.6", require: false

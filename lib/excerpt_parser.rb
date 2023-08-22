@@ -22,6 +22,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @keep_svg = options[:keep_svg] == true
     @remap_emoji = options[:remap_emoji] == true
     @start_excerpt = false
+    @start_hashtag_icon = false
     @in_details_depth = 0
     @summary_contents = +""
     @detail_contents = +""
@@ -112,10 +113,18 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     when "header"
       @in_quote = !@keep_onebox_source if attributes.include?(%w[class source])
     when "div", "span"
-      if attributes.include?(%w[class excerpt])
+      attributes = Hash[*attributes.flatten]
+
+      # Only match "excerpt" class if it does not specifically equal "excerpt
+      # hidden" in order to prevent internal links with GitHub oneboxes from
+      # being empty https://meta.discourse.org/t/269436
+      if attributes["class"]&.include?("excerpt") && !attributes["class"]&.match?("excerpt hidden")
         @excerpt = +""
         @current_length = 0
         @start_excerpt = true
+      elsif attributes["class"]&.include?("hashtag-icon-placeholder")
+        @start_hashtag_icon = true
+        include_tag(name, attributes)
       end
     when "details"
       @detail_contents = +"" if @in_details_depth == 0
@@ -180,6 +189,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
       @in_summary = false if @in_details_depth == 1
     when "div", "span"
       throw :done if @start_excerpt
+      characters("</span>", truncate: false, count_it: false, encode: false) if @start_hashtag_icon
     when "svg"
       characters("</svg>", truncate: false, count_it: false, encode: false) if @keep_svg
       @in_svg = false

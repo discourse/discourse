@@ -3256,7 +3256,7 @@ export default {
           avatar_template: "/letter_avatar_proxy/v4/letter/b/3be4f8/{size}.png",
           created_at: "2020-07-05T09:28:36.371Z",
           cooked:
-            '<p><span data-date="2021-09-30" data-time="13:00:00" class="discourse-local-date" data-timezone="Africa/Cairo" data-email-preview="2021-09-30T11:00:00Z UTC">2021-09-30T11:00:00Z</span></p>',
+            '<p><span data-date="2021-09-30" data-time="13:00:00" class="discourse-local-date" data-timezone="America/Lima" data-email-preview="2021-09-30T18:00:00Z UTC">2021-09-30T18:00:00Z</span></p>',
           post_number: 1,
           post_type: 1,
           updated_at: "2020-07-05T09:28:36.371Z",

@@ -6,8 +6,9 @@ RSpec.describe UserSilencer do
   fab!(:admin) { Fabricate(:admin) }
 
   describe "silence" do
-    let(:silencer) { UserSilencer.new(user) }
     subject(:silence_user) { silencer.silence }
+
+    let(:silencer) { UserSilencer.new(user) }
 
     it "silences the user correctly" do
       expect { UserSilencer.silence(user, admin) }.to change { user.reload.silenced? }

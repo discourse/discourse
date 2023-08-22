@@ -10,8 +10,12 @@
         <li class='nav-item-faq'><a class='<%= @page == 'faq' ? 'active' : '' %>' href='<%=faq_path%>'><%= t 'js.faq' %></a></li>
       <% end %>
     <% end %>
-    <li class='nav-item-tos'><a href='<%= tos_path %>' class='<%= @page == 'tos' ? 'active' : '' %>'><%= t 'js.tos' %></a></li>
-    <li class='nav-item-privacy'><a href='<%= privacy_path %>' class='<%= @page == 'privacy' ? 'active' : '' %>'><%= t 'js.privacy' %></a></li>
+    <% if tos_url.present? %>
+      <li class='nav-item-tos'><a href='<%= tos_url %>' class='<%= @page == 'tos' ? 'active' : '' %>'><%= t 'js.tos' %></a></li>
+    <% end %>
+    <% if privacy_policy_url.present? %>
+      <li class='nav-item-privacy'><a href='<%= privacy_policy_url %>' class='<%= @page == 'privacy' ? 'active' : '' %>'><%= t 'js.privacy' %></a></li>
+    <% end %>
   </ul>
 
   <% if staff? %>

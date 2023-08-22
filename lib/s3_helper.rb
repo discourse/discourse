@@ -293,7 +293,7 @@ class S3Helper
   def create_multipart(key, content_type, metadata: {})
     response =
       s3_client.create_multipart_upload(
-        acl: "private",
+        acl: SiteSetting.s3_use_acls ? "private" : nil,
         bucket: s3_bucket_name,
         key: key,
         content_type: content_type,

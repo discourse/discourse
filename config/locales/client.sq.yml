@@ -198,7 +198,6 @@ sq:
       one: "%{count} shkronjë"
       other: "%{count} shkronja"
     suggested_topics:
-      title: "Temat e sugjeruara"
       pm_title: "Mesazhet e sugjeruara"
     about:
       simple_title: "Rreth Faqes"
@@ -453,7 +452,6 @@ sq:
       "12": "Të dërguar"
       "13": "Inbox"
       "14": "Në pritje"
-      "15": "Drafts"
     categories:
       all: "kategoritë"
       all_subcategories: "të gjitha"
@@ -588,12 +586,6 @@ sq:
       api_approved: "Aprovuar më:"
       theme: "Tema"
       staged: "Staged"
-      staff_counters:
-        flags_given: "sinjalizime të dobishme"
-        flagged_posts: "postimet e sinjalizuara"
-        deleted_posts: "postimet e fshira"
-        suspensions: "pezullimet"
-        warnings_received: "paralajmërimet"
       messages:
         inbox: "Inbox"
         latest: "Të fundit"
@@ -635,7 +627,6 @@ sq:
       second_factor_backup:
         regenerate: "Rigjenero"
         disable: "Çaktivizo"
-        enable: "Aktivizo"
       second_factor:
         name: "Emri"
         disable: "Çaktivizo"
@@ -907,8 +898,6 @@ sq:
       sign_up: "Regjistrohu"
       hide_forever: "jo faleminderit"
     summary:
-      enabled_description: "Po lexoni një përmbledhje të kësaj teme: postimet më interesante sipas vlerësimit të komunitetit."
-      enable: "Përmblidhe këtë Temë"
       disable: "Shfaq të gjithë postimet"
     deleted_filter:
       enabled_description: "Kjo temë përmban postime të fshira, që tani janë fshehur."
@@ -1266,7 +1255,6 @@ sq:
           "2_8": "Ju do të shikoni numrin e përgjigjeve të reja sepse jeni duke gjurmuar këtë kategori. "
           "2_4": "Ju do të shikoni numrin e përgjigjeve të reja sepse ju postuat një përgjigje në këtë temë. "
           "2_2": "Ju do të shikoni numrin e përgjigjeve të reja sepse jeni duke gjurmuar këtë temë. "
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. "
           "1": "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. "
           "0_7": "Ju nuk do të merrni asnjë njoftim për temat në këtë kategori. "
@@ -1832,7 +1820,6 @@ sq:
         one: "Kjo stemë është fituar %{count} herë"
         other: "Kjo stemë është fituar %{count} herë"
       granted_on: "Atribuar më %{date}"
-      others_count: "Të tjerë me këtë stemë (%{count})"
       title: Stemat
       allow_title: "Mund t'a përdorësh këtë stemë si titull"
       multiple_grant: "Kjo stemë mund të fitohet disa herë"
@@ -1842,9 +1829,6 @@ sq:
       more_badges:
         one: "+%{count} tjetër"
         other: "+%{count} të tjera"
-      granted:
-        one: "%{count} e akorduar"
-        other: "%{count} të akorduara"
       select_badge_for_title: Zgjidhni një stemë për ta përdorur si titullin tuaj
       none: "(asnjë)"
       badge_grouping:
@@ -1932,6 +1916,9 @@ sq:
         other: "%{count} të reja"
       more: "Më shumë"
       all_categories: "Të gjitha kategoritë"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Të Gjithë"
       sections:
         custom:
           save: "Ruaj"
@@ -1958,7 +1945,8 @@ sq:
         categories:
           header_link_text: "Categories"
         community:
-          header_link_text: "Komuniteti"
+          edit_section:
+            header_dropdown: "Personalizo"
           links:
             about:
               content: "Rreth"
@@ -1966,6 +1954,8 @@ sq:
               content: "Admin"
             badges:
               content: "Stemat"
+            topics:
+              content: "Topics"
             faq:
               content: "Pyetje të shpeshta"
             groups:
@@ -1974,6 +1964,11 @@ sq:
               content: "Users"
             my_posts:
               content: "Postimet e mia"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Ju lutem shkruani një vlerë të vlefshme."
+          email: "Ju lutemi të vendosni një email të vlefshëm."
   admin_js:
     type_to_filter: "shkruaj për kërkim"
     admin:
@@ -2188,6 +2183,7 @@ sq:
           customize_desc: "Personalizo:"
           create_type: "Lloji"
           create_name: "Emri"
+          save: "Ruaj"
           edit: "Redakto"
           mobile: "Mobile"
           settings: "Rregullimet"
@@ -2434,6 +2430,8 @@ sq:
           validations:
             required:
               key: "i nevojshëm"
+            type:
+              key: "lloji"
       impersonate:
         title: "Personifiko"
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
@@ -2639,6 +2637,8 @@ sq:
         go_back: "Kthehu tek kërkimi"
         recommended: "Ju rekomandojmë të ndryshoni tekstin më poshtë sipas nevojave tuaja: "
         show_overriden: "Shfaq vetëm të ndryshuarat"
+        outdated:
+          dismiss: "Hiqe"
       settings:
         show_overriden: "Shfaq vetëm të ndryshuarat"
         reset: "rivendos"

@@ -1,14 +1,22 @@
 # frozen_string_literal: true
 
 RSpec.describe DraftsController do
+  fab!(:user) { Fabricate(:user) }
+
   describe "#index" do
     it "requires you to be logged in" do
       get "/drafts.json"
       expect(response.status).to eq(403)
     end
 
+    describe "when limit params is invalid" do
+      before { sign_in(user) }
+
+      include_examples "invalid limit params", "/drafts.json", described_class::INDEX_LIMIT
+    end
+
     it "returns correct stream length after adding a draft" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
       Draft.set(user, "xxx", 0, "{}")
       get "/drafts.json"
       expect(response.status).to eq(200)
@@ -17,7 +25,7 @@ RSpec.describe DraftsController do
     end
 
     it "has empty stream after deleting last draft" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
       Draft.set(user, "xxx", 0, "{}")
       Draft.clear(user, "xxx", 0)
       get "/drafts.json"
@@ -46,7 +54,7 @@ RSpec.describe DraftsController do
 
   describe "#show" do
     it "returns a draft if requested" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
       Draft.set(user, "hello", 0, "test")
 
       get "/drafts/hello.json"
@@ -62,7 +70,7 @@ RSpec.describe DraftsController do
     end
 
     it "saves a draft" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
 
       post "/drafts.json", params: { draft_key: "xyz", data: { my: "data" }.to_json, sequence: 0 }
 
@@ -77,7 +85,7 @@ RSpec.describe DraftsController do
     end
 
     it "checks for an conflict on update" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
       post = Fabricate(:post, user: user)
 
       post "/drafts.json",
@@ -103,7 +111,7 @@ RSpec.describe DraftsController do
     end
 
     it "cant trivially resolve conflicts without interaction" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
 
       DraftSequence.next!(user, "abc")
 
@@ -120,7 +128,7 @@ RSpec.describe DraftsController do
     end
 
     it "has a clean protocol for ownership handover" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
 
       post "/drafts.json",
            params: {
@@ -170,7 +178,7 @@ RSpec.describe DraftsController do
     end
 
     it "raises an error for out-of-sequence draft setting" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
       seq = DraftSequence.next!(user, "abc")
       Draft.set(user, "abc", seq, { b: "test" }.to_json)
 
@@ -230,11 +238,83 @@ RSpec.describe DraftsController do
 
   describe "#destroy" do
     it "destroys drafts when required" do
-      user = sign_in(Fabricate(:user))
+      sign_in(user)
       Draft.set(user, "xxx", 0, "hi")
       delete "/drafts/xxx.json", params: { sequence: 0 }
+
       expect(response.status).to eq(200)
       expect(Draft.get(user, "xxx", 0)).to eq(nil)
+    end
+
+    it "denies attempts to destroy unowned draft" do
+      sign_in(Fabricate(:admin))
+      user = Fabricate(:user)
+      Draft.set(user, "xxx", 0, "hi")
+      delete "/drafts/xxx.json", params: { sequence: 0, username: user.username }
+
+      # Draft is not deleted because request is not via API
+      expect(Draft.get(user, "xxx", 0)).to be_present
+    end
+
+    shared_examples "for a passed user" do
+      it "deletes draft" do
+        api_key = Fabricate(:api_key).key
+        Draft.set(recipient, "xxx", 0, "hi")
+
+        delete "/drafts/xxx.json",
+               params: {
+                 sequence: 0,
+                 username: recipient.username,
+               },
+               headers: {
+                 HTTP_API_USERNAME: caller.username,
+                 HTTP_API_KEY: api_key,
+               }
+
+        expect(response.status).to eq(response_code)
+
+        if draft_deleted
+          expect(Draft.get(recipient, "xxx", 0)).to eq(nil)
+        else
+          expect(Draft.get(recipient, "xxx", 0)).to be_present
+        end
+      end
+    end
+
+    describe "api called by admin" do
+      include_examples "for a passed user" do
+        let(:caller) { Fabricate(:admin) }
+        let(:recipient) { Fabricate(:user) }
+        let(:response_code) { 200 }
+        let(:draft_deleted) { true }
+      end
+    end
+
+    describe "api called by tl4 user" do
+      include_examples "for a passed user" do
+        let(:caller) { Fabricate(:trust_level_4) }
+        let(:recipient) { Fabricate(:user) }
+        let(:response_code) { 403 }
+        let(:draft_deleted) { false }
+      end
+    end
+
+    describe "api called by regular user" do
+      include_examples "for a passed user" do
+        let(:caller) { Fabricate(:user) }
+        let(:recipient) { Fabricate(:user) }
+        let(:response_code) { 403 }
+        let(:draft_deleted) { false }
+      end
+    end
+
+    describe "api called by admin for another admin" do
+      include_examples "for a passed user" do
+        let(:caller) { Fabricate(:admin) }
+        let(:recipient) { Fabricate(:admin) }
+        let(:response_code) { 200 }
+        let(:draft_deleted) { true }
+      end
     end
   end
 end

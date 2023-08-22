@@ -1,0 +1,18 @@
+{{#each this.filteredResultTypes as |resultType|}}
+  <div class={{resultType.componentName}}>
+    <ul
+      class="list"
+      aria-label={{concat (i18n "search.results") " " resultType.type}}
+    >
+      {{#each resultType.results as |result|}}
+        {{! template-lint-disable no-pointer-down-event-binding }}
+        {{! template-lint-disable no-invalid-interactive }}
+        <li class="item" {{on "keydown" this.onKeydown}}>
+          <a href={{(or result.url result.path)}} class="search-link">
+            <resultType.component @result={{result}} />
+          </a>
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+{{/each}}

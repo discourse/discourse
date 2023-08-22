@@ -1,0 +1,65 @@
+<DModal
+  @title={{i18n this.modalTitleKey}}
+  @closeModal={{@closeModal}}
+  class="history-modal"
+>
+  <:body>
+    <ConditionalLoadingSpinner @condition={{this.initialLoad}}>
+      <Modal::History::Revision
+        @model={{this.postRevision}}
+        @mobileView={{this.site.mobileView}}
+        @wikiDisabled={{this.wikiDisabled}}
+        @previousCategory={{this.previousCategory}}
+        @currentCategory={{this.currentCategory}}
+        @displayInline={{this.displayInline}}
+        @displaySideBySide={{this.displaySideBySide}}
+        @displaySideBySideMarkdown={{this.displaySideBySideMarkdown}}
+        @viewMode={{this.viewMode}}
+      />
+      <Modal::History::Revisions
+        @model={{this.postRevision}}
+        @hiddenClasses={{this.hiddenClasses}}
+        @mobileView={{this.site.mobileView}}
+        @userChanges={{this.user_changes}}
+        @wikiDisabled={{this.wikiDisabled}}
+        @postTypeDisabled={{this.postTypeDisabled}}
+        @previousCategory={{this.previousCategory}}
+        @currentCategory={{this.currentCategory}}
+        @previousTagChanges={{this.previousTagChanges}}
+        @currentTagChanges={{this.currentTagChanges}}
+        @bodyDiffHTML={{this.bodyDiffHTML}}
+        @bodyDiff={{this.bodyDiff}}
+        @calculateBodyDiff={{this.calculateBodyDiff}}
+        @titleDiff={{this.titleDiff}}
+      />
+    </ConditionalLoadingSpinner>
+  </:body>
+  <:footer>
+    {{#if @model.editPost}}
+      <Modal::History::TopicFooter
+        @model={{this.postRevision}}
+        @loadFirstVersion={{this.loadFirstVersion}}
+        @loadPreviousVersion={{this.loadPreviousVersion}}
+        @loadNextVersion={{this.loadNextVersion}}
+        @loadLastVersion={{this.loadLastVersion}}
+        @displayEdit={{this.displayEdit}}
+        @editPost={{this.editPost}}
+        @editButtonLabel={{this.editButtonLabel}}
+        @revertToVersion={{this.revertToVersion}}
+        @hideVersion={{this.hideVersion}}
+        @showVersion={{this.showVersion}}
+        @permanentlyDeleteVersions={{this.permanentlyDeleteVersions}}
+        @loading={{this.loading}}
+        @canPermanentlyDelete={{this.siteSettings.can_permanently_delete}}
+        @loadFirstDisabled={{this.loadFirstDisabled}}
+        @loadPreviousDisabled={{this.loadPreviousDisabled}}
+        @displayRevisions={{this.displayRevisions}}
+        @revisionsText={{this.revisionsText}}
+        @loadNextDisabled={{this.loadNextDisabled}}
+        @loadLastDisabled={{this.loadLastDisabled}}
+        @revertToRevisionText={{this.revertToRevisionText}}
+        @isStaff={{this.currentUser.staff}}
+      />
+    {{/if}}
+  </:footer>
+</DModal>

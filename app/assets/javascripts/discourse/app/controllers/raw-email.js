@@ -1,5 +1,4 @@
 import Controller from "@ember/controller";
-import IncomingEmail from "admin/models/incoming-email";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import Post from "discourse/models/post";
 import { equal } from "@ember/object/computed";
@@ -22,16 +21,6 @@ export default Controller.extend(ModalFunctionality, {
 
   loadRawEmail(postId) {
     return Post.loadRawEmail(postId).then((result) =>
-      this.setProperties({
-        rawEmail: result.raw_email,
-        textPart: result.text_part,
-        htmlPart: result.html_part,
-      })
-    );
-  },
-
-  loadIncomingRawEmail(incomingEmailId) {
-    return IncomingEmail.loadRawEmail(incomingEmailId).then((result) =>
       this.setProperties({
         rawEmail: result.raw_email,
         textPart: result.text_part,

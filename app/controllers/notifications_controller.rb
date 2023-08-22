@@ -5,6 +5,8 @@ class NotificationsController < ApplicationController
   before_action :ensure_admin, only: %i[create update destroy]
   before_action :set_notification, only: %i[update destroy]
 
+  INDEX_LIMIT = 50
+
   def index
     user =
       if params[:username] && !params[:recent]
@@ -25,19 +27,14 @@ class NotificationsController < ApplicationController
     end
 
     if params[:recent].present?
-      limit = (params[:limit] || 15).to_i
-      limit = 50 if limit > 50
+      limit = fetch_limit_from_params(default: 15, max: INDEX_LIMIT)
 
       include_reviewables = false
 
-      if SiteSetting.legacy_navigation_menu?
-        notifications = Notification.recent_report(current_user, limit, notification_types)
-      else
-        notifications =
-          Notification.prioritized_list(current_user, count: limit, types: notification_types)
-        # notification_types is blank for the "all notifications" user menu tab
-        include_reviewables = notification_types.blank? && guardian.can_see_review_queue?
-      end
+      notifications =
+        Notification.prioritized_list(current_user, count: limit, types: notification_types)
+      # notification_types is blank for the "all notifications" user menu tab
+      include_reviewables = notification_types.blank? && guardian.can_see_review_queue?
 
       if notifications.present? && !(params.has_key?(:silent) || @readonly_mode)
         if current_user.bump_last_seen_notification!

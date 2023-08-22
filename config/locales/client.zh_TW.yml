@@ -148,6 +148,7 @@ zh_TW:
       banner:
         enabled: "已於 %{when} 將其作為橫幅主題。它將一直顯示直至使用者關閉它。"
         disabled: "已於 %{when} 移除該橫幅主題。將不再出現於任何頁面。"
+      forwarded: "已轉寄上述電子郵件"
     topic_admin_menu: "話題動作"
     skip_to_main_content: "跳到主要內容"
     skip_user_nav: "跳至個人檔案內容"
@@ -183,6 +184,7 @@ zh_TW:
         us_east_1: "美國東部 (北維珍尼亞州)"
         us_east_2: "美國東部 (俄亥俄州)"
         us_gov_east_1: "AWS 政府專用（US-East）"
+        us_gov_west_1: "AWS GovCloud (美國西部)"
         us_west_1: "美國西部 (北加州)"
         us_west_2: "美國西部 (奧勒岡州)"
     clear_input: "清除輸入"
@@ -236,9 +238,9 @@ zh_TW:
       aria_label: "按期間篩選"
     related_messages:
       title: "相關訊息"
+      pill: "相關訊息"
       see_all: '參閱 @%{username} 的 <a href="%{path}">所有訊息</a>...'
     suggested_topics:
-      title: "建議的話題"
       pm_title: "推薦訊息"
     about:
       simple_title: "關於"
@@ -255,6 +257,7 @@ zh_TW:
       like_count: "讚"
       topic_count: "話題"
       post_count: "貼文"
+      user_count: "註冊"
       active_user_count: "活躍使用者"
       contact: "聯絡我們"
       contact_info: "若有重大問題或關係到網站的緊急時間，請透過 %{contact_info} 聯絡我們"
@@ -287,7 +290,7 @@ zh_TW:
         on_owner_reply: "刪除書籤，一旦我回复"
         clear_reminder: "保留書籤和清除提醒"
       search_placeholder: "依名稱、主題標題或貼文內容搜尋書籤"
-      search: "搜索"
+      search: "搜尋"
       reminders:
         today_with_time: "今天 %{time}"
         tomorrow_with_time: "明天 %{time}"
@@ -508,6 +511,8 @@ zh_TW:
       relative: "相關的"
     time_shortcut:
       now: "現在"
+      in_one_hour: "一小時內"
+      in_two_hours: "兩小時內"
       later_today: "今日稍晚"
       two_days: "兩天"
       next_business_day: "下個工作日"
@@ -621,7 +626,9 @@ zh_TW:
           settings_required: "所有設定皆為必填，請輸入所有欄位再進行驗證。"
           smtp_settings_valid: "SMTP 設定有效。"
           smtp_title: "SMTP"
+          imap_title: "IMAP"
           imap_additional_settings: "其他設定"
+          imap_settings_valid: "IMAP 設定有效。"
           prefill:
             gmail: "Gmail"
           credentials:
@@ -834,6 +841,8 @@ zh_TW:
       profile: "個人檔案"
       mute: "靜音"
       edit: "編輯喜好設定"
+      download_archive:
+        title: "匯出您的資料"
       new_private_message: "新訊息"
       private_message: "訊息"
       private_messages: "訊息"
@@ -933,14 +942,7 @@ zh_TW:
       experimental_sidebar:
         enable: "啟用側選單"
         options: "選項"
-        categories_section: "選擇分類"
-        categories_section_instruction: "選定的分類將顯示在側選單的分類段落中。"
-        tags_section: "選擇標籤"
-        tags_section_instruction: "選定的標籤將顯示在側選單的標籤段落中。"
         navigation_section: "導覽"
-        list_destination_instruction: "當側邊欄中有新內容時..."
-        list_destination_default: "使用預設連結並顯示新項目的徽章"
-        list_destination_unread_new: "連結至未讀/新的並顯示新項目的數量"
       change: "修改"
       featured_topic: "特色主題"
       moderator: "%{user} 是板主"
@@ -1004,12 +1006,6 @@ zh_TW:
       theme: "佈景主題"
       home: "預設首頁"
       staged: "暫存"
-      staff_counters:
-        flags_given: "有幫助的檢舉"
-        flagged_posts: "已檢舉的貼文"
-        deleted_posts: "已刪除的貼文"
-        suspensions: "停權"
-        warnings_received: "警告"
       messages:
         inbox: "收件匣"
         personal: "個人的"
@@ -1026,8 +1022,8 @@ zh_TW:
         move_to_inbox: "移動到收件匣"
         move_to_archive: "封存"
         failed_to_move: "移動所選郵件失敗（請檢查網路連線）"
-        tags: "標籤"
-        all_tags: "所有標籤"
+        tags: "標記"
+        all_tags: "所有標記"
         read_more: "想看更多？到<a href='%{basePath}/u/%{username}/messages'>個人訊息</a>瀏覽其他訊息。"
       preferences_nav:
         account: "帳號"
@@ -1041,7 +1037,6 @@ zh_TW:
         tags: "標籤"
         interface: "界面"
         apps: "應用"
-        sidebar: "側選單"
       change_password:
         success: "( 寄出的郵件 )"
         in_progress: "( 正在傳送郵件 )"
@@ -1053,8 +1048,8 @@ zh_TW:
       second_factor_backup:
         regenerate: "重新產生"
         disable: "禁用"
-        enable: "啟用"
-        enable_long: "啟用備用碼"
+        manage:
+          other: "你還剩下 <strong>%{count}</strong> 個可使用的備用碼"
         copy_to_clipboard: "複製至剪貼簿"
         copy_to_clipboard_error: "複製至剪貼簿時發生錯誤"
         copied_to_clipboard: "複製至剪貼簿"
@@ -1144,10 +1139,10 @@ zh_TW:
       name:
         title: "名稱"
         instructions: "您的全名 (選填)"
-        instructions_required: "您的匿稱"
+        instructions_required: "您的暱稱"
         required: "請輸入名稱"
-        too_short: "你的匿稱太短。"
-        ok: "你的匿稱符合要求。"
+        too_short: "你的暱稱太短。"
+        ok: "你的暱稱符合要求。"
       username:
         title: "使用者名稱"
         instructions: "獨一、無空格、短的"
@@ -1193,6 +1188,7 @@ zh_TW:
       enable_physical_keyboard: "支援iPad外接鍵盤"
       text_size:
         title: "文字大小"
+        smallest: "最小"
         smaller: "小"
         normal: "一般"
         larger: "大"
@@ -1263,6 +1259,7 @@ zh_TW:
         topic: "話題"
         edit: "編輯"
         remove: "移除"
+        copy_link: "取得連結"
         reinvite: "重新送出電子郵件"
         reinvited: "邀請已經重送"
         removed: "已移除"
@@ -1289,6 +1286,7 @@ zh_TW:
         invite_link:
           success: "邀請連結生成成功！"
         invite:
+          new_title: "建立邀請"
           copy_link: "複製連結"
           show_advanced: "顯示進階選項"
           hide_advanced: "隱藏進階選項"
@@ -1369,6 +1367,10 @@ zh_TW:
         the_topic: "話題"
     user_status:
       save: "儲存"
+    user_tips:
+      button: "了解！"
+      suggested_topics:
+        title: "繼續閱讀！"
     loading: "正在載入"
     errors:
       prev_page: "當嘗試載入"
@@ -1414,11 +1416,11 @@ zh_TW:
       sign_up: "註冊"
       hide_forever: "不了"
       intro: "你好！:heart_eyes: 看起來你挺喜歡這樣的討論，可是你還沒有註冊帳號。"
+    offline_indicator:
+      refresh_page: "重新整理頁面"
     summary:
-      enabled_description: "你正在檢視此話題的摘要：在這個社群裡最熱門的貼文。"
       description:
         other: "有 <b>%{count}</b> 個回覆。"
-      enable: "以摘要檢視此話題"
       disable: "顯示所有貼文"
     deleted_filter:
       enabled_description: "這個話題含有被刪除的回覆，這些回覆已被隱藏。"
@@ -1427,6 +1429,7 @@ zh_TW:
       disable: "顯示已刪除的貼文"
     private_message_info:
       title: "訊息"
+      remove: "移除..."
       add: "加入..."
       leave_message: "確定要移除這個訊息嗎？"
       remove_allowed_user: "確定將 %{name} 從對話中移除？"
@@ -1467,9 +1470,13 @@ zh_TW:
       complete_email_not_found: "沒有符合<b>%{email}</b>的帳號"
       confirm_title: 繼續連接至 %{site_name}
     login:
+      title: "登入"
       username: "使用者"
       password: "密碼"
       show_password: "顯示"
+      hide_password: "隱藏"
+      show_password_title: "顯示密碼"
+      hide_password_title: "隱藏密碼"
       second_factor_title: "兩步驟驗證"
       second_factor_description: "請輸入應用程式中的驗證碼："
       second_factor_backup_description: "請輸入一組您的備用碼"
@@ -1507,6 +1514,8 @@ zh_TW:
         name: "Facebook"
       github:
         name: "GitHub"
+      discord:
+        name: "Discord"
       second_factor_toggle:
         totp: "請改用身份驗證應用程式"
         backup_code: "請改用備用碼"
@@ -1600,6 +1609,7 @@ zh_TW:
       drafts_offline: "離線草稿"
       edit_conflict: "編輯衝突"
       esc: "退出"
+      ok_proceed: "好的，繼續"
       group_mentioned_limit:
         other: "<b>提醒</b>你提及了<a href='%{group_link}'>%{group}</a>，但此群組的人數多於管理員配置的提及人數上限（%{count}位），因此不會有任何人收到通知。"
       group_mentioned:
@@ -1695,6 +1705,7 @@ zh_TW:
         toggle_topic_bump:
           label: "回應但不讓貼文浮上來"
           desc: "回覆而不改變最新回應日期"
+      reload: "重新載入"
       ignore: "忽略"
     notifications:
       tooltip:
@@ -1737,6 +1748,7 @@ zh_TW:
       watching_first_post: "<span>新話題</span> %{description}"
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}、%{username2}</span> %{description}"
+      admin_problems: "有新的建議出現在後台儀表板"
       dismiss_confirmation:
         dismiss: "忽略"
         cancel: "取消"
@@ -1776,8 +1788,8 @@ zh_TW:
       too_short: "你的搜尋詞語太短。"
       result_count:
         other: "關於<span class='term'>%{term}</span>的<span>%{count}%{plus} 個結果 </span>"
-      title: "搜索"
-      full_page_title: "搜索"
+      title: "搜尋"
+      full_page_title: "搜尋"
       results: "結果"
       no_results: "未找到任何結果。"
       no_more_results: "沒有找到更多的結果。"
@@ -1789,15 +1801,16 @@ zh_TW:
       or_search_google: "或是嘗試利用 Google 搜尋:"
       search_google: "嘗試利用 Google 搜尋:"
       search_google_button: "Google"
-      search_button: "搜索"
+      search_button: "搜尋"
       categories: "分類"
-      tags: "標籤"
+      tags: "標記"
+      in: "在"
       type:
         users: "使用者"
         categories: "分類"
       context:
         user: "搜尋 @%{username} 的貼文"
-        category: "搜索 #%{category} 分類"
+        category: "搜尋 #%{category} 分類"
         topic: "搜尋此話題"
         private_messages: "搜尋訊息"
       advanced:
@@ -1837,12 +1850,21 @@ zh_TW:
         post:
           count:
             label: 貼文
+          min:
+            placeholder: 最小值
+          max:
+            placeholder: 最大值
           time:
             label: 發表於
             before: 之前
             after: 之後
         views:
           label: 瀏覽
+        min_views:
+          placeholder: 最小值
+        max_views:
+          placeholder: 最大值
+    hamburger_menu: "選單"
     new_item: "新增"
     go_back: "返回"
     not_logged_in_user: "使用者頁面（包含目前活動及喜好的摘要）"
@@ -1879,8 +1901,8 @@ zh_TW:
         choose_new_category: "為話題選擇新類別："
         selected:
           other: "你已選擇了 <b>%{count}</b> 個話題。"
-        change_tags: "取代標籤"
-        append_tags: "添加標籤"
+        change_tags: "取代標記"
+        append_tags: "向後追加標記"
         choose_new_tags: "為話題選擇新標籤"
         choose_append_tags: "為話題選擇新標籤"
         changed_tags: "話題的標籤已修改"
@@ -1948,10 +1970,12 @@ zh_TW:
         title: "慢速模式"
         select: "使用者在本主題的發文頻率限制："
         enable: "啟用"
+        update: "更新"
         enabled_until: "啟用直到："
         remove: "停用"
         hours: "小時:"
         minutes: "分鐘:"
+        seconds: "秒："
         durations:
           10_minutes: "10 分鐘"
           15_minutes: "15 分鐘"
@@ -2024,7 +2048,6 @@ zh_TW:
           "2_8": "您將會看到新回覆的數量，因為你正在追蹤這個分類。"
           "2_4": "您將會看到新回覆的數量，因為你回覆了此話題。"
           "2_2": "您將會看到新回覆的數量，因為你正在追蹤這個話題。"
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "如果有人@你或回覆你，將通知你。"
           "1": "如果有人@你或回覆你，將通知你。"
           "0_7": "你正忽略此分類中的所有通知。"
@@ -2187,6 +2210,7 @@ zh_TW:
         action: "合併選擇的貼文"
         error: "合併選擇的貼文試出錯。"
       publish_page:
+        publish: "發佈"
         public: "公開"
       change_owner:
         title: "變更擁有者"
@@ -2224,7 +2248,9 @@ zh_TW:
           other: "你已選擇了 <b>%{count}</b> 篇貼文。"
     post:
       quote_reply: "引用"
+      quote_reply_shortcut: "或按 q 鍵"
       quote_edit: "編輯"
+      quote_edit_shortcut: "或按 e 鍵"
       quote_share: "分享"
       edit_reason: "原因: "
       post_number: "貼文 %{number}"
@@ -2246,6 +2272,7 @@ zh_TW:
       unread: "貼文未讀"
       has_replies:
         other: "%{count} 個回覆"
+      has_replies_count: "%{count}"
       has_likes_title:
         other: "%{count} 個使用者對此貼文讚好"
       has_likes_title_only_you: "你已按讚"
@@ -2360,6 +2387,7 @@ zh_TW:
       bookmarks:
         create: "建立書籤"
         edit: "編輯書籤"
+        updated: "更新時間"
         name: "名稱"
         options: "選項"
         actions:
@@ -2368,6 +2396,8 @@ zh_TW:
           edit_bookmark:
             name: "編輯書籤"
             description: "編輯書籤名稱或更改提醒日期和時間"
+      filtered_replies:
+        show_all: "顯示全部"
     category:
       none: "( 無分類 )"
       all: "所有分類"
@@ -2378,12 +2408,12 @@ zh_TW:
       back: "回到類別"
       general: "一般"
       settings: "設定"
-      tags: "標籤"
+      tags: "標記"
       tags_allowed_tags: "將這些標籤（Tags）限制為此分類做使用："
       tags_allowed_tag_groups: "將這些標籤群組限制在此類別使用："
       tags_placeholder: "（可選）允許使用的標籤列表"
       tag_groups_placeholder: "（可選）允許使用的標籤組列表"
-      allow_global_tags_label: "也允許其他標籤（Tags）"
+      allow_global_tags_label: "還允許使用其他標記"
       required_tag_group:
         delete: "刪除"
       topic_featured_link_allowed: "允許在該分類中發布精選的連結標題"
@@ -2475,7 +2505,7 @@ zh_TW:
         activity: "活動"
         posters: "發表人"
         category: "分類"
-        created: "創建"
+        created: "建立"
       sort_ascending: "升序"
       sort_descending: "降序"
       subcategory_list_styles:
@@ -2582,6 +2612,7 @@ zh_TW:
     users_lowercase:
       other: "使用者"
     category_title: "分類"
+    history: "歷史記錄"
     raw_email:
       title: "寄來的郵件"
       not_available: "不可使用"
@@ -2668,7 +2699,12 @@ zh_TW:
       close: "關閉（Esc）"
       content_load_error: '無法加載<a href="%url%">內容</a>。'
       image_load_error: '無法加載<a href="%url%">圖片</a>。'
+    experimental_lightbox:
+      buttons:
+        close: "關閉（Esc）"
     keyboard_shortcuts_help:
+      shortcut_key_delimiter_comma: "、"
+      shortcut_key_delimiter_plus: "+"
       title: "快捷鍵"
       jump_to:
         title: "轉至"
@@ -2728,7 +2764,6 @@ zh_TW:
       earned_n_times:
         other: "授予徽章 %{count} 次"
       granted_on: "授予於%{date}"
-      others_count: "其他有該徽章的人（%{count}）"
       title: 徽章
       allow_title: "您能使用此徽章作為稱號"
       multiple_grant: "您能多次獲得此徽章"
@@ -2736,8 +2771,6 @@ zh_TW:
         other: "%{count} 徽章"
       more_badges:
         other: "+%{count} 更多"
-      granted:
-        other: "%{count} 授予"
       select_badge_for_title: 選擇一個徽章作為你的頭銜使用
       none: "(無)"
       successfully_granted: "已成功將%{badge}徽章給予%{username}"
@@ -2755,15 +2788,17 @@ zh_TW:
     download_calendar:
       download: "下載"
     tagging:
-      all_tags: "所有標籤"
-      other_tags: "其他標籤"
+      all_tags: "所有標記"
+      other_tags: "其他標記"
       selector_all_tags: "所有標籤"
-      selector_no_tags: "無標籤"
+      selector_no_tags: "無標記"
       changed: "標籤被修改："
-      tags: "標籤"
+      tags: "標記"
       choose_for_topic: "可選標籤"
+      info: "資訊"
+      synonyms: "同義詞"
       add_synonyms: "新增"
-      delete_tag: "刪除標籤"
+      delete_tag: "刪除標記"
       delete_confirm:
         other: "您確定要刪除此標籤並將它從%{count}個話題中移除嗎？"
       delete_confirm_no_topics: "您是否確定要刪除這個標籤？"
@@ -2771,16 +2806,17 @@ zh_TW:
       sort_by: "排序方式："
       sort_by_count: "總數"
       sort_by_name: "名稱"
-      manage_groups: "管理標籤組"
+      manage_groups: "管理標記群組"
       manage_groups_description: "管理標籤的群組"
-      upload: "上傳標籤"
+      upload: "上傳標記"
       upload_description: "批次上傳 csv 檔案以建立標籤"
       upload_instructions: "一行一個，可選擇以 'tag_name,tag_group' 的格式包含一個標籤群組。"
       upload_successful: "標籤已成功上傳"
       delete_unused_confirmation:
-        other: "%{count}個標籤將被刪除：%{tags}"
+        other: "%{count} 個標記將被刪除：%{tags}"
       delete_unused_confirmation_more_tags:
         other: "%{tags}以及其他%{count}個"
+      tag_list_joiner: "、"
       delete_unused: "刪除未被使用的標籤"
       delete_unused_description: "刪除所有未被附加在任何話題或個人訊息的標籤"
       filters:
@@ -2806,7 +2842,7 @@ zh_TW:
           description: "你將不會收到這些分類中的新討論話題通知，它們也不會出現在你的未讀欄內。"
       groups:
         back_btn: "返回所有標籤"
-        title: "標籤組"
+        title: "標記群組"
         about_heading: "選取一個標籤群組或建立一個新標籤群組"
         about_description: "標記組可協助您集中管理多個標籤的權限。"
         new: "新標籤組"
@@ -2821,7 +2857,9 @@ zh_TW:
         delete: "刪除"
         confirm_delete: "確定要刪除此標籤組嗎？"
         everyone_can_use: "所有使用者都能使用標籤。"
+        tags_placeholder: "搜尋或建立標記"
         parent_tag_placeholder: "選擇性"
+        select_groups_placeholder: "選取群組..."
       topics:
         none:
           unread: "你沒有未讀話題。"
@@ -2857,6 +2895,13 @@ zh_TW:
         member: "成員"
         regular: "活躍使用者"
         leader: "資深"
+    user_activity:
+      no_activity_body: "歡迎來到我們的社群！你是新來的，還沒有參與討論。第一步，訪問 <a href='%{topUrl}'>精選話題</a> 或<a href='%{categoriesUrl}'>類別</a>，然後開始閱讀！在您喜歡或想了解更多資訊的貼文上選擇 %{heartIcon}。當您參與時，您的活動將>列在此處。"
+    no_group_messages_title: "找不到群組訊息"
+    fullscreen_table:
+      expand_btn: "展開表格"
+    second_factor_auth:
+      redirect_after_success: "兩步驟驗證成功。重新導向至之前的頁面..."
     sidebar:
       unread_count:
         other: "%{count} 個未讀"
@@ -2865,15 +2910,25 @@ zh_TW:
       more: "更多"
       all_categories: "所有分類"
       all_tags: "所有標籤"
+      tags_form_modal:
+        title: "編輯標記導航"
+      edit_navigation_modal_form:
+        deselect_button_text: "取消全選"
+        filter_dropdown:
+          all: "全部"
+          selected: "已選"
       sections:
         custom:
           save: "保存"
           delete: "刪除"
           links:
+            reset: "重設為預設值"
             icon:
               label: "圖示"
             name:
               label: "姓名"
+            value:
+              label: "連結"
         about:
           header_link_text: "關於"
         messages:
@@ -2890,6 +2945,7 @@ zh_TW:
           none: "您尚未新增任何標籤。"
           click_to_get_started: "按一下這裡開始。"
           header_link_text: "標籤"
+          header_action_title: "編輯您的側標條標記"
           configure_defaults: "設定預設值"
         categories:
           none: "您尚未新增任何類別。"
@@ -2897,7 +2953,8 @@ zh_TW:
           header_link_text: "分類"
           configure_defaults: "設定預設值"
         community:
-          header_link_text: "社群"
+          edit_section:
+            header_dropdown: "客製化"
           links:
             about:
               content: "關於"
@@ -2905,8 +2962,8 @@ zh_TW:
               content: "管理員"
             badges:
               content: "徽章"
-            everything:
-              content: "所有"
+            topics:
+              content: "討論話題"
               title: "所有話題"
             faq:
               content: "常見問答"
@@ -2923,6 +2980,12 @@ zh_TW:
               pending_count: "剩餘 %{count}"
     welcome_topic_banner:
       title: "建立您的歡迎主題"
+      button_title: "開始編輯"
+    until: "直到："
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "請輸入一個有效的值。"
   admin_js:
     type_to_filter: "輸入要搜尋的文字..."
     admin:
@@ -3036,6 +3099,7 @@ zh_TW:
             email: Email
             incoming_email: "自訂電子郵件"
             incoming_email_placeholder: "輸入 email"
+            incoming_email_tooltip: "您可以使用 | 字元分隔多個電子郵件地址。"
             visibility: 能見度
             visibility_levels:
               title: "誰能看到這個群組？"
@@ -3071,6 +3135,7 @@ zh_TW:
         none: "目前沒有啟用中的 API 金鑰。"
         user: "使用者"
         title: "API"
+        key: "金鑰"
         created: 已建立
         never_used: (永不)
         generate: "產生"
@@ -3078,9 +3143,13 @@ zh_TW:
         all_users: "所有使用者"
         show_details: 詳細訊息
         description: 描述
+        all_api_keys: 所有 API 金鑰
         save: 儲存
         continue: 繼續
         scopes:
+          read_only: 唯讀
+          global: 全域
+          resource: 資源
           action: 動作
       web_hooks:
         title: "Webhooks"
@@ -3088,7 +3157,7 @@ zh_TW:
         instruction: "Webhooks 讓 Discourse 可以在特定事件發生時通知外部服務。當 webhook 事件觸發時，一個 POST 請求將發向指定地址。"
         detailed_instruction: "一個 POST 請求將在選定事件發生時發至指定 URL。"
         new: "新建 Webhook"
-        create: "創建"
+        create: "建立"
         edit: "編輯"
         save: "保存"
         controls: "控制"
@@ -3156,7 +3225,7 @@ zh_TW:
           ping: "Ping"
           status: "狀態碼"
           event_id: "ID"
-          timestamp: "創建時間"
+          timestamp: "建立時間"
           completion: "完成時間"
           actions: "操作"
       plugins:
@@ -3173,6 +3242,7 @@ zh_TW:
         official: "官方套件"
       navigation_menu:
         sidebar: "側選單"
+        legacy: "舊版"
       backups:
         title: "備份"
         menu:
@@ -3250,6 +3320,7 @@ zh_TW:
         title: "客製化"
         preview: "預覽"
         explain_preview: "以此佈景主題預覽網站"
+        syntax_error: "語法錯誤"
         save: "儲存"
         new: "新增"
         new_style: "新增樣式"
@@ -3284,6 +3355,7 @@ zh_TW:
           create: "建立"
           create_type: "類型"
           create_name: "名稱"
+          save: "保存"
           long_title: "修改網站上的CSS顏色、HTML內容"
           edit: "編輯"
           edit_confirm: "這是一個遠端佈景主題，因此您對CSS/HTML所做的變更將會在您下次更新佈景主題時消失。"
@@ -3674,15 +3746,20 @@ zh_TW:
           require_approval: "需要審核"
           flag: "檢舉"
           replace: "取代"
+          tag: "標記"
           silence: "靜音"
+          link: "連結"
         form:
           placeholder_regexp: "正規表示法"
+          tag_label: "標記"
+          link_label: "連結"
           link_placeholder: "https://example.com"
           add: "新增"
           success: "成功"
           exists: "已存在"
           upload_successful: "上傳成功，文字已被添加。"
         test:
+          button_label: "測試"
           no_matches: "找不到符合的項目"
       form_templates:
         nav_title: "模板"
@@ -3700,6 +3777,7 @@ zh_TW:
           preview: "預覽"
         quick_insert_fields:
           add_new_field: "加入"
+          checkbox: "核取方塊"
           dropdown: "下拉"
         validations_modal:
           table_headers:
@@ -3708,6 +3786,21 @@ zh_TW:
           validations:
             required:
               key: "必填"
+              type: "布林值"
+            minimum:
+              key: "最小值"
+              type: "整數"
+            maximum:
+              key: "最大值"
+              type: "整數"
+            type:
+              key: "類型"
+              type: "字串"
+        field_placeholders:
+          choices:
+            first: "選項 1"
+            second: "選項 2"
+            third: "選項 3"
       impersonate:
         title: "檢視角度"
         help: "使用此工具以使用者的檢視角度進行除錯。完成後將需登出。"
@@ -3956,15 +4049,15 @@ zh_TW:
           enabled: "在使用者卡片上顯示"
           disabled: "在使用者卡片上隱藏"
         searchable:
-          title: "可搜索"
-          enabled: "可搜索"
+          title: "可搜尋"
+          enabled: "可搜尋"
         field_types:
           text: "文字區域"
           confirm: "確認"
           dropdown: "下拉"
       site_text:
-        description: "你可以自定義論壇的任意文本。請按以下搜索："
-        search: "搜索你想要編輯的文本"
+        description: "你可以自定義論壇的任意文本。請按以下搜尋："
+        search: "搜尋你想要編輯的文本"
         title: "文字"
         edit: "編輯"
         revert: "恢復變更"
@@ -3973,6 +4066,8 @@ zh_TW:
         recommended: "我們建議自定義以下文本以符合你的需求："
         show_overriden: "只顯示修改過的項目"
         more_than_50_results: "有超過50個搜尋結果。請嘗試重新定義搜尋關鍵字。"
+        outdated:
+          dismiss: "忽略"
       settings:
         show_overriden: "只顯示被覆寫的內容"
         reset: "重置"
@@ -3980,7 +4075,6 @@ zh_TW:
       site_settings:
         title: "設定"
         no_results: "未找到任何結果。"
-        more_than_30_results: "共有超過 30 筆搜尋結果，請輸入更精確的文字或選擇特定分類搜尋。"
         clear_filter: "清除"
         add_url: "加入網址"
         add_host: "新增主機"
@@ -4019,7 +4113,7 @@ zh_TW:
           plugins: "延伸套件"
           user_preferences: "偏好設定"
           tags: "標籤"
-          search: "搜索"
+          search: "搜尋"
           groups: "群組"
           dashboard: "控制面板"
           navigation: "導覽"
@@ -4124,7 +4218,7 @@ zh_TW:
         allowed_embed_selectors: "使用 CSS 選擇器選擇允許的嵌入元素"
         blocked_embed_selectors: "使用 CSS 選擇器移除嵌入元素"
         allowed_embed_classnames: "允許 CSS class 名稱"
-        save: "儲存崁入設定"
+        save: "儲存嵌入設定"
       permalink:
         title: "固定連結"
         url: "網址"
@@ -4134,6 +4228,7 @@ zh_TW:
         post_title: "貼文"
         category_id: "分類 ID"
         category_title: "分類"
+        tag_name: "標記名稱"
         delete_confirm: 你確定要刪除此固定連結？
         form:
           label: "新增："
@@ -4153,7 +4248,7 @@ zh_TW:
     wizard:
       back: "上一步"
       next: "下一步"
-      step-text: "梯級"
+      step-text: "步驟"
       step: "%{current} / %{total}"
       uploading: "上傳中..."
       upload_error: "抱歉，上傳檔案時發生錯誤，請再試一次。"

@@ -6,7 +6,7 @@ export default class ChatChannelPreviewCard extends Component {
   @service chat;
 
   get showJoinButton() {
-    return this.args.channel?.isOpen;
+    return this.args.channel?.isOpen && this.args.channel?.canJoin;
   }
 
   get hasDescription() {

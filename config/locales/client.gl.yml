@@ -234,9 +234,9 @@ gl:
       other: "%{count} caracteres"
     related_messages:
       title: "Mensaxes relacionadas"
+      pill: "Mensaxes relacionadas"
       see_all: 'Ver <a href="%{path}">todas as mensaxes</a> de @%{username}...'
     suggested_topics:
-      title: "Temas suxeridos"
       pm_title: "Mensaxes suxeridas"
     about:
       simple_title: "Verbo de"
@@ -1034,13 +1034,6 @@ gl:
       save_to_change_theme: 'Para actualizar o tema, prema "%{save_text}"'
       home: "Páxina de inicio predeterminada"
       staged: "Transitorio"
-      staff_counters:
-        flags_given: "alertas útiles"
-        flagged_posts: "publicacións sinaladas"
-        deleted_posts: "publicacións eliminadas"
-        suspensions: "suspensións"
-        warnings_received: "advertencias"
-        rejected_posts: "publicacións rexeitadas"
       messages:
         inbox: "Caixa de entrada"
         latest: "Últimos"
@@ -1085,11 +1078,9 @@ gl:
         title: "Códigos de copia de seguranza de dobre paso"
         regenerate: "Rexenerar"
         disable: "Desactivar"
-        enable: "Activar"
-        enable_long: "Activar códigos de copia de seguranza"
         manage:
-          one: "Xestionar os códigos de copia de seguranza. Quédanlle <strong>%{count}</strong> de código de copia de seguranza."
-          other: "Xestionar os códigos de copia de seguranza. Quédanlle <strong>%{count}</strong> de códigos de copia de seguranza."
+          one: "Quédanlle <strong>%{count}</strong> de código de copia de seguranza."
+          other: "Quédanlle <strong>%{count}</strong> de códigos de copia de seguranza."
         copy_to_clipboard: "Copiar ao portapapeis"
         copy_to_clipboard_error: "Produciuse un erro ao copiar os datos ao portapapeis"
         copied_to_clipboard: "Copiado ao portapapeis"
@@ -1516,8 +1507,6 @@ gl:
       enabled: "Este sitio está en modo só-lectura. Continúe navegando pero responder, gustar e outras accións estarán desactivadas polo de agora."
       login_disabled: "Cando o sitio está no modo de só-lectura, desactívase o inicio de sesión."
       logout_disabled: "O peche de sesión desactívase mentres o sitio está en modo de só lectura."
-    too_few_posts_notice_MF: |
-      Comecemos <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">a discusión!</a> E {currentPosts, plural, one {hai <strong>#</strong> publicación} other {hai <strong>#</strong> publicacións}}. Os visitantes necesitan máis para ler e responder – recomendamos que haxa cando menos {requiredPosts, plural, one {<strong>#</strong> publicación} other {<strong>#</strong> publicacións}}. Soamente o equipo pode ver esta mensaxe.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hour} other {# errors/hour}}</a> acadou o límite configurado no sitio de {limit, plural, one {# erro/hora} other {# erros/hora}}.
@@ -1545,13 +1534,11 @@ gl:
       hide_forever: "non grazas"
       intro: "Ola! Todo indica que goza coa discusión pero aínda non solicitou inscrición dunha conta."
     summary:
-      enabled_description: "Está vendo un resumo deste tema: as publicacións máis interesantes determinadas pola comunidade."
       description:
         one: "Hai <b>%{count}</b> resposta."
         other: "Hai <b>%{count}</b> respostas."
       description_time_MF: |
         Hai {replyCount, plural, one {<b>#</b> resposta} other {<b>#</b> respostas}} que supoñen un tempo estimado de lectura de <b>{readingTime, plural, one {# minuto} other {# minutos}}</b>.
-      enable: "Resumir este tema"
       disable: "Amosar todas as publicacións"
     deleted_filter:
       enabled_description: "Este tema contén publicacións eliminadas, que se ocultaron."
@@ -1943,6 +1930,7 @@ gl:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - completado"
+      admin_problems: "Novo consello no seu panel de sitio"
       dismiss_confirmation:
         dismiss: "Desbotar"
         cancel: "Cancelar"
@@ -2144,7 +2132,6 @@ gl:
         top: "Non hai temas destacados."
         educate:
           new: '<p>Aquí aparecen os seus temas novos. De xeito predeterminado, os temas considéranse novos e amosarán un indicador de <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> se se crearon nos últimos dous días.</p><p>Vexa as súas <a href="%{userPrefsUrl}">preferencias</a> para cambiar este axuste.</p>'
-          unread: "<p>Os seus temas pendentes aparecen aquí.</p><p>De xeito predeterminado, os temas considéranse pendentes e amosarase o número dos non lidos. <span class=\"badge unread-posts badge-notification\">1</span> se vostede:</p><ul><li>Creou o tema</li><li>Respondeu ao tema</li><li>Leu o tema durante máis de catro minutos</li></ul><p>Ou estabeleceu explicitamente o tema para ser observado ou seguido con \U0001F514 de cada tema.</p><p>Vaia ás súas <a href=\"%{userPrefsUrl}\">preferencias</a> se quere cambiar isto.</p>"
       bottom:
         latest: "Non hai máis temas."
         posted: "Non hai máis temas publicados."
@@ -2728,7 +2715,6 @@ gl:
       filtered_replies:
         viewing_posts_by: "Vendo %{post_count} publicacións de"
         viewing_subset: "Algunhas respostas están repregadas"
-        viewing_summary: "Vendo un resumo deste tema"
         post_number: "%{username}, publicación #%{post_number}"
         show_all: "Amosar todas"
     category:
@@ -3071,6 +3057,9 @@ gl:
       close: "Pechar (Esc)"
       content_load_error: '<a href="%url%">O contido</a> non puido cargarse.'
       image_load_error: '<a href="%url%">A imaxe</a> non puido cargarse.'
+    experimental_lightbox:
+      buttons:
+        close: "Pechar (Esc)"
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
       shortcut_key_delimiter_plus: "+"
@@ -3158,7 +3147,6 @@ gl:
         one: "Gañou esta insignia %{count} vez"
         other: "Gañou esta insignia %{count} veces"
       granted_on: "Concedida %{date}"
-      others_count: "Outros con esta insignia (%{count})"
       title: Insignias
       allow_title: "Pode usar esta insignia como título"
       multiple_grant: "Pode gañala múltiples veces"
@@ -3168,9 +3156,6 @@ gl:
       more_badges:
         one: "+%{count} Máis"
         other: "+%{count} Máis"
-      granted:
-        one: "%{count} concedida"
-        other: "%{count} concedidas"
       select_badge_for_title: Seleccione unha insignia que usará como título
       none: "(ningunha)"
       successfully_granted: "Concedeuse %{badge} a %{username} correctamente"
@@ -3325,11 +3310,15 @@ gl:
         other: "%{count} novos"
       more: "Máis"
       all_categories: "Todas as categorías"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "Todas"
       sections:
         custom:
           save: "Gardar"
           delete: "Eliminar"
           links:
+            reset: "Restabelecer cos valores predeterminados"
             icon:
               label: "Icona"
             name:
@@ -3353,7 +3342,8 @@ gl:
         categories:
           header_link_text: "Categorías"
         community:
-          header_link_text: "Comunidade"
+          edit_section:
+            header_dropdown: "Personalizar"
           links:
             about:
               content: "Verbo de"
@@ -3361,8 +3351,8 @@ gl:
               content: "Administración"
             badges:
               content: "Insignias"
-            everything:
-              content: "Todo"
+            topics:
+              content: "Temas"
             faq:
               content: "PMF"
             groups:
@@ -3374,6 +3364,11 @@ gl:
             review:
               content: "Revisar"
     until: "Ata:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Introduza un valor correcto."
+          email: "Introduza un enderezo de correo electrónico correcto."
   admin_js:
     type_to_filter: "escriba para filtrar..."
     admin:
@@ -3651,9 +3646,6 @@ gl:
         notification_event:
           name: "Evento de notificación"
           details: "Cando o usuario recibe unha notificación na fonte."
-        user_badge_event:
-          name: "Evento de concesión de insignias"
-          details: "Cando se recibe unha insignia."
         delivery_status:
           title: "Estado de entrega"
           inactive: "Inactivo"
@@ -3805,6 +3797,7 @@ gl:
           create: "Crear"
           create_type: "Tipo"
           create_name: "Nome"
+          save: "Gardar"
           long_title: "Mudar as cores, o contido CSS e HTML do seu sitio"
           edit: "Editar"
           edit_confirm: "Este é un tema remoto. Se editas o CSS/HTML, os cambios borraranse a próxima vez que actualice o tema."
@@ -4327,6 +4320,8 @@ gl:
               key: "mínimo"
             maximum:
               key: "máximo"
+            type:
+              key: "tipo"
       impersonate:
         title: "Suplantar"
         help: "Usar esta ferramenta para suplantar unha conta de usuario co obxecto de detectar e corrixir erros. Deberá saír da sesión ao rematar."
@@ -4632,6 +4627,8 @@ gl:
         show_overriden: "Amosar só os cambios"
         locale: "Idioma:"
         more_than_50_results: "Hai máis de 50 resultados. Restrinxa a busca."
+        outdated:
+          dismiss: "Desbotar"
       settings:
         show_overriden: "Amosar só os cambios"
         history: "Ver o historial de cambios"
@@ -4640,7 +4637,6 @@ gl:
       site_settings:
         title: "Axustes"
         no_results: "Non se atoparon resultados."
-        more_than_30_results: "Hai máis de 30 resultados. Restrinxa a busca ou seleccione unha categoría."
         clear_filter: "Borrar"
         add_url: "engadir URL"
         add_host: "engadir servidor"

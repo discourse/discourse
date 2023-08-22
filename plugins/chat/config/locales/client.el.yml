@@ -56,6 +56,8 @@ el:
           about: Σχετικά
           members: Μέλη
           settings: Ρυθμίσεις
+      new_message_modal:
+        no_items: "Δεν υπάρχουν στοιχεία"
       direct_message_creator:
         title: Νέο Μήνυμα
         prefix: "Προς:"
@@ -67,11 +69,13 @@ el:
       composer:
         italic_text: "κείμενο σε έμφαση"
         bold_text: "έντονη γραφή"
+        send: "Αποστολή"
       notification_levels:
         never: "Ποτέ"
       settings:
         follow: "Γίνετε μέλος"
         followed: "Έγινε μέλος"
+        threading_disabled: "Απενεργοποιημένο"
         notifications: "Ειδοποιήσεις"
         preview: "Προεπισκόπηση"
         save: "Αποθήκευση"
@@ -103,6 +107,18 @@ el:
         activities: "Δραστηριότητες"
         flags: "Σημάνσεις"
         symbols: "Σύμβολα"
+      thread:
+        title: "Τίτλος"
+        replies:
+          one: "%{count} απάντηση"
+          other: "%{count} απαντήσεις"
+        settings: "Ρυθμίσεις"
+        last_reply: "τελευταία απάντηση"
+        notifications:
+          regular:
+            title: "Φυσιολογικό"
+          tracking:
+            title: "Παρακολουθείται"
       draft_channel_screen:
         header: "Νέο Μήνυμα"
         cancel: "Ακύρωση"
@@ -114,7 +130,3 @@ el:
           fields:
             message:
               label: Μήνυμα
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Επισήμανση από"

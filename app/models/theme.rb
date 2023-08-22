@@ -6,15 +6,17 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 71
+  BASE_COMPILER_VERSION = 73
 
   attr_accessor :child_components
 
-  @cache = DistributedCache.new("theme:compiler:#{BASE_COMPILER_VERSION}")
+  def self.cache
+    @cache ||= DistributedCache.new("theme:compiler:#{BASE_COMPILER_VERSION}")
+  end
 
   belongs_to :user
   belongs_to :color_scheme
-  has_many :theme_fields, dependent: :destroy
+  has_many :theme_fields, dependent: :destroy, validate: false
   has_many :theme_settings, dependent: :destroy
   has_many :theme_translation_overrides, dependent: :destroy
   has_many :child_theme_relation,
@@ -59,6 +61,7 @@ class Theme < ActiveRecord::Base
            class_name: "ThemeField"
 
   validate :component_validations
+  validate :validate_theme_fields
 
   after_create :update_child_components
 
@@ -97,6 +100,9 @@ class Theme < ActiveRecord::Base
     changed_colors.clear
     changed_schemes.clear
 
+    any_non_css_fields_changed =
+      changed_fields.any? { |f| !(f.basic_scss_field? || f.extra_scss_field?) }
+
     changed_fields.each(&:save!)
     changed_fields.clear
 
@@ -116,7 +122,7 @@ class Theme < ActiveRecord::Base
     update_javascript_cache!
 
     remove_from_cache!
-    DB.after_commit { ColorScheme.hex_cache.clear }
+    ColorScheme.hex_cache.clear
     notify_theme_change(with_scheme: notify_with_scheme)
 
     if theme_setting_requests_refresh
@@ -125,6 +131,14 @@ class Theme < ActiveRecord::Base
         self.theme_setting_requests_refresh = false
       end
     end
+
+    if any_non_css_fields_changed && should_refresh_development_clients?
+      MessageBus.publish "/file-change", ["development-mode-theme-changed"]
+    end
+  end
+
+  def should_refresh_development_clients?
+    Rails.env.development?
   end
 
   def update_child_components
@@ -190,7 +204,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.get_set_cache(key, &blk)
-    @cache.defer_get_set(key, &blk)
+    cache.defer_get_set(key, &blk)
   end
 
   def self.theme_ids
@@ -300,6 +314,12 @@ class Theme < ActiveRecord::Base
     errors.add(:base, I18n.t("themes.errors.component_no_default")) if default?
   end
 
+  def validate_theme_fields
+    theme_fields.each do |field|
+      field.errors.full_messages.each { |message| errors.add(:base, message) } unless field.valid?
+    end
+  end
+
   def switch_to_component!
     return if component
 
@@ -351,7 +371,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.clear_cache!
-    DB.after_commit { @cache.clear }
+    cache.clear
   end
 
   def self.targets
@@ -494,11 +514,11 @@ class Theme < ActiveRecord::Base
 
     value ||= ""
 
-    field =
-      theme_fields.find { |f| f.name == name && f.target_id == target_id && f.type_id == type_id }
+    field = theme_fields.find_by(name: name, target_id: target_id, type_id: type_id)
+
     if field
       if value.blank? && !upload_id
-        theme_fields.delete field.destroy
+        field.destroy
       else
         if field.value != value || field.upload_id != upload_id
           field.value = value
@@ -506,18 +526,30 @@ class Theme < ActiveRecord::Base
           changed_fields << field
         end
       end
-      field
     else
       if value.present? || upload_id.present?
-        theme_fields.build(
-          target_id: target_id,
-          value: value,
-          name: name,
-          type_id: type_id,
-          upload_id: upload_id,
-        )
+        field =
+          theme_fields.build(
+            target_id: target_id,
+            value: value,
+            name: name,
+            type_id: type_id,
+            upload_id: upload_id,
+          )
+        changed_fields << field
       end
     end
+    field
+  end
+
+  def child_theme_ids=(theme_ids)
+    super(theme_ids)
+    Theme.clear_cache!
+  end
+
+  def parent_theme_ids=(theme_ids)
+    super(theme_ids)
+    Theme.clear_cache!
   end
 
   def add_relative_theme!(kind, theme)
@@ -761,12 +793,13 @@ class Theme < ActiveRecord::Base
     return if !keys
 
     current_values = CSV.parse(setting_row.value, **{ col_sep: "|" }).flatten
-    new_values = []
-    current_values.each do |item|
-      parts = CSV.parse(item, **{ col_sep: "," }).flatten
-      props = parts.map.with_index { |p, idx| [keys[idx], p] }.to_h
-      new_values << props
-    end
+
+    new_values =
+      current_values.map do |item|
+        parts = CSV.parse(item, **{ col_sep: "," }).flatten
+        raise "Schema validation failed" if keys.size < parts.size
+        parts.zip(keys).map(&:reverse).to_h
+      end
 
     schemer = JSONSchemer.schema(schema)
     raise "Schema validation failed" if !schemer.valid?(new_values)

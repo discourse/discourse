@@ -30,8 +30,6 @@ describe Chat::MessageUpdater do
       Fabricate(:user_chat_channel_membership, chat_channel: public_chat_channel, user: user)
     end
     Group.refresh_automatic_groups!
-    @direct_message_channel =
-      Chat::DirectMessageChannelCreator.create!(acting_user: user1, target_users: [user1, user2])
   end
 
   def create_chat_message(user, message, channel, upload_ids: nil)
@@ -87,6 +85,27 @@ describe Chat::MessageUpdater do
     expect(chat_message.reload.message).to eq(og_message)
   end
 
+  it "errors when a blank message is sent" do
+    og_message = "This won't be changed!"
+    chat_message = create_chat_message(user1, og_message, public_chat_channel)
+    new_message = "    "
+
+    updater =
+      Chat::MessageUpdater.update(
+        guardian: guardian,
+        chat_message: chat_message,
+        new_content: new_message,
+      )
+    expect(updater.failed?).to eq(true)
+    expect(updater.error.message).to match(
+      I18n.t(
+        "chat.errors.minimum_length_not_met",
+        { count: SiteSetting.chat_minimum_message_length },
+      ),
+    )
+    expect(chat_message.reload.message).to eq(og_message)
+  end
+
   it "errors if a user other than the message user is trying to edit the message" do
     og_message = "This won't be changed!"
     chat_message = create_chat_message(user1, og_message, public_chat_channel)
@@ -126,121 +145,255 @@ describe Chat::MessageUpdater do
     expect(events.map { _1[:event_name] }).to include(:chat_message_edited)
   end
 
-  it "creates mention notifications for unmentioned users" do
+  it "publishes updated message to message bus" do
     chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
-    expect {
-      Chat::MessageUpdater.update(
-        guardian: guardian,
-        chat_message: chat_message,
-        new_content:
-          "this is a message with @system @mentions @#{user2.username} and @#{user3.username}",
-      )
-    }.to change { user2.chat_mentions.count }.by(1).and change { user3.chat_mentions.count }.by(1)
-  end
-
-  it "doesn't create mentions for already mentioned users" do
-    message = "ping @#{user2.username} @#{user3.username}"
-    chat_message = create_chat_message(user1, message, public_chat_channel)
-    expect {
-      Chat::MessageUpdater.update(
-        guardian: guardian,
-        chat_message: chat_message,
-        new_content: message + " editedddd",
-      )
-    }.not_to change { Chat::Mention.count }
-  end
-
-  it "doesn't create mention notification for users without access" do
-    message = "ping"
-    chat_message = create_chat_message(user1, message, public_chat_channel)
-
-    Chat::MessageUpdater.update(
-      guardian: guardian,
-      chat_message: chat_message,
-      new_content: message + " @#{user_without_memberships.username}",
-    )
-
-    mention = user_without_memberships.chat_mentions.where(chat_message: chat_message).first
-    expect(mention.notification).to be_nil
-  end
-
-  it "destroys mention notifications that should be removed" do
-    chat_message =
-      create_chat_message(user1, "ping @#{user2.username} @#{user3.username}", public_chat_channel)
-    expect {
-      Chat::MessageUpdater.update(
-        guardian: guardian,
-        chat_message: chat_message,
-        new_content: "ping @#{user3.username}",
-      )
-    }.to change { user2.chat_mentions.count }.by(-1).and not_change { user3.chat_mentions.count }
-  end
-
-  it "creates new, leaves existing, and removes old mentions all at once" do
-    chat_message =
-      create_chat_message(user1, "ping @#{user2.username} @#{user3.username}", public_chat_channel)
-    Chat::MessageUpdater.update(
-      guardian: guardian,
-      chat_message: chat_message,
-      new_content: "ping @#{user3.username} @#{user4.username}",
-    )
-
-    expect(user2.chat_mentions.where(chat_message: chat_message)).not_to be_present
-    expect(user3.chat_mentions.where(chat_message: chat_message)).to be_present
-    expect(user4.chat_mentions.where(chat_message: chat_message)).to be_present
-  end
-
-  it "doesn't create mention notification in direct message for users without access" do
-    message = create_chat_message(user1, "ping nobody", @direct_message_channel)
-
-    Chat::MessageUpdater.update(
-      guardian: guardian,
-      chat_message: message,
-      new_content: "ping @#{admin1.username}",
-    )
-
-    mention = admin1.chat_mentions.where(chat_message: message).first
-    expect(mention.notification).to be_nil
-  end
-
-  describe "group mentions" do
-    it "creates group mentions on update" do
-      chat_message = create_chat_message(user1, "ping nobody", public_chat_channel)
-      expect {
-        Chat::MessageUpdater.update(
+    new_content = "New content"
+    messages =
+      MessageBus.track_publish("/chat/#{public_chat_channel.id}") do
+        described_class.update(
           guardian: guardian,
           chat_message: chat_message,
-          new_content: "ping @#{admin_group.name}",
+          new_content: new_content,
         )
-      }.to change { Chat::Mention.where(chat_message: chat_message).count }.by(2)
+      end
 
-      expect(admin1.chat_mentions.where(chat_message: chat_message)).to be_present
-      expect(admin2.chat_mentions.where(chat_message: chat_message)).to be_present
+    expect(messages.count).to be(1)
+    message = messages[0].data
+    expect(message["chat_message"]["message"]).to eq(new_content)
+  end
+
+  context "with mentions" do
+    it "sends notifications if a message was updated with new mentions" do
+      message = create_chat_message(user1, "Mentioning @#{user2.username}", public_chat_channel)
+
+      Chat::MessageUpdater.update(
+        guardian: guardian,
+        chat_message: message,
+        new_content: "Mentioning @#{user2.username} and @#{user3.username}",
+      )
+
+      mention = user3.chat_mentions.where(chat_message: message).first
+      expect(mention.notification).to be_present
     end
 
-    it "doesn't duplicate mentions when the user is already direct mentioned and then group mentioned" do
-      chat_message = create_chat_message(user1, "ping @#{admin2.username}", public_chat_channel)
+    it "doesn't create mentions for already mentioned users" do
+      message = "ping @#{user2.username} @#{user3.username}"
+      chat_message = create_chat_message(user1, message, public_chat_channel)
       expect {
         Chat::MessageUpdater.update(
           guardian: guardian,
           chat_message: chat_message,
-          new_content: "ping @#{admin_group.name} @#{admin2.username}",
+          new_content: message + " editedddd",
         )
-      }.to change { admin1.chat_mentions.count }.by(1).and not_change { admin2.chat_mentions.count }
+      }.not_to change { Chat::Mention.count }
     end
 
-    it "deletes old mentions when group mention is removed" do
-      chat_message = create_chat_message(user1, "ping @#{admin_group.name}", public_chat_channel)
+    it "doesn't create mention notification for users without access" do
+      message = "ping"
+      chat_message = create_chat_message(user1, message, public_chat_channel)
+
+      Chat::MessageUpdater.update(
+        guardian: guardian,
+        chat_message: chat_message,
+        new_content: message + " @#{user_without_memberships.username}",
+      )
+
+      mention = user_without_memberships.chat_mentions.where(chat_message: chat_message).first
+      expect(mention.notification).to be_nil
+    end
+
+    it "destroys mentions that should be removed" do
+      chat_message =
+        create_chat_message(
+          user1,
+          "ping @#{user2.username} @#{user3.username}",
+          public_chat_channel,
+        )
       expect {
         Chat::MessageUpdater.update(
           guardian: guardian,
           chat_message: chat_message,
-          new_content: "ping nobody anymore!",
+          new_content: "ping @#{user3.username}",
         )
-      }.to change { Chat::Mention.where(chat_message: chat_message).count }.by(-2)
+      }.to change { user2.chat_mentions.count }.by(-1).and not_change { user3.chat_mentions.count }
+    end
 
-      expect(admin1.chat_mentions.where(chat_message: chat_message)).not_to be_present
-      expect(admin2.chat_mentions.where(chat_message: chat_message)).not_to be_present
+    it "creates new, leaves existing, and removes old mentions all at once" do
+      chat_message =
+        create_chat_message(
+          user1,
+          "ping @#{user2.username} @#{user3.username}",
+          public_chat_channel,
+        )
+      Chat::MessageUpdater.update(
+        guardian: guardian,
+        chat_message: chat_message,
+        new_content: "ping @#{user3.username} @#{user4.username}",
+      )
+
+      expect(user2.chat_mentions.where(chat_message: chat_message)).not_to be_present
+      expect(user3.chat_mentions.where(chat_message: chat_message)).to be_present
+      expect(user4.chat_mentions.where(chat_message: chat_message)).to be_present
+    end
+
+    it "doesn't create mention notification in direct message for users without access" do
+      result =
+        Chat::CreateDirectMessageChannel.call(
+          guardian: user1.guardian,
+          target_usernames: [user1.username, user2.username],
+        )
+      service_failed!(result) if result.failure?
+      direct_message_channel = result.channel
+      message = create_chat_message(user1, "ping nobody", direct_message_channel)
+
+      Chat::MessageUpdater.update(
+        guardian: guardian,
+        chat_message: message,
+        new_content: "ping @#{admin1.username}",
+      )
+
+      mention = admin1.chat_mentions.where(chat_message: message).first
+      expect(mention.notification).to be_nil
+    end
+
+    it "creates a chat_mention record without notification when self mentioning" do
+      chat_message = create_chat_message(user1, "I will mention myself soon", public_chat_channel)
+      new_content = "hello @#{user1.username}"
+
+      described_class.update(
+        guardian: guardian,
+        chat_message: chat_message,
+        new_content: new_content,
+      )
+
+      mention = user1.chat_mentions.where(chat_message: chat_message).first
+      expect(mention).to be_present
+      expect(mention.notification).to be_nil
+    end
+
+    it "adds mentioned user and their status to the message bus message" do
+      SiteSetting.enable_user_status = true
+      status = { description: "dentist", emoji: "tooth" }
+      user2.set_status!(status[:description], status[:emoji])
+      chat_message = create_chat_message(user1, "This will be updated", public_chat_channel)
+      new_content = "Hey @#{user2.username}"
+
+      messages =
+        MessageBus.track_publish("/chat/#{public_chat_channel.id}") do
+          described_class.update(
+            guardian: guardian,
+            chat_message: chat_message,
+            new_content: new_content,
+          )
+        end
+
+      expect(messages.count).to be(1)
+      message = messages[0].data
+      expect(message["chat_message"]["mentioned_users"].count).to be(1)
+      mentioned_user = message["chat_message"]["mentioned_users"][0]
+
+      expect(mentioned_user["id"]).to eq(user2.id)
+      expect(mentioned_user["username"]).to eq(user2.username)
+      expect(mentioned_user["status"]).to be_present
+      expect(mentioned_user["status"].slice(:description, :emoji)).to eq(status)
+    end
+
+    it "doesn't add mentioned user's status to the message bus message when status is disabled" do
+      SiteSetting.enable_user_status = false
+      user2.set_status!("dentist", "tooth")
+      chat_message = create_chat_message(user1, "This will be updated", public_chat_channel)
+      new_content = "Hey @#{user2.username}"
+
+      messages =
+        MessageBus.track_publish("/chat/#{public_chat_channel.id}") do
+          described_class.update(
+            guardian: guardian,
+            chat_message: chat_message,
+            new_content: new_content,
+          )
+        end
+
+      expect(messages.count).to be(1)
+      message = messages[0].data
+      expect(message["chat_message"]["mentioned_users"].count).to be(1)
+      mentioned_user = message["chat_message"]["mentioned_users"][0]
+
+      expect(mentioned_user["status"]).to be_blank
+    end
+
+    context "when updating a mentioned user" do
+      it "updates the mention record" do
+        chat_message = create_chat_message(user1, "ping @#{user2.username}", public_chat_channel)
+
+        Chat::MessageUpdater.update(
+          guardian: guardian,
+          chat_message: chat_message,
+          new_content: "ping @#{user3.username}",
+        )
+
+        user2_mentions = user2.chat_mentions.where(chat_message: chat_message)
+        expect(user2_mentions.length).to be(0)
+
+        user3_mentions = user3.chat_mentions.where(chat_message: chat_message)
+        expect(user3_mentions.length).to be(1)
+      end
+    end
+
+    context "when there are duplicate mentions" do
+      it "creates a single mention record per user" do
+        chat_message = create_chat_message(user1, "ping @#{user2.username}", public_chat_channel)
+
+        Chat::MessageUpdater.update(
+          guardian: guardian,
+          chat_message: chat_message,
+          new_content: "ping @#{user2.username} @#{user2.username} edited",
+        )
+
+        expect(user2.chat_mentions.where(chat_message: chat_message).count).to eq(1)
+      end
+    end
+
+    describe "with group mentions" do
+      it "creates group mentions on update" do
+        chat_message = create_chat_message(user1, "ping nobody", public_chat_channel)
+        expect {
+          Chat::MessageUpdater.update(
+            guardian: guardian,
+            chat_message: chat_message,
+            new_content: "ping @#{admin_group.name}",
+          )
+        }.to change { Chat::Mention.where(chat_message: chat_message).count }.by(2)
+
+        expect(admin1.chat_mentions.where(chat_message: chat_message)).to be_present
+        expect(admin2.chat_mentions.where(chat_message: chat_message)).to be_present
+      end
+
+      it "doesn't duplicate mentions when the user is already direct mentioned and then group mentioned" do
+        chat_message = create_chat_message(user1, "ping @#{admin2.username}", public_chat_channel)
+        expect {
+          Chat::MessageUpdater.update(
+            guardian: guardian,
+            chat_message: chat_message,
+            new_content: "ping @#{admin_group.name} @#{admin2.username}",
+          )
+        }.to change { admin1.chat_mentions.count }.by(1).and not_change {
+                admin2.chat_mentions.count
+              }
+      end
+
+      it "deletes old mentions when group mention is removed" do
+        chat_message = create_chat_message(user1, "ping @#{admin_group.name}", public_chat_channel)
+        expect {
+          Chat::MessageUpdater.update(
+            guardian: guardian,
+            chat_message: chat_message,
+            new_content: "ping nobody anymore!",
+          )
+        }.to change { Chat::Mention.where(chat_message: chat_message).count }.by(-2)
+
+        expect(admin1.chat_mentions.where(chat_message: chat_message)).not_to be_present
+        expect(admin2.chat_mentions.where(chat_message: chat_message)).not_to be_present
+      end
     end
   end
 
@@ -459,6 +612,29 @@ describe Chat::MessageUpdater do
         upload_ids: [upload1.id],
       )
       expect(chat_message.reload.message).to eq(new_message)
+    end
+  end
+
+  context "when the message is in a thread" do
+    fab!(:message) do
+      Fabricate(
+        :chat_message,
+        user: user1,
+        chat_channel: public_chat_channel,
+        thread: Fabricate(:chat_thread, channel: public_chat_channel),
+      )
+    end
+
+    it "publishes a MessageBus event to update the original message metadata" do
+      messages =
+        MessageBus.track_publish("/chat/#{public_chat_channel.id}") do
+          Chat::MessageUpdater.update(
+            guardian: guardian,
+            chat_message: message,
+            new_content: "some new updated content",
+          )
+        end
+      expect(messages.find { |m| m.data["type"] == "update_thread_original_message" }).to be_present
     end
   end
 

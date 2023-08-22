@@ -1,0 +1,54 @@
+<div class="d-lightbox__header">
+  {{#if @canNavigate}}
+    <div aria-hidden="true" class="d-lightbox__multi-item-controls">
+      <DButton
+        @class="d-lightbox__carousel-button btn-flat"
+        @title="experimental_lightbox.buttons.carousel"
+        @icon="images"
+        @ariaHidden="true"
+        {{on "click" @toggleCarousel passive=true capture=true}}
+        aria-hidden="true"
+      />
+      <div class="d-lightbox__counters">
+        <span class="d-lightbox__counter-current">
+          {{~@counterIndex~}}
+        </span>
+        <span class="d-lightbox__counter-separator">
+          <span>/</span>
+        </span>
+        <span class="d-lightbox__counter-total">
+          {{~@totalItemCount~}}
+        </span>
+      </div>
+    </div>
+  {{/if}}
+  <div class="d-lightbox__header-buttons">
+    {{#if @canDownload}}
+      <DButton
+        @class="d-lightbox__new-tab-button btn-flat"
+        @title="experimental_lightbox.buttons.newtab"
+        @icon="external-link-alt"
+        @ariaHidden="true"
+        {{on "click" @openInNewTab passive=true capture=true}}
+        aria-hidden="true"
+      />
+    {{/if}}
+    {{#if @canFullscreen}}
+      <DButton
+        @class="d-lightbox__full-screen-button btn-flat"
+        @title="experimental_lightbox.buttons.fullscreen"
+        @icon="discourse-expand"
+        @ariaHidden="true"
+        {{on "click" @toggleFullScreen passive=true capture=true}}
+        aria-hidden="true"
+      />
+    {{/if}}
+    <DButton
+      @class="d-lightbox__close-button btn-flat"
+      @title="experimental_lightbox.buttons.close"
+      @icon="times"
+      @ariaHidden="true"
+      {{on "click" @close passive=true capture=true}}
+    />
+  </div>
+</div>

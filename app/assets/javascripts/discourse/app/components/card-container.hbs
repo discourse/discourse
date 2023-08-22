@@ -7,14 +7,11 @@
   @showUser={{this.showUser}}
   @filterPosts={{this.filterPosts}}
   @composePrivateMessage={{route-action "composePrivateMessage"}}
-  @createNewMessageViaParams={{route-action "createNewMessageViaParams"}}
   role="dialog"
-  aria-labelledby="discourse-user-card-title"
 />
 
 <GroupCardContents
   @topic={{this.topic.model}}
   @showUser={{this.showUser}}
   @showGroup={{this.showGroup}}
-  @createNewMessageViaParams={{route-action "createNewMessageViaParams"}}
 />

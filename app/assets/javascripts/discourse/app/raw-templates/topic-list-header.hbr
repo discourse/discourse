@@ -1,0 +1,23 @@
+{{~raw-plugin-outlet name="topic-list-header-before"~}}
+{{#if bulkSelectEnabled}}
+  <th class="bulk-select topic-list-data">
+    {{#if canBulkSelect}}
+      {{raw "flat-button" class="bulk-select" icon="list" title="topics.bulk.toggle"}}
+    {{/if}}
+  </th>
+{{/if}}
+{{raw "topic-list-header-column" order='default' name=listTitle bulkSelectEnabled=bulkSelectEnabled showBulkToggle=toggleInTitle canBulkSelect=canBulkSelect canDoBulkActions=canDoBulkActions showTopicsAndRepliesToggle=showTopicsAndRepliesToggle newListSubset=newListSubset newRepliesCount=newRepliesCount newTopicsCount=newTopicsCount}}
+{{raw-plugin-outlet name="topic-list-header-after-main-link"}}
+{{#if showPosters}}
+  {{raw "topic-list-header-column" order='posters' ariaLabel=(i18n "category.sort_options.posters")}}
+{{/if}}
+{{raw "topic-list-header-column" sortable=sortable number='true' order='posts' name='replies' ariaLabel=(i18n "sr_replies")}}
+{{#if showLikes}}
+  {{raw "topic-list-header-column" sortable=sortable number='true' order='likes' name='likes' ariaLabel=(i18n "sr_likes")}}
+{{/if}}
+{{#if showOpLikes}}
+  {{raw "topic-list-header-column" sortable=sortable number='true' order='op_likes' name='likes' ariaLabel=(i18n "sr_op_likes")}}
+{{/if}}
+{{raw "topic-list-header-column" sortable=sortable number='true' order='views' name='views' ariaLabel=(i18n "sr_views")}}
+{{raw "topic-list-header-column" sortable=sortable number='true' order='activity' name='activity' ariaLabel=(i18n "sr_activity")}}
+{{~raw-plugin-outlet name="topic-list-header-after"~}}

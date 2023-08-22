@@ -27,3 +27,5 @@ be:
         rich_tooltip:
           description: "апісанне"
           header: "Header"
+        char_counter:
+          placeholder: "Увядзіце свой тэкст тут..."

@@ -8,12 +8,14 @@ import { dateNode } from "discourse/helpers/node";
 import { emojiUnescape } from "discourse/lib/text";
 import getURL from "discourse-common/lib/get-url";
 import { h } from "virtual-dom";
-import hbs from "discourse/widgets/hbs-compiler";
+import widgetHbs from "discourse/widgets/hbs-compiler";
 import highlightSearch from "discourse/lib/highlight-search";
 import { iconNode } from "discourse-common/lib/icon-library";
 import renderTag from "discourse/lib/render-tag";
 import { MODIFIER_REGEXP } from "discourse/widgets/search-menu";
 import User from "discourse/models/user";
+import { hbs } from "ember-cli-htmlbars";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
 
 const suggestionShortcuts = [
   "in:title",
@@ -71,6 +73,10 @@ export function addQuickSearchRandomTip(tip) {
   if (!QUICK_TIPS.includes(tip)) {
     QUICK_TIPS.push(tip);
   }
+}
+
+export function removeDefaultQuickSearchRandomTips() {
+  QUICK_TIPS = QUICK_TIPS.filter((tip) => !DEFAULT_QUICK_TIPS.includes(tip));
 }
 
 export function resetQuickSearchRandomTips() {
@@ -284,7 +290,14 @@ createWidget("search-menu-results", {
   tagName: "div.results",
 
   html(attrs) {
-    const { term, suggestionKeyword, results, searchTopics } = attrs;
+    const {
+      term,
+      suggestionKeyword,
+      inTopicContext,
+      results,
+      searchTopics,
+      onLinkClicked,
+    } = attrs;
 
     if (suggestionKeyword) {
       return this.attach("search-menu-assistant", {
@@ -385,8 +398,40 @@ createWidget("search-menu-results", {
       }
     }
 
+    content.push(
+      new RenderGlimmer(
+        this,
+        "div",
+        hbs`<PluginOutlet @name="search-menu-results-top" @outletArgs={{@data.outletArgs}}/>`,
+        {
+          outletArgs: {
+            searchTerm: term,
+            inTopicContext,
+            onLinkClicked,
+            searchTopics,
+          },
+        }
+      )
+    );
+
     content.push(categoriesAndTags);
     content.push(usersAndGroups);
+
+    content.push(
+      new RenderGlimmer(
+        this,
+        "div",
+        hbs`<PluginOutlet @name="search-menu-results-bottom" @outletArgs={{@data.outletArgs}}/>`,
+        {
+          outletArgs: {
+            searchTerm: term,
+            inTopicContext,
+            onLinkClicked,
+            searchTopics,
+          },
+        }
+      )
+    );
 
     return content;
   },
@@ -778,6 +823,7 @@ createWidget("search-menu-assistant-item", {
       value: this.attrs.slug,
       searchTopics: true,
       setTopicContext: this.attrs.setTopicContext,
+      origin: this.attrs.origin,
     });
     e.preventDefault();
     return false;
@@ -790,10 +836,16 @@ createWidget("random-quick-tip", {
   buildKey: () => "random-quick-tip",
 
   defaultState() {
-    return QUICK_TIPS[Math.floor(Math.random() * QUICK_TIPS.length)];
+    return QUICK_TIPS.length
+      ? QUICK_TIPS[Math.floor(Math.random() * QUICK_TIPS.length)]
+      : {};
   },
 
   html(attrs, state) {
+    if (!Object.keys(state).length) {
+      return;
+    }
+
     return [
       h(
         `span.tip-label${state.clickable ? ".tip-clickable" : ""}`,
@@ -819,7 +871,7 @@ createWidget("random-quick-tip", {
 createWidget("search-menu-recent-searches", {
   tagName: "div.search-menu-recent",
 
-  template: hbs`
+  template: widgetHbs`
     <div class="heading">
       <h4>{{i18n "search.recent"}}</h4>
       {{flat-button
@@ -833,7 +885,7 @@ createWidget("search-menu-recent-searches", {
     {{#each this.currentUser.recent_searches as |slug|}}
       {{attach
         widget="search-menu-assistant-item"
-        attrs=(hash slug=slug icon="history")
+        attrs=(hash slug=slug icon="history" origin="recent-search")
       }}
     {{/each}}
   `,

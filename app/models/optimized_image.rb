@@ -55,13 +55,8 @@ class OptimizedImage < ActiveRecord::Base
 
     if original_path.blank?
       # download is protected with a DistributedMutex
-      external_copy =
-        begin
-          Discourse.store.download(upload)
-        rescue StandardError
-          nil
-        end
-      original_path = external_copy.try(:path)
+      external_copy = Discourse.store.download_safe(upload)
+      original_path = external_copy&.path
     end
 
     lock(upload.id, width, height) do
@@ -151,7 +146,7 @@ class OptimizedImage < ActiveRecord::Base
       if local?
         Discourse.store.path_for(self)
       else
-        Discourse.store.download(self).path
+        Discourse.store.download!(self).path
       end
     File.size(path)
   end
@@ -180,7 +175,7 @@ class OptimizedImage < ActiveRecord::Base
     paths.each { |path| raise Discourse::InvalidAccess unless safe_path?(path) }
   end
 
-  IM_DECODERS ||= /\A(jpe?g|png|ico|gif|webp)\z/i
+  IM_DECODERS ||= /\A(jpe?g|png|ico|gif|webp|avif)\z/i
 
   def self.prepend_decoder!(path, ext_path = nil, opts = nil)
     opts ||= {}

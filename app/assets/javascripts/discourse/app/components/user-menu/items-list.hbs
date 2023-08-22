@@ -29,6 +29,13 @@
         {{i18n "user.dismiss"}}
       </button>
     {{/if}}
+    <PluginOutlet
+      @name="panel-body-bottom"
+      @outletArgs={{hash
+        itemsCacheKey=this.itemsCacheKey
+        closeUserMenu=@closeUserMenu
+      }}
+    />
   </div>
 {{else}}
   {{component this.emptyStateComponent}}

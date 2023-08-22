@@ -16,8 +16,20 @@ function fixLegacyExtensions(tree) {
       if (relativePath.endsWith(".es6")) {
         return relativePath.slice(0, -4);
       } else if (relativePath.endsWith(".raw.hbs")) {
-        return relativePath.replace(".raw.hbs", ".hbr");
+        relativePath = relativePath.replace(".raw.hbs", ".hbr");
       }
+
+      if (relativePath.endsWith(".hbr")) {
+        if (relativePath.includes("/templates/")) {
+          relativePath = relativePath.replace("/templates/", "/raw-templates/");
+        } else if (relativePath.includes("/connectors/")) {
+          relativePath = relativePath.replace(
+            "/connectors/",
+            "/raw-templates/connectors/"
+          );
+        }
+      }
+
       return relativePath;
     },
   });
@@ -83,6 +95,12 @@ function parsePluginName(pluginRbPath) {
 module.exports = {
   name: require("./package").name,
 
+  options: {
+    babel: {
+      plugins: [require.resolve("deprecation-silencer")],
+    },
+  },
+
   pluginInfos() {
     const root = path.resolve("../../../../plugins");
     const pluginDirectories = fs
@@ -135,6 +153,9 @@ module.exports = {
   },
 
   generatePluginsTree() {
+    if (!this.shouldLoadPlugins()) {
+      return mergeTrees([]);
+    }
     const appTree = this._generatePluginAppTree();
     const testTree = this._generatePluginTestTree();
     const adminTree = this._generatePluginAdminTree();
@@ -227,7 +248,16 @@ module.exports = {
     return;
   },
 
-  shouldLoadPluginTestJs() {
-    return EmberApp.env() === "development" || process.env.LOAD_PLUGINS === "1";
+  // Matches logic from GlobalSetting.load_plugins? in the ruby app
+  shouldLoadPlugins() {
+    if (process.env.LOAD_PLUGINS === "1") {
+      return true;
+    } else if (process.env.LOAD_PLUGINS === "0") {
+      return false;
+    } else if (EmberApp.env() === "test") {
+      return false;
+    } else {
+      return true;
+    }
   },
 };

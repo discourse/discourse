@@ -1,13 +1,9 @@
 import { reads } from "@ember/object/computed";
 import Component from "@ember/component";
 import { computed } from "@ember/object";
-import layout from "select-kit/templates/components/mini-tag-chooser/selected-collection";
 
 export default Component.extend({
   tagName: "",
-
-  layout,
-
   selectedTags: reads("collection.content.selectedTags.[]"),
 
   tags: computed("selectedTags.[]", "selectKit.filter", function () {

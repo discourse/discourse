@@ -1,0 +1,59 @@
+<div
+  class="d-lightbox__body"
+  tabindex="-1"
+  {{on "touchstart" @onTouchstart passive=true capture=true}}
+  {{on "touchend" @onTouchend passive=true capture=true}}
+  {{on "click" @toggleZoom passive=true}}
+>
+  {{#if @shouldDisplayMainImageArrows}}
+    <DButton
+      @class="d-lightbox__previous-button btn-flat"
+      @title="experimental_lightbox.buttons.previous"
+      @icon={{@previousButtonIcon}}
+      @ariaHidden="true"
+      {{on "click" @showPreviousItem passive=true capture=true}}
+    />
+  {{/if}}
+  {{#if @isLoading}}
+    <span class="d-lightbox__loading-spinner">
+      {{loading-spinner size="large"}}
+    </span>
+  {{else if @hasLoadingError}}
+    <span class="d-lightbox__error-message">
+      <DButton
+        @class="d-lightbox__retry-button btn-flat"
+        @title="experimental_lightbox.buttons.redo"
+        @icon="redo"
+        {{on "click" @reloadImage passive=true capture=true}}
+      />
+      <span>{{i18n "experimental_lightbox.image_load_error"}}</span>
+    </span>
+  {{else if @isZoomed}}
+    <div
+      class="d-lightbox__zoomed-image-container"
+      tabindex="-1"
+      {{did-insert @centerZoomedBackgroundPosition}}
+      {{on "mousemove" @zoomOnMouseover passive=true capture=true}}
+    ></div>
+  {{else}}
+    <DLightbox::Backdrop @close={{@close}} />
+    <img
+      aria-hidden="true"
+      draggable="false"
+      fetchPriority="high"
+      decoding="async"
+      tabindex="-1"
+      class="d-lightbox__main-image"
+      src={{@currentItem.fullsizeURL}}
+    />
+  {{/if}}
+  {{#if @shouldDisplayMainImageArrows}}
+    <DButton
+      @class="d-lightbox__next-button btn-flat"
+      @title="experimental_lightbox.buttons.next"
+      @icon={{@nextButtonIcon}}
+      @ariaHidden="true"
+      {{on "click" @showNextItem passive=true capture=true}}
+    />
+  {{/if}}
+</div>

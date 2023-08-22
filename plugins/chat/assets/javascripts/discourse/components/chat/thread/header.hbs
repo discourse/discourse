@@ -1,0 +1,47 @@
+<div class="chat-thread-header">
+  <div class="chat-thread-header__left-buttons">
+    {{#if @thread}}
+      <LinkTo
+        class="chat-thread__back-to-previous-route btn-flat btn btn-icon no-text"
+        @route={{this.backLink.route}}
+        @models={{this.backLink.models}}
+        title={{i18n "chat.return_to_threads_list"}}
+      >
+        <Chat::Thread::HeaderUnreadIndicator @channel={{@thread.channel}} />
+        {{d-icon "chevron-left"}}
+      </LinkTo>
+    {{/if}}
+  </div>
+
+  <span class="chat-thread-header__label overflow-ellipsis">
+    {{replace-emoji this.label}}
+  </span>
+
+  <div
+    class={{concat-class
+      "chat-thread-header__buttons"
+      (if this.persistedNotificationLevel "-persisted")
+    }}
+  >
+    <ThreadNotificationsButton
+      @value={{this.threadNotificationLevel}}
+      @onChange={{this.updateThreadNotificationLevel}}
+    />
+    {{#if this.canChangeThreadSettings}}
+      <DButton
+        @action={{this.openThreadSettings}}
+        @class="btn-flat chat-thread-header__settings"
+        @icon="cog"
+        @title="chat.thread.settings"
+      />
+    {{/if}}
+    <LinkTo
+      class="chat-thread__close btn-flat btn btn-icon no-text"
+      @route="chat.channel"
+      @models={{@thread.channel.routeModels}}
+      title={{i18n "chat.thread.close"}}
+    >
+      {{d-icon "times"}}
+    </LinkTo>
+  </div>
+</div>

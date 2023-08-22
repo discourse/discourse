@@ -34,11 +34,22 @@
 
     <label>
       <Input
+        id="toggle-overridden"
         @type="checkbox"
         @checked={{this.overridden}}
         {{on "click" (action "toggleOverridden")}}
       />
       {{i18n "admin.site_text.show_overriden"}}
+    </label>
+
+    <label>
+      <Input
+        id="toggle-outdated"
+        @type="checkbox"
+        @checked={{this.outdated}}
+        {{on "click" this.toggleOutdated}}
+      />
+      {{i18n "admin.site_text.show_outdated"}}
     </label>
   </p>
 </div>

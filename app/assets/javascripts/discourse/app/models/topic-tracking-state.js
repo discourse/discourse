@@ -94,45 +94,45 @@ const TopicTrackingState = EmberObject.extend({
     this.messageBus.subscribe(
       "/latest",
       this._processChannelPayload,
-      meta["/latest"] || messageBusDefaultNewMessageId
+      meta["/latest"] ?? messageBusDefaultNewMessageId
     );
 
     if (this.currentUser) {
       this.messageBus.subscribe(
         "/new",
         this._processChannelPayload,
-        meta["/new"] || messageBusDefaultNewMessageId
+        meta["/new"] ?? messageBusDefaultNewMessageId
       );
 
       this.messageBus.subscribe(
         `/unread`,
         this._processChannelPayload,
-        meta["/unread"] || messageBusDefaultNewMessageId
+        meta["/unread"] ?? messageBusDefaultNewMessageId
       );
 
       this.messageBus.subscribe(
         `/unread/${this.currentUser.id}`,
         this._processChannelPayload,
-        meta[`/unread/${this.currentUser.id}`] || messageBusDefaultNewMessageId
+        meta[`/unread/${this.currentUser.id}`] ?? messageBusDefaultNewMessageId
       );
     }
 
     this.messageBus.subscribe(
       "/delete",
       this.onDeleteMessage,
-      meta["/delete"] || messageBusDefaultNewMessageId
+      meta["/delete"] ?? messageBusDefaultNewMessageId
     );
 
     this.messageBus.subscribe(
       "/recover",
       this.onRecoverMessage,
-      meta["/recover"] || messageBusDefaultNewMessageId
+      meta["/recover"] ?? messageBusDefaultNewMessageId
     );
 
     this.messageBus.subscribe(
       "/destroy",
       this.onDestroyMessage,
-      meta["/destroy"] || messageBusDefaultNewMessageId
+      meta["/destroy"] ?? messageBusDefaultNewMessageId
     );
   },
 
@@ -397,8 +397,9 @@ const TopicTrackingState = EmberObject.extend({
    * @method removeTopic
    */
   removeTopic(topicId) {
-    this.states.delete(this._stateKey(topicId));
-    this._afterStateChange();
+    if (this.states.delete(this._stateKey(topicId))) {
+      this._afterStateChange();
+    }
   },
 
   /**
@@ -1015,6 +1016,10 @@ const TopicTrackingState = EmberObject.extend({
       this._dismissNewTopics(data.payload.topic_ids);
     }
 
+    if (data.message_type === "dismiss_new_posts") {
+      this._dismissNewPosts(data.payload.topic_ids);
+    }
+
     if (["new_topic", "unread", "read"].includes(data.message_type)) {
       this.notifyIncoming(data);
       if (!deepEqual(old, data.payload)) {
@@ -1054,6 +1059,23 @@ const TopicTrackingState = EmberObject.extend({
     topicIds.forEach((topicId) => {
       this.modifyStateProp(topicId, "is_seen", true);
     });
+
+    this.incrementMessageCount();
+  },
+
+  _dismissNewPosts(topicIds) {
+    topicIds.forEach((topicId) => {
+      const state = this.findState(topicId);
+
+      if (state) {
+        this.modifyStateProp(
+          topicId,
+          "last_read_post_number",
+          state.highest_post_number
+        );
+      }
+    });
+
     this.incrementMessageCount();
   },
 

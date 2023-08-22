@@ -1,0 +1,41 @@
+<CreateInviteUploader @autoFindInput={{false}} as |uploader setElement|>
+  <DModal
+    @title={{i18n "user.invited.bulk_invite.text"}}
+    class="create-invite-bulk-modal"
+    @closeModal={{@closeModal}}
+  >
+    <:body>
+      {{#if uploader.uploaded}}
+        {{i18n "user.invited.bulk_invite.success"}}
+      {{else}}
+        {{html-safe (i18n "user.invited.bulk_invite.instructions")}}
+        <input
+          id="csv-file"
+          disabled={{uploader.uploading}}
+          type="file"
+          accept=".csv"
+          {{did-insert setElement}}
+        />
+      {{/if}}
+    </:body>
+    <:footer>
+      {{#unless uploader.uploaded}}
+        <DButton
+          @icon="link"
+          @translatedLabel={{if
+            uploader.uploading
+            (i18n
+              "user.invited.bulk_invite.progress"
+              progress=uploader.uploadProgress
+            )
+            (i18n "user.invited.bulk_invite.text")
+          }}
+          class="btn-primary"
+          @action={{uploader.startUpload}}
+          @disabled={{uploader.submitDisabled}}
+        />
+      {{/unless}}
+      <DButton @label="close" class="btn-primary" @action={{@closeModal}} />
+    </:footer>
+  </DModal>
+</CreateInviteUploader>

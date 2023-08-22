@@ -27,3 +27,7 @@
 *.PDF  diff=astextplain
 *.rtf  diff=astextplain
 *.RTF  diff=astextplain
+
+# Ember App
+*.gjs linguist-language=js linguist-detectable
+*.gts linguist-language=ts linguist-detectable

@@ -7,10 +7,11 @@ import { ajax } from "discourse/lib/ajax";
 import { categoryLinkHTML } from "discourse/helpers/category-link";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { htmlSafe } from "@ember/template";
-import showModal from "discourse/lib/show-modal";
 import { warn } from "@ember/debug";
 import { action } from "@ember/object";
 import { splitString } from "discourse/lib/utilities";
+import { inject as service } from "@ember/service";
+import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-default-categories";
 
 const CUSTOM_TYPES = [
   "bool",
@@ -27,6 +28,7 @@ const CUSTOM_TYPES = [
   "upload",
   "group_list",
   "tag_list",
+  "tag_group_list",
   "color",
   "simple_list",
   "emoji_list",
@@ -66,11 +68,15 @@ const DEFAULT_USER_PREFERENCES = [
   "default_tags_watching_first_post",
   "default_text_size",
   "default_title_count_mode",
-  "default_sidebar_categories",
-  "default_sidebar_tags",
+  "default_navigation_menu_categories",
+  "default_navigation_menu_tags",
+  "default_sidebar_link_to_filtered_list",
+  "default_sidebar_show_count_of_new_items",
 ];
 
 export default Mixin.create({
+  modal: service(),
+  site: service(),
   attributeBindings: ["setting.setting:data-setting"],
   classNameBindings: [":row", ":setting", "overridden", "typeClass"],
   validationMessage: null,
@@ -187,20 +193,22 @@ export default Mixin.create({
     });
 
     const count = result.user_count;
-
     if (count > 0) {
-      const controller = showModal("site-setting-default-categories", {
-        model: { count, key: key.replaceAll("_", " ") },
-        admin: true,
+      await this.modal.show(SiteSettingDefaultCategoriesModal, {
+        model: {
+          siteSetting: { count, key: key.replaceAll("_", " ") },
+          setUpdateExistingUsers: this.setUpdateExistingUsers,
+        },
       });
-
-      controller.set("onClose", () => {
-        this.updateExistingUsers = controller.updateExistingUsers;
-        this.save();
-      });
+      this.save();
     } else {
       await this.save();
     }
+  },
+
+  @action
+  setUpdateExistingUsers(value) {
+    this.updateExistingUsers = value;
   },
 
   @action
@@ -214,8 +222,15 @@ export default Mixin.create({
         this.afterSave();
       }
     } catch (e) {
-      if (e.jqXHR?.responseJSON?.errors) {
-        this.set("validationMessage", e.jqXHR.responseJSON.errors[0]);
+      const json = e.jqXHR?.responseJSON;
+      if (json?.errors) {
+        let errorString = json.errors[0];
+
+        if (json.html_message) {
+          errorString = htmlSafe(errorString);
+        }
+
+        this.set("validationMessage", errorString);
       } else {
         this.set("validationMessage", I18n.t("generic_error"));
       }

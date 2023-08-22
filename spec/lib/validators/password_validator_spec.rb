@@ -5,8 +5,9 @@ RSpec.describe PasswordValidator do
     I18n.t("activerecord.errors.models.user.attributes.password.#{key.to_s}")
   end
 
-  let(:validator) { described_class.new(attributes: :password) }
   subject(:validate) { validator.validate_each(record, :password, @password) }
+
+  let(:validator) { described_class.new(attributes: :password) }
 
   describe "password required" do
     let(:record) do

@@ -1,0 +1,11 @@
+{{#if this.showUnreadIndicator}}
+  <div
+    class="chat-thread-header-unread-indicator"
+    aria-label={{i18n "chat.unread_threads_count" count=this.unreadCountLabel}}
+    title={{i18n "chat.unread_threads_count" count=this.unreadCountLabel}}
+  >
+    <div
+      class="chat-thread-header-unread-indicator__number"
+    >{{this.unreadCountLabel}}</div>
+  </div>
+{{/if}}

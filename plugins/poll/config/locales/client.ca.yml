@@ -23,27 +23,14 @@ ca:
           title: "Els resultats es mostraran una vegada <strong>tancada</strong> la votació."
         staff:
           title: "Els resultats només es mostren als membres de l'<strong>equip responsable</strong>."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Trieu almenys <strong>%{count}</strong> opció."
-            other: "Trieu almenys <strong>%{count}</strong> opcions."
-          up_to_max_options:
-            one: "Trieu fins a <strong>%{count}</strong> opció."
-            other: "Trieu fins a <strong>%{count}</strong> opcions."
-          x_options:
-            one: "Trieu <strong>%{count}</strong> opció."
-            other: "Trieu <strong>%{count}</strong> opcions."
-          between_min_and_max_options: "Trieu entre les opcions <strong>%{min}</strong> i <strong>%{max}</strong>."
       cast-votes:
         title: "Repartiu els vostres vots"
         label: "Voteu ara!"
       show-results:
         title: "Mostra els resultats de l'enquesta"
-        label: "Mostra els resultats"
+        label: "Resultats"
       hide-results:
         title: "Torna als vots"
-        label: "Mostra el vot"
       group-results:
         title: "Agrupa els vots per camp d'usuari"
       export-results:
@@ -62,6 +49,8 @@ ca:
         age: "Tancat <strong>%{age}</strong>"
       breakdown:
         count: "Recompte"
+      options:
+        label: "Opcions"
       error_while_toggling_status: "Ho sentim. S'ha produït un error en canviar l'estat d'aquesta enquesta."
       error_while_casting_votes: "Ho sentim. S'ha produït un error en l'emissió dels vostres vots."
       error_while_fetching_voters: "Hi ha hagut un error en mostrar els votants."

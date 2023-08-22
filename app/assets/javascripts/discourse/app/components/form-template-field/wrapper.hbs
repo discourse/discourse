@@ -1,12 +1,17 @@
-{{#if this.canShowContent}}
-  {{#each this.parsedContent as |content|}}
-    {{component
-      (concat "form-template-field/" content.type)
-      attributes=content.attributes
-      choices=content.choices
-      validations=content.validations
-    }}
-  {{/each}}
+{{#if this.parsedTemplate}}
+  <div
+    class="form-template-form__wrapper"
+    {{did-update this.refreshTemplate @id}}
+  >
+    {{#each this.parsedTemplate as |content|}}
+      {{component
+        (concat "form-template-field/" content.type)
+        attributes=content.attributes
+        choices=content.choices
+        validations=content.validations
+      }}
+    {{/each}}
+  </div>
 {{else}}
   <div class="alert alert-error">
     {{this.error}}

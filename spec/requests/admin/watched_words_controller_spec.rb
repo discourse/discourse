@@ -6,6 +6,60 @@ RSpec.describe Admin::WatchedWordsController do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
 
+  describe "#index" do
+    context "when logged in as non-staff user" do
+      before { sign_in(user) }
+
+      it "does not return watched words" do
+        get "/admin/customize/watched_words.json"
+
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when logged in as a staff user" do
+      fab!(:word1) { Fabricate(:watched_word, action: WatchedWord.actions[:block]) }
+      fab!(:word2) { Fabricate(:watched_word, action: WatchedWord.actions[:block]) }
+      fab!(:word3) { Fabricate(:watched_word, action: WatchedWord.actions[:censor]) }
+      fab!(:word4) { Fabricate(:watched_word, action: WatchedWord.actions[:censor]) }
+
+      before { sign_in(admin) }
+
+      it "returns all watched words" do
+        get "/admin/customize/watched_words.json"
+
+        expect(response.status).to eq(200)
+
+        watched_words = response.parsed_body
+
+        expect(watched_words["actions"]).to match_array(WatchedWord.actions.keys.map(&:to_s))
+        expect(watched_words["words"].length).to eq(4)
+        expect(watched_words["words"]).to include(
+          hash_including(
+            "id" => word1.id,
+            "word" => word1.word,
+            "regexp" => WordWatcher.word_to_regexp(word1.word, engine: :js),
+            "case_sensitive" => false,
+            "action" => "block",
+          ),
+          hash_including(
+            "id" => word4.id,
+            "word" => word4.word,
+            "regexp" => WordWatcher.word_to_regexp(word4.word, engine: :js),
+            "case_sensitive" => false,
+            "action" => "censor",
+          ),
+        )
+        expect(watched_words["compiled_regular_expressions"]["block"].first).to eq(
+          WordWatcher
+            .serializable_word_matcher_regexp(:block, engine: :js)
+            .first
+            .deep_stringify_keys,
+        )
+      end
+    end
+  end
+
   describe "#destroy" do
     fab!(:watched_word) { Fabricate(:watched_word) }
 

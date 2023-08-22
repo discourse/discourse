@@ -1,0 +1,7 @@
+<TagGroupChooser
+  @tagGroups={{this.selectedTagGroups}}
+  @onChange={{action "onTagGroupChange"}}
+  @options={{hash filterPlaceholder="category.required_tag_group.placeholder"}}
+/>
+<div class="desc">{{html-safe this.setting.description}}</div>
+<SettingValidationMessage @message={{this.validationMessage}} />

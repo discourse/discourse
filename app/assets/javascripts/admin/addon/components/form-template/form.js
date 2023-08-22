@@ -14,6 +14,7 @@ export default class FormTemplateForm extends Component {
   @tracked formSubmitted = false;
   @tracked templateContent = this.args.model?.template || "";
   @tracked templateName = this.args.model?.name || "";
+  @tracked showFormTemplateFormPreview;
   isEditing = this.args.model?.id ? true : false;
   quickInsertFields = [
     {
@@ -129,11 +130,7 @@ export default class FormTemplateForm extends Component {
 
     FormTemplate.validateTemplate(data)
       .then(() => {
-        return showModal("form-template-form-preview", {
-          model: {
-            content: this.templateContent,
-          },
-        });
+        this.showFormTemplateFormPreview = true;
       })
       .catch(popupAjaxError);
   }

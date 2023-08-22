@@ -6,6 +6,7 @@
   scrollbar-color: transparent var(--scrollbarBg);
   transition: scrollbar-color 0.25s ease-in-out;
 
+  // chrome, safari
   &::-webkit-scrollbar-thumb {
     background-color: var(--scrollbarThumbBg);
     border-radius: calc(var(--scrollbarWidth) / 2);
@@ -17,6 +18,26 @@
   }
 
   &::-webkit-scrollbar {
+    width: var(--scrollbarWidth);
+  }
+
+  // firefox
+  & {
+    scrollbar-color: var(--scrollbarThumbBg) var(--scrollbarBg);
+    scrollbar-width: thin;
+  }
+
+  &::-moz-scrollbar-thumb {
+    background-color: var(--scrollbarThumbBg);
+    border-radius: calc(var(--scrollbarWidth) / 2);
+    border: calc(var(--scrollbarWidth) / 4) solid var(--secondary);
+  }
+
+  &::-moz-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-moz-scrollbar {
     width: var(--scrollbarWidth);
   }
 }

@@ -6,6 +6,7 @@ import Site from "discourse/models/site";
 import { createPopper } from "@popperjs/core";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import { isDocumentRTL } from "discourse/lib/text-direction";
 
 /**
   This is a jQuery plugin to support autocompleting values in our text fields.
@@ -147,6 +148,7 @@ export default function (options) {
 
   function closeAutocomplete() {
     _autoCompletePopper?.destroy();
+    options.onClose && options.onClose();
 
     if (div) {
       div.hide().remove();
@@ -216,7 +218,7 @@ export default function (options) {
       });
   }
 
-  let completeTerm = async function (term) {
+  let completeTerm = async function (term, event) {
     let completeEnd = null;
 
     if (term) {
@@ -228,7 +230,7 @@ export default function (options) {
         addInputSelectedItem(term, true);
       } else {
         if (options.transformComplete) {
-          term = await options.transformComplete(term);
+          term = await options.transformComplete(term, event);
         }
 
         if (term) {
@@ -272,7 +274,7 @@ export default function (options) {
           setCaretPosition(me[0], newCaretPos);
 
           if (options && options.afterComplete) {
-            options.afterComplete(text);
+            options.afterComplete(text, event);
           }
         }
       }
@@ -371,7 +373,7 @@ export default function (options) {
     } else {
       selectedOption = -1;
     }
-    ul.find("li").click(function () {
+    ul.find("li").click(function ({ originalEvent }) {
       selectedOption = ul.find("li").index(this);
       // hack for Gboard, see meta.discourse.org/t/-/187009/24
       if (autocompleteOptions == null) {
@@ -379,13 +381,13 @@ export default function (options) {
         const forcedAutocompleteOptions = dataSource(prevTerm, opts);
         forcedAutocompleteOptions?.then((data) => {
           updateAutoComplete(data);
-          completeTerm(autocompleteOptions[selectedOption]);
+          completeTerm(autocompleteOptions[selectedOption], originalEvent);
           if (!options.single) {
             me.focus();
           }
         });
       } else {
-        completeTerm(autocompleteOptions[selectedOption]);
+        completeTerm(autocompleteOptions[selectedOption], originalEvent);
         if (!options.single) {
           me.focus();
         }
@@ -401,6 +403,10 @@ export default function (options) {
 
     if (options.scrollElementSelector) {
       scrollElement = div.find(options.scrollElementSelector);
+    }
+
+    if (options.onRender) {
+      options.onRender(autocompleteOptions);
     }
 
     if (isInput || options.treatAsTextarea) {
@@ -420,19 +426,13 @@ export default function (options) {
     }
 
     let vOffset = 0;
-    let hOffset = 0;
     let pos = me.caretPosition({
       pos: completeStart + 1,
     });
 
-    hOffset = 10;
     if (options.treatAsTextarea) {
       vOffset = -32;
     }
-
-    div.css({
-      left: "-1000px",
-    });
 
     if (!isInput && !options.treatAsTextarea) {
       vOffset = div.height();
@@ -446,34 +446,39 @@ export default function (options) {
         vOffset = BELOW;
       }
 
+      if (Site.currentProp("mobileView") && me.height() / 2 >= pos.top) {
+        vOffset = BELOW;
+      }
+    }
+
+    const mePos = me.position();
+
+    let left;
+    if (isDocumentRTL()) {
+      left = mePos.left + pos.left - div.width();
+    } else {
+      let hOffset = 10;
       if (Site.currentProp("mobileView")) {
-        if (me.height() / 2 >= pos.top) {
-          vOffset = BELOW;
-        }
         if (me.width() / 2 <= pos.left) {
           hOffset = -div.width();
         }
       }
+      left = mePos.left + pos.left + hOffset;
     }
-
-    let mePos = me.position();
-
-    let borderTop = parseInt(me.css("border-top-width"), 10) || 0;
-
-    let left = mePos.left + pos.left + hOffset;
     if (left < 0) {
       left = 0;
     }
 
     const offsetTop = me.offset().top;
+    const borderTop = parseInt(me.css("border-top-width"), 10) || 0;
     if (mePos.top + pos.top + borderTop - vOffset + offsetTop < 30) {
       vOffset = BELOW;
     }
 
     div.css({
       position: "absolute",
-      top: mePos.top + pos.top - vOffset + borderTop + "px",
-      left: left + "px",
+      top: `${mePos.top + pos.top - vOffset + borderTop}px`,
+      left: `${left}px`,
     });
   }
 
@@ -710,7 +715,7 @@ export default function (options) {
             selectedOption >= 0 &&
             (userToComplete = autocompleteOptions[selectedOption])
           ) {
-            completeTerm(userToComplete);
+            completeTerm(userToComplete, e);
           } else {
             // We're cancelling it, really.
             return true;

@@ -1,11 +1,5 @@
 // Desktop styles for "user-stream-item" component
 .user-stream {
-  .time,
-  .delete-info,
-  .draft-type {
-    margin-right: 8px;
-  }
-
   .notification {
     &.unread {
       background-color: var(--tertiary-low);

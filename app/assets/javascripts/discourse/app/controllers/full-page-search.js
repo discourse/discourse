@@ -1,5 +1,8 @@
 import Controller, { inject as controller } from "@ember/controller";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed, {
+  bind,
+  observes,
+} from "discourse-common/utils/decorators";
 import {
   getSearchKey,
   isValidSearchTerm,
@@ -20,8 +23,9 @@ import { scrollTop } from "discourse/mixins/scroll-top";
 import { setTransient } from "discourse/lib/page-tracker";
 import { Promise } from "rsvp";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
-import showModal from "discourse/lib/show-modal";
 import userSearch from "discourse/lib/user-search";
+import { inject as service } from "@ember/service";
+import TopicBulkActions from "discourse/components/modal/topic-bulk-actions";
 
 const SortOrders = [
   { name: I18n.t("search.relevance"), id: 0 },
@@ -49,9 +53,10 @@ export function registerFullPageSearchType(
 
 export default Controller.extend({
   application: controller(),
-  composer: controller(),
-  bulkSelectEnabled: null,
+  composer: service(),
+  modal: service(),
 
+  bulkSelectEnabled: null,
   loading: false,
   queryParams: [
     "q",
@@ -131,7 +136,7 @@ export default Controller.extend({
       return (!skip && context) || skip === "false";
     },
     set(val) {
-      this.set("skip_context", val ? "false" : "true");
+      this.set("skip_context", !val);
     },
   },
 
@@ -240,11 +245,6 @@ export default Controller.extend({
     );
   },
 
-  @observes("loading")
-  _showFooter() {
-    this.set("application.showFooter", !this.loading);
-  },
-
   @discourseComputed("resultCount", "noSortQ")
   resultCountLabel(count, term) {
     const plus = count % 50 === 0 ? "+" : "";
@@ -309,6 +309,7 @@ export default Controller.extend({
 
   searchButtonDisabled: or("searching", "loading"),
 
+  @bind
   _search() {
     if (this.searching) {
       return;
@@ -431,7 +432,6 @@ export default Controller.extend({
   },
 
   _afterTransition() {
-    this._showFooter();
     if (Object.keys(this.model).length === 0) {
       this.reset();
     }
@@ -495,14 +495,12 @@ export default Controller.extend({
     },
 
     showBulkActions() {
-      const modalController = showModal("topic-bulk-actions", {
+      this.modal.show(TopicBulkActions, {
         model: {
           topics: this.selected,
+          refreshClosure: this._search,
         },
-        title: "topics.bulk.actions",
       });
-
-      modalController.set("refreshClosure", () => this._search());
     },
 
     search(options = {}) {

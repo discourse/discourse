@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = function (environment) {
-  let ENV = {
+  const ENV = {
     modulePrefix: "discourse",
     environment,
     rootURL: process.env.DISCOURSE_RELATIVE_URL_ROOT || "/",

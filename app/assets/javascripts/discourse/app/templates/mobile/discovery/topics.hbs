@@ -1,3 +1,7 @@
+{{#if (or this.loading this.model.canLoadMore)}}
+  {{hide-application-footer}}
+{{/if}}
+
 <TopicDismissButtons
   @position="top"
   @selectedTopics={{this.selected}}
@@ -11,7 +15,6 @@
   @model={{this.model}}
   @refresh={{action "refresh"}}
   @incomingCount={{this.topicTrackingState.incomingCount}}
-  as |discoveryTopicList|
 >
   {{#if this.top}}
     <div class="top-lists">
@@ -36,7 +39,16 @@
       </a>
     {{/if}}
   {{/if}}
-
+  {{#unless this.bulkSelectEnabled}}
+    {{#if this.showTopicsAndRepliesToggle}}
+      <NewListHeaderControlsWrapper
+        @current={{this.model.params.subset}}
+        @newRepliesCount={{this.newRepliesCount}}
+        @newTopicsCount={{this.newTopicsCount}}
+        @changeNewListSubset={{route-action "changeNewListSubset"}}
+      />
+    {{/if}}
+  {{/unless}}
   {{#if this.hasTopics}}
     <TopicList
       @ascending={{this.ascending}}
@@ -56,8 +68,6 @@
       @expandAllPinned={{this.expandAllPinned}}
       @category={{this.category}}
       @topics={{this.model.topics}}
-      @scrollOnLoad={{true}}
-      @onScroll={{discoveryTopicList.saveScrollPosition}}
     />
   {{/if}}
 </DiscoveryTopicsList>
@@ -79,9 +89,12 @@
       @message={{this.footerMessage}}
     >
       {{#if this.latest}}
-        {{#if this.canCreateTopicOnCategory}}
+        {{#if this.category.canCreateTopic}}
           <DiscourseLinkedText
-            @action={{route-action "createTopic"}}
+            @action={{fn
+              this.composer.openNewTopic
+              (hash category=this.category preferDraft=true)
+            }}
             @text="topic.suggest_create_topic"
           />
         {{/if}}
@@ -101,5 +114,7 @@
         }}
       {{/if}}
     </FooterMessage>
+  {{else}}
+    {{hide-application-footer}}
   {{/if}}
 </footer>
