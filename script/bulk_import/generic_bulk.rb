@@ -26,6 +26,9 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def execute
+    # needs to happen before groups, because keeping group names is more important than usernames
+    import_groups
+
     import_users
     import_user_emails
     import_user_profiles
@@ -37,17 +40,19 @@ class BulkImport::Generic < BulkImport::Base
     import_muted_users
     import_user_histories
 
+    import_group_members
+
     import_uploads
     import_user_avatars
     import_user_avatar_upload_references
     update_uploaded_avatar_id
 
-    # import_categories
-    # import_topics
-    # import_posts
-    # import_topic_allowed_users
-    # import_likes
-    # import_tags
+    import_categories
+    import_topics
+    import_posts
+    import_topic_allowed_users
+    import_likes
+    import_tags
 
     @source_db.close
     @uploads_db.close if @uploads_db
@@ -88,6 +93,41 @@ class BulkImport::Generic < BulkImport::Base
 
       categories.close
     end
+  end
+
+  def import_groups
+    puts "Importing groups..."
+
+    groups = query(<<~SQL)
+      SELECT *
+      FROM groups
+      ORDER BY id
+    SQL
+
+    create_groups(groups) do |row|
+      { imported_id: row["id"], name: row["name"], full_name: row["full_name"] }
+    end
+
+    groups.close
+  end
+
+  def import_group_members
+    puts "Importing group members..."
+
+    group_members = query(<<~SQL)
+      SELECT *
+      FROM group_members
+      ORDER BY ROWID
+    SQL
+
+    create_group_users(group_members) do |row|
+      {
+        group_id: group_id_from_imported_id(row["group_id"]),
+        user_id: user_id_from_imported_id(row["user_id"]),
+      }
+    end
+
+    group_members.close
   end
 
   def import_users

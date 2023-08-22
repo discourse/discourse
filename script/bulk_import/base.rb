@@ -229,7 +229,7 @@ class BulkImport::Base
   def load_indexes
     puts "Loading groups indexes..."
     @last_group_id = last_id(Group)
-    @group_names = Group.unscoped.pluck(:name).map(&:downcase).to_set
+    group_names = Group.unscoped.pluck(:name).map(&:downcase).to_set
 
     puts "Loading users indexes..."
     @last_user_id = last_id(User)
@@ -237,7 +237,7 @@ class BulkImport::Base
     @last_sso_record_id = last_id(SingleSignOnRecord)
     @emails = UserEmail.pluck(:email, :user_id).to_h
     @external_ids = SingleSignOnRecord.pluck(:external_id, :user_id).to_h
-    @usernames_lower = User.unscoped.pluck(:username_lower).to_set
+    @usernames_and_groupnames_lower = User.unscoped.pluck(:username_lower).to_set.merge(group_names)
     @anonymized_user_suffixes =
       DB.query_single(
         "SELECT SUBSTRING(username_lower, 5)::BIGINT FROM users WHERE username_lower ~* '^anon\\d+$'",
@@ -384,7 +384,7 @@ class BulkImport::Base
     post_id && @topic_id_by_post_id[post_id]
   end
 
-  GROUP_COLUMNS ||= %i[id name title bio_raw bio_cooked created_at updated_at]
+  GROUP_COLUMNS ||= %i[id name full_name title bio_raw bio_cooked created_at updated_at]
 
   USER_COLUMNS ||= %i[
     id
@@ -676,9 +676,9 @@ class BulkImport::Base
 
     group[:name] = fix_name(group[:name])
 
-    unless @group_names.add?(group[:name].downcase)
+    unless @usernames_and_groupnames_lower.add?(group[:name].downcase)
       group_name = group[:name] + "_1"
-      group_name.next! until @group_names.add?(group_name.downcase)
+      group_name.next! until @usernames_and_groupnames_lower.add?(group_name.downcase)
       group[:name] = group_name
     end
 
@@ -721,9 +721,9 @@ class BulkImport::Base
     end
 
     # unique username_lower
-    unless @usernames_lower.add?(user[:username].downcase)
+    unless @usernames_and_groupnames_lower.add?(user[:username].downcase)
       username = user[:username] + "_1"
-      username.next! until @usernames_lower.add?(username.downcase)
+      username.next! until @usernames_and_groupnames_lower.add?(username.downcase)
       user[:username] = username
     end
 
