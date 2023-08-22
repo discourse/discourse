@@ -129,7 +129,8 @@ class DiscourseJsProcessor
       ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
 
       # Theme template AST transformation plugins
-      unless File.exist?("#{Rails.root}/app/assets/javascripts/js-processor.js")
+      if Rails.env.development? ||
+           !File.exist?("#{Rails.root}/app/assets/javascripts/js-processor.js")
         generate_js_processor
       end
 
