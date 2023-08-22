@@ -10,6 +10,10 @@ tr_TR:
       site_settings:
         categories:
           chat: Sohbet
+        chat_separate_sidebar_mode:
+          always: "Her zaman"
+          fullscreen: "Sohbet tam ekran modundayken"
+          never: "Asla"
       logs:
         staff_actions:
           actions:
@@ -106,6 +110,8 @@ tr_TR:
         all_new: "Tüm Yeni Mesajlar"
         dm_and_mentions: "Doğrudan Mesajlar ve Bahsetmeler"
         never: "Asla"
+      separate_sidebar_mode:
+        title: "Forum ve sohbet için ayrı kenar çubuğu modları göster"
       enable: "Sohbeti etkinleştir"
       flag: "Bayrak ekle"
       emoji: "Emoji ekle"
@@ -649,3 +655,7 @@ tr_TR:
       sections:
         chat:
           title: Sohbet
+    sidebar:
+      panels:
+        chat:
+          label: "Sohbet"

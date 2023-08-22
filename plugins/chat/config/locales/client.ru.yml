@@ -10,6 +10,9 @@ ru:
       site_settings:
         categories:
           chat: Чат
+        chat_separate_sidebar_mode:
+          always: "Всегда"
+          never: "Никогда"
       logs:
         staff_actions:
           actions:
@@ -737,3 +740,7 @@ ru:
       sections:
         chat:
           title: Чат
+    sidebar:
+      panels:
+        chat:
+          label: "Чат"

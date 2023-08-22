@@ -2654,6 +2654,9 @@ zh_TW:
         title_with_count:
           other: "近期 (%{count})"
         help: "最近幾天開啟的話題"
+        all: "全部"
+        topics: "話題"
+        replies: "回覆"
       posted:
         title: "我的貼文"
         help: "你回覆過的話題"

@@ -1725,6 +1725,9 @@ sq:
           one: "Të reja (%{count})"
           other: "Të reja (%{count})"
         help: "temat e krijuar gjatë ditëve të fundit"
+        all: "Të Gjithë"
+        topics: "Topics"
+        replies: "Përgjigjet"
       posted:
         title: "Postimet e mia"
         help: "temat ku keni dërguar pêrgjigje"

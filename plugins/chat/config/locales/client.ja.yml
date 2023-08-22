@@ -10,6 +10,9 @@ ja:
       site_settings:
         categories:
           chat: チャット
+        chat_separate_sidebar_mode:
+          always: "常時"
+          never: "なし"
       logs:
         staff_actions:
           actions:
@@ -614,3 +617,7 @@ ja:
       sections:
         chat:
           title: チャット
+    sidebar:
+      panels:
+        chat:
+          label: "チャット"

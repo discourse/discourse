@@ -10,6 +10,9 @@ fa_IR:
       site_settings:
         categories:
           chat: گفتگو
+        chat_separate_sidebar_mode:
+          always: "همیشه"
+          never: "هرگز"
       logs:
         staff_actions:
           actions:
@@ -354,3 +357,7 @@ fa_IR:
       sections:
         chat:
           title: گفتگو
+    sidebar:
+      panels:
+        chat:
+          label: "گفتگو"

@@ -960,7 +960,6 @@ hu:
     review_every_post: "Minden bejegyzést jóvá kell hagyni. FIGYELEM! FORGALMAS OLDALAKON NEM AJÁNLOTT."
     use_admin_ip_allowlist: "Az adminokk csak akkor tudnak bejelentkezni, ha a Screened IPs listában megadott IP-címmel vannak megadva (Admin > Naplók > Screened Ips)."
     slow_down_crawler_user_agents: 'A forgalmi korlátozás alá elő webes robotok felhasználói ügynökei, ahogy a „robotok sebességének lelassítása” beállításban meg van adva. Minden egyes értéknek legalább 3 karakteresnek kell lennie.'
-    content_security_policy: "Tartalom-biztonsági házirend engedélyezése"
     content_security_policy_collect_reports: "Engedélyezze a CSP-szabálysértési jelentések gyűjtését /csp_reports címen."
     send_welcome_message: "A rövid gyorstalpalóról szóló üzenet elküldése minden új felhasználónak."
     remove_full_quote: "Automatikusan eltávolítja az idézetet, ha (a) a hozzászólás elején jelenik meg, (b) egy teljes hozzászólás, és (c) ha a közvetlenül az előző hozzászólásból származik. A részletekért lásd: <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>Teljes idézetek eltávolítása a közvetlen válaszokból</a>"

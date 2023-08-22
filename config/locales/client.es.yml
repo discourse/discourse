@@ -3674,6 +3674,9 @@ es:
           one: "Nuevo (%{count})"
           other: "Nuevos (%{count})"
         help: "temas creados en los últimos días"
+        all: "Todos"
+        topics: "Temas"
+        replies: "Respuestas"
       posted:
         title: "Mis publicaciones"
         help: "temas en los que has publicado"

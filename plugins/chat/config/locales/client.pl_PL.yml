@@ -10,6 +10,9 @@ pl_PL:
       site_settings:
         categories:
           chat: Czat
+        chat_separate_sidebar_mode:
+          always: "Zawsze"
+          never: "Nigdy"
       logs:
         staff_actions:
           actions:
@@ -709,3 +712,7 @@ pl_PL:
       sections:
         chat:
           title: Czat
+    sidebar:
+      panels:
+        chat:
+          label: "Czat"
