@@ -85,7 +85,7 @@ function buildTemplateCompilerBabelPlugins({ themeId }) {
 function buildThemeRawHbsTemplateManipulatorPlugin(themeId) {
   return function (ast) {
     ["SubExpression", "MustacheStatement"].forEach((pass) => {
-      let visitor = new Handlebars.Visitor();
+      const visitor = new Handlebars.Visitor();
       visitor.mutating = true;
       visitor[pass] = (node) => manipulateAstNodeForTheme(node, themeId);
       visitor.accept(ast);
@@ -107,11 +107,10 @@ globalThis.compileRawTemplate = function (source, themeId) {
   }
 };
 
-globalThis.transpile = function (
-  source,
-  { moduleId, filename, skipModule, themeId, commonPlugins } = {}
-) {
+globalThis.transpile = function (source, options = {}) {
+  const { moduleId, filename, skipModule, themeId, commonPlugins } = options;
   const plugins = [];
+
   plugins.push(...buildTemplateCompilerBabelPlugins({ themeId }));
   if (moduleId && !skipModule) {
     plugins.push(["transform-modules-amd", { noInterop: true }]);
