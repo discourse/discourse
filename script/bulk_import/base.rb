@@ -92,6 +92,8 @@ class BulkImport::Base
   end
 
   def run
+    start_time = Time.now
+
     puts "Starting..."
     Rails.logger.level = 3 # :error, so that we don't create log files that are many GB
     preload_i18n
@@ -102,7 +104,8 @@ class BulkImport::Base
     execute
     fix_primary_keys
     execute_after
-    puts "Done! Now run the 'import:ensure_consistency' rake task."
+    puts "Done! (#{((Time.now - start_time) / 60).to_i} minutes)"
+    puts "Now run the 'import:ensure_consistency' rake task."
   end
 
   def preload_i18n

@@ -446,7 +446,7 @@ class BulkImport::Generic < BulkImport::Base
           ON CONFLICT DO NOTHING
     SQL
 
-    puts "  Imported user stats in #{Time.now - start_time} seconds."
+    puts "  Imported user stats in #{(Time.now - start_time).to_i} seconds."
 
     # likes_received = @db.execute(<<~SQL)
     #   SELECT COUNT(l.id) AS likes_received
@@ -542,7 +542,7 @@ class BulkImport::Generic < BulkImport::Base
     avatars = query(<<~SQL)
       SELECT id, avatar_upload_id
         FROM users
-       WHERE avatar_upload_id
+       WHERE avatar_upload_id IS NOT NULL
        ORDER BY id
     SQL
 
@@ -579,7 +579,7 @@ class BulkImport::Generic < BulkImport::Base
           ON CONFLICT DO NOTHING
     SQL
 
-    puts "  Imported upload references in #{Time.now - start_time} seconds."
+    puts "  Imported upload references in #{(Time.now - start_time).to_i} seconds."
   end
 
   def import_tags
