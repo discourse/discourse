@@ -126,8 +126,12 @@ export default class ChatComposer extends Component {
     const minLength = this.siteSettings.chat_minimum_message_length || 1;
     return (
       this.currentMessage?.message?.length >= minLength ||
-      (this.canAttachUploads && this.currentMessage?.uploads?.length > 0)
+      (this.canAttachUploads && this.hasUploads)
     );
+  }
+
+  get hasUploads() {
+    return this.currentMessage?.uploads?.length > 0;
   }
 
   get sendEnabled() {
@@ -229,14 +233,10 @@ export default class ChatComposer extends Component {
 
     if (
       this.currentMessage.editing &&
+      !this.hasUploads &&
       this.currentMessage.message.length === 0
     ) {
-      new ChatMessageInteractor(
-        getOwner(this),
-        this.currentMessage,
-        this.context
-      ).delete();
-      this.reset(this.args.channel, this.args.thread);
+      this.#deleteEmptyMessage();
       return;
     }
 
@@ -584,5 +584,14 @@ export default class ChatComposer extends Component {
 
   #isAutocompleteDisplayed() {
     return document.querySelector(".autocomplete");
+  }
+
+  #deleteEmptyMessage() {
+    new ChatMessageInteractor(
+      getOwner(this),
+      this.currentMessage,
+      this.context
+    ).delete();
+    this.reset(this.args.channel, this.args.thread);
   }
 }
