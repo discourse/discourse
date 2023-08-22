@@ -203,7 +203,14 @@ class BulkImport::Generic < BulkImport::Base
       user_id = user_id_from_imported_id(row["id"])
       next if user_id && existing_user_ids.include?(user_id)
 
-      { user_id: user_id, timezone: row["timezone"] }
+      # TODO Update email settings before go-live
+      {
+        user_id: user_id,
+        timezone: row["timezone"],
+        email_level: UserOption.email_level_types[:never],
+        email_messages_level: UserOption.email_level_types[:never],
+        email_digests: false,
+      }
     end
 
     users.close
