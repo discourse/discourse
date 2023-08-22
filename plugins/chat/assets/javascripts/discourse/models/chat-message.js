@@ -5,6 +5,7 @@ import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-me
 import Bookmark from "discourse/models/bookmark";
 import I18n from "I18n";
 import { generateCookFunction } from "discourse/lib/text";
+import transformMentions from "discourse/plugins/chat/discourse/lib/transform-mentions";
 import { getOwner } from "discourse-common/lib/get-owner";
 import discourseLater from "discourse-common/lib/later";
 
@@ -191,7 +192,7 @@ export default class ChatMessage {
     } else {
       const cookFunction = await generateCookFunction(markdownOptions);
       ChatMessage.cookFunction = (raw) => {
-        return cookFunction(raw);
+        return transformMentions(cookFunction(raw));
       };
 
       this.cooked = ChatMessage.cookFunction(this.message);
