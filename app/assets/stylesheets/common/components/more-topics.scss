@@ -9,6 +9,10 @@
       .btn {
         padding: 0.5em 0.65em;
       }
+
+      .btn.active .d-icon {
+        color: var(--primary-low);
+      }
     }
   }
 
