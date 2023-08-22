@@ -12,7 +12,7 @@ class Chat::DirectMessageChannel::MaxUsersExcessPolicy < PolicyBase
     return I18n.t("chat.errors.over_chat_max_direct_message_users_allow_self") if no_dm?
     I18n.t(
       "chat.errors.over_chat_max_direct_message_users",
-      count: SiteSetting.chat_max_direct_message_users + 1, # +1 for the acting user
+      count: SiteSetting.chat_max_direct_message_users,
     )
   end
 

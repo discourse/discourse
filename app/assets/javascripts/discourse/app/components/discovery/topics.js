@@ -172,4 +172,12 @@ export default class DiscoveryTopics extends Component.extend(DismissTopics) {
       ),
     });
   }
+
+  get renderNewListHeaderControls() {
+    return (
+      this.site.mobileView &&
+      this.get("showTopicsAndRepliesToggle") &&
+      !this.get("bulkSelectEnabled")
+    );
+  }
 }

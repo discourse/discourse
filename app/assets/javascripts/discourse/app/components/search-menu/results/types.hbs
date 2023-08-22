@@ -8,7 +8,7 @@
         {{! template-lint-disable no-pointer-down-event-binding }}
         {{! template-lint-disable no-invalid-interactive }}
         <li class="item" {{on "keydown" this.onKeydown}}>
-          <a href={{(or result.url result.path)}} class="search-link">
+          <a href={{or result.url result.path}} class="search-link">
             <resultType.component @result={{result}} />
           </a>
         </li>
