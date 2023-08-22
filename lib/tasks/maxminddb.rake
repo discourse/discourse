@@ -38,9 +38,9 @@ end
 
 maxmind_thread = nil
 
-task "maxminddb:refresh" do
+task "maxminddb:refresh": "environment" do
   refresh_days = GlobalSetting.refresh_maxmind_db_during_precompile_days
-  return if refresh_days.to_i <= 0
+  next if refresh_days.to_i <= 0
 
   mmdb_time = get_mmdb_time(DiscourseIpInfo.path)
 
@@ -54,7 +54,7 @@ task "maxminddb:refresh" do
     mmdb_time = backup_mmdb_time
   end
 
-  return if mmdb_time && mmdb_time >= refresh_days.days.ago
+  next if mmdb_time && mmdb_time >= refresh_days.days.ago
 
   puts "Downloading MaxMindDB..."
 
