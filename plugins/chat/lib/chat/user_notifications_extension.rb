@@ -44,9 +44,6 @@ module Chat
       build_summary_for(user)
       @preferences_path = "#{Discourse.base_url}/my/preferences/chat"
 
-      # TODO(roman): Remove after the 2.9 release
-      add_unsubscribe_link = UnsubscribeKey.respond_to?(:get_unsubscribe_strategy_for)
-
       if add_unsubscribe_link
         unsubscribe_key = UnsubscribeKey.create_key_for(@user, "chat_summary")
         @unsubscribe_link = "#{Discourse.base_url}/email/unsubscribe/#{unsubscribe_key}"
