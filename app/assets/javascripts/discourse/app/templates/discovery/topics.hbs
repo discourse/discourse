@@ -62,6 +62,22 @@
       </div>
     {{/if}}
   {{/if}}
+
+  {{#if
+    (and
+      this.site.mobileView
+      this.showTopicsAndRepliesToggle
+      (not this.bulkSelectEnabled)
+    )
+  }}
+    <NewListHeaderControlsWrapper
+      @current={{this.model.params.subset}}
+      @newRepliesCount={{this.newRepliesCount}}
+      @newTopicsCount={{this.newTopicsCount}}
+      @changeNewListSubset={{route-action "changeNewListSubset"}}
+    />
+  {{/if}}
+
   <span>
     <PluginOutlet
       @name="before-topic-list"
