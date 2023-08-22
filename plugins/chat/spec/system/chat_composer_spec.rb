@@ -104,6 +104,25 @@ RSpec.describe "Chat composer", type: :system do
 
       expect(channel_page.messages).to have_message(deleted: 1)
     end
+
+    context "with uploads" do
+      fab!(:upload_reference) do
+        Fabricate(
+          :upload_reference,
+          target: message_1,
+          upload: Fabricate(:upload, user: current_user),
+        )
+      end
+
+      it "doesnt delete the message" do
+        chat_page.visit_channel(channel_1)
+        channel_page.composer.edit_last_message_shortcut
+        channel_page.composer.fill_in(with: "")
+        channel_page.click_send_message
+
+        expect(channel_page.messages).to have_message(id: message_1.id)
+      end
+    end
   end
 
   context "when posting a message with length equal to minimum length" do
