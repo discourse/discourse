@@ -172,7 +172,6 @@ class BulkImport::Base
     puts "Loading imported user ids..."
     @users, imported_user_ids = imported_ids("user")
     @last_imported_user_id = imported_user_ids.max || -1
-    @pre_existing_user_ids = Set.new
 
     puts "Loading imported category ids..."
     @categories, imported_category_ids = imported_ids("category")
@@ -249,6 +248,7 @@ class BulkImport::Base
     @last_muted_user_id = last_id(MutedUser)
     @last_user_history_id = last_id(UserHistory)
     @last_user_avatar_id = last_id(UserAvatar)
+    @last_upload_reference_id = last_id(UploadReference)
     @last_upload_id = last_id(Upload)
 
     puts "Loading categories indexes..."
@@ -332,6 +332,11 @@ class BulkImport::Base
     end
     if @last_user_avatar_id > 0
       @raw_connection.exec("SELECT setval('#{UserAvatar.sequence_name}', #{@last_user_avatar_id})")
+    end
+    if @last_upload_reference_id > 0
+      @raw_connection.exec(
+        "SELECT setval('#{UploadReference.sequence_name}', #{@last_upload_reference_id})",
+      )
     end
     if @last_upload_id > 0
       @raw_connection.exec("SELECT setval('#{Upload.sequence_name}', #{@last_upload_id})")
@@ -572,6 +577,8 @@ class BulkImport::Base
     dominant_color
   ]
 
+  UPLOAD_REFERENCE_COLUMNS ||= %i[id upload_id target_type target_id created_at updated_at]
+
   def create_groups(rows, &block)
     create_records(rows, "group", GROUP_COLUMNS, &block)
   end
@@ -657,6 +664,10 @@ class BulkImport::Base
     store_mappings(MAPPING_TYPES[:upload], @imported_uploads)
   end
 
+  def create_upload_references(rows, &block)
+    create_records(rows, "upload_reference", UPLOAD_REFERENCE_COLUMNS, &block)
+  end
+
   def process_group(group)
     @groups[group[:imported_id].to_i] = group[:id] = @last_group_id += 1
 
@@ -680,8 +691,7 @@ class BulkImport::Base
     if user[:email].present?
       user[:email].downcase!
 
-      if existing_user_id = @emails[user[:email]]
-        @pre_existing_user_ids << existing_user_id
+      if (existing_user_id = @emails[user[:email]])
         @users[user[:imported_id].to_i] = existing_user_id
         user[:skip] = true
         return user
@@ -689,8 +699,7 @@ class BulkImport::Base
     end
 
     if user[:external_id].present?
-      if existing_user_id = @external_ids[user[:external_id]]
-        @pre_existing_user_ids << existing_user_id
+      if (existing_user_id = @external_ids[user[:external_id]])
         @users[user[:imported_id].to_i] = existing_user_id
         user[:skip] = true
         return user
@@ -735,11 +744,7 @@ class BulkImport::Base
   end
 
   def process_user_email(user_email)
-    user_id = @users[user_email[:imported_user_id].to_i]
-    return { skip: true } if @pre_existing_user_ids.include?(user_id)
-
     user_email[:id] = @last_user_email_id += 1
-    user_email[:user_id] = user_id
     user_email[:primary] = true
     user_email[:created_at] ||= NOW
     user_email[:updated_at] ||= user_email[:created_at]
@@ -754,10 +759,7 @@ class BulkImport::Base
   end
 
   def process_user_stat(user_stat)
-    user_id = @users[user_stat[:imported_user_id].to_i]
-    return { skip: true } if @pre_existing_user_ids.include?(user_id)
-
-    user_stat[:user_id] = user_id
+    user_stat[:user_id] = user_id_from_imported_id(user_email[:imported_user_id])
     user_stat[:topics_entered] ||= 0
     user_stat[:time_read] ||= 0
     user_stat[:days_visited] ||= 0
@@ -773,9 +775,6 @@ class BulkImport::Base
   end
 
   def process_user_history(history)
-    user_id = @users[history[:imported_user_id].to_i]
-    return { skip: true } if @pre_existing_user_ids.include?(user_id)
-
     history[:id] = @last_user_history_id += 1
     history[:created_at] ||= NOW
     history[:updated_at] ||= NOW
@@ -783,9 +782,6 @@ class BulkImport::Base
   end
 
   def process_muted_user(muted_user)
-    user_id = @users[muted_user[:imported_user_id].to_i]
-    return { skip: true } if @pre_existing_user_ids.include?(user_id)
-
     muted_user[:id] = @last_muted_user_id += 1
     muted_user[:created_at] ||= NOW
     muted_user[:updated_at] ||= NOW
@@ -793,10 +789,6 @@ class BulkImport::Base
   end
 
   def process_user_profile(user_profile)
-    user_id = @users[user_profile[:imported_user_id].to_i]
-    return { skip: true } if @pre_existing_user_ids.include?(user_id)
-
-    user_profile[:user_id] = user_id
     user_profile[:bio_raw] = (user_profile[:bio_raw].presence || "").scrub.strip.presence
     user_profile[:bio_cooked] = pre_cook(user_profile[:bio_raw]) if user_profile[:bio_raw].present?
     user_profile[:views] ||= 0
@@ -828,22 +820,12 @@ class BulkImport::Base
   }
 
   def process_user_option(user_option)
-    user_id = @users[user_option[:imported_user_id].to_i]
-    return { skip: true } if @pre_existing_user_ids.include?(user_id)
-
-    user_option[:user_id] = user_id
-
     USER_OPTION_DEFAULTS.each { |key, value| user_option[key] = value if user_option[key].nil? }
-
     user_option
   end
 
   def process_single_sign_on_record(sso_record)
-    user_id = @users[sso_record[:imported_user_id].to_i]
-    return { skip: true } if @pre_existing_user_ids.include?(user_id)
-
     sso_record[:id] = @last_sso_record_id += 1
-    sso_record[:user_id] = user_id
     sso_record[:last_payload] ||= ""
     sso_record[:created_at] = NOW
     sso_record[:updated_at] = NOW
@@ -980,6 +962,13 @@ class BulkImport::Base
     @uploads_by_sha1[upload[:sha1]] = upload[:id]
 
     upload
+  end
+
+  def process_upload_reference(upload_reference)
+    upload_reference[:id] = @last_upload_reference_id += 1
+    upload_reference[:created_at] ||= NOW
+    upload_reference[:updated_at] ||= NOW
+    upload_reference
   end
 
   def process_user_avatar(avatar)
@@ -1154,11 +1143,12 @@ class BulkImport::Base
     @raw_connection.copy_data(sql, @encoder) do
       rows.each do |row|
         begin
-          next unless mapped = yield(row)
-          processed = send(process_method_name, mapped)
-          imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
-          imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
-          @raw_connection.put_copy_data columns.map { |c| processed[c] } unless processed[:skip]
+          if (mapped = yield(row))
+            processed = send(process_method_name, mapped)
+            imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
+            imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
+            @raw_connection.put_copy_data columns.map { |c| processed[c] } unless processed[:skip]
+          end
           rows_created += 1
           if rows_created % 100 == 0
             print "\r%7d - %6d/sec" % [rows_created, rows_created.to_f / (Time.now - start)]

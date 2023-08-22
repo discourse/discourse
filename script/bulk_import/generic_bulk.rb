@@ -27,20 +27,21 @@ class BulkImport::Generic < BulkImport::Base
 
   def execute
     # import_categories
-    # import_users
-    # import_user_emails
-    # import_user_profiles
-    # import_user_options
-    # import_user_fields
-    # import_user_custom_field_values
-    # import_single_sign_on_records
-    # import_user_stats
-    # import_muted_users
+    import_users
+    import_user_emails
+    import_user_profiles
+    import_user_options
+    import_user_fields
+    import_user_custom_field_values
+    import_single_sign_on_records
+    import_user_stats
+    import_muted_users
     import_user_histories
 
     import_uploads
     import_user_avatars
-    #
+    import_user_avatar_upload_references
+
     # import_topics
     # import_posts
     # import_topic_allowed_users
@@ -145,6 +146,8 @@ class BulkImport::Generic < BulkImport::Base
   def import_user_emails
     puts "", "Importing user emails..."
 
+    existing_user_ids = UserEmail.pluck(:user_id).to_set
+
     users = query(<<~SQL)
       SELECT id, email, created_at
       FROM users
@@ -152,15 +155,10 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     create_user_emails(users) do |row|
-      next if user_id_from_imported_id(row["id"]).present?
+      user_id = user_id_from_imported_id(row["id"])
+      next if user_id && existing_user_ids.include?(user_id)
 
-      {
-        # FIXME: using both "imported_id" and "imported_user_id" and should be replaced by just "imported_id"
-        imported_id: row["id"],
-        imported_user_id: row["id"],
-        email: row["email"],
-        created_at: to_datetime(row["created_at"]),
-      }
+      { user_id: user_id, email: row["email"], created_at: to_datetime(row["created_at"]) }
     end
 
     users.close
@@ -176,15 +174,13 @@ class BulkImport::Generic < BulkImport::Base
       ORDER BY id
     SQL
 
-    create_user_profiles(users) do |row|
-      next if user_id_from_imported_id(row["id"]).present?
+    existing_user_ids = UserProfile.pluck(:user_id).to_set
 
-      {
-        # FIXME: using both "imported_id" and "imported_user_id" and should be replaced by just "imported_id"
-        imported_id: row["id"],
-        imported_user_id: row["id"],
-        bio_raw: row["bio"],
-      }
+    create_user_profiles(users) do |row|
+      user_id = user_id_from_imported_id(row["id"])
+      next if user_id && existing_user_ids.include?(user_id)
+
+      { user_id: user_id, bio_raw: row["bio"] }
     end
 
     users.close
@@ -200,15 +196,13 @@ class BulkImport::Generic < BulkImport::Base
       ORDER BY id
     SQL
 
-    create_user_options(users) do |row|
-      next if user_id_from_imported_id(row["id"]).present?
+    existing_user_ids = UserOption.pluck(:user_id).to_set
 
-      {
-        # FIXME: using both "imported_id" and "imported_user_id" and should be replaced by just "imported_id"
-        imported_id: row["id"],
-        imported_user_id: row["id"],
-        timezone: row["timezone"],
-      }
+    create_user_options(users) do |row|
+      user_id = user_id_from_imported_id(row["id"])
+      next if user_id && existing_user_ids.include?(user_id)
+
+      { user_id: user_id, timezone: row["timezone"] }
     end
 
     users.close
@@ -223,8 +217,10 @@ class BulkImport::Generic < BulkImport::Base
       ORDER BY ROWID
     SQL
 
+    existing_user_field_names = UserField.pluck(:name).to_set
+
     user_fields.each do |row|
-      next if UserField.exists?(name: row["name"])
+      next if existing_user_field_names.include?(row["name"])
 
       options = row.delete("options")
       field = UserField.create!(row)
@@ -262,14 +258,15 @@ class BulkImport::Generic < BulkImport::Base
        WHERE u.anonymized = FALSE
     SQL
 
-    create_user_custom_fields(values) do |row|
-      next if user_id_from_imported_id(row["id"]).present?
+    existing_user_fields =
+      UserCustomField.pluck(:user_id, :name).map { |id, name| "#{id}-#{name}" }.to_set
 
-      {
-        user_id: user_id_from_imported_id(row["user_id"]),
-        name: field_id_mapping[row["field_id"]],
-        value: row["value"],
-      }
+    create_user_custom_fields(values) do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+      field_name = field_id_mapping[row["field_id"]]
+      next if user_id && field_name && existing_user_fields.include?("#{user_id}-#{field_name}")
+
+      { user_id: user_id, name: field_name, value: row["value"] }
     end
 
     values.close
@@ -285,13 +282,14 @@ class BulkImport::Generic < BulkImport::Base
       ORDER BY id
     SQL
 
+    existing_user_ids = SingleSignOnRecord.pluck(:user_id).to_set
+
     create_single_sign_on_records(users) do |row|
-      next if user_id_from_imported_id(row["id"]).present?
+      user_id = user_id_from_imported_id(row["id"])
+      next if user_id && existing_user_ids.include?(user_id)
 
       sso_record = JSON.parse(row["sso_record"], symbolize_names: true)
-      # FIXME: using both "imported_id" and "imported_user_id" and should be replaced by just "imported_id"
-      sso_record[:imported_id] = row["id"]
-      sso_record[:imported_user_id] = row["id"]
+      sso_record[:user_id] = user_id
       sso_record
     end
 
@@ -475,14 +473,13 @@ class BulkImport::Generic < BulkImport::Base
         FROM muted_users
     SQL
 
-    create_muted_users(muted_users) do |row|
-      next if user_id_from_imported_id(row["user_id"]).present?
+    existing_user_ids = MutedUser.pluck(:user_id).to_set
 
-      {
-        imported_user_id: row["id"],
-        user_id: user_id_from_imported_id(row["user_id"]),
-        muted_user_id: user_id_from_imported_id(row["muted_user_id"]),
-      }
+    create_muted_users(muted_users) do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+      next if user_id && existing_user_ids.include?(user_id)
+
+      { user_id: user_id, muted_user_id: user_id_from_imported_id(row["muted_user_id"]) }
     end
 
     muted_users.close
@@ -498,15 +495,16 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     action_id = UserHistory.actions[:suspend_user]
+    existing_user_ids = UserHistory.where(action: action_id).pluck(:target_user_id).to_set
 
     create_user_histories(user_histories) do |row|
-      next if user_id_from_imported_id(row["id"]).present?
+      user_id = user_id_from_imported_id(row["id"])
+      next if user_id && existing_user_ids.include?(user_id)
 
       {
-        imported_user_id: row["id"],
         action: action_id,
         acting_user_id: Discourse::SYSTEM_USER_ID,
-        target_user_id: user_id_from_imported_id(row["id"]),
+        target_user_id: user_id,
         details: row["reason"],
       }
     end
@@ -548,41 +546,40 @@ class BulkImport::Generic < BulkImport::Base
        ORDER BY id
     SQL
 
-    create_user_avatars(avatars) do |row|
-      next if user_id_from_imported_id(row["id"]).present?
+    existing_user_ids = UserAvatar.pluck(:user_id).to_set
 
-      {
-        user_id: user_id_from_imported_id(row["id"]),
-        custom_upload_id: upload_id_from_original_id(row["avatar_upload_id"]),
-      }
+    create_user_avatars(avatars) do |row|
+      user_id = user_id_from_imported_id(row["id"])
+      upload_id = upload_id_from_original_id(row["avatar_upload_id"])
+      next if !upload_id || !user_id || existing_user_ids.include?(user_id)
+
+      { user_id: user_id, custom_upload_id: upload_id }
     end
 
     avatars.close
   end
 
-  def import_upload_references
-    return if !@uploads_db
+  def import_user_avatar_upload_references
+    puts "Importing upload references for user avatars..."
 
-    puts "Importing upload references..."
+    start_time = Time.now
 
-    upload_references = query(<<~SQL)
-      SELECT id, avatar_upload_id
-        FROM users
-       WHERE avatar_upload_id
-       ORDER BY id
+    DB.exec(<<~SQL)
+      INSERT INTO upload_references (upload_id, target_type, target_id, created_at, updated_at)
+      SELECT ua.custom_upload_id, 'UserAvatar', ua.id, ua.created_at, ua.updated_at
+        FROM user_avatars ua
+       WHERE ua.custom_upload_id IS NOT NULL
+         AND NOT EXISTS (
+         SELECT 1
+           FROM upload_references ur
+          WHERE ur.upload_id = ua.custom_upload_id
+            AND ur.target_type = 'UserAvatar'
+            AND ur.target_id = ua.id
+       )
+          ON CONFLICT DO NOTHING
     SQL
 
-    target_type = "UserAvatar"
-
-    create_upload_references(upload_references) do |row|
-      {
-        upload_id: upload_id_from_original_id(row["upload_id"]),
-        user_id: user_id_from_imported_id(row["id"]),
-        target_type: target_type,
-      }
-    end
-
-    upload_references.close
+    puts "  Imported upload references in #{Time.now - start_time} seconds."
   end
 
   def import_tags
