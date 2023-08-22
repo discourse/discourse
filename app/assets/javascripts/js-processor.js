@@ -18,11 +18,11 @@ globalThis.console = {
 };
 
 import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
-import * as colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
+import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
 import { precompile } from "ember-source/dist/ember-template-compiler";
 import Handlebars from "handlebars";
-import * as Babel from "@babel/standalone";
-import * as Terser from "terser";
+import { transform as babelTransform } from "@babel/standalone";
+import { minify as terserMinify } from "terser";
 import RawHandlebars from "discourse-common/addon/lib/raw-handlebars";
 import { WidgetHbsCompiler } from "./discourse-widget-hbs/lib/widget-hbs-compiler";
 
@@ -118,7 +118,7 @@ globalThis.transpile = function (source, options = {}) {
   plugins.push(...commonPlugins);
 
   try {
-    return Babel.transform(source, {
+    return babelTransform(source, {
       moduleId,
       filename,
       ast: false,
@@ -139,7 +139,7 @@ let lastMinifyError, lastMinifyResult;
 globalThis.minify = async function (sources, options) {
   lastMinifyError = lastMinifyResult = null;
   try {
-    lastMinifyResult = await Terser.minify(sources, options);
+    lastMinifyResult = await terserMinify(sources, options);
   } catch (e) {
     lastMinifyError = e;
   }
