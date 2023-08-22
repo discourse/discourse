@@ -115,6 +115,10 @@ class DiscourseJsProcessor
       ctx.eval(contents, filename: path)
     end
 
+    def self.generate_js_processor
+      puts `yarn esbuild --bundle app/assets/javascripts/gizmo.js --external:fs --define:process='{"env":{}}' --outfile=app/assets/javascripts/js-processor.js`
+    end
+
     def self.create_new_context
       # timeout any eval that takes longer than 15 seconds
       ctx = MiniRacer::Context.new(timeout: 15_000, ensure_gc_after_idle: 2000)
@@ -125,8 +129,11 @@ class DiscourseJsProcessor
       ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
 
       # Theme template AST transformation plugins
-      puts `yarn esbuild --bundle app/assets/javascripts/gizmo.js --external:fs --define:process='{"env":{}}' --outfile=app/assets/javascripts/gizmo-output.js`
-      load_file_in_context(ctx, "gizmo-output.js")
+      unless File.exist?("#{Rails.root}/app/assets/javascripts/js-processor.js")
+        generate_js_processor
+      end
+
+      load_file_in_context(ctx, "js-processor.js")
 
       ctx
     end

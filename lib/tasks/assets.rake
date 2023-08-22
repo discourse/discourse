@@ -300,9 +300,14 @@ task "assets:precompile:compress_js" do
   Rails.application.assets_manifest.reload
 end
 
+task "assets:precompile:js_processor": "environment"
+  DiscourseJsProcessor.generate_js_processor
+end
+
 task "assets:precompile": %w[
        assets:precompile:before
        maxminddb:refresh
+       assets:precompile:js_processor
        assets:precompile:compress_js
        assets:precompile:css
      ]
