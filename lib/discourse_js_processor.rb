@@ -116,7 +116,7 @@ class DiscourseJsProcessor
     end
 
     def self.generate_js_processor
-      puts `yarn esbuild --bundle app/assets/javascripts/gizmo.js --external:fs --define:process='{"env":{}}' --outfile=app/assets/javascripts/js-processor.js`
+      puts `yarn --silent esbuild --bundle app/assets/javascripts/gizmo.js --external:fs --define:process='{"env":{}}' --outfile=app/assets/javascripts/js-processor.js`
     end
 
     def self.create_new_context
