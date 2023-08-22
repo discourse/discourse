@@ -26,6 +26,12 @@ module ThemeStore
       end
     end
 
+    def file_size(path)
+      fullpath = real_path(path)
+      return -1 unless fullpath
+      File.size(fullpath)
+    end
+
     def all_files
       Dir.glob("**/**", base: temp_folder).reject { |f| File.directory?(File.join(temp_folder, f)) }
     end

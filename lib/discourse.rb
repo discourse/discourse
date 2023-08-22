@@ -8,6 +8,7 @@ require "version"
 module Discourse
   DB_POST_MIGRATE_PATH ||= "db/post_migrate"
   REQUESTED_HOSTNAME ||= "REQUESTED_HOSTNAME"
+  MAX_METADATA_FILE_SIZE = 64.kilobytes
 
   class Utils
     URI_REGEXP ||= URI.regexp(%w[http https])
