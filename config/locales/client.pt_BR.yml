@@ -2674,7 +2674,7 @@ pt_BR:
       create: "Novo tópico"
       create_disabled_category: "Você não possui permissão para criar tópicos nesta categoria"
       create_long: "Criar um novo tópico"
-      open_draft: "Rascunho aberto"
+      open_draft: "Abrir rascunho"
       private_message: "Iniciar uma mensagem"
       archive_message:
         help: "Mover mensagem para o seu arquivo"

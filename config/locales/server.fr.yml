@@ -3130,7 +3130,7 @@ fr:
       title: "E-mail révoqué"
       subject_template: "Est-ce que votre adresse e-mail est correcte ?"
       text_body_template: |
-        Nous sommes désolés, mais nous avons des difficultés à vous joindre par e-mail. Nos derniers e-mailsn'ont pas été délivrés.
+        Nous sommes désolés, mais nous avons des difficultés à vous joindre par e-mail. Nos derniers e-mails n'ont pas été délivrés.
 
         Pouvez-vous vous assurer que [votre adresse e-mail](%{base_url}/my/preferences/email) est valide et fonctionne ? Vous pouvez également ajouter notre adresse e-mail à votre carnet d'adresses ou liste de contacts pour améliorer la réception de nos e-mails.
     email_bounced: |

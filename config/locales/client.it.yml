@@ -4451,7 +4451,7 @@ it:
             topics:
               read: Leggi un argomento o un messaggio specifico in esso. È supportato anche RSS.
               write: Crea un nuovo argomento o pubblica un messaggio su uno esistente.
-              update: Aggiorna un argomento. Cambia title, category, tags, status, archetype, featured_link, ecc.
+              update: Aggiorna un argomento. Cambia titolo, categoria, etichette, stato, archetipo, link_evidenza, ecc.
               delete: Elimina un argomento.
               read_lists: Leggi liste di argomenti come Popolari, Nuovi, Recenti, ecc. E' supportato anche l'RSS.
               status: "Aggiorna lo stato di un argomento. Stato: chiuso, archiviato, visibile, bloccato. Abilitato: vero, falso. Specifica un category_id qui e nel payload della richiesta per consentire solo modifiche di stato sugli argomenti in quella categoria."
