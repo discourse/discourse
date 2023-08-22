@@ -1,5 +1,22 @@
 // This is executed in mini_racer to provide the JS logic for lib/discourse_js_processor.rb
 
+/* eslint-disable no-console */
+/* global rails */
+
+globalThis.window = {};
+globalThis.console = {
+  prefix: "[DiscourseJsProcessor] ",
+  log(...args) {
+    rails.logger.info(console.prefix + args.join(" "));
+  },
+  warn(...args) {
+    rails.logger.warn(console.prefix + args.join(" "));
+  },
+  error(...args) {
+    rails.logger.error(console.prefix + args.join(" "));
+  },
+};
+
 const HTMLBarsInlinePrecompile =
   require("babel-plugin-ember-template-compilation").default;
 const colocatedBabelPlugin = require("ember-cli-htmlbars/lib/colocated-babel-plugin");
@@ -80,7 +97,7 @@ function buildThemeRawHbsTemplateManipulatorPlugin(themeId) {
   };
 }
 
-exports.compileRawTemplate = function (source, themeId) {
+globalThis.compileRawTemplate = function (source, themeId) {
   try {
     const plugins = [];
     if (themeId) {
@@ -94,7 +111,7 @@ exports.compileRawTemplate = function (source, themeId) {
   }
 };
 
-exports.transpile = function (
+globalThis.transpile = function (
   source,
   { moduleId, filename, skipModule, themeId, commonPlugins } = {}
 ) {
@@ -124,7 +141,7 @@ exports.transpile = function (
 // in a followup method call.
 let lastMinifyError, lastMinifyResult;
 
-exports.minify = async function (sources, options) {
+globalThis.minify = async function (sources, options) {
   lastMinifyError = lastMinifyResult = null;
   try {
     lastMinifyResult = await Terser.minify(sources, options);
@@ -133,7 +150,7 @@ exports.minify = async function (sources, options) {
   }
 };
 
-exports.getMinifyResult = function () {
+globalThis.getMinifyResult = function () {
   const error = lastMinifyError;
   const result = lastMinifyResult;
 

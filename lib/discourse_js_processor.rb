@@ -120,7 +120,7 @@ class DiscourseJsProcessor
       @processor_mutex.synchronize do
         if Rails.env.development? ||
              !File.exist?("#{Rails.root}/app/assets/javascripts/compiled-js-processor.js")
-          puts `yarn --silent esbuild --bundle app/assets/javascripts/gizmo.js --external:fs --define:process='{"env":{}}' --outfile=app/assets/javascripts/compiled-js-processor.js`
+          puts `yarn --silent esbuild --bundle app/assets/javascripts/js-processor.js --external:fs --define:process='{"env":{}}' --outfile=app/assets/javascripts/compiled-js-processor.js`
         end
       end
     end
