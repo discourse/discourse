@@ -134,7 +134,7 @@ class DiscourseJsProcessor
       JS
 
       # Theme template AST transformation plugins
-      puts `cd app/assets/javascripts && npx esbuild --bundle gizmo.js --external:fs --define:process='{"env":{}}' > gizmo-output.js`
+      puts `yarn esbuild --bundle app/assets/javascripts/gizmo.js --external:fs --define:process='{"env":{}}' --outfile=app/assets/javascripts/gizmo-output.js`
       load_file_in_context(ctx, "gizmo-output.js")
 
       ctx
