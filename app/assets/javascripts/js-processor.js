@@ -17,18 +17,14 @@ globalThis.console = {
   },
 };
 
-const HTMLBarsInlinePrecompile =
-  require("babel-plugin-ember-template-compilation").default;
-const colocatedBabelPlugin = require("ember-cli-htmlbars/lib/colocated-babel-plugin");
-const precompile =
-  require("ember-source/dist/ember-template-compiler").precompile;
-const Handlebars = require("handlebars").default;
-const Babel = require("@babel/standalone");
-const Terser = require("terser");
-const RawHandlebars =
-  require("discourse-common/addon/lib/raw-handlebars").default;
-const WidgetHbsCompiler =
-  require("./discourse-widget-hbs/lib/widget-hbs-compiler").WidgetHbsCompiler;
+import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
+import * as colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
+import { precompile } from "ember-source/dist/ember-template-compiler";
+import Handlebars from "handlebars";
+import * as Babel from "@babel/standalone";
+import * as Terser from "terser";
+import RawHandlebars from "discourse-common/addon/lib/raw-handlebars";
+import { WidgetHbsCompiler } from "./discourse-widget-hbs/lib/widget-hbs-compiler";
 
 function manipulateAstNodeForTheme(node, themeId) {
   // Magically add theme id as the first param for each of these helpers)
