@@ -63,13 +63,7 @@
     {{/if}}
   {{/if}}
 
-  {{#if
-    (and
-      this.site.mobileView
-      this.showTopicsAndRepliesToggle
-      (not this.bulkSelectEnabled)
-    )
-  }}
+  {{#if this.renderNewListHeaderControls}}
     <NewListHeaderControlsWrapper
       @current={{this.model.params.subset}}
       @newRepliesCount={{this.newRepliesCount}}
