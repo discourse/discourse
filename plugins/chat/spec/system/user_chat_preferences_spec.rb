@@ -16,6 +16,12 @@ RSpec.describe "User chat preferences", type: :system do
       sign_in(current_user)
     end
 
+    it "doesn’t show the tab" do
+      visit("/u/#{current_user.username}/preferences")
+
+      expect(page).to have_no_css(".user-nav__preferences-chat", visible: :all)
+    end
+
     it "shows a not found page" do
       visit("/u/#{current_user.username}/preferences/chat")
 

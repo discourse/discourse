@@ -204,4 +204,12 @@ export default class TopicsController extends DiscoveryController.extend(
       ),
     });
   }
+
+  get renderNewListHeaderControls() {
+    return (
+      this.site.mobileView &&
+      this.get("showTopicsAndRepliesToggle") &&
+      !this.get("bulkSelectEnabled")
+    );
+  }
 }

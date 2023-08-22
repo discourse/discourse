@@ -62,6 +62,16 @@
       </div>
     {{/if}}
   {{/if}}
+
+  {{#if this.renderNewListHeaderControls}}
+    <NewListHeaderControlsWrapper
+      @current={{this.model.params.subset}}
+      @newRepliesCount={{this.newRepliesCount}}
+      @newTopicsCount={{this.newTopicsCount}}
+      @changeNewListSubset={{route-action "changeNewListSubset"}}
+    />
+  {{/if}}
+
   <span>
     <PluginOutlet
       @name="before-topic-list"

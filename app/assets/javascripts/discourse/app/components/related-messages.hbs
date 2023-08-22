@@ -3,8 +3,8 @@
   class="more-topics__list {{if this.hidden 'hidden'}}"
   role="complementary"
   aria-labelledby="related-messages-title"
-  data-mobile-title={{i18n "related_messages.pill"}}
-  data-list-id={{this.listId}}
+  {{did-insert this.registerList}}
+  {{will-destroy this.removeList}}
 >
   <h3 id="related-messages-title" class="more-topics__list-title">
     {{i18n "related_messages.title"}}
