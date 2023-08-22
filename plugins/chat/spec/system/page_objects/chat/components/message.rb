@@ -98,7 +98,6 @@ module PageObjects
           selector += ".-persisted" if args[:persisted]
           selector += ".-staged" if args[:staged]
           selector += ".-deleted" if args[:deleted]
-          selector += ":not(.-deleted)" if !args[:deleted]
           selector
         end
       end
