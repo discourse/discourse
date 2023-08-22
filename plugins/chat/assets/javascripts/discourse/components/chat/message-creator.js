@@ -453,6 +453,10 @@ export default class ChatMessageCreator extends Component {
     this.chat
       .upsertDmChannelForUsernames(users.mapBy("username"))
       .then((channel) => {
+        if (!channel) {
+          return;
+        }
+
         this.router.transitionTo("chat.channel", ...channel.routeModels);
         this.args.onClose?.();
       });
