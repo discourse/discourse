@@ -26,7 +26,6 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def execute
-    # import_categories
     import_users
     import_user_emails
     import_user_profiles
@@ -41,7 +40,9 @@ class BulkImport::Generic < BulkImport::Base
     import_uploads
     import_user_avatars
     import_user_avatar_upload_references
+    update_uploaded_avatar_id
 
+    # import_categories
     # import_topics
     # import_posts
     # import_topic_allowed_users
@@ -580,6 +581,23 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     puts "  Imported upload references in #{(Time.now - start_time).to_i} seconds."
+  end
+
+  def update_uploaded_avatar_id
+    puts "Updating user's uploaded_avatar_id column..."
+
+    start_time = Time.now
+
+    DB.exec(<<~SQL)
+      UPDATE users u
+         SET uploaded_avatar_id = ua.custom_upload_id
+        FROM user_avatars ua
+       WHERE u.uploaded_avatar_id IS NULL
+         AND u.id = ua.user_id
+         AND ua.custom_upload_id IS NOT NULL
+    SQL
+
+    puts "  Update took #{(Time.now - start_time).to_i} seconds."
   end
 
   def import_tags
