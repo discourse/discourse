@@ -249,6 +249,7 @@ module Chat
       @global_mentions_disabled =
         (@parsed_mentions.has_global_mention || @parsed_mentions.has_here_mention) &&
           !@chat_channel.allow_channel_wide_mentions
+      @global_mentions_disabled
     end
 
     # Filters out users from global, here, group, and direct mentions that are
