@@ -426,7 +426,7 @@ createWidget("glimmer-search-menu-wrapper", {
   },
 
   buildClasses() {
-    return ["search-menu"];
+    return ["search-menu glimmer-search-menu"];
   },
 
   html() {

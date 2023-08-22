@@ -81,34 +81,4 @@ module DiscourseWebauthn
       DiscourseWebauthn::ChallengeGenerator::ChallengeSession.session_challenge_key(user)
     ]
   end
-
-  def self.validate_first_factor_key(key)
-    pp key
-    webauthn_credential = DiscourseWebauthn::Credential.from_get(key)
-    p "webauthn_credential"
-    pp webauthn_credential
-
-    # stored_credential = user.credentials.find_by(webauthn_id: webauthn_credential.id)
-
-    # begin
-    #   webauthn_credential.verify(
-    #     session[:authentication_challenge],
-    #     public_key: stored_credential.public_key,
-    #     sign_count: stored_credential.sign_count
-    #   )
-
-    #   # Update the stored credential sign count with the value from `webauthn_credential.sign_count`
-    #   stored_credential.update!(sign_count: webauthn_credential.sign_count)
-
-    #   # Continue with successful sign in or 2FA verification...
-
-    # rescue ::WebAuthn::SignCountVerificationError => e
-    #   # Cryptographic verification of the authenticator data succeeded, but the signature counter was less then or equal
-    #   # to the stored value. This can have several reasons and depending on your risk tolerance you can choose to fail or
-    #   # pass authentication. For more information see https://www.w3.org/TR/webauthn/#sign-counter
-    #   pp e
-    # rescue ::WebAuthn::Error => e
-    #   # Handle error
-    # end
-  end
 end

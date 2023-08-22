@@ -3,8 +3,11 @@ import { once } from "@ember/runloop";
 import { seenUser } from "discourse/lib/user-presence";
 import { getOwner } from "discourse-common/lib/get-owner";
 import deprecated from "discourse-common/lib/deprecated";
+import { inject as service } from "@ember/service";
 
 const DiscourseRoute = Route.extend({
+  router: service(),
+
   willTransition() {
     seenUser();
   },
@@ -39,7 +42,7 @@ const DiscourseRoute = Route.extend({
   redirectIfLoginRequired() {
     const app = this.controllerFor("application");
     if (app.get("loginRequired")) {
-      this.replaceWith("login");
+      this.router.replaceWith("login");
     }
   },
 

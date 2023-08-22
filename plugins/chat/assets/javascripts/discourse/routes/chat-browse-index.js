@@ -18,6 +18,6 @@ export default class ChatBrowseIndexRoute extends DiscourseRoute {
   }
 
   afterModel() {
-    this.replaceWith("chat.browse.open");
+    this.router.replaceWith("chat.browse.open");
   }
 }

@@ -24,6 +24,8 @@ const ALL = "all";
 
 export default DiscourseRoute.extend({
   composer: service(),
+  router: service(),
+  currentUser: service(),
   navMode: "latest",
 
   queryParams,
@@ -98,7 +100,7 @@ export default DiscourseRoute.extend({
     ) {
       // TODO: avoid throwing away preload data by redirecting on the server
       PreloadStore.getAndRemove("topic_list");
-      return this.replaceWith(
+      return this.router.replaceWith(
         "tags.showCategoryNone",
         params.category_slug_path_with_id,
         tagId

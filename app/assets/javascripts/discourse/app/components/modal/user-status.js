@@ -1,5 +1,3 @@
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -8,14 +6,17 @@ import {
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
+import Component from "@ember/component";
 
-export default Controller.extend(ModalFunctionality, {
-  showDeleteButton: false,
-  prefilledDateTime: null,
-  timeShortcuts: null,
-  _itsatrap: null,
+export default class ModalUserStatus extends Component {
+  showDeleteButton = false;
+  prefilledDateTime = null;
+  timeShortcuts = null;
+  _itsatrap = null;
 
-  onShow() {
+  init() {
+    super.init(...arguments);
+
     const currentStatus = { ...this.model.status };
     this.setProperties({
       status: currentStatus,
@@ -27,42 +28,42 @@ export default Controller.extend(ModalFunctionality, {
     });
 
     this.set("_itsatrap", new ItsATrap());
-  },
+  }
 
-  onClose() {
+  willDestroy() {
     this._itsatrap.destroy();
     this.set("_itsatrap", null);
     this.set("timeShortcuts", null);
-  },
+  }
 
   @discourseComputed("status.emoji", "status.description")
   statusIsSet(emoji, description) {
     return !!emoji && !!description;
-  },
+  }
 
   @discourseComputed
   customTimeShortcutLabels() {
     const labels = {};
     labels[TIME_SHORTCUT_TYPES.NONE] = "time_shortcut.never";
     return labels;
-  },
+  }
 
   @discourseComputed
   hiddenTimeShortcutOptions() {
     return [TIME_SHORTCUT_TYPES.LAST_CUSTOM];
-  },
+  }
 
   @action
   delete() {
     Promise.resolve(this.model.deleteAction())
-      .then(() => this.send("closeModal"))
+      .then(() => this.closeModal())
       .catch((e) => this._handleError(e));
-  },
+  }
 
   @action
   onTimeSelected(_, time) {
     this.set("status.endsAt", time);
-  },
+  }
 
   @action
   saveAndClose() {
@@ -73,9 +74,9 @@ export default Controller.extend(ModalFunctionality, {
     };
 
     Promise.resolve(this.model.saveAction(newStatus, this.pauseNotifications))
-      .then(() => this.send("closeModal"))
+      .then(() => this.closeModal())
       .catch((e) => this._handleError(e));
-  },
+  }
 
   _handleError(e) {
     if (typeof e === "string") {
@@ -83,11 +84,11 @@ export default Controller.extend(ModalFunctionality, {
     } else {
       popupAjaxError(e);
     }
-  },
+  }
 
   _buildTimeShortcuts() {
     const timezone = this.currentUser.user_option.timezone;
     const shortcuts = timeShortcuts(timezone);
     return [shortcuts.oneHour(), shortcuts.twoHours(), shortcuts.tomorrow()];
-  },
-});
+  }
+}

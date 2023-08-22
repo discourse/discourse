@@ -79,7 +79,15 @@ export default class AdminSiteSettingsController extends Controller {
             item.get("description").toLowerCase().includes(filter) ||
             (item.get("value") || "").toString().toLowerCase().includes(filter);
           if (!filterResult && fuzzyRegex && fuzzyRegex.test(setting)) {
-            fuzzyMatches.push(item);
+            // Tightens up fuzzy search results a bit.
+            const fuzzySearchLimiter = 15;
+            const strippedSetting = setting.replace(/[^a-z0-9]/gi, "");
+            if (
+              strippedSetting.length <=
+              strippedQuery.length + fuzzySearchLimiter
+            ) {
+              fuzzyMatches.push(item);
+            }
           }
           return filterResult;
         } else {

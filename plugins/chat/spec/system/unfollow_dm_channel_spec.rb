@@ -27,7 +27,7 @@ RSpec.describe "Unfollow dm channel", type: :system do
         sign_in(other_user)
         chat_page.visit_channel(dm_channel_1)
         channel_page.send_message(text)
-        expect(channel_page).to have_message(text: text)
+        expect(channel_page.messages).to have_message(text: text)
         session.quit
       end
 
