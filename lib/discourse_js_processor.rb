@@ -123,15 +123,6 @@ class DiscourseJsProcessor
       ctx.attach("rails.logger.info", proc { |err| Rails.logger.info(err.to_s) })
       ctx.attach("rails.logger.warn", proc { |err| Rails.logger.warn(err.to_s) })
       ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
-      ctx.eval(<<~JS, filename: "environment-setup.js")
-        window = {};
-        console = {
-          prefix: "[DiscourseJsProcessor] ",
-          log: function(...args){ rails.logger.info(console.prefix + args.join(" ")); },
-          warn: function(...args){ rails.logger.warn(console.prefix + args.join(" ")); },
-          error: function(...args){ rails.logger.error(console.prefix + args.join(" ")); }
-        };
-      JS
 
       # Theme template AST transformation plugins
       puts `yarn esbuild --bundle app/assets/javascripts/gizmo.js --external:fs --define:process='{"env":{}}' --outfile=app/assets/javascripts/gizmo-output.js`
