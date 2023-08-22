@@ -52,7 +52,7 @@ class BulkImport::Generic < BulkImport::Base
     import_posts
     import_topic_allowed_users
     import_likes
-    import_tags
+    # import_tags
 
     @source_db.close
     @uploads_db.close if @uploads_db
