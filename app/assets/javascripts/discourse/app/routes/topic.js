@@ -315,7 +315,7 @@ const TopicRoute = DiscourseRoute.extend({
       this.setupParams(topic, queryParams);
       return topic;
     } else {
-      let props = Object.assign({}, params);
+      let props = { ...params };
       delete props.username_filters;
       delete props.filter;
       topic = this.store.createRecord("topic", props);

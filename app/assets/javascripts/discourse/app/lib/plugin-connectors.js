@@ -165,6 +165,13 @@ function buildConnectorCache() {
   }
 }
 
+export function connectorsExist(outletName) {
+  if (!_connectorCache) {
+    buildConnectorCache();
+  }
+  return Boolean(_connectorCache[outletName]);
+}
+
 export function connectorsFor(outletName) {
   if (!_connectorCache) {
     buildConnectorCache();

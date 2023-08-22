@@ -200,6 +200,10 @@ module PageObjects
         JS
       end
 
+      def close
+        find("#{COMPOSER_ID} .save-or-cancel .cancel").click
+      end
+
       private
 
       def emoji_preview_selector(emoji)

@@ -1,5 +1,9 @@
-<DModalBody>
-  <ConditionalLoadingSpinner @condition={{this.loading}}>
+<DModal
+  @closeModal={{@closeModal}}
+  class="user-status"
+  @title={{i18n "user_status.set_custom_status"}}
+>
+  <:body>
     <div class="control-group">
       <UserStatusPicker @status={{this.status}} />
     </div>
@@ -15,30 +19,31 @@
       <label class="control-label">
         {{i18n "user_status.remove_status"}}
       </label>
+
       <TimeShortcutPicker
         @timeShortcuts={{this.timeShortcuts}}
         @hiddenOptions={{this.hiddenTimeShortcutOptions}}
         @customLabels={{this.customTimeShortcutLabels}}
         @prefilledDatetime={{this.prefilledDateTime}}
-        @onTimeSelected={{action "onTimeSelected"}}
+        @onTimeSelected={{this.onTimeSelected}}
         @_itsatrap={{this._itsatrap}}
       />
     </div>
-    <div class="modal-footer control-group">
+  </:body>
+  <:footer>
+    <DButton
+      @label="user_status.save"
+      @class="btn-primary"
+      @disabled={{not this.statusIsSet}}
+      @action={{this.saveAndClose}}
+    />
+    <DModalCancel @close={{@closeModal}} />
+    {{#if this.showDeleteButton}}
       <DButton
-        @label="user_status.save"
-        @class="btn-primary"
-        @disabled={{not this.statusIsSet}}
-        @action={{action "saveAndClose"}}
+        @icon="trash-alt"
+        @class="delete-status btn-danger"
+        @action={{this.delete}}
       />
-      <DModalCancel @close={{action "closeModal"}} />
-      {{#if this.showDeleteButton}}
-        <DButton
-          @icon="trash-alt"
-          @class="delete-status btn-danger"
-          @action={{action "delete"}}
-        />
-      {{/if}}
-    </div>
-  </ConditionalLoadingSpinner>
-</DModalBody>
+    {{/if}}
+  </:footer>
+</DModal>

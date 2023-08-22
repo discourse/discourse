@@ -5,9 +5,9 @@ module PageObjects
     class NewTopicListToggle < PageObjects::Components::Base
       COMMON_SELECTOR = ".topics-replies-toggle"
 
-      ALL_SELECTOR = "#{COMMON_SELECTOR}.all"
-      REPLIES_SELECTOR = "#{COMMON_SELECTOR}.replies"
-      TOPICS_SELECTOR = "#{COMMON_SELECTOR}.topics"
+      ALL_SELECTOR = "#{COMMON_SELECTOR}.--all"
+      REPLIES_SELECTOR = "#{COMMON_SELECTOR}.--replies"
+      TOPICS_SELECTOR = "#{COMMON_SELECTOR}.--topics"
 
       def not_rendered?
         has_no_css?(COMMON_SELECTOR)

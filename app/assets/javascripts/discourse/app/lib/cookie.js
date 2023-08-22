@@ -20,7 +20,7 @@ function parseCookieValue(s) {
 function cookie(key, value, options) {
   // Write
   if (value !== undefined) {
-    options = Object.assign({}, options || {});
+    options = { ...(options || {}) };
 
     if (typeof options.expires === "number") {
       let days = options.expires,
@@ -71,7 +71,7 @@ export function removeCookie(key, options) {
   }
 
   // Must not alter options, thus extending a fresh object...
-  cookie(key, "", Object.assign({}, options || {}, { expires: -1 }));
+  cookie(key, "", { ...(options || {}), expires: -1 });
   return !cookie(key);
 }
 

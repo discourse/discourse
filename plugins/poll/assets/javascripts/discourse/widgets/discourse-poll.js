@@ -299,10 +299,7 @@ createWidget("discourse-poll-container", {
           ? `discourse-poll-${type}-results`
           : "discourse-poll-pie-chart";
       contents.push(
-        this.attach(
-          resultsWidget,
-          Object.assign({}, attrs, { voters: state.voters })
-        )
+        this.attach(resultsWidget, { ...attrs, voters: state.voters })
       );
 
       return contents;
@@ -903,7 +900,8 @@ export default createWidget("discourse-poll", {
       (attrs.post.get("topic.archived") && !staffOnly) ||
       (this.isClosed() && !staffOnly);
 
-    const newAttrs = Object.assign({}, attrs, {
+    const newAttrs = {
+      ...attrs,
       canCastVotes: this.canCastVotes(),
       hasVoted: this.hasVoted(),
       isAutomaticallyClosed: this.isAutomaticallyClosed(),
@@ -912,7 +910,7 @@ export default createWidget("discourse-poll", {
       max: this.max(),
       min: this.min(),
       showResults,
-    });
+    };
 
     return [
       this.attach("discourse-poll-container", newAttrs),

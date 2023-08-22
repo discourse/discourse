@@ -13,11 +13,13 @@
       </span>
     {{/if ~}}
   {{/if ~}}
-  {{~#if view.showTopicsAndRepliesToggle}}
-    {{raw "list/new-list-header-controls" current=newListSubset newRepliesCount=newRepliesCount newTopicsCount=newTopicsCount}}
-  {{else}}
-    <span>{{view.localizedName}}</span>
-  {{/if ~}}
+  {{~#unless bulkSelectEnabled}}
+    {{~#if view.showTopicsAndRepliesToggle}}
+      {{raw "list/new-list-header-controls" current=newListSubset newRepliesCount=newRepliesCount newTopicsCount=newTopicsCount}}
+    {{else}}
+      <span>{{view.localizedName}}</span>
+    {{/if ~}}
+  {{/unless ~}}
   {{~#if view.isSorting}}
     {{d-icon view.sortIcon}}
   {{/if ~}}

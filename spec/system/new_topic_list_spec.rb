@@ -88,7 +88,6 @@ describe "New topic list", type: :system do
           new_topic_with_tag,
         ].each { |topic| expect(topic_list).to have_topic(topic) }
 
-        expect(tabs_toggle.all_tab).to have_count(6)
         expect(tabs_toggle.replies_tab).to have_count(3)
         expect(tabs_toggle.topics_tab).to have_count(3)
 
@@ -124,7 +123,6 @@ describe "New topic list", type: :system do
         expect(tabs_toggle.replies_tab).to be_inactive
         expect(tabs_toggle.topics_tab).to be_active
 
-        expect(tabs_toggle.all_tab).to have_count(6)
         expect(tabs_toggle.replies_tab).to have_count(3)
         expect(tabs_toggle.topics_tab).to have_count(3)
 
@@ -144,7 +142,6 @@ describe "New topic list", type: :system do
         expect(tabs_toggle.replies_tab).to be_active
         expect(tabs_toggle.topics_tab).to be_inactive
 
-        expect(tabs_toggle.all_tab).to have_count(6)
         expect(tabs_toggle.replies_tab).to have_count(3)
         expect(tabs_toggle.topics_tab).to have_count(3)
 
@@ -170,19 +167,16 @@ describe "New topic list", type: :system do
       it "live-updates the counts shown on the tabs" do
         visit("/new")
 
-        expect(tabs_toggle.all_tab).to have_count(6)
         expect(tabs_toggle.replies_tab).to have_count(3)
         expect(tabs_toggle.topics_tab).to have_count(3)
 
         TopicUser.update_last_read(user, new_reply_in_category.id, 2, 1, 1)
 
-        expect(tabs_toggle.all_tab).to have_count(5)
         expect(tabs_toggle.replies_tab).to have_count(2)
         expect(tabs_toggle.topics_tab).to have_count(3)
 
         TopicUser.update_last_read(user, new_topic.id, 1, 1, 1)
 
-        expect(tabs_toggle.all_tab).to have_count(4)
         expect(tabs_toggle.replies_tab).to have_count(2)
         expect(tabs_toggle.topics_tab).to have_count(2)
       end
@@ -198,7 +192,6 @@ describe "New topic list", type: :system do
           expect(tabs_toggle.replies_tab).to be_inactive
           expect(tabs_toggle.topics_tab).to be_inactive
 
-          expect(tabs_toggle.all_tab).to have_count(2)
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(1)
         end
@@ -214,7 +207,6 @@ describe "New topic list", type: :system do
           expect(tabs_toggle.replies_tab).to be_inactive
           expect(tabs_toggle.topics_tab).to be_active
 
-          expect(tabs_toggle.all_tab).to have_count(2)
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(1)
 
@@ -234,7 +226,6 @@ describe "New topic list", type: :system do
           expect(tabs_toggle.replies_tab).to be_active
           expect(tabs_toggle.topics_tab).to be_inactive
 
-          expect(tabs_toggle.all_tab).to have_count(2)
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(1)
 
@@ -262,13 +253,11 @@ describe "New topic list", type: :system do
 
           visit("/c/#{category.slug}/#{category.id}/l/new")
 
-          expect(tabs_toggle.all_tab).to have_count(3)
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(2)
 
           TopicUser.update_last_read(user, new_topic_in_category.id, 1, 1, 1)
 
-          expect(tabs_toggle.all_tab).to have_count(2)
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(1)
         end
@@ -286,7 +275,6 @@ describe "New topic list", type: :system do
           expect(tabs_toggle.replies_tab).to be_inactive
           expect(tabs_toggle.topics_tab).to be_inactive
 
-          expect(tabs_toggle.all_tab).to have_count(2)
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(1)
         end
@@ -302,7 +290,6 @@ describe "New topic list", type: :system do
           expect(tabs_toggle.replies_tab).to be_inactive
           expect(tabs_toggle.topics_tab).to be_active
 
-          expect(tabs_toggle.all_tab).to have_count(2)
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(1)
 
@@ -321,7 +308,6 @@ describe "New topic list", type: :system do
           expect(tabs_toggle.replies_tab).to be_active
           expect(tabs_toggle.topics_tab).to be_inactive
 
-          expect(tabs_toggle.all_tab).to have_count(2)
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(1)
 
@@ -347,13 +333,11 @@ describe "New topic list", type: :system do
 
           visit("/tag/#{tag.name}/l/new")
 
-          expect(tabs_toggle.all_tab).to have_count(3)
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(2)
 
           TopicUser.update_last_read(user, new_topic_with_tag.id, 1, 1, 1)
 
-          expect(tabs_toggle.all_tab).to have_count(2)
           expect(tabs_toggle.replies_tab).to have_count(1)
           expect(tabs_toggle.topics_tab).to have_count(1)
         end
@@ -389,7 +373,6 @@ describe "New topic list", type: :system do
         expect(tabs_toggle.replies_tab).to be_visible
         expect(tabs_toggle.topics_tab).to be_visible
 
-        expect(tabs_toggle.all_tab).to have_count(3)
         expect(tabs_toggle.replies_tab).to have_count(3)
         expect(tabs_toggle.topics_tab).to have_count(0)
       end
@@ -411,7 +394,6 @@ describe "New topic list", type: :system do
         expect(tabs_toggle.replies_tab).to be_visible
         expect(tabs_toggle.topics_tab).to be_visible
 
-        expect(tabs_toggle.all_tab).to have_count(3)
         expect(tabs_toggle.replies_tab).to have_count(0)
         expect(tabs_toggle.topics_tab).to have_count(3)
       end
