@@ -396,9 +396,10 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
             return {
               method: "put",
               url: response.url,
-              headers: deepMerge(response.signed_headers, {
+              headers: {
+                ...response.signed_headers,
                 "Content-Type": file.type,
-              }),
+              },
             };
           })
           .catch((errResponse) => {

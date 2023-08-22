@@ -109,8 +109,8 @@ jobs:
 
       - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
         run: |
-          sudo echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
-          sudo echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
+          echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
+          echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
 
       - name: Fetch app state cache
         uses: actions/cache@v3

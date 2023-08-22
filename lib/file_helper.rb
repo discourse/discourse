@@ -53,12 +53,7 @@ class FileHelper
     include_port_in_host_header: false
   )
     url = "https:" + url if url.start_with?("//")
-
-    # Certain system tests need to download files from http:// URLs (e.g. minio S3 tests)
-    # which are hosted on localhost.
-    if Rails.env.production?
-      raise Discourse::InvalidParameters.new(:url) unless url =~ %r{\Ahttps?://}
-    end
+    raise Discourse::InvalidParameters.new(:url) unless url =~ %r{\Ahttps?://}
 
     tmp = nil
 

@@ -274,7 +274,7 @@ RSpec.configure do |config|
       minio_runner_config.buckets =
         (
           if ENV["MINIO_RUNNER_BUCKETS"]
-            ENV["MINIO_RUNNER_BUCKETS"]&.split(",")
+            ENV["MINIO_RUNNER_BUCKETS"].split(",")
           else
             ["discoursetest"]
           end
@@ -282,7 +282,7 @@ RSpec.configure do |config|
       minio_runner_config.public_buckets =
         (
           if ENV["MINIO_RUNNER_PUBLIC_BUCKETS"]
-            ENV["MINIO_RUNNER_PUBLIC_BUCKETS"]&.split(",")
+            ENV["MINIO_RUNNER_PUBLIC_BUCKETS"].split(",")
           else
             ["discoursetest"]
           end
