@@ -1,7 +1,8 @@
 import Component from "@glimmer/component";
-import { computed } from "@ember/object";
+import { action, computed } from "@ember/object";
 import getURL from "discourse-common/lib/get-url";
 import { inject as service } from "@ember/service";
+import I18n from "I18n";
 
 export default class RelatedMessages extends Component {
   @service moreTopicsPreferenceTracking;
@@ -9,9 +10,22 @@ export default class RelatedMessages extends Component {
 
   listId = "related-Messages";
 
-  @computed("moreTopicsPreferenceTracking.preference")
+  @computed("moreTopicsPreferenceTracking.selectedTab")
   get hidden() {
-    return this.moreTopicsPreferenceTracking.preference !== this.listId;
+    return this.moreTopicsPreferenceTracking.selectedTab !== this.listId;
+  }
+
+  @action
+  registerList() {
+    this.moreTopicsPreferenceTracking.registerTopicList({
+      name: I18n.t("related_messages.pill"),
+      id: this.listId,
+    });
+  }
+
+  @action
+  removeList() {
+    this.moreTopicsPreferenceTracking.removeTopicList(this.listId);
   }
 
   get targetUser() {

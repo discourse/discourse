@@ -383,18 +383,6 @@
     font-size: var(--font-0);
     cursor: default;
   }
-
-  .show-more {
-    width: 100%;
-    z-index: z("base");
-    position: absolute;
-    top: 0;
-
-    .alert {
-      margin: 0;
-      padding: 1.1em 2em 1.1em 0.65em;
-    }
-  }
 }
 
 .topic-list {
