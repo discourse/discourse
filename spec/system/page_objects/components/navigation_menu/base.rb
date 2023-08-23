@@ -30,6 +30,10 @@ module PageObjects
           has_css?(".sidebar-sections [data-section-name='#{name.parameterize}']")
         end
 
+        def switch_to_chat
+          find(".sidebar__panel-switch-button[data-key='chat']").click
+        end
+
         def has_no_section?(name)
           has_no_css?(".sidebar-sections [data-section-name='#{name.parameterize}']")
         end
