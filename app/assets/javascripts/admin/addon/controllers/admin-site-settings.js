@@ -22,6 +22,17 @@ export default class AdminSiteSettingsController extends Controller {
     return 100;
   }
 
+  sortSettings(settings) {
+    // Sort the site settings so that fuzzy results are at the bottom
+    // and ordered by their gap count asc.
+    settings.sort((a, b) => {
+      const aSort = a.sort === undefined ? 0 : a.sort;
+      const bSort = b.sort === undefined ? 0 : b.sort;
+      return aSort - bSort;
+    });
+    return settings;
+  }
+
   performSearch(filter, allSiteSettings, onlyOverridden) {
     let pluginFilter;
 
@@ -56,9 +67,11 @@ export default class AdminSiteSettingsController extends Controller {
 
     const strippedQuery = filter.replace(/[^a-z0-9]/gi, "");
     let fuzzyRegex;
+    let fuzzyRegexGaps;
 
     if (strippedQuery.length > 2) {
       fuzzyRegex = new RegExp(strippedQuery.split("").join(".*"), "i");
+      fuzzyRegexGaps = new RegExp(strippedQuery.split("").join("(.*)"), "i");
     }
 
     allSiteSettings.forEach((settingsCategory) => {
@@ -86,6 +99,11 @@ export default class AdminSiteSettingsController extends Controller {
               strippedSetting.length <=
               strippedQuery.length + fuzzySearchLimiter
             ) {
+              const gapResult = strippedSetting.match(fuzzyRegexGaps);
+              if (gapResult) {
+                const filteredGapResult = gapResult.filter((gap) => gap !== "");
+                item.sort = filteredGapResult.length;
+              }
               fuzzyMatches.push(item);
             }
           }
@@ -106,13 +124,15 @@ export default class AdminSiteSettingsController extends Controller {
           name: I18n.t(
             "admin.site_settings.categories." + settingsCategory.nameKey
           ),
-          siteSettings,
+          siteSettings: this.sortSettings(siteSettings),
           count: siteSettings.length,
         });
       }
     });
 
     all.siteSettings.pushObjects(matches.slice(0, this.maxResults));
+    all.siteSettings = this.sortSettings(all.siteSettings);
+
     all.hasMore = matches.length > this.maxResults;
     all.count = all.hasMore ? `${this.maxResults}+` : matches.length;
     all.maxResults = this.maxResults;

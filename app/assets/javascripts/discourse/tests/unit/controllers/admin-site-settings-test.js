@@ -48,6 +48,13 @@ module("Unit | Controller | admin-site-settings", function (hooks) {
     assert.deepEqual(results[0].siteSettings.length, 2);
     // ensures hello world shows up before fuzzy hpello world
     assert.deepEqual(results[0].siteSettings[0].setting, "hello world");
+
+    results = controller.performSearch("world", settings2);
+    assert.deepEqual(results[0].siteSettings.length, 2);
+    // ensures hello world shows up before fuzzy hpello world with "world" search
+    assert.deepEqual(results[0].siteSettings[0].setting, "hello world");
+
+    // ensures fuzzy search limiter is in place
     results = controller.performSearch("digest", settings2);
     assert.deepEqual(results[0].siteSettings.length, 1);
     assert.deepEqual(results[0].siteSettings[0].setting, "digest_logo");
