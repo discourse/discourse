@@ -6,6 +6,9 @@ class DiscourseJsProcessor
   class TranspileError < StandardError
   end
 
+  JS_PROCESSOR_PATH =
+    Rails.env.production? ? "tmp/js-processor.js" : "tmp/js-processor/#{Process.pid}.js"
+
   # To generate a list of babel plugins used by ember-cli, set
   # babel: { debug: true } in ember-cli-build.js, then run `yarn ember build -prod`
   DISCOURSE_COMMON_BABEL_PLUGINS = [
@@ -106,22 +109,12 @@ class DiscourseJsProcessor
       @mutex
     end
 
-    def self.load_file_in_context(ctx, path, wrap_in_module: nil)
-      contents = File.read("#{Rails.root}/app/assets/javascripts/#{path}")
-      contents = <<~JS if wrap_in_module
-          define(#{wrap_in_module.to_json}, ["exports", "require", "module"], function(exports, require, module){
-            #{contents}
-          });
-        JS
-      ctx.eval(contents, filename: path)
-    end
-
     def self.generate_js_processor
       @processor_mutex.synchronize do
         if Rails.env.development? || Rails.env.test?
           !File.exist?("#{Rails.root}/app/assets/javascripts/compiled-js-processor.js")
           error =
-            `yarn --silent esbuild --log-level=warning --bundle app/assets/javascripts/js-processor.js --external:fs --define:process='{"env":{}}' --outfile=app/assets/javascripts/compiled-js-processor.js`.strip
+            `yarn --silent esbuild --log-level=warning --bundle app/assets/javascripts/js-processor.js --external:fs --define:process='{"env":{}}' --outfile=#{JS_PROCESSOR_PATH}`.strip
           raise error if error.present?
         end
       end
@@ -138,7 +131,7 @@ class DiscourseJsProcessor
 
       # Theme template AST transformation plugins
       generate_js_processor
-      load_file_in_context(ctx, "compiled-js-processor.js")
+      ctx.eval(File.read(JS_PROCESSOR_PATH), filename: "js-processor.js")
 
       ctx
     end
