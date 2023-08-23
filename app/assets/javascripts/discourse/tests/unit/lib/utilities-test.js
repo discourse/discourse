@@ -6,7 +6,6 @@ import {
   escapeExpression,
   extractDomainFromUrl,
   fillMissingDates,
-  getCaretPosition,
   inCodeBlock,
   initializeDefaultHomepage,
   mergeSortedLists,
@@ -280,22 +279,6 @@ module("Unit | Utilities", function (hooks) {
       [6, 5, 4, 3, 2, 2, 1, 1],
       "it correctly merges lists that share common items"
     );
-  });
-
-  test("getCaretPosition", function (assert) {
-    const textarea = document.createElement("textarea");
-    const content = document.createTextNode("01234\n56789\n012345");
-    textarea.appendChild(content);
-    document.body.appendChild(textarea);
-
-    const adjustedPosition = getCaretPosition(textarea, {
-      pos: 0,
-    });
-    const expectedX = 0;
-    const expectedY = 2;
-
-    assert.equal(adjustedPosition.x, expectedX, "x coordinate is correct");
-    assert.equal(adjustedPosition.y, expectedY, "y coordinate is correct");
   });
 });
 
