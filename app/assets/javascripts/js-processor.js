@@ -23,7 +23,7 @@ import Handlebars from "handlebars";
 import { transform as babelTransform } from "@babel/standalone";
 import { minify as terserMinify } from "terser";
 import RawHandlebars from "discourse-common/addon/lib/raw-handlebars";
-import { WidgetHbsCompiler } from "./discourse-widget-hbs/lib/widget-hbs-compiler";
+import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
 
 function manipulateAstNodeForTheme(node, themeId) {
   // Magically add theme id as the first param for each of these helpers)
