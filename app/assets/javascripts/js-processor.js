@@ -1,19 +1,18 @@
 // This is executed in mini_racer to provide the JS logic for lib/discourse_js_processor.rb
 
-/* eslint-disable no-console */
 /* global rails */
 
+const CONSOLE_PREFIX = "[DiscourseJsProcessor] ";
 globalThis.window = {};
 globalThis.console = {
-  prefix: "[DiscourseJsProcessor] ",
   log(...args) {
-    rails.logger.info(console.prefix + args.join(" "));
+    rails.logger.info(CONSOLE_PREFIX + args.join(" "));
   },
   warn(...args) {
-    rails.logger.warn(console.prefix + args.join(" "));
+    rails.logger.warn(CONSOLE_PREFIX + args.join(" "));
   },
   error(...args) {
-    rails.logger.error(console.prefix + args.join(" "));
+    rails.logger.error(CONSOLE_PREFIX + args.join(" "));
   },
 };
 
