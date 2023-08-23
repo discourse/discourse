@@ -256,6 +256,7 @@ class BulkImport::Base
 
     puts "Loading categories indexes..."
     @last_category_id = last_id(Category)
+    @last_category_group_id = last_id(CategoryGroup)
     @highest_category_position = Category.unscoped.maximum(:position) || 0
     @category_names =
       Category
@@ -310,6 +311,11 @@ class BulkImport::Base
     end
     if @last_category_id > 0
       @raw_connection.exec("SELECT setval('#{Category.sequence_name}', #{@last_category_id})")
+    end
+    if @last_category_group_id > 0
+      @raw_connection.exec(
+        "SELECT setval('#{CategoryGroup.sequence_name}', #{@last_category_group_id})",
+      )
     end
     if @last_topic_id > 0
       @raw_connection.exec("SELECT setval('#{Topic.sequence_name}', #{@last_topic_id})")
@@ -489,9 +495,12 @@ class BulkImport::Base
     description
     position
     parent_category_id
+    read_restricted
     created_at
     updated_at
   ]
+
+  CATEGORY_GROUP_COLUMNS ||= %i[id category_id group_id permission_type created_at updated_at]
 
   TOPIC_COLUMNS ||= %i[
     id
@@ -639,6 +648,10 @@ class BulkImport::Base
 
   def create_categories(rows, &block)
     create_records(rows, "category", CATEGORY_COLUMNS, &block)
+  end
+
+  def create_category_groups(rows, &block)
+    create_records(rows, "category_group", CATEGORY_GROUP_COLUMNS, &block)
   end
 
   def create_topics(rows, &block)
@@ -867,6 +880,7 @@ class BulkImport::Base
     category[:slug] ||= Slug.ascii_generator(name_lower)
     category[:description] = (category[:description] || "").scrub.strip.presence
     category[:user_id] ||= Discourse::SYSTEM_USER_ID
+    category[:read_restricted] = false if category[:read_restricted].nil?
     category[:created_at] ||= NOW
     category[:updated_at] ||= category[:created_at]
 
@@ -878,6 +892,13 @@ class BulkImport::Base
     end
 
     category
+  end
+
+  def process_category_group(category_group)
+    category_group[:id] = @last_category_group_id += 1
+    category_group[:created_at] = NOW
+    category_group[:updated_at] = NOW
+    category_group
   end
 
   def process_topic(topic)

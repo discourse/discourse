@@ -48,6 +48,8 @@ class BulkImport::Generic < BulkImport::Base
     update_uploaded_avatar_id
 
     import_categories
+    import_category_permissions
+
     import_topics
     import_posts
     import_topic_allowed_users
@@ -91,10 +93,33 @@ class BulkImport::Generic < BulkImport::Base
         parent_category_id:
           row["parent_category_id"] ? category_id_from_imported_id(row["parent_category_id"]) : nil,
         slug: row["slug"],
+        read_restricted: row["read_restricted"],
       }
     end
 
     categories.close
+  end
+
+  def import_category_permissions
+    puts "Importing category permissions..."
+
+    permissions = query(<<~SQL)
+      SELECT c.id AS category_id, p.value -> 'group_id' AS group_id, p.value -> 'permission_type' AS permission_type
+        FROM categories c,
+             JSON_EACH(c.permissions) p
+    SQL
+
+    existing_category_group_ids = CategoryGroup.pluck(:category_id, :group_id).to_set
+
+    create_category_groups(permissions) do |row|
+      category_id = category_id_from_imported_id(row["category_id"])
+      group_id = group_id_from_imported_id(row["group_id"])
+      next if existing_category_group_ids.include?([category_id, group_id])
+
+      { category_id: category_id, group_id: group_id, permission_type: row["permission_type"] }
+    end
+
+    permissions.close
   end
 
   def import_groups
@@ -107,6 +132,8 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     create_groups(groups) do |row|
+      next if group_id_from_imported_id(row["id"]).present?
+
       { imported_id: row["id"], name: row["name"], full_name: row["full_name"] }
     end
 
@@ -122,11 +149,14 @@ class BulkImport::Generic < BulkImport::Base
       ORDER BY ROWID
     SQL
 
+    existing_group_user_ids = GroupUser.pluck(:group_id, :user_id).to_set
+
     create_group_users(group_members) do |row|
-      {
-        group_id: group_id_from_imported_id(row["group_id"]),
-        user_id: user_id_from_imported_id(row["user_id"]),
-      }
+      group_id = group_id_from_imported_id(row["group_id"])
+      user_id = user_id_from_imported_id(row["user_id"])
+      next if existing_group_user_ids.include?([group_id, user_id])
+
+      { group_id: group_id, user_id: user_id }
     end
 
     group_members.close
