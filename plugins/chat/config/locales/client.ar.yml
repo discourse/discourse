@@ -10,6 +10,9 @@ ar:
       site_settings:
         categories:
           chat: الدردشة
+        chat_separate_sidebar_mode:
+          always: "دائمًا"
+          never: "أبدًا"
       logs:
         staff_actions:
           actions:
@@ -761,3 +764,7 @@ ar:
       sections:
         chat:
           title: الدردشة
+    sidebar:
+      panels:
+        chat:
+          label: "الدردشة"

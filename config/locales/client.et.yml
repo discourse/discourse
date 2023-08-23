@@ -2305,6 +2305,9 @@ et:
           one: "Uus (%{count})"
           other: "Uusi (%{count})"
         help: "viimase paari päeva jooksul loodud teemad"
+        all: "Kõik"
+        topics: "Teemasid"
+        replies: "Vastused"
       posted:
         title: "Minu"
         help: "minu postitustega teemad"

@@ -10,6 +10,10 @@ uk:
       site_settings:
         categories:
           chat: Чат
+        chat_separate_sidebar_mode:
+          always: "Завжди"
+          fullscreen: "Коли чат у повноекранному режимі"
+          never: "Ніколи"
       logs:
         staff_actions:
           actions:
@@ -110,6 +114,8 @@ uk:
         all_new: "Усі нові повідомлення"
         dm_and_mentions: "Прямі повідомлення та згадки"
         never: "Ніколи"
+      separate_sidebar_mode:
+        title: "Показувати окремі режими бічної панелі для форуму і чату"
       enable: "Увімкнути чат"
       flag: "Поскаржитися"
       emoji: "Вставити емодзі"
@@ -737,3 +743,7 @@ uk:
       sections:
         chat:
           title: Чат
+    sidebar:
+      panels:
+        chat:
+          label: "Чат"

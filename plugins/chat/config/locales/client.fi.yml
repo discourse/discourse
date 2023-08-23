@@ -10,6 +10,9 @@ fi:
       site_settings:
         categories:
           chat: Chat
+        chat_separate_sidebar_mode:
+          always: "Aina"
+          never: "Ei koskaan"
       logs:
         staff_actions:
           actions:
@@ -596,3 +599,7 @@ fi:
       sections:
         chat:
           title: Chat
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

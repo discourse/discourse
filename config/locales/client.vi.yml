@@ -3177,6 +3177,9 @@ vi:
         title_with_count:
           other: "Mới (%{count})"
         help: "chủ đề đã tạo cách đây vài ngày"
+        all: "All"
+        topics: "Các chủ đề"
+        replies: "Trả lời"
       posted:
         title: "Bài viết của tôi"
         help: "chủ đề của bạn đã được đăng trong"

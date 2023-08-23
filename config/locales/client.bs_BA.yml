@@ -2736,6 +2736,9 @@ bs_BA:
           few: "Novo (%{count})"
           other: "Novo (%{count})"
         help: "teme stvorene u zadnjih par dana"
+        all: "All"
+        topics: "Topics"
+        replies: "Odgovori"
       posted:
         title: "Moje objave"
         help: "teme u kojima imate postove"

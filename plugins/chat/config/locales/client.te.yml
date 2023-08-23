@@ -6,6 +6,10 @@
 
 te:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "ఎల్లప్పుడూ"
     chat:
       cancel: "రద్దుచేయి"
       channel_settings:

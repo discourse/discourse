@@ -6,6 +6,11 @@
 
 ur:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "ہمیشہ"
+          never: "کبھی نہیں"
     chat:
       create: "بنائیں"
       cancel: "منسوخ"

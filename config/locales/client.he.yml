@@ -4048,6 +4048,12 @@ he:
           many: "חדשים (%{count})"
           other: "חדשים (%{count})"
         help: "נושאים שנוצרו בימים האחרונים"
+        all: "הכול"
+        all_with_count: "הכול (%{count})"
+        topics: "נושאים"
+        topics_with_count: "נושאים (%{count})"
+        replies: "תשובות"
+        replies_with_count: "תשובות (%{count})"
       posted:
         title: "הפוסטים שלי"
         help: "נושאים בהם פרסמת"

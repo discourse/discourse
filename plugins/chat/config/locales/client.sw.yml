@@ -6,6 +6,11 @@
 
 sw:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Mara kwa mara"
+          never: "Kamwe"
     chat:
       create: "Tengeneza"
       cancel: "Ghairi"
