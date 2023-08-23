@@ -141,15 +141,21 @@ tr_TR:
               label: Konu Kimliği
         post_created_edited:
           fields:
+            action_type:
+              label: Eylem türü
+              description: "İsteğe bağlı, tetiklemeyi yalnızca oluşturulan veya düzenlenen etkinliklerle sınırlandırın"
             valid_trust_levels:
               label: Geçerli güven seviyeleri
               description: Yalnızca gönderi bu güven seviyelerindeki bir kullanıcı tarafından oluşturulduğunda tetiklenir, varsayılan olarak herhangi bir güven seviyesidir
             restricted_category:
               label: Kategori
               description: İsteğe bağlı, tetikleyici yürütmeyi bu kategoriyle sınırlandırmaya izin verir
+          created: Oluşturuldu
+          edited: Düzenlendi
         category_created_edited:
           fields:
             restricted_category:
+              label: Ana Kategori
               description: İsteğe bağlı, tetikleyici yürütmeyi bu kategoriyle sınırlandırmaya izin verir
         pm_created:
           fields:
@@ -195,6 +201,7 @@ tr_TR:
           fields:
             tags:
               label: Etiketler
+              description: Konuya eklenecek etiketlerin listesi.
         post:
           fields:
             creator:
@@ -207,6 +214,11 @@ tr_TR:
           fields:
             group:
               label: Grup
+            notification_level:
+              label: Bildirim seviyesi
+            update_existing_members:
+              label: Mevcut üyeleri güncelleyin
+              description: Mevcut grup üyeleri için bildirim seviyesini günceller
         user_global_notice:
           fields:
             level:

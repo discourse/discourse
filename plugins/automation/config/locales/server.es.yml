@@ -17,6 +17,9 @@ es:
       user_badge_granted:
         title: Credencial de usuario concedida
         doc: Activa una automatización cuando un usuario recibe una insignia.
+      user_first_logged_in:
+        title: Usuario que inició sesión por primera vez
+        doc: Activa una automatización cuando un usuario se conecta por primera vez.
       stalled_topic:
         title: Tema estancado
         doc: Activa una automatización cuando el autor del tema no responde tras un periodo de tiempo especificado. Recomendamos limitarlo por etiqueta o categoría, ya que si no el número de temas impactados puede ser muy elevado. Como medida de seguridad, no podrá impactar a más de 250 temas.
@@ -24,6 +27,9 @@ es:
         title: Llamada a la API
         description: Hacer una petición POST para activar una automatización
         doc: La petición POST debe hacerse a «/automations/:id/trigger.json» con una clave de API global.
+      category_created_edited:
+        title: Categoría creada/editada
+        description: Cuando se cree o edite una categoría se activará la automatización
       recurring:
         title: Periódico
       point_in_time:
@@ -69,6 +75,9 @@ es:
       auto_responder:
         title: Respuesta automática
         description: Responde a un mensaje que incluya las palabras clave especificadas
+      auto_tag_topic:
+        title: Etiquetar automáticamente tea
+        description: Añadir etiquetas automáticamente a un tema
       pin_topic:
         title: Fijar tema
         description: Fija un tema específico en una fecha determinada
@@ -92,6 +101,8 @@ es:
         doc: Al activar «suspend_user_by_email» con una llamada API, se espera que haya un «email» válido en los parámetros enviados. También se pueden utilizar «reasons» y «suspend_until (formato ISO 8601)» para anular los valores de los campos por defecto.
       user_global_notice_with_stalled_topic:
         doc: Cuando se active a través de un tema estancado, el autor del tema recibirá el aviso global
+      user_global_notice_with_first_accepted_solution:
+        doc: Cuando se active a través de la primera solución aceptada, el autor de la solución recibirá el aviso global.
       send_pms_with_api_call:
         doc: Si utilizas el script «send pms» con el activador «api call», el parámetro «usernames» de tu solicitud se utilizará para rellenar la lista de destinatarios.
       topic_required_words:
@@ -116,3 +127,6 @@ es:
         button_text: Hecho
       add_user_to_group_through_custom_field:
         title: "Añadir un usuario al grupo a través del campo personalizado de usuario"
+      group_category_notification_default:
+        title: "Notificación de categoría de grupo predeterminada"
+        description: "Establecer el nivel de notificación por defecto de una categoría para los miembros de un grupo"

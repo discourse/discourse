@@ -103,6 +103,8 @@ fr:
             P6M: "Six mois"
             P1Y: "Un an"
           fields:
+            restricted_category:
+              label: Limité à la catégorie
             stalled_after:
               label: Délai de déclenchement
               description: Définit le délai entre la dernière modification du wiki et le déclenchement de l'automatisation
@@ -139,15 +141,21 @@ fr:
               label: ID de sujet
         post_created_edited:
           fields:
+            action_type:
+              label: Type d'action
+              description: "Facultatif, limitez le déclenchement aux seuls événements créés ou modifiés"
             valid_trust_levels:
               label: Niveaux de confiance valides
               description: Se déclenchera uniquement si la publication est créée par l'utilisateur dans ces niveaux de confiance. Cette valeur est fixée par défaut sur tous les niveaux de confiance
             restricted_category:
               label: Catégorie
               description: Facultatif, permet de limiter l'exécution du déclencheur à cette catégorie
+          created: Créé
+          edited: Édité
         category_created_edited:
           fields:
             restricted_category:
+              label: Catégorie parente
               description: Facultatif, permet de limiter l'exécution du déclencheur à cette catégorie
         pm_created:
           fields:
@@ -193,6 +201,7 @@ fr:
           fields:
             tags:
               label: Étiquettes
+              description: Liste des étiquettes à ajouter au sujet.
         post:
           fields:
             creator:
@@ -205,6 +214,11 @@ fr:
           fields:
             group:
               label: Groupe
+            notification_level:
+              label: Niveau de notification
+            update_existing_members:
+              label: Mettre à jour les membres existants
+              description: Met à jour le niveau de notification pour les membres du groupe existant
         user_global_notice:
           fields:
             level:

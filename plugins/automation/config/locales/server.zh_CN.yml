@@ -17,6 +17,9 @@ zh_CN:
       user_badge_granted:
         title: 授予用户徽章
         doc: 当用户被授予徽章时触发自动化。
+      user_first_logged_in:
+        title: 用户首次登录
+        doc: 当用户首次登录时触发自动化。
       stalled_topic:
         title: 停止话题
         doc: 当话题在指定时间段内未收到话题所有者的新回复时会触发自动化。建议将此触发器的范围限定为标签/类别，因为受影响的话题数量可能会非常多。作为一项安全措施，受影响话题的数量上限为 250 个。
@@ -24,6 +27,9 @@ zh_CN:
         title: API 调用
         description: 发出 POST 请求来触发自动化
         doc: 应使用全局 API 密钥将 POST 请求发送到 `/automations/:id/trigger.json`。
+      category_created_edited:
+        title: 创建/编辑类别
+        description: 创建或编辑类别时将触发自动化
       recurring:
         title: 重复
       point_in_time:
@@ -69,6 +75,9 @@ zh_CN:
       auto_responder:
         title: 自动回复器
         description: 对包含指定关键字的帖子发布回复
+      auto_tag_topic:
+        title: 自动为话题添加标签
+        description: 自动为话题添加标签
       pin_topic:
         title: 置顶话题
         description: 在给定日期置顶指定话题
@@ -92,6 +101,8 @@ zh_CN:
         doc: 当使用 API 调用触发 `suspend_user_by_email` 时，端点期望发送的参数中存在有效的 `email`。`reasons` 和 `suspend_until (ISO 8601 format)` 也可以用于重写默认字段值。
       user_global_notice_with_stalled_topic:
         doc: 当通过停止的话题触发时，话题所有者将收到全局通知。
+      user_global_notice_with_first_accepted_solution:
+        doc: 通过第一个接受的解决方案触发时，解决方案作者将收到全局通知。
       send_pms_with_api_call:
         doc: 将 `send pms` 脚本与 `api call` 触发器结合使用时，您的请求的 `usernames` 参数将用于填充接收者列表。
       topic_required_words:
@@ -116,3 +127,6 @@ zh_CN:
         button_text: 已完成
       add_user_to_group_through_custom_field:
         title: "通过用户自定义字段将用户添加到群组"
+      group_category_notification_default:
+        title: "群组类别通知默认值"
+        description: "为群组成员设置类别的默认通知级别"

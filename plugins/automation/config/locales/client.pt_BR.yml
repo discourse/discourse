@@ -103,6 +103,8 @@ pt_BR:
             P6M: "Seis meses"
             P1Y: "Um ano"
           fields:
+            restricted_category:
+              label: Restrito(a) à categoria
             stalled_after:
               label: Atraso do acionador
               description: Define o atraso entre a última edição do wiki e o acionador da automação
@@ -139,15 +141,21 @@ pt_BR:
               label: ID do tópico
         post_created_edited:
           fields:
+            action_type:
+              label: Tipo de ação
+              description: "Opcional, acionamento de limite apenas para eventos criados ou editados"
             valid_trust_levels:
               label: Níveis de confiança válidos
               description: Será acionado apenas se a postagem for criada pelo usuário nesses níveis de confiança, o padrão é qualquer nível de confiança
             restricted_category:
               label: Categoria
               description: Opcional, permite limitar a execução do acionador a esta categoria
+          created: Criado(a)
+          edited: Editado(a)
         category_created_edited:
           fields:
             restricted_category:
+              label: Categoria pai
               description: Opcional, permite limitar a execução do acionador a esta categoria
         pm_created:
           fields:
@@ -159,7 +167,7 @@ pt_BR:
               description: Ignore o acionador se o remetente for um usuário da equipe
             valid_trust_levels:
               label: Níveis de confiança válidos
-              description: Será acionado apenas se a postagem for criada pelo usuário nesses níveis de confiança, o padrão é qualquer nível de confiança
+              description: Será acionado apenas se a postagem for criada pelo(a) usuário(a) nesses níveis de confiança, o padrão é qualquer nível de confiança
         after_post_cook:
           fields:
             valid_trust_levels:
@@ -193,6 +201,7 @@ pt_BR:
           fields:
             tags:
               label: Tags
+              description: Lista de tags para adicionar ao tópico.
         post:
           fields:
             creator:
@@ -205,6 +214,11 @@ pt_BR:
           fields:
             group:
               label: Grupo
+            notification_level:
+              label: Nível de notificação
+            update_existing_members:
+              label: Atualizar membros existentes
+              description: Atualiza o nível de notificação para membros de grupos existentes
         user_global_notice:
           fields:
             level:

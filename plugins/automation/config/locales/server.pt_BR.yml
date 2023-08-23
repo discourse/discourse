@@ -17,6 +17,9 @@ pt_BR:
       user_badge_granted:
         title: Emblema de usuário concedido
         doc: Aciona uma automação quando um usuário recebe um emblema.
+      user_first_logged_in:
+        title: Usuário(a) logado(a) pela primeira vez
+        doc: Aciona uma automação quando um(a) usuário(a) fizer login pela primeira vez.
       stalled_topic:
         title: Tópico parado
         doc: Aciona uma automação quando o tópico não recebe uma nova resposta do proprietário do tópico por um período de tempo especificado. É recomendável definir o escopo desse acionador para uma tag/categoria, pois o número de tópicos impactados pode ser muito alto. Como medida de segurança, o número de tópicos impactados é limitado a 250.
@@ -24,6 +27,9 @@ pt_BR:
         title: Chamada de API
         description: Fazendo uma solicitação POSTAGEM para acionar uma automação
         doc: A solicitação POSTAGEM deve ser feita para `/automations/:id/trigger.json` com uma chave de API global.
+      category_created_edited:
+        title: Categoria criada/editada
+        description: Quando uma categoria for criada ou editada, a automação será acionada
       recurring:
         title: Recorrente
       point_in_time:
@@ -69,6 +75,9 @@ pt_BR:
       auto_responder:
         title: Respondente automático
         description: Publica uma resposta a uma postagem incluindo palavras-chave especificadas
+      auto_tag_topic:
+        title: Marcar tópico automaticamente
+        description: Adiciona automaticamente tags a um tópico
       pin_topic:
         title: Fixar Tópico
         description: Fixa um tópico especificado em uma determinada data
@@ -92,6 +101,8 @@ pt_BR:
         doc: Ao acionar `suspend_user_by_email` com uma chamada de API, o endpoint espera que um `email` válido esteja presente nos parâmetros enviados. `reasons` e `suspend_until (formato ISO 8601)` também podem ser usados para substituir valores de campos padrão.
       user_global_notice_with_stalled_topic:
         doc: Quando acionado por meio de um tópico parado, o proprietário do tópico receberá o aviso global.
+      user_global_notice_with_first_accepted_solution:
+        doc: Quando acionado(a) através da primera solução aceita, o(a) autor(a) da solução receberá o aviso global.
       send_pms_with_api_call:
         doc: Ao usar o script `send pms` com o acionador `api call`, o parâmetro `usernames` da sua solicitação será usado para preencher a lista de receptores.
       topic_required_words:
@@ -116,3 +127,6 @@ pt_BR:
         button_text: Concluído
       add_user_to_group_through_custom_field:
         title: "Adicionar usuário ao grupo por meio do campo personalizado do usuário"
+      group_category_notification_default:
+        title: "Notificação de categoria de grupo por padrão"
+        description: "Definir o nível de notificação padrão de uma categoria para membros de um grupo"

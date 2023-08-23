@@ -17,6 +17,9 @@ tr_TR:
       user_badge_granted:
         title: Kullanıcı rozeti verildi
         doc: Bir kullanıcıya rozet verildiğinde bir otomasyonu tetikler.
+      user_first_logged_in:
+        title: Kullanıcı ilk kez giriş yaptı
+        doc: Bir kullanıcı ilk kez giriş yaptığında bir otomasyonu tetikler.
       stalled_topic:
         title: Durmuş konu
         doc: Konu, belirli bir süre boyunca konu sahibinden yeni bir yanıt almadığında bir otomasyonu tetikler. Etkilenen konu sayısı çok yüksek olabileceğinden, bu tetikleyicinin bir etiket/kategoriyi kapsaması önerilir. Bir güvenlik önlemi olarak, etkilenen konu sayısı 250 ile sınırlandırılmıştır.
@@ -24,6 +27,9 @@ tr_TR:
         title: API çağrısı
         description: Bir otomasyonu tetiklemek için GÖNDERİ talebi yapma
         doc: GÖNDERİ talebi global bir API anahtarı ile "/automations/:id/trigger.json" adresine yapılmalıdır.
+      category_created_edited:
+        title: Kategori oluşturuldu/düzenlendi
+        description: Bir kategori oluşturulduğunda veya düzenlendiğinde otomasyon tetiklenir
       recurring:
         title: Yinelenen
       point_in_time:
@@ -69,6 +75,9 @@ tr_TR:
       auto_responder:
         title: Otomatik Yanıtlayıcı
         description: Belirtilen anahtar kelimeleri içeren bir gönderiye yanıt gönderir
+      auto_tag_topic:
+        title: Konuyu Otomatik Etiketle
+        description: Bir konuya otomatik olarak etiket ekleyin
       pin_topic:
         title: Konuyu Sabitle
         description: Belirli bir konuyu belirli bir tarihte sabitler
@@ -92,6 +101,8 @@ tr_TR:
         doc: Bir api çağrısı ile "suspend_user_by_email" tetiklendiğinde, uç nokta gönderilen parametreleri içinde geçerli bir "email" bulunmasını bekler. "reasons" ve "suspend_until (ISO 8601 format)" de varsayılan alan değerlerini geçersiz kılmak için kullanılabilir.
       user_global_notice_with_stalled_topic:
         doc: Durdurulan konu üzerinden tetiklendiğinde, konu sahibi genel bildirimi alır.
+      user_global_notice_with_first_accepted_solution:
+        doc: İlk kabul edilen çözüm aracılığıyla tetiklendiğinde, çözüm yazarı genel bildirimi alır.
       send_pms_with_api_call:
         doc: '"api call" tetikleyicisi ile "send pms" komut dosyasını kullanırken, alıcı listesini doldurmak için isteğinizin "usernames" parametresi kullanılır.'
       topic_required_words:
@@ -116,3 +127,6 @@ tr_TR:
         button_text: Bitti
       add_user_to_group_through_custom_field:
         title: "Kullanıcı Özel Alanı aracılığıyla gruba kullanıcı ekleyin"
+      group_category_notification_default:
+        title: "Grup Kategorisi Bildirimi Varsayılan"
+        description: "Bir grubun üyeleri için bir kategorinin varsayılan bildirim seviyesini ayarlayın"

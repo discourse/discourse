@@ -103,6 +103,8 @@ de:
             P6M: "Sechs Monate"
             P1Y: "Ein Jahr"
           fields:
+            restricted_category:
+              label: Auf Kategorie beschränkt
             stalled_after:
               label: Auslöseverzögerung
               description: Definiert die Verzögerung zwischen der letzten Wiki-Bearbeitung und dem Auslöser der Automatisierung
@@ -139,15 +141,21 @@ de:
               label: Themen-ID
         post_created_edited:
           fields:
+            action_type:
+              label: Aktionstyp
+              description: "Optional, beschränke die Auslösung auf erstellte oder bearbeitete Ereignisse"
             valid_trust_levels:
               label: Gültige Vertrauensstufen
               description: Wird nur ausgelöst, wenn ein Beitrag von einem Benutzer mit diesen Vertrauensstufen erstellt wird, standardmäßig eine beliebige Vertrauensstufe
             restricted_category:
               label: Kategorie
               description: Optional, ermöglicht es, die Ausführung des Auslösers auf diese Kategorie zu beschränken
+          created: Erstellt
+          edited: Bearbeitet
         category_created_edited:
           fields:
             restricted_category:
+              label: Übergeordnete Kategorie
               description: Optional, ermöglicht es, die Ausführung des Auslösers auf diese Kategorie zu beschränken
         pm_created:
           fields:
@@ -192,7 +200,8 @@ de:
         auto_tag_topic:
           fields:
             tags:
-              label: Tags
+              label: Schlagwörter
+              description: Liste der Schlagwörter, die dem Thema hinzugefügt werden sollen.
         post:
           fields:
             creator:
@@ -205,6 +214,11 @@ de:
           fields:
             group:
               label: Gruppe
+            notification_level:
+              label: Benachrichtigungsstufe
+            update_existing_members:
+              label: Bestehende Mitglieder aktualisieren
+              description: Aktualisiert die Benachrichtigungsstufe für bestehende Gruppenmitglieder
         user_global_notice:
           fields:
             level:

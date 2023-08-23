@@ -17,6 +17,9 @@ fr:
       user_badge_granted:
         title: Badge d'utilisateur accordé
         doc: Déclenche une automatisation lorsqu'un utilisateur reçoit un badge.
+      user_first_logged_in:
+        title: Utilisateur connecté pour la première fois
+        doc: Déclenche une automatisation lorsqu'un utilisateur se connecte pour la première fois.
       stalled_topic:
         title: Sujet bloqué
         doc: Déclenche une automatisation lorsque le sujet n'a pas reçu de nouvelle réponse du propriétaire du sujet pendant une période de temps spécifiée. Il est recommandé d'étendre ce déclencheur à une étiquette/catégorie, car le nombre de sujets impactés peut être très élevé. Par mesure de sécurité, le nombre de sujets impactés est plafonné à 250.
@@ -24,6 +27,9 @@ fr:
         title: Appel d'API
         description: Faire une requête POST pour déclencher une automatisation
         doc: La requête POST doit être envoyée à « /automations/:id/trigger.json » avec une clé API globale.
+      category_created_edited:
+        title: Catégorie créée/modifiée
+        description: Lorsqu'une catégorie est créée ou modifiée, l'automatisation sera déclenchée
       recurring:
         title: Récurrent
       point_in_time:
@@ -69,6 +75,9 @@ fr:
       auto_responder:
         title: Répondeur automatique
         description: Publie une réponse à un message incluant des mots-clés spécifiés
+      auto_tag_topic:
+        title: Marquage automatique du sujet
+        description: Ajouter automatiquement des étiquettes à un sujet
       pin_topic:
         title: Épingler le sujet
         description: Épingle un sujet spécifié à une date donnée
@@ -92,6 +101,8 @@ fr:
         doc: Lorsque vous déclenchez « suspend_user_by_email » avec un appel d'API, le terminal s'attend à ce qu'un « email » valide soit présent dans les paramètres envoyés. « reasons » et « suspend_until » (format ISO 8601) peuvent également être utilisés pour remplacer les valeurs des champs par défaut.
       user_global_notice_with_stalled_topic:
         doc: Lorsqu'il est déclenché par un sujet bloqué, le propriétaire du sujet recevra l'avis global.
+      user_global_notice_with_first_accepted_solution:
+        doc: En cas de déclenchement via la première solution acceptée, l'auteur de la solution recevra la notification globale.
       send_pms_with_api_call:
         doc: Lorsque vous utilisez le script « send pms » avec le déclencheur « api call », le paramètre « usernames » de votre requête sera utilisé pour remplir la liste des destinataires.
       topic_required_words:
@@ -116,3 +127,6 @@ fr:
         button_text: Terminé
       add_user_to_group_through_custom_field:
         title: "Ajouter un utilisateur au groupe via le champ personnalisé de l'utilisateur"
+      group_category_notification_default:
+        title: "Notification de catégorie de groupe par défaut"
+        description: "Définir le niveau de notification par défaut d'une catégorie pour les membres d'un groupe"

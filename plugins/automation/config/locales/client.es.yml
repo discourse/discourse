@@ -47,7 +47,7 @@ es:
           delay:
             label: Retardo (en minutos)
           prefers_encrypt:
-            label: Cifrar el mensaje cuando sea posible
+            label: Cifra el MP cuando sea posible
         group:
           label: Grupo
         text:
@@ -103,6 +103,8 @@ es:
             P6M: "Seis meses"
             P1Y: "Un año"
           fields:
+            restricted_category:
+              label: Restringido a la categoría
             stalled_after:
               label: Retardo de activación
               description: Define el retraso entre la última edición del wiki y la activación de la automatización
@@ -139,15 +141,21 @@ es:
               label: ID del tema
         post_created_edited:
           fields:
+            action_type:
+              label: Tipo de acción
+              description: "Opcional, limite la activación solo a eventos creados o editados"
             valid_trust_levels:
               label: Niveles de confianza válidos
               description: Se activará solo si la publicación es creada por un usuario en estos niveles de confianza. Por defecto, cualquier nivel de confianza
             restricted_category:
               label: Categoría
               description: Opcional, permite limitar la ejecución del activador a esta categoría
+          created: Creado
+          edited: Editado
         category_created_edited:
           fields:
             restricted_category:
+              label: Categoría principal
               description: Opcional, permite limitar la ejecución del activador a esta categoría
         pm_created:
           fields:
@@ -193,6 +201,7 @@ es:
           fields:
             tags:
               label: Etiquetas
+              description: Lista de etiquetas para añadir al tema.
         post:
           fields:
             creator:
@@ -205,6 +214,11 @@ es:
           fields:
             group:
               label: Grupo
+            notification_level:
+              label: Nivel de notificación
+            update_existing_members:
+              label: Actualizar miembros existentes
+              description: Actualiza el nivel de notificación de los miembros del grupo existentes
         user_global_notice:
           fields:
             level:

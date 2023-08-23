@@ -17,6 +17,9 @@ nl:
       user_badge_granted:
         title: Gebruikersbadge toegekend
         doc: Triggert een automatisering als een gebruiker een badge krijgt.
+      user_first_logged_in:
+        title: Gebruiker voor het eerst ingelogd
+        doc: Triggert een automatisering wanneer een gebruiker voor het eerst inlogt.
       stalled_topic:
         title: Stilgevallen topic
         doc: Triggert een automatisering wanneer het topic gedurende een bepaalde periode geen nieuw antwoord van de topiceigenaar heeft ontvangen. Het wordt aanbevolen om deze trigger in te stellen op een tag/categorie, aangezien het aantal getroffen topics erg hoog kan zijn. Uit veiligheidsoverwegingen is het aantal getroffen topics beperkt tot 250.
@@ -24,6 +27,9 @@ nl:
         title: API-aanroep
         description: Een POST-verzoek doen om een automatisering te triggeren
         doc: Het POST-verzoek moet worden gedaan aan '/automations/:id/trigger.json' met een globale API-sleutel.
+      category_created_edited:
+        title: Categorie gemaakt/bewerkt
+        description: Wanneer een categorie wordt gemaakt of bewerkt, wordt de automatisering getriggerd
       recurring:
         title: Herhalend
       point_in_time:
@@ -69,6 +75,9 @@ nl:
       auto_responder:
         title: Automatische beantwoorder
         description: Plaatst een antwoord op een bericht inclusief opgegeven trefwoorden
+      auto_tag_topic:
+        title: Topic automatisch taggen
+        description: Voeg automatisch tags toe aan een topic
       pin_topic:
         title: Topic vastmaken
         description: Maakt een opgegeven topic vast op een bepaalde datum
@@ -92,6 +101,8 @@ nl:
         doc: Bij het triggeren van 'suspend_user_by_email' met een API-aanroep, verwacht het eindpunt dat er een geldige 'email' aanwezig is in de verzonden parameters. 'reasons' en 'suspend_until' (ISO 8601-notatie) kunnen ook worden gebruikt om standaardveldwaarden te overschrijven.
       user_global_notice_with_stalled_topic:
         doc: Indien getriggerd via stilgevallen topic, ontvangt de topiceigenaar de algemene melding.
+      user_global_notice_with_first_accepted_solution:
+        doc: Indien getriggerd via eerst geaccepteerde oplossing, ontvangt de auteur van de oplossing de algemene melding.
       send_pms_with_api_call:
         doc: Wanneer je het 'send pms'-script gebruikt met de 'api call'-trigger, wordt de parameter 'usernames' van je verzoek gebruikt om de lijst van ontvangers te vullen.
       topic_required_words:
@@ -116,3 +127,6 @@ nl:
         button_text: Gereed
       add_user_to_group_through_custom_field:
         title: "Gebruiker toevoegen aan groep via Aangepast veld"
+      group_category_notification_default:
+        title: "Standaard categoriemelding groep"
+        description: "Stel het standaard meldingsniveau van een categorie in voor leden van een groep"

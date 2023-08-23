@@ -103,6 +103,8 @@ ar:
             P6M: "ستة أشهر"
             P1Y: "عام واحد"
           fields:
+            restricted_category:
+              label: مقيَّد إلى الفئة
             stalled_after:
               label: تأخير المشغِّل
               description: يحدِّد التأخير بين تعديل Wiki الأخير ومشغِّل الأتمتة
@@ -139,15 +141,21 @@ ar:
               label: معرِّف الموضوع
         post_created_edited:
           fields:
+            action_type:
+              label: نوع الإجراء
+              description: "اختياري، تقييد التشغيل إلى الأحداث التي تم إنشاؤها أو تحريرها فقط"
             valid_trust_levels:
               label: مستويات الثقة الصالحة
               description: سيتم التشغيل فقط إذا تم إنشاء المنشور بواسطة مستخدم في مستويات الثقة هذه، ويتم تعيينه افتراضيًا على أي مستوى ثقة
             restricted_category:
               label: الفئة
               description: اختياري، يسمح بتقييد تنفيذ المشغِّل لهذه الفئة
+          created: تم إنشاؤها
+          edited: تم تحريرها
         category_created_edited:
           fields:
             restricted_category:
+              label: الفئة الرئيسية
               description: اختياري، يسمح بتقييد تنفيذ المشغِّل لهذه الفئة
         pm_created:
           fields:
@@ -193,6 +201,7 @@ ar:
           fields:
             tags:
               label: الوسوم
+              description: قائمة الوسوم لإضافتها إلى الموضوع.
         post:
           fields:
             creator:
@@ -205,6 +214,11 @@ ar:
           fields:
             group:
               label: المجموعة
+            notification_level:
+              label: مستوى الإشعارات
+            update_existing_members:
+              label: تحديث الأعضاء الحاليين
+              description: يحدِّث مستوى الإشعارات لأعضاء المجموعة الحاليين
         user_global_notice:
           fields:
             level:

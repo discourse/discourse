@@ -103,6 +103,8 @@ ja:
             P6M: "6 か月"
             P1Y: "1 年"
           fields:
+            restricted_category:
+              label: カテゴリに限定
             stalled_after:
               label: トリガー遅延
               description: 最後のウィキ編集と自動化のトリガーの間の遅延を定義します
@@ -139,15 +141,21 @@ ja:
               label: トピック ID
         post_created_edited:
           fields:
+            action_type:
+              label: アクションのタイプ
+              description: "オプション。トリガーを作成または編集されたイベントのみに制限します"
             valid_trust_levels:
               label: 有効な信頼レベル
               description: 投稿がこれらの信頼レベルのユーザーによって作成された場合にのみトリガーされます。デフォルトはすべての信頼レベルです。
             restricted_category:
               label: カテゴリ
               description: オプション。トリガーの実行をこのカテゴリに限定できます
+          created: 作成
+          edited: 編集
         category_created_edited:
           fields:
             restricted_category:
+              label: 親カテゴリ
               description: オプション。トリガーの実行をこのカテゴリに限定できます
         pm_created:
           fields:
@@ -193,6 +201,7 @@ ja:
           fields:
             tags:
               label: タグ
+              description: トピックに追加するタグのリスト。
         post:
           fields:
             creator:
@@ -205,6 +214,11 @@ ja:
           fields:
             group:
               label: グループ
+            notification_level:
+              label: 通知レベル
+            update_existing_members:
+              label: 既存のメンバーを更新する
+              description: 既存のグループメンバーの通知レベルを更新します
         user_global_notice:
           fields:
             level:

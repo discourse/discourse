@@ -103,6 +103,8 @@ nl:
             P6M: "Zes maanden"
             P1Y: "Eén jaar"
           fields:
+            restricted_category:
+              label: Beperkt tot categorie
             stalled_after:
               label: Triggervertraging
               description: Definieert de vertraging tussen de laatste wikibewerking en de automatiseringstrigger
@@ -139,15 +141,21 @@ nl:
               label: Topic-ID
         post_created_edited:
           fields:
+            action_type:
+              label: Actietype
+              description: "Optioneel, beperk triggering tot alleen gemaakte of bewerkte gebeurtenissen"
             valid_trust_levels:
               label: Geldige vertrouwensniveaus
               description: Wordt alleen getriggerd als een bericht wordt gemaakt door een gebruiker met deze vertrouwensniveaus. Standaard ingesteld op elk vertrouwensniveau
             restricted_category:
               label: Categorie
               description: Optioneel, maakt het mogelijk om de uitvoering van triggers te beperken tot deze categorie
+          created: Gemaakt
+          edited: Bewerkt
         category_created_edited:
           fields:
             restricted_category:
+              label: Bovenliggende categorie
               description: Optioneel, maakt het mogelijk om de uitvoering van triggers te beperken tot deze categorie
         pm_created:
           fields:
@@ -193,6 +201,7 @@ nl:
           fields:
             tags:
               label: Tags
+              description: Lijst van tags om toe te voegen aan de topic.
         post:
           fields:
             creator:
@@ -205,6 +214,11 @@ nl:
           fields:
             group:
               label: Groep
+            notification_level:
+              label: Meldingsniveau
+            update_existing_members:
+              label: Bestaande leden bijwerken
+              description: Werkt het meldingsniveau bij voor bestaande groepsleden
         user_global_notice:
           fields:
             level:

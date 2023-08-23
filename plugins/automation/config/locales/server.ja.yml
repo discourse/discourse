@@ -17,6 +17,9 @@ ja:
       user_badge_granted:
         title: ユーザーバッチ付与
         doc: ユーザーがバッチを付与されると、自動化がトリガーされます。
+      user_first_logged_in:
+        title: ユーザーの初回ログイン
+        doc: ユーザーが初めてログインするときに自動化をトリガーします。
       stalled_topic:
         title: トピックの失速
         doc: 特定の期間、トピックにトピック所有者からの新しい返信がない場合に自動化をトリガーします。影響を受けるトピック数が非常に高くなる可能性があるため、このトリガーの範囲をタグ/カテゴリに設定することをお勧めします。安全対策として、影響のあるトピック数は 250 に制限されています。
@@ -24,6 +27,9 @@ ja:
         title: API 呼び出し
         description: 自動化をトリガーする POST リクエストの作成
         doc: POST リクエストは、グローバル API キーを使用して `/automations/:id/trigger.json` に行う必要があります。
+      category_created_edited:
+        title: カテゴリの作成/編集
+        description: カテゴリが作成または先週差あれると、自動化がトリガーされます
       recurring:
         title: 繰り返し
       point_in_time:
@@ -69,6 +75,9 @@ ja:
       auto_responder:
         title: 自動応答
         description: 指定されたキーワードを含む投稿に返信を投稿します
+      auto_tag_topic:
+        title: トピックにタグを自動設定
+        description: トピックにタグを自動的に追加します
       pin_topic:
         title: トピックを固定
         description: 指定されたトピックを特定の日付に固定します
@@ -92,6 +101,8 @@ ja:
         doc: API 呼び出しで `suspend_user_by_email` をトリガーする場合、エンドポイントでは送信されたパラメーターに有効な `email` が存在することを必要としてます。デフォルトのフィールド値をオーバーライドするには、`reasons` と `suspend_until（ISO 8601 形式）` を使用することも可能です。
       user_global_notice_with_stalled_topic:
         doc: 失速したトピックからトリガーされると、トピック所有者はグローバル通知を受信します。
+      user_global_notice_with_first_accepted_solution:
+        doc: 最初に承諾されたソリューションからトリガーされると、ソリューション作成者はグローバル通知を受け取ります。
       send_pms_with_api_call:
         doc: '`api call` で `send pms` スクリプトを使用する場合、リクエストの `usernames` パラメーターが受信者リストの入力に使用されます。'
       topic_required_words:
@@ -116,3 +127,6 @@ ja:
         button_text: 完了
       add_user_to_group_through_custom_field:
         title: "ユーザーカスタムフィールドを介してグループにユーザーを追加する"
+      group_category_notification_default:
+        title: "グループカテゴリ通知のデフォルト"
+        description: "グループのメンバーに対するカテゴリのデフォルトの通知レベルを設定します"

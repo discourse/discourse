@@ -103,6 +103,8 @@ it:
             P6M: "Sei mesi"
             P1Y: "Un anno"
           fields:
+            restricted_category:
+              label: Limitato alla categoria
             stalled_after:
               label: Ritardo di attivazione
               description: Definisce il ritardo tra l'ultima modifica wiki e l'attivazione dell'automazione
@@ -139,16 +141,22 @@ it:
               label: ID argomento
         post_created_edited:
           fields:
+            action_type:
+              label: Tipo di azione
+              description: "Facoltativo, limitare l'attivazione solo agli eventi creati o modificati"
             valid_trust_levels:
               label: Livelli di attendibilità validi
               description: L'attivazione avverrà solo se il messaggio viene creato da utenti in questi livelli di attendibilità, il valore predefinito è qualsiasi livello di attendibilità
             restricted_category:
               label: Categoria
               description: Facoltativo, consente di limitare l'attivazione a questa categoria
+          created: Creati
+          edited: Modificati
         category_created_edited:
           fields:
             restricted_category:
-              description: Facoltativo, consente di limitare l'attivazione a questa categoria
+              label: Categoria principale
+              description: Facoltativo, consente di limitare l'attivazione di questa categoria
         pm_created:
           fields:
             restricted_user:
@@ -192,7 +200,8 @@ it:
         auto_tag_topic:
           fields:
             tags:
-              label: Tag
+              label: Etichette
+              description: Elenco di etichette da aggiungere all'argomento.
         post:
           fields:
             creator:
@@ -205,6 +214,11 @@ it:
           fields:
             group:
               label: Gruppo
+            notification_level:
+              label: Livello di notifica
+            update_existing_members:
+              label: Aggiorna i membri esistenti
+              description: Aggiorna il livello di notifica per i membri del gruppo esistenti
         user_global_notice:
           fields:
             level:

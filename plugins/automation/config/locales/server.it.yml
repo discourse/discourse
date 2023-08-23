@@ -17,6 +17,9 @@ it:
       user_badge_granted:
         title: Distintivo utente concesso
         doc: Attiva un'automazione quando a un utente viene riconosciuto un distintivo.
+      user_first_logged_in:
+        title: L'utente ha effettuato l'accesso per la prima volta
+        doc: Attiva un'automazione quando un utente accede per la prima volta.
       stalled_topic:
         title: Argomento bloccato
         doc: Attiva un'automazione quando l'argomento non ha ricevuto una nuova risposta dal proprietario dell'argomento per un periodo di tempo specificato. Si consiglia di limitare questa azione di attivazione a un tag/categoria poiché il numero di argomenti interessati può essere molto elevato. Per motivi di sicurezza, il numero di argomenti interessati è limitato a 250.
@@ -24,6 +27,9 @@ it:
         title: Chiamata API
         description: Effettuare una richiesta POST per attivare un'automazione
         doc: La richiesta POST deve essere inviata a `/automations/:id/trigger.json` con una chiave API globale.
+      category_created_edited:
+        title: Categoria creata/modificata
+        description: Quando una categoria viene creata o modificata, verrà attivata l'automazione
       recurring:
         title: Ricorrente
       point_in_time:
@@ -69,6 +75,9 @@ it:
       auto_responder:
         title: Risponditore automatico
         description: Pubblica una risposta a un messaggio includendo le parole chiave specificate
+      auto_tag_topic:
+        title: Etichetta automaticamente argomenti
+        description: Aggiungi automaticamente etichette a un argomento
       pin_topic:
         title: Fissa argomento
         description: Fissa un argomento specificato in una determinata data
@@ -92,6 +101,8 @@ it:
         doc: Quando si attiva `suspend_user_by_email` con una chiamata API, l'endpoint si aspetta un valore `email` valido nei parametri inviati. I parametri `reasons` e `suspend_until (formato ISO 8601)` possono anche essere usati per sovrascrivere i valori predefiniti dei campi.
       user_global_notice_with_stalled_topic:
         doc: Quando l'attivazione avviene tramite l'argomento bloccato, il proprietario dell'argomento riceverà l'avviso globale.
+      user_global_notice_with_first_accepted_solution:
+        doc: Quando attivato tramite la prima soluzione accettata, l'autore della soluzione riceverà l'avviso globale.
       send_pms_with_api_call:
         doc: Quando si utilizza lo script `send pms` con azione di attivazione `api call`, il parametro `usernames` della tua richiesta verrà utilizzato per riempire l'elenco dei destinatari.
       topic_required_words:
@@ -116,3 +127,6 @@ it:
         button_text: Fatto
       add_user_to_group_through_custom_field:
         title: "Aggiungi utente al gruppo tramite il campo personalizzato utente"
+      group_category_notification_default:
+        title: "Notifica predefinita per le categorie di gruppo"
+        description: "Imposta il livello di notifica predefinito di una categoria per i membri di un gruppo"

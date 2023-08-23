@@ -17,6 +17,9 @@ ar:
       user_badge_granted:
         title: تم منح شارة المستخدم
         doc: يشغِّل الأتمتة عند منح المستخدم شارة.
+      user_first_logged_in:
+        title: تسجيل المستخدم الدخول لأول مرة
+        doc: يشغِّل الأتمتة عندما يسجِّل أحد المستخدمين الدخول لأول مرة.
       stalled_topic:
         title: موضوع متوقف
         doc: يشغِّل الأتمتة عندما لا يتلقى الموضوع ردًا جديدًا من مالك الموضوع لفترة زمنية محدَّدة. يوصى بتوسيع نطاق هذا المشغِّل إلى وسم/فئة لأن عدد الموضوعات المتأثرة يمكن أن يكون مرتفعًا جدًا. كإجراء أمني، تم تحديد عدد الموضوعات المتأثرة بـ 250 موضوعًا.
@@ -24,6 +27,9 @@ ar:
         title: استدعاء API
         description: إنشاء طلب منشور لتشغيل الأتمتة
         doc: ينبغي إجراء طلب المنشور إلى `/automations/:id/trigger.json` باستخدام مفتاح API عام.
+      category_created_edited:
+        title: تم إنشاء/تحرير الفئة
+        description: يتم تشغيل الأتمتة عند إنشاء أو تعديل منشور
       recurring:
         title: متكرر
       point_in_time:
@@ -69,6 +75,9 @@ ar:
       auto_responder:
         title: المستجيب التلقائي
         description: ينشر ردًا على منشور يتضمَّن كلمات رئيسية محدَّدة
+      auto_tag_topic:
+        title: التوسيم التلقائي للموضوع
+        description: يضيف الوسوم تلقائيًا إلى الموضوع
       pin_topic:
         title: تثبيت الموضوع
         description: يثبِّت موضوعًا محدَّدًا في تاريخ معيَّن
@@ -92,6 +101,8 @@ ar:
         doc: عند تشغيل `suspend_user_by_email` باستخدام استدعاء API، تتوقع نقطة النهاية وجود `email` صالح في المعلمات المُرسلة. يمكن أيضًا استخدام `reasons` و`suspend_until (ISO 8601 format)` لتجاوز قيم الحقول الافتراضية.
       user_global_notice_with_stalled_topic:
         doc: عند التشغيل عبر موضوع المتوقف، سيتلقى مالك الموضوع الإشعار العام.
+      user_global_notice_with_first_accepted_solution:
+        doc: يتلقى مؤلف الحل الإشعار العام عند تشغيل الأتمتة من خلال أول حل تم قبوله.
       send_pms_with_api_call:
         doc: عند استخدام البرنامج النصي `send pms` مع المشغِّل `api call`، سيتم استخدام معلمة `usernames` لطلبك لملء قائمة المستلمين.
       topic_required_words:
@@ -116,3 +127,6 @@ ar:
         button_text: تم
       add_user_to_group_through_custom_field:
         title: "إضافة مستخدم إلى المجموعة عبر الحقل المخصَّص للمستخدمين"
+      group_category_notification_default:
+        title: "الإعداد الافتراضي لإشعارات فئة المجموعة"
+        description: "يضبط مستوى الإشعارات الافتراضي للفئة لأعضاء المجموعة"
