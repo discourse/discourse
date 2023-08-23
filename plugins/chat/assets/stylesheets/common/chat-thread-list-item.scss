@@ -46,14 +46,34 @@
     }
   }
 
-  &__metadata {
-    display: flex;
-    justify-content: flex-end;
+  &__last-reply-author {
+    font-weight: 700;
   }
 
-  &__last-reply {
+  &__metadata {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__metadata__separator {
+    padding-inline: 0.25rem;
+    font-weight: 700;
+  }
+
+  &__participants {
+    margin-right: 0.25rem;
+  }
+
+  &__replies-count {
+    margin-left: auto;
+  }
+
+  &__last-reply-timestamp,
+  &__replies-count {
     color: var(--secondary-low);
     font-size: var(--font-down-1);
+    @include ellipsis;
   }
 
   &__header {
@@ -66,6 +86,7 @@
   &__title {
     flex: 1 1 auto;
     font-weight: bold;
+    @include ellipsis;
   }
 
   &__unread-indicator {
@@ -77,16 +98,10 @@
     flex-direction: column;
     box-sizing: border-box;
     justify-content: center;
-    color: var(--primary);
-
-    &:hover,
-    &:visited {
-      color: var(--primary);
-    }
   }
 
   &__om-user-avatar {
-    margin-right: 0.5rem;
+    margin-right: 0.25rem;
     flex: 0 0 auto;
   }
 }
