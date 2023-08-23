@@ -31,6 +31,10 @@ module PageObjects
           )
         end
 
+        def has_no_reply_count?
+          find(@context).has_no_css?("#{SELECTOR}__replies-count")
+        end
+
         def has_participant?(user)
           find(@context).has_css?(
             ".chat-thread-participants__avatar-group .chat-user-avatar .chat-user-avatar__container[data-user-card=\"#{user.username}\"] img",

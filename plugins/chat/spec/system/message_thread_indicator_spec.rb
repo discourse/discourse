@@ -52,9 +52,9 @@ describe "Thread indicator for chat messages", type: :system do
       expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_reply_count(
         3,
       )
-      expect(channel_page.message_thread_indicator(thread_2.original_message)).to have_reply_count(
-        1,
-      )
+      expect(
+        channel_page.message_thread_indicator(thread_2.original_message),
+      ).to have_no_reply_count
     end
 
     it "it shows the reply count but no participant avatars when there is only one participant" do
@@ -114,13 +114,25 @@ describe "Thread indicator for chat messages", type: :system do
     end
 
     it "shows avatars for the participants of the thread" do
+      extra_user = Fabricate(:user)
+      thread_1.add(extra_user)
+      Fabricate(:chat_message, thread: thread_1, user: extra_user)
+
       chat_page.visit_channel(channel)
+
       expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_participant(
         current_user,
       )
       expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_participant(
         other_user,
       )
+      expect(channel_page.message_thread_indicator(thread_1.original_message)).to have_participant(
+        extra_user,
+      )
+
+      expect(
+        channel_page.message_thread_indicator(thread_2.original_message),
+      ).to have_no_participants
     end
 
     it "shows an excerpt of the last reply in the thread" do
