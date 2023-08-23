@@ -3674,6 +3674,9 @@ nl:
           one: "Nieuw (%{count})"
           other: "Nieuw (%{count})"
         help: "de afgelopen paar dagen gemaakte topics"
+        all: "Alles"
+        topics: "Topics"
+        replies: "Antwoorden"
       posted:
         title: "Mijn berichten"
         help: "topics waarin je een bericht hebt geplaatst"

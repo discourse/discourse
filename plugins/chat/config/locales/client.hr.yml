@@ -10,6 +10,9 @@ hr:
       site_settings:
         categories:
           chat: Čet
+        chat_separate_sidebar_mode:
+          always: "Uvijek"
+          never: "Nikad"
       logs:
         staff_actions:
           actions:
@@ -358,3 +361,7 @@ hr:
       sections:
         chat:
           title: Čavrljanje
+    sidebar:
+      panels:
+        chat:
+          label: "Čavrljanje"

@@ -3674,6 +3674,9 @@ fr:
           one: "Nouveau (%{count})"
           other: "Nouveaux (%{count})"
         help: "sujets créés dans les derniers jours"
+        all: "Tout"
+        topics: "Sujets"
+        replies: "Réponses"
       posted:
         title: "Mes messages"
         help: "sujets auxquels vous avez participé"
@@ -4231,7 +4234,7 @@ fr:
         patternMismatch: "Veuillez respecter le format demandé."
         badInput: "Veuillez saisir une entrée valide."
   admin_js:
-    type_to_filter: "commencez votre saisie pour filtrer…"
+    type_to_filter: "filtrer les paramètres…"
     admin:
       title: "Administrateur Discourse"
       moderator: "Modérateur"
@@ -4734,7 +4737,7 @@ fr:
           theme: "Thème"
           component: "Composant"
           components: "Composants"
-          filter_placeholder: "commencez votre saisie pour filtrer…"
+          filter_placeholder: "filtrer les paramètres…"
           theme_name: "Nom du thème"
           component_name: "Nom du composant"
           themes_intro: "Sélectionnez un thème existant ou installez-en un nouveau pour commencer"

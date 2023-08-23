@@ -10,6 +10,9 @@ nl:
       site_settings:
         categories:
           chat: Chat
+        chat_separate_sidebar_mode:
+          always: "Altijd"
+          never: "Nooit"
       logs:
         staff_actions:
           actions:
@@ -649,3 +652,7 @@ nl:
       sections:
         chat:
           title: Chat
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

@@ -10,6 +10,9 @@ ko:
       site_settings:
         categories:
           chat: 채팅
+        chat_separate_sidebar_mode:
+          always: "항상"
+          never: "알림 받지 않기"
       logs:
         staff_actions:
           actions:
@@ -378,3 +381,7 @@ ko:
       sections:
         chat:
           title: 채팅
+    sidebar:
+      panels:
+        chat:
+          label: "채팅"

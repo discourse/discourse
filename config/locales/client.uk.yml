@@ -4046,6 +4046,12 @@ uk:
           many: "Нові (%{count})"
           other: "Нові (%{count})"
         help: "теми, створені за останні кілька днів"
+        all: "Все"
+        all_with_count: "Всі (%{count})"
+        topics: "Теми"
+        topics_with_count: "Теми (%{count})"
+        replies: "Відповіді"
+        replies_with_count: "Відповіді (%{count})"
       posted:
         title: "Мої дописи"
         help: "теми, в які ви дописували"

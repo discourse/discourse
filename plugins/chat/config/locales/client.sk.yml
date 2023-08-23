@@ -7,6 +7,10 @@
 sk:
   js:
     admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Vždy"
+          never: "Nikdy"
       logs:
         staff_actions:
           actions:
@@ -211,3 +215,7 @@ sk:
       sections:
         chat:
           title: Chat
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

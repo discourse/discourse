@@ -1868,6 +1868,9 @@ id:
         title: "Baru"
         title_with_count:
           other: "Baru (%{count})"
+        all: "Semua"
+        topics: "Topik"
+        replies: "balasan"
       bookmarks:
         title: "Markah"
       category:

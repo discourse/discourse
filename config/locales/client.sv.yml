@@ -3673,6 +3673,9 @@ sv:
           one: "Ny (%{count})"
           other: "Nya (%{count})"
         help: "ämnen skapade de senaste dagarna"
+        all: "Alla"
+        topics: "Ämnen"
+        replies: "Svar"
       posted:
         title: "Mina inlägg"
         help: "ämnen som du har gjort inlägg i"

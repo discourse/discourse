@@ -6,6 +6,11 @@
 
 vi:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Luôn luôn"
+          never: "Không bao giờ"
     chat:
       create: "Tạo"
       cancel: "Huỷ"

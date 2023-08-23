@@ -3053,6 +3053,9 @@ nb_NO:
           one: "Nye (%{count})"
           other: "Nye (%{count})"
         help: "emner opprettet de siste dagene"
+        all: "Alle"
+        topics: "Emner"
+        replies: "Svar"
       posted:
         title: "Mine innlegg"
         help: "emner du har bidratt med innlegg i"

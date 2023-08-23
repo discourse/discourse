@@ -1571,11 +1571,8 @@ fr:
     blocked_crawler_user_agents: "Mot unique insensible à la casse dans la chaîne de caractères de l'agent utilisateur identifiant les robots d'indexation Web qui ne devraient pas être autorisés à accéder au site. Ne s'applique pas si la liste d'autorisations est définie."
     slow_down_crawler_user_agents: 'Agents utilisateurs des robots d''indexation Web dont le débit doit être limité, comme configuré dans le paramètre « slow down crawler rate ». Chaque valeur doit comporter au moins 3 caractères.'
     slow_down_crawler_rate: "Si slow_down_crawler_user_agents est défini, ce taux s'appliquera à tous les robots d'indexation (nombre de secondes d'attente entre requêtes)"
-    content_security_policy: "Activer Content-Security-Policy"
-    content_security_policy_report_only: "Activer Content-Security-Policy-Report-Only"
     content_security_policy_collect_reports: "Activer la collecte des rapports de violation CSP sur la page /csp_reports"
     content_security_policy_frame_ancestors: "Limiter les parties autorisées à intégrer ce site dans une iframe par le biais de l'attribut « csp ». Appliquer les restrictions d'hôtes définies dans la page <a href='%{base_path}/admin/customize/embedding'>Intégration externe</a>."
-    content_security_policy_script_src: "Sources supplémentaires de scripts acceptées. L'hôte actuel et le CDN sont inclus par défaut. Voir <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Empêcher les attaques XSS avec Content Security Policy</a>."
     invalidate_inactive_admin_email_after_days: "Les comptes administrateurs qui n'ont pas visité le site depuis ce nombre de jours devront revalider leur adresse e-mail avant de se connecter. Mettre à 0 pour désactiver."
     include_secure_categories_in_tag_counts: "Lorsque cette option est activée, le nombre de sujets pour une étiquette inclut les sujets appartenant à des catégories dont la lecture est limitée pour tous les utilisateurs. Lorsque cette option est désactivée, les utilisateurs normaux ne voient apparaître que le nombre de sujets pour une étiquette dont tous les sujets se trouvent dans des catégories publiques."
     display_personal_messages_tag_counts: "Lorsque cette option est activée, le nombre de messages personnels marqués d'une étiquette donnée s'affiche."
@@ -3125,7 +3122,7 @@ fr:
       title: "E-mail révoqué"
       subject_template: "Est-ce que votre adresse e-mail est correcte ?"
       text_body_template: |
-        Nous sommes désolés, mais nous avons des difficultés à vous joindre par e-mail. Nos derniers e-mailsn'ont pas été délivrés.
+        Nous sommes désolés, mais nous avons des difficultés à vous joindre par e-mail. Nos derniers e-mails n'ont pas été délivrés.
 
         Pouvez-vous vous assurer que [votre adresse e-mail](%{base_url}/my/preferences/email) est valide et fonctionne ? Vous pouvez également ajouter notre adresse e-mail à votre carnet d'adresses ou liste de contacts pour améliorer la réception de nos e-mails.
     email_bounced: |
