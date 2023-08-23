@@ -2302,9 +2302,9 @@ da:
       text_body_template: |
         Hej,
 
-        Dette er en automatisk besked fra %{site_name} at informere dig om, at @%{username} er blevet ignoreret af %{ignores_threshold} brugere. Dette kan indikere, at der er ved at udvikle sig et problem i dit fællesskab.
+        Dette er en automatisk besked fra %{site_name}, for at informere dig om, at @%{username} er blevet ignoreret af %{ignores_threshold} brugere. Dette kan indikere, at der er ved at udvikle sig et problem i dit fællesskab.
 
-        Du vil måske [gennemgå de seneste indlæg](%{base_url}/u/%{username}/resume) fra denne bruger og potentielt andre brugere i [ignoreret og tavs brugerrapport] (%{base_url}/admin/reports/top_ignored_users).
+        Du vil måske [gennemgå de seneste indlæg](%{base_url}/u/%{username}/resume) fra denne bruger og potentielt andre brugere i [ignoreret og tavs brugerrapport](%{base_url}/admin/reports/top_ignored_users).
 
         For yderligere vejledning henvises til vores [fællesskabs-retningslinjer](%{base_url}/guidelines).
     too_many_spam_flags:
