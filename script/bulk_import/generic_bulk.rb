@@ -62,22 +62,24 @@ class BulkImport::Generic < BulkImport::Base
     puts "Importing categories..."
 
     categories = query(<<~SQL)
-      WITH RECURSIVE tree(id, parent_category_id, name, description, color, text_color, read_restricted, slug,
-                          old_relative_url, existing_id, level) AS (
-          SELECT c.id, c.parent_category_id, c.name, c.description, c.color, c.text_color, c.read_restricted, c.slug,
-                 c.old_relative_url, c.existing_id, 0 AS level
-          FROM categories c
-          WHERE c.parent_category_id IS NULL
-          UNION
-          SELECT c.id, c.parent_category_id, c.name, c.description, c.color, c.text_color, c.read_restricted, c.slug,
-                 c.old_relative_url, c.existing_id, tree.level + 1 AS level
-          FROM categories c,
-               tree
-          WHERE c.parent_category_id = tree.id
-      )
+        WITH
+          RECURSIVE
+          tree(id, parent_category_id, name, description, color, text_color, read_restricted, slug,
+               old_relative_url, existing_id, position, level) AS (
+            SELECT c.id, c.parent_category_id, c.name, c.description, c.color, c.text_color, c.read_restricted, c.slug,
+                   c.old_relative_url, c.existing_id, c.position, 0 AS level
+              FROM categories c
+             WHERE c.parent_category_id IS NULL
+             UNION ALL
+            SELECT c.id, c.parent_category_id, c.name, c.description, c.color, c.text_color, c.read_restricted, c.slug,
+                   c.old_relative_url, c.existing_id, c.position, tree.level + 1 AS level
+              FROM categories c,
+                   tree
+             WHERE c.parent_category_id = tree.id
+          )
       SELECT *
-      FROM tree
-      ORDER BY level, id
+        FROM tree
+       ORDER BY level, position, id;
     SQL
 
     create_categories(categories) do |row|
@@ -90,9 +92,9 @@ class BulkImport::Generic < BulkImport::Base
           row["parent_category_id"] ? category_id_from_imported_id(row["parent_category_id"]) : nil,
         slug: row["slug"],
       }
-
-      categories.close
     end
+
+    categories.close
   end
 
   def import_groups
