@@ -96,13 +96,7 @@ RSpec.describe Chat::ParsedMentions do
     end
 
     it "returns a user when self-mentioning" do
-      message =
-        Fabricate(
-          :chat_message,
-          chat_channel: chat_channel,
-          message: "Hey @#{channel_member_1.username}",
-          user: channel_member_1,
-        )
+      message = create_message("Hey @#{channel_member_1.username}", user: channel_member_1)
 
       mentions = described_class.new(message)
 
@@ -174,7 +168,7 @@ RSpec.describe Chat::ParsedMentions do
     end
   end
 
-  def create_message(text)
-    Fabricate(:chat_message, chat_channel: chat_channel, message: text)
+  def create_message(text, **extra_args)
+    Fabricate(:chat_message, chat_channel: chat_channel, message: text, **extra_args)
   end
 end

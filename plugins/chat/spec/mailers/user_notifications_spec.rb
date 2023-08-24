@@ -152,6 +152,11 @@ describe UserNotifications do
         )
       end
 
+      before do
+        channel.add(sender)
+        channel.update!(last_message: chat_message)
+      end
+
       it "doesn't return an email if there are no unread mentions" do
         email = described_class.chat_summary(user, {})
 
@@ -272,6 +277,7 @@ describe UserNotifications do
               chat_message: another_chat_message,
               notification: notification,
             )
+            another_chat_channel.update!(last_message: another_chat_message)
 
             email = described_class.chat_summary(user, {})
 
@@ -311,6 +317,7 @@ describe UserNotifications do
                 chat_message: another_chat_message,
                 notification: notification,
               )
+              another_chat_channel.update!(last_message: another_chat_message)
             end
 
             expected_subject =

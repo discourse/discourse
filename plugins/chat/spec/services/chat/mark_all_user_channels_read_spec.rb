@@ -47,6 +47,12 @@ RSpec.describe Chat::MarkAllUserChannelsRead do
       )
     end
 
+    before do
+      channel_1.update!(last_message: message_2)
+      channel_2.update!(last_message: message_4)
+      channel_3.update!(last_message: message_6)
+    end
+
     context "when the user has no memberships" do
       let(:guardian) { Guardian.new(Fabricate(:user)) }
 
@@ -170,6 +176,7 @@ RSpec.describe Chat::MarkAllUserChannelsRead do
 
         it "does use thread original messages for last_read_message_id" do
           new_om = Fabricate(:chat_message, chat_channel: channel_1, user: other_user)
+          channel_1.update!(last_message: new_om)
           thread.update!(original_message: new_om, original_message_user: other_user)
           result
           expect(membership_1.reload.last_read_message_id).to eq(new_om.id)

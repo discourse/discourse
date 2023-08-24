@@ -39,17 +39,20 @@ RSpec.describe "User menu notifications | sidebar", type: :system do
     context "when dm channel" do
       fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
 
+      before { Jobs.run_immediately! }
+
       context "when @username" do
+        let!(:message) do
+          Fabricate(
+            :chat_message,
+            chat_channel: dm_channel_1,
+            user: other_user,
+            message: "this is fine @#{current_user.username}",
+            use_service: true,
+          )
+        end
+
         it "shows a mention notification" do
-          Jobs.run_immediately!
-
-          message =
-            Chat::MessageCreator.create(
-              chat_channel: dm_channel_1,
-              user: other_user,
-              content: "this is fine @#{current_user.username}",
-            ).chat_message
-
           visit("/")
 
           find(".header-dropdown-toggle.current-user").click
@@ -69,24 +72,30 @@ RSpec.describe "User menu notifications | sidebar", type: :system do
       fab!(:channel_1) { Fabricate(:chat_channel) }
 
       before do
+        Jobs.run_immediately!
         channel_1.add(current_user)
         channel_1.add(other_user)
-        # Jobs.run_immediately!
       end
 
       context "when group mention" do
         fab!(:group) { Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone]) }
 
-        before { group.add(current_user) }
+        let(:message) do
+          Fabricate(
+            :chat_message,
+            chat_channel: channel_1,
+            user: other_user,
+            message: "this is fine @#{group.name}",
+            use_service: true,
+          )
+        end
 
-        xit "shows a group mention notification" do
-          message =
-            Chat::MessageCreator.create(
-              chat_channel: channel_1,
-              user: other_user,
-              content: "this is fine @#{group.name}",
-            ).chat_message
+        before do
+          group.add(current_user)
+          message
+        end
 
+        it "shows a group mention notification" do
           visit("/")
 
           find(".header-dropdown-toggle.current-user").click
@@ -106,16 +115,17 @@ RSpec.describe "User menu notifications | sidebar", type: :system do
       end
 
       context "when @username" do
+        let!(:message) do
+          Fabricate(
+            :chat_message,
+            chat_channel: channel_1,
+            user: other_user,
+            message: "this is fine @#{current_user.username}",
+            use_service: true,
+          )
+        end
+
         it "shows a mention notification" do
-          Jobs.run_immediately!
-
-          message =
-            Chat::MessageCreator.create(
-              chat_channel: channel_1,
-              user: other_user,
-              content: "this is fine @#{current_user.username}",
-            ).chat_message
-
           visit("/")
 
           find(".header-dropdown-toggle.current-user").click
@@ -130,41 +140,46 @@ RSpec.describe "User menu notifications | sidebar", type: :system do
           )
         end
 
-        it "shows a mention notification when the message is in a thread" do
-          Jobs.run_immediately!
-
-          message =
-            Chat::MessageCreator.create(
-              chat_channel: channel_1,
+        context "when the message is in a thread" do
+          let!(:message) do
+            Fabricate(
+              :chat_message,
+              thread: Fabricate(:chat_thread, channel: channel_1),
               user: other_user,
-              content: "this is fine @#{current_user.username}",
-              thread_id: Fabricate(:chat_thread, channel: channel_1).id,
-            ).chat_message
-
-          visit("/")
-
-          find(".header-dropdown-toggle.current-user").click
-          within("#user-menu-button-chat-notifications") do |panel|
-            expect(panel).to have_content(1)
-            panel.click
+              message: "this is fine @#{current_user.username}",
+              use_service: true,
+            )
           end
 
-          expect(find("#quick-access-chat-notifications")).to have_link(
-            I18n.t("js.notifications.popup.chat_mention.direct", channel: channel_1.name),
-            href: "/chat/c/#{channel_1.slug}/#{channel_1.id}/t/#{message.thread_id}",
-          )
+          it "shows a mention notification when the message is in a thread" do
+            visit("/")
+
+            find(".header-dropdown-toggle.current-user").click
+            within("#user-menu-button-chat-notifications") do |panel|
+              expect(panel).to have_content(1)
+              panel.click
+            end
+
+            expect(find("#quick-access-chat-notifications")).to have_link(
+              I18n.t("js.notifications.popup.chat_mention.direct", channel: channel_1.name),
+              href: "/chat/c/#{channel_1.slug}/#{channel_1.id}/t/#{message.thread_id}",
+            )
+          end
         end
       end
 
       context "when @all" do
-        xit "shows a mention notification" do
-          message =
-            Chat::MessageCreator.create(
-              chat_channel: channel_1,
-              user: other_user,
-              content: "this is fine @all",
-            ).chat_message
+        let!(:message) do
+          Fabricate(
+            :chat_message,
+            chat_channel: channel_1,
+            user: other_user,
+            message: "this is fine @all",
+            use_service: true,
+          )
+        end
 
+        it "shows a mention notification" do
           visit("/")
 
           find(".header-dropdown-toggle.current-user").click

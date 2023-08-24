@@ -4,8 +4,8 @@ RSpec.describe "Chat message - thread", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:thread_message_1) do
-    message_1 = Fabricate(:chat_message, chat_channel: channel_1)
-    Fabricate(:chat_message, chat_channel: channel_1, in_reply_to: message_1)
+    message_1 = Fabricate(:chat_message, chat_channel: channel_1, use_service: true)
+    Fabricate(:chat_message, in_reply_to: message_1, use_service: true)
   end
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
