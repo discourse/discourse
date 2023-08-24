@@ -1157,31 +1157,45 @@ class BulkImport::Base
     field
   end
 
-  def create_records(rows, name, columns)
+  def create_records(all_rows, name, columns)
     start = Time.now
     imported_ids = []
     process_method_name = "process_#{name}"
-    sql = "COPY #{name.pluralize} (#{columns.map { |c| "\"#{c}\"" }.join(",")}) FROM STDIN"
+
     rows_created = 0
 
-    @raw_connection.copy_data(sql, @encoder) do
-      rows.each do |row|
-        begin
-          if (mapped = yield(row))
-            processed = send(process_method_name, mapped)
-            imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
-            imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
-            @raw_connection.put_copy_data columns.map { |c| processed[c] } unless processed[:skip]
+    all_rows.each_slice(1) do |rows|
+      sql = "COPY #{name.pluralize} (#{columns.map { |c| "\"#{c}\"" }.join(",")}) FROM STDIN"
+
+      begin
+        @raw_connection.copy_data(sql, @encoder) do
+          rows.each do |row|
+            begin
+              if (mapped = yield(row))
+                processed = send(process_method_name, mapped)
+                imported_ids << mapped[:imported_id] unless mapped[:imported_id].nil?
+                imported_ids |= mapped[:imported_ids] unless mapped[:imported_ids].nil?
+                unless processed[:skip]
+                  @raw_connection.put_copy_data columns.map { |c| processed[c] }
+                end
+              end
+              rows_created += 1
+              if rows_created % 100 == 0
+                print "\r%7d - %6d/sec" % [rows_created, rows_created.to_f / (Time.now - start)]
+              end
+            rescue => e
+              puts "\n"
+              puts "ERROR: #{e.message}"
+              puts e.backtrace.join("\n")
+            end
           end
-          rows_created += 1
-          if rows_created % 100 == 0
-            print "\r%7d - %6d/sec" % [rows_created, rows_created.to_f / (Time.now - start)]
-          end
-        rescue => e
-          puts "\n"
-          puts "ERROR: #{e.message}"
-          puts e.backtrace.join("\n")
         end
+      rescue => e
+        puts "\n"
+        puts "ERROR: #{e.message}"
+        puts e.backtrace.join("\n")
+        puts "\n"
+        puts "First Row: #{rows.first.inspect}"
       end
     end
 
@@ -1254,17 +1268,16 @@ class BulkImport::Base
   end
 
   def pre_cook(raw)
-    cooked = raw
-
     # TODO Check if this is still up-to-date
     # Convert YouTube URLs to lazyYT DOMs before being transformed into links
-    cooked.gsub!(%r{\nhttps\://www.youtube.com/watch\?v=(\w+)\n}) do
-      video_id = $1
-      result = <<-HTML
+    cooked =
+      raw.gsub(%r{\nhttps\://www.youtube.com/watch\?v=(\w+)\n}) do
+        video_id = $1
+        result = <<-HTML
         <div class="lazyYT" data-youtube-id="#{video_id}" data-width="480" data-height="270" data-parameters="feature=oembed&amp;wmode=opaque"></div>
       HTML
-      result.strip
-    end
+        result.strip
+      end
 
     cooked = @markdown.render(cooked).scrub.strip
 
@@ -1300,6 +1313,7 @@ class BulkImport::Base
       end
     end
 
+    cooked.gsub!(/\x00/, "")
     cooked.scrub.strip
   end
 
