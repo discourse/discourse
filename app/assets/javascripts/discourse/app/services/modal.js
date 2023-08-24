@@ -48,7 +48,6 @@ const KNOWN_LEGACY_MODALS = [
   "admin-reseed",
   "admin-color-scheme-select-base",
   "admin-form-template-validation-options",
-  "admin-staff-action-log-details",
   "admin-uploaded-image-list",
 ];
 
