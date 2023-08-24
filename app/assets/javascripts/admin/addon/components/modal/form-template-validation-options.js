@@ -1,13 +1,10 @@
-import Controller from "@ember/controller";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import Component from "@glimmer/component";
 import I18n from "I18n";
 
-export default class AdminFormTemplateValidationOptions extends Controller.extend(
-  ModalFunctionality
-) {
-  TABLE_HEADER_KEYS = ["key", "type", "description"];
-  VALIDATION_KEYS = ["required", "minimum", "maximum", "pattern", "type"];
+const TABLE_HEADER_KEYS = ["key", "type", "description"];
+const VALIDATION_KEYS = ["required", "minimum", "maximum", "pattern", "type"];
 
+export default class FormTemplateValidationOptions extends Component {
   get tableHeaders() {
     const translatedHeaders = [];
     this.TABLE_HEADER_KEYS.forEach((header) => {
