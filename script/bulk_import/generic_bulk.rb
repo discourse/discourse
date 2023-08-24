@@ -339,12 +339,12 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     existing_user_fields =
-      UserCustomField.pluck(:user_id, :name).map { |id, name| "#{id}-#{name}" }.to_set
+      UserCustomField.where("name LIKE '#{User::USER_FIELD_PREFIX}%'").pluck(:user_id, :name).to_set
 
     create_user_custom_fields(values) do |row|
       user_id = user_id_from_imported_id(row["user_id"])
       field_name = field_id_mapping[row["field_id"]]
-      next if user_id && field_name && existing_user_fields.include?("#{user_id}-#{field_name}")
+      next if user_id && field_name && existing_user_fields.include?([user_id, field_name])
 
       { user_id: user_id, name: field_name, value: row["value"] }
     end
