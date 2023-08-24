@@ -26,7 +26,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def execute
-    # needs to happen before groups, because keeping group names is more important than usernames
+    # needs to happen before users, because keeping group names is more important than usernames
     import_groups
 
     import_users
@@ -459,6 +459,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def process_raw(original_raw)
+    original_raw.gsub!(/\x00/, "")
     original_raw
   end
 
@@ -698,20 +699,21 @@ class BulkImport::Generic < BulkImport::Base
     tags.close
 
     topic_tags = query(<<~SQL)
-      SELECT DISTINCT t.id AS topic_id, ta.value AS tag_id
+      SELECT t.id AS topic_id, ta.value AS tag_id
         FROM topics t,
              JSON_EACH(t.tag_ids) ta
        WHERE tag_ids IS NOT NULL
+       GROUP BY topic_id, tag_id
     SQL
 
     existing_topic_tags = TopicTag.pluck(:topic_id, :tag_id).to_set
 
     create_topic_tags(topic_tags) do |row|
-      topic_id = topic_id_from_imported_id(row[:topic_id])
-      tag_id = tag_mapping[row[:tag_id]]
+      topic_id = topic_id_from_imported_id(row["topic_id"])
+      tag_id = tag_mapping[row["tag_id"]]
 
       next unless topic_id && tag_id
-      next if existing_topic_tags.include?([topic_id, tag_id])
+      next unless existing_topic_tags.add?([topic_id, tag_id])
 
       { topic_id: topic_id, tag_id: tag_id }
     end
