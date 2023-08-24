@@ -441,7 +441,8 @@ class BulkImport::Generic < BulkImport::Base
 
     create_posts(posts) do |row|
       next if row["raw"].blank?
-      next unless topic_id = topic_id_from_imported_id(row["topic_id"])
+      next unless (topic_id = topic_id_from_imported_id(row["topic_id"]))
+      next if post_id_from_imported_id(row["id"]).present?
 
       {
         imported_id: row["id"],
