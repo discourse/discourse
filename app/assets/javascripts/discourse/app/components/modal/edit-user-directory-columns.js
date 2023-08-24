@@ -77,7 +77,6 @@ export default class EditUserDirectoryColumns extends Component {
 
   @action
   moveUp(column) {
-    console.log(column);
     this._moveColumn(UP, column);
   }
 
