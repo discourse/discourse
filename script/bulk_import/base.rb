@@ -1164,7 +1164,7 @@ class BulkImport::Base
 
     rows_created = 0
 
-    all_rows.each_slice(1) do |rows|
+    all_rows.each_slice(10_000) do |rows|
       sql = "COPY #{name.pluralize} (#{columns.map { |c| "\"#{c}\"" }.join(",")}) FROM STDIN"
 
       begin
