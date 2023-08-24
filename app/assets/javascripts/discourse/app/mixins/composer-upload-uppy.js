@@ -502,8 +502,8 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     const filename = this._filenamePlaceholder(file);
 
     // when adding two separate files with the same filename search for matching
-    // placeholder already existing in the editor ie [Uploading: test.png...]
-    // and add order nr to the next one: [Uploading: test.png(1)...]
+    // placeholder already existing in the editor ie [Uploading: test.png…]
+    // and add order nr to the next one: [Uploading: test.png(1)…]
     const escapedFilename = escapeRegExp(filename);
     const regexString = `\\[${I18n.t("uploading_filename", {
       filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?",
