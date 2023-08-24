@@ -1,6 +1,5 @@
 import Service, { inject as service } from "@ember/service";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import ChatMessageMentionWarning from "discourse/plugins/chat/discourse/models/chat-message-mention-warning";
 import { cloneJSON } from "discourse-common/lib/object";
 import { bind } from "discourse-common/utils/decorators";
 
@@ -105,9 +104,6 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
       case "restore":
         this.handleRestoreMessage(busData);
         break;
-      case "mention_warning":
-        this.handleMentionWarning(busData);
-        break;
       case "self_flagged":
         this.handleSelfFlaggedMessage(busData);
         break;
@@ -200,13 +196,6 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
       const newMessage = ChatMessage.create(this.model, data.chat_message);
       newMessage.manager = this.messagesManager;
       this.messagesManager.addMessages([newMessage]);
-    }
-  }
-
-  handleMentionWarning(data) {
-    const message = this.messagesManager.findMessage(data.chat_message_id);
-    if (message) {
-      message.mentionWarning = ChatMessageMentionWarning.create(message, data);
     }
   }
 

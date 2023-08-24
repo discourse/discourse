@@ -3,9 +3,18 @@
 
   {{#each this.noticesForChannel as |notice|}}
     <div class="chat-notices__notice">
-      <p class="chat-notices__notice__content">
-        {{notice.textContent}}
-      </p>
+
+      {{#if notice.textContent}}
+        <p class="chat-notices__notice__content">
+          {{notice.textContent}}
+        </p>
+      {{else}}
+        <notice.component
+          @channel={{@channel}}
+          @notice={{notice}}
+          @clearNotice={{this.clearNotice}}
+        />
+      {{/if}}
 
       <DButton
         @icon="times"
