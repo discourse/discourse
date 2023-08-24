@@ -110,22 +110,17 @@ class DiscourseJsProcessor
     end
 
     def self.generate_js_processor
-      @processor_mutex.synchronize do
-        if Rails.env.development? || Rails.env.test? ||
-             !File.exist?("#{Rails.root}/#{JS_PROCESSOR_PATH}")
-          Discourse::Utils.execute_command(
-            "yarn",
-            "--silent",
-            "esbuild",
-            "--log-level=warning",
-            "--bundle",
-            "--external:fs",
-            "--define:process='{\"env\":{}}'",
-            "app/assets/javascripts/js-processor.js",
-            "--outfile=#{JS_PROCESSOR_PATH}",
-          )
-        end
-      end
+      Discourse::Utils.execute_command(
+        "yarn",
+        "--silent",
+        "esbuild",
+        "--log-level=warning",
+        "--bundle",
+        "--external:fs",
+        "--define:process='{\"env\":{}}'",
+        "app/assets/javascripts/js-processor.js",
+        "--outfile=#{JS_PROCESSOR_PATH}",
+      )
     end
 
     def self.create_new_context
@@ -138,7 +133,10 @@ class DiscourseJsProcessor
       ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
 
       # Theme template AST transformation plugins
-      generate_js_processor
+      if Rails.env.development? || Rails.env.test?
+        @processor_mutex.synchronize { generate_js_processor }
+      end
+
       ctx.eval(File.read(JS_PROCESSOR_PATH), filename: "js-processor.js")
 
       ctx

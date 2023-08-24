@@ -301,7 +301,7 @@ task "assets:precompile:compress_js" do
 end
 
 task "assets:precompile:js_processor": "environment" do
-  DiscourseJsProcessor.generate_js_processor
+  DiscourseJsProcessor::Transpiler.generate_js_processor
 end
 
 task "assets:precompile": %w[
