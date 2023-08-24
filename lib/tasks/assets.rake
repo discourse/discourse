@@ -59,6 +59,18 @@ task "assets:precompile:before" do
 end
 
 task "assets:precompile:css" => "environment" do
+  class Sprockets::Manifest
+    def reload
+      @filename = find_directory_manifest(@directory)
+      @data = json_decode(File.read(@filename))
+    end
+  end
+
+  # cause on boot we loaded a blank manifest,
+  # we need to know where all the assets are to precompile CSS
+  # cause CSS uses asset_path
+  Rails.application.assets_manifest.reload
+
   if ENV["DONT_PRECOMPILE_CSS"] == "1"
     STDERR.puts "Skipping CSS precompilation, ensure CSS lives in a shared directory across hosts"
   else
@@ -286,18 +298,6 @@ task "assets:precompile:compress_js" do
       end
     end
   end
-
-  class Sprockets::Manifest
-    def reload
-      @filename = find_directory_manifest(@directory)
-      @data = json_decode(File.read(@filename))
-    end
-  end
-
-  # cause on boot we loaded a blank manifest,
-  # we need to know where all the assets are to precompile CSS
-  # cause CSS uses asset_path
-  Rails.application.assets_manifest.reload
 end
 
 task "assets:precompile:js_processor": "environment" do
