@@ -945,6 +945,9 @@ class BulkImport::Base
     post[:created_at] ||= NOW
     post[:last_version_at] = post[:created_at]
     post[:updated_at] ||= post[:created_at]
+
+    post[:skip] = true if post[:raw].bytes.include?(0) || post[:cooked].bytes.include?(0)
+
     post
   end
 
