@@ -16,9 +16,6 @@
         }
         &.active {
           border-bottom: 2px solid var(--tertiary);
-          .d-icon {
-            color: var(--primary-low);
-          }
         }
       }
     }
@@ -93,5 +90,14 @@
   .suggested-topics-message .badge-wrapper.bullet span.badge-category,
   .suggested-topics-message .badge-wrapper.bar span.badge-category {
     max-width: 150px;
+  }
+}
+
+
+#main-outlet .regular {
+  @media screen and (min-width: 550px) {
+    .more-topics__container .nav li .btn {
+      padding: 0.75em 0.65em;
+    }
   }
 }
