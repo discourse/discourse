@@ -24,7 +24,6 @@ export default class SidebarState extends Service {
 
   setPanel(name) {
     this.currentPanelKey = name;
-    this.setSeparatedMode();
   }
 
   get currentPanel() {
