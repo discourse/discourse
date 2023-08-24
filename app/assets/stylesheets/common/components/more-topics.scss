@@ -17,6 +17,9 @@
           }
         }
         &.active {
+          .d-icon {
+            color: var(--primary-high);
+          }
           box-shadow: inset 0px -3px 0px 0px var(--tertiary);
         }
       }
