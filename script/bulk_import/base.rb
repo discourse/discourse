@@ -1164,7 +1164,7 @@ class BulkImport::Base
 
     rows_created = 0
 
-    all_rows.each_slice(10_000) do |rows|
+    all_rows.each_slice(1_000) do |rows|
       sql = "COPY #{name.pluralize} (#{columns.map { |c| "\"#{c}\"" }.join(",")}) FROM STDIN"
 
       begin
@@ -1313,8 +1313,10 @@ class BulkImport::Base
       end
     end
 
-    cooked.gsub!(/\x00/, "")
+    # TODO Check if scrub or strip is inserting \x00 which is causing Postgres COPY to fail
     cooked.scrub.strip
+    cooked.gsub!(/\x00/, "")
+    cooked
   end
 
   def user_avatar(user)
