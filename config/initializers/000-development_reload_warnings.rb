@@ -9,7 +9,6 @@ if Rails.env.development? && !Rails.configuration.cache_classes && Discourse.run
     "#{Rails.root}/config",
     "#{Rails.root}/lib",
     "#{Rails.root}/plugins",
-    "#{Rails.root}/app/assets/javascripts/js-processor.js",
   ]
 
   Listen
