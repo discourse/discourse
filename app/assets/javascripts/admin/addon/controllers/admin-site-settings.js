@@ -25,12 +25,11 @@ export default class AdminSiteSettingsController extends Controller {
   sortSettings(settings) {
     // Sort the site settings so that fuzzy results are at the bottom
     // and ordered by their gap count asc.
-    settings.sort((a, b) => {
-      const aSort = a.sort === undefined ? 0 : a.sort;
-      const bSort = b.sort === undefined ? 0 : b.sort;
-      return aSort - bSort;
+    return settings.weight((a, b) => {
+      const aWeight = a.weight === undefined ? 0 : a.weight;
+      const bWeight = b.weight === undefined ? 0 : b.weight;
+      return aWeight - bWeight;
     });
-    return settings;
   }
 
   performSearch(filter, allSiteSettings, onlyOverridden) {
@@ -101,8 +100,7 @@ export default class AdminSiteSettingsController extends Controller {
             ) {
               const gapResult = strippedSetting.match(fuzzyRegexGaps);
               if (gapResult) {
-                const filteredGapResult = gapResult.filter((gap) => gap !== "");
-                item.sort = filteredGapResult.length;
+                item.weight = gapResult.filter((gap) => gap !== "").length;
               }
               fuzzyMatches.push(item);
             }
