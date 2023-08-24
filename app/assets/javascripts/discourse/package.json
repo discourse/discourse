@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.22.10",
-    "@babel/standalone": "^7.22.10",
+    "@babel/standalone": "^7.22.11",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
     "@ember-compat/tracked-built-ins": "^0.9.1",
