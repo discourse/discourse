@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-task "assets:precompile:before" do
+task "assets:precompile:before": "environment" do
   require "uglifier"
   require "open3"
 
@@ -238,7 +238,7 @@ def log_task_duration(task_description, &task)
   STDERR.puts
 end
 
-task "assets:precompile:compress_js" do
+task "assets:precompile:compress_js": "environment" do
   if $bypass_sprockets_uglify
     puts "Compressing Javascript and Generating Source Maps"
     manifest = Sprockets::Manifest.new(assets_path)
