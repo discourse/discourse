@@ -9,18 +9,18 @@
       .btn {
         color: var(--primary);
         background-color: transparent;
-        border-bottom: 2px solid transparent;
         padding: 0.5em 5px;
         &:hover {
-          border-bottom: 2px solid rgba(var(--tertiary-rgb), 0.5);
+          box-shadow: inset 0px -3px 0px 0px rgba(var(--tertiary-rgb), 0.5);
+          .d-icon {
+            color: var(--primary-high);
+          }
         }
         &.active {
-          border-bottom: 2px solid var(--tertiary);
-        }
-        .d-icon,
-        &:hover .d-icon,
-        &:active .d-icon {
-          color: var(--primary-high);
+          box-shadow: inset 0px -3px 0px 0px var(--tertiary);
+          .d-icon {
+            color: var(--primary-high);
+          }
         }
       }
     }
