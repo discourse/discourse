@@ -304,10 +304,15 @@ task "assets:precompile:js_processor": "environment" do
   DiscourseJsProcessor::Transpiler.generate_js_processor
 end
 
+# Run these tasks **before** Rails' "assets:precompile" task
 task "assets:precompile": %w[
        assets:precompile:before
        maxminddb:refresh
        assets:precompile:js_processor
-       assets:precompile:compress_js
-       assets:precompile:css
      ]
+
+# Run these tasks **after** Rails' "assets:precompile" task
+Rake::Task["assets:precompile"].enhance do
+  Rake::Task["assets:precompile:compress_js"].invoke
+  Rake::Task["assets:precompile:css"].invoke
+end
