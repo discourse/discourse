@@ -248,7 +248,7 @@ module Chat
     def self.find_with_access_check(channel_id_or_slug, guardian)
       base_channel_relation = Chat::Channel.includes(:chatable)
 
-      if guardian.user.staff?
+      if guardian.is_staff?
         base_channel_relation = base_channel_relation.includes(:chat_channel_archive)
       end
 
