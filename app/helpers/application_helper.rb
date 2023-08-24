@@ -371,6 +371,7 @@ module ApplicationHelper
         "@context" => "http://schema.org",
         "@type" => "WebSite",
         :url => Discourse.base_url,
+        :name => SiteSetting.title,
         :potentialAction => {
           "@type" => "SearchAction",
           :target => "#{Discourse.base_url}/search?q={search_term_string}",
