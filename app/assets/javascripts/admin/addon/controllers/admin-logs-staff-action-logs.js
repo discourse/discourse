@@ -7,6 +7,7 @@ import { outputExportResult } from "discourse/lib/export-result";
 import { scheduleOnce } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import ThemeChangeModal from "../components/modal/theme-change";
+import StaffActionLogDetailsModal from "../components/modal/staff-action-log-details";
 
 export default class AdminLogsStaffActionLogsController extends Controller {
   @service modal;
@@ -155,7 +156,7 @@ export default class AdminLogsStaffActionLogsController extends Controller {
   @action
   showDetailsModal(model, event) {
     event?.preventDefault();
-    this.modal.show(StaffActionLogDetails, {
+    this.modal.show(StaffActionLogDetailsModal, {
       model: { staffActionLog: model },
     });
   }
