@@ -226,7 +226,7 @@ def log_task_duration(task_description, &task)
   STDERR.puts
 end
 
-task "assets:precompile:compress_js" do
+task "assets:precompile" => %w[assets:precompile:before maxminddb:refresh] do
   if $bypass_sprockets_uglify
     puts "Compressing Javascript and Generating Source Maps"
     manifest = Sprockets::Manifest.new(assets_path)
@@ -286,7 +286,9 @@ task "assets:precompile:compress_js" do
       end
     end
   end
+end
 
+Rake::Task["assets:precompile"].enhance do
   class Sprockets::Manifest
     def reload
       @filename = find_directory_manifest(@directory)
@@ -298,16 +300,5 @@ task "assets:precompile:compress_js" do
   # we need to know where all the assets are to precompile CSS
   # cause CSS uses asset_path
   Rails.application.assets_manifest.reload
+  Rake::Task["assets:precompile:css"].invoke
 end
-
-task "assets:precompile:js_processor": "environment" do
-  DiscourseJsProcessor::Transpiler.generate_js_processor
-end
-
-task "assets:precompile": %w[
-       assets:precompile:before
-       maxminddb:refresh
-       assets:precompile:js_processor
-       assets:precompile:compress_js
-       assets:precompile:css
-     ]
