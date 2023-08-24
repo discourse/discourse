@@ -25,7 +25,7 @@ export default class AdminSiteSettingsController extends Controller {
   sortSettings(settings) {
     // Sort the site settings so that fuzzy results are at the bottom
     // and ordered by their gap count asc.
-    return settings.weight((a, b) => {
+    return settings.sort((a, b) => {
       const aWeight = a.weight === undefined ? 0 : a.weight;
       const bWeight = b.weight === undefined ? 0 : b.weight;
       return aWeight - bWeight;
