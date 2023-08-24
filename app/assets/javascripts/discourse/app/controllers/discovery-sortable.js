@@ -13,6 +13,7 @@ export const queryParams = {
   before: { replace: true, refreshModel: true },
   bumped_before: { replace: true, refreshModel: true },
   f: { replace: true, refreshModel: true },
+  subset: { replace: true, refreshModel: true },
   period: { replace: true, refreshModel: true },
   topic_ids: { replace: true, refreshModel: true },
   group_name: { replace: true, refreshModel: true },
@@ -22,17 +23,6 @@ export const queryParams = {
   no_tags: { replace: true, refreshModel: true },
   exclude_tag: { replace: true, refreshModel: true },
 };
-
-// Basic controller options
-const controllerOpts = {
-  discoveryTopics: controller("discovery/topics"),
-  queryParams: Object.keys(queryParams),
-};
-
-// Default to `undefined`
-controllerOpts.queryParams.forEach((p) => {
-  controllerOpts[p] = queryParams[p].default;
-});
 
 export function changeSort(sortBy) {
   let model = this.controllerFor("discovery.topics").model;
@@ -46,22 +36,34 @@ export function changeSort(sortBy) {
   }
 }
 
+export function changeNewListSubset(subset) {
+  this.controller.set("subset", subset);
+
+  let model = this.controllerFor("discovery.topics").model;
+  model.updateNewListSubsetParam(subset);
+}
+
 export function resetParams(skipParams = []) {
-  controllerOpts.queryParams.forEach((p) => {
+  Object.keys(queryParams).forEach((p) => {
     if (!skipParams.includes(p)) {
       this.controller.set(p, queryParams[p].default);
     }
   });
 }
 
-const SortableController = Controller.extend(controllerOpts);
-
-export const addDiscoveryQueryParam = function (p, opts) {
+export function addDiscoveryQueryParam(p, opts) {
   queryParams[p] = opts;
-  const cOpts = {};
-  cOpts[p] = null;
-  cOpts["queryParams"] = Object.keys(queryParams);
-  SortableController.reopen(cOpts);
-};
+}
 
-export default SortableController;
+export default class DiscoverySortableController extends Controller {
+  @controller("discovery/topics") discoveryTopics;
+
+  queryParams = Object.keys(queryParams);
+
+  constructor() {
+    super(...arguments);
+    this.queryParams.forEach((p) => {
+      this[p] = queryParams[p].default;
+    });
+  }
+}

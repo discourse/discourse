@@ -4045,6 +4045,12 @@ pl_PL:
           many: "Nowe (%{count})"
           other: "Nowe (%{count})"
         help: "tematy dodane w ciągu ostatnich kilku dni"
+        all: "Wszystkie"
+        all_with_count: "Wszystkie (%{count})"
+        topics: "Tematy"
+        topics_with_count: "Tematy (%{count})"
+        replies: "Odpowiedzi"
+        replies_with_count: "Odpowiedzi (%{count})"
       posted:
         title: "Wysłane"
         help: "tematy w których pisałeś"
@@ -5789,6 +5795,7 @@ pl_PL:
         field_placeholders:
           validations: "wprowadź walidacje tutaj"
           label: "Wprowadź etykietę tutaj"
+          placeholder: "Wpisz tutaj symbol zastępczy"
           none_label: "Wybierz element"
           choices:
             first: "Opcja 1"

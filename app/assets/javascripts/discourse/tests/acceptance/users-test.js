@@ -6,6 +6,9 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import directoryFixtures from "discourse/tests/fixtures/directory-fixtures";
+import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("User Directory", function () {
   test("Visit Page", async function (assert) {
@@ -34,6 +37,24 @@ acceptance("User Directory", function () {
     assert.ok(
       exists(".directory .directory-table .directory-table__row"),
       "has a list of users"
+    );
+  });
+
+  test("Visit With Group Exclusion", async function (assert) {
+    let queryParams;
+
+    pretender.get("/directory_items", (request) => {
+      queryParams = request.queryParams;
+
+      return response(cloneJSON(directoryFixtures["directory_items"]));
+    });
+
+    await visit("/u?exclude_groups=trust_level_0");
+
+    assert.strictEqual(
+      queryParams.exclude_groups,
+      "trust_level_0",
+      "includes the right query param in the API call"
     );
   });
 

@@ -1,3 +1,7 @@
+{{#if this.canLoadMore}}
+  {{hide-application-footer}}
+{{/if}}
+
 <div class="container show-badge {{this.model.slug}}">
   <h1>
     <LinkTo @route="badges.index">{{i18n "badges.title"}}</LinkTo>

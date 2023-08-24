@@ -182,7 +182,7 @@ RSpec.describe SecondFactorManager do
       before do
         disable_totp
         simulate_localhost_webauthn_challenge
-        Webauthn.stage_challenge(user, secure_session)
+        DiscourseWebauthn.stage_challenge(user, secure_session)
       end
 
       context "when security key params are valid" do
@@ -264,7 +264,7 @@ RSpec.describe SecondFactorManager do
 
       before do
         simulate_localhost_webauthn_challenge
-        Webauthn.stage_challenge(user, secure_session)
+        DiscourseWebauthn.stage_challenge(user, secure_session)
       end
 
       context "when method selected is invalid" do
@@ -312,7 +312,7 @@ RSpec.describe SecondFactorManager do
 
         before do
           simulate_localhost_webauthn_challenge
-          Webauthn.stage_challenge(user, secure_session)
+          DiscourseWebauthn.stage_challenge(user, secure_session)
         end
 
         context "when security key params are valid" do

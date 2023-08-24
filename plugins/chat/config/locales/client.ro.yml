@@ -7,6 +7,10 @@
 ro:
   js:
     admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Întotdeauna"
+          never: "Niciodată"
       logs:
         staff_actions:
           actions:

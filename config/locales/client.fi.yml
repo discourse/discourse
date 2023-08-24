@@ -277,6 +277,8 @@ fi:
       pill: "Aiheeseen liittyviä viestejä"
       see_all: 'Katso <a href="%{path}">kaikki viestit</a> käyttäjältä @%{username}...'
     suggested_topics:
+      title: "Uudet ja lukemattomat ketjut"
+      pill: "Ehdotettu"
       pm_title: "Viestiehdotuksia"
     about:
       simple_title: "Tietoa"
@@ -3672,6 +3674,12 @@ fi:
           one: "Uudet (%{count})"
           other: "Uudet (%{count})"
         help: "viime päivinä aloitetut ketjut"
+        all: "Kaikki"
+        all_with_count: "Kaikki (%{count})"
+        topics: "Ketjut"
+        topics_with_count: "Ketjut (%{count})"
+        replies: "Vastaukset"
+        replies_with_count: "Vastaukset (%{count})"
       posted:
         title: "Viestini"
         help: "ketjut, joihin olet kirjoittanut"

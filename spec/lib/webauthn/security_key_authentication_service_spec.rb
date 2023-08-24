@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require "webauthn"
+require "discourse_webauthn"
 require "webauthn/security_key_registration_service"
 
 ##
@@ -37,7 +37,7 @@ require "webauthn/security_key_registration_service"
 #
 # The origin params just need to be whatever your localhost URL for Discourse is.
 
-RSpec.describe Webauthn::SecurityKeyAuthenticationService do
+RSpec.describe DiscourseWebauthn::SecurityKeyAuthenticationService do
   subject(:service) { described_class.new(current_user, params, challenge_params) }
 
   let(:security_key_user) { current_user }
@@ -118,7 +118,7 @@ RSpec.describe Webauthn::SecurityKeyAuthenticationService do
 
     it "raises a NotFoundError" do
       expect { service.authenticate_security_key }.to raise_error(
-        Webauthn::NotFoundError,
+        DiscourseWebauthn::NotFoundError,
         I18n.t("webauthn.validation.not_found_error"),
       )
     end
@@ -129,7 +129,7 @@ RSpec.describe Webauthn::SecurityKeyAuthenticationService do
 
     it "raises an OwnershipError" do
       expect { service.authenticate_security_key }.to raise_error(
-        Webauthn::OwnershipError,
+        DiscourseWebauthn::OwnershipError,
         I18n.t("webauthn.validation.ownership_error"),
       )
     end
@@ -140,7 +140,7 @@ RSpec.describe Webauthn::SecurityKeyAuthenticationService do
 
     it "raises an InvalidTypeError" do
       expect { service.authenticate_security_key }.to raise_error(
-        Webauthn::InvalidTypeError,
+        DiscourseWebauthn::InvalidTypeError,
         I18n.t("webauthn.validation.invalid_type_error"),
       )
     end
@@ -151,7 +151,7 @@ RSpec.describe Webauthn::SecurityKeyAuthenticationService do
 
     it "raises a ChallengeMismatchError" do
       expect { service.authenticate_security_key }.to raise_error(
-        Webauthn::ChallengeMismatchError,
+        DiscourseWebauthn::ChallengeMismatchError,
         I18n.t("webauthn.validation.challenge_mismatch_error"),
       )
     end
@@ -162,7 +162,7 @@ RSpec.describe Webauthn::SecurityKeyAuthenticationService do
 
     it "raises a InvalidOriginError" do
       expect { service.authenticate_security_key }.to raise_error(
-        Webauthn::InvalidOriginError,
+        DiscourseWebauthn::InvalidOriginError,
         I18n.t("webauthn.validation.invalid_origin_error"),
       )
     end
@@ -173,7 +173,7 @@ RSpec.describe Webauthn::SecurityKeyAuthenticationService do
 
     it "raises a InvalidRelyingPartyIdError" do
       expect { service.authenticate_security_key }.to raise_error(
-        Webauthn::InvalidRelyingPartyIdError,
+        DiscourseWebauthn::InvalidRelyingPartyIdError,
         I18n.t("webauthn.validation.invalid_relying_party_id_error"),
       )
     end
@@ -184,7 +184,7 @@ RSpec.describe Webauthn::SecurityKeyAuthenticationService do
 
     it "raises a PublicKeyError" do
       expect { service.authenticate_security_key }.to raise_error(
-        Webauthn::PublicKeyError,
+        DiscourseWebauthn::PublicKeyError,
         I18n.t("webauthn.validation.public_key_error"),
       )
     end
@@ -195,7 +195,7 @@ RSpec.describe Webauthn::SecurityKeyAuthenticationService do
 
     it "raises a UnknownCOSEAlgorithmError" do
       expect { service.authenticate_security_key }.to raise_error(
-        Webauthn::UnknownCOSEAlgorithmError,
+        DiscourseWebauthn::UnknownCOSEAlgorithmError,
         I18n.t("webauthn.validation.unknown_cose_algorithm_error"),
       )
     end
@@ -237,6 +237,8 @@ RSpec.describe Webauthn::SecurityKeyAuthenticationService do
   end
 
   it "all supported algorithms are implemented" do
-    Webauthn::SUPPORTED_ALGORITHMS.each { |alg| expect(COSE::Algorithm.find(alg)).not_to be_nil }
+    DiscourseWebauthn::SUPPORTED_ALGORITHMS.each do |alg|
+      expect(COSE::Algorithm.find(alg)).not_to be_nil
+    end
   end
 end

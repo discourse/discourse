@@ -10,6 +10,10 @@ zh_CN:
       site_settings:
         categories:
           chat: 聊天
+        chat_separate_sidebar_mode:
+          always: "始终"
+          fullscreen: "当全屏聊天时"
+          never: "永不"
       logs:
         staff_actions:
           actions:
@@ -104,6 +108,8 @@ zh_CN:
         all_new: "所有新消息"
         dm_and_mentions: "直接消息和提及"
         never: "永不"
+      separate_sidebar_mode:
+        title: "为论坛和聊天显示单独的边栏模式"
       enable: "启用聊天"
       flag: "举报"
       emoji: "插入表情符号"
@@ -614,3 +620,7 @@ zh_CN:
       sections:
         chat:
           title: 聊天
+    sidebar:
+      panels:
+        chat:
+          label: "聊天"

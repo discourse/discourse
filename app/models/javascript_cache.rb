@@ -46,8 +46,8 @@ end
 # Indexes
 #
 #  index_javascript_caches_on_digest          (digest)
-#  index_javascript_caches_on_theme_field_id  (theme_field_id)
-#  index_javascript_caches_on_theme_id        (theme_id)
+#  index_javascript_caches_on_theme_field_id  (theme_field_id) UNIQUE
+#  index_javascript_caches_on_theme_id        (theme_id) UNIQUE
 #
 # Foreign Keys
 #

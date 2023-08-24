@@ -6,6 +6,11 @@
 
 lt:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Visada"
+          never: "Niekada"
     chat:
       create: "Sukurti"
       cancel: "Atšaukti"

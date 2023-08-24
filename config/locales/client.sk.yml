@@ -2090,6 +2090,9 @@ sk:
           many: "Nových (%{count})"
           other: "Nových (%{count})"
         help: "témy vytvorené za posledných pár dní"
+        all: "Všetky"
+        topics: "Témy"
+        replies: "Odpovede"
       posted:
         title: "Moje príspevky"
         help: "témy s vašimi príspevkami"

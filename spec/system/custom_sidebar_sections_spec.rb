@@ -95,6 +95,24 @@ describe "Custom sidebar sections", type: :system do
     )
   end
 
+  it "allows the user to create custom section with anchor" do
+    sign_in user
+    visit("/latest")
+    sidebar.click_add_section_button
+
+    expect(section_modal).to be_visible
+    expect(section_modal).to have_disabled_save
+    expect(sidebar.custom_section_modal_title).to have_content("Add custom section")
+
+    section_modal.fill_name("My section")
+    section_modal.fill_link("Faq", "/faq#anchor")
+    section_modal.save
+
+    expect(sidebar).to have_section("My section")
+    take_screenshot
+    expect(sidebar).to have_section_link("Faq", target: "_blank")
+  end
+
   it "allows the user to edit custom section" do
     sidebar_section = Fabricate(:sidebar_section, title: "My section", user: user)
     sidebar_url_1 = Fabricate(:sidebar_url, name: "Sidebar Tags", value: "/tags")

@@ -2804,6 +2804,9 @@ cs:
           many: "Nová (%{count})"
           other: "Nová (%{count})"
         help: "témata vytvořená za posledních několik dní"
+        all: "Celkem"
+        topics: "Témata"
+        replies: "Odpovědi"
       posted:
         title: "Mé příspěvky"
         help: "témata, do kterých jste přispěli"

@@ -21,7 +21,7 @@ import { Promise } from "rsvp";
 import User from "discourse/models/user";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import {
-  destroyTippyInstances,
+  destroyUserStatuses,
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
@@ -98,6 +98,7 @@ export default class ChatComposer extends Component {
     this.cancelPersistDraft();
     this.composer.textarea.value = this.currentMessage.message;
     this.persistDraft();
+    this.captureMentions({ skipDebounce: true });
   }
 
   @action
@@ -126,8 +127,12 @@ export default class ChatComposer extends Component {
     const minLength = this.siteSettings.chat_minimum_message_length || 1;
     return (
       this.currentMessage?.message?.length >= minLength ||
-      (this.canAttachUploads && this.currentMessage?.uploads?.length > 0)
+      (this.canAttachUploads && this.hasUploads)
     );
+  }
+
+  get hasUploads() {
+    return this.currentMessage?.uploads?.length > 0;
   }
 
   get sendEnabled() {
@@ -229,14 +234,10 @@ export default class ChatComposer extends Component {
 
     if (
       this.currentMessage.editing &&
+      !this.hasUploads &&
       this.currentMessage.message.length === 0
     ) {
-      new ChatMessageInteractor(
-        getOwner(this),
-        this.currentMessage,
-        this.context
-      ).delete();
-      this.reset(this.args.channel, this.args.thread);
+      this.#deleteEmptyMessage();
       return;
     }
 
@@ -372,11 +373,14 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  captureMentions() {
+  captureMentions(opts = { skipDebounce: false }) {
     if (this.hasContent) {
       this.chatComposerWarningsTracker.trackMentions(
-        this.currentMessage.message
+        this.currentMessage,
+        opts.skipDebounce
       );
+    } else {
+      this.chatComposerWarningsTracker.reset();
     }
   }
 
@@ -411,7 +415,7 @@ export default class ChatComposer extends Component {
         return obj.username || obj.name;
       },
       dataSource: (term) => {
-        destroyTippyInstances();
+        destroyUserStatuses();
         return userSearch({ term, includeGroups: true }).then((result) => {
           if (result?.users?.length > 0) {
             const presentUserNames =
@@ -435,7 +439,7 @@ export default class ChatComposer extends Component {
         this.composer.focus();
         this.captureMentions();
       },
-      onClose: destroyTippyInstances,
+      onClose: destroyUserStatuses,
     });
   }
 
@@ -584,5 +588,14 @@ export default class ChatComposer extends Component {
 
   #isAutocompleteDisplayed() {
     return document.querySelector(".autocomplete");
+  }
+
+  #deleteEmptyMessage() {
+    new ChatMessageInteractor(
+      getOwner(this),
+      this.currentMessage,
+      this.context
+    ).delete();
+    this.reset(this.args.channel, this.args.thread);
   }
 }

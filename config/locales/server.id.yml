@@ -207,7 +207,7 @@ id:
       local_login_cannot_be_disabled_if_second_factor_enforced: "Anda tidak dapat menonaktifkan login lokal jika 2FA diterapkan. Nonaktifkan 2FA yang diberlakukan sebelum menonaktifkan login lokal."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Anda tidak dapat mengaktifkan unggahan S3 karena unggahan S3 sudah diaktifkan secara global, dan mengaktifkan site-level ini dapat menyebabkan masalah kritis pada unggahan"
       cors_origins_should_not_have_trailing_slash: "Anda tidak boleh menambahkan garis miring (/) ke CORS origins."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Agen pengguna harus memiliki panjang minimal 3 karakter untuk menghindari kesalahan pembatasan pengguna manusia."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Agen pengguna harus memiliki panjang minimal 3 karakter untuk menghindari pengguna sah yang secara tidak sengaja dibatasi lajunya."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Anda tidak dapat menambahkan salah satu nilai berikut ke setelan: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Anda tidak dapat menonaktifkan metadata gambar strip jika 'composer media optimization image enabled' diaktifkan. Nonaktifkan 'composer media optimization image enabled' sebelum menonaktifkan metadata gambar strip."
       twitter_summary_large_image_no_svg: "Gambar ringkasan Twitter yang digunakan untuk twitter:image metadata tidak boleh berupa gambar .svg."
@@ -622,6 +622,7 @@ id:
     media_placeholder:
       blocked_hotlinked_title: "Media dihosting di situs lain. Klik untuk membuka di tab baru."
       blocked_hotlinked: "Media Eksternal"
+    hidden_bidi_character: "Karakter kontrol dua arah dapat mengubah urutan perenderan teks. Ini dapat digunakan untuk mengaburkan kode berbahaya."
     has_likes:
       other: "%{count} Suka"
   rate_limiter:
@@ -797,6 +798,8 @@ id:
   draft_backup:
     pm_title: "Draf Cadangan dari topik yang sedang berlangsung"
     pm_body: "Topik berisi draf cadangan"
+  user_activity:
+    no_log_search_queries: "Log permintaan pencarian saat ini dinonaktifkan (administrator dapat mengaktifkannya di pengaturan situs)."
   email_settings:
     smtp_server_busy_error: "Server SMTP sedang sibuk, coba lagi nanti."
     smtp_unhandled_error: "Terjadi kesalahan yang tidak tertangani saat berkomunikasi dengan server SMTP. %{message}"

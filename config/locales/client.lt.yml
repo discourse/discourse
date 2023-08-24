@@ -3197,6 +3197,9 @@ lt:
           many: "Naujos (%{count})"
           other: "Naujos (%{count})"
         help: "Per paskutines dienas sukurtos temos"
+        all: "Visos"
+        topics: "Temos"
+        replies: "Atsakymai"
       posted:
         title: "Mano Įrašai"
         help: "temos, kuriose yra tavo įrašas"

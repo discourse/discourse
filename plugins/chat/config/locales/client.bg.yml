@@ -10,6 +10,9 @@ bg:
       site_settings:
         categories:
           chat: Чат
+        chat_separate_sidebar_mode:
+          always: "Винаги"
+          never: "Никога"
       logs:
         staff_actions:
           actions:
@@ -179,3 +182,7 @@ bg:
       sections:
         chat:
           title: Чат
+    sidebar:
+      panels:
+        chat:
+          label: "Чат"

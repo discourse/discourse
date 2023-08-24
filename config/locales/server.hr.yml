@@ -482,7 +482,6 @@ hr:
     media_placeholder:
       blocked_hotlinked_title: "Mediji smješteni na drugom mjestu. Kliknite za otvaranje u novoj kartici."
       blocked_hotlinked: "Vanjski mediji"
-    hidden_bidi_character: "Dvosmjerni znakovi mogu promijeniti redoslijed prikaza teksta. To se može koristiti za prikrivanje zlonamjernog koda."
     has_likes:
       one: "%{count} Like"
       few: "%{count} Likeova"

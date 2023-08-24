@@ -3674,6 +3674,12 @@ tr_TR:
           one: "Yeni (%{count})"
           other: "Yeni (%{count})"
         help: "son birkaç günde oluşturulmuş konular"
+        all: "Hepsi"
+        all_with_count: "Hepsi (%{count})"
+        topics: "Konular"
+        topics_with_count: "Konular (%{count})"
+        replies: "Yanıtlar"
+        replies_with_count: "Cevaplar (%{count})"
       posted:
         title: "Gönderilerim"
         help: "gönderi yaptığınız konular"

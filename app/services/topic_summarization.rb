@@ -5,7 +5,7 @@ class TopicSummarization
     @strategy = strategy
   end
 
-  def summarize(topic, user, opts = {})
+  def summarize(topic, user, opts = {}, &on_partial_blk)
     existing_summary = SummarySection.find_by(target: topic, meta_section_id: nil)
 
     # Existing summary shouldn't be nil in this scenario because the controller checks its existence.
@@ -37,7 +37,7 @@ class TopicSummarization
       content[:contents] << { poster: username, id: pn, text: raw }
     end
 
-    summarization_result = strategy.summarize(content)
+    summarization_result = strategy.summarize(content, &on_partial_blk)
 
     cache_summary(summarization_result, targets_data.map(&:first), topic)
   end

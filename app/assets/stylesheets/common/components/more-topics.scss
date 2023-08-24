@@ -1,0 +1,102 @@
+.more-topics__container {
+  position: relative;
+  padding-bottom: max(env(safe-area-inset-bottom), 1em);
+  max-width: calc(var(--d-max-width) * 0.87);
+
+  .nav {
+    margin-block: 0;
+    li {
+      .btn {
+        color: var(--primary);
+        background-color: transparent;
+        border-bottom: 2px solid transparent;
+        padding: 0.5em 5px;
+        &:hover {
+          border-bottom: 2px solid rgba(var(--tertiary-rgb), 0.5);
+        }
+        &.active {
+          border-bottom: 2px solid var(--tertiary);
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: 550px) {
+    .nav {
+      position: absolute;
+      top: 0;
+      li {
+        margin-right: 0;
+        .btn {
+          font-size: var(--font-0);
+          line-height: var(--line-height-large);
+          padding: 1em 0.65em;
+        }
+      }
+    }
+    .more-topics__lists:not(.single-list) {
+      .topic-list-header .default {
+        visibility: hidden;
+      }
+    }
+  }
+
+  .more-topics__lists {
+    &:not(.single-list) {
+      .more-topics__list-title {
+        display: none;
+      }
+    }
+  }
+
+  .topic-list .topic-list-data:first-of-type {
+    padding-left: 5px;
+  }
+
+  .more-topics__list {
+    .topic-list-body {
+      border-top: none;
+
+      .topic-list-item:last-of-type {
+        border-bottom: none;
+      }
+    }
+  }
+
+  // Target the .badge-category text, the bullet icon needs to maintain `display: block`
+  .suggested-topics-message .badge-wrapper.bullet span.badge-category,
+  .suggested-topics-message .badge-wrapper.box span,
+  .suggested-topics-message .badge-wrapper.bar span {
+    display: inline;
+  }
+
+  .suggested-topics-message .badge-wrapper.bullet span.badge-category {
+    // Override vertical-align: text-top from `badges.css.scss`
+    vertical-align: baseline;
+    line-height: var(--line-height-medium);
+  }
+
+  .suggested-topics-message .badge-wrapper.bullet {
+    margin-right: 0;
+  }
+
+  .suggested-topics-message .badge-wrapper.bullet,
+  .suggested-topics-message .badge-wrapper.bullet span.badge-category-parent-bg,
+  .suggested-topics-message .badge-wrapper.bullet span.badge-category-bg {
+    // Top of bullet aligns with top of line - adjust line height to vertically align bullet.
+    line-height: 0.8;
+  }
+
+  .suggested-topics-message .badge-wrapper.bullet span.badge-category,
+  .suggested-topics-message .badge-wrapper.bar span.badge-category {
+    max-width: 150px;
+  }
+}
+
+#main-outlet .regular {
+  @media screen and (min-width: 550px) {
+    .more-topics__container .nav li .btn {
+      padding: 0.75em 0.65em;
+    }
+  }
+}

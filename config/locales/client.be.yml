@@ -1245,6 +1245,9 @@ be:
       new:
         lower_title: "новая"
         title: "Новая"
+        all: "Усё"
+        topics: "тэмы"
+        replies: "Адказы"
       posted:
         title: "мае паведамленні"
         help: "тэмы, у якія Вы дапісвалі"

@@ -814,11 +814,11 @@ class UsersController < ApplicationController
       format.html do
         return render "password_reset", layout: "no_ember" if @error
 
-        Webauthn.stage_challenge(@user, secure_session)
+        DiscourseWebauthn.stage_challenge(@user, secure_session)
         store_preloaded(
           "password_reset",
           MultiJson.dump(
-            security_params.merge(Webauthn.allowed_credentials(@user, secure_session)),
+            security_params.merge(DiscourseWebauthn.allowed_credentials(@user, secure_session)),
           ),
         )
 
@@ -828,8 +828,9 @@ class UsersController < ApplicationController
       format.json do
         return render json: { message: @error } if @error
 
-        Webauthn.stage_challenge(@user, secure_session)
-        render json: security_params.merge(Webauthn.allowed_credentials(@user, secure_session))
+        DiscourseWebauthn.stage_challenge(@user, secure_session)
+        render json:
+                 security_params.merge(DiscourseWebauthn.allowed_credentials(@user, secure_session))
       end
     end
   end
@@ -896,7 +897,7 @@ class UsersController < ApplicationController
       format.html do
         return render "password_reset", layout: "no_ember" if @error
 
-        Webauthn.stage_challenge(@user, secure_session)
+        DiscourseWebauthn.stage_challenge(@user, secure_session)
 
         security_params = {
           is_developer: UsernameCheckerService.is_developer?(@user.email),
@@ -905,7 +906,7 @@ class UsersController < ApplicationController
           security_key_required: @user.security_keys_enabled?,
           backup_enabled: @user.backup_codes_enabled?,
           multiple_second_factor_methods: @user.has_multiple_second_factor_methods?,
-        }.merge(Webauthn.allowed_credentials(@user, secure_session))
+        }.merge(DiscourseWebauthn.allowed_credentials(@user, secure_session))
 
         store_preloaded("password_reset", MultiJson.dump(security_params))
 
@@ -1546,13 +1547,13 @@ class UsersController < ApplicationController
   end
 
   def create_second_factor_security_key
-    challenge_session = Webauthn.stage_challenge(current_user, secure_session)
+    challenge_session = DiscourseWebauthn.stage_challenge(current_user, secure_session)
     render json:
              success_json.merge(
                challenge: challenge_session.challenge,
                rp_id: challenge_session.rp_id,
                rp_name: challenge_session.rp_name,
-               supported_algorithms: ::Webauthn::SUPPORTED_ALGORITHMS,
+               supported_algorithms: ::DiscourseWebauthn::SUPPORTED_ALGORITHMS,
                user_secure_id: current_user.create_or_fetch_secure_identifier,
                existing_active_credential_ids:
                  current_user.second_factor_security_key_credential_ids,
@@ -1564,15 +1565,15 @@ class UsersController < ApplicationController
     params.require(:attestation)
     params.require(:clientData)
 
-    ::Webauthn::SecurityKeyRegistrationService.new(
+    ::DiscourseWebauthn::SecurityKeyRegistrationService.new(
       current_user,
       params,
-      challenge: Webauthn.challenge(current_user, secure_session),
-      rp_id: Webauthn.rp_id(current_user, secure_session),
+      challenge: DiscourseWebauthn.challenge(current_user, secure_session),
+      rp_id: DiscourseWebauthn.rp_id(current_user, secure_session),
       origin: Discourse.base_url,
     ).register_second_factor_security_key
     render json: success_json
-  rescue ::Webauthn::SecurityKeyError => err
+  rescue ::DiscourseWebauthn::SecurityKeyError => err
     render json: failed_json.merge(error: err.message)
   end
 

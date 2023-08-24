@@ -175,7 +175,6 @@ lt:
       local_login_cannot_be_disabled_if_second_factor_enforced: "Negalite išjungti vietinio prisijungimo, jei taikomas 2FA. Prieš išjungdami vietinius prisijungimus, išjunkite priverstinį 2FA."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Negalite įgalinti S3 įkėlimų, nes S3 įkėlimai jau įgalinti visame pasaulyje, o įjungus šį svetainės lygį gali kilti kritinių įkėlimų problemų"
       cors_origins_should_not_have_trailing_slash: "Neturėtumėte pridėti galinio brūkšnio (/) prie CORS šaltinių."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Vartotojų agentai turi būti ne trumpesni kaip 3 simboliai, kad būtų išvengta klaidingo greičio ribojimo žmonių vartotojams."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Prie nustatymo negalite pridėti nė vienos iš šių reikšmių: %{values}."
     onebox:
       invalid_address: "Deja, nepavyko sukurti šio tinklalapio peržiūros, nes nepavyko rasti serverio %{hostname}Vietoj peržiūros jūsų įraše bus rodoma tik nuoroda. :cry:"
@@ -521,7 +520,6 @@ lt:
   post:
     image_placeholder:
       broken: "Šis paveikslėlis yra sugadintas"
-    hidden_bidi_character: "Dvikrypčiai simboliai gali pakeisti teksto pateikimo tvarką. Tai gali būti naudojama kenkėjiškam kodui paslėpti."
     has_likes:
       one: "%{count} patinka"
       few: "%{count} Patinka"
@@ -790,8 +788,6 @@ lt:
   draft_backup:
     pm_title: "Atsarginės temų juodraščių kopijos"
     pm_body: "Tema, kurioje yra atsarginių juodraščių"
-  user_activity:
-    no_log_search_queries: "Paieškos žurnalo užklausos šiuo metu išjungtos (administratorius gali jas įjungti svetainės nustatymuose)."
   email_settings:
     pop3_authentication_error: "Iškilo problema dėl pateiktų POP3 prisijungimo duomenų, patikrinkite naudotojo vardą ir slaptažodį ir bandykite dar kartą."
     imap_no_response_error: "Ryšio su IMAP serveriu metu įvyko klaida. %{message}"

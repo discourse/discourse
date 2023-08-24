@@ -132,7 +132,7 @@ export default class ScreenTrack extends Service {
         }
       });
       found.topicTime += topicTime;
-      found.timings = Object.assign({}, timings, found.timings);
+      found.timings = { ...timings, ...found.timings };
     } else {
       this._consolidatedTimings.push({ timings, topicTime, topicId });
     }

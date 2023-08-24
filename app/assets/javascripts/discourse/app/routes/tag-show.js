@@ -24,6 +24,8 @@ const ALL = "all";
 
 export default DiscourseRoute.extend({
   composer: service(),
+  router: service(),
+  currentUser: service(),
   navMode: "latest",
 
   queryParams,
@@ -98,7 +100,7 @@ export default DiscourseRoute.extend({
     ) {
       // TODO: avoid throwing away preload data by redirecting on the server
       PreloadStore.getAndRemove("topic_list");
-      return this.replaceWith(
+      return this.router.replaceWith(
         "tags.showCategoryNone",
         params.category_slug_path_with_id,
         tagId
@@ -246,10 +248,11 @@ export default DiscourseRoute.extend({
     const categoryId = controller.category?.id;
 
     if (categoryId) {
-      options = Object.assign({}, options, {
+      options = {
+        ...options,
         categoryId,
         includeSubcategories: !controller.noSubcategories,
-      });
+      };
     }
 
     controller.send("dismissRead", operationType, options);
@@ -258,12 +261,6 @@ export default DiscourseRoute.extend({
   @action
   resetParams(skipParams = []) {
     resetParams.call(this, skipParams);
-  },
-
-  @action
-  didTransition() {
-    this.controllerFor("tag.show")._showFooter();
-    return true;
   },
 
   _controllerTags(controller) {

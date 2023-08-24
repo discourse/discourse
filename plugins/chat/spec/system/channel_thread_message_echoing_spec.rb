@@ -7,7 +7,7 @@ describe "Channel thread message echoing", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:side_panel) { PageObjects::Pages::ChatSidePanel.new }
-  let(:open_thread) { PageObjects::Pages::ChatThread.new }
+  let(:thread_page) { PageObjects::Pages::ChatThread.new }
   let(:chat_drawer_page) { PageObjects::Pages::ChatDrawer.new }
 
   before do
@@ -50,8 +50,8 @@ describe "Channel thread message echoing", type: :system do
       chat_page.visit_channel(channel)
       channel_page.message_thread_indicator(thread.original_message).click
       expect(side_panel).to have_open_thread(thread)
-      open_thread.send_message("new thread message")
-      expect(open_thread).to have_message(thread_id: thread.id, text: "new thread message")
+      thread_page.send_message("new thread message")
+      expect(thread_page.messages).to have_message(thread_id: thread.id, text: "new thread message")
       new_message = thread.reload.replies.last
       expect(channel_page).not_to have_css(channel_page.message_by_id_selector(new_message.id))
     end

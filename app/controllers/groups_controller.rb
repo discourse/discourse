@@ -230,14 +230,15 @@ class GroupsController < ApplicationController
     render "posts/latest", formats: [:rss]
   end
 
-  MEMBERS_LIMIT = 1_000
+  MEMBERS_MAX_PAGE_SIZE = 1_000
+  MEMBERS_DEFAULT_PAGE_SIZE = 50
 
   def members
     group = find_group(:group_id)
 
     guardian.ensure_can_see_group_members!(group)
 
-    limit = fetch_limit_from_params(default: 50, max: MEMBERS_LIMIT)
+    limit = fetch_limit_from_params(default: MEMBERS_DEFAULT_PAGE_SIZE, max: MEMBERS_MAX_PAGE_SIZE)
     offset = params[:offset].to_i
 
     raise Discourse::InvalidParameters.new(:offset) if offset < 0

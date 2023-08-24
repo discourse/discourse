@@ -3733,6 +3733,9 @@ hr:
           few: "Novih (%{count})"
           other: "Novih (%{count})"
         help: "teme stvorene u zadnjih par dana"
+        all: "Sve"
+        topics: "Tema"
+        replies: "Odgovori"
       posted:
         title: "Moje objave"
         help: "teme u kojima si objavljivao"

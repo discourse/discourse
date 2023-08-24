@@ -72,6 +72,9 @@ nl:
       minimum_length_not_met:
         one: "Bericht is te kort, moet minimaal %{count} teken lang zijn."
         other: "Bericht is te kort, moet minimaal %{count} tekens lang zijn."
+      message_too_long:
+        one: "Bericht is te lang, berichten mogen maximaal %{count} teken lang zijn."
+        other: "Bericht is te lang, berichten mogen maximaal %{count} tekens lang zijn."
       draft_too_long: "Concept is te lang."
       max_reactions_limit_reached: "Nieuwe reacties op dit bericht zijn niet toegestaan."
       message_move_invalid_channel: "Het bron- en bestemmingskanaal moeten openbare kanalen zijn."
@@ -87,6 +90,7 @@ nl:
       over_chat_max_direct_message_users:
         one: "Je kunt geen direct bericht met meer dan %{count} andere gebruiker maken."
         other: "Je kunt geen direct bericht met meer dan %{count} andere gebruikers maken."
+      original_message_not_found: "Het bovenliggende bericht van het bericht waarop je antwoordt, kan niet worden gevonden of is verwijderd."
       thread_invalid_for_channel: "Thread maakt geen deel uit van het opgegeven kanaal."
       thread_does_not_match_parent: "Thread komt niet overeen met het bovenliggende bericht."
     reviewables:

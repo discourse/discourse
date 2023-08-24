@@ -35,6 +35,11 @@ module SystemHelpers
     SiteSetting.disable_avatar_education_message = true
     SiteSetting.enable_user_tips = false
     SiteSetting.splash_screen = false
+    SiteSetting.allowed_internal_hosts =
+      (
+        SiteSetting.allowed_internal_hosts.to_s.split("|") +
+          MinioRunner.config.minio_urls.map { |url| URI.parse(url).host }
+      ).join("|")
   end
 
   def try_until_success(timeout: Capybara.default_max_wait_time, frequency: 0.01)
@@ -137,5 +142,26 @@ module SystemHelpers
     JS
 
     page.execute_script(js, selector, start, offset)
+  end
+
+  def setup_s3_system_test
+    SiteSetting.enable_s3_uploads = true
+
+    SiteSetting.s3_upload_bucket = "discoursetest"
+    SiteSetting.enable_upload_debug_mode = true
+
+    SiteSetting.s3_access_key_id = MinioRunner.config.minio_root_user
+    SiteSetting.s3_secret_access_key = MinioRunner.config.minio_root_password
+    SiteSetting.s3_endpoint = MinioRunner.config.minio_server_url
+
+    MinioRunner.start
+  end
+
+  def skip_unless_s3_system_specs_enabled!
+    if !ENV["CI"] && !ENV["RUN_S3_SYSTEM_SPECS"]
+      skip(
+        "S3 system specs are disabled in this environment, set CI=1 or RUN_S3_SYSTEM_SPECS=1 to enable them.",
+      )
+    end
   end
 end

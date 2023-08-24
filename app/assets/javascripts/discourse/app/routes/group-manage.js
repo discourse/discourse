@@ -4,7 +4,6 @@ import { inject as service } from "@ember/service";
 
 export default DiscourseRoute.extend({
   router: service(),
-  showFooter: true,
 
   titleToken() {
     return I18n.t("groups.manage.title");

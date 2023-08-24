@@ -1,3 +1,9 @@
+{{#let this.model.postStream as |postStream|}}
+  {{#unless (and postStream.loaded postStream.loadedAllPosts)}}
+    {{hide-application-footer}}
+  {{/unless}}
+{{/let}}
+
 <DiscourseTopic
   @multiSelect={{this.multiSelect}}
   @enteredAt={{this.enteredAt}}
@@ -293,13 +299,13 @@
             />
           </TopicProgress>
         {{/if}}
-      </TopicNavigation>
 
-      <PluginOutlet
-        @name="after-topic-navigation"
-        @connectorTagName="div"
-        @outletArgs={{hash model=this.model}}
-      />
+        <PluginOutlet
+          @name="topic-navigation-bottom"
+          @connectorTagName="div"
+          @outletArgs={{hash model=this.model}}
+        />
+      </TopicNavigation>
 
       <div class="row">
         <section class="topic-area" id="topic" data-topic-id={{this.model.id}}>
@@ -541,6 +547,8 @@
           </div>
         {{/if}}
       {{/if}}
+
+      <br />
 
       <span>
         <PluginOutlet

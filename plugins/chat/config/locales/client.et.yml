@@ -6,6 +6,11 @@
 
 et:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Alati"
+          never: "Mitte kunagi"
     chat:
       create: "Loo"
       cancel: "Tühista"

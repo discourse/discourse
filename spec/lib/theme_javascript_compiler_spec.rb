@@ -119,7 +119,9 @@ RSpec.describe ThemeJavascriptCompiler do
           "discourse/templates/components/mycomponent.hbs" => "{{my-component-template}}",
         },
       )
-      expect(compiler.raw_content).to include('define("discourse/theme-1/components/mycomponent"')
+      expect(compiler.raw_content).to include(
+        'define("discourse/theme-1/discourse/components/mycomponent"',
+      )
       expect(compiler.raw_content).to include(
         'define("discourse/theme-1/discourse/templates/components/mycomponent"',
       )

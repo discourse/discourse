@@ -11,6 +11,11 @@
         {{#if this.hasTooManyMentions}}
           <li>{{this.tooManyMentionsBody}}</li>
         {{else}}
+          {{#if this.channelWideMentionDisallowed}}
+            <li>{{i18n
+                "chat.mention_warning.channel_wide_mentions_disallowed"
+              }}</li>
+          {{/if}}
           {{#if this.hasUnreachableGroupMentions}}
             <li>{{this.unreachableBody}}</li>
           {{/if}}

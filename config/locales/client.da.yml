@@ -3218,6 +3218,9 @@ da:
           one: "Nye (%{count})"
           other: "Nye (%{count})"
         help: "emner oprettet i de seneste par dage"
+        all: "Alle"
+        topics: "Emner"
+        replies: "Svar"
       posted:
         title: "Mine indlæg"
         help: "emner du har skrevet indlæg i"
