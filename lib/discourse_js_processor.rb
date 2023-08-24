@@ -6,9 +6,6 @@ class DiscourseJsProcessor
   class TranspileError < StandardError
   end
 
-  JS_PROCESSOR_PATH =
-    Rails.env.production? ? "tmp/js-processor.js" : "tmp/js-processor/#{Process.pid}.js"
-
   # To generate a list of babel plugins used by ember-cli, set
   # babel: { debug: true } in ember-cli-build.js, then run `yarn ember build -prod`
   DISCOURSE_COMMON_BABEL_PLUGINS = [
@@ -109,18 +106,27 @@ class DiscourseJsProcessor
       @mutex
     end
 
+    def self.js_processor_path
+      suffix = File.mtime("#{Rails.root}/app/assets/javascripts/js-processor.js").to_i
+      name = Rails.env.production? ? "tmp/js-processor" : "tmp/js-processor/#{Process.pid}"
+      "#{name}-#{suffix}.js"
+    end
+
     def self.generate_js_processor
-      Discourse::Utils.execute_command(
-        "yarn",
-        "--silent",
-        "esbuild",
-        "--log-level=warning",
-        "--bundle",
-        "--external:fs",
-        "--define:process='{\"env\":{}}'",
-        "app/assets/javascripts/js-processor.js",
-        "--outfile=#{JS_PROCESSOR_PATH}",
-      )
+      path = js_processor_path
+      if !File.exist?(path)
+        Discourse::Utils.execute_command(
+          "yarn",
+          "--silent",
+          "esbuild",
+          "--log-level=warning",
+          "--bundle",
+          "--external:fs",
+          "--define:process='{\"env\":{}}'",
+          "app/assets/javascripts/js-processor.js",
+          "--outfile=#{path}",
+        )
+      end
     end
 
     def self.create_new_context
@@ -137,7 +143,7 @@ class DiscourseJsProcessor
         @processor_mutex.synchronize { generate_js_processor }
       end
 
-      ctx.eval(File.read(JS_PROCESSOR_PATH), filename: "js-processor.js")
+      ctx.eval(File.read(js_processor_path), filename: "js-processor.js")
 
       ctx
     end
