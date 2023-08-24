@@ -46,8 +46,6 @@ const KNOWN_LEGACY_MODALS = [
   "topic-summary",
   "user-status",
   "admin-reseed",
-  "admin-color-scheme-select-base",
-  "admin-form-template-validation-options",
   "admin-staff-action-log-details",
   "admin-uploaded-image-list",
 ];
