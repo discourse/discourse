@@ -6,6 +6,7 @@
 
 zh_CN:
   site_settings:
+    chat_separate_sidebar_mode: "为论坛和聊天显示单独的边栏模式。"
     chat_enabled: "启用聊天插件。"
     enable_public_channels: "基于类别启用公开频道。"
     chat_allowed_groups: "这些群组中的用户可以聊天。请注意，管理人员始终可以访问聊天。"

@@ -6,6 +6,7 @@
 
 tr_TR:
   site_settings:
+    chat_separate_sidebar_mode: "Forum ve sohbet için ayrı kenar çubuğu modları göster"
     chat_enabled: "Sohbet eklentisini etkinleştirin."
     enable_public_channels: "Kategorilere göre herkese açık kanalları etkinleştirin."
     chat_allowed_groups: "Bu gruplardaki kullanıcılar sohbet edebilir. Personelin sohbete her zaman erişebileceğini dikkate alın."

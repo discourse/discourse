@@ -46,6 +46,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     cooked: `<p>Hey <a class="mention" href="/u/${mentionedUser1.username}">@${mentionedUser1.username}</a></p>`,
     mentioned_users: [mentionedUser1],
     user: actingUser,
+    created_at: "2020-08-04T15:00:00.000Z",
   };
   const newStatus = {
     description: "working remotely",
@@ -55,7 +56,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     id: channelId,
     chatable_id: 1,
     chatable_type: "Category",
-    meta: { message_bus_last_ids: {} },
+    meta: { message_bus_last_ids: {}, can_delete_self: true },
     current_user_membership: { following: true },
     chatable: { id: 1 },
   };
@@ -78,19 +79,19 @@ acceptance("Chat | User status on mentions", function (needs) {
     pretender.put(`/chat/1/edit/${messageId}`, () => response({}));
     pretender.post(`/chat/drafts`, () => response({}));
     pretender.put(`/chat/api/channels/1/read/1`, () => response({}));
+    pretender.get(`/chat/api/channels/1/messages`, () =>
+      response({
+        messages: [message],
+        meta: {
+          can_load_more_future: false,
+        },
+      })
+    );
     pretender.delete(`/chat/api/channels/1/messages/${messageId}`, () =>
       response({})
     );
     pretender.put(`/chat/api/channels/1/messages/${messageId}/restore`, () =>
       response({})
-    );
-
-    pretender.get(`/chat/api/channels/1`, () =>
-      response({
-        channel,
-        chat_messages: [message],
-        meta: { can_delete_self: true },
-      })
     );
 
     pretender.get("/u/search/users", () =>

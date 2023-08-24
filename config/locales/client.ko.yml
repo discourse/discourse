@@ -3169,6 +3169,9 @@ ko:
         title_with_count:
           other: "신규(%{count})"
         help: "지난 며칠 동안 작성된 주제"
+        all: "전체"
+        topics: "글"
+        replies: "댓글"
       posted:
         title: "내 글"
         help: "내가 게시한 주제"

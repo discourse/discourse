@@ -3324,6 +3324,9 @@ hu:
           one: "Új (%{count})"
           other: "Új (%{count})"
         help: "az elmúlt napokban létrehozott témakörök"
+        all: "Összes"
+        topics: "Témák"
+        replies: "Válaszok"
       posted:
         title: "Saját bejegyzéseim"
         help: "témakörök, amikhez már hozzászóltál"

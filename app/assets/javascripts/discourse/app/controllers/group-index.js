@@ -23,7 +23,7 @@ export default Controller.extend({
   bulkSelection: null,
 
   get canLoadMore() {
-    return this.get("model.members")?.length >= this.get("model.user_count");
+    return this.get("model.members")?.length < this.get("model.user_count");
   },
 
   @observes("filterInput")

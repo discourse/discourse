@@ -10,6 +10,9 @@ fr:
       site_settings:
         categories:
           chat: Discussion
+        chat_separate_sidebar_mode:
+          always: "Toujours"
+          never: "Jamais"
       logs:
         staff_actions:
           actions:
@@ -649,3 +652,7 @@ fr:
       sections:
         chat:
           title: Discussion
+    sidebar:
+      panels:
+        chat:
+          label: "Discussion"

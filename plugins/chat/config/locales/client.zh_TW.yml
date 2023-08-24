@@ -10,6 +10,9 @@ zh_TW:
       site_settings:
         categories:
           chat: 聊天
+        chat_separate_sidebar_mode:
+          always: "總是"
+          never: "永不"
       logs:
         staff_actions:
           actions:
@@ -260,3 +263,7 @@ zh_TW:
       sections:
         chat:
           title: 聊天
+    sidebar:
+      panels:
+        chat:
+          label: "聊天"

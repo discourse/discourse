@@ -10,6 +10,9 @@ sv:
       site_settings:
         categories:
           chat: Chatt
+        chat_separate_sidebar_mode:
+          always: "Alltid"
+          never: "Aldrig"
       logs:
         staff_actions:
           actions:
@@ -649,3 +652,7 @@ sv:
       sections:
         chat:
           title: Chatt
+    sidebar:
+      panels:
+        chat:
+          label: "Chatt"

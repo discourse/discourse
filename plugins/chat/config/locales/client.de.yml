@@ -10,6 +10,10 @@ de:
       site_settings:
         categories:
           chat: Chat
+        chat_separate_sidebar_mode:
+          always: "Immer"
+          fullscreen: "Wenn der Chat im Vollbildmodus ist"
+          never: "niemals"
       logs:
         staff_actions:
           actions:
@@ -106,6 +110,8 @@ de:
         all_new: "bei allen neuen Nachrichten"
         dm_and_mentions: "bei Direktnachrichten und Erwähnungen"
         never: "niemals"
+      separate_sidebar_mode:
+        title: "Separate Seitenleisten-Modi für Forum und Chat anzeigen"
       enable: "Chat aktivieren"
       flag: "Melden"
       emoji: "Emoji einfügen"
@@ -649,3 +655,7 @@ de:
       sections:
         chat:
           title: Chat
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

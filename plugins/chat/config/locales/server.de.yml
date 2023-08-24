@@ -6,6 +6,7 @@
 
 de:
   site_settings:
+    chat_separate_sidebar_mode: "Zeige separate Seitenleisten-Modi für Forum und Chat."
     chat_enabled: "Chat-Plug-in aktivieren."
     enable_public_channels: "Öffentliche Kanäle basierend auf Kategorien aktivieren."
     chat_allowed_groups: "Benutzer in diesen Gruppen können chatten. Bitte beachte, dass Teammitglieder jederzeit auf den Chat zugreifen können."

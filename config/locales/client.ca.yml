@@ -2629,6 +2629,9 @@ ca:
           one: "Nou (%{count})"
           other: "Nous (%{count})"
         help: "temes creats durant els darrers dies"
+        all: "Tot"
+        topics: "Temes"
+        replies: "Respostes"
       posted:
         title: "Les meves publicacions"
         help: "temes en què heu publicat"

@@ -38,7 +38,7 @@ import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import userSearch from "discourse/lib/user-search";
 import {
-  destroyTippyInstances,
+  destroyUserStatuses,
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
@@ -216,7 +216,7 @@ export default Component.extend(ComposerUploadUppy, {
       $input.autocomplete({
         template: findRawTemplate("user-selector-autocomplete"),
         dataSource: (term) => {
-          destroyTippyInstances();
+          destroyUserStatuses();
           return userSearch({
             term,
             topicId: this.topic?.id,
@@ -235,7 +235,7 @@ export default Component.extend(ComposerUploadUppy, {
         afterComplete: this._afterMentionComplete,
         triggerRule: (textarea) =>
           !inCodeBlock(textarea.value, caretPosition(textarea)),
-        onClose: destroyTippyInstances,
+        onClose: destroyUserStatuses,
       });
     }
 

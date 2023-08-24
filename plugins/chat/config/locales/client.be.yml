@@ -6,6 +6,11 @@
 
 be:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "заўсёды"
+          never: "ніколі"
     chat:
       create: "стварыць"
       cancel: "адмяніць"
