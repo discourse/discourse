@@ -152,6 +152,11 @@ module PageObjects
         end
       end
 
+      def click_footer_reply
+        find("#topic-footer-buttons .btn-primary", text: "Reply").click
+        self
+      end
+
       private
 
       def topic_footer_button_id(button)
