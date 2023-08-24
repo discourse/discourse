@@ -26,12 +26,12 @@ describe "Thread list in side panel | full page", type: :system do
   end
 
   context "for threads the user is not a participant in" do
-    fab!(:thread_om) { Fabricate(:chat_message, chat_channel: channel) }
+    fab!(:thread_om) { Fabricate(:chat_message, chat_channel: channel, use_service: true) }
 
     before { chat_system_user_bootstrap(user: other_user, channel: channel) }
 
     it "does not show existing threads in the channel if the user is not tracking them" do
-      Fabricate(:chat_thread, original_message: thread_om, channel: channel)
+      Fabricate(:chat_thread, original_message: thread_om, channel: channel, use_service: true)
       chat_page.visit_channel(channel)
       channel_page.open_thread_list
       expect(page).to have_content(I18n.t("js.chat.threads.none"))
@@ -118,7 +118,7 @@ describe "Thread list in side panel | full page", type: :system do
 
     it "shows the last reply date of the thread" do
       freeze_time
-      last_reply = Fabricate(:chat_message, chat_channel: thread_1.channel, thread: thread_1)
+      last_reply = Fabricate(:chat_message, thread: thread_1, use_service: true)
       chat_page.visit_channel(channel)
       channel_page.open_thread_list
       expect(thread_list_page.item_by_id(thread_1.id)).to have_css(
