@@ -14,7 +14,8 @@ import { htmlSafe } from "@ember/template";
 export default class ForgotPassword extends Component {
   @service siteSettings;
 
-  @tracked emailOrUsername = cookie("email") || this.args.model.emailOrUsername;
+  @tracked emailOrUsername =
+    cookie("email") || this.args.model?.emailOrUsername;
   @tracked disabled = false;
   @tracked helpSeen = false;
   @tracked offerHelp;
