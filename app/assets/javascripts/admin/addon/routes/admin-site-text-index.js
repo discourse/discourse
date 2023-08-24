@@ -1,6 +1,5 @@
 import Route from "@ember/routing/route";
 import { action, getProperties } from "@ember/object";
-import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
 import ReseedModal from "admin/components/modal/reseed";
 
