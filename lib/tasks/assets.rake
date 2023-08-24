@@ -301,7 +301,8 @@ task "assets:precompile:compress_js" do
 end
 
 task "assets:precompile:js_processor": "environment" do
-  DiscourseJsProcessor::Transpiler.generate_js_processor
+  path = DiscourseJsProcessor::Transpiler.generate_js_processor
+  puts "Compiled js-processor: #{path}"
 end
 
 task "assets:precompile": %w[

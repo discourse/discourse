@@ -3,12 +3,6 @@ require "execjs"
 require "mini_racer"
 
 class DiscourseJsProcessor
-  class TranspileError < StandardError
-  end
-
-  JS_PROCESSOR_PATH =
-    Rails.env.production? ? "tmp/js-processor.js" : "tmp/js-processor/#{Process.pid}.js"
-
   # To generate a list of babel plugins used by ember-cli, set
   # babel: { debug: true } in ember-cli-build.js, then run `yarn ember build -prod`
   DISCOURSE_COMMON_BABEL_PLUGINS = [
@@ -101,6 +95,12 @@ class DiscourseJsProcessor
   end
 
   class Transpiler
+    class TranspileError < StandardError
+    end
+
+    JS_PROCESSOR_PATH =
+      Rails.env.production? ? "tmp/js-processor.js" : "tmp/js-processor/#{Process.pid}.js"
+
     @mutex = Mutex.new
     @ctx_init = Mutex.new
     @processor_mutex = Mutex.new
@@ -121,6 +121,7 @@ class DiscourseJsProcessor
         "app/assets/javascripts/js-processor.js",
         "--outfile=#{JS_PROCESSOR_PATH}",
       )
+      JS_PROCESSOR_PATH
     end
 
     def self.create_new_context
