@@ -9,34 +9,19 @@
       .btn {
         color: var(--primary);
         background-color: transparent;
-        border-bottom: 2px solid transparent;
         padding: 0.5em 5px;
         &:hover {
-          border-bottom: 2px solid rgba(var(--tertiary-rgb), 0.5);
+          box-shadow: inset 0px -3px 0px 0px rgba(var(--tertiary-rgb), 0.5);
+          .d-icon {
+            color: var(--primary-high);
+          }
         }
         &.active {
-          border-bottom: 2px solid var(--tertiary);
+          box-shadow: inset 0px -3px 0px 0px var(--tertiary);
+          .d-icon {
+            color: var(--primary-high);
+          }
         }
-      }
-    }
-  }
-
-  @media screen and (min-width: 550px) {
-    .nav {
-      position: absolute;
-      top: 0;
-      li {
-        margin-right: 0;
-        .btn {
-          font-size: var(--font-0);
-          line-height: var(--line-height-large);
-          padding: 1em 0.65em;
-        }
-      }
-    }
-    .more-topics__lists:not(.single-list) {
-      .topic-list-header .default {
-        visibility: hidden;
       }
     }
   }
@@ -90,13 +75,5 @@
   .suggested-topics-message .badge-wrapper.bullet span.badge-category,
   .suggested-topics-message .badge-wrapper.bar span.badge-category {
     max-width: 150px;
-  }
-}
-
-#main-outlet .regular {
-  @media screen and (min-width: 550px) {
-    .more-topics__container .nav li .btn {
-      padding: 0.75em 0.65em;
-    }
   }
 }
