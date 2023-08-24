@@ -12,15 +12,14 @@
         padding: 0.5em 5px;
         &:hover {
           box-shadow: inset 0px -3px 0px 0px rgba(var(--tertiary-rgb), 0.5);
-          .d-icon {
-            color: var(--primary-high);
-          }
         }
         &.active {
           box-shadow: inset 0px -3px 0px 0px var(--tertiary);
-          .d-icon {
-            color: var(--primary-high);
-          }
+        }
+        .d-icon,
+        &:hover .d-icon,
+        &:active .d-icon {
+          color: var(--primary-high);
         }
       }
     }
