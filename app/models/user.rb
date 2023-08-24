@@ -96,6 +96,7 @@ class User < ActiveRecord::Base
   has_many :directory_items
   has_many :email_logs
   has_many :security_keys, -> { where(enabled: true) }, class_name: "UserSecurityKey"
+  has_many :all_security_keys, class_name: "UserSecurityKey"
 
   has_many :badges, through: :user_badges
   has_many :default_featured_user_badges,

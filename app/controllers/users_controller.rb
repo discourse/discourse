@@ -1545,6 +1545,11 @@ class UsersController < ApplicationController
   end
 
   def create_second_factor_security_key
+    if current_user.all_security_keys.count >= UserSecurityKey::MAX_KEYS_PER_USER
+      render_json_error(I18n.t("login.too_many_security_keys"), status: 422)
+      return
+    end
+
     challenge_session = Webauthn.stage_challenge(current_user, secure_session)
     render json:
              success_json.merge(
