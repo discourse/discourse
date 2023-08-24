@@ -3,7 +3,10 @@ import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 
 export default class UploadedImageList extends Component {
-  @tracked images = this.args.model.value?.split?.("|") || [];
+  @tracked
+  images = this.args.model.value?.length
+    ? this.args.model.value.split("|")
+    : [];
 
   @action
   remove(url, event) {
