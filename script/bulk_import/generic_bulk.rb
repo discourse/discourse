@@ -54,7 +54,7 @@ class BulkImport::Generic < BulkImport::Base
     import_posts
     import_topic_allowed_users
     import_likes
-    # import_tags
+    import_tags
 
     @source_db.close
     @uploads_db.close if @uploads_db
@@ -436,7 +436,7 @@ class BulkImport::Generic < BulkImport::Base
     posts = query(<<~SQL)
       SELECT *
       FROM posts
-      ORDER BY topic_id, post_number
+      ORDER BY topic_id, id
     SQL
 
     create_posts(posts) do |row|
@@ -682,43 +682,41 @@ class BulkImport::Generic < BulkImport::Base
   def import_tags
     puts "", "Importing tags..."
 
-    topics = query("SELECT id as topic_id, tags FROM topics")
-
-    tags =
-      topics
-        .map do |r|
-          next unless r["tags"]
-          [r["topic_id"], JSON.parse(r["tags"]).uniq]
-        end
-        .compact
-
-    topics.close
-
     tag_mapping = {}
 
-    tags
-      .map(&:last)
-      .flatten
-      .compact
-      .uniq
-      .each do |tag_name|
-        cleaned_tag_name = DiscourseTagging.clean_tag(tag_name)
-        tag = Tag.find_by_name(cleaned_tag_name) || Tag.create!(name: cleaned_tag_name)
-        tag_mapping[tag_name] = tag.id
-      end
+    tags = query(<<~SQL)
+      SELECT *
+        FROM tags
+    SQL
 
-    tags_disaggregated =
-      tags
-        .map do |topic_id, tags_of_topic|
-          tags_of_topic.map { |t| { topic_id: topic_id, tag_id: tag_mapping.fetch(t) } }
-        end
-        .flatten
-
-    create_topic_tags(tags_disaggregated) do |row|
-      next unless topic_id = topic_id_from_imported_id(row[:topic_id])
-
-      { topic_id: topic_id, tag_id: row[:tag_id] }
+    tags.each do |row|
+      cleaned_tag_name = DiscourseTagging.clean_tag(row["name"])
+      tag = Tag.find_or_create_by(name: cleaned_tag_name)
+      tag_mapping[row["id"]] = tag.id
     end
+
+    tags.close
+
+    topic_tags = query(<<~SQL)
+      SELECT DISTINCT t.id AS topic_id, ta.value AS tag_id
+        FROM topics t,
+             JSON_EACH(t.tag_ids) ta
+       WHERE tag_ids IS NOT NULL
+    SQL
+
+    existing_topic_tags = TopicTag.pluck(:topic_id, :tag_id).to_set
+
+    create_topic_tags(topic_tags) do |row|
+      topic_id = topic_id_from_imported_id(row[:topic_id])
+      tag_id = tag_mapping[row[:tag_id]]
+
+      next unless topic_id && tag_id
+      next if existing_topic_tags.include?([topic_id, tag_id])
+
+      { topic_id: topic_id, tag_id: tag_id }
+    end
+
+    topic_tags.close
   end
 
   def create_connection(path)
