@@ -35,7 +35,6 @@ const KNOWN_LEGACY_MODALS = [
   "request-group-membership-form",
   "share-and-invite",
   "tag-upload",
-  "admin-uploaded-image-list",
 ];
 
 const LEGACY_OPTS = new Set([
