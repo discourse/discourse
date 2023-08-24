@@ -16,7 +16,7 @@
     "ember-template-imports": "^3.4.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.10",
+    "@babel/core": "^7.22.11",
     "ember-cli": "~5.0.0",
     "webpack": "^5.88.2"
   },
