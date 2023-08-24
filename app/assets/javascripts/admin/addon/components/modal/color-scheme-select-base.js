@@ -3,8 +3,8 @@ import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 
 export default class ColorSchemeSelectBase extends Component {
-  @tracked selectedBaseThemeId =
-    this.args.model.baseColorSchemes?.[0]?.base_scheme_id;
+  @tracked
+  selectedBaseThemeId = this.args.model.baseColorSchemes?.[0]?.base_scheme_id;
 
   @action
   selectBase() {
