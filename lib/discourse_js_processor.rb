@@ -3,6 +3,9 @@ require "execjs"
 require "mini_racer"
 
 class DiscourseJsProcessor
+  class TranspileError < StandardError
+  end
+
   # To generate a list of babel plugins used by ember-cli, set
   # babel: { debug: true } in ember-cli-build.js, then run `yarn ember build -prod`
   DISCOURSE_COMMON_BABEL_PLUGINS = [
@@ -95,9 +98,6 @@ class DiscourseJsProcessor
   end
 
   class Transpiler
-    class TranspileError < StandardError
-    end
-
     JS_PROCESSOR_PATH =
       Rails.env.production? ? "tmp/js-processor.js" : "tmp/js-processor/#{Process.pid}.js"
 
