@@ -1,7 +1,7 @@
 .more-topics__container {
   .nav {
     position: absolute;
-    top: 1em;
+    top: 2px;
     li {
       margin-right: 0;
       .btn {
@@ -20,7 +20,6 @@
 
 #main-outlet .regular {
   .more-topics__container .nav {
-    top: 0;
     li .btn {
       padding: 0.75em 0.65em;
     }
