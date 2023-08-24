@@ -281,11 +281,12 @@ class Compiler {
   }
 }
 
-const defaultGlimmer = require("@glimmer/syntax");
+// eslint-disable-next-line no-undef
+const loader = typeof Ember !== "undefined" ? Ember.__loader.require : require;
 
 function compile(template, glimmer) {
   if (!glimmer) {
-    glimmer = defaultGlimmer;
+    glimmer = loader("@glimmer/syntax");
   }
   const compiled = glimmer.preprocess(template);
   const compiler = new Compiler(compiled);

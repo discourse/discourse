@@ -1,29 +1,12 @@
+/* global Babel:true Terser:true */
+
 // This is executed in mini_racer to provide the JS logic for lib/discourse_js_processor.rb
 
-/* global rails */
-
-const CONSOLE_PREFIX = "[DiscourseJsProcessor] ";
-globalThis.window = {};
-globalThis.console = {
-  log(...args) {
-    rails.logger.info(CONSOLE_PREFIX + args.join(" "));
-  },
-  warn(...args) {
-    rails.logger.warn(CONSOLE_PREFIX + args.join(" "));
-  },
-  error(...args) {
-    rails.logger.error(CONSOLE_PREFIX + args.join(" "));
-  },
-};
-
-import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
-import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
-import { precompile } from "ember-source/dist/ember-template-compiler";
-import Handlebars from "handlebars";
-import { transform as babelTransform } from "@babel/standalone";
-import { minify as terserMinify } from "terser";
-import RawHandlebars from "discourse-common/addon/lib/raw-handlebars";
-import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
+const HTMLBarsInlinePrecompile =
+  require("babel-plugin-ember-template-compilation").default;
+const colocatedBabelPlugin = require("colocated-babel-plugin").default;
+const precompile = require("ember-template-compiler").precompile;
+const Handlebars = require("handlebars").default;
 
 function manipulateAstNodeForTheme(node, themeId) {
   // Magically add theme id as the first param for each of these helpers)
@@ -70,7 +53,7 @@ function buildTemplateCompilerBabelPlugins({ themeId }) {
 
   return [
     colocatedBabelPlugin,
-    WidgetHbsCompiler,
+    require("widget-hbs-compiler").WidgetHbsCompiler,
     [
       HTMLBarsInlinePrecompile,
       {
@@ -84,7 +67,7 @@ function buildTemplateCompilerBabelPlugins({ themeId }) {
 function buildThemeRawHbsTemplateManipulatorPlugin(themeId) {
   return function (ast) {
     ["SubExpression", "MustacheStatement"].forEach((pass) => {
-      const visitor = new Handlebars.Visitor();
+      let visitor = new Handlebars.Visitor();
       visitor.mutating = true;
       visitor[pass] = (node) => manipulateAstNodeForTheme(node, themeId);
       visitor.accept(ast);
@@ -92,8 +75,9 @@ function buildThemeRawHbsTemplateManipulatorPlugin(themeId) {
   };
 }
 
-globalThis.compileRawTemplate = function (source, themeId) {
+exports.compileRawTemplate = function (source, themeId) {
   try {
+    const RawHandlebars = require("raw-handlebars").default;
     const plugins = [];
     if (themeId) {
       plugins.push(buildThemeRawHbsTemplateManipulatorPlugin(themeId));
@@ -106,10 +90,11 @@ globalThis.compileRawTemplate = function (source, themeId) {
   }
 };
 
-globalThis.transpile = function (source, options = {}) {
-  const { moduleId, filename, skipModule, themeId, commonPlugins } = options;
+exports.transpile = function (
+  source,
+  { moduleId, filename, skipModule, themeId, commonPlugins } = {}
+) {
   const plugins = [];
-
   plugins.push(...buildTemplateCompilerBabelPlugins({ themeId }));
   if (moduleId && !skipModule) {
     plugins.push(["transform-modules-amd", { noInterop: true }]);
@@ -117,7 +102,7 @@ globalThis.transpile = function (source, options = {}) {
   plugins.push(...commonPlugins);
 
   try {
-    return babelTransform(source, {
+    return Babel.transform(source, {
       moduleId,
       filename,
       ast: false,
@@ -135,16 +120,16 @@ globalThis.transpile = function (source, options = {}) {
 // in a followup method call.
 let lastMinifyError, lastMinifyResult;
 
-globalThis.minify = async function (sources, options) {
+exports.minify = async function (sources, options) {
   lastMinifyError = lastMinifyResult = null;
   try {
-    lastMinifyResult = await terserMinify(sources, options);
+    lastMinifyResult = await Terser.minify(sources, options);
   } catch (e) {
     lastMinifyError = e;
   }
 };
 
-globalThis.getMinifyResult = function () {
+exports.getMinifyResult = function () {
   const error = lastMinifyError;
   const result = lastMinifyResult;
 
