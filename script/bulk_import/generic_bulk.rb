@@ -27,30 +27,30 @@ class BulkImport::Generic < BulkImport::Base
 
   def execute
     # needs to happen before users, because keeping group names is more important than usernames
-    # import_groups
-    #
-    # import_users
-    # import_user_emails
-    # import_user_profiles
-    # import_user_options
-    # import_user_fields
-    # import_user_custom_field_values
-    # import_single_sign_on_records
-    # import_user_stats
-    # import_muted_users
-    # import_user_histories
-    #
-    # import_group_members
-    #
-    # import_uploads
-    # import_user_avatars
-    # import_user_avatar_upload_references
-    # update_uploaded_avatar_id
-    #
-    # import_categories
-    # import_category_permissions
-    #
-    # import_topics
+    import_groups
+
+    import_users
+    import_user_emails
+    import_user_profiles
+    import_user_options
+    import_user_fields
+    import_user_custom_field_values
+    import_single_sign_on_records
+    import_user_stats
+    import_muted_users
+    import_user_histories
+
+    import_group_members
+
+    import_uploads
+    import_user_avatars
+    import_user_avatar_upload_references
+    update_uploaded_avatar_id
+
+    import_categories
+    import_category_permissions
+
+    import_topics
     import_posts
     import_topic_allowed_users
     import_likes
