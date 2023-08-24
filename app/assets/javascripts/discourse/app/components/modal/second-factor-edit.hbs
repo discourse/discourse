@@ -9,6 +9,7 @@
         }}</label>
       <Input
         name="authenticator-name"
+        maxlength={{this.maxSecondFactorNameLength}}
         @type="text"
         @value={{@model.secondFactor.name}}
       />
