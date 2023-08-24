@@ -14,6 +14,7 @@ import HistoryModal from "discourse/components/modal/history";
 import PublishPageModal from "discourse/components/modal/publish-page";
 import EditSlowModeModal from "discourse/components/modal/edit-slow-mode";
 import ChangeTimestampModal from "discourse/components/modal/change-timestamp";
+import EditTopicTimerModal from "discourse/components/modal/edit-topic-timer";
 
 const SCROLL_DELAY = 500;
 
@@ -123,12 +124,10 @@ const TopicRoute = DiscourseRoute.extend({
   @action
   showTopicTimerModal() {
     const model = this.modelFor("topic");
-
     if (!model.get("topic_timer")) {
       model.set("topic_timer", {});
     }
-
-    showModal("edit-topic-timer", { model });
+    this.modal.show(EditTopicTimerModal, { model: { topic: model } });
   },
 
   @action

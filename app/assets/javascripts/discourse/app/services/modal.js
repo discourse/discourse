@@ -18,7 +18,6 @@ const KNOWN_LEGACY_MODALS = [
   "create-account",
   "create-invite-bulk",
   "create-invite",
-  "edit-topic-timer",
   "explain-reviewable",
   "feature-topic-on-profile",
   "feature-topic",
