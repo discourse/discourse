@@ -1,6 +1,8 @@
 const TapReporter = require("testem/lib/reporters/tap_reporter");
 const { shouldLoadPlugins } = require("discourse-plugins");
 const fs = require("fs");
+const displayUtils = require("testem/lib/utils/displayutils");
+const colors = require("@colors/colors");
 
 class Reporter {
   failReports = [];
@@ -26,7 +28,46 @@ class Reporter {
     if (data.failed) {
       this.failReports.push([prefix, data, this._tapReporter.id]);
     }
-    this._tapReporter.report(prefix, data);
+
+    this._tapReporter.results.push({
+      launcher: prefix,
+      result: data,
+    });
+    this.display(prefix, data);
+    this._tapReporter.total++;
+
+    if (data.skipped) {
+      this._tapReporter.skipped++;
+    } else if (data.passed && !data.todo) {
+      this._tapReporter.pass++;
+    } else if (!data.passed && data.todo) {
+      this._tapReporter.todo++;
+    }
+  }
+
+  display(prefix, result) {
+    if (this._tapReporter.willDisplay(result)) {
+      const string = displayUtils.resultString(
+        this._tapReporter.id++,
+        prefix,
+        result,
+        this._tapReporter.quietLogs,
+        this._tapReporter.strictSpecCompliance
+      );
+
+      const color = this.colorForResult(result);
+      this._tapReporter.out.write(color(string));
+    }
+  }
+
+  colorForResult(result) {
+    if (result.todo || result.skipped) {
+      return colors.yellow;
+    } else if (result.passed) {
+      return colors.green;
+    } else {
+      return colors.red;
+    }
   }
 
   generateDeprecationTable() {
