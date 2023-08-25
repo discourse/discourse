@@ -11,14 +11,9 @@ export default class UploadedImageList extends Component {
     this.modal.show(UploadedImageListModal, {
       model: {
         title: `admin.site_settings.${setting.setting}.title`,
-        save: this.valueChanged,
+        changeValue: (v) => this.set("value", v),
         value,
       },
     });
-  }
-
-  @action
-  valueChanged(value) {
-    this.set("value", value);
   }
 }

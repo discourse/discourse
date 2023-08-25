@@ -9,8 +9,7 @@ export default class UploadedImageList extends Component {
     : [];
 
   @action
-  remove(url, event) {
-    event?.preventDefault();
+  remove(url) {
     this.images.removeObject(url);
   }
 
@@ -21,7 +20,7 @@ export default class UploadedImageList extends Component {
 
   @action
   close() {
-    this.args.model.save(this.images.join("|"));
+    this.args.model.changeValue(this.images.join("|"));
     this.args.closeModal();
   }
 }
