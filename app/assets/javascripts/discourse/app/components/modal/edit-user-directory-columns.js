@@ -14,8 +14,8 @@ export default class EditUserDirectoryColumns extends Component {
   @tracked labelKey;
   @tracked flash;
 
-  constructor(owner, args) {
-    super(owner, args);
+  constructor() {
+    super(...arguments);
     this.setupColumns();
   }
 
