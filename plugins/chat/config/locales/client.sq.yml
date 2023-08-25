@@ -6,6 +6,11 @@
 
 sq:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Gjithmonë"
+          never: "Asnjëherë"
     chat:
       cancel: "Anulo"
       channel_settings:

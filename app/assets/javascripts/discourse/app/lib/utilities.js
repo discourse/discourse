@@ -596,3 +596,19 @@ export function mergeSortedLists(list1, list2, comparator) {
   }
   return merged;
 }
+
+export function getCaretPosition(element, options) {
+  const jqueryElement = $(element);
+  const position = jqueryElement.caretPosition(options);
+
+  // Get the position of the textarea on the page
+  const textareaRect = element.getBoundingClientRect();
+
+  // Calculate the x and y coordinates by adding the element's position
+  const adjustedPosition = {
+    x: position.left + textareaRect.left,
+    y: position.top + textareaRect.top,
+  };
+
+  return adjustedPosition;
+}

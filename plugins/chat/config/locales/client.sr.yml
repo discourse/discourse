@@ -6,6 +6,11 @@
 
 sr:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Uvek"
+          never: "Nikad"
     chat:
       dates:
         time_tiny: "h:mm"

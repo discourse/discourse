@@ -6,6 +6,11 @@
 
 lv:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Vienmēr"
+          never: "Nekad"
     chat:
       create: "Izveidot"
       cancel: "Atcelt"

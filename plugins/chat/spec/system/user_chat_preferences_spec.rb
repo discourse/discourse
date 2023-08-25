@@ -16,15 +16,22 @@ RSpec.describe "User chat preferences", type: :system do
       sign_in(current_user)
     end
 
+    it "doesn’t show the tab" do
+      visit("/my/preferences")
+
+      expect(page).to have_no_css(".user-nav__preferences-chat", visible: :all)
+    end
+
     it "shows a not found page" do
-      visit("/u/#{current_user.username}/preferences/chat")
+      visit("/my/preferences/chat")
 
       expect(page).to have_content(I18n.t("page_not_found.title"))
     end
   end
 
   it "can select chat sound" do
-    visit("/u/#{current_user.username}/preferences/chat")
+    visit("/my/preferences")
+    find(".user-nav__preferences-chat", visible: :all).click
     select_kit = PageObjects::Components::SelectKit.new("#user_chat_sounds")
     select_kit.expand
     select_kit.select_row_by_value("bell")
@@ -34,7 +41,8 @@ RSpec.describe "User chat preferences", type: :system do
   end
 
   it "can select header_indicator_preference" do
-    visit("/u/#{current_user.username}/preferences/chat")
+    visit("/my/preferences")
+    find(".user-nav__preferences-chat", visible: :all).click
     select_kit = PageObjects::Components::SelectKit.new("#user_chat_header_indicator_preference")
     select_kit.expand
     select_kit.select_row_by_value("dm_and_mentions")
@@ -44,7 +52,8 @@ RSpec.describe "User chat preferences", type: :system do
   end
 
   it "can select separate sidebar mode" do
-    visit("/u/#{current_user.username}/preferences/chat")
+    visit("/my/preferences")
+    find(".user-nav__preferences-chat", visible: :all).click
     select_kit = PageObjects::Components::SelectKit.new("#user_chat_separate_sidebar_mode")
     select_kit.expand
     select_kit.select_row_by_value("fullscreen")
@@ -61,8 +70,7 @@ RSpec.describe "User chat preferences", type: :system do
 
     it "allows to change settings" do
       visit("/u/#{user_1.username}/preferences")
-
-      find(".user-nav__preferences-chat").click
+      find(".user-nav__preferences-chat", visible: :all).click
 
       expect(page).to have_current_path("/u/#{user_1.username}/preferences/chat")
     end

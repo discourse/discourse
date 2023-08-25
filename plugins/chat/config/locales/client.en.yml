@@ -146,6 +146,7 @@ en:
         group_mentions_disabled_multiple:
           one: "%{group_name} and %{count} other group don't allow mentions."
           other: "%{group_name} and %{count} other groups don't allow mentions."
+        channel_wide_mentions_disallowed: "@here and @all mentions are disabled in this channel."
         too_many_members: "%{group_name} has too many members. No one was notified."
         too_many_members_multiple:
           one: "%{group_name} and %{count} other group have too many members. No one was notified."
@@ -471,7 +472,7 @@ en:
         title: "Chat"
         export_messages:
           title: "Export chat messages"
-          description: "Export is currently limited to 10000 most recent messages in the last 6 months."
+          description: "This exports all messages from all channels."
           create_export: "Create export"
           export_has_started: "The export has started. You'll receive a PM when it's ready."
 
@@ -578,7 +579,6 @@ en:
       thread:
         title: "Title"
         view_thread: View thread
-        default_title: "Thread"
         replies:
           one: "%{count} reply"
           other: "%{count} replies"

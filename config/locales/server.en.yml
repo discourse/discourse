@@ -353,7 +353,7 @@ en:
       one: "%{count} more reply"
       other: "%{count} more replies"
 
-    loading: "Loading Discussion..."
+    loading: "Loading Discussion…"
     permalink: "Permalink"
     imported_from: "This is a companion discussion topic for the original entry at %{link}"
     in_reply_to: "▶ %{username}"
@@ -2694,16 +2694,16 @@ en:
       sent_test: "sent!"
     user:
       merge_user:
-        updating_username: "Updating username..."
-        changing_post_ownership: "Changing post ownership..."
-        merging_given_daily_likes: "Merging given daily likes..."
-        merging_post_timings: "Merging post timings..."
-        merging_user_visits: "Merging user visits..."
-        updating_site_settings: "Updating site settings..."
-        updating_user_stats: "Updating user stats..."
-        merging_user_attributes: "Merging user attributes..."
-        updating_user_ids: "Updating user ids..."
-        deleting_source_user: "Deleting source user..."
+        updating_username: "Updating username…"
+        changing_post_ownership: "Changing post ownership…"
+        merging_given_daily_likes: "Merging given daily likes…"
+        merging_post_timings: "Merging post timings…"
+        merging_user_visits: "Merging user visits…"
+        updating_site_settings: "Updating site settings…"
+        updating_user_stats: "Updating user stats…"
+        merging_user_attributes: "Merging user attributes…"
+        updating_user_ids: "Updating user ids…"
+        deleting_source_user: "Deleting source user…"
   user:
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
     deactivated_by_staff: "Deactivated by staff"
@@ -5186,7 +5186,7 @@ en:
       delete_single:
         title: "Delete"
       delete:
-        title: "Delete..."
+        title: "Delete…"
       delete_and_ignore:
         title: "Ignore flag and delete post"
         description: "Ignore the flag by removing it from the queue and delete the post; if the first post, delete the topic as well. "
@@ -5221,7 +5221,7 @@ en:
       approve_user:
         title: "Approve User"
       reject_user:
-        title: "Delete User..."
+        title: "Delete User…"
         delete:
           title: "Delete User"
           description: "The user will be deleted from the forum."
@@ -5230,7 +5230,7 @@ en:
           description: "The user will be deleted, and we'll block their IP and email address."
       reject:
         title: "Reject"
-        bundle_title: "Reject..."
+        bundle_title: "Reject…"
       reject_and_suspend:
         title: "Reject and Suspend user"
       reject_and_silence:

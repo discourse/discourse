@@ -31,6 +31,11 @@
     }
   }
 
+  &__participants {
+    display: flex;
+    align-items: center;
+  }
+
   &__main {
     flex: 1 1 100%;
     width: 100%;
@@ -46,14 +51,36 @@
     }
   }
 
-  &__metadata {
-    display: flex;
-    justify-content: flex-end;
+  &__last-reply-author {
+    font-weight: 700;
   }
 
-  &__last-reply {
+  &__metadata {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__metadata__separator {
+    padding-inline: 0.5rem;
+    font-weight: 700;
+    font-size: 20px;
+    text-align: center;
+  }
+
+  &__participants {
+    margin-right: 0.25rem;
+  }
+
+  &__replies-count {
+    margin-left: auto;
+  }
+
+  &__last-reply-timestamp,
+  &__replies-count {
     color: var(--secondary-low);
     font-size: var(--font-down-1);
+    @include ellipsis;
   }
 
   &__header {
@@ -65,11 +92,22 @@
 
   &__title {
     flex: 1 1 auto;
-    font-weight: bold;
+    font-weight: 500;
+    font-size: var(--font-up-1);
+    @include ellipsis;
+  }
+
+  &__last-reply-excerpt {
+    font-size: var(--font-0);
   }
 
   &__unread-indicator {
     flex: 0 0 auto;
+
+    .chat-thread-list-item-unread-indicator__number {
+      color: var(--primary);
+      font-size: var(--font-up-1);
+    }
   }
 
   &__open-button {
@@ -77,16 +115,10 @@
     flex-direction: column;
     box-sizing: border-box;
     justify-content: center;
-    color: var(--primary);
-
-    &:hover,
-    &:visited {
-      color: var(--primary);
-    }
   }
 
   &__om-user-avatar {
-    margin-right: 0.5rem;
+    margin-right: 0.25rem;
     flex: 0 0 auto;
   }
 }

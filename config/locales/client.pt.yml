@@ -3152,6 +3152,9 @@ pt:
           one: "Novo (%{count})"
           other: "Novos (%{count})"
         help: "tópicos criados nos últimos dias"
+        all: "Tudo"
+        topics: "Tópicos"
+        replies: "Respostas"
       posted:
         title: "As Minhas publicações"
         help: "tópicos em que publicou"

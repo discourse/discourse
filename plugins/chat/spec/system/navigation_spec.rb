@@ -352,5 +352,29 @@ RSpec.describe "Navigation", type: :system do
         expect(sidebar_component).to have_no_section_link(category_channel.name, active: true)
       end
     end
+
+    context "when exiting a thread for homepage" do
+      fab!(:thread) { Fabricate(:chat_thread, channel: category_channel) }
+
+      before do
+        current_user.user_option.update(
+          chat_separate_sidebar_mode: UserOption.chat_separate_sidebar_modes[:always],
+        )
+        chat_page.prefers_full_page
+        category_channel.update!(threading_enabled: true)
+        thread.add(current_user)
+      end
+
+      it "correctly closes the panel" do
+        chat_page.visit_thread(thread)
+
+        expect(side_panel_page).to have_open_thread(thread)
+
+        find("#site-logo").click
+        sidebar_component.switch_to_chat
+
+        expect(page).to have_no_css(".chat-side-panel")
+      end
+    end
   end
 end

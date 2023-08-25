@@ -397,6 +397,7 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
               method: "put",
               url: response.url,
               headers: {
+                ...response.signed_headers,
                 "Content-Type": file.type,
               },
             };

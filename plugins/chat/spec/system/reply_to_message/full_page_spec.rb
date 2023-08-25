@@ -106,7 +106,7 @@ RSpec.describe "Reply to message - channel - full page", type: :system do
       channel_page.reply_to(original_message)
 
       expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
-        "<a class=\"mention\" href=\"/u/#{other_user.username}\">@#{other_user.username}</a> &lt;mark&gt;not marked&lt;/mark&gt;",
+        "@#{other_user.username} &lt;mark&gt;not marked&lt;/mark&gt;",
       )
 
       channel_page.fill_composer("reply to message")

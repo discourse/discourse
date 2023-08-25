@@ -252,13 +252,13 @@ module FileStore
       presigned_get_url(key, expires_in: expires_in, force_download: force_download)
     end
 
-    def signed_url_for_temporary_upload(
+    def signed_request_for_temporary_upload(
       file_name,
       expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS,
       metadata: {}
     )
       key = temporary_upload_path(file_name)
-      s3_helper.presigned_url(
+      s3_helper.presigned_request(
         key,
         method: :put_object,
         expires_in: expires_in,

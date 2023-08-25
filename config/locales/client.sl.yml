@@ -3027,6 +3027,9 @@ sl:
           few: "Nove (%{count})"
           other: "Novih (%{count})"
         help: "teme ustvarjene v zadnjih dneh"
+        all: "Vse"
+        topics: "Tem"
+        replies: "Odgovori"
       posted:
         title: "Moji prispevki"
         help: "teme v katerih ste objavljali"

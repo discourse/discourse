@@ -24,8 +24,9 @@
     "pretty-text": "1.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.10",
-    "@babel/standalone": "^7.22.10",
+    "@babel/core": "^7.22.11",
+    "@babel/standalone": "^7.22.12",
+    "@colors/colors": "^1.6.0",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
     "@ember-compat/tracked-built-ins": "^0.9.1",
@@ -48,7 +49,7 @@
     "a11y-dialog": "8.0.1",
     "admin": "1.0.0",
     "babel-import-util": "^1.4.1",
-    "babel-plugin-ember-template-compilation": "^2.0.0",
+    "babel-plugin-ember-template-compilation": "^2.2.0",
     "bootstrap": "3.4.1",
     "bootstrap-json": "1.0.0",
     "broccoli-asset-rev": "^3.0.0",

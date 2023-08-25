@@ -83,10 +83,11 @@ describe "Thread list in side panel | full page", type: :system do
       thread_2.add(current_user)
     end
 
-    it "shows a default title for threads without a title" do
+    it "shows the OM excerpt for threads without a title" do
       chat_page.visit_channel(channel)
       channel_page.open_thread_list
-      expect(page).to have_content(I18n.t("js.chat.thread.default_title", thread_id: thread_1.id))
+
+      expect(page).to have_content(thread_1.original_message.excerpt)
     end
 
     it "shows the thread title with emoji" do
@@ -122,6 +123,28 @@ describe "Thread list in side panel | full page", type: :system do
       channel_page.open_thread_list
       expect(thread_list_page.item_by_id(thread_1.id)).to have_css(
         thread_list_page.last_reply_datetime_selector(last_reply),
+      )
+    end
+
+    it "shows replies count" do
+      chat_page.visit_channel(channel)
+      channel_page.open_thread_list
+
+      expect(thread_list_page.item_by_id(thread_1.id)).to have_css(
+        ".chat-thread-list-item__replies-count",
+        text: I18n.t("js.chat.thread.replies", count: thread_1.replies_count_cache),
+      )
+    end
+
+    it "shows participants" do
+      chat_page.visit_channel(channel)
+      channel_page.open_thread_list
+
+      expect(thread_list_page.item_by_id(thread_1.id)).to have_css(
+        ".avatar[title='#{current_user.username}']",
+      )
+      expect(thread_list_page.item_by_id(thread_1.id)).to have_css(
+        ".avatar[title='#{other_user.username}']",
       )
     end
 

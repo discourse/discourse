@@ -10,6 +10,9 @@ hu:
       site_settings:
         categories:
           chat: Csevegés
+        chat_separate_sidebar_mode:
+          always: "Mindig"
+          never: "Soha"
       logs:
         staff_actions:
           actions:

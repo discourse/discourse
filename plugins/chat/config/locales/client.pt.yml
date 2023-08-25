@@ -7,6 +7,10 @@
 pt:
   js:
     admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Sempre"
+          never: "Nunca"
       logs:
         staff_actions:
           actions:

@@ -2044,6 +2044,9 @@ sw:
         lower_title: "mpya"
         title: "Mpya"
         help: "mada zilizotengenezwa siku chache zilizopita"
+        all: "Vyote"
+        topics: "Mada"
+        replies: "Majibu"
       posted:
         title: "Machapisho Yangu"
         help: "mada zenye machapisho yako"

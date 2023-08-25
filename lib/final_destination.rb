@@ -49,6 +49,7 @@ class FinalDestination
     @default_user_agent = @opts[:default_user_agent] || DEFAULT_USER_AGENT
     @opts[:max_redirects] ||= 5
     @https_redirect_ignore_limit = @opts[:initial_https_redirect_ignore_limit]
+    @include_port_in_host_header = @opts[:include_port_in_host_header] || false
 
     @max_redirects = @opts[:max_redirects]
     @limit = @max_redirects
@@ -114,7 +115,7 @@ class FinalDestination
       "User-Agent" => @user_agent,
       "Accept" => "*/*",
       "Accept-Language" => "*",
-      "Host" => @uri.hostname,
+      "Host" => @uri.hostname + (@include_port_in_host_header ? ":#{@uri.port}" : ""),
     }
 
     result["Cookie"] = @cookie if @cookie
@@ -397,7 +398,15 @@ class FinalDestination
   def validate_uri_format
     return false unless @uri && @uri.host
     return false unless %w[https http].include?(@uri.scheme)
-    return false if @uri.scheme == "http" && @uri.port != 80
+
+    # In some cases (like local/test environments) we may want to allow http URLs
+    # to be used for internal hosts, but only if it's the case that the host is
+    # explicitly used for SiteSetting.s3_endpoint. This is to allow for local
+    # S3 providers like minio.
+    #
+    # In all other cases, we should not be allowing http calls to anything except
+    # port 80.
+    return false if @uri.scheme == "http" && !http_port_ok?
     return false if @uri.scheme == "https" && @uri.port != 443
 
     # Disallow IP based crawling
@@ -408,6 +417,23 @@ class FinalDestination
         nil
       end
     ).nil?
+  end
+
+  def http_port_ok?
+    return true if @uri.port == 80
+
+    allowed_internal_hosts =
+      SiteSetting.allowed_internal_hosts&.split(/[|\n]/).filter_map { |aih| aih.strip.presence }
+    return false if allowed_internal_hosts.empty? || SiteSetting.s3_endpoint.blank?
+    return false if allowed_internal_hosts.none? { |aih| hostname_matches_s3_endpoint?(aih) }
+
+    true
+  end
+
+  def hostname_matches_s3_endpoint?(allowed_internal_host)
+    s3_endpoint_uri = URI(SiteSetting.s3_endpoint)
+    hostname_matches?("http://#{allowed_internal_host}") && @uri.port == s3_endpoint_uri.port &&
+      @uri.hostname.end_with?(s3_endpoint_uri.hostname)
   end
 
   def hostname
@@ -451,7 +477,11 @@ class FinalDestination
     headers_subset = Struct.new(:location, :set_cookie).new
 
     safe_session(uri) do |http|
-      headers = request_headers.merge("Accept-Encoding" => "gzip", "Host" => uri.host)
+      headers =
+        request_headers.merge(
+          "Accept-Encoding" => "gzip",
+          "Host" => uri.hostname + (@include_port_in_host_header ? ":#{uri.port}" : ""),
+        )
 
       req = FinalDestination::HTTP::Get.new(uri.request_uri, headers)
 

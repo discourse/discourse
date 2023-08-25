@@ -3674,6 +3674,12 @@ de:
           one: "Neu (%{count})"
           other: "Neu (%{count})"
         help: "Themen, die in den letzten paar Tagen erstellt wurden"
+        all: "Gesamt"
+        all_with_count: "Alle (%{count})"
+        topics: "Themen"
+        topics_with_count: "Themen (%{count})"
+        replies: "Antworten"
+        replies_with_count: "Antworten (%{count})"
       posted:
         title: "Meine Beiträge"
         help: "Themen, zu denen du beigetragen hast"

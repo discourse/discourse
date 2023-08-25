@@ -539,6 +539,7 @@ export default class ChatChannel extends Component {
     } catch (e) {
       popupAjaxError(e);
     } finally {
+      message.editing = false;
       this.chatDraftsManager.remove({ channelId: this.args.channel.id });
       this.pane.sending = false;
     }

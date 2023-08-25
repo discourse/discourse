@@ -10,6 +10,10 @@ he:
       site_settings:
         categories:
           chat: צ׳אט
+        chat_separate_sidebar_mode:
+          always: "תמיד"
+          fullscreen: "כאשר הצ׳אט במסך מלא"
+          never: "לעולם לא"
       logs:
         staff_actions:
           actions:
@@ -110,6 +114,8 @@ he:
         all_new: "כל ההודעות החדשות"
         dm_and_mentions: "הודעות ישירות ואזכורים"
         never: "לעולם לא"
+      separate_sidebar_mode:
+        title: "הצגת מצבי סרגל צד נפרדים עבור פורום וצ׳אט"
       enable: "הפעלת צ׳אט"
       flag: "דיגול"
       emoji: "הוספת אמוג׳י"
@@ -705,3 +711,7 @@ he:
       sections:
         chat:
           title: צ׳אט
+    sidebar:
+      panels:
+        chat:
+          label: "צ׳אט"

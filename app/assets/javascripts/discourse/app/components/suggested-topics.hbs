@@ -3,8 +3,8 @@
   class="more-topics__list {{if this.hidden 'hidden'}}"
   role="complementary"
   aria-labelledby="suggested-topics-title"
-  data-mobile-title={{i18n "suggested_topics.pill"}}
-  data-list-id={{this.listId}}
+  {{did-insert this.registerList}}
+  {{will-destroy this.removeList}}
 >
   <UserTip @id="suggested_topics" @selector=".user-tip-reference" />
 

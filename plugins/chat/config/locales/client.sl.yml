@@ -6,6 +6,11 @@
 
 sl:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Vedno"
+          never: "Nikoli"
     chat:
       create: "Ustvari"
       cancel: "Prekliči"
