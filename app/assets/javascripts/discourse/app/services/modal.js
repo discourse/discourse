@@ -37,8 +37,6 @@ const KNOWN_LEGACY_MODALS = [
   "share-and-invite",
   "tag-upload",
   "admin-reseed",
-  "admin-color-scheme-select-base",
-  "admin-form-template-validation-options",
   "admin-staff-action-log-details",
   "admin-uploaded-image-list",
 ];
