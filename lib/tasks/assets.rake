@@ -301,7 +301,8 @@ task "assets:precompile:compress_js": "environment" do
 end
 
 task "assets:precompile:js_processor": "environment" do
-  DiscourseJsProcessor::Transpiler.generate_js_processor
+  path = DiscourseJsProcessor::Transpiler.generate_js_processor
+  puts "Compiled js-processor: #{path}"
 end
 
 # Run these tasks **before** Rails' "assets:precompile" task
