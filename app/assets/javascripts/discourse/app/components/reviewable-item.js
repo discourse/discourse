@@ -217,7 +217,8 @@ export default Component.extend({
   },
 
   @action
-  explainReviewable(reviewable) {
+  explainReviewable(reviewable, event) {
+    event.preventDefault();
     this.modal.show(ExplainReviewableModal, {
       model: { reviewable },
     });
