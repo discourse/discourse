@@ -4,13 +4,9 @@ const fs = require("fs");
 const displayUtils = require("testem/lib/utils/displayutils");
 const colors = require("@colors/colors");
 
-class Reporter {
+class Reporter extends TapReporter {
   failReports = [];
   deprecationCounts = new Map();
-
-  constructor() {
-    this._tapReporter = new TapReporter(...arguments);
-  }
 
   reportMetadata(tag, metadata) {
     if (tag === "increment-deprecation") {
@@ -18,45 +14,32 @@ class Reporter {
       const currentCount = this.deprecationCounts.get(id) || 0;
       this.deprecationCounts.set(id, currentCount + 1);
     } else if (tag === "summary-line") {
-      process.stdout.write(`\n${metadata.message}\n`);
+      this.out.write(`\n${metadata.message}\n`);
     } else {
-      this._tapReporter.reportMetadata(...arguments);
+      super.reportMetadata(...arguments);
     }
   }
 
   report(prefix, data) {
     if (data.failed) {
-      this.failReports.push([prefix, data, this._tapReporter.id]);
+      this.failReports.push([prefix, data, this.id]);
     }
 
-    this._tapReporter.results.push({
-      launcher: prefix,
-      result: data,
-    });
-    this.display(prefix, data);
-    this._tapReporter.total++;
-
-    if (data.skipped) {
-      this._tapReporter.skipped++;
-    } else if (data.passed && !data.todo) {
-      this._tapReporter.pass++;
-    } else if (!data.passed && data.todo) {
-      this._tapReporter.todo++;
-    }
+    super.report(prefix, data);
   }
 
   display(prefix, result) {
-    if (this._tapReporter.willDisplay(result)) {
+    if (this.willDisplay(result)) {
       const string = displayUtils.resultString(
-        this._tapReporter.id++,
+        this.id++,
         prefix,
         result,
-        this._tapReporter.quietLogs,
-        this._tapReporter.strictSpecCompliance
+        this.quietLogs,
+        this.strictSpecCompliance
       );
 
       const color = this.colorForResult(result);
-      this._tapReporter.out.write(color(string));
+      this.out.write(color(string));
     }
   }
 
@@ -102,24 +85,24 @@ class Reporter {
     } else {
       deprecationMessage += "No deprecations logged";
     }
-    process.stdout.write(`\n${deprecationMessage}\n\n`);
+    this.out.write(`\n${deprecationMessage}\n\n`);
   }
 
   finish() {
-    this._tapReporter.finish();
+    super.finish();
 
     this.reportDeprecations();
 
     if (this.failReports.length > 0) {
-      process.stdout.write("\nFailures:\n\n");
+      this.out.write("\nFailures:\n\n");
 
       this.failReports.forEach(([prefix, data, id]) => {
         if (process.env.GITHUB_ACTIONS) {
-          process.stdout.write(`::error ::QUnit Test Failure: ${data.name}\n`);
+          this.out.write(`::error ::QUnit Test Failure: ${data.name}\n`);
         }
 
-        this._tapReporter.id = id;
-        this._tapReporter.report(prefix, data);
+        this.id = id;
+        super.report(prefix, data);
       });
     }
   }
