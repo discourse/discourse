@@ -10,7 +10,11 @@ class Reporter extends TapReporter {
 
   constructor() {
     super(...arguments);
-    colors.enable();
+
+    // Colors are enabled automatically in dev env, just need to toggle them on in GH
+    if (process.env.GITHUB_ACTIONS) {
+      colors.enable();
+    }
   }
 
   reportMetadata(tag, metadata) {
