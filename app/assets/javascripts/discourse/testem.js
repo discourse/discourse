@@ -2,11 +2,16 @@ const TapReporter = require("testem/lib/reporters/tap_reporter");
 const { shouldLoadPlugins } = require("discourse-plugins");
 const fs = require("fs");
 const displayUtils = require("testem/lib/utils/displayutils");
-const colors = require("@colors/colors");
+const colors = require("@colors/colors/safe");
 
 class Reporter extends TapReporter {
   failReports = [];
   deprecationCounts = new Map();
+
+  constructor() {
+    super(...arguments);
+    colors.enable();
+  }
 
   reportMetadata(tag, metadata) {
     if (tag === "increment-deprecation") {
