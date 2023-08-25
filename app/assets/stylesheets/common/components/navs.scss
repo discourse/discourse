@@ -125,7 +125,9 @@
   }
 }
 
-.user-navigation .nav-pills li a,
-button {
-  border-radius: 0px;
+.user-navigation .nav-pills > li {
+  a,
+  button {
+    border-radius: 0px;
+  }
 }
