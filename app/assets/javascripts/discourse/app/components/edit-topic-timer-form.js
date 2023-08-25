@@ -6,7 +6,7 @@ import {
   DELETE_STATUS_TYPE,
   OPEN_STATUS_TYPE,
   PUBLISH_TO_CATEGORY_STATUS_TYPE,
-} from "discourse/controllers/edit-topic-timer";
+} from "discourse/components/modal/edit-topic-timer";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 import discourseComputed from "discourse-common/utils/decorators";
 import { equal, or, readOnly } from "@ember/object/computed";
