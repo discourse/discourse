@@ -13,8 +13,10 @@ module Chat
     def flag_message(chat_message, guardian, flag_type_id, opts = {})
       result = { success: false, errors: [] }
 
-      is_notify_type =
-        ReviewableScore.types.slice(:notify_user, :notify_moderators).values.include?(flag_type_id)
+      is_notify_user_type = ReviewableScore.types.slice(:notify_user).values.include?(flag_type_id)
+      is_notify_moderators_type =
+        ReviewableScore.types.slice(:notify_moderators).values.include?(flag_type_id)
+      is_notify_type = is_notify_user_type || is_notify_moderators_type
       is_dm = chat_message.chat_channel.direct_message_channel?
 
       raise Discourse::InvalidParameters.new(:flag_type) if is_dm && is_notify_type
@@ -46,7 +48,7 @@ module Chat
 
       queued_for_review = !!ActiveRecord::Type::Boolean.new.deserialize(opts[:queue_for_review])
 
-      if !is_notify_type
+      if !is_notify_user_type
         reviewable =
           Chat::ReviewableMessage.needs_review!(
             created_by: guardian.user,
@@ -77,7 +79,7 @@ module Chat
 
       result.tap do |r|
         r[:success] = true
-        r[:reviewable] = reviewable if !is_notify_type
+        r[:reviewable] = reviewable if !is_notify_user_type
       end
     end
 
