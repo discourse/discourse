@@ -1,5 +1,4 @@
 import Controller from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
@@ -8,8 +7,8 @@ import { categoriesComponent } from "./discovery/categories";
 import { getOwner } from "@ember/application";
 import { tracked } from "@glimmer/tracking";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
-import { or } from "@ember/object/computed";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
+import { defineTrackedProperty } from "discourse/lib/tracked-tools";
 
 // Just add query params here to have them automatically passed to topic list filters.
 export const queryParams = {
@@ -67,50 +66,46 @@ export function addDiscoveryQueryParam(p, opts) {
 }
 
 @disableImplicitInjections
-export default class DiscoverySortableController extends Controller.extend() {
+export default class DiscoverySortableController extends Controller {
   @service composer;
   @service siteSettings;
   @service site;
+  @service currentUser;
 
+  @tracked model;
   @tracked subcategoryList;
-  bulkSelectHelper = new BulkSelectHelper(this);
-
-  @or("currentUser.canManageTopic", "showDismissRead", "showResetNew")
-  canBulkSelect;
 
   queryParams = Object.keys(queryParams);
 
+  bulkSelectHelper = new BulkSelectHelper(this);
+
   constructor() {
     super(...arguments);
-    this.queryParams.forEach((p) => {
-      this[p] = queryParams[p].default;
-    });
+    for (const [name, info] of Object.entries(queryParams)) {
+      defineTrackedProperty(this, name, info.default);
+    }
   }
 
-  get bulkSelectEnabled() {
-    return this.bulkSelectHelper.bulkSelectEnabled;
+  get canBulkSelect() {
+    return (
+      this.currentUser?.canManageTopic ||
+      this.showDismissRead ||
+      this.showResetNew
+    );
   }
 
-  get selected() {
-    return this.bulkSelectHelper.selected;
+  get showDismissRead() {
+    return (
+      filterTypeForMode(this.model?.filter) === "unread" &&
+      this.model.get("topics.length") > 0
+    );
   }
 
-  @discourseComputed("model.filter", "model.topics.length")
-  showDismissRead(filterMode, topicsLength) {
-    return filterTypeForMode(filterMode) === "unread" && topicsLength > 0;
-  }
-
-  @discourseComputed("model.filter", "model.topics.length")
-  showResetNew(filterMode, topicsLength) {
-    return filterTypeForMode(filterMode) === "new" && topicsLength > 0;
-  }
-
-  @action
-  createTopic() {
-    this.composer.openNewTopic({
-      category: this.createTopicTargetCategory,
-      preferDraft: true,
-    });
+  get showResetNew() {
+    return (
+      filterTypeForMode(this.model?.filter) === "new" &&
+      this.model?.get("topics.length") > 0
+    );
   }
 
   get createTopicTargetCategory() {
@@ -142,6 +137,14 @@ export default class DiscoverySortableController extends Controller.extend() {
   }
 
   @action
+  createTopic() {
+    this.composer.openNewTopic({
+      category: this.createTopicTargetCategory,
+      preferDraft: true,
+    });
+  }
+
+  @action
   setTrackingTopicList(model) {
     setTopicList(model);
   }
@@ -149,25 +152,5 @@ export default class DiscoverySortableController extends Controller.extend() {
   @action
   changePeriod(p) {
     this.set("period", p);
-  }
-
-  @action
-  toggleBulkSelect() {
-    this.bulkSelectHelper.toggleBulkSelect();
-  }
-
-  @action
-  dismissRead(operationType, options) {
-    this.bulkSelectHelper.dismissRead(operationType, options);
-  }
-
-  @action
-  updateAutoAddTopicsToBulkSelect(value) {
-    this.bulkSelectHelper.autoAddTopicsToBulkSelect = value;
-  }
-
-  @action
-  addTopicsToBulkSelect(topics) {
-    this.bulkSelectHelper.addTopics(topics);
   }
 }

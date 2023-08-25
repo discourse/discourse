@@ -30,9 +30,7 @@
 <DiscoveryTopicsList
   @model={{this.model}}
   @incomingCount={{this.topicTrackingState.incomingCount}}
-  @autoAddTopicsToBulkSelect={{@autoAddTopicsToBulkSelect}}
-  @bulkSelectEnabled={{@bulkSelectEnabled}}
-  @addTopicsToBulkSelect={{@addTopicsToBulkSelect}}
+  @bulkSelectHelper={{@bulkSelectHelper}}
 >
   {{#if this.top}}
     <div class="top-lists">
@@ -85,14 +83,11 @@
       @showTopicPostBadges={{this.showTopicPostBadges}}
       @showPosters={{true}}
       @canBulkSelect={{@canBulkSelect}}
+      @bulkSelectHelper={{@bulkSelectHelper}}
       @changeSort={{route-action "changeSort"}}
-      @toggleBulkSelect={{@toggleBulkSelect}}
-      @updateAutoAddTopicsToBulkSelect={{this.updateAutoAddTopicsToBulkSelect}}
       @hideCategory={{this.model.hideCategory}}
       @order={{this.order}}
       @ascending={{this.ascending}}
-      @bulkSelectEnabled={{@bulkSelectEnabled}}
-      @selected={{@selected}}
       @expandGloballyPinned={{this.expandGloballyPinned}}
       @expandAllPinned={{this.expandAllPinned}}
       @category={{this.category}}
@@ -120,11 +115,11 @@
   {{#if this.allLoaded}}
     <TopicDismissButtons
       @position="bottom"
-      @selectedTopics={{this.selected}}
+      @selectedTopics={{this.bulkSelectHelper.selected}}
       @model={{this.model}}
       @showResetNew={{this.showResetNew}}
       @showDismissRead={{this.showDismissRead}}
-      @resetNew={{action "resetNew"}}
+      @resetNew={{this.resetNew}}
     />
 
     <FooterMessage
