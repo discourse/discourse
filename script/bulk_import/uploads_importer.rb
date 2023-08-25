@@ -27,7 +27,10 @@ module BulkImport
       consumer_threads = []
 
       existing_ids = Set.new
-      query("SELECT id FROM uploads", @output_db).each { |row| existing_ids << row["id"] }
+      query("SELECT id FROM uploads", @output_db).tap do |result_set|
+        result_set.each { |row| existing_ids << row["id"] }
+        result_set.close
+      end
       max_count = @source_db.get_first_value("SELECT COUNT(*) FROM uploads")
 
       puts "Found #{existing_ids.size} existing uploads, #{max_count} total"
@@ -35,8 +38,9 @@ module BulkImport
 
       producer_thread =
         Thread.new do
-          query("SELECT * FROM uploads", @source_db).each do |row|
-            queue << row unless existing_ids.include?(row["id"])
+          query("SELECT * FROM uploads", @source_db).tap do |result_set|
+            result_set.each { |row| queue << row unless existing_ids.include?(row["id"]) }
+            result_set.close
           end
         end
 
