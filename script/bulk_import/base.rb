@@ -946,7 +946,15 @@ class BulkImport::Base
     post[:last_version_at] = post[:created_at]
     post[:updated_at] ||= post[:created_at]
 
-    post[:skip] = true if post[:raw].bytes.include?(0) || post[:cooked].bytes.include?(0)
+    if post[:raw].bytes.include?(0)
+      STDERR.puts "Skipping post with original ID #{post[:imported_id]} because `raw` contains null bytes"
+      post[:skip] = true
+    end
+
+    if post[:cooked].bytes.include?(0)
+      STDERR.puts "Skipping post with original ID #{post[:imported_id]} because `cooked` contains null bytes"
+      post[:skip] = true
+    end
 
     post
   end
@@ -1194,11 +1202,8 @@ class BulkImport::Base
           end
         end
       rescue => e
-        puts "\n"
-        puts "ERROR: #{e.message}"
-        puts e.backtrace.join("\n")
-        puts "\n"
         puts "First Row: #{rows.first.inspect}"
+        raise e
       end
     end
 
@@ -1278,7 +1283,7 @@ class BulkImport::Base
         video_id = $1
         result = <<-HTML
         <div class="lazyYT" data-youtube-id="#{video_id}" data-width="480" data-height="270" data-parameters="feature=oembed&amp;wmode=opaque"></div>
-      HTML
+        HTML
         result.strip
       end
 
