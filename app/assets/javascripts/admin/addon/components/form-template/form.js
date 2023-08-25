@@ -6,15 +6,18 @@ import I18n from "I18n";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { templateFormFields } from "admin/lib/template-form-fields";
 import FormTemplate from "admin/models/form-template";
-import showModal from "discourse/lib/show-modal";
+import FormTemplateValidationOptionsModal from "admin/components/modal/form-template-validation-options";
 
 export default class FormTemplateForm extends Component {
   @service router;
   @service dialog;
+  @service modal;
+
   @tracked formSubmitted = false;
   @tracked templateContent = this.args.model?.template || "";
   @tracked templateName = this.args.model?.name || "";
   @tracked showFormTemplateFormPreview;
+
   isEditing = this.args.model?.id ? true : false;
   quickInsertFields = [
     {
@@ -112,9 +115,7 @@ export default class FormTemplateForm extends Component {
 
   @action
   showValidationOptionsModal() {
-    return showModal("admin-form-template-validation-options", {
-      admin: true,
-    });
+    return this.modal.show(FormTemplateValidationOptionsModal);
   }
 
   @action
