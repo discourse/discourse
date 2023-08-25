@@ -1170,11 +1170,6 @@ blockquote > *:last-child {
     );
     min-width: 0; // Allows flex container to shrink
 
-    .avatar {
-      margin-right: 0.5em;
-      float: left;
-    }
-
     p {
       margin: 0;
       padding: 0.15em 0.5em 0 0;
@@ -1183,6 +1178,13 @@ blockquote > *:last-child {
 
   .small-action-contents {
     flex: 1 1 auto;
+    display: flex;
+    a.trigger-user-card {
+      display: inline-flex;
+      align-items: center;
+      margin-right: 0.5em;
+      border-radius: 1em;
+    }
   }
 
   .small-action-buttons {
