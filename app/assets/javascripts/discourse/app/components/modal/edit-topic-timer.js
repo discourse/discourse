@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import I18n from "I18n";
-import { alias } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { tracked } from "@glimmer/tracking";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
@@ -20,7 +19,8 @@ export const DELETE_REPLIES_TYPE = "delete_replies";
 export default class EditTopicTimer extends Component {
   @service currentUser;
 
-  @tracked topicTimer = new TrackedObject(
+  @tracked
+  topicTimer = new TrackedObject(
     this.args.model.topic?.topic_timer || this.createDefaultTimer()
   );
   @tracked loading = false;
