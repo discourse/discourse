@@ -1,5 +1,4 @@
 import Controller from "@ember/controller";
-import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import discourseComputed from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
@@ -8,6 +7,9 @@ import { inject as service } from "@ember/service";
 import { categoriesComponent } from "./discovery/categories";
 import { getOwner } from "@ember/application";
 import { tracked } from "@glimmer/tracking";
+import { filterTypeForMode } from "discourse/lib/filter-mode";
+import { or } from "@ember/object/computed";
+import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 
 // Just add query params here to have them automatically passed to topic list filters.
 export const queryParams = {
@@ -65,12 +67,15 @@ export function addDiscoveryQueryParam(p, opts) {
 }
 
 @disableImplicitInjections
-export default class DiscoverySortableController extends Controller.extend(
-  BulkTopicSelection
-) {
+export default class DiscoverySortableController extends Controller.extend() {
   @service composer;
   @service siteSettings;
   @service site;
+
+  bulkSelectHelper = new BulkSelectHelper(this);
+
+  @or("currentUser.canManageTopic", "showDismissRead", "showResetNew")
+  canBulkSelect;
 
   @tracked subcategoryList;
 
@@ -85,21 +90,22 @@ export default class DiscoverySortableController extends Controller.extend(
     this.resetSelected();
   }
 
-  @discourseComputed("model.filter", "model.topics.length")
-  showDismissRead(filter, topicsLength) {
-    return (
-      this._isFilterPage(this.model.get("filter"), "unread") && topicsLength > 0
-    );
+  get bulkSelectEnabled() {
+    return this.bulkSelectHelper.bulkSelectEnabled;
+  }
+
+  get selected() {
+    return this.bulkSelectHelper.selected;
   }
 
   @discourseComputed("model.filter", "model.topics.length")
-  showResetNew(filter, topicsLength) {
-    return this._isFilterPage(filter, "new") && topicsLength > 0;
+  showDismissRead(filterMode, topicsLength) {
+    return filterTypeForMode(filterMode) === "unread" && topicsLength > 0;
   }
 
-  @action
-  toggleBulkSelect() {
-    this.bulkSelectEnabled = !this.bulkSelectEnabled;
+  @discourseComputed("model.filter", "model.topics.length")
+  showResetNew(filterMode, topicsLength) {
+    return filterTypeForMode(filterMode) === "new" && topicsLength > 0;
   }
 
   @action
@@ -146,5 +152,25 @@ export default class DiscoverySortableController extends Controller.extend(
   @action
   changePeriod(p) {
     this.set("period", p);
+  }
+
+  @action
+  toggleBulkSelect() {
+    this.bulkSelectHelper.toggleBulkSelect();
+  }
+
+  @action
+  dismissRead(operationType, options) {
+    this.bulkSelectHelper.dismissRead(operationType, options);
+  }
+
+  @action
+  updateAutoAddTopicsToBulkSelect(value) {
+    this.bulkSelectHelper.autoAddTopicsToBulkSelect = value;
+  }
+
+  @action
+  addTopicsToBulkSelect(topics) {
+    this.bulkSelectHelper.addTopics(topics);
   }
 }

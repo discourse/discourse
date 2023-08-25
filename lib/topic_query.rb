@@ -749,7 +749,7 @@ class TopicQuery
         # category default sort order
         sort_order, sort_ascending =
           Category.where(id: category_id).pick(:sort_order, :sort_ascending)
-        if sort_order && (filter.blank? || %i[latest unseen].include?(filter))
+        if sort_order && (filter.blank? || %w[latest unseen].include?(filter.to_s))
           options[:order] = sort_order
           options[:ascending] = !!sort_ascending ? "true" : "false"
         else

@@ -30,7 +30,7 @@ export default DiscourseRoute.extend({
 
     this.controllerFor("user-topics-list").setProperties({
       showToggleBulkSelect: false,
-      selected: [],
     });
+    this.controllerFor("user-topics-list").bulkSelectHelper.clear();
   },
 });

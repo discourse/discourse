@@ -184,6 +184,7 @@ class AbstractCategoryRoute extends DiscourseRoute {
     this.set("topics", null);
 
     controller.setProperties(topicOpts);
+    controller.bulkSelectHelper.clear();
   }
 
   deactivate() {

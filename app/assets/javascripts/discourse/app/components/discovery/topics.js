@@ -16,7 +16,6 @@ export default class DiscoveryTopics extends Component.extend(DismissTopics) {
   @service composer;
 
   period = null;
-  selected = null;
   expandGloballyPinned = false;
   expandAllPinned = false;
 

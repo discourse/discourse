@@ -136,6 +136,7 @@ class AbstractTopicRoute extends DiscourseRoute {
       expandGloballyPinned: true,
       navigationArgs: { filterType },
     });
+    controller.bulkSelectHelper.clear();
 
     super.setupController(...arguments);
   }
