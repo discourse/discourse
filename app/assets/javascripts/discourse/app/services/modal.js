@@ -12,7 +12,6 @@ import deprecated from "discourse-common/lib/deprecated";
 // don't cause unnecessary noise.
 const KNOWN_LEGACY_MODALS = [
   "associate-account-confirm",
-  "auth-token",
   "avatar-selector",
   "change-owner",
   "change-post-notice",
