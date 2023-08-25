@@ -50,11 +50,11 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
   afterMessage() {}
 
   subscribe(model) {
-    this.beforeSubscribe(model);
     this.unsubscribe();
+    this.beforeSubscribe(model);
     this.model = model;
 
-    if (!this.messageBusChannel || !this.messageBusLastId) {
+    if (!this.messageBusChannel) {
       return;
     }
 
