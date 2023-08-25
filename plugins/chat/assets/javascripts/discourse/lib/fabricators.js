@@ -142,10 +142,10 @@ function threadPreviewFabricator(args = {}) {
 
 function reactionFabricator(args = {}) {
   return ChatMessageReaction.create({
-    count: args.count || 1,
+    count: args.count ?? 1,
     users: args.users || [userFabricator()],
     emoji: args.emoji || "heart",
-    reacted: args.reacted || false,
+    reacted: args.reacted ?? false,
   });
 }
 
