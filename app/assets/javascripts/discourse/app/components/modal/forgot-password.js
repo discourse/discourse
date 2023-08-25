@@ -14,7 +14,8 @@ import { htmlSafe } from "@ember/template";
 export default class ForgotPassword extends Component {
   @service siteSettings;
 
-  @tracked emailOrUsername = cookie("email") || this.args.model.emailOrUsername;
+  @tracked
+  emailOrUsername = cookie("email") || this.args.model?.emailOrUsername || "";
   @tracked disabled = false;
   @tracked helpSeen = false;
   @tracked offerHelp;
@@ -24,9 +25,9 @@ export default class ForgotPassword extends Component {
     if (this.disabled) {
       return true;
     } else if (this.siteSettings.hide_email_address_taken) {
-      return !(this.emailOrUsername || "").includes("@");
+      return !this.emailOrUsername.includes("@");
     } else {
-      return isEmpty((this.emailOrUsername || "").trim());
+      return isEmpty(this.emailOrUsername.trim());
     }
   }
 
