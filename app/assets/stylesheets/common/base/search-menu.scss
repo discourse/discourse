@@ -25,6 +25,8 @@ $search-pad-horizontal: 0.5em;
     display: flex;
     align-items: center;
     border: 1px solid var(--primary-medium);
+    border-radius: var(--d-border-radius-large);
+    overflow: hidden;
     input#search-term {
       border-width: 0;
       margin-bottom: 0;
