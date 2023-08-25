@@ -14,6 +14,7 @@ import { getOwner } from "discourse-common/lib/get-owner";
 let _components = {};
 
 const pluginReviewableParams = {};
+const customModalClassMap = {};
 
 export function addPluginReviewableParam(reviewableType, param) {
   pluginReviewableParams[reviewableType]
@@ -21,9 +22,15 @@ export function addPluginReviewableParam(reviewableType, param) {
     : (pluginReviewableParams[reviewableType] = [param]);
 }
 
+export function registerReviewableCustomModal(reviewableType, modalClass) {
+  customModalClassMap[reviewableType] ??= {};
+  customModalClassMap[reviewableType][modalClass.name] = modalClass;
+}
+
 export default Component.extend({
   adminTools: optionalService(),
   dialog: service(),
+  modal: service(),
   tagName: "",
   updating: null,
   editing: false,
@@ -286,13 +293,23 @@ export default Component.extend({
           action: performableAction,
         });
       } else if (customModal) {
-        showModal(customModal, {
-          title: `review.${customModal}.title`,
-          model: this.reviewable,
-        }).setProperties({
-          performConfirmed: this._performConfirmed,
-          action: performableAction,
-        });
+        const customModalClass =
+          customModalClassMap[this.reviewable.type]?.[customModal];
+
+        if (customModalClass) {
+          this.modal.show(customModalClass, {
+            model: {
+              reviewable: this.reviewable,
+              performConfirmed: this._performConfirmed,
+              action: performableAction,
+            },
+          });
+        } else {
+          // eslint-disable-next-line no-console
+          console.error(
+            `No custom modal found for ${customModal} for reviewable type ${this.reviewable.type}`
+          );
+        }
       } else {
         return this._performConfirmed(performableAction);
       }

@@ -55,7 +55,10 @@ import { addGlobalNotice } from "discourse/components/global-notice";
 import { addNavItem } from "discourse/models/nav-item";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
-import { addPluginReviewableParam } from "discourse/components/reviewable-item";
+import {
+  addPluginReviewableParam,
+  registerReviewableCustomModal,
+} from "discourse/components/reviewable-item";
 import {
   addComposerSaveErrorCallback,
   addPopupMenuOptionsCallback,
@@ -130,7 +133,7 @@ import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-export const PLUGIN_API_VERSION = "1.9.0";
+export const PLUGIN_API_VERSION = "1.9.1";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -1648,8 +1651,35 @@ class PluginApi {
   addSaveableUserOptionField(fieldName) {
     addSaveableUserOptionField(fieldName);
   }
+
+  /**
+   * Adds additional params to be sent to the reviewable/:id/perform/:action
+   * endpoint for a given reviewable type. This is so plugins can provide more
+   * complex reviewable actions that may depend on a custom modal.
+   *
+   * This is copied from the reviewable model instance when performing an action
+   * on the ReviewableItem component.
+   *
+   * ```
+   * api.addPluginReviewableParam("ReviewablePluginType", "some_param");
+   * ```
+   **/
   addPluginReviewableParam(reviewableType, param) {
     addPluginReviewableParam(reviewableType, param);
+  }
+
+  /**
+   * Registers a modal JS class for a specific reviewable type. This is used
+   * alongside the `custom_modal` option for reviewables. The `custom_modal`
+   * option should just be the JS class name as a string, then we map it to the
+   * real class at runtime.
+   *
+   * ```
+   * api.registerReviewableCustomModal("ReviewablePluginType", MyCustomModal);
+   * ```
+   **/
+  registerReviewableCustomModal(reviewableType, modalClass) {
+    registerReviewableCustomModal(reviewableType, modalClass);
   }
 
   /**
