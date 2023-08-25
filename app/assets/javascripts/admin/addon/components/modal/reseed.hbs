@@ -45,12 +45,11 @@
     </ConditionalLoadingSpinner>
   </:body>
   <:footer>
-    <ConditionalLoadingSpinner @condition={{this.reseeding}} @size="small" />
     <DButton
       @action={{this.reseed}}
-      class="btn-danger"
       @label="admin.reseed.modal.replace"
-      @disabled={{this.reseeding}}
+      @isLoading={{this.reseeding}}
+      class="btn-danger"
     />
 
     {{#unless this.reseeding}}
