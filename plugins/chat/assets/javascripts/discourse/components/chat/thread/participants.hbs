@@ -1,5 +1,5 @@
 {{#if (gt @thread.preview.participantUsers.length 1)}}
-  <div class="chat-thread-participants">
+  <div class="chat-thread-participants" ...attributes>
     <div class="chat-thread-participants__avatar-group">
       {{#each @thread.preview.participantUsers as |user|}}
         <Chat::UserAvatar

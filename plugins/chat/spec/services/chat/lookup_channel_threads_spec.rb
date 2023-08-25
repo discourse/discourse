@@ -260,6 +260,14 @@ RSpec.describe ::Chat::LookupChannelThreads do
       end
     end
 
+    describe "step - fetch_participants" do
+      it "returns correct participants" do
+        expect(result.participants).to eq(
+          ::Chat::ThreadParticipantQuery.call(thread_ids: [thread_1, thread_2, thread_3].map(&:id)),
+        )
+      end
+    end
+
     describe "step - build_load_more_url" do
       it "returns a url with the correct params" do
         expect(result.load_more_url).to eq("/chat/api/channels/#{channel_1.id}/threads?offset=10")

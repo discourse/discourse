@@ -222,7 +222,7 @@ module(
         .dom(".select-kit-header .filter-input")
         .hasAttribute(
           "placeholder",
-          "Search...",
+          "Search…",
           "Placeholder is back to default when there is no selection"
         );
     });
