@@ -7,6 +7,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { tracked } from "@glimmer/tracking";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 import TopicTimer from "discourse/models/topic-timer";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 
 export const CLOSE_STATUS_TYPE = "close";
 export const CLOSE_AFTER_LAST_POST_STATUS_TYPE = "close_after_last_post";
@@ -19,6 +20,7 @@ export const DELETE_REPLIES_TYPE = "delete_replies";
 export default class EditTopicTimer extends Component {
   @service currentUser;
 
+  @tracked topicTimer = new TrackedObject(this.args.model.topic.topic_timer);
   @tracked loading = false;
   @tracked isPublic = "true";
   @tracked defaultStatusType = this.publicTimerTypes[0].id;
@@ -107,32 +109,45 @@ export default class EditTopicTimer extends Component {
     )
       .then((result) => {
         if (time || durationMinutes) {
-          this.closeModal();
-
-          this.args.model.topic.topicTimer.execute_at = result.execute_at;
-          this.args.model.topic.topicTimer.duration_minutes =
-            result.duration_minutes;
-          this.args.model.topic.topicTimer.category_id = result.category_id;
-
-          this.args.model.topic.closed = result.closed;
+          this.args.model.updateTopicTimerProperty(
+            "execute_at",
+            result.execute_at
+          );
+          this.args.model.updateTopicTimerProperty(
+            "duration_minutes",
+            result.duration_minutes
+          );
+          this.args.model.updateTopicTimerProperty(
+            "category_id",
+            result.category_id
+          );
+          this.args.model.updateTopicTimerProperty("closed", result.closed);
         } else {
-          this.args.model.topic.topic_timer = TopicTimer.create({
+          const topicTimer = TopicTimer.create({
             status_type: this.defaultStatusType,
           });
-          this.send("onChangeInput", null, null);
+          this.topicTime = topicTimer;
+          this.args.model.setTopicTimer(topicTimer);
+          this.onChangeInput(null, null);
         }
       })
       .catch(popupAjaxError)
       .finally(() => {
         this.loading = false;
+        this.args.closeModal();
       });
   }
 
   @action
   onChangeStatusType(value) {
-    this.args.model.topic.topicTimer.based_on_last_post =
-      CLOSE_AFTER_LAST_POST_STATUS_TYPE === value;
-    this.args.model.topic.topicTimer.status_type = value;
+    const basedOnLastPost = CLOSE_AFTER_LAST_POST_STATUS_TYPE === value;
+    this.topicTimer.based_on_last_post = basedOnLastPost;
+    this.args.model.updateTopicTimerProperty(
+      "based_on_last_post",
+      basedOnLastPost
+    );
+    this.topicTimer.status_type = value;
+    this.args.model.updateTopicTimerProperty("status_type", value);
   }
 
   @action
@@ -140,52 +155,49 @@ export default class EditTopicTimer extends Component {
     if (moment.isMoment(time)) {
       time = time.format(FORMAT);
     }
-    this.args.model.topic.topicTimer.updateTime = time;
+    this.topicTimer.updateTime = time;
+    this.args.model.updateTopicTimerProperty("updateTime", time);
   }
 
   @action
   async saveTimer() {
-    if (
-      !this.args.model.topic.topicTimer.updateTime &&
-      !this.args.model.topic.topicTimer.duration_minutes
-    ) {
+    this.flash = null;
+
+    if (!this.topicTimer.updateTime && !this.topicTimer.duration_minutes) {
       this.flash = I18n.t("topic.topic_status_update.time_frame_required");
       return;
     }
 
-    if (
-      this.args.model.topic.topicTimer.duration_minutes &&
-      !this.args.model.topic.topicTimer.updateTime
-    ) {
-      if (this.args.model.topic.topicTimer.duration_minutes <= 0) {
+    if (this.topicTimer.duration_minutes && !this.topicTimer.updateTime) {
+      if (this.topicTimer.duration_minutes <= 0) {
         this.flash = I18n.t("topic.topic_status_update.min_duration");
         return;
       }
 
       // cannot be more than 20 years
-      if (this.args.model.topic.topicTimer.duration_minutes > 20 * 365 * 1440) {
+      if (this.topicTimer.duration_minutes > 20 * 365 * 1440) {
         this.flash = I18n.t("topic.topic_status_update.max_duration");
         return;
       }
     }
 
-    let statusType = this.args.model.topic.topicTimer.status_type;
+    let statusType = this.topicTimer.status_type;
     if (statusType === CLOSE_AFTER_LAST_POST_STATUS_TYPE) {
       statusType = CLOSE_STATUS_TYPE;
     }
 
     await this._setTimer(
-      this.args.model.topic.topicTimer.updateTime,
-      this.args.model.topic.topicTimer.duration_minutes,
+      this.topicTimer.updateTime,
+      this.topicTimer.duration_minutes,
       statusType,
-      this.args.model.topic.topicTimer.based_on_last_post,
-      this.args.model.topic.topicTimer.category_id
+      this.topicTimer.based_on_last_post,
+      this.topicTimer.category_id
     );
   }
 
   @action
   async removeTimer() {
-    let statusType = this.args.model.topic.topicTimer.status_type;
+    let statusType = this.topicTimer.status_type;
     if (statusType === CLOSE_AFTER_LAST_POST_STATUS_TYPE) {
       statusType = CLOSE_STATUS_TYPE;
     }

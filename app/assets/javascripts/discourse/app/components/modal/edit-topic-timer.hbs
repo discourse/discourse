@@ -1,36 +1,34 @@
 <DModal
   @title={{i18n "topic.topic_status_update.title"}}
+  @flash={{this.flash}}
+  @closeModal={{@closeModal}}
   autoFocus="false"
   id="topic-timer-modal"
   class="edit-topic-timer-modal"
-  @flash={{this.flash}}
 >
   <:body>
     <EditTopicTimerForm
-      @topic={{this.model}}
+      @topic={{@model.topic}}
       @topicTimer={{this.topicTimer}}
       @timerTypes={{this.publicTimerTypes}}
       @onChangeStatusType={{this.onChangeStatusType}}
       @onChangeInput={{this.onChangeInput}}
     />
-
   </:body>
   <:footer>
-    <div class="control-group edit-topic-timer-buttons">
+    <DButton
+      class="btn-primary"
+      @disabled={{this.saveDisabled}}
+      @label="topic.topic_status_update.save"
+      @action={{this.saveTimer}}
+      @isLoading={{this.loading}}
+    />
+    {{#if this.topicTimer.execute_at}}
       <DButton
-        class="btn-primary"
-        @disabled={{this.saveDisabled}}
-        @label="topic.topic_status_update.save"
-        @action={{this.saveTimer}}
+        class="btn-danger"
+        @action={{this.removeTimer}}
+        @label="topic.topic_status_update.remove"
       />
-      <ConditionalLoadingSpinner @size="small" @condition={{this.loading}} />
-      {{#if this.topicTimer.execute_at}}
-        <DButton
-          class="pull-right btn-danger"
-          @action={{this.removeTimer}}
-          @label="topic.topic_status_update.remove"
-        />
-      {{/if}}
-    </div>
+    {{/if}}
   </:footer>
 </DModal>
