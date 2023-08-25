@@ -11,12 +11,13 @@ export default class ChatChannelPaneSubscriptionsManager extends ChatPaneBaseSub
 
   @tracked notices = new TrackedArray();
 
-  get messageBusChannel() {
-    return `/chat/${this.model.id}`;
+  beforeSubscribe(model) {
+    this.messageBusChannel = `/chat/${model.id}`;
+    this.messageBusLastId = model.channelMessageBusLastId;
   }
 
-  get messageBusLastId() {
-    return this.model.channelMessageBusLastId;
+  afterMessage(model, _, __, lastMessageBusId) {
+    model.channelMessageBusLastId = lastMessageBusId;
   }
 
   handleSentMessage() {

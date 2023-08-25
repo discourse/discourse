@@ -18,7 +18,6 @@ const KNOWN_LEGACY_MODALS = [
   "create-account",
   "create-invite-bulk",
   "create-invite",
-  "edit-topic-timer",
   "feature-topic-on-profile",
   "feature-topic",
   "flag",
