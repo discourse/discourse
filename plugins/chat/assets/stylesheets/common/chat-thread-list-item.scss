@@ -31,6 +31,11 @@
     }
   }
 
+  &__participants {
+    display: flex;
+    align-items: center;
+  }
+
   &__main {
     flex: 1 1 100%;
     width: 100%;
@@ -57,8 +62,10 @@
   }
 
   &__metadata__separator {
-    padding-inline: 0.25rem;
+    padding-inline: 0.5rem;
     font-weight: 700;
+    font-size: 20px;
+    text-align: center;
   }
 
   &__participants {
@@ -85,12 +92,22 @@
 
   &__title {
     flex: 1 1 auto;
-    font-weight: bold;
+    font-weight: 500;
+    font-size: var(--font-up-1);
     @include ellipsis;
+  }
+
+  &__last-reply-excerpt {
+    font-size: var(--font-0);
   }
 
   &__unread-indicator {
     flex: 0 0 auto;
+
+    .chat-thread-list-item-unread-indicator__number {
+      color: var(--primary);
+      font-size: var(--font-up-1);
+    }
   }
 
   &__open-button {

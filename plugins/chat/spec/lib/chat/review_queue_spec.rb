@@ -246,6 +246,13 @@ describe Chat::ReviewQueue do
         )
       end
 
+      it "creates a reviewable" do
+        queue.flag_message(message, guardian, ReviewableScore.types[:notify_moderators])
+
+        reviewable = Chat::ReviewableMessage.find_by(target: message)
+        expect(reviewable).to be_present
+      end
+
       it "ignores the is_warning flag when notifying moderators" do
         queue.flag_message(
           message,
