@@ -20,11 +20,15 @@ export const DELETE_REPLIES_TYPE = "delete_replies";
 export default class EditTopicTimer extends Component {
   @service currentUser;
 
-  @tracked topicTimer = new TrackedObject(this.args.model.topic.topic_timer);
+  @tracked topicTimer = new TrackedObject(
+    this.args.model.topic?.topic_timer || this.createDefaultTimer()
+  );
   @tracked loading = false;
-  @tracked isPublic = "true";
-  @tracked defaultStatusType = this.publicTimerTypes[0].id;
   @tracked flash;
+
+  get defaultStatusType() {
+    return this.publicTimerTypes[0].id;
+  }
 
   get publicTimerTypes() {
     const types = [];
@@ -122,20 +126,25 @@ export default class EditTopicTimer extends Component {
             result.category_id
           );
           this.args.model.updateTopicTimerProperty("closed", result.closed);
+          this.args.closeModal();
         } else {
-          const topicTimer = TopicTimer.create({
-            status_type: this.defaultStatusType,
-          });
+          const topicTimer = this.createDefaultTimer();
           this.topicTime = topicTimer;
           this.args.model.setTopicTimer(topicTimer);
           this.onChangeInput(null, null);
         }
       })
       .catch(popupAjaxError)
-      .finally(() => {
-        this.loading = false;
-        this.args.closeModal();
-      });
+      .finally(() => (this.loading = false));
+  }
+
+  @action
+  createDefaultTimer() {
+    const defaultTimer = TopicTimer.create({
+      status_type: this.defaultStatusType,
+    });
+    this.args.model.setTopicTimer(defaultTimer);
+    return defaultTimer;
   }
 
   @action
@@ -202,5 +211,8 @@ export default class EditTopicTimer extends Component {
       statusType = CLOSE_STATUS_TYPE;
     }
     await this._setTimer(null, null, statusType);
+    // timer has been removed and we are removing `execute_at`
+    // which will hide the remove timer button from the modal
+    this.topicTimer.execute_at = null;
   }
 }

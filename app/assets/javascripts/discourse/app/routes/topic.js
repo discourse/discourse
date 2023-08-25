@@ -124,13 +124,10 @@ const TopicRoute = DiscourseRoute.extend({
   @action
   showTopicTimerModal() {
     const model = this.modelFor("topic");
-    if (!model.get("topic_timer")) {
-      model.set("topic_timer", {});
-    }
     this.modal.show(EditTopicTimerModal, {
       model: {
         topic: model,
-        setTopicTimer: (v) => this.model.set("topic_timer", v),
+        setTopicTimer: (v) => model.set("topic_timer", v),
         updateTopicTimerProperty: this.updateTopicTimerProperty,
       },
     });
