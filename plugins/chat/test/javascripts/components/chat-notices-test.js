@@ -9,9 +9,6 @@ import { click, render } from "@ember/test-helpers";
 
 module("Discourse Chat | Component | chat-notice", function (hooks) {
   setupRenderingTest(hooks);
-  pretender.put("/chat/0/invite", () => {
-    return [200, { "Content-Type": "application/json" }, {}];
-  });
 
   test("displays all notices for a channel", async function (assert) {
     this.channel = fabricators.channel();
@@ -67,7 +64,6 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
       "Notice was cleared"
     );
   });
-
   test("MentionWithoutMembership notice renders", async function (assert) {
     this.channel = fabricators.channel();
     this.manager = this.container.lookup(
@@ -94,6 +90,10 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
     assert
       .dom(".mention-without-membership-notice__body__link")
       .hasText(I18n.t("chat.mention_warning.invite"));
+
+    pretender.put(`/chat/${this.channel.id}/invite`, () => {
+      return [200, { "Content-Type": "application/json" }, {}];
+    });
 
     await click(
       query(".mention-without-membership-notice__body__link"),

@@ -6,13 +6,22 @@
     >
       {{d-icon "check"}}
       <span>
-        {{i18n "chat.mention_warning.invitations_sent" count=this.userIds.length}}
+        {{i18n
+          "chat.mention_warning.invitations_sent"
+          count=this.userIds.length
+        }}
       </span>
     </span>
   {{else}}
     <p class="mention-without-membership-notice__body -without-membership">
-      <span class="mention-without-membership-notice__body__text">{{@notice.componentArgs.text}}</span>
-      <a class="mention-without-membership-notice__body__link" href {{on "click" this.sendInvitations}}>
+      <span
+        class="mention-without-membership-notice__body__text"
+      >{{@notice.componentArgs.text}}</span>
+      <a
+        class="mention-without-membership-notice__body__link"
+        href
+        {{on "click" this.sendInvitations}}
+      >
         {{i18n "chat.mention_warning.invite"}}
       </a>
     </p>
