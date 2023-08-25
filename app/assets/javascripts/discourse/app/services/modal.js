@@ -36,7 +36,6 @@ const KNOWN_LEGACY_MODALS = [
   "request-group-membership-form",
   "share-and-invite",
   "tag-upload",
-  "admin-reseed",
   "admin-uploaded-image-list",
 ];
 
