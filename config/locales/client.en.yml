@@ -5037,7 +5037,7 @@ en:
             title: "Create a backup"
             confirm: "Do you want to start a new backup?"
             include_uploads: "include all uploads"
-            upload_warning: 'This is for database backups only. Uploads will not be included, meaning all images and other file uploads can be missing if the backup is restored to another hosting setup. <b>To enable a full backup including your S3 uploads please see <a href="https://meta.discourse.org/t/-/276535" target="_blank">this guide</a>.</b>'
+            s3_upload_warning: 'This is for database backups only. Uploads will not be included, meaning all images and other file uploads can be missing if the backup is restored to another hosting setup. <b>To enable a full backup including your S3 uploads please see <a href="https://meta.discourse.org/t/-/276535" target="_blank">this guide</a>.</b>'
           download:
             label: "Download"
             title: "Send email with download link"

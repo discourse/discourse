@@ -24,7 +24,7 @@ export default class StartBackup extends Component {
       this.siteSettings.enable_s3_uploads &&
       !this.siteSettings.include_s3_uploads_in_backups
     ) {
-      return I18n.t("admin.backups.operations.backup.upload_warning");
+      return I18n.t("admin.backups.operations.backup.s3_upload_warning");
     }
     return "";
   }
