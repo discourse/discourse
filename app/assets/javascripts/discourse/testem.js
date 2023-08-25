@@ -44,7 +44,7 @@ class Reporter extends TapReporter {
       );
 
       const color = this.colorForResult(result);
-      const matches = string.match(/(.+)\n(\s+---\n[\S\s]+)/);
+      const matches = string.match(/([\S\s]+?)(\n\s+browser\slog:[\S\s]+)/);
 
       if (matches) {
         this.out.write(color(matches[1]));
