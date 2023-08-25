@@ -72,12 +72,11 @@ export default class DiscoverySortableController extends Controller.extend() {
   @service siteSettings;
   @service site;
 
+  @tracked subcategoryList;
   bulkSelectHelper = new BulkSelectHelper(this);
 
   @or("currentUser.canManageTopic", "showDismissRead", "showResetNew")
   canBulkSelect;
-
-  @tracked subcategoryList;
 
   queryParams = Object.keys(queryParams);
 
@@ -86,8 +85,6 @@ export default class DiscoverySortableController extends Controller.extend() {
     this.queryParams.forEach((p) => {
       this[p] = queryParams[p].default;
     });
-
-    this.resetSelected();
   }
 
   get bulkSelectEnabled() {
