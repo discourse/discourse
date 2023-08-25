@@ -1,0 +1,20 @@
+source_db_path: "/path/to/your/db.sqlite3"
+output_db_path: "/path/to/your/uploads.sqlite3"
+
+root_path: "/path/to/your/files"
+
+# The number of threads to use for processing uploads is calculated as:
+#   thread_count = [number of cores] * [thread_count_factor]
+thread_count_factor: 1.5
+
+settings:
+  authorized_extensions: "*"
+  max_attachment_size_kb: 102_400
+  max_image_size_kb: 102_400
+
+  enable_s3_uploads: true
+  s3_upload_bucket: "your-bucket-name"
+  s3_region: "your-region"
+  s3_access_key_id: "your-access-key-id"
+  s3_secret_access_key: "your-secret-access-key"
+  s3_cdn_url: "https://your-cdn-url.com"

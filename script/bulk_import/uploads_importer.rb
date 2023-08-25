@@ -7,20 +7,22 @@ require "sqlite3"
 
 module BulkImport
   class UploadsImporter
-    def initialize(source_db_path, output_db_path, root_path)
-      @source_db = create_connection(source_db_path)
-      @output_db = create_connection(output_db_path)
-      @root_path = root_path
+    TRANSACTION_SIZE = 1000
+    QUEUE_SIZE = 1000
+
+    def initialize(settings_path)
+      @settings = YAML.load_file(settings_path, symbolize_names: true)
+
+      @source_db = create_connection(@settings[:source_db_path])
+      @output_db = create_connection(@settings[:output_db_path])
+      @root_path = @settings[:root_path]
 
       initialize_output_db
+      configure_site_settings
     end
 
     def run
-      SiteSetting.authorized_extensions = "*"
-      SiteSetting.max_attachment_size_kb = 102_400
-      SiteSetting.max_image_size_kb = 102_400
-
-      queue = SizedQueue.new(1000)
+      queue = SizedQueue.new(QUEUE_SIZE)
       consumer_threads = []
 
       existing_ids = Set.new
@@ -37,7 +39,7 @@ module BulkImport
           end
         end
 
-      status_queue = SizedQueue.new(1000)
+      status_queue = SizedQueue.new(QUEUE_SIZE)
       status_thread =
         Thread.new do
           error_count = 0
@@ -62,7 +64,7 @@ module BulkImport
           end
         end
 
-      (Etc.nprocessors * 1.5).to_i.times do
+      (Etc.nprocessors * @settings[:thread_count_factor]).to_i.times do
         consumer_threads << Thread.new do
           while (row = queue.pop)
             begin
@@ -107,9 +109,8 @@ module BulkImport
       consumer_threads.each(&:join)
       status_queue.close
       status_thread.join
-
-      @source_db.close
-      @output_db.close
+    ensure
+      close
     end
 
     private
@@ -127,12 +128,33 @@ module BulkImport
     end
 
     def initialize_output_db
+      @statement_counter = 0
+
       @output_db.execute(<<~SQL)
         CREATE TABLE IF NOT EXISTS uploads (
           id TEXT PRIMARY KEY,
           upload JSON_TEXT
         )
       SQL
+    end
+
+    def insert(sql, bind_vars = [])
+      @output_db.transaction if @statement_counter == 0
+      @output_db.execute(sql, bind_vars)
+
+      if (@statement_counter += 1) > TRANSACTION_SIZE
+        @output_db.commit
+        @statement_counter = 0
+      end
+    end
+
+    def close
+      @source_db.close if @source_db
+
+      if @output_db
+        @output_db.commit if @output_db.transaction_active?
+        @output_db.close
+      end
     end
 
     def copy_to_tempfile(source_path)
@@ -154,8 +176,37 @@ module BulkImport
       return nil if value.nil?
       value ? 1 : 0
     end
+
+    def configure_site_settings
+      SiteSetting.authorized_extensions = @settings[:authorized_extensions]
+      SiteSetting.max_attachment_size_kb = @settings[:max_attachment_size_kb]
+      SiteSetting.max_image_size_kb = @settings[:max_image_size_kb]
+
+      if @settings[:enable_s3_uploads]
+        SiteSetting.s3_access_key_id = @settings[:s3_access_key_id]
+        SiteSetting.s3_secret_access_key = @settings[:s3_secret_access_key]
+        SiteSetting.s3_upload_bucket = @settings[:s3_upload_bucket]
+        SiteSetting.s3_region = @settings[:s3_region]
+        SiteSetting.s3_cdn_url = @settings[:s3_cdn_url]
+        SiteSetting.enable_s3_uploads = true
+
+        raise "Failed to enable S3 uploads" if SiteSetting.enable_s3_uploads != true
+
+        Tempfile.open("discourse-s3-test") do |tmpfile|
+          upload =
+            UploadCreator.new(tmpfile, "discourse-s3-test").create_for(Discourse::SYSTEM_USER_ID)
+
+          unless upload.present? && upload.persisted? && upload.errors.blank? &&
+                   upload.url.start_with?("//")
+            raise "Failed to upload to S3"
+          end
+
+          upload.destroy
+        end
+      end
+    end
   end
 end
 
-# bundle exec ruby script/bulk_import/uploads_importer.rb /path/to/source.db /path/to/output.db /path/to/uploads
-BulkImport::UploadsImporter.new(ARGV[0], ARGV[1], ARGV[2]).run
+# bundle exec ruby script/bulk_import/uploads_importer.rb /path/to/settings.yml
+BulkImport::UploadsImporter.new(ARGV.first).run
