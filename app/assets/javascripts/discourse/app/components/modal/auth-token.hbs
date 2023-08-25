@@ -9,7 +9,7 @@
     </div>
     <div>
       <h3>{{i18n "user.auth_tokens.details"}}</h3>
-      <ul style="list-style-type:none">
+      <ul>
         <li>{{d-icon "far-clock"}} {{format-date @model.seen_at}}</li>
         <li>{{d-icon "map-marker-alt"}} {{@model.location}}</li>
         <li>{{d-icon @model.icon}}
@@ -25,7 +25,9 @@
       <div>
         <h3>
           {{i18n "user.auth_tokens.latest_post"}}
-          <a href {{on "click" this.toggleExpanded}} {{did-insert this.focus}}>
+          {{! when this.fetchActivity is called, the modal focus is reset }}
+          {{! allowing you to tab behind the modal, so we need to refocus }}
+          <a href {{on "click" this.toggleExpanded}} {{auto-focus}}>
             {{d-icon (if this.expanded "caret-up" "caret-down")}}
           </a>
         </h3>

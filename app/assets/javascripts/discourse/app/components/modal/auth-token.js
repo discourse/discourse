@@ -26,13 +26,6 @@ export default class AuthTokenComponent extends Component {
     }
   }
 
-  // when fetchActivity() is called, the modal focus is reset
-  // allowing you to tab behind the modal, so we need to refocus
-  @action
-  focus(element) {
-    element.focus();
-  }
-
   @action
   toggleExpanded(event) {
     event?.preventDefault();
