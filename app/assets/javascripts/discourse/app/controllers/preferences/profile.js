@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
-import EmberObject from "@ember/object";
+import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import { cookAsync } from "discourse/lib/text";
@@ -8,8 +8,6 @@ import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { readOnly } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
-import { actionDescription } from "discourse/widgets/post-small-action";
-import { action } from "@ember/object";
 import FeatureTopicOnProfileModal from "discourse/components/modal/feature-topic-on-profile";
 
 export default Controller.extend({
@@ -74,7 +72,6 @@ export default Controller.extend({
 
   @action
   async showFeaturedTopicModal() {
-    console.log(this.model);
     await this.modal.show(FeatureTopicOnProfileModal, {
       model: {
         user: this.model,
