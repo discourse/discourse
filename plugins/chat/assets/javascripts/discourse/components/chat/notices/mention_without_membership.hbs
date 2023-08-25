@@ -1,18 +1,20 @@
-{{#if this.invitationsSent}}
-  <span
-    class="chat-message-mention-warning__invitation-sent"
-    {{chat/later-fn this.dismiss 3000}}
-  >
-    {{d-icon "check"}}
-    <span>
-      {{i18n "chat.mention_warning.invitations_sent" count=this.userIds.length}}
+<div class="mention-without-membership-notice">
+  {{#if this.invitationsSent}}
+    <span
+      class="mention-without-membership-notice__invitation-sent"
+      {{chat/later-fn this.dismiss 3000}}
+    >
+      {{d-icon "check"}}
+      <span>
+        {{i18n "chat.mention_warning.invitations_sent" count=this.userIds.length}}
+      </span>
     </span>
-  </span>
-{{else}}
-  <p class="chat-message-mention-warning__text -without-membership">
-    <span>{{@notice.componentArgs.text}}</span>
-    <a href {{on "click" this.sendInvitations}}>
-      {{i18n "chat.mention_warning.invite"}}
-    </a>
-  </p>
-{{/if}}
+  {{else}}
+    <p class="mention-without-membership-notice__body -without-membership">
+      <span class="mention-without-membership-notice__body__text">{{@notice.componentArgs.text}}</span>
+      <a class="mention-without-membership-notice__body__link" href {{on "click" this.sendInvitations}}>
+        {{i18n "chat.mention_warning.invite"}}
+      </a>
+    </p>
+  {{/if}}
+</div>

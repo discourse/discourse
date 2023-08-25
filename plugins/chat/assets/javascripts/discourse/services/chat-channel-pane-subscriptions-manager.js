@@ -25,14 +25,11 @@ export default class ChatChannelPaneSubscriptionsManager extends ChatPaneBaseSub
   }
 
   handleNotice(data) {
-    this.notices.push(ChatNotice.create(data));
+    this.notices.pushObject(ChatNotice.create(data));
   }
 
   clearNotice(notice) {
-    const index = this.notices.indexOf(notice);
-    if (index > -1) {
-      this.notices.splice(index, 1);
-    }
+    this.notices.removeObject(notice);
   }
 
   handleThreadOriginalMessageUpdate(data) {
