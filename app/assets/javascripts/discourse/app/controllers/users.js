@@ -2,11 +2,13 @@ import Controller from "@ember/controller";
 import Group from "discourse/models/group";
 import { action } from "@ember/object";
 import discourseDebounce from "discourse-common/lib/debounce";
-import showModal from "discourse/lib/show-modal";
 import { and, equal } from "@ember/object/computed";
 import { longDate } from "discourse/lib/formatter";
+import { inject as service } from "@ember/service";
+import EditUserDirectoryColumnsModal from "discourse/components/modal/edit-user-directory-columns";
 
 export default Controller.extend({
+  modal: service(),
   queryParams: [
     "period",
     "order",
@@ -97,7 +99,7 @@ export default Controller.extend({
 
   @action
   showEditColumnsModal() {
-    showModal("edit-user-directory-columns");
+    this.modal.show(EditUserDirectoryColumnsModal);
   },
 
   @action

@@ -20,7 +20,6 @@ const KNOWN_LEGACY_MODALS = [
   "create-invite-bulk",
   "create-invite",
   "edit-topic-timer",
-  "edit-user-directory-columns",
   "explain-reviewable",
   "feature-topic-on-profile",
   "feature-topic",
