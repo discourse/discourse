@@ -668,7 +668,6 @@ class Reviewable < ActiveRecord::Base
       a.icon = "user-times"
       a.label = "reviewables.actions.reject_user.delete.title"
       a.require_reject_reason = require_reject_reason
-      a.description = "reviewables.actions.reject_user.delete.description"
     end
 
     actions.add(:delete_user_block, bundle: bundle) do |a|
