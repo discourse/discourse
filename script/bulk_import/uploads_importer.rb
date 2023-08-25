@@ -4,6 +4,7 @@ require_relative "../../config/environment"
 
 require "etc"
 require "sqlite3"
+require "colored2"
 
 module BulkImport
   class UploadsImporter
@@ -43,24 +44,32 @@ module BulkImport
       status_thread =
         Thread.new do
           error_count = 0
+          skipped_count = 0
           current_count = 0
 
           while !(params = status_queue.pop).nil?
             begin
-              error_count += 1 if params[:upload].nil?
+              if params.delete(:skipped) == true
+                skipped_count += 1
+              elsif (error_message = params.delete(:error)) || params[:upload].nil?
+                error_count += 1
+                puts "", "Failed to create upload: #{params[:id]} (#{error_message})", ""
+              end
 
               @output_db.execute(<<~SQL, params)
                 INSERT INTO uploads (id, upload)
                 VALUES (:id, :upload)
               SQL
-            rescue StandardError
-              puts "Failed to insert upload: #{params}"
+            rescue StandardError => e
+              puts "", "Failed to insert upload: #{params[:id]} (#{e.message}))", ""
               error_count += 1
             end
 
             current_count += 1
+            error_count_text = error_count > 0 ? "#{error_count} errors".red : "0 errors"
 
-            print "\r%7d / %7d (%d errors)" % [current_count, max_count, error_count]
+            print "\r%7d / %7d (%s, %d skipped)" %
+                    [current_count, max_count, error_count_text, skipped_count]
           end
         end
 
@@ -69,7 +78,11 @@ module BulkImport
           while (row = queue.pop)
             begin
               path = File.join(@root_path, row["relative_path"], row["filename"])
-              next unless File.exist?(path)
+
+              if !File.exist?(path)
+                status_queue << { id: row["id"], upload: nil, skipped: true }
+                next
+              end
 
               copy_to_tempfile(path) do |file|
                 retry_count = 0
@@ -90,15 +103,16 @@ module BulkImport
                     status_queue << { id: row["id"], upload: upload.attributes.to_json }
                     break
                   elsif retry_count >= 3
-                    status_queue << { id: row["id"], upload: nil }
+                    status_queue << { id: row["id"], upload: nil, error: "too many retries" }
                     break
                   end
 
                   retry_count += 1
+                  sleep 0.25 * retry_count
                 end
               end
             rescue StandardError => e
-              status_queue << { id: row["id"], upload: nil }
+              status_queue << { id: row["id"], upload: nil, error: e.message }
             end
           end
         end
