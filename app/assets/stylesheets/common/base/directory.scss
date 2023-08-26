@@ -24,15 +24,14 @@
     display: flex;
     justify-content: space-between;
     .total-rows {
-      color: var(--primary-medium);
+      color: var(--primary-high);
       font-weight: normal;
     }
   }
 
   .directory-last-updated {
     margin-bottom: 0.5em;
-    color: var(--primary-medium);
-    font-size: var(--font-down-1);
+    color: var(--primary-high);
   }
 }
 
@@ -91,7 +90,7 @@
         font-size: var(--font-up-2);
         &,
         &--user-field {
-          color: var(--primary-medium);
+          color: var(--primary-high);
         }
       }
     }
