@@ -330,7 +330,7 @@
     &.bar,
     &.none {
       span.badge-category {
-        color: var(--header_primary-high);
+        color: var(--header_primary-very-high);
       }
     }
   }
@@ -345,6 +345,7 @@
       .discourse-tag {
         display: inline; // tags need to stay inline in order for them to truncate
         vertical-align: unset;
+        color: var(--header_primary-very-high) !important; //override the !important in tagging
       }
     }
   }

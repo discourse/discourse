@@ -301,9 +301,11 @@ nav.post-controls {
     }
     a,
     button {
-      color: var(--primary-low-mid-or-secondary-high);
+      color: var(--primary-high-or-secondary-low);
+      // opacity: .7;
       .d-icon {
         opacity: 1;
+        color: var(--primary-high-or-secondary-low);
       }
       display: inline-block;
     }
@@ -1227,7 +1229,7 @@ blockquote > *:last-child {
       line-height: 0;
       margin: 0;
       margin-bottom: -1px;
-      color: var(--danger-medium);
+      color: var(--danger);
       font-size: var(--font-down-1);
       width: calc(
         var(--topic-body-width) + var(--topic-avatar-width) +
@@ -1463,7 +1465,7 @@ span.mention {
   padding-left: 0;
   &.old {
     background-color: unset;
-    color: var(--primary-medium);
+    color: var(--primary-high);
 
     .d-icon {
       color: var(--primary-medium);

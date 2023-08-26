@@ -19,7 +19,7 @@
     z-index: z("base") + 1;
     color: var(--primary-med-or-secondary-med);
   }
-  .actions .fade-out {
+  .actions {
     .discourse-no-touch & {
       opacity: 0.7;
       transition: background 0.25s, opacity 0.7s ease-in-out;
@@ -28,8 +28,8 @@
       opacity: 1;
     }
   }
-  &:hover .actions .fade-out,
-  .selected .actions .fade-out {
+  &:hover .actions,
+  .selected .actions {
     opacity: 1;
   }
 }
