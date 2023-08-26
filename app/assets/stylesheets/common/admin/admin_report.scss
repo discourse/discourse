@@ -60,7 +60,7 @@
     }
 
     &.no-change {
-      color: var(--primary-medium);
+      color: var(--high);
       .d-icon {
         display: none;
       }
@@ -91,7 +91,7 @@
     border: 1px solid transparent;
 
     a {
-      color: var(--primary-medium);
+      color: var(--primary-high);
     }
 
     .d-icon {

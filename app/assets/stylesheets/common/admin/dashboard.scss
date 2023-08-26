@@ -262,7 +262,7 @@
       margin: 1em 0 0 0;
       display: flex;
       align-items: center;
-      color: var(--primary-medium);
+      color: var(--primary-high);
       .btn {
         margin-right: 1em;
       }
@@ -408,7 +408,7 @@
     &.user-leader {
       background: var(--gold);
       .label {
-        color: var(--secondary);
+        color: var(--copper);
       }
     }
   }

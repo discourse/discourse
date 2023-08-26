@@ -17,7 +17,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: var(--tertiary-low);
+    background: var(--tertiary-very-low);
     padding: 0.5em 0 0.5em 1em;
     color: var(--primary);
     padding: 0.5em 0 0.5em 1em;
@@ -39,7 +39,7 @@
       }
     }
     .d-icon {
-      color: var(--primary-medium);
+      color: var(--tertiary);
     }
   }
 }

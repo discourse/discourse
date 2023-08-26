@@ -29,7 +29,7 @@
   .topics .badge-notification,
   .category .badge-notification {
     background-color: transparent;
-    color: var(--primary-med-or-secondary-high);
+    color: var(--primary-high-or-secondary-low);
   }
 
   .topics {
@@ -78,7 +78,7 @@
     a.last-posted-at,
     a.last-posted-at:visited {
       font-size: var(--font-down-1);
-      color: var(--primary-med-or-secondary-high);
+      color: var(--primary-high);
     }
     .title {
       @include ellipsis;

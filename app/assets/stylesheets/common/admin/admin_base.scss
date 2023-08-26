@@ -264,7 +264,7 @@ $mobile-breakpoint: 700px;
         max-width: 80vw;
         margin-right: 3em;
       }
-      color: var(--primary-medium);
+      color: var(--primary-high);
     }
   }
   .edit-site-text {
@@ -561,7 +561,7 @@ $mobile-breakpoint: 700px;
     > li {
       margin: 0;
       a.active {
-        background: var(--primary-medium);
+        background: var(--primary-700);
       }
     }
   }

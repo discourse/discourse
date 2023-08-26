@@ -444,7 +444,7 @@
   }
 
   .label {
-    color: var(--primary-medium);
+    color: var(--primary-high);
   }
 }
 
@@ -462,7 +462,7 @@
   }
 
   .topic-info {
-    color: var(--primary-medium);
+    color: var(--primary-high);
   }
 
   @media all and (max-width: 600px) {
@@ -544,7 +544,7 @@
   }
 
   .instructions {
-    color: var(--primary-medium);
+    color: var(--primary-high);
     font-size: var(--font-down-1);
     line-height: var(--line-height-large);
 
