@@ -38,10 +38,9 @@ export default Component.extend(LoadMore, {
         if (
           newTopics &&
           newTopics.length &&
-          this.autoAddTopicsToBulkSelect &&
-          this.bulkSelectEnabled
+          this.bulkSelectHelper?.bulkSelectEnabled
         ) {
-          this.addTopicsToBulkSelect(newTopics);
+          this.bulkSelectHelper.addTopics(newTopics);
         }
         if (moreTopicsUrl && $(window).height() >= $(document).height()) {
           this.send("loadMore");

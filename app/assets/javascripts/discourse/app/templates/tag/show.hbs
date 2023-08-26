@@ -96,9 +96,7 @@
             <DiscoveryTopicsList
               @model={{this.list}}
               @refresh={{action "refresh"}}
-              @autoAddTopicsToBulkSelect={{this.autoAddTopicsToBulkSelect}}
-              @bulkSelectEnabled={{this.bulkSelectEnabled}}
-              @addTopicsToBulkSelect={{action "addTopicsToBulkSelect"}}
+              @bulkSelectHelper={{this.bulkSelectHelper}}
             >
               {{#if this.top}}
                 <div class="top-lists">
@@ -142,13 +140,7 @@
                 <TopicList
                   @topics={{this.list.topics}}
                   @canBulkSelect={{this.canBulkSelect}}
-                  @toggleBulkSelect={{action "toggleBulkSelect"}}
-                  @bulkSelectEnabled={{this.bulkSelectEnabled}}
-                  @bulkSelectAction={{action "refresh"}}
-                  @updateAutoAddTopicsToBulkSelect={{action
-                    "updateAutoAddTopicsToBulkSelect"
-                  }}
-                  @selected={{this.selected}}
+                  @bulkSelectHelper={{this.bulkSelectHelper}}
                   @category={{this.category}}
                   @showPosters={{true}}
                   @order={{this.order}}

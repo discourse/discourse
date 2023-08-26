@@ -43,14 +43,6 @@ export default class TagShowController extends DiscoverySortableController.exten
   @or("currentUser.canManageTopic", "showDismissRead", "showResetNew")
   canBulkSelect;
 
-  get bulkSelectEnabled() {
-    return this.bulkSelectHelper.bulkSelectEnabled;
-  }
-
-  get selected() {
-    return this.bulkSelectHelper.selected;
-  }
-
   @dependentKeyCompat
   get filterMode() {
     return calculateFilterMode({
@@ -272,22 +264,7 @@ export default class TagShowController extends DiscoverySortableController.exten
   }
 
   @action
-  toggleBulkSelect() {
-    this.bulkSelectHelper.toggleBulkSelect();
-  }
-
-  @action
   dismissRead(operationType, options) {
     this.bulkSelectHelper.dismissRead(operationType, options);
-  }
-
-  @action
-  updateAutoAddTopicsToBulkSelect(value) {
-    this.bulkSelectHelper.autoAddTopicsToBulkSelect = value;
-  }
-
-  @action
-  addTopicsToBulkSelect(topics) {
-    this.bulkSelectHelper.addTopics(topics);
   }
 }
