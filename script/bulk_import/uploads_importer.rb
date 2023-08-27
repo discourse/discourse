@@ -61,8 +61,8 @@ module BulkImport
               end
 
               @output_db.execute(<<~SQL, params)
-                INSERT INTO uploads (id, upload)
-                VALUES (:id, :upload)
+                INSERT INTO uploads (id, upload, skip_reason)
+                VALUES (:id, :upload, :skip_reason)
               SQL
             rescue StandardError => e
               puts "", "Failed to insert upload: #{params[:id]} (#{e.message}))", ""
@@ -84,7 +84,12 @@ module BulkImport
               path = File.join(@root_path, row["relative_path"], row["filename"])
 
               if !File.exist?(path)
-                status_queue << { id: row["id"], upload: nil, skipped: true }
+                status_queue << {
+                  id: row["id"],
+                  upload: nil,
+                  skipped: true,
+                  skip_reason: "file not found",
+                }
                 next
               end
 
@@ -104,10 +109,20 @@ module BulkImport
                   upload_okay = upload.present? && upload.persisted? && upload.errors.blank?
 
                   if upload_okay
-                    status_queue << { id: row["id"], upload: upload.attributes.to_json }
+                    status_queue << {
+                      id: row["id"],
+                      upload: upload.attributes.to_json,
+                      skip_reason: nil,
+                    }
                     break
                   elsif retry_count >= 3
-                    status_queue << { id: row["id"], upload: nil, error: "too many retries" }
+                    error_message = upload&.errors&.full_messages&.join(", ") || "unknown error"
+                    status_queue << {
+                      id: row["id"],
+                      upload: nil,
+                      error: "too many retries: #{error_message}",
+                      skip_reason: "too many retries",
+                    }
                     break
                   end
 
@@ -116,7 +131,7 @@ module BulkImport
                 end
               end
             rescue StandardError => e
-              status_queue << { id: row["id"], upload: nil, error: e.message }
+              status_queue << { id: row["id"], upload: nil, error: e.message, skip_reason: "error" }
             end
           end
         end
@@ -151,7 +166,8 @@ module BulkImport
       @output_db.execute(<<~SQL)
         CREATE TABLE IF NOT EXISTS uploads (
           id TEXT PRIMARY KEY,
-          upload JSON_TEXT
+          upload JSON_TEXT,
+          skip_reason TEXT
         )
       SQL
     end
