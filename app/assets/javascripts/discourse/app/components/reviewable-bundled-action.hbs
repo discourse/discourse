@@ -1,6 +1,10 @@
 {{#if this.multiple}}
   <DropdownSelectBox
-    @class="reviewable-action-dropdown btn-icon-text"
+    @class={{concat-class
+      "reviewable-action-dropdown btn-icon-text"
+      (dasherize this.first.id)
+      this.first.button_class
+    }}
     @nameProperty="label"
     @content={{this.bundle.actions}}
     @onChange={{action "performById"}}

@@ -5206,6 +5206,8 @@ en:
         description: "Restore the post so that all users can see it."
       disagree:
         title: "No"
+      discard_post:
+        title: "Discard Post"
       ignore:
         title: "Ignore"
       ignore_and_do_nothing:
