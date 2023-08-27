@@ -23,6 +23,9 @@ module BulkImport
     end
 
     def run
+      # disable logging for EXIFR which is used by ImageOptim
+      EXIFR.logger = Logger.new(nil)
+
       queue = SizedQueue.new(QUEUE_SIZE)
       consumer_threads = []
 
