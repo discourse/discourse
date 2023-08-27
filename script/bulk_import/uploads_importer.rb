@@ -229,8 +229,13 @@ module BulkImport
         raise "Failed to enable S3 uploads" if SiteSetting.enable_s3_uploads != true
 
         Tempfile.open("discourse-s3-test") do |tmpfile|
+          tmpfile.write("test")
+          tmpfile.rewind
+
           upload =
-            UploadCreator.new(tmpfile, "discourse-s3-test").create_for(Discourse::SYSTEM_USER_ID)
+            UploadCreator.new(tmpfile, "discourse-s3-test.txt").create_for(
+              Discourse::SYSTEM_USER_ID,
+            )
 
           unless upload.present? && upload.persisted? && upload.errors.blank? &&
                    upload.url.start_with?("//")
