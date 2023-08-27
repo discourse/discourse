@@ -47,9 +47,10 @@ module BulkImport
         puts "Deleting #{surplus_upload_ids.size} uploads from output database..."
 
         surplus_upload_ids.each_slice(TRANSACTION_SIZE) do |ids|
-          @output_db.execute(<<~SQL, ids.join(","))
+          placeholders = (["?"] * ids.size).join(",")
+          @output_db.execute(<<~SQL, ids)
             DELETE FROM uploads
-            WHERE id IN (?)
+            WHERE id IN (#{placeholders})
           SQL
         end
 
