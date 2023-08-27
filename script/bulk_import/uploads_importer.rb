@@ -29,20 +29,26 @@ module BulkImport
       queue = SizedQueue.new(QUEUE_SIZE)
       consumer_threads = []
 
-      existing_ids = Set.new
+      output_existing_ids = Set.new
       query("SELECT id FROM uploads", @output_db).tap do |result_set|
-        result_set.each { |row| existing_ids << row["id"] }
+        result_set.each { |row| output_existing_ids << row["id"] }
         result_set.close
       end
-      max_count = @source_db.get_first_value("SELECT COUNT(*) FROM uploads")
 
-      puts "Found #{existing_ids.size} existing uploads, #{max_count} total"
-      max_count -= existing_ids.size
+      source_existing_ids = Set.new
+      query("SELECT id FROM uploads", @source_db).tap do |result_set|
+        result_set.each { |row| source_existing_ids << row["id"] }
+        result_set.close
+      end
+
+      max_count = (source_existing_ids - output_existing_ids).size
+      source_existing_ids = nil
+      puts "Found #{output_existing_ids.size} existing uploads. #{max_count} are missing."
 
       producer_thread =
         Thread.new do
           query("SELECT * FROM uploads", @source_db).tap do |result_set|
-            result_set.each { |row| queue << row unless existing_ids.include?(row["id"]) }
+            result_set.each { |row| queue << row unless output_existing_ids.include?(row["id"]) }
             result_set.close
           end
         end
