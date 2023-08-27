@@ -7,6 +7,9 @@ root_path: "/path/to/your/files"
 #   thread_count = [number of cores] * [thread_count_factor]
 thread_count_factor: 1.5
 
+# Delete uploads from the output database that are not found in the source database.
+delete_surplus_uploads: false
+
 site_settings:
   authorized_extensions: "*"
   max_attachment_size_kb: 102_400

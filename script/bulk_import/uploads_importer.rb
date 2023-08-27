@@ -41,6 +41,24 @@ module BulkImport
         result_set.close
       end
 
+      surplus_upload_ids = output_existing_ids - source_existing_ids
+
+      if @settings[:delete_surplus_uploads]
+        puts "Deleting #{surplus_upload_ids.size} uploads from output database..."
+
+        surplus_upload_ids.each_slice(TRANSACTION_SIZE) do |ids|
+          @output_db.execute(<<~SQL, ids.join(","))
+            DELETE FROM uploads
+            WHERE id IN (?)
+          SQL
+        end
+
+        output_existing_ids -= surplus_upload_ids
+      else
+        puts "Found #{surplus_upload_ids.size} surplus uploads in output database. " \
+               "Run with `delete_surplus_uploads: true` to delete them."
+      end
+
       max_count = (source_existing_ids - output_existing_ids).size
       source_existing_ids = nil
       puts "Found #{output_existing_ids.size} existing uploads. #{max_count} are missing."
