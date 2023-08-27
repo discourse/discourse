@@ -137,7 +137,15 @@ class BulkImport::Generic < BulkImport::Base
     create_groups(groups) do |row|
       next if group_id_from_imported_id(row["id"]).present?
 
-      { imported_id: row["id"], name: row["name"], full_name: row["full_name"] }
+      {
+        imported_id: row["id"],
+        name: row["name"],
+        full_name: row["full_name"],
+        visibility_level: row["visibility_level"],
+        members_visibility_level: row["members_visibility_level"],
+        mentionable_level: row["mentionable_level"],
+        messageable_level: row["messageable_level"],
+      }
     end
 
     groups.close

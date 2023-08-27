@@ -390,7 +390,20 @@ class BulkImport::Base
     post_id && @topic_id_by_post_id[post_id]
   end
 
-  GROUP_COLUMNS ||= %i[id name full_name title bio_raw bio_cooked created_at updated_at]
+  GROUP_COLUMNS ||= %i[
+    id
+    name
+    full_name
+    title
+    bio_raw
+    bio_cooked
+    visibility_level
+    members_visibility_level
+    mentionable_level
+    messageable_level
+    created_at
+    updated_at
+  ]
 
   USER_COLUMNS ||= %i[
     id
@@ -699,6 +712,12 @@ class BulkImport::Base
     group[:title] = group[:title].scrub.strip.presence if group[:title].present?
     group[:bio_raw] = group[:bio_raw].scrub.strip.presence if group[:bio_raw].present?
     group[:bio_cooked] = pre_cook(group[:bio_raw]) if group[:bio_raw].present?
+
+    group[:visibility_level] ||= Group.visibility_levels[:public]
+    group[:members_visibility_level] ||= Group.visibility_levels[:public]
+    group[:mentionable_level] ||= Group::ALIAS_LEVELS[:nobody]
+    group[:messageable_level] ||= Group::ALIAS_LEVELS[:nobody]
+
     group[:created_at] ||= NOW
     group[:updated_at] ||= group[:created_at]
     group
