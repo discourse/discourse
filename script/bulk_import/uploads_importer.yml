@@ -7,7 +7,7 @@ root_path: "/path/to/your/files"
 #   thread_count = [number of cores] * [thread_count_factor]
 thread_count_factor: 1.5
 
-settings:
+site_settings:
   authorized_extensions: "*"
   max_attachment_size_kb: 102_400
   max_image_size_kb: 102_400

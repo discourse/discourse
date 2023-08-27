@@ -212,16 +212,18 @@ module BulkImport
     end
 
     def configure_site_settings
-      SiteSetting.authorized_extensions = @settings[:authorized_extensions]
-      SiteSetting.max_attachment_size_kb = @settings[:max_attachment_size_kb]
-      SiteSetting.max_image_size_kb = @settings[:max_image_size_kb]
+      settings = @settings[:site_settings]
 
-      if @settings[:enable_s3_uploads]
-        SiteSetting.s3_access_key_id = @settings[:s3_access_key_id]
-        SiteSetting.s3_secret_access_key = @settings[:s3_secret_access_key]
-        SiteSetting.s3_upload_bucket = @settings[:s3_upload_bucket]
-        SiteSetting.s3_region = @settings[:s3_region]
-        SiteSetting.s3_cdn_url = @settings[:s3_cdn_url]
+      SiteSetting.authorized_extensions = settings[:authorized_extensions]
+      SiteSetting.max_attachment_size_kb = settings[:max_attachment_size_kb]
+      SiteSetting.max_image_size_kb = settings[:max_image_size_kb]
+
+      if settings[:enable_s3_uploads]
+        SiteSetting.s3_access_key_id = settings[:s3_access_key_id]
+        SiteSetting.s3_secret_access_key = settings[:s3_secret_access_key]
+        SiteSetting.s3_upload_bucket = settings[:s3_upload_bucket]
+        SiteSetting.s3_region = settings[:s3_region]
+        SiteSetting.s3_cdn_url = settings[:s3_cdn_url]
         SiteSetting.enable_s3_uploads = true
 
         raise "Failed to enable S3 uploads" if SiteSetting.enable_s3_uploads != true
