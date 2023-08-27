@@ -95,7 +95,8 @@ class BulkImport::Generic < BulkImport::Base
           row["parent_category_id"] ? category_id_from_imported_id(row["parent_category_id"]) : nil,
         slug: row["slug"],
         read_restricted: row["read_restricted"],
-        uploaded_logo_id: upload_id_from_imported_id(row["logo_upload_id"]),
+        uploaded_logo_id:
+          row["logo_upload_id"] ? upload_id_from_original_id(row["logo_upload_id"]) : nil,
       }
     end
 
