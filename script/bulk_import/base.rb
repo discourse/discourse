@@ -496,6 +496,7 @@ class BulkImport::Base
     position
     parent_category_id
     read_restricted
+    uploaded_logo_id
     created_at
     updated_at
   ]

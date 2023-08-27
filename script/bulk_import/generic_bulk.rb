@@ -26,6 +26,8 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def execute
+    import_uploads
+
     # needs to happen before users, because keeping group names is more important than usernames
     import_groups
 
@@ -40,12 +42,10 @@ class BulkImport::Generic < BulkImport::Base
     import_muted_users
     import_user_histories
 
-    import_group_members
-
-    import_uploads
     import_user_avatars
-    import_user_avatar_upload_references
     update_uploaded_avatar_id
+
+    import_group_members
 
     import_categories
     import_category_permissions
@@ -55,6 +55,8 @@ class BulkImport::Generic < BulkImport::Base
     import_topic_allowed_users
     import_likes
     import_tags
+
+    import_upload_references
 
     @source_db.close
     @uploads_db.close if @uploads_db
@@ -66,22 +68,21 @@ class BulkImport::Generic < BulkImport::Base
     categories = query(<<~SQL)
         WITH
           RECURSIVE
-          tree(id, parent_category_id, name, description, color, text_color, read_restricted, slug,
-               old_relative_url, existing_id, position, level) AS (
-            SELECT c.id, c.parent_category_id, c.name, c.description, c.color, c.text_color, c.read_restricted, c.slug,
-                   c.old_relative_url, c.existing_id, c.position, 0 AS level
-              FROM categories c
-             WHERE c.parent_category_id IS NULL
-             UNION ALL
-            SELECT c.id, c.parent_category_id, c.name, c.description, c.color, c.text_color, c.read_restricted, c.slug,
-                   c.old_relative_url, c.existing_id, c.position, tree.level + 1 AS level
-              FROM categories c,
-                   tree
-             WHERE c.parent_category_id = tree.id
-          )
+          tree AS (
+                    SELECT c.id, c.parent_category_id, c.name, c.description, c.color, c.text_color, c.read_restricted,
+                           c.slug, c.old_relative_url, c.existing_id, c.position, c.logo_upload_id, 0 AS level
+                      FROM categories c
+                     WHERE c.parent_category_id IS NULL
+                     UNION ALL
+                    SELECT c.id, c.parent_category_id, c.name, c.description, c.color, c.text_color, c.read_restricted,
+                           c.slug, c.old_relative_url, c.existing_id, c.position, c.logo_upload_id, tree.level + 1 AS level
+                      FROM categories c,
+                           tree
+                     WHERE c.parent_category_id = tree.id
+                  )
       SELECT *
         FROM tree
-       ORDER BY level, position, id;
+       ORDER BY level, position, id
     SQL
 
     create_categories(categories) do |row|
@@ -94,6 +95,7 @@ class BulkImport::Generic < BulkImport::Base
           row["parent_category_id"] ? category_id_from_imported_id(row["parent_category_id"]) : nil,
         slug: row["slug"],
         read_restricted: row["read_restricted"],
+        uploaded_logo_id: upload_id_from_imported_id(row["logo_upload_id"]),
       }
     end
 
@@ -640,8 +642,8 @@ class BulkImport::Generic < BulkImport::Base
     avatars.close
   end
 
-  def import_user_avatar_upload_references
-    puts "Importing upload references for user avatars..."
+  def import_upload_references
+    puts "Importing upload references..."
 
     start_time = Time.now
 
@@ -657,6 +659,32 @@ class BulkImport::Generic < BulkImport::Base
             AND ur.target_type = 'UserAvatar'
             AND ur.target_id = ua.id
        )
+          ON CONFLICT DO NOTHING
+    SQL
+
+    DB.exec(<<~SQL)
+      INSERT INTO upload_references (upload_id, target_type, target_id, created_at, updated_at)
+      SELECT upload_id, 'Category', target_id, created_at, updated_at
+        FROM (
+               SELECT uploaded_logo_id AS upload_id, id AS target_id, created_at, updated_at
+                 FROM categories
+                WHERE uploaded_logo_id IS NOT NULL
+                UNION
+               SELECT uploaded_logo_dark_id AS upload_id, id AS target_id, created_at, updated_at
+                 FROM categories
+                WHERE uploaded_logo_dark_id IS NOT NULL
+                UNION
+               SELECT uploaded_background_id AS upload_id, id AS target_id, created_at, updated_at
+                 FROM categories
+                WHERE uploaded_background_id IS NOT NULL
+             ) x
+       WHERE NOT EXISTS (
+                          SELECT 1
+                            FROM upload_references ur
+                           WHERE ur.upload_id = x.upload_id
+                             AND ur.target_type = 'Category'
+                             AND ur.target_id = x.target_id
+                        )
           ON CONFLICT DO NOTHING
     SQL
 
