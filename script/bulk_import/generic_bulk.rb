@@ -63,7 +63,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_categories
-    puts "Importing categories..."
+    puts "", "Importing categories..."
 
     categories = query(<<~SQL)
         WITH
@@ -104,7 +104,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_category_permissions
-    puts "Importing category permissions..."
+    puts "", "Importing category permissions..."
 
     permissions = query(<<~SQL)
       SELECT c.id AS category_id, p.value -> 'group_id' AS group_id, p.value -> 'permission_type' AS permission_type
@@ -126,7 +126,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_groups
-    puts "Importing groups..."
+    puts "", "Importing groups..."
 
     groups = query(<<~SQL)
       SELECT *
@@ -144,7 +144,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_group_members
-    puts "Importing group members..."
+    puts "", "Importing group members..."
 
     group_members = query(<<~SQL)
       SELECT *
@@ -166,7 +166,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_users
-    puts "Importing users..."
+    puts "", "Importing users..."
 
     users = query(<<~SQL)
       SELECT *
@@ -380,7 +380,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_topics
-    puts "Importing topics..."
+    puts "", "Importing topics..."
 
     topics = query(<<~SQL)
       SELECT *
@@ -405,7 +405,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_topic_allowed_users
-    puts "Importing topic_allowed_users..."
+    puts "", "Importing topic_allowed_users..."
 
     topics = query(<<~SQL)
       SELECT *
@@ -430,11 +430,11 @@ class BulkImport::Generic < BulkImport::Base
 
     topics.close
 
-    puts "", "Added #{added} topic_allowed_users records."
+    puts "  Added #{added} topic_allowed_users records."
   end
 
   def import_posts
-    puts "Importing posts..."
+    puts "", "Importing posts..."
 
     posts = query(<<~SQL)
       SELECT *
@@ -467,7 +467,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_likes
-    puts "Importing likes..."
+    puts "", "Importing likes..."
 
     @imported_likes = Set.new
 
@@ -497,7 +497,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_user_stats
-    puts "Importing user stats..."
+    puts "", "Importing user stats..."
 
     start_time = Time.now
 
@@ -550,7 +550,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_muted_users
-    puts "Importing muted users..."
+    puts "", "Importing muted users..."
 
     muted_users = query(<<~SQL)
       SELECT *
@@ -570,7 +570,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_user_histories
-    puts "Importing user histories..."
+    puts "", "Importing user histories..."
 
     user_histories = query(<<~SQL)
       SELECT id, JSON_EXTRACT(suspension, '$.reason') AS reason
@@ -599,7 +599,7 @@ class BulkImport::Generic < BulkImport::Base
   def import_uploads
     return if !@uploads_db
 
-    puts "Importing uploads..."
+    puts "", "Importing uploads..."
 
     uploads = query(<<~SQL, db: @uploads_db)
       SELECT id, upload
@@ -621,7 +621,7 @@ class BulkImport::Generic < BulkImport::Base
   def import_user_avatars
     return if !@uploads_db
 
-    puts "Importing user avatars..."
+    puts "", "Importing user avatars..."
 
     avatars = query(<<~SQL)
       SELECT id, avatar_upload_id
@@ -644,7 +644,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_upload_references
-    puts "Importing upload references..."
+    puts "", "Importing upload references..."
 
     start_time = Time.now
 
@@ -693,7 +693,7 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def update_uploaded_avatar_id
-    puts "Updating user's uploaded_avatar_id column..."
+    puts "", "Updating user's uploaded_avatar_id column..."
 
     start_time = Time.now
 
