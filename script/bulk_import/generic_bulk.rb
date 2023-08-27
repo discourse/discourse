@@ -712,7 +712,7 @@ class BulkImport::Generic < BulkImport::Base
   def import_tags
     puts "", "Importing tags..."
 
-    SiteSetting.max_tag_length = 200
+    SiteSetting.max_tag_length = 100
 
     tag_mapping = {}
 
