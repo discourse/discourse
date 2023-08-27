@@ -665,9 +665,10 @@ end
 def run_jobs
   log "Running jobs"
 
+  Jobs::EnsureDbConsistency.new.execute({})
   Jobs::DirectoryRefreshOlder.new.execute({})
   Jobs::DirectoryRefreshDaily.new.execute({})
-  Jobs::ReindexSearch.new.execute({})
+  # Jobs::ReindexSearch.new.execute({})
   Jobs::TopRefreshToday.new.execute({})
   Jobs::TopRefreshOlder.new.execute({})
   # Jobs::Weekly.new.execute({})
