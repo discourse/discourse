@@ -80,8 +80,10 @@ module BulkImport
           end
         end
 
-      (Etc.nprocessors * @settings[:thread_count_factor]).to_i.times do
+      (Etc.nprocessors * @settings[:thread_count_factor]).to_i.times do |index|
         consumer_threads << Thread.new do
+          Thread.current.name = "worker-#{index}"
+
           while (row = queue.pop)
             begin
               path = File.join(@root_path, row["relative_path"], row["filename"])
