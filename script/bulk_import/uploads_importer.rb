@@ -93,42 +93,44 @@ module BulkImport
                 next
               end
 
-              copy_to_tempfile(path) do |file|
-                retry_count = 0
+              retry_count = 0
 
-                loop do
-                  upload =
+              loop do
+                error_message = nil
+                upload =
+                  copy_to_tempfile(path) do |file|
                     begin
                       UploadCreator.new(file, row["filename"], type: row["type"]).create_for(
                         Discourse::SYSTEM_USER_ID,
                       )
-                    rescue StandardError
+                    rescue StandardError => e
+                      error_message = e.message
                       nil
                     end
-
-                  upload_okay = upload.present? && upload.persisted? && upload.errors.blank?
-
-                  if upload_okay
-                    status_queue << {
-                      id: row["id"],
-                      upload: upload.attributes.to_json,
-                      skip_reason: nil,
-                    }
-                    break
-                  elsif retry_count >= 3
-                    error_message = upload&.errors&.full_messages&.join(", ") || "unknown error"
-                    status_queue << {
-                      id: row["id"],
-                      upload: nil,
-                      error: "too many retries: #{error_message}",
-                      skip_reason: "too many retries",
-                    }
-                    break
                   end
 
-                  retry_count += 1
-                  sleep 0.25 * retry_count
+                upload_okay = upload.present? && upload.persisted? && upload.errors.blank?
+
+                if upload_okay
+                  status_queue << {
+                    id: row["id"],
+                    upload: upload.attributes.to_json,
+                    skip_reason: nil,
+                  }
+                  break
+                elsif retry_count >= 3
+                  error_message ||= upload&.errors&.full_messages&.join(", ") || "unknown error"
+                  status_queue << {
+                    id: row["id"],
+                    upload: nil,
+                    error: "too many retries: #{error_message}",
+                    skip_reason: "too many retries",
+                  }
+                  break
                 end
+
+                retry_count += 1
+                sleep 0.25 * retry_count
               end
             rescue StandardError => e
               status_queue << { id: row["id"], upload: nil, error: e.message, skip_reason: "error" }
@@ -198,7 +200,6 @@ module BulkImport
         File.open(source_path, "rb") { |source_stream| IO.copy_stream(source_stream, tmpfile) }
         tmpfile.rewind
         yield(tmpfile)
-        tmpfile
       end
     end
 
