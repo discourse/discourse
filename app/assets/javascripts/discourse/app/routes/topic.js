@@ -16,6 +16,7 @@ import EditSlowModeModal from "discourse/components/modal/edit-slow-mode";
 import ChangeTimestampModal from "discourse/components/modal/change-timestamp";
 import EditTopicTimerModal from "discourse/components/modal/edit-topic-timer";
 import FeatureTopicModal from "discourse/components/modal/feature-topic";
+import FlagModal from "discourse/components/modal/flag";
 
 const SCROLL_DELAY = 500;
 
@@ -103,15 +104,25 @@ const TopicRoute = DiscourseRoute.extend({
 
   @action
   showFlags(model) {
-    let controller = showModal("flag", { model });
-    controller.setProperties({ flagTarget: new PostFlag() });
+    this.modal.show(FlagModal, {
+      model: {
+        flagTarget: new PostFlag(),
+        flagModel: model,
+        setHidden: () => model.set("hidden", true),
+      },
+    });
   },
 
   @action
   showFlagTopic() {
     const model = this.modelFor("topic");
-    let controller = showModal("flag", { model });
-    controller.setProperties({ flagTarget: new TopicFlag() });
+    this.modal.show(FlagModal, {
+      model: {
+        flagTarget: new TopicFlag(),
+        flagModel: model,
+        setHidden: () => model.set("hidden", true),
+      },
+    });
   },
 
   @action
