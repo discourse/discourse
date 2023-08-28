@@ -160,19 +160,17 @@ export default class Flag extends Component {
 
   @action
   async takeAction(actionable) {
-    if (actionable.client_action) {
-      if (actionable.client_action === "suspend") {
-        await this.penalize("showSuspendModal", () =>
-          this.createFlag({ takeAction: true, skipClose: true })
-        );
-      } else if (actionable.client_action === "silence") {
-        await this.penalize("showSilenceModal", () =>
-          this.createFlag({ takeAction: true, skipClose: true })
-        );
-      } else {
-        // eslint-disable-next-line no-console
-        console.error(`No handler for ${actionable.client_action} found`);
-      }
+    if (actionable.client_action === "suspend") {
+      await this.penalize("showSuspendModal", () =>
+        this.createFlag({ takeAction: true, skipClose: true })
+      );
+    } else if (actionable.client_action === "silence") {
+      await this.penalize("showSilenceModal", () =>
+        this.createFlag({ takeAction: true, skipClose: true })
+      );
+    } else if (actionable.client_action) {
+      // eslint-disable-next-line no-console
+      console.error(`No handler for ${actionable.client_action} found`);
     } else {
       this.args.model.setHidden();
       this.createFlag({ takeAction: true });
