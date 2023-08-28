@@ -99,14 +99,15 @@ export default class Flag extends Component {
       return false;
     }
 
-    if (this.selected.is_custom_flag) {
-      const len = this.message?.length || 0;
-      return (
-        len >= this.siteSettings.min_personal_message_post_length &&
-        len <= MAX_MESSAGE_LENGTH
-      );
+    if (!this.selected.is_custom_flag) {
+      return true;
     }
-    return true;
+
+    const len = this.message?.length || 0;
+    return (
+      len >= this.siteSettings.min_personal_message_post_length &&
+      len <= MAX_MESSAGE_LENGTH
+    );
   }
 
   get notifyModeratorsFlag() {
