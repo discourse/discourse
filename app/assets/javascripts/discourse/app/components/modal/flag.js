@@ -136,19 +136,21 @@ export default class Flag extends Component {
 
   @action
   async penalize(adminToolMethod, performAction) {
-    if (this.adminTools) {
-      const createdBy = await User.findByUsername(
-        this.args.model.flagModel.username
-      );
-      const opts = { before: performAction };
-
-      if (this.args.model.flagTarget.editable()) {
-        opts.postId = this.args.model.flagModel.id;
-        opts.postEdit = this.args.model.flagModel.cooked;
-      }
-
-      return this.adminTools[adminToolMethod](createdBy, opts);
+    if (!this.adminTools) {
+      return;
     }
+
+    const createdBy = await User.findByUsername(
+      this.args.model.flagModel.username
+    );
+    const opts = { before: performAction };
+
+    if (this.args.model.flagTarget.editable()) {
+      opts.postId = this.args.model.flagModel.id;
+      opts.postEdit = this.args.model.flagModel.cooked;
+    }
+
+    return this.adminTools[adminToolMethod](createdBy, opts);
   }
 
   @action
