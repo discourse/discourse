@@ -11,15 +11,6 @@
         aria-orientation="vertical"
         aria-label={{i18n "user_menu.sr_menu_tabs"}}
       >
-       {{!-- <div class="top-tabs tabs-list" {{did-insert this.focusFirstTab}}>
-          {{#each this.topTabs as |tab|}}
-            <UserMenu::MenuTab
-              @tab={{tab}}
-              @currentTabId={{this.currentTabId}}
-              @onTabClick={{fn this.handleTabClick tab}}
-            />
-          {{/each}}
-        </div>--}}
         <div class="bottom-tabs tabs-list">
           {{#each this.bottomTabs as |tab|}}
             <UserMenu::MenuTab
