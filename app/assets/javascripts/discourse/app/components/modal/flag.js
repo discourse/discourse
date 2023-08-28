@@ -170,10 +170,9 @@ export default class Flag extends Component {
 
   @action
   async takeAction(actionable) {
-    const performAction = (o = {}) => {
+    const performAction = async (o = {}) => {
       o.takeAction = true;
       this.createFlag(o);
-      return Promise.resolve();
     };
 
     if (actionable.client_action) {
