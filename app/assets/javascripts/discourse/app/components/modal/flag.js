@@ -25,13 +25,9 @@ export default class Flag extends Component {
   constructor() {
     super(...arguments);
 
-    if (this.adminTools) {
-      this.adminTools
-        .checkSpammer(this.args.model.flagModel.user_id)
-        .then((result) => {
-          this.spammerDetails = result;
-        });
-    }
+    this.adminTools
+      ?.checkSpammer(this.args.model.flagModel.user_id)
+      .then((result) => (this.spammerDetails = result));
   }
 
   get flagActions() {
