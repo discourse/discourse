@@ -339,6 +339,8 @@ pl_PL:
       pill: "Wiadomości powiązane"
       see_all: 'Zobacz <a href="%{path}">wszystkie wiadomości</a> od @%{username} ...'
     suggested_topics:
+      title: "Nowe i nieprzeczytane tematy"
+      pill: "Sugerowane"
       pm_title: "Sugerowane wiadomości"
     about:
       simple_title: "O stronie"
@@ -1956,6 +1958,7 @@ pl_PL:
         content: "Oto kilka tematów, które naszym zdaniem warto przeczytać w następnej kolejności."
       admin_guide:
         title: "Witaj w swojej nowej witrynie!"
+        content: "<a href='%{admin_guide_url}'>Przeczytaj przewodnik administratora</a>, aby kontynuować budowanie witryny i społeczności."
         content_no_url: "Przeczytaj przewodnik administratora, aby kontynuować tworzenie witryny i społeczności."
     loading: "Wczytuję…"
     errors:
@@ -4042,6 +4045,12 @@ pl_PL:
           many: "Nowe (%{count})"
           other: "Nowe (%{count})"
         help: "tematy dodane w ciągu ostatnich kilku dni"
+        all: "Wszystkie"
+        all_with_count: "Wszystkie (%{count})"
+        topics: "Tematy"
+        topics_with_count: "Tematy (%{count})"
+        replies: "Odpowiedzi"
+        replies_with_count: "Odpowiedzi (%{count})"
       posted:
         title: "Wysłane"
         help: "tematy w których pisałeś"
@@ -4219,6 +4228,11 @@ pl_PL:
         few: "+%{count} więcej"
         many: "+%{count} więcej"
         other: "+%{count} więcej"
+      awarded:
+        one: "%{number} przyznana"
+        few: "%{number} przyznane"
+        many: "%{number} przyznanych"
+        other: "%{number} przyznanych"
       select_badge_for_title: Wybierz odznakę do użycia jako twój tytuł
       none: "(brak)"
       successfully_granted: "Przyznano %{badge} użytkownikowi %{username}"
@@ -4615,10 +4629,26 @@ pl_PL:
           tel: "Wprowadź prawidłowy numer telefonu."
           text: "Wprowadź wartość tekstową."
           url: "Wprowadź prawidłowy adres URL."
-        tooShort: "Wprowadzane dane muszą zawierać %{minLength} znaków lub więcej."
-        tooLong: "Wprowadzane dane muszą zawierać mniej niż %{maxLength} znaków."
-        rangeOverflow: "Dane wejściowe muszą być mniejsze niż %{max}."
-        rangeUnderflow: "Dane wejściowe muszą być większe niż %{min}."
+        tooShort:
+          one: "Wprowadzane dane muszą zawierać %{count} znak lub więcej."
+          few: "Wprowadzane dane muszą zawierać %{count} znaki lub więcej."
+          many: "Wprowadzane dane muszą zawierać %{count} znaków lub więcej."
+          other: "Wprowadzane dane muszą zawierać %{count} znaków lub więcej."
+        tooLong:
+          one: "Wprowadzane dane muszą zawierać mniej niż %{count} znak."
+          few: "Wprowadzane dane muszą zawierać mniej niż %{count} znaki."
+          many: "Wprowadzane dane muszą zawierać mniej niż %{count} znaków."
+          other: "Wprowadzane dane muszą zawierać mniej niż %{count} znaków."
+        rangeOverflow:
+          one: "Dane wejściowe muszą być mniejsze niż %{count}."
+          few: "Dane wejściowe muszą być mniejsze niż %{count}."
+          many: "Dane wejściowe muszą być mniejsze niż %{count}."
+          other: "Dane wejściowe muszą być mniejsze niż %{count}."
+        rangeUnderflow:
+          one: "Dane wejściowe muszą być większe niż %{count}."
+          few: "Dane wejściowe muszą być większe niż %{count}."
+          many: "Dane wejściowe muszą być większe niż %{count}."
+          other: "Dane wejściowe muszą być większe niż %{count}."
         patternMismatch: "Proszę dopasować żądany format."
         badInput: "Wprowadź prawidłowe dane wejściowe."
   admin_js:
@@ -4745,6 +4775,7 @@ pl_PL:
             email: Email
             incoming_email: "Niestandardowy adres poczty przychodzącej"
             incoming_email_placeholder: "podaj adres e-mail"
+            incoming_email_tooltip: "Możesz oddzielić kilka adresów e-mail znakiem |."
             visibility: Widoczność
             visibility_levels:
               title: "Kto może widzieć tę grupę?"
@@ -4973,6 +5004,7 @@ pl_PL:
           name: "Wydarzenie promowania użytkownika"
           details: "Gdy użytkownik awansuje z jednego poziomu zaufania na inny."
         user_badge_event:
+          name: "Zdarzenie odznak"
           details: "Kiedy odznaka zostaje przyznana lub odebrana."
         group_user_event:
           name: "Grupowy event użytkownika"
@@ -5106,6 +5138,11 @@ pl_PL:
         title: "Wygląd"
         preview: "podgląd"
         explain_preview: "Zobacz tę stronę z włączonym stylem"
+        syntax_error: "Błąd składni"
+        settings_editor: "Edytor ustawień"
+        validation_settings_keys: "Każdy element musi mieć tylko klucz 'setting' i klucz 'value'."
+        validation_settings_deleted: "Te ustawienia zostały usunięte. Przywróć je i spróbuj ponownie."
+        validation_settings_added: "Te ustawienia zostały dodane. Usuń je i spróbuj ponownie."
         save: "Zapisz"
         new: "Nowy"
         new_style: "Nowy styl"
@@ -5159,6 +5196,7 @@ pl_PL:
           extra_files_upload: "Eksportuj motyw, aby wyświetlić te pliki."
           extra_files_remote: "Eksportuj motyw lub sprawdź repozytorium git, aby wyświetlić te pliki."
           preview: "Podgląd"
+          settings_editor: "Edytor ustawień"
           show_advanced: "Pokaż pola zaawansowane"
           hide_advanced: "Ukryj pola zaawansowane"
           hide_unused_fields: "Ukryj nieużywane pola"
@@ -5278,6 +5316,7 @@ pl_PL:
             text: "Osadzony CSS"
             title: "Podaj spersonalizowany kod CSS dostarczany w ramkowej wersji komentarzy"
           embedded_header:
+            text: "Wbudowany nagłówek"
             title: "Wprowadź HTML, aby wyświetlić nad osadzoną wersją komentarzy"
           color_definitions:
             text: "Definicje kolorów"
@@ -5589,6 +5628,7 @@ pl_PL:
             create_public_sidebar_section: "utwórz publiczną sekcję paska bocznego"
             update_public_sidebar_section: "aktualizuj publiczną sekcję paska bocznego"
             destroy_public_sidebar_section: "zniszcz publiczną sekcję paska bocznego"
+            reset_bounce_score: "zresetuj licznik odrzuceń"
         screened_emails:
           title: "Ekranowane emaile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -5755,6 +5795,7 @@ pl_PL:
         field_placeholders:
           validations: "wprowadź walidacje tutaj"
           label: "Wprowadź etykietę tutaj"
+          placeholder: "Wpisz tutaj symbol zastępczy"
           none_label: "Wybierz element"
           choices:
             first: "Opcja 1"
@@ -5985,7 +6026,7 @@ pl_PL:
         silence_failed: "Wystąpił problem podczas wyciszania użytkownika."
         silence_confirm: "Czy na pewno chcesz wyciszyć tego użytkownika? Nie będzie mógł/mogła tworzyć nowych tematów ani postów."
         silence_accept: "Tak, ucisz tego użytkownika"
-        bounce_score: "Wskaźnik odbić"
+        bounce_score: "Licznik odrzuceń"
         reset_bounce_score:
           label: "Przywróć"
           title: "Przywróć stan licznika zwrotów z powrotem do wartości 0"
@@ -5995,8 +6036,8 @@ pl_PL:
         silence_explanation: "Wyciszony użytkownik nie może publikować ani tworzyć tematów."
         staged_explanation: "Etapowy użytkownik może pisać tylko za pośrednictwem poczty email w konkretnych tematach."
         bounce_score_explanation:
-          none: "Z tego adresu email nie otrzymano ostatnio żadnych wiadomości zwrotnych."
-          some: "Z tego adresu email zostały ostatnio otrzymane wiadomości zwrotne."
+          none: "Z tego e-maila nie otrzymano ostatnio żadnych odrzuconych wiadomości."
+          some: "Z tego adresu email zostały ostatnio otrzymane odrzucone wiadomości."
           threshold_reached: "Otrzymano zbyt wiele wiadomości zwrotnych z tego adresu email."
         trust_level_change_failed: "Wystąpił problem podczas zmiany poziomu zaufania użytkownika."
         suspend_modal_title: "Zawieś użytkownika"
@@ -6297,6 +6338,12 @@ pl_PL:
       embedding:
         get_started: "Jeśli chcesz osadzić Discourse na innej stronie, rozpocznij podając jej host."
         confirm_delete: "Czy na pewno chcesz usunąć ten host?"
+        sample: |
+          <p>Wklej następujący kod HTML do swojej witryny, aby utworzyć i osadzić tematy Discourse. Zastąp <b>EMBED_URL</b> kanonicznym adresem URL strony, na której chcesz go osadzić.</p>
+
+          <p>Jeśli chcesz dostosować styl, odkomentuj i zastąp <b>CLASS_NAME</b> klasą CSS zdefiniowaną w <i>osadzonym CSS</i> Twojego motywu.</p>
+
+          <p>Zastąp <b>DISCOURSE_USERNAME</b> nazwą użytkownika Discourse autora, który powinien utworzyć temat. Discourse automatycznie wyszuka użytkownika według atrybutu <code>content</code> tagów <code>&lt;meta&gt;</code> z atrybutem <code>name</code> ustawionym na <code>discourse-username</code> lub <code>autor</code>. Parametr <code>discourseUserName</code> został wycofany i zostanie usunięty w Discourse 3.2.</p>
         title: "Osadzanie"
         host: "Dozwolone hosty"
         allowed_paths: "Lista dozwolonych ścieżek"

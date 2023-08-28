@@ -14,7 +14,6 @@ export default Route.extend(DisableSidebar, {
 
     this.controllerFor("application").setProperties({
       showTop: false,
-      showFooter: false,
       showSiteHeader: false,
     });
   },

@@ -34,7 +34,7 @@ RSpec.describe "Reply to message - channel - full page", type: :system do
       thread_page.fill_composer("reply to message")
       thread_page.click_send_message
 
-      expect(thread_page).to have_message(text: "reply to message")
+      expect(thread_page.messages).to have_message(text: "reply to message")
       expect(channel_page).to have_thread_indicator(original_message)
     end
 
@@ -45,12 +45,12 @@ RSpec.describe "Reply to message - channel - full page", type: :system do
         thread_page.fill_composer("reply to message")
         thread_page.click_send_message
 
-        expect(thread_page).to have_message(text: "reply to message")
+        expect(thread_page.messages).to have_message(text: "reply to message")
         expect(channel_page).to have_thread_indicator(original_message)
 
         refresh
 
-        expect(thread_page).to have_message(text: "reply to message")
+        expect(thread_page.messages).to have_message(text: "reply to message")
       end
     end
   end
@@ -95,7 +95,7 @@ RSpec.describe "Reply to message - channel - full page", type: :system do
       channel_page.fill_composer("reply to message")
       channel_page.click_send_message
 
-      expect(channel_page).to have_message(text: "reply to message")
+      expect(channel_page.messages).to have_message(text: "reply to message")
     end
 
     it "renders safe HTML from the original message excerpt" do
@@ -106,13 +106,13 @@ RSpec.describe "Reply to message - channel - full page", type: :system do
       channel_page.reply_to(original_message)
 
       expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
-        "<a class=\"mention\" href=\"/u/#{other_user.username}\">@#{other_user.username}</a> &lt;mark&gt;not marked&lt;/mark&gt;",
+        "@#{other_user.username} &lt;mark&gt;not marked&lt;/mark&gt;",
       )
 
       channel_page.fill_composer("reply to message")
       channel_page.click_send_message
 
-      expect(channel_page).to have_message(text: "reply to message")
+      expect(channel_page.messages).to have_message(text: "reply to message")
     end
   end
 end

@@ -302,7 +302,7 @@ en:
     related_messages:
       title: "Related Messages"
       pill: "Related Messages"
-      see_all: 'See <a href="%{path}">all messages</a> from @%{username}...'
+      see_all: 'See <a href="%{path}">all messages</a> from @%{username}…'
 
     suggested_topics:
       title: "New & Unread Topics"
@@ -412,21 +412,21 @@ en:
     preview: "preview"
     cancel: "cancel"
 
-    deleting: "Deleting..."
+    deleting: "Deleting…"
 
     save: "Save Changes"
-    saving: "Saving..."
+    saving: "Saving…"
     saved: "Saved!"
 
     upload: "Upload"
-    uploading: "Uploading..."
-    processing: "Processing..."
-    uploading_filename: "Uploading: %{filename}..."
-    processing_filename: "Processing: %{filename}..."
+    uploading: "Uploading…"
+    processing: "Processing…"
+    uploading_filename: "Uploading: %{filename}…"
+    processing_filename: "Processing: %{filename}…"
     clipboard: "clipboard"
     uploaded: "Uploaded!"
 
-    pasting: "Pasting..."
+    pasting: "Pasting…"
 
     enable: "Enable"
     disable: "Disable"
@@ -1041,7 +1041,7 @@ en:
       topic_stat_sentence_month:
         one: "%{count} new topic in the past month."
         other: "%{count} new topics in the past month."
-      n_more: "Categories (%{count} more)..."
+      n_more: "Categories (%{count} more)…"
 
     ip_lookup:
       title: IP Address Lookup
@@ -1097,7 +1097,7 @@ en:
         ignore_no_users: "You have no ignored users."
         ignore_option: "Ignored"
         ignore_option_title: "You will not receive notifications related to this user and all of their topics and replies will be hidden."
-        add_ignored_user: "Add..."
+        add_ignored_user: "Add…"
         mute_option: "Muted"
         mute_option_title: "You will not receive any notifications related to this user."
         normal_option: "Normal"
@@ -1552,7 +1552,7 @@ en:
         primary_label: "primary"
         unconfirmed_label: "unconfirmed"
         resend_label: "resend confirmation email"
-        resending_label: "sending..."
+        resending_label: "sending…"
         resent_label: "email sent"
         update_email: "Change Email"
         set_primary: "Set Primary Email"
@@ -1600,7 +1600,7 @@ en:
         not_available_no_suggestion: "Not available"
         too_short: "Your username is too short"
         too_long: "Your username is too long"
-        checking: "Checking username availability..."
+        checking: "Checking username availability…"
         prefilled: "Email matches this registered username"
         required: "Please enter a username"
         edit: "Edit username"
@@ -1735,7 +1735,7 @@ en:
         reinvite: "Resend Email"
         reinvited: "Invite re-sent"
         removed: "Removed"
-        search: "type to search invites..."
+        search: "type to search invites…"
         user: "Invited User"
         none: "No invites to display."
         truncated:
@@ -1806,7 +1806,7 @@ en:
             <pre>john@smith.com,first_group_name;second_group_name,topic_id</pre>
             <p>Every email address in your uploaded CSV file will be sent an invitation, and you will be able to manage it later.</p>
 
-          progress: "Uploaded %{progress}%..."
+          progress: "Uploaded %{progress}%…"
           success: "File uploaded successfully. You will be notified via message when the process is complete."
           error: "Sorry, file should be CSV format."
 
@@ -1938,7 +1938,7 @@ en:
         content: "<a href='%{admin_guide_url}'>Read the admin guide</a> to continue building your site and community."
         content_no_url: "Read the admin guide to continue building your site and community."
 
-    loading: "Loading..."
+    loading: "Loading…"
     errors:
       prev_page: "while trying to load"
       reasons:
@@ -2014,7 +2014,7 @@ en:
           other {# errors/minute}
         }.
 
-    learn_more: "learn more..."
+    learn_more: "learn more…"
 
     mute: Mute
     unmute: Unmute
@@ -2081,10 +2081,10 @@ en:
 
     private_message_info:
       title: "Message"
-      invite: "Invite Others..."
-      edit: "Add or Remove..."
-      remove: "Remove..."
-      add: "Add..."
+      invite: "Invite Others…"
+      edit: "Add or Remove…"
+      remove: "Remove…"
+      add: "Add…"
       leave_message: "Do you really want to leave this message?"
       remove_allowed_user: "Do you really want to remove %{name} from this message?"
       remove_allowed_group: "Do you really want to remove %{name} from this message?"
@@ -2170,10 +2170,10 @@ en:
       blank_username: "Please enter your email or username."
       blank_username_or_password: "Please enter your email or username, and password."
       reset_password: "Reset Password"
-      logging_in: "Signing In..."
+      logging_in: "Signing In…"
       previous_sign_up: "Already have an account?"
       or: "Or"
-      authenticating: "Authenticating..."
+      authenticating: "Authenticating…"
       awaiting_activation: "Your account is awaiting activation, use the forgot password link to issue another activation email."
       awaiting_approval: "Your account has not been approved by a staff member yet. You will be sent an email when it is approved."
       requires_invite: "Sorry, access to this forum is by invite only."
@@ -2262,7 +2262,7 @@ en:
       enter: "Enter"
 
     conditional_loading_section:
-      loading: Loading...
+      loading: Loading…
 
     category_row:
       topic_count:
@@ -2279,13 +2279,13 @@ en:
       delete_item: "Delete %{name}"
       filter_by: "Filter by: %{name}"
       select_to_filter: "Select a value to filter"
-      default_header_text: Select...
+      default_header_text: Select…
       no_content: No matches found
       results_count:
         one: "%{count} result"
         other: "%{count} results"
-      filter_placeholder: Search...
-      filter_placeholder_with_any: Search or create...
+      filter_placeholder: Search…
+      filter_placeholder_with_any: Search or create…
       create: "Create: '%{content}'"
       max_content_reached:
         one: "You can only select %{count} item."
@@ -2295,7 +2295,7 @@ en:
         other: "Select at least %{count} items."
       components:
         tag_drop:
-          filter_for_more: Filter for more...
+          filter_for_more: Filter for more…
         categories_admin_dropdown:
           title: "Manage categories"
 
@@ -2329,11 +2329,11 @@ en:
       destination_category: "Destination Category"
       publish: "Publish Shared Draft"
       confirm_publish: "Are you sure you want to publish this draft?"
-      publishing: "Publishing Topic..."
+      publishing: "Publishing Topic…"
 
     composer:
       emoji: "Emoji :)"
-      more_emoji: "more..."
+      more_emoji: "more…"
       options: "Options"
       whisper: "whisper"
       unlist: "unlisted"
@@ -2343,7 +2343,7 @@ en:
       toggle_unlisted: "Toggle Unlisted"
       posting_not_on_topic: "Which topic do you want to reply to?"
       saved_local_draft_tip: "saved locally"
-      similar_topics: "Your topic is similar to..."
+      similar_topics: "Your topic is similar to…"
       drafts_offline: "drafts offline"
       edit_conflict: "edit conflict"
       esc: "esc"
@@ -2417,7 +2417,7 @@ en:
       saving: "Saving"
       saved: "Saved!"
       saved_draft: "Post draft in progress. Tap to resume."
-      uploading: "Uploading..."
+      uploading: "Uploading…"
       show_preview: "show preview"
       hide_preview: "hide preview"
 
@@ -2717,7 +2717,7 @@ en:
           label: Tagged
           aria_label: Filter using tags
         filters:
-          label: Only return topics/posts...
+          label: Only return topics/posts…
           title: Matching in title only
           likes: I liked
           posted: I posted in
@@ -2848,18 +2848,25 @@ en:
         dismiss_new_modal:
           title: "Dismiss new"
           topics: "Dismiss new topics"
-          posts: "Dismiss new posts"
+          posts: "Dismiss new replies"
+          topics_with_count:
+            one: "Dismiss %{count} new topic"
+            other: "Dismiss %{count} new topics"
+          replies_with_count:
+            one: "Dismiss %{count} new reply"
+            other: "Dismiss %{count} new replies"
+          replies: "Dismiss new replies"
           untrack: "Stop tracking these topics so they stop appearing in my new list"
         dismiss_new_with_selected:
           one: "Dismiss New (%{count})"
           other: "Dismiss New (%{count})"
         toggle: "toggle bulk selection of topics"
         actions: "Bulk Actions"
-        change_category: "Set Category..."
+        change_category: "Set Category…"
         close_topics: "Close Topics"
         archive_topics: "Archive Topics"
         move_messages_to_inbox: "Move to Inbox"
-        notification_level: "Notifications..."
+        notification_level: "Notifications…"
         change_notification_level: "Change Notification Level"
         choose_new_category: "Choose the new category for the topics:"
         selected:
@@ -3097,11 +3104,11 @@ en:
 
       progress:
         title: topic progress
-        jump_prompt: "jump to..."
+        jump_prompt: "jump to…"
         jump_prompt_of:
           one: "of %{count} post"
           other: "of %{count} posts"
-        jump_prompt_long: "Jump to..."
+        jump_prompt_long: "Jump to…"
         jump_prompt_to_date: "to date"
         jump_prompt_or: "or"
 
@@ -3159,8 +3166,8 @@ en:
         open: "Open Topic"
         close: "Close Topic"
         multi_select: "Select Posts…"
-        slow_mode: "Set Slow Mode..."
-        timed_update: "Set Topic Timer..."
+        slow_mode: "Set Slow Mode…"
+        timed_update: "Set Topic Timer…"
         pin: "Pin Topic…"
         unpin: "Un-Pin Topic…"
         unarchive: "Unarchive Topic"
@@ -3168,7 +3175,7 @@ en:
         invisible: "Unlist Topic"
         visible: "List Topic"
         reset_read: "Reset Read Data"
-        make_public: "Make Public Topic..."
+        make_public: "Make Public Topic…"
         make_private: "Make Personal Message"
         reset_bump_date: "Reset Bump Date"
 
@@ -3234,7 +3241,7 @@ en:
         no_banner_exists: "There is no banner topic."
         banner_exists: "There <strong class='badge badge-notification unread'>is</strong> currently a banner topic."
 
-      inviting: "Inviting..."
+      inviting: "Inviting…"
       automatically_add_to_groups: "This invite also includes access to these groups:"
 
       invite_private:
@@ -3353,7 +3360,7 @@ en:
           other: "Please choose a new owner for the %{count} posts"
 
       change_timestamp:
-        title: "Change Timestamp..."
+        title: "Change Timestamp…"
         action: "change timestamp"
         invalid_timestamp: "Timestamp cannot be in the future."
         error: "There was an error changing the timestamp of the topic."
@@ -3521,8 +3528,8 @@ en:
         rebake: "Rebuild HTML"
         publish_page: "Page Publishing"
         unhide: "Unhide"
-        change_owner: "Change Ownership..."
-        grant_badge: "Grant Badge..."
+        change_owner: "Change Ownership…"
+        grant_badge: "Grant Badge…"
         lock_post: "Lock Post"
         lock_post_description: "prevent the poster from editing this post"
         unlock_post: "Unlock Post"
@@ -3536,8 +3543,8 @@ en:
         delete_topic_confirm_modal_no: "No, keep this topic"
         delete_topic_error: "An error occurred while deleting this topic"
         delete_topic: "delete topic"
-        add_post_notice: "Add Staff Notice..."
-        change_post_notice: "Change Staff Notice..."
+        add_post_notice: "Add Staff Notice…"
+        change_post_notice: "Change Staff Notice…"
         delete_post_notice: "Delete Staff Notice"
         remove_timer: "remove timer"
         edit_timer: "edit timer"
@@ -3675,7 +3682,7 @@ en:
         description: "Require new topics to have tags from tag groups:"
         delete: "Delete"
         add: "Add required tag group"
-        placeholder: "select tag group..."
+        placeholder: "select tag group…"
       topic_featured_link_allowed: "Allow featured links in this category"
       delete: "Delete Category"
       create: "New Category"
@@ -3806,7 +3813,7 @@ en:
     flagging:
       title: "Thanks for helping to keep our community civil!"
       action: "Flag Post"
-      take_action: "Take Action..."
+      take_action: "Take Action…"
       take_action_options:
         default:
           title: "Take Action"
@@ -3852,8 +3859,8 @@ en:
           one: "enter at least %{count} character"
           other: "enter at least %{count} characters"
         more:
-          one: "%{count} to go..."
-          other: "%{count} to go..."
+          one: "%{count} to go…"
+          other: "%{count} to go…"
         left:
           one: "%{count} remaining"
           other: "%{count} remaining"
@@ -3867,7 +3874,7 @@ en:
       title: "Topic Summary"
       participants_title: "Frequent Posters"
       links_title: "Popular Links"
-      links_shown: "show more links..."
+      links_shown: "show more links…"
       clicks:
         one: "%{count} click"
         other: "%{count} clicks"
@@ -3995,6 +4002,12 @@ en:
           one: "New (%{count})"
           other: "New (%{count})"
         help: "topics created in the last few days"
+        all: "All"
+        all_with_count: "All (%{count})"
+        topics: "Topics"
+        topics_with_count: "Topics (%{count})"
+        replies: "Replies"
+        replies_with_count: "Replies (%{count})"
       posted:
         title: "My Posts"
         help: "topics you have posted in"
@@ -4212,11 +4225,11 @@ en:
       tags: "Tags"
       choose_for_topic: "optional tags"
       choose_for_topic_required:
-        one: "select at least %{count} tag..."
-        other: "select at least %{count} tags..."
+        one: "select at least %{count} tag…"
+        other: "select at least %{count} tags…"
       choose_for_topic_required_group:
-        one: "select %{count} tag from '%{name}'..."
-        other: "select %{count} tags from '%{name}'..."
+        one: "select %{count} tag from '%{name}'…"
+        other: "select %{count} tags from '%{name}'…"
       info: "Info"
       default_info: "This tag isn't restricted to any categories, and has no synonyms."
       staff_info: "To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."
@@ -4316,7 +4329,7 @@ en:
         cannot_save: "Cannot save tag group. Make sure that there is at least one tag present, tag group name is not empty, and a group is selected for tags permission."
         tags_placeholder: "Search or create tags"
         parent_tag_placeholder: "Optional"
-        select_groups_placeholder: "Select groups..."
+        select_groups_placeholder: "Select groups…"
         disabled: "Tagging is disabled. "
 
       topics:
@@ -4352,7 +4365,7 @@ en:
     image_removed: "(image removed)"
 
     pause_notifications:
-      title: "Pause notifications for..."
+      title: "Pause notifications for…"
       label: "Pause notifications"
       options:
         half_hour: "30 minutes"
@@ -4568,16 +4581,25 @@ en:
           tel: "Please enter a valid telephone number."
           text: "Please enter a text value."
           url: "Please enter a valid URL."
-        tooShort: "The input must be %{minLength} characters or longer."
-        tooLong: "The input must be less than %{maxLength} characters."
-        rangeOverflow: "The input must be less than %{max}."
-        rangeUnderflow: "The input must be more than %{min}."
+        tooShort:
+          one: "The input must be %{count} character or longer."
+          other: "The input must be %{count} characters or longer."
+        tooLong:
+          one: "The input must be less than %{count} character."
+          other: "The input must be less than %{count} characters."
+        rangeOverflow:
+          one: "The input must be less than %{count}."
+          other: "The input must be less than %{count}."
+        rangeUnderflow:
+          one: "The input must be more than %{count}."
+          other: "The input must be more than %{count}."
         patternMismatch: "Please match the requested format."
         badInput: "Please enter a valid input."
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
-    type_to_filter: "type to filter..."
+    # This is a text input placeholder, keep the translation short
+    type_to_filter: "type to filter…"
 
     admin:
       title: "Discourse Admin"
@@ -4695,7 +4717,7 @@ en:
           name:
             too_short: "Group name is too short"
             too_long: "Group name is too long"
-            checking: "Checking group name availability..."
+            checking: "Checking group name availability…"
             available: "Group name is available"
             not_available: "Group name is not available"
             blank: "Group name cannot be blank"
@@ -5000,19 +5022,19 @@ en:
             title: "Disable read-only mode"
             label: "Disable read-only"
         logs:
-          none: "No logs yet..."
+          none: "No logs yet…"
         columns:
           filename: "Filename"
           size: "Size"
         upload:
           label: "Upload"
           title: "Upload a backup to this instance"
-          uploading: "Uploading..."
-          uploading_progress: "Uploading... %{progress}%"
+          uploading: "Uploading…"
+          uploading_progress: "Uploading… %{progress}%"
           success: "'%{filename}' has successfully been uploaded. The file is now being processed and will take up to a minute to show up in the list."
           error: "There has been an error while uploading '%{filename}': %{message}"
         operations:
-          is_running: "An operation is currently running..."
+          is_running: "An operation is currently running…"
           failed: "The %{operation} failed. Please check the logs."
           cancel:
             label: "Cancel"
@@ -5156,7 +5178,7 @@ en:
           uploads: "Uploads"
           no_uploads: "You can upload assets associated with your theme such as fonts and images"
           add_upload: "Add Upload"
-          upload_file_tip: "Choose an asset to upload (png, woff2, etc...)"
+          upload_file_tip: "Choose an asset to upload (png, woff2, etc…)"
           variable_name: "SCSS var name:"
           variable_name_invalid: "Invalid variable name. Only alphanumeric allowed. Must start with a letter. Must be unique."
           variable_name_error:
@@ -5164,7 +5186,7 @@ en:
             no_overwrite: "Invalid variable name. Must not overwrite an existing variable."
             must_be_unique: "Invalid variable name. Must be unique."
           upload: "Upload"
-          select_component: "Select a component..."
+          select_component: "Select a component…"
           unsaved_changes_alert: "You haven't saved your changes yet, do you want to discard them and move on?"
           unsaved_parent_themes: "You haven't assigned the component to themes, do you want to move on?"
           discard: "Discard"
@@ -5178,7 +5200,7 @@ en:
           add_all: "Add all"
           import_web_tip: "Repository containing theme"
           direct_install_tip: "Are you sure you want to install <strong>%{name}</strong> from the repository listed below?"
-          import_web_advanced: "Advanced..."
+          import_web_advanced: "Advanced…"
           import_file_tip: ".tar.gz, .zip, or .dcstyle.json file containing theme"
           is_private: "Theme is in a private git repository"
           finish_install: "Finish Theme Installation"
@@ -5210,7 +5232,7 @@ en:
             maximum: "Requires Discourse version %{version} or below."
           update_to_latest: "Update to Latest"
           check_for_updates: "Check for Updates"
-          updating: "Updating..."
+          updating: "Updating…"
           up_to_date: "Theme is up-to-date, last checked:"
           has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
           add: "Add"
@@ -5359,7 +5381,7 @@ en:
           run: "Run Test"
           text: "Selected Text Body"
           elided: "Elided Text"
-        sending_test: "Sending test Email..."
+        sending_test: "Sending test Email…"
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
         sent: "Sent"
@@ -5381,7 +5403,7 @@ en:
         refresh: "Refresh"
         send_digest_label: "Send this result to:"
         send_digest: "Send"
-        sending_email: "Sending email..."
+        sending_email: "Sending email…"
         format: "Format"
         html: "html"
         text: "text"
@@ -5409,7 +5431,7 @@ en:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
             cc_placeholder: "cc@example.com"
-            subject_placeholder: "Subject..."
+            subject_placeholder: "Subject…"
             error_placeholder: "Error"
         logs:
           none: "No logs found."
@@ -5417,7 +5439,7 @@ en:
             title: "Filter"
             user_placeholder: "username"
             address_placeholder: "name@example.com"
-            type_placeholder: "digest, signup..."
+            type_placeholder: "digest, signup…"
             reply_key_placeholder: "reply key"
             smtp_transaction_response_placeholder: "SMTP ID"
 
@@ -5682,10 +5704,10 @@ en:
           cancel: "Cancel"
           name:
             label: "Template Name"
-            placeholder: "Enter a name for this template..."
+            placeholder: "Enter a name for this template…"
           template:
             label: "Template"
-            placeholder: "Create a YAML template here..."
+            placeholder: "Create a YAML template here…"
           preview: "Preview"
         delete_confirm: "Are you sure you would like to delete this template?"
         quick_insert_fields:
@@ -5802,7 +5824,7 @@ en:
           combative: "Too combative"
           in_wrong_place: "In the wrong place"
           no_constructive_purpose: "No constructive purpose to their actions other than creating dissent within the community"
-          custom: "Custom..."
+          custom: "Custom…"
         suspend_message: "Email Message"
         suspend_message_placeholder: "Optionally, provide more information about the suspension and it will be emailed to the user."
         suspended_by: "Suspended by"
@@ -5911,7 +5933,7 @@ en:
           button: "Delete all posts"
           progress:
             title: "Progress of deleting posts"
-            description: "Deleting posts..."
+            description: "Deleting posts…"
           confirmation:
             title: "Delete all posts by @%{username}"
             description: |
@@ -5951,7 +5973,7 @@ en:
             transfer_and_delete: "Transfer & Delete @%{username}"
             cancel: "Cancel"
 
-        merging_user: "Merging user..."
+        merging_user: "Merging user…"
         merge_failed: "There was an error while merging the users."
         delete_forbidden_because_staff: "Admins and moderators can't be deleted."
         delete_posts_forbidden_because_staff: "Can't delete all posts of admins and moderators."
@@ -5968,7 +5990,7 @@ en:
         delete_confirm: "It is generally preferable to anonymize users rather than deleting them, to avoid removing content from existing discussions."
         delete_and_block: "Delete and <b>block</b> this email and IP address"
         delete_dont_block: "Delete only"
-        deleting_user: "Deleting user..."
+        deleting_user: "Deleting user…"
         deleted: "The user was deleted."
         delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
         send_activation_email: "Send Activation Email"
@@ -6183,7 +6205,7 @@ en:
           modal_yes: "Yes"
           modal_no: "No, only apply change going forward"
         simple_list:
-          add_item: "Add item..."
+          add_item: "Add item…"
         json_schema:
           edit: Launch Editor
           modal_title: "Edit %{name}"
@@ -6284,7 +6306,7 @@ en:
         help: "Add new emoji that will be available to everyone. Drag and drop multiple files at once without entering a name to create emojis using their file names. The selected group will be used for all files that are added at the same time. You can also click 'Add New Emoji' to open the file picker."
         add: "Add New Emoji"
         choose_files: "Choose Files"
-        uploading: "Uploading..."
+        uploading: "Uploading…"
         name: "Name"
         group: "Group"
         image: "Image"
@@ -6359,11 +6381,11 @@ en:
       finish: "Exit setup"
       back: "Back"
       next: "Next"
-      configure_more: "Configure more..."
+      configure_more: "Configure more…"
       step-text: "Step"
       step: "%{current} of %{total}"
       upload: "Upload file"
-      uploading: "Uploading..."
+      uploading: "Uploading…"
       upload_error: "Sorry, there was an error uploading that file. Please try again."
 
       staff_count:

@@ -130,7 +130,7 @@ acceptance("Local Dates - composer", function (needs) {
     await click(".delete-to-date");
 
     assert.notOk(
-      query(".pika-table .is-selected"),
+      query(".date-time-control.to.is-selected"),
       "deleting selected TO date works"
     );
 

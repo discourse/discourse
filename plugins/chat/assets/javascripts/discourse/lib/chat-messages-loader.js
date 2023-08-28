@@ -55,7 +55,7 @@ export default class ChatMessagesLoader {
       this.canLoadMoreFuture = result.meta.can_load_more_future;
       this.canLoadMorePast = result.meta.can_load_more_past;
     } catch (error) {
-      this.#handleError(error);
+      popupAjaxError(error);
     } finally {
       this.loading = false;
     }
@@ -80,7 +80,7 @@ export default class ChatMessagesLoader {
       this.canLoadMorePast = result.meta.can_load_more_past;
       this.fetchedOnce = true;
     } catch (error) {
-      this.#handleError(error);
+      popupAjaxError(error);
     } finally {
       this.loading = false;
     }
@@ -110,18 +110,5 @@ export default class ChatMessagesLoader {
     return direction === PAST
       ? model.messagesManager.messages.find((message) => !message.staged)
       : model.messagesManager.messages.findLast((message) => !message.staged);
-  }
-
-  #handleError(error) {
-    switch (error?.jqXHR?.status) {
-      case 429:
-        popupAjaxError(error);
-        break;
-      case 404:
-        popupAjaxError(error);
-        break;
-      default:
-        throw error;
-    }
   }
 }

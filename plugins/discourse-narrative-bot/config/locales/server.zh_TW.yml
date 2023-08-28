@@ -11,31 +11,24 @@ zh_TW:
     certified:
       name: 已認證
   discourse_narrative_bot:
+    dice:
+      trigger: "擲骰"
     quote:
       trigger: "引用"
+      "3":
+        author: "蘇斯博士"
+      "9":
+        author: "李小龍"
+      "13":
+        author: "老子"
     magic_8_ball:
       answers:
-        "1": "It is certain"
-        "2": "It is decidedly so"
-        "3": "Without a doubt"
-        "4": "Yes definitely"
-        "5": "You may rely on it"
-        "6": "As I see it, yes"
-        "7": "Most likely"
-        "8": "Outlook good"
         "9": "是"
-        "10": "Signs point to yes"
-        "11": "Reply hazy, try again"
-        "12": "Ask again later"
-        "13": "Better not tell you now"
-        "14": "Cannot predict now"
-        "15": "Concentrate and ask again"
-        "16": "Don't count on it"
-        "17": "My reply is no"
-        "18": "My sources say no"
-        "19": "Outlook not so good"
-        "20": "Very doubtful"
+    track_selector:
+      reset_trigger: "開始"
+      skip_trigger: "跳過"
     new_user_narrative:
+      reset_trigger: "教學"
       hello:
         message: |-
           感謝您加入 %{title}，歡迎！

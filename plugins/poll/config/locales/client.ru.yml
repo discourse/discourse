@@ -83,7 +83,7 @@ ru:
         percentage: "Процент"
         count: "Количество"
       options:
-        label: "Параметры"
+        label: "Варианты"
       error_while_toggling_status: "Произошла ошибка при смене статуса опроса."
       error_while_casting_votes: "Произошла ошибка в процессе обработки вашего голоса."
       error_while_fetching_voters: "Произошла ошибка в процессе получения списка проголосовавших."

@@ -939,6 +939,8 @@ class Search
       users = users.where(suspended_at: nil)
     end
 
+    users = DiscoursePluginRegistry.apply_modifier(:search_user_search, users)
+
     users_custom_data_query =
       DB.query(<<~SQL, user_ids: users.pluck(:id), term: "%#{@original_term.downcase}%")
       SELECT user_custom_fields.user_id, user_fields.name, user_custom_fields.value FROM user_custom_fields

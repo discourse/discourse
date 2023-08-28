@@ -1185,18 +1185,21 @@ class TopicsController < ApplicationController
 
     opts = params.permit(:skip_age_check)
 
-    hijack do
-      summary = TopicSummarization.new(strategy).summarize(topic, current_user, opts)
+    if params[:stream] && current_user
+      Jobs.enqueue(
+        :stream_topic_summary,
+        topic_id: topic.id,
+        user_id: current_user.id,
+        opts: opts.as_json,
+      )
 
-      render json: {
-               summary: summary.summarized_text,
-               summarized_on: summary.updated_at,
-               summarized_by: summary.algorithm,
-               outdated: summary.outdated,
-               can_regenerate: Summarization::Base.can_request_summary_for?(current_user),
-               new_posts_since_summary:
-                 topic.highest_post_number.to_i - summary.content_range&.max.to_i,
-             }
+      render json: success_json
+    else
+      hijack do
+        summary = TopicSummarization.new(strategy).summarize(topic, current_user, opts)
+
+        render_serialized(summary, TopicSummarySerializer)
+      end
     end
   end
 

@@ -10,6 +10,9 @@ id:
       site_settings:
         categories:
           chat: Obrolan
+        chat_separate_sidebar_mode:
+          always: "Selalu"
+          never: "Tidak pernah"
       logs:
         staff_actions:
           actions:
@@ -177,3 +180,7 @@ id:
       sections:
         chat:
           title: Obrolan
+    sidebar:
+      panels:
+        chat:
+          label: "Obrolan"

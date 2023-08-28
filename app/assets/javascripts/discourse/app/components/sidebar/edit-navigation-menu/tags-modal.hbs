@@ -3,9 +3,10 @@
   @title="sidebar.tags_form_modal.title"
   @saving={{this.saving}}
   @save={{this.save}}
-  @showResetDefaultsButton={{(gt
-    this.siteSettings.default_navigation_menu_tags.length 0
-  )}}
+  @showResetDefaultsButton={{gt
+    this.siteSettings.default_navigation_menu_tags.length
+    0
+  }}
   @resetToDefaults={{this.resetToDefaults}}
   @deselectAll={{this.deselectAll}}
   @deselectAllText={{i18n "sidebar.tags_form_modal.subtitle.text"}}

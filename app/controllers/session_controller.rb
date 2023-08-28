@@ -344,9 +344,9 @@ class SessionController < ApplicationController
       end
 
       if matched_user&.security_keys_enabled?
-        Webauthn.stage_challenge(matched_user, secure_session)
+        DiscourseWebauthn.stage_challenge(matched_user, secure_session)
         response.merge!(
-          Webauthn.allowed_credentials(matched_user, secure_session).merge(
+          DiscourseWebauthn.allowed_credentials(matched_user, secure_session).merge(
             security_key_required: true,
           ),
         )
@@ -433,8 +433,8 @@ class SessionController < ApplicationController
         allowed_methods: challenge[:allowed_methods],
       )
       if user.security_keys_enabled?
-        Webauthn.stage_challenge(user, secure_session)
-        json.merge!(Webauthn.allowed_credentials(user, secure_session))
+        DiscourseWebauthn.stage_challenge(user, secure_session)
+        json.merge!(DiscourseWebauthn.allowed_credentials(user, secure_session))
         json[:security_keys_enabled] = true
       else
         json[:security_keys_enabled] = false
@@ -660,8 +660,8 @@ class SessionController < ApplicationController
     if !second_factor_authentication_result.ok
       failure_payload = second_factor_authentication_result.to_h
       if user.security_keys_enabled?
-        Webauthn.stage_challenge(user, secure_session)
-        failure_payload.merge!(Webauthn.allowed_credentials(user, secure_session))
+        DiscourseWebauthn.stage_challenge(user, secure_session)
+        failure_payload.merge!(DiscourseWebauthn.allowed_credentials(user, secure_session))
       end
       @second_factor_failure_payload = failed_json.merge(failure_payload)
       return second_factor_authentication_result

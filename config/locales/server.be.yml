@@ -18,7 +18,7 @@ be:
       no_day: "% B% Y"
   date:
     month_names:
-    - null
+    -
     - Студзень
     - Люты
     - Сакавік
@@ -944,8 +944,6 @@ be:
     allowed_internal_hosts: "Спіс ўнутраных хастоў, дыскурс можа бяспечна паўзці для oneboxing і іншых мэтаў"
     allowed_iframes: "Спіс прэфіксаў дамена IFrame Src Дыскурс можа бяспечна дазволіць у паведамленнях"
     slow_down_crawler_rate: "Калі slow_down_crawler_user_agents паказаны гэтая стаўка будзе прымяняцца да ўсіх сканэра (колькасць секунд затрымкі паміж запытамі)"
-    content_security_policy: "Ўключыць Content-Security-Policy"
-    content_security_policy_report_only: "Ўключыць Content-Security-Policy-Report-Only"
     content_security_policy_collect_reports: "Ўключыць CSP збор справаздач парушэнні ў"
     invalidate_inactive_admin_email_after_days: "Адміністратар рахункаў, якія не наведвалі сайт у гэтым колькасць дзён трэба будзе паўторна праверыць іх адрасы электроннай пошты перад уваходам у сістэму. Усталюйце 0, каб адключыць."
     top_menu: "Вызначце, якія з'яўляюцца элементы хатняй старонкі навігацыі, і ў якім парадку. Прыклад апошнія | Новыя | непрачытаныя | катэгорыя | топ | прачытаныя | Адпраўленыя | закладкі"

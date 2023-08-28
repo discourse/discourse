@@ -6,4 +6,4 @@
 
 fi:
   site_settings:
-    checklist_enabled: 'Otetaanko tarkistuslistalisäosa käyttöön?'
+    checklist_enabled: "Otetaanko tarkistuslistalisäosa käyttöön?"

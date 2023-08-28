@@ -225,7 +225,7 @@ en:
       local_login_cannot_be_disabled_if_second_factor_enforced: "You cannot disable local login if 2FA is enforced. Disable enforced 2FA before disabling local logins."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "You cannot enable S3 uploads because S3 uploads are already globally enabled, and enabling this site-level could cause critical issues with uploads"
       cors_origins_should_not_have_trailing_slash: "You should not add the trailing slash (/) to CORS origins."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "User agents must be at least 3 characters long to avoid incorrectly rate limiting human users."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "User agents must be at least 3 characters long to avoid accidentally rate-limiting legitimate users."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "You cannot add any of the following values to the setting: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "You cannot disable strip image metadata if 'composer media optimization image enabled' is enabled. Disable 'composer media optimization image enabled' before disabling strip image metadata."
       twitter_summary_large_image_no_svg: "Twitter summary images used for twitter:image metadata cannot be an .svg image."
@@ -353,7 +353,7 @@ en:
       one: "%{count} more reply"
       other: "%{count} more replies"
 
-    loading: "Loading Discussion..."
+    loading: "Loading Discussion…"
     permalink: "Permalink"
     imported_from: "This is a companion discussion topic for the original entry at %{link}"
     in_reply_to: "▶ %{username}"
@@ -741,7 +741,7 @@ en:
     media_placeholder:
       blocked_hotlinked_title: "Media hosted on another site. Click to open in a new tab."
       blocked_hotlinked: "External Media"
-    hidden_bidi_character: "Bidirectional characters can change the order that text is rendered. This could be used to obscure malicious code."
+    hidden_bidi_character: "Bidirectional control characters can change the order in which text is rendered. This could be used to obscure malicious code."
     has_likes:
       one: "%{count} Like"
       other: "%{count} Likes"
@@ -982,7 +982,7 @@ en:
     pm_title: "Backup Drafts from ongoing topics"
     pm_body: "Topic containing backup drafts"
   user_activity:
-    no_log_search_queries: "Search log queries are currently disabled (an administrator can enable them in site settings)."
+    no_log_search_queries: "Search queries logs are currently disabled (an administrator can enable them in site settings)."
 
   email_settings:
     pop3_authentication_error: "There was an issue with the POP3 credentials provided, check the username and password and try again."
@@ -1462,7 +1462,7 @@ en:
       description: "Top 10 users who have had likes from a wide range of people."
 
   dashboard:
-    group_email_credentials_warning: 'There was an issue with the email credentials for the group <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. No emails will send from the group inbox until this problem is addressed. %{error}'
+    group_email_credentials_warning: 'There was an issue with the email credentials for the group <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. No emails will be sent from the group inbox until this problem is addressed. %{error}'
     rails_env_warning: "Your server is running in %{env} mode."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by Sidekiq. Please ensure at least one Sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
@@ -1672,11 +1672,11 @@ en:
     blocked_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if allowlist is defined."
     slow_down_crawler_user_agents: 'User agents of web crawlers that should be rate limited as configured in the "slow down crawler rate" setting. Each value must be at least 3 characters long.'
     slow_down_crawler_rate: "If slow_down_crawler_user_agents is specified this rate will apply to all the crawlers (number of seconds delay between requests)"
-    content_security_policy: "Enable Content-Security-Policy"
-    content_security_policy_report_only: "Enable Content-Security-Policy-Report-Only"
+    content_security_policy: "Enable Content-Security-Policy (CSP)"
+    content_security_policy_report_only: "Enable Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_collect_reports: "Enable CSP violation report collection at /csp_reports"
     content_security_policy_frame_ancestors: "Restrict who can embed this site in iframes via CSP. Control allowed hosts on <a href='%{base_path}/admin/customize/embedding'>Embedding</a>"
-    content_security_policy_script_src: "Additional allowlisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a>"
+    content_security_policy_script_src: "Additional allowlisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a> (CSP)"
     invalidate_inactive_admin_email_after_days: "Admin accounts that have not visited the site in this number of days will need to re-validate their email address before logging in. Set to 0 to disable."
     include_secure_categories_in_tag_counts: "When enabled, count of topics for a tag will include topics that are in read restricted categories for all users. When disabled, normal users are only shown a count of topics for a tag where all the topics are in public categories."
     display_personal_messages_tag_counts: "When enabled, count of personal messages tagged with a given tag will be displayed."
@@ -2149,6 +2149,7 @@ en:
     digest_min_excerpt_length: "Minimum post excerpt in the email summary, in characters."
     suppress_digest_email_after_days: "Suppress summary emails for users not seen on the site for more than (n) days."
     digest_suppress_categories: "Suppress these categories from summary emails."
+    digest_suppress_tags: "Suppress these tags from summary emails."
     disable_digest_emails: "Disable summary emails for all users."
     apply_custom_styles_to_digest: "Custom email template and css are applied to summary emails."
     email_accent_bg_color: "The accent color to be used as the background of some elements in HTML emails. Enter a color name ('red') or hex value ('#FF0000')."
@@ -2693,16 +2694,16 @@ en:
       sent_test: "sent!"
     user:
       merge_user:
-        updating_username: "Updating username..."
-        changing_post_ownership: "Changing post ownership..."
-        merging_given_daily_likes: "Merging given daily likes..."
-        merging_post_timings: "Merging post timings..."
-        merging_user_visits: "Merging user visits..."
-        updating_site_settings: "Updating site settings..."
-        updating_user_stats: "Updating user stats..."
-        merging_user_attributes: "Merging user attributes..."
-        updating_user_ids: "Updating user ids..."
-        deleting_source_user: "Deleting source user..."
+        updating_username: "Updating username…"
+        changing_post_ownership: "Changing post ownership…"
+        merging_given_daily_likes: "Merging given daily likes…"
+        merging_post_timings: "Merging post timings…"
+        merging_user_visits: "Merging user visits…"
+        updating_site_settings: "Updating site settings…"
+        updating_user_stats: "Updating user stats…"
+        merging_user_attributes: "Merging user attributes…"
+        updating_user_ids: "Updating user ids…"
+        deleting_source_user: "Deleting source user…"
   user:
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
     deactivated_by_staff: "Deactivated by staff"
@@ -5185,7 +5186,7 @@ en:
       delete_single:
         title: "Delete"
       delete:
-        title: "Delete..."
+        title: "Delete…"
       delete_and_ignore:
         title: "Ignore flag and delete post"
         description: "Ignore the flag by removing it from the queue and delete the post; if the first post, delete the topic as well. "
@@ -5205,6 +5206,8 @@ en:
         description: "Restore the post so that all users can see it."
       disagree:
         title: "No"
+      discard_post:
+        title: "Discard Post"
       ignore:
         title: "Ignore"
       ignore_and_do_nothing:
@@ -5220,7 +5223,7 @@ en:
       approve_user:
         title: "Approve User"
       reject_user:
-        title: "Delete User..."
+        title: "Delete User…"
         delete:
           title: "Delete User"
           description: "The user will be deleted from the forum."
@@ -5229,7 +5232,7 @@ en:
           description: "The user will be deleted, and we'll block their IP and email address."
       reject:
         title: "Reject"
-        bundle_title: "Reject..."
+        bundle_title: "Reject…"
       reject_and_suspend:
         title: "Reject and Suspend user"
       reject_and_silence:

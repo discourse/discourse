@@ -65,7 +65,7 @@ RSpec.describe "Chat channel", type: :system do
         end
 
         using_session(:tab_2) do |session|
-          expect(channel_page).to have_message(text: "test_message")
+          expect(channel_page.messages).to have_message(text: "test_message")
           session.quit
         end
       end
@@ -237,7 +237,7 @@ RSpec.describe "Chat channel", type: :system do
       chat.visit_channel(channel_1)
 
       expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
-        "<a class=\"mention\" href=\"/u/#{other_user.username}\">@#{other_user.username}</a> &lt;mark&gt;not marked&lt;/mark&gt;",
+        "@#{other_user.username} &lt;mark&gt;not marked&lt;/mark&gt;",
       )
     end
   end

@@ -18,6 +18,8 @@ class Category < ActiveRecord::Base
 
   REQUIRE_TOPIC_APPROVAL = "require_topic_approval"
   REQUIRE_REPLY_APPROVAL = "require_reply_approval"
+  NUM_AUTO_BUMP_DAILY = "num_auto_bump_daily"
+  SLUG_REF_SEPARATOR = ":"
 
   register_custom_field_type(REQUIRE_TOPIC_APPROVAL, :boolean)
   register_custom_field_type(REQUIRE_REPLY_APPROVAL, :boolean)
@@ -203,14 +205,16 @@ class Category < ActiveRecord::Base
   # Allows us to skip creating the category definition topic in tests.
   attr_accessor :skip_category_definition
 
-  @topic_id_cache = DistributedCache.new("category_topic_ids")
+  def self.topic_id_cache
+    @topic_id_cache ||= DistributedCache.new("category_topic_ids")
+  end
 
   def self.topic_ids
-    @topic_id_cache.defer_get_set("ids") { Set.new(Category.pluck(:topic_id).compact) }
+    topic_id_cache.defer_get_set("ids") { Set.new(Category.pluck(:topic_id).compact) }
   end
 
   def self.reset_topic_ids_cache
-    @topic_id_cache.clear
+    topic_id_cache.clear
   end
 
   def reset_topic_ids_cache
@@ -1034,6 +1038,20 @@ class Category < ActiveRecord::Base
       slug_path
     else
       [self.slug_for_url]
+    end
+  end
+
+  def slug_ref(depth: 1)
+    if self.parent_category_id.present?
+      built_ref = [self.slug]
+      parent = self.parent_category
+      while parent.present? && (built_ref.length < depth + 1)
+        built_ref << parent.slug
+        parent = parent.parent_category
+      end
+      built_ref.reverse.join(Category::SLUG_REF_SEPARATOR)
+    else
+      self.slug
     end
   end
 

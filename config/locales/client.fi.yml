@@ -277,6 +277,8 @@ fi:
       pill: "Aiheeseen liittyviä viestejä"
       see_all: 'Katso <a href="%{path}">kaikki viestit</a> käyttäjältä @%{username}...'
     suggested_topics:
+      title: "Uudet ja lukemattomat ketjut"
+      pill: "Ehdotettu"
       pm_title: "Viestiehdotuksia"
     about:
       simple_title: "Tietoa"
@@ -1129,7 +1131,7 @@ fi:
         enable: "Ota sivupalkki käyttöön"
         options: "Asetukset"
         navigation_section: "Navigointi"
-        navigation_section_instruction: "Kun navigointivalikon aihelistalla on uusia tai lukemattomia kohteita…"
+        navigation_section_instruction: "Kun navigointivalikon ketjuluettelossa on uusia tai lukemattomia kohteita…"
         link_to_filtered_list_checkbox_description: "Linkki suodatettuun luetteloon"
         show_count_new_items_checkbox_description: "Näytä uusien kohteiden lukumäärä"
       change: "vaihda"
@@ -1207,11 +1209,11 @@ fi:
           one: '<span class="%{className}">%{count}</span> hyödyllinen liputus'
           other: '<span class="%{className}">%{count}</span> hyödyllistä liputusta'
         flagged_posts:
-          one: '<span class="%{className}">%{count}</span> merkitty julkaisu'
-          other: '<span class="%{className}">%{count}</span> merkittyä julkaisua'
+          one: '<span class="%{className}">%{count}</span> merkitty viesti'
+          other: '<span class="%{className}">%{count}</span> merkittyä viestiä'
         deleted_posts:
-          one: '<span class="%{className}">%{count}</span> poistettu julkaisu'
-          other: '<span class="%{className}">%{count}</span> poistettua julkaisua'
+          one: '<span class="%{className}">%{count}</span> poistettu viesti'
+          other: '<span class="%{className}">%{count}</span> poistettua viestiä'
         suspensions:
           one: '<span class="%{className}">%{count}</span> jäädytys'
           other: '<span class="%{className}">%{count}</span> jäädytystä'
@@ -1219,8 +1221,8 @@ fi:
           one: '<span class="%{className}">%{count}</span> varoitus'
           other: '<span class="%{className}">%{count}</span> varoitusta'
         rejected_posts:
-          one: '<span class="%{className}">%{count}</span> hylätty julkaisu'
-          other: '<span class="%{className}">%{count}</span> hylättyä julkaisua'
+          one: '<span class="%{className}">%{count}</span> hylätty viesti'
+          other: '<span class="%{className}">%{count}</span> hylättyä viestiä'
       messages:
         all: "kaikki postilaatikot"
         inbox: "Saapuneet"
@@ -2224,7 +2226,7 @@ fi:
       ulist_title: "Luettelomerkillinen luettelo"
       list_item: "Luettelokohde"
       toggle_direction: "Vaihda suuntaa"
-      help: "Markdown-mukkausohje"
+      help: "Markdown-muokkausohje"
       collapse: "pienennä kirjoituspaneeli"
       open: "avaa kirjoituspaneeli"
       abandon: "sulje kirjoitustila ja hylkää luonnos"
@@ -3672,6 +3674,12 @@ fi:
           one: "Uudet (%{count})"
           other: "Uudet (%{count})"
         help: "viime päivinä aloitetut ketjut"
+        all: "Kaikki"
+        all_with_count: "Kaikki (%{count})"
+        topics: "Ketjut"
+        topics_with_count: "Ketjut (%{count})"
+        replies: "Vastaukset"
+        replies_with_count: "Vastaukset (%{count})"
       posted:
         title: "Viestini"
         help: "ketjut, joihin olet kirjoittanut"
@@ -4103,7 +4111,7 @@ fi:
               label: "Kuvake"
               validation:
                 blank: "Kuvake ei voi olla tyhjä"
-                maximum: "Kuvakkeen täytyy olla lyhyempi kuin %{count} merkkiä"
+                maximum: "Kuvakkeen nimen täytyy olla lyhyempi kuin %{count} merkkiä"
             name:
               label: "Nimi"
               validation:
@@ -4186,7 +4194,7 @@ fi:
         global_section: "Yleinen osio, joka näkyy kaikille"
       panels:
         forum:
-          label: Keskustelualuea
+          label: Foorumi
     welcome_topic_banner:
       title: "Luo tervetuloketjusi"
       description: "Tervetuloketjusi on ensimmäinen asia, jonka uudet jäsenet lukevat. Ajattele sitä \"hissipuheenasi\" tai \"tavoitelausumanasi\". Kerro kaikille, kenelle tämä yhteisö on tarkoitettu, mitä he voivat odottaa löytävänsä täältä ja mitä haluat heidän tekevän ensin."
@@ -4214,10 +4222,18 @@ fi:
           tel: "Anna kelvollinen puhelinnumero."
           text: "Anna tekstiarvo."
           url: "Anna kelvollinen URL."
-        tooShort: "Syötteen täytyy olla vähintään %{minLength} merkin pituinen."
-        tooLong: "Syötteen täytyy olla alle %{maxLength} merkin pituinen."
-        rangeOverflow: "Syötteen täytyy olla alle %{max}."
-        rangeUnderflow: "Syötteen täytyy olla yli %{min}."
+        tooShort:
+          one: "Syötteen täytyy olla ainakin %{count} merkki."
+          other: "Syötteen täytyy olla ainakin %{count} merkkiä."
+        tooLong:
+          one: "Syötteen täytyy olla alle %{count} merkkiä."
+          other: "Syötteen täytyy olla alle %{count} merkkiä."
+        rangeOverflow:
+          one: "Syötteen täytyy olla vähemmän kuin %{count}."
+          other: "Syötteen täytyy olla vähemmän kuin %{count}."
+        rangeUnderflow:
+          one: "Syötteen täytyy olla enemmän kuin %{count}."
+          other: "Syötteen täytyy olla enemmän kuin %{count}."
         patternMismatch: "Noudata pyydettyä muotoa."
         badInput: "Anna kelvollinen syöte."
   admin_js:
@@ -4342,6 +4358,7 @@ fi:
             email: Sähköposti
             incoming_email: "Mukautettu saapuvan postin sähköpostiosoite"
             incoming_email_placeholder: "syötä sähköpostiosoite"
+            incoming_email_tooltip: "Voit erottaa useita sähköpostiosoitteita |-merkillä."
             visibility: Näkyvyys
             visibility_levels:
               title: "Ketkä voivat nähdä tämän ryhmän?"

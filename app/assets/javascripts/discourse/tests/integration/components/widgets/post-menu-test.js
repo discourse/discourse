@@ -5,6 +5,8 @@ import { count, exists } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { resetPostMenuExtraButtons } from "discourse/widgets/post-menu";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { createWidget } from "discourse/widgets/widget";
+import { h } from "virtual-dom";
 
 module("Integration | Component | Widget | post-menu", function (hooks) {
   setupRenderingTest(hooks);
@@ -87,5 +89,52 @@ module("Integration | Component | Widget | post-menu", function (hooks) {
     await render(hbs`<MountWidget @widget="post-menu" @args={{this.args}} />`);
 
     assert.ok(!exists(".actions .reply"), "it removes reply button");
+  });
+
+  createWidget("post-menu-replacement", {
+    html(attrs) {
+      return h("h1.post-menu-replacement", {}, attrs.id);
+    },
+  });
+
+  test("buttons are replaced when shouldRender is true", async function (assert) {
+    this.set("args", { id: 1, canCreatePost: true });
+
+    withPluginApi("0.14.0", (api) => {
+      api.replacePostMenuButton("reply", {
+        name: "post-menu-replacement",
+        buildAttrs: (widget) => {
+          return widget.attrs;
+        },
+        shouldRender: (widget) => widget.attrs.id === 1, // true!
+      });
+    });
+
+    await render(hbs`<MountWidget @widget="post-menu" @args={{this.args}} />`);
+
+    assert.ok(exists("h1.post-menu-replacement"), "replacement is rendered");
+    assert.ok(!exists(".actions .reply"), "reply button is replaced button");
+  });
+
+  test("buttons are not replaced when shouldRender is false", async function (assert) {
+    this.set("args", { id: 1, canCreatePost: true, canRemoveReply: false });
+
+    withPluginApi("0.14.0", (api) => {
+      api.replacePostMenuButton("reply", {
+        name: "post-menu-replacement",
+        buildAttrs: (widget) => {
+          return widget.attrs;
+        },
+        shouldRender: (widget) => widget.attrs.id === 102323948, // false!
+      });
+    });
+
+    await render(hbs`<MountWidget @widget="post-menu" @args={{this.args}} />`);
+
+    assert.ok(
+      !exists("h1.post-menu-replacement"),
+      "replacement is not rendered"
+    );
+    assert.ok(exists(".actions .reply"), "reply button is present");
   });
 });

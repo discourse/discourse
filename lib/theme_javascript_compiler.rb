@@ -234,7 +234,7 @@ class ThemeJavascriptCompiler
 
   def append_module(script, name, include_variables: true)
     original_filename = name
-    name = "discourse/theme-#{@theme_id}/#{name.gsub(%r{\Adiscourse/}, "")}"
+    name = "discourse/theme-#{@theme_id}/#{name}"
 
     script = "#{theme_settings}#{script}" if include_variables
     transpiler = DiscourseJsProcessor::Transpiler.new

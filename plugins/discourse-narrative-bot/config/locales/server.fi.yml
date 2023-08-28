@@ -376,18 +376,8 @@ fi:
         instructions: |-
           Tiesitkö, että viesteissä voi viitata alueisiin ja tunnisteisiin? Esimerkiksi, oletko käynyt alueella %{category}?
 
-          Näppäile lauseen keskellä `#` ja valitse mieleinen alue tai tunniste.
-        instructions_experimental: |-
-          Tiesitkö, että viesteissä voi viitata alueisiin ja tunnisteisiin? Esimerkiksi, oletko käynyt alueella %{category}?
-
           Kirjoita # mihin tahansa kohtaan lauseessa ja valitse mieleinen alue tai tunniste.
         not_found: |-
-          Höh, en näe viittauksia alueisiin. Huomioi, ettei `#` saa olla rivinsä ensimmäinen merkki. Kopioisitko tämän seuraavaan vastaukseesi?
-
-          ```text
-          Voin luoda aluelinkin käyttäen risuaitaa #
-          ```
-        not_found_experimental: |-
           Höh, en näe viittauksia alueisiin. Kopioisitko tämän seuraavaan vastaukseesi?
 
           ```text

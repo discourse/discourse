@@ -5,15 +5,17 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import logout from "discourse/lib/logout";
-import showModal from "discourse/lib/show-modal";
 import { userPath } from "discourse/lib/url";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
 import I18n from "I18n";
+import { inject as service } from "@ember/service";
+import AuthTokenModal from "discourse/components/modal/auth-token";
 
 // Number of tokens shown by default.
 const DEFAULT_AUTH_TOKENS_COUNT = 2;
 
 export default Controller.extend(CanCheckEmails, {
+  modal: service(),
   passwordProgress: null,
   subpageTitle: I18n.t("user.preferences_nav.security"),
   showAllAuthTokens: false,
@@ -112,7 +114,7 @@ export default Controller.extend(CanCheckEmails, {
     },
 
     showToken(token) {
-      showModal("auth-token", { model: token });
+      this.modal.show(AuthTokenModal, { model: token });
     },
   },
 });

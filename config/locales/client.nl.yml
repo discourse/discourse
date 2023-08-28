@@ -277,6 +277,8 @@ nl:
       pill: "Gerelateerde berichten"
       see_all: '<a href="%{path}">Alle berichten</a> van @%{username} weergeven...'
     suggested_topics:
+      title: "Nieuwe en ongelezen topics"
+      pill: "Voorgesteld"
       pm_title: "Voorgestelde berichten"
     about:
       simple_title: "Over"
@@ -671,7 +673,7 @@ nl:
       edit_columns:
         title: "Mapkolommen bewerken"
         save: "Opslaan"
-        reset_to_default: "Standaard herstellen"
+        reset_to_default: "Resetten"
       group:
         all: "alle groepen"
       sort:
@@ -1114,7 +1116,7 @@ nl:
         default_description: "Standaard voor thema"
         disable_dark_scheme: "Hetzelfde als normaal"
         dark_instructions: "Je kunt een voorbeeld van het kleurenschema van de donkere modus bekijken door de donkere modus van je apparaat in te schakelen."
-        undo: "Herstellen"
+        undo: "Resetten"
         regular: "Normaal"
         dark: "Donkere modus"
         default_dark_scheme: "(standaard voor website)"
@@ -1789,6 +1791,7 @@ nl:
         content: "Hier zijn enkele topics waarvan we denken dat je ze misschien leuk vindt om te lezen."
       admin_guide:
         title: "Welkom op je nieuwe site!"
+        content: "<a href='%{admin_guide_url}'>Lees de beheerdersgids</a> om door te gaan met het bouwen van je site en community."
         content_no_url: "Lees de beheerdersgids om door te gaan met het bouwen van je site en community."
     loading: "Laden..."
     errors:
@@ -3671,6 +3674,9 @@ nl:
           one: "Nieuw (%{count})"
           other: "Nieuw (%{count})"
         help: "de afgelopen paar dagen gemaakte topics"
+        all: "Alles"
+        topics: "Topics"
+        replies: "Antwoorden"
       posted:
         title: "Mijn berichten"
         help: "topics waarin je een bericht hebt geplaatst"
@@ -3838,6 +3844,9 @@ nl:
       more_badges:
         one: "+nog %{count}"
         other: "+nog %{count}"
+      awarded:
+        one: "%{number} toegekend"
+        other: "%{number} toegekend"
       select_badge_for_title: Kies een badge om als je titel te gebruiken
       none: "(geen)"
       successfully_granted: "%{badge} toegekend aan %{username}"
@@ -4210,10 +4219,18 @@ nl:
           tel: "Voer een geldig telefoonnummer in."
           text: "Voer een tekstwaarde in."
           url: "Voer een geldige URL in."
-        tooShort: "De invoer moet %{minLength} tekens of langer zijn."
-        tooLong: "De invoer moet minder dan %{maxLength} tekens zijn."
-        rangeOverflow: "De invoer moet kleiner zijn dan %{max}."
-        rangeUnderflow: "De invoer moet groter zijn dan %{min}."
+        tooShort:
+          one: "De invoer moet %{count} teken of langer zijn."
+          other: "De invoer moet %{count} tekens of langer zijn."
+        tooLong:
+          one: "De invoer moet minder dan %{count} teken zijn."
+          other: "De invoer moet minder dan %{count} tekens zijn."
+        rangeOverflow:
+          one: "De invoer moet kleiner zijn dan %{count}."
+          other: "De invoer moet kleiner zijn dan %{count}."
+        rangeUnderflow:
+          one: "De invoer moet groter zijn dan %{count}."
+          other: "De invoer moet groter zijn dan %{count}."
         patternMismatch: "Zorg dat je de gevraagde notatie gebruikt."
         badInput: "Voer een geldige invoer in."
   admin_js:
@@ -4338,6 +4355,7 @@ nl:
             email: E-mail
             incoming_email: "Aangepast adres voor inkomende e-mail"
             incoming_email_placeholder: "voer e-mailadres in"
+            incoming_email_tooltip: "Je kunt meerdere e-mailadressen scheiden met het teken |."
             visibility: Zichtbaarheid
             visibility_levels:
               title: "Wie kan deze groep zien?"
@@ -4490,7 +4508,7 @@ nl:
               revoke_badge_from_user: Trek een badge van een gebruiker in.
             groups:
               manage_groups: Groepsleden weergeven, toevoegen en verwijderen.
-              administer_groups: Groepen weergeven, maken, bijwerken en verwijderen.
+              administer_groups: Groepen opsommen, weergeven, maken, bijwerken en verwijderen.
             search:
               show: Zoek met behulp van het eindpunt '/search.json?q=term'.
               query: Zoek met behulp van het eindpunt '/search/query?term=term'.

@@ -2675,6 +2675,9 @@ ro:
           few: "Noi (%{count})"
           other: "Noi (%{count})"
         help: "subiecte create în ultimele zile"
+        all: "Toate"
+        topics: "Discuții"
+        replies: "Răspunsuri"
       posted:
         title: "Postările mele"
         help: "subiecte în care ai postat"

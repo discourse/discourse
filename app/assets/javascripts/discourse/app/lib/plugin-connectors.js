@@ -1,6 +1,5 @@
 import { buildRawConnectorCache } from "discourse-common/lib/raw-templates";
 import deprecated from "discourse-common/lib/deprecated";
-import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 import {
   getComponentTemplate,
   hasInternalComponentManager,
@@ -11,11 +10,9 @@ import templateOnly from "@ember/component/template-only";
 let _connectorCache;
 let _rawConnectorCache;
 let _extraConnectorClasses = {};
-let _classPaths;
 
 export function resetExtraClasses() {
   _extraConnectorClasses = {};
-  _classPaths = undefined;
 }
 
 // Note: In plugins, define a class by path and it will be wired up automatically
@@ -24,14 +21,19 @@ export function extraConnectorClass(name, obj) {
   _extraConnectorClasses[name] = obj;
 }
 
-function findOutlets(keys, callback) {
-  keys.forEach(function (res) {
-    const segments = res.split("/");
-    if (segments.includes("connectors")) {
-      const outletName = segments[segments.length - 2];
-      const uniqueName = segments[segments.length - 1];
+const OUTLET_REGEX =
+  /^discourse(\/[^\/]+)*?(?<template>\/templates)?\/connectors\/(?<outlet>[^\/]+)\/(?<name>[^\/\.]+)$/;
 
-      callback(outletName, res, uniqueName);
+function findOutlets(keys, callback) {
+  return keys.forEach((res) => {
+    const match = res.match(OUTLET_REGEX);
+    if (match) {
+      callback({
+        outletName: match.groups.outlet,
+        connectorName: match.groups.name,
+        moduleName: res,
+        isTemplate: !!match.groups.template,
+      });
     }
   });
 }
@@ -39,25 +41,6 @@ function findOutlets(keys, callback) {
 export function clearCache() {
   _connectorCache = null;
   _rawConnectorCache = null;
-}
-
-function findClass(outletName, uniqueName) {
-  if (!_classPaths) {
-    _classPaths = {};
-    findOutlets(Object.keys(require._eak_seen), (outlet, res, un) => {
-      const possibleConnectorClass = requirejs(res).default;
-      if (possibleConnectorClass.__id) {
-        // This is the template, not the connector class
-        return;
-      }
-      _classPaths[`${outlet}/${un}`] = possibleConnectorClass;
-    });
-  }
-
-  const id = `${outletName}/${uniqueName}`;
-  let foundClass = _extraConnectorClasses[id] || _classPaths[id];
-
-  return foundClass;
 }
 
 /**
@@ -85,11 +68,9 @@ class ConnectorInfo {
   #componentClass;
   #templateOnly;
 
-  constructor(outletName, connectorName, connectorClass, template) {
+  constructor(outletName, connectorName) {
     this.outletName = outletName;
     this.connectorName = connectorName;
-    this.connectorClass = connectorClass;
-    this.template = template;
   }
 
   get componentClass() {
@@ -104,10 +85,26 @@ class ConnectorInfo {
     return `${this.outletName}-outlet ${this.connectorName}`;
   }
 
+  get connectorClass() {
+    if (this.classModule) {
+      return require(this.classModule).default;
+    } else {
+      return _extraConnectorClasses[`${this.outletName}/${this.connectorName}`];
+    }
+  }
+
+  get template() {
+    if (this.templateModule) {
+      return require(this.templateModule).default;
+    }
+  }
+
   #buildComponentClass() {
     const klass = this.connectorClass;
     if (klass && hasInternalComponentManager(klass)) {
-      safeSetComponentTemplate(this.template, klass);
+      if (this.template) {
+        safeSetComponentTemplate(this.template, klass);
+      }
       this.#warnUnusableHooks();
       return klass;
     } else {
@@ -141,19 +138,38 @@ class ConnectorInfo {
 function buildConnectorCache() {
   _connectorCache = {};
 
+  const outletsByModuleName = {};
   findOutlets(
-    DiscourseTemplateMap.keys(),
-    (outletName, resource, connectorName) => {
-      _connectorCache[outletName] ||= [];
+    Object.keys(require.entries),
+    ({ outletName, connectorName, moduleName, isTemplate }) => {
+      let key = isTemplate
+        ? moduleName.replace("/templates/", "/")
+        : moduleName;
 
-      const template = require(DiscourseTemplateMap.resolve(resource)).default;
-      const connectorClass = findClass(outletName, connectorName);
+      let info = (outletsByModuleName[key] ??= new ConnectorInfo(
+        outletName,
+        connectorName
+      ));
 
-      _connectorCache[outletName].push(
-        new ConnectorInfo(outletName, connectorName, connectorClass, template)
-      );
+      if (isTemplate) {
+        info.templateModule = moduleName;
+      } else {
+        info.classModule = moduleName;
+      }
     }
   );
+
+  for (const info of Object.values(outletsByModuleName)) {
+    _connectorCache[info.outletName] ??= [];
+    _connectorCache[info.outletName].push(info);
+  }
+}
+
+export function connectorsExist(outletName) {
+  if (!_connectorCache) {
+    buildConnectorCache();
+  }
+  return Boolean(_connectorCache[outletName]);
 }
 
 export function connectorsFor(outletName) {
@@ -172,7 +188,7 @@ export function renderedConnectorsFor(outletName, args, context) {
 
 export function rawConnectorsFor(outletName) {
   if (!_rawConnectorCache) {
-    _rawConnectorCache = buildRawConnectorCache(findOutlets);
+    _rawConnectorCache = buildRawConnectorCache();
   }
   return _rawConnectorCache[outletName] || [];
 }

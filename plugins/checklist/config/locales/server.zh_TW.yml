@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  site_settings:
+    checklist_enabled: "要啟用檢查清單外掛程式嗎？"

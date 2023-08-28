@@ -39,21 +39,25 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
   @service currentUser;
   @service chatStagedThreadMapping;
 
-  get messageBusChannel() {
-    throw "not implemented";
-  }
-
-  get messageBusLastId() {
-    throw "not implemented";
-  }
+  messageBusChannel = null;
+  messageBusLastId = null;
 
   get messagesManager() {
     return this.model.messagesManager;
   }
 
+  beforeSubscribe() {}
+  afterMessage() {}
+
   subscribe(model) {
     this.unsubscribe();
+    this.beforeSubscribe(model);
     this.model = model;
+
+    if (!this.messageBusChannel) {
+      return;
+    }
+
     this.messageBus.subscribe(
       this.messageBusChannel,
       this.onMessage,
@@ -120,6 +124,8 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
         this.handleNotice(busData);
         break;
     }
+
+    this.afterMessage(this.model, ...arguments);
   }
 
   handleSentMessage() {

@@ -2,9 +2,7 @@ import Badge from "discourse/models/badge";
 import DiscourseRoute from "discourse/routes/discourse";
 import PreloadStore from "discourse/lib/preload-store";
 import UserBadge from "discourse/models/user-badge";
-import { scrollTop } from "discourse/mixins/scroll-top";
 import { hash } from "rsvp";
-import { action } from "@ember/object";
 
 export default DiscourseRoute.extend({
   queryParams: {
@@ -63,12 +61,5 @@ export default DiscourseRoute.extend({
     controller.set("model", model);
     controller.set("userBadges", this.userBadgesGrant);
     controller.set("userBadgesAll", this.userBadgesAll);
-  },
-
-  @action
-  didTransition() {
-    this.controllerFor("badges/show")._showFooter();
-    scrollTop();
-    return true;
   },
 });

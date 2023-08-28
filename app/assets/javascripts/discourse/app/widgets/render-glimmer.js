@@ -4,6 +4,8 @@ import { tracked } from "@glimmer/tracking";
 import { assert } from "@ember/debug";
 import { createWidgetFrom } from "discourse/widgets/widget";
 
+const INITIAL_CLASSES = Symbol("RENDER_GLIMMER_INITIAL_CLASSES");
+
 /*
 
 This class allows you to render arbitrary Glimmer templates inside widgets.
@@ -71,8 +73,14 @@ createWidget("my-widget", {
     this.scheduleRerender();
   },
 });
-```
 
+To dynamically control the attributes of the wrapper element, a helper function is provided as an argument to your hbs template.
+To use this via a template, you can do something like this:
+```
+hbs`{{@setWrapperElementAttrs class="some class value" title="title value"}}`
+```
+If you prefer, you can pass this function down into your own components, and call it from there. Invoked as a helper, this can
+be passed (auto-)tracked values, and will update the wrapper element attributes whenever the inputs.
 */
 
 export default class RenderGlimmer {
@@ -104,6 +112,7 @@ export default class RenderGlimmer {
       const [type, ...classNames] = this.renderInto.split(".");
       this.element = document.createElement(type);
       this.element.classList.add(...classNames);
+      this.element[INITIAL_CLASSES] = classNames;
     }
     this.connectComponent();
     return this.element;
@@ -147,9 +156,25 @@ export default class RenderGlimmer {
       element,
       component,
       @tracked data: this.data,
+      setWrapperElementAttrs: (attrs) =>
+        this.updateElementAttrs(element, attrs),
     };
 
     this.parentMountWidgetComponent.mountChildComponent(this._componentInfo);
+  }
+
+  updateElementAttrs(element, attrs) {
+    for (let [key, value] of Object.entries(attrs)) {
+      if (key === "class") {
+        value = [element[INITIAL_CLASSES], value].filter(Boolean).join(" ");
+      }
+
+      if ([null, undefined].includes(value)) {
+        element.removeAttribute(key);
+      } else {
+        element.setAttribute(key, value);
+      }
+    }
   }
 
   get parentMountWidgetComponent() {

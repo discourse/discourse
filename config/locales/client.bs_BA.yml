@@ -2082,7 +2082,6 @@ bs_BA:
           "2_8": "Vidjet ćete broj novih odgovora jer pratite ovu kategoriju."
           "2_4": "Vidjet ćete broj novih odgovora jer ste objavili odgovor na ovu temu."
           "2_2": "Vidjet ćete broj novih odgovora jer pratite ovu temu."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Dobiti ćete obavijest kada neko spomene tvoje @korisničko-ime ili odgovori na tvoj post."
           "1": "Dobiti ćete obavjest kada neko spomene tvoje @korisničko-ime ili odgovori na tvoj post."
           "0_7": "Ignorišete sve notifikacije u ovoj kategoriji."
@@ -2737,6 +2736,9 @@ bs_BA:
           few: "Novo (%{count})"
           other: "Novo (%{count})"
         help: "teme stvorene u zadnjih par dana"
+        all: "All"
+        topics: "Topics"
+        replies: "Odgovori"
       posted:
         title: "Moje objave"
         help: "teme u kojima imate postove"

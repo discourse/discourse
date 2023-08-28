@@ -8,6 +8,7 @@ import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { userPath } from "discourse/lib/url";
 import { htmlSafe } from "@ember/template";
+import { decorateHashtags } from "discourse/lib/hashtag-autocomplete";
 
 export function actionDescriptionHtml(actionCode, createdAt, username, path) {
   const dt = new Date(createdAt);
@@ -178,9 +179,12 @@ export default createWidget("post-small-action", {
     }
 
     if (!attrs.actionDescriptionWidget && attrs.cooked) {
+      const fragment = document.createElement("div");
+      fragment.innerHTML = attrs.cooked;
+      decorateHashtags(fragment, this.site);
       customMessage.push(
         new RawHtml({
-          html: `<div class='small-action-custom-message'>${attrs.cooked}</div>`,
+          html: `<div class='small-action-custom-message'>${fragment.innerHTML}</div>`,
         })
       );
     }

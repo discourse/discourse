@@ -246,6 +246,8 @@ ja:
       pill: "関連メッセージ"
       see_all: '@%{username} からの<a href="%{path}">すべてのメッセージ</a>を表示...'
     suggested_topics:
+      title: "新規と未読のトピック"
+      pill: "提案"
       pm_title: "推奨メッセージ"
     about:
       simple_title: "サイト情報"
@@ -382,10 +384,10 @@ ja:
         score_to_hide: "投稿を非表示にするスコア"
         take_action_bonus:
           name: "対応済み"
-          title: "スタッフが対応すると、フラグにボーナスが与えられます。"
+          title: "スタッフが対応すると、通報にボーナスが与えられます。"
         user_accuracy_bonus:
           name: "ユーザーの正確性"
-          title: "過去に同意を得たフラグを報告したユーザーにはボーナスが与えられます。"
+          title: "過去に同意を得た通報を報告したユーザーにはボーナスが与えられます。"
         trust_level_bonus:
           name: "信頼レベル"
           title: "レビュー待ち項目を作成したユーザーの信頼レベルが高いほど、その項目のスコアが高くなります。"
@@ -480,7 +482,7 @@ ja:
       conversation:
         view_full: "会話をすべて表示"
       scores:
-        about: "このスコアは、報告者の信頼レベル、以前のフラグの正確性、および報告されている項目の優先度に基づいて計算されます。"
+        about: "このスコアは、報告者の信頼レベル、以前の通報の正確性、および報告されている項目の優先度に基づいて計算されます。"
         score: "スコア"
         date: "報告日"
         type: "理由"
@@ -494,7 +496,7 @@ ja:
         approved:
           title: "承認済み"
         approved_flag:
-          title: "フラグが承認されました"
+          title: "通報が承認されました"
         approved_user:
           title: "ユーザーが承認されました"
         approved_post:
@@ -1705,6 +1707,7 @@ ja:
         content: "次に読むことをお勧めするトピックをいくつかご紹介します。"
       admin_guide:
         title: "新しいサイトへようこそ！"
+        content: "サイトとコミュニティーの構築を続けるには、<a href='%{admin_guide_url}'>管理者ガイドをお読みください</a>。"
         content_no_url: "管理者ガイドを読み、サイトとコミュニティの構築を続けましょう。"
     loading: "読み込み中..."
     errors:
@@ -3485,6 +3488,9 @@ ja:
         title_with_count:
           other: "新規 (%{count})"
         help: "数日以内に作成されたトピック"
+        all: "すべて"
+        topics: "トピック"
+        replies: "返信"
       posted:
         title: "自分の投稿"
         help: "投稿したトピック"
@@ -3647,6 +3653,8 @@ ja:
         other: "%{count} 個のバッジ"
       more_badges:
         other: "他 %{count}"
+      awarded:
+        other: "%{number} 獲得"
       select_badge_for_title: タグラインとして使用するバッジを選択
       none: "(なし)"
       successfully_granted: "%{badge} を %{username} に正常に付与しました"
@@ -4007,10 +4015,14 @@ ja:
           tel: "有効な電話番号を入力してください。"
           text: "テキスト値を入力してください。"
           url: "有効な URL を入力してください。"
-        tooShort: "入力は %{minLength} 文字以上である必要があります。"
-        tooLong: "入力は %{maxLength} 文字未満である必要があります。"
-        rangeOverflow: "入力は %{max} 未満である必要があります。"
-        rangeUnderflow: "入力は %{min} 以上である必要があります。"
+        tooShort:
+          other: "入力は %{count} 文字以上である必要があります。"
+        tooLong:
+          other: "入力は %{count} 文字未満である必要があります。"
+        rangeOverflow:
+          other: "入力は %{count} 未満である必要があります。"
+        rangeUnderflow:
+          other: "入力は %{count} 以上である必要があります。"
         patternMismatch: "要求されたフォーマットに一致させてください。"
         badInput: "有効な入力を入力してください。"
   admin_js:
@@ -4134,6 +4146,7 @@ ja:
             email: メール
             incoming_email: "カスタム受信メールアドレス"
             incoming_email_placeholder: "メールアドレスを入力"
+            incoming_email_tooltip: "複数のメールアドレスは「|」文字で区切ることができます。"
             visibility: 表示状態
             visibility_levels:
               title: "誰がこのグループを閲覧できますか？"
@@ -4481,6 +4494,11 @@ ja:
         title: "カスタマイズ"
         preview: "プレビュー"
         explain_preview: "このテーマを有効にした状態でサイトを見る"
+        syntax_error: "構文エラー"
+        settings_editor: "設定エディター"
+        validation_settings_keys: "各項目には、'setting' キーと 'value' キーのみが必要です。"
+        validation_settings_deleted: "これらの設定は削除されました。復元してからもう一度お試しください。"
+        validation_settings_added: "これらの設定が追加されました。削除してからもう一度お試しください。"
         save: "保存"
         new: "新規"
         new_style: "新規スタイル"
@@ -4534,6 +4552,7 @@ ja:
           extra_files_upload: "これらのファイルを表示するにはテーマをエクスポートします。"
           extra_files_remote: "これらのファイルを表示するには、テーマをエクスポートするか、Git リポジトリをチェックします。"
           preview: "プレビュー"
+          settings_editor: "設定エディター"
           show_advanced: "高度なフィールドを表示"
           hide_advanced: "高度なフィールドを非表示"
           hide_unused_fields: "未使用のフィールドを非表示"

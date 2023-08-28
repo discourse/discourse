@@ -6,6 +6,8 @@ import { h } from "virtual-dom";
 import { replaceEmoji } from "discourse/widgets/emoji";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 import { userPath } from "discourse/lib/url";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
+import { hbs } from "ember-cli-htmlbars";
 
 const LINKS_SHOWN = 5;
 
@@ -387,7 +389,7 @@ export default createWidget("topic-map", {
     }
 
     if (attrs.hasTopRepliesSummary || attrs.summarizable) {
-      contents.push(this.attach("toggle-topic-summary", attrs));
+      contents.push(this.buildSummaryBox(attrs));
     }
 
     if (attrs.showPMMap) {
@@ -398,5 +400,22 @@ export default createWidget("topic-map", {
 
   toggleMap() {
     this.state.collapsed = !this.state.collapsed;
+  },
+
+  buildSummaryBox(attrs) {
+    return new RenderGlimmer(
+      this,
+      "section.information.toggle-summary",
+      hbs`<SummaryBox 
+        @postAttrs={{@data.postAttrs}}
+        @topRepliesToggle={{@data.actionDispatchFunc}} 
+      />`,
+      {
+        postAttrs: attrs,
+        actionDispatchFunc: (actionName) => {
+          this.sendWidgetAction(actionName);
+        },
+      }
+    );
   },
 });

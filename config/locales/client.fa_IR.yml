@@ -3064,6 +3064,9 @@ fa_IR:
           one: "(%{count}) جدید"
           other: "(%{count}) جدید"
         help: "موضوعات ایجاد شده در چند روز گذشته"
+        all: "همه"
+        topics: "موضوعات"
+        replies: "پاسخ‌ها"
       posted:
         title: "نوشته‌های من"
         help: "موضوعاتی که در آن‌ها نوشته دارید"
@@ -3543,6 +3546,7 @@ fa_IR:
             email: ایمیل
             incoming_email: "آدرس ایمیل های دریافتی سفارشی"
             incoming_email_placeholder: "آدرس ایمیل را وارد کنید"
+            incoming_email_tooltip: "شما می‌توانید چندیدن آدرس ایمیل را با کارکتر | جدا کنید."
             visibility: قابل مشاهده
             visibility_levels:
               title: "چه کسی می‌تواند این گروه را ببیند؟"

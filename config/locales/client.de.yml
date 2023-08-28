@@ -1791,8 +1791,8 @@ de:
         content: "Hier sind einige Themen, von denen wir denken, dass du sie als Nächstes lesen möchtest."
       admin_guide:
         title: "Willkommen auf deiner neuen Website!"
-        content: "<a href='%{admin_guide_url}'>Lies den Admin-Leitfaden</a> , um mit dem Aufbau deiner Website und Community fortzufahren."
-        content_no_url: "Lies den Administrator-Leitfaden, um deine Website und deine Community weiter auszubauen."
+        content: "<a href='%{admin_guide_url}'>Lies den Administrator-Leitfaden</a>, um mit dem Aufbau deiner Website und Community fortzufahren."
+        content_no_url: "Lies den Administrator-Leitfaden, um mit dem Aufbau deiner Website und Community fortzufahren."
     loading: "Wird geladen …"
     errors:
       prev_page: "während des Ladens"
@@ -3674,6 +3674,12 @@ de:
           one: "Neu (%{count})"
           other: "Neu (%{count})"
         help: "Themen, die in den letzten paar Tagen erstellt wurden"
+        all: "Gesamt"
+        all_with_count: "Alle (%{count})"
+        topics: "Themen"
+        topics_with_count: "Themen (%{count})"
+        replies: "Antworten"
+        replies_with_count: "Antworten (%{count})"
       posted:
         title: "Meine Beiträge"
         help: "Themen, zu denen du beigetragen hast"
@@ -4216,10 +4222,18 @@ de:
           tel: "Bitte gib eine gültige Telefonnummer ein."
           text: "Bitte gib einen Textwert ein."
           url: "Bitte gib eine gültige URL ein."
-        tooShort: "Die Eingabe muss %{minLength} Zeichen oder länger sein."
-        tooLong: "Die Eingabe muss weniger als %{maxLength} Zeichen umfassen."
-        rangeOverflow: "Die Eingabe muss kleiner als %{max} sein."
-        rangeUnderflow: "Die Eingabe muss größer als %{min} sein."
+        tooShort:
+          one: "Die Eingabe muss %{count} Zeichen oder länger sein."
+          other: "Die Eingabe muss %{count} Zeichen oder länger sein."
+        tooLong:
+          one: "Die Eingabe muss kleiner als %{count} sein."
+          other: "Die Eingabe muss weniger als %{count} Zeichen umfassen."
+        rangeOverflow:
+          one: "Die Eingabe muss kleiner als %{count} sein."
+          other: "Die Eingabe muss kleiner als %{count} sein."
+        rangeUnderflow:
+          one: "Die Eingabe muss größer als %{count} sein."
+          other: "Die Eingabe muss größer als %{count} sein."
         patternMismatch: "Bitte beachte das erforderliche Format."
         badInput: "Bitte stelle eine gültige Eingabe zur Verfügung."
   admin_js:
@@ -4344,6 +4358,7 @@ de:
             email: E-Mail
             incoming_email: "Benutzerdefinierte Adresse für eingehende E-Mails"
             incoming_email_placeholder: "E-Mail-Adresse eingeben"
+            incoming_email_tooltip: "Mehrere E-Mail-Adressen können getrennt mit dem | Zeichen eingegeben werden."
             visibility: Sichtbarkeit
             visibility_levels:
               title: "Wer kann diese Gruppe sehen?"
@@ -4698,7 +4713,7 @@ de:
         explain_preview: "Website mit diesem Theme anschauen"
         syntax_error: "Syntaxfehler"
         settings_editor: "Einstellungseditor"
-        validation_settings_keys: "Jedes Element darf nur einen „Einstellungs“-Schlüssel und einen „Wert“-Schlüssel haben."
+        validation_settings_keys: "Jedes Element darf nur einen Schlüssel „Einstellung“ und einen Schlüssel „Wert“ haben."
         validation_settings_deleted: "Diese Einstellungen wurden gelöscht. Bitte stelle sie wieder her und versuche es erneut."
         validation_settings_added: "Diese Einstellungen wurden hinzugefügt. Bitte entferne sie und versuche es erneut."
         save: "Speichern"

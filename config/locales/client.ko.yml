@@ -3169,6 +3169,9 @@ ko:
         title_with_count:
           other: "신규(%{count})"
         help: "지난 며칠 동안 작성된 주제"
+        all: "전체"
+        topics: "글"
+        replies: "댓글"
       posted:
         title: "내 글"
         help: "내가 게시한 주제"
@@ -3702,6 +3705,7 @@ ko:
             email: 이메일
             incoming_email: "사용자 지정 수신 이메일 주소"
             incoming_email_placeholder: "이메일 주소 입력"
+            incoming_email_tooltip: "| 문자로 여러 이메일 주소를 구분할 수 있습니다."
             visibility: 공개 옵션
             visibility_levels:
               title: "누가 이 그룹을 볼 수 있나요?"

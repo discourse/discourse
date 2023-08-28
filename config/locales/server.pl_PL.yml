@@ -19,7 +19,7 @@ pl_PL:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - Styczeń
     - Luty
     - Marzec
@@ -219,6 +219,8 @@ pl_PL:
       page_publishing_requirements: "Nie można włączyć publikowania stron, jeśli włączone są bezpieczne media."
       s3_backup_requires_s3_settings: "Nie możesz używać S3 do tworzenia kopii zapasowych bez podania \"%{setting_name}\"."
       s3_bucket_reused: "Nie możesz używać tego samego bucketu jako \"s3_upload_bucket\" i \"s3_backup_bucket\". Wybierz inny bucket albo podaj różne ścieżki dla każdego z bucketów."
+      secure_uploads_requirements: "Przed włączeniem bezpiecznego przesyłania należy włączyć przesyłanie S3 i S3 ACL."
+      s3_use_acls_requirements: "Gdy włączone jest bezpieczne przesyłanie, musisz mieć włączone S3 ACL."
       share_quote_facebook_requirements: "Aby włączyć udostępnianie na Facebooku, musisz ustawić identyfikator aplikacji Facebook."
       second_factor_cannot_enforce_with_socials: "Nie można wymusić 2FA z włączonym logowaniu społecznościowym. Najpierw musisz wyłączyć logowanie przez: %{auth_provider_names}"
       second_factor_cannot_be_enforced_with_disabled_local_login: "Nie można wymusić 2FA, jeśli lokalne logowanie jest wyłączone."
@@ -226,7 +228,7 @@ pl_PL:
       local_login_cannot_be_disabled_if_second_factor_enforced: "Nie można wyłączyć lokalnego logowania, jeśli wymuszone jest 2FA. Wyłącz wymuszone 2FA przed wyłączeniem lokalnych logowań."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Nie można włączyć przesyłania S3, ponieważ przesyłanie S3 jest już włączone globalnie, a włączenie tego poziomu witryny może powodować krytyczne problemy z przesyłaniem"
       cors_origins_should_not_have_trailing_slash: "Nie należy dodawać końcowego ukośnika (/) do źródeł CORS."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "User-Agent musi mieć co najmniej 3 znaki, aby uniknąć niewłaściwego ograniczania prawdziwych użytkowników."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "User-Agent musi mieć co najmniej 3 znaki, aby uniknąć przypadkowego ograniczania prawdziwych użytkowników."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Do ustawienia nie można dodać żadnej z następujących wartości: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Nie można wyłączyć usuwania metadanych obrazu, jeśli 'composer media optimization image enabled'. Wyłącz 'composer media optimization image enabled' przed wyłączeniem usuwania metadanych obrazu."
       twitter_summary_large_image_no_svg: "Obrazy podsumowania Twittera używane w metadanych twitter:image nie mogą być obrazami .svg."
@@ -679,6 +681,20 @@ pl_PL:
   staff_category_description: "Ukryta kategoria dla rozmów zespołu. Tematy są widoczne tylko dla adminów i moderatorów."
   discourse_welcome_topic:
     title: "Witamy w %{site_title}! :wave:"
+    body: |
+      Bardzo się cieszymy, że do nas dołączyłeś.
+
+      %{site_info_quote}
+
+      Oto kilka rzeczy, które możesz zrobić, aby zacząć:
+
+      :speaking_head: **Przedstaw się**, dodając swoje zdjęcie oraz informacje o sobie i swoich zainteresowaniach do [swojego profilu](%{base_path}/my/preferences/account). Jaka jest jedna rzecz, o którą chciałbyś zostać zapytany?
+
+      :open_book: **Poznaj społeczność**, [przeglądając dyskusje](%{base_path}/top), które już się tutaj toczą. Gdy uznasz post za interesujący, pouczający lub zabawny, użyj :heart:, aby okazać uznanie lub wsparcie!
+
+      :handshake: **Wnieś swój wkład**, komentując, dzieląc się własną perspektywą, zadając pytania lub wyrażając opinie w dyskusji. Przed udzieleniem odpowiedzi lub rozpoczęciem nowych tematów zapoznaj się z [wytycznymi dla społeczności](%{base_path}/faq).
+
+      > Jeśli potrzebujesz pomocy lub masz sugestie, nie krępuj się zapytać w %{feedback_category} lub [skontaktuj się z administratorami](%{base_path}/about).
   admin_quick_start_title: "Przewodnik administratora: Pierwsze kroki"
   category:
     topic_prefix: "O kategorii %{category}"
@@ -721,7 +737,7 @@ pl_PL:
     media_placeholder:
       blocked_hotlinked_title: "Media przechowywane są w innej witrynie. Kliknij, aby otworzyć nową kartę."
       blocked_hotlinked: "Zewnętrzne media"
-    hidden_bidi_character: "Znaki dwukierunkowe mogą zmienić kolejność renderowania tekstu. Może to służyć do ukrywania złośliwego kodu."
+    hidden_bidi_character: "Dwukierunkowe znaki sterujące mogą zmieniać kolejność renderowania tekstu. Może to zostać wykorzystane do ukrycia złośliwego kodu."
     has_likes:
       one: "%{count} polubienie"
       few: "%{count} polubienia"
@@ -998,7 +1014,7 @@ pl_PL:
     pm_title: "Kopie zapasowe wersje robocze z bieżących tematów"
     pm_body: "Temat zawierający kopie zapasowe"
   user_activity:
-    no_log_search_queries: "Zapytania dziennika wyszukiwania są obecnie wyłączone (administrator może je włączyć w ustawieniach witryny)."
+    no_log_search_queries: "Dzienniki zapytań wyszukiwania są obecnie wyłączone (administrator może je włączyć w ustawieniach witryny)."
   email_settings:
     pop3_authentication_error: "Wystąpił problem z podanymi poświadczeniami POP3, sprawdź nazwę użytkownika i hasło i spróbuj ponownie."
     imap_authentication_error: "Wystąpił problem z podanymi poświadczeniami IMAP, sprawdź nazwę użytkownika i hasło i spróbuj ponownie."
@@ -1467,7 +1483,7 @@ pl_PL:
         qtt_like: Polubienia otrzymane
       description: "Top 10 użytkowników, którzy otrzymali polubienia od szerokiego grona osób."
   dashboard:
-    group_email_credentials_warning: 'Wystąpił problem z poświadczeniami e-mail dla grupy <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Żadne e-maile nie będą wysyłane ze skrzynki odbiorczej grupy, dopóki ten problem nie zostanie rozwiązany. %{error}'
+    group_email_credentials_warning: 'Wystąpił problem z poświadczeniami e-mail dla grupy <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Wiadomości e-mail nie będą wysyłane z grupowej skrzynki odbiorczej do czasu rozwiązania tego problemu. %{error}'
     rails_env_warning: "Twój serwer działa w trybie %{env}"
     host_names_warning: "Twój plik config/database.yml używa domyślnej nazwy serwera localhost. Zmień go by używał nazwy serwera Twojej strony."
     sidekiq_warning: 'Sidekiq nie działa. Wiele zadań, takich jak wysyłanie emaili, jest wykonywane asynchronicznie przez sidekiqa. Zagwarantuj, że przynajmniej jeden proces sidekiqa działa. <a href="https://github.com/mperham/sidekiq" target="_blank">Dowiedz się więcej o Sidekiqu</a>.'
@@ -1592,6 +1608,7 @@ pl_PL:
     favicon: "Favicona dla Twojej strony, zobacz <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Aby działała poprawnie poprzez CDN, musi to być w formacie png. Zostanie przeskalowana do 32x32. Jeśli pozostanie pusta, zostanie użyte large_icon."
     apple_touch_icon: "Ikona używana w urządzeniach dotykowych Apple. Przezroczyste tło nie jest zalecane. Zostanie automatycznie zmniejszona do rozmiaru 180x180. Jeśli pozostanie pusta, użyta zostanie ikona large_icon."
     opengraph_image: "Domyślny obraz opengraph, używany, gdy strona nie ma innego odpowiedniego obrazu. Jeśli pozostanie puste, zostanie użyty large_icon"
+    twitter_summary_large_image: "Karta Twittera 'summary large image' (powinna mieć co najmniej 280 szerokości i co najmniej 150 wysokości, nie może być to .svg). Jeśli pozostanie pusta, zwykłe metadane karty są generowane przy użyciu opengraph_image, o ile nie jest to również .svg"
     notification_email: "Adres z którego wysyłane będą wszystkie istotne emaile systemowe.\nKonieczna jest poprawna konfiguracja rekordów SPF, DKIM oraz zwrotnego PTR użytej domeny."
     email_custom_headers: "A pipe-delimited list of custom email headers"
     email_subject: "Konfigurowalny format tematyczny dla standardowych e-maili. Zobacz <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801</a>"
@@ -1666,11 +1683,8 @@ pl_PL:
     blocked_crawler_user_agents: "Unikalne słowo bez rozróżniania wielkości liter w ciągu znaków, które identyfikują crawlery internetowe, które nie powinny mieć dostępu do witryny. Nie ma zastosowania, jeśli dozwolona lista jest zdefiniowana."
     slow_down_crawler_user_agents: 'User-Agent''y robotów indeksujących, którym należy ograniczyć prędkość, zgodnie z ustawieniami "spowolnij szybkość indeksowania". Każda wartość musi mieć co najmniej 3 znaki.'
     slow_down_crawler_rate: "Jeśli określono parametr slow_down_crawler_user_agents, ta stawka będzie obowiązywać dla wszystkich robotów (liczba sekund opóźnienia między żądaniami)"
-    content_security_policy: "Włącz politykę bezpieczeństwa treści"
-    content_security_policy_report_only: "Włącz tylko treść-bezpieczeństwo-zasady-tylko raport"
     content_security_policy_collect_reports: "Włącz zbieranie raportów o naruszeniach CSP na / csp_reports"
     content_security_policy_frame_ancestors: "Określ, kto może osadzić tę witrynę w ramkach iframe za pośrednictwem CSP. Kontroluj dozwolone hosty w <a href='%{base_path}/admin/customize/embedding'>ustawieniach osadzania</a>"
-    content_security_policy_script_src: "Dodatkowe dozwolone źródła skryptów. Bieżący host i CDN są domyślnie uwzględniane. Zobacz <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>ograniczanie ataków XSS za pomocą zasad zabezpieczeń zawartości (CSP).</a>"
     invalidate_inactive_admin_email_after_days: "Konta administracyjne, które nie odwiedzały witryny w tej liczbie dni, będą musiały ponownie zweryfikować swój adres e-mail przed zalogowaniem. Ustaw na 0, aby wyłączyć."
     include_secure_categories_in_tag_counts: "Gdy opcja ta jest włączona, liczba tematów dla tagu będzie obejmować tematy, które znajdują się w kategoriach z ograniczeniami odczytu dla wszystkich użytkowników. Gdy opcja ta jest wyłączona, zwykłym użytkownikom wyświetlana jest tylko liczba tematów dla tagu, w którym wszystkie tematy znajdują się w kategoriach publicznych."
     display_personal_messages_tag_counts: "Gdy ta opcja jest włączona, zostanie wyświetlona liczba wiadomości osobistych oznaczonych danym tagiem."
@@ -1754,6 +1768,7 @@ pl_PL:
     google_oauth2_hd: "Opcjonalna domena Google Apps Hosted, do której logowanie będzie ograniczone. Więcej informacji można znaleźć na <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a>"
     google_oauth2_hd_groups: "(eksperymentalne) Pobierz grupy dyskusyjne Google użytkowników w domenie hostowanej po uwierzytelnieniu. Pobrane grupy dyskusyjne Google mogą być używane do przyznawania automatycznego członkostwa w grupach Discourse (zobacz ustawienia grupy). Więcej informacji znajdziesz na https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "Adres e-mail należący do konta administratora Google Workspace. Będzie używany z poświadczeniami konta usługi do pobierania informacji o grupie."
+    google_oauth2_hd_groups_service_account_json: "Kluczowe informacje w formacie JSON dla konta usługi. Będą używane do pobierania informacji o grupie."
     enable_twitter_logins: "Włącz uwierzytelnianie przez Twittera, wymaga twitter_consumer_key i twitter_consumer_secret. Zobacz <a href='https://meta.discourse.org/t/13395' target='_blank'>Konfigurowanie logowania przez Twittera (i bogatych embedów) dla Discourse</a>."
     twitter_consumer_key: "Klucz klienta do uwierzytelnienia na Twitterze, zarejestrowany na <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Sekret klienta dotyczący uwierzytelniania na Twitterze, zarejestrowany na <a href='https://developer.twitter.com/apps' target='_blank'>stronie https://developer.twitter.com/apps</a>"
@@ -1914,6 +1929,7 @@ pl_PL:
     title_min_entropy: "Minimalna entropia tytułu tematu (liczba różnych znaków, zaleca się więcej dla języków innych niż angielski)."
     body_min_entropy: "Minimalna entropia treści wpisu (liczba różnych znaków, zaleca się więcej dla języków innych niż angielski)."
     allow_uppercase_posts: "Zezwól na same wielkie litery w tytule tematu lub treści wpisu."
+    max_consecutive_replies: "Liczba postów z rzędu, które użytkownik może napisać w danym temacie, zanim nie będzie mógł dodać kolejnej odpowiedzi. Limit ten nie ma zastosowania do właściciela tematu, personelu witryny ani moderatorów kategorii."
     enable_filtered_replies_view: 'Przycisk "(n) odpowiedzi" zwija wszystkie pozostałe posty i pokazuje tylko bieżący post i jego odpowiedzi.'
     title_fancy_entities: "Konwertuj typowe znaki ASCII na fantazyjne jednostki HTML w tytułach tematów, ala SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Minimalna długość tytułu zanim zostanie sprawdzony z podobnymi tematami."
@@ -1977,7 +1993,7 @@ pl_PL:
     alternative_reply_by_email_addresses: "Lista alternatywnych szablonów do odpowiedzi przez adres email. Przykład: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     incoming_email_prefer_html: "Do przychodzących wiadomości e-mail używaj HTML zamiast tekstu."
     strip_incoming_email_lines: "Usuń wiodące i końcowe białe spacje z każdej linii przychodzących wiadomości e-mail."
-    disable_emails: "Zapobiegaj wysyłaniu przez Discourse jakichkolwiek wiadomości e-mail. Wybierz „tak”, aby wyłączyć e-maile dla wszystkich użytkowników. Wybierz opcję „nie będący pracownikami”, aby wyłączyć wiadomości e-mail tylko dla użytkowników niebędących członkami personelu."
+    disable_emails: "Zapobiegaj wysyłaniu przez Discourse jakichkolwiek wiadomości e-mail. Wybierz 'yes', aby wyłączyć e-maile dla wszystkich użytkowników. Wybierz opcję 'non-staff', aby wyłączyć wiadomości e-mail tylko dla użytkowników niebędących członkami personelu."
     strip_images_from_short_emails: "Pasek zdjęć z emaila o rozmiarze mniejszym niż 2800 bajtów"
     short_email_length: "Długość krótkiego emaila w bajtach"
     display_name_on_email_from: "Wyświetl pełne nazwy na emailach z pól"
@@ -2000,8 +2016,8 @@ pl_PL:
     sparkpost_webhook_token: "Token używany do weryfikacji zawartości webhooka. Musi być przekazany jako parametr zapytania 't' w webhooku, na przykład: https://example.com/webhook/sparkpost?t=supersecret"
     soft_bounce_score: "Wynik odrzucania dodany do użytkownika, gdy ma miejsce tymczasowe odrzucanie."
     hard_bounce_score: "Wynik odrzucania dodany do użytkownika, gdy ma miejsce stałe odrzucanie."
-    bounce_score_threshold: "Maksymalny wynik odrzucania przed końcem wysyłania emaili do użytkownika."
-    reset_bounce_score_after_days: "Automatyczne resetuj licznik odrzucania po X dniach."
+    bounce_score_threshold: "Maksymalna liczba odrzuceń, zanim przestaniemy wysyłać wiadomość e-mail do użytkownika."
+    reset_bounce_score_after_days: "Automatycznie resetuj wskaźnik odrzuceń po X dniach."
     blocked_attachment_content_types: "Lista słów kluczowych używanych do blokowania załączników na podstawie typu zawartości."
     blocked_attachment_filenames: "Lista słów kluczowych używanych do blokowania załączników na podstawie nazwy pliku."
     forwarded_emails_behaviour: "Jak traktować przesłaną wiadomość e-mail do Discourse"
@@ -2100,6 +2116,8 @@ pl_PL:
     permalink_normalizations: "Zastosuj następujący regex przed dopasowaniem permalinków, na przykład /(topic.*)\\?.*/\\1  spowoduje ściągnięcie ciągu zapytań z dróg tematu. Format to regex+strin używaj \\1 itd aby przechwycić dostęp"
     global_notice: "Wyświetlaj PILNE, AWARYJNE lub zawsze widoczny banner informacyjny, który będzie widoczny dla wszystkich odwiedzających. Ustaw to pole jako puste, aby go ukryć. (HTML dozwolony)"
     disable_system_edit_notifications: "Wyłącz edytowanie powiadomień przez system użytkownika gdy 'download_remote_images_to_local' jest aktywne."
+    disable_category_edit_notifications: "Wyłącz powiadomienia dla edycji tematów kategorii. Obejmuje to tematy, które zostały \"opublikowane\" (np. udostępnione wersje robocze)."
+    disable_tags_edit_notifications: "Wyłącz powiadomienia o zmianach tagów tematu. Obejmuje to tematy, które zostały \"opublikowane\" (np. udostępnione wersje robocze)."
     notification_consolidation_threshold: "Liczba polubień lub powiadomień o członkostwie otrzymanych przed połączeniem powiadomień w jedno. Ustaw 0 aby wyłączyć."
     likes_notification_consolidation_window_mins: "Czas w minutach, po którym powiadomienia o polubieniach są łączone w jedno powiadomienie. Próg można skonfigurować za pomocą `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Automatycznie odpinaj tematy, gdy użytkownik dotknie dna."
@@ -2206,6 +2224,7 @@ pl_PL:
     enable_offline_indicator: "Wyświetlaj komunikat użytkownikom, gdy zostanie wykryte, że nie mają oni połączenia z siecią"
     default_sidebar_link_to_filtered_list: "Spraw, aby linki menu nawigacyjnego domyślnie prowadziły do przefiltrowanej listy."
     default_sidebar_show_count_of_new_items: "Spraw, aby łącza menu nawigacyjnego domyślnie pokazywały liczbę nowych elementów zamiast odznak."
+    default_sidebar_switch_panel_position: "Położenie przycisków panelu przełączania paska bocznego"
     retain_web_hook_events_period_days: "Liczba dni przechowywania rekordów zdarzeń webhooków."
     retry_web_hook_events: "Automatycznie ponów 4 razy nieudane zdarzenia webhooków. Luki czasowe między ponownymi próbami wynoszą 1, 5, 25 i 125 minut."
     revoke_api_keys_days: "Liczba dni do automatycznego unieważnienia nieużywanego klucza API (0 oznacza brak)"
@@ -2300,6 +2319,7 @@ pl_PL:
       pop3_polling_password_is_empty: "Musisz ustawić 'pop3 polling password' przed włączeniem przeglądania cyklicznego POP3."
       pop3_polling_authentication_failed: "Błąd autoryzacji POP3. Proszę zweryfikować swoje dane uwierzytelniające POP3."
       reply_by_email_address_is_empty: "Musisz ustawić \"odpowiedz poprzez adres email' przed włączeniem odpowiedzi przez email."
+      email_polling_disabled: "Przed włączeniem odpowiedzi przez e-mail należy włączyć sprawdzanie poczty ręcznie lub za pośrednictwem protokołu POP3 albo skonfigurować własne sprawdzanie poczty."
       user_locale_not_enabled: "Musisz najpierw włączyć ''pozwól na ustawienia lokalne\" przed włączeniem tych ustawień."
       personal_message_enabled_groups_invalid: "Musisz określić co najmniej jedną grupę dla tego ustawienia. Jeśli nie chcesz, aby ktokolwiek poza personelem wysyłał PW, wybierz grupę personelu."
       invalid_regex: "Wyrażenie regularne jest niepoprawne lub niedozwolone."
@@ -3258,7 +3278,7 @@ pl_PL:
 
         Czy możesz upewnić się, że [Twój adres e-mail](%{base_url}/my/preferences/email) jest prawidłowy i działa? Możesz również dodać nasz adres e-mail do swojej książki adresowej lub listy kontaktów, aby poprawić dostarczalność.
     email_bounced: |
-      Wiadomość do %{email} została zwrócona.
+      Wiadomość do %{email} została odrzucona.
 
       ### Szczegóły
 
@@ -4260,6 +4280,89 @@ pl_PL:
       Po otrzymaniu powiadomienia o aktualizacji warunków, musisz zgodzić się na nowe warunki, aby nadal korzystać z forum.
   privacy_topic:
     title: "Polityka prywatności"
+    body: |
+      ## [Administratorze forum, poniżej znajdziesz przykładowy wzór polityki prywatności, który powinieneś dostosować do swojej strony].
+
+      <a name="collect"></a>
+
+      ## [Jakie informacje zbieramy?](#collect)
+
+      Zbieramy informacje od Ciebie, gdy rejestrujesz się na naszej stronie i zbieramy dane, gdy uczestniczysz w forum, czytając, pisząc i oceniając udostępniane tutaj treści.
+
+      Podczas rejestracji na naszej stronie możesz zostać poproszony o podanie swojego pseudonimu i adresu e-mail. Możesz jednak odwiedzać naszą stronę bez rejestracji. Twój adres e-mail zostanie zweryfikowany za pomocą wiadomości e-mail zawierającej unikalny link. Jeśli ten link zostanie odwiedzony, wiemy, że kontrolujesz adres e-mail.
+
+      Gdy jesteś zarejestrowany i publikujesz posty, rejestrujemy adres IP, z którego pochodzi post. Możemy również przechowywać dzienniki serwera, które zawierają adres IP każdego żądania skierowanego do naszego serwera.
+
+      <a name="use"></a>
+
+      ## [Do czego wykorzystujemy Twoje dane?](#use)
+
+      Wszelkie informacje, które od Ciebie zbieramy, mogą być wykorzystywane na jeden z następujących sposobów:
+
+      * Aby spersonalizować Twoje doświadczenia &mdash; Twoje informacje pomagają nam lepiej reagować na Twoje indywidualne potrzeby.
+      * Aby ulepszyć naszą witrynę &mdash; nieustannie staramy się ulepszać naszą ofertę w oparciu o informacje i opinie, które otrzymujemy od Ciebie.
+      * Aby poprawić obsługę klienta &mdash; Twoje informacje pomagają nam skuteczniej reagować na Twoje prośby o obsługę klienta i potrzeby wsparcia.
+      * W celu wysyłania okresowych wiadomości e-mail &mdash; Podany przez Ciebie adres e-mail może być wykorzystywany do wysyłania informacji, powiadomień, o które prosisz, o zmianach w tematach lub w odpowiedzi na Twoją nazwę użytkownika, odpowiadania na zapytania i / lub inne prośby lub pytania.
+
+      <a name="protect"></a>
+
+      ## [Jak chronimy Twoje dane?](#protect)
+
+      Wdrażamy różne środki bezpieczeństwa w celu zachowania bezpieczeństwa Twoich danych osobowych podczas ich wprowadzania, przesyłania lub uzyskiwania do nich dostępu.
+
+      <a name="data-retention"></a>
+
+      ## [Jakie są wasze zasady przechowywania danych?](#data-retention)
+
+      W dobrej wierze dołożymy wszelkich starań, aby:
+
+      * Zachowaj dzienniki serwera zawierające adres IP wszystkich żądań do tego serwera nie dłużej niż [LICZBA DNI] dni.
+
+      <a name="cookies"></a>
+
+      ## [Czy używamy plików cookie?](#cookies)
+
+      Tak. Pliki cookie to małe pliki, które witryna lub jej usługodawca przesyła na dysk twardy komputera za pośrednictwem przeglądarki internetowej (jeśli na to zezwalasz). Te pliki cookie umożliwiają witrynie rozpoznanie Twojej przeglądarki i, jeśli masz zarejestrowane konto, powiązanie jej z zarejestrowanym kontem.
+
+      Używamy plików cookie, aby zrozumieć i zapisać Twoje preferencje dotyczące przyszłych wizyt oraz zebrać zbiorcze dane dotyczące ruchu w witrynie i interakcji z nią, abyśmy mogli oferować lepsze doświadczenia i narzędzia w przyszłości. Możemy zawierać umowy z zewnętrznymi dostawcami usług, aby pomóc nam w lepszym zrozumieniu odwiedzających naszą witrynę. Usługodawcy ci nie mogą wykorzystywać informacji zebranych w naszym imieniu, z wyjątkiem pomocy w prowadzeniu i ulepszaniu naszej działalności.
+
+      <a name="disclose"></a>
+
+      ## [Czy ujawniamy jakiekolwiek informacje podmiotom zewnętrznym?](#disclose)
+
+      Nie sprzedajemy, nie handlujemy ani w żaden inny sposób nie przekazujemy podmiotom zewnętrznym Twoich danych osobowych. Nie obejmuje to zaufanych stron trzecich, które pomagają nam w obsłudze naszej witryny, prowadzeniu naszej działalności lub obsłudze użytkownika, o ile strony te zgadzają się zachować poufność tych informacji. Możemy również ujawnić twoje informacje, gdy uważamy, że jest to właściwe w celu przestrzegania prawa, egzekwowania zasad naszej witryny lub ochrony naszych lub innych praw, własności lub bezpieczeństwa. Informacje o odwiedzających, które nie umożliwiają ich identyfikacji, mogą być jednak przekazywane innym stronom w celach marketingowych, reklamowych lub innych.
+
+      <a name="third-party"></a>
+
+      ## [Linki stron trzecich](#third-party)
+
+      Od czasu do czasu, według naszego uznania, możemy umieszczać lub oferować produkty lub usługi stron trzecich w naszej witrynie. Te witryny stron trzecich mają oddzielne i niezależne polityki prywatności. W związku z tym nie ponosimy żadnej odpowiedzialności za treści i działania tych stron. Niemniej jednak staramy się chronić integralność naszej witryny i z zadowoleniem przyjmujemy wszelkie opinie na temat tych witryn.
+
+      <a name="coppa"></a>
+
+      ## [Zgodność z ustawą o ochronie prywatności dzieci w Internecie](#coppa)
+
+      Nasza witryna, produkty i usługi są skierowane do osób, które ukończyły 13 lat. Jeśli ten serwer znajduje się w USA, a masz mniej niż 13 lat, zgodnie z wymogami COPPA ([Children's Online Privacy Protection Act](https://pl.wikipedia.org/wiki/Children%E2%80%99s_Online_Privacy_Protection_Act)), nie korzystaj z tej witryny.
+
+      <a name="online"></a>
+
+      ## [Tylko polityka prywatności online](#online)
+
+      Niniejsza polityka prywatności online ma zastosowanie wyłącznie do informacji gromadzonych za pośrednictwem naszej witryny, a nie do informacji gromadzonych offline.
+
+      <a name="consent"></a>
+
+      ## [Twoja zgoda](#consent)
+
+      Korzystając z naszej witryny, wyrażasz zgodę na naszą politykę prywatności.
+
+      <a name="changes"></a>
+
+      ## [Zmiany naszej polityki prywatności](#changes)
+
+      Jeśli zdecydujemy się zmienić naszą politykę prywatności, opublikujemy te zmiany na tej stronie.
+
+      Ten dokument jest objęty licencją CC-BY-SA. Został ostatnio zaktualizowany [WSTAW TUTAJ DATĘ OSTATNIEJ AKTUALIZACJI].
   badges:
     mass_award:
       errors:

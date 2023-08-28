@@ -1568,7 +1568,6 @@ sk:
           "3_2": "Budete dostávať upozornenia, pretože sledujete túto tému."
           "3_1": "Budete dostávať upozornenia, pretože ste vytvorili túto tému."
           "3": "Budete dostávať upozornenia, pretože sledujete túto tému."
-          "2": 'You will see a count of new replies because you <a href="%{basePath}/u/%{username}/preferences/notifications">read this topic</a>.'
           "1_2": "Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie."
           "1": "Budete upozornený ak niekto zmieni Vaše @meno alebo Vám odpovie."
           "0_7": "Ignorujete všetky upozornenia v tejto kategórii."
@@ -2091,6 +2090,9 @@ sk:
           many: "Nových (%{count})"
           other: "Nových (%{count})"
         help: "témy vytvorené za posledných pár dní"
+        all: "Všetky"
+        topics: "Témy"
+        replies: "Odpovede"
       posted:
         title: "Moje príspevky"
         help: "témy s vašimi príspevkami"

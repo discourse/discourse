@@ -30,7 +30,8 @@ export default class ChatChannelThread extends DiscourseRoute {
     if (
       transition.targetName === "chat.channel.index" ||
       transition.targetName === "chat.channel.near-message" ||
-      transition.targetName === "chat.index"
+      transition.targetName === "chat.index" ||
+      !transition.targetName.startsWith("chat")
     ) {
       this.chatStateManager.closeSidePanel();
     }

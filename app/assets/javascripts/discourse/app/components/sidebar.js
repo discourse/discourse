@@ -23,7 +23,7 @@ export default class Sidebar extends Component {
 
   get switchPanelButtons() {
     if (
-      this.sidebarState.combinedMode ||
+      !this.sidebarState.displaySwitchPanelButtons ||
       this.sidebarState.panels.length === 1 ||
       !this.currentUser
     ) {

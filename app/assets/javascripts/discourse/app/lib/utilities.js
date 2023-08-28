@@ -76,6 +76,10 @@ export function highlightPost(postNumber) {
   if (!container) {
     return;
   }
+
+  // sets focus to the first focusable anchor in the post
+  container.querySelector("a:not([tabindex='-1'])")?.focus();
+
   const element = container.querySelector(".topic-body");
   if (!element || element.classList.contains("highlighted")) {
     return;
@@ -88,7 +92,6 @@ export function highlightPost(postNumber) {
     element.removeEventListener("animationend", removeHighlighted);
   };
   element.addEventListener("animationend", removeHighlighted);
-  container.querySelector(".tabLoc").focus();
 }
 
 export function emailValid(email) {
@@ -593,4 +596,20 @@ export function mergeSortedLists(list1, list2, comparator) {
     }
   }
   return merged;
+}
+
+export function getCaretPosition(element, options) {
+  const jqueryElement = $(element);
+  const position = jqueryElement.caretPosition(options);
+
+  // Get the position of the textarea on the page
+  const textareaRect = element.getBoundingClientRect();
+
+  // Calculate the x and y coordinates by adding the element's position
+  const adjustedPosition = {
+    x: position.left + textareaRect.left,
+    y: position.top + textareaRect.top,
+  };
+
+  return adjustedPosition;
 }

@@ -1,3 +1,7 @@
+{{#if (or this.loading this.groups.canLoadMore)}}
+  {{hide-application-footer}}
+{{/if}}
+
 <PluginOutlet @name="before-groups-index-container" @connectorTagName="div" />
 
 <DSection @pageClass="groups">

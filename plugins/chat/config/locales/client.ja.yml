@@ -10,6 +10,9 @@ ja:
       site_settings:
         categories:
           chat: チャット
+        chat_separate_sidebar_mode:
+          always: "常時"
+          never: "なし"
       logs:
         staff_actions:
           actions:
@@ -269,6 +272,7 @@ ja:
         read_only: "読み取り専用"
         archived_header: "チャンネルはアーカイブされています"
         archived: "アーカイブ済み"
+        archive_failed: "チャンネルのアーカイブに失敗しました。%{completed} / 全 %{total} 件のメッセージがアーカイブされました。<a target=\"_blank\" href=\"%{topic_url}\">アーカイブ先のトピック</a>が作成されました。再試行を押して、アーカイブの完了を試してください。"
         archive_failed_no_topic: "チャンネルのアーカイブに失敗しました。%{completed} / 全 %{total} 件のメッセージがアーカイブされました。アーカイブ先のトピックは作成されていません。再試行を押して、アーカイブの完了を試してください。"
         archive_completed: "<a target=\"_blank\" href=\"%{topic_url}\">アーカイブ済みのトピック</a>を見る"
         closed_header: "チャンネルは閉鎖されています"
@@ -315,9 +319,9 @@ ja:
       channel_edit_name_slug_modal:
         title: チャンネルを編集する
         input_placeholder: 名前を追加してください
-        slug_description: チャンネルスラグはチャンネル名の代わりに URL で使用されます
+        slug_description: チャンネルスラッグはチャンネル名の代わりに URL で使用されます
         name: チャンネル名
-        slug: チャンネルスラグ (オプション)
+        slug: チャンネルスラッグ (オプション)
       channel_edit_description_modal:
         title: 説明を編集する
         input_placeholder: 説明を追加する
@@ -360,7 +364,7 @@ ja:
         create: "チャンネルを作成"
         description: "説明 (オプション)"
         name: "チャンネル名"
-        slug: "チャンネルスラグ (オプション)"
+        slug: "チャンネルスラッグ (オプション)"
         title: "新しいチャンネル"
         type: "タイプ"
         types:
@@ -613,3 +617,7 @@ ja:
       sections:
         chat:
           title: チャット
+    sidebar:
+      panels:
+        chat:
+          label: "チャット"

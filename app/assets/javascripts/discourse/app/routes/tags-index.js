@@ -39,12 +39,6 @@ export default DiscourseRoute.extend({
   },
 
   @action
-  didTransition() {
-    this.controllerFor("application").set("showFooter", true);
-    return true;
-  },
-
-  @action
   showTagGroups() {
     this.router.transitionTo("tagGroups");
     return true;

@@ -277,6 +277,8 @@ fr:
       pill: "Messages connexes"
       see_all: 'Voir <a href="%{path}">tous les messages</a> de @%{username}…'
     suggested_topics:
+      title: "Sujets nouveaux et non lus"
+      pill: "Suggérés"
       pm_title: "Messages suggérés"
     about:
       simple_title: "À propos"
@@ -1789,6 +1791,7 @@ fr:
         content: "Voici quelques sujets que vous pourriez vouloir lire ensuite."
       admin_guide:
         title: "Bienvenue sur votre nouveau site !"
+        content: "<a href='%{admin_guide_url}'>Lisez le guide d'administration</a> pour continuer à développer votre site et votre communauté."
         content_no_url: "Lisez le guide d'administration pour continuer à développer votre site et votre communauté."
     loading: "Chargement…"
     errors:
@@ -3671,6 +3674,9 @@ fr:
           one: "Nouveau (%{count})"
           other: "Nouveaux (%{count})"
         help: "sujets créés dans les derniers jours"
+        all: "Tout"
+        topics: "Sujets"
+        replies: "Réponses"
       posted:
         title: "Mes messages"
         help: "sujets auxquels vous avez participé"
@@ -3838,6 +3844,9 @@ fr:
       more_badges:
         one: "+%{count} autre"
         other: "+%{count} autres"
+      awarded:
+        one: "%{number} décerné"
+        other: "%{number} décernés"
       select_badge_for_title: Sélectionnez un badge qui vous servira de titre
       none: "(aucun)"
       successfully_granted: "%{badge} attribué à %{username} avec succès"
@@ -4090,7 +4099,7 @@ fr:
           reset_confirm: "Voulez-vous vraiment réinitialiser cette section par défaut ?"
           public: "Rendre cette section publique et la rendre visible pour tous"
           always_public: "Le contenu de cette section est toujours public"
-          more_menu: "Plus de menus"
+          more_menu: "Plus"
           links:
             add: "Ajouter un autre lien"
             delete: "Supprimer le lien"
@@ -4099,7 +4108,7 @@ fr:
               label: "Icône"
               validation:
                 blank: "L'icône ne peut pas être vide"
-                maximum: "L'icône doit être inférieure à %{count} caractères"
+                maximum: "Le nom de l'icône doit comporter moins de %{count} caractères"
             name:
               label: "Nom"
               validation:
@@ -4210,14 +4219,22 @@ fr:
           tel: "Veuillez saisir un numéro de téléphone valide."
           text: "Veuillez saisir une valeur de texte."
           url: "Veuillez saisir une URL valide."
-        tooShort: "La saisie doit comporter %{minLength} caractères ou plus."
-        tooLong: "La saisie doit comporter moins de %{maxLength} caractères."
-        rangeOverflow: "La saisie doit comporter moins de %{max}."
-        rangeUnderflow: "La saisie doit comporter plus de %{min}."
+        tooShort:
+          one: "La saisie doit comporter %{count} caractère ou plus."
+          other: "La saisie doit comporter %{count} caractères ou plus."
+        tooLong:
+          one: "La saisie doit comporter moins de %{count} caractère."
+          other: "La saisie doit comporter moins de %{count} caractères."
+        rangeOverflow:
+          one: "La saisie doit être inférieure à %{count}."
+          other: "La saisie doit être inférieure à %{count}."
+        rangeUnderflow:
+          one: "La saisie doit être supérieure à %{count}."
+          other: "La saisie doit être supérieure à %{count}."
         patternMismatch: "Veuillez respecter le format demandé."
         badInput: "Veuillez saisir une entrée valide."
   admin_js:
-    type_to_filter: "commencez votre saisie pour filtrer…"
+    type_to_filter: "filtrer les paramètres…"
     admin:
       title: "Administrateur Discourse"
       moderator: "Modérateur"
@@ -4338,6 +4355,7 @@ fr:
             email: E-mail
             incoming_email: "Adresse e-mail entrante personnalisée"
             incoming_email_placeholder: "saisissez une adresse e-mail"
+            incoming_email_tooltip: "Vous pouvez séparer plusieurs adresses e-mail avec le caractère « | »."
             visibility: Visibilité
             visibility_levels:
               title: "Qui peut voir ce groupe ?"
@@ -4719,7 +4737,7 @@ fr:
           theme: "Thème"
           component: "Composant"
           components: "Composants"
-          filter_placeholder: "commencez votre saisie pour filtrer…"
+          filter_placeholder: "filtrer les paramètres…"
           theme_name: "Nom du thème"
           component_name: "Nom du composant"
           themes_intro: "Sélectionnez un thème existant ou installez-en un nouveau pour commencer"

@@ -73,7 +73,11 @@
         </span>
       </a>
     </div>
-    <div class="timeline-scrollarea" style={{this.timelineScrollareaStyle}}>
+    <div
+      class="timeline-scrollarea"
+      style={{this.timelineScrollareaStyle}}
+      {{did-insert this.registerScrollarea}}
+    >
       <div
         class="timeline-padding"
         style={{this.beforePadding}}
@@ -89,6 +93,7 @@
         @didStartDrag={{this.didStartDrag}}
         @dragMove={{this.dragMove}}
         @didEndDrag={{this.didEndDrag}}
+        {{did-insert this.registerScroller}}
       />
       <div
         class="timeline-padding"

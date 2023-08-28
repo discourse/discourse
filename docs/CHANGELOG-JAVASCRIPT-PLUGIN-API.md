@@ -7,6 +7,28 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2023-08-09
+
+### Added
+
+- Adds `showSidebarSwitchPanelButtons` which is experimental, and allows plugins to show sidebar switch panel buttons in separated mode
+
+- Adds `hideSidebarSwitchPanelButtons` which is experimental, and allows plugins to hide sidebar switch panel buttons in separated mode
+
+## [1.8.1] - 2023-08-08
+
+### Added
+
+- Adds `replacePostMenuButton` which allows plugins to replace a post menu button with a widget.
+
+## [1.8.0] - 2023-07-18
+
+### Added
+- Adds `addSidebarPanel` which is experimental, and adds a Sidebar panel by returning a class which extends from the 
+  BaseCustomSidebarPanel class.
+
+- Adds `setSidebarPanel` which is experimental, and sets the current sidebar panel.
+
 ## [1.7.1] - 2023-07-18
 
 ### Added

@@ -14,6 +14,9 @@ import HistoryModal from "discourse/components/modal/history";
 import PublishPageModal from "discourse/components/modal/publish-page";
 import EditSlowModeModal from "discourse/components/modal/edit-slow-mode";
 import ChangeTimestampModal from "discourse/components/modal/change-timestamp";
+import EditTopicTimerModal from "discourse/components/modal/edit-topic-timer";
+import FeatureTopicModal from "discourse/components/modal/feature-topic";
+import FlagModal from "discourse/components/modal/flag";
 
 const SCROLL_DELAY = 500;
 
@@ -101,15 +104,25 @@ const TopicRoute = DiscourseRoute.extend({
 
   @action
   showFlags(model) {
-    let controller = showModal("flag", { model });
-    controller.setProperties({ flagTarget: new PostFlag() });
+    this.modal.show(FlagModal, {
+      model: {
+        flagTarget: new PostFlag(),
+        flagModel: model,
+        setHidden: () => model.set("hidden", true),
+      },
+    });
   },
 
   @action
   showFlagTopic() {
     const model = this.modelFor("topic");
-    let controller = showModal("flag", { model });
-    controller.setProperties({ flagTarget: new TopicFlag() });
+    this.modal.show(FlagModal, {
+      model: {
+        flagTarget: new TopicFlag(),
+        flagModel: model,
+        setHidden: () => model.set("hidden", true),
+      },
+    });
   },
 
   @action
@@ -123,12 +136,18 @@ const TopicRoute = DiscourseRoute.extend({
   @action
   showTopicTimerModal() {
     const model = this.modelFor("topic");
+    this.modal.show(EditTopicTimerModal, {
+      model: {
+        topic: model,
+        setTopicTimer: (v) => model.set("topic_timer", v),
+        updateTopicTimerProperty: this.updateTopicTimerProperty,
+      },
+    });
+  },
 
-    if (!model.get("topic_timer")) {
-      model.set("topic_timer", {});
-    }
-
-    showModal("edit-topic-timer", { model });
+  @action
+  updateTopicTimerProperty(property, value) {
+    this.modelFor("topic").set(`topic_timer.${property}`, value);
   },
 
   @action
@@ -147,11 +166,22 @@ const TopicRoute = DiscourseRoute.extend({
 
   @action
   showFeatureTopic() {
-    showModal("feature-topic", {
-      model: this.modelFor("topic"),
-      title: "topic.feature_topic.title",
+    const topicController = this.controllerFor("topic");
+    const model = this.modelFor("topic");
+    model.setProperties({
+      pinnedInCategoryUntil: null,
+      pinnedGloballyUntil: null,
     });
-    this.controllerFor("feature_topic").reset();
+
+    this.modal.show(FeatureTopicModal, {
+      model: {
+        topic: model,
+        pinGlobally: () => topicController.send("pinGlobally"),
+        togglePinned: () => topicController.send("togglePinned"),
+        makeBanner: () => topicController.send("makeBanner"),
+        removeBanner: () => topicController.send("removeBanner"),
+      },
+    });
   },
 
   @action
@@ -248,7 +278,6 @@ const TopicRoute = DiscourseRoute.extend({
   @action
   didTransition() {
     const controller = this.controllerFor("topic");
-    controller._showFooter();
     const topicId = controller.get("model.id");
     setTopicId(topicId);
     return true;
@@ -316,7 +345,7 @@ const TopicRoute = DiscourseRoute.extend({
       this.setupParams(topic, queryParams);
       return topic;
     } else {
-      let props = Object.assign({}, params);
+      let props = { ...params };
       delete props.username_filters;
       delete props.filter;
       topic = this.store.createRecord("topic", props);

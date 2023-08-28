@@ -10,6 +10,9 @@ ar:
       site_settings:
         categories:
           chat: الدردشة
+        chat_separate_sidebar_mode:
+          always: "دائمًا"
+          never: "أبدًا"
       logs:
         staff_actions:
           actions:
@@ -117,7 +120,7 @@ ar:
       enable: "تفعيل الدردشة"
       flag: "الإبلاغ"
       emoji: "إدراج رمز تعبيري"
-      flagged: "لقد تم الإبلاغ عن الرسالة للمراجعة"
+      flagged: "لقد تم الإبلاغ عن هذه الرسالة للمراجعة"
       invalid_access: "ليس لديك إذن الوصول لعرض قناة الدردشة هذه"
       invitation_notification: "دعاك <span>%{username}</span> <span>للانضمام إلى قناة دردشة</span>"
       in_reply_to: "ردًا على"
@@ -129,7 +132,7 @@ ar:
         description: "حدِّد خيارًا أدناه لتلخيص المحادثة المُرسَلة خلال الإطار الزمني المطلوب."
         summarize: "تلخيص"
         since:
-          zero: "آخر ساعة"
+          zero: "آخر %{count} ساعة"
           one: "آخر ساعة"
           two: "آخر ساعتين (%{count})"
           few: "آخر %{count} ساعات"
@@ -761,3 +764,7 @@ ar:
       sections:
         chat:
           title: الدردشة
+    sidebar:
+      panels:
+        chat:
+          label: "الدردشة"

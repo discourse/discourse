@@ -6,6 +6,11 @@
 
 th:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "เสมอ"
+          never: "ไม่เคย"
     chat:
       create: "สร้าง"
       cancel: "ยกเลิก"

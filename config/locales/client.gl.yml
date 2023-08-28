@@ -3011,6 +3011,9 @@ gl:
           one: "(%{count}) novo"
           other: "(%{count}) novos"
         help: "temas creados nos últimos días"
+        all: "Todas"
+        topics: "Temas"
+        replies: "Réplicas"
       posted:
         title: "As miñas publicacións"
         help: "temas nos que publicou"

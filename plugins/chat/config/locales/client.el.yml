@@ -6,6 +6,11 @@
 
 el:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Πάντα"
+          never: "Ποτέ"
     chat:
       create: "Δημιουργία"
       cancel: "Ακύρωση"

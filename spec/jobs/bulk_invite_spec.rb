@@ -4,6 +4,7 @@ RSpec.describe Jobs::BulkInvite do
   describe "#execute" do
     fab!(:user) { Fabricate(:user) }
     fab!(:admin) { Fabricate(:admin) }
+    fab!(:east_coast_user) { Fabricate(:east_coast_user) }
     fab!(:group1) { Fabricate(:group, name: "group1") }
     fab!(:group2) { Fabricate(:group, name: "group2") }
     fab!(:topic) { Fabricate(:topic) }
@@ -49,6 +50,18 @@ RSpec.describe Jobs::BulkInvite do
       expect(post.raw).to include("1 skipped")
       expect(post.raw).to include("0 warning")
       expect(post.raw).to include("1 error")
+    end
+
+    it "handles daylight savings time correctly" do
+      # EDT (-04:00) transitions to EST (-05:00) on the first Sunday in November.
+      # Freeze time to the last Day of October, so that the creation and expiration date will be in different time zones.
+
+      Time.use_zone("Eastern Time (US & Canada)") do
+        freeze_time DateTime.parse("2023-10-31 06:00:00 -0400")
+        described_class.new.execute(current_user_id: east_coast_user.id, invites: invites)
+        invite = Invite.first
+        expect(invite.expires_at.hour).to equal(6)
+      end
     end
 
     it "does not create invited groups for automatic groups" do

@@ -10,6 +10,7 @@ import { action, set } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
 import { getOwner } from "discourse-common/lib/get-owner";
+import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
 
 let _components = {};
 
@@ -24,6 +25,9 @@ export function addPluginReviewableParam(reviewableType, param) {
 export default Component.extend({
   adminTools: optionalService(),
   dialog: service(),
+  modal: service(),
+  siteSettings: service(),
+  currentUser: service(),
   tagName: "",
   updating: null,
   editing: false,
@@ -214,10 +218,9 @@ export default Component.extend({
 
   @action
   explainReviewable(reviewable, event) {
-    event?.preventDefault();
-    showModal("explain-reviewable", {
-      title: "review.explain.title",
-      model: reviewable,
+    event.preventDefault();
+    this.modal.show(ExplainReviewableModal, {
+      model: { reviewable },
     });
   },
 

@@ -10,6 +10,9 @@ pt_BR:
       site_settings:
         categories:
           chat: Chat
+        chat_separate_sidebar_mode:
+          always: "Sempre"
+          never: "Nunca"
       logs:
         staff_actions:
           actions:
@@ -44,7 +47,7 @@ pt_BR:
           other: "Você está movendo <strong>%{count}</strong> mensagens. Selecione o canal de destino. Uma mensagem de espaço reservado será criada no canal <strong>%{channelTitle}</strong> para indicar que estas mensagens foram movidas. Note que as respostas não serão movidas junto para o novo canal, e mensagens no antigo canal não serão mais exibidas como respostas às mensagens movidas."
         confirm_move: "Mover mensagens"
       channel_settings:
-        title: "Definições do canal"
+        title: "Configurações do canal"
         edit: "Editar"
         add: "Adicionar"
         close_channel: "Fechar canal"
@@ -85,9 +88,9 @@ pt_BR:
       expand: "Expandir Chat"
       confirm_flag: "Tem certeza de que deseja sinalizar a mensagem de %{username}?"
       deleted:
-        one: "Uma mensagem foi excluída. [view]"
-        other: "%{count} mensagens foram excluídas. [ver todas]"
-      hidden: "Uma mensagem foi ocultada. [view]"
+        one: "Uma mensagem foi excluída. [visualizar]"
+        other: "%{count} mensagens foram excluídas. [visualizar todas]"
+      hidden: "Uma mensagem foi ocultada. [visualizar]"
       delete: "Excluir"
       edited: "editou"
       muted: "silenciado(a)"
@@ -314,7 +317,7 @@ pt_BR:
         tabs:
           about: Sobre
           members: Membros
-          settings: Definições
+          settings: Configurações
       new_message_modal:
         title: Enviar mensagem
         add_user_long: <kbd>shift + clique</kbd> ou <kbd>shift + enter</kbd><span>Adicionar @%{username}</span>
@@ -398,13 +401,13 @@ pt_BR:
         you_and_single_user: "Você e %{username} reagiram com :%{emoji}:"
         you_and_multiple_users: "Você, %{commaSeparatedUsernames} e %{username} reagiram com :%{emoji}:"
         you_multiple_users_and_more:
-          one: "Você, %{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
+          one: "Você, %{commaSeparatedUsernames} e mais %{count} outro(a) reagiram com :%{emoji}:"
           other: "Você, %{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
         single_user: "%{username} reagiu com :%{emoji}:"
         multiple_users: "%{commaSeparatedUsernames} e %{username} reagiram com :%{emoji}:"
         multiple_users_and_more:
           one: "%{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
-          other: "%{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
+          other: "%{commaSeparatedUsernames} e mais %{count} outros(as) reagiram com :%{emoji}:"
       composer:
         toggle_toolbar: "Ativar/desativar barra de ferramentas"
         italic_text: "texto enfatizado"
@@ -552,7 +555,7 @@ pt_BR:
         close: "Fechar tópico"
         original_message:
           started_by: "Iniciado por"
-        settings: "Definições"
+        settings: "Configurações"
         last_reply: "última resposta"
         notifications:
           regular:
@@ -649,3 +652,7 @@ pt_BR:
       sections:
         chat:
           title: Chat
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

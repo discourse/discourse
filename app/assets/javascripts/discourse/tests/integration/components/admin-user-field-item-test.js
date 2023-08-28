@@ -37,12 +37,15 @@ module("Integration | Component | admin-user-field-item", function (hooks) {
     assert.ok(exists(".save"));
   });
 
-  test("user field with an id", async function (assert) {
+  test("field attributes are rendered correctly", async function (assert) {
     this.set("userField", {
       id: 1,
       field_type: "text",
       name: "foo",
       description: "what is foo",
+      show_on_profile: true,
+      show_on_user_card: true,
+      searchable: true,
     });
 
     await render(hbs`<AdminUserFieldItem @userField={{this.userField}} />`);
@@ -56,5 +59,13 @@ module("Integration | Component | admin-user-field-item", function (hooks) {
       query(".field-type").innerText,
       I18n.t("admin.user_fields.field_types.text")
     );
+
+    assert
+      .dom(".user-field-flags")
+      .hasText(
+        `${I18n.t("admin.user_fields.show_on_profile.enabled")}, ${I18n.t(
+          "admin.user_fields.show_on_user_card.enabled"
+        )}, ${I18n.t("admin.user_fields.searchable.enabled")}`
+      );
   });
 });

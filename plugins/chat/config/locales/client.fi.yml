@@ -10,6 +10,9 @@ fi:
       site_settings:
         categories:
           chat: Chat
+        chat_separate_sidebar_mode:
+          always: "Aina"
+          never: "Ei koskaan"
       logs:
         staff_actions:
           actions:
@@ -229,7 +232,7 @@ fi:
         read_only: "Vain luku"
         archived_header: "Kanava on arkistoitu"
         archived: "Arkistoitu"
-        archive_failed: "Kanavan arkistointi epäonnistui. %{completed}/%{total} viestiä arkistoitiin <a target=\"_blank\" href=\"%{topic_url}\">kohdeaiheeseen</a>. Yritä täydentää arkisto uudelleen painamalla \"Yritä uudelleen\"."
+        archive_failed: "Kanavan arkistointi epäonnistui. %{completed}/%{total} viestiä arkistoitiin <a target=\"_blank\" href=\"%{topic_url}\">kohdeketjuun</a>. Yritä täydentää arkisto uudelleen painamalla \"Yritä uudelleen\"."
         archive_failed_no_topic: "Kanavan arkistointi epäonnistui. %{completed}/%{total} viestiä on arkistoitu, kohdeketjua ei luotu. Yritä arkistoinnin viimeistelyä uudelleen painamalla Yritä uudelleen -painiketta."
         archive_completed: "Katso <a target=\"_blank\" href=\"%{topic_url}\">arkistoketju</a>"
         closed_header: "Kanava on suljettu"
@@ -264,7 +267,7 @@ fi:
           settings: Asetukset
       new_message_modal:
         title: Lähetä viesti
-        add_user_long: <kbd>vaihto + napsautus</kbd> tai <kbd>vaihto + enter</kbd><span>Lisää @%{username}</span>
+        add_user_long: <kbd>vaihto + klikkaus</kbd> tai <kbd>vaihto + enter</kbd><span>Lisää @%{username}</span>
         add_user_short: <span>Lisää käyttäjä</span>
         open_channel: <span>Avaa kanava</span>
         default_search_placeholder: "#a-kanava, @joku tai mitä tahansa"
@@ -596,3 +599,7 @@ fi:
       sections:
         chat:
           title: Chat
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

@@ -84,7 +84,8 @@ html {
     }
   }
 
-  .menu-panel .panel-body-bottom .btn:hover {
+  .menu-panel .panel-body-bottom .btn:hover,
+  .menu-panel .panel-body-bottom .btn:focus {
     .d-icon {
       color: var(--primary);
     }

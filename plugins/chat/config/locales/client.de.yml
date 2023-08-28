@@ -10,6 +10,10 @@ de:
       site_settings:
         categories:
           chat: Chat
+        chat_separate_sidebar_mode:
+          always: "Immer"
+          fullscreen: "Wenn der Chat im Vollbildmodus ist"
+          never: "niemals"
       logs:
         staff_actions:
           actions:
@@ -106,6 +110,8 @@ de:
         all_new: "bei allen neuen Nachrichten"
         dm_and_mentions: "bei Direktnachrichten und Erwähnungen"
         never: "niemals"
+      separate_sidebar_mode:
+        title: "Separate Seitenleisten-Modi für Forum und Chat anzeigen"
       enable: "Chat aktivieren"
       flag: "Melden"
       emoji: "Emoji einfügen"
@@ -282,7 +288,7 @@ de:
         read_only: "Schreibgeschützt"
         archived_header: "Kanal ist archiviert"
         archived: "Archiviert"
-        archive_failed: "Archivieren des Kanals fehlgeschlagen. %{completed}/%{total} Nachrichten wurden im <a target=\"_blank\" href=\"%{topic_url}\">Zielthema</a> erstellt und archiviert. Drücke auf „Erneut versuchen“, um zu versuchen, die Archivierung abzuschließen."
+        archive_failed: "Archivieren des Kanals fehlgeschlagen. %{completed}/%{total} Nachrichten wurden archiviert. <a target=\"_blank\" href=\"%{topic_url}\">Das Zielthema</a> wurde erstellt. Drücke auf „Erneut versuchen“, um zu versuchen, die Archivierung abzuschließen."
         archive_failed_no_topic: "Archivieren des Kanals fehlgeschlagen. %{completed}/%{total} Nachrichten wurden archiviert, das Zielthema wurde nicht erstellt. Drücke auf „Erneut versuchen“, um zu versuchen, die Archivierung abzuschließen."
         archive_completed: "<a target=\"_blank\" href=\"%{topic_url}\">Archivthema</a> anzeigen"
         closed_header: "Kanal ist geschlossen"
@@ -649,3 +655,7 @@ de:
       sections:
         chat:
           title: Chat
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

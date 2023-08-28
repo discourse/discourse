@@ -22,6 +22,7 @@ export default Controller.extend({
   dialog: service(),
   currentUser: service(),
   router: service(),
+  composer: service(),
 
   counts: null,
   showing: "members",
@@ -130,7 +131,7 @@ export default Controller.extend({
 
   @action
   messageGroup() {
-    this.send("createNewMessageViaParams", {
+    this.composer.openNewMessage({
       recipients: this.get("model.name"),
       hasGroups: true,
     });

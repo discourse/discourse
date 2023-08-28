@@ -36,11 +36,13 @@ class Plugin::Metadata
         discourse-fontawesome-pro
         discourse-footnote
         discourse-gamification
+        discourse-geoblocking
         discourse-github
         discourse-gradle-issue
         discourse-graphviz
         discourse-group-tracker
         discourse-invite-tokens
+        discourse-jira
         discourse-lazy-videos
         discourse-local-dates
         discourse-login-with-amazon
@@ -78,6 +80,7 @@ class Plugin::Metadata
         discourse-staff-alias
         discourse-steam-login
         discourse-subscriptions
+        discourse-tag-by-group
         discourse-teambuild
         discourse-templates
         discourse-tooltips

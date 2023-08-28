@@ -5,8 +5,8 @@ import { RUNTIME_OPTIONS } from "discourse-common/lib/raw-handlebars-helpers";
 import { getOwner, setOwner } from "@ember/application";
 
 function renderRaw(ctx, template, templateName, params) {
-  params = Object.assign({}, params);
-  params.parent = params.parent || ctx;
+  params = { ...params };
+  params.parent ||= ctx;
 
   let context = helperContext();
   if (!params.view) {
@@ -18,7 +18,7 @@ function renderRaw(ctx, template, templateName, params) {
     }
 
     if (!params.view) {
-      params = Object.assign({}, params, context);
+      params = { ...params, ...context };
     }
   }
 

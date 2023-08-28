@@ -4048,6 +4048,12 @@ he:
           many: "חדשים (%{count})"
           other: "חדשים (%{count})"
         help: "נושאים שנוצרו בימים האחרונים"
+        all: "הכול"
+        all_with_count: "הכול (%{count})"
+        topics: "נושאים"
+        topics_with_count: "נושאים (%{count})"
+        replies: "תשובות"
+        replies_with_count: "תשובות (%{count})"
       posted:
         title: "הפוסטים שלי"
         help: "נושאים בהם פרסמת"
@@ -4626,10 +4632,26 @@ he:
           tel: "נא למלא מספר טלפון תקני."
           text: "נא למלא ערך טקסט."
           url: "נא למלא כתובת תקינה."
-        tooShort: "הקלט חייב להיות באורך של %{minLength} תווים ומעלה."
-        tooLong: "הקלט חייב להיות פחות מ־%{maxLength} תווים."
-        rangeOverflow: "הקלט חייב להיות פחות מ־%{max}."
-        rangeUnderflow: "הקלט חייב להיות יותר מ־%{min}."
+        tooShort:
+          one: "הקלט חייב להיות באורך של תו ומעלה."
+          two: "הקלט חייב להיות באורך של %{count} תווים ומעלה."
+          many: "הקלט חייב להיות באורך של %{count} תווים ומעלה."
+          other: "הקלט חייב להיות באורך של %{count} תווים ומעלה."
+        tooLong:
+          one: "הקלט חייב להיות פחות מתו."
+          two: "הקלט חייב להיות פחות מ־%{count} תווים."
+          many: "הקלט חייב להיות פחות מ־%{count} תווים."
+          other: "הקלט חייב להיות פחות מ־%{count} תווים."
+        rangeOverflow:
+          one: "הקלט חייב להיות פחות מ־%{count}."
+          two: "הקלט חייב להיות פחות מ־%{count}."
+          many: "הקלט חייב להיות פחות מ־%{count}."
+          other: "הקלט חייב להיות פחות מ־%{count}."
+        rangeUnderflow:
+          one: "הקלט חייב להיות יותר מ־%{count}."
+          two: "הקלט חייב להיות יותר מ־%{count}."
+          many: "הקלט חייב להיות יותר מ־%{count}."
+          other: "הקלט חייב להיות יותר מ־%{count}."
         patternMismatch: "נא לתאם מול התבנית המבוקשת."
         badInput: "נא למלא קלט תקין."
   admin_js:
@@ -4756,6 +4778,7 @@ he:
             email: דוא״ל
             incoming_email: "כתובת דוא״ל נכנס בהתאמה אישית"
             incoming_email_placeholder: "נא למלא כתובת דוא״ל"
+            incoming_email_tooltip: "אפשר להפריד בין כתובות דוא״ל עם התו |."
             visibility: חשיפה
             visibility_levels:
               title: "מי יכול לראות קבוצה זו?"

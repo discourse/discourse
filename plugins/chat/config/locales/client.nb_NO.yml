@@ -6,6 +6,11 @@
 
 nb_NO:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Alltid"
+          never: "Aldri"
     chat:
       create: "Opprett"
       cancel: "Avbryt"
