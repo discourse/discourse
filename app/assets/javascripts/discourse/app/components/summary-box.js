@@ -167,18 +167,14 @@ export default class SummaryBox extends Component {
       this.loadingSummary = true;
     }
 
-    let fetchURL = `/t/${this.args.postAttrs.topicId}/strategy-summary`;
+    let fetchURL = `/t/${this.args.postAttrs.topicId}/strategy-summary?`;
 
     if (this.currentUser) {
       fetchURL += `stream=true`;
-    }
 
-    if (this.canRegenerate) {
-      if (this.currentUser) {
-        fetchURL += "&";
+      if (this.canRegenerate) {
+        fetchURL += "&skip_age_check=true";
       }
-
-      fetchURL += "skip_age_check=true";
     }
 
     ajax(fetchURL)
