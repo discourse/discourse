@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import I18n from "I18n";
-import { alias } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import EmberObject, { action } from "@ember/object";
