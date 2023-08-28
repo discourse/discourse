@@ -1,8 +1,9 @@
 import getURL from "discourse-common/lib/get-url";
+import { generatePlaceholderHashtagHTML } from "discourse/lib/hashtag-autocomplete";
 
 const domParser = new DOMParser();
 
-export default function transformMentions(cooked) {
+export default function transformAutolinks(cooked) {
   const html = domParser.parseFromString(cooked, "text/html");
   transform(html);
   return html.body.innerHTML;
@@ -15,6 +16,18 @@ function transform(html) {
     mentionLink.classList.add("mention");
     mentionLink.appendChild(mentionText);
     mentionLink.href = getURL(`/u/${mentionSpan.innerText.substring(1)}`);
-    mentionSpan.parentNode.replaceChild(mentionLink, mentionSpan);
+    mentionSpan.replaceWith(mentionLink);
+  });
+
+  (html.querySelectorAll("span.hashtag-raw") || []).forEach((hashtagSpan) => {
+    // Doesn't matter what "type" of hashtag we use here, it will get replaced anyway,
+    // this is just for the placeholder HTML.
+    generatePlaceholderHashtagHTML("category", hashtagSpan, {
+      id: -1,
+      text: "...",
+      relative_url: "/",
+      slug: "",
+      icon: "square-full",
+    });
   });
 }
