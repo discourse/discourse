@@ -23,7 +23,6 @@ const KNOWN_LEGACY_MODALS = [
   "group-default-notifications",
   "login",
   "move-to-topic",
-  "post-enqueued",
   "raw-email",
   "reject-reason-reviewable",
   "reorder-categories",
