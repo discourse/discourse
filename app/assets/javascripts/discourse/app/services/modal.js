@@ -21,7 +21,6 @@ const KNOWN_LEGACY_MODALS = [
   "grant-badge",
   "group-default-notifications",
   "login",
-  "move-to-topic",
   "raw-email",
   "reject-reason-reviewable",
   "reorder-categories",
