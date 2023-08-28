@@ -15,6 +15,7 @@ export default Mixin.create({
 
     this.modal.show(DismissNewModal, {
       model: {
+        selectedTopics: this.selected,
         dismissCallback: ({ dismissPosts, dismissTopics, untrack }) => {
           this.callResetNew(dismissPosts, dismissTopics, untrack);
         },

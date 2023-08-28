@@ -2848,7 +2848,14 @@ en:
         dismiss_new_modal:
           title: "Dismiss new"
           topics: "Dismiss new topics"
-          posts: "Dismiss new posts"
+          posts: "Dismiss new replies"
+          topics_with_count:
+            one: "Dismiss %{count} new topic"
+            other: "Dismiss %{count} new topics"
+          replies_with_count:
+            one: "Dismiss %{count} new reply"
+            other: "Dismiss %{count} new replies"
+          replies: "Dismiss new replies"
           untrack: "Stop tracking these topics so they stop appearing in my new list"
         dismiss_new_with_selected:
           one: "Dismiss New (%{count})"
