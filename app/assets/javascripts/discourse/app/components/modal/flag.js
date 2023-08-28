@@ -4,9 +4,10 @@ import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import I18n from "I18n";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
-import { Promise } from "rsvp";
 import User from "discourse/models/user";
-import { classify } from "@ember/string";
+import { reload } from "discourse/helpers/page-reloader";
+
+const NOTIFY_MODERATORS_ID = 7;
 
 export default class Flag extends Component {
   @service adminTools;
@@ -24,13 +25,9 @@ export default class Flag extends Component {
   constructor() {
     super(...arguments);
 
-    if (this.adminTools) {
-      this.adminTools
-        .checkSpammer(this.args.model.flagModel.user_id)
-        .then((result) => {
-          this.spammerDetails = result;
-        });
-    }
+    this.adminTools
+      ?.checkSpammer(this.args.model.flagModel.user_id)
+      .then((result) => (this.spammerDetails = result));
   }
 
   get flagActions() {
@@ -102,19 +99,19 @@ export default class Flag extends Component {
       return false;
     }
 
-    if (this.selected.is_custom_flag) {
-      const len = this.message?.length || 0;
-      return (
-        len >= this.siteSettings.min_personal_message_post_length &&
-        len <= MAX_MESSAGE_LENGTH
-      );
+    if (!this.selected.is_custom_flag) {
+      return true;
     }
-    return true;
+
+    const len = this.message?.length || 0;
+    return (
+      len >= this.siteSettings.min_personal_message_post_length &&
+      len <= MAX_MESSAGE_LENGTH
+    );
   }
 
   get notifyModeratorsFlag() {
-    const notifyModeratorsID = 7;
-    return this.flagsAvailable.find((f) => f.id === notifyModeratorsID);
+    return this.flagsAvailable.find((f) => f.id === NOTIFY_MODERATORS_ID);
   }
 
   get canTakeAction() {
@@ -127,78 +124,68 @@ export default class Flag extends Component {
 
   @action
   onKeydown(event) {
-    // CTRL+ENTER or CMD+ENTER
-    if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
-      if (this.submitEnabled) {
-        this.createFlag();
-        return false;
-      }
+    if (
+      this.submitEnabled &&
+      event.key === "Enter" &&
+      (event.ctrlKey || event.metaKey)
+    ) {
+      this.createFlag();
+      return false;
     }
-  }
-
-  @action
-  clientSuspend(performAction) {
-    this.penalize("showSuspendModal", performAction);
-  }
-
-  @action
-  clientSilence(performAction) {
-    this.penalize("showSilenceModal", performAction);
   }
 
   @action
   async penalize(adminToolMethod, performAction) {
-    if (this.adminTools) {
-      const createdBy = await User.findByUsername(
-        this.args.model.flagModel.username
-      );
-      const opts = { before: performAction };
-
-      if (this.args.model.flagTarget.editable()) {
-        opts.postId = this.args.model.flagModel.id;
-        opts.postEdit = this.args.model.flagModel.cooked;
-      }
-
-      return this.adminTools[adminToolMethod](createdBy, opts);
+    if (!this.adminTools) {
+      return;
     }
+
+    const createdBy = await User.findByUsername(
+      this.args.model.flagModel.username
+    );
+    const opts = { before: performAction };
+
+    if (this.args.model.flagTarget.editable()) {
+      opts.postId = this.args.model.flagModel.id;
+      opts.postEdit = this.args.model.flagModel.cooked;
+    }
+
+    return this.adminTools[adminToolMethod](createdBy, opts);
   }
 
   @action
-  deleteSpammer() {
+  async deleteSpammer() {
     if (this.spammerDetails) {
-      this.spammerDetails.deleteUser().then(() => window.location.reload());
+      await this.spammerDetails.deleteUser();
+      reload();
     }
   }
 
   @action
   async takeAction(actionable) {
-    const performAction = (o = {}) => {
-      o.takeAction = true;
-      this.createFlag(o);
-      return Promise.resolve();
-    };
-
-    if (actionable.client_action) {
-      const actionMethod = this[`client${classify(actionable.client_action)}`];
-      if (actionMethod) {
-        await actionMethod(() => performAction({ skipClose: true }));
-      } else {
-        // eslint-disable-next-line no-console
-        console.error(`No handler for ${actionable.client_action} found`);
-      }
+    if (actionable.client_action === "suspend") {
+      await this.penalize("showSuspendModal", () =>
+        this.createFlag({ takeAction: true, skipClose: true })
+      );
+    } else if (actionable.client_action === "silence") {
+      await this.penalize("showSilenceModal", () =>
+        this.createFlag({ takeAction: true, skipClose: true })
+      );
+    } else if (actionable.client_action) {
+      // eslint-disable-next-line no-console
+      console.error(`No handler for ${actionable.client_action} found`);
     } else {
       this.args.model.setHidden();
-      await performAction();
+      this.createFlag({ takeAction: true });
     }
   }
 
   @action
-  createFlag(opts) {
-    const params = opts || {};
+  createFlag(opts = {}) {
     if (this.selected.is_custom_flag) {
-      params.message = this.message;
+      opts.message = this.message;
     }
-    this.args.model.flagTarget.create(this, params);
+    this.args.model.flagTarget.create(this, opts);
   }
 
   @action
@@ -209,9 +196,7 @@ export default class Flag extends Component {
 
   @action
   flagForReview() {
-    if (!this.selected) {
-      this.selected = this.notifyModeratorsFlag;
-    }
+    this.selected ||= this.notifyModeratorsFlag;
     this.createFlag({ queue_for_review: true });
     this.args.model.setHidden();
   }
