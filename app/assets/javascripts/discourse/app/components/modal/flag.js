@@ -211,9 +211,7 @@ export default class Flag extends Component {
 
   @action
   flagForReview() {
-    if (!this.selected) {
-      this.selected = this.notifyModeratorsFlag;
-    }
+    this.selected ||= this.notifyModeratorsFlag;
     this.createFlag({ queue_for_review: true });
     this.args.model.setHidden();
   }
