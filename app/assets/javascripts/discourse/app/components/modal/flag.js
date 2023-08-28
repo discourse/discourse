@@ -185,12 +185,11 @@ export default class Flag extends Component {
   }
 
   @action
-  createFlag(opts) {
-    const params = opts || {};
+  createFlag(opts = {}) {
     if (this.selected.is_custom_flag) {
-      params.message = this.message;
+      opts.message = this.message;
     }
-    this.args.model.flagTarget.create(this, params);
+    this.args.model.flagTarget.create(this, opts);
   }
 
   @action
