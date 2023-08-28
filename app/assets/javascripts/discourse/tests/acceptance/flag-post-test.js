@@ -158,31 +158,31 @@ acceptance("flagging", function (needs) {
     await visit("/t/internationalization-localization/280");
     await openFlagModal();
 
-    const modal = query("#discourse-modal");
+    const modal = query(".d-modal");
     await pressEnter(modal, "ctrlKey");
     assert.ok(
-      exists("#discourse-modal:visible"),
+      exists(".d-modal:visible"),
       "The modal wasn't closed because the accept button was disabled"
     );
 
     await click("#radio_inappropriate"); // this enables the accept button
     await pressEnter(modal, "ctrlKey");
-    assert.ok(!exists("#discourse-modal:visible"), "The modal was closed");
+    assert.ok(!exists(".d-modal:visible"), "The modal was closed");
   });
 
   test("CMD or WINDOWS-KEY + ENTER accepts the modal", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openFlagModal();
 
-    const modal = query("#discourse-modal");
+    const modal = query(".d-modal");
     await pressEnter(modal, "metaKey");
     assert.ok(
-      exists("#discourse-modal:visible"),
+      exists(".d-modal:visible"),
       "The modal wasn't closed because the accept button was disabled"
     );
 
     await click("#radio_inappropriate"); // this enables the accept button
     await pressEnter(modal, "ctrlKey");
-    assert.ok(!exists("#discourse-modal:visible"), "The modal was closed");
+    assert.ok(!exists(".d-modal:visible"), "The modal was closed");
   });
 });

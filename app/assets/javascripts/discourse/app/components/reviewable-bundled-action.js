@@ -18,13 +18,11 @@ export default Component.extend({
 
   actions: {
     performById(id) {
-      this.attrs.performAction.value(
-        this.get("bundle.actions").findBy("id", id)
-      );
+      this.performAction(this.get("bundle.actions").findBy("id", id));
     },
 
     perform(action) {
-      this.attrs.performAction.value(action);
+      this.performAction(action);
     },
   },
 });
