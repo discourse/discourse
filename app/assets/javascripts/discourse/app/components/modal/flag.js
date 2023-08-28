@@ -4,9 +4,7 @@ import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import I18n from "I18n";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
-import { Promise } from "rsvp";
 import User from "discourse/models/user";
-import { classify } from "@ember/string";
 import { reload } from "discourse/helpers/page-reloader";
 
 export default class Flag extends Component {
