@@ -2,7 +2,7 @@ import { cancel } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import Category from "discourse/models/category";
 import Component from "@ember/component";
-import { DELETE_REPLIES_TYPE } from "discourse/controllers/edit-topic-timer";
+import { DELETE_REPLIES_TYPE } from "discourse/components/modal/edit-topic-timer";
 import I18n from "I18n";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";

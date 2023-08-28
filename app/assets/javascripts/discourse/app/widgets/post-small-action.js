@@ -190,9 +190,6 @@ export default createWidget("post-small-action", {
     }
 
     return [
-      h("span.tabLoc", {
-        attributes: { "aria-hidden": true, tabindex: -1 },
-      }),
       h("div.topic-avatar", iconNode(icons[attrs.actionCode] || "exclamation")),
       h("div.small-action-desc", [
         h("div.small-action-contents", contents),

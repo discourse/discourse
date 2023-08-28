@@ -5,15 +5,17 @@
 >
   <:body>
     {{#if @model.badge.errors}}
-      <p class="error-header">{{i18n
-          "admin.badges.preview.sql_error_header"
-        }}</p>
+      <p class="error-header">
+        {{i18n "admin.badges.preview.sql_error_header"}}
+      </p>
       <pre class="badge-errors">{{@model.badge.errors}}</pre>
     {{else}}
       <p class="grant-count">
-        {{#if this.count}}
+        {{#if @model.badge.grant_count}}
           {{html-safe
-            (i18n "admin.badges.preview.grant_count" count=@model.badge.count)
+            (i18n
+              "admin.badges.preview.grant_count" count=@model.badge.grant_count
+            )
           }}
         {{else}}
           {{html-safe (i18n "admin.badges.preview.no_grant_count")}}
@@ -32,7 +34,7 @@
         </div>
       {{/if}}
 
-      {{#if this.sample}}
+      {{#if @model.badge.sample}}
         <p class="sample">
           {{i18n "admin.badges.preview.sample"}}
         </p>

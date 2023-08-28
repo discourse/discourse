@@ -77,7 +77,8 @@ export function highlightPost(postNumber) {
     return;
   }
 
-  container.querySelector(".tabLoc")?.focus();
+  // sets focus to the first focusable anchor in the post
+  container.querySelector("a:not([tabindex='-1'])")?.focus();
 
   const element = container.querySelector(".topic-body");
   if (!element || element.classList.contains("highlighted")) {

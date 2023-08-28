@@ -237,7 +237,7 @@ RSpec.describe "Chat channel", type: :system do
       chat.visit_channel(channel_1)
 
       expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
-        "<a class=\"mention\" href=\"/u/#{other_user.username}\">@#{other_user.username}</a> &lt;mark&gt;not marked&lt;/mark&gt;",
+        "@#{other_user.username} &lt;mark&gt;not marked&lt;/mark&gt;",
       )
     end
   end
