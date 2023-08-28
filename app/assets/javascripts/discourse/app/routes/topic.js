@@ -15,6 +15,7 @@ import PublishPageModal from "discourse/components/modal/publish-page";
 import EditSlowModeModal from "discourse/components/modal/edit-slow-mode";
 import ChangeTimestampModal from "discourse/components/modal/change-timestamp";
 import EditTopicTimerModal from "discourse/components/modal/edit-topic-timer";
+import FeatureTopicModal from "discourse/components/modal/feature-topic";
 
 const SCROLL_DELAY = 500;
 
@@ -154,11 +155,22 @@ const TopicRoute = DiscourseRoute.extend({
 
   @action
   showFeatureTopic() {
-    showModal("feature-topic", {
-      model: this.modelFor("topic"),
-      title: "topic.feature_topic.title",
+    const topicController = this.controllerFor("topic");
+    const model = this.modelFor("topic");
+    model.setProperties({
+      pinnedInCategoryUntil: null,
+      pinnedGloballyUntil: null,
     });
-    this.controllerFor("feature_topic").reset();
+
+    this.modal.show(FeatureTopicModal, {
+      model: {
+        topic: model,
+        pinGlobally: () => topicController.send("pinGlobally"),
+        togglePinned: () => topicController.send("togglePinned"),
+        makeBanner: () => topicController.send("makeBanner"),
+        removeBanner: () => topicController.send("removeBanner"),
+      },
+    });
   },
 
   @action
