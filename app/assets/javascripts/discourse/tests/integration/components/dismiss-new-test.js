@@ -8,7 +8,7 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    this.model = { subset: null, selectedTopics: [] };
+    this.model = { selectedTopics: [] };
   });
 
   test("modal title", async function (assert) {
@@ -19,6 +19,16 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
     assert
       .dom("#discourse-modal-title")
       .hasText(I18n.t("topics.bulk.dismiss_new_modal.title"));
+  });
+
+  test("default state", async function (assert) {
+    await render(
+      hbs`<Modal::DismissNew @inline={{true}} @model={{this.model}} />`
+    );
+
+    assert.dom(".dismiss-topics input").isChecked();
+    assert.dom(".dismiss-posts input").isChecked();
+    assert.dom(".untrack input").isNotChecked();
   });
 
   test("one new selected topic", async function (assert) {
@@ -32,9 +42,9 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
       hbs`<Modal::DismissNew @inline={{true}} @model={{this.model}} />`
     );
 
-    assert.dom(".dismiss-posts.controls").doesNotExist();
+    assert.dom(".dismiss-posts").doesNotExist();
     assert
-      .dom(".dismiss-topics.controls")
+      .dom(".dismiss-topics")
       .hasText(
         I18n.t("topics.bulk.dismiss_new_modal.topics_with_count", { count: 1 })
       );
@@ -51,9 +61,9 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
       hbs`<Modal::DismissNew @inline={{true}} @model={{this.model}} />`
     );
 
-    assert.dom(".dismiss-topics.controls").doesNotExist();
+    assert.dom(".dismiss-topics").doesNotExist();
     assert
-      .dom(".dismiss-posts.controls")
+      .dom(".dismiss-posts")
       .hasText(
         I18n.t("topics.bulk.dismiss_new_modal.replies_with_count", { count: 1 })
       );
@@ -66,9 +76,9 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
       hbs`<Modal::DismissNew @inline={{true}} @model={{this.model}} />`
     );
 
-    assert.dom(".dismiss-posts.controls").doesNotExist();
+    assert.dom(".dismiss-posts").doesNotExist();
     assert
-      .dom(".dismiss-topics.controls")
+      .dom(".dismiss-topics")
       .hasText(I18n.t("topics.bulk.dismiss_new_modal.topics"));
   });
 
@@ -79,9 +89,9 @@ module("Integration | Component | modal/dismiss-new", function (hooks) {
       hbs`<Modal::DismissNew @inline={{true}} @model={{this.model}} />`
     );
 
-    assert.dom(".dismiss-topics.controls").doesNotExist();
+    assert.dom(".dismiss-topics").doesNotExist();
     assert
-      .dom(".dismiss-posts.controls")
+      .dom(".dismiss-posts")
       .hasText(I18n.t("topics.bulk.dismiss_new_modal.replies"));
   });
 
