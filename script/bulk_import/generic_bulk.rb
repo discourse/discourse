@@ -56,6 +56,7 @@ class BulkImport::Generic < BulkImport::Base
     import_likes
     import_tags
     import_votes
+    import_answers
 
     import_upload_references
 
@@ -780,7 +781,7 @@ class BulkImport::Generic < BulkImport::Base
 
       # Determine if it is a comment or a post
       post_id = post_id_from_imported_id(vote["element_id"])
-      element = post_id ? Post.find_by(id: post_id)
+      element = post_id ? Post.find_by(id: post_id) : nil
       # No comments for this migration, so we skip next 2 lines
       #comment_id = comment_id_from_imported_id(vote["element_id"])
       #element = post_id ? Post.find_by(id: post_id) : QuestionAnswerComment.find_by(id: comment_id)
@@ -792,6 +793,38 @@ class BulkImport::Generic < BulkImport::Base
       rescue => e
         puts "Could not create vote for #{element.id}"
         puts e
+      end
+    end
+  end
+
+  def import_answers
+    puts "Importing solutions..."
+    solutions = @db.execute(<<~SQL)
+      SELECT ROWID, *
+      FROM solutions
+    SQL
+
+    solutions.each do |row|
+      post_id = post_id_from_imported_id(row["post_id"])
+      topic_id = topic_id_from_imported_id(row["topic_id"])
+      user_id = user_id_from_imported_id(row["user_id"])
+      acting_user_id = user_id_from_imported_id(row["acting_user_id"])
+      begin
+        PostCustomField.create!(post_id: post_id, name: "is_accepted_answer", value: "true")
+        TopicCustomField.create!(
+          topic_id: topic_id,
+          name: "accepted_answer_post_id",
+          value: post_id,
+        )
+        UserAction.log_action!(
+          action_type: UserAction::SOLVED,
+          user_id: user_id,
+          acting_user_id: acting_user_id,
+          target_post_id: post_id,
+          target_topic_id: topic_id,
+        )
+      rescue StandardError
+        next
       end
     end
   end
