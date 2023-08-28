@@ -6,6 +6,17 @@ export default class DismissNew extends Component {
   dismissPosts = true;
   untrack = false;
 
+  constructor() {
+    super(...arguments);
+
+    if (this.args.model.subset === "replies") {
+      this.dismissTopics = false;
+    }
+    if (this.args.model.subset === "topics") {
+      this.dismissPosts = false;
+    }
+  }
+
   @computed("args.model.selectedTopics")
   get partialDismiss() {
     return (this.args.model.selectedTopics?.length || 0) !== 0;
@@ -27,10 +38,10 @@ export default class DismissNew extends Component {
     );
   }
 
-  @computed("args.model.selectedTopics")
+  @computed("args.model.selectedTopics", "args.model.subset")
   get showDismissNewTopics() {
     if (!this.partialDismiss) {
-      return true;
+      return this.args.model.subset === "topics" || !this.args.model.subset;
     }
     return this.countNewTopics > 0;
   }
@@ -38,7 +49,7 @@ export default class DismissNew extends Component {
   @computed("args.model.selectedTopics")
   get showDismissNewReplies() {
     if (!this.partialDismiss) {
-      return true;
+      return this.args.model.subset === "replies" || !this.args.model.subset;
     }
     return this.countNewReplies > 0;
   }

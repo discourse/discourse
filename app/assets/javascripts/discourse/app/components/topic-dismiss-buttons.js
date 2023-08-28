@@ -37,7 +37,7 @@ export default Component.extend({
       return true;
     }
 
-    return topicCount > 5;
+    return this.currentUser.new_new_view_enabled || topicCount > 5;
   },
 
   @discourseComputed("selectedTopics.length")
