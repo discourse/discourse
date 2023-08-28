@@ -623,7 +623,7 @@
   }
 
   @mixin inactiveMode() {
-    color: var(--primary-medium);
+    color: var(--primary-high);
     .select-kit.combo-box .select-kit-header {
       border-color: var(--primary-medium);
     }
