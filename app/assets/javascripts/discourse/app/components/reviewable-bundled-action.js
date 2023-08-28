@@ -21,8 +21,8 @@ export default Component.extend({
       this.performAction(this.get("bundle.actions").findBy("id", id));
     },
 
-    perform(action) {
-      this.performAction(action);
+    performFirst() {
+      this.performAction(this.first);
     },
   },
 });
