@@ -17,7 +17,6 @@ import ChangeTimestampModal from "discourse/components/modal/change-timestamp";
 import EditTopicTimerModal from "discourse/components/modal/edit-topic-timer";
 import FeatureTopicModal from "discourse/components/modal/feature-topic";
 import MoveToTopicModal from "discourse/components/modal/move-to-topic";
-import topic from "discourse/controllers/topic";
 
 const SCROLL_DELAY = 500;
 
