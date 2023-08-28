@@ -53,10 +53,10 @@ class BulkImport::Generic < BulkImport::Base
     import_topics
     import_posts
     import_topic_allowed_users
-    import_likes
+    # import_likes
     import_tags
-    import_votes
-    import_answers
+    # import_votes
+    # import_answers
 
     import_upload_references
 
@@ -784,8 +784,8 @@ class BulkImport::Generic < BulkImport::Base
       post_id = post_id_from_imported_id(vote["element_id"])
       element = post_id ? Post.find_by(id: post_id) : nil
       # No comments for this migration, so we skip next 2 lines
-      #comment_id = comment_id_from_imported_id(vote["element_id"])
-      #element = post_id ? Post.find_by(id: post_id) : QuestionAnswerComment.find_by(id: comment_id)
+      # comment_id = comment_id_from_imported_id(vote["element_id"])
+      # element = post_id ? Post.find_by(id: post_id) : QuestionAnswerComment.find_by(id: comment_id)
       next unless element
       begin
         PostVoting::VoteManager.vote(element, user, direction: direction)
