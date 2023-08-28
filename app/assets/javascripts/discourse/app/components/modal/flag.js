@@ -7,6 +7,7 @@ import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
 import { classify } from "@ember/string";
+import { reload } from "discourse/helpers/page-reloader";
 
 export default class Flag extends Component {
   @service adminTools;
@@ -164,9 +165,10 @@ export default class Flag extends Component {
   }
 
   @action
-  deleteSpammer() {
+  async deleteSpammer() {
     if (this.spammerDetails) {
-      this.spammerDetails.deleteUser().then(() => window.location.reload());
+      await this.spammerDetails.deleteUser();
+      reload();
     }
   }
 
