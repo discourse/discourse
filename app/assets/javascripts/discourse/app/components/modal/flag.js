@@ -134,16 +134,6 @@ export default class Flag extends Component {
   }
 
   @action
-  clientSuspend(performAction) {
-    this.penalize("showSuspendModal", performAction);
-  }
-
-  @action
-  clientSilence(performAction) {
-    this.penalize("showSilenceModal", performAction);
-  }
-
-  @action
   async penalize(adminToolMethod, performAction) {
     if (this.adminTools) {
       const createdBy = await User.findByUsername(
@@ -176,9 +166,14 @@ export default class Flag extends Component {
     };
 
     if (actionable.client_action) {
-      const actionMethod = this[`client${classify(actionable.client_action)}`];
-      if (actionMethod) {
-        await actionMethod(() => performAction({ skipClose: true }));
+      if (actionable.client_action === "suspend") {
+        await this.penalize("showSuspendModal", () =>
+          performAction({ skipClose: true })
+        );
+      } else if (actionable.client_action === "silence") {
+        await this.penalize("showSilenceModal", () =>
+          performAction({ skipClose: true })
+        );
       } else {
         // eslint-disable-next-line no-console
         console.error(`No handler for ${actionable.client_action} found`);
