@@ -7,6 +7,8 @@ import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import User from "discourse/models/user";
 import { reload } from "discourse/helpers/page-reloader";
 
+const NOTIFY_MODERATORS_ID = 7;
+
 export default class Flag extends Component {
   @service adminTools;
   @service currentUser;
@@ -109,8 +111,7 @@ export default class Flag extends Component {
   }
 
   get notifyModeratorsFlag() {
-    const notifyModeratorsID = 7;
-    return this.flagsAvailable.find((f) => f.id === notifyModeratorsID);
+    return this.flagsAvailable.find((f) => f.id === NOTIFY_MODERATORS_ID);
   }
 
   get canTakeAction() {
