@@ -469,6 +469,7 @@ end
 def create_category_definitions
   log "Creating category definitions"
   Category.ensure_consistency!
+  Site.clear_cache
 end
 
 def log(message)

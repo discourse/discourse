@@ -415,9 +415,21 @@ class Category < ActiveRecord::Base
       update_column(:topic_id, t.id)
       post = t.posts.build(raw: description || post_template, user: user)
       post.save!(validate: false)
-      update_column(:description, post.cooked) if description.present?
-
+      update_category_definition_from_cooked(post.cooked) if description.present?
       t
+    end
+  end
+
+  def update_category_definition_from_cooked(cooked)
+    doc = Nokogiri::HTML5.fragment(cooked)
+    doc.css("img").remove
+
+    if (html = doc.css("p").first&.inner_html&.strip)
+      new_description = html unless html.starts_with?(Category.post_template[0..50])
+      update_column(:description, new_description)
+      true
+    else
+      false
     end
   end
 
@@ -440,7 +452,7 @@ class Category < ActiveRecord::Base
   def description_text
     return nil unless self.description
 
-    @@cache_text ||= LruRedux::ThreadSafeCache.new(1000)
+    @@cache_text ||= LruRedux::ThreadSafeCache.new(1_000)
     @@cache_text.getset(self.description) do
       text = Nokogiri::HTML5.fragment(self.description).text.strip
       ERB::Util.html_escape(text).html_safe
@@ -450,7 +462,7 @@ class Category < ActiveRecord::Base
   def description_excerpt
     return nil unless self.description
 
-    @@cache_excerpt ||= LruRedux::ThreadSafeCache.new(1000)
+    @@cache_excerpt ||= LruRedux::ThreadSafeCache.new(1_000)
     @@cache_excerpt.getset(self.description) { PrettyText.excerpt(description, 300) }
   end
 
