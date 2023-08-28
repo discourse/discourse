@@ -109,6 +109,7 @@
         </div>
       </div>
       {{#if this.canPinGlobally}}
+        <hr />
         <div class="feature-section">
           <div class="desc">
             <p>
@@ -181,6 +182,7 @@
         </div>
       {{/if}}
     {{/if}}
+    <hr />
     {{#if this.currentUser.staff}}
       <div class="feature-section">
         <div class="desc">
@@ -227,7 +229,4 @@
       </div>
     {{/if}}
   </:body>
-  <:footer>
-    <DModalCancel @close={{@closeModal}} />
-  </:footer>
 </DModal>
