@@ -1511,8 +1511,22 @@ span.mention {
     margin-top: 0;
   }
 
-  .pinned-button,
   .topic-notifications-button {
+    display: inline-flex;
+    margin: 0.5em 0 1em;
+
+    .dropdown-select-box {
+      .select-kit-selected-name {
+        overflow: hidden;
+        width: 100%;
+      }
+      .name {
+        @include ellipsis;
+      }
+    }
+  }
+
+  .pinned-button {
     margin: 0.5em 0 1em;
 
     .reason {
