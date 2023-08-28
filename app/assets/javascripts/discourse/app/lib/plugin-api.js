@@ -133,7 +133,7 @@ import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-export const PLUGIN_API_VERSION = "1.9.1";
+export const PLUGIN_API_VERSION = "1.10.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -1669,11 +1669,24 @@ class PluginApi {
   }
 
   /**
-   * Registers a modal JS class for a specific reviewable type. This is used
-   * alongside the `custom_modal` option for reviewables. The `custom_modal`
-   * option should just be the JS class name as a string, then we map it to the
-   * real class at runtime.
+   * Registers a mapping between a modal JavaScript class and a server-side reviewable type class.
    *
+   * This is used alongside the `custom_modal` option for reviewable actions, which
+   * are defined at Reviewable::Actions::Action server-side.
+   *
+   * The `custom_modal` option should just be the JavaScript modal class name as a string,
+   * then we map it to the real modal class provided here at runtime, as long as their
+   * names match exactly.
+   *
+   * For more information about modal classes, which are special Ember components used with
+   * the DModal API, see:
+   *
+   * https://meta.discourse.org/t/using-the-dmodal-api-to-render-modal-windows-aka-popups-dialogs-in-discourse/268304.
+   *
+   * @param {String} reviewableType - The ruby class name of the reviewable type.
+   * @param {Class} modalClass - The actual JavaScript class of the modal.
+   *
+   * @example
    * ```
    * api.registerReviewableCustomModal("ReviewablePluginType", MyCustomModal);
    * ```
