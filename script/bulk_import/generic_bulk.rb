@@ -614,7 +614,8 @@ class BulkImport::Generic < BulkImport::Base
     uploads = query(<<~SQL, db: @uploads_db)
       SELECT id, upload
         FROM uploads
-       ORDER BY id
+       WHERE upload IS NOT NULL
+       ORDER BY rowid
     SQL
 
     create_uploads(uploads) do |row|
