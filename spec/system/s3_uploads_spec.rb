@@ -25,11 +25,11 @@ describe "Uploading files in the composer to S3", type: :system do
         end
         expect(page).to have_css(".avatar-uploader label[data-uploaded]")
         modal.click_primary_button
+        expect(modal).to be_closed
         expect(page).to have_css(
           "#user-avatar-uploads[data-custom-avatar-upload-id]",
           visible: false,
         )
-        puts page.driver.browser.logs.get(:browser).map(&:message)
         expect(current_user.reload.uploaded_avatar_id).to eq(
           find("#user-avatar-uploads", visible: false)["data-custom-avatar-upload-id"].to_i,
         )
