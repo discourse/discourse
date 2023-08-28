@@ -160,19 +160,14 @@ export default class Flag extends Component {
 
   @action
   async takeAction(actionable) {
-    const performAction = async (o = {}) => {
-      o.takeAction = true;
-      this.createFlag(o);
-    };
-
     if (actionable.client_action) {
       if (actionable.client_action === "suspend") {
         await this.penalize("showSuspendModal", () =>
-          performAction({ skipClose: true })
+          this.createFlag({ takeAction: true, skipClose: true })
         );
       } else if (actionable.client_action === "silence") {
         await this.penalize("showSilenceModal", () =>
-          performAction({ skipClose: true })
+          this.createFlag({ takeAction: true, skipClose: true })
         );
       } else {
         // eslint-disable-next-line no-console
@@ -180,7 +175,7 @@ export default class Flag extends Component {
       }
     } else {
       this.args.model.setHidden();
-      await performAction();
+      this.createFlag({ takeAction: true });
     }
   }
 
