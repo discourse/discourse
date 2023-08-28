@@ -77,9 +77,9 @@ export default class ChatComposerWarningsTracker extends Service {
             (mentions.includes("here") || mentions.includes("all"));
 
           if (newMentions?.length > 0) {
-            this._recordNewWarnings(newMentions, mentions);
+            this.#recordNewWarnings(newMentions, mentions);
           } else {
-            this._rebuildWarnings(mentions);
+            this.#rebuildWarnings(mentions);
           }
         }
       } else {
@@ -95,7 +95,7 @@ export default class ChatComposerWarningsTracker extends Service {
     this.overMembersLimitGroupMentions = [];
   }
 
-  _recordNewWarnings(newMentions, mentions) {
+  #recordNewWarnings(newMentions, mentions) {
     ajax("/chat/api/mentions/groups.json", {
       data: { mentions: newMentions },
     })
@@ -113,12 +113,12 @@ export default class ChatComposerWarningsTracker extends Service {
           this._mentionWarningsSeen[warning] = MENTION_RESULT["invalid"];
         });
 
-        this._rebuildWarnings(mentions);
+        this.#rebuildWarnings(mentions);
       })
-      .catch(this._rebuildWarnings(mentions));
+      .catch(this.#rebuildWarnings(mentions));
   }
 
-  _rebuildWarnings(mentions) {
+  #rebuildWarnings(mentions) {
     const newWarnings = mentions.reduce(
       (memo, mention) => {
         if (
