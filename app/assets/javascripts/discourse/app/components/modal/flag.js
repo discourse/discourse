@@ -124,12 +124,13 @@ export default class Flag extends Component {
 
   @action
   onKeydown(event) {
-    // CTRL+ENTER or CMD+ENTER
-    if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
-      if (this.submitEnabled) {
-        this.createFlag();
-        return false;
-      }
+    if (
+      this.submitEnabled &&
+      event.key === "Enter" &&
+      (event.ctrlKey || event.metaKey)
+    ) {
+      this.createFlag();
+      return false;
     }
   }
 
