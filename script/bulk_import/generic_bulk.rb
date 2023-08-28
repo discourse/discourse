@@ -55,6 +55,7 @@ class BulkImport::Generic < BulkImport::Base
     import_topic_allowed_users
     import_likes
     import_tags
+    import_votes
 
     import_upload_references
 
@@ -758,6 +759,41 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     topic_tags.close
+  end
+
+  def import_votes
+    puts "Importing votes..."
+    votes = @db.execute(<<~SQL)
+      SELECT ROWID, *
+      FROM votes
+    SQL
+
+    votes.each do |vote|
+      user_id = user_id_from_imported_id(vote["user_id"])
+      user = User.find_by(id: user_id)
+      next unless user
+      if vote["direction"] == "up"
+        direction = QuestionAnswerVote.directions[:up]
+      else
+        direction = QuestionAnswerVote.directions[:down]
+      end
+
+      # Determine if it is a comment or a post
+      post_id = post_id_from_imported_id(vote["element_id"])
+      element = post_id ? Post.find_by(id: post_id)
+      # No comments for this migration, so we skip next 2 lines
+      #comment_id = comment_id_from_imported_id(vote["element_id"])
+      #element = post_id ? Post.find_by(id: post_id) : QuestionAnswerComment.find_by(id: comment_id)
+      next unless element
+      begin
+        PostVoting::VoteManager.vote(element, user, direction: direction)
+      rescue ActiveRecord::RecordNotUnique, PG::UniqueViolation
+        next
+      rescue => e
+        puts "Could not create vote for #{element.id}"
+        puts e
+      end
+    end
   end
 
   def create_connection(path)
