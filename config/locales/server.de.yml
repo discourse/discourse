@@ -1703,7 +1703,6 @@ de:
     enable_safe_mode: "Erlaube Benutzern, den abgesicherten Modus zu betreten, um Plug-ins zu debuggen."
     rate_limit_create_topic: "Nach Erstellen eines Themas muss ein Benutzer (n) Sekunden warten, bevor ein weiteres Thema erstellt werden kann."
     rate_limit_create_post: "Nach Schreiben eines Beitrags muss ein Benutzer (n) Sekunden warten, bevor ein weiterer Beitrag erstellt werden kann."
-    rate_limit_new_user_create_topic: "Nach Erstellen eines Themas muss ein neuer Benutzer (n) Sekunden warten, bevor ein weiteres Thema erstellt werden kann."
     rate_limit_new_user_create_post: "Nach Schreiben eines Beitrags muss ein neuer Benutzer (n) Sekunden warten, bevor ein weiterer Beitrag erstellt werden kann."
     max_likes_per_day: "Maximale Anzahl der „Gefällt mir“ pro Benutzer und Tag."
     max_flags_per_day: "Maximale Anzahl der Meldungen pro Benutzer und Tag."
@@ -2125,7 +2124,6 @@ de:
     retain_web_hook_events_period_days: "Anzahl an Tagen, die Webhook-Ereigniseinträge aufbewahrt werden."
     retry_web_hook_events: "Fehlgeschlagene Webhook-Ereignisse automatisch 4 Mal erneut versuchen. Die Wartezeiten zwischen den Versuchen betragen eine, 5, 25 und 125 Minuten."
     revoke_api_keys_days: "Anzahl der Tage, bevor ein nicht verwendeter API-Schlüssel automatisch widerrufen wird (0 für niemals)"
-    allow_user_api_keys: "Erlaube das Generieren von Benutzer-API-Schlüsseln"
     allow_user_api_key_scopes: "Liste erlaubter Bereiche für Benutzer-API-Schlüssel"
     min_trust_level_for_user_api_key: |
       Vertrauensstufe, die für die Generierung von Benutzer-API-Schlüsseln erforderlich ist.<br>

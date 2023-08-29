@@ -1690,7 +1690,6 @@ tr_TR:
     enable_safe_mode: "Kullanıcıların eklentilerde hata ayıklamak için güvenli moda girmesine izin verin."
     rate_limit_create_topic: "Bir konu oluşturduktan sonra, kullanıcılar başka bir konu oluşturabilmek için (n) saniye beklemelidir."
     rate_limit_create_post: "Gönderi yaptıktan sonra, kullanıcılar başka bir gönderi oluşturabilmek için (n) saniye beklemelidir."
-    rate_limit_new_user_create_topic: "Bir konu oluşturduktan sonra, yeni kullanıcılar başka bir konu oluşturabilmek için (n) saniye beklemelidir."
     rate_limit_new_user_create_post: "Gönderi yaptıktan sonra, yeni kullanıcılar başka bir gönderi oluşturabilmek için (n) saniye beklemelidir."
     max_likes_per_day: "Kullanıcı başına günlük maksimum beğeni sayısı."
     max_flags_per_day: "Kullanıcı başına günlük maksimum bayrak sayısı."
@@ -2112,7 +2111,6 @@ tr_TR:
     retain_web_hook_events_period_days: "Web kancası olay kayıtlarının saklanacağı gün sayısı."
     retry_web_hook_events: "Başarısız web kancası olaylarını otomatik olarak 4 kez yeniden deneyin. Yeniden denemeler arasındaki zaman aralıkları 1, 5, 25 ve 125 dakikadır."
     revoke_api_keys_days: "Kullanılmayan bir API anahtarının otomatik olarak iptal edilmesinden önceki gün sayısı (asla için 0)"
-    allow_user_api_keys: "Kullanıcı API anahtarlarının oluşturulmasına izin verin"
     allow_user_api_key_scopes: "Kullanıcı API anahtarları için izin verilen kapsamların listesi"
     min_trust_level_for_user_api_key: |
       Kullanıcı API anahtarlarının oluşturulması için gereken güven seviyesi.<br>

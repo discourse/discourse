@@ -1680,7 +1680,6 @@ es:
     enable_safe_mode: "Permitir a los usuarios ingresar al modo seguro para depurar plugins."
     rate_limit_create_topic: "Después de crear un tema, los usuarios deben esperar (n) segundos antes de crear otro tema."
     rate_limit_create_post: "Después de realizar una publicación, los usuarios deben esperar (n) segundos antes de crear otra publicación."
-    rate_limit_new_user_create_topic: "Después de crear un tema, los nuevos usuarios deben esperar (n) segundos antes de crear otro tema."
     rate_limit_new_user_create_post: "Después de realizar una publicación, los nuevos usuarios deben esperar (n) segundos antes de crear otra publicación."
     max_likes_per_day: "Máximo número de me gusta por usuario por día."
     max_flags_per_day: "Máximo número de denuncias por usuario por día."
@@ -2101,7 +2100,6 @@ es:
     retain_web_hook_events_period_days: "Número de días para retener registros de eventos de web hook."
     retry_web_hook_events: "Reintentar automáticamente 4 veces los eventos del web hook fallidos. Los intervalos de tiempo entre los reintentos son 1, 5, 25 y 125 minutos."
     revoke_api_keys_days: "Número de días antes de que una clave de API sin usar sea revocada automáticamente (0 para nunca)"
-    allow_user_api_keys: "Permitir que se generen claves de API de usuario"
     allow_user_api_key_scopes: "Lista de ámbitos permitidos para las claves API de usuario"
     min_trust_level_for_user_api_key: |
       Nivel de confianza requerido para la generación de claves API de usuario.<br>

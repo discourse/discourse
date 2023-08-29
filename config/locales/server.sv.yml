@@ -1694,7 +1694,6 @@ sv:
     enable_safe_mode: "Tillåt användare att gå in i säkert läge för att felsöka tillägg."
     rate_limit_create_topic: "Efter att ha skapat ett ämne, måste användare vänta (n) sekunder innan de kan skapa ett nytt."
     rate_limit_create_post: "Efter att ha skrivit ett inlägg, måste användare vänta (n) sekunder innan de skriver ett nytt."
-    rate_limit_new_user_create_topic: "Efter att ha skapat ett ämne, måste nya användare vänta (n) sekunder innan de kan skapa ett nytt."
     rate_limit_new_user_create_post: "Efter att ha skrivit ett inlägg, måste nya användare vänta (n) sekunder innan de kan skriva ett nytt."
     max_likes_per_day: "Max antal gillningar per användare och dag."
     max_flags_per_day: "Max antal flaggningar per användare och dag."
@@ -2115,7 +2114,6 @@ sv:
     retain_web_hook_events_period_days: "Antal dagar för att behålla register över webhook-händelsedata."
     retry_web_hook_events: "Försök automatiskt igen för misslyckade händelser för webhooken 4 gånger. Tidsspannet mellan försöken är 1, 5, 25 och 125 minuter."
     revoke_api_keys_days: "Antal dagar innan en oanvänd API-nyckel automatiskt återkallas (0 för aldrig)"
-    allow_user_api_keys: "Tillåt generering av API-nycklar för användare"
     allow_user_api_key_scopes: "Lista över samtliga tillåtna användar-API-nycklar"
     min_trust_level_for_user_api_key: |
       Förtroendenivå som krävs för generering av användar-API-nycklar.<br>
