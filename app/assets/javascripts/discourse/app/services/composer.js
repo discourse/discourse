@@ -32,13 +32,13 @@ import { isEmpty } from "@ember/utils";
 import { isTesting } from "discourse-common/config/environment";
 import Service, { inject as service } from "@ember/service";
 import { shortDate } from "discourse/lib/formatter";
-import showModal from "discourse/lib/show-modal";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import renderTags from "discourse/lib/render-tags";
 import { htmlSafe } from "@ember/template";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import prepareFormTemplateData from "discourse/lib/form-template-validation";
 import DiscardDraftModal from "discourse/components/modal/discard-draft";
+import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
 
 async function loadDraft(store, opts = {}) {
   let { draft, draftKey, draftSequence } = opts;
@@ -1169,10 +1169,7 @@ export default class ComposerService extends Service {
 
   @action
   postWasEnqueued(details) {
-    showModal("post-enqueued", {
-      model: details,
-      title: "review.approval.title",
-    });
+    this.modal.show(PostEnqueuedModal, { model: details });
   }
 
   // Notify the composer messages controller that a reply has been typed. Some
