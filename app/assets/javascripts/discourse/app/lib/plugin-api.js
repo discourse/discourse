@@ -57,7 +57,7 @@ import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import {
   addPluginReviewableParam,
-  registerReviewableCustomModal,
+  registerReviewableActionModal,
 } from "discourse/components/reviewable-item";
 import {
   addComposerSaveErrorCallback,
@@ -1669,30 +1669,24 @@ class PluginApi {
   }
 
   /**
-   * Registers a mapping between a modal JavaScript class and a server-side reviewable type class.
-   *
-   * This is used alongside the `custom_modal` option for reviewable actions, which
-   * are defined at Reviewable::Actions::Action server-side.
-   *
-   * The `custom_modal` option should just be the JavaScript modal class name as a string,
-   * then we map it to the real modal class provided here at runtime, as long as their
-   * names match exactly.
+   * Registers a mapping between a JavaScript modal component class and a server-side reviewable
+   * action, which is registered via `actions.add` and `build_actions`.
    *
    * For more information about modal classes, which are special Ember components used with
    * the DModal API, see:
    *
    * https://meta.discourse.org/t/using-the-dmodal-api-to-render-modal-windows-aka-popups-dialogs-in-discourse/268304.
    *
-   * @param {String} reviewableType - The ruby class name of the reviewable type.
+   * @param {String} reviewableAction - The action name, as registered in the server-side.
    * @param {Class} modalClass - The actual JavaScript class of the modal.
    *
    * @example
    * ```
-   * api.registerReviewableCustomModal("ReviewablePluginType", MyCustomModal);
+   * api.registerReviewableActionModal("approve_category_expert", ExpertGroupChooserModal);
    * ```
    **/
-  registerReviewableCustomModal(reviewableType, modalClass) {
-    registerReviewableCustomModal(reviewableType, modalClass);
+  registerReviewableActionModal(reviewableType, modalClass) {
+    registerReviewableActionModal(reviewableType, modalClass);
   }
 
   /**

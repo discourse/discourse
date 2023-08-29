@@ -11,7 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Adds `registerReviewableCustomModal` which allows core and plugins to register a custom modal which is used for reviewable types utilizing the `custom_modal` option.
+- Adds `registerReviewableActionModal` which allows core and plugins to register a modal component class
+  which is used to show a modal for certain reviewable actions.
 
 ## [1.9.0] - 2023-08-09
 

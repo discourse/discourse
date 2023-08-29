@@ -15,7 +15,7 @@ import ExplainReviewableModal from "discourse/components/modal/explain-reviewabl
 let _components = {};
 
 const pluginReviewableParams = {};
-const customModalClassMap = {};
+const actionModalClassMap = {};
 
 export function addPluginReviewableParam(reviewableType, param) {
   pluginReviewableParams[reviewableType]
@@ -23,9 +23,8 @@ export function addPluginReviewableParam(reviewableType, param) {
     : (pluginReviewableParams[reviewableType] = [param]);
 }
 
-export function registerReviewableCustomModal(reviewableType, modalClass) {
-  customModalClassMap[reviewableType] ??= {};
-  customModalClassMap[reviewableType][modalClass.name] = modalClass;
+export function registerReviewableActionModal(actionName, modalClass) {
+  actionModalClassMap[actionName] = modalClass;
 }
 
 export default Component.extend({
@@ -279,8 +278,11 @@ export default Component.extend({
       }
 
       const message = performableAction.get("confirm_message");
-      let requireRejectReason = performableAction.get("require_reject_reason");
-      let customModal = performableAction.get("custom_modal");
+      const requireRejectReason = performableAction.get(
+        "require_reject_reason"
+      );
+      const actionModalClass = actionModalClassMap[performableAction.id];
+
       if (message) {
         this.dialog.confirm({
           message,
@@ -294,24 +296,14 @@ export default Component.extend({
           performConfirmed: this._performConfirmed,
           action: performableAction,
         });
-      } else if (customModal) {
-        const customModalClass =
-          customModalClassMap[this.reviewable.type]?.[customModal];
-
-        if (customModalClass) {
-          this.modal.show(customModalClass, {
-            model: {
-              reviewable: this.reviewable,
-              performConfirmed: this._performConfirmed,
-              action: performableAction,
-            },
-          });
-        } else {
-          // eslint-disable-next-line no-console
-          console.error(
-            `No custom modal found for ${customModal} for reviewable type ${this.reviewable.type}`
-          );
-        }
+      } else if (actionModalClass) {
+        this.modal.show(actionModalClass, {
+          model: {
+            reviewable: this.reviewable,
+            performConfirmed: this._performConfirmed,
+            action: performableAction,
+          },
+        });
       } else {
         return this._performConfirmed(performableAction);
       }
