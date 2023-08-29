@@ -53,7 +53,7 @@ class BulkImport::Generic < BulkImport::Base
     import_topics
     import_posts
     import_topic_allowed_users
-    # import_likes
+    import_likes
     import_tags
     # import_votes
     # import_answers
@@ -479,26 +479,27 @@ class BulkImport::Generic < BulkImport::Base
   def import_likes
     puts "", "Importing likes..."
 
-    @imported_likes = Set.new
-
     likes = query(<<~SQL)
-      SELECT ROWID, *
-      FROM likes
-      ORDER BY ROWID
+      SELECT post_id, user_id, created_at
+        FROM likes
+       ORDER BY post_id, user_id
     SQL
+
+    post_action_type_id = PostActionType.types[:like]
+    existing_likes =
+      PostAction.where(post_action_type_id: post_action_type_id).pluck(:post_id, :user_id).to_set
 
     create_post_actions(likes) do |row|
       post_id = post_id_from_imported_id(row["post_id"])
       user_id = user_id_from_imported_id(row["user_id"])
 
-      next if post_id.nil? || user_id.nil?
-      next if @imported_likes.add?([post_id, user_id]).nil?
+      next unless post_id && user_id
+      next unless existing_likes.add?([post_id, user_id])
 
       {
-        # FIXME: missing imported_id
-        post_id: post_id_from_imported_id(row["post_id"]),
-        user_id: user_id_from_imported_id(row["user_id"]),
-        post_action_type_id: 2,
+        post_id: post_id,
+        user_id: user_id,
+        post_action_type_id: post_action_type_id,
         created_at: to_datetime(row["created_at"]),
       }
     end
@@ -710,10 +711,15 @@ class BulkImport::Generic < BulkImport::Base
        WHERE upload_ids IS NOT NULL
     SQL
 
+    existing_upload_references =
+      UploadReference.where(target_type: "Post").pluck(:upload_id, :target_id).to_set
+
     create_upload_references(post_uploads) do |row|
       upload_id = upload_id_from_original_id(row["upload_id"])
       post_id = post_id_from_imported_id(row["post_id"])
-      next if !upload_id || !post_id
+
+      next unless upload_id && post_id
+      next unless existing_upload_references.add?([upload_id, post_id])
 
       { upload_id: upload_id, target_type: "Post", target_id: post_id }
     end
