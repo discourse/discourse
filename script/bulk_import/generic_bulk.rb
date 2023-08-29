@@ -619,7 +619,7 @@ class BulkImport::Generic < BulkImport::Base
 
       upload = JSON.parse(row["upload"], symbolize_names: true)
       upload[:original_id] = row["id"]
-      upload ``
+      upload
     end
 
     uploads.close
