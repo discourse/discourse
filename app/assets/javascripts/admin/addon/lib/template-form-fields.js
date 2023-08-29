@@ -4,7 +4,7 @@ export const templateFormFields = [
   {
     type: "checkbox",
     structure: `- type: checkbox
-  id: enter-id-here
+  id: ${I18n.t("admin.form_templates.field_placeholders.id")}
   attributes:
     label: "${I18n.t("admin.form_templates.field_placeholders.label")}"
   validations:
@@ -13,7 +13,7 @@ export const templateFormFields = [
   {
     type: "input",
     structure: `- type: input
-  id: enter-id-here
+  id: ${I18n.t("admin.form_templates.field_placeholders.id")}
   attributes:
     label: "${I18n.t("admin.form_templates.field_placeholders.label")}"
     placeholder: "${I18n.t(
@@ -25,7 +25,7 @@ export const templateFormFields = [
   {
     type: "textarea",
     structure: `- type: textarea
-  id: enter-id-here
+  id: ${I18n.t("admin.form_templates.field_placeholders.id")}
   attributes:
     label: "${I18n.t("admin.form_templates.field_placeholders.label")}"
     placeholder: "${I18n.t(
@@ -37,7 +37,7 @@ export const templateFormFields = [
   {
     type: "dropdown",
     structure: `- type: dropdown
-  id: enter-id-here
+  id: ${I18n.t("admin.form_templates.field_placeholders.id")}
   choices:
     - "${I18n.t("admin.form_templates.field_placeholders.choices.first")}"
     - "${I18n.t("admin.form_templates.field_placeholders.choices.second")}"
@@ -54,7 +54,7 @@ export const templateFormFields = [
   {
     type: "upload",
     structure: `- type: upload
-  id: enter-id-here
+  id: ${I18n.t("admin.form_templates.field_placeholders.id")}
   attributes:
     file_types: ".jpg, .png, .gif"
     allow_multiple: false
@@ -65,7 +65,7 @@ export const templateFormFields = [
   {
     type: "multiselect",
     structure: `- type: multi-select
-  id: enter-id-here
+  id: ${I18n.t("admin.form_templates.field_placeholders.id")}
   choices:
     - "${I18n.t("admin.form_templates.field_placeholders.choices.first")}"
     - "${I18n.t("admin.form_templates.field_placeholders.choices.second")}"
