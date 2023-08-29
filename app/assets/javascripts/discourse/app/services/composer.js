@@ -909,7 +909,8 @@ export default class ComposerService extends Service {
     if (this.siteSettings.experimental_form_templates) {
       if (
         this.formTemplateIds?.length > 0 &&
-        !this.get("model.replyingToTopic")
+        !this.get("model.replyingToTopic") &&
+        !this.get("model.editingPost")
       ) {
         const formTemplateData = prepareFormTemplateData(
           document.querySelector("#form-template-form")
