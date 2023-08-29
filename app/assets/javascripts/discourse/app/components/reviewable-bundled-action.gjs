@@ -12,7 +12,7 @@ export default class ReviewableBundledAction extends Component {
   <template>
     {{#if this.multiple}}
       <DropdownSelectBox
-        class={{concatClass
+        @class={{concatClass
           "reviewable-action-dropdown btn-icon-text"
           (dasherize this.first.id)
           this.first.button_class
