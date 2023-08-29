@@ -5291,3 +5291,6 @@ en:
       invalid_yaml: "is not a valid YAML string"
       invalid_type: "contains an invalid template type: %{type} (valid types are: %{valid_types})"
       missing_type: "is missing a field type"
+      missing_id: "is missing a field id"
+      duplicate_ids: "has duplicate ids"
+      reserved_id: "has a reserved keyword as id: %{id}"

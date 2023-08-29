@@ -6,9 +6,11 @@
     {{#each this.parsedTemplate as |content|}}
       {{component
         (concat "form-template-field/" content.type)
+        id=content.id
         attributes=content.attributes
         choices=content.choices
         validations=content.validations
+        value=(get @initialValues content.id)
       }}
     {{/each}}
   </div>
