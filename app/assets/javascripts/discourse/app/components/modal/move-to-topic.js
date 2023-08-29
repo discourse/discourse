@@ -156,7 +156,5 @@ export default class MoveToTopic extends Component {
     } finally {
       this.saving = false;
     }
-
-    return false;
   }
 }
