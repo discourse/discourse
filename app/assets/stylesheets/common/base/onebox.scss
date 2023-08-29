@@ -454,6 +454,7 @@ pre.onebox code {
   }
 
   .github-icon-container {
+    position: absolute;
     display: flex;
     align-items: center;
     margin-right: 10px;
@@ -474,6 +475,9 @@ pre.onebox code {
 
   .github-info-container {
     width: 100%;
+    h4 {
+      margin: 0 0 10px 50px;
+    }
   }
 
   .github-info {
