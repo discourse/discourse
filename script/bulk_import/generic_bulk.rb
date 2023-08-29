@@ -623,7 +623,7 @@ class BulkImport::Generic < BulkImport::Base
 
       upload = JSON.parse(row["upload"], symbolize_names: true)
       upload[:original_id] = row["id"]
-      upload
+      upload ``
     end
 
     uploads.close
@@ -655,10 +655,8 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_upload_references
-    puts "", "Importing upload references..."
-
+    puts "", "Importing upload references for user avatars..."
     start_time = Time.now
-
     DB.exec(<<~SQL)
       INSERT INTO upload_references (upload_id, target_type, target_id, created_at, updated_at)
       SELECT ua.custom_upload_id, 'UserAvatar', ua.id, ua.created_at, ua.updated_at
@@ -673,7 +671,10 @@ class BulkImport::Generic < BulkImport::Base
        )
           ON CONFLICT DO NOTHING
     SQL
+    puts "  Import took #{(Time.now - start_time).to_i} seconds."
 
+    puts "", "Importing upload references for categories..."
+    start_time = Time.now
     DB.exec(<<~SQL)
       INSERT INTO upload_references (upload_id, target_type, target_id, created_at, updated_at)
       SELECT upload_id, 'Category', target_id, created_at, updated_at
@@ -699,8 +700,25 @@ class BulkImport::Generic < BulkImport::Base
                         )
           ON CONFLICT DO NOTHING
     SQL
+    puts "  Import took #{(Time.now - start_time).to_i} seconds."
 
-    puts "  Imported upload references in #{(Time.now - start_time).to_i} seconds."
+    puts "", "Importing upload references for posts..."
+    post_uploads = query(<<~SQL)
+      SELECT p.id AS post_id, u.value AS upload_id
+        FROM posts p,
+             JSON_EACH(p.upload_ids) u
+       WHERE upload_ids IS NOT NULL
+    SQL
+
+    create_upload_references(post_uploads) do |row|
+      upload_id = upload_id_from_original_id(row["upload_id"])
+      post_id = post_id_from_imported_id(row["post_id"])
+      next if !upload_id || !post_id
+
+      { upload_id: upload_id, target_type: "Post", target_id: post_id }
+    end
+
+    post_uploads.close
   end
 
   def update_uploaded_avatar_id

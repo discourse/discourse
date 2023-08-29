@@ -251,7 +251,6 @@ class BulkImport::Base
     @last_muted_user_id = last_id(MutedUser)
     @last_user_history_id = last_id(UserHistory)
     @last_user_avatar_id = last_id(UserAvatar)
-    @last_upload_reference_id = last_id(UploadReference)
     @last_upload_id = last_id(Upload)
 
     puts "Loading categories indexes..."
@@ -341,11 +340,6 @@ class BulkImport::Base
     end
     if @last_user_avatar_id > 0
       @raw_connection.exec("SELECT setval('#{UserAvatar.sequence_name}', #{@last_user_avatar_id})")
-    end
-    if @last_upload_reference_id > 0
-      @raw_connection.exec(
-        "SELECT setval('#{UploadReference.sequence_name}', #{@last_upload_reference_id})",
-      )
     end
     if @last_upload_id > 0
       @raw_connection.exec("SELECT setval('#{Upload.sequence_name}', #{@last_upload_id})")
@@ -1020,7 +1014,6 @@ class BulkImport::Base
   end
 
   def process_upload_reference(upload_reference)
-    upload_reference[:id] = @last_upload_reference_id += 1
     upload_reference[:created_at] ||= NOW
     upload_reference[:updated_at] ||= NOW
     upload_reference
