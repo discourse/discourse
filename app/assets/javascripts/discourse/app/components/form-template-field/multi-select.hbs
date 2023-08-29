@@ -27,7 +27,7 @@
     {{#each @choices as |choice|}}
       <option
         value={{choice}}
-        selected={{includes @value choice}}
+        selected={{this.isSelected choice}}
       >{{choice}}</option>
     {{/each}}
   </select>
