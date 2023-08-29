@@ -345,7 +345,9 @@
       .discourse-tag {
         display: inline; // tags need to stay inline in order for them to truncate
         vertical-align: unset;
-        color: var(--header_primary-very-high) !important; //override the !important in tagging
+        color: var(
+          --header_primary-very-high
+        ) !important; //override the !important in tagging
       }
     }
   }
