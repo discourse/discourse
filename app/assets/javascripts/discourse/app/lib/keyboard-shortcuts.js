@@ -803,9 +803,7 @@ export default {
   },
 
   _onScrollEndsCallback() {
-    document
-      .querySelector(".topic-post.selected a:not([tabindex='-1'])")
-      ?.focus();
+    document.querySelector(".topic-post.selected span.tabLoc")?.focus();
   },
 
   categoriesTopicsList() {
