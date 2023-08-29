@@ -40,8 +40,9 @@ class SiteSettingsTask
   end
 
   def self.names
-    site_settings = SiteSetting.all_settings(include_hidden: true)
-    site_settings.map { |site_setting| site_setting[:setting].to_s }
+    SiteSetting
+      .all_settings(include_hidden: true)
+      .map { |site_setting| site_setting[:setting].to_s }
   end
 
   def self.rg_installed?
@@ -49,7 +50,12 @@ class SiteSettingsTask
   end
 
   def self.directory_path(directory_name)
-    File.expand_path(File.join(Dir.pwd, "..", directory_name))
+    all_the_parent_dir = ENV["ALL_THE_PARENT_DIR"]
+    if all_the_parent_dir
+      File.expand_path(File.join(all_the_parent_dir, directory_name))
+    else
+      File.expand_path(File.join(Dir.pwd, "..", directory_name))
+    end
   end
 
   def self.directories_to_check

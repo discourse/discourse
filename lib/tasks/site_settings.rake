@@ -55,19 +55,25 @@ task "site_settings:find_dead" => :environment do
     exit 1
   end
 
+  if !ENV["ALL_THE_PARENT_DIR"]
+    puts "To specify a custom parent directory for all-the-themes & all-the-plugins"
+    puts "use the ALL_THE_PARENT_DIR ENV var."
+  end
   puts "Checking #{setting_names.count} settings in these directories:"
   puts directories
   puts
 
   setting_names.each do |setting_name|
-    count = 0
-    count = SiteSettingsTask.rg_search_count("SiteSetting.#{setting_name}", directories[0])
+    count = SiteSettingsTask.rg_search_count("SiteSetting.#{setting_name}", directories.first)
     count =
-      SiteSettingsTask.rg_search_count("siteSettings.#{setting_name}", directories[0]) if count == 0
+      SiteSettingsTask.rg_search_count(
+        "siteSettings.#{setting_name}",
+        directories.first,
+      ) if count.zero?
     directories.each do |directory|
-      count = SiteSettingsTask.rg_search_count(setting_name, directory) if count == 0
+      count = SiteSettingsTask.rg_search_count(setting_name, directory) if count.zero?
     end
-    if count == 0
+    if count.zero?
       print setting_name
       dead_settings << setting_name
     else
