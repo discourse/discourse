@@ -596,7 +596,6 @@ en:
       chat_message:
         personal: "messaged you in a personal chat"
         group: "messaged you in a group personal chat"
-        active_channel: "messaged you in an active channel"
         group_multiple:
           one: "and %{username2} messaged you in a group personal chat"
           other: "and %{count} others messaged you in a group personal chat"
