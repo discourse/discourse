@@ -174,6 +174,14 @@ export default class ComposerService extends Service {
     return this.model.category?.get("form_template_ids");
   }
 
+  get formTemplateInitialValues() {
+    return this._formTemplateInitialValues;
+  }
+
+  set formTemplateInitialValues(values) {
+    return this.set("_formTemplateInitialValues", values);
+  }
+
   @discourseComputed("showPreview")
   toggleText(showPreview) {
     return showPreview
@@ -246,7 +254,6 @@ export default class ComposerService extends Service {
   canEditTags(canEditTitle, creatingPrivateMessage) {
     const isPrivateMessage =
       creatingPrivateMessage || this.get("model.topic.isPrivateMessage");
-
     return (
       canEditTitle &&
       this.site.can_tag_topics &&

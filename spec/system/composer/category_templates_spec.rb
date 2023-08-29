@@ -8,6 +8,7 @@ describe "Composer Form Templates", type: :system do
       name: "Bug Reports",
       template:
         "- type: input
+  id: full-name
   attributes:
     label: What is your full name?
     placeholder: John Doe
@@ -16,13 +17,13 @@ describe "Composer Form Templates", type: :system do
     )
   end
   fab!(:form_template_2) do
-    Fabricate(:form_template, name: "Feature Request", template: "- type: checkbox")
+    Fabricate(:form_template, name: "Feature Request", template: "- type: checkbox\n  id: check")
   end
   fab!(:form_template_3) do
-    Fabricate(:form_template, name: "Awesome Possum", template: "- type: dropdown")
+    Fabricate(:form_template, name: "Awesome Possum", template: "- type: dropdown\n  id: dropdown")
   end
   fab!(:form_template_4) do
-    Fabricate(:form_template, name: "Biography", template: "- type: textarea")
+    Fabricate(:form_template, name: "Biography", template: "- type: textarea\n  id: bio")
   end
   fab!(:form_template_5) do
     Fabricate(
@@ -31,12 +32,14 @@ describe "Composer Form Templates", type: :system do
       template:
         %Q(
         - type: input
+          id: full-name
           attributes:
             label: "What is your name?"
             placeholder: "John Smith"
           validations:
             required: false
         - type: upload
+          id: prescription
           attributes:
             file_types: ".jpg, .png"
             allow_multiple: false
@@ -44,6 +47,7 @@ describe "Composer Form Templates", type: :system do
             validations:
             required: true
         - type: upload
+          id: additional-docs
           attributes:
             file_types: ".jpg, .png, .pdf, .mp3, .mp4"
             allow_multiple: true

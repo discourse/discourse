@@ -1123,7 +1123,7 @@ posting:
     min: 5
     max: 255
   max_form_template_content_length:
-    default: 2000
+    default: 5000
     max: 150000
 
 email:
