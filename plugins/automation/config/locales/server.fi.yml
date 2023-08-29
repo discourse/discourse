@@ -17,6 +17,9 @@ fi:
       user_badge_granted:
         title: Käyttäjän kunniamerkki myönnetty
         doc: Käynnistää automaation, kun käyttäjälle myönnetään kunniamerkki.
+      user_first_logged_in:
+        title: Käyttäjä kirjautui sisään ensimmäisen kerran
+        doc: Käynnistää automaation, kun käyttäjä kirjautuu sisään ensimmäisen kerran.
       stalled_topic:
         title: Pysähtynyt ketju
         doc: Käynnistää automaation, kun ketju ei ole saanut uutta vastausta ketjun omistajalta tiettynä aikana. Suosittelemme, että tämä triggeri kohdistetaan tunnisteeseen tai alueeseen, koska niiden ketjujen määrä, joihin se vaikuttaa, saattaa olla erittäin suuri. Turvallisuussyistä ketjujen määrä, johon tämä vaikuttaa, on rajoitettu 250:een.
@@ -24,6 +27,9 @@ fi:
         title: API-kutsu
         description: POST-pyynnön tekeminen automaation käynnistämiseksi
         doc: POST-pyyntö tulisi lähettää osoitteeseen "/automations/:id/trigger.json" yleisellä API-avaimella.
+      category_created_edited:
+        title: Alue luotu/aluetta muokattu
+        description: Kun aluetta muokataan tai sellainen luodaan, automaatio käynnistyy
       recurring:
         title: Toistuva
       point_in_time:
@@ -69,6 +75,9 @@ fi:
       auto_responder:
         title: Automaattinen vastaus
         description: Lähettää vastauksen viestiin, joka sisältää tietyt avainsanat
+      auto_tag_topic:
+        title: Ketjun automaattinen merkintä
+        description: Lisää tunnisteita ketjuun automaattisesti
       pin_topic:
         title: Kiinnitä aihe
         description: Kiinnittää tietyn aiheen tiettynä päivänä
@@ -92,6 +101,8 @@ fi:
         doc: Kun "suspend_user_by_email" käynnistetään API-kutsulla, päätepiste odottaa, että lähetettyihin parametreihin sisältyy kelvollinen "email". Parametreja "reasons" ja "suspend_until (ISO 8601 -muoto)" voidaan myös käyttää oletusarvoisten kenttien arvojen ohittamiseen.
       user_global_notice_with_stalled_topic:
         doc: Kun tämä käynnistetään pysähtyneen ketjun kautta, ketjun omistaja saa yleisen ilmoituksen.
+      user_global_notice_with_first_accepted_solution:
+        doc: Kun tämä käynnistetään ensimmäisen hyväksytyn ratkaisun kautta, ratkaisun kirjoittaja saa yleisen ilmoituksen.
       send_pms_with_api_call:
         doc: Kun "send pms" -skriptiä käytetään "api call" -triggerin kanssa, pyyntösi "usernames"-parametria käytetään vastaanottajaluettelon täyttämiseen.
       topic_required_words:
@@ -116,3 +127,6 @@ fi:
         button_text: Valmis
       add_user_to_group_through_custom_field:
         title: "Lisää käyttäjä ryhmään käyttäjän mukautetun kentän kautta"
+      group_category_notification_default:
+        title: "Ryhmän alueen ilmoitusoletus"
+        description: "Aseta alueen oletusarvoinen ilmoitustaso ryhmän jäsenille"

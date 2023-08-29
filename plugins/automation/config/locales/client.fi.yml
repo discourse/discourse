@@ -103,6 +103,8 @@ fi:
             P6M: "Kuusi kuukautta"
             P1Y: "Yksi vuosi"
           fields:
+            restricted_category:
+              label: Rajoitettu alueeseen
             stalled_after:
               label: Triggerin viive
               description: Määrittää viiveen viimeisimmän wiki-muokkauksen ja automaation triggerin välillä
@@ -139,15 +141,21 @@ fi:
               label: Ketjun tunnus
         post_created_edited:
           fields:
+            action_type:
+              label: Toiminnon tyyppi
+              description: "Valinnainen, rajaa käynnistyksen vain luomis- tai muokkaustapahtumiin"
             valid_trust_levels:
               label: Kelvolliset luottamustasot
               description: Käynnistyy vain, jos viestin on luonut käyttäjä, jonka luottamustaso on jokin näistä, oletusarvo on mikä tahansa luottamustaso
             restricted_category:
               label: Alue
               description: Valinnainen, mahdollistaa triggerin suorittamisen rajoittamisen tähän alueeseen
+          created: Luotu
+          edited: Muokattu
         category_created_edited:
           fields:
             restricted_category:
+              label: Ylätason alue
               description: Valinnainen, mahdollistaa triggerin suorittamisen rajoittamisen tähän alueeseen
         pm_created:
           fields:
@@ -193,6 +201,7 @@ fi:
           fields:
             tags:
               label: Tunnisteet
+              description: Luettelo ketjuun lisättävistä tunnisteista.
         post:
           fields:
             creator:
@@ -205,6 +214,11 @@ fi:
           fields:
             group:
               label: Ryhmä
+            notification_level:
+              label: Ilmoitustaso
+            update_existing_members:
+              label: Päivitä nykyiset jäsenet
+              description: Päivittää ryhmän nykyisten jäsenten ilmoitustason
         user_global_notice:
           fields:
             level:

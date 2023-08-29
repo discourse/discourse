@@ -141,15 +141,21 @@ ru:
               label: Идентификатор темы
         post_created_edited:
           fields:
+            action_type:
+              label: Тип действия
+              description: "Необязательно; ограничить срабатывание только созданными или измененными событиями"
             valid_trust_levels:
               label: Допустимые уровни доверия
               description: Сработает, только если запись создана пользователем на указанных уровнях доверия. По умолчанию — любой уровень.
             restricted_category:
               label: Категория
               description: Необязательно; позволяет ограничить срабатывание триггера указанной категорией
+          created: Создано
+          edited: Изменено
         category_created_edited:
           fields:
             restricted_category:
+              label: Родительская категория
               description: Необязательно; позволяет ограничить срабатывание триггера указанной категорией
         pm_created:
           fields:
@@ -195,6 +201,7 @@ ru:
           fields:
             tags:
               label: Теги
+              description: Список тегов для добавления в тему.
         post:
           fields:
             creator:
@@ -207,6 +214,11 @@ ru:
           fields:
             group:
               label: Группа
+            notification_level:
+              label: Уровень уведомлений
+            update_existing_members:
+              label: Обновить существующих участников
+              description: Обновляет уровень уведомлений для существующих участников группы
         user_global_notice:
           fields:
             level:
