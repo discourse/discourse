@@ -689,5 +689,44 @@ describe Chat::Notifier do
         )
       end
     end
+
+    describe "personal chat messages" do
+      fab!(:dm_channel) { Fabricate(:direct_message_channel) }
+
+      before do
+        dm_user_ids = dm_channel.allowed_user_ids
+        @dm_user_1 = User.find(dm_user_ids.first)
+        @dm_user_2 = User.find(dm_user_ids.last)
+      end
+
+      it "notifies the other user when a new message is sent" do
+        msg = build_cooked_msg("Hey guys", @dm_user_1, chat_channel: dm_channel)
+        to_notify = described_class.new(msg, msg.created_at).notify_new
+
+        expect(to_notify[:direct_messages]).to contain_exactly(@dm_user_2.id)
+      end
+
+      it "does not notify users who have muted the chat channel" do
+        dm_channel.membership_for(@dm_user_1.id).update!(muted: true)
+        msg = build_cooked_msg("How are you?", @dm_user_2, chat_channel: dm_channel)
+
+        expect { described_class.new(msg, msg.created_at).notify_new }.not_to change {
+          @dm_user_1.notifications.count
+        }
+      end
+
+      it "adds correct data to the notification" do
+        msg = build_cooked_msg("Hey guys", @dm_user_1, chat_channel: dm_channel)
+        to_notify = described_class.new(msg, msg.created_at).notify_new
+        notification = Notification.where(user: @dm_user_2).first
+
+        expect(notification.data_hash[:username]).to eq(@dm_user_1.username)
+        expect(notification.data_hash[:chat_channel_id]).to eq(dm_channel.id)
+        expect(notification.data_hash[:chat_message_id]).to eq(msg.id)
+        expect(notification.data_hash[:is_direct_message_channel]).to eq(true)
+        expect(notification.data_hash[:is_group_message]).to eq(false)
+        expect(notification.data_hash[:user_ids]).to eq([@dm_user_1.id])
+      end
+    end
   end
 end

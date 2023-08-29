@@ -105,6 +105,68 @@ export default {
             };
           }
         );
+
+        api.registerNotificationTypeRenderer(
+          "chat_message",
+          (NotificationItemBase) => {
+            return class extends NotificationItemBase {
+              get linkHref() {
+                const slug = slugifyChannel({
+                  title: this.notification.data.chat_channel_title,
+                  slug: this.notification.data.chat_channel_slug,
+                });
+                return `/chat/c/${slug || "-"}/${
+                  this.notification.data.chat_channel_id
+                }/${this.notification.data.chat_message_id}`;
+              }
+
+              get linkTitle() {
+                return I18n.t("notifications.titles.chat_message");
+              }
+
+              get icon() {
+                return "comment";
+              }
+
+              get label() {
+                return formatUsername(this.notification.data.username);
+              }
+
+              get description() {
+                if (this.notification.data.is_group_message) {
+                  if (this.notification.data.username2) {
+                    if (this.notification.data.user_ids.length > 2) {
+                      return I18n.t(
+                        "notifications.chat_message.group_multiple",
+                        {
+                          username: this.notification.data.username,
+                          count: this.notification.data.user_ids.length - 1,
+                        }
+                      );
+                    } else {
+                      // only 2 users so we show the second username
+                      return I18n.t(
+                        "notifications.chat_message.group_multiple",
+                        {
+                          username: this.notification.data.username,
+                          username2: this.notification.data.username2,
+                          count: 1,
+                        }
+                      );
+                    }
+                  }
+                  return I18n.t("notifications.chat_message.group", {
+                    username: this.notification.data.username,
+                  });
+                }
+
+                return I18n.t("notifications.chat_message.personal", {
+                  username: this.notification.data.username,
+                });
+              }
+            };
+          }
+        );
       }
 
       if (api.registerUserMenuTab) {
@@ -125,6 +187,7 @@ export default {
             get count() {
               return (
                 this.getUnreadCountForType("chat_mention") +
+                this.getUnreadCountForType("chat_message") +
                 this.getUnreadCountForType("chat_invitation")
               );
             }
