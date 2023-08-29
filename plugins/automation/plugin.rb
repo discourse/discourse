@@ -53,6 +53,7 @@ after_initialize do
     lib/discourse_automation/scripts/suspend_user_by_email
     lib/discourse_automation/scripts/topic_required_words
     lib/discourse_automation/scripts/user_global_notice
+    lib/discourse_automation/scripts/user_group_membership_through_badge
     lib/discourse_automation/scripts/zapier_webhook
     lib/discourse_automation/triggers/after_post_cook
     lib/discourse_automation/triggers/api_call

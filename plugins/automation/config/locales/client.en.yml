@@ -225,6 +225,16 @@ en:
             info: Info
             success: Success
             error: Error
+        user_group_membership_through_badge:
+          fields:
+            badge_name:
+              label: Badge Name
+            group:
+              label: Group
+              description: Target group. Users with the specified badge will be added to this group
+            remove_members_without_badge:
+              label: Remove existing members without badge
+              description: Optional, Remove existing group members without the specified badge
         suspend_user_by_email:
           fields:
             suspend_until:

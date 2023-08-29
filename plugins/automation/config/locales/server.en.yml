@@ -91,6 +91,9 @@ en:
       user_global_notice:
         title: User global notice
         description: Allows to display a global notice for a user
+      user_group_membership_through_badge:
+        title: User Group Membership through Badge
+        description: Modify user group membership based on a badge
       suspend_user_by_email_with_api_call:
         doc: When triggering `suspend_user_by_email` with an api call, the endpoint expects a valid `email` to be present in the params sent. `reasons` and `suspend_until (ISO 8601 format)` can also be used to override default fields values.
       user_global_notice_with_stalled_topic:
