@@ -18,8 +18,6 @@ const KNOWN_LEGACY_MODALS = [
   "create-account",
   "create-invite-bulk",
   "create-invite",
-  "feature-topic",
-  "flag",
   "grant-badge",
   "group-default-notifications",
   "login",
