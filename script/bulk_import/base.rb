@@ -597,7 +597,7 @@ class BulkImport::Base
     dominant_color
   ]
 
-  UPLOAD_REFERENCE_COLUMNS ||= %i[id upload_id target_type target_id created_at updated_at]
+  UPLOAD_REFERENCE_COLUMNS ||= %i[upload_id target_type target_id created_at updated_at]
 
   def create_groups(rows, &block)
     create_records(rows, "group", GROUP_COLUMNS, &block)
