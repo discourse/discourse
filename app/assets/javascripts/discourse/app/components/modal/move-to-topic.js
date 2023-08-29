@@ -20,14 +20,6 @@ export default class MoveToTopic extends Component {
   @tracked selection = "new_topic";
   @tracked selectedTopicId;
 
-  saveAttrNames = [
-    "newTopic",
-    "existingTopic",
-    "newMessage",
-    "existingMessage",
-  ];
-  moveTypes = ["newTopic", "existingTopic", "newMessage", "existingMessage"];
-
   constructor() {
     super(...arguments);
     if (this.args.model.topic.isPrivateMessage) {
@@ -89,11 +81,15 @@ export default class MoveToTopic extends Component {
 
   @action
   performMove() {
-    this.moveTypes.forEach((type) => {
-      if (this[type]) {
-        this.movePostsTo(type);
-      }
-    });
+    if (this.newTopic) {
+      this.movePostsTo("newTopic");
+    } else if (this.existingTopic) {
+      this.movePostsTo("existingTopic");
+    } else if (this.newMessage) {
+      this.movePostsTo("newMessage");
+    } else if (this.existingMessage) {
+      this.movePostsTo("existingMessage");
+    }
   }
 
   @action
@@ -107,10 +103,10 @@ export default class MoveToTopic extends Component {
         destination_topic_id: this.selectedTopicId,
         chronological_order: this.chronologicalOrder,
       };
-      moveOptions = Object.assign(
-        { post_ids: this.args.model.selectedPostIds },
-        mergeOptions
-      );
+      moveOptions = {
+        post_ids: this.args.model.selectedPostIds,
+        ...mergeOptions,
+      };
     } else if (type === "existingMessage") {
       mergeOptions = {
         destination_topic_id: this.selectedTopicId,
@@ -118,10 +114,10 @@ export default class MoveToTopic extends Component {
         archetype: "private_message",
         chronological_order: this.chronologicalOrder,
       };
-      moveOptions = Object.assign(
-        { post_ids: this.args.model.selectedPostIds },
-        mergeOptions
-      );
+      moveOptions = {
+        post_ids: this.args.model.selectedPostIds,
+        ...mergeOptions,
+      };
     } else if (type === "newTopic") {
       mergeOptions = {};
       moveOptions = {
@@ -141,10 +137,13 @@ export default class MoveToTopic extends Component {
     }
 
     try {
-      const promise = this.args.model.selectedAllPosts
-        ? mergeTopic(this.args.model.topic.id, mergeOptions)
-        : movePosts(this.args.model.topic.id, moveOptions);
-      const result = await promise;
+      let result;
+      if (this.args.model.selectedAllPosts) {
+        result = await mergeTopic(this.args.model.topic.id, mergeOptions);
+      } else {
+        result = await movePosts(this.args.model.topic.id, moveOptions);
+      }
+
       this.args.closeModal();
       this.args.model.toggleMultiSelect();
       DiscourseURL.routeTo(result.url);
@@ -153,7 +152,5 @@ export default class MoveToTopic extends Component {
     } finally {
       this.saving = false;
     }
-
-    return false;
   }
 }
