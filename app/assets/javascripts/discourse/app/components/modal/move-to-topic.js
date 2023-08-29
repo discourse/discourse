@@ -20,13 +20,6 @@ export default class MoveToTopic extends Component {
   @tracked selection = "new_topic";
   @tracked selectedTopicId;
 
-  saveAttrNames = [
-    "newTopic",
-    "existingTopic",
-    "newMessage",
-    "existingMessage",
-  ];
-
   constructor() {
     super(...arguments);
     if (this.args.model.topic.isPrivateMessage) {
