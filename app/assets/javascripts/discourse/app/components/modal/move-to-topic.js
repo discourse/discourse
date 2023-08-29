@@ -107,10 +107,10 @@ export default class MoveToTopic extends Component {
         destination_topic_id: this.selectedTopicId,
         chronological_order: this.chronologicalOrder,
       };
-      moveOptions = Object.assign(
-        { post_ids: this.args.model.selectedPostIds },
-        mergeOptions
-      );
+      moveOptions = {
+        post_ids: this.args.model.selectedPostIds,
+        ...mergeOptions,
+      };
     } else if (type === "existingMessage") {
       mergeOptions = {
         destination_topic_id: this.selectedTopicId,
@@ -118,10 +118,10 @@ export default class MoveToTopic extends Component {
         archetype: "private_message",
         chronological_order: this.chronologicalOrder,
       };
-      moveOptions = Object.assign(
-        { post_ids: this.args.model.selectedPostIds },
-        mergeOptions
-      );
+      moveOptions = {
+        post_ids: this.args.model.selectedPostIds,
+        ...mergeOptions,
+      };
     } else if (type === "newTopic") {
       mergeOptions = {};
       moveOptions = {
