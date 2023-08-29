@@ -1627,7 +1627,6 @@ ja:
     enable_safe_mode: "プラグインをデバッグするためにユーザーによる安全モードの開始を許可する。"
     rate_limit_create_topic: "トピック作成後、ユーザーは (n) 秒待ってから次のトピックを作成する必要があります。"
     rate_limit_create_post: "投稿後、ユーザーは (n) 秒待ってから次の投稿を作成する必要があります。"
-    rate_limit_new_user_create_topic: "トピック作成後、新規ユーザーは (n) 秒待ってから次のトピックを作成する必要があります。"
     rate_limit_new_user_create_post: "投稿後、新規ユーザーは (n) 秒待ってから次の投稿を作成する必要があります。"
     max_likes_per_day: "ユーザーが 1 日に「いいね！」できる最大回数"
     max_flags_per_day: "ユーザーが 1 日に行える通報の回数"
@@ -2048,7 +2047,6 @@ ja:
     retain_web_hook_events_period_days: "Webhook イベントレコードを保持する日数。"
     retry_web_hook_events: "失敗した Webhook イベントを自動的に 4 回再試行する。再試行間の時間差は、1、5、25、および 125 分です。"
     revoke_api_keys_days: "未使用の API キーが自動的に取り消されるまでの日数 (0 に設定すると取り消されません)"
-    allow_user_api_keys: "ユーザー API キーの生成を許可する"
     allow_user_api_key_scopes: "ユーザー API キーに許可されるスコープのリスト"
     min_trust_level_for_user_api_key: |
       ユーザー API キーの生成に必要な信頼レベル。<br>

@@ -1702,7 +1702,6 @@ fi:
     enable_safe_mode: "Salli käyttäjän siirtyä vikasietotilaan lisäosien vianmääritystä varten."
     rate_limit_create_topic: "Ketjun aloittamisen jälkeen käyttäjän täytyy odottaa (n) sekuntia ennen toisen ketjun aloittamista."
     rate_limit_create_post: "Viestin luomisen jälkeen käyttäjän täytyy odottaa (n) sekuntia ennen uuden viestin luomista."
-    rate_limit_new_user_create_topic: "Ketjun luomisen jälkeen uuden käyttäjän täytyy odottaa (n) sekuntia ennen uuden ketjun luomista."
     rate_limit_new_user_create_post: "Viestin luomisen jälkeen uuden käyttäjän täytyy odottaa (n) sekuntia ennen uuden viestin luomista."
     max_likes_per_day: "Tykkäysten päivittäinen maksimimäärä per käyttäjä."
     max_flags_per_day: "Merkintöjen päivittäinen maksimimäärä per käyttäjä."
@@ -2124,7 +2123,6 @@ fi:
     retain_web_hook_events_period_days: "Kuinka monta päivää tietoa webhook-tapahtumista säilötään."
     retry_web_hook_events: "Yritä uudelleen epäonnistuneita webhook-tapahtumia neljästi. Aikavälit yritysten välillä ovat 1, 5, 25 ja 125 minuuttia."
     revoke_api_keys_days: "Kuinka monen päivän kuluttua käyttämätön API-avain mitätöidään automaattisesti (0 tarkoittaa ei koskaan)"
-    allow_user_api_keys: "Salli käyttäjä-API-avainten muodostaminen"
     allow_user_api_key_scopes: "Luettelo käyttäjä-API-avaimiin liittyvistä oikeuksista"
     min_trust_level_for_user_api_key: |
       Käyttäjän API-avaimien luomiseen vaadittu luottamustaso.<br>
