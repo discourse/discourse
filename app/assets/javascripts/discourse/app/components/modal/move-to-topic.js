@@ -26,7 +26,6 @@ export default class MoveToTopic extends Component {
     "newMessage",
     "existingMessage",
   ];
-  moveTypes = ["newTopic", "existingTopic", "newMessage", "existingMessage"];
 
   constructor() {
     super(...arguments);
@@ -89,11 +88,15 @@ export default class MoveToTopic extends Component {
 
   @action
   performMove() {
-    this.moveTypes.forEach((type) => {
-      if (this[type]) {
-        this.movePostsTo(type);
-      }
-    });
+    if (this.newTopic) {
+      this.movePostsTo("newTopic");
+    } else if (this.existingTopic) {
+      this.movePostsTo("existingTopic");
+    } else if (this.newMessage) {
+      this.movePostsTo("newMessage");
+    } else if (this.existingMessage) {
+      this.movePostsTo("existingMessage");
+    }
   }
 
   @action
