@@ -147,6 +147,7 @@ tr_TR:
         group_mentions_disabled_multiple:
           one: "%{group_name} ve %{count} grup daha bahsetmeye izin vermiyor."
           other: "%{group_name} ve %{count} grup daha bahsetmeye izin vermiyor."
+        channel_wide_mentions_disallowed: "Bu kanalda @here ve @all mentionları devre dışı bırakılmıştır."
         too_many_members: "%{group_name} çok fazla üyeye sahip. Kimseye bildirim gönderilmedi."
         too_many_members_multiple:
           one: "%{group_name} ve %{count} grubun daha çok fazla üyesi var. Kimse bilgilendirilmedi."
@@ -452,7 +453,6 @@ tr_TR:
         title: "Sohbet"
         export_messages:
           title: "Sohbet mesajlarını dışa aktar"
-          description: "Dışa aktarma şu anda son 6 aydaki en son 10.000 mesajla sınırlıdır."
           create_export: "Dışa aktarma oluştur"
           export_has_started: "Dışa aktarma başladı. Hazır olduğunda bir kişisel mesaj alacaksınız."
       direct_messages:
@@ -550,7 +550,6 @@ tr_TR:
       thread:
         title: "Başlık"
         view_thread: Konuyu görüntüle
-        default_title: "Konu"
         replies:
           one: "%{count} yanıt"
           other: "%{count} yanıt"

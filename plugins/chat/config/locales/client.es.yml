@@ -88,7 +88,7 @@ es:
       expand: "Ampliar el cajón de chat"
       confirm_flag: "¿Seguro que quieres denunciar el mensaje de %{username}?"
       deleted:
-        one: "Se eliminó un mensaje. [ver]"
+        one: "Se eliminó un mensaje. [view]"
         other: "Se han eliminado %{count} mensajes. [ver todos]"
       hidden: "Se ha ocultado un mensaje. [ver]"
       delete: "Eliminar"
@@ -449,7 +449,6 @@ es:
         title: "Chat"
         export_messages:
           title: "Exportar mensajes de chat"
-          description: "Actualmente, la exportación está limitada a los 10 000 mensajes más recientes de los últimos 6 meses."
           create_export: "Crear exportación"
           export_has_started: "La exportación ha comenzado. Recibirás un MP cuando esté lista."
       direct_messages:
@@ -547,7 +546,6 @@ es:
       thread:
         title: "Título"
         view_thread: Ver hilo
-        default_title: "Hilo"
         replies:
           one: "%{count} respuesta"
           other: "%{count} respuestas"

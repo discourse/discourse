@@ -274,7 +274,6 @@ gl:
     more_replies:
       one: "%{count} resposta máis"
       other: "%{count} respostas máis"
-    loading: "Cargando discusión..."
     permalink: "Ligazón permanente"
     imported_from: "Este é un tema de discusión complementario da entrada %{link}"
     in_reply_to: "▶ %{username}"
@@ -2084,18 +2083,6 @@ gl:
   admin:
     email:
       sent_test: "enviado!"
-    user:
-      merge_user:
-        updating_username: "Actualizando nome de usuario..."
-        changing_post_ownership: "Cambiando o propietario da publicación ..."
-        merging_given_daily_likes: "Combinando os gústame diarios..."
-        merging_post_timings: "Combinando os intres de publicación..."
-        merging_user_visits: "Combinando as visitas de usuario..."
-        updating_site_settings: "Actualizando a configuración do sitio..."
-        updating_user_stats: "Actualizando as estatísticas de usuario..."
-        merging_user_attributes: "Combinando os atributos de usuario..."
-        updating_user_ids: "Actualizando os id de usuario..."
-        deleting_source_user: "Eliminando o usuario orixe..."
   user:
     deactivated: "Desactivado debido a excesivos correos devoltos con «%{email}»."
     deactivated_by_staff: "Desactivado polo equipo"
@@ -3727,8 +3714,6 @@ gl:
         description: "Restaurar a publicación para que todos os usuarios a poidan ver."
       delete_single:
         title: "Eliminar"
-      delete:
-        title: "Eliminar..."
       delete_and_ignore_replies:
         confirm: "Confirma que quere eliminar as respostas desta publicación tamén?"
       delete_and_agree_replies:
@@ -3751,7 +3736,6 @@ gl:
       approve_user:
         title: "Aprobar usuario"
       reject_user:
-        title: "Eliminar usuario..."
         delete:
           title: "Eliminar usuario"
           description: "O usuario será eliminado do foro."

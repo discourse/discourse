@@ -129,7 +129,6 @@ id:
       admin:
         export_messages:
           title: "Ekspor pesan obrolan"
-          description: "Ekspor saat ini dibatasi hingga 10.000 pesan terbaru dalam 6 bulan terakhir."
           create_export: "Buat ekspor"
           export_has_started: "Ekspor telah dimulai. Anda akan menerima PM jika sudah siap."
       incoming_webhooks:
@@ -148,9 +147,9 @@ id:
         flags: "Flags"
       thread:
         title: "Judul"
-        default_title: "Utas"
         replies:
           other: "%{count} balasan"
+        label: Utas
         original_message:
           started_by: "Dimulai oleh"
         settings: "Pengaturan"

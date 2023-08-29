@@ -149,7 +149,6 @@ bg:
     more_replies:
       one: "още един отговор"
       other: "%{count} повече отговори"
-    loading: "Зареждане на дискусия..."
     permalink: "Постоянен адрес"
     imported_from: "Това е упътваща дискусионна тема за първоначалното влизане в %{link}"
     in_reply_to: "▶ %{username}"

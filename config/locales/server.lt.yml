@@ -245,7 +245,6 @@ lt:
       few: "dar %{count} atsakymai"
       many: "dar %{count} atsakymų"
       other: "dar %{count} atsakymų"
-    loading: "Kraunama diskusija..."
     permalink: "Nuoroda"
     in_reply_to: "▶ %{username}"
     replies:
@@ -1583,16 +1582,6 @@ lt:
   admin:
     email:
       sent_test: "išsiųsta!"
-    user:
-      merge_user:
-        updating_username: "Atnaujinamas vartotojo vardas ..."
-        changing_post_ownership: "Keičiama įrašo nuosavybė ..."
-        merging_given_daily_likes: "Sujungiama atsižvelgiant į kasdienius mėgstamus dalykus ..."
-        merging_user_visits: "Vartotojų apsilankymų sujungimas..."
-        updating_site_settings: "Atnaujinami svetainės nustatymai ..."
-        updating_user_stats: "Vartotojo statistikos atnaujinimas..."
-        merging_user_attributes: "Sujungiami naudotojo atributai ..."
-        deleting_source_user: "Ištrinamas šaltinio vartotojas ..."
   user:
     deactivated_by_staff: "Išjungė darbuotojai"
     activated_by_staff: "Aktyvuoja darbuotojai"
@@ -2755,8 +2744,6 @@ lt:
         description: "Atkurkite įrašą, kad visi vartotojai jį matytų."
       delete_single:
         title: "Pašalinti"
-      delete:
-        title: "Ištrinti..."
       delete_and_ignore_replies:
         confirm: "Ar tikrai norite ištrinti ir įrašo atsakymus?"
       delete_and_agree_replies:
@@ -2778,7 +2765,6 @@ lt:
       approve_user:
         title: "Patvirtinti vartotoją"
       reject_user:
-        title: "Ištrinti vartotoją..."
         delete:
           title: "Ištrinti vartotoją"
           description: "Vartotojas bus pašalintas iš forumo."
@@ -2786,7 +2772,6 @@ lt:
           title: "Ištrinti ir blokuoti vartotoją"
       reject:
         title: "Atmesti"
-        bundle_title: "Atmesti..."
       reject_and_suspend:
         title: "Atmesti ir sustabdyti vartotoją"
       reject_and_silence:

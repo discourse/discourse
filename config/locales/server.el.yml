@@ -232,7 +232,6 @@ el:
     more_replies:
       one: "μια ακόμη απάντηση"
       other: "%{count} ακόμη απαντήσεις"
-    loading: "Φόρτωση Συζήτησης..."
     permalink: "Μόνιμος σύνδεσμος"
     imported_from: "Αυτό είναι ένα συνοδό θέμα συζητησης για την αρχική ανάρτηση στο %{link}"
     in_reply_to: "▶ %{username}"
@@ -2460,7 +2459,6 @@ el:
       approve:
         title: "Έγκριση"
       reject_user:
-        title: "Διαγραφή Χρήστη..."
         delete:
           title: "Διαγραφή Χρήστη"
       reject:

@@ -214,7 +214,7 @@ fi:
       local_login_cannot_be_disabled_if_second_factor_enforced: "Et voi poistaa paikallista kirjautumista käytöstä, jos kaksivaiheinen tunnistus on pakollinen. Kun poistat kaksivaiheisen tunnistuksen pakollisuuden, voit ottaa käyttöön paikallisen kirjautumisen."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Et voi ottaa S3-latauksia käyttöön, koska S3-lataukset ovat käytössä globaalisti, ja käyttöönotto sivustonlaajuisesti voi aiheuttaa kriittisiä latauksiin liittyviä ongelmia"
       cors_origins_should_not_have_trailing_slash: "CORS-poluissa ei tulisi olla kauttaviivaa (/) lopussa."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Käyttäjäagenttien täytyy sisältää vähintään kolme merkkiä aitojen käyttäjien virheellisen rajoittamisen välttämiseksi."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Käyttäjäagenttien täytyy sisältää vähintään kolme merkkiä aitojen käyttäjien pyyntöjen virheellisen rajoittamisen välttämiseksi."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Et voi lisätä asetukseen mitään seuraavista arvoista: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "Et voi poistaa kuvan metatietojen poistoa käytöstä, jos 'composer media optimization image enabled' on käytössä. Poista 'composer media optimization image enabled' käytöstä ennen kuvien metatietojen poiston poistamista käytöstä."
       twitter_summary_large_image_no_svg: "Twitterin yhteenvetokuvat, joita käytetään twitter:image-metatiedoissa, eivät voi olla .svg-kuvia."
@@ -325,7 +325,6 @@ fi:
     more_replies:
       one: "%{count} muu kommentti"
       other: "%{count} muuta kommenttia"
-    loading: "Ladataan keskustelua ..."
     permalink: "Pysyvä linkki"
     imported_from: "Tämä on oheiskeskusteluketju alkuperäiselle viestille osoitteessa %{link}"
     in_reply_to: "▶ %{username}"
@@ -1611,7 +1610,7 @@ fi:
     enable_badges: "Ota kunniamerkkijärjestelmä käyttöön"
     max_favorite_badges: "Enimmäismäärä kunniamerkkejä, jonka käyttäjä voi valita"
     whispers_allowed_groups: "Salli tiettyjen ryhmien jäsenten yksityinen viestintä ketjuissa."
-    hidden_post_visible_groups: "Salli näiden ryhmien jäsenten tarkastella piilotettuja viestejä. Henkilökunnan jäsenet voivat aina tarkastella piilotettuja viestejä."
+    hidden_post_visible_groups: "Salli näiden ryhmien jäsenten tarkastella piilotettuja viestejä. Ylläpidon jäsenet voivat aina tarkastella piilotettuja viestejä."
     allow_index_in_robots_txt: "Määritä robots.txt-tiedostossa, että hakurobotit saavat indeksoida tätä sivustoa. Poikkeuksellisissa tapauksissa voit <a href='%{base_path}/admin/customize/robots'>ohittaa robots.txt:n</a> pysyvästi."
     blocked_email_domains: "Pystyviivalla eroteltu luettelo sähköpostiverkkotunnuksista, joilla käyttäjät eivät saa rekisteröidä tilejä. Määritettyjen verkkotunnusten alaverkkotunnukset käsitellään automaattisesti. Jokerimerkkisymboleita * ja ? ei tueta. Esimerkki: mailinator.com|trashmail.net"
     allowed_email_domains: "Pystyviivalla eroteltu luettelo sähköpostiverkkotunnuksista, joilla käyttäjien TÄYTYY rekisteröidä tilit. Määritettyjen verkkotunnusten alaverkkotunnukset käsitellään automaattisesti. VAROITUS: käyttäjiä, joiden sähköpostiverkkotunnus ei ole luettelossa, ei sallita!"
@@ -1825,7 +1824,7 @@ fi:
     title_min_entropy: "Ketjun otsikossa vaadittava minimientropia (uniikkeja merkkejä, muilla kuin englannin kielen merkeillä on suurempi painotus)."
     body_min_entropy: "Ketjun leipätekstissä vaadittava minimientropia (uniikkeja merkkejä, muilla kuin englannin kielen merkeillä on suurempi painotus)."
     allow_uppercase_posts: "Salli pelkillä isoilla kirjaimilla kirjoittaminen otsikossa tai viestin leipätekstissä."
-    max_consecutive_replies: "Peräkkäisten viestien määrä, jonka käyttäjä voi julkaista ketjussa ennen kuin vastaaminen estetään. Rajoitus ei koske ketjun omistajaa, sivuston henkilökuntaa tai alueen valvojia."
+    max_consecutive_replies: "Peräkkäisten viestien määrä, jonka käyttäjä voi julkaista ketjussa ennen kuin vastaaminen estetään. Rajoitus ei koske ketjun omistajaa, sivuston ylläpitoa tai alueen valvojia."
     enable_filtered_replies_view: '"(n) vastausta" -painike kutistaa kaikki muut viestit ja näyttää vain nykyisen viestin ja sen vastaukset.'
     title_fancy_entities: "Muunna tavalliset ASCII-merkit hienommiksi HTML-merkinnöiksi ketjujen otsikoissa SmartyPantsin avulla <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Ketjun otsikon minimipituus, kunnes sitä verrataan muihin samankaltaisiin ketjuihin."
@@ -2013,8 +2012,8 @@ fi:
     permalink_normalizations: "Sovella tätä säännöllistä lauseketta ennen pysyvien linkkien sovittamista, esim. /(topic.*)\\?.*/\\1 poistaa hakulausekkeet ketjujen reiteistä. Muoto on regex+string, \\1 jne. avulla pääset käsiksi captureihin."
     global_notice: "Näytä kaikilla sivuilla kaikille käyttäjille KIIREELLISESTÄ HÄTÄTAPAUKSESTA kertova banneri, jota ei voi piilottaa. Vaihda tyhjäksi piilottaaksesi sen (HTML sallittu)."
     disable_system_edit_notifications: "Poistaa järjestelmäkäyttäjän muokkausilmoitukset käytöstä, kun 'download_remote_images_to_local' on asetettu."
-    disable_category_edit_notifications: "Poista ketjujen alueiden muokkausilmoitukset käytöstä. Tämä sisältää ketjut, jotka on ns. \"julkaistu\" (esim. jaetut luonnokset)."
-    disable_tags_edit_notifications: "Poista ketjujen tunnisteiden muokkausilmoitukset käytöstä. Tämä sisältää ketjut, jotka on ns. \"julkaistu\" (esim. jaetut luonnokset)."
+    disable_category_edit_notifications: "Poista aiheiden kategorioiden muokkausilmoitukset käytöstä. Tämä aiheet, jotka on ns. 'julkaistu' (esim. jaetut luonnokset)."
+    disable_tags_edit_notifications: "Poista aiheiden tunnisteiden muokkausilmoitukset käytöstä. Tämä aiheet, jotka on ns. 'julkaistu' (esim. jaetut luonnokset)."
     notification_consolidation_threshold: "Kuinka monta tykkäys- tai jäsenhakemusilmoitusta tulee saada, jotta ne yhdistetään yhdeksi. Arvo 0 poistaa käytöstä."
     likes_notification_consolidation_window_mins: "Kesto minuutteina, jonka aikana tykkäysilmoitukset yhdistetään yhdeksi ilmoitukseksi, kun raja on saavutettu. Rajan voi määrittää asetuksella `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Poista ketjun kiinnitys automaattisesti, kun käyttäjä on sen lopussa."
@@ -2188,7 +2187,7 @@ fi:
     experimental_new_new_view_groups: 'KOKEELLINEN: ota käyttöön uusien ketjujen luettelo, joka yhdistää lukemattomat ja uudet ketjut, ja linkitä sivupalkin "Kaikki"-linkki siihen.'
     enable_custom_sidebar_sections: "KOKEELLINEN: ota mukautetut sivupalkin osiot käyttöön"
     experimental_topics_filter: "KOKEELLINEN: ottaa käyttöön kokeellisen aiheiden suodatuspolun osoitteella /filter"
-    experimental_search_menu_groups: "KOKEELLINEN: ottaa käyttöön uuden hakuvalikon, joka on päivitetty käyttämään glimmeriä"
+    experimental_search_menu_groups: "KOKEELLINEN: ottaa käyttöön uuden hakuvalikon, joka on päivitetty käyttämään tuiketta"
     enable_experimental_lightbox: "KOKEELLINEN: Korvaa kuvien oletusarvoinen lightbox-tehoste uudistetulla tyylillä."
     page_loading_indicator: "Määritä latausilmaisin, joka näkyy Discoursessa sivujen navigointien aikana. \"Spinner\" on koko sivun ilmaisin. \"Slider\" näyttää kapean palkin ruudun yläosassa."
     errors:
@@ -2421,18 +2420,6 @@ fi:
   admin:
     email:
       sent_test: "lähetetty!"
-    user:
-      merge_user:
-        updating_username: "Päivitetään käyttäjätunnusta..."
-        changing_post_ownership: "Muutetaan viestin omistajuutta..."
-        merging_given_daily_likes: "Yhdistetään annettuja päivittäisiä tykkäyksiä..."
-        merging_post_timings: "Yhdistetään viestien ajoituksia..."
-        merging_user_visits: "Yhdistetään käyttäjien käyntejä..."
-        updating_site_settings: "Päivitetään sivuston asetuksia..."
-        updating_user_stats: "Päivitetään käyttäjätilastoja..."
-        merging_user_attributes: "Yhdistetään käyttäjien määritteitä..."
-        updating_user_ids: "Päivitetään käyttäjätunnuksia..."
-        deleting_source_user: "Poistetaan lähdekäyttäjää..."
   user:
     deactivated: "Käyttäjätili poistettiin käytöstä osoitteesta '%{email}' palautettujen sähköpostien vuoksi."
     deactivated_by_staff: "Henkilökunta poisti käytöstä"
@@ -4062,7 +4049,7 @@ fi:
 
       Muut, jotka saavat foorumille lähettämääsi sisältöä, saattavat rikkoa ehtoja, joiden mukaan lisensoit sisältösi. Hyväksyt, että yritys ei ole vastuussa sinulle näistä rikkomuksista tai niiden seurauksista.
 
-      <h2 id="heading--responsibility"><a href="#heading--responsibility">Vastuusi</a></h2>
+      <h2 id="heading--responsibility"><a href=”#heading--responsibility”>Vastuusi</a></h2>
 
       Hyväksyt suojaavasi yritystä muiden oikeudellisilta vaateilta, jotka liittyvät näiden ehtojen rikkomiseesi tai näiden ehtojen rikkomiseen muiden toimesta tiliäsi käyttämällä foorumilla. Sekä sinä että yritys hyväksytte ilmoittavanne toiselle osapuolelle oikeudellisista vaateista, joissa saatat joutua suojaamaan yritystä, mahdollisimman pian. Jos yritys ei ilmoita sinulle oikeudellisesta vaateesta viipymättä, sinun ei tarvitse suojata yritystä vahingoilta, joita vastaan olisit voinut puolustautua tai jotka olisit voinut välttää saadessasi ilmoituksen viipymättä. Hyväksyt sallivasi yrityksen hallita niiden oikeudellisten vaateiden tutkintaa, puolustusta ja ratkaisua, joissa sinun täytyisi suojata yritystä, ja tekeväsi yhteistyötä näissä pyrkimyksissä. Yritys hyväksyy, ettei se hyväksy ratkaisua, joka hyväksyy vahinkosi tai asettaa sinulle velvollisuuksia, ilman etukäteistä hyväksyntääsi.
 
@@ -4715,8 +4702,6 @@ fi:
         description: "Hyväksy liputtamalla ja piilota julkaisu + lähetä käyttäjälle automattisesti yksityisviesti, jossa häntä pyydetään muokkaamaan sitä."
       delete_single:
         title: "Poista"
-      delete:
-        title: "Poista..."
       delete_and_ignore:
         title: "Ohita liputus ja poista viesti"
         description: "Ohita liputus poistamalla se jonosta ja poista viesti; jos viesti on ensimmäinen viesti, poista myös ketju. "
@@ -4751,7 +4736,6 @@ fi:
       approve_user:
         title: "Hyväksy käyttäjä"
       reject_user:
-        title: "Poista käyttäjä..."
         delete:
           title: "Poista käyttäjä"
           description: "Käyttäjä poistetaan foorumista."
@@ -4760,7 +4744,6 @@ fi:
           description: "Käyttäjä poistetaan ja hänen IP-osoitteensa sekä sähköpostiosoitteensa estetään."
       reject:
         title: "Hylkää"
-        bundle_title: "Hylkää..."
       reject_and_suspend:
         title: "Hylkää ja hyllytä käyttäjä"
       reject_and_silence:

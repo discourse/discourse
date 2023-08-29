@@ -2150,7 +2150,7 @@ de:
     remove_muted_tags_from_latest: "Themen, die nur mit stummgeschalteten Tags versehen sind, nicht in der Liste der aktuellen Themen anzeigen"
     force_lowercase_tags: "Kleinschreibung für alle neuen Schlagwörter erzwingen."
     create_post_for_category_and_tag_changes: "Einen kleinen Aktionsbeitrag erstellen, wenn sich die Kategorie oder die Schlagwörter eines Themas ändern"
-    watched_precedence_over_muted: "Benachrichtige mich über Themen in Kategorien oder mit Schlagwörtern, die ich beobachte und die auch zu einem Thema gehören, das ich stummgeschaltet habe"
+    watched_precedence_over_muted: "Benachrichtige mich über Themen in Kategorien oder Schlagwörtern, die ich beobachte und die auch zu einem Thema gehören, das ich stummgeschaltet habe"
     company_name: "Firmenname"
     governing_law: "Anzuwendendes Recht"
     city_for_disputes: "Stadt für Rechtsstreitigkeiten"
@@ -4720,7 +4720,7 @@ de:
       delete_single:
         title: "Löschen"
       delete:
-        title: "Löschen …"
+        title: "Löschen …"
       delete_and_ignore:
         title: "Meldung ignorieren und Beitrag löschen"
         description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst und den Beitrag löschst; wenn es der erste Beitrag ist, wird auch das Thema gelöscht. "
@@ -4740,6 +4740,8 @@ de:
         description: "Beitrag wiederherstellen, sodass alle Benutzer ihn sehen können."
       disagree:
         title: "Nein"
+      discard_post:
+        title: "Beitrag verwerfen"
       ignore:
         title: "Ignorieren"
       ignore_and_do_nothing:
@@ -4755,7 +4757,7 @@ de:
       approve_user:
         title: "Benutzer genehmigen"
       reject_user:
-        title: "Lösche Benutzer …"
+        title: "Benutzer löschen …"
         delete:
           title: "Benutzer löschen"
           description: "Der Benutzer wird aus dem Forum gelöscht."
@@ -4764,7 +4766,7 @@ de:
           description: "Der Benutzer wird gelöscht und wir blockieren seine IP- und E-Mail-Adresse."
       reject:
         title: "Ablehnen"
-        bundle_title: "Ablehnen …"
+        bundle_title: "Ablehnen …"
       reject_and_suspend:
         title: "Benutzer ablehnen und sperren"
       reject_and_silence:

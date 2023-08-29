@@ -294,7 +294,6 @@ ur:
     more_replies:
       one: "%{count} مزید جواب"
       other: "%{count}مزید جوابات"
-    loading: "بحث لَوڈ ہو رہی ہے..."
     permalink: "دائمی لِنک"
     imported_from: "یہ %{link}پر اصل اندراج کے لیے ایک ساتھی بحث کا موضوع ہے"
     in_reply_to: "◀ %{username}"
@@ -3445,8 +3444,6 @@ ur:
         description: "پوسٹ کو بحال کریں تاکہ تمام صارفین اِسے دیکھ سکیں۔"
       delete_single:
         title: "حذف کریں"
-      delete:
-        title: "حذف کریں..."
       delete_and_ignore_replies:
         confirm: "کیا آپ واقعی اِس پوسٹ پر جوابات بھی حذف کرنا چاہتے ہیں؟"
       delete_and_agree_replies:
@@ -3469,7 +3466,6 @@ ur:
       approve_user:
         title: "صارف منظور کریں"
       reject_user:
-        title: "صارف حذف کریں..."
         delete:
           title: "صارف حذف کریں"
           description: "اِس صارف کو فورم سے حذف کردیا جائے گا۔"

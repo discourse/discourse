@@ -324,7 +324,6 @@ nl:
     more_replies:
       one: "Nog %{count} antwoord"
       other: "Nog %{count} antwoorden"
-    loading: "Discussie laden..."
     permalink: "Permalink"
     imported_from: "Dit discussietopic is een voortzetting van het oorspronkelijke topic op %{link}"
     in_reply_to: "▶ %{username}"
@@ -1605,8 +1604,8 @@ nl:
     whispers_allowed_groups: "Sta privécommunicatie binnen topics toe voor leden van bepaalde groepen."
     hidden_post_visible_groups: "Sta leden van deze groepen toe om verborgen berichten te bekijken. Personeelgebruikers kunnen altijd verborgen berichten bekijken."
     allow_index_in_robots_txt: "Geef in robots.txt op dat deze website door webzoekmachines mag worden geïndexeerd. In uitzonderlijke gevallen kun je <a href='%{base_path}/admin/customize/robots'>robots.txt</a> blijvend negeren."
-    blocked_email_domains: "Een door pijpsymbolen gescheiden lijst van e-maildomeinen waarop gebruikers geen accounts mogen registreren. Subdomeinen worden automatisch afgehandeld voor de opgegeven domeinen. De jokertekens * en ? worden niet ondersteund. Voorbeeld: mailinator.com|trashmail.net"
-    allowed_email_domains: "Een door pijpsymbolen gescheiden lijst van e-maildomeinen waarop gebruikers een account MOETEN registreren. Subdomeinen worden automatisch afgehandeld voor de opgegeven domeinen. De jokertekens * en ? worden niet ondersteund. WAARSCHUWING: gebruikers met andere e-maildomeinen dan de vermelde zijn niet toegestaan!"
+    blocked_email_domains: "Een door sluistekens ('pijpsymbolen') gescheiden lijst van e-maildomeinen waarop gebruikers geen accounts mogen registreren. Subdomeinen worden automatisch afgehandeld voor de opgegeven domeinen. De jokertekens * en ? worden niet ondersteund. Voorbeeld: mailinator.com|trashmail.net"
+    allowed_email_domains: "Een door sluistekens ('pijpsymbolen') gescheiden lijst van e-maildomeinen waarop gebruikers een account MOETEN registreren. Subdomeinen worden automatisch afgehandeld voor de opgegeven domeinen. De jokertekens * en ? worden niet ondersteund. WAARSCHUWING: gebruikers met andere e-maildomeinen dan de vermelde zijn niet toegestaan!"
     normalize_emails: "Controleren of het genormaliseerde e-mailadres uniek is. Normalisering van e-mailadressen verwijdert alle punten uit de gebruikersnaam en alles tussen de symbolen + en @."
     auto_approve_email_domains: "Gebruikers met e-mailadressen uit deze domeinenlijst worden automatisch goedgekeurd. Subdomeinen worden automatisch afgehandeld voor de opgegeven domeinen. De jokertekens * en ? worden niet ondersteund."
     hide_email_address_taken: "Laat gebruikers niet weten dat er een account bestaat met een bepaald e-mailadres bij het registreren. bij het herstellen van een wachtwoord. Volledig e-mailadres wordt vereist voor wachtwoordherstelverzoeken."
@@ -2412,18 +2411,6 @@ nl:
   admin:
     email:
       sent_test: "verzonden!"
-    user:
-      merge_user:
-        updating_username: "Gebruikersnaam bijwerken..."
-        changing_post_ownership: "Eigendom van bericht wijzigen..."
-        merging_given_daily_likes: "Gegeven dagelijkse likes samenvoegen..."
-        merging_post_timings: "Berichttijden samenvoegen..."
-        merging_user_visits: "Gebruikersbezoeken samenvoegen..."
-        updating_site_settings: "Site-instellingen bijwerken..."
-        updating_user_stats: "Gebruikersstatistieken bijwerken ..."
-        merging_user_attributes: "Gebruikerskenmerken samenvoegen..."
-        updating_user_ids: "Gebruikers-ID's bijwerken..."
-        deleting_source_user: "Brongebruiker verwijderen..."
   user:
     deactivated: "Gedeactiveerd vanwege te veel gebouncete e-mails naar '%{email}'."
     deactivated_by_staff: "Gedeactiveerd door medewerker"
@@ -4201,7 +4188,7 @@ nl:
 
       <a name="changes"></a>
 
-      ## [Wijzigingen in ons privacybeleid](#changes)
+      ## Wijzigingen in ons privacybeleid](#changes)
 
       Als we besluiten om ons privacybeleid te wijzigen, publiceren we de wijzigingen op deze pagina.
 
@@ -4513,8 +4500,8 @@ nl:
     title: "Veilige modus starten"
     description: "In de veilige modus kun je je site testen zonder thema's of plug-inaanpassingen aan de clientzijde te laden. Plug-inaanpassingen aan de serverzijde blijven ingeschakeld."
     no_themes: "Thema's en themacomponenten uitschakelen"
-    no_unofficial_plugins: "Niet-officiële plug-inaanpassingen aan clientzijde uitschakelen"
-    no_plugins: "Alle plug-inaanpassingen aan clientzijde uitschakelen"
+    no_unofficial_plugins: "Schakel niet-officiële plug-inaanpassingen aan de clientzijde uit"
+    no_plugins: "Schakel alle plug-inaanpassingen aan de clientzijde uit"
     enter: "Veilige modus starten"
     must_select: "Je moet ten minste één optie selecteren om naar de veilige modus te gaan."
   wizard:
@@ -4715,8 +4702,6 @@ nl:
         description: "Ga akkoord met de markering en verberg dit bericht, stuur de gebruiker automatisch een bericht waarin deze wordt aangespoord het gemarkeerde bericht te bewerken."
       delete_single:
         title: "Verwijderen"
-      delete:
-        title: "Verwijderen..."
       delete_and_ignore:
         title: "Markering negeren en bericht verwijderen"
         description: "Negeer de markering door deze uit de wachtrij te verwijderen en verwijder het bericht. Als dit het eerste bericht is, wordt het topic ook verwijderd. "
@@ -4751,7 +4736,6 @@ nl:
       approve_user:
         title: "Gebruiker goedkeuren"
       reject_user:
-        title: "Gebruiker verwijderen..."
         delete:
           title: "Gebruiker verwijderen"
           description: "De gebruiker wordt van het forum verwijderd."
@@ -4760,7 +4744,6 @@ nl:
           description: "De gebruiker wordt verwijderd, en het IP- en e-mailadres ervan geblokkeerd."
       reject:
         title: "Weigeren"
-        bundle_title: "Weigeren..."
       reject_and_suspend:
         title: "Gebruiker weigeren en schorsen"
       reject_and_silence:

@@ -278,7 +278,6 @@ ko:
     configure: "임베딩 환경설정"
     more_replies:
       other: "%{count}개 댓글 더 보기"
-    loading: "토론 로드 중..."
     permalink: "Permalink"
     imported_from: "%{link}에 있는 원본 엔트리의 동반 토론 주제입니다."
     in_reply_to: "▶ %{username}"
@@ -2118,18 +2117,6 @@ ko:
   admin:
     email:
       sent_test: "전송되었습니다!"
-    user:
-      merge_user:
-        updating_username: "아이디 업데이트 중..."
-        changing_post_ownership: "게시물 소유자 변경 중..."
-        merging_given_daily_likes: "보낸 일일 좋아요 병합 중..."
-        merging_post_timings: "게시물 시간 병합 중..."
-        merging_user_visits: "사용자 방문 병합 중..."
-        updating_site_settings: "사이트 설정 업데이트 중..."
-        updating_user_stats: "사용자 통계 업데이트 중..."
-        merging_user_attributes: "사용자 어트리뷰트 병합 중..."
-        updating_user_ids: "사용자 ID 업데이트 중..."
-        deleting_source_user: "소스 사용자 삭제 중..."
   user:
     deactivated: "'%{email}'에 반송 이메일이 너무 많아 비활성화되었습니다."
     deactivated_by_staff: "운영진에 의해 비활성화됨"
@@ -3883,8 +3870,6 @@ ko:
         description: "모든 사용자가 볼 수 있도록 게시물을 복원합니다."
       delete_single:
         title: "삭제"
-      delete:
-        title: "삭제..."
       delete_and_ignore_replies:
         confirm: "게시물에 대한 댓글도 삭제할까요?"
       delete_and_agree_replies:
@@ -3907,7 +3892,6 @@ ko:
       approve_user:
         title: "사용자 승인"
       reject_user:
-        title: "사용자 삭제..."
         delete:
           title: "사용자 삭제"
           description: "사용자가 포럼에서 삭제됩니다."
@@ -3916,7 +3900,6 @@ ko:
           description: "사용자가 삭제되고 IP 및 이메일 주소가 차단됩니다."
       reject:
         title: "거부"
-        bundle_title: "거부..."
       reject_and_suspend:
         title: "사용자 거부 정지"
       reject_and_silence:

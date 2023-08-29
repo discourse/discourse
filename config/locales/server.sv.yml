@@ -324,7 +324,6 @@ sv:
     more_replies:
       one: "Ytterligare %{count} svar"
       other: "Ytterligare %{count} svar"
-    loading: "Laddar diskussion..."
     permalink: "Permalänk"
     imported_from: "Detta är ett kopplat diskussionsämne till det ursprungliga inlägget på %{link}"
     in_reply_to: "▶ %{username}"
@@ -2411,18 +2410,6 @@ sv:
   admin:
     email:
       sent_test: "skickat!"
-    user:
-      merge_user:
-        updating_username: "Uppdaterar användarnamn..."
-        changing_post_ownership: "Ändrar äganderätt till inlägget..."
-        merging_given_daily_likes: "Sammanslagning av dagliga gillanden..."
-        merging_post_timings: "Sammanslagning av tidpunkter för inlägg..."
-        merging_user_visits: "Sammanslagning av användarbesök..."
-        updating_site_settings: "Uppdaterar webbplatsinställningar..."
-        updating_user_stats: "Uppdaterar användarstatistik..."
-        merging_user_attributes: "Sammanslagning av användarattribut..."
-        updating_user_ids: "Uppdaterar användar-id..."
-        deleting_source_user: "Tar bort källanvändare..."
   user:
     deactivated: "Inaktiverades på grund av för många studsade e-postmeddelanden till '%{email}'."
     deactivated_by_staff: "Avaktiverades av personalen"
@@ -4524,8 +4511,6 @@ sv:
         description: "Godkänn flaggning och dölj detta inlägg + sänd automatiskt användaren ett meddelande som uppmanar om att redigera det."
       delete_single:
         title: "Radera"
-      delete:
-        title: "Radera..."
       delete_and_ignore:
         title: "Ignorera flaggning och radera inlägget"
         description: "Ignorera flaggningen genom att ta bort den från kön och radera inlägget. Om det är det första inlägget, radera ämnet också. "
@@ -4560,7 +4545,6 @@ sv:
       approve_user:
         title: "Godkänn användare"
       reject_user:
-        title: "Radera användare..."
         delete:
           title: "Ta bort användare"
           description: "Användaren kommer att raderas från forumet."
@@ -4569,7 +4553,6 @@ sv:
           description: "Användaren kommer att raderas, och vi blockerar också hens IP och e-postadress."
       reject:
         title: "Avvisa"
-        bundle_title: "Avvisa..."
       reject_and_suspend:
         title: "Avvisa och stäng av användare"
       reject_and_silence:

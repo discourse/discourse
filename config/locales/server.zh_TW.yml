@@ -218,7 +218,6 @@ zh_TW:
     configure: "配置嵌入"
     more_replies:
       other: "%{count} 個更多回覆"
-    loading: "討論串載入中⋯"
     permalink: "永久連結"
     imported_from: "這是一個已從原 %{link} 中分離的主題"
     in_reply_to: "▶ %{username}"
@@ -3020,8 +3019,6 @@ zh_TW:
         description: "將話題變更為對所有人顯示。"
       delete_single:
         title: "刪除"
-      delete:
-        title: "刪除..."
       delete_and_ignore_replies:
         confirm: "您確定要刪除對該貼文的留言嗎？"
       delete_and_agree_replies:
@@ -3043,7 +3040,6 @@ zh_TW:
       approve_user:
         title: "批准使用者"
       reject_user:
-        title: "刪除使用者..."
         delete:
           title: "刪除使用者"
           description: "該使用者將從論壇中刪除。"
