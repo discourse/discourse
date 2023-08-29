@@ -17,6 +17,7 @@ import ChangeTimestampModal from "discourse/components/modal/change-timestamp";
 import EditTopicTimerModal from "discourse/components/modal/edit-topic-timer";
 import FeatureTopicModal from "discourse/components/modal/feature-topic";
 import FlagModal from "discourse/components/modal/flag";
+import MoveToTopicModal from "discourse/components/modal/move-to-topic";
 
 const SCROLL_DELAY = 500;
 
@@ -212,9 +213,16 @@ const TopicRoute = DiscourseRoute.extend({
 
   @action
   moveToTopic() {
-    showModal("move-to-topic", {
-      model: this.modelFor("topic"),
-      title: "topic.move_to.title",
+    const topicController = this.controllerFor("topic");
+    this.modal.show(MoveToTopicModal, {
+      model: {
+        topic: this.modelFor("topic"),
+        selectedPostsCount: topicController.selectedPostsCount,
+        selectedAllPosts: topicController.selectedAllPosts,
+        selectedPosts: topicController.selectedPosts,
+        selectedPostIds: topicController.selectedPostIds,
+        toggleMultiSelect: topicController.toggleMultiSelect,
+      },
     });
   },
 
