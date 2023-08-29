@@ -141,10 +141,13 @@ export default class MoveToTopic extends Component {
     }
 
     try {
-      const promise = this.args.model.selectedAllPosts
-        ? mergeTopic(this.args.model.topic.id, mergeOptions)
-        : movePosts(this.args.model.topic.id, moveOptions);
-      const result = await promise;
+      let result;
+      if (this.args.model.selectedAllPosts) {
+        result = await mergeTopic(this.args.model.topic.id, mergeOptions);
+      } else {
+        result = await movePosts(this.args.model.topic.id, moveOptions);
+      }
+
       this.args.closeModal();
       this.args.model.toggleMultiSelect();
       DiscourseURL.routeTo(result.url);
