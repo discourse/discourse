@@ -42,3 +42,9 @@
     {{/if}}
   {{/each}}
 {{/if}}
+
+{{#each this.components as |c|}}
+  {{#let (component c) as |Component|}}
+    <Component @outletArgs={{this.outletArgsWithDeprecations}} />
+  {{/let}}
+{{/each}}

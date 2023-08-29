@@ -10,6 +10,7 @@ import { helperContext } from "discourse-common/lib/helpers";
 import deprecated from "discourse-common/lib/deprecated";
 import { get } from "@ember/object";
 import { cached } from "@glimmer/tracking";
+import { registeredPluginOutletComponents } from "discourse/lib/registered-plugin-outlet-components";
 
 const PARENT_VIEW_DEPRECATION_MSG =
   "parentView should not be used within plugin outlets. Use the available outlet arguments, or inject a service which can provide the context you need.";
@@ -77,6 +78,10 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
     }
 
     return result;
+  }
+
+  get components() {
+    return registeredPluginOutletComponents[this.args.name] || [];
   }
 
   get connectors() {

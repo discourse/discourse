@@ -125,6 +125,7 @@ import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/
 import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
 import { registerHashtagType } from "discourse/lib/hashtag-autocomplete";
 import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
+import { registerPluginOutletComponents } from "discourse/lib/registered-plugin-outlet-components";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -2416,6 +2417,22 @@ class PluginApi {
    */
   addBulkActionButton(opts) {
     _addBulkButton(opts);
+  }
+
+  /**
+   * EXPERIMENTAL: Do not use.
+   *
+   * Renders a component in a plugin outlet.
+   *
+   * ```
+   * import MyComponent from "theme-name/components/my-component";
+   *
+   * api.renderInPluginOutlet("above-discovery-categories", MyComponent);
+   * ```
+   *
+   */
+  renderInPluginOutlet(outletName, component) {
+    registerPluginOutletComponents(outletName, component);
   }
 }
 
