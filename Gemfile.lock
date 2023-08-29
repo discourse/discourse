@@ -120,7 +120,7 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    css_parser (1.14.0)
+    css_parser (1.15.0)
       addressable
     dartsass-ruby (3.0.1)
       sass-embedded (~> 1.54)
