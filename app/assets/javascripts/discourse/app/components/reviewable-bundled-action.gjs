@@ -13,7 +13,8 @@ export default class ReviewableBundledAction extends Component {
     {{#if this.multiple}}
       <DropdownSelectBox
         @class={{concatClass
-          "reviewable-action-dropdown btn-icon-text"
+          "reviewable-action-dropdown"
+          "btn-icon-text"
           (dasherize this.first.id)
           this.first.button_class
         }}
@@ -44,7 +45,7 @@ export default class ReviewableBundledAction extends Component {
   @service site;
 
   get multiple() {
-    this.args.bundle.actions.length > 1;
+    return this.args.bundle.actions.length > 1;
   }
 
   get first() {
