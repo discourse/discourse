@@ -244,7 +244,7 @@ describe "Composer Form Templates", type: :system do
 
     category_page.visit(category_with_upload_template)
     category_page.new_topic_button.click
-    attach_file "upload-your-prescription-uploader",
+    attach_file "prescription-uploader",
                 "#{Rails.root}/spec/fixtures/images/logo.png",
                 make_visible: true
     composer.fill_title(topic_title)
@@ -257,11 +257,9 @@ describe "Composer Form Templates", type: :system do
   end
 
   it "doesn't allow uploading an invalid file type" do
-    topic_title = "Bruce Wayne's Medication"
-
     category_page.visit(category_with_upload_template)
     category_page.new_topic_button.click
-    attach_file "upload-your-prescription-uploader",
+    attach_file "prescription-uploader",
                 "#{Rails.root}/spec/fixtures/images/animated.gif",
                 make_visible: true
     expect(find("#dialog-holder .dialog-body p", visible: :all)).to have_content(
@@ -274,10 +272,10 @@ describe "Composer Form Templates", type: :system do
 
     category_page.visit(category_with_upload_template)
     category_page.new_topic_button.click
-    attach_file "upload-your-prescription-uploader",
+    attach_file "prescription-uploader",
                 "#{Rails.root}/spec/fixtures/images/logo.png",
                 make_visible: true
-    attach_file "any-additional-docs-uploader",
+    attach_file "additional-docs-uploader",
                 [
                   "#{Rails.root}/spec/fixtures/media/small.mp3",
                   "#{Rails.root}/spec/fixtures/media/small.mp4",

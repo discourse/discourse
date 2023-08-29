@@ -24,7 +24,12 @@ module(
     });
 
     test("renders a component based on the component type found in the content YAML", async function (assert) {
-      const content = `- type: checkbox\n- type: input\n- type: textarea\n- type: dropdown\n- type: upload\n- type: multi-select`;
+      const content = `- type: checkbox\n  id: checkbox\n
+- type: input\n  id: name
+- type: textarea\n  id: notes
+- type: dropdown\n  id: dropdown
+- type: upload\n  id: upload
+- type: multi-select\n  id: multi`;
       const componentTypes = [
         "checkbox",
         "input",

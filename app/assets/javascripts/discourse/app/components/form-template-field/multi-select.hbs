@@ -25,7 +25,10 @@
       >{{@attributes.none_label}}</option>
     {{/if}}
     {{#each @choices as |choice|}}
-      <option value={{choice}} selected={{includes choice @value}}>{{choice}}</option>
+      <option
+        value={{choice}}
+        selected={{includes choice @value}}
+      >{{choice}}</option>
     {{/each}}
   </select>
 </div>

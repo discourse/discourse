@@ -15,8 +15,10 @@
         />
       {{/if}}
       <form id="form-template-form">
-        <FormTemplateField::Wrapper @id={{this.selectedFormTemplateId}}
-                                    @initialValues={{@formTemplateInitialValues}} />
+        <FormTemplateField::Wrapper
+          @id={{this.selectedFormTemplateId}}
+          @initialValues={{@formTemplateInitialValues}}
+        />
       </form>
     {{else}}
       <div
