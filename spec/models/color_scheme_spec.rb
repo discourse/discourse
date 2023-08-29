@@ -154,7 +154,7 @@ RSpec.describe ColorScheme do
       resolved = color_scheme.resolved_colors
       expect(resolved["primary"]).to eq("121212") # From db
       expect(resolved["secondary"]).to eq("123123") # From custom scheme
-      expect(resolved["tertiary"]).to eq("0088cc") # From `foundation/colors.scss`
+      expect(resolved["tertiary"]).to eq("016db1") # From `foundation/colors.scss`
     ensure
       ColorScheme::CUSTOM_SCHEMES.delete(custom_scheme_id)
     end
