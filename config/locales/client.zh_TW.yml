@@ -3780,6 +3780,7 @@ zh_TW:
           dropdown: "下拉"
         validations_modal:
           table_headers:
+            key: "金鑰"
             type: "類型"
             description: "簡述"
           validations:

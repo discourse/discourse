@@ -276,8 +276,8 @@ fi:
       title: "Aiheeseen liittyviä viestejä"
       see_all: 'Katso <a href="%{path}">kaikki viestit</a> käyttäjältä @%{username}...'
     suggested_topics:
-      title: "Ehdotettuja ketjuja"
-      pm_title: "Viestiehdotuksia"
+      title: "Ketjuehdotukset"
+      pm_title: "Viestiehdotukset"
     about:
       simple_title: "Tietoa"
       title: "Tietoja kohteesta %{title}"

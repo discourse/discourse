@@ -72,6 +72,9 @@ es:
       minimum_length_not_met:
         one: "El mensaje es demasiado corto, debe tener un mínimo de %{count} carácter."
         other: "El mensaje es demasiado corto, debe tener un mínimo de %{count} caracteres."
+      message_too_long:
+        one: "El mensaje es demasiado largo, los mensajes deben tener un máximo de %{count} carácter."
+        other: "El mensaje es demasiado largo, los mensajes deben tener un máximo de %{count} caracteres."
       draft_too_long: "El borrador es demasiado largo."
       max_reactions_limit_reached: "No se permiten nuevas reacciones en este mensaje."
       message_move_invalid_channel: "El canal de origen y el de destino deben ser canales públicos."
