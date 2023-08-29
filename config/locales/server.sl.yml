@@ -858,17 +858,6 @@ sl:
   admin:
     email:
       sent_test: "poslano!"
-    user:
-      merge_user:
-        updating_username: "Posodabljanje uporabniškega imena ..."
-        changing_post_ownership: "Spreminjanje lastništva objave ..."
-        merging_given_daily_likes: "Združevanje danih dnevnih všečkov ..."
-        merging_user_visits: "Združevanje obiskov uporabnikov ..."
-        updating_site_settings: "Posodabljanje nastavitev mesta..."
-        updating_user_stats: "Posodabljanje uporabniške statistike ..."
-        merging_user_attributes: "Združevanje uporabniških atributov..."
-        updating_user_ids: "Posodabljanje uporabniških ID-jev ..."
-        deleting_source_user: "Brisanje izvornega uporabnika..."
   user:
     email:
       does_not_exist: "N/A"
@@ -2007,8 +1996,6 @@ sl:
         description: "Povrni prispevek tako da ga lahko vidijo vsi uporabniki"
       delete_single:
         title: "Izbriši"
-      delete:
-        title: "Izbriši..."
       delete_and_ignore_replies:
         confirm: "Ali ste prepričani, da hočete izbrisati tudi odgovore na prispevek?"
       delete_and_agree_replies:
@@ -2030,7 +2017,6 @@ sl:
       approve_user:
         title: "Odobri uporabnika"
       reject_user:
-        title: "Izbriši uporabnika..."
         delete:
           title: "Izbriši uporabnika"
           description: "Ta uporabnik bo izbrisan iz foruma."

@@ -276,7 +276,6 @@ pt:
     more_replies:
       one: "mais %{count} resposta"
       other: "mais %{count} respostas"
-    loading: "A carregar Discussão..."
     permalink: "Hiperligação Permanente"
     imported_from: "Este é um tópico de discussão de acompanhamento para a entrada original em %{link}"
     in_reply_to: "▶ %{username}"
@@ -2146,7 +2145,6 @@ pt:
       approve:
         title: "Aprovar"
       reject_user:
-        title: "Eliminar Utilizador..."
         delete:
           title: "Eliminar Utilizador"
       reject:

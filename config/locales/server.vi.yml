@@ -266,7 +266,6 @@ vi:
     configure: "Định cấu hình nhúng"
     more_replies:
       other: "còn %{count} câu trả lời"
-    loading: "Đang tải cuộc thảo luận"
     permalink: "Liên kết cố định"
     imported_from: "Đây là cuộc thảo luận đi kèm chủ đề gốc tại %{link}"
     in_reply_to: "▶ %{username}"
@@ -2220,7 +2219,6 @@ vi:
       approve_user:
         title: "Phê duyệt người dùng"
       reject_user:
-        title: "Xóa người dùng..."
         delete:
           title: "Xóa tài khoản"
         block:

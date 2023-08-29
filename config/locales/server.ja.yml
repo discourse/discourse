@@ -312,7 +312,6 @@ ja:
     configure: "埋め込みを構成"
     more_replies:
       other: "他 %{count} 件の返信"
-    loading: "ディスカッションを読み込み中…"
     permalink: "パーマリンク"
     imported_from: "これは、元のエントリ (%{link}) に関連するディスカッショントピックです"
     in_reply_to: "▶ %{username}"
@@ -1862,7 +1861,7 @@ ja:
     pop3_polling_password: "ポーリングを行う POP3 アカウントのパスワードです。"
     pop3_polling_delete_from_server: "サーバーからメールを削除する。注意: これを無効にした場合、メールの受信トレイを手動でクリーンアップする必要があります"
     log_mail_processing_failures: "すべてのメール処理の失敗を <a href='%{base_path}/logs' target='_blank'>/logs</a> に記録する"
-    email_in: "ユーザーがメール経由で新規トピックを投稿できるようにします。この設定を有効にすると、グループとカテゴリの受信メールアドレスを構成できるようになります。"
+    email_in: "ユーザーがメール経由で新規トピックを作成できるようにします。この設定を有効にすると、グループとカテゴリの受信メールアドレスを構成できるようになります。"
     email_in_min_trust: "メールでのトピック作成を許可する最低信頼レベル"
     email_in_authserv_id: "受信メールに認証チェックを実行するサービスの識別子。この構成方法については、<a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> をご覧ください。"
     email_in_spam_header: "迷惑を検出するためのメールヘッダー。"
@@ -2114,7 +2113,7 @@ ja:
     experimental_topics_filter: "実験的: /filter で実験的なトピックフィルターのルートを有効にします"
     experimental_search_menu_groups: "実験的: glimmer を使用するようにアップグレードされた新しい検索メニューを有効にします"
     enable_experimental_lightbox: "実験的: デフォルトの画像ライトボックスを改良されたデザインに置き換えます。"
-    page_loading_indicator: "Discourse 内のページナビゲーション中に表示される読み込みインジケーターを構成します。'Spinner' はページ全体のインジケーターです。'Slider' は画面上部に細いバーを表示します。"
+    page_loading_indicator: "Discourse 内のページナビゲーション中に表示される読み込みインジケーターを構成します。「スピナー」はページ全体のインジケーターです。「スライダー」は画面上部に細いバーを表示します。"
     errors:
       invalid_css_color: "無効な色です。色名または 16 進数値を入力してください。"
       invalid_email: "無効なメールアドレスです。"
@@ -2326,18 +2325,6 @@ ja:
   admin:
     email:
       sent_test: "送信完了！"
-    user:
-      merge_user:
-        updating_username: "ユーザー名を更新中…"
-        changing_post_ownership: "投稿の所有権を変更中…"
-        merging_given_daily_likes: "付与した 1 日の「いいね！」をマージ中…"
-        merging_post_timings: "投稿のタイミングをマージ中…"
-        merging_user_visits: "ユーザーの訪問をマージ中…"
-        updating_site_settings: "サイト設定を更新中…"
-        updating_user_stats: "ユーザー統計を更新中…"
-        merging_user_attributes: "ユーザー属性をマージ中…"
-        updating_user_ids: "ユーザー ID を更新中…"
-        deleting_source_user: "ソースユーザーを削除中…"
   user:
     deactivated: "'%{email}' からのバウンスメールが多すぎるため無効化されました。"
     deactivated_by_staff: "スタッフによる無効化"
@@ -4593,8 +4580,6 @@ ja:
         description: "通報に同意し、この投稿を非表示にします。さらに、ユーザーに編集を求めるメッセージを自動送信します。"
       delete_single:
         title: "削除"
-      delete:
-        title: "削除…"
       delete_and_ignore:
         title: "通報を無視して投稿を削除する"
         description: "通報をキューから削除して通報を無視し、投稿を削除します。最初の投稿である場合は、トピックも削除します。 "
@@ -4629,7 +4614,6 @@ ja:
       approve_user:
         title: "ユーザーの承認"
       reject_user:
-        title: "ユーザーの削除…"
         delete:
           title: "ユーザーの削除"
           description: "ユーザーはフォーラムから削除されます。"
@@ -4638,7 +4622,6 @@ ja:
           description: "ユーザーは削除され、その IP とメールアドレスはブロックされます。"
       reject:
         title: "却下"
-        bundle_title: "拒否..."
       reject_and_suspend:
         title: "ユーザーの拒否と凍結"
       reject_and_silence:

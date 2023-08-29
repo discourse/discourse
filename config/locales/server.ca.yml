@@ -226,7 +226,6 @@ ca:
     more_replies:
       one: "%{count} resposta més"
       other: "%{count} respostes més "
-    loading: "Carregant la discussió..."
     permalink: "Enllaç permanent "
     imported_from: "Aquesta discussió és derivada de l'entrada original de %{link}"
     in_reply_to: "▶ %{username}"
@@ -2974,8 +2973,6 @@ ca:
         description: "Restaura la publicació de manera que tots els usuaris puguin veure-la."
       delete_single:
         title: "Suprimeix"
-      delete:
-        title: "Suprimeix ..."
       delete_and_ignore_replies:
         confirm: "Esteu segur que també voleu suprimir les respostes a la publicació?"
       delete_and_agree_replies:
@@ -2998,7 +2995,6 @@ ca:
       approve_user:
         title: "Aprova l'usuari"
       reject_user:
-        title: "Suprimeix l'usuari..."
         delete:
           title: "Suprimeix l'usuari"
           description: "L'usuari serà suprimit del fòrum."

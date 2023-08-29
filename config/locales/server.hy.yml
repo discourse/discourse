@@ -212,7 +212,6 @@ hy:
     more_replies:
       one: "%{count} պատասխան ևս"
       other: "ևս %{count} պատասխան"
-    loading: "Քննարկման Բեռնում..."
     permalink: "Մշտահղում"
     imported_from: "Սա գործընկերային քննարկման թեմա է %{link} սկզբնական մուտքի համար"
     in_reply_to: "▶ %{username}"
@@ -2919,7 +2918,6 @@ hy:
       approve:
         title: "Հաստատել"
       reject_user:
-        title: "Ջնջել Օգտատիրոջը..."
         delete:
           title: "Ջնջել Օգտատիրոջը"
       reject:

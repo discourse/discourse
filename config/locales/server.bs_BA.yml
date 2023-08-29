@@ -137,7 +137,6 @@ bs_BA:
       one: "još %{count} odgovor"
       few: "još %{count} odgovora"
       other: "još %{count} odgovora"
-    loading: "Učitavanje rasprave..."
     permalink: "Permalink"
     imported_from: "Ovo je prateća tema rasprave za originalni unos na %{link}"
     in_reply_to: "▶ %{username}"
@@ -1091,7 +1090,6 @@ bs_BA:
       approve:
         title: "Odobri"
       reject_user:
-        title: "Delete User..."
         delete:
           title: "Delete User"
       reject:

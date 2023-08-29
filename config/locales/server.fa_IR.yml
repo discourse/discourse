@@ -184,7 +184,6 @@ fa_IR:
     more_replies:
       one: "%{count} پاسخ دیگر"
       other: "%{count} پاسخ دیگر"
-    loading: "بارگزاری بحث..."
     permalink: " پیوند یکتا"
     imported_from: "این بحث‌وگفتگوی همراه برای ورود اصلی در %{link} است"
     in_reply_to: "◀ %{username}"
@@ -2338,12 +2337,10 @@ fa_IR:
       approve:
         title: "تایید"
       reject_user:
-        title: "حذف کاربر..."
         delete:
           title: "حذف کاربر"
       reject:
         title: "رد کردن"
-        bundle_title: "رد کردن..."
   fallback_username: "کاربران"
   user_status:
     errors:

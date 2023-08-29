@@ -164,7 +164,6 @@ sk:
       few: "%{count} ďalšie odpovede"
       many: "%{count} ďalších odpovedí"
       other: "%{count} ďalších odpovedí"
-    loading: "Nahrávanie Diskusie ..."
     permalink: "Trvalý odkaz"
     imported_from: "Toto je sprievodná diskusia k pôvodnej téme na %{link}"
     in_reply_to: "▶ %{username}"
@@ -1416,7 +1415,6 @@ sk:
       approve:
         title: "Schváliť"
       reject_user:
-        title: "Odstrániť používateľa..."
         delete:
           title: "Odstrániť používateľa"
       reject:

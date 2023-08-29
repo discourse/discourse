@@ -116,7 +116,6 @@ sq:
     more_replies:
       one: "edhe %{count} përgjigje "
       other: "janë %{count} përgjigje"
-    loading: "Duke Ngarkuar Diskutimin..."
     permalink: "Permalink"
     imported_from: "This is a companion discussion topic for the original entry at %{link}"
     in_reply_to: "▶ %{username}"
@@ -1413,7 +1412,6 @@ sq:
       approve:
         title: "Aprovo"
       reject_user:
-        title: "Fshij Anëtarin..."
         delete:
           title: "Fshij Anëtarin"
       reject:
