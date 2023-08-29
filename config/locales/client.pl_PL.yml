@@ -5424,7 +5424,7 @@ pl_PL:
         refresh: "Odśwież"
         send_digest_label: "Wyślij ten wynik do:"
         send_digest: "Wyślij"
-        sending_email: "Wysyłanie wiadomości e-mail ..."
+        sending_email: "Wysyłanie wiadomości e-mail…"
         format: "Format"
         html: "html"
         text: "text"
