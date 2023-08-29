@@ -457,6 +457,9 @@ class BulkImport::Generic < BulkImport::Base
       next unless (topic_id = topic_id_from_imported_id(row["topic_id"]))
       next if post_id_from_imported_id(row["id"]).present?
 
+      # TODO Ensure that we calculate the `like_count` if the column is empty, but the DB contains likes.
+      # Otherwise #import_user_stats will not be able to calculate the correct `likes_received` value.
+
       {
         imported_id: row["id"],
         topic_id: topic_id,
@@ -512,52 +515,44 @@ class BulkImport::Generic < BulkImport::Base
 
     start_time = Time.now
 
-    # TODO Add likes received and likes given from `post_actions` table
+    # TODO Merge with #update_user_stats from import.rake and check if there are privacy concerns wi
+    # E.g. maybe we need to exclude PMs from the calculation?
 
     DB.exec(<<~SQL)
         WITH
-          posts_counts AS (
-            SELECT COUNT(p.id) AS count, p.user_id FROM posts p GROUP BY p.user_id
-          ),
-          topic_counts AS (
-            SELECT COUNT(t.id) AS count, t.user_id FROM topics t GROUP BY t.user_id
-          ),
-          first_post AS (
-            SELECT MIN(p.created_at) AS created_at, p.user_id FROM posts p GROUP BY p.user_id
-          )
+          post_stats AS (
+                          SELECT p.user_id, COUNT(p.id) AS post_count, MIN(p.created_at) AS first_post_created_at,
+                                 SUM(like_count) AS likes_received
+                            FROM posts p
+                           GROUP BY p.user_id
+                        ),
+          topic_stats AS (
+                           SELECT t.user_id, COUNT(t.id) AS topic_count FROM topics t GROUP BY t.user_id
+                         ),
+          like_stats AS (
+                          SELECT pa.user_id, COUNT(*) AS likes_given
+                            FROM post_actions pa
+                           WHERE pa.post_action_type_id = 2
+                           GROUP BY pa.user_id
+                        )
       INSERT
-        INTO user_stats (user_id, new_since, post_count, topic_count, first_post_created_at)
-      SELECT u.id, u.created_at AS new_since, COALESCE(pc.count, 0) AS post_count, COALESCE(tc.count, 0) AS topic_count,
-             fp.created_at AS first_post_created_at
+        INTO user_stats (user_id, new_since, post_count, topic_count, first_post_created_at, likes_received, likes_given)
+      SELECT u.id, u.created_at AS new_since, COALESCE(ps.post_count, 0) AS post_count,
+             COALESCE(ts.topic_count, 0) AS topic_count, ps.first_post_created_at,
+             COALESCE(ps.likes_received, 0) AS likes_received, COALESCE(ls.likes_given, 0) AS likes_given
         FROM users u
-             LEFT JOIN posts_counts pc ON u.id = pc.user_id
-             LEFT JOIN topic_counts tc ON u.id = tc.user_id
-             LEFT JOIN first_post fp ON u.id = fp.user_id
+             LEFT JOIN post_stats ps ON u.id = ps.user_id
+             LEFT JOIN topic_stats ts ON u.id = ts.user_id
+             LEFT JOIN like_stats ls ON u.id = ls.user_id
        WHERE NOT EXISTS (
-         SELECT 1
-           FROM user_stats us
-          WHERE us.user_id = u.id
-       )
+                          SELECT 1
+                            FROM user_stats us
+                           WHERE us.user_id = u.id
+                        )
           ON CONFLICT DO NOTHING
     SQL
 
     puts "  Imported user stats in #{(Time.now - start_time).to_i} seconds."
-
-    # likes_received = @db.execute(<<~SQL)
-    #   SELECT COUNT(l.id) AS likes_received
-    #   FROM likes l JOIN posts p ON l.post_id = p.id
-    #   WHERE p.user_id = #{row["user_id"]}
-    # SQL
-    #
-    # user[:likes_received] = row["likes_received"] if likes_received
-    #
-    # likes_given = @db.execute(<<~SQL)
-    #   SELECT COUNT(l.id) AS likes_given
-    #   FROM likes l
-    #   WHERE l.user_id = #{row["user_id"]}
-    # SQL
-    #
-    # user[:likes_given] = row["likes_given"] if likes_given
   end
 
   def import_muted_users
