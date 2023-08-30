@@ -15,6 +15,16 @@ const AuthErrors = [
   "not_allowed_from_ip_address",
 ];
 
+const beforeAuthCompleteCallbacks = [];
+
+export function addBeforeAuthCompleteCallback(fn) {
+  beforeAuthCompleteCallbacks.push(fn);
+}
+
+export function resetBeforeAuthCompleteCallbacks() {
+  beforeAuthCompleteCallbacks.length = 0;
+}
+
 export default {
   after: "inject-objects",
   initialize(owner) {
@@ -30,12 +40,17 @@ export default {
       const router = owner.lookup("router:main");
       router.one("didTransition", () => {
         next(() => {
+          const options = JSON.parse(lastAuthResult);
+
+          if (!beforeAuthCompleteCallbacks.every((fn) => fn(options))) {
+            return;
+          }
+
           if (router.currentPath === "invites.show") {
             owner
               .lookup("controller:invites-show")
-              .authenticationComplete(JSON.parse(lastAuthResult));
+              .authenticationComplete(options);
           } else {
-            const options = JSON.parse(lastAuthResult);
             const modal = owner.lookup("service:modal");
             const siteSettings = owner.lookup("service:site-settings");
 
