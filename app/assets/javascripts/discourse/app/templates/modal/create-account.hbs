@@ -21,6 +21,10 @@
           <p class="login-subheader">{{i18n
               "create_account.subheader_title"
             }}</p>
+          <PluginOutlet
+            @name="create-account-header-bottom"
+            @outletArgs={{hash showLogin=(route-action "showLogin")}}
+          />
         </div>
         {{#if this.showCreateForm}}
 
