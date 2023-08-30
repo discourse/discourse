@@ -167,7 +167,7 @@ module SecondFactorManager
       self,
       security_key_credential,
       challenge: DiscourseWebauthn.challenge(self, secure_session),
-      rp_id: DiscourseWebauthn.rp_id(self, secure_session),
+      rp_id: DiscourseWebauthn.rp_id,
       origin: Discourse.base_url,
     ).authenticate_security_key
   end
