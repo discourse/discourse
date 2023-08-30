@@ -10,6 +10,9 @@ it:
       site_settings:
         categories:
           chat: Chat
+        chat_separate_sidebar_mode:
+          always: "Sempre"
+          never: "Mai"
       logs:
         staff_actions:
           actions:
@@ -141,6 +144,7 @@ it:
         group_mentions_disabled_multiple:
           one: "%{group_name} e %{count} altro gruppo non consentono menzioni."
           other: "%{group_name} e %{count} altri gruppi non consentono menzioni."
+        channel_wide_mentions_disallowed: "Le menzioni di @here e @all sono disabilitate in questo canale."
         too_many_members: "%{group_name} ha troppi membri. Nessuno è stato avvisato."
         too_many_members_multiple:
           one: "%{group_name} e %{count} altro gruppo hanno troppi membri. Nessuno è stato notificato."
@@ -368,8 +372,8 @@ it:
                     }
               other {
                       { userCount, plural,
-                          one {Aggiungere automaticamente {userCount} utente di {groupName} e di altri {groupCount} gruppi?}
-                        other {Aggiungere automaticamente {userCount} utenti di {groupName} e di altri {groupCount} gruppi?}
+                          one {Aggiungere automaticamente {userCount} utente di {groupName} e di {groupCount} altri gruppi?}
+                        other {Aggiungere automaticamente {userCount} utenti di {groupName} e di {groupCount} altri gruppi?}
                       }
                     }
             }
@@ -446,7 +450,7 @@ it:
         title: "Chat"
         export_messages:
           title: "Esporta i messaggi della chat"
-          description: "L'esportazione è attualmente limitata a 10000 messaggi più recenti negli ultimi 6 mesi."
+          description: "Questo esporta tutti i messaggi da tutti i canali."
           create_export: "Crea esportazione"
           export_has_started: "L'esportazione è iniziata. Riceverai un messaggio personale quando sarà pronto."
       direct_messages:
@@ -544,7 +548,6 @@ it:
       thread:
         title: "Titolo"
         view_thread: Visualizza thread
-        default_title: "Thread"
         replies:
           one: "%{count} risposta"
           other: "%{count} risposte"
@@ -649,3 +652,7 @@ it:
       sections:
         chat:
           title: Chat
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

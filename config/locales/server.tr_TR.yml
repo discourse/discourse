@@ -324,7 +324,6 @@ tr_TR:
     more_replies:
       one: "%{count} yanıt daha"
       other: "%{count} yanıt daha"
-    loading: "Tartışma Yükleniyor..."
     permalink: "Kalıcı Bağlantı"
     imported_from: "Bu, %{link} adresindeki orijinal girdi için tamamlayıcı bir tartışma konusudur."
     in_reply_to: "▶ %{username}"
@@ -1564,11 +1563,11 @@ tr_TR:
     blocked_crawler_user_agents: "Siteye erişmesine izin verilmemesi gereken web veri gezginlerini tanımlayan kullanıcı aracısı dizesinde büyük/küçük harfe duyarlı olmayan benzersiz kelime. İzin verilenler listesi tanımlanmışsa geçerli değildir."
     slow_down_crawler_user_agents: '"Tarayıcı hızını yavaşlat" ayarında yapılandırıldığı gibi hız sınırlandırılması gereken web veri gezginlerinin kullanıcı aracıları. Her değer en az 3 karakter uzunluğunda olmalıdır.'
     slow_down_crawler_rate: "slow_down_crawler_user_agents belirtilirse bu oran tüm veri gezginleri için geçerli olur (istekler arasındaki saniye gecikme sayısı)"
-    content_security_policy: "Content-Security-Policy'yi etkinleştir"
-    content_security_policy_report_only: "Content-Security-Policy-Report-Only'yi etkinleştir"
+    content_security_policy: "İçerik-Güvenlik-Politikasını (CSP) Etkinleştir"
+    content_security_policy_report_only: "Sadece-Raporla-İçerik-Güvenlik-Politikasını (CSP) Etkinleştir"
     content_security_policy_collect_reports: "CSP ihlal raporu toplamayı /csp_reports adresinde etkinleştir"
     content_security_policy_frame_ancestors: "CSP aracılığıyla bu siteyi iframe'lere kimlerin yerleştirebileceğini kısıtlayın. <a href='%{base_path}/admin/customize/embedding'>Gömme</a> bölümünde izin verilen sunucuları kontrol edin"
-    content_security_policy_script_src: "İzin verilen ek komut dosyası kaynakları. Geçerli sunucu ve CDN varsayılan olarak dahil edilir. Bkz. <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>İçerik Güvenliği Politikası ile XSS Saldırılarını Azaltma.</a>"
+    content_security_policy_script_src: "İzin verilenler listesine eklenen ek komut dosyası kaynakları. Geçerli sunucu ve CDN varsayılan olarak dahil edilmiştir. Bkz. <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>İçerik Güvenliği Politikası ile XSS Saldırılarını Azaltın.</a> (CSP)"
     invalidate_inactive_admin_email_after_days: "Bu kadar gün içinde siteyi ziyaret etmemiş olan yönetici hesaplarının oturum açmadan önce e-posta adreslerini yeniden doğrulamaları gerekir. Devre dışı bırakmak için 0 olarak ayarlayın."
     include_secure_categories_in_tag_counts: "Etkinleştirildiğinde, bir etiket için konu sayısı, tüm kullanıcılar için okuma kısıtlamalı kategorilerdeki konuları içerecektir. Devre dışı bırakıldığında, normal kullanıcılara yalnızca tüm konuların herkese açık kategorilerde olduğu bir etiket için konu sayısı gösterilir."
     display_personal_messages_tag_counts: "Etkinleştirildiğinde, belirli bir etiketle etiketlenmiş kişisel mesajların sayısı görüntülenir."
@@ -1691,7 +1690,6 @@ tr_TR:
     enable_safe_mode: "Kullanıcıların eklentilerde hata ayıklamak için güvenli moda girmesine izin verin."
     rate_limit_create_topic: "Bir konu oluşturduktan sonra, kullanıcılar başka bir konu oluşturabilmek için (n) saniye beklemelidir."
     rate_limit_create_post: "Gönderi yaptıktan sonra, kullanıcılar başka bir gönderi oluşturabilmek için (n) saniye beklemelidir."
-    rate_limit_new_user_create_topic: "Bir konu oluşturduktan sonra, yeni kullanıcılar başka bir konu oluşturabilmek için (n) saniye beklemelidir."
     rate_limit_new_user_create_post: "Gönderi yaptıktan sonra, yeni kullanıcılar başka bir gönderi oluşturabilmek için (n) saniye beklemelidir."
     max_likes_per_day: "Kullanıcı başına günlük maksimum beğeni sayısı."
     max_flags_per_day: "Kullanıcı başına günlük maksimum bayrak sayısı."
@@ -1957,6 +1955,7 @@ tr_TR:
     digest_min_excerpt_length: "E-posta özetinde karakter cinsinden minimum gönderi alıntısı."
     suppress_digest_email_after_days: "Sitede (n) günden fazla görülmeyen kullanıcılar için özet e-postalarını bastırın."
     digest_suppress_categories: "Bu kategorileri özet e-postalardan bastırın."
+    digest_suppress_tags: "Özet e-postalarından bu etiketleri kaldır"
     disable_digest_emails: "Tüm kullanıcılar için özet e-postalarını devre dışı bırakın."
     apply_custom_styles_to_digest: "Özet e-postalara özel e-posta şablonu ve css uygulanır."
     email_accent_bg_color: "HTML e-postalarındaki bazı ögelerin arka planı olarak kullanılacak vurgu rengi. Bir renk adı (\"kırmızı\") veya hex değeri (\"#FF0000\") girin."
@@ -2112,7 +2111,6 @@ tr_TR:
     retain_web_hook_events_period_days: "Web kancası olay kayıtlarının saklanacağı gün sayısı."
     retry_web_hook_events: "Başarısız web kancası olaylarını otomatik olarak 4 kez yeniden deneyin. Yeniden denemeler arasındaki zaman aralıkları 1, 5, 25 ve 125 dakikadır."
     revoke_api_keys_days: "Kullanılmayan bir API anahtarının otomatik olarak iptal edilmesinden önceki gün sayısı (asla için 0)"
-    allow_user_api_keys: "Kullanıcı API anahtarlarının oluşturulmasına izin verin"
     allow_user_api_key_scopes: "Kullanıcı API anahtarları için izin verilen kapsamların listesi"
     min_trust_level_for_user_api_key: |
       Kullanıcı API anahtarlarının oluşturulması için gereken güven seviyesi.<br>
@@ -2408,18 +2406,6 @@ tr_TR:
   admin:
     email:
       sent_test: "gönderildi!"
-    user:
-      merge_user:
-        updating_username: "Kullanıcı adı güncelleniyor..."
-        changing_post_ownership: "Gönderi sahipliği değiştiriliyor..."
-        merging_given_daily_likes: "Yapılan günlük beğeniler birleştiriliyor..."
-        merging_post_timings: "Gönderi zamanlamaları birleştiriliyor..."
-        merging_user_visits: "Kullanıcı ziyaretleri birleştiriliyor..."
-        updating_site_settings: "Site ayarları güncelleniyor..."
-        updating_user_stats: "Kullanıcı istatistikleri güncelleniyor..."
-        merging_user_attributes: "Kullanıcı özellikleri birleştiriliyor..."
-        updating_user_ids: "Kullanıcı kimlikleri güncelleniyor..."
-        deleting_source_user: "Kaynak kullanıcı siliniyor..."
   user:
     deactivated: "\"%{email}\" adresine çok fazla geri dönen e-posta nedeniyle devre dışı bırakıldı."
     deactivated_by_staff: "Personel tarafından devre dışı bırakıldı"
@@ -4668,8 +4654,6 @@ tr_TR:
         description: "Bayrağı kabul edin ve bu gönderiyi gizleyin + otomatik olarak kullanıcıya bu gönderiyi düzenlemesini isteyen bir mesaj gönderin"
       delete_single:
         title: "Sil"
-      delete:
-        title: "Sil..."
       delete_and_ignore:
         title: "Bayrağı yok say ve gönderiyi sil"
         description: "Kuyruktan kaldırarak bayrağı yok sayın ve gönderiyi silin; ilk gönderiyse konuyu da silin. "
@@ -4704,7 +4688,6 @@ tr_TR:
       approve_user:
         title: "Kullanıcıyı Onayla"
       reject_user:
-        title: "Kullanıcıyı Sil..."
         delete:
           title: "Kullanıcıyı Sil"
           description: "Kullanıcı forumdan silinecek."
@@ -4713,7 +4696,6 @@ tr_TR:
           description: "Kullanıcı silinecek ve IP ve e-posta adresini engelleyeceğiz."
       reject:
         title: "Reddet"
-        bundle_title: "Reddet..."
       reject_and_suspend:
         title: "Reddet ve Kullanıcıyı Askıya Al"
       reject_and_silence:

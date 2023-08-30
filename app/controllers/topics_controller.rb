@@ -1185,7 +1185,7 @@ class TopicsController < ApplicationController
 
     opts = params.permit(:skip_age_check)
 
-    if params[:stream]
+    if params[:stream] && current_user
       Jobs.enqueue(
         :stream_topic_summary,
         topic_id: topic.id,

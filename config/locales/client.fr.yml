@@ -275,7 +275,6 @@ fr:
     related_messages:
       title: "Messages connexes"
       pill: "Messages connexes"
-      see_all: 'Voir <a href="%{path}">tous les messages</a> de @%{username}…'
     suggested_topics:
       title: "Sujets nouveaux et non lus"
       pill: "Suggérés"
@@ -372,18 +371,11 @@ fr:
       other: "Voir %{count} nouveaux sujets"
     preview: "prévisualiser"
     cancel: "annuler"
-    deleting: "Suppression…"
     save: "Enregistrer les modifications"
-    saving: "Enregistrement en cours…"
     saved: "Enregistré avec succès !"
     upload: "Joindre un fichier"
-    uploading: "Envoi en cours…"
-    processing: "Traitement…"
-    uploading_filename: "Envoi en cours : %{filename}…"
-    processing_filename: "Traitement de : %{filename}…"
     clipboard: "presse-papier"
     uploaded: "Envoyé !"
-    pasting: "Coller…"
     enable: "Activer"
     disable: "Désactiver"
     continue: "Continuer"
@@ -973,7 +965,6 @@ fr:
       topic_stat_sentence_month:
         one: "%{count} nouveau sujet au cours du dernier mois."
         other: "%{count} nouveaux sujets au cours du dernier mois."
-      n_more: "Catégories (%{count} autres)…"
     ip_lookup:
       title: Localisation de l'adresse IP
       hostname: Nom de l'hôte
@@ -1026,7 +1017,6 @@ fr:
         ignore_no_users: "Vous n'ignorez aucun utilisateur."
         ignore_option: "Ignoré"
         ignore_option_title: "Vous ne recevrez pas de notifications en lien avec cet utilisateur et ses messages et réponses seront masqués."
-        add_ignored_user: "Ajouter…"
         mute_option: "En sourdine"
         mute_option_title: "Vous ne recevrez pas de notifications en lien avec cet utilisateur."
         normal_option: "Normal"
@@ -1448,7 +1438,6 @@ fr:
         primary_label: "principale"
         unconfirmed_label: "non confirmée"
         resend_label: "renvoyer l'e-mail de confirmation"
-        resending_label: "envoi en cours…"
         resent_label: "e-mail envoyé"
         update_email: "Modifier l'adresse e-mail"
         set_primary: "Définir comme adresse e-mail principale"
@@ -1494,7 +1483,6 @@ fr:
         not_available_no_suggestion: "Non disponible"
         too_short: "Votre nom d'utilisateur est trop court"
         too_long: "Votre nom d'utilisateur est trop long"
-        checking: "Vérification de la disponibilité du nom d'utilisateur…"
         prefilled: "L'adresse e-mail correspond à ce nom d'utilisateur enregistré"
         required: "Veuillez entrer un nom d'utilisateur"
         edit: "Modifier le nom d'utilisateur"
@@ -1615,7 +1603,6 @@ fr:
         reinvite: "Renvoyer un e-mail"
         reinvited: "Invitation renvoyée"
         removed: "Supprimé"
-        search: "commencez votre saisie pour rechercher vos invitations…"
         user: "Utilisateur(rice) invité(e)"
         none: "Aucune invitation à afficher."
         truncated:
@@ -1675,7 +1662,6 @@ fr:
             <p>Pour mettre votre communauté sur pied rapidement, invitez une liste d'utilisateurs : composez un <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">fichier CSV</a> contenant l'adresse de chaque personne à inviter, en disposant une adresse par ligne. Pour ajouter certaines personnes à des groupes particuliers, ou pour les diriger automatiquement vers un sujet particulier lors de leur première connexion, vous pouvez faire figurer les éléments suivants.</p>
             <pre>jean@dupont.fr,nom_dun_groupe;nom_dun_autre_groupe,identifiant_numérique_du_sujet</pre>
             <p>Un e-mail d'invitation sera envoyé à chaque adresse reprise dans ce fichier CSV, et vous pourrez modifier son contenu après l'avoir envoyé sur le serveur.</p>
-          progress: "Envoi en cours : %{progress} %…"
           success: "Le fichier a été envoyé avec succès. Vous recevrez un message de notification lorsque le processus sera terminé."
           error: "Nous sommes désolés, le fichier doit être au format CSV."
       password:
@@ -1793,7 +1779,6 @@ fr:
         title: "Bienvenue sur votre nouveau site !"
         content: "<a href='%{admin_guide_url}'>Lisez le guide d'administration</a> pour continuer à développer votre site et votre communauté."
         content_no_url: "Lisez le guide d'administration pour continuer à développer votre site et votre communauté."
-    loading: "Chargement…"
     errors:
       prev_page: "lors du chargement de"
       reasons:
@@ -1836,7 +1821,6 @@ fr:
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/heure} other {# erreurs/heure}}</a> a dépassé la limite paramétrée de {limit, plural, one {# erreur/heure} other {# erreurs/heure}}.
       exceeded_minute_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# erreur/minute} other {# erreurs/minute}}</a> a dépassé la limite paramétrée de {limit, plural, one {# erreur/minute} other {# erreurs/minute}}.
-    learn_more: "en savoir plus…"
     mute: Mettre en sourdine
     unmute: Rétablir
     last_post: Dernier message
@@ -1888,10 +1872,6 @@ fr:
       disable: "Afficher les messages supprimés"
     private_message_info:
       title: "Message direct"
-      invite: "Inviter d'autres utilisateurs…"
-      edit: "Ajouter ou supprimer…"
-      remove: "Supprimer…"
-      add: "Ajouter…"
       leave_message: "Voulez-vous vraiment quitter cette conversation ?"
       remove_allowed_user: "Voulez-vous vraiment supprimer %{name} de ce message direct ?"
       remove_allowed_group: "Voulez-vous vraiment supprimer %{name} de ce message direct ?"
@@ -1971,10 +1951,8 @@ fr:
       blank_username: "Veuillez saisir votre adresse e-mail ou votre nom d'utilisateur."
       blank_username_or_password: "Veuillez saisir votre adresse e-mail ou votre nom d'utilisateur et votre mot de passe."
       reset_password: "Réinitialiser le mot de passe"
-      logging_in: "Connexion en cours…"
       previous_sign_up: "Vous avez déjà un compte ?"
       or: "ou"
-      authenticating: "Authentification…"
       awaiting_activation: "Votre compte est en attente d'activation, utilisez le lien de mot de passe oublié pour envoyer un autre e-mail d'activation."
       awaiting_approval: "Votre compte n'a pas encore été approuvé par un modérateur. Vous recevrez une confirmation par e-mail lors de l'activation."
       requires_invite: "Nous sommes désolés, l'accès à ce forum est réservé sur invitation seulement."
@@ -2055,8 +2033,6 @@ fr:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Entrée"
-    conditional_loading_section:
-      loading: Chargement…
     category_row:
       topic_count:
         one: "%{count} sujet dans cette catégorie"
@@ -2071,13 +2047,10 @@ fr:
       delete_item: "Supprimer %{name}"
       filter_by: "Filtrer par : %{name}"
       select_to_filter: "Sélectionner une valeur à filtrer"
-      default_header_text: Sélectionner…
       no_content: Aucune correspondance trouvée
       results_count:
         one: "%{count} résultat"
         other: "%{count} résultats"
-      filter_placeholder: Rechercher…
-      filter_placeholder_with_any: Rechercher ou créer…
       create: "Créer : « %{content} »"
       max_content_reached:
         one: "Vous ne pouvez sélectionner que %{count} élément."
@@ -2086,8 +2059,6 @@ fr:
         one: "Sélectionnez au moins %{count} élément."
         other: "Sélectionnez au moins %{count} éléments."
       components:
-        tag_drop:
-          filter_for_more: et plus encore…
         categories_admin_dropdown:
           title: "Gérer les catégories"
     date_time_picker:
@@ -2118,10 +2089,8 @@ fr:
       destination_category: "Catégorie de destination"
       publish: "Publier le brouillon partagé"
       confirm_publish: "Voulez-vous vraiment publier ce brouillon ?"
-      publishing: "Sujet en cours de publication…"
     composer:
       emoji: "Émoji :)"
-      more_emoji: "plus…"
       options: "Options"
       whisper: "murmure"
       unlist: "invisible"
@@ -2130,7 +2099,6 @@ fr:
       toggle_unlisted: "Activer/désactiver la visibilité"
       posting_not_on_topic: "À quel sujet voulez-vous répondre ?"
       saved_local_draft_tip: "enregistré sur votre appareil"
-      similar_topics: "Votre sujet est similaire à…"
       drafts_offline: "brouillons hors ligne"
       edit_conflict: "conflit de modification"
       esc: "échap"
@@ -2200,7 +2168,6 @@ fr:
       saving: "Enregistrement en cours"
       saved: "Enregistré avec succès !"
       saved_draft: "Brouillon de message en cours. Appuyez pour reprendre."
-      uploading: "Envoi en cours…"
       show_preview: "afficher l'aperçu"
       hide_preview: "masquer l'aperçu"
       quote_post_title: "Citer le message en entier"
@@ -2484,7 +2451,6 @@ fr:
           label: Étiquettes
           aria_label: Filtrer à l'aide d'étiquettes
         filters:
-          label: Seulement retourner les sujets/messages…
           title: où seuls les titres correspondent
           likes: que j'ai aimés
           posted: auxquels j'ai participé
@@ -2613,18 +2579,15 @@ fr:
         dismiss_new_modal:
           title: "Ignorer les nouveaux"
           topics: "Ignorer les nouveaux sujets"
-          posts: "Ignorer les nouveaux messages"
           untrack: "Arrêter de suivre ces sujets pour qu'ils n'apparaissent plus dans ma nouvelle liste"
         dismiss_new_with_selected:
           one: "Marquer le nouveau sujet comme lu (%{count})"
           other: "Marquer les nouveaux sujets comme lus (%{count})"
         toggle: "activer/désactiver la sélection multiple de sujets"
         actions: "Actions sur la sélection"
-        change_category: "Définir la catégorie…"
         close_topics: "Fermer les sujets"
         archive_topics: "Archiver les sujets"
         move_messages_to_inbox: "Déplacer dans la boîte de réception"
-        notification_level: "Notifications…"
         change_notification_level: "Modifier le niveau de notification"
         choose_new_category: "Choisissez la nouvelle catégorie pour ces sujets :"
         selected:
@@ -2847,11 +2810,9 @@ fr:
         replies_short: "%{current}/%{total}"
       progress:
         title: progression dans le sujet
-        jump_prompt: "aller à…"
         jump_prompt_of:
           one: "sur %{count} message"
           other: "sur %{count} messages"
-        jump_prompt_long: "Aller à…"
         jump_prompt_to_date: "à la date"
         jump_prompt_or: "ou"
       notifications:
@@ -2907,8 +2868,6 @@ fr:
         open: "Ouvrir le sujet"
         close: "Fermer le sujet"
         multi_select: "Sélectionner des messages…"
-        slow_mode: "Activer le mode ralenti…"
-        timed_update: "Planifier une action…"
         pin: "Épingler le sujet…"
         unpin: "Désépingler le sujet…"
         unarchive: "Désarchiver le sujet"
@@ -2916,7 +2875,6 @@ fr:
         invisible: "Rendre le sujet invisible"
         visible: "Lister le sujet"
         reset_read: "Réinitialiser les données de lecture"
-        make_public: "Rendre le sujet public…"
         make_private: "Transformer en message direct"
         reset_bump_date: "Réinitialiser la date d'actualisation"
       feature:
@@ -2975,7 +2933,6 @@ fr:
         banner_note: "Chaque utilisateur pourra empêcher l'affichage du sujet à la une individuellement (pour lui seulement). Seul un sujet à la fois peut figurer à la une."
         no_banner_exists: "Il n'y a pas de sujet à la une."
         banner_exists: "Il y <strong class='badge badge-notification unread'>a</strong> un sujet à la une."
-      inviting: "Invitation en cours…"
       automatically_add_to_groups: "Cette invitation inclut également l'accès aux groupes suivants :"
       invite_private:
         title: "Inviter dans la discussion"
@@ -3079,7 +3036,6 @@ fr:
           one: "Veuillez choisir un nouvel auteur pour le message"
           other: "Veuillez choisir un nouvel auteur pour les %{count} messages"
       change_timestamp:
-        title: "Modifier la date et l'heure…"
         action: "modifier la date et l'heure"
         invalid_timestamp: "La date et l'heure ne peuvent pas être ultérieures à la date et à l'heure actuelles."
         error: "Une erreur s'est produite lors de la modification de la date et de l'heure du sujet."
@@ -3232,8 +3188,6 @@ fr:
         rebake: "Reconstruire le HTML"
         publish_page: "Publication de pages"
         unhide: "Afficher"
-        change_owner: "Changer de propriétaire…"
-        grant_badge: "Attribuer un badge…"
         lock_post: "Verrouiller le message"
         lock_post_description: "empêcher l'utilisateur de modifier ce message"
         unlock_post: "Déverrouiller le message"
@@ -3247,8 +3201,6 @@ fr:
         delete_topic_confirm_modal_no: "Non, conserver ce sujet"
         delete_topic_error: "Une erreur s'est produite lors de la suppression de ce sujet"
         delete_topic: "supprimer le sujet"
-        add_post_notice: "Afficher une note pour les responsables…"
-        change_post_notice: "Modifier la note pour les responsables…"
         delete_post_notice: "Supprimer la note pour les responsables"
         remove_timer: "supprimer la planification"
         edit_timer: "modifier le minuteur"
@@ -3377,7 +3329,6 @@ fr:
         description: "Exiger que les nouveaux sujets aient des étiquettes d'un groupe d'étiquettes :"
         delete: "Supprimer"
         add: "Ajouter le groupe d'étiquettes requis"
-        placeholder: "sélectionner un groupe d'étiquettes…"
       topic_featured_link_allowed: "Autoriser les liens à la une dans cette catégorie"
       delete: "Supprimer la catégorie"
       create: "Nouvelle catégorie"
@@ -3507,7 +3458,6 @@ fr:
     flagging:
       title: "Merci pour votre participation au maintien de la civilité !"
       action: "Signaler ce message"
-      take_action: "Intervenir…"
       take_action_options:
         default:
           title: "Intervenir"
@@ -3543,9 +3493,6 @@ fr:
         at_least:
           one: "saisissez au moins %{count} caractère"
           other: "saisissez au moins %{count} caractères"
-        more:
-          one: "%{count} restant…"
-          other: "%{count} restants…"
         left:
           one: "%{count} restant"
           other: "%{count} restants"
@@ -3557,7 +3504,6 @@ fr:
       title: "Résumé du sujet"
       participants_title: "Auteurs fréquents"
       links_title: "Liens populaires"
-      links_shown: "afficher plus de liens…"
       clicks:
         one: "%{count} clic"
         other: "%{count} clics"
@@ -3674,6 +3620,9 @@ fr:
           one: "Nouveau (%{count})"
           other: "Nouveaux (%{count})"
         help: "sujets créés dans les derniers jours"
+        all: "Tout"
+        topics: "Sujets"
+        replies: "Réponses"
       posted:
         title: "Mes messages"
         help: "sujets auxquels vous avez participé"
@@ -3881,12 +3830,6 @@ fr:
       changed: "étiquettes modifiées :"
       tags: "Étiquettes"
       choose_for_topic: "étiquettes optionnelles"
-      choose_for_topic_required:
-        one: "sélectionnez au moins %{count} étiquette…"
-        other: "sélectionnez au moins %{count} étiquettes…"
-      choose_for_topic_required_group:
-        one: "sélectionnez %{count} étiquette de « %{name} »…"
-        other: "sélectionnez %{count} étiquettes de « %{name} »…"
       info: "Détails"
       default_info: "Cette étiquette n'est pas limitée à une catégorie et n'a aucun synonyme."
       staff_info: "Pour y définir des restrictions d'utilisation, placez cette étiquette dans un <a href=%{basePath}/tag_groups>groupe d'étiquettes</a>."
@@ -3983,7 +3926,6 @@ fr:
         cannot_save: "Impossible d'enregistrer le groupe d'étiquettes. Assurez-vous qu'au moins une étiquette est présente, que le nom du groupe d'étiquettes n'est pas vide et qu'un groupe est sélectionné pour l'autorisation des étiquettes."
         tags_placeholder: "Créez ou recherchez des étiquettes"
         parent_tag_placeholder: "Facultatif"
-        select_groups_placeholder: "Sélectionnez des groupes…"
         disabled: "L'étiquetage des sujets est désactivé "
       topics:
         none:
@@ -4012,7 +3954,6 @@ fr:
       enabled: "Le mode sans échec est activé ; fermez cette fenêtre de navigateur pour le quitter"
     image_removed: "(image supprimée)"
     pause_notifications:
-      title: "Suspendre les notifications pour…"
       label: "Suspendre les notifications"
       options:
         half_hour: "30 minutes"
@@ -4096,7 +4037,7 @@ fr:
           reset_confirm: "Voulez-vous vraiment réinitialiser cette section par défaut ?"
           public: "Rendre cette section publique et la rendre visible pour tous"
           always_public: "Le contenu de cette section est toujours public"
-          more_menu: "Plus"
+          more_menu: "Plus de menus"
           links:
             add: "Ajouter un autre lien"
             delete: "Supprimer le lien"
@@ -4105,7 +4046,7 @@ fr:
               label: "Icône"
               validation:
                 blank: "L'icône ne peut pas être vide"
-                maximum: "Le nom de l'icône doit comporter moins de %{count} caractères"
+                maximum: "L'icône doit être inférieure à %{count} caractères"
             name:
               label: "Nom"
               validation:
@@ -4231,7 +4172,7 @@ fr:
         patternMismatch: "Veuillez respecter le format demandé."
         badInput: "Veuillez saisir une entrée valide."
   admin_js:
-    type_to_filter: "commencez votre saisie pour filtrer…"
+    type_to_filter: "filtrer les paramètres…"
     admin:
       title: "Administrateur Discourse"
       moderator: "Modérateur"
@@ -4343,7 +4284,6 @@ fr:
           name:
             too_short: "Nom de groupe trop court"
             too_long: "Le nom du groupe est trop long"
-            checking: "Vérification de la disponibilité du nom de groupe…"
             available: "Nom de groupe disponible"
             not_available: "Nom de groupe indisponible"
             blank: "Le nom du groupe ne peut pas être vide"
@@ -4642,20 +4582,15 @@ fr:
           disable:
             title: "Désactiver le mode lecture seule"
             label: "Désactiver la lecture seule"
-        logs:
-          none: "Pas de journaux pour l'instant…"
         columns:
           filename: "Nom du fichier"
           size: "Taille"
         upload:
           label: "Envoyer"
           title: "Envoyer une sauvegarde vers cette instance"
-          uploading: "Envoi en cours…"
-          uploading_progress: "Envoi en cours… %{progress} %"
           success: "Le fichier « %{filename} » a été envoyé avec succès. Le fichier est en cours de traitement et il faudra jusqu'à une minute pour qu'il apparaisse dans la liste."
           error: "Une erreur est survenue lors de l'envoi du fichier « %{filename} » : %{message}"
         operations:
-          is_running: "Une opération est en cours d'exécution…"
           failed: "L'opération %{operation} a échoué. Veuillez consulter les journaux."
           cancel:
             label: "Annuler"
@@ -4734,7 +4669,7 @@ fr:
           theme: "Thème"
           component: "Composant"
           components: "Composants"
-          filter_placeholder: "commencez votre saisie pour filtrer…"
+          filter_placeholder: "filtrer les paramètres…"
           theme_name: "Nom du thème"
           component_name: "Nom du composant"
           themes_intro: "Sélectionnez un thème existant ou installez-en un nouveau pour commencer"
@@ -4795,7 +4730,6 @@ fr:
           uploads: "Fichiers envoyés"
           no_uploads: "Vous pouvez envoyer des ressources associées à votre thème comme des polices ou des images"
           add_upload: "Ajouter un fichier"
-          upload_file_tip: "Choisissez un fichier à envoyer (png, woff2, etc.)"
           variable_name: "Nom de variable SCSS :"
           variable_name_invalid: "Nom de variable invalide. Seuls les caractères alphanumériques sont autorisés. Le nom doit commencer par une lettre et être unique."
           variable_name_error:
@@ -4803,7 +4737,6 @@ fr:
             no_overwrite: "Nom de variable invalide. Le nom ne doit pas écraser une variable existante."
             must_be_unique: "Nom de variable invalide. Le nom doit être unique."
           upload: "Envoyer"
-          select_component: "Sélectionner un composant…"
           unsaved_changes_alert: "Vous n'avez pas encore enregistré vos modifications, souhaitez-vous les abandonner et passer à autre chose ?"
           unsaved_parent_themes: "Vous n'avez assigné le composant à aucun thème, voulez-vous continuer ?"
           discard: "Abandonner"
@@ -4817,7 +4750,6 @@ fr:
           add_all: "Tout ajouter"
           import_web_tip: "Dépôt contenant le thème"
           direct_install_tip: "Voulez-vous vraiment installer <strong>%{name}</strong> depuis le dépôt indiqué ci-dessous ?"
-          import_web_advanced: "Avancé…"
           import_file_tip: "Fichier .tar.gz, .zip ou .dcstyle.json contenant le thème"
           is_private: "Le thème est dans un dépôt Git privé"
           finish_install: "Terminer l'installation du thème"
@@ -4849,7 +4781,6 @@ fr:
             maximum: "Nécessite la version %{version} ou inférieure de Discourse."
           update_to_latest: "Mettre à jour"
           check_for_updates: "Vérifier les mises à jour"
-          updating: "Mise à jour…"
           up_to_date: "Thème à jour, dernière vérification :"
           has_overwritten_history: "La version actuelle du thème n'existe plus car l'historique Git a été écrasé par une mise à jour forcée."
           add: "Ajouter"
@@ -4992,7 +4923,6 @@ fr:
           run: "Lancer le test"
           text: "Corps de texte sélectionné"
           elided: "Texte élidé"
-        sending_test: "Envoi de l'e-mail de test…"
         error: "<b>ERREUR</b> - %{server_error}"
         test_error: "Un problème est survenu lors de l'envoi de l'e-mail de test. Veuillez vérifier vos paramètres et que votre hébergeur ne bloque pas les connexions aux e-mails, puis réessayez."
         sent: "Envoyés"
@@ -5014,7 +4944,6 @@ fr:
         refresh: "Actualiser"
         send_digest_label: "Envoyer ce résultat à :"
         send_digest: "Envoyer"
-        sending_email: "E-mail en cours d'envoi…"
         format: "Format"
         html: "html"
         text: "texte"
@@ -5042,7 +4971,6 @@ fr:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
             cc_placeholder: "cc@example.com"
-            subject_placeholder: "Objet…"
             error_placeholder: "Erreur"
         logs:
           none: "Pas de journaux trouvés."
@@ -5050,7 +4978,6 @@ fr:
             title: "Filtrer"
             user_placeholder: "nom d'utilisateur"
             address_placeholder: "nom@exemple.com"
-            type_placeholder: "résumé, inscription…"
             reply_key_placeholder: "clé de réponse"
             smtp_transaction_response_placeholder: "Identifiant SMTP"
       moderation_history:
@@ -5311,10 +5238,8 @@ fr:
           cancel: "Annuler"
           name:
             label: "Nom du modèle"
-            placeholder: "Saisissez un nom pour ce modèle..."
           template:
             label: "Modèle"
-            placeholder: "Créez un modèle YAML ici..."
           preview: "Prévisualiser"
         delete_confirm: "Voulez-vous vraiment supprimer ce modèle ?"
         quick_insert_fields:
@@ -5428,7 +5353,6 @@ fr:
           combative: "Trop belliqueux(se)"
           in_wrong_place: "Au mauvais endroit"
           no_constructive_purpose: "Aucun but constructif à ses actions autre que de créer une dissidence au sein de la communauté"
-          custom: "Personnalisé…"
         suspend_message: "E-mail"
         suspend_message_placeholder: "Si besoin, donnez plus d'informations au sujet de cette suspension qui seront envoyées à l'utilisateur par e-mail."
         suspended_by: "Suspendu par"
@@ -5516,7 +5440,6 @@ fr:
           button: "Supprimer tous les messages"
           progress:
             title: "Progression de la suppression des messages"
-            description: "Messages en cours de suppression…"
           confirmation:
             title: "Supprimer tous les messages de @%{username}"
             description: |
@@ -5552,7 +5475,6 @@ fr:
             text: "transférer @%{username} vers @%{targetUsername}"
             transfer_and_delete: "Transférer et supprimer @%{username}"
             cancel: "Annuler"
-        merging_user: "Fusion de l'utilisateur…"
         merge_failed: "Une erreur s'est produite lors de la fusion des utilisateurs."
         delete_forbidden_because_staff: "Les administrateurs et modérateurs ne peuvent pas être supprimés."
         delete_posts_forbidden_because_staff: "Vous ne pouvez pas supprimer tous les messages des administrateurs et des modérateurs."
@@ -5569,7 +5491,6 @@ fr:
         delete_confirm: "Il est généralement préférable d'anonymiser les utilisateurs plutôt que de les supprimer, afin d'éviter de supprimer du contenu dans les discussions existantes."
         delete_and_block: "Supprimer et <b>bloquer</b> cette adresse e-mail et adresse IP."
         delete_dont_block: "Supprimer uniquement"
-        deleting_user: "Suppression de l'utilisateur…"
         deleted: "L'utilisateur a été supprimé."
         delete_failed: "Une erreur s'est produite lors de la suppression de cet utilisateur. Assurez-vous que tous les messages sont supprimés avant d'essayer de supprimer l'utilisateur."
         send_activation_email: "Envoyer l'e-mail d'activation"
@@ -5778,8 +5699,6 @@ fr:
           modal_description: "Voulez-vous appliquer cette modification rétroactivement ? Cela affectera les préférences de %{count} utilisateurs existants."
           modal_yes: "Oui"
           modal_no: "Non, appliquer ce changement à partir de maintenant"
-        simple_list:
-          add_item: "Ajouter un élément…"
         json_schema:
           edit: Lancer l'éditeur
           modal_title: "Modifier %{name}"
@@ -5878,7 +5797,6 @@ fr:
         help: "Ajoutez de nouveaux émojis que tout le monde pourra utiliser. Vous pouvez glisser-déposer plusieurs fichiers en une seule fois pour créer des émojis qui hériteront du nom de leurs fichiers d'origine respectifs. Vous pouvez aussi utiliser le bouton « Ajouter un nouvel émoji » pour ouvrir une boîte de dialogue de sélection de fichiers."
         add: "Ajouter un nouvel émoji"
         choose_files: "Choisissez des fichiers"
-        uploading: "Envoi en cours…"
         name: "Nom"
         group: "Groupe"
         image: "Image"
@@ -5947,11 +5865,9 @@ fr:
       finish: "Quitter la configuration"
       back: "Retour"
       next: "Suivant"
-      configure_more: "Configurer plus…"
       step-text: "Étape"
       step: "%{current} sur %{total}"
       upload: "Téléverser un fichier"
-      uploading: "Envoi en cours…"
       upload_error: "Nous sommes désolés, une erreur est survenue lors de l'envoi de ce fichier. Veuillez réessayer."
       staff_count:
         one: "Votre communauté a %{count} responsable (vous)."

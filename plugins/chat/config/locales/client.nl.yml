@@ -10,6 +10,9 @@ nl:
       site_settings:
         categories:
           chat: Chat
+        chat_separate_sidebar_mode:
+          always: "Altijd"
+          never: "Nooit"
       logs:
         staff_actions:
           actions:
@@ -446,7 +449,6 @@ nl:
         title: "Chat"
         export_messages:
           title: "Chatberichten exporteren"
-          description: "Exporteren is momenteel beperkt tot de 10.000 meest recente berichten van de afgelopen 6 maanden."
           create_export: "Export maken"
           export_has_started: "Het exporteren is begonnen. Je ontvangt een privébericht als het klaar is."
       direct_messages:
@@ -544,7 +546,6 @@ nl:
       thread:
         title: "Titel"
         view_thread: Thread weergeven
-        default_title: "Thread"
         replies:
           one: "%{count} antwoord"
           other: "%{count} antwoorden"
@@ -649,3 +650,7 @@ nl:
       sections:
         chat:
           title: Chat
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

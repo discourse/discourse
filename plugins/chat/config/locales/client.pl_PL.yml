@@ -10,6 +10,10 @@ pl_PL:
       site_settings:
         categories:
           chat: Czat
+        chat_separate_sidebar_mode:
+          always: "Zawsze"
+          fullscreen: "Gdy czat jest w trybie pełnoekranowym"
+          never: "Nigdy"
       logs:
         staff_actions:
           actions:
@@ -110,6 +114,8 @@ pl_PL:
         all_new: "Wszystkie nowe wiadomości"
         dm_and_mentions: "Bezpośrednie wiadomości i wzmianki"
         never: "Nigdy"
+      separate_sidebar_mode:
+        title: "Pokaż oddzielne tryby paska bocznego dla forum i czatu"
       enable: "Włącz czat"
       flag: "Oflaguj"
       emoji: "Wstaw emoji"
@@ -155,6 +161,7 @@ pl_PL:
           few: "%{group_name} i %{count} inne grupy nie zezwalają na wzmianki."
           many: "%{group_name} i %{count} inne grupy nie zezwalają na wzmianki."
           other: "%{group_name} i %{count} inne grupy nie zezwalają na wzmianki."
+        channel_wide_mentions_disallowed: "Wzmianki @here i @all są wyłączone na tym kanale."
         too_many_members: "%{group_name} ma zbyt wielu członków. Nikt nie został powiadomiony."
         too_many_members_multiple:
           one: "%{group_name} i %{count} inna grupa ma zbyt wielu członków. Nikt nie został powiadomiony."
@@ -488,7 +495,7 @@ pl_PL:
         title: "Czat"
         export_messages:
           title: "Eksportuj wiadomości czatu"
-          description: "Eksport jest obecnie ograniczony do 10 000 najnowszych wiadomości z ostatnich 6 miesięcy."
+          description: "Spowoduje to wyeksportowanie wszystkich wiadomości ze wszystkich kanałów."
           create_export: "Utwórz eksport"
           export_has_started: "Eksport rozpoczął się. Otrzymasz wiadomość prywatną, gdy będzie gotowy."
       direct_messages:
@@ -598,7 +605,6 @@ pl_PL:
       thread:
         title: "Tytuł"
         view_thread: Zobacz wątek
-        default_title: "Wątek"
         replies:
           one: "%{count} odpowiedź"
           few: "%{count} odpowiedzi"
@@ -709,3 +715,7 @@ pl_PL:
       sections:
         chat:
           title: Czat
+    sidebar:
+      panels:
+        chat:
+          label: "Czat"

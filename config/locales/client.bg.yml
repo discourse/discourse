@@ -271,7 +271,6 @@ bg:
     related_messages:
       title: "Свързани съобщения"
       pill: "Свързани съобщения"
-      see_all: 'See <a href="%{path}">всички съобщения</a> от @%{username}...'
     suggested_topics:
       pm_title: "Предложени съобщения"
     about:
@@ -366,18 +365,11 @@ bg:
       other: "Вижте %{count} нови теми"
     preview: "преглед"
     cancel: "прекрати"
-    deleting: "Изтриване..."
     save: "Запазете промените"
-    saving: "Запазва се..."
     saved: "Запазено!"
     upload: "Качване"
-    uploading: "Качва се..."
-    processing: "Обработва се..."
-    uploading_filename: "Качване: %{filename}..."
-    processing_filename: "Обработка: %{filename}..."
     clipboard: "клипборд"
     uploaded: "Качено!"
-    pasting: "Вмъкване..."
     enable: "Позволи"
     disable: "Деактивиране"
     continue: "Напред"
@@ -957,7 +949,6 @@ bg:
       topic_stat_sentence_month:
         one: "%{count}нова тема през последния месец."
         other: "%{count}през последния месец."
-      n_more: "Категории (още %{count})..."
     ip_lookup:
       title: Търсене по IP адрес
       hostname: Хост
@@ -1010,7 +1001,6 @@ bg:
         ignore_no_users: "Нямате игнорирани потребители."
         ignore_option: "Игнориран"
         ignore_option_title: "Няма да получавате известия, свързани с този потребител и всички негови теми и отговори ще бъдат скрити."
-        add_ignored_user: "Добавете ..."
         mute_option: "Заглушен"
         mute_option_title: "Няма да получавате никакви известия, свързани с този потребител."
         normal_option: "Нормален"
@@ -1427,7 +1417,6 @@ bg:
         primary_label: "главен"
         unconfirmed_label: "непотвърдено"
         resend_label: "изпрати отново и-мейл за потвърждение"
-        resending_label: "изпращане..."
         resent_label: "имейлът е изпратен"
         update_email: "Смяна на Имейла"
         set_primary: "Задайте основен имейл"
@@ -1473,7 +1462,6 @@ bg:
         not_available_no_suggestion: "Не е наличен!"
         too_short: "Потребителското име е твърде кратко"
         too_long: "Потребителското име е твърде дълго"
-        checking: "Проверяваме дали потребителското име е свободно..."
         prefilled: "Имейлът съвпада с това потребителско име"
         required: "Моля, въведете потребителско име"
         edit: "Редактиране на потребителско име"
@@ -1594,7 +1582,6 @@ bg:
         reinvite: "Изпратете отново имейла"
         reinvited: "Поканата е изпратена отново"
         removed: "Премахнато"
-        search: "търсете покани"
         user: "Поканени потребители"
         none: "Няма покани за показване."
         truncated:
@@ -1654,7 +1641,6 @@ bg:
             <p>Поканете списък с потребители, за да задвижите общността си бързо. Подгответе <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">CSV файл</a> , съдържащ поне един ред на имейл адрес на потребителите, които искате да поканите. Последваща информация, разделена със запетая, може да бъде предоставена, ако искате да добавите хората към групи или да ги изпратите до конкретна тема при първото им влизане.</p>
             <pre>john@smith.com,first_group_name;second_group_name,topic_id</pre>
             <p>На всеки имейл адрес в качения ви CSV файл ще бъде изпратена покана и вие ще можете да я управлявате по-късно.</p>
-          progress: "Качено %{progress}%..."
           success: "Файлът е качен успешно. Ще бъдете информирани чрез съобщение, когато процесът завърши."
           error: "За съжаление файлът трябва да е във формат CSV."
       password:
@@ -1768,7 +1754,6 @@ bg:
       suggested_topics:
         title: "Продължете да четете!"
         content: "Ето някои теми, които смятаме, че бихте искали също да прочетете."
-    loading: "Зарежда се..."
     errors:
       prev_page: "докато се зареждаше"
       reasons:
@@ -1817,7 +1802,6 @@ bg:
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# грешка/час} other {# грешки/час}}</a> превиши лимита за настройка на сайта от {limit, plural, one {# грешка/час} other {# грешки/час}}.
       exceeded_minute_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# грешка/минута} other {# грешки/минута}}</a> превиши лимита за настройка на сайта от {limit, plural, one {# грешка/минута} other {# грешки/минута}}.
-    learn_more: "научете повече..."
     mute: Заглушаване
     unmute: Премахване на заглушаване
     last_post: Публикувано
@@ -1848,10 +1832,6 @@ bg:
       disable: "Покажи изтритите публикации"
     private_message_info:
       title: "Съобщение"
-      invite: "Поканете други..."
-      edit: "Добавяне или премахване..."
-      remove: "Премахване..."
-      add: "Добавете ..."
       leave_message: "Сигурни ли сте, че искате да оставите това съобщение?"
       remove_allowed_user: "Сигурни ли сте, че искате да премахнете %{name} от това съобщение?"
       remove_allowed_group: "Сигурни ли сте, че искате да премахнете %{name} от това съобщение?"
@@ -1931,10 +1911,8 @@ bg:
       blank_username: "Моля, въведете Вашия имейл или потребителско име."
       blank_username_or_password: "Моля, въведете Вашия имейл или потребителско име и парола."
       reset_password: "Смяна на парола"
-      logging_in: "Влизане..."
       previous_sign_up: "Вече имате акаунт?"
       or: "Или"
-      authenticating: "Оторизация..."
       awaiting_activation: "Вашият акаунт изчаква активация, използвайте линка за забравена парола, за да изпратите друг имейл за активация."
       awaiting_approval: "Вашия акаунт все още не е одобрен от администратора. Ще получите известие, когато това се случи."
       requires_invite: "Съжаляваме, този форум е достъпен само с покани."
@@ -2015,8 +1993,6 @@ bg:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Въведете"
-    conditional_loading_section:
-      loading: Зарежда се...
     category_row:
       topic_count:
         one: "%{count} тема в тази категория"
@@ -2031,13 +2007,10 @@ bg:
       delete_item: "Изтрий %{name}"
       filter_by: "Филтриране по: %{name}"
       select_to_filter: "Изберете стойност за филтриране"
-      default_header_text: Изберете...
       no_content: Няма намерени съвпадения
       results_count:
         one: "%{count} резултат"
         other: "%{count} резултата"
-      filter_placeholder: Търсене ...
-      filter_placeholder_with_any: Търсете или създайте...
       create: "Създаване: '%{content}'"
       max_content_reached:
         one: "Можете да изберете само %{count} артикул."
@@ -2046,8 +2019,6 @@ bg:
         one: "Изберете поне %{count} елемент."
         other: "Изберете поне %{count} елемента."
       components:
-        tag_drop:
-          filter_for_more: Филтрирайте за повече...
         categories_admin_dropdown:
           title: "Управление на категории"
     date_time_picker:
@@ -2078,10 +2049,8 @@ bg:
       destination_category: "Категория дестинация"
       publish: "Публикуване на споделена чернова"
       confirm_publish: "Сигурни ли сте, че искате да публикувате тази чернова?"
-      publishing: "Темата се публикува..."
     composer:
       emoji: "Емошънка :)"
-      more_emoji: "още..."
       options: "Опции"
       whisper: "шепот"
       unlist: "скрити"
@@ -2090,7 +2059,6 @@ bg:
       toggle_unlisted: "Превключване на неизброени"
       posting_not_on_topic: "На коя тема искате да отговорите ?"
       saved_local_draft_tip: "запазено локално"
-      similar_topics: "Вашата тема е подобна на..."
       drafts_offline: "чернови офлайн"
       edit_conflict: "редактиране на конфликта"
       esc: "esc"
@@ -2146,7 +2114,6 @@ bg:
       saving: "Запаметяване"
       saved: "Запазено!"
       saved_draft: "Публикуването на чернова е в ход. Докоснете, за да възобновите."
-      uploading: "Качва се..."
       show_preview: "Покажи преглед"
       hide_preview: "скрий преглед"
       quote_post_title: "Цитирай цялата публикация"
@@ -2358,7 +2325,6 @@ bg:
           label: Тагнат
           aria_label: Филтрирайте с помощта на тагове
         filters:
-          label: Връщане само на теми/публикации...
           title: Съвпадение само в заглавието
           likes: Аз харесах
           posted: Аз публикувах в
@@ -2407,7 +2373,6 @@ bg:
         close_topics: "Затвори темите"
         archive_topics: "Архивирай темите"
         move_messages_to_inbox: "Премести във входящи"
-        notification_level: "Известия..."
         choose_new_category: "Избери нова категория за тези теми:"
         selected:
           one: "Вие сте избрали <b>%{count}</b> тема."
@@ -2552,8 +2517,6 @@ bg:
         back: "Назад"
       progress:
         title: прогрес на темата
-        jump_prompt: "отиди на..."
-        jump_prompt_long: "Отиди на..."
         jump_prompt_to_date: "до дата"
         jump_prompt_or: "или"
       notifications:
@@ -2605,7 +2568,6 @@ bg:
         unarchive: "Разархивирай темата"
         archive: "Архивирай темата"
         reset_read: "Изчисти прочетените данни "
-        make_public: "Направи темата публична..."
       feature:
         pin: "Закови темата"
         unpin: "Отгови темата"
@@ -2648,7 +2610,6 @@ bg:
         banner_note: "Потребителите могат да откажат банера като го затворят. Само една тема може да бъде банер в едно и също време."
         no_banner_exists: "Няма блокирани теми."
         banner_exists: "<strong class='badge badge-notification unread'> е</strong> тема за банер."
-      inviting: "Покана..."
       invite_private:
         title: "Покани за съобщение"
         email_or_username: "Имейл адрес или Потребителско име"
@@ -2734,7 +2695,6 @@ bg:
           one: "Моля, изберете нов собственик за публикацията"
           other: "Моля, изберете нов собственик за %{count} публикации"
       change_timestamp:
-        title: "Промяна на времевия печат..."
         action: "смени времевия показател"
         invalid_timestamp: "Времевия показател неможе да бъде в бъдещето."
         error: "Грешка при смяната на времевия показател."
@@ -2860,8 +2820,6 @@ bg:
         rebake: "Прегенерирай HTML "
         publish_page: "Публикуване на страници"
         unhide: "Покажи "
-        change_owner: "Смени Правомощията..."
-        grant_badge: "Присъдени значка..."
         lock_post: "Заключване на публикацията"
         lock_post_description: "не позволявайте на публикувалия да редактира тази публикация"
         unlock_post: "Отключи публикацията"
@@ -3059,7 +3017,6 @@ bg:
       title: "Резюме на темата"
       participants_title: "Чести автори"
       links_title: "Популярни връзки"
-      links_shown: "покажи повече адреси..."
       clicks:
         one: "%{count} кликване"
         other: "%{count} кликвания"
@@ -3155,6 +3112,9 @@ bg:
           one: "Нов (%{count})"
           other: "Нови (%{count})"
         help: "теми създадени през последните няколко дни"
+        all: "Всички"
+        topics: "Теми"
+        replies: "Отговори"
       posted:
         title: "Моите публикации"
         help: "теми в които сте публикували"
@@ -3420,7 +3380,6 @@ bg:
           default: "Моля, въведете валидна стойност."
           email: "Моля, въведете валиден имейл адрес."
   admin_js:
-    type_to_filter: "филтрирай..."
     admin:
       title: "Discourse Админ"
       moderator: "Модератор"
@@ -3567,18 +3526,14 @@ bg:
           disable:
             title: "Изключване на read-only режим"
             label: "Изключване на read-only"
-        logs:
-          none: "Все още няма логове..."
         columns:
           filename: "Име на файла"
           size: "Размер"
         upload:
           label: "Качи"
           title: "Качи бекъп за тази инстанция"
-          uploading: "Качва се..."
           error: "Появи се грешка при качването на '%{filename}': %{message}"
         operations:
-          is_running: "В момента се изпълнява задача..."
           failed: "Задачата се провали. Моля проверете логовете."
           cancel:
             label: "Прекрати"
@@ -3711,7 +3666,6 @@ bg:
         settings: "Настройки"
         templates: "Шаблони"
         preview_digest: "Преглед на справочника"
-        sending_test: "Изпраща се тестов имейл..."
         error: "<b>ГРЕШКА</b> - %{server_error}"
         test_error: "Проблем при изпращането на пробния имейл. Моля, проверете настройките на имейла, вижте дали хостът не блокира имейл връзката и пробвайте отново."
         sent: "Изпрати"
@@ -3729,7 +3683,6 @@ bg:
         delivery_method: "Метод за доставяне "
         preview_digest_desc: "Преглед на съдържанието на имейлите, изпратени до неактивните потребители."
         refresh: "Опресни"
-        sending_email: "Изпраща се имейл..."
         format: "Формат"
         html: "html"
         text: "текст"
@@ -3755,7 +3708,6 @@ bg:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
             cc_placeholder: "cc@example.com"
-            subject_placeholder: "Тема..."
             error_placeholder: "Грешка"
         logs:
           none: "Няма налични логове "
@@ -3763,7 +3715,6 @@ bg:
             title: "Филтер"
             user_placeholder: "потребителско име "
             address_placeholder: "name@example.com"
-            type_placeholder: "дайджест, регистрация"
             reply_key_placeholder: "reply key "
       moderation_history:
         actions:
@@ -3909,10 +3860,8 @@ bg:
           cancel: "Прекрати"
           name:
             label: "Име на шаблон"
-            placeholder: "Въведете име за този шаблон..."
           template:
             label: "Шаблон"
-            placeholder: "Създайте YAML шаблон тук..."
           preview: "Преглед"
         delete_confirm: "Сигурни ли сте, че искате да изтриете този шаблон?"
         quick_insert_fields:
@@ -4290,7 +4239,6 @@ bg:
       emoji:
         title: "Емотикони "
         add: "Добави нова емотикона "
-        uploading: "Качва се..."
         name: "Име "
         group: "Група"
         image: "Изображение "
@@ -4341,7 +4289,6 @@ bg:
       back: "Назад"
       next: "Напред"
       step-text: "Стъпка"
-      uploading: "Качва се..."
       upload_error: "Съжаляваме, възникна грешка при качването на този файл. Моля, опитайте отново."
       invites:
         add_user: "добавяне"

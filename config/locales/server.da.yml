@@ -286,7 +286,6 @@ da:
     more_replies:
       one: "%{count} svar til"
       other: "%{count} svar til"
-    loading: "Indlæser diskussion…"
     permalink: "Permalink"
     imported_from: "Importeret fra: %{link}"
     in_reply_to: "▶ %{username}"
@@ -1359,8 +1358,6 @@ da:
     allowed_crawler_user_agents: "Brugeragenter for webcrawlere, der skal have adgang til webstedet. ADVARSEL! INDSTILLES DETTE VIL ALLE CRAWLERE, DER IKKE ER ANGIVET HER BLIVE NÆGTET!"
     blocked_crawler_user_agents: "Entydigt store og små bogstaver i brugeragentstrengen, der identificerer webcrawlere, der ikke skal have adgang til webstedet. Gælder ikke, hvis tilladelsesliste er defineret."
     slow_down_crawler_rate: "Hvis der er angivet slow_down_crawler_user_agents, gælder denne sats for alle crawlere (antal sekunders forsinkelse mellem anmodninger)"
-    content_security_policy: "Aktivér indholds-sikkerheds-politik"
-    content_security_policy_report_only: "Aktivér indholds-sikkerheds-politik-kun-rapportering"
     content_security_policy_collect_reports: "Aktivér CSP-overtrædelsesrapportindsamling på /csp_reports"
     invalidate_inactive_admin_email_after_days: "Administratorkonti, der ikke har besøgt webstedet i dette antal dage, skal validere deres e-mailadresse igen, før de logger ind. Indstil til til 0 for at deaktivere."
     top_menu: "Afklar hvilke ting fremgår af sidens navigations bar, og i hvilken rækkefølge. Eksempel: latest|new|unread|categories|top|read|posted|bookmarks"
@@ -1622,7 +1619,6 @@ da:
     default_tags_tracking: "Liste over mærker, der spores som standard."
     default_tags_muted: "Liste over mærker, der er tavse som standard."
     default_tags_watching_first_post: "Liste over mærker, hvor første indlæg i hvert nyt emne vil blive overvåget som standard."
-    allow_user_api_keys: "Tillad generering af bruger API nøgler"
     allow_user_api_key_scopes: "Liste over tilladte anvendelsesområder for bruger-API-nøgler"
     expire_user_api_keys_days: "Antal dage før en bruger API-nøgle automatisk udløber (0 for aldrig)"
     tagging_enabled: "Aktivér mærker på emner?"
@@ -1782,18 +1778,6 @@ da:
   admin:
     email:
       sent_test: "sendt!"
-    user:
-      merge_user:
-        updating_username: "Opdaterer brugernavn..."
-        changing_post_ownership: "Ændrer ejerskab af indlæg..."
-        merging_given_daily_likes: "Sammenfletter de givne daglige 'Synes godt om'..."
-        merging_post_timings: "Fletter indlægs tider..."
-        merging_user_visits: "Fletter brugerbesøg..."
-        updating_site_settings: "Opdaterer webstedsindstillinger..."
-        updating_user_stats: "Opdaterer brugerstatistik..."
-        merging_user_attributes: "Fletter brugerattributter..."
-        updating_user_ids: "Opdaterer bruger-id'er..."
-        deleting_source_user: "Sletter kildebruger..."
   user:
     deactivated: "Blev deaktiveret på grund af for mange returnerede e-mails til '%{email}'."
     deactivated_by_staff: "Deaktiveret af hjælperteamet"
@@ -2301,9 +2285,9 @@ da:
       text_body_template: |
         Hej,
 
-        Dette er en automatisk besked fra %{site_name} at informere dig om, at @%{username} er blevet ignoreret af %{ignores_threshold} brugere. Dette kan indikere, at der er ved at udvikle sig et problem i dit fællesskab.
+        Dette er en automatisk besked fra %{site_name}, for at informere dig om, at @%{username} er blevet ignoreret af %{ignores_threshold} brugere. Dette kan indikere, at der er ved at udvikle sig et problem i dit fællesskab.
 
-        Du vil måske [gennemgå de seneste indlæg](%{base_url}/u/%{username}/resume) fra denne bruger og potentielt andre brugere i [ignoreret og tavs brugerrapport] (%{base_url}/admin/reports/top_ignored_users).
+        Du vil måske [gennemgå de seneste indlæg](%{base_url}/u/%{username}/resume) fra denne bruger og potentielt andre brugere i [ignoreret og tavs brugerrapport](%{base_url}/admin/reports/top_ignored_users).
 
         For yderligere vejledning henvises til vores [fællesskabs-retningslinjer](%{base_url}/guidelines).
     too_many_spam_flags:
@@ -3310,8 +3294,6 @@ da:
         description: "Gendan indlægget, så alle brugere kan se det."
       delete_single:
         title: "Slet"
-      delete:
-        title: "Slet..."
       delete_and_ignore_replies:
         confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
       delete_and_agree_replies:
@@ -3333,7 +3315,6 @@ da:
       approve_user:
         title: "Godkend Bruger"
       reject_user:
-        title: "Slet Bruger..."
         delete:
           title: "Slet Bruger"
           description: "Brugeren vil blive slettet fra forummet."

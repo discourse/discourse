@@ -6,6 +6,11 @@
 
 cs:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Vždy"
+          never: "Nikdy"
     chat:
       create: "Vytvoř"
       cancel: "Zrušit"

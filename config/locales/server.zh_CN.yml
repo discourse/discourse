@@ -54,9 +54,9 @@ zh_CN:
   on_another_topic: "在另一个话题中"
   topic_category_changed: "从 %{from} 到 %{to}"
   topic_tag_changed:
-    added_and_removed: "添加了 %{added}，移除了 %{removed}"
-    added: "添加了 %{added}"
-    removed: "移除了 %{removed}"
+    added_and_removed: "%{added}添加，%{removed}移除"
+    added: "%{added}添加"
+    removed: "%{removed}移除"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number}，来自 %{username}"
@@ -207,6 +207,7 @@ zh_CN:
       local_login_cannot_be_disabled_if_second_factor_enforced: "如果强制执行双重身份验证，则无法禁用本地登录。先禁用强制双重身份验证，然后再禁用本地登录。"
       cannot_enable_s3_uploads_when_s3_enabled_globally: "您无法启用 S3 上传，因为 S3 上传已全局启用，启用此站点级设置可能会导致上传出现严重问题"
       cors_origins_should_not_have_trailing_slash: "您不应该将尾部反斜杠 (/) 添加到 CORS 源。"
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "用户代理的长度必须至少为 3 个字符，以避免意外限制合法用户的速率。"
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "您不能将以下任何值添加到设置中：%{values}。"
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "如果启用了 'composer media optimization image enabled'，则无法禁用带状图片元数据。在禁用带状图片元数据之前，禁用 'composer media optimization image enabled'。"
       twitter_summary_large_image_no_svg: "用于 twitter:image 元数据的 Twitter 总结图片不能是 .svg 图片。"
@@ -312,7 +313,6 @@ zh_CN:
     configure: "配置嵌入"
     more_replies:
       other: "其他 %{count} 个回复"
-    loading: "正在加载讨论…"
     permalink: "永久链接"
     imported_from: "这是一个从 %{link} 下的原始话题分离的讨论话题"
     in_reply_to: "▶ %{username}"
@@ -641,6 +641,7 @@ zh_CN:
     media_placeholder:
       blocked_hotlinked_title: "媒体托管在另一个站点上。点击以在新标签页中打开。"
       blocked_hotlinked: "外部媒体"
+    hidden_bidi_character: "双向控制字符可以更改文本渲染的顺序。可能被用于掩盖恶意代码。"
     has_likes:
       other: "%{count} 个赞"
     cannot_permanently_delete:
@@ -841,6 +842,8 @@ zh_CN:
   draft_backup:
     pm_title: "正在进行的话题的备份草稿"
     pm_body: "包含备份草稿的话题"
+  user_activity:
+    no_log_search_queries: "搜索日志当前已禁用（管理员可以在站点设置中启用它们）。"
   email_settings:
     pop3_authentication_error: "提供的 POP3 凭据存在问题，请检查用户名和密码并重试。"
     imap_authentication_error: "提供的 IMAP 凭据存在问题，请检查用户名和密码并重试。"
@@ -1309,6 +1312,7 @@ zh_CN:
         qtt_like: 获赞
       description: "从各种用户收到赞最多的前 10 名用户。"
   dashboard:
+    group_email_credentials_warning: '群组 <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a> 的电子邮件凭据有问题。在此问题解决之前，不会从群组邮箱发送电子邮件。%{error}'
     rails_env_warning: "您的服务器正在以%{env}模式运行。"
     host_names_warning: "您的 config/database.yml 文件使用的是默认的 localhost 主机名。请更新为您的站点主机名。"
     sidekiq_warning: 'Sidekiq 未运行。许多任务，例如发送电子邮件，是通过 Sidekiq 异步执行的。请确保至少运行一个 Sidekiq进程。<a href="https://github.com/mperham/sidekiq" target="_blank">在此处了解 Sidekiq</a>。'
@@ -1505,11 +1509,11 @@ zh_CN:
     blocked_crawler_user_agents: "用户代理字符串中唯一不区分大小写的字词，用于标识不应被允许访问站点的网抓取工具。如果定义了许可名单，则不适用。"
     slow_down_crawler_user_agents: '网络爬虫的用户代理应该按照“减慢爬虫速率”设置中的配置进行速率限制。每个值的长度必须至少为 3 个字符。'
     slow_down_crawler_rate: "如果指定了 slow_down_crawler_user_agents，则此速率将应用于所有抓取工具（请求之间的延迟秒数）"
-    content_security_policy: "启用内容安全策略"
-    content_security_policy_report_only: "启用仅内容安全策略报告"
+    content_security_policy: "启用内容安全策略 (CSP)"
+    content_security_policy_report_only: "启用仅限内容安全政策报告 (CSP)"
     content_security_policy_collect_reports: "在 /csp_reports 启用 CSP 违规报告收集"
     content_security_policy_frame_ancestors: "限制谁可以通过 CSP 将此站点嵌入 iframe 中。在<a href='%{base_path}/admin/customize/embedding'>嵌入</a>上控制允许的主机。"
-    content_security_policy_script_src: "其他列入许可名单的脚本源。默认包含当前主机和 CDN。请参阅<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>使用内容安全策略缓解 XSS 攻击</a>。"
+    content_security_policy_script_src: "附加的脚本来源白名单。默认包含当前主机和 CDN。<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>使用内容安全策略缓解 XSS 攻击</a> (CSP)"
     invalidate_inactive_admin_email_after_days: "在此天数内未访问站点的管理员帐户将需要在登录前重新验证其电子邮件地址。设置为 0 将禁用。"
     include_secure_categories_in_tag_counts: "启用后，一个标签的话题数量将包括所有用户的阅读限制类别中的话题。禁用时，常规用户只会看到所有话题都为公开类别的标签的话题数量。"
     display_personal_messages_tag_counts: "启用后，将显示使用给定标签标记的个人消息的数量。"
@@ -1632,7 +1636,6 @@ zh_CN:
     enable_safe_mode: "允许用户进入安全模式以调试插件。"
     rate_limit_create_topic: "创建话题后，用户必须等待 (n) 秒才能创建另一个话题。"
     rate_limit_create_post: "发帖后，用户必须等待 (n) 秒才能创建另一个帖子。"
-    rate_limit_new_user_create_topic: "创建话题后，新用户必须等待 (n) 秒才能创建另一个话题。"
     rate_limit_new_user_create_post: "发帖后，新用户必须等待 (n) 秒才能创建另一个帖子。"
     max_likes_per_day: "每个用户每天的最大点赞次数。"
     max_flags_per_day: "每个用户每天的最大举报次数。"
@@ -1717,7 +1720,7 @@ zh_CN:
     tl3_requires_likes_received: "为了有资格升级到信任级别 3，在过去 (tl3 time period) 天内必须收到的最少赞数。"
     tl3_links_no_follow: "不从信任级别 3 用户发布的链接中移除 rel=nofollow。"
     tl4_delete_posts_and_topics: "允许 TL4 用户删除其他用户创建的帖子和话题。 TL4 用户还可以查看已删除的话题和帖子。"
-    edit_all_topic_groups: "允许此群组中的用户编辑其他用户的话题标题、标签和类别"
+    edit_all_topic_groups: "允许此群组中的用户编辑其他用户的主题标题、标签和类别"
     edit_all_post_groups: "允许此群组中的用户编辑其他用户的帖子"
     min_trust_to_create_topic: "创建新话题所需的最低信任级别。"
     allow_flagging_staff: "如果启用，用户可以举报来自管理人员帐户的帖子。"
@@ -1754,7 +1757,7 @@ zh_CN:
     title_min_entropy: "话题标题所需的最小熵（唯一字符，非英语计数更多）。"
     body_min_entropy: "帖子正文所需的最小熵（唯一字符，非英语计数更多）。"
     allow_uppercase_posts: "允许在话题标题或帖子正文中全部使用大写字母。"
-    max_consecutive_replies: "用户在被阻止添加另一个回复之前可以在话题中连续发布的帖子数。此限值不适用于话题所有者、站点管理人员或类别版主。"
+    max_consecutive_replies: "用户在被阻止添加另一个回复之前可以在话题中连续发布的帖子数。此限值不适用于话题所有者、站点工作人员或类别版主。"
     enable_filtered_replies_view: '“(n) 回复”按钮会收起所有其他帖子，仅显示当前帖子及其回复。'
     title_fancy_entities: "将常见的 ASCII 字符转换为话题标题中的花哨 HTML 实体，又称为 SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "检查有无类似话题之前的标题的最小长度。"
@@ -1941,8 +1944,8 @@ zh_CN:
     permalink_normalizations: "在匹配永久链接之前应用以下正则表达式，例如：/(topic.*)\\?.*/\\1 将从话题路由中去除查询字符串。格式为正则表达式+字符串。使用 \\1 等访问捕获"
     global_notice: "向所有访客显示紧急、突发、不可忽略的全局横幅通知，更改为空将隐藏（允许使用 HTML）。"
     disable_system_edit_notifications: "当 'download_remote_images_to_local' 启用时禁用系统用户的编辑通知。"
-    disable_category_edit_notifications: "禁用话题类别编辑的通知。包括“已发布”的话题（例如，共享草稿）。"
-    disable_tags_edit_notifications: "禁用话题标签编辑的通知。包括“已发布”的话题（例如，共享草稿）。"
+    disable_category_edit_notifications: "禁用主题类别编辑通知。包括 “已发布” 的主题(例如共享草稿)。"
+    disable_tags_edit_notifications: "禁用主题标签编辑的通知。包括“已发布”的主题(例如共享草稿)。"
     notification_consolidation_threshold: "合并通知前，收到的赞或成员资格请求通知的数量。设置为 0 将禁用。"
     likes_notification_consolidation_window_mins: "以分钟计的持续时间，被赞的通知在达到此阈值后会被合并到单个通知中。可以通过 `SiteSetting.notification_consolidation_threshold` 配置阈值。"
     automatically_unpin_topics: "当用户到达底部时自动取消置顶话题。"
@@ -1956,7 +1959,7 @@ zh_CN:
     auto_handle_queued_age: "在此设定天数后自动处理待审核的记录。举报将被忽略。队列中的帖子和用户将被拒绝。设为 0 将禁用此功能。"
     penalty_step_hours: "以小时为单位对用户进行禁言或封禁的默认处罚。第一次违反默认为第一个值，第二次违反默认为第二个值，依此类推。"
     svg_icon_subset: "添加您希望包含在资源中的其他 FontAwesome 5 图标。使用前缀 'fa-' 表示实心图标，使用 far-' 表示常规图标，使用 'fab-' 表示品牌图标。"
-    max_prints_per_hour_per_user: "打印页面的最大展示次数（设置为 0 将禁用打印）"
+    max_prints_per_hour_per_user: "/print 页面的最大展示次数（设置为 0 将禁用打印）"
     full_name_required: "全名是用户个人资料的必填字段。"
     enable_names: "在用户的个人资料、用户卡片和电子邮件中显示用户的全名。禁用将在所有地方隐藏全名。"
     display_name_on_posts: "在帖子中显示用户的全名以及他们的用户名。"
@@ -1977,7 +1980,7 @@ zh_CN:
     allowed_href_schemes: "除了 http 和 https 之外，链接中允许的协议名称。"
     embed_post_limit: "要嵌入的最大帖子数。"
     embed_username_required: "创建话题需要用户名。"
-    notify_about_reviewable_item_after: "如果经过这么多小时数后仍有未处理的可审核条目，请向版主发送个人消息。设置为 0 将禁用。"
+    notify_about_reviewable_item_after: "如果经过这么多小时数后仍有未处理的可审核条目，请向版主发送个人信息。设置为 0 将禁用。"
     delete_drafts_older_than_n_days: "删除超过 (n) 天的草稿。"
     delete_merged_stub_topics_after_days: "在自动删除完全合并的存根话题之前等待的天数。设置为 0 将从不删除存根话题。"
     bootstrap_mode_min_users: "禁用引导模式所需的最小用户数（设置为 0 将禁用，最多可能需要 24 小时）"
@@ -2053,7 +2056,6 @@ zh_CN:
     retain_web_hook_events_period_days: "保留网络钩子事件记录的天数。"
     retry_web_hook_events: "自动重试失败的网络钩子事件 4 次。重试之间的时间间隔为 1、5、25 和 125 分钟。"
     revoke_api_keys_days: "未使用的 API 密钥被自动撤消前的天数（0 表示从不撤消）"
-    allow_user_api_keys: "允许生成用户 API 密钥"
     allow_user_api_key_scopes: "用户 API 密钥允许的范围列表"
     min_trust_level_for_user_api_key: |
       生成用户 API 密钥所需的信任级别。<br>
@@ -2118,7 +2120,7 @@ zh_CN:
     experimental_topics_filter: "实验性：在 /filter 下启用实验性话题筛选路由"
     experimental_search_menu_groups: "实验性：启用已升级为使用 glimmer 的新搜索菜单"
     enable_experimental_lightbox: "实验性：将默认图片灯箱替换为全新设计。"
-    page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。'Spinner' 是整页指示器。'Slider' 会在屏幕顶部显示一个窄条。"
+    page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_email: "无效的电子邮件地址。"
@@ -2330,18 +2332,6 @@ zh_CN:
   admin:
     email:
       sent_test: "已发送！"
-    user:
-      merge_user:
-        updating_username: "正在更新用户名…"
-        changing_post_ownership: "正在更改帖子所有权…"
-        merging_given_daily_likes: "正在合并每日赞…"
-        merging_post_timings: "正在合并帖子时间数据…"
-        merging_user_visits: "正在合并用户访问…"
-        updating_site_settings: "正在更新站点设置…"
-        updating_user_stats: "正在更新用户统计信息…"
-        merging_user_attributes: "正在合并用户特性…"
-        updating_user_ids: "正在更新用户 ID…"
-        deleting_source_user: "正在删除源用户…"
   user:
     deactivated: "由于 '%{email}' 的退回电子邮件过多，已被停用。"
     deactivated_by_staff: "被管理人员停用"
@@ -4607,11 +4597,9 @@ zh_CN:
         description: "恢复帖子，以便所有用户都可以看到它。"
       agree_and_hide:
         title: "隐藏帖子"
-        description: "同意举报并隐藏此帖子 + 自动向用户发送消息，敦促他们进行编辑。"
+        description: "同意举报并隐藏此帖子 + 自动向用户发送信息，敦促他们进行编辑。"
       delete_single:
         title: "删除"
-      delete:
-        title: "删除…"
       delete_and_ignore:
         title: "忽略举报并删除帖子"
         description: "忽略举报，将举报从队列中移除，并删除该帖子；如果是第一篇帖子，同时删除该话题。 "
@@ -4631,6 +4619,8 @@ zh_CN:
         description: "恢复帖子，以便所有用户都可以看到它。"
       disagree:
         title: "否"
+      discard_post:
+        title: "丢弃帖子"
       ignore:
         title: "忽略"
       ignore_and_do_nothing:
@@ -4646,7 +4636,6 @@ zh_CN:
       approve_user:
         title: "批准用户"
       reject_user:
-        title: "删除用户…"
         delete:
           title: "删除用户"
           description: "该用户将被从论坛中删除。"
@@ -4655,7 +4644,6 @@ zh_CN:
           description: "该用户将被删除，我们将屏蔽他们的 IP 和电子邮件地址。"
       reject:
         title: "拒绝"
-        bundle_title: "拒绝…"
       reject_and_suspend:
         title: "拒绝并封禁用户"
       reject_and_silence:

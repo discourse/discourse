@@ -1,7 +1,7 @@
 import Mixin from "@ember/object/mixin";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
-import DismissNewModal from "discourse/components/modal/dismiss-new";
+import DismissNew from "discourse/components/modal/dismiss-new";
 
 export default Mixin.create({
   modal: service(),
@@ -13,8 +13,10 @@ export default Mixin.create({
       return this.callResetNew();
     }
 
-    this.modal.show(DismissNewModal, {
+    this.modal.show(DismissNew, {
       model: {
+        selectedTopics: this.selected,
+        subset: this.model.listParams?.subset,
         dismissCallback: ({ dismissPosts, dismissTopics, untrack }) => {
           this.callResetNew(dismissPosts, dismissTopics, untrack);
         },

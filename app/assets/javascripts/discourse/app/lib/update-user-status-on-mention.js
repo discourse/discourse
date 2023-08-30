@@ -1,12 +1,20 @@
-import createUserStatusMessage from "discourse/lib/user-status-message";
+import { UserStatusMessage } from "discourse/lib/user-status-message";
 
-export function updateUserStatusOnMention(mention, status, tippyInstances) {
+let userStatusMessages = [];
+
+export function updateUserStatusOnMention(mention, status) {
   removeStatus(mention);
   if (status) {
-    const statusHtml = createUserStatusMessage(status, { showTooltip: true });
-    tippyInstances.push(statusHtml._tippy);
-    mention.appendChild(statusHtml);
+    const userStatusMessage = new UserStatusMessage(status);
+    userStatusMessages.push(userStatusMessage);
+    mention.appendChild(userStatusMessage.html);
   }
+}
+
+export function destroyUserStatusOnMentions() {
+  userStatusMessages.forEach((instance) => {
+    instance.destroy();
+  });
 }
 
 function removeStatus(mention) {

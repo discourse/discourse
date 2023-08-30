@@ -275,7 +275,6 @@ nl:
     related_messages:
       title: "Gerelateerde berichten"
       pill: "Gerelateerde berichten"
-      see_all: '<a href="%{path}">Alle berichten</a> van @%{username} weergeven...'
     suggested_topics:
       title: "Nieuwe en ongelezen topics"
       pill: "Voorgesteld"
@@ -372,18 +371,11 @@ nl:
       other: "%{count} nieuwe topics weergeven"
     preview: "voorbeeld"
     cancel: "annuleren"
-    deleting: "Verwijderen..."
     save: "Wijzigingen opslaan"
-    saving: "Opslaan..."
     saved: "Opgeslagen!"
     upload: "Uploaden"
-    uploading: "Uploaden..."
-    processing: "Verwerken..."
-    uploading_filename: "Uploaden: %{filename}..."
-    processing_filename: "Verwerken: %{filename}..."
     clipboard: "klembord"
     uploaded: "Geüpload!"
-    pasting: "Plakken..."
     enable: "Inschakelen"
     disable: "Uitschakelen"
     continue: "Doorgaan"
@@ -973,7 +965,6 @@ nl:
       topic_stat_sentence_month:
         one: "%{count} nieuw topic de afgelopen maand."
         other: "%{count} nieuwe topics de afgelopen maand."
-      n_more: "Categorieën (nog %{count})..."
     ip_lookup:
       title: IP-adres zoeken
       hostname: Hostnaam
@@ -1026,7 +1017,6 @@ nl:
         ignore_no_users: "Je hebt geen genegeerde gebruikers."
         ignore_option: "Genegeerd"
         ignore_option_title: "Je ontvangt geen meldingen met betrekking tot deze gebruiker en alle topics en antwoorden ervan worden verborgen."
-        add_ignored_user: "Toevoegen..."
         mute_option: "Gedempt"
         mute_option_title: "Je ontvangt geen meldingen met betrekking tot deze gebruiker."
         normal_option: "Normaal"
@@ -1448,7 +1438,6 @@ nl:
         primary_label: "primair"
         unconfirmed_label: "onbevestigd"
         resend_label: "bevestigings-e-mail opnieuw verzenden"
-        resending_label: "verzenden..."
         resent_label: "e-mail verzonden"
         update_email: "E-mailadres wijzigen"
         set_primary: "Primair e-mailadres instellen"
@@ -1494,7 +1483,6 @@ nl:
         not_available_no_suggestion: "Niet beschikbaar"
         too_short: "Je gebruikersnaam is te kort"
         too_long: "Je gebruikersnaam is te lang"
-        checking: "Beschikbaarheid van gebruikersnaam controleren..."
         prefilled: "E-mailadres komt overeen met deze geregistreerde gebruikersnaam"
         required: "Voer een gebruikersnaam in"
         edit: "Gebruikersnaam bewerken"
@@ -1615,7 +1603,6 @@ nl:
         reinvite: "E-mail opnieuw sturen"
         reinvited: "Uitnodiging opnieuw verzonden"
         removed: "Verwijderd"
-        search: "typ om uitnodigingen te zoeken..."
         user: "Uitgenodigde gebruiker"
         none: "Geen uitnodigingen om weer te geven."
         truncated:
@@ -1675,7 +1662,6 @@ nl:
             <p>Nodig een lijst van gebruikers uit om je community snel op gang te helpen. Stel een <a href="https://nl.wikipedia.org/wiki/Kommagescheiden_bestand" target="_blank">CSV-bestand</a> op met minimaal één rij per e-mailadres van gebruikers die je wilt uitnodigen. De volgende door komma's gescheiden gegevens kunnen worden verstrekt als je mensen aan groepen wilt toevoegen of ze naar een specifiek topic wilt sturen de eerste keer dat ze zich aanmelden.</p>
             <pre>jan@pietersen.com,eerste_groepsnaam;tweede_groepsnaam,topic_id</pre>
             <p>Elk e-mailadres in je geüploade CSV-bestand ontvangt een uitnodiging die je later kunt beheren.</p>
-          progress: "%{progress}% geüpload..."
           success: "Bestand geüpload. Je ontvangt een melding zodra het proces is voltooid."
           error: "Sorry, het bestand moet de CSV-indeling hebben."
       password:
@@ -1793,7 +1779,6 @@ nl:
         title: "Welkom op je nieuwe site!"
         content: "<a href='%{admin_guide_url}'>Lees de beheerdersgids</a> om door te gaan met het bouwen van je site en community."
         content_no_url: "Lees de beheerdersgids om door te gaan met het bouwen van je site en community."
-    loading: "Laden..."
     errors:
       prev_page: "tijdens het laden van"
       reasons:
@@ -1836,7 +1821,6 @@ nl:
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/uur} other {# fouten/uur}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/uur} other {# fouten/uur}} bereikt.
       exceeded_minute_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# fout/minuut} other {# fouten/minuut}}</a> heeft de limiet voor de website-instelling van {limit, plural, one {# fout/minuut} other {# fouten/minuut}} bereikt.
-    learn_more: "meer informatie..."
     mute: Dempen
     unmute: Dempen opheffen
     last_post: Geplaatst
@@ -1888,10 +1872,6 @@ nl:
       disable: "Verwijderde berichten weergeven"
     private_message_info:
       title: "Bericht"
-      invite: "Anderen uitnodigen..."
-      edit: "Toevoegen of verwijderen..."
-      remove: "Verwijderen..."
-      add: "Toevoegen..."
       leave_message: "Weet je zeker dat je dit bericht wilt verlaten?"
       remove_allowed_user: "Weet je zeker dat je %{name} wilt verwijderen uit dit bericht?"
       remove_allowed_group: "Weet je zeker dat je %{name} wilt verwijderen uit dit bericht?"
@@ -1971,10 +1951,8 @@ nl:
       blank_username: "Voer je e-mailadres of gebruikersnaam in."
       blank_username_or_password: "Voer je e-mailadres of gebruikersnaam en je wachtwoord in."
       reset_password: "Wachtwoord herstellen"
-      logging_in: "Aanmelden..."
       previous_sign_up: "Heb je al een account?"
       or: "Of"
-      authenticating: "Verifiëren..."
       awaiting_activation: "Je account wacht op activering. Gebruik de link 'Wachtwoord vergeten' om een nieuwe activerings-e-mail te ontvangen."
       awaiting_approval: "Je account is nog niet goedgekeurd door een medewerker. Je ontvangt een e-mail zodra dat is gebeurd."
       requires_invite: "Sorry, dit forum is alleen toegankelijk op uitnodiging."
@@ -2055,8 +2033,6 @@ nl:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Enter"
-    conditional_loading_section:
-      loading: Laden...
     category_row:
       topic_count:
         one: "%{count} topic in deze categorie"
@@ -2071,13 +2047,10 @@ nl:
       delete_item: "%{name} verwijderen"
       filter_by: "Filteren op: %{name}"
       select_to_filter: "Selecteer een waarde om te filteren"
-      default_header_text: Selecteren...
       no_content: Geen overeenkomsten gevonden
       results_count:
         one: "%{count} resultaat"
         other: "%{count} resultaten"
-      filter_placeholder: Zoeken...
-      filter_placeholder_with_any: Zoeken of maken...
       create: "Maken: '%{content}'"
       max_content_reached:
         one: "Je kunt slechts %{count} item selecteren."
@@ -2086,8 +2059,6 @@ nl:
         one: "Selecteer minimaal %{count} item."
         other: "Selecteer minimaal %{count} items."
       components:
-        tag_drop:
-          filter_for_more: Filteren voor meer...
         categories_admin_dropdown:
           title: "Categorieën beheren"
     date_time_picker:
@@ -2118,10 +2089,8 @@ nl:
       destination_category: "Bestemmingscategorie"
       publish: "Gedeeld concept publiceren"
       confirm_publish: "Weet je zeker dat je dit concept wilt publiceren?"
-      publishing: "Topic publiceren..."
     composer:
       emoji: "Emoji :)"
-      more_emoji: "meer..."
       options: "Opties"
       whisper: "fluisteren"
       unlist: "onzichtbaar"
@@ -2130,7 +2099,6 @@ nl:
       toggle_unlisted: "Onzichtbaar in-/uitschakelen"
       posting_not_on_topic: "Op welk topic wil je antwoorden?"
       saved_local_draft_tip: "lokaal opgeslagen"
-      similar_topics: "Je topic lijkt op..."
       drafts_offline: "concepten offline"
       edit_conflict: "bewerkingsconflict"
       esc: "Esc"
@@ -2200,7 +2168,6 @@ nl:
       saving: "Opslaan"
       saved: "Opgeslagen!"
       saved_draft: "Berichtconcept wordt uitgevoerd. Tik om te hervatten."
-      uploading: "Uploaden..."
       show_preview: "voorbeeld weergeven"
       hide_preview: "voorbeeld verbergen"
       quote_post_title: "Hele bericht citeren"
@@ -2484,7 +2451,6 @@ nl:
           label: Getagd
           aria_label: Filteren met tags
         filters:
-          label: Alleen topics/berichten weergeven...
           title: Alleen matchen in titel
           likes: die ik heb geliket
           posted: waarin ik iets heb geplaatst
@@ -2613,18 +2579,15 @@ nl:
         dismiss_new_modal:
           title: "Nieuwe negeren"
           topics: "Nieuwe topics negeren"
-          posts: "Nieuwe berichten negeren"
           untrack: "Stop met het volgen van deze topics, zodat ze niet meer worden weergegeven in mijn nieuwe lijst"
         dismiss_new_with_selected:
           one: "Nieuwe negeren (%{count})"
           other: "Nieuwe negeren (%{count})"
         toggle: "bulkselectie van topics in-/uitschakelen"
         actions: "Bulkacties"
-        change_category: "Categorie instellen..."
         close_topics: "Topics sluiten"
         archive_topics: "Topics archiveren"
         move_messages_to_inbox: "Verplaatsen naar inbox"
-        notification_level: "Meldingen..."
         change_notification_level: "Meldingsniveau wijzigen"
         choose_new_category: "Kies de nieuwe categorie voor de topics:"
         selected:
@@ -2847,11 +2810,9 @@ nl:
         replies_short: "%{current} / %{total}"
       progress:
         title: topicvoortgang
-        jump_prompt: "springen naar..."
         jump_prompt_of:
           one: "van %{count} bericht"
           other: "van %{count} berichten"
-        jump_prompt_long: "Springen naar..."
         jump_prompt_to_date: "naar datum"
         jump_prompt_or: "of"
       notifications:
@@ -2907,8 +2868,6 @@ nl:
         open: "Topic openen"
         close: "Topic sluiten"
         multi_select: "Berichten selecteren..."
-        slow_mode: "Langzame modus instellen..."
-        timed_update: "Topictimer instellen..."
         pin: "Topic vastmaken..."
         unpin: "Topic losmaken..."
         unarchive: "Topic dearchiveren"
@@ -2916,7 +2875,6 @@ nl:
         invisible: "Topic onzichtbaar maken"
         visible: "Topic zichtbaar maken"
         reset_read: "Leesgegevens resetten"
-        make_public: "Topic openbaar maken..."
         make_private: "Persoonlijk bericht maken"
         reset_bump_date: "Omhoogplaatsingsdatum resetten"
       feature:
@@ -2975,7 +2933,6 @@ nl:
         banner_note: "Gebruikers kunnen de banner negeren door deze te sluiten. Er kan maar één bannertopic tegelijk bestaan."
         no_banner_exists: "Er is geen bannertopic."
         banner_exists: "Er <strong class='badge badge-notification unread'>is</strong> momenteel een bannertopic."
-      inviting: "Uitnodigen..."
       automatically_add_to_groups: "Deze uitnodiging geeft ook toegang tot de volgende groepen:"
       invite_private:
         title: "Uitnodigen voor bericht"
@@ -3079,7 +3036,6 @@ nl:
           one: "Kies een nieuwe eigenaar voor het bericht"
           other: "Kies een nieuwe eigenaar voor de %{count} berichten"
       change_timestamp:
-        title: "Tijdstempel wijzigen..."
         action: "tijdstempel wijzigen"
         invalid_timestamp: "Tijdstempel mag niet in de toekomst zijn."
         error: "Er is een fout opgetreden bij het wijzigen van het tijdstempel van het topic."
@@ -3232,8 +3188,6 @@ nl:
         rebake: "HTML opnieuw opbouwen"
         publish_page: "Pagina's publiceren"
         unhide: "Weergeven"
-        change_owner: "Eigendom wijzigen..."
-        grant_badge: "Badge toekennen..."
         lock_post: "Bericht vergrendelen"
         lock_post_description: "voorkom dat de auteur dit bericht bewerkt"
         unlock_post: "Bericht ontgrendelen"
@@ -3247,8 +3201,6 @@ nl:
         delete_topic_confirm_modal_no: "Nee, dit topic behouden"
         delete_topic_error: "Er is een fout opgetreden bij het verwijderen van dit topic"
         delete_topic: "topic verwijderen"
-        add_post_notice: "Medewerkermelding toevoegen..."
-        change_post_notice: "Medewerkermelding wijzigen..."
         delete_post_notice: "Medewerkermelding verwijderen"
         remove_timer: "timer verwijderen"
         edit_timer: "timer bewerken"
@@ -3377,7 +3329,6 @@ nl:
         description: "Vereisen dat nieuwe topics tags uit taggroepen hebben:"
         delete: "Verwijderen"
         add: "Vereiste taggroep toevoegen"
-        placeholder: "selecteer taggroep..."
       topic_featured_link_allowed: "Uitgelichte links toestaan in deze categorie"
       delete: "Categorie verwijderen"
       create: "Nieuwe categorie"
@@ -3507,7 +3458,6 @@ nl:
     flagging:
       title: "Bedankt voor het beschaafd houden van onze community!"
       action: "Bericht markeren"
-      take_action: "Actie ondernemen..."
       take_action_options:
         default:
           title: "Actie ondernemen"
@@ -3543,9 +3493,6 @@ nl:
         at_least:
           one: "voer minimaal %{count} teken in"
           other: "voer minimaal %{count} tekens in"
-        more:
-          one: "%{count} resterend..."
-          other: "%{count} resterend..."
         left:
           one: "%{count} resterend"
           other: "%{count} resterend"
@@ -3557,7 +3504,6 @@ nl:
       title: "Topicsamenvatting"
       participants_title: "Frequente schrijvers"
       links_title: "Populaire links"
-      links_shown: "meer links weergeven..."
       clicks:
         one: "%{count} klik"
         other: "%{count} klikken"
@@ -3674,6 +3620,9 @@ nl:
           one: "Nieuw (%{count})"
           other: "Nieuw (%{count})"
         help: "de afgelopen paar dagen gemaakte topics"
+        all: "Alles"
+        topics: "Topics"
+        replies: "Antwoorden"
       posted:
         title: "Mijn berichten"
         help: "topics waarin je een bericht hebt geplaatst"
@@ -3881,12 +3830,6 @@ nl:
       changed: "gewijzigde tags:"
       tags: "Tags"
       choose_for_topic: "optionele tags"
-      choose_for_topic_required:
-        one: "selecteer minstens %{count} tag..."
-        other: "selecteer minstens %{count} tags..."
-      choose_for_topic_required_group:
-        one: "selecteer %{count} tag uit '%{name}'..."
-        other: "selecteer %{count} tags uit '%{name}'..."
       info: "Info"
       default_info: "Deze tag is niet beperkt tot categorieën en heeft geen synoniemen."
       staff_info: "Om beperkingen toe te voegen, moet je deze tag in een <a href=%{basePath}/tag_groups>taggroep</a> plaatsen."
@@ -3983,7 +3926,6 @@ nl:
         cannot_save: "Kan taggroep niet opslaan. Zorg dat er minimaal één tag aanwezig is, dat de naam van de taggroep niet leeg is en dat er een groep is geselecteerd voor tagstoestemming."
         tags_placeholder: "Zoek of maak tags"
         parent_tag_placeholder: "Optioneel"
-        select_groups_placeholder: "Selecteer groepen..."
         disabled: "Taggen is uitgeschakeld. "
       topics:
         none:
@@ -4012,7 +3954,6 @@ nl:
       enabled: "Veilige modus is ingeschakeld; sluit dit browservenster om de veilige modus te verlaten"
     image_removed: "(afbeelding verwijderd)"
     pause_notifications:
-      title: "Meldingen pauzeren voor..."
       label: "Meldingen pauzeren"
       options:
         half_hour: "30 minuten"
@@ -4231,7 +4172,7 @@ nl:
         patternMismatch: "Zorg dat je de gevraagde notatie gebruikt."
         badInput: "Voer een geldige invoer in."
   admin_js:
-    type_to_filter: "typ om te filteren..."
+    type_to_filter: "typ om te filteren…"
     admin:
       title: "Discourse-beheerder"
       moderator: "Moderator"
@@ -4343,7 +4284,6 @@ nl:
           name:
             too_short: "Groepsnaam is te kort"
             too_long: "Groepsnaam is te lang"
-            checking: "Beschikbaarheid van groepsnaam controleren..."
             available: "Groepsnaam is beschikbaar"
             not_available: "Groepsnaam is niet beschikbaar"
             blank: "Groepsnaam mag niet leeg zijn"
@@ -4505,7 +4445,7 @@ nl:
               revoke_badge_from_user: Trek een badge van een gebruiker in.
             groups:
               manage_groups: Groepsleden weergeven, toevoegen en verwijderen.
-              administer_groups: Groepen opsommen, weergeven, maken, bijwerken en verwijderen.
+              administer_groups: Groepen weergeven, maken, bijwerken en verwijderen.
             search:
               show: Zoek met behulp van het eindpunt '/search.json?q=term'.
               query: Zoek met behulp van het eindpunt '/search/query?term=term'.
@@ -4642,20 +4582,15 @@ nl:
           disable:
             title: "Alleen-lezenmodus uitschakelen"
             label: "Alleen-lezen uitschakelen"
-        logs:
-          none: "Nog geen logs..."
         columns:
           filename: "Bestandsnaam"
           size: "Grootte"
         upload:
           label: "Uploaden"
           title: "Een back-up naar deze instantie uploaden"
-          uploading: "Uploaden..."
-          uploading_progress: "Uploaden... %{progress}%"
           success: "'%{filename}' is geüpload. Het bestand wordt nu verwerkt, het kan tot een minuut duren voordat het in de lijst wordt weergegeven."
           error: "Er is een fout opgetreden bij het uploaden van '%{filename}': %{message}"
         operations:
-          is_running: "Er wordt al een bewerking uitgevoerd..."
           failed: "%{operation} mislukt. Controleer de logs."
           cancel:
             label: "Annuleren"
@@ -4795,7 +4730,6 @@ nl:
           uploads: "Uploads"
           no_uploads: "Je kunt assets behorende bij je thema uploaden, zoals lettertypen en afbeeldingen"
           add_upload: "Upload toevoegen"
-          upload_file_tip: "Kies een asset om te uploaden (png, woff2, etc...)"
           variable_name: "SCSS-variabelenaam:"
           variable_name_invalid: "Ongeldige naam van variabele. Alleen alfanumerieke tekens zijn toegestaan. Moet beginnen met een letter. Moet uniek zijn."
           variable_name_error:
@@ -4803,7 +4737,6 @@ nl:
             no_overwrite: "Ongeldige naam van variabele. Mag geen bestaande variabele overschrijven."
             must_be_unique: "Ongeldige naam van variabele. Moet uniek zijn."
           upload: "Upload"
-          select_component: "Selecteer een onderdeel..."
           unsaved_changes_alert: "Je hebt je wijzigingen nog niet opgeslagen. Wil je ze negeren en verder gaan?"
           unsaved_parent_themes: "Je hebt het onderdeel niet toegewezen aan thema's. Wil je verder gaan?"
           discard: "Weggooien"
@@ -4817,7 +4750,6 @@ nl:
           add_all: "Alle toevoegen"
           import_web_tip: "Repository die thema bevat"
           direct_install_tip: "Weet je zeker dat je <strong>%{name}</strong> uit de onderstaande repository wilt installeren?"
-          import_web_advanced: "Geavanceerd..."
           import_file_tip: ".tar.gz-, .zip- of .dcstyle.json-bestand dat thema bevat"
           is_private: "Thema bevindt zich in een privé-git-repository"
           finish_install: "Thema-installatie voltooien"
@@ -4849,7 +4781,6 @@ nl:
             maximum: "Vereist Discourse-versie %{version} of lager."
           update_to_latest: "Bijwerken naar nieuwste"
           check_for_updates: "Controleren op updates"
-          updating: "Bijwerken..."
           up_to_date: "Thema is up-to-date, laatst gecontroleerd:"
           has_overwritten_history: "De huidige themaversie bestaat niet meer, omdat de Git-geschiedenis door een afgedwongen push is overschreven."
           add: "Toevoegen"
@@ -4992,7 +4923,6 @@ nl:
           run: "Test uitvoeren"
           text: "Hoofdtekst van geselecteerde tekst"
           elided: "Weggelaten tekst"
-        sending_test: "Test-e-mail wordt verzonden..."
         error: "<b>FOUT</b> - %{server_error}"
         test_error: "Er is een probleem opgetreden bij het versturen van de testmail. Controleer je mailinstellingen, controleer of je host geen mailverbindingen blokkeert, en probeer het daarna opnieuw."
         sent: "Verzonden"
@@ -5014,7 +4944,6 @@ nl:
         refresh: "Vernieuwen"
         send_digest_label: "Dit resultaat verzenden naar:"
         send_digest: "Verzenden"
-        sending_email: "E-mail verzenden..."
         format: "Indeling"
         html: "html"
         text: "tekst"
@@ -5042,7 +4971,6 @@ nl:
             from_placeholder: "van@voorbeeld.com"
             to_placeholder: "aan@voorbeeld.com"
             cc_placeholder: "cc@voorbeeld.com"
-            subject_placeholder: "Onderwerp..."
             error_placeholder: "Fout"
         logs:
           none: "Geen logs gevonden."
@@ -5050,7 +4978,6 @@ nl:
             title: "Filter"
             user_placeholder: "gebruikersnaam"
             address_placeholder: "naam@voorbeeld.com"
-            type_placeholder: "digest, registratie..."
             reply_key_placeholder: "antwoordsleutel"
             smtp_transaction_response_placeholder: "SMTP-ID"
       moderation_history:
@@ -5311,10 +5238,8 @@ nl:
           cancel: "Annuleren"
           name:
             label: "Sjabloonnaam"
-            placeholder: "Voer een naam in voor dit sjabloon..."
           template:
             label: "Sjabloon"
-            placeholder: "Maak hier een YAML-sjabloon..."
           preview: "Voorbeeld"
         delete_confirm: "Weet je zeker dat je dit sjabloon wilt verwijderen?"
         quick_insert_fields:
@@ -5428,7 +5353,6 @@ nl:
           combative: "Te strijdlustig"
           in_wrong_place: "Op de verkeerde plek"
           no_constructive_purpose: "Geen constructief doel voor hun acties, anders dan het creëren van onenigheid binnen de community"
-          custom: "Aangepast..."
         suspend_message: "E-mailbericht"
         suspend_message_placeholder: "Optioneel kun je meer informatie over de schorsing geven, wat naar de gebruiker wordt gestuurd via e-mail."
         suspended_by: "Geschorst door"
@@ -5516,7 +5440,6 @@ nl:
           button: "Alle berichten verwijderen"
           progress:
             title: "Voortgang van berichten verwijderen"
-            description: "Berichten verwijderen..."
           confirmation:
             title: "Alle berichten van @%{username} verwijderen"
             description: |
@@ -5552,7 +5475,6 @@ nl:
             text: "@%{username} naar @%{targetUsername} overdragen"
             transfer_and_delete: "Overdragen en @%{username} verwijderen"
             cancel: "Annuleren"
-        merging_user: "Gebruiker samenvoegen..."
         merge_failed: "Er is een fout opgetreden tijdens het samenvoegen van de gebruikers."
         delete_forbidden_because_staff: "Beheerders en moderators kunnen niet worden verwijderd."
         delete_posts_forbidden_because_staff: "Kan niet alle berichten van beheerders en moderators verwijderen."
@@ -5569,7 +5491,6 @@ nl:
         delete_confirm: "Het verdient over het algemeen de voorkeur om gebruikers te anonimiseren in plaats van ze te verwijderen, om te voorkomen dat inhoud uit bestaande discussies wordt verwijderd."
         delete_and_block: "Dit e-mail- en IP-adres verwijderen en <b>blokkeren</b>"
         delete_dont_block: "Alleen verwijderen"
-        deleting_user: "Gebruiker verwijderen..."
         deleted: "De gebruiker is verwijderd."
         delete_failed: "Er is een fout opgetreden bij het verwijderen van de gebruiker. Zorg dat alle berichten zijn verwijderd voordat je de gebruiker probeert te verwijderen."
         send_activation_email: "Activerings-e-mail sturen"
@@ -5778,8 +5699,6 @@ nl:
           modal_description: "Wil je deze wijziging met terugwerkende kracht toepassen? Hierdoor worden voorkeuren gewijzigd voor %{count} bestaande gebruikers."
           modal_yes: "Ja"
           modal_no: "Nee, wijziging alleen vanaf nu toepassen"
-        simple_list:
-          add_item: "Item toevoegen..."
         json_schema:
           edit: Editor starten
           modal_title: "%{name} bewerken"
@@ -5878,7 +5797,6 @@ nl:
         help: "Voeg nieuwe emoji toe die voor iedereen beschikbaar is. Sleep meerdere bestanden tegelijk zonder een naam in te voeren om emoji's te maken op basis van hun bestandsnamen. De geselecteerde groep wordt gebruikt voor alle bestanden die tegelijk worden toegevoegd. Je kunt ook op 'Nieuwe emoji toevoegen' klikken om de bestandskiezer te openen."
         add: "Nieuwe emoji toevoegen"
         choose_files: "Bestanden kiezen"
-        uploading: "Uploaden..."
         name: "Naam"
         group: "Groep"
         image: "Afbeelding"
@@ -5947,11 +5865,9 @@ nl:
       finish: "Configuratie afsluiten"
       back: "Terug"
       next: "Volgende"
-      configure_more: "Meer configureren..."
       step-text: "Stap"
       step: "%{current} van %{total}"
       upload: "Bestand uploaden"
-      uploading: "Uploaden..."
       upload_error: "Sorry, er is een fout opgetreden bij het uploaden van het bestand. Probeer het opnieuw."
       staff_count:
         one: "Je community heeft %{count} medewerker (jij)."

@@ -245,7 +245,6 @@ ca:
     related_messages:
       title: "Missatges relacionats"
       pill: "Missatges relacionats"
-      see_all: 'Mostra <a href="%{path}">tots els missatges</a> de @%{username}...'
     suggested_topics:
       pm_title: "Missatges recomanats"
     about:
@@ -326,17 +325,11 @@ ca:
       other: "Vegeu %{count} temes nous"
     preview: "previsualitza"
     cancel: "cancel·la"
-    deleting: "Suprimint..."
     save: "Desa els canvis"
-    saving: "Desant..."
     saved: "Desat!"
     upload: "Carrega"
-    uploading: "Carregant..."
-    uploading_filename: "Pujant: %{filename}..."
-    processing_filename: "Processant: %{filename}..."
     clipboard: "porta-retalls"
     uploaded: "Carregat!"
-    pasting: "Enganxant..."
     enable: "Activa"
     disable: "Desactiva"
     continue: "Continua"
@@ -805,7 +798,6 @@ ca:
       topic_stat_sentence_month:
         one: "%{count} tema nou el mes passat."
         other: "%{count} temes nous el mes passat. "
-      n_more: "Categories (%{count} més)..."
     ip_lookup:
       title: Explora adreça IP
       hostname: Nom d'amfitrió
@@ -846,7 +838,6 @@ ca:
         ignore_no_users: "No teniu usuaris ignorats."
         ignore_option: "Ignorat"
         ignore_option_title: "No rebreu notificacions relacionades amb aquest usuari i tots els seus temes i respostes seran ocultats."
-        add_ignored_user: "Afegeix..."
         mute_option: "Silenciat"
         mute_option_title: "No rebreu cap notificació relacionada amb aquest usuari."
         normal_option: "Normal"
@@ -1083,7 +1074,6 @@ ca:
         primary: "Adreça de correu primària"
         secondary: "Adreces de correu secundàries"
         primary_label: "primari"
-        resending_label: "enviant ..."
         resent_label: "correu electrònic enviat"
         update_email: "Canvi de correu"
         set_primary: "Estableix el correu electrònic principal"
@@ -1123,7 +1113,6 @@ ca:
         not_available_no_suggestion: "No disponible"
         too_short: "El nom d'usuari és massa breu"
         too_long: "El nom d'usuari és massa llarg"
-        checking: "Comprovant si el nom d'usuari està disponible..."
         prefilled: "L'adreça electrònica coincideix amb aquest nom d'usuari registrat"
       locale:
         title: "Llengua de la interfície"
@@ -1223,7 +1212,6 @@ ca:
         edit: "Edita"
         remove: "Elimina"
         reinvited: "Invitació reenviada"
-        search: "escriu aquí per a cercar invitacions..."
         user: "Usuari convidat"
         none: "Cap invitació per a mostrar."
         truncated:
@@ -1326,7 +1314,6 @@ ca:
         the_topic: "el tema"
     user_status:
       save: "Desa"
-    loading: "Carregant..."
     errors:
       prev_page: "mentre es prova de carregar"
       reasons:
@@ -1365,7 +1352,6 @@ ca:
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/hora} other {# errors/hora}}</a> s'ha superat el límit de la configuració del lloc web de {limit, plural, one {# error/hora} other {# errors/hora}}.
       exceeded_minute_MF: |
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# error/minut} other {# errors/minut}}</a> s'ha superat el límit de la configuració del lloc web de {limit, plural, one {# error/minut} other {# errors/minut}}.
-    learn_more: "per a saber-ne més..."
     mute: Silencia
     unmute: Desfés el silenciament
     last_post: Publicat
@@ -1390,7 +1376,6 @@ ca:
       disable: "Mostra publicacions suprimides"
     private_message_info:
       title: "Missatge"
-      add: "Afegeix..."
       leave_message: "Realment voleu deixar aquest missatge?"
       remove_allowed_user: "De debò voleu eliminar %{name} d'aquest missatge?"
       remove_allowed_group: "De debò voleu eliminar %{name} d'aquest missatge?"
@@ -1453,9 +1438,7 @@ ca:
       blank_username: "Introduïu l'adreça de correu o el nom d'usuari."
       blank_username_or_password: "Introduïu el correu electrònic o el nom d'usuari i la contrasenya."
       reset_password: "Restableix la contrasenya"
-      logging_in: "Iniciant la sessió..."
       or: "O"
-      authenticating: "Autenticant..."
       awaiting_activation: "El vostre compte espera l'activació. Utilitzeu l'enllaç de contrasenya oblidada per a tramitar un altre correu d'activació."
       awaiting_approval: "El vostre compte encara no ha estat aprovat per l'equip responsable. Us enviarem un correu quan sigui aprovat."
       requires_invite: "L'accés a aquest fòrum es fa sols amb invitació."
@@ -1517,14 +1500,9 @@ ca:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Retorn"
-    conditional_loading_section:
-      loading: Carregant...
     select_kit:
       delete_item: "Suprimeix %{name}"
-      default_header_text: Selecciona...
       no_content: No s'han trobat coincidències
-      filter_placeholder: Cerca...
-      filter_placeholder_with_any: Cerca o crea...
       create: "Crea: '%{content}'"
       max_content_reached:
         one: "Sols podeu seleccionar %{count} element."
@@ -1559,10 +1537,8 @@ ca:
       destination_category: "Categoria de destinació"
       publish: "Publica l'esborrany compartit"
       confirm_publish: "Esteu segur que voleu publicar aquest esborrany?"
-      publishing: "Publicant el tema..."
     composer:
       emoji: "Emoji :)"
-      more_emoji: "més..."
       options: "Opcions"
       whisper: "xiuxiueig"
       unlist: "invisible"
@@ -1571,7 +1547,6 @@ ca:
       toggle_unlisted: "Commuta invisible"
       posting_not_on_topic: "A quin tema voleu respondre?"
       saved_local_draft_tip: "desat localment"
-      similar_topics: "El tema és semblant a..."
       drafts_offline: "esborranys fora de línia"
       edit_conflict: "edita el conflicte"
       group_mentioned:
@@ -1606,7 +1581,6 @@ ca:
       saving: "Desant"
       saved: "Desat!"
       saved_draft: "Publica l'esborrany en curs. Toqueu per a continuar."
-      uploading: "Carregant..."
       quote_post_title: "Cita tota la publicació"
       bold_label: "B"
       bold_title: "Negreta"
@@ -1807,7 +1781,6 @@ ca:
         with_tags:
           label: Etiquetats
         filters:
-          label: Sols temes/publicacions existents...
           title: Coincidència sols en el títol
           likes: M'han agradat
           posted: He publicat en
@@ -1866,11 +1839,9 @@ ca:
         dismiss_new: "Descarta'n els nous"
         toggle: "commuta la selecció massiva de temes"
         actions: "Accions massives"
-        change_category: "Defineix categoria..."
         close_topics: "Tanca temes"
         archive_topics: "Arxiva temes"
         move_messages_to_inbox: "Mou a la safata d'entrada"
-        notification_level: "Notificacions..."
         choose_new_category: "Seleccioneu la categoria nova per als temes:"
         selected:
           one: "He seleccionat <b>%{count}</b> tema."
@@ -1992,8 +1963,6 @@ ca:
         replies_short: "%{current} / %{total}"
       progress:
         title: progrés del tema
-        jump_prompt: "salta a..."
-        jump_prompt_long: "Salta a..."
         jump_prompt_to_date: "fins a la data"
         jump_prompt_or: "o"
       notifications:
@@ -2045,13 +2014,11 @@ ca:
         open: "Obre tema"
         close: "Tanca tema"
         multi_select: "Tria publicacions..."
-        timed_update: "Estableix el temporitzador del tema..."
         pin: "Afixa tema"
         unpin: "Desafixa el tema"
         unarchive: "Desarxiva tema"
         archive: "Arxiva tema"
         reset_read: "Restableix data de lectura"
-        make_public: "Fes públic el tema..."
         make_private: "Converteix en missatge personal"
         reset_bump_date: "Restableix la data d'elevació"
       feature:
@@ -2100,7 +2067,6 @@ ca:
         banner_note: "Els usuaris poden descartar el bàner tancant-lo. Només es pot posar un tema com a bàner en un moment donat."
         no_banner_exists: "No hi ha tema com a bàner."
         banner_exists: "A hores d'ara <strong class='badge badge-notification unread'>hi ha</strong> un tema com a bàner."
-      inviting: "Convidant..."
       automatically_add_to_groups: "La invitació també inclou accés a aquests grups:"
       invite_private:
         title: "Convida al missatge"
@@ -2186,7 +2152,6 @@ ca:
           one: "Trieu un nou propietari per a la publicació de <b>@%{old_user}</b>"
           other: "Trieu un nou propietari per a les %{count} publicacions de <b>@%{old_user}</b>"
       change_timestamp:
-        title: "Canvia la marca de temps"
         action: "canvia la marca de temps"
         invalid_timestamp: "La marca de temps no pot ser en el futur."
         error: "Hi ha hagut un error en canviar la marca de temps del tema."
@@ -2294,8 +2259,6 @@ ca:
         revert_to_regular: "Elimina el color de l'equip responsable"
         rebake: "Refés HTML"
         unhide: "Desfés amagar"
-        change_owner: "Canvia la propietat..."
-        grant_badge: "Atorga insígnia..."
         lock_post: "Bloca la publicació"
         lock_post_description: "impedeix que l'autor editi aquesta publicació"
         unlock_post: "Desbloca la publicació"
@@ -2303,7 +2266,6 @@ ca:
         delete_topic_disallowed_modal: "No teniu permís per a suprimir aquest tema. Si realment voleu que se suprimeixi, envieu una bandera perquè un moderador hi pari atenció juntament amb una argumentació."
         delete_topic_disallowed: "no teniu permís per a suprimir aquest tema"
         delete_topic: "suprimeix el tema"
-        add_post_notice: "Afegeix un avís a l'equip responsable..."
         remove_timer: "elimina el temporitzador"
       actions:
         people:
@@ -2486,7 +2448,6 @@ ca:
     flagging:
       title: "Gràcies per ajudar a mantenir endreçada la comunitat!"
       action: "Marca la publicació amb bandera "
-      take_action: "Actua..."
       take_action_options:
         default:
           title: "Actua"
@@ -2515,9 +2476,6 @@ ca:
         at_least:
           one: "introduïu almenys %{count} caràcter"
           other: "introduïu almenys %{count} caràcters"
-        more:
-          one: "En falta només %{count} "
-          other: "En falten %{count} "
         left:
           one: "%{count} restant"
           other: "%{count} restants"
@@ -2529,7 +2487,6 @@ ca:
       title: "Resum del tema"
       participants_title: "Persones que han publicat sovint"
       links_title: "Enllaços populars"
-      links_shown: "mostra més enllaços..."
       clicks:
         one: "%{count} clic"
         other: "%{count} clics"
@@ -2629,6 +2586,9 @@ ca:
           one: "Nou (%{count})"
           other: "Nous (%{count})"
         help: "temes creats durant els darrers dies"
+        all: "Tot"
+        topics: "Temes"
+        replies: "Respostes"
       posted:
         title: "Les meves publicacions"
         help: "temes en què heu publicat"
@@ -2930,7 +2890,6 @@ ca:
           default: "Introduïu un valor vàlid."
           email: "Introduïu una adreça vàlida de correu electrònic."
   admin_js:
-    type_to_filter: "escriu per a filtrar..."
     admin:
       title: "Administració de Discourse"
       moderator: "Moderador"
@@ -3037,7 +2996,6 @@ ca:
           name:
             too_short: "El nom de grup és massa curt"
             too_long: "El nom del grup és massa llarg"
-            checking: "Comprovant la disponibilitat del nom de grup..."
             available: "El nom de grup és disponible"
             not_available: "El nom de grup no és disponible"
             blank: "El nom de grup no pot restar en blanc"
@@ -3221,20 +3179,15 @@ ca:
           disable:
             title: "Desactiva només de lectura"
             label: "Desactiva només de lectura"
-        logs:
-          none: "Encara no hi ha registres (logs)..."
         columns:
           filename: "Nom del fitxer"
           size: "Mida"
         upload:
           label: "Carrega"
           title: "Carrega una còpia de seguretat a aquesta instància"
-          uploading: "Carregant..."
-          uploading_progress: "Carregant... %{progress}%"
           success: "%{filename} s'ha carregat amb èxit. El fitxer ara és processat i trigarà fins a un minut a aparèixer en la llista."
           error: "S'ha produït un error en carregar '%{filename}': %{message}"
         operations:
-          is_running: "Ara hi ha una operació en marxa..."
           failed: "Ha fallat %{operation}. Consulteu els registres (logs)."
           cancel:
             label: "Cancel·la"
@@ -3356,7 +3309,6 @@ ca:
           uploads: "Càrregues"
           no_uploads: "Podeu pujar elements associats a la vostra aparença com ara fonts tipogràfiques i imatges"
           add_upload: "Afegeix càrrega"
-          upload_file_tip: "Trieu un element per a carregar (png, woff2, etc.)"
           variable_name: "Nom de variable SCSS:"
           variable_name_invalid: "Nom de variable no vàlid. Sols són permesos els caràcters alfanumèrics. Ha de començar amb una lletra. Ha de ser únic."
           variable_name_error:
@@ -3364,7 +3316,6 @@ ca:
             no_overwrite: "Nom de variable no vàlid. No heu de sobreescriure una variable existent."
             must_be_unique: "Nom de variable no vàlid. Ha de ser únic."
           upload: "Carrega"
-          select_component: "Seleccioneu un component..."
           unsaved_changes_alert: "Encara no heu desat els canvis. Voleu descartar-los i continuar?"
           discard: "Descarta"
           stay: "Roman"
@@ -3373,7 +3324,6 @@ ca:
           edit_css_html_help: "No heu editat cap CSS o HTML"
           delete_upload_confirm: "Voleu suprimir aquesta càrrega? (L'aparença CSS pot deixar de funcionar!)"
           import_web_tip: "Repositori que conté l'aparença"
-          import_web_advanced: "Avançat..."
           import_file_tip: "fitxer .tar.gz, .zip o .dcstyle.json que conté l'aparença"
           is_private: "L'aparença és en un repositori git privat"
           remote_branch: "Nom de branca (opcional)"
@@ -3399,7 +3349,6 @@ ca:
             maximum: "Requereix una versió de Discourse %{version} o inferior."
           update_to_latest: "Actualitza al més recent"
           check_for_updates: "Comprova si hi ha actualitzacions"
-          updating: "Actualitzant"
           up_to_date: "L'aparença és actualitzada, última comprovació:"
           add: "Afegeix"
           theme_settings: "Configuració de l'aparença"
@@ -3504,7 +3453,6 @@ ca:
           run: "Executa el test"
           text: "Cos de text seleccionat"
           elided: "Text elidit"
-        sending_test: "Enviant correu de test..."
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "Hi ha hagut un problema en enviar el correu de prova. Torneu a revisar la configuració del vostre correu; verifiqueu que el vostre amfitrió no bloca les connexions de correu i intenteu-ho una altra vegada. "
         sent: "Enviat"
@@ -3525,7 +3473,6 @@ ca:
         refresh: "Actualitza"
         send_digest_label: "Envia aquest resultat a:"
         send_digest: "Envia"
-        sending_email: "Enviant correu..."
         format: "Format"
         html: "html"
         text: "text"
@@ -3551,7 +3498,6 @@ ca:
             from_placeholder: "desde@exemple.com"
             to_placeholder: "to@example.com"
             cc_placeholder: "cc@example.com"
-            subject_placeholder: "Assumpte..."
             error_placeholder: "Error"
         logs:
           none: "No s'han trobat registres (logs)."
@@ -3559,7 +3505,6 @@ ca:
             title: "Filtre"
             user_placeholder: "nom d'usuari"
             address_placeholder: "name@example.com"
-            type_placeholder: "resum, registre..."
             reply_key_placeholder: "clau de resposta"
       moderation_history:
         performed_by: "Realitzat per"
@@ -3894,8 +3839,6 @@ ca:
         delete: "Suprimeix l'usuari"
         delete_posts:
           button: "Suprimeix totes les publicacions"
-          progress:
-            description: "Suprimint publicacions..."
           confirmation:
             cancel: "Cancel·la"
         merge:
@@ -3916,7 +3859,6 @@ ca:
           other: "No es poden suprimir totes les publicacions perquè l'usuari té més de %{count} publicacions. (delete_all_posts_max)"
         delete_and_block: "Suprimeix i <b>bloca</i> aquest correu electrònic i aquesta adreça IP"
         delete_dont_block: "Només suprimeix"
-        deleting_user: "Suprimint l'usuari..."
         deleted: "S'ha suprimit l'usuari."
         delete_failed: "Hi ha hagut un error en suprimir aquest usuari. Assegureu-vos que totes les seves publicacions són suprimides abans d'intentar suprimir-lo."
         send_activation_email: "Envia el correu d'activació"
@@ -4168,7 +4110,6 @@ ca:
       emoji:
         title: "Emoji"
         add: "Afegeix emoji nou"
-        uploading: "Carregant..."
         name: "Nom"
         group: "Grup"
         image: "Imatge"
@@ -4222,7 +4163,6 @@ ca:
       next: "Següent"
       step-text: "Pas"
       step: "%{current} de %{total}"
-      uploading: "Carregant..."
       upload_error: "S'ha produït un error en carregar aquest fitxer. Torneu-ho a provar."
       staff_count:
         one: "La comunitat té %{count}membre responsable (vós inclòs)."

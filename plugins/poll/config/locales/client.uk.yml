@@ -37,16 +37,16 @@ uk:
             many: "Виберіть принаймні <strong>%{count} варіантів</strong>."
             other: "Виберіть принаймні <strong>%{count} варіантів</strong>."
           up_to_max_options:
-            one: "Виберіть максимум <strong>%{count} варіант</strong>."
-            few: "Виберіть максимум <strong>%{count} варіанти</strong>."
-            many: "Виберіть максимум <strong>%{count} варіантів</strong>."
-            other: "Виберіть максимум <strong>%{count} варіантів</strong>."
+            one: "Виберіть до <strong>%{count} варіант</strong>."
+            few: "Виберіть до <strong>%{count} варіанти</strong>."
+            many: "Виберіть до <strong>%{count} варіантів</strong>."
+            other: "Виберіть до <strong>%{count} варіантів</strong>."
           x_options:
             one: "Виберіть <strong>%{count} варіант</strong>."
             few: "Виберіть <strong>%{count} варіанти</strong>."
             many: "Виберіть <strong>%{count} варіантів</strong>."
             other: "Виберіть <strong>%{count} варіантів</strong>."
-          between_min_and_max_options: "Виберіть <strong>варіанти між %{min} та %{max}</strong>."
+          between_min_and_max_options: "Виберіть між <strong>%{min} і %{max} варіантами</strong>."
       cast-votes:
         title: "Проголосуйте"
         label: "Проголосувати!"

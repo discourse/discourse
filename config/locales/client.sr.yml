@@ -271,7 +271,6 @@ sr:
     related_messages:
       title: "Povezane Poruke"
       pill: "Povezane Poruke"
-      see_all: 'Prikaži <a href="%{path}">sve poruke</a> od @%{username}...'
     suggested_topics:
       pm_title: "Predložene poruke"
     about:
@@ -351,17 +350,11 @@ sr:
       other: "Pregledajte %{count} nepročitanih tema"
     preview: "prikaži"
     cancel: "otkaži"
-    deleting: "Uklanjanje..."
     save: "Sačuvaj izmene"
-    saving: "Čuvanje..."
     saved: "Sačuvano!"
     upload: "Učitaj"
-    uploading: "Učitava se..."
-    uploading_filename: "Otpremanje: %{filename}..."
-    processing_filename: "Обрада: %{filename}..."
     clipboard: "klipbord"
     uploaded: "Učitano!"
-    pasting: "Nalepljivanje..."
     enable: "Omogući"
     disable: "Onemogući"
     continue: "Nastavi"
@@ -799,7 +792,6 @@ sr:
         not_available_no_suggestion: "Nije dostupno"
         too_short: "Vaše korisničko ime prekratko"
         too_long: "Vaše korisničko ime je predugačko"
-        checking: "Proveravamo dostupnost korisničkog imena..."
         prefilled: "E-mail odgovara ovom registrovanom korisničkom imenu"
       locale:
         title: "Jezik interfejsa"
@@ -860,7 +852,6 @@ sr:
         edit: "Izmeni"
         remove: "Ukloni"
         reinvited: "Pozivnica ponovno poslata"
-        search: "pišite da pregledate pozivnice"
         user: "Pozvani Korisnici"
         redeemed: "Nadoknadi Pozivnice"
         redeemed_at: "Nadoknadi"
@@ -963,7 +954,6 @@ sr:
         the_topic: "tema"
     user_status:
       save: "Sačuvaj"
-    loading: "Učitavanje..."
     errors:
       prev_page: "pri pokušaju očitavanja"
       reasons:
@@ -989,7 +979,6 @@ sr:
     home: "Home"
     read_only_mode:
       login_disabled: "Prijave su onemogućene dok je stranica u modulu \"samo čitanje\"."
-    learn_more: "saznaj više..."
     mute: Utišaj
     unmute: Poništi utišanje
     last_post: Pisao
@@ -1042,9 +1031,7 @@ sr:
       rate_limit: "Molimo sačekajte pre nego pokušate opet da se prijavite."
       blank_username_or_password: "Molimo unesite e-mail ili korisničko ime i šifru."
       reset_password: "Resetujte Šifru"
-      logging_in: "Prijavljivanje..."
       or: "Ili"
-      authenticating: "Autentifikaciranje..."
       awaiting_activation: "Vaš nalog čeka aktivaciju, poslužite se linkom za zaboravljenu šifru da pošaljemo drugi aktivacijski e-mail."
       awaiting_approval: "Vaš nalog nije odobren od osoblja. Poslaćemo vam e-mail kad bude odobren."
       requires_invite: "Žao nam je, pristup ovoj zajednici je moguć samo uz pozivnicu."
@@ -1067,20 +1054,16 @@ sr:
       twitter: "Twitter"
     shortcut_modifier_key:
       alt: "Alt"
-    conditional_loading_section:
-      loading: Učitavanje...
     select_kit:
       delete_item: "Obriši %{name}"
     emoji_picker:
       flags: Zastave
     composer:
       emoji: "Emotikoni :)"
-      more_emoji: "više..."
       options: "Opcije"
       add_warning: "Ovo je službeno upozorenje."
       posting_not_on_topic: "U kojoj temi želite odgovoriti?"
       saved_local_draft_tip: "sačuvano lokalno"
-      similar_topics: "Vaša tema je slična..."
       drafts_offline: "nacrti offline"
       error:
         title_missing: "Naslov je obavezan"
@@ -1096,7 +1079,6 @@ sr:
       view_new_post: "Pogledajte svoju novu poruku."
       saving: "Čuvanje"
       saved: "Sačuvano!"
-      uploading: "Učitavanje..."
       quote_post_title: "Citiraj celu poruku"
       bold_label: "B"
       bold_title: "Bold"
@@ -1195,7 +1177,6 @@ sr:
         actions: "Grupne aktivnosti"
         close_topics: "Zatvori Teme"
         archive_topics: "Arhiviraj teme"
-        notification_level: "Obaveštenja..."
         choose_new_category: "Izaberite novu kategoriju za vašu temu."
         selected:
           one: "Odabrali ste <b>%{count}</b> temu."
@@ -1318,7 +1299,6 @@ sr:
         unarchive: "Vrati temu iz arhiva"
         archive: "Arhiviraj temu"
         reset_read: "Poništi podatke o pročitanom"
-        make_public: "Napravi javnu temu..."
       feature:
         pin: "Zakači temu"
         unpin: "Otkači temu"
@@ -1342,7 +1322,6 @@ sr:
         unpin: "Ukloni ovu temu sa vrha %{categoryLink} kategorije."
         pin_validation: "Neophodan je datum da zakačite ovu temu"
         unpin_globally: "Ukloni ovu temu sa vrha svih lista"
-      inviting: "Pozivanje..."
       invite_private:
         email_or_username: "E-mail ili korisničko ime pozivanog"
         email_or_username_placeholder: "e-mail adresa ili korisničko ime"
@@ -1442,7 +1421,6 @@ sr:
         revert_to_regular: "Ukloni Boje Osoblja"
         rebake: "Popravi HTML"
         unhide: "Poništi sakrivanje"
-        grant_badge: "Dodeli Značku..."
         delete_topic: "obriši temu"
       actions:
         by_you:
@@ -1540,7 +1518,6 @@ sr:
     flagging:
       title: "Hvala što pomažete u održavanju naše zajednice pristojnom."
       action: "Označi Poruku Zastavom"
-      take_action: "Preduzmi Akciju..."
       take_action_options:
         default:
           title: "Preduzmi Akciju"
@@ -1656,6 +1633,9 @@ sr:
           few: "Nove (%{count})"
           other: "Nove (%{count})"
         help: "teme otvorene u zadnjih par dana"
+        all: "sve"
+        topics: "Teme"
+        replies: "Odgovori"
       posted:
         title: "Moje poruke"
         help: "teme u kojima si pisao poruke"
@@ -1856,7 +1836,6 @@ sr:
           default: "Molimo unesite validnu vrednost"
           email: "Molimo unesite validnu e-mail adresu."
   admin_js:
-    type_to_filter: "upiši za filtriranje"
     admin:
       title: "Administrator"
       moderator: "Moderator"
@@ -1973,17 +1952,13 @@ sr:
             title: "Omogući samo-čitanje modul."
           disable:
             title: "Onemogući samo-čitanje modul."
-        logs:
-          none: "Još nema logova..."
         columns:
           filename: "Ime datoteke"
           size: "Veličina"
         upload:
           label: "Učitaj"
-          uploading: "Učitavanje..."
           error: "Dogodila se greška pri učitavanju '%{filename}': %{message}"
         operations:
-          is_running: "Operacija je trenutno u toku..."
           failed: "%{operation} neuspješna. Molimo proverite logove."
           cancel:
             label: "Odustani"
@@ -2090,7 +2065,6 @@ sr:
       email:
         settings: "Podešavanje"
         preview_digest: "Pregled sažetka"
-        sending_test: "Šaljem test Email"
         error: "<b>GREŠKA</b> - %{server_error}"
         test_error: "Dogodio se problem pri slanju test emaila. Molimo proverite podešavanja emaila, potvrdite da domaćin ne blokira email veze i pokušajte ponovo."
         sent: "Poslato"
@@ -2106,7 +2080,6 @@ sr:
         sent_test: "poslato!"
         delivery_method: "Metoda dostave"
         refresh: "Osveži"
-        sending_email: "Email se šalje..."
         format: "Format"
         html: "html"
         text: "tekst"
@@ -2127,7 +2100,6 @@ sr:
             title: "Filter"
             user_placeholder: "korisničko ime"
             address_placeholder: "name@example.com"
-            type_placeholder: "sažetak, prijava..."
             reply_key_placeholder: "ključ odgovora"
       logs:
         title: "Logovi"
@@ -2525,7 +2497,6 @@ sr:
       emoji:
         title: "Emoji"
         add: "Dodaj Novi Emoji"
-        uploading: "Učitavanje..."
         name: "Ime"
         group: "Grupa"
         image: "Slika"
@@ -2553,7 +2524,6 @@ sr:
       next: "Dalje"
       step-text: "Korak"
       step: "%{current} od %{total}"
-      uploading: "Uploading..."
       upload_error: "Žao nam je, dogodila se greška pri učitavanju te datoteke. Molimo pokušajte ponovo."
       staff_count:
         one: "Tvoja zajednica ima %{count} člana tima (tebe). "

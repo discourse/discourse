@@ -10,6 +10,9 @@ ja:
       site_settings:
         categories:
           chat: チャット
+        chat_separate_sidebar_mode:
+          always: "常時"
+          never: "なし"
       logs:
         staff_actions:
           actions:
@@ -316,9 +319,9 @@ ja:
       channel_edit_name_slug_modal:
         title: チャンネルを編集する
         input_placeholder: 名前を追加してください
-        slug_description: チャンネルスラッグはチャンネル名の代わりに URL で使用されます
+        slug_description: チャンネルスラグはチャンネル名の代わりに URL で使用されます
         name: チャンネル名
-        slug: チャンネルスラッグ (オプション)
+        slug: チャンネルスラグ (オプション)
       channel_edit_description_modal:
         title: 説明を編集する
         input_placeholder: 説明を追加する
@@ -361,7 +364,7 @@ ja:
         create: "チャンネルを作成"
         description: "説明 (オプション)"
         name: "チャンネル名"
-        slug: "チャンネルスラッグ (オプション)"
+        slug: "チャンネルスラグ (オプション)"
         title: "新しいチャンネル"
         type: "タイプ"
         types:
@@ -420,7 +423,6 @@ ja:
         title: "チャット"
         export_messages:
           title: "チャットメッセージをエクスポートする"
-          description: "現在、エクスポートは過去 6 か月間の最新メッセージ 10,000 件に制限されています。"
           create_export: "エクスポートを作成"
           export_has_started: "エクスポートが開始されました。準備ができたら PM が届きます。"
       direct_messages:
@@ -512,7 +514,6 @@ ja:
       thread:
         title: "タイトル"
         view_thread: スレッドを表示
-        default_title: "スレッド"
         replies:
           other: "返信: %{count} 件"
         label: スレッド
@@ -614,3 +615,7 @@ ja:
       sections:
         chat:
           title: チャット
+    sidebar:
+      panels:
+        chat:
+          label: "チャット"

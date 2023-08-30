@@ -10,6 +10,10 @@ he:
       site_settings:
         categories:
           chat: צ׳אט
+        chat_separate_sidebar_mode:
+          always: "תמיד"
+          fullscreen: "כאשר הצ׳אט במסך מלא"
+          never: "לעולם לא"
       logs:
         staff_actions:
           actions:
@@ -110,6 +114,8 @@ he:
         all_new: "כל ההודעות החדשות"
         dm_and_mentions: "הודעות ישירות ואזכורים"
         never: "לעולם לא"
+      separate_sidebar_mode:
+        title: "הצגת מצבי סרגל צד נפרדים עבור פורום וצ׳אט"
       enable: "הפעלת צ׳אט"
       flag: "דיגול"
       emoji: "הוספת אמוג׳י"
@@ -155,6 +161,7 @@ he:
           two: "%{group_name} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
           many: "%{group_name} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
           other: "%{group_name} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
+        channel_wide_mentions_disallowed: "האזכורים ‎@here (כאן) ו־‎@all (כולם) מושבתים בערוץ הזה."
         too_many_members: "בקבוצה %{group_name} יש יותר מדי חברים. לא נשלחו התראות."
         too_many_members_multiple:
           one: "בקבוצה %{group_name} וב־%{count} נוספת יש יותר מדי חברים. לא נשלחו התראות."
@@ -484,7 +491,7 @@ he:
         title: "צ׳אט"
         export_messages:
           title: "ייצוא הודעות צ׳אט"
-          description: "הייצוא מוגבל כרגע ל־10000 ההודעות העדכניות ביותר ב־6 החודשים האחרונים."
+          description: "פעולה זו תייצא את כל ההודעות מכל הערוצים."
           create_export: "יצירת ייצוא"
           export_has_started: "הייצוא החל. תישלח אליך הודעה פרטית כשהוא מוכן."
       direct_messages:
@@ -594,7 +601,6 @@ he:
       thread:
         title: "כותרת"
         view_thread: הצגת שרשור
-        default_title: "שרשור"
         replies:
           one: "תגובה אחת"
           two: "%{count} תגובות"
@@ -705,3 +711,7 @@ he:
       sections:
         chat:
           title: צ׳אט
+    sidebar:
+      panels:
+        chat:
+          label: "צ׳אט"

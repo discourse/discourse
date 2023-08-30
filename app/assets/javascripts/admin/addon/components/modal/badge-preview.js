@@ -33,7 +33,7 @@ export default class BadgePreview extends Component {
         this.args.model.badge.grant_count
       );
     } else {
-      return this.args.model.badge.sample.length !== 10;
+      return this.args.model.badge.sample?.length !== 10;
     }
   }
 

@@ -200,8 +200,20 @@ module PageObjects
         JS
       end
 
+      def submit
+        find("#{COMPOSER_ID} .save-or-cancel .create").click
+      end
+
       def close
         find("#{COMPOSER_ID} .save-or-cancel .cancel").click
+      end
+
+      def has_no_in_progress_uploads?
+        find("#{COMPOSER_ID}").has_no_css?("#file-uploading")
+      end
+
+      def has_in_progress_uploads?
+        find("#{COMPOSER_ID}").has_css?("#file-uploading")
       end
 
       private

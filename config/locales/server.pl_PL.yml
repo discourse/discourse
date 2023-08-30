@@ -349,7 +349,7 @@ pl_PL:
       few: "%{count} odpowiedzi więcej"
       many: "%{count} odpowiedzi więcej"
       other: "%{count} odpowiedzi więcej"
-    loading: "Wczytuję dyskusję…"
+    loading: "Ładowanie dyskusji…"
     permalink: "Link bezpośredni"
     imported_from: "Ten temat jest powiązany ze źródłową dyskusją: %{link}"
     in_reply_to: "▶ %{username}"
@@ -1683,11 +1683,11 @@ pl_PL:
     blocked_crawler_user_agents: "Unikalne słowo bez rozróżniania wielkości liter w ciągu znaków, które identyfikują crawlery internetowe, które nie powinny mieć dostępu do witryny. Nie ma zastosowania, jeśli dozwolona lista jest zdefiniowana."
     slow_down_crawler_user_agents: 'User-Agent''y robotów indeksujących, którym należy ograniczyć prędkość, zgodnie z ustawieniami "spowolnij szybkość indeksowania". Każda wartość musi mieć co najmniej 3 znaki.'
     slow_down_crawler_rate: "Jeśli określono parametr slow_down_crawler_user_agents, ta stawka będzie obowiązywać dla wszystkich robotów (liczba sekund opóźnienia między żądaniami)"
-    content_security_policy: "Włącz politykę bezpieczeństwa treści"
-    content_security_policy_report_only: "Włącz tylko treść-bezpieczeństwo-zasady-tylko raport"
+    content_security_policy: "Włącz Content-Security-Policy (CSP)"
+    content_security_policy_report_only: "Włącz Content-Security-Policy-Report-Only (CSP)."
     content_security_policy_collect_reports: "Włącz zbieranie raportów o naruszeniach CSP na / csp_reports"
     content_security_policy_frame_ancestors: "Określ, kto może osadzić tę witrynę w ramkach iframe za pośrednictwem CSP. Kontroluj dozwolone hosty w <a href='%{base_path}/admin/customize/embedding'>ustawieniach osadzania</a>"
-    content_security_policy_script_src: "Dodatkowe dozwolone źródła skryptów. Bieżący host i CDN są domyślnie uwzględniane. Zobacz <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>ograniczanie ataków XSS za pomocą zasad zabezpieczeń zawartości (CSP).</a>"
+    content_security_policy_script_src: "Dodatkowe dozwolone źródła skryptów. Bieżący host i CDN są domyślnie uwzględniane. Zobacz <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Ograniczanie ataków XSS dzięki Content Security Policy.</a> (CSP)"
     invalidate_inactive_admin_email_after_days: "Konta administracyjne, które nie odwiedzały witryny w tej liczbie dni, będą musiały ponownie zweryfikować swój adres e-mail przed zalogowaniem. Ustaw na 0, aby wyłączyć."
     include_secure_categories_in_tag_counts: "Gdy opcja ta jest włączona, liczba tematów dla tagu będzie obejmować tematy, które znajdują się w kategoriach z ograniczeniami odczytu dla wszystkich użytkowników. Gdy opcja ta jest wyłączona, zwykłym użytkownikom wyświetlana jest tylko liczba tematów dla tagu, w którym wszystkie tematy znajdują się w kategoriach publicznych."
     display_personal_messages_tag_counts: "Gdy ta opcja jest włączona, zostanie wyświetlona liczba wiadomości osobistych oznaczonych danym tagiem."
@@ -1810,7 +1810,6 @@ pl_PL:
     enable_safe_mode: "Zezwól użytkownikom na wchodzenie do trybu awaryjnego w celu debudowania wtyczek."
     rate_limit_create_topic: "Po otworzeniu tematu użytkownicy muszą odczekać (n) sekund, zanim otworzą inny temat."
     rate_limit_create_post: "Po napisaniu wpisu użytkownicy muszą odczekać (n) sekund, zanim napiszą inny wpis."
-    rate_limit_new_user_create_topic: "Po otworzeniu tematu nowi użytkownicy muszą odczekać (n) sekund, zanim otworzą inny temat."
     rate_limit_new_user_create_post: "Po napisaniu wpisu nowi użytkownicy muszą odczekać (n) sekund, zanim napiszą inny wpis."
     max_likes_per_day: "Maksymalna liczba polubień per użytkownik per dzień"
     max_flags_per_day: "Maksymalna liczba oflagowań per użytkownik per dzień."
@@ -2076,6 +2075,7 @@ pl_PL:
     digest_min_excerpt_length: "Minimalny wycinek wpisu (liczba znaków) w podsumowaniu e-mail."
     suppress_digest_email_after_days: "Znieś emaile podsumowujące dla użytkowników niewidocznych na stronie przez więcej niż (n) dni."
     digest_suppress_categories: "Znieś te kategorie z emaili podsumowujących."
+    digest_suppress_tags: "Pomiń te tagi w e-mailach z podsumowaniem."
     disable_digest_emails: "Wyłącz podsumowania e-mailowe dla wszystkich użytkowników."
     apply_custom_styles_to_digest: "Niestandardowe szablony wiadomości e-mail i css są stosowane do wiadomości e-mail z podsumowaniem."
     email_accent_bg_color: "Kolor akcentu używany jako tło niektórych elementów w wiadomościach HTML. Wprowadź angielską nazwę koloru ('red') lub wartość szesnastkową ('#FF0000')."
@@ -2231,7 +2231,6 @@ pl_PL:
     retain_web_hook_events_period_days: "Liczba dni przechowywania rekordów zdarzeń webhooków."
     retry_web_hook_events: "Automatycznie ponów 4 razy nieudane zdarzenia webhooków. Luki czasowe między ponownymi próbami wynoszą 1, 5, 25 i 125 minut."
     revoke_api_keys_days: "Liczba dni do automatycznego unieważnienia nieużywanego klucza API (0 oznacza brak)"
-    allow_user_api_keys: "Pozwól na generację kluczy API użytkownika."
     allow_user_api_key_scopes: "Lista zakresów dozwolona dla kluczy API użytkownika."
     min_trust_level_for_user_api_key: |
       Poziom zaufania wymagany do generowania kluczy API użytkownika.<br>
@@ -2565,18 +2564,6 @@ pl_PL:
   admin:
     email:
       sent_test: "wysłany!"
-    user:
-      merge_user:
-        updating_username: "Aktualizuję nazwę użytkownika ..."
-        changing_post_ownership: "Zmiana właściciela wpisu..."
-        merging_given_daily_likes: "Łączenie oddanych dziennych polubień..."
-        merging_post_timings: "Łączenie czasów postów..."
-        merging_user_visits: "Łączenie odwiedzin użytkownika..."
-        updating_site_settings: "Aktualizowanie ustawień strony..."
-        updating_user_stats: "Aktualizowanie statystyk użytkownika..."
-        merging_user_attributes: "Łączenie atrybutów użytkownika..."
-        updating_user_ids: "Aktualizuję identyfikatory użytkowników..."
-        deleting_source_user: "Usuwanie użytkownika źródłowego..."
   user:
     deactivated: "Został dezaktywowany w związku ze zbyt dużą liczbą odrzuconych emaili na '%{email}'."
     deactivated_by_staff: "Wyłączone przez personel"
@@ -4891,7 +4878,7 @@ pl_PL:
       delete_single:
         title: "Usuń"
       delete:
-        title: "Usuń..."
+        title: "Usuń…"
       delete_and_ignore:
         title: "Zignoruj flagę i usuń post"
         description: "Zignoruj flagę, usuwając ją z kolejki i usuń post; jeśli jest to pierwszy post, usuń również temat. "
@@ -4926,7 +4913,7 @@ pl_PL:
       approve_user:
         title: "Zatwierdź użytkownika"
       reject_user:
-        title: "Usuń użytkownika..."
+        title: "Usuń użytkownika…"
         delete:
           title: "Usuń użytkownika"
           description: "Użytkownik zostanie usunięty z forum."
@@ -4935,7 +4922,7 @@ pl_PL:
           description: "Użytkownik zostanie usunięty, a my zablokujemy jego adres IP i e-mail."
       reject:
         title: "Odrzuć"
-        bundle_title: "Odrzuć..."
+        bundle_title: "Odrzuć…"
       reject_and_suspend:
         title: "Odrzuć i zawieś użytkownika"
       reject_and_silence:

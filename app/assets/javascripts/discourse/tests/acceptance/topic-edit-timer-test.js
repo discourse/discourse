@@ -268,7 +268,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await click("#tap_tile_custom");
     await fillIn(".tap-tile-date-input .date-picker", "2100-11-24");
     await fillIn("#custom-time", "10:30");
-    await click(".edit-topic-timer-buttons button.btn-primary");
+    await click(".edit-topic-timer-modal button.btn-primary");
 
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
@@ -380,7 +380,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".toggle-admin-menu");
     await click(".admin-topic-timer-update button");
     await click("#tap_tile_start_of_next_business_week");
-    await click(".edit-topic-timer-buttons button.btn-primary");
+    await click(".edit-topic-timer-modal button.btn-primary");
 
     const removeTimerButton = query(".topic-timer-info .topic-timer-remove");
     assert.strictEqual(removeTimerButton.getAttribute("title"), "remove timer");

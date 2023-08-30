@@ -218,7 +218,6 @@ zh_TW:
     configure: "配置嵌入"
     more_replies:
       other: "%{count} 個更多回覆"
-    loading: "討論串載入中⋯"
     permalink: "永久連結"
     imported_from: "這是一個已從原 %{link} 中分離的主題"
     in_reply_to: "▶ %{username}"
@@ -1169,8 +1168,6 @@ zh_TW:
     allowed_iframes: "允許 Discourse 可以在貼文中安全發布含有 iframe 及 src 網域前綴列表"
     allowed_crawler_user_agents: "使用者代理（User Agents）的網路爬蟲（Web Crawlers）將允許存取網站。警告！設置此將取消未列出的所有網路爬蟲者（Web Crawlers）"
     slow_down_crawler_rate: "如果指定了slow_down_crawler_user_agents，則此速率將適用於所有抓取工具（請求之間的延遲秒數）"
-    content_security_policy: "啟用內容安全性政策"
-    content_security_policy_report_only: "僅啟用內容安全性政策報告"
     content_security_policy_collect_reports: "在 /csp_reports 啟用CSP違規報告蒐集"
     invalidate_inactive_admin_email_after_days: "在這幾天沒有訪問網站的管理員帳戶，在登入前需要重新驗證該管理員帳戶的電子郵件。設定為0禁用。"
     top_menu: "選擇在主頁導航列包含哪些項目，以及排列次序。例如：latest|new|unread|categories|top|read|posted|bookmarks"
@@ -1244,7 +1241,6 @@ zh_TW:
     enable_safe_mode: "允許使用者進入安全模式以偵錯插件（plugins）。"
     rate_limit_create_topic: "建立新討論話題之後，使用者必須間隔多少秒 (n) 才能再建立新討論話題"
     rate_limit_create_post: "建立新貼文之後，使用者必須間隔多少秒 (n) 才能再建立新貼文"
-    rate_limit_new_user_create_topic: "建立一個話題後，新使用者必須等待 (n) 秒才能建立另一個新話題"
     rate_limit_new_user_create_post: "在發表貼文後，新使用者必須等待 (n) 秒才能再發表另一篇貼文"
     max_likes_per_day: "每個使用者每天最多能\"讚\"的數量"
     max_flags_per_day: "每個使用者每天最多能\"標記\"的數量"
@@ -1533,7 +1529,6 @@ zh_TW:
     default_title_count_mode: "頁面標題計數器的預設模式"
     retain_web_hook_events_period_days: "保留Web hook事件記錄的天數。"
     retry_web_hook_events: "自動重試失敗的Web hook事件，最大重試為4次。 重試之間的時間間隔為1、5、25及125分鐘"
-    allow_user_api_keys: "允許生成使用者API密鑰"
     allow_user_api_key_scopes: "使用者API授權範圍列表"
     allowed_user_api_auth_redirects: "允許身份驗證URL用於導向使用者API 密鑰（Keys），使用星號「*」將代入所有字詞，並找到最適合的配對（例如：www.example.com/*）。"
     allowed_user_api_push_urls: "允許使用伺服器推送至使用者 API 的 URL"
@@ -3022,8 +3017,6 @@ zh_TW:
         description: "將話題變更為對所有人顯示。"
       delete_single:
         title: "刪除"
-      delete:
-        title: "刪除..."
       delete_and_ignore_replies:
         confirm: "您確定要刪除對該貼文的留言嗎？"
       delete_and_agree_replies:
@@ -3045,7 +3038,6 @@ zh_TW:
       approve_user:
         title: "批准使用者"
       reject_user:
-        title: "刪除使用者..."
         delete:
           title: "刪除使用者"
           description: "該使用者將從論壇中刪除。"

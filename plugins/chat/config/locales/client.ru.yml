@@ -10,12 +10,15 @@ ru:
       site_settings:
         categories:
           chat: Чат
+        chat_separate_sidebar_mode:
+          always: "Всегда"
+          never: "Никогда"
       logs:
         staff_actions:
           actions:
             chat_channel_status_change: "Изменение статуса канала чата"
             chat_channel_delete: "Удаление канала чата"
-            chat_auto_remove_membership: "Участники автоматически удалены из каналов"
+            chat_auto_remove_membership: "Участники автоматически удаляются из каналов"
       api:
         scopes:
           descriptions:
@@ -363,7 +366,7 @@ ru:
         default_user_search_placeholder: "@пользователь"
         user_search_placeholder: "...добавить пользователей"
         disabled_user: "отключил(а) чат"
-        no_items: "Ничего не найдено"
+        no_items: "Нет компонентов"
       channel_edit_name_slug_modal:
         title: Изменение канала
         input_placeholder: Укажите название
@@ -516,7 +519,6 @@ ru:
         title: "Чат"
         export_messages:
           title: "Экспорт сообщений чата"
-          description: "Текущее ограничение на экспорт — 10 000 последних сообщений за последние шесть месяцев."
           create_export: "Создать экспорт"
           export_has_started: "Экспорт начался. Когда он завершится, вы получите личное сообщение."
       direct_messages:
@@ -626,7 +628,6 @@ ru:
       thread:
         title: "Название"
         view_thread: Просмотреть цепочку
-        default_title: "Цепочка"
         replies:
           one: "%{count} ответ"
           few: "%{count} ответа"
@@ -737,3 +738,7 @@ ru:
       sections:
         chat:
           title: Чат
+    sidebar:
+      panels:
+        chat:
+          label: "Чат"

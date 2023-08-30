@@ -240,7 +240,6 @@ nb_NO:
     related_messages:
       title: "Relaterte meldinger"
       pill: "Relaterte meldinger"
-      see_all: 'se <a href="%{path}">alle meldinger</a> fra @%{username} …'
     suggested_topics:
       pm_title: "Anbefalte meldinger"
     about:
@@ -321,17 +320,11 @@ nb_NO:
       other: "Se %{count} nye emner"
     preview: "forhåndsvisning"
     cancel: "avbryt"
-    deleting: "Sletter..."
     save: "Lagre endringer"
-    saving: "Lagrer…"
     saved: "Lagret!"
     upload: "Last opp"
-    uploading: "Laster opp…"
-    uploading_filename: "Laster opp %{filename}"
-    processing_filename: "Behandler: %{filename}..."
     clipboard: "utklippstavle"
     uploaded: "Lastet opp!"
-    pasting: "Limer inn…"
     enable: "Aktiver"
     disable: "Deaktiver"
     continue: "Fortsett"
@@ -873,7 +866,6 @@ nb_NO:
       topic_stat_unit:
         week: "uke"
         month: "måned"
-      n_more: "Kategorier (ytterligere%{count})..."
     ip_lookup:
       title: Slå opp IP-adresse
       hostname: Vertsnavn
@@ -917,7 +909,6 @@ nb_NO:
         ignore_no_users: "Du har ingen ignorerte brukere."
         ignore_option: "Ignorert"
         ignore_option_title: "Du vil ikke motta varsler om denne brukeren og alle deres emner og svar vil bli skjult."
-        add_ignored_user: "Legg til …"
         mute_option: "Ignorert"
         mute_option_title: "Du vil ikke motta noen varsler relatert til denne brukeren."
         normal_option: "Normal"
@@ -1211,7 +1202,6 @@ nb_NO:
         primary_label: "primær"
         unconfirmed_label: "ubekreftet"
         resend_label: "send bekreftelses-e-post på nytt"
-        resending_label: "sender..."
         resent_label: "e-post sendt"
         update_email: "Endre e-postadresse"
         set_primary: "Angi primær e-post"
@@ -1256,7 +1246,6 @@ nb_NO:
         not_available_no_suggestion: "Ikke tilgjengelig"
         too_short: "Ditt brukernavn er for kort."
         too_long: "Ditt brukernavn er for langt."
-        checking: "Sjekker brukernavnets tilgjengelighet…"
         prefilled: "E-post stemmer med dette registrerte brukernavnet"
         required: "Skriv inn et brukernavn"
         edit: "Rediger brukernavn"
@@ -1373,7 +1362,6 @@ nb_NO:
         reinvite: "Send e-post på nytt"
         reinvited: "Invitasjon sendt igjen"
         removed: "Fjernet"
-        search: "skriv for å søke etter invitasjoner…"
         user: "Invitert bruker"
         none: "Ingen invitasjoner å vise."
         truncated:
@@ -1427,7 +1415,6 @@ nb_NO:
             <p>Inviter en liste over brukere for å få fellesskapet til å gå raskt. Forbered en <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">CSV-fil</a> som inneholder minst en rad per e-postadresse til brukere som du vil invitere. Følgende kommaseparert informasjon kan gis hvis du vil legge til personer i grupper, eller sende dem til et bestemt emne første gang de logger inn.</p>
             <pre>john@smith. om,first_group_name; econd_group_name,topic_id</pre>
             <p>Hver e-postadresse i din opplastede CSV-fil vil bli sendt en invitasjon, og du vil kunne administrere det senere.</p>
-          progress: "Lastet opp %{progress}%..."
           success: "Filen ble lastet opp. Du vil bli varslet via melding når prosessen er fullført."
           error: "Beklager, fila må være i CSV-format."
       password:
@@ -1515,7 +1502,6 @@ nb_NO:
         the_topic: "emnet"
     user_status:
       save: "Lagre"
-    loading: "Laster…"
     errors:
       prev_page: "ved lasting"
       reasons:
@@ -1556,7 +1542,6 @@ nb_NO:
         <b>{relativeAge}</b> – <a href='{url}' target='_blank'>{rate, plural, one {# feil/time} other {# feil/time}}</a> overskrider sideinnstillingsgrensen på {limit, plural, one {# error/time} other {# errors/hour}}
       exceeded_minute_MF: |
         <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, one {# feil / minutt} other {# feil / minutt}}</a> overskredet nettstedsinnstillingsgrensen på {limit, plural, one {# feil / minutt} other {# feil / minutt}}.
-    learn_more: "lær mer…"
     mute: Ignorer
     unmute: Fjern ignorering
     last_post: Postet
@@ -1585,10 +1570,6 @@ nb_NO:
       disable: "Vis slettede innlegg"
     private_message_info:
       title: "Send"
-      invite: "Inviter Andre..."
-      edit: "Legg til eller slett..."
-      remove: "Fjern..."
-      add: "Legg til …"
       leave_message: "Ønsker du virkelig å legge igjen denne meldingen?"
       remove_allowed_user: "Er du sikker på at du vil fjerne %{name} fra denne meldingen?"
       remove_allowed_group: "Vil du virkelig fjerne %{name} fra denne meldingen?"
@@ -1661,9 +1642,7 @@ nb_NO:
       blank_username: "Vennligst oppgi din e-post eller brukernavn."
       blank_username_or_password: "Oppgi din e-postadresse eller brukernavn og ditt passord."
       reset_password: "Nullstill passord"
-      logging_in: "Logger inn…"
       or: "Eller"
-      authenticating: "Autentiserer…"
       awaiting_activation: "Din konto avventer aktivering. Bruk lenken for glemt passord for å sende en ny e-post for aktivering."
       awaiting_approval: "Din konto har ikke blitt godkjent av en moderator ennå. Du vil motta en e-post når den er godkjent."
       requires_invite: "Beklager, tilgang til dette forumet kun ved invitasjon."
@@ -1728,8 +1707,6 @@ nb_NO:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Angi"
-    conditional_loading_section:
-      loading: Laster…
     category_row:
       topic_count:
         one: "%{count} emne i denne kategori"
@@ -1744,10 +1721,7 @@ nb_NO:
       delete_item: "Slett %{name}"
       filter_by: "Filtrer etter %{name}"
       select_to_filter: "Velg en verdi å filtrere"
-      default_header_text: Velg…
       no_content: Ingen treff funnet
-      filter_placeholder: Søk…
-      filter_placeholder_with_any: Søk eller opprett...
       create: "Opprett: %{content}"
       max_content_reached:
         one: "Du kan kun velge %{count} gjenstand."
@@ -1756,8 +1730,6 @@ nb_NO:
         one: "Velg minst %{count} element."
         other: "Velg minst %{count} elementer."
       components:
-        tag_drop:
-          filter_for_more: Filter for mer...
         categories_admin_dropdown:
           title: "Administrere kategorier"
     date_time_picker:
@@ -1788,10 +1760,8 @@ nb_NO:
       destination_category: "Målkategori"
       publish: "Publiser delt kladd"
       confirm_publish: "Er du sikker på at du vil publisere denne kladden?"
-      publishing: "Publiserer emne…"
     composer:
       emoji: "Emoji :)"
-      more_emoji: "mer…"
       options: "Alternativer"
       whisper: "hvisk"
       unlist: "skjult"
@@ -1800,7 +1770,6 @@ nb_NO:
       toggle_unlisted: "Skjul eller gjør synlig"
       posting_not_on_topic: "Du svarer på emnet \"%{title}\", men for øyeblikket ser du på et annet emne."
       saved_local_draft_tip: "lagret lokalt"
-      similar_topics: "Emnet ditt har likheter med…"
       drafts_offline: "utkast offline"
       edit_conflict: "rediger konflikt"
       group_mentioned:
@@ -1835,7 +1804,6 @@ nb_NO:
       saving: "Lagrer"
       saved: "Lagret!"
       saved_draft: "Legg inn utkast pågår. Trykk for å gjenoppta."
-      uploading: "Laster opp…"
       show_preview: "vis forhåndsvisning"
       hide_preview: "skjul forhåndsvisning"
       quote_post_title: "Siter hele innlegget"
@@ -2058,7 +2026,6 @@ nb_NO:
         with_tags:
           label: Med stikkord
         filters:
-          label: Vis bare emner/innlegg…
           title: Med treff i tittelen
           likes: Jeg likte
           posted: jeg skrev innlegg i
@@ -2131,11 +2098,9 @@ nb_NO:
         dismiss_new: "Forkast nye"
         toggle: "slå på/av massevelging av emner"
         actions: "Massehandlinger"
-        change_category: "Velg kategori..."
         close_topics: "Lukk emner"
         archive_topics: "Arkiver emner"
         move_messages_to_inbox: "Flytt til innboks"
-        notification_level: "Varsler..."
         change_notification_level: "Endre varslingsnivå"
         choose_new_category: "Velg den nye kategorien for emnene:"
         selected:
@@ -2305,8 +2270,6 @@ nb_NO:
         replies_short: "%{current} / %{total}"
       progress:
         title: fremgang i emne
-        jump_prompt: "hopp til…"
-        jump_prompt_long: "Hopp til…"
         jump_prompt_to_date: "til dato"
         jump_prompt_or: "eller"
       notifications:
@@ -2362,14 +2325,11 @@ nb_NO:
         open: "Åpne emne"
         close: "Lukk emne"
         multi_select: "Velg innlegg…"
-        slow_mode: "Sett sakte modus..."
-        timed_update: "Sett opp tidsbestemt handling for emne…"
         pin: "Fest emne…"
         unpin: "Løsne emne…"
         unarchive: "Opphev arkivering av emne"
         archive: "Arkiver emne"
         reset_read: "Tilbakestill lesedata"
-        make_public: "Gjør til offentlig emne..."
         make_private: "Gjør om til personlig melding"
         reset_bump_date: "Tilbakestille dato emnet ble flyttet øverst"
       feature:
@@ -2421,7 +2381,6 @@ nb_NO:
         banner_note: "Brukere kan fjerne banneret ved å lukke det. Kun ett emne kan være valgt som banner av gangen."
         no_banner_exists: "Det er ikke valgt et banneremne. "
         banner_exists: "Det <strong class='badge badge-notification unread'>finnes</strong> et banneremne allerede."
-      inviting: "Inviterer…"
       automatically_add_to_groups: "Denne invitasjonen inkluderer også tilgang til disse gruppene:"
       invite_private:
         title: "Inviter til samtale"
@@ -2524,7 +2483,6 @@ nb_NO:
           one: "Vennligst velg en ny eier for innlegget"
           other: "Vennligst velg en ny eier for innlegget ved @%{count}"
       change_timestamp:
-        title: "Endre tidsstempel…"
         action: "endre tidsstempel"
         invalid_timestamp: "Tidsstempel kan ikke være i fremtiden."
         error: "Det oppstod en feil ved endring av tidsstempel for emnet."
@@ -2653,8 +2611,6 @@ nb_NO:
         rebake: "Generer HTML på nytt"
         publish_page: "Side Publisering"
         unhide: "Vis"
-        change_owner: "Endre eierskap..."
-        grant_badge: "Tildel merke..."
         lock_post: "Lås innlegg"
         lock_post_description: "forhindre innleggsskriveren fra å redigere dette innlegget"
         unlock_post: "Lås opp innlegg"
@@ -2668,8 +2624,6 @@ nb_NO:
         delete_topic_confirm_modal_no: "Nei, behold dette emnet"
         delete_topic_error: "Det oppstod en feil under sletting av emnet"
         delete_topic: "slett emne"
-        add_post_notice: "Legg til medarbeider varsel..."
-        change_post_notice: "Merknad om endring av personalet..."
         delete_post_notice: "Slett personalmerknad"
         remove_timer: "Fjern timer"
         edit_timer: "rediger timeren"
@@ -2898,7 +2852,6 @@ nb_NO:
     flagging:
       title: "Takk for at du hjelper å holde forumet ryddig!"
       action: "Rapporter innlegg"
-      take_action: "Ta handling..."
       take_action_options:
         default:
           title: "Ta handling"
@@ -2932,9 +2885,6 @@ nb_NO:
         at_least:
           one: "skriv inn minst ett tegn"
           other: "skriv inn minst %{count} tegn"
-        more:
-          one: "Én igjen…"
-          other: "%{count} igjen…"
         left:
           one: "ett gjenstående"
           other: "%{count} gjenstående"
@@ -2946,7 +2896,6 @@ nb_NO:
       title: "Oppsummering av emne"
       participants_title: "Hyppige innleggsskrivere"
       links_title: "Populære Lenker"
-      links_shown: "vis flere lenker…"
       clicks:
         one: "%{count} klikk"
         other: "%{count} klikk"
@@ -3053,6 +3002,9 @@ nb_NO:
           one: "Nye (%{count})"
           other: "Nye (%{count})"
         help: "emner opprettet de siste dagene"
+        all: "Alle"
+        topics: "Emner"
+        replies: "Svar"
       posted:
         title: "Mine innlegg"
         help: "emner du har bidratt med innlegg i"
@@ -3316,7 +3268,6 @@ nb_NO:
         cannot_save: "Kan ikke lagre taggruppe. Forsikre deg om at det er minst én tag tilstede, at tagggruppenavnet ikke er tomt, og at en gruppe er valgt for taggetillatelse."
         tags_placeholder: "Søk eller opprett..."
         parent_tag_placeholder: "Valgfritt"
-        select_groups_placeholder: "Velg grupper..."
         disabled: "Merking er deaktivert. "
       topics:
         none:
@@ -3541,7 +3492,6 @@ nb_NO:
           name:
             too_short: "Gruppenavnet er for kort"
             too_long: "Gruppenavnet er for langt"
-            checking: "Sjekker om gruppenavnet er ledig..."
             available: "Gruppenavn tilgjengelig"
             not_available: "Gruppenavn ikke tilgjengelig"
             blank: "Gruppenavnet kan ikke være tomt"
@@ -3716,20 +3666,15 @@ nb_NO:
           disable:
             title: "Skru av skrivebeskyttet modus"
             label: "Skru av skrivebeskytting"
-        logs:
-          none: "Ingen logger enda…"
         columns:
           filename: "Filnavn"
           size: "Størrelse"
         upload:
           label: "Last opp"
           title: "Last opp en sikkerhetskopi til denne instansen"
-          uploading: "Laster opp…"
-          uploading_progress: "Laster opp... %{progress}%"
           success: "Opplastingen av '%{filename}' var vellykket. Filen blir nå bearbeidet og det vil ta opp til et minutt før den dukker opp i listen."
           error: "Det oppstod en feil ved opplastingen av '%{filename}': %{message}"
         operations:
-          is_running: "En prosess pågår…"
           failed: " %{operation} mislyktes. Undersøk loggene."
           cancel:
             label: "Avbryt"
@@ -3861,7 +3806,6 @@ nb_NO:
           uploads: "Opplastinger"
           no_uploads: "Du kan laste opp effekter tilknyttet din drakt, som skrifter og bilder"
           add_upload: "Legg til opplasting"
-          upload_file_tip: "Velg en effekt å laste opp (PNG, WOFF2, osv…)"
           variable_name: "Variabelnavn for SCSS:"
           variable_name_invalid: "Ugyldig variabelnavn. Kun alfanumeriske tegn tillatt. Må starte med en bokstav. Må være unikt. "
           variable_name_error:
@@ -3888,7 +3832,6 @@ nb_NO:
           disabled: "Denne komponenten har blitt deaktivert."
           update_to_latest: "Oppdater til seneste"
           check_for_updates: "Se etter oppdateringer"
-          updating: "Oppdaterer…"
           up_to_date: "Drakten er oppdatert, sist sjekket:"
           add: "Legg til"
           theme_settings: "Draktinnstillinger"
@@ -3978,7 +3921,6 @@ nb_NO:
           email: "Original melding"
           run: "Kjør test"
           text: "Valgt tekstinnhold"
-        sending_test: "Sender e-post for testing"
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "Det oppstod et problem ved utsendelse av e-post for testing. Sjekk e-postinnstillinger nøye, sjekk at verten ikke blokkerer e-posttilkoblinger, og prøv igjen."
         sent: "Sendt"
@@ -3999,7 +3941,6 @@ nb_NO:
         refresh: "Refresh"
         send_digest_label: "Send dette resultatet til:"
         send_digest: "Send"
-        sending_email: "Sender e-post…"
         format: "Format"
         html: "html"
         text: "tekst"
@@ -4026,7 +3967,6 @@ nb_NO:
             from_placeholder: "fra@eksempel.no"
             to_placeholder: "til@eksempel.no"
             cc_placeholder: "cc@eksempel.no"
-            subject_placeholder: "Emne…"
             error_placeholder: "Feil"
         logs:
           none: "Ingen logger funnet"
@@ -4034,7 +3974,6 @@ nb_NO:
             title: "Filtrer"
             user_placeholder: "brukernavn"
             address_placeholder: "navn@eksempel.no"
-            type_placeholder: "oppsummering, registrering…"
             reply_key_placeholder: "svarnøkkel"
       moderation_history:
         performed_by: "Utført av"
@@ -4393,7 +4332,6 @@ nb_NO:
           other: "Kan ikke slette alle innlegg fordi brukeren har mer enn %{count} innlegg. (delete_all_posts_max)"
         delete_and_block: "Slett og <b>blokker</b> denne e-post- og IP-adressen"
         delete_dont_block: "Bare slett"
-        deleting_user: "Sletter bruker..."
         deleted: "Brukeren ble slettet."
         delete_failed: "Det oppstod en feil ved slettingen av den brukeren. Sørg for at alle av brukerens innlegg er slettet før du prøver å slette brukeren."
         send_activation_email: "Send e-post for aktivering"
@@ -4634,7 +4572,6 @@ nb_NO:
       emoji:
         title: "Emoji"
         add: "Legg til ny Emoji"
-        uploading: "Laster opp…"
         name: "Navn"
         group: "Gruppe"
         image: "Bilde"
@@ -4682,7 +4619,6 @@ nb_NO:
       next: "Neste"
       step-text: "Steg"
       step: "%{current} av %{total}"
-      uploading: "Laster opp…"
       upload_error: "Beklager, det skjedde en feil ved opplastingen av den filen. Vennligst prøv igjen."
       staff_count:
         one: "Din gemenskap har ett stabsmedlem (deg)."

@@ -312,7 +312,6 @@ ja:
     configure: "埋め込みを構成"
     more_replies:
       other: "他 %{count} 件の返信"
-    loading: "ディスカッションを読み込み中…"
     permalink: "パーマリンク"
     imported_from: "これは、元のエントリ (%{link}) に関連するディスカッショントピックです"
     in_reply_to: "▶ %{username}"
@@ -1504,11 +1503,8 @@ ja:
     blocked_crawler_user_agents: "サイトへのアクセスを許可してはいけないウェブクローラーを識別する、ユーザーエージェント文字列の大文字と小文字を区別しない一意の語。ホワイトリストが定義されている場合は適用されません。"
     slow_down_crawler_user_agents: '"slow down crawler rate" 設定の構成のとおりに速度の制限が必要なウェブクローラーのユーザーエージェント。各値の長さは 3 文字以上です。'
     slow_down_crawler_rate: "このレートに slow_down_crawler_user_agents が指定されている場合、このレートはすべてのクローラーに適用されます (リクエスト間の遅延秒数)"
-    content_security_policy: "Content-Security-Policy を有効にする"
-    content_security_policy_report_only: "Content-Security-Policy-Report-Only を有効にする"
     content_security_policy_collect_reports: "/csp_reports で CSP 違反レポートの収集を有効にする"
     content_security_policy_frame_ancestors: "CSP を介してこのサイトを iframe に埋め込むことのできるユーザーを制限する。許可されるホストを <a href='%{base_path}/admin/customize/embedding'>埋め込み</a>で制御します。"
-    content_security_policy_script_src: "追加のホワイトリストにあるスクリプトソース。現在のホストと CDN はデフォルトで含まれています。<a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>コンテンツセキュリティポリティーで XSS 攻撃を緩和する</a> をご覧ください。"
     invalidate_inactive_admin_email_after_days: "この日数以上サイトを訪問していない管理者アカウントは、ログインする前にメールアドレスを再確認する必要があります。0 に設定すると無効になります。"
     include_secure_categories_in_tag_counts: "有効にすると、タグのトピック数には、すべてのユーザーに対して読み取りが制限されたカテゴリにあるトピックが含まれます。無効にすると、通常のユーザーは、すべてのトピックが公開カテゴリにあるタグのトピック数のみが表示されます。"
     display_personal_messages_tag_counts: "有効にすると、指定されたタグが付けられた個人メッセージの数が表示されます。"
@@ -1631,7 +1627,6 @@ ja:
     enable_safe_mode: "プラグインをデバッグするためにユーザーによる安全モードの開始を許可する。"
     rate_limit_create_topic: "トピック作成後、ユーザーは (n) 秒待ってから次のトピックを作成する必要があります。"
     rate_limit_create_post: "投稿後、ユーザーは (n) 秒待ってから次の投稿を作成する必要があります。"
-    rate_limit_new_user_create_topic: "トピック作成後、新規ユーザーは (n) 秒待ってから次のトピックを作成する必要があります。"
     rate_limit_new_user_create_post: "投稿後、新規ユーザーは (n) 秒待ってから次の投稿を作成する必要があります。"
     max_likes_per_day: "ユーザーが 1 日に「いいね！」できる最大回数"
     max_flags_per_day: "ユーザーが 1 日に行える通報の回数"
@@ -1865,7 +1860,7 @@ ja:
     pop3_polling_password: "ポーリングを行う POP3 アカウントのパスワードです。"
     pop3_polling_delete_from_server: "サーバーからメールを削除する。注意: これを無効にした場合、メールの受信トレイを手動でクリーンアップする必要があります"
     log_mail_processing_failures: "すべてのメール処理の失敗を <a href='%{base_path}/logs' target='_blank'>/logs</a> に記録する"
-    email_in: "ユーザーがメール経由で新規トピックを投稿できるようにします。この設定を有効にすると、グループとカテゴリの受信メールアドレスを構成できるようになります。"
+    email_in: "ユーザーがメール経由で新規トピックを作成できるようにします。この設定を有効にすると、グループとカテゴリの受信メールアドレスを構成できるようになります。"
     email_in_min_trust: "メールでのトピック作成を許可する最低信頼レベル"
     email_in_authserv_id: "受信メールに認証チェックを実行するサービスの識別子。この構成方法については、<a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> をご覧ください。"
     email_in_spam_header: "迷惑を検出するためのメールヘッダー。"
@@ -2052,7 +2047,6 @@ ja:
     retain_web_hook_events_period_days: "Webhook イベントレコードを保持する日数。"
     retry_web_hook_events: "失敗した Webhook イベントを自動的に 4 回再試行する。再試行間の時間差は、1、5、25、および 125 分です。"
     revoke_api_keys_days: "未使用の API キーが自動的に取り消されるまでの日数 (0 に設定すると取り消されません)"
-    allow_user_api_keys: "ユーザー API キーの生成を許可する"
     allow_user_api_key_scopes: "ユーザー API キーに許可されるスコープのリスト"
     min_trust_level_for_user_api_key: |
       ユーザー API キーの生成に必要な信頼レベル。<br>
@@ -2117,7 +2111,7 @@ ja:
     experimental_topics_filter: "実験的: /filter で実験的なトピックフィルターのルートを有効にします"
     experimental_search_menu_groups: "実験的: glimmer を使用するようにアップグレードされた新しい検索メニューを有効にします"
     enable_experimental_lightbox: "実験的: デフォルトの画像ライトボックスを改良されたデザインに置き換えます。"
-    page_loading_indicator: "Discourse 内のページナビゲーション中に表示される読み込みインジケーターを構成します。'Spinner' はページ全体のインジケーターです。'Slider' は画面上部に細いバーを表示します。"
+    page_loading_indicator: "Discourse 内のページナビゲーション中に表示される読み込みインジケーターを構成します。「スピナー」はページ全体のインジケーターです。「スライダー」は画面上部に細いバーを表示します。"
     errors:
       invalid_css_color: "無効な色です。色名または 16 進数値を入力してください。"
       invalid_email: "無効なメールアドレスです。"
@@ -2329,18 +2323,6 @@ ja:
   admin:
     email:
       sent_test: "送信完了！"
-    user:
-      merge_user:
-        updating_username: "ユーザー名を更新中…"
-        changing_post_ownership: "投稿の所有権を変更中…"
-        merging_given_daily_likes: "付与した 1 日の「いいね！」をマージ中…"
-        merging_post_timings: "投稿のタイミングをマージ中…"
-        merging_user_visits: "ユーザーの訪問をマージ中…"
-        updating_site_settings: "サイト設定を更新中…"
-        updating_user_stats: "ユーザー統計を更新中…"
-        merging_user_attributes: "ユーザー属性をマージ中…"
-        updating_user_ids: "ユーザー ID を更新中…"
-        deleting_source_user: "ソースユーザーを削除中…"
   user:
     deactivated: "'%{email}' からのバウンスメールが多すぎるため無効化されました。"
     deactivated_by_staff: "スタッフによる無効化"
@@ -4596,8 +4578,6 @@ ja:
         description: "通報に同意し、この投稿を非表示にします。さらに、ユーザーに編集を求めるメッセージを自動送信します。"
       delete_single:
         title: "削除"
-      delete:
-        title: "削除…"
       delete_and_ignore:
         title: "通報を無視して投稿を削除する"
         description: "通報をキューから削除して通報を無視し、投稿を削除します。最初の投稿である場合は、トピックも削除します。 "
@@ -4632,7 +4612,6 @@ ja:
       approve_user:
         title: "ユーザーの承認"
       reject_user:
-        title: "ユーザーの削除…"
         delete:
           title: "ユーザーの削除"
           description: "ユーザーはフォーラムから削除されます。"
@@ -4641,7 +4620,6 @@ ja:
           description: "ユーザーは削除され、その IP とメールアドレスはブロックされます。"
       reject:
         title: "却下"
-        bundle_title: "拒否..."
       reject_and_suspend:
         title: "ユーザーの拒否と凍結"
       reject_and_silence:

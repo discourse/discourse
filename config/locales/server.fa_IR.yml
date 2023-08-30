@@ -184,7 +184,6 @@ fa_IR:
     more_replies:
       one: "%{count} پاسخ دیگر"
       other: "%{count} پاسخ دیگر"
-    loading: "بارگزاری بحث..."
     permalink: " پیوند یکتا"
     imported_from: "این بحث‌وگفتگوی همراه برای ورود اصلی در %{link} است"
     in_reply_to: "◀ %{username}"
@@ -985,7 +984,6 @@ fa_IR:
     top_topics_formula_least_likes_per_post_multiplier: "مقدار پسند‌های حداقل هر نوشته ضربدر (n) در موضوعات برتر است فرمول: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     rate_limit_create_topic: "بعد از ایجاد موضوع،‌ کاربر باید (n) ثانیه قبل از اینکه موضوع دیگری ایجاد کند صبر کند. "
     rate_limit_create_post: "بعد از نوشته،‌ کاربر باید (n) ثانیه قبل از ساختن نوشته‌ی دیگر صبر کند. "
-    rate_limit_new_user_create_topic: "بعد از ایجاد یک موضوع، کاربر جدید باید (n) ثانیه قبل از ایجاد موضوع دیگر صبر کند."
     rate_limit_new_user_create_post: "بعد از نوشته،‌ کاربر جدید باید (n) ثانیه قبل از ساختن نوشته‌ی دیگر صبر کند. "
     max_likes_per_day: "حداکثر تعداد پسند هر کاربر در روز"
     max_flags_per_day: "حداکثر تعداد پرچم هر کاربر در روز"
@@ -1206,7 +1204,6 @@ fa_IR:
     default_categories_tracking: "لیست دسته‌بندی‌هایی که به صورت پیشفرض پیگیری می‌شوند."
     default_categories_muted: "لیست دسته‌بندی‌هایی که به صورت پیشفرض غیر‌فعال می‌شوند."
     default_categories_watching_first_post: "لیست دسته‌بندی‌هایی که نوشته‌هایشان در هر موضوع به صورت پیشفرض تحت نظر هستند."
-    allow_user_api_keys: "اجازه‌ی ساخت کلید‌های API"
     allow_user_api_key_scopes: "لیست حوزه‌های مجاز برای کلید‌های API کاربری"
     allowed_user_api_push_urls: "لینک‌های مجاز برای سرور و ارسال به API کاربری"
     tagging_enabled: "فعالسازی برچسب در موضوعات؟"
@@ -2338,12 +2335,10 @@ fa_IR:
       approve:
         title: "تایید"
       reject_user:
-        title: "حذف کاربر..."
         delete:
           title: "حذف کاربر"
       reject:
         title: "رد کردن"
-        bundle_title: "رد کردن..."
   fallback_username: "کاربران"
   user_status:
     errors:

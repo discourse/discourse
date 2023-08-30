@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-task "assets:precompile:before" do
+task "assets:precompile:before": "environment" do
   require "uglifier"
   require "open3"
 
@@ -59,6 +59,18 @@ task "assets:precompile:before" do
 end
 
 task "assets:precompile:css" => "environment" do
+  class Sprockets::Manifest
+    def reload
+      @filename = find_directory_manifest(@directory)
+      @data = json_decode(File.read(@filename))
+    end
+  end
+
+  # cause on boot we loaded a blank manifest,
+  # we need to know where all the assets are to precompile CSS
+  # cause CSS uses asset_path
+  Rails.application.assets_manifest.reload
+
   if ENV["DONT_PRECOMPILE_CSS"] == "1"
     STDERR.puts "Skipping CSS precompilation, ensure CSS lives in a shared directory across hosts"
   else
@@ -226,7 +238,7 @@ def log_task_duration(task_description, &task)
   STDERR.puts
 end
 
-task "assets:precompile" => %w[assets:precompile:before maxminddb:refresh] do
+task "assets:precompile:compress_js": "environment" do
   if $bypass_sprockets_uglify
     puts "Compressing Javascript and Generating Source Maps"
     manifest = Sprockets::Manifest.new(assets_path)
@@ -288,17 +300,20 @@ task "assets:precompile" => %w[assets:precompile:before maxminddb:refresh] do
   end
 end
 
-Rake::Task["assets:precompile"].enhance do
-  class Sprockets::Manifest
-    def reload
-      @filename = find_directory_manifest(@directory)
-      @data = json_decode(File.read(@filename))
-    end
-  end
+task "assets:precompile:js_processor": "environment" do
+  path = DiscourseJsProcessor::Transpiler.generate_js_processor
+  puts "Compiled js-processor: #{path}"
+end
 
-  # cause on boot we loaded a blank manifest,
-  # we need to know where all the assets are to precompile CSS
-  # cause CSS uses asset_path
-  Rails.application.assets_manifest.reload
+# Run these tasks **before** Rails' "assets:precompile" task
+task "assets:precompile": %w[
+       assets:precompile:before
+       maxminddb:refresh
+       assets:precompile:js_processor
+     ]
+
+# Run these tasks **after** Rails' "assets:precompile" task
+Rake::Task["assets:precompile"].enhance do
+  Rake::Task["assets:precompile:compress_js"].invoke
   Rake::Task["assets:precompile:css"].invoke
 end

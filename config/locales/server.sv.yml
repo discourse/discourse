@@ -324,7 +324,6 @@ sv:
     more_replies:
       one: "Ytterligare %{count} svar"
       other: "Ytterligare %{count} svar"
-    loading: "Laddar diskussion..."
     permalink: "Permalänk"
     imported_from: "Detta är ett kopplat diskussionsämne till det ursprungliga inlägget på %{link}"
     in_reply_to: "▶ %{username}"
@@ -1571,11 +1570,8 @@ sv:
     blocked_crawler_user_agents: "Unikt fall av känsligt ord i användaragent-strängen som identifierar webbsökare som inte bör få åtkomst till webbplatsen. Gäller inte om vitlista har definierats."
     slow_down_crawler_user_agents: 'Användaragenter för sökrobotar som ska vara hastighetsbegränsade vilket konfigurerats i inställningen "sakta ned sökrobots hastighet". Varje värde måste vara minst 3 tecken långt.'
     slow_down_crawler_rate: "Om slow_down_crawler_user_agents anges kommer denna hastighet att gälla för alla sökrobotar (fördröjning mellan förfrågningarna uttryckt i sekunder)"
-    content_security_policy: "Aktivera säkerhetspolicy för innehåll"
-    content_security_policy_report_only: "Aktivera enbart säkerhetspolicy för innehåll"
     content_security_policy_collect_reports: "Aktivera insamling av CSP-överträdelserapporter på /csp_reports"
     content_security_policy_frame_ancestors: "Begränsa vem som kan bädda in denna webbplats i iframes via CSP. Kontrollera tillåtna värdar på <a href='%{base_path}/admin/customize/embedding'>Inbäddning</a>"
-    content_security_policy_script_src: "Ytterligare vitlistade skriptkällor. Den aktuella värden och CDN ingår som standard. Se <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Minska XSS-attacker genom policy för innehållssäkerhet.</a>"
     invalidate_inactive_admin_email_after_days: "Administratörskonton som inte har besökt webbplatsen under detta antal dagar kommer att behöva validera sin e-postadress innan de loggar in. Ställ in till 0 för att inaktivera."
     include_secure_categories_in_tag_counts: "När detta är aktiverat kommer antalet ämnen för en tagg att omfatta ämnen som finns i läsbegränsade kategorier för alla användare. När detta är inaktiverat visas normala användare endast ett antal ämnen för en tagg där alla ämnen är i offentliga kategorier."
     display_personal_messages_tag_counts: "När detta är aktiverat kommer antalet personliga meddelanden som taggats med en angiven tagg att visas."
@@ -1698,7 +1694,6 @@ sv:
     enable_safe_mode: "Tillåt användare att gå in i säkert läge för att felsöka tillägg."
     rate_limit_create_topic: "Efter att ha skapat ett ämne, måste användare vänta (n) sekunder innan de kan skapa ett nytt."
     rate_limit_create_post: "Efter att ha skrivit ett inlägg, måste användare vänta (n) sekunder innan de skriver ett nytt."
-    rate_limit_new_user_create_topic: "Efter att ha skapat ett ämne, måste nya användare vänta (n) sekunder innan de kan skapa ett nytt."
     rate_limit_new_user_create_post: "Efter att ha skrivit ett inlägg, måste nya användare vänta (n) sekunder innan de kan skriva ett nytt."
     max_likes_per_day: "Max antal gillningar per användare och dag."
     max_flags_per_day: "Max antal flaggningar per användare och dag."
@@ -2119,7 +2114,6 @@ sv:
     retain_web_hook_events_period_days: "Antal dagar för att behålla register över webhook-händelsedata."
     retry_web_hook_events: "Försök automatiskt igen för misslyckade händelser för webhooken 4 gånger. Tidsspannet mellan försöken är 1, 5, 25 och 125 minuter."
     revoke_api_keys_days: "Antal dagar innan en oanvänd API-nyckel automatiskt återkallas (0 för aldrig)"
-    allow_user_api_keys: "Tillåt generering av API-nycklar för användare"
     allow_user_api_key_scopes: "Lista över samtliga tillåtna användar-API-nycklar"
     min_trust_level_for_user_api_key: |
       Förtroendenivå som krävs för generering av användar-API-nycklar.<br>
@@ -2414,18 +2408,6 @@ sv:
   admin:
     email:
       sent_test: "skickat!"
-    user:
-      merge_user:
-        updating_username: "Uppdaterar användarnamn..."
-        changing_post_ownership: "Ändrar äganderätt till inlägget..."
-        merging_given_daily_likes: "Sammanslagning av dagliga gillanden..."
-        merging_post_timings: "Sammanslagning av tidpunkter för inlägg..."
-        merging_user_visits: "Sammanslagning av användarbesök..."
-        updating_site_settings: "Uppdaterar webbplatsinställningar..."
-        updating_user_stats: "Uppdaterar användarstatistik..."
-        merging_user_attributes: "Sammanslagning av användarattribut..."
-        updating_user_ids: "Uppdaterar användar-id..."
-        deleting_source_user: "Tar bort källanvändare..."
   user:
     deactivated: "Inaktiverades på grund av för många studsade e-postmeddelanden till '%{email}'."
     deactivated_by_staff: "Avaktiverades av personalen"
@@ -4527,8 +4509,6 @@ sv:
         description: "Godkänn flaggning och dölj detta inlägg + sänd automatiskt användaren ett meddelande som uppmanar om att redigera det."
       delete_single:
         title: "Radera"
-      delete:
-        title: "Radera..."
       delete_and_ignore:
         title: "Ignorera flaggning och radera inlägget"
         description: "Ignorera flaggningen genom att ta bort den från kön och radera inlägget. Om det är det första inlägget, radera ämnet också. "
@@ -4563,7 +4543,6 @@ sv:
       approve_user:
         title: "Godkänn användare"
       reject_user:
-        title: "Radera användare..."
         delete:
           title: "Ta bort användare"
           description: "Användaren kommer att raderas från forumet."
@@ -4572,7 +4551,6 @@ sv:
           description: "Användaren kommer att raderas, och vi blockerar också hens IP och e-postadress."
       reject:
         title: "Avvisa"
-        bundle_title: "Avvisa..."
       reject_and_suspend:
         title: "Avvisa och stäng av användare"
       reject_and_silence:

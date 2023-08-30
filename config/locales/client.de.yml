@@ -374,7 +374,7 @@ de:
     cancel: "Abbrechen"
     deleting: "Löschen …"
     save: "Änderungen speichern"
-    saving: "Speichern …"
+    saving: "Wird gespeichert …"
     saved: "Gespeichert!"
     upload: "Hochladen"
     uploading: "Wird hochgeladen …"
@@ -1026,7 +1026,7 @@ de:
         ignore_no_users: "Du hast keine Benutzer ignoriert."
         ignore_option: "Ignoriert"
         ignore_option_title: "Du wirst keine Benachrichtigungen zu dieser Person erhalten und ihre Themen und Antworten werden ausgeblendet."
-        add_ignored_user: "Hinzufügen …"
+        add_ignored_user: "Hinzufügen …"
         mute_option: "Stummgeschaltet"
         mute_option_title: "Du wirst keine Benachrichtigungen zu dieser Person bekommen."
         normal_option: "Normal"
@@ -1791,9 +1791,9 @@ de:
         content: "Hier sind einige Themen, von denen wir denken, dass du sie als Nächstes lesen möchtest."
       admin_guide:
         title: "Willkommen auf deiner neuen Website!"
-        content: "<a href='%{admin_guide_url}'>Lies den Administrator-Leitfaden</a>, um mit dem Aufbau deiner Website und Community fortzufahren."
-        content_no_url: "Lies den Administrator-Leitfaden, um mit dem Aufbau deiner Website und Community fortzufahren."
-    loading: "Wird geladen …"
+        content: "<a href='%{admin_guide_url}'>Lies den Admin-Leitfaden</a> , um mit dem Aufbau deiner Website und Community fortzufahren."
+        content_no_url: "Lies den Administrator-Leitfaden, um deine Website und deine Community weiter auszubauen."
+    loading: "Wird geladen …"
     errors:
       prev_page: "während des Ladens"
       reasons:
@@ -1890,8 +1890,8 @@ de:
       title: "Nachricht"
       invite: "Lade andere ein …"
       edit: "Hinzufügen oder entfernen …"
-      remove: "Entfernen …"
-      add: "Hinzufügen …"
+      remove: "Entfernen …"
+      add: "Hinzufügen ..."
       leave_message: "Möchtest du diese Unterhaltung wirklich verlassen?"
       remove_allowed_user: "Willst du %{name} wirklich aus dieser Nachricht entfernen?"
       remove_allowed_group: "Willst du %{name} wirklich aus dieser Nachricht entfernen?"
@@ -2071,12 +2071,12 @@ de:
       delete_item: "%{name} löschen"
       filter_by: "Filtern nach: %{name}"
       select_to_filter: "Wähle einen zu filternden Wert aus"
-      default_header_text: Auswählen …
+      default_header_text: Auswählen ...
       no_content: Keine Treffer gefunden
       results_count:
         one: "%{count} Ergebnis"
         other: "%{count} Ergebnisse"
-      filter_placeholder: Suchen …
+      filter_placeholder: Suchen ...
       filter_placeholder_with_any: Suchen oder erstellen …
       create: "Erstelle: „%{content}“"
       max_content_reached:
@@ -2121,7 +2121,7 @@ de:
       publishing: "Thema wird veröffentlicht …"
     composer:
       emoji: "Emoji :)"
-      more_emoji: "mehr …"
+      more_emoji: "mehr ..."
       options: "Optionen"
       whisper: "flüstern"
       unlist: "unsichtbar"
@@ -2484,7 +2484,7 @@ de:
           label: Mit dem Schlagwort
           aria_label: Nach Schlagwörtern filtern
         filters:
-          label: 'Themen/Beiträge einschränken:'
+          label: Nur Themen/Beiträge zurückgeben …
           title: Mit Treffer im Titel
           likes: Themen/Beiträge, die mir gefallen
           posted: Themen mit Beiträgen von mir
@@ -2613,7 +2613,14 @@ de:
         dismiss_new_modal:
           title: "Neue verwerfen"
           topics: "Neue Themen verwerfen"
-          posts: "Neue Beiträge verwerfen"
+          posts: "Neue Antworten verwerfen"
+          topics_with_count:
+            one: "%{count} neues Thema verwerfen"
+            other: "%{count} neue Themen verwerfen"
+          replies_with_count:
+            one: "%{count} neue Antwort verwerfen"
+            other: "%{count} neue Antworten verwerfen"
+          replies: "Neue Antworten verwerfen"
           untrack: "Diese Themen nicht mehr verfolgen, damit sie nicht mehr in meiner Liste „Neu“ auftauchen"
         dismiss_new_with_selected:
           one: "Neues Thema ignorieren (%{count})"
@@ -2851,7 +2858,7 @@ de:
         jump_prompt_of:
           one: "von %{count} Beitrag"
           other: "von %{count} Beiträgen"
-        jump_prompt_long: "Zu … springen"
+        jump_prompt_long: "Springe zu …"
         jump_prompt_to_date: "zu Datum"
         jump_prompt_or: "oder"
       notifications:
@@ -2908,7 +2915,7 @@ de:
         close: "Thema schließen"
         multi_select: "Beiträge auswählen …"
         slow_mode: "Langsamen Modus einstellen …"
-        timed_update: "Zeitschaltuhren …"
+        timed_update: "Themen-Timer einstellen …"
         pin: "Thema anheften …"
         unpin: "Thema loslösen …"
         unarchive: "Thema aus Archiv holen"
@@ -3079,7 +3086,7 @@ de:
           one: "Bitte wähle einen neuen Eigentümer für den Beitrag"
           other: "Bitte wähle einen neuen Eigentümer für %{count} Beiträge"
       change_timestamp:
-        title: "Zeitstempel änden …"
+        title: "Zeitstempel ändern …"
         action: "Zeitstempel ändern"
         invalid_timestamp: "Zeitstempel kann nicht in der Zukunft liegen."
         error: "Beim Ändern des Zeitstempels des Themas ist ein Fehler aufgetreten."
@@ -3674,6 +3681,12 @@ de:
           one: "Neu (%{count})"
           other: "Neu (%{count})"
         help: "Themen, die in den letzten paar Tagen erstellt wurden"
+        all: "Gesamt"
+        all_with_count: "Alle (%{count})"
+        topics: "Themen"
+        topics_with_count: "Themen (%{count})"
+        replies: "Antworten"
+        replies_with_count: "Antworten (%{count})"
       posted:
         title: "Meine Beiträge"
         help: "Themen, zu denen du beigetragen hast"
@@ -4707,7 +4720,7 @@ de:
         explain_preview: "Website mit diesem Theme anschauen"
         syntax_error: "Syntaxfehler"
         settings_editor: "Einstellungseditor"
-        validation_settings_keys: "Jedes Element darf nur einen Schlüssel „Einstellung“ und einen Schlüssel „Wert“ haben."
+        validation_settings_keys: "Jedes Element darf nur einen „Einstellungs“-Schlüssel und einen „Wert“-Schlüssel haben."
         validation_settings_deleted: "Diese Einstellungen wurden gelöscht. Bitte stelle sie wieder her und versuche es erneut."
         validation_settings_added: "Diese Einstellungen wurden hinzugefügt. Bitte entferne sie und versuche es erneut."
         save: "Speichern"
@@ -5428,7 +5441,7 @@ de:
           combative: "Zu streitlustig"
           in_wrong_place: "An der falschen Stelle"
           no_constructive_purpose: "Kein konstruktiver Zweck der Handlungen, außer Dissens innerhalb der Gemeinschaft zu erzeugen"
-          custom: "Benutzerdefiniert …"
+          custom: "Benutzerdefiniert …"
         suspend_message: "E-Mail-Nachricht"
         suspend_message_placeholder: "Optional: Gib weitere Informationen zur Sperre an und sie werden dem Benutzer per E-Mail geschickt."
         suspended_by: "Gesperrt von"

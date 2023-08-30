@@ -10,6 +10,9 @@ da:
       site_settings:
         categories:
           chat: Chat
+        chat_separate_sidebar_mode:
+          always: "Altid"
+          never: "Aldrig"
       logs:
         staff_actions:
           actions:

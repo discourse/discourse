@@ -22,6 +22,7 @@ export default class SectionLink {
     this.text = name;
     this.value = value;
     this.section = section;
+    this.withAnchor = value.match(/#\w+$/gi);
 
     if (!this.externalOrFullReload) {
       const routeInfoHelper = new RouteInfoHelper(router, value);
@@ -36,7 +37,7 @@ export default class SectionLink {
   }
 
   get externalOrFullReload() {
-    return this.external || this.fullReload;
+    return this.external || this.fullReload || this.withAnchor;
   }
 
   @bind

@@ -6,6 +6,7 @@
 
 zh_CN:
   site_settings:
+    chat_separate_sidebar_mode: "为论坛和聊天显示单独边栏模式。"
     chat_enabled: "启用聊天插件。"
     enable_public_channels: "基于类别启用公开频道。"
     chat_allowed_groups: "这些群组中的用户可以聊天。请注意，管理人员始终可以访问聊天。"
@@ -60,7 +61,7 @@ zh_CN:
         closed: "该频道已关闭，无法发送新消息"
         read_only: "该频道为只读频道，无法发送新消息"
       channel_modify_message_disallowed:
-        archived: "该频道已归档，无法编辑或删除任何消息"
+        archived: "该频道已关闭，无法编辑或删除任何消息"
         closed: "该频道已关闭，无法编辑或删除任何消息"
         read_only: "该频道为只读频道，无法编辑或删除任何消息"
       user_cannot_send_message: "您目前无法发送消息。"
@@ -87,7 +88,7 @@ zh_CN:
       over_chat_max_direct_message_users_allow_self: "您只能创建一个与自己的直接消息。"
       over_chat_max_direct_message_users:
         other: "您无法创建与超过 %{count} 个其他用户的直接消息。"
-      original_message_not_found: "找不到您要回复消息的上级内容，或相关内容已被删除。"
+      original_message_not_found: "找不到您要回复信息的上级内容，或相关内容已被删除。"
       thread_invalid_for_channel: "该对话不是所提供频道的一部分。"
       thread_does_not_match_parent: "对话与父消息不匹配。"
     reviewables:

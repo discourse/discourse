@@ -324,7 +324,6 @@ nl:
     more_replies:
       one: "Nog %{count} antwoord"
       other: "Nog %{count} antwoorden"
-    loading: "Discussie laden..."
     permalink: "Permalink"
     imported_from: "Dit discussietopic is een voortzetting van het oorspronkelijke topic op %{link}"
     in_reply_to: "▶ %{username}"
@@ -1571,11 +1570,8 @@ nl:
     blocked_crawler_user_agents: "Uniek hoofdletterongevoelig woord in de useragent-string waarmee webcrawlers worden herkend die geen toegang tot de website mogen hebben. Niet van toepassing als toelatingslijst is opgegeven."
     slow_down_crawler_user_agents: 'Useragents van webcrawlers waarvan de snelheid moet worden beperkt, zoals geconfigureerd in de instelling ''crawlersnelheid vertragen''. Elke waarde moet minimaal 3 tekens lang zijn.'
     slow_down_crawler_rate: "Als slow_down_crawler_user_agents is opgegeven, is deze beperking op alle crawlers van toepassing (aantal seconden vertraging tussen verzoeken)"
-    content_security_policy: "Content-Security-Policy inschakelen"
-    content_security_policy_report_only: "Content-Security-Policy-Report-Only inschakelen"
     content_security_policy_collect_reports: "Rapportverzameling voor CSP-schendingen inschakelen via /csp_reports"
     content_security_policy_frame_ancestors: "Beperken wie deze website kan insluiten in iframes via CSP. Beheer toegestane hosts op <a href='%{base_path}/admin/customize/embedding'>Insluiten</a>"
-    content_security_policy_script_src: "Aanvullende scriptbronnen op de acceptatielijst. De huidige host en CDN zijn standaard inbegrepen. Zie <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy</a>."
     invalidate_inactive_admin_email_after_days: "Beheerdersaccounts die de website dit aantal dagen niet hebben bezocht, dienen hun e-mailadres voor het aanmelden opnieuw te valideren. Stel dit in op 0 om uit te schakelen."
     include_secure_categories_in_tag_counts: "Indien ingeschakeld, omvat het aantal topics voor een tag ook topics die in leesbeperkte categorieën staan voor alle gebruikers. Indien uitgeschakeld, krijgen normale gebruikers alleen het aantal topics voor een tag te zien waarbij alle topics in openbare categorieën staan."
     display_personal_messages_tag_counts: "Indien ingeschakeld, wordt het aantal persoonlijke berichten weergegeven dat is getagd met een bepaalde tag."
@@ -1608,8 +1604,8 @@ nl:
     whispers_allowed_groups: "Sta privécommunicatie binnen topics toe voor leden van bepaalde groepen."
     hidden_post_visible_groups: "Sta leden van deze groepen toe om verborgen berichten te bekijken. Personeelgebruikers kunnen altijd verborgen berichten bekijken."
     allow_index_in_robots_txt: "Geef in robots.txt op dat deze website door webzoekmachines mag worden geïndexeerd. In uitzonderlijke gevallen kun je <a href='%{base_path}/admin/customize/robots'>robots.txt</a> blijvend negeren."
-    blocked_email_domains: "Een door pijpsymbolen gescheiden lijst van e-maildomeinen waarop gebruikers geen accounts mogen registreren. Subdomeinen worden automatisch afgehandeld voor de opgegeven domeinen. De jokertekens * en ? worden niet ondersteund. Voorbeeld: mailinator.com|trashmail.net"
-    allowed_email_domains: "Een door pijpsymbolen gescheiden lijst van e-maildomeinen waarop gebruikers een account MOETEN registreren. Subdomeinen worden automatisch afgehandeld voor de opgegeven domeinen. De jokertekens * en ? worden niet ondersteund. WAARSCHUWING: gebruikers met andere e-maildomeinen dan de vermelde zijn niet toegestaan!"
+    blocked_email_domains: "Een door sluistekens ('pijpsymbolen') gescheiden lijst van e-maildomeinen waarop gebruikers geen accounts mogen registreren. Subdomeinen worden automatisch afgehandeld voor de opgegeven domeinen. De jokertekens * en ? worden niet ondersteund. Voorbeeld: mailinator.com|trashmail.net"
+    allowed_email_domains: "Een door sluistekens ('pijpsymbolen') gescheiden lijst van e-maildomeinen waarop gebruikers een account MOETEN registreren. Subdomeinen worden automatisch afgehandeld voor de opgegeven domeinen. De jokertekens * en ? worden niet ondersteund. WAARSCHUWING: gebruikers met andere e-maildomeinen dan de vermelde zijn niet toegestaan!"
     normalize_emails: "Controleren of het genormaliseerde e-mailadres uniek is. Normalisering van e-mailadressen verwijdert alle punten uit de gebruikersnaam en alles tussen de symbolen + en @."
     auto_approve_email_domains: "Gebruikers met e-mailadressen uit deze domeinenlijst worden automatisch goedgekeurd. Subdomeinen worden automatisch afgehandeld voor de opgegeven domeinen. De jokertekens * en ? worden niet ondersteund."
     hide_email_address_taken: "Laat gebruikers niet weten dat er een account bestaat met een bepaald e-mailadres bij het registreren. bij het herstellen van een wachtwoord. Volledig e-mailadres wordt vereist voor wachtwoordherstelverzoeken."
@@ -1698,7 +1694,6 @@ nl:
     enable_safe_mode: "Gebruikers mogen de veilige modus betreden om plug-ins te debuggen."
     rate_limit_create_topic: "Na het maken van een topic moeten gebruikers (n) seconden wachten voordat ze een ander topic kunnen maken."
     rate_limit_create_post: "Na het plaatsen van een bericht moeten gebruikers (n) seconden wachten voor ze een ander bericht kunnen plaatsen."
-    rate_limit_new_user_create_topic: "Na het maken van een topic moeten nieuwe gebruikers (n) seconden wachten voor ze een ander topic kunnen maken."
     rate_limit_new_user_create_post: "Na het plaatsen van een bericht moeten nieuwe gebruikers (n) seconden wachten voor ze een ander bericht kunnen plaatsen."
     max_likes_per_day: "Maximale aantal likes per gebruiker per dag."
     max_flags_per_day: "Maximale aantal markeringen per gebruiker per dag."
@@ -2119,7 +2114,6 @@ nl:
     retain_web_hook_events_period_days: "Aantal dagen voor het behouden van records van webhookgebeurtenissen."
     retry_web_hook_events: "Mislukte webhookgebeurtenissen automatisch 4 keer opnieuw proberen. De intervallen tussen de pogingen zijn 1, 5, 25 en 125 minuten."
     revoke_api_keys_days: "Aantal dagen voordat een niet-gebruikte API-sleutel van een gebruiker automatisch wordt ingetrokken (0 voor nooit)"
-    allow_user_api_keys: "Genereren van API-sleutels van gebruiker toestaan"
     allow_user_api_key_scopes: "Lijst van toegestane scopes voor API-sleutels van gebruiker"
     min_trust_level_for_user_api_key: |
       Vereist vertrouwensniveau voor het genereren van API-sleutels voor gebruikers.<br>
@@ -2415,18 +2409,6 @@ nl:
   admin:
     email:
       sent_test: "verzonden!"
-    user:
-      merge_user:
-        updating_username: "Gebruikersnaam bijwerken..."
-        changing_post_ownership: "Eigendom van bericht wijzigen..."
-        merging_given_daily_likes: "Gegeven dagelijkse likes samenvoegen..."
-        merging_post_timings: "Berichttijden samenvoegen..."
-        merging_user_visits: "Gebruikersbezoeken samenvoegen..."
-        updating_site_settings: "Site-instellingen bijwerken..."
-        updating_user_stats: "Gebruikersstatistieken bijwerken ..."
-        merging_user_attributes: "Gebruikerskenmerken samenvoegen..."
-        updating_user_ids: "Gebruikers-ID's bijwerken..."
-        deleting_source_user: "Brongebruiker verwijderen..."
   user:
     deactivated: "Gedeactiveerd vanwege te veel gebouncete e-mails naar '%{email}'."
     deactivated_by_staff: "Gedeactiveerd door medewerker"
@@ -4204,7 +4186,7 @@ nl:
 
       <a name="changes"></a>
 
-      ## [Wijzigingen in ons privacybeleid](#changes)
+      ## Wijzigingen in ons privacybeleid](#changes)
 
       Als we besluiten om ons privacybeleid te wijzigen, publiceren we de wijzigingen op deze pagina.
 
@@ -4516,8 +4498,8 @@ nl:
     title: "Veilige modus starten"
     description: "In de veilige modus kun je je site testen zonder thema's of plug-inaanpassingen aan de clientzijde te laden. Plug-inaanpassingen aan de serverzijde blijven ingeschakeld."
     no_themes: "Thema's en themacomponenten uitschakelen"
-    no_unofficial_plugins: "Niet-officiële plug-inaanpassingen aan clientzijde uitschakelen"
-    no_plugins: "Alle plug-inaanpassingen aan clientzijde uitschakelen"
+    no_unofficial_plugins: "Schakel niet-officiële plug-inaanpassingen aan de clientzijde uit"
+    no_plugins: "Schakel alle plug-inaanpassingen aan de clientzijde uit"
     enter: "Veilige modus starten"
     must_select: "Je moet ten minste één optie selecteren om naar de veilige modus te gaan."
   wizard:
@@ -4718,8 +4700,6 @@ nl:
         description: "Ga akkoord met de markering en verberg dit bericht, stuur de gebruiker automatisch een bericht waarin deze wordt aangespoord het gemarkeerde bericht te bewerken."
       delete_single:
         title: "Verwijderen"
-      delete:
-        title: "Verwijderen..."
       delete_and_ignore:
         title: "Markering negeren en bericht verwijderen"
         description: "Negeer de markering door deze uit de wachtrij te verwijderen en verwijder het bericht. Als dit het eerste bericht is, wordt het topic ook verwijderd. "
@@ -4754,7 +4734,6 @@ nl:
       approve_user:
         title: "Gebruiker goedkeuren"
       reject_user:
-        title: "Gebruiker verwijderen..."
         delete:
           title: "Gebruiker verwijderen"
           description: "De gebruiker wordt van het forum verwijderd."
@@ -4763,7 +4742,6 @@ nl:
           description: "De gebruiker wordt verwijderd, en het IP- en e-mailadres ervan geblokkeerd."
       reject:
         title: "Weigeren"
-        bundle_title: "Weigeren..."
       reject_and_suspend:
         title: "Gebruiker weigeren en schorsen"
       reject_and_silence:

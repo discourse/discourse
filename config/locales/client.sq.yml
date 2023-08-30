@@ -228,10 +228,8 @@ sq:
     preview: "shiko"
     cancel: "anulo"
     save: "Ruaj ndryshimet"
-    saving: "Duke e ruajtur..."
     saved: "U ruajtën!"
     upload: "Ngarko"
-    uploading: "Duke ngarkuar..."
     uploaded: "U ngarkua!"
     enable: "Aktivizo"
     disable: "Çaktivizo"
@@ -690,7 +688,6 @@ sq:
         not_available_no_suggestion: "I padisponueshëm"
         too_short: "Emri juaj është shumë i shkurtër"
         too_long: "Emri juaj është shumë i gjatë"
-        checking: "Duke verifikuar disponibilitetin e emrit të përdoruesit...."
         prefilled: "Emaili u gjet në këtë përdorues të regjistruar"
       locale:
         title: "Gjuha e faqes"
@@ -765,7 +762,6 @@ sq:
         edit: "Redakto"
         remove: "Hiq"
         reinvited: "Ftesa u ri-dërgua"
-        search: "shkruaj për të kërkuar ftesat..."
         user: "Anëtari i ftuar"
         truncated:
           one: "Po afishohet ftesa e parë."
@@ -856,7 +852,6 @@ sq:
         the_topic: "tema"
     user_status:
       save: "Ruaj"
-    loading: "Duke ngarkuar..."
     errors:
       prev_page: "duke u munduar të ngarkohet"
       reasons:
@@ -886,7 +881,6 @@ sq:
       enabled: "Faqja lejon vetëm leximet per momentin. Mund të vazhdoni të shfletoni, por përgjigjet, pëlqimet dhe veprime të tjera janë të çaktivizuara përkohësisht."
       login_disabled: "Nuk mund të hyni në faqe sepse faqja është përkohësisht në formatin vetëm-lexim."
       logout_disabled: "Nuk mund të shkëputeni nga faqja sepse faqja është përkohësisht në formatin vetëm-lexim."
-    learn_more: "mëso më shumë..."
     mute: Hesht
     unmute: Çaktivizo heshtjen
     time_read: Lexo
@@ -942,9 +936,7 @@ sq:
       rate_limit: "Ju lutemi të prisni para se të provoni të identifikoheni përsëri. "
       blank_username_or_password: "Ju lutem, shkruani adresën email ose emrin e përdoruesit dhe fjalëkalimin."
       reset_password: "Rivendos fjalëkalimin"
-      logging_in: "Duke u identifikuar..."
       or: "Ose"
-      authenticating: "Duke u autorizuar..."
       awaiting_activation: "Llogaria juaj është në pritje të aktivizimit, përdorni butonin e fjalëkalimit të humbur që të merrni një email të ri me kodin e aktivizimit."
       awaiting_approval: "Llogaria juaj nuk është aprovuar ende nga një admin. Do t'ju dërgojmë një email kur të aprovohet. "
       requires_invite: "Na vjen keq, ky forum është vetëm për anëtarë të ftuar. "
@@ -988,8 +980,6 @@ sq:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
-    conditional_loading_section:
-      loading: Duke ngarkuar...
     select_kit:
       delete_item: "Fshi %{name}"
     date_time_picker:
@@ -999,7 +989,6 @@ sq:
       flags: Sinjalizime
     composer:
       emoji: "Emoji :)"
-      more_emoji: "më shumë..."
       options: "Opsione"
       whisper: "pëshpëritje"
       unlist: "çlistuar"
@@ -1008,7 +997,6 @@ sq:
       toggle_unlisted: "Toggle Unlisted"
       posting_not_on_topic: "Cilës temë doni t'i përgjigjeni?"
       saved_local_draft_tip: "ruajtur lokalisht"
-      similar_topics: "Tema juaj është e ngjashme me..."
       drafts_offline: "draftet offline"
       group_mentioned:
         one: "By mentioning %{group}, you are about to notify <a href='%{group_link}'>%{count} person</a> – are you sure?"
@@ -1028,7 +1016,6 @@ sq:
       view_new_post: "Shikoni postimin tuaj të ri."
       saving: "Duke e ruajtur"
       saved: "U ruajt!"
-      uploading: "Duke ngarkuar..."
       quote_post_title: "Citoni të gjithë postimin"
       bold_label: "B"
       bold_title: "Trashë"
@@ -1154,7 +1141,6 @@ sq:
         close_topics: "Mbyll temat"
         archive_topics: "Arkivo temat"
         move_messages_to_inbox: "Transfero në inbox"
-        notification_level: "Njoftimet..."
         choose_new_category: "Zgjidhni kategorinë e re për temat: "
         selected:
           one: "Keni zgjedhur <b>%{count}</b> temë."
@@ -1296,7 +1282,6 @@ sq:
         unarchive: "Çarkivoje temën"
         archive: "Arkivoje temën"
         reset_read: "Reset Read Data"
-        make_public: "Bëje temën publike..."
       feature:
         pin: "Ngjite temën"
         unpin: "Çngjite temën"
@@ -1336,7 +1321,6 @@ sq:
         banner_note: "Përdoruesit mund ta heqin temën parrullë duke e mbyllur atë. Vetëm një temë mund të kthehet në parrullë në një moment të caktuar."
         no_banner_exists: "Nuk ka temë parrullë."
         banner_exists: "Për momentin <strong class='badge badge-notification unread'>ka</strong> një temë parrullë."
-      inviting: "Inviting..."
       automatically_add_to_groups: "Kjo ftesë përfshin edhe akses për këto grupe:"
       invite_private:
         title: "Ftoje në këtë mesazh"
@@ -1472,8 +1456,6 @@ sq:
         revert_to_regular: "Hiq ngjyrën e stafit"
         rebake: "Rindërtoni HTML"
         unhide: "Çfshi"
-        change_owner: "Ndrysho zotëruesin..."
-        grant_badge: "Dhuroni Stemë..."
         delete_topic: "fshi temën"
       actions:
         people:
@@ -1591,7 +1573,6 @@ sq:
     flagging:
       title: "Faleminderit për ndihmën që i jepni këtij komuniteti!"
       action: "Sinjalizo postimin"
-      take_action: "Vepro..."
       take_action_options:
         default:
           title: "Vepro"
@@ -1618,9 +1599,6 @@ sq:
         at_least:
           one: "futni së paku %{count} gërmë"
           other: "futni së paku %{count} gërma"
-        more:
-          one: "edhe %{count} për të vazhduar..."
-          other: "edhe %{count} për të vazhduar..."
         left:
           one: "edhe %{count} gërmë"
           other: "edhe %{count} gërma"
@@ -1632,7 +1610,6 @@ sq:
       title: "Përmbledhja e Temës"
       participants_title: "Postues të Shpeshtë"
       links_title: "Lidhje Aktive"
-      links_shown: "trego më shumë lidhje..."
       clicks:
         one: "%{count} klik"
         other: "%{count} klikime"
@@ -1725,6 +1702,9 @@ sq:
           one: "Të reja (%{count})"
           other: "Të reja (%{count})"
         help: "temat e krijuar gjatë ditëve të fundit"
+        all: "Të Gjithë"
+        topics: "Topics"
+        replies: "Përgjigjet"
       posted:
         title: "Postimet e mia"
         help: "temat ku keni dërguar pêrgjigje"
@@ -1970,7 +1950,6 @@ sq:
           default: "Ju lutem shkruani një vlerë të vlefshme."
           email: "Ju lutemi të vendosni një email të vlefshëm."
   admin_js:
-    type_to_filter: "shkruaj për kërkim"
     admin:
       title: "Administrator"
       moderator: "Moderator"
@@ -2112,18 +2091,14 @@ sq:
           disable:
             title: "Disable read-only mode"
             label: "Disable read-only"
-        logs:
-          none: "No logs yet..."
         columns:
           filename: "Filename"
           size: "Size"
         upload:
           label: "Ngarko"
           title: "Upload a backup to this instance"
-          uploading: "Duke ngarkuar..."
           error: "There has been an error while uploading '%{filename}': %{message}"
         operations:
-          is_running: "An operation is currently running..."
           failed: "The %{operation} failed. Please check the logs."
           cancel:
             label: "Anulo"
@@ -2249,7 +2224,6 @@ sq:
         settings: "Rregullimet"
         templates: "Shabllonet"
         preview_digest: "Parashiko emailin përmbledhës"
-        sending_test: "Duke dërguar emailin test..."
         error: "<b>ERROR</b> - %{server_error}"
         test_error: "Pati një problem gjatë dërgimit të emailit test. Verifiko parametrat e dërgimit dhe provo përsëri. "
         sent: "Dërguar"
@@ -2266,7 +2240,6 @@ sq:
         sent_test: "u dërgua!"
         delivery_method: "Metoda e dorëzimit"
         refresh: "Rifresko"
-        sending_email: "Duke dërguar emailin..."
         format: "Formati"
         html: "html"
         text: "tekst"
@@ -2291,7 +2264,6 @@ sq:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
             cc_placeholder: "cc@example.com"
-            subject_placeholder: "Subjekti..."
             error_placeholder: "Gabim"
         logs:
           none: "Nuk u gjet asnjë log."
@@ -2299,7 +2271,6 @@ sq:
             title: "Filtro"
             user_placeholder: "username"
             address_placeholder: "emri@shembull.com"
-            type_placeholder: "digest, signup..."
             reply_key_placeholder: "reply key"
       logs:
         title: "Ditari"
@@ -2752,7 +2723,6 @@ sq:
       emoji:
         title: "Emoji"
         add: "Add New Emoji"
-        uploading: "Duke ngarkuar..."
         name: "Emri"
         group: "Grupi"
         image: "Imazh"
@@ -2786,7 +2756,6 @@ sq:
       next: "Vazhdo përpara"
       step-text: "Hapi"
       step: "%{current} nga %{total}"
-      uploading: "Duke ngarkuar..."
       upload_error: "Na vjen keq, pati një gabim gjatë ngarkimit të skedarit. Provo përsëri. "
       invites:
         add_user: "shto"
