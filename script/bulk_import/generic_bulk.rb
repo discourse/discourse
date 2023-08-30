@@ -514,6 +514,23 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     likes.close
+
+    puts "", "Updating like counts of topics..."
+    start_time = Time.now
+
+    DB.exec(<<~SQL)
+        WITH
+          likes AS (
+                     SELECT topic_id, SUM(like_count) AS like_count FROM posts WHERE like_count > 0 GROUP BY topic_id
+                   )
+      UPDATE topics
+         SET like_count = likes.like_count
+        FROM likes
+       WHERE topics.id = likes.topic_id
+         AND topics.like_count <> likes.like_count
+    SQL
+
+    puts "  Update took #{(Time.now - start_time).to_i} seconds."
   end
 
   def import_user_stats
