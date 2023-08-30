@@ -48,24 +48,20 @@ export function decorateHashtags(element, site) {
   });
 }
 
-export function generatePlaceholderHashtagHTML(
-  hashtagType,
-  hashtagSpan,
-  hashtagData
-) {
+export function generatePlaceholderHashtagHTML(type, spanEl, data) {
   // NOTE: When changing the HTML structure here, you must also change
   // it in the hashtag-autocomplete markdown rule, and vice-versa.
   const link = document.createElement("a");
   link.classList.add("hashtag-cooked");
-  link.href = hashtagData.relative_url;
-  link.dataset.type = hashtagType;
-  link.dataset.id = hashtagData.id;
-  link.dataset.slug = hashtagData.slug;
-  const hashtagTypeClass = new getHashtagTypeClasses()[hashtagType];
+  link.href = data.relative_url;
+  link.dataset.type = type;
+  link.dataset.id = data.id;
+  link.dataset.slug = data.slug;
+  const hashtagTypeClass = new getHashtagTypeClasses()[type];
   link.innerHTML = `${hashtagTypeClass.generateIconHTML(
-    hashtagData
-  )}<span>${emojiUnescape(hashtagData.text)}</span>`;
-  hashtagSpan.replaceWith(link);
+    data
+  )}<span>${emojiUnescape(data.text)}</span>`;
+  spanEl.replaceWith(link);
 }
 
 /**

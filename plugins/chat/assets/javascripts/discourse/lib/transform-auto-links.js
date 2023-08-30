@@ -5,11 +5,12 @@ const domParser = new DOMParser();
 
 export default function transformAutolinks(cooked) {
   const html = domParser.parseFromString(cooked, "text/html");
-  transform(html);
+  transformMentions(html);
+  transformHashtags(html);
   return html.body.innerHTML;
 }
 
-function transform(html) {
+function transformMentions(html) {
   (html.querySelectorAll("span.mention") || []).forEach((mentionSpan) => {
     let mentionLink = document.createElement("a");
     let mentionText = document.createTextNode(mentionSpan.innerText);
@@ -18,7 +19,9 @@ function transform(html) {
     mentionLink.href = getURL(`/u/${mentionSpan.innerText.substring(1)}`);
     mentionSpan.replaceWith(mentionLink);
   });
+}
 
+function transformHashtags(html) {
   (html.querySelectorAll("span.hashtag-raw") || []).forEach((hashtagSpan) => {
     // Doesn't matter what "type" of hashtag we use here, it will get replaced anyway,
     // this is just for the placeholder HTML.
