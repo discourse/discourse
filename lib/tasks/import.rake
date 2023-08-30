@@ -26,7 +26,7 @@ task "import:ensure_consistency" => :environment do
   update_topic_users
   create_category_definitions
 
-  run_jobs
+  # run_jobs
 
   log "Done!"
 end
