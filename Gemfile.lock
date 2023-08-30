@@ -381,7 +381,7 @@ GEM
       rack (>= 1.4)
     rexml (3.2.6)
     rinku (2.0.6)
-    rotp (6.2.2)
+    rotp (6.3.0)
     rouge (4.1.3)
     rqrcode (2.2.0)
       chunky_png (~> 1.0)
