@@ -41,16 +41,15 @@
                 />
               {{else}}
                 <DButton
-                  @action={{b.action}}
-                  @type="button"
-                  @actionParam={{b}}
+                  @action={{fn (action b.action) b}}
                   @translatedTitle={{b.title}}
                   @label={{b.label}}
                   @icon={{b.icon}}
-                  @class={{b.className}}
                   @preventFocus={{b.preventFocus}}
-                  @tabindex={{b.tabindex}}
                   @onKeyDown={{this.rovingButtonBar}}
+                  tabindex={{b.tabindex}}
+                  type="button"
+                  class={{b.className}}
                 />
               {{/if}}
             {{/each}}

@@ -34,11 +34,10 @@
         {{#each this.messageInteractor.secondaryActions as |button|}}
           <li class="chat-message-action-item" data-id={{button.id}}>
             <DButton
-              @class="chat-message-action"
               @translatedLabel={{button.name}}
               @icon={{button.icon}}
-              @actionParam={{button.id}}
-              @action={{action this.actAndCloseMenu button.id}}
+              @action={{fn this.actAndCloseMenu button.id}}
+              class="chat-message-action"
             />
           </li>
         {{/each}}

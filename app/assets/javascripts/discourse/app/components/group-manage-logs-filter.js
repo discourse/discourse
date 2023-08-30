@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
 
 export default Component.extend({
   tagName: "",
@@ -17,9 +18,8 @@ export default Component.extend({
       : value;
   },
 
-  actions: {
-    clearFilter(param) {
-      this.clearFilter(param);
-    },
+  @action
+  clearFilter(param) {
+    this.clearFilter(param);
   },
 });

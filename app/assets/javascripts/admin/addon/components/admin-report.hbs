@@ -143,10 +143,9 @@
               <div class="modes">
                 {{#each this.displayedModes as |displayedMode|}}
                   <DButton
-                    @action={{action "onChangeMode"}}
-                    @actionParam={{displayedMode.mode}}
-                    @class={{displayedMode.cssClass}}
+                    @action={{fn this.onChangeMode displayedMode.mode}}
                     @icon={{displayedMode.icon}}
+                    class={{displayedMode.cssClass}}
                   />
                 {{/each}}
               </div>
