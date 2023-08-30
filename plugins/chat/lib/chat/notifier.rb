@@ -78,7 +78,7 @@ module Chat
       notify_mentioned_users(to_notify)
       notify_watching_users(except: all_mentioned_user_ids << @user.id)
 
-      notify_personal_chat_users(to_notify)
+      notify_personal_chat_users(to_notify, except: all_mentioned_user_ids << @user.id)
 
       to_notify
     end
@@ -123,9 +123,9 @@ module Chat
       [to_notify, inaccessible, all_mentioned_user_ids]
     end
 
-    def notify_personal_chat_users(to_notify)
-      return unless @chat_channel.direct_message_channel?
-      notify_user_ids = @chat_channel.allowed_user_ids - [@user.id]
+    def notify_personal_chat_users(to_notify, except: [])
+      return if !@chat_channel.direct_message_channel?
+      notify_user_ids = @chat_channel.allowed_user_ids.reject { |id| except.include?(id) }
       notified_user_ids = []
 
       notify_user_ids.each do |user_id|
