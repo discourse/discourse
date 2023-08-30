@@ -6,10 +6,10 @@
   <:headerBelowTitle>
     <p class="sidebar__edit-navigation-menu__deselect-wrapper">
       <DButton
-        @class="btn-flat sidebar__edit-navigation-menu__deselect-button"
         @label="sidebar.edit_navigation_modal_form.deselect_button_text"
         @ariaLabel="sidebar.edit_navigation_modal_form.deselect_button_text"
         @action={{@deselectAll}}
+        class="btn-flat sidebar__edit-navigation-menu__deselect-button"
       />
 
       {{@deselectAllText}}
@@ -53,19 +53,19 @@
   <:footer>
     <div class="sidebar__edit-navigation-menu__footer">
       <DButton
-        @class="btn-primary sidebar__edit-navigation-menu__save-button"
         @label="save"
         @disabled={{@saving}}
         @action={{@save}}
+        class="btn-primary sidebar__edit-navigation-menu__save-button"
       />
 
       {{#if @showResetDefaultsButton}}
         <DButton
           @icon="undo"
-          @class="btn-flat btn-text sidebar__edit-navigation-menu__reset-defaults-button"
           @label="sidebar.edit_navigation_modal_form.reset_to_defaults"
           @disabled={{@saving}}
           @action={{@resetToDefaults}}
+          class="btn-flat btn-text sidebar__edit-navigation-menu__reset-defaults-button"
         />
       {{/if}}
     </div>

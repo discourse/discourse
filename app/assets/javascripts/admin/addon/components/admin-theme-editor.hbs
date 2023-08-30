@@ -83,14 +83,14 @@
               @escape-press={{action "cancelAddField"}}
             />
             <DButton
-              @class="ok"
-              @action={{action "addField" this.newFieldName}}
+              @action={{fn this.addField this.newFieldName}}
               @icon="check"
+              class="ok"
             />
             <DButton
-              @class="cancel"
-              @action={{action "cancelAddField"}}
+              @action={{this.cancelAddField}}
               @icon="times"
+              class="cancel"
             />
           {{else}}
             <a href {{on "click" this.toggleAddField}} class="no-text">

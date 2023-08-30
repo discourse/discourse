@@ -161,9 +161,9 @@
                 {{#each this.chartGroupings as |chartGrouping|}}
                   <DButton
                     @label={{chartGrouping.label}}
-                    @action={{action "changeGrouping" chartGrouping.id}}
-                    @class={{chartGrouping.class}}
+                    @action={{fn this.changeGrouping chartGrouping.id}}
                     @disabled={{chartGrouping.disabled}}
+                    class={{chartGrouping.class}}
                   />
                 {{/each}}
               </div>
@@ -211,10 +211,10 @@
             <div class="control">
               <div class="input">
                 <DButton
-                  @class="btn-default export-csv-btn"
-                  @action={{action "exportCsv"}}
+                  @action={{this.exportCsv}}
                   @label="admin.export_csv.button_text"
                   @icon="download"
+                  class="btn-default export-csv-btn"
                 />
               </div>
             </div>
@@ -223,10 +223,10 @@
               <div class="control">
                 <div class="input">
                   <DButton
-                    @class="refresh-report-btn btn-primary"
-                    @action={{action "refreshReport"}}
+                    @action={{this.refreshReport}}
                     @label="admin.dashboard.reports.refresh_report"
                     @icon="sync"
+                    class="refresh-report-btn btn-primary"
                   />
                 </div>
               </div>

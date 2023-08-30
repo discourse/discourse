@@ -33,10 +33,10 @@
 
     {{#if this.showNewPM}}
       <DButton
-        @class="btn-primary new-private-message"
         @action={{route-action "composePrivateMessage"}}
         @icon="envelope"
         @label="user.new_private_message"
+        class="btn-primary new-private-message"
       />
     {{/if}}
   </div>

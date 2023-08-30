@@ -231,20 +231,20 @@
 
           <div class="modal-footer">
             <DButton
-              @class="btn-large btn-primary"
               @action={{action "createAccount"}}
               @disabled={{this.submitDisabled}}
               @label="create_account.title"
               @isLoading={{this.formSubmitted}}
+              class="btn-large btn-primary"
             />
 
             {{#unless this.hasAuthOptions}}
               <DButton
-                @class="btn-large"
-                @id="login-link"
                 @action={{route-action "showLogin"}}
                 @disabled={{this.formSubmitted}}
                 @label="log_in"
+                id="login-link"
+                class="btn-large"
               />
             {{/unless}}
 

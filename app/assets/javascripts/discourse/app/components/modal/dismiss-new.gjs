@@ -43,10 +43,10 @@ export default class DismissNew extends Component {
       </:body>
       <:footer>
         <DButton
-          id="dismiss-read-confirm"
           @action={{this.dismissed}}
           @icon="check"
           @label="topics.bulk.dismiss"
+          id="dismiss-read-confirm"
           class="btn-primary"
         />
       </:footer>

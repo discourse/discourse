@@ -50,10 +50,10 @@
       <label>{{i18n "categories.category"}}</label>
 
       <CategoryChooser
-        @id="new-topic-category-selector"
         @value={{this.categoryId}}
-        @class="small"
         @onChange={{action (mut this.categoryId)}}
+        id="new-topic-category-selector"
+        class="small"
       />
 
       {{#if this.canAddTags}}

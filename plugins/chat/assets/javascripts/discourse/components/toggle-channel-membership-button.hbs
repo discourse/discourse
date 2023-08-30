@@ -1,25 +1,25 @@
 {{#if @channel.currentUserMembership.following}}
   <DButton
-    @action={{action "onLeaveChannel"}}
+    @action={{this.onLeaveChannel}}
     @translatedLabel={{this.label}}
     @translatedTitle={{this.options.leaveTitle}}
-    @class={{concat-class
+    @icon={{this.options.leaveIcon}}
+    @disabled={{this.isLoading}}
+    class={{concat-class
       "toggle-channel-membership-button -leave btn-flat"
       this.options.leaveClass
     }}
-    @icon={{this.options.leaveIcon}}
-    @disabled={{this.isLoading}}
   />
 {{else}}
   <DButton
-    @action={{action "onJoinChannel"}}
+    @action={{this.onJoinChannel}}
     @translatedLabel={{this.label}}
     @translatedTitle={{this.options.joinTitle}}
-    @class={{concat-class
+    @icon={{this.options.joinIcon}}
+    @disabled={{this.isLoading}}
+    class={{concat-class
       "toggle-channel-membership-button -join"
       this.options.joinClass
     }}
-    @icon={{this.options.joinIcon}}
-    @disabled={{this.isLoading}}
   />
 {{/if}}
