@@ -3,7 +3,7 @@
     @title="sidebar.toggle_section"
     @action={{@toggleSectionDisplay}}
     aria-controls={{@sidebarSectionContentID}}
-    aria-expanded={{@isExpanded}}
+    aria-expanded={{if @isExpanded "true" "false"}}
     class="sidebar-section-header sidebar-section-header-collapsable btn-flat"
   >
     {{yield}}

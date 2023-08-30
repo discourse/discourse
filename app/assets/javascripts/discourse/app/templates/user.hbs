@@ -342,7 +342,11 @@
                     @icon={{this.collapsedInfoState.icon}}
                     @action={{action this.collapsedInfoState.action}}
                     aria-controls="collapsed-info-panel"
-                    aria-expanded={{this.collapsedInfoState.isExpanded}}
+                    aria-expanded={{if
+                      this.collapsedInfoState.isExpanded
+                      "true"
+                      "false"
+                    }}
                     class="btn-default"
                   />
                 </li>
