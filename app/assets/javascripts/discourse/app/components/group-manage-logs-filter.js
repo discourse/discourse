@@ -1,7 +1,6 @@
 import Component from "@ember/component";
 import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
-import { action } from "@ember/object";
 
 export default Component.extend({
   tagName: "",
@@ -16,10 +15,5 @@ export default Component.extend({
     return type === "action"
       ? I18n.t(`group_histories.actions.${value}`)
       : value;
-  },
-
-  @action
-  clearFilter(param) {
-    this.clearFilter(param);
   },
 });
