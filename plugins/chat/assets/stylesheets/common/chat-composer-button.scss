@@ -1,9 +1,12 @@
 .chat-composer-button {
+  @include breakpoint(mobile-large) {
+    width: 50px;
+  }
   box-sizing: border-box;
-  width: 50px;
   border: 0;
   height: 50px;
   background: none;
+  padding-inline: 0.75rem;
 
   .is-disabled & {
     cursor: not-allowed;
