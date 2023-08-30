@@ -72,8 +72,8 @@ module("Discourse Chat | Component | chat-notice", function (hooks) {
     const text = "Joffrey can't chat, hermano";
     this.manager.handleNotice({
       channel_id: this.channel.id,
-      component: "mention_without_membership",
-      component_args: { user_ids: [1], message_id: 1, text },
+      notice_type: "mention_without_membership",
+      data: { user_ids: [1], message_id: 1, text },
     });
 
     await render(hbs`<ChatNotices @channel={{this.channel}} />`);

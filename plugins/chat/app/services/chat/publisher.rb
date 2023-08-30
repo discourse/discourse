@@ -453,22 +453,18 @@ module Chat
       )
     end
 
-    def self.publish_notice(
-      user_id:,
-      channel_id:,
-      text_content: nil,
-      component: nil,
-      component_args: nil
-    )
-      if text_content.blank? && component.blank? && component_args.blank?
-        raise "Cannot publish notice without text content or a component"
+    def self.publish_notice(user_id:, channel_id:, text_content: nil, type: nil, data: nil)
+      # Notices are either plain text sent to the client, or a "type" with data. The
+      # client will then translate that type and data into a front-end component.
+      if text_content.blank? && type.blank? && data.blank?
+        raise "Cannot publish notice without text content or a type"
       end
       payload = { type: "notice", channel_id: channel_id }
       if text_content
         payload[:text_content] = text_content
       else
-        payload[:component] = component
-        payload[:component_args] = component_args
+        payload[:notice_type] = type
+        payload[:data] = data
       end
 
       MessageBus.publish("/chat/#{channel_id}", payload, user_ids: [user_id])

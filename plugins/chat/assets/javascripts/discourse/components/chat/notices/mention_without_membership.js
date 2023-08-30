@@ -5,12 +5,12 @@ import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 
 export default class MentionWithoutMembership extends Component {
-  @service("chat-api") api;
+  @service("chat-api") chatApi;
 
   @tracked invitationsSent = false;
 
   get userIds() {
-    return this.args.notice.componentArgs.user_ids;
+    return this.args.notice.data.user_ids;
   }
 
   @action
@@ -19,8 +19,8 @@ export default class MentionWithoutMembership extends Component {
     event.preventDefault();
 
     try {
-      await this.api.invite(this.args.channel.id, this.userIds, {
-        messageId: this.args.notice.componentArgs.messageId,
+      await this.chatApi.invite(this.args.channel.id, this.userIds, {
+        messageId: this.args.notice.data.messageId,
       });
 
       this.invitationsSent = true;

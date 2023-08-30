@@ -505,8 +505,8 @@ describe Chat::Notifier do
 
         expect(not_participating_msg[:data][:type].to_sym).to eq(:notice)
         expect(not_participating_msg[:data][:text_content]).to be_nil
-        expect(not_participating_msg[:data][:component].to_sym).to eq(:mention_without_membership)
-        expect(not_participating_msg[:data][:component_args]).to eq(
+        expect(not_participating_msg[:data][:notice_type].to_sym).to eq(:mention_without_membership)
+        expect(not_participating_msg[:data][:data]).to eq(
           user_ids: [user_3.id],
           text:
             I18n.t("chat.mention_warning.without_membership", first_identifier: user_3.username),
@@ -562,8 +562,8 @@ describe Chat::Notifier do
 
         expect(not_participating_msg[:data][:type].to_sym).to eq(:notice)
         expect(not_participating_msg[:data][:text_content]).to be_nil
-        expect(not_participating_msg[:data][:component].to_sym).to eq(:mention_without_membership)
-        expect(not_participating_msg[:data][:component_args]).to eq(
+        expect(not_participating_msg[:data][:notice_type].to_sym).to eq(:mention_without_membership)
+        expect(not_participating_msg[:data][:data]).to eq(
           user_ids: [user_3.id],
           text:
             I18n.t("chat.mention_warning.without_membership", first_identifier: user_3.username),

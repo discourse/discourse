@@ -249,8 +249,8 @@ module Chat
       Chat::Publisher.publish_notice(
         user_id: @user.id,
         channel_id: @chat_channel.id,
-        component: "mention_without_membership",
-        component_args: {
+        type: "mention_without_membership",
+        data: {
           user_ids: users.map(&:id),
           text:
             mention_warning_text(

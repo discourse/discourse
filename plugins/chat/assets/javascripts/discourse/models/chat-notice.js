@@ -16,11 +16,11 @@ export default class ChatNotice {
   constructor(args = {}) {
     this.channelId = args.channel_id;
     this.textContent = args.text_content;
-    this.componentName = args.component;
-    this.componentArgs = args.component_args;
+    this.type = args.notice_type;
+    this.data = args.data;
   }
 
   get component() {
-    return COMPONENT_DICT[this.componentName];
+    return COMPONENT_DICT[this.type];
   }
 }
