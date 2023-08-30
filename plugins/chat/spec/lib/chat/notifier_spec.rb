@@ -715,6 +715,24 @@ describe Chat::Notifier do
         }
       end
 
+      it "does not notify users who have muted the other user" do
+        Fabricate(:muted_user, user: @dm_user_1, muted_user: @dm_user_2)
+        msg = build_cooked_msg("How are you?", @dm_user_2, chat_channel: dm_channel)
+
+        expect { described_class.new(msg, msg.created_at).notify_new }.not_to change {
+          @dm_user_1.notifications.count
+        }
+      end
+
+      it "does not notify users who have ignored the other user" do
+        Fabricate(:ignored_user, user: @dm_user_1, ignored_user: @dm_user_2)
+        msg = build_cooked_msg("How are you?", @dm_user_2, chat_channel: dm_channel)
+
+        expect { described_class.new(msg, msg.created_at).notify_new }.not_to change {
+          @dm_user_1.notifications.count
+        }
+      end
+
       it "adds correct data to the notification" do
         msg = build_cooked_msg("Hey guys", @dm_user_1, chat_channel: dm_channel)
         to_notify = described_class.new(msg, msg.created_at).notify_new

@@ -129,6 +129,8 @@ module Chat
       notified_user_ids = []
 
       notify_user_ids.each do |user_id|
+        screener = UserCommScreener.new(acting_user: @user, target_user_ids: user_id)
+        next if screener.ignoring_or_muting_actor?(user_id)
         membership = @chat_channel.membership_for(user_id)
 
         if !membership&.muted?
