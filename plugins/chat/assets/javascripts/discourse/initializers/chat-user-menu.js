@@ -128,28 +128,30 @@ export default {
               }
 
               get description() {
-                if (!this.notification.data.is_group_message) {
+                const data = this.notification.data;
+
+                if (!data.is_group_message) {
                   return I18n.t("notifications.chat_message.personal", {
-                    username: this.notification.data.username,
+                    username: data.username,
                   });
                 }
 
-                if (!this.notification.data.username2) {
+                if (!data.username2) {
                   return I18n.t("notifications.chat_message.group", {
-                    username: this.notification.data.username,
+                    username: data.username,
                   });
                 }
 
-                if (this.notification.data.user_ids.length > 2) {
+                if (data.user_ids.length > 2) {
                   return I18n.t("notifications.chat_message.group_multiple", {
-                    username: this.notification.data.username,
-                    count: this.notification.data.user_ids.length - 1,
+                    username: data.username,
+                    count: data.user_ids.length - 1,
                   });
                 } else {
                   // only 2 users so we show the second username
                   return I18n.t("notifications.chat_message.group_multiple", {
-                    username: this.notification.data.username,
-                    username2: this.notification.data.username2,
+                    username: data.username,
+                    username2: data.username2,
                     count: 1,
                   });
                 }
