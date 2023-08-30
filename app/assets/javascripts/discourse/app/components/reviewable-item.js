@@ -58,6 +58,11 @@ export default Component.extend({
     return classes;
   },
 
+  @discourseComputed("reviewable.created_from_flag", "reviewable.status")
+  displayContextQuestion(createdFromFlag, status) {
+    return createdFromFlag && status === 0;
+  },
+
   @discourseComputed(
     "reviewable.topic",
     "reviewable.topic_id",
