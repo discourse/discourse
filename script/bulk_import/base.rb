@@ -523,6 +523,7 @@ class BulkImport::Base
     closed
     pinned_at
     views
+    subtype
     created_at
     bumped_at
     updated_at
@@ -598,6 +599,8 @@ class BulkImport::Base
   ]
 
   UPLOAD_REFERENCE_COLUMNS ||= %i[upload_id target_type target_id created_at updated_at]
+
+  QUESTION_ANSWER_VOTE_COLUMNS ||= %i[user_id votable_type votable_id direction created_at]
 
   def create_groups(rows, &block)
     create_records(rows, "group", GROUP_COLUMNS, &block)
@@ -690,6 +693,10 @@ class BulkImport::Base
 
   def create_upload_references(rows, &block)
     create_records(rows, "upload_reference", UPLOAD_REFERENCE_COLUMNS, &block)
+  end
+
+  def create_question_answer_votes(rows, &block)
+    create_records(rows, "question_answer_vote", QUESTION_ANSWER_VOTE_COLUMNS, &block)
   end
 
   def process_group(group)
@@ -965,6 +972,8 @@ class BulkImport::Base
       post[:skip] = true
     end
 
+    post[:reply_to_post_number] = nil if post[:reply_to_post_number] == 1
+
     if post[:cooked].bytes.include?(0)
       STDERR.puts "Skipping post with original ID #{post[:imported_id]} because `cooked` contains null bytes"
       post[:skip] = true
@@ -1017,6 +1026,11 @@ class BulkImport::Base
     upload_reference[:created_at] ||= NOW
     upload_reference[:updated_at] ||= NOW
     upload_reference
+  end
+
+  def process_question_answer_vote(question_answer_vote)
+    question_answer_vote[:created_at] ||= NOW
+    question_answer_vote
   end
 
   def process_user_avatar(avatar)

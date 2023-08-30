@@ -54,11 +54,12 @@ class BulkImport::Generic < BulkImport::Base
     import_topic_allowed_users
     import_likes
     import_tags
-    # import_votes
+    import_votes
     # import_answers
 
     import_upload_references
     import_user_stats
+    enable_category_settings
 
     @source_db.close
     @uploads_db.close if @uploads_db
@@ -412,6 +413,7 @@ class BulkImport::Generic < BulkImport::Base
         category_id: category_id,
         closed: to_boolean(row["closed"]),
         views: row["views"],
+        subtype: "question_answer", # TODO Make this configurable!!
       }
     end
 
@@ -787,38 +789,54 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_votes
-    puts "Importing votes..."
-    votes = @db.execute(<<~SQL)
-      SELECT ROWID, *
-      FROM votes
+    puts "", "Importing votes for posts..."
+
+    votes = query(<<~SQL)
+      SELECT *
+        FROM votes
+       WHERE votable_type = 'Post'
     SQL
 
-    votes.each do |vote|
-      user_id = user_id_from_imported_id(vote["user_id"])
-      user = User.find_by(id: user_id)
-      next unless user
-      if vote["direction"] == "up"
-        direction = QuestionAnswerVote.directions[:up]
-      else
-        direction = QuestionAnswerVote.directions[:down]
-      end
+    votable_type = "Post"
+    existing_votes =
+      QuestionAnswerVote.where(votable_type: votable_type).pluck(:user_id, :votable_id).to_set
 
-      # Determine if it is a comment or a post
-      post_id = post_id_from_imported_id(vote["element_id"])
-      element = post_id ? Post.find_by(id: post_id) : nil
-      # No comments for this migration, so we skip next 2 lines
-      # comment_id = comment_id_from_imported_id(vote["element_id"])
-      # element = post_id ? Post.find_by(id: post_id) : QuestionAnswerComment.find_by(id: comment_id)
-      next unless element
-      begin
-        PostVoting::VoteManager.vote(element, user, direction: direction)
-      rescue ActiveRecord::RecordNotUnique, PG::UniqueViolation
-        next
-      rescue => e
-        puts "Could not create vote for #{element.id}"
-        puts e
-      end
+    create_question_answer_votes(votes) do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+      post_id = post_id_from_imported_id(row["votable_id"])
+
+      next unless user_id && post_id
+      next unless existing_votes.add?([user_id, post_id])
+
+      {
+        user_id: user_id,
+        direction: row["direction"],
+        votable_type: votable_type,
+        votable_id: post_id,
+      }
     end
+
+    votes.close
+
+    puts "", "Updating vote counts of posts..."
+
+    start_time = Time.now
+
+    DB.exec(<<~SQL)
+        WITH
+          votes AS (
+                     SELECT votable_id AS post_id, SUM(CASE direction WHEN 'up' THEN 1 ELSE -1 END) AS vote_count
+                       FROM question_answer_votes
+                      GROUP BY votable_id
+                   )
+      UPDATE posts
+         SET qa_vote_count = votes.vote_count
+        FROM votes
+       WHERE votes.post_id = posts.id
+         AND votes.vote_count <> posts.qa_vote_count
+    SQL
+
+    puts "  Update took #{(Time.now - start_time).to_i} seconds."
   end
 
   def import_answers
@@ -851,6 +869,26 @@ class BulkImport::Generic < BulkImport::Base
         next
       end
     end
+  end
+
+  def enable_category_settings
+    puts "", "Updating category settings..."
+
+    start_time = Time.now
+
+    DB.exec(<<~SQL)
+      INSERT INTO category_custom_fields (category_id, name, value, created_at, updated_at)
+      SELECT c.id, s.name, s.value, NOW(), NOW()
+        FROM categories c,
+             (
+               VALUES ('create_as_post_voting_default', 'true'), ('enable_accepted_answers', 'true')
+             ) AS s (name, value)
+       WHERE NOT EXISTS (
+                          SELECT 1 FROM category_custom_fields x WHERE x.category_id = c.id AND x.name = s.name
+                        )
+    SQL
+
+    puts "  Update took #{(Time.now - start_time).to_i} seconds."
   end
 
   def create_connection(path)
