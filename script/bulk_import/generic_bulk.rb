@@ -38,7 +38,6 @@ class BulkImport::Generic < BulkImport::Base
     import_user_fields
     import_user_custom_field_values
     import_single_sign_on_records
-    import_user_stats
     import_muted_users
     import_user_histories
 
@@ -59,6 +58,7 @@ class BulkImport::Generic < BulkImport::Base
     # import_answers
 
     import_upload_references
+    import_user_stats
 
     @source_db.close
     @uploads_db.close if @uploads_db
@@ -399,13 +399,17 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     create_topics(topics) do |row|
+      unless row["category_id"] && (category_id = category_id_from_imported_id(row["category_id"]))
+        next
+      end
+
       {
         archetype: row["private_message"] ? Archetype.private_message : Archetype.default,
         imported_id: row["id"],
         title: row["title"],
         user_id: user_id_from_imported_id(row["user_id"]),
         created_at: to_datetime(row["created_at"]),
-        category_id: category_id_from_imported_id(row["category_id"]),
+        category_id: category_id,
         closed: to_boolean(row["closed"]),
         views: row["views"],
       }
