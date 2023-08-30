@@ -110,6 +110,9 @@ export default {
           "chat_message",
           (NotificationItemBase) => {
             return class extends NotificationItemBase {
+              linkTitle = I18n.t("notifications.titles.chat_message");
+              icon = "comment";
+
               get linkHref() {
                 const slug = slugifyChannel({
                   title: this.notification.data.chat_channel_title,
@@ -118,14 +121,6 @@ export default {
                 return `/chat/c/${slug || "-"}/${
                   this.notification.data.chat_channel_id
                 }/${this.notification.data.chat_message_id}`;
-              }
-
-              get linkTitle() {
-                return I18n.t("notifications.titles.chat_message");
-              }
-
-              get icon() {
-                return "comment";
               }
 
               get label() {
