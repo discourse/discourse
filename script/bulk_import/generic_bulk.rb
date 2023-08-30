@@ -897,7 +897,7 @@ class BulkImport::Generic < BulkImport::Base
 
     create_user_actions(solutions) do |row|
       post_id = post_id_from_imported_id(row["post_id"])
-      next unless post && existing_actions.add?(post_id)
+      next unless post_id && existing_actions.add?(post_id)
 
       topic_id = topic_id_from_imported_id(row["topic_id"])
       user_id = user_id_from_imported_id(row["user_id"])
