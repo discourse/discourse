@@ -1694,7 +1694,6 @@ nl:
     enable_safe_mode: "Gebruikers mogen de veilige modus betreden om plug-ins te debuggen."
     rate_limit_create_topic: "Na het maken van een topic moeten gebruikers (n) seconden wachten voordat ze een ander topic kunnen maken."
     rate_limit_create_post: "Na het plaatsen van een bericht moeten gebruikers (n) seconden wachten voor ze een ander bericht kunnen plaatsen."
-    rate_limit_new_user_create_topic: "Na het maken van een topic moeten nieuwe gebruikers (n) seconden wachten voor ze een ander topic kunnen maken."
     rate_limit_new_user_create_post: "Na het plaatsen van een bericht moeten nieuwe gebruikers (n) seconden wachten voor ze een ander bericht kunnen plaatsen."
     max_likes_per_day: "Maximale aantal likes per gebruiker per dag."
     max_flags_per_day: "Maximale aantal markeringen per gebruiker per dag."
@@ -2115,7 +2114,6 @@ nl:
     retain_web_hook_events_period_days: "Aantal dagen voor het behouden van records van webhookgebeurtenissen."
     retry_web_hook_events: "Mislukte webhookgebeurtenissen automatisch 4 keer opnieuw proberen. De intervallen tussen de pogingen zijn 1, 5, 25 en 125 minuten."
     revoke_api_keys_days: "Aantal dagen voordat een niet-gebruikte API-sleutel van een gebruiker automatisch wordt ingetrokken (0 voor nooit)"
-    allow_user_api_keys: "Genereren van API-sleutels van gebruiker toestaan"
     allow_user_api_key_scopes: "Lijst van toegestane scopes voor API-sleutels van gebruiker"
     min_trust_level_for_user_api_key: |
       Vereist vertrouwensniveau voor het genereren van API-sleutels voor gebruikers.<br>
