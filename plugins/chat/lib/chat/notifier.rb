@@ -129,14 +129,14 @@ module Chat
       notified_user_ids = []
 
       notify_user_ids.each do |user_id|
+        membership = @chat_channel.membership_for(user_id)
+        next if !membership || membership.muted?
+
         screener = UserCommScreener.new(acting_user: @user, target_user_ids: user_id)
         next if screener.ignoring_or_muting_actor?(user_id)
-        membership = @chat_channel.membership_for(user_id)
 
-        if !membership&.muted?
-          notified_user_ids << user_id
-          create_notification_for(membership, notification_type: Notification.types[:chat_message])
-        end
+        notified_user_ids << user_id
+        create_notification_for(membership, notification_type: Notification.types[:chat_message])
       end
 
       to_notify[:direct_messages] = notified_user_ids
