@@ -330,6 +330,16 @@ class BulkImport::Base
         "SELECT setval('#{UserCustomField.sequence_name}', #{@last_user_custom_field_id})",
       )
     end
+    if @last_post_custom_field_id && @last_post_custom_field_id > 0
+      @raw_connection.exec(
+        "SELECT setval('#{PostCustomField.sequence_name}', #{@last_post_custom_field_id})",
+      )
+    end
+    if @last_topic_custom_field_id && @last_topic_custom_field_id > 0
+      @raw_connection.exec(
+        "SELECT setval('#{TopicCustomField.sequence_name}', #{@last_topic_custom_field_id})",
+      )
+    end
     if @last_muted_user_id > 0
       @raw_connection.exec("SELECT setval('#{MutedUser.sequence_name}', #{@last_muted_user_id})")
     end
@@ -490,6 +500,21 @@ class BulkImport::Base
   GROUP_USER_COLUMNS ||= %i[group_id user_id created_at updated_at]
 
   USER_CUSTOM_FIELD_COLUMNS ||= %i[id user_id name value created_at updated_at]
+
+  POST_CUSTOM_FIELD_COLUMNS ||= %i[id post_id name value created_at updated_at]
+
+  TOPIC_CUSTOM_FIELD_COLUMNS ||= %i[id topic_id name value created_at updated_at]
+
+  USER_ACTION_COLUMNS ||= %i[
+    action_type
+    user_id
+    target_topic_id
+    target_post_id
+    target_user_id
+    acting_user_id
+    created_at
+    updated_at
+  ]
 
   MUTED_USER_COLUMNS ||= %i[id user_id muted_user_id created_at updated_at]
 
@@ -697,6 +722,20 @@ class BulkImport::Base
 
   def create_question_answer_votes(rows, &block)
     create_records(rows, "question_answer_vote", QUESTION_ANSWER_VOTE_COLUMNS, &block)
+  end
+
+  def create_post_custom_fields(rows, &block)
+    @last_post_custom_field_id = last_id(PostCustomField)
+    create_records(rows, "post_custom_field", POST_CUSTOM_FIELD_COLUMNS, &block)
+  end
+
+  def create_topic_custom_fields(rows, &block)
+    @last_topic_custom_field_id = last_id(TopicCustomField)
+    create_records(rows, "topic_custom_field", TOPIC_CUSTOM_FIELD_COLUMNS, &block)
+  end
+
+  def create_user_actions(rows, &block)
+    create_records(rows, "user_action", USER_ACTION_COLUMNS, &block)
   end
 
   def process_group(group)
@@ -1193,6 +1232,26 @@ class BulkImport::Base
     field[:created_at] ||= NOW
     field[:updated_at] ||= NOW
     field
+  end
+
+  def process_post_custom_field(field)
+    field[:id] ||= @last_post_custom_field_id += 1
+    field[:created_at] ||= NOW
+    field[:updated_at] ||= NOW
+    field
+  end
+
+  def process_topic_custom_field(field)
+    field[:id] ||= @last_topic_custom_field_id += 1
+    field[:created_at] ||= NOW
+    field[:updated_at] ||= NOW
+    field
+  end
+
+  def process_user_action(user_action)
+    user_action[:created_at] ||= NOW
+    user_action[:updated_at] ||= NOW
+    user_action
   end
 
   def create_records(all_rows, name, columns)

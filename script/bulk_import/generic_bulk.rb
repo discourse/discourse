@@ -26,40 +26,40 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def execute
-    import_uploads
+    # import_uploads
+    #
+    # # needs to happen before users, because keeping group names is more important than usernames
+    # import_groups
+    #
+    # import_users
+    # import_user_emails
+    # import_user_profiles
+    # import_user_options
+    # import_user_fields
+    # import_user_custom_field_values
+    # import_single_sign_on_records
+    # import_muted_users
+    # import_user_histories
+    #
+    # import_user_avatars
+    # update_uploaded_avatar_id
+    #
+    # import_group_members
+    #
+    # import_categories
+    # import_category_permissions
+    #
+    # import_topics
+    # import_posts
+    # import_topic_allowed_users
+    # import_likes
+    # import_tags
+    # import_votes
+    import_answers
 
-    # needs to happen before users, because keeping group names is more important than usernames
-    import_groups
-
-    import_users
-    import_user_emails
-    import_user_profiles
-    import_user_options
-    import_user_fields
-    import_user_custom_field_values
-    import_single_sign_on_records
-    import_muted_users
-    import_user_histories
-
-    import_user_avatars
-    update_uploaded_avatar_id
-
-    import_group_members
-
-    import_categories
-    import_category_permissions
-
-    import_topics
-    import_posts
-    import_topic_allowed_users
-    import_likes
-    import_tags
-    import_votes
-    # import_answers
-
-    import_upload_references
-    import_user_stats
-    enable_category_settings
+    # import_upload_references
+    # import_user_stats
+    # enable_category_settings
 
     @source_db.close
     @uploads_db.close if @uploads_db
@@ -813,6 +813,7 @@ class BulkImport::Generic < BulkImport::Base
         direction: row["direction"],
         votable_type: votable_type,
         votable_id: post_id,
+        created_at: to_datetime(row["created_at"]),
       }
     end
 
@@ -840,35 +841,80 @@ class BulkImport::Generic < BulkImport::Base
   end
 
   def import_answers
-    puts "Importing solutions..."
-    solutions = @db.execute(<<~SQL)
-      SELECT ROWID, *
-      FROM solutions
+    puts "", "Importing solutions into post custom fields..."
+
+    solutions = query(<<~SQL)
+      SELECT *
+        FROM solutions
+       ORDER BY topic_id
     SQL
 
-    solutions.each do |row|
+    field_name = "is_accepted_answer"
+    value = "true"
+    existing_fields = PostCustomField.where(name: field_name).pluck(:post_id).to_set
+
+    create_post_custom_fields(solutions) do |row|
+      next unless (post_id = post_id_from_imported_id(row["post_id"]))
+      next unless existing_fields.add?(post_id)
+
+      {
+        post_id: post_id,
+        name: field_name,
+        value: value,
+        created_at: to_datetime(row["created_at"]),
+      }
+    end
+
+    puts "", "Importing solutions into topic custom fields..."
+
+    solutions.reset
+
+    field_name = "accepted_answer_post_id"
+    existing_fields = TopicCustomField.where(name: field_name).pluck(:topic_id).to_set
+
+    create_topic_custom_fields(solutions) do |row|
       post_id = post_id_from_imported_id(row["post_id"])
       topic_id = topic_id_from_imported_id(row["topic_id"])
-      user_id = user_id_from_imported_id(row["user_id"])
-      acting_user_id = user_id_from_imported_id(row["acting_user_id"])
-      begin
-        PostCustomField.create!(post_id: post_id, name: "is_accepted_answer", value: "true")
-        TopicCustomField.create!(
-          topic_id: topic_id,
-          name: "accepted_answer_post_id",
-          value: post_id,
-        )
-        UserAction.log_action!(
-          action_type: UserAction::SOLVED,
-          user_id: user_id,
-          acting_user_id: acting_user_id,
-          target_post_id: post_id,
-          target_topic_id: topic_id,
-        )
-      rescue StandardError
-        next
-      end
+
+      next unless post_id && topic_id
+      next unless existing_fields.add?(topic_id)
+
+      {
+        topic_id: topic_id,
+        name: field_name,
+        value: post_id.to_s,
+        created_at: to_datetime(row["created_at"]),
+      }
     end
+
+    puts "", "Importing solutions into user actions..."
+
+    existing_fields = nil
+    solutions.reset
+
+    action_type = UserAction::SOLVED
+    existing_actions = UserAction.where(action_type: action_type).pluck(:target_post_id).to_set
+
+    create_user_actions(solutions) do |row|
+      post_id = post_id_from_imported_id(row["post_id"])
+      next unless post && existing_actions.add?(post_id)
+
+      topic_id = topic_id_from_imported_id(row["topic_id"])
+      user_id = user_id_from_imported_id(row["user_id"])
+      next unless topic_id && user_id
+
+      acting_user_id = row["acting_user_id"] ? user_id_from_imported_id(row["acting_user_id"]) : nil
+
+      {
+        action_type: action_type,
+        user_id: user_id,
+        target_topic_id: topic_id,
+        target_post_id: post_id,
+        acting_user_id: acting_user_id || Discourse::SYSTEM_USER_ID,
+      }
+    end
+
+    solutions.close
   end
 
   def enable_category_settings
