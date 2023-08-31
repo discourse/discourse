@@ -3,12 +3,37 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { createPopper } from "@popperjs/core";
+import ChatEmojiPicker from "discourse/plugins/chat/discourse/components/chat-emoji-picker";
+import { modifier } from "ember-modifier";
 
 export default class ChatChannelMessageEmojiPicker extends Component {
+  <template>
+    <ChatEmojiPicker
+      @context="chat-channel-message"
+      @didInsert={{this.didInsert}}
+      @willDestroy={{this.willDestroy}}
+      @didSelectEmoji={{this.didSelectEmoji}}
+      @class="hidden"
+      {{this.listenToBodyScroll}}
+    />
+  </template>
+
   @service site;
   @service chatEmojiPickerManager;
 
   context = "chat-channel-message";
+
+  listenToBodyScroll = modifier(() => {
+    const handler = () => {
+      this.chatEmojiPickerManager.close();
+    };
+
+    document.addEventListener("scroll", handler);
+
+    return () => {
+      document.removeEventListener("scroll", handler);
+    };
+  });
 
   @action
   didSelectEmoji(emoji) {
