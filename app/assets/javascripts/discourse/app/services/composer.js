@@ -182,6 +182,11 @@ export default class ComposerService extends Service {
     return this.set("_formTemplateInitialValues", values);
   }
 
+  @action
+  onSelectFormTemplate(formTemplate) {
+    this.selectedFormTemplate = formTemplate;
+  }
+
   @discourseComputed("showPreview")
   toggleText(showPreview) {
     return showPreview
@@ -920,7 +925,8 @@ export default class ComposerService extends Service {
         !this.get("model.editingPost")
       ) {
         const formTemplateData = prepareFormTemplateData(
-          document.querySelector("#form-template-form")
+          document.querySelector("#form-template-form"),
+          this.selectedFormTemplate
         );
         if (formTemplateData) {
           this.model.set("reply", formTemplateData);

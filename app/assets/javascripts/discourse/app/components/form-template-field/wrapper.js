@@ -23,6 +23,8 @@ export default class FormTemplateFieldWrapper extends Component {
   _loadTemplate(templateContent) {
     try {
       this.parsedTemplate = Yaml.load(templateContent);
+
+      this.args.onSelectFormTemplate?.(this.parsedTemplate);
     } catch (e) {
       this.error = e;
     }
