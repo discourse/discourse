@@ -51,6 +51,7 @@ class ApplicationController < ActionController::Base
   after_action :add_noindex_header,
                if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
   after_action :add_noindex_header_to_non_canonical, if: :spa_boot_request?
+  after_action :set_cross_origin_opener_policy_header, if: :spa_boot_request?
   around_action :link_preload, if: -> { spa_boot_request? && GlobalSetting.preload_link_header }
 
   HONEYPOT_KEY ||= "HONEYPOT_KEY"
@@ -982,6 +983,12 @@ class ApplicationController < ActionController::Base
     if canonical.present? && canonical != request.url &&
          !SiteSetting.allow_indexing_non_canonical_urls
       response.headers["X-Robots-Tag"] ||= "noindex"
+    end
+  end
+
+  def set_cross_origin_opener_policy_header
+    if SiteSetting.cross_origin_opener_policy_header != "unsafe-none"
+      response.headers["Cross-Origin-Opener-Policy"] = SiteSetting.cross_origin_opener_policy_header
     end
   end
 
