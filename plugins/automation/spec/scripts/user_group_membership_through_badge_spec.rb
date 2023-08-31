@@ -6,7 +6,7 @@ describe "UserGroupMembershipThroughBadge" do
   fab!(:user) { Fabricate(:user) }
   fab!(:other_users) { Fabricate.times(5, :user) }
   fab!(:badge) { Fabricate(:badge) }
-  fab!(:target_group) { Fabricate(:group) }
+  fab!(:target_group) { Fabricate(:group, title: "Target Title", flair_icon: "ad") }
 
   fab!(:automation) do
     Fabricate(
@@ -279,6 +279,116 @@ describe "UserGroupMembershipThroughBadge" do
 
         expect(target_group_member?(other_users.map(&:id))).to eq(true)
         expect(owns_badge?(other_users.map(&:id))).to eq(false)
+      end
+    end
+
+    context "with update_user_title_and_flair = true" do
+      before do
+        BadgeGranter.grant(badge, user)
+        automation.upsert_field!(
+          "update_user_title_and_flair",
+          "boolean",
+          { value: true },
+          target: "script",
+        )
+      end
+
+      it "sets user title and flair" do
+        expect(user.title).to be_nil
+        expect(user.flair_group_id).to be_nil
+
+        automation.trigger!(
+          "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
+          "user" => user,
+        )
+
+        user.reload
+        expect(user.title).to eq("Target Title")
+        expect(user.flair_group_id).to eq(target_group.id)
+      end
+
+      it "updates existing user title and flair" do
+        existing_flair_group = Fabricate(:group)
+        user.update(title: "Existing Title", flair_group_id: existing_flair_group.id)
+
+        expect(user.title).to eq("Existing Title")
+        expect(user.flair_group_id).to eq(existing_flair_group.id)
+
+        automation.trigger!(
+          "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
+          "user" => user,
+        )
+
+        user.reload
+        expect(user.title).to eq("Target Title")
+        expect(user.flair_group_id).to eq(target_group.id)
+
+        user_badge = UserBadge.find_by(user_id: user.id, badge_id: badge.id)
+        user_badge.destroy
+
+        automation.upsert_field!(
+          "remove_members_without_badge",
+          "boolean",
+          { value: true },
+          target: "script",
+        )
+
+        automation.trigger!(
+          "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
+          "user" => user,
+        )
+
+        user.reload
+        expect(user.title).to be_nil
+        expect(user.flair_group_id).to be_nil
+      end
+    end
+
+    context "with update_user_title_and_flair = false" do
+      before do
+        BadgeGranter.grant(badge, user)
+        automation.upsert_field!(
+          "update_user_title_and_flair",
+          "boolean",
+          { value: false },
+          target: "script",
+        )
+      end
+
+      it "does not update existing user title and flair" do
+        existing_flair_group = Fabricate(:group)
+        user.update(title: "Existing Title", flair_group_id: existing_flair_group.id)
+
+        expect(user.title).to eq("Existing Title")
+        expect(user.flair_group_id).to eq(existing_flair_group.id)
+
+        automation.trigger!(
+          "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
+          "user" => user,
+        )
+
+        user.reload
+        expect(user.title).to eq("Existing Title")
+        expect(user.flair_group_id).to eq(existing_flair_group.id)
+
+        user_badge = UserBadge.find_by(user_id: user.id, badge_id: badge.id)
+        user_badge.destroy
+
+        automation.upsert_field!(
+          "remove_members_without_badge",
+          "boolean",
+          { value: true },
+          target: "script",
+        )
+
+        automation.trigger!(
+          "kind" => DiscourseAutomation::Triggerable::USER_FIRST_LOGGED_IN,
+          "user" => user,
+        )
+
+        user.reload
+        expect(user.title).to eq("Existing Title")
+        expect(user.flair_group_id).to eq(existing_flair_group.id)
       end
     end
   end

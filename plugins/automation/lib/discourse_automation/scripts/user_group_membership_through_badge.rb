@@ -11,6 +11,7 @@ DiscourseAutomation::Scriptable.add(
 
   field :badge_name, component: :text, required: true
   field :group, component: :group, required: true
+  field :update_user_title_and_flair, component: :boolean
   field :remove_members_without_badge, component: :boolean
 
   triggerables %i[recurring user_first_logged_in]
@@ -18,6 +19,7 @@ DiscourseAutomation::Scriptable.add(
   script do |context, fields|
     badge_name = fields.dig("badge_name", "value").strip
     group_id = fields.dig("group", "value")
+    update_user_title_and_flair = fields.dig("update_user_title_and_flair", "value")
     remove_members_without_badge = fields.dig("remove_members_without_badge", "value")
     current_user = context["user"]
     bulk_modify_start_count =
@@ -64,6 +66,14 @@ DiscourseAutomation::Scriptable.add(
       group.bulk_add(user_ids_to_add)
     end
 
+    if update_user_title_and_flair && user_ids_to_add.present?
+      DB.exec(<<~SQL, ids: user_ids_to_add, title: group.title, flair_group_id: group.id)
+        UPDATE users
+        SET title = :title, flair_group_id = :flair_group_id
+        WHERE id IN (:ids)
+      SQL
+    end
+
     next unless remove_members_without_badge
 
     # IDs of users who are currently target group members without the badge
@@ -91,6 +101,14 @@ DiscourseAutomation::Scriptable.add(
         end
     else
       group.bulk_remove(user_ids_to_remove)
+    end
+
+    if update_user_title_and_flair && user_ids_to_remove.present?
+      DB.exec(<<~SQL, ids: user_ids_to_remove, title: group.title, flair_group_id: group.id)
+        UPDATE users
+        SET title = NULL, flair_group_id = NULL
+        WHERE id IN (:ids) AND (flair_group_id = :flair_group_id OR title = :title)
+      SQL
     end
   end
 end

@@ -232,6 +232,9 @@ en:
             group:
               label: Group
               description: Target group. Users with the specified badge will be added to this group
+            update_user_title_and_flair:
+              label: Update user title and flair
+              description: Optional, Update user title and flair
             remove_members_without_badge:
               label: Remove existing members without badge
               description: Optional, Remove existing group members without the specified badge
