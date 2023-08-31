@@ -17,12 +17,12 @@ describe Chat do
     fab!(:unused_upload) { Fabricate(:upload, user: user, created_at: 1.month.ago) }
 
     let!(:chat_message) do
-      Chat::MessageCreator.create(
+      Fabricate(
+        :chat_message,
         chat_channel: chat_channel,
         user: user,
-        in_reply_to_id: nil,
-        content: "Hello world!",
-        upload_ids: [upload.id],
+        message: "Hello world!",
+        uploads: [upload],
       )
     end
 
@@ -43,15 +43,13 @@ describe Chat do
     fab!(:unused_upload) { Fabricate(:upload, user: user, created_at: 1.month.ago) }
 
     let!(:chat_message) do
-      Chat::MessageCreator.create(
+      Fabricate(
+        :chat_message,
         chat_channel: chat_channel,
         user: user,
-        in_reply_to_id: nil,
-        content: "Hello world! #{message_upload.sha1}",
-        upload_ids: [],
+        message: "Hello world! #{message_upload.sha1}",
       )
     end
-
     let!(:draft_message) do
       Chat::Draft.create!(
         user: user,
@@ -135,16 +133,15 @@ describe Chat do
     fab!(:user_4) { Fabricate(:user, suspended_till: 3.weeks.from_now) }
 
     let!(:chat_message) do
-      Chat::MessageCreator.create(
-        chat_channel: chat_channel,
-        user: user,
-        in_reply_to_id: nil,
-        content: "Hello world!",
-        upload_ids: [],
-      ).chat_message
+      Fabricate(:chat_message, chat_channel: chat_channel, user: user, message: "Hello world!")
     end
 
     let(:chat_url) { "#{Discourse.base_url}/chat/c/-/#{chat_channel.id}" }
+
+    before do
+      chat_channel.update!(last_message: chat_message)
+      chat_channel.add(user)
+    end
 
     context "when inline" do
       it "renders channel" do
@@ -166,7 +163,6 @@ describe Chat do
 
     context "when regular" do
       it "renders channel, excluding inactive, staged, and suspended users" do
-        user.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
         user_2.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
         user_3.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
         user_4.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)

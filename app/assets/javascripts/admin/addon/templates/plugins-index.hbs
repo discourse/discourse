@@ -15,7 +15,7 @@
       {{#each this.model as |plugin|}}
         <tr data-plugin-name={{plugin.name}}>
           <td>
-            {{#if plugin.is_official}}
+            {{#if plugin.isOfficial}}
               {{d-icon
                 "check-circle"
                 title="admin.plugins.official"
@@ -47,7 +47,7 @@
           </td>
           <td class="col-enabled">
             <div class="label">{{i18n "admin.plugins.enabled"}}</div>
-            {{#if plugin.enabled_setting}}
+            {{#if plugin.enabledSetting}}
               <DToggleSwitch
                 @state={{plugin.enabled}}
                 {{on "click" (fn this.togglePluginEnabled plugin)}}
@@ -58,14 +58,17 @@
           </td>
           <td class="settings">
             {{#if this.currentUser.admin}}
-              {{#if plugin.has_settings}}
-                <DButton
-                  @class="btn-default"
-                  @action={{route-action "showSettings"}}
-                  @actionParam={{plugin}}
-                  @icon="cog"
-                  @label="admin.plugins.change_settings_short"
-                />
+              {{#if plugin.hasSettings}}
+                <LinkTo
+                  class="btn-default btn btn-icon-text"
+                  @route="adminSiteSettingsCategory"
+                  @model={{plugin.settingCategoryName}}
+                  @query={{hash filter=(concat "plugin:" plugin.name)}}
+                  data-plugin-setting-button={{plugin.name}}
+                >
+                  {{d-icon "cog"}}
+                  {{i18n "admin.plugins.change_settings_short"}}
+                </LinkTo>
               {{/if}}
             {{/if}}
           </td>

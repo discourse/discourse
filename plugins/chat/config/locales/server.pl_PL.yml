@@ -6,6 +6,7 @@
 
 pl_PL:
   site_settings:
+    chat_separate_sidebar_mode: "Pokaż oddzielne tryby paska bocznego dla forum i czatu."
     chat_enabled: "Włącz wtyczkę czatu."
     enable_public_channels: "Włącz kanały publiczne na podstawie kategorii."
     chat_allowed_groups: "Użytkownicy w tych grupach mogą rozmawiać. Pamiętaj, że personel zawsze ma dostęp do czatu."
@@ -76,9 +77,9 @@ pl_PL:
         other: "Wiadomość jest za krótka, musi mieć co najmniej %{count} znaków."
       message_too_long:
         one: "Wiadomość jest zbyt długa, wiadomości muszą mieć maksymalnie %{count} znak."
-        few: "Wiadomość jest zbyt długa, wiadomości muszą mieć maksymalnie %{count} znaki."
-        many: "Wiadomość jest zbyt długa, wiadomości muszą mieć maksymalnie %{count} znaków."
-        other: "Wiadomość jest zbyt długa, wiadomości muszą mieć maksymalnie %{count} znaków."
+        few: "Wiadomość jest za długa, wiadomości mogą mieć maksymalnie %{count} znaków."
+        many: "Wiadomość jest za długa, wiadomości mogą mieć maksymalnie %{count} znaków."
+        other: "Wiadomość jest za długa, wiadomości mogą mieć maksymalnie %{count} znaków."
       draft_too_long: "Wersja robocza jest za długa."
       max_reactions_limit_reached: "Nowe reakcje nie są dozwolone w tej wiadomości."
       message_move_invalid_channel: "Kanał źródłowy i docelowy muszą być kanałami publicznymi."

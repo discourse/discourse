@@ -12,8 +12,8 @@ RSpec.describe "Reply to message - channel - drawer", type: :system do
     Fabricate(
       :chat_message,
       chat_channel: channel_1,
-      user: Fabricate(:user),
       message: "This is a message to reply to!",
+      use_service: true,
     )
   end
 
@@ -44,17 +44,7 @@ RSpec.describe "Reply to message - channel - drawer", type: :system do
   end
 
   context "when the message has an existing thread" do
-    fab!(:message_1) do
-      creator =
-        Chat::MessageCreator.new(
-          chat_channel: channel_1,
-          in_reply_to_id: original_message.id,
-          user: Fabricate(:user),
-          content: Faker::Lorem.paragraph,
-        )
-      creator.create
-      creator.chat_message
-    end
+    fab!(:message_1) { Fabricate(:chat_message, in_reply_to: original_message, use_service: true) }
 
     it "replies to the existing thread" do
       visit("/")

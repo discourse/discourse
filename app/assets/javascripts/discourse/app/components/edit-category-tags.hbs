@@ -69,17 +69,17 @@
         />
         <DButton
           @label="category.required_tag_group.delete"
-          @action={{action "deleteRequiredTagGroup" rtg}}
+          @action={{fn this.deleteRequiredTagGroup rtg}}
           @icon="trash-alt"
-          @class="delete-required-tag-group"
+          class="delete-required-tag-group"
         />
       </div>
     {{/each}}
     <DButton
       @label="category.required_tag_group.add"
-      @action={{action "addRequiredTagGroup"}}
+      @action={{this.addRequiredTagGroup}}
       @icon="plus"
-      @class="add-required-tag-group"
+      class="add-required-tag-group"
     />
   </section>
 </section>

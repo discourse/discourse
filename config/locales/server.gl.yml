@@ -274,7 +274,6 @@ gl:
     more_replies:
       one: "%{count} resposta máis"
       other: "%{count} respostas máis"
-    loading: "Cargando discusión..."
     permalink: "Ligazón permanente"
     imported_from: "Este é un tema de discusión complementario da entrada %{link}"
     in_reply_to: "▶ %{username}"
@@ -1478,7 +1477,6 @@ gl:
     enable_safe_mode: "Permitir que os usuarios entren no modo seguro para depurar complementos."
     rate_limit_create_topic: "Despois de crear un tema, os usuarios deben agardar (n) segundos antes de crear un outro."
     rate_limit_create_post: "Despois de publicar, os usuarios deben agardar (n) segundos antes de crear unha outra publicación."
-    rate_limit_new_user_create_topic: "Despois de crear un tema, os novos usuarios deben agardar (n) segundos antes de crear un outro."
     rate_limit_new_user_create_post: "Despois de publicar, os novos usuarios deben agardar (n) segundos antes de crear unha outra publicación."
     max_likes_per_day: "Número máximo de gústame por usuario e día."
     max_flags_per_day: "Número máximo de denuncias por usuario e día."
@@ -1842,7 +1840,6 @@ gl:
     retain_web_hook_events_period_days: "Número de días para reter rexistros de eventos de web hook."
     retry_web_hook_events: "Volver tentar automaticamente 4 veces os eventos de web hook frustrados. Os intervalos entre os novos intentos son de 1, 5, 25 e 125 minutos."
     revoke_api_keys_days: "Número de días antes de que unha chave API sen usar sexa revogada automaticamente (0 para nunca)"
-    allow_user_api_keys: "Permitir a xeración de chaves API de usuario"
     allow_user_api_key_scopes: "Listaxe de ámbitos permitidos para as chaves API de usuario"
     allowed_user_api_auth_redirects: "URL permitido para redireccionar a autenticación das chaves API de usuario. O símbolo do comodín pódese utilizar para que coincida calquera parte súa (ex.: www.exemplo.com/*)."
     allowed_user_api_push_urls: "Enderezos URL permitidos para que servidor envíe á API de usuario"
@@ -2084,18 +2081,6 @@ gl:
   admin:
     email:
       sent_test: "enviado!"
-    user:
-      merge_user:
-        updating_username: "Actualizando nome de usuario..."
-        changing_post_ownership: "Cambiando o propietario da publicación ..."
-        merging_given_daily_likes: "Combinando os gústame diarios..."
-        merging_post_timings: "Combinando os intres de publicación..."
-        merging_user_visits: "Combinando as visitas de usuario..."
-        updating_site_settings: "Actualizando a configuración do sitio..."
-        updating_user_stats: "Actualizando as estatísticas de usuario..."
-        merging_user_attributes: "Combinando os atributos de usuario..."
-        updating_user_ids: "Actualizando os id de usuario..."
-        deleting_source_user: "Eliminando o usuario orixe..."
   user:
     deactivated: "Desactivado debido a excesivos correos devoltos con «%{email}»."
     deactivated_by_staff: "Desactivado polo equipo"
@@ -3727,8 +3712,6 @@ gl:
         description: "Restaurar a publicación para que todos os usuarios a poidan ver."
       delete_single:
         title: "Eliminar"
-      delete:
-        title: "Eliminar..."
       delete_and_ignore_replies:
         confirm: "Confirma que quere eliminar as respostas desta publicación tamén?"
       delete_and_agree_replies:
@@ -3751,7 +3734,6 @@ gl:
       approve_user:
         title: "Aprobar usuario"
       reject_user:
-        title: "Eliminar usuario..."
         delete:
           title: "Eliminar usuario"
           description: "O usuario será eliminado do foro."

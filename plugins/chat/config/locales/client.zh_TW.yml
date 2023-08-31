@@ -228,7 +228,6 @@ zh_TW:
       thread:
         title: "標題"
         view_thread: 檢視討論串
-        default_title: "討論串"
         replies:
           other: "%{count}個回覆"
         label: 討論串

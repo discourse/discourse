@@ -137,15 +137,17 @@ function threadPreviewFabricator(args = {}) {
     last_reply_id: args.last_reply_id || sequence++,
     last_reply_created_at: args.last_reply_created_at || Date.now(),
     last_reply_excerpt: args.last_reply_excerpt || "This is a reply",
+    participant_count: args.participant_count ?? 0,
+    participant_users: args.participant_users ?? [],
   });
 }
 
 function reactionFabricator(args = {}) {
   return ChatMessageReaction.create({
-    count: args.count || 1,
+    count: args.count ?? 1,
     users: args.users || [userFabricator()],
     emoji: args.emoji || "heart",
-    reacted: args.reacted || false,
+    reacted: args.reacted ?? false,
   });
 }
 

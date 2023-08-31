@@ -24,16 +24,14 @@
               @min="0"
             />
             <DButton
-              @class="btn-default no-text"
-              @action={{action "moveUp"}}
-              @actionParam={{cat}}
+              @action={{fn (action "moveUp") cat}}
               @icon="arrow-up"
+              class="btn-default no-text"
             />
             <DButton
-              @class="btn-default no-text"
-              @action={{action "moveDown"}}
-              @actionParam={{cat}}
+              @action={{fn (action "moveDown") cat}}
               @icon="arrow-down"
+              class="btn-default no-text"
             />
           </td>
         </tr>
@@ -45,8 +43,8 @@
 
 <div class="modal-footer">
   <DButton
-    @class="btn-primary"
     @action={{action "save"}}
     @label="categories.reorder.save"
+    class="btn-primary"
   />
 </div>

@@ -122,11 +122,11 @@ RSpec.describe "Navigation", type: :system do
   end
 
   context "when opening a thread" do
-    fab!(:thread) { Fabricate(:chat_thread, channel: category_channel) }
+    fab!(:thread) { Fabricate(:chat_thread, channel: category_channel, use_service: true) }
 
     before do
       category_channel.update!(threading_enabled: true)
-      Fabricate(:chat_message, thread: thread, chat_channel: thread.channel)
+      Fabricate(:chat_message, thread: thread, use_service: true)
       thread.add(current_user)
     end
 
@@ -335,7 +335,7 @@ RSpec.describe "Navigation", type: :system do
       it "activates the channel in the sidebar" do
         visit("/")
         chat_page.open_from_header
-        sidebar_component.click_link(category_channel.name)
+        sidebar_component.click_section_link(category_channel.name)
 
         expect(sidebar_component).to have_section_link(category_channel.name, active: true)
       end
@@ -346,7 +346,7 @@ RSpec.describe "Navigation", type: :system do
         visit("/")
         chat_page.open_from_header
 
-        sidebar_component.click_link(category_channel.name)
+        sidebar_component.click_section_link(category_channel.name)
         chat_drawer_page.close
 
         expect(sidebar_component).to have_no_section_link(category_channel.name, active: true)

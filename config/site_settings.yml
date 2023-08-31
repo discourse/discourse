@@ -1123,7 +1123,7 @@ posting:
     min: 5
     max: 255
   max_form_template_content_length:
-    default: 2000
+    default: 5000
     max: 150000
 
 email:
@@ -1955,7 +1955,6 @@ rate_limits:
   unique_posts_mins: 5
   rate_limit_create_topic: 15
   rate_limit_create_post: 5
-  rate_limit_new_user_create_topic: 120
   rate_limit_new_user_create_post: 30
   rate_limit_search_anon_global_per_minute:
     hidden: true
@@ -2490,10 +2489,6 @@ uncategorized:
     type: float
     default: 48
 
-  enable_system_avatars:
-    hidden: true
-    default: true
-
   use_site_small_logo_as_system_avatar:
     default: true
 
@@ -2558,10 +2553,6 @@ uncategorized:
   bootstrap_mode_enabled:
     default: false
     client: true
-    hidden: true
-
-  check_for_new_features:
-    default: false
     hidden: true
 
   automatically_unpin_topics:
@@ -2773,8 +2764,6 @@ api:
     max: 36500
 
 user_api:
-  allow_user_api_keys:
-    default: true
   allow_user_api_key_scopes:
     default: "read|write|message_bus|push|notifications|session_info|one_time_password"
     type: list

@@ -2848,7 +2848,14 @@ en:
         dismiss_new_modal:
           title: "Dismiss new"
           topics: "Dismiss new topics"
-          posts: "Dismiss new posts"
+          posts: "Dismiss new replies"
+          topics_with_count:
+            one: "Dismiss %{count} new topic"
+            other: "Dismiss %{count} new topics"
+          replies_with_count:
+            one: "Dismiss %{count} new reply"
+            other: "Dismiss %{count} new replies"
+          replies: "Dismiss new replies"
           untrack: "Stop tracking these topics so they stop appearing in my new list"
         dismiss_new_with_selected:
           one: "Dismiss New (%{count})"
@@ -3458,7 +3465,7 @@ en:
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
-        upload: "Sorry, there was an error uploading that file. Please try again."
+        upload: "Sorry, there was an error uploading %{file_name}. Please try again."
         file_too_large: "Sorry, that file is too big (maximum size is %{max_size_kb}kb). Why not upload your large file to a cloud sharing service, then paste the link?"
         file_size_zero: "Sorry, it looks like something has gone wrong, the file you are trying to upload is 0 bytes. Please try again."
         file_too_large_humanized: "Sorry, that file is too big (maximum size is %{max_size}). Why not upload your large file to a cloud sharing service, then paste the link?"
@@ -4989,7 +4996,6 @@ en:
         enabled: "Enabled?"
         is_enabled: "Y"
         not_enabled: "N"
-        change_settings: "Plugin Settings"
         change_settings_short: "Settings"
         howto: "How do I install plugins?"
         official: "Official Plugin"
@@ -5037,7 +5043,8 @@ en:
             label: "Backup"
             title: "Create a backup"
             confirm: "Do you want to start a new backup?"
-            without_uploads: "Yes (do not include uploads)"
+            include_uploads: "include all uploads"
+            s3_upload_warning: 'This is for database backups only. Uploads will not be included, meaning all images and other file uploads can be missing if the backup is restored to another hosting setup. <b>To enable a full backup including your S3 uploads please see <a href="https://meta.discourse.org/t/-/276535" target="_blank">this guide</a>.</b>'
           download:
             label: "Download"
             title: "Send email with download link"
@@ -5743,6 +5750,7 @@ en:
           title: "Preview Template"
         field_placeholders:
           validations: "enter validations here"
+          id: "enter-id-here"
           label: "Enter label here"
           placeholder: "Enter placeholder here"
           none_label: "Select an item"

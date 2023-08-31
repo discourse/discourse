@@ -11,10 +11,10 @@
 
   <div class="modal-footer">
     <DButton
-      @class="btn-primary"
       @disabled={{this.disableSubmit}}
       @label="groups.membership_request.submit"
       @action={{action "requestMember"}}
+      class="btn-primary"
     />
 
     <DModalCancel @close={{route-action "closeModal"}} />

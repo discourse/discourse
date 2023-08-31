@@ -324,7 +324,6 @@ tr_TR:
     more_replies:
       one: "%{count} yanıt daha"
       other: "%{count} yanıt daha"
-    loading: "Tartışma Yükleniyor..."
     permalink: "Kalıcı Bağlantı"
     imported_from: "Bu, %{link} adresindeki orijinal girdi için tamamlayıcı bir tartışma konusudur."
     in_reply_to: "▶ %{username}"
@@ -1691,7 +1690,6 @@ tr_TR:
     enable_safe_mode: "Kullanıcıların eklentilerde hata ayıklamak için güvenli moda girmesine izin verin."
     rate_limit_create_topic: "Bir konu oluşturduktan sonra, kullanıcılar başka bir konu oluşturabilmek için (n) saniye beklemelidir."
     rate_limit_create_post: "Gönderi yaptıktan sonra, kullanıcılar başka bir gönderi oluşturabilmek için (n) saniye beklemelidir."
-    rate_limit_new_user_create_topic: "Bir konu oluşturduktan sonra, yeni kullanıcılar başka bir konu oluşturabilmek için (n) saniye beklemelidir."
     rate_limit_new_user_create_post: "Gönderi yaptıktan sonra, yeni kullanıcılar başka bir gönderi oluşturabilmek için (n) saniye beklemelidir."
     max_likes_per_day: "Kullanıcı başına günlük maksimum beğeni sayısı."
     max_flags_per_day: "Kullanıcı başına günlük maksimum bayrak sayısı."
@@ -2113,7 +2111,6 @@ tr_TR:
     retain_web_hook_events_period_days: "Web kancası olay kayıtlarının saklanacağı gün sayısı."
     retry_web_hook_events: "Başarısız web kancası olaylarını otomatik olarak 4 kez yeniden deneyin. Yeniden denemeler arasındaki zaman aralıkları 1, 5, 25 ve 125 dakikadır."
     revoke_api_keys_days: "Kullanılmayan bir API anahtarının otomatik olarak iptal edilmesinden önceki gün sayısı (asla için 0)"
-    allow_user_api_keys: "Kullanıcı API anahtarlarının oluşturulmasına izin verin"
     allow_user_api_key_scopes: "Kullanıcı API anahtarları için izin verilen kapsamların listesi"
     min_trust_level_for_user_api_key: |
       Kullanıcı API anahtarlarının oluşturulması için gereken güven seviyesi.<br>
@@ -2409,18 +2406,6 @@ tr_TR:
   admin:
     email:
       sent_test: "gönderildi!"
-    user:
-      merge_user:
-        updating_username: "Kullanıcı adı güncelleniyor..."
-        changing_post_ownership: "Gönderi sahipliği değiştiriliyor..."
-        merging_given_daily_likes: "Yapılan günlük beğeniler birleştiriliyor..."
-        merging_post_timings: "Gönderi zamanlamaları birleştiriliyor..."
-        merging_user_visits: "Kullanıcı ziyaretleri birleştiriliyor..."
-        updating_site_settings: "Site ayarları güncelleniyor..."
-        updating_user_stats: "Kullanıcı istatistikleri güncelleniyor..."
-        merging_user_attributes: "Kullanıcı özellikleri birleştiriliyor..."
-        updating_user_ids: "Kullanıcı kimlikleri güncelleniyor..."
-        deleting_source_user: "Kaynak kullanıcı siliniyor..."
   user:
     deactivated: "\"%{email}\" adresine çok fazla geri dönen e-posta nedeniyle devre dışı bırakıldı."
     deactivated_by_staff: "Personel tarafından devre dışı bırakıldı"
@@ -4669,8 +4654,6 @@ tr_TR:
         description: "Bayrağı kabul edin ve bu gönderiyi gizleyin + otomatik olarak kullanıcıya bu gönderiyi düzenlemesini isteyen bir mesaj gönderin"
       delete_single:
         title: "Sil"
-      delete:
-        title: "Sil..."
       delete_and_ignore:
         title: "Bayrağı yok say ve gönderiyi sil"
         description: "Kuyruktan kaldırarak bayrağı yok sayın ve gönderiyi silin; ilk gönderiyse konuyu da silin. "
@@ -4705,7 +4688,6 @@ tr_TR:
       approve_user:
         title: "Kullanıcıyı Onayla"
       reject_user:
-        title: "Kullanıcıyı Sil..."
         delete:
           title: "Kullanıcıyı Sil"
           description: "Kullanıcı forumdan silinecek."
@@ -4714,7 +4696,6 @@ tr_TR:
           description: "Kullanıcı silinecek ve IP ve e-posta adresini engelleyeceğiz."
       reject:
         title: "Reddet"
-        bundle_title: "Reddet..."
       reject_and_suspend:
         title: "Reddet ve Kullanıcıyı Askıya Al"
       reject_and_silence:

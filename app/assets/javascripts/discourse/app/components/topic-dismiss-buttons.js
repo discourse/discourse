@@ -37,7 +37,7 @@ export default Component.extend({
       return true;
     }
 
-    return topicCount > 5;
+    return this.currentUser?.new_new_view_enabled || topicCount > 5;
   },
 
   @discourseComputed("selectedTopics.length")
@@ -52,7 +52,7 @@ export default Component.extend({
 
   @discourseComputed("selectedTopics.length")
   dismissNewLabel(selectedTopicCount) {
-    if (this.currentUser.new_new_view_enabled) {
+    if (this.currentUser?.new_new_view_enabled) {
       return I18n.t("topics.bulk.dismiss_button");
     } else if (selectedTopicCount === 0) {
       return I18n.t("topics.bulk.dismiss_new");

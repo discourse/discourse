@@ -12,33 +12,21 @@ import deprecated from "discourse-common/lib/deprecated";
 // don't cause unnecessary noise.
 const KNOWN_LEGACY_MODALS = [
   "associate-account-confirm",
-  "auth-token",
   "avatar-selector",
   "change-owner",
   "change-post-notice",
   "create-account",
   "create-invite-bulk",
   "create-invite",
-  "edit-topic-timer",
-  "edit-user-directory-columns",
-  "explain-reviewable",
-  "feature-topic-on-profile",
-  "feature-topic",
-  "flag",
   "grant-badge",
   "group-default-notifications",
   "login",
-  "move-to-topic",
-  "post-enqueued",
   "raw-email",
   "reject-reason-reviewable",
   "reorder-categories",
   "request-group-membership-form",
   "share-and-invite",
   "tag-upload",
-  "admin-reseed",
-  "admin-form-template-validation-options",
-  "admin-uploaded-image-list",
 ];
 
 const LEGACY_OPTS = new Set([

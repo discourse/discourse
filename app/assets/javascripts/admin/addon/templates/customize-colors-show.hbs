@@ -7,23 +7,23 @@
     <div class="controls">
       {{#unless this.model.theme_id}}
         <DButton
-          @class="btn-primary"
-          @action={{action "save"}}
+          @action={{this.save}}
           @disabled={{this.model.disableSave}}
           @label="admin.customize.save"
+          class="btn-primary"
         />
       {{/unless}}
       <DButton
-        @class="btn-default"
-        @action={{action "copy" this.model}}
+        @action={{fn this.copy this.model}}
         @icon="copy"
         @label="admin.customize.copy"
+        class="btn-default"
       />
       <DButton
-        @class="btn-default copy-to-clipboard"
-        @action={{action "copyToClipboard" this.model}}
+        @action={{fn this.copyToClipboard this.model}}
         @icon="far-clipboard"
         @label="admin.customize.copy_to_clipboard"
+        class="btn-default copy-to-clipboard"
       />
       <span
         class="saving {{unless this.model.savingStatus 'hidden'}}"
@@ -38,25 +38,16 @@
         </span>
       {{else}}
         <DButton
-          @action={{action "destroy"}}
-          @class="btn-danger"
+          @action={{this.destroy}}
           @icon="far-trash-alt"
           @label="admin.customize.delete"
+          class="btn-danger"
         />
       {{/if}}
     </div>
 
     <div class="admin-controls">
-      {{#unless this.model.theme_id}}
-        <div class="pull-right">
-          <label>
-            <Input @type="checkbox" @checked={{this.onlyOverridden}} />
-            {{i18n "admin.settings.show_overriden"}}
-          </label>
-        </div>
-      {{/unless}}
-
-      <div>
+      <div class="pull-left">
         {{#if this.model.theme_id}}
           <InlineEditCheckbox
             @action={{action "applyUserSelectable"}}
@@ -71,6 +62,15 @@
           </label>
         {{/if}}
       </div>
+
+      {{#unless this.model.theme_id}}
+        <div class="pull-right">
+          <label>
+            <Input @type="checkbox" @checked={{this.onlyOverridden}} />
+            {{i18n "admin.settings.show_overriden"}}
+          </label>
+        </div>
+      {{/unless}}
     </div>
 
     {{#if this.colors.length}}
@@ -100,22 +100,24 @@
               <td class="actions">
                 {{#unless this.model.theme_id}}
                   <DButton
-                    @class={{concat
-                      "btn-default revert "
-                      (unless c.savedIsOverriden "invisible")
-                    }}
-                    @action={{action "revert" c}}
+                    @action={{fn this.revert c}}
                     @title="admin.customize.colors.revert_title"
                     @label="admin.customize.colors.revert"
+                    class={{concat-class
+                      "btn-default"
+                      "revert"
+                      (unless c.savedIsOverriden "invisible")
+                    }}
                   />
                   <DButton
-                    @class={{concat
-                      "btn-default undo "
-                      (unless c.changed "invisible")
-                    }}
-                    @action={{action "undo" c}}
+                    @action={{fn this.undo c}}
                     @title="admin.customize.colors.undo_title"
                     @label="admin.customize.colors.undo"
+                    class={{concat-class
+                      "btn-default"
+                      "undo"
+                      (unless c.changed "invisible")
+                    }}
                   />
                 {{/unless}}
               </td>

@@ -508,7 +508,6 @@ sr:
       approve:
         title: "Odobri"
       reject_user:
-        title: "Obriši Korisnika..."
         delete:
           title: "Obriši Korisnika"
       reject:

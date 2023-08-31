@@ -313,7 +313,6 @@ id:
     configure: "Konfigurasi Penyematan"
     more_replies:
       other: "%{count} jawaban lainnya"
-    loading: "Sedang memuat diskusi..."
     permalink: "Permalink"
     imported_from: "Ini adalah topik diskusi tambahan untuk topik utama di %{link}"
     in_reply_to: "▶ %{username}"
@@ -1712,7 +1711,6 @@ id:
       approve:
         title: "Terima"
       reject_user:
-        title: "Hapus Pengguna..."
         delete:
           title: "Hapus Pengguna"
       reject:

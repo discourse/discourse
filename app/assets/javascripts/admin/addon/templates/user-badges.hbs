@@ -33,10 +33,10 @@
             }}</small>
         </div>
         <DButton
-          @class="btn-primary"
           @action={{this.performGrantBadge}}
-          @type="submit"
           @label="admin.badges.grant"
+          type="submit"
+          class="btn-primary"
         />
       </form>
     {{/if}}
@@ -71,14 +71,14 @@
             <td>
               {{#if userBadge.grouped}}
                 <DButton
-                  @action={{action "expandGroup" userBadge}}
+                  @action={{fn this.expandGroup userBadge}}
                   @label="admin.badges.expand"
                 />
               {{else}}
                 <DButton
-                  @class="btn-danger"
-                  @action={{action "revokeBadge" userBadge}}
+                  @action={{fn this.revokeBadge userBadge}}
                   @label="admin.badges.revoke"
+                  class="btn-danger"
                 />
               {{/if}}
             </td>

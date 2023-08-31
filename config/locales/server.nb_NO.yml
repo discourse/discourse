@@ -192,7 +192,6 @@ nb_NO:
     more_replies:
       one: "%{count} svar til"
       other: "%{count} svar til"
-    loading: "Laster inn diskusjon…"
     permalink: "Permalink"
     imported_from: "Dette er en relatert diskusjon ved siden av det originale innlegget ved %{link}"
     in_reply_to: "▶ %{username}"
@@ -1367,7 +1366,6 @@ nb_NO:
       approve:
         title: "Godkjenn"
       reject_user:
-        title: "Slett bruker..."
         delete:
           title: "Slett bruker"
       reject:

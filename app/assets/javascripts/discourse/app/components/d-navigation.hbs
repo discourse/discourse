@@ -17,7 +17,7 @@
 
 <div class="navigation-controls">
   {{#if (and this.notCategoriesRoute this.site.mobileView this.canBulk)}}
-    <BulkSelectToggle @parentController={{"discovery/topics"}} @tagName="" />
+    <BulkSelectToggle @parentController="discovery/topics" @tagName="" />
   {{/if}}
 
   {{#if this.showCategoryAdmin}}
@@ -29,10 +29,10 @@
 
   {{#if (and this.category this.showCategoryEdit)}}
     <DButton
-      @class="btn-default edit-category"
       @action={{this.editCategory}}
       @icon="wrench"
       @title="category.edit_title"
+      class="btn-default edit-category"
     />
   {{/if}}
 
@@ -40,10 +40,10 @@
     {{#if this.showToggleInfo}}
       <DButton
         @icon={{if this.currentUser.staff "wrench" "info-circle"}}
-        @class="btn-default"
         @ariaLabel="tagging.info"
         @action={{this.toggleInfo}}
-        @id="show-tag-info"
+        id="show-tag-info"
+        class="btn-default"
       />
     {{/if}}
   {{/if}}
@@ -109,5 +109,4 @@
       {{/if}}
     {{/unless}}
   {{/if}}
-
 </div>

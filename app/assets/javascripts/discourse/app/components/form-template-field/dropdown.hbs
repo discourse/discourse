@@ -11,7 +11,7 @@
   {{! TODO(@keegan): Update implementation to use <ComboBox/> instead }}
   {{! Current using <select> as it integrates easily with FormData (will update in v2) }}
   <select
-    name={{@attributes.label}}
+    name={{@id}}
     class="form-template-field__dropdown"
     required={{if @validations.required "required" ""}}
   >
@@ -25,7 +25,7 @@
       >{{@attributes.none_label}}</option>
     {{/if}}
     {{#each @choices as |choice|}}
-      <option value={{choice}}>{{choice}}</option>
+      <option value={{choice}} selected={{eq @value choice}}>{{choice}}</option>
     {{/each}}
   </select>
 </div>

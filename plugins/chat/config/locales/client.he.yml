@@ -161,6 +161,7 @@ he:
           two: "%{group_name} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
           many: "%{group_name} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
           other: "%{group_name} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
+        channel_wide_mentions_disallowed: "האזכורים ‎@here (כאן) ו־‎@all (כולם) מושבתים בערוץ הזה."
         too_many_members: "בקבוצה %{group_name} יש יותר מדי חברים. לא נשלחו התראות."
         too_many_members_multiple:
           one: "בקבוצה %{group_name} וב־%{count} נוספת יש יותר מדי חברים. לא נשלחו התראות."
@@ -490,7 +491,7 @@ he:
         title: "צ׳אט"
         export_messages:
           title: "ייצוא הודעות צ׳אט"
-          description: "הייצוא מוגבל כרגע ל־10000 ההודעות העדכניות ביותר ב־6 החודשים האחרונים."
+          description: "פעולה זו תייצא את כל ההודעות מכל הערוצים."
           create_export: "יצירת ייצוא"
           export_has_started: "הייצוא החל. תישלח אליך הודעה פרטית כשהוא מוכן."
       direct_messages:
@@ -600,7 +601,6 @@ he:
       thread:
         title: "כותרת"
         view_thread: הצגת שרשור
-        default_title: "שרשור"
         replies:
           one: "תגובה אחת"
           two: "%{count} תגובות"

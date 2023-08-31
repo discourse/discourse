@@ -359,10 +359,12 @@ describe Chat::ChannelFetcher do
       Chat::DirectMessageUser.create!(direct_message: dm_channel2, user: user1)
       Chat::DirectMessageUser.create!(direct_message: dm_channel2, user: user2)
 
-      Fabricate(:chat_message, user: user1, chat_channel: direct_message_channel1)
-      Fabricate(:chat_message, user: user1, chat_channel: direct_message_channel2)
+      dm_1 = Fabricate(:chat_message, user: user1, chat_channel: direct_message_channel1)
+      dm_2 = Fabricate(:chat_message, user: user1, chat_channel: direct_message_channel2)
 
+      direct_message_channel1.update!(last_message: dm_1)
       direct_message_channel1.last_message.update!(created_at: 1.day.ago)
+      direct_message_channel2.update!(last_message: dm_2)
       direct_message_channel2.last_message.update!(created_at: 1.hour.ago)
 
       expect(described_class.secured_direct_message_channels(user1.id, guardian).map(&:id)).to eq(

@@ -20,10 +20,10 @@
         </ul>
 
         <DButton
-          @class="btn-default"
           @action={{action "newTagGroup"}}
           @icon="plus"
           @label="tagging.groups.new"
+          class="btn-default"
         />
       </div>
     {{/if}}
@@ -34,5 +34,4 @@
       <div class="alert info">{{i18n "tagging.groups.disabled"}}</div>
     </div>
   {{/if}}
-
 </div>
