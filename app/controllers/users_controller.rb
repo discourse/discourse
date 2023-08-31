@@ -1550,8 +1550,8 @@ class UsersController < ApplicationController
     render json:
              success_json.merge(
                challenge: challenge_session.challenge,
-               rp_id: challenge_session.rp_id,
-               rp_name: challenge_session.rp_name,
+               rp_id: DiscourseWebauthn.rp_id,
+               rp_name: DiscourseWebauthn.rp_name,
                supported_algorithms: ::DiscourseWebauthn::SUPPORTED_ALGORITHMS,
                user_secure_id: current_user.create_or_fetch_secure_identifier,
                existing_active_credential_ids:
@@ -1568,7 +1568,7 @@ class UsersController < ApplicationController
       current_user,
       params,
       challenge: DiscourseWebauthn.challenge(current_user, secure_session),
-      rp_id: DiscourseWebauthn.rp_id(current_user, secure_session),
+      rp_id: DiscourseWebauthn.rp_id,
       origin: Discourse.base_url,
     ).register_second_factor_security_key
     render json: success_json
