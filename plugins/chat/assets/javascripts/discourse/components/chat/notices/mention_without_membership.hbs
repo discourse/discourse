@@ -2,7 +2,7 @@
   {{#if this.invitationsSent}}
     <span
       class="mention-without-membership-notice__invitation-sent"
-      {{chat/later-fn this.dismiss 3000}}
+      {{chat/later-fn @clearNotice 3000}}
     >
       {{d-icon "check"}}
       <span>

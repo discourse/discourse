@@ -28,9 +28,4 @@ export default class MentionWithoutMembership extends Component {
       popupAjaxError(error);
     }
   }
-
-  @action
-  dismiss() {
-    this.args.clearNotice(this.args.notice);
-  }
 }
