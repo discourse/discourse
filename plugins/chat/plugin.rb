@@ -24,6 +24,7 @@ register_svg_icon "file-image"
 
 # route: /admin/plugins/chat
 add_admin_route "chat.admin.title", "chat"
+hide_plugin
 
 GlobalSetting.add_default(:allow_unsecure_chat_uploads, false)
 
