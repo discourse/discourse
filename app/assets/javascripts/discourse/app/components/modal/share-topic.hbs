@@ -43,31 +43,31 @@
 
         {{#if this.allowInvites}}
           <DButton
-            @class="btn-default invite"
             @label="topic.share.invite_users"
             @icon="user-plus"
-            @action={{action "inviteUsers"}}
+            @action={{this.inviteUsers}}
+            class="btn-default invite"
           />
         {{/if}}
 
         {{#if this.topic.details.can_reply_as_new_topic}}
           {{#if this.topic.isPrivateMessage}}
             <DButton
-              @action={{action "replyAsNewTopic"}}
-              @class="btn-default new-topic"
+              @action={{this.replyAsNewTopic}}
               @icon="plus"
-              @aria-label="post.reply_as_new_private_message"
+              @ariaLabel="post.reply_as_new_private_message"
               @title="post.reply_as_new_private_message"
               @label="user.new_private_message"
+              class="btn-default new-topic"
             />
           {{else}}
             <DButton
-              @action={{action "replyAsNewTopic"}}
-              @class="btn-default new-topic"
+              @action={{this.replyAsNewTopic}}
               @icon="plus"
-              @aria-label="post.reply_as_new_topic"
+              @ariaLabel="post.reply_as_new_topic"
               @title="post.reply_as_new_topic"
               @label="topic.create"
+              class="btn-default new-topic"
             />
           {{/if}}
         {{/if}}

@@ -22,9 +22,9 @@
       <DButton
         @icon="cog"
         @action={{this.toggleShowOptions}}
-        class="bookmark-options-button"
         @ariaLabel="post.bookmarks.options"
         @title="post.bookmarks.options"
+        class="bookmark-options-button"
       />
     </div>
 
@@ -78,20 +78,20 @@
 
   <:footer>
     <DButton
-      id="save-bookmark"
       @label="bookmarks.save"
-      class="btn-primary"
       @action={{this.saveAndClose}}
+      id="save-bookmark"
+      class="btn-primary"
     />
     <DModalCancel @close={{action "closeWithoutSavingBookmark"}} />
     {{#if this.showDelete}}
       <DButton
-        id="delete-bookmark"
         @icon="trash-alt"
-        class="delete-bookmark btn-danger"
         @action={{this.delete}}
         @ariaLabel="post.bookmarks.actions.delete_bookmark.name"
         @title="post.bookmarks.actions.delete_bookmark.name"
+        id="delete-bookmark"
+        class="delete-bookmark btn-danger"
       />
     {{/if}}
   </:footer>

@@ -4,11 +4,11 @@
     "angle-double-down"
     "angle-double-up"
   }}
-  @class="btn-flat btn-link chat-drawer-header__expand-btn"
   @action={{@toggleExpand}}
   @title={{if
     this.chatStateManager.isDrawerExpanded
     "chat.collapse"
     "chat.expand"
   }}
+  class="btn-flat btn-link chat-drawer-header__expand-btn"
 />

@@ -79,6 +79,14 @@ export default class MoveToTopic extends Component {
     return this.canSplitTopic && this.currentUser?.admin;
   }
 
+  get canAddTags() {
+    return this.site.can_create_tag;
+  }
+
+  get canTagMessages() {
+    return this.site.can_tag_pms;
+  }
+
   @action
   performMove() {
     if (this.newTopic) {

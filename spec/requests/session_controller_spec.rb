@@ -120,7 +120,7 @@ RSpec.describe SessionController do
           expect(response_body_parsed["challenge"]).to eq(
             DiscourseWebauthn.challenge(user, secure_session),
           )
-          expect(DiscourseWebauthn.rp_id(user, secure_session)).to eq(Discourse.current_hostname)
+          expect(DiscourseWebauthn.rp_id).to eq(Discourse.current_hostname)
         end
       end
     end

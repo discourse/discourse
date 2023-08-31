@@ -71,8 +71,8 @@
         {{#if this.capabilities.hasContactPicker}}
           <DButton
             @icon="address-book"
-            @action={{action "searchContact"}}
-            @class="btn-primary open-contact-picker"
+            @action={{this.searchContact}}
+            class="btn-primary open-contact-picker"
           />
         {{/if}}
       </div>
@@ -165,8 +165,8 @@
   <DButton
     @icon="link"
     @label="user.invited.invite.save_invite"
-    @class="btn-primary save-invite"
-    @action={{action "saveInvite"}}
+    @action={{this.saveInvite}}
+    class="btn-primary save-invite"
   />
 
   <DButton
@@ -176,12 +176,12 @@
       "user.invited.reinvite"
       "user.invited.invite.send_invite_email"
     }}
-    @class="btn-primary send-invite"
-    @action={{action "saveInvite" true}}
+    @action={{fn this.saveInvite true}}
     @title={{unless
       this.isEmail
       "user.invited.invite.send_invite_email_instructions"
     }}
     @disabled={{not this.isEmail}}
+    class="btn-primary send-invite"
   />
 </div>

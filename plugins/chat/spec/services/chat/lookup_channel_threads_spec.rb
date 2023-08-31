@@ -126,13 +126,15 @@ RSpec.describe ::Chat::LookupChannelThreads do
           [thread_2, 1.day.ago],
           [thread_3, 2.seconds.ago],
         ].each do |thread, created_at|
-          Fabricate(
-            :chat_message,
-            user: current_user,
-            chat_channel: channel_1,
-            thread: thread,
-            created_at: created_at,
-          )
+          message =
+            Fabricate(
+              :chat_message,
+              user: current_user,
+              chat_channel: channel_1,
+              thread: thread,
+              created_at: created_at,
+            )
+          thread.update!(last_message: message)
         end
 
         expect(result.threads.map(&:id)).to eq([thread_3.id, thread_1.id, thread_2.id])
@@ -141,6 +143,7 @@ RSpec.describe ::Chat::LookupChannelThreads do
       it "sorts by unread over recency" do
         unread_message = Fabricate(:chat_message, chat_channel: channel_1, thread: thread_2)
         unread_message.update!(created_at: 2.days.ago)
+        thread_2.update!(last_message: unread_message)
 
         expect(result.threads.map(&:id)).to eq([thread_2.id, thread_1.id, thread_3.id])
       end

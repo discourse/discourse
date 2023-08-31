@@ -1694,7 +1694,6 @@ fr:
     enable_safe_mode: "Permettre aux utilisateurs d'utiliser le mode sans échec pour déboguer les extensions."
     rate_limit_create_topic: "Après la création d'un sujet, les utilisateurs doivent attendre (n) secondes avant de pouvoir en créer un nouveau."
     rate_limit_create_post: "Après avoir publié un message, les utilisateurs doivent attendre (n) secondes avant de pouvoir en publier un autre."
-    rate_limit_new_user_create_topic: "Après la création d'un sujet, les nouveaux utilisateurs doivent attendre (n) secondes avant de pouvoir en créer un nouveau."
     rate_limit_new_user_create_post: "Après avoir publié un message, les nouveaux utilisateurs doivent attendre (n) secondes avant de pouvoir en publier un autre."
     max_likes_per_day: "Nombre maximal de « J'aime » par utilisateur chaque jour."
     max_flags_per_day: "Nombre maximal de signalements par utilisateur chaque jour."
@@ -2115,7 +2114,6 @@ fr:
     retain_web_hook_events_period_days: "Nombre de jours de conservation des événements des Webhooks."
     retry_web_hook_events: "Réessayer jusqu'à 4 fois les événements de Webhooks qui ont échoué. Les intervalles entre chaque tentative sont de 1, 5, 25 et 125 minutes."
     revoke_api_keys_days: "Nombre de jours avant qu'une clé API inutilisée soit automatiquement révoquée (0 pour jamais)"
-    allow_user_api_keys: "Autoriser la génération des clés de l'API utilisateur"
     allow_user_api_key_scopes: "Liste des champs d'action autorisés pour les clés de l'API utilisateur"
     min_trust_level_for_user_api_key: |
       Niveau de confiance requis pour la génération de clés API utilisateur.<br>

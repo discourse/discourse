@@ -1619,7 +1619,6 @@ da:
     default_tags_tracking: "Liste over mærker, der spores som standard."
     default_tags_muted: "Liste over mærker, der er tavse som standard."
     default_tags_watching_first_post: "Liste over mærker, hvor første indlæg i hvert nyt emne vil blive overvåget som standard."
-    allow_user_api_keys: "Tillad generering af bruger API nøgler"
     allow_user_api_key_scopes: "Liste over tilladte anvendelsesområder for bruger-API-nøgler"
     expire_user_api_keys_days: "Antal dage før en bruger API-nøgle automatisk udløber (0 for aldrig)"
     tagging_enabled: "Aktivér mærker på emner?"

@@ -39,11 +39,11 @@
 
     <div class="control-group buttons">
       <DButton
-        @action={{action "save"}}
-        @type="submit"
+        @action={{this.save}}
         @disabled={{this.saving}}
-        @class="btn btn-primary group-form-save"
         @label="admin.groups.new.create"
+        type="submit"
+        class="btn-primary group-form-save"
       />
 
       <LinkTo @route="groups">

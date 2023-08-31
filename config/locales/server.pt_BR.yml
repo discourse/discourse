@@ -1694,7 +1694,6 @@ pt_BR:
     enable_safe_mode: "Permitir que os(as) usuários(as) insiram o modo de segurança para depurar plugins."
     rate_limit_create_topic: "Após criar um tópico, os(as) usuários(as) devem aguardar (n) segundos antes de criar um outro tópico."
     rate_limit_create_post: "Após postar, os(as) usuários(as) devem aguardar (n) segundos antes de criar outra postagem."
-    rate_limit_new_user_create_topic: "Após criar um tópico, novos(as) usuários(as) devem aguardar (n) segundos antes de criar outro tópico."
     rate_limit_new_user_create_post: "Após postar, novos(as) usuários(as) devem aguardar (n) segundos antes de criar outra postagem."
     max_likes_per_day: "Quantidade máxima de curtidas por usuário(a) a cada dia."
     max_flags_per_day: "Quantidade máxima de sinalizadores por usuário(a) a cada dia."
@@ -2115,7 +2114,6 @@ pt_BR:
     retain_web_hook_events_period_days: "Quantidade de dias para manter registros de eventos de webhook."
     retry_web_hook_events: "Repita automaticamente os eventos com falha do webhook quatro vezes. Os intervalos de tempo entre as tentativas são de 1, 5, 25 e 125 minutos."
     revoke_api_keys_days: "Quantidade de dias antes de uma chave de API não usada ser revogada automaticamente (0 para nunca)"
-    allow_user_api_keys: "Permitir geração de chaves de API do(a) usuário(a)"
     allow_user_api_key_scopes: "Lista de escopos permitidos para chaves de API do(a) usuário(a)"
     min_trust_level_for_user_api_key: |
       Nível de confiança necessário para geração de chaves de API do(a) usuário(a).<br>

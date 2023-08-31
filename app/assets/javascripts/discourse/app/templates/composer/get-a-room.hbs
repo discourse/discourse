@@ -11,8 +11,8 @@
 {{html-safe this.message.body}}
 
 <DButton
-  @class="btn-primary"
   @label="user.private_message"
   @icon="envelope"
-  @action={{action this.switchPM this.message}}
+  @action={{fn this.switchPM this.message}}
+  class="btn-primary"
 />

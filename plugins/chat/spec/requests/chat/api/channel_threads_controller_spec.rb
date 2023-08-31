@@ -106,6 +106,11 @@ RSpec.describe Chat::Api::ChannelThreadsController do
       )
     end
 
+    before do
+      thread_1.add(current_user)
+      thread_3.add(current_user)
+    end
+
     it "returns the threads the user has sent messages in for the channel" do
       get "/chat/api/channels/#{public_channel.id}/threads"
       expect(response.status).to eq(200)
