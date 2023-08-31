@@ -1058,7 +1058,7 @@ class BulkImport::Generic < BulkImport::Base
       next unless tag_id && user_id
       next unless existing_tag_users.add?([tag_id, user_id])
 
-      { tag_id: tag_id, user_id: user_id }
+      { tag_id: tag_id, user_id: user_id, notification_level: row["notification_level"] }
     end
 
     tag_users.close
