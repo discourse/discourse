@@ -1419,6 +1419,18 @@ class BulkImport::Base
       end
     end
 
+    # TODO Make this work for usernames as well
+    cooked.gsub!(/@(\w+)/) do
+      group_name = $1
+      lower_group_name = $1.downcase
+
+      if Group.where("LOWER(name) = ?", lower_group_name).exists?
+        %|<a class="mention-group" href="/groups/#{lower_group_name}">@#{group_name}</a>|
+      else
+        "@#{group_name}"
+      end
+    end
+
     # TODO Check if scrub or strip is inserting \x00 which is causing Postgres COPY to fail
     cooked.scrub.strip
     cooked.gsub!(/\x00/, "")

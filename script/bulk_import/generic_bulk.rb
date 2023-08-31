@@ -489,6 +489,8 @@ class BulkImport::Generic < BulkImport::Base
       ORDER BY topic_id, id
     SQL
 
+    group_names = Group.pluck(:id, :name).to_h
+
     create_posts(posts) do |row|
       next if row["raw"].blank?
       next unless (topic_id = topic_id_from_imported_id(row["topic_id"]))
@@ -497,12 +499,27 @@ class BulkImport::Generic < BulkImport::Base
       # TODO Ensure that we calculate the `like_count` if the column is empty, but the DB contains likes.
       # Otherwise #import_user_stats will not be able to calculate the correct `likes_received` value.
 
+      raw = row["raw"]
+
+      if row["mentions"].present?
+        mentions = JSON.parse(row["mentions"])
+
+        # TODO Implement mentions for types other than groups
+
+        mentions.each do |mention|
+          group_id = group_id_from_imported_id(mention["id"])
+          group_name = group_names[group_id]
+          puts "group not found -- #{mention["id"]}" unless group_name
+          raw.gsub!(mention["placeholder"], "@#{group_name}")
+        end
+      end
+
       {
         imported_id: row["id"],
         topic_id: topic_id,
         user_id: user_id_from_imported_id(row["user_id"]),
         created_at: to_datetime(row["created_at"]),
-        raw: row["raw"],
+        raw: raw,
         like_count: row["like_count"],
         reply_to_post_number:
           row["reply_to_post_id"] ? post_number_from_imported_id(row["reply_to_post_id"]) : nil,
