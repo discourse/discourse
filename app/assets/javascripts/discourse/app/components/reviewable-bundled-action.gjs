@@ -14,7 +14,7 @@ export default class ReviewableBundledAction extends Component {
       <DropdownSelectBox
         @nameProperty="label"
         @content={{@bundle.actions}}
-        @onChange={{this.performById}}
+        @onChange={{this.perform}}
         @options={{hash
           showCaret=true
           disabled=@reviewableUpdating
@@ -30,7 +30,7 @@ export default class ReviewableBundledAction extends Component {
       />
     {{else}}
       <DButton
-        @action={{this.performFirst}}
+        @action={{this.perform}}
         @translatedLabel={{this.first.label}}
         @disabled={{@reviewableUpdating}}
         class={{concatClass
@@ -60,13 +60,12 @@ export default class ReviewableBundledAction extends Component {
   }
 
   @action
-  performById(id) {
-    const _action = this.args.bundle.actions.find((a) => a.id === id);
-    this.args.performAction(_action);
-  }
-
-  @action
-  performFirst() {
-    this.args.performAction(this.first);
+  perform(id) {
+    if (id) {
+      const _action = this.args.bundle.actions.find((a) => a.id === id);
+      this.args.performAction(_action);
+    } else {
+      this.args.performAction(this.first);
+    }
   }
 }
