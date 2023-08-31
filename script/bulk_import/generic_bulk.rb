@@ -67,7 +67,10 @@ class BulkImport::Generic < BulkImport::Base
     # import_upload_references
     # import_user_stats
     # enable_category_settings
-    # import_category_about_topics
+  end
+
+  def execute_after
+    import_category_about_topics
 
     @source_db.close
     @uploads_db.close if @uploads_db
