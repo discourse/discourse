@@ -108,10 +108,10 @@ describe "Thread list in side panel | full page", type: :system do
       )
     end
 
-    it "shows the thread original message user avatar" do
+    it "doesn’t show the thread original message user avatar" do
       chat_page.visit_channel(channel)
       channel_page.open_thread_list
-      expect(thread_list_page.item_by_id(thread_1.id)).to have_css(
+      expect(thread_list_page.item_by_id(thread_1.id)).to have_no_css(
         thread_list_page.avatar_selector(thread_1.original_message.user),
       )
     end
@@ -123,16 +123,6 @@ describe "Thread list in side panel | full page", type: :system do
       channel_page.open_thread_list
       expect(thread_list_page.item_by_id(thread_1.id)).to have_css(
         thread_list_page.last_reply_datetime_selector(last_reply),
-      )
-    end
-
-    it "shows replies count" do
-      chat_page.visit_channel(channel)
-      channel_page.open_thread_list
-
-      expect(thread_list_page.item_by_id(thread_1.id)).to have_css(
-        ".chat-thread-list-item__replies-count",
-        text: I18n.t("js.chat.thread.replies", count: thread_1.replies_count_cache),
       )
     end
 
