@@ -1052,14 +1052,14 @@ class BulkImport::Generic < BulkImport::Base
        ORDER BY tag_id, user_id
     SQL
 
-    existing_tag_users = TagUser.pluck(:tag_id, :user_id).to_set
+    existing_tag_users = TagUser.distinct.pluck(:user_id).to_set
 
     create_tag_users(tag_users) do |row|
       tag_id = @tag_mapping[row["tag_id"]]
       user_id = user_id_from_imported_id(row["user_id"])
 
       next unless tag_id && user_id
-      next unless existing_tag_users.add?([tag_id, user_id])
+      next if existing_tag_users.include?(user_id)
 
       { tag_id: tag_id, user_id: user_id, notification_level: row["notification_level"] }
     end
