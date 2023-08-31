@@ -229,13 +229,13 @@ describe "Composer Form Templates", type: :system do
     composer.fill_title(topic_title)
     composer.fill_form_template_field("input", "Bruce Wayne")
     composer.create
-    topic = Topic.where(user: user, title: topic_title)
-    topic_id = Topic.where(user: user, title: topic_title).pluck(:id)
-    post = Post.where(topic_id: topic_id).first
 
     expect(topic_page).to have_topic_title(topic_title)
     expect(find("#{topic_page.post_by_number_selector(1)} .cooked p")).to have_content(
       "Bruce Wayne",
+    )
+    expect(find("#{topic_page.post_by_number_selector(1)} .cooked h3")).to have_content(
+      "What is your full name?",
     )
   end
 
