@@ -535,6 +535,8 @@ class BulkImport::Base
 
   CATEGORY_GROUP_COLUMNS ||= %i[id category_id group_id permission_type created_at updated_at]
 
+  CATEGORY_TAG_GROUP_COLUMNS ||= %i[category_id tag_group_id created_at updated_at]
+
   TOPIC_COLUMNS ||= %i[
     id
     archetype
@@ -688,6 +690,10 @@ class BulkImport::Base
 
   def create_category_groups(rows, &block)
     create_records(rows, "category_group", CATEGORY_GROUP_COLUMNS, &block)
+  end
+
+  def create_category_tag_groups(rows, &block)
+    create_records(rows, "category_tag_group", CATEGORY_TAG_GROUP_COLUMNS, &block)
   end
 
   def create_topics(rows, &block)
@@ -959,6 +965,12 @@ class BulkImport::Base
     category_group[:created_at] = NOW
     category_group[:updated_at] = NOW
     category_group
+  end
+
+  def process_category_tag_group(category_tag_group)
+    category_tag_group[:created_at] = NOW
+    category_tag_group[:updated_at] = NOW
+    category_tag_group
   end
 
   def process_topic(topic)

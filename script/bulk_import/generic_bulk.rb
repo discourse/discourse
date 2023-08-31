@@ -46,14 +46,20 @@ class BulkImport::Generic < BulkImport::Base
 
     import_group_members
 
+    import_tag_groups
+    import_tags
+
     import_categories
+    import_category_tag_groups
     import_category_permissions
 
     import_topics
     import_posts
+
+    import_topic_tags
     import_topic_allowed_users
+
     import_likes
-    import_tags
     import_votes
     import_answers
 
@@ -104,6 +110,31 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     categories.close
+  end
+
+  def import_category_tag_groups
+    puts "", "Importing category tag groups..."
+
+    category_tag_groups = query(<<~SQL)
+      SELECT c.id AS category_id, t.value AS tag_group_id
+        FROM categories c,
+             JSON_EACH(c.tag_group_ids) t
+       ORDER BY category_id, tag_group_id
+    SQL
+
+    existing_category_tag_groups = CategoryTagGroup.pluck(:category_id, :tag_group_id).to_set
+
+    create_category_tag_groups(category_tag_groups) do |row|
+      category_id = category_id_from_imported_id(row["category_id"])
+      tag_group_id = @tag_group_mapping[row["tag_group_id"]]
+
+      next unless category_id && tag_group_id
+      next unless existing_category_tag_groups.add?([category_id, tag_group_id])
+
+      { category_id: category_id, tag_group_id: tag_group_id }
+    end
+
+    category_tag_groups.close
   end
 
   def import_category_permissions
@@ -762,39 +793,70 @@ class BulkImport::Generic < BulkImport::Base
     puts "  Update took #{(Time.now - start_time).to_i} seconds."
   end
 
+  def import_tag_groups
+    puts "", "Importing tag groups..."
+
+    SiteSetting.tags_listed_by_group = true
+
+    @tag_group_mapping = {}
+
+    tag_groups = query(<<~SQL)
+      SELECT *
+        FROM tag_groups
+       ORDER BY id
+    SQL
+
+    tag_groups.each do |row|
+      tag_group = TagGroup.find_or_create_by(name: row["name"])
+      @tag_group_mapping[row["id"]] = tag_group.id
+    end
+
+    tag_groups.close
+  end
+
   def import_tags
     puts "", "Importing tags..."
 
-    SiteSetting.max_tag_length = 100
+    SiteSetting.max_tag_length = 100 if SiteSetting.max_tag_length < 100
 
-    tag_mapping = {}
+    @tag_mapping = {}
 
     tags = query(<<~SQL)
       SELECT *
         FROM tags
+       ORDER BY id
     SQL
 
     tags.each do |row|
       cleaned_tag_name = DiscourseTagging.clean_tag(row["name"])
       tag = Tag.find_or_create_by(name: cleaned_tag_name)
-      tag_mapping[row["id"]] = tag.id
+      @tag_mapping[row["id"]] = tag.id
+
+      if row["tag_group_id"]
+        TagGroupMembership.find_or_create_by(
+          tag_id: tag.id,
+          tag_group_id: @tag_group_mapping[row["tag_group_id"]],
+        )
+      end
     end
 
     tags.close
+  end
+
+  def import_topic_tags
+    puts "", "Importing topic tags..."
 
     topic_tags = query(<<~SQL)
-      SELECT t.id AS topic_id, ta.value AS tag_id
-        FROM topics t,
-             JSON_EACH(t.tag_ids) ta
-       WHERE tag_ids IS NOT NULL
-       GROUP BY topic_id, tag_id
+      SELECT *
+        FROM topic_tags
+       ORDER BY topic_id, tag_id
     SQL
 
     existing_topic_tags = TopicTag.pluck(:topic_id, :tag_id).to_set
 
     create_topic_tags(topic_tags) do |row|
       topic_id = topic_id_from_imported_id(row["topic_id"])
-      tag_id = tag_mapping[row["tag_id"]]
+      tag_id = @tag_mapping[row["tag_id"]]
 
       next unless topic_id && tag_id
       next unless existing_topic_tags.add?([topic_id, tag_id])
