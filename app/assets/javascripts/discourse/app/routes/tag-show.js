@@ -89,6 +89,10 @@ export default DiscourseRoute.extend({
       filter += `/${tagId}/l/${topicFilter}`;
     } else if (additionalTags) {
       filter = `tags/intersection/${tagId}/${additionalTags.join("/")}`;
+
+      if (transition.to.queryParams["category"]) {
+        filteredQueryParams["category"] = transition.to.queryParams["category"];
+      }
     } else {
       filter = `tag/${tagId}/l/${topicFilter}`;
     }
