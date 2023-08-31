@@ -16,6 +16,7 @@ export const queryParams = {
   subset: { replace: true, refreshModel: true },
   period: { replace: true, refreshModel: true },
   topic_ids: { replace: true, refreshModel: true },
+  category: { replace: true, refreshModel: true },
   group_name: { replace: true, refreshModel: true },
   tags: { replace: true, refreshModel: true },
   match_all_tags: { replace: true, refreshModel: true },
