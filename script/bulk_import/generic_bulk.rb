@@ -66,6 +66,7 @@ class BulkImport::Generic < BulkImport::Base
     import_upload_references
     import_user_stats
     enable_category_settings
+    import_category_about_topics
 
     @source_db.close
     @uploads_db.close if @uploads_db
@@ -109,12 +110,21 @@ class BulkImport::Generic < BulkImport::Base
       }
     end
 
+    categories.close
+  end
+
+  def import_category_about_topics
     puts "", %|Creating "About..." topics for categories...|
     start_time = Time.now
     Category.ensure_consistency!
     Site.clear_cache
 
-    categories.reset
+    categories = query(<<~SQL)
+      SELECT id, about_topic_title
+        FROM categories
+       WHERE about_topic_title IS NOT NULL
+       ORDER BY id
+    SQL
 
     categories.each do |row|
       if (about_topic_title = row["about_topic_title"]).present?
@@ -123,9 +133,9 @@ class BulkImport::Generic < BulkImport::Base
       end
     end
 
-    puts "  Creating took #{(Time.now - start_time).to_i} seconds."
-
     categories.close
+
+    puts "  Creating took #{(Time.now - start_time).to_i} seconds."
   end
 
   def import_category_tag_groups
