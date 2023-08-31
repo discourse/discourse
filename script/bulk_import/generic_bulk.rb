@@ -109,6 +109,22 @@ class BulkImport::Generic < BulkImport::Base
       }
     end
 
+    puts "", %|Creating "About..." topics for categories...|
+    start_time = Time.now
+    Category.ensure_consistency!
+    Site.clear_cache
+
+    categories.reset
+
+    categories.each do |row|
+      if (about_topic_title = row["about_topic_title"]).present?
+        category_id = category_id_from_imported_id(row["id"])
+        Category.find(category_id).topic.update!(title: about_topic_title)
+      end
+    end
+
+    puts "  Creating took #{(Time.now - start_time).to_i} seconds."
+
     categories.close
   end
 
