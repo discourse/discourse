@@ -170,33 +170,11 @@ export default class ChatMessage {
   }
 
   async cook() {
-    const site = getOwner(this).lookup("service:site");
-
     if (this.isDestroyed || this.isDestroying) {
       return;
     }
-
-    const markdownOptions = {
-      featuresOverride:
-        site.markdown_additional_options?.chat?.limited_pretty_text_features,
-      markdownItRules:
-        site.markdown_additional_options?.chat
-          ?.limited_pretty_text_markdown_rules,
-      hashtagTypesInPriorityOrder:
-        site.hashtag_configurations?.["chat-composer"],
-      hashtagIcons: site.hashtag_icons,
-    };
-
-    if (ChatMessage.cookFunction) {
-      this.cooked = ChatMessage.cookFunction(this.message);
-    } else {
-      const cookFunction = await generateCookFunction(markdownOptions);
-      ChatMessage.cookFunction = (raw) => {
-        return transformAutolinks(cookFunction(raw));
-      };
-
-      this.cooked = ChatMessage.cookFunction(this.message);
-    }
+    await this.#ensureCookFunctionInitialized();
+    this.cooked = ChatMessage.cookFunction(this.message);
   }
 
   get read() {
@@ -359,6 +337,31 @@ export default class ChatMessage {
         );
       }
     }
+  }
+
+  async #ensureCookFunctionInitialized() {
+    if (ChatMessage.cookFunction) {
+      return;
+    }
+
+    const cookFunction = await generateCookFunction(this.#markdownOptions);
+    ChatMessage.cookFunction = (raw) => {
+      return transformAutolinks(cookFunction(raw));
+    };
+  }
+
+  get #markdownOptions() {
+    const site = getOwner(this).lookup("service:site");
+    return {
+      featuresOverride:
+        site.markdown_additional_options?.chat?.limited_pretty_text_features,
+      markdownItRules:
+        site.markdown_additional_options?.chat
+          ?.limited_pretty_text_markdown_rules,
+      hashtagTypesInPriorityOrder:
+        site.hashtag_configurations?.["chat-composer"],
+      hashtagIcons: site.hashtag_icons,
+    };
   }
 
   #initChatMessageReactionModel(reactions = []) {
