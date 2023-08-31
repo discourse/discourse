@@ -49,17 +49,10 @@
 
     <script src="/testem.js" integrity="" data-embroider-ignore></script>
     <script src="{{rootURL}}assets/vendor.js"></script>
-    
-    <discourse-chunked-script entrypoint="test-support">
-      <script src="{{rootURL}}assets/test-support.js"></script>
-      <ember-auto-import-scripts entrypoint="tests"></ember-auto-import-scripts>
-    </discourse-chunked-script>
-
-    <discourse-chunked-script entrypoint="discourse">
-      <ember-auto-import-scripts entrypoint="app"></ember-auto-import-scripts>
-      <script src="{{rootURL}}assets/discourse.js"></script>
-    </discourse-chunked-script>
-
+    <ember-auto-import-scripts entrypoint="app"></ember-auto-import-scripts>
+    <script src="{{rootURL}}assets/test-support.js"></script>
+    <ember-auto-import-scripts entrypoint="tests"></ember-auto-import-scripts>
+    <script src="{{rootURL}}assets/discourse.js"></script>
     <script src="{{rootURL}}assets/markdown-it-bundle.js"></script>
     <script src="{{rootURL}}assets/admin.js"></script>
     <script src="{{rootURL}}assets/wizard.js"></script>

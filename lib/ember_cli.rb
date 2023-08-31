@@ -37,15 +37,19 @@ module EmberCli
   def self.script_chunks
     return @@chunk_infos if defined?(@@chunk_infos)
 
-    chunk_infos = {}
+    raw_chunk_infos =
+      JSON.parse(
+        File.read("#{Rails.configuration.root}/app/assets/javascripts/discourse/dist/chunks.json"),
+      )
 
-    begin
-      chunk_infos.merge! parse_chunks_from_html("tests/index.html")
-    rescue Errno::ENOENT
-      # production build
-    end
-
-    chunk_infos.merge! parse_chunks_from_html("index.html")
+    chunk_infos =
+      raw_chunk_infos["scripts"]
+        .map do |info|
+          logical_name = info["afterFile"][%r{\Aassets/(.*)\.js\z}, 1]
+          chunks = info["scriptChunks"].map { |filename| filename[%r{\Aassets/(.*)\.js\z}, 1] }
+          [logical_name, chunks]
+        end
+        .to_h
 
     @@chunk_infos = chunk_infos if Rails.env.production?
     chunk_infos
@@ -73,23 +77,5 @@ module EmberCli
       if (full_path = Dir.glob("app/assets/javascripts/discourse/dist/assets/workbox-*")[0])
         File.basename(full_path)
       end
-  end
-
-  def self.parse_chunks_from_html(path)
-    html = File.read("#{Rails.root}/app/assets/javascripts/discourse/dist/#{path}")
-    doc = Nokogiri::HTML5.parse(html)
-
-    chunk_infos = {}
-
-    doc
-      .css("discourse-chunked-script")
-      .each do |discourse_script|
-        entrypoint = discourse_script.attr("entrypoint")
-        chunk_infos[entrypoint] = discourse_script
-          .css("script[src]")
-          .map { |script| script.attr("src")[%r{\A/assets/(.*)\.js\z}, 1] }
-      end
-
-    chunk_infos
   end
 end
