@@ -25,19 +25,19 @@ export default class ChatThreadParticipants extends Component {
   </template>
 
   get showParticipants() {
-    if (this.includeOriginalMessageParticipant) {
+    if (this.includeOriginalMessageUser) {
       return this.participantsUsers.length > 1;
     }
 
     return this.participantsUsers.length > 0;
   }
 
-  get includeOriginalMessageParticipant() {
-    return this.args.includeOriginalMessageParticipant ?? true;
+  get includeOriginalMessageUser() {
+    return this.args.includeOriginalMessageUser ?? true;
   }
 
   get participantsUsers() {
-    if (this.includeOriginalMessageParticipant) {
+    if (this.includeOriginalMessageUser) {
       return this.args.thread.preview.participantUsers;
     }
 
