@@ -20,6 +20,24 @@ class DistributedCache < MessageBus::DistributedCache
     value
   end
 
+  def defer_get_set_bulk(ks, key_blk, &blk)
+    found_keys, missing_keys = ks.partition { |k| hash.key?(key_blk.call(k)) }
+    found_hash = found_keys.map { |key| [key, self[key_blk.call(key)]] }.to_h
+
+    if missing_keys.present?
+      missing_values = blk.call(missing_keys.freeze)
+      missing_hash = missing_keys.zip(missing_values).to_h
+
+      Scheduler::Defer.later("#{@key}_bulk_set") do
+        missing_hash.each { |key, value| self[key_blk.call(key)] = value }
+      end
+
+      ks.zip(missing_hash.merge(found_hash).values_at(*ks)).to_h
+    else
+      found_hash
+    end
+  end
+
   def clear(after_commit: true)
     if after_commit && !GlobalSetting.skip_db?
       DB.after_commit { super() }
