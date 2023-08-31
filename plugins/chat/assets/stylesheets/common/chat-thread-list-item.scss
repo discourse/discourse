@@ -76,19 +76,8 @@
     }
   }
 
-  &__metadata__separator {
-    padding-inline: 0.5rem;
-    font-weight: 700;
-    font-size: 20px;
-    text-align: center;
-  }
-
   &__participants {
     margin-right: 0.25rem;
-  }
-
-  &__replies-count {
-    margin-left: auto;
   }
 
   &__last-reply-timestamp {
