@@ -1842,6 +1842,14 @@ security:
     default: false
   display_personal_messages_tag_counts:
     default: false
+  cross_origin_opener_policy_header:
+    default: "unsafe-none"
+    type: enum
+    choices:
+      - "unsafe-none"
+      - "same-origin"
+      - "same-origin-allow-popups"
+    hidden: true
 
 onebox:
   post_onebox_maxlength:
@@ -2674,7 +2682,6 @@ user_preferences:
     default: false
   default_hide_profile_and_presence:
     default: false
-
   default_other_new_topic_duration_minutes:
     enum: "NewTopicDurationSiteSetting"
     default: 2880

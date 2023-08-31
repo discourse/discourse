@@ -517,6 +517,37 @@ RSpec.describe ApplicationController do
     end
   end
 
+  describe "setting `Cross-Origin-Opener-Policy` header" do
+    describe "when `cross_origin_opener_policy_header` site setting is set to `same-origin`" do
+      before { SiteSetting.cross_origin_opener_policy_header = "same-origin" }
+
+      it "sets `Cross-Origin-Opener-Policy` header to `same-origin`" do
+        get "/latest"
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Cross-Origin-Opener-Policy"]).to eq("same-origin")
+      end
+
+      it "does not set the `Cross-Origin-Opener-Policy` header for a JSON request" do
+        get "/latest.json"
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Cross-Origin-Opener-Policy"]).to eq(nil)
+      end
+    end
+
+    describe "when `cross_origin_opener_policy_header` site setting is set to `unsafe-none`" do
+      it "does not set the `Cross-Origin-Opener-Policy` header" do
+        SiteSetting.cross_origin_opener_policy_header = "unsafe-none"
+
+        get "/latest"
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Cross-Origin-Opener-Policy"]).to eq(nil)
+      end
+    end
+  end
+
   describe "splash_screen" do
     let(:admin) { Fabricate(:admin) }
 
