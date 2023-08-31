@@ -48,6 +48,7 @@ class BulkImport::Generic < BulkImport::Base
 
     import_tag_groups
     import_tags
+    import_tag_users
 
     import_categories
     import_category_tag_groups
@@ -1037,6 +1038,30 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     solutions.close
+  end
+
+  def import_tag_users
+    puts "", "Importing tag users..."
+
+    tag_users = query(<<~SQL)
+      SELECT *
+        FROM tag_users
+       ORDER BY tag_id, user_id
+    SQL
+
+    existing_tag_users = TagUser.pluck(:tag_id, :user_id).to_set
+
+    create_tag_users(tag_users) do |row|
+      tag_id = @tag_mapping[row["tag_id"]]
+      user_id = user_id_from_imported_id(row["user_id"])
+
+      next unless tag_id && user_id
+      next unless existing_tag_users.add?([tag_id, user_id])
+
+      { tag_id: tag_id, user_id: user_id }
+    end
+
+    tag_users.close
   end
 
   def enable_category_settings

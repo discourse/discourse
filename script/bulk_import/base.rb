@@ -598,6 +598,8 @@ class BulkImport::Base
 
   TOPIC_TAG_COLUMNS ||= %i[topic_id tag_id created_at updated_at]
 
+  TAG_USER_COLUMNS ||= %i[tag_id user_id notification_level created_at updated_at]
+
   UPLOAD_COLUMNS ||= %i[
     id
     user_id
@@ -714,6 +716,10 @@ class BulkImport::Base
 
   def create_topic_tags(rows, &block)
     create_records(rows, "topic_tag", TOPIC_TAG_COLUMNS, &block)
+  end
+
+  def create_tag_users(rows, &block)
+    create_records(rows, "tag_user", TAG_USER_COLUMNS, &block)
   end
 
   def create_uploads(rows, &block)
@@ -1052,6 +1058,12 @@ class BulkImport::Base
     topic_tag[:created_at] = NOW
     topic_tag[:updated_at] = NOW
     topic_tag
+  end
+
+  def process_tag_user(tag_user)
+    tag_user[:created_at] = NOW
+    tag_user[:updated_at] = NOW
+    tag_user
   end
 
   def process_upload(upload)
