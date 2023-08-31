@@ -4,7 +4,7 @@
       @action={{action "displayRaw"}}
       @label="post.raw_email.displays.raw.button"
       @title="post.raw_email.displays.raw.title"
-      @class={{if this.showRawEmail "active"}}
+      class={{if this.showRawEmail "active"}}
     />
 
     {{#if this.textPart}}
@@ -12,7 +12,7 @@
         @action={{action "displayTextPart"}}
         @label="post.raw_email.displays.text_part.button"
         @title="post.raw_email.displays.text_part.title"
-        @class={{if this.showTextPart "active"}}
+        class={{if this.showTextPart "active"}}
       />
     {{/if}}
 
@@ -21,7 +21,7 @@
         @action={{action "displayHtmlPart"}}
         @label="post.raw_email.displays.html_part.button"
         @title="post.raw_email.displays.html_part.title"
-        @class={{if this.showHtmlPart "active"}}
+        class={{if this.showHtmlPart "active"}}
       />
     {{/if}}
   </div>

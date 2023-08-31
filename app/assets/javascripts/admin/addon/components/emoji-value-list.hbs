@@ -3,11 +3,10 @@
     {{#each this.collection as |data index|}}
       <li class="value" data-index={{index}}>
         <DButton
-          @action={{action "removeValue"}}
-          @actionParam={{data}}
+          @action={{fn this.removeValue data}}
           @icon="times"
-          @class="remove-value-btn btn-small"
           @disabled={{not data.isEditable}}
+          class="remove-value-btn btn-small"
         />
 
         <div
@@ -28,14 +27,14 @@
 
         {{#if this.showUpDownButtons}}
           <DButton
-            @action={{action "shift" -1 index}}
+            @action={{fn this.shift -1 index}}
             @icon="arrow-up"
-            @class="shift-up-value-btn btn-small"
+            class="shift-up-value-btn btn-small"
           />
           <DButton
-            @action={{action "shift" 1 index}}
+            @action={{fn this.shift 1 index}}
             @icon="arrow-down"
-            @class="shift-down-value-btn btn-small"
+            class="shift-down-value-btn btn-small"
           />
         {{/if}}
       </li>
@@ -45,11 +44,10 @@
 
 <div class="value">
   <DButton
-    @action={{action "editValue"}}
-    @actionParam={{this.data}}
+    @action={{fn this.editValue this.data}}
     @icon="discourse-emojis"
-    @class="add-emoji-button d-editor-textarea-wrapper"
     @label="admin.site_settings.emoji_list.add_emoji_button.label"
+    class="add-emoji-button d-editor-textarea-wrapper"
   />
 </div>
 

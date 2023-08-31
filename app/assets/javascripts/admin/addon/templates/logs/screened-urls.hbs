@@ -2,11 +2,11 @@
   {{i18n "admin.logs.screened_urls.description"}}
 </p>
 <DButton
-  @class="btn-default"
-  @action={{action "exportScreenedUrlList"}}
+  @action={{this.exportScreenedUrlList}}
   @title="admin.export_csv.button_title.screened_url"
   @icon="download"
   @label="admin.export_csv.button_text"
+  class="btn-default"
 />
 <br />
 

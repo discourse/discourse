@@ -76,9 +76,8 @@
   {{#each this.pages as |pageState|}}
     <DButton
       @translatedLabel={{pageState.page}}
-      @action={{action "changePage"}}
-      @actionParam={{pageState.index}}
-      @class={{pageState.class}}
+      @action={{fn this.changePage pageState.index}}
+      class={{pageState.class}}
     />
   {{/each}}
 </div>

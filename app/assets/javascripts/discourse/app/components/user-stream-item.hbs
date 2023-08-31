@@ -102,18 +102,16 @@
 {{#if @item.editableDraft}}
   <div class="user-stream-item-draft-actions">
     <DButton
-      @action={{@resumeDraft}}
-      @actionParam={{@item}}
+      @action={{fn @resumeDraft @item}}
       @icon="pencil-alt"
       @label="drafts.resume"
-      @class="btn-default resume-draft"
+      class="btn-default resume-draft"
     />
     <DButton
-      @action={{@removeDraft}}
-      @actionParam={{@item}}
+      @action={{fn @removeDraft @item}}
       @icon="far-trash-alt"
-      @class="btn-danger remove-draft"
       @title="drafts.remove"
+      class="btn-danger remove-draft"
     />
   </div>
 {{/if}}

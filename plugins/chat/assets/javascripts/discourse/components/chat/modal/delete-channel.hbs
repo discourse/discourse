@@ -22,11 +22,11 @@
   <:footer>
     <DButton
       @disabled={{this.buttonDisabled}}
-      @class="btn-danger"
       @action={{this.deleteChannel}}
       @label="chat.channel_delete.confirm"
-      @id="chat-confirm-delete-channel"
+      id="chat-confirm-delete-channel"
+      class="btn-danger"
     />
-    <DButton @label="cancel" @class="btn-flat" @action={{@closeModal}} />
+    <DButton @label="cancel" @action={{@closeModal}} class="btn-flat" />
   </:footer>
 </DModal>

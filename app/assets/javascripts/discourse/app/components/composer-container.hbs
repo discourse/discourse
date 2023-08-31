@@ -141,9 +141,9 @@
                       @recipients={{this.composer.model.targetRecipients}}
                       @hasGroups={{this.composer.model.hasTargetGroups}}
                       @focusTarget={{this.composer.focusTarget}}
-                      @class={{concat
+                      @class={{concat-class
                         "users-input"
-                        (if this.composer.showWarning " can-warn")
+                        (if this.composer.showWarning "can-warn")
                       }}
                     />
                     {{#if this.composer.showWarning}}
@@ -322,9 +322,9 @@
             {{#if this.composer.showPreview}}
               <DButton
                 @action={{this.composer.togglePreview}}
-                @class="hide-preview"
                 @ariaLabel="composer.hide_preview"
                 @icon="pencil-alt"
+                class="hide-preview"
               />
             {{/if}}
           {{/if}}
@@ -384,8 +384,8 @@
               @action={{this.composer.togglePreview}}
               @translatedTitle={{this.composer.toggleText}}
               @icon="angle-double-left"
-              @class={{concat
-                "btn-flat btn-mini-toggle toggle-preview "
+              @class={{concat-class
+                "btn-flat btn-mini-toggle toggle-preview"
                 (unless this.composer.showPreview "active")
               }}
             />
