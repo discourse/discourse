@@ -39,6 +39,10 @@
         @label="user.new_private_message"
       />
     {{/if}}
+    <PluginOutlet
+      @name="user-messages-controls-bottom"
+      @outletArgs={{hash showNewPM=this.showNewPM}}
+    />
   </div>
 </div>
 
