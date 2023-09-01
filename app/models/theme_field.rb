@@ -201,7 +201,11 @@ class ThemeField < ActiveRecord::Base
 
     begin
       content = File.read(path)
-      Nokogiri.XML(content) { |config| config.options = Nokogiri::XML::ParseOptions::NOBLANKS }
+      if content.to_s.bytesize > SvgSprite::MAX_THEME_SPRITE_SIZE
+        error = "Error with #{self.name}: Icon sprite file is too large"
+      else
+        Nokogiri.XML(content) { |config| config.options = Nokogiri::XML::ParseOptions::NOBLANKS }
+      end
     rescue => e
       error = "Error with #{self.name}: #{e.inspect}"
     end
@@ -664,7 +668,7 @@ class ThemeField < ActiveRecord::Base
     rescue => e
       Discourse.warn_exception(e, message: "Failed to fetch svg sprite for theme field #{id}")
     else
-      if content.length > 4 * 1024**2
+      if content.length > SvgSprite::MAX_THEME_SPRITE_SIZE
         Rails.logger.warn(
           "can't store theme svg sprite for theme #{theme_id} and upload #{upload_id}, sprite too big",
         )
