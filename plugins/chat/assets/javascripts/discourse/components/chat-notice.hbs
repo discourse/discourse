@@ -1,0 +1,20 @@
+<div class="chat-notices__notice">
+
+  {{#if @notice.textContent}}
+    <p class="chat-notices__notice__content">
+      {{@notice.textContent}}
+    </p>
+  {{else}}
+    <this.component
+      @channel={{@channel}}
+      @notice={{@notice}}
+      @clearNotice={{this.clearNotice}}
+    />
+  {{/if}}
+
+  <DButton
+    @icon="times"
+    @action={{this.clearNotice}}
+    class="btn-flat chat-notices__notice__clear"
+  />
+</div>
