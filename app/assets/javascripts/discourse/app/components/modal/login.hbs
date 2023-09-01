@@ -10,7 +10,10 @@
     <PluginOutlet @name="login-before-modal-body" @connectorTagName="div" />
 
     {{#if this.site.mobileView}}
-      <Modal::Login::WelcomeHeader @wavingHandURL={{this.wavingHandURL}} />
+      <Modal::Login::WelcomeHeader
+        @wavingHandURL={{this.wavingHandURL}}
+        @createAccount={{this.createAccount}}
+      />
       {{#if this.showLoginButtons}}
         <LoginButtons @externalLogin={{this.externalLogin}} />
       {{/if}}
@@ -19,7 +22,10 @@
     {{#if this.canLoginLocal}}
       <div class={{if this.site.desktopView "login-left-side"}}>
         {{#if this.site.desktopView}}
-          <Modal::Login::WelcomeHeader @wavingHandURL={{this.wavingHandURL}} />
+          <Modal::Login::WelcomeHeader
+            @wavingHandURL={{this.wavingHandURL}}
+            @createAccount={{this.createAccount}}
+          />
         {{/if}}
         <Modal::Login::LocalLoginForm
           @loginName={{this.loginName}}
