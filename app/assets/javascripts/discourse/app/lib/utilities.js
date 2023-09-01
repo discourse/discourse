@@ -78,18 +78,18 @@ export function highlightPost(postNumber) {
     return;
   }
 
-  // sets focus to the first focusable anchor in the post
-  container.querySelector("a:not([tabindex='-1'])")?.focus();
-
-  const element = container.querySelector(".topic-body");
+  const element = container.querySelector(".topic-body, .small-action-desc");
   if (!element || element.classList.contains("highlighted")) {
     return;
   }
 
   element.classList.add("highlighted");
+  element.setAttribute("tabindex", "0");
+  element.focus();
 
   const removeHighlighted = function () {
     element.classList.remove("highlighted");
+    element.removeAttribute("tabindex");
     element.removeEventListener("animationend", removeHighlighted);
   };
   element.addEventListener("animationend", removeHighlighted);
