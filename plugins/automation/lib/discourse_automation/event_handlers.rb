@@ -156,5 +156,28 @@ module DiscourseAutomation
           end
         end
     end
+
+    def self.handle_stalled_topic(post)
+      return if post.topic.blank?
+      return if post.user_id != post.topic.user_id
+
+      DiscourseAutomation::Automation
+        .where(trigger: DiscourseAutomation::Triggerable::STALLED_TOPIC)
+        .where(enabled: true)
+        .find_each do |automation|
+          fields = automation.serialized_fields
+
+          categories = fields.dig("categories", "value")
+          next if categories && !categories.include?(post.topic.category_id)
+
+          tags = fields.dig("tags", "value")
+          next if tags && (tags & post.topic.tags.map(&:name)).empty?
+
+          DiscourseAutomation::UserGlobalNotice
+            .where(identifier: automation.id)
+            .where(user_id: post.user_id)
+            .destroy_all
+        end
+    end
   end
 end
