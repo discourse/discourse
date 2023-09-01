@@ -34,7 +34,7 @@ export default DiscourseRoute.extend({
   templateName: "tag.show",
 
   beforeModel() {
-    const controller = this.controllerFor("tag.show");
+    const controller = this.controllerFor(this.controllerName);
     controller.setProperties({
       loading: true,
       showInfo: false,
@@ -67,7 +67,7 @@ export default DiscourseRoute.extend({
       );
     }
 
-    const category = params.category_slug_path_with_id
+    let category = params.category_slug_path_with_id
       ? Category.findBySlugPathWithID(params.category_slug_path_with_id)
       : null;
     const filteredQueryParams = filterQueryParams(
@@ -92,6 +92,9 @@ export default DiscourseRoute.extend({
 
       if (transition.to.queryParams["category"]) {
         filteredQueryParams["category"] = transition.to.queryParams["category"];
+        category = Category.findBySlugPathWithID(
+          transition.to.queryParams["category"]
+        );
       }
     } else {
       filter = `tag/${tagId}/l/${topicFilter}`;
@@ -147,7 +150,7 @@ export default DiscourseRoute.extend({
   setupController(controller, model) {
     const noSubcategories = this.noSubcategories;
 
-    this.controllerFor("tag.show").setProperties({
+    this.controllerFor(this.controllerName).setProperties({
       model: model.tag,
       ...model,
       period: model.list.for_period,
@@ -176,7 +179,7 @@ export default DiscourseRoute.extend({
     const filterText = I18n.t(
       `filters.${this.navMode.replace("/", ".")}.title`
     );
-    const controller = this.controllerFor("tag.show");
+    const controller = this.controllerFor(this.controllerName);
 
     if (controller.tag?.id) {
       if (controller.category) {
@@ -220,7 +223,7 @@ export default DiscourseRoute.extend({
     if (this.currentUser?.has_topic_draft) {
       this.openTopicDraft();
     } else {
-      const controller = this.controllerFor("tag.show");
+      const controller = this.controllerFor(this.controllerName);
       this.composer
         .open({
           categoryId: controller.category?.id,
@@ -245,7 +248,7 @@ export default DiscourseRoute.extend({
 
   @action
   dismissRead(operationType) {
-    const controller = this.controllerFor("tag-show");
+    const controller = this.controllerFor(this.controllerName);
     let options = {
       tagName: controller.tag?.id,
     };
