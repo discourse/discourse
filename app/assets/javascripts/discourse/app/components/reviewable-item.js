@@ -154,7 +154,7 @@ export default Component.extend({
       });
 
       return ajax(
-        `/review/${reviewable.id}/perform/${performableAction.id}?version=${version}`,
+        `/review/${reviewable.id}/perform/${performableAction.server_action}?version=${version}`,
         {
           type: "PUT",
           data,
@@ -286,7 +286,8 @@ export default Component.extend({
       const requireRejectReason = performableAction.get(
         "require_reject_reason"
       );
-      const actionModalClass = actionModalClassMap[performableAction.id];
+      const actionModalClass =
+        actionModalClassMap[performableAction.server_action];
 
       if (message) {
         this.dialog.confirm({
