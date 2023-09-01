@@ -22,6 +22,6 @@ class PendingPostSerializer < ApplicationSerializer
   end
 
   def title
-    payload["title"] || topic.title
+    payload["title"] || topic&.title
   end
 end
