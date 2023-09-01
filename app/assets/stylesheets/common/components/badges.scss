@@ -33,18 +33,7 @@
       flex: 0 0 auto;
       width: 0.666rem;
       height: 0.666rem;
-      background: var(--category-badge-color);
       margin-right: 0.4em;
-    }
-
-    &.badge-subcategory {
-      &:before {
-        background: linear-gradient(
-          90deg,
-          var(--parent-category-badge-color) 50%,
-          var(--category-badge-color) 50%
-        );
-      }
     }
 
     .category-name {
