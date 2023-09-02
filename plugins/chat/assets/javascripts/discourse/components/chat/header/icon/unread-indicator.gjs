@@ -6,7 +6,21 @@ import {
   HEADER_INDICATOR_PREFERENCE_NEVER,
 } from "discourse/plugins/chat/discourse/controllers/preferences-chat";
 
+const MAX_UNREAD_COUNT = 99;
+
 export default class ChatHeaderIconUnreadIndicator extends Component {
+  <template>
+    {{#if this.showUrgentIndicator}}
+      <div class="chat-channel-unread-indicator -urgent">
+        <div class="chat-channel-unread-indicator__number">
+          {{this.unreadCountLabel}}
+        </div>
+      </div>
+    {{else if this.showUnreadIndicator}}
+      <div class="chat-channel-unread-indicator"></div>
+    {{/if}}
+  </template>
+
   @service chatTrackingStateManager;
   @service currentUser;
 
@@ -49,7 +63,9 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
   }
 
   get unreadCountLabel() {
-    return this.urgentCount > 99 ? "99+" : this.urgentCount;
+    return this.urgentCount > MAX_UNREAD_COUNT
+      ? `${MAX_UNREAD_COUNT}+`
+      : this.urgentCount;
   }
 
   #hasAnyIndicatorPreference(preferences) {
