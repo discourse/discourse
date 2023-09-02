@@ -15,6 +15,25 @@ module PageObjects
         self
       end
 
+      def click_profile_tab
+        click_link("user-menu-button-profile")
+        has_css?("#quick-access-profile")
+        self
+      end
+
+      def click_logout_button
+        find("#quick-access-profile .logout .btn").click
+        has_css?(".d-header .login-button")
+        self
+      end
+
+      def sign_out
+        open
+        click_profile_tab
+        click_logout_button
+        self
+      end
+
       def has_group_mentioned_notification?(topic, user_that_mentioned_group, group_mentioned)
         expect(find("#quick-access-replies .group-mentioned").text).to eq(
           "#{user_that_mentioned_group.username} @#{group_mentioned.name} #{topic.title}",
