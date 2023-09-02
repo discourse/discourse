@@ -665,12 +665,13 @@
     grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
     grid-gap: 1.5em;
     &.three-or-more-items {
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: minmax(160px, auto);
     }
   }
 
   .section-footer {
-    margin: 1.5em;
+    margin: 2.5em 0;
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -685,20 +686,16 @@
   align-items: flex-start;
 
   .new-feature-emoji {
-    font-size: 3.5em;
-    padding-right: 0.5em;
-    padding-left: 0.5em;
-    width: 25%;
-    text-align: center;
+    font-size: 2.25em;
+    margin-right: 0.5em;
   }
 
   .new-feature-content {
-    padding-right: 0.5em;
-    width: 75%;
+    padding-right: 1em;
     .header {
       font-size: var(--font-up-1);
       font-weight: bold;
-      margin-bottom: 0.5em;
+      margin: 0.25em 0 0.5em;
     }
   }
 }
