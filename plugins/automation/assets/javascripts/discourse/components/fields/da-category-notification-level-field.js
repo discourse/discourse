@@ -1,3 +1,3 @@
 import BaseField from "./da-base-field";
 
-export default class CategoryNotficiationLevelField extends BaseField {}
+export default class CategoryNotficationLevelField extends BaseField {}

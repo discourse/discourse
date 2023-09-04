@@ -6,6 +6,7 @@
       <CategoryNotificationsButton
         @value={{field.metadata.value}}
         @onChange={{action (mut field.metadata.value)}}
+        @options={{hash showFullTitle=true}}
       />
 
       {{fields/da-field-description description=description}}
