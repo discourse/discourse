@@ -996,7 +996,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
     mysql_query("SELECT userid, bandate FROM #{TABLE_PREFIX}userban").each do |b|
       user = User.find_by_id(user_id_from_imported_user_id(b["userid"]))
       if user
-        user.suspended_at = parse_timestamp(user["bandate"])
+        user.suspended_at = parse_timestamp(b["bandate"])
         user.suspended_till = 200.years.from_now
 
         if user.save
