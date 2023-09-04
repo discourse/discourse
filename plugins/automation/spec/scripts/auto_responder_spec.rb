@@ -60,6 +60,24 @@ describe "AutoResponder" do
           expect(topic.reload.posts.last.raw).to eq("this is foo")
         end
       end
+
+      context "when the word answer list has a wildcard (empty string) for key" do
+        before do
+          automation.upsert_field!(
+            "word_answer_list",
+            "key-value",
+            { value: [{ key: "", value: "this is a response" }].to_json },
+          )
+        end
+
+        it "creates an answer" do
+          topic = Fabricate(:topic, title: "What a foo day to walk")
+          post = create_post(topic: topic, raw: "this is a post with no keyword")
+          automation.trigger!("post" => post)
+
+          expect(topic.reload.posts.last.raw).to eq("this is a response")
+        end
+      end
     end
 
     context "when post contains a keyword" do

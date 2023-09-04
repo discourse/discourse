@@ -3,10 +3,12 @@
     {{fields/da-field-label label=label field=field}}
 
     <div class="controls">
-      <DButton
-        @label="discourse_automation.fields.key_value.label"
-        @action={{fn (mut this.showJsonEditorModal) true}}
-      />
+      <DButton @action={{fn (mut this.showJsonEditorModal) true}}>
+        {{i18n
+          "discourse_automation.fields.key_value.label"
+          count=this.keyCount
+        }}
+      </DButton>
 
       {{#if this.showJsonEditorModal}}
         <Modal::JsonSchemaEditor

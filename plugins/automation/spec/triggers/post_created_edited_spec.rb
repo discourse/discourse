@@ -6,7 +6,7 @@ describe "PostCreatedEdited" do
   before { SiteSetting.discourse_automation_enabled = true }
 
   let(:basic_topic_params) do
-    { title: "hello world topic", raw: "my name is fred", archetype_id: 1 }
+    { title: "hello world topic", raw: "my name is fred", archetype: Archetype.default }
   end
   let(:parent_category) { Fabricate(:category_with_definition) }
   let(:subcategory) { Fabricate(:category_with_definition, parent_category_id: parent_category.id) }
@@ -65,6 +65,134 @@ describe "PostCreatedEdited" do
             end
 
           expect(list).to be_blank
+        end
+      end
+    end
+
+    context "when group is restricted" do
+      fab!(:target_group) { Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]) }
+
+      before do
+        automation.upsert_field!(
+          "restricted_group",
+          "group",
+          { value: target_group.id },
+          target: "trigger",
+        )
+      end
+
+      it "fires the trigger" do
+        list =
+          capture_contexts do
+            PostCreator.create(
+              user,
+              basic_topic_params.merge(
+                target_group_names: [target_group.name],
+                archetype: Archetype.private_message,
+              ),
+            )
+          end
+
+        expect(list.length).to eq(1)
+        expect(list[0]["kind"]).to eq("post_created_edited")
+      end
+
+      context "when members of the group are ignored" do
+        before do
+          automation.upsert_field!(
+            "ignore_group_members",
+            "boolean",
+            { value: true },
+            target: "trigger",
+          )
+        end
+
+        it "doesn’t fire the trigger" do
+          list =
+            capture_contexts do
+              user.groups << target_group
+              PostCreator.create(
+                user,
+                basic_topic_params.merge(
+                  target_group_names: [target_group.name],
+                  archetype: Archetype.private_message,
+                ),
+              )
+            end
+
+          expect(list).to be_blank
+        end
+      end
+
+      context "when a different group is used" do
+        it "does not fire the trigger" do
+          list =
+            capture_contexts do
+              PostCreator.create(
+                user,
+                basic_topic_params.merge(
+                  target_group_names: [Fabricate(:group).name],
+                  archetype: Archetype.private_message,
+                ),
+              )
+            end
+
+          expect(list).to be_blank
+        end
+      end
+    end
+
+    context "when the post is being created from an incoming email" do
+      let(:reply_key) { "4f97315cc828096c9cb34c6f1a0d6fe8" }
+      fab!(:user) { Fabricate(:user, email: "discourse@bar.com") }
+      fab!(:topic) { create_topic(user: user) }
+      fab!(:post) { create_post(topic: topic) }
+
+      let!(:post_reply_key) do
+        Fabricate(:post_reply_key, reply_key: reply_key, user: user, post: post)
+      end
+
+      before do
+        SiteSetting.email_in = true
+        SiteSetting.reply_by_email_address = "reply+%{reply_key}@bar.com"
+        SiteSetting.alternative_reply_by_email_addresses = "alt+%{reply_key}@bar.com"
+      end
+
+      it "fires the trigger" do
+        list = capture_contexts { Email::Receiver.new(email("html_reply")).process! }
+
+        expect(list.length).to eq(1)
+        expect(list[0]["kind"]).to eq("post_created_edited")
+        expect(list[0]["action"].to_s).to eq("create")
+      end
+
+      context "when the incoming email is automated" do
+        before { SiteSetting.block_auto_generated_emails = false }
+
+        it "fires the trigger" do
+          list =
+            capture_contexts { Email::Receiver.new(email("auto_generated_unblocked")).process! }
+
+          expect(list.length).to eq(1)
+          expect(list[0]["kind"]).to eq("post_created_edited")
+        end
+
+        context "when ignore_automated is true" do
+          before do
+            automation.upsert_field!(
+              "ignore_automated",
+              "boolean",
+              { value: true },
+              target: "trigger",
+            )
+          end
+
+          it "doesn't fire the trigger" do
+            list =
+              capture_contexts { Email::Receiver.new(email("auto_generated_unblocked")).process! }
+
+            expect(list).to be_blank
+          end
         end
       end
     end

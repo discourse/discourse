@@ -21,7 +21,10 @@ en:
         confirm: "Are you sure you want to delete `%{name}`?"
       fields:
         key_value:
-          label: Configure
+          label:
+            zero: Configure
+            one: Edit Configuration (%{count})
+            other: Edit Configuration (%{count})
         user:
           label: User
         pm:
@@ -143,7 +146,16 @@ en:
               description: Will trigger only if post is created by user in these trust levels, defaults to any trust level
             restricted_category:
               label: Category
-              description: Optional, allows to limit trigger execution to this category
+              description: Optional, will trigger only if the post's topic is in this category
+            restricted_group:
+              label: Group
+              description: Optional, will trigger only if the post's topic is a private message in this group's inbox
+            ignore_group_members:
+              label: Ignore group members
+              description: Skip the trigger if sender is a member of the Group specified above
+            ignore_automated:
+              label: Ignore automated
+              description: Skip the trigger if the sender has a noreply email or is from an automated source. Only applies to posts created via email
           created: Created
           edited: Edited
         category_created_edited:
@@ -154,11 +166,20 @@ en:
         pm_created:
           fields:
             restricted_user:
-              label: User
-              description: Allows to limit trigger execution to this user
+              label: Users
+              description: Will trigger only for PMs sent to this user
+            restricted_group:
+              label: Group
+              description: Will trigger only for PMs sent to this group
             ignore_staff:
               label: Ignore staff
               description: Skip the trigger if sender is a staff user
+            ignore_group_members:
+              label: Ignore group members
+              description: Skip the trigger if sender is a member of the Group specified above
+            ignore_automated:
+              label: Ignore automated
+              description: Skip the trigger if the sender has a noreply email or is from an automated source. Only applies to PMs created via email
             valid_trust_levels:
               label: Valid trust levels
               description: Will trigger only if post is created by user in these trust levels, defaults to any trust level
@@ -169,10 +190,10 @@ en:
               description: Will trigger only if post is created by user in these trust levels, defaults to any trust level
             restricted_category:
               label: Category
-              description: Optional, allows to limit trigger execution to this category
+              description: Optional, will trigger only if the post's topic is in this category
             restricted_tags:
               label: Tags
-              description: Optional, allows to limit trigger execution to any of these tags
+              description: Optional, will trigger only if the post has any of these tags
       scriptables:
         not_found: Couldn’t find script `%{script}` for automation `%{automation}`, ensure the associated plugin is installed
         zapier_webhook:
@@ -187,7 +208,7 @@ en:
               description: Only responds once by topic
             word_answer_list:
               label: List of word/answer pairs
-              description: "Defines a list of key/value groups, where the `key` is the searched term, and `value` the text of the reply. Note that `value` accepts `%%KEY%%` as a placeholder to be replaced by the value of `key` in the reply. Note that `key` will be evaluated as a regex, and special chars like `.` should be escaped if you actually mean a dot, eg: `\\.`"
+              description: "Defines a list of key/value groups, where the `key` is the searched term, and `value` the text of the reply. The `key` can be left blank to respond to all triggers, regardless of content. Note that `value` accepts `%%KEY%%` as a placeholder to be replaced by the value of `key` in the reply. Note that `key` will be evaluated as a regex, and special chars like `.` should be escaped if you actually mean a dot, eg: `\\.`"
             answering_user:
               label: Answering user
               description: Defaults to System user

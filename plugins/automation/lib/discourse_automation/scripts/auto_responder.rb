@@ -26,29 +26,29 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scriptable::AUTO_RESPON
     next if fields.dig("once", "value") && post.topic.custom_fields[key]&.include?(automation.id)
 
     answers = Set.new
-    json = fields.dig("word_answer_list", "value")
-    next if json.blank?
+    word_answer_list_json = fields.dig("word_answer_list", "value")
+    next if word_answer_list_json.blank?
 
-    tuples = JSON.parse(json)
-    next if tuples.blank?
+    word_answer_list = JSON.parse(word_answer_list_json)
+    next if word_answer_list.blank?
 
-    tuples.each do |tuple|
-      if tuple["key"].blank?
-        answers.add(tuple)
+    word_answer_list.each do |word_answer_pair|
+      if word_answer_pair["key"].blank?
+        answers.add(word_answer_pair)
         next
       end
 
       if post.is_first_post?
-        if match = post.topic.title.match(/\b(#{tuple["key"]})\b/i)
-          tuple["key"] = match.captures.first
-          answers.add(tuple)
+        if match = post.topic.title.match(/\b(#{word_answer_pair["key"]})\b/i)
+          word_answer_pair["key"] = match.captures.first
+          answers.add(word_answer_pair)
           next
         end
       end
 
-      if match = post.raw.match(/\b(#{tuple["key"]})\b/i)
-        tuple["key"] = match.captures.first
-        answers.add(tuple)
+      if match = post.raw.match(/\b(#{word_answer_pair["key"]})\b/i)
+        word_answer_pair["key"] = match.captures.first
+        answers.add(word_answer_pair)
       end
     end
 

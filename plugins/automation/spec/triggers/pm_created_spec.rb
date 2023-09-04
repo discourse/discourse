@@ -10,20 +10,21 @@ describe "PMCreated" do
   end
 
   fab!(:user) { Fabricate(:user) }
-  fab!(:target_user) { Fabricate(:user) }
-  let(:basic_topic_params) do
-    {
-      title: "hello world topic",
-      raw: "my name is fred",
-      archetype: Archetype.private_message,
-      target_usernames: [target_user.username],
-    }
-  end
   fab!(:automation) do
     Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::PM_CREATED)
   end
 
-  context "when creating a PM" do
+  context "when creating a PM to a user" do
+    fab!(:target_user) { Fabricate(:user) }
+    let(:basic_topic_params) do
+      {
+        title: "hello world topic",
+        raw: "my name is fred",
+        archetype: Archetype.private_message,
+        target_usernames: [target_user.username],
+      }
+    end
+
     before do
       automation.upsert_field!(
         "restricted_user",
@@ -31,6 +32,13 @@ describe "PMCreated" do
         { value: target_user.username },
         target: "trigger",
       )
+    end
+
+    it "fires the trigger" do
+      list = capture_contexts { PostCreator.create(user, basic_topic_params) }
+
+      expect(list.length).to eq(1)
+      expect(list[0]["kind"]).to eq("pm_created")
     end
 
     context "when user is not targeted" do
@@ -47,13 +55,6 @@ describe "PMCreated" do
 
         expect(list).to be_blank
       end
-    end
-
-    it "fires the trigger" do
-      list = capture_contexts { PostCreator.create(user, basic_topic_params) }
-
-      expect(list.length).to eq(1)
-      expect(list[0]["kind"]).to eq("pm_created")
     end
 
     context "when trust_levels are restricted" do
@@ -108,6 +109,132 @@ describe "PMCreated" do
           end
 
         expect(list).to be_blank
+      end
+    end
+  end
+
+  context "when creating a PM to a group" do
+    fab!(:target_group) { Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]) }
+    let(:basic_topic_params) do
+      {
+        title: "hello world topic",
+        raw: "my name is fred",
+        archetype: Archetype.private_message,
+        target_group_names: [target_group.name],
+      }
+    end
+
+    before do
+      automation.upsert_field!(
+        "restricted_group",
+        "group",
+        { value: target_group.id },
+        target: "trigger",
+      )
+    end
+
+    it "fires the trigger" do
+      list = capture_contexts { PostCreator.create(user, basic_topic_params) }
+
+      expect(list.length).to eq(1)
+      expect(list[0]["kind"]).to eq("pm_created")
+    end
+
+    context "when members of the group are ignored" do
+      before do
+        automation.upsert_field!(
+          "ignore_group_members",
+          "boolean",
+          { value: true },
+          target: "trigger",
+        )
+      end
+
+      it "doesn’t fire the trigger" do
+        list =
+          capture_contexts do
+            user.groups << target_group
+            PostCreator.create(user, basic_topic_params)
+          end
+
+        expect(list).to be_blank
+      end
+    end
+
+    context "when the PM is being created from an incoming email" do
+      before do
+        target_group.update!(
+          email_username: "team@somesmtpaddress.com",
+          incoming_email: "team@somesmtpaddress.com|suppor+team@bar.com",
+          smtp_server: "smtp.test.com",
+          smtp_port: 587,
+          smtp_ssl: true,
+          smtp_enabled: true,
+        )
+        SiteSetting.email_in = true
+      end
+
+      it "fires the trigger" do
+        list =
+          capture_contexts do
+            Email::Receiver.new(email("email_to_group_email_username_1")).process!
+          end
+
+        expect(list.length).to eq(1)
+        expect(list[0]["kind"]).to eq("pm_created")
+      end
+
+      context "when the restricted group does not match" do
+        before do
+          automation.upsert_field!(
+            "restricted_group",
+            "group",
+            { value: Fabricate(:group).id },
+            target: "trigger",
+          )
+        end
+
+        it "doesn’t fire the trigger" do
+          list =
+            capture_contexts do
+              Email::Receiver.new(email("email_to_group_email_username_1")).process!
+            end
+          expect(list).to be_blank
+        end
+      end
+
+      context "when the incoming email is automated" do
+        before { SiteSetting.block_auto_generated_emails = false }
+
+        it "fires the trigger" do
+          list =
+            capture_contexts do
+              Email::Receiver.new(email("email_to_group_email_username_auto_generated")).process!
+            end
+
+          expect(list.length).to eq(1)
+          expect(list[0]["kind"]).to eq("pm_created")
+        end
+
+        context "when ignore_automated is true" do
+          before do
+            automation.upsert_field!(
+              "ignore_automated",
+              "boolean",
+              { value: true },
+              target: "trigger",
+            )
+          end
+
+          it "doesn't fire the trigger" do
+            list =
+              capture_contexts do
+                Email::Receiver.new(email("email_to_group_email_username_auto_generated")).process!
+              end
+
+            expect(list).to be_blank
+          end
+        end
       end
     end
   end

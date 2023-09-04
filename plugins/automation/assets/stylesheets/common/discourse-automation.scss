@@ -78,6 +78,12 @@
     .controls {
       margin-left: 185px;
     }
+
+    .boolean-field {
+      .controls {
+        display: flex;
+      }
+    }
   }
 
   .automation-presentation {

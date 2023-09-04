@@ -4,6 +4,8 @@ module DiscourseAutomation
   module EventHandlers
     def self.handle_post_created_edited(post, action)
       return if post.post_type != Post.types[:regular] || post.user_id < 0
+      topic = post.topic
+      return if topic.blank?
 
       name = DiscourseAutomation::Triggerable::POST_CREATED_EDITED
 
@@ -17,9 +19,26 @@ module DiscourseAutomation
 
           restricted_category = automation.trigger_field("restricted_category")
           if restricted_category["value"]
-            category_ids = [post.topic&.category&.parent_category&.id, post.topic&.category&.id]
-            next if !category_ids.compact.include?(restricted_category["value"])
+            category_ids =
+              if topic.category_id.blank?
+                []
+              else
+                [topic.category_id, topic.category.parent_category_id]
+              end
+            next if !category_ids.include?(restricted_category["value"])
           end
+
+          if topic.private_message?
+            target_group_ids = topic.allowed_groups.pluck(:id)
+            restricted_group_id = automation.trigger_field("restricted_group")["value"]
+            next if restricted_group_id.present? && restricted_group_id != target_group_ids.first
+
+            ignore_group_members = automation.trigger_field("ignore_group_members")
+            next if ignore_group_members["value"] && post.user.in_any_groups?([restricted_group_id])
+          end
+
+          ignore_automated = automation.trigger_field("ignore_automated")
+          next if ignore_automated["value"] && post.incoming_email&.is_auto_generated?
 
           action_type = automation.trigger_field("action_type")
           selected_action = action_type["value"]&.to_sym
@@ -52,7 +71,8 @@ module DiscourseAutomation
 
       user = topic.user
       target_usernames = topic.allowed_users.pluck(:username) - [user.username]
-      return unless target_usernames.count == 1
+      target_group_ids = topic.allowed_groups.pluck(:id)
+      return if (target_usernames.length + target_group_ids.length) > 1
 
       name = DiscourseAutomation::Triggerable::PM_CREATED
 
@@ -60,14 +80,23 @@ module DiscourseAutomation
         .where(trigger: name, enabled: true)
         .find_each do |automation|
           restricted_username = automation.trigger_field("restricted_user")["value"]
-          next if restricted_username != target_usernames.first
+          next if restricted_username.present? && restricted_username != target_usernames.first
+
+          restricted_group_id = automation.trigger_field("restricted_group")["value"]
+          next if restricted_group_id.present? && restricted_group_id != target_group_ids.first
 
           ignore_staff = automation.trigger_field("ignore_staff")
           next if ignore_staff["value"] && user.staff?
 
+          ignore_group_members = automation.trigger_field("ignore_group_members")
+          next if ignore_group_members["value"] && user.in_any_groups?([restricted_group_id])
+
+          ignore_automated = automation.trigger_field("ignore_automated")
+          next if ignore_automated["value"] && topic.first_post.incoming_email&.is_auto_generated?
+
           valid_trust_levels = automation.trigger_field("valid_trust_levels")
           if valid_trust_levels["value"]
-            next unless valid_trust_levels["value"].include?(user.trust_level)
+            next if !valid_trust_levels["value"].include?(user.trust_level)
           end
 
           automation.trigger!("kind" => name, "post" => topic.first_post)
