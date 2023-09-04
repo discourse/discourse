@@ -22,9 +22,11 @@
     <link integrity="" rel="stylesheet" href="{{rootURL}}assets/discourse.css" />
 
     <script defer src="{{rootURL}}assets/vendor.js"></script>
-    <script defer src="{{rootURL}}assets/discourse.js"></script>
 
-    <ember-auto-import-scripts defer entrypoint="app"></ember-auto-import-scripts>
+    <discourse-chunked-script entrypoint="discourse">
+      <ember-auto-import-scripts defer entrypoint="app"></ember-auto-import-scripts>
+      <script defer src="{{rootURL}}assets/discourse.js"></script>
+    </discourse-chunked-script>
 
     <bootstrap-content key="head"></bootstrap-content>
     {{content-for "head"}}
