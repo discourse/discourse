@@ -28,10 +28,12 @@ module DiscourseAutomation
             next if !category_ids.include?(restricted_category["value"])
           end
 
-          if topic.private_message?
+          restricted_group_id = automation.trigger_field("restricted_group")["value"]
+          if restricted_group_id.present?
+            next if !topic.private_message?
+
             target_group_ids = topic.allowed_groups.pluck(:id)
-            restricted_group_id = automation.trigger_field("restricted_group")["value"]
-            next if restricted_group_id.present? && restricted_group_id != target_group_ids.first
+            next if restricted_group_id != target_group_ids.first
 
             ignore_group_members = automation.trigger_field("ignore_group_members")
             next if ignore_group_members["value"] && post.user.in_any_groups?([restricted_group_id])
@@ -47,6 +49,7 @@ module DiscourseAutomation
             next if selected_action == :created && action != :create
             next if selected_action == :edited && action != :edit
           end
+
           automation.trigger!("kind" => name, "action" => action, "post" => post)
         end
     end

@@ -97,6 +97,18 @@ describe "PostCreatedEdited" do
         expect(list[0]["kind"]).to eq("post_created_edited")
       end
 
+      context "when the topic is not a PM" do
+        it "doesn’t fire the trigger" do
+          list =
+            capture_contexts do
+              user.groups << target_group
+              PostCreator.create(user, basic_topic_params)
+            end
+
+          expect(list).to be_blank
+        end
+      end
+
       context "when members of the group are ignored" do
         before do
           automation.upsert_field!(
