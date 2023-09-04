@@ -22,12 +22,9 @@ module SystemHelpers
     expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
   end
 
-  def sign_out
-    delete File.join(GlobalSetting.relative_url_root || "", "/session")
-  end
-
   def setup_system_test
     SiteSetting.login_required = false
+    SiteSetting.has_login_hint = false
     SiteSetting.content_security_policy = false
     SiteSetting.force_hostname = Capybara.server_host
     SiteSetting.port = Capybara.server_port
