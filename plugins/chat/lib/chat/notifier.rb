@@ -125,7 +125,8 @@ module Chat
 
     def notify_personal_chat_users(to_notify, except: [])
       return if !@chat_channel.direct_message_channel?
-      notify_user_ids = @chat_channel.allowed_user_ids.reject { |id| except.include?(id) }
+      notify_user_ids =
+        User.where(id: @chat_channel.allowed_user_ids).not_suspended.pluck(:id) - except
       notified_user_ids = []
 
       notify_user_ids.each do |user_id|
