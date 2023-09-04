@@ -28,6 +28,7 @@ import EmberThisFallback from "ember-this-fallback";
 
 const thisFallbackPlugin = EmberThisFallback._buildPlugin({
   enableLogging: false,
+  isTheme: true,
 }).plugin;
 
 function manipulateAstNodeForTheme(node, themeId) {
