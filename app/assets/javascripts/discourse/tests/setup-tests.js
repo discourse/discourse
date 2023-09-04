@@ -359,19 +359,25 @@ export default function setupTests(config) {
 
   const target = getUrlParameter("target") || "core";
 
+  const hasPluginJs = !!document.querySelector("script[data-discourse-plugin]");
+  const hasThemeJs = !!document.querySelector("script[data-theme-id]");
+
   const shouldLoadModule = (name) => {
     if (!/\-test/.test(name)) {
       return false;
     }
 
     const isPlugin = name.match(/\/plugins\//);
-    const isCore = !isPlugin;
+    const isTheme = name.match(/\/theme-\d+\//);
+    const isCore = !isPlugin && !isTheme;
     const pluginName = name.match(/\/plugins\/([\w-]+)\//)?.[1];
 
     const loadCore = target === "core" || target === "all";
     const loadAllPlugins = target === "plugins" || target === "all";
 
-    if (isCore && !loadCore) {
+    if (hasThemeJs) {
+      return isTheme;
+    } else if (isCore && !loadCore) {
       return false;
     } else if (isPlugin && !(loadAllPlugins || pluginName === target)) {
       return false;
@@ -388,9 +394,6 @@ export default function setupTests(config) {
   setupToolbar();
   reportMemoryUsageAfterTests();
   patchFailedAssertion();
-
-  const hasPluginJs = !!document.querySelector("script[data-discourse-plugin]");
-  const hasThemeJs = !!document.querySelector("script[data-theme-id]");
 
   if (!hasPluginJs && !hasThemeJs) {
     configureRaiseOnDeprecation();
