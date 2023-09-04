@@ -657,7 +657,8 @@ export default Controller.extend(bufferedProperty("model"), {
 
       if (
         composerController.get("model.topic.id") === topic.get("id") &&
-        composerController.get("model.action") === Composer.REPLY
+        composerController.get("model.action") === Composer.REPLY &&
+        post?.get("post_number") !== 1
       ) {
         composerController.set("model.post", post);
         composerController.set("model.composeState", Composer.OPEN);
