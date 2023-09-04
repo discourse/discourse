@@ -4,7 +4,7 @@ import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 import Bookmark from "discourse/models/bookmark";
 import I18n from "I18n";
-import { generateCookFunction } from "discourse/lib/text";
+import { generateCookFunction, parseMentions } from "discourse/lib/text";
 import transformAutolinks from "discourse/plugins/chat/discourse/lib/transform-auto-links";
 import { getOwner } from "discourse-common/lib/get-owner";
 import discourseLater from "discourse-common/lib/later";
@@ -239,6 +239,10 @@ export default class ChatMessage {
 
   incrementVersion() {
     this.version++;
+  }
+
+  async parseMentions() {
+    return await parseMentions(this.message, this.#markdownOptions);
   }
 
   toJSONDraft() {

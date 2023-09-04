@@ -9,6 +9,7 @@ import { helperContext } from "discourse-common/lib/helpers";
 import { htmlSafe } from "@ember/template";
 import loadScript from "discourse/lib/load-script";
 import { sanitize as textSanitize } from "pretty-text/sanitizer";
+import { MentionsParser } from "discourse/lib/mentions-parser";
 
 function getOpts(opts) {
   let context = helperContext();
@@ -71,8 +72,15 @@ export function sanitizeAsync(text, options) {
 
 export function parseAsync(md, options = {}, env = {}) {
   return loadMarkdownIt().then(() => {
-    return createPrettyText(options).opts.engine.parse(md, env);
+    return createPrettyText(options).parse(md, env);
   });
+}
+
+export async function parseMentions(markdown, options) {
+  await loadMarkdownIt();
+  const prettyText = createPrettyText(options);
+  const mentionsParser = new MentionsParser(prettyText);
+  return mentionsParser.parse(markdown);
 }
 
 function loadMarkdownIt() {
