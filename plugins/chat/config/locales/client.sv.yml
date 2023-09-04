@@ -10,6 +10,9 @@ sv:
       site_settings:
         categories:
           chat: Chatt
+        chat_separate_sidebar_mode:
+          always: "Alltid"
+          never: "Aldrig"
       logs:
         staff_actions:
           actions:
@@ -446,7 +449,6 @@ sv:
         title: "Chatt"
         export_messages:
           title: "Exportera chattmeddelanden"
-          description: "Exporten är för närvarande begränsad till de 10 000 senaste meddelanden under de senaste 6 månaderna."
           create_export: "Skapa export"
           export_has_started: "Exporten har börjat. Du får ett PM när det är klart."
       direct_messages:
@@ -544,7 +546,6 @@ sv:
       thread:
         title: "Rubrik"
         view_thread: Visa tråd
-        default_title: "Tråd"
         replies:
           one: "%{count} svar"
           other: "%{count} svar"
@@ -649,3 +650,7 @@ sv:
       sections:
         chat:
           title: Chatt
+    sidebar:
+      panels:
+        chat:
+          label: "Chatt"

@@ -23,16 +23,16 @@
             {{#unless this.updateDisabled}}
               <DButton
                 @action={{action "finishedEditing"}}
-                @class="btn-primary submit-edit"
                 @icon="check"
                 @ariaLabel="tagging.save"
+                class="btn-primary submit-edit"
               />
             {{/unless}}
             <DButton
               @action={{action "cancelEditing"}}
-              @class="btn-default cancel-edit"
               @icon="times"
               @ariaLabel="cancel"
+              class="btn-default cancel-edit"
             />
           </div>
         </div>
@@ -49,7 +49,7 @@
           {{/if}}
         </div>
         <div class="tag-description-wrapper">
-          {{this.tagInfo.description}}
+          <span>{{html-safe this.tagInfo.description}}</span>
         </div>
       {{/if}}
     </div>
@@ -123,10 +123,10 @@
             @allowCreate={{true}}
           />
           <DButton
-            @class="ok"
             @action={{action "addSynonyms"}}
             @disabled={{this.addSynonymsDisabled}}
             @icon="check"
+            class="ok"
           />
         </div>
       </section>
@@ -140,19 +140,19 @@
       </section>
       <div class="tag-actions">
         <DButton
-          @class="btn-default"
           @action={{action "toggleEditControls"}}
           @icon="cog"
           @label="tagging.edit_synonyms"
-          @id="edit-synonyms"
+          id="edit-synonyms"
+          class="btn-default"
         />
         {{#if this.deleteAction}}
           <DButton
-            @class="btn-danger delete-tag"
             @action={{action "deleteTag"}}
             @icon="far-trash-alt"
             @label="tagging.delete_tag"
-            @id="delete-tag"
+            id="delete-tag"
+            class="btn-danger delete-tag"
           />
         {{/if}}
       </div>

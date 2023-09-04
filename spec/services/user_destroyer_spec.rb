@@ -203,6 +203,26 @@ RSpec.describe UserDestroyer do
               reviewable.reload
               expect(reviewable).to be_approved
             end
+
+            it "rejects pending posts" do
+              post = Fabricate(:post, user: user)
+              reviewable =
+                Fabricate(
+                  :reviewable,
+                  type: "ReviewablePost",
+                  target_type: "Post",
+                  target_id: post.id,
+                  created_by: Discourse.system_user,
+                  target_created_by: user,
+                )
+
+              expect(reviewable).to be_pending
+
+              destroy
+
+              reviewable.reload
+              expect(reviewable).to be_rejected
+            end
           end
         end
 

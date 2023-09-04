@@ -10,6 +10,8 @@ zh_TW:
   chat:
     deleted_chat_username: 已刪除
     errors:
+      minimum_length_not_met:
+        other: "訊息過短，必須至少有 %{count} 個字元。"
       message_too_long:
         other: "訊息過長，不得超過 %{count} 個字元。"
       not_accepting_dms: "對不起，%{username} 目前不接收訊息。"

@@ -10,6 +10,9 @@ it:
       site_settings:
         categories:
           chat: Chat
+        chat_separate_sidebar_mode:
+          always: "Sempre"
+          never: "Mai"
       logs:
         staff_actions:
           actions:
@@ -141,6 +144,7 @@ it:
         group_mentions_disabled_multiple:
           one: "%{group_name} e %{count} altro gruppo non consentono menzioni."
           other: "%{group_name} e %{count} altri gruppi non consentono menzioni."
+        channel_wide_mentions_disallowed: "Le menzioni di @here e @all sono disabilitate in questo canale."
         too_many_members: "%{group_name} ha troppi membri. Nessuno è stato avvisato."
         too_many_members_multiple:
           one: "%{group_name} e %{count} altro gruppo hanno troppi membri. Nessuno è stato notificato."
@@ -154,6 +158,60 @@ it:
           unreachable_multiple:
             one: "@%{group} e %{count} altro gruppo non consentono menzioni."
             other: "@%{group} e %{count} altri gruppi non consentono menzioni."
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {La menzione di @{group1} supera il <a href="{siteSettingUrl}" target="_blank">limite di notifica</a> di # utente.}
+                              other {La menzione di @{group1} supera il <a href="{siteSettingUrl}" target="_blank">limite di notifica</a> di # utenti.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {La menzione di @{group1} supera il limite di notifica di # utente.}
+                              other {La menzione di @{group1} supera il limite di notifica di # utenti.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {La menzione di @{group1} e @{group2} supera il <a href="{siteSettingUrl}" target="_blank">limite di notifica</a> di # utente.}
+                            other {La menzione di @{group1} e @{group2} supera il <a href="{siteSettingUrl}" target="_blank">limite di notifica</a> di # utenti.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {La menzione di @{group1} e @{group2} supera il limite di notifica di # utente.}
+                            other {La menzione di @{group1} e @{group2} supera il limite di notifica di # utenti.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {La menzione di questi {groupCount} gruppi supera il <a href="{siteSettingUrl}" target="_blank">limite di notifica</a> di # utente.}
+                            other {La menzione di questi {groupCount} gruppi supera il <a href="{siteSettingUrl}" target="_blank">limite di notifica</a> di # utenti.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {La menzione di questi {groupCount} gruppi supera il limite di notifica di # utente.}
+                            other {La menzione di questi {groupCount} gruppi supera il limite di notifica di # utenti.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
         too_many_mentions:
           one: "Questo messaggio supera il limite di notifica di %{count} menzione."
           other: "Questo messaggio supera il limite di notifica di %{count} menzioni."
@@ -228,6 +286,7 @@ it:
         read_only: "Sola lettura"
         archived_header: "Il canale è archiviato"
         archived: "Archiviati"
+        archive_failed: "Archiviazione del canale non riuscita. %{completed}/%{total} messaggi sono stati archiviati. <a target=\"_blank\" href=\"%{topic_url}\">L'argomento di destinazione</a> è stato creato. Premi Riprova per tentare di completare l'archiviazione."
         archive_failed_no_topic: "Archiviazione del canale non riuscita. %{completed}/%{total} messaggi sono stati archiviati e l'argomento di destinazione non è stato creato. Premi Riprova per tentare di completare l'archiviazione."
         archive_completed: "Vedi <a target=\"_blank\" href=\"%{topic_url}\">l'argomento di archiviazione</a>"
         closed_header: "Il canale è chiuso"
@@ -391,7 +450,7 @@ it:
         title: "Chat"
         export_messages:
           title: "Esporta i messaggi della chat"
-          description: "L'esportazione è attualmente limitata a 10000 messaggi più recenti negli ultimi 6 mesi."
+          description: "Questo esporta tutti i messaggi da tutti i canali."
           create_export: "Crea esportazione"
           export_has_started: "L'esportazione è iniziata. Riceverai un messaggio personale quando sarà pronto."
       direct_messages:
@@ -489,7 +548,6 @@ it:
       thread:
         title: "Titolo"
         view_thread: Visualizza thread
-        default_title: "Thread"
         replies:
           one: "%{count} risposta"
           other: "%{count} risposte"
@@ -594,3 +652,7 @@ it:
       sections:
         chat:
           title: Chat
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

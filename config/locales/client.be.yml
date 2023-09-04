@@ -176,10 +176,8 @@ be:
     preview: "папярэдні прагляд"
     cancel: "адмена"
     save: "Захаваць змены"
-    saving: "Захаванне..."
     saved: "Захавана!"
     upload: "Загрузіць"
-    uploading: "Загрузка..."
     uploaded: "Загружана!"
     enable: "Уключыць"
     disable: "Адключыць"
@@ -418,7 +416,6 @@ be:
       topic_stat_unit:
         week: "тыдзень"
         month: "месяц"
-      n_more: "Катэгорыі (%{count} і больш)..."
     ip_lookup:
       title: Пошук IP адрасы
       hostname: Імя хосту
@@ -576,7 +573,6 @@ be:
         not_available: "Не даступна. Паспрабуеце %{suggestion}?"
         too_short: "Ваша імя кароткі"
         too_long: "Ваша імя доўгае"
-        checking: "Праверка даступнасці імя карыстальніка ..."
       locale:
         title: "Interface language"
         default: "(Default)"
@@ -639,7 +635,6 @@ be:
         topic: "Тэма"
         edit: "Рэдагаваць"
         remove: "выдаліць"
-        search: "шукаць запрашэнні ..."
         user: "запрошаны карыстальнік"
         redeemed: "Адазваныя запрашэнні"
         redeemed_at: "прынята"
@@ -697,7 +692,6 @@ be:
         the_topic: "тэма"
     user_status:
       save: "Захаваць"
-    loading: "Загрузка ..."
     errors:
       reasons:
         network: "памылка Сеткі"
@@ -720,7 +714,6 @@ be:
     home: "дома"
     read_only_mode:
       login_disabled: "Login is disabled while the site is in read only mode."
-    learn_more: "даведацца больш ..."
     mute: Mute
     unmute: Unmute
     time_read: прачытаныя
@@ -768,9 +761,7 @@ be:
       caps_lock_warning: "Caps Lock уключаны"
       error: "Невядомая памылка"
       reset_password: "скінуць пароль"
-      logging_in: "Уваход ..."
       or: "або"
-      authenticating: "Аўтентифікуемся ..."
       awaiting_activation: "Ваш рахунак чакае актывацыю. Для атрымання яшчэ аднаго актывацыйны лісты выкарыстоўвайце спасылкі Забыўся пароль."
       awaiting_approval: "Ваш рахунак яшчэ не зацверджаны членам каманды. Калі ён будзе актываваны, Вы атрымаеце электронны ліст."
       requires_invite: "Выбачайце, доступ да гэтага форуму - толькі па запрашэннях."
@@ -802,22 +793,17 @@ be:
       categories_with_featured_topics: "Катэгорыі з Выбранымі Тэмамі"
       categories_and_latest_topics: "Катэгорыі і Апошнія тэмы"
       categories_and_top_topics: "Катэгорыі і асноўныя тэмы"
-    conditional_loading_section:
-      loading: Загрузка ...
     select_kit:
       delete_item: "Выдаліць %{name}"
-      filter_placeholder_with_any: Знайсці альбо стварыць...
     date_time_picker:
       from: ад
       to: да
     emoji_picker:
       flags: Пазначэнні
     composer:
-      more_emoji: "яшчэ ..."
       options: "Налады"
       posting_not_on_topic: "На якую тэму Вы хочаце адказаць?"
       saved_local_draft_tip: "захавана лакальна"
-      similar_topics: "Ваша тэма падобная на ..."
       drafts_offline: "чарнавікі у афлайне"
       error:
         title_missing: "Загаловак неабходна"
@@ -835,7 +821,6 @@ be:
       view_new_post: "Праглядзець свой новы запіс."
       saving: "захаванне"
       saved: "Захавана!"
-      uploading: "Запампоўванне..."
       quote_post_title: "Працытаваць увесь паведамленне цалкам"
       bold_title: "моцнае вылучэнне"
       bold_text: "Моцнае вылучэнне тэксту"
@@ -942,7 +927,6 @@ be:
         close_topics: "Закрыць тэму"
         archive_topics: "Заархіваваныя тэмы"
         move_messages_to_inbox: "Перамясціць у тэчцы Уваходныя"
-        notification_level: "Натыфікацыі..."
       none:
         unread: "У вас няма непрачытаных тэм."
         new: "У вас няма новых тэм."
@@ -1029,7 +1013,6 @@ be:
         open: "Адкрыць тэму"
         close: "Закрыць тэму"
         multi_select: "Абраць запісы ..."
-        timed_update: "Усталяваць таймер тэмы ..."
         pin: "Замацаваць тэму ..."
         unpin: "Адмацаваць тэму ..."
         unarchive: "Разархіваваць тэму"
@@ -1077,7 +1060,6 @@ be:
       publish_page:
         public: "грамадскага"
       change_timestamp:
-        title: "Змяніць метку часу"
         action: "змяніць метку часу"
     post:
       quote_edit: "Рэдагаваць"
@@ -1090,7 +1072,6 @@ be:
         like: "упадабаць гэты пост"
         edit_action: "Рэдагаваць"
         more: "Болей"
-        grant_badge: "даць Значок..."
         delete_topic: "выдаліць тэму"
       actions:
         people:
@@ -1185,7 +1166,6 @@ be:
         email: "Электронная пошта"
     flagging:
       action: "Пазначыць запіс"
-      take_action: "прыняць меры..."
       take_action_options:
         default:
           title: "прыняць меры"
@@ -1245,6 +1225,9 @@ be:
       new:
         lower_title: "новая"
         title: "Новая"
+        all: "Усё"
+        topics: "тэмы"
+        replies: "Адказы"
       posted:
         title: "мае паведамленні"
         help: "тэмы, у якія Вы дапісвалі"
@@ -1565,16 +1548,12 @@ be:
           disable:
             title: "Адключыць рэжым Толькі для чытання"
             label: "Адключыць Толькі для чытання"
-        logs:
-          none: "No logs yet ..."
         columns:
           filename: "Назва файлу"
           size: "Size"
         upload:
           label: "Загрузіць"
-          uploading: "Запампоўванне ..."
         operations:
-          is_running: "An operation is currently running ..."
           cancel:
             label: "Адмяніць"
             title: "Cancel the current operation"
@@ -1670,7 +1649,6 @@ be:
         settings: "Налады"
         templates: "шаблоны"
         preview_digest: "Кароткі выклад навін"
-        sending_test: "Адпраўка тэставага ліста ..."
         sent: "Sent"
         skipped: "Skipped"
         received: "Атрымана"
@@ -1684,7 +1662,6 @@ be:
         delivery_method: "спосаб дастаўкі"
         refresh: "абнавіць"
         send_digest: "адправіць"
-        sending_email: "Адпраўленне ліста ..."
         format: "фармат"
         html: "html"
         text: "тэкст"
@@ -1705,7 +1682,6 @@ be:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
             cc_placeholder: "cc@example.com"
-            subject_placeholder: "Тэма ..."
             error_placeholder: "памылка"
         logs:
           none: "No logs found."
@@ -1713,7 +1689,6 @@ be:
             title: "Filter"
             user_placeholder: "username"
             address_placeholder: "name@example.com"
-            type_placeholder: "digest, signup ..."
       moderation_history:
         actions:
           delete_topic: "Тэма выдаленая"
@@ -2073,7 +2048,6 @@ be:
           sample: "Прыклад:"
       emoji:
         title: "Абразкі"
-        uploading: "Запампоўванне ..."
         name: "Імя"
         group: "Група"
         image: "Выява"
@@ -2110,7 +2084,6 @@ be:
     wizard:
       back: "Назад"
       next: "Далей"
-      uploading: "Запампоўванне..."
       upload_error: "Выбачайце, пры загрузцы гэтага файла адбылася памылка. Калі ласка, паспрабуйце яшчэ раз."
       invites:
         add_user: "дадаць"

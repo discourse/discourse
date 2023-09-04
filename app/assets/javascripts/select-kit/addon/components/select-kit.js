@@ -860,7 +860,7 @@ export default Component.extend(
 
       this.clearErrors();
 
-      const inModal = this.element.closest("#discourse-modal");
+      const inModal = this.element.closest(".fixed-modal");
       if (inModal && this.site.mobileView) {
         const modalBody = inModal.querySelector(".modal-body");
         modalBody.style = "";
@@ -884,7 +884,7 @@ export default Component.extend(
       this.selectKit.onOpen(event);
 
       if (!this.popper) {
-        const inModal = this.element.closest("#discourse-modal .modal-body");
+        const inModal = this.element.closest(".fixed-modal .modal-body");
         const anchor = document.querySelector(
           `#${this.selectKit.uniqueID}-header`
         );
@@ -948,7 +948,7 @@ export default Component.extend(
               fn: ({ state }) => {
                 if (inModal) {
                   const innerModal = document.querySelector(
-                    "#discourse-modal div.modal-inner-container"
+                    ".fixed-modal div.modal-inner-container"
                   );
 
                   if (innerModal) {
@@ -1127,8 +1127,8 @@ export default Component.extend(
     },
 
     _deprecateMutations() {
-      this.actions = this.actions || {};
-      this.attrs = this.attrs || {};
+      this.actions ??= {};
+      this.attrs ??= {};
 
       if (!this.attrs.onChange && !this.actions.onChange) {
         this._deprecated(

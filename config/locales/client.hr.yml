@@ -300,7 +300,6 @@ hr:
     related_messages:
       title: "Vezane poruke"
       pill: "Vezane poruke"
-      see_all: 'Pregledajte <a href="%{path}">sve poruke</a> od @%{username}...'
     suggested_topics:
       pm_title: "Predložene poruke"
     about:
@@ -397,18 +396,11 @@ hr:
       other: "Pregledajte %{count} nove teme."
     preview: "Predprikaz"
     cancel: "otkaži"
-    deleting: "Brisanje..."
     save: "Zabilježi promjene"
-    saving: "Spremam..."
     saved: "Spremljeno!"
     upload: "Učitaj"
-    uploading: "Učitava se..."
-    processing: "Obrada..."
-    uploading_filename: "Učitavam: %{filename}..."
-    processing_filename: "Obrada: %{filename}..."
     clipboard: "međuspremnik"
     uploaded: "Učitano!"
-    pasting: "Zalijepljujem..."
     enable: "Omogući"
     disable: "Onemogući"
     continue: "Nastavi"
@@ -993,7 +985,6 @@ hr:
         one: "%{count} nova tema u proteklom mjesecu."
         few: "%{count} nove teme u proteklom mjesecu."
         other: "%{count} novih tema u proteklom mjesecu."
-      n_more: "Kategorije (%{count} više)..."
     ip_lookup:
       title: Pretraga po IP adresi
       hostname: Ime računala
@@ -1039,7 +1030,6 @@ hr:
         ignore_no_users: "Nemate ignoriranih korisnika."
         ignore_option: "Ignorirao"
         ignore_option_title: "Nećete primati obavijesti vezane uz ovog korisnika i sve njihove teme i odgovori bit će skriveni."
-        add_ignored_user: "Dodaj..."
         mute_option: "Utišano"
         mute_option_title: "Nećete primati obavijesti vezane uz ovog korisnika."
         normal_option: "Normalno"
@@ -1444,7 +1434,6 @@ hr:
         primary_label: "primarna"
         unconfirmed_label: "nepotvrđeno"
         resend_label: "ponovno pošaljite poruku e-pošte s potvrdom"
-        resending_label: "slanje ..."
         resent_label: "email je poslan"
         update_email: "Promijeni E-mail"
         set_primary: "Postavi primarnu e-poštu"
@@ -1491,7 +1480,6 @@ hr:
         not_available_no_suggestion: "Nije dostupno"
         too_short: "Vaše je korisničko ima prekratko"
         too_long: "Vaše je korisničko ima pre dugačko"
-        checking: "Provjeravamo dostupnost korisničkog imena..."
         prefilled: "E-mail odgovara ovom registriranom korisničkom imenom"
         required: "Unesite korisničko ime"
         edit: "Uredite korisničko ime"
@@ -1612,7 +1600,6 @@ hr:
         reinvite: "Ponovo pošalji e-poštu"
         reinvited: "Pozivnica ponovno poslana"
         removed: "Uklonjeno"
-        search: "upišite da pregledate pozivnice"
         user: "Pozvani Korisnici"
         none: "Nema poziva za prikaz."
         truncated:
@@ -1673,7 +1660,6 @@ hr:
             <p>Pozovite popis korisnika da biste ubrzali svoju zajednicu. Pripremite <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">CSV datoteka</a> koji sadrži najmanje jedan redak po adresi e-pošte korisnika koje želite pozvati. Sljedeće informacije odvojene zarezom možete navesti ako želite dodati osobe u grupe ili ih poslati na određenu temu prilikom prve prijave.</p>
             <pre>john@smith.com, prvo_group_name; second_group_name, tema_id</pre>
             <p>Svaka adresa e-pošte u vašoj učitanoj CSV datoteci poslat će se pozivnica i moći ćete je kasnije upravljati.</p>
-          progress: "Upload %{progress}%..."
           success: "Datoteka je uspješno prenesena. Bit ćete obaviješteni putem poruke kada je postupak dovršen."
           error: "Nažalost, datoteka bi trebala biti u CSV formatu."
       password:
@@ -1795,7 +1781,6 @@ hr:
       suggested_topics:
         title: "Nastavi čitati!"
         content: "Evo nekih tema za koje mislimo da biste ih željeli pročitati sljedeće."
-    loading: "Očitavanje..."
     errors:
       prev_page: "pri pokušaju očitanja"
       reasons:
@@ -1838,7 +1823,6 @@ hr:
         <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}</a> dosegao ograničenje za postavljanje stranice {limit, plural, one {# Greška/sat} few {# greške/sat} other {# greške/sat}}.
       exceeded_minute_MF: |
         <b>{relativeAge}</b> — <a href='{url}' target='_blank'>{rate, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}</a> premašio ograničenje za postavljanje stranice {limit, plural, one {# Greška/minuta} few {# greške/minuta} other {# greške/minuta}}.
-    learn_more: "saznaj više..."
     mute: Utišaj
     unmute: Poništi utišanje
     last_post: Objavljeno
@@ -1874,10 +1858,6 @@ hr:
       disable: "Pokaži obrisane članke"
     private_message_info:
       title: "Poruka"
-      invite: "Pozovite druge..."
-      edit: "Dodaj ili ukloni..."
-      remove: "Ukloni..."
-      add: "Dodaj..."
       leave_message: "Želite li zaista ostaviti ovu poruku?"
       remove_allowed_user: "Želite li zaista ukloniti %{name} iz ove poruke?"
       remove_allowed_group: "Želite li zaista ukloniti %{name} iz ove poruke?"
@@ -1957,10 +1937,8 @@ hr:
       blank_username: "Unesite svoj e-mail ili korisničko ime."
       blank_username_or_password: "Molimo unesite e-mail ili korisničko ime i zaporku."
       reset_password: "Ponovno postavi zaporku"
-      logging_in: "Prijavljivanje..."
       previous_sign_up: "Već imate račun?"
       or: "Ili"
-      authenticating: "Autentifikaciranje..."
       awaiting_activation: "Vaš račun čeka aktivaciju, poslužite se poveznicom za zaboravljenu zaporku da pošaljemo drugi aktivacijski e-mail."
       awaiting_approval: "Vaš račun nije odobren od osoblja. Poslat ćemo vam e-mail kad bude odobren."
       requires_invite: "Žao nam je, pristup ovom forumu moguć je samo uz pozivnicu."
@@ -2041,8 +2019,6 @@ hr:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Unesi"
-    conditional_loading_section:
-      loading: Očitavanje...
     category_row:
       topic_count:
         one: "%{count} tema u ovoj kategoriji"
@@ -2060,14 +2036,11 @@ hr:
       delete_item: "Obriši %{name}"
       filter_by: "Filtriraj po: %{name}"
       select_to_filter: "Odaberite vrijednost za filtriranje"
-      default_header_text: Odaberi...
       no_content: Nema pronađenih podudaranja
       results_count:
         one: "%{count} rezultat"
         few: "%{count} rezultata"
         other: "%{count} rezultata"
-      filter_placeholder: Pretraži...
-      filter_placeholder_with_any: Pretraži ili stvori...
       create: "Stvori: '%{content}'"
       max_content_reached:
         one: "Možete odabrati samo %{count} stavku."
@@ -2078,8 +2051,6 @@ hr:
         few: "Odaberite barem %{count} stavki."
         other: "Odaberite barem %{count} stavki."
       components:
-        tag_drop:
-          filter_for_more: Filtrirajte za više ...
         categories_admin_dropdown:
           title: "Upravljanje kategorijama"
     date_time_picker:
@@ -2110,10 +2081,8 @@ hr:
       destination_category: "Kategorija odredišta"
       publish: "Objavi zajedničku skicu"
       confirm_publish: "Jeste li sigurni da želite objaviti ovaj nacrt?"
-      publishing: "Objavljivanje teme ..."
     composer:
       emoji: "Emoji :)"
-      more_emoji: "više..."
       options: "Mogućnosti"
       whisper: "šapat"
       unlist: "nenavedeno"
@@ -2122,7 +2091,6 @@ hr:
       toggle_unlisted: "Uključi / isključi Nenavedeno"
       posting_not_on_topic: "U kojoj temi želite odgovoriti?"
       saved_local_draft_tip: "spašeno lokalno"
-      similar_topics: "Vaša tema je slična..."
       drafts_offline: "nacrti offline"
       edit_conflict: "uredi sukob"
       esc: "esc"
@@ -2200,7 +2168,6 @@ hr:
       saving: "Spremanje"
       saved: "Spremljeno!"
       saved_draft: "Nacrt posta u tijeku. Dodirnite za nastavak."
-      uploading: "Učitavanje..."
       show_preview: "prikaz pregleda"
       hide_preview: "sakrij pregled"
       quote_post_title: "Citiraj cijeli članak"
@@ -2497,7 +2464,6 @@ hr:
           label: Označeno
           aria_label: Filtrirajte pomoću oznaka
         filters:
-          label: Vrati samo teme/postove ...
           title: Usklađivanje samo u naslovu
           likes: Sviđalo mi se
           posted: Objavio sam u
@@ -2639,11 +2605,9 @@ hr:
           other: "Odbaci novo (%{count})"
         toggle: "uključi/isključi grupni odabir tema"
         actions: "Grupne aktivnosti"
-        change_category: "Postavi kategoriju..."
         close_topics: "Zatvori teme"
         archive_topics: "Arhiviraj teme"
         move_messages_to_inbox: "Premjesti u Inbox"
-        notification_level: "Obavijesti..."
         change_notification_level: "Promijenite razinu obavijesti"
         choose_new_category: "Odaberite novu kategoriju za teme:"
         selected:
@@ -2873,12 +2837,10 @@ hr:
         replies_short: "%{current} / %{total}"
       progress:
         title: napredak teme
-        jump_prompt: "Skoči na..."
         jump_prompt_of:
           one: "od %{count} objava"
           few: "od %{count} objava"
           other: "od %{count} objava"
-        jump_prompt_long: "Skoči na..."
         jump_prompt_to_date: "do danas"
         jump_prompt_or: "ili"
       notifications:
@@ -2934,8 +2896,6 @@ hr:
         open: "Otvori temu"
         close: "Zatvori temu"
         multi_select: "Odaberi objave..."
-        slow_mode: "Postavi spori način ..."
-        timed_update: "Podesi tajmer teme..."
         pin: "Prikvači temu…"
         unpin: "Otkvači temu"
         unarchive: "Vrati temu iz arhiva"
@@ -2943,7 +2903,6 @@ hr:
         invisible: "Poništite popis tema"
         visible: "Izlistaj temu"
         reset_read: "Poništi podatke o pročitanom"
-        make_public: "Napravi javnu temu..."
         make_private: "Izradite osobnu poruku"
         reset_bump_date: "Poništi datum bump"
       feature:
@@ -3006,7 +2965,6 @@ hr:
         banner_note: "Korisnik može ukloniti istaknutu objavu. U određenom trenutku može biti istaknuta samo jedna objava."
         no_banner_exists: "Ne postoji istaknuta objava"
         banner_exists: "Trenutno <strong class='badge badge-notification unread'>je</strong> istaknuta objava.."
-      inviting: "Pozivanje..."
       automatically_add_to_groups: "Ova pozivnica obuhvaća i pristup tim grupama:"
       invite_private:
         title: "Pozovite u Poruke"
@@ -3116,7 +3074,6 @@ hr:
           few: "Molimo odaberite novog vlasnika za post @%{count}"
           other: "Molimo odaberite novog vlasnika za post @%{count}"
       change_timestamp:
-        title: "Promijeni vremensku oznaku ..."
         action: "promijeni vremensku oznaku"
         invalid_timestamp: "Vremenska oznaka ne može biti u budućnosti."
         error: "Došlo je do pogreške prilikom promjene vremenske oznake teme."
@@ -3277,8 +3234,6 @@ hr:
         rebake: "Popravi HTML"
         publish_page: "Objava stranica"
         unhide: "Poništi skrivanje"
-        change_owner: "Promjena vlasništva..."
-        grant_badge: "Dodijelite značku ..."
         lock_post: "Zaključaj post"
         lock_post_description: "zabranite autoru uređivanje objave"
         unlock_post: "Otključaj post"
@@ -3293,8 +3248,6 @@ hr:
         delete_topic_confirm_modal_no: "Ne, zadrži ovu temu"
         delete_topic_error: "Došlo je do pogreške prilikom brisanja ove teme"
         delete_topic: "obriši temu"
-        add_post_notice: "Dodaj obavijest o osoblju..."
-        change_post_notice: "Promjena obavijesti o osoblju..."
         delete_post_notice: "Izbriši obavijest osoblja"
         remove_timer: "ukloni tajmer"
         edit_timer: "uredi mjerač vremena"
@@ -3424,7 +3377,6 @@ hr:
         description: "Zahtijevajte da nove teme imaju oznake iz grupa oznaka:"
         delete: "Pobriši"
         add: "Dodajte potrebnu grupu oznaka"
-        placeholder: "odaberite grupu oznaka..."
       topic_featured_link_allowed: "Dopusti istaknute poveznice u ovoj kategoriji"
       delete: "Obriši kategoriju"
       create: "Nova kategorija"
@@ -3552,7 +3504,6 @@ hr:
     flagging:
       title: "Hvala što pomažete održavati našu zajednicu pristojnom."
       action: "Označi objavu zastavicom"
-      take_action: "Poduzmi akciju..."
       take_action_options:
         default:
           title: "Poduzmi akciju"
@@ -3589,10 +3540,6 @@ hr:
           one: "unesite barem %{count} znak"
           few: "unesite barem %{count} znakova"
           other: "unesite barem %{count} znakova"
-        more:
-          one: "%{count} do kraja ..."
-          few: "%{count} do kraja ..."
-          other: "%{count} do kraja ..."
         left:
           one: "%{count} preostalih"
           few: "%{count} preostalih"
@@ -3605,7 +3552,6 @@ hr:
       title: "Sažetak teme"
       participants_title: "Često objavljuju"
       links_title: "Popularne poveznice"
-      links_shown: "prikaži više poveznica..."
       clicks:
         one: "%{count} klik"
         few: "%{count} klikova"
@@ -3733,6 +3679,9 @@ hr:
           few: "Novih (%{count})"
           other: "Novih (%{count})"
         help: "teme stvorene u zadnjih par dana"
+        all: "Sve"
+        topics: "Tema"
+        replies: "Odgovori"
       posted:
         title: "Moje objave"
         help: "teme u kojima si objavljivao"
@@ -3926,14 +3875,6 @@ hr:
       changed: "promijenjene oznake:"
       tags: "Oznake"
       choose_for_topic: "neobavezne oznake"
-      choose_for_topic_required:
-        one: "odaberite najmanje %{count} oznaka..."
-        few: "odaberite najmanje %{count} oznaka..."
-        other: "odaberite najmanje %{count} oznaka..."
-      choose_for_topic_required_group:
-        one: "odaberite oznaku %{count} iz '%{name}..."
-        few: "odaberite oznake %{count} iz '%{name}..."
-        other: "odaberite %{count} oznake iz '%{name}'..."
       info: "Info"
       default_info: "Ova oznaka nije ograničena ni na jednu kategoriju i nema sinonime."
       staff_info: "Da biste dodali ograničenja, stavite ovu oznaku u grupu oznaka <a href=%{basePath}/tag_groups></a>."
@@ -4037,7 +3978,6 @@ hr:
         cannot_save: "Nije moguće spremiti grupu oznaka. Provjerite je li prisutna barem jedna oznaka, naziv grupe oznaka nije prazan i grupa je odabrana za dopuštenje oznaka."
         tags_placeholder: "Pretražite ili izradite oznake"
         parent_tag_placeholder: "Neobvezno"
-        select_groups_placeholder: "Odaberite grupe..."
         disabled: "Označavanje je onemogućeno. "
       topics:
         none:
@@ -4066,7 +4006,6 @@ hr:
       enabled: "Omogućen je siguran način rada, da biste izašli iz sigurnog načina rada, zatvorite ovaj prozor preglednika"
     image_removed: "(slika uklonjena)"
     pause_notifications:
-      title: "Pauziraj obavijesti za..."
       label: "Pauziraj obavijesti"
       options:
         half_hour: "30 minuta"
@@ -4242,7 +4181,7 @@ hr:
         patternMismatch: "Molimo uskladite s traženim formatom."
         badInput: "Unesite valjani unos."
   admin_js:
-    type_to_filter: "upiši za filtriranje"
+    type_to_filter: "upišite za filtriranje…"
     admin:
       title: "Administrator"
       moderator: "Moderator"
@@ -4355,7 +4294,6 @@ hr:
           name:
             too_short: "Naziv grupe je prekratak"
             too_long: "Naziv grupe je predugačak"
-            checking: "Provjera dostupnosti naziva grupe ..."
             available: "Dostupan je naziv grupe"
             not_available: "Naziv grupe nije dostupan"
             blank: "Polje za naziv grupe ne može biti prazno"
@@ -4629,20 +4567,15 @@ hr:
           disable:
             title: "Onemogući \"samo čitanje\" model."
             label: "Onemogući samo za čitanje"
-        logs:
-          none: "Još nema zapisa..."
         columns:
           filename: "Ime datoteke"
           size: "Veličina"
         upload:
           label: "Učitaj"
           title: "Prenesite sigurnosnu kopiju na ovu instancu"
-          uploading: "Učitavanje..."
-          uploading_progress: "Prijenos... %{progress}%"
           success: "'%{filename}' je uspješno učitan. Datoteka se procesira i potrajat će do minute kako bi bila prikazana na popisu."
           error: "Dogodila se greška pri učitavanju '%{filename}': %{message}"
         operations:
-          is_running: "Operacija je trenutno u toku..."
           failed: "%{operation} neuspješna. Molimo provjerite zapise."
           cancel:
             label: "Odustani"
@@ -4776,7 +4709,6 @@ hr:
           uploads: "Prijenosi"
           no_uploads: "Možete prenijeti materijale povezane s vašom temom, poput fontova i slika"
           add_upload: "Dodaj prijenos"
-          upload_file_tip: "Odaberite materijal za prijenos (png, woff2, itd ...)"
           variable_name: "SCSS var naziv:"
           variable_name_invalid: "Neispravan naziv varijable. Dozvoljeni su samo alfanumerički znakovi. Mora biti jedinstvena."
           variable_name_error:
@@ -4784,7 +4716,6 @@ hr:
             no_overwrite: "Nevažeći naziv varijable. Ne smije prebrisati postojeću varijablu."
             must_be_unique: "Neispravan naziv varijable. Naziv mora biti jedinstven."
           upload: "Učitaj"
-          select_component: "Odaberite komponentu..."
           unsaved_changes_alert: "Još niste spremili svoje promjene, želite li ih odbaciti i nastaviti dalje?"
           unsaved_parent_themes: "Niste dodijelili komponentu temama, želite li krenuti dalje?"
           discard: "Odbaci"
@@ -4798,7 +4729,6 @@ hr:
           add_all: "Dodaj Sve"
           import_web_tip: "Repozitorijum koji sadrži temu"
           direct_install_tip: "Jeste li sigurni da želite instalirati <strong>%{name}</strong> iz dolje navedenog spremišta?"
-          import_web_advanced: "Napredna..."
           import_file_tip: ".tar.gz, .zip ili .dcstyle.json datoteka koja sadrži temu"
           is_private: "Tema je u privatnom git repozitoriju"
           finish_install: "Završite instalaciju teme"
@@ -4830,7 +4760,6 @@ hr:
             maximum: "Zahtijeva verziju Discoursa %{version} ili nižu."
           update_to_latest: "Ažurirajte na najnovije"
           check_for_updates: "Provjerite ima li ažuriranja"
-          updating: "Ažuriranje..."
           up_to_date: "Tema je ažurirana, zadnja provjera:"
           has_overwritten_history: "Trenutna verzija teme više ne postoji jer je povijest Gita prepisana prisilnim pritiskom."
           add: "Dodaj"
@@ -4967,7 +4896,6 @@ hr:
           run: "Pokreni test"
           text: "Odabrano tijelo teksta"
           elided: "Poništeni tekst"
-        sending_test: "Šaljem testni email..."
         error: "<b>GREŠKA</b> - %{server_error}"
         test_error: "Dogodio se problem pri slanju testnog emaila. Molimo provjerite postavke emaila, potvrdite da domaćin ne blokira email veze i pokušajte ponovo."
         sent: "Poslano"
@@ -4989,7 +4917,6 @@ hr:
         refresh: "Osvježi"
         send_digest_label: "Pošaljite ovaj rezultat na:"
         send_digest: "Pošalji"
-        sending_email: "Email se šalje..."
         format: "Formatiraj"
         html: "hmtl"
         text: "tekst"
@@ -5017,7 +4944,6 @@ hr:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
             cc_placeholder: "cc@example.com"
-            subject_placeholder: "Predmet..."
             error_placeholder: "Greška"
         logs:
           none: "Nema pronađenih zapisa."
@@ -5025,7 +4951,6 @@ hr:
             title: "Filter"
             user_placeholder: "korisničko ime"
             address_placeholder: "ime@primjer.com"
-            type_placeholder: "sažetak, prijava..."
             reply_key_placeholder: "ključ odgovora"
             smtp_transaction_response_placeholder: "SMTP ID"
       moderation_history:
@@ -5341,7 +5266,6 @@ hr:
           combative: "Previše agresivan"
           in_wrong_place: "Na krivom mjestu"
           no_constructive_purpose: "Njihova djela nemaju konstruktivnu svrhu osim stvaranja neslaganja unutar zajednice"
-          custom: "Prilagođeno..."
         suspend_message: "Pošaljite poruku emailom."
         suspend_message_placeholder: "Po želji, pružite više informacija o suspenziji i bit će poslana korisniku."
         suspended_by: "Suspendirao"
@@ -5429,7 +5353,6 @@ hr:
           button: "Obriši sve objave"
           progress:
             title: "Napredak brisanja postova"
-            description: "Brisanje postova..."
           confirmation:
             title: "Izbrišite sve postove do @%{username}"
             description: |
@@ -5465,7 +5388,6 @@ hr:
             text: "prijenos @%{username} u @%{targetUsername}"
             transfer_and_delete: "Prijenos i brisanje @%{username}"
             cancel: "Odustani"
-        merging_user: "Spajanje korisnika..."
         merge_failed: "Došlo je do pogreške prilikom spajanja korisnika."
         delete_forbidden_because_staff: "Admini i moderatori ne mogu biti obrisani."
         delete_posts_forbidden_because_staff: "Nije moguće obrisati sve objave administratora i moderatora."
@@ -5485,7 +5407,6 @@ hr:
         delete_confirm: "Općenito je bolje anonimizirati korisnike umjesto brisanja, kako bi se izbjeglo uklanjanje sadržaja iz postojećih rasprava."
         delete_and_block: "Obriši i <b>block</b> ovaj email i IP adresu"
         delete_dont_block: "Samo obriši"
-        deleting_user: "Brisanje korisnika..."
         deleted: "Korisnik je obrisan."
         delete_failed: "Dogodila se greška pri brisanju korisnika. Provjerite da li ste obrisali sve njegove objave prije nego ga ponovo pokušate brisati."
         send_activation_email: "Pošalji aktivacijski email"
@@ -5687,8 +5608,6 @@ hr:
           modal_description: "Želite li povijesno primijeniti ovu promjenu? Time će se promijeniti postavke za %{count} postojećih korisnika."
           modal_yes: "Da"
           modal_no: "Ne, samo ubuduće primijeni promjenu"
-        simple_list:
-          add_item: "Dodaj stavku..."
         json_schema:
           edit: Pokreni uređivač
           modal_title: "Uredi %{name}"
@@ -5788,7 +5707,6 @@ hr:
         help: "Dodajte nove emojije koji će biti dostupni svima. Povucite i ispustite više datoteka odjednom bez unosa naziva da biste stvorili emojije koristeći njihove nazive datoteka. Odabrana grupa će se koristiti za sve datoteke koje se dodaju u isto vrijeme. Također možete kliknuti \"Dodaj novi emoji\" da otvorite alat za odabir datoteka."
         add: "Dodaj novi emoji"
         choose_files: "Odaberite Datoteke"
-        uploading: "Učitavanje..."
         name: "Ime"
         group: "Grupa"
         image: "Slika"
@@ -5851,11 +5769,9 @@ hr:
       finish: "Završi postavljanje."
       back: "Natrag"
       next: "Sljedeći"
-      configure_more: "Konfiguriraj više..."
       step-text: "Korak"
       step: "%{current} od %{total}"
       upload: "Učitaj datoteku"
-      uploading: "Učitavanje..."
       upload_error: "Žao nam je, dogodila se greška pri učitavanju te datoteke. Molimo pokušajte ponovo."
       staff_count:
         one: "Vaša zajednica ima %{count} djelatnika (vi)."

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "cose"
 
-module Webauthn
+module DiscourseWebauthn
   class SecurityKeyAuthenticationService < SecurityKeyBaseValidationService
     ##
     # See https://w3c.github.io/webauthn/#sctn-verifying-assertion for
@@ -30,7 +30,7 @@ module Webauthn
       client_data
 
       # 8. Verify that the value of C.type is the string webauthn.get.
-      validate_webauthn_type(::Webauthn::ACCEPTABLE_AUTHENTICATION_TYPE)
+      validate_webauthn_type(::DiscourseWebauthn::ACCEPTABLE_AUTHENTICATION_TYPE)
 
       # 9. Verify that the value of C.challenge equals the base64url encoding of options.challenge.
       validate_challenge

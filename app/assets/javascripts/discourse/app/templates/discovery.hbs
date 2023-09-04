@@ -3,7 +3,7 @@
   {{#unless this.viewingCategoriesList}}
     <CategoryReadOnlyBanner
       @category={{this.category}}
-      @readOnly={{this.navigationCategory.cannotCreateTopicOnCategory}}
+      @readOnly={{not this.navigationCategory.enableCreateTopicButton}}
     />
   {{/unless}}
 </div>
@@ -23,6 +23,10 @@
 </div>
 
 <ConditionalLoadingSpinner @condition={{this.showLoadingSpinner}} />
+
+{{#if this.loading}}
+  {{hide-application-footer}}
+{{/if}}
 
 <span>
   <PluginOutlet @name="discovery-above" @connectorTagName="div" />

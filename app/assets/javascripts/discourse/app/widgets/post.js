@@ -21,7 +21,6 @@ import { relativeAgeMediumSpan } from "discourse/lib/formatter";
 import { transformBasicPost } from "discourse/lib/transform-post";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
 import { nativeShare } from "discourse/lib/pwa-utils";
-import { hideUserTip } from "discourse/lib/user-tips";
 import ShareTopicModal from "discourse/components/modal/share-topic";
 import { getOwner } from "@ember/application";
 
@@ -871,7 +870,7 @@ export function addPostClassesCallback(callback) {
 
 export default createWidget("post", {
   buildKey: (attrs) => `post-${attrs.id}`,
-  services: ["dialog"],
+  services: ["dialog", "user-tips"],
   shadowTree: true,
 
   buildAttributes(attrs) {
@@ -1004,10 +1003,10 @@ export default createWidget("post", {
   },
 
   destroy() {
-    hideUserTip("post_menu");
+    this.userTips.hideTip("post_menu");
   },
 
   willRerenderWidget() {
-    hideUserTip("post_menu");
+    this.userTips.hideTip("post_menu");
   },
 });

@@ -1,20 +1,23 @@
+import Component from "@ember/component";
+import { inject as service } from "@ember/service";
 import PanEvents, {
   SWIPE_DISTANCE_THRESHOLD,
   SWIPE_VELOCITY_THRESHOLD,
 } from "discourse/mixins/pan-events";
-import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import { next } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
-import { observes } from "discourse-common/utils/decorators";
-import showModal from "discourse/lib/show-modal";
+import { bind, observes } from "discourse-common/utils/decorators";
+import JumpToPost from "./modal/jump-to-post";
 
-const MIN_WIDTH_TIMELINE = 924,
-  MIN_HEIGHT_TIMELINE = 325;
+const MIN_WIDTH_TIMELINE = 925;
+const MIN_HEIGHT_TIMELINE = 325;
 
 export default Component.extend(PanEvents, {
+  modal: service(),
+
   classNameBindings: [
     "info.topicProgressExpanded:topic-progress-expanded",
     "info.renderTimeline:with-timeline:with-topic-progress",
@@ -44,35 +47,26 @@ export default Component.extend(PanEvents, {
       return;
     }
 
-    let info = this.info;
-
-    // Safari's window.innerWidth doesn't match CSS media queries
-    let windowWidth = this.capabilities.isSafari
-      ? document.documentElement.clientWidth
-      : window.innerWidth;
-
-    if (info.get("topicProgressExpanded")) {
-      info.set("renderTimeline", true);
+    if (this.info.topicProgressExpanded) {
+      this.info.set("renderTimeline", true);
+    } else if (this.site.mobileView) {
+      this.info.set("renderTimeline", false);
     } else {
-      let renderTimeline = !this.site.mobileView;
+      const composerHeight =
+        document.querySelector("#reply-control")?.offsetHeight || 0;
+      const verticalSpace =
+        window.innerHeight - composerHeight - headerOffset();
 
-      if (renderTimeline) {
-        const composer = document.getElementById("reply-control");
-
-        if (composer) {
-          renderTimeline =
-            windowWidth > MIN_WIDTH_TIMELINE &&
-            window.innerHeight - composer.offsetHeight - headerOffset() >
-              MIN_HEIGHT_TIMELINE;
-        }
-      }
-
-      info.set("renderTimeline", renderTimeline);
+      this.info.set(
+        "renderTimeline",
+        this.mediaQuery.matches && verticalSpace > MIN_HEIGHT_TIMELINE
+      );
     }
   },
 
+  @bind
   _checkSize() {
-    discourseDebounce(this, this._performCheckSize, 300, true);
+    discourseDebounce(this, this._performCheckSize, 200, true);
   },
 
   // we need to store this so topic progress has something to init with
@@ -132,13 +126,12 @@ export default Component.extend(PanEvents, {
 
   keyboardTrigger(e) {
     if (e.type === "jump") {
-      const controller = showModal("jump-to-post", {
-        modalClass: "jump-to-post-modal",
-      });
-      controller.setProperties({
-        topic: this.topic,
-        jumpToIndex: this.attrs.jumpToIndex,
-        jumpToDate: this.attrs.jumpToDate,
+      this.modal.show(JumpToPost, {
+        model: {
+          topic: this.topic,
+          jumpToIndex: this.attrs.jumpToIndex,
+          jumpToDate: this.attrs.jumpToDate,
+        },
       });
     }
   },
@@ -216,16 +209,13 @@ export default Component.extend(PanEvents, {
       .on("topic:jump-to-post", this, this._collapseFullscreen)
       .on("topic:keyboard-trigger", this, this.keyboardTrigger);
 
-    if (!this.site.mobileView) {
-      $(window).on("resize.discourse-topic-navigation", () =>
-        this._checkSize()
-      );
+    if (this.site.desktopView) {
+      this.mediaQuery = matchMedia(`(min-width: ${MIN_WIDTH_TIMELINE}px)`);
+      this.mediaQuery.addEventListener("change", this._checkSize);
       this.appEvents.on("composer:opened", this, this.composerOpened);
       this.appEvents.on("composer:resize-ended", this, this.composerOpened);
       this.appEvents.on("composer:closed", this, this.composerClosed);
-      $("#reply-control").on("div-resized.discourse-topic-navigation", () =>
-        this._checkSize()
-      );
+      $("#reply-control").on("div-resized", this._checkSize);
     }
 
     this._checkSize();
@@ -241,12 +231,12 @@ export default Component.extend(PanEvents, {
 
     $(window).off("click.hide-fullscreen");
 
-    if (!this.site.mobileView) {
-      $(window).off("resize.discourse-topic-navigation");
+    if (this.site.desktopView) {
+      this.mediaQuery.removeEventListener("change", this._checkSize);
       this.appEvents.off("composer:opened", this, this.composerOpened);
       this.appEvents.off("composer:resize-ended", this, this.composerOpened);
       this.appEvents.off("composer:closed", this, this.composerClosed);
-      $("#reply-control").off("div-resized.discourse-topic-navigation");
+      $("#reply-control").off("div-resized", this._checkSize);
     }
   },
 });

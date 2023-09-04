@@ -10,6 +10,10 @@ ar:
       site_settings:
         categories:
           chat: الدردشة
+        chat_separate_sidebar_mode:
+          always: "دائمًا"
+          fullscreen: "عندما تكون الدردشة في وضع ملء الشاشة"
+          never: "أبدًا"
       logs:
         staff_actions:
           actions:
@@ -114,6 +118,8 @@ ar:
         all_new: "كل الرسائل الجديدة"
         dm_and_mentions: "الرسائل المباشرة والإشارات"
         never: "أبدًا"
+      separate_sidebar_mode:
+        title: "إظهار أوضاع الشريط الجانبي المنفصلة للمنتدى والدردشة"
       enable: "تفعيل الدردشة"
       flag: "الإبلاغ"
       emoji: "إدراج رمز تعبيري"
@@ -129,7 +135,7 @@ ar:
         description: "حدِّد خيارًا أدناه لتلخيص المحادثة المُرسَلة خلال الإطار الزمني المطلوب."
         summarize: "تلخيص"
         since:
-          zero: "آخر %{count} ساعة"
+          zero: "آخر ساعة"
           one: "آخر ساعة"
           two: "آخر ساعتين (%{count})"
           few: "آخر %{count} ساعات"
@@ -169,6 +175,7 @@ ar:
           few: "لا تسمح المجموعة @%{group_name} و%{count} مجموعات أخرى بالإشارات."
           many: "لا تسمح المجموعة @%{group_name} و%{count} مجموعةً أخرى بالإشارات."
           other: "لا تسمح المجموعة @%{group_name} و%{count} مجموعة أخرى بالإشارات."
+        channel_wide_mentions_disallowed: "إشارات @here و @all مٌعطلة في هذه القناة."
         too_many_members: "تحتوي المجموعة %{group_name} على أعضاء كثيرين. لم يتلقَّ أحد الإشعارات."
         too_many_members_multiple:
           zero: "تحتوي المجموعة %{group_name} و%{count} مجموعة أخرى على أعضاء كثيرين. لم يتلقَّ أحد الإشعارات."
@@ -522,7 +529,7 @@ ar:
         title: "الدردشة"
         export_messages:
           title: "تصدير رسائل الدردشة"
-          description: "التصدير مقتصر حاليًا على أحدث 10000 رسالة في آخر 6 أشهر."
+          description: "يؤدي هذا إلى تصدير جميع الرسائل من جميع القنوات."
           create_export: "إنشاء تصدير"
           export_has_started: "بدأ التصدير. ستتلقى رسالة خاصة عندما يصبح جاهزًا."
       direct_messages:
@@ -644,7 +651,6 @@ ar:
       thread:
         title: "العنوان"
         view_thread: عرض سلسلة الدردشة
-        default_title: "سلسلة الدردشة"
         replies:
           zero: "%{count} رد"
           one: "رد واحد (%{count})"
@@ -761,3 +767,7 @@ ar:
       sections:
         chat:
           title: الدردشة
+    sidebar:
+      panels:
+        chat:
+          label: "الدردشة"

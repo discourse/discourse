@@ -44,6 +44,8 @@ walkthrough will go through these in detail:
 
 - To ensure mail deliverability, you must add valid [SPF and DKIM records](https://www.google.com/search?q=what+is+spf+dkim) in your DNS. You'll need SMTP credentials from your email provider, which include an SMTP username and password. Log in to your email provider's account, go to SMTP settings or Email API section, and locate/generate your unique SMTP credentials. Keep them secure, as you'll use them during the Discourse configuration. See your mail provider instructions for specifics.
 
+- When creating the DKIM record, some cloud hosting providers may append the domain name automatically to the input for public key. Do check that the created record has the expected public key value.
+
 - If you're having trouble getting emails to work, follow our [Email Troubleshooting Guide](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326)
 
 ## Installation
@@ -101,7 +103,7 @@ Answer the following questions when prompted:
     Let's Encrypt account email? (ENTER to skip) [me@example.com]: 
     Optional Maxmind License key () [xxxxxxxxxxxxxxxx]:
 
-You'll get the SMTP details from your [email](#email) setup, be sure to complete that section.
+You'll get the SMTP details from your [email](#2-setting-up-email) setup, be sure to complete that section.
 
 Let's Encrypt account setup is to give you a free HTTPS certificate for your site, be sure to set that up if you want your site secure.
 

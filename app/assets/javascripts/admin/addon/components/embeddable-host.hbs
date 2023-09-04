@@ -29,15 +29,15 @@
   <td class="editing-controls">
     <DButton
       @icon="check"
-      @action={{action "save"}}
-      @class="btn-primary"
+      @action={{this.save}}
       @disabled={{this.cantSave}}
+      class="btn-primary"
     />
     <DButton
       @icon="times"
-      @action={{action "cancel"}}
-      @class="btn-danger"
+      @action={{this.cancel}}
       @disabled={{this.host.isSaving}}
+      class="btn-danger"
     />
   </td>
 {{else}}
@@ -56,11 +56,7 @@
     {{category-badge this.host.category allowUncategorized=true}}
   </td>
   <td class="controls">
-    <DButton @icon="pencil-alt" @action={{action "edit"}} />
-    <DButton
-      @icon="far-trash-alt"
-      @action={{action "delete"}}
-      @class="btn-danger"
-    />
+    <DButton @icon="pencil-alt" @action={{this.edit}} />
+    <DButton @icon="far-trash-alt" @action={{this.delete}} class="btn-danger" />
   </td>
 {{/if}}

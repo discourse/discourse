@@ -6,6 +6,7 @@ import StaticPage from "discourse/models/static-page";
 
 export default class LoginRoute extends DiscourseRoute {
   @service siteSettings;
+  @service router;
 
   // `login-page` because `login` controller is the one for
   // the login modal
@@ -13,9 +14,10 @@ export default class LoginRoute extends DiscourseRoute {
 
   beforeModel() {
     if (!this.siteSettings.login_required) {
-      this.replaceWith(`/${defaultHomepage()}`).then((e) => {
-        next(() => e.send("showLogin"));
-      });
+      this.router
+        .replaceWith(`/${defaultHomepage()}`)
+        .followRedirects()
+        .then((e) => next(() => e.send("showLogin")));
     }
   }
 

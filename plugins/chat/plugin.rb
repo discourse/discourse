@@ -24,6 +24,7 @@ register_svg_icon "file-image"
 
 # route: /admin/plugins/chat
 add_admin_route "chat.admin.title", "chat"
+hide_plugin
 
 GlobalSetting.add_default(:allow_unsecure_chat_uploads, false)
 
@@ -47,6 +48,7 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:ignore_channel_wide_mention)
   UserUpdater::OPTION_ATTR.push(:chat_email_frequency)
   UserUpdater::OPTION_ATTR.push(:chat_header_indicator_preference)
+  UserUpdater::OPTION_ATTR.push(:chat_separate_sidebar_mode)
 
   register_reviewable_type Chat::ReviewableMessage
 
@@ -297,6 +299,12 @@ after_initialize do
     object.chat_header_indicator_preference
   end
 
+  add_to_serializer(:user_option, :chat_separate_sidebar_mode) { object.chat_separate_sidebar_mode }
+
+  add_to_serializer(:current_user_option, :chat_separate_sidebar_mode) do
+    object.chat_separate_sidebar_mode
+  end
+
   RETENTION_SETTINGS_TO_USER_OPTION_FIELDS = {
     chat_channel_retention_days: :dismissed_channel_retention_reminder,
     chat_dm_retention_days: :dismissed_dm_retention_reminder,
@@ -418,7 +426,6 @@ after_initialize do
   end
 
   on(:category_updated) do |category|
-    # TODO(roman): remove early return after 2.9 release.
     # There's a bug on core where this event is triggered with an `#update` result (true/false)
     if category.is_a?(Category) && category_channel = Chat::Channel.find_by(chatable: category)
       if category_channel.auto_join_users

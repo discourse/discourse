@@ -17,6 +17,12 @@ module PageObjects
         )
       end
 
+      def prefers_drawer
+        page.execute_script(
+          "window.localStorage.setItem('discourse_chat_preferred_mode', '\"DRAWER_CHAT\"');",
+        )
+      end
+
       def open_from_header
         find(".chat-header-icon").click
       end
@@ -78,12 +84,6 @@ module PageObjects
 
       def minimize_full_page
         find(".open-drawer-btn").click
-      end
-
-      def has_message?(message)
-        container = find(".chat-message-container[data-id=\"#{message.id}\"]")
-        container.has_content?(message.message)
-        container.has_content?(message.user.username)
       end
 
       NEW_CHANNEL_BUTTON_SELECTOR = ".new-channel-btn"

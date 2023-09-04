@@ -387,29 +387,6 @@ module Chat
         end
     end
 
-    def self.publish_inaccessible_mentions(
-      user_id,
-      chat_message,
-      cannot_chat_users,
-      without_membership,
-      too_many_members,
-      mentions_disabled
-    )
-      MessageBus.publish(
-        "/chat/#{chat_message.chat_channel_id}",
-        {
-          type: :mention_warning,
-          chat_message_id: chat_message.id,
-          cannot_see: cannot_chat_users.map { |u| { username: u.username, id: u.id } }.as_json,
-          without_membership:
-            without_membership.map { |u| { username: u.username, id: u.id } }.as_json,
-          groups_with_too_many_members: too_many_members.map(&:name).as_json,
-          group_mentions_disabled: mentions_disabled.map(&:name).as_json,
-        },
-        user_ids: [user_id],
-      )
-    end
-
     def self.publish_kick_users(channel_id, user_ids)
       MessageBus.publish(
         kick_users_message_bus_channel(channel_id),
@@ -476,8 +453,19 @@ module Chat
       )
     end
 
-    def self.publish_notice(user_id:, channel_id:, text_content:)
-      payload = { type: "notice", text_content: text_content, channel_id: channel_id }
+    def self.publish_notice(user_id:, channel_id:, text_content: nil, type: nil, data: nil)
+      # Notices are either plain text sent to the client, or a "type" with data. The
+      # client will then translate that type and data into a front-end component.
+      if text_content.blank? && type.blank? && data.blank?
+        raise "Cannot publish notice without text content or a type"
+      end
+      payload = { type: "notice", channel_id: channel_id }
+      if text_content
+        payload[:text_content] = text_content
+      else
+        payload[:notice_type] = type
+        payload[:data] = data
+      end
 
       MessageBus.publish("/chat/#{channel_id}", payload, user_ids: [user_id])
     end

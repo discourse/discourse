@@ -16,7 +16,7 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
     sign_in(creator)
     chat_page.visit_channel(channel)
     chat_channel_page.send_message(text)
-    expect(chat_channel_page).to have_message(text: text)
+    expect(chat_channel_page.messages).to have_message(text: text)
   end
 
   context "as a user" do

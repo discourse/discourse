@@ -10,6 +10,9 @@ ru:
       site_settings:
         categories:
           chat: Чат
+        chat_separate_sidebar_mode:
+          always: "Всегда"
+          never: "Никогда"
       logs:
         staff_actions:
           actions:
@@ -516,7 +519,6 @@ ru:
         title: "Чат"
         export_messages:
           title: "Экспорт сообщений чата"
-          description: "Текущее ограничение на экспорт — 10 000 последних сообщений за последние шесть месяцев."
           create_export: "Создать экспорт"
           export_has_started: "Экспорт начался. Когда он завершится, вы получите личное сообщение."
       direct_messages:
@@ -626,7 +628,6 @@ ru:
       thread:
         title: "Название"
         view_thread: Просмотреть цепочку
-        default_title: "Цепочка"
         replies:
           one: "%{count} ответ"
           few: "%{count} ответа"
@@ -737,3 +738,7 @@ ru:
       sections:
         chat:
           title: Чат
+    sidebar:
+      panels:
+        chat:
+          label: "Чат"

@@ -4,8 +4,44 @@ describe "Filtering topics", type: :system do
   fab!(:user) { Fabricate(:user) }
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:topic_query_filter) { PageObjects::Components::TopicQueryFilter.new }
+  let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
   before { SiteSetting.experimental_topics_filter = true }
+
+  it "updates the input field when the query string is changed" do
+    sidebar_section = Fabricate(:sidebar_section, user: user)
+
+    sidebar_section_link_1 =
+      Fabricate(
+        :sidebar_section_link,
+        sidebar_section: sidebar_section,
+        linkable: Fabricate(:sidebar_url, name: "filter tags", value: "/filter?q=tag%3Atag1"),
+      )
+
+    sidebar_section_link_2 =
+      Fabricate(
+        :sidebar_section_link,
+        sidebar_section: sidebar_section,
+        linkable:
+          Fabricate(
+            :sidebar_url,
+            name: "filter categories",
+            value: "/filter?q=category%3Acategory1",
+          ),
+      )
+
+    sign_in(user)
+
+    visit("/latest")
+
+    sidebar.click_section_link("filter tags")
+
+    expect(topic_query_filter).to have_input_text("tag:tag1")
+
+    sidebar.click_section_link("filter categories")
+
+    expect(topic_query_filter).to have_input_text("category:category1")
+  end
 
   describe "when filtering by status" do
     fab!(:topic) { Fabricate(:topic) }

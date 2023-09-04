@@ -28,21 +28,17 @@
 
     <div class="controls">
       {{#if this.editingDescription}}
+        <DButton @action={{this.saveDescription}} @icon="check" class="ok" />
         <DButton
-          @class="ok"
-          @action={{action "saveDescription"}}
-          @icon="check"
-        />
-        <DButton
-          @class="cancel"
-          @action={{action "editDescription"}}
+          @action={{this.editDescription}}
           @icon="times"
+          class="cancel"
         />
       {{else}}
         <DButton
-          @class="btn-default"
-          @action={{action "editDescription"}}
+          @action={{this.editDescription}}
           @icon="pencil-alt"
+          class="btn-default"
         />
       {{/if}}
     </div>
@@ -84,25 +80,22 @@
     <div class="controls">
       {{#if this.model.revoked_at}}
         <DButton
-          @action={{action "undoRevokeKey"}}
-          @actionParam={{this.model}}
+          @action={{fn this.undoRevokeKey this.model}}
           @icon="undo"
           @label="admin.api.undo_revoke"
         />
         <DButton
-          @action={{action "deleteKey"}}
-          @actionParam={{this.model}}
+          @action={{fn this.deleteKey this.model}}
           @icon="trash-alt"
           @label="admin.api.delete"
-          @class="btn-danger"
+          class="btn-danger"
         />
       {{else}}
         <DButton
-          @class="btn-danger"
-          @action={{action "revokeKey"}}
-          @actionParam={{this.model}}
+          @action={{fn this.revokeKey this.model}}
           @icon="times"
           @label="admin.api.revoke"
+          class="btn-danger"
         />
       {{/if}}
     </div>
@@ -143,8 +136,8 @@
             <td>
               <DButton
                 @icon="link"
-                @action={{action "showURLs" scope.urls}}
-                @class="btn-info"
+                @action={{fn this.showURLs scope.urls}}
+                class="btn-info"
               />
             </td>
             <td>

@@ -10,6 +10,10 @@ zh_CN:
       site_settings:
         categories:
           chat: 聊天
+        chat_separate_sidebar_mode:
+          always: "总是"
+          fullscreen: "当全屏聊天时"
+          never: "永不"
       logs:
         staff_actions:
           actions:
@@ -104,6 +108,8 @@ zh_CN:
         all_new: "所有新消息"
         dm_and_mentions: "直接消息和提及"
         never: "永不"
+      separate_sidebar_mode:
+        title: "为论坛和聊天显示单独边栏模式"
       enable: "启用聊天"
       flag: "举报"
       emoji: "插入表情符号"
@@ -134,6 +140,7 @@ zh_CN:
         group_mentions_disabled: "%{group_name} 不允许提及。"
         group_mentions_disabled_multiple:
           other: "%{group_name} 和其他 %{count} 个群组不允许提及。"
+        channel_wide_mentions_disallowed: "在本频道中禁用 @here 和 @all 这2种提及方式。"
         too_many_members: "%{group_name} 的成员过多。任何人都没有收到通知。"
         too_many_members_multiple:
           other: "%{group_name} 和其他 %{count} 个群组的成员过多。任何人都没有收到通知。"
@@ -357,7 +364,7 @@ zh_CN:
           hint_1_group: '%{group} 中的用户将根据<a href="%{settingLink}" target="_blank">安全设置</a>访问此频道'
           hint_2_groups: '%{group1} 和 %{group2} 中的用户将根据<a href="%{settingLink}" target="_blank">安全设置</a>访问此频道'
           hint_multiple_groups:
-            other: '%{group} 和其他 %{count} 个群组中的用户将根据<a href="%{settingLink}" target="_blank">安全设置</a>访问此频道'
+            other: '%{group} 和其他 %{count} 个群组中的用户将根据<a href="%{settingLink}" target="_blank">安全</a>访问此频道'
         create: "创建频道"
         description: "描述（可选）"
         name: "频道名称"
@@ -420,7 +427,7 @@ zh_CN:
         title: "聊天"
         export_messages:
           title: "导出聊天消息"
-          description: "目前只能导出过去 6 个月内的 10000 条最新消息。"
+          description: "这将导出所有频道的所有信息。"
           create_export: "创建导出"
           export_has_started: "导出已开始。导出完成后，您将收到一条私信。"
       direct_messages:
@@ -512,7 +519,6 @@ zh_CN:
       thread:
         title: "标题"
         view_thread: 查看对话
-        default_title: "对话"
         replies:
           other: "%{count} 个回复"
         label: 对话
@@ -614,3 +620,7 @@ zh_CN:
       sections:
         chat:
           title: 聊天
+    sidebar:
+      panels:
+        chat:
+          label: "聊天"

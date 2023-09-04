@@ -161,7 +161,6 @@ ro:
       one: "Încă un răspuns"
       few: "Încă %{count} răspunsuri"
       other: "Încă %{count} de răspunsuri"
-    loading: "Încarcă discuția..."
     permalink: "Link permanent"
     imported_from: "Acesta este un subiect de discuție adăugat la discuția originală de la %{link}"
     in_reply_to: "▶ %{username}"
@@ -901,7 +900,6 @@ ro:
     top_topics_formula_least_likes_per_post_multiplier: "valoarea multiplicatorului (n) de cele mai puține aprecieri în formula celor mai bune subiecte:\n`log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     rate_limit_create_topic: "După crearea unui subiect, utilizatorii trebuie să aștepte (n) secunde până pot crea unul nou."
     rate_limit_create_post: "După postare, utilizatorii trebuie să aștepte (n) de secunde până să creeze alta postare."
-    rate_limit_new_user_create_topic: "După crearea unui subiect, utilizatorii noi trebuie să aștepte (n) secunde până pot crea unul nou."
     rate_limit_new_user_create_post: "După ce postează, utilizatorii noi trebuie să aștepte (n) secunde până pot crea altă postare."
     max_likes_per_day: "Numărul maxim zilnic de aprecieri per utilizator."
     max_flags_per_day: "Numărul maxim zilnic de marcaje de avertizare per utilizator."
@@ -1113,7 +1111,6 @@ ro:
     default_categories_tracking: "Implicit, listează categoriile care sunt urmărite."
     default_categories_muted: "Implicit, listează categoriile care sunt setate pe silențios."
     default_categories_watching_first_post: "Lista categoriilor în care prima postare din fiecare topic va fi urmărită activ în mod implicit."
-    allow_user_api_keys: "Permite generarea de chei API pentru utilizator"
     allow_user_api_key_scopes: "Lista domeniilor pentru care se permit chei API pentru utilizatori"
     allowed_user_api_push_urls: "URL-uri permise pentru serviciul push al serverului la API utilizator"
     tagging_enabled: "Activează etichetele la subiecte?"
@@ -2089,7 +2086,6 @@ ro:
       approve:
         title: "Aprobare"
       reject_user:
-        title: "Şterge utilizatorul..."
         delete:
           title: "Şterge utilizatorul"
       reject:

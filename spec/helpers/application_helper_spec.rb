@@ -161,7 +161,19 @@ RSpec.describe ApplicationHelper do
         it "will return sitelinks search tag" do
           helper.stubs(:current_page?).returns(false)
           helper.stubs(:current_page?).with("/").returns(true)
-          expect(helper.render_sitelinks_search_tag).to include('"@type":"SearchAction"')
+
+          sitelinks_search_tag =
+            JSON.parse(
+              helper
+                .render_sitelinks_search_tag
+                .gsub('<script type="application/ld+json">', "")
+                .gsub("</script>", ""),
+            )
+
+          expect(sitelinks_search_tag["@type"]).to eq("WebSite")
+          expect(sitelinks_search_tag["potentialAction"]["@type"]).to eq("SearchAction")
+          expect(sitelinks_search_tag["name"]).to eq(SiteSetting.title)
+          expect(sitelinks_search_tag["url"]).to eq(Discourse.base_url)
         end
       end
       context "when not on homepage" do
@@ -180,6 +192,7 @@ RSpec.describe ApplicationHelper do
           helper.stubs(:current_page?).returns(false)
           helper.stubs(:current_page?).with(Discourse.base_path).returns(true)
           expect(helper.render_sitelinks_search_tag).to include('"@type":"SearchAction"')
+          expect(helper.render_sitelinks_search_tag).to include("subfolder-base-path")
         end
       end
       context "when not on homepage" do

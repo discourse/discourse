@@ -54,7 +54,7 @@ describe "Viewing sidebar as anonymous user", type: :system do
       expect(sidebar).to have_tags_section
       expect(sidebar).to have_all_tags_section_link
       expect(sidebar).to have_tag_section_links([tag3, tag2, tag4, tag5, tag1])
-      expect(sidebar).to have_tag_section_link_with_title(tag1, "tag 1 description &lt;script&gt;")
+      expect(sidebar).to have_tag_section_link_with_title(tag1, "tag 1 description ")
     end
 
     it "should display the site's top tags when `default_navigation_menu_tags` site setting has been set but the tags configured are hidden to the user" do
@@ -66,7 +66,7 @@ describe "Viewing sidebar as anonymous user", type: :system do
       expect(sidebar).to have_tags_section
       expect(sidebar).to have_all_tags_section_link
       expect(sidebar).to have_tag_section_links([tag3, tag2, tag4, tag1, tag6])
-      expect(sidebar).to have_tag_section_link_with_title(tag1, "tag 1 description &lt;script&gt;")
+      expect(sidebar).to have_tag_section_link_with_title(tag1, "tag 1 description ")
     end
 
     it "should display the tags configured in `default_navigation_menu_tags` site setting when it has been set" do

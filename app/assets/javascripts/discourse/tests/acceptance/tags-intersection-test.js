@@ -12,11 +12,6 @@ acceptance("Tags intersection", function (needs) {
   needs.settings({ tagging_enabled: true });
 
   needs.pretender((server, helper) => {
-    server.get("/tag/first/notifications", () => {
-      return helper.response({
-        tag_notification: { id: "first", notification_level: 1 },
-      });
-    });
     server.get("/tags/intersection/first/second.json", () => {
       return helper.response({
         users: [],

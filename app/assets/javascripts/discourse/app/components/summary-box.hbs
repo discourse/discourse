@@ -1,62 +1,71 @@
-{{#if @postAttrs.hasTopRepliesSummary}}
-  <p>{{html-safe this.topRepliesSummaryInfo}}</p>
-{{/if}}
-<div class="summarization-buttons">
-  {{#if @postAttrs.summarizable}}
-    {{#if this.canCollapseSummary}}
+<div
+  class="summary-box__container"
+  {{did-insert this.subscribe}}
+  {{will-destroy this.unsubscribe}}
+>
+  {{#if @postAttrs.hasTopRepliesSummary}}
+    <p>{{html-safe this.topRepliesSummaryInfo}}</p>
+  {{/if}}
+  <div class="summarization-buttons">
+    {{#if @postAttrs.summarizable}}
+      {{#if this.canCollapseSummary}}
+        <DButton
+          @action={{this.collapseSummary}}
+          @title="summary.buttons.hide"
+          @label="summary.buttons.hide"
+          @icon="chevron-up"
+          class="btn-primary topic-strategy-summarization"
+        />
+      {{else}}
+        <DButton
+          @action={{this.generateSummary}}
+          @translatedLabel={{this.generateSummaryTitle}}
+          @translatedTitle={{this.generateSummaryTitle}}
+          @icon={{this.generateSummaryIcon}}
+          @disabled={{this.loadingSummary}}
+          class="btn-primary topic-strategy-summarization"
+        />
+      {{/if}}
+    {{/if}}
+
+    {{#if @postAttrs.hasTopRepliesSummary}}
       <DButton
-        @class="btn-primary topic-strategy-summarization"
-        @action={{this.toggleSummary}}
-        @title="summary.buttons.hide"
-        @label="summary.buttons.hide"
-        @icon="chevron-up"
-      />
-    {{else}}
-      <DButton
-        @class="btn-primary topic-strategy-summarization"
-        @action={{this.generateSummary}}
-        @translatedLabel={{this.generateSummaryTitle}}
-        @translatedTitle={{this.generateSummaryTitle}}
-        @icon={{this.generateSummaryIcon}}
-        @disabled={{this.loadingSummary}}
+        @action={{this.toggleTopRepliesFilter}}
+        @translatedTitle={{this.topRepliesTitle}}
+        @translatedLabel={{this.topRepliesLabel}}
+        @icon={{this.topRepliesIcon}}
+        class="top-replies"
       />
     {{/if}}
-  {{/if}}
+  </div>
 
-  {{#if @postAttrs.hasTopRepliesSummary}}
-    <DButton
-      @class="top-replies"
-      @action={{this.toggleTopRepliesFilter}}
-      @translatedTitle={{this.topRepliesTitle}}
-      @translatedLabel={{this.topRepliesLabel}}
-      @icon={{this.topRepliesIcon}}
-    />
+  {{#if this.showSummaryBox}}
+    <article class="summary-box">
+      {{#if (and this.loadingSummary (not this.summary))}}
+        <AiSummarySkeleton />
+      {{else}}
+        <div class="generated-summary">{{this.summary}}</div>
+
+        {{#if this.summarizedOn}}
+          <div class="summarized-on">
+            <p>
+              {{i18n "summary.summarized_on" date=this.summarizedOn}}
+              <span>
+                {{d-icon "info-circle"}}
+                <DTooltip @placement="top-end">
+                  {{i18n "summary.model_used" model=this.summarizedBy}}
+                </DTooltip>
+              </span>
+            </p>
+
+            {{#if this.outdated}}
+              <p class="outdated-summary">
+                {{this.outdatedSummaryWarningText}}
+              </p>
+            {{/if}}
+          </div>
+        {{/if}}
+      {{/if}}
+    </article>
   {{/if}}
 </div>
-
-{{#if this.showSummaryBox}}
-  <article class="summary-box">
-    {{#if this.loadingSummary}}
-      <AiSummarySkeleton />
-    {{else}}
-      <div class="generated-summary">{{this.summary}}</div>
-      <div class="summarized-on">
-        <p>
-          {{i18n "summary.summarized_on" date=this.summarizedOn}}
-          <span>
-            {{d-icon "info-circle"}}
-            <DTooltip @placement="top-end">
-              {{i18n "summary.model_used" model=this.summarizedBy}}
-            </DTooltip>
-          </span>
-        </p>
-
-        {{#if this.outdated}}
-          <p class="outdated-summary">
-            {{this.outdatedSummaryWarningText}}
-          </p>
-        {{/if}}
-      </div>
-    {{/if}}
-  </article>
-{{/if}}

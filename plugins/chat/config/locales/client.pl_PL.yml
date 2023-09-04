@@ -10,6 +10,10 @@ pl_PL:
       site_settings:
         categories:
           chat: Czat
+        chat_separate_sidebar_mode:
+          always: "Zawsze"
+          fullscreen: "Gdy czat jest w trybie pełnoekranowym"
+          never: "Nigdy"
       logs:
         staff_actions:
           actions:
@@ -110,6 +114,8 @@ pl_PL:
         all_new: "Wszystkie nowe wiadomości"
         dm_and_mentions: "Bezpośrednie wiadomości i wzmianki"
         never: "Nigdy"
+      separate_sidebar_mode:
+        title: "Pokaż oddzielne tryby paska bocznego dla forum i czatu"
       enable: "Włącz czat"
       flag: "Oflaguj"
       emoji: "Wstaw emoji"
@@ -155,6 +161,7 @@ pl_PL:
           few: "%{group_name} i %{count} inne grupy nie zezwalają na wzmianki."
           many: "%{group_name} i %{count} inne grupy nie zezwalają na wzmianki."
           other: "%{group_name} i %{count} inne grupy nie zezwalają na wzmianki."
+        channel_wide_mentions_disallowed: "Wzmianki @here i @all są wyłączone na tym kanale."
         too_many_members: "%{group_name} ma zbyt wielu członków. Nikt nie został powiadomiony."
         too_many_members_multiple:
           one: "%{group_name} i %{count} inna grupa ma zbyt wielu członków. Nikt nie został powiadomiony."
@@ -172,6 +179,60 @@ pl_PL:
             few: "@%{group} i %{count} inne grupy nie zezwalają na wzmianki."
             many: "@%{group} i %{count} innych grup nie zezwala na wzmianki."
             other: "@%{group} i %{count} innych grup nie zezwala na wzmianki."
+          too_many_members_MF: |
+            { groupCount, plural,
+                 =1 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Wspomnienie @{group1} przekracza <a href="{siteSettingUrl}" target="_blank">limit powiadomień</a> z # użytkownika.}
+                              other {Wspomnienie @{group1} przekracza <a href="{siteSettingUrl}" target="_blank">limit powiadomień</a> z # użytkowników.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Wspomnienie @{group1} przekracza limit powiadomień z # użytkownika.}
+                              other {Wspomnienie @{group1} przekracza limit powiadomień z # użytkowników.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+                 =2 {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Wspomnienie @{group1} i @{group2} przekracza <a href="{siteSettingUrl}" target="_blank">limit powiadomień</a> z # użytkownika.}
+                            other {Wspomnienie @{group1} i @{group2} przekracza <a href="{siteSettingUrl}" target="_blank">limit powiadomień</a> z # użytkowników.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Wspomnienie @{group1} i @{group2} przekracza <a href="{siteSettingUrl}" target="_blank">limit powiadomień</a> z # użytkownika.}
+                            other {Wspomnienie @{group1} i @{group2} przekracza <a href="{siteSettingUrl}" target="_blank">limit powiadomień</a> z # użytkowników.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+              other {
+                      { isAdmin, select,
+                        true {
+                          { notificationLimit, plural,
+                              one {Wspomnienie o tych {groupCount} grupach przekracza <a href="{siteSettingUrl}" target="_blank">limit powiadomień</a> z # użytkownika.}
+                            other {Wspomnienie o tych {groupCount} grupach przekracza <a href="{siteSettingUrl}" target="_blank">limit powiadomień</a> z # użytkowników.}
+                          }
+                        }
+                        false {
+                          { notificationLimit, plural,
+                              one {Wspomnienie o tych {groupCount} grupach przekracza <a href="{siteSettingUrl}" target="_blank">limit powiadomień</a> z # użytkownika.}
+                            other {Wspomnienie o tych {groupCount} grupach przekracza <a href="{siteSettingUrl}" target="_blank">limit powiadomień</a> z # użytkowników.}
+                          }
+                        }
+                        other {}
+                      }
+                    }
+            }
         too_many_mentions:
           one: "Ta wiadomość przekracza limit powiadomień wynoszący %{count} wzmiankę."
           few: "Ta wiadomość przekracza limit powiadomień wynoszący %{count} wzmianki."
@@ -336,6 +397,25 @@ pl_PL:
             few: "Automatycznie dodać %{count} użytkowników z %{group1} i %{group2}?"
             many: "Automatycznie dodać %{count} użytkowników z %{group1} i %{group2}?"
             other: "Automatycznie dodać %{count} użytkowników z %{group1} i %{group2}?"
+          warning_multiple_groups_MF: |
+            { groupCount, plural,
+                one {
+                      { userCount, plural,
+                          one {Automatycznie dodać {userCount} użytkownika z {groupName} i {groupCount} innej grupy?}
+                few {Automatycznie dodać {userCount} użytkowników z {groupName} i {groupCount} innej grupy?}
+                many {Automatycznie dodać {userCount} użytkowników z {groupName} i {groupCount} innej grupy?}
+                        other {Automatycznie dodać {userCount} użytkowników z {groupName} i {groupCount} innej grupy?}
+                      }
+                    }
+                other {
+                      { userCount, plural,
+                          one {Automatycznie dodać {userCount} użytkownika z {groupName} i {groupCount} innych grup?}
+                few {Automatycznie dodać {userCount} użytkowników z {groupName} i {groupCount} innych grup?}
+                many {Automatycznie dodać {userCount} użytkowników z {groupName} i {groupCount} innych grup?}
+                        other {Automatycznie dodać {userCount} użytkowników z {groupName} i {groupCount} innych grup?}
+                      }
+                    }
+            }
         choose_category:
           label: "Wybierz kategorię"
           none: "wybierz jeden..."
@@ -415,7 +495,7 @@ pl_PL:
         title: "Czat"
         export_messages:
           title: "Eksportuj wiadomości czatu"
-          description: "Eksport jest obecnie ograniczony do 10 000 najnowszych wiadomości z ostatnich 6 miesięcy."
+          description: "Spowoduje to wyeksportowanie wszystkich wiadomości ze wszystkich kanałów."
           create_export: "Utwórz eksport"
           export_has_started: "Eksport rozpoczął się. Otrzymasz wiadomość prywatną, gdy będzie gotowy."
       direct_messages:
@@ -525,7 +605,6 @@ pl_PL:
       thread:
         title: "Tytuł"
         view_thread: Zobacz wątek
-        default_title: "Wątek"
         replies:
           one: "%{count} odpowiedź"
           few: "%{count} odpowiedzi"
@@ -636,3 +715,7 @@ pl_PL:
       sections:
         chat:
           title: Czat
+    sidebar:
+      panels:
+        chat:
+          label: "Czat"

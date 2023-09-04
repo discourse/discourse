@@ -77,6 +77,10 @@ module PageObjects
         find(AUTOCOMPLETE_MENU)
       end
 
+      def category_chooser
+        Components::SelectKit.new(".category-chooser")
+      end
+
       def switch_category(category_name)
         find(".category-chooser").click
         find(".category-row[data-name='#{category_name}']").click
@@ -194,6 +198,22 @@ module PageObjects
           const composer = document.querySelector("#{COMPOSER_ID} .d-editor-input");
           composer.setSelectionRange(0, composer.value.length);
         JS
+      end
+
+      def submit
+        find("#{COMPOSER_ID} .save-or-cancel .create").click
+      end
+
+      def close
+        find("#{COMPOSER_ID} .save-or-cancel .cancel").click
+      end
+
+      def has_no_in_progress_uploads?
+        find("#{COMPOSER_ID}").has_no_css?("#file-uploading")
+      end
+
+      def has_in_progress_uploads?
+        find("#{COMPOSER_ID}").has_css?("#file-uploading")
       end
 
       private

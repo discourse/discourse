@@ -1,4 +1,5 @@
 import Mixin from "@ember/object/mixin";
+import { getOwner } from "@ember/application";
 import ExtendableUploader from "discourse/mixins/extendable-uploader";
 import EmberObject from "@ember/object";
 import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
@@ -11,6 +12,7 @@ import { warn } from "@ember/debug";
 import I18n from "I18n";
 import getURL from "discourse-common/lib/get-url";
 import { clipboardHelpers } from "discourse/lib/utilities";
+import ComposerVideoThumbnailUppy from "discourse/mixins/composer-video-thumbnail-uppy";
 import { bind, observes, on } from "discourse-common/utils/decorators";
 import {
   bindFileInputChangeListener,
@@ -325,28 +327,32 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
         cacheShortUploadUrl(upload.short_url, upload);
 
-        this._generateVideoThumbnail(file, upload.url, () => {
-          if (this.useUploadPlaceholders) {
+        new ComposerVideoThumbnailUppy(getOwner(this)).generateVideoThumbnail(
+          file,
+          upload.url,
+          () => {
+            if (this.useUploadPlaceholders) {
+              this.appEvents.trigger(
+                `${this.composerEventPrefix}:replace-text`,
+                this.placeholders[file.id].uploadPlaceholder.trim(),
+                markdown
+              );
+            }
+            this._resetUpload(file, { removePlaceholder: false });
             this.appEvents.trigger(
-              `${this.composerEventPrefix}:replace-text`,
-              this.placeholders[file.id].uploadPlaceholder.trim(),
-              markdown
+              `${this.composerEventPrefix}:upload-success`,
+              file.name,
+              upload
             );
-          }
-          this._resetUpload(file, { removePlaceholder: false });
-          this.appEvents.trigger(
-            `${this.composerEventPrefix}:upload-success`,
-            file.name,
-            upload
-          );
 
-          if (this.inProgressUploads.length === 0) {
-            this.appEvents.trigger(
-              `${this.composerEventPrefix}:all-uploads-complete`
-            );
-            this._reset();
+            if (this.inProgressUploads.length === 0) {
+              this.appEvents.trigger(
+                `${this.composerEventPrefix}:all-uploads-complete`
+              );
+              this._reset();
+            }
           }
-        });
+        );
       });
     });
 
@@ -496,8 +502,8 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     const filename = this._filenamePlaceholder(file);
 
     // when adding two separate files with the same filename search for matching
-    // placeholder already existing in the editor ie [Uploading: test.png...]
-    // and add order nr to the next one: [Uploading: test.png(1)...]
+    // placeholder already existing in the editor ie [Uploading: test.png…]
+    // and add order nr to the next one: [Uploading: test.png(1)…]
     const escapedFilename = escapeRegExp(filename);
     const regexString = `\\[${I18n.t("uploading_filename", {
       filename: escapedFilename + "(?:\\()?([0-9])?(?:\\))?",

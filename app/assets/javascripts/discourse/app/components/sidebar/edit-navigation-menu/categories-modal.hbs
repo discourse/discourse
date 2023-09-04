@@ -3,9 +3,10 @@
   @title="sidebar.categories_form_modal.title"
   @disableSaveButton={{this.saving}}
   @save={{this.save}}
-  @showResetDefaultsButton={{(gt
-    this.siteSettings.default_navigation_menu_categories.length 0
-  )}}
+  @showResetDefaultsButton={{gt
+    this.siteSettings.default_navigation_menu_categories.length
+    0
+  }}
   @resetToDefaults={{this.resetToDefaults}}
   @deselectAll={{this.deselectAll}}
   @deselectAllText={{i18n "sidebar.categories_form_modal.subtitle.text"}}
@@ -55,9 +56,9 @@
                     this.selectedSidebarCategoryIds
                     category.id
                   }}
-                  disabled={{(not
+                  disabled={{not
                     (includes this.filteredCategoryIds category.id)
-                  )}}
+                  }}
                   {{on "click" (action "toggleCategory" category.id)}}
                 />
               </label>

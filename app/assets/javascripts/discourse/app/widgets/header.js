@@ -12,7 +12,6 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { hbs } from "ember-cli-htmlbars";
-import { hideUserTip } from "discourse/lib/user-tips";
 import { SEARCH_BUTTON_ID } from "discourse/components/search-menu";
 
 let _extraHeaderIcons = [];
@@ -47,6 +46,8 @@ export const dropdown = {
 };
 
 createWidget("header-notifications", {
+  services: ["user-tips"],
+
   settings: {
     avatarSize: "medium",
   },
@@ -162,18 +163,18 @@ createWidget("header-notifications", {
       reference: document
         .querySelector(".d-header .badge-notification")
         ?.parentElement?.querySelector(".avatar"),
-      appendTo: document.querySelector(".d-header .panel"),
+      appendTo: document.querySelector(".d-header"),
 
       placement: "bottom-end",
     });
   },
 
   destroy() {
-    hideUserTip("first_notification");
+    this.userTips.hideTip("first_notification");
   },
 
   willRerenderWidget() {
-    hideUserTip("first_notification");
+    this.userTips.hideTip("first_notification");
   },
 });
 
@@ -425,7 +426,7 @@ createWidget("glimmer-search-menu-wrapper", {
   },
 
   buildClasses() {
-    return ["search-menu"];
+    return ["search-menu glimmer-search-menu"];
   },
 
   html() {
@@ -557,7 +558,7 @@ export default createWidget("header", {
 
     return h(
       "div.wrap",
-      this.attach("header-contents", Object.assign({}, attrs, contentsAttrs))
+      this.attach("header-contents", { ...attrs, ...contentsAttrs })
     );
   },
 

@@ -6,6 +6,11 @@
 
 hy:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Միշտ"
+          never: "Երբեք"
     chat:
       create: "Ստեղծել"
       cancel: "Չեղարկել"

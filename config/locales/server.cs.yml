@@ -174,7 +174,6 @@ cs:
       few: "%{count} další odpověďi"
       many: "%{count} dalších odpověďí"
       other: "%{count} dalších odpověďí"
-    loading: "Načítám diskuzi..."
     permalink: "Permalink"
     imported_from: "Diskuze k původnímu příspěvku na blogu: %{link}"
     in_reply_to: "▶ %{username}"
@@ -1172,7 +1171,6 @@ cs:
       approve:
         title: "Schválit"
       reject_user:
-        title: "Smazat uživatele..."
         delete:
           title: "Smazat uživatele"
       reject:

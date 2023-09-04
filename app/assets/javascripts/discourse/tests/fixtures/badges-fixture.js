@@ -1727,6 +1727,7 @@ export default {
         icon: "fa-rocket",
         image_url: "/images/avatar.png?3",
         multiple_grant: true,
+        query: "SELECT 1",
       },
     ],
   },

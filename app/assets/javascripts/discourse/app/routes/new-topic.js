@@ -2,76 +2,88 @@ import Category from "discourse/models/category";
 import DiscourseRoute from "discourse/routes/discourse";
 import cookie from "discourse/lib/cookie";
 import { next } from "@ember/runloop";
+import { inject as service } from "@ember/service";
 
-export default DiscourseRoute.extend({
+export default class extends DiscourseRoute {
+  @service composer;
+  @service router;
+  @service currentUser;
+  @service site;
+
   beforeModel(transition) {
     if (this.currentUser) {
-      let category, categoryId;
-
-      if (transition.to.queryParams.category_id) {
-        categoryId = transition.to.queryParams.category_id;
-        category = Category.findById(categoryId);
-      } else if (transition.to.queryParams.category) {
-        const splitCategory = transition.to.queryParams.category.split("/");
-
-        category = this._getCategory(
-          splitCategory[0],
-          splitCategory[1],
-          "nameLower"
-        );
-
-        if (!category) {
-          category = this._getCategory(
-            splitCategory[0],
-            splitCategory[1],
-            "slug"
-          );
-        }
-
-        if (category) {
-          categoryId = category.id;
-        }
-      }
+      const category = this.parseCategoryFromTransition(transition);
 
       if (category) {
-        let route = "discovery.category";
-        let params = { category, id: category.id };
-
-        this.replaceWith(route, params).then((e) => {
-          if (this.controllerFor("navigation/category").canCreateTopic) {
-            this._sendTransition(e, transition, categoryId);
-          }
-        });
-      } else {
-        if (transition.from) {
-          transition.abort();
-          this.send("createNewTopicViaParams");
-        } else {
-          this.replaceWith("discovery.latest").then((e) => {
-            if (this.controllerFor("navigation/default").canCreateTopic) {
-              this._sendTransition(e, transition);
+        // Using URL-based transition to avoid bug with dynamic segments and refreshModel query params
+        // https://github.com/emberjs/ember.js/issues/16992
+        this.router
+          .replaceWith(`/c/${category.id}`)
+          .followRedirects()
+          .then(() => {
+            if (this.currentUser.can_create_topic) {
+              this.openComposer({ transition, category });
             }
           });
-        }
+      } else if (transition.from) {
+        // Navigation from another ember route
+        transition.abort();
+        this.openComposer({ transition });
+      } else {
+        this.router
+          .replaceWith("discovery.latest")
+          .followRedirects()
+          .then(() => {
+            if (this.currentUser.can_create_topic) {
+              this.openComposer({ transition });
+            }
+          });
       }
     } else {
       // User is not logged in
       cookie("destination_url", window.location.href);
-      this.replaceWith("login");
+      this.router.replaceWith("login");
     }
-  },
+  }
 
-  _sendTransition(event, transition, categoryId) {
+  openComposer({ transition, category }) {
     next(() => {
-      event.send(
-        "createNewTopicViaParams",
-        transition.to.queryParams.title,
-        transition.to.queryParams.body,
-        categoryId,
-        transition.to.queryParams.tags
-      );
+      this.composer.openNewTopic({
+        title: transition.to.queryParams.title,
+        body: transition.to.queryParams.body,
+        category,
+        tags: transition.to.queryParams.tags,
+      });
+
+      this.composer.set("formTemplateInitialValues", transition.to.queryParams);
     });
-  },
+  }
+
+  parseCategoryFromTransition(transition) {
+    let category;
+
+    if (transition.to.queryParams.category_id) {
+      const categoryId = transition.to.queryParams.category_id;
+      category = Category.findById(categoryId);
+    } else if (transition.to.queryParams.category) {
+      const splitCategory = transition.to.queryParams.category.split("/");
+
+      category = this._getCategory(
+        splitCategory[0],
+        splitCategory[1],
+        "nameLower"
+      );
+
+      if (!category) {
+        category = this._getCategory(
+          splitCategory[0],
+          splitCategory[1],
+          "slug"
+        );
+      }
+    }
+    return category;
+  }
 
   _getCategory(mainCategory, subCategory, type) {
     let category;
@@ -92,5 +104,5 @@ export default DiscourseRoute.extend({
     }
 
     return category;
-  },
-});
+  }
+}

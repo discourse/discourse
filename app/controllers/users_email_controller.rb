@@ -127,11 +127,11 @@ class UsersEmailController < ApplicationController
       else
         @show_second_factor = true if @user.totp_enabled?
         if @user.security_keys_enabled?
-          Webauthn.stage_challenge(@user, secure_session)
+          DiscourseWebauthn.stage_challenge(@user, secure_session)
           @show_security_key = params[:show_totp].to_s == "true" ? false : true
-          @security_key_challenge = Webauthn.challenge(@user, secure_session)
+          @security_key_challenge = DiscourseWebauthn.challenge(@user, secure_session)
           @security_key_allowed_credential_ids =
-            Webauthn.allowed_credentials(@user, secure_session)[:allowed_credential_ids]
+            DiscourseWebauthn.allowed_credentials(@user, secure_session)[:allowed_credential_ids]
         end
       end
 

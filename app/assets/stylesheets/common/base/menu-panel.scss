@@ -17,6 +17,7 @@
   top: 100%; // directly underneath .panel
   right: -10px; // 10px to the right of .panel - adjust as needed
   max-height: 80vh;
+  border-radius: var(--d-border-radius-large);
 }
 
 .menu-panel {
@@ -100,6 +101,7 @@
   right: 0;
   width: 320px;
   padding: 0;
+  border-top-right-radius: 0px;
 
   .panel-body-bottom {
     flex: 0;
@@ -122,6 +124,7 @@
       display: flex;
       padding: 0.857em;
       position: relative;
+      border-radius: 0px;
 
       .d-icon {
         color: var(--primary-medium);

@@ -22,9 +22,9 @@
       {{#if (chat-guardian "can-edit-chat-channel")}}
         <div class="chat-form__label-actions">
           <DButton
-            @class="edit-name-slug-btn btn-flat"
             @label="chat.channel_settings.edit"
             @action={{if this.onEditChatChannelName this.onEditChatChannelName}}
+            class="edit-name-slug-btn btn-flat"
           />
         </div>
       {{/if}}
@@ -50,7 +50,6 @@
         {{#if (chat-guardian "can-edit-chat-channel")}}
           <div class="chat-form__label-actions">
             <DButton
-              @class="edit-description-btn btn-flat"
               @label={{if
                 this.channel.description.length
                 "chat.channel_settings.edit"
@@ -60,6 +59,7 @@
                 this.onEditChatChannelDescription
                 this.onEditChatChannelDescription
               }}
+              class="edit-description-btn btn-flat"
             />
           </div>
         {{/if}}

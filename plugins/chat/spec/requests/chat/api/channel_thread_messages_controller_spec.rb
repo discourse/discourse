@@ -17,8 +17,8 @@ RSpec.describe Chat::Api::ChannelThreadMessagesController do
 
   describe "index" do
     describe "success" do
-      fab!(:message_1) { Fabricate(:chat_message, thread: thread) }
-      fab!(:message_2) { Fabricate(:chat_message) }
+      fab!(:message_1) { Fabricate(:chat_message, thread: thread, chat_channel: thread.channel) }
+      fab!(:message_2) { Fabricate(:chat_message, chat_channel: thread.channel) }
 
       it "works" do
         get "/chat/api/channels/#{thread.channel.id}/threads/#{thread.id}/messages"

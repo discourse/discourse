@@ -146,7 +146,7 @@ module SecondFactorManager
     # if we have gotten down to this point without being
     # OK or invalid something has gone very weird.
     invalid_second_factor_method_result
-  rescue ::Webauthn::SecurityKeyError => err
+  rescue ::DiscourseWebauthn::SecurityKeyError => err
     invalid_security_key_result(err.message)
   end
 
@@ -163,11 +163,11 @@ module SecondFactorManager
   end
 
   def authenticate_security_key(secure_session, security_key_credential)
-    ::Webauthn::SecurityKeyAuthenticationService.new(
+    ::DiscourseWebauthn::SecurityKeyAuthenticationService.new(
       self,
       security_key_credential,
-      challenge: Webauthn.challenge(self, secure_session),
-      rp_id: Webauthn.rp_id(self, secure_session),
+      challenge: DiscourseWebauthn.challenge(self, secure_session),
+      rp_id: DiscourseWebauthn.rp_id,
       origin: Discourse.base_url,
     ).authenticate_security_key
   end

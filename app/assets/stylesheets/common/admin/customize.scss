@@ -180,12 +180,19 @@
     }
 
     &.color-scheme .admin-controls {
+      display: flex;
       padding: 1em;
       label {
         margin-bottom: 0;
         input[type="checkbox"] {
           margin-top: 0;
         }
+      }
+      .pull-left {
+        width: 70%;
+      }
+      .pull-right {
+        width: 30%;
       }
     }
   }
@@ -209,6 +216,16 @@
       width: 50%;
       box-sizing: border-box;
       text-align: center;
+      &.themes-tab {
+        border-top-right-radius: 0px;
+        border-bottom-left-radius: 0px;
+        border-bottom-right-radius: 0px;
+      }
+      &.components-tab {
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+        border-bottom-right-radius: 0px;
+      }
 
       &.active {
         background-color: var(--quaternary);
@@ -228,6 +245,8 @@
     overflow-y: auto;
     box-sizing: border-box;
     max-height: 60vh;
+    border-bottom-right-radius: var(--d-border-radius);
+    border-bottom-left-radius: var(--d-border-radius);
     @media screen and (max-height: 1000px) {
       max-height: 50vh;
     }

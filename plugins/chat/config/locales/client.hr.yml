@@ -10,6 +10,9 @@ hr:
       site_settings:
         categories:
           chat: Čet
+        chat_separate_sidebar_mode:
+          always: "Uvijek"
+          never: "Nikad"
       logs:
         staff_actions:
           actions:
@@ -265,7 +268,6 @@ hr:
         title: "Čet"
         export_messages:
           title: "Izvezi poruke čavrljanja"
-          description: "Izvoz je trenutno ograničen na 10 000 najnovijih poruka u zadnjih 6 mjeseci."
           create_export: "Stvori izvoz"
           export_has_started: "Izvoz je počeo. Dobit ćete PM kad bude spreman."
       incoming_webhooks:
@@ -307,7 +309,6 @@ hr:
       thread:
         title: "Naslov"
         view_thread: Pogledaj nit
-        default_title: "Nit"
         replies:
           one: "%{count} odgovor"
           few: "%{count} odgovora"
@@ -358,3 +359,7 @@ hr:
       sections:
         chat:
           title: Čavrljanje
+    sidebar:
+      panels:
+        chat:
+          label: "Čavrljanje"

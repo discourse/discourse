@@ -42,7 +42,7 @@ export default function (node, words, opts = {}) {
     matchCase: false,
   };
 
-  settings = Object.assign({}, settings, opts);
+  settings = { ...settings, ...opts };
   words = makeArray(words)
     .filter(Boolean)
     .map((word) => word.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&"));
@@ -74,7 +74,7 @@ export function unhighlightHTML(opts = {}) {
     className: "highlighted",
   };
 
-  settings = Object.assign({}, settings, opts);
+  settings = { ...settings, ...opts };
 
   document
     .querySelectorAll(`${settings.nodeName}.${settings.className}`)

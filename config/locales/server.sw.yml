@@ -154,7 +154,6 @@ sw:
     start_discussion: "Anzisha Majadiliano"
     continue: "Endelea Kujadiliana"
     error: "Hitilafu ya Uambatanishi"
-    loading: "Inapakua Majadiliano..."
     permalink: "Kiungo cha mtandao cha Mda Mrefu"
     in_reply_to: "▶ %{username}"
     replies:
@@ -816,7 +815,6 @@ sw:
     backup_frequency: "idadi ya siku kati ya machelezo."
     rate_limit_create_topic: "Baada ya kutengeneza mada, watumiaji wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."
     rate_limit_create_post: "Baada ya kuchapisha, watumiaji wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."
-    rate_limit_new_user_create_topic: "Baada ya kutengeneza mada, watumiaji wapya wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."
     rate_limit_new_user_create_post: "Baada ya kuchapisha, watumiaji wapya wasubiri sekunde (n) kabla ya kutengeneza mada nyingine."
     max_likes_per_day: "Kiwango cha juu cha upendo kwa kila mtumiaji kwa siku."
     max_flags_per_day: "Kiwango cha juu cha bendera kwa kila mtumiaji kwa siku."
@@ -2063,7 +2061,6 @@ sw:
       approve:
         title: "Imethibitishwa"
       reject_user:
-        title: "Futa Mtumiaji..."
         delete:
           title: "Futa Mtumiaji"
       reject:

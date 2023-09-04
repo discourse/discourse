@@ -10,6 +10,9 @@ pt_BR:
       site_settings:
         categories:
           chat: Chat
+        chat_separate_sidebar_mode:
+          always: "Sempre"
+          never: "Nunca"
       logs:
         staff_actions:
           actions:
@@ -85,8 +88,8 @@ pt_BR:
       expand: "Expandir Chat"
       confirm_flag: "Tem certeza de que deseja sinalizar a mensagem de %{username}?"
       deleted:
-        one: "Uma mensagem foi excluída. [visualizar]"
-        other: "%{count} mensagens foram excluídas. [visualizar todas]"
+        one: "Uma mensagem foi excluída. [view]"
+        other: "%{count} mensagens foram excluídas. [ver todas]"
       hidden: "Uma mensagem foi ocultada. [visualizar]"
       delete: "Excluir"
       edited: "editou"
@@ -398,13 +401,13 @@ pt_BR:
         you_and_single_user: "Você e %{username} reagiram com :%{emoji}:"
         you_and_multiple_users: "Você, %{commaSeparatedUsernames} e %{username} reagiram com :%{emoji}:"
         you_multiple_users_and_more:
-          one: "Você, %{commaSeparatedUsernames} e mais %{count} outro(a) reagiram com :%{emoji}:"
+          one: "Você, %{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
           other: "Você, %{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
         single_user: "%{username} reagiu com :%{emoji}:"
         multiple_users: "%{commaSeparatedUsernames} e %{username} reagiram com :%{emoji}:"
         multiple_users_and_more:
           one: "%{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
-          other: "%{commaSeparatedUsernames} e mais %{count} outros(as) reagiram com :%{emoji}:"
+          other: "%{commaSeparatedUsernames} e mais %{count} reagiram com :%{emoji}:"
       composer:
         toggle_toolbar: "Ativar/desativar barra de ferramentas"
         italic_text: "texto enfatizado"
@@ -446,7 +449,6 @@ pt_BR:
         title: "Chat"
         export_messages:
           title: "Exportar mensagens do chat"
-          description: "A exportação está atualmente limitada a 10.000 mensagens mais recentes nos últimos 6 meses."
           create_export: "Criar exportação"
           export_has_started: "A exportação foi iniciada. Você receberá uma MP quando estiver pronta."
       direct_messages:
@@ -544,7 +546,6 @@ pt_BR:
       thread:
         title: "Título"
         view_thread: Visualizar tópico
-        default_title: "Tópico"
         replies:
           one: "%{count} resposta"
           other: "%{count} respostas"
@@ -552,7 +553,7 @@ pt_BR:
         close: "Fechar tópico"
         original_message:
           started_by: "Iniciado por"
-        settings: "Configurações"
+        settings: "Definições"
         last_reply: "última resposta"
         notifications:
           regular:
@@ -649,3 +650,7 @@ pt_BR:
       sections:
         chat:
           title: Chat
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

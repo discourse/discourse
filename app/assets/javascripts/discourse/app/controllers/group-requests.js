@@ -18,6 +18,10 @@ export default Controller.extend({
 
   loading: false,
 
+  get canLoadMore() {
+    return this.get("model.requesters")?.length < this.get("model.user_count");
+  },
+
   @observes("filterInput")
   filterInputChanged() {
     this._setFilter();
@@ -43,17 +47,12 @@ export default Controller.extend({
       return;
     }
 
-    if (!refresh && model.requesters.length >= model.user_count) {
-      this.set("application.showFooter", true);
+    if (!refresh && !this.canLoadMore) {
       return;
     }
 
     this.set("loading", true);
     model.findRequesters(this.memberParams, refresh).finally(() => {
-      this.set(
-        "application.showFooter",
-        model.requesters.length >= model.user_count
-      );
       this.set("loading", false);
     });
   },

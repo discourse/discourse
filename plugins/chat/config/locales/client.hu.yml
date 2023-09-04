@@ -10,6 +10,9 @@ hu:
       site_settings:
         categories:
           chat: Csevegés
+        chat_separate_sidebar_mode:
+          always: "Mindig"
+          never: "Soha"
       logs:
         staff_actions:
           actions:
@@ -350,7 +353,6 @@ hu:
       thread:
         title: "Cím"
         view_thread: Téma megtekintése
-        default_title: "Szál"
         replies:
           one: "%{count} válasz"
           other: "%{count} válasz"

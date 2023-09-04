@@ -6,7 +6,7 @@
 # authors: Jan Cernik
 # url: https://github.com/discourse/discourse-lazy-videos
 
-hide_plugin if self.respond_to?(:hide_plugin)
+hide_plugin
 enabled_site_setting :lazy_videos_enabled
 
 register_asset "stylesheets/lazy-videos.scss"

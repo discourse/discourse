@@ -44,4 +44,16 @@ RSpec.describe "Edited message", type: :system do
       expect(page).to have_css(".cooked-date")
     end
   end
+
+  context "when replying to and edited message" do
+    fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, user: current_user) }
+
+    it "shows the correct reply indicator" do
+      chat_page.visit_channel(channel_1)
+      channel_page.edit_message(message_1, message_1.message + "a")
+      channel_page.reply_to(message_1)
+
+      expect(channel_page.composer.message_details).to be_replying_to(message_1)
+    end
+  end
 end

@@ -10,6 +10,9 @@ fr:
       site_settings:
         categories:
           chat: Discussion
+        chat_separate_sidebar_mode:
+          always: "Toujours"
+          never: "Jamais"
       logs:
         staff_actions:
           actions:
@@ -446,7 +449,6 @@ fr:
         title: "Discussion"
         export_messages:
           title: "Exporter les messages de la discussion"
-          description: "L'exportation est actuellement limitée au 10 000 messages les plus récents au cours des 6 derniers mois."
           create_export: "Créer une exportation"
           export_has_started: "L'exportation a commencé. Vous recevrez un MP quand elle sera prête."
       direct_messages:
@@ -544,7 +546,6 @@ fr:
       thread:
         title: "Titre"
         view_thread: Afficher le fil
-        default_title: "Fil"
         replies:
           one: "%{count} réponse"
           other: "%{count} réponses"
@@ -649,3 +650,7 @@ fr:
       sections:
         chat:
           title: Discussion
+    sidebar:
+      panels:
+        chat:
+          label: "Discussion"

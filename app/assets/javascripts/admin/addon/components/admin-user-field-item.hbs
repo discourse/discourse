@@ -57,16 +57,16 @@
 
     <AdminFormRow>
       <DButton
-        @action={{action "save"}}
-        @class="btn-primary save"
+        @action={{this.save}}
         @icon="check"
         @label="admin.user_fields.save"
+        class="btn-primary save"
       />
       <DButton
-        @action={{action "cancel"}}
-        @class="btn-danger cancel"
+        @action={{this.cancel}}
         @icon="times"
         @label="admin.user_fields.cancel"
+        class="btn-danger cancel"
       />
     </AdminFormRow>
   {{else}}
@@ -81,34 +81,31 @@
       <div class="form-display field-type">{{this.fieldName}}</div>
       <div class="form-element controls">
         <DButton
-          @action={{action "edit"}}
-          @class="btn-default edit"
+          @action={{this.edit}}
           @icon="pencil-alt"
           @label="admin.user_fields.edit"
+          class="btn-default edit"
         />
         <DButton
-          @action={{this.destroyAction}}
-          @actionParam={{this.userField}}
-          @class="btn-danger cancel"
+          @action={{fn this.destroyAction this.userField}}
           @icon="far-trash-alt"
           @label="admin.user_fields.delete"
+          class="btn-danger cancel"
         />
         <DButton
-          @action={{this.moveUpAction}}
-          @actionParam={{this.userField}}
-          @class="btn-default"
+          @action={{fn this.moveUpAction this.userField}}
           @icon="arrow-up"
           @disabled={{this.cantMoveUp}}
+          class="btn-default"
         />
         <DButton
-          @action={{this.moveDownAction}}
-          @actionParam={{this.userField}}
-          @class="btn-default"
+          @action={{fn this.moveDownAction this.userField}}
           @icon="arrow-down"
           @disabled={{this.cantMoveDown}}
+          class="btn-default"
         />
       </div>
     </div>
-    <div class="row">{{this.flags}}</div>
+    <div class="row user-field-flags">{{this.flags}}</div>
   {{/if}}
 </div>

@@ -72,9 +72,7 @@ export function bind(target, name, descriptor) {
     configurable: true,
     get() {
       const bound = emberBind(this, descriptor.value);
-      const attributes = Object.assign({}, descriptor, {
-        value: bound,
-      });
+      const attributes = { ...descriptor, value: bound };
 
       Object.defineProperty(this, name, attributes);
 

@@ -246,8 +246,8 @@ zh_CN:
       pill: "相关消息"
       see_all: '查看来自 @%{username} 的<a href="%{path}">所有消息</a>…'
     suggested_topics:
-      title: "新的和未读的主题"
-      pill: "建议"
+      title: "新话题和未读话题"
+      pill: "推荐"
       pm_title: "建议的消息"
     about:
       simple_title: "关于"
@@ -917,7 +917,7 @@ zh_CN:
         other: "过去一周有 %{count} 个新话题。"
       topic_stat_sentence_month:
         other: "过去一个月有 %{count} 个新话题。"
-      n_more: "类别 （其他 %{count} 个）…"
+      n_more: "类别（还有%{count}个）…"
     ip_lookup:
       title: IP 地址查询
       hostname: 主机名
@@ -1089,12 +1089,12 @@ zh_CN:
       suspended_permanently: "此用户已被封禁。"
       suspended_reason: "原因："
       github_profile: "GitHub"
-      email_activity_summary: "活动摘要"
+      email_activity_summary: "活动总结"
       mailing_list_mode:
         label: "邮寄名单模式"
         enabled: "启用邮寄名单模式"
         instructions: |
-          此设置将替换活动摘要。<br />
+          此设置将替换活动总结。<br />
           已设为免打扰的话题和类别将不会被包含在这些电子邮件中。
         individual: "为每个新帖子发送一封电子邮件"
         individual_no_echo: "为除了我发表的新帖子之外的每个新帖子发送一封电子邮件"
@@ -1482,7 +1482,7 @@ zh_CN:
         always: "始终"
         never: "从不"
       email_digests:
-        title: "当我不访问这里时，向我发送热门话题和回复的电子邮件摘要"
+        title: "当我不访问这里时，向我发送热门话题和回复的电子邮件总结"
         every_30_minutes: "每 30 分钟"
         every_hour: "每小时"
         daily: "每天"
@@ -1495,7 +1495,7 @@ zh_CN:
         only_when_away: "只在离开时"
         never: "从不"
       email_messages_level: "当我收到个人消息时给我发电子邮件"
-      include_tl0_in_digests: "在摘要电子邮件中包含来自新用户的内容"
+      include_tl0_in_digests: "在总结电子邮件中包含来自新用户的内容"
       email_in_reply_to: "在电子邮件中包含帖子回复节选"
       other_settings: "其他"
       categories_settings: "类别"
@@ -1612,7 +1612,7 @@ zh_CN:
         instructions: "至少 %{count} 个字符"
         required: "请输入密码"
       summary:
-        title: "摘要"
+        title: "总结"
         stats: "统计信息"
         time_read: "阅读时间"
         time_read_title: "%{duration}（所有时间）"
@@ -1709,7 +1709,7 @@ zh_CN:
         title: "欢迎来到您的新站点！"
         content: "<a href='%{admin_guide_url}'>阅读管理指南</a> 以继续构建你的网站和社区。"
         content_no_url: "阅读管理指南以继续建设您的站点和社区。"
-    loading: "正在加载…"
+    loading: "加载…"
     errors:
       prev_page: "无法加载"
       reasons:
@@ -1776,7 +1776,7 @@ zh_CN:
       refresh_page: "刷新页面"
     summary:
       in_progress: "使用 AI 总结话题"
-      summarized_on: "已在 %{date} 使用 AI 总结"
+      summarized_on: "已在 %{date}使用 AI 总结"
       model_used: "使用的 AI：%{model}"
       outdated: "摘要已过时"
       outdated_posts:
@@ -1801,7 +1801,7 @@ zh_CN:
       disable: "显示已删除的帖子"
     private_message_info:
       title: "消息"
-      invite: "邀请其他人…"
+      invite: "邀请他人…"
       edit: "添加或移除…"
       remove: "移除…"
       add: "添加…"
@@ -1887,7 +1887,7 @@ zh_CN:
       logging_in: "正在登录…"
       previous_sign_up: "已经有帐户？"
       or: "或者"
-      authenticating: "正在进行身份验证…"
+      authenticating: "验证…"
       awaiting_activation: "您的帐户正在等待激活，请使用忘记密码链接发出另一封激活电子邮件。"
       awaiting_approval: "您的帐户尚未得到管理人员的批准。批准后，您将收到一封电子邮件。"
       requires_invite: "抱歉，本论坛仅接受邀请注册。"
@@ -1969,7 +1969,7 @@ zh_CN:
       alt: "Alt"
       enter: "Enter"
     conditional_loading_section:
-      loading: 正在加载…
+      loading: 加载…
     category_row:
       topic_count:
         other: "此类别下有 %{count} 个话题"
@@ -2025,10 +2025,10 @@ zh_CN:
       destination_category: "目标类别"
       publish: "发布共享草稿"
       confirm_publish: "确定要发布此草稿吗？"
-      publishing: "正在发布话题…"
+      publishing: "发布话题…"
     composer:
       emoji: "表情符号 :)"
-      more_emoji: "更多…"
+      more_emoji: "更多"
       options: "选项"
       whisper: "密语"
       unlist: "取消公开"
@@ -2369,7 +2369,7 @@ zh_CN:
           label: 拥有该标签
           aria_label: 使用标签筛选
         filters:
-          label: 只返回话题/帖子…
+          label: 仅返回话题/帖子…
           title: 仅在标题中匹配
           likes: 我赞过
           posted: 我发过帖
@@ -2420,7 +2420,7 @@ zh_CN:
     hamburger_menu: "菜单"
     new_item: "新"
     go_back: "返回"
-    not_logged_in_user: "包含当前活动和偏好设置摘要的用户页面"
+    not_logged_in_user: "包含当前活动和偏好设置总结的用户页面"
     current_user: "转到您的用户页面"
     view_all: "查看所有%{tab}"
     user_menu:
@@ -2486,9 +2486,8 @@ zh_CN:
         also_dismiss_topics: "停止跟踪这些话题，以便它们不再显示为我的未读话题"
         dismiss_new: "忽略新话题"
         dismiss_new_modal:
-          title: "忽略新话题"
-          topics: "忽略新话题"
-          posts: "忽略新帖子"
+          title: "关闭新话题"
+          topics: "关闭新话题"
           untrack: "停止跟踪这些话题，以便它们不再出现在我的新列表中"
         dismiss_new_with_selected:
           other: "忽略新话题（%{count} 个）…"
@@ -2830,7 +2829,7 @@ zh_CN:
         banner_note: "用户可以通过忽略话题来忽略横幅。任何时候都只能将一个话题设为横幅。"
         no_banner_exists: "没有横幅话题。"
         banner_exists: "当前设置了<strong class='badge badge-notification unread'>一个</strong>横幅话题。"
-      inviting: "正在邀请…"
+      inviting: "邀请…"
       automatically_add_to_groups: "此邀请还包括以下群组的访问权限："
       invite_private:
         title: "邀请加入消息"
@@ -3379,7 +3378,7 @@ zh_CN:
       action: "举报话题"
       notify_action: "消息"
     topic_map:
-      title: "话题摘要"
+      title: "话题总结"
       participants_title: "频繁发帖人"
       links_title: "热门链接"
       links_shown: "显示更多链接…"
@@ -3488,6 +3487,12 @@ zh_CN:
         title_with_count:
           other: "新 (%{count})"
         help: "最近几天创建的话题"
+        all: "所有"
+        all_with_count: "全部 (%{count})"
+        topics: "话题"
+        topics_with_count: "话题 (%{count})"
+        replies: "回复"
+        replies_with_count: "回复 (%{count})"
       posted:
         title: "我的帖子"
         help: "您发过帖子的话题"
@@ -4436,12 +4441,12 @@ zh_CN:
         upload:
           label: "上传"
           title: "将备份上传到此实例"
-          uploading: "正在上传…"
-          uploading_progress: "正在上传…%{progress}%"
+          uploading: "上传…"
+          uploading_progress: "上传… %{progress}%"
           success: "'%{filename}' 已成功上传。文件正在处理，将在几分钟后显示在列表中。"
           error: "上传 '%{filename}' 时出错：%{message}"
         operations:
-          is_running: "一项操作当前正在运行…"
+          is_running: "当前正在运行一个操作…"
           failed: "%{operation}失败。请检查日志。"
           cancel:
             label: "取消"
@@ -4581,7 +4586,7 @@ zh_CN:
           uploads: "上传"
           no_uploads: "您可以上传与您的主题相关的资源文件，例如字体和图片"
           add_upload: "添加上传"
-          upload_file_tip: "选择要上传的资源（png、woff2 等）"
+          upload_file_tip: "选择要上传的资产 (png、woff2 等…)"
           variable_name: "SCSS 变量名："
           variable_name_invalid: "变量名无效。只允许使用字母数字。必须以字母开头。必须是独一无二的。"
           variable_name_error:
@@ -4635,7 +4640,7 @@ zh_CN:
             maximum: "需要 Discourse 版本 %{version} 或更低版本。"
           update_to_latest: "更新到最新"
           check_for_updates: "检查更新"
-          updating: "正在更新…"
+          updating: "更新…"
           up_to_date: "主题已经是最新版本，上次检查日期："
           has_overwritten_history: "当前主题版本不再存在，因为 Git 历史记录已被强制推送覆盖。"
           add: "添加"
@@ -4769,7 +4774,7 @@ zh_CN:
         title: "电子邮件"
         settings: "设置"
         templates: "模板"
-        preview_digest: "预览摘要"
+        preview_digest: "预览总结"
         advanced_test:
           title: "高级测试"
           desc: "了解 Discourse 如何处理收到的电子邮件。为了能够正确处理电子邮件，请将整个原始电子邮件消息粘贴到下方。"
@@ -4795,7 +4800,7 @@ zh_CN:
         send_test: "发送测试电子邮件"
         sent_test: "已发送！"
         delivery_method: "投递方式"
-        preview_digest_desc: "预览发送给停用用户的摘要电子邮件的内容。"
+        preview_digest_desc: "预览发送给停用用户的总结电子邮件的内容。"
         refresh: "刷新"
         send_digest_label: "将此结果发送至："
         send_digest: "发送"
@@ -4805,7 +4810,7 @@ zh_CN:
         text: "文本"
         html_preview: "电子邮件内容预览"
         last_seen_user: "最后活动："
-        no_result: "没有找到摘要的结果。"
+        no_result: "没有找到总结的结果。"
         reply_key: "回复键"
         post_link_with_smtp: "POST 和 SMTP 详细信息"
         skipped_reason: "跳过原因"
@@ -5041,13 +5046,13 @@ zh_CN:
           silence: "禁言"
           link: "链接"
         action_descriptions:
-          block: "试图创建包含这些字词的帖子时，将显示一条错误消息。"
+          block: "试图创建包含这些字词的帖子时，将显示一条错误信息。"
           censor: "允许包含这些字词的帖子，但将其替换为隐藏敏感字词的字符。"
           require_approval: "包含这些字词的帖子需要管理人员批准后才能被其他人看到。"
           flag: "允许包含这些字词的帖子，但将它们举报为不当言论以供版主审核。"
           replace: "使用其他字词替换帖子中的字词。"
           tag: "如果第一篇帖子包含特定字词，则自动为话题添加标签。"
-          silence: "如果新帐户的第一篇帖子包含这些字词，则将其禁言。该帖子将被自动隐藏，直到管理人员批准。"
+          silence: "如果新帐户的第一篇帖子包含这些字词，则将其禁言。该帖子将被自动隐藏，直到工作人员批准。"
           link: "使用链接替换帖子中的字词。"
         form:
           label: "包含字词或短语"
@@ -5493,7 +5498,7 @@ zh_CN:
           description: "自此替换创建以来，此键的默认翻译已更改。请在下面检查您的翻译是否与对原始意图所做的任何更改相符。"
           old_default: "旧默认值"
           new_default: "新默认值"
-          dismiss: "忽略"
+          dismiss: "关闭"
       settings:
         show_overriden: "只显示被替换"
         history: "查看变更历史记录"
@@ -5556,8 +5561,6 @@ zh_CN:
           modal_description: "要回溯应用此变更吗？这将更改 %{count} 个现有用户的偏好设置。"
           modal_yes: "是"
           modal_no: "不，仅对以后应用变更"
-        simple_list:
-          add_item: "添加条目…"
         json_schema:
           edit: 启动编辑器
           modal_title: "编辑 %{name}"
@@ -5655,7 +5658,6 @@ zh_CN:
         help: "添加可供所有人使用的新表情符号。一次拖放多个文件，无需输入名称即可使用文件名创建表情符号。所选组将用于同时添加的所有文件。您还可以点击“添加新表情符号”以打开文件选择器。"
         add: "添加新表情符号"
         choose_files: "选择文件"
-        uploading: "正在上传…"
         name: "名称"
         group: "组"
         image: "图片"
@@ -5724,11 +5726,9 @@ zh_CN:
       finish: "退出设置"
       back: "返回"
       next: "下一步"
-      configure_more: "配置更多…"
       step-text: "步骤"
       step: "%{current}/%{total}"
       upload: "上传文件"
-      uploading: "正在上传…"
       upload_error: "抱歉，上传该文件时出错。请重试。"
       staff_count:
         other: "您的社区有 %{count} 位管理人员，包括您。"

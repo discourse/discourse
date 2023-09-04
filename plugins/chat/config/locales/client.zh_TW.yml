@@ -10,6 +10,9 @@ zh_TW:
       site_settings:
         categories:
           chat: 聊天
+        chat_separate_sidebar_mode:
+          always: "總是"
+          never: "永不"
       logs:
         staff_actions:
           actions:
@@ -225,7 +228,6 @@ zh_TW:
       thread:
         title: "標題"
         view_thread: 檢視討論串
-        default_title: "討論串"
         replies:
           other: "%{count}個回覆"
         label: 討論串
@@ -260,3 +262,7 @@ zh_TW:
       sections:
         chat:
           title: 聊天
+    sidebar:
+      panels:
+        chat:
+          label: "聊天"

@@ -248,13 +248,9 @@ sw:
     preview: "kihakiki"
     cancel: "ghairi"
     save: "Hifadhi Mabadiliko"
-    saving: "Inahifadhi..."
     saved: "Imehifadhiwa!"
     upload: "Pakia"
-    uploading: "Inapakiwa..."
-    uploading_filename: "Inapakia %{filename}..."
     uploaded: "Imepakiwa!"
-    pasting: "Inabandika..."
     enable: "Ruhusu"
     disable: "Zuia"
     continue: "Endelea"
@@ -803,7 +799,6 @@ sw:
         not_available_no_suggestion: "Haijapatikana"
         too_short: "Jina lako la mtumiaji ni fupi sana"
         too_long: "Jina la mtumiaji ni refu sana"
-        checking: "Tunaangalia kama jina la mtumiaji lipo..."
         prefilled: "Barua pepe inalingana na jina la mtumiaji lililosajiliwa"
       locale:
         title: "lugha ya kiolesura"
@@ -879,7 +874,6 @@ sw:
         edit: "Hariri"
         remove: "Ondoa"
         reinvited: "Mualiko umetumwa tena"
-        search: "andika kutafuta mualiko..."
         user: "Mtumiaji Aliyekaribishwa"
         none: "Hakuna mialiko ya kuonyeshwa."
         truncated:
@@ -980,7 +974,6 @@ sw:
         the_topic: "mada"
     user_status:
       save: "hifadhi"
-    loading: "Inapakia..."
     errors:
       prev_page: "ikiwa inajaribu kupakia"
       reasons:
@@ -1010,7 +1003,6 @@ sw:
       enabled: "Tovuti hii ipo kwenye hali-tumizi ya usomaji tu. Tafadhali endelea kuperuzi, lakini kujibu, kupenda na vitendo vingine vimesitishwa kwa sasa."
       login_disabled: "Kuingia kumesitishwa kipindi tovuti ipo kwenye hali-tumizi ya kusoma tu."
       logout_disabled: "Kutoka kumesitishwa kipindi tovuti ipo kwenye hali-tumizi ya kusoma tu."
-    learn_more: "jifunze zaidi..."
     mute: Nyamazisha
     unmute: Toa kwenye Ukimya
     last_post: Alichapisha
@@ -1083,9 +1075,7 @@ sw:
       blank_username: "Tafadhali andika barua pepe au jina la mtumiaji."
       blank_username_or_password: "Tafadhali andika barua pepe au jina la mtumiaji, na nywila."
       reset_password: "Weka upya Nywila"
-      logging_in: "Unaingia..."
       or: "Au"
-      authenticating: "Inathibitishwa..."
       awaiting_activation: "Akaunti yako inasubiria kuanzishwa, tumia kiungo cha nimesahau nywila kupata barua pepe nyingine ya kuanzisha akaunti."
       awaiting_approval: "Akaunti yako bado haijathibitishwa na msaidizi. Utapata ujumbe kwa barua pepe ikipata kibali."
       requires_invite: "Samahani, jumuia hii ni kwa walioalikwa tu."
@@ -1140,13 +1130,9 @@ sw:
       shift: "Shift"
       ctrl: "Ctrl"
       alt: "Alt"
-    conditional_loading_section:
-      loading: Inaandaa....
     select_kit:
       delete_item: "Futa %{name}"
-      default_header_text: Chagua
       no_content: Hakuna uwiano uliopatikana
-      filter_placeholder: Tafuta
       create: "Tengeneza: '%{maandishi}'"
       max_content_reached:
         one: "Unaweza tu kuchagua kitu %{count}."
@@ -1174,10 +1160,8 @@ sw:
       destination_category: "Kategoria Pokezi"
       publish: "Chapisha Mswadajaribio Gawiza"
       confirm_publish: "Unauhakika unataka kuchapisha mswadajaribio huu?"
-      publishing: "Mada Inachapishwa..."
     composer:
       emoji: "Ishara :)"
-      more_emoji: "zaidi"
       options: "Chaguo"
       whisper: "nong'ona"
       unlist: "ondoa kwenye orodha"
@@ -1186,7 +1170,6 @@ sw:
       toggle_unlisted: "Badilisha Ondoa kwenye Orodha"
       posting_not_on_topic: "Mada zipi unazotaka kuzijibu?"
       saved_local_draft_tip: "Imehifadhiwa kwenye mazingira yako"
-      similar_topics: "Mada yako inafanana na..."
       drafts_offline: "Miswadajaribio Nje ya Mtandao"
       group_mentioned:
         one: "Kwa kutaja %{group}, utamjulisha <a href='%{group_link}'>mtu mmoja</a> – una uhakika?"
@@ -1213,7 +1196,6 @@ sw:
       view_new_post: "Angalia chapisho lako jipya"
       saving: "Inahifadhiwa"
       saved: "Imehifadhiwa!"
-      uploading: "Inapakia..."
       quote_post_title: "Nukulu chapisho lote"
       bold_label: "B"
       bold_title: "koleza"
@@ -1373,7 +1355,6 @@ sw:
         with_tags:
           label: Ametajwa
         filters:
-          label: Onyesha tu mada/machapisho...
           title: Mlingano upo kwenye kichwa tu
           likes: Nilipenda
           posted: Nilichapisha ndani ya
@@ -1431,11 +1412,9 @@ sw:
         dismiss_new: "Ondosha Mpya"
         toggle: "Badili kwa wingi chaguo la topiki"
         actions: "Vitendo za Jumla"
-        change_category: "Seti Kategoria..."
         close_topics: "Funga Mada"
         archive_topics: "Hifadhi Mada kwenye nyaraka"
         move_messages_to_inbox: "Hamishia kwenye kisanduku-pokezi"
-        notification_level: "Taarifa..."
         choose_new_category: "Chagua kategoria mpya kwa ajili ya mada:"
         selected:
           one: "Umechagua mada <b>%{count}</b>."
@@ -1545,8 +1524,6 @@ sw:
         replies_short: "%{current} / %{total}"
       progress:
         title: maendeleo ya mada
-        jump_prompt: "ruka kwenda..."
-        jump_prompt_long: "Ruka kwenda..."
         jump_prompt_or: "au"
       notifications:
         title: badilisha mara ngapi utapata taarifa kuhusu mada hii
@@ -1596,13 +1573,11 @@ sw:
         open: "Fungua Mada"
         close: "Funga Mada"
         multi_select: "Chagua Machapisho..."
-        timed_update: "Seti Kipima Mda cha Mada..."
         pin: "Bandika Mada..."
         unpin: "Ondoa Mada..."
         unarchive: "Ondoa Mada kwenye Nyaraka"
         archive: "Weka Mada kwenye Nyaraka"
         reset_read: "Anzisha Upya Usomaji wa Taarifa"
-        make_public: "Fanya Mada iwe ya Umma..."
         make_private: "Tengeneza Ujumbe Binafsi"
       feature:
         pin: "Bandika Mada"
@@ -1638,7 +1613,6 @@ sw:
         banner_note: "Watumiaji wanaweza kuondoa bango kwa kulifunga. Mada moja kwa wakati inaweza kuondolewa kwenye mda wowote."
         no_banner_exists: "Hakuna bango la mada."
         banner_exists: "Kwa sasa <strong class='badge badge-notification unread'>kuna</strong> bango la mada."
-      inviting: "Anakaribishwa..."
       automatically_add_to_groups: "Mwaliko huu unakupa ruhusa kuona mada hizi:"
       invite_private:
         title: "Mkaribishe kwenye Ujumbe"
@@ -1693,7 +1667,6 @@ sw:
         error: "Hitilafu imetokea wakati wa kubadilisha mmiliki wa machapisho."
         placeholder: "jina la mtumiaji la mmiliki mpya"
       change_timestamp:
-        title: "Badilisha Mhuri wa mda"
         action: "badilisha mhuri wa mda"
         invalid_timestamp: "Mhuri wa mda hauwezi ukawa wa wakati ujao."
         error: "Hitilafu imetokea wakati wa kubadilisha mhuri wa mda wa mada."
@@ -1786,8 +1759,6 @@ sw:
         revert_to_regular: "Ondoa Rangi ya Wasaidizi"
         rebake: "Tengeneza upya HTML"
         unhide: "Onesha"
-        change_owner: "Badilisha Umiliki..."
-        grant_badge: "Toa Beji..."
         lock_post: "Funga Chapisho"
         lock_post_description: "mzuie mchapishaji kuhariri chapisho hili"
         unlock_post: "Fungua Chapisho"
@@ -1932,7 +1903,6 @@ sw:
     flagging:
       title: "Asante kwa kuendeleza ustaarabu kwenye jumuiya yetu!"
       action: "Ripoti Chapisho"
-      take_action: "Fanya Kitendo..."
       take_action_options:
         default:
           title: "Fanya Kitendo"
@@ -1961,7 +1931,6 @@ sw:
       title: "Muhtasari wa Mada"
       participants_title: "Wachapishaji wa Mara kwa Mara"
       links_title: "Viungo Maarufu"
-      links_shown: "onyesha viungo zaidi..."
     topic_statuses:
       warning:
         help: "Hii ni onyo rasmi."
@@ -2044,6 +2013,9 @@ sw:
         lower_title: "mpya"
         title: "Mpya"
         help: "mada zilizotengenezwa siku chache zilizopita"
+        all: "Vyote"
+        topics: "Mada"
+        replies: "Majibu"
       posted:
         title: "Machapisho Yangu"
         help: "mada zenye machapisho yako"
@@ -2292,7 +2264,6 @@ sw:
           default: "Tafadhali andika thamani sahihi."
           email: "Andika barua pepe iliyo sahihi."
   admin_js:
-    type_to_filter: "andika kuchuja..."
     admin:
       title: "Kiongozi wa Discourse"
       moderator: "Msimamizi"
@@ -2372,7 +2343,6 @@ sw:
           name:
             too_short: "Jina la kikundi ni fupi sana"
             too_long: "Jina la kikundi ni refu sana"
-            checking: "Tunaangalia kama jina la kikundi lipo..."
             available: "Jina la kikundi lipo"
             not_available: "Jina la kikundi halipo"
             blank: "Jina la kikundi haliwezi kuwa wazi"
@@ -2505,19 +2475,15 @@ sw:
           disable:
             title: "Zima hali-timizi ya soma tu"
             label: "Zima soma-tu"
-        logs:
-          none: "Bado hakuna batli..."
         columns:
           filename: "Jina la faili"
           size: "Kipimo"
         upload:
           label: "Pakia"
           title: "Pakia chelezo kwenye mfano huu."
-          uploading: "Inapakia..."
           success: "'%{jina la faili}' imepakiwa kwa mafanikio. Faili lipokwenye harakati na litachukua mpaka dakika kuonekana kwenye orodha."
           error: "Hitilafu imetokea wakati wa kupakia '%{jina la faili}': %{ujumbe}"
         operations:
-          is_running: "Operesheni inaendelea kwa sasa..."
           failed: "%{Operesheni} imeshindwa. Tafadhali angalia batli."
           cancel:
             label: "Ghairi"
@@ -2603,7 +2569,6 @@ sw:
           uploads: "Upakiaji"
           no_uploads: "Unaweza kupakia vitu vinavyoendana na mandhari yako kama picha na fonti"
           add_upload: "Ongeza Upakiaji"
-          upload_file_tip: "Chagua kitu cha kupakia (png, woff2, na vinginevyo...)"
           variable_name: "Jina la SCSS:"
           variable_name_invalid: "Jina lililoandikwa sio sahihi. Namba na herufi tu zinaruhusiwa. Lazima ianze na herufi. Lazima iwe ya kipekee."
           upload: "Pakia"
@@ -2623,7 +2588,6 @@ sw:
           disable: "Sitisha"
           update_to_latest: "Sasisha iwe Toleo Jipya"
           check_for_updates: "Angalia Masasisho"
-          updating: "Inasasishwa..."
           up_to_date: "Mandhari hii ime toleo la sasa, mara ya mwisho imeangaliwa:"
           add: "Ongeza"
           theme_settings: "Mipangilio ya Mandhari"
@@ -2691,7 +2655,6 @@ sw:
         settings: "Mipangilio"
         templates: "Violezo"
         preview_digest: "Kihakiki Jarida"
-        sending_test: "Barua Pepe ya Majaribio inatumwa..."
         error: "<b>HITILAFU</b> - %{server_error}"
         test_error: "Tatizo limetokea wakati wa kutuma barua pepe ya majaribio. Tafadhali angalia tena mipangilio ya barua, hakikisha kuwa muunganisho wa barua haujazuiliwa, na jaribu tena."
         sent: "Imetumwa"
@@ -2712,7 +2675,6 @@ sw:
         refresh: "Rudisha Tena"
         send_digest_label: "Tuma majibu haya kwa:"
         send_digest: "Tuma"
-        sending_email: "Barua Pepe inatumwa..."
         format: "umbizo"
         html: "html"
         text: "neno"
@@ -2738,7 +2700,6 @@ sw:
             from_placeholder: "from@example.com"
             to_placeholder: "kwendakwa@example.com"
             cc_placeholder: "cc@example.com"
-            subject_placeholder: "Maudhui"
             error_placeholder: "Hitilafu"
         logs:
           none: "Hakuna batli iliyopatikana."
@@ -2746,7 +2707,6 @@ sw:
             title: "Chuja"
             user_placeholder: "jina la mtumiaji"
             address_placeholder: "name@example.com"
-            type_placeholder: "jifunze, jiunge..."
             reply_key_placeholder: "ufunguo wa jibu"
       moderation_history:
         performed_by: "Imefanywa Na"
@@ -3049,7 +3009,6 @@ sw:
           other: "Hauwezi kufuta machapisho yote kwa sababu mtumiaji ana machapisho zaidi ya %{count}. (delete_all_posts_max)"
         delete_and_block: "Futa na <b>fungia</b>hii barua pepe na anwani ya mtandao"
         delete_dont_block: "Futa"
-        deleting_user: "Inafuta mtumiaji"
         deleted: "Mtumiaji amefutwa."
         delete_failed: "Hitilafu imetokea wakati wa kumfuta mtumiaji. Hakikisha machapisho yake yote yamefutwa kabla ya kujaribu kumfuta mtumiaji."
         send_activation_email: "Tuma Barua Pepe ya Uanzisho"
@@ -3278,7 +3237,6 @@ sw:
       emoji:
         title: "Emoji"
         add: "Ongeza Emoji Mpya"
-        uploading: "Inaongezwa"
         name: "Jina"
         group: "Kikundi"
         image: "Picha"
@@ -3324,7 +3282,6 @@ sw:
       next: "Ijayo"
       step-text: "Hatua"
       step: "%{current} chini ya %{total}"
-      uploading: "Inaongezwa"
       upload_error: "Samahani, hitilafu imetokea wakati wa kupakia faili hilo. Tafadhali jaribu tena."
       invites:
         add_user: "ongeza"

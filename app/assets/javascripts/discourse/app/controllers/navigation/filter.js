@@ -11,11 +11,6 @@ export default class NavigationFilterController extends Controller {
   @tracked copyClass = "btn-default";
   @tracked newQueryString = "";
 
-  constructor() {
-    super(...arguments);
-    this.newQueryString = this.discoveryFilter.q;
-  }
-
   @bind
   updateQueryString(string) {
     this.newQueryString = string;

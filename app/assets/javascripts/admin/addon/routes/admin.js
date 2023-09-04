@@ -9,7 +9,6 @@ export default class AdminRoute extends DiscourseRoute {
   activate() {
     this.controllerFor("application").setProperties({
       showTop: false,
-      showFooter: false,
     });
   }
 
