@@ -29,10 +29,12 @@ export default class AutomationField extends Component {
   }
 
   @computed("target", "field.name")
+  get translationKey() {
+    return `discourse_automation${this.target}fields.${this.field.name}.description`;
+  }
+
+  @computed("target", "field.name")
   get description() {
-    return I18n.lookup(
-      `discourse_automation${this.target}fields.${this.field.name}.description`,
-      { locale: I18n.locale }
-    );
+    return I18n.t(this.translationKey);
   }
 }
