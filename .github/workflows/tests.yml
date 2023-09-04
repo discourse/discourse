@@ -125,7 +125,7 @@ jobs:
 
       - name: Restore database from cache
         if: steps.app-cache.outputs.cache-hit == 'true'
-        run: psql -f tmp/app-cache/cache.sql postgres
+        run: psql --quiet -f tmp/app-cache/cache.sql postgres
 
       - name: Restore uploads from cache
         if: steps.app-cache.outputs.cache-hit == 'true'
