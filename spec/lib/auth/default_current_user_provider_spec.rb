@@ -421,6 +421,29 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
     expect(token.auth_token).not_to eq(unverified_token)
   end
 
+  it "rotates token on ip address change" do
+    @provider = provider("/")
+    @provider.log_on_user(user, {}, @provider.cookie_jar)
+
+    cookie = @provider.cookie_jar["_t"]
+    unhashed_token = decrypt_auth_cookie(cookie)[:token]
+    hashed_token = UserAuthToken.hash_token(unhashed_token)
+    cookie = CGI.escape(cookie)
+
+    token = UserAuthToken.find_by(user_id: user.id)
+    expect(token.auth_token).to eq(hashed_token)
+
+    # at this point we are going to try to rotate token
+    provider2 = provider("/", { "HTTP_COOKIE" => "_t=#{cookie}", "REMOTE_ADDR" => "10.0.0.8" })
+
+    expect(provider2.current_user.id).to eq(user.id)
+    provider2.refresh_session(user, {}, provider2.cookie_jar)
+
+    token.reload
+    expect(token.auth_token).not_to eq(hashed_token)
+    expect(token.prev_auth_token).to eq(hashed_token)
+  end
+
   describe "events" do
     before do
       @refreshes = 0

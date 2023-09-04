@@ -234,6 +234,7 @@ class Auth::DefaultCurrentUserProvider
             rotated_at < UserAuthToken::URGENT_ROTATE_TIME.ago
           end
         )
+      needs_rotation ||= @user_token.client_ip != @request.ip
 
       if needs_rotation
         if @user_token.rotate!(
