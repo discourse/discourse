@@ -204,7 +204,6 @@ const TopicRoute = DiscourseRoute.extend({
     const topicController = this.controllerFor("topic");
     this.modal.show(GrantBadgeModal, {
       model: {
-        topic: this.modelFor("topic"),
         selectedPost: topicController.selectedPosts[0],
       },
     });
