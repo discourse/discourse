@@ -733,17 +733,27 @@ describe Chat::Notifier do
         }
       end
 
+      it "does not notify users who are suspended" do
+        @dm_user_1.update!(suspended_till: 2.years.from_now)
+        msg = build_cooked_msg("How are you?", @dm_user_2, chat_channel: dm_channel)
+
+        expect { described_class.new(msg, msg.created_at).notify_new }.not_to change {
+          @dm_user_1.notifications.count
+        }
+      end
+
       it "adds correct data to the notification" do
         msg = build_cooked_msg("Hey guys", @dm_user_1, chat_channel: dm_channel)
         to_notify = described_class.new(msg, msg.created_at).notify_new
         notification = Notification.where(user: @dm_user_2).first
+        data = notification.data_hash
 
-        expect(notification.data_hash[:username]).to eq(@dm_user_1.username)
-        expect(notification.data_hash[:chat_channel_id]).to eq(dm_channel.id)
-        expect(notification.data_hash[:chat_message_id]).to eq(msg.id)
-        expect(notification.data_hash[:is_direct_message_channel]).to eq(true)
-        expect(notification.data_hash[:is_group_message]).to eq(false)
-        expect(notification.data_hash[:user_ids]).to eq([@dm_user_1.id])
+        expect(data[:username]).to eq(@dm_user_1.username)
+        expect(data[:chat_channel_id]).to eq(dm_channel.id)
+        expect(data[:chat_message_id]).to eq(msg.id)
+        expect(data[:is_direct_message_channel]).to eq(true)
+        expect(data[:is_group_message]).to eq(false)
+        expect(data[:user_ids]).to eq([@dm_user_1.id])
       end
     end
   end
