@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 describe "User preferences for Security", type: :system do
-  fab!(:user) { Fabricate(:user, email: "dude@pm.com", password: "kungfukenny") }
+  fab!(:password) { "kungfukenny" }
+  fab!(:email) { "email@user.com" }
+  fab!(:user) { Fabricate(:user, email: email, password: password) }
   let(:user_preferences_security_page) { PageObjects::Pages::UserPreferencesSecurity.new }
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 
   before do
-    Fabricate(:email_token, email: "dude@pm.com", user: user, confirmed: true)
+    user.activate
     sign_in(user)
   end
 
@@ -17,7 +19,7 @@ describe "User preferences for Security", type: :system do
       page.driver.browser.add_virtual_authenticator(options)
 
       user_preferences_security_page.visit(user)
-      user_preferences_security_page.visit_second_factor("kungfukenny")
+      user_preferences_security_page.visit_second_factor(password)
 
       find(".security-key .new-security-key").click
       expect(user_preferences_security_page).to have_css("input#security-key-name")
@@ -32,7 +34,7 @@ describe "User preferences for Security", type: :system do
       # login flow
       find(".d-header .login-button").click
       find("input#login-account-name").fill_in(with: user.username)
-      find("input#login-account-password").fill_in(with: "kungfukenny")
+      find("input#login-account-password").fill_in(with: password)
 
       find(".modal-footer .btn-primary").click
       find("#security-key .btn-primary").click
