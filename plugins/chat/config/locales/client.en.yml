@@ -637,6 +637,9 @@ en:
       types:
         chat_reviewable_message:
           title: "Flagged Chat Message"
+        reviewable_chat_message:
+          title: "Flagged chat message"
+          noun: "chat message"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"
