@@ -4,6 +4,7 @@
   {{/if}}
 
   {{#if this.sidebarState.showMainPanel}}
+    <PluginOutlet @name="above-sidebar-sections" />
     <Sidebar::Sections
       @currentUser={{this.currentUser}}
       @collapsableSections={{true}}
