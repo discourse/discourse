@@ -28,8 +28,9 @@ import EmberThisFallback from "ember-this-fallback";
 
 const thisFallbackPlugin = EmberThisFallback._buildPlugin({
   enableLogging: false,
-  isTheme: true,
 }).plugin;
+
+delete thisFallbackPlugin.parallelBabel;
 
 function manipulateAstNodeForTheme(node, themeId) {
   // Magically add theme id as the first param for each of these helpers)
