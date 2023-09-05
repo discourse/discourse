@@ -1,5 +1,5 @@
 diff --git a/node_modules/ember-this-fallback/index.js b/node_modules/ember-this-fallback/index.js
-index afa73eb..168bb16 100644
+index afa73eb..21e9411 100644
 --- a/node_modules/ember-this-fallback/index.js
 +++ b/node_modules/ember-this-fallback/index.js
 @@ -8,7 +8,7 @@ module.exports = {
@@ -11,6 +11,32 @@ index afa73eb..168bb16 100644
        registry.add('htmlbars-ast-plugin', this._buildPlugin(options));
      }
    },
+@@ -17,15 +17,20 @@ module.exports = {
+     ThisFallbackPlugin.baseDir = () => __dirname;
+     ThisFallbackPlugin.cacheKey = () => 'ember-this-fallback';
+ 
+-    return {
++    let plugin = {
+       name: 'ember-this-fallback',
+-      parallelBabel: {
++      plugin: ThisFallbackPlugin(options),
++    };
++
++    if (!options.isTheme) {
++      plugin.parallelBabel = {
+         requireFile: __filename,
+         buildUsing: '_buildPlugin',
+         params: options,
+-      },
+-      plugin: ThisFallbackPlugin(options),
+-    };
++      };
++    }
++
++    return plugin;
+   },
+ };
+ 
 diff --git a/node_modules/ember-this-fallback/lib/helpers/deprecations.js b/node_modules/ember-this-fallback/lib/helpers/deprecations.js
 index 5a00c44..993e3cf 100644
 --- a/node_modules/ember-this-fallback/lib/helpers/deprecations.js
