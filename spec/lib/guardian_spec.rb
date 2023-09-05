@@ -1542,6 +1542,11 @@ RSpec.describe Guardian do
       SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
       expect(Guardian.new(user).can_convert_topic?(topic)).to be_falsey
     end
+
+    it "returns true if user is not in personal_message_enabled_groups but they are still admin" do
+      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_4]
+      expect(Guardian.new(admin).can_convert_topic?(topic)).to be_truthy
+    end
   end
 
   describe "can_edit?" do
