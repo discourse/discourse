@@ -26,8 +26,6 @@ tr_TR:
       destroy_automation:
         confirm: "Şunu silmek istediğinizden emin misiniz: \"%{name}\"?"
       fields:
-        key_value:
-          label: Yapılandır
         user:
           label: Kullanıcı
         pm:
@@ -149,7 +147,8 @@ tr_TR:
               description: Yalnızca gönderi bu güven seviyelerindeki bir kullanıcı tarafından oluşturulduğunda tetiklenir, varsayılan olarak herhangi bir güven seviyesidir
             restricted_category:
               label: Kategori
-              description: İsteğe bağlı, tetikleyici yürütmeyi bu kategoriyle sınırlandırmaya izin verir
+            restricted_group:
+              label: Grup
           created: Oluşturuldu
           edited: Düzenlendi
         category_created_edited:
@@ -159,9 +158,8 @@ tr_TR:
               description: İsteğe bağlı, tetikleyici yürütmeyi bu kategoriyle sınırlandırmaya izin verir
         pm_created:
           fields:
-            restricted_user:
-              label: Kullanıcı
-              description: Tetikleyicinin yürütülmesini bu kullanıcıyla sınırlandırmaya izin verir
+            restricted_group:
+              label: Grup
             ignore_staff:
               label: Personeli yok say
               description: Gönderen bir personel kullanıcısıysa tetikleyiciyi atla
@@ -175,10 +173,8 @@ tr_TR:
               description: Yalnızca gönderi bu güven seviyelerindeki bir kullanıcı tarafından oluşturulduğunda tetiklenir, varsayılan olarak herhangi bir güven seviyesidir
             restricted_category:
               label: Kategori
-              description: İsteğe bağlı, tetikleyici yürütmeyi bu kategoriyle sınırlandırmaya izin verir
             restricted_tags:
               label: Etiketler
-              description: İsteğe bağlı, tetikleyici yürütmeyi bu etiketlerden herhangi biriyle sınırlandırmaya izin verir
       scriptables:
         not_found: '"%{automation}" otomasyonu için "%{script}" komut dosyası bulunamadı, ilişkili eklentinin yüklü olduğundan emin olun'
         zapier_webhook:
@@ -193,7 +189,6 @@ tr_TR:
               description: Konuya göre yalnızca bir kez yanıt verir
             word_answer_list:
               label: Kelime/yanıt çiftlerinin listesi
-              description: "Anahtar/değer gruplarının bir listesini tanımlar; burada \"anahtar\" aranan terim, \"değer\" ise yanıt metnidir. \"Değer\" ifadesinin, yanıtta \"anahtar\" değeriyle değiştirilecek bir yer tutucu olarak \"%%KEY%%\" ifadesini kabul ettiğini unutmayın. Anahtar'ın bir regex olarak değerlendirileceğini ve \".\" gibi özel karakterlerin aslında bir noktayı kastediyorsanız kaçınılması gerektiğini unutmayın, ör.: \"\\.\""
             answering_user:
               label: Yanıtlayan kullanıcı
               description: Varsayılan olarak Sistem kullanıcısını ayarlar
@@ -231,6 +226,10 @@ tr_TR:
             info: Bilgi
             success: Başarılı
             error: Hata
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Grup
         suspend_user_by_email:
           fields:
             suspend_until:

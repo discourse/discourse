@@ -26,8 +26,6 @@ sv:
       destroy_automation:
         confirm: "Är du säker på att du vill ta bort `%{name}`?"
       fields:
-        key_value:
-          label: Konfigurera
         user:
           label: Användare
         pm:
@@ -144,16 +142,16 @@ sv:
               description: Kommer att utlösa endast om inlägg skapas av användare i dessa förtroendenivåer, standard är alla förtroendenivåer
             restricted_category:
               label: Kategori
-              description: Valfritt, tillåter att begränsa utlösarens körning till denna kategori
+            restricted_group:
+              label: Grupp
         category_created_edited:
           fields:
             restricted_category:
               description: Valfritt, tillåter att begränsa utlösarens körning till denna kategori
         pm_created:
           fields:
-            restricted_user:
-              label: Användare
-              description: Gör det möjligt att begränsa utförandet av utlösare till den här användaren
+            restricted_group:
+              label: Grupp
             ignore_staff:
               label: Ignorera personal
               description: Hoppa över utlösaren om avsändaren är en medarbetare
@@ -167,10 +165,8 @@ sv:
               description: Kommer att utlösa endast om inlägg skapas av användare i dessa förtroendenivåer, standard är alla förtroendenivåer
             restricted_category:
               label: Kategori
-              description: Valfritt, tillåter att begränsa utlösarens körning till denna kategori
             restricted_tags:
               label: Taggar
-              description: Valfritt, tillåter att begränsa exekvering av utlösare till någon av dessa taggar
       scriptables:
         not_found: Kunde inte hitta skript `%{script}` för automatisering `%{automation}`, se till att den tillhörande pluginen är installerad
         zapier_webhook:
@@ -182,7 +178,6 @@ sv:
           fields:
             word_answer_list:
               label: Lista över ord/svarspar
-              description: "Definierar en lista över nyckel/värdegrupper, där `key` är den sökta termen och `value` svarstexten. Observera att `value` accepterar `%%KEY%%` som platshållare som ska ersättas med värdet `key` i svaret. Observera att `key` kommer att utvärderas som en regex, och speciella tecken som `.` bör undvikas om du faktiskt menar en punkt, t.ex.: `\\.`"
             answering_user:
               label: Svarande användare
               description: Standard är systemanvändaren
@@ -210,6 +205,10 @@ sv:
             info: Information
             success: Framgång
             error: Fel
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Grupp
         suspend_user_by_email:
           fields:
             suspend_until:

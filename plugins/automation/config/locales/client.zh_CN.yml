@@ -26,8 +26,6 @@ zh_CN:
       destroy_automation:
         confirm: "确定要删除 `%{name}` 吗？"
       fields:
-        key_value:
-          label: 配置
         user:
           label: 用户
         pm:
@@ -149,7 +147,8 @@ zh_CN:
               description: 仅当这些信任级别的用户创建帖子时才会触发，默认为任意信任级别
             restricted_category:
               label: 类别
-              description: 可选，允许将触发器执行限制为此类别
+            restricted_group:
+              label: 群组
           created: 创建
           edited: 编辑
         category_created_edited:
@@ -159,9 +158,8 @@ zh_CN:
               description: 可选，允许将触发器执行限制为此类别
         pm_created:
           fields:
-            restricted_user:
-              label: 用户
-              description: 允许将触发器执行限制为此用户
+            restricted_group:
+              label: 群组
             ignore_staff:
               label: 忽略管理人员
               description: 如果发送者是管理人员用户，则跳过触发器
@@ -175,10 +173,8 @@ zh_CN:
               description: 仅当这些信任级别的用户创建帖子时才会触发，默认为任意信任级别
             restricted_category:
               label: 类别
-              description: 可选，允许将触发器执行限制为此类别
             restricted_tags:
               label: 标签
-              description: 可选，允许将触发器执行限制为这些标签中的任意一个
       scriptables:
         not_found: 找不到用于自动化 `%{automation}` 的脚本 `%{script}`，请确保相关插件已安装
         zapier_webhook:
@@ -193,7 +189,6 @@ zh_CN:
               description: 仅按话题回复一次
             word_answer_list:
               label: 字词/答案对列表
-              description: "定义键/值组列表，其中 `key` 是搜索词，`value` 是回复的文本。请注意，`value` 接受 `%%KEY%%` 作为占位符，在回复中会替换为 `key` 的值。请注意，`key` 将被评估为正则表达式，如果您实际上指的是点，则应转义 `.` 等特殊字符，例如：`\\.`"
             answering_user:
               label: 回答用户
               description: 默认为系统用户
@@ -231,6 +226,10 @@ zh_CN:
             info: 信息
             success: 成功
             error: 错误
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: 群组
         suspend_user_by_email:
           fields:
             suspend_until:

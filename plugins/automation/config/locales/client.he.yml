@@ -25,8 +25,6 @@ he:
       destroy_automation:
         confirm: "למחוק את `%{name}`?"
       fields:
-        key_value:
-          label: הגדרה
         user:
           label: משתמש
         pm:
@@ -139,7 +137,8 @@ he:
               description: יוקפץ רק אם הפוסט נוצר על ידי משתמש בדרגות האמון האלו, ברירת המחדל היא כל דרגת אמון
             restricted_category:
               label: קטגוריה
-              description: רשות, מאפשר להגביל הפעלות בקטגוריה הזאת
+            restricted_group:
+              label: קבוצה
           created: נוצרו
           edited: נערכו
         category_created_edited:
@@ -150,8 +149,9 @@ he:
         pm_created:
           fields:
             restricted_user:
-              label: משתמש
-              description: מאפשר להגביל הפעלות למשתמש הזה
+              label: משתמשים
+            restricted_group:
+              label: קבוצה
             ignore_staff:
               label: התעלמות מהסגל
               description: לדלג על גורם ההפעלה אם זה משתמש מהסגל
@@ -165,10 +165,8 @@ he:
               description: יוקפץ רק אם הפוסט נוצר על ידי משתמש בדרגות האמון האלו, ברירת המחדל היא כל דרגת אמון
             restricted_category:
               label: קטגוריה
-              description: רשות, מאפשר להגביל הפעלות בקטגוריה הזאת
             restricted_tags:
               label: תגיות
-              description: רשות, מאפשר להגביל הפעלות לכל אחת מהתגיות האלו
       scriptables:
         not_found: לא ניתן למצוא את הסקריפט `%{script}` לאוטומציה `%{automation}`, יש לוודא שהתוסף המשויך מותקן
         zapier_webhook:
@@ -183,7 +181,6 @@ he:
               description: מגיב פעם אחת בלבד בכל נושא
             word_answer_list:
               label: רשימה של צמדי מילה/תשובה
-              description: "מגדיר רשימה של קבוצות מפתח/ערך כאשר `מפתח` הוא הערך אחריו מחפשים, ו`ערך` הוא טקסט התגובה. נא לשים לב ש`ערך` מקבל `%%KEY%%` בתור ממלא מקום להחלפת הערך של ה`מפתח` בתגובה. נא לשים לב ש`מפתח` יפוענח כביטוי רגולרי, ותווים מיוחדים כגון `.` דורשים החרגה אם הכוונה שלך הייתה נקודה, למשל: `\\.`"
             answering_user:
               label: משתמש שענה
               description: ברירת המחדל היא משתמש המערכת
@@ -221,6 +218,19 @@ he:
             info: מידע
             success: הצלחה
             error: שגיאה
+        user_group_membership_through_badge:
+          fields:
+            badge_name:
+              label: שם העיטור
+            group:
+              label: קבוצה
+              description: קבוצת יעד. משתמשים עם העיטור שצוין יתווספו לקבוצה הזאת.
+            update_user_title_and_flair:
+              label: עדכון כותרת וסמלון המשתמש
+              description: רשות, עדכון כותרת וסמלון המשתמש
+            remove_members_without_badge:
+              label: הסרת חברים קיימים ללא עיטור
+              description: כרשות, להסיר חברי קבוצה קיימים בלי עיטורים מסוימים
         suspend_user_by_email:
           fields:
             suspend_until:

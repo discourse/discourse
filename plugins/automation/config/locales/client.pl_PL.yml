@@ -26,8 +26,6 @@ pl_PL:
       destroy_automation:
         confirm: "Czy na pewno chcesz usunąć `%{name}`?"
       fields:
-        key_value:
-          label: Skonfiguruj
         user:
           label: Użytkownik
         pm:
@@ -115,6 +113,8 @@ pl_PL:
               label: Prawidłowe poziomy zaufania
             restricted_category:
               label: Kategoria
+            restricted_group:
+              label: Grupa
           created: Utworzony
           edited: Edytowany
         category_created_edited:
@@ -123,8 +123,8 @@ pl_PL:
               label: Kategoria nadrzędna
         pm_created:
           fields:
-            restricted_user:
-              label: Użytkownik
+            restricted_group:
+              label: Grupa
             ignore_staff:
               label: Ignoruj personel
             valid_trust_levels:
@@ -177,6 +177,10 @@ pl_PL:
             info: Informacja
             success: Sukces
             error: Błąd
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Grupa
         suspend_user_by_email:
           fields:
             reason:

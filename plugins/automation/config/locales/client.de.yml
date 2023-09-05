@@ -26,8 +26,6 @@ de:
       destroy_automation:
         confirm: "Bist du sicher, dass du `%{name}` löschen willst?"
       fields:
-        key_value:
-          label: Konfigurieren
         user:
           label: Benutzer
         pm:
@@ -149,7 +147,8 @@ de:
               description: Wird nur ausgelöst, wenn ein Beitrag von einem Benutzer mit diesen Vertrauensstufen erstellt wird, standardmäßig eine beliebige Vertrauensstufe
             restricted_category:
               label: Kategorie
-              description: Optional, ermöglicht es, die Ausführung des Auslösers auf diese Kategorie zu beschränken
+            restricted_group:
+              label: Gruppe
           created: Erstellt
           edited: Bearbeitet
         category_created_edited:
@@ -159,9 +158,8 @@ de:
               description: Optional, ermöglicht es, die Ausführung des Auslösers auf diese Kategorie zu beschränken
         pm_created:
           fields:
-            restricted_user:
-              label: Benutzer
-              description: Ermöglicht es, die Ausführung des Auslösers auf diesen Benutzer zu beschränken
+            restricted_group:
+              label: Gruppe
             ignore_staff:
               label: Teammitglieder ignorieren
               description: Den Auslöser überspringen, falls der Absender ein Teammitglied ist
@@ -175,10 +173,8 @@ de:
               description: Wird nur ausgelöst, wenn ein Beitrag von einem Benutzer mit diesen Vertrauensstufen erstellt wird, standardmäßig eine beliebige Vertrauensstufe
             restricted_category:
               label: Kategorie
-              description: Optional, ermöglicht es, die Ausführung des Auslösers auf diese Kategorie zu beschränken
             restricted_tags:
               label: Tags
-              description: Optional, ermöglicht es, die Ausführung des Auslösers auf einen dieser Tags zu beschränken
       scriptables:
         not_found: Konnte das Skript `%{script}` für die Automatisierung `%{automation}` nicht finden. Stelle sicher, dass das zugehörige Plug-in installiert ist
         zapier_webhook:
@@ -193,7 +189,6 @@ de:
               description: Antwortet nur einmal pro Thema
             word_answer_list:
               label: Liste von Wort/Antwort-Paaren
-              description: "Definiert eine Liste von Schlüssel/Wert-Gruppen, wobei `key` der gesuchte Begriff und `value` der Text der Antwort ist. Beachte, dass `value` `%%KEY%%` als Platzhalter akzeptiert, der in der Antwort durch den Wert von `key` ersetzt wird. Beachte weiterhin, dass `key` als Regex ausgewertet wird und Sonderzeichen wie `.` maskiert werden müssen, wenn du tatsächlich einen Punkt meinst, z. B.: `\\.`"
             answering_user:
               label: Antwortender Benutzer
               description: Standardmäßig Systembenutzer
@@ -231,6 +226,10 @@ de:
             info: Info
             success: Erfolg
             error: Fehler
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Gruppe
         suspend_user_by_email:
           fields:
             suspend_until:

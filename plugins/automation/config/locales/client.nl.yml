@@ -26,8 +26,6 @@ nl:
       destroy_automation:
         confirm: "Weet je zeker dat je '%{name}' wilt verwijderen?"
       fields:
-        key_value:
-          label: Configureren
         user:
           label: Gebruiker
         pm:
@@ -149,7 +147,8 @@ nl:
               description: Wordt alleen getriggerd als een bericht wordt gemaakt door een gebruiker met deze vertrouwensniveaus. Standaard ingesteld op elk vertrouwensniveau
             restricted_category:
               label: Categorie
-              description: Optioneel, maakt het mogelijk om de uitvoering van triggers te beperken tot deze categorie
+            restricted_group:
+              label: Groep
           created: Gemaakt
           edited: Bewerkt
         category_created_edited:
@@ -159,9 +158,8 @@ nl:
               description: Optioneel, maakt het mogelijk om de uitvoering van triggers te beperken tot deze categorie
         pm_created:
           fields:
-            restricted_user:
-              label: Gebruiker
-              description: Maakt het mogelijk om de uitvoering van triggers te beperken tot deze gebruiker
+            restricted_group:
+              label: Groep
             ignore_staff:
               label: Medewerkers negeren
               description: Sla de trigger over als de afzender een medewerker is
@@ -175,10 +173,8 @@ nl:
               description: Wordt alleen getriggerd als een bericht wordt gemaakt door een gebruiker met deze vertrouwensniveaus. Standaard ingesteld op elk vertrouwensniveau
             restricted_category:
               label: Categorie
-              description: Optioneel, maakt het mogelijk om de uitvoering van triggers te beperken tot deze categorie
             restricted_tags:
               label: Tags
-              description: Optioneel, maakt het mogelijk om de uitvoering van triggers te beperken tot deze tags
       scriptables:
         not_found: Kon script '%{script}' voor automatisering '%{automation}' niet vinden, controleer of de bijbehorende plug-in is geïnstalleerd
         zapier_webhook:
@@ -193,7 +189,6 @@ nl:
               description: Reageert slechts één keer per topic
             word_answer_list:
               label: Lijst van woord-antwoordparen
-              description: "Definieert een lijst van sleutel-waardegroepen, waarbij de 'sleutel' de gezochte term is en de 'waarde' de tekst van het antwoord. Merk op dat 'waarde' '%%KEY%%' accepteert als tijdelijke aanduiding die moet worden vervangen door de waarde van 'sleutel' in het antwoord. Merk op dat 'sleutel' wordt geëvalueerd als een reguliere expressie en dat speciale tekens zoals '.' moeten worden ge-escaped als je daadwerkelijk een punt bedoelt, bijvoorbeeld: '\\.'"
             answering_user:
               label: Antwoordende gebruiker
               description: Standaard ingesteld op Systeemgebruiker
@@ -231,6 +226,10 @@ nl:
             info: Informatie
             success: Geslaagd
             error: Fout
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Groep
         suspend_user_by_email:
           fields:
             suspend_until:

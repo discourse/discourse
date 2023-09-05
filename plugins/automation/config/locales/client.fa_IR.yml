@@ -13,8 +13,6 @@ fa_IR:
       destroy_automation:
         confirm: "آیا مطمئنید هستید که می‌خواهید «%{name}» را حذف کنید؟"
       fields:
-        key_value:
-          label: پیکربندی
         user:
           label: کاربر
         pm:
@@ -89,12 +87,14 @@ fa_IR:
               label: نوع عمل
             restricted_category:
               label: دسته‌بندی
+            restricted_group:
+              label: گروه
           created: ایجاد شده
           edited: ویرایش شده
         pm_created:
           fields:
-            restricted_user:
-              label: کاربر
+            restricted_group:
+              label: گروه
         after_post_cook:
           fields:
             restricted_category:
@@ -132,6 +132,10 @@ fa_IR:
             info: اطلاعات
             success: موفقیت
             error: خطا
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: گروه
         suspend_user_by_email:
           fields:
             reason:

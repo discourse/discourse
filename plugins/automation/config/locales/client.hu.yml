@@ -26,8 +26,6 @@ hu:
       destroy_automation:
         confirm: "Biztos, hogy törli: „%{name}\"?"
       fields:
-        key_value:
-          label: Beállítás
         user:
           label: Felhasználó
         pm:
@@ -139,11 +137,12 @@ hu:
               label: Érvényes bizalmi szintek
             restricted_category:
               label: Kategória
+            restricted_group:
+              label: Csoport
         pm_created:
           fields:
-            restricted_user:
-              label: Felhasználó
-              description: Lehetővé teszi az aktiváló végrehajtásának erre a felhasználóra korlátozását
+            restricted_group:
+              label: Csoport
             ignore_staff:
               label: Stáb figyelmen kívül hagyása
               description: Az aktiválás kihagyása, ha a küldő stábtag
@@ -166,7 +165,6 @@ hu:
           fields:
             word_answer_list:
               label: Szó/válasz párok listája
-              description: "Kulcs/érték csoportok listáját határoz meg, ahol a `kulcs` a keresett kifejezés, az `érték` pedig a válasz szövege. Vegye figyelembe, hogy az `érték` elfogadja a `%%KEY%%` helykitöltőt, amelybe a `kulcs` értéke lesz behelyettesítve a válaszban. Vegye figyelembe, hogy a `kulcs` reguláris kifejezésként lesz kiértékelve, így figyelembe kell vennie a speciális karaktereket, például ha a `.` karakterre gondol, akkor ezt kell megadnia: `\\.`."
             answering_user:
               label: Válaszoló felhasználó
               description: Alapértelmezetten a rendszerfelhasználó
@@ -194,6 +192,10 @@ hu:
             info: Információ
             success: Siker
             error: Hiba
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Csoport
         suspend_user_by_email:
           fields:
             reason:

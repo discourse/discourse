@@ -26,8 +26,6 @@ fi:
       destroy_automation:
         confirm: "Haluatko varmasti poistaa kohteen \"%{name}\"?"
       fields:
-        key_value:
-          label: Määritä
         user:
           label: Käyttäjä
         pm:
@@ -149,7 +147,8 @@ fi:
               description: Käynnistyy vain, jos viestin on luonut käyttäjä, jonka luottamustaso on jokin näistä, oletusarvo on mikä tahansa luottamustaso
             restricted_category:
               label: Alue
-              description: Valinnainen, mahdollistaa triggerin suorittamisen rajoittamisen tähän alueeseen
+            restricted_group:
+              label: Ryhmä
           created: Luotu
           edited: Muokattu
         category_created_edited:
@@ -159,9 +158,8 @@ fi:
               description: Valinnainen, mahdollistaa triggerin suorittamisen rajoittamisen tähän alueeseen
         pm_created:
           fields:
-            restricted_user:
-              label: Käyttäjä
-              description: Mahdollistaa triggerin suorittamisen rajoittamisen tähän käyttäjään
+            restricted_group:
+              label: Ryhmä
             ignore_staff:
               label: Ohita henkilökunta
               description: Ohita triggeri, jos lähettäjä on henkilökunnan käyttäjä
@@ -175,10 +173,8 @@ fi:
               description: Käynnistyy vain, jos viestin on luonut käyttäjä, jonka luottamustaso on jokin näistä; oletusarvo on mikä tahansa luottamustaso
             restricted_category:
               label: Alue
-              description: Valinnainen, mahdollistaa triggerin suorittamisen rajoittamisen tähän alueeseen
             restricted_tags:
               label: Tunnisteet
-              description: Valinnainen, mahdollistaa triggerin suorittamisen rajoittamisen mihin tahansa näistä tunnisteista
       scriptables:
         not_found: Skriptiä %{script} automaatiolle %{automation} ei löytynyt. Varmista, että siihen liittyvä lisäosa on asennettuna.
         zapier_webhook:
@@ -193,7 +189,6 @@ fi:
               description: Vastaa vain kerran ketjua kohden
             word_answer_list:
               label: Sana ja vastaus -parien luettelo
-              description: "Määrittää avain/arvoryhmien luettelon, jossa avain on haettu ehto ja arvo on vastauksen teksti. Huomioi, että arvo hyväksyy tekstin \"%%KEY%%\" paikkamerkkinä, joka korvataan avaimen arvolla vastauksessa. Avain arvioidaan säännöllisenä lausekkeena, ja erikoismerkkien, kuten \".\", yhteydessä tulisi käyttää koodinvaihtomerkkiä, jos todella tarkoitat pistettä, esim. \"\\.\"."
             answering_user:
               label: Vastaava käyttäjä
               description: Oletuksena järjestelmäkäyttäjä
@@ -231,6 +226,10 @@ fi:
             info: Info
             success: Onnistuminen
             error: Virhe
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Ryhmä
         suspend_user_by_email:
           fields:
             suspend_until:

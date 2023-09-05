@@ -26,8 +26,6 @@ fr:
       destroy_automation:
         confirm: "Voulez-vous vraiment supprimer « %{name} » ?"
       fields:
-        key_value:
-          label: Configurer
         user:
           label: Utilisateur
         pm:
@@ -149,7 +147,8 @@ fr:
               description: Se déclenchera uniquement si la publication est créée par l'utilisateur dans ces niveaux de confiance. Cette valeur est fixée par défaut sur tous les niveaux de confiance
             restricted_category:
               label: Catégorie
-              description: Facultatif, permet de limiter l'exécution du déclencheur à cette catégorie
+            restricted_group:
+              label: Groupe
           created: Créé
           edited: Édité
         category_created_edited:
@@ -159,9 +158,8 @@ fr:
               description: Facultatif, permet de limiter l'exécution du déclencheur à cette catégorie
         pm_created:
           fields:
-            restricted_user:
-              label: Utilisateur
-              description: Permet de limiter l'exécution du déclencheur à cet utilisateur
+            restricted_group:
+              label: Groupe
             ignore_staff:
               label: Ignorer le responsable
               description: Ignorer le déclencheur si l'expéditeur est un responsable
@@ -175,10 +173,8 @@ fr:
               description: Se déclenchera uniquement si la publication est créée par l'utilisateur dans ces niveaux de confiance. Cette valeur est fixée par défaut sur tous les niveaux de confiance
             restricted_category:
               label: Catégorie
-              description: Facultatif, permet de limiter l'exécution du déclencheur à cette catégorie
             restricted_tags:
               label: Étiquettes
-              description: Facultatif, permet de limiter l'exécution du déclencheur à l'une de ces étiquettes
       scriptables:
         not_found: Impossible de trouver le script « %{script} » pour l'automatisation « %{automation} », assurez-vous que l'extension associée est installée
         zapier_webhook:
@@ -193,7 +189,6 @@ fr:
               description: Ne répond qu'une seule fois par sujet
             word_answer_list:
               label: Liste des paires mot/réponse
-              description: "Définit une liste de groupes clé/valeur, où la « key » est le terme recherché et la « value » le texte de la réponse. Notez que la « value » accepte « %%KEY%% » comme espace réservé à remplacer par la valeur de « key » dans la réponse. Notez que « key » sera évaluée comme une expression régulière et que les caractères spéciaux tels que « . » devraient être évités si vous voulez réellement dire un point, par exemple : « \\ . »"
             answering_user:
               label: Utilisateur qui répond
               description: Par défaut, utilisateur système
@@ -231,6 +226,10 @@ fr:
             info: Informations
             success: Succès
             error: Erreur
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Groupe
         suspend_user_by_email:
           fields:
             suspend_until:

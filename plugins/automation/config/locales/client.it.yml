@@ -26,8 +26,6 @@ it:
       destroy_automation:
         confirm: "Vuoi davvero eliminare `%{name}`?"
       fields:
-        key_value:
-          label: Configura
         user:
           label: Utente
         pm:
@@ -149,7 +147,8 @@ it:
               description: L'attivazione avverrà solo se il messaggio viene creato da utenti in questi livelli di attendibilità, il valore predefinito è qualsiasi livello di attendibilità
             restricted_category:
               label: Categoria
-              description: Facoltativo, consente di limitare l'attivazione a questa categoria
+            restricted_group:
+              label: Gruppo
           created: Creati
           edited: Modificati
         category_created_edited:
@@ -159,9 +158,8 @@ it:
               description: Facoltativo, consente di limitare l'attivazione di questa categoria
         pm_created:
           fields:
-            restricted_user:
-              label: Utente
-              description: Consente di limitare l'attivazione a questo utente
+            restricted_group:
+              label: Gruppo
             ignore_staff:
               label: Ignora staff
               description: Salta l'attivazione se il mittente è un utente dello staff
@@ -175,10 +173,8 @@ it:
               description: L'attivazione avverrà solo se il messaggio viene creato da utenti in questi livelli di attendibilità, il valore predefinito è qualsiasi livello di attendibilità
             restricted_category:
               label: Categoria
-              description: Facoltativo, consente di limitare l'attivazione a questa categoria
             restricted_tags:
               label: Tag
-              description: Facoltativo, consente di limitare l'attivazione a uno qualunque di questi tag
       scriptables:
         not_found: Impossibile trovare lo script `%{script}` per l'automazione `%{automation}`, verifica che il plugin associato sia installato
         zapier_webhook:
@@ -193,7 +189,6 @@ it:
               description: Risponde solo una volta per argomento
             word_answer_list:
               label: Elenco di coppie parole/risposte
-              description: "Definisce un elenco di gruppi chiave/valore, dove \"chiave\" è il termine cercato e \"valore\" il testo della risposta. Il parametro `value` accetta `%%KEY%%` come segnaposto che sarà sostituito con il valore di `key` nella risposta. Il parametro `key` sarà valutato come regex e i caratteri speciali come `.` devono essere preceduti da escape se si intende effettivamente indicare un punto, ad esempio: `\\.`"
             answering_user:
               label: Utente che risponde
               description: Ripristina impostazione predefinita Utente di sistema
@@ -231,6 +226,10 @@ it:
             info: Informazioni
             success: Riuscito
             error: Errore
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Gruppo
         suspend_user_by_email:
           fields:
             suspend_until:

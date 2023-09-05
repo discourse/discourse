@@ -26,8 +26,6 @@ ar:
       destroy_automation:
         confirm: "هل تريد بالتأكيد حذف `%{name}`؟"
       fields:
-        key_value:
-          label: التهيئة
         user:
           label: المستخدم
         pm:
@@ -149,7 +147,8 @@ ar:
               description: سيتم التشغيل فقط إذا تم إنشاء المنشور بواسطة مستخدم في مستويات الثقة هذه، ويتم تعيينه افتراضيًا على أي مستوى ثقة
             restricted_category:
               label: الفئة
-              description: اختياري، يسمح بتقييد تنفيذ المشغِّل لهذه الفئة
+            restricted_group:
+              label: المجموعة
           created: تم إنشاؤها
           edited: تم تحريرها
         category_created_edited:
@@ -159,9 +158,8 @@ ar:
               description: اختياري، يسمح بتقييد تنفيذ المشغِّل لهذه الفئة
         pm_created:
           fields:
-            restricted_user:
-              label: المستخدم
-              description: يسمح بالحد من تنفيذ المشغِّل لهذا المستخدم
+            restricted_group:
+              label: المجموعة
             ignore_staff:
               label: تجاهل فريق العمل
               description: تخطي المشغِّل إذا كان المُرسل مستخدمًا من فريق العمل
@@ -175,10 +173,8 @@ ar:
               description: سيتم التشغيل فقط إذا تم إنشاء المنشور بواسطة مستخدم في مستويات الثقة هذه، ويتم تعيينه افتراضيًا على أي مستوى ثقة
             restricted_category:
               label: الفئة
-              description: اختياري، يسمح بتقييد تنفيذ المشغِّل لهذه الفئة
             restricted_tags:
               label: الوسوم
-              description: اختياري، يسمح بتقييد تنفيذ المشغِّل لأي وسم من هذه الوسوم
       scriptables:
         not_found: تعذَّر العثور على البرنامج النصي `%{script}` للأتمتة `%{automation}`، تأكَّد من تثبيت المكوِّن الإضافي ذي الصلة
         zapier_webhook:
@@ -193,7 +189,6 @@ ar:
               description: يستجيب مرة واحدة فقط لكل موضوع
             word_answer_list:
               label: قائمة أزواج الكلمات/الإجابات
-              description: "يحدِّد قائمة من مجموعات المفاتيح/القيم، حيث يكون `key` هو المصطلح الذي يتم البحث عنه، و`value` هي نص الرد. لاحظ أن `value` تقبل \"%%KEY%%\" كعنصر نائب ليتم استبداله بقيمة `key` في الرد. لاحظ أنه سيتم تقييم `key` باعتباره تعبيرًا عاديًا، ويجب تخطي الأحرف الخاصة مثل `.` إذا كنت تقصد بالفعل نقطة؛ على سبيل المثال: `\\.`"
             answering_user:
               label: المستخدم المجيب
               description: يتم تعيينه افتراضيًا إلى مستخدم النظام
@@ -231,6 +226,10 @@ ar:
             info: المعلومات
             success: تم بنجاح
             error: خطأ
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: المجموعة
         suspend_user_by_email:
           fields:
             suspend_until:

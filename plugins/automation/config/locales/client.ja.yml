@@ -26,8 +26,6 @@ ja:
       destroy_automation:
         confirm: "`%{name}` を削除してもよろしいですか？"
       fields:
-        key_value:
-          label: 構成
         user:
           label: ユーザー
         pm:
@@ -149,7 +147,8 @@ ja:
               description: 投稿がこれらの信頼レベルのユーザーによって作成された場合にのみトリガーされます。デフォルトはすべての信頼レベルです。
             restricted_category:
               label: カテゴリ
-              description: オプション。トリガーの実行をこのカテゴリに限定できます
+            restricted_group:
+              label: グループ
           created: 作成
           edited: 編集
         category_created_edited:
@@ -159,9 +158,8 @@ ja:
               description: オプション。トリガーの実行をこのカテゴリに限定できます
         pm_created:
           fields:
-            restricted_user:
-              label: ユーザー
-              description: トリガーの実行をこのユーザーに限定できます
+            restricted_group:
+              label: グループ
             ignore_staff:
               label: スタッフを無視する
               description: 送信者がスタッフユーザーである場合は、トリガーをスキップします
@@ -175,10 +173,8 @@ ja:
               description: 投稿がこれらの信頼レベルのユーザーによって作成された場合にのみトリガーされます。デフォルトはすべての信頼レベルです。
             restricted_category:
               label: カテゴリ
-              description: オプション。トリガーの実行をこのカテゴリに限定できます
             restricted_tags:
               label: タグ
-              description: オプション。トリガーの実行をこれらのタグに限定できます
       scriptables:
         not_found: 自動化 `%{automation}` のスクリプト `%{script}` が見つかりませんでした。関連するプラグインがインストールされていることを確認してください。
         zapier_webhook:
@@ -193,7 +189,6 @@ ja:
               description: トピックごとに 1 回だけ応答します
             word_answer_list:
               label: 単語/回答ペアのリスト
-              description: "キー/値グループのリストを定義します。`key` は検索された語で、`value` は返信テキストです。`value` は、返信の `key` の値と置換されるプレースホルダーとして、`%%KEY%%` を受け入れることに注意してください。`key` は正規表現として評価されます。`.` といった特殊文字は、実際にドットを意味する場合は、エスケープが必要であることに注意してください（例: `\\.`）。"
             answering_user:
               label: 回答するユーザー
               description: デフォルトでシステムユーザー
@@ -231,6 +226,10 @@ ja:
             info: 情報
             success: 成功
             error: エラー
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: グループ
         suspend_user_by_email:
           fields:
             suspend_until:

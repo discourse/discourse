@@ -26,8 +26,6 @@ es:
       destroy_automation:
         confirm: "¿Seguro que quieres eliminar «%{name}»?"
       fields:
-        key_value:
-          label: Configurar
         user:
           label: Usuario
         pm:
@@ -149,7 +147,8 @@ es:
               description: Se activará solo si la publicación es creada por un usuario en estos niveles de confianza. Por defecto, cualquier nivel de confianza
             restricted_category:
               label: Categoría
-              description: Opcional, permite limitar la ejecución del activador a esta categoría
+            restricted_group:
+              label: Grupo
           created: Creado
           edited: Editado
         category_created_edited:
@@ -159,9 +158,8 @@ es:
               description: Opcional, permite limitar la ejecución del activador a esta categoría
         pm_created:
           fields:
-            restricted_user:
-              label: Usuario
-              description: Permite limitar la ejecución del activador a este usuario
+            restricted_group:
+              label: Grupo
             ignore_staff:
               label: Ignorar personal
               description: Omitir la activación si el remitente es un usuario del personal
@@ -175,10 +173,8 @@ es:
               description: Se activará solo si la publicación es creada por un usuario en estos niveles de confianza. Por defecto, cualquier nivel de confianza
             restricted_category:
               label: Categoría
-              description: Opcional, permite limitar la ejecución del activador a esta categoría
             restricted_tags:
               label: Etiquetas
-              description: Opcional, permite limitar la ejecución del activador a cualquiera de estas etiquetas
       scriptables:
         not_found: No se ha podido encontrar el script «%{script}» para la automatización «%{automation}», asegúrate de que el plugin asociado está instalado
         zapier_webhook:
@@ -193,7 +189,6 @@ es:
               description: Solo responde una vez por tema
             word_answer_list:
               label: Lista de pares de palabras/respuestas
-              description: "Define una lista de grupos clave/valor, donde la «clave» es el término buscado, y el «valor» el texto de la respuesta. Ten en cuenta que «valor» acepta «%%KEY%%» como marcador de posición que será sustituido por el valor de «clave» en la respuesta. Ten en cuenta que «clave» se evaluará como una expresión regular, y los caracteres especiales como «.» deben escaparse si en realidad se trata de un punto, por ejemplo: «\\.»"
             answering_user:
               label: Usuario que responde
               description: Por defecto, usuario del sistema
@@ -231,6 +226,10 @@ es:
             info: Información
             success: Éxito
             error: Error
+        user_group_membership_through_badge:
+          fields:
+            group:
+              label: Grupo
         suspend_user_by_email:
           fields:
             suspend_until:
