@@ -281,4 +281,15 @@ RSpec.describe RemoteTheme do
       expect(described_class.unreachable_themes).to eq([])
     end
   end
+
+  describe ".import_theme_from_directory" do
+    let(:theme_dir) { "#{Rails.root}/spec/fixtures/themes/discourse-test-theme" }
+
+    it "imports a theme from a directory" do
+      theme = RemoteTheme.import_theme_from_directory(theme_dir)
+
+      expect(theme.name).to eq("Header Icons")
+      expect(theme.theme_fields.count).to eq(5)
+    end
+  end
 end
