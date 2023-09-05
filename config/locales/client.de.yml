@@ -5705,7 +5705,7 @@ de:
           new_default: "Neuer Standard"
           dismiss: "Verwerfen"
       settings:
-        show_overriden: "Nur geänderte Texte anzeigen"
+        show_overriden: "Nur geänderte Einstellungen anzeigen"
         history: "Änderungsverlauf ansehen"
         reset: "zurücksetzen"
         none: "keine"
