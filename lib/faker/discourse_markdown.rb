@@ -86,7 +86,7 @@ module Faker
 
       def available_methods
         methods = super
-        methods << :image if ::DiscourseDev.config.post[:include_images]
+        methods << :image if Rails.env.dev? && ::DiscourseDev.config.post[:include_images]
         methods
       end
     end
