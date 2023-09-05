@@ -45,7 +45,7 @@ module("Unit | Utility | text | parseMentions", function () {
   test("parses mentions from markdown", async function (assert) {
     const markdown = "Hey @user1, @user2, @group1, @group2, @here, @all";
     const mentions = await parseMentions(markdown);
-    assert.equal(mentions, [
+    assert.deepEqual(mentions, [
       "user1",
       "user2",
       "group1",
@@ -53,5 +53,23 @@ module("Unit | Utility | text | parseMentions", function () {
       "here",
       "all",
     ]);
+  });
+
+  test("ignores duplicated mentions", async function (assert) {
+    const markdown = "Hey @john, @john, @john, @john";
+    const mentions = await parseMentions(markdown);
+    assert.deepEqual(mentions, ["john"]);
+  });
+
+  test("ignores mentions in codeblocks", async function (assert) {
+    const markdown = `Hey
+    \`\`\`
+      def foo
+        @bar = true
+      end
+    \`\`\`
+    `;
+    const mentions = await parseMentions(markdown);
+    assert.equal(mentions.length, 0);
   });
 });
