@@ -150,6 +150,7 @@ RSpec.describe Post do
   describe "with_secure_uploads?" do
     let(:topic) { Fabricate(:topic) }
     let!(:post) { Fabricate(:post, topic: topic) }
+
     it "returns false if secure uploads is not enabled" do
       expect(post.with_secure_uploads?).to eq(false)
     end
@@ -167,6 +168,14 @@ RSpec.describe Post do
         it "returns true" do
           expect(post.with_secure_uploads?).to eq(true)
         end
+
+        context "if secure_uploads_pm_only" do
+          before { SiteSetting.secure_uploads_pm_only = true }
+
+          it "returns false" do
+            expect(post.with_secure_uploads?).to eq(false)
+          end
+        end
       end
 
       context "if the topic category is read_restricted" do
@@ -176,6 +185,14 @@ RSpec.describe Post do
         it "returns true" do
           expect(post.with_secure_uploads?).to eq(true)
         end
+
+        context "if secure_uploads_pm_only" do
+          before { SiteSetting.secure_uploads_pm_only = true }
+
+          it "returns false" do
+            expect(post.with_secure_uploads?).to eq(false)
+          end
+        end
       end
 
       context "if the post is in a PM topic" do
@@ -183,6 +200,14 @@ RSpec.describe Post do
 
         it "returns true" do
           expect(post.with_secure_uploads?).to eq(true)
+        end
+
+        context "if secure_uploads_pm_only" do
+          before { SiteSetting.secure_uploads_pm_only = true }
+
+          it "returns true" do
+            expect(post.with_secure_uploads?).to eq(true)
+          end
         end
       end
     end
