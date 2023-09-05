@@ -1439,6 +1439,10 @@ files:
     default: 1024
     min: 1
     max: 10240
+  secure_uploads_pm_only:
+    default: false
+    hidden: true
+    client: true
   enable_s3_uploads:
     default: false
     client: true

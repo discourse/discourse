@@ -141,7 +141,7 @@ module SystemHelpers
     page.execute_script(js, selector, start, offset)
   end
 
-  def setup_s3_system_test
+  def setup_s3_system_test(enable_secure_uploads: false, enable_direct_s3_uploads: true)
     SiteSetting.enable_s3_uploads = true
 
     SiteSetting.s3_upload_bucket = "discoursetest"
@@ -150,6 +150,9 @@ module SystemHelpers
     SiteSetting.s3_access_key_id = MinioRunner.config.minio_root_user
     SiteSetting.s3_secret_access_key = MinioRunner.config.minio_root_password
     SiteSetting.s3_endpoint = MinioRunner.config.minio_server_url
+
+    SiteSetting.enable_direct_s3_uploads = enable_direct_s3_uploads
+    SiteSetting.secure_uploads = enable_secure_uploads
 
     MinioRunner.start
   end
