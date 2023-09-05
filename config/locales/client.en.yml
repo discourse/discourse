@@ -4163,6 +4163,7 @@ en:
         print: "%{shortcut} Print topic"
         defer: "%{shortcut} Defer topic"
         topic_admin_actions: "%{shortcut} Open topic admin actions"
+        archive_private_message: "%{shortcut} Toggle archive private message"
       search_menu:
         title: "Search Menu"
         prev_next: "%{shortcut} Move selection up and down"
