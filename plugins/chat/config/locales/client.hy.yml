@@ -12,6 +12,7 @@ hy:
           always: "Միշտ"
           never: "Երբեք"
     chat:
+      deleted_chat_username: ջնջված
       create: "Ստեղծել"
       cancel: "Չեղարկել"
       channel_settings:
@@ -31,8 +32,6 @@ hy:
       flag: "Դրոշակավորել"
       join: "Միանալ"
       last_visit: "վերջին այցելությունը"
-      mention_warning:
-        dismiss: "չեղարկել"
       reply: "Պատասխանել"
       edit: "Խմբագրել"
       rebake_message: "Վերակառուցել HTML-ը"

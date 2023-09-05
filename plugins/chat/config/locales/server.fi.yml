@@ -6,7 +6,7 @@
 
 fi:
   site_settings:
-    chat_enabled: "Ota chat-lisäosa käyttöön."
+    chat_enabled: "Ota chat käyttöön."
     enable_public_channels: "Käytä julkisia kanavia kategorioiden perusteella."
     chat_allowed_groups: "Näiden ryhmien käyttäjät voivat keskustella chatissa. Huomaa, että henkilökunnalla on aina chatin käyttöoikeus."
     chat_channel_retention_days: "Tavallisten kanavien chat-viestit säilytetään näin monta päivää. Viestit säilytetään ikuisesti, jos asetat arvoksi 0."
@@ -116,15 +116,11 @@ fi:
         agree_and_delete:
           title: "Poista viesti"
           description: "Poista viesti, jotta käyttäjät eivät näe sitä."
-        delete_and_agree:
-          title: "Poista viesti"
         disagree_and_restore:
           title: "Hylkää ja palauta viesti"
           description: "Palauta viesti, jotta kaikki käyttäjät näkevät sen."
         disagree:
           title: "Hylkää"
-        ignore:
-          title: "Ohita"
       direct_messages:
         transcript_title: "Kanavan %{channel_name} aiempien viestin transkriptio"
         transcript_body: "Antaaksemme sinulle enemmän kontekstia lisäsimme tämän keskustelun aiempien viestien transkription (enintään kymmenen):\n\n%{transcript}"
@@ -140,6 +136,28 @@ fi:
         multi_user_truncated:
           one: "%{comma_separated_usernames} ja %{count} muu"
           other: "%{comma_separated_usernames} ja %{count} muuta"
+    mention_warning:
+      dismiss: "hylkää"
+      cannot_see: "%{first_identifier} ei voi käyttää tätä kanavaa, eikä hänelle ilmoitettu."
+      cannot_see_multiple:
+        one: "%{first_identifier} ja %{count} muu käyttäjä eivät voi käyttää tätä kanavaa, eikä heille ilmoitettu."
+        other: "%{first_identifier} ja %{count} muuta käyttäjää eivät voi käyttää tätä kanavaa, eikä heille ilmoitettu."
+      invitations_sent:
+        one: "Kutsu lähetetty"
+        other: "Kutsut lähetettiin"
+      invite: "Kutsu kanavalle"
+      without_membership: "%{first_identifier} ei ole liittynyt tälle kanavalle."
+      without_membership_multiple:
+        one: "%{first_identifier} ja %{count} muu käyttäjä eivät ole liittyneet tälle kanavalle."
+        other: "%{first_identifier} ja %{count} muuta käyttäjää eivät ole liittyneet tälle kanavalle."
+      group_mentions_disabled: "%{first_identifier} ei salli mainintoja."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} ja %{count} muu ryhmä eivät salli mainintoja."
+        other: "%{first_identifier} ja %{count} muuta ryhmää eivät salli mainintoja."
+      too_many_members: "Ryhmässä %{first_identifier} on liian monta jäsentä. Kukaan ei saanut ilmoitusta."
+      too_many_members_multiple:
+        one: "Ryhmässä %{first_identifier} ja %{count} muussa ryhmässä on liikaa jäseniä. Kukaan ei saanut ilmoitusta."
+        other: "Ryhmässä %{first_identifier} ja %{count} muussa ryhmässä on liikaa jäseniä. Kukaan ei saanut ilmoitusta."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "sisältää muita kuin ascii-merkkejä"

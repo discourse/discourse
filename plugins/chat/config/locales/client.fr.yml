@@ -29,6 +29,7 @@ fr:
       chat_channels_count: "Canaux de discussion"
       chat_users_count: "Utilisateurs de la discussion"
     chat:
+      deleted_chat_username: supprimé
       dates:
         time_tiny: "h:mm"
       all_loaded: "Affichage de tous les messages"
@@ -127,27 +128,10 @@ fr:
           one: "Dernière heure"
           other: "%{count} dernières heures"
       mention_warning:
-        dismiss: "rejeter"
-        cannot_see: "%{username} ne peut pas accéder à ce canal et n'a pas été averti(e)."
-        cannot_see_multiple:
-          one: "%{username} et %{count} autre utilisateur ne peuvent pas accéder à ce canal et n'ont pas été avertis."
-          other: "%{username} et %{count} autres utilisateurs ne peuvent pas accéder à ce canal et n'ont pas été avertis."
         invitations_sent:
           one: "Invitation envoyée"
           other: "Invitations envoyées"
         invite: "Inviter à rejoindre le canal"
-        without_membership: "%{username} n'a pas rejoint ce canal."
-        without_membership_multiple:
-          one: "%{username} et %{count} autre utilisateur n'ont pas rejoint ce canal."
-          other: "%{username} et %{count} autres utilisateurs n'ont pas rejoint ce canal."
-        group_mentions_disabled: "%{group_name} n'autorise pas les mentions."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} et %{count} autre groupe n'autorisent pas les mentions."
-          other: "%{group_name} et %{count} autres groupes n'autorisent pas les mentions."
-        too_many_members: "%{group_name} a trop de membres. Personne n'a reçu de notification."
-        too_many_members_multiple:
-          one: "%{group_name} et %{count} autre groupe comprennent trop de membres. Personne n'a été prévenu."
-          other: "%{group_name} et %{count} autres groupes comprennent trop de membres. Personne n'a été prévenu."
         groups:
           header:
             some: "Certains utilisateurs ne recevront pas de notification"
@@ -615,6 +599,9 @@ fr:
       types:
         chat_reviewable_message:
           title: "Message de discussion signalé"
+        reviewable_chat_message:
+          title: "Message de discussion marqué"
+          noun: "message de discussion"
     keyboard_shortcuts_help:
       chat:
         title: "Discussion"

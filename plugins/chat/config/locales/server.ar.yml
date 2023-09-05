@@ -7,7 +7,7 @@
 ar:
   site_settings:
     chat_separate_sidebar_mode: "إظهار أوضاع الشريط الجانبي المنفصلة للمنتدى والدردشة."
-    chat_enabled: "تفعيل المكوِّن الإضافي للدردشة."
+    chat_enabled: "تفعيل الدردشة."
     enable_public_channels: "تفعيل القنوات العامة حسب الفئات."
     chat_allowed_groups: "يمكن للمستخدمين في هذه المجموعات الدردشة. لاحظ أن أعضاء فريق العمل يمكنهم دائمًا الوصول إلى الدردشة."
     chat_channel_retention_days: "سيتم الاحتفاظ برسائل الدردشة في القنوات العادية لهذا العدد من الأيام. اتعيين القيمة على '0' للاحتفاظ بالرسائل إلى الأبد."
@@ -129,15 +129,11 @@ ar:
         agree_and_delete:
           title: "حذف الرسالة"
           description: "يمكنك حذف الرسالة حتى لا يتمكن المستخدمون من رؤيتها."
-        delete_and_agree:
-          title: "حذف الرسالة"
         disagree_and_restore:
           title: "عدم الموافقة واستعادة الرسالة"
           description: "يمكنك استعادة الرسالة حتى يتمكن جميع المستخدمين من رؤيتها."
         disagree:
           title: "عدم الموافقة"
-        ignore:
-          title: "تجاهل"
       direct_messages:
         transcript_title: "نص الرسائل السابقة في %{channel_name}"
         transcript_body: "لمنحك مزيدًا من السياق، فقد ضمَّنا نسخة من الرسائل السابقة في هذه المحادثة (حتى عشر رسائل):\n\n%{transcript}"
@@ -161,6 +157,41 @@ ar:
           few: "%{comma_separated_usernames} و%{count} آخرين"
           many: "%{comma_separated_usernames} و%{count} آخرين"
           other: "%{comma_separated_usernames} و%{count} آخرين"
+    mention_warning:
+      dismiss: "تجاهل"
+      cannot_see: "لا يمكن للمستخدم %{first_identifier} الوصول إلى هذه القناة ولم يتلقَّ إشعارًا."
+      cannot_see_multiple:
+        zero: "لا يمكن للمستخدم %{first_identifier} و%{count} مستخدم آخر الوصول إلى هذه القناة ولم يتلقوا إشعارات."
+        one: "لا يمكن للمستخدم %{first_identifier} ومستخدم (%{count}) آخر الوصول إلى هذه القناة ولم يتلقيا إشعارات."
+        two: "لا يمكن للمستخدم %{first_identifier} ومستخدمَين (%{count}) آخرين الوصول إلى هذه القناة ولم يتلقوا إشعارات."
+        few: "لا يمكن للمستخدم %{first_identifier} و%{count} مستخدمين آخر الوصول إلى هذه القناة ولم يتلقوا إشعارات."
+        many: "لا يمكن للمستخدم %{first_identifier} و%%{count} مستخدمًا آخر الوصول إلى هذه القناة ولن يتلقوا إشعارات."
+        other: "لا يمكن للمستخدم %{first_identifier} و%{count} مستخدم آخر الوصول إلى هذه القناة ولم يتلقوا إشعارات."
+      without_membership: "لم ينضم المستخدم %{first_identifier} إلى هذه القناة."
+      without_membership_multiple:
+        zero: "لم ينضم %{first_identifier} و%{count} مستخدمًا آخر إلى هذه القناة."
+        one: "لم ينضم %{first_identifier} ومستخدم (%{count}) آخر إلى هذه القناة."
+        two: "لم ينضم %{first_identifier} ومستخدمان (%{count}) آخران إلى هذه القناة."
+        few: "لم ينضم %{first_identifier} و%{count} مستخدمين آخرين إلى هذه القناة."
+        many: "لم ينضم %{first_identifier} و%{count} مستخدمًا آخر إلى هذه القناة."
+        other: "لم ينضم %{first_identifier} و%{count} مستخدمًا آخر إلى هذه القناة."
+      group_mentions_disabled: "لا تسمح المجموعة %{first_identifier} بالإشارات."
+      group_mentions_disabled_multiple:
+        zero: "لا تسمح المجموعة @%{first_identifier} و%{count} مجموعة أخرى بالإشارات."
+        one: "لا تسمح المجموعة @%{first_identifier} ومجموعة واحدة (%{count}) أخرى بالإشارات."
+        two: "لا تسمح المجموعة @%{first_identifier} ومجموعتان (%{count}) أخرتان بالإشارات."
+        few: "لا تسمح المجموعة @%{first_identifier} و%{count} مجموعات أخرى بالإشارات."
+        many: "لا تسمح المجموعة @%{first_identifier} و%{count} مجموعةً أخرى بالإشارات."
+        other: "لا تسمح المجموعة @%{first_identifier} و%{count} مجموعة أخرى بالإشارات."
+      global_mentions_disallowed: "إشارات @here و @all مٌعطلة في هذه القناة."
+      too_many_members: "تحتوي المجموعة %{first_identifier} على أعضاء كثيرين. لم يتلقَّ أحد الإشعارات."
+      too_many_members_multiple:
+        zero: "تحتوي المجموعة %{first_identifier} و%{count} مجموعةً أخرى على أعضاء كثيرين. لم يتلقَّ أحد الإشعارات."
+        one: "تحتوي المجموعة %{first_identifier} ومجموعة واحدة (%{count}) أخرى على أعضاء كثيرين. لم يتلقَّ أحد الإشعارات."
+        two: "تحتوي المجموعة %{first_identifier} ومجموعتان (%{count}) أخرتان على أعضاء كثيرين. لم يتلقَّ أحد الإشعارات."
+        few: "تحتوي المجموعة %{first_identifier} و%{count} مجموعات أخرى على أعضاء كثيرين. لم يتلقَّ أحد الإشعارات."
+        many: "تحتوي المجموعة %{first_identifier} و%{count} مجموعةً أخرى على أعضاء كثيرين. لم يتلقَّ أحد الإشعارات."
+        other: "تحتوي المجموعة %{first_identifier} و%{count} مجموعةً أخرى على أعضاء كثيرين. لم يتلقَّ أحد الإشعارات."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "يتضمَّن حروفًا لا تنتمي إلى ترميز ASCII"

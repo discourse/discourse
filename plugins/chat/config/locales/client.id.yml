@@ -28,6 +28,7 @@ id:
       chat_channels_count: "Kanal Obrolan"
       chat_users_count: "Pengguna Obrolan"
     chat:
+      deleted_chat_username: dihapus
       dates:
         time_tiny: "h:mm"
       all_loaded: "Menampilkan semua pesan"
@@ -67,7 +68,7 @@ id:
         since:
           other: "%{count} jam terakhir"
       mention_warning:
-        dismiss: "bubar"
+        channel_wide_mentions_disallowed: "Penyebutan @here dan @all dinonaktifkan di kanal ini."
       reply: "Balas"
       edit: "Ubah"
       bookmark_message: "Penandaan"
@@ -129,6 +130,7 @@ id:
       admin:
         export_messages:
           title: "Ekspor pesan obrolan"
+          description: "Ini mengekspor semua pesan dari semua kanal."
           create_export: "Buat ekspor"
           export_has_started: "Ekspor telah dimulai. Anda akan menerima PM jika sudah siap."
       incoming_webhooks:
@@ -175,6 +177,10 @@ id:
           fields:
             message:
               label: pesan
+    review:
+      types:
+        reviewable_chat_message:
+          title: "Pesan obrolan yang ditandai"
     styleguide:
       sections:
         chat:

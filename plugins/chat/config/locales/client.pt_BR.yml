@@ -29,6 +29,7 @@ pt_BR:
       chat_channels_count: "Canais de chat"
       chat_users_count: "Usuários do chat"
     chat:
+      deleted_chat_username: excluído(a)
       dates:
         time_tiny: "h:mm"
       all_loaded: "Mostrando todas as mensagens"
@@ -127,27 +128,10 @@ pt_BR:
           one: "Última hora"
           other: "Últimas %{count} horas"
       mention_warning:
-        dismiss: "ignorar"
-        cannot_see: "%{username} não pode acessar este canal e não foi notificado(a)."
-        cannot_see_multiple:
-          one: "%{username} e %{count} outro usuário não podem acessar este canal e não foram notificados"
-          other: "%{username} e %{count} outros usuários não podem acessar este canal e não foram notificados"
         invitations_sent:
           one: "Convite enviado"
           other: "Convites enviados"
         invite: "convidar para canal"
-        without_membership: "%{username} não entrou neste canal."
-        without_membership_multiple:
-          one: "%{username} e %{count} outro usuário não se juntaram a este canal"
-          other: "%{username} e %{count} outros(as) usuários(as) não se juntaram a este canal"
-        group_mentions_disabled: "%{group_name} não permite menções."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} e %{count} outro grupo não permitem menções"
-          other: "%{group_name} e %{count} outros grupos não permitem menções"
-        too_many_members: "%{group_name} tem membros demais. Ninguém foi notificado."
-        too_many_members_multiple:
-          one: "%{group_name} e %{count} outro grupo têm membros demais. Ninguém foi notificado."
-          other: "%{group_name} e %{count} outros grupos têm membros demais. Ninguém foi notificado."
         groups:
           header:
             some: "Alguns usuários não serão notificados"
@@ -615,6 +599,9 @@ pt_BR:
       types:
         chat_reviewable_message:
           title: "Mensagem de chat sinalizada"
+        reviewable_chat_message:
+          title: "Mensagem de chat sinalizada"
+          noun: "mensagem de chat"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"

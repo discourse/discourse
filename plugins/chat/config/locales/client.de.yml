@@ -30,6 +30,7 @@ de:
       chat_channels_count: "Chat-Kanäle"
       chat_users_count: "Chat-Benutzer"
     chat:
+      deleted_chat_username: gelöscht
       dates:
         time_tiny: "h:mm"
       all_loaded: "Alle Nachrichten werden angezeigt"
@@ -130,28 +131,11 @@ de:
           one: "Letzte Stunde"
           other: "Letzte %{count} Stunden"
       mention_warning:
-        dismiss: "verwerfen"
-        cannot_see: "%{username} kann nicht auf diesen Kanal zugreifen und wurde nicht benachrichtigt."
-        cannot_see_multiple:
-          one: "%{username} und %{count} anderer Benutzer können nicht auf diesen Kanal zugreifen und wurden nicht benachrichtigt."
-          other: "%{username} und %{count} andere Benutzer können nicht auf diesen Kanal zugreifen und wurden nicht benachrichtigt."
         invitations_sent:
           one: "Einladung gesendet"
           other: "Einladungen gesendet"
         invite: "Zum Kanal einladen"
-        without_membership: "%{username} ist diesem Kanal nicht beigetreten."
-        without_membership_multiple:
-          one: "%{username} und %{count} anderer Benutzer sind diesem Kanal nicht beigetreten."
-          other: "%{username} und %{count} andere Benutzer sind diesem Kanal nicht beigetreten."
-        group_mentions_disabled: "%{group_name} erlaubt keine Erwähnungen."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} und %{count} andere Gruppe erlauben keine Erwähnungen."
-          other: "%{group_name} und %{count} andere Gruppen erlauben keine Erwähnungen."
         channel_wide_mentions_disallowed: "Die Erwähnungen von @here und @all sind in diesem Kanal deaktiviert."
-        too_many_members: "%{group_name} hat zu viele Mitglieder. Niemand wurde benachrichtigt."
-        too_many_members_multiple:
-          one: "%{group_name} und %{count} andere Gruppe haben zu viele Mitglieder. Es wurde niemand benachrichtigt."
-          other: "%{group_name} und %{count} andere Gruppen haben zu viele Mitglieder. Es wurde niemand benachrichtigt."
         groups:
           header:
             some: "Einige Benutzer werden nicht benachrichtigt"
@@ -620,6 +604,9 @@ de:
       types:
         chat_reviewable_message:
           title: "Markierte Chat-Nachricht"
+        reviewable_chat_message:
+          title: "Markierte Chat-Nachricht"
+          noun: "chat-Nachricht"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"

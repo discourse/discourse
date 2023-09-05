@@ -7,7 +7,7 @@
 de:
   site_settings:
     chat_separate_sidebar_mode: "Zeige separate Seitenleisten-Modi für Forum und Chat."
-    chat_enabled: "Chat-Plug-in aktivieren."
+    chat_enabled: "Chat aktivieren."
     enable_public_channels: "Öffentliche Kanäle basierend auf Kategorien aktivieren."
     chat_allowed_groups: "Benutzer in diesen Gruppen können chatten. Bitte beachte, dass Teammitglieder jederzeit auf den Chat zugreifen können."
     chat_channel_retention_days: "Chat-Nachrichten in regulären Kanälen werden so viele Tage lang aufbewahrt. Auf „0“ setzen, um Nachrichten für immer aufzubewahren."
@@ -118,14 +118,16 @@ de:
           title: "Nachricht löschen"
           description: "Nachricht löschen, damit Benutzer sie nicht sehen können."
         delete_and_agree:
-          title: "Nachricht löschen"
+          title: "Meldung ignorieren und Nachricht löschen"
+          description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst und die Nachricht löschst."
         disagree_and_restore:
           title: "Ablehnen und Nachricht wiederherstellen"
           description: "Nachricht wiederherstellen, damit alle Benutzer sie sehen können."
         disagree:
           title: "Ablehnen"
         ignore:
-          title: "Ignorieren"
+          title: "Nichts tun"
+          description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst, ohne etwas zu unternehmen."
       direct_messages:
         transcript_title: "Transkript früherer Nachrichten in %{channel_name}"
         transcript_body: "Um dir mehr Kontext zu geben, haben wir ein Transkript der vorherigen Nachrichten in dieser Unterhaltung beigefügt (bis zu zehn):\n\n%{transcript}"
@@ -141,6 +143,29 @@ de:
         multi_user_truncated:
           one: "%{comma_separated_usernames} und %{count} andere Person"
           other: "%{comma_separated_usernames} und %{count} andere"
+    mention_warning:
+      dismiss: "schließen"
+      cannot_see: "%{first_identifier} kann nicht auf diesen Kanal zugreifen und wurde nicht benachrichtigt."
+      cannot_see_multiple:
+        one: "%{first_identifier} und %{count} anderer Benutzer können nicht auf diesen Kanal zugreifen und wurden nicht benachrichtigt."
+        other: "%{first_identifier} und %{count} andere Benutzer können nicht auf diesen Kanal zugreifen und wurden nicht benachrichtigt."
+      invitations_sent:
+        one: "Einladung gesendet"
+        other: "Einladungen gesendet"
+      invite: "Zum Kanal einladen"
+      without_membership: "%{first_identifier} ist diesem Kanal nicht beigetreten."
+      without_membership_multiple:
+        one: "%{first_identifier} und %{count} anderer Benutzer sind diesem Kanal nicht beigetreten."
+        other: "%{first_identifier} und %{count} andere Benutzer sind diesem Kanal nicht beigetreten."
+      group_mentions_disabled: "%{first_identifier} erlaubt keine Erwähnungen."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} und %{count} andere Gruppe erlauben keine Erwähnungen."
+        other: "%{first_identifier} und %{count} andere Gruppen erlauben keine Erwähnungen."
+      global_mentions_disallowed: "Die Erwähnungen von @here und @all sind in diesem Kanal deaktiviert."
+      too_many_members: "%{first_identifier} hat zu viele Mitglieder. Niemand wurde benachrichtigt."
+      too_many_members_multiple:
+        one: "%{first_identifier} und %{count} andere Gruppe haben zu viele Mitglieder. Es wurde niemand benachrichtigt."
+        other: "%{first_identifier} und %{count} andere Gruppen haben zu viele Mitglieder. Es wurde niemand benachrichtigt."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "enthält Nicht-ASCII-Zeichen"

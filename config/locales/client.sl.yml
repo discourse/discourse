@@ -495,14 +495,19 @@ sl:
         reviewable_flagged_post:
           title: "Prijavljen prispevek"
           flagged_by: "Prijavljen od"
+          noun: "prispevek"
         reviewable_queued_topic:
           title: "Tema v čakalni vrsti"
+          noun: "tema"
         reviewable_queued_post:
           title: "Prispevek za potrditev"
+          noun: "prispevek"
         reviewable_user:
           title: "Uporabnik"
+          noun: "uporabnik"
         reviewable_post:
           title: "Prispevek"
+          noun: "prispevek"
       approval:
         title: "Prispevek za odobritev."
         description: "Prejeli smo vaš nov prispevek, vendar potrebuje odobritev s strani moderatorja preden bo objavljen. Prosimo za potrpežljivost."
@@ -2552,7 +2557,6 @@ sl:
       errors:
         create: "Oprostite, pri ustvarjanju vašega prispevka je prišlo do napake. Poskusite ponovno."
         edit: "Oprostite, pri ustvarjanju vašega prispevka je prišlo do napake. Poskusite ponovno."
-        upload: "Oprostite, pri prenosu datoteke je prišlo do napake. Poskusite ponovno."
         file_too_large: "Datoteka je prevelika (največja velikost je %{max_size_kb}kb). Naložite vašo veliko datoteko na ponudnika v oblaku in objavite povezavo?"
         too_many_uploads: "Oprostite, naenkrat lahko naložite samo eno datoteko."
         upload_not_authorized: "Oprostite, datoteka ki ste jo hoteli naložiti ni podprta (podprte pripone:%{authorized_extensions})."
@@ -3589,7 +3593,6 @@ sl:
             label: "Varnostna kopija"
             title: "Ustvari varnostno kopijo"
             confirm: "Želite ustvariti varnostno kopijo?"
-            without_uploads: "Da (brez naloženih datotek)"
           download:
             label: "Naloži"
         location:

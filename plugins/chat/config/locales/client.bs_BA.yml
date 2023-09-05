@@ -12,6 +12,7 @@ bs_BA:
           always: "Uvijek"
           never: "Nikad"
     chat:
+      deleted_chat_username: obrisano
       create: "napravi"
       cancel: "Odustani"
       channel_settings:
@@ -31,8 +32,6 @@ bs_BA:
       flag: "Prijavi"
       join: "Učlani se"
       last_visit: "zadnja posjeta"
-      mention_warning:
-        dismiss: "odbaci"
       reply: "Odgovori"
       edit: "Edit"
       rebake_message: "Popravi HTML"

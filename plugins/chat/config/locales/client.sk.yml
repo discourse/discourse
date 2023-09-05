@@ -16,6 +16,7 @@ sk:
           actions:
             chat_auto_remove_membership: "Automatické odstránenie členstiev z kanálov"
     chat:
+      deleted_chat_username: vymazané
       create: "Vytvoriť"
       cancel: "Zrušiť"
       channel_settings:
@@ -55,9 +56,6 @@ sk:
           many: "Posledných %{count} hodín"
           other: "Posledných %{count} hodín"
       mention_warning:
-        dismiss: "zahodiť"
-        cannot_see: "%{username} nemá prístup k tomuto kanálu a nebol upozornený."
-        group_mentions_disabled: "%{group_name} nepovoľuje označovanie."
         groups:
           unreachable_1: "@%{group} nepovoľuje označovanie."
           unreachable_2: "@%{group1} a @%{group2} nepovoľujú oznčovanie."
