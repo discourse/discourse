@@ -81,6 +81,12 @@
   </div>
 
   <div class="search-advanced">
+    <PluginOutlet
+      @name="full-page-search-below-search-header"
+      @connectorTagName="div"
+      @outletArgs={{hash search=this.searchTerm type=this.search_type}}
+    />
+
     {{#if this.hasResults}}
       {{#if this.usingDefaultSearchType}}
         <div
