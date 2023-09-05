@@ -1005,6 +1005,17 @@ RSpec.describe TopicQuery do
         expect(topic_ids - [topic_category.id]).to eq([topic_in_cat1.id, topic_in_cat2.id])
       end
 
+      it "uses the category's default sort order when filter=default is passed explicitly" do
+        category.update!(sort_order: "created", sort_ascending: true)
+        topic_ids =
+          TopicQuery
+            .new(user, category: category.id, filter: "default")
+            .list_latest
+            .topics
+            .map(&:id)
+        expect(topic_ids - [topic_category.id]).to eq([topic_in_cat1.id, topic_in_cat2.id])
+      end
+
       it "should apply default sort order to latest and unseen filters only" do
         category.update!(sort_order: "created", sort_ascending: true)
 
