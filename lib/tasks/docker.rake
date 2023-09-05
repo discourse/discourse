@@ -6,7 +6,6 @@
 # Environment Variables (specific to this rake task)
 # => SKIP_LINT                 set to 1 to skip linting (eslint and rubocop)
 # => SKIP_TESTS                set to 1 to skip all tests
-# => SKIP_WIZARD_TESTS         set to 1 to skip wizard tests
 # => SKIP_CORE                 set to 1 to skip core tests (rspec and qunit)
 # => SKIP_PLUGINS              set to 1 to skip plugin tests (rspec and qunit)
 # => SKIP_INSTALL_PLUGINS      comma separated list of plugins you want to skip installing
