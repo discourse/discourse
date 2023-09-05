@@ -989,7 +989,7 @@ RSpec.describe PostAction do
   end
 
   describe "count_per_day_for_type" do
-    before { PostActionCreator.create(Fabricate(:user), post, :like) }
+    before { PostActionCreator.create(eviltrout, post, :like) }
 
     it "returns the correct count" do
       expect(PostAction.count_per_day_for_type(PostActionType.types[:like])).to eq(
@@ -1017,7 +1017,7 @@ RSpec.describe PostAction do
 
       PostActionCreator.create(codinghorror, post, :like)
       expect(
-        PostAction.count_per_day_for_type(PostActionType.types[:like], { group_ids: group.id }),
+        PostAction.count_per_day_for_type(PostActionType.types[:like], { group_ids: [group.id] }),
       ).to eq(Time.now.utc.to_date => 1)
     end
   end
