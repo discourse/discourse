@@ -123,7 +123,7 @@ acceptance("flagging", function (needs) {
     await silenceUntilCombobox.expand();
     await silenceUntilCombobox.selectRowByValue("tomorrow");
     assert.ok(exists(".modal-body"));
-    await fillIn(".silence-reason", "for breaking the rules");
+    await fillIn("input.silence-reason", "for breaking the rules");
 
     await click(".perform-penalize");
     assert.ok(!exists(".modal-body"));
@@ -139,7 +139,7 @@ acceptance("flagging", function (needs) {
     const silenceUntilCombobox = selectKit(".silence-until .combobox");
     await silenceUntilCombobox.expand();
     await silenceUntilCombobox.selectRowByValue("tomorrow");
-    await fillIn(".silence-reason", "for breaking the rules");
+    await fillIn("input.silence-reason", "for breaking the rules");
     await click(".d-modal-cancel");
     assert.ok(exists(".dialog-body"));
 
