@@ -20,7 +20,6 @@ const KNOWN_LEGACY_MODALS = [
   "create-invite",
   "grant-badge",
   "group-default-notifications",
-  "login",
   "raw-email",
   "reject-reason-reviewable",
   "reorder-categories",
