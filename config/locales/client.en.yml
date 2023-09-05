@@ -618,24 +618,27 @@ en:
           title: "Everything"
 
       context_question:
-        is_this_post: "Is this post %{reviewable_human_score_types}?"
+        is_this_post: "Is this %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "or"
-        something_else_wrong: "Is there something wrong with this post?"
+        something_else_wrong: "Is there something wrong with this %{reviewable_type}?"
 
       types:
         reviewable_flagged_post:
           title: "Flagged Post"
           flagged_by: "Flagged By"
+          noun: "post"
         reviewable_queued_topic:
           title: "Queued Topic"
+          noun: "topic"
         reviewable_queued_post:
           title: "Queued Post"
+          noun: "post"
         reviewable_user:
           title: "User"
+          noun: "user"
         reviewable_post:
           title: "Post"
-        reviewable_chat_message:
-          title: "Flagged chat message"
+          noun: "post"
       approval:
         title: "Post Needs Approval"
         description: "We've received your new post but it needs to be approved by a moderator before it will appear. Please be patient."
