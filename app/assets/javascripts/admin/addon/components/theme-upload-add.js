@@ -55,6 +55,8 @@ export default class ThemeUploadAdd extends Component {
   @tracked fileSelected = false;
   @tracked flash;
 
+  uploadUrl = this.args.model.uploadUrl || "/admin/themes/upload_asset";
+
   get disabled() {
     return this.errorMessage && this.fileSelected;
   }
@@ -97,7 +99,7 @@ export default class ThemeUploadAdd extends Component {
     options.data.append("file", file);
 
     try {
-      const result = await ajax("/admin/themes/upload_asset", options);
+      const result = await ajax(this.uploadUrl, options);
       const upload = {
         upload_id: result.upload_id,
         name: this.name,
