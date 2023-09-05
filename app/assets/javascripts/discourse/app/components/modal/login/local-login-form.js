@@ -8,7 +8,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "I18n";
-import getWebauthnCredential from "discourse/lib/webauthn";
+import { getWebauthnCredential } from "discourse/lib/webauthn";
 import ForgotPassword from "discourse/components/modal/forgot-password";
 
 export default class LocalLoginBody extends Component {
