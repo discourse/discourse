@@ -652,7 +652,8 @@ class Topic < ActiveRecord::Base
     start_date,
     end_date,
     category_id = nil,
-    include_subcategories = false
+    include_subcategories = false,
+    group_ids = nil
   )
     result =
       listable_topics.where(
@@ -665,6 +666,15 @@ class Topic < ActiveRecord::Base
       result.where(
         category_id: include_subcategories ? Category.subcategory_ids(category_id) : category_id,
       ) if category_id
+
+    if group_ids
+      result =
+        result
+          .joins("INNER JOIN users ON users.id = topics.user_id")
+          .joins("INNER JOIN group_users ON group_users.user_id = users.id")
+          .where("group_users.group_id IN (?)", group_ids)
+    end
+
     result.count
   end
 
