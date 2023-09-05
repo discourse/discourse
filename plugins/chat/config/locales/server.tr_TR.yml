@@ -7,7 +7,7 @@
 tr_TR:
   site_settings:
     chat_separate_sidebar_mode: "Forum ve sohbet için ayrı kenar çubuğu modları göster"
-    chat_enabled: "Sohbet eklentisini etkinleştirin."
+    chat_enabled: "Sohbeti etkinleştir."
     enable_public_channels: "Kategorilere göre herkese açık kanalları etkinleştirin."
     chat_allowed_groups: "Bu gruplardaki kullanıcılar sohbet edebilir. Personelin sohbete her zaman erişebileceğini dikkate alın."
     chat_channel_retention_days: "Normal kanallardaki sohbet mesajları bu kadar gün boyunca saklanır. Mesajları sonsuza kadar saklamak için \"0\" olarak ayarlayın."
@@ -118,14 +118,16 @@ tr_TR:
           title: "Mesajı sil"
           description: "Kullanıcıların görememesi için mesajı silin."
         delete_and_agree:
-          title: "Mesajı sil"
+          title: "Bayrağı Yoksay ve Mesajı Sil"
+          description: "Kuyruktan kaldırarak bayrağı yoksayın ve mesajı sil."
         disagree_and_restore:
           title: "Katılma ve Mesajı Geri Yükle"
           description: "Tüm kullanıcıların görebilmesi için mesajı geri yükle."
         disagree:
           title: "Katılma"
         ignore:
-          title: "Yok say"
+          title: "Hiçbir şey yapma"
+          description: "Herhangi bir işlem yapmadan bayrağı kuyruktan kaldırarak yok say."
       direct_messages:
         transcript_title: "%{channel_name} adlı kanaldaki önceki mesajların dökümü"
         transcript_body: "Size daha fazla bağlam sağlamak için bu konuşmadaki önceki mesajların bir dökümünü ekledik (en fazla on):\n\n%{transcript}"
@@ -141,6 +143,29 @@ tr_TR:
         multi_user_truncated:
           one: "%{comma_separated_usernames} ve %{count} kişi daha"
           other: "%{comma_separated_usernames} ve %{count} kişi daha"
+    mention_warning:
+      dismiss: "kapat"
+      cannot_see: "%{first_identifier} bu kanala erişemiyor ve bilgilendirilmedi."
+      cannot_see_multiple:
+        one: "%{first_identifier} ve %{count} kullanıcı daha bu kanala erişemiyor ve bilgilendirilmediler."
+        other: "%{first_identifier} ve %{count} kullanıcı daha bu kanala erişemiyor ve bilgilendirilmediler."
+      invitations_sent:
+        one: "Davet gönderildi"
+        other: "Davet gönderildi"
+      invite: "Kanala davet et"
+      without_membership: "%{first_identifier} bu kanala katılmadı."
+      without_membership_multiple:
+        one: "%{first_identifier} ve %{count} kullanıcı daha bu kanala katılmadı."
+        other: "%{first_identifier} ve %{count} kullanıcı daha bu kanala katılmadı."
+      group_mentions_disabled: "%{first_identifier} bahsetmeye izin vermiyor."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} ve %{count} grup daha bahsetmeye izin vermiyor."
+        other: "%{first_identifier} ve %{count} grup daha bahsetmeye izin vermiyor."
+      global_mentions_disallowed: "Bu kanalda @here ve @all mentionları devre dışı bırakılmıştır."
+      too_many_members: "%{first_identifier} çok fazla üyeye sahip. Kimseye bildirim gönderilmedi."
+      too_many_members_multiple:
+        one: "%{first_identifier} ve %{count} grubun daha çok fazla üyesi var. Kimse bilgilendirilmedi."
+        other: "%{first_identifier} ve %{count} grubun daha çok fazla üyesi var. Kimse bilgilendirilmedi."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "ascii olmayan karakterler içeriyor"

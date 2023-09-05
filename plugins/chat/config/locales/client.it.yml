@@ -29,6 +29,7 @@ it:
       chat_channels_count: "Canali di chat"
       chat_users_count: "Utenti della chat"
     chat:
+      deleted_chat_username: cancellati
       dates:
         time_tiny: "h:mm"
       all_loaded: "Mostra tutti i messaggi"
@@ -127,28 +128,11 @@ it:
           one: "Ultima ora"
           other: "Ultime %{count} ore"
       mention_warning:
-        dismiss: "ignora"
-        cannot_see: "%{username} non può accedere a questo canale e non è stato avvisato."
-        cannot_see_multiple:
-          one: "%{username} e %{count} altro utente non possono accedere a questo canale e non sono stati avvisati."
-          other: "%{username} e altri %{count} utenti non possono accedere a questo canale e non sono stati avvisati."
         invitations_sent:
           one: "Invito inviato"
           other: "Inviti inviati"
         invite: "Invita al canale"
-        without_membership: "%{username} non ha partecipato a questo canale."
-        without_membership_multiple:
-          one: "%{username} e %{count} altro utente non si sono uniti a questo canale."
-          other: "%{username} e altri %{count} utenti non si sono uniti a questo canale."
-        group_mentions_disabled: "%{group_name} non consente menzioni."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} e %{count} altro gruppo non consentono menzioni."
-          other: "%{group_name} e %{count} altri gruppi non consentono menzioni."
         channel_wide_mentions_disallowed: "Le menzioni di @here e @all sono disabilitate in questo canale."
-        too_many_members: "%{group_name} ha troppi membri. Nessuno è stato avvisato."
-        too_many_members_multiple:
-          one: "%{group_name} e %{count} altro gruppo hanno troppi membri. Nessuno è stato notificato."
-          other: "%{group_name} e %{count} altri gruppi hanno troppi membri. Nessuno è stato notificato."
         groups:
           header:
             some: "Alcuni utenti non riceveranno notifiche"
@@ -617,6 +601,9 @@ it:
       types:
         chat_reviewable_message:
           title: "Messaggio di chat segnalato"
+        reviewable_chat_message:
+          title: "Messaggio di chat segnalato"
+          noun: "messaggio di chat"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"

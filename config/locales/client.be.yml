@@ -240,12 +240,19 @@ be:
           title: "Усё"
       context_question:
         delimiter: "або"
-        something_else_wrong: "Штосьці не так з гэтай публікацыяй?"
       types:
+        reviewable_flagged_post:
+          noun: "пост"
+        reviewable_queued_topic:
+          noun: "тэма"
+        reviewable_queued_post:
+          noun: "пост"
         reviewable_user:
           title: "Карыстальнік"
+          noun: "карыстальнік"
         reviewable_post:
           title: "Паведамленне"
+          noun: "пост"
       approval:
         title: "Паведамленне мае патрэбу ў падцверджанні"
         ok: "Добра"
@@ -1066,7 +1073,6 @@ be:
       quote_share: "Падзяліцца тэмай"
       edit_reason: "прычына: "
       errors:
-        upload: "Выбачайце, пры загрузцы гэтага файла адбылася памылка. Калі ласка, паспрабуйце яшчэ раз."
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
       controls:
         like: "упадабаць гэты пост"

@@ -4693,6 +4693,9 @@ zh_CN:
       invalid_yaml: "不是有效的 YAML 字符串"
       invalid_type: "包含一个无效的模板类型：%{type}（有效类型：%{valid_types}）"
       missing_type: "缺少一个字段类型"
+      missing_id: "缺少一个字段 ID"
+      duplicate_ids: "有重复的 id"
+      reserved_id: "有一个保留关键字 id: %{id}"
   activemodel:
     errors:
       <<: *errors

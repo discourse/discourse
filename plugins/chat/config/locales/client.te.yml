@@ -11,6 +11,7 @@ te:
         chat_separate_sidebar_mode:
           always: "ఎల్లప్పుడూ"
     chat:
+      deleted_chat_username: తొలగించారు
       cancel: "రద్దుచేయి"
       channel_settings:
         edit: "సవరణ"

@@ -29,6 +29,7 @@ ja:
       chat_channels_count: "チャットチャンネル"
       chat_users_count: "チャットユーザー"
     chat:
+      deleted_chat_username: 削除
       dates:
         time_tiny: "h:mm"
       all_loaded: "すべてのメッセージを表示中"
@@ -124,22 +125,9 @@ ja:
         since:
           other: "過去 %{count} 時間"
       mention_warning:
-        dismiss: "閉じる"
-        cannot_see: "%{username} はこのチャンネルにアクセスできないため通知されませんでした。"
-        cannot_see_multiple:
-          other: "%{username} と他 %{count} 人のユーザーはこのチャンネルにアクセスできないため通知されませんでした。"
         invitations_sent:
           other: "招待状を送信しました"
         invite: "チャンネルに招待する"
-        without_membership: "%{username} はこのチャンネルに参加していません。"
-        without_membership_multiple:
-          other: "%{username} と他 %{count} 人のユーザーはこのチャンネルに参加していません。"
-        group_mentions_disabled: "%{group_name} はメンションを許可していません。"
-        group_mentions_disabled_multiple:
-          other: "%{group_name} と他 %{count} 個のグループはメンションを許可していません。"
-        too_many_members: "%{group_name} のメンバーが多すぎます。誰にも通知されませんでした。"
-        too_many_members_multiple:
-          other: "%{group_name} と他 %{count} 個のグループのメンバーが多すぎます。誰にも通知されませんでした."
         groups:
           header:
             some: "一部のユーザーには通知されません"
@@ -581,6 +569,9 @@ ja:
       types:
         chat_reviewable_message:
           title: "通報されたチャットメッセージ"
+        reviewable_chat_message:
+          title: "通報されたチャットメッセージ"
+          noun: "チャットメッセージ"
     keyboard_shortcuts_help:
       chat:
         title: "チャット"

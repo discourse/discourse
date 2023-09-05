@@ -29,6 +29,7 @@ es:
       chat_channels_count: "Canales de chat"
       chat_users_count: "Usuarios del chat"
     chat:
+      deleted_chat_username: eliminado
       dates:
         time_tiny: "h:mm"
       all_loaded: "Mostrando todos los mensajes"
@@ -127,27 +128,10 @@ es:
           one: "Última hora"
           other: "Últimas %{count} horas"
       mention_warning:
-        dismiss: "descartar"
-        cannot_see: "%{username} no puede acceder a este canal y no ha sido notificado."
-        cannot_see_multiple:
-          one: "%{username} y otro usuario no pueden acceder a este canal y no fueron notificados."
-          other: "%{username} y otros %{count} usuarios no pueden acceder a este canal y no fueron notificados."
         invitations_sent:
           one: "Invitación enviada"
           other: "Invitaciones enviadas"
         invite: "Invitar al canal"
-        without_membership: "%{username} no se ha unido a este canal."
-        without_membership_multiple:
-          one: "%{username} y otro usuario no se han unido a este canal."
-          other: "%{username} y otros %{count} usuarios no se han unido a este canal."
-        group_mentions_disabled: "%{group_name} no permite menciones."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} y otro grupo no permiten menciones."
-          other: "%{group_name} y otros %{count} grupos no permiten menciones."
-        too_many_members: "%{group_name} tiene demasiados miembros. No se notificó a nadie."
-        too_many_members_multiple:
-          one: "%{group_name} y otro grupo tienen demasiados miembros. No se ha notificado a nadie."
-          other: "%{group_name} y otros %{count} grupos tienen demasiados miembros. No se ha notificado a nadie."
         groups:
           header:
             some: "Algunos usuarios no serán notificados"
@@ -615,6 +599,9 @@ es:
       types:
         chat_reviewable_message:
           title: "Mensaje de chat denunciado"
+        reviewable_chat_message:
+          title: "Mensaje de chat denunciado"
+          noun: "mensaje de chat"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"

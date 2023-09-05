@@ -461,14 +461,19 @@ lv:
         reviewable_flagged_post:
           title: "Marķētie ieraksts"
           flagged_by: "Atzīmēja"
+          noun: "ieraksts"
         reviewable_queued_topic:
           title: "Tēma rindā"
+          noun: "tēmas"
         reviewable_queued_post:
           title: "Rinda"
+          noun: "ieraksts"
         reviewable_user:
           title: "Lietotājs"
+          noun: "lietotājs"
         reviewable_post:
           title: "Ieraksts"
+          noun: "ieraksts"
       approval:
         title: "Ieraksts gaida apstiprinājumu"
         description: "Mēs saņēmām jūsu ierakstu, taču vispirms to jāapstiprina moderatoram. Lūdzu, esiet pacietīgi."
@@ -2208,7 +2213,6 @@ lv:
       errors:
         create: "Atvainojiet, izveidojot jūsu ierakstu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
         edit: "Atvainojiet, rediģējot jūsu ierakstu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
-        upload: "Atvainojiet, augšuplādējot šo failu, notika kļūda. Lūdzu, mēģiniet vēlreiz."
         too_many_uploads: "Atvainojiet, jūs varat augšuplādēt tikai vienu failu vienā reizē."
         upload_not_authorized: "Atvainojiet, fails, ko mēģināt augšuplādēt, nav atļauts (atļautie paplašinājumi: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Atvainojiet, jaunie lietotāji nevar augšuplādēt attēlus."

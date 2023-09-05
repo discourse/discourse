@@ -27,6 +27,7 @@ hr:
     about:
       chat_messages_count: "Chat poruke"
     chat:
+      deleted_chat_username: izbrisao
       dates:
         time_tiny: "h:mm"
       all_loaded: "Prikaz svih poruka"
@@ -110,32 +111,11 @@ hr:
           few: "Posljednja %{count} sata"
           other: "Posljednjih %{count} sati"
       mention_warning:
-        dismiss: "skloni"
-        cannot_see: "%{username} ne može pristupiti ovom kanalu i nije obaviješten."
-        cannot_see_multiple:
-          one: "%{username} i %{count} drugi korisnik ne mogu pristupiti ovom kanalu i nisu bili obaviješteni."
-          few: "%{username} i %{count} druga korisnika ne mogu pristupiti ovom kanalu i nisu bili obaviješteni."
-          other: "%{username} i %{count} drugih korisnika ne može pristupiti ovom kanalu i nisu bili obaviješteni."
         invitations_sent:
           one: "Poziv poslan"
           few: "Pozivnice poslane"
           other: "Pozivnice poslane"
         invite: "Pozovite na kanal"
-        without_membership: "%{username} se nije pridružio ovom kanalu."
-        without_membership_multiple:
-          one: "%{username} i još %{count} korisnik se nisu pridružili ovom kanalu."
-          few: "%{username} i još %{count} korisnika se nisu pridružili ovom kanalu."
-          other: "%{username} i još %{count} korisnika se nisu pridružili ovom kanalu."
-        group_mentions_disabled: "%{group_name} ne dopušta spominjanje."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} i %{count} druga grupa ne dopuštaju spominjanje."
-          few: "%{group_name} i %{count} druge grupe ne dopuštaju spominjanje."
-          other: "%{group_name} i %{count} drugih grupa ne dopuštaju spominjanje."
-        too_many_members: "%{group_name} ima previše članova. Nitko nije obaviješten."
-        too_many_members_multiple:
-          one: "%{group_name} i %{count} druga grupa imaju previše članova. Nitko nije obaviješten."
-          few: "%{group_name} i %{count} druge grupe imaju previše članova. Nitko nije obaviješten."
-          other: "%{group_name} i %{count} drugih grupa imaju previše članova. Nitko nije obaviješten."
         groups:
           unreachable_1: "@%{group} ne dopušta spominjanje."
           unreachable_2: "@%{group1} i @%{group2} ne dopuštaju spominjanje."

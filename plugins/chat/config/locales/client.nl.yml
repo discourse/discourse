@@ -29,6 +29,7 @@ nl:
       chat_channels_count: "Chatkanalen"
       chat_users_count: "Chatgebruikers"
     chat:
+      deleted_chat_username: verwijderd
       dates:
         time_tiny: "h:mm"
       all_loaded: "Alle berichten worden weergeven"
@@ -127,27 +128,10 @@ nl:
           one: "Afgelopen uur"
           other: "Afgelopen %{count} uur"
       mention_warning:
-        dismiss: "negeren"
-        cannot_see: "%{username} heeft geen toegang tot dit kanaal en is niet geïnformeerd."
-        cannot_see_multiple:
-          one: "%{username} en %{count} andere gebruiker hebben geen toegang tot dit kanaal en zijn niet geïnformeerd."
-          other: "%{username} en %{count} andere gebruikers hebben geen toegang tot dit kanaal en zijn niet geïnformeerd."
         invitations_sent:
           one: "Uitnodiging gestuurd"
           other: "Uitnodigingen gestuurd"
         invite: "Uitnodigen voor kanaal"
-        without_membership: "%{username} neemt niet deel aan dit kanaal."
-        without_membership_multiple:
-          one: "%{username} en %{count} ander nemen niet deel aan dit kanaal."
-          other: "%{username} en %{count} anderen nemen niet deel aan dit kanaal."
-        group_mentions_disabled: "%{group_name} staat geen vermeldingen toe."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} en %{count} andere groep staan geen vermeldingen toe."
-          other: "%{group_name} en %{count} andere groepen staan geen vermeldingen toe."
-        too_many_members: "%{group_name} heeft te veel leden. Niemand is geïnformeerd."
-        too_many_members_multiple:
-          one: "%{group_name} en %{count} andere groep hebben te veel leden. Niemand is geïnformeerd."
-          other: "%{group_name} en %{count} andere groepen hebben te veel leden. Niemand is geïnformeerd."
         groups:
           header:
             some: "Sommige gebruikers worden niet geïnformeerd"
@@ -615,6 +599,9 @@ nl:
       types:
         chat_reviewable_message:
           title: "Gemarkeerd chatbericht"
+        reviewable_chat_message:
+          title: "Gemarkeerd chatbericht"
+          noun: "chatbericht"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"

@@ -29,6 +29,7 @@ sv:
       chat_channels_count: "Chattkanaler"
       chat_users_count: "Chattanvändare"
     chat:
+      deleted_chat_username: raderat
       dates:
         time_tiny: "h:mm"
       all_loaded: "Visar alla meddelanden"
@@ -127,27 +128,10 @@ sv:
           one: "Senaste timmen"
           other: "Senaste %{count} timmarna"
       mention_warning:
-        dismiss: "avfärda"
-        cannot_see: "%{username} kan inte komma åt den här kanalen och har inte aviserats."
-        cannot_see_multiple:
-          one: "%{username} och %{count} annan användare kan inte komma åt den här kanalen och har inte aviserats."
-          other: "%{username} och %{count} andra användare kan inte komma åt den här kanalen och har inte aviserats."
         invitations_sent:
           one: "Inbjudan skickad"
           other: "Inbjudningar skickade"
         invite: "Bjud in till kanal"
-        without_membership: "%{username} har inte gått med i den här kanalen."
-        without_membership_multiple:
-          one: "%{username} och %{count} annan användare har inte gått med i den här kanalen."
-          other: "%{username} och %{count} andra användare har inte gått med i den här kanalen."
-        group_mentions_disabled: "%{group_name} tillåter inte omnämnanden."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} och ytterligare %{count} grupp tillåter inte omnämnanden."
-          other: "%{group_name} och ytterligare %{count} grupper tillåter inte omnämnanden."
-        too_many_members: "%{group_name} har för många medlemmar. Ingen aviserades."
-        too_many_members_multiple:
-          one: "%{group_name} och %{count} annan grupp har för många medlemmar. Ingen aviserades."
-          other: "%{group_name} och %{count} andra grupper har för många medlemmar. Ingen aviserades."
         groups:
           header:
             some: "Vissa användare kommer inte att aviseras"
@@ -614,6 +598,8 @@ sv:
         view: "Visa tidigare meddelandens avskrift"
       types:
         chat_reviewable_message:
+          title: "Flaggat chattmeddelande"
+        reviewable_chat_message:
           title: "Flaggat chattmeddelande"
     keyboard_shortcuts_help:
       chat:

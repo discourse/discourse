@@ -286,10 +286,18 @@ sq:
       context_question:
         delimiter: "ose"
       types:
+        reviewable_flagged_post:
+          noun: "postim"
+        reviewable_queued_topic:
+          noun: "topic"
+        reviewable_queued_post:
+          noun: "postim"
         reviewable_user:
           title: "User"
+          noun: "përdorues"
         reviewable_post:
           title: "Postim"
+          noun: "postim"
       approval:
         title: "Postimi ka nevojë për aprovim"
         description: "Postimi juaj u morr, por duhet të aprovohet nga një moderator para se të shfaqet në faqe. Kini pak durim. "
@@ -1422,7 +1430,6 @@ sq:
       errors:
         create: "Na vjen keq, por ndodhi një gabim gjatë hapjes së temës. Provojeni përsëri."
         edit: "Na vjen keq, ndodhi një gabim gjatë redaktimit të temës. Provojeni përsëri."
-        upload: "Na vjen keq, pati një gabim gjatë ngarkimit të skedarit. Provo përsëri. "
         too_many_uploads: "Na vjen keq, por duhet t'i ngarkoni skedarët një nga një."
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Na vjen keq, anëtarët e rinj nuk mund të ngarkojnë skedarë. "

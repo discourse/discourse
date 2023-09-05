@@ -4815,6 +4815,9 @@ de:
       invalid_yaml: "ist keine gültige YAML-Zeichenfolge"
       invalid_type: "enthält einen ungültigen Vorlagentyp: %{type} (gültige Typen sind: %{valid_types})"
       missing_type: "fehlt ein Feldtyp"
+      missing_id: "fehlt eine Feld-ID"
+      duplicate_ids: "hat doppelte IDs"
+      reserved_id: "hat ein reserviertes Schlüsselwort als id: %{id}"
   activemodel:
     errors:
       <<: *errors

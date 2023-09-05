@@ -12,6 +12,7 @@ da:
           chat: Chat
         chat_separate_sidebar_mode:
           always: "Altid"
+          fullscreen: "Når chat er i fuld skærm"
           never: "Aldrig"
       logs:
         staff_actions:
@@ -28,6 +29,7 @@ da:
       chat_channels_count: "Chatkanaler"
       chat_users_count: "Chatbrugere"
     chat:
+      deleted_chat_username: slettet
       dates:
         time_tiny: "tt:mm"
       all_loaded: "Viser alle beskeder"
@@ -76,6 +78,8 @@ da:
         never: "Aldrig"
       header_indicator_preference:
         never: "Aldrig"
+      separate_sidebar_mode:
+        title: "Vis separate sidebjælke-tilstande for forum og chat"
       enable: "Aktiver chat"
       flag: "Rapportér"
       invalid_access: "Du har ikke adgang til at se denne chatkanal"
@@ -84,8 +88,6 @@ da:
       heading: "Chat"
       join: "Tilslut"
       last_visit: "sidste besøg"
-      mention_warning:
-        dismiss: "afvis"
       reply: "Svar"
       edit: "Rediger"
       rebake_message: "Gendan HTML"
@@ -174,6 +176,8 @@ da:
         admin_title: "Admin"
       admin:
         title: "Chat"
+        export_messages:
+          description: "Dette eksporterer alle beskeder fra alle kanaler."
       incoming_webhooks:
         back: "Tilbage"
         description: "Beskrivelse"
@@ -254,8 +258,16 @@ da:
             sender:
               label: Afsender
               description: Standard er system
+    review:
+      types:
+        reviewable_chat_message:
+          noun: "chatbesked"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Skift kanal"
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

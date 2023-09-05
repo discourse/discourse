@@ -379,10 +379,18 @@ et:
       context_question:
         delimiter: "või"
       types:
+        reviewable_flagged_post:
+          noun: "postitus"
+        reviewable_queued_topic:
+          noun: "teema"
+        reviewable_queued_post:
+          noun: "postitus"
         reviewable_user:
           title: "Kasutaja"
+          noun: "kasutaja"
         reviewable_post:
           title: "Postitus"
+          noun: "postitus"
       approval:
         title: "Postitus vajab kinnitust"
         description: "Oleme sinu uue postituse kätte saanud, kuid see vajab enne ilmumist moderaatori kinnitust. Palume veidi kannatust. "
@@ -1923,7 +1931,6 @@ et:
       errors:
         create: "Vabandame, postituse loomisel tekkis viga. Palun proovi uuesti."
         edit: "Vabandame, postituse redigeerimisel tekkis viga. Palun proovi uuesti."
-        upload: "Vabandame, selle faili üleslaadimisel tekkis viga. Palun proovi uuesti."
         file_too_large: "See fail on liiga suur (maksimaalne lubatud suurus on %{max_size_kb}kb). Lae fail üles mõnda pilveteenusesse ja jaga siin linki."
         too_many_uploads: "Vabandame, faile saab üles laadida vaid ühekaupa."
         too_many_dragged_and_dropped_files:

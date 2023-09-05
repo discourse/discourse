@@ -2566,7 +2566,14 @@ he:
     user:
       merge_user:
         updating_username: "שם המשתמש מעודכן…"
+        changing_post_ownership: "הבעלות על הפוסט מתחלפת…"
+        merging_given_daily_likes: "הלייקים היומיים שחולקו ממוזגים…"
+        merging_post_timings: "תזמוני הפוסטים ממוזגים…"
+        merging_user_visits: "ביקורי המשתמש מתמזגים…"
+        updating_site_settings: "הגדרות האתר מתעדכנות…"
         updating_user_stats: "סטטיסטיקת המשתמש מתעדכנת…"
+        merging_user_attributes: "מאפייני המשתמש מתמזגים…"
+        updating_user_ids: "מזהי המשתמש מתעדכנים…"
         deleting_source_user: "משתמש המקור נמחק…"
   user:
     deactivated: "הושבת בעקבות כמות גדולה מדי של הודעות דוא״ל שהוחזרו אל ‚%{email}’."
@@ -4959,6 +4966,9 @@ he:
       invalid_yaml: "איזה מחרוזת YAML תקנית"
       invalid_type: "מכיל סוג תבנית שגוי: %{type} (הסוגים התקפים הם: %{valid_types})"
       missing_type: "סוג השדה חסר"
+      missing_id: "חסר מזהה שדה"
+      duplicate_ids: "יש מזהים כפולים"
+      reserved_id: "יש מילת מפתח שמורה בתור מזהה: %{id}"
   activemodel:
     errors:
       <<: *errors

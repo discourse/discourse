@@ -51,6 +51,10 @@ sk:
           few: "%{comma_separated_usernames} a %{count} ďalších"
           many: "%{comma_separated_usernames} a %{count} ďalších"
           other: "%{comma_separated_usernames} a %{count} ďalších"
+    mention_warning:
+      dismiss: "zahodiť"
+      cannot_see: "%{first_identifier} nemá prístup k tomuto kanálu a nebol upozornený."
+      group_mentions_disabled: "%{first_identifier} nepovoľuje označovanie."
     summaries:
       no_targets: "Počas vybraného obdobia neboli zaznamenané žiadne správy."
   discourse_push_notifications:

@@ -4898,6 +4898,8 @@ pl_PL:
         description: "Przywróć post, aby wszyscy użytkownicy mogli go zobaczyć."
       disagree:
         title: "Nie"
+      discard_post:
+        title: "Odrzuć post"
       ignore:
         title: "Ignoruj"
       ignore_and_do_nothing:

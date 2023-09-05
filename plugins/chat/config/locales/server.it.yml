@@ -6,7 +6,7 @@
 
 it:
   site_settings:
-    chat_enabled: "Abilita il plug-in della chat."
+    chat_enabled: "Abilita chat."
     enable_public_channels: "Abilita i canali pubblici in base alle categorie."
     chat_allowed_groups: "Gli utenti di questi gruppi possono chattare. Tieni presente che lo staff può sempre accedere alla chat."
     chat_channel_retention_days: "I messaggi di chat nei canali normali saranno conservati per i giorni indicati. Impostare il parametro a '0' per conservare i messaggi per sempre."
@@ -116,15 +116,11 @@ it:
         agree_and_delete:
           title: "Elimina messaggio"
           description: "Elimina il messaggio in modo che gli utenti non possano vederlo."
-        delete_and_agree:
-          title: "Elimina messaggio"
         disagree_and_restore:
           title: "Rifiuta e ripristina il messaggio"
           description: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
         disagree:
           title: "Rifiuta"
-        ignore:
-          title: "Ignora"
       direct_messages:
         transcript_title: "Trascrizione dei messaggi precedenti in %{channel_name}"
         transcript_body: "Per darti più contesto, abbiamo incluso una trascrizione dei messaggi precedenti in questa conversazione (fino a dieci):\n\n%{transcript}"
@@ -140,6 +136,29 @@ it:
         multi_user_truncated:
           one: "%{comma_separated_usernames} e %{count} altro"
           other: "%{comma_separated_usernames} e altri %{count}"
+    mention_warning:
+      dismiss: "ignora"
+      cannot_see: "%{first_identifier} non può accedere a questo canale e non è stato avvisato."
+      cannot_see_multiple:
+        one: "%{first_identifier} e %{count} altro utente non possono accedere a questo canale e non sono stati avvisati."
+        other: "%{first_identifier} e altri %{count} utenti non possono accedere a questo canale e non sono stati avvisati."
+      invitations_sent:
+        one: "Invito inviato"
+        other: "Inviti inviati"
+      invite: "Invita al canale"
+      without_membership: "%{first_identifier} non ha partecipato a questo canale."
+      without_membership_multiple:
+        one: "%{first_identifier} e %{count} altro utente non si sono uniti a questo canale."
+        other: "%{first_identifier} e altri %{count} utenti non si sono uniti a questo canale."
+      group_mentions_disabled: "%{first_identifier} non consente menzioni."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} e %{count} altro gruppo non consentono menzioni."
+        other: "%{first_identifier} e %{count} altri gruppi non consentono menzioni."
+      global_mentions_disallowed: "Le menzioni di @here e @all sono disabilitate in questo canale."
+      too_many_members: "%{first_identifier} ha troppi membri. Nessuno è stato avvisato."
+      too_many_members_multiple:
+        one: "%{first_identifier} e %{count} altro gruppo hanno troppi membri. Nessuno è stato notificato."
+        other: "%{first_identifier} e %{count} altri gruppi hanno troppi membri. Nessuno è stato notificato."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "contiene caratteri non-ascii"
