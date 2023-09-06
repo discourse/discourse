@@ -51,21 +51,6 @@ export default class DiscoveryRoute extends DiscourseRoute {
     topic.clearPin();
   }
 
-  @action
-  dismissReadTopics(dismissTopics) {
-    const operationType = dismissTopics ? "topics" : "posts";
-    this.send("dismissRead", operationType);
-  }
-
-  @action
-  dismissRead(operationType) {
-    const controller = this.controllerFor("discovery/topics");
-    controller.send("dismissRead", operationType, {
-      categoryId: controller.get("category.id"),
-      includeSubcategories: !controller.noSubcategories,
-    });
-  }
-
   refresh() {
     resetCachedTopicList(this.session);
     super.refresh();

@@ -173,4 +173,13 @@ export default class DiscoveryTopics extends Component.extend(DismissTopics) {
       !this.get("bulkSelectEnabled")
     );
   }
+
+  @action
+  dismissRead(dismissTopics) {
+    const operationType = dismissTopics ? "topics" : "posts";
+    this.bulkSelectHelper.dismissRead(operationType, {
+      categoryId: this.category?.id,
+      includeSubcategories: this.noSubcategories,
+    });
+  }
 }
