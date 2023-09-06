@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Adds `addBeforeAuthCompleteCallback` which allows core and plugins to add functions to be 
+- Adds `addBeforeAuthCompleteCallback` which allows plugins and themes to add functions to be 
   evaluated before the auth-complete logic is run. If any of these callbacks return false, the 
   auth-complete logic will be aborted.
 
