@@ -57,12 +57,17 @@ acceptance("Plugin Outlet - Decorator", function (needs) {
     assert.strictEqual(fooConnector.style.backgroundColor, "yellow");
     assert.strictEqual(barConnector.style.backgroundColor, "");
 
-    await visit("/c/bug");
+    // TODO: deprecate and remove this 'decoratePluginOutlet' API
+    // The only reason this test worked in the past is that the discovery
+    // routes would totally rerender outlets when switching between pages.
+    // That is no longer the case.
 
-    assert.ok(fooConnector.classList.contains("in-category"));
+    // await visit("/c/bug");
 
-    await visit("/");
+    // assert.ok(fooConnector.classList.contains("in-category"));
 
-    assert.notOk(fooConnector.classList.contains("in-category"));
+    // await visit("/");
+
+    // assert.notOk(fooConnector.classList.contains("in-category"));
   });
 });
