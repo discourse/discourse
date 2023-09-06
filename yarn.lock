@@ -1953,10 +1953,10 @@ escodegen@^2.1.0:
   optionalDependencies:
     source-map "~0.6.1"
 
-eslint-config-discourse@^3.6.0:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-discourse/-/eslint-config-discourse-3.6.0.tgz#bceb472ca66fb969600587aa0722d428798e0d4f"
-  integrity sha512-w4q0D+FtLyYPIgu2ec0SIaY8vNKmj5dPV8AgWqmXLNX2rjFdWXcQQBZRsq4U+JJrOT7v4uNMz+B5mFRMGxOiQw==
+eslint-config-discourse@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-config-discourse/-/eslint-config-discourse-4.0.0.tgz#22135f962ec65bafdf3a0708a87464f43ab38c7a"
+  integrity sha512-T5sAFFtTl8/pGsERHvubQNLZqUG3Ftg2IyxxyiLCj6q9X8KueqazNB7a9aSvDJByFJbB67Iu0puIknjIIhQtaQ==
   dependencies:
     "@babel/core" "^7.22.5"
     "@babel/eslint-parser" "^7.22.5"
