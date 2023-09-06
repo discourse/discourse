@@ -7,6 +7,7 @@ class ReviewableActionSerializer < ApplicationSerializer
              :label,
              :confirm_message,
              :description,
+             :server_action,
              :client_action,
              :require_reject_reason
 
@@ -20,6 +21,10 @@ class ReviewableActionSerializer < ApplicationSerializer
 
   def description
     I18n.t(object.description, default: nil)
+  end
+
+  def server_action
+    object.server_action
   end
 
   def include_description?
