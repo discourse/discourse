@@ -55,9 +55,10 @@
       <ember-auto-import-scripts entrypoint="tests"></ember-auto-import-scripts>
     </discourse-chunked-script>
 
-    <discourse-chunked-script entrypoint="discourse">
+    <discourse-chunked-script entrypoint="discourse-for-tests">
       <ember-auto-import-scripts entrypoint="app"></ember-auto-import-scripts>
       <script src="{{rootURL}}assets/discourse.js"></script>
+      <script defer src="{{rootURL}}assets/tests.js" data-embroider-ignore></script> <!-- Will 404 under embroider. Can be removed once we drop legacy build. -->
     </discourse-chunked-script>
 
     <script src="{{rootURL}}assets/markdown-it-bundle.js" data-embroider-ignore></script>
@@ -67,7 +68,6 @@
     <template id="dynamic-test-js">
       {{content-for "test-plugin-css"}}
       {{content-for "test-plugin-js"}}
-      <script defer src="{{rootURL}}assets/tests.js"></script>
       {{content-for "test-plugin-tests-js"}}
       <script defer src="{{rootURL}}assets/scripts/discourse-test-trigger-ember-cli-boot.js"></script>
       <script defer src="{{rootURL}}assets/scripts/discourse-boot.js"></script>
