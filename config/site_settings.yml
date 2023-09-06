@@ -1934,7 +1934,9 @@ spam:
   auto_respond_to_flag_actions: true
   min_first_post_typing_time: 3000
   auto_silence_fast_typers_on_first_post: true
-  auto_silence_fast_typers_max_trust_level: 0
+  auto_silence_fast_typers_max_trust_level:
+    default: 0
+    enum: "TrustLevelSetting"
   auto_silence_first_post_regex: ""
   high_trust_flaggers_auto_hide_posts: true
   cooldown_hours_until_reflag:
