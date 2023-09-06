@@ -1,4 +1,8 @@
-<PluginOutlet @name="above-latest-topic-list-item" @connectorTagName="div" />
+<PluginOutlet
+  @name="above-latest-topic-list-item"
+  @connectorTagName="div"
+  @outletArgs={{hash topic=this.topic}}
+/>
 <div class="topic-poster">
   <UserLink @user={{this.topic.lastPosterUser}}>
     {{avatar this.topic.lastPosterUser imageSize="large"}}
