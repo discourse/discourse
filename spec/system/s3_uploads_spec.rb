@@ -5,10 +5,9 @@ describe "Uploading files in the composer to S3", type: :system do
 
   let(:modal) { PageObjects::Modals::Base.new }
   let(:composer) { PageObjects::Components::Composer.new }
+  let(:topic) { PageObjects::Pages::Topic.new }
 
   describe "direct S3 uploads" do
-    before { SiteSetting.enable_direct_s3_uploads = true }
-
     describe "single part uploads" do
       it "uploads custom avatars to S3" do
         skip_unless_s3_system_specs_enabled!
@@ -25,11 +24,11 @@ describe "Uploading files in the composer to S3", type: :system do
         end
         expect(page).to have_css(".avatar-uploader label[data-uploaded]")
         modal.click_primary_button
+        expect(modal).to be_closed
         expect(page).to have_css(
           "#user-avatar-uploads[data-custom-avatar-upload-id]",
           visible: false,
         )
-        puts page.driver.browser.logs.get(:browser).map(&:message)
         expect(current_user.reload.uploaded_avatar_id).to eq(
           find("#user-avatar-uploads", visible: false)["data-custom-avatar-upload-id"].to_i,
         )
@@ -43,7 +42,7 @@ describe "Uploading files in the composer to S3", type: :system do
         setup_s3_system_test
         sign_in(current_user)
 
-        visit "/new-topic"
+        topic.open_new_topic
 
         file_path = file_from_fixtures("logo.png", "images").path
         attach_file(file_path) { composer.click_toolbar_button("upload") }

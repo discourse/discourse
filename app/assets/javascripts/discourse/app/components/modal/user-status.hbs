@@ -33,16 +33,16 @@
   <:footer>
     <DButton
       @label="user_status.save"
-      @class="btn-primary"
       @disabled={{not this.statusIsSet}}
       @action={{this.saveAndClose}}
+      class="btn-primary"
     />
     <DModalCancel @close={{@closeModal}} />
     {{#if this.showDeleteButton}}
       <DButton
         @icon="trash-alt"
-        @class="delete-status btn-danger"
         @action={{this.delete}}
+        class="delete-status btn-danger"
       />
     {{/if}}
   </:footer>

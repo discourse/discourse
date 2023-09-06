@@ -488,7 +488,7 @@ describe Chat::MessageCreator do
       end
 
       it "publishes inaccessible mentions when user isn't aren't a part of the channel" do
-        Chat::Publisher.expects(:publish_inaccessible_mentions).once
+        Chat::Publisher.expects(:publish_notice).once
         described_class.create(
           chat_channel: public_chat_channel,
           user: admin1,
@@ -498,7 +498,7 @@ describe Chat::MessageCreator do
 
       it "publishes inaccessible mentions when user doesn't have chat access" do
         SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
-        Chat::Publisher.expects(:publish_inaccessible_mentions).once
+        Chat::Publisher.expects(:publish_notice).once
         described_class.create(
           chat_channel: public_chat_channel,
           user: admin1,
@@ -507,7 +507,7 @@ describe Chat::MessageCreator do
       end
 
       it "doesn't publish inaccessible mentions when user is following channel" do
-        Chat::Publisher.expects(:publish_inaccessible_mentions).never
+        Chat::Publisher.expects(:publish_notice).never
         described_class.create(
           chat_channel: public_chat_channel,
           user: admin1,

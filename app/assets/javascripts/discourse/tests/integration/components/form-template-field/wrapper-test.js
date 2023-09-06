@@ -2,7 +2,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
+import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module(
@@ -24,7 +24,12 @@ module(
     });
 
     test("renders a component based on the component type found in the content YAML", async function (assert) {
-      const content = `- type: checkbox\n- type: input\n- type: textarea\n- type: dropdown\n- type: upload\n- type: multi-select`;
+      const content = `- type: checkbox\n  id: checkbox\n
+- type: input\n  id: name
+- type: textarea\n  id: notes
+- type: dropdown\n  id: dropdown
+- type: upload\n  id: upload
+- type: multi-select\n  id: multi`;
       const componentTypes = [
         "checkbox",
         "input",
@@ -43,6 +48,36 @@ module(
         assert.ok(
           exists(`.form-template-field[data-field-type='${componentType}']`),
           `${componentType} component exists`
+        );
+      });
+    });
+
+    test("renders a component based on the component type found in the content YAML, with initial values", async function (assert) {
+      const content = `- type: checkbox\n  id: checkbox\n
+- type: input\n  id: name
+- type: textarea\n  id: notes
+- type: dropdown\n  id: dropdown\n  choices:\n    - "Option 1"\n    - "Option 2"\n    - "Option 3"
+- type: multi-select\n  id: multi\n  choices:\n    - "Option 1"\n    - "Option 2"\n    - "Option 3"`;
+      this.set("content", content);
+
+      const initialValues = {
+        checkbox: "on",
+        name: "Test Name",
+        notes: "Test Notes",
+        dropdown: "Option 1",
+        multi: ["Option 1"],
+      };
+      this.set("initialValues", initialValues);
+
+      await render(
+        hbs`<FormTemplateField::Wrapper @content={{this.content}} @initialValues={{this.initialValues}} />`
+      );
+
+      Object.keys(initialValues).forEach((componentId) => {
+        assert.equal(
+          query(`[name='${componentId}']`).value,
+          initialValues[componentId],
+          `${componentId} component has initial value`
         );
       });
     });

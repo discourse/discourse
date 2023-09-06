@@ -103,7 +103,7 @@ Answer the following questions when prompted:
     Let's Encrypt account email? (ENTER to skip) [me@example.com]: 
     Optional Maxmind License key () [xxxxxxxxxxxxxxxx]:
 
-You'll get the SMTP details from your [email](#email) setup, be sure to complete that section.
+You'll get the SMTP details from your [email](#2-setting-up-email) setup, be sure to complete that section.
 
 Let's Encrypt account setup is to give you a free HTTPS certificate for your site, be sure to set that up if you want your site secure.
 

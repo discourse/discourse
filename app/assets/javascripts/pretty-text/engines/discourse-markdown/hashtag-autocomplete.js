@@ -78,10 +78,24 @@ function addHashtag(buffer, matches, state) {
 // Instead, the UI will dynamically replace these where hashtags
 // are rendered, like within posts, using decorateCooked* APIs.
 function addIconPlaceholder(buffer, state) {
-  const token = new state.Token("span_open", "span", 1);
+  let token = new state.Token("span_open", "span", 1);
   token.block = false;
   token.attrs = [["class", "hashtag-icon-placeholder"]];
   buffer.push(token);
+
+  token = new state.Token("svg_open", "svg", 1);
+  token.block = false;
+  token.attrs = [["class", `fa d-icon d-icon-square-full svg-icon svg-node`]];
+  buffer.push(token);
+
+  token = new state.Token("use_open", "use", 1);
+  token.block = false;
+  token.attrs = [["href", "#square-full"]];
+  buffer.push(token);
+
+  buffer.push(new state.Token("use_close", "use", -1));
+  buffer.push(new state.Token("svg_close", "svg", -1));
+
   buffer.push(new state.Token("span_close", "span", -1));
 }
 
@@ -99,6 +113,8 @@ export function setup(helper) {
     "a.hashtag-cooked",
     "span.hashtag-raw",
     "span.hashtag-icon-placeholder",
+    "svg[class=fa d-icon d-icon-square-full svg-icon svg-node]",
+    "use[href=#square-full]",
     "a[data-type]",
     "a[data-slug]",
     "a[data-ref]",

@@ -14,7 +14,6 @@ module("Integration | Component | themes-list-item", function (hooks) {
 
     await render(hbs`<ThemesListItem @theme={{this.theme}} />`);
 
-    assert.expect(1);
     assert.strictEqual(count(".d-icon-check"), 1, "shows default theme icon");
   });
 
@@ -26,7 +25,6 @@ module("Integration | Component | themes-list-item", function (hooks) {
 
     await render(hbs`<ThemesListItem @theme={{this.theme}} />`);
 
-    assert.expect(1);
     assert.strictEqual(count(".d-icon-sync"), 1, "shows pending update icon");
   });
 
@@ -41,7 +39,6 @@ module("Integration | Component | themes-list-item", function (hooks) {
 
     await render(hbs`<ThemesListItem @theme={{this.theme}} />`);
 
-    assert.expect(1);
     assert.strictEqual(
       count(".d-icon-exclamation-circle"),
       1,
@@ -65,7 +62,6 @@ module("Integration | Component | themes-list-item", function (hooks) {
 
     await render(hbs`<ThemesListItem @theme={{this.theme}} />`);
 
-    assert.expect(2);
     assert.deepEqual(
       query(".components")
         .innerText.trim()

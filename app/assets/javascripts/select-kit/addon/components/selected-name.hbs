@@ -24,11 +24,10 @@
 
     {{#if this.shouldDisplayClearableButton}}
       <DButton
-        @class="btn-clear"
         @icon="times"
-        @action={{this.selectKit.deselect}}
-        @actionParam={{this.item}}
+        @action={{fn this.selectKit.deselect this.item}}
         @ariaLabel="clear_input"
+        class="btn-clear"
       />
     {{/if}}
   </div>

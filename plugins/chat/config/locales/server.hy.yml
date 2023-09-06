@@ -19,11 +19,11 @@ hy:
           description: "Ընդունել դրոշակը և սառեցնել օգտատիրոջը:"
         disagree:
           title: "Չընդունել"
-        ignore:
-          title: "Անտեսել"
     channel:
       dm_title:
         single_user: "%{username}"
+    mention_warning:
+      dismiss: "չեղարկել"
   discourse_push_notifications:
     popup:
       chat_mention:

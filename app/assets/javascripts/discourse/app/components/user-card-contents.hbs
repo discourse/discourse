@@ -130,10 +130,10 @@
           {{#if this.user.can_send_private_message_to_user}}
             <li class="compose-pm">
               <DButton
-                @class="btn-primary"
-                @action={{action "composePM" this.user this.post}}
+                @action={{fn (action "composePM") this.user this.post}}
                 @icon="envelope"
                 @label="user.private_message"
+                class="btn-primary"
               />
             </li>
           {{/if}}
@@ -145,10 +145,10 @@
           {{#if this.showFilter}}
             <li>
               <DButton
-                @class="btn-default"
-                @action={{action "filterPosts" this.user}}
+                @action={{fn (action "filterPosts") this.user}}
                 @icon="filter"
                 @translatedLabel={{this.filterPostsLabel}}
+                class="btn-default"
               />
             </li>
           {{/if}}
@@ -164,11 +164,10 @@
           {{#if this.showDelete}}
             <li>
               <DButton
-                @class="btn-danger"
-                @action={{action "deleteUser"}}
-                @actionParam={{this.user}}
+                @action={{fn (action "deleteUser") this.user}}
                 @icon="exclamation-triangle"
                 @label="admin.user.delete"
+                class="btn-danger"
               />
             </li>
           {{/if}}
@@ -326,11 +325,10 @@
                   {{this.user.email}}
                 {{else}}
                   <DButton
-                    @action={{action "checkEmail"}}
-                    @actionParam={{this.user}}
+                    @action={{fn (action "checkEmail") this.user}}
                     @icon="envelope"
                     @label="admin.users.check_email.text"
-                    @class="btn-primary"
+                    class="btn-primary"
                   />
                 {{/if}}
               </h3>

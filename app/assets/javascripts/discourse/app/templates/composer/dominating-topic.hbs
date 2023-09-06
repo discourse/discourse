@@ -12,9 +12,9 @@
 
 {{#if this.currentUser.can_invite_to_forum}}
   <DButton
-    @class="btn-primary"
     @label="footer_nav.share"
     @icon="link"
-    @action={{action this.shareModal}}
+    @action={{this.shareModal}}
+    class="btn-primary"
   />
 {{/if}}

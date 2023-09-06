@@ -6,17 +6,19 @@ RSpec.describe Jobs::Chat::MarkAllChannelThreadsRead do
   fab!(:thread_2) { Fabricate(:chat_thread, channel: channel) }
   fab!(:user_1) { Fabricate(:user) }
   fab!(:user_2) { Fabricate(:user) }
-  fab!(:thread_1_message_1) { Fabricate(:chat_message, thread: thread_1) }
-  fab!(:thread_1_message_2) { Fabricate(:chat_message, thread: thread_1) }
-  fab!(:thread_1_message_3) { Fabricate(:chat_message, thread: thread_1) }
-  fab!(:thread_2_message_1) { Fabricate(:chat_message, thread: thread_2) }
-  fab!(:thread_2_message_2) { Fabricate(:chat_message, thread: thread_2) }
+  fab!(:thread_1_message_1) { Fabricate(:chat_message, thread: thread_1, chat_channel: channel) }
+  fab!(:thread_1_message_2) { Fabricate(:chat_message, thread: thread_1, chat_channel: channel) }
+  fab!(:thread_1_message_3) { Fabricate(:chat_message, thread: thread_1, chat_channel: channel) }
+  fab!(:thread_2_message_1) { Fabricate(:chat_message, thread: thread_2, chat_channel: channel) }
+  fab!(:thread_2_message_2) { Fabricate(:chat_message, thread: thread_2, chat_channel: channel) }
 
   before do
     channel.add(user_1)
     channel.add(user_2)
     thread_1.add(user_1)
+    thread_1.update!(last_message: thread_1_message_3)
     thread_2.add(user_2)
+    thread_2.update!(last_message: thread_2_message_2)
   end
 
   def unread_count(user)

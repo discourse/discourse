@@ -21,10 +21,10 @@
       <div class="control-group">
         <div class="controls">
           <DButton
-            @class="btn-primary"
-            @action={{action "saveBadgeTitle"}}
+            @action={{this.saveBadgeTitle}}
             @disabled={{this._isSaving}}
             @label={{if this._isSaving "saving" "save"}}
+            class="btn-primary"
           />
           {{#if this._isSaved}}
             <span>{{i18n "saved"}}</span>

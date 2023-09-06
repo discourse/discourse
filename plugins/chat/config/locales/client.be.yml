@@ -12,6 +12,7 @@ be:
           always: "заўсёды"
           never: "ніколі"
     chat:
+      deleted_chat_username: аддалены
       create: "стварыць"
       cancel: "адмяніць"
       channel_settings:

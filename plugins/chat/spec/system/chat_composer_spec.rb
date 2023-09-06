@@ -7,6 +7,7 @@ RSpec.describe "Chat composer", type: :system do
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
+  let(:cdp) { PageObjects::CDP.new }
 
   before do
     chat_system_bootstrap
@@ -151,18 +152,18 @@ RSpec.describe "Chat composer", type: :system do
     it "doesn’t allow to send" do
       chat_page.visit_channel(channel_1)
 
-      page.driver.browser.network_conditions = { latency: 20_000 }
-
       file_path = file_from_fixtures("logo.png", "images").path
-      attach_file(file_path) do
-        channel_page.open_action_menu
-        channel_page.click_action_button("chat-upload-btn")
-      end
+      cdp.with_slow_upload do
+        attach_file(file_path) do
+          channel_page.open_action_menu
+          channel_page.click_action_button("chat-upload-btn")
+        end
 
-      expect(page).to have_css(".chat-composer-upload--in-progress")
-      expect(page).to have_css(".chat-composer.is-send-disabled")
-    ensure
-      page.driver.browser.network_conditions = { latency: 0 }
+        expect(page).to have_css(".chat-composer-upload--in-progress")
+        expect(page).to have_css(".chat-composer.is-send-disabled")
+        page.find(".chat-composer-upload").hover
+        page.find(".chat-composer-upload__remove-btn").click
+      end
     end
   end
 end

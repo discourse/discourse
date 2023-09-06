@@ -1,20 +1,18 @@
 <div class="themes-list-header">
   <DButton
-    @action={{action "changeView"}}
-    @actionParam={{this.THEMES}}
-    @class={{concat "themes-tab " "tab " (if this.themesTabActive "active" "")}}
+    @action={{fn this.changeView this.THEMES}}
     @label="admin.customize.theme.title"
+    class={{concat-class "themes-tab" "tab" (if this.themesTabActive "active")}}
   />
   <DButton
-    @action={{action "changeView"}}
-    @actionParam={{this.COMPONENTS}}
-    @class={{concat
-      "components-tab "
-      "tab "
-      (if this.componentsTabActive "active" "")
-    }}
+    @action={{fn this.changeView this.COMPONENTS}}
     @label="admin.customize.theme.components"
     @icon="puzzle-piece"
+    class={{concat-class
+      "components-tab"
+      "tab"
+      (if this.componentsTabActive "active")
+    }}
   />
 </div>
 
@@ -74,6 +72,6 @@
     @action={{this.installModal}}
     @icon="upload"
     @label="admin.customize.install"
-    @class="btn-primary"
+    class="btn-primary"
   />
 </div>

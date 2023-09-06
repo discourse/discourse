@@ -255,7 +255,7 @@ HTML
 
     # All together
     expect(theme.javascript_cache.content).to include(
-      "define(\"discourse/theme-#{theme.id}/discourse/templates/discovery\", [\"exports\", \"@ember/template-factory\"]",
+      "define(\"discourse/theme-#{theme.id}/discourse/templates/discovery\", [\"exports\", ",
     )
     expect(theme.javascript_cache.content).to include('addRawTemplate("discovery"')
     expect(theme.javascript_cache.content).to include(

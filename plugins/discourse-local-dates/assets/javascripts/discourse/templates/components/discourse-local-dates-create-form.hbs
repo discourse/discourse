@@ -3,7 +3,6 @@
   @class="discourse-local-dates-create-modal"
   @style="overflow: auto"
 >
-
   <div class="form">
     {{#if this.isValid}}
       {{#if this.timezoneIsDifferentFromUserTimezone}}
@@ -29,10 +28,10 @@
         >
           {{d-icon "calendar-alt"}}
           <DButton
-            @id="from-date-time"
-            @action={{action "focusFrom"}}
+            @action={{this.focusFrom}}
             @translatedLabel={{this.formattedFrom}}
-            @class="date-time"
+            id="from-date-time"
+            class="date-time"
           />
         </div>
 
@@ -43,15 +42,15 @@
         >
           {{d-icon "calendar-alt"}}
           <DButton
-            @action={{action "focusTo"}}
+            @action={{this.focusTo}}
             @translatedLabel={{this.formattedTo}}
-            @class="date-time"
+            class="date-time"
           />
           {{#if this.toFilled}}
             <DButton
+              @action={{this.eraseToDateTime}}
               @icon="times"
-              @action={{action "eraseToDateTime"}}
-              @class="delete-to-date"
+              class="delete-to-date"
             />
           {{/if}}
         </div>
@@ -174,22 +173,22 @@
 <div class="modal-footer discourse-local-dates-create-modal-footer">
   {{#if this.isValid}}
     <DButton
-      @class="btn-primary"
-      @action={{action "save"}}
+      @action={{this.save}}
       @label="discourse_local_dates.create.form.insert"
+      class="btn-primary"
     />
   {{/if}}
 
   <DButton
-    @class="btn-flat"
-    @action={{action "cancel"}}
+    @action={{this.cancel}}
     @translatedLabel={{i18n "cancel"}}
+    class="btn-flat"
   />
 
   <DButton
-    @class="btn-default advanced-mode-btn"
-    @action={{action "toggleAdvancedMode"}}
+    @action={{this.toggleAdvancedMode}}
     @icon="cog"
     @label={{this.toggleModeBtnLabel}}
+    class="btn-default advanced-mode-btn"
   />
 </div>

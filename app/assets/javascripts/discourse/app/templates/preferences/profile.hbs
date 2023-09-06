@@ -15,10 +15,10 @@
     @class="input-xxlarge"
   />
   <DButton
-    @class="btn-default"
     @icon="globe"
     @label="user.use_current_timezone"
     @action={{action "useCurrentTimezone"}}
+    class="btn-default"
   />
 </div>
 
@@ -120,15 +120,15 @@
 
     <div>
       <DButton
-        @action={{action "showFeaturedTopicModal"}}
-        @class="btn-default feature-topic-on-profile-btn"
+        @action={{this.showFeaturedTopicModal}}
         @label="user.feature_topic_on_profile.open_search"
+        class="btn-default feature-topic-on-profile-btn"
       />
       {{#if this.model.featured_topic}}
         <DButton
           @action={{action "clearFeaturedTopicFromProfile"}}
-          @class="btn-danger clear-feature-topic-on-profile-btn"
           @label="user.feature_topic_on_profile.clear.title"
+          class="btn-danger clear-feature-topic-on-profile-btn"
         />
       {{/if}}
     </div>

@@ -5,20 +5,22 @@ export default class AdminPluginsController extends Controller {
   @service router;
 
   get adminRoutes() {
-    return this.allAdminRoutes.filter((r) => this.routeExists(r.full_location));
+    return this.allAdminRoutes.filter((route) =>
+      this.routeExists(route.full_location)
+    );
   }
 
   get brokenAdminRoutes() {
     return this.allAdminRoutes.filter(
-      (r) => !this.routeExists(r.full_location)
+      (route) => !this.routeExists(route.full_location)
     );
   }
 
   get allAdminRoutes() {
     return this.model
-      .filter((p) => p?.enabled)
-      .map((p) => {
-        return p.admin_route;
+      .filter((plugin) => plugin?.enabled)
+      .map((plugin) => {
+        return plugin.adminRoute;
       })
       .filter(Boolean);
   }

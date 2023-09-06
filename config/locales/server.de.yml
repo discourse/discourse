@@ -1703,7 +1703,6 @@ de:
     enable_safe_mode: "Erlaube Benutzern, den abgesicherten Modus zu betreten, um Plug-ins zu debuggen."
     rate_limit_create_topic: "Nach Erstellen eines Themas muss ein Benutzer (n) Sekunden warten, bevor ein weiteres Thema erstellt werden kann."
     rate_limit_create_post: "Nach Schreiben eines Beitrags muss ein Benutzer (n) Sekunden warten, bevor ein weiterer Beitrag erstellt werden kann."
-    rate_limit_new_user_create_topic: "Nach Erstellen eines Themas muss ein neuer Benutzer (n) Sekunden warten, bevor ein weiteres Thema erstellt werden kann."
     rate_limit_new_user_create_post: "Nach Schreiben eines Beitrags muss ein neuer Benutzer (n) Sekunden warten, bevor ein weiterer Beitrag erstellt werden kann."
     max_likes_per_day: "Maximale Anzahl der „Gefällt mir“ pro Benutzer und Tag."
     max_flags_per_day: "Maximale Anzahl der Meldungen pro Benutzer und Tag."
@@ -2125,7 +2124,6 @@ de:
     retain_web_hook_events_period_days: "Anzahl an Tagen, die Webhook-Ereigniseinträge aufbewahrt werden."
     retry_web_hook_events: "Fehlgeschlagene Webhook-Ereignisse automatisch 4 Mal erneut versuchen. Die Wartezeiten zwischen den Versuchen betragen eine, 5, 25 und 125 Minuten."
     revoke_api_keys_days: "Anzahl der Tage, bevor ein nicht verwendeter API-Schlüssel automatisch widerrufen wird (0 für niemals)"
-    allow_user_api_keys: "Erlaube das Generieren von Benutzer-API-Schlüsseln"
     allow_user_api_key_scopes: "Liste erlaubter Bereiche für Benutzer-API-Schlüssel"
     min_trust_level_for_user_api_key: |
       Vertrauensstufe, die für die Generierung von Benutzer-API-Schlüsseln erforderlich ist.<br>
@@ -2150,7 +2148,7 @@ de:
     remove_muted_tags_from_latest: "Themen, die nur mit stummgeschalteten Tags versehen sind, nicht in der Liste der aktuellen Themen anzeigen"
     force_lowercase_tags: "Kleinschreibung für alle neuen Schlagwörter erzwingen."
     create_post_for_category_and_tag_changes: "Einen kleinen Aktionsbeitrag erstellen, wenn sich die Kategorie oder die Schlagwörter eines Themas ändern"
-    watched_precedence_over_muted: "Benachrichtige mich über Themen in Kategorien oder mit Schlagwörtern, die ich beobachte und die auch zu einem Thema gehören, das ich stummgeschaltet habe"
+    watched_precedence_over_muted: "Benachrichtige mich über Themen in Kategorien oder Schlagwörtern, die ich beobachte und die auch zu einem Thema gehören, das ich stummgeschaltet habe"
     company_name: "Firmenname"
     governing_law: "Anzuwendendes Recht"
     city_for_disputes: "Stadt für Rechtsstreitigkeiten"
@@ -4720,7 +4718,7 @@ de:
       delete_single:
         title: "Löschen"
       delete:
-        title: "Löschen …"
+        title: "Löschen …"
       delete_and_ignore:
         title: "Meldung ignorieren und Beitrag löschen"
         description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst und den Beitrag löschst; wenn es der erste Beitrag ist, wird auch das Thema gelöscht. "
@@ -4740,6 +4738,8 @@ de:
         description: "Beitrag wiederherstellen, sodass alle Benutzer ihn sehen können."
       disagree:
         title: "Nein"
+      discard_post:
+        title: "Beitrag verwerfen"
       ignore:
         title: "Ignorieren"
       ignore_and_do_nothing:
@@ -4755,7 +4755,7 @@ de:
       approve_user:
         title: "Benutzer genehmigen"
       reject_user:
-        title: "Lösche Benutzer …"
+        title: "Benutzer löschen …"
         delete:
           title: "Benutzer löschen"
           description: "Der Benutzer wird aus dem Forum gelöscht."
@@ -4764,7 +4764,7 @@ de:
           description: "Der Benutzer wird gelöscht und wir blockieren seine IP- und E-Mail-Adresse."
       reject:
         title: "Ablehnen"
-        bundle_title: "Ablehnen …"
+        bundle_title: "Ablehnen …"
       reject_and_suspend:
         title: "Benutzer ablehnen und sperren"
       reject_and_silence:
@@ -4815,6 +4815,9 @@ de:
       invalid_yaml: "ist keine gültige YAML-Zeichenfolge"
       invalid_type: "enthält einen ungültigen Vorlagentyp: %{type} (gültige Typen sind: %{valid_types})"
       missing_type: "fehlt ein Feldtyp"
+      missing_id: "fehlt eine Feld-ID"
+      duplicate_ids: "hat doppelte IDs"
+      reserved_id: "hat ein reserviertes Schlüsselwort als id: %{id}"
   activemodel:
     errors:
       <<: *errors

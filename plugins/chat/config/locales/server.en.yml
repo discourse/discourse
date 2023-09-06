@@ -1,7 +1,7 @@
 en:
   site_settings:
     chat_separate_sidebar_mode: "Show separate sidebar modes for forum and chat."
-    chat_enabled: "Enable the chat plugin."
+    chat_enabled: "Enable chat."
     enable_public_channels: "Enable public channels based on categories."
     chat_allowed_groups: "Users in these groups can chat. Note that staff can always access chat."
     chat_channel_retention_days: "Chat messages in regular channels will be retained for this many days. Set to '0' to retain messages forever."
@@ -113,14 +113,16 @@ en:
           title: "Delete Message"
           description: "Delete the message so that users cannot see it."
         delete_and_agree:
-          title: "Delete Message"
+          title: "Ignore Flag and Delete Message"
+          description: "Ignore the flag by removing it from the queue and delete the message."
         disagree_and_restore:
           title: "Disagree and Restore Message"
           description: "Restore the message so that all users can see it."
         disagree:
           title: "Disagree"
         ignore:
-          title: "Ignore"
+          title: "Do Nothing"
+          description: "Ignore the flag by removing it from the queue without taking any action."
       direct_messages:
         transcript_title: "Transcript of previous messages in %{channel_name}"
         transcript_body: "To give you more context, we included a transcript of the previous messages in this conversation (up to ten):\n\n%{transcript}"
@@ -136,6 +138,29 @@ en:
         multi_user_truncated:
           one: "%{comma_separated_usernames} and %{count} other"
           other: "%{comma_separated_usernames} and %{count} others"
+    mention_warning:
+      dismiss: "dismiss"
+      cannot_see: "%{first_identifier} can't access this channel and was not notified."
+      cannot_see_multiple:
+        one: "%{first_identifier} and %{count} other user cannot access this channel and were not notified."
+        other: "%{first_identifier} and %{count} other users cannot access this channel and were not notified."
+      invitations_sent:
+        one: "Invitation sent"
+        other: "Invitations sent"
+      invite: "Invite to channel"
+      without_membership: "%{first_identifier} has not joined this channel."
+      without_membership_multiple:
+        one: "%{first_identifier} and %{count} other user have not joined this channel."
+        other: "%{first_identifier} and %{count} other users have not joined this channel."
+      group_mentions_disabled: "%{first_identifier} doesn't allow mentions."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} and %{count} other group don't allow mentions."
+        other: "%{first_identifier} and %{count} other groups don't allow mentions."
+      global_mentions_disallowed: "@here and @all mentions are disabled in this channel."
+      too_many_members: "%{first_identifier} has too many members. No one was notified."
+      too_many_members_multiple:
+        one: "%{first_identifier} and %{count} other group have too many members. No one was notified."
+        other: "%{first_identifier} and %{count} other groups have too many members. No one was notified."
 
     category_channel:
       errors:

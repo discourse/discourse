@@ -9,16 +9,16 @@
         <DButton
           @title="post.controls.edit_timer"
           @icon="pencil-alt"
-          @class="btn topic-timer-edit no-text"
           @action={{this.showTopicTimerModal}}
+          class="topic-timer-edit no-text"
         />
       {{/if}}
       {{#if this.showTrashCan}}
         <DButton
           @title="post.controls.remove_timer"
           @icon="trash-alt"
-          @class="btn topic-timer-remove no-text"
           @action={{this.removeTopicTimer}}
+          class="topic-timer-remove no-text"
         />
       {{/if}}
     </div>

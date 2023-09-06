@@ -140,6 +140,13 @@ export default Component.extend({
     }
   },
 
+  @action
+  focusInput(element) {
+    if (this.autoFocus) {
+      element.focus();
+    }
+  },
+
   _handleEnter(event) {
     if (event.key === "Enter") {
       event.preventDefault();

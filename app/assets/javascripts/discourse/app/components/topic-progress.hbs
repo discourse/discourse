@@ -6,9 +6,9 @@
   <div class="progress-back-container">
     <DButton
       @label="topic.timeline.back"
-      @class="btn-primary progress-back"
-      @action={{action "goBack"}}
+      @action={{this.goBack}}
       @icon="arrow-down"
+      class="btn-primary progress-back"
     />
   </div>
 {{/if}}

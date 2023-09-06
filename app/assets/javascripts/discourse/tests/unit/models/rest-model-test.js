@@ -45,21 +45,16 @@ module("Unit | Model | rest-model", function (hooks) {
   });
 
   test("updating simultaneously", async function (assert) {
-    assert.expect(2);
-
     const store = getOwner(this).lookup("service:store");
     const widget = await store.find("widget", 123);
 
     const firstPromise = widget.update({ name: "new name" });
     const secondPromise = widget.update({ name: "new name" });
 
-    firstPromise.then(function () {
-      assert.ok(true, "the first promise succeeds");
-    });
+    firstPromise.then(() => assert.true(true, "the first promise succeeds"));
+    secondPromise.catch(() => assert.true(true, "the second promise fails"));
 
-    secondPromise.catch(function () {
-      assert.ok(true, "the second promise fails");
-    });
+    await Promise.allSettled([firstPromise, secondPromise]);
   });
 
   test("save new", async function (assert) {
@@ -88,21 +83,17 @@ module("Unit | Model | rest-model", function (hooks) {
     assert.strictEqual(result.target.name, widget.name);
   });
 
-  test("creating simultaneously", function (assert) {
-    assert.expect(2);
-
+  test("creating simultaneously", async function (assert) {
     const store = getOwner(this).lookup("service:store");
     const widget = store.createRecord("widget");
 
     const firstPromise = widget.save({ name: "Evil Widget" });
     const secondPromise = widget.save({ name: "Evil Widget" });
-    firstPromise.then(function () {
-      assert.ok(true, "the first promise succeeds");
-    });
 
-    secondPromise.catch(function () {
-      assert.ok(true, "the second promise fails");
-    });
+    firstPromise.then(() => assert.true(true, "the first promise succeeds"));
+    secondPromise.catch(() => assert.true(true, "the second promise fails"));
+
+    await Promise.allSettled([firstPromise, secondPromise]);
   });
 
   test("destroyRecord", async function (assert) {
