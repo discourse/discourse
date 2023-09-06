@@ -157,18 +157,20 @@ module.exports = function (defaults) {
     .findAddonByName("pretty-text")
     .treeForMarkdownItBundle();
 
-  let testemStylesheetTree;
+  const extraPublicTrees = [];
+
   if (isTest) {
-    testemStylesheetTree = mergeTrees([
+    const testemStylesheetTree = mergeTrees([
       discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
       discourseScss(
         `${discourseRoot}/app/assets/stylesheets`,
         "qunit-custom.scss"
       ),
     ]);
+    extraPublicTrees.push(testemStylesheetTree);
   }
 
-  const extraPublicTrees = [
+  extraPublicTrees.push(
     createI18nTree(discourseRoot, vendorJs),
     parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
@@ -190,9 +192,8 @@ module.exports = function (defaults) {
       outputFile: `assets/markdown-it-bundle.js`,
     }),
     generateScriptsTree(app),
-    discoursePluginsTree,
-    testemStylesheetTree,
-  ];
+    discoursePluginsTree
+  );
 
   return maybeEmbroider(app, {
     extraPublicTrees,
