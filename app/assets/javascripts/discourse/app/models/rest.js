@@ -109,7 +109,8 @@ RestModel.reopenClass({
     // Some Discourse code calls `model.create()` directly without going through the
     // store. In that case the owner is not set, and injections will fail. This workaround ensures
     // the owner is always present. Eventually we should use the store for everything to fix this.
-    if (!getOwner(createArgs)) {
+    const receivedOwner = getOwner(createArgs);
+    if (!receivedOwner || receivedOwner.isDestroyed) {
       setOwner(createArgs, getOwnerWithFallback());
     }
 
