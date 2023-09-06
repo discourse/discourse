@@ -37,6 +37,7 @@ import { cancel } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { isTesting } from "discourse-common/config/environment";
 import { dependentKeyCompat } from "@ember/object/compat";
+import { inject as service } from "@ember/service";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
@@ -167,6 +168,8 @@ function userOption(userOptionKey) {
 }
 
 const User = RestModel.extend({
+  userTips: service(),
+
   mailing_list_mode: userOption("mailing_list_mode"),
   external_links_in_new_tab: userOption("external_links_in_new_tab"),
   enable_quoting: userOption("enable_quoting"),
@@ -1348,9 +1351,6 @@ User.reopenClass(Singleton, {
   create(args) {
     args = args || {};
     this.deleteStatusTrackingFields(args);
-
-    const owner = getOwner(this);
-    args.userTips = owner.lookup("service:user-tips");
 
     return this._super(args);
   },
