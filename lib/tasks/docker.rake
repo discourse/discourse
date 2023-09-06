@@ -188,23 +188,6 @@ task "docker:test" do
             params << "--seed #{ENV["RSPEC_SEED"]}" if ENV["RSPEC_SEED"]
           end
 
-          if ENV["PARALLEL"]
-            parts = ENV["PARALLEL"].split("/")
-            total = parts[1].to_i
-            subset = parts[0].to_i - 1
-
-            spec_partials = Dir["spec/**/*_spec.rb"].sort.in_groups(total, false)
-            # quick and dirty load balancing
-            if (spec_partials.count > 3)
-              spec_partials[0].concat(spec_partials[total - 1].shift(30))
-              spec_partials[1].concat(spec_partials[total - 2].shift(30))
-            end
-
-            params << spec_partials[subset].join(" ")
-
-            puts "Running spec subset #{subset + 1} of #{total}"
-          end
-
           if ENV["USE_TURBO"]
             @good &&=
               run_or_fail("bundle exec ./bin/turbo_rspec --verbose #{params.join(" ")}".strip)
