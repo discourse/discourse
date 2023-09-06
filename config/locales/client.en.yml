@@ -2543,12 +2543,12 @@ en:
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} and %{count} other</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} and %{count} others</span> %{description}"
+        one: "<span class='multi-user'>%{username} and %{count} other</span> %{description}"
+        other: "<span class='multi-user'>%{username} and %{count} others</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
-        one: "%{username}, %{username2} and %{count} other"
-        other: "%{username}, %{username2} and %{count} others"
+        one: "%{username} and %{count} other"
+        other: "%{username} and %{count} others"
       liked_consolidated_description:
         one: "liked %{count} of your posts"
         other: "liked %{count} of your posts"

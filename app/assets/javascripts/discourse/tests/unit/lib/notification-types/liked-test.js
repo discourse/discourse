@@ -58,8 +58,7 @@ module("Unit | Notification Types | liked", function (hooks) {
       director.label,
       I18n.t("notifications.liked_by_multiple_users", {
         username: "osama",
-        username2: "shrek",
-        count: 1,
+        count: 2,
       }),
       "concatenates 2 usernames with comma and displays the remaining count when count larger than 2"
     );
