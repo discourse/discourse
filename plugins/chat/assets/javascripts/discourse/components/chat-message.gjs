@@ -12,6 +12,26 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
 import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
 import { tracked } from "@glimmer/tracking";
+import ChatMessageSeparatorDate from "discourse/plugins/chat/discourse/components/chat-message-separator-date";
+import ChatMessageSeparatorNew from "discourse/plugins/chat/discourse/components/chat-message-separator-new";
+import concatClass from "discourse/helpers/concat-class";
+import DButton from "discourse/components/d-button";
+import ChatMessageInReplyToIndicator from "discourse/plugins/chat/discourse/components/chat-message-in-reply-to-indicator";
+import ChatMessageLeftGutter from "discourse/plugins/chat/discourse/components/chat/message/left-gutter";
+import ChatMessageAvatar from "discourse/plugins/chat/discourse/components/chat/message/avatar";
+import ChatMessageError from "discourse/plugins/chat/discourse/components/chat/message/error";
+import ChatMessageInfo from "discourse/plugins/chat/discourse/components/chat/message/info";
+import ChatMessageText from "discourse/plugins/chat/discourse/components/chat-message-text";
+import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
+import ChatMessageThreadIndicator from "discourse/plugins/chat/discourse/components/chat-message-thread-indicator";
+import eq from "truth-helpers/helpers/eq";
+import not from "truth-helpers/helpers/not";
+import { on } from "@ember/modifier";
+import { Input } from "@ember/component";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+import ChatOnLongPress from "discourse/plugins/chat/discourse/modifiers/chat/on-long-press";
 
 let _chatMessageDecorators = [];
 let _tippyInstances = [];
@@ -28,6 +48,139 @@ export const MENTION_KEYWORDS = ["here", "all"];
 export const MESSAGE_CONTEXT_THREAD = "thread";
 
 export default class ChatMessage extends Component {
+  <template>
+    {{! template-lint-disable no-invalid-interactive }}
+    {{! template-lint-disable modifier-name-case }}
+    {{#if this.shouldRender}}
+      {{#if (eq @context "channel")}}
+        <ChatMessageSeparatorDate
+          @fetchMessagesByDate={{@fetchMessagesByDate}}
+          @message={{@message}}
+        />
+        <ChatMessageSeparatorNew @message={{@message}} />
+      {{/if}}
+
+      <div
+        class={{concatClass
+          "chat-message-container"
+          (if this.pane.selectingMessages "-selectable")
+          (if @message.highlighted "-highlighted")
+          (if (eq @message.user.id this.currentUser.id) "is-by-current-user")
+          (if @message.staged "-staged" "-persisted")
+          (if this.hasActiveState "-active")
+          (if @message.bookmark "-bookmarked")
+          (if @message.deletedAt "-deleted")
+          (if @message.selected "-selected")
+          (if @message.error "-errored")
+          (if this.showThreadIndicator "has-thread-indicator")
+          (if this.hideUserInfo "-user-info-hidden")
+          (if this.hasReply "has-reply")
+        }}
+        data-id={{@message.id}}
+        data-thread-id={{@message.thread.id}}
+        {{didInsert this.didInsertMessage}}
+        {{didUpdate this.didUpdateMessageId @message.id}}
+        {{didUpdate this.didUpdateMessageVersion @message.version}}
+        {{willDestroy this.willDestroyMessage}}
+        {{on "mouseenter" this.onMouseEnter passive=true}}
+        {{on "mouseleave" this.onMouseLeave passive=true}}
+        {{on "mousemove" this.onMouseMove passive=true}}
+        {{ChatOnLongPress
+          this.onLongPressStart
+          this.onLongPressEnd
+          this.onLongPressCancel
+        }}
+        ...attributes
+      >
+        {{#if this.show}}
+          {{#if this.pane.selectingMessages}}
+            <Input
+              @type="checkbox"
+              class="chat-message-selector"
+              @checked={{@message.selected}}
+              {{on "click" this.toggleChecked}}
+            />
+          {{/if}}
+
+          {{#if this.deletedAndCollapsed}}
+            <div class="chat-message-text -deleted">
+              <DButton
+                @action={{this.expand}}
+                @translatedLabel={{this.deletedMessageLabel}}
+                class="btn-flat chat-message-expand"
+              />
+            </div>
+          {{else if this.hiddenAndCollapsed}}
+            <div class="chat-message-text -hidden">
+              <DButton
+                @action={{this.expand}}
+                @label="chat.hidden"
+                class="btn-flat chat-message-expand"
+              />
+            </div>
+          {{else}}
+            <div class="chat-message">
+              {{#unless this.hideReplyToInfo}}
+                <ChatMessageInReplyToIndicator @message={{@message}} />
+              {{/unless}}
+
+              {{#if this.hideUserInfo}}
+                <ChatMessageLeftGutter @message={{@message}} />
+              {{else}}
+                <ChatMessageAvatar @message={{@message}} />
+              {{/if}}
+
+              <div class="chat-message-content">
+                <ChatMessageInfo
+                  @message={{@message}}
+                  @show={{not this.hideUserInfo}}
+                />
+
+                <ChatMessageText
+                  @cooked={{@message.cooked}}
+                  @uploads={{@message.uploads}}
+                  @edited={{@message.edited}}
+                >
+                  {{#if @message.reactions.length}}
+                    <div class="chat-message-reaction-list">
+                      {{#each @message.reactions as |reaction|}}
+                        <ChatMessageReaction
+                          @reaction={{reaction}}
+                          @onReaction={{this.messageInteractor.react}}
+                          @message={{@message}}
+                          @showTooltip={{true}}
+                        />
+                      {{/each}}
+
+                      {{#if this.shouldRenderOpenEmojiPickerButton}}
+                        <DButton
+                          @action={{this.messageInteractor.openEmojiPicker}}
+                          @icon="discourse-emojis"
+                          @title="chat.react"
+                          @forwardEvent={{true}}
+                          class="chat-message-react-btn"
+                        />
+                      {{/if}}
+                    </div>
+                  {{/if}}
+                </ChatMessageText>
+
+                <ChatMessageError
+                  @message={{@message}}
+                  @onRetry={{@resendStagedMessage}}
+                />
+              </div>
+
+              {{#if this.showThreadIndicator}}
+                <ChatMessageThreadIndicator @message={{@message}} />
+              {{/if}}
+            </div>
+          {{/if}}
+        {{/if}}
+      </div>
+    {{/if}}
+  </template>
+
   @service site;
   @service dialog;
   @service currentUser;
