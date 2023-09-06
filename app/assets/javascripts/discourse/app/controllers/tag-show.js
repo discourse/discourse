@@ -151,7 +151,7 @@ export default class TagShowController extends DiscoverySortableController.exten
       (this.router.currentRoute.queryParams["f"] ||
         this.router.currentRoute.queryParams["filter"]) === "tracked";
 
-    let topicIds = this.selected ? this.selected.mapBy("id") : null;
+    let topicIds = this.bulkSelectHelper.selected.map((t) => t.id);
 
     Topic.resetNew(this.category, !this.noSubcategories, {
       tracked: filterTracked,
