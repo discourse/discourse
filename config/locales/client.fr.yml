@@ -2283,13 +2283,10 @@ fr:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} et %{count} autre</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} et %{count} autres</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
-        one: "%{username}, %{username2} et %{count} autre utilisateur"
-        other: "%{username}, %{username2} et %{count} autres utilisateurs"
+        one: "%{username} et %{count} autre utilisateur"
+        other: "%{username} et %{count} autres utilisateurs"
       liked_consolidated_description:
         one: "a aimé %{count} de vos messages"
         other: "a aimé %{count} de vos messages"

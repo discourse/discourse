@@ -1276,9 +1276,6 @@ sw:
       edited: "<span>%{jina la mtumiaji} </span> %{maelezo}"
       liked: "<span>%{jina la mtumiaji}</span> %{maelezo}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} na %{count} mwingine </span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} na %{count} wengine</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_consolidated: "<span>%{jina la mtumiaji}</span> %{maelezo}"
       private_message: "<span>%{jina la mtumiaji}</span> %{maelezo}"

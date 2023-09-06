@@ -1316,6 +1316,11 @@ sk:
       none: "Notifikácie sa nepodarilo načítať"
       empty: "Žiadne upozornenia sa nenašli."
       watching_first_post_label: "Nová téma"
+      liked_by_multiple_users:
+        one: "%{username} a %{count} ďalší"
+        few: "%{username} a %{count} ďalších"
+        many: "%{username} a %{count} ďalších"
+        other: "%{username} a %{count} ďalších"
       dismiss_confirmation:
         dismiss: "Zahodiť"
         cancel: "Zrušiť"

@@ -1431,8 +1431,6 @@ th:
       edited: "<span>%{username}</span>%{description}"
       liked: "<span>%{username}</span>%{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span>%{description}"
-      liked_many:
-        other: "<span class='multi-user'>%{username}, %{username2} และอื่นๆอีก %{count}</span>%{description}"
       liked_consolidated_description:
         other: "ถูกใจ %{count} ครั้งต่อโพสต์ของคุณ"
       liked_consolidated: "<span>%{username}</span>%{description}"
