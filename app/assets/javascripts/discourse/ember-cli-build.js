@@ -227,6 +227,13 @@ module.exports = function (defaults) {
             ),
           },
         },
+        module: {
+          parser: {
+            javascript: {
+              exportsPresence: "error",
+            },
+          },
+        },
       },
     },
   });
