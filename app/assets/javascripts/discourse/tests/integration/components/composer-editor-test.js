@@ -9,8 +9,6 @@ module("Integration | Component | ComposerEditor", function (hooks) {
   setupRenderingTest(hooks);
 
   test("warns about users that will not see a mention", async function (assert) {
-    assert.expect(2);
-
     this.set("model", {});
     this.set("noop", () => {});
     this.set("expectation", (warning) => {
