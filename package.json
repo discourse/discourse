@@ -51,7 +51,7 @@
     "lint:js-plugins:fix": "eslint ./plugins",
     "lint:hbs": "ember-template-lint 'app/assets/javascripts/**/*.{gjs,hbs}' 'plugins/**/assets/javascripts/**/*.{gjs,hbs}' --no-error-on-unmatched-pattern",
     "lint:hbs:fix": "ember-template-lint 'app/assets/javascripts/**/*.{gjs,hbs}' 'plugins/**/assets/javascripts/**/*.{gjs,hbs}' --no-error-on-unmatched-pattern --fix",
-    "lint:prettier": "yarn pprettier  --list-different 'app/assets/stylesheets/**/*.scss' 'app/assets/javascripts/**/*.{js,gjs,hbs}' 'plugins/**/assets/stylesheets/**/*.scss' 'plugins/**/assets/javascripts/**/*.{js,gjs,hbs}'",
+    "lint:prettier": "yarn pprettier --list-different 'app/assets/stylesheets/**/*.scss' 'app/assets/javascripts/**/*.{js,gjs,hbs}' 'plugins/**/assets/stylesheets/**/*.scss' 'plugins/**/assets/javascripts/**/*.{js,gjs,hbs}'",
     "lint:prettier:fix": "yarn prettier -w 'app/assets/stylesheets/**/*.scss' 'app/assets/javascripts/**/*.{js,gjs,hbs}' 'plugins/**/assets/stylesheets/**/*.scss' 'plugins/**/assets/javascripts/**/*.{js,gjs,hbs}'",
     "lttf:ignore": "lint-to-the-future ignore",
     "lttf:output": "lint-to-the-future output -o ./lint-progress/",
