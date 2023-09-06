@@ -38,10 +38,7 @@ export default class DiscoveryTopics extends Component.extend(DismissTopics) {
       (this.router.currentRoute.queryParams["f"] ||
         this.router.currentRoute.queryParams["filter"]) === "tracked";
 
-    let topicIds = this.selected
-      ? this.selected.map((topic) => topic.id)
-      : null;
-
+    let topicIds = this.bulkSelectHelper.selected.map((topic) => topic.id);
     Topic.resetNew(this.category, !this.noSubcategories, {
       tracked,
       topicIds,
@@ -52,10 +49,7 @@ export default class DiscoveryTopics extends Component.extend(DismissTopics) {
       if (result.topic_ids) {
         this.topicTrackingState.removeTopics(result.topic_ids);
       }
-      this.send(
-        "refresh",
-        tracked ? { skipResettingParams: ["filter", "f"] } : {}
-      );
+      this.router.refresh();
     });
   }
 
