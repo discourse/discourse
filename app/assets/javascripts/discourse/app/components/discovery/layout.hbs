@@ -1,8 +1,8 @@
 <div class="container">
   <DiscourseBanner @user={{this.currentUser}} @banner={{this.site.banner}} />
-  {{#if this.category}}
+  {{#if @category}}
     <CategoryReadOnlyBanner
-      @category={{this.category}}
+      @category={{@category}}
       @readOnly={{@createTopicDisabled}}
     />
   {{/if}}
