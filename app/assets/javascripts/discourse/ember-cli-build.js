@@ -216,17 +216,6 @@ module.exports = function (defaults) {
             }
           },
         ],
-        resolve: {
-          alias: {
-            // https://github.com/handlebars-lang/handlebars.js/pull/1862
-            // The `browser` field in handlebar's package.json is currently messed up; the PR has
-            // been merged but has not been released
-            handlebars: path.resolve(
-              __dirname,
-              "../node_modules/handlebars/dist/cjs/handlebars.js"
-            ),
-          },
-        },
         module: {
           parser: {
             javascript: {
