@@ -99,7 +99,6 @@ RSpec.describe QunitController do
         expect(response.body).to include("/test-support.js")
         expect(response.body).to include("/test-site-settings.js")
         expect(response.body).to include("/assets/markdown-it-bundle.js")
-        expect(response.body).to include("/assets/discourse.js")
         expect(response.body).to include("/assets/admin.js")
         expect(response.body).to match(/\/theme-javascripts\/\h{40}\.js/)
         expect(response.body).to include("/theme-javascripts/tests/#{theme.id}-")
