@@ -211,7 +211,7 @@ export default class TagShowController extends DiscoverySortableController.exten
       })
       .then((list) => {
         this.set("list", list);
-        this.resetSelected();
+        this.bulkSelectHelper.clear();
       });
   }
 

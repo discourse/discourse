@@ -76,7 +76,7 @@
 
   <TopicDismissButtons
     @position="top"
-    @selectedTopics={{this.selected}}
+    @selectedTopics={{this.bulkSelectHelper.selected}}
     @model={{this.model}}
     @showResetNew={{this.showResetNew}}
     @showDismissRead={{this.showDismissRead}}
@@ -159,7 +159,7 @@
             <footer class="topic-list-bottom">
               <TopicDismissButtons
                 @position="bottom"
-                @selectedTopics={{this.selected}}
+                @selectedTopics={{this.bulkSelectHelper.selected}}
                 @model={{this.model}}
                 @showResetNew={{this.showResetNew}}
                 @showDismissRead={{this.showDismissRead}}
