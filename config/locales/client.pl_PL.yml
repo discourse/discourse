@@ -2526,17 +2526,12 @@ pl_PL:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} oraz %{count} inny</span> %{description}"
-        few: "<span class='multi-user'>%{username}, %{username2} oraz %{count} innych</span> %{description}"
-        many: "<span class='multi-user'>%{username}, %{username2} oraz %{count} innych</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} oraz %{count} innych</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
-        one: "%{username}, %{username2} i %{count} inna osoba"
-        few: "%{username}, %{username2} i %{count} inne osoby"
-        many: "%{username}, %{username2} i %{count} innych osób"
-        other: "%{username}, %{username2} oraz %{count} innych"
+        one: "%{username} i %{count} inny"
+        few: "%{username} i %{count} inni"
+        many: "%{username} i %{count} innych"
+        other: "%{username} i %{count} innych"
       liked_consolidated_description:
         one: "polubiono %{count} Twój wpis"
         few: "polubił %{count} twoje posty"

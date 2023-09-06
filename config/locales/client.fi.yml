@@ -2283,13 +2283,10 @@ fi:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} ja %{count} muu</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} ja %{count} muuta</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
-        one: "%{username}, %{username2} ja %{count} muu"
-        other: "%{username}, %{username2} ja %{count} muuta"
+        one: "%{username} ja %{count} muu"
+        other: "%{username} ja %{count} muuta"
       liked_consolidated_description:
         one: "tykkäsi %{count} viestistäsi"
         other: "tykkäsi %{count} viestistäsi"

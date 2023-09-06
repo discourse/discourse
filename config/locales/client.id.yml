@@ -1566,6 +1566,8 @@ id:
       empty: "Tidak ada pemberitahuan."
       post_approved: "Tulisan Anda telah disetujui"
       watching_first_post_label: "Topik Baru"
+      liked_by_multiple_users:
+        other: "%{username} dan %{count} lainnya"
       liked_consolidated_description:
         other: "menyukai %{count} dari tulisan Anda"
       invitee_accepted: "<span>%{username}</span> menerima undangan Anda"

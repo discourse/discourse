@@ -1709,11 +1709,7 @@ zh_TW:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}、%{username2}</span> %{description}"
-      liked_many:
-        other: "<span class='multi-user'>%{username}、%{username2} 和其他 %{count} 個人都</span> %{description}"
       liked_by_2_users: "%{username}、%{username2}"
-      liked_by_multiple_users:
-        other: "%{username}、%{username2} 和其他 %{count} 個人都"
       liked_consolidated_description:
         other: "說你的%{count}則貼文讚"
       liked_consolidated: "<span>%{username}</span> %{description}"
