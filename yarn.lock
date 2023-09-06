@@ -28,7 +28,7 @@
   resolved "https://registry.yarnpkg.com/@babel/compat-data/-/compat-data-7.22.9.tgz#71cdb00a1ce3a329ce4cbec3a44f9fef35669730"
   integrity sha512-5UamI7xkUcJ3i9qVDS+KFDEK8/7oJ55/sJMB1Ge7IEapr7KfdfV/HErR+koZwOfd+SgtFKOKRhRakdg++DcJpQ==
 
-"@babel/core@^7.18.6", "@babel/core@^7.22.11", "@babel/core@^7.22.5":
+"@babel/core@^7.18.6", "@babel/core@^7.20.12", "@babel/core@^7.22.5":
   version "7.22.15"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.22.15.tgz#15d4fd03f478a459015a4b94cfbb3bd42c48d2f4"
   integrity sha512-PtZqMmgRrvj8ruoEOIwVA3yoF91O+Hgw9o7DAUTNBA6Mo2jpu31clx9a7Nz/9JznqetTR6zwfC4L3LAjKQXUwA==
@@ -1389,6 +1389,11 @@ core-js@^3.27.2:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.31.0.tgz#4471dd33e366c79d8c0977ed2d940821719db344"
   integrity sha512-NIp2TQSGfR6ba5aalZD+ZQ1fSxGhDo/s1w0nx3RYzf2pnJxt7YynxFlFScP6eV7+GZsKO95NSjGxyJsU3DZgeQ==
 
+core-js@^3.4.1:
+  version "3.32.1"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.32.1.tgz#a7d8736a3ed9dd05940c3c4ff32c591bb735be77"
+  integrity sha512-lqufgNn9NLnESg5mQeYsxQP5w7wrViSj0jr/kv6ECQiByzQkrn1MKvV0L3acttpDqfQrHLwr2KCMgX5b8X+lyQ==
+
 core-util-is@~1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.3.tgz#a6042d3634c2b27e9328f837b965fac83808db85"
@@ -1550,7 +1555,7 @@ ember-cli-babel-plugin-helpers@^1.1.1:
   resolved "https://registry.yarnpkg.com/ember-cli-babel-plugin-helpers/-/ember-cli-babel-plugin-helpers-1.1.1.tgz#5016b80cdef37036c4282eef2d863e1d73576879"
   integrity sha512-sKvOiPNHr5F/60NLd7SFzMpYPte/nnGkq/tMIfXejfKHIhaiIkYFqX8Z9UFTKWLLn+V7NOaby6niNPZUdvKCRw==
 
-ember-cli-htmlbars@^6.3.0:
+ember-cli-htmlbars@^6.2.0:
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/ember-cli-htmlbars/-/ember-cli-htmlbars-6.3.0.tgz#ac85f2bbd09788992ab7f9ca832cd044fb8e5798"
   integrity sha512-N9Y80oZfcfWLsqickMfRd9YByVcTGyhYRnYQ2XVPVrp6jyUyOeRWmEAPh7ERSXpp8Ws4hr/JB9QVQrn/yZa+Ag==
@@ -3503,26 +3508,22 @@ prelude-ls@^1.2.1:
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
   integrity sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==
 
-prettier-plugin-ember-template-tag@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-ember-template-tag/-/prettier-plugin-ember-template-tag-1.1.0.tgz#b144c36736cad6c03db6612d740ad59427e616c7"
-  integrity sha512-zJTC+NhEU0kHNnVh7OtcvMmkJmYTgFTist76FP9q07m9+WCvcaunR1sTFIOlGE9TH/5UGm6rlF86Umt9ouorAg==
+prettier-plugin-ember-template-tag@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-ember-template-tag/-/prettier-plugin-ember-template-tag-0.3.2.tgz#dcf4e402951d6766a9880308ea6a405c9ea5a5f1"
+  integrity sha512-L/15ujsvuOpuIB9y9XJJs/QOPgdot76T0U1Q34C19igS1lsaL/cdRw8rXIVC5Z2x362yZI33Qodo//7kK7ItkA==
   dependencies:
-    "@babel/core" "^7.22.11"
-    "@glimmer/syntax" "^0.84.3"
-    ember-cli-htmlbars "^6.3.0"
-    ember-template-imports "^3.4.2"
-    prettier "^3.0.3"
+    "@babel/core" "^7.20.12"
+    "@glimmer/syntax" "^0.84.2"
+    ember-cli-htmlbars "^6.2.0"
+    ember-template-imports "^3.4.1"
+    prettier "^2.8.3"
+    ts-replace-all "^1.0.0"
 
-prettier@2.8.8, prettier@^2.0.4:
+prettier@2.8.8, prettier@^2.0.4, prettier@^2.8.3:
   version "2.8.8"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.8.tgz#e8c5d7e98a4305ffe3de2e1fc4aca1a71c28b1da"
   integrity sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==
-
-prettier@^3.0.3:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.0.3.tgz#432a51f7ba422d1469096c0fdc28e235db8f9643"
-  integrity sha512-L/4pUDMxcNa8R/EthV08Zt42WBO4h1rarVtK0K+QJG0X187OLo7l699jWw0GKuwzkPQ//jMFA/8Xm6Fh3J/DAg==
 
 process-nextick-args@~2.0.0:
   version "2.0.1"
@@ -4207,6 +4208,13 @@ tree-sync@^1.2.2:
     mkdirp "^0.5.1"
     quick-temp "^0.1.5"
     walk-sync "^0.3.3"
+
+ts-replace-all@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/ts-replace-all/-/ts-replace-all-1.0.0.tgz#ef28283ccdb4da7d69fb03cf543e09e51711659b"
+  integrity sha512-6uBtdkw3jHXkPtx/e9xB/5vcngMm17CyJYsS2YZeQ+9FdRnt6Ev5g931Sg2p+dxbtMGoCm13m3ax/obicTZIkQ==
+  dependencies:
+    core-js "^3.4.1"
 
 tslib@^1.9.0:
   version "1.14.1"
