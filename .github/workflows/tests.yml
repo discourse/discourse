@@ -50,8 +50,6 @@ jobs:
             target: core # Handled by core_frontend_tests job (below)
           - build_type: backend
             embroider: "1"
-          - build_type: system
-            embroider: "1" # Still needs some work on the Rails side
 
     steps:
       - name: Set working directory owner
