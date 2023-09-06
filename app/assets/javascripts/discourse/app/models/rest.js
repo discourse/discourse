@@ -103,15 +103,17 @@ RestModel.reopenClass({
   create(args) {
     args = args || {};
 
+    args.__munge = this.munge;
+    const createArgs = this.munge(args, args.store);
+
     // Some Discourse code calls `model.create()` directly without going through the
     // store. In that case the owner is not set, and injections will fail. This workaround ensures
     // the owner is always present. Eventually we should use the store for everything to fix this.
-    if (!getOwner(this)) {
-      setOwner(this, getOwnerWithFallback());
+    if (!getOwner(createArgs)) {
+      setOwner(createArgs, getOwnerWithFallback());
     }
 
-    args.__munge = this.munge;
-    return this._super(this.munge(args, args.store));
+    return this._super(createArgs);
   },
 });
 
