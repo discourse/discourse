@@ -33,15 +33,13 @@ describe Chat::MessageUpdater do
   end
 
   def create_chat_message(user, message, channel, upload_ids: nil)
-    creator =
-      Chat::MessageCreator.create(
-        chat_channel: channel,
-        user: user,
-        in_reply_to_id: nil,
-        content: message,
-        upload_ids: upload_ids,
-      )
-    creator.chat_message
+    Fabricate(
+      :chat_message,
+      chat_channel: channel,
+      user: user,
+      message: message,
+      upload_ids: upload_ids,
+    )
   end
 
   it "errors when length is less than `chat_minimum_message_length`" do
@@ -643,14 +641,14 @@ describe Chat::MessageUpdater do
 
     it "errors when a blocked word is present" do
       chat_message = create_chat_message(user1, "something", public_chat_channel)
-      creator =
-        Chat::MessageCreator.create(
-          chat_channel: public_chat_channel,
-          user: user1,
-          content: "bad word - #{watched_word.word}",
+      updater =
+        Chat::MessageUpdater.update(
+          guardian: guardian,
+          chat_message: chat_message,
+          new_content: "bad word - #{watched_word.word}",
         )
-      expect(creator.failed?).to eq(true)
-      expect(creator.error.message).to match(
+      expect(updater.failed?).to eq(true)
+      expect(updater.error.message).to match(
         I18n.t("contains_blocked_word", { word: watched_word.word }),
       )
     end

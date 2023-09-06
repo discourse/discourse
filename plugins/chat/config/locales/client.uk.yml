@@ -10,6 +10,10 @@ uk:
       site_settings:
         categories:
           chat: Чат
+        chat_separate_sidebar_mode:
+          always: "Завжди"
+          fullscreen: "Коли чат у повноекранному режимі"
+          never: "Ніколи"
       logs:
         staff_actions:
           actions:
@@ -26,6 +30,7 @@ uk:
       chat_channels_count: "Канали чату"
       chat_users_count: "Користувачі чату"
     chat:
+      deleted_chat_username: видалено
       dates:
         time_tiny: "h:mm"
       all_loaded: "Показати всі повідомлення"
@@ -110,6 +115,8 @@ uk:
         all_new: "Усі нові повідомлення"
         dm_and_mentions: "Прямі повідомлення та згадки"
         never: "Ніколи"
+      separate_sidebar_mode:
+        title: "Показувати окремі режими бічної панелі для форуму і чату"
       enable: "Увімкнути чат"
       flag: "Поскаржитися"
       emoji: "Вставити емодзі"
@@ -130,37 +137,13 @@ uk:
           many: "Останні %{count} годин"
           other: "Останні %{count} годин"
       mention_warning:
-        dismiss: "відкласти"
-        cannot_see: "%{username} не має доступу до цього каналу і не отримав сповіщення."
-        cannot_see_multiple:
-          one: "%{username} і %{count} інший користувач не мають доступу до цього каналу та не отримали сповіщення."
-          few: "%{username} і %{count} інші користувачі не мають доступу до цього каналу та не отримали сповіщення."
-          many: "%{username} та %{count} інших користувачів не мають доступу до цього каналу та не отримали сповіщення."
-          other: "%{username} та %{count} інших користувачів не мають доступу до цього каналу та не отримали сповіщення."
         invitations_sent:
           one: "Запрошення надіслано"
           few: "Запрошення надіслані"
           many: "Запрошення надіслані"
           other: "Запрошення надіслані"
         invite: "Запросити до каналу"
-        without_membership: "%{username} не приєднався до цього каналу."
-        without_membership_multiple:
-          one: "%{username} і ще %{count} користувач не приєдналися до цього каналу."
-          few: "%{username} і ще %{count} користувачі не приєдналися до цього каналу."
-          many: "%{username} і ще %{count} користувачів не приєдналися до цього каналу."
-          other: "%{username} і ще %{count} користувачів не приєдналися до цього каналу."
-        group_mentions_disabled: "%{group_name} не дозволяє згадки."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} та %{count} інша група забороняють згадки."
-          few: "%{group_name} та %{count} інші групи забороняють згадки."
-          many: "%{group_name} та %{count} інших груп забороняють згадки."
-          other: "%{group_name} та %{count} інших груп забороняють згадки."
-        too_many_members: "%{group_name} має занадто багато учасників. Ніхто не був повідомлений."
-        too_many_members_multiple:
-          one: "%{group_name} та %{count} інша група мають занадто багато членів. Ніхто не був сповіщений."
-          few: "%{group_name} та %{count} інші групи мають занадто багато членів. Ніхто не був сповіщений."
-          many: "%{group_name} та %{count} інших груп мають занадто багато членів. Ніхто не був сповіщений."
-          other: "%{group_name} та %{count} інших груп мають занадто багато членів. Ніхто не був сповіщений."
+        channel_wide_mentions_disallowed: "Згадки @here та @all вимкнені на цьому каналі."
         groups:
           header:
             some: "Деякі користувачі не отримають сповіщення"
@@ -320,7 +303,7 @@ uk:
         read_only: "Тільки для читання"
         archived_header: "Канал заархівовано"
         archived: "Архівовано"
-        archive_failed: "Не вдалося архівувати канал. %{completed}/%{total} повідомлень заархівовано. <a target=\"_blank\" href=\"%{topic_url}\">Тему призначення</a> було створено. Натисніть «Повторити», щоб спробувати завершити архівування."
+        archive_failed: "Не вдалося архівувати канал. %{completed}/%{total} повідомлень заархівовано. <a target=\"_blank\" href=\"%{topic_url}\">Тему призначення</a> було створено. Натисніть повторити, щоб спробувати завершити архівування."
         archive_failed_no_topic: "Не вдалося архівувати канал. %{completed}/%{total} повідомлень заархівовано, тема призначення не створена. Натисніть повторити, щоб спробувати завершити архів."
         archive_completed: "Див. <a target=\"_blank\" href=\"%{topic_url}\">архівну тему</a>"
         closed_header: "Канал закритий"
@@ -516,7 +499,7 @@ uk:
         title: "Чат"
         export_messages:
           title: "Експорт повідомлень чату"
-          description: "Наразі експорт обмежено до 10 000 повідомлень за останні 6 місяців."
+          description: "Це експортує всі повідомлення з усіх каналів."
           create_export: "Створити експорт"
           export_has_started: "Експорт почався. Ви отримаєте ПП коли він буде готовий."
       direct_messages:
@@ -626,7 +609,6 @@ uk:
       thread:
         title: "Назва"
         view_thread: Відкрити діалог
-        default_title: "Нитка"
         replies:
           one: "%{count} відповідь"
           few: "%{count} відповіді"
@@ -700,6 +682,9 @@ uk:
       types:
         chat_reviewable_message:
           title: "Позначене повідомлення чату"
+        reviewable_chat_message:
+          title: "Позначене повідомлення чату"
+          noun: "повідомлення чату"
     keyboard_shortcuts_help:
       chat:
         title: "Чат"
@@ -737,3 +722,7 @@ uk:
       sections:
         chat:
           title: Чат
+    sidebar:
+      panels:
+        chat:
+          label: "Чат"

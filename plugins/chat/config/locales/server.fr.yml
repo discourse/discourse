@@ -6,7 +6,7 @@
 
 fr:
   site_settings:
-    chat_enabled: "Activer l'extension de discussion."
+    chat_enabled: "Activer la discussion."
     enable_public_channels: "Activer les canaux publics en fonction des catégories."
     chat_allowed_groups: "Les utilisateurs de ces groupes peuvent discuter. Notez que les responsables peuvent toujours accéder à la discussion."
     chat_channel_retention_days: "Les messages de discussion dans les canaux ordinaires seront conservés pendant ce nombre de jours. Fixez cette valeur sur « 0 » pour conserver les messages indéfiniment."
@@ -116,15 +116,11 @@ fr:
         agree_and_delete:
           title: "Supprimer le message"
           description: "Supprimer le message pour que les utilisateurs ne puissent pas le voir."
-        delete_and_agree:
-          title: "Supprimer le message"
         disagree_and_restore:
           title: "Refuser et restaurer le message"
           description: "Restaurer le message pour que tous les utilisateurs puissent le voir."
         disagree:
           title: "Refuser"
-        ignore:
-          title: "Ignorer"
       direct_messages:
         transcript_title: "Transcription des messages précédents dans le canal %{channel_name}"
         transcript_body: "Pour vous donner plus de contexte, nous avons inclus une transcription des messages précédents de cette conversation (jusqu'à dix) :\n\n%{transcript}"
@@ -140,6 +136,28 @@ fr:
         multi_user_truncated:
           one: "%{comma_separated_usernames} et %{count} autre utilisateur"
           other: "%{comma_separated_usernames} et %{count} autres utilisateurs"
+    mention_warning:
+      dismiss: "rejeter"
+      cannot_see: "%{first_identifier} ne peut pas accéder à ce canal et n'a pas été averti(e)."
+      cannot_see_multiple:
+        one: "%{first_identifier} et %{count} autre utilisateur ne peuvent pas accéder à ce canal et n'ont pas été avertis."
+        other: "%{first_identifier} et %{count} autres utilisateurs ne peuvent pas accéder à ce canal et n'ont pas été avertis."
+      invitations_sent:
+        one: "Invitation envoyée"
+        other: "Invitations envoyées"
+      invite: "Inviter à rejoindre le canal"
+      without_membership: "%{first_identifier} n'a pas rejoint ce canal."
+      without_membership_multiple:
+        one: "%{first_identifier} et %{count} autre utilisateur n'ont pas rejoint ce canal."
+        other: "%{first_identifier} et %{count} autres utilisateurs n'ont pas rejoint ce canal."
+      group_mentions_disabled: "%{first_identifier} n'autorise pas les mentions."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} et %{count} autre groupe n'autorisent pas les mentions."
+        other: "%{first_identifier} et %{count} autres groupes n'autorisent pas les mentions."
+      too_many_members: "%{first_identifier} a trop de membres. Personne n'a reçu de notification."
+      too_many_members_multiple:
+        one: "%{first_identifier} et %{count} autre groupe comprennent trop de membres. Personne n'a été prévenu."
+        other: "%{first_identifier} et %{count} autres groupes comprennent trop de membres. Personne n'a été prévenu."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "contient des caractères non ASCII"

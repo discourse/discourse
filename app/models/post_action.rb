@@ -82,6 +82,15 @@ class PostAction < ActiveRecord::Base
         result = result.joins(post: :topic).where("topics.category_id = ?", opts[:category_id])
       end
     end
+
+    if opts[:group_ids]
+      result =
+        result
+          .joins("INNER JOIN users ON users.id = post_actions.user_id")
+          .joins("INNER JOIN group_users ON group_users.user_id = users.id")
+          .where("group_users.group_id IN (?)", opts[:group_ids])
+    end
+
     result.group("date(post_actions.created_at)").order("date(post_actions.created_at)").count
   end
 

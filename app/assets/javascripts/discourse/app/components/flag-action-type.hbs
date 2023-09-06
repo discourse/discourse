@@ -20,8 +20,13 @@
             @value={{this.message}}
           />
           <div
-            class="custom-message-length {{this.customMessageLengthClasses}}"
-          >{{this.customMessageLength}}</div>
+            class={{concat-class
+              "custom-message-length"
+              this.customMessageLengthClasses
+            }}
+          >
+            {{this.customMessageLength}}
+          </div>
         {{/if}}
       </div>
     </label>
@@ -53,8 +58,13 @@
             @value={{this.message}}
           />
           <div
-            class="custom-message-length {{this.customMessageLengthClasses}}"
-          >{{this.customMessageLength}}</div>
+            class={{concat-class
+              "custom-message-length"
+              this.customMessageLengthClasses
+            }}
+          >
+            {{this.customMessageLength}}
+          </div>
         {{/if}}
       </div>
     </label>

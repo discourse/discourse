@@ -278,7 +278,6 @@ ko:
     configure: "임베딩 환경설정"
     more_replies:
       other: "%{count}개 댓글 더 보기"
-    loading: "토론 로드 중..."
     permalink: "Permalink"
     imported_from: "%{link}에 있는 원본 엔트리의 동반 토론 주제입니다."
     in_reply_to: "▶ %{username}"
@@ -1406,11 +1405,8 @@ ko:
     allowed_crawler_user_agents: "사이트 액세스를 허용해야 하는 웹 크롤러의 사용자 에이전트입니다. 경고! 이것을 설정하면 여기에 나열되지 않은 모든 크롤러가 비활성화됩니다!"
     blocked_crawler_user_agents: "사이트 액세스가 허용되지 않아야 하는 웹 크롤러를 식별하는 사용자 에이전트 스트링에서 대소문자를 구분하지 않는 고유한 단어입니다. 허용 목록이 정의된 경우 적용되지 않습니다."
     slow_down_crawler_rate: "slow_down_crawler_user_agents를 지정하면 이 비율이 모든 크롤러에 적용됩니다(요청 간 지연 시간(초))."
-    content_security_policy: "콘텐츠 보안 정책 활성화"
-    content_security_policy_report_only: "콘텐츠 보안 정책 리포트만 활성화"
     content_security_policy_collect_reports: "/csp_reports에서 CSP 위반 리포트 수집 활성화"
     content_security_policy_frame_ancestors: "CSP를 통해 iframe에 이 사이트를 임베드할 수 있는 사용자를 제한합니다. <a href='%{base_path}/admin/customize/embedding'>임베딩</a>에서 허용된 호스트를 제어합니다."
-    content_security_policy_script_src: "추가 허용 목록에 있는 스크립트 소스입니다. 현재 호스트와 CDN이 기본적으로 포함됩니다. <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>콘텐츠 보안 정책으로 XSS 공격 완화</a>를 참조하세요."
     invalidate_inactive_admin_email_after_days: "이 기간에 사이트를 방문하지 않은 관리자 계정은 로그인하기 전에 이메일 주소를 다시 확인해야 합니다. 비활성화하려면 0으로 설정하세요."
     top_menu: "홈페이지 메뉴에 표시할 항목과 순서를 결정합니다. 예: 최신|신규|읽지 않음|카테고리|주요|읽음|게시함|북마크"
     post_menu: "게시물 메뉴에 표시할 항목과 순서를 결정합니다. 예: 좋아요|편집|신고|삭제|공유|북마크|댓글"
@@ -1513,7 +1509,6 @@ ko:
     enable_safe_mode: "사용자가 안전 모드에서 플러그인을 디버깅하도록 허용합니다."
     rate_limit_create_topic: "주제 생성 후 추가로 주제를 생성하려면 (n)초 기다려야 합니다."
     rate_limit_create_post: "게시물 작성 후 추가로 게시물을 작성하려면 (n)초 기다려야 합니다."
-    rate_limit_new_user_create_topic: "신규 사용자가 주제 생성 후 추가로 주제를 생성하려면 (n)초 기다려야 합니다."
     rate_limit_new_user_create_post: "신규 사용자가 게시물 작성 후 추가로 게시물을 작성하려면 (n)초 기다려야 합니다."
     max_likes_per_day: "사용자당 일일 최대 좋아요 수입니다."
     max_flags_per_day: "사용자당 일일 최대 신고 수입니다."
@@ -1890,7 +1885,6 @@ ko:
     retain_web_hook_events_period_days: "Webhook 이벤트 기록 보유 기간(일)입니다."
     retry_web_hook_events: "실패한 Webhook 이벤트를 4번 자동으로 재시도합니다. 재시도 간 간격은 1, 5, 25 및 125분입니다."
     revoke_api_keys_days: "사용하지 않는 API 키가 자동으로 취소되기까지의 기간(일)(0은 취소 안 함)"
-    allow_user_api_keys: "사용자 API 키 생성 허용"
     allow_user_api_key_scopes: "사용자 API 키에 허용되는 범위 목록"
     allowed_user_api_auth_redirects: "사용자 API 키의 인증 리디렉션을 위해 허용된 URL입니다. 와일드 카드 기호 *를 사용하면 일부를 일치시킬 수 있습니다(예 : www.example.com/*)."
     allowed_user_api_push_urls: "사용자 API의 서버 푸시를 위한 허용된 URL"
@@ -2121,18 +2115,6 @@ ko:
   admin:
     email:
       sent_test: "전송되었습니다!"
-    user:
-      merge_user:
-        updating_username: "아이디 업데이트 중..."
-        changing_post_ownership: "게시물 소유자 변경 중..."
-        merging_given_daily_likes: "보낸 일일 좋아요 병합 중..."
-        merging_post_timings: "게시물 시간 병합 중..."
-        merging_user_visits: "사용자 방문 병합 중..."
-        updating_site_settings: "사이트 설정 업데이트 중..."
-        updating_user_stats: "사용자 통계 업데이트 중..."
-        merging_user_attributes: "사용자 어트리뷰트 병합 중..."
-        updating_user_ids: "사용자 ID 업데이트 중..."
-        deleting_source_user: "소스 사용자 삭제 중..."
   user:
     deactivated: "'%{email}'에 반송 이메일이 너무 많아 비활성화되었습니다."
     deactivated_by_staff: "운영진에 의해 비활성화됨"
@@ -3886,8 +3868,6 @@ ko:
         description: "모든 사용자가 볼 수 있도록 게시물을 복원합니다."
       delete_single:
         title: "삭제"
-      delete:
-        title: "삭제..."
       delete_and_ignore_replies:
         confirm: "게시물에 대한 댓글도 삭제할까요?"
       delete_and_agree_replies:
@@ -3910,7 +3890,6 @@ ko:
       approve_user:
         title: "사용자 승인"
       reject_user:
-        title: "사용자 삭제..."
         delete:
           title: "사용자 삭제"
           description: "사용자가 포럼에서 삭제됩니다."
@@ -3919,7 +3898,6 @@ ko:
           description: "사용자가 삭제되고 IP 및 이메일 주소가 차단됩니다."
       reject:
         title: "거부"
-        bundle_title: "거부..."
       reject_and_suspend:
         title: "사용자 거부 정지"
       reject_and_silence:

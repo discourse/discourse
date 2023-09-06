@@ -94,45 +94,45 @@ const TopicTrackingState = EmberObject.extend({
     this.messageBus.subscribe(
       "/latest",
       this._processChannelPayload,
-      meta["/latest"] || messageBusDefaultNewMessageId
+      meta["/latest"] ?? messageBusDefaultNewMessageId
     );
 
     if (this.currentUser) {
       this.messageBus.subscribe(
         "/new",
         this._processChannelPayload,
-        meta["/new"] || messageBusDefaultNewMessageId
+        meta["/new"] ?? messageBusDefaultNewMessageId
       );
 
       this.messageBus.subscribe(
         `/unread`,
         this._processChannelPayload,
-        meta["/unread"] || messageBusDefaultNewMessageId
+        meta["/unread"] ?? messageBusDefaultNewMessageId
       );
 
       this.messageBus.subscribe(
         `/unread/${this.currentUser.id}`,
         this._processChannelPayload,
-        meta[`/unread/${this.currentUser.id}`] || messageBusDefaultNewMessageId
+        meta[`/unread/${this.currentUser.id}`] ?? messageBusDefaultNewMessageId
       );
     }
 
     this.messageBus.subscribe(
       "/delete",
       this.onDeleteMessage,
-      meta["/delete"] || messageBusDefaultNewMessageId
+      meta["/delete"] ?? messageBusDefaultNewMessageId
     );
 
     this.messageBus.subscribe(
       "/recover",
       this.onRecoverMessage,
-      meta["/recover"] || messageBusDefaultNewMessageId
+      meta["/recover"] ?? messageBusDefaultNewMessageId
     );
 
     this.messageBus.subscribe(
       "/destroy",
       this.onDestroyMessage,
-      meta["/destroy"] || messageBusDefaultNewMessageId
+      meta["/destroy"] ?? messageBusDefaultNewMessageId
     );
   },
 
@@ -732,22 +732,23 @@ const TopicTrackingState = EmberObject.extend({
 
   lookupCount({ type, category, tagId, noSubcategories, customFilterFn } = {}) {
     if (type === "latest") {
-      return (
-        this.lookupCount({
-          type: "new",
-          category,
-          tagId,
-          noSubcategories,
-          customFilterFn,
-        }) +
-        this.lookupCount({
+      let count = this.lookupCount({
+        type: "new",
+        category,
+        tagId,
+        noSubcategories,
+        customFilterFn,
+      });
+      if (!this.currentUser?.new_new_view_enabled) {
+        count += this.lookupCount({
           type: "unread",
           category,
           tagId,
           noSubcategories,
           customFilterFn,
-        })
-      );
+        });
+      }
+      return count;
     }
 
     let categoryId = category ? get(category, "id") : null;

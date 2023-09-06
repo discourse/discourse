@@ -53,6 +53,7 @@ class TopicQuery
       search
       q
       f
+      subset
       group_name
       tags
       match_all_tags
@@ -304,7 +305,16 @@ class TopicQuery
 
   def list_new
     if @user&.new_new_view_enabled?
-      create_list(:new, { unordered: true }, new_and_unread_results)
+      list =
+        case @options[:subset]
+        when "topics"
+          new_results
+        when "replies"
+          unread_results
+        else
+          new_and_unread_results
+        end
+      create_list(:new, { unordered: true }, list)
     else
       create_list(:new, { unordered: true }, new_results)
     end
@@ -739,7 +749,7 @@ class TopicQuery
         # category default sort order
         sort_order, sort_ascending =
           Category.where(id: category_id).pick(:sort_order, :sort_ascending)
-        if sort_order && (filter.blank? || %i[latest unseen].include?(filter))
+        if sort_order && (filter.blank? || %w[default latest unseen].include?(filter.to_s))
           options[:order] = sort_order
           options[:ascending] = !!sort_ascending ? "true" : "false"
         else

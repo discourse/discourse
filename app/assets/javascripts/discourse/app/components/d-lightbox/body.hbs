@@ -7,11 +7,11 @@
 >
   {{#if @shouldDisplayMainImageArrows}}
     <DButton
-      @class="d-lightbox__previous-button btn-flat"
+      {{on "click" @showPreviousItem passive=true capture=true}}
       @title="experimental_lightbox.buttons.previous"
       @icon={{@previousButtonIcon}}
       @ariaHidden="true"
-      {{on "click" @showPreviousItem passive=true capture=true}}
+      class="d-lightbox__previous-button btn-flat"
     />
   {{/if}}
   {{#if @isLoading}}
@@ -21,10 +21,10 @@
   {{else if @hasLoadingError}}
     <span class="d-lightbox__error-message">
       <DButton
-        @class="d-lightbox__retry-button btn-flat"
+        {{on "click" @reloadImage passive=true capture=true}}
         @title="experimental_lightbox.buttons.redo"
         @icon="redo"
-        {{on "click" @reloadImage passive=true capture=true}}
+        class="d-lightbox__retry-button btn-flat"
       />
       <span>{{i18n "experimental_lightbox.image_load_error"}}</span>
     </span>
@@ -49,11 +49,11 @@
   {{/if}}
   {{#if @shouldDisplayMainImageArrows}}
     <DButton
-      @class="d-lightbox__next-button btn-flat"
+      {{on "click" @showNextItem passive=true capture=true}}
       @title="experimental_lightbox.buttons.next"
       @icon={{@nextButtonIcon}}
       @ariaHidden="true"
-      {{on "click" @showNextItem passive=true capture=true}}
+      class="d-lightbox__next-button btn-flat"
     />
   {{/if}}
 </div>

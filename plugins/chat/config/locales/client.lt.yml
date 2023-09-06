@@ -6,7 +6,13 @@
 
 lt:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Visada"
+          never: "Niekada"
     chat:
+      deleted_chat_username: ištrintas
       create: "Sukurti"
       cancel: "Atšaukti"
       channel_settings:
@@ -28,8 +34,6 @@ lt:
       last_visit: "paskutinis apsilankymas"
       summarization:
         summarize: "Apibendrinti"
-      mention_warning:
-        dismiss: "praleisti"
       reply: "Atsakyti"
       edit: "Redaguoti"
       rebake_message: "Perkurti HTML"

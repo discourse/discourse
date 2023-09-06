@@ -59,6 +59,11 @@ export default class AssistantItem extends Component {
 
   @action
   onKeydown(e) {
+    // don't capture tab key
+    if (e.key === "Tab") {
+      return;
+    }
+
     if (e.key === "Escape") {
       focusSearchButton();
       this.args.closeSearchMenu();

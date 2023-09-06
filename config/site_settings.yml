@@ -1123,7 +1123,7 @@ posting:
     min: 5
     max: 255
   max_form_template_content_length:
-    default: 2000
+    default: 5000
     max: 150000
 
 email:
@@ -1155,6 +1155,9 @@ email:
     max: 36500
   digest_suppress_categories:
     type: category_list
+    default: ""
+  digest_suppress_tags:
+    type: tag_list
     default: ""
   disable_digest_emails:
     default: false
@@ -1436,6 +1439,10 @@ files:
     default: 1024
     min: 1
     max: 10240
+  secure_uploads_pm_only:
+    default: false
+    hidden: true
+    client: true
   enable_s3_uploads:
     default: false
     client: true
@@ -1839,6 +1846,14 @@ security:
     default: false
   display_personal_messages_tag_counts:
     default: false
+  cross_origin_opener_policy_header:
+    default: "unsafe-none"
+    type: enum
+    choices:
+      - "unsafe-none"
+      - "same-origin"
+      - "same-origin-allow-popups"
+    hidden: true
 
 onebox:
   post_onebox_maxlength:
@@ -1919,7 +1934,9 @@ spam:
   auto_respond_to_flag_actions: true
   min_first_post_typing_time: 3000
   auto_silence_fast_typers_on_first_post: true
-  auto_silence_fast_typers_max_trust_level: 0
+  auto_silence_fast_typers_max_trust_level:
+    default: 0
+    enum: "TrustLevelSetting"
   auto_silence_first_post_regex: ""
   high_trust_flaggers_auto_hide_posts: true
   cooldown_hours_until_reflag:
@@ -1952,7 +1969,6 @@ rate_limits:
   unique_posts_mins: 5
   rate_limit_create_topic: 15
   rate_limit_create_post: 5
-  rate_limit_new_user_create_topic: 120
   rate_limit_new_user_create_post: 30
   rate_limit_search_anon_global_per_minute:
     hidden: true
@@ -2487,10 +2503,6 @@ uncategorized:
     type: float
     default: 48
 
-  enable_system_avatars:
-    hidden: true
-    default: true
-
   use_site_small_logo_as_system_avatar:
     default: true
 
@@ -2555,10 +2567,6 @@ uncategorized:
   bootstrap_mode_enabled:
     default: false
     client: true
-    hidden: true
-
-  check_for_new_features:
-    default: false
     hidden: true
 
   automatically_unpin_topics:
@@ -2680,7 +2688,6 @@ user_preferences:
     default: false
   default_hide_profile_and_presence:
     default: false
-
   default_other_new_topic_duration_minutes:
     enum: "NewTopicDurationSiteSetting"
     default: 2880
@@ -2770,8 +2777,6 @@ api:
     max: 36500
 
 user_api:
-  allow_user_api_keys:
-    default: true
   allow_user_api_key_scopes:
     default: "read|write|message_bus|push|notifications|session_info|one_time_password"
     type: list

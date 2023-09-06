@@ -1,13 +1,28 @@
 .more-topics__container {
+  position: relative;
   padding-bottom: max(env(safe-area-inset-bottom), 1em);
   max-width: calc(var(--d-max-width) * 0.87);
 
   .nav {
-    margin: 0 0 1em 0;
-
+    margin-block: 0;
     li {
       .btn {
-        padding: 0.5em 0.65em;
+        color: var(--primary);
+        background-color: transparent;
+        padding: 0.5em 5px;
+        border-radius: 0px;
+        &:hover {
+          box-shadow: inset 0px -3px 0px 0px rgba(var(--tertiary-rgb), 0.5);
+        }
+        &.active {
+          box-shadow: inset 0px -3px 0px 0px var(--tertiary);
+        }
+        .d-icon,
+        &:hover .d-icon,
+        &:active .d-icon {
+          color: var(--primary-high);
+          opacity: 1;
+        }
       }
     }
   }

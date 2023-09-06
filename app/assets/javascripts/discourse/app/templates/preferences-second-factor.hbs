@@ -46,10 +46,10 @@
               {{/each}}
               <DButton
                 @action={{action "createTotp"}}
-                @class="btn-default new-totp"
                 @icon="plus"
                 @disabled={{this.loading}}
                 @label="user.second_factor.totp.add"
+                class="btn-default new-totp"
               />
             </div>
           </div>
@@ -82,10 +82,10 @@
               {{/each}}
               <DButton
                 @action={{action "createSecurityKey"}}
-                @class="btn-default new-security-key"
                 @icon="plus"
                 @disabled={{this.loading}}
                 @label="user.second_factor.security_key.add"
+                class="btn-default new-security-key"
               />
             </div>
           </div>
@@ -106,10 +106,10 @@
                     {{else}}
                       <DButton
                         @action={{action "editSecondFactorBackup"}}
-                        @class="btn-default new-second-factor-backup"
                         @icon="plus"
                         @disabled={{this.loading}}
                         @label="user.second_factor_backup.enable_long"
+                        class="btn-default new-second-factor-backup"
                       />
                     {{/if}}
                   </div>
@@ -144,11 +144,11 @@
               <div class="control-group pref-second-factor-disable-all">
                 <div class="controls -actions">
                   <DButton
-                    @class="btn-danger"
                     @icon="ban"
                     @action={{action "disableAllSecondFactors"}}
                     @disabled={{this.loading}}
                     @label="user.second_factor.disable_all"
+                    class="btn-danger"
                   />
                   <CancelLink
                     @route="preferences.security"
@@ -181,11 +181,11 @@
           <div class="control-group">
             <div class="controls -actions">
               <DButton
-                @class="btn-primary"
-                @type="submit"
                 @action={{action "confirmPassword"}}
                 @disabled={{this.loading}}
                 @label="continue"
+                type="submit"
+                class="btn-primary"
               />
 
               {{#unless this.showEnforcedNotice}}

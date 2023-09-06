@@ -27,7 +27,7 @@ acceptance("Admin - Site Settings", function (needs) {
     });
     server.get("/admin/site_settings", () => {
       const fixtures = siteSettingFixture["/admin/site_settings"].site_settings;
-      const titleSetting = Object.assign({}, fixtures[0]);
+      const titleSetting = { ...fixtures[0] };
 
       if (updatedTitle) {
         titleSetting.value = updatedTitle;

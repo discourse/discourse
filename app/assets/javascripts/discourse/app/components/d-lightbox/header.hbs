@@ -2,12 +2,12 @@
   {{#if @canNavigate}}
     <div aria-hidden="true" class="d-lightbox__multi-item-controls">
       <DButton
-        @class="d-lightbox__carousel-button btn-flat"
+        {{on "click" @toggleCarousel passive=true capture=true}}
         @title="experimental_lightbox.buttons.carousel"
         @icon="images"
         @ariaHidden="true"
-        {{on "click" @toggleCarousel passive=true capture=true}}
         aria-hidden="true"
+        class="d-lightbox__carousel-button btn-flat"
       />
       <div class="d-lightbox__counters">
         <span class="d-lightbox__counter-current">
@@ -25,30 +25,30 @@
   <div class="d-lightbox__header-buttons">
     {{#if @canDownload}}
       <DButton
-        @class="d-lightbox__new-tab-button btn-flat"
+        {{on "click" @openInNewTab passive=true capture=true}}
         @title="experimental_lightbox.buttons.newtab"
         @icon="external-link-alt"
         @ariaHidden="true"
-        {{on "click" @openInNewTab passive=true capture=true}}
         aria-hidden="true"
+        class="d-lightbox__new-tab-button btn-flat"
       />
     {{/if}}
     {{#if @canFullscreen}}
       <DButton
-        @class="d-lightbox__full-screen-button btn-flat"
+        {{on "click" @toggleFullScreen passive=true capture=true}}
         @title="experimental_lightbox.buttons.fullscreen"
         @icon="discourse-expand"
         @ariaHidden="true"
-        {{on "click" @toggleFullScreen passive=true capture=true}}
         aria-hidden="true"
+        class="d-lightbox__full-screen-button btn-flat"
       />
     {{/if}}
     <DButton
-      @class="d-lightbox__close-button btn-flat"
+      {{on "click" @close passive=true capture=true}}
       @title="experimental_lightbox.buttons.close"
       @icon="times"
       @ariaHidden="true"
-      {{on "click" @close passive=true capture=true}}
+      class="d-lightbox__close-button btn-flat"
     />
   </div>
 </div>

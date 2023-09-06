@@ -52,10 +52,10 @@
       {{#if this.category.topic_url}}
         <br />
         <DButton
-          @class="btn-default edit-category-description"
-          @action={{action "showCategoryTopic"}}
+          @action={{this.showCategoryTopic}}
           @icon="pencil-alt"
           @label="category.change_in_category_topic"
+          class="btn-default edit-category-description"
         />
       {{/if}}
     </section>

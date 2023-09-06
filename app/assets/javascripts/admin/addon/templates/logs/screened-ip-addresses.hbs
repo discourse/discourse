@@ -10,11 +10,11 @@
       @autocapitalize="off"
     />
     <DButton
-      @class="btn-default"
-      @action={{action "exportScreenedIpList"}}
+      @action={{this.exportScreenedIpList}}
       @icon="download"
       @title="admin.export_csv.button_title.screened_ip"
       @label="admin.export_csv.button_text"
+      class="btn-default"
     />
   </div>
 
@@ -83,44 +83,39 @@
             <td class="col actions">
               {{#if item.editing}}
                 <DButton
-                  @class="btn-default"
-                  @action={{action "save"}}
-                  @actionParam={{item}}
+                  @action={{fn this.save item}}
                   @label="admin.logs.save"
+                  class="btn-default"
                 />
                 <DButton
-                  @class="btn-flat"
-                  @action={{action "cancel" item}}
+                  @action={{fn this.cancel item}}
                   @translatedLabel={{i18n "cancel"}}
+                  class="btn-flat"
                 />
               {{else}}
                 <DButton
-                  @class="btn-default btn-danger"
-                  @action={{action "destroyRecord"}}
-                  @actionParam={{item}}
+                  @action={{fn this.destroyRecord item}}
                   @icon="far-trash-alt"
+                  class="btn-default btn-danger"
                 />
                 <DButton
-                  @class="btn-default"
-                  @action={{action "edit"}}
-                  @actionParam={{item}}
+                  @action={{fn this.edit item}}
                   @icon="pencil-alt"
+                  class="btn-default"
                 />
                 {{#if item.isBlocked}}
                   <DButton
-                    @class="btn-default"
-                    @action={{action "allow"}}
-                    @actionParam={{item}}
+                    @action={{fn this.allow item}}
                     @icon="check"
                     @label="admin.logs.screened_ips.actions.do_nothing"
+                    class="btn-default"
                   />
                 {{else}}
                   <DButton
-                    @class="btn-default"
-                    @action={{action "block"}}
-                    @actionParam={{item}}
+                    @action={{fn this.block item}}
                     @icon="ban"
                     @label="admin.logs.screened_ips.actions.block"
+                    class="btn-default"
                   />
                 {{/if}}
               {{/if}}

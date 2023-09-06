@@ -8,10 +8,10 @@
   <div class="groups-header">
     {{#if this.currentUser.can_create_group}}
       <DButton
-        @action={{action "new"}}
-        @class="btn-default groups-header-new pull-right"
+        @action={{this.new}}
         @icon="plus"
         @label="admin.groups.new.title"
+        class="btn-default groups-header-new pull-right"
       />
     {{/if}}
 

@@ -5,6 +5,7 @@
 {{/let}}
 
 <DiscourseTopic
+  {{sticky-avatars}}
   @multiSelect={{this.multiSelect}}
   @enteredAt={{this.enteredAt}}
   @topic={{this.model}}
@@ -95,15 +96,15 @@
             <div class="edit-controls">
               <DButton
                 @action={{action "finishedEditingTopic"}}
-                @class="btn-primary submit-edit"
                 @icon="check"
                 @ariaLabel="composer.save_edit"
+                class="btn-primary submit-edit"
               />
               <DButton
                 @action={{action "cancelEditingTopic"}}
-                @class="btn-default cancel-edit"
                 @icon="times"
                 @ariaLabel="composer.cancel"
+                class="btn-default cancel-edit"
               />
 
               {{#if this.canRemoveTopicFeaturedLink}}
@@ -299,13 +300,13 @@
             />
           </TopicProgress>
         {{/if}}
-      </TopicNavigation>
 
-      <PluginOutlet
-        @name="after-topic-navigation"
-        @connectorTagName="div"
-        @outletArgs={{hash model=this.model}}
-      />
+        <PluginOutlet
+          @name="topic-navigation-bottom"
+          @connectorTagName="div"
+          @outletArgs={{hash model=this.model}}
+        />
+      </TopicNavigation>
 
       <div class="row">
         <section class="topic-area" id="topic" data-topic-id={{this.model.id}}>
@@ -414,10 +415,10 @@
                       </div>
                       <div class="reviewable-actions">
                         <DButton
-                          @class="btn-danger"
                           @label="review.delete"
                           @icon="trash-alt"
-                          @action={{action "deletePending" pending}}
+                          @action={{fn (action "deletePending") pending}}
+                          class="btn-danger"
                         />
                       </div>
                     </div>
@@ -540,9 +541,9 @@
           <div id="topic-footer-buttons">
             <DButton
               @icon="reply"
-              @class="btn-primary pull-right"
               @action={{route-action "showLogin"}}
               @label="topic.reply.title"
+              class="btn-primary pull-right"
             />
           </div>
         {{/if}}
@@ -572,17 +573,17 @@
               {{#unless this.currentUser}}
                 <DButton
                   @action={{route-action "showLogin"}}
-                  @class="btn-primary topic-retry"
                   @icon="user"
                   @label="log_in"
+                  class="btn-primary topic-retry"
                 />
               {{/unless}}
             {{else}}
               <DButton
                 @action={{action "retryLoading"}}
-                @class="btn-primary topic-retry"
                 @icon="sync"
                 @label="errors.buttons.again"
+                class="btn-primary topic-retry"
               />
             {{/if}}
           </div>

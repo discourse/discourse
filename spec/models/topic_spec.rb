@@ -2363,6 +2363,27 @@ RSpec.describe Topic do
         expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
       end
 
+      it "doesn't return topics from suppressed tags" do
+        category = Fabricate(:category_with_definition, created_at: 2.minutes.ago)
+        topic = Fabricate(:topic, category: category, created_at: 1.minute.ago)
+        topic2 = Fabricate(:topic, category: category, created_at: 1.minute.ago)
+        tag = Fabricate(:tag)
+        Fabricate(:topic_tag, topic: topic, tag: tag)
+
+        SiteSetting.digest_suppress_tags = "#{tag.id}"
+        topics = Topic.for_digest(user, 1.year.ago, top_order: true)
+        expect(topics).to eq([topic2])
+
+        Fabricate(
+          :topic_user,
+          user: user,
+          topic: topic,
+          notification_level: TopicUser.notification_levels[:regular],
+        )
+
+        expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to eq([topic2])
+      end
+
       it "doesn't return topics from TL0 users" do
         new_user = Fabricate(:user, trust_level: 0)
         Fabricate(:topic, user: new_user, created_at: 1.minute.ago)
@@ -2550,6 +2571,16 @@ RSpec.describe Topic do
       )
       expect(Topic.listable_count_per_day(2.days.ago, Time.now)).not_to include(
         4.days.ago.to_date => 1,
+      )
+    end
+
+    it "returns the correct count with group filter" do
+      group = Fabricate(:group)
+      group.add(user)
+      topic = Fabricate(:topic, user: user)
+
+      expect(Topic.listable_count_per_day(2.days.ago, Time.now, nil, false, [group.id])).to include(
+        Time.now.utc.to_date => 1,
       )
     end
   end

@@ -1,14 +1,15 @@
-<div class="more-topics__container" {{did-insert this.buildListPills}}>
+<div class="more-topics__container">
   {{#unless this.singleList}}
     <div class="row">
       <ul class="nav nav-pills">
-        {{#each this.availablePills as |pill|}}
+        {{#each this.availableTabs as |tab|}}
           <li>
             <DButton
-              @translatedTitle={{pill.name}}
-              @translatedLabel={{pill.name}}
-              @class={{if pill.selected "active"}}
-              @action={{action "rememberTopicListPreference" pill.id}}
+              @translatedTitle={{tab.name}}
+              @translatedLabel={{tab.name}}
+              @action={{fn this.rememberTopicListPreference tab.id}}
+              @icon={{tab.icon}}
+              class={{if (eq tab.id this.selectedTab) "active"}}
             />
           </li>
         {{/each}}

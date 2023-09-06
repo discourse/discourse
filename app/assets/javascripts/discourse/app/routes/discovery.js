@@ -3,12 +3,15 @@ import User from "discourse/models/user";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import { action } from "@ember/object";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
+import { inject as service } from "@ember/service";
 
 /**
   The parent route for all discovery routes.
   Handles the logic for showing the loading spinners.
 **/
 export default class DiscoveryRoute extends DiscourseRoute {
+  @service router;
+
   queryParams = {
     filter: { refreshModel: true },
   };
@@ -28,14 +31,14 @@ export default class DiscoveryRoute extends DiscourseRoute {
       User.currentProp("user_option.should_be_redirected_to_top", false);
       const period =
         User.currentProp("user_option.redirected_to_top.period") || "all";
-      this.replaceWith("discovery.top", {
+      this.router.replaceWith("discovery.top", {
         queryParams: {
           period,
         },
       });
     } else if (url && (matches = url.match(/top\/(.*)$/))) {
       if (this.site.periods.includes(matches[1])) {
-        this.replaceWith("discovery.top", {
+        this.router.replaceWith("discovery.top", {
           queryParams: {
             period: matches[1],
           },

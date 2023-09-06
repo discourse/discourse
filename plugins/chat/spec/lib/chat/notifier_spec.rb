@@ -58,6 +58,23 @@ describe Chat::Notifier do
         expect(to_notify[list_key]).to be_empty
       end
 
+      it "will publish a mention warning" do
+        channel.update!(allow_channel_wide_mentions: false)
+        msg = build_cooked_msg(mention, user_1)
+
+        messages =
+          MessageBus.track_publish("/chat/#{channel.id}") do
+            to_notify = described_class.new(msg, msg.created_at).notify_new
+          end
+
+        global_mentions_disabled_message = messages.first
+
+        expect(global_mentions_disabled_message.data[:type].to_sym).to eq(:notice)
+        expect(global_mentions_disabled_message.data[:text_content]).to eq(
+          I18n.t("chat.mention_warning.global_mentions_disallowed"),
+        )
+      end
+
       it "includes all members of a channel except the sender" do
         msg = build_cooked_msg(mention, user_1)
 
@@ -399,10 +416,10 @@ describe Chat::Notifier do
 
         unreachable_msg = messages.first
 
-        expect(unreachable_msg).to be_present
-        expect(unreachable_msg.data[:without_membership]).to be_empty
-        unreachable_users = unreachable_msg.data[:cannot_see].map { |u| u["id"] }
-        expect(unreachable_users).to contain_exactly(user_3.id)
+        expect(unreachable_msg[:data][:type].to_sym).to eq(:notice)
+        expect(unreachable_msg[:data][:text_content]).to eq(
+          I18n.t("chat.mention_warning.cannot_see", first_identifier: user_3.username),
+        )
       end
 
       context "when in a personal message" do
@@ -436,10 +453,10 @@ describe Chat::Notifier do
 
           unreachable_msg = messages.first
 
-          expect(unreachable_msg).to be_present
-          expect(unreachable_msg.data[:without_membership]).to be_empty
-          unreachable_users = unreachable_msg.data[:cannot_see].map { |u| u["id"] }
-          expect(unreachable_users).to contain_exactly(user_3.id)
+          expect(unreachable_msg[:data][:type].to_sym).to eq(:notice)
+          expect(unreachable_msg[:data][:text_content]).to eq(
+            I18n.t("chat.mention_warning.cannot_see", first_identifier: user_3.username),
+          )
         end
 
         it "notify posts of users who are part of the mentioned group but participating" do
@@ -461,10 +478,10 @@ describe Chat::Notifier do
 
           unreachable_msg = messages.first
 
-          expect(unreachable_msg).to be_present
-          expect(unreachable_msg.data[:without_membership]).to be_empty
-          unreachable_users = unreachable_msg.data[:cannot_see].map { |u| u["id"] }
-          expect(unreachable_users).to contain_exactly(user_3.id)
+          expect(unreachable_msg[:data][:type].to_sym).to eq(:notice)
+          expect(unreachable_msg[:data][:text_content]).to eq(
+            I18n.t("chat.mention_warning.cannot_see", first_identifier: user_3.username),
+          )
         end
       end
     end
@@ -486,11 +503,15 @@ describe Chat::Notifier do
 
         not_participating_msg = messages.first
 
-        expect(not_participating_msg).to be_present
-        expect(not_participating_msg.data[:cannot_see]).to be_empty
-        not_participating_users =
-          not_participating_msg.data[:without_membership].map { |u| u["id"] }
-        expect(not_participating_users).to contain_exactly(user_3.id)
+        expect(not_participating_msg[:data][:type].to_sym).to eq(:notice)
+        expect(not_participating_msg[:data][:text_content]).to be_nil
+        expect(not_participating_msg[:data][:notice_type].to_sym).to eq(:mention_without_membership)
+        expect(not_participating_msg[:data][:data]).to eq(
+          user_ids: [user_3.id],
+          text:
+            I18n.t("chat.mention_warning.without_membership", first_identifier: user_3.username),
+          message_id: msg.id,
+        )
       end
 
       it "cannot invite chat user without channel membership if they are ignoring the user who created the message" do
@@ -539,11 +560,15 @@ describe Chat::Notifier do
 
         not_participating_msg = messages.first
 
-        expect(not_participating_msg).to be_present
-        expect(not_participating_msg.data[:cannot_see]).to be_empty
-        not_participating_users =
-          not_participating_msg.data[:without_membership].map { |u| u["id"] }
-        expect(not_participating_users).to contain_exactly(user_3.id)
+        expect(not_participating_msg[:data][:type].to_sym).to eq(:notice)
+        expect(not_participating_msg[:data][:text_content]).to be_nil
+        expect(not_participating_msg[:data][:notice_type].to_sym).to eq(:mention_without_membership)
+        expect(not_participating_msg[:data][:data]).to eq(
+          user_ids: [user_3.id],
+          text:
+            I18n.t("chat.mention_warning.without_membership", first_identifier: user_3.username),
+          message_id: msg.id,
+        )
       end
 
       it "can invite other group members to channel" do
@@ -564,11 +589,15 @@ describe Chat::Notifier do
 
         not_participating_msg = messages.first
 
-        expect(not_participating_msg).to be_present
-        expect(not_participating_msg.data[:cannot_see]).to be_empty
-        not_participating_users =
-          not_participating_msg.data[:without_membership].map { |u| u["id"] }
-        expect(not_participating_users).to contain_exactly(user_3.id)
+        expect(not_participating_msg[:data][:type].to_sym).to eq(:notice)
+        expect(not_participating_msg[:data][:text_content]).to be_nil
+        expect(not_participating_msg[:data][:notice_type].to_sym).to eq(:mention_without_membership)
+        expect(not_participating_msg[:data][:data]).to eq(
+          user_ids: [user_3.id],
+          text:
+            I18n.t("chat.mention_warning.without_membership", first_identifier: user_3.username),
+          message_id: msg.id,
+        )
       end
 
       it "cannot invite a member of a group who is ignoring the user who created the message" do
@@ -634,9 +663,11 @@ describe Chat::Notifier do
           end
 
         too_many_members_msg = messages.first
-        expect(too_many_members_msg).to be_present
-        too_many_members = too_many_members_msg.data[:groups_with_too_many_members]
-        expect(too_many_members).to contain_exactly(group.name)
+
+        expect(too_many_members_msg[:data][:type].to_sym).to eq(:notice)
+        expect(too_many_members_msg[:data][:text_content]).to eq(
+          I18n.t("chat.mention_warning.too_many_members", first_identifier: group.name),
+        )
       end
 
       it "sends a message to the client signaling the group doesn't allow mentions" do
@@ -651,9 +682,11 @@ describe Chat::Notifier do
           end
 
         mentions_disabled_msg = messages.first
-        expect(mentions_disabled_msg).to be_present
-        mentions_disabled = mentions_disabled_msg.data[:group_mentions_disabled]
-        expect(mentions_disabled).to contain_exactly(group.name)
+
+        expect(mentions_disabled_msg[:data][:type].to_sym).to eq(:notice)
+        expect(mentions_disabled_msg[:data][:text_content]).to eq(
+          I18n.t("chat.mention_warning.group_mentions_disabled", first_identifier: group.name),
+        )
       end
     end
   end

@@ -1,6 +1,7 @@
 import { inject as service } from "@ember/service";
 import { Promise, all } from "rsvp";
 import {
+  changeNewListSubset,
   changeSort,
   queryParams,
   resetParams,
@@ -19,6 +20,7 @@ import PreloadStore from "discourse/lib/preload-store";
 
 class AbstractCategoryRoute extends DiscourseRoute {
   @service composer;
+  @service router;
 
   queryParams = queryParams;
 
@@ -48,7 +50,7 @@ class AbstractCategoryRoute extends DiscourseRoute {
 
   afterModel(model, transition) {
     if (!model) {
-      this.replaceWith("/404");
+      this.router.replaceWith("/404");
       return;
     }
 
@@ -62,10 +64,11 @@ class AbstractCategoryRoute extends DiscourseRoute {
     ) {
       // TODO: avoid throwing away preload data by redirecting on the server
       PreloadStore.getAndRemove("topic_list");
-      return this.replaceWith(
+      this.router.replaceWith(
         "discovery.categoryNone",
         modelParams.category_slug_path_with_id
       );
+      return;
     }
 
     this._setupNavigation(category);
@@ -216,6 +219,11 @@ class AbstractCategoryRoute extends DiscourseRoute {
   @action
   changeSort(sortBy) {
     changeSort.call(this, sortBy);
+  }
+
+  @action
+  changeNewListSubset(subset) {
+    changeNewListSubset.call(this, subset);
   }
 
   @action

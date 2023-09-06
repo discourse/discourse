@@ -11,35 +11,38 @@ import {
 } from "discourse/routes/build-private-messages-route";
 
 // Lists of topics on a user's page.
-export default Controller.extend(BulkTopicSelection, {
-  hideCategory: false,
-  showPosters: false,
-  channel: null,
-  tagsForUser: null,
-  incomingCount: reads("pmTopicTrackingState.newIncoming.length"),
+export default class UserTopicsListController extends Controller.extend(
+  BulkTopicSelection
+) {
+  hideCategory = false;
+  showPosters = false;
+  channel = null;
+  tagsForUser = null;
+
+  @reads("pmTopicTrackingState.newIncoming.length") incomingCount;
 
   @discourseComputed("model.topics.length", "incomingCount")
   noContent(topicsLength, incomingCount) {
     return topicsLength === 0 && incomingCount === 0;
-  },
+  }
 
   @discourseComputed("filter", "model.topics.length")
   showResetNew(filter, hasTopics) {
     return filter === NEW_FILTER && hasTopics;
-  },
+  }
 
   @discourseComputed("filter", "model.topics.length")
   showDismissRead(filter, hasTopics) {
     return filter === UNREAD_FILTER && hasTopics;
-  },
+  }
 
   subscribe() {
     this.pmTopicTrackingState.trackIncoming(this.inbox, this.filter);
-  },
+  }
 
   unsubscribe() {
     this.pmTopicTrackingState.stopIncomingTracking();
-  },
+  }
 
   @action
   resetNew() {
@@ -62,22 +65,22 @@ export default Controller.extend(BulkTopicSelection, {
         this.send("refresh");
       }
     });
-  },
+  }
 
   @action
   loadMore() {
     this.model.loadMore();
-  },
+  }
 
   @action
   showInserted(event) {
     event?.preventDefault();
     this.model.loadBefore(this.pmTopicTrackingState.newIncoming);
     this.pmTopicTrackingState.resetIncomingTracking();
-  },
+  }
 
   @action
   refresh() {
     this.send("triggerRefresh");
-  },
-});
+  }
+}

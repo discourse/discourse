@@ -245,7 +245,6 @@ lt:
       few: "dar %{count} atsakymai"
       many: "dar %{count} atsakymų"
       other: "dar %{count} atsakymų"
-    loading: "Kraunama diskusija..."
     permalink: "Nuoroda"
     in_reply_to: "▶ %{username}"
     replies:
@@ -1322,7 +1321,6 @@ lt:
     enable_safe_mode: "Leisti vartotojams įjungti saugųjį režimą, kad būtų derinami papildiniai."
     rate_limit_create_topic: "Sukūrę temą, vartotojai turi palaukti (n) sekundžių prieš kurdami kitą temą."
     rate_limit_create_post: "Po paskelbimo, vartotojai turi palaukti (n) sekundžių prieš kurdami kitą įrašą."
-    rate_limit_new_user_create_topic: "Sukūrę temą, nauji vartotojai, prieš sukurdami kitą temą, turi palaukti (n) sekundžių."
     rate_limit_new_user_create_post: "Po paskelbimo nauji vartotojai turi palaukti (n) sekundžių prieš kurdami kitą įrašą."
     max_likes_per_day: "Didžiausias paspaudimų „Patinka“ skaičius vienam vartotojui per dieną."
     max_flags_per_day: "Maksimalus vėliavų skaičius vienam vartotojui per dieną."
@@ -1455,7 +1453,6 @@ lt:
     default_categories_muted: "Kategorijų, kurios yra nutildytos pagal numatytuosius nustatymus, sąrašas."
     default_text_size: "Teksto dydis, kuris pasirenkamas pagal numatytuosius nustatymus"
     default_title_count_mode: "Numatytasis puslapio pavadinimo skaitiklio režimas"
-    allow_user_api_keys: "Leisti generuoti vartotojo API raktus"
     allow_user_api_key_scopes: "Leidžiamų naudotojo API raktų apimčių sąrašas"
     allowed_user_api_auth_redirects: "Leidžiamas vartotojo API raktų autentifikavimo peradresavimo URL. Pakaitos simbolis * gali būti naudojamas norint atitikti bet kurią jo dalį (pvz., www.example.com/*)."
     allowed_user_api_push_urls: "Leidžiami serverio siuntimo naudotojui API URL adresai"
@@ -1583,16 +1580,6 @@ lt:
   admin:
     email:
       sent_test: "išsiųsta!"
-    user:
-      merge_user:
-        updating_username: "Atnaujinamas vartotojo vardas ..."
-        changing_post_ownership: "Keičiama įrašo nuosavybė ..."
-        merging_given_daily_likes: "Sujungiama atsižvelgiant į kasdienius mėgstamus dalykus ..."
-        merging_user_visits: "Vartotojų apsilankymų sujungimas..."
-        updating_site_settings: "Atnaujinami svetainės nustatymai ..."
-        updating_user_stats: "Vartotojo statistikos atnaujinimas..."
-        merging_user_attributes: "Sujungiami naudotojo atributai ..."
-        deleting_source_user: "Ištrinamas šaltinio vartotojas ..."
   user:
     deactivated_by_staff: "Išjungė darbuotojai"
     activated_by_staff: "Aktyvuoja darbuotojai"
@@ -2755,8 +2742,6 @@ lt:
         description: "Atkurkite įrašą, kad visi vartotojai jį matytų."
       delete_single:
         title: "Pašalinti"
-      delete:
-        title: "Ištrinti..."
       delete_and_ignore_replies:
         confirm: "Ar tikrai norite ištrinti ir įrašo atsakymus?"
       delete_and_agree_replies:
@@ -2778,7 +2763,6 @@ lt:
       approve_user:
         title: "Patvirtinti vartotoją"
       reject_user:
-        title: "Ištrinti vartotoją..."
         delete:
           title: "Ištrinti vartotoją"
           description: "Vartotojas bus pašalintas iš forumo."
@@ -2786,7 +2770,6 @@ lt:
           title: "Ištrinti ir blokuoti vartotoją"
       reject:
         title: "Atmesti"
-        bundle_title: "Atmesti..."
       reject_and_suspend:
         title: "Atmesti ir sustabdyti vartotoją"
       reject_and_silence:

@@ -150,7 +150,6 @@ et:
     more_replies:
       one: "veel %{count} vastus"
       other: "veel %{count} vastust"
-    loading: "Laen arutelu..."
     permalink: "Püsilink"
     imported_from: "See on kaasnev vestlusteema originaalsisestusele %{link}"
     in_reply_to: "▶ %{username}"
@@ -1063,7 +1062,6 @@ et:
       approve_user:
         title: "Kiida kasutaja heaks"
       reject_user:
-        title: "Kustuta kasutaja..."
         delete:
           title: "Kustuta kasutaja"
       reject:

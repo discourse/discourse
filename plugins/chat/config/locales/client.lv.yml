@@ -6,7 +6,13 @@
 
 lv:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Vienmēr"
+          never: "Nekad"
     chat:
+      deleted_chat_username: dzēsts
       create: "Izveidot"
       cancel: "Atcelt"
       channel_settings:
@@ -26,8 +32,6 @@ lv:
       flag: "Sūdzība"
       join: "Pievienojieties"
       last_visit: "pēdējais apmeklējums"
-      mention_warning:
-        dismiss: "nerādīt"
       reply: "Atbilde"
       edit: "Rediģēt"
       rebake_message: "Pārbūvēt HTML"

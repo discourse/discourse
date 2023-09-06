@@ -15,7 +15,7 @@ class Chat::Api::DirectMessagesController < Chat::ApiController
       end
       on_model_not_found(:target_users) { raise ActiveRecord::RecordNotFound }
       on_failed_policy(:satisfies_dms_max_users_limit) do |policy|
-        raise Discourse::InvalidParameters.new(:target_usernames, policy.reason)
+        render_json_dump({ error: policy.reason }, status: 400)
       end
       on_failed_policy(:actor_allows_dms) do
         render_json_error(I18n.t("chat.errors.actor_disallowed_dms"))

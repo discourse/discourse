@@ -1,8 +1,8 @@
 <DButton
-  @class="btn-primary"
   @action={{route-action "new"}}
   @icon="plus"
   @label="admin.api.new_key"
+  class="btn-primary"
 />
 
 {{#if this.model}}
@@ -56,18 +56,16 @@
               />
               {{#if k.revoked_at}}
                 <DButton
-                  @action={{action "undoRevokeKey"}}
-                  @actionParam={{k}}
+                  @action={{fn this.undoRevokeKey k}}
                   @icon="undo"
                   @title="admin.api.undo_revoke"
                 />
               {{else}}
                 <DButton
-                  @class="btn-danger"
-                  @action={{action "revokeKey"}}
-                  @actionParam={{k}}
+                  @action={{fn this.revokeKey k}}
                   @icon="times"
                   @title="admin.api.revoke"
+                  class="btn-danger"
                 />
               {{/if}}
             </td>

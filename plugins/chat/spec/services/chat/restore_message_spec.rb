@@ -58,7 +58,7 @@ RSpec.describe Chat::RestoreMessage do
 
         it "does not update the channel last_message_id if the message is not the last one in the channel" do
           next_message = Fabricate(:chat_message, chat_channel: message.chat_channel)
-          expect(message.chat_channel.reload.last_message_id).to eq(next_message.id)
+          message.chat_channel.update!(last_message: next_message)
           result
           expect(message.chat_channel.reload.last_message_id).to eq(next_message.id)
         end
@@ -97,10 +97,10 @@ RSpec.describe Chat::RestoreMessage do
           end
 
           it "does not update the thread last_message_id if the message is not the last one in the channel" do
-            next_message = Fabricate(:chat_message, thread: message.thread)
-            expect(message.thread.reload.last_message_id).to eq(next_message.id)
-            result
-            expect(message.thread.reload.last_message_id).to eq(next_message.id)
+            next_message =
+              Fabricate(:chat_message, thread: message.thread, chat_channel: message.chat_channel)
+            message.thread.update!(last_message: next_message)
+            expect { result }.not_to change { message.thread.reload.last_message }
           end
         end
       end

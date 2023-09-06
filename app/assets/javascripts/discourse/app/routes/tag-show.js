@@ -24,6 +24,8 @@ const ALL = "all";
 
 export default DiscourseRoute.extend({
   composer: service(),
+  router: service(),
+  currentUser: service(),
   navMode: "latest",
 
   queryParams,
@@ -57,7 +59,7 @@ export default DiscourseRoute.extend({
     const filterType = this.navMode.split("/")[0];
 
     let tagNotification;
-    if (tag && tag.id !== NONE && this.currentUser) {
+    if (tag && tag.id !== NONE && this.currentUser && !additionalTags) {
       // If logged in, we should get the tag's user settings
       tagNotification = await this.store.find(
         "tagNotification",
@@ -98,7 +100,7 @@ export default DiscourseRoute.extend({
     ) {
       // TODO: avoid throwing away preload data by redirecting on the server
       PreloadStore.getAndRemove("topic_list");
-      return this.replaceWith(
+      return this.router.replaceWith(
         "tags.showCategoryNone",
         params.category_slug_path_with_id,
         tagId
@@ -246,10 +248,11 @@ export default DiscourseRoute.extend({
     const categoryId = controller.category?.id;
 
     if (categoryId) {
-      options = Object.assign({}, options, {
+      options = {
+        ...options,
         categoryId,
         includeSubcategories: !controller.noSubcategories,
-      });
+      };
     }
 
     controller.send("dismissRead", operationType, options);

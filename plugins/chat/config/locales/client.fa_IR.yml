@@ -10,6 +10,9 @@ fa_IR:
       site_settings:
         categories:
           chat: گفتگو
+        chat_separate_sidebar_mode:
+          always: "همیشه"
+          never: "هرگز"
       logs:
         staff_actions:
           actions:
@@ -20,6 +23,7 @@ fa_IR:
       chat_channels_count: "کانال‌های گفتگو"
       chat_users_count: "کاربران گفتگو"
     chat:
+      deleted_chat_username: حذف شد
       dates:
         time_tiny: "HH:mm"
       all_loaded: "نمایش همه پیام‌ها"
@@ -89,7 +93,6 @@ fa_IR:
       join: "عضو شدن"
       last_visit: "آخرین بازدید"
       mention_warning:
-        dismiss: "رد کردن"
         invitations_sent:
           one: "دعوت‌نامه ارسال شد"
           other: "دعوت‌نامه‌ها ارسال شد"
@@ -354,3 +357,7 @@ fa_IR:
       sections:
         chat:
           title: گفتگو
+    sidebar:
+      panels:
+        chat:
+          label: "گفتگو"

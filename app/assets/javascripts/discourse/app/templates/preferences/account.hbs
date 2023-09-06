@@ -8,14 +8,20 @@
     <label class="control-label" id="profile-picture">{{i18n
         "user.avatar.title"
       }}</label>
+    <input
+      type="hidden"
+      id="user-avatar-uploads"
+      data-custom-avatar-upload-id={{this.model.custom_avatar_upload_id}}
+      data-system-avatar-upload-id={{this.model.system_avatar_upload_id}}
+    />
     <div class="controls">
       {{! we want the "huge" version even though we're downsizing it in CSS }}
       {{bound-avatar this.model "huge"}}
       <DButton
-        @action={{route-action "showAvatarSelector"}}
-        @actionParam={{this.model}}
-        @class="btn-default pad-left"
+        @action={{fn (route-action "showAvatarSelector") this.model}}
         @icon="pencil-alt"
+        id="edit-avatar"
+        class="btn-default pad-left"
       />
     </div>
   </div>
@@ -98,12 +104,11 @@
     {{else}}
       <div class="controls">
         <DButton
-          @action={{route-action "checkEmail"}}
-          @class="btn-default"
-          @actionParam={{this.model}}
+          @action={{fn (route-action "checkEmail") this.model}}
           @title="admin.users.check_email.title"
           @icon="envelope"
           @label="admin.users.check_email.text"
+          class="btn-default"
         />
       </div>
     {{/if}}
@@ -131,12 +136,14 @@
                 <td>
                   {{#if authProvider.method.can_revoke}}
                     <DButton
-                      @action={{action "revokeAccount"}}
-                      @actionParam={{authProvider.account}}
+                      @action={{fn
+                        (action "revokeAccount")
+                        authProvider.account
+                      }}
                       @title="user.associated_accounts.revoke"
-                      @class="btn-danger no-text"
                       @icon="trash-alt"
                       @disabled={{get this.revoking authProvider.method.name}}
+                      class="btn-danger no-text"
                     />
                   {{/if}}
                 </td>
@@ -147,12 +154,14 @@
                 <td colspan="2">
                   {{#if authProvider.method.can_connect}}
                     <DButton
-                      @action={{action "connectAccount"}}
-                      @actionParam={{authProvider.method}}
+                      @action={{fn
+                        (action "connectAccount")
+                        authProvider.method
+                      }}
                       @label="user.associated_accounts.connect"
-                      @class="btn-default"
                       @icon="plug"
                       @disabled={{this.disableConnectButtons}}
+                      class="btn-default"
                     />
                   {{else}}
                     {{i18n "user.associated_accounts.not_connected"}}
@@ -166,8 +175,7 @@
     {{else}}
       <div class="controls">
         <DButton
-          @action={{route-action "checkEmail"}}
-          @actionParam={{this.model}}
+          @action={{fn (route-action "checkEmail") this.model}}
           @title="admin.users.check_email.title"
           @icon="envelope"
           @label="admin.users.check_email.text"
@@ -244,10 +252,9 @@
         <span class="static">{{i18n "user.status.not_set"}}</span>
       {{/if}}
       <DButton
-        @action={{action "showUserStatusModal"}}
-        @actionParam={{this.newStatus}}
-        @class="btn-default btn-small pad-left"
+        @action={{fn (action "showUserStatusModal") this.newStatus}}
         @icon="pencil-alt"
+        class="btn-default btn-small pad-left"
       />
     </div>
   </div>
@@ -278,9 +285,9 @@
     <div class="controls">
       <DButton
         @action={{action "exportUserArchive"}}
-        @class="btn-default btn-request-archive"
         @label="user.download_archive.button_text"
         @icon="download"
+        class="btn-default btn-request-archive"
       />
     </div>
     <div class="instructions">
@@ -322,9 +329,9 @@
       <DButton
         @action={{action "delete"}}
         @disabled={{this.deleteDisabled}}
-        @class="btn-danger"
         @icon="far-trash-alt"
         @label="user.delete_account"
+        class="btn-danger"
       />
     </div>
   </div>

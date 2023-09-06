@@ -99,6 +99,23 @@
   />
 </div>
 
+<div
+  class="control-group chat-setting controls-dropdown"
+  data-setting-name="user_chat_separate_sidebar_mode"
+>
+  <label for="user_chat_separate_sidebar_mode">
+    {{i18n "chat.separate_sidebar_mode.title"}}
+  </label>
+
+  <ComboBox
+    @valueProperty="value"
+    @content={{this.chatSeparateSidebarModeOptions}}
+    @value={{this.chatSeparateSidebarMode}}
+    @id="user_chat_separate_sidebar_mode"
+    @onChange={{action (mut this.model.user_option.chat_separate_sidebar_mode)}}
+  />
+</div>
+
 <SaveControls
   @id="user_chat_preference_save"
   @model={{this.model}}

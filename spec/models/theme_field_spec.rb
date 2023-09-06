@@ -255,14 +255,14 @@ HTML
 
     # All together
     expect(theme.javascript_cache.content).to include(
-      "define(\"discourse/theme-#{theme.id}/discourse/templates/discovery\", [\"exports\", \"@ember/template-factory\"]",
+      "define(\"discourse/theme-#{theme.id}/discourse/templates/discovery\", [\"exports\", ",
     )
     expect(theme.javascript_cache.content).to include('addRawTemplate("discovery"')
     expect(theme.javascript_cache.content).to include(
-      "define(\"discourse/theme-#{theme.id}/controllers/discovery\"",
+      "define(\"discourse/theme-#{theme.id}/discourse/controllers/discovery\"",
     )
     expect(theme.javascript_cache.content).to include(
-      "define(\"discourse/theme-#{theme.id}/controllers/discovery-2\"",
+      "define(\"discourse/theme-#{theme.id}/discourse/controllers/discovery-2\"",
     )
     expect(theme.javascript_cache.content).to include("const settings =")
     expect(theme.javascript_cache.content).to include(

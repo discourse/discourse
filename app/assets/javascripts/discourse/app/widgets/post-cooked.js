@@ -9,7 +9,10 @@ import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { escape } from "pretty-text/sanitizer";
 import domFromString from "discourse-common/lib/dom-from-string";
 import getURL from "discourse-common/lib/get-url";
-import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
+import {
+  destroyUserStatusOnMentions,
+  updateUserStatusOnMention,
+} from "discourse/lib/update-user-status-on-mention";
 
 let _beforeAdoptDecorators = [];
 let _afterAdoptDecorators = [];
@@ -36,7 +39,6 @@ function createDetachedElement(nodeName) {
 
 export default class PostCooked {
   originalQuoteContents = null;
-  tippyInstances = [];
 
   constructor(attrs, decoratorHelper, currentUser) {
     this.attrs = attrs;
@@ -77,7 +79,7 @@ export default class PostCooked {
 
   destroy() {
     this._stopTrackingMentionedUsersStatus();
-    this._destroyTippyInstances();
+    destroyUserStatusOnMentions();
   }
 
   _decorateAndAdopt(cooked) {
@@ -382,14 +384,8 @@ export default class PostCooked {
     }
   }
 
-  _destroyTippyInstances() {
-    this.tippyInstances.forEach((instance) => {
-      instance.destroy();
-    });
-  }
-
   _rerenderUserStatusOnMentions() {
-    this._destroyTippyInstances();
+    destroyUserStatusOnMentions();
     this._post()?.mentioned_users?.forEach((user) =>
       this._rerenderUserStatusOnMention(this.cookedDiv, user)
     );
@@ -400,7 +396,7 @@ export default class PostCooked {
     const mentions = postElement.querySelectorAll(`a.mention[href="${href}"]`);
 
     mentions.forEach((mention) => {
-      updateUserStatusOnMention(mention, user.status, this.tippyInstances);
+      updateUserStatusOnMention(mention, user.status);
     });
   }
 

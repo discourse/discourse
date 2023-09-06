@@ -36,18 +36,18 @@
 
       {{#if this.messageInteractor.canInteractWithMessage}}
         <DButton
-          @class="btn-flat react-btn"
           @action={{this.messageInteractor.openEmojiPicker}}
           @icon="discourse-emojis"
           @title="chat.react"
           @forwardEvent={{true}}
+          class="btn-flat react-btn"
         />
       {{/if}}
 
       {{#if this.messageInteractor.canBookmark}}
         <DButton
-          @class="btn-flat bookmark-btn"
           @action={{this.messageInteractor.toggleBookmark}}
+          class="btn-flat bookmark-btn"
         >
           <BookmarkIcon @bookmark={{this.message.bookmark}} />
         </DButton>
@@ -55,10 +55,10 @@
 
       {{#if this.messageInteractor.canReply}}
         <DButton
-          @class="btn-flat reply-btn"
           @action={{this.messageInteractor.reply}}
           @icon="reply"
           @title="chat.reply"
+          class="btn-flat reply-btn"
         />
       {{/if}}
 

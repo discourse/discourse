@@ -90,10 +90,7 @@ export default class DiscoursePopover extends Component {
       return null;
     }
 
-    const instance = tippy(
-      target,
-      Object.assign({}, baseOptions, this.options || {})
-    );
+    const instance = tippy(target, { ...baseOptions, ...(this.options || {}) });
 
     return instance?.id ? instance : null;
   }

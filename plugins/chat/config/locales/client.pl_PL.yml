@@ -10,6 +10,10 @@ pl_PL:
       site_settings:
         categories:
           chat: Czat
+        chat_separate_sidebar_mode:
+          always: "Zawsze"
+          fullscreen: "Gdy czat jest w trybie pełnoekranowym"
+          never: "Nigdy"
       logs:
         staff_actions:
           actions:
@@ -26,6 +30,7 @@ pl_PL:
       chat_channels_count: "Kanały czatu"
       chat_users_count: "Użytkownicy czatu"
     chat:
+      deleted_chat_username: usunięte
       dates:
         time_tiny: "h:mm"
       all_loaded: "Pokazuje wszystkie wiadomości"
@@ -110,6 +115,8 @@ pl_PL:
         all_new: "Wszystkie nowe wiadomości"
         dm_and_mentions: "Bezpośrednie wiadomości i wzmianki"
         never: "Nigdy"
+      separate_sidebar_mode:
+        title: "Pokaż oddzielne tryby paska bocznego dla forum i czatu"
       enable: "Włącz czat"
       flag: "Oflaguj"
       emoji: "Wstaw emoji"
@@ -130,37 +137,13 @@ pl_PL:
           many: "Ostatnie %{count} godzin"
           other: "Ostatnie %{count} godzin"
       mention_warning:
-        dismiss: "odrzuć"
-        cannot_see: "%{username} nie ma dostępu do tego kanału i nie został powiadomiony."
-        cannot_see_multiple:
-          one: "%{username} i %{count} inny użytkownik nie ma dostępu do tego kanału i nie został powiadomiony."
-          few: "%{username} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
-          many: "%{username} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
-          other: "%{username} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
         invitations_sent:
           one: "Zaproszenie wysłane"
           few: "Zaproszenia wysłane"
           many: "Zaproszenia wysłane"
           other: "Zaproszenia wysłane"
         invite: "Zaproś do kanału"
-        without_membership: "%{username} nie dołączył(a) do tego kanału."
-        without_membership_multiple:
-          one: "%{username} i %{count} inny użytkownik nie dołączył do tego kanału."
-          few: "%{username} i %{count} inni użytkownicy nie dołączyli do tego kanału."
-          many: "%{username} i %{count} inni użytkownicy nie dołączyli do tego kanału."
-          other: "%{username} i %{count} inni użytkownicy nie dołączyli do tego kanału."
-        group_mentions_disabled: "%{group_name} nie zezwala na wzmianki."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} i %{count} inna grupa nie zezwala na wzmianki."
-          few: "%{group_name} i %{count} inne grupy nie zezwalają na wzmianki."
-          many: "%{group_name} i %{count} inne grupy nie zezwalają na wzmianki."
-          other: "%{group_name} i %{count} inne grupy nie zezwalają na wzmianki."
-        too_many_members: "%{group_name} ma zbyt wielu członków. Nikt nie został powiadomiony."
-        too_many_members_multiple:
-          one: "%{group_name} i %{count} inna grupa ma zbyt wielu członków. Nikt nie został powiadomiony."
-          few: "%{group_name} i %{count} inne grupy mają zbyt wielu członków. Nikt nie został powiadomiony."
-          many: "%{group_name} i %{count} innych grup ma zbyt wielu członków. Nikt nie został powiadomiony."
-          other: "%{group_name} i %{count} innych grup ma zbyt wielu członków. Nikt nie został powiadomiony."
+        channel_wide_mentions_disallowed: "Wzmianki @here i @all są wyłączone na tym kanale."
         groups:
           header:
             some: "Niektórzy użytkownicy nie zostaną powiadomieni"
@@ -488,7 +471,7 @@ pl_PL:
         title: "Czat"
         export_messages:
           title: "Eksportuj wiadomości czatu"
-          description: "Eksport jest obecnie ograniczony do 10 000 najnowszych wiadomości z ostatnich 6 miesięcy."
+          description: "Spowoduje to wyeksportowanie wszystkich wiadomości ze wszystkich kanałów."
           create_export: "Utwórz eksport"
           export_has_started: "Eksport rozpoczął się. Otrzymasz wiadomość prywatną, gdy będzie gotowy."
       direct_messages:
@@ -598,7 +581,6 @@ pl_PL:
       thread:
         title: "Tytuł"
         view_thread: Zobacz wątek
-        default_title: "Wątek"
         replies:
           one: "%{count} odpowiedź"
           few: "%{count} odpowiedzi"
@@ -672,6 +654,9 @@ pl_PL:
       types:
         chat_reviewable_message:
           title: "Oflagowana wiadomość na czacie"
+        reviewable_chat_message:
+          title: "Oflagowana wiadomość na czacie"
+          noun: "wiadomość na czacie"
     keyboard_shortcuts_help:
       chat:
         title: "Czat"
@@ -709,3 +694,7 @@ pl_PL:
       sections:
         chat:
           title: Czat
+    sidebar:
+      panels:
+        chat:
+          label: "Czat"

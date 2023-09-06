@@ -25,10 +25,7 @@
   <div class="navigation-controls">
     {{#if this.site.mobileView}}
       {{#if this.currentUser.admin}}
-        <BulkSelectToggle
-          @parentController={{"user-topics-list"}}
-          @tagName=""
-        />
+        <BulkSelectToggle @parentController="user-topics-list" @tagName="" />
       {{/if}}
     {{/if}}
 
@@ -36,12 +33,16 @@
 
     {{#if this.showNewPM}}
       <DButton
-        @class="btn-primary new-private-message"
         @action={{route-action "composePrivateMessage"}}
         @icon="envelope"
         @label="user.new_private_message"
+        class="btn-primary new-private-message"
       />
     {{/if}}
+    <PluginOutlet
+      @name="user-messages-controls-bottom"
+      @outletArgs={{hash showNewPM=this.showNewPM}}
+    />
   </div>
 </div>
 

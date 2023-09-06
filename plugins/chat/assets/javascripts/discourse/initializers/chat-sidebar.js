@@ -11,6 +11,8 @@ import { decorateUsername } from "discourse/helpers/decorate-username-selector";
 import { until } from "discourse/lib/formatter";
 import { inject as service } from "@ember/service";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
+import getURL from "discourse-common/lib/get-url";
+import { initSidebarState } from "discourse/plugins/chat/discourse/lib/init-sidebar-state";
 
 export default {
   name: "chat-sidebar",
@@ -22,6 +24,20 @@ export default {
     }
 
     this.siteSettings = container.lookup("service:site-settings");
+
+    withPluginApi("1.8.0", (api) => {
+      api.addSidebarPanel(
+        (BaseCustomSidebarPanel) =>
+          class ChatSidebarPanel extends BaseCustomSidebarPanel {
+            key = "chat";
+            switchButtonLabel = I18n.t("sidebar.panels.chat.label");
+            switchButtonIcon = "d-chat";
+            switchButtonDefaultUrl = getURL("/chat");
+          }
+      );
+
+      initSidebarState(api, api.getCurrentUser());
+    });
 
     withPluginApi("1.3.0", (api) => {
       if (this.siteSettings.enable_public_channels) {
@@ -180,7 +196,8 @@ export default {
             };
 
             return SidebarChatChannelsSection;
-          }
+          },
+          "chat"
         );
       }
 
@@ -193,7 +210,10 @@ export default {
               this.chatService = chatService;
 
               if (this.oneOnOneMessage) {
-                this.channel.chatable.users[0].trackStatus();
+                const user = this.channel.chatable.users[0];
+                if (user.username !== I18n.t("chat.deleted_chat_username")) {
+                  user.trackStatus();
+                }
               }
             }
 
@@ -414,7 +434,8 @@ export default {
           };
 
           return SidebarChatDirectMessagesSection;
-        }
+        },
+        "chat"
       );
     });
   },

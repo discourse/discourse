@@ -34,11 +34,10 @@
         {{#each this.messageInteractor.secondaryActions as |button|}}
           <li class="chat-message-action-item" data-id={{button.id}}>
             <DButton
-              @class="chat-message-action"
               @translatedLabel={{button.name}}
               @icon={{button.icon}}
-              @actionParam={{button.id}}
-              @action={{action this.actAndCloseMenu button.id}}
+              @action={{fn this.actAndCloseMenu button.id}}
+              class="chat-message-action"
             />
           </li>
         {{/each}}
@@ -59,20 +58,20 @@
             {{/each}}
 
             <DButton
-              @class="btn-flat react-btn"
               @action={{this.openEmojiPicker}}
               @icon="discourse-emojis"
               @title="chat.react"
               @forwardEvent={{true}}
               data-id="react"
+              class="btn-flat react-btn"
             />
           {{/if}}
 
           {{#if this.messageInteractor.canBookmark}}
             <DButton
-              @class="btn-flat bookmark-btn"
-              @action={{action this.actAndCloseMenu "toggleBookmark"}}
+              @action={{fn this.actAndCloseMenu "toggleBookmark"}}
               data-id="bookmark"
+              class="btn-flat bookmark-btn"
             >
               <BookmarkIcon @bookmark={{this.message.bookmark}} />
             </DButton>
@@ -80,11 +79,11 @@
 
           {{#if this.messageInteractor.canReply}}
             <DButton
-              @class="chat-message-action reply-btn btn-flat"
-              @action={{action this.actAndCloseMenu "reply"}}
+              @action={{fn this.actAndCloseMenu "reply"}}
               @icon="reply"
               @title="chat.reply"
               data-id="reply"
+              class="chat-message-action reply-btn btn-flat"
             />
           {{/if}}
         </div>

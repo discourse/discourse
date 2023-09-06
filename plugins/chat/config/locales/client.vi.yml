@@ -6,7 +6,13 @@
 
 vi:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Luôn luôn"
+          never: "Không bao giờ"
     chat:
+      deleted_chat_username: đã bị xóa
       create: "Tạo"
       cancel: "Huỷ"
       channel_settings:
@@ -29,7 +35,6 @@ vi:
       summarization:
         summarize: "Tóm tắt"
       mention_warning:
-        dismiss: "bỏ qua"
         groups:
           header:
             some: "Một số người dùng sẽ không được thông báo"

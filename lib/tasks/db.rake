@@ -216,8 +216,12 @@ task "multisite:migrate" => %w[db:load_config environment set_locale] do |_, arg
   end
 end
 
-# we need to run seed_fu every time we run rake db:migrate
-task "db:migrate" => %w[load_config environment set_locale] do |_, args|
+task "db:migrate" => %w[
+       load_config
+       environment
+       set_locale
+       assets:precompile:js_processor
+     ] do |_, args|
   DistributedMutex.synchronize(
     "db_migration",
     redis: Discourse.redis.without_namespace,

@@ -37,36 +37,36 @@ RSpec.describe "Reply to message - smoke", type: :system do
 
         expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(1)
 
-        expect(thread_page).to have_message(text: "user1reply")
+        expect(thread_page.messages).to have_message(text: "user1reply")
       end
 
       using_session(:user_2) do |session|
-        expect(thread_page).to have_message(text: "user1reply")
+        expect(thread_page.messages).to have_message(text: "user1reply")
         expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(1)
 
         thread_page.fill_composer("user2reply")
         thread_page.click_send_message
 
-        expect(thread_page).to have_message(text: "user2reply")
+        expect(thread_page.messages).to have_message(text: "user2reply")
         expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(2)
 
         refresh
 
-        expect(thread_page).to have_message(text: "user1reply")
-        expect(thread_page).to have_message(text: "user2reply")
+        expect(thread_page.messages).to have_message(text: "user1reply")
+        expect(thread_page.messages).to have_message(text: "user2reply")
         expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(2)
 
         session.quit
       end
 
       using_session(:user_1) do |session|
-        expect(thread_page).to have_message(text: "user2reply")
+        expect(thread_page.messages).to have_message(text: "user2reply")
         expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(2)
 
         refresh
 
-        expect(thread_page).to have_message(text: "user1reply")
-        expect(thread_page).to have_message(text: "user2reply")
+        expect(thread_page.messages).to have_message(text: "user1reply")
+        expect(thread_page.messages).to have_message(text: "user2reply")
         expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(2)
 
         session.quit

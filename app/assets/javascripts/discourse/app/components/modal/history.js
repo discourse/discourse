@@ -203,7 +203,7 @@ export default class History extends Component {
         }
         this.args.closeModal();
       })
-      .catch(function (e) {
+      .catch((e) => {
         if (e.jqXHR.responseJSON?.errors?.[0]) {
           this.dialog.alert(e.jqXHR.responseJSON.errors[0]);
         }

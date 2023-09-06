@@ -28,6 +28,14 @@ RSpec.describe UploadSecurity do
           expect(security.should_be_secure?).to eq(true)
         end
 
+        context "if secure_uploads_pm_only" do
+          before { SiteSetting.secure_uploads_pm_only = true }
+
+          it "returns false" do
+            expect(security.should_be_secure?).to eq(false)
+          end
+        end
+
         context "when uploading in public context" do
           describe "for a public type badge_image" do
             let(:type) { "badge_image" }

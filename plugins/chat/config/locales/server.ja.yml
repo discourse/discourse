@@ -6,7 +6,7 @@
 
 ja:
   site_settings:
-    chat_enabled: "チャットプラグインを有効にします。"
+    chat_enabled: "チャットを有効にする."
     enable_public_channels: "カテゴリに基づいて公開チャンネルを有効にします。"
     chat_allowed_groups: "これらのグループのユーザーがチャットできます。スタッフはいつでもチャットにアクセスできることに注意してください。"
     chat_channel_retention_days: "通常のチャンネルのチャットメッセージは、この日数の間保持されます。メッセージを永久に保持するには、'0' に設定します。"
@@ -113,15 +113,11 @@ ja:
         agree_and_delete:
           title: "メッセージを削除"
           description: "ユーザーが閲覧できないようにメッセージを削除します。"
-        delete_and_agree:
-          title: "メッセージを削除"
         disagree_and_restore:
           title: "同意せずにメッセージを復元"
           description: "すべてのユーザーが閲覧できるようにメッセージを復元します。"
         disagree:
           title: "同意しない"
-        ignore:
-          title: "無視"
       direct_messages:
         transcript_title: "%{channel_name} の過去のメッセージのトランスクリプト"
         transcript_body: "より文脈を掴みやすいように、この会話の過去のメッセージのトランスクリプトを含めました (最大 10 件)。\n\n%{transcript}"
@@ -135,6 +131,23 @@ ja:
         multi_user: "%{comma_separated_usernames}"
         multi_user_truncated:
           other: "%{comma_separated_usernames} および他 %{count} 人"
+    mention_warning:
+      dismiss: "閉じる"
+      cannot_see: "%{first_identifier} はこのチャンネルにアクセスできないため通知されませんでした。"
+      cannot_see_multiple:
+        other: "%{first_identifier} と他 %{count} 人のユーザーはこのチャンネルにアクセスできないため通知されませんでした。"
+      invitations_sent:
+        other: "招待状を送信しました"
+      invite: "チャンネルに招待する"
+      without_membership: "%{first_identifier} はこのチャンネルに参加していません。"
+      without_membership_multiple:
+        other: "%{first_identifier} と他 %{count} 人のユーザーはこのチャンネルに参加していません。"
+      group_mentions_disabled: "%{first_identifier} はメンションを許可していません。"
+      group_mentions_disabled_multiple:
+        other: "%{first_identifier} と他 %{count} 個のグループはメンションを許可していません。"
+      too_many_members: "%{first_identifier} のメンバーが多すぎます。誰にも通知されませんでした。"
+      too_many_members_multiple:
+        other: "%{first_identifier} と他 %{count} 個のグループのメンバーが多すぎます。誰にも通知されませんでした."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "に非 ASCII 文字が含まれます"

@@ -2,20 +2,20 @@
   <div class="row {{this.containerClass}}">
     {{#if this.showDismissRead}}
       <DButton
-        @class="btn-default dismiss-read"
-        @id={{this.dismissReadId}}
-        @action={{action "dismissReadPosts"}}
+        @action={{this.dismissReadPosts}}
         @translatedLabel={{this.dismissLabel}}
         @title="topics.bulk.dismiss_tooltip"
+        id={{this.dismissReadId}}
+        class="btn-default dismiss-read"
       />
     {{/if}}
     {{#if this.showResetNew}}
       <DButton
-        @class="btn-default dismiss-read"
-        @id={{this.dismissNewId}}
         @action={{this.resetNew}}
         @icon="check"
         @translatedLabel={{this.dismissNewLabel}}
+        id={{this.dismissNewId}}
+        class="btn-default dismiss-read"
       />
     {{/if}}
   </div>

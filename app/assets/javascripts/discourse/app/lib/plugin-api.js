@@ -55,7 +55,10 @@ import { addGlobalNotice } from "discourse/components/global-notice";
 import { addNavItem } from "discourse/models/nav-item";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
-import { addPluginReviewableParam } from "discourse/components/reviewable-item";
+import {
+  addPluginReviewableParam,
+  registerReviewableActionModal,
+} from "discourse/components/reviewable-item";
 import {
   addComposerSaveErrorCallback,
   addPopupMenuOptionsCallback,
@@ -130,7 +133,7 @@ import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-export const PLUGIN_API_VERSION = "1.9.0";
+export const PLUGIN_API_VERSION = "1.10.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -1648,8 +1651,42 @@ class PluginApi {
   addSaveableUserOptionField(fieldName) {
     addSaveableUserOptionField(fieldName);
   }
+
+  /**
+   * Adds additional params to be sent to the reviewable/:id/perform/:action
+   * endpoint for a given reviewable type. This is so plugins can provide more
+   * complex reviewable actions that may depend on a custom modal.
+   *
+   * This is copied from the reviewable model instance when performing an action
+   * on the ReviewableItem component.
+   *
+   * ```
+   * api.addPluginReviewableParam("ReviewablePluginType", "some_param");
+   * ```
+   **/
   addPluginReviewableParam(reviewableType, param) {
     addPluginReviewableParam(reviewableType, param);
+  }
+
+  /**
+   * Registers a mapping between a JavaScript modal component class and a server-side reviewable
+   * action, which is registered via `actions.add` and `build_actions`.
+   *
+   * For more information about modal classes, which are special Ember components used with
+   * the DModal API, see:
+   *
+   * https://meta.discourse.org/t/using-the-dmodal-api-to-render-modal-windows-aka-popups-dialogs-in-discourse/268304.
+   *
+   * @param {String} reviewableAction - The action name, as registered in the server-side.
+   * @param {Class} modalClass - The actual JavaScript class of the modal.
+   *
+   * @example
+   * ```
+   * api.registerReviewableActionModal("approve_category_expert", ExpertGroupChooserModal);
+   * ```
+   **/
+  registerReviewableActionModal(reviewableType, modalClass) {
+    registerReviewableActionModal(reviewableType, modalClass);
   }
 
   /**

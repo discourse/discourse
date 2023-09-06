@@ -1014,6 +1014,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
         "new-panel"
       );
       api.setSidebarPanel("new-panel");
+      api.setSeparatedSidebarMode();
     });
 
     await visit("/");

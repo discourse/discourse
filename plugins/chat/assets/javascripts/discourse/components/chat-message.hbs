@@ -54,17 +54,17 @@
       {{#if this.deletedAndCollapsed}}
         <div class="chat-message-text -deleted">
           <DButton
-            @class="btn-flat chat-message-expand"
             @action={{this.expand}}
             @translatedLabel={{this.deletedMessageLabel}}
+            class="btn-flat chat-message-expand"
           />
         </div>
       {{else if this.hiddenAndCollapsed}}
         <div class="chat-message-text -hidden">
           <DButton
-            @class="btn-flat chat-message-expand"
             @action={{this.expand}}
             @label="chat.hidden"
+            class="btn-flat chat-message-expand"
           />
         </div>
       {{else}}
@@ -103,11 +103,11 @@
 
                   {{#if this.shouldRenderOpenEmojiPickerButton}}
                     <DButton
-                      @class="chat-message-react-btn"
                       @action={{this.messageInteractor.openEmojiPicker}}
                       @icon="discourse-emojis"
                       @title="chat.react"
                       @forwardEvent={{true}}
+                      class="chat-message-react-btn"
                     />
                   {{/if}}
                 </div>
@@ -118,7 +118,6 @@
               @message={{@message}}
               @onRetry={{@resendStagedMessage}}
             />
-            <Chat::Message::MentionWarning @message={{@message}} />
           </div>
 
           {{#if this.showThreadIndicator}}

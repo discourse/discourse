@@ -226,7 +226,6 @@ ca:
     more_replies:
       one: "%{count} resposta més"
       other: "%{count} respostes més "
-    loading: "Carregant la discussió..."
     permalink: "Enllaç permanent "
     imported_from: "Aquesta discussió és derivada de l'entrada original de %{link}"
     in_reply_to: "▶ %{username}"
@@ -1226,8 +1225,6 @@ ca:
     allowed_iframes: "Llista dels prefixos de domini en el codi d'iframe que Discourse pot permetre de manera segura en les publicacions"
     allowed_crawler_user_agents: "Agents d'usuari dels rastrejadors web als quals es permet accedir al lloc web. ATENCIÓ! ESTABLIR AIXÒ IMPEDIRÀ ACTUAR A TOTS ELS RASTREJADORS NO LLISTATS AQUÍ!"
     slow_down_crawler_rate: "Si s'especifica slow_down_crawler_user_agents, aquesta ràtio s'aplicarà a tots els rastrejadors (nombre de segons de retard entre les sol·licituds)."
-    content_security_policy: "Activa Content-Security-Policy (CSP)"
-    content_security_policy_report_only: "Activa Content-Security-Policy-Report-Only"
     content_security_policy_collect_reports: "Habilita la recol·lecció de reports de violació de CSP en /csp_reports"
     invalidate_inactive_admin_email_after_days: "Els comptes d'administrador que no hagin visitat el lloc web en aquest nombre de dies hauran de tornar a validar la seva adreça de correu abans d'iniciar la sessió. 0 per a desactivar-ho."
     top_menu: "Determineu quins elements apareixen en la navegació de la pàgina principal i en quin ordre. Per exemple, latest|new|unread|categories|top|read|posted|bookmarks"
@@ -1304,7 +1301,6 @@ ca:
     enable_safe_mode: "Permet als usuaris entrar en el mode segur per a depurar els connectors (plugins)."
     rate_limit_create_topic: "Després de crear un tema, els usuaris han d'esperar (n) segons abans de crear-ne un altre."
     rate_limit_create_post: "Després de fer una publicació, els usuaris han d'esperar (n) segons abans de fer-ne una altra."
-    rate_limit_new_user_create_topic: "Després de crear un tema, els usuaris nous han d'esperar (n) segons abans de crear-ne un altre"
     rate_limit_new_user_create_post: "Després de fer una publicació, els usuaris nous han d'esperar (n) segons abans de crear-ne una altra."
     max_likes_per_day: "Nombre màxim de 'M'agrada' per usuari i dia."
     max_flags_per_day: "Nombre màxim de banderes per usuari i dia."
@@ -1614,7 +1610,6 @@ ca:
     retain_web_hook_events_period_days: "Nombre de dies per a conservar els registres d'esdeveniments webhook."
     retry_web_hook_events: "Reintenta automàticament quatre vegades els esdeveniments webhook fallits. Els intervals de temps entre els reintents són 1, 5, 25 i 125 minuts."
     revoke_api_keys_days: "Nombre de dies abans que una clau d’API no utilitzada sigui revocada  automàticament (0 per a mai)"
-    allow_user_api_keys: "Permet la generació de claus API d'usuari"
     allow_user_api_key_scopes: "Llista d'àmbits permesos per a les claus d'API d'usuari"
     allowed_user_api_auth_redirects: "URL permès per a la redirecció d'autenticació per a les claus de l'API d'usuari. El símbol de comodí * es pot utilitzar per a fer coincidir qualsevol part de l'URL (p. ex. www.example.com/*)."
     allowed_user_api_push_urls: "Adreces URL permeses per al 'server push' a l'API d'usuari"
@@ -2976,8 +2971,6 @@ ca:
         description: "Restaura la publicació de manera que tots els usuaris puguin veure-la."
       delete_single:
         title: "Suprimeix"
-      delete:
-        title: "Suprimeix ..."
       delete_and_ignore_replies:
         confirm: "Esteu segur que també voleu suprimir les respostes a la publicació?"
       delete_and_agree_replies:
@@ -3000,7 +2993,6 @@ ca:
       approve_user:
         title: "Aprova l'usuari"
       reject_user:
-        title: "Suprimeix l'usuari..."
         delete:
           title: "Suprimeix l'usuari"
           description: "L'usuari serà suprimit del fòrum."

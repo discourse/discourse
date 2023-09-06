@@ -6,7 +6,6 @@
 # Environment Variables (specific to this rake task)
 # => SKIP_LINT                 set to 1 to skip linting (eslint and rubocop)
 # => SKIP_TESTS                set to 1 to skip all tests
-# => SKIP_WIZARD_TESTS         set to 1 to skip wizard tests
 # => SKIP_CORE                 set to 1 to skip core tests (rspec and qunit)
 # => SKIP_PLUGINS              set to 1 to skip plugin tests (rspec and qunit)
 # => SKIP_INSTALL_PLUGINS      comma separated list of plugins you want to skip installing
@@ -187,23 +186,6 @@ task "docker:test" do
             params << "--fail-fast"
             params << "--bisect" if ENV["BISECT"]
             params << "--seed #{ENV["RSPEC_SEED"]}" if ENV["RSPEC_SEED"]
-          end
-
-          if ENV["PARALLEL"]
-            parts = ENV["PARALLEL"].split("/")
-            total = parts[1].to_i
-            subset = parts[0].to_i - 1
-
-            spec_partials = Dir["spec/**/*_spec.rb"].sort.in_groups(total, false)
-            # quick and dirty load balancing
-            if (spec_partials.count > 3)
-              spec_partials[0].concat(spec_partials[total - 1].shift(30))
-              spec_partials[1].concat(spec_partials[total - 2].shift(30))
-            end
-
-            params << spec_partials[subset].join(" ")
-
-            puts "Running spec subset #{subset + 1} of #{total}"
           end
 
           if ENV["USE_TURBO"]

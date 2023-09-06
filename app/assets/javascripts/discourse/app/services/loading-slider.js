@@ -108,13 +108,13 @@ export default class LoadingSlider extends Service.extend(Evented) {
     this.trigger("stateChanged", false);
 
     this.scheduleManager.cancelAll();
-    this.scheduleManager.schedule("afterRender", this.removeClasses);
+    this.scheduleManager.schedule("render", this.removeClasses);
   }
 
   @bind
   setStillLoading() {
     this.stillLoading = true;
-    this.scheduleManager.schedule("afterRender", this.addStillLoadingClass);
+    this.scheduleManager.schedule("render", this.addStillLoadingClass);
   }
 
   @bind

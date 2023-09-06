@@ -355,7 +355,7 @@ module ExternalUploadHelpers
   def debug_upload_error(err, friendly_message)
     return if !SiteSetting.enable_upload_debug_mode
     Discourse.warn_exception(err, message: friendly_message)
-    Rails.env.development? ? friendly_message : I18n.t("upload.failed")
+    (Rails.env.development? || Rails.env.test?) ? friendly_message : I18n.t("upload.failed")
   end
 
   def multipart_store(upload_type)

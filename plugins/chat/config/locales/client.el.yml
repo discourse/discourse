@@ -6,7 +6,13 @@
 
 el:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Πάντα"
+          never: "Ποτέ"
     chat:
+      deleted_chat_username: διεγράφη
       create: "Δημιουργία"
       cancel: "Ακύρωση"
       channel_settings:
@@ -26,8 +32,6 @@ el:
       flag: "Επισήμανση"
       join: "Γίνετε μέλος"
       last_visit: "τελευταία επίσκεψη"
-      mention_warning:
-        dismiss: "απόρριψη"
       reply: "Απάντηση"
       edit: "Επεξεργασία"
       rebake_message: "Ανανέωση HTML"
