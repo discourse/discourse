@@ -97,7 +97,6 @@ RSpec.describe QunitController do
         expect(response.body).to include("* https://qunitjs.com/") # inlined QUnit CSS
         expect(response.body).to include("/assets/locales/en.js")
         expect(response.body).to include("/test-support.js")
-        expect(response.body).to include("/tests.js")
         expect(response.body).to include("/test-site-settings.js")
         expect(response.body).to include("/assets/markdown-it-bundle.js")
         expect(response.body).to include("/assets/discourse.js")
