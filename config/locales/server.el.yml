@@ -232,7 +232,6 @@ el:
     more_replies:
       one: "μια ακόμη απάντηση"
       other: "%{count} ακόμη απαντήσεις"
-    loading: "Φόρτωση Συζήτησης..."
     permalink: "Μόνιμος σύνδεσμος"
     imported_from: "Αυτό είναι ένα συνοδό θέμα συζητησης για την αρχική ανάρτηση στο %{link}"
     in_reply_to: "▶ %{username}"
@@ -987,7 +986,6 @@ el:
     top_topics_formula_least_likes_per_post_multiplier: "value of least likes per post multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     rate_limit_create_topic: "Μετά τη δημιουργία νήματος, οι χρήστες πρέπει να περιμένουν (n) δευτερόλεπτα πριν τη δημιουργία άλλου νήματος."
     rate_limit_create_post: "Μετά την ανάρτηση, οι χρήστες πρέπει να περιμένουν (n) δευτερόλεπτα πριν τη δημιουργία άλλης ανάρτησης."
-    rate_limit_new_user_create_topic: "Μετά τη δημιουργία νήματος, οι νέοι χρήστες πρέπει να περιμένουν (n) δευτερόλεπτα πριν τη δημιουργία άλλου νήματος."
     rate_limit_new_user_create_post: "Μετά την ανάρτηση, οι νέοι χρήστες πρέπει να περιμένουν (n) δευτερόλεπτα πριν τη δημιουργία άλλης ανάρτησης."
     max_likes_per_day: "Μέγιστος αριθμός \"Μου αρέσει\" ανά χρήστη ανά ημέρα."
     max_flags_per_day: "Μέγιστος αριθμός σημάνσεων ανά χρήστη ανά ημέρα."
@@ -1219,7 +1217,6 @@ el:
     default_categories_muted: "Λίστα κατηγοριών που βρίσκονται σε σίγαση από προεπιλογή."
     default_categories_watching_first_post: "Λίστα κατηγοριών στις οποίες η πρώτη ανάρτηση σε κάθε νέο νήμα θα επιτηρείται από προεπιλογή."
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
-    allow_user_api_keys: "Επιτρέψτε την δημιουργία των user API keys"
     allow_user_api_key_scopes: "Λίστα των πεδίων που επιτρέπεται για τα user API keys"
     allowed_user_api_push_urls: "Επιτρεπόμενοι συνδέσμοι για την ώθηση του διακομιστή στο user API"
     tagging_enabled: "Ενεργοποίηση ετικετών στα θέματα; "
@@ -2460,7 +2457,6 @@ el:
       approve:
         title: "Έγκριση"
       reject_user:
-        title: "Διαγραφή Χρήστη..."
         delete:
           title: "Διαγραφή Χρήστη"
       reject:

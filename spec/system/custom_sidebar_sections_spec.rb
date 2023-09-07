@@ -109,7 +109,6 @@ describe "Custom sidebar sections", type: :system do
     section_modal.save
 
     expect(sidebar).to have_section("My section")
-    take_screenshot
     expect(sidebar).to have_section_link("Faq", target: "_blank")
   end
 

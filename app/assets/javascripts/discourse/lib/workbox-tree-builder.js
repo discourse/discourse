@@ -2,6 +2,10 @@ const crypto = require("crypto");
 const mergeTrees = require("broccoli-merge-trees");
 const funnel = require("broccoli-funnel");
 
+// Bump to cache-bust if there are any changes to the workbox compilation logic
+// which are not caused by a simple workbox version bump
+const COMPILER_VERSION = 2;
+
 module.exports = function generateWorkboxTree() {
   const workboxDeps = [
     "workbox-sw",
@@ -25,7 +29,7 @@ module.exports = function generateWorkboxTree() {
   // Sprockets' default behaviour for these files is disabled via freedom_patches/sprockets.rb.
   const versionHash = crypto
     .createHash("md5")
-    .update(versions.join("|"))
+    .update(`${versions.join("|")}|${COMPILER_VERSION}`)
     .digest("hex");
 
   return funnel(mergeTrees(nodes), {

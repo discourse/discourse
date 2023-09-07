@@ -16,6 +16,7 @@ pt:
           actions:
             chat_auto_remove_membership: "Assinaturas removidas automaticamente dos canais"
     chat:
+      deleted_chat_username: eliminado
       dates:
         time_tiny: "hh:mm"
       all_loaded: "Mostrando todas as mensagens"
@@ -81,8 +82,6 @@ pt:
       last_visit: "última visita"
       summarization:
         summarize: "Resumir"
-      mention_warning:
-        dismiss: "marcar Visto"
       only_chat_push_notifications:
         title: "Enviar notificações push apenas para chat"
       reply: "Responder"

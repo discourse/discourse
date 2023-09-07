@@ -7,7 +7,7 @@
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-presence
 
 enabled_site_setting :presence_enabled
-hide_plugin if self.respond_to?(:hide_plugin)
+hide_plugin
 
 register_asset "stylesheets/presence.scss"
 

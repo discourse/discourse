@@ -21,9 +21,9 @@
           <div class="grant-info-item">
             {{i18n "badges.allow_title"}}
             <DButton
-              @class="btn-default pad-left"
-              @action={{action "toggleSetUserTitle"}}
+              @action={{this.toggleSetUserTitle}}
               @icon="pencil-alt"
+              class="btn-default pad-left"
             />
           </div>
         {{/if}}
@@ -39,9 +39,9 @@
       <div class="badge-set-title {{if this.hiddenSetTitle 'hidden' ''}}">
         <BadgeTitle @selectableUserBadges={{this.selectableUserBadges}} />
         <DButton
-          @class="btn-default close-btn"
-          @action={{action "toggleSetUserTitle"}}
+          @action={{this.toggleSetUserTitle}}
           @label="close"
+          class="btn-default close-btn"
         />
       </div>
     {{/if}}

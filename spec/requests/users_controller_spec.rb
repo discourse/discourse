@@ -457,10 +457,9 @@ RSpec.describe UsersController do
           end
         end
 
-        it "stages a webauthn challenge and rp-id for the user" do
+        it "stages a webauthn challenge for the user" do
           secure_session = SecureSession.new(session["secure_session_id"])
           expect(DiscourseWebauthn.challenge(user1, secure_session)).not_to eq(nil)
-          expect(DiscourseWebauthn.rp_id(user1, secure_session)).to eq(Discourse.current_hostname)
         end
 
         it "changes password with valid security key challenge and authentication" do
@@ -5659,8 +5658,8 @@ RSpec.describe UsersController do
       secure_session = read_secure_session
       response_parsed = response.parsed_body
       expect(response_parsed["challenge"]).to eq(DiscourseWebauthn.challenge(user1, secure_session))
-      expect(response_parsed["rp_id"]).to eq(DiscourseWebauthn.rp_id(user1, secure_session))
-      expect(response_parsed["rp_name"]).to eq(DiscourseWebauthn.rp_name(user1, secure_session))
+      expect(response_parsed["rp_id"]).to eq(DiscourseWebauthn.rp_id)
+      expect(response_parsed["rp_name"]).to eq(DiscourseWebauthn.rp_name)
       expect(response_parsed["user_secure_id"]).to eq(
         user1.reload.create_or_fetch_secure_identifier,
       )

@@ -55,6 +55,7 @@ export default Controller.extend({
   application: controller(),
   composer: service(),
   modal: service(),
+  appEvents: service(),
 
   bulkSelectEnabled: null,
   loading: false,
@@ -510,6 +511,9 @@ export default Controller.extend({
           ?.removeAttribute("open");
       }
       this.set("page", 1);
+
+      this.appEvents.trigger("full-page-search:trigger-search");
+
       this._search();
     },
 

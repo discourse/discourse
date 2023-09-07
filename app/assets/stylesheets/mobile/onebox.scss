@@ -1,0 +1,13 @@
+// Onebox - Github - PR, Commit & Issue
+.onebox.githubpullrequest,
+.onebox.githubcommit,
+.onebox.githubissue {
+  .github-icon-container {
+    position: absolute;
+  }
+  .github-info-container {
+    h4 {
+      margin: 0 0 10px 50px;
+    }
+  }
+}

@@ -14,10 +14,15 @@ RSpec.describe "Shortcuts | mark all read", type: :system do
     SiteSetting.navigation_menu = "sidebar"
     chat_system_bootstrap(user_1, [channel_1, channel_2, channel_3])
     sign_in(user_1)
-    Fabricate(:chat_message, chat_channel: channel_1)
-    Fabricate(:chat_message, chat_channel: channel_1)
+    Fabricate(:chat_message, chat_channel: channel_1, use_service: true)
+    Fabricate(:chat_message, chat_channel: channel_1, use_service: true)
     10.times do |i|
-      Fabricate(:chat_message, chat_channel: channel_2, message: "all read message #{i}")
+      Fabricate(
+        :chat_message,
+        chat_channel: channel_2,
+        message: "all read message #{i}",
+        use_service: true,
+      )
     end
   end
 

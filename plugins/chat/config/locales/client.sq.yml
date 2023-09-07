@@ -12,6 +12,7 @@ sq:
           always: "Gjithmonë"
           never: "Asnjëherë"
     chat:
+      deleted_chat_username: deleted
       cancel: "Anulo"
       channel_settings:
         edit: "Redakto"
@@ -26,8 +27,6 @@ sq:
         never: "Asnjëherë"
       flag: "Sinjalizoni"
       last_visit: "vizita e fundit"
-      mention_warning:
-        dismiss: "hiqe"
       reply: "Përgjigju"
       edit: "Redakto"
       rebake_message: "Rindërtoni HTML"

@@ -1,12 +1,54 @@
 # frozen_string_literal: true
 
-# rake docker:test is designed to be used inside the discourse/docker_test image
-# running it anywhere else will likely fail
-#
+# The Rake tasks in this file are designed to be used inside the `discourse/discourse_test:release` image.
+# Running it anywhere else is not supported.
+
+def run_or_fail(command)
+  log(command)
+  pid = Process.spawn(command)
+  Process.wait(pid)
+  $?.exitstatus == 0
+end
+
+def log(message)
+  puts "[#{Time.now.strftime("%Y-%m-%d %H:%M:%S")}] #{message}"
+end
+
+def setup_postgres(skip_init:)
+  unless skip_init
+    log "Initializing postgres"
+    system("script/start_test_db.rb --skip-run", exception: true)
+  end
+
+  log "Starting postgres"
+  Process.spawn("script/start_test_db.rb --skip-setup --exec")
+end
+
+def setup_redis
+  log "Starting background redis"
+  data_directory = "#{Rails.root}/tmp/test_data/redis"
+  `rm -rf #{data_directory} && mkdir -p #{data_directory}`
+  Process.spawn("redis-server --dir #{data_directory}")
+end
+
+def migrate_databases(parallel: false, load_plugins: false)
+  migrate_env = load_plugins ? "LOAD_PLUGINS=1" : "LOAD_PLUGINS=0"
+
+  success = run_or_fail("#{migrate_env} bundle exec rake db:migrate")
+  success &&= run_or_fail("#{migrate_env} bundle exec rake parallel:migrate") if parallel
+  success
+end
+
+desc "Setups up the test environment"
+task "docker:test:setup" do
+  setup_redis
+  setup_postgres(skip_init: false)
+  migrate_databases(parallel: true, load_plugins: true)
+end
+
 # Environment Variables (specific to this rake task)
 # => SKIP_LINT                 set to 1 to skip linting (eslint and rubocop)
 # => SKIP_TESTS                set to 1 to skip all tests
-# => SKIP_WIZARD_TESTS         set to 1 to skip wizard tests
 # => SKIP_CORE                 set to 1 to skip core tests (rspec and qunit)
 # => SKIP_PLUGINS              set to 1 to skip plugin tests (rspec and qunit)
 # => SKIP_INSTALL_PLUGINS      comma separated list of plugins you want to skip installing
@@ -34,30 +76,18 @@
 #       docker run -e SKIP_CORE=1 -v $(pwd)/my-awesome-plugin:/var/www/discourse/plugins/my-awesome-plugin discourse/discourse_test:release
 #   Run tests for a specific plugin (with a plugin mounted from host filesystem):
 #       docker run -e SKIP_CORE=1 SINGLE_PLUGIN='my-awesome-plugin' -v $(pwd)/my-awesome-plugin:/var/www/discourse/plugins/my-awesome-plugin discourse/discourse_test:release
-
-def run_or_fail(command)
-  log(command)
-  pid = Process.spawn(command)
-  Process.wait(pid)
-  $?.exitstatus == 0
-end
-
-def run_or_fail_prettier(*patterns)
-  if patterns.any? { |p| Dir[p].any? }
-    patterns = patterns.map { |p| "'#{p}'" }.join(" ")
-    run_or_fail("yarn pprettier --list-different #{patterns}")
-  else
-    puts "Skipping prettier. Pattern not found."
-    true
-  end
-end
-
-def log(message)
-  puts "[#{Time.now.strftime("%Y-%m-%d %H:%M:%S")}] #{message}"
-end
-
 desc "Run all tests (JS and code in a standalone environment)"
 task "docker:test" do
+  def run_or_fail_prettier(*patterns)
+    if patterns.any? { |p| Dir[p].any? }
+      patterns = patterns.map { |p| "'#{p}'" }.join(" ")
+      run_or_fail("yarn pprettier --list-different #{patterns}")
+    else
+      puts "Skipping prettier. Pattern not found."
+      true
+    end
+  end
+
   begin
     @good = true
     @good &&= run_or_fail("yarn install")
@@ -121,19 +151,8 @@ task "docker:test" do
     end
 
     unless ENV["SKIP_TESTS"]
-      puts "Cleaning up old test tmp data in tmp/test_data"
-      `rm -fr tmp/test_data && mkdir -p tmp/test_data/redis && mkdir tmp/test_data/pg`
-
-      puts "Starting background redis"
-      @redis_pid = Process.spawn("redis-server --dir tmp/test_data/redis")
-
-      unless ENV["SKIP_DB_CREATE"]
-        puts "Initializing postgres"
-        system("script/start_test_db.rb --skip-run", exception: true)
-      end
-
-      puts "Starting postgres"
-      @pg_pid = Process.spawn("script/start_test_db.rb --skip-setup --exec")
+      @redis_pid = setup_redis
+      @pg_pid = setup_postgres(skip_init: ENV["SKIP_DB_CREATE"].present?)
 
       ENV["RAILS_ENV"] = "test"
       # this shaves all the creation of the multisite db off
@@ -160,19 +179,7 @@ task "docker:test" do
           end
       end
 
-      command_prefix =
-        if ENV["SKIP_PLUGINS"]
-          # Make sure not to load plugins. bin/rake will add LOAD_PLUGINS=1 automatically unless we set it to 0 explicitly
-          "LOAD_PLUGINS=0 "
-        else
-          "LOAD_PLUGINS=1 "
-        end
-
-      @good &&= run_or_fail("#{command_prefix}bundle exec rake db:migrate")
-
-      if ENV["USE_TURBO"]
-        @good &&= run_or_fail("#{command_prefix}bundle exec rake parallel:migrate")
-      end
+      @good &&= migrate_databases(parallel: ENV["USE_TURBO"], load_plugins: !ENV["SKIP_PLUGINS"])
 
       unless ENV["JS_ONLY"]
         if ENV["WARMUP_TMP_FOLDER"]
@@ -187,23 +194,6 @@ task "docker:test" do
             params << "--fail-fast"
             params << "--bisect" if ENV["BISECT"]
             params << "--seed #{ENV["RSPEC_SEED"]}" if ENV["RSPEC_SEED"]
-          end
-
-          if ENV["PARALLEL"]
-            parts = ENV["PARALLEL"].split("/")
-            total = parts[1].to_i
-            subset = parts[0].to_i - 1
-
-            spec_partials = Dir["spec/**/*_spec.rb"].sort.in_groups(total, false)
-            # quick and dirty load balancing
-            if (spec_partials.count > 3)
-              spec_partials[0].concat(spec_partials[total - 1].shift(30))
-              spec_partials[1].concat(spec_partials[total - 2].shift(30))
-            end
-
-            params << spec_partials[subset].join(" ")
-
-            puts "Running spec subset #{subset + 1} of #{total}"
           end
 
           if ENV["USE_TURBO"]

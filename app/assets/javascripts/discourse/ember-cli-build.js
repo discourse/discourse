@@ -22,8 +22,28 @@ module.exports = function (defaults) {
   DeprecationSilencer.silence(console, "warn");
   DeprecationSilencer.silence(defaults.project.ui, "writeWarnLine");
 
+  const isEmbroider = process.env.USE_EMBROIDER === "1";
   const isProduction = EmberApp.env().includes("production");
   const isTest = EmberApp.env().includes("test");
+
+  // This is more or less the same as the one in @embroider/test-setup
+  const maybeEmbroider = (app, options) => {
+    if (isEmbroider) {
+      const { compatBuild } = require("@embroider/compat");
+      const { Webpack } = require("@embroider/webpack");
+
+      // https://github.com/embroider-build/embroider/issues/1581
+      if (Array.isArray(options?.extraPublicTrees)) {
+        options.extraPublicTrees = [
+          app.addonPostprocessTree("all", mergeTrees(options.extraPublicTrees)),
+        ];
+      }
+
+      return compatBuild(app, Webpack, options);
+    } else {
+      return app.toTree(options?.extraPublicTrees);
+    }
+  };
 
   const app = new EmberApp(defaults, {
     autoRun: false,
@@ -110,60 +130,6 @@ module.exports = function (defaults) {
     },
   });
 
-  // Patching a private method is not great, but there's no other way for us to tell
-  // Ember CLI that we want the tests alone in a package without helpers/fixtures, since
-  // we re-use those in the theme tests.
-  app._defaultPackager.packageApplicationTests = function (tree) {
-    let appTestTrees = []
-      .concat(
-        this.packageEmberCliInternalFiles(),
-        this.packageTestApplicationConfig(),
-        tree
-      )
-      .filter(Boolean);
-
-    appTestTrees = mergeTrees(appTestTrees, {
-      overwrite: true,
-      annotation: "TreeMerger (appTestTrees)",
-    });
-
-    const tests = concat(appTestTrees, {
-      inputFiles: ["**/tests/**/*-test.js"],
-      headerFiles: ["vendor/ember-cli/tests-prefix.js"],
-      footerFiles: ["vendor/ember-cli/app-config.js"],
-      outputFile: "/assets/core-tests.js",
-      annotation: "Concat: Core Tests",
-      sourceMapConfig: false,
-    });
-
-    const testHelpers = concat(appTestTrees, {
-      inputFiles: [
-        "**/tests/loader-shims.js",
-        "**/tests/test-boot-ember-cli.js",
-        "**/tests/helpers/**/*.js",
-        "**/tests/fixtures/**/*.js",
-        "**/tests/setup-tests.js",
-      ],
-      outputFile: "/assets/test-helpers.js",
-      annotation: "Concat: Test Helpers",
-      sourceMapConfig: false,
-    });
-
-    if (isTest) {
-      return mergeTrees([
-        tests,
-        testHelpers,
-        discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
-        discourseScss(
-          `${discourseRoot}/app/assets/stylesheets`,
-          "qunit-custom.scss"
-        ),
-      ]);
-    } else {
-      return mergeTrees([tests, testHelpers]);
-    }
-  };
-
   // WARNING: We should only import scripts here if they are not in NPM.
   // For example: our very specific version of bootstrap-modal.
   app.import(vendorJs + "bootbox.js");
@@ -191,7 +157,20 @@ module.exports = function (defaults) {
     .findAddonByName("pretty-text")
     .treeForMarkdownItBundle();
 
-  return app.toTree([
+  const extraPublicTrees = [];
+
+  if (isTest) {
+    const testemStylesheetTree = mergeTrees([
+      discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
+      discourseScss(
+        `${discourseRoot}/app/assets/stylesheets`,
+        "qunit-custom.scss"
+      ),
+    ]);
+    extraPublicTrees.push(testemStylesheetTree);
+  }
+
+  extraPublicTrees.push(
     createI18nTree(discourseRoot, vendorJs),
     parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
@@ -213,6 +192,38 @@ module.exports = function (defaults) {
       outputFile: `assets/markdown-it-bundle.js`,
     }),
     generateScriptsTree(app),
-    discoursePluginsTree,
-  ]);
+    discoursePluginsTree
+  );
+
+  return maybeEmbroider(app, {
+    extraPublicTrees,
+    packagerOptions: {
+      webpackConfig: {
+        externals: [
+          function ({ request }, callback) {
+            if (
+              !request.includes("-embroider-implicit") &&
+              (request.startsWith("admin/") ||
+                request.startsWith("wizard/") ||
+                (request.startsWith("pretty-text/engines/") &&
+                  request !== "pretty-text/engines/discourse-markdown-it") ||
+                request.startsWith("discourse/plugins/") ||
+                request.startsWith("discourse/theme-"))
+            ) {
+              callback(null, request, "commonjs");
+            } else {
+              callback();
+            }
+          },
+        ],
+        module: {
+          parser: {
+            javascript: {
+              exportsPresence: "error",
+            },
+          },
+        },
+      },
+    },
+  });
 };

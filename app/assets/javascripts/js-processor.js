@@ -24,6 +24,12 @@ import { transform as babelTransform } from "@babel/standalone";
 import { minify as terserMinify } from "terser";
 import RawHandlebars from "discourse-common/addon/lib/raw-handlebars";
 import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
+import EmberThisFallback from "ember-this-fallback";
+
+const thisFallbackPlugin = EmberThisFallback._buildPlugin({
+  enableLogging: false,
+  isTheme: true,
+}).plugin;
 
 function manipulateAstNodeForTheme(node, themeId) {
   // Magically add theme id as the first param for each of these helpers)
@@ -62,7 +68,10 @@ function buildTemplateCompilerBabelPlugins({ themeId }) {
       return precompile(src, {
         ...opts,
         plugins: {
-          ast: [buildEmberTemplateManipulatorPlugin(themeId)],
+          ast: [
+            buildEmberTemplateManipulatorPlugin(themeId),
+            thisFallbackPlugin,
+          ],
         },
       });
     };

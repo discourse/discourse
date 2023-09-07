@@ -65,19 +65,21 @@ RSpec.describe "Archive channel", type: :system do
         end
 
         context "when archived channels had unreads" do
-          before { channel_1.add(current_user) }
+          let(:other_user) { Fabricate(:user) }
 
-          it "clears unread indicators" do
+          before do
             Jobs.run_immediately!
-
-            other_user = Fabricate(:user)
-            channel_1.add(other_user)
-            Chat::MessageCreator.create(
+            channel_1.add(current_user)
+            Fabricate(
+              :chat_message,
               chat_channel: channel_1,
               user: other_user,
-              content: "this is fine @#{current_user.username}",
+              message: "this is fine @#{current_user.username}",
+              use_service: true,
             )
+          end
 
+          it "clears unread indicators" do
             visit("/")
             expect(page.find(".chat-channel-unread-indicator")).to have_content(1)
 

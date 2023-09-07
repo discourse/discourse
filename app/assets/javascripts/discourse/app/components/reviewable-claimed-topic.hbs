@@ -7,17 +7,17 @@
       </div>
       <DButton
         @icon="times"
-        @class="btn-small unclaim"
         @action={{action "unclaim"}}
         @disabled={{this.unassigning}}
         @title="review.unclaim.help"
+        class="btn-small unclaim"
       />
     {{else}}
       <DButton
         @icon="user-plus"
-        @class="btn-small claim"
         @title="review.claim.title"
         @action={{action "claim"}}
+        class="btn-small claim"
       />
     {{/if}}
   </div>

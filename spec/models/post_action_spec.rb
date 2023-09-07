@@ -987,4 +987,38 @@ RSpec.describe PostAction do
       end
     end
   end
+
+  describe "count_per_day_for_type" do
+    before { PostActionCreator.create(eviltrout, post, :like) }
+
+    it "returns the correct count" do
+      expect(PostAction.count_per_day_for_type(PostActionType.types[:like])).to eq(
+        Time.now.utc.to_date => 1,
+      )
+    end
+
+    it "returns the correct count when there are multiple actions" do
+      PostActionCreator.create(codinghorror, post, :like)
+      expect(PostAction.count_per_day_for_type(PostActionType.types[:like])).to eq(
+        Time.now.utc.to_date => 2,
+      )
+    end
+
+    it "returns the correct count when there are multiple types" do
+      PostActionCreator.create(eviltrout, post, :spam)
+      expect(PostAction.count_per_day_for_type(PostActionType.types[:spam])).to eq(
+        Time.now.utc.to_date => 1,
+      )
+    end
+
+    it "returns the correct count with group filter" do
+      group = Fabricate(:group)
+      group.add(codinghorror)
+
+      PostActionCreator.create(codinghorror, post, :like)
+      expect(
+        PostAction.count_per_day_for_type(PostActionType.types[:like], { group_ids: [group.id] }),
+      ).to eq(Time.now.utc.to_date => 1)
+    end
+  end
 end

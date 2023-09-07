@@ -29,8 +29,9 @@ class TopicUploadSecurityManager
 
         secure_status_did_change =
           post.owned_uploads_via_access_control.any? do |upload|
-            # we have already got the post preloaded so we may as well
+            # We already have the post preloaded so we may as well
             # attach it here to avoid another load in UploadSecurity
+            # (which is called via update_secure_status)
             upload.access_control_post = post
             upload.update_secure_status(source: "topic upload security")
           end
@@ -43,14 +44,14 @@ class TopicUploadSecurityManager
 
     return if !SiteSetting.secure_uploads
 
-    # we only want to do this if secure uploads is enabled. if
+    # We only want to do this if secure uploads is enabled. If
     # the setting is turned on after a site has been running
     # already, we want to make sure that any post moves after
     # this are handled and upload secure statuses and ACLs
     # are updated appropriately, as well as setting the access control
     # post for secure uploads missing it.
     #
-    # examples (all after secure uploads is enabled):
+    # Examples (all after secure uploads is enabled):
     #
     #  -> a public topic is moved to a private category after
     #  -> a PM is converted to a public topic

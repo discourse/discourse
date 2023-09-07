@@ -206,7 +206,14 @@ function replaceIn(bootstrap, template, id, headers, baseURL) {
   BUILDERS[id](buffer, bootstrap, headers, baseURL);
   let contents = buffer.filter((b) => b && b.length > 0).join("\n");
 
-  return template.replace(`<bootstrap-content key="${id}">`, contents);
+  if (id === "html-tag") {
+    return template.replace(`<html>`, contents);
+  } else {
+    return template.replace(
+      `<bootstrap-content key="${id}"></bootstrap-content>`,
+      contents
+    );
+  }
 }
 
 function extractPreloadJson(html) {

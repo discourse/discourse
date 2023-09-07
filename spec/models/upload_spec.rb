@@ -491,15 +491,37 @@ RSpec.describe Upload do
         SiteSetting.login_required = true
         SiteSetting.authorized_extensions = ""
         expect do
-          upl =
-            Fabricate(
-              :upload,
-              access_control_post: Fabricate(:private_message_post),
-              security_last_changed_at: Time.zone.now,
-              security_last_changed_reason: "test",
-              secure: true,
-            )
+          Fabricate(
+            :upload,
+            access_control_post: Fabricate(:private_message_post),
+            security_last_changed_at: Time.zone.now,
+            security_last_changed_reason: "test",
+            secure: true,
+          )
         end.to raise_error(ActiveRecord::RecordInvalid)
+      end
+
+      context "when secure_uploads_pm_only is true" do
+        before { SiteSetting.secure_uploads_pm_only = true }
+
+        it "does not mark an image upload as secure if login_required is enabled" do
+          SiteSetting.login_required = true
+          upload.update!(secure: false)
+          expect { upload.update_secure_status }.not_to change { upload.secure }
+          expect(upload.reload.secure).to eq(false)
+        end
+
+        it "marks the upload as not secure if its access control post is a public post" do
+          upload.update!(secure: true, access_control_post: Fabricate(:post))
+          upload.update_secure_status
+          expect(upload.secure).to eq(false)
+        end
+
+        it "leaves the upload as secure if its access control post is a PM post" do
+          upload.update!(secure: true, access_control_post: Fabricate(:private_message_post))
+          upload.update_secure_status
+          expect(upload.secure).to eq(true)
+        end
       end
     end
   end

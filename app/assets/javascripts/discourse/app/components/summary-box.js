@@ -14,6 +14,7 @@ const MIN_POST_READ_TIME = 4;
 export default class SummaryBox extends Component {
   @service siteSettings;
   @service messageBus;
+  @service currentUser;
 
   @tracked summary = "";
   @tracked summarizedOn = null;
@@ -166,12 +167,23 @@ export default class SummaryBox extends Component {
       this.loadingSummary = true;
     }
 
-    let fetchURL = `/t/${this.args.postAttrs.topicId}/strategy-summary?stream=true`;
+    let fetchURL = `/t/${this.args.postAttrs.topicId}/strategy-summary?`;
 
-    if (this.canRegenerate) {
-      fetchURL += "&skip_age_check=true";
+    if (this.currentUser) {
+      fetchURL += `stream=true`;
+
+      if (this.canRegenerate) {
+        fetchURL += "&skip_age_check=true";
+      }
     }
 
-    ajax(fetchURL).catch(popupAjaxError);
+    ajax(fetchURL)
+      .then((data) => {
+        if (!this.currentUser) {
+          data.done = true;
+          this._updateSummary(data);
+        }
+      })
+      .catch(popupAjaxError);
   }
 }

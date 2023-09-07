@@ -12,6 +12,7 @@ sl:
           always: "Vedno"
           never: "Nikoli"
     chat:
+      deleted_chat_username: izbrisano
       create: "Ustvari"
       cancel: "Prekliči"
       channel_settings:
@@ -31,8 +32,6 @@ sl:
       flag: "Prijavi"
       join: "Pridruži se"
       last_visit: "zadnji obisk"
-      mention_warning:
-        dismiss: "opusti"
       reply: "Odgovori"
       edit: "Uredi"
       rebake_message: "Obnovi HTML"

@@ -161,7 +161,7 @@
                       <TogglePasswordMask
                         @maskPassword={{this.maskPassword}}
                         @togglePasswordMask={{this.togglePasswordMask}}
-                        @parentController={{"invites-show"}}
+                        @parentController="invites-show"
                       />
                     </div>
                   </div>
@@ -183,11 +183,11 @@
 
                 <div class="invitation-cta">
                   <DButton
-                    @class="btn-primary invitation-cta__accept"
                     @action={{action "submit"}}
-                    @type="submit"
                     @disabled={{this.submitDisabled}}
                     @label="invites.accept_invite"
+                    type="submit"
+                    class="btn-primary invitation-cta__accept"
                   />
                   <div class="invitation-cta__info">
                     <span class="invitation-cta__signed-up">{{i18n
@@ -195,8 +195,8 @@
                       }}</span>
                     <DButton
                       @action={{route-action "showLogin"}}
-                      @class="btn-flat invitation-cta__sign-in"
                       @label="log_in"
+                      class="btn-flat invitation-cta__sign-in"
                     />
                   </div>
                 </div>
@@ -214,11 +214,11 @@
             {{#if this.existingUserRedeeming}}
               {{#if this.existingUserCanRedeem}}
                 <DButton
-                  @class="btn-primary"
                   @action={{action "submit"}}
-                  @type="submit"
                   @disabled={{this.submitDisabled}}
                   @label="invites.accept_invite"
+                  type="submit"
+                  class="btn-primary"
                 />
               {{else}}
                 <div

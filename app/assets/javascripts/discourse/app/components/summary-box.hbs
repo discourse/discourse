@@ -10,31 +10,31 @@
     {{#if @postAttrs.summarizable}}
       {{#if this.canCollapseSummary}}
         <DButton
-          @class="btn-primary topic-strategy-summarization"
           @action={{this.collapseSummary}}
           @title="summary.buttons.hide"
           @label="summary.buttons.hide"
           @icon="chevron-up"
+          class="btn-primary topic-strategy-summarization"
         />
       {{else}}
         <DButton
-          @class="btn-primary topic-strategy-summarization"
           @action={{this.generateSummary}}
           @translatedLabel={{this.generateSummaryTitle}}
           @translatedTitle={{this.generateSummaryTitle}}
           @icon={{this.generateSummaryIcon}}
           @disabled={{this.loadingSummary}}
+          class="btn-primary topic-strategy-summarization"
         />
       {{/if}}
     {{/if}}
 
     {{#if @postAttrs.hasTopRepliesSummary}}
       <DButton
-        @class="top-replies"
         @action={{this.toggleTopRepliesFilter}}
         @translatedTitle={{this.topRepliesTitle}}
         @translatedLabel={{this.topRepliesLabel}}
         @icon={{this.topRepliesIcon}}
+        class="top-replies"
       />
     {{/if}}
   </div>

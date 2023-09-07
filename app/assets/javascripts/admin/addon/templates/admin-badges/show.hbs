@@ -103,9 +103,9 @@
           @onChange={{action (mut this.buffered.badge_grouping_id)}}
         />
         <DButton
-          @class="btn-default"
           @action={{route-action "editGroupings"}}
           @icon="pencil-alt"
+          class="btn-default"
         />
       </div>
     </div>
@@ -271,18 +271,18 @@
 
     <div class="buttons">
       <DButton
-        @class="btn-primary"
-        @action={{action "save"}}
-        @type="submit"
+        @action={{this.save}}
         @disabled={{this.saving}}
         @label="admin.badges.save"
+        type="submit"
+        class="btn-primary"
       />
       <span class="saving">{{this.savingStatus}}</span>
       {{#unless this.readOnly}}
         <DButton
-          @action={{action "destroyBadge"}}
-          @class="btn-danger"
+          @action={{this.destroyBadge}}
           @label="admin.badges.delete"
+          class="btn-danger"
         />
       {{/unless}}
     </div>

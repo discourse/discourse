@@ -1,6 +1,6 @@
 <DButton
-  @action={{action "share" this.source}}
-  @class={{concat "btn-default share-" this.source.id}}
+  @action={{fn (action "share") this.source}}
   @translatedTitle={{this.source.title}}
-  @icon={{if this.source.icon this.source.icon this.source.htmlIcon}}
+  @icon={{or this.source.icon this.source.htmlIcon}}
+  class={{concat "btn-default share-" this.source.id}}
 />

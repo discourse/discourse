@@ -11,7 +11,7 @@
   {{! TODO(@keegan): Update implementation to use <MultiSelect/> instead }}
   {{! Current using <select multiple> as it integrates easily with FormData (will update in v2) }}
   <select
-    name={{@attributes.label}}
+    name={{@id}}
     class="form-template-field__multi-select"
     required={{if @validations.required "required" ""}}
     multiple="multiple"
@@ -25,7 +25,10 @@
       >{{@attributes.none_label}}</option>
     {{/if}}
     {{#each @choices as |choice|}}
-      <option value={{choice}}>{{choice}}</option>
+      <option
+        value={{choice}}
+        selected={{this.isSelected choice}}
+      >{{choice}}</option>
     {{/each}}
   </select>
 </div>

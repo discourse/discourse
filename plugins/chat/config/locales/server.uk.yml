@@ -7,7 +7,7 @@
 uk:
   site_settings:
     chat_separate_sidebar_mode: "Показувати окремі режими бічної панелі для форуму і чату."
-    chat_enabled: "Увімкніть плаґін чату."
+    chat_enabled: "Увімкнути чат."
     enable_public_channels: "Увімкнути публічні канали на основі категорій."
     chat_allowed_groups: "Користувачі в цих групах можуть спілкуватися в чаті. Зауважте, що команда обслуговування завжди має доступ до чату."
     chat_channel_retention_days: "Повідомлення чату в звичайних каналах зберігатимуться стільки днів. Встановіть «0», щоб зберігати повідомлення назавжди."
@@ -124,14 +124,16 @@ uk:
           title: "Видалити повідомлення"
           description: "Видаліть повідомлення, щоб користувачі не бачили його."
         delete_and_agree:
-          title: "Видалити повідомлення"
+          title: "Ігнорувати прапорець і видалити повідомлення"
+          description: "Ігнорувати прапорець, видаливши його з черги і видаливши повідомлення."
         disagree_and_restore:
           title: "Не погодитися та відновити повідомлення"
           description: "Відновити повідомлення, щоб усі користувачі могли його бачити."
         disagree:
           title: "Відмовити"
         ignore:
-          title: "Ігнорувати"
+          title: "Нічого не робити"
+          description: "Ігнорувати прапорець, видаливши його з черги без жодних дій."
       direct_messages:
         transcript_title: "Зміст попередніх повідомлень в %{channel_name}"
         transcript_body: "Щоб надати вам більше контексту, ми включили зміст попередніх повідомлень у цій розмові (до десяти):\n\n%{transcript}"
@@ -151,6 +153,39 @@ uk:
           few: "%{comma_separated_usernames} і ще %{count}"
           many: "%{comma_separated_usernames} і ще %{count}"
           other: "%{comma_separated_usernames} і ще %{count}"
+    mention_warning:
+      dismiss: "відхилити"
+      cannot_see: "%{first_identifier} не має доступу до цього каналу і не отримав сповіщення."
+      cannot_see_multiple:
+        one: "%{first_identifier} і %{count} інший користувач не мають доступу до цього каналу та не отримали сповіщення."
+        few: "%{first_identifier} і %{count} інші користувачі не мають доступу до цього каналу та не отримали сповіщення."
+        many: "%{first_identifier} та %{count} інших користувачів не мають доступу до цього каналу та не отримали сповіщення."
+        other: "%{first_identifier} та %{count} інших користувачів не мають доступу до цього каналу та не отримали сповіщення."
+      invitations_sent:
+        one: "Запрошення надіслано"
+        few: "Запрошення надіслані"
+        many: "Запрошення надіслані"
+        other: "Запрошення надіслані"
+      invite: "Запросити до каналу"
+      without_membership: "%{first_identifier} не приєднався до цього каналу."
+      without_membership_multiple:
+        one: "%{first_identifier} і ще %{count} користувач не приєдналися до цього каналу."
+        few: "%{first_identifier} і ще %{count} користувачі не приєдналися до цього каналу."
+        many: "%{first_identifier} і ще %{count} користувачів не приєдналися до цього каналу."
+        other: "%{first_identifier} і ще %{count} користувачів не приєдналися до цього каналу."
+      group_mentions_disabled: "%{first_identifier} не дозволяє згадувати."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} та %{count} інша група забороняють згадки."
+        few: "%{first_identifier} та %{count} інші групи забороняють згадки."
+        many: "%{first_identifier} та %{count} інших груп забороняють згадки."
+        other: "%{first_identifier} та %{count} інших груп забороняють згадки."
+      global_mentions_disallowed: "Згадки @here та @all вимкнені на цьому каналі."
+      too_many_members: "%{first_identifier} має занадто багато членів. Нікого не було повідомлено."
+      too_many_members_multiple:
+        one: "%{first_identifier} та %{count} інша група мають занадто багато членів. Ніхто не був сповіщений."
+        few: "%{first_identifier} та %{count} інші групи мають занадто багато членів. Ніхто не був сповіщений."
+        many: "%{first_identifier} та %{count} інших груп мають занадто багато членів. Ніхто не був сповіщений."
+        other: "%{first_identifier} та %{count} інших груп мають занадто багато членів. Ніхто не був сповіщений."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "містить символи, які не є ASCII"

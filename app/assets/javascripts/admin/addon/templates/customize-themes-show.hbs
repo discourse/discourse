@@ -10,21 +10,21 @@
     {{#if this.editingName}}
       <TextField @value={{this.model.name}} @autofocus="true" />
       <DButton
-        @action={{action "finishedEditingName"}}
-        @class="btn-primary btn-small submit-edit"
+        @action={{this.finishedEditingName}}
         @icon="check"
+        class="btn-primary btn-small submit-edit"
       />
       <DButton
-        @action={{action "cancelEditingName"}}
-        @class="btn-small cancel-edit"
+        @action={{this.cancelEditingName}}
         @icon="times"
+        class="btn-small cancel-edit"
       />
     {{else}}
       <span>{{this.model.name}}</span>
       <DButton
-        @action={{action "startEditingName"}}
+        @action={{this.startEditingName}}
         @icon="pencil-alt"
-        @class="btn-small"
+        class="btn-small"
       />
     {{/if}}
   </div>
@@ -59,16 +59,16 @@
       {{/if}}
 
       <DButton
-        @action={{action "updateToLatest"}}
+        @action={{this.updateToLatest}}
         @icon="download"
-        @class="btn-primary finish-install"
         @label="admin.customize.theme.finish_install"
+        class="btn-primary finish-install"
       />
       <DButton
-        @action={{action "destroyTheme"}}
+        @action={{this.destroyTheme}}
         @label="admin.customize.delete"
         @icon="trash-alt"
-        @class="btn-danger"
+        class="btn-danger"
       />
 
       <span class="status-message">
@@ -108,10 +108,10 @@
           {{i18n "admin.customize.theme.disabled"}}
         {{/if}}
         <DButton
-          @class="btn-default"
-          @action={{action "enableComponent"}}
+          @action={{this.enableComponent}}
           @icon="check"
           @label="admin.customize.theme.enable"
+          class="btn-default"
         />
       </div>
     {{/unless}}
@@ -181,17 +181,17 @@
 
             {{#if this.model.remote_theme.commits_behind}}
               <DButton
-                @action={{action "updateToLatest"}}
+                @action={{this.updateToLatest}}
                 @icon="download"
-                @class="btn-primary"
                 @label="admin.customize.theme.update_to_latest"
+                class="btn-primary"
               />
             {{else}}
               <DButton
-                @action={{action "checkForThemeUpdates"}}
+                @action={{this.checkForThemeUpdates}}
                 @icon="sync"
-                @class="btn-default"
                 @label="admin.customize.theme.check_for_updates"
+                class="btn-default"
               />
             {{/if}}
 
@@ -293,14 +293,14 @@
           <div class="setting-controls">
             {{#if this.colorSchemeChanged}}
               <DButton
-                @action={{action "changeScheme"}}
-                @class="ok submit-edit"
+                @action={{this.changeScheme}}
                 @icon="check"
+                class="ok submit-edit"
               />
               <DButton
-                @action={{action "cancelChangeScheme"}}
-                @class="cancel cancel-edit"
+                @action={{this.cancelChangeScheme}}
                 @icon="times"
+                class="cancel cancel-edit"
               />
             {{/if}}
           </div>
@@ -349,9 +349,9 @@
         {{/if}}
 
         <DButton
-          @class="btn-default edit"
-          @action={{action "editTheme"}}
+          @action={{this.editTheme}}
           @label="admin.customize.theme.edit_css_html"
+          class="btn-default edit"
         />
       </div>
 
@@ -369,10 +369,9 @@
                   >{{upload.filename}}</a></span>
                 <span class="col">
                   <DButton
-                    @action={{action "removeUpload"}}
-                    @actionParam={{upload}}
-                    @class="second btn-default btn-default cancel-edit"
+                    @action={{fn this.removeUpload upload}}
                     @icon="times"
+                    class="second btn-default btn-default cancel-edit"
                   />
                 </span>
               </li>
@@ -384,10 +383,10 @@
             }}</div>
         {{/if}}
         <DButton
-          @action={{action "addUploadModal"}}
-          @class="btn-default"
+          @action={{this.addUploadModal}}
           @icon="plus"
           @label="admin.customize.theme.add"
+          class="btn-default"
         />
       </div>
     {{/unless}}
@@ -471,48 +470,46 @@
 
       {{#if this.showConvert}}
         <DButton
-          @action={{action "switchType"}}
+          @action={{this.switchType}}
           @label="admin.customize.theme.convert"
           @icon={{this.convertIcon}}
-          @class="btn-default btn-normal"
           @title={{this.convertTooltip}}
+          class="btn-default btn-normal"
         />
       {{/if}}
 
       {{#if this.model.component}}
         {{#if this.model.enabled}}
           <DButton
-            @class="btn-default"
-            @action={{action "disableComponent"}}
+            @action={{this.disableComponent}}
             @icon="ban"
             @label="admin.customize.theme.disable"
+            class="btn-default"
           />
         {{else}}
           <DButton
-            @class="btn-default"
-            @action={{action "enableComponent"}}
+            @action={{this.enableComponent}}
             @icon="check"
             @label="admin.customize.theme.enable"
+            class="btn-default"
           />
         {{/if}}
       {{/if}}
       {{#if this.hasSettings}}
-
         <DButton
           @action={{this.showThemeSettingsEditor}}
           @label="admin.customize.theme.settings_editor"
           @icon="pen"
-          @class="btn-default btn-normal"
           @title="admin.customize.theme.settings_editor"
+          class="btn-default btn-normal"
         />
       {{/if}}
       <DButton
-        @action={{action "destroyTheme"}}
+        @action={{this.destroyTheme}}
         @label="admin.customize.delete"
         @icon="trash-alt"
-        @class="btn-danger"
+        class="btn-danger"
       />
     </div>
   {{/if}}
-
 </div>

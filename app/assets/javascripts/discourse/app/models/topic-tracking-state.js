@@ -732,22 +732,23 @@ const TopicTrackingState = EmberObject.extend({
 
   lookupCount({ type, category, tagId, noSubcategories, customFilterFn } = {}) {
     if (type === "latest") {
-      return (
-        this.lookupCount({
-          type: "new",
-          category,
-          tagId,
-          noSubcategories,
-          customFilterFn,
-        }) +
-        this.lookupCount({
+      let count = this.lookupCount({
+        type: "new",
+        category,
+        tagId,
+        noSubcategories,
+        customFilterFn,
+      });
+      if (!this.currentUser?.new_new_view_enabled) {
+        count += this.lookupCount({
           type: "unread",
           category,
           tagId,
           noSubcategories,
           customFilterFn,
-        })
-      );
+        });
+      }
+      return count;
     }
 
     let categoryId = category ? get(category, "id") : null;

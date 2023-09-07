@@ -40,12 +40,12 @@
         {{/if}}
       </div>
       <DButton
-        @class="btn-primary"
-        @action={{action "massAward"}}
-        @type="submit"
+        @action={{this.massAward}}
         @disabled={{this.massAwardButtonDisabled}}
         @icon="certificate"
         @label="admin.badges.mass_award.perform"
+        type="submit"
+        class="btn-primary"
       />
       <LinkTo @route="adminBadges.index" class="btn btn-normal">
         {{d-icon "times"}}

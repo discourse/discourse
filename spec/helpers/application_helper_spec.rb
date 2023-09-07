@@ -32,9 +32,9 @@ RSpec.describe ApplicationHelper do
       set_cdn_url "https://awesome.com"
 
       helper.request.env["HTTP_ACCEPT_ENCODING"] = "br"
-      link = helper.preload_script("discourse")
+      link = helper.preload_script("start-discourse")
 
-      expect(link).to eq(script_tag("https://awesome.com/brotli_asset/discourse.js"))
+      expect(link).to eq(script_tag("https://awesome.com/brotli_asset/start-discourse.js"))
     end
 
     context "with s3 CDN" do
@@ -48,8 +48,8 @@ RSpec.describe ApplicationHelper do
 
       it "deals correctly with subfolder" do
         set_subfolder "/community"
-        expect(helper.preload_script("discourse")).to include(
-          "https://s3cdn.com/assets/discourse.js",
+        expect(helper.preload_script("start-discourse")).to include(
+          "https://s3cdn.com/assets/start-discourse.js",
         )
       end
 
@@ -57,35 +57,35 @@ RSpec.describe ApplicationHelper do
         global_setting :s3_cdn_url, "https://s3cdn.com/s3_subpath"
         set_cdn_url "https://awesome.com"
         set_subfolder "/community"
-        expect(helper.preload_script("discourse")).to include(
-          "https://s3cdn.com/s3_subpath/assets/discourse.js",
+        expect(helper.preload_script("start-discourse")).to include(
+          "https://s3cdn.com/s3_subpath/assets/start-discourse.js",
         )
       end
 
       it "returns magic brotli mangling for brotli requests" do
         helper.request.env["HTTP_ACCEPT_ENCODING"] = "br"
-        link = helper.preload_script("discourse")
+        link = helper.preload_script("start-discourse")
 
-        expect(link).to eq(script_tag("https://s3cdn.com/assets/discourse.br.js"))
+        expect(link).to eq(script_tag("https://s3cdn.com/assets/start-discourse.br.js"))
       end
 
       it "gives s3 cdn if asset host is not set" do
-        link = helper.preload_script("discourse")
+        link = helper.preload_script("start-discourse")
 
-        expect(link).to eq(script_tag("https://s3cdn.com/assets/discourse.js"))
+        expect(link).to eq(script_tag("https://s3cdn.com/assets/start-discourse.js"))
       end
 
       it "can fall back to gzip compression" do
         helper.request.env["HTTP_ACCEPT_ENCODING"] = "gzip"
-        link = helper.preload_script("discourse")
-        expect(link).to eq(script_tag("https://s3cdn.com/assets/discourse.gz.js"))
+        link = helper.preload_script("start-discourse")
+        expect(link).to eq(script_tag("https://s3cdn.com/assets/start-discourse.gz.js"))
       end
 
       it "gives s3 cdn even if asset host is set" do
         set_cdn_url "https://awesome.com"
-        link = helper.preload_script("discourse")
+        link = helper.preload_script("start-discourse")
 
-        expect(link).to eq(script_tag("https://s3cdn.com/assets/discourse.js"))
+        expect(link).to eq(script_tag("https://s3cdn.com/assets/start-discourse.js"))
       end
 
       it "gives s3 cdn but without brotli/gzip extensions for theme tests assets" do
@@ -98,8 +98,8 @@ RSpec.describe ApplicationHelper do
 
       it "uses separate asset CDN if configured" do
         global_setting :s3_asset_cdn_url, "https://s3-asset-cdn.example.com"
-        expect(helper.preload_script("discourse")).to include(
-          "https://s3-asset-cdn.example.com/assets/discourse.js",
+        expect(helper.preload_script("start-discourse")).to include(
+          "https://s3-asset-cdn.example.com/assets/start-discourse.js",
         )
       end
     end
@@ -108,7 +108,7 @@ RSpec.describe ApplicationHelper do
   describe "add_resource_preload_list" do
     it "adds resources to the preload list when it's available" do
       @links_to_preload = []
-      add_resource_preload_list("/assets/discourse.js", "script")
+      add_resource_preload_list("/assets/start-discourse.js", "script")
       add_resource_preload_list("/assets/discourse.css", "style")
 
       expect(@links_to_preload.size).to eq(2)
@@ -116,7 +116,7 @@ RSpec.describe ApplicationHelper do
 
     it "doesn't add resources to the preload list when it's not available" do
       @links_to_preload = nil
-      add_resource_preload_list("/assets/discourse.js", "script")
+      add_resource_preload_list("/assets/start-discourse.js", "script")
       add_resource_preload_list("/assets/discourse.css", "style")
 
       expect(@links_to_preload).to eq(nil)
@@ -124,7 +124,7 @@ RSpec.describe ApplicationHelper do
 
     it "adds resources to the preload list when preload_script is called" do
       @links_to_preload = []
-      helper.preload_script("discourse")
+      helper.preload_script("start-discourse")
 
       expect(@links_to_preload.size).to eq(1)
     end
@@ -139,7 +139,7 @@ RSpec.describe ApplicationHelper do
     it "adds resources as the correct type" do
       @links_to_preload = []
       helper.discourse_stylesheet_link_tag(:desktop)
-      helper.preload_script("discourse")
+      helper.preload_script("start-discourse")
 
       expect(@links_to_preload[0]).to match(/as="style"/)
       expect(@links_to_preload[1]).to match(/as="script"/)

@@ -17,19 +17,19 @@
         {{/if}}
         <DSection @class="user-invite-buttons">
           <DButton
-            @class="btn-default"
             @icon="plus"
-            @action={{action "createInvite"}}
+            @action={{this.createInvite}}
             @label="user.invited.create"
+            class="btn-default"
           />
           {{#if this.canBulkInvite}}
             {{#if this.siteSettings.allow_bulk_invite}}
               {{#unless this.site.mobileView}}
                 <DButton
-                  @class="btn-flat"
                   @icon="upload"
-                  @action={{action "createInviteCsv"}}
+                  @action={{this.createInviteCsv}}
                   @label="user.invited.bulk_invite.text"
+                  class="btn-flat"
                 />
               {{/unless}}
             {{/if}}
@@ -43,7 +43,7 @@
               {{else}}
                 <DButton
                   @icon="times"
-                  @action={{action "destroyAllExpired"}}
+                  @action={{this.destroyAllExpired}}
                   @label="user.invited.remove_all"
                 />
               {{/if}}
@@ -60,10 +60,10 @@
                 </span>
               {{else if this.hasEmailInvites}}
                 <DButton
-                  @class="btn-default"
                   @icon="sync"
-                  @action={{action "reinviteAll"}}
+                  @action={{this.reinviteAll}}
                   @label="user.invited.reinvite_all"
+                  class="btn-default"
                 />
               {{/if}}
             {{/if}}
@@ -187,20 +187,20 @@
                     {{#if invite.can_delete_invite}}
                       <td class="invite-actions">
                         <DButton
-                          @class="btn-default"
                           @icon="pencil-alt"
-                          @action={{action "editInvite" invite}}
+                          @action={{fn this.editInvite invite}}
                           @title="user.invited.edit"
+                          class="btn-default"
                         />
                         <DButton
                           @icon="trash-alt"
-                          @class="cancel"
-                          @action={{action "destroyInvite" invite}}
+                          @action={{fn this.destroyInvite invite}}
                           @title={{if
                             invite.destroyed
                             "user.invited.removed"
                             "user.invited.remove"
                           }}
+                          class="cancel"
                         />
                       </td>
                     {{/if}}
