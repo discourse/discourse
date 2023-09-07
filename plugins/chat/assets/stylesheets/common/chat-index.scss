@@ -97,34 +97,6 @@
     position: relative;
     cursor: pointer;
     color: var(--primary-high);
-    transition: height 0.25s ease-out, opacity 0.25s ease-out;
-    transform-origin: top center;
-    opacity: 1;
-    will-change: height, opacity, left;
-
-    &__action-btn {
-      display: flex;
-      align-items: center;
-      position: absolute;
-      top: 0px;
-      bottom: 0px;
-      padding-inline: 0.5rem;
-      color: var(--primary);
-
-      &.-cancel {
-        background: var(--tertiary);
-      }
-
-      &.-remove {
-        background: var(--danger);
-      }
-    }
-
-    &.-fade-out {
-      opacity: 0;
-      height: 0 !important;
-      overflow: hidden;
-    }
 
     @media (hover: none) {
       &:hover,
