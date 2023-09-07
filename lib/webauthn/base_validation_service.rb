@@ -2,10 +2,11 @@
 
 module DiscourseWebauthn
   class BaseValidationService
-    def initialize(current_user, params, challenge_params)
+    def initialize(current_user, params, options = {})
       @current_user = current_user
       @params = params
-      @challenge_params = challenge_params
+      @challenge = options[:challenge]
+      @factor_type = options[:factor_type]
     end
 
     def validate_webauthn_type(type_to_check)
@@ -52,7 +53,7 @@ module DiscourseWebauthn
     end
 
     def challenge_match?
-      Base64.decode64(client_data["challenge"]) == @challenge_params[:challenge]
+      Base64.decode64(client_data["challenge"]) == @challenge
     end
 
     def origin_match?
