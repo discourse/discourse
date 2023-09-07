@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseWebauthn
-  class SecurityKeyBaseValidationService
+  class BaseValidationService
     def initialize(current_user, params, challenge_params)
       @current_user = current_user
       @params = params

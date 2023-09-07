@@ -1578,7 +1578,7 @@ class UsersController < ApplicationController
     params.require(:attestation)
     params.require(:clientData)
 
-    ::DiscourseWebauthn::SecurityKeyRegistrationService.new(
+    ::DiscourseWebauthn::RegistrationService.new(
       current_user,
       params,
       challenge: DiscourseWebauthn.challenge(current_user, secure_session),

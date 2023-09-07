@@ -163,7 +163,7 @@ module SecondFactorManager
   end
 
   def authenticate_security_key(secure_session, security_key_credential)
-    ::DiscourseWebauthn::SecurityKeyAuthenticationService.new(
+    ::DiscourseWebauthn::AuthenticationService.new(
       self,
       security_key_credential,
       challenge: DiscourseWebauthn.challenge(self, secure_session),

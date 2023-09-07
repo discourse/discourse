@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require "discourse_webauthn"
-require "webauthn/security_key_registration_service"
+require "webauthn/registration_service"
 
 ##
 # These tests use the following parameters generated on a local discourse
@@ -36,7 +36,7 @@ require "webauthn/security_key_registration_service"
 #
 # The origin params just need to be whatever your localhost URL for Discourse is.
 
-RSpec.describe DiscourseWebauthn::SecurityKeyAuthenticationService do
+RSpec.describe DiscourseWebauthn::AuthenticationService do
   subject(:service) { described_class.new(current_user, params, challenge_params) }
 
   let(:security_key_user) { current_user }
