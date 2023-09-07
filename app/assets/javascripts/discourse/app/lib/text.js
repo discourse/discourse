@@ -33,15 +33,16 @@ function getOpts(opts) {
   return buildOptions(opts);
 }
 
-// Use this to easily create a pretty text instance with proper options
 export function cook(text, options) {
-  return htmlSafe(createPrettyText(options).cook(text));
+  return loadMarkdownIt().then(() => {
+    const cooked = createPrettyText(options).cook(text);
+    return htmlSafe(cooked);
+  });
 }
 
-// everything should eventually move to async API and this should be renamed
-// cook
+// todo drop this function after migrating everything to cook()
 export function cookAsync(text, options) {
-  return loadMarkdownIt().then(() => cook(text, options));
+  return cook(text, options);
 }
 
 // Warm up pretty text with a set of options and return a function
