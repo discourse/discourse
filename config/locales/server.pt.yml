@@ -276,7 +276,6 @@ pt:
     more_replies:
       one: "mais %{count} resposta"
       other: "mais %{count} respostas"
-    loading: "A carregar Discussão..."
     permalink: "Hiperligação Permanente"
     imported_from: "Este é um tópico de discussão de acompanhamento para a entrada original em %{link}"
     in_reply_to: "▶ %{username}"
@@ -1052,7 +1051,6 @@ pt:
     top_topics_formula_least_likes_per_post_multiplier: "valor do multiplicador (n) de menos gostos por publicação na fórmula dos melhores tópicos: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     rate_limit_create_topic: "Após a criação de um tópico, os utilizadores devem esperar (n) segundos antes de criarem um novo tópico."
     rate_limit_create_post: "Após a publicação, os utilizadores devem esperar (n) segundos antes de criarem outra mensagem."
-    rate_limit_new_user_create_topic: "Após a criação de um tópico, os novos utilizadores devem esperar (n) segundos antes de criarem um novo tópico."
     rate_limit_new_user_create_post: "Após a publicação, os novos utilizadores devem esperar (n) segundos antes de criarem novas mensagens."
     max_likes_per_day: "Número máximo de gostos por utilizador por dia."
     max_flags_per_day: "Número máximo de sinalizações por utilizador por dia."
@@ -1267,7 +1265,6 @@ pt:
     default_categories_tracking: "Lista de categorias que por defeito são acompanhadas."
     default_categories_muted: "Lista de categorias que por defeito são mudas."
     default_categories_watching_first_post: "Lista de categorias em que a primeira publicação em cada novo tópico será vigiada por defeito."
-    allow_user_api_keys: "Permitir geração de chaves de API de utilizador"
     allow_user_api_key_scopes: "Lista de esferas permitidas para chaves da API de utlizador"
     allowed_user_api_push_urls: "URLs permitidos para o servidor fazer push para a API de utilizador"
     tagging_enabled: "Permitir etiquetas em tópicos?"
@@ -2146,7 +2143,6 @@ pt:
       approve:
         title: "Aprovar"
       reject_user:
-        title: "Eliminar Utilizador..."
         delete:
           title: "Eliminar Utilizador"
       reject:

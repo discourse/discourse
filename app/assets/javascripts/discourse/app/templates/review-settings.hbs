@@ -20,9 +20,9 @@
       <DButton
         @icon="check"
         @label="review.settings.save_changes"
-        @class="btn-primary save-settings"
         @action={{action "save"}}
         @disabled={{this.saving}}
+        class="btn-primary save-settings"
       />
 
       {{#if this.saved}}

@@ -11,5 +11,7 @@ export default class ChatNotice {
   constructor(args = {}) {
     this.channelId = args.channel_id;
     this.textContent = args.text_content;
+    this.type = args.notice_type;
+    this.data = args.data;
   }
 }

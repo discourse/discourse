@@ -99,6 +99,14 @@ module.exports = {
     babel: {
       plugins: [require.resolve("deprecation-silencer")],
     },
+
+    "ember-cli-babel": {
+      throwUnlessParallelizable: true,
+    },
+
+    "ember-this-fallback": {
+      enableLogging: false,
+    },
   },
 
   pluginInfos() {
@@ -241,11 +249,6 @@ module.exports = {
     // files in the addon directories. We need to override that
     // check so that the template compiler always runs.
     return true;
-  },
-
-  treeFor() {
-    // This addon doesn't contribute any 'real' trees to the app
-    return;
   },
 
   // Matches logic from GlobalSetting.load_plugins? in the ruby app

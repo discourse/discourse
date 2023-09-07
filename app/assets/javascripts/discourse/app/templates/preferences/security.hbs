@@ -27,7 +27,10 @@
     {{/unless}}
     <div class="controls pref-second-factor">
       {{#if this.isCurrentUser}}
-        <LinkTo @route="preferences.second-factor" class="btn btn-default">
+        <LinkTo
+          @route="preferences.second-factor"
+          class="btn btn-default btn-second-factor"
+        >
           {{d-icon "lock"}}
           <span>{{i18n "user.second_factor.enable"}}</span>
         </LinkTo>

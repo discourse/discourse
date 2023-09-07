@@ -6,7 +6,7 @@
 
 nl:
   site_settings:
-    chat_enabled: "Schakel de chatplug-in in."
+    chat_enabled: "Chat inschakelen."
     enable_public_channels: "Openbare kanalen inschakelen op basis van categorieën"
     chat_allowed_groups: "Gebruikers in deze groepen kunnen chatten. Houd er rekening mee dat medewerkers altijd toegang hebben tot de chat."
     chat_channel_retention_days: "Chatberichten in reguliere kanalen worden dit aantal dagen bewaard. Stel dit in op '0' om berichten voor altijd te bewaren."
@@ -116,15 +116,11 @@ nl:
         agree_and_delete:
           title: "Bericht verwijderen"
           description: "Verwijder het bericht zodat gebruikers het niet kunnen zien."
-        delete_and_agree:
-          title: "Bericht verwijderen"
         disagree_and_restore:
           title: "Niet akkoord en bericht herstellen"
           description: "Herstel het bericht zodat alle gebruikers het kunnen zien."
         disagree:
           title: "Niet akkoord"
-        ignore:
-          title: "Negeren"
       direct_messages:
         transcript_title: "Transcript van eerdere berichten in %{channel_name}"
         transcript_body: "Om je meer context te geven, hebben we een transcript van de vorige berichten opgenomen in deze conversatie (maximaal tien):\n\n%{transcript}"
@@ -140,6 +136,28 @@ nl:
         multi_user_truncated:
           one: "%{comma_separated_usernames} en %{count} ander"
           other: "%{comma_separated_usernames} en %{count} anderen"
+    mention_warning:
+      dismiss: "sluiten"
+      cannot_see: "%{first_identifier} heeft geen toegang tot dit kanaal en is niet geïnformeerd."
+      cannot_see_multiple:
+        one: "%{first_identifier} en %{count} andere gebruiker hebben geen toegang tot dit kanaal en zijn niet geïnformeerd."
+        other: "%{first_identifier} en %{count} andere gebruikers hebben geen toegang tot dit kanaal en zijn niet geïnformeerd."
+      invitations_sent:
+        one: "Uitnodiging gestuurd"
+        other: "Uitnodigingen gestuurd"
+      invite: "Uitnodigen voor kanaal"
+      without_membership: "%{first_identifier} neemt niet deel aan dit kanaal."
+      without_membership_multiple:
+        one: "%{first_identifier} en %{count} ander nemen niet deel aan dit kanaal."
+        other: "%{first_identifier} en %{count} anderen nemen niet deel aan dit kanaal."
+      group_mentions_disabled: "%{first_identifier} staat geen vermeldingen toe."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} en %{count} andere groep staan geen vermeldingen toe."
+        other: "%{first_identifier} en %{count} andere groepen staan geen vermeldingen toe."
+      too_many_members: "%{first_identifier} heeft te veel leden. Niemand is geïnformeerd."
+      too_many_members_multiple:
+        one: "%{first_identifier} en %{count} andere groep hebben te veel leden. Niemand is geïnformeerd."
+        other: "%{first_identifier} en %{count} andere groepen hebben te veel leden. Niemand is geïnformeerd."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "bevat niet-ASCII-tekens"

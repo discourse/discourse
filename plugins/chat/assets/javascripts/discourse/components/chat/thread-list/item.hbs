@@ -14,11 +14,12 @@
       {{on "click" (fn this.openThread @thread) passive=true}}
     >
       <div class="chat-thread-list-item__header">
-        <div class="chat-thread-list-item__om-user-avatar">
-          <Chat::UserAvatar @user={{@thread.originalMessage.user}} />
-        </div>
-        <div class="chat-thread-list-item__title overflow-ellipsis">
-          {{replace-emoji this.title}}
+        <div class="chat-thread-list-item__title">
+          {{#if this.title}}
+            {{replace-emoji this.title}}
+          {{else}}
+            {{replace-emoji @thread.originalMessage.excerpt}}
+          {{/if}}
         </div>
         <div class="chat-thread-list-item__unread-indicator">
           <Chat::ThreadList::Item::UnreadIndicator @thread={{@thread}} />
@@ -26,17 +27,32 @@
       </div>
 
       <div class="chat-thread-list-item__body">
-        {{replace-emoji (html-safe @thread.originalMessage.excerpt)}}
+        <span class="chat-thread-list-item__last-reply-author">
+          @{{@thread.preview.lastReplyUser.username}}:
+        </span>
+        <span class="chat-thread-list-item__last-reply-excerpt">
+          {{replace-emoji (html-safe @thread.preview.lastReplyExcerpt)}}
+        </span>
       </div>
 
       <div class="chat-thread-list-item__metadata">
-        <div class="chat-thread-list-item__participants"></div>
-        <div class="chat-thread-list-item__last-reply">
+
+        <div class="chat-thread-list-item__last-reply-timestamp">
           {{#if @thread.preview.lastReplyCreatedAt}}
-            {{i18n "chat.thread.last_reply"}}
+            <span>{{i18n "chat.thread.last_reply"}}</span>
             {{format-date @thread.preview.lastReplyCreatedAt leaveAgo="true"}}
           {{/if}}
         </div>
+
+        <Chat::UserAvatar
+          @user={{@thread.originalMessage.user}}
+          @showPresence={{false}}
+        />
+        <Chat::Thread::Participants
+          @thread={{@thread}}
+          @includeOriginalMessageUser={{false}}
+          class="chat-thread-list-item__participants"
+        />
       </div>
     </div>
   </div>

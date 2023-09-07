@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 73
+  BASE_COMPILER_VERSION = 74
 
   attr_accessor :child_components
 
@@ -350,12 +350,7 @@ class Theme < ActiveRecord::Base
     return "" if theme_id.blank?
 
     theme_ids = !skip_transformation ? transform_ids(theme_id) : [theme_id]
-    cache_key = "#{theme_ids.join(",")}:#{target}:#{field}:#{Theme.compiler_version}"
-
-    get_set_cache(cache_key) do
-      target = target.to_sym
-      resolve_baked_field(theme_ids, target, field) || ""
-    end.html_safe
+    (resolve_baked_field(theme_ids, target.to_sym, field) || "").html_safe
   end
 
   def self.lookup_modifier(theme_ids, modifier_name)
@@ -434,25 +429,71 @@ class Theme < ActiveRecord::Base
   end
 
   def self.resolve_baked_field(theme_ids, target, name)
-    if target == :extra_js
-      require_rebake =
-        ThemeField.where(theme_id: theme_ids, target_id: Theme.targets[:extra_js]).where(
-          "compiler_version <> ?",
-          Theme.compiler_version,
-        )
-      require_rebake.each { |tf| tf.ensure_baked! }
-      require_rebake
-        .map(&:theme_id)
-        .uniq
-        .each { |theme_id| Theme.find(theme_id).update_javascript_cache! }
-      caches = JavascriptCache.where(theme_id: theme_ids)
-      caches = caches.sort_by { |cache| theme_ids.index(cache.theme_id) }
-      return caches.map { |c| <<~HTML.html_safe }.join("\n")
+    target = target.to_sym
+    name = name&.to_sym
+
+    target = :mobile if target == :mobile_theme
+    target = :desktop if target == :desktop_theme
+
+    case target
+    when :extra_js
+      get_set_cache("#{theme_ids.join(",")}:extra_js:#{Theme.compiler_version}") do
+        require_rebake =
+          ThemeField.where(theme_id: theme_ids, target_id: Theme.targets[:extra_js]).where(
+            "compiler_version <> ?",
+            Theme.compiler_version,
+          )
+
+        ActiveRecord::Base.transaction do
+          require_rebake.each { |tf| tf.ensure_baked! }
+
+          Theme.where(id: require_rebake.map(&:theme_id)).each(&:update_javascript_cache!)
+        end
+
+        caches =
+          JavascriptCache
+            .where(theme_id: theme_ids)
+            .index_by(&:theme_id)
+            .values_at(*theme_ids)
+            .compact
+
+        caches.map { |c| <<~HTML.html_safe }.join("\n")
           <link rel="preload" href="#{c.url}" as="script">
           <script defer src='#{c.url}' data-theme-id='#{c.theme_id}'></script>
         HTML
+      end
+    when :translations
+      theme_field_values(theme_ids, :translations, I18n.fallbacks[name])
+        .to_a
+        .select(&:second)
+        .uniq { |((theme_id, _, _), _)| theme_id }
+        .flat_map(&:second)
+        .join("\n")
+    else
+      theme_field_values(theme_ids, [:common, target], name).values.compact.flatten.join("\n")
     end
-    list_baked_fields(theme_ids, target, name).map { |f| f.value_baked || f.value }.join("\n")
+  end
+
+  def self.theme_field_values(theme_ids, targets, names)
+    cache.defer_get_set_bulk(
+      Array(theme_ids).product(Array(targets), Array(names)),
+      lambda do |(theme_id, target, name)|
+        "#{theme_id}:#{target}:#{name}:#{Theme.compiler_version}"
+      end,
+    ) do |keys|
+      keys = keys.map { |theme_id, target, name| [theme_id, Theme.targets[target], name.to_s] }
+
+      keys
+        .map do |theme_id, target_id, name|
+          ThemeField.where(theme_id: theme_id, target_id: target_id, name: name)
+        end
+        .inject { |a, b| a.or(b) }
+        .each(&:ensure_baked!)
+        .map { |tf| [[tf.theme_id, tf.target_id, tf.name], tf.value_baked || tf.value] }
+        .group_by(&:first)
+        .transform_values { |x| x.map(&:second) }
+        .values_at(*keys)
+    end
   end
 
   def self.list_baked_fields(theme_ids, target, name)

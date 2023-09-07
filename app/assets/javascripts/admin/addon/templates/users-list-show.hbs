@@ -5,15 +5,15 @@
   {{#if this.canCheckEmails}}
     {{#if this.showEmails}}
       <DButton
-        @action={{action "toggleEmailVisibility"}}
-        @class="hide-emails btn-default"
+        @action={{this.toggleEmailVisibility}}
         @label="admin.users.hide_emails"
+        class="hide-emails btn-default"
       />
     {{else}}
       <DButton
-        @action={{action "toggleEmailVisibility"}}
-        @class="show-emails btn-default"
+        @action={{this.toggleEmailVisibility}}
         @label="admin.users.show_emails"
+        class="show-emails btn-default"
       />
     {{/if}}
   {{/if}}
@@ -32,7 +32,6 @@
   @action={{action "loadMore"}}
 >
   {{#if this.model}}
-
     <ResponsiveTable
       @className="users-list"
       @aria-label={{this.title}}
@@ -45,7 +44,6 @@
       }}
       @updates={{this.model.email}}
     >
-
       <:header>
         <TableHeaderToggle
           @class="directory-table__column-header--username"
@@ -271,7 +269,6 @@
           </div>
         {{/each}}
       </:body>
-
     </ResponsiveTable>
 
     <ConditionalLoadingSpinner @condition={{this.refreshing}} />

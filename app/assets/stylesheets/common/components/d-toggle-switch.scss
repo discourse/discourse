@@ -54,7 +54,7 @@
     display: inline-block;
     cursor: pointer;
     background: var(--primary-low-mid);
-    border-radius: 16px;
+    border-radius: var(--toggle-switch-height);
     width: var(--toggle-switch-width);
     height: var(--toggle-switch-height);
     margin-right: 0.5em;
@@ -82,10 +82,10 @@
   &__checkbox-slider::before {
     background: var(--secondary);
     border-radius: 50%;
-    width: calc(var(--toggle-switch-width) / 2.5);
-    height: calc(var(--toggle-switch-width) / 2.5);
-    top: 3.5px;
-    left: 4px;
+    width: calc(var(--toggle-switch-height) * 0.75);
+    height: calc(var(--toggle-switch-height) * 0.75);
+    top: calc(var(--toggle-switch-height) * 0.125);
+    left: calc(var(--toggle-switch-height) * 0.125);
     transition: left 0.25s;
   }
 }

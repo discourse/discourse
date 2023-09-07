@@ -17,6 +17,7 @@ describe "Single thread in side panel", type: :system do
 
   context "when threading_enabled is false for the channel" do
     fab!(:channel) { Fabricate(:chat_channel) }
+
     before { channel.update!(threading_enabled: false) }
 
     it "does not open the side panel for a single thread" do
@@ -116,7 +117,7 @@ describe "Single thread in side panel", type: :system do
       end
 
       it "changes the tracking bell to be Tracking level in the thread panel" do
-        new_thread = Fabricate(:chat_thread, channel: channel, with_replies: 1)
+        new_thread = Fabricate(:chat_thread, channel: channel, with_replies: 1, use_service: true)
         chat_page.visit_channel(channel)
         channel_page.message_thread_indicator(new_thread.original_message).click
         expect(side_panel).to have_open_thread(new_thread)
@@ -171,11 +172,12 @@ describe "Single thread in side panel", type: :system do
       it "does not mark the channel unread if another user sends a message in the thread" do
         other_user = Fabricate(:user)
         chat_system_user_bootstrap(user: other_user, channel: channel)
-        Chat::MessageCreator.create(
-          chat_channel: channel,
+        Fabricate(
+          :chat_message,
+          thread: thread,
           user: other_user,
-          content: "Hello world!",
-          thread_id: thread.id,
+          message: "Hello world!",
+          use_service: true,
         )
         sign_in(current_user)
         chat_page.visit_channel(channel)

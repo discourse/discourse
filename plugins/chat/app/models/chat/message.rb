@@ -13,9 +13,9 @@ module Chat
 
     belongs_to :chat_channel, class_name: "Chat::Channel"
     belongs_to :user
-    belongs_to :in_reply_to, class_name: "Chat::Message"
+    belongs_to :in_reply_to, class_name: "Chat::Message", autosave: true
     belongs_to :last_editor, class_name: "User"
-    belongs_to :thread, class_name: "Chat::Thread", optional: true
+    belongs_to :thread, class_name: "Chat::Thread", optional: true, autosave: true
 
     has_many :replies,
              class_name: "Chat::Message",
@@ -113,7 +113,7 @@ module Chat
       return uploads.first.original_filename if cooked.blank? && uploads.present?
 
       # this may return blank for some complex things like quotes, that is acceptable
-      PrettyText.excerpt(cooked, max_length)
+      PrettyText.excerpt(cooked, max_length, strip_links: true)
     end
 
     def censored_excerpt(max_length: 50)

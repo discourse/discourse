@@ -2573,6 +2573,16 @@ RSpec.describe Topic do
         4.days.ago.to_date => 1,
       )
     end
+
+    it "returns the correct count with group filter" do
+      group = Fabricate(:group)
+      group.add(user)
+      topic = Fabricate(:topic, user: user)
+
+      expect(Topic.listable_count_per_day(2.days.ago, Time.now, nil, false, [group.id])).to include(
+        Time.now.utc.to_date => 1,
+      )
+    end
   end
 
   describe "#secure_category?" do

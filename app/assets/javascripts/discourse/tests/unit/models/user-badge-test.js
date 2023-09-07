@@ -58,10 +58,10 @@ module("Unit | Model | user-badge", function (hooks) {
   });
 
   test("revoke", async function (assert) {
-    assert.expect(0);
     const store = getOwner(this).lookup("service:store");
     const userBadge = store.createRecord("user-badge", { id: 1 });
-    await userBadge.revoke();
+    const result = await userBadge.revoke();
+    assert.deepEqual(result, { success: true });
   });
 
   test("favorite", async function (assert) {

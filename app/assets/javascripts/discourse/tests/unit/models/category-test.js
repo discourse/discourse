@@ -69,8 +69,6 @@ module("Unit | Model | category", function (hooks) {
   });
 
   test("findBySlug", function (assert) {
-    assert.expect(6);
-
     const store = getOwner(this).lookup("service:store");
     const darth = store.createRecord("category", { id: 1, slug: "darth" }),
       luke = store.createRecord("category", {
@@ -134,8 +132,6 @@ module("Unit | Model | category", function (hooks) {
   });
 
   test("findSingleBySlug", function (assert) {
-    assert.expect(6);
-
     const store = getOwner(this).lookup("service:store");
     const darth = store.createRecord("category", { id: 1, slug: "darth" }),
       luke = store.createRecord("category", {

@@ -15,9 +15,9 @@
 />
 
 <DButton
-  @type="submit"
-  @class="btn-default"
-  @action={{action "submitForm"}}
+  @action={{this.submitForm}}
   @disabled={{this.formSubmitted}}
   @label="admin.logs.screened_ips.form.add"
+  type="submit"
+  class="btn-default"
 />

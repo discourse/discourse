@@ -6,6 +6,7 @@ describe "Uploading files in the composer", type: :system, js: true do
   let(:modal) { PageObjects::Modals::Base.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:topic) { PageObjects::Pages::Topic.new }
+  let(:cdp) { PageObjects::CDP.new }
 
   before { sign_in(current_user) }
 
@@ -29,17 +30,15 @@ describe "Uploading files in the composer", type: :system, js: true do
     visit "/new-topic"
     expect(composer).to be_opened
 
-    page.driver.browser.network_conditions = { latency: 20_000 }
+    file_path_1 = file_from_fixtures("huge.jpg", "images").path
+    cdp.with_slow_upload do
+      attach_file(file_path_1) { composer.click_toolbar_button("upload") }
+      expect(composer).to have_in_progress_uploads
+      find("#cancel-file-upload").click
 
-    file_path_1 = file_from_fixtures("logo.png", "images").path
-    attach_file(file_path_1) { composer.click_toolbar_button("upload") }
-    expect(composer).to have_in_progress_uploads
-    find("#cancel-file-upload").click
-
-    expect(composer).to have_no_in_progress_uploads
-    expect(composer.preview).to have_no_css(".image-wrapper")
-  ensure
-    page.driver.browser.network_conditions = { latency: 0 }
+      expect(composer).to have_no_in_progress_uploads
+      expect(composer.preview).to have_no_css(".image-wrapper")
+    end
   end
 
   context "when video thumbnails are enabled" do

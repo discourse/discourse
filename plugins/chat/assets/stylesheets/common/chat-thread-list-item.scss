@@ -10,7 +10,7 @@
 .chat-thread-list-item {
   @include thread-list-item;
   cursor: pointer;
-  margin: 0.25rem;
+  margin: 0.75rem;
 
   & + .chat-thread-list-item {
     margin-top: 0;
@@ -31,6 +31,11 @@
     }
   }
 
+  &__participants {
+    display: flex;
+    align-items: center;
+  }
+
   &__main {
     flex: 1 1 100%;
     width: 100%;
@@ -39,21 +44,47 @@
   &__body {
     padding-bottom: 0.25rem;
     word-break: break-word;
-    margin: 0.5rem 0rem;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
 
     > * {
       pointer-events: none;
     }
   }
 
-  &__metadata {
-    display: flex;
-    justify-content: flex-end;
+  &__last-reply-author {
+    font-weight: 700;
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
   }
 
-  &__last-reply {
-    color: var(--secondary-low);
-    font-size: var(--font-down-1);
+  &__metadata {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    .chat-user-avatar {
+      .avatar {
+        border: 1px solid var(--primary-very-low);
+      }
+
+      &:not(:last-child) {
+        margin-right: -8px;
+      }
+    }
+  }
+
+  &__participants {
+    margin-right: 0.25rem;
+  }
+
+  &__last-reply-timestamp {
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+    @include ellipsis;
+    margin-right: auto;
   }
 
   &__header {
@@ -66,10 +97,20 @@
   &__title {
     flex: 1 1 auto;
     font-weight: bold;
+    @include ellipsis;
+  }
+
+  &__last-reply-excerpt {
+    font-size: var(--font-down-1);
   }
 
   &__unread-indicator {
     flex: 0 0 auto;
+
+    .chat-thread-list-item-unread-indicator__number {
+      color: var(--primary);
+      font-size: var(--font-up-1);
+    }
   }
 
   &__open-button {
@@ -77,12 +118,6 @@
     flex-direction: column;
     box-sizing: border-box;
     justify-content: center;
-    color: var(--primary);
-
-    &:hover,
-    &:visited {
-      color: var(--primary);
-    }
   }
 
   &__om-user-avatar {

@@ -370,7 +370,7 @@ module Service
 
     # @!visibility private
     def fail!(message)
-      step_name = caller_locations(1, 1)[0].label
+      step_name = caller_locations(1, 1)[0].base_label
       context["result.step.#{step_name}"].fail(error: message)
       context.fail!
     end

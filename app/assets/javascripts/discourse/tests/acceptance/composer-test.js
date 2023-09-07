@@ -334,6 +334,22 @@ acceptance("Composer", function (needs) {
     );
   });
 
+  test("Replying to the first post in a topic is a topic reply", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    await click("#post_1 .reply.create");
+    assert.strictEqual(
+      query(".reply-details a.topic-link").innerText,
+      "Internationalization / localization"
+    );
+
+    await click("#post_1 .reply.create");
+    assert.strictEqual(
+      query(".reply-details a.topic-link").innerText,
+      "Internationalization / localization"
+    );
+  });
+
   test("Can edit a post after starting a reply", async function (assert) {
     await visit("/t/internationalization-localization/280");
 

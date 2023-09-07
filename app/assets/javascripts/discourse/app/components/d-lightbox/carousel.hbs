@@ -1,11 +1,11 @@
 <div class="d-lightbox__carousel">
   {{#if @shouldDisplayCarouselArrows}}
     <DButton
-      @class="d-lightbox__carousel-previous-button btn-flat"
+      {{on "click" @showPreviousItem passive=true capture=true}}
       @title="experimental_lightbox.buttons.previous"
       @icon={{@previousButtonIcon}}
       @ariaHidden="true"
-      {{on "click" @showPreviousItem passive=true capture=true}}
+      class="d-lightbox__carousel-previous-button btn-flat"
     />
   {{/if}}
   <div
@@ -39,11 +39,11 @@
   </div>
   {{#if @shouldDisplayCarouselArrows}}
     <DButton
-      @class="d-lightbox__carousel-next-button btn-flat"
+      {{on "click" @showNextItem passive=true capture=true}}
       @title="experimental_lightbox.buttons.next"
       @icon={{@nextButtonIcon}}
       @ariaHidden="true"
-      {{on "click" @showNextItem passive=true capture=true}}
+      class="d-lightbox__carousel-next-button btn-flat"
     />
   {{/if}}
 </div>

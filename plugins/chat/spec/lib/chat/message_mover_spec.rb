@@ -34,7 +34,10 @@ describe Chat::MessageMover do
   fab!(:message4) { Fabricate(:chat_message, chat_channel: destination_channel) }
   fab!(:message5) { Fabricate(:chat_message, chat_channel: destination_channel) }
   fab!(:message6) { Fabricate(:chat_message, chat_channel: destination_channel) }
+
   let(:move_message_ids) { [message1.id, message2.id, message3.id] }
+
+  before { source_channel.update!(last_message: message3) }
 
   describe "#move_to_channel" do
     def move!(move_message_ids = [message1.id, message2.id, message3.id])

@@ -59,7 +59,7 @@ export default DiscourseRoute.extend({
     const filterType = this.navMode.split("/")[0];
 
     let tagNotification;
-    if (tag && tag.id !== NONE && this.currentUser) {
+    if (tag && tag.id !== NONE && this.currentUser && !additionalTags) {
       // If logged in, we should get the tag's user settings
       tagNotification = await this.store.find(
         "tagNotification",

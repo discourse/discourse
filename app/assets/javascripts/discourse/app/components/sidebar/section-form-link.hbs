@@ -65,8 +65,8 @@
   </div>
   <DButton
     @icon="trash-alt"
-    @action={{action @deleteLink @link}}
-    @class="btn-flat delete-link"
+    @action={{fn @deleteLink @link}}
     @title="sidebar.sections.custom.links.delete"
+    class="btn-flat delete-link"
   />
 </div>

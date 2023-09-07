@@ -12,8 +12,8 @@ RSpec.describe "Reply to message - channel - full page", type: :system do
     Fabricate(
       :chat_message,
       chat_channel: channel_1,
-      user: Fabricate(:user),
       message: "This is a message to reply to!",
+      use_service: true,
     )
   end
 
@@ -56,9 +56,7 @@ RSpec.describe "Reply to message - channel - full page", type: :system do
   end
 
   context "when the message has an existing thread" do
-    fab!(:message_1) do
-      Fabricate(:chat_message, chat_channel: channel_1, in_reply_to: original_message)
-    end
+    fab!(:message_1) { Fabricate(:chat_message, in_reply_to: original_message, use_service: true) }
 
     before { original_message.thread.add(current_user) }
 
@@ -106,7 +104,7 @@ RSpec.describe "Reply to message - channel - full page", type: :system do
       channel_page.reply_to(original_message)
 
       expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
-        "<a class=\"mention\" href=\"/u/#{other_user.username}\">@#{other_user.username}</a> &lt;mark&gt;not marked&lt;/mark&gt;",
+        "@#{other_user.username} &lt;mark&gt;not marked&lt;/mark&gt;",
       )
 
       channel_page.fill_composer("reply to message")

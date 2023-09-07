@@ -4,13 +4,6 @@
     {{#each this.adminRoutes as |route|}}
       <NavItem @route={{route.full_location}} @label={{route.label}} />
     {{/each}}
-    {{#if this.currentUser.admin}}
-      <NavItem
-        @route="adminSiteSettingsCategory"
-        @label="admin.plugins.change_settings"
-        @routeParam="plugins"
-      />
-    {{/if}}
   </HorizontalOverflowNav>
 </div>
 

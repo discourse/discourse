@@ -86,7 +86,6 @@ te:
     more_replies:
       one: "మరో జవాబు ఉంది"
       other: "ఇంకా %{count} జవాబులు ఉన్నాయి"
-    loading: "చర్చ లోడవుతోంది"
     permalink: "శాస్వత లంకె"
     imported_from: "%{link} వద్ద మూల పద్దుకు జోడు చర్చా విషయం ఉంది."
     in_reply_to: "▶ %{username}"

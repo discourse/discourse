@@ -158,10 +158,10 @@
       {{#if (chat-guardian "can-archive-channel" @channel)}}
         <div class="chat-form__field">
           <DButton
-            @action={{action "onArchiveChannel"}}
+            @action={{this.onArchiveChannel}}
             @label="chat.channel_settings.archive_channel"
-            @class="archive-btn chat-form__btn btn-flat"
             @icon="archive"
+            class="archive-btn chat-form__btn btn-flat"
           />
         </div>
       {{/if}}
@@ -169,29 +169,29 @@
       {{#if @channel.isClosed}}
         <div class="chat-form__field">
           <DButton
-            @action={{action "onToggleChannelState"}}
+            @action={{this.onToggleChannelState}}
             @label="chat.channel_settings.open_channel"
-            @class="open-btn chat-form__btn btn-flat"
             @icon="unlock"
+            class="open-btn chat-form__btn btn-flat"
           />
         </div>
       {{else}}
         <div class="chat-form__field">
           <DButton
-            @action={{action "onToggleChannelState"}}
+            @action={{this.onToggleChannelState}}
             @label="chat.channel_settings.close_channel"
-            @class="close-btn chat-form__btn btn-flat"
             @icon="lock"
+            class="close-btn chat-form__btn btn-flat"
           />
         </div>
       {{/if}}
 
       <div class="chat-form__field">
         <DButton
-          @action={{action "onDeleteChannel"}}
+          @action={{this.onDeleteChannel}}
           @label="chat.channel_settings.delete_channel"
-          @class="delete-btn chat-form__btn btn-flat"
           @icon="trash-alt"
+          class="delete-btn chat-form__btn btn-flat"
         />
       </div>
     {{/if}}
