@@ -21,7 +21,9 @@
     <link integrity="" rel="stylesheet" href="{{rootURL}}assets/vendor.css" />
     <link integrity="" rel="stylesheet" href="{{rootURL}}assets/discourse.css" />
 
-    <script defer src="{{rootURL}}assets/vendor.js"></script>
+    <discourse-chunked-script entrypoint="vendor">
+      <script defer src="{{rootURL}}assets/vendor.js"></script>
+    </discourse-chunked-script>
 
     <discourse-chunked-script entrypoint="discourse">
       <ember-auto-import-scripts defer entrypoint="app"></ember-auto-import-scripts>
@@ -51,7 +53,7 @@
 
     <bootstrap-content key="hidden-login-form"></bootstrap-content>
 
-    <script defer src="{{rootURL}}assets/start-discourse.js"></script>
+    <script defer src="{{rootURL}}assets/start-discourse.js" data-embroider-ignore></script>
 
     <bootstrap-content key="body-footer"></bootstrap-content>
     {{content-for "body-footer"}}
