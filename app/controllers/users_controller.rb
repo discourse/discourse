@@ -1578,8 +1578,6 @@ class UsersController < ApplicationController
       current_user,
       params,
       challenge: DiscourseWebauthn.challenge(current_user, secure_session),
-      rp_id: DiscourseWebauthn.rp_id,
-      origin: Discourse.base_url,
     ).register_second_factor_security_key
     render json: success_json
   rescue ::DiscourseWebauthn::SecurityKeyError => err

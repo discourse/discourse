@@ -5833,7 +5833,6 @@ RSpec.describe UsersController do
 
     context "when the creation parameters are invalid" do
       it "shows a security key error and does not create a key" do
-        stub_as_dev_localhost
         create_second_factor_security_key
         _response_parsed = response.parsed_body
 

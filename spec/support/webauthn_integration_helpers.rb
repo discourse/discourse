@@ -17,6 +17,10 @@ module DiscourseWebauthnIntegrationHelpers
   # This is because the challenge is embedded
   # in the post data's authenticatorData and must match up. See
   # simulate_localhost_webauthn_challenge for a real example.
+
+  # All of the valid security key data is sourced from a localhost
+  # login (with origin http://localhost:3000).
+
   def valid_security_key_data
     {
       credential_id:
@@ -55,15 +59,7 @@ module DiscourseWebauthnIntegrationHelpers
     }
   end
 
-  # all of the valid security key data is sourced from a localhost
-  # login, if this is not set the specs for webauthn WILL NOT WORK
-  def stub_as_dev_localhost
-    Discourse.stubs(:current_hostname).returns("localhost")
-    Discourse.stubs(:base_url).returns("http://localhost:3000")
-  end
-
   def simulate_localhost_webauthn_challenge
-    stub_as_dev_localhost
     DiscourseWebauthn::ChallengeGenerator.stubs(:generate).returns(
       DiscourseWebauthn::ChallengeGenerator::ChallengeSession.new(
         challenge: valid_security_key_challenge_data[:challenge],
