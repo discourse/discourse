@@ -14,6 +14,9 @@ describe "User preferences for Security", type: :system do
 
   describe "Security keys" do
     it "adds a 2F security key and logs in with it" do
+      # system specs run on their own host + port
+      DiscourseWebauthn.stubs(:origin).returns(current_host + ":" + Capybara.server_port.to_s)
+
       # simulate browser credential authorization
       options = ::Selenium::WebDriver::VirtualAuthenticatorOptions.new
       page.driver.browser.add_virtual_authenticator(options)
