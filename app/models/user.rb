@@ -1396,10 +1396,6 @@ class User < ActiveRecord::Base
     cats.pluck("categories.id").sort
   end
 
-  def topic_create_allowed_category_ids
-    Category.topic_create_allowed(self.id).select(:id)
-  end
-
   # Flag all posts from a user as spam
   def flag_linked_posts_as_spam
     results = []
