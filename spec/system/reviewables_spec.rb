@@ -76,6 +76,34 @@ describe "Reviewables", type: :system do
         expect(queued_post_reviewable.reload).to be_rejected
         expect(queued_post_reviewable.target_created_by).to be_nil
       end
+
+      it "allows revising and rejecting to send a PM to the user" do
+        revise_modal = PageObjects::Modals::Base.new
+
+        review_page.visit_reviewable(queued_post_reviewable)
+
+        expect(queued_post_reviewable).to be_pending
+        expect(queued_post_reviewable.target_created_by).to be_present
+
+        review_page.select_action(queued_post_reviewable, "revise_and_reject_post")
+
+        expect(revise_modal).to be_open
+
+        reason_dropdown =
+          PageObjects::Components::SelectKit.new(".revise-and-reject-reviewable__reason")
+        reason_dropdown.select_row_by_value(SiteSetting.reviewable_revision_reasons_map.first)
+        find(".revise-and-reject-reviewable__feedback").fill_in(with: "This is a test")
+        revise_modal.click_primary_button
+
+        expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
+        expect(queued_post_reviewable.reload).to be_rejected
+        expect(Topic.where(archetype: Archetype.private_message).last.title).to eq(
+          I18n.t(
+            "system_messages.reviewable_queued_post_revise_and_reject.subject_template",
+            topic_title: queued_post_reviewable.topic.title,
+          ),
+        )
+      end
     end
   end
 end

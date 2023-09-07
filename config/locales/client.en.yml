@@ -480,6 +480,13 @@ en:
         type_bonus:
           name: "type bonus"
           title: "Certain reviewable types can be assigned a bonus by staff to make them a higher priority."
+      revise_and_reject_post:
+        title: "Revise"
+        reason: "Reason"
+        send_pm: "Send PM"
+        feedback: "Feedback"
+        custom_reason: "Give a clear description of the reason"
+        optional: "optional"
       stale_help: "This reviewable has been resolved by <b>%{username}</b>."
       claim_help:
         optional: "You can claim this item to prevent others from reviewing it."

@@ -11,11 +11,18 @@ import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
 import { getOwner } from "discourse-common/lib/get-owner";
 import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
+import ReviseAndRejectPostReviewable from "discourse/components/modal/revise-and-reject-post-reviewable";
 
 let _components = {};
 
 const pluginReviewableParams = {};
-const actionModalClassMap = {};
+
+// The mappings defined here are default core mappings, and cannot be overridden
+// by plugins.
+const defaultActionModalClassMap = {
+  revise_and_reject_post: ReviseAndRejectPostReviewable,
+};
+const actionModalClassMap = { ...defaultActionModalClassMap };
 
 export function addPluginReviewableParam(reviewableType, param) {
   pluginReviewableParams[reviewableType]
@@ -24,6 +31,11 @@ export function addPluginReviewableParam(reviewableType, param) {
 }
 
 export function registerReviewableActionModal(actionName, modalClass) {
+  if (Object.keys(defaultActionModalClassMap).includes(actionName)) {
+    throw new Error(
+      `Cannot override default action modal class for ${actionName} (mapped to ${defaultActionModalClassMap[actionName].name})!`
+    );
+  }
   actionModalClassMap[actionName] = modalClass;
 }
 
@@ -135,7 +147,7 @@ export default Component.extend({
   },
 
   @bind
-  _performConfirmed(performableAction) {
+  _performConfirmed(performableAction, additionalData = {}) {
     let reviewable = this.reviewable;
 
     let performAction = () => {
@@ -145,6 +157,7 @@ export default Component.extend({
       const data = {
         send_email: reviewable.sendEmail,
         reject_reason: reviewable.rejectReason,
+        ...additionalData,
       };
 
       (pluginReviewableParams[reviewable.type] || []).forEach((param) => {
