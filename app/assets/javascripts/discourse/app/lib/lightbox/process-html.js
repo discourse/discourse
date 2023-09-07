@@ -1,5 +1,4 @@
 import { SELECTORS } from "./constants";
-import { escapeExpression } from "discourse/lib/utilities";
 import { htmlSafe } from "@ember/template";
 
 export async function processHTML({ container, selector, clickTarget }) {
@@ -67,7 +66,7 @@ export async function processHTML({ container, selector, clickTarget }) {
         fullsizeURL: encodeURI(_fullsizeURL),
         smallURL: encodeURI(_smallURL),
         downloadURL: encodeURI(_downloadURL),
-        title: escapeExpression(_title),
+        title: _title,
         fileDetails: _fileDetails,
         dominantColor: _dominantColor,
         aspectRatio: _aspectRatio,
