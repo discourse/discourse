@@ -79,7 +79,7 @@ Chat::Engine.routes.draw do
   put "/user_chat_enabled/:user_id" => "chat#set_user_chat_status"
   put "/:chat_channel_id/invite" => "chat#invite_users"
   post "/drafts" => "chat#set_draft"
-  post "/:chat_channel_id" => "chat#create_message"
+  post "/:chat_channel_id" => "api/channel_messages#create"
   put "/flag" => "chat#flag"
   get "/emojis" => "emojis#index"
 
