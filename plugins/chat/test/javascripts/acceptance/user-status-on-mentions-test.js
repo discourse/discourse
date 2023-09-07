@@ -235,7 +235,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     await deleteMessage(".chat-message-content");
     await click(".chat-message-expand");
 
-    loggedInUser().appEvents.triggedr("user-status:changed", {
+    loggedInUser().appEvents.trigger("user-status:changed", {
       [mentionedUser1.id]: newStatus,
     });
 
