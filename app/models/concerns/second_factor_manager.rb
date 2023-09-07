@@ -166,7 +166,7 @@ module SecondFactorManager
     ::DiscourseWebauthn::AuthenticationService.new(
       self,
       security_key_credential,
-      challenge: DiscourseWebauthn.challenge(self, secure_session),
+      session: secure_session,
     ).authenticate_security_key
   end
 
