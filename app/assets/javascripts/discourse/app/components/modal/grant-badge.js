@@ -4,7 +4,6 @@ import Badge from "discourse/models/badge";
 import GrantBadgeController from "discourse/mixins/grant-badge-controller";
 import I18n from "I18n";
 import UserBadge from "discourse/models/user-badge";
-import { all } from "rsvp";
 import discourseComputed from "discourse-common/utils/decorators";
 import { extractError } from "discourse/lib/ajax-error";
 import getURL from "discourse-common/lib/get-url";
@@ -15,22 +14,13 @@ export default class GrantBadgeModal extends Component.extend(
   loading = true;
   saving = false;
   selectedBadgeId = null;
+  flash = null;
+  flashType = null;
+  allBadges = [];
+  userBadges = [];
 
   init() {
-    this.set("loading", true);
-    all([
-      Badge.findAll(),
-      UserBadge.findByUsername(this.get("post.username")),
-    ]).then(([allBadges, userBadges]) => {
-      this.setProperties({
-        allBadges,
-        userBadges,
-        loading: false,
-      });
-    });
     super.init(...arguments);
-    this.allBadges = [];
-    this.userBadges = [];
   }
 
   @discourseComputed("model.selectedPost")
@@ -49,32 +39,51 @@ export default class GrantBadgeModal extends Component.extend(
   }
 
   @action
-  performGrantBadge() {
-    this.set("saving", true);
-
-    this.grantBadge(
-      this.selectedBadgeId,
-      this.get("post.username"),
-      this.badgeReason
-    )
-      .then(
-        (newBadge) => {
-          this.set("selectedBadgeId", null);
-          this.setProperties({
-            flash: I18n.t("badges.successfully_granted", {
-              username: this.get("post.username"),
-              badge: newBadge.get("badge.name"),
-            }),
-            flashType: "success",
-          });
-        },
-        (e) => {
-          this.setProperties({
-            flash: extractError(e),
-            flashType: "error",
-          });
-        }
-      )
-      .finally(() => this.set("saving", false));
+  async loadBadges() {
+    this.set("loading", true);
+    try {
+      const allBadges = await Badge.findAll();
+      const userBadges = await UserBadge.findByUsername(
+        this.get("post.username")
+      );
+      this.setProperties({
+        allBadges,
+        userBadges,
+      });
+    } catch (e) {
+      this.setProperties({
+        flash: extractError(e),
+        flashType: "error",
+      });
+    } finally {
+      this.set("loading", false);
+    }
+  }
+  @action
+  async performGrantBadge() {
+    try {
+      this.set("saving", true);
+      const username = this.get("post.username");
+      const newBadge = await this.grantBadge(
+        this.selectedBadgeId,
+        username,
+        this.badgeReason
+      );
+      this.set("selectedBadgeId", null);
+      this.setProperties({
+        flash: I18n.t("badges.successfully_granted", {
+          username,
+          badge: newBadge.get("badge.name"),
+        }),
+        flashType: "success",
+      });
+    } catch (e) {
+      this.setProperties({
+        flash: extractError(e),
+        flashType: "error",
+      });
+    } finally {
+      this.set("saving", false);
+    }
   }
 }
