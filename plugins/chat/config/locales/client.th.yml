@@ -12,6 +12,7 @@ th:
           always: "เสมอ"
           never: "ไม่เคย"
     chat:
+      deleted_chat_username: ลบ
       create: "สร้าง"
       cancel: "ยกเลิก"
       channel_settings:
@@ -31,8 +32,6 @@ th:
       flag: "ธง"
       join: "เข้าร่วม"
       last_visit: "เยี่ยมชมครั้งล่าสุด"
-      mention_warning:
-        dismiss: "ซ่อน"
       reply: "ตอบ"
       edit: "แก้ไข"
       bookmark_message: "บุ๊คมาร์ค"

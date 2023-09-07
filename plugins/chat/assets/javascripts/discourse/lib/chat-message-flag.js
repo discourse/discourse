@@ -24,10 +24,6 @@ export default class ChatMessageFlag {
     return false;
   }
 
-  includeSeparator() {
-    return true;
-  }
-
   _rewriteFlagDescriptions(flags) {
     return flags.map((flag) => {
       flag.set(

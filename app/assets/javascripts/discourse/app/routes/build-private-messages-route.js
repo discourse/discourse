@@ -60,12 +60,12 @@ export default (inboxType, path, filter) => {
         hideCategory: true,
         showPosters: true,
         tagsForUser: this.modelFor("user").get("username_lower"),
-        selected: [],
         showToggleBulkSelect: true,
         filter,
         group: null,
         inbox: inboxType,
       });
+      userTopicsListController.bulkSelectHelper.clear();
 
       userTopicsListController.subscribe();
 

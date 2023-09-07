@@ -1,0 +1,29 @@
+<div class="mention-without-membership-notice">
+  {{#if this.invitationsSent}}
+    <span
+      class="mention-without-membership-notice__invitation-sent"
+      {{chat/later-fn @clearNotice 3000}}
+    >
+      {{d-icon "check"}}
+      <span>
+        {{i18n
+          "chat.mention_warning.invitations_sent"
+          count=this.userIds.length
+        }}
+      </span>
+    </span>
+  {{else}}
+    <p class="mention-without-membership-notice__body -without-membership">
+      <span
+        class="mention-without-membership-notice__body__text"
+      >{{@notice.data.text}}</span>
+      <a
+        class="mention-without-membership-notice__body__link"
+        href
+        {{on "click" this.sendInvitations}}
+      >
+        {{i18n "chat.mention_warning.invite"}}
+      </a>
+    </p>
+  {{/if}}
+</div>

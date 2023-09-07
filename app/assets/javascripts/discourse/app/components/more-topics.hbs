@@ -7,9 +7,9 @@
             <DButton
               @translatedTitle={{tab.name}}
               @translatedLabel={{tab.name}}
-              @class={{if (eq tab.id this.selectedTab) "active"}}
-              @action={{action "rememberTopicListPreference" tab.id}}
+              @action={{fn this.rememberTopicListPreference tab.id}}
               @icon={{tab.icon}}
+              class={{if (eq tab.id this.selectedTab) "active"}}
             />
           </li>
         {{/each}}

@@ -12,6 +12,7 @@ ca:
           always: "Sempre"
           never: "Mai"
     chat:
+      deleted_chat_username: suprimit
       create: "Crea"
       cancel: "Cancel·la"
       channel_settings:
@@ -31,8 +32,6 @@ ca:
       flag: "Bandera"
       join: "Registre"
       last_visit: "darrera visita"
-      mention_warning:
-        dismiss: "descarta-ho"
       reply: "Respon"
       edit: "Edita"
       rebake_message: "Refés HTML"

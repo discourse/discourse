@@ -118,17 +118,17 @@
 
 <div class="tag-group-controls">
   <DButton
-    @class="btn-primary"
     @action={{action "save"}}
     @disabled={{this.buffered.isSaving}}
     @label="tagging.groups.save"
+    class="btn-primary"
   />
 
   <DButton
-    @class="btn-danger"
     @action={{action "destroy"}}
     @disabled={{this.buffered.isNew}}
     @icon="far-trash-alt"
     @label="tagging.groups.delete"
+    class="btn-danger"
   />
 </div>

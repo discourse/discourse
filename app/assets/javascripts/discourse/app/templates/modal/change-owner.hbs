@@ -29,9 +29,9 @@
 
 <div class="modal-footer">
   <DButton
-    @class="btn-primary"
     @action={{action "changeOwnershipOfPosts"}}
     @disabled={{this.buttonDisabled}}
     @label={{if this.saving "saving" "topic.change_owner.action"}}
+    class="btn-primary"
   />
 </div>

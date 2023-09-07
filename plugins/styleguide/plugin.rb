@@ -7,6 +7,7 @@
 
 register_asset "stylesheets/styleguide.scss"
 enabled_site_setting :styleguide_enabled
+hide_plugin
 
 load File.expand_path("../lib/styleguide/engine.rb", __FILE__)
 

@@ -29,7 +29,7 @@ Rails.application.config.assets.precompile += %w[
   admin.js
   wizard.js
   test-support.js
-  test-helpers.js
+  tests.js
   test-site-settings.js
   browser-detect.js
   browser-update.js

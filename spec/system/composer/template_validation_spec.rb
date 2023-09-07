@@ -8,6 +8,7 @@ describe "Composer Form Template Validations", type: :system, js: true do
       name: "Bug Reports",
       template:
         "- type: input
+  id: full-name
   attributes:
     label: What is your full name?
     placeholder: John Doe
@@ -24,6 +25,7 @@ describe "Composer Form Template Validations", type: :system, js: true do
       name: "Websites",
       template:
         "- type: input
+  id: website-name
   attributes:
     label: What is your website name?
     placeholder: https://www.example.com

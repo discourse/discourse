@@ -5,10 +5,9 @@ describe "Uploading files in the composer to S3", type: :system do
 
   let(:modal) { PageObjects::Modals::Base.new }
   let(:composer) { PageObjects::Components::Composer.new }
+  let(:topic) { PageObjects::Pages::Topic.new }
 
   describe "direct S3 uploads" do
-    before { SiteSetting.enable_direct_s3_uploads = true }
-
     describe "single part uploads" do
       it "uploads custom avatars to S3" do
         skip_unless_s3_system_specs_enabled!
@@ -43,7 +42,7 @@ describe "Uploading files in the composer to S3", type: :system do
         setup_s3_system_test
         sign_in(current_user)
 
-        visit "/new-topic"
+        topic.open_new_topic
 
         file_path = file_from_fixtures("logo.png", "images").path
         attach_file(file_path) { composer.click_toolbar_button("upload") }

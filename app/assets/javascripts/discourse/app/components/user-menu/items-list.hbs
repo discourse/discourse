@@ -40,3 +40,7 @@
 {{else}}
   {{component this.emptyStateComponent}}
 {{/if}}
+<PluginOutlet
+  @name="after-panel-body"
+  @outletArgs={{hash closeUserMenu=@closeUserMenu}}
+/>

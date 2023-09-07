@@ -24,11 +24,11 @@ module DiscourseDev
         ::Chat::UserChatChannelMembership.where(chat_channel: channel).order("RANDOM()").first
       user = membership.user
 
-      { user: user, content: Faker::Lorem.paragraph, chat_channel: channel }
+      { guardian: user.guardian, message: Faker::Lorem.paragraph, chat_channel_id: channel.id }
     end
 
     def create!
-      Chat::MessageCreator.create(data)
+      Chat::CreateMessage.call(data)
     end
   end
 end

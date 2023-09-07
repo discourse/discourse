@@ -8,4 +8,10 @@
   @autocomplete="off"
 />
 
+<PluginOutlet
+  @name="after-composer-title-input"
+  @connectorTagName="div"
+  @outletArgs={{hash composer=this.composer}}
+/>
+
 <PopupInputTip @validation={{this.validation}} />

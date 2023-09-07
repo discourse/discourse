@@ -47,6 +47,7 @@ const DEFAULT_BINDINGS = {
   "=": { handler: "toggleHamburgerMenu", anonymous: true },
   "?": { handler: "showHelpModal", anonymous: true },
   ".": { click: ".alert.alert-info.clickable", anonymous: true }, // show incoming/updated topics
+  a: { handler: "toggleArchivePM" },
   b: { handler: "toggleBookmark" },
   c: { handler: "createTopic" },
   "shift+c": { handler: "focusComposer" },
@@ -803,9 +804,7 @@ export default {
   },
 
   _onScrollEndsCallback() {
-    document
-      .querySelector(".topic-post.selected a:not([tabindex='-1'])")
-      ?.focus();
+    document.querySelector(".topic-post.selected span.tabLoc")?.focus();
   },
 
   categoriesTopicsList() {
@@ -889,6 +888,10 @@ export default {
 
   toggleAdminActions() {
     this.appEvents.trigger("topic:toggle-actions");
+  },
+
+  toggleArchivePM() {
+    getOwner(this).lookup("controller:topic").send("toggleArchiveMessage");
   },
 
   webviewKeyboardBack() {

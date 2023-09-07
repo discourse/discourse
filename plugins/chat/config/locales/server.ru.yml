@@ -6,7 +6,7 @@
 
 ru:
   site_settings:
-    chat_enabled: "Включить плагин чата."
+    chat_enabled: "Включить чат."
     enable_public_channels: "Включить публичные каналы на основе категорий."
     chat_allowed_groups: "Пользователи в этих группах могут общаться в чате. Обратите внимание, что сотрудники всегда могут получить доступ к чату."
     chat_channel_retention_days: "Сообщения чата в обычных каналах будут храниться указанное здесь количество дней. Установите значение в «0», чтобы сохранять сообщения навсегда."
@@ -122,15 +122,11 @@ ru:
         agree_and_delete:
           title: "Удалить сообщение"
           description: "Удалить сообщение, чтобы пользователи не могли его видеть."
-        delete_and_agree:
-          title: "Удалить сообщение"
         disagree_and_restore:
           title: "Отклонить жалобу и восстановить сообщение"
           description: "Восстановить сообщение, чтобы все пользователи могли его видеть."
         disagree:
           title: "Отклонить"
-        ignore:
-          title: "Игнорировать"
       direct_messages:
         transcript_title: "Содержимое предыдущих сообщений в канале %{channel_name}"
         transcript_body: "Чтобы дать больше контекста, мы отображаем содержимое предыдущих сообщений этой беседы (до десяти):\n\n%{transcript}"
@@ -150,6 +146,38 @@ ru:
           few: "%{comma_separated_usernames} и ещё %{count}"
           many: "%{comma_separated_usernames} и ещё %{count}"
           other: "%{comma_separated_usernames} и ещё %{count}"
+    mention_warning:
+      dismiss: "Отклонить"
+      cannot_see: "Пользователь %{first_identifier} не имеет доступа к этому каналу и не был уведомлен."
+      cannot_see_multiple:
+        one: "%{first_identifier} и еще %{count} пользователь не имеют доступа к этому каналу и не были уведомлены."
+        few: "%{first_identifier} и еще %{count} пользователя не имеют доступа к этому каналу и не были уведомлены."
+        many: "%{first_identifier} и еще %{count} пользователей не имеют доступа к этому каналу и не были уведомлены."
+        other: "%{first_identifier} и еще %{count} пользователей не имеют доступа к этому каналу и не были уведомлены."
+      invitations_sent:
+        one: "Приглашение отправлено"
+        few: "Приглашения отправлены"
+        many: "Приглашений отправлены"
+        other: "Приглашений отправлены"
+      invite: "Пригласить в канал"
+      without_membership: "Пользователь %{first_identifier} не является участником канала."
+      without_membership_multiple:
+        one: "%{first_identifier} и еще %{count} пользователь не являются участниками канала."
+        few: "%{first_identifier} и еще %{count} пользователя не являются участниками канала."
+        many: "%{first_identifier} и еще %{count} пользователей не являются участниками канала."
+        other: "%{first_identifier} и еще %{count} пользователей не являются участниками канала."
+      group_mentions_disabled: "В группе «%{first_identifier}» не разрешены упоминания."
+      group_mentions_disabled_multiple:
+        one: "В группе «%{first_identifier}» и еще %{count} не разрешены упоминания."
+        few: "В группе «%{first_identifier}» и еще %{count} не разрешены упоминания."
+        many: "В группе «%{first_identifier}» и еще %{count} не разрешены упоминания."
+        other: "В группе «%{first_identifier}» и еще %{count} не разрешены упоминания."
+      too_many_members: "В группе «%{first_identifier}» слишком много участников. Никто не был уведомлен."
+      too_many_members_multiple:
+        one: "В группе «%{first_identifier}» и еще %{count} слишком много участников. Никто не был уведомлен."
+        few: "В группе «%{first_identifier}» и еще %{count} слишком много участников. Никто не был уведомлен."
+        many: "В группе «%{first_identifier}» и еще %{count} слишком много участников. Никто не был уведомлен."
+        other: "В группе «%{first_identifier}» и еще %{count} слишком много участников. Никто не был уведомлен."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "содержит символы не в ascii-кодировке"

@@ -390,7 +390,9 @@ module("Unit | Utility | uploads", function (hooks) {
       "test.png"
     );
     assert.ok(
-      dialog.alert.calledWith(I18n.t("post.errors.upload")),
+      dialog.alert.calledWith(
+        I18n.t("post.errors.upload", { file_name: "test.png" })
+      ),
       "the alert is called"
     );
   });

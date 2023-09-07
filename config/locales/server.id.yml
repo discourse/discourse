@@ -313,7 +313,6 @@ id:
     configure: "Konfigurasi Penyematan"
     more_replies:
       other: "%{count} jawaban lainnya"
-    loading: "Sedang memuat diskusi..."
     permalink: "Permalink"
     imported_from: "Ini adalah topik diskusi tambahan untuk topik utama di %{link}"
     in_reply_to: "▶ %{username}"
@@ -1704,6 +1703,8 @@ id:
         title: "Tidak, pulihkan postingan"
       disagree:
         title: "Tidak"
+      discard_post:
+        title: "Buang Post"
       ignore:
         title: "Abaikan"
       ignore_and_do_nothing:
@@ -1712,7 +1713,6 @@ id:
       approve:
         title: "Terima"
       reject_user:
-        title: "Hapus Pengguna..."
         delete:
           title: "Hapus Pengguna"
       reject:
@@ -1723,6 +1723,9 @@ id:
       invalid_yaml: "bukan string YAML yang valid"
       invalid_type: "berisi tipe templat yang tidak valid: %{type} (tipe yang valid adalah: %{valid_types})"
       missing_type: "tidak dapat menemukan tipe bidang"
+      missing_id: "tidak ada id bidang"
+      duplicate_ids: "memiliki id duplikat"
+      reserved_id: "memiliki kata kunci khusus sebagai id: %{id}"
   activemodel:
     errors:
       <<: *errors

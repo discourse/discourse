@@ -12,6 +12,7 @@ gl:
           always: "Sempre"
           never: "Nunca"
     chat:
+      deleted_chat_username: eliminado
       create: "Crear"
       cancel: "Cancelar"
       channel_settings:
@@ -31,8 +32,6 @@ gl:
       flag: "Sinalar"
       join: "Participar"
       last_visit: "última visita"
-      mention_warning:
-        dismiss: "desbotar"
       reply: "Responder"
       edit: "Editar"
       rebake_message: "Reconstruír HTML"

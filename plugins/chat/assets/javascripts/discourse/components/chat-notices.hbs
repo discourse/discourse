@@ -2,16 +2,6 @@
   <ChatRetentionReminder @channel={{@channel}} />
 
   {{#each this.noticesForChannel as |notice|}}
-    <div class="chat-notices__notice">
-      <p class="chat-notices__notice__content">
-        {{notice.textContent}}
-      </p>
-
-      <DButton
-        @icon="times"
-        @class="btn-flat chat-notices__notice__clear"
-        @action={{fn this.clearNotice notice}}
-      />
-    </div>
+    <ChatNotice @notice={{notice}} @channel={{@channel}} />
   {{/each}}
 </div>

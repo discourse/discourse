@@ -8,13 +8,12 @@
     <%- if !@suggested_themes %>
       <%= preload_script "locales/#{I18n.locale}" %>
       <%= preload_script "vendor" %>
-      <%= preload_script "discourse" %>
+      <%= preload_script "test-support" %>
+      <%= preload_script "discourse-for-tests" %>
       <%= preload_script "admin" %>
       <%- Discourse.find_plugin_js_assets(include_disabled: true).each do |file| %>
         <%= preload_script file %>
       <%- end %>
-      <%= preload_script "test-support" %>
-      <%= preload_script "test-helpers" %>
       <%= preload_script "test-site-settings" %>
       <%= theme_translations_lookup %>
       <%= theme_js_lookup %>

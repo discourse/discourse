@@ -125,6 +125,10 @@ export default class {
     return result ? result : "";
   }
 
+  parse(markdown, env = {}) {
+    return this.opts.engine.parse(markdown, env);
+  }
+
   sanitize(html) {
     return this.opts.sanitizer(html).trim();
   }

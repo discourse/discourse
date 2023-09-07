@@ -26,7 +26,8 @@ document.addEventListener("discourse-booted", () => {
 
   const params = new URLSearchParams(window.location.search);
   const target = params.get("target");
-  const testingCore = !target || target === "core";
+  const testingTheme = !!document.querySelector("script[data-theme-id]");
+  const testingCore = !testingTheme && (!target || target === "core");
   const disableAutoStart = params.get("qunit_disable_auto_start") === "1";
 
   Ember.ENV.LOG_STACKTRACE_ON_DEPRECATION = false;

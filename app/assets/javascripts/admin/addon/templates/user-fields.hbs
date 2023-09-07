@@ -10,19 +10,18 @@
         @fieldTypes={{this.fieldTypes}}
         @firstField={{this.firstField}}
         @lastField={{this.lastField}}
-        @destroyAction={{action "destroyField"}}
-        @moveUpAction={{action "moveUp"}}
-        @moveDownAction={{action "moveDown"}}
+        @destroyAction={{this.destroyField}}
+        @moveUpAction={{this.moveUp}}
+        @moveDownAction={{this.moveDown}}
       />
     {{/each}}
   {{/if}}
 
   <DButton
     @disabled={{this.createDisabled}}
-    @class="btn-primary"
-    @action={{action "createField"}}
+    @action={{this.createField}}
     @label="admin.user_fields.create"
     @icon="plus"
+    class="btn-primary"
   />
-
 </div>

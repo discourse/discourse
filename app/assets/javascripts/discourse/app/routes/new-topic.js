@@ -54,6 +54,8 @@ export default class extends DiscourseRoute {
         category,
         tags: transition.to.queryParams.tags,
       });
+
+      this.composer.set("formTemplateInitialValues", transition.to.queryParams);
     });
   }
 

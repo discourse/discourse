@@ -86,7 +86,7 @@ task "smoke:test" do
   query_params = { seed: Random.new.seed, theme_url: theme_url, hidepassed: 1, report_requests: 1 }
   url += "/" if !url.end_with?("/")
   full_url = "#{url}theme-qunit?#{query_params.to_query}"
-  timeout = 1000 * 60 * 10
+  timeout = 1000 * 20
 
   sh("node", "#{Rails.root}/test/run-qunit.js", full_url, timeout.to_s)
 

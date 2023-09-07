@@ -16,7 +16,7 @@ module DiscourseWebauthnIntegrationHelpers
   #
   # This is because the challenge is embedded
   # in the post data's authenticatorData and must match up. See
-  # simulate_localhost_webautn_challenge for a real example.
+  # simulate_localhost_webauthn_challenge for a real example.
   def valid_security_key_data
     {
       credential_id:
@@ -67,7 +67,6 @@ module DiscourseWebauthnIntegrationHelpers
     DiscourseWebauthn::ChallengeGenerator.stubs(:generate).returns(
       DiscourseWebauthn::ChallengeGenerator::ChallengeSession.new(
         challenge: valid_security_key_challenge_data[:challenge],
-        rp_id: Discourse.current_hostname,
       ),
     )
   end

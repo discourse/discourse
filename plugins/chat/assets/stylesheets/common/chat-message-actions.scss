@@ -91,6 +91,8 @@
       padding: 0.5em 0;
       width: 2.5em;
       transition: background 0.2s, border-color 0.2s;
+      border-top-left-radius: 0px;
+      border-bottom-left-radius: 0px;
 
       &:focus {
         border-color: var(--primary-300);
@@ -161,6 +163,8 @@
 
     &:first-child {
       border-left-color: var(--primary-300);
+      border-top-left-radius: var(--d-border-radius);
+      border-bottom-left-radius: var(--d-border-radius);
     }
 
     &.reacted {

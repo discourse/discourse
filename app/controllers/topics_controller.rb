@@ -53,8 +53,8 @@ class TopicsController < ApplicationController
   def show
     flash["referer"] ||= request.referer[0..255] if request.referer
 
-    # We'd like to migrate the wordpress feed to another url. This keeps up backwards compatibility with
-    # existing installs.
+    # TODO: We'd like to migrate the wordpress feed to another url. This keeps up backwards
+    # compatibility with existing installs.
     return wordpress if params[:best].present?
 
     # work around people somehow sending in arrays,
@@ -212,15 +212,19 @@ class TopicsController < ApplicationController
       :only_moderator_liked,
     )
 
-    opts = {
-      best: params[:best].to_i,
-      min_trust_level: params[:min_trust_level] ? params[:min_trust_level].to_i : 1,
-      min_score: params[:min_score].to_i,
-      min_replies: params[:min_replies].to_i,
-      bypass_trust_level_score: params[:bypass_trust_level_score].to_i, # safe cause 0 means ignore
-      only_moderator_liked: params[:only_moderator_liked].to_s == "true",
-      exclude_hidden: true,
-    }
+    begin
+      opts = {
+        best: params[:best].to_i,
+        min_trust_level: params[:min_trust_level] ? params[:min_trust_level].to_i : 1,
+        min_score: params[:min_score].to_i,
+        min_replies: params[:min_replies].to_i,
+        bypass_trust_level_score: params[:bypass_trust_level_score].to_i, # safe cause 0 means ignore
+        only_moderator_liked: params[:only_moderator_liked].to_s == "true",
+        exclude_hidden: true,
+      }
+    rescue NoMethodError
+      raise Discourse::InvalidParameters
+    end
 
     @topic_view = TopicView.new(params[:topic_id], current_user, opts)
     discourse_expires_in 1.minute

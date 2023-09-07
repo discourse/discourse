@@ -4,7 +4,7 @@ require "reviewable/collection"
 
 class Reviewable < ActiveRecord::Base
   class Actions < Reviewable::Collection
-    attr_reader :bundles
+    attr_reader :bundles, :reviewable
 
     def initialize(reviewable, guardian, args = nil)
       super(reviewable, guardian, args)
@@ -46,6 +46,10 @@ class Reviewable < ActiveRecord::Base
         super(id)
         @icon, @button_class, @label = icon, button_class, label
       end
+
+      def server_action
+        id.split("-").last
+      end
     end
 
     def add_bundle(id, icon: nil, label: nil)
@@ -55,6 +59,7 @@ class Reviewable < ActiveRecord::Base
     end
 
     def add(id, bundle: nil)
+      id = [reviewable.target_type&.underscore, id].compact_blank.join("-")
       action = Actions.common_actions[id] || Action.new(id)
       yield action if block_given?
       @content << action

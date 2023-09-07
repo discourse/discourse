@@ -324,7 +324,6 @@ fr:
     more_replies:
       one: "%{count} réponse supplémentaire"
       other: "%{count} réponses supplémentaires"
-    loading: "Chargement de la discussion…"
     permalink: "Permalien"
     imported_from: "Ce sujet de discussion accompagne la publication sur %{link}"
     in_reply_to: "▶ %{username}"
@@ -1695,7 +1694,6 @@ fr:
     enable_safe_mode: "Permettre aux utilisateurs d'utiliser le mode sans échec pour déboguer les extensions."
     rate_limit_create_topic: "Après la création d'un sujet, les utilisateurs doivent attendre (n) secondes avant de pouvoir en créer un nouveau."
     rate_limit_create_post: "Après avoir publié un message, les utilisateurs doivent attendre (n) secondes avant de pouvoir en publier un autre."
-    rate_limit_new_user_create_topic: "Après la création d'un sujet, les nouveaux utilisateurs doivent attendre (n) secondes avant de pouvoir en créer un nouveau."
     rate_limit_new_user_create_post: "Après avoir publié un message, les nouveaux utilisateurs doivent attendre (n) secondes avant de pouvoir en publier un autre."
     max_likes_per_day: "Nombre maximal de « J'aime » par utilisateur chaque jour."
     max_flags_per_day: "Nombre maximal de signalements par utilisateur chaque jour."
@@ -2116,7 +2114,6 @@ fr:
     retain_web_hook_events_period_days: "Nombre de jours de conservation des événements des Webhooks."
     retry_web_hook_events: "Réessayer jusqu'à 4 fois les événements de Webhooks qui ont échoué. Les intervalles entre chaque tentative sont de 1, 5, 25 et 125 minutes."
     revoke_api_keys_days: "Nombre de jours avant qu'une clé API inutilisée soit automatiquement révoquée (0 pour jamais)"
-    allow_user_api_keys: "Autoriser la génération des clés de l'API utilisateur"
     allow_user_api_key_scopes: "Liste des champs d'action autorisés pour les clés de l'API utilisateur"
     min_trust_level_for_user_api_key: |
       Niveau de confiance requis pour la génération de clés API utilisateur.<br>
@@ -2412,18 +2409,6 @@ fr:
   admin:
     email:
       sent_test: "envoyé !"
-    user:
-      merge_user:
-        updating_username: "Mise à jour du nom d'utilisateur…"
-        changing_post_ownership: "Modification de la propriété du message…"
-        merging_given_daily_likes: "Fusion des « J'aime » quotidiens…"
-        merging_post_timings: "Fusion des horaires des messages…"
-        merging_user_visits: "Fusion des visites des utilisateurs…"
-        updating_site_settings: "Mise à jour des paramètres du site…"
-        updating_user_stats: "Mise à jour des statistiques utilisateur…"
-        merging_user_attributes: "Fusion des attributs utilisateur…"
-        updating_user_ids: "Mise à jour des identifiants utilisateur…"
-        deleting_source_user: "Suppression de l'utilisateur source…"
   user:
     deactivated: "A été désactivé car trop d'e-mails envoyés à « %{email} » n'ont pas été délivrés."
     deactivated_by_staff: "Désactivé par un responsable"
@@ -4719,8 +4704,6 @@ fr:
         description: "Acceptez ce signalement, masquez le message et envoyez automatiquement un message à l'utilisateur pour l'inciter à le modifier"
       delete_single:
         title: "Supprimer"
-      delete:
-        title: "Supprimer…"
       delete_and_ignore:
         title: "Ignorer le signalement et supprimer le message"
         description: "Ignorez le signalement en le retirant de la file d'attente et supprimez le message. S'il s'agit du premier message, vous supprimerez également le sujet. "
@@ -4755,7 +4738,6 @@ fr:
       approve_user:
         title: "Approuver l'utilisateur"
       reject_user:
-        title: "Supprimer l'utilisateur…"
         delete:
           title: "Supprimer l'utilisateur"
           description: "L'utilisateur sera supprimé du forum."
@@ -4764,7 +4746,6 @@ fr:
           description: "L'utilisateur sera supprimé et nous bloquerons ses adresses e-mail et IP."
       reject:
         title: "Rejeter"
-        bundle_title: "Refuser…"
       reject_and_suspend:
         title: "Refuser et suspendre cet utilisateur"
       reject_and_silence:

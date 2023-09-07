@@ -210,7 +210,10 @@ export default {
               this.chatService = chatService;
 
               if (this.oneOnOneMessage) {
-                this.channel.chatable.users[0].trackStatus();
+                const user = this.channel.chatable.users[0];
+                if (user.username !== I18n.t("chat.deleted_chat_username")) {
+                  user.trackStatus();
+                }
               }
             }
 

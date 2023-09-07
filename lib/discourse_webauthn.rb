@@ -59,26 +59,23 @@ module DiscourseWebauthn
     credential_ids = user.second_factor_security_key_credential_ids
     {
       allowed_credential_ids: credential_ids,
-      challenge:
-        secure_session[
-          DiscourseWebauthn::ChallengeGenerator::ChallengeSession.session_challenge_key(user)
-        ],
+      challenge: secure_session[self.session_challenge_key(user)],
     }
   end
 
-  def self.rp_id(user, secure_session)
-    secure_session[DiscourseWebauthn::ChallengeGenerator::ChallengeSession.session_rp_id_key(user)]
-  end
-
-  def self.rp_name(user, secure_session)
-    secure_session[
-      DiscourseWebauthn::ChallengeGenerator::ChallengeSession.session_rp_name_key(user)
-    ]
-  end
-
   def self.challenge(user, secure_session)
-    secure_session[
-      DiscourseWebauthn::ChallengeGenerator::ChallengeSession.session_challenge_key(user)
-    ]
+    secure_session[self.session_challenge_key(user)]
+  end
+
+  def self.rp_id
+    Discourse.current_hostname
+  end
+
+  def self.rp_name
+    SiteSetting.title
+  end
+
+  def self.session_challenge_key(user)
+    "staged-webauthn-challenge-#{user&.id}"
   end
 end

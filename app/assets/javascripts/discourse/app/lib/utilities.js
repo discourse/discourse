@@ -77,8 +77,7 @@ export function highlightPost(postNumber) {
     return;
   }
 
-  // sets focus to the first focusable anchor in the post
-  container.querySelector("a:not([tabindex='-1'])")?.focus();
+  container.querySelector(".tabLoc")?.focus();
 
   const element = container.querySelector(".topic-body");
   if (!element || element.classList.contains("highlighted")) {

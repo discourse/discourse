@@ -49,28 +49,52 @@ Fabricator(:direct_message_channel, from: :chat_channel) do
   end
 end
 
-Fabricator(:chat_message, class_name: "Chat::MessageCreator") do
-  transient :chat_channel
-  transient :user
-  transient :message
-  transient :in_reply_to
-  transient :thread
-  transient :upload_ids
+Fabricator(:chat_message, class_name: "Chat::Message") do
+  transient use_service: false
 
   initialize_with do |transients|
-    user = transients[:user] || Fabricate(:user)
+    Fabricate(
+      transients[:use_service] ? :chat_message_with_service : :chat_message_without_service,
+      **to_params,
+    )
+  end
+end
+
+Fabricator(:chat_message_without_service, class_name: "Chat::Message") do
+  user
+  chat_channel
+  message { Faker::Lorem.paragraph_by_chars(number: 500) }
+
+  after_build { |message, attrs| message.cook }
+  after_create { |message, attrs| message.create_mentions }
+end
+
+Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
+  transient :chat_channel,
+            :user,
+            :message,
+            :in_reply_to,
+            :thread,
+            :upload_ids,
+            :incoming_chat_webhook
+
+  initialize_with do |transients|
     channel =
       transients[:chat_channel] || transients[:thread]&.channel ||
         transients[:in_reply_to]&.chat_channel || Fabricate(:chat_channel)
+    user = transients[:user] || Fabricate(:user)
+    Group.refresh_automatic_groups!
+    channel.add(user)
 
-    resolved_class.create(
-      chat_channel: channel,
-      user: user,
-      content: transients[:message] || Faker::Lorem.paragraph_by_chars(number: 500),
+    resolved_class.call(
+      chat_channel_id: channel.id,
+      guardian: user.guardian,
+      message: transients[:message] || Faker::Lorem.paragraph_by_chars(number: 500),
       thread_id: transients[:thread]&.id,
       in_reply_to_id: transients[:in_reply_to]&.id,
       upload_ids: transients[:upload_ids],
-    ).chat_message
+      incoming_chat_webhook: transients[:incoming_chat_webhook],
+    ).message
   end
 end
 
@@ -157,16 +181,14 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
     thread.channel = original_message.chat_channel
   end
 
-  transient :with_replies
-  transient :channel
-  transient :original_message_user
-  transient :old_om
+  transient :with_replies, :channel, :original_message_user, :old_om, use_service: false
 
   original_message do |attrs|
     Fabricate(
       :chat_message,
       chat_channel: attrs[:channel] || Fabricate(:chat_channel),
       user: attrs[:original_message_user] || Fabricate(:user),
+      use_service: attrs[:use_service],
     )
   end
 
@@ -181,7 +203,12 @@ Fabricator(:chat_thread, class_name: "Chat::Thread") do
     thread.add(thread.original_message_user)
 
     if transients[:with_replies]
-      Fabricate.times(transients[:with_replies], :chat_message, thread: thread)
+      Fabricate.times(
+        transients[:with_replies],
+        :chat_message,
+        thread: thread,
+        use_service: transients[:use_service],
+      )
     end
   end
 end

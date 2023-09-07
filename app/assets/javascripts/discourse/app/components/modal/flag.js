@@ -7,7 +7,7 @@ import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import User from "discourse/models/user";
 import { reload } from "discourse/helpers/page-reloader";
 
-const NOTIFY_MODERATORS_ID = 7;
+const NOTIFY_MODERATORS_KEY = "notify_moderators";
 
 export default class Flag extends Component {
   @service adminTools;
@@ -75,13 +75,6 @@ export default class Flag extends Component {
     return this.args.model.flagTarget.submitLabel();
   }
 
-  get includeSeparator() {
-    return (
-      this.staffFlagsAvailable ||
-      this.args.model.flagTarget.includeSeparator?.()
-    );
-  }
-
   get title() {
     return this.args.model.flagTarget.title();
   }
@@ -91,7 +84,7 @@ export default class Flag extends Component {
   }
 
   get staffFlagsAvailable() {
-    return this.args.model.flagModel.flagsAvailable?.length > 1;
+    return this.flagsAvailable.length > 1;
   }
 
   get submitEnabled() {
@@ -111,7 +104,7 @@ export default class Flag extends Component {
   }
 
   get notifyModeratorsFlag() {
-    return this.flagsAvailable.find((f) => f.id === NOTIFY_MODERATORS_ID);
+    return this.flagsAvailable.find((f) => f.id === NOTIFY_MODERATORS_KEY);
   }
 
   get canTakeAction() {

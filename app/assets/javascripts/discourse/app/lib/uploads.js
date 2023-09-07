@@ -329,14 +329,14 @@ export function displayErrorForUpload(data, siteSettings, fileName) {
   }
 
   // otherwise, display a generic error message
-  dialog.alert(I18n.t("post.errors.upload"));
+  dialog.alert(I18n.t("post.errors.upload", { file_name: fileName }));
 }
 
 function displayErrorByResponseStatus(status, body, fileName, siteSettings) {
   switch (status) {
     // didn't get headers from server, or browser refuses to tell us
     case 0:
-      dialog.alert(I18n.t("post.errors.upload"));
+      dialog.alert(I18n.t("post.errors.upload", { file_name: fileName }));
       return true;
 
     // entity too large, usually returned from the web server

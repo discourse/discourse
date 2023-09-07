@@ -389,6 +389,10 @@ en:
         yes_value: "Discard"
         no_value: "Resume editing"
 
+    topic_count_all:
+      one: "See %{count} new topic"
+      other: "See %{count} new topics"
+
     topic_count_categories:
       one: "See %{count} new or updated topic"
       other: "See %{count} new or updated topics"
@@ -618,24 +622,27 @@ en:
           title: "Everything"
 
       context_question:
-        is_this_post: "Is this post %{reviewable_human_score_types}?"
+        is_this_post: "Is this %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "or"
-        something_else_wrong: "Is there something wrong with this post?"
+        something_else_wrong: "Is there something wrong with this %{reviewable_type}?"
 
       types:
         reviewable_flagged_post:
           title: "Flagged Post"
           flagged_by: "Flagged By"
+          noun: "post"
         reviewable_queued_topic:
           title: "Queued Topic"
+          noun: "topic"
         reviewable_queued_post:
           title: "Queued Post"
+          noun: "post"
         reviewable_user:
           title: "User"
+          noun: "user"
         reviewable_post:
           title: "Post"
-        reviewable_chat_message:
-          title: "Flagged chat message"
+          noun: "post"
       approval:
         title: "Post Needs Approval"
         description: "We've received your new post but it needs to be approved by a moderator before it will appear. Please be patient."
@@ -2540,12 +2547,12 @@ en:
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
       liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} and %{count} other</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} and %{count} others</span> %{description}"
+        one: "<span class='multi-user'>%{username} and %{count} other</span> %{description}"
+        other: "<span class='multi-user'>%{username} and %{count} others</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
-        one: "%{username}, %{username2} and %{count} other"
-        other: "%{username}, %{username2} and %{count} others"
+        one: "%{username} and %{count} other"
+        other: "%{username} and %{count} others"
       liked_consolidated_description:
         one: "liked %{count} of your posts"
         other: "liked %{count} of your posts"
@@ -3465,7 +3472,7 @@ en:
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
-        upload: "Sorry, there was an error uploading that file. Please try again."
+        upload: "Sorry, there was an error uploading %{file_name}. Please try again."
         file_too_large: "Sorry, that file is too big (maximum size is %{max_size_kb}kb). Why not upload your large file to a cloud sharing service, then paste the link?"
         file_size_zero: "Sorry, it looks like something has gone wrong, the file you are trying to upload is 0 bytes. Please try again."
         file_too_large_humanized: "Sorry, that file is too big (maximum size is %{max_size}). Why not upload your large file to a cloud sharing service, then paste the link?"
@@ -4160,6 +4167,7 @@ en:
         print: "%{shortcut} Print topic"
         defer: "%{shortcut} Defer topic"
         topic_admin_actions: "%{shortcut} Open topic admin actions"
+        archive_private_message: "%{shortcut} Toggle archive private message"
       search_menu:
         title: "Search Menu"
         prev_next: "%{shortcut} Move selection up and down"
@@ -4996,7 +5004,6 @@ en:
         enabled: "Enabled?"
         is_enabled: "Y"
         not_enabled: "N"
-        change_settings: "Plugin Settings"
         change_settings_short: "Settings"
         howto: "How do I install plugins?"
         official: "Official Plugin"
@@ -5044,7 +5051,8 @@ en:
             label: "Backup"
             title: "Create a backup"
             confirm: "Do you want to start a new backup?"
-            without_uploads: "Yes (do not include uploads)"
+            include_uploads: "include all uploads"
+            s3_upload_warning: 'This is for database backups only. Uploads will not be included, meaning all images and other file uploads can be missing if the backup is restored to another hosting setup. <b>To enable a full backup including your S3 uploads please see <a href="https://meta.discourse.org/t/-/276535" target="_blank">this guide</a>.</b>'
           download:
             label: "Download"
             title: "Send email with download link"
@@ -5750,6 +5758,7 @@ en:
           title: "Preview Template"
         field_placeholders:
           validations: "enter validations here"
+          id: "enter-id-here"
           label: "Enter label here"
           placeholder: "Enter placeholder here"
           none_label: "Select an item"

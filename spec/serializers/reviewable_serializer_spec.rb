@@ -15,6 +15,7 @@ RSpec.describe ReviewableSerializer do
     expect(json[:can_edit]).to eq(true)
     expect(json[:version]).to eq(0)
     expect(json[:removed_topic_id]).to be_nil
+    expect(json[:created_from_flag]).to eq(false)
   end
 
   it "Includes the removed topic id when the topis was deleted" do

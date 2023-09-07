@@ -51,11 +51,10 @@
                 </LinkTo>
 
                 <DButton
-                  @class="destroy btn-danger"
-                  @action={{this.destroy}}
-                  @actionParam={{webhook}}
+                  @action={{fn this.destroy webhook}}
                   @icon="times"
                   @title="delete"
+                  class="destroy btn-danger"
                 />
               </td>
             </tr>

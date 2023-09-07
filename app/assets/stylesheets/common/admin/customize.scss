@@ -180,12 +180,19 @@
     }
 
     &.color-scheme .admin-controls {
+      display: flex;
       padding: 1em;
       label {
         margin-bottom: 0;
         input[type="checkbox"] {
           margin-top: 0;
         }
+      }
+      .pull-left {
+        width: 70%;
+      }
+      .pull-right {
+        width: 30%;
       }
     }
   }

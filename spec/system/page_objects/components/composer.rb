@@ -82,8 +82,8 @@ module PageObjects
       end
 
       def switch_category(category_name)
-        find(".category-chooser").click
-        find(".category-row[data-name='#{category_name}']").click
+        category_chooser.expand
+        category_chooser.select_row_by_name(category_name)
       end
 
       def preview
@@ -214,6 +214,14 @@ module PageObjects
 
       def has_in_progress_uploads?
         find("#{COMPOSER_ID}").has_css?("#file-uploading")
+      end
+
+      def select_pm_user(username)
+        select_kit = PageObjects::Components::SelectKit.new("#private-message-users")
+        select_kit.expand
+        select_kit.search(username)
+        select_kit.select_row_by_value(username)
+        select_kit.collapse
       end
 
       private

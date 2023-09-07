@@ -1,0 +1,40 @@
+diff --git a/node_modules/ember-this-fallback/index.js b/node_modules/ember-this-fallback/index.js
+index afa73eb..168bb16 100644
+--- a/node_modules/ember-this-fallback/index.js
++++ b/node_modules/ember-this-fallback/index.js
+@@ -8,7 +8,7 @@ module.exports = {
+ 
+   setupPreprocessorRegistry(type, registry) {
+     if (type === 'parent') {
+-      const options = getOptions(findHost(this));
++      const options = getOptions(this.parent); // findHost doesn't work for us - not sure why
+       registry.add('htmlbars-ast-plugin', this._buildPlugin(options));
+     }
+   },
+diff --git a/node_modules/ember-this-fallback/lib/helpers/deprecations.js b/node_modules/ember-this-fallback/lib/helpers/deprecations.js
+index 5a00c44..993e3cf 100644
+--- a/node_modules/ember-this-fallback/lib/helpers/deprecations.js
++++ b/node_modules/ember-this-fallback/lib/helpers/deprecations.js
+@@ -6,8 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.deprecationOptionsFor = void 0;
+ const assert_1 = __importDefault(require("../types/assert"));
+ const CURRENT_DEPRECATIONS = [
++  [
++    'this-property-fallback',
+     {
+-        id: 'this-property-fallback',
++        id: 'ember-this-fallback.this-property-fallback', // Updating deprecation id so we can distinguish it from Ember's
+         until: 'n/a',
+         for: 'ember-this-fallback',
+         url: 'https://deprecations.emberjs.com/v3.x#toc_this-property-fallback',
+@@ -15,8 +17,9 @@ const CURRENT_DEPRECATIONS = [
+             available: '0.2.0',
+         },
+     },
++  ]
+ ];
+-const DEPRECATION_OPTIONS_MAP = new Map(CURRENT_DEPRECATIONS.map((options) => [options.id, options]));
++const DEPRECATION_OPTIONS_MAP = new Map(CURRENT_DEPRECATIONS);
+ function deprecationOptionsFor(id) {
+     const options = DEPRECATION_OPTIONS_MAP.get(id);
+     (0, assert_1.default)(`expected to find DeprecationOptions for id=${id}`, options);

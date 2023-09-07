@@ -53,9 +53,9 @@ task "assets:precompile:before": "environment" do
   require "digest/sha1"
 
   # Add ember cli chunks
-  Rails.configuration.assets.precompile.push(
-    *EmberCli.script_chunks.values.flatten.flat_map { |name| ["#{name}.js", "#{name}.map"] },
-  )
+  chunk_files = EmberCli.script_chunks.values.flatten.map { |name| "#{name}.js" }
+  map_files = chunk_files.map { |file| EmberCli.parse_source_map_path(file) }
+  Rails.configuration.assets.precompile.push(*chunk_files, *map_files)
 end
 
 task "assets:precompile:css" => "environment" do
