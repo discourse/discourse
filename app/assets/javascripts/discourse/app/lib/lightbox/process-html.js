@@ -40,7 +40,7 @@ export async function processHTML({ container, selector, clickTarget }) {
         null;
 
       const _title =
-        item.title || item.alt || innerImage.title || innerImage.alt || null;
+        item.title || item.alt || innerImage.title || innerImage.alt || "";
 
       const _aspectRatio =
         item.dataset?.aspectRatio ||

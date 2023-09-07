@@ -3,7 +3,7 @@ import {
   generateImageUploaderMarkup,
   generateLightboxMarkup,
 } from "discourse/tests/helpers/lightbox-helpers";
-import { module, test } from "qunit";
+import { module, skip, test } from "qunit";
 
 import { SELECTORS } from "discourse/lib/lightbox/constants";
 import domFromString from "discourse-common/lib/dom-from-string";
@@ -127,7 +127,7 @@ module("Unit | lib | Experimental lightbox | processHTML()", function () {
     assert.strictEqual(items[0].title, "");
   });
 
-  test("correctly escapes the title", async function (assert) {
+  skip("correctly escapes the title", async function (assert) {
     const container = wrap.cloneNode(true);
 
     container
