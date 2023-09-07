@@ -12,6 +12,7 @@ et:
           always: "Alati"
           never: "Mitte kunagi"
     chat:
+      deleted_chat_username: kustutatud
       create: "Loo"
       cancel: "Tühista"
       channel_settings:
@@ -30,8 +31,6 @@ et:
       flag: "Tähis"
       join: "Liitu"
       last_visit: "viimane visiit"
-      mention_warning:
-        dismiss: "ignoreeri"
       reply: "Vasta"
       edit: "Muuda"
       rebake_message: "Rekonstrueeri HTML"

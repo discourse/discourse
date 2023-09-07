@@ -12,6 +12,7 @@ sw:
           always: "Mara kwa mara"
           never: "Kamwe"
     chat:
+      deleted_chat_username: imefutwa
       create: "Tengeneza"
       cancel: "Ghairi"
       channel_settings:
@@ -30,8 +31,6 @@ sw:
       flag: "Bendera"
       join: "Jiunge"
       last_visit: "Mara ya mwisho imetembelewa"
-      mention_warning:
-        dismiss: "ondosha..."
       reply: "Jibu"
       edit: "Hariri"
       rebake_message: "Tengeneza upya HTML"

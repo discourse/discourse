@@ -4936,6 +4936,8 @@ ar:
         description: "استعادة المنشور حتى يتمكن جميع المستخدمين من رؤيته"
       disagree:
         title: "لا"
+      discard_post:
+        title: "تجاهل المنشور"
       ignore:
         title: "تجاهل"
       ignore_and_do_nothing:
@@ -5015,6 +5017,9 @@ ar:
       invalid_yaml: "ليست سلسلة YAML صالحة"
       invalid_type: "تحتوي على نوع قالب غير صالح: %{type} (الأنواع الصالحة هي: %{valid_types})"
       missing_type: "تفتقد نوع الحقل"
+      missing_id: "معرف الحقل مفقود"
+      duplicate_ids: "تحتوي على معرفات مكررة"
+      reserved_id: "يحتوي على كلمة مفتاحية محجوزة كمعرف: %{id}"
   activemodel:
     errors:
       <<: *errors

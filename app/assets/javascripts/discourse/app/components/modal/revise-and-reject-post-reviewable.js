@@ -32,11 +32,6 @@ export default class ReviseAndRejectPostReviewable extends Component {
     );
   }
 
-  // TODO:
-  // * Link this up properly to the action for the reviewable items
-  // * System Test
-  // * Server-side PM sending code and doing the rejection, add perform_revise_and_reject_post
-  // * Validate the reason server-side based on reviewable_revision_reasons
   @action
   rejectAndSendPM() {
     this.submitting = true;

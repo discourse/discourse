@@ -472,14 +472,19 @@ gl:
         reviewable_flagged_post:
           title: "Publicación sinalada"
           flagged_by: "Sinalado por"
+          noun: "publicación"
         reviewable_queued_topic:
           title: "Tema na fila de espera"
+          noun: "tema"
         reviewable_queued_post:
           title: "Publicación na fila de espera"
+          noun: "publicación"
         reviewable_user:
           title: "Usuario"
+          noun: "usuario"
         reviewable_post:
           title: "Publicación"
+          noun: "publicación"
       approval:
         title: "A publicación necesita aprobación"
         description: "Recibimos a súa nova publicación pero cómpre que sexa aprobada por un moderador antes de aparecer. Teña paciencia."
@@ -1874,13 +1879,7 @@ gl:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} e %{count} outro</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} e %{count} outros</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
-      liked_by_multiple_users:
-        one: "%{username}, %{username2} e %{count} máis"
-        other: "%{username}, %{username2} e %{count} máis"
       liked_consolidated_description:
         one: "gustoulles %{count} das súas publicacións"
         other: "gustáronlles %{count} das súas publicacións"
@@ -2522,7 +2521,6 @@ gl:
       errors:
         create: "Sentímolo pero produciuse un erro creando a publicación. Ténteo de novo."
         edit: "Sentímolo pero produciuse un erro editando a publicación. Ténteo de novo."
-        upload: "Sentímolo pero produciuse un erro ao cargar ese ficheiro. Ténteo de novo."
         file_too_large: "Sentímolo, pero o ficheiro é demasiado grande (o tamaño máximo é de %{max_size_kb}kb). Por que non proba a cargalo nun servizo da nube e pega aquí a ligazón?"
         too_many_uploads: "Sentímolo pero só pode cargar un ficheiro de cada vez."
         too_many_dragged_and_dropped_files:
@@ -3670,7 +3668,6 @@ gl:
             label: "Copia de seguranza"
             title: "Crear unha copia de seguranza"
             confirm: "Confirma a execución dunha nova copia de seguranza?"
-            without_uploads: "Si (non incluír as cargas)"
           download:
             label: "Descargar"
             title: "Enviar correo electrónico coa ligazón de descarga"

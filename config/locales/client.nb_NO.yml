@@ -485,14 +485,19 @@ nb_NO:
         reviewable_flagged_post:
           title: "Rapportert innlegg"
           flagged_by: "Rapportert av"
+          noun: "innlegg"
         reviewable_queued_topic:
           title: "Emne i kø"
+          noun: "emne"
         reviewable_queued_post:
           title: "Innlegg i kø"
+          noun: "innlegg"
         reviewable_user:
           title: "Bruker"
+          noun: "bruker"
         reviewable_post:
           title: "Innlegg"
+          noun: "innlegg"
       approval:
         title: "Innlegg trenger godkjenning"
         description: "Vi har mottatt ditt nye innlegg men det krever godkjenning av en moderator før det vises. Ha tålmod."
@@ -1903,13 +1908,7 @@ nb_NO:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} og én annen</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} og %{count} andre</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
-      liked_by_multiple_users:
-        one: "%{username}, %{username2} og én annen"
-        other: "%{username}, %{username2} og %{count} andre"
       liked_consolidated_description:
         one: "likte %{count} av dine innlegg"
         other: "likte %{count} av dine innlegg"
@@ -2559,7 +2558,6 @@ nb_NO:
       errors:
         create: "Beklager, det oppstod en feil ved å publisere ditt innlegg. Prøv igjen."
         edit: "Det oppstod en feil ved redigeringen av ditt innlegg. Prøv igjen."
-        upload: "Det skjedde en feil når filen ble lastet opp. Prøv igjen senere. "
         file_too_large: "Beklager, den filen er for stor (maks størrelse er %{max_size_kb}kb). Hvorfor ikke laste opp din store fil til en sky-delingstjeneste, og lim så inn linken?"
         too_many_uploads: "Du kan bare laste opp ett bilde av gangen."
         too_many_dragged_and_dropped_files:
@@ -3684,7 +3682,6 @@ nb_NO:
             label: "Sikkerhetskopi"
             title: "Opprett en sikkerhetskopi"
             confirm: "Vil du starte en ny sikkerhetskopiering?"
-            without_uploads: "Ja (ikke inkluderer opplastinger)"
           download:
             label: "Last ned"
             title: "Send e-post med nedlastingslenke"

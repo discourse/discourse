@@ -499,14 +499,19 @@ da:
         reviewable_flagged_post:
           title: "Markeret indlæg"
           flagged_by: "Markeret af"
+          noun: "indlæg"
         reviewable_queued_topic:
           title: "Emne i kø"
+          noun: "emne"
         reviewable_queued_post:
           title: "Indlæg i kø"
+          noun: "indlæg"
         reviewable_user:
           title: "Bruger"
+          noun: "bruger"
         reviewable_post:
           title: "Indlæg"
+          noun: "indlæg"
       approval:
         title: "Indlæg afventer godkendelse"
         description: "Vi har modtaget dit indlæg, men det skal først godkendes af en moderator. Hav venligst tålmodighed."
@@ -2008,13 +2013,7 @@ da:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} og %{count} anden</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} og %{count} andre</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
-      liked_by_multiple_users:
-        one: "%{username}, %{username2} og %{count} anden"
-        other: "%{username}, %{username2} og %{count} andre"
       liked_consolidated_description:
         one: "syntes godt om %{count} af dine indlæg"
         other: "syntes godt om %{count} af dine indlæg"
@@ -2708,7 +2707,6 @@ da:
       errors:
         create: "Beklager, der opstod en fejl under oprettelsen af dit indlæg. Prøv venligst igen."
         edit: "Beklager, der opstrod en fejl under redigeringen af dit indlæg. Prøv venligst igen."
-        upload: "Beklager, der opstod en fejl under overførsel af filen. Prøv venligst igen."
         file_too_large: "Beklager, denne fil er for stor (maksimal størrelse er %{max_size_kb}kb). Hvorfor ikke overføre din store fil til en sky-delingstjeneste, og derefter indsætte linket?"
         file_size_zero: "Beklager, det ser ud til, at der er gået noget galt, filen, du forsøger at overføre er 0 bytes. Prøv venligst igen."
         too_many_uploads: "Beklager, men du kan kun overføre én fil ad gangen."
@@ -3947,7 +3945,6 @@ da:
             label: "Backup"
             title: "Start backup"
             confirm: "Vil du starte en ny backup?"
-            without_uploads: "Ja (inkluder ikke overførsler)"
           download:
             label: "Download"
             title: "Send e-mail med downloadlink"

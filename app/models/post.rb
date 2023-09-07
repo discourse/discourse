@@ -567,8 +567,15 @@ class Post < ActiveRecord::Base
 
   def with_secure_uploads?
     return false if !SiteSetting.secure_uploads?
-    SiteSetting.login_required? ||
-      (topic.present? && (topic.private_message? || topic.category&.read_restricted))
+
+    # NOTE: This is meant to be a stopgap solution to prevent secure uploads
+    # in a single place (private messages) for sensitive admin data exports.
+    # Ideally we would want a more comprehensive way of saying that certain
+    # upload types get secured which is a hybrid/mixed mode secure uploads,
+    # but for now this will do the trick.
+    return topic&.private_message? if SiteSetting.secure_uploads_pm_only?
+
+    SiteSetting.login_required? || topic&.private_message? || topic&.category&.read_restricted?
   end
 
   def hide!(post_action_type_id, reason = nil, custom_message: nil)

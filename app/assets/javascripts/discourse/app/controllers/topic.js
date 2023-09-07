@@ -589,7 +589,7 @@ export default Controller.extend(bufferedProperty("model"), {
     toggleArchiveMessage() {
       const topic = this.model;
 
-      if (topic.get("archiving")) {
+      if (!topic || topic.get("archiving") || !topic.isPrivateMessage) {
         return;
       }
 

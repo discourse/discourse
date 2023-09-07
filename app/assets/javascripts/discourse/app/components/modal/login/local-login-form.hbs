@@ -1,0 +1,98 @@
+<form id="login-form" method="post">
+  <div id="credentials" class={{this.credentialsClass}}>
+    <div class="input-group">
+      <Input
+        @value={{@loginName}}
+        @type="email"
+        id="login-account-name"
+        class={{value-entered @loginName}}
+        autocomplete="username"
+        autocorrect="off"
+        autocapitalize="off"
+        disabled={{@showSecondFactor}}
+        autofocus="autofocus"
+        tabindex="1"
+        {{on "input" @loginNameChanged}}
+        {{on "keydown" this.loginOnEnter}}
+      />
+      <label class="alt-placeholder" for="login-account-name">
+        {{i18n "login.email_placeholder"}}
+      </label>
+      {{#if @canLoginLocalWithEmail}}
+        <a
+          href
+          class={{if @loginName "" "no-login-filled"}}
+          tabindex="3"
+          id="email-login-link"
+          {{on "click" this.emailLogin}}
+        >
+          {{i18n "email_login.login_link"}}
+        </a>
+      {{/if}}
+    </div>
+    <div class="input-group">
+      <PasswordField
+        @value={{@loginPassword}}
+        @type={{if this.maskPassword "password" "text"}}
+        class={{value-entered @loginPassword}}
+        id="login-account-password"
+        autocomplete="current-password"
+        maxlength="200"
+        @capsLockOn={{this.capsLockOn}}
+        disabled={{this.disableLoginFields}}
+        tabindex="1"
+        {{on "keydown" this.loginOnEnter}}
+      />
+      <label class="alt-placeholder" for="login-account-password">
+        {{i18n "login.password"}}
+      </label>
+      <div class="login__password-links">
+        <a
+          href
+          id="forgot-password-link"
+          tabindex="3"
+          {{on "click" this.handleForgotPassword}}
+        >
+          {{i18n "forgot_password.action"}}
+        </a>
+        {{#if @loginPassword}}
+          <TogglePasswordMask
+            @maskPassword={{this.maskPassword}}
+            @togglePasswordMask={{this.togglePasswordMask}}
+            tabindex="3"
+          />
+        {{/if}}
+      </div>
+      <div class="caps-lock-warning {{unless this.capsLockOn 'hidden'}}">
+        {{d-icon "exclamation-triangle"}}
+        {{i18n "login.caps_lock_warning"}}</div>
+    </div>
+  </div>
+  <SecondFactorForm
+    @secondFactorMethod={{@secondFactorMethod}}
+    @secondFactorToken={{@secondFactorToken}}
+    @class={{this.secondFactorClass}}
+    @backupEnabled={{@backupEnabled}}
+    @isLogin={{true}}
+  >
+    {{#if @showSecurityKey}}
+      <SecurityKeyForm
+        @allowedCredentialIds={{@securityKeyAllowedCredentialIds}}
+        @challenge={{@securityKeyChallenge}}
+        @showSecurityKey={{@showSecurityKey}}
+        @showSecondFactor={{@showSecondFactor}}
+        @secondFactorMethod={{@secondFactorMethod}}
+        @otherMethodAllowed={{@otherMethodAllowed}}
+        @action={{this.authenticateSecurityKey}}
+      />
+    {{else}}
+      <SecondFactorInput
+        @value={{@secondFactorToken}}
+        @inputId="login-second-factor"
+        @secondFactorMethod={{@secondFactorMethod}}
+        @backupEnabled={{@backupEnabled}}
+        {{on "keydown" this.loginOnEnter}}
+      />
+    {{/if}}
+  </SecondFactorForm>
+</form>

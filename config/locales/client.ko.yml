@@ -480,14 +480,19 @@ ko:
         reviewable_flagged_post:
           title: "신고된 게시물"
           flagged_by: "신고자"
+          noun: "글"
         reviewable_queued_topic:
           title: "대기 중인 주제"
+          noun: "글"
         reviewable_queued_post:
           title: "대기 중인 게시물"
+          noun: "글"
         reviewable_user:
           title: "사용자"
+          noun: "사용자"
         reviewable_post:
           title: "게시물"
+          noun: "글"
       approval:
         title: "승인이 필요한 게시물"
         description: "새 게시물이 있습니다. 그러나 이 게시물이 보여지려면 운영자의 승인이 필요합니다. 잠시 기다려 주세요."
@@ -1971,11 +1976,7 @@ ko:
       edited: "<span>%{username}</span> %{description} "
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        other: "<span class='multi-user'>%{username}, %{username2} 및 이외 %{count}명</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
-      liked_by_multiple_users:
-        other: "%{username}, %{username2} 외 %{count} 명의 사용자가"
       liked_consolidated_description:
         other: "내 게시물 중 %{count}개를 좋아합니다"
       liked_consolidated: "<span>%{username}</span> %{description} "
@@ -2676,7 +2677,6 @@ ko:
       errors:
         create: "게시물을 생성하는 중에 오류가 발생했습니다. 다시 시도하세요."
         edit: "게시물을 편집하는 중에 오류가 발생했습니다. 다시 시도하세요."
-        upload: "파일을 업로드하는 중에 오류가 발생했습니다. 다시 시도하세요."
         file_too_large: "파일이 너무 큽니다(최대 허용 크기: %{max_size_kb}KB). 대용량 파일은 클라우드 공유 서비스에 업로드한 다음 링크를 붙여 넣는 것이 좋습니다."
         file_too_large_humanized: "파일이 너무 큽니다(최대 허용 크기: %{max_size}). 대용량 파일은 클라우드 공유 서비스에 업로드한 다음 링크를 붙여 넣는 것이 좋습니다."
         too_many_uploads: "한 번에 한 파일만 업로드할 수 있습니다."
@@ -3906,7 +3906,6 @@ ko:
             label: "백업"
             title: "백업 생성"
             confirm: "새 백업을 시작할까요?"
-            without_uploads: "예(업로드 포함 안 함)"
           download:
             label: "다운로드"
             title: "다운로드 링크와 함께 이메일 전송"

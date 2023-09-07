@@ -480,14 +480,19 @@ vi:
         reviewable_flagged_post:
           title: "Bài viết bị gắn cờ"
           flagged_by: "Gắn cờ bởi"
+          noun: "bài đăng"
         reviewable_queued_topic:
           title: "Chủ đề được lên lịch"
+          noun: "chủ đề"
         reviewable_queued_post:
           title: "Bài viết được xếp lịch"
+          noun: "bài đăng"
         reviewable_user:
           title: "Người dùng"
+          noun: "người dùng"
         reviewable_post:
           title: "Bài viết"
+          noun: "bài đăng"
       approval:
         title: "Bài viết cần phê duyệt"
         description: "Chúng tôi đã nhận được bài viết mới của bạn, nhưng nó cần phải được phê duyệt bởi admin trước khi được hiện. Xin hãy kiên nhẫn."
@@ -1953,11 +1958,9 @@ vi:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        other: "<span class='multi-user'>%{username}, %{username2} và %{count} người khác</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
-        other: "%{username}, %{username2} và %{count} người khác"
+        other: "%{username} và %{count} khác"
       liked_consolidated_description:
         other: "đã thích %{count} bài viết của bạn"
       liked_consolidated: "<span>%{username}</span> %{description}"
@@ -2678,7 +2681,6 @@ vi:
       errors:
         create: "Xin lỗi, có lỗi xảy ra khi tạo bài viết của bạn. Vui lòng thử lại."
         edit: "Xin lỗi, có lỗi xảy ra khi sửa bài viết của bạn. Vui lòng thử lại."
-        upload: "Xin lỗi, có lỗi xảy ra khi tải lên tập tin này. Vui lòng thử lại."
         file_too_large: "Xin lỗi, tệp đó quá lớn (kích thước tối đa là %{max_size_kb}kb). Bạn có thể tải dữ liệu lớn của bạn lên dịch vụ chia sẻ đám mây, sau đó dán liên kết tại đây"
         file_size_zero: "Rất tiếc, có vẻ như đã xảy ra sự cố, tệp bạn đang cố tải lên có dung lượng là 0 byte. Vui lòng thử lại."
         file_too_large_humanized: "Xin lỗi, tệp đó quá lớn (kích thước tối đa là %{max_size}). Tại sao không tải tệp lớn của bạn lên dịch vụ chia sẻ đám mây, sau đó dán liên kết?"
@@ -3926,7 +3928,6 @@ vi:
             label: "Sao lưu"
             title: "Tạo bản sao lưu"
             confirm: "Bạn muốn bắt đầu một bản sao lưu mới?"
-            without_uploads: "Có (không bao gồm tải lên)"
           download:
             label: "Tải xuống"
             title: "Gửi email với liên kết tải xuống"

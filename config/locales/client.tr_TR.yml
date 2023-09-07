@@ -553,23 +553,24 @@ tr_TR:
         all:
           title: "Her şey"
       context_question:
-        is_this_post: "Bu gönderi %{reviewable_human_score_types} özelliği taşıyor mu?"
         delimiter: "veya"
-        something_else_wrong: "Bu gönderiyle ilgili bir sorun mu var?"
       types:
         reviewable_flagged_post:
           title: "Bayrak Eklenen Gönderi"
           flagged_by: "Bayrak Ekleyen Kişi"
+          noun: "i̇leti"
         reviewable_queued_topic:
           title: "Kuyruğa Eklenen Konu"
+          noun: "konu"
         reviewable_queued_post:
           title: "Kuyruğa Eklenen Gönderi"
+          noun: "i̇leti"
         reviewable_user:
           title: "Kullanıcı"
+          noun: "kullanıcı"
         reviewable_post:
           title: "Gönderi"
-        reviewable_chat_message:
-          title: "Bayrak eklenen sohbet mesajı"
+          noun: "i̇leti"
       approval:
         title: "Gönderi Onay Gerektiriyor"
         description: "Yeni gönderinizi aldık fakat görünmeden önce moderatör tarafından onaylanması gerekiyor. Lütfen sabırlı olun."
@@ -2282,13 +2283,10 @@ tr_TR:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} ve %{count} </span> %{description} daha"
-        other: "<span class='multi-user'>%{username}, %{username2} ve %{count} </span> %{description} daha"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
-        one: "%{username}, %{username2} ve %{count} kişi daha"
-        other: "%{username}, %{username2} ve %{count} kişi daha"
+        one: "%{username} ve %{count} kişi daha"
+        other: "%{username} ve %{count} kişi daha"
       liked_consolidated_description:
         one: "gönderilerinizden %{count} tanesini beğendi"
         other: "gönderilerinizden %{count} tanesini beğendi"
@@ -3138,7 +3136,7 @@ tr_TR:
       errors:
         create: "Üzgünüz, gönderiniz oluşturulurken bir hata oluştu. Lütfen tekrar deneyin."
         edit: "Üzgünüz, gönderiniz düzenlenirken bir hata oluştu. Lütfen tekrar deneyin."
-        upload: "Üzgünüz, bu dosyayı yüklerken bir hata oluştu. Lütfen yeniden deneyin."
+        upload: "Üzgünüz, %{file_name} isimli dosya yüklenirken bir hata oluştu. Lütfen tekrar deneyin."
         file_too_large: "Üzgünüz, bu dosya çok büyük (en fazla %{max_size_kb} kb). Paylaşımınızı bir bulut paylaşım hizmetine yükleyip bağlantısını paylaşmaya ne dersiniz?"
         file_size_zero: "Üzgünüz, bir şeyler ters gitmiş gibi görünüyor, yüklemeye çalıştığınız dosya 0 bayt. Lütfen tekrar deneyin."
         file_too_large_humanized: "Üzgünüz, bu dosya çok büyük (maksimum boyut %{max_size}). Dosyanızı bir bulut paylaşım hizmetine yükleyip bağlantıyı paylaşmaya ne dersiniz?"
@@ -4570,7 +4568,6 @@ tr_TR:
         enabled: "Etkin mi?"
         is_enabled: "E"
         not_enabled: "H"
-        change_settings: "Eklenti Ayarları"
         change_settings_short: "Ayarlar"
         howto: "Eklentileri nasıl yüklerim?"
         official: "Resmi Eklenti"
@@ -4611,7 +4608,8 @@ tr_TR:
             label: "Yedekleme"
             title: "Yedekleme oluştur"
             confirm: "Yeni bir yedekleme başlatmak ister misiniz?"
-            without_uploads: "Evet (yüklemeleri dahil etme)"
+            include_uploads: "tüm yüklemeleri dahil et"
+            s3_upload_warning: 'Bu yalnızca veritabanı yedeklemeleri içindir. Yüklemeler dahil edilmeyecektir; bu, yedeklemenin başka bir barındırma kurulumuna geri yüklenmesi durumunda tüm görsellerin ve diğer dosya yüklemelerinin eksik olabileceği anlamına gelir. <b>S3 yüklemeleriniz de dahil olmak üzere tam yedeklemeyi etkinleştirmek için lütfen <a href="https://meta.discourse.org/t/-/276535" target="_blank">bu kılavuza</a> göz atın.</b>'
           download:
             label: "İndir"
             title: "İndirme bağlantısını içeren e-posta gönder"

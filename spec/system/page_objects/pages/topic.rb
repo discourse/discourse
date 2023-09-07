@@ -16,8 +16,7 @@ module PageObjects
       end
 
       def open_new_topic
-        page.visit "/"
-        find("button#create-topic").click
+        page.visit "/new-topic"
         self
       end
 
@@ -32,6 +31,14 @@ module PageObjects
         self
       end
 
+      def current_topic_id
+        find("h1[data-topic-id]")["data-topic-id"]
+      end
+
+      def current_topic
+        ::Topic.find(current_topic_id)
+      end
+
       def has_topic_title?(text)
         has_css?("h1 .fancy-title", text: text)
       end
@@ -44,9 +51,9 @@ module PageObjects
         has_css?("#post_#{number}")
       end
 
-      def post_by_number(post_or_number)
+      def post_by_number(post_or_number, wait: Capybara.default_max_wait_time)
         post_or_number = post_or_number.is_a?(Post) ? post_or_number.post_number : post_or_number
-        find(".topic-post:not(.staged) #post_#{post_or_number}")
+        find(".topic-post:not(.staged) #post_#{post_or_number}", wait: wait)
       end
 
       def post_by_number_selector(post_number)

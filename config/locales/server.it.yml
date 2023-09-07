@@ -4295,6 +4295,9 @@ it:
       invalid_yaml: "non è una stringa YAML valida"
       invalid_type: "contiene un tipo di modello non valido: %{type} (i tipi validi sono: %{valid_types})"
       missing_type: "manca un tipo di campo"
+      missing_id: "manca l'id del campo"
+      duplicate_ids: "ha id duplicati"
+      reserved_id: "ha una parola chiave riservata come ID: %{id}"
   activemodel:
     errors:
       <<: *errors

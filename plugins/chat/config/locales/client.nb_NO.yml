@@ -12,6 +12,7 @@ nb_NO:
           always: "Alltid"
           never: "Aldri"
     chat:
+      deleted_chat_username: slettet
       create: "Opprett"
       cancel: "Avbryt"
       channel_settings:
@@ -31,8 +32,6 @@ nb_NO:
       flag: "Flagg"
       join: "Bli medlem"
       last_visit: "siste besøk"
-      mention_warning:
-        dismiss: "forkast"
       reply: "Svar"
       edit: "Endre"
       rebake_message: "Generer HTML på nytt"

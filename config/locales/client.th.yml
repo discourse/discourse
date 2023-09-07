@@ -407,10 +407,17 @@ th:
         reviewable_flagged_post:
           title: "โพสต์ที่ถูกปักธง"
           flagged_by: "ถูกปักธงโดย"
+          noun: "โพส"
+        reviewable_queued_topic:
+          noun: "หัวข้อ"
+        reviewable_queued_post:
+          noun: "โพส"
         reviewable_user:
           title: "ผู้ใช้"
+          noun: "ผู้ใช้"
         reviewable_post:
           title: "โพสต์"
+          noun: "โพส"
       approval:
         title: "โพสต์นี้ต้องได้รับการอนุมัติ"
         description: "เราได้รับโพสต์ใหม่ของคุณแล้ว แต่ต้องได้รับการอนุมัติจากผู้ดูแลก่อนถึงจะปรากฏขึ้น กรุณารอสักครู่"
@@ -1424,8 +1431,6 @@ th:
       edited: "<span>%{username}</span>%{description}"
       liked: "<span>%{username}</span>%{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span>%{description}"
-      liked_many:
-        other: "<span class='multi-user'>%{username}, %{username2} และอื่นๆอีก %{count}</span>%{description}"
       liked_consolidated_description:
         other: "ถูกใจ %{count} ครั้งต่อโพสต์ของคุณ"
       liked_consolidated: "<span>%{username}</span>%{description}"
@@ -1908,7 +1913,6 @@ th:
       errors:
         create: "ขออภัย เกิดความผิดพลาดขณะกำลังสร้างโพสต์ของคุณ กรุณาลองใหม่อีกครั้ง"
         edit: "ขออภัย เกิดความผิดพลาดขณะกำลังแก้ไขโพสต์ของคุณ กรุณาลองใหม่อีกครั้ง"
-        upload: "ขออภัย เกิดความผิดพลาดขณะกำลังอัปโหลดไฟล์ของคุณ กรุณาลองใหม่อีกครั้ง"
         too_many_uploads: "ขออภัย คุณสามารถอัปโหลดได้ครั้งละหนึ่งไฟล์เท่านั้น"
         too_many_dragged_and_dropped_files:
           other: "ขออภัย คุณสามารถอัปโหลดได้ครั้งละ %{count}ไฟล์เท่านั้น"

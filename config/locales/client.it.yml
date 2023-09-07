@@ -553,23 +553,24 @@ it:
         all:
           title: "Tutti"
       context_question:
-        is_this_post: "questo messaggio è %{reviewable_human_score_types}?"
         delimiter: "o"
-        something_else_wrong: "Cosa non va in questo messaggio?"
       types:
         reviewable_flagged_post:
           title: "Messaggio segnalato"
           flagged_by: "Segnalato da"
+          noun: "messaggio"
         reviewable_queued_topic:
           title: "Argomento accodato"
+          noun: "argomento"
         reviewable_queued_post:
           title: "Messaggio accodato"
+          noun: "messaggio"
         reviewable_user:
           title: "Utente"
+          noun: "utente"
         reviewable_post:
           title: "Messaggio"
-        reviewable_chat_message:
-          title: "Messaggio di chat segnalato"
+          noun: "messaggio"
       approval:
         title: "Messaggio Da Approvare"
         description: "Abbiamo ricevuto il tuo messaggio ma prima che appaia deve essere approvato da un moderatore. Attendi."
@@ -2282,13 +2283,10 @@ it:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} e %{count} altro</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} e altri %{count}</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
-        one: "%{username}, %{username2} e %{count} altro"
-        other: "%{username}, %{username2} e altri %{count}"
+        one: "%{username} e %{count} altro"
+        other: "%{username} e altri %{count}"
       liked_consolidated_description:
         one: "ha messo \"mi piace\" a %{count} dei tuoi messaggi"
         other: "ha messo \"mi piace\" a %{count} dei tuoi messaggi"
@@ -3138,7 +3136,6 @@ it:
       errors:
         create: "Spiacenti, si è verificato un errore nel creare il tuo messaggio. Prova di nuovo."
         edit: "Spiacenti, si è verificato un errore nel modificare il tuo messaggio. Prova di nuovo."
-        upload: "Spiacenti, si è verificato un errore durante il caricamento del file. Prova di nuovo."
         file_too_large: "Spiacenti, ma questo file è troppo grande (la dimensione massima è %{max_size_kb}kb). Perché non lo carichi su un servizio di cloud sharing per poi incollarne qui il collegamento?"
         file_size_zero: "Spiacenti, sembra che qualcosa sia andato storto, il file che stai tentando di caricare è di 0 byte. Per favore riprova."
         file_too_large_humanized: "Purtroppo questo file è troppo grande (la dimensione massima consentita è %{max_size}). Prova a caricare il file su un servizio di condivisione in cloud e poi copia qui il link."
@@ -4570,7 +4567,6 @@ it:
         enabled: "Abilitato?"
         is_enabled: "S"
         not_enabled: "N"
-        change_settings: "Impostazioni del plugin"
         change_settings_short: "Impostazioni"
         howto: "Come installo i plugin?"
         official: "Plugin Ufficiale"
@@ -4611,7 +4607,6 @@ it:
             label: "Backup"
             title: "Crea un backup"
             confirm: "Vuoi creare un nuovo backup?"
-            without_uploads: "Sì (non includere i caricamenti)"
           download:
             label: "Scarica"
             title: "Invia una email con il collegamento per il download"
@@ -5293,6 +5288,7 @@ it:
           title: "Anteprima del modello"
         field_placeholders:
           validations: "inserisci le convalide qui"
+          id: "inserisci-id-qui"
           label: "Inserisci qui l'etichetta"
           placeholder: "Inserisci qui il segnaposto"
           none_label: "Seleziona un elemento"

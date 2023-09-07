@@ -553,23 +553,24 @@ sv:
         all:
           title: "Allting"
       context_question:
-        is_this_post: "Är detta inlägg %{reviewable_human_score_types}?"
         delimiter: "eller"
-        something_else_wrong: "Är det något fel med detta inlägg?"
       types:
         reviewable_flagged_post:
           title: "Flaggat inlägg"
           flagged_by: "Flaggat av"
+          noun: "inlägg"
         reviewable_queued_topic:
           title: "Köat ämne"
+          noun: "ämne"
         reviewable_queued_post:
           title: "Köat inlägg"
+          noun: "inlägg"
         reviewable_user:
           title: "Användare"
+          noun: "användare"
         reviewable_post:
           title: "Inlägg"
-        reviewable_chat_message:
-          title: "Flaggat chattmeddelande"
+          noun: "inlägg"
       approval:
         title: "Inlägget behöver godkännande"
         description: "Vi har mottagit ditt nya inlägg men det måste godkännas av en moderator innan det kan visas. Ha tålamod."
@@ -2281,13 +2282,10 @@ sv:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username},%{username2}</span>%{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username},%{username2} och %{count} annan</span> %{description}"
-        other: "<span class='multi-user'>%{username},%{username2} och %{count} andra</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
-        one: "%{username},%{username2} och %{count} annan"
-        other: "%{username},%{username2} och %{count} andra"
+        one: "%{username} och %{count} andra"
+        other: "%{username} och %{count} andra"
       liked_consolidated_description:
         one: "gillade %{count} av dina inlägg"
         other: "gillade %{count} av dina inlägg"
@@ -3129,7 +3127,6 @@ sv:
       errors:
         create: "Tyvärr uppstod det ett fel under skapandet av ditt inlägg. Vi ber dig försöka igen."
         edit: "Tyvärr uppstod det ett fel under ändringen av ditt inlägg. Vi ber dig försöka igen."
-        upload: "Tyvärr uppstod det ett fel under uppladdandet av den filen. Vi ber dig försöka igen."
         file_too_large: "Tyvärr är den filen för stor (maximal filstorlek är %{max_size_kb}kb). Varför inte ladda upp din stora fil till en moln-delningstjänst och sedan dela länken?"
         file_size_zero: "Tyvärr verkar det som om något har gått fel. Filen du försöker ladda upp är 0 bytes. Försök igen."
         file_too_large_humanized: "Tyvärr är den filen för stor (maximal storlek är %{max_size}). Varför inte ladda upp din stora fil till en molndelningstjänst och sedan klistra in länken här?"
@@ -4552,7 +4549,6 @@ sv:
         enabled: "Aktiverad?"
         is_enabled: "J"
         not_enabled: "N"
-        change_settings: "Plugin-inställningar"
         change_settings_short: "Inställningar"
         howto: "Hur installerar jag tillägg?"
         official: "Officiellt tillägg"
@@ -4593,7 +4589,6 @@ sv:
             label: "Säkerhetskopia"
             title: "Skapa en säkerhetskopia"
             confirm: "Vill du skapa en ny säkerhetskopia?"
-            without_uploads: "Ja (inkludera inte uppladdningar)"
           download:
             label: "Ladda ner"
             title: "Skicka mail med nedladdningslänk"

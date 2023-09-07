@@ -393,10 +393,18 @@ sk:
       context_question:
         delimiter: "alebo"
       types:
+        reviewable_flagged_post:
+          noun: "príspevok"
+        reviewable_queued_topic:
+          noun: "témy"
+        reviewable_queued_post:
+          noun: "príspevok"
         reviewable_user:
           title: "Používateľ"
+          noun: "používateľ"
         reviewable_post:
           title: "Príspevok"
+          noun: "príspevok"
       approval:
         title: "Príspevok vyžaduje schválenie"
         description: "Váš príspevok sme obdžali, ale skôr než bude zverejnený musí byť schválený moderátorom. Prosíme o trpezlivosť."
@@ -1308,6 +1316,11 @@ sk:
       none: "Notifikácie sa nepodarilo načítať"
       empty: "Žiadne upozornenia sa nenašli."
       watching_first_post_label: "Nová téma"
+      liked_by_multiple_users:
+        one: "%{username} a %{count} ďalší"
+        few: "%{username} a %{count} ďalších"
+        many: "%{username} a %{count} ďalších"
+        other: "%{username} a %{count} ďalších"
       dismiss_confirmation:
         dismiss: "Zahodiť"
         cancel: "Zrušiť"
@@ -1758,7 +1771,6 @@ sk:
       errors:
         create: "Ľutujeme, pri vytváraní príspevku nastala chyba. Prosím, skúste znovu."
         edit: "Ľutujeme, pri úprave príspevku nastala chyba. Prosím, skúste znovu."
-        upload: "Ľutujeme, pri nahrávaní súboru nastala chyba. Prosím, skúste znovu."
         too_many_uploads: "Ľutujeme, ale naraz je možné nahrať iba jeden súbor."
         upload_not_authorized: "Ľutujeme, súbor, ktorý sa pokúšate nahrať nemá povolenú príponu (povolené prípony sú: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Ľutujeme, noví použivatelia nemôžu nahrávať obrázky."

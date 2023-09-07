@@ -510,23 +510,24 @@ ja:
         all:
           title: "すべて"
       context_question:
-        is_this_post: "この投稿は%{reviewable_human_score_types}ですか？"
         delimiter: "または"
-        something_else_wrong: "この投稿に何か問題がありますか？"
       types:
         reviewable_flagged_post:
           title: "通報された投稿"
           flagged_by: "通報者:"
+          noun: "投稿"
         reviewable_queued_topic:
           title: "待機中のトピック"
+          noun: "トピック"
         reviewable_queued_post:
           title: "待機中の投稿"
+          noun: "投稿"
         reviewable_user:
           title: "ユーザー"
+          noun: "ユーザー"
         reviewable_post:
           title: "投稿"
-        reviewable_chat_message:
-          title: "通報されたチャットメッセージ"
+          noun: "投稿"
       approval:
         title: "承認待ちの投稿"
         description: "あなたの新しい投稿を受領しましたが、表示するにはモデレーターの承認が必要です。しばらくお待ちください。"
@@ -2176,11 +2177,9 @@ ja:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}、%{username2}</span> %{description}"
-      liked_many:
-        other: "<span class='multi-user'>%{username}、%{username2}、他 %{count} 人</span> %{description}"
       liked_by_2_users: "%{username}、%{username2}"
       liked_by_multiple_users:
-        other: "%{username}、%{username2}、他 %{count} 人"
+        other: "%{username} および他 %{count} 人"
       liked_consolidated_description:
         other: "はあなたの %{count} 件の投稿に「いいね！」しました"
       liked_consolidated: "<span>%{username}</span> %{description}"
@@ -2968,7 +2967,6 @@ ja:
       errors:
         create: "投稿を作成中にエラーが発生しました。もう一度お試しください。"
         edit: "投稿を編集中にエラーが発生しました。もう一度お試しください。"
-        upload: "ファイルのアップロード中にエラーが発生しました。もう一度お試しください。"
         file_too_large: "ファイルが大きすぎます (最大サイズは %{max_size_kb} kb です)。クラウド共有サービスにアップロードしてから、そのリンクを貼り付けてはどうですか？"
         file_size_zero: "問題が発生したようです。アップロードしようとしているファイルは 0 バイトです。もう一度お試しください。"
         file_too_large_humanized: "ファイルが大きすぎます (最大サイズは %{max_size} です)。クラウド共有サービスにアップロードしてから、そのリンクを貼り付けてはどうですか？"
@@ -4348,7 +4346,6 @@ ja:
         enabled: "有効化？"
         is_enabled: "はい"
         not_enabled: "いいえ"
-        change_settings: "プラグインの設定"
         change_settings_short: "設定"
         howto: "プラグインをインストールするには？"
         official: "公式プラグイン"
@@ -4389,7 +4386,6 @@ ja:
             label: "バックアップ"
             title: "バックアップの作成"
             confirm: "新しいバックアップを開始しますか？"
-            without_uploads: "はい (アップロードを含めない)"
           download:
             label: "ダウンロード"
             title: "ダウンロードリンクをメールで送る"

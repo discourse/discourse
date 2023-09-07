@@ -512,14 +512,19 @@ pt:
         reviewable_flagged_post:
           title: "Publicação Sinalizada"
           flagged_by: "Sinalizado por"
+          noun: "publicação"
         reviewable_queued_topic:
           title: "Tópico na fila"
+          noun: "tópico"
         reviewable_queued_post:
           title: "Post na fila"
+          noun: "publicação"
         reviewable_user:
           title: "Utilizador"
+          noun: "utilizador"
         reviewable_post:
           title: "Mensagem"
+          noun: "publicação"
       approval:
         title: "A Publicação Necessita de Aprovação"
         description: "Recebemos a sua nova publicação mas necessita de ser aprovada pelo moderador antes de aparecer. Por favor seja paciente."
@@ -1996,13 +2001,7 @@ pt:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} e %{count} outro</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} e %{count} outros</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
-      liked_by_multiple_users:
-        one: "%{username}, %{username2} e %{count} outro"
-        other: "%{username}, %{username2} e %{count} outros"
       liked_consolidated_description:
         one: "gostou de %{count} das suas publicações"
         other: "gostou de %{count} das suas publicações"
@@ -2683,7 +2682,6 @@ pt:
       errors:
         create: "Desculpe, ocorreu um erro ao criar a sua mensagem. Por favor, tente novamente."
         edit: "Desculpe, ocorreu um erro ao editar a sua mensagem. Por favor, tente novamente."
-        upload: "Pedimos desculpa, ocorreu um erro ao carregar esse ficheiro. Por favor, tente novamente."
         file_too_large: "Desculpe, esse ficheiro é demasiado grande (o tamanho máximo é %{max_size_kb}kb). Por que não enviar o seu grande ficheiro para um serviço de partilha na nuvem e, de seguida, colar o link?"
         too_many_uploads: "Pedimos desculpa, só pode carregar um ficheiro de cada vez."
         too_many_dragged_and_dropped_files:
@@ -3786,7 +3784,6 @@ pt:
             label: "Fazer Cópia de segurança"
             title: "Criar uma cópia de segurança"
             confirm: "Deseja criar uma nova cópia de segurança?"
-            without_uploads: "Sim (não inclua uploads)"
           download:
             label: "Transferir"
             title: "Enviar mensagem com a hiperligação de transferência"

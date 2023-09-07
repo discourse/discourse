@@ -542,14 +542,19 @@ lt:
         reviewable_flagged_post:
           title: "Pažymėtas pranešimas"
           flagged_by: "Pažymėjo"
+          noun: "įrašai"
         reviewable_queued_topic:
           title: "Tema eilėje"
+          noun: "tema"
         reviewable_queued_post:
           title: "Pranešimas eilėje"
+          noun: "įrašai"
         reviewable_user:
           title: "Narys"
+          noun: "narys"
         reviewable_post:
           title: "Įrašai"
+          noun: "įrašai"
       approval:
         title: "Įrašui reikalingas patvirtinimas"
         description: "Mes gavome tavo naują įrašą, tačiau jis turi būti patvirtintas moderatoriaus. Ačiū už kantrybę!"
@@ -1973,17 +1978,7 @@ lt:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} ir dar %{count}</span> %{description}"
-        few: "<span class='multi-user'>%{username}, %{username2}ir %{count} kiti</span> %{description}"
-        many: "<span class='multi-user'>%{username}, %{username2} ir %{count}kitų</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} ir %{count}kitų</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
-      liked_by_multiple_users:
-        one: "%{username}, %{username2} ir dar %{count}"
-        few: "%{username}, %{username2}ir %{count} kiti"
-        many: "%{username}, %{username2} ir %{count}kitų"
-        other: "%{username}, %{username2} ir %{count}kitų"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -2685,7 +2680,6 @@ lt:
       errors:
         create: "Atsiprašome, įvyko klaida kuriant įrašą. Prašome pamėginti dar kartą."
         edit: "Atsiprašome, įvyko klaida redaguojant įrašą. Prašome pamėginti dar kartą."
-        upload: "Atsiprašome, įvyko klaida įkeliant šį dokumentą. Prašome pamėginti dar kartą."
         file_too_large: "Deja, failas per didelis (maksimalus dydis yra %{max_size_kb}kb). Kodėl neįkėlus didelio failo į bendrinimo debesyje paslaugą ir tuomet įklijuokite nuorodą?"
         file_too_large_humanized: "Deja, failas per didelis (maksimalus dydis yra %{max_size}kb). Kodėl neįkėlus didelio failo į bendrinimo debesyje paslaugą ir tuomet įklijuokite nuorodą?"
         too_many_uploads: "Atsiprašome, bet jūs galite įkelti tik vieną failą vienu metu."
@@ -3870,7 +3864,6 @@ lt:
             label: "Kurti atsarginę kopiją"
             title: "Sukurti atsarginę kopiją"
             confirm: "Ar tikrai norite pradėti naują atsarginės kopijos darymą?"
-            without_uploads: "Taip (neįtraukti įkėlimų)"
           download:
             label: "Atsisiųsti"
             title: "Siųsti laišką su atsisiuntimo nuoroda"

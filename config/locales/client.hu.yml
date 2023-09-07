@@ -535,19 +535,23 @@ hu:
           title: "Összes"
       context_question:
         delimiter: "vagy"
-        something_else_wrong: "Valami baj van ezzel a bejegyzéssel?"
       types:
         reviewable_flagged_post:
           title: "Megjelölt bejegyzés"
           flagged_by: "Megjelölte"
+          noun: "bejegyzés"
         reviewable_queued_topic:
           title: "Sorban álló téma"
+          noun: "téma"
         reviewable_queued_post:
           title: "Sorban álló bejegyzés"
+          noun: "bejegyzés"
         reviewable_user:
           title: "Felhasználó"
+          noun: "felhasználó"
         reviewable_post:
           title: "Bejegyzés"
+          noun: "bejegyzés"
       approval:
         title: "A bejegyzés jóváhagyásra vár."
         description: "Fogadtuk a bejegyzését, de egy moderátornak jóvá kell hagynia, mielőtt megjelenne. Köszönjük a türelmét."
@@ -2154,13 +2158,10 @@ hu:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} és még %{count} felhasználó</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} és még %{count} felhasználó</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
-        one: "%{username}, %{username2} és még %{count} felhasználó"
-        other: "%{username}, %{username2} és még %{count} felhasználó"
+        one: "%{username} és még %{count} fő"
+        other: "%{username} és még %{count} fő"
       liked_consolidated_description:
         one: "kedvelte %{count} bejegyzését"
         other: "kedvelte %{count} bejegyzését"
@@ -2893,7 +2894,6 @@ hu:
       errors:
         create: "Sajnos hiba történt a bejegyzése létrehozása során. Próbálja újra."
         edit: "Sajnos hiba történt a bejegyzése szerkesztése során. Próbálja újra."
-        upload: "Sajnos hiba történt a fájl feltöltése során. Próbálja újra."
         file_too_large: "Sajnos ez a fájl túl nagy (a maximális méret %{max_size_kb} kB). Töltse fel a nagyméretű fájlt egy felhős megosztási szolgáltatásba, majd illessze be annak a hivatkozását."
         file_size_zero: "Sajnos úgy tűnik, hogy valami hiba történt, a feltöltendő fájl 0 bájtos. Próbálja újra."
         file_too_large_humanized: "Sajnos ez a fájl túl nagy (a maximális méret %{max_size}). Töltse fel a nagyméretű fájlt egy felhőmegosztó szolgáltatásba, majd illessze be annak a linkjét."
@@ -3983,7 +3983,6 @@ hu:
         enabled: "Engedélyezed?"
         is_enabled: "Y"
         not_enabled: "N"
-        change_settings: "Beépülő modul beállításai"
         change_settings_short: "Beállítások"
         howto: "Hogyan lehet plugin-eket telepíteni?"
         official: "Hivatalos bővítmény"
@@ -4021,7 +4020,6 @@ hu:
             label: "Biztonsági mentés"
             title: "Mentés készítése"
             confirm: "Új biztonsági mentést kívánsz indítani?"
-            without_uploads: "Igen (fájlok feltöltésének kihagyása)"
           download:
             label: "Letöltés"
             title: "Letöltési hivatkozás küldése e-mailben"

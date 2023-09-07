@@ -18,9 +18,7 @@ class TopicSummarization
 
     if use_cached?(existing_summary, can_summarize, current_topic_sha, !!opts[:skip_age_check])
       # It's important that we signal a cached summary is outdated
-      if can_summarize && new_targets?(existing_summary, current_topic_sha)
-        existing_summary.mark_as_outdated
-      end
+      existing_summary.mark_as_outdated if new_targets?(existing_summary, current_topic_sha)
 
       return existing_summary
     end

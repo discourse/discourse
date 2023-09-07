@@ -473,12 +473,18 @@ zh_TW:
         reviewable_flagged_post:
           title: "標記的貼文"
           flagged_by: "標記由"
+          noun: "貼文"
+        reviewable_queued_topic:
+          noun: "話題"
         reviewable_queued_post:
           title: "排定的貼文"
+          noun: "貼文"
         reviewable_user:
           title: "使用者"
+          noun: "使用者"
         reviewable_post:
           title: "貼文"
+          noun: "貼文"
       approval:
         title: "貼文需等待審核"
         description: "我們已收到您的貼文，但需要先經過版主審核後才會顯示出來。敬請稍後。"
@@ -1703,11 +1709,7 @@ zh_TW:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}、%{username2}</span> %{description}"
-      liked_many:
-        other: "<span class='multi-user'>%{username}、%{username2} 和其他 %{count} 個人都</span> %{description}"
       liked_by_2_users: "%{username}、%{username2}"
-      liked_by_multiple_users:
-        other: "%{username}、%{username2} 和其他 %{count} 個人都"
       liked_consolidated_description:
         other: "說你的%{count}則貼文讚"
       liked_consolidated: "<span>%{username}</span> %{description}"
@@ -2245,7 +2247,6 @@ zh_TW:
       errors:
         create: "抱歉，建立你的貼文時發生錯誤，請再試一次。"
         edit: "抱歉，編輯你的貼文時發生錯誤，請再試一次。"
-        upload: "抱歉，上傳你的檔案時發生錯誤，請再試一次。"
         file_too_large: "檔案過大（最大 %{max_size_kb}KB）。為什麼不就大檔案上傳至雲存儲服務後再分享連結呢？"
         too_many_uploads: "抱歉，一次只能上傳一個檔案。"
         too_many_dragged_and_dropped_files:
@@ -3232,7 +3233,6 @@ zh_TW:
             label: "備份"
             title: "新增備份"
             confirm: "你確定要新增備份嗎?"
-            without_uploads: "是（不包含上傳檔案）"
           download:
             label: "下載"
             title: "傳送含有下載連結的 email"

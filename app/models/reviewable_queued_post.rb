@@ -165,7 +165,7 @@ class ReviewableQueuedPost < Reviewable
     pm_translation_args = {
       topic_title: self.topic.title,
       topic_url: self.topic.url,
-      reason: args[:revise_custom_reason] || args[:revise_reason],
+      reason: args[:revise_custom_reason].presence || args[:revise_reason],
       feedback: args[:revise_feedback],
       original_post: self.payload["raw"],
       site_name: SiteSetting.title,

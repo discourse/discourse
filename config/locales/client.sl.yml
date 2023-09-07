@@ -495,14 +495,19 @@ sl:
         reviewable_flagged_post:
           title: "Prijavljen prispevek"
           flagged_by: "Prijavljen od"
+          noun: "prispevek"
         reviewable_queued_topic:
           title: "Tema v čakalni vrsti"
+          noun: "tema"
         reviewable_queued_post:
           title: "Prispevek za potrditev"
+          noun: "prispevek"
         reviewable_user:
           title: "Uporabnik"
+          noun: "uporabnik"
         reviewable_post:
           title: "Prispevek"
+          noun: "prispevek"
       approval:
         title: "Prispevek za odobritev."
         description: "Prejeli smo vaš nov prispevek, vendar potrebuje odobritev s strani moderatorja preden bo objavljen. Prosimo za potrpežljivost."
@@ -1887,17 +1892,7 @@ sl:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} in %{count} drug</span> %{description}"
-        two: "<span class='multi-user'>%{username}, %{username2} in %{count} druga</span> %{description}"
-        few: "<span class='multi-user'>%{username}, %{username2} in %{count} drugi</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} in %{count} drugih</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
-      liked_by_multiple_users:
-        one: "%{username}, %{username2} in %{count} drug"
-        two: "%{username}, %{username2} in %{count} druga"
-        few: "%{username}, %{username2} in %{count} drugi"
-        other: "%{username}, %{username2} in %{count} drugih"
       liked_consolidated_description:
         one: "je všečkal %{count} vaš prispevek"
         two: "je všečkal %{count} vaša prispevka"
@@ -2552,7 +2547,6 @@ sl:
       errors:
         create: "Oprostite, pri ustvarjanju vašega prispevka je prišlo do napake. Poskusite ponovno."
         edit: "Oprostite, pri ustvarjanju vašega prispevka je prišlo do napake. Poskusite ponovno."
-        upload: "Oprostite, pri prenosu datoteke je prišlo do napake. Poskusite ponovno."
         file_too_large: "Datoteka je prevelika (največja velikost je %{max_size_kb}kb). Naložite vašo veliko datoteko na ponudnika v oblaku in objavite povezavo?"
         too_many_uploads: "Oprostite, naenkrat lahko naložite samo eno datoteko."
         upload_not_authorized: "Oprostite, datoteka ki ste jo hoteli naložiti ni podprta (podprte pripone:%{authorized_extensions})."
@@ -3589,7 +3583,6 @@ sl:
             label: "Varnostna kopija"
             title: "Ustvari varnostno kopijo"
             confirm: "Želite ustvariti varnostno kopijo?"
-            without_uploads: "Da (brez naloženih datotek)"
           download:
             label: "Naloži"
         location:

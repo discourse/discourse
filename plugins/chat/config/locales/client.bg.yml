@@ -29,6 +29,7 @@ bg:
       chat_channels_count: "Чат канали"
       chat_users_count: "Потребители в чата"
     chat:
+      deleted_chat_username: изтрит
       dates:
         time_tiny: "ч:мм"
       all_loaded: "Показани са всички съобщения"
@@ -73,12 +74,6 @@ bg:
       last_visit: "последно посещение"
       summarization:
         summarize: "Обобщаване"
-      mention_warning:
-        dismiss: "отмени"
-        cannot_see: "%{username} няма достъп до този канал и не е уведомен."
-        cannot_see_multiple:
-          one: "%{username} и %{count} друг потребител нямат достъп до този канал и не са били уведомени."
-          other: "%{username} и %{count} други потребители нямат достъп до този канал и не са били уведомени."
       reply: "Отговорете"
       edit: "Редактирай"
       rebake_message: "Прегенерирай HTML "

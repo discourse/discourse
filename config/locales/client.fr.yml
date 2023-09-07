@@ -553,23 +553,24 @@ fr:
         all:
           title: "Tout"
       context_question:
-        is_this_post: "Est-ce que ce message est %{reviewable_human_score_types} ?"
         delimiter: "ou"
-        something_else_wrong: "Y a-t-il un problème avec ce message ?"
       types:
         reviewable_flagged_post:
           title: "Message signalé"
           flagged_by: "Signalé par"
+          noun: "message"
         reviewable_queued_topic:
           title: "Sujet en file d'attente"
+          noun: "sujet"
         reviewable_queued_post:
           title: "Message en file d'attente"
+          noun: "message"
         reviewable_user:
           title: "Utilisateur"
+          noun: "utilisateur"
         reviewable_post:
           title: "Message"
-        reviewable_chat_message:
-          title: "Message de discussion marqué"
+          noun: "message"
       approval:
         title: "Ce message doit être approuvé"
         description: "Votre nouveau message a bien été envoyé, mais il doit être accepté par un modérateur avant d'apparaître publiquement. Merci de votre patience."
@@ -2282,13 +2283,10 @@ fr:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} et %{count} autre</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} et %{count} autres</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
-        one: "%{username}, %{username2} et %{count} autre utilisateur"
-        other: "%{username}, %{username2} et %{count} autres utilisateurs"
+        one: "%{username} et %{count} autre utilisateur"
+        other: "%{username} et %{count} autres utilisateurs"
       liked_consolidated_description:
         one: "a aimé %{count} de vos messages"
         other: "a aimé %{count} de vos messages"
@@ -2868,6 +2866,8 @@ fr:
         open: "Ouvrir le sujet"
         close: "Fermer le sujet"
         multi_select: "Sélectionner des messages…"
+        slow_mode: "Activer le mode ralenti…"
+        timed_update: "Planifier une action…"
         pin: "Épingler le sujet…"
         unpin: "Désépingler le sujet…"
         unarchive: "Désarchiver le sujet"
@@ -3036,6 +3036,7 @@ fr:
           one: "Veuillez choisir un nouvel auteur pour le message"
           other: "Veuillez choisir un nouvel auteur pour les %{count} messages"
       change_timestamp:
+        title: "Modifier la date et l'heure…"
         action: "modifier la date et l'heure"
         invalid_timestamp: "La date et l'heure ne peuvent pas être ultérieures à la date et à l'heure actuelles."
         error: "Une erreur s'est produite lors de la modification de la date et de l'heure du sujet."
@@ -3130,7 +3131,6 @@ fr:
       errors:
         create: "Nous sommes désolés, une erreur est survenue lors de la création de votre message. Veuillez réessayer."
         edit: "Nous sommes désolés, une erreur est survenue lors de la modification de votre message. Veuillez réessayer."
-        upload: "Nous sommes désolés, une erreur est survenue lors de l'envoi du fichier. Veuillez réessayer."
         file_too_large: "Nous sommes désolés, ce fichier est trop volumineux (la taille maximale autorisée est de %{max_size_kb} Ko). Nous vous suggérons de stocker votre fichier sur un service d'hébergement extérieur au forum et de coller ensuite un lien dans votre message."
         file_size_zero: "Un problème semble être survenu, la taille du fichier que vous tentez d'importer est de 0 octet. Veuillez réessayer."
         file_too_large_humanized: "Nous sommes désolés, ce fichier est trop volumineux (la taille maximale est de %{max_size}). Nous vous suggérons de stocker votre fichier sur un service d'hébergement extérieur au forum et de coller ensuite un lien dans votre message."
@@ -4559,7 +4559,6 @@ fr:
         enabled: "Activée ?"
         is_enabled: "O"
         not_enabled: "N"
-        change_settings: "Paramètres de l'extension"
         change_settings_short: "Paramètres"
         howto: "Comment installer des extensions ?"
         official: "Extension officielle"
@@ -4600,7 +4599,6 @@ fr:
             label: "Sauvegarder"
             title: "Créer une sauvegarde"
             confirm: "Voulez-vous démarrer une nouvelle sauvegarde ?"
-            without_uploads: "Oui (ne pas inclure les fichiers envoyés)"
           download:
             label: "Télécharger"
             title: "Envoyer un e-mail avec un lien de téléchargement"

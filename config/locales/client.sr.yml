@@ -439,10 +439,18 @@ sr:
       context_question:
         delimiter: "ili"
       types:
+        reviewable_flagged_post:
+          noun: "post"
+        reviewable_queued_topic:
+          noun: "tema"
+        reviewable_queued_post:
+          noun: "post"
         reviewable_user:
           title: "Korisnik"
+          noun: "korisnik"
         reviewable_post:
           title: "Post"
+          noun: "post"
       approval:
         title: "Potrebno odobrenje"
         description: "Primili smo tvoj novi post ali on najpre mora biti odobren od strane moderatora. Budi strpljiv."
@@ -1391,7 +1399,6 @@ sr:
       errors:
         create: "Žao nam je, dogodila se greška pri otvaranju tvoje poruke. Molimo pokušajte ponovo."
         edit: "Žao nam je, dogodila se greška pri izmenjivanju tvoje poruke. Molimo pokušajte ponovo."
-        upload: "Žao nam je, dogodila se greška pri učitavanju te datoteke. Molimo pokušajte ponovo."
         too_many_uploads: "Žao nam je, možete učitati samo jednu datoteku od jednom."
         image_upload_not_allowed_for_new_user: "Žao nam je, novi korisnici ne mogu učitavati slike."
         attachment_upload_not_allowed_for_new_user: "Žao nam je, novi korisnici ne mogu učitavati priloge."

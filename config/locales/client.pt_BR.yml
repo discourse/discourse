@@ -553,23 +553,24 @@ pt_BR:
         all:
           title: "Tudo"
       context_question:
-        is_this_post: "Essa publicação é %{reviewable_human_score_types}?"
         delimiter: "ou"
-        something_else_wrong: "Existe algo errado com essa postagem?"
       types:
         reviewable_flagged_post:
           title: "Postagem sinalizada"
           flagged_by: "Sinalizado por"
+          noun: "postar"
         reviewable_queued_topic:
           title: "Tópico na fila"
+          noun: "tópico"
         reviewable_queued_post:
           title: "Postagem na fila"
+          noun: "postar"
         reviewable_user:
           title: "Usuário"
+          noun: "usuário(a)"
         reviewable_post:
           title: "Postagem"
-        reviewable_chat_message:
-          title: "Mensagem de chat sinalizada"
+          noun: "postar"
       approval:
         title: "A postagem precisa de aprovação"
         description: "Nós recebemos sua nova postagem, mas é necessário ter aprovação da moderação antes de ser exibida. Pedimos paciência."
@@ -2282,13 +2283,10 @@ pt_BR:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} e %{count} outro</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} e %{count} outros</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
-        one: "%{username}, %{username2} e %{count} outro"
-        other: "%{username}, %{username2} e %{count} outros"
+        one: "%{username} e %{count} outro"
+        other: "%{username} e %{count} outros(as)"
       liked_consolidated_description:
         one: "curtiu %{count} de suas postagens"
         other: "curtiu %{count} de suas postagens"
@@ -3130,7 +3128,6 @@ pt_BR:
       errors:
         create: "Desculpe, houve um erro ao criar sua postagem. Tente outra vez."
         edit: "Desculpe, houve um erro ao editar sua postagem. Tente outra vez."
-        upload: "Desculpe, houve um erro ao enviar o arquivo. Tente outra vez."
         file_too_large: "Desculpe, este arquivo é muito grande (o tamanho máximo é de %{max_size_kb} KB). Que tal enviar o arquivo grande para um serviço de nuvem e compartilhar o link?"
         file_size_zero: "Desculpe, parece que algo deu errado, o arquivo que você está tentando enviar tem 0 bytes. Tente novamente."
         file_too_large_humanized: "Desculpe, este arquivo é muito grande (o tamanho máximo é de %{max_size}). Que tal enviar o arquivo grande para um serviço de nuvem e compartilhar o link?"
@@ -4553,7 +4550,6 @@ pt_BR:
         enabled: "Ativado(a)?"
         is_enabled: "S"
         not_enabled: "N"
-        change_settings: "Configurações de plugin"
         change_settings_short: "Configurações"
         howto: "Como instalo plugins?"
         official: "Plugin oficial"
@@ -4594,7 +4590,6 @@ pt_BR:
             label: "Backup"
             title: "Criar um backup"
             confirm: "Você quer iniciar um novo backup?"
-            without_uploads: "Sim (não incluir envios)"
           download:
             label: "Download"
             title: "Enviar e-mail com link para download"

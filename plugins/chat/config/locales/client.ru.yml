@@ -29,6 +29,7 @@ ru:
       chat_channels_count: "Каналы чата"
       chat_users_count: "Пользователи чата"
     chat:
+      deleted_chat_username: удалён
       dates:
         time_tiny: "h:mm"
       all_loaded: "Показать все сообщения"
@@ -133,37 +134,12 @@ ru:
           many: "Последние %{count} часов"
           other: "Последние %{count} часа"
       mention_warning:
-        dismiss: "Отклонить"
-        cannot_see: "Пользователь %{username} не имеет доступа к этому каналу и не был уведомлен."
-        cannot_see_multiple:
-          one: "%{username} и еще %{count} пользователь не имеют доступа к этому каналу и не были уведомлены."
-          few: "%{username} и еще %{count} пользователя не имеют доступа к этому каналу и не были уведомлены."
-          many: "%{username} и еще %{count} пользователей не имеют доступа к этому каналу и не были уведомлены."
-          other: "%{username} и еще %{count} пользователя не имеют доступа к этому каналу и не были уведомлены."
         invitations_sent:
           one: "Приглашение отправлено"
           few: "Приглашения отправлены"
           many: "Приглашений отправлены"
           other: "Приглашений отправлены"
         invite: "Пригласить в канал"
-        without_membership: "Пользователь %{username} не является участником канала."
-        without_membership_multiple:
-          one: "%{username} и еще %{count} пользователь не являются участниками канала."
-          few: "%{username} и еще %{count} пользователя не являются участниками канала."
-          many: "%{username} и еще %{count} пользователей не являются участниками канала."
-          other: "%{username} и еще %{count} пользователя не являются участниками канала."
-        group_mentions_disabled: "В группе «%{group_name}» не разрешены упоминания."
-        group_mentions_disabled_multiple:
-          one: "В группе «%{group_name}» и еще %{count} не разрешены упоминания."
-          few: "В группе «%{group_name}» и еще %{count} не разрешены упоминания."
-          many: "В группе «%{group_name}» и еще %{count} не разрешены упоминания."
-          other: "В группе «%{group_name}» и еще %{count} не разрешены упоминания."
-        too_many_members: "В группе «%{group_name}» слишком много участников. Никто не был уведомлен."
-        too_many_members_multiple:
-          one: "В группе «%{group_name}» и еще %{count} слишком много участников. Никто не был уведомлен."
-          few: "В группе «%{group_name}» и еще %{count} слишком много участников. Никто не был уведомлен."
-          many: "В группе «%{group_name}» и еще %{count} слишком много участников. Никто не был уведомлен."
-          other: "В группе «%{group_name}» и еще %{count} слишком много участников. Никто не был уведомлен."
         groups:
           header:
             some: "Некоторые пользователи не будут уведомлены"
@@ -701,6 +677,9 @@ ru:
       types:
         chat_reviewable_message:
           title: "На сообщение пожаловались"
+        reviewable_chat_message:
+          title: "На сообщение пожаловались"
+          noun: "сообщение чата"
     keyboard_shortcuts_help:
       chat:
         title: "Чат"

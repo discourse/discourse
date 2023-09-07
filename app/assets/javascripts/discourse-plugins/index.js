@@ -100,6 +100,10 @@ module.exports = {
       plugins: [require.resolve("deprecation-silencer")],
     },
 
+    "ember-cli-babel": {
+      throwUnlessParallelizable: true,
+    },
+
     "ember-this-fallback": {
       enableLogging: false,
     },

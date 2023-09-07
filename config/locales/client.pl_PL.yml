@@ -450,6 +450,8 @@ pl_PL:
     upload: "Prześlij"
     uploading: "Przesyłanie…"
     processing: "Przetwarzanie…"
+    uploading_filename: "Przesyłanie: %{filename}…"
+    processing_filename: "Przetwarzanie: %{filename}…"
     clipboard: "schowek"
     uploaded: "Przesłano!"
     pasting: "Wklejanie…"
@@ -644,23 +646,26 @@ pl_PL:
         all:
           title: "Wszystko"
       context_question:
-        is_this_post: "Czy ten post %{reviewable_human_score_types}?"
+        is_this_post: "Czy to jest %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "lub"
-        something_else_wrong: "Czy coś jest nie tak z tym postem?"
+        something_else_wrong: "Czy jest coś nie tak z tym %{reviewable_type}?"
       types:
         reviewable_flagged_post:
           title: "Oflagowany wpis"
           flagged_by: "Oflagowany przez"
+          noun: "post"
         reviewable_queued_topic:
           title: "Temat w kolejce"
+          noun: "temat"
         reviewable_queued_post:
           title: "Wpis w kolejce"
+          noun: "post"
         reviewable_user:
           title: "Użytkownik"
+          noun: "użytkownik"
         reviewable_post:
           title: "Post"
-        reviewable_chat_message:
-          title: "Oflagowana wiadomość na czacie"
+          noun: "post"
       approval:
         title: "Post wymaga zatwierdzenia"
         description: "Twój nowy wpis został umieszczony w kolejce i pojawi się po zatwierdzeniu przez moderatora. Prosimy o cierpliwość."
@@ -1082,6 +1087,7 @@ pl_PL:
         few: "%{count} nowe tematy w ostatnim miesiącu."
         many: "%{count} nowe tematy w ostatnim miesiącu."
         other: "%{count} nowych tematów w ostatnim miesiącu."
+      n_more: "Kategorie (%{count} więcej)…"
     ip_lookup:
       title: Wyszukiwanie adresu IP
       hostname: Nazwa hosta
@@ -1639,6 +1645,7 @@ pl_PL:
         not_available_no_suggestion: "Niedostępne"
         too_short: "Nazwa użytkownika jest zbyt krótka"
         too_long: "Nazwa użytkownika jest zbyt długa"
+        checking: "Sprawdzanie dostępności nazwy użytkownika…"
         prefilled: "Email zgadza się z zarejestrowaną nazwą użytkownika"
         required: "Wpisz nazwę użytkownika"
         edit: "Edytuj nazwę użytkownika"
@@ -2251,6 +2258,7 @@ pl_PL:
         many: "%{count} wyników"
         other: "%{count} wyników"
       filter_placeholder: Szukaj…
+      filter_placeholder_with_any: Wyszukaj lub utwórz…
       create: "Stwórz: '%{content}'"
       max_content_reached:
         one: "Możesz wybrać tylko %{count} element."
@@ -2518,17 +2526,12 @@ pl_PL:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} oraz %{count} inny</span> %{description}"
-        few: "<span class='multi-user'>%{username}, %{username2} oraz %{count} innych</span> %{description}"
-        many: "<span class='multi-user'>%{username}, %{username2} oraz %{count} innych</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} oraz %{count} innych</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
-        one: "%{username}, %{username2} i %{count} inna osoba"
-        few: "%{username}, %{username2} i %{count} inne osoby"
-        many: "%{username}, %{username2} i %{count} innych osób"
-        other: "%{username}, %{username2} oraz %{count} innych"
+        one: "%{username} i %{count} inny"
+        few: "%{username} i %{count} inni"
+        many: "%{username} i %{count} innych"
+        other: "%{username} i %{count} innych"
       liked_consolidated_description:
         one: "polubiono %{count} Twój wpis"
         few: "polubił %{count} twoje posty"
@@ -2705,6 +2708,7 @@ pl_PL:
           label: Otagowane
           aria_label: Filtruj za pomocą tagów
         filters:
+          label: Zwracaj tylko tematy/posty…
           title: Dopasowanie tylko w tytule
           likes: Lubię
           posted: Opublikowałem w
@@ -3128,11 +3132,13 @@ pl_PL:
         replies_short: "%{current} / %{total}"
       progress:
         title: postęp tematu
+        jump_prompt: "skocz do…"
         jump_prompt_of:
           one: "z %{count} postu"
           few: "z %{count} postów"
           many: "z %{count} postów"
           other: "z %{count} postów"
+        jump_prompt_long: "Skocz do…"
         jump_prompt_to_date: "do daty"
         jump_prompt_or: "lub"
       notifications:
@@ -3188,6 +3194,7 @@ pl_PL:
         open: "Otwórz temat"
         close: "Zamknij temat"
         multi_select: "Wybierz wpisy…"
+        slow_mode: "Ustaw tryb powolny…"
         pin: "Przypnij temat…"
         unpin: "Odepnij temat…"
         unarchive: "Przywróć z archiwum"
@@ -3494,7 +3501,6 @@ pl_PL:
       errors:
         create: "Przepraszamy, podczas tworzenia twojego wpisu wystąpił błąd. Spróbuj ponownie."
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
-        upload: "Przepraszamy, wystąpił błąd podczas wczytywania Twojego pliku. Proszę, spróbuj ponownie."
         file_too_large: "Przepraszamy, ten plik jest zbyt duży (maksymalny rozmiar to %{max_size_kb}kB). Dlaczego nie przesłać dużego pliku do usługi udostępniania w chmurze, a następnie wkleić link?"
         file_size_zero: "Przepraszamy, wygląda na to, że coś poszło nie tak. Plik, który próbujesz przesłać, ma 0 bajtów. Spróbuj przesłać go ponownie."
         file_too_large_humanized: "Przepraszamy, ten plik jest za duży (maksymalny rozmiar to %{max_size}). Dlaczego nie przesłać dużego pliku do usługi udostępniania w chmurze, a następnie wkleić link?"
@@ -5036,7 +5042,6 @@ pl_PL:
         enabled: "Włączona?"
         is_enabled: "T"
         not_enabled: "N"
-        change_settings: "Ustawienia wtyczki"
         change_settings_short: "Ustawienia"
         howto: "Jak zainstalować wtyczkę?"
         official: "Oficjalna wtyczka"
@@ -5082,7 +5087,6 @@ pl_PL:
             label: "Kopia zapasowa"
             title: "Wykonaj kopię zapasową"
             confirm: "Czy chcesz wykonać kopię zapasową?"
-            without_uploads: "Tak (nie dołączaj przesyłanych plików)"
           download:
             label: "Pobierz"
             title: "Wyślij email z linkiem do pobrania"

@@ -501,14 +501,19 @@ ur:
         reviewable_flagged_post:
           title: "فلَیگ کردہ پوسٹ"
           flagged_by: "کی طرف سے فلَیگ کردہ"
+          noun: "پوسٹ"
         reviewable_queued_topic:
           title: "قطار شدہ ٹاپک"
+          noun: "ٹاپک"
         reviewable_queued_post:
           title: "قطار شدہ پوسٹ"
+          noun: "پوسٹ"
         reviewable_user:
           title: "صارف"
+          noun: "صارف"
         reviewable_post:
           title: "پوسٹ"
+          noun: "پوسٹ"
       approval:
         title: "پوسٹ کو منظوری کی ضرورت ہے"
         description: "ہمیں آپ کی نئی پوسٹ موصول ہو چکی ہے لیکن یہ ظاہر ہونے سے پہلے ایک منتظم سے منظور ہونا ضروری ہے۔ براہ مہربانی صبر کریں۔"
@@ -1989,13 +1994,7 @@ ur:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username2}، %{username} اور %{count} مزید</span> %{description}"
-        other: "<span class='multi-user'>%{username2}، %{username} اور %{count} مزید</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
-      liked_by_multiple_users:
-        one: "%{username2}، %{username} اور %{count} مزید"
-        other: "%{username2}، %{username} اور %{count} مزید"
       liked_consolidated_description:
         one: "آپ کی %{count} پوسٹس کو لائیک کیا"
         other: "آپ کی %{count} پوسٹس کو لائیک کیا"
@@ -2708,7 +2707,6 @@ ur:
       errors:
         create: "معذرت، آپ کی پوسٹ بنانے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"
         edit: "معذرت، آپ کی پوسٹ ترمیم کرنے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"
-        upload: "معذرت، یہ فائل اَپ لوڈ کرنے میں ایک خرابی کا سامنا کرنا پڑا۔ براہ مہربانی دوبارہ کوشش کریں۔"
         file_too_large: "معذرت، یہ فائل بہت بڑی ہے (زیادہ سے زیادہ سائز %{max_size_kb}kb) ہے۔ کیوں نہ آپ اپنی بڑی فائل ایک کلاؤڈ شیئرنگ سروس پر اَپ لوڈ کریں اور اس کا لنک پَیسٹ کریں؟"
         file_size_zero: "معذرت، ایسا لگتا ہے کہ کچھ غلط ہو گیا ہے، آپ جس فائل کو اپ لوڈ کرنے کی کوشش کر رہے ہیں وہ 0 بائٹس ہے۔ دوبارہ کوشش کریں."
         file_too_large_humanized: "معذرت، وہ فائل بہت بڑی ہے (زیادہ سے زیادہ سائز ہے %{max_size})۔ کیوں نہ اپنی بڑی فائل کو کلاؤڈ شیئرنگ سروس پر اپ لوڈ کریں، پھر لنک پیسٹ کریں؟"
@@ -3972,7 +3970,6 @@ ur:
             label: "بیک اَپ"
             title: "بیک اَپ بنائیں"
             confirm: "کیا آپ نیا بیک اَپ شروع کرنا چاہتے ہیں؟"
-            without_uploads: "جی ہاں (اپ لوڈز کو شامل نہ کیا جائے)"
           download:
             label: "ڈاؤن لوڈ"
             title: "ڈاؤن لوڈ لنک کے ساتھ اِیمیل بھیجیں"

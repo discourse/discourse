@@ -569,14 +569,19 @@ hr:
         reviewable_flagged_post:
           title: "Post označen zastavicom"
           flagged_by: "Označio"
+          noun: "objava"
         reviewable_queued_topic:
           title: "Tema u redu čekanja"
+          noun: "tema"
         reviewable_queued_post:
           title: "Objava u redu čekanja"
+          noun: "objava"
         reviewable_user:
           title: "Korisnik"
+          noun: "korisnik"
         reviewable_post:
           title: "Objava"
+          noun: "objava"
       approval:
         title: "natpis čeka potvrdu"
         description: "Zaprimili smo vašu objavu, ali potrebno je odobrenje moderatora prije nego se pojavi. Molim vas budite strpljivi."
@@ -2286,15 +2291,7 @@ hr:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} i %{count} ostalo</span> %{description}"
-        few: "<span class='multi-user'>%{username}, %{username2} i %{count} ostalih</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} i %{count} ostali</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
-      liked_by_multiple_users:
-        one: "%{username}, %{username2} i %{count} ostalo"
-        few: "%{username}, %{username2} i %{count} ostalih"
-        other: "%{username}, %{username2} i %{count} ostali"
       liked_consolidated_description:
         one: "se sviđa vaš %{count} post"
         few: "se sviđa vaših %{count} postova"
@@ -3173,7 +3170,6 @@ hr:
       errors:
         create: "Žao nam je, dogodila se greška u stvaranju tvoje objave. Molimo pokušajte ponovo."
         edit: "Žao nam je, dogodila se greška u izmjenjivanju tvoje objave. Molimo pokušajte ponovo."
-        upload: "Žao nam je, dogodila se greška pri učitavanju te datoteke. Molimo pokušajte ponovo."
         file_too_large: "Nažalost, ta je datoteka prevelika (maksimalna veličina je %{max_size_kb}kb). Zašto svoju veliku datoteku ne biste prenijeli na vanjski servis poput imgur.com, a zatim zalijepili vezu?"
         file_size_zero: "Žao nam je, izgleda da je nešto pošlo po zlu, datoteka koju pokušavate prenijeti je 0 bajtova. Molim te pokušaj ponovno."
         file_too_large_humanized: "Nažalost, ta je datoteka prevelika (maksimalna veličina je %{max_size}). Zašto ne biste prenijeli svoju veliku datoteku na uslugu dijeljenja u oblaku, a zatim zalijepili vezu?"
@@ -4585,7 +4581,6 @@ hr:
             label: "Napravi sigurnosnu kopiju"
             title: "Stvori sigurnosnu kopiju"
             confirm: "Želite li pokrenuti novu sigurnosnu kopiju?"
-            without_uploads: "Da (ne uključuje prijenose)"
           download:
             label: "Preuzmi"
             title: "Pošaljite e-poštu s vezom za preuzimanje"

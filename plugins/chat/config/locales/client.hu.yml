@@ -29,6 +29,7 @@ hu:
       chat_channels_count: "Csevegőcsatornák"
       chat_users_count: "Csevegőfelhasználók"
     chat:
+      deleted_chat_username: törölt
       dates:
         time_tiny: "h:mm"
       all_loaded: "Összes üzenet megjelenítése"
@@ -111,7 +112,6 @@ hu:
       summarization:
         summarize: "Összefoglalás"
       mention_warning:
-        dismiss: "elvetés"
         invitations_sent:
           one: "Meghívó elküldve"
           other: "Meghívók elküldve"

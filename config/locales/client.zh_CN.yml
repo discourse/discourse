@@ -518,23 +518,26 @@ zh_CN:
         all:
           title: "一切"
       context_question:
-        is_this_post: "此帖子是否%{reviewable_human_score_types}？"
+        is_this_post: "这是 %{reviewable_type} %{reviewable_human_score_types} 吗？"
         delimiter: "或者"
-        something_else_wrong: "此帖子有什么问题吗？"
+        something_else_wrong: "%{reviewable_type} 有什么问题吗？"
       types:
         reviewable_flagged_post:
           title: "被举报的帖子"
           flagged_by: "举报人"
+          noun: "帖子"
         reviewable_queued_topic:
           title: "已加入队列的话题"
+          noun: "话题"
         reviewable_queued_post:
           title: "已加入队列的帖子"
+          noun: "帖子"
         reviewable_user:
           title: "用户"
+          noun: "用户"
         reviewable_post:
           title: "帖子"
-        reviewable_chat_message:
-          title: "被举报的聊天消息"
+          noun: "帖子"
       approval:
         title: "帖子需要审批"
         description: "我们已收到您的帖子，不过需要由版主批准才能显示。请耐心等待。"
@@ -2209,11 +2212,9 @@ zh_CN:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}、%{username2}</span> %{description}"
-      liked_many:
-        other: "<span class='multi-user'>%{username}、%{username2} 和其他 %{count} 人</span> %{description}"
       liked_by_2_users: "%{username}、%{username2}"
       liked_by_multiple_users:
-        other: "%{username}、%{username2} 和其他 %{count} 人"
+        other: "%{username} 和其他 %{count} 人"
       liked_consolidated_description:
         other: "点赞了您的 %{count} 个帖子"
       liked_consolidated: "<span>%{username}</span> %{description}"
@@ -2488,6 +2489,12 @@ zh_CN:
         dismiss_new_modal:
           title: "关闭新话题"
           topics: "关闭新话题"
+          posts: "忽略新回复"
+          topics_with_count:
+            other: "忽略 %{count} 个新话题"
+          replies_with_count:
+            other: "忽略 %{count} 新回复"
+          replies: "忽略新回复"
           untrack: "停止跟踪这些话题，以便它们不再出现在我的新列表中"
         dismiss_new_with_selected:
           other: "忽略新话题（%{count} 个）…"
@@ -3011,7 +3018,7 @@ zh_CN:
       errors:
         create: "抱歉，创建您的帖子时出错。请重试。"
         edit: "抱歉，编辑您的帖子时出错。请重试。"
-        upload: "抱歉，上传该文件时出错。请重试。"
+        upload: "抱歉，上传 %{file_name} 时出错。请重试。"
         file_too_large: "抱歉，该文件太大（大小上限为 %{max_size_kb}KB）。为什么不将您的大文件上传到云共享服务，然后粘贴链接呢？"
         file_size_zero: "抱歉，好像出了点问题，您要上传的文件是 0 字节。请再试一次。"
         file_too_large_humanized: "抱歉，该文件太大（大小上限为 %{max_size}）。为什么不将您的大文件上传到云共享服务，然后粘贴链接呢？"
@@ -4410,7 +4417,6 @@ zh_CN:
         enabled: "已启用？"
         is_enabled: "是"
         not_enabled: "否"
-        change_settings: "插件设置"
         change_settings_short: "设置"
         howto: "如何安装插件？"
         official: "官方插件"
@@ -4456,7 +4462,7 @@ zh_CN:
             label: "备份"
             title: "创建备份"
             confirm: "要开始新备份吗？"
-            without_uploads: "是（不包括上传）"
+            include_uploads: "包括所有上传的内容"
           download:
             label: "下载"
             title: "发送带有下载链接的电子邮件"
@@ -5146,6 +5152,7 @@ zh_CN:
           title: "预览模板"
         field_placeholders:
           validations: "在此处输入验证"
+          id: "在此输入 ID"
           label: "在此处输入标签"
           placeholder: "在此处输入占位符"
           none_label: "选择条目"

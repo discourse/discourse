@@ -561,23 +561,26 @@ de:
         all:
           title: "Alles"
       context_question:
-        is_this_post: "Ist dieser Beitrag %{reviewable_human_score_types}?"
+        is_this_post: "Ist das %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "oder"
-        something_else_wrong: "Stimmt etwas mit diesem Beitrag nicht?"
+        something_else_wrong: "Stimmt etwas nicht mit diesem %{reviewable_type}?"
       types:
         reviewable_flagged_post:
           title: "Gemeldeter Beitrag"
           flagged_by: "Gemeldet von"
+          noun: "beitrag"
         reviewable_queued_topic:
           title: "Thema in der Warteschlange"
+          noun: "thema"
         reviewable_queued_post:
           title: "Beitrag in der Warteschlange"
+          noun: "beitrag"
         reviewable_user:
           title: "Benutzer"
+          noun: "Benutzer"
         reviewable_post:
           title: "Beitrag"
-        reviewable_chat_message:
-          title: "Markierte Chat-Nachricht"
+          noun: "beitrag"
       approval:
         title: "Beitrag muss genehmigt werden"
         description: "Wir haben deinen neuen Beitrag erhalten. Dieser muss jedoch von einem Moderator genehmigt werden, bevor er angezeigt wird. Bitte habe etwas Geduld."
@@ -2315,13 +2318,10 @@ de:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} und %{count} anderer</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} und %{count} andere</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
-        one: "%{username}, %{username2} und jemand anderes"
-        other: "%{username}, %{username2} und %{count} andere"
+        one: "%{username} und %{count} andere Person"
+        other: "%{username} und %{count} andere"
       liked_consolidated_description:
         one: "gefällt %{count} deiner Beiträge"
         other: "gefallen %{count} deiner Beiträge"
@@ -3181,7 +3181,7 @@ de:
       errors:
         create: "Entschuldige, es gab einen Fehler beim Anlegen des Beitrags. Bitte versuche es noch einmal."
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Bitte versuche es noch einmal."
-        upload: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Bitte versuche es noch einmal."
+        upload: "Entschuldige, beim Hochladen von %{file_name} ist leider ein Fehler aufgetreten. Bitte versuche es noch einmal."
         file_too_large: "Entschuldige, die Datei ist zu groß (die maximale Größe beträgt %{max_size_kb} KB). Wie wäre es, die Datei bei einem Cloud-Sharing-Service hochzuladen und dann den Link einzufügen?"
         file_size_zero: "Entschuldigung, es sieht so aus, als ob etwas schiefgelaufen ist. Die Datei, die du hochladen möchtest, ist 0 Byte groß. Bitte versuche es erneut."
         file_too_large_humanized: "Entschuldigung, diese Datei ist zu groß (die maximale Größe beträgt %{max_size}). Lade deine große Datei bitte bei einem Cloud-Sharing-Dienst hoch und füge den Link ein."
@@ -3832,6 +3832,7 @@ de:
         print: "%{shortcut} Thema ausdrucken"
         defer: "%{shortcut} Thema ignorieren"
         topic_admin_actions: "%{shortcut} Themen-Administration öffnen"
+        archive_private_message: "%{shortcut} Archivierung privater Nachrichten umschalten"
       search_menu:
         title: "Suchmenü"
         prev_next: "%{shortcut} Auswahl bewegen ↑ ↓"
@@ -4632,7 +4633,6 @@ de:
         enabled: "Aktiviert?"
         is_enabled: "J"
         not_enabled: "N"
-        change_settings: "Plug-in-Einstellungen"
         change_settings_short: "Einstellungen"
         howto: "Wie installiere ich Plug-ins?"
         official: "Offizielles Plug-in"
@@ -4678,7 +4678,8 @@ de:
             label: "Backup"
             title: "Ein Backup erstellen"
             confirm: "Möchtest du ein neues Backup starten?"
-            without_uploads: "Ja (ohne Dateien)"
+            include_uploads: "alle Uploads einbeziehen"
+            s3_upload_warning: 'Dies gilt nur für Datenbank-Backups. Uploads werden nicht einbezogen, d.h. alle Bilder und andere Datei-Uploads können fehlen, wenn das Backup auf einem anderen Hosting-System wiederhergestellt wird. <b>Um ein vollständiges Backup einschließlich deiner S3-Uploads zu aktivieren, schaue bitte unter <a href="https://meta.discourse.org/t/-/276535" target="_blank">diesen Leitfaden</a>.</b>'
           download:
             label: "Herunterladen"
             title: "Sende E-Mail mit Download-Link"
@@ -5370,6 +5371,7 @@ de:
           title: "Vorschau der Vorlage"
         field_placeholders:
           validations: "Validierungen hier eingeben"
+          id: "enter-id-here"
           label: "Bezeichnung hier eingeben"
           placeholder: "Platzhalter hier eingeben"
           none_label: "Wähle ein Element aus"
@@ -5729,7 +5731,7 @@ de:
           new_default: "Neuer Standard"
           dismiss: "Verwerfen"
       settings:
-        show_overriden: "Nur geänderte Texte anzeigen"
+        show_overriden: "Nur geänderte Einstellungen anzeigen"
         history: "Änderungsverlauf ansehen"
         reset: "zurücksetzen"
         none: "keine"

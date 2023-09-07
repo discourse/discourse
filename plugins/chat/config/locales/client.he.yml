@@ -30,6 +30,7 @@ he:
       chat_channels_count: "ערוצי צ׳אט"
       chat_users_count: "משתמשי צ׳אט"
     chat:
+      deleted_chat_username: נמחק
       dates:
         time_tiny: "h:mm"
       all_loaded: "כל ההודעות מוצגות"
@@ -136,38 +137,13 @@ he:
           many: "%{count} השעות האחרונות"
           other: "%{count} השעות האחרונות"
       mention_warning:
-        dismiss: "התעלמות"
-        cannot_see: "ל־%{username} אין גישה לערוץ הזה ולא נשלחה התראה."
-        cannot_see_multiple:
-          one: "ל־%{username} ולעוד %{count} אין גישה לערוץ הזה ולא נשלחו הודעות."
-          two: "ל־%{username} ולעוד %{count} אין גישה לערוץ הזה ולא נשלחו הודעות."
-          many: "ל־%{username} ולעוד %{count} אין גישה לערוץ הזה ולא נשלחו הודעות."
-          other: "ל־%{username} ולעוד %{count} אין גישה לערוץ הזה ולא נשלחו הודעות."
         invitations_sent:
           one: "נשלחה הזמנה"
           two: "נשלחו הזמנות"
           many: "נשלחו הזמנות"
           other: "נשלחו הזמנות"
         invite: "הזמנה לערוץ"
-        without_membership: "לא הצטרפו לערוץ הזה: %{username}."
-        without_membership_multiple:
-          one: "לא הצטרפו לערוץ הזה: %{username} ועוד %{count}."
-          two: "לא הצטרפו לערוץ הזה: %{username} ועוד %{count}."
-          many: "לא הצטרפו לערוץ הזה: %{username} ועוד %{count}."
-          other: "לא הצטרפו לערוץ הזה: %{username} ועוד %{count}."
-        group_mentions_disabled: "אזכורים אסורים בקבוצה %{group_name}."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} וקבוצה %{count} נוספת לא מרשות אזכורים."
-          two: "%{group_name} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
-          many: "%{group_name} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
-          other: "%{group_name} ו־%{count} קבוצות נוספת לא מרשות אזכורים."
         channel_wide_mentions_disallowed: "האזכורים ‎@here (כאן) ו־‎@all (כולם) מושבתים בערוץ הזה."
-        too_many_members: "בקבוצה %{group_name} יש יותר מדי חברים. לא נשלחו התראות."
-        too_many_members_multiple:
-          one: "בקבוצה %{group_name} וב־%{count} נוספת יש יותר מדי חברים. לא נשלחו התראות."
-          two: "בקבוצה %{group_name} וב־%{count} נוספות יש יותר מדי חברים. לא נשלחו התראות."
-          many: "בקבוצה %{group_name} וב־%{count} נוספות יש יותר מדי חברים. לא נשלחו התראות."
-          other: "בקבוצה %{group_name} וב־%{count} נוספות יש יותר מדי חברים. לא נשלחו התראות."
         groups:
           header:
             some: "חלק מהמשתמשים לא יקבלו התראה"
@@ -674,6 +650,9 @@ he:
       types:
         chat_reviewable_message:
           title: "הודעת צ׳אט מסומנת"
+        reviewable_chat_message:
+          title: "הודעת צ׳אט מסומנת"
+          noun: "הודעת הצ׳אט"
     keyboard_shortcuts_help:
       chat:
         title: "צ׳אט"

@@ -497,14 +497,19 @@ el:
         reviewable_flagged_post:
           title: "Επισημασμένη ανάρτηση"
           flagged_by: "Επισήμανση από"
+          noun: "ανάρτηση"
         reviewable_queued_topic:
           title: "Θέμα σε ουρά"
+          noun: "θέμα"
         reviewable_queued_post:
           title: "Ανάρτηση σε ουρά"
+          noun: "ανάρτηση"
         reviewable_user:
           title: "Χρήστης"
+          noun: "χρήστης"
         reviewable_post:
           title: "Ανάρτηση"
+          noun: "ανάρτηση"
       approval:
         title: "Απαιτείται Έγκριση Ανάρτησης"
         description: "Λάβαμε την ανάρτησή σου, αλλά πρέπει πρώτα να εγκριθεί από έναν συντονιστή πριν εμφανιστεί. Παρακαλώ περιμένετε."
@@ -1873,13 +1878,7 @@ el:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} και %{count} ακόμα</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} και %{count} ακόμα</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
-      liked_by_multiple_users:
-        one: "%{username}, %{username2} και %{count} ακόμα"
-        other: "%{username}, %{username2} και %{count} ακόμα"
       liked_consolidated_description:
         one: "μου άρεσε %{count} από τις αναρτήσεις σας"
         other: "μου άρεσαν %{count} από τις αναρτήσεις σας"
@@ -2515,7 +2514,6 @@ el:
       errors:
         create: "Λυπούμαστε, παρουσιάστηκε σφάλμα κατά την δημιουργία της ανάρτησης. Προσπάθησε πάλι."
         edit: "Λυπούμαστε, παρουσιάστηκε σφάλμα κατά την επεξεργασία της ανάρτησης. Προσπάθησε πάλι."
-        upload: "Λυπούμαστε, παρουσιάστηκε σφάλμα κατά το ανέβασμα του αρχείου. Προσπάθησε πάλι."
         file_too_large: "Δυστυχώς, αυτό το αρχείο είναι πολύ μεγάλο (το μέγιστο μέγεθος είναι %{max_size_kb}kb). Γιατί δεν επιφορτώνετε το μεγάλο αρχείο σας σε μια cloud υπηρεσία διαμοιρασμού και, στη συνέχεια, να επικολλήσετε τον σύνδεσμο;"
         too_many_uploads: "Λυπούμαστε, μπορείς να ανεβάζεις μόνο ένα αρχείο τη φορά."
         upload_not_authorized: "Λυπούμαστε, το αρχείο που προσπαθείς να ανεβάσεις δεν επιτρέπεται (επιτρεπόμενες επεκτάσεις:%{authorized_extensions})"
@@ -3659,7 +3657,6 @@ el:
             label: "Αντίγραφο ασφαλείας"
             title: "Δημιουργία αντίγραφου ασφαλείας"
             confirm: "Θέλεις να ξεκινήσεις τη δημιουργία ενός νέου αντίγραφου ασφαλείας;"
-            without_uploads: "Ναι (μη συμπεριλάβετε επιφορτώσεις)"
           download:
             label: "Κατέβασμα"
             title: "Αποστολή email με σύνδεσμο λήψης"

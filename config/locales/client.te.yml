@@ -211,8 +211,11 @@ te:
       context_question:
         delimiter: "లేదా"
       types:
+        reviewable_queued_topic:
+          noun: "విషయం"
         reviewable_user:
           title: "సభ్యుడు"
+          noun: "సభ్యుడు"
       approval:
         ok: "సరే"
       example_username: "సభ్యనామం"
@@ -977,7 +980,6 @@ te:
       errors:
         create: "క్షమించాలి. మీ టపా సృష్టించుటలో దోషం. దయచేసి మరలా ప్రయత్నించండి. "
         edit: "క్షమించాలి. మీ టపా సవరించుటలో దోషం. మరలా ప్రయత్నించండి"
-        upload: "క్షమించాలి. దస్త్రం ఎగుమతించుటలో దోషం. దయచేసి మరలా ప్రయత్నించండి. "
         too_many_uploads: "క్షమించాలి. మీరు ఒకసారి ఒక దస్త్రం మాత్రమే ఎగుమతించగలరు"
         image_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు బొమ్మలు ఎగుమతి చేయలేరు."
         attachment_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు జోడింపులు ఎగుమతి చేయలేరు."

@@ -440,14 +440,19 @@ hy:
         reviewable_flagged_post:
           title: "Դրոշակավորված Գրառումներ"
           flagged_by: "Դրոշակավորել է"
+          noun: "գրառում"
         reviewable_queued_topic:
           title: "Թեման Հերթագրված է "
+          noun: "թեմա"
         reviewable_queued_post:
           title: "Հաղորդագրությունը Հերթագրված է "
+          noun: "գրառում"
         reviewable_user:
           title: "Օգտատեր"
+          noun: "օգտատեր"
         reviewable_post:
           title: "Գրառում"
+          noun: "գրառում"
       approval:
         title: "Գրառումը Հաստատման Կարիք Ունի"
         description: "Մենք ստացել ենք Ձեր նոր գրառումը, սակայն այն պետք է հաստատվի մոդերատորի կողմից մինչև ցուցադրվելը: Խնդրում ենք սպասել:"
@@ -1584,13 +1589,7 @@ hy:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} and %{count} other</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} և ևս %{count}-ը</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
-      liked_by_multiple_users:
-        one: "%{username}, %{username2} and %{count} other"
-        other: "%{username}, %{username2} և ևս %{count}-ը"
       liked_consolidated_description:
         one: "հավանել է Ձեր %{count} գրառում"
         other: "հավանել է Ձեր %{count} գրառումը"
@@ -2152,7 +2151,6 @@ hy:
       errors:
         create: "Ներողություն, Ձեր գրառումը ստեղծելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
         edit: "Ներողություն, Ձեր գրառումը խմբագրելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
-        upload: "Ներողություն, այդ ֆայլը վերբեռնելիս տեղի է ունեցել սխալ: Խնդրում ենք կրկին փորձել:"
         file_too_large: "Ներողություն, այդ ֆայլը շատ մեծ է (առավելագույն չափը %{max_size_kb}ԿԲ է): Առաջարկվում ենք վերբեռնել Ձեր մեծ ֆայլը որևէ ամպային ծառայություն(cloud service) և կիսվել հղումով:"
         too_many_uploads: "Ներողություն, Դուք կարող եք վերբեռնել միաժամանակ միայն մեկ ֆայլ:"
         upload_not_authorized: "Ներողություն, ֆայլը, որ Դուք փորձում եք վերբեռնել թուլատրելի չէ (թույլատրվում են միայն՝ %{authorized_extensions}):"
@@ -3177,7 +3175,6 @@ hy:
             label: "Պահուստ"
             title: "Ստեղծել պահուստ"
             confirm: "Դուք ցանկանո՞ւմ եք ստեղծել նոր պահուստ:"
-            without_uploads: "Այո (բացառությամբ վերբեռնումների)"
           download:
             label: "Ներբեռնել"
             title: "Ուղարկել էլ. նամակ՝ ներբեռնման հղումով"

@@ -553,23 +553,24 @@ nl:
         all:
           title: "Alles"
       context_question:
-        is_this_post: "Is dit bericht %{reviewable_human_score_types}?"
         delimiter: "of"
-        something_else_wrong: "Is er iets mis met dit bericht?"
       types:
         reviewable_flagged_post:
           title: "Gemarkeerd bericht"
           flagged_by: "Gemarkeerd door"
+          noun: "bericht"
         reviewable_queued_topic:
           title: "Topic in wachtrij"
+          noun: "topic"
         reviewable_queued_post:
           title: "Bericht in wachtrij"
+          noun: "bericht"
         reviewable_user:
           title: "Gebruiker"
+          noun: "gebruiker"
         reviewable_post:
           title: "Bericht"
-        reviewable_chat_message:
-          title: "Gemarkeerd chatbericht"
+          noun: "bericht"
       approval:
         title: "Bericht vereist goedkeuring"
         description: "We hebben je nieuwe bericht ontvangen, maar dit moet eerst door een moderator worden goedgekeurd voordat het zichtbaar wordt. Heb geduld."
@@ -2282,13 +2283,10 @@ nl:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} en %{count} ander</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} en %{count} anderen</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
-        one: "%{username}, %{username2} en %{count} ander"
-        other: "%{username}, %{username2} en %{count} anderen"
+        one: "%{username} en %{count} ander"
+        other: "%{username} en %{count} anderen"
       liked_consolidated_description:
         one: "heeft %{count} van je berichten geliket"
         other: "heeft %{count} van je berichten geliket"
@@ -3130,7 +3128,6 @@ nl:
       errors:
         create: "Sorry, er is een fout opgetreden bij het plaatsen van je bericht. Probeer het opnieuw."
         edit: "Sorry, er is een fout opgetreden bij het bewerken van je bericht. Probeer het opnieuw."
-        upload: "Sorry, er is een fout opgetreden bij het uploaden van het bestand. Probeer het opnieuw."
         file_too_large: "Sorry, dat bestand is te groot (maximale grootte is %{max_size_kb} KB). Misschien ku je het uploaden naar een cloudopslagdienst en dan de link plakken?"
         file_size_zero: "Sorry, het lijkt erop dat er iets is misgegaan. Het bestand dat je probeert te uploaden is 0 bytes. Probeer het opnieuw."
         file_too_large_humanized: "Sorry, dat bestand is te groot (maximale grootte is %{max_size}). Misschien ku je het uploaden naar een cloudopslagdienst en dan de link plakken?"
@@ -4559,7 +4556,6 @@ nl:
         enabled: "Ingeschakeld?"
         is_enabled: "J"
         not_enabled: "N"
-        change_settings: "Plug-in-instellingen"
         change_settings_short: "Instellingen"
         howto: "Hoe kan ik plug-ins installeren?"
         official: "Officiële plug-in"
@@ -4600,7 +4596,6 @@ nl:
             label: "Back-up maken"
             title: "Een back-up maken"
             confirm: "Wil je een nieuwe back-up starten?"
-            without_uploads: "Ja (geen uploads bijvoegen)"
           download:
             label: "Downloaden"
             title: "E-mail met downloadlink sturen"

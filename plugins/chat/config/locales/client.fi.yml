@@ -29,6 +29,7 @@ fi:
       chat_channels_count: "Chat-kanavat"
       chat_users_count: "Chat-käyttäjät"
     chat:
+      deleted_chat_username: poistettu
       dates:
         time_tiny: "t:mm"
       all_loaded: "Näytetään kaikki viestit"
@@ -127,27 +128,10 @@ fi:
           one: "Viimeinen tunti"
           other: "Viimeiset %{count} tuntia"
       mention_warning:
-        dismiss: "hylkää"
-        cannot_see: "%{username} ei voi käyttää tätä kanavaa, eikä hänelle ilmoitettu."
-        cannot_see_multiple:
-          one: "%{username} ja %{count} muu käyttäjä eivät voi käyttää tätä kanavaa, eikä heille ilmoitettu."
-          other: "%{username} ja %{count} muuta käyttäjää eivät voi käyttää tätä kanavaa, eikä heille ilmoitettu."
         invitations_sent:
           one: "Kutsu lähetetty"
           other: "Kutsut lähetettiin"
         invite: "Kutsu kanavalle"
-        without_membership: "%{username} ei ole liittynyt tälle kanavalle."
-        without_membership_multiple:
-          one: "%{username} ja %{count} muu käyttäjä eivät ole liittyneet tälle kanavalle."
-          other: "%{username} ja %{count} muuta käyttäjää eivät ole liittyneet tälle kanavalle."
-        group_mentions_disabled: "%{group_name} ei salli mainintoja."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} ja %{count} muu ryhmä eivät salli mainintoja."
-          other: "%{group_name} ja %{count} muuta ryhmää eivät salli mainintoja."
-        too_many_members: "Ryhmässä %{group_name} on liian monta jäsentä. Kukaan ei saanut ilmoitusta."
-        too_many_members_multiple:
-          one: "Ryhmässä %{group_name} ja %{count} muussa ryhmässä on liikaa jäseniä. Kukaan ei saanut ilmoitusta."
-          other: "Ryhmässä %{group_name} ja %{count} muussa ryhmässä on liikaa jäseniä. Kukaan ei saanut ilmoitusta."
         groups:
           header:
             some: "Osa käyttäjistä ei saa ilmoitusta"
@@ -562,6 +546,9 @@ fi:
       types:
         chat_reviewable_message:
           title: "Liputettu chat-viesti"
+        reviewable_chat_message:
+          title: "Liputettu chat-viesti"
+          noun: "chat-viesti"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"

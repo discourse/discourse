@@ -7,7 +7,7 @@
 pl_PL:
   site_settings:
     chat_separate_sidebar_mode: "Pokaż oddzielne tryby paska bocznego dla forum i czatu."
-    chat_enabled: "Włącz wtyczkę czatu."
+    chat_enabled: "Włącz czat."
     enable_public_channels: "Włącz kanały publiczne na podstawie kategorii."
     chat_allowed_groups: "Użytkownicy w tych grupach mogą rozmawiać. Pamiętaj, że personel zawsze ma dostęp do czatu."
     chat_channel_retention_days: "Wiadomości czatu w zwykłych kanałach będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
@@ -123,15 +123,13 @@ pl_PL:
         agree_and_delete:
           title: "Usuń wiadomość"
           description: "Usuń wiadomość, aby użytkownicy nie mogli jej zobaczyć."
-        delete_and_agree:
-          title: "Usuń wiadomość"
         disagree_and_restore:
           title: "Nie zgadzam się i przywracam wiadomość"
           description: "Przywróć wiadomość, aby wszyscy użytkownicy mogli ją zobaczyć."
         disagree:
           title: "Wycofaj"
         ignore:
-          title: "Ignoruj"
+          title: "Nic nie rób"
       direct_messages:
         transcript_title: "Transkrypcja poprzednich wiadomości w %{channel_name}"
         transcript_body: "Aby dać Ci więcej kontekstu, zamieściliśmy transkrypcję poprzednich wiadomości w tej rozmowie (do dziesięciu):\n\n%{transcript}"
@@ -151,6 +149,33 @@ pl_PL:
           few: "%{comma_separated_usernames} i %{count} inni"
           many: "%{comma_separated_usernames} i %{count} innych"
           other: "%{comma_separated_usernames} i %{count} innych"
+    mention_warning:
+      dismiss: "odrzuć"
+      cannot_see: "%{first_identifier} nie ma dostępu do tego kanału i nie został powiadomiony."
+      cannot_see_multiple:
+        one: "%{first_identifier} i %{count} inny użytkownik nie ma dostępu do tego kanału i nie został powiadomiony."
+        few: "%{first_identifier} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
+        many: "%{first_identifier} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
+        other: "%{first_identifier} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
+      without_membership: "%{first_identifier} nie dołączył(a) do tego kanału."
+      without_membership_multiple:
+        one: "%{first_identifier} i %{count} inny użytkownik nie dołączył do tego kanału."
+        few: "%{first_identifier} i %{count} inni użytkownicy nie dołączyli do tego kanału."
+        many: "%{first_identifier} i %{count} inni użytkownicy nie dołączyli do tego kanału."
+        other: "%{first_identifier} i %{count} inni użytkownicy nie dołączyli do tego kanału."
+      group_mentions_disabled: "%{first_identifier} nie zezwala na wzmianki."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} i %{count} inna grupa nie zezwala na wzmianki."
+        few: "%{first_identifier} i %{count} inne grupy nie zezwalają na wzmianki."
+        many: "%{first_identifier} i %{count} innych grup nie zezwala na wzmianki."
+        other: "%{first_identifier} i %{count} innych grup nie zezwala na wzmianki."
+      global_mentions_disallowed: "Wzmianki @here i @all są wyłączone na tym kanale."
+      too_many_members: "%{first_identifier} ma zbyt wielu członków. Nikt nie został powiadomiony."
+      too_many_members_multiple:
+        one: "%{first_identifier} i %{count} inna grupa ma zbyt wielu członków. Nikt nie został powiadomiony."
+        few: "%{first_identifier} i %{count} inne grupy mają zbyt wielu członków. Nikt nie został powiadomiony."
+        many: "%{first_identifier} i %{count} innych grup ma zbyt wielu członków. Nikt nie został powiadomiony."
+        other: "%{first_identifier} i %{count} innych grup ma zbyt wielu członków. Nikt nie został powiadomiony."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "zawiera znaki inne niż ascii"

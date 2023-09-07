@@ -28,6 +28,7 @@ zh_TW:
       chat_channels_count: "聊天頻道"
       chat_users_count: "聊天使用者"
     chat:
+      deleted_chat_username: 已刪除
       dates:
         time_tiny: "h:mm"
       all_loaded: "顯示所有訊息"
@@ -87,8 +88,6 @@ zh_TW:
         summarize: "總結"
         since:
           other: "前 %{count} 小時"
-      mention_warning:
-        dismiss: "忽略"
       remove_upload: "移除檔案"
       react: "用表情符號反應"
       reply: "回覆"
@@ -255,6 +254,10 @@ zh_TW:
           fields:
             message:
               label: 訊息
+    review:
+      types:
+        reviewable_chat_message:
+          noun: "聊天訊息"
     keyboard_shortcuts_help:
       chat:
         title: "聊天"

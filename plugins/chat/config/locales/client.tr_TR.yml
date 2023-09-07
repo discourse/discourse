@@ -30,6 +30,7 @@ tr_TR:
       chat_channels_count: "Sohbet Kanalları"
       chat_users_count: "Sohbet Kullanıcıları"
     chat:
+      deleted_chat_username: silindi
       dates:
         time_tiny: "h:mm"
       all_loaded: "Tüm mesajlar gösteriliyor"
@@ -130,28 +131,11 @@ tr_TR:
           one: "Son bir saat"
           other: "Son %{count} saat"
       mention_warning:
-        dismiss: "kapat"
-        cannot_see: "%{username} bu kanala erişemiyor ve bilgilendirilmedi."
-        cannot_see_multiple:
-          one: "%{username} ve %{count} kullanıcı daha bu kanala erişemiyor ve bilgilendirilmediler."
-          other: "%{username} ve %{count} kullanıcı daha bu kanala erişemiyor ve bilgilendirilmediler."
         invitations_sent:
           one: "Davet gönderildi"
           other: "Davet gönderildi"
         invite: "Kanala davet et"
-        without_membership: "%{username} bu kanala katılmadı."
-        without_membership_multiple:
-          one: "%{username} ve %{count} kullanıcı daha bu kanala katılmadı."
-          other: "%{username} ve %{count} kullanıcı daha bu kanala katılmadı."
-        group_mentions_disabled: "%{group_name} bahsetmeye izin vermiyor."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} ve %{count} grup daha bahsetmeye izin vermiyor."
-          other: "%{group_name} ve %{count} grup daha bahsetmeye izin vermiyor."
         channel_wide_mentions_disallowed: "Bu kanalda @here ve @all mentionları devre dışı bırakılmıştır."
-        too_many_members: "%{group_name} çok fazla üyeye sahip. Kimseye bildirim gönderilmedi."
-        too_many_members_multiple:
-          one: "%{group_name} ve %{count} grubun daha çok fazla üyesi var. Kimse bilgilendirilmedi."
-          other: "%{group_name} ve %{count} grubun daha çok fazla üyesi var. Kimse bilgilendirilmedi."
         groups:
           header:
             some: "Bazı kullanıcılara bildirim gönderilmeyecek"
@@ -619,6 +603,9 @@ tr_TR:
       types:
         chat_reviewable_message:
           title: "Bayrak Eklenen Sohbet Mesajı"
+        reviewable_chat_message:
+          title: "Bayrak eklenen sohbet mesajı"
+          noun: "sohbet mesajı"
     keyboard_shortcuts_help:
       chat:
         title: "Sohbet"

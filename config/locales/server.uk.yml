@@ -349,6 +349,7 @@ uk:
       few: "Ще %{count} відповіді"
       many: "Ще %{count} відповідей"
       other: "Ще %{count} відповідей"
+    loading: "Завантаження обговорення…"
     permalink: "Постійне посилання"
     imported_from: "Це супутня тема для обговорення оригінального запису %{link}"
     in_reply_to: "▶ %{username}"
@@ -2562,6 +2563,18 @@ uk:
   admin:
     email:
       sent_test: "надіслано!"
+    user:
+      merge_user:
+        updating_username: "Оновлення імені користувача…"
+        changing_post_ownership: "Зміна власника публікації"
+        merging_given_daily_likes: "Об’єднання отриманих щоденних симпатій"
+        merging_post_timings: "Об’єднання часу створення публікацій"
+        merging_user_visits: "Об’єднання статистики відвідувань користувачів"
+        updating_site_settings: "Оновлення налаштувань сайту…"
+        updating_user_stats: "Оновлення статистики користувача"
+        merging_user_attributes: "Обʼєднання атрибутів користувача…"
+        updating_user_ids: "Оновлення ідентифікаторів користувачів…"
+        deleting_source_user: "Видалення початкового користувача…"
   user:
     deactivated: "Було дезактивовано через велику кількість відхилених електронних листів на \"%{email}\"."
     deactivated_by_staff: "Деактивовано командою обслуговування"
@@ -4835,6 +4848,8 @@ uk:
         description: "Погодитися з прапором і приховати цей допис + автоматично надіслати користувачеві повідомлення із закликом відредагувати його."
       delete_single:
         title: "Видалити"
+      delete:
+        title: "Видалити"
       delete_and_ignore:
         title: "Ігнорувати прапорець і видалити повідомлення"
         description: "Ігнорувати прапор, видаливши його з черги, і видалити публікацію; а якщо це перший допис, то видалити й тему. "
@@ -4854,6 +4869,8 @@ uk:
         description: "Відновити допис, щоб усі користувачі могли його бачити."
       disagree:
         title: "Ні"
+      discard_post:
+        title: "Відхилити допис"
       ignore:
         title: "Ігнорувати"
       ignore_and_do_nothing:
@@ -4869,6 +4886,7 @@ uk:
       approve_user:
         title: "Затвердити користувача"
       reject_user:
+        title: "Видалити користувача…"
         delete:
           title: "Видалити користувача"
           description: "Користувача буде видалено з форуму."
@@ -4877,6 +4895,7 @@ uk:
           description: "Користувач буде видалений, і ми заблокуємо його IP-адресу та e-mail."
       reject:
         title: "Відхилити"
+        bundle_title: "Відхилити…"
       reject_and_suspend:
         title: "Відхилити та призупинити користувача"
       reject_and_silence:
@@ -4929,6 +4948,9 @@ uk:
       invalid_yaml: "не є дійсним рядком YAML"
       invalid_type: "містить недійсний тип шаблону: %{type} (дійсні типи: %{valid_types})"
       missing_type: "відсутній тип поля"
+      missing_id: "відсутній ідентифікатор поля"
+      duplicate_ids: "має дублікати ідентифікаторів"
+      reserved_id: "має зарезервоване ключове слово як id: %{id}."
   activemodel:
     errors:
       <<: *errors

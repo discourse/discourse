@@ -733,23 +733,26 @@ ar:
         all:
           title: "كل شىء"
       context_question:
-        is_this_post: "هل هذا المنشور %{reviewable_human_score_types}؟"
+        is_this_post: "هل هذا %{reviewable_type} %{reviewable_human_score_types}؟"
         delimiter: "أو"
-        something_else_wrong: "هل هناك خطأ في هذا المنشور؟"
+        something_else_wrong: "هل هناك خطأ ما في هذا %{reviewable_type}؟"
       types:
         reviewable_flagged_post:
           title: "المنشورات المُبلَغ عنها"
           flagged_by: "تم الإبلاغ بواسطة"
+          noun: "المنشور"
         reviewable_queued_topic:
           title: "موضوع في قائمة الانتظار"
+          noun: "الموضوع"
         reviewable_queued_post:
           title: "منشور في قائمة الانتظار"
+          noun: "المنشور"
         reviewable_user:
           title: "المستخدم"
+          noun: "مستخدم واحد"
         reviewable_post:
           title: "المنشور"
-        reviewable_chat_message:
-          title: "تم الإبلاغ عن رسالة الدردشة"
+          noun: "المنشور"
       approval:
         title: "المنشور بحاجة للموافقة"
         description: "لقد استلمنا منشورك الجديد، لكنه بحاجة إلى موافقة أحد المشرفين عليه قبل ظهوره. يُرجى الانتظار."
@@ -2731,21 +2734,14 @@ ar:
       edited: "‏<span>⁨%{username}⁩</span> ‏%{description}"
       liked: "‏<span>⁨%{username}⁩</span> ‏%{description}"
       liked_2: "<span class='double-user'>%{username}، و%{username2}</span> %{description}"
-      liked_many:
-        zero: "<span class='multi-user'>%{username} و%{username2} و%{count} مستخدم آخر</span> %{description}"
-        one: "<span class='multi-user'>%{username} و%{username2} ومستخدم واحد (%{count}) آخر</span> %{description}"
-        two: "<span class='multi-user'>%{username} و%{username2} ومستخدمان (%{count}) آخران</span> %{description}"
-        few: "<span class='multi-user'>%{username} و%{username2} و%{count} مستخدمين آخرين</span> %{description}"
-        many: "<span class='multi-user'>‏%{username} و%{username2} و%{count} مستخدمًا آخر</span> ‏%{description}"
-        other: "<span class='multi-user'>‏%{username} و%{username2} و%{count} مستخدم آخر</span> ‏%{description}"
       liked_by_2_users: "%{username}، %{username2}"
       liked_by_multiple_users:
-        zero: "%{username} و%{username2} و%{count} مستخدم آخر"
-        one: "%{username} و%{username2} ومستخدم واحد (%{count}) آخر"
-        two: "%{username} و%{username2} ومستخدمان (%{count}) آخران"
-        few: "%{username} و%{username2} و%{count} مستخدمين آخرين"
-        many: "%{username} و%{username2} و%{count} مستخدمًا آخر"
-        other: "%{username} و%{username2} و%{count} مستخدم آخر"
+        zero: "%{username} واثنان (%{count}) آخران"
+        one: "%{username} وواحد (%{count}) آخر"
+        two: "%{username} و%{count} آخرين"
+        few: "%{username} واثنان (%{count}) آخران"
+        many: "%{username} واثنان (%{count}) آخران"
+        other: "%{username} واثنان (%{count}) آخران"
       liked_consolidated_description:
         zero: "سجَّل إعجابه على %{count} من منشوراتك"
         one: "سجَّل إعجابه على واحد (%{count}) من منشوراتك"
@@ -3105,6 +3101,22 @@ ar:
         dismiss_new_modal:
           title: "تجاهل الجديدة"
           topics: "تجاهل الموضوعات الجديدة"
+          posts: "تجاهل الردود الجديدة"
+          topics_with_count:
+            zero: "تجاهل %{count} موضوع جديد"
+            one: "تجاهل موضوع جديد"
+            two: "تجاهل %{count} موضوع جديد"
+            few: "تجاهل %{count} مواضيع جديدة"
+            many: "تجاهل %{count} مواضيع جديدة"
+            other: "تجاهل %{count} مواضيع جديدة"
+          replies_with_count:
+            zero: "تجاهَل %{count} الرد الجديد"
+            one: "تجاهل رد جديد"
+            two: "تجاهل ردين جديدين"
+            few: "تجاهل %{count} ردود جديدة"
+            many: "تجاهل %{count} ردود جديدة"
+            other: "تجاهل %{count} ردود جديدة"
+          replies: "تجاهل الردود الجديدة"
           untrack: "التوقف عن تتبُّع تلك الموضوعات؛ حتى تتوقف عن الظهور في قائمتي الجديدة"
         dismiss_new_with_selected:
           zero: "تجاهل الجديدة (%{count})"
@@ -3809,7 +3821,7 @@ ar:
       errors:
         create: "عذرًا، حدث خطأ في أثناء إنشاء منشورك. يُرجى إعادة المحاولة."
         edit: "عذرا، حدث خطأ في أثناء تعديل منشورك. يُرجى إعادة المحاولة."
-        upload: "عذرًا، حدث خطأ في أثناء تحميل هذا الملف. يُرجى إعادة المحاولة."
+        upload: "عذرًا، حدث خطأ في أثناء الرفع %{file_name}. يُرجى إعادة المحاولة."
         file_too_large: "عذرًا، لكن الملف كبير جدًا (أقصى حجم هو %{max_size_kb} ك.ب). لماذا لا تحمِّل ملفك الكبير إلى خدمة مشاركة سحابية، ثم تلصق الرابط؟"
         file_size_zero: "عذرًا، يبدو أنه حدث خطأ ما؛ فحجم الملف الذي تحاول تحميله هو 0 بايت. حاول مرة أخرى."
         file_too_large_humanized: "عذرًا، هذا الملف كبير جدًا (الحد الأقصى للحجم هو %{max_size}). لماذا لا تقوم بتحميل ملفك الكبير إلى خدمة مشاركة سحابية، ثم تلصق الرابط؟"
@@ -4560,6 +4572,7 @@ ar:
         print: "%{shortcut} طباعة الموضوع"
         defer: "%{shortcut} تأجيل الموضوع"
         topic_admin_actions: "%{shortcut} فتح إجراءات المشرف على الموضوع"
+        archive_private_message: "%{shortcut} تبديل أرشيف الرسالة الخاصة"
       search_menu:
         title: "قائمة البحث"
         prev_next: "%{shortcut} نقل التحديد لأعلى ولأسفل"
@@ -5468,7 +5481,6 @@ ar:
         enabled: "مفعَّلة؟"
         is_enabled: "نعم"
         not_enabled: "لا"
-        change_settings: "إعدادات المكوِّن الإضافي"
         change_settings_short: "الإعدادات"
         howto: "كيف يمكنني تثبيت الإضافات؟"
         official: "المكوِّن الإضافي الرسمي"
@@ -5514,7 +5526,8 @@ ar:
             label: "نسخة احتياطية"
             title: "إنشاء نسخة احتياطية"
             confirm: "هل تريد إنشاء نسخة احتياطية جديدة؟"
-            without_uploads: "نعم (عدم تضمين التحميلات)"
+            include_uploads: "شمل جميع المرفُعات"
+            s3_upload_warning: 'هذا للنسخ الاحتياطي لقاعدة البيانات فقط. لن يتم إدراج الرفع، مما يعني أن جميع الصور وغيرها من رفع الملفات يمكن أن تكون مفقودة إذا تم استعادة النسخة الاحتياطية إلى إعداد استضافة آخر. <b>لتمكين نسخة احتياطية كاملة بما في ذلك تحميل S3 الخاص بك يُرجى الاطلاع على <a href="https://meta.discourse.org/t/-/276535" target="_blank">هذا الدليل</a>.</b>'
           download:
             label: "تنزيل"
             title: "مراسلتي عبر البريد الإلكتروني برابط التنزيل"
@@ -6214,6 +6227,7 @@ ar:
           title: "معاينة القالب"
         field_placeholders:
           validations: "أدخل قيم التحقق هنا"
+          id: "أدخل الهوية هنا"
           label: "أدخل التسمية هنا"
           placeholder: "أدخل العنصر النائب هنا"
           none_label: "تحديد عنصر"

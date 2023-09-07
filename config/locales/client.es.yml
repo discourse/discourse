@@ -553,23 +553,24 @@ es:
         all:
           title: "Todo"
       context_question:
-        is_this_post: "¿Esta publicación es %{reviewable_human_score_types}?"
         delimiter: "o"
-        something_else_wrong: "¿Hay algún problema con esta publicación?"
       types:
         reviewable_flagged_post:
           title: "Publicación denunciada"
           flagged_by: "Denunciada por"
+          noun: "publicación"
         reviewable_queued_topic:
           title: "Tema en cola"
+          noun: "tema"
         reviewable_queued_post:
           title: "Publicación en cola"
+          noun: "publicación"
         reviewable_user:
           title: "Usuario"
+          noun: "usuario"
         reviewable_post:
           title: "Publicación"
-        reviewable_chat_message:
-          title: "Mensaje de chat denunciado"
+          noun: "publicación"
       approval:
         title: "La publicación requiere aprobación"
         description: "Hemos recibido tu nueva publicación, pero debe ser aprobada por un moderador antes de que aparezca. Por favor, ten paciencia."
@@ -2282,13 +2283,10 @@ es:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} y %{count} más</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} y %{count} más</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
-        one: "%{username}, %{username2} and %{count} mas"
-        other: "%{username}, %{username2} y %{count} más"
+        one: "%{username} y %{count} más"
+        other: "%{username} y otros %{count}"
       liked_consolidated_description:
         one: "le ha dado me gusta a %{count} de tus publicaciones"
         other: "le ha dado me gusta a %{count} de tus publicaciones"
@@ -3130,7 +3128,6 @@ es:
       errors:
         create: "Lo sentimos, se produjo un error al crear tu publicación. Inténtalo de nuevo."
         edit: "Lo sentimos, se produjo un error al editar tu publicación. Inténtalo de nuevo."
-        upload: "Lo sentimos, se ha producido un error al cargar este archivo. Inténtalo de nuevo."
         file_too_large: "Lo sentimos, ese archivo es demasiado grande (el tamaño máximo es %{max_size_kb} kb). ¿Por qué no lo subes a un servicio de almacenamiento en la nube y compartes el enlace luego?"
         file_size_zero: "Lo sentimos, algo ha ido mal. El archivo que estás intentando cargar ocupa 0 bytes. Inténtalo de nuevo."
         file_too_large_humanized: "Lo sentimos, el archivo es demasiado grande (el tamaño máximo es %{max_size}). Podrías probar a subirlo a una plataforma en la nube, compartirlo y pegar el enlace."
@@ -4552,7 +4549,6 @@ es:
         enabled: "¿Activado?"
         is_enabled: "S"
         not_enabled: "N"
-        change_settings: "Ajustes del plugin"
         change_settings_short: "Ajustes"
         howto: "¿Cómo instalo plugins?"
         official: "Plugin oficial"
@@ -4593,7 +4589,6 @@ es:
             label: "Copia de seguridad"
             title: "Crear una copia de seguridad"
             confirm: "¿Quieres iniciar una nueva copia de seguridad?"
-            without_uploads: "Sí (no incluir archivos subidos)"
           download:
             label: "Descargar"
             title: "Enviar correo electrónico con enlace de descarga"

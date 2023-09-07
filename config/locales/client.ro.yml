@@ -521,14 +521,19 @@ ro:
         reviewable_flagged_post:
           title: "Postare semnalată"
           flagged_by: "Semnalat de"
+          noun: "postare"
         reviewable_queued_topic:
           title: "Subiect în așteptare"
+          noun: "discuție"
         reviewable_queued_post:
           title: "Postare în așteptare"
+          noun: "postare"
         reviewable_user:
           title: "Utilizatori"
+          noun: "utilizatori"
         reviewable_post:
           title: "Postare"
+          noun: "postare"
       approval:
         title: "Necesită aprobare"
         description: "Am primit noua postare dar trebuie să fie aprobată de un moderator înainte că ea să apară pe site. Te rugăm să ai răbdare."
@@ -1719,15 +1724,7 @@ ro:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} și încă o persoană</span> %{description}"
-        few: "<span class='multi-user'>%{username}, %{username2} și încă o persoană</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} și alți %{count}</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
-      liked_by_multiple_users:
-        one: "%{username}, %{username2} și încă o persoană"
-        few: "%{username}, %{username2} și încă o persoană"
-        other: "%{username}, %{username2} și alți %{count}"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -2260,7 +2257,6 @@ ro:
       errors:
         create: "Ne pare rău, a apărut o eroare la creerea postării. Te rugăm să încerci iar."
         edit: "Ne pare rău, a apărut o eroare la editarea postării. Te rugăm să încerci iar."
-        upload: "Ne pare rău, a apărut o eroare la încărcarea fișierului. Te rugăm să încerci iar."
         too_many_uploads: "Ne pare rău, poți încărca doar câte un fișier."
         upload_not_authorized: "Ne pare rău, fișierul pe care-l încerci să-l încarci nu este autorizat (extensii autorizate: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Ne pare rău, un utilizator nou nu poate încărca imagini."

@@ -553,23 +553,24 @@ fi:
         all:
           title: "Kaikki"
       context_question:
-        is_this_post: "Onko tämä viesti %{reviewable_human_score_types}?"
         delimiter: "tai"
-        something_else_wrong: "Onko tässä viestissä jotain vikaa?"
       types:
         reviewable_flagged_post:
           title: "Liputettu viesti"
           flagged_by: "Liputtaja"
+          noun: "viesti"
         reviewable_queued_topic:
           title: "Jonossa oleva ketju"
+          noun: "ketju"
         reviewable_queued_post:
           title: "Jonossa oleva viesti"
+          noun: "viesti"
         reviewable_user:
           title: "Käyttäjä"
+          noun: "käyttäjä"
         reviewable_post:
           title: "Viesti"
-        reviewable_chat_message:
-          title: "Liputettu chat-viesti"
+          noun: "viesti"
       approval:
         title: "Viesti odottaa hyväksyntää"
         description: "Viestisi saapui perille, mutta valvojan on vielä hyväksyttävä se, jotta se näkyy sivustolla. Ole kärsivällinen."
@@ -2282,13 +2283,10 @@ fi:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} ja %{count} muu</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} ja %{count} muuta</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
-        one: "%{username}, %{username2} ja %{count} muu"
-        other: "%{username}, %{username2} ja %{count} muuta"
+        one: "%{username} ja %{count} muu"
+        other: "%{username} ja %{count} muuta"
       liked_consolidated_description:
         one: "tykkäsi %{count} viestistäsi"
         other: "tykkäsi %{count} viestistäsi"
@@ -3130,7 +3128,6 @@ fi:
       errors:
         create: "Viestin luonti epäonnistui. Yritä uudelleen."
         edit: "Viestin muokkaus epäonnistui. Yritä uudelleen."
-        upload: "Tiedoston lataaminen epäonnistui. Yritä uudelleen."
         file_too_large: "Tiedosto on valitettavasti liian suuri (enimmäiskoko on %{max_size_kb} kt). Mitäpä jos lataisit suuren tiedostosi johonkin pilvipalveluun ja jakaisit linkin?"
         file_size_zero: "Jokin näyttää menneen vikaan. Tiedosto, jota yrität ladata, on 0 tavua. Yritä uudelleen."
         file_too_large_humanized: "Tiedosto on valitettavasti liian suuri (enimmäiskoko on %{max_size}). Mitäpä jos lataisit suuren tiedostosi johonkin pilvipalveluun ja jakaisit linkin?"
@@ -4561,7 +4558,6 @@ fi:
         enabled: "Otettu käyttöön?"
         is_enabled: "K"
         not_enabled: "E"
-        change_settings: "Lisäosa-asetukset"
         change_settings_short: "Asetukset"
         howto: "Kuinka asennan lisäosia?"
         official: "Virallinen lisäosa"
@@ -4602,7 +4598,6 @@ fi:
             label: "Varmuuskopio"
             title: "Luo varmuuskopio"
             confirm: "Haluatko luoda uuden varmuuskopion?"
-            without_uploads: "Kyllä (älä sisällytä ladattuja tiedostoja)"
           download:
             label: "Lataa"
             title: "Lähetä sähköposti, jossa on latauslinkki"

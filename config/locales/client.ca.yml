@@ -487,14 +487,19 @@ ca:
         reviewable_flagged_post:
           title: "Publicació amb bandera"
           flagged_by: "Marcat amb bandera per"
+          noun: "publicació"
         reviewable_queued_topic:
           title: "Tema en cua"
+          noun: "tema"
         reviewable_queued_post:
           title: "Publicació en cua"
+          noun: "publicació"
         reviewable_user:
           title: "Usuari"
+          noun: "usuari"
         reviewable_post:
           title: "Publicació"
+          noun: "publicació"
       approval:
         title: "Cal aprovar la publicació"
         description: "Hem rebut la vostra nova publicació, però cal que sigui aprovada per un moderador abans d'aparèixer publicada. Tingueu una mica de paciència."
@@ -1664,13 +1669,7 @@ ca:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} i %{count} altre</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} i %{count} altres</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
-      liked_by_multiple_users:
-        one: "%{username}, %{username2} i %{count} altre"
-        other: "%{username}, %{username2} i %{count} altres"
       liked_consolidated_description:
         one: "li agrada %{count} de les vostres publicacions"
         other: " %{count} de les vostres publicacions té 'M'agrada'"
@@ -2214,7 +2213,6 @@ ca:
       errors:
         create: "S'ha produït un error en crear la vostra publicació. Torneu-ho a provar."
         edit: "S'ha produït un error en editar la vostra publicació. Torneu-ho a provar."
-        upload: "Ho sentim. S'ha produït un error en carregar aquest fitxer. Torneu-ho a provar."
         file_too_large: "Ho sentim, el fitxer és massa gros (mida màxima %{max_size_kb} kb). Per què no pugeu el fitxer a un servei en el núvol i llavors enganxeu l'enllaç?"
         too_many_uploads: "Només podeu pujar un fitxer cada vegada."
         upload_not_authorized: "El fitxer que proveu de pujar no està autoritzat (les extensions autoritzades són: %{authorized_extensions})."
@@ -3197,7 +3195,6 @@ ca:
             label: "Còpia de seguretat"
             title: "Crea una còpia de seguretat"
             confirm: "Voleu començar una nova còpia de seguretat?"
-            without_uploads: "Sí (no s'hi inclouen càrregues)"
           download:
             label: "Descarrega"
             title: "Envia correu amb enllaç de descàrrega"

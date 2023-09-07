@@ -19,6 +19,8 @@ class TopicQuery
         array_or_string = lambda { |x| Array === x || String === x }
 
         {
+          before: zero_up_to_max_int,
+          bumped_before: zero_up_to_max_int,
           max_posts: zero_up_to_max_int,
           min_posts: zero_up_to_max_int,
           page: zero_up_to_max_int,
@@ -749,7 +751,7 @@ class TopicQuery
         # category default sort order
         sort_order, sort_ascending =
           Category.where(id: category_id).pick(:sort_order, :sort_ascending)
-        if sort_order && (filter.blank? || %w[latest unseen].include?(filter.to_s))
+        if sort_order && (filter.blank? || %w[default latest unseen].include?(filter.to_s))
           options[:order] = sort_order
           options[:ascending] = !!sort_ascending ? "true" : "false"
         else

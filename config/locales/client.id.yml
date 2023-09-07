@@ -510,23 +510,24 @@ id:
         all:
           title: "Semuanya"
       context_question:
-        is_this_post: "Apakah postingan ini %{reviewable_human_score_types}?"
         delimiter: "atau"
-        something_else_wrong: "Apakah ada yang salah dengan post ini?"
       types:
         reviewable_flagged_post:
           title: "Pos yang Dipanji"
           flagged_by: "Dipanji Oleh"
+          noun: "postingan"
         reviewable_queued_topic:
           title: "Topik Antri"
+          noun: "topik"
         reviewable_queued_post:
           title: "Tulisan Antre"
+          noun: "postingan"
         reviewable_user:
           title: "Pengguna"
+          noun: "pengguna"
         reviewable_post:
           title: "Postingan"
-        reviewable_chat_message:
-          title: "Pesan obrolan yang ditandai"
+          noun: "postingan"
       approval:
         title: "Pesan Membutuhkan Persetujuan"
         description: "Kami telah menerima posting baru Anda, tetapi diperlukan persetujuan dari moderator sebelum posting tersebut tampil. Mohon kesabarannya. Terima kasih!"
@@ -1565,6 +1566,8 @@ id:
       empty: "Tidak ada pemberitahuan."
       post_approved: "Tulisan Anda telah disetujui"
       watching_first_post_label: "Topik Baru"
+      liked_by_multiple_users:
+        other: "%{username} dan %{count} lainnya"
       liked_consolidated_description:
         other: "menyukai %{count} dari tulisan Anda"
       invitee_accepted: "<span>%{username}</span> menerima undangan Anda"
@@ -1625,6 +1628,12 @@ id:
         dismiss_new_modal:
           title: "Abaikan yang baru"
           topics: "Abaikan topik baru"
+          posts: "Abaikan balasan baru"
+          topics_with_count:
+            other: "Abaikan %{count} topik baru"
+          replies_with_count:
+            other: "Abaikan %{count} balasan baru"
+          replies: "Abaikan balasan baru"
           untrack: "Berhenti melacak topik ini agar tidak lagi muncul di daftar baru saya"
         move_messages_to_inbox: "Pindah ke Kotak Masuk"
         choose_new_tags: "Silahkan pilih tag baru untuk topik-topik ini:"
@@ -1729,6 +1738,7 @@ id:
       has_replies:
         other: "%{count} Balasan"
       errors:
+        upload: "Maaf, terjadi kesalahan saat mengunggah %{file_name}. Silakan coba lagi."
         image_upload_not_allowed_for_new_user: "Maaf, pengguna baru belum diperbolehkan mengunggah gambar."
         attachment_upload_not_allowed_for_new_user: "Maaf, pengguna baru belum diperbolehkan mengunggah lampiran."
       cancel_composer:
@@ -1843,8 +1853,11 @@ id:
         title_with_count:
           other: "Baru (%{count})"
         all: "Semua"
+        all_with_count: "Semua (%{count})"
         topics: "Topik"
+        topics_with_count: "Topik (%{count})"
         replies: "balasan"
+        replies_with_count: "Balasan (%{count})"
       bookmarks:
         title: "Markah"
       category:
@@ -2127,6 +2140,9 @@ id:
         operations:
           cancel:
             label: "Batal"
+          backup:
+            include_uploads: "sertakan semua unggahan"
+            s3_upload_warning: 'Ini hanya untuk cadangan basis data. Unggahan tidak akan disertakan, artinya semua gambar dan file lain yang diunggah bisa hilang jika cadangan dikembalikan ke pengaturan hosting lain. <b>Untuk mengaktifkan pencadangan penuh termasuk unggahan S3 Anda, silakan lihat <a href="https://meta.discourse.org/t/-/276535" target="_blank">panduan ini</a>.</b>'
       export_csv:
         button_text: "Ekspor"
       export_json:
@@ -2266,6 +2282,8 @@ id:
               key: "tipe"
               type: "string"
               description: "Untuk bidang input, Anda dapat menentukan jenis masukan yang diharapkan (teks|email|tanggal|nomor|url|tel|warna)"
+        field_placeholders:
+          id: "masukkan-id-di-sini"
         edit_category:
           select_template: "Pilih templat formulir"
       users:
