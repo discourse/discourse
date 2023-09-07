@@ -20,6 +20,7 @@ export default class TagShowController extends DiscoverySortableController.exten
   @service router;
   @service currentUser;
   @service siteSettings;
+  @service topicTrackingState;
 
   @tracked category;
   @tracked filterType;
