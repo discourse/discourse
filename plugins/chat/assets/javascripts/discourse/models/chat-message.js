@@ -4,7 +4,7 @@ import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 import Bookmark from "discourse/models/bookmark";
 import I18n from "I18n";
-import { generateCookFunction } from "discourse/lib/text";
+import { generateCookFunction, parseMentions } from "discourse/lib/text";
 import transformAutolinks from "discourse/plugins/chat/discourse/lib/transform-auto-links";
 import { getOwner } from "discourse-common/lib/get-owner";
 import discourseLater from "discourse-common/lib/later";
@@ -178,29 +178,8 @@ export default class ChatMessage {
     if (this.isDestroyed || this.isDestroying) {
       return;
     }
-
-    const markdownOptions = {
-      featuresOverride:
-        this.site.markdown_additional_options?.chat
-          ?.limited_pretty_text_features,
-      markdownItRules:
-        this.site.markdown_additional_options?.chat
-          ?.limited_pretty_text_markdown_rules,
-      hashtagTypesInPriorityOrder:
-        this.site.hashtag_configurations?.["chat-composer"],
-      hashtagIcons: this.site.hashtag_icons,
-    };
-
-    if (ChatMessage.cookFunction) {
-      this.cooked = ChatMessage.cookFunction(this.message);
-    } else {
-      const cookFunction = await generateCookFunction(markdownOptions);
-      ChatMessage.cookFunction = (raw) => {
-        return transformAutolinks(cookFunction(raw));
-      };
-
-      this.cooked = ChatMessage.cookFunction(this.message);
-    }
+    await this.#ensureCookFunctionInitialized();
+    this.cooked = ChatMessage.cookFunction(this.message);
   }
 
   get read() {
@@ -287,6 +266,10 @@ export default class ChatMessage {
 
   incrementVersion() {
     this.version++;
+  }
+
+  async parseMentions() {
+    return await parseMentions(this.message, this.#markdownOptions);
   }
 
   toJSONDraft() {
@@ -385,6 +368,31 @@ export default class ChatMessage {
         );
       }
     }
+  }
+
+  async #ensureCookFunctionInitialized() {
+    if (ChatMessage.cookFunction) {
+      return;
+    }
+
+    const cookFunction = await generateCookFunction(this.#markdownOptions);
+    ChatMessage.cookFunction = (raw) => {
+      return transformAutolinks(cookFunction(raw));
+    };
+  }
+
+  get #markdownOptions() {
+    return {
+      featuresOverride:
+        this.site.markdown_additional_options?.chat
+          ?.limited_pretty_text_features,
+      markdownItRules:
+        this.site.markdown_additional_options?.chat
+          ?.limited_pretty_text_markdown_rules,
+      hashtagTypesInPriorityOrder:
+        this.site.hashtag_configurations?.["chat-composer"],
+      hashtagIcons: this.site.hashtag_icons,
+    };
   }
 
   get #notLoadedMentions() {
