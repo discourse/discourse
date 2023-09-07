@@ -1581,7 +1581,7 @@ class UsersController < ApplicationController
     ::DiscourseWebauthn::RegistrationService.new(
       current_user,
       params,
-      challenge: DiscourseWebauthn.challenge(current_user, secure_session),
+      session: secure_session,
       factor_type: UserSecurityKey.factor_types[:second_factor],
     ).register_security_key
     render json: success_json

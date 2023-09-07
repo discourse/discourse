@@ -5,8 +5,8 @@ module DiscourseWebauthn
     def initialize(current_user, params, options = {})
       @current_user = current_user
       @params = params
-      @challenge = options[:challenge]
       @factor_type = options[:factor_type]
+      @session = options[:session]
     end
 
     def validate_webauthn_type(type_to_check)
@@ -53,7 +53,8 @@ module DiscourseWebauthn
     end
 
     def challenge_match?
-      Base64.decode64(client_data["challenge"]) == @challenge
+      Base64.decode64(client_data["challenge"]) ==
+        DiscourseWebauthn.challenge(@current_user, @session)
     end
 
     def origin_match?

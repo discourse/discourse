@@ -37,7 +37,7 @@ require "webauthn/registration_service"
 # The origin params just need to be whatever your localhost URL for Discourse is.
 
 RSpec.describe DiscourseWebauthn::AuthenticationService do
-  subject(:service) { described_class.new(current_user, params, challenge_params) }
+  subject(:service) { described_class.new(current_user, params, options) }
 
   let(:security_key_user) { current_user }
   let!(:security_key) do
@@ -55,6 +55,7 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
   let(:credential_id) do
     "mJAJ4CznTO0SuLkJbYwpgK75ao4KMNIPlU5KWM92nq39kRbXzI9mSv6GxTcsMYoiPgaouNw7b7zBiS4vsQaO6A=="
   end
+  let(:secure_session) { SecureSession.new("tester") }
   let(:challenge) { "81d4acfbd69eafa8f02bc2ecbec5267be8c9b28c1e0ba306d52b79f0f13d" }
   let(:client_data_challenge) { Base64.strict_encode64(challenge) }
   let(:client_data_webauthn_type) { "webauthn.get" }
@@ -87,8 +88,13 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
     }
   end
 
-  let(:challenge_params) { { challenge: challenge } }
+  let(:options) { { session: secure_session } }
   let(:current_user) { Fabricate(:user) }
+
+  before do
+    # we have to stub here because the public key was created using this specific challenge
+    DiscourseWebauthn.stubs(:challenge).returns(challenge)
+  end
 
   it "updates last_used when the security key and params are valid" do
     expect(service.authenticate_security_key).to eq(true)

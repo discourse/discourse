@@ -5,6 +5,7 @@ require "webauthn/registration_service"
 RSpec.describe DiscourseWebauthn::RegistrationService do
   subject(:service) { described_class.new(current_user, params, options) }
 
+  let(:secure_session) { SecureSession.new("tester") }
   let(:client_data_challenge) { Base64.encode64(challenge) }
   let(:client_data_webauthn_type) { "webauthn.create" }
   let(:client_data_origin) { "http://localhost:3000" }
@@ -33,9 +34,11 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
   # The above attestation was generated in localhost; Discourse.current_hostname
   # returns test.localhost which we do not want
   let(:options) do
-    { challenge: challenge, factor_type: UserSecurityKey.factor_types[:second_factor] }
+    { session: secure_session, factor_type: UserSecurityKey.factor_types[:second_factor] }
   end
-  let(:challenge) { "f1e04530f34a1b6a08d032d8550e23eb8330be04e4166008f26c0e1b42ad" }
+
+  let(:challenge) { DiscourseWebauthn.stage_challenge(current_user, secure_session).challenge }
+
   let(:current_user) { Fabricate(:user) }
 
   context "when the client data webauthn type is not webauthn.create" do
@@ -152,7 +155,7 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
 
   describe "registering a first factor key" do
     let(:options) do
-      { challenge: challenge, factor_type: UserSecurityKey.factor_types[:first_factor] }
+      { factor_type: UserSecurityKey.factor_types[:first_factor], session: secure_session }
     end
 
     it "works" do
