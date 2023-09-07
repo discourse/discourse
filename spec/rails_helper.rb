@@ -381,14 +381,22 @@ RSpec.configure do |config|
           options.add_preference("download.default_directory", Downloads::FOLDER)
         end
 
+    driver_options = { browser: :chrome }
+
+    if ENV["CAPYBARA_REMOTE_DRIVER_URL"].present?
+      driver_options[:browser] = :remote
+      driver_options[:url] = ENV["CAPYBARA_REMOTE_DRIVER_URL"]
+    end
+
+    desktop_driver_options = driver_options.merge(options: chrome_browser_options)
+
     Capybara.register_driver :selenium_chrome do |app|
-      Capybara::Selenium::Driver.new(app, browser: :chrome, options: chrome_browser_options)
+      Capybara::Selenium::Driver.new(app, **desktop_driver_options)
     end
 
     Capybara.register_driver :selenium_chrome_headless do |app|
       chrome_browser_options.add_argument("--headless=new")
-
-      Capybara::Selenium::Driver.new(app, browser: :chrome, options: chrome_browser_options)
+      Capybara::Selenium::Driver.new(app, **desktop_driver_options)
     end
 
     mobile_chrome_browser_options =
@@ -402,13 +410,15 @@ RSpec.configure do |config|
           apply_base_chrome_options(options)
         end
 
+    mobile_driver_options = driver_options.merge(options: mobile_chrome_browser_options)
+
     Capybara.register_driver :selenium_mobile_chrome do |app|
-      Capybara::Selenium::Driver.new(app, browser: :chrome, options: mobile_chrome_browser_options)
+      Capybara::Selenium::Driver.new(app, **mobile_driver_options)
     end
 
     Capybara.register_driver :selenium_mobile_chrome_headless do |app|
       mobile_chrome_browser_options.add_argument("--headless=new")
-      Capybara::Selenium::Driver.new(app, browser: :chrome, options: mobile_chrome_browser_options)
+      Capybara::Selenium::Driver.new(app, **mobile_driver_options)
     end
 
     if ENV["ELEVATED_UPLOADS_ID"]
