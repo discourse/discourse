@@ -33,6 +33,12 @@ RSpec.describe ListController do
 
       get "/latest?tags[1]=hello"
       expect(response.status).to eq(400)
+
+      get "/latest?before[1]=haxx"
+      expect(response.status).to eq(400)
+
+      get "/latest?bumped_before[1]=haxx"
+      expect(response.status).to eq(400)
     end
 
     it "returns 200 for legit requests" do

@@ -19,6 +19,8 @@ class TopicQuery
         array_or_string = lambda { |x| Array === x || String === x }
 
         {
+          before: zero_up_to_max_int,
+          bumped_before: zero_up_to_max_int,
           max_posts: zero_up_to_max_int,
           min_posts: zero_up_to_max_int,
           page: zero_up_to_max_int,
