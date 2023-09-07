@@ -28,7 +28,7 @@ def setup_redis
   log "Starting background redis"
   data_directory = "#{Rails.root}/tmp/test_data/redis"
   `rm -rf #{data_directory} && mkdir -p #{data_directory}`
-  Process.spawn("redis-server --dir #{data_directory} --port 1234")
+  Process.spawn("redis-server --dir #{data_directory}")
 end
 
 def migrate_databases(parallel: false, load_plugins: false)
