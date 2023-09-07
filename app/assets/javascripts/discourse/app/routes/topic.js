@@ -18,6 +18,7 @@ import EditTopicTimerModal from "discourse/components/modal/edit-topic-timer";
 import FeatureTopicModal from "discourse/components/modal/feature-topic";
 import FlagModal from "discourse/components/modal/flag";
 import MoveToTopicModal from "discourse/components/modal/move-to-topic";
+import RawEmailModal from "discourse/components/modal/raw-email";
 
 const SCROLL_DELAY = 500;
 
@@ -207,7 +208,7 @@ const TopicRoute = DiscourseRoute.extend({
 
   @action
   showRawEmail(model) {
-    showModal("raw-email", { model });
+    this.modal.show(RawEmailModal, { model });
     this.controllerFor("raw_email").loadRawEmail(model.get("id"));
   },
 
