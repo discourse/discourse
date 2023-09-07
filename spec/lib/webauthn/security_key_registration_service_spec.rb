@@ -32,8 +32,7 @@ RSpec.describe DiscourseWebauthn::SecurityKeyRegistrationService do
   ##
   # The above attestation was generated in localhost; Discourse.current_hostname
   # returns test.localhost which we do not want
-  let(:rp_id) { "localhost" }
-  let(:challenge_params) { { challenge: challenge, rp_id: rp_id, origin: "http://localhost:3000" } }
+  let(:challenge_params) { { challenge: challenge } }
   let(:challenge) { "f1e04530f34a1b6a08d032d8550e23eb8330be04e4166008f26c0e1b42ad" }
   let(:current_user) { Fabricate(:user) }
 
@@ -71,9 +70,9 @@ RSpec.describe DiscourseWebauthn::SecurityKeyRegistrationService do
   end
 
   context "when the sha256 hash of the relaying party ID does not match the one in attestation.authData" do
-    let(:rp_id) { "bad_rp_id" }
-
     it "raises a InvalidRelyingPartyIdError" do
+      DiscourseWebauthn.stubs(:rp_id).returns("http://a.different.host")
+
       expect { service.register_second_factor_security_key }.to raise_error(
         DiscourseWebauthn::InvalidRelyingPartyIdError,
         I18n.t("webauthn.validation.invalid_relying_party_id_error"),

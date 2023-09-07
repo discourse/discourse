@@ -56,11 +56,11 @@ module DiscourseWebauthn
     end
 
     def origin_match?
-      client_data["origin"] == @challenge_params[:origin]
+      client_data["origin"] == DiscourseWebauthn.origin
     end
 
     def rp_id_hash_match?
-      auth_data[0..31] == OpenSSL::Digest::SHA256.digest(@challenge_params[:rp_id])
+      auth_data[0..31] == OpenSSL::Digest::SHA256.digest(DiscourseWebauthn.rp_id)
     end
 
     def client_data_hash

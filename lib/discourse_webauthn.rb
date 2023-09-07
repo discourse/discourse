@@ -68,7 +68,18 @@ module DiscourseWebauthn
   end
 
   def self.rp_id
-    Discourse.current_hostname
+    Rails.env.production? ? Discourse.current_hostname : "localhost"
+  end
+
+  def self.origin
+    case Rails.env
+    when "development"
+      "http://localhost:4200"
+    when "test"
+      "http://localhost:3000"
+    else
+      Discourse.base_url
+    end
   end
 
   def self.rp_name

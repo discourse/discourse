@@ -12,7 +12,6 @@ require "webauthn/security_key_registration_service"
 # - signature
 # - authenticator_data
 # - client_data_origin
-# - challenge_params_origin
 #
 # To create another test (e.g. for a different COSE algorithm) you need to:
 #
@@ -87,11 +86,8 @@ RSpec.describe DiscourseWebauthn::SecurityKeyAuthenticationService do
       signature: signature,
     }
   end
-  ##
-  # The original key was generated in localhost
-  let(:rp_id) { "localhost" }
-  let(:challenge_params_origin) { "http://localhost:3000" }
-  let(:challenge_params) { { challenge: challenge, rp_id: rp_id, origin: challenge_params_origin } }
+
+  let(:challenge_params) { { challenge: challenge } }
   let(:current_user) { Fabricate(:user) }
 
   it "updates last_used when the security key and params are valid" do
@@ -169,9 +165,9 @@ RSpec.describe DiscourseWebauthn::SecurityKeyAuthenticationService do
   end
 
   context "when the sha256 hash of the relaying party ID does not match the one in attestation.authData" do
-    let(:rp_id) { "bad_rp_id" }
-
     it "raises a InvalidRelyingPartyIdError" do
+      DiscourseWebauthn.stubs(:rp_id).returns("http://a.different.host")
+
       expect { service.authenticate_security_key }.to raise_error(
         DiscourseWebauthn::InvalidRelyingPartyIdError,
         I18n.t("webauthn.validation.invalid_relying_party_id_error"),
@@ -214,7 +210,7 @@ RSpec.describe DiscourseWebauthn::SecurityKeyAuthenticationService do
     let(:public_key) do
       "pAEDAzkBACBZAQCqsl50KrR5zVm/QT9vWkeGTGxby32m0QRtCRh2UWseqoG0ZmBhGeWEYvkdoYlB1jObQKEHsAeB+1NBf5q69/88AA5zv4fzrvCydCtL41EUsHYFEbaPGnB61zZmYVLTPI7BYa+fu4F4MzFa924s36tVlU/L7n04peviJVZW2C1YIQfwOGDZJSvUpqJoZMQtw1vGRfrb4cQKlHfrpDZUpa3QLE8phh4ce4nwtX1tUnUGgCy8sOaFVkDNufENGTNr8HdAIHcinUiax3yy/Q8LjSZb8UR2ha6oXSe1vRHhj001B/P/mr5AdVMxSrOT1sUNXWkHv8L8IzS/iTBQpsC8CADZIUMBAAE="
     end
-    let(:challenge_params_origin) { "http://localhost:4200" }
+    # This key was generated using this specific origin
     let(:client_data_origin) { "http://localhost:4200" }
 
     # This has to be in the exact same order with the same data as it was originally
@@ -231,6 +227,8 @@ RSpec.describe DiscourseWebauthn::SecurityKeyAuthenticationService do
     end
 
     it "updates last_used when the security key and params are valid" do
+      DiscourseWebauthn.stubs(:origin).returns("http://localhost:4200")
+
       expect(service.authenticate_security_key).to eq(true)
       expect(security_key.reload.last_used).not_to eq(nil)
     end
