@@ -2,7 +2,7 @@
 require "cose"
 
 module DiscourseWebauthn
-  class SecurityKeyAuthenticationService < SecurityKeyBaseValidationService
+  class AuthenticationService < BaseValidationService
     ##
     # See https://w3c.github.io/webauthn/#sctn-verifying-assertion for
     # the steps followed here. Memoized methods are called in their

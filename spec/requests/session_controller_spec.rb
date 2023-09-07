@@ -117,6 +117,7 @@ RSpec.describe SessionController do
             [user_security_key.credential_id],
           )
           secure_session = SecureSession.new(session["secure_session_id"])
+
           expect(response_body_parsed["challenge"]).to eq(
             DiscourseWebauthn.challenge(user, secure_session),
           )

@@ -3,7 +3,7 @@ require "cbor"
 require "cose"
 
 module DiscourseWebauthn
-  class SecurityKeyRegistrationService < SecurityKeyBaseValidationService
+  class RegistrationService < BaseValidationService
     ##
     # See https://w3c.github.io/webauthn/#sctn-registering-a-new-credential for
     # the registration steps followed here. Memoized methods are called in their

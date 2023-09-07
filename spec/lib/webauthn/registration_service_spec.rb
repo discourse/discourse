@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 require "discourse_webauthn"
-require "webauthn/security_key_registration_service"
+require "webauthn/registration_service"
 
-RSpec.describe DiscourseWebauthn::SecurityKeyRegistrationService do
+RSpec.describe DiscourseWebauthn::RegistrationService do
   subject(:service) { described_class.new(current_user, params, challenge_params) }
 
   let(:client_data_challenge) { Base64.encode64(challenge) }
