@@ -230,7 +230,9 @@
     height: calc(var(--row-height) - 6);
     padding-inline: 0.25rem;
     margin: 3px;
-    animation: popIn 0.1s ease-out;
+    @media (prefers-reduced-motion: no-preference) {
+      animation: popIn 0.1s ease-out;
+    }
 
     .d-icon-times {
       margin-top: 4px;
