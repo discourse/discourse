@@ -2,7 +2,6 @@ import Service, { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
-import { mentionRegex } from "pretty-text/mentions";
 import { cancel } from "@ember/runloop";
 import { tracked } from "@glimmer/tracking";
 
@@ -34,11 +33,7 @@ export default class ChatComposerWarningsTracker extends Service {
 
   @bind
   reset() {
-    this.unreachableGroupMentions = [];
-    this.unreachableGroupMentions = [];
-    this.overMembersLimitGroupMentions = [];
-    this.tooManyMentions = false;
-    this.channelWideMentionDisallowed = false;
+    this.#resetMentionStats();
     this.mentionsCount = 0;
     cancel(this.mentionsTimer);
   }
@@ -63,61 +58,42 @@ export default class ChatComposerWarningsTracker extends Service {
       return;
     }
 
-    const mentions = this._extractMentions(currentMessage.message);
-    this.mentionsCount = mentions?.length;
+    currentMessage.parseMentions().then((mentions) => {
+      this.mentionsCount = mentions?.length;
 
-    if (this.mentionsCount > 0) {
-      this.tooManyMentions =
-        this.mentionsCount > this.siteSettings.max_mentions_per_chat_message;
+      if (this.mentionsCount > 0) {
+        this.tooManyMentions =
+          this.mentionsCount > this.siteSettings.max_mentions_per_chat_message;
 
-      if (!this.tooManyMentions) {
-        const newMentions = mentions.filter(
-          (mention) => !(mention in this._mentionWarningsSeen)
-        );
+        if (!this.tooManyMentions) {
+          const newMentions = mentions.filter(
+            (mention) => !(mention in this._mentionWarningsSeen)
+          );
 
-        this.channelWideMentionDisallowed =
-          !currentMessage.channel.allowChannelWideMentions &&
-          (mentions.includes("here") || mentions.includes("all"));
+          this.channelWideMentionDisallowed =
+            !currentMessage.channel.allowChannelWideMentions &&
+            (mentions.includes("here") || mentions.includes("all"));
 
-        if (newMentions?.length > 0) {
-          this._recordNewWarnings(newMentions, mentions);
-        } else {
-          this._rebuildWarnings(mentions);
-        }
-      }
-    } else {
-      this.tooManyMentions = false;
-      this.channelWideMentionDisallowed = false;
-      this.unreachableGroupMentions = [];
-      this.overMembersLimitGroupMentions = [];
-    }
-  }
-
-  _extractMentions(message) {
-    const regex = mentionRegex(this.siteSettings.unicode_usernames);
-    const mentions = [];
-    let mentionsLeft = true;
-
-    while (mentionsLeft) {
-      const matches = message.match(regex);
-
-      if (matches) {
-        const mention = matches[1] || matches[2];
-        mentions.push(mention);
-        message = message.replaceAll(`${mention}`, "");
-
-        if (mentions.length > this.siteSettings.max_mentions_per_chat_message) {
-          mentionsLeft = false;
+          if (newMentions?.length > 0) {
+            this.#recordNewWarnings(newMentions, mentions);
+          } else {
+            this.#rebuildWarnings(mentions);
+          }
         }
       } else {
-        mentionsLeft = false;
+        this.#resetMentionStats();
       }
-    }
-
-    return mentions;
+    });
   }
 
-  _recordNewWarnings(newMentions, mentions) {
+  #resetMentionStats() {
+    this.tooManyMentions = false;
+    this.channelWideMentionDisallowed = false;
+    this.unreachableGroupMentions = [];
+    this.overMembersLimitGroupMentions = [];
+  }
+
+  #recordNewWarnings(newMentions, mentions) {
     ajax("/chat/api/mentions/groups.json", {
       data: { mentions: newMentions },
     })
@@ -135,12 +111,12 @@ export default class ChatComposerWarningsTracker extends Service {
           this._mentionWarningsSeen[warning] = MENTION_RESULT["invalid"];
         });
 
-        this._rebuildWarnings(mentions);
+        this.#rebuildWarnings(mentions);
       })
-      .catch(this._rebuildWarnings(mentions));
+      .catch(this.#rebuildWarnings(mentions));
   }
 
-  _rebuildWarnings(mentions) {
+  #rebuildWarnings(mentions) {
     const newWarnings = mentions.reduce(
       (memo, mention) => {
         if (

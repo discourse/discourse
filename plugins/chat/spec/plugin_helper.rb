@@ -37,17 +37,16 @@ module ChatSystemHelpers
       thread_id = i.zero? ? nil : last_message.thread_id
       last_user = ((users - [last_user]).presence || users).sample
       creator =
-        Chat::MessageCreator.new(
-          chat_channel: channel,
+        Chat::CreateMessage.call(
+          chat_channel_id: channel.id,
           in_reply_to_id: in_reply_to,
           thread_id: thread_id,
-          user: last_user,
-          content: Faker::Lorem.paragraph,
+          guardian: last_user.guardian,
+          message: Faker::Lorem.paragraph,
         )
-      creator.create
 
-      raise creator.error if creator.error
-      last_message = creator.chat_message
+      raise "#{creator.inspect_steps.inspect}\n\n#{creator.inspect_steps.error}" if creator.failure?
+      last_message = creator.message
     end
 
     last_message.thread.set_replies_count_cache(messages_count - 1, update_db: true)

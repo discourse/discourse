@@ -24,6 +24,8 @@ while a = ARGV.pop
 end
 
 if should_setup
+  run "rm -rf #{DATA}"
+  run "mkdir -p #{DATA}"
   run "#{BIN}/initdb -D #{DATA}"
 
   run "echo fsync = off >> #{DATA}/postgresql.conf"
@@ -32,7 +34,7 @@ if should_setup
 end
 
 if should_exec
-  exec "#{BIN}/postmaster -D #{DATA}"
+  exec "#{BIN}/postgres -D #{DATA}"
 elsif should_run
   run "#{BIN}/pg_ctl -D #{DATA} start"
 end

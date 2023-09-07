@@ -4,12 +4,12 @@
       <DButton
         @action={{@login}}
         id="login-button"
-        @form="login-form"
+        form="login-form"
         @icon="unlock"
         @label={{@loginButtonLabel}}
         @disabled={{@loginDisabled}}
         class="btn btn-large btn-primary"
-        @tabindex="2"
+        tabindex={{unless @showSecondFactor "2"}}
       />
     {{/unless}}
 
@@ -19,7 +19,7 @@
         id="new-account-link"
         @action={{@createAccount}}
         @label="create_account.title"
-        @tabindex="3"
+        tabindex="3"
       />
     {{/if}}
   {{/if}}

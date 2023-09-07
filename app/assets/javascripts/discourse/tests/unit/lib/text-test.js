@@ -1,5 +1,10 @@
 import { module, test } from "qunit";
-import { cookAsync, excerpt, parseAsync } from "discourse/lib/text";
+import {
+  cookAsync,
+  excerpt,
+  parseAsync,
+  parseMentions,
+} from "discourse/lib/text";
 
 module("Unit | Utility | text", function () {
   test("parseAsync", async function (assert) {
@@ -33,5 +38,38 @@ module("Unit | Utility | text", function () {
       await excerpt(cooked, 300),
       "<a><code>&lt;script&gt;alert('hi')&lt;/script&gt;</code></a>"
     );
+  });
+});
+
+module("Unit | Utility | text | parseMentions", function () {
+  test("parses mentions from markdown", async function (assert) {
+    const markdown = "Hey @user1, @user2, @group1, @group2, @here, @all";
+    const mentions = await parseMentions(markdown);
+    assert.deepEqual(mentions, [
+      "user1",
+      "user2",
+      "group1",
+      "group2",
+      "here",
+      "all",
+    ]);
+  });
+
+  test("ignores duplicated mentions", async function (assert) {
+    const markdown = "Hey @john, @john, @john, @john";
+    const mentions = await parseMentions(markdown);
+    assert.deepEqual(mentions, ["john"]);
+  });
+
+  test("ignores mentions in codeblocks", async function (assert) {
+    const markdown = `Hey
+    \`\`\`
+      def foo
+        @bar = true
+      end
+    \`\`\`
+    `;
+    const mentions = await parseMentions(markdown);
+    assert.equal(mentions.length, 0);
   });
 });

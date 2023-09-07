@@ -54,13 +54,13 @@ Fabricator(:chat_message, class_name: "Chat::Message") do
 
   initialize_with do |transients|
     Fabricate(
-      transients[:use_service] ? :service_chat_message : :no_service_chat_message,
+      transients[:use_service] ? :chat_message_with_service : :chat_message_without_service,
       **to_params,
     )
   end
 end
 
-Fabricator(:no_service_chat_message, class_name: "Chat::Message") do
+Fabricator(:chat_message_without_service, class_name: "Chat::Message") do
   user
   chat_channel
   message { Faker::Lorem.paragraph_by_chars(number: 500) }
@@ -69,8 +69,14 @@ Fabricator(:no_service_chat_message, class_name: "Chat::Message") do
   after_create { |message, attrs| message.create_mentions }
 end
 
-Fabricator(:service_chat_message, class_name: "Chat::MessageCreator") do
-  transient :chat_channel, :user, :message, :in_reply_to, :thread, :upload_ids
+Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
+  transient :chat_channel,
+            :user,
+            :message,
+            :in_reply_to,
+            :thread,
+            :upload_ids,
+            :incoming_chat_webhook
 
   initialize_with do |transients|
     channel =
@@ -80,14 +86,15 @@ Fabricator(:service_chat_message, class_name: "Chat::MessageCreator") do
     Group.refresh_automatic_groups!
     channel.add(user)
 
-    resolved_class.create(
-      chat_channel: channel,
-      user: user,
-      content: transients[:message] || Faker::Lorem.paragraph_by_chars(number: 500),
+    resolved_class.call(
+      chat_channel_id: channel.id,
+      guardian: user.guardian,
+      message: transients[:message] || Faker::Lorem.paragraph_by_chars(number: 500),
       thread_id: transients[:thread]&.id,
       in_reply_to_id: transients[:in_reply_to]&.id,
       upload_ids: transients[:upload_ids],
-    ).chat_message
+      incoming_chat_webhook: transients[:incoming_chat_webhook],
+    ).message
   end
 end
 

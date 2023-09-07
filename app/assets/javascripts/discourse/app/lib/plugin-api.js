@@ -128,12 +128,13 @@ import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/
 import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
 import { registerHashtagType } from "discourse/lib/hashtag-autocomplete";
 import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
+import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-export const PLUGIN_API_VERSION = "1.10.0";
+export const PLUGIN_API_VERSION = "1.11.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -2125,7 +2126,7 @@ class PluginApi {
    * Support for setting a Sidebar panel.
    */
   setSidebarPanel(name) {
-    this._lookupContainer("service:sidebar-state").setPanel(name);
+    this._lookupContainer("service:sidebar-state")?.setPanel(name);
   }
 
   /**
@@ -2133,7 +2134,7 @@ class PluginApi {
    * Set combined sidebar section mode. In this mode, sections from all panels are displayed together.
    */
   setCombinedSidebarMode() {
-    this._lookupContainer("service:sidebar-state").setCombinedMode();
+    this._lookupContainer("service:sidebar-state")?.setCombinedMode();
   }
 
   /**
@@ -2157,7 +2158,7 @@ class PluginApi {
    * Hide sidebar switch panels buttons in separated mode.
    */
   hideSidebarSwitchPanelButtons() {
-    this._lookupContainer("service:sidebar-state").hideSwitchPanelButtons();
+    this._lookupContainer("service:sidebar-state")?.hideSwitchPanelButtons();
   }
 
   /**
@@ -2398,6 +2399,15 @@ class PluginApi {
    */
   addFullPageSearchType(translationKey, searchTypeId, searchFunc) {
     registerFullPageSearchType(translationKey, searchTypeId, searchFunc);
+  }
+
+  /**
+   * @param {function} fn - Function that will be called before the auth complete logic is run
+   * in instance-initializers/auth-complete.js. If any single callback returns false, the
+   * auth-complete logic will be aborted.
+   */
+  addBeforeAuthCompleteCallback(fn) {
+    addBeforeAuthCompleteCallback(fn);
   }
 
   /**

@@ -1,6 +1,6 @@
 import { next } from "@ember/runloop";
 import cookie, { removeCookie } from "discourse/lib/cookie";
-import { getURL } from "discourse/lib/url";
+import DiscourseUrl from "discourse/lib/url";
 import EmberObject from "@ember/object";
 import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
@@ -14,6 +14,16 @@ const AuthErrors = [
   "admin_not_allowed_from_ip_address",
   "not_allowed_from_ip_address",
 ];
+
+const beforeAuthCompleteCallbacks = [];
+
+export function addBeforeAuthCompleteCallback(fn) {
+  beforeAuthCompleteCallbacks.push(fn);
+}
+
+export function resetBeforeAuthCompleteCallbacks() {
+  beforeAuthCompleteCallbacks.length = 0;
+}
 
 export default {
   after: "inject-objects",
@@ -30,12 +40,17 @@ export default {
       const router = owner.lookup("router:main");
       router.one("didTransition", () => {
         next(() => {
+          const options = JSON.parse(lastAuthResult);
+
+          if (!beforeAuthCompleteCallbacks.every((fn) => fn(options))) {
+            return;
+          }
+
           if (router.currentPath === "invites.show") {
             owner
               .lookup("controller:invites-show")
-              .authenticationComplete(JSON.parse(lastAuthResult));
+              .authenticationComplete(options);
           } else {
-            const options = JSON.parse(lastAuthResult);
             const modal = owner.lookup("service:modal");
             const siteSettings = owner.lookup("service:site-settings");
 
@@ -91,8 +106,10 @@ export default {
                 // redirect client to the original URL
                 removeCookie("destination_url");
                 window.location.href = destinationUrl;
-              } else if (window.location.pathname === getURL("/login")) {
-                window.location = getURL("/");
+              } else if (
+                window.location.pathname === DiscourseUrl.getURL("/login")
+              ) {
+                window.location = DiscourseUrl.getURL("/");
               } else {
                 window.location.reload();
               }

@@ -95,7 +95,9 @@ export default class Login extends Component {
   }
 
   get showSignupLink() {
-    return this.args.model.canSignUp && !this.loggingIn;
+    return (
+      this.args.model.canSignUp && !this.loggingIn && !this.showSecondFactor
+    );
   }
 
   @action
