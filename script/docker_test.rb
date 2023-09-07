@@ -36,8 +36,8 @@ OptionParser
 
 no_checkout = options.has_key?(:no_checkout) ? options[:no_checkout] : ENV["NO_UPDATE"]
 checkout_ref = options.has_key?(:checkout_ref) ? options[:checkout_ref] : ENV["COMMIT_HASH"]
-run_smoke_test =
-  options.has_key?(:run_smoke_test) ? options[:run_smoke_test] : ENV["RUN_SMOKE_TESTS"]
+run_smoke_tests =
+  options.has_key?(:run_smoke_tests) ? options[:run_smoke_tests] : ENV["RUN_SMOKE_TESTS"]
 no_tests = options.has_key?(:no_tests) ? options[:no_tests] : false
 
 def log(message)
