@@ -8,7 +8,7 @@ module DiscourseWebauthn
     # See https://w3c.github.io/webauthn/#sctn-registering-a-new-credential for
     # the registration steps followed here. Memoized methods are called in their
     # place in the step flow to make the process clearer.
-    def register_second_factor_security_key
+    def register_security_key
       # 4. Verify that the value of C.type is webauthn.create.
       validate_webauthn_type(::DiscourseWebauthn::ACCEPTABLE_REGISTRATION_TYPE)
 
@@ -114,7 +114,7 @@ module DiscourseWebauthn
         credential_id: encoded_credential_id,
         public_key: endcoded_public_key,
         name: @params[:name],
-        factor_type: UserSecurityKey.factor_types[:second_factor],
+        factor_type: @factor_type,
       )
     rescue CBOR::UnpackError, CBOR::TypeError, CBOR::MalformedFormatError, CBOR::StackError
       raise MalformedAttestationError, I18n.t("webauthn.validation.malformed_attestation_error")

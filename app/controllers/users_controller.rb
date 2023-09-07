@@ -1582,7 +1582,8 @@ class UsersController < ApplicationController
       current_user,
       params,
       challenge: DiscourseWebauthn.challenge(current_user, secure_session),
-    ).register_second_factor_security_key
+      factor_type: UserSecurityKey.factor_types[:second_factor],
+    ).register_security_key
     render json: success_json
   rescue ::DiscourseWebauthn::SecurityKeyError => err
     render json: failed_json.merge(error: err.message)
