@@ -8,7 +8,6 @@ import { generateCookFunction, parseMentions } from "discourse/lib/text";
 import transformAutolinks from "discourse/plugins/chat/discourse/lib/transform-auto-links";
 import { getOwner } from "discourse-common/lib/get-owner";
 import discourseLater from "discourse-common/lib/later";
-import { parseMentionedUsernames } from "discourse/lib/parse-mentions";
 
 export default class ChatMessage {
   static cookFunction = null;
@@ -248,7 +247,7 @@ export default class ChatMessage {
 
   async ensureMentionsLoaded(ignoreFailure) {
     try {
-      const notLoaded = this.#notLoadedMentions;
+      const notLoaded = await this.#notLoadedMentions();
       if (notLoaded.length > 0) {
         const users = await this.usersApi.lookupUsers(notLoaded);
         users.forEach((user) => this.addMentionedUser(user));
@@ -395,8 +394,8 @@ export default class ChatMessage {
     };
   }
 
-  get #notLoadedMentions() {
-    const parsed = parseMentionedUsernames(this._cooked);
+  async #notLoadedMentions() {
+    const parsed = await this.parseMentions();
     const loaded = [...this.mentionedUsers.values()].map((u) => u.username);
     return parsed.filter((x) => !loaded.includes(x));
   }
