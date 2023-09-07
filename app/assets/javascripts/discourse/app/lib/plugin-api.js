@@ -2126,7 +2126,7 @@ class PluginApi {
    * Support for setting a Sidebar panel.
    */
   setSidebarPanel(name) {
-    this._lookupContainer("service:sidebar-state").setPanel(name);
+    this._lookupContainer("service:sidebar-state")?.setPanel(name);
   }
 
   /**
@@ -2134,7 +2134,7 @@ class PluginApi {
    * Set combined sidebar section mode. In this mode, sections from all panels are displayed together.
    */
   setCombinedSidebarMode() {
-    this._lookupContainer("service:sidebar-state").setCombinedMode();
+    this._lookupContainer("service:sidebar-state")?.setCombinedMode();
   }
 
   /**
@@ -2158,7 +2158,7 @@ class PluginApi {
    * Hide sidebar switch panels buttons in separated mode.
    */
   hideSidebarSwitchPanelButtons() {
-    this._lookupContainer("service:sidebar-state").hideSwitchPanelButtons();
+    this._lookupContainer("service:sidebar-state")?.hideSwitchPanelButtons();
   }
 
   /**
