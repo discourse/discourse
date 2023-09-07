@@ -26,6 +26,27 @@ module.exports = function (defaults) {
   const isProduction = EmberApp.env().includes("production");
   const isTest = EmberApp.env().includes("test");
 
+  // Embroider does not respect the fingerprint: { enabled: false } config
+  // so we need to remove the fingerprints manually. In future we would
+  // like to stop sprockets generating our asset fingerprints and use
+  // Webpack/ember-cli instead
+  const removeEmbroiderFingerprints = (tree) => {
+    return new funnel(tree, {
+      getDestinationPath(relativePath) {
+        const segments = relativePath.split("/");
+        const filenameParts = segments[segments.length - 1].split(".");
+        if (
+          filenameParts.length > 2 &&
+          filenameParts[filenameParts.length - 2].length === 32
+        ) {
+          filenameParts.splice(filenameParts.length - 2, 1);
+          segments[segments.length - 1] = filenameParts.join(".");
+        }
+        return segments.join("/");
+      },
+    });
+  };
+
   // This is more or less the same as the one in @embroider/test-setup
   const maybeEmbroider = (app, options) => {
     if (isEmbroider) {
@@ -39,7 +60,8 @@ module.exports = function (defaults) {
         ];
       }
 
-      return compatBuild(app, Webpack, options);
+      const embroiderOutput = compatBuild(app, Webpack, options);
+      return removeEmbroiderFingerprints(embroiderOutput);
     } else {
       return app.toTree(options?.extraPublicTrees);
     }
