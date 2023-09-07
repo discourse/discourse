@@ -209,7 +209,6 @@ const TopicRoute = DiscourseRoute.extend({
   @action
   showRawEmail(model) {
     this.modal.show(RawEmailModal, { model });
-    this.controllerFor("raw_email").loadRawEmail(model.get("id"));
   },
 
   @action

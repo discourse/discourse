@@ -11,7 +11,9 @@ export default class RawEmailComponent extends Component {
 
   constructor() {
     super(...arguments);
-    this.loadRawEmail(this.args.postId);
+    if (this.args.model.id) {
+      this.loadRawEmail(this.args.model.id);
+    }
   }
 
   @action
