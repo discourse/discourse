@@ -17,7 +17,7 @@
 
 <div class="navigation-controls">
   {{#if (and this.notCategoriesRoute this.site.mobileView this.canBulk)}}
-    <BulkSelectToggle @parentController="discovery/topics" @tagName="" />
+    <BulkSelectToggle @parentController="discovery/topics" />
   {{/if}}
 
   {{#if this.showCategoryAdmin}}

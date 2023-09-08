@@ -31,19 +31,63 @@ def setup_redis
   Process.spawn("redis-server --dir #{data_directory}")
 end
 
+def setup_test_env(
+  setup_multisite: false,
+  create_db: true,
+  create_parallel_db: false,
+  install_all_official: false,
+  update_all_plugins: false,
+  plugins_to_remove: "",
+  load_plugins: false
+)
+  ENV["RAILS_ENV"] = "test"
+  # this shaves all the creation of the multisite db off
+  # for js tests
+  ENV["SKIP_MULTISITE"] = "1" unless setup_multisite
+
+  success = true
+  success &&= run_or_fail("bundle exec rake db:create") if create_db
+  success &&= run_or_fail("bundle exec rake parallel:create") if create_parallel_db
+  success &&= run_or_fail("bundle exec rake plugin:install_all_official") if install_all_official
+  success &&= run_or_fail("bundle exec rake plugin:update_all") if update_all_plugins
+
+  if !plugins_to_remove.blank?
+    plugins_to_remove
+      .split(",")
+      .map(&:strip)
+      .each do |plugin|
+        puts "[SKIP_INSTALL_PLUGINS] Removing #{plugin}"
+        `rm -fr plugins/#{plugin}`
+      end
+  end
+
+  success &&= migrate_databases(parallel: create_parallel_db, load_plugins: load_plugins)
+  success
+end
+
 def migrate_databases(parallel: false, load_plugins: false)
   migrate_env = load_plugins ? "LOAD_PLUGINS=1" : "LOAD_PLUGINS=0"
 
-  success = run_or_fail("#{migrate_env} bundle exec rake db:migrate")
+  success = true
+  success &&= run_or_fail("#{migrate_env} bundle exec rake db:migrate")
   success &&= run_or_fail("#{migrate_env} bundle exec rake parallel:migrate") if parallel
   success
 end
 
+# Environment Variables (specific to this rake task)
 desc "Setups up the test environment"
 task "docker:test:setup" do
   setup_redis
   setup_postgres(skip_init: false)
-  migrate_databases(parallel: true, load_plugins: true)
+
+  setup_test_env(
+    setup_multisite: true,
+    create_db: true,
+    create_parallel_db: false,
+    load_plugins: false,
+    install_all_official: false,
+    update_all_plugins: false,
+  )
 end
 
 # Environment Variables (specific to this rake task)
@@ -154,32 +198,16 @@ task "docker:test" do
       @redis_pid = setup_redis
       @pg_pid = setup_postgres(skip_init: ENV["SKIP_DB_CREATE"].present?)
 
-      ENV["RAILS_ENV"] = "test"
-      # this shaves all the creation of the multisite db off
-      # for js tests
-      ENV["SKIP_MULTISITE"] = "1" if ENV["JS_ONLY"]
-
-      @good &&= run_or_fail("bundle exec rake db:create") unless ENV["SKIP_DB_CREATE"]
-
-      @good &&= run_or_fail("bundle exec rake parallel:create") if ENV["USE_TURBO"]
-
-      if ENV["INSTALL_OFFICIAL_PLUGINS"]
-        @good &&= run_or_fail("bundle exec rake plugin:install_all_official")
-      end
-
-      @good &&= run_or_fail("bundle exec rake plugin:update_all") if ENV["UPDATE_ALL_PLUGINS"]
-
-      if skip_install = ENV["SKIP_INSTALL_PLUGINS"]
-        skip_install
-          .split(",")
-          .map(&:strip)
-          .each do |plugin|
-            puts "[SKIP_INSTALL_PLUGINS] Removing #{plugin}"
-            `rm -fr plugins/#{plugin}`
-          end
-      end
-
-      @good &&= migrate_databases(parallel: ENV["USE_TURBO"], load_plugins: !ENV["SKIP_PLUGINS"])
+      @good &&=
+        setup_test_env(
+          setup_multisite: !ENV["JS_ONLY"],
+          create_db: !ENV["SKIP_DB_CREATE"],
+          create_parallel_db: !!ENV["USE_TURBO"],
+          install_all_official: !!ENV["INSTALL_OFFICIAL_PLUGINS"],
+          update_all_plugins: !!ENV["UPDATE_ALL_PLUGINS"],
+          plugins_to_remove: ENV["SKIP_INSTALL_PLUGINS"] || "",
+          load_plugins: !ENV["SKIP_PLUGINS"],
+        )
 
       unless ENV["JS_ONLY"]
         if ENV["WARMUP_TMP_FOLDER"]
