@@ -118,7 +118,7 @@ class DiscourseJsProcessor
         "--log-level=warning",
         "--bundle",
         "--external:fs",
-        "--external:path",
+        "--alias:path=./app/assets/javascripts/node_modules/path-browserify",
         "--define:process='{\"env\":{}}'",
         "app/assets/javascripts/js-processor.js",
         "--outfile=#{JS_PROCESSOR_PATH}",
