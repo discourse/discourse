@@ -294,7 +294,8 @@ RSpec.configure do |config|
       allow: [
         *MinioRunner.config.minio_urls,
         URI(MinioRunner::MinioBinary.platform_binary_url).host,
-      ],
+        ENV["CAPYBARA_REMOTE_DRIVER_URL"],
+      ].compact,
     )
 
     if ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].present?
