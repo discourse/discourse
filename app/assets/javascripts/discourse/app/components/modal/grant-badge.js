@@ -19,10 +19,6 @@ export default class GrantBadgeModal extends Component.extend(
   allBadges = [];
   userBadges = [];
 
-  init() {
-    super.init(...arguments);
-  }
-
   @discourseComputed("model.selectedPost")
   post() {
     return this.get("model.selectedPost");
