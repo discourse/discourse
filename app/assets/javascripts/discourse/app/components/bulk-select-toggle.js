@@ -1,15 +1,17 @@
-import Component from "@glimmer/component";
+import Component from "@ember/component";
 import { action } from "@ember/object";
 import { getOwner } from "discourse-common/lib/get-owner";
 
-export default class BulkSelectToggle extends Component {
+export default Component.extend({
+  parentController: null,
+
   @action
   toggleBulkSelect() {
     const controller = getOwner(this).lookup(
-      `controller:${this.args.parentController}`
+      `controller:${this.parentController}`
     );
-    const helper = controller.bulkSelectHelper;
-    helper.clear();
-    helper.bulkSelectEnabled = !helper.bulkSelectEnabled;
-  }
-}
+    const selection = controller.selected;
+    controller.toggleProperty("bulkSelectEnabled");
+    selection.clear();
+  },
+});
