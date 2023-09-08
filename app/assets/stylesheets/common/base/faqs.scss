@@ -2,6 +2,7 @@
   /* covers /about, /faq, /guidelines, /tos, /privacy, and login-required */
   width: 100%;
   max-width: 700px;
+  background: var(--d-content-background);
   .about-page & {
     max-width: unset;
     section:not(.admins):not(.moderators):not(.category-moderators) {
