@@ -24,11 +24,6 @@ export default class GrantBadgeModal extends Component.extend(
     return this.get("model.selectedPost");
   }
 
-  @discourseComputed("post")
-  badgeReason(post) {
-    return getURL(post.get("url"));
-  }
-
   @discourseComputed("saving", "selectedBadgeGrantable")
   buttonDisabled(saving, selectedBadgeGrantable) {
     return saving || !selectedBadgeGrantable;
@@ -63,7 +58,7 @@ export default class GrantBadgeModal extends Component.extend(
       const newBadge = await this.grantBadge(
         this.selectedBadgeId,
         username,
-        this.badgeReason
+        getURL(this.get("post.url"))
       );
       this.set("selectedBadgeId", null);
       this.setProperties({
