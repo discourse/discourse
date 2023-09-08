@@ -5314,10 +5314,12 @@ RSpec.describe UsersController do
       users = response.parsed_body["users"]
 
       expect(users.length).to be(1)
-      expect(users[0]["id"]).to be(user_1.id)
-      expect(users[0]["username"]).to eq(user_1.username)
-      expect(users[0]["name"]).to eq(user_1.name)
-      expect(users[0]["avatar_template"]).to eq(user_1.avatar_template)
+      expect(users[0]).to match(
+        "id" => user_1.id,
+        "username" => user_1.username,
+        "name" => user_1.name,
+        "avatar_template" => user_1.avatar_template,
+      )
     end
 
     it "returns users with user status if status is enabled in settings" do
