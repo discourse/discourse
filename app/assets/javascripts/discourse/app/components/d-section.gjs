@@ -4,7 +4,7 @@ import { scheduleOnce } from "@ember/runloop";
 // Can add a body class from within a component
 export default class DSection extends Component {
   <template>
-    <section class={{@class}} ...attributes>{{yield}}</section>
+    <section id={{@id}} class={{@class}} ...attributes>{{yield}}</section>
   </template>
 
   currentClasses = new Set();
