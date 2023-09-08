@@ -245,7 +245,7 @@ export default class ChatMessage {
     this.mentionedUsers.set(user.id, user);
   }
 
-  async ensureMentionsLoaded(ignoreFailure) {
+  async tryToEnsureMentionsLoaded() {
     try {
       const notLoaded = await this.#notLoadedMentions();
       if (notLoaded.length > 0) {
@@ -254,12 +254,8 @@ export default class ChatMessage {
         this.incrementVersion();
       }
     } catch (e) {
-      if (ignoreFailure) {
-        // eslint-disable-next-line no-console
-        console.warn("Cannot load mentioned users", e);
-      } else {
-        throw e;
-      }
+      // eslint-disable-next-line no-console
+      console.warn("Cannot load mentioned users", e);
     }
   }
 

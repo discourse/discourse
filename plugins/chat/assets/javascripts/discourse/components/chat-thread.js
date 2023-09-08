@@ -359,7 +359,7 @@ export default class ChatThread extends Component {
     }
 
     this.chatThreadPane.sending = true;
-    await message.ensureMentionsLoaded({ ignoreFailure: true });
+    await message.tryToEnsureMentionsLoaded();
     this._ignoreNextScroll = true;
     stackingContextFix(this.scrollable, async () => {
       await this.args.thread.stageMessage(message);
@@ -407,7 +407,7 @@ export default class ChatThread extends Component {
       upload_ids: message.uploads.map((upload) => upload.id),
     };
 
-    await message.ensureMentionsLoaded({ ignoreFailure: true });
+    await message.tryToEnsureMentionsLoaded();
     this.resetComposerMessage();
 
     try {

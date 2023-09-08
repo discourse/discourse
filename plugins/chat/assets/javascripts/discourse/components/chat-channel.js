@@ -531,7 +531,7 @@ export default class ChatChannel extends Component {
       upload_ids: message.uploads.map((upload) => upload.id),
     };
 
-    await message.ensureMentionsLoaded({ ignoreFailure: true });
+    await message.tryToEnsureMentionsLoaded();
     this.resetComposerMessage();
 
     try {
@@ -552,7 +552,7 @@ export default class ChatChannel extends Component {
 
     resetIdle();
 
-    await message.ensureMentionsLoaded({ ignoreFailure: true });
+    await message.tryToEnsureMentionsLoaded();
 
     stackingContextFix(this.scrollable, async () => {
       await this.args.channel.stageMessage(message);
