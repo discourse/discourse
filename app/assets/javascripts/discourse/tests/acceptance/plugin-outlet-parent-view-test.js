@@ -1,26 +1,35 @@
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "ember-qunit";
 import { hbs } from "ember-cli-htmlbars";
-import { test } from "qunit";
-import { visit } from "@ember/test-helpers";
+import { render } from "@ember/test-helpers";
 import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
+import Component from "@ember/component";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 
-acceptance("Plugin Outlet - Deprecated parentView", function (needs) {
-  needs.hooks.beforeEach(function () {
-    registerTemporaryModule(
-      "discourse/templates/connectors/user-profile-primary/hello",
-      hbs`<span class="hello-username">{{this.parentView.parentView.constructor.name}}</span>`
-    );
-  });
+module("Plugin Outlet - Deprecated parentView", function (hooks) {
+  setupRenderingTest(hooks);
 
   test("Can access parentView", async function (assert) {
+    this.component = class AComponent extends Component {
+      layout = hbs`<PluginOutlet @name="an-outlet" @connectorTagName="div" />`;
+    };
+
+    registerTemporaryModule(
+      "discourse/templates/connectors/an-outlet/hello",
+      hbs`<span class="hello-username">{{this.parentView.parentView.constructor.name}}</span>`
+    );
+
     await withSilencedDeprecationsAsync(
       "discourse.plugin-outlet-parent-view",
       async () => {
-        await visit("/u/eviltrout");
+        await render(hbs`<this.component />`);
+
         assert
           .dom(".hello-username")
-          .hasText("DSection", "it renders a value from parentView.parentView");
+          .hasText(
+            "AComponent",
+            "it renders a value from parentView.parentView"
+          );
       }
     );
   });
