@@ -233,4 +233,27 @@ RSpec.describe ThemeJavascriptCompiler do
       )
     end
   end
+
+  describe "ember-template-imports" do
+    it "applies its transforms" do
+      compiler.append_tree({ "discourse/components/my-component.gjs" => <<~JS })
+        import Component from "@glimmer/component";
+
+        export default class MyComponent extends Component {
+          <template>
+            {{this.value}}
+          </template>
+
+          value = "foo";
+        }
+      JS
+
+      expect(compiler.raw_content).to include(
+        "define(\"discourse/theme-1/discourse/components/my-component\", [\"exports\",",
+      )
+      expect(compiler.raw_content).to include("_defineProperty(this, \"value\", \"foo\");")
+      expect(compiler.raw_content).to include("setComponentTemplate")
+      expect(compiler.raw_content).to include("createTemplateFactory")
+    end
+  end
 end

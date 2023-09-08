@@ -18,13 +18,17 @@ globalThis.console = {
 
 import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
 import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
-import { precompile } from "ember-source/dist/ember-template-compiler";
+import * as EmberTemplateCompiler from "ember-source/dist/ember-template-compiler";
 import Handlebars from "handlebars";
 import { transform as babelTransform } from "@babel/standalone";
 import { minify as terserMinify } from "terser";
 import RawHandlebars from "discourse-common/addon/lib/raw-handlebars";
 import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
 import EmberThisFallback from "ember-this-fallback";
+import {
+  preprocessEmbeddedTemplates,
+  babelPlugin as templateImportsPlugin,
+} from "ember-template-imports";
 
 const thisFallbackPlugin = EmberThisFallback._buildPlugin({
   enableLogging: false,
@@ -35,7 +39,14 @@ function manipulateAstNodeForTheme(node, themeId) {
   // Magically add theme id as the first param for each of these helpers)
   if (
     node.path.parts &&
-    ["theme-i18n", "theme-prefix", "theme-setting"].includes(node.path.parts[0])
+    [
+      "theme-i18n",
+      "themeI18n",
+      "theme-prefix",
+      "themePrefix",
+      "theme-setting",
+      "themeSetting",
+    ].includes(node.path.parts[0])
   ) {
     if (node.params.length === 1) {
       node.params.unshift({
@@ -61,11 +72,13 @@ function buildEmberTemplateManipulatorPlugin(themeId) {
 }
 
 function buildTemplateCompilerBabelPlugins({ themeId }) {
-  const compiler = { precompile };
+  const compiler = {
+    precompile: EmberTemplateCompiler.precompile,
+  };
 
   if (themeId) {
     compiler.precompile = (src, opts) => {
-      return precompile(src, {
+      return EmberTemplateCompiler.precompile(src, {
         ...opts,
         plugins: {
           ast: [
@@ -78,6 +91,7 @@ function buildTemplateCompilerBabelPlugins({ themeId }) {
   }
 
   return [
+    templateImportsPlugin,
     colocatedBabelPlugin,
     WidgetHbsCompiler,
     [
@@ -118,6 +132,19 @@ globalThis.compileRawTemplate = function (source, themeId) {
 globalThis.transpile = function (source, options = {}) {
   const { moduleId, filename, skipModule, themeId, commonPlugins } = options;
   const plugins = [];
+
+  // if (GJS) {
+  const templateTagConfig = {
+    getTemplateLocalsExportPath: "_GlimmerSyntax.getTemplateLocals",
+    templateTag: "template",
+    templateTagReplacement: "__GLIMMER_TEMPLATE",
+    includeSourceMaps: false,
+    includeTemplateTokens: true,
+    relativePath: filename, // TODO?
+    getTemplateLocalsRequirePath: EmberTemplateCompiler,
+  };
+  source = preprocessEmbeddedTemplates(source, templateTagConfig).output;
+  // }
 
   plugins.push(...buildTemplateCompilerBabelPlugins({ themeId }));
   if (moduleId && !skipModule) {
