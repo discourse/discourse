@@ -37,7 +37,7 @@ def setup_test_env(
   create_parallel_db: false,
   install_all_official: false,
   update_all_plugins: false,
-  plugins_to_remove: [],
+  plugins_to_remove: "",
   load_plugins: false
 )
   ENV["RAILS_ENV"] = "test"
@@ -51,7 +51,7 @@ def setup_test_env(
   success &&= run_or_fail("bundle exec rake plugin:install_all_official") if install_all_official
   success &&= run_or_fail("bundle exec rake plugin:update_all") if update_all_plugins
 
-  if plugins_to_remove.any?
+  if !plugins_to_remove.blank?
     plugins_to_remove
       .split(",")
       .map(&:strip)
@@ -200,12 +200,12 @@ task "docker:test" do
 
       @good &&=
         setup_test_env(
-          setup_multisite: ENV["JS_ONLY"] ? false : true,
-          create_db: ENV["SKIP_DB_CREATE"] ? true : false,
-          create_parallel_db: ENV["USE_TURBO"] ? true : false,
-          install_all_official: ENV["INSTALL_OFFICIAL_PLUGINS"],
-          update_all_plugins: ENV["UPDATE_ALL_PLUGINS"],
-          plugins_to_remove: ENV["SKIP_INSTALL_PLUGINS"] || [],
+          setup_multisite: !ENV["JS_ONLY"],
+          create_db: !ENV["SKIP_DB_CREATE"],
+          create_parallel_db: !!ENV["USE_TURBO"],
+          install_all_official: !!ENV["INSTALL_OFFICIAL_PLUGINS"],
+          update_all_plugins: !!ENV["UPDATE_ALL_PLUGINS"],
+          plugins_to_remove: ENV["SKIP_INSTALL_PLUGINS"] || "",
           load_plugins: !ENV["SKIP_PLUGINS"],
         )
 
