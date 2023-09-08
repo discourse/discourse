@@ -1,20 +1,21 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import { scheduleOnce } from "@ember/runloop";
 
 // Can add a body class from within a component
-export default class extends Component {
-  tagName = null;
-  pageClass = null;
-  bodyClass = null;
+export default class DSection extends Component {
+  <template>
+    <section class={{@class}} ...attributes>{{yield}}</section>
+  </template>
+
   currentClasses = new Set();
 
-  didReceiveAttrs() {
-    this._super(...arguments);
+  constructor() {
+    super(...arguments);
     scheduleOnce("afterRender", this, this._updateClasses);
   }
 
-  willDestroyElement() {
-    this._super(...arguments);
+  willDestroy() {
+    super.willDestroy(...arguments);
     scheduleOnce("afterRender", this, this._removeClasses);
   }
 
@@ -24,11 +25,11 @@ export default class extends Component {
     }
 
     const desiredClasses = new Set();
-    if (this.pageClass) {
-      desiredClasses.add(`${this.pageClass}-page`);
+    if (this.args.pageClass) {
+      desiredClasses.add(`${this.args.pageClass}-page`);
     }
-    if (this.bodyClass) {
-      for (const bodyClass of this.bodyClass.split(" ")) {
+    if (this.args.bodyClass) {
+      for (const bodyClass of this.args.bodyClass.split(" ")) {
         desiredClasses.add(bodyClass);
       }
     }
