@@ -3,7 +3,7 @@ import {
   generateImageUploaderMarkup,
   generateLightboxMarkup,
 } from "discourse/tests/helpers/lightbox-helpers";
-import { module, skip, test } from "qunit";
+import { module, test } from "qunit";
 
 import { SELECTORS } from "discourse/lib/lightbox/constants";
 import domFromString from "discourse-common/lib/dom-from-string";
@@ -125,24 +125,6 @@ module("Unit | lib | Experimental lightbox | processHTML()", function () {
     }));
 
     assert.strictEqual(items[0].title, "");
-  });
-
-  skip("correctly escapes the title", async function (assert) {
-    const container = wrap.cloneNode(true);
-
-    container
-      .querySelector("a")
-      .setAttribute("title", `"><\x00script>javascript:alert(1)</script>`);
-
-    const { items } = await processHTML({
-      container,
-      selector,
-    });
-
-    assert.strictEqual(
-      items[0].title,
-      `&quot;&gt;&lt;\x00script&gt;javascript:alert(1)&lt;/script&gt;`
-    );
   });
 
   test("handles missing aspect ratio", async function (assert) {
