@@ -7,7 +7,7 @@
     @selector=".user-invite-list tr"
     @action={{action "loadMore"}}
   >
-    <DSection @class="user-additional-controls">
+    <section class="user-additional-controls">
       {{#if this.showSearch}}
         <div class="user-invite-search">
           <form><TextField
@@ -16,7 +16,7 @@
             /></form>
         </div>
       {{/if}}
-      <DSection @class="user-invite-buttons">
+      <section class="user-invite-buttons">
         <DButton
           @icon="plus"
           @action={{this.createInvite}}
@@ -69,8 +69,8 @@
             {{/if}}
           {{/if}}
         {{/if}}
-      </DSection>
-    </DSection>
+      </section>
+    </section>
     <section>
       {{#if this.model.invites}}
         {{#if this.inviteRedeemed}}
