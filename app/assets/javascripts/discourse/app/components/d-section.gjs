@@ -1,9 +1,9 @@
-import GlimmerComponentWithDeprecatedParentView from "discourse/components/glimmer-component-with-deprecated-parent-view";
+import Component from "@glimmer/component";
 import { scheduleOnce } from "@ember/runloop";
 import notEq from "truth-helpers/helpers/not-eq";
 
 // Can add a body class from within a component
-export default class DSection extends GlimmerComponentWithDeprecatedParentView {
+export default class DSection extends Component {
   <template>
     {{#if (notEq @tagName "")}}
       <section id={{@id}} class={{@class}} ...attributes>{{yield}}</section>
