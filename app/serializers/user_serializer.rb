@@ -59,6 +59,7 @@ class UserSerializer < UserCardSerializer
                      :can_change_website,
                      :can_change_tracking_preferences,
                      :user_api_keys,
+                     :user_passkeys,
                      :user_auth_tokens,
                      :user_notification_schedule,
                      :use_logo_small_as_avatar,
@@ -164,6 +165,13 @@ class UserSerializer < UserCardSerializer
     )
   end
 
+  def user_passkeys
+    UserSecurityKey
+      .where(user_id: object.id, factor_type: UserSecurityKey.factor_types[:first_factor])
+      .map do |usk|
+        { id: usk.id, name: usk.name, last_used: usk.last_used, created_at: usk.created_at }
+      end
+  end
   def bio_raw
     object.user_profile.bio_raw
   end

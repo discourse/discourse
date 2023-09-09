@@ -479,6 +479,11 @@ Discourse::Application.routes.draw do
 
       put "#{root_path}/second_factors_backup" => "users#create_second_factor_backup"
 
+      post "#{root_path}/create_passkey" => "users#create_passkey"
+      post "#{root_path}/register_passkey" => "users#register_passkey"
+      post "#{root_path}/rename_passkey/:id" => "passkeys#rename_passkey"
+      delete "#{root_path}/delete_passkey/:id" => "passkeys#delete_passkey"
+
       put "#{root_path}/update-activation-email" => "users#update_activation_email"
       post "#{root_path}/email-login" => "users#email_login"
       get "#{root_path}/admin-login" => "users#admin_login"

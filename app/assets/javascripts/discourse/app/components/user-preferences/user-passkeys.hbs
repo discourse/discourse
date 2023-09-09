@@ -1,0 +1,53 @@
+<div class="row pref-passkeys">
+  <div class="control-group">
+    <label class="control-label">Passkeys</label>
+    {{#each @model.user_passkeys as |passkey|}}
+      <div class="row">
+        <div class="passkey-left">
+          <div><b>{{passkey.name}}</b></div>
+          <div class="row-passkey__created-date">{{format-date
+              passkey.created_at
+              format="medium"
+              leaveAgo="true"
+              prefix="Added "
+            }}</div>
+          <div class="row-passkey__used-date">
+            {{#if passkey.last_used}}
+              {{format-date
+                passkey.last_used
+                format="medium"
+                leaveAgo="true"
+                prefix="Last used "
+              }}
+            {{else}}
+              Never used
+            {{/if}}
+          </div>
+        </div>
+        <div class="passkey-right">
+          {{#if this.isCurrentUser}}
+            <div class="actions">
+              <UserPreferences::PasskeyOptionsDropdown
+                @passkeyId={{passkey.id}}
+                @deletePasskey={{action "deletePasskey" passkey.id}}
+                @renamePasskey={{action
+                  "renamePasskey"
+                  passkey.id
+                  passkey.name
+                }}
+              />
+            </div>
+          {{/if}}
+        </div>
+      </div>
+    {{/each}}
+  </div>
+
+  {{#if this.isCurrentUser}}
+    <DButton
+      @action={{action "addPasskey"}}
+      @icon="plus"
+      @translatedLabel="Add Passkey"
+    />
+  {{/if}}
+</div>

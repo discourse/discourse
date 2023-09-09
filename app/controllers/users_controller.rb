@@ -1589,6 +1589,56 @@ class UsersController < ApplicationController
     render json: failed_json.merge(error: err.message)
   end
 
+  def create_passkey
+    challenge_session = DiscourseWebauthn.stage_challenge(current_user, secure_session)
+    render json:
+             success_json.merge(
+               challenge: challenge_session.challenge,
+               rp_id: DiscourseWebauthn.rp_id,
+               rp_name: DiscourseWebauthn.rp_name,
+               supported_algorithms: ::DiscourseWebauthn::SUPPORTED_ALGORITHMS,
+               user_secure_id: current_user.create_or_fetch_secure_identifier,
+               existing_passkey_credential_ids:
+                 current_user.first_factor_security_key_credential_ids,
+             )
+  end
+
+  def register_passkey
+    params.require(:name)
+    params.require(:attestation)
+    params.require(:clientData)
+
+    key =
+      ::DiscourseWebauthn::RegistrationService.new(
+        current_user,
+        params,
+        session: secure_session,
+        factor_type: UserSecurityKey.factor_types[:first_factor],
+      ).register_security_key
+
+    render json: success_json.merge(id: key.id, name: key.name)
+  rescue ::DiscourseWebauthn::SecurityKeyError => err
+    render json: failed_json.merge(error: err.message)
+  end
+
+  def delete_passkey
+    UserSecurityKey.where(
+      id: params[:id],
+      user_id: current_user.id,
+      factor_type: UserSecurityKey.factor_types[:first_factor],
+    ).destroy_all
+    render json: success_json
+  end
+
+  def rename_passkey
+    params.require(:id)
+    params.require(:name)
+
+    UserSecurityKey.find_by(id: params[:id], user_id: current_user.id)&.update!(name: params[:name])
+
+    render json: success_json
+  end
+
   def update_security_key
     user_security_key = current_user.security_keys.find_by(id: params[:id].to_i)
     raise Discourse::InvalidParameters unless user_security_key
