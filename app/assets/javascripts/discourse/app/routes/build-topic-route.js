@@ -139,12 +139,12 @@ class AbstractTopicRoute extends DiscourseRoute {
       model,
       category: null,
       period: model.get("for_period") || model.get("params.period"),
-      selected: [],
       expandAllPinned: false,
       expandGloballyPinned: true,
     };
 
     this.controllerFor("discovery/topics").setProperties(topicOpts);
+    this.controllerFor("discovery/topics").bulkSelectHelper.clear();
 
     this.controllerFor("navigation/default").set(
       "canCreateTopic",
