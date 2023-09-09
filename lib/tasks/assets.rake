@@ -9,12 +9,14 @@ task "assets:precompile:before": "environment" do
   end
 
   if ENV["EMBER_CLI_COMPILE_DONE"] != "1"
-    compile_command = "yarn --cwd app/assets/javascripts/discourse run ember build -prod"
+    compile_command = "yarn --cwd app/assets/javascripts/discourse run ember build"
 
     if check_node_heap_size_limit < 1024
       STDERR.puts "Detected low Node.js heap_size_limit. Using --max-old-space-size=1024."
       compile_command = "NODE_OPTIONS='--max-old-space-size=1024' #{compile_command}"
     end
+
+    compile_command = "EMBER_ENV=production #{compile_command}" if ENV["EMBER_ENV"].nil?
 
     only_assets_precompile_remaining = (ARGV.last == "assets:precompile")
 
