@@ -64,7 +64,7 @@ module EmberCli
   end
 
   def self.is_ember_cli_asset?(name)
-    assets.include?(name) || name.start_with?("chunk.")
+    assets.include?(name) || script_chunks.values.flatten.include?(name.delete_suffix(".js"))
   end
 
   def self.ember_version
