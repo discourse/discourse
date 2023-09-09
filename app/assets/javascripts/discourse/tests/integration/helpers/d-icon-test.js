@@ -4,7 +4,7 @@ import { render } from "@ember/test-helpers";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
 
-module("Integration | Component | d-icon helper", function (hooks) {
+module("Integration | Helper | d-icon", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default", async function (assert) {
