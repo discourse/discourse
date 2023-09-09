@@ -1,3 +1,7 @@
+#main-outlet > .regular {
+  background: var(--d-content-background);
+}
+
 .button-count.has-pending {
   span {
     background-color: var(--danger);

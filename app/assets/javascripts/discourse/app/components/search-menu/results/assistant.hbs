@@ -9,6 +9,7 @@
         @slug={{@slug}}
         @withInLabel={{@withInLabel}}
         @isIntersection={{true}}
+        @searchAllTopics={{true}}
         @closeSearchMenu={{@closeSearchMenu}}
         @searchTermChanged={{@searchTermChanged}}
         @suggestionKeyword={{@suggestionKeyword}}
@@ -17,19 +18,23 @@
   {{else if (eq this.suggestionType "categoryOrTag")}}
     {{#each @results as |result|}}
       {{#if result.model}}
+        {{! render category }}
         <SearchMenu::Results::AssistantItem
           @category={{result.model}}
           @slug={{get this.fullSlugForCategoryMap result.model.id}}
           @withInLabel={{@withInLabel}}
+          @searchAllTopics={{true}}
           @closeSearchMenu={{@closeSearchMenu}}
           @searchTermChanged={{@searchTermChanged}}
           @suggestionKeyword={{@suggestionKeyword}}
         />
       {{else}}
+        {{! render tag }}
         <SearchMenu::Results::AssistantItem
           @tag={{result.name}}
           @slug={{concat this.prefix "#" result.name}}
           @withInLabel={{@withInLabel}}
+          @searchAllTopics={{true}}
           @closeSearchMenu={{@closeSearchMenu}}
           @searchTermChanged={{@searchTermChanged}}
           @suggestionKeyword={{@suggestionKeyword}}
@@ -43,6 +48,7 @@
         @user={{this.user}}
         @slug={{concat this.prefix "@" this.user.username}}
         @suffix={{i18n "search.in_topics_posts"}}
+        @searchAllTopics={{true}}
         @closeSearchMenu={{@closeSearchMenu}}
         @searchTermChanged={{@searchTermChanged}}
         @suggestionKeyword={{@suggestionKeyword}}
@@ -61,6 +67,7 @@
         <SearchMenu::Results::AssistantItem
           @user={{result}}
           @slug={{concat this.prefix "@" result.username}}
+          @searchAllTopics={{true}}
           @closeSearchMenu={{@closeSearchMenu}}
           @searchTermChanged={{@searchTermChanged}}
           @suggestionKeyword={{@suggestionKeyword}}
@@ -72,6 +79,7 @@
       <SearchMenu::Results::AssistantItem
         @slug={{concat this.prefix item}}
         @label={{item}}
+        @searchAllTopics={{true}}
         @closeSearchMenu={{@closeSearchMenu}}
         @searchTermChanged={{@searchTermChanged}}
         @suggestionKeyword={{@suggestionKeyword}}

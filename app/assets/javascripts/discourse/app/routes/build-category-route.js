@@ -162,6 +162,7 @@ class AbstractCategoryRoute extends DiscourseRoute {
       period:
         topics.get("for_period") ||
         (model.modelParams && model.modelParams.period),
+      selected: [],
       noSubcategories: this.routeConfig && !!this.routeConfig.no_subcategories,
       expandAllPinned: true,
     };
@@ -177,7 +178,6 @@ class AbstractCategoryRoute extends DiscourseRoute {
     }
 
     this.controllerFor("discovery/topics").setProperties(topicOpts);
-    this.controllerFor("discovery/topics").bulkSelectHelper.clear();
     this.searchService.searchContext = category.get("searchContext");
     this.set("topics", null);
   }

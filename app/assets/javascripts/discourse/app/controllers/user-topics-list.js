@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
-import { or, reads } from "@ember/object/computed";
-import BulkSelectHelper from "discourse/lib/bulk-select-helper";
+import { reads } from "@ember/object/computed";
+import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
 import { action } from "@ember/object";
 import Topic from "discourse/models/topic";
 
@@ -11,26 +11,15 @@ import {
 } from "discourse/routes/build-private-messages-route";
 
 // Lists of topics on a user's page.
-export default class UserTopicsListController extends Controller {
+export default class UserTopicsListController extends Controller.extend(
+  BulkTopicSelection
+) {
   hideCategory = false;
   showPosters = false;
   channel = null;
   tagsForUser = null;
 
-  bulkSelectHelper = new BulkSelectHelper(this);
-
   @reads("pmTopicTrackingState.newIncoming.length") incomingCount;
-
-  @or("currentUser.canManageTopic", "showDismissRead", "showResetNew")
-  canBulkSelect;
-
-  get bulkSelectEnabled() {
-    return this.bulkSelectHelper.bulkSelectEnabled;
-  }
-
-  get selected() {
-    return this.bulkSelectHelper.selected;
-  }
 
   @discourseComputed("model.topics.length", "incomingCount")
   noContent(topicsLength, incomingCount) {
@@ -93,25 +82,5 @@ export default class UserTopicsListController extends Controller {
   @action
   refresh() {
     this.send("triggerRefresh");
-  }
-
-  @action
-  toggleBulkSelect() {
-    this.bulkSelectHelper.toggleBulkSelect();
-  }
-
-  @action
-  dismissRead(operationType, options) {
-    this.bulkSelectHelper.dismissRead(operationType, options);
-  }
-
-  @action
-  updateAutoAddTopicsToBulkSelect(value) {
-    this.bulkSelectHelper.autoAddTopicsToBulkSelect = value;
-  }
-
-  @action
-  addTopicsToBulkSelect(topics) {
-    this.bulkSelectHelper.addTopics(topics);
   }
 }
