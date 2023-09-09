@@ -4,7 +4,7 @@ import { render } from "@ember/test-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
 
-module("Integration | Component | html-safe-helper", function (hooks) {
+module("Integration | Helper | html-safe", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default", async function (assert) {
