@@ -116,7 +116,7 @@ module.exports = function (defaults) {
       plugins: [require.resolve("deprecation-silencer")],
     },
 
-    // Was previous true so that we could run theme tests in production
+    // Was previously true so that we could run theme tests in production
     // but we're moving away from that as part of the Embroider migration
     tests: isEmbroider ? !isProduction : true,
 
