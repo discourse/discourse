@@ -118,7 +118,7 @@ module.exports = function (defaults) {
 
     // Was previous true so that we could run theme tests in production
     // but we're moving away from that as part of the Embroider migration
-    tests: !isEmbroider,
+    tests: isEmbroider ? !isProduction : true,
 
     vendorFiles: {
       // Freedom patch - includes bug fix and async stack support
