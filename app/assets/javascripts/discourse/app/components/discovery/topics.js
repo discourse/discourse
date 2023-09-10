@@ -1,5 +1,6 @@
 import { inject as service } from "@ember/service";
-import { alias, empty, equal, gt, readOnly } from "@ember/object/computed";
+import { alias, empty, equal, gt, or, readOnly } from "@ember/object/computed";
+import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import DismissTopics from "discourse/mixins/dismiss-topics";
 import I18n from "I18n";
 import Topic from "discourse/models/topic";
@@ -14,6 +15,8 @@ import Component from "@ember/component";
 export default class DiscoveryTopics extends Component.extend(DismissTopics) {
   @service router;
   @service composer;
+
+  bulkSelectHelper = new BulkSelectHelper(this);
 
   period = null;
   expandGloballyPinned = false;

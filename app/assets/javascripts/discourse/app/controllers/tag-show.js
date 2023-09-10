@@ -44,6 +44,14 @@ export default class TagShowController extends DiscoverySortableController.exten
   @or("currentUser.canManageTopic", "showDismissRead", "showResetNew")
   canBulkSelect;
 
+  get bulkSelectEnabled() {
+    return this.bulkSelectHelper.bulkSelectEnabled;
+  }
+
+  get selected() {
+    return this.bulkSelectHelper.selected;
+  }
+
   @dependentKeyCompat
   get filterMode() {
     return calculateFilterMode({

@@ -417,10 +417,10 @@ after_initialize do
         placeholders = { channel_name: channel.title(sender) }.merge(context["placeholders"] || {})
 
         creator =
-          Chat::CreateMessage.call(
-            chat_channel: channel,
+          ::Chat::CreateMessage.call(
+            chat_channel_id: channel.id,
             guardian: sender.guardian,
-            content: utils.apply_placeholders(fields.dig("message", "value"), placeholders),
+            message: utils.apply_placeholders(fields.dig("message", "value"), placeholders),
           )
 
         if creator.failure?

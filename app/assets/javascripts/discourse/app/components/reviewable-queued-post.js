@@ -1,9 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import showModal from "discourse/lib/show-modal";
+import { inject as service } from "@ember/service";
+import RawEmailModal from "discourse/components/modal/raw-email";
 
 export default class ReviewableQueuedPost extends Component {
+  @service modal;
+
   @tracked isCollapsed = false;
   @tracked isLongPost = false;
   @tracked postBodyHeight = 0;
@@ -12,10 +15,11 @@ export default class ReviewableQueuedPost extends Component {
   @action
   showRawEmail(event) {
     event?.preventDefault();
-    showModal("raw-email").set(
-      "rawEmail",
-      this.args.reviewable.payload.raw_email
-    );
+    this.modal.show(RawEmailModal, {
+      model: {
+        rawEmail: this.args.reviewable.payload.raw_email,
+      },
+    });
   }
 
   @action

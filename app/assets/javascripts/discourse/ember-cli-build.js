@@ -199,6 +199,7 @@ module.exports = function (defaults) {
     extraPublicTrees,
     packagerOptions: {
       webpackConfig: {
+        devtool: "source-map",
         externals: [
           function ({ request }, callback) {
             if (

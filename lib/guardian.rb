@@ -58,9 +58,6 @@ class Guardian
     def secure_category_ids
       []
     end
-    def topic_create_allowed_category_ids
-      []
-    end
     def groups
       []
     end

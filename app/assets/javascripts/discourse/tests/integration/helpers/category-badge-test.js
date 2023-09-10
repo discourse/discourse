@@ -5,7 +5,7 @@ import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import Category from "discourse/models/category";
 
-module("Integration | Component | category-badge helper", function (hooks) {
+module("Integration | Helper | category-badge", function (hooks) {
   setupRenderingTest(hooks);
 
   test("displays category", async function (assert) {
