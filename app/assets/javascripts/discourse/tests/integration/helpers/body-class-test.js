@@ -1,6 +1,6 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { render } from "@ember/test-helpers";
+import { render, settled } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 
 module("Integration | Helper | body-class", function (hooks) {
@@ -24,5 +24,15 @@ module("Integration | Helper | body-class", function (hooks) {
     const classesBefore = document.body.className;
     await render(hbs`{{body-class (if false "not-really")}}`);
     assert.strictEqual(document.body.className, classesBefore);
+  });
+
+  test("Dynamic classes", async function (assert) {
+    this.set("bar", "bar");
+    await render(hbs`{{body-class this.bar}}`);
+    assert.true(document.body.classList.contains("bar"));
+
+    this.set("bar", "baz");
+    await settled();
+    assert.true(document.body.classList.contains("baz"));
   });
 });
