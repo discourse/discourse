@@ -8,9 +8,7 @@
   {{/unless}}
 </div>
 
-<span>
-  <PluginOutlet @name="discovery-list-controls-above" @connectorTagName="div" />
-</span>
+<PluginOutlet @name="discovery-list-controls-above" @connectorTagName="div" />
 
 <div class="list-controls">
   <PluginOutlet
@@ -28,9 +26,7 @@
   {{hide-application-footer}}
 {{/if}}
 
-<span>
-  <PluginOutlet @name="discovery-above" @connectorTagName="div" />
-</span>
+<PluginOutlet @name="discovery-above" @connectorTagName="div" />
 
 <div class="container list-container {{if this.showLoadingSpinner 'hidden'}}">
   <div class="row">
@@ -59,6 +55,4 @@
   </div>
 </div>
 
-<span>
-  <PluginOutlet @name="discovery-below" @connectorTagName="div" />
-</span>
+<PluginOutlet @name="discovery-below" @connectorTagName="div" />
