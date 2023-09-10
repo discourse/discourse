@@ -4,13 +4,9 @@
 
 {{body-class
   "tags-page"
-  (concat
-    "tag-"
-    this.tag.id
-    (if this.category.slug (concat " category-" this.category.slug))
-    ""
-    (if this.additionalTags " tags-intersection")
-  )
+  (concat "tag-" this.tag.id)
+  (if this.category.slug (concat "category-" this.category.slug))
+  (if this.additionalTags "tags-intersection")
 }}
 
 <div class="container">
