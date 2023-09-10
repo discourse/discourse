@@ -2,16 +2,16 @@
   {{hide-application-footer}}
 {{/if}}
 
-<DSection
-  @pageClass="tags"
-  @bodyClass={{concat
+{{body-class
+  "tags-page"
+  (concat
     "tag-"
     this.tag.id
     (if this.category.slug (concat " category-" this.category.slug))
     ""
     (if this.additionalTags " tags-intersection")
-  }}
-/>
+  )
+}}
 
 <div class="container">
   <DiscourseBanner @user={{this.currentUser}} @banner={{this.site.banner}} />
