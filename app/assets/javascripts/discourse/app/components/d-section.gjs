@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { scheduleOnce } from "@ember/runloop";
 import notEq from "truth-helpers/helpers/not-eq";
-import deprecated from "discourse-common/lib/deprecated";
+// import deprecated from "discourse-common/lib/deprecated";
 
 // Can add a body class from within a component
 export default class DSection extends Component {
@@ -19,14 +19,14 @@ export default class DSection extends Component {
     super(...arguments);
     scheduleOnce("afterRender", this, this._updateClasses);
 
-    deprecated(
-      `<DSection> is deprecated. Use {{body-class "foo-page" "bar"}} and/or <section></section> instead.`,
-      {
-        since: "3.2.0.beta1",
-        dropFrom: "3.3.0.beta1",
-        id: "discourse.d-section",
-      }
-    );
+    // deprecated(
+    //   `<DSection> is deprecated. Use {{body-class "foo-page" "bar"}} and/or <section></section> instead.`,
+    //   {
+    //     since: "3.2.0.beta1",
+    //     dropFrom: "3.3.0.beta1",
+    //     id: "discourse.d-section",
+    //   }
+    // );
   }
 
   willDestroy() {
