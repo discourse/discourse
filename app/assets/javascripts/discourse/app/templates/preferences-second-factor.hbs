@@ -1,7 +1,6 @@
-<DSection
-  @pageClass="user-preferences"
-  class="user-content user-preferences solo-preference second-factor"
->
+{{body-class "user-preferences-page"}}
+
+<section class="user-content user-preferences solo-preference second-factor">
   <ConditionalLoadingSpinner @condition={{this.loading}}>
     <form class="form-vertical">
       {{#if this.showEnforcedNotice}}
@@ -211,4 +210,4 @@
       {{/if}}
     </form>
   </ConditionalLoadingSpinner>
-</DSection>
+</section>

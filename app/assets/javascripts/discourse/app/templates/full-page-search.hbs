@@ -2,7 +2,9 @@
   {{hide-application-footer}}
 {{/if}}
 
-<DSection @pageClass="search" class="search-container">
+{{body-class "search-page"}}
+
+<section class="search-container">
   <ScrollTracker
     @name="full-page-search"
     @tag={{this.searchTerm}}
@@ -280,4 +282,4 @@
       </div>
     {{/if}}
   </div>
-</DSection>
+</section>

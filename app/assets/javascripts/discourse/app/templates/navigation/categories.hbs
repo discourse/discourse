@@ -1,4 +1,6 @@
-<DSection @bodyClass="navigation-categories" class="navigation-container">
+{{body-class "navigation-categories"}}
+
+<section class="navigation-container">
   <DNavigation
     @filterMode="categories"
     @showCategoryAdmin={{this.showCategoryAdmin}}
@@ -8,4 +10,4 @@
     @hasDraft={{this.currentUser.has_topic_draft}}
     @createTopic={{fn this.composer.openNewTopic (hash preferDraft=true)}}
   />
-</DSection>
+</section>

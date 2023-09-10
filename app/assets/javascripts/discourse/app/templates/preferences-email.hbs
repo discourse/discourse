@@ -1,7 +1,6 @@
-<DSection
-  @pageClass="user-preferences"
-  class="user-content user-preferences solo-preference"
->
+{{body-class "user-preferences-page"}}
+
+<section class="user-content user-preferences solo-preference">
   <form class="form-vertical">
     {{#if this.success}}
       <div class="alert alert-success">{{this.successMessage}}</div>
@@ -51,4 +50,4 @@
       </div>
     {{/if}}
   </form>
-</DSection>
+</section>
