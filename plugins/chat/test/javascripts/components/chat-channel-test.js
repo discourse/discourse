@@ -151,7 +151,6 @@ module(
 
     test("it shows status tooltip", async function (assert) {
       await render(hbs`<ChatChannel @channel={{this.channel}} />`);
-
       await triggerEvent(statusSelector(mentionedUser.username), "mouseenter");
 
       assert.equal(
