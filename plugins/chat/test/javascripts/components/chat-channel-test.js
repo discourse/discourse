@@ -68,11 +68,6 @@ module(
         statusSelector(mentionedUser.username),
         mentionedUser.status
       );
-      await assertStatusTooltipIsRendered(
-        assert,
-        statusSelector(mentionedUser.username),
-        mentionedUser.status
-      );
     });
 
     test("it updates status on mentions", async function (assert) {
@@ -90,11 +85,6 @@ module(
       const selector = statusSelector(mentionedUser.username);
       await waitFor(selector);
       assertStatusIsRendered(
-        assert,
-        statusSelector(mentionedUser.username),
-        newStatus
-      );
-      await assertStatusTooltipIsRendered(
         assert,
         statusSelector(mentionedUser.username),
         newStatus
@@ -123,11 +113,6 @@ module(
         statusSelector(mentionedUser2.username),
         mentionedUser2.status
       );
-      await assertStatusTooltipIsRendered(
-        assert,
-        statusSelector(mentionedUser2.username),
-        mentionedUser2.status
-      );
     });
 
     test("it updates status on mentions on messages that came from Message Bus", async function (assert) {
@@ -149,11 +134,6 @@ module(
         statusSelector(mentionedUser2.username),
         newStatus
       );
-      await assertStatusTooltipIsRendered(
-        assert,
-        statusSelector(mentionedUser2.username),
-        newStatus
-      );
     });
 
     test("it deletes status on mentions on messages that came from Message Bus", async function (assert) {
@@ -167,6 +147,16 @@ module(
       const selector = statusSelector(mentionedUser2.username);
       await waitFor(selector, { count: 0 });
       assert.dom(selector).doesNotExist("status is deleted");
+    });
+
+    test("it shows status tooltip", async function (assert) {
+      await render(hbs`<ChatChannel @channel={{this.channel}} />`);
+
+      await assertStatusTooltipIsRendered(
+        assert,
+        statusSelector(mentionedUser.username),
+        mentionedUser.status
+      );
     });
 
     function assertStatusIsRendered(assert, selector, status) {
