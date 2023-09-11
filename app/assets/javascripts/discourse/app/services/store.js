@@ -4,13 +4,11 @@ import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import ResultSet from "discourse/models/result-set";
 import { ajax } from "discourse/lib/ajax";
-import { getRegister } from "discourse-common/lib/get-owner";
 import { underscore } from "@ember/string";
 import { warn } from "@ember/debug";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export default class Store extends Service {
-  register = getRegister(this);
-
   // Map<type, Map<id, {}>>
   #identityMap = new Map();
 
@@ -260,12 +258,11 @@ export default class Store extends Service {
     obj.__state = obj[adapter.primaryKey] ? "created" : "new";
 
     // TODO: Have injections be automatic
-    obj.topicTrackingState = this.register.lookup(
-      "service:topic-tracking-state"
-    );
-    obj.keyValueStore = this.register.lookup("service:key-value-store");
+    const owner = getOwner(this);
+    obj.topicTrackingState = owner.lookup("service:topic-tracking-state");
+    obj.keyValueStore = owner.lookup("service:key-value-store");
 
-    const klass = this.register.lookupFactory("model:" + type) || RestModel;
+    const klass = owner.factoryFor("model:" + type) || RestModel;
     const model = klass.create(obj);
 
     this.storeMap(type, obj[adapter.primaryKey], model);
@@ -273,10 +270,8 @@ export default class Store extends Service {
   }
 
   adapterFor(type) {
-    return (
-      this.register.lookup("adapter:" + type) ||
-      this.register.lookup("adapter:rest")
-    );
+    const owner = getOwner(this);
+    return owner.lookup("adapter:" + type) || owner.lookup("adapter:rest");
   }
 
   _lookupSubType(subType, type, id, root) {
@@ -376,7 +371,7 @@ export default class Store extends Service {
 
     if (existing) {
       delete obj[adapter.primaryKey];
-      let klass = this.register.lookupFactory("model:" + type);
+      let klass = getOwner(this).factoryFor("model:" + type);
 
       if (klass?.class) {
         klass = klass?.class;
