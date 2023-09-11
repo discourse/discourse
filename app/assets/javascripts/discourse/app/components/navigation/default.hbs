@@ -19,9 +19,10 @@
   </section>
 {{/if}}
 
-<DSection
-  @bodyClass={{this.bodyClass}}
-  @class={{concat-class
+{{body-class this.bodyClass}}
+
+<section
+  class={{concat-class
     "navigation-container"
     (if @category "category-navigation")
   }}
@@ -42,4 +43,4 @@
     @bulkSelectHelper={{@bulkSelectHelper}}
     @skipCategoriesNavItem={{this.skipCategoriesNavItem}}
   />
-</DSection>
+</section>

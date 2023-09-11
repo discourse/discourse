@@ -5,9 +5,8 @@ import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
-import {
+import lightbox, {
   cleanupLightboxes,
-  default as lightbox,
   setupLightboxes,
 } from "discourse/lib/lightbox";
 import { next } from "@ember/runloop";

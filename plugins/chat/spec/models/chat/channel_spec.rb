@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Channel do
+  subject(:channel) { Fabricate(:chat_channel) }
+
   fab!(:category_channel_1) { Fabricate(:category_channel) }
   fab!(:dm_channel_1) { Fabricate(:direct_message_channel) }
+
+  it { is_expected.to validate_length_of(:description).is_at_most(500) }
+  it { is_expected.to validate_length_of(:slug).is_at_most(100) }
 
   describe ".find_by_id_or_slug" do
     subject(:find_channel) { described_class.find_by_id_or_slug(channel_id) }
