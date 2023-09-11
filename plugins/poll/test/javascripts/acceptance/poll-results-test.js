@@ -752,7 +752,7 @@ acceptance("Poll results - no voters", function (needs) {
       });
     });
 
-    server.get("/t/load-more-poll-voters.json", () => {
+    server.get("/t/134.json", () => {
       return helper.response({
         post_stream: {
           posts: [
