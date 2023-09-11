@@ -8,11 +8,12 @@ import { getRegister } from "discourse-common/lib/get-owner";
 import { underscore } from "@ember/string";
 import { warn } from "@ember/debug";
 
-let _identityMap = {};
+// Map<string, {}>
+const _identityMap = new Map();
 
 // You should only call this if you're a test scaffold
 export function flushMap() {
-  _identityMap = {};
+  _identityMap.clear();
 }
 
 function storeMap(type, id, obj) {
@@ -20,26 +21,29 @@ function storeMap(type, id, obj) {
     return;
   }
 
-  _identityMap[type] = _identityMap[type] || {};
-  _identityMap[type][id] = obj;
+  if (!_identityMap.has(type)) {
+    _identityMap.set(type, {});
+  }
+
+  _identityMap.get(type)[id] = obj;
 }
 
 function fromMap(type, id) {
-  const byType = _identityMap[type];
+  const byType = _identityMap.get(type);
   if (byType?.hasOwnProperty(id)) {
     return byType[id];
   }
 }
 
 function removeMap(type, id) {
-  const byType = _identityMap[type];
+  const byType = _identityMap.get(type);
   if (byType?.hasOwnProperty(id)) {
     delete byType[id];
   }
 }
 
 function findAndRemoveMap(type, id) {
-  const byType = _identityMap[type];
+  const byType = _identityMap.get(type);
   if (byType?.hasOwnProperty(id)) {
     const result = byType[id];
     delete byType[id];
