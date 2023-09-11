@@ -51,7 +51,7 @@
     }
   }
 
-  &__checkbox[aria-checked="true"] + .d-toggle-switch__checkbox-slider {
+  &__checkbox[aria-pressed="true"] + .d-toggle-switch__checkbox-slider {
     background-color: var(--tertiary);
   }
 
