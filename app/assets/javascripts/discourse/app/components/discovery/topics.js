@@ -1,13 +1,11 @@
 import { inject as service } from "@ember/service";
-import { alias, empty, equal, gt, or, readOnly } from "@ember/object/computed";
+import { alias, empty, equal, gt, readOnly } from "@ember/object/computed";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import DismissTopics from "discourse/mixins/dismiss-topics";
 import I18n from "I18n";
 import Topic from "discourse/models/topic";
-import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
 import { endWith } from "discourse/lib/computed";
-import { routeAction } from "discourse/helpers/route-action";
 import { userPath } from "discourse/lib/url";
 import { action } from "@ember/object";
 import Component from "@ember/component";
@@ -65,19 +63,6 @@ export default class DiscoveryTopics extends Component.extend(DismissTopics) {
     // Move inserted into topics
     this.model.loadBefore(tracker.get("newIncoming"), true);
     tracker.resetTracking();
-  }
-
-  @action
-  changeSort() {
-    deprecated(
-      "changeSort has been changed from an (action) to a (route-action)",
-      {
-        since: "2.6.0",
-        dropFrom: "2.7.0",
-        id: "discourse.topics.change-sort",
-      }
-    );
-    return routeAction("changeSort", this.router._router, ...arguments)();
   }
 
   @discourseComputed("model.filter")

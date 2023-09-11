@@ -1,6 +1,4 @@
 import {
-  changeNewListSubset,
-  changeSort,
   queryParams,
   resetParams,
 } from "discourse/controllers/discovery-sortable";
@@ -139,16 +137,6 @@ class AbstractTopicRoute extends DiscourseRoute {
     controller.bulkSelectHelper.clear();
 
     super.setupController(...arguments);
-  }
-
-  @action
-  changeSort(sortBy) {
-    changeSort.call(this, sortBy);
-  }
-
-  @action
-  changeNewListSubset(subset) {
-    changeNewListSubset.call(this, subset);
   }
 
   @action

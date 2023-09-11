@@ -65,7 +65,7 @@
       @current={{this.model.params.subset}}
       @newRepliesCount={{this.newRepliesCount}}
       @newTopicsCount={{this.newTopicsCount}}
-      @changeNewListSubset={{route-action "changeNewListSubset"}}
+      @changeNewListSubset={{this.changeNewListSubset}}
     />
   {{/if}}
 
@@ -85,7 +85,7 @@
       @showPosters={{true}}
       @canBulkSelect={{@canBulkSelect}}
       @bulkSelectHelper={{@bulkSelectHelper}}
-      @changeSort={{route-action "changeSort"}}
+      @changeSort={{@changeSort}}
       @hideCategory={{this.model.hideCategory}}
       @order={{this.order}}
       @ascending={{this.ascending}}
@@ -97,7 +97,7 @@
       @focusLastVisitedTopic={{true}}
       @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
       @newListSubset={{this.model.params.subset}}
-      @changeNewListSubset={{route-action "changeNewListSubset"}}
+      @changeNewListSubset={{this.changeNewListSubset}}
       @newRepliesCount={{this.newRepliesCount}}
       @newTopicsCount={{this.newTopicsCount}}
     />

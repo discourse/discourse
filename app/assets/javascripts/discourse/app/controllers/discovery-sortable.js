@@ -34,25 +34,6 @@ export const queryParams = {
   exclude_tag: { replace: true, refreshModel: true },
 };
 
-export function changeSort(sortBy) {
-  let model = this.controllerFor("discovery.topics").model;
-
-  if (sortBy === this.controller.order) {
-    this.controller.toggleProperty("ascending");
-    model.updateSortParams(sortBy, this.controller.ascending);
-  } else {
-    this.controller.setProperties({ order: sortBy, ascending: false });
-    model.updateSortParams(sortBy, false);
-  }
-}
-
-export function changeNewListSubset(subset) {
-  this.controller.set("subset", subset);
-
-  let model = this.controllerFor("discovery.topics").model;
-  model.updateNewListSubsetParam(subset);
-}
-
 export function resetParams(skipParams = []) {
   Object.keys(queryParams).forEach((p) => {
     if (!skipParams.includes(p)) {
@@ -152,5 +133,23 @@ export default class DiscoverySortableController extends Controller {
   @action
   changePeriod(p) {
     this.set("period", p);
+  }
+
+  @action
+  changeSort(sortBy) {
+    if (sortBy === this.order) {
+      this.ascending = !this.ascending;
+      this.model.updateSortParams(sortBy, this.ascending);
+    } else {
+      this.order = sortBy;
+      this.ascending = false;
+      this.model.updateSortParams(sortBy, false);
+    }
+  }
+
+  @action
+  changeNewListSubset(subset) {
+    this.subset = subset;
+    this.model.updateNewListSubsetParam(subset);
   }
 }

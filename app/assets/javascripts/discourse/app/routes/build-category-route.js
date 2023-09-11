@@ -1,8 +1,6 @@
 import { inject as service } from "@ember/service";
 import { Promise, all } from "rsvp";
 import {
-  changeNewListSubset,
-  changeSort,
   queryParams,
   resetParams,
 } from "discourse/controllers/discovery-sortable";
@@ -202,16 +200,6 @@ class AbstractCategoryRoute extends DiscourseRoute {
   @action
   triggerRefresh() {
     this.refresh();
-  }
-
-  @action
-  changeSort(sortBy) {
-    changeSort.call(this, sortBy);
-  }
-
-  @action
-  changeNewListSubset(subset) {
-    changeNewListSubset.call(this, subset);
   }
 
   @action
