@@ -146,7 +146,7 @@ GEM
     email_reply_trimmer (0.1.13)
     erubi (1.12.0)
     excon (0.102.0)
-    execjs (2.8.1)
+    execjs (2.9.0)
     exifr (1.4.0)
     fabrication (2.30.0)
     faker (2.23.0)
