@@ -195,6 +195,7 @@ body.has-full-page-chat {
 .full-page-chat {
   display: grid;
   grid-template-columns: var(--full-page-sidebar-width) 1fr;
+  background: var(--d-content-background);
 
   .chat-full-page-header {
     border-top: 1px solid var(--primary-low);

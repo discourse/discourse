@@ -5691,7 +5691,7 @@ en:
       form_templates:
         nav_title: "Templates"
         title: "Form Templates"
-        help: "Create a template structure that can be used to create new topics, posts, and messages."
+        help: "Create a form template structure that can be used to create new topics."
         new_template: "New Template"
         list_table:
           headings:

@@ -2,7 +2,8 @@
   {{hide-application-footer}}
 {{/if}}
 
-<DSection @pageClass="users">
+{{body-class "users-page"}}
+<section>
   <LoadMore
     @selector=".directory-table .directory-table__cell"
     @action={{action "loadMore"}}
@@ -86,4 +87,4 @@
       </div>
     </div>
   </LoadMore>
-</DSection>
+</section>

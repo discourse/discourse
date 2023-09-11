@@ -46,44 +46,36 @@ module("Integration | Component | Widget | discourse-poll", function (hooks) {
     });
   });
 
-  const template = hbs`
-    <MountWidget
-      @widget="discourse-poll"
-      @args={{hash
-        id=this.id
-        post=this.post
-        poll=this.poll
-        vote=this.vote
-        groupableUserFields=this.groupableUserFields
-      }}
-    />
-  `;
-
   test("can vote", async function (assert) {
-    this.setProperties({
-      post: EmberObject.create({
-        id: 42,
-        topic: {
-          archived: false,
-        },
-      }),
-      poll: EmberObject.create({
-        name: "poll",
-        type: "regular",
-        status: "open",
-        results: "always",
-        options: [
-          { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
-          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
-        ],
-        voters: 0,
-        chart_type: "bar",
-      }),
-      vote: [],
-      groupableUserFields: [],
-    });
+    this.set(
+      "args",
+      EmberObject.create({
+        post: EmberObject.create({
+          id: 42,
+          topic: {
+            archived: false,
+          },
+        }),
+        poll: EmberObject.create({
+          name: "poll",
+          type: "regular",
+          status: "open",
+          results: "always",
+          options: [
+            { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
+            { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+          ],
+          voters: 0,
+          chart_type: "bar",
+        }),
+        vote: [],
+        groupableUserFields: [],
+      })
+    );
 
-    await render(template);
+    await render(
+      hbs`<MountWidget @widget="discourse-poll" @args={{this.args}} />`
+    );
 
     requests = 0;
 
@@ -103,31 +95,36 @@ module("Integration | Component | Widget | discourse-poll", function (hooks) {
   });
 
   test("cannot vote if not member of the right group", async function (assert) {
-    this.setProperties({
-      post: EmberObject.create({
-        id: 42,
-        topic: {
-          archived: false,
-        },
-      }),
-      poll: EmberObject.create({
-        name: "poll",
-        type: "regular",
-        status: "open",
-        results: "always",
-        options: [
-          { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
-          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
-        ],
-        voters: 0,
-        chart_type: "bar",
-        groups: "foo",
-      }),
-      vote: [],
-      groupableUserFields: [],
-    });
+    this.set(
+      "args",
+      EmberObject.create({
+        post: EmberObject.create({
+          id: 42,
+          topic: {
+            archived: false,
+          },
+        }),
+        poll: EmberObject.create({
+          name: "poll",
+          type: "regular",
+          status: "open",
+          results: "always",
+          options: [
+            { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
+            { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+          ],
+          voters: 0,
+          chart_type: "bar",
+          groups: "foo",
+        }),
+        vote: [],
+        groupableUserFields: [],
+      })
+    );
 
-    await render(template);
+    await render(
+      hbs`<MountWidget @widget="discourse-poll" @args={{this.args}} />`
+    );
 
     requests = 0;
 
@@ -141,31 +138,36 @@ module("Integration | Component | Widget | discourse-poll", function (hooks) {
   });
 
   test("voting on a multiple poll with no min attribute", async function (assert) {
-    this.setProperties({
-      post: EmberObject.create({
-        id: 42,
-        topic: {
-          archived: false,
-        },
-      }),
-      poll: EmberObject.create({
-        name: "poll",
-        type: "multiple",
-        status: "open",
-        results: "always",
-        max: 2,
-        options: [
-          { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
-          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
-        ],
-        voters: 0,
-        chart_type: "bar",
-      }),
-      vote: [],
-      groupableUserFields: [],
-    });
+    this.set(
+      "args",
+      EmberObject.create({
+        post: EmberObject.create({
+          id: 42,
+          topic: {
+            archived: false,
+          },
+        }),
+        poll: EmberObject.create({
+          name: "poll",
+          type: "multiple",
+          status: "open",
+          results: "always",
+          max: 2,
+          options: [
+            { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
+            { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+          ],
+          voters: 0,
+          chart_type: "bar",
+        }),
+        vote: [],
+        groupableUserFields: [],
+      })
+    );
 
-    await render(template);
+    await render(
+      hbs`<MountWidget @widget="discourse-poll" @args={{this.args}} />`
+    );
     assert.ok(exists(".poll-buttons .cast-votes[disabled=true]"));
 
     await click("li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29']");

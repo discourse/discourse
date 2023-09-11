@@ -1,4 +1,8 @@
 /* Default badge styles. */
+.show-badge {
+  background: var(--d-content-background);
+}
+
 .user-badge {
   padding: 3px 8px;
   color: var(--primary);
@@ -229,6 +233,10 @@
   @media screen and (max-width: $small-width) {
     justify-content: space-between;
   }
+}
+
+.container.badges {
+  background: var(--d-content-background);
 }
 
 .badge-groups {

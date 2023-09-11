@@ -7,6 +7,8 @@ import { extractError } from "discourse/lib/ajax-error";
 import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 
+const SLUG_MAX_LENGTH = 100;
+
 export default class ChatModalEditChannelName extends Component {
   @service chatApi;
   @service siteSettings;
@@ -26,7 +28,8 @@ export default class ChatModalEditChannelName extends Component {
     return (
       (this.channel.title === this.editedName &&
         this.channel.slug === this.editedSlug) ||
-      this.editedName?.length > this.siteSettings.max_topic_title_length
+      this.editedName?.length > this.siteSettings.max_topic_title_length ||
+      this.editedSlug?.length > SLUG_MAX_LENGTH
     );
   }
 

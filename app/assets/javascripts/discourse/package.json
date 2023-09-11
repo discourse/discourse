@@ -24,8 +24,8 @@
     "pretty-text": "1.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.15",
-    "@babel/standalone": "^7.22.15",
+    "@babel/core": "^7.22.17",
+    "@babel/standalone": "^7.22.17",
     "@colors/colors": "^1.6.0",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
@@ -84,7 +84,7 @@
     "ember-router-service-refresh-polyfill": "^1.1.0",
     "ember-template-imports": "^3.4.2",
     "ember-test-selectors": "^6.0.0",
-    "eslint": "^8.48.0",
+    "eslint": "^8.49.0",
     "eslint-plugin-qunit": "^8.0.0",
     "html-entities": "^2.4.0",
     "imports-loader": "^4.0.1",

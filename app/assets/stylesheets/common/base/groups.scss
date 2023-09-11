@@ -28,6 +28,10 @@
   }
 }
 
+.container.groups-index {
+  background: var(--d-content-background);
+}
+
 .groups-boxes {
   display: grid;
   grid-gap: 1em;

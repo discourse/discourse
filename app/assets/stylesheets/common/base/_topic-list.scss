@@ -1,6 +1,8 @@
 // Topic list navigation & controls
 
 .list-controls {
+  background: var(--d-content-background);
+
   a.badge-category {
     padding: 3px 12px;
     font-size: var(--font-up-1);
@@ -113,6 +115,10 @@
 
 .topic-list.shared-drafts {
   margin-bottom: 1.5em;
+}
+
+#header-list-area {
+  background: var(--d-content-background);
 }
 
 // Topic list body
@@ -369,6 +375,7 @@
 }
 
 #list-area {
+  background: var(--d-content-background);
   margin-bottom: 100px;
 
   .empty-topic-list {

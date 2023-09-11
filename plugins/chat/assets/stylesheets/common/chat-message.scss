@@ -168,7 +168,7 @@
 }
 
 .chat-message-container {
-  background-color: var(--secondary);
+  background-color: var(--d-content-background, var(--secondary));
 
   &.-errored {
     color: var(--primary-medium);
