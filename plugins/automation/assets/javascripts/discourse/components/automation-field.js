@@ -7,7 +7,6 @@ export default class AutomationField extends Component {
   field = null;
   automation = null;
   saveAutomation = null;
-  tagName = "";
 
   @computed("automation.trigger.id", "field.triggerable")
   get displayField() {
@@ -33,8 +32,8 @@ export default class AutomationField extends Component {
     return `discourse_automation${this.target}fields.${this.field.name}.description`;
   }
 
-  @computed("target", "field.name")
+  @computed("translationKey")
   get description() {
-    return I18n.t(this.translationKey);
+    return I18n.lookup(this.translationKey);
   }
 }
