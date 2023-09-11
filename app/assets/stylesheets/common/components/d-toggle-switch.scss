@@ -31,14 +31,29 @@
 
   &__checkbox {
     position: absolute;
-    visibility: hidden;
+    border: 0;
+    padding: 0;
+    background: transparent;
+
+    &:focus {
+      + .d-toggle-switch__checkbox-slider {
+        outline: 2px solid var(--tertiary);
+      }
+
+      // Outline should show only when tabbing, not clicking
+      &:not(:focus-visible) {
+        + .d-toggle-switch__checkbox-slider {
+          outline: none;
+        }
+      }
+    }
   }
 
   &__checkbox[aria-checked="true"] + .d-toggle-switch__checkbox-slider {
     background-color: var(--tertiary);
   }
 
-  &__checkbox[aria-checked="true"] + .d-toggle-switch__checkbox-slider::before {
+  &__checkbox[aria-pressed="true"] + .d-toggle-switch__checkbox-slider::before {
     left: calc(var(--toggle-switch-width) - 22px);
   }
 
@@ -87,5 +102,9 @@
     top: calc(var(--toggle-switch-height) * 0.125);
     left: calc(var(--toggle-switch-height) * 0.125);
     transition: left 0.25s;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition-duration: 0ms;
+    }
   }
 }
