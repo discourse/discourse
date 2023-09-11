@@ -103,4 +103,8 @@ module EmberCli
 
     chunk_infos
   end
+
+  def self.has_tests?
+    File.exist?("#{dist_dir}/tests/index.html")
+  end
 end
