@@ -21,6 +21,7 @@
 
   display: flex;
   align-items: center;
+  gap: 0.5rem;
 
   &__label {
     position: relative;
@@ -57,7 +58,6 @@
     border-radius: var(--toggle-switch-height);
     width: var(--toggle-switch-width);
     height: var(--toggle-switch-height);
-    margin-right: 0.5em;
     position: relative;
     vertical-align: middle;
     transition: background 0.25s;
