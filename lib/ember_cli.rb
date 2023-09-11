@@ -60,7 +60,7 @@ module EmberCli
   end
 
   def self.parse_source_map_path(file)
-    File.read("#{dist_dir}/assets/#{file}")[%r{^//# sourceMappingURL=(.*)$}, 1]
+    File.read("#{dist_dir}/assets/#{file}")[%r{//# sourceMappingURL=(.*)$}, 1]
   end
 
   def self.is_ember_cli_asset?(name)
