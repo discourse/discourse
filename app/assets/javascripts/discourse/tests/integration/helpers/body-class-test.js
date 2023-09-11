@@ -27,12 +27,16 @@ module("Integration | Helper | body-class", function (hooks) {
   });
 
   test("Dynamic classes", async function (assert) {
-    this.set("bar", "bar");
-    await render(hbs`{{body-class this.bar}}`);
-    assert.true(document.body.classList.contains("bar"));
+    this.set("dynamic", "bar");
+    await render(hbs`{{body-class this.dynamic}}`);
+    assert.true(document.body.classList.contains("bar"), "has .bar");
 
-    this.set("bar", "baz");
+    this.set("dynamic", "baz");
     await settled();
-    assert.true(document.body.classList.contains("baz"));
+    assert.true(document.body.classList.contains("baz"), "has .baz");
+    assert.false(
+      document.body.classList.contains("bar"),
+      "does not have .bar anymore"
+    );
   });
 });
