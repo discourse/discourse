@@ -10,6 +10,10 @@ import { warn } from "@ember/debug";
 
 export default class Store extends Service {
   register = getRegister(this);
+
+  // Map<type, Map<id, {}>>
+  #identityMap = new Map();
+
   _plurals = {
     category: "categories",
     "post-reply": "post-replies",
@@ -17,12 +21,9 @@ export default class Store extends Service {
     reviewable_history: "reviewable_histories",
   };
 
-  // Map<type, Map<id, {}>>
-  _identityMap = new Map();
-
   // You should only call this if you're a test scaffold
   flushMap() {
-    this._identityMap.clear();
+    this.#identityMap.clear();
   }
 
   storeMap(type, id, obj) {
@@ -30,23 +31,23 @@ export default class Store extends Service {
       return;
     }
 
-    if (!this._identityMap.has(type)) {
-      this._identityMap.set(type, new Map());
+    if (!this.#identityMap.has(type)) {
+      this.#identityMap.set(type, new Map());
     }
 
-    this._identityMap.get(type).set(id, obj);
+    this.#identityMap.get(type).set(id, obj);
   }
 
   fromMap(type, id) {
-    return this._identityMap.get(type)?.get(id);
+    return this.#identityMap.get(type)?.get(id);
   }
 
   removeMap(type, id) {
-    this._identityMap.get(type)?.delete(id);
+    this.#identityMap.get(type)?.delete(id);
   }
 
   findAndRemoveMap(type, id) {
-    const byType = this._identityMap.get(type);
+    const byType = this.#identityMap.get(type);
 
     if (byType.has(id)) {
       const result = byType.get(id);
