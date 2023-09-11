@@ -29,14 +29,8 @@ export default class Store extends Service {
       return;
     }
 
-    if (typeof id !== "number") {
-      // eslint-disable-next-line no-console
-      console.warn(
-        `Trying to store a ${type} with an id \`${id}\` (${typeof id}). Should use a number type instead.`
-      );
-      id = Number.parseInt(id, 10);
-    }
-
+    // Normalize values (e.g. 2 vs "2")
+    id = String(id);
     if (!this.#identityMap.has(type)) {
       this.#identityMap.set(type, new Map());
     }
@@ -45,38 +39,20 @@ export default class Store extends Service {
   }
 
   fromMap(type, id) {
-    if (typeof id !== "number") {
-      // eslint-disable-next-line no-console
-      console.warn(
-        `Trying get a ${type} from the store using an id \`${id}\` (${typeof id}). Should use a number type instead.`
-      );
-      id = Number.parseInt(id, 10);
-    }
-
+    // Normalize values (e.g. 2 vs "2")
+    id = String(id);
     return this.#identityMap.get(type)?.get(id);
   }
 
   removeMap(type, id) {
-    if (typeof id !== "number") {
-      // eslint-disable-next-line no-console
-      console.warn(
-        `Trying remove a ${type} from the store using an id \`${id}\` (${typeof id}). Should use a number type instead.`
-      );
-      id = Number.parseInt(id, 10);
-    }
-
+    // Normalize values (e.g. 2 vs "2")
+    id = String(id);
     this.#identityMap.get(type)?.delete(id);
   }
 
   findAndRemoveMap(type, id) {
-    if (typeof id !== "number") {
-      // eslint-disable-next-line no-console
-      console.warn(
-        `Trying get and remove a ${type} from the store using an id \`${id}\` (${typeof id}). Should use a number type instead.`
-      );
-      id = Number.parseInt(id, 10);
-    }
-
+    // Normalize values (e.g. 2 vs "2")
+    id = String(id);
     const byType = this.#identityMap.get(type);
 
     if (byType.has(id)) {
