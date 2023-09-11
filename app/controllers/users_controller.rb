@@ -106,7 +106,9 @@ class UsersController < ApplicationController
   end
 
   def show(for_card: false)
-    return redirect_to path("/login") if SiteSetting.hide_user_profiles_from_public && !current_user
+    if SiteSetting.hide_user_profiles_from_public && !current_user
+      raise Discourse::InvalidAccess.new(custom_message: "invalid_access")
+    end
 
     @user =
       fetch_user_from_params(
@@ -158,7 +160,7 @@ class UsersController < ApplicationController
     return redirect_to path("/login") if SiteSetting.hide_user_profiles_from_public && !current_user
 
     user_ids = params.require(:user_ids).split(",").map(&:to_i)
-    raise Discourse::InvalidParameters.new(:user_ids) if user_ids.length > 50
+    raise Discourse::InvalidAccess.new(:user_ids) if user_ids.length > 50
 
     users =
       User.where(id: user_ids).includes(

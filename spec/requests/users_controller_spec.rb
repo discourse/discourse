@@ -4478,7 +4478,7 @@ RSpec.describe UsersController do
       it "should redirect to login page for anonymous user when profiles are hidden" do
         SiteSetting.hide_user_profiles_from_public = true
         get "/u/#{user.username}.json"
-        expect(response).to redirect_to "/login"
+        expect(response).to have_http_status(:forbidden)
       end
 
       describe "user profile views" do
@@ -4684,7 +4684,7 @@ RSpec.describe UsersController do
       it "should redirect to login page for anonymous user when profiles are hidden" do
         SiteSetting.hide_user_profiles_from_public = true
         get "/u/#{user.username}/card.json"
-        expect(response).to redirect_to "/login"
+        expect(response).to have_http_status(:forbidden)
       end
     end
 
