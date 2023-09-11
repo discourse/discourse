@@ -2,7 +2,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "ember-qunit";
 import { click, doubleClick, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import { default as ClassicComponent } from "@ember/component";
+import ClassicComponent from "@ember/component";
 
 module("Unit | Lib | ember-action-modifer", function (hooks) {
   setupRenderingTest(hooks);
