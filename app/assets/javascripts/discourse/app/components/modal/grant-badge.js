@@ -20,14 +20,11 @@ export default class GrantBadgeModal extends Component {
   @tracked flashType = null;
   @tracked allBadges = [];
   @tracked userBadges = [];
+  @tracked availableBadges = [];
   @empty("availableBadges") noAvailableBadges;
 
   get post() {
     return this.args.model.selectedPost;
-  }
-
-  get availableBadges() {
-    return grantableBadges(this.allBadges, this.userBadges);
   }
 
   get buttonDisabled() {
@@ -37,12 +34,17 @@ export default class GrantBadgeModal extends Component {
     );
   }
 
+  #updateAvailableBadges() {
+    this.availableBadges = grantableBadges(this.allBadges, this.userBadges);
+  }
+
   @action
   async loadBadges() {
     this.loading = true;
     try {
       this.allBadges = await Badge.findAll();
       this.userBadges = await UserBadge.findByUsername(this.post.username);
+      this.#updateAvailableBadges();
     } catch (e) {
       this.flash = extractError(e);
       this.flashType = "error";
@@ -61,6 +63,7 @@ export default class GrantBadgeModal extends Component {
         getURL(this.post.url)
       );
       this.userBadges.pushObject(newBadge);
+      this.#updateAvailableBadges();
       this.selectedBadgeId = null;
       this.flash = I18n.t("badges.successfully_granted", {
         username,
