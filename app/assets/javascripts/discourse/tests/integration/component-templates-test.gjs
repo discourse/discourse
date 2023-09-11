@@ -6,6 +6,8 @@ import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 import { setComponentTemplate } from "@glimmer/manager";
 import Component from "@glimmer/component";
 import { forceMobile, resetMobile } from "discourse/lib/mobile";
+import sinon from "sinon";
+import { overrideThrowGjsError } from "discourse/instance-initializers/component-templates";
 
 class MockColocatedComponent extends Component {}
 setComponentTemplate(hbs`Colocated Original`, MockColocatedComponent);
@@ -264,6 +266,47 @@ module("Integration | Initializers | plugin-component-templates", function () {
       assert
         .dom("#mock-resolved")
         .hasText("Resolved Theme Override", "resolved component correct");
+    });
+  });
+
+  module("overriding gjs component", function (hooks) {
+    let errorStub;
+
+    hooks.beforeEach(() => {
+      registerTemporaryModule(
+        `discourse/components/mock-gjs-component`,
+        class MyComponent extends Component {
+          <template>
+            <span class="greeting">Hello world</span>
+          </template>
+        }
+      );
+
+      registerTemporaryModule(
+        `discourse/plugins/my-plugin/discourse/templates/components/mock-gjs-component`,
+        hbs`doomed override`
+      );
+
+      errorStub = sinon
+        .stub(console, "error")
+        .withArgs(sinon.match(/mock-gjs-component was authored using gjs/));
+
+      overrideThrowGjsError(false);
+    });
+
+    hooks.afterEach(() => {
+      overrideThrowGjsError(true);
+    });
+
+    setupRenderingTest(hooks);
+
+    test("theme overrides plugin component", async function () {
+      await render(hbs`<MockGjsComponent />`);
+      assert
+        .dom(".greeting")
+        .hasText("Hello world", "renders original implementation");
+
+      sinon.assert.calledOnce(errorStub);
     });
   });
 });
