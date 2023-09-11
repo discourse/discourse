@@ -4,6 +4,7 @@ import { render } from "@ember/test-helpers";
 import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 import Session from "discourse/models/session";
 import MountWidget from "discourse/components/mount-widget";
+
 const bigLogo = "/images/d-logo-sketch.png?test";
 const smallLogo = "/images/d-logo-sketch-small.png?test";
 const mobileLogo = "/images/d-logo-sketch.png?mobile";
