@@ -5,6 +5,7 @@
   &:focus {
     .d-toggle-switch__checkbox-slider {
       outline: 2px solid var(--tertiary);
+      outline-offset: 2px;
     }
   }
 
@@ -38,6 +39,7 @@
     &:focus {
       + .d-toggle-switch__checkbox-slider {
         outline: 2px solid var(--tertiary);
+        outline-offset: 2px;
       }
 
       // Outline should show only when tabbing, not clicking
