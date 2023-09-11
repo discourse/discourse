@@ -166,8 +166,6 @@ export default class ChatChannelRow extends Component {
 
   @bind
   onSwipe(event) {
-    event.preventDefault();
-
     const touchX = event.changedTouches[0].screenX;
     const diff = this.initialX - touchX;
 
@@ -193,8 +191,10 @@ export default class ChatChannelRow extends Component {
       this.isCancelling = !this._towardsThreshold;
     }
 
-    this.actionButton.style.width = diff + "px";
-    this.swipableRow.style.left = -(this.initialX - touchX) + "px";
+    if (diff > 25) {
+      this.actionButton.style.width = diff + "px";
+      this.swipableRow.style.left = -(this.initialX - touchX) + "px";
+    }
   }
 
   @bind
