@@ -356,7 +356,7 @@ const TopicRoute = DiscourseRoute.extend({
       this.setupParams(topic, queryParams);
       return topic;
     } else {
-      let props = { ...params };
+      let props = { ...params, id: parseInt(params.id, 10) };
       delete props.username_filters;
       delete props.filter;
       topic = this.store.createRecord("topic", props);
