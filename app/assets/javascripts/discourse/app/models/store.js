@@ -1,5 +1,5 @@
 import deprecated from "discourse-common/lib/deprecated";
-export { default, flushMap } from "discourse/services/store";
+export { default } from "discourse/services/store";
 
 deprecated(
   `"discourse/models/store" import is deprecated, use "discourse/services/store" instead`,

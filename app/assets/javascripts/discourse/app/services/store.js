@@ -8,44 +8,6 @@ import { getRegister } from "discourse-common/lib/get-owner";
 import { underscore } from "@ember/string";
 import { warn } from "@ember/debug";
 
-// Map<type, Map<id, {}>>
-const _identityMap = new Map();
-
-// You should only call this if you're a test scaffold
-export function flushMap() {
-  _identityMap.clear();
-}
-
-function storeMap(type, id, obj) {
-  if (!id) {
-    return;
-  }
-
-  if (!_identityMap.has(type)) {
-    _identityMap.set(type, new Map());
-  }
-
-  _identityMap.get(type).set(id, obj);
-}
-
-function fromMap(type, id) {
-  return _identityMap.get(type)?.get(id);
-}
-
-function removeMap(type, id) {
-  _identityMap.get(type)?.delete(id);
-}
-
-function findAndRemoveMap(type, id) {
-  const byType = _identityMap.get(type);
-
-  if (byType.has(id)) {
-    const result = byType.get(id);
-    byType.delete(id);
-    return result;
-  }
-}
-
 export default class Store extends Service {
   register = getRegister(this);
   _plurals = {
@@ -54,6 +16,44 @@ export default class Store extends Service {
     "post-reply-history": "post_reply_histories",
     reviewable_history: "reviewable_histories",
   };
+
+  // Map<type, Map<id, {}>>
+  _identityMap = new Map();
+
+  // You should only call this if you're a test scaffold
+  flushMap() {
+    this._identityMap.clear();
+  }
+
+  storeMap(type, id, obj) {
+    if (!id) {
+      return;
+    }
+
+    if (!this._identityMap.has(type)) {
+      this._identityMap.set(type, new Map());
+    }
+
+    this._identityMap.get(type).set(id, obj);
+  }
+
+  fromMap(type, id) {
+    return this._identityMap.get(type)?.get(id);
+  }
+
+  removeMap(type, id) {
+    this._identityMap.get(type)?.delete(id);
+  }
+
+  findAndRemoveMap(type, id) {
+    const byType = this._identityMap.get(type);
+
+    if (byType.has(id)) {
+      const result = byType.get(id);
+      byType.delete(id);
+      return result;
+    }
+  }
 
   pluralize(thing) {
     return this._plurals[thing] || thing + "s";
@@ -188,8 +188,8 @@ export default class Store extends Service {
     const adapter = this.adapterFor(type);
     return adapter.update(this, type, id, attrs, (result) => {
       if (result?.[type]?.[adapter.primaryKey]) {
-        const oldRecord = findAndRemoveMap(type, id);
-        storeMap(type, result[type][adapter.primaryKey], oldRecord);
+        const oldRecord = this.findAndRemoveMap(type, id);
+        this.storeMap(type, result[type][adapter.primaryKey], oldRecord);
       }
       return result;
     });
@@ -208,12 +208,12 @@ export default class Store extends Service {
 
     // If the record is new, don't perform an Ajax call
     if (record.isNew) {
-      removeMap(type, record[adapter.primaryKey]);
+      this.removeMap(type, record[adapter.primaryKey]);
       return Promise.resolve(true);
     }
 
     return adapter.destroyRecord(this, type, record).then((result) => {
-      removeMap(type, record[adapter.primaryKey]);
+      this.removeMap(type, record[adapter.primaryKey]);
       return result;
     });
   }
@@ -267,7 +267,7 @@ export default class Store extends Service {
     const klass = this.register.lookupFactory("model:" + type) || RestModel;
     const model = klass.create(obj);
 
-    storeMap(type, obj[adapter.primaryKey], model);
+    this.storeMap(type, obj[adapter.primaryKey], model);
     return model;
   }
 
@@ -368,7 +368,7 @@ export default class Store extends Service {
       this._hydrateEmbedded(type, obj, root);
     }
 
-    const existing = fromMap(type, id);
+    const existing = this.fromMap(type, id);
     if (existing === obj) {
       return existing;
     }

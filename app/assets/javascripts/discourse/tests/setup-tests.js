@@ -32,7 +32,6 @@ import User from "discourse/models/user";
 import bootbox from "bootbox";
 import { buildResolver } from "discourse-common/resolver";
 import deprecated from "discourse-common/lib/deprecated";
-import { flushMap } from "discourse/services/store";
 import sinon from "sinon";
 import { disableCloaking } from "discourse/widgets/post-stream";
 import { clearState as clearPresenceState } from "discourse/tests/helpers/presence-pretender";
@@ -344,8 +343,6 @@ export default function setupTests(config) {
     const testContainer = document.getElementById("ember-testing-container");
     testContainer.scrollTop = 0;
     testContainer.scrollLeft = 0;
-
-    flushMap();
 
     MessageBus.unsubscribe("*");
     localStorage.clear();

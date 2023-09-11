@@ -15,7 +15,6 @@ import { deepMerge } from "discourse-common/lib/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { emojiUnescape } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
-import { flushMap } from "discourse/services/store";
 import getURL from "discourse-common/lib/get-url";
 import { longDate } from "discourse/lib/formatter";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -23,6 +22,7 @@ import { resolveShareUrl } from "discourse/helpers/share-url";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import deprecated from "discourse-common/lib/deprecated";
 import { applyModelTransformations } from "discourse/lib/model-transformers";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export function loadTopicView(topic, args) {
   const data = deepMerge({}, args);
@@ -903,7 +903,7 @@ Topic.reopenClass({
 function moveResult(result) {
   if (result.success) {
     // We should be hesitant to flush the map but moving ids is one rare case
-    flushMap();
+    getOwner(null).lookup("service:store").flushMap();
     return result;
   }
   throw new Error("error moving posts topic");
