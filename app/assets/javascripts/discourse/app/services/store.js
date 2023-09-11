@@ -312,7 +312,7 @@ export default class Store extends Service {
   _hydrateEmbedded(type, obj, root) {
     const adapter = this.adapterFor(type);
 
-    for (const k of Object.keys(obj)) {
+    Object.keys(obj).forEach((k) => {
       if (k === adapter.primaryKey) {
         return;
       }
@@ -346,7 +346,7 @@ export default class Store extends Service {
           }
         }
       }
-    }
+    });
   }
 
   _hydrate(type, obj, root) {
