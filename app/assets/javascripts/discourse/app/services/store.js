@@ -25,8 +25,16 @@ export default class Store extends Service {
   }
 
   storeMap(type, id, obj) {
-    if (!id) {
+    if (id === undefined) {
       return;
+    }
+
+    if (typeof id !== "number") {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `Trying to store a ${type} with an id \`${id}\` (${typeof id}). Should use a number type instead.`
+      );
+      id = Number.parseInt(id, 10);
     }
 
     if (!this.#identityMap.has(type)) {
@@ -37,14 +45,38 @@ export default class Store extends Service {
   }
 
   fromMap(type, id) {
+    if (typeof id !== "number") {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `Trying get a ${type} from the store using an id \`${id}\` (${typeof id}). Should use a number type instead.`
+      );
+      id = Number.parseInt(id, 10);
+    }
+
     return this.#identityMap.get(type)?.get(id);
   }
 
   removeMap(type, id) {
+    if (typeof id !== "number") {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `Trying remove a ${type} from the store using an id \`${id}\` (${typeof id}). Should use a number type instead.`
+      );
+      id = Number.parseInt(id, 10);
+    }
+
     this.#identityMap.get(type)?.delete(id);
   }
 
   findAndRemoveMap(type, id) {
+    if (typeof id !== "number") {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `Trying get and remove a ${type} from the store using an id \`${id}\` (${typeof id}). Should use a number type instead.`
+      );
+      id = Number.parseInt(id, 10);
+    }
+
     const byType = this.#identityMap.get(type);
 
     if (byType.has(id)) {
