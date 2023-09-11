@@ -8,6 +8,8 @@ RSpec.describe Chat::Channel do
 
   it { is_expected.to validate_length_of(:description).is_at_most(500) }
   it { is_expected.to validate_length_of(:slug).is_at_most(100) }
+  it { is_expected.to validate_length_of(:chatable_type).is_at_most(100) }
+  it { is_expected.to validate_length_of(:type).is_at_most(100) }
 
   describe ".find_by_id_or_slug" do
     subject(:find_channel) { described_class.find_by_id_or_slug(channel_id) }
