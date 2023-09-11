@@ -152,10 +152,21 @@ module(
     test("it shows status tooltip", async function (assert) {
       await render(hbs`<ChatChannel @channel={{this.channel}} />`);
 
-      await assertStatusTooltipIsRendered(
-        assert,
-        statusSelector(mentionedUser.username),
-        mentionedUser.status
+      await triggerEvent(statusSelector(mentionedUser.username), "mouseenter");
+
+      assert.equal(
+        document
+          .querySelector(".user-status-tooltip-description")
+          .textContent.trim(),
+        mentionedUser.status.description,
+        "status description is correct"
+      );
+
+      assert.ok(
+        document.querySelector(
+          `.user-status-message-tooltip img[alt='${mentionedUser.status.emoji}']`
+        ),
+        "status emoji is correct"
       );
     });
 
@@ -168,27 +179,6 @@ module(
           new RegExp(`${status.emoji}.png`),
           "status emoji is updated"
         );
-    }
-
-    async function assertStatusTooltipIsRendered(assert, selector, status) {
-      await triggerEvent(selector, "mouseenter");
-
-      assert.equal(
-        document
-          .querySelector(".user-status-tooltip-description")
-          .textContent.trim(),
-        status.description,
-        "status description is correct"
-      );
-
-      assert.ok(
-        document.querySelector(
-          `.user-status-message-tooltip img[alt='${status.emoji}']`
-        ),
-        "status emoji is correct"
-      );
-
-      await triggerEvent(selector, "mouseleave");
     }
 
     async function receiveChatMessageViaMessageBus() {
