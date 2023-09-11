@@ -1,36 +1,38 @@
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { click, settled, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { hbs } from "ember-cli-htmlbars";
 import { getOwner } from "@ember/application";
 import Component from "@glimmer/component";
-import { setComponentTemplate } from "@glimmer/manager";
-import {
+import DModal, {
   CLOSE_INITIATED_BY_BUTTON,
   CLOSE_INITIATED_BY_CLICK_OUTSIDE,
   CLOSE_INITIATED_BY_ESC,
   CLOSE_INITIATED_BY_MODAL_SHOW,
 } from "discourse/components/d-modal";
 import { action } from "@ember/object";
+import { on } from "@ember/modifier";
 
 class MyModalClass extends Component {
+  <template>
+    <DModal
+      class="service-modal"
+      @closeModal={{@closeModal}}
+      @title="Hello World"
+    >
+      Modal content is
+      {{@model.text}}
+      <button
+        class="custom-data"
+        {{on "click" this.closeWithCustomData}}
+      ></button>
+    </DModal>
+  </template>
+
   @action
   closeWithCustomData() {
     this.args.closeModal({ hello: "world" });
   }
 }
-setComponentTemplate(
-  hbs`
-    <DModal
-      @closeModal={{@closeModal}}
-      @title="Hello World"
-    >
-      Modal content is {{@model.text}}
-      <button class='custom-data' {{on "click" this.closeWithCustomData}}></button>
-    </DModal>
-  `,
-  MyModalClass
-);
 
 acceptance("Modal service: component-based API", function () {
   test("displays correctly", async function (assert) {
