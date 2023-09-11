@@ -8,16 +8,17 @@ export default class BodyClassesService extends Service {
 
   registerClasses(helper, classes) {
     if (this.#helpers.has(helper)) {
-      const classesToRemove = this.#helpers.get(helper);
+      const previousClasses = this.#helpers.get(helper);
 
       this.#helpers.set(helper, classes);
-      this.removeClasses(classesToRemove);
+      this.removeUnusedClasses(previousClasses);
     } else {
       this.#helpers.set(helper, classes);
+
       registerDestructor(helper, () => {
-        const removedClasses = this.#helpers.get(helper);
+        const previousClasses = this.#helpers.get(helper);
         this.#helpers.delete(helper);
-        this.removeClasses(removedClasses);
+        this.removeUnusedClasses(previousClasses);
       });
     }
 
@@ -26,7 +27,7 @@ export default class BodyClassesService extends Service {
     }
   }
 
-  removeClasses(classes) {
+  removeUnusedClasses(classes) {
     const remainingClasses = new Set([...this.#helpers.values()].flat());
 
     for (const bodyClass of classes) {
