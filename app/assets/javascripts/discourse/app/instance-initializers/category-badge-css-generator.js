@@ -5,7 +5,7 @@ export default {
   after: "category-color-css-generator",
 
   /**
-   * This generates CSS color classes for each category,
+   * This generates badge CSS classes for each category,
    * which can be used in themes to render category-specific elements.
    */
   initialize(owner) {
