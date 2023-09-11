@@ -8,10 +8,10 @@ import { getRegister } from "discourse-common/lib/get-owner";
 import { underscore } from "@ember/string";
 import { warn } from "@ember/debug";
 
-let _identityMap;
+let _identityMap = {};
 
 // You should only call this if you're a test scaffold
-function flushMap() {
+export function flushMap() {
   _identityMap = {};
 }
 
@@ -26,28 +26,26 @@ function storeMap(type, id, obj) {
 
 function fromMap(type, id) {
   const byType = _identityMap[type];
-  if (byType && byType.hasOwnProperty(id)) {
+  if (byType?.hasOwnProperty(id)) {
     return byType[id];
   }
 }
 
 function removeMap(type, id) {
   const byType = _identityMap[type];
-  if (byType && byType.hasOwnProperty(id)) {
+  if (byType?.hasOwnProperty(id)) {
     delete byType[id];
   }
 }
 
 function findAndRemoveMap(type, id) {
   const byType = _identityMap[type];
-  if (byType && byType.hasOwnProperty(id)) {
+  if (byType?.hasOwnProperty(id)) {
     const result = byType[id];
     delete byType[id];
     return result;
   }
 }
-
-flushMap();
 
 export default Service.extend({
   _plurals: {
@@ -59,7 +57,7 @@ export default Service.extend({
 
   init() {
     this._super(...arguments);
-    this.register = this.register || getRegister(this);
+    this.register ||= getRegister(this);
   },
 
   pluralize(thing) {
@@ -73,13 +71,12 @@ export default Service.extend({
   findAll(type, findArgs) {
     const adapter = this.adapterFor(type);
 
-    let store = this;
     return adapter.findAll(this, type, findArgs).then((result) => {
       let results = this._resultSet(type, result);
       if (adapter.afterFindAll) {
         results = adapter.afterFindAll(results, {
           lookup(subType, id) {
-            return store._lookupSubType(subType, type, id, result);
+            return this._lookupSubType(subType, type, id, result);
           },
         });
       }
@@ -139,8 +136,8 @@ export default Service.extend({
 
     hydrated.set(
       "content",
-      hydrated.get("content").map((item) => {
-        let staleItem = stale.content.findBy(primaryKey, item.get(primaryKey));
+      hydrated.content.map((item) => {
+        let staleItem = stale.content.findBy(primaryKey, item[primaryKey]);
         if (staleItem) {
           for (const [key, value] of Object.entries(
             Object.getOwnPropertyDescriptors(staleItem)
@@ -176,17 +173,17 @@ export default Service.extend({
 
       let pageTarget = result.meta || result;
       let totalRows =
-        pageTarget["total_rows_" + typeName] || resultSet.get("totalRows");
+        pageTarget["total_rows_" + typeName] || resultSet.totalRows;
       let loadMoreUrl = pageTarget["load_more_" + typeName];
       let content = result[typeName].map((obj) =>
         this._hydrate(type, obj, result)
       );
 
       resultSet.setProperties({ totalRows, loadMoreUrl });
-      resultSet.get("content").pushObjects(content);
+      resultSet.content.pushObjects(content);
 
       // If we've loaded them all, clear the load more URL
-      if (resultSet.get("length") >= totalRows) {
+      if (resultSet.length >= totalRows) {
         resultSet.set("loadMoreUrl", null);
       }
     });
@@ -194,8 +191,8 @@ export default Service.extend({
 
   update(type, id, attrs) {
     const adapter = this.adapterFor(type);
-    return adapter.update(this, type, id, attrs, function (result) {
-      if (result && result[type] && result[type][adapter.primaryKey]) {
+    return adapter.update(this, type, id, attrs, (result) => {
+      if (result?.[type]?.[adapter.primaryKey]) {
         const oldRecord = findAndRemoveMap(type, id);
         storeMap(type, result[type][adapter.primaryKey], oldRecord);
       }
@@ -204,7 +201,7 @@ export default Service.extend({
   },
 
   createRecord(type, attrs) {
-    attrs = attrs || {};
+    attrs ||= {};
     const adapter = this.adapterFor(type);
     return !!attrs[adapter.primaryKey]
       ? this._hydrate(type, attrs)
@@ -215,13 +212,13 @@ export default Service.extend({
     const adapter = this.adapterFor(type);
 
     // If the record is new, don't perform an Ajax call
-    if (record.get("isNew")) {
-      removeMap(type, record.get(adapter.primaryKey));
+    if (record.isNew) {
+      removeMap(type, record[adapter.primaryKey]);
       return Promise.resolve(true);
     }
 
-    return adapter.destroyRecord(this, type, record).then(function (result) {
-      removeMap(type, record.get(adapter.primaryKey));
+    return adapter.destroyRecord(this, type, record).then((result) => {
+      removeMap(type, record[adapter.primaryKey]);
       return result;
     });
   },
@@ -287,21 +284,23 @@ export default Service.extend({
   },
 
   _lookupSubType(subType, type, id, root) {
-    if (root.meta && root.meta.types) {
+    if (root.meta?.types) {
       subType = root.meta.types[subType] || subType;
     }
 
     const subTypeAdapter = this.adapterFor(subType);
     const pluralType = this.pluralize(subType);
     const collection = root[this.pluralize(subType)];
+
     if (collection) {
       const hashedProp = "__hashed_" + pluralType;
       let hashedCollection = root[hashedProp];
+
       if (!hashedCollection) {
         hashedCollection = {};
-        collection.forEach(function (it) {
+        for (const it of collection) {
           hashedCollection[it[subTypeAdapter.primaryKey]] = it;
-        });
+        }
         root[hashedProp] = hashedCollection;
       }
 
@@ -316,7 +315,8 @@ export default Service.extend({
 
   _hydrateEmbedded(type, obj, root) {
     const adapter = this.adapterFor(type);
-    Object.keys(obj).forEach((k) => {
+
+    for (const k of Object.keys(obj)) {
       if (k === adapter.primaryKey) {
         return;
       }
@@ -350,7 +350,7 @@ export default Service.extend({
           }
         }
       }
-    });
+    }
   },
 
   _hydrate(type, obj, root) {
@@ -367,7 +367,7 @@ export default Service.extend({
       );
     }
 
-    root = root || obj;
+    root ||= obj;
 
     if (root.__rest_serializer === "1") {
       this._hydrateEmbedded(type, obj, root);
@@ -382,13 +382,11 @@ export default Service.extend({
       delete obj[adapter.primaryKey];
       let klass = this.register.lookupFactory("model:" + type);
 
-      if (klass && klass.class) {
-        klass = klass.class;
+      if (klass?.class) {
+        klass = klass?.class;
       }
 
-      if (!klass) {
-        klass = RestModel;
-      }
+      klass ||= RestModel;
 
       existing.setProperties(klass.munge(obj));
       obj[adapter.primaryKey] = id;
@@ -398,5 +396,3 @@ export default Service.extend({
     return this._build(type, obj);
   },
 });
-
-export { flushMap };
