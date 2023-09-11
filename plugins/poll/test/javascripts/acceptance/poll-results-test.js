@@ -115,7 +115,7 @@ acceptance("Poll results", function (needs) {
       });
     });
 
-    server.get("/t/load-more-poll-voters.json", () => {
+    server.get("/t/134.json", () => {
       return helper.response({
         post_stream: {
           posts: [
@@ -374,9 +374,9 @@ acceptance("Poll results", function (needs) {
           },
           {
             id: 133,
-            title: "This is a new tpoic",
-            fancy_title: "This is a new tpoic",
-            slug: "this-is-a-new-tpoic",
+            title: "This is a new topic",
+            fancy_title: "This is a new topic",
+            slug: "this-is-a-new-topic",
             posts_count: 12,
             reply_count: 0,
             highest_post_number: 12,
@@ -560,7 +560,7 @@ acceptance("Poll results", function (needs) {
   });
 
   test("can load more voters", async function (assert) {
-    await visit("/t/-/load-more-poll-voters");
+    await visit("/t/load-more-poll-voters/134");
 
     assert.strictEqual(
       count(".poll-container .results li:nth-child(1) .poll-voters li"),
@@ -630,7 +630,7 @@ acceptance("Poll results", function (needs) {
     );
 
     await click(".poll-voters-toggle-expand a");
-    await visit("/t/-/load-more-poll-voters");
+    await visit("/t/load-more-poll-voters/134");
 
     assert.strictEqual(
       count(".poll-container .results li:nth-child(1) .poll-voters li"),
@@ -643,7 +643,7 @@ acceptance("Poll results", function (needs) {
   });
 
   test("can unvote", async function (assert) {
-    await visit("/t/-/load-more-poll-voters");
+    await visit("/t/load-more-poll-voters/134");
     await click(".toggle-results");
 
     assert.strictEqual(count(".poll-container .d-icon-circle"), 1);
@@ -752,7 +752,7 @@ acceptance("Poll results - no voters", function (needs) {
       });
     });
 
-    server.get("/t/load-more-poll-voters.json", () => {
+    server.get("/t/134.json", () => {
       return helper.response({
         post_stream: {
           posts: [
@@ -1000,9 +1000,9 @@ acceptance("Poll results - no voters", function (needs) {
           },
           {
             id: 133,
-            title: "This is a new tpoic",
-            fancy_title: "This is a new tpoic",
-            slug: "this-is-a-new-tpoic",
+            title: "This is a new topic",
+            fancy_title: "This is a new topic",
+            slug: "this-is-a-new-topic",
             posts_count: 12,
             reply_count: 0,
             highest_post_number: 12,
@@ -1157,7 +1157,7 @@ acceptance("Poll results - no voters", function (needs) {
   });
 
   test("does not show results button", async function (assert) {
-    await visit("/t/-/load-more-poll-voters");
+    await visit("/t/load-more-poll-voters/134");
 
     assert.ok(!exists(".toggle-results"));
   });

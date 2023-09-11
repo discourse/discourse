@@ -43,7 +43,14 @@
       </LinkTo>
     </div>
 
-    <div id="public-channels" class={{this.publicChannelClasses}}>
+    <div
+      id="public-channels"
+      class={{concat-class
+        "channels-list-container"
+        "public-channels"
+        (if this.inSidebar "collapsible-sidebar-section")
+      }}
+    >
       {{#if this.publicChannelsEmpty}}
         <div class="public-channel-empty-message">
           <span class="channel-title">{{i18n "chat.no_public_channels"}}</span>

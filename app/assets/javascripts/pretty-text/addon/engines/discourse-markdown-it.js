@@ -479,7 +479,7 @@ export function setup(opts, siteSettings, state) {
   // all of the modules under discourse-markdown or markdown-it
   // directories are considered additional markdown "features" which
   // may define their own rules
-  Object.keys(require._eak_seen).forEach((entry) => {
+  Object.keys(require.entries).forEach((entry) => {
     if (check.test(entry)) {
       const module = requirejs(entry);
       if (module && module.setup) {

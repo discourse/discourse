@@ -51,16 +51,34 @@ class RemoteTheme < ActiveRecord::Base
   def self.update_zipped_theme(
     filename,
     original_filename,
-    match_theme: false,
     user: Discourse.system_user,
     theme_id: nil,
     update_components: nil
   )
-    importer = ThemeStore::ZipImporter.new(filename, original_filename)
+    update_theme(
+      ThemeStore::ZipImporter.new(filename, original_filename),
+      user:,
+      theme_id:,
+      update_components:,
+    )
+  end
+
+  # This is only used in the tests environment and is currently not supported for other environments
+  if Rails.env.test?
+    def self.import_theme_from_directory(directory)
+      update_theme(ThemeStore::DirectoryImporter.new(directory))
+    end
+  end
+
+  def self.update_theme(
+    importer,
+    user: Discourse.system_user,
+    theme_id: nil,
+    update_components: nil
+  )
     importer.import!
 
     theme_info = RemoteTheme.extract_theme_info(importer)
-    theme = Theme.find_by(name: theme_info["name"]) if match_theme # Old theme CLI method, remove Jan 2020
     theme = Theme.find_by(id: theme_id) if theme_id # New theme CLI method
 
     existing = true
@@ -107,6 +125,7 @@ class RemoteTheme < ActiveRecord::Base
       Rails.logger.warn("Failed cleanup remote path #{e}")
     end
   end
+  private_class_method :update_theme
 
   def self.import_theme(url, user = Discourse.system_user, private_key: nil, branch: nil)
     importer = ThemeStore::GitImporter.new(url.strip, private_key: private_key, branch: branch)
@@ -232,6 +251,7 @@ class RemoteTheme < ActiveRecord::Base
     METADATA_PROPERTIES.each do |property|
       self.public_send(:"#{property}=", theme_info[property.to_s])
     end
+
     if !self.valid?
       raise ImportError,
             I18n.t(
@@ -246,6 +266,7 @@ class RemoteTheme < ActiveRecord::Base
         theme_info.dig("modifiers", modifier_name.to_s),
       )
     end
+
     if !theme.theme_modifier_set.valid?
       raise ImportError,
             I18n.t(
