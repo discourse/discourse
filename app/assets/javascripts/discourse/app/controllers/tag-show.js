@@ -1,8 +1,8 @@
 import { inject as service } from "@ember/service";
-import { readOnly } from "@ember/object/computed";
+import { or, readOnly } from "@ember/object/computed";
 import DiscoverySortableController from "discourse/controllers/discovery-sortable";
 import discourseComputed from "discourse-common/utils/decorators";
-import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
+import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import DismissTopics from "discourse/mixins/dismiss-topics";
 import I18n from "I18n";
 import NavItem from "discourse/models/nav-item";
@@ -14,7 +14,6 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import { tracked } from "@glimmer/tracking";
 
 export default class TagShowController extends DiscoverySortableController.extend(
-  BulkTopicSelection,
   DismissTopics
 ) {
   @service dialog;
@@ -25,6 +24,8 @@ export default class TagShowController extends DiscoverySortableController.exten
   @tracked category;
   @tracked filterType;
   @tracked noSubcategories;
+
+  bulkSelectHelper = new BulkSelectHelper(this);
 
   tag = null;
   additionalTags = null;
@@ -38,6 +39,17 @@ export default class TagShowController extends DiscoverySortableController.exten
   showInfo = false;
 
   @endWith("list.filter", "top") top;
+
+  @or("currentUser.canManageTopic", "showDismissRead", "showResetNew")
+  canBulkSelect;
+
+  get bulkSelectEnabled() {
+    return this.bulkSelectHelper.bulkSelectEnabled;
+  }
+
+  get selected() {
+    return this.bulkSelectHelper.selected;
+  }
 
   @dependentKeyCompat
   get filterMode() {
@@ -96,14 +108,14 @@ export default class TagShowController extends DiscoverySortableController.exten
     }
   }
 
-  @discourseComputed("list.filter", "list.topics.length")
-  showDismissRead(filter, topicsLength) {
-    return this._isFilterPage(filter, "unread") && topicsLength > 0;
+  @discourseComputed("filterType", "list.topics.length")
+  showDismissRead(filterType, topicsLength) {
+    return filterType === "unread" && topicsLength > 0;
   }
 
-  @discourseComputed("list.filter")
-  new(filter) {
-    return this._isFilterPage(filter, "new");
+  @discourseComputed("filterType")
+  new(filterType) {
+    return filterType === "new";
   }
 
   @discourseComputed("new")
@@ -207,7 +219,7 @@ export default class TagShowController extends DiscoverySortableController.exten
       })
       .then((list) => {
         this.set("list", list);
-        this.resetSelected();
+        this.bulkSelectHelper.clear();
       });
   }
 
@@ -257,5 +269,25 @@ export default class TagShowController extends DiscoverySortableController.exten
           regular_tags: payload.regular_tags,
         });
       });
+  }
+
+  @action
+  toggleBulkSelect() {
+    this.bulkSelectHelper.toggleBulkSelect();
+  }
+
+  @action
+  dismissRead(operationType, options) {
+    this.bulkSelectHelper.dismissRead(operationType, options);
+  }
+
+  @action
+  updateAutoAddTopicsToBulkSelect(value) {
+    this.bulkSelectHelper.autoAddTopicsToBulkSelect = value;
+  }
+
+  @action
+  addTopicsToBulkSelect(topics) {
+    this.bulkSelectHelper.addTopics(topics);
   }
 }
