@@ -22,6 +22,7 @@ class MyModalClass extends Component {
       Modal content is
       {{@model.text}}
       <button
+        type="button"
         class="custom-data"
         {{on "click" this.closeWithCustomData}}
       ></button>
