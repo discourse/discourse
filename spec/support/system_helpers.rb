@@ -22,6 +22,10 @@ module SystemHelpers
     expect(page).to have_content("Signed in to #{user.encoded_username} successfully")
   end
 
+  def upload_theme(theme_dir)
+    RemoteTheme.import_theme_from_directory(theme_dir)
+  end
+
   def setup_system_test
     SiteSetting.login_required = false
     SiteSetting.has_login_hint = false
