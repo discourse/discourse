@@ -47,26 +47,22 @@ function findAndRemoveMap(type, id) {
   }
 }
 
-export default Service.extend({
-  _plurals: {
+export default class Store extends Service {
+  register = getRegister(this);
+  _plurals = {
     category: "categories",
     "post-reply": "post-replies",
     "post-reply-history": "post_reply_histories",
     reviewable_history: "reviewable_histories",
-  },
-
-  init() {
-    this._super(...arguments);
-    this.register ||= getRegister(this);
-  },
+  };
 
   pluralize(thing) {
     return this._plurals[thing] || thing + "s";
-  },
+  }
 
   addPluralization(thing, plural) {
     this._plurals[thing] = plural;
-  },
+  }
 
   findAll(type, findArgs) {
     const adapter = this.adapterFor(type);
@@ -82,14 +78,14 @@ export default Service.extend({
       }
       return results;
     });
-  },
+  }
 
   // Mostly for legacy, things like TopicList without ResultSets
   findFiltered(type, findArgs) {
     return this.adapterFor(type)
       .find(this, type, findArgs)
       .then((result) => this._build(type, result));
-  },
+  }
 
   _hydrateFindResults(result, type, findArgs) {
     if (typeof findArgs === "object") {
@@ -98,7 +94,7 @@ export default Service.extend({
       const apiName = this.adapterFor(type).apiNameFor(type);
       return this._hydrate(type, result[underscore(apiName)], result);
     }
-  },
+  }
 
   // See if the store can find stale data. We sometimes prefer to show stale data and
   // refresh it in the background.
@@ -109,7 +105,7 @@ export default Service.extend({
       results: stale,
       refresh: () => this.find(type, findArgs, opts),
     };
-  },
+  }
 
   find(type, findArgs, opts) {
     let adapter = this.adapterFor(type);
@@ -127,7 +123,7 @@ export default Service.extend({
       }
       return hydrated;
     });
-  },
+  }
 
   _updateStale(stale, hydrated, primaryKey) {
     if (!stale) {
@@ -153,7 +149,7 @@ export default Service.extend({
       })
     );
     return hydrated;
-  },
+  }
 
   refreshResults(resultSet, type, url) {
     const adapter = this.adapterFor(type);
@@ -164,7 +160,7 @@ export default Service.extend({
       );
       resultSet.set("content", content);
     });
-  },
+  }
 
   appendResults(resultSet, type, url) {
     const adapter = this.adapterFor(type);
@@ -187,7 +183,7 @@ export default Service.extend({
         resultSet.set("loadMoreUrl", null);
       }
     });
-  },
+  }
 
   update(type, id, attrs) {
     const adapter = this.adapterFor(type);
@@ -198,7 +194,7 @@ export default Service.extend({
       }
       return result;
     });
-  },
+  }
 
   createRecord(type, attrs) {
     attrs ||= {};
@@ -206,7 +202,7 @@ export default Service.extend({
     return !!attrs[adapter.primaryKey]
       ? this._hydrate(type, attrs)
       : this._build(type, attrs);
-  },
+  }
 
   destroyRecord(type, record) {
     const adapter = this.adapterFor(type);
@@ -221,7 +217,7 @@ export default Service.extend({
       removeMap(type, record[adapter.primaryKey]);
       return result;
     });
-  },
+  }
 
   _resultSet(type, result, findArgs) {
     const adapter = this.adapterFor(type);
@@ -255,7 +251,7 @@ export default Service.extend({
     }
 
     return ResultSet.create(createArgs);
-  },
+  }
 
   _build(type, obj) {
     const adapter = this.adapterFor(type);
@@ -274,14 +270,14 @@ export default Service.extend({
 
     storeMap(type, obj[adapter.primaryKey], model);
     return model;
-  },
+  }
 
   adapterFor(type) {
     return (
       this.register.lookup("adapter:" + type) ||
       this.register.lookup("adapter:rest")
     );
-  },
+  }
 
   _lookupSubType(subType, type, id, root) {
     if (root.meta?.types) {
@@ -311,7 +307,7 @@ export default Service.extend({
         return hydrated;
       }
     }
-  },
+  }
 
   _hydrateEmbedded(type, obj, root) {
     const adapter = this.adapterFor(type);
@@ -351,7 +347,7 @@ export default Service.extend({
         }
       }
     }
-  },
+  }
 
   _hydrate(type, obj, root) {
     if (!obj) {
@@ -394,5 +390,5 @@ export default Service.extend({
     }
 
     return this._build(type, obj);
-  },
-});
+  }
+}
