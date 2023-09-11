@@ -101,6 +101,10 @@ module.exports = function (defaults) {
       enabled: false,
     },
 
+    "ember-cli-deprecation-workflow": {
+      enabled: true,
+    },
+
     "ember-cli-terser": {
       enabled: isProduction,
       exclude:
