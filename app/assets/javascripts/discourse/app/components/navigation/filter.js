@@ -3,16 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { bind } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
+import { resettableTracked } from "discourse/lib/tracked-tools";
 
 export default class NavigationFilter extends Component {
   @tracked copyIcon = "link";
   @tracked copyClass = "btn-default";
-  @tracked newQueryString = "";
-
-  constructor() {
-    super(...arguments);
-    this.newQueryString = this.args.queryString;
-  }
+  @resettableTracked newQueryString = this.args.queryString;
 
   @bind
   updateQueryString(string) {

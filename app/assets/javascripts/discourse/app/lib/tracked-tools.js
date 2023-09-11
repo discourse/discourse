@@ -14,3 +14,41 @@ export function defineTrackedProperty(target, key, value) {
     tracked(target, key, { enumerable: true, value })
   );
 }
+
+class ResettableTrackedState {
+  @tracked currentValue;
+  previousUpstreamValue;
+}
+
+function getOrCreateState(map, instance) {
+  let state = map.get(instance);
+  if (!state) {
+    state = new ResettableTrackedState();
+    map.set(instance, state);
+  }
+  return state;
+}
+
+export function resettableTracked(prototype, key, descriptor) {
+  const states = new WeakMap();
+
+  return {
+    get() {
+      const state = getOrCreateState(states, this);
+
+      const upstreamValue = descriptor.initializer?.call(this);
+
+      if (upstreamValue !== state.previousUpstreamValue) {
+        state.currentValue = upstreamValue;
+        state.previousUpstreamValue = upstreamValue;
+      }
+
+      return state.currentValue;
+    },
+
+    set(value) {
+      const state = getOrCreateState(states, this);
+      state.currentValue = value;
+    },
+  };
+}
