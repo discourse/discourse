@@ -11,7 +11,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 export default Controller.extend({
   queryParams: ["order", "asc", "filter"],
 
-  order: "",
+  order: null,
   asc: true,
   filter: null,
   filterInput: null,
