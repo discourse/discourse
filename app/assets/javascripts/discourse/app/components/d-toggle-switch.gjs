@@ -11,7 +11,7 @@ export default class DToggleSwitch extends Component {
           class="d-toggle-switch__checkbox"
           type="button"
           role="switch"
-          aria-pressed={{this.pressed}}
+          aria-checked={{this.checked}}
           ...attributes
         ></button>
         {{! template-lint-enable no-redundant-role }}
@@ -36,7 +36,7 @@ export default class DToggleSwitch extends Component {
     return this.args.translatedLabel;
   }
 
-  get pressed() {
+  get checked() {
     return this.args.state ? "true" : "false";
   }
 }

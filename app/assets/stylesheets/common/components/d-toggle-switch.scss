@@ -51,11 +51,11 @@
     }
   }
 
-  &__checkbox[aria-pressed="true"] + .d-toggle-switch__checkbox-slider {
+  &__checkbox[aria-checked="true"] + .d-toggle-switch__checkbox-slider {
     background-color: var(--tertiary);
   }
 
-  &__checkbox[aria-pressed="true"] + .d-toggle-switch__checkbox-slider::before {
+  &__checkbox[aria-checked="true"] + .d-toggle-switch__checkbox-slider::before {
     left: calc(var(--toggle-switch-width) - 22px);
   }
 

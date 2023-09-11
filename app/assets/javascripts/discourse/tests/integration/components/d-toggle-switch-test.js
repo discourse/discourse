@@ -15,7 +15,7 @@ module("Integration | Component | d-toggle-switch", function (hooks) {
 
     assert.ok(exists(".d-toggle-switch"), "it renders a toggle switch");
     assert.strictEqual(
-      query(".d-toggle-switch__checkbox").getAttribute("aria-pressed"),
+      query(".d-toggle-switch__checkbox").getAttribute("aria-checked"),
       "false"
     );
   });
@@ -27,7 +27,7 @@ module("Integration | Component | d-toggle-switch", function (hooks) {
 
     assert.ok(exists(".d-toggle-switch"), "it renders a toggle switch");
     assert.strictEqual(
-      query(".d-toggle-switch__checkbox").getAttribute("aria-pressed"),
+      query(".d-toggle-switch__checkbox").getAttribute("aria-checked"),
       "true"
     );
   });
