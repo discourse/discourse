@@ -50,12 +50,15 @@
           <div class="summarized-on">
             <p>
               {{i18n "summary.summarized_on" date=this.summarizedOn}}
-              <span>
-                {{d-icon "info-circle"}}
-                <DTooltip @placement="top-end">
+
+              <DTooltip @placements={{array "top-end"}}>
+                <:trigger>
+                  {{d-icon "info-circle"}}
+                </:trigger>
+                <:content>
                   {{i18n "summary.model_used" model=this.summarizedBy}}
-                </DTooltip>
-              </span>
+                </:content>
+              </DTooltip>
             </p>
 
             {{#if this.outdated}}

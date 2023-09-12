@@ -7,7 +7,6 @@ import { inject as service } from "@ember/service";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { bind } from "discourse-common/utils/decorators";
 import discourseLater from "discourse-common/lib/later";
-import { createPopper } from "@popperjs/core";
 import { headerOffset } from "discourse/lib/offset-calculator";
 
 const DEFAULT_SELECTOR = "#main-outlet";
@@ -24,6 +23,7 @@ export function resetCardClickListenerSelector() {
 
 export default Mixin.create({
   router: service(),
+  menu: service(),
 
   elementId: null, //click detection added for data-{elementId}
   triggeringLinkClass: null, //the <a> classname where this card should appear
@@ -39,7 +39,7 @@ export default Mixin.create({
   post: null,
   isDocked: false,
 
-  _popperReference: null,
+  _menuInstance: null,
 
   _show(username, target, event) {
     // No user card for anon
@@ -85,7 +85,6 @@ export default Mixin.create({
     this.appEvents.trigger("user-card:show", { username });
     this._showCallback(username, $(target)).then((user) => {
       this.appEvents.trigger("user-card:after-show", { user });
-      this._positionCard($(target), event);
     });
 
     // We bind scrolling on mobile after cards are shown to hide them if user scrolls
@@ -189,57 +188,35 @@ export default Mixin.create({
     return this._show($target.text().replace(/^@/, ""), $target);
   },
 
-  _positionCard(target, event) {
-    this._popperReference?.destroy();
-
-    schedule("afterRender", () => {
+  _positionCard(target) {
+    schedule("afterRender", async () => {
       if (!target) {
         return;
       }
 
+      const avatarOverflowSize = 44;
       if (this.site.desktopView) {
-        const avatarOverflowSize = 44;
-        this._popperReference = createPopper(target[0], this.element, {
-          placement: "right",
-          modifiers: [
-            {
-              name: "preventOverflow",
-              options: {
-                padding: {
-                  top: headerOffset() + avatarOverflowSize,
-                  right: 10,
-                  bottom: 10,
-                  left: 10,
-                },
-              },
-            },
-            { name: "eventListeners", enabled: false },
-            { name: "offset", options: { offset: [10, 10] } },
-          ],
+        this._menuInstance = await this.menu.show(target[0], {
+          content: this.element,
+          autoUpdate: false,
+          identifier: "card",
+          padding: {
+            top: 10 + avatarOverflowSize + headerOffset(),
+            right: 10,
+            bottom: 10,
+            left: 10,
+          },
         });
       } else {
-        this._popperReference = createPopper(target[0], this.element, {
-          modifiers: [
-            { name: "eventListeners", enabled: false },
-            {
-              name: "computeStyles",
-              enabled: true,
-              fn({ state }) {
-                // mimics our modal top of the screen positioning
-                state.styles.popper = {
-                  ...state.styles.popper,
-                  position: "fixed",
-                  left: `${
-                    (window.innerWidth - state.rects.popper.width) / 2
-                  }px`,
-                  top: "10%",
-                  transform: "translateY(-10%)",
-                };
-
-                return state;
-              },
-            },
-          ],
+        this._menuInstance = await this.menu.show(target[0], {
+          content: this.element,
+          strategy: "fixed",
+          identifier: "card",
+          computePosition: (content) => {
+            content.style.left = "10px";
+            content.style.right = "10px";
+            content.style.top = 10 + avatarOverflowSize + "px";
+          },
         });
       }
 
@@ -261,11 +238,12 @@ export default Mixin.create({
   @bind
   _hide() {
     if (!this.visible) {
-      $(this.element).css({ left: -9999, top: -9999 });
       if (this.site.mobileView) {
         $(".card-cloak").addClass("hidden");
       }
     }
+
+    this._menuInstance?.destroy();
   },
 
   _close() {
