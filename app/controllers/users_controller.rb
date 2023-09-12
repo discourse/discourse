@@ -107,7 +107,7 @@ class UsersController < ApplicationController
 
   def show(for_card: false)
     if SiteSetting.hide_user_profiles_from_public && !current_user
-      raise Discourse::InvalidAccess.new(custom_message: "invalid_access")
+      raise Discourse::NotFound.new(custom_message: "invalid_access", status: 403)
     end
 
     @user =
