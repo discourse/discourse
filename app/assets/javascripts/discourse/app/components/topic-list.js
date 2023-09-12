@@ -5,6 +5,7 @@ import LoadMore from "discourse/mixins/load-more";
 import { on } from "@ember/object/evented";
 import { inject as service } from "@ember/service";
 import TopicBulkActions from "./modal/topic-bulk-actions";
+import { dependentKeyCompat } from "@ember/object/compat";
 
 export default Component.extend(LoadMore, {
   modal: service(),
@@ -36,6 +37,7 @@ export default Component.extend(LoadMore, {
     return this.bulkSelectHelper?.selected;
   },
 
+  @dependentKeyCompat // for the classNameBindings
   get bulkSelectEnabled() {
     return this.bulkSelectHelper?.bulkSelectEnabled;
   },

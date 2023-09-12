@@ -132,7 +132,7 @@ export default class DiscoverySortableController extends Controller {
 
   @action
   changePeriod(p) {
-    this.set("period", p);
+    this.period = p;
   }
 
   @action
