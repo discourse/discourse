@@ -32,6 +32,7 @@ ro:
       channel_delete:
         instructions: "<p>Șterge canalul <strong>%{name}</strong> și istoricul de chat. Toate mesajele și datele asociate, cum ar fi reacțiile și încărcările, vor fi șterse permanent. Dacă doriți să păstrați istoricul canalului și să-l decomisionați, s-ar putea să doriți să arhivați canalul în schimb.</p> <p>Sunteți sigur că doriți să ștergeți <strong>permanent</strong> canalul? Pentru a confirma, tastați numele canalului în caseta de mai jos.</p>"
       close: "Închide sondajul"
+      remove: "Elimină"
       expand: "Extinde sertarul de chat"
       delete: "Șterge"
       muted: "silențios"

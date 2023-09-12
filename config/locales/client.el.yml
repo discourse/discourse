@@ -318,6 +318,9 @@ el:
       abandon:
         yes_value: "Απόρριψη"
         no_value: "Συνέχιση επεξεργασίας"
+    topic_count_all:
+      one: "Δείτε %{count} νέο θέμα"
+      other: "Δείτε %{count} νέα θέματα"
     topic_count_categories:
       one: "Δείτε %{count} νέο ή ενημερωμένο θέμα"
       other: "Δείτε %{count} νέα ή ενημερωμένα θέματα"

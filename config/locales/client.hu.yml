@@ -346,6 +346,9 @@ hu:
         confirm: "Már van egy folyamatban lévő tervezete. Mit szeretne vele kezdeni?"
         yes_value: "Elvetés"
         no_value: "Szerkesztés folytatása"
+    topic_count_all:
+      one: "Nézzen meg %{count} új témát"
+      other: "Nézzen meg %{count} új témát"
     topic_count_categories:
       one: "Nézzen meg %{count} új vagy frissített témát"
       other: "Nézzen meg %{count} új vagy frissített témát"
@@ -535,23 +538,24 @@ hu:
           title: "Összes"
       context_question:
         delimiter: "vagy"
+        something_else_wrong: "Valami baj van ezzel a %{reviewable_type}?"
       types:
         reviewable_flagged_post:
           title: "Megjelölt bejegyzés"
           flagged_by: "Megjelölte"
-          noun: "bejegyzés"
+          noun: "bejegyzéssel"
         reviewable_queued_topic:
           title: "Sorban álló téma"
-          noun: "téma"
+          noun: "témával"
         reviewable_queued_post:
           title: "Sorban álló bejegyzés"
-          noun: "bejegyzés"
+          noun: "bejegyzéssel"
         reviewable_user:
           title: "Felhasználó"
-          noun: "felhasználó"
+          noun: "felhasználóval"
         reviewable_post:
           title: "Bejegyzés"
-          noun: "bejegyzés"
+          noun: "bejegyzéssel"
       approval:
         title: "A bejegyzés jóváhagyásra vár."
         description: "Fogadtuk a bejegyzését, de egy moderátornak jóvá kell hagynia, mielőtt megjelenne. Köszönjük a türelmét."
@@ -3405,6 +3409,9 @@ hu:
       more_badges:
         one: "+Még %{count}"
         other: "+Még %{count}"
+      awarded:
+        one: "%{number} megszerezve"
+        other: "%{number} megszerezve"
       select_badge_for_title: Válassz egy jelvényt, hogy címként használd
       none: "(semmi)"
       successfully_granted: "Sikeresen megadta a(z) %{badge} jelvényt %{username} számára"

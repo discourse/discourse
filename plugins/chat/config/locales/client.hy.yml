@@ -21,6 +21,7 @@ hy:
         join: "Միանալ"
         leave: "Լքել"
       close: "Փակել"
+      remove: "Հեռացնել"
       delete: "Ջնջել"
       edited: "խմբագրվել է"
       muted: "խլացված"

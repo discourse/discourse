@@ -324,6 +324,8 @@ zh_CN:
         confirm: "您已经有一个正在进行的草稿。您想对它做什么？"
         yes_value: "舍弃"
         no_value: "恢复编辑"
+    topic_count_all:
+      other: "查看 %{count} 个新话题"
     topic_count_categories:
       other: "查看 %{count} 个新的或更新过的话题"
     topic_count_latest:
@@ -2212,9 +2214,11 @@ zh_CN:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}、%{username2}</span> %{description}"
+      liked_many:
+        other: "<span class='multi-user'>%{username} 和 %{count} 其他 </span> %{description}"
       liked_by_2_users: "%{username}、%{username2}"
       liked_by_multiple_users:
-        other: "%{username} 和其他 %{count} 人"
+        other: "%{username} 和其他 %{count}"
       liked_consolidated_description:
         other: "点赞了您的 %{count} 个帖子"
       liked_consolidated: "<span>%{username}</span> %{description}"
@@ -5085,7 +5089,7 @@ zh_CN:
       form_templates:
         nav_title: "模板"
         title: "表单模板"
-        help: "创建可用于创建新话题、帖子和消息的模板结构。"
+        help: "创建可用于创建新话题的表单模板结构。"
         new_template: "新建模板"
         list_table:
           headings:

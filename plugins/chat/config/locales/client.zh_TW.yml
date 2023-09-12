@@ -67,6 +67,7 @@ zh_TW:
       channel_delete:
         title: "刪除頻道"
       close: "關閉"
+      remove: "移除"
       delete: "刪除"
       edited: "已編輯"
       muted: "靜音"

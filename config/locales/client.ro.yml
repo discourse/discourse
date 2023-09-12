@@ -335,6 +335,10 @@ ro:
       abandon:
         yes_value: "Renunță"
         no_value: "Reia editarea"
+    topic_count_all:
+      one: "Afișați %{count} subiect nou"
+      few: "Afișați %{count} subiecte noi"
+      other: "Afișați %{count} subiecte noi"
     topic_count_categories:
       one: "Un subiect nou sau actualizat."
       few: "%{count} subiecte noi sau actualizate."

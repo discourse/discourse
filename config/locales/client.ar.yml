@@ -479,6 +479,13 @@ ar:
         confirm: "لديك بالفعل مسودة قيد التقدم. ماذا تريد أن تفعل بها؟"
         yes_value: "تجاهل"
         no_value: "استئناف التعديل"
+    topic_count_all:
+      zero: "عرض %{count} موضوعًا جديدًا"
+      one: "عرض موضوع واحد (%{count}) جديد"
+      two: "عرض موضوعين (%{count}) جديدين"
+      few: "عرض %{count} موضوعات جديدة"
+      many: "عرض %{count} موضوعًا جديدًا"
+      other: "طالِع %{count} موضوع جديد"
     topic_count_categories:
       zero: "عرض %{count} موضوع جديد أو محدَّث"
       one: "عرض موضوع واحد (%{count}) جديد أو محدَّث"
@@ -6160,7 +6167,6 @@ ar:
       form_templates:
         nav_title: "القوالب"
         title: "قوالب النموذج"
-        help: "أنشئ هيكل قالب يمكن استخدامها لإنشاء موضوعات ومنشورات ورسائل جديدة."
         new_template: "قالب جديد"
         list_table:
           headings:

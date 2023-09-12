@@ -86,6 +86,7 @@ de:
         create: "Neuer Kanal"
       click_to_join: "Klicke hier, um die verfügbaren Kanäle zu sehen."
       close: "Schließen"
+      remove: "Entfernen"
       collapse: "Chat-Bereich ausblenden"
       expand: "Chat-Bereich erweitern"
       confirm_flag: "Bist du sicher, dass du die Nachricht von %{username} markieren möchtest?"

@@ -85,6 +85,7 @@ fi:
         create: "Uusi kanava"
       click_to_join: "Näytä saatavilla olevat kanavat napsauttamalla tätä."
       close: "Sulje"
+      remove: "Poista"
       collapse: "Tiivistä chat-laatikko"
       expand: "Laajenna chat-laatikko"
       confirm_flag: "Haluatko varmasti liputtaa käyttäjän %{username} viestin?"

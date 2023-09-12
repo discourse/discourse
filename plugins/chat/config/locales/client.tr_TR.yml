@@ -86,6 +86,7 @@ tr_TR:
         create: "Yeni kanal"
       click_to_join: "Mevcut kanalları görüntülemek için buraya tıklayın."
       close: "Kapat"
+      remove: "Kaldır"
       collapse: "Sohbet Çekmecesini Daralt"
       expand: "Sohbet Çekmecesini genişlet"
       confirm_flag: "%{username} adlı kullanıcının mesajına bayrak eklemek istediğinizden emin misiniz?"

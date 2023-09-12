@@ -21,6 +21,7 @@ et:
         join: "Liitu"
         leave: "Lahku"
       close: "Sulge"
+      remove: "Eemalda"
       delete: "Kustuta"
       muted: "vaigistatud"
       joined: "liitus"
