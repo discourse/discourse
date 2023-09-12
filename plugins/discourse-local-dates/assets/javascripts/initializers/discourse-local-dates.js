@@ -1,17 +1,16 @@
-import deprecated from "discourse-common/lib/deprecated";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { bind } from "discourse-common/utils/decorators";
 import LocalDateBuilder from "../lib/local-date-builder";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import showModal from "discourse/lib/show-modal";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { renderIcon } from "discourse-common/lib/icon-library";
 import I18n from "I18n";
-import { hidePopover, showPopover } from "discourse/lib/d-popover";
 import {
   addTagDecorateCallback,
   addTextDecorateCallback,
 } from "discourse/lib/to-markdown";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
+import { htmlSafe } from "@ember/template";
 
 // Import applyLocalDates from discourse/lib/local-dates instead
 export function applyLocalDates(dates, siteSettings) {
@@ -348,11 +347,9 @@ function _calculateDuration(element) {
 export default {
   name: "discourse-local-dates",
 
+  @bind
   showDatePopover(event) {
-    const owner = getOwner(this);
-    if (owner.isDestroyed || owner.isDestroying) {
-      return;
-    }
+    const tooltip = this.container.lookup("service:tooltip");
 
     if (event?.target?.classList?.contains("download-calendar")) {
       const dataset = event.target.dataset;
@@ -363,50 +360,25 @@ export default {
         },
       ]);
 
-      // TODO: remove this when rewriting preview as a component
-      const parentPopover = event.target.closest("[data-tippy-root]");
-      if (parentPopover?._tippy) {
-        parentPopover._tippy.hide();
-      }
-
-      return;
+      return tooltip.close();
     }
 
     if (!event?.target?.classList?.contains("discourse-local-date")) {
       return;
     }
 
-    const siteSettings = owner.lookup("service:site-settings");
-
-    showPopover(event, {
-      trigger: "click",
-      content: buildHtmlPreview(event.target, siteSettings),
-      allowHTML: true,
-      interactive: true,
-      appendTo: "parent",
-      onHidden: (instance) => {
-        instance.destroy();
-      },
+    const siteSettings = this.container.lookup("service:site-settings");
+    return tooltip.show(event.target, {
+      content: htmlSafe(buildHtmlPreview(event.target, siteSettings)),
     });
   },
 
-  hideDatePopover(event) {
-    hidePopover(event);
-  },
-
   initialize(container) {
-    window.addEventListener("click", this.showDatePopover);
+    this.container = container;
+    window.addEventListener("click", this.showDatePopover, { passive: true });
 
     const siteSettings = container.lookup("service:site-settings");
     if (siteSettings.discourse_local_dates_enabled) {
-      $.fn.applyLocalDates = function () {
-        deprecated(
-          "`$.applyLocalDates()` is deprecated, import and use `applyLocalDates()` instead."
-        );
-
-        return applyLocalDates(this.toArray(), siteSettings);
-      };
-
       withPluginApi("0.8.8", initializeDiscourseLocalDates);
     }
   },

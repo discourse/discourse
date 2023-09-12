@@ -1,0 +1,48 @@
+@keyframes d-toast-opening {
+  0% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+}
+
+.fk-d-toasts {
+  position: fixed;
+  top: 5px;
+  right: 5px;
+  z-index: z("max");
+
+  .mobile-view & {
+    left: 5px;
+  }
+
+  .fk-d-toast {
+    box-sizing: border-box;
+    opacity: 1;
+    transition: opacity 0.5s;
+    border-radius: var(--d-border-radius);
+    overflow: hidden;
+    background-color: var(--secondary);
+    border: 1px solid var(--primary-low);
+    box-shadow: var(--shadow-menu-panel);
+    overflow-wrap: break-word;
+    display: flex;
+    animation: d-toast-opening 0.5s ease-in-out;
+
+    &:hover {
+      border-color: var(--primary-300);
+    }
+
+    &.-fade-out {
+      opacity: 0;
+    }
+
+    & + .d-toast {
+      margin-top: 0.25rem;
+    }
+  }
+}

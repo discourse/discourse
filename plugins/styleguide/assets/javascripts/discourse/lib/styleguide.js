@@ -18,7 +18,9 @@ import headerIcons from "../components/sections/molecules/header-icons";
 import navigationBar from "../components/sections/molecules/navigation-bar";
 import navigationStacked from "../components/sections/molecules/navigation-stacked";
 import postMenu from "../components/sections/molecules/post-menu";
-import richTooltip from "../components/sections/molecules/rich-tooltip";
+import tooltips from "../components/sections/molecules/tooltips";
+import menus from "../components/sections/molecules/menus";
+import toasts from "../components/sections/molecules/toasts";
 import signupCta from "../components/sections/molecules/signup-cta";
 import topicListItem from "../components/sections/molecules/topic-list-item";
 import topicNotifications from "../components/sections/molecules/topic-notifications";
@@ -70,7 +72,9 @@ const SECTIONS = [
     id: "navigation-stacked",
   },
   { component: postMenu, category: "molecules", id: "post-menu" },
-  { component: richTooltip, category: "molecules", id: "rich-tooltip" },
+  { component: tooltips, category: "molecules", id: "tooltips" },
+  { component: menus, category: "molecules", id: "menus" },
+  { component: toasts, category: "molecules", id: "toasts" },
   { component: signupCta, category: "molecules", id: "signup-cta" },
   { component: topicListItem, category: "molecules", id: "topic-list-item" },
   {

@@ -12,6 +12,9 @@ import {
 } from "discourse/models/bookmark";
 import { isTesting } from "discourse-common/config/environment";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
+import { hbs } from "ember-cli-htmlbars";
+import AdminPostMenu from "discourse/components/admin-post-menu";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
@@ -403,11 +406,13 @@ registerButton("admin", (attrs) => {
   if (!attrs.canManage && !attrs.canWiki && !attrs.canEditStaffNotes) {
     return;
   }
+
   return {
     action: "openAdminMenu",
     title: "post.controls.admin",
     className: "show-post-admin-menu",
     icon: "wrench",
+    sendActionEvent: true,
   };
 });
 
@@ -464,7 +469,7 @@ function _replaceButton(buttons, find, replace) {
 
 export default createWidget("post-menu", {
   tagName: "section.post-menu-area.clearfix",
-  services: ["modal"],
+  services: ["modal", "menu"],
 
   settings: {
     collapseButtons: true,
@@ -477,27 +482,67 @@ export default createWidget("post-menu", {
       collapsed: true,
       likedUsers: [],
       readers: [],
-      adminVisible: false,
     };
   },
 
   buildKey: (attrs) => `post-menu-${attrs.id}`,
 
   attachButton(name) {
-    let buttonAtts = buildButton(name, this);
+    let buttonAttrs = buildButton(name, this);
+
+    if (buttonAttrs?.component) {
+      return [
+        new RenderGlimmer(
+          this,
+          buttonAttrs.tagName,
+          hbs`<@data.component
+            @permanentlyDeletePost={{@data.permanentlyDeletePost}}
+            @lockPost={{@data.lockPost}}
+            @unlockPost={{@data.unlockPost}}
+            @grantBadge={{@data.grantBadge}}
+            @rebakePost={{@data.rebakePost}}
+            @toggleWiki={{@data.toggleWiki}}
+            @changePostOwner={{@data.changePostOwner}}
+            @changeNotice={{@data.changeNotice}}
+            @togglePostType={{@data.togglePostType}}
+            @unhidePost={{@data.unhidePost}}
+            @showPagePublish={{@data.showPagePublish}}
+            @post={{@data.post}}
+            @transformedPost={{@data.transformedPost}}
+            @scheduleRerender={{@data.scheduleRerender}}
+          />`,
+          {
+            component: buttonAttrs.component,
+            transformedPost: this.attrs,
+            post: this.findAncestorModel(),
+            permanentlyDeletePost: () =>
+              this.sendWidgetAction("permanentlyDeletePost"),
+            lockPost: () => this.sendWidgetAction("lockPost"),
+            unlockPost: () => this.sendWidgetAction("unlockPost"),
+            grantBadge: () => this.sendWidgetAction("grantBadge"),
+            rebakePost: () => this.sendWidgetAction("rebakePost"),
+            toggleWiki: () => this.sendWidgetAction("toggleWiki"),
+            changePostOwner: () => this.sendWidgetAction("changePostOwner"),
+            changeNotice: () => this.sendWidgetAction("changeNotice"),
+            togglePostType: () => this.sendWidgetAction("togglePostType"),
+            scheduleRerender: () => this.scheduleRerender(),
+          }
+        ),
+      ];
+    }
 
     // If the button is replaced via the plugin API, we need to render the
     // replacement rather than a button
-    if (buttonAtts?.replaced) {
-      return this.attach(buttonAtts.name, buttonAtts.attrs);
+    if (buttonAttrs?.replaced) {
+      return this.attach(buttonAttrs.name, buttonAttrs.attrs);
     }
 
-    if (buttonAtts) {
-      let button = this.attach(this.settings.buttonType, buttonAtts);
-      if (buttonAtts.before) {
-        let before = this.attachButton(buttonAtts.before);
+    if (buttonAttrs) {
+      let button = this.attach(this.settings.buttonType, buttonAttrs);
+      if (buttonAttrs.before) {
+        let before = this.attachButton(buttonAttrs.before);
         return h("div.double-button", [before, button]);
-      } else if (buttonAtts.addContainer) {
+      } else if (buttonAttrs.addContainer) {
         return h("div.double-button", [button]);
       }
 
@@ -590,18 +635,18 @@ export default createWidget("post-menu", {
       }
 
       if (shouldAddButton && builder) {
-        const buttonAtts = builder(
+        const buttonAttrs = builder(
           attrs,
           this.state,
           this.siteSettings,
           this.settings,
           this.currentUser
         );
-        if (buttonAtts) {
-          const { position, beforeButton, afterButton } = buttonAtts;
-          delete buttonAtts.position;
+        if (buttonAttrs) {
+          const { position, beforeButton, afterButton } = buttonAttrs;
+          delete buttonAttrs.position;
 
-          let button = this.attach(this.settings.buttonType, buttonAtts);
+          let button = this.attach(this.settings.buttonType, buttonAttrs);
 
           const content = [];
           if (beforeButton) {
@@ -666,9 +711,6 @@ export default createWidget("post-menu", {
     ];
 
     postControls.push(h("div.actions", controlsButtons));
-    if (state.adminVisible) {
-      postControls.push(this.attach("post-admin-menu", attrs));
-    }
 
     const contents = [
       h(
@@ -728,12 +770,28 @@ export default createWidget("post-menu", {
     return contents;
   },
 
-  openAdminMenu() {
-    this.state.adminVisible = true;
-  },
-
-  closeAdminMenu() {
-    this.state.adminVisible = false;
+  openAdminMenu(event) {
+    this.menu.show(event.target, {
+      identifier: "admin-post-menu",
+      component: AdminPostMenu,
+      data: {
+        scheduleRerender: this.scheduleRerender.bind(this),
+        transformedPost: this.attrs,
+        post: this.findAncestorModel(),
+        permanentlyDeletePost: () =>
+          this.sendWidgetAction("permanentlyDeletePost"),
+        lockPost: () => this.sendWidgetAction("lockPost"),
+        unlockPost: () => this.sendWidgetAction("unlockPost"),
+        grantBadge: () => this.sendWidgetAction("grantBadge"),
+        rebakePost: () => this.sendWidgetAction("rebakePost"),
+        toggleWiki: () => this.sendWidgetAction("toggleWiki"),
+        changePostOwner: () => this.sendWidgetAction("changePostOwner"),
+        changeNotice: () => this.sendWidgetAction("changeNotice"),
+        togglePostType: () => this.sendWidgetAction("togglePostType"),
+        unhidePost: () => this.sendWidgetAction("unhidePost"),
+        showPagePublish: () => this.sendWidgetAction("showPagePublish"),
+      },
+    });
   },
 
   showDeleteTopicModal() {

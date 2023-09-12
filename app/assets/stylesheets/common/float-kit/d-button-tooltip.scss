@@ -1,0 +1,12 @@
+.fk-d-button-tooltip {
+  display: inline-flex;
+  align-items: center;
+
+  .fk-d-tooltip__trigger {
+    background: var(--primary-very-low);
+    height: 100%;
+    align-items: center;
+    display: flex;
+    padding-inline: 0.5rem;
+  }
+}
