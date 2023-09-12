@@ -7,20 +7,10 @@ describe Chat::Message do
 
   it { is_expected.to have_many(:chat_mentions).dependent(:destroy) }
 
-  describe "validates" do
-    fab!(:channel) { Fabricate(:chat_channel) }
-    fab!(:user) { Fabricate(:user) }
+  describe "validations" do
+    subject(:message) { described_class.new(message: "") }
 
-    it "cooked column does not exceed maximum length" do
-      str = "a b c d e f g h i j " * 1_000
-      cooked = described_class.cook(str)
-      message = described_class.new(message: str, cooked: cooked, chat_channel: channel, user: user)
-
-      expect(message).not_to be_valid
-
-      # should fail due to cooked markup exceeding max length
-      expect(message.errors[:cooked]).to eq(["is too long (maximum is 20000 characters)"])
-    end
+    it { is_expected.to validate_length_of(:cooked).is_at_most(20_000) }
   end
 
   describe ".cook" do
