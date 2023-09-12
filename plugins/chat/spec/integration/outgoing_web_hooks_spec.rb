@@ -6,7 +6,12 @@ RSpec.describe "Outgoing chat webhooks" do
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
   end
 
-  shared_context "with chat message webhook tests" do
+  describe "chat messages" do
+    fab!(:web_hook) { Fabricate(:outgoing_chat_message_web_hook) }
+    fab!(:user1) { Fabricate(:user) }
+    fab!(:user2) { Fabricate(:user) }
+    let(:message_content) { "This is a test message" }
+    let(:new_message_content) { "This is the edited message" }
     let(:job_args) { Jobs::EmitWebHookEvent.jobs[0]["args"].first }
     let(:event_name) { job_args["event_name"] }
     let(:payload) { JSON.parse(job_args["payload"]) }
@@ -82,16 +87,6 @@ RSpec.describe "Outgoing chat webhooks" do
 
       yield(payload_channel) if block_given?
     end
-  end
-
-  describe "chat messages" do
-    include_context "with chat message webhook tests"
-
-    fab!(:web_hook) { Fabricate(:outgoing_chat_message_web_hook) }
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
-    let(:message_content) { "This is a test message" }
-    let(:new_message_content) { "This is the edited message" }
 
     context "for a category channel" do
       fab!(:category) { Fabricate(:category) }
