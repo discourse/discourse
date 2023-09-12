@@ -1722,6 +1722,10 @@ class User < ActiveRecord::Base
     new_secure_identifier
   end
 
+  def second_factor_security_keys
+    security_keys.where(factor_type: UserSecurityKey.factor_types[:second_factor])
+  end
+
   def second_factor_security_key_credential_ids
     security_keys
       .select(:credential_id)

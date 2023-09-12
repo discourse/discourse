@@ -5862,6 +5862,7 @@ RSpec.describe UsersController do
         sign_in(user1)
         stub_secure_session_confirmed
       end
+
       context "when user has a registered totp and security key" do
         before do
           _totp_second_factor = Fabricate(:user_second_factor_totp, user: user1)
@@ -5871,9 +5872,10 @@ RSpec.describe UsersController do
               user: user1,
               factor_type: UserSecurityKey.factor_types[:second_factor],
             )
+          Fabricate(:passkey_with_random_credential, user: user1)
         end
 
-        it "should disable all totp and security keys" do
+        it "should disable all totp and security keys (but not passkeys)" do
           expect_enqueued_with(
             job: :critical_user_email,
             args: {
@@ -5886,7 +5888,8 @@ RSpec.describe UsersController do
             expect(response.status).to eq(200)
 
             expect(user1.reload.user_second_factors).to be_empty
-            expect(user1.security_keys).to be_empty
+            expect(user1.second_factor_security_keys).to be_empty
+            expect(user1.security_keys.length).to eq(1)
           end
         end
       end
