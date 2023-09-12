@@ -172,6 +172,11 @@ class UserSerializer < UserCardSerializer
         { id: usk.id, name: usk.name, last_used: usk.last_used, created_at: usk.created_at }
       end
   end
+
+  def include_user_passkeys?
+    SiteSetting.experimental_passkeys
+  end
+
   def bio_raw
     object.user_profile.bio_raw
   end
