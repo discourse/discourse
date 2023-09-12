@@ -233,7 +233,7 @@ export default class PostTextSelection extends Component {
   }
 
   @bind
-  async mousedown(event) {
+  mousedown(event) {
     this.holdingMouseDown = false;
 
     if (!event.target.closest(".cooked")) {
