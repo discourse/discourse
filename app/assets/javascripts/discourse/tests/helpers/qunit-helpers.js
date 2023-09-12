@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import QUnit, { module, skip, test } from "qunit";
 import { cloneJSON, deepMerge } from "discourse-common/lib/object";
 import MessageBus from "message-bus-client";
@@ -322,6 +323,8 @@ export function acceptance(name, optionsOrCallback) {
 
   const setup = {
     beforeEach() {
+      I18n.testing = true;
+
       resetMobile();
 
       resetExtraClasses();
@@ -359,6 +362,7 @@ export function acceptance(name, optionsOrCallback) {
     },
 
     afterEach() {
+      I18n.testing = false;
       resetMobile();
       let app = getApplication();
       options?.afterEach?.call(this);
