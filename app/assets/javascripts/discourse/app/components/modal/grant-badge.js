@@ -1,5 +1,4 @@
 import { action } from "@ember/object";
-import { empty } from "@ember/object/computed";
 import { tracked } from "@glimmer/tracking";
 import Component from "@glimmer/component";
 import Badge from "discourse/models/badge";
@@ -21,7 +20,10 @@ export default class GrantBadgeModal extends Component {
   @tracked allBadges = [];
   @tracked userBadges = [];
   @tracked availableBadges = [];
-  @empty("availableBadges") noAvailableBadges;
+
+  get noAvailableBadges() {
+    !this.availableBadges.length;
+  }
 
   get post() {
     return this.args.model.selectedPost;
