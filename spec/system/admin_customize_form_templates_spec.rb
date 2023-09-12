@@ -178,7 +178,6 @@ describe "Admin Customize Form Templates", type: :system do
   attributes:
     none_label: "Select an item"
     label: "Enter label here"
-    filterable: false
   validations:
     # enter validations here',
       )
