@@ -564,21 +564,13 @@ module("Integration | Component | Widget | post", function (hooks) {
   test("show admin menu", async function (assert) {
     this.set("args", { canManage: true });
 
-    await render(
-      hbs`<MountWidget @widget="post" @args={{this.args}} /><DInlineMenu />`
-    );
+    await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
 
-    assert
-      .dom("[data-content][data-identifier='admin-post-menu']")
-      .doesNotExist();
+    assert.ok(!exists(".post-admin-menu"));
     await click(".post-menu-area .show-post-admin-menu");
-
-    assert.dom("[data-content][data-identifier='admin-post-menu']").exists();
-
+    assert.strictEqual(count(".post-admin-menu"), 1, "it shows the popup");
     await click(".post-menu-area");
-    assert
-      .dom("[data-content][data-identifier='admin-post-menu']")
-      .doesNotExist("clicking outside clears the popup");
+    assert.ok(!exists(".post-admin-menu"), "clicking outside clears the popup");
   });
 
   test("permanently delete topic", async function (assert) {
@@ -586,17 +578,13 @@ module("Integration | Component | Widget | post", function (hooks) {
     this.set("permanentlyDeletePost", () => (this.deleted = true));
 
     await render(
-      hbs`<MountWidget @widget="post" @args={{this.args}} @permanentlyDeletePost={{this.permanentlyDeletePost}} /><DInlineMenu />`
+      hbs`<MountWidget @widget="post" @args={{this.args}} @permanentlyDeletePost={{this.permanentlyDeletePost}} />`
     );
 
     await click(".post-menu-area .show-post-admin-menu");
-    await click(
-      "[data-content][data-identifier='admin-post-menu'] .permanently-delete"
-    );
+    await click(".post-admin-menu .permanently-delete");
     assert.ok(this.deleted);
-    assert
-      .dom("[data-content][data-identifier='admin-post-menu']")
-      .doesNotExist("also hides the menu");
+    assert.ok(!exists(".post-admin-menu"), "also hides the menu");
   });
 
   test("permanently delete post", async function (assert) {
@@ -605,18 +593,12 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`
       <MountWidget @widget="post" @args={{this.args}} @permanentlyDeletePost={{this.permanentlyDeletePost}} />
-      <DInlineMenu />
     `);
 
     await click(".post-menu-area .show-post-admin-menu");
-
-    await click(
-      "[data-content][data-identifier='admin-post-menu'] .permanently-delete"
-    );
+    await click(".post-admin-menu .permanently-delete");
     assert.ok(this.deleted);
-    assert
-      .dom("[data-content][data-identifier='admin-post-menu']")
-      .doesNotExist("also hides the menu");
+    assert.ok(!exists(".post-admin-menu"), "also hides the menu");
   });
 
   test("toggle moderator post", async function (assert) {
@@ -626,18 +608,29 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`
       <MountWidget @widget="post" @args={{this.args}} @togglePostType={{this.togglePostType}} />
-      <DInlineMenu />
     `);
 
     await click(".post-menu-area .show-post-admin-menu");
-    await click(
-      "[data-content][data-identifier='admin-post-menu'] .toggle-post-type"
-    );
+    await click(".post-admin-menu .toggle-post-type");
 
     assert.ok(this.toggled);
-    assert
-      .dom("[data-content][data-identifier='admin-post-menu']")
-      .doesNotExist("also hides the menu");
+    assert.ok(!exists(".post-admin-menu"), "also hides the menu");
+  });
+
+  test("toggle moderator post", async function (assert) {
+    this.currentUser.set("moderator", true);
+    this.set("args", { canManage: true });
+    this.set("togglePostType", () => (this.toggled = true));
+
+    await render(hbs`
+      <MountWidget @widget="post" @args={{this.args}} @togglePostType={{this.togglePostType}} />
+    `);
+
+    await click(".post-menu-area .show-post-admin-menu");
+    await click(".post-admin-menu .toggle-post-type");
+
+    assert.ok(this.toggled);
+    assert.ok(!exists(".post-admin-menu"), "also hides the menu");
   });
 
   test("rebake post", async function (assert) {
@@ -646,41 +639,27 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`
       <MountWidget @widget="post" @args={{this.args}} @rebakePost={{this.rebakePost}} />
-      <DInlineMenu />
     `);
 
     await click(".post-menu-area .show-post-admin-menu");
-    await click(
-      "[data-content][data-identifier='admin-post-menu'] .rebuild-html"
-    );
+    await click(".post-admin-menu .rebuild-html");
     assert.ok(this.baked);
-    assert
-      .dom("[data-content][data-identifier='admin-post-menu']")
-      .doesNotExist("also hides the menu");
+    assert.ok(!exists(".post-admin-menu"), "also hides the menu");
   });
 
   test("unhide post", async function (assert) {
-    let unhidden;
     this.currentUser.admin = true;
     this.set("args", { canManage: true, hidden: true });
-    this.set("unhidePost", () => (unhidden = true));
+    this.set("unhidePost", () => (this.unhidden = true));
 
     await render(hbs`
       <MountWidget @widget="post" @args={{this.args}} @unhidePost={{this.unhidePost}} />
-      <DInlineMenu />
     `);
 
     await click(".post-menu-area .show-post-admin-menu");
-
-    await click(
-      "[data-content][data-identifier='admin-post-menu'] .unhide-post"
-    );
-
-    assert.ok(unhidden);
-
-    assert
-      .dom("[data-content][data-identifier='admin-post-menu']")
-      .doesNotExist("also hides the menu");
+    await click(".post-admin-menu .unhide-post");
+    assert.ok(this.unhidden);
+    assert.ok(!exists(".post-admin-menu"), "also hides the menu");
   });
 
   test("change owner", async function (assert) {
@@ -690,17 +669,12 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(hbs`
       <MountWidget @widget="post" @args={{this.args}} @changePostOwner={{this.changePostOwner}} />
-      <DInlineMenu />
     `);
 
     await click(".post-menu-area .show-post-admin-menu");
-    await click(
-      "[data-content][data-identifier='admin-post-menu'] .change-owner"
-    );
+    await click(".post-admin-menu .change-owner");
     assert.ok(this.owned);
-    assert
-      .dom("[data-content][data-identifier='admin-post-menu']")
-      .doesNotExist("also hides the menu");
+    assert.ok(!exists(".post-admin-menu"), "also hides the menu");
   });
 
   test("reply", async function (assert) {

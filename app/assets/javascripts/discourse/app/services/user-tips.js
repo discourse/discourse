@@ -1,20 +1,16 @@
-import { getOwner } from "discourse-common/lib/get-owner";
-import Service, { inject as service } from "@ember/service";
+import Service from "@ember/service";
 import { isTesting } from "discourse-common/config/environment";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "I18n";
 import { escape } from "pretty-text/sanitizer";
+import tippy from "tippy.js";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import discourseLater from "discourse-common/lib/later";
 import { cancel } from "@ember/runloop";
-import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
-import UserTipContainer from "discourse/components/user-tip-container";
 
-const DELAY = 500;
+const TIPPY_DELAY = 500;
 
 export default class UserTips extends Service {
-  @service tooltip;
-
   #instances = new Map();
 
   /**
@@ -24,6 +20,7 @@ export default class UserTips extends Service {
    * @param {string} [options.buttonLabel]
    * @param {string} [options.buttonIcon]
    * @param {string} [options.placement]
+   * @param {Element} [options.appendTo]
    * @param {string} [options.content]
    * @param {string} [options.contentText]
    * @param {string} [options.titleText]
@@ -54,19 +51,42 @@ export default class UserTips extends Service {
 
     this.#instances.set(
       options.id,
-      new DTooltipInstance(getOwner(this), options.reference, {
-        identifier: "user-tip",
-        interactive: true,
-        closeOnScroll: false,
-        closeOnClickOutside: false,
+      tippy(options.reference, {
+        hideOnClick: false,
+        trigger: "manual",
+        theme: "user-tip",
+        zIndex: "", // reset z-index to use inherited value from the parent
+        duration: TIPPY_DELAY,
+
+        arrow: iconHTML("tippy-rounded-arrow"),
         placement: options.placement,
-        component: UserTipContainer,
-        data: {
-          titleText: escape(options.titleText),
-          contentHtml: options.contentHtml || null,
-          contentText: options.contentText ? escape(options.contentText) : null,
-          onDismiss: options.onDismiss,
-          buttonText,
+        appendTo: options.appendTo,
+
+        interactive: true, // for buttons in content
+        allowHTML: true,
+
+        content:
+          options.content ||
+          `<div class='user-tip__container'>
+            <div class='user-tip__title'>${escape(options.titleText)}</div>
+            <div class='user-tip__content'>${
+              options.contentHtml || escape(options.contentText)
+            }</div>
+            <div class='user-tip__buttons'>
+              <button class="btn btn-primary">${buttonText}</button>
+            </div>
+          </div>`,
+
+        onCreate(tippyInstance) {
+          // Used to set correct z-index property on root tippy element
+          tippyInstance.popper.classList.add("user-tip");
+
+          tippyInstance.popper
+            .querySelector(".btn")
+            .addEventListener("click", (event) => {
+              options.onDismiss?.();
+              event.preventDefault();
+            });
         },
       })
     );
@@ -75,7 +95,7 @@ export default class UserTips extends Service {
   }
 
   hideTip(userTipId, force = false) {
-    // Instances are not destroyed immediately because sometimes their
+    // Tippy instances are not destroyed immediately because sometimes there
     // user tip is recreated immediately. This happens when Ember components
     // are re-rendered because a parent component has changed
 
@@ -93,7 +113,7 @@ export default class UserTips extends Service {
         this.#destroyInstance(this.#instances.get(userTipId));
         this.#instances.delete(userTipId);
         this.showNextTip();
-      }, DELAY);
+      }, TIPPY_DELAY);
     }
   }
 
@@ -107,7 +127,7 @@ export default class UserTips extends Service {
   showNextTip() {
     // Return early if a user tip is already visible and it is in viewport
     for (const tip of this.#instances.values()) {
-      if (tip.expanded && isElementInViewport(tip.trigger)) {
+      if (tip.state.isVisible && isElementInViewport(tip.reference)) {
         return;
       }
     }
@@ -115,9 +135,8 @@ export default class UserTips extends Service {
     // Otherwise, try to find a user tip in the viewport
     let visibleTip;
     for (const tip of this.#instances.values()) {
-      if (isElementInViewport(tip.trigger)) {
+      if (isElementInViewport(tip.reference)) {
         visibleTip = tip;
-
         break;
       }
     }
@@ -158,18 +177,20 @@ export default class UserTips extends Service {
 
   #showInstance(instance) {
     if (isTesting()) {
-      this.tooltip.show(instance);
+      instance.show();
     } else if (!instance.showTimer) {
       instance.showTimer = discourseLater(() => {
         instance.showTimer = null;
-        this.tooltip.show(instance);
-      }, DELAY);
+        if (!instance.state.isDestroyed) {
+          instance.show();
+        }
+      }, TIPPY_DELAY);
     }
   }
 
   #hideInstance(instance) {
     cancel(instance.showTimer);
     instance.showTimer = null;
-    this.tooltip.close(instance);
+    instance.hide();
   }
 }

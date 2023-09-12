@@ -2,11 +2,11 @@ import { UserStatusMessage } from "discourse/lib/user-status-message";
 
 let userStatusMessages = [];
 
-export function initUserStatusHtml(owner, users) {
+export function initUserStatusHtml(users) {
   (users || []).forEach((user, index) => {
     if (user.status) {
       user.index = index;
-      const userStatusMessage = new UserStatusMessage(owner, user.status, {
+      const userStatusMessage = new UserStatusMessage(user.status, {
         showDescription: true,
       });
       user.statusHtml = userStatusMessage.html;

@@ -52,7 +52,7 @@ export default class TopicTimeline extends Component {
   }
 
   @bind
-  addUserTip() {
+  addUserTip(element) {
     if (!this.currentUser) {
       return;
     }
@@ -62,6 +62,7 @@ export default class TopicTimeline extends Component {
       titleText: I18n.t("user_tips.topic_timeline.title"),
       contentText: I18n.t("user_tips.topic_timeline.content"),
       reference: document.querySelector("div.timeline-scrollarea-wrapper"),
+      appendTo: element,
       placement: "left",
     });
   }

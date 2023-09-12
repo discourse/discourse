@@ -34,6 +34,7 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import ChatOnLongPress from "discourse/plugins/chat/discourse/modifiers/chat/on-long-press";
 
 let _chatMessageDecorators = [];
+let _tippyInstances = [];
 
 export function addChatMessageDecorator(decorator) {
   _chatMessageDecorators.push(decorator);
@@ -296,6 +297,13 @@ export default class ChatMessage extends Component {
     this.#teardownMentionedUsers();
   }
 
+  #destroyTippyInstances() {
+    _tippyInstances.forEach((instance) => {
+      instance.destroy();
+    });
+    _tippyInstances = [];
+  }
+
   @action
   refreshStatusOnMentions() {
     schedule("afterRender", () => {
@@ -306,7 +314,7 @@ export default class ChatMessage extends Component {
         );
 
         mentions.forEach((mention) => {
-          updateUserStatusOnMention(getOwner(this), mention, user.status);
+          updateUserStatusOnMention(mention, user.status, _tippyInstances);
         });
       });
     });
@@ -588,5 +596,6 @@ export default class ChatMessage extends Component {
       user.stopTrackingStatus();
       user.off("status-changed", this, "refreshStatusOnMentions");
     });
+    this.#destroyTippyInstances();
   }
 }

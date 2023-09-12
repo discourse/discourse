@@ -1,0 +1,12 @@
+// ".tippy-box" is one of the classes tippy.js uses for creating tooltips
+// see https://atomiks.github.io/tippyjs/v6/themes/#tippy-elements
+//
+// Using `data-theme~="d-tooltip"` scopes down these styles
+// to tooltips created using the d-tooltip component
+.tippy-box[data-theme~="d-tooltip"] {
+  color: var(--primary);
+  background: var(--secondary);
+  border: 1px solid var(--primary-low);
+  box-shadow: var(--shadow-menu-panel);
+  overflow-wrap: break-word;
+}

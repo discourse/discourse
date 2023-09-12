@@ -1,0 +1,32 @@
+$d-popover-background: var(--secondary);
+$d-popover-border: var(--primary-low);
+
+.tippy-box {
+  color: var(--primary);
+  background: $d-popover-background;
+  border: 1px solid var(--primary-low);
+  box-shadow: var(--shadow-menu-panel);
+  border-radius: var(--d-border-radius);
+
+  > .tippy-svg-arrow {
+    color: $d-popover-background;
+  }
+}
+
+.tippy-box[data-placement^="top"] .tippy-svg-arrow > svg {
+  top: 12px;
+}
+.tippy-box[data-placement^="bottom"] .tippy-svg-arrow > svg {
+  top: -10px;
+}
+
+#tippy-rounded-arrow {
+  .svg-arrow {
+    fill: $d-popover-border;
+  }
+}
+
+[data-tooltip] > *,
+[data-popover] > * {
+  pointer-events: none;
+}

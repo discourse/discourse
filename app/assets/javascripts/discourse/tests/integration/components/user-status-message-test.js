@@ -5,7 +5,7 @@ import { hbs } from "ember-cli-htmlbars";
 import { exists, fakeTime, query } from "discourse/tests/helpers/qunit-helpers";
 
 async function mouseenter() {
-  await triggerEvent(query(".user-status-message"), "mousemove");
+  await triggerEvent(query(".user-status-message"), "mouseenter");
 }
 
 module("Integration | Component | user-status-message", function (hooks) {
@@ -27,6 +27,11 @@ module("Integration | Component | user-status-message", function (hooks) {
     assert.ok(exists("img.emoji[alt='tooth']"), "the status emoji is shown");
   });
 
+  test("it doesn't render status description by default", async function (assert) {
+    await render(hbs`<UserStatusMessage @status={{this.status}} />`);
+    assert.notOk(exists(".user-status-message-description"));
+  });
+
   test("it renders status description if enabled", async function (assert) {
     await render(hbs`
       <UserStatusMessage
@@ -34,9 +39,10 @@ module("Integration | Component | user-status-message", function (hooks) {
        @showDescription=true/>
     `);
 
-    assert
-      .dom('[data-trigger][data-identifier="user-status-message-tooltip"]')
-      .containsText("off to dentist");
+    assert.equal(
+      query(".user-status-message-description").innerText.trim(),
+      "off to dentist"
+    );
   });
 
   test("it shows the until TIME on the tooltip if status will expire today", async function (assert) {
@@ -47,14 +53,15 @@ module("Integration | Component | user-status-message", function (hooks) {
     );
     this.status.ends_at = "2100-02-01T12:30:00.000Z";
 
-    await render(
-      hbs`<UserStatusMessage @status={{this.status}} /><DInlineTooltip />`
-    );
-    await mouseenter();
+    await render(hbs`<UserStatusMessage @status={{this.status}} />`);
 
-    assert
-      .dom('[data-content][data-identifier="user-status-message-tooltip"]')
-      .containsText("Until: 12:30 PM");
+    await mouseenter();
+    assert.equal(
+      document
+        .querySelector("[data-tippy-root] .user-status-tooltip-until")
+        .textContent.trim(),
+      "Until: 12:30 PM"
+    );
   });
 
   test("it shows the until DATE on the tooltip if status will expire tomorrow", async function (assert) {
@@ -65,14 +72,15 @@ module("Integration | Component | user-status-message", function (hooks) {
     );
     this.status.ends_at = "2100-02-02T12:30:00.000Z";
 
-    await render(
-      hbs`<UserStatusMessage @status={{this.status}} /><DInlineTooltip />`
-    );
-    await mouseenter();
+    await render(hbs`<UserStatusMessage @status={{this.status}} />`);
 
-    assert
-      .dom('[data-content][data-identifier="user-status-message-tooltip"]')
-      .containsText("Until: Feb 2");
+    await mouseenter();
+    assert.equal(
+      document
+        .querySelector("[data-tippy-root] .user-status-tooltip-until")
+        .textContent.trim(),
+      "Until: Feb 2"
+    );
   });
 
   test("it doesn't show until datetime on the tooltip if status doesn't have expiration date", async function (assert) {
@@ -83,27 +91,32 @@ module("Integration | Component | user-status-message", function (hooks) {
     );
     this.status.ends_at = null;
 
-    await render(
-      hbs`<UserStatusMessage @status={{this.status}} /><DInlineTooltip />`
-    );
-    await mouseenter();
+    await render(hbs`<UserStatusMessage @status={{this.status}} />`);
 
-    assert
-      .dom(
-        '[data-content][data-identifier="user-status-message-tooltip"] .user-status-tooltip-until'
-      )
-      .doesNotExist();
+    await mouseenter();
+    assert.notOk(
+      document.querySelector("[data-tippy-root] .user-status-tooltip-until")
+    );
   });
 
   test("it shows tooltip by default", async function (assert) {
+    await render(hbs`<UserStatusMessage @status={{this.status}} />`);
+    await mouseenter();
+
+    assert.ok(
+      document.querySelector("[data-tippy-root] .user-status-message-tooltip")
+    );
+  });
+
+  test("it doesn't show tooltip if disabled", async function (assert) {
     await render(
-      hbs`<UserStatusMessage @status={{this.status}} /><DInlineTooltip />`
+      hbs`<UserStatusMessage @status={{this.status}} @showTooltip={{false}} />`
     );
     await mouseenter();
 
-    assert
-      .dom('[data-content][data-identifier="user-status-message-tooltip"]')
-      .exists();
+    assert.notOk(
+      document.querySelector("[data-tippy-root] .user-status-message-tooltip")
+    );
   });
 
   test("doesn't blow up with an anonymous user", async function (assert) {
@@ -112,9 +125,7 @@ module("Integration | Component | user-status-message", function (hooks) {
 
     await render(hbs`<UserStatusMessage @status={{this.status}} />`);
 
-    assert
-      .dom('[data-trigger][data-identifier="user-status-message-tooltip"]')
-      .exists();
+    assert.dom(".user-status-message").exists();
   });
 
   test("accepts a custom css class", async function (assert) {
@@ -124,8 +135,6 @@ module("Integration | Component | user-status-message", function (hooks) {
       hbs`<UserStatusMessage @status={{this.status}} @class="foo" />`
     );
 
-    assert
-      .dom('[data-trigger][data-identifier="user-status-message-tooltip"].foo')
-      .exists();
+    assert.dom(".user-status-message.foo").exists();
   });
 });
