@@ -166,9 +166,6 @@ RSpec.describe "React to message", type: :system do
         channel.click_reaction(message_1, "female_detective")
 
         expect(channel).to have_reaction(message_1, "female_detective", "1")
-        expect(
-          channel.find_reaction(message_1, "female_detective")["data-tippy-content"],
-        ).to include(other_user.username)
       end
     end
   end

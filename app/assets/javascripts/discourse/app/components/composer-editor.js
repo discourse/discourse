@@ -42,6 +42,7 @@ import {
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 // original string `![image|foo=bar|690x220, 50%|bar=baz](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
 // group 1 `image|foo=bar`
@@ -223,7 +224,7 @@ export default Component.extend(ComposerUploadUppy, {
             categoryId: this.topic?.category_id || this.composer?.categoryId,
             includeGroups: true,
           }).then((result) => {
-            initUserStatusHtml(result.users);
+            initUserStatusHtml(getOwner(this), result.users);
             return result;
           });
         },

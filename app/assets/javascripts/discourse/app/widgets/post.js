@@ -991,13 +991,9 @@ export default createWidget("post", {
 
     this.currentUser.showUserTip({
       id: "post_menu",
-
       titleText: I18n.t("user_tips.post_menu.title"),
       contentText: I18n.t("user_tips.post_menu.content"),
-
       reference,
-      appendTo: reference?.closest(".post-controls"),
-
       placement: "top",
     });
   },

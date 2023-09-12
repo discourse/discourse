@@ -163,7 +163,6 @@ createWidget("header-notifications", {
       reference: document
         .querySelector(".d-header .badge-notification")
         ?.parentElement?.querySelector(".avatar"),
-      appendTo: document.querySelector(".d-header"),
 
       placement: "bottom-end",
     });

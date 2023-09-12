@@ -1,14 +1,6 @@
 // shared styles for user and group cards
 .user-card,
 .group-card {
-  z-index: z("usercard");
-  &.fixed {
-    position: fixed;
-    z-index: z("header") + 1;
-  }
-  &.docked-card {
-    z-index: z("header") + 1;
-  }
   // avatar - names - controls
   .first-row {
     .names {

@@ -37,7 +37,6 @@ export default class UserTip extends Component {
       buttonIcon,
       reference:
         (selector && element.parentElement.querySelector(selector)) || element,
-      appendTo: element.parentElement,
       placement,
       onDismiss,
     });
