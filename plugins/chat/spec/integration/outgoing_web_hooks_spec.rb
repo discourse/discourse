@@ -14,6 +14,7 @@ RSpec.describe "Outgoing chat webhooks" do
     let(:new_message_content) { "This is the edited message" }
     let(:job_args) { Jobs::EmitWebHookEvent.jobs[0]["args"].first }
     let(:event_name) { job_args["event_name"] }
+    let(:event_category_id) { job_args["category_id"] }
     let(:payload) { JSON.parse(job_args["payload"]) }
 
     def expect_response_to_be_successful
@@ -22,6 +23,10 @@ RSpec.describe "Outgoing chat webhooks" do
 
     def expect_web_hook_event_name_to_be(name)
       expect(event_name).to eq(name)
+    end
+
+    def expect_web_hook_event_category_to_be(category)
+      expect(event_category_id).to eq(category.id)
     end
 
     def expect_web_hook_payload_message_to_match(message:, user:, &block)
@@ -110,6 +115,7 @@ RSpec.describe "Outgoing chat webhooks" do
 
         expect_response_to_be_successful
         expect_web_hook_event_name_to_be("chat_message_created")
+        expect_web_hook_event_category_to_be(category)
         expect_web_hook_payload_message_to_match(
           message: Chat::Message.last,
           user: user1,
@@ -125,6 +131,7 @@ RSpec.describe "Outgoing chat webhooks" do
 
         expect_response_to_be_successful
         expect_web_hook_event_name_to_be("chat_message_edited")
+        expect_web_hook_event_category_to_be(category)
         expect_web_hook_payload_message_to_match(
           message: Chat::Message.last,
           user: user1,
@@ -138,6 +145,7 @@ RSpec.describe "Outgoing chat webhooks" do
         expect_response_to_be_successful
         expect(chat_message.reload.trashed?).to eq(true)
         expect_web_hook_event_name_to_be("chat_message_trashed")
+        expect_web_hook_event_category_to_be(category)
         expect_web_hook_payload_message_to_match(message: chat_message, user: user1)
         expect_web_hook_payload_channel_to_match_category(channel: chat_channel, category: category)
       end
@@ -151,6 +159,7 @@ RSpec.describe "Outgoing chat webhooks" do
         expect_response_to_be_successful
         expect(chat_message.reload.trashed?).to eq(false)
         expect_web_hook_event_name_to_be("chat_message_restored")
+        expect_web_hook_event_category_to_be(category)
         expect_web_hook_payload_message_to_match(message: chat_message, user: user1)
         expect_web_hook_payload_channel_to_match_category(channel: chat_channel, category: category)
       end

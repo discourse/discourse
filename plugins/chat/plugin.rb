@@ -407,7 +407,13 @@ after_initialize do
           ).as_json,
       }
 
-      WebHook.enqueue_chat_message_hooks(chat_message_event, payload.to_json)
+      category_id = channel.chatable_type == "Category" ? channel.chatable_id : nil
+
+      WebHook.enqueue_chat_message_hooks(
+        chat_message_event,
+        payload.to_json,
+        category_id: category_id,
+      )
     end
   end
 
