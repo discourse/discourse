@@ -73,6 +73,7 @@ module Chat
 
     before_save { ensure_last_editor_id }
 
+    validates :cooked, length: { maximum: 12_000 }
     validate :validate_message
 
     def self.polymorphic_class_mapping = { "ChatMessage" => Chat::Message }
