@@ -1,0 +1,19 @@
+{{! template-lint-disable no-pointer-down-event-binding }}
+{{! template-lint-disable no-invalid-interactive }}
+<div class="fast-edit-container" {{on "keydown" this.onKeydown}}>
+  <textarea
+    {{auto-focus}}
+    {{on "input" this.updateValue}}
+    id="fast-edit-input"
+  >{{@initialValue}}</textarea>
+
+  <DButton
+    class="btn-small btn-primary save-fast-edit"
+    @action={{this.save}}
+    @icon="pencil-alt"
+    @label="composer.save_edit"
+    @translatedTitle={{this.buttonTitle}}
+    @isLoading={{this.isSaving}}
+    @disabled={{this.disabled}}
+  />
+</div>

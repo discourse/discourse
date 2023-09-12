@@ -1,0 +1,30 @@
+{{#if (and @reaction this.emojiUrl)}}
+  <button
+    type="button"
+    tabindex="0"
+    class={{concat-class
+      "chat-message-reaction"
+      (if @reaction.reacted "reacted")
+      (if this.isActive "-active")
+    }}
+    data-emoji-name={{@reaction.emoji}}
+    data-tippy-content={{this.popoverContent}}
+    title={{this.emojiString}}
+    {{did-insert this.setup}}
+    {{will-destroy this.teardown}}
+    {{did-update this.refreshTooltip this.popoverContent}}
+  >
+    <img
+      loading="lazy"
+      class="emoji"
+      width="20"
+      height="20"
+      alt={{this.emojiString}}
+      src={{this.emojiUrl}}
+    />
+
+    {{#if (and this.showCount @reaction.count)}}
+      <span class="count">{{@reaction.count}}</span>
+    {{/if}}
+  </button>
+{{/if}}
