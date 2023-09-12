@@ -105,12 +105,10 @@
       @placeholderKey="admin.groups.manage.interaction.incoming_email_placeholder"
     />
 
-    <span>
-      {{d-icon "info-circle"}}
-      <DTooltip>{{i18n
-          "admin.groups.manage.interaction.incoming_email_tooltip"
-        }}</DTooltip>
-    </span>
+    <DTooltip
+      @icon="info-circle"
+      @content={{i18n "admin.groups.manage.interaction.incoming_email_tooltip"}}
+    />
 
     <span>
       <PluginOutlet

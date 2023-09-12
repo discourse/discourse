@@ -1,19 +1,27 @@
-import { DTooltip } from "discourse/lib/d-tooltip";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { until } from "discourse/lib/formatter";
 import User from "discourse/models/user";
+import { setOwner } from "@ember/application";
+import { inject as service } from "@ember/service";
 
 export class UserStatusMessage {
-  #dTooltip;
+  @service tooltip;
 
-  constructor(status, opts) {
+  html = null;
+  content = null;
+
+  constructor(owner, status, opts) {
+    setOwner(this, owner);
     this.html = this.#statusHtml(status, opts);
-    this.#dTooltip = new DTooltip(this.html, this.#tooltipHtml(status));
+    this.content = this.#tooltipHtml(status);
+    this.tooltipInstance = this.tooltip.register(this.html, {
+      content: this.content,
+    });
   }
 
   destroy() {
-    this.#dTooltip.destroy();
+    this.tooltipInstance.destroy();
   }
 
   #emojiHtml(emojiName) {

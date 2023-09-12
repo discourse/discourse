@@ -20,6 +20,7 @@
     {{did-insert this.setupListeners}}
     {{will-destroy this.cleanupListeners}}
     {{on "mouseup" this.handleMouseUp}}
+    {{trap-tab (hash preventScroll=false)}}
   >
     <div class="modal-outer-container">
       <div class="modal-middle-container">
