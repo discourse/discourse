@@ -948,7 +948,7 @@ export default Component.extend(ComposerUploadUppy, {
       preview.addEventListener("click", this._handleImageScaleButtonClick);
       this._registerImageAltTextButtonClick(preview);
 
-      this.trigger("previewRefreshed", preview);
+      this.appEvents.trigger("decorate-non-stream-cooked-element", preview);
       this.afterRefresh($preview);
     },
   },
