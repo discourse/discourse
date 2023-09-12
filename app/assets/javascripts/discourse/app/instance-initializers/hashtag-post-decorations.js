@@ -10,7 +10,6 @@ export default {
     withPluginApi("0.8.7", (api) => {
       api.decorateCookedElement((post) => decorateHashtags(post, site), {
         onlyStream: true,
-        id: "hashtag-icons",
       });
     });
   },

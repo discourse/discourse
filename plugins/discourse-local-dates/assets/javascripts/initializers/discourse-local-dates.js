@@ -149,19 +149,16 @@ function initializeDiscourseLocalDates(api) {
     site_name: siteSettings.title,
   });
 
-  api.decorateCookedElement(
-    (elem, helper) => {
-      const dates = elem.querySelectorAll(".discourse-local-date");
+  api.decorateCookedElement((elem, helper) => {
+    const dates = elem.querySelectorAll(".discourse-local-date");
 
-      applyLocalDates(dates, siteSettings);
+    applyLocalDates(dates, siteSettings);
 
-      const topicTitle = helper?.getModel()?.topic?.title;
-      dates.forEach((date) => {
-        date.dataset.title = date.dataset.title || topicTitle || defaultTitle;
-      });
-    },
-    { id: "discourse-local-date" }
-  );
+    const topicTitle = helper?.getModel()?.topic?.title;
+    dates.forEach((date) => {
+      date.dataset.title = date.dataset.title || topicTitle || defaultTitle;
+    });
+  });
 
   api.onToolbarCreate((toolbar) => {
     toolbar.addButton({

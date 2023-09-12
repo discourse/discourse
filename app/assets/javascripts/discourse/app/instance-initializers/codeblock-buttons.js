@@ -43,7 +43,6 @@ export default {
         },
         {
           onlyStream: true,
-          id: "codeblock-buttons",
         }
       );
 
