@@ -224,15 +224,16 @@ task "docker:test" do
             params << "--seed #{ENV["RSPEC_SEED"]}" if ENV["RSPEC_SEED"]
           end
 
-          @good &&= run_or_fail("bin/ember-cli --build")
-
           if ENV["USE_TURBO"]
             @good &&=
-              run_or_fail(
-                "bundle exec ./bin/turbo_rspec --enable-system-tests --verbose #{params.join(" ")}".strip,
-              )
+              run_or_fail("bundle exec ./bin/turbo_rspec --verbose #{params.join(" ")}".strip)
           else
             @good &&= run_or_fail("bundle exec rspec #{params.join(" ")}".strip)
+          end
+
+          if ENV["RUN_SYSTEM_TESTS"]
+            @good &&= run_or_fail("bin/ember-cli --build")
+            @good &&= run_or_fail("timeout --verbose 1800 bundle exec rspec spec/system")
           end
         end
 
