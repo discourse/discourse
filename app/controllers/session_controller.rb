@@ -325,6 +325,34 @@ class SessionController < ApplicationController
     end
   end
 
+  def passkey_challenge
+    render json: DiscourseWebauthn.stage_challenge(current_user, secure_session)
+  end
+
+  def passkey_auth_perform
+    raise Discourse::NotFound unless SiteSetting.experimental_passkeys
+
+    params.require(:publicKeyCredential)
+
+    security_key =
+      ::DiscourseWebauthn::AuthenticationService.new(
+        nil,
+        params[:publicKeyCredential],
+        session: secure_session,
+        factor_type: UserSecurityKey.factor_types[:first_factor],
+      ).authenticate_security_key
+
+    user = User.find_by_id(security_key.user_id)
+
+    if user.active && user.email_confirmed?
+      login(user, false)
+    else
+      not_activated(user)
+    end
+  rescue ::DiscourseWebauthn::SecurityKeyError => err
+    render json: failed_json.merge(error: err.message)
+  end
+
   def email_login_info
     token = params[:token]
     matched_token = EmailToken.confirmable(token, scope: EmailToken.scopes[:email_login])

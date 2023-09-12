@@ -1,4 +1,5 @@
 import I18n from "I18n";
+
 export function stringToBuffer(str) {
   let buffer = new ArrayBuffer(str.length);
   let byteView = new Uint8Array(buffer);
@@ -40,10 +41,7 @@ export function getWebauthnCredential(
         challenge: challengeBuffer,
         allowCredentials,
         timeout: 60000,
-
-        // see https://chromium.googlesource.com/chromium/src/+/master/content/browser/webauth/uv_preferred.md for why
-        // default value of preferred is not necessarily what we want, it limits webauthn to only devices that support
-        // user verification, which usually requires entering a PIN
+        // we don't want user verification for a second factor
         userVerification: "discouraged",
       },
     })
@@ -69,6 +67,39 @@ export function getWebauthnCredential(
         credentialId: bufferToBase64(credential.rawId),
       };
       successCallback(credentialData);
+    })
+    .catch((err) => {
+      if (err.name === "NotAllowedError") {
+        return errorCallback(I18n.t("login.security_key_not_allowed_error"));
+      }
+      errorCallback(err);
+    });
+}
+
+export async function prepPasskeyCredential(challenge, errorCallback) {
+  if (!isWebauthnSupported()) {
+    return errorCallback(I18n.t("login.security_key_support_missing_error"));
+  }
+
+  return navigator.credentials
+    .get({
+      publicKey: {
+        challenge: stringToBuffer(challenge),
+        // https://www.w3.org/TR/webauthn-2/#user-verification
+        // for passkeys (first factor), user verification should be marked as required
+        // it ensures browser requests PIN or biometrics before authenticating
+        userVerification: "required",
+      },
+    })
+    .then((credential) => {
+      return {
+        signature: bufferToBase64(credential.response.signature),
+        clientData: bufferToBase64(credential.response.clientDataJSON),
+        authenticatorData: bufferToBase64(
+          credential.response.authenticatorData
+        ),
+        credentialId: bufferToBase64(credential.rawId),
+      };
     })
     .catch((err) => {
       if (err.name === "NotAllowedError") {

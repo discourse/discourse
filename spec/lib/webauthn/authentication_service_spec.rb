@@ -23,18 +23,20 @@ require "webauthn/registration_service"
 # you need to add puts debugger statements (or use binding.pry) like so:
 #
 # puts client_data
-# puts signature
-# puts auth_data
+# puts @params
 #
-# The auth_data will have the challenge param, but you must Base64.decode64 to
-# use it in the let(:challenge) variable. The signature and auth_data params
-# can be used as is.
+# The client_data will have the challenge param, but you must Base64.decode64 to
+# use it in the let(:challenge) variable.
+#
+# puts Base64.decode64(client_data["challenge"])
 #
 # You also need to make sure that client_data_param has the exact same structure
-# and order of keys as auth_data, otherwise even with everything else right the
+# and order of keys, otherwise even with everything else right the
 # public key verification will fail.
 #
-# The origin params just need to be whatever your localhost URL for Discourse is.
+# @params will contain authenticatorData and signature which you can use as is.
+#
+# The origin param needs to be http://localhost:3000 (that's the port tests run on)
 
 RSpec.describe DiscourseWebauthn::AuthenticationService do
   subject(:service) { described_class.new(current_user, params, options) }
@@ -46,7 +48,9 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
       credential_id: credential_id,
       public_key: public_key,
       user: security_key_user,
+      factor_type: UserSecurityKey.factor_types[:second_factor],
       last_used: nil,
+      name: "Some key",
     )
   end
   let(:public_key) do
@@ -88,7 +92,9 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
     }
   end
 
-  let(:options) { { session: secure_session } }
+  let(:options) do
+    { session: secure_session, factor_type: UserSecurityKey.factor_types[:second_factor] }
+  end
   let(:current_user) { Fabricate(:user) }
 
   before do
@@ -97,7 +103,7 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
   end
 
   it "updates last_used when the security key and params are valid" do
-    expect(service.authenticate_security_key).to eq(true)
+    expect(service.authenticate_security_key).to eq(security_key)
     expect(security_key.reload.last_used).not_to eq(nil)
   end
 
@@ -235,7 +241,7 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
     it "updates last_used when the security key and params are valid" do
       DiscourseWebauthn.stubs(:origin).returns("http://localhost:4200")
 
-      expect(service.authenticate_security_key).to eq(true)
+      expect(service.authenticate_security_key).to eq(security_key)
       expect(security_key.reload.last_used).not_to eq(nil)
     end
   end
@@ -243,6 +249,54 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
   it "all supported algorithms are implemented" do
     DiscourseWebauthn::SUPPORTED_ALGORITHMS.each do |alg|
       expect(COSE::Algorithm.find(alg)).not_to be_nil
+    end
+  end
+
+  describe "authenticating a first factor key" do
+    let(:options) do
+      { factor_type: UserSecurityKey.factor_types[:first_factor], session: secure_session }
+    end
+
+    ##
+    # These are sourced from an actual login, see instructions at the top of this spec
+    #
+    let(:public_key) do
+      "pQECAyYgASFYILjOiAHAwNrXkCk/tmyYRiE87QyV/15wUvhcXhr1JfwtIlggClQywgQvSxTsqV/FSK0cNHTTmuwfzzREqE6eLDmPxmI="
+    end
+    let(:credential_id) { "JFeriwVn1elZk7N8nwSC4magQ8zM1XIUxRZB9Pm7VDM=" }
+    let(:signature) do
+      "MEUCIG5AFaw2Nfy69hHjeRLqm3LzQRMFb+TRbUAz19WJymegAiEAyEEyGdAMB2/NBwRCHM47IwtjKWCLEtabAX2BaK6fD8g="
+    end
+    let(:authenticator_data) { "SZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2MFAAAAAA==" }
+    let(:challenge) { "66b47014ef72937d8320ed893dc797e8a9a6d5098b89b185ca3d439b3656" }
+
+    let(:client_data_param) do
+      {
+        type: client_data_webauthn_type,
+        challenge: client_data_challenge,
+        origin: client_data_origin,
+        crossOrigin: false,
+      }
+    end
+
+    let!(:security_key) do
+      Fabricate(
+        :user_security_key,
+        credential_id: credential_id,
+        public_key: public_key,
+        user: security_key_user,
+        factor_type: UserSecurityKey.factor_types[:first_factor],
+        last_used: nil,
+        name: "A key",
+      )
+    end
+
+    it "works" do
+      key = service.authenticate_security_key
+      expect(key).to eq(security_key)
+      expect(key).to be_a(UserSecurityKey)
+      expect(key.user).to eq(current_user)
+      expect(key.factor_type).to eq(UserSecurityKey.factor_types[:first_factor])
     end
   end
 end

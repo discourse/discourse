@@ -98,9 +98,7 @@ export default class SecondFactorAddSecurityKey extends Component {
       timeout: 20000,
       attestation: "none",
       authenticatorSelection: {
-        // see https://chromium.googlesource.com/chromium/src/+/master/content/browser/webauth/uv_preferred.md for why
-        // default value of preferred is not necessarily what we want, it limits webauthn to only devices that support
-        // user verification, which usually requires entering a PIN
+        // for 2FA, we don't want user verification, which usually requires entering a PIN / touch / face ID
         userVerification: "discouraged",
       },
     };

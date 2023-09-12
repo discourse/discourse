@@ -16,7 +16,8 @@ module DiscourseWebauthn
       #    owner of the public key credential source credentialSource identified by credential.id:
       security_key = UserSecurityKey.find_by(credential_id: @params[:credentialId])
       raise(NotFoundError, I18n.t("webauthn.validation.not_found_error")) if security_key.blank?
-      if security_key.user != @current_user
+      if @factor_type == UserSecurityKey.factor_types[:second_factor] &&
+           security_key.user != @current_user
         raise(OwnershipError, I18n.t("webauthn.validation.ownership_error"))
       end
 
@@ -49,11 +50,12 @@ module DiscourseWebauthn
       # 13. Verify that the User Present bit of the flags in authData is set.
       # https://blog.bigbinary.com/2011/07/20/ruby-pack-unpack.html
       #
-      # bit 0 is the least significant bit - LSB first
+      validate_user_presence
+
       #
       # 14. If user verification is required for this registration, verify that
       #     the User Verified bit of the flags in authData is set.
-      validate_user_verification
+      validate_user_verification if @factor_type == UserSecurityKey.factor_types[:first_factor]
 
       # 15. Verify that the values of the client extension outputs in clientExtensionResults and the authenticator
       #     extension outputs in the extensions in authData are as expected, considering the client extension input
@@ -86,6 +88,9 @@ module DiscourseWebauthn
 
       # Success! Update the last used at time for the key.
       security_key.update(last_used: Time.zone.now)
+
+      # Return security key record so login controller can use it to update the session
+      security_key
     rescue OpenSSL::PKey::PKeyError
       raise(PublicKeyError, I18n.t("webauthn.validation.public_key_error"))
     end

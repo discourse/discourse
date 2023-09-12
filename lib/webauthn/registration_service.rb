@@ -38,11 +38,12 @@ module DiscourseWebauthn
       # 11. Verify that the User Present bit of the flags in authData is set.
       # https://blog.bigbinary.com/2011/07/20/ruby-pack-unpack.html
       #
-      # bit 0 is the least significant bit - LSB first
+      validate_user_presence
+
       #
       # 12. If user verification is required for this registration, verify that
       #     the User Verified bit of the flags in authData is set.
-      validate_user_verification
+      validate_user_verification if @factor_type == UserSecurityKey.factor_types[:first_factor]
 
       # 13. Verify that the "alg" parameter in the credential public key in authData matches the alg
       #     attribute of one of the items in options.pubKeyCredParams.

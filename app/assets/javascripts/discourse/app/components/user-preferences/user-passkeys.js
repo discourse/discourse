@@ -1,6 +1,5 @@
 import I18n from "I18n";
 import { bufferToBase64, stringToBuffer } from "discourse/lib/webauthn";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import RenamePasskey from "discourse/components/user-preferences/rename-passkey";
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
@@ -9,9 +8,22 @@ import { inject as service } from "@ember/service";
 export default class UserPasskeys extends Component {
   @service dialog;
   @service currentUser;
+  @service capabilities;
 
   get isCurrentUser() {
     return this.currentUser.id === this.args.model.id;
+  }
+
+  get passkeyName() {
+    if (this.capabilities.isSafari) {
+      return I18n.t("user.first_factor.name.icloud_keychain");
+    }
+
+    if (this.capabilities.isAndroid || this.capabilities.isChrome) {
+      return I18n.t("user.first_factor.name.google_password_manager");
+    }
+
+    return I18n.t("user.first_factor.name.default");
   }
 
   @action
@@ -39,6 +51,12 @@ export default class UserPasskeys extends Component {
             };
           }
         ),
+        authenticatorSelection: {
+          // https://www.w3.org/TR/webauthn-2/#user-verification
+          // for passkeys (first factor), user verification should be marked as required
+          // it ensures browser prompts user for PIN/fingerprint/faceID before authenticating
+          userVerification: "required",
+        },
       };
 
       navigator.credentials
@@ -55,26 +73,34 @@ export default class UserPasskeys extends Component {
                 credential.response.attestationObject
               ),
               clientData: bufferToBase64(credential.response.clientDataJSON),
-              name: "placeholder",
+              name: this.passkeyName,
             };
 
             this.args.model
               .registerPasskey(serverData)
               .then((resp) => {
                 if (resp.error) {
-                  popupAjaxError(resp.error);
+                  this.dialog.alert(resp.error);
                   return;
                 }
 
                 // Show rename alert after creating/saving new key
                 this.dialog.dialog({
-                  title: "Success! Passkey was created.",
+                  title: I18n.t(
+                    "user.first_factor.passkey_successfully_created"
+                  ),
                   type: "notice",
                   bodyComponent: RenamePasskey,
                   bodyComponentModel: resp,
+                  didCancel: () => {
+                    // TODO(pmusaraj): avoid refreshing the page
+                    window.location.reload();
+                  },
                 });
               })
-              .catch(popupAjaxError);
+              .catch((res) => {
+                this.dialog.alert(res.error);
+              });
           },
           (err) => {
             if (err.name === "InvalidStateError") {
@@ -96,7 +122,7 @@ export default class UserPasskeys extends Component {
   @action
   deletePasskey(id) {
     this.dialog.deleteConfirm({
-      title: "Are you sure you want to delete this passkey?",
+      title: I18n.t("user.first_factor.confirm_delete_passkey"),
       didConfirm: () => {
         this.args.model.deletePasskey(id).then(() => {
           window.location.reload();
@@ -108,7 +134,7 @@ export default class UserPasskeys extends Component {
   @action
   renamePasskey(id, name) {
     this.dialog.dialog({
-      title: "Rename Passkey",
+      title: I18n.t("user.first_factor.rename_passkey"),
       type: "notice",
       bodyComponent: RenamePasskey,
       bodyComponentModel: { id, name },

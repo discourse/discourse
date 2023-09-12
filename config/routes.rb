@@ -428,6 +428,8 @@ Discourse::Application.routes.draw do
     if Rails.env.test?
       post "session/2fa/test-action" => "session#test_second_factor_restricted_route"
     end
+    get "session/passkey/challenge" => "session#passkey_challenge"
+    post "session/passkey/auth" => "session#passkey_auth_perform"
     get "session/scopes" => "session#scopes"
     get "composer/mentions" => "composer#mentions"
     get "composer_messages" => "composer_messages#index"
@@ -481,8 +483,8 @@ Discourse::Application.routes.draw do
 
       post "#{root_path}/create_passkey" => "users#create_passkey"
       post "#{root_path}/register_passkey" => "users#register_passkey"
-      post "#{root_path}/rename_passkey/:id" => "passkeys#rename_passkey"
-      delete "#{root_path}/delete_passkey/:id" => "passkeys#delete_passkey"
+      post "#{root_path}/rename_passkey/:id" => "users#rename_passkey"
+      delete "#{root_path}/delete_passkey/:id" => "users#delete_passkey"
 
       put "#{root_path}/update-activation-email" => "users#update_activation_email"
       post "#{root_path}/email-login" => "users#email_login"

@@ -19,7 +19,8 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
   ##
   # This attestation object was sourced by manually registering
   # a key with `navigator.credentials.create` and capturing the
-  # results in localhost.
+  # results in localhost. It does not have a user verification
+  # flag set (i.e. it is only usable as 2FA).
   let(:attestation) do
     "o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YVjESZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2NBAAAAAAAAAAAAAAAAAAAAAAAAAAAAQFmvayWc8OPJ4jj4sevfxBmvUglDMZrFalyokYrdnqOVvudC0lQialaGQv72eBzJM2Qn1GfJI7lpBgFJMprisLSlAQIDJiABIVgg+23/BZux7LK0/KQgCiQGtdr51ar+vfTtHWpRtN17gOwiWCBstV918mugVBexg/rdZjTs0wN/upHFoyBiAJCaGVD8OA=="
   end
@@ -153,9 +154,53 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
     end
   end
 
+  context "when the user presence flag is false" do
+    it "raises a UserPresenceError" do
+      # simulate missing user presence by flipping first bit to 0
+      flags = "00000010"
+      overridenAuthData = service.send(:auth_data)
+      overridenAuthData[32] = [flags].pack("b*")
+
+      service.instance_variable_set(:@auth_data, overridenAuthData)
+
+      expect { service.register_security_key }.to raise_error(
+        DiscourseWebauthn::UserPresenceError,
+        I18n.t("webauthn.validation.user_presence_error"),
+      )
+    end
+  end
+
+  it "works" do
+    key = service.register_security_key
+    expect(key).to be_a(UserSecurityKey)
+    expect(key.user).to eq(current_user)
+    expect(key.factor_type).to eq(UserSecurityKey.factor_types[:second_factor])
+  end
+
+  describe "registering a second factor key as first factor" do
+    let(:options) do
+      { factor_type: UserSecurityKey.factor_types[:first_factor], session: secure_session }
+    end
+
+    it "does not work since second factor key does not have the user verification flag" do
+      expect { service.register_security_key }.to raise_error(
+        DiscourseWebauthn::UserVerificationError,
+        I18n.t("webauthn.validation.user_verification_error"),
+      )
+    end
+  end
+
   describe "registering a first factor key" do
     let(:options) do
       { factor_type: UserSecurityKey.factor_types[:first_factor], session: secure_session }
+    end
+
+    ##
+    # key registered locally using
+    # - localhost:3000 as the origin (via an origin override in discourse_webauthn.rb)
+    # - frontend webauthn.create has user verification flag enabled
+    let(:attestation) do
+      "o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YVikSZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2NFAAAAAK3OAAI1vMYKZIsLJfHwVQMAICRXq4sFZ9XpWZOzfJ8EguJmoEPMzNVyFMUWQfT5u1QzpQECAyYgASFYILjOiAHAwNrXkCk/tmyYRiE87QyV/15wUvhcXhr1JfwtIlggClQywgQvSxTsqV/FSK0cNHTTmuwfzzREqE6eLDmPxmI="
     end
 
     it "works" do
@@ -163,6 +208,22 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
       expect(key).to be_a(UserSecurityKey)
       expect(key.user).to eq(current_user)
       expect(key.factor_type).to eq(UserSecurityKey.factor_types[:first_factor])
+    end
+
+    context "when the user verification flag is false" do
+      it "raises a UserVerificationError" do
+        # simulate missing user verification by flipping third bit to 0
+        flags = "10000010"
+        overridenAuthData = service.send(:auth_data)
+        overridenAuthData[32] = [flags].pack("b*")
+
+        service.instance_variable_set(:@auth_data, overridenAuthData)
+
+        expect { service.register_security_key }.to raise_error(
+          DiscourseWebauthn::UserVerificationError,
+          I18n.t("webauthn.validation.user_verification_error"),
+        )
+      end
     end
   end
 end

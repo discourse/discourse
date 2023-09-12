@@ -32,9 +32,26 @@ module DiscourseWebauthn
       )
     end
 
+    ## flags per specification
+    # https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data
+    # bit 0 - user presence
+    # bit 1 - reserved for future use
+    # bit 2 - user verification
+    # bit 3-5 - reserved for future use
+    # bit 6 - attested credential data
+    # bit 7 - extension data
+
+    def validate_user_presence
+      flags = auth_data[32].unpack("b*")[0].split("")
+      # bit 0 - user presence
+      return if flags[0] == "1"
+      raise(UserPresenceError, I18n.t("webauthn.validation.user_presence_error"))
+    end
+
     def validate_user_verification
       flags = auth_data[32].unpack("b*")[0].split("")
-      return if flags[0] == "1"
+      # bit 2 - user verification
+      return if flags[2] == "1"
       raise(UserVerificationError, I18n.t("webauthn.validation.user_verification_error"))
     end
 

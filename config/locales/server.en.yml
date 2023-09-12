@@ -1010,6 +1010,7 @@ en:
       invalid_origin_error: "The origin of the authentication request does not match the server origin."
       malformed_attestation_error: "There was an error decoding the attestation data."
       invalid_relying_party_id_error: "The Relying Party ID of the authentication request does not match the server Relying Party ID."
+      user_presence_error: "User presence is required."
       user_verification_error: "User verification is required."
       unsupported_public_key_algorithm_error: "The provided public key algorithm is not supported by the server."
       unsupported_attestation_format_error: "The attestation format is not supported by the server."

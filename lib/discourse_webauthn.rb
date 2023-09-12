@@ -22,6 +22,8 @@ module DiscourseWebauthn
   end
   class UserVerificationError < SecurityKeyError
   end
+  class UserPresenceError < SecurityKeyError
+  end
   class ChallengeMismatchError < SecurityKeyError
   end
   class InvalidTypeError < SecurityKeyError
