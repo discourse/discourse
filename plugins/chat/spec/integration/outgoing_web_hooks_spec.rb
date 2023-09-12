@@ -87,7 +87,7 @@ RSpec.describe "Outgoing chat webhooks" do
   describe "chat messages" do
     include_context "with chat message webhook tests"
 
-    fab!(:web_hook) { Fabricate(:chat_message_web_hook) }
+    fab!(:web_hook) { Fabricate(:outgoing_chat_message_web_hook) }
     fab!(:user1) { Fabricate(:user) }
     fab!(:user2) { Fabricate(:user) }
     let(:message_content) { "This is a test message" }

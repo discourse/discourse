@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-Fabricator(:chat_message_web_hook, from: :web_hook) do
+Fabricator(:outgoing_chat_message_web_hook, from: :web_hook) do
   transient chat_message_hook: WebHookEventType.find_by(name: "chat_message")
 
   after_build do |web_hook, transients|
