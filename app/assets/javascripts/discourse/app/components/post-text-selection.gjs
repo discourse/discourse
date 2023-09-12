@@ -233,9 +233,14 @@ export default class PostTextSelection extends Component {
   }
 
   @bind
-  async mousedown() {
-    this.isMousedown = true;
+  async mousedown(event) {
     this.holdingMouseDown = false;
+
+    if (!event.target.closest(".cooked")) {
+      return;
+    }
+
+    this.isMousedown = true;
     this.holdingMouseDownHandler = discourseLater(() => {
       this.holdingMouseDown = true;
     }, 100);
