@@ -11,22 +11,15 @@ describe Chat::Message do
     fab!(:channel) { Fabricate(:chat_channel) }
     fab!(:user) { Fabricate(:user) }
 
-    before do
-      @max_message_length = 12_000
-      SiteSetting.chat_maximum_message_length = @max_message_length
-    end
-
     it "cooked column does not exceed maximum length" do
-      str = "abc " * 3_000
+      str = "a b c d e f g h i j " * 1_000
       cooked = described_class.cook(str)
       message = described_class.new(message: str, cooked: cooked, chat_channel: channel, user: user)
 
       expect(message).not_to be_valid
 
       # should fail due to cooked markup exceeding max length
-      expect(message.errors[:cooked]).to eq(
-        ["is too long (maximum is #{@max_message_length} characters)"],
-      )
+      expect(message.errors[:cooked]).to eq(["is too long (maximum is 20000 characters)"])
     end
   end
 
