@@ -66,7 +66,7 @@ RSpec.describe WebHook do
       expect(voting_event_types.count).to eq(1)
 
       SiteSetting.stubs(:chat_enabled).returns(true)
-      chat_enabled_types = WebHookEventType.active.where(name: "chat")
+      chat_enabled_types = WebHookEventType.active.where("name LIKE 'chat_%'")
       expect(chat_enabled_types.count).to eq(1)
     end
 

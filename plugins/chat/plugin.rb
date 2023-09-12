@@ -67,6 +67,7 @@ after_initialize do
     Jobs::UserEmail.prepend Chat::UserEmailExtension
     Plugin::Instance.prepend Chat::PluginInstanceExtension
     Jobs::ExportCsvFile.class_eval { prepend Chat::MessagesExporter }
+    WebHook.prepend Chat::WebhookExtension
   end
 
   if Oneboxer.respond_to?(:register_local_handler)
@@ -379,6 +380,26 @@ after_initialize do
 
       Jobs.enqueue(Jobs::Chat::AutoRemoveMembershipHandleCategoryUpdated, category_id: category.id)
     end
+  end
+
+  on(:chat_message_created) do |message, channel, user|
+    guardian = Guardian.new(user)
+    memberships = Chat::ChannelMembershipManager.all_for_user(user)
+
+    payload = {
+      message: Chat::MessageSerializer.new(message, { scope: guardian, root: false }).as_json,
+      channel:
+        Chat::ChannelSerializer.new(
+          channel,
+          {
+            scope: guardian,
+            membership: memberships.find { |membership| membership.chat_channel_id == channel.id },
+            root: false,
+          },
+        ).as_json,
+    }
+
+    WebHook.enqueue_chat_message_hooks(:chat_message_created, payload.to_json)
   end
 
   Discourse::Application.routes.append do

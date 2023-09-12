@@ -76,6 +76,6 @@ WebHookEventType.seed do |b|
 end
 
 WebHookEventType.seed do |b|
-  b.id = WebHookEventType::CHAT
-  b.name = "chat"
+  b.id = WebHookEventType::CHAT_MESSAGE
+  b.name = "chat_message"
 end
