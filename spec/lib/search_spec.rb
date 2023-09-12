@@ -2748,4 +2748,21 @@ RSpec.describe Search do
       expect(result.posts.pluck(:id)).to eq([post1.id, post2.id])
     end
   end
+
+  describe "Extensibility features of search" do
+    it "is possible to parse queries" do
+      term = "hello l status:closed"
+      search = Search.new(term)
+
+      posts = Post.all.includes(:topic)
+      posts = search.apply_filters(posts)
+      posts = search.apply_order(posts)
+
+      sql = posts.to_sql
+
+      expect(search.term).to eq("hello")
+      expect(sql).to include("ORDER BY posts.created_at DESC")
+      expect(sql).to match(/where.*topics.closed/i)
+    end
+  end
 end

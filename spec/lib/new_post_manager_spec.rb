@@ -60,7 +60,7 @@ RSpec.describe NewPostManager do
       tag3 = Fabricate(:tag)
       tag_group = Fabricate(:tag_group, tags: [tag2])
       category = Fabricate(:category, tags: [tag1], tag_groups: [tag_group])
-      category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+      category.require_topic_approval = true
       category.save!
 
       manager =
@@ -498,7 +498,7 @@ RSpec.describe NewPostManager do
     context "when new topics require approval" do
       before do
         SiteSetting.tagging_enabled = true
-        category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+        category.require_topic_approval = true
         category.save
       end
 
@@ -625,7 +625,7 @@ RSpec.describe NewPostManager do
       let!(:topic) { Fabricate(:topic, category: category) }
 
       before do
-        category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = true
+        category.require_reply_approval = true
         category.save
       end
 

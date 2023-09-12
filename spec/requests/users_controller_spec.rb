@@ -834,6 +834,46 @@ RSpec.describe UsersController do
         end
       end
 
+      context "when normalize_emails is enabled" do
+        let (:email) {
+          "jane+100@gmail.com"
+        }
+        let (:dupe_email) {
+          "jane+191@gmail.com"
+        }
+        let! (:user) {
+          Fabricate(:user, email: email, password: "strongpassword")
+        }
+
+        before do
+          SiteSetting.hide_email_address_taken = true
+          SiteSetting.normalize_emails = true
+        end
+
+        it "sends an email to normalized email owner when hide_email_address_taken is enabled" do
+          expect do
+            expect_enqueued_with(
+              job: Jobs::CriticalUserEmail,
+              args: {
+                type: "account_exists",
+                user_id: user.id,
+              },
+            ) do
+              post "/u.json",
+                   params: {
+                     name: "Jane Doe",
+                     username: "janedoe9999",
+                     password: "strongpassword",
+                     email: dupe_email,
+                   }
+            end
+          end.to_not change { User.count }
+
+          expect(response.status).to eq(200)
+          expect(session["user_created_message"]).to be_present
+        end
+      end
+
       context "when users already exists with given email" do
         let!(:existing) { Fabricate(:user, email: post_user_params[:email]) }
 
@@ -850,7 +890,15 @@ RSpec.describe UsersController do
 
         it "returns success if hide_email_address_taken is enabled" do
           SiteSetting.hide_email_address_taken = true
-          expect { post_user }.to_not change { User.count }
+          expect {
+            expect_enqueued_with(
+              job: Jobs::CriticalUserEmail,
+              args: {
+                type: "account_exists",
+                user_id: existing.id,
+              },
+            ) { post_user }
+          }.to_not change { User.count }
 
           expect(response.status).to eq(200)
           expect(session["user_created_message"]).to be_present

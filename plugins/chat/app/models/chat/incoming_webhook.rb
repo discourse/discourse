@@ -12,6 +12,12 @@ module Chat
 
     before_create { self.key = SecureRandom.hex(12) }
 
+    validates :name, presence: true, length: { maximum: 100 }
+    validates :key, length: { maximum: 100 }
+    validates :username, length: { maximum: 100 }
+    validates :description, length: { maximum: 500 }
+    validates :emoji, length: { maximum: 100 }
+
     def url
       "#{Discourse.base_url}/chat/hooks/#{key}.json"
     end
