@@ -1,19 +1,21 @@
-import Component from "@glimmer/component";
+import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { until } from "discourse/lib/formatter";
-import { inject as service } from "@ember/service";
 
 export default class UserStatusMessage extends Component {
-  @service currentUser;
+  tagName = "";
+  showTooltip = true;
 
+  @computed("status.ends_at")
   get until() {
-    if (!this.args.status.ends_at) {
-      return;
+    if (!this.status.ends_at) {
+      return null;
     }
 
     const timezone = this.currentUser
       ? this.currentUser.user_option?.timezone
       : moment.tz.guess();
 
-    return until(this.args.status.ends_at, timezone, this.currentUser?.locale);
+    return until(this.status.ends_at, timezone, this.currentUser?.locale);
   }
 }
