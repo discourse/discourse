@@ -2056,7 +2056,7 @@ fa_IR:
       name: خوش آمدید
       description: یک پسند دریافت کرده‌اید
     autobiographer:
-      name: نویسنده شرح‌حال
+      name: شرح‌حال نویس
       description: اطلاعات <a href="%{base_path}/my/preferences">صفحه شخصی</a> خود را تکمیل کرده
     anniversary:
       name: سالگرد
