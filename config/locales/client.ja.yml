@@ -323,6 +323,8 @@ ja:
         confirm: "作成中の下書きがあります。どうしますか？"
         yes_value: "破棄"
         no_value: "編集を再開"
+    topic_count_all:
+      other: "%{count} 件の新規トピックを見る"
     topic_count_categories:
       other: "%{count} 件の新規/更新トピックを見る"
     topic_count_latest:
@@ -5000,7 +5002,6 @@ ja:
       form_templates:
         nav_title: "テンプレート"
         title: "フォームテンプレート"
-        help: "新規トピック、投稿、およびメッセージを作成するために使用できるテンプレートの構造を作成します。"
         new_template: "新しいテンプレート"
         list_table:
           headings:

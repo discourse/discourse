@@ -8,11 +8,30 @@ cs:
   js:
     admin:
       site_settings:
+        categories:
+          chat: Chat
         chat_separate_sidebar_mode:
           always: "Vždy"
           never: "Nikdy"
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Stav chatu změněn"
+            chat_channel_delete: "Kanál chatu byl smazán"
+            chat_auto_remove_membership: "Členství automaticky odebráno z kanálů"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "Vytvořit chatovací zprávu v určeném kanálu."
+    about:
+      chat_messages_count: "Zprávy v chatu"
+      chat_channels_count: "Chatovací kanály"
+      chat_users_count: "Uživatelé chatu"
     chat:
       deleted_chat_username: smazáno
+      dates:
+        time_tiny: "h:mm"
       create: "Vytvoř"
       cancel: "Zrušit"
       channel_settings:
@@ -20,7 +39,13 @@ cs:
         add: "přidat"
         join: "Přidat se ke skupině"
         leave: "Opustit skupinu"
+      channel_close:
+        title: "Zavřít kanál"
+      channels_list_popup:
+        create: "Nový kanál"
       close: "Zavřít"
+      remove: "Smazat"
+      expand: "Rozbalit menu chatu"
       delete: "Smazat"
       muted: "ztišení"
       joined: "účet vytvořen"

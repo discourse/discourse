@@ -310,6 +310,10 @@ bs_BA:
       new_topic: "Nacrt nove teme"
       abandon:
         yes_value: "Odbaci"
+    topic_count_all:
+      one: "Pogledaj %{count} novu temu"
+      few: "Pogledaj %{count} nove teme"
+      other: "Pogledaj %{count} novih tema"
     topic_count_categories:
       one: "Pogledajte %{count} novu ili ažuriranu temu"
       few: "Pogledajte %{count} nove ili ažurirane teme"

@@ -417,6 +417,11 @@ uk:
         confirm: "У вас вже є чернетка. Які дії виконати з нею?"
         yes_value: "Відхилити"
         no_value: "Продовжити редагування"
+    topic_count_all:
+      one: "Переглянути %{count} нову тему"
+      few: "Переглянути %{count} нові теми"
+      many: "Переглянути %{count} нових тем"
+      other: "Переглянути %{count} нові теми"
     topic_count_categories:
       one: "Переглянути %{count} нову чи оновлену тему"
       few: "Переглянути %{count} нові чи оновлені теми"
@@ -647,7 +652,9 @@ uk:
         all:
           title: "Усе"
       context_question:
+        is_this_post: "Це %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "або"
+        something_else_wrong: "Щось не так з цим %{reviewable_type}?"
       types:
         reviewable_flagged_post:
           title: "Позначений допис"
@@ -2528,6 +2535,11 @@ uk:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username} та %{count} інший</span> %{description}"
+        few: "<span class='multi-user'>%{username} та %{count} інших</span> %{description}"
+        many: "<span class='multi-user'>%{username} та %{count} інші</span> %{description}"
+        other: "<span class='multi-user'>%{username} та %{count} інші</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
         one: "%{username} і ще %{count}"
@@ -5736,7 +5748,7 @@ uk:
       form_templates:
         nav_title: "Шаблони"
         title: "Шаблони форм"
-        help: "Створіть структуру шаблону, яку можна використовувати для створення нових тем, дописів і повідомлень."
+        help: "Створіть структуру шаблону форми, яку можна використовувати для створення нових тем."
         new_template: "Новий шаблон"
         list_table:
           headings:

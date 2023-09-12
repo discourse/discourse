@@ -417,6 +417,11 @@ he:
         confirm: "כבר יש טיוטה שהתחלת לערוך. מה לעשות אתה?"
         yes_value: "להשליך"
         no_value: "לחזור לעריכה"
+    topic_count_all:
+      one: "הצגת נושא %{count} חדש"
+      two: "הצגת %{count} נושאים חדשים"
+      many: "הצגת %{count} נושאים חדשים"
+      other: "הצגת %{count} נושאים חדשים"
     topic_count_categories:
       one: "הצגת נושא %{count} חדש או עדכני"
       two: "הצגת %{count} נושאים חדשים או עדכניים"
@@ -2532,6 +2537,11 @@ he:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username} ועוד %{count}</span> %{description}"
+        two: "<span class='multi-user'>%{username} ועוד %{count}</span> %{description}"
+        many: "<span class='multi-user'>%{username} ועוד %{count}</span> %{description}"
+        other: "<span class='multi-user'>%{username} ועוד %{count}</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
         one: "%{username} ועוד %{count}"
@@ -5740,7 +5750,7 @@ he:
       form_templates:
         nav_title: "תבניות"
         title: "תבניות טפסים"
-        help: "יצירת מבנה תבנית בו ניתן להשתמש ליצירת נושאים, פוסטים והודעות חדשים."
+        help: "יצירת מבנה תבנית בו ניתן להשתמש ליצירת נושאים חדשים."
         new_template: "תבנית חדשה"
         list_table:
           headings:

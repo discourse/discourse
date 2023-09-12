@@ -318,6 +318,9 @@ ur:
       abandon:
         yes_value: "منسوخ"
         no_value: "ترمیم دوبارہ شروع کریں"
+    topic_count_all:
+      one: "%{count} نیا ٹاپک دیکھیں۔"
+      other: "%{count} نئے ٹاپک دیکھیں۔"
     topic_count_categories:
       one: "%{count} نیا یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
       other: "%{count} نئے یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"

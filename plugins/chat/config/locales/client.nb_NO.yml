@@ -21,6 +21,7 @@ nb_NO:
         join: "Bli medlem"
         leave: "Forlat"
       close: "Lukk"
+      remove: "Fjern"
       delete: "Slett"
       edited: "redigert"
       muted: "ignorert"

@@ -310,6 +310,8 @@ zh_TW:
       abandon:
         yes_value: "捨棄"
         no_value: "繼續編輯"
+    topic_count_all:
+      other: "檢視 %{count} 則新話題"
     topic_count_categories:
       other: "檢視 %{count} 則新發佈或更新的話題"
     topic_count_latest:

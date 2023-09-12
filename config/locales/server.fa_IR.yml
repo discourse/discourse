@@ -136,6 +136,7 @@ fa_IR:
     site_settings:
       default_categories_already_selected: "شما نمیتوانید دسته‌بندی‌ای را که در یک فهرست دیگر استفاده شده را انتخاب کنید."
       s3_upload_bucket_is_required: "شما نمیتوانید بارگذاری به S3 را فعال کنید مگر اینکه 's3_upload_bucket' را ارائه دهید."
+      slow_down_crawler_user_agent_must_be_at_least_3_characters: "یوزر ایجینت باید حداقل 3 کاراکتر داشته باشند تا از محدود شدن نرخ درخواست کاربران قانونی به صورت تصادفی جلوگیری شود."
   word_connector:
     comma: "، "
   invite:
@@ -184,6 +185,7 @@ fa_IR:
     more_replies:
       one: "%{count} پاسخ دیگر"
       other: "%{count} پاسخ دیگر"
+    loading: "در حال بارگیری بحث…"
     permalink: " پیوند یکتا"
     imported_from: "این بحث‌وگفتگوی همراه برای ورود اصلی در %{link} است"
     in_reply_to: "◀ %{username}"
@@ -401,6 +403,7 @@ fa_IR:
     media_placeholder:
       blocked_hotlinked_title: "این رسانه در سایت دیگری میزبانی شده است، کلیک کنید تا در یک زبانه جدید باز شود."
       blocked_hotlinked: "رسانه خارجی"
+    hidden_bidi_character: "کارکترهای دو جهته می‌توانند، ترتیب رندر شدن متن را تغییر دهند. این می‌تواند برای پنهان کردن کدهای مخرب استفاده شود."
     has_likes:
       one: "%{count} پسندیده"
       other: "%{count} پسندیده"
@@ -576,6 +579,8 @@ fa_IR:
       title: "پسندیدن"
       description: "پسندیدن این فرسته"
       short_description: "پسندیدن این فرسته"
+  user_activity:
+    no_log_search_queries: "لاگ درخواست‌های جستجو در حال حاضر غیرفعال است (مدیر می‌تواند آن را در تنظیمات سایت فعال کند)."
   topic_flag_types:
     spam:
       title: "هرز‌نامه"
@@ -937,6 +942,8 @@ fa_IR:
     maximum_session_age: "کاربر برای n ساعت از آخرین بازدید در حالت وارد شده می‌ماند."
     cors_origins: "ریشه های مجاز برای cross-origin requests درخواست متقابل منشاء (CORS). هر منشاء باید دارای http:// or https://. The DISCOURSE_ENABLE_CORS env برای تنظیم به کارگیری CORS باید متغیر باشد."
     use_admin_ip_allowlist: "مدیر‌ها فقط در صورتی می‌توانند وارد شوند که در لیست آیپی‌های نمایش داده شده باشند. (مدیریت > گزارش‌ها > آیپی‌های نمایش داده شده)"
+    content_security_policy: "فعال کردن Content-Security-Policy (CSP)"
+    content_security_policy_report_only: "فعال کردن Content-Security-Policy-Report-Only (CSP)"
     top_menu: "مشخص کنید کدام موارد و با چه ترتیبی در ناوبری صفحه خانگی نشان داده شوند. برای مثال: آخرین‌ها|تازه‌ها|نخوانده‌ها|دسته‌ها|خوانده‌ها|فرسته‌ها|نشانک‌ها"
     post_menu: "مشخص کنید کدام موارد بر روی فهرست نوشته ها نشان داده شوند٬ و بر اساس چه ترتیبی. برای مثال : پسند|ویرایش|پرچم|پاک کردن|همرسانی|نشانک|پاسخ"
     post_menu_hidden_items: "فهرست موارد مخفی شود بطور پیش فرض در فهرست نوشته مگر اینکه رفع گسترش به حالت روشن باشد."
@@ -2052,7 +2059,7 @@ fa_IR:
       name: خوش آمدید
       description: یک پسند دریافت کرده‌اید
     autobiographer:
-      name: نویسنده شرح‌حال
+      name: شرح‌حال نویس
       description: اطلاعات <a href="%{base_path}/my/preferences">صفحه شخصی</a> خود را تکمیل کرده
     anniversary:
       name: سالگرد
@@ -2326,6 +2333,8 @@ fa_IR:
         title: "بازیابی نوشته"
       delete_single:
         title: "حذف"
+      delete:
+        title: "حذف…"
       delete_and_agree:
         title: "حذف نوشته"
       disagree:
@@ -2335,14 +2344,20 @@ fa_IR:
       approve:
         title: "تایید"
       reject_user:
+        title: "حذف کاربر…"
         delete:
           title: "حذف کاربر"
       reject:
         title: "رد کردن"
+        bundle_title: "رد کردن…"
   fallback_username: "کاربران"
   user_status:
     errors:
       ends_at_should_be_greater_than_set_at: "ends_at باید بیشتر از set_at باشد"
+  form_templates:
+    errors:
+      duplicate_ids: "دارای شناسه های تکراری است"
+      reserved_id: "دارای یک کلمه کلیدی رزرو شده به عنوان شناسه است: %{id}"
   activemodel:
     errors:
       <<: *errors

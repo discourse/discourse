@@ -90,6 +90,7 @@ ar:
         create: "قناة جديدة"
       click_to_join: "انقر هنا لعرض القنوات المتاحة"
       close: "إغلاق"
+      remove: "إزالة"
       collapse: "طي ساحب الدردشة"
       expand: "توسيع درج الدردشة"
       confirm_flag: "هل تريد بالتأكيد الإبلاغ عن رسالة %{username}؟"

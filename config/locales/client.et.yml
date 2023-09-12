@@ -271,6 +271,9 @@ et:
       remove: "Eemalda"
       remove_confirmation: "Oled kindel, et soovid selle mustandi kustutada?"
       new_topic: "Uus teema mustand"
+    topic_count_all:
+      one: "Vaata %{count} uut teemat"
+      other: "Vaata %{count} uut teemat"
     topic_count_categories:
       one: "Vaata %{count} uut või uuendatud teemat"
       other: "Vaata %{count} uut või uuendatud teemat"

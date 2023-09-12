@@ -21,6 +21,7 @@ sw:
         join: "Jiunge"
         leave: "Ondoka"
       close: "Funga"
+      remove: "Ondoa"
       delete: "Futa"
       muted: "kunyamazisha"
       joined: "alijiunga"
