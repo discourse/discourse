@@ -100,7 +100,6 @@ export default {
 
       api.decorateCookedElement(_attachCommands, {
         onlyStream: true,
-        id: "animated-images-pause-on-click",
       });
 
       api.cleanupStream(_cleanUp);

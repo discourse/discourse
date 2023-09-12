@@ -131,7 +131,6 @@ function initializePolls(api) {
   api.includePostAttributes("polls", "polls_votes");
   api.decorateCookedElement(attachPolls, {
     onlyStream: true,
-    id: "discourse-poll",
   });
   api.cleanupStream(cleanUpPolls);
 
