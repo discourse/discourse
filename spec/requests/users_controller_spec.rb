@@ -4479,6 +4479,8 @@ RSpec.describe UsersController do
         SiteSetting.hide_user_profiles_from_public = true
         get "/u/#{user.username}.json"
         expect(response).to have_http_status(:forbidden)
+        get "/u/#{user.username}/messages.json"
+        expect(response).to have_http_status(:forbidden)
       end
 
       describe "user profile views" do
@@ -4681,7 +4683,7 @@ RSpec.describe UsersController do
         expect(parsed["trust_level"]).to be_present
       end
 
-      it "should redirect to login page for anonymous user when profiles are hidden" do
+      it "should have http status 403 for anonymous user when profiles are hidden" do
         SiteSetting.hide_user_profiles_from_public = true
         get "/u/#{user.username}/card.json"
         expect(response).to have_http_status(:forbidden)
@@ -4740,10 +4742,10 @@ RSpec.describe UsersController do
       expect(parsed.map { |u| u["username"] }).to contain_exactly(user.username, user2.username)
     end
 
-    it "should redirect to login page for anonymous user when profiles are hidden" do
+    it "should have http status 403 for anonymous user when profiles are hidden" do
       SiteSetting.hide_user_profiles_from_public = true
       get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
-      expect(response).to redirect_to "/login"
+      expect(response).to have_http_status(:forbidden)
     end
 
     context "when `hide_profile_and_presence` user option is checked" do

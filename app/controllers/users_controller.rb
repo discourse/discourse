@@ -157,10 +157,12 @@ class UsersController < ApplicationController
 
   # This route is not used in core, but is used by theme components (e.g. https://meta.discourse.org/t/144479)
   def cards
-    return redirect_to path("/login") if SiteSetting.hide_user_profiles_from_public && !current_user
+    if SiteSetting.hide_user_profiles_from_public && !current_user
+      raise Discourse::NotFound.new(custom_message: "invalid_access", status: 403)
+    end
 
     user_ids = params.require(:user_ids).split(",").map(&:to_i)
-    raise Discourse::InvalidAccess.new(:user_ids) if user_ids.length > 50
+    raise Discourse::InvalidParameters.new(:user_ids) if user_ids.length > 50
 
     users =
       User.where(id: user_ids).includes(
