@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Chat
-  module WebhookExtension
+  module OutgoingWebHookExtension
     def self.prepended(base)
       def base.enqueue_chat_message_hooks(event, payload = nil)
         if active_web_hooks("chat_message").exists?

@@ -67,7 +67,7 @@ after_initialize do
     Jobs::UserEmail.prepend Chat::UserEmailExtension
     Plugin::Instance.prepend Chat::PluginInstanceExtension
     Jobs::ExportCsvFile.class_eval { prepend Chat::MessagesExporter }
-    WebHook.prepend Chat::WebhookExtension
+    WebHook.prepend Chat::OutgoingWebHookExtension
   end
 
   if Oneboxer.respond_to?(:register_local_handler)
@@ -382,24 +382,33 @@ after_initialize do
     end
   end
 
-  on(:chat_message_created) do |message, channel, user|
-    guardian = Guardian.new(user)
-    memberships = Chat::ChannelMembershipManager.all_for_user(user)
+  # outgoing webhook events
+  %i[
+    chat_message_created
+    chat_message_edited
+    chat_message_trashed
+    chat_message_restored
+  ].each do |chat_message_event|
+    on(chat_message_event) do |message, channel, user|
+      guardian = Guardian.new(user)
+      memberships = Chat::ChannelMembershipManager.all_for_user(user)
 
-    payload = {
-      message: Chat::MessageSerializer.new(message, { scope: guardian, root: false }).as_json,
-      channel:
-        Chat::ChannelSerializer.new(
-          channel,
-          {
-            scope: guardian,
-            membership: memberships.find { |membership| membership.chat_channel_id == channel.id },
-            root: false,
-          },
-        ).as_json,
-    }
+      payload = {
+        message: Chat::MessageSerializer.new(message, { scope: guardian, root: false }).as_json,
+        channel:
+          Chat::ChannelSerializer.new(
+            channel,
+            {
+              scope: guardian,
+              membership:
+                memberships.find { |membership| membership.chat_channel_id == channel.id },
+              root: false,
+            },
+          ).as_json,
+      }
 
-    WebHook.enqueue_chat_message_hooks(:chat_message_created, payload.to_json)
+      WebHook.enqueue_chat_message_hooks(chat_message_event, payload.to_json)
+    end
   end
 
   Discourse::Application.routes.append do
