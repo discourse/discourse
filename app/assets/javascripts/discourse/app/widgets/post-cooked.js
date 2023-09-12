@@ -13,7 +13,6 @@ import {
   destroyUserStatusOnMentions,
   updateUserStatusOnMention,
 } from "discourse/lib/update-user-status-on-mention";
-import { getOwner } from "discourse-common/lib/get-owner";
 
 let _beforeAdoptDecorators = [];
 let _afterAdoptDecorators = [];
@@ -397,7 +396,7 @@ export default class PostCooked {
     const mentions = postElement.querySelectorAll(`a.mention[href="${href}"]`);
 
     mentions.forEach((mention) => {
-      updateUserStatusOnMention(getOwner(this._post()), mention, user.status);
+      updateUserStatusOnMention(mention, user.status);
     });
   }
 

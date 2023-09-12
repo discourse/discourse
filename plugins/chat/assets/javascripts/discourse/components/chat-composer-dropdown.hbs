@@ -1,24 +1,30 @@
 {{#if @buttons.length}}
-  <DMenu
+  <Chat::Composer::Button
+    {{on "click" this.toggleExpand}}
+    @icon="plus"
+    title={{i18n "chat.composer.toggle_toolbar"}}
+    disabled={{@isDisabled}}
+    {{did-insert this.setupTrigger}}
     class={{concat-class
       "chat-composer-dropdown__trigger-btn"
-      "btn-flat"
       (if @hasActivePanel "has-active-panel")
     }}
-    @title={{i18n "chat.composer.toggle_toolbar"}}
-    @icon="plus"
-    @disabled={{@isDisabled}}
-    @arrow={{true}}
-    @placements={{array "top" "bottom"}}
+    aria-expanded={{if this.isExpanded "true" "false"}}
+    aria-controls={{this.ariaControls}}
     ...attributes
-    as |menu|
-  >
-    <ul class="chat-composer-dropdown__list">
+  />
+  {{#if this.isExpanded}}
+    <ul
+      id="chat-composer-dropdown__list"
+      class="chat-composer-dropdown__list"
+      {{did-insert this.setupPanel}}
+      {{will-destroy this.teardownPanel}}
+    >
       {{#each @buttons as |button|}}
         <li class={{concat-class "chat-composer-dropdown__item" button.id}}>
           <DButton
             @icon={{button.icon}}
-            @action={{fn this.onButtonClick button menu.close}}
+            @action={{fn this.onButtonClick button}}
             @label={{button.label}}
             class={{concat-class
               "chat-composer-dropdown__action-btn"
@@ -28,5 +34,5 @@
         </li>
       {{/each}}
     </ul>
-  </DMenu>
+  {{/if}}
 {{/if}}

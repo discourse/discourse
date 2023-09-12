@@ -162,8 +162,8 @@ acceptance("Post inline mentions – user status tooltip", function (needs) {
     ends_at: null,
   };
 
-  async function mouseMove(selector) {
-    await triggerEvent(selector, "mousemove");
+  async function mouseEnter(selector) {
+    await triggerEvent(query(selector), "mouseenter");
   }
 
   test("shows user status tooltip", async function (assert) {
@@ -177,7 +177,7 @@ acceptance("Post inline mentions – user status tooltip", function (needs) {
       "user status is shown"
     );
 
-    await mouseMove(".user-status-message");
+    await mouseEnter(".user-status-message");
     const statusTooltip = document.querySelector(
       ".user-status-message-tooltip"
     );

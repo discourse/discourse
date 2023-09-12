@@ -1,24 +1,49 @@
-[data-content][data-identifier="user-tip"] {
-  min-width: 300px;
+.tippy-box[data-theme="user-tip"] {
   background-color: var(--tertiary);
-  border: none;
   color: var(--secondary);
 
-  --float-kit-arrow-stroke-color: var(--tertiary);
-  --float-kit-arrow-fill-color: var(--tertiary);
+  .btn-flat {
+    color: var(--secondary);
 
-  .user-tip__container {
+    &:hover {
+      color: var(--d-hover);
+    }
+  }
+
+  .btn-primary {
+    background: var(--secondary);
+    color: var(--tertiary);
+
+    &:hover {
+      color: var(--tertiary-hover);
+    }
+
+    .d-icon {
+      color: var(--tertiary);
+    }
+  }
+
+  > .tippy-svg-arrow {
+    color: var(--tertiary);
+  }
+}
+
+.user-tip {
+  z-index: z("composer", "content") - 1;
+
+  &__container {
     font-weight: normal;
+    min-width: 300px;
     padding: 0.5em;
     text-align: left;
   }
 
-  .user-tip__title {
+  &__title {
     font-size: var(--font-up-2);
     font-weight: bold;
   }
 
-  .user-tip__content {
+  &__content {
     margin-top: 0.25em;
 
     a {
@@ -27,12 +52,17 @@
     }
   }
 
-  .user-tip__buttons {
+  &__buttons {
     margin-top: 1em;
   }
+}
 
-  .btn-primary {
-    background: var(--secondary);
-    color: var(--tertiary);
-  }
+.tippy-box[data-placement^="left"] > .tippy-svg-arrow {
+  right: -1px;
+}
+
+.tippy-box[data-theme~="user-tips"] > .tippy-svg-arrow:after,
+.tippy-box[data-theme~="user-tips"] > .tippy-svg-arrow > svg {
+  width: 18px;
+  height: 18px;
 }

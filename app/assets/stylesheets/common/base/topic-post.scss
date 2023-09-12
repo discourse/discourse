@@ -560,7 +560,17 @@ aside.quote {
 }
 
 .quote-button {
+  display: none;
+  position: absolute;
+  z-index: z("dropdown");
+  background-color: var(--secondary);
+  border: 1px solid var(--primary-low);
+  box-shadow: var(--shadow-card);
   flex-direction: column;
+
+  &.animated {
+    transition: top 0.1s linear, left 0.1s linear;
+  }
 
   &.visible {
     display: flex;
@@ -599,9 +609,12 @@ aside.quote {
   }
 
   .btn-flat {
-    &:hover {
-      .d-icon {
-        color: var(--tertiary);
+    .d-icon {
+      color: var(--primary-high);
+    }
+    .discourse-no-touch & {
+      &:hover {
+        background-color: var(--tertiary-low);
       }
     }
   }

@@ -425,7 +425,7 @@ export default class ChatComposer extends Component {
                 user.cssClasses = "is-online";
               }
             });
-            initUserStatusHtml(getOwner(this), result.users);
+            initUserStatusHtml(result.users);
           }
           return result;
         });
