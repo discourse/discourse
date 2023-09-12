@@ -13,7 +13,7 @@
   border-radius: var(--d-border-radius);
   border: 1px solid var(--primary-low);
   box-shadow: var(--shadow-menu-panel);
-  z-index: z("tooltip");
+  z-index: z("max");
   width: max-content;
   position: absolute;
   top: 0;
