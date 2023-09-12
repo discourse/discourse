@@ -5893,6 +5893,112 @@ RSpec.describe UsersController do
     end
   end
 
+  describe "#create_passkey" do
+    before { SiteSetting.experimental_passkeys = true }
+
+    it "stores the challenge in the session and returns challenge data, user id, and supported algorithms" do
+      create_passkey
+      secure_session = read_secure_session
+      response_parsed = response.parsed_body
+      expect(response_parsed["challenge"]).to eq(DiscourseWebauthn.challenge(user1, secure_session))
+      expect(response_parsed["rp_id"]).to eq(DiscourseWebauthn.rp_id)
+      expect(response_parsed["rp_name"]).to eq(DiscourseWebauthn.rp_name)
+      expect(response_parsed["user_secure_id"]).to eq(
+        user1.reload.create_or_fetch_secure_identifier,
+      )
+      expect(response_parsed["supported_algorithms"]).to eq(
+        ::DiscourseWebauthn::SUPPORTED_ALGORITHMS,
+      )
+    end
+
+    context "if the user has a passkey already" do
+      fab!(:user_security_key) { Fabricate(:passkey_with_random_credential, user: user1) }
+
+      it "returns existing active credentials" do
+        create_passkey
+        response_parsed = response.parsed_body
+        expect(response_parsed["existing_passkey_credential_ids"]).to eq(
+          [user_security_key.credential_id],
+        )
+      end
+    end
+  end
+
+  describe "#rename_passkey" do
+    before { SiteSetting.experimental_passkeys = true }
+
+    it "fails if no user is logged in" do
+      post "/u/rename_passkey/NONE.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "fails if no name parameter is provided" do
+      sign_in(user1)
+      post "/u/rename_passkey/ID.json"
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"][0]).to eq(
+        "param is missing or the value is empty: name",
+      )
+    end
+
+    it "fails if key is not present" do
+      sign_in(user1)
+      post "/u/rename_passkey/ID.json", params: { name: "new name" }
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"][0]).to include("Discourse::InvalidParameters")
+    end
+
+    context "if the user has a passkey" do
+      fab!(:passkey) { Fabricate(:passkey_with_random_credential, user: user1) }
+
+      it "works" do
+        sign_in(user1)
+        post "/u/rename_passkey/#{passkey.id}.json", params: { name: "new name" }
+        response_parsed = response.parsed_body
+
+        expect(response.status).to eq(200)
+        expect(passkey.reload.name).to eq("new name")
+      end
+    end
+  end
+
+  describe "#delete_passkey" do
+    before { SiteSetting.experimental_passkeys = true }
+
+    it "fails if user is not logged in" do
+      delete "/u/delete_passkey/ID.json"
+      expect(response.status).to eq(403)
+    end
+
+    it "fails if key is not present" do
+      sign_in(user1)
+      delete "/u/delete_passkey/12.json"
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"][0]).to include("Discourse::InvalidParameters")
+    end
+
+    context "if the user has a passkey" do
+      fab!(:passkey) { Fabricate(:passkey_with_random_credential, user: user1) }
+
+      it "works" do
+        sign_in(user1)
+        delete "/u/delete_passkey/#{passkey.id}.json"
+        expect(response.status).to eq(200)
+        expect(user1.passkey_credential_ids).to eq([])
+      end
+
+      it "does not let another user delete a passkey associated with another user" do
+        sign_in(admin)
+        delete "/u/delete_passkey/#{passkey.id}.json"
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"][0]).to include("Discourse::InvalidParameters")
+      end
+    end
+  end
+
   describe "#revoke_account" do
     it "errors for unauthorised users" do
       post "/u/#{user1.username}/preferences/revoke-account.json",
@@ -6891,6 +6997,12 @@ RSpec.describe UsersController do
     sign_in(user1)
     stub_secure_session_confirmed
     post "/u/create_second_factor_security_key.json"
+  end
+
+  def create_passkey
+    sign_in(user1)
+    stub_secure_session_confirmed
+    post "/u/create_passkey.json"
   end
 
   def stub_secure_session_confirmed

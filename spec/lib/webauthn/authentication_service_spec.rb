@@ -109,15 +109,21 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
 
   context "when params is blank" do
     let(:params) { nil }
-    it "returns false with no validation" do
-      expect(service.authenticate_security_key).to eq(false)
+    it "raises a MalformedPublicKeyCredentialError" do
+      expect { service.authenticate_security_key }.to raise_error(
+        DiscourseWebauthn::MalformedPublicKeyCredentialError,
+        I18n.t("webauthn.validation.malformed_public_key_credential_error"),
+      )
     end
   end
 
   context "when params is not blank and not a hash" do
     let(:params) { "test" }
-    it "returns false with no validation" do
-      expect(service.authenticate_security_key).to eq(false)
+    it "raises a MalformedPublicKeyCredentialError" do
+      expect { service.authenticate_security_key }.to raise_error(
+        DiscourseWebauthn::MalformedPublicKeyCredentialError,
+        I18n.t("webauthn.validation.malformed_public_key_credential_error"),
+      )
     end
   end
 
@@ -126,7 +132,7 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
 
     it "raises a NotFoundError" do
       expect { service.authenticate_security_key }.to raise_error(
-        DiscourseWebauthn::NotFoundError,
+        DiscourseWebauthn::KeyNotFoundError,
         I18n.t("webauthn.validation.not_found_error"),
       )
     end

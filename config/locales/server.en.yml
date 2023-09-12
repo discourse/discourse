@@ -1019,6 +1019,7 @@ en:
       ownership_error: "The security key is not owned by the user."
       not_found_error: "A security key with the provided credential ID could not be found."
       unknown_cose_algorithm_error: "The algorithm used for the security key is not recognized."
+      malformed_public_key_credential_error: "The provided public key is invalid."
 
   topic_flag_types:
     spam:

@@ -9,13 +9,16 @@ module DiscourseWebauthn
     # place in the step flow to make the process clearer.
     def authenticate_security_key
       if @params.blank? || (!@params.is_a?(Hash) && !@params.is_a?(ActionController::Parameters))
-        return false
+        raise(
+          MalformedPublicKeyCredentialError,
+          I18n.t("webauthn.validation.malformed_public_key_credential_error"),
+        )
       end
 
       # 3. Identify the user being authenticated and verify that this user is the
       #    owner of the public key credential source credentialSource identified by credential.id:
       security_key = UserSecurityKey.find_by(credential_id: @params[:credentialId])
-      raise(NotFoundError, I18n.t("webauthn.validation.not_found_error")) if security_key.blank?
+      raise(KeyNotFoundError, I18n.t("webauthn.validation.not_found_error")) if security_key.blank?
       if @factor_type == UserSecurityKey.factor_types[:second_factor] &&
            security_key.user != @current_user
         raise(OwnershipError, I18n.t("webauthn.validation.ownership_error"))

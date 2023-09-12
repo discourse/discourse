@@ -350,7 +350,7 @@ class SessionController < ApplicationController
       not_activated(user)
     end
   rescue ::DiscourseWebauthn::SecurityKeyError => err
-    render json: failed_json.merge(error: err.message)
+    render_json_error(err.message, status: 401)
   end
 
   def email_login_info

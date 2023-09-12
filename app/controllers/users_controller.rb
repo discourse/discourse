@@ -24,6 +24,10 @@ class UsersController < ApplicationController
                    revoke_auth_token
                    register_second_factor_security_key
                    create_second_factor_security_key
+                   create_passkey
+                   register_passkey
+                   rename_passkey
+                   delete_passkey
                    feature_topic
                    clear_featured_topic
                    bookmarks
@@ -1590,6 +1594,8 @@ class UsersController < ApplicationController
   end
 
   def create_passkey
+    raise Discourse::NotFound unless SiteSetting.experimental_passkeys
+
     challenge_session = DiscourseWebauthn.stage_challenge(current_user, secure_session)
     render json:
              success_json.merge(
@@ -1598,12 +1604,13 @@ class UsersController < ApplicationController
                rp_name: DiscourseWebauthn.rp_name,
                supported_algorithms: ::DiscourseWebauthn::SUPPORTED_ALGORITHMS,
                user_secure_id: current_user.create_or_fetch_secure_identifier,
-               existing_passkey_credential_ids:
-                 current_user.first_factor_security_key_credential_ids,
+               existing_passkey_credential_ids: current_user.passkey_credential_ids,
              )
   end
 
   def register_passkey
+    raise Discourse::NotFound unless SiteSetting.experimental_passkeys
+
     params.require(:name)
     params.require(:attestation)
     params.require(:clientData)
@@ -1622,20 +1629,26 @@ class UsersController < ApplicationController
   end
 
   def delete_passkey
-    UserSecurityKey.where(
-      id: params[:id],
-      user_id: current_user.id,
-      factor_type: UserSecurityKey.factor_types[:first_factor],
-    ).destroy_all
+    # TODO(pmusaraj): require password/passkey confirmation before deleting?
+    raise Discourse::NotFound unless SiteSetting.experimental_passkeys
+
+    passkey = current_user.security_keys.find_by(id: params[:id].to_i)
+    raise Discourse::InvalidParameters unless passkey
+
+    passkey.destroy
     render json: success_json
   end
 
   def rename_passkey
+    raise Discourse::NotFound unless SiteSetting.experimental_passkeys
+
     params.require(:id)
     params.require(:name)
 
-    UserSecurityKey.find_by(id: params[:id], user_id: current_user.id)&.update!(name: params[:name])
+    passkey = current_user.security_keys.find_by(id: params[:id].to_i)
+    raise Discourse::InvalidParameters unless passkey
 
+    passkey.update!(name: params[:name])
     render json: success_json
   end
 

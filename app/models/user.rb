@@ -1729,7 +1729,7 @@ class User < ActiveRecord::Base
       .pluck(:credential_id)
   end
 
-  def first_factor_security_key_credential_ids
+  def passkey_credential_ids
     security_keys
       .select(:credential_id)
       .where(factor_type: UserSecurityKey.factor_types[:first_factor])

@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { prepPasskeyCredential } from "discourse/lib/webauthn";
 import { inject as service } from "@ember/service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default class PasskeyLoginButton extends Component {
   @service dialog;
@@ -29,13 +30,9 @@ export default class PasskeyLoginButton extends Component {
                 this.dialog.alert(result.error);
               }
             })
-            .catch((res) => {
-              this.dialog.alert(res.error);
-            });
+            .catch(popupAjaxError);
         });
       })
-      .catch((res) => {
-        this.dialog.alert(res.error);
-      });
+      .catch(popupAjaxError);
   }
 }

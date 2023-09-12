@@ -36,7 +36,9 @@ module DiscourseWebauthn
   end
   class MalformedAttestationError < SecurityKeyError
   end
-  class NotFoundError < SecurityKeyError
+  class KeyNotFoundError < SecurityKeyError
+  end
+  class MalformedPublicKeyCredentialError < SecurityKeyError
   end
   class OwnershipError < SecurityKeyError
   end

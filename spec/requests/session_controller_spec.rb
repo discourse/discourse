@@ -2967,6 +2967,84 @@ RSpec.describe SessionController do
     end
   end
 
+  describe "#passkey_challenge" do
+    it "returns a challenge for an anonymous user" do
+      get "/session/passkey/challenge.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["challenge"]).not_to eq(nil)
+    end
+
+    it "returns a challenge for an authenticated user" do
+      sign_in(user)
+      get "/session/passkey/challenge.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["challenge"]).not_to eq(nil)
+    end
+
+    it "reset challenge on subsequent calls" do
+      get "/session/passkey/challenge.json"
+      expect(response.status).to eq(200)
+      challenge1 = response.parsed_body["challenge"]
+
+      get "/session/passkey/challenge.json"
+      expect(response.parsed_body["challenge"]).not_to eq(challenge1)
+    end
+  end
+
+  describe "#passkey_auth_perform" do
+    it "returns 404 if feature is not enabled" do
+      SiteSetting.experimental_passkeys = false
+
+      post "/session/passkey/auth.json"
+      expect(response.status).to eq(404)
+    end
+
+    context "when feature is enabled" do
+      before { SiteSetting.experimental_passkeys = true }
+
+      it "returns 400 if public key param is missing" do
+        post "/session/passkey/auth.json"
+        expect(response.status).to eq(400)
+
+        json = response.parsed_body
+        expect(json["errors"][0]).to include("param is missing")
+        expect(json["errors"][0]).to include("publicKeyCredential")
+      end
+
+      it "returns 401 on malformed credentials" do
+        post "/session/passkey/auth.json", params: { publicKeyCredential: "someboringstring" }
+        expect(response.status).to eq(401)
+
+        json = response.parsed_body
+        expect(json["errors"][0]).to eq(
+          I18n.t("webauthn.validation.malformed_public_key_credential_error"),
+        )
+      end
+
+      it "returns 401 on invalid credentials" do
+        post "/session/passkey/auth.json",
+             params: {
+               # creds are well-formed but security key is not registered
+               publicKeyCredential: {
+                 signature:
+                   "MEYCIQDYtbfkTGHOfizXHBHltn5KOq1eC3EM6Uq4peZ0L+3wMwIhAMgzm88qOOZ7SPYh5M6zvKMjVsUAne7n9RKdN/4Bb6z8",
+                 clientData:
+                   "eyJ0eXBlIjoid2ViYXV0aG4uZ2V0IiwiY2hhbGxlbmdlIjoiWmpJMk16UmxNMlV3TkRSaFl6QmhNemczTURjMlpUaGhaR1l5T1dGaU5qSXpNamMxWmpCaU9EVmxNVFUzTURaaVpEaGpNVEUwTVdJeU1qRXkiLCJvcmlnaW4iOiJodHRwOi8vbG9jYWxob3N0OjMwMDAiLCJjcm9zc09yaWdpbiI6ZmFsc2x9",
+                 authenticatorData: "SZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2MFAAAAAA==",
+                 credentialId: "humAArAAAiZZuwFE/F9Gi4BAVTsRL/FowuzQsYTPKIk=",
+               },
+             }
+
+        expect(response.status).to eq(401)
+        json = response.parsed_body
+        expect(json["errors"][0]).to eq(I18n.t("webauthn.validation.not_found_error"))
+      end
+
+      # TODO(pmusaraj) add tests for valid credentials?
+      # spec/lib/webauthn also covers them
+    end
+  end
+
   describe "#scopes" do
     context "when not a valid api request" do
       it "returns 404" do
