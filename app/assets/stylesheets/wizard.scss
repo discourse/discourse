@@ -44,6 +44,10 @@ body.wizard {
       }
     }
   }
+
+  .wizard-canvas {
+    position: absolute;
+  }
 }
 
 // Refactored SCSS
