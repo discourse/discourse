@@ -1,4 +1,3 @@
-import { isTesting } from "discourse-common/config/environment";
 import { getAndClearUnhandledThemeErrors } from "discourse/app";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
@@ -9,26 +8,34 @@ import identifySource, {
   getThemeInfo,
 } from "discourse/lib/source-identifier";
 import Ember from "ember";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import Service, { inject as service } from "@ember/service";
+import { getOwner } from "@ember/application";
 
 const showingErrors = new Set();
 
-export default {
-  initialize(owner) {
-    if (isTesting()) {
-      return;
-    }
+@disableImplicitInjections
+export default class ClientErrorHandlerService extends Service {
+  @service currentUser;
 
-    this.currentUser = owner.lookup("service:current-user");
+  constructor() {
+    super(...arguments);
 
     getAndClearUnhandledThemeErrors().forEach((e) => this.reportThemeError(e));
 
     document.addEventListener("discourse-error", this.handleDiscourseError);
-  },
+  }
 
-  teardown() {
+  get rootElement() {
+    return document.querySelector(getOwner(this).rootElement);
+  }
+
+  willDestroy() {
     document.removeEventListener("discourse-error", this.handleDiscourseError);
-    delete this.currentUser;
-  },
+    this.rootElement
+      .querySelectorAll(".broken-theme-alert-banner")
+      .forEach((e) => e.remove());
+  }
 
   @bind
   handleDiscourseError(e) {
@@ -39,7 +46,7 @@ export default {
     }
 
     e.preventDefault(); // Mark as handled
-  },
+  }
 
   reportThemeError(e) {
     const { themeId, error } = e.detail;
@@ -53,7 +60,7 @@ export default {
 
     const message = I18n.t("themes.broken_theme_alert");
     this.displayErrorNotice(message, source);
-  },
+  }
 
   reportGenericError(e) {
     const { messageKey, error } = e.detail;
@@ -67,14 +74,14 @@ export default {
       showingErrors.add(messageKey);
       this.displayErrorNotice(message, source);
     }
-  },
+  }
 
   displayErrorNotice(message, source) {
     if (!this.currentUser?.admin) {
       return;
     }
 
-    let html = `⚠️ ${message}`;
+    let html = `⚠️ ${escape(message)}`;
 
     if (source && source.type === "theme") {
       html += `<br/>${I18n.t("themes.error_caused_by", {
@@ -88,11 +95,11 @@ export default {
     )}</span>`;
 
     const alertDiv = document.createElement("div");
-    alertDiv.classList.add("broken-theme-alert");
+    alertDiv.classList.add("broken-theme-alert-banner");
     alertDiv.innerHTML = html;
-    document.body.prepend(alertDiv);
-  },
-};
+    this.rootElement.prepend(alertDiv);
+  }
+}
 
 function reportToLogster(name, error) {
   const data = {
