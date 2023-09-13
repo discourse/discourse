@@ -12,7 +12,12 @@ RSpec.describe "Outgoing chat webhooks" do
     fab!(:user2) { Fabricate(:user) }
     let(:message_content) { "This is a test message" }
     let(:new_message_content) { "This is the edited message" }
-    let(:job_args) { Jobs::EmitWebHookEvent.jobs[0]["args"].first }
+    let(:job_args) do
+      Jobs::EmitWebHookEvent
+        .jobs
+        .map { |job| job["args"].first }
+        .find { |args| args["event_type"] == "chat_message" }
+    end
     let(:event_name) { job_args["event_name"] }
     let(:event_category_id) { job_args["category_id"] }
     let(:payload) { JSON.parse(job_args["payload"]) }
