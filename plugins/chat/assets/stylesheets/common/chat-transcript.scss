@@ -24,8 +24,15 @@
     padding-bottom: 0.5rem;
   }
 
-  .chat-transcript-channel {
+  .chat-transcript-channel,
+  .chat-transcript-thread {
     font-size: var(--font-down-1-rem);
+  }
+
+  .chat-transcript-separator {
+    font-size: var(--font-down-3-rem);
+    color: var(--primary-high);
+    padding: 0 0.5rem;
   }
 
   .chat-transcript-username {

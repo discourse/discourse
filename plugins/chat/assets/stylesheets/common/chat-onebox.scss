@@ -1,7 +1,11 @@
 .chat-onebox {
   .chat-onebox-body {
     .chat-onebox-title {
+      display: inline;
       margin-bottom: 3px;
+      margin-left: 0;
+      padding-left: 0;
+      width: 100px;
     }
 
     .chat-onebox-description {

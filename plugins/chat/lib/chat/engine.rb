@@ -28,4 +28,12 @@ module ::Chat
         File.read(path)
       end
   end
+
+  def self.thread_onebox_template
+    @thread_onebox_template ||=
+      begin
+        path = "#{Rails.root}/plugins/chat/lib/onebox/templates/discourse_chat_thread.mustache"
+        File.read(path)
+      end
+  end
 end
