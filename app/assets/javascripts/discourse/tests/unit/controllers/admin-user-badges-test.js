@@ -38,7 +38,6 @@ module("Unit | Controller | admin-user-badges", function (hooks) {
     });
 
     const controller = this.owner.lookup("controller:admin-user-badges");
-    assert.ok(1);
     controller.setProperties({
       model: [],
       badges: [
