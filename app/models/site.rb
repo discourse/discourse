@@ -4,6 +4,8 @@
 class Site
   include ActiveModel::Serialization
 
+  MANY_CATEGORIES_LIMIT = 100
+
   cattr_accessor :preloaded_category_custom_fields
 
   def self.reset_preloaded_category_custom_fields
@@ -116,6 +118,8 @@ class Site
              )
             categories << category
           end
+
+          break if SiteSetting.many_categories && categories.size > Site::MANY_CATEGORIES_LIMIT
         end
 
         with_children = Set.new
