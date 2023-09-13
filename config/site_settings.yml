@@ -2170,6 +2170,9 @@ developer:
   instrument_gc_stat_per_request:
     default: false
     hidden: true
+  many_categories:
+    default: false
+    hidden: true
 
 navigation:
   navigation_menu:
