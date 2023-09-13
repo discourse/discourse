@@ -60,11 +60,11 @@ module EmberCli
   end
 
   def self.parse_source_map_path(file)
-    File.read("#{dist_dir}/assets/#{file}")[%r{^//# sourceMappingURL=(.*)$}, 1]
+    File.read("#{dist_dir}/assets/#{file}")[%r{//# sourceMappingURL=(.*)$}, 1]
   end
 
   def self.is_ember_cli_asset?(name)
-    assets.include?(name) || name.start_with?("chunk.")
+    assets.include?(name) || script_chunks.values.flatten.include?(name.delete_suffix(".js"))
   end
 
   def self.ember_version
@@ -102,5 +102,9 @@ module EmberCli
       end
 
     chunk_infos
+  end
+
+  def self.has_tests?
+    File.exist?("#{dist_dir}/tests/index.html")
   end
 end

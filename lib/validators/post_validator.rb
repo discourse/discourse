@@ -212,7 +212,7 @@ class PostValidator < ActiveModel::Validator
   end
 
   def private_message?(post)
-    post.topic.try(:private_message?)
+    post.topic.try(:private_message?) || options[:private_message]
   end
 
   def add_error_if_count_exceeded(

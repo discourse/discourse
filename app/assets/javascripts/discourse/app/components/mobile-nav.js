@@ -3,7 +3,6 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-import deprecated from "discourse-common/lib/deprecated";
 
 export default Component.extend({
   @on("init")
@@ -14,13 +13,6 @@ export default Component.extend({
         classes = classes.split(" ");
         this.set("classNames", classes);
       }
-    }
-    if (this.currentPath) {
-      deprecated("{{mobile-nav}} no longer requires the currentPath property", {
-        since: "2.7.0.beta4",
-        dropFrom: "2.9.0.beta1",
-        id: "discourse.mobile-nav.currentPath",
-      });
     }
   },
 

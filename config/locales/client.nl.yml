@@ -354,6 +354,9 @@ nl:
         confirm: "Je hebt al een concept openstaan. Wat wil je ermee doen?"
         yes_value: "Weggooien"
         no_value: "Bewerken hervatten"
+    topic_count_all:
+      one: "%{count} nieuw topic weergeven"
+      other: "%{count} nieuwe topics weergeven"
     topic_count_categories:
       one: "%{count} nieuw of bijgewerkt topic weergeven"
       other: "%{count} nieuwe of bijgewerkte topics weergeven"
@@ -5212,7 +5215,6 @@ nl:
       form_templates:
         nav_title: "Sjablonen"
         title: "Formuliersjablonen"
-        help: "Maak een sjabloonstructuur die kan worden gebruikt om nieuwe topics en berichten te maken."
         new_template: "Nieuw sjabloon"
         list_table:
           headings:

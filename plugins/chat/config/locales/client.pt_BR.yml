@@ -85,6 +85,7 @@ pt_BR:
         create: "Novo canal"
       click_to_join: "Clique aqui para visualizar os canais disponíveis."
       close: "Fechar"
+      remove: "Remover"
       collapse: "Recolher gaveta de chat"
       expand: "Expandir Chat"
       confirm_flag: "Tem certeza de que deseja sinalizar a mensagem de %{username}?"

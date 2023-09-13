@@ -320,6 +320,9 @@ fa_IR:
       abandon:
         yes_value: "حذف"
         no_value: "ادامه"
+    topic_count_all:
+      one: "مشاهده %{count} موضوع جدید"
+      other: "مشاهده %{count} موضوع جدید"
     topic_count_categories:
       one: "%{count} موضوع تازه یا به‌ روز شده."
       other: "%{count} موضوع تازه یا به‌ روز شده."
@@ -2910,7 +2913,7 @@ fa_IR:
         boxes_with_featured_topics: "جعبه‌ها با موضوعات برجسته"
       settings_sections:
         general: "عمومی"
-        moderation: "معتدل"
+        moderation: "مدیریت"
         appearance: "ظاهر"
         email: "ایمیل"
       list_filters:
@@ -3485,7 +3488,7 @@ fa_IR:
         activity_metrics: معیارهای فعالیت
         all_reports: "تمامی گزارشات"
         general_tab: "عمومی"
-        moderation_tab: "معتدل"
+        moderation_tab: "مدیریت"
         security_tab: "امنیت"
         reports_tab: "گزارشات"
         report_filter_any: "هر"
@@ -4423,9 +4426,9 @@ fa_IR:
           required: "مورد نیاز"
           basic: "راه اندازی اولیه"
           users: "کاربران"
-          posting: "در حال نوشتن"
+          posting: "مطلب"
           email: "ایمیل"
-          files: "پرونده‌ها"
+          files: "فایل ها"
           trust: "سطوح اعتماد"
           security: "امنیت"
           onebox: "جعبه‌ی پیوند"

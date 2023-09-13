@@ -57,6 +57,7 @@ ko:
         browse: "채널 찾아보기"
         create: "새 채널"
       close: "닫기"
+      remove: "제거"
       expand: "채팅창 확장"
       deleted:
         other: "%{count}메시지가 삭제되었습니다 [모두 보기]"

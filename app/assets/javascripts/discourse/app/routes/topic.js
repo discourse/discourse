@@ -17,6 +17,7 @@ import ChangeTimestampModal from "discourse/components/modal/change-timestamp";
 import EditTopicTimerModal from "discourse/components/modal/edit-topic-timer";
 import FeatureTopicModal from "discourse/components/modal/feature-topic";
 import FlagModal from "discourse/components/modal/flag";
+import GrantBadgeModal from "discourse/components/modal/grant-badge";
 import MoveToTopicModal from "discourse/components/modal/move-to-topic";
 import RawEmailModal from "discourse/components/modal/raw-email";
 
@@ -200,9 +201,11 @@ const TopicRoute = DiscourseRoute.extend({
 
   @action
   showGrantBadgeModal() {
-    showModal("grant-badge", {
-      model: this.modelFor("topic"),
-      title: "admin.badges.grant_badge",
+    const topicController = this.controllerFor("topic");
+    this.modal.show(GrantBadgeModal, {
+      model: {
+        selectedPost: topicController.selectedPosts[0],
+      },
     });
   },
 

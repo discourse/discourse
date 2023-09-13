@@ -296,6 +296,11 @@ sk:
       new_topic: "Nová téma"
       abandon:
         yes_value: "Zahodiť"
+    topic_count_all:
+      one: "Pozrieť %{count} novú tému."
+      few: "Pozrieť %{count} nových tém."
+      many: "Pozrieť %{count} nových tém."
+      other: "Pozrieť %{count} nových tém."
     topic_count_categories:
       one: "Pozri si %{count} novú alebo upravenú tému."
       few: "Pozri si %{count} nových alebo upravených tém."

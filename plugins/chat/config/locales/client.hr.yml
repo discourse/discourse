@@ -73,6 +73,7 @@ hr:
         browse: "Pretražujte kanale"
       click_to_join: "Kliknite ovdje da biste vidjeli dostupne kanale."
       close: "Zatvori"
+      remove: "Ukloni"
       collapse: "Sažmi ladicu za chat"
       expand: "Proširi ladicu za čavrljanje"
       confirm_flag: "Jeste li sigurni da želite označiti poruku korisnika %{username}?"

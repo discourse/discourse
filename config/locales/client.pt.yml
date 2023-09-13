@@ -331,6 +331,9 @@ pt:
       abandon:
         yes_value: "Descartar"
         no_value: "Retomar a edição"
+    topic_count_all:
+      one: "Ver %{count} tópico novo"
+      other: "Ver %{count} tópicos novos"
     topic_count_categories:
       one: "Ver %{count} tópico novo ou atualizado"
       other: "Ver %{count} tópicos novos ou atualizados"

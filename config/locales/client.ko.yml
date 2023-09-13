@@ -309,6 +309,8 @@ ko:
       abandon:
         yes_value: "버리기"
         no_value: "편집 재개"
+    topic_count_all:
+      other: "%{count}개의 새로운 글 보기"
     topic_count_categories:
       other: "%{count}개의 새 주제 또는 업데이트된 주제 보기"
     topic_count_latest:

@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 import I18n from "I18n";
+import { MAX_SECOND_FACTOR_NAME_LENGTH } from "discourse/models/user";
 
 export default class SecondFactorAddTotp extends Component {
   @tracked loading = false;
@@ -10,6 +11,8 @@ export default class SecondFactorAddTotp extends Component {
   @tracked showSecondFactorKey = false;
   @tracked errorMessage;
   @tracked secondFactorToken;
+
+  maxSecondFactorNameLength = MAX_SECOND_FACTOR_NAME_LENGTH;
 
   @action
   totpRequested() {

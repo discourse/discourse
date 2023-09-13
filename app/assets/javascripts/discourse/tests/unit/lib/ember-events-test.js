@@ -1,13 +1,13 @@
+/* eslint-disable ember/require-tagless-components */
+/* eslint-disable ember/no-classic-classes */
+/* eslint-disable ember/no-classic-components */
+
 import { module, test } from "qunit";
 import { setupRenderingTest } from "ember-qunit";
 import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
-
-/* eslint-disable ember/require-tagless-components */
-/* eslint-disable ember/no-classic-classes */
-/* eslint-disable ember/no-classic-components */
-import { default as ClassicComponent } from "@ember/component";
-import { default as GlimmerComponent } from "@glimmer/component";
+import ClassicComponent from "@ember/component";
+import GlimmerComponent from "@glimmer/component";
 import { action } from "@ember/object";
 
 // Configure test-local Classic and Glimmer components that

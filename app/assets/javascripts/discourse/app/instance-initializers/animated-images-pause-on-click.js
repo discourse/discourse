@@ -27,7 +27,9 @@ function _resumeAnimation(img) {
 }
 
 function animatedImgs() {
-  return document.querySelectorAll("img.animated:not(.manually-paused)");
+  return document.querySelectorAll(
+    ".topic-post img.animated:not(.manually-paused)"
+  );
 }
 
 export default {
@@ -100,7 +102,6 @@ export default {
 
       api.decorateCookedElement(_attachCommands, {
         onlyStream: true,
-        id: "animated-images-pause-on-click",
       });
 
       api.cleanupStream(_cleanUp);

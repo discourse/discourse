@@ -6,6 +6,7 @@
 
 it:
   site_settings:
+    chat_separate_sidebar_mode: "Mostra modalità separate della barra laterale per forum e chat."
     chat_enabled: "Abilita chat."
     enable_public_channels: "Abilita i canali pubblici in base alle categorie."
     chat_allowed_groups: "Gli utenti di questi gruppi possono chattare. Tieni presente che lo staff può sempre accedere alla chat."
@@ -116,11 +117,17 @@ it:
         agree_and_delete:
           title: "Elimina messaggio"
           description: "Elimina il messaggio in modo che gli utenti non possano vederlo."
+        delete_and_agree:
+          title: "Ignora segnalazione ed elimina messaggio"
+          description: "Ignora la segnalazione rimuovendolo dalla coda ed eliminando il messaggio."
         disagree_and_restore:
           title: "Rifiuta e ripristina il messaggio"
           description: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
         disagree:
           title: "Rifiuta"
+        ignore:
+          title: "Non fare nulla"
+          description: "Ignora la segnalazione rimuovendola dalla coda senza intraprendere alcuna azione."
       direct_messages:
         transcript_title: "Trascrizione dei messaggi precedenti in %{channel_name}"
         transcript_body: "Per darti più contesto, abbiamo incluso una trascrizione dei messaggi precedenti in questa conversazione (fino a dieci):\n\n%{transcript}"

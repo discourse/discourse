@@ -7,6 +7,12 @@ describe Chat::Message do
 
   it { is_expected.to have_many(:chat_mentions).dependent(:destroy) }
 
+  describe "validations" do
+    subject(:message) { described_class.new(message: "") }
+
+    it { is_expected.to validate_length_of(:cooked).is_at_most(20_000) }
+  end
+
   describe ".cook" do
     it "does not support HTML tags" do
       cooked = described_class.cook("<h1>test</h1>")

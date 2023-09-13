@@ -303,6 +303,9 @@ nb_NO:
       abandon:
         yes_value: "Forkast"
         no_value: "Gjenoppta redigering"
+    topic_count_all:
+      one: "Se %{count} nytt emne"
+      other: "Se %{count} nye emner"
     topic_count_categories:
       one: "Se %{count} nytt eller oppdatert emne"
       other: "Se %{count} nye eller oppdaterte emner"

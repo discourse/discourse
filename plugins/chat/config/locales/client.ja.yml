@@ -84,6 +84,7 @@ ja:
         create: "新しいチャンネル"
       click_to_join: "利用可能なチャンネルを表示するにはここをクリックします。"
       close: "閉じる"
+      remove: "削除"
       collapse: "チャットドロワーを折りたたむ"
       expand: "チャットドロワーを展開"
       confirm_flag: "%{username} のメッセージを通報してよろしいですか？"

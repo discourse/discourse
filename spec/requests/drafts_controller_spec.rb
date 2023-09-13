@@ -234,6 +234,45 @@ RSpec.describe DraftsController do
         end
       end
     end
+
+    it "returns 403 when the maximum amount of drafts per users is reached" do
+      SiteSetting.max_drafts_per_user = 2
+
+      user1 = Fabricate(:user)
+      sign_in(user1)
+
+      data = { my: "data" }.to_json
+
+      # creating the first draft should work
+      post "/drafts.json", params: { draft_key: "TOPIC_1", data: data }
+      expect(response.status).to eq(200)
+
+      # same draft key, so shouldn't count against the limit
+      post "/drafts.json", params: { draft_key: "TOPIC_1", data: data, sequence: 0 }
+      expect(response.status).to eq(200)
+
+      # different draft key, so should count against the limit
+      post "/drafts.json", params: { draft_key: "TOPIC_2", data: data }
+      expect(response.status).to eq(200)
+
+      # limit should be reached now
+      post "/drafts.json", params: { draft_key: "TOPIC_3", data: data }
+      expect(response.status).to eq(403)
+
+      # updating existing draft should still work
+      post "/drafts.json", params: { draft_key: "TOPIC_1", data: data, sequence: 1 }
+      expect(response.status).to eq(200)
+
+      # creating a new draft as a different user should still work
+      user2 = Fabricate(:user)
+      sign_in(user2)
+      post "/drafts.json", params: { draft_key: "TOPIC_3", data: data }
+      expect(response.status).to eq(200)
+
+      # check the draft counts just to be safe
+      expect(Draft.where(user_id: user1.id).count).to eq(2)
+      expect(Draft.where(user_id: user2.id).count).to eq(1)
+    end
   end
 
   describe "#destroy" do

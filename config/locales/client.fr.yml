@@ -354,6 +354,9 @@ fr:
         confirm: "Vous avez déjà un brouillon en cours de rédaction. Que voulez-vous en faire ?"
         yes_value: "Abandonner"
         no_value: "Reprendre l'édition"
+    topic_count_all:
+      one: "Voir %{count} nouveau sujet"
+      other: "Voir %{count} nouveaux sujets"
     topic_count_categories:
       one: "Voir %{count} sujet récent ou mis à jour"
       other: "Voir %{count} sujets récents ou mis à jour"
@@ -5215,7 +5218,6 @@ fr:
       form_templates:
         nav_title: "Modèles"
         title: "Modèles de formulaires"
-        help: "Créer une structure de modèle qui peut être utilisée pour créer de nouveaux sujets, publications et messages."
         new_template: "Nouveau modèle"
         list_table:
           headings:

@@ -1,4 +1,6 @@
-<DSection @bodyClass="static-login" @class="container">
+{{body-class "static-login"}}
+
+<section class="container">
   <div class="contents clearfix body-page">
     <div class="login-welcome">
       <PluginOutlet @name="above-login" @outletArgs={{hash model=this.model}} />
@@ -29,4 +31,4 @@
       </div>
     </div>
   </div>
-</DSection>
+</section>

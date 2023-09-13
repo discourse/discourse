@@ -4,6 +4,15 @@ var I18n = I18n || {};
 // Set default locale to english
 I18n.defaultLocale = "en";
 
+I18n.testing = false;
+
+I18n.missingInterpolationArgument = class I18nMissingInterpolationArgument extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "I18nMissingInterpolationArgument";
+  }
+}
+
 // Set default pluralization rule
 I18n.pluralizationRules = {
   en(n) {
@@ -101,7 +110,7 @@ I18n.prepareOptions = function () {
   return options;
 };
 
-I18n.interpolate = function (message, options) {
+I18n.interpolate = function (message, options, scope) {
   options = this.prepareOptions(options);
 
   var matches = message.match(this.PLACEHOLDER),
@@ -128,6 +137,10 @@ I18n.interpolate = function (message, options) {
 
     if (!this.isValidNode(options, name)) {
       value = "[missing " + placeholder + " value]";
+
+      if (I18n.testing) {
+        throw new I18n.missingInterpolationArgument(`${scope}: ${value}`);
+      }
     }
 
     var regex = new RegExp(
@@ -166,12 +179,16 @@ I18n.translate = function (scope, options) {
   }
 
   try {
-    return this.interpolate(translation, options);
+    return this.interpolate(translation, options, scope);
   } catch (error) {
-    return (
-      options.translatedFallback ||
-      this.missingTranslation(scope, null, options)
-    );
+    if (error instanceof I18n.missingInterpolationArgument) {
+      throw error;
+    } else {
+      return (
+        options.translatedFallback ||
+        this.missingTranslation(scope, null, options)
+      );
+    }
   }
 };
 

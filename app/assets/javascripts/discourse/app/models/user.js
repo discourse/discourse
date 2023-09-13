@@ -45,6 +45,8 @@ export const SECOND_FACTOR_METHODS = {
   SECURITY_KEY: 3,
 };
 
+export const MAX_SECOND_FACTOR_NAME_LENGTH = 300;
+
 const TEXT_SIZE_COOKIE_NAME = "text_size";
 const COOKIE_EXPIRY_DAYS = 365;
 
