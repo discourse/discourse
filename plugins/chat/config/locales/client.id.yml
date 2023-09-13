@@ -52,6 +52,7 @@ id:
         join: "Gabung"
         leave: "Keluar"
       close: "Tutup"
+      remove: "Hapus"
       delete: "Hapus"
       muted: "diredam"
       joined: "joined"
@@ -181,6 +182,7 @@ id:
       types:
         reviewable_chat_message:
           title: "Pesan obrolan yang ditandai"
+          noun: "pesan obrolan"
     styleguide:
       sections:
         chat:

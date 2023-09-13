@@ -354,6 +354,9 @@ sv:
         confirm: "Du har redan ett pågående utkast. Vad vill du göra med det?"
         yes_value: "Förkasta"
         no_value: "Återuppta redigering"
+    topic_count_all:
+      one: "Visa %{count} nytt ämne"
+      other: "Visa %{count} nya ämnen"
     topic_count_categories:
       one: "Visa %{count} nytt eller uppdaterat ämne"
       other: "Visa %{count} nya eller uppdaterade ämnen"
@@ -5205,7 +5208,6 @@ sv:
       form_templates:
         nav_title: "Mallar"
         title: "Formulärmallar"
-        help: "Skapa en mallstruktur som kan användas för att skapa nya ämnen, inlägg och meddelanden."
         new_template: "Ny mall"
         list_table:
           headings:

@@ -767,7 +767,12 @@ class UsersController < ApplicationController
           user.errors[:primary_email]&.include?(I18n.t("errors.messages.taken"))
       session["user_created_message"] = activation.success_message
 
-      if existing_user = User.find_by_email(user.primary_email&.email)
+      existing_user = User.find_by_email(user.primary_email&.email)
+      if !existing_user && SiteSetting.normalize_emails
+        existing_user =
+          UserEmail.find_by_normalized_email(user.primary_email&.normalized_email)&.user
+      end
+      if existing_user
         Jobs.enqueue(:critical_user_email, type: "account_exists", user_id: existing_user.id)
       end
 
@@ -1546,6 +1551,11 @@ class UsersController < ApplicationController
   end
 
   def create_second_factor_security_key
+    if current_user.all_security_keys.count >= UserSecurityKey::MAX_KEYS_PER_USER
+      render_json_error(I18n.t("login.too_many_security_keys"), status: 422)
+      return
+    end
+
     challenge_session = DiscourseWebauthn.stage_challenge(current_user, secure_session)
     render json:
              success_json.merge(

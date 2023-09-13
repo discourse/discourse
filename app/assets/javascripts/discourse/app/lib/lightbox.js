@@ -1,7 +1,4 @@
-import {
-  escapeExpression,
-  postRNWebviewMessage,
-} from "discourse/lib/utilities";
+import { postRNWebviewMessage } from "discourse/lib/utilities";
 
 import I18n from "I18n";
 import User from "discourse/models/user";
@@ -119,7 +116,7 @@ export default function lightbox(elem, siteSettings) {
         titleSrc(item) {
           const href = item.el.data("download-href") || item.src;
           let src = [
-            escapeExpression(item.el.attr("title")),
+            item.el.attr("title"),
             $("span.informations", item.el).text(),
           ];
           if (

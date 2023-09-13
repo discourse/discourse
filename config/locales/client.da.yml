@@ -317,6 +317,9 @@ da:
       abandon:
         yes_value: "Kassér"
         no_value: "Genoptag redigering"
+    topic_count_all:
+      one: "Se %{count} nyt emne"
+      other: "Se %{count} nye emner"
     topic_count_categories:
       one: "Se %{count} nyt eller opdateret emne"
       other: "Se %{count} nye eller opdaterede emner"

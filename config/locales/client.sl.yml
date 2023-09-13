@@ -338,6 +338,11 @@ sl:
       new_topic: "Nov osnutek teme"
       abandon:
         yes_value: "Zavrzi"
+    topic_count_all:
+      one: "Poglej %{count} novo temo"
+      two: "Poglej %{count} novi temi"
+      few: "Poglej %{count} nove teme"
+      other: "Poglej %{count} novih tem"
     topic_count_categories:
       one: "Poglej %{count} novo ali posodobljeno temo"
       two: "Poglej %{count} novi ali posodobljeni temi"

@@ -355,6 +355,48 @@ module("Unit | Utility | uploads", function (hooks) {
     );
   });
 
+  test("displayErrorForUpload - non-backup tar.gz file too large", function (assert) {
+    sinon.stub(dialog, "alert");
+    displayErrorForUpload(
+      {
+        jqXHR: {
+          status: 413,
+          responseJSON: {
+            message: I18n.t("post.errors.file_too_large_humanized"),
+          },
+        },
+      },
+      { max_attachment_size_kb: 4096, max_image_size_kb: 4096 },
+      "non-backup-tar-gz-file.tar.gz"
+    );
+    assert.ok(
+      dialog.alert.calledWith(
+        I18n.t("post.errors.file_too_large_humanized", {
+          max_size: I18n.toHumanSize(4096 * 1024),
+        })
+      ),
+      "the alert is called"
+    );
+  });
+
+  test("displayErrorForUpload - backup file too large", function (assert) {
+    sinon.stub(dialog, "alert");
+    displayErrorForUpload(
+      {
+        jqXHR: {
+          status: 413,
+          responseJSON: { message: I18n.t("post.errors.backup_too_large") },
+        },
+      },
+      { max_attachment_size_kb: 4096, max_image_size_kb: 4096 },
+      "backup-2023-09-07-092329-v20230728055813.tar.gz"
+    );
+    assert.ok(
+      dialog.alert.calledWith(I18n.t("post.errors.backup_too_large")),
+      "the alert is called"
+    );
+  });
+
   test("displayErrorForUpload - jquery file upload - jqXHR present", function (assert) {
     sinon.stub(dialog, "alert");
     displayErrorForUpload(

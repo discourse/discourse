@@ -7,4 +7,10 @@ RSpec.describe Chat::IncomingWebhook do
       .class_name("Chat::WebhookEvent")
       .dependent(:delete_all)
   end
+
+  it { is_expected.to validate_length_of(:name).is_at_most(100) }
+  it { is_expected.to validate_length_of(:key).is_at_most(100) }
+  it { is_expected.to validate_length_of(:username).is_at_most(100) }
+  it { is_expected.to validate_length_of(:description).is_at_most(500) }
+  it { is_expected.to validate_length_of(:emoji).is_at_most(100) }
 end

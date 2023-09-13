@@ -355,6 +355,9 @@ de:
         confirm: "Du hast bereits einen Entwurf in Arbeit. Was möchtest du damit machen?"
         yes_value: "Verwerfen"
         no_value: "Bearbeitung fortsetzen"
+    topic_count_all:
+      one: "Zeige %{count} neues Thema"
+      other: "Zeige %{count} neue Themen"
     topic_count_categories:
       one: "Zeige %{count} neues oder aktualisiertes Thema"
       other: "Zeige %{count} neue oder aktualisierte Themen"
@@ -2318,6 +2321,9 @@ de:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username} und %{count} andere</span> %{description}"
+        other: "<span class='multi-user'>%{username} und %{count} andere</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
         one: "%{username} und %{count} andere Person"
@@ -5304,7 +5310,7 @@ de:
       form_templates:
         nav_title: "Vorlagen"
         title: "Formularvorlagen"
-        help: "Erstelle eine Vorlagenstruktur, mit der du neue Themen, Beiträge und Nachrichten erstellen kannst."
+        help: "Erstelle eine Formularvorlagenstruktur, die zum Erstellen neuer Themen verwendet werden kann."
         new_template: "Neue Vorlage"
         list_table:
           headings:

@@ -18,6 +18,7 @@ sq:
         edit: "Redakto"
         add: "Shto"
       close: "Mbyll"
+      remove: "Hiq"
       delete: "Fshij"
       muted: "të heshtur"
       joined: "anëtarësuar"

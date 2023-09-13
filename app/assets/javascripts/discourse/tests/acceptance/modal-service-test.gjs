@@ -1,36 +1,41 @@
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { click, settled, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { hbs } from "ember-cli-htmlbars";
 import { getOwner } from "@ember/application";
 import Component from "@glimmer/component";
-import { setComponentTemplate } from "@glimmer/manager";
-import {
+import DModal, {
   CLOSE_INITIATED_BY_BUTTON,
   CLOSE_INITIATED_BY_CLICK_OUTSIDE,
   CLOSE_INITIATED_BY_ESC,
   CLOSE_INITIATED_BY_MODAL_SHOW,
 } from "discourse/components/d-modal";
 import { action } from "@ember/object";
+import { on } from "@ember/modifier";
+import { tracked } from "@glimmer/tracking";
+import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 
 class MyModalClass extends Component {
+  <template>
+    <DModal
+      class="service-modal"
+      @closeModal={{@closeModal}}
+      @title="Hello World"
+    >
+      Modal content is
+      {{@model.text}}
+      <button
+        type="button"
+        class="custom-data"
+        {{on "click" this.closeWithCustomData}}
+      ></button>
+    </DModal>
+  </template>
+
   @action
   closeWithCustomData() {
     this.args.closeModal({ hello: "world" });
   }
 }
-setComponentTemplate(
-  hbs`
-    <DModal
-      @closeModal={{@closeModal}}
-      @title="Hello World"
-    >
-      Modal content is {{@model.text}}
-      <button class='custom-data' {{on "click" this.closeWithCustomData}}></button>
-    </DModal>
-  `,
-  MyModalClass
-);
 
 acceptance("Modal service: component-based API", function () {
   test("displays correctly", async function (assert) {
@@ -146,6 +151,56 @@ acceptance("Modal service: component-based API", function () {
       ["constructor: argumentValue", "willDestroy: argumentValue"],
       "constructor called with args available"
     );
+  });
+
+  test("alongside declarative modals", async function (assert) {
+    class State {
+      @tracked showDeclarativeModal;
+    }
+
+    const testState = new State();
+    const closeModal = () => (testState.showDeclarativeModal = false);
+
+    const MyConnector = <template>
+      {{#if testState.showDeclarativeModal}}
+        <DModal
+          class="declarative-modal"
+          @title="Declarative modal"
+          @closeModal={{closeModal}}
+        >
+          <span class="declarative-modal-content">Declarative modal content</span>
+        </DModal>
+      {{/if}}
+    </template>;
+
+    registerTemporaryModule(
+      "discourse/plugins/my-plugin/connectors/below-footer/connector-name",
+      MyConnector
+    );
+
+    await visit("/");
+
+    const modalService = getOwner(this).lookup("service:modal");
+
+    modalService.show(MyModalClass);
+    await settled();
+    assert.dom(".d-modal.service-modal").exists("modal should appear");
+
+    testState.showDeclarativeModal = true;
+    await settled();
+    assert
+      .dom(".d-modal.declarative-modal")
+      .exists("declarative modal should appear");
+    assert.dom(".d-modal.service-modal").exists("service modal should remain");
+
+    await click(".d-modal.declarative-modal .modal-close");
+    assert
+      .dom(".d-modal.declarative-modal")
+      .doesNotExist("declarative modal should close");
+    assert.dom(".d-modal.service-modal").exists("service modal should remain");
+
+    await click(".d-modal.service-modal .modal-close");
+    assert.dom(".d-modal").doesNotExist("all modals closed");
   });
 
   // (See also, `tests/integration/component/d-modal-test.js`)

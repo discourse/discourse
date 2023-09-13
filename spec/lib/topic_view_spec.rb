@@ -1004,9 +1004,14 @@ RSpec.describe TopicView do
 
   describe "#reviewable_counts" do
     it "exclude posts queued because the category needs approval" do
-      category = Fabricate.build(:category, user: admin)
-      category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
-      category.save!
+      category =
+        Fabricate.create(
+          :category,
+          user: admin,
+          category_setting_attributes: {
+            require_topic_approval: true,
+          },
+        )
       manager =
         NewPostManager.new(
           user,
@@ -1081,13 +1086,16 @@ RSpec.describe TopicView do
       let(:queue_enabled) { false }
 
       context "when category is moderated" do
-        before { category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = true }
+        before do
+          category.require_reply_approval = true
+          category.save!
+        end
 
         it { expect(topic_view.queued_posts_enabled?).to be(true) }
       end
 
       context "when category is not moderated" do
-        it { expect(topic_view.queued_posts_enabled?).to be(nil) }
+        it { expect(topic_view.queued_posts_enabled?).to be(false) }
       end
     end
   end

@@ -354,6 +354,9 @@ pt_BR:
         confirm: "Você já tem um rascunho em andamento. O que deseja fazer com ele?"
         yes_value: "Descartar"
         no_value: "Retomar a edição"
+    topic_count_all:
+      one: "Veja %{count} novo tópico"
+      other: "Veja %{count} novos tópicos"
     topic_count_categories:
       one: "Veja %{count} tópico novo ou atualizado"
       other: "Veja %{count} tópicos novos ou atualizados"
@@ -5206,7 +5209,6 @@ pt_BR:
       form_templates:
         nav_title: "Modelos"
         title: "Modelos de formulário"
-        help: "Crie uma estrutura de modelo que pode ser usada para criar novos tópicos, postagens e mensagens."
         new_template: "Novo modelo"
         list_table:
           headings:

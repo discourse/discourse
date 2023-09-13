@@ -78,8 +78,11 @@ en:
       generic: An error occurred while importing that theme
       upload: "Error creating upload asset: %{name}. %{errors}"
       about_json: "Import Error: about.json does not exist, or is invalid. Are you sure this is a Discourse Theme?"
+      about_json_too_big: "Import Error: about.json is bigger than the %{limit} limit."
       about_json_values: "about.json contains invalid values: %{errors}"
       modifier_values: "about.json modifiers contain invalid values: %{errors}"
+      asset_too_big: "Asset %{filename} is bigger than the %{limit} limit"
+      theme_too_big: "Theme is bigger than the %{limit} limit"
       git: "Error cloning git repository, access is denied or repository is not found"
       git_ref_not_found: "Unable to checkout git reference: %{ref}"
       git_unsupported_scheme: "Unable to clone git repo: scheme unsupported"
@@ -88,6 +91,7 @@ en:
       unknown_file_type: "The file you uploaded does not appear to be a valid Discourse theme."
       not_allowed_theme: "`%{repo}` is not in the list of allowed themes (check `allowed_theme_repos` global setting)."
       ssh_key_gone: "You waited too long to install the theme and SSH key expired. Please try again."
+      too_many_files: "The number of files (%{count}) in the theme has exceeded the maximum allowed number of files (%{limit})"
     errors:
       component_no_user_selectable: "Theme components can't be user-selectable"
       component_no_default: "Theme components can't be default theme"
@@ -978,6 +982,9 @@ en:
     sequence_conflict_error:
       title: "draft error"
       description: "Draft is being edited in another window. Please reload this page."
+    too_many_drafts:
+      title: "Too many drafts"
+      description: "You have reached the maximum number of allowed drafts. Please delete some of [your drafts](%{base_url}/my/activity/drafts) and try again."
   draft_backup:
     pm_title: "Backup Drafts from ongoing topics"
     pm_body: "Topic containing backup drafts"
@@ -1503,9 +1510,9 @@ en:
     allow_user_locale: "Allow users to choose their own language interface preference"
     set_locale_from_accept_language_header: "set interface language for anonymous users from their web browser's language headers"
     support_mixed_text_direction: "Support mixed left-to-right and right-to-left text directions."
-    min_post_length: "Minimum allowed post length in characters"
-    min_first_post_length: "Minimum allowed first post (topic body) length in characters"
-    min_personal_message_post_length: "Minimum allowed post length in characters for messages"
+    min_post_length: "Minimum allowed post length in characters (excluding personal messages)"
+    min_first_post_length: "Minimum allowed first post (topic body) length (excluding personal messages)"
+    min_personal_message_post_length: "Minimum allowed post length in characters for messages (both first post and replies)"
     max_post_length: "Maximum allowed post length in characters"
     topic_featured_link_enabled: "Enable posting a link with topics."
     show_topic_featured_link_in_digest: "Show the topic featured link in the digest email."
@@ -2674,6 +2681,8 @@ en:
     invalid_security_key: "Invalid security key."
     missing_second_factor_name: "Please provide a name."
     missing_second_factor_code: "Please provide a code."
+    too_many_authenticators: "Sorry, you can't have more than 50 authenticators. Please remove an existing one and try again."
+    too_many_security_keys: "Sorry, you can't have more than 50 security keys. Please remove an existing one and try again."
     second_factor_toggle:
       totp: "Use an authenticator app or security key instead"
       backup_code: "Use a backup code instead"

@@ -4,6 +4,7 @@ import { computed } from "@ember/object";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["notifications-filter"],
+  nameProperty: "label",
 
   content: computed(function () {
     return [

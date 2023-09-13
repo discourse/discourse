@@ -354,6 +354,9 @@ es:
         confirm: "Ya tienes un borrador en curso. ¿Qué te gustaría hacer con él?"
         yes_value: "Descartar"
         no_value: "Reanudar edición"
+    topic_count_all:
+      one: "Ver %{count} tema nuevo"
+      other: "Ver %{count} temas nuevos"
     topic_count_categories:
       one: "Ver %{count} tema nuevo o actualizado"
       other: "Ver %{count} temas nuevos o actualizados"
@@ -5205,7 +5208,6 @@ es:
       form_templates:
         nav_title: "Plantillas"
         title: "Plantillas de formularios"
-        help: "Crea una estructura de plantillas que pueda utilizarse para crear nuevos temas, publicaciones y mensajes."
         new_template: "Nueva plantilla"
         list_table:
           headings:

@@ -834,6 +834,46 @@ RSpec.describe UsersController do
         end
       end
 
+      context "when normalize_emails is enabled" do
+        let (:email) {
+          "jane+100@gmail.com"
+        }
+        let (:dupe_email) {
+          "jane+191@gmail.com"
+        }
+        let! (:user) {
+          Fabricate(:user, email: email, password: "strongpassword")
+        }
+
+        before do
+          SiteSetting.hide_email_address_taken = true
+          SiteSetting.normalize_emails = true
+        end
+
+        it "sends an email to normalized email owner when hide_email_address_taken is enabled" do
+          expect do
+            expect_enqueued_with(
+              job: Jobs::CriticalUserEmail,
+              args: {
+                type: "account_exists",
+                user_id: user.id,
+              },
+            ) do
+              post "/u.json",
+                   params: {
+                     name: "Jane Doe",
+                     username: "janedoe9999",
+                     password: "strongpassword",
+                     email: dupe_email,
+                   }
+            end
+          end.to_not change { User.count }
+
+          expect(response.status).to eq(200)
+          expect(session["user_created_message"]).to be_present
+        end
+      end
+
       context "when users already exists with given email" do
         let!(:existing) { Fabricate(:user, email: post_user_params[:email]) }
 
@@ -850,7 +890,15 @@ RSpec.describe UsersController do
 
         it "returns success if hide_email_address_taken is enabled" do
           SiteSetting.hide_email_address_taken = true
-          expect { post_user }.to_not change { User.count }
+          expect {
+            expect_enqueued_with(
+              job: Jobs::CriticalUserEmail,
+              args: {
+                type: "account_exists",
+                user_id: existing.id,
+              },
+            ) { post_user }
+          }.to_not change { User.count }
 
           expect(response.status).to eq(200)
           expect(session["user_created_message"]).to be_present
@@ -5491,6 +5539,46 @@ RSpec.describe UsersController do
         expect(response.parsed_body["error"]).to eq(I18n.t("login.missing_second_factor_code"))
       end
     end
+
+    it "doesn't allow creating too many TOTPs" do
+      Fabricate(:user_second_factor_totp, user: user1)
+
+      create_totp
+      staged_totp_key = read_secure_session["staged-totp-#{user1.id}"]
+      token = ROTP::TOTP.new(staged_totp_key).now
+
+      stub_const(UserSecondFactor, "MAX_TOTPS_PER_USER", 1) do
+        post "/users/enable_second_factor_totp.json",
+             params: {
+               name: "test",
+               second_factor_token: token,
+             }
+      end
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(I18n.t("login.too_many_authenticators"))
+
+      expect(user1.user_second_factors.count).to eq(1)
+    end
+
+    it "doesn't allow the TOTP name to exceed the limit" do
+      create_totp
+      staged_totp_key = read_secure_session["staged-totp-#{user1.id}"]
+      token = ROTP::TOTP.new(staged_totp_key).now
+
+      post "/users/enable_second_factor_totp.json",
+           params: {
+             name: "a" * (UserSecondFactor::MAX_NAME_LENGTH + 1),
+             second_factor_token: token,
+           }
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(
+        "Name is too long (maximum is 300 characters)",
+      )
+
+      expect(user1.user_second_factors.count).to eq(0)
+    end
   end
 
   describe "#update_second_factor" do
@@ -5668,6 +5756,13 @@ RSpec.describe UsersController do
       )
     end
 
+    it "doesn't create a challenge if the user has the maximum number allowed of security keys" do
+      Fabricate(:user_security_key_with_random_credential, user: user1)
+      stub_const(UserSecurityKey, "MAX_KEYS_PER_USER", 1) { create_second_factor_security_key }
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(I18n.t("login.too_many_security_keys"))
+    end
+
     context "if the user has security key credentials already" do
       fab!(:user_security_key) { Fabricate(:user_security_key_with_random_credential, user: user1) }
 
@@ -5696,6 +5791,43 @@ RSpec.describe UsersController do
           valid_security_key_create_post_data[:rawId],
         )
         expect(user1.security_keys.last.name).to eq(valid_security_key_create_post_data[:name])
+      end
+
+      it "doesn't allow creating too many security keys" do
+        simulate_localhost_webauthn_challenge
+        create_second_factor_security_key
+        _response_parsed = response.parsed_body
+
+        Fabricate(:user_security_key_with_random_credential, user: user1)
+
+        stub_const(UserSecurityKey, "MAX_KEYS_PER_USER", 1) do
+          post "/u/register_second_factor_security_key.json",
+               params: valid_security_key_create_post_data
+        end
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(I18n.t("login.too_many_security_keys"))
+
+        expect(user1.security_keys.count).to eq(1)
+      end
+
+      it "doesn't allow the security key name to exceed the limit" do
+        simulate_localhost_webauthn_challenge
+        create_second_factor_security_key
+        _response_parsed = response.parsed_body
+
+        post "/u/register_second_factor_security_key.json",
+             params:
+               valid_security_key_create_post_data.merge(
+                 name: "a" * (UserSecurityKey::MAX_NAME_LENGTH + 1),
+               )
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(
+          "Name is too long (maximum is 300 characters)",
+        )
+
+        expect(user1.security_keys.count).to eq(0)
       end
     end
 

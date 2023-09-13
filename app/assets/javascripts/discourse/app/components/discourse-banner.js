@@ -42,4 +42,8 @@ export default Component.extend({
       });
     }
   },
+
+  didInsertElement() {
+    this.appEvents.trigger("decorate-non-stream-cooked-element", this.element);
+  },
 });

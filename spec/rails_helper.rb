@@ -687,6 +687,12 @@ def file_from_fixtures(filename, directory = "images")
   File.new(tmp_file_path)
 end
 
+def file_from_contents(contents, filename, directory = "images")
+  tmp_file_path = File.join(concurrency_safe_tmp_dir, SecureRandom.hex << filename)
+  File.write(tmp_file_path, contents)
+  File.new(tmp_file_path)
+end
+
 def plugin_from_fixtures(plugin_name)
   tmp_plugins_dir = File.join(concurrency_safe_tmp_dir, "plugins")
 

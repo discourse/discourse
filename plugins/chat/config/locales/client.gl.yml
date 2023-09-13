@@ -21,6 +21,7 @@ gl:
         join: "Participar"
         leave: "Abandonar"
       close: "Pechar"
+      remove: "Retirar"
       delete: "Eliminar"
       edited: "editado"
       muted: "silenciado"

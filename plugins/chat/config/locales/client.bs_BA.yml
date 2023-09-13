@@ -21,6 +21,7 @@ bs_BA:
         join: "Učlani se"
         leave: "Napusti"
       close: "Zatvori"
+      remove: "Ukloni"
       delete: "Delete"
       edited: "promjenjeno"
       muted: "utišani"

@@ -354,6 +354,9 @@ tr_TR:
         confirm: "Halihazırda devam eden bir taslağınız var. Bununla ne yapmak istersiniz?"
         yes_value: "Kapat"
         no_value: "Düzenlemeyi sürdür"
+    topic_count_all:
+      one: "%{count} yeni konuya bakın"
+      other: "%{count} yeni konuya bakın"
     topic_count_categories:
       one: "%{count} yeni veya güncellenmiş konuya bakın"
       other: "%{count} yeni veya güncellenmiş konuya bakın"
@@ -3777,6 +3780,7 @@ tr_TR:
         print: "%{shortcut} Konuyu yazdır"
         defer: "%{shortcut} Konuyu ertele"
         topic_admin_actions: "%{shortcut} Açık konu yönetici işlemleri"
+        archive_private_message: "%{shortcut} Özel mesajı arşivle seçeneğini aç / kapat"
       search_menu:
         title: "Arama Menüsü"
         prev_next: "%{shortcut} Seçimi yukarı ve aşağı taşı"
@@ -5226,7 +5230,7 @@ tr_TR:
       form_templates:
         nav_title: "Şablonlar"
         title: "Form Şablonları"
-        help: "Yeni konular, gönderiler ve mesajlar oluşturmak için kullanılabilecek bir şablon yapısı oluşturun."
+        help: "Yeni konular oluşturmak için kullanılabilecek bir şablon yapısı oluşturun."
         new_template: "Yeni Şablon"
         list_table:
           headings:

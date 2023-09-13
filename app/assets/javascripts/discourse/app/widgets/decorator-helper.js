@@ -131,7 +131,7 @@ class DecoratorHelper {
    *     cooked.querySelector(".some-container"),
    *     hbs`I will be appended to some-container`
    *   );
-   * }, { onlyStream: true, id: "my-id" });
+   * }, { onlyStream: true });
    * ```
    *
    */
