@@ -15,13 +15,6 @@ export default class DocumentElement extends Service {
   _title = null;
   _backgroundNotify = null;
 
-  reset() {
-    this.contextCount = 0;
-    this.notificationCount = 0;
-    this._title = null;
-    this._backgroundNotify = null;
-  }
-
   getTitle() {
     return this._title;
   }
