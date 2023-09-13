@@ -1,9 +1,13 @@
 <DModal
-  @title={{@model.title}}
+  @title={{i18n @model.title}}
   @closeModal={{@closeModal}}
+  @bodyClass="invite modal-panel"
   class="share-and-invite"
 >
   <:body>
-    <InvitePanel @inviteModel={{@model.inviteModel}} />
+    <InvitePanel
+      @inviteModel={{@model.inviteModel}}
+      @closeModal={{@closeModal}}
+    />
   </:body>
 </DModal>

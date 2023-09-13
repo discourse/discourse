@@ -315,11 +315,6 @@ export default Component.extend({
   },
 
   @action
-  sendCloseModal() {
-    this.attrs.close();
-  },
-
-  @action
   createInvite() {
     if (this.disabled) {
       return;
