@@ -1,35 +1,35 @@
 import Service, { inject as service } from "@ember/service";
 import getURL from "discourse-common/lib/get-url";
 import updateTabCount from "discourse/lib/update-tab-count";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
-export default Service.extend({
-  appEvents: service(),
-  currentUser: service(),
-  contextCount: null,
-  notificationCount: null,
-  _title: null,
-  _backgroundNotify: null,
+@disableImplicitInjections
+export default class DocumentElement extends Service {
+  @service appEvents;
+  @service currentUser;
+  @service session;
+  @service siteSettings;
 
-  init() {
-    this._super(...arguments);
-    this.reset();
-  },
+  contextCount = 0;
+  notificationCount = 0;
+  _title = null;
+  _backgroundNotify = null;
 
   reset() {
     this.contextCount = 0;
     this.notificationCount = 0;
     this._title = null;
     this._backgroundNotify = null;
-  },
+  }
 
   getTitle() {
     return this._title;
-  },
+  }
 
   setTitle(title) {
     this._title = title;
     this._renderTitle();
-  },
+  }
 
   setFocus(focus) {
     let { session } = this;
@@ -47,12 +47,12 @@ export default Service.extend({
     this.appEvents.trigger("discourse:focus-changed", session.hasFocus);
     this._renderFavicon();
     this._renderTitle();
-  },
+  }
 
   updateContextCount(count) {
     this.contextCount = count;
     this._renderTitle();
-  },
+  }
 
   updateNotificationCount(count, { forced = false } = {}) {
     if (!this.session.hasFocus || forced) {
@@ -60,7 +60,7 @@ export default Service.extend({
       this._renderFavicon();
       this._renderTitle();
     }
-  },
+  }
 
   incrementBackgroundContextCount() {
     if (!this.session.hasFocus) {
@@ -69,14 +69,13 @@ export default Service.extend({
       this._renderFavicon();
       this._renderTitle();
     }
-  },
+  }
 
   _displayCount() {
-    return this.currentUser &&
-      this.currentUser.user_option.title_count_mode === "notifications"
+    return this.currentUser?.user_option.title_count_mode === "notifications"
       ? this.notificationCount
       : this.contextCount;
-  },
+  }
 
   _renderTitle() {
     let title = this._title || this.siteSettings.title;
@@ -94,7 +93,7 @@ export default Service.extend({
     }
 
     document.title = title;
-  },
+  }
 
   _renderFavicon() {
     if (this.currentUser?.user_option.dynamic_favicon) {
@@ -109,5 +108,5 @@ export default Service.extend({
 
       updateTabCount(url, this._displayCount());
     }
-  },
-});
+  }
+}
