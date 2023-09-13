@@ -144,8 +144,10 @@ body.wizard {
   &__field.invalid input {
     outline: 0;
     border: 3px solid var(--danger);
-    animation: bump 0.25s ease-in-out;
-    animation-iteration-count: 2;
+    @media (prefers-reduced-motion: no-preference) {
+      animation: bump 0.25s ease-in-out;
+      animation-iteration-count: 2;
+    }
   }
 
   &__field label {

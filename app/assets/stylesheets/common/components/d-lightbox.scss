@@ -714,7 +714,9 @@ html.has-lightbox {
 .d-lightbox {
   &.is-visible &__content {
     @extend %lightbox-animation-base;
-    animation-name: lightbox-fade-in-scale;
+    @media (prefers-reduced-motion: no-preference) {
+      animation-name: lightbox-fade-in-scale;
+    }
   }
 
   &__backdrop,
