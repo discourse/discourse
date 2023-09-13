@@ -391,19 +391,13 @@ after_initialize do
   ].each do |chat_message_event|
     on(chat_message_event) do |message, channel, user|
       guardian = Guardian.new(user)
-      memberships = Chat::ChannelMembershipManager.all_for_user(user)
 
       payload = {
         message: Chat::MessageSerializer.new(message, { scope: guardian, root: false }).as_json,
         channel:
           Chat::ChannelSerializer.new(
             channel,
-            {
-              scope: guardian,
-              membership:
-                memberships.find { |membership| membership.chat_channel_id == channel.id },
-              root: false,
-            },
+            { scope: guardian, membership: channel.membership_for(user), root: false },
           ).as_json,
       }
 
