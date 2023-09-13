@@ -27,7 +27,9 @@ function _resumeAnimation(img) {
 }
 
 function animatedImgs() {
-  return document.querySelectorAll("img.animated:not(.manually-paused)");
+  return document.querySelectorAll(
+    ".topic-post img.animated:not(.manually-paused)"
+  );
 }
 
 export default {
