@@ -12,15 +12,15 @@ export default class DocumentElement extends Service {
 
   contextCount = 0;
   notificationCount = 0;
-  _title = null;
-  _backgroundNotify = null;
+  #title = null;
+  #backgroundNotify = null;
 
   getTitle() {
-    return this._title;
+    return this.#title;
   }
 
   setTitle(title) {
-    this._title = title;
+    this.#title = title;
     this._renderTitle();
   }
 
@@ -29,10 +29,10 @@ export default class DocumentElement extends Service {
 
     session.hasFocus = focus;
 
-    if (session.hasFocus && this._backgroundNotify) {
+    if (session.hasFocus && this.#backgroundNotify) {
       this.updateContextCount(0);
     }
-    this._backgroundNotify = false;
+    this.#backgroundNotify = false;
 
     if (session.hasFocus) {
       this.notificationCount = 0;
@@ -57,7 +57,7 @@ export default class DocumentElement extends Service {
 
   incrementBackgroundContextCount() {
     if (!this.session.hasFocus) {
-      this._backgroundNotify = true;
+      this.#backgroundNotify = true;
       this.contextCount += 1;
       this._renderFavicon();
       this._renderTitle();
@@ -71,7 +71,7 @@ export default class DocumentElement extends Service {
   }
 
   _renderTitle() {
-    let title = this._title || this.siteSettings.title;
+    let title = this.#title || this.siteSettings.title;
 
     let displayCount = this._displayCount();
     let dynamicFavicon = this.currentUser?.user_option.dynamic_favicon;
