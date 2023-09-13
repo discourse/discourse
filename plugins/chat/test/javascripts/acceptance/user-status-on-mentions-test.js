@@ -5,7 +5,7 @@ import {
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { skip } from "qunit";
+import { skip, test } from "qunit";
 import { click, triggerEvent, visit, waitFor } from "@ember/test-helpers";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
@@ -206,7 +206,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     assert.dom(selector).doesNotExist("status is deleted");
   });
 
-  skip("deleted messages | it shows status on mentions", async function (assert) {
+  test("deleted messages | it shows status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
@@ -224,7 +224,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     );
   });
 
-  skip("deleted messages | it updates status on mentions", async function (assert) {
+  test("deleted messages | it updates status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
@@ -240,7 +240,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     await assertStatusTooltipIsRendered(assert, selector, newStatus);
   });
 
-  skip("deleted messages | it deletes status on mentions", async function (assert) {
+  test("deleted messages | it deletes status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
@@ -255,7 +255,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     assert.dom(selector).doesNotExist("status is deleted");
   });
 
-  skip("restored messages | it shows status on mentions", async function (assert) {
+  test("restored messages | it shows status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
@@ -273,7 +273,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     );
   });
 
-  skip("restored messages | it updates status on mentions", async function (assert) {
+  test("restored messages | it updates status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
@@ -289,7 +289,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     await assertStatusTooltipIsRendered(assert, selector, newStatus);
   });
 
-  skip("restored messages | it deletes status on mentions", async function (assert) {
+  test("restored messages | it deletes status on mentions", async function (assert) {
     await visit(`/chat/c/-/${channelId}`);
 
     await deleteMessage(".chat-message-content");
