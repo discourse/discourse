@@ -1,7 +1,7 @@
 import concatClass from "discourse/helpers/concat-class";
 import eq from "truth-helpers/helpers/eq";
 
-<template>
+export const ConditionalLoadingSpinner = <template>
   <div
     class={{concatClass
       "loading-container"
@@ -15,4 +15,4 @@ import eq from "truth-helpers/helpers/eq";
       {{yield}}
     {{/if}}
   </div>
-</template>
+</template>;
