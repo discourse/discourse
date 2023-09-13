@@ -19,6 +19,7 @@ class TopicListItemSerializer < ListableTopicSerializer
 
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
   has_many :participants, serializer: TopicPosterSerializer, embed: :objects
+  has_one :category, serializer: SiteCategorySerializer
 
   def include_participant_groups?
     object.private_message?

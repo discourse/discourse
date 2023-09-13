@@ -8,6 +8,7 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import { isEmpty } from "@ember/utils";
 import { notEmpty } from "@ember/object/computed";
 import deprecated from "discourse-common/lib/deprecated";
+import Site from "discourse/models/site";
 
 function extractByKey(collection, klass) {
   const retval = {};
@@ -166,6 +167,10 @@ TopicList.reopenClass({
 
     const users = extractByKey(result.users, User);
     const groups = extractByKey(result.primary_groups, EmberObject);
+
+    result.categories.forEach((c) => {
+      Site.current().updateCategory(c);
+    });
 
     return result.topic_list[listKey].map((t) => {
       t.posters.forEach((p) => {
