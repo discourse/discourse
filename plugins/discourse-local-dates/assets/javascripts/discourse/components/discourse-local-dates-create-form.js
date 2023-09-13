@@ -6,7 +6,7 @@ import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import { INPUT_DELAY } from "discourse-common/config/environment";
-import { cookAsync } from "discourse/lib/text";
+import { cook } from "discourse/lib/text";
 import { notEmpty } from "@ember/object/computed";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { schedule } from "@ember/runloop";
@@ -60,7 +60,7 @@ export default Component.extend({
   @debounce(INPUT_DELAY)
   async _renderPreview() {
     if (this.markup) {
-      const result = await cookAsync(this.markup);
+      const result = await cook(this.markup);
       this.set("currentPreview", result);
 
       schedule("afterRender", () => {

@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action } from "@ember/object";
-import { cookAsync } from "discourse/lib/text";
+import { cook } from "discourse/lib/text";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 
@@ -37,7 +37,7 @@ export default Controller.extend(ModalFunctionality, {
       .updatePostField("notice", notice)
       .then(() => {
         if (notice) {
-          return cookAsync(notice, { features: { onebox: false } });
+          return cook(notice, { features: { onebox: false } });
         }
       })
       .then((cooked) =>
