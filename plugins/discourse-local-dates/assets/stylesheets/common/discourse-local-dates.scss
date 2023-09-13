@@ -48,7 +48,7 @@ div[data-tippy-root] {
   }
 }
 
-.discourse-local-dates-create-modal-footer {
+.discourse-local-dates-create-modal .modal-footer {
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -69,6 +69,7 @@ div[data-tippy-root] {
   display: flex;
   flex-direction: row;
   padding: 0.5em;
+  overflow: auto;
 
   .form {
     flex: 1 0 0px;
