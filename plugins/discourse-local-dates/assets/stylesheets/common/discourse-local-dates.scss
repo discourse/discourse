@@ -254,7 +254,7 @@ div[data-tippy-root] {
 }
 
 html:not(.mobile-view) {
-  .fixed-modal .discourse-local-dates-create-modal.modal-body {
+  .discourse-local-dates-create-modal .modal-body {
     width: 40em; // using ems to scale with user font size
     max-width: 100vw; // avoids overflow if someone has extreme font-sizes impacting width
     max-height: 400px !important;
@@ -262,7 +262,7 @@ html:not(.mobile-view) {
 }
 
 html.mobile-view {
-  .fixed-modal .discourse-local-dates-create-modal.modal-body {
+  .discourse-local-dates-create-modal .modal-body {
     max-height: 400px !important;
 
     .date-time-configuration {
