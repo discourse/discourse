@@ -185,10 +185,18 @@ RSpec.describe ComposerController do
         other_group = Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone])
         other_group.add(allowed_user)
         other_group.add(user)
-        other_group.add(Fabricate(:user))
 
         # Trying to mention other_group which has not been invited, but two of
         # its members have been (allowed_user directly and user via group).
+        get "/composer/mentions.json", params: { names: [other_group.name], topic_id: topic.id }
+
+        expect(response.status).to eq(200)
+
+        expect(response.parsed_body["groups"]).to eq(other_group.name => { "user_count" => 2 })
+        expect(response.parsed_body["group_reasons"]).to be_empty
+
+        other_group.add(Fabricate(:user))
+
         get "/composer/mentions.json", params: { names: [other_group.name], topic_id: topic.id }
 
         expect(response.status).to eq(200)

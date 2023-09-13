@@ -5,7 +5,6 @@ import { tracked } from "@glimmer/tracking";
 import { cancel, next } from "@ember/runloop";
 import { cloneJSON } from "discourse-common/lib/object";
 import { chatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
-import showModal from "discourse/lib/show-modal";
 import TextareaInteractor from "discourse/plugins/chat/discourse/lib/textarea-interactor";
 import { getOwner } from "discourse-common/lib/get-owner";
 import userSearch from "discourse/lib/user-search";
@@ -166,13 +165,19 @@ export default class ChatComposer extends Component {
 
   @action
   insertDiscourseLocalDate() {
-    showModal("discourse-local-dates-create-modal").setProperties({
-      insertDate: (markup) => {
-        this.composer.textarea.addText(
-          this.composer.textarea.getSelected(),
-          markup
-        );
-        this.composer.focus();
+    // JIT import because local-dates isn't necessarily enabled
+    const LocalDatesCreateModal =
+      require("discourse/plugins/discourse-local-dates/discourse/components/modal/local-dates-create").default;
+
+    this.modal.show(LocalDatesCreateModal, {
+      model: {
+        insertDate: (markup) => {
+          this.composer.textarea.addText(
+            this.composer.textarea.getSelected(),
+            markup
+          );
+          this.composer.focus();
+        },
       },
     });
   }

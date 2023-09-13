@@ -21,6 +21,7 @@ ca:
         join: "Registre"
         leave: "Abandona"
       close: "Tanca"
+      remove: "Elimina"
       delete: "Suprimeix"
       edited: "editat"
       muted: "silenciat"

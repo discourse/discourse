@@ -85,6 +85,7 @@ sv:
         create: "Ny kanal"
       click_to_join: "Klicka här för att se tillgängliga kanaler."
       close: "Stäng"
+      remove: "Ta bort"
       collapse: "Komprimera chattruta"
       expand: "Expandera chattlådan"
       confirm_flag: "Är du säker på att du vill flagga %{username}:s meddelande?"

@@ -1,5 +1,4 @@
-import {
-  default as deprecated,
+import deprecated, {
   withSilencedDeprecations,
   withSilencedDeprecationsAsync,
 } from "discourse-common/lib/deprecated";

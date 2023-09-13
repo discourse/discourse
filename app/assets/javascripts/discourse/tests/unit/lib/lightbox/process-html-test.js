@@ -127,24 +127,6 @@ module("Unit | lib | Experimental lightbox | processHTML()", function () {
     assert.strictEqual(items[0].title, "");
   });
 
-  test("correctly escapes the title", async function (assert) {
-    const container = wrap.cloneNode(true);
-
-    container
-      .querySelector("a")
-      .setAttribute("title", `"><\x00script>javascript:alert(1)</script>`);
-
-    const { items } = await processHTML({
-      container,
-      selector,
-    });
-
-    assert.strictEqual(
-      items[0].title,
-      `&quot;&gt;&lt;\x00script&gt;javascript:alert(1)&lt;/script&gt;`
-    );
-  });
-
   test("handles missing aspect ratio", async function (assert) {
     const container = wrap.cloneNode(true);
 

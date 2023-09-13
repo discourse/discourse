@@ -7,6 +7,10 @@ RSpec.describe Chat::CategoryChannel do
 
   it { is_expected.to delegate_method(:read_restricted?).to(:category) }
   it { is_expected.to delegate_method(:url).to(:chatable).with_prefix }
+  it { is_expected.to validate_length_of(:description).is_at_most(500) }
+  it { is_expected.to validate_length_of(:slug).is_at_most(100) }
+  it { is_expected.to validate_length_of(:chatable_type).is_at_most(100) }
+  it { is_expected.to validate_length_of(:type).is_at_most(100) }
 
   describe "#category_channel?" do
     it "always returns true" do

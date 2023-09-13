@@ -82,11 +82,16 @@ def find_changes(repo, from, to)
   changes = {}
   CHANGE_TYPES.each { |ct| changes[ct] = Set.new }
 
+  repo_path =
+    `git -C #{repo} remote get-url origin`.match(%r{github.com[/:](?<repo>(?:(?!\.git).)*)}).try(
+      :[],
+      :repo,
+    )
   out.each_line do |comment|
     next if comment =~ /\A\s*Revert/
     split_comments(comment).each do |line|
       ct = CHANGE_TYPES.find { |t| line =~ t[:pattern] }
-      changes[ct] << better(line) if ct
+      changes[ct] << better(line, repo_path) if ct
     end
   end
 
@@ -100,10 +105,10 @@ def print_changes(heading, changes, importance)
   puts changes.to_a, ""
 end
 
-def better(line)
+def better(line, repo_path)
   line = remove_prefix(line)
   line = escape_brackets(line)
-  line = remove_pull_request(line)
+  line = link_to_pull_request(line, repo_path)
   line[0] = '\#' if line[0] == "#"
   if line[0]
     line[0] = line[0].capitalize
@@ -121,8 +126,8 @@ def escape_brackets(line)
   line.gsub("<", "`<").gsub(">", ">`").gsub("[", "`[").gsub("]", "]`")
 end
 
-def remove_pull_request(line)
-  line.gsub(/ \(\#\d+\)\z/, "")
+def link_to_pull_request(line, repo_path)
+  line.gsub(/ \(\#(?<id>\d+)\)\z/, " ([\\k<id>](https://github.com/#{repo_path}/pull/\\k<id>))")
 end
 
 def split_comments(text)

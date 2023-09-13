@@ -14,6 +14,8 @@ seed = rand(2**16)
 profile = false
 profile_print_slowest_examples_count = 10
 use_runtime_info = nil
+enable_system_tests = nil
+disable_system_tests = nil
 
 OptionParser
   .new do |opts|
@@ -54,22 +56,53 @@ OptionParser
     opts.on("--use-runtime-info", "Use runtime info for tests group splitting") do
       use_runtime_info = true
     end
+
+    opts.on("--enable-system-tests", "Run the system tests (defaults false)") do
+      enable_system_tests = true
+    end
+
+    opts.on("--disable-system-tests", "Don't run the system tests (defaults true)") do
+      disable_system_tests = true
+    end
   end
   .parse!(ARGV)
+
+
+if enable_system_tests && disable_system_tests
+  STDERR.puts "Error: I'm not sure how to enable and disable system tests simultaneously"
+  exit 1
+end
+
+# OptionParser modifies ARGV, leaving the leftover arguments in ARGV
+if ARGV.empty?
+  if !enable_system_tests && !disable_system_tests
+    STDERR.puts "Not running system tests since it wasn't explicitly specified"
+  end
+
+  run_system_tests = !!enable_system_tests
+
+  files =
+    if run_system_tests
+      ["#{Rails.root}/spec"]
+    else
+      TurboTests::Runner.default_spec_folders
+    end
+
+  use_runtime_info = true if use_runtime_info.nil?
+else
+  if enable_system_tests || disable_system_tests
+    STDERR.puts "Ignoring system test options since files were specified"
+  end
+
+  files = ARGV
+  use_runtime_info = false if use_runtime_info.nil?
+end
 
 requires.each { |f| require(f) }
 
 formatters << { name: "progress", outputs: [] } if formatters.empty?
 
 formatters.each { |formatter| formatter[:outputs] << "-" if formatter[:outputs].empty? }
-
-if ARGV.empty?
-  files = TurboTests::Runner.default_spec_folders
-  use_runtime_info = true if use_runtime_info.nil?
-else
-  files = ARGV
-  use_runtime_info = false if use_runtime_info.nil?
-end
 
 puts "::group::Run turbo_rspec" if ENV["GITHUB_ACTIONS"]
 puts "Running turbo_rspec (seed: #{seed}) using files in: #{files}"

@@ -291,6 +291,9 @@ gl:
       abandon:
         yes_value: "Desbotar"
         no_value: "Retomar a edición"
+    topic_count_all:
+      one: "Ver %{count} tema novo"
+      other: "Ver %{count} temas novos"
     topic_count_categories:
       one: "Ver %{count} tema novo ou actualizado"
       other: "Ver %{count} temas novos ou actualizados"

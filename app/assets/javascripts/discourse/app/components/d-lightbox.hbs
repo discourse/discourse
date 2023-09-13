@@ -1,11 +1,10 @@
-<DSection
-  tabIndex="-1"
+<section
+  tabindex="-1"
   id={{this.elementId}}
   aria-hidden={{not this.isVisible}}
   class={{this.HTMLClassList}}
-  @scrollTop={{false}}
   {{did-insert this.registerAppEventListeners}}
-  {{will-destroy this.deregisterAppEventListners}}
+  {{will-destroy this.deregisterAppEventListeners}}
 >
   {{#if this.isVisible}}
     <div
@@ -72,6 +71,7 @@
         @toggleZoom={{this.toggleZoom}}
         @zoomButtonIcon={{this.zoomButtonIcon}}
       />
+
       <DLightbox::ScreenReaderAnnouncer
         @currentItem={{this.currentItem}}
         @counterIndex={{this.counterIndex}}
@@ -81,4 +81,4 @@
       <div class="d-lightbox__focus-trap" tabindex="0"></div>
     </div>
   {{/if}}
-</DSection>
+</section>

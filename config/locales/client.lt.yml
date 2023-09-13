@@ -366,6 +366,11 @@ lt:
       abandon:
         yes_value: "Išmesti"
         no_value: "Tęsti redagavimą"
+    topic_count_all:
+      one: "Pamatyk %{count} naują temą"
+      few: "Pamatyk %{count} naujas temas"
+      many: "Pamatyk %{count} naujų temų"
+      other: "Pamatyk %{count} naujų temų"
     topic_count_categories:
       one: "Peržiūrėti %{count} naują arba atnaujintą temą"
       few: "Peržiūrėkite %{count} naujų ar atnaujintų temų"

@@ -2,6 +2,9 @@
 
 module Chat
   class ReviewableMessage < Reviewable
+    validates :type, length: { maximum: 100 }
+    validates :target_type, length: { maximum: 100 }
+
     def serializer
       Chat::ReviewableMessageSerializer
     end

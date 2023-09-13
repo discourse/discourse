@@ -5,6 +5,7 @@
   &:focus {
     .d-toggle-switch__checkbox-slider {
       outline: 2px solid var(--tertiary);
+      outline-offset: 2px;
     }
   }
 
@@ -21,6 +22,7 @@
 
   display: flex;
   align-items: center;
+  gap: 0.5rem;
 
   &__label {
     position: relative;
@@ -30,7 +32,23 @@
 
   &__checkbox {
     position: absolute;
-    visibility: hidden;
+    border: 0;
+    padding: 0;
+    background: transparent;
+
+    &:focus {
+      + .d-toggle-switch__checkbox-slider {
+        outline: 2px solid var(--tertiary);
+        outline-offset: 2px;
+      }
+
+      // Outline should show only when tabbing, not clicking
+      &:not(:focus-visible) {
+        + .d-toggle-switch__checkbox-slider {
+          outline: none;
+        }
+      }
+    }
   }
 
   &__checkbox[aria-checked="true"] + .d-toggle-switch__checkbox-slider {
@@ -57,7 +75,6 @@
     border-radius: var(--toggle-switch-height);
     width: var(--toggle-switch-width);
     height: var(--toggle-switch-height);
-    margin-right: 0.5em;
     position: relative;
     vertical-align: middle;
     transition: background 0.25s;
@@ -87,5 +104,9 @@
     top: calc(var(--toggle-switch-height) * 0.125);
     left: calc(var(--toggle-switch-height) * 0.125);
     transition: left 0.25s;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition-duration: 0ms;
+    }
   }
 }

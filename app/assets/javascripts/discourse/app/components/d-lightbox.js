@@ -128,7 +128,7 @@ export default class DLightbox extends Component {
   get shouldDisplayCarouselArrows() {
     return (
       !this.options.isMobile &&
-      this.totalItemCount >= this.options.minCarosuelArrowItemCount
+      this.totalItemCount >= this.options.minCarouselArrowItemCount
     );
   }
 
@@ -187,7 +187,7 @@ export default class DLightbox extends Component {
   }
 
   @bind
-  deregisterAppEventListners() {
+  deregisterAppEventListeners() {
     this.appEvents.off(LIGHTBOX_APP_EVENT_NAMES.OPEN, this.open);
     this.appEvents.off(LIGHTBOX_APP_EVENT_NAMES.CLOSE, this.close);
   }

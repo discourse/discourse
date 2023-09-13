@@ -27,7 +27,10 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
       context "when not member of the channel" do
         it "doesn’t show the channel" do
           visit("/chat")
-          expect(page.find(".public-channels")).to have_no_content(category_channel_1.name)
+
+          expect(page.find(".public-channels", visible: :all)).to have_no_content(
+            category_channel_1.name,
+          )
         end
       end
     end

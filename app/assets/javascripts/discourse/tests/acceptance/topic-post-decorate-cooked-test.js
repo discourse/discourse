@@ -47,7 +47,7 @@ acceptance("Acceptance | decorateCookedElement", function () {
             hbs` with more content from glimmer`
           );
         },
-        { id: "render-glimmer-test" }
+        { onlyStream: true }
       );
     });
 

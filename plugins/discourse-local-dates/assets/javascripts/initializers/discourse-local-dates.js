@@ -2,7 +2,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import { getOwner } from "discourse-common/lib/get-owner";
 import LocalDateBuilder from "../lib/local-date-builder";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import showModal from "discourse/lib/show-modal";
+import LocalDatesCreateModal from "../discourse/components/modal/local-dates-create";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { renderIcon } from "discourse-common/lib/icon-library";
 import I18n from "I18n";
@@ -12,6 +12,7 @@ import {
   addTextDecorateCallback,
 } from "discourse/lib/to-markdown";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
+import { inject as service } from "@ember/service";
 
 // Import applyLocalDates from discourse/lib/local-dates instead
 export function applyLocalDates(dates, siteSettings) {
@@ -150,19 +151,16 @@ function initializeDiscourseLocalDates(api) {
     site_name: siteSettings.title,
   });
 
-  api.decorateCookedElement(
-    (elem, helper) => {
-      const dates = elem.querySelectorAll(".discourse-local-date");
+  api.decorateCookedElement((elem, helper) => {
+    const dates = elem.querySelectorAll(".discourse-local-date");
 
-      applyLocalDates(dates, siteSettings);
+    applyLocalDates(dates, siteSettings);
 
-      const topicTitle = helper?.getModel()?.topic?.title;
-      dates.forEach((date) => {
-        date.dataset.title = date.dataset.title || topicTitle || defaultTitle;
-      });
-    },
-    { id: "discourse-local-date" }
-  );
+    const topicTitle = helper?.getModel()?.topic?.title;
+    dates.forEach((date) => {
+      date.dataset.title = date.dataset.title || topicTitle || defaultTitle;
+    });
+  });
 
   api.onToolbarCreate((toolbar) => {
     toolbar.addButton({
@@ -176,12 +174,15 @@ function initializeDiscourseLocalDates(api) {
   });
 
   api.modifyClass("component:d-editor", {
+    modal: service(),
     pluginId: "discourse-local-dates",
     actions: {
       insertDiscourseLocalDate(toolbarEvent) {
-        showModal("discourse-local-dates-create-modal").setProperties({
-          insertDate: (markup) => {
-            toolbarEvent.addText(markup);
+        this.modal.show(LocalDatesCreateModal, {
+          model: {
+            insertDate: (markup) => {
+              toolbarEvent.addText(markup);
+            },
           },
         });
       },

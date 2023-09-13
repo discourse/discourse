@@ -40,6 +40,7 @@ export default Component.extend(LoadMore, {
       return ClickTrack.trackClick(e, this.siteSettings);
     });
     this._updateLastDecoratedElement();
+    this.appEvents.trigger("decorate-non-stream-cooked-element", this.element);
   }),
 
   // This view is being removed. Shut down operations
@@ -130,6 +131,7 @@ export default Component.extend(LoadMore, {
         let element = this._lastDecoratedElement?.nextElementSibling;
         while (element) {
           this.trigger("user-stream:new-item-inserted", element);
+          this.appEvents.trigger("decorate-non-stream-cooked-element", element);
           element = element.nextElementSibling;
         }
         this._updateLastDecoratedElement();

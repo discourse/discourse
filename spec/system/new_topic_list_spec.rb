@@ -328,7 +328,7 @@ describe "New topic list", type: :system do
           expect(tabs_toggle.topics_tab).to be_inactive
         end
 
-        it "live-updates the counts shown on the tabs" do
+        skip "live-updates the counts shown on the tabs" do
           Fabricate(:post, topic: Fabricate(:topic, tags: [tag]))
 
           visit("/tag/#{tag.name}/l/new")

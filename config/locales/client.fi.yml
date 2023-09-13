@@ -354,6 +354,9 @@ fi:
         confirm: "Sinulla on jo keskeneräinen luonnos. Mitä haluat tehdä sille?"
         yes_value: "Hylkää"
         no_value: "Jatka muokkausta"
+    topic_count_all:
+      one: "Näytä %{count} uusi ketju"
+      other: "Näytä %{count} uutta ketjua"
     topic_count_categories:
       one: "Katso %{count} uusi tai päivitetty ketju"
       other: "Katso %{count} uutta tai päivitettyä ketjua"
@@ -5214,7 +5217,7 @@ fi:
       form_templates:
         nav_title: "Mallit"
         title: "Lomakemallit"
-        help: "Luo mallirakenne, jonka avulla voit luoda uusia ketjuja ja viestejä."
+        help: "Luo mallirakenne, jonta voidaan käyttää luotaessa ketjuja."
         new_template: "Uusi malli"
         list_table:
           headings:

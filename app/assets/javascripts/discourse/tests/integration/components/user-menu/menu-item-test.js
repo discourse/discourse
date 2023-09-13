@@ -484,7 +484,7 @@ function getBookmark(overrides = {}) {
 }
 
 module(
-  "Integration | Component | user-menu | meun-item | with bookmark items",
+  "Integration | Component | user-menu | menu-item | with bookmark items",
   function (hooks) {
     setupRenderingTest(hooks);
 

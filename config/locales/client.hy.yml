@@ -277,6 +277,9 @@ hy:
       new_topic: "Նոր թեմայի սևագիր"
       abandon:
         yes_value: "Չեղարկել"
+    topic_count_all:
+      one: "Տեսնել %{count} նոր թեման"
+      other: "Դիտել %{count} նոր թեմաները"
     topic_count_categories:
       one: "Տեսնել %{count} նոր կամ թարմացված թեման"
       other: "Դիտել %{count} նոր կամ թարմացված թեմաները"
