@@ -319,8 +319,11 @@ $search-pad-horizontal: 0.5em;
       .d-icon {
         color: var(--primary-low-mid);
       }
-      &:hover .d-icon {
-        color: var(--primary-high);
+      &:focus,
+      &:hover {
+        .d-icon {
+          color: var(--primary-high);
+        }
       }
     }
 
