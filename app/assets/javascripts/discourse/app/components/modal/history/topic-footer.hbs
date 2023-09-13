@@ -45,13 +45,15 @@
   {{/if}}
 
   {{#if @isStaff}}
-    <DButton
-      @action={{@revertToVersion}}
-      @icon="undo"
-      @translatedLabel={{@revertToRevisionText}}
-      class="btn-danger revert-to-version"
-      @disabled={{@loading}}
-    />
+    {{#if @revertToRevisionText}}
+      <DButton
+        @action={{@revertToVersion}}
+        @icon="undo"
+        @translatedLabel={{@revertToRevisionText}}
+        class="btn-danger revert-to-version"
+        @disabled={{@loading}}
+      />
+    {{/if}}
 
     {{#if @model.previous_hidden}}
       <DButton

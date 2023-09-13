@@ -17,6 +17,7 @@ acceptance("Chat | Mentions", function (needs) {
     current_user_membership: { following: true },
     allow_channel_wide_mentions: false,
     chatable: { id: 1 },
+    title: "Some title",
   };
 
   needs.settings({ chat_enabled: true });
