@@ -126,6 +126,8 @@ class CategoryList
   def find_categories
     query = Category.includes(CategoryList.included_associations).secured(@guardian)
 
+    query = query.limit(Site::MANY_CATEGORIES_LIMIT) if SiteSetting.many_categories
+
     query =
       query.where(
         "categories.parent_category_id = ?",
