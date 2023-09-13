@@ -244,7 +244,7 @@ module SvgSprite
 
   THEME_SPRITE_VAR_NAME = "icons-sprite"
 
-  MAX_THEME_SPRITE_SIZE = 512.kilobytes
+  MAX_THEME_SPRITE_SIZE = 1024.kilobytes
 
   def self.preload
     settings_icons
