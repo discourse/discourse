@@ -2001,7 +2001,9 @@ RSpec.describe SessionController do
             expect(session[:current_user_id]).to eq(nil)
             response_body = response.parsed_body
             expect(response_body["failed"]).to eq("FAILED")
-            expect(response_body["error"]).to eq(I18n.t("login.invalid_security_key"))
+            expect(response_body["error"]).to eq(
+              I18n.t("webauthn.validation.malformed_public_key_credential_error"),
+            )
           end
         end
 
