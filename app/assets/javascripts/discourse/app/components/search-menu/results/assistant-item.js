@@ -95,10 +95,12 @@ export default class AssistantItem extends Component {
     } else {
       updatedValue = this.prefix.trim();
     }
+
+    const inTopicContext = this.search.searchContext?.type === "topic";
+
     this.args.searchTermChanged(updatedValue, {
-      searchTopics:
-        !this.search.inTopicContext || this.search.activeGlobalSearchTerm,
-      ...(this.search.inTopicContext &&
+      searchTopics: !inTopicContext || this.search.activeGlobalSearchTerm,
+      ...(inTopicContext &&
         !this.args.searchAllTopics && { setTopicContext: true }),
     });
     focusSearchInput();
