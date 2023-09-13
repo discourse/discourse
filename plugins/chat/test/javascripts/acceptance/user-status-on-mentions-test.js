@@ -56,6 +56,7 @@ acceptance("Chat | User status on mentions", function (needs) {
     id: channelId,
     chatable_id: 1,
     chatable_type: "Category",
+    title: "A category channel",
     meta: { message_bus_last_ids: {}, can_delete_self: true },
     current_user_membership: { following: true },
     chatable: { id: 1 },
