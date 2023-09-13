@@ -78,8 +78,6 @@ module Chat
       notify_mentioned_users(to_notify)
       notify_watching_users(except: all_mentioned_user_ids << @user.id)
 
-      notify_personal_chat_users(to_notify, except: all_mentioned_user_ids << @user.id)
-
       to_notify
     end
 
@@ -121,48 +119,6 @@ module Chat
       filter_users_ignoring_or_muting_creator(to_notify, inaccessible, all_mentioned_user_ids)
 
       [to_notify, inaccessible, all_mentioned_user_ids]
-    end
-
-    def notify_personal_chat_users(to_notify, except: [])
-      return if !@chat_channel.direct_message_channel?
-      notify_user_ids =
-        User.where(id: @chat_channel.allowed_user_ids).not_suspended.pluck(:id) - except
-      notified_user_ids = []
-
-      notify_user_ids.each do |user_id|
-        membership = @chat_channel.membership_for(user_id)
-        next if !membership || membership.muted?
-
-        screener = UserCommScreener.new(acting_user: @user, target_user_ids: user_id)
-        next if screener.ignoring_or_muting_actor?(user_id)
-
-        notified_user_ids << user_id
-        create_notification_for(membership, notification_type: Notification.types[:chat_message])
-      end
-
-      to_notify[:direct_messages] = notified_user_ids
-    end
-
-    def create_notification_for(membership, notification_type:)
-      if notification_type == Notification.types[:chat_message]
-        data = {
-          username: @user.username,
-          chat_message_id: @chat_message.id,
-          chat_channel_id: @chat_channel.id,
-          last_read_message_id: membership&.last_read_message_id,
-          is_direct_message_channel: @chat_channel.direct_message_channel?,
-          is_group_message: @chat_channel.allowed_user_ids.size > 2,
-          user_ids: [@user.id],
-        }
-
-        data[:chat_thread_id] = @chat_message.thread_id if @chat_message.in_thread?
-      end
-
-      Notification.consolidate_or_create!(
-        notification_type: notification_type,
-        user_id: membership.user_id,
-        data: data.to_json,
-      )
     end
 
     def expand_global_mention(to_notify, already_covered_ids)

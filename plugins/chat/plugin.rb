@@ -59,7 +59,6 @@ after_initialize do
 
     Guardian.prepend Chat::GuardianExtensions
     UserNotifications.prepend Chat::UserNotificationsExtension
-    Notifications::ConsolidationPlan.prepend Chat::NotificationConsolidationExtension
     UserOption.prepend Chat::UserOptionExtension
     Category.prepend Chat::CategoryExtension
     Reviewable.prepend Chat::ReviewableExtension
@@ -473,10 +472,6 @@ after_initialize do
   )
 
   register_bookmarkable(Chat::MessageBookmarkable)
-
-  register_notification_consolidation_plan(
-    Chat::NotificationConsolidationExtension.chat_message_plan,
-  )
 end
 
 if Rails.env == "test"
