@@ -60,7 +60,7 @@ export default class DModal extends Component {
   }
 
   @action
-  handleMouseUp(e) {
+  handleWrapperClick(e) {
     if (e.button !== 0) {
       return; // Non-default mouse button
     }
@@ -69,14 +69,9 @@ export default class DModal extends Component {
       return;
     }
 
-    if (
-      e.target.classList.contains("modal-middle-container") ||
-      e.target.classList.contains("modal-outer-container")
-    ) {
-      return this.args.closeModal?.({
-        initiatedBy: CLOSE_INITIATED_BY_CLICK_OUTSIDE,
-      });
-    }
+    return this.args.closeModal?.({
+      initiatedBy: CLOSE_INITIATED_BY_CLICK_OUTSIDE,
+    });
   }
 
   @action
