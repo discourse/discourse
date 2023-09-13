@@ -595,6 +595,12 @@ en:
       chat_invitation: "invited you to join a chat channel"
       chat_invitation_html: "<span>%{username}</span> <span>invited you to join a chat channel</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
+      chat_message:
+        personal: "messaged you in a personal chat"
+        group: "messaged you in a group personal chat"
+        group_multiple:
+          one: "and %{username2} messaged you in a group personal chat"
+          other: "and %{count} others messaged you in a group personal chat"
 
       popup:
         chat_mention:
@@ -616,6 +622,7 @@ en:
         chat_mention: "Chat mention"
         chat_invitation: "Chat invitation"
         chat_quoted: "Chat quoted"
+        chat_message: "Chat message"
     action_codes:
       chat:
         enabled: '%{who} enabled <button class="btn-link open-chat">chat</button> %{when}'
