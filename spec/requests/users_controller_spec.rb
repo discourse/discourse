@@ -2929,7 +2929,6 @@ RSpec.describe UsersController do
 
         it "updates user status" do
           user.set_status!("off to dentist", "tooth")
-          user.reload
 
           new_status = { emoji: "surfing_man", description: "surfing" }
           put "/u/#{user.username}.json", params: { status: new_status }
@@ -2943,7 +2942,6 @@ RSpec.describe UsersController do
 
         it "clears user status" do
           user.set_status!("off to dentist", "tooth")
-          user.reload
 
           put "/u/#{user.username}.json", params: { status: nil }
           expect(response.status).to eq(200)
@@ -2969,7 +2967,6 @@ RSpec.describe UsersController do
         it "can't update status of another user" do
           old_status = { emoji: "tooth", description: "off to dentist" }
           user1.set_status!(old_status[:description], old_status[:emoji])
-          user1.reload
 
           new_status = { emoji: "surfing_man", description: "surfing" }
           put "/u/#{user1.username}.json", params: { status: new_status }
@@ -2983,7 +2980,6 @@ RSpec.describe UsersController do
 
         it "can't clear status of another user" do
           user1.set_status!("off to dentist", "tooth")
-          user1.reload
 
           put "/u/#{user1.username}.json", params: { status: nil }
           expect(response.status).to eq(403)
@@ -2995,7 +2991,6 @@ RSpec.describe UsersController do
         it "doesn't clear user status if it wasn't sent in the payload" do
           new_status = { emoji: "tooth", description: "off to dentist" }
           user.set_status!(new_status[:description], new_status[:emoji])
-          user.reload
 
           put "/u/#{user.username}.json", params: { bio_raw: "new bio" }
           expect(response.status).to eq(200)
@@ -3026,7 +3021,6 @@ RSpec.describe UsersController do
           it "doesn't update user status" do
             old_status = { emoji: "tooth", description: "off to dentist" }
             user.set_status!(old_status[:description], old_status[:emoji])
-            user.reload
 
             new_status = { emoji: "surfing_man", description: "surfing" }
             put "/u/#{user.username}.json", params: { status: new_status }
@@ -3040,7 +3034,6 @@ RSpec.describe UsersController do
 
           it "doesn't clear user status" do
             user.set_status!("off to dentist", "tooth")
-            user.reload
 
             put "/u/#{user.username}.json", params: { status: nil }
             expect(response.status).to eq(200)
@@ -3071,7 +3064,6 @@ RSpec.describe UsersController do
 
         it "updates another user's status" do
           user.set_status!("off to dentist", "tooth")
-          user.reload
 
           new_status = { emoji: "surfing_man", description: "surfing" }
           put "/u/#{user.username}.json", params: { status: new_status }
@@ -3085,7 +3077,6 @@ RSpec.describe UsersController do
 
         it "clears another user's status" do
           user.set_status!("off to dentist", "tooth")
-          user.reload
 
           put "/u/#{user.username}.json", params: { status: nil }
           expect(response.status).to eq(200)
@@ -5375,7 +5366,6 @@ RSpec.describe UsersController do
     it "returns users with user status if status is enabled in settings" do
       SiteSetting.enable_user_status = true
       user_1.set_status!("off to dentist", "tooth")
-      user_1.reload
 
       get "/u/lookup/users.json", params: { usernames: [user_1.username] }
 
@@ -5391,7 +5381,6 @@ RSpec.describe UsersController do
     it "returns users without user status if status is disabled in settings" do
       SiteSetting.enable_user_status = false
       user_1.set_status!("off to dentist", "tooth")
-      user_1.reload
 
       get "/u/lookup/users.json", params: { usernames: [user_1.username] }
 
