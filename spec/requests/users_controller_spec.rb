@@ -5331,9 +5331,7 @@ RSpec.describe UsersController do
       expect(users.length).to be(3)
 
       ids = users.map { |user| user["id"] }
-      expect(ids).to include(user_1.id)
-      expect(ids).to include(user_2.id)
-      expect(ids).to include(user_3.id)
+      expect(ids).to contain_exactly(user_1.id, user_2.id, user_3.id)
     end
 
     it "ignores non-existent usernames" do
