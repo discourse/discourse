@@ -82,7 +82,7 @@ acceptance("Personal Message - invite", function (needs) {
     await click(".private-message-map .controls .add-participant-btn");
 
     assert
-      .dom(".d-modal.share-and-invite .invite-user-control")
+      .dom(".d-modal.add-pm-participants .invite-user-control")
       .exists("invite modal is displayed");
   });
 });
