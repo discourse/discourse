@@ -20,6 +20,7 @@ import FlagModal from "discourse/components/modal/flag";
 import GrantBadgeModal from "discourse/components/modal/grant-badge";
 import MoveToTopicModal from "discourse/components/modal/move-to-topic";
 import RawEmailModal from "discourse/components/modal/raw-email";
+import ShareAndInvite from "discourse/components/modal/share-and-invite";
 
 const SCROLL_DELAY = 500;
 
@@ -91,17 +92,11 @@ const TopicRoute = DiscourseRoute.extend({
       invitePanelTitle = "user.invited.create";
     }
 
-    showModal("share-and-invite", {
-      modalClass: "share-and-invite",
-      panels: [
-        {
-          id: "invite",
-          title: invitePanelTitle,
-          model: {
-            inviteModel: this.modelFor("topic"),
-          },
-        },
-      ],
+    this.modal.show(ShareAndInvite, {
+      model: {
+        title: invitePanelTitle,
+        inviteModel: this.modelFor("topic"),
+      },
     });
   },
 

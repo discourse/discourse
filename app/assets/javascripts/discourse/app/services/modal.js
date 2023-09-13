@@ -23,7 +23,6 @@ const KNOWN_LEGACY_MODALS = [
   "reject-reason-reviewable",
   "reorder-categories",
   "request-group-membership-form",
-  "share-and-invite",
   "tag-upload",
 ];
 

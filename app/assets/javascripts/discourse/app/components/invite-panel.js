@@ -14,7 +14,6 @@ export default Component.extend({
   groupIds: null,
   allGroups: null,
 
-  inviteModel: alias("panel.model.inviteModel"),
   isStaff: readOnly("currentUser.staff"),
   isAdmin: readOnly("currentUser.admin"),
 
