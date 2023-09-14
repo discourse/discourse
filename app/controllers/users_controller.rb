@@ -1928,8 +1928,9 @@ class UsersController < ApplicationController
            }
   end
 
+  LOOKUP_USERS_LIMIT = 20
   def lookup
-    users = User.where(username: params.require(:usernames))
+    users = User.where(username: params.require(:usernames)).limit(LOOKUP_USERS_LIMIT)
     render json: serialize_found_users(users)
   end
 

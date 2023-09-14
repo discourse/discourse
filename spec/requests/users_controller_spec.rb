@@ -5387,6 +5387,17 @@ RSpec.describe UsersController do
       expect(users.length).to be(1)
       expect(users[0]["status"]).to be_nil
     end
+
+    it "returns no more than 20 users" do
+      users = []
+      21.times { users << Fabricate(:user) }
+
+      params = { usernames: users.map(&:username) }
+      get "/u/lookup/users.json", params: params
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].length).to be(20)
+    end
   end
 
   describe "#email_login" do
