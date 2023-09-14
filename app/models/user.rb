@@ -1736,6 +1736,13 @@ class User < ActiveRecord::Base
     )
   end
 
+  def passkey_credential_ids
+    security_keys
+      .select(:credential_id)
+      .where(factor_type: UserSecurityKey.factor_types[:first_factor])
+      .pluck(:credential_id)
+  end
+
   def encoded_username(lower: false)
     UrlHelper.encode_component(lower ? username_lower : username)
   end
