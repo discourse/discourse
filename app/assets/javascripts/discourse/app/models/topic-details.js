@@ -1,6 +1,7 @@
-import EmberObject from "@ember/object";
 import RestModel from "discourse/models/rest";
+import EmberObject from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
+import { inject as service } from "@ember/service";
 
 /**
   A model representing a Topic's details that aren't always present, such as a list of participants.
@@ -8,19 +9,21 @@ import { ajax } from "discourse/lib/ajax";
 **/
 
 const TopicDetails = RestModel.extend({
+  store: service(),
+
   loaded: false,
 
   updateFromJson(details) {
     const topic = this.topic;
 
     if (details.allowed_users) {
-      details.allowed_users = details.allowed_users.map(function (u) {
-        return this.store.createRecord("user", u);
-      });
+      details.allowed_users = details.allowed_users.map((u) =>
+        this.store.createRecord("user", u)
+      );
     }
 
     if (details.participants) {
-      details.participants = details.participants.map(function (p) {
+      details.participants = details.participants.map((p) => {
         p.topic = topic;
         return EmberObject.create(p);
       });
