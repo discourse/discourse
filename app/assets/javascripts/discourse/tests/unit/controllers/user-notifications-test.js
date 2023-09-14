@@ -3,7 +3,6 @@ import { setupTest } from "ember-qunit";
 import sinon from "sinon";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import EmberObject from "@ember/object";
-import User from "discourse/models/user";
 
 module("Unit | Controller | user-notifications", function (hooks) {
   setupTest(hooks);
@@ -44,7 +43,10 @@ module("Unit | Controller | user-notifications", function (hooks) {
 
   test("Marks all notifications read when no high priority notifications", function (assert) {
     let markRead = false;
-    const currentUser = User.create({ unread_high_priority_notifications: 0 });
+    const store = this.owner.lookup("service:store");
+    const currentUser = store.createRecord("user", {
+      unread_high_priority_notifications: 0,
+    });
     const controller = this.owner.lookup("controller:user-notifications");
     controller.setProperties({
       model: [],

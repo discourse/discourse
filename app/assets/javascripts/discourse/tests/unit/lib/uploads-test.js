@@ -9,7 +9,6 @@ import {
   validateUploadedFiles,
 } from "discourse/lib/uploads";
 import I18n from "I18n";
-import User from "discourse/models/user";
 import sinon from "sinon";
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
@@ -20,6 +19,7 @@ module("Unit | Utility | uploads", function (hooks) {
 
   hooks.beforeEach(function () {
     this.siteSettings = getOwner(this).lookup("service:site-settings");
+    this.store = getOwner(this).lookup("service:store");
   });
 
   test("validateUploadedFiles", function (assert) {
@@ -52,7 +52,7 @@ module("Unit | Utility | uploads", function (hooks) {
 
     assert.notOk(
       validateUploadedFiles([{ name: "image.png" }], {
-        user: User.create(),
+        user: this.store.createRecord("user"),
         siteSettings: this.siteSettings,
       }),
       "the upload is not valid"
@@ -72,7 +72,7 @@ module("Unit | Utility | uploads", function (hooks) {
 
     assert.ok(
       validateUploadedFiles([{ name: "image.png" }], {
-        user: User.create(),
+        user: this.store.createRecord("user"),
         siteSettings: this.siteSettings,
       })
     );
@@ -84,7 +84,7 @@ module("Unit | Utility | uploads", function (hooks) {
 
     assert.ok(
       validateUploadedFiles([{ name: "image.png" }], {
-        user: User.create({ trust_level: 1 }),
+        user: this.store.createRecord("user", { trust_level: 1 }),
         siteSettings: this.siteSettings,
       })
     );
@@ -96,7 +96,7 @@ module("Unit | Utility | uploads", function (hooks) {
 
     assert.notOk(
       validateUploadedFiles([{ name: "roman.txt" }], {
-        user: User.create(),
+        user: this.store.createRecord("user"),
         siteSettings: this.siteSettings,
       })
     );
@@ -151,7 +151,7 @@ module("Unit | Utility | uploads", function (hooks) {
     sinon.stub(dialog, "alert");
     assert.notOk(
       validateUploadedFiles([{ name: "test.jpg" }], {
-        user: User.create(),
+        user: this.store.createRecord("user"),
         siteSettings: this.siteSettings,
       })
     );
@@ -167,7 +167,7 @@ module("Unit | Utility | uploads", function (hooks) {
     sinon.stub(dialog, "alert");
     assert.notOk(
       validateUploadedFiles([{ name: "test.jpg" }], {
-        user: User.create({ staff: true }),
+        user: this.store.createRecord("user", { staff: true }),
         siteSettings: this.siteSettings,
       })
     );
@@ -181,7 +181,7 @@ module("Unit | Utility | uploads", function (hooks) {
     this.siteSettings.authorized_extensions = "jpeg";
     sinon.stub(dialog, "alert");
 
-    let user = User.create({ moderator: true });
+    let user = this.store.createRecord("user", { moderator: true });
     assert.notOk(
       validateUploadedFiles(files, { user, siteSettings: this.siteSettings })
     );
@@ -215,7 +215,7 @@ module("Unit | Utility | uploads", function (hooks) {
   test("allows valid uploads to go through", function (assert) {
     sinon.stub(dialog, "alert");
 
-    let user = User.create({ trust_level: 1 });
+    let user = this.store.createRecord("user", { trust_level: 1 });
 
     // image
     let image = { name: "image.png", size: imageSize };
