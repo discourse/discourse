@@ -1929,7 +1929,7 @@ class UsersController < ApplicationController
   end
 
   def lookup
-    users = User.where(username: params[:usernames])
+    users = User.where(username: params.require(:usernames))
     render json: serialize_found_users(users)
   end
 
