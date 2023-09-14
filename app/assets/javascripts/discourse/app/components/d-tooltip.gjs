@@ -47,7 +47,7 @@ export default class DiscourseTooltip extends Component {
     this.#tippyInstance = tippy(element.parentElement, {
       content: element,
       interactive: this.args.interactive ?? false,
-      trigger: this.capabilities.touch ? "click" : "mouseenter",
+      trigger: this.capabilities.touch ? "click" : "mouseenter focus",
       theme: this.args.theme || "d-tooltip",
       arrow: this.args.arrow ? iconHTML("tippy-rounded-arrow") : false,
       placement: this.args.placement || "bottom-start",

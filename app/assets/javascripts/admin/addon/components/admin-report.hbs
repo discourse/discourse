@@ -30,16 +30,18 @@
                         rel="noopener noreferrer"
                         href={{this.model.description_link}}
                         class="info"
-                        data-tooltip={{this.model.description}}
                       >
                         {{d-icon "question-circle"}}
+                        <DTooltip>
+                          {{this.model.description}}
+                        </DTooltip>
                       </a>
                     {{else}}
-                      <span
-                        class="info"
-                        data-tooltip={{this.model.description}}
-                      >
+                      <span class="info" tabindex="0">
                         {{d-icon "question-circle"}}
+                        <DTooltip>
+                          {{this.model.description}}
+                        </DTooltip>
                       </span>
                     {{/if}}
                   {{/if}}

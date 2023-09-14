@@ -28,7 +28,7 @@ export class DTooltip {
     return tippy(target, {
       interactive: false,
       content,
-      trigger: this.#hasTouchCapabilities() ? "click" : "mouseenter",
+      trigger: this.#hasTouchCapabilities() ? "click" : "mouseenter focus",
       theme: "d-tooltip",
       arrow: false,
       placement: "bottom-start",
