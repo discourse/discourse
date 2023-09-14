@@ -210,10 +210,10 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
       expect(key.factor_type).to eq(UserSecurityKey.factor_types[:first_factor])
     end
 
-    context "when the user verification flag is false" do
+    context "when the user verification flag in the key is false" do
       it "raises a UserVerificationError" do
         # simulate missing user verification by flipping third bit to 0
-        flags = "10000010"
+        flags = "10000010" # correct flag sequence is "10100010"
         overridenAuthData = service.send(:auth_data)
         overridenAuthData[32] = [flags].pack("b*")
 

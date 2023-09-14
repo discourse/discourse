@@ -258,32 +258,21 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
     end
   end
 
-  describe "authenticating a first factor key" do
+  describe "authenticating a valid passkey" do
     let(:options) do
       { factor_type: UserSecurityKey.factor_types[:first_factor], session: secure_session }
     end
 
     ##
-    # These are sourced from an actual login, see instructions at the top of this spec
+    # These are sourced from an actual key, see instructions at the top of this spec for details
     #
-    let(:public_key) do
-      "pQECAyYgASFYILjOiAHAwNrXkCk/tmyYRiE87QyV/15wUvhcXhr1JfwtIlggClQywgQvSxTsqV/FSK0cNHTTmuwfzzREqE6eLDmPxmI="
-    end
-    let(:credential_id) { "JFeriwVn1elZk7N8nwSC4magQ8zM1XIUxRZB9Pm7VDM=" }
-    let(:signature) do
-      "MEUCIG5AFaw2Nfy69hHjeRLqm3LzQRMFb+TRbUAz19WJymegAiEAyEEyGdAMB2/NBwRCHM47IwtjKWCLEtabAX2BaK6fD8g="
-    end
-    let(:authenticator_data) { "SZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2MFAAAAAA==" }
-    let(:challenge) { "66b47014ef72937d8320ed893dc797e8a9a6d5098b89b185ca3d439b3656" }
+    let(:public_key) { valid_passkey_data[:public_key] }
+    let(:credential_id) { valid_passkey_data[:credential_id] }
+    let(:signature) { valid_passkey_auth_data[:signature] }
+    let(:authenticator_data) { valid_passkey_auth_data[:authenticatorData] }
+    let(:challenge) { valid_passkey_challenge }
 
-    let(:client_data_param) do
-      {
-        type: client_data_webauthn_type,
-        challenge: client_data_challenge,
-        origin: client_data_origin,
-        crossOrigin: false,
-      }
-    end
+    let(:client_data_param) { valid_passkey_client_data_param }
 
     let!(:security_key) do
       Fabricate(
@@ -303,6 +292,23 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
       expect(key).to be_a(UserSecurityKey)
       expect(key.user).to eq(current_user)
       expect(key.factor_type).to eq(UserSecurityKey.factor_types[:first_factor])
+    end
+
+    context "when the user verification flag in the key is false" do
+      it "raises a UserVerificationError" do
+        # simulate missing user verification in the key data
+        # by setting third bit to 0
+        flags = "10000010" # correct flag sequence is "10100010"
+        overridenAuthData = service.send(:auth_data)
+        overridenAuthData[32] = [flags].pack("b*")
+
+        service.instance_variable_set(:@auth_data, overridenAuthData)
+
+        expect { service.authenticate_security_key }.to raise_error(
+          DiscourseWebauthn::UserVerificationError,
+          I18n.t("webauthn.validation.user_verification_error"),
+        )
+      end
     end
   end
 end

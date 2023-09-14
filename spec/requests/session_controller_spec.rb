@@ -3001,10 +3001,10 @@ RSpec.describe SessionController do
       expect(response.status).to eq(404)
     end
 
-    context "when feature is enabled" do
+    context "when experimental_passkeys is enabled" do
       before { SiteSetting.experimental_passkeys = true }
 
-      it "returns 400 if public key param is missing" do
+      it "fails if public key param is missing" do
         post "/session/passkey/auth.json"
         expect(response.status).to eq(400)
 
@@ -3013,7 +3013,7 @@ RSpec.describe SessionController do
         expect(json["errors"][0]).to include("publicKeyCredential")
       end
 
-      it "returns 401 on malformed credentials" do
+      it "fails on malformed credentials" do
         post "/session/passkey/auth.json", params: { publicKeyCredential: "someboringstring" }
         expect(response.status).to eq(401)
 
@@ -3023,7 +3023,7 @@ RSpec.describe SessionController do
         )
       end
 
-      it "returns 401 on invalid credentials" do
+      it "fails on invalid credentials" do
         post "/session/passkey/auth.json",
              params: {
                # creds are well-formed but security key is not registered
@@ -3042,8 +3042,33 @@ RSpec.describe SessionController do
         expect(json["errors"][0]).to eq(I18n.t("webauthn.validation.not_found_error"))
       end
 
-      # TODO(pmusaraj) add tests for valid credentials?
-      # spec/lib/webauthn also covers them
+      context "when user has a valid registered passkey" do
+        let!(:passkey) do
+          Fabricate(
+            :user_security_key,
+            credential_id: valid_passkey_data[:credential_id],
+            public_key: valid_passkey_data[:public_key],
+            user: user,
+            factor_type: UserSecurityKey.factor_types[:first_factor],
+            last_used: nil,
+            name: "A key",
+          )
+        end
+
+        it "logs the user in" do
+          simulate_localhost_passkey_challenge
+          user.activate
+          post "/session/passkey/auth.json",
+               params: {
+                 publicKeyCredential: valid_passkey_auth_data,
+               }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).not_to be_present
+          user.reload
+
+          expect(session[:current_user_id]).to eq(user.id)
+        end
+      end
     end
   end
 

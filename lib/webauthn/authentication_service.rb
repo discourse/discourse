@@ -92,7 +92,7 @@ module DiscourseWebauthn
       # Success! Update the last used at time for the key.
       security_key.update(last_used: Time.zone.now)
 
-      # Return security key record so login controller can use it to update the session
+      # Return security key record so controller can use it to update the session
       security_key
     rescue OpenSSL::PKey::PKeyError
       raise(PublicKeyError, I18n.t("webauthn.validation.public_key_error"))

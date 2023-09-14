@@ -60,10 +60,44 @@ module DiscourseWebauthnIntegrationHelpers
   end
 
   def simulate_localhost_webauthn_challenge
-    DiscourseWebauthn::ChallengeGenerator.stubs(:generate).returns(
-      DiscourseWebauthn::ChallengeGenerator::ChallengeSession.new(
-        challenge: valid_security_key_challenge_data[:challenge],
-      ),
-    )
+    DiscourseWebauthn.stubs(:challenge).returns(valid_security_key_challenge_data[:challenge])
+  end
+
+  # Passkey data sourced from a key generated in a local browser
+  # with webauthn.create that includes the user verification flag on localhost:3000
+  # usin puts statements in the passkeys session controllers
+  def valid_passkey_challenge
+    "66b47014ef72937d8320ed893dc797e8a9a6d5098b89b185ca3d439b3656"
+  end
+
+  def valid_passkey_client_data_param
+    {
+      type: "webauthn.get",
+      challenge: Base64.strict_encode64(valid_passkey_challenge),
+      origin: "http://localhost:3000",
+      crossOrigin: false,
+    }
+  end
+
+  def valid_passkey_auth_data
+    {
+      clientData: Base64.strict_encode64(valid_passkey_client_data_param.to_json),
+      credentialId: "JFeriwVn1elZk7N8nwSC4magQ8zM1XIUxRZB9Pm7VDM=",
+      authenticatorData: "SZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2MFAAAAAA==",
+      signature:
+        "MEUCIG5AFaw2Nfy69hHjeRLqm3LzQRMFb+TRbUAz19WJymegAiEAyEEyGdAMB2/NBwRCHM47IwtjKWCLEtabAX2BaK6fD8g=",
+    }
+  end
+
+  def valid_passkey_data
+    {
+      credential_id: "JFeriwVn1elZk7N8nwSC4magQ8zM1XIUxRZB9Pm7VDM=",
+      public_key:
+        "pQECAyYgASFYILjOiAHAwNrXkCk/tmyYRiE87QyV/15wUvhcXhr1JfwtIlggClQywgQvSxTsqV/FSK0cNHTTmuwfzzREqE6eLDmPxmI=",
+    }
+  end
+
+  def simulate_localhost_passkey_challenge
+    DiscourseWebauthn.stubs(:challenge).returns(valid_passkey_challenge)
   end
 end
