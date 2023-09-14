@@ -4,6 +4,7 @@ import { inject as service } from "@ember/service";
 
 @disableImplicitInjections
 export default class AdminSiteTextIndexRoute extends Route {
+  @service siteSettings;
   @service store;
 
   queryParams = {
