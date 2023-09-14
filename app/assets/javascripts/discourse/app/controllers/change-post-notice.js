@@ -47,7 +47,7 @@ export default Controller.extend(ModalFunctionality, {
             ? {
                 type: "custom",
                 raw: notice,
-                cooked: cooked.string,
+                cooked: cooked.toString(),
               }
             : null
         )

@@ -47,7 +47,7 @@ module("Unit | Model | pending-post", function (hooks) {
     await settled();
 
     assert.strictEqual(
-      post.expandedExcerpt.string,
+      post.expandedExcerpt.toString(),
       "<p><strong>bold text</strong></p>"
     );
   });
