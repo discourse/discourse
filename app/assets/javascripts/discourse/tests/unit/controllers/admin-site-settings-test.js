@@ -66,8 +66,8 @@ module("Unit | Controller | admin-site-settings", function (hooks) {
 
     // ensures fuzzy search limiter doesn't limit too much
     results = controller.performSearch("min length", settings2);
-    assert.deepEqual(results[0].siteSettings.length, 1);
-    assert.deepEqual(
+    assert.strictEqual(results[0].siteSettings.length, 1);
+    assert.strictEqual(
       results[0].siteSettings[0].setting,
       "min_personal_message_post_length"
     );
