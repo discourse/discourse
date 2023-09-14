@@ -19,6 +19,7 @@ class TopicListItemSerializer < ListableTopicSerializer
 
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
   has_many :participants, serializer: TopicPosterSerializer, embed: :objects
+  has_one :category, serializer: TopicCategorySerializer
 
   def include_participant_groups?
     object.private_message?
@@ -92,5 +93,9 @@ class TopicListItemSerializer < ListableTopicSerializer
 
   def include_allowed_user_count?
     object.private_message?
+  end
+
+  def include_category?
+    SiteSetting.lazy_load_categories
   end
 end

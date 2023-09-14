@@ -223,6 +223,35 @@ RSpec.describe ListController do
         expect(response.body).not_to include(restricted_tag.name)
       end
     end
+
+    context "with lazy_load_categories" do
+      fab!(:category) { Fabricate(:category) }
+
+      before { topic.update!(category: category) }
+
+      it "returns categories if true" do
+        SiteSetting.lazy_load_categories = true
+
+        get "/latest.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_list"]["topics"].length).to eq(1)
+        expect(response.parsed_body["topic_list"]["topics"][0]["id"]).to eq(topic.id)
+        expect(response.parsed_body["categories"].length).to eq(1)
+        expect(response.parsed_body["categories"][0]["id"]).to eq(topic.category_id)
+      end
+
+      it "does not return categories if not true" do
+        SiteSetting.lazy_load_categories = false
+
+        get "/latest.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_list"]["topics"].length).to eq(1)
+        expect(response.parsed_body["topic_list"]["topics"][0]["id"]).to eq(topic.id)
+        expect(response.parsed_body["categories"]).to eq(nil)
+      end
+    end
   end
 
   describe "categories and X" do

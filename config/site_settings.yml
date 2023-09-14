@@ -2178,6 +2178,9 @@ developer:
   instrument_gc_stat_per_request:
     default: false
     hidden: true
+  lazy_load_categories:
+    default: false
+    hidden: true
 
 navigation:
   navigation_menu:
