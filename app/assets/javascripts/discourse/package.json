@@ -13,7 +13,7 @@
     "build": "ember build",
     "start": "ember serve",
     "test": "ember test",
-    "postinstall": "yarn --silent --cwd .. patch-package"
+    "postinstall": "../run-patch-package"
   },
   "dependencies": {
     "@glimmer/syntax": "^0.84.3",
@@ -98,7 +98,7 @@
     "qunit-dom": "^2.0.0",
     "sass": "^1.66.1",
     "select-kit": "1.0.0",
-    "sinon": "^15.2.0",
+    "sinon": "^16.0.0",
     "source-map": "^0.7.4",
     "terser": "^5.19.4",
     "tippy.js": "^6.3.7",

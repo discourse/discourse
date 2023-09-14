@@ -3,7 +3,6 @@ import { alias, and, equal, readOnly } from "@ember/object/computed";
 import Component from "@ember/component";
 import Group from "discourse/models/group";
 import I18n from "I18n";
-import Invite from "discourse/models/invite";
 import discourseComputed from "discourse-common/utils/decorators";
 import { emailValid } from "discourse/lib/utilities";
 import { getNativeContact } from "discourse/lib/pwa-utils";
@@ -15,8 +14,6 @@ export default Component.extend({
   groupIds: null,
   allGroups: null,
 
-  inviteModel: alias("panel.model.inviteModel"),
-  userInvitedShow: alias("panel.model.userInvitedShow"),
   isStaff: readOnly("currentUser.staff"),
   isAdmin: readOnly("currentUser.admin"),
 
@@ -318,19 +315,12 @@ export default Component.extend({
   },
 
   @action
-  sendCloseModal() {
-    this.attrs.close();
-  },
-
-  @action
   createInvite() {
     if (this.disabled) {
       return;
     }
 
     const groupIds = this.groupIds;
-    const userInvitedController = this.userInvitedShow;
-
     const model = this.inviteModel;
     model.setProperties({ saving: true, error: false });
 
@@ -363,17 +353,7 @@ export default Component.extend({
         .createInvite(this.invitee.trim(), groupIds, this.customMessage)
         .then((result) => {
           model.setProperties({ saving: false, finished: true });
-          if (!this.invitingToTopic && userInvitedController) {
-            Invite.findInvitedBy(
-              this.currentUser,
-              userInvitedController.get("filter")
-            ).then((inviteModel) => {
-              userInvitedController.setProperties({
-                model: inviteModel,
-                totalInvites: inviteModel.invites.length,
-              });
-            });
-          } else if (this.isPM && result && result.user) {
+          if (this.isPM && result && result.user) {
             this.get("inviteModel.details.allowed_users").pushObject(
               EmberObject.create(result.user)
             );
@@ -398,7 +378,6 @@ export default Component.extend({
     }
 
     const groupIds = this.groupIds;
-    const userInvitedController = this.userInvitedShow;
     const model = this.inviteModel;
     model.setProperties({ saving: true, error: false });
 
@@ -415,18 +394,6 @@ export default Component.extend({
           finished: true,
           inviteLink: result.link,
         });
-
-        if (userInvitedController) {
-          Invite.findInvitedBy(
-            this.currentUser,
-            userInvitedController.get("filter")
-          ).then((inviteModel) => {
-            userInvitedController.setProperties({
-              model: inviteModel,
-              totalInvites: inviteModel.invites.length,
-            });
-          });
-        }
       })
       .catch((e) => {
         if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {

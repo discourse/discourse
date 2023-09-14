@@ -62,8 +62,11 @@ RSpec.describe Chat::TrashMessage do
           freeze_time
           messages = nil
           event =
-            DiscourseEvent.track_events { messages = MessageBus.track_publish { result } }.first
-          expect(event[:event_name]).to eq(:chat_message_trashed)
+            DiscourseEvent
+              .track_events { messages = MessageBus.track_publish { result } }
+              .find { |e| e[:event_name] == :chat_message_trashed }
+
+          expect(event).to be_present
           expect(event[:params]).to eq([message, message.chat_channel, current_user])
           expect(messages.find { |m| m.channel == "/chat/#{message.chat_channel_id}" }.data).to eq(
             {

@@ -20,12 +20,9 @@ module("Integration | Component | invite-panel", function (hooks) {
     );
 
     this.currentUser.set("details", { can_invite_via_email: true });
-    this.set("panel", {
-      id: "invite",
-      model: { inviteModel: User.create(this.currentUser) },
-    });
+    this.set("inviteModel", User.create(this.currentUser));
 
-    await render(hbs`<InvitePanel @panel={{this.panel}} />`);
+    await render(hbs`<InvitePanel @inviteModel={{this.inviteModel}} />`);
 
     const input = selectKit(".invite-user-input");
     await input.expand();

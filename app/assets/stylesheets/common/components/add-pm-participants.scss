@@ -1,4 +1,4 @@
-.share-and-invite.modal {
+.add-pm-participants.modal {
   .modal-body {
     max-width: 475px;
     min-width: 320px;
@@ -11,7 +11,7 @@
   }
 }
 
-.share-and-invite.modal .share.modal-panel {
+.add-pm-participants.modal .share.modal-panel {
   .header {
     display: flex;
     flex-direction: row;
@@ -57,7 +57,7 @@
   }
 }
 
-.share-and-invite.modal .invite.modal-panel,
+.add-pm-participants.modal .invite.modal-panel,
 .invite-link.modal-panel {
   .error-message,
   .success-message {
