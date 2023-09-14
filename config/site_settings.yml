@@ -2158,6 +2158,10 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
+  experimental_passkeys:
+    client: true
+    default: false
+    hidden: true
   experimental_search_menu_groups:
     type: group_list
     list_type: compact
