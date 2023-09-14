@@ -6143,6 +6143,7 @@ en:
         show_outdated: "Only show outdated/invalid"
         locale: "Language:"
         more_than_50_results: "There are more than 50 results. Please refine your search."
+        no_results: "No matching site texts found"
         interpolation_keys: "Available interpolation keys:"
         outdated:
           title: "This translation is outdated"
