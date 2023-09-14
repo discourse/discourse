@@ -20,6 +20,7 @@ import FlagModal from "discourse/components/modal/flag";
 import GrantBadgeModal from "discourse/components/modal/grant-badge";
 import MoveToTopicModal from "discourse/components/modal/move-to-topic";
 import RawEmailModal from "discourse/components/modal/raw-email";
+import AddPmParticipants from "discourse/components/modal/add-pm-participants";
 
 const SCROLL_DELAY = 500;
 
@@ -81,27 +82,21 @@ const TopicRoute = DiscourseRoute.extend({
 
   @action
   showInvite() {
-    let invitePanelTitle;
+    let modalTitle;
 
     if (this.isPM) {
-      invitePanelTitle = "topic.invite_private.title";
+      modalTitle = "topic.invite_private.title";
     } else if (this.invitingToTopic) {
-      invitePanelTitle = "topic.invite_reply.title";
+      modalTitle = "topic.invite_reply.title";
     } else {
-      invitePanelTitle = "user.invited.create";
+      modalTitle = "user.invited.create";
     }
 
-    showModal("share-and-invite", {
-      modalClass: "share-and-invite",
-      panels: [
-        {
-          id: "invite",
-          title: invitePanelTitle,
-          model: {
-            inviteModel: this.modelFor("topic"),
-          },
-        },
-      ],
+    this.modal.show(AddPmParticipants, {
+      model: {
+        title: modalTitle,
+        inviteModel: this.modelFor("topic"),
+      },
     });
   },
 
