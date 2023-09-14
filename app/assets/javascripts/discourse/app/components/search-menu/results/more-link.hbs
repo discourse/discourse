@@ -3,7 +3,7 @@
   <div class="search-menu__show-more" {{on "keyup" this.onKeyup}}>
     {{#if this.moreUrl}}
       <a
-        href
+        href={{this.moreUrl}}
         {{on "click" this.transitionToMoreUrl}}
         class="filter search-link"
       >

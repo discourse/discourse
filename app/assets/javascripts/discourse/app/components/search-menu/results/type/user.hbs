@@ -1,4 +1,4 @@
-<a href {{on "click" this.onClick}} class="search-link">
+<a href={{(or @result.url @result.path)}} {{on "click" this.onClick}} class="search-link">
   {{avatar
     @result
     imageSize="small"
