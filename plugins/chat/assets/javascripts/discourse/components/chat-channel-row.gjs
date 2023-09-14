@@ -15,11 +15,10 @@ import I18n from "I18n";
 import { modifier } from "ember-modifier";
 import { bind } from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
-import discourseLater from "discourse-common/lib/later";
-import { cancel } from "@ember/runloop";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import icon from "discourse-common/helpers/d-icon";
+import { htmlSafe } from "@ember/template";
 
-const RESET_CLASS = "-reset";
 const FADEOUT_CLASS = "-fade-out";
 
 export default class ChatChannelRow extends Component {
@@ -40,94 +39,109 @@ export default class ChatChannelRow extends Component {
       data-chat-channel-id={{@channel.id}}
       {{didInsert this.startTrackingStatus}}
       {{willDestroy this.stopTrackingStatus}}
-      {{(if this.shouldHandleSwipe (modifier this.registerSwipableRow))}}
-      {{(if this.shouldHandleSwipe (modifier this.handleSwipe))}}
       {{(if this.shouldRemoveChannel (modifier this.onRemoveChannel))}}
-      {{(if this.shouldResetRow (modifier this.onResetRow))}}
     >
-      <ChatChannelTitle @channel={{@channel}} />
-      <ChatChannelMetadata @channel={{@channel}} @unreadIndicator={{true}} />
+      <div
+        class={{concatClass
+          "chat-channel-row__content"
+          (if this.shouldReset "-animate-reset")
+        }}
+        {{(if this.shouldHandleSwipe (modifier this.registerSwipableRow))}}
+        {{(if this.shouldHandleSwipe (modifier this.handleSwipe))}}
+        {{(if this.shouldReset (modifier this.onReset))}}
+        style={{this.rowStyle}}
+      >
+        <ChatChannelTitle @channel={{@channel}} />
+        <ChatChannelMetadata @channel={{@channel}} @unreadIndicator={{true}} />
 
-      {{#if
-        (and @options.leaveButton @channel.isFollowing this.site.desktopView)
-      }}
-        <ToggleChannelMembershipButton
-          @channel={{@channel}}
-          @options={{hash
-            leaveClass="btn-flat chat-channel-leave-btn"
-            labelType="none"
-            leaveIcon="times"
-            leaveTitle=(if
-              @channel.isDirectMessageChannel
-              this.leaveDirectMessageLabel
-              this.leaveChannelLabel
-            )
-          }}
-        />
-      {{/if}}
+        {{#if
+          (and @options.leaveButton @channel.isFollowing this.site.desktopView)
+        }}
+          <ToggleChannelMembershipButton
+            @channel={{@channel}}
+            @options={{hash
+              leaveClass="btn-flat chat-channel-leave-btn"
+              labelType="none"
+              leaveIcon="times"
+              leaveTitle=(if
+                @channel.isDirectMessageChannel
+                this.leaveDirectMessageLabel
+                this.leaveChannelLabel
+              )
+            }}
+          />
+        {{/if}}
+      </div>
 
-      {{#if this.shouldHandleSwipe}}
+      {{#if this.showRemoveButton}}
         <div
           class={{concatClass
             "chat-channel-row__action-btn"
-            (if this.isCancelling "-cancel" "-leave")
+            (if this.isAtThreshold "-at-threshold" "-not-at-threshold")
           }}
-          {{this.registerActionButton}}
-          {{this.positionActionButton}}
         >
-          {{#if this.isCancelling}}
-            {{this.cancelActionLabel}}
-          {{else}}
-            {{this.removeActionLabel}}
-          {{/if}}
+          {{icon "times-circle"}}
         </div>
       {{/if}}
     </LinkTo>
   </template>
 
-  @service router;
-  @service chat;
-  @service capabilities;
-  @service currentUser;
-  @service site;
   @service api;
+  @service capabilities;
+  @service chat;
+  @service currentUser;
+  @service router;
+  @service site;
 
+  @tracked isAtThreshold = false;
   @tracked shouldRemoveChannel = false;
-  @tracked hasReachedThreshold = false;
-  @tracked isCancelling = false;
-  @tracked shouldResetRow = false;
-  @tracked actionButton;
-  @tracked swipableRow;
-
-  positionActionButton = modifier((element) => {
-    element.style.left = "100%";
-  });
-
-  registerActionButton = modifier((element) => {
-    this.actionButton = element;
-  });
+  @tracked showRemoveButton = false;
+  @tracked swipableRow = null;
+  @tracked shouldReset = false;
+  @tracked diff = 0;
+  @tracked rowStyle = null;
+  @tracked canSwipe = true;
 
   registerSwipableRow = modifier((element) => {
     this.swipableRow = element;
   });
 
-  onRemoveChannel = modifier(() => {
-    this.swipableRow.classList.add(FADEOUT_CLASS);
+  onReset = modifier((element) => {
+    const handler = () => {
+      this.rowStyle = htmlSafe("margin-right: 0px;");
+      this.showRemoveButton = false;
+      this.shouldReset = false;
+    };
 
-    const handler = discourseLater(() => {
-      this.chat.unfollowChannel(this.args.channel).catch(popupAjaxError);
-    }, 250);
+    element.addEventListener("transitionend", handler, { once: true });
 
     return () => {
-      cancel(handler);
+      element.removeEventListener("transitionend", handler);
+      this.rowStyle = htmlSafe("margin-right: 0px;");
+      this.showRemoveButton = false;
+      this.shouldReset = false;
     };
+  });
+
+  onRemoveChannel = modifier((element) => {
+    element.addEventListener(
+      "transitionend",
+      () => {
+        this.chat.unfollowChannel(this.args.channel).catch(popupAjaxError);
+      },
+      { once: true }
+    );
+
+    element.classList.add(FADEOUT_CLASS);
   });
 
   handleSwipe = modifier((element) => {
     element.addEventListener("touchstart", this.onSwipeStart, {
       passive: true,
     });
-    element.addEventListener("touchmove", this.onSwipe);
+    element.addEventListener("touchmove", this.onSwipe, {
+      passive: true,
+    });
     element.addEventListener("touchend", this.onSwipeEnd);
 
     return () => {
@@ -137,91 +151,47 @@ export default class ChatChannelRow extends Component {
     };
   });
 
-  onResetRow = modifier(() => {
-    this.swipableRow.classList.add(RESET_CLASS);
-    this.swipableRow.style.left = "0px";
-
-    const handler = discourseLater(() => {
-      this.isCancelling = false;
-      this.hasReachedThreshold = false;
-      this.shouldResetRow = false;
-      this.swipableRow.classList.remove(RESET_CLASS);
-    }, 250);
-
-    return () => {
-      cancel(handler);
-      this.swipableRow.classList.remove(RESET_CLASS);
-    };
-  });
-
-  _lastX = null;
-  _towardsThreshold = false;
-
   @bind
   onSwipeStart(event) {
-    this.hasReachedThreshold = false;
-    this.isCancelling = false;
-    this._lastX = this.initialX = event.changedTouches[0].screenX;
+    this._initialX = event.changedTouches[0].screenX;
   }
 
   @bind
   onSwipe(event) {
-    const touchX = event.changedTouches[0].screenX;
-    const diff = this.initialX - touchX;
+    this.showRemoveButton = true;
+    this.shouldReset = false;
+    this.isAtThreshold = false;
 
-    // we don't state to be too sensitive to the touch
-    if (Math.abs(this._lastX - touchX) > 5) {
-      this._towardsThreshold = this._lastX >= touchX;
-      this._lastX = touchX;
-    }
+    const threshold = window.innerWidth / 3;
+    const touchX = event.changedTouches[0].screenX;
+
+    this.diff = this._initialX - touchX;
+    this.isAtThreshold = this.diff >= threshold;
 
     // ensures we will go back to the initial position when swiping very fast
-    if (diff < 10) {
-      this.isCancelling = false;
-      this.hasReachedThreshold = false;
-      this.swipableRow.style.left = "0px";
-      return;
-    }
+    if (this.diff > 25) {
+      if (this.isAtThreshold) {
+        this.diff = threshold + (this.diff - threshold) * 0.1;
+      }
 
-    if (diff >= window.innerWidth / 3) {
-      this.isCancelling = false;
-      this.hasReachedThreshold = true;
-      return;
+      this.rowStyle = htmlSafe(`margin-right: ${this.diff}px;`);
     } else {
-      this.isCancelling = !this._towardsThreshold;
-    }
-
-    if (diff > 25) {
-      this.actionButton.style.width = diff + "px";
-      this.swipableRow.style.left = -(this.initialX - touchX) + "px";
+      this.rowStyle = htmlSafe("margin-right: 0px;");
     }
   }
 
   @bind
-  onSwipeEnd(event) {
-    this._lastX = null;
-    const diff = this.initialX - event.changedTouches[0].screenX;
-
-    if (diff >= window.innerWidth / 3) {
-      this.swipableRow.style.left = "0px";
+  onSwipeEnd() {
+    if (this.isAtThreshold) {
+      this.rowStyle = htmlSafe("margin-right: 0px;");
       this.shouldRemoveChannel = true;
-      return;
+    } else {
+      this.shouldReset = true;
     }
-
-    this.isCancelling = true;
-    this.shouldResetRow = true;
   }
 
   get shouldHandleSwipe() {
     return this.capabilities.touch && this.args.channel.isDirectMessageChannel;
-  }
-
-  get cancelActionLabel() {
-    return I18n.t("cancel_value");
-  }
-
-  get removeActionLabel() {
-    return I18n.t("chat.remove");
   }
 
   get leaveDirectMessageLabel() {
