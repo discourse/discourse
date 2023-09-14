@@ -1,4 +1,4 @@
-import { click, currentURL, visit } from "@ember/test-helpers";
+import { click, currentURL, triggerKeyEvent, visit } from "@ember/test-helpers";
 import {
   acceptance,
   exists,
@@ -818,6 +818,22 @@ acceptance("User menu", function (needs) {
     } finally {
       window.removeEventListener("click", interceptor);
     }
+  });
+
+  test("tabs without hrefs can be visited with the keyboard", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+
+    await triggerKeyEvent(
+      "#user-menu-button-other-notifications",
+      "keydown",
+      "Enter"
+    );
+
+    assert.ok(
+      exists("#quick-access-other-notifications"),
+      "the other notifications panel can display using keyboard navigation"
+    );
   });
 });
 
