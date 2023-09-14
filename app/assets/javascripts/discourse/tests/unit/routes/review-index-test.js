@@ -6,7 +6,7 @@ module("Unit | Route | review-index", function (hooks) {
 
   test("subscribes and unsubscribes /reviewable_counts(with id) when user menu enabled", function (assert) {
     const store = this.owner.lookup("service:store");
-    const currentUser = store.createRecord("user", { id: "the-id" });
+    const currentUser = store.createRecord("user", { id: 654 });
     this.owner.unregister("service:current-user");
     this.owner.register("service:current-user", currentUser, {
       instantiate: false,
@@ -16,19 +16,19 @@ module("Unit | Route | review-index", function (hooks) {
     const messageBus = this.owner.lookup("service:message-bus");
 
     let channels = messageBus.callbacks.map((c) => c.channel);
-    assert.false(channels.includes("/reviewable_counts/the-id"));
+    assert.false(channels.includes("/reviewable_counts/654"));
     assert.false(channels.includes("/reviewable_claimed"));
 
     reviewIndexRoute.activate();
 
     channels = messageBus.callbacks.map((c) => c.channel);
-    assert.true(channels.includes("/reviewable_counts/the-id"));
+    assert.true(channels.includes("/reviewable_counts/654"));
     assert.true(channels.includes("/reviewable_claimed"));
 
     reviewIndexRoute.deactivate();
 
     channels = messageBus.callbacks.map((c) => c.channel);
-    assert.false(channels.includes("/reviewable_counts/the-id"));
+    assert.false(channels.includes("/reviewable_counts/654"));
     assert.false(channels.includes("/reviewable_claimed"));
   });
 });
