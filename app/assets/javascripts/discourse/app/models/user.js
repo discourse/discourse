@@ -559,6 +559,25 @@ const User = RestModel.extend({
     });
   },
 
+  createPasskey() {
+    return ajax("/u/create_passkey.json", {
+      type: "POST",
+    });
+  },
+
+  registerPasskey(credential) {
+    return ajax("/u/register_passkey.json", {
+      data: credential,
+      type: "POST",
+    });
+  },
+
+  deletePasskey(id) {
+    return ajax(`/u/delete_passkey/${id}`, {
+      type: "DELETE",
+    });
+  },
+
   createSecondFactorTotp() {
     return ajax("/u/create_second_factor_totp.json", {
       type: "POST",

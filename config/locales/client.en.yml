@@ -1502,7 +1502,21 @@ en:
           save: "Save"
           edit_description: "Physical Security Key Name"
           name_required_error: "You must provide a name for your security key."
-
+      passkeys:
+        rename_passkey: "Rename Passkey"
+        add_passkey: "Add Passkey"
+        confirm_delete_passkey: "Are you sure you want to delete this passkey?"
+        passkey_successfully_created: "Success! Your new passkey was created."
+        rename_passkey_instructions: "Pick a passkey name that will easily identify it for you, for example, use the name of your password manager."
+        name:
+          default: "Main Passkey"
+          google_password_manager: "Google Password Manager"
+          icloud_keychain: "iCloud Keychain"
+        save: "Save"
+        title: "Passkeys"
+        added_prefix: "Added"
+        last_used_prefix: "Last Used"
+        never_used: "Never Used"
       change_about:
         title: "Change About Me"
         error: "There was an error changing this value."
@@ -2224,6 +2238,8 @@ en:
         name: "Discord"
         title: "Log in with Discord"
         sr_title: "Log in with Discord"
+      passkey:
+        name: "Login with a passkey"
       second_factor_toggle:
         totp: "Use an authenticator app instead"
         backup_code: "Use a backup code instead"

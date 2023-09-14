@@ -10,6 +10,7 @@ import CanCheckEmails from "discourse/mixins/can-check-emails";
 import I18n from "I18n";
 import { inject as service } from "@ember/service";
 import AuthTokenModal from "discourse/components/modal/auth-token";
+import { isWebauthnSupported } from "discourse/lib/webauthn";
 
 // Number of tokens shown by default.
 const DEFAULT_AUTH_TOKENS_COUNT = 2;
@@ -19,6 +20,10 @@ export default Controller.extend(CanCheckEmails, {
   passwordProgress: null,
   subpageTitle: I18n.t("user.preferences_nav.security"),
   showAllAuthTokens: false,
+
+  canUsePasskeys() {
+    return this.siteSettings.experimental_passkeys && isWebauthnSupported();
+  },
 
   @discourseComputed("model.is_anonymous")
   canChangePassword(isAnonymous) {

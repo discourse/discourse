@@ -1,0 +1,16 @@
+<div class="rename-passkey__form">
+  <div class="rename-passkey__message">
+    <p>{{i18n "user.passkeys.rename_passkey_instructions"}}</p>
+  </div>
+  <form>
+    <div class="rename-passkey__form inline-form">
+      <TextField @value={{this.passkeyName}} autofocus={{true}} />
+      <DButton
+        @class="btn-primary"
+        @type="submit"
+        @action={{this.saveRename}}
+        @label="user.passkeys.save"
+      />
+    </div>
+  </form>
+</div>
