@@ -42,11 +42,11 @@ RSpec.describe ApiKey do
     expect(ApiKey.last_used_epoch).to eq(nil)
   end
 
-  it "can automatically revoke keys" do
+  it "can automatically revoke unused keys" do
     now = Time.now
 
     SiteSetting.api_key_last_used_epoch = now - 2.years
-    SiteSetting.revoke_api_keys_days = 180 # 6 months
+    SiteSetting.revoke_api_keys_unused_days = 180 # 6 months
 
     freeze_time now - 1.year
     never_used = Fabricate(:api_key)
@@ -76,6 +76,20 @@ RSpec.describe ApiKey do
     expect(never_used.revoked_at).to eq(nil)
     expect(used_previously.revoked_at).to eq(nil)
     expect(used_recently.revoked_at).to eq(nil)
+  end
+
+  it "can automatically revoke keys by max life" do
+    freeze_time
+
+    SiteSetting.revoke_api_keys_maxlife_days = 2
+
+    older_key = Fabricate(:api_key, created_at: 3.days.ago)
+    newer_key = Fabricate(:api_key, created_at: 1.days.ago)
+
+    ApiKey.revoke_max_life_keys!
+
+    expect(older_key.reload.revoked_at).to eq_time(Time.zone.now)
+    expect(newer_key.reload.revoked_at).to eq(nil)
   end
 
   describe "API Key scope mappings" do

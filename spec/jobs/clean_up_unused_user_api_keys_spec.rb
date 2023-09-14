@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-RSpec.describe Jobs::AutoExpireUserApiKeys do
+RSpec.describe Jobs::CleanUpUnusedUserApiKeys do
   fab!(:key1) { Fabricate(:readonly_user_api_key) }
   fab!(:key2) { Fabricate(:readonly_user_api_key) }
 
   context "when user api key is unused in last 1 days" do
-    before { SiteSetting.expire_user_api_keys_days = 1 }
+    before { SiteSetting.revoke_user_api_keys_unused_days = 1 }
 
     it "should revoke the key" do
       freeze_time
