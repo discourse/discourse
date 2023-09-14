@@ -1625,7 +1625,7 @@ class UsersController < ApplicationController
 
     render json: success_json.merge(id: key.id, name: key.name)
   rescue ::DiscourseWebauthn::SecurityKeyError => err
-    render json: failed_json.merge(error: err.message)
+    render_json_error(err.message, status: 401)
   end
 
   def delete_passkey

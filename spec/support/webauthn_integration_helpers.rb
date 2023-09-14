@@ -70,9 +70,9 @@ module DiscourseWebauthnIntegrationHelpers
     "66b47014ef72937d8320ed893dc797e8a9a6d5098b89b185ca3d439b3656"
   end
 
-  def valid_passkey_client_data_param
+  def passkey_client_data_param(type)
     {
-      type: "webauthn.get",
+      type: type,
       challenge: Base64.strict_encode64(valid_passkey_challenge),
       origin: "http://localhost:3000",
       crossOrigin: false,
@@ -81,7 +81,7 @@ module DiscourseWebauthnIntegrationHelpers
 
   def valid_passkey_auth_data
     {
-      clientData: Base64.strict_encode64(valid_passkey_client_data_param.to_json),
+      clientData: Base64.strict_encode64(passkey_client_data_param("webauthn.get").to_json),
       credentialId: "JFeriwVn1elZk7N8nwSC4magQ8zM1XIUxRZB9Pm7VDM=",
       authenticatorData: "SZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2MFAAAAAA==",
       signature:

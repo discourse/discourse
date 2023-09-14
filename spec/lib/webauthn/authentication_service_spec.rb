@@ -272,7 +272,7 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
     let(:authenticator_data) { valid_passkey_auth_data[:authenticatorData] }
     let(:challenge) { valid_passkey_challenge }
 
-    let(:client_data_param) { valid_passkey_client_data_param }
+    let(:client_data_param) { passkey_client_data_param("webauthn.get") }
 
     let!(:security_key) do
       Fabricate(

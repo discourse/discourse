@@ -190,7 +190,7 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
     end
   end
 
-  describe "registering a first factor key" do
+  describe "registering a passkey" do
     let(:options) do
       { factor_type: UserSecurityKey.factor_types[:first_factor], session: secure_session }
     end
