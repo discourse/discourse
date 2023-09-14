@@ -1,2 +1,4 @@
-{{d-icon "tag"}}
-{{discourse-tag (or @result.id @result) tagName="span"}}
+<a href {{on "click" this.onClick}} class="search-link">
+  {{d-icon "tag"}}
+  {{discourse-tag (or @result.id @result) tagName="span"}}
+</a>

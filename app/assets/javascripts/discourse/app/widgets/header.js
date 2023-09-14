@@ -12,7 +12,8 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { hbs } from "ember-cli-htmlbars";
-import { SEARCH_BUTTON_ID } from "discourse/components/search-menu";
+
+const SEARCH_BUTTON_ID = "search-button";
 
 let _extraHeaderIcons = [];
 
@@ -393,14 +394,17 @@ createWidget("glimmer-search-menu-wrapper", {
       new RenderGlimmer(
         this,
         "div.widget-component-connector",
-        hbs`<SearchMenu @closeSearchMenu={{@data.closeSearchMenu}} />`,
-        { closeSearchMenu: this.closeSearchMenu.bind(this) }
+        hbs`<SearchMenuPanel @closeSearchMenu={{@data.closeSearchMenu}} />`,
+        {
+          closeSearchMenu: this.closeSearchMenu.bind(this),
+        }
       ),
     ];
   },
 
   closeSearchMenu() {
     this.sendWidgetAction("toggleSearchMenu");
+    document.getElementById(SEARCH_BUTTON_ID)?.focus();
   },
 
   clickOutside() {

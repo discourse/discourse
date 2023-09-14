@@ -22,7 +22,6 @@ const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;
 const SUGGESTIONS_REGEXP = /(in:|status:|order:|:)([a-zA-Z]*)$/gi;
 export const SEARCH_INPUT_ID = "search-term";
-export const SEARCH_BUTTON_ID = "search-button";
 export const MODIFIER_REGEXP = /.*(\#|\@|:).*$/gi;
 export const DEFAULT_TYPE_FILTER = "exclude_topics";
 
@@ -30,16 +29,11 @@ export function focusSearchInput() {
   document.getElementById(SEARCH_INPUT_ID).focus();
 }
 
-export function focusSearchButton() {
-  document.getElementById(SEARCH_BUTTON_ID).focus();
-}
-
 export default class SearchMenu extends Component {
   @service search;
   @service currentUser;
   @service siteSettings;
   @service appEvents;
-  @service site;
 
   @tracked loading = false;
   @tracked results = {};
@@ -50,13 +44,41 @@ export default class SearchMenu extends Component {
   @tracked suggestionKeyword = false;
   @tracked suggestionResults = [];
   @tracked invalidTerm = false;
+  @tracked menuPanelOpen = false;
+
   _debouncer = null;
   _activeSearch = null;
 
-  get animationClass() {
-    return this.site.mobileView || this.site.narrowDesktopView
-      ? "slide-in"
-      : "drop-down";
+  @bind
+  setupEventListeners() {
+    document.addEventListener("mousedown", this.onDocumentPress, true);
+    document.addEventListener("touchend", this.onDocumentPress, {
+      capture: true,
+      passive: true,
+    });
+  }
+
+  willDestroy() {
+    document.removeEventListener("mousedown", this.onDocumentPress);
+    document.removeEventListener("touchend", this.onDocumentPress);
+
+    super.willDestroy(...arguments);
+  }
+
+  @bind
+  onDocumentPress(event) {
+    if (!event.target.closest(".search-menu-container.menu-panel-results")) {
+      this.menuPanelOpen = false;
+    }
+  }
+  get classNames() {
+    const classes = ["search-menu-container"];
+
+    if (!this.args.inlineResults) {
+      classes.push("menu-panel-results");
+    }
+
+    return classes.join(" ");
   }
 
   get includesTopics() {
@@ -69,6 +91,20 @@ export default class SearchMenu extends Component {
     }
 
     return false;
+  }
+
+  @action
+  close() {
+    if (this.args?.closeSearchMenu) {
+      return this.args.closeSearchMenu();
+    }
+
+    this.menuPanelOpen = false;
+  }
+
+  @action
+  open() {
+    this.menuPanelOpen = true;
   }
 
   @bind
@@ -93,6 +129,18 @@ export default class SearchMenu extends Component {
       url = `${url}?${params}`;
     }
     return getURL(url);
+  }
+
+  get advancedSearchButtonHref() {
+    return this.fullSearchUrl({ expanded: true });
+  }
+
+  get displayMenuPanelResults() {
+    if (this.args.inlineResults) {
+      return false;
+    }
+
+    return this.menuPanelOpen;
   }
 
   @bind
