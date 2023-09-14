@@ -23,7 +23,6 @@ const KNOWN_LEGACY_MODALS = [
   "reject-reason-reviewable",
   "reorder-categories",
   "request-group-membership-form",
-  "tag-upload",
 ];
 
 const LEGACY_OPTS = new Set([
