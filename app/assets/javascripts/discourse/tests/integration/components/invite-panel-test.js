@@ -23,7 +23,6 @@ module("Integration | Component | invite-panel", function (hooks) {
     const user = store.createRecord("user", {
       details: { can_invite_via_email: true },
     });
-    // this.currentUser.set("details", { can_invite_via_email: true });
     this.set("inviteModel", user);
 
     await render(hbs`<InvitePanel @inviteModel={{this.inviteModel}} />`);
