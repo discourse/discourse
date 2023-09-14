@@ -273,6 +273,10 @@ export default class UserMenu extends Component {
       return;
     }
 
+    if (event.type === "keydown" && event.keyCode !== 13) {
+      return;
+    }
+
     event.preventDefault();
 
     this.currentTabId = tab.id;
