@@ -10,7 +10,6 @@ import { cookAsync } from "discourse/lib/text";
 import { notEmpty } from "@ember/object/computed";
 import { propertyNotEqual } from "discourse/lib/computed";
 import { schedule } from "@ember/runloop";
-import { getOwner } from "discourse-common/lib/get-owner";
 import { applyLocalDates } from "discourse/lib/local-dates";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 
@@ -369,17 +368,13 @@ export default Component.extend({
     const markup = this.markup;
 
     if (markup) {
-      this._closeModal();
-      this.insertDate(markup);
+      this.closeModal();
+      this.model.insertDate(markup);
     }
   },
 
   @action
   cancel() {
-    this._closeModal();
-  },
-
-  _closeModal() {
-    getOwner(this).lookup("service:modal").close();
+    this.closeModal();
   },
 });

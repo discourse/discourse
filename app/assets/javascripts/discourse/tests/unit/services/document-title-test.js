@@ -8,14 +8,8 @@ module("Unit | Service | document-title", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    const session = Session.current();
-    session.hasFocus = true;
-
+    Session.current().hasFocus = true;
     this.documentTitle = getOwner(this).lookup("service:document-title");
-  });
-
-  hooks.afterEach(function () {
-    this.documentTitle.reset();
   });
 
   test("it updates the document title", function (assert) {

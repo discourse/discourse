@@ -59,7 +59,6 @@ after_initialize do
 
     Guardian.prepend Chat::GuardianExtensions
     UserNotifications.prepend Chat::UserNotificationsExtension
-    Notifications::ConsolidationPlan.prepend Chat::NotificationConsolidationExtension
     UserOption.prepend Chat::UserOptionExtension
     Category.prepend Chat::CategoryExtension
     Reviewable.prepend Chat::ReviewableExtension
@@ -68,6 +67,7 @@ after_initialize do
     Jobs::UserEmail.prepend Chat::UserEmailExtension
     Plugin::Instance.prepend Chat::PluginInstanceExtension
     Jobs::ExportCsvFile.class_eval { prepend Chat::MessagesExporter }
+    WebHook.prepend Chat::OutgoingWebHookExtension
   end
 
   if Oneboxer.respond_to?(:register_local_handler)
@@ -382,6 +382,35 @@ after_initialize do
     end
   end
 
+  # outgoing webhook events
+  %i[
+    chat_message_created
+    chat_message_edited
+    chat_message_trashed
+    chat_message_restored
+  ].each do |chat_message_event|
+    on(chat_message_event) do |message, channel, user|
+      guardian = Guardian.new(user)
+
+      payload = {
+        message: Chat::MessageSerializer.new(message, { scope: guardian, root: false }).as_json,
+        channel:
+          Chat::ChannelSerializer.new(
+            channel,
+            { scope: guardian, membership: channel.membership_for(user), root: false },
+          ).as_json,
+      }
+
+      category_id = channel.chatable_type == "Category" ? channel.chatable_id : nil
+
+      WebHook.enqueue_chat_message_hooks(
+        chat_message_event,
+        payload.to_json,
+        category_id: category_id,
+      )
+    end
+  end
+
   Discourse::Application.routes.append do
     mount ::Chat::Engine, at: "/chat"
 
@@ -473,10 +502,6 @@ after_initialize do
   )
 
   register_bookmarkable(Chat::MessageBookmarkable)
-
-  register_notification_consolidation_plan(
-    Chat::NotificationConsolidationExtension.chat_message_plan,
-  )
 end
 
 if Rails.env == "test"

@@ -5,7 +5,7 @@ import Badge from "discourse/models/badge";
 module("Unit | Controller | admin-user-badges", function (hooks) {
   setupTest(hooks);
 
-  test("grantableBadges", function (assert) {
+  test("availableBadges", function (assert) {
     const badgeFirst = Badge.create({
       id: 3,
       name: "A Badge",
@@ -50,7 +50,7 @@ module("Unit | Controller | admin-user-badges", function (hooks) {
     });
 
     const sortedNames = [badgeFirst.name, badgeMiddle.name, badgeLast.name];
-    const badgeNames = controller.grantableBadges.map((badge) => badge.name);
+    const badgeNames = controller.availableBadges.map((badge) => badge.name);
 
     assert.notOk(
       badgeNames.includes(badgeDisabled),

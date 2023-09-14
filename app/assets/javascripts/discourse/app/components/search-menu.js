@@ -39,8 +39,8 @@ export default class SearchMenu extends Component {
   @service currentUser;
   @service siteSettings;
   @service appEvents;
+  @service site;
 
-  @tracked inTopicContext = this.args.inTopicContext;
   @tracked loading = false;
   @tracked results = {};
   @tracked noResults = false;
@@ -53,12 +53,18 @@ export default class SearchMenu extends Component {
   _debouncer = null;
   _activeSearch = null;
 
+  get animationClass() {
+    return this.site.mobileView || this.site.narrowDesktopView
+      ? "slide-in"
+      : "drop-down";
+  }
+
   get includesTopics() {
     return this.typeFilter !== DEFAULT_TYPE_FILTER;
   }
 
   get searchContext() {
-    if (this.inTopicContext || this.inPMInboxContext) {
+    if (this.search.inTopicContext || this.inPMInboxContext) {
       return this.search.searchContext;
     }
 
@@ -102,7 +108,7 @@ export default class SearchMenu extends Component {
   searchTermChanged(term, opts = {}) {
     this.typeFilter = opts.searchTopics ? null : DEFAULT_TYPE_FILTER;
     if (opts.setTopicContext) {
-      this.inTopicContext = true;
+      this.search.inTopicContext = true;
     }
     this.search.activeGlobalSearchTerm = term;
     this.triggerSearch();
@@ -129,7 +135,7 @@ export default class SearchMenu extends Component {
 
   @action
   clearTopicContext() {
-    this.inTopicContext = false;
+    this.search.inTopicContext = false;
   }
 
   // for cancelling debounced search
@@ -286,7 +292,7 @@ export default class SearchMenu extends Component {
       }
     } else {
       this.loading = false;
-      if (!this.inTopicContext) {
+      if (!this.search.inTopicContext) {
         this._debouncer = discourseDebounce(this, this.perform, 400);
       }
     }
