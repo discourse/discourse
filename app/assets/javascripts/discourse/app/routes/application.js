@@ -1,3 +1,4 @@
+import cookie from "discourse/lib/cookie";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
@@ -230,7 +231,9 @@ const ApplicationRoute = DiscourseRoute.extend({
 
   handleShowLogin() {
     if (this.siteSettings.enable_discourse_connect) {
-      const returnPath = encodeURIComponent(window.location.pathname);
+      const returnPath = cookie("destination_url")
+        ? getURL("/")
+        : encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
       this.modal.show(LoginModal, {
