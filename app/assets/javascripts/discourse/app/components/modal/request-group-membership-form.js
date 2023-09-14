@@ -1,38 +1,39 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
-import { alias } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Component.extend({
-  loading: false,
-  reason: alias("model.group.membership_request_template"),
+export default class RequestGroupMembershipForm extends Component {
+  @tracked loading = false;
 
-  @discourseComputed("model.group.name")
-  title(groupName) {
-    return I18n.t("groups.membership_request.title", { group_name: groupName });
-  },
+  get reason() {
+    return this.args.model.group.membership_request_template;
+  }
 
-  @discourseComputed("loading", "reason")
-  disableSubmit(loading, reason) {
-    return loading || isEmpty(reason);
-  },
+  get title() {
+    return I18n.t("groups.membership_request.title", {
+      group_name: this.args.model.group.name,
+    });
+  }
+
+  get disableSubmit() {
+    return this.loading || isEmpty(this.reason);
+  }
 
   @action
-  requestMember() {
-    this.set("loading", true);
+  async requestMember() {
+    this.loading = true;
 
-    this.model.group
-      .requestMembership(this.reason)
-      .then((result) => {
-        DiscourseURL.routeTo(result.relative_url);
-      })
-      .catch(popupAjaxError)
-      .finally(() => {
-        this.set("loading", false);
-      });
-  },
-});
+    try {
+      const result = await this.args.model.group.requestMembership(this.reason);
+      DiscourseURL.routeTo(result.relative_url);
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.loading = false;
+    }
+  }
+}
