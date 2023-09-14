@@ -290,6 +290,9 @@ a.toggle-preview {
   animation-delay: 1.5s;
   animation-direction: reverse;
   animation-fill-mode: forwards;
+  @media (prefers-reduced-motion) {
+    animation-duration: 0s;
+  }
   position: fixed;
   left: 50%;
   top: 10%;
