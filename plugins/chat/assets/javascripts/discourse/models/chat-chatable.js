@@ -1,7 +1,6 @@
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import User from "discourse/models/user";
 import { tracked } from "@glimmer/tracking";
-import { inject as service } from "@ember/service";
 
 export default class ChatChatable {
   static create(args = {}) {
@@ -23,9 +22,6 @@ export default class ChatChatable {
       identifier: `c-${model.id}`,
     });
   }
-
-  @service chatChannelsManager;
-  @service store;
 
   @tracked identifier;
   @tracked type;
@@ -58,7 +54,7 @@ export default class ChatChatable {
           break;
         }
 
-        this.model = this.store.createRecord("user", args.model);
+        this.model = User.create(args.model);
         break;
     }
   }
