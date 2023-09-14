@@ -30,7 +30,6 @@ export default class Chat extends Service {
   @service presence;
   @service router;
   @service site;
-  @service siteSettings;
   @service chatChannelsManager;
   @service chatTrackingStateManager;
 
@@ -69,8 +68,7 @@ export default class Chat extends Service {
     return (
       this.currentUser.staff ||
       this.currentUser.isInAnyGroups(
-        (this.siteSettings.direct_message_enabled_groups || 11) // trust level 1 auto group
-          .toString()
+        (this.siteSettings.direct_message_enabled_groups || "11") // trust level 1 auto group
           .split("|")
           .map((groupId) => parseInt(groupId, 10))
       )
