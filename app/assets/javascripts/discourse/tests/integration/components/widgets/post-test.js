@@ -10,7 +10,6 @@ import {
 import { hbs } from "ember-cli-htmlbars";
 import EmberObject from "@ember/object";
 import I18n from "I18n";
-import User from "discourse/models/user";
 import { getOwner } from "discourse-common/lib/get-owner";
 
 module("Integration | Component | Widget | post", function (hooks) {
@@ -936,7 +935,8 @@ module("Integration | Component | Widget | post", function (hooks) {
       emoji: "tooth",
       description: "off to dentist",
     };
-    const user = User.create({ status });
+    const store = getOwner(this).lookup("service:store");
+    const user = store.createRecord("user", { status });
     this.set("args", { user });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);
@@ -950,7 +950,8 @@ module("Integration | Component | Widget | post", function (hooks) {
       emoji: "tooth",
       description: "off to dentist",
     };
-    const user = User.create({ status });
+    const store = getOwner(this).lookup("service:store");
+    const user = store.createRecord("user", { status });
     this.set("args", { user });
 
     await render(hbs`<MountWidget @widget="post" @args={{this.args}} />`);

@@ -4,7 +4,6 @@ import { settled } from "@ember/test-helpers";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import EmberObject from "@ember/object";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
-import User from "discourse/models/user";
 import { next } from "@ember/runloop";
 import { getOwner } from "discourse-common/lib/get-owner";
 import sinon from "sinon";
@@ -260,7 +259,7 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("canDeleteSelected", function (assert) {
-    const currentUser = User.create({ admin: false });
+    const currentUser = this.store.createRecord("user", { admin: false });
     const model = topicWithStream.call(this, {
       posts: [
         { id: 1, can_delete: false },
@@ -353,7 +352,7 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("canChangeOwner", function (assert) {
-    const currentUser = User.create({ admin: false });
+    const currentUser = this.store.createRecord("user", { admin: false });
     const model = topicWithStream.call(this, {
       posts: [
         { id: 1, username: "gary" },
@@ -385,7 +384,7 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("modCanChangeOwner", function (assert) {
-    const currentUser = User.create({ moderator: false });
+    const currentUser = this.store.createRecord("user", { moderator: false });
     const model = topicWithStream.call(this, {
       posts: [
         { id: 1, username: "gary" },

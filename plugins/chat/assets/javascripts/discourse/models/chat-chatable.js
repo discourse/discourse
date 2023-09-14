@@ -25,6 +25,7 @@ export default class ChatChatable {
   }
 
   @service chatChannelsManager;
+  @service store;
 
   @tracked identifier;
   @tracked type;
@@ -57,7 +58,7 @@ export default class ChatChatable {
           break;
         }
 
-        this.model = User.create(args.model);
+        this.model = this.store.createRecord("user", args.model);
         break;
     }
   }

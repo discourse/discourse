@@ -1,6 +1,5 @@
 import EmberObject from "@ember/object";
 import RestModel from "discourse/models/rest";
-import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
 
 /**
@@ -16,7 +15,7 @@ const TopicDetails = RestModel.extend({
 
     if (details.allowed_users) {
       details.allowed_users = details.allowed_users.map(function (u) {
-        return User.create(u);
+        return this.store.createRecord("user", u);
       });
     }
 

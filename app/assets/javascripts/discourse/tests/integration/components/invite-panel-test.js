@@ -5,7 +5,6 @@ import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import User from "discourse/models/user";
 
 module("Integration | Component | invite-panel", function (hooks) {
   setupRenderingTest(hooks);
@@ -20,7 +19,7 @@ module("Integration | Component | invite-panel", function (hooks) {
     );
 
     this.currentUser.set("details", { can_invite_via_email: true });
-    this.set("inviteModel", User.create(this.currentUser));
+    this.set("inviteModel", this.currentUser);
 
     await render(hbs`<InvitePanel @inviteModel={{this.inviteModel}} />`);
 

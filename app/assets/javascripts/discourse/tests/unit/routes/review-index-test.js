@@ -1,4 +1,3 @@
-import User from "discourse/models/user";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 
@@ -6,9 +5,8 @@ module("Unit | Route | review-index", function (hooks) {
   setupTest(hooks);
 
   test("subscribes and unsubscribes /reviewable_counts(with id) when user menu enabled", function (assert) {
-    const currentUser = User.create({
-      id: "the-id",
-    });
+    const store = this.owner.lookup("service:store");
+    const currentUser = store.createRecord("user", { id: "the-id" });
     this.owner.unregister("service:current-user");
     this.owner.register("service:current-user", currentUser, {
       instantiate: false,

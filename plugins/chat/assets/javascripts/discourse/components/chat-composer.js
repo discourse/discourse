@@ -17,7 +17,6 @@ import { translations } from "pretty-text/emoji/data";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import { isPresent } from "@ember/utils";
 import { Promise } from "rsvp";
-import User from "discourse/models/user";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import {
   destroyUserStatuses,
@@ -31,6 +30,7 @@ export default class ChatComposer extends Component {
   @service capabilities;
   @service site;
   @service siteSettings;
+  @service store;
   @service chat;
   @service chatComposerPresenceManager;
   @service chatComposerWarningsTracker;
@@ -397,7 +397,7 @@ export default class ChatComposer extends Component {
   }
 
   #addMentionedUser(userData) {
-    const user = User.create(userData);
+    const user = this.store.createRecord("user", userData);
     this.currentMessage.mentionedUsers.set(user.id, user);
   }
 
