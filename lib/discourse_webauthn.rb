@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 require "webauthn/challenge_generator"
-require "webauthn/security_key_base_validation_service"
-require "webauthn/security_key_registration_service"
-require "webauthn/security_key_authentication_service"
+require "webauthn/base_validation_service"
+require "webauthn/registration_service"
+require "webauthn/authentication_service"
 
 module DiscourseWebauthn
   ACCEPTABLE_REGISTRATION_TYPE = "webauthn.create"
@@ -22,6 +22,8 @@ module DiscourseWebauthn
   end
   class UserVerificationError < SecurityKeyError
   end
+  class UserPresenceError < SecurityKeyError
+  end
   class ChallengeMismatchError < SecurityKeyError
   end
   class InvalidTypeError < SecurityKeyError
@@ -34,7 +36,9 @@ module DiscourseWebauthn
   end
   class MalformedAttestationError < SecurityKeyError
   end
-  class NotFoundError < SecurityKeyError
+  class KeyNotFoundError < SecurityKeyError
+  end
+  class MalformedPublicKeyCredentialError < SecurityKeyError
   end
   class OwnershipError < SecurityKeyError
   end
@@ -68,7 +72,18 @@ module DiscourseWebauthn
   end
 
   def self.rp_id
-    Discourse.current_hostname
+    Rails.env.production? ? Discourse.current_hostname : "localhost"
+  end
+
+  def self.origin
+    case Rails.env
+    when "development"
+      "http://localhost:4200"
+    when "test"
+      "http://localhost:3000"
+    else
+      Discourse.base_url
+    end
   end
 
   def self.rp_name

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require "discourse_webauthn"
-require "webauthn/security_key_registration_service"
+require "webauthn/registration_service"
 
 ##
 # These tests use the following parameters generated on a local discourse
@@ -12,7 +12,6 @@ require "webauthn/security_key_registration_service"
 # - signature
 # - authenticator_data
 # - client_data_origin
-# - challenge_params_origin
 #
 # To create another test (e.g. for a different COSE algorithm) you need to:
 #
@@ -24,21 +23,23 @@ require "webauthn/security_key_registration_service"
 # you need to add puts debugger statements (or use binding.pry) like so:
 #
 # puts client_data
-# puts signature
-# puts auth_data
+# puts @params
 #
-# The auth_data will have the challenge param, but you must Base64.decode64 to
-# use it in the let(:challenge) variable. The signature and auth_data params
-# can be used as is.
+# The client_data will have the challenge param, but you must Base64.decode64 to
+# use it in the let(:challenge) variable.
+#
+# puts Base64.decode64(client_data["challenge"])
 #
 # You also need to make sure that client_data_param has the exact same structure
-# and order of keys as auth_data, otherwise even with everything else right the
+# and order of keys, otherwise even with everything else right the
 # public key verification will fail.
 #
-# The origin params just need to be whatever your localhost URL for Discourse is.
+# @params will contain authenticatorData and signature which you can use as is.
+#
+# The origin param needs to be http://localhost:3000 (that's the port tests run on)
 
-RSpec.describe DiscourseWebauthn::SecurityKeyAuthenticationService do
-  subject(:service) { described_class.new(current_user, params, challenge_params) }
+RSpec.describe DiscourseWebauthn::AuthenticationService do
+  subject(:service) { described_class.new(current_user, params, options) }
 
   let(:security_key_user) { current_user }
   let!(:security_key) do
@@ -47,7 +48,9 @@ RSpec.describe DiscourseWebauthn::SecurityKeyAuthenticationService do
       credential_id: credential_id,
       public_key: public_key,
       user: security_key_user,
+      factor_type: UserSecurityKey.factor_types[:second_factor],
       last_used: nil,
+      name: "Some key",
     )
   end
   let(:public_key) do
@@ -56,6 +59,7 @@ RSpec.describe DiscourseWebauthn::SecurityKeyAuthenticationService do
   let(:credential_id) do
     "mJAJ4CznTO0SuLkJbYwpgK75ao4KMNIPlU5KWM92nq39kRbXzI9mSv6GxTcsMYoiPgaouNw7b7zBiS4vsQaO6A=="
   end
+  let(:secure_session) { SecureSession.new("tester") }
   let(:challenge) { "81d4acfbd69eafa8f02bc2ecbec5267be8c9b28c1e0ba306d52b79f0f13d" }
   let(:client_data_challenge) { Base64.strict_encode64(challenge) }
   let(:client_data_webauthn_type) { "webauthn.get" }
@@ -87,29 +91,39 @@ RSpec.describe DiscourseWebauthn::SecurityKeyAuthenticationService do
       signature: signature,
     }
   end
-  ##
-  # The original key was generated in localhost
-  let(:rp_id) { "localhost" }
-  let(:challenge_params_origin) { "http://localhost:3000" }
-  let(:challenge_params) { { challenge: challenge, rp_id: rp_id, origin: challenge_params_origin } }
+
+  let(:options) do
+    { session: secure_session, factor_type: UserSecurityKey.factor_types[:second_factor] }
+  end
   let(:current_user) { Fabricate(:user) }
 
+  before do
+    # we have to stub here because the public key was created using this specific challenge
+    DiscourseWebauthn.stubs(:challenge).returns(challenge)
+  end
+
   it "updates last_used when the security key and params are valid" do
-    expect(service.authenticate_security_key).to eq(true)
+    expect(service.authenticate_security_key).to eq(security_key)
     expect(security_key.reload.last_used).not_to eq(nil)
   end
 
   context "when params is blank" do
     let(:params) { nil }
-    it "returns false with no validation" do
-      expect(service.authenticate_security_key).to eq(false)
+    it "raises a MalformedPublicKeyCredentialError" do
+      expect { service.authenticate_security_key }.to raise_error(
+        DiscourseWebauthn::MalformedPublicKeyCredentialError,
+        I18n.t("webauthn.validation.malformed_public_key_credential_error"),
+      )
     end
   end
 
   context "when params is not blank and not a hash" do
     let(:params) { "test" }
-    it "returns false with no validation" do
-      expect(service.authenticate_security_key).to eq(false)
+    it "raises a MalformedPublicKeyCredentialError" do
+      expect { service.authenticate_security_key }.to raise_error(
+        DiscourseWebauthn::MalformedPublicKeyCredentialError,
+        I18n.t("webauthn.validation.malformed_public_key_credential_error"),
+      )
     end
   end
 
@@ -118,7 +132,7 @@ RSpec.describe DiscourseWebauthn::SecurityKeyAuthenticationService do
 
     it "raises a NotFoundError" do
       expect { service.authenticate_security_key }.to raise_error(
-        DiscourseWebauthn::NotFoundError,
+        DiscourseWebauthn::KeyNotFoundError,
         I18n.t("webauthn.validation.not_found_error"),
       )
     end
@@ -169,9 +183,9 @@ RSpec.describe DiscourseWebauthn::SecurityKeyAuthenticationService do
   end
 
   context "when the sha256 hash of the relaying party ID does not match the one in attestation.authData" do
-    let(:rp_id) { "bad_rp_id" }
-
     it "raises a InvalidRelyingPartyIdError" do
+      DiscourseWebauthn.stubs(:rp_id).returns("bad_rp_id")
+
       expect { service.authenticate_security_key }.to raise_error(
         DiscourseWebauthn::InvalidRelyingPartyIdError,
         I18n.t("webauthn.validation.invalid_relying_party_id_error"),
@@ -214,7 +228,7 @@ RSpec.describe DiscourseWebauthn::SecurityKeyAuthenticationService do
     let(:public_key) do
       "pAEDAzkBACBZAQCqsl50KrR5zVm/QT9vWkeGTGxby32m0QRtCRh2UWseqoG0ZmBhGeWEYvkdoYlB1jObQKEHsAeB+1NBf5q69/88AA5zv4fzrvCydCtL41EUsHYFEbaPGnB61zZmYVLTPI7BYa+fu4F4MzFa924s36tVlU/L7n04peviJVZW2C1YIQfwOGDZJSvUpqJoZMQtw1vGRfrb4cQKlHfrpDZUpa3QLE8phh4ce4nwtX1tUnUGgCy8sOaFVkDNufENGTNr8HdAIHcinUiax3yy/Q8LjSZb8UR2ha6oXSe1vRHhj001B/P/mr5AdVMxSrOT1sUNXWkHv8L8IzS/iTBQpsC8CADZIUMBAAE="
     end
-    let(:challenge_params_origin) { "http://localhost:4200" }
+    # This key was generated using this specific origin
     let(:client_data_origin) { "http://localhost:4200" }
 
     # This has to be in the exact same order with the same data as it was originally
@@ -231,7 +245,9 @@ RSpec.describe DiscourseWebauthn::SecurityKeyAuthenticationService do
     end
 
     it "updates last_used when the security key and params are valid" do
-      expect(service.authenticate_security_key).to eq(true)
+      DiscourseWebauthn.stubs(:origin).returns("http://localhost:4200")
+
+      expect(service.authenticate_security_key).to eq(security_key)
       expect(security_key.reload.last_used).not_to eq(nil)
     end
   end
@@ -239,6 +255,60 @@ RSpec.describe DiscourseWebauthn::SecurityKeyAuthenticationService do
   it "all supported algorithms are implemented" do
     DiscourseWebauthn::SUPPORTED_ALGORITHMS.each do |alg|
       expect(COSE::Algorithm.find(alg)).not_to be_nil
+    end
+  end
+
+  describe "authenticating a valid passkey" do
+    let(:options) do
+      { factor_type: UserSecurityKey.factor_types[:first_factor], session: secure_session }
+    end
+
+    ##
+    # These are sourced from an actual key, see instructions at the top of this spec for details
+    #
+    let(:public_key) { valid_passkey_data[:public_key] }
+    let(:credential_id) { valid_passkey_data[:credential_id] }
+    let(:signature) { valid_passkey_auth_data[:signature] }
+    let(:authenticator_data) { valid_passkey_auth_data[:authenticatorData] }
+    let(:challenge) { valid_passkey_challenge }
+
+    let(:client_data_param) { passkey_client_data_param("webauthn.get") }
+
+    let!(:security_key) do
+      Fabricate(
+        :user_security_key,
+        credential_id: credential_id,
+        public_key: public_key,
+        user: security_key_user,
+        factor_type: UserSecurityKey.factor_types[:first_factor],
+        last_used: nil,
+        name: "A key",
+      )
+    end
+
+    it "works" do
+      key = service.authenticate_security_key
+      expect(key).to eq(security_key)
+      expect(key).to be_a(UserSecurityKey)
+      expect(key.user).to eq(current_user)
+      expect(key.factor_type).to eq(UserSecurityKey.factor_types[:first_factor])
+    end
+
+    context "when the user verification flag in the key is false" do
+      it "raises a UserVerificationError" do
+        # simulate missing user verification in the key data
+        # by setting third bit to 0
+        flags = "10000010" # correct flag sequence is "10100010"
+        overridenAuthData = service.send(:auth_data)
+        overridenAuthData[32] = [flags].pack("b*")
+
+        service.instance_variable_set(:@auth_data, overridenAuthData)
+
+        expect { service.authenticate_security_key }.to raise_error(
+          DiscourseWebauthn::UserVerificationError,
+          I18n.t("webauthn.validation.user_verification_error"),
+        )
+      end
     end
   end
 end
