@@ -1,80 +1,82 @@
 import { action } from "@ember/object";
-import Component from "@ember/component";
+import { tracked } from "@glimmer/tracking";
+import Component from "@glimmer/component";
 import Badge from "discourse/models/badge";
-import GrantBadgeController from "discourse/mixins/grant-badge-controller";
 import I18n from "I18n";
 import UserBadge from "discourse/models/user-badge";
-import discourseComputed from "discourse-common/utils/decorators";
 import { extractError } from "discourse/lib/ajax-error";
 import getURL from "discourse-common/lib/get-url";
+import {
+  grantableBadges,
+  isBadgeGrantable,
+} from "discourse/lib/grant-badge-utils";
 
-export default class GrantBadgeModal extends Component.extend(
-  GrantBadgeController
-) {
-  loading = true;
-  saving = false;
-  selectedBadgeId = null;
-  flash = null;
-  flashType = null;
-  allBadges = [];
-  userBadges = [];
+export default class GrantBadgeModal extends Component {
+  @tracked loading = true;
+  @tracked saving = false;
+  @tracked selectedBadgeId = null;
+  @tracked flash = null;
+  @tracked flashType = null;
+  @tracked allBadges = [];
+  @tracked userBadges = [];
+  @tracked availableBadges = [];
 
-  @discourseComputed("model.selectedPost")
-  post() {
-    return this.get("model.selectedPost");
+  get noAvailableBadges() {
+    !this.availableBadges.length;
   }
 
-  @discourseComputed("saving", "selectedBadgeGrantable")
-  buttonDisabled(saving, selectedBadgeGrantable) {
-    return saving || !selectedBadgeGrantable;
+  get post() {
+    return this.args.model.selectedPost;
+  }
+
+  get buttonDisabled() {
+    return (
+      this.saving ||
+      !isBadgeGrantable(this.selectedBadgeId, this.availableBadges)
+    );
+  }
+
+  #updateAvailableBadges() {
+    this.availableBadges = grantableBadges(this.allBadges, this.userBadges);
   }
 
   @action
   async loadBadges() {
-    this.set("loading", true);
+    this.loading = true;
     try {
-      const allBadges = await Badge.findAll();
-      const userBadges = await UserBadge.findByUsername(
-        this.get("post.username")
-      );
-      this.setProperties({
-        allBadges,
-        userBadges,
-      });
+      this.allBadges = await Badge.findAll();
+      this.userBadges = await UserBadge.findByUsername(this.post.username);
+      this.#updateAvailableBadges();
     } catch (e) {
-      this.setProperties({
-        flash: extractError(e),
-        flashType: "error",
-      });
+      this.flash = extractError(e);
+      this.flashType = "error";
     } finally {
-      this.set("loading", false);
+      this.loading = false;
     }
   }
   @action
   async performGrantBadge() {
     try {
-      this.set("saving", true);
-      const username = this.get("post.username");
-      const newBadge = await this.grantBadge(
+      this.saving = true;
+      const username = this.post.username;
+      const newBadge = await UserBadge.grant(
         this.selectedBadgeId,
         username,
-        getURL(this.get("post.url"))
+        getURL(this.post.url)
       );
-      this.set("selectedBadgeId", null);
-      this.setProperties({
-        flash: I18n.t("badges.successfully_granted", {
-          username,
-          badge: newBadge.get("badge.name"),
-        }),
-        flashType: "success",
+      this.userBadges.pushObject(newBadge);
+      this.#updateAvailableBadges();
+      this.selectedBadgeId = null;
+      this.flash = I18n.t("badges.successfully_granted", {
+        username,
+        badge: newBadge.get("badge.name"),
       });
+      this.flashType = "success";
     } catch (e) {
-      this.setProperties({
-        flash: extractError(e),
-        flashType: "error",
-      });
+      this.flash = extractError(e);
+      this.flashType = "error";
     } finally {
-      this.set("saving", false);
+      this.saving = false;
     }
   }
 }

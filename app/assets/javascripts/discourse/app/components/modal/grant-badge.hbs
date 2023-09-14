@@ -9,13 +9,13 @@
 >
   <:body>
     <ConditionalLoadingSpinner @condition={{this.loading}}>
-      {{#if this.noGrantableBadges}}
+      {{#if this.noAvailableBadges}}
         <p>{{i18n "admin.badges.no_badges"}}</p>
       {{else}}
         <p>
           <ComboBox
             @value={{this.selectedBadgeId}}
-            @content={{this.grantableBadges}}
+            @content={{this.availableBadges}}
             @onChange={{action (mut this.selectedBadgeId)}}
             @options={{hash filterable=true none="badges.none"}}
           />
