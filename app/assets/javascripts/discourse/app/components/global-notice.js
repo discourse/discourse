@@ -5,6 +5,7 @@ import I18n from "I18n";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { htmlSafe } from "@ember/template";
 import { inject as service } from "@ember/service";
+import { tagName } from "@ember-decorators/component";
 
 const _pluginNotices = [];
 
@@ -48,32 +49,34 @@ const Notice = EmberObject.extend({
   },
 });
 
-export default Component.extend({
-  tagName: "",
-  router: service(),
-  logsNoticeService: service("logsNotice"),
-  logNotice: null,
+@tagName("")
+export default class GlobalNotice extends Component {
+  @service keyValueStore;
+  @service("logsNotice") logsNoticeService;
+  @service router;
 
-  init() {
-    this._super(...arguments);
+  logNotice = null;
+
+  constructor() {
+    super(...arguments);
 
     this.logsNoticeService.addObserver("hidden", this._handleLogsNoticeUpdate);
     this.logsNoticeService.addObserver("text", this._handleLogsNoticeUpdate);
-  },
+  }
 
   willDestroyElement() {
-    this._super(...arguments);
+    super.willDestroyElement(...arguments);
 
     this.logsNoticeService.removeObserver("text", this._handleLogsNoticeUpdate);
     this.logsNoticeService.removeObserver(
       "hidden",
       this._handleLogsNoticeUpdate
     );
-  },
+  }
 
   get visible() {
     return !this.router.currentRouteName.startsWith("wizard.");
-  },
+  }
 
   @discourseComputed(
     "site.isReadOnly",
@@ -183,13 +186,11 @@ export default Component.extend({
         return false;
       }
     });
-  },
+  }
 
   @action
   dismissNotice(notice) {
-    if (notice.options.onDismiss) {
-      notice.options.onDismiss(notice);
-    }
+    notice.options.onDismiss?.(notice);
 
     if (notice.options.persistentDismiss) {
       this.keyValueStore.set({
@@ -202,26 +203,21 @@ export default Component.extend({
     if (alert) {
       alert.style.display = "none";
     }
-  },
+  }
 
   @bind
   _handleLogsNoticeUpdate() {
-    const { logsNoticeService } = this;
     const logNotice = Notice.create({
       text: htmlSafe(this.logsNoticeService.message),
       id: "alert-logs-notice",
       options: {
         dismissable: true,
         persistentDismiss: false,
-        visibility() {
-          return !logsNoticeService.hidden;
-        },
-        onDismiss() {
-          logsNoticeService.set("text", "");
-        },
+        visibility: () => !this.logsNoticeService.hidden,
+        onDismiss: () => this.logsNoticeService.set("text", ""),
       },
     });
 
     this.set("logNotice", logNotice);
-  },
-});
+  }
+}
