@@ -22,7 +22,6 @@ const KNOWN_LEGACY_MODALS = [
   "group-default-notifications",
   "reject-reason-reviewable",
   "reorder-categories",
-  "request-group-membership-form",
 ];
 
 const LEGACY_OPTS = new Set([
