@@ -107,6 +107,7 @@ export default class ComposerService extends Service {
   @service currentUser;
   @service dialog;
   @service keyValueStore;
+  @service messageBus;
   @service modal;
   @service router;
   @service site;
