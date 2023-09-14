@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "postinstall": "patch-package"
+    "postinstall": "./run-patch-package"
   },
   "workspaces": [
     "admin",
