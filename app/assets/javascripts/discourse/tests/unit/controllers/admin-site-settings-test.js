@@ -40,6 +40,11 @@ module("Unit | Controller | admin-site-settings", function (hooks) {
             value: "",
             setting: "pending_users_reminder_delay_minutes",
           }),
+          SiteSetting.create({
+            description: "",
+            value: "",
+            setting: "min_personal_message_post_length",
+          }),
         ],
       },
     ];
@@ -58,5 +63,13 @@ module("Unit | Controller | admin-site-settings", function (hooks) {
     results = controller.performSearch("digest", settings2);
     assert.deepEqual(results[0].siteSettings.length, 1);
     assert.deepEqual(results[0].siteSettings[0].setting, "digest_logo");
+
+    // ensures fuzzy search limiter doesn't limit too much
+    results = controller.performSearch("min length", settings2);
+    assert.strictEqual(results[0].siteSettings.length, 1);
+    assert.strictEqual(
+      results[0].siteSettings[0].setting,
+      "min_personal_message_post_length"
+    );
   });
 });
