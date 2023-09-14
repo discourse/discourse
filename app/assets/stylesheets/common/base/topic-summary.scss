@@ -103,6 +103,9 @@
       }
       &.show {
         animation: appear 0.5s cubic-bezier(0.445, 0.05, 0.55, 0.95) 0s forwards;
+        @media (prefers-reduced-motion) {
+          animation-duration: 0s;
+        }
       }
       @media (prefers-reduced-motion: no-preference) {
         &.blink {

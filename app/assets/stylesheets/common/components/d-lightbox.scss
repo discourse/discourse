@@ -727,6 +727,9 @@ html.has-lightbox {
   &__main-title {
     @extend %lightbox-animation-base;
     animation-name: lightbox-fade-in;
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
   }
 
   &__loading-spinner {
@@ -736,6 +739,9 @@ html.has-lightbox {
 
   &.will-close &__content {
     animation-name: lightbox-fade-out;
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
   }
 }
 
