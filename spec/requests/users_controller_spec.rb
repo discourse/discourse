@@ -5862,6 +5862,7 @@ RSpec.describe UsersController do
         sign_in(user1)
         stub_secure_session_confirmed
       end
+
       context "when user has a registered totp and security key" do
         before do
           _totp_second_factor = Fabricate(:user_second_factor_totp, user: user1)
@@ -5895,6 +5896,177 @@ RSpec.describe UsersController do
             expect(user1.passkey_credential_ids.length).to eq(1)
           end
         end
+      end
+    end
+  end
+
+  describe "#create_passkey" do
+    before { SiteSetting.experimental_passkeys = true }
+
+    it "fails if user is not logged in" do
+      stub_secure_session_confirmed
+      post "/u/create_passkey.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "stores the challenge in the session and returns challenge data, user id, and supported algorithms" do
+      sign_in(user1)
+      stub_secure_session_confirmed
+      post "/u/create_passkey.json"
+
+      secure_session = read_secure_session
+      response_parsed = response.parsed_body
+      expect(response_parsed["challenge"]).to eq(DiscourseWebauthn.challenge(user1, secure_session))
+      expect(response_parsed["rp_id"]).to eq(DiscourseWebauthn.rp_id)
+      expect(response_parsed["rp_name"]).to eq(DiscourseWebauthn.rp_name)
+      expect(response_parsed["user_secure_id"]).to eq(
+        user1.reload.create_or_fetch_secure_identifier,
+      )
+      expect(response_parsed["supported_algorithms"]).to eq(
+        ::DiscourseWebauthn::SUPPORTED_ALGORITHMS,
+      )
+    end
+
+    context "if the user has a passkey already" do
+      fab!(:user_security_key) { Fabricate(:passkey_with_random_credential, user: user1) }
+
+      it "returns existing active credentials" do
+        sign_in(user1)
+        stub_secure_session_confirmed
+        post "/u/create_passkey.json"
+
+        response_parsed = response.parsed_body
+        expect(response_parsed["existing_passkey_credential_ids"]).to eq(
+          [user_security_key.credential_id],
+        )
+      end
+    end
+  end
+
+  describe "#rename_passkey" do
+    before { SiteSetting.experimental_passkeys = true }
+
+    it "fails if no user is logged in" do
+      post "/u/rename_passkey/NONE.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "fails if no name parameter is provided" do
+      sign_in(user1)
+      post "/u/rename_passkey/ID.json"
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"][0]).to eq(
+        "param is missing or the value is empty: name",
+      )
+    end
+
+    it "fails if key is not present" do
+      sign_in(user1)
+      post "/u/rename_passkey/ID.json", params: { name: "new name" }
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"][0]).to include("Discourse::InvalidParameters")
+    end
+
+    context "if the user has a passkey" do
+      fab!(:passkey) { Fabricate(:passkey_with_random_credential, user: user1) }
+
+      it "works" do
+        sign_in(user1)
+        post "/u/rename_passkey/#{passkey.id}.json", params: { name: "new name" }
+        response_parsed = response.parsed_body
+
+        expect(response.status).to eq(200)
+        expect(passkey.reload.name).to eq("new name")
+      end
+    end
+  end
+
+  describe "#delete_passkey" do
+    before { SiteSetting.experimental_passkeys = true }
+
+    it "fails if user is not logged in" do
+      delete "/u/delete_passkey/ID.json"
+      expect(response.status).to eq(403)
+    end
+
+    it "fails if key is not present" do
+      sign_in(user1)
+      delete "/u/delete_passkey/12.json"
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"][0]).to include("Discourse::InvalidParameters")
+    end
+
+    context "if the user has a passkey" do
+      fab!(:passkey) { Fabricate(:passkey_with_random_credential, user: user1) }
+
+      it "works" do
+        sign_in(user1)
+        delete "/u/delete_passkey/#{passkey.id}.json"
+        expect(response.status).to eq(200)
+        expect(user1.passkey_credential_ids).to eq([])
+      end
+
+      it "does not let another user delete a passkey associated with another user" do
+        sign_in(admin)
+        delete "/u/delete_passkey/#{passkey.id}.json"
+        expect(response.status).to eq(400)
+        expect(response.parsed_body["errors"][0]).to include("Discourse::InvalidParameters")
+      end
+    end
+  end
+
+  describe "#register_passkey" do
+    before { SiteSetting.experimental_passkeys = true }
+
+    it "fails if user is not logged in" do
+      stub_secure_session_confirmed
+      post "/u/register_passkey.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    context "with a valid key" do
+      let(:attestation) do
+        "o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YVikSZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2NFAAAAAK3OAAI1vMYKZIsLJfHwVQMAICRXq4sFZ9XpWZOzfJ8EguJmoEPMzNVyFMUWQfT5u1QzpQECAyYgASFYILjOiAHAwNrXkCk/tmyYRiE87QyV/15wUvhcXhr1JfwtIlggClQywgQvSxTsqV/FSK0cNHTTmuwfzzREqE6eLDmPxmI="
+      end
+      let(:valid_client_param) { passkey_client_data_param("webauthn.create") }
+      let(:invalid_client_param) { passkey_client_data_param("webauthn.get") }
+
+      before do
+        sign_in(user1)
+        stub_secure_session_confirmed
+        simulate_localhost_passkey_challenge
+      end
+
+      it "registers the passkey" do
+        post "/u/register_passkey.json",
+             params: {
+               name: "My Passkey",
+               attestation: attestation,
+               clientData: Base64.encode64(valid_client_param.to_json),
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["name"]).to eq("My Passkey")
+        expect(user1.passkey_credential_ids).to eq([valid_passkey_data[:credential_id]])
+      end
+
+      it "does not register a passkey with the wrong webauthn type" do
+        post "/u/register_passkey.json",
+             params: {
+               name: "My Passkey",
+               attestation: attestation,
+               clientData: Base64.encode64(invalid_client_param.to_json),
+             }
+
+        expect(response.status).to eq(401)
+        expect(response.parsed_body["errors"][0]).to eq(
+          I18n.t("webauthn.validation.invalid_type_error"),
+        )
       end
     end
   end
