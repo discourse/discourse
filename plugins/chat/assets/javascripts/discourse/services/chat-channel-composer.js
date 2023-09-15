@@ -5,6 +5,7 @@ import { tracked } from "@glimmer/tracking";
 
 export default class ChatChannelComposer extends Service {
   @service chat;
+  @service chatApi;
   @service currentUser;
   @service router;
   @service("chat-thread-composer") threadComposer;
@@ -54,7 +55,15 @@ export default class ChatChannelComposer extends Service {
 
     if (message.channel.threadingEnabled) {
       if (!message.thread?.id) {
-        message.thread = message.channel.createStagedThread(message);
+        const threadObject = await this.chatApi.createThread(
+          message.channel.id,
+          message.id
+        );
+
+        message.thread = message.channel.threadsManager.add(
+          message.channel,
+          threadObject
+        );
       }
 
       this.reset(message.channel);

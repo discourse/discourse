@@ -2,7 +2,6 @@
   class={{concat-class
     "chat-thread"
     (if this.messagesLoader.loading "loading")
-    (if @thread.staged "staged")
   }}
   data-id={{@thread.id}}
   {{did-insert this.setUploadDropZone}}

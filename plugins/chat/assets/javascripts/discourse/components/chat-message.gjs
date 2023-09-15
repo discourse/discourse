@@ -460,7 +460,7 @@ export default class ChatMessage extends Component {
 
   @action
   onLongPressStart(element, event) {
-    if (!this.args.message.expanded) {
+    if (!this.args.message.expanded || !this.args.message.persisted) {
       return;
     }
 
