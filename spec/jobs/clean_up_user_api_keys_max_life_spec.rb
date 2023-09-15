@@ -15,9 +15,9 @@ RSpec.describe Jobs::CleanUpUserApiKeysMaxLife do
 
       expect { described_class.new.execute({}) }.to change { older_key.reload.revoked_at }.from(
         nil,
-      ).to(Time.current).and not_change { newer_key.reload.revoked_at }.and not_change {
-                    revoked_key.reload.revoked_at
-                  }
+      ).to(be_within_one_second_of Time.current).and not_change {
+              newer_key.reload.revoked_at
+            }.and not_change { revoked_key.reload.revoked_at }
     end
   end
 end
