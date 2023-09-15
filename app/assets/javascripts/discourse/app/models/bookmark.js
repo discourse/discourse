@@ -89,10 +89,13 @@ const Bookmark = RestModel.extend({
 
   @discourseComputed("bumpedAt", "createdAt")
   bumpedAtTitle(bumpedAt, createdAt) {
-    return I18n.t("topic.bumped_at_title", {
-      createdAtDate: longDate(createdAt),
-      bumpedAtDate: longDate(bumpedAt),
-    });
+    return bumpedAt.toISOString().slice(0, 19) !==
+      createdAt.toISOString().slice(0, 19) // excludes milliseconds
+      ? `${I18n.t("topic.created_at", { date: longDate(createdAt) })}\n${I18n.t(
+          "topic.bumped_at",
+          { date: longDate(bumpedAt) }
+        )}`
+      : I18n.t("topic.created_at", { date: longDate(createdAt) });
   },
 
   @discourseComputed("created_at")
