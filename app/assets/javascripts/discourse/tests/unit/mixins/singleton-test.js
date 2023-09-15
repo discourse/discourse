@@ -1,8 +1,11 @@
 import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import EmberObject from "@ember/object";
 import Singleton from "discourse/mixins/singleton";
 
-module("Unit | Mixin | singleton", function () {
+module("Unit | Mixin | singleton", function (hooks) {
+  setupTest(hooks);
+
   test("current", function (assert) {
     let DummyModel = EmberObject.extend({});
     DummyModel.reopenClass(Singleton);

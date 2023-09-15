@@ -1,7 +1,10 @@
 import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import Columns from "discourse/lib/columns";
 
 module("Unit | Columns", function (hooks) {
+  setupTest(hooks);
+
   hooks.afterEach(function () {
     document.getElementById("qunit-fixture").innerHTML = "";
   });

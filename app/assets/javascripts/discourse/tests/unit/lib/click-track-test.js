@@ -1,4 +1,5 @@
 import { fixture, logIn } from "discourse/tests/helpers/qunit-helpers";
+import { setupTest } from "ember-qunit";
 import { module, skip, test } from "qunit";
 import ClickTrack from "discourse/lib/click-track";
 import DiscourseURL from "discourse/lib/url";
@@ -14,6 +15,8 @@ function generateClickEventOn(selector) {
 }
 
 module("Unit | Utility | click-track", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     logIn();
 
