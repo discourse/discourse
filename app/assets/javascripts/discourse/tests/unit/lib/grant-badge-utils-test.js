@@ -1,96 +1,104 @@
 import { module, test } from "qunit";
-import Badge from "discourse/models/badge";
+import { setupTest } from "ember-qunit";
+import { getOwner } from "@ember/application";
 import {
   grantableBadges,
   isBadgeGrantable,
 } from "discourse/lib/grant-badge-utils";
+
 module("Unit | Utility | Grant Badge", function (hooks) {
-  hooks.beforeEach(() => {
-    const firstBadge = Badge.create({
+  setupTest(hooks);
+
+  hooks.beforeEach(function () {
+    const store = getOwner(this).lookup("service:store");
+    this.firstBadge = store.createRecord("badge", {
       id: 3,
       name: "A Badge",
       enabled: true,
       manually_grantable: true,
     });
-    const middleBadge = Badge.create({
+    this.middleBadge = store.createRecord("badge", {
       id: 1,
       name: "My Badge",
       enabled: true,
       manually_grantable: true,
     });
-    const lastBadge = Badge.create({
+    this.lastBadge = store.createRecord("badge", {
       id: 2,
       name: "Zoo Badge",
       enabled: true,
       manually_grantable: true,
       multiple_grant: true,
     });
-    const grantedBadge = Badge.create({
+    this.grantedBadge = store.createRecord("badge", {
       id: 6,
       name: "Grant Badge",
       enabled: true,
       manually_grantable: true,
       multiple_grant: false,
     });
-    const disabledBadge = Badge.create({
+    this.disabledBadge = store.createRecord("badge", {
       id: 4,
       name: "Disabled Badge",
       enabled: false,
       manually_grantable: true,
     });
-    const automaticBadge = Badge.create({
+    this.automaticBadge = store.createRecord("badge", {
       id: 5,
       name: "Automatic Badge",
       enabled: true,
       manually_grantable: false,
     });
+  });
 
+  test("grantableBadges", function (assert) {
     const allBadges = [
-      lastBadge,
-      firstBadge,
-      middleBadge,
-      grantedBadge,
-      disabledBadge,
-      automaticBadge,
+      this.lastBadge,
+      this.firstBadge,
+      this.middleBadge,
+      this.grantedBadge,
+      this.disabledBadge,
+      this.automaticBadge,
     ];
-    const userBadges = [lastBadge, grantedBadge];
+    const userBadges = [this.lastBadge, this.grantedBadge];
+    const sortedNames = [
+      this.firstBadge.name,
+      this.middleBadge.name,
+      this.lastBadge.name,
+    ];
 
-    test("grantableBadges", function (assert) {
-      const sortedNames = [firstBadge.name, middleBadge.name, lastBadge.name];
+    const result = grantableBadges(allBadges, userBadges);
+    const badgeNames = result.map((b) => b.name);
 
-      const result = grantableBadges(allBadges, userBadges);
-      const badgeNames = result.map((b) => b.name);
+    assert.false(
+      badgeNames.includes(this.grantedBadge.name),
+      "excludes already granted badges"
+    );
+    assert.false(
+      badgeNames.includes(this.disabledBadge.name),
+      "excludes disabled badges"
+    );
+    assert.false(
+      badgeNames.includes(this.automaticBadge.name),
+      "excludes automatic badges"
+    );
+    assert.true(
+      badgeNames.includes(this.lastBadge.name),
+      "includes granted badges that can be granted multiple times"
+    );
+    assert.deepEqual(badgeNames, sortedNames, "sorts badges by name");
+  });
 
-      assert.deepEqual(badgeNames, sortedNames, "sorts badges by name");
-      assert.notOk(
-        badgeNames.includes(grantedBadge.name),
-        "excludes already granted badges"
-      );
-      assert.notOk(
-        badgeNames.includes(disabledBadge.name),
-        "excludes disabled badges"
-      );
-      assert.notOk(
-        badgeNames.includes(automaticBadge.name),
-        "excludes automatic badges"
-      );
-      assert.ok(
-        badgeNames.includes(lastBadge.name),
-        "includes granted badges that can be granted multiple times"
-      );
-    });
-
-    test("isBadgeGrantable", function (assert) {
-      const badges = [firstBadge, lastBadge];
-      assert.ok(isBadgeGrantable(firstBadge.id, badges));
-      assert.notOk(
-        isBadgeGrantable(disabledBadge.id, badges),
-        "returns false when badgeId is not that of any badge in availableBadges"
-      );
-      assert.notOk(
-        isBadgeGrantable(firstBadge.id),
-        "returns false if no availableBadges is defined"
-      );
-    });
+  test("isBadgeGrantable", function (assert) {
+    const badges = [this.firstBadge, this.lastBadge];
+    assert.true(isBadgeGrantable(this.firstBadge.id, badges));
+    assert.false(
+      isBadgeGrantable(this.disabledBadge.id, badges),
+      "returns false when badgeId is not that of any badge in availableBadges"
+    );
+    assert.false(
+      isBadgeGrantable(this.firstBadge.id),
+      "returns false if no availableBadges is defined"
+    );
   });
 });
