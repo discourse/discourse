@@ -33,9 +33,6 @@
     }
 
     .chat-channel-title {
-      width: 100%;
-      overflow: hidden;
-
       &__users-count {
         font-size: var(--font-up-2);
         & + .chat-channel-title__name {
