@@ -30,6 +30,10 @@
       transition: margin-right 0.15s ease-out;
       margin-right: 0px !important;
     }
+    &:not(.-animate-reset) {
+      border-top-right-radius: 0.25rem;
+      border-bottom-right-radius: 0.25rem;
+    }
   }
 
   &__action-btn {
