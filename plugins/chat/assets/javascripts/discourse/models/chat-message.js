@@ -70,7 +70,9 @@ export default class ChatMessage {
     this.availableFlags = args.availableFlags || args.available_flags;
     this.hidden = args.hidden || false;
     this.chatWebhookEvent = args.chatWebhookEvent || args.chat_webhook_event;
-    this.createdAt = args.created_at ? new Date(args.created_at) : null;
+    this.createdAt = args.created_at
+      ? new Date(args.created_at)
+      : new Date(args.createdAt);
     this.deletedById = args.deletedById || args.deleted_by_id;
     this._deletedAt = args.deletedAt || args.deleted_at;
     this.expanded =
