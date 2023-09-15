@@ -85,11 +85,13 @@ RSpec.describe ApiKey do
 
     older_key = Fabricate(:api_key, created_at: 3.days.ago)
     newer_key = Fabricate(:api_key, created_at: 1.days.ago)
+    revoked_key = Fabricate(:api_key, created_at: 3.days.ago, revoked_at: 1.day.ago)
 
-    ApiKey.revoke_max_life_keys!
-
-    expect(older_key.reload.revoked_at).to eq_time(Time.zone.now)
-    expect(newer_key.reload.revoked_at).to eq(nil)
+    expect { ApiKey.revoke_max_life_keys! }.to change { older_key.reload.revoked_at }.from(nil).to(
+      Time.zone.now,
+    ).and not_change { newer_key.reload.revoked_at }.and not_change {
+                  revoked_key.reload.revoked_at
+                }
   end
 
   describe "API Key scope mappings" do
