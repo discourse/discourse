@@ -39,6 +39,7 @@
   &__action-btn {
     z-index: 1;
     display: flex;
+    justify-content: flex-end;
     align-items: center;
     position: absolute;
     top: 0px;
@@ -49,11 +50,10 @@
     color: var(--primary-very-low);
 
     .d-icon {
-      transform-origin: 50% 50%;
+      transform-origin: center center;
       transform-box: fill-box;
       transition: scale 0.2s ease-out;
-      margin: 0 1rem 0 auto;
-      padding-left: 1rem;
+      margin-inline: 0 1.5rem;
     }
 
     &.-not-at-threshold {
