@@ -69,8 +69,9 @@ class Chat::Api::ChannelThreadsController < Chat::ApiController
       end
       on_failed_policy(:threading_enabled_for_channel) { raise Discourse::NotFound }
       on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
-      on_failed_step(:create) do
-        render json: failed_json.merge(errors: [result["result.step.create"].error]), status: 422
+      on_failed_step(:create_thread) do
+        render json: failed_json.merge(errors: [result["result.step.create_thread"].error]),
+               status: 422
       end
     end
   end
