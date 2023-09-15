@@ -50,7 +50,7 @@
     color: var(--primary-very-low);
 
     .d-icon {
-      transform-origin: center center;
+      transform-origin: 50% 50%;
       transform-box: fill-box;
       transition: scale 0.2s ease-out;
       margin-inline: 0 1.5rem;
