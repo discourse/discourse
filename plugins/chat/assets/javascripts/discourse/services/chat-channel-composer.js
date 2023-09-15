@@ -9,6 +9,7 @@ export default class ChatChannelComposer extends Service {
   @service currentUser;
   @service router;
   @service("chat-thread-composer") threadComposer;
+  @service loadingSlider;
 
   @tracked message;
   @tracked textarea;
@@ -55,10 +56,12 @@ export default class ChatChannelComposer extends Service {
 
     if (message.channel.threadingEnabled) {
       if (!message.thread?.id) {
+        this.loadingSlider.transitionStarted();
         const threadObject = await this.chatApi.createThread(
           message.channel.id,
           message.id
         );
+        this.loadingSlider.transitionEnded();
 
         message.thread = message.channel.threadsManager.add(
           message.channel,
