@@ -89,13 +89,17 @@ const Bookmark = RestModel.extend({
 
   @discourseComputed("bumpedAt", "createdAt")
   bumpedAtTitle(bumpedAt, createdAt) {
-    return bumpedAt.toISOString().slice(0, 19) !==
-      createdAt.toISOString().slice(0, 19) // excludes milliseconds
-      ? `${I18n.t("topic.created_at", { date: longDate(createdAt) })}\n${I18n.t(
-          "topic.bumped_at",
-          { date: longDate(bumpedAt) }
-        )}`
-      : I18n.t("topic.created_at", { date: longDate(createdAt) });
+    const BUMPED_FORMAT = "YYYY-MM-DDTHH:mm:ss";
+    if (moment(bumpedAt).isValid() && moment(createdAt).isValid()) {
+      const bumpedAtStr = moment(bumpedAt).format(BUMPED_FORMAT);
+      const createdAtStr = moment(createdAt).format(BUMPED_FORMAT);
+
+      return bumpedAtStr !== createdAtStr
+        ? `${I18n.t("topic.created_at", {
+            date: longDate(createdAt),
+          })}\n${I18n.t("topic.bumped_at", { date: longDate(bumpedAt) })}`
+        : I18n.t("topic.created_at", { date: longDate(createdAt) });
+    }
   },
 
   @discourseComputed("created_at")
