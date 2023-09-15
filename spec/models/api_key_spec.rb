@@ -88,7 +88,7 @@ RSpec.describe ApiKey do
     revoked_key = Fabricate(:api_key, created_at: 3.days.ago, revoked_at: 1.day.ago)
 
     expect { ApiKey.revoke_max_life_keys! }.to change { older_key.reload.revoked_at }.from(nil).to(
-      Time.zone.now,
+      Time.current,
     ).and not_change { newer_key.reload.revoked_at }.and not_change {
                   revoked_key.reload.revoked_at
                 }
