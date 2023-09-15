@@ -2144,7 +2144,6 @@ developer:
   experimental_form_templates:
     client: true
     default: false
-    hidden: true
   experimental_new_new_view_groups:
     client: true
     type: group_list
