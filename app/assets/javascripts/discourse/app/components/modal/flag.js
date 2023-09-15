@@ -67,6 +67,10 @@ export default class Flag extends Component {
     );
   }
 
+  get showDeleteSpammer() {
+    return this.spammerDetails?.canDelete && this.selected?.name_key === "spam";
+  }
+
   get submitLabel() {
     if (this.selected?.is_custom_flag) {
       return this.args.model.flagTarget.customSubmitLabel();
