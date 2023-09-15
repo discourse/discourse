@@ -57,7 +57,6 @@ export default class ChatMessage {
   @tracked _thread;
 
   constructor(channel, args = {}) {
-    // when modifying constructor, be sure to update duplicate function accordingly
     this.id = args.id;
     this.channel = channel;
     this.manager = args.manager;
@@ -99,35 +98,8 @@ export default class ChatMessage {
     }
   }
 
-  duplicate() {
-    // This is important as a message can exist in the context of a channel or a thread
-    // The current strategy is to have a different message object in each cases to avoid
-    // side effects
-    const message = new ChatMessage(this.channel, {
-      id: this.id,
-      newest: this.newest,
-      staged: this.staged,
-      edited: this.edited,
-      availableFlags: this.availableFlags,
-      hidden: this.hidden,
-      chatWebhookEvent: this.chatWebhookEvent,
-      createdAt: this.createdAt,
-      deletedAt: this.deletedAt,
-      excerpt: this.excerpt,
-      reviewableId: this.reviewableId,
-      userFlagStatus: this.userFlagStatus,
-      draft: this.draft,
-      message: this.message,
-      cooked: this.cooked,
-    });
-
-    message.reactions = this.reactions;
-    message.user = this.user;
-    message.inReplyTo = this.inReplyTo;
-    message.bookmark = this.bookmark;
-    message.uploads = this.uploads;
-
-    return message;
+  get persisted() {
+    return !!this.id && !this.staged;
   }
 
   get replyable() {

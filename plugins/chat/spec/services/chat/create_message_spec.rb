@@ -69,12 +69,7 @@ RSpec.describe Chat::CreateMessage do
       end
 
       it "publishes the new message" do
-        Chat::Publisher.expects(:publish_new!).with(
-          channel,
-          instance_of(Chat::Message),
-          nil,
-          staged_thread_id: nil,
-        )
+        Chat::Publisher.expects(:publish_new!).with(channel, instance_of(Chat::Message), nil)
         result
       end
 
