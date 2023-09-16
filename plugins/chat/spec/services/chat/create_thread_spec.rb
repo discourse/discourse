@@ -108,7 +108,7 @@ RSpec.describe Chat::CreateThread do
       end
 
       it "uses the existing thread" do
-        expect { result }.to change { Chat::Thread.count }.by(0)
+        expect { result }.not_to change { Chat::Thread.count }
       end
     end
   end
