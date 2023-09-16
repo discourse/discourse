@@ -97,5 +97,19 @@ RSpec.describe Chat::CreateThread do
 
       it { is_expected.to fail_a_policy(:threading_enabled_for_channel) }
     end
+
+    context "when a thread is already present" do
+      before do
+        Chat::CreateThread.call(
+          guardian: current_user.guardian,
+          original_message_id: message_1.id,
+          channel_id: channel_1.id,
+        )
+      end
+
+      it "uses the existing thread" do
+        expect { result }.to change { Chat::Thread.count }.by(0)
+      end
+    end
   end
 end
