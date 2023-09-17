@@ -51,7 +51,7 @@
           "type": "integer"
         },
         "score": {
-          "type": ""
+          "type": "number"
         },
         "yours": {
           "type": "boolean"
