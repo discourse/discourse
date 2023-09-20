@@ -100,7 +100,7 @@
     "select-kit": "1.0.0",
     "sinon": "^16.0.0",
     "source-map": "^0.7.4",
-    "terser": "^5.19.4",
+    "terser": "^5.20.0",
     "tippy.js": "^6.3.7",
     "truth-helpers": "1.0.0",
     "util": "^0.12.5",
