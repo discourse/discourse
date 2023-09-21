@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "ember-cli-babel": "^8.2.0",
-    "ember-cli-htmlbars": "^6.3.0"
+    "ember-cli-htmlbars": "^6.3.0",
+    "ember-template-imports": "^4.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.23.3",
