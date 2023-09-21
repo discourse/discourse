@@ -4857,6 +4857,11 @@ en:
               list: List latest posts and private posts. RSS is also supported.
             tags:
               list: List tags.
+            tag_groups:
+              list: Get a list of tag groups.
+              show: Get a single tag group by id.
+              create: Creates a tag group.
+              update: Updates a tag group specified by id.
             categories:
               list: Get a list of categories.
               show: Get a single category by id.
