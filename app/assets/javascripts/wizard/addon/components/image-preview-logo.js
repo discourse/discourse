@@ -1,4 +1,4 @@
-import { observes } from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
 import { drawHeader } from "wizard/lib/preview";
 import WizardPreviewBaseComponent from "./wizard-preview-base";
 
@@ -7,13 +7,23 @@ export default WizardPreviewBaseComponent.extend({
   height: 100,
   image: null,
 
-  @observes("field.value")
+  didInsertElement() {
+    this._super(...arguments);
+    this.field.addListener(this.imageChanged);
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+    this.field.removeListener(this.imageChanged);
+  },
+
+  @action
   imageChanged() {
     this.reload();
   },
 
   images() {
-    return { image: this.get("field.value") };
+    return { image: this.field.value };
   },
 
   paint({ ctx, colors, font, width, height }) {

@@ -33,7 +33,7 @@
           {{#if this.includeSidebar}}
             <div class="wizard-container__sidebar">
               {{#each this.step.fields as |field|}}
-                {{#if field.show_in_sidebar}}
+                {{#if field.showInSidebar}}
                   <WizardField
                     @field={{field}}
                     @step={{this.step}}
@@ -45,7 +45,7 @@
           {{/if}}
           <div class="wizard-container__fields">
             {{#each this.step.fields as |field|}}
-              {{#unless field.show_in_sidebar}}
+              {{#unless field.showInSidebar}}
                 <WizardField
                   @field={{field}}
                   @step={{this.step}}

@@ -1,11 +1,11 @@
+/*eslint no-bitwise:0 */
 import Component from "@ember/component";
+import { action } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { Promise } from "rsvp";
 import PreloadStore from "discourse/lib/preload-store";
-/*eslint no-bitwise:0 */
 import getUrl from "discourse-common/lib/get-url";
-import { observes } from "discourse-common/utils/decorators";
 import { darkLightDiff, drawHeader } from "wizard/lib/preview";
 
 export const LOREM = `
@@ -61,22 +61,47 @@ export default Component.extend({
     const c = this.element.querySelector("canvas");
     this.ctx = c.getContext("2d");
     this.ctx.scale(scale, scale);
+
+    if (this.step) {
+      this.step.findField("color_scheme")?.addListener(this.themeChanged);
+      this.step.findField("homepage_style")?.addListener(this.themeChanged);
+      this.step.findField("body_font")?.addListener(this.themeBodyFontChanged);
+      this.step
+        .findField("heading_font")
+        ?.addListener(this.themeHeadingFontChanged);
+    }
+
     this.reload();
   },
 
-  @observes("step.fieldsById.{color_scheme,homepage_style}.value")
+  willDestroyElement() {
+    this._super(...arguments);
+
+    if (this.step) {
+      this.step.findField("color_scheme")?.removeListener(this.themeChanged);
+      this.step.findField("homepage_style")?.removeListener(this.themeChanged);
+      this.step
+        .findField("body_font")
+        ?.removeListener(this.themeBodyFontChanged);
+      this.step
+        .findField("heading_font")
+        ?.removeListener(this.themeHeadingFontChanged);
+    }
+  },
+
+  @action
   themeChanged() {
     this.triggerRepaint();
   },
 
-  @observes("step.fieldsById.{body_font}.value")
+  @action
   themeBodyFontChanged() {
     if (!this.loadingFontVariants) {
       this.loadFontVariants(this.wizard.font);
     }
   },
 
-  @observes("step.fieldsById.{heading_font}.value")
+  @action
   themeHeadingFontChanged() {
     if (!this.loadingFontVariants) {
       this.loadFontVariants(this.wizard.headingFont);

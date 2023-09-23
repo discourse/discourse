@@ -22,12 +22,16 @@ export default WizardPreviewBaseComponent.extend({
 
   init() {
     this._super(...arguments);
-    this.wizard.on("homepageStyleChanged", this.onHomepageStyleChange);
+    this.step
+      .findField("homepage_style")
+      ?.addListener(this.onHomepageStyleChange);
   },
 
   willDestroy() {
     this._super(...arguments);
-    this.wizard.off("homepageStyleChanged", this.onHomepageStyleChange);
+    this.step
+      .findField("homepage_style")
+      ?.removeListener(this.onHomepageStyleChange);
   },
 
   didInsertElement() {
@@ -104,7 +108,7 @@ export default WizardPreviewBaseComponent.extend({
 
   images() {
     return {
-      logo: this.wizard.getLogoUrl(),
+      logo: this.wizard.logoUrl,
       avatar: "/images/wizard/trout.png",
     };
   },

@@ -15,7 +15,7 @@ export default WizardPreviewBaseComponent.extend({
 
   images() {
     return {
-      logo: this.wizard.getLogoUrl(),
+      logo: this.wizard.logoUrl,
       avatar: "/images/wizard/trout.png",
     };
   },
@@ -23,25 +23,25 @@ export default WizardPreviewBaseComponent.extend({
   paint({ ctx, colors, font, width, height }) {
     this.drawFullHeader(colors, font, this.logo);
 
-    if (this.get("step.fieldsById.homepage_style.value") === "latest") {
+    const homepageStyle = this.getHomepageStyle();
+
+    if (homepageStyle === "latest") {
       this.drawPills(colors, font, height * 0.15);
       this.renderLatest(ctx, colors, font, width, height);
     } else if (
       ["categories_only", "categories_with_featured_topics"].includes(
-        this.get("step.fieldsById.homepage_style.value")
+        homepageStyle
       )
     ) {
       this.drawPills(colors, font, height * 0.15, { categories: true });
       this.renderCategories(ctx, colors, font, width, height);
     } else if (
       ["categories_boxes", "categories_boxes_with_topics"].includes(
-        this.get("step.fieldsById.homepage_style.value")
+        homepageStyle
       )
     ) {
       this.drawPills(colors, font, height * 0.15, { categories: true });
-      const topics =
-        this.get("step.fieldsById.homepage_style.value") ===
-        "categories_boxes_with_topics";
+      const topics = homepageStyle === "categories_boxes_with_topics";
       this.renderCategoriesBoxes(ctx, colors, font, width, height, { topics });
     } else {
       this.drawPills(colors, font, height * 0.15, { categories: true });
@@ -146,9 +146,10 @@ export default WizardPreviewBaseComponent.extend({
     ctx.font = `${bodyFontSize * 0.9}em '${font}'`;
     ctx.fillStyle = textColor;
     ctx.fillText("Category", cols[0], headingY);
-    if (
-      this.get("step.fieldsById.homepage_style.value") === "categories_only"
-    ) {
+
+    const homepageStyle = this.getHomepageStyle();
+
+    if (homepageStyle === "categories_only") {
       ctx.fillText("Topics", cols[4], headingY);
     } else {
       ctx.fillText("Topics", cols[1], headingY);
@@ -183,10 +184,7 @@ export default WizardPreviewBaseComponent.extend({
       ctx.lineTo(margin, y + categoryHeight);
       ctx.stroke();
 
-      if (
-        this.get("step.fieldsById.homepage_style.value") ===
-        "categories_with_featured_topics"
-      ) {
+      if (homepageStyle === "categories_with_featured_topics") {
         ctx.font = `${bodyFontSize}em '${font}'`;
         ctx.fillText(
           Math.floor(Math.random() * 90) + 10,
@@ -204,10 +202,7 @@ export default WizardPreviewBaseComponent.extend({
     });
 
     // Featured Topics
-    if (
-      this.get("step.fieldsById.homepage_style.value") ===
-      "categories_with_featured_topics"
-    ) {
+    if (homepageStyle === "categories_with_featured_topics") {
       const topicHeight = height / 15;
 
       y = headingY + bodyFontSize * 22;
@@ -249,10 +244,7 @@ export default WizardPreviewBaseComponent.extend({
     ctx.fillStyle = textColor;
     ctx.fillText("Category", cols[0], headingY);
     ctx.fillText("Topics", cols[1], headingY);
-    if (
-      this.get("step.fieldsById.homepage_style.value") ===
-      "categories_and_latest_topics"
-    ) {
+    if (this.getHomepageStyle() === "categories_and_latest_topics") {
       ctx.fillText("Latest", cols[2], headingY);
     } else {
       ctx.fillText("Top", cols[2], headingY);
@@ -344,6 +336,10 @@ export default WizardPreviewBaseComponent.extend({
 
       drawLine(width / 2, y);
     });
+  },
+
+  getHomepageStyle() {
+    return this.step.valueFor("homepage_style");
   },
 
   getTitles() {

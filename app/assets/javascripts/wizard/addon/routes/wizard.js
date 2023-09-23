@@ -1,10 +1,10 @@
 import Route from "@ember/routing/route";
 import DisableSidebar from "discourse/mixins/disable-sidebar";
-import { findWizard } from "wizard/models/wizard";
+import Wizard from "wizard/models/wizard";
 
 export default Route.extend(DisableSidebar, {
   model() {
-    return findWizard();
+    return Wizard.load();
   },
 
   activate() {

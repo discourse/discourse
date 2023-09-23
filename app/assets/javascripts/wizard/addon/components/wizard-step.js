@@ -72,7 +72,7 @@ export default Component.extend({
     return step;
   },
 
-  @observes("step.id")
+  @observes("step")
   _stepChanged() {
     this.set("saving", false);
     this.autoFocus();
@@ -90,7 +90,7 @@ export default Component.extend({
 
   @discourseComputed("step.fields")
   includeSidebar(fields) {
-    return !!fields.findBy("show_in_sidebar");
+    return !!fields.findBy("showInSidebar");
   },
 
   autoFocus() {
@@ -127,7 +127,7 @@ export default Component.extend({
     const step = this.step;
     step.validate();
 
-    if (step.get("valid")) {
+    if (step.valid) {
       this.set("saving", true);
 
       step
@@ -174,7 +174,7 @@ export default Component.extend({
       }
     }
 
-    if (step.get("valid")) {
+    if (step.valid) {
       this.advance();
     } else {
       this.autoFocus();

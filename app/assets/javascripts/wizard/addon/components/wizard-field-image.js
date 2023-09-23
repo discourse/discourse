@@ -30,7 +30,7 @@ export default Component.extend({
   },
 
   setupUploads() {
-    const id = this.get("field.id");
+    const id = this.field.id;
     this._uppyInstance = new Uppy({
       id: `wizard-field-image-${id}`,
       meta: { upload_type: `wizard_${id}` },
