@@ -1,6 +1,7 @@
 {{#if this.value}}
+  <span class="op">{{if this.isNegative "-" "+"}}</span>
   <span class="score-value">
-    <span class="score-number">{{float this.value}}</span>
+    <span class="score-number">{{abs (float this.value)}}</span>
     {{#if this.label}}
       <span
         title={{i18n (concat "review.explain." this.label ".title")}}
@@ -10,5 +11,4 @@
       </span>
     {{/if}}
   </span>
-  <span class="op">+</span>
 {{/if}}
