@@ -1,10 +1,11 @@
 import { inject as service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
 
-export default DiscourseRoute.extend({
-  router: service(),
+export default class WizardIndexRoute extends DiscourseRoute {
+  @service router;
+
   beforeModel() {
-    const appModel = this.modelFor("wizard");
-    this.router.replaceWith("wizard.step", appModel.start);
-  },
-});
+    const wizard = this.modelFor("wizard");
+    this.router.replaceWith("wizard.step", wizard.start);
+  }
+}
