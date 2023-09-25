@@ -4970,29 +4970,36 @@ en:
         group_user_event:
           name: "Group User Event"
           details: "When a user is added or removed in a group."
-        like_event:
-          name: "Like Event"
-          details: "When a user likes a post."
-=======
-        event_details:
+        topic_event:
+          group_name: "Topic Events"
           topic_created: "Topic is created"
           topic_revised: "Topic is revised"
           topic_edited: "Topic is updated"
           topic_destroyed: "Topic is deleted"
           topic_recovered: "Topic is recovered"
+        post_event:
+          group_name: "Post Events"
           post_created: "Post is created"
           post_edited: "Post is updated"
           post_destroyed: "Post is deleted"
           post_recovered: "Post is recovered"
+        group_event:
+          group_name: "Group Events"
           group_created: "Group is created"
           group_updated: "Group is updated"
           group_destroyed: "Group is deleted"
+        tag_event:
+          group_name: "Tag Events"
           tag_created: "Tag is created"
           tag_updated: "Tag is updated"
           tag_destroyed: "Tag is deleted"
+        category_event:
+          group_name: "Category Events"
           category_created: "Category is created"
           category_updated: "Category is updated"
           category_destroyed: "Category is deleted"
+        user_event:
+          group_name: "User Events"
           user_logged_in: "User logged in"
           user_logged_out: "User logged out"
           user_confirmed_email: "User confirmed e-mail"
@@ -5000,28 +5007,27 @@ en:
           user_approved: "User is approved"
           user_updated: "User is updated"
           user_destroyed: "User is deleted"
+        reviewable_event:
+          group_name: "Reviewable Events"
           reviewable_created: "Reviewable item is ready"
           reviewable_updated: "Reviewable item is updated"
+        user_badge_event:
+          group_name: "Badge Events"
           user_badge_granted: "User badge is granted"
           user_badge_revoked: "User badge is revoked"
-          post_liked: "Like is given"
+        like_event:
+          group_name: "Like Events"
+          post_liked: "When a user likes a post."
+        notification_event:
+          group_name: "Notification Events"
           notification_created: "An user receives a notification in their feed"
+        group_user_event:
+          group_name: "Group User Events"
           user_added_to_group: "An user is added to a group"
           user_removed_from_group: "An user is removed from a group"
+        user_promoted_event:
+          group_name: "User Promoted Events"
           user_promoted: "An user is promoted"
-        groups:
-          topic: "Topic Events"
-          post: "Post Events"
-          user: "User Events"
-          group: "Group Events"
-          category: "Category Events"
-          tag: "Tag Events"
-          reviewable: "Reviewable Events"
-          notification: "Notification Events"
-          user_promoted: "User Promoted Events"
-          user_badge: "Badge Events"
-          group_user: "Group User Events"
-          like: "Like Events"
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"

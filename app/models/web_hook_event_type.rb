@@ -18,6 +18,26 @@ class WebHookEventType < ActiveRecord::Base
   TOPIC_VOTING = 17
   CHAT_MESSAGE = 18
 
+  enum group: {
+         topic: 0,
+         post: 1,
+         user: 2,
+         group: 3,
+         category: 4,
+         tag: 5,
+         reviewable: 6,
+         notification: 7,
+         solved: 8,
+         assign: 9,
+         user_badge: 10,
+         group_user: 11,
+         like: 12,
+         user_promoted: 13,
+         voting: 14,
+         chat: 15,
+       },
+       _scopes: false
+
   TYPES = {
     topic: {
       created: 101,
@@ -99,6 +119,8 @@ class WebHookEventType < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: true
 
+  scope :active_grouped, -> { active.where.not(group: nil).group_by(&:group) }
+
   def self.active
     ids_to_exclude = []
     unless defined?(SiteSetting.solved_enabled) && SiteSetting.solved_enabled
@@ -111,9 +133,8 @@ class WebHookEventType < ActiveRecord::Base
       ids_to_exclude << TYPES[:voting][:voted_unvoted]
     end
     unless defined?(SiteSetting.chat_enabled) && SiteSetting.chat_enabled
-      ids_to_exclude << CHAT_MESSAGE
+      ids_to_exclude << TYPES[:chat][:message]
     end
-
     self.where.not(id: ids_to_exclude)
   end
 end

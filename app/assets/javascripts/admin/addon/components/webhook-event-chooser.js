@@ -3,7 +3,9 @@ import I18n from "I18n";
 
 export default class WebhookEventChooser extends Component {
   get details() {
-    return I18n.t(`admin.web_hooks.event_details.${this.args.type.name}`);
+    return I18n.t(
+      `admin.web_hooks.${this.args.group}_event.${this.args.type.name}`
+    );
   }
 
   get eventTypeExists() {
