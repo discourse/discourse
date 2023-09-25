@@ -7,6 +7,7 @@ import Route from "@ember/routing/route";
 import RestModel from "discourse/models/rest";
 import RestAdapter from "discourse/adapters/rest";
 import Service from "@ember/service";
+import deprecated from "discourse-common/lib/deprecated";
 
 const disableImplicitInjectionsKey = Symbol("DISABLE_IMPLICIT_INJECTIONS");
 
@@ -16,7 +17,7 @@ const disableImplicitInjectionsKey = Symbol("DISABLE_IMPLICIT_INJECTIONS");
  * https://github.com/emberjs/ember.js/blob/22b318a381/packages/%40ember/-internals/metal/lib/injected_property.ts#L37
  *
  */
-function implicitInjectionShim(lookupName, key) {
+function implicitInjectionShim(lookupName, key, deprecationLabel) {
   let overrideKey = `__OVERRIDE_${key}`;
 
   return computed(key, {
@@ -26,6 +27,13 @@ function implicitInjectionShim(lookupName, key) {
       }
       if (this[disableImplicitInjectionsKey]) {
         return undefined;
+      }
+
+      if (deprecationLabel) {
+        deprecated(
+          `Implicit injection for ${key} on '${deprecationLabel}' type is deprecated. Add explicit '@service' injections to the class definition.`,
+          { id: `discourse.implicit-injections.${deprecationLabel}` }
+        );
       }
 
       let owner = getOwner(this) || this.container;
@@ -41,10 +49,10 @@ function implicitInjectionShim(lookupName, key) {
   });
 }
 
-function setInjections(target, injections) {
+function setInjections(target, injections, { deprecationLabel } = {}) {
   const extension = {};
   for (const [key, lookupName] of Object.entries(injections)) {
-    extension[key] = implicitInjectionShim(lookupName, key);
+    extension[key] = implicitInjectionShim(lookupName, key, deprecationLabel);
   }
   EmberObject.reopen.call(target, extension);
 }
@@ -105,14 +113,18 @@ export function registerDiscourseImplicitInjections() {
     ...commonInjections,
   });
 
-  setInjections(Service, {
-    session: "service:session",
-    messageBus: "service:message-bus",
-    siteSettings: "service:site-settings",
-    topicTrackingState: "service:topic-tracking-state",
-    keyValueStore: "service:key-value-store",
-    currentUser: "service:current-user",
-  });
+  setInjections(
+    Service,
+    {
+      session: "service:session",
+      messageBus: "service:message-bus",
+      siteSettings: "service:site-settings",
+      topicTrackingState: "service:topic-tracking-state",
+      keyValueStore: "service:key-value-store",
+      currentUser: "service:current-user",
+    },
+    { deprecationLabel: "service" }
+  );
 
   alreadyRegistered = true;
 }

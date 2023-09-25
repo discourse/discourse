@@ -3,16 +3,19 @@ import { test } from "qunit";
 import RestModel from "discourse/models/rest";
 import Service, { inject as service } from "@ember/service";
 import { getOwner, setOwner } from "@ember/application";
+import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 
 acceptance("Implicit injections shims", function () {
   test("it provides legacy injections on common models", function (assert) {
     const serviceInstance = Service.create();
     setOwner(serviceInstance, getOwner(this));
 
-    assert.strictEqual(
-      serviceInstance.session,
-      getOwner(this).lookup("service:session")
-    );
+    withSilencedDeprecations("discourse.implicit-injections.service", () => {
+      assert.strictEqual(
+        serviceInstance.session,
+        getOwner(this).lookup("service:session")
+      );
+    });
   });
 
   test("it allows overlaying explicit injections", function (assert) {
@@ -22,10 +25,12 @@ acceptance("Implicit injections shims", function () {
     const serviceInstance = MyService.create();
     setOwner(serviceInstance, getOwner(this));
 
-    assert.strictEqual(
-      serviceInstance.session,
-      getOwner(this).lookup("service:session")
-    );
+    withSilencedDeprecations("discourse.implicit-injections.service", () => {
+      assert.strictEqual(
+        serviceInstance.session,
+        getOwner(this).lookup("service:session")
+      );
+    });
   });
 
   test("it allows overriding values by assignment", function (assert) {
