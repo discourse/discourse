@@ -1,7 +1,6 @@
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import I18n from "I18n";
-import { htmlSafe } from "@ember/template";
 import { schedule } from "@ember/runloop";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
@@ -72,19 +71,6 @@ export default Component.extend({
     return step;
   },
 
-  @discourseComputed("step.banner")
-  bannerImage(bannerName) {
-    if (!bannerName) {
-      return;
-    }
-    return bannerName;
-  },
-
-  @discourseComputed()
-  bannerAndDescriptionClass() {
-    return `wizard-container__step-banner`;
-  },
-
   @observes("step.id")
   _stepChanged() {
     this.set("saving", false);
@@ -99,19 +85,6 @@ export default Component.extend({
         this.send("nextStep");
       }
     }
-  },
-
-  @discourseComputed("step.index", "wizard.totalSteps")
-  barStyle(displayIndex, totalSteps) {
-    let ratio = parseFloat(displayIndex) / parseFloat(totalSteps - 1);
-    if (ratio < 0) {
-      ratio = 0;
-    }
-    if (ratio > 1) {
-      ratio = 1;
-    }
-
-    return htmlSafe(`width: ${ratio * 200}px`);
   },
 
   @discourseComputed("step.fields")
