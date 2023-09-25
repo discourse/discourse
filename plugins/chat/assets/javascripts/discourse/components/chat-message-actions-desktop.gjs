@@ -98,7 +98,12 @@ export default class ChatMessageActionsDesktop extends Component {
           }}
             <DropdownSelectBox
               @class="more-buttons secondary-actions"
-              @options={{hash icon="ellipsis-v" placement="left"}}
+              @options={{hash
+                icon="ellipsis-v"
+                placement="left"
+                customStyle="true"
+                btnCustomClasses="btn-flat"
+              }}
               @content={{this.messageInteractor.secondaryActions}}
               @onChange={{this.messageInteractor.handleSecondaryActions}}
             />
