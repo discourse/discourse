@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Chat
-  class DeletedLastMessage < Chat::Message
+  class NullMessage < Chat::Message
     def user
       nil
     end

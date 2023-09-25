@@ -31,7 +31,7 @@ module Chat
                foreign_key: :last_message_id,
                optional: true
     def last_message
-      super || DeletedLastMessage.new
+      super || NullMessage.new
     end
 
     enum :status, { open: 0, read_only: 1, closed: 2, archived: 3 }, scopes: false
