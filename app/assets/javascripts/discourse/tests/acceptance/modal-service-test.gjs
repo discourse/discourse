@@ -54,7 +54,7 @@ acceptance("Modal service: component-based API", function () {
     assert.dom(".d-modal .title h3").hasText("Hello World");
     assert.dom(".d-modal .modal-body").hasText("Modal content is working");
 
-    await click(".modal-outer-container");
+    await click(".modal-backdrop");
     assert.dom(".d-modal").doesNotExist("disappears on click outside");
     assert.deepEqual(
       await promise,

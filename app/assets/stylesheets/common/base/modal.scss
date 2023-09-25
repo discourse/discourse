@@ -1,5 +1,10 @@
 // Modal wrappers
 
+.fixed-modal:not(#discourse-modal) {
+  // new <DModal /> only, not <DModalLegacy />
+  pointer-events: none; // Allow clicks through wrappers so they hit the adjacent backdrop element
+}
+
 .modal-outer-container {
   width: 100%;
   height: 100%;
@@ -12,6 +17,7 @@
 }
 
 .modal-inner-container {
+  pointer-events: auto;
   --modal-max-width: 47em; // set in ems to scale with user font-size
   box-sizing: border-box;
   flex: 0 1 auto;
@@ -84,6 +90,7 @@
 }
 
 .modal-backdrop {
+  user-select: none;
   position: fixed;
   top: 0;
   right: 0;
