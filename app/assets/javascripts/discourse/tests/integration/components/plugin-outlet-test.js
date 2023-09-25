@@ -11,6 +11,7 @@ import Component from "@glimmer/component";
 import templateOnly from "@ember/component/template-only";
 import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
 import { setComponentTemplate } from "@glimmer/manager";
+import sinon from "sinon";
 
 const TEMPLATE_PREFIX = "discourse/plugins/some-plugin/templates/connectors";
 const CLASS_PREFIX = "discourse/plugins/some-plugin/connectors";
@@ -69,6 +70,15 @@ module("Integration | Component | plugin-outlet", function (hooks) {
       `${TEMPLATE_PREFIX}/test-name/conditional-render`,
       hbs`<span class="conditional-render">I only render sometimes</span>`
     );
+
+    registerTemporaryModule(
+      `${TEMPLATE_PREFIX}/outlet-with-default/my-connector`,
+      hbs`<span class='result'>Plugin implementation{{#if @outletArgs.yieldCore}} {{yield}}{{/if}}</span>`
+    );
+    registerTemporaryModule(
+      `${TEMPLATE_PREFIX}/outlet-with-default/clashing-connector`,
+      hbs`This will override my-connector and raise an error`
+    );
   });
 
   test("Renders a template into the outlet", async function (assert) {
@@ -101,6 +111,124 @@ module("Integration | Component | plugin-outlet", function (hooks) {
       "hi!",
       "actions delegate properly"
     );
+  });
+
+  module(
+    "as a wrapper around a default core implementation",
+    function (innerHooks) {
+      innerHooks.beforeEach(function () {
+        this.consoleErrorStub = sinon.stub(console, "error");
+
+        this.set("shouldDisplay", false);
+        this.set("yieldCore", false);
+        this.set("enableClashingConnector", false);
+
+        extraConnectorClass("outlet-with-default/my-connector", {
+          shouldRender(args) {
+            return args.shouldDisplay;
+          },
+        });
+
+        extraConnectorClass("outlet-with-default/clashing-connector", {
+          shouldRender(args) {
+            return args.enableClashingConnector;
+          },
+        });
+
+        this.template = hbs`
+      <PluginOutlet @name="outlet-with-default" @outletArgs={{hash shouldDisplay=this.shouldDisplay yieldCore=this.yieldCore enableClashingConnector=this.enableClashingConnector}}>
+        <span class='result'>Core implementation</span>
+      </PluginOutlet>
+    `;
+      });
+
+      test("Can act as a wrapper around core implementation", async function (assert) {
+        await render(this.template);
+
+        assert.dom(".result").hasText("Core implementation");
+
+        this.set("shouldDisplay", true);
+        await settled();
+
+        assert.dom(".result").hasText("Plugin implementation");
+
+        this.set("yieldCore", true);
+        await settled();
+
+        assert
+          .dom(".result")
+          .hasText("Plugin implementation Core implementation");
+
+        assert.strictEqual(
+          this.consoleErrorStub.callCount,
+          0,
+          "no errors in console"
+        );
+      });
+
+      test("clashing connectors for regular users", async function (assert) {
+        await render(this.template);
+
+        this.set("shouldDisplay", true);
+        this.set("enableClashingConnector", true);
+        await settled();
+
+        assert.strictEqual(
+          this.consoleErrorStub.callCount,
+          1,
+          "clash error reported to console"
+        );
+
+        assert.true(
+          this.consoleErrorStub
+            .getCall(0)
+            .args[0].includes("Multiple connectors"),
+          "console error includes message about multiple connectors"
+        );
+
+        assert
+          .dom(".broken-theme-alert-banner")
+          .doesNotExist("Banner is not shown to regular users");
+      });
+
+      test("clashing connectors for admins", async function (assert) {
+        this.set("currentUser.admin", true);
+        await render(this.template);
+
+        this.set("shouldDisplay", true);
+        this.set("enableClashingConnector", true);
+        await settled();
+
+        assert.strictEqual(
+          this.consoleErrorStub.callCount,
+          1,
+          "clash error reported to console"
+        );
+
+        assert.true(
+          this.consoleErrorStub
+            .getCall(0)
+            .args[0].includes("Multiple connectors"),
+          "console error includes message about multiple connectors"
+        );
+
+        assert
+          .dom(".broken-theme-alert-banner")
+          .exists("Error banner is shown to admins");
+      });
+    }
+  );
+
+  test("Renders wrapped implementation if no connectors are registered", async function (assert) {
+    await render(
+      hbs`
+        <PluginOutlet @name="outlet-with-no-registrations">
+          <span class='result'>Core implementation</span>
+        </PluginOutlet>
+      `
+    );
+
+    assert.dom(".result").hasText("Core implementation");
   });
 
   test("Reevaluates shouldRender for argument changes", async function (assert) {
