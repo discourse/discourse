@@ -391,11 +391,11 @@ RSpec.describe PostDestroyer do
         user_stat = post2.user.user_stat
 
         called = 0
-        topic_destroyed = ->(topic, user) {
+        topic_destroyed = ->(topic, user) do
           expect(topic).to eq(post2.topic)
           expect(user).to eq(post2.user)
           called += 1
-        }
+        end
 
         DiscourseEvent.on(:topic_destroyed, &topic_destroyed)
 
@@ -414,11 +414,11 @@ RSpec.describe PostDestroyer do
         expect(user_stat.reload.topic_count).to eq(1)
 
         called = 0
-        topic_recovered = ->(topic, user) {
+        topic_recovered = ->(topic, user) do
           expect(topic).to eq(post2.topic)
           expect(user).to eq(post2.user)
           called += 1
-        }
+        end
 
         DiscourseEvent.on(:topic_recovered, &topic_recovered)
 

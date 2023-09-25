@@ -42,12 +42,12 @@ class WatchedWord < ActiveRecord::Base
 
   scope :by_action, -> { order("action ASC, word ASC") }
   scope :for,
-        ->(word:) {
+        ->(word:) do
           where(
             "(word ILIKE :word AND case_sensitive = 'f') OR (word LIKE :word AND case_sensitive = 't')",
             word: word,
           )
-        }
+        end
 
   def self.normalize_word(w)
     w.strip.squeeze("*")

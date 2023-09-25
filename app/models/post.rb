@@ -89,13 +89,13 @@ class Post < ActiveRecord::Base
   register_custom_field_type(NOTICE, :json)
 
   scope :private_posts_for_user,
-        ->(user) {
+        ->(user) do
           where(
             "topics.id IN (#{Topic::PRIVATE_MESSAGES_SQL_USER})
       OR topics.id IN (#{Topic::PRIVATE_MESSAGES_SQL_GROUP})",
             user_id: user.id,
           )
-        }
+        end
 
   scope :by_newest, -> { order("created_at DESC, id DESC") }
   scope :by_post_number, -> { order("post_number ASC") }
@@ -111,7 +111,7 @@ class Post < ActiveRecord::Base
         ->(guardian) { where("posts.post_type IN (?)", Topic.visible_post_types(guardian&.user)) }
 
   scope :for_mailing_list,
-        ->(user, since) {
+        ->(user, since) do
           q =
             created_since(since).joins(
               "INNER JOIN (#{Topic.for_digest(user, Time.at(0)).select(:id).to_sql}) AS digest_topics ON digest_topics.id = posts.topic_id",
@@ -120,10 +120,10 @@ class Post < ActiveRecord::Base
 
           q = q.where.not(post_type: Post.types[:whisper]) unless user.staff?
           q
-        }
+        end
 
   scope :raw_match,
-        ->(pattern, type = "string") {
+        ->(pattern, type = "string") do
           type = type&.downcase
 
           case type
@@ -132,10 +132,10 @@ class Post < ActiveRecord::Base
           when "regex"
             where("raw ~* ?", "(?n)#{pattern}")
           end
-        }
+        end
 
   scope :have_uploads,
-        -> {
+        -> do
           where(
             "
           (
@@ -151,7 +151,7 @@ class Post < ActiveRecord::Base
           )",
             "%/uploads/#{RailsMultisite::ConnectionManagement.current_db}/%",
           )
-        }
+        end
 
   delegate :username, to: :user
 

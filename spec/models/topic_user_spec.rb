@@ -590,10 +590,10 @@ RSpec.describe TopicUser do
 
       called = 0
       visits = []
-      user_first_visit = ->(topic_id, user_id) {
+      user_first_visit = ->(topic_id, user_id) do
         visits << "#{topic_id}-#{user_id}"
         called += 1
-      }
+      end
 
       DiscourseEvent.on(:topic_first_visited_by_user, &user_first_visit)
 

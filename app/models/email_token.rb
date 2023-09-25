@@ -10,12 +10,12 @@ class EmailToken < ActiveRecord::Base
 
   scope :unconfirmed, -> { where(confirmed: false) }
   scope :active,
-        -> {
+        -> do
           where(expired: false).where(
             "created_at >= ?",
             SiteSetting.email_token_valid_hours.hours.ago,
           )
-        }
+        end
 
   after_initialize do
     if self.token_hash.blank?

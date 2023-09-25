@@ -25,27 +25,27 @@ RSpec.describe BackupRestore::S3BackupStore do
 
     @s3_client.stub_responses(
       :list_objects_v2,
-      ->(context) {
+      ->(context) do
         check_context(context)
 
         { contents: objects_with_prefix(context) }
-      },
+      end,
     )
 
     @s3_client.stub_responses(
       :delete_object,
-      ->(context) {
+      ->(context) do
         check_context(context)
 
         expect do @objects.delete_if { |obj| obj[:key] == context.params[:key] } end.to change {
           @objects
         }
-      },
+      end,
     )
 
     @s3_client.stub_responses(
       :head_object,
-      ->(context) {
+      ->(context) do
         check_context(context)
 
         if object = @objects.find { |obj| obj[:key] == context.params[:key] }
@@ -53,12 +53,12 @@ RSpec.describe BackupRestore::S3BackupStore do
         else
           { status_code: 404, headers: {}, body: "" }
         end
-      },
+      end,
     )
 
     @s3_client.stub_responses(
       :get_object,
-      ->(context) {
+      ->(context) do
         check_context(context)
 
         if object = @objects.find { |obj| obj[:key] == context.params[:key] }
@@ -66,12 +66,12 @@ RSpec.describe BackupRestore::S3BackupStore do
         else
           { status_code: 404, headers: {}, body: "" }
         end
-      },
+      end,
     )
 
     @s3_client.stub_responses(
       :put_object,
-      ->(context) {
+      ->(context) do
         check_context(context)
 
         @objects << {
@@ -79,7 +79,7 @@ RSpec.describe BackupRestore::S3BackupStore do
           size: context.params[:body].size,
           last_modified: Time.zone.now,
         }
-      },
+      end,
     )
 
     SiteSetting.s3_backup_bucket = "s3-backup-bucket"

@@ -130,9 +130,9 @@ RSpec.describe InlineOneboxer do
       topic = Fabricate(:topic, title: "Inline oneboxer")
       Fabricate(:post, topic: topic) # OP
       Fabricate(:post, topic: topic)
-      lookup = ->(number) {
+      lookup = ->(number) do
         InlineOneboxer.lookup("#{topic.url}/#{number}", skip_cache: true)[:title]
-      }
+      end
       posts = topic.reload.posts.order("post_number ASC")
 
       expect(lookup.call(0)).to eq("Inline oneboxer")

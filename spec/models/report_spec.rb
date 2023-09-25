@@ -206,14 +206,14 @@ RSpec.describe Report do
           if arg == :flag
             user = Fabricate(:user)
             topic = Fabricate(:topic, user: user)
-            builder = ->(dt) {
+            builder = ->(dt) do
               PostActionCreator.create(
                 user,
                 Fabricate(:post, topic: topic, user: user),
                 :spam,
                 created_at: dt,
               )
-            }
+            end
           elsif arg == :signup
             builder = ->(dt) { Fabricate(:user, created_at: dt) }
           else

@@ -667,10 +667,10 @@ RSpec.describe Middleware::RequestTracker do
     end
 
     let(:logger) do
-      ->(env, data) {
+      ->(env, data) do
         @env = env
         @data = data
-      }
+      end
     end
 
     before { Middleware::RequestTracker.register_detailed_request_logger(logger) }
