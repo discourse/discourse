@@ -1,5 +1,6 @@
 import Service from "@ember/service";
 import KeyValueStore from "discourse/lib/key-value-store";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 const PROXIED_METHODS = Object.getOwnPropertyNames(
   KeyValueStore.prototype
@@ -10,6 +11,7 @@ const PROXIED_METHODS = Object.getOwnPropertyNames(
  * Alternatively, consumers can use `discourse/lib/key-value-store` directly
  * to create their own namespaced store.
  * */
+@disableImplicitInjections
 export default class KeyValueStoreService extends Service {
   _keyValueStore = new KeyValueStore("discourse_");
 

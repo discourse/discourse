@@ -39,6 +39,7 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import prepareFormTemplateData from "discourse/lib/form-template-validation";
 import DiscardDraftModal from "discourse/components/modal/discard-draft";
 import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 async function loadDraft(store, opts = {}) {
   let { draft, draftKey, draftSequence } = opts;
@@ -99,14 +100,19 @@ export function addComposerSaveErrorCallback(callback) {
   _composerSaveErrorCallbacks.push(callback);
 }
 
+@disableImplicitInjections
 export default class ComposerService extends Service {
-  @service router;
-  @service dialog;
-  @service site;
-  @service store;
   @service appEvents;
   @service capabilities;
+  @service currentUser;
+  @service dialog;
+  @service keyValueStore;
+  @service messageBus;
   @service modal;
+  @service router;
+  @service site;
+  @service siteSettings;
+  @service store;
 
   checkedMessages = false;
   messageCount = null;

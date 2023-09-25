@@ -7,9 +7,11 @@ import tippy from "tippy.js";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import discourseLater from "discourse-common/lib/later";
 import { cancel } from "@ember/runloop";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 const TIPPY_DELAY = 500;
 
+@disableImplicitInjections
 export default class UserTips extends Service {
   #instances = new Map();
 
