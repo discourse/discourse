@@ -30,7 +30,7 @@ describe Chat::OneboxHandler do
         <aside class="onebox chat-onebox">
           <article class="onebox-body chat-onebox-body">
             <h3 class="chat-onebox-title">
-              <a href="#{public_chat_url}">
+              <a href="/chat/c/-/#{public_channel.id}">
                 <span class="category-chat-badge" style="color: ##{public_channel.chatable.color}">
                   <svg class="fa d-icon d-icon-d-chat svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#d-chat"></use></svg>
                </span>
@@ -94,7 +94,7 @@ describe Chat::OneboxHandler do
           </div>
           <div class="chat-transcript-username">#{user.username}</div>
             <div class="chat-transcript-datetime">
-              <a href="#{public_chat_url}/#{public_message.id}" title="#{public_message.created_at}">#{public_message.created_at}</a>
+              <a href="/chat/c/-/#{public_channel.id}" title="#{public_message.created_at}">#{public_message.created_at}</a>
             </div>
             <a class="chat-transcript-channel" href="/chat/c/-/#{public_channel.id}">
               <span class="category-chat-badge" style="color: ##{public_channel.chatable.color}">
