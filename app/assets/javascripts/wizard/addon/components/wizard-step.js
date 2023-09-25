@@ -4,13 +4,9 @@ import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import $ from "jquery";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import I18n from "discourse-i18n";
-
-const alreadyWarned = {};
 
 export default Component.extend({
   router: service(),
-  dialog: service(),
   classNameBindings: [":wizard-container__step", "stepClass"],
   saving: null,
 
@@ -125,9 +121,8 @@ export default Component.extend({
   exitEarly(event) {
     event?.preventDefault();
     const step = this.step;
-    step.validate();
 
-    if (step.valid) {
+    if (step.validate()) {
       this.set("saving", true);
 
       step
@@ -158,23 +153,7 @@ export default Component.extend({
       return;
     }
 
-    const step = this.step;
-    const result = step.validate();
-
-    if (result.warnings.length) {
-      const unwarned = result.warnings.filter((w) => !alreadyWarned[w]);
-
-      if (unwarned.length) {
-        unwarned.forEach((w) => (alreadyWarned[w] = true));
-
-        return this.dialog.confirm({
-          message: unwarned.map((w) => I18n.t(`wizard.${w}`)).join("\n"),
-          didConfirm: () => this.advance(),
-        });
-      }
-    }
-
-    if (step.valid) {
+    if (this.step.validate()) {
       this.advance();
     } else {
       this.autoFocus();

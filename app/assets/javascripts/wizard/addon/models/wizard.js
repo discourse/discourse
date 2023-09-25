@@ -94,6 +94,10 @@ export class Step {
     return this._validState === ValidStates.VALID;
   }
 
+  set valid(valid) {
+    this._validState = valid ? ValidStates.VALID : ValidStates.INVALID;
+  }
+
   get invalid() {
     return this._validState === ValidStates.INVALID;
   }
@@ -122,22 +126,11 @@ export class Step {
   }
 
   validate() {
-    let results = this.fields.map((field) => field.validate());
-    let warnings = [];
+    let valid = this.fields
+      .map((field) => field.validate())
+      .every((result) => result);
 
-    for (let { warning } of this.fields) {
-      if (warning) {
-        warnings.field.push(warning);
-      }
-    }
-
-    if (results.every((result) => result)) {
-      this._validState = ValidStates.VALID;
-    } else {
-      this._validState = ValidStates.INVALID;
-    }
-
-    return { warnings };
+    return (this.valid = valid);
   }
 
   serialize() {
