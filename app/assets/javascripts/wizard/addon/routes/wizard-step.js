@@ -3,15 +3,13 @@ import DiscourseRoute from "discourse/routes/discourse";
 export default class WizardStepRoute extends DiscourseRoute {
   model(params) {
     const wizard = this.modelFor("wizard");
-    const step = wizard.findStep(params.step_id);
-    // should the latter be a redirect?
-    return step || wizard.steps[0];
-  }
+    let step = wizard.findStep(params.step_id);
 
-  setupController(controller, step) {
-    const wizard = this.modelFor("wizard");
-    this.controllerFor("wizard").set("currentStepId", step.id);
+    // should this be a redirect?
+    if (!step) {
+      step = wizard.steps[0];
+    }
 
-    controller.setProperties({ step, wizard });
+    return { wizard, step };
   }
 }
