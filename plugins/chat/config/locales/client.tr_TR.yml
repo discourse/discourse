@@ -10,6 +10,10 @@ tr_TR:
       site_settings:
         categories:
           chat: Sohbet
+        chat_separate_sidebar_mode:
+          always: "Her zaman"
+          fullscreen: "Sohbet tam ekran modundayken"
+          never: "Asla"
       logs:
         staff_actions:
           actions:
@@ -26,6 +30,7 @@ tr_TR:
       chat_channels_count: "Sohbet Kanalları"
       chat_users_count: "Sohbet Kullanıcıları"
     chat:
+      deleted_chat_username: silindi
       dates:
         time_tiny: "h:mm"
       all_loaded: "Tüm mesajlar gösteriliyor"
@@ -81,6 +86,7 @@ tr_TR:
         create: "Yeni kanal"
       click_to_join: "Mevcut kanalları görüntülemek için buraya tıklayın."
       close: "Kapat"
+      remove: "Kaldır"
       collapse: "Sohbet Çekmecesini Daralt"
       expand: "Sohbet Çekmecesini genişlet"
       confirm_flag: "%{username} adlı kullanıcının mesajına bayrak eklemek istediğinizden emin misiniz?"
@@ -106,6 +112,8 @@ tr_TR:
         all_new: "Tüm Yeni Mesajlar"
         dm_and_mentions: "Doğrudan Mesajlar ve Bahsetmeler"
         never: "Asla"
+      separate_sidebar_mode:
+        title: "Forum ve sohbet için ayrı kenar çubuğu modları göster"
       enable: "Sohbeti etkinleştir"
       flag: "Bayrak ekle"
       emoji: "Emoji ekle"
@@ -124,27 +132,11 @@ tr_TR:
           one: "Son bir saat"
           other: "Son %{count} saat"
       mention_warning:
-        dismiss: "kapat"
-        cannot_see: "%{username} bu kanala erişemiyor ve bilgilendirilmedi."
-        cannot_see_multiple:
-          one: "%{username} ve %{count} kullanıcı daha bu kanala erişemiyor ve bilgilendirilmediler."
-          other: "%{username} ve %{count} kullanıcı daha bu kanala erişemiyor ve bilgilendirilmediler."
         invitations_sent:
           one: "Davet gönderildi"
           other: "Davet gönderildi"
         invite: "Kanala davet et"
-        without_membership: "%{username} bu kanala katılmadı."
-        without_membership_multiple:
-          one: "%{username} ve %{count} kullanıcı daha bu kanala katılmadı."
-          other: "%{username} ve %{count} kullanıcı daha bu kanala katılmadı."
-        group_mentions_disabled: "%{group_name} bahsetmeye izin vermiyor."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} ve %{count} grup daha bahsetmeye izin vermiyor."
-          other: "%{group_name} ve %{count} grup daha bahsetmeye izin vermiyor."
-        too_many_members: "%{group_name} çok fazla üyeye sahip. Kimseye bildirim gönderilmedi."
-        too_many_members_multiple:
-          one: "%{group_name} ve %{count} grubun daha çok fazla üyesi var. Kimse bilgilendirilmedi."
-          other: "%{group_name} ve %{count} grubun daha çok fazla üyesi var. Kimse bilgilendirilmedi."
+        channel_wide_mentions_disallowed: "Bu kanalda @here ve @all mentionları devre dışı bırakılmıştır."
         groups:
           header:
             some: "Bazı kullanıcılara bildirim gönderilmeyecek"
@@ -446,7 +438,6 @@ tr_TR:
         title: "Sohbet"
         export_messages:
           title: "Sohbet mesajlarını dışa aktar"
-          description: "Dışa aktarma şu anda son 6 aydaki en son 10.000 mesajla sınırlıdır."
           create_export: "Dışa aktarma oluştur"
           export_has_started: "Dışa aktarma başladı. Hazır olduğunda bir kişisel mesaj alacaksınız."
       direct_messages:
@@ -544,7 +535,6 @@ tr_TR:
       thread:
         title: "Başlık"
         view_thread: Konuyu görüntüle
-        default_title: "Konu"
         replies:
           one: "%{count} yanıt"
           other: "%{count} yanıt"
@@ -614,6 +604,9 @@ tr_TR:
       types:
         chat_reviewable_message:
           title: "Bayrak Eklenen Sohbet Mesajı"
+        reviewable_chat_message:
+          title: "Bayrak eklenen sohbet mesajı"
+          noun: "sohbet mesajı"
     keyboard_shortcuts_help:
       chat:
         title: "Sohbet"
@@ -649,3 +642,7 @@ tr_TR:
       sections:
         chat:
           title: Sohbet
+    sidebar:
+      panels:
+        chat:
+          label: "Sohbet"

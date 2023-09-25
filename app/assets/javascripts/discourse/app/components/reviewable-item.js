@@ -10,10 +10,12 @@ import { action, set } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
 import { getOwner } from "discourse-common/lib/get-owner";
+import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
 
 let _components = {};
 
 const pluginReviewableParams = {};
+const actionModalClassMap = {};
 
 export function addPluginReviewableParam(reviewableType, param) {
   pluginReviewableParams[reviewableType]
@@ -21,9 +23,16 @@ export function addPluginReviewableParam(reviewableType, param) {
     : (pluginReviewableParams[reviewableType] = [param]);
 }
 
+export function registerReviewableActionModal(actionName, modalClass) {
+  actionModalClassMap[actionName] = modalClass;
+}
+
 export default Component.extend({
   adminTools: optionalService(),
   dialog: service(),
+  modal: service(),
+  siteSettings: service(),
+  currentUser: service(),
   tagName: "",
   updating: null,
   editing: false,
@@ -47,6 +56,11 @@ export default Component.extend({
     }
 
     return classes;
+  },
+
+  @discourseComputed("reviewable.created_from_flag", "reviewable.status")
+  displayContextQuestion(createdFromFlag, status) {
+    return createdFromFlag && status === 0;
   },
 
   @discourseComputed(
@@ -140,7 +154,7 @@ export default Component.extend({
       });
 
       return ajax(
-        `/review/${reviewable.id}/perform/${performableAction.id}?version=${version}`,
+        `/review/${reviewable.id}/perform/${performableAction.server_action}?version=${version}`,
         {
           type: "PUT",
           data,
@@ -214,10 +228,9 @@ export default Component.extend({
 
   @action
   explainReviewable(reviewable, event) {
-    event?.preventDefault();
-    showModal("explain-reviewable", {
-      title: "review.explain.title",
-      model: reviewable,
+    event.preventDefault();
+    this.modal.show(ExplainReviewableModal, {
+      model: { reviewable },
     });
   },
 
@@ -270,8 +283,12 @@ export default Component.extend({
       }
 
       const message = performableAction.get("confirm_message");
-      let requireRejectReason = performableAction.get("require_reject_reason");
-      let customModal = performableAction.get("custom_modal");
+      const requireRejectReason = performableAction.get(
+        "require_reject_reason"
+      );
+      const actionModalClass =
+        actionModalClassMap[performableAction.server_action];
+
       if (message) {
         this.dialog.confirm({
           message,
@@ -285,13 +302,13 @@ export default Component.extend({
           performConfirmed: this._performConfirmed,
           action: performableAction,
         });
-      } else if (customModal) {
-        showModal(customModal, {
-          title: `review.${customModal}.title`,
-          model: this.reviewable,
-        }).setProperties({
-          performConfirmed: this._performConfirmed,
-          action: performableAction,
+      } else if (actionModalClass) {
+        this.modal.show(actionModalClass, {
+          model: {
+            reviewable: this.reviewable,
+            performConfirmed: this._performConfirmed,
+            action: performableAction,
+          },
         });
       } else {
         return this._performConfirmed(performableAction);

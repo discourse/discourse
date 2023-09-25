@@ -48,6 +48,9 @@
     align-items: center;
     height: 100%;
     animation: fadein 0.5s;
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
     // min-width acts as a placeholder if the small logo takes a while to load
     // it prevents topic title from shifting after the small logo loads
     // it's set to match the #site-logo height so square small logos don't resize when titles dock
@@ -276,6 +279,9 @@
     overflow: hidden;
     width: 100%;
     animation: fadein 0.5s;
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
   }
   .title-wrapper {
     display: grid;
@@ -417,11 +423,10 @@ $mobile-avatar-height: 1.532em;
 }
 
 .d-header-mode .bootstrap-mode {
-  border-radius: 2em;
   color: var(--primary-medium);
   font-size: var(--font-down-1);
-  margin-left: 0.5em;
-  padding: 0.25em 0.5em;
+  margin-left: 1em;
+  padding: 0.15em 0.5em;
 
   &:focus {
     background-color: var(--primary-medium);

@@ -15,8 +15,8 @@
       <DButton
         @icon="angle-right"
         @label="admin.api.continue"
-        @action={{action "continue"}}
-        @class="btn-primary"
+        @action={{this.continue}}
+        class="btn-primary"
       />
     </AdminFormRow>
   {{else}}
@@ -102,8 +102,8 @@
                 <td>
                   <DButton
                     @icon="link"
-                    @action={{action "showURLs" act.urls}}
-                    @class="btn-info"
+                    @action={{fn this.showURLs act.urls}}
+                    class="btn-info"
                   />
                 </td>
                 <td>
@@ -125,9 +125,9 @@
     <DButton
       @icon="check"
       @label="admin.api.save"
-      @action={{action "save"}}
-      @class="btn-primary"
+      @action={{this.save}}
       @disabled={{this.saveDisabled}}
+      class="btn-primary"
     />
   {{/if}}
 </div>

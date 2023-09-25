@@ -78,6 +78,12 @@ RSpec.describe TopicsController do
         "#{Discourse.base_url_no_prefix}#{moderator.avatar_template}",
       )
     end
+
+    it "does not error out when using invalid parameters" do
+      get "/t/#{p1.topic.id}/wordpress.json", params: { topic_id: 1, best: { leet: "haxx0r" } }
+
+      expect(response.status).to eq(400)
+    end
   end
 
   describe "#move_posts" do
@@ -1593,7 +1599,7 @@ RSpec.describe TopicsController do
       end
 
       it "can not move to a category that requires topic approval" do
-        category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+        category.require_topic_approval = true
         category.save!
 
         put "/t/#{topic.id}.json", params: { category_id: category.id }

@@ -19,6 +19,9 @@ RSpec.describe "Navigation", type: :system do
 
   before do
     chat_system_bootstrap(current_user, [category_channel, category_channel_2])
+    current_user.user_option.update(
+      chat_separate_sidebar_mode: UserOption.chat_separate_sidebar_modes[:never],
+    )
     sign_in(current_user)
   end
 
@@ -36,23 +39,10 @@ RSpec.describe "Navigation", type: :system do
 
   context "when clicking chat icon on mobile and is viewing channel" do
     it "navigates to index", mobile: true do
-      visit("/chat")
       chat_page.visit_channel(category_channel_2)
       chat_page.open_from_header
 
       expect(page).to have_current_path(chat_path)
-    end
-  end
-
-  context "when clicking chat icon on desktop and is viewing channel" do
-    it "stays on channel page" do
-      visit("/chat")
-      chat_page.visit_channel(category_channel_2)
-      chat_page.open_from_header
-
-      expect(page).to have_current_path(
-        chat.channel_path(category_channel_2.slug, category_channel_2.id),
-      )
     end
   end
 
@@ -132,11 +122,11 @@ RSpec.describe "Navigation", type: :system do
   end
 
   context "when opening a thread" do
-    fab!(:thread) { Fabricate(:chat_thread, channel: category_channel) }
+    fab!(:thread) { Fabricate(:chat_thread, channel: category_channel, use_service: true) }
 
     before do
       category_channel.update!(threading_enabled: true)
-      Fabricate(:chat_message, thread: thread, chat_channel: thread.channel)
+      Fabricate(:chat_message, thread: thread, use_service: true)
       thread.add(current_user)
     end
 
@@ -345,7 +335,7 @@ RSpec.describe "Navigation", type: :system do
       it "activates the channel in the sidebar" do
         visit("/")
         chat_page.open_from_header
-        sidebar_component.click_link(category_channel.name)
+        sidebar_component.click_section_link(category_channel.name)
 
         expect(sidebar_component).to have_section_link(category_channel.name, active: true)
       end
@@ -356,10 +346,34 @@ RSpec.describe "Navigation", type: :system do
         visit("/")
         chat_page.open_from_header
 
-        sidebar_component.click_link(category_channel.name)
+        sidebar_component.click_section_link(category_channel.name)
         chat_drawer_page.close
 
         expect(sidebar_component).to have_no_section_link(category_channel.name, active: true)
+      end
+    end
+
+    context "when exiting a thread for homepage" do
+      fab!(:thread) { Fabricate(:chat_thread, channel: category_channel) }
+
+      before do
+        current_user.user_option.update(
+          chat_separate_sidebar_mode: UserOption.chat_separate_sidebar_modes[:always],
+        )
+        chat_page.prefers_full_page
+        category_channel.update!(threading_enabled: true)
+        thread.add(current_user)
+      end
+
+      it "correctly closes the panel" do
+        chat_page.visit_thread(thread)
+
+        expect(side_panel_page).to have_open_thread(thread)
+
+        find("#site-logo").click
+        sidebar_component.switch_to_chat
+
+        expect(page).to have_no_css(".chat-side-panel")
       end
     end
   end

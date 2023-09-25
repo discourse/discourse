@@ -162,9 +162,11 @@ export default class History extends Component {
   }
 
   get revertToRevisionText() {
-    return I18n.t("post.revisions.controls.revert", {
-      revision: this.previousVersion,
-    });
+    if (this.previousVersion) {
+      return I18n.t("post.revisions.controls.revert", {
+        revision: this.previousVersion,
+      });
+    }
   }
 
   refresh(postId, postVersion) {
@@ -203,7 +205,7 @@ export default class History extends Component {
         }
         this.args.closeModal();
       })
-      .catch(function (e) {
+      .catch((e) => {
         if (e.jqXHR.responseJSON?.errors?.[0]) {
           this.dialog.alert(e.jqXHR.responseJSON.errors[0]);
         }

@@ -6,7 +6,13 @@
 
 sl:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Vedno"
+          never: "Nikoli"
     chat:
+      deleted_chat_username: izbrisano
       create: "Ustvari"
       cancel: "Prekliči"
       channel_settings:
@@ -15,6 +21,7 @@ sl:
         join: "Pridruži se"
         leave: "Zapusti"
       close: "Zapri"
+      remove: "Odstrani"
       delete: "Izbriši"
       edited: "urejen"
       muted: "utišani"
@@ -26,8 +33,6 @@ sl:
       flag: "Prijavi"
       join: "Pridruži se"
       last_visit: "zadnji obisk"
-      mention_warning:
-        dismiss: "opusti"
       reply: "Odgovori"
       edit: "Uredi"
       rebake_message: "Obnovi HTML"

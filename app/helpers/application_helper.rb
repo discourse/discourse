@@ -133,10 +133,12 @@ module ApplicationHelper
   end
 
   def preload_script(script)
-    scripts = [script]
+    scripts = []
 
     if chunks = EmberCli.script_chunks[script]
       scripts.push(*chunks)
+    else
+      scripts.push(script)
     end
 
     scripts
@@ -371,6 +373,7 @@ module ApplicationHelper
         "@context" => "http://schema.org",
         "@type" => "WebSite",
         :url => Discourse.base_url,
+        :name => SiteSetting.title,
         :potentialAction => {
           "@type" => "SearchAction",
           :target => "#{Discourse.base_url}/search?q={search_term_string}",

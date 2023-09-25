@@ -258,7 +258,6 @@ hr:
       one: "još %{count} odgovor"
       few: "još %{count} odgovora"
       other: "još %{count} odgovora"
-    loading: "Učitavanje rasprave"
     permalink: "Poveznica"
     imported_from: "Ovo je prateća tema rasprave za originalni unos na %{link}"
     in_reply_to: "▶ %{username}"
@@ -1924,7 +1923,6 @@ hr:
       approve:
         title: "Odobri"
       reject_user:
-        title: "Obriši korisnika..."
         delete:
           title: "Obriši korisnika"
       reject:

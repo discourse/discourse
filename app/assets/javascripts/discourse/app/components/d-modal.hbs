@@ -4,6 +4,7 @@
 <ConditionalInElement
   @element={{this.modal.containerElement}}
   @inline={{@inline}}
+  @append={{true}}
 >
   <this.dynamicElement
     class={{concat-class
@@ -18,7 +19,6 @@
     ...attributes
     {{did-insert this.setupListeners}}
     {{will-destroy this.cleanupListeners}}
-    {{on "mouseup" this.handleMouseUp}}
   >
     <div class="modal-outer-container">
       <div class="modal-middle-container">
@@ -38,8 +38,8 @@
                 <DButton
                   @icon="times"
                   @action={{this.handleCloseButton}}
-                  @class="btn-flat modal-close close"
                   @title="modal.close"
+                  class="btn-flat modal-close close"
                 />
               {{/if}}
 
@@ -97,6 +97,6 @@
     </div>
   </this.dynamicElement>
   {{#unless @inline}}
-    <div class="modal-backdrop"></div>
+    <div class="modal-backdrop" {{on "click" this.handleWrapperClick}}></div>
   {{/unless}}
 </ConditionalInElement>

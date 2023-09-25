@@ -6,7 +6,13 @@
 
 ur:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "ہمیشہ"
+          never: "کبھی نہیں"
     chat:
+      deleted_chat_username: حذف کردہ
       create: "بنائیں"
       cancel: "منسوخ"
       channel_settings:
@@ -15,6 +21,7 @@ ur:
         join: "شمولیت اختیار کریں"
         leave: "چھوڑ دیں"
       close: "بند کریں"
+      remove: "خارج کریں"
       delete: "مٹائیں"
       edited: "ترمیم کردہ"
       muted: "خاموش کِیا ہوا"
@@ -28,8 +35,6 @@ ur:
       last_visit: "آخری وزٹ"
       summarization:
         summarize: "خلاصہ"
-      mention_warning:
-        dismiss: "بر خاست کریں"
       reply: "جواب"
       edit: "ترمیم کریں"
       rebake_message: "HTML دوبارہ بِلڈ کریں"

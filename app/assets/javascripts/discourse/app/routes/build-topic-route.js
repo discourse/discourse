@@ -1,4 +1,5 @@
 import {
+  changeNewListSubset,
   changeSort,
   queryParams,
   resetParams,
@@ -16,7 +17,7 @@ import User from "discourse/models/user";
 
 // A helper to build a topic route for a filter
 export function filterQueryParams(params, defaultParams) {
-  const findOpts = Object.assign({}, defaultParams || {});
+  const findOpts = { ...(defaultParams || {}) };
 
   if (params) {
     Object.keys(queryParams).forEach(function (opt) {
@@ -138,12 +139,12 @@ class AbstractTopicRoute extends DiscourseRoute {
       model,
       category: null,
       period: model.get("for_period") || model.get("params.period"),
-      selected: [],
       expandAllPinned: false,
       expandGloballyPinned: true,
     };
 
     this.controllerFor("discovery/topics").setProperties(topicOpts);
+    this.controllerFor("discovery/topics").bulkSelectHelper.clear();
 
     this.controllerFor("navigation/default").set(
       "canCreateTopic",
@@ -163,6 +164,11 @@ class AbstractTopicRoute extends DiscourseRoute {
   @action
   changeSort(sortBy) {
     changeSort.call(this, sortBy);
+  }
+
+  @action
+  changeNewListSubset(subset) {
+    changeNewListSubset.call(this, subset);
   }
 
   @action

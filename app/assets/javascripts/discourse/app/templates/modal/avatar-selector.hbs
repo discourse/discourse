@@ -77,7 +77,7 @@
           }}
           @disabled={{this.gravatarRefreshDisabled}}
           @icon="sync"
-          @class="btn-default avatar-selector-refresh-gravatar"
+          class="btn-default avatar-selector-refresh-gravatar"
         />
 
         {{#if this.gravatarFailed}}
@@ -121,9 +121,9 @@
   <div class="modal-footer">
     <DButton
       @action={{action "saveAvatarSelection"}}
-      @class="btn-primary"
       @disabled={{this.submitDisabled}}
       @label="save"
+      class="btn-primary"
     />
     <DModalCancel @close={{route-action "closeModal"}} />
   </div>

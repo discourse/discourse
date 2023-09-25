@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import QUnit, { module, skip, test } from "qunit";
 import { cloneJSON, deepMerge } from "discourse-common/lib/object";
 import MessageBus from "message-bus-client";
@@ -91,6 +92,7 @@ import { resetMentions } from "discourse/lib/link-mentions";
 import { resetModelTransformers } from "discourse/lib/model-transformers";
 import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper";
 import { clearBulkButtons } from "discourse/components/modal/topic-bulk-actions";
+import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializers/auth-complete";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -228,6 +230,7 @@ export function testCleanup(container, app) {
   cleanupTemporaryModuleRegistrations();
   cleanupCssGeneratorTags();
   clearBulkButtons();
+  resetBeforeAuthCompleteCallbacks();
 }
 
 function cleanupCssGeneratorTags() {
@@ -320,6 +323,8 @@ export function acceptance(name, optionsOrCallback) {
 
   const setup = {
     beforeEach() {
+      I18n.testing = true;
+
       resetMobile();
 
       resetExtraClasses();
@@ -357,6 +362,7 @@ export function acceptance(name, optionsOrCallback) {
     },
 
     afterEach() {
+      I18n.testing = false;
       resetMobile();
       let app = getApplication();
       options?.afterEach?.call(this);

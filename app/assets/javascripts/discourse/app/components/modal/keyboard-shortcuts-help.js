@@ -150,6 +150,12 @@ export default class KeyboardShortcutsHelp extends Component {
             keys1: [SHIFT, "a"],
             keysDelimiter: PLUS,
           }),
+          archive_private_message: buildShortcut(
+            "actions.archive_private_message",
+            {
+              keys1: ["a"],
+            }
+          ),
         },
       },
       navigation: {

@@ -10,6 +10,9 @@ hu:
       site_settings:
         categories:
           chat: Csevegés
+        chat_separate_sidebar_mode:
+          always: "Mindig"
+          never: "Soha"
       logs:
         staff_actions:
           actions:
@@ -26,6 +29,7 @@ hu:
       chat_channels_count: "Csevegőcsatornák"
       chat_users_count: "Csevegőfelhasználók"
     chat:
+      deleted_chat_username: törölt
       dates:
         time_tiny: "h:mm"
       all_loaded: "Összes üzenet megjelenítése"
@@ -73,6 +77,7 @@ hu:
         create: "Új csatorna"
       click_to_join: "Kattintson ide az elérhető csatornák megtekintéséhez."
       close: "Lezárás"
+      remove: "Eltávolítás"
       collapse: "Csevegőfiók összecsukása"
       expand: "Chat fiók bővítése"
       confirm_flag: "Biztos, hogy jelenti %{username} üzenetét?"
@@ -108,7 +113,6 @@ hu:
       summarization:
         summarize: "Összefoglalás"
       mention_warning:
-        dismiss: "elvetés"
         invitations_sent:
           one: "Meghívó elküldve"
           other: "Meghívók elküldve"
@@ -350,7 +354,6 @@ hu:
       thread:
         title: "Cím"
         view_thread: Téma megtekintése
-        default_title: "Szál"
         replies:
           one: "%{count} válasz"
           other: "%{count} válasz"

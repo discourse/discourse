@@ -6,7 +6,10 @@ RSpec.describe Chat::IncomingWebhooksController do
   fab!(:chat_channel) { Fabricate(:category_channel) }
   fab!(:webhook) { Fabricate(:incoming_chat_webhook, chat_channel: chat_channel) }
 
-  before { SiteSetting.chat_debug_webhook_payloads = true }
+  before do
+    SiteSetting.chat_enabled = true
+    SiteSetting.chat_debug_webhook_payloads = true
+  end
 
   let(:valid_payload) { { text: "A new signup woo!" } }
 
@@ -35,7 +38,7 @@ RSpec.describe Chat::IncomingWebhooksController do
            params: {
              text: "$" * (SiteSetting.chat_maximum_message_length + 1),
            }
-      expect(response.status).to eq(400)
+      expect(response.status).to eq(422)
     end
 
     it "creates a new chat message" do

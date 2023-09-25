@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
-import { reads } from "@ember/object/computed";
-import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
+import { or, reads } from "@ember/object/computed";
+import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { action } from "@ember/object";
 import Topic from "discourse/models/topic";
 
@@ -11,35 +11,49 @@ import {
 } from "discourse/routes/build-private-messages-route";
 
 // Lists of topics on a user's page.
-export default Controller.extend(BulkTopicSelection, {
-  hideCategory: false,
-  showPosters: false,
-  channel: null,
-  tagsForUser: null,
-  incomingCount: reads("pmTopicTrackingState.newIncoming.length"),
+export default class UserTopicsListController extends Controller {
+  hideCategory = false;
+  showPosters = false;
+  channel = null;
+  tagsForUser = null;
+
+  bulkSelectHelper = new BulkSelectHelper(this);
+
+  @reads("pmTopicTrackingState.newIncoming.length") incomingCount;
+
+  @or("currentUser.canManageTopic", "showDismissRead", "showResetNew")
+  canBulkSelect;
+
+  get bulkSelectEnabled() {
+    return this.bulkSelectHelper.bulkSelectEnabled;
+  }
+
+  get selected() {
+    return this.bulkSelectHelper.selected;
+  }
 
   @discourseComputed("model.topics.length", "incomingCount")
   noContent(topicsLength, incomingCount) {
     return topicsLength === 0 && incomingCount === 0;
-  },
+  }
 
   @discourseComputed("filter", "model.topics.length")
   showResetNew(filter, hasTopics) {
     return filter === NEW_FILTER && hasTopics;
-  },
+  }
 
   @discourseComputed("filter", "model.topics.length")
   showDismissRead(filter, hasTopics) {
     return filter === UNREAD_FILTER && hasTopics;
-  },
+  }
 
   subscribe() {
     this.pmTopicTrackingState.trackIncoming(this.inbox, this.filter);
-  },
+  }
 
   unsubscribe() {
     this.pmTopicTrackingState.stopIncomingTracking();
-  },
+  }
 
   @action
   resetNew() {
@@ -62,22 +76,42 @@ export default Controller.extend(BulkTopicSelection, {
         this.send("refresh");
       }
     });
-  },
+  }
 
   @action
   loadMore() {
     this.model.loadMore();
-  },
+  }
 
   @action
   showInserted(event) {
     event?.preventDefault();
     this.model.loadBefore(this.pmTopicTrackingState.newIncoming);
     this.pmTopicTrackingState.resetIncomingTracking();
-  },
+  }
 
   @action
   refresh() {
     this.send("triggerRefresh");
-  },
-});
+  }
+
+  @action
+  toggleBulkSelect() {
+    this.bulkSelectHelper.toggleBulkSelect();
+  }
+
+  @action
+  dismissRead(operationType, options) {
+    this.bulkSelectHelper.dismissRead(operationType, options);
+  }
+
+  @action
+  updateAutoAddTopicsToBulkSelect(value) {
+    this.bulkSelectHelper.autoAddTopicsToBulkSelect = value;
+  }
+
+  @action
+  addTopicsToBulkSelect(topics) {
+    this.bulkSelectHelper.addTopics(topics);
+  }
+}

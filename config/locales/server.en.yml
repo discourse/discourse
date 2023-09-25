@@ -78,8 +78,11 @@ en:
       generic: An error occurred while importing that theme
       upload: "Error creating upload asset: %{name}. %{errors}"
       about_json: "Import Error: about.json does not exist, or is invalid. Are you sure this is a Discourse Theme?"
+      about_json_too_big: "Import Error: about.json is bigger than the %{limit} limit."
       about_json_values: "about.json contains invalid values: %{errors}"
       modifier_values: "about.json modifiers contain invalid values: %{errors}"
+      asset_too_big: "Asset %{filename} is bigger than the %{limit} limit"
+      theme_too_big: "Theme is bigger than the %{limit} limit"
       git: "Error cloning git repository, access is denied or repository is not found"
       git_ref_not_found: "Unable to checkout git reference: %{ref}"
       git_unsupported_scheme: "Unable to clone git repo: scheme unsupported"
@@ -88,6 +91,7 @@ en:
       unknown_file_type: "The file you uploaded does not appear to be a valid Discourse theme."
       not_allowed_theme: "`%{repo}` is not in the list of allowed themes (check `allowed_theme_repos` global setting)."
       ssh_key_gone: "You waited too long to install the theme and SSH key expired. Please try again."
+      too_many_files: "The number of files (%{count}) in the theme has exceeded the maximum allowed number of files (%{limit})"
     errors:
       component_no_user_selectable: "Theme components can't be user-selectable"
       component_no_default: "Theme components can't be default theme"
@@ -353,7 +357,7 @@ en:
       one: "%{count} more reply"
       other: "%{count} more replies"
 
-    loading: "Loading Discussion..."
+    loading: "Loading Discussion…"
     permalink: "Permalink"
     imported_from: "This is a companion discussion topic for the original entry at %{link}"
     in_reply_to: "▶ %{username}"
@@ -978,6 +982,9 @@ en:
     sequence_conflict_error:
       title: "draft error"
       description: "Draft is being edited in another window. Please reload this page."
+    too_many_drafts:
+      title: "Too many drafts"
+      description: "You have reached the maximum number of allowed drafts. Please delete some of [your drafts](%{base_url}/my/activity/drafts) and try again."
   draft_backup:
     pm_title: "Backup Drafts from ongoing topics"
     pm_body: "Topic containing backup drafts"
@@ -1503,9 +1510,9 @@ en:
     allow_user_locale: "Allow users to choose their own language interface preference"
     set_locale_from_accept_language_header: "set interface language for anonymous users from their web browser's language headers"
     support_mixed_text_direction: "Support mixed left-to-right and right-to-left text directions."
-    min_post_length: "Minimum allowed post length in characters"
-    min_first_post_length: "Minimum allowed first post (topic body) length in characters"
-    min_personal_message_post_length: "Minimum allowed post length in characters for messages"
+    min_post_length: "Minimum allowed post length in characters (excluding personal messages)"
+    min_first_post_length: "Minimum allowed first post (topic body) length (excluding personal messages)"
+    min_personal_message_post_length: "Minimum allowed post length in characters for messages (both first post and replies)"
     max_post_length: "Maximum allowed post length in characters"
     topic_featured_link_enabled: "Enable posting a link with topics."
     show_topic_featured_link_in_digest: "Show the topic featured link in the digest email."
@@ -1672,11 +1679,11 @@ en:
     blocked_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if allowlist is defined."
     slow_down_crawler_user_agents: 'User agents of web crawlers that should be rate limited as configured in the "slow down crawler rate" setting. Each value must be at least 3 characters long.'
     slow_down_crawler_rate: "If slow_down_crawler_user_agents is specified this rate will apply to all the crawlers (number of seconds delay between requests)"
-    content_security_policy: "Enable Content-Security-Policy"
-    content_security_policy_report_only: "Enable Content-Security-Policy-Report-Only"
+    content_security_policy: "Enable Content-Security-Policy (CSP)"
+    content_security_policy_report_only: "Enable Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_collect_reports: "Enable CSP violation report collection at /csp_reports"
     content_security_policy_frame_ancestors: "Restrict who can embed this site in iframes via CSP. Control allowed hosts on <a href='%{base_path}/admin/customize/embedding'>Embedding</a>"
-    content_security_policy_script_src: "Additional allowlisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a>"
+    content_security_policy_script_src: "Additional allowlisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a> (CSP)"
     invalidate_inactive_admin_email_after_days: "Admin accounts that have not visited the site in this number of days will need to re-validate their email address before logging in. Set to 0 to disable."
     include_secure_categories_in_tag_counts: "When enabled, count of topics for a tag will include topics that are in read restricted categories for all users. When disabled, normal users are only shown a count of topics for a tag where all the topics are in public categories."
     display_personal_messages_tag_counts: "When enabled, count of personal messages tagged with a given tag will be displayed."
@@ -1821,7 +1828,6 @@ en:
 
     rate_limit_create_topic: "After creating a topic, users must wait (n) seconds before creating another topic."
     rate_limit_create_post: "After posting, users must wait (n) seconds before creating another post."
-    rate_limit_new_user_create_topic: "After creating a topic, new users must wait (n) seconds before creating another topic."
     rate_limit_new_user_create_post: "After posting, new users must wait (n) seconds before creating another post."
 
     max_likes_per_day: "Maximum number of likes per user per day."
@@ -2149,6 +2155,7 @@ en:
     digest_min_excerpt_length: "Minimum post excerpt in the email summary, in characters."
     suppress_digest_email_after_days: "Suppress summary emails for users not seen on the site for more than (n) days."
     digest_suppress_categories: "Suppress these categories from summary emails."
+    digest_suppress_tags: "Suppress these tags from summary emails."
     disable_digest_emails: "Disable summary emails for all users."
     apply_custom_styles_to_digest: "Custom email template and css are applied to summary emails."
     email_accent_bg_color: "The accent color to be used as the background of some elements in HTML emails. Enter a color name ('red') or hex value ('#FF0000')."
@@ -2362,16 +2369,17 @@ en:
 
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
     retry_web_hook_events: "Automatically retry failed web hook events for 4 times. Time gaps between the retries are 1, 5, 25 and 125 minutes."
-    revoke_api_keys_days: "Number of days before an unused API key is automatically revoked (0 for never)"
+    revoke_api_keys_unused_days: "Number of days since an API key was last used before it is automatically revoked (0 for never)"
+    revoke_api_keys_maxlife_days: "Number of days before an API key is automatically revoked (0 for never)"
 
-    allow_user_api_keys: "Allow generation of user API keys"
     allow_user_api_key_scopes: "List of scopes allowed for user API keys"
     min_trust_level_for_user_api_key: |
       Trust level required for generation of user API keys.<br>
       <b>WARNING</b>: Changing the trust level will prevent users with a lower trust level from logging in via Discourse Hub
     allowed_user_api_auth_redirects: "Allowed URL for authentication redirect for user API keys. Wildcard symbol * can be used to match any part of it (e.g. www.example.com/*)."
     allowed_user_api_push_urls: "Allowed URLs for server push to user API"
-    expire_user_api_keys_days: "Number of days before a user API key automatically expires (0 for never)"
+    revoke_user_api_keys_unused_days: "Number of days since a user API key was last used before it is automatically revoked (0 for never)"
+    revoke_user_api_keys_maxlife_days: "Number of days before a user API key is automatically revoked (0 for never)"
 
     tagging_enabled: "Enable tags on topics?"
     min_trust_to_create_tag: "The minimum trust level required to create a tag."
@@ -2443,6 +2451,8 @@ en:
     experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
     experimental_search_menu_groups: "EXPERIMENTAL: Enables the new search menu that has been upgraded to use glimmer"
     enable_experimental_lightbox: "EXPERIMENTAL: Replace the default image lightbox with the revamped design."
+
+    experimental_form_templates: "EXPERIMENTAL: Enable the form templates feature. <b>After enabled,</b> manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
 
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
 
@@ -2675,6 +2685,8 @@ en:
     invalid_security_key: "Invalid security key."
     missing_second_factor_name: "Please provide a name."
     missing_second_factor_code: "Please provide a code."
+    too_many_authenticators: "Sorry, you can't have more than 50 authenticators. Please remove an existing one and try again."
+    too_many_security_keys: "Sorry, you can't have more than 50 security keys. Please remove an existing one and try again."
     second_factor_toggle:
       totp: "Use an authenticator app or security key instead"
       backup_code: "Use a backup code instead"
@@ -2693,16 +2705,16 @@ en:
       sent_test: "sent!"
     user:
       merge_user:
-        updating_username: "Updating username..."
-        changing_post_ownership: "Changing post ownership..."
-        merging_given_daily_likes: "Merging given daily likes..."
-        merging_post_timings: "Merging post timings..."
-        merging_user_visits: "Merging user visits..."
-        updating_site_settings: "Updating site settings..."
-        updating_user_stats: "Updating user stats..."
-        merging_user_attributes: "Merging user attributes..."
-        updating_user_ids: "Updating user ids..."
-        deleting_source_user: "Deleting source user..."
+        updating_username: "Updating username…"
+        changing_post_ownership: "Changing post ownership…"
+        merging_given_daily_likes: "Merging given daily likes…"
+        merging_post_timings: "Merging post timings…"
+        merging_user_visits: "Merging user visits…"
+        updating_site_settings: "Updating site settings…"
+        updating_user_stats: "Updating user stats…"
+        merging_user_attributes: "Merging user attributes…"
+        updating_user_ids: "Updating user ids…"
+        deleting_source_user: "Deleting source user…"
   user:
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
     deactivated_by_staff: "Deactivated by staff"
@@ -5122,6 +5134,9 @@ en:
       automatic_revoked:
         one: "Automatically revoked, last activity more than %{count} day ago"
         other: "Automatically revoked, last activity more than %{count} days ago"
+      automatic_revoked_max_life:
+        one: "Automatically revoked, created at more than %{count} day ago"
+        other: "Automatically revoked, created at more than %{count} days ago"
       revoked: Revoked
       restored: Restored
 
@@ -5185,7 +5200,7 @@ en:
       delete_single:
         title: "Delete"
       delete:
-        title: "Delete..."
+        title: "Delete…"
       delete_and_ignore:
         title: "Ignore flag and delete post"
         description: "Ignore the flag by removing it from the queue and delete the post; if the first post, delete the topic as well. "
@@ -5205,6 +5220,8 @@ en:
         description: "Restore the post so that all users can see it."
       disagree:
         title: "No"
+      discard_post:
+        title: "Discard Post"
       ignore:
         title: "Ignore"
       ignore_and_do_nothing:
@@ -5220,7 +5237,7 @@ en:
       approve_user:
         title: "Approve User"
       reject_user:
-        title: "Delete User..."
+        title: "Delete User…"
         delete:
           title: "Delete User"
           description: "The user will be deleted from the forum."
@@ -5229,7 +5246,7 @@ en:
           description: "The user will be deleted, and we'll block their IP and email address."
       reject:
         title: "Reject"
-        bundle_title: "Reject..."
+        bundle_title: "Reject…"
       reject_and_suspend:
         title: "Reject and Suspend user"
       reject_and_silence:
@@ -5288,3 +5305,6 @@ en:
       invalid_yaml: "is not a valid YAML string"
       invalid_type: "contains an invalid template type: %{type} (valid types are: %{valid_types})"
       missing_type: "is missing a field type"
+      missing_id: "is missing a field id"
+      duplicate_ids: "has duplicate ids"
+      reserved_id: "has a reserved keyword as id: %{id}"

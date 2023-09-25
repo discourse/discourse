@@ -1,6 +1,5 @@
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import User from "discourse/models/user";
 
 module("Unit | Controller | preferences/profile", function (hooks) {
   setupTest(hooks);
@@ -14,8 +13,9 @@ module("Unit | Controller | preferences/profile", function (hooks) {
     ]);
 
     const controller = this.owner.lookup("controller:preferences/profile");
+    const store = this.owner.lookup("service:store");
     controller.setProperties({
-      model: User.create({
+      model: store.createRecord("user", {
         id: 70,
         second_factor_enabled: true,
         is_anonymous: true,

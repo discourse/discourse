@@ -1,5 +1,4 @@
 import { getOwner } from "discourse-common/lib/get-owner";
-import I18n from "I18n";
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
@@ -48,11 +47,7 @@ export default class ChatThread {
       ? ChatMessage.create(channel, args.original_message)
       : null;
 
-    this.title =
-      args.title ||
-      `${I18n.t("chat.thread.default_title", {
-        thread_id: this.id,
-      })}`;
+    this.title = args.title;
 
     if (args.current_user_membership) {
       this.currentUserMembership = UserChatThreadMembership.create(

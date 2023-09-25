@@ -65,7 +65,7 @@ RSpec.describe "Chat channel", type: :system do
         end
 
         using_session(:tab_2) do |session|
-          expect(channel_page).to have_message(text: "test_message")
+          expect(channel_page.messages).to have_message(text: "test_message")
           session.quit
         end
       end
@@ -237,7 +237,7 @@ RSpec.describe "Chat channel", type: :system do
       chat.visit_channel(channel_1)
 
       expect(find(".chat-reply .chat-reply__excerpt")["innerHTML"].strip).to eq(
-        "<a class=\"mention\" href=\"/u/#{other_user.username}\">@#{other_user.username}</a> &lt;mark&gt;not marked&lt;/mark&gt;",
+        "@#{other_user.username} &lt;mark&gt;not marked&lt;/mark&gt;",
       )
     end
   end
@@ -284,6 +284,33 @@ RSpec.describe "Chat channel", type: :system do
 
       expect(page).to have_no_css(
         ".chat-message-actions-container[data-id='#{last_message["data-id"]}']",
+      )
+    end
+  end
+
+  context "when opening message secondary options" do
+    it "doesn’t hide dropdown on mouseleave" do
+      chat.visit_channel(channel_1)
+      last_message = find(".chat-message-container:last-child")
+      last_message.hover
+
+      expect(page).to have_css(
+        ".chat-message-actions-container[data-id='#{last_message["data-id"]}']",
+      )
+
+      find(".chat-message-actions-container .secondary-actions").click
+      expect(page).to have_css(
+        ".chat-message-actions-container .secondary-actions .select-kit-body",
+      )
+
+      find("#site-logo").hover
+      expect(page).to have_css(
+        ".chat-message-actions-container .secondary-actions .select-kit-body",
+      )
+
+      find("#site-logo").click
+      expect(page).to have_no_css(
+        ".chat-message-actions-container .secondary-actions .select-kit-body",
       )
     end
   end

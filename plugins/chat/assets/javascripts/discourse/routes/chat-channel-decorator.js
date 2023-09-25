@@ -31,19 +31,10 @@ export default function withChatChannel(extendedClass) {
         return this.router.replaceWith("chat");
       }
 
-      let { messageId, channelTitle } = this.paramsFor(this.routeName);
-
-      // messageId query param backwards-compatibility
-      if (messageId) {
-        this.router.replaceWith(
-          "chat.channel",
-          ...model.routeModels,
-          messageId
-        );
-      }
+      let { channelTitle } = this.paramsFor(this.routeName);
 
       if (channelTitle && channelTitle !== model.slugifiedTitle) {
-        messageId = this.paramsFor("chat.channel.near-message").messageId;
+        const messageId = this.paramsFor("chat.channel.near-message").messageId;
         const threadId = this.paramsFor("chat.channel.thread").threadId;
 
         if (threadId) {

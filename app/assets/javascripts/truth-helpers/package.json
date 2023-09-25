@@ -15,11 +15,11 @@
   },
   "dependencies": {
     "ember-auto-import": "^2.6.3",
-    "ember-cli-babel": "^7.26.11",
+    "ember-cli-babel": "^8.0.0",
     "ember-cli-htmlbars": "^6.3.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.10",
+    "@babel/core": "^7.22.20",
     "@ember/optional-features": "^2.0.0",
     "@ember/string": "^3.1.1",
     "@embroider/test-setup": "^3.0.1",

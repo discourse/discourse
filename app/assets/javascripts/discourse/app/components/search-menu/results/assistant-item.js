@@ -59,6 +59,11 @@ export default class AssistantItem extends Component {
 
   @action
   onKeydown(e) {
+    // don't capture tab key
+    if (e.key === "Tab") {
+      return;
+    }
+
     if (e.key === "Escape") {
       focusSearchButton();
       this.args.closeSearchMenu();
@@ -90,6 +95,7 @@ export default class AssistantItem extends Component {
     } else {
       updatedValue = this.prefix.trim();
     }
+
     const inTopicContext = this.search.searchContext?.type === "topic";
     this.args.searchTermChanged(updatedValue, {
       searchTopics: !inTopicContext || this.search.activeGlobalSearchTerm,

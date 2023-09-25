@@ -54,14 +54,6 @@ acceptance("User Preferences - Security", function (needs) {
     await authTokenDropdown.selectRowByValue("notYou");
 
     assert.strictEqual(count(".d-modal:visible"), 1, "modal should appear");
-
-    await click(".modal-footer .btn-primary");
-
-    assert.strictEqual(
-      count(".pref-password.highlighted"),
-      1,
-      "it should highlight password preferences"
-    );
   });
 
   test("Viewing user api keys", async function (assert) {

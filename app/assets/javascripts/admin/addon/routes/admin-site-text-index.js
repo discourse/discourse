@@ -1,8 +1,12 @@
 import Route from "@ember/routing/route";
-import { action, getProperties } from "@ember/object";
-import showModal from "discourse/lib/show-modal";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { inject as service } from "@ember/service";
 
+@disableImplicitInjections
 export default class AdminSiteTextIndexRoute extends Route {
+  @service siteSettings;
+  @service store;
+
   queryParams = {
     q: { replace: true },
     overridden: { replace: true },
@@ -11,18 +15,11 @@ export default class AdminSiteTextIndexRoute extends Route {
   };
 
   model(params) {
-    return this.store.find(
-      "site-text",
-      getProperties(params, "q", "overridden", "outdated", "locale")
-    );
-  }
-
-  setupController(controller, model) {
-    controller.set("siteTexts", model);
-  }
-
-  @action
-  showReseedModal() {
-    showModal("admin-reseed", { admin: true });
+    return this.store.find("site-text", {
+      q: params.q,
+      overridden: params.overridden ?? false,
+      outdated: params.outdated ?? false,
+      locale: params.locale ?? this.siteSettings.default_locale,
+    });
   }
 }

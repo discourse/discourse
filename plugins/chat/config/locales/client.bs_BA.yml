@@ -6,7 +6,13 @@
 
 bs_BA:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Uvijek"
+          never: "Nikad"
     chat:
+      deleted_chat_username: obrisano
       create: "napravi"
       cancel: "Odustani"
       channel_settings:
@@ -15,6 +21,7 @@ bs_BA:
         join: "Učlani se"
         leave: "Napusti"
       close: "Zatvori"
+      remove: "Ukloni"
       delete: "Delete"
       edited: "promjenjeno"
       muted: "utišani"
@@ -26,8 +33,6 @@ bs_BA:
       flag: "Prijavi"
       join: "Učlani se"
       last_visit: "zadnja posjeta"
-      mention_warning:
-        dismiss: "odbaci"
       reply: "Odgovori"
       edit: "Edit"
       rebake_message: "Popravi HTML"

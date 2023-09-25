@@ -152,6 +152,11 @@ describe UserNotifications do
         )
       end
 
+      before do
+        channel.add(sender)
+        channel.update!(last_message: chat_message)
+      end
+
       it "doesn't return an email if there are no unread mentions" do
         email = described_class.chat_summary(user, {})
 
@@ -165,7 +170,11 @@ describe UserNotifications do
           # Sometimes it's not enough to just fabricate a message
           # and we have to create it like here. In this case all the necessary
           # db records for mentions and notifications will be created under the hood.
-          Chat::MessageCreator.create(chat_channel: channel, user: sender, content: content)
+          Chat::CreateMessage.call(
+            chat_channel_id: channel.id,
+            guardian: sender.guardian,
+            message: content,
+          )
         end
 
         it "returns email for @all mention by default" do
@@ -272,6 +281,7 @@ describe UserNotifications do
               chat_message: another_chat_message,
               notification: notification,
             )
+            another_chat_channel.update!(last_message: another_chat_message)
 
             email = described_class.chat_summary(user, {})
 
@@ -311,6 +321,7 @@ describe UserNotifications do
                 chat_message: another_chat_message,
                 notification: notification,
               )
+              another_chat_channel.update!(last_message: another_chat_message)
             end
 
             expected_subject =

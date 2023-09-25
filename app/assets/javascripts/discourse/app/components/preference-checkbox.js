@@ -5,9 +5,13 @@ import discourseComputed from "discourse-common/utils/decorators";
 export default Component.extend({
   classNames: ["controls"],
 
-  @discourseComputed("labelKey")
-  label(labelKey) {
-    return I18n.t(labelKey);
+  @discourseComputed("labelKey", "labelCount")
+  label(labelKey, labelCount) {
+    if (labelCount) {
+      return I18n.t(labelKey, { count: labelCount });
+    } else {
+      return I18n.t(labelKey);
+    }
   },
 
   change() {

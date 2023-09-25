@@ -241,8 +241,16 @@ export function isAudio(path) {
   return /\.(mp3|og[ga]|opus|wav|m4[abpr]|aac|flac)$/i.test(path);
 }
 
+export function isBackup(path) {
+  return /^\w[\w\.-]*-v\d+\.(tar\.gz)$/i.test(path);
+}
+
 function uploadTypeFromFileName(fileName) {
-  return isImage(fileName) ? "image" : "attachment";
+  return isImage(fileName)
+    ? "image"
+    : isBackup(fileName)
+    ? "backup"
+    : "attachment";
 }
 
 export function allowsImages(staff, siteSettings) {
@@ -329,25 +337,29 @@ export function displayErrorForUpload(data, siteSettings, fileName) {
   }
 
   // otherwise, display a generic error message
-  dialog.alert(I18n.t("post.errors.upload"));
+  dialog.alert(I18n.t("post.errors.upload", { file_name: fileName }));
 }
 
 function displayErrorByResponseStatus(status, body, fileName, siteSettings) {
   switch (status) {
     // didn't get headers from server, or browser refuses to tell us
     case 0:
-      dialog.alert(I18n.t("post.errors.upload"));
+      dialog.alert(I18n.t("post.errors.upload", { file_name: fileName }));
       return true;
 
     // entity too large, usually returned from the web server
     case 413:
       const type = uploadTypeFromFileName(fileName);
-      const max_size_kb = siteSettings[`max_${type}_size_kb`];
-      dialog.alert(
-        I18n.t("post.errors.file_too_large_humanized", {
-          max_size: I18n.toHumanSize(max_size_kb * 1024),
-        })
-      );
+      if (type === "backup") {
+        dialog.alert(I18n.t("post.errors.backup_too_large"));
+      } else {
+        const max_size_kb = siteSettings[`max_${type}_size_kb`];
+        dialog.alert(
+          I18n.t("post.errors.file_too_large_humanized", {
+            max_size: I18n.toHumanSize(max_size_kb * 1024),
+          })
+        );
+      }
       return true;
 
     // the error message is provided by the server

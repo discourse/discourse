@@ -17,26 +17,25 @@
       </span>
       {{#each this.quickInsertFields as |field|}}
         <DButton
-          @class="btn-flat btn-icon-text quick-insert-{{field.type}}"
           @icon={{field.icon}}
           @label="admin.form_templates.quick_insert_fields.{{field.type}}"
-          @action={{this.onInsertField}}
-          @actionParam={{field.type}}
+          @action={{fn this.onInsertField field.type}}
+          class="btn-flat btn-icon-text quick-insert-{{field.type}}"
         />
       {{/each}}
       <DButton
-        class="btn-flat btn-icon-text form-templates__validations-modal-button"
         @label="admin.form_templates.validations_modal.button_title"
         @icon="check-circle"
         @action={{this.showValidationOptionsModal}}
+        class="btn-flat btn-icon-text form-templates__validations-modal-button"
       />
     </div>
     <DButton
-      @class="form-templates__preview-button"
       @icon="eye"
       @label="admin.form_templates.new_template_form.preview"
       @action={{this.showPreview}}
       @disabled={{this.disablePreviewButton}}
+      class="form-templates__preview-button"
     />
   </div>
 
@@ -46,11 +45,11 @@
 
   <div class="footer-buttons">
     <DButton
-      @class="btn-primary"
       @label="admin.form_templates.new_template_form.submit"
       @icon="check"
       @action={{this.onSubmit}}
       @disabled={{this.disableSubmitButton}}
+      class="btn-primary"
     />
 
     <DButton
@@ -61,10 +60,10 @@
 
     {{#if this.isEditing}}
       <DButton
-        @class="btn-danger"
         @label="admin.form_templates.view_template.delete"
         @icon="trash-alt"
         @action={{this.onDelete}}
+        class="btn-danger"
       />
     {{/if}}
   </div>

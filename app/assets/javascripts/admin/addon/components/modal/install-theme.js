@@ -26,7 +26,9 @@ export default class InstallTheme extends Component {
   @tracked themeCannotBeInstalled;
   @tracked name;
 
-  recordType = "theme";
+  recordType = this.args.model.recordType || "theme";
+  keyGenUrl = this.args.model.keyGenUrl || "/admin/themes/generate_key_pair";
+  importUrl = this.args.model.importUrl || "/admin/themes/import";
 
   get createTypes() {
     return [
@@ -121,7 +123,7 @@ export default class InstallTheme extends Component {
   @action
   async generatePublicKey() {
     try {
-      const pair = await ajax("/admin/themes/generate_key_pair", {
+      const pair = await ajax(this.keyGenUrl, {
         type: "POST",
       });
       this.publicKey = pair.public_key;
@@ -211,7 +213,7 @@ export default class InstallTheme extends Component {
 
     try {
       this.loading = true;
-      const result = await ajax("/admin/themes/import", options);
+      const result = await ajax(this.importUrl, options);
       const theme = this.store.createRecord(this.recordType, result.theme);
       this.args.model.addTheme(theme);
       this.args.closeModal();

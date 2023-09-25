@@ -1,3 +1,7 @@
+.container.tags-index {
+  background: var(--d-content-background);
+}
+
 .topic-title-outlet.choose-tags {
   margin-left: 25px;
   margin-top: 3px;
@@ -210,7 +214,7 @@ header .discourse-tag {
     grid-area: header;
     background: var(--primary-very-low);
     padding: 20px;
-    margin-bottom: 1em;
+    margin: 1em 0;
   }
   .tag-groups-sidebar {
     grid-area: sidebar;

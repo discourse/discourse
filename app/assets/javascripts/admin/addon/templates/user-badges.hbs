@@ -13,7 +13,7 @@
   <div class="admin-container user-badges">
     <h2>{{i18n "admin.badges.grant_badge"}}</h2>
     <br />
-    {{#if this.noGrantableBadges}}
+    {{#if this.noAvailableBadges}}
       <p>{{i18n "admin.badges.no_badges"}}</p>
     {{else}}
       <form class="form-horizontal">
@@ -21,7 +21,7 @@
           <label>{{i18n "admin.badges.badge"}}</label>
           <ComboBox
             @value={{this.selectedBadgeId}}
-            @content={{this.grantableBadges}}
+            @content={{this.availableBadges}}
             @onChange={{action (mut this.selectedBadgeId)}}
             @options={{hash filterable=true}}
           />
@@ -33,10 +33,10 @@
             }}</small>
         </div>
         <DButton
-          @class="btn-primary"
           @action={{this.performGrantBadge}}
-          @type="submit"
           @label="admin.badges.grant"
+          type="submit"
+          class="btn-primary"
         />
       </form>
     {{/if}}
@@ -71,14 +71,14 @@
             <td>
               {{#if userBadge.grouped}}
                 <DButton
-                  @action={{action "expandGroup" userBadge}}
+                  @action={{fn this.expandGroup userBadge}}
                   @label="admin.badges.expand"
                 />
               {{else}}
                 <DButton
-                  @class="btn-danger"
-                  @action={{action "revokeBadge" userBadge}}
+                  @action={{fn this.revokeBadge userBadge}}
                   @label="admin.badges.revoke"
+                  class="btn-danger"
                 />
               {{/if}}
             </td>

@@ -1,30 +1,52 @@
-import Mixin from "@ember/object/mixin";
-import ExtendableUploader from "discourse/mixins/extendable-uploader";
-import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
+import { setOwner } from "@ember/application";
+import { isVideo } from "discourse/lib/uploads";
+import { tracked } from "@glimmer/tracking";
+import UppyUploadMixin from "discourse/mixins/uppy-upload";
+import EmberObject from "@ember/object";
 import Uppy from "@uppy/core";
-import DropTarget from "@uppy/drop-target";
-import XHRUpload from "@uppy/xhr-upload";
 import { warn } from "@ember/debug";
 import I18n from "I18n";
-import getURL from "discourse-common/lib/get-url";
-import { bind } from "discourse-common/utils/decorators";
 import { inject as service } from "@ember/service";
 
-export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
-  dialog: service(),
-  uploadRootPath: "/uploads",
-  uploadTargetBound: false,
-  useUploadPlaceholders: true,
+// It is not ideal that this is a class extending a mixin, but in the case
+// where this is needed (a second background uppy uploader on a class that
+// already has an uppyInstance) then it is acceptable for now.
+//
+// Ideally, this would be refactored into an uppy postprocessor and support
+// for that would be added to the ExtendableUploader. Generally, we want to
+// move away from these Mixins in future.
+//
+// Video thumbnail is attached to the post/topic here:
+//
+// https://github.com/discourse/discourse/blob/110a3025dbf5c7205cec498c7d83dc258d994cfe/app/models/post.rb#L1013-L1035
+export default class ComposerVideoThumbnailUppy extends EmberObject.extend(
+  UppyUploadMixin
+) {
+  @service dialog;
+  @service siteSettings;
+  @service session;
 
-  @bind
-  _generateVideoThumbnail(videoFile, uploadUrl, callback) {
+  @tracked uploading;
+
+  uploadRootPath = "/uploads";
+  uploadTargetBound = false;
+  useUploadPlaceholders = true;
+
+  constructor(owner) {
+    super(...arguments);
+    setOwner(this, owner);
+  }
+
+  generateVideoThumbnail(videoFile, uploadUrl, callback) {
     if (!this.siteSettings.video_thumbnails_enabled) {
       return callback();
     }
-    if (videoFile.type.split("/")[0] !== "video") {
+
+    if (!isVideo(videoFile.name)) {
       return callback();
     }
-    let video = document.createElement("video");
+
+    const video = document.createElement("video");
     video.src = URL.createObjectURL(videoFile.data);
 
     // These attributes are needed for thumbnail generation on mobile.
@@ -40,8 +62,8 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     // Wait for the video element to load, otherwise the canvas will be empty.
     // iOS Safari prefers onloadedmetadata over oncanplay.
     video.onloadedmetadata = () => {
-      let canvas = document.createElement("canvas");
-      let ctx = canvas.getContext("2d");
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
 
@@ -54,8 +76,8 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
           this._uppyInstance = new Uppy({
             id: "video-thumbnail",
             meta: {
-              upload_type: `thumbnail`,
               videoSha1,
+              upload_type: "thumbnail",
             },
             autoProceed: true,
           });
@@ -69,14 +91,13 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
           } else {
             this._useXHRUploads();
           }
-          this._uppyInstance.use(DropTarget, { target: this.element });
 
           this._uppyInstance.on("upload", () => {
-            this.set("uploading", true);
+            this.uploading = true;
           });
 
           this._uppyInstance.on("upload-success", () => {
-            this.set("uploading", false);
+            this.uploading = false;
             callback();
           });
 
@@ -88,13 +109,13 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
             // eslint-disable-next-line no-console
             console.error(message);
-            this.set("uploading", false);
+            this.uploading = false;
             callback();
           });
 
           try {
             this._uppyInstance.addFile({
-              source: `${this.id} thumbnail`,
+              source: `${this.id}-video-thumbnail`,
               name: `${videoSha1}`,
               type: blob.type,
               data: blob,
@@ -107,19 +128,5 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         });
       }, 100);
     };
-  },
-
-  // This should be overridden in a child component if you need to
-  // hook into uppy events and be sure that everything is already
-  // set up for _uppyInstance.
-  _uppyReady() {},
-
-  _useXHRUploads() {
-    this._uppyInstance.use(XHRUpload, {
-      endpoint: getURL(`/uploads.json?client_id=${this.messageBus.clientId}`),
-      headers: {
-        "X-CSRF-Token": this.session.csrfToken,
-      },
-    });
-  },
-});
+  }
+}

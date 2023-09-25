@@ -37,12 +37,15 @@ import { cancel } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { isTesting } from "discourse-common/config/environment";
 import { dependentKeyCompat } from "@ember/object/compat";
+import { inject as service } from "@ember/service";
 
 export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
   BACKUP_CODE: 2,
   SECURITY_KEY: 3,
 };
+
+export const MAX_SECOND_FACTOR_NAME_LENGTH = 300;
 
 const TEXT_SIZE_COOKIE_NAME = "text_size";
 const COOKIE_EXPIRY_DAYS = 365;
@@ -167,6 +170,8 @@ function userOption(userOptionKey) {
 }
 
 const User = RestModel.extend({
+  userTips: service(),
+
   mailing_list_mode: userOption("mailing_list_mode"),
   external_links_in_new_tab: userOption("external_links_in_new_tab"),
   enable_quoting: userOption("enable_quoting"),
@@ -1349,9 +1354,6 @@ User.reopenClass(Singleton, {
     args = args || {};
     this.deleteStatusTrackingFields(args);
 
-    const owner = getOwner(this);
-    args.userTips = owner.lookup("service:user-tips");
-
     return this._super(args);
   },
 
@@ -1381,7 +1383,7 @@ User.reopen(Evented, {
 
   // always call stopTrackingStatus() when done with a user
   trackStatus() {
-    if (!this.id) {
+    if (!this.id && !isTesting()) {
       // eslint-disable-next-line no-console
       console.warn(
         "It's impossible to track user status on a user model that doesn't have id. This user model won't be receiving live user status updates."

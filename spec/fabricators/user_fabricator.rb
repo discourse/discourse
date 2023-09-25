@@ -134,3 +134,11 @@ Fabricator(:bot, from: :user) do
     [(min_id || 0) - 1, -10].min
   end
 end
+
+Fabricator(:east_coast_user, from: :user) do
+  email "eastcoast@tz.com"
+  after_create do |user|
+    user.user_option = UserOption.new(timezone: "Eastern Time (US & Canada)")
+    user.save
+  end
+end

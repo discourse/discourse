@@ -177,5 +177,14 @@ RSpec.describe Discourse::VERSION do
 
       expect(output).to include("Invalid version list")
     end
+
+    it "gracefully handles large .discourse-compatibility files" do
+      stub_const(Discourse, "MAX_METADATA_FILE_SIZE", 1) do
+        output =
+          capture_stderr { expect(Discourse.find_compatible_git_resource(git_directory)).to be_nil }
+
+        expect(output).to include(Discourse::VERSION_COMPATIBILITY_FILENAME)
+      end
+    end
   end
 end

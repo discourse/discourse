@@ -172,6 +172,6 @@ module("Unit | Utility | computed", function (hooks) {
       desc: htmlSafe("cookies"),
     }).create({ cookies });
 
-    assert.strictEqual(t.desc.string, cookies);
+    assert.strictEqual(t.desc.toString(), cookies);
   });
 });

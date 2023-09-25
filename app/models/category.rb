@@ -16,13 +16,7 @@ class Category < ActiveRecord::Base
   include AnonCacheInvalidator
   include HasDestroyedWebHook
 
-  REQUIRE_TOPIC_APPROVAL = "require_topic_approval"
-  REQUIRE_REPLY_APPROVAL = "require_reply_approval"
-  NUM_AUTO_BUMP_DAILY = "num_auto_bump_daily"
   SLUG_REF_SEPARATOR = ":"
-
-  register_custom_field_type(REQUIRE_TOPIC_APPROVAL, :boolean)
-  register_custom_field_type(REQUIRE_REPLY_APPROVAL, :boolean)
 
   belongs_to :topic
   belongs_to :topic_only_relative_url,
@@ -51,6 +45,12 @@ class Category < ActiveRecord::Base
   delegate :auto_bump_cooldown_days,
            :num_auto_bump_daily,
            :num_auto_bump_daily=,
+           :require_reply_approval,
+           :require_reply_approval=,
+           :require_reply_approval?,
+           :require_topic_approval,
+           :require_topic_approval=,
+           :require_topic_approval?,
            to: :category_setting,
            allow_nil: true
 
@@ -205,14 +205,16 @@ class Category < ActiveRecord::Base
   # Allows us to skip creating the category definition topic in tests.
   attr_accessor :skip_category_definition
 
-  @topic_id_cache = DistributedCache.new("category_topic_ids")
+  def self.topic_id_cache
+    @topic_id_cache ||= DistributedCache.new("category_topic_ids")
+  end
 
   def self.topic_ids
-    @topic_id_cache.defer_get_set("ids") { Set.new(Category.pluck(:topic_id).compact) }
+    topic_id_cache.defer_get_set("ids") { Set.new(Category.pluck(:topic_id).compact) }
   end
 
   def self.reset_topic_ids_cache
-    @topic_id_cache.clear
+    topic_id_cache.clear
   end
 
   def reset_topic_ids_cache
@@ -667,14 +669,6 @@ class Category < ActiveRecord::Base
     end
 
     [read_restricted, mapped]
-  end
-
-  def require_topic_approval?
-    custom_fields[REQUIRE_TOPIC_APPROVAL]
-  end
-
-  def require_reply_approval?
-    custom_fields[REQUIRE_REPLY_APPROVAL]
   end
 
   def auto_bump_limiter

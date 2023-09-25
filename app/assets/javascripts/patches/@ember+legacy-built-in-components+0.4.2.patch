@@ -1,0 +1,28 @@
+diff --git a/node_modules/@ember/legacy-built-in-components/addon/mixins/_target_action_support.js b/node_modules/@ember/legacy-built-in-components/addon/mixins/_target_action_support.js
+index d95b013..60f4ddf 100644
+--- a/node_modules/@ember/legacy-built-in-components/addon/mixins/_target_action_support.js
++++ b/node_modules/@ember/legacy-built-in-components/addon/mixins/_target_action_support.js
+@@ -3,8 +3,8 @@
+ /**
+ @module ember
+ */
+-
+-import { context } from '../components/_internals';
++// This change has been merged upstream, but not yet released
++// see https://github.com/emberjs/ember-legacy-built-in-components/commit/61b1a048
+ import { get, computed } from '@ember/object';
+ import Mixin from '@ember/object/mixin';
+ import { assert } from '@ember/debug';
+@@ -29,11 +29,7 @@ export default Mixin.create({
+     let actionContext = get(this, 'actionContext');
+ 
+     if (typeof actionContext === 'string') {
+-      let value = get(this, actionContext);
+-      if (value === undefined) {
+-        value = get(context.lookup, actionContext);
+-      }
+-      return value;
++      return get(this, actionContext);
+     } else {
+       return actionContext;
+     }

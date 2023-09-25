@@ -106,7 +106,9 @@ class UsersController < ApplicationController
   end
 
   def show(for_card: false)
-    return redirect_to path("/login") if SiteSetting.hide_user_profiles_from_public && !current_user
+    if SiteSetting.hide_user_profiles_from_public && !current_user
+      raise Discourse::NotFound.new(custom_message: "invalid_access", status: 403)
+    end
 
     @user =
       fetch_user_from_params(
@@ -155,7 +157,9 @@ class UsersController < ApplicationController
 
   # This route is not used in core, but is used by theme components (e.g. https://meta.discourse.org/t/144479)
   def cards
-    return redirect_to path("/login") if SiteSetting.hide_user_profiles_from_public && !current_user
+    if SiteSetting.hide_user_profiles_from_public && !current_user
+      raise Discourse::NotFound.new(custom_message: "invalid_access", status: 403)
+    end
 
     user_ids = params.require(:user_ids).split(",").map(&:to_i)
     raise Discourse::InvalidParameters.new(:user_ids) if user_ids.length > 50
@@ -767,7 +771,12 @@ class UsersController < ApplicationController
           user.errors[:primary_email]&.include?(I18n.t("errors.messages.taken"))
       session["user_created_message"] = activation.success_message
 
-      if existing_user = User.find_by_email(user.primary_email&.email)
+      existing_user = User.find_by_email(user.primary_email&.email)
+      if !existing_user && SiteSetting.normalize_emails
+        existing_user =
+          UserEmail.find_by_normalized_email(user.primary_email&.normalized_email)&.user
+      end
+      if existing_user
         Jobs.enqueue(:critical_user_email, type: "account_exists", user_id: existing_user.id)
       end
 
@@ -813,11 +822,11 @@ class UsersController < ApplicationController
       format.html do
         return render "password_reset", layout: "no_ember" if @error
 
-        Webauthn.stage_challenge(@user, secure_session)
+        DiscourseWebauthn.stage_challenge(@user, secure_session)
         store_preloaded(
           "password_reset",
           MultiJson.dump(
-            security_params.merge(Webauthn.allowed_credentials(@user, secure_session)),
+            security_params.merge(DiscourseWebauthn.allowed_credentials(@user, secure_session)),
           ),
         )
 
@@ -827,8 +836,9 @@ class UsersController < ApplicationController
       format.json do
         return render json: { message: @error } if @error
 
-        Webauthn.stage_challenge(@user, secure_session)
-        render json: security_params.merge(Webauthn.allowed_credentials(@user, secure_session))
+        DiscourseWebauthn.stage_challenge(@user, secure_session)
+        render json:
+                 security_params.merge(DiscourseWebauthn.allowed_credentials(@user, secure_session))
       end
     end
   end
@@ -895,7 +905,7 @@ class UsersController < ApplicationController
       format.html do
         return render "password_reset", layout: "no_ember" if @error
 
-        Webauthn.stage_challenge(@user, secure_session)
+        DiscourseWebauthn.stage_challenge(@user, secure_session)
 
         security_params = {
           is_developer: UsernameCheckerService.is_developer?(@user.email),
@@ -904,7 +914,7 @@ class UsersController < ApplicationController
           security_key_required: @user.security_keys_enabled?,
           backup_enabled: @user.backup_codes_enabled?,
           multiple_second_factor_methods: @user.has_multiple_second_factor_methods?,
-        }.merge(Webauthn.allowed_credentials(@user, secure_session))
+        }.merge(DiscourseWebauthn.allowed_credentials(@user, secure_session))
 
         store_preloaded("password_reset", MultiJson.dump(security_params))
 
@@ -1545,13 +1555,18 @@ class UsersController < ApplicationController
   end
 
   def create_second_factor_security_key
-    challenge_session = Webauthn.stage_challenge(current_user, secure_session)
+    if current_user.all_security_keys.count >= UserSecurityKey::MAX_KEYS_PER_USER
+      render_json_error(I18n.t("login.too_many_security_keys"), status: 422)
+      return
+    end
+
+    challenge_session = DiscourseWebauthn.stage_challenge(current_user, secure_session)
     render json:
              success_json.merge(
                challenge: challenge_session.challenge,
-               rp_id: challenge_session.rp_id,
-               rp_name: challenge_session.rp_name,
-               supported_algorithms: ::Webauthn::SUPPORTED_ALGORITHMS,
+               rp_id: DiscourseWebauthn.rp_id,
+               rp_name: DiscourseWebauthn.rp_name,
+               supported_algorithms: ::DiscourseWebauthn::SUPPORTED_ALGORITHMS,
                user_secure_id: current_user.create_or_fetch_secure_identifier,
                existing_active_credential_ids:
                  current_user.second_factor_security_key_credential_ids,
@@ -1563,15 +1578,15 @@ class UsersController < ApplicationController
     params.require(:attestation)
     params.require(:clientData)
 
-    ::Webauthn::SecurityKeyRegistrationService.new(
+    ::DiscourseWebauthn::SecurityKeyRegistrationService.new(
       current_user,
       params,
-      challenge: Webauthn.challenge(current_user, secure_session),
-      rp_id: Webauthn.rp_id(current_user, secure_session),
+      challenge: DiscourseWebauthn.challenge(current_user, secure_session),
+      rp_id: DiscourseWebauthn.rp_id,
       origin: Discourse.base_url,
     ).register_second_factor_security_key
     render json: success_json
-  rescue ::Webauthn::SecurityKeyError => err
+  rescue ::DiscourseWebauthn::SecurityKeyError => err
     render json: failed_json.merge(error: err.message)
   end
 

@@ -23,6 +23,7 @@ require "fabrication"
 require "mocha/api"
 require "certified"
 require "webmock/rspec"
+require "minio_runner"
 
 class RspecErrorTracker
   def self.last_exception=(ex)
@@ -182,7 +183,7 @@ RSpec.configure do |config|
   config.include RSpecHtmlMatchers
   config.include IntegrationHelpers, type: :request
   config.include SystemHelpers, type: :system
-  config.include WebauthnIntegrationHelpers
+  config.include DiscourseWebauthnIntegrationHelpers
   config.include SiteSettingsHelpers
   config.include SidekiqHelpers
   config.include UploadsHelpers
@@ -267,7 +268,35 @@ RSpec.configure do |config|
 
     SiteSetting.provider = TestLocalProcessProvider.new
 
-    WebMock.disable_net_connect!(allow_localhost: true)
+    # Used for S3 system specs, see also setup_s3_system_test.
+    MinioRunner.config do |minio_runner_config|
+      minio_runner_config.minio_domain = ENV["MINIO_RUNNER_MINIO_DOMAIN"] || "minio.local"
+      minio_runner_config.buckets =
+        (
+          if ENV["MINIO_RUNNER_BUCKETS"]
+            ENV["MINIO_RUNNER_BUCKETS"].split(",")
+          else
+            ["discoursetest"]
+          end
+        )
+      minio_runner_config.public_buckets =
+        (
+          if ENV["MINIO_RUNNER_PUBLIC_BUCKETS"]
+            ENV["MINIO_RUNNER_PUBLIC_BUCKETS"].split(",")
+          else
+            ["discoursetest"]
+          end
+        )
+    end
+
+    WebMock.disable_net_connect!(
+      allow_localhost: true,
+      allow: [
+        *MinioRunner.config.minio_urls,
+        URI(MinioRunner::MinioBinary.platform_binary_url).host,
+        ENV["CAPYBARA_REMOTE_DRIVER_URL"],
+      ].compact,
+    )
 
     if ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].present?
       Capybara.default_max_wait_time = ENV["CAPYBARA_DEFAULT_MAX_WAIT_TIME"].to_i
@@ -280,8 +309,10 @@ RSpec.configure do |config|
     Capybara.w3c_click_offset = false
 
     Capybara.configure do |capybara_config|
-      capybara_config.server_host = "localhost"
-      capybara_config.server_port = 31_337 + ENV["TEST_ENV_NUMBER"].to_i
+      capybara_config.server_host = ENV["CAPYBARA_SERVER_HOST"].presence || "localhost"
+
+      capybara_config.server_port =
+        (ENV["CAPYBARA_SERVER_PORT"].presence || "31_337").to_i + ENV["TEST_ENV_NUMBER"].to_i
     end
 
     module IgnoreUnicornCapturedErrors
@@ -353,14 +384,22 @@ RSpec.configure do |config|
           options.add_preference("download.default_directory", Downloads::FOLDER)
         end
 
+    driver_options = { browser: :chrome }
+
+    if ENV["CAPYBARA_REMOTE_DRIVER_URL"].present?
+      driver_options[:browser] = :remote
+      driver_options[:url] = ENV["CAPYBARA_REMOTE_DRIVER_URL"]
+    end
+
+    desktop_driver_options = driver_options.merge(options: chrome_browser_options)
+
     Capybara.register_driver :selenium_chrome do |app|
-      Capybara::Selenium::Driver.new(app, browser: :chrome, options: chrome_browser_options)
+      Capybara::Selenium::Driver.new(app, **desktop_driver_options)
     end
 
     Capybara.register_driver :selenium_chrome_headless do |app|
       chrome_browser_options.add_argument("--headless=new")
-
-      Capybara::Selenium::Driver.new(app, browser: :chrome, options: chrome_browser_options)
+      Capybara::Selenium::Driver.new(app, **desktop_driver_options)
     end
 
     mobile_chrome_browser_options =
@@ -374,13 +413,15 @@ RSpec.configure do |config|
           apply_base_chrome_options(options)
         end
 
+    mobile_driver_options = driver_options.merge(options: mobile_chrome_browser_options)
+
     Capybara.register_driver :selenium_mobile_chrome do |app|
-      Capybara::Selenium::Driver.new(app, browser: :chrome, options: mobile_chrome_browser_options)
+      Capybara::Selenium::Driver.new(app, **mobile_driver_options)
     end
 
     Capybara.register_driver :selenium_mobile_chrome_headless do |app|
       mobile_chrome_browser_options.add_argument("--headless=new")
-      Capybara::Selenium::Driver.new(app, browser: :chrome, options: mobile_chrome_browser_options)
+      Capybara::Selenium::Driver.new(app, **mobile_driver_options)
     end
 
     if ENV["ELEVATED_UPLOADS_ID"]
@@ -420,6 +461,7 @@ RSpec.configure do |config|
   config.after(:suite) do
     FileUtils.remove_dir(concurrency_safe_tmp_dir, true) if SpecSecureRandom.value
     Downloads.clear
+    MinioRunner.stop
   end
 
   config.around :each do |example|
@@ -644,6 +686,12 @@ end
 def file_from_fixtures(filename, directory = "images")
   tmp_file_path = File.join(concurrency_safe_tmp_dir, SecureRandom.hex << filename)
   FileUtils.cp("#{Rails.root}/spec/fixtures/#{directory}/#{filename}", tmp_file_path)
+  File.new(tmp_file_path)
+end
+
+def file_from_contents(contents, filename, directory = "images")
+  tmp_file_path = File.join(concurrency_safe_tmp_dir, SecureRandom.hex << filename)
+  File.write(tmp_file_path, contents)
   File.new(tmp_file_path)
 end
 

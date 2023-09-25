@@ -6,13 +6,20 @@
 
 be:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "заўсёды"
+          never: "ніколі"
     chat:
+      deleted_chat_username: аддалены
       create: "стварыць"
       cancel: "адмяніць"
       channel_settings:
         edit: "рэдагаваць"
         add: "дадаць"
       close: "зачыніць"
+      remove: "выдаліць"
       delete: "выдаляць"
       muted: "ігнаруемай"
       joined: "рэгістрацыя"

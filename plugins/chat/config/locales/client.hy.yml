@@ -6,7 +6,13 @@
 
 hy:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Միշտ"
+          never: "Երբեք"
     chat:
+      deleted_chat_username: ջնջված
       create: "Ստեղծել"
       cancel: "Չեղարկել"
       channel_settings:
@@ -15,6 +21,7 @@ hy:
         join: "Միանալ"
         leave: "Լքել"
       close: "Փակել"
+      remove: "Հեռացնել"
       delete: "Ջնջել"
       edited: "խմբագրվել է"
       muted: "խլացված"
@@ -26,8 +33,6 @@ hy:
       flag: "Դրոշակավորել"
       join: "Միանալ"
       last_visit: "վերջին այցելությունը"
-      mention_warning:
-        dismiss: "չեղարկել"
       reply: "Պատասխանել"
       edit: "Խմբագրել"
       rebake_message: "Վերակառուցել HTML-ը"

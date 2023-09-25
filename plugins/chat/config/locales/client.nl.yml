@@ -10,6 +10,9 @@ nl:
       site_settings:
         categories:
           chat: Chat
+        chat_separate_sidebar_mode:
+          always: "Altijd"
+          never: "Nooit"
       logs:
         staff_actions:
           actions:
@@ -26,6 +29,7 @@ nl:
       chat_channels_count: "Chatkanalen"
       chat_users_count: "Chatgebruikers"
     chat:
+      deleted_chat_username: verwijderd
       dates:
         time_tiny: "h:mm"
       all_loaded: "Alle berichten worden weergeven"
@@ -81,6 +85,7 @@ nl:
         create: "Nieuw kanaal"
       click_to_join: "Klik hier om de beschikbare kanalen te bekijken."
       close: "Sluiten"
+      remove: "Verwijderen"
       collapse: "Chatlade samenvouwen"
       expand: "Chatlade uitvouwen"
       confirm_flag: "Weet je zeker dat je het bericht van %{username} wilt markeren?"
@@ -124,27 +129,10 @@ nl:
           one: "Afgelopen uur"
           other: "Afgelopen %{count} uur"
       mention_warning:
-        dismiss: "negeren"
-        cannot_see: "%{username} heeft geen toegang tot dit kanaal en is niet geïnformeerd."
-        cannot_see_multiple:
-          one: "%{username} en %{count} andere gebruiker hebben geen toegang tot dit kanaal en zijn niet geïnformeerd."
-          other: "%{username} en %{count} andere gebruikers hebben geen toegang tot dit kanaal en zijn niet geïnformeerd."
         invitations_sent:
           one: "Uitnodiging gestuurd"
           other: "Uitnodigingen gestuurd"
         invite: "Uitnodigen voor kanaal"
-        without_membership: "%{username} neemt niet deel aan dit kanaal."
-        without_membership_multiple:
-          one: "%{username} en %{count} ander nemen niet deel aan dit kanaal."
-          other: "%{username} en %{count} anderen nemen niet deel aan dit kanaal."
-        group_mentions_disabled: "%{group_name} staat geen vermeldingen toe."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} en %{count} andere groep staan geen vermeldingen toe."
-          other: "%{group_name} en %{count} andere groepen staan geen vermeldingen toe."
-        too_many_members: "%{group_name} heeft te veel leden. Niemand is geïnformeerd."
-        too_many_members_multiple:
-          one: "%{group_name} en %{count} andere groep hebben te veel leden. Niemand is geïnformeerd."
-          other: "%{group_name} en %{count} andere groepen hebben te veel leden. Niemand is geïnformeerd."
         groups:
           header:
             some: "Sommige gebruikers worden niet geïnformeerd"
@@ -446,7 +434,6 @@ nl:
         title: "Chat"
         export_messages:
           title: "Chatberichten exporteren"
-          description: "Exporteren is momenteel beperkt tot de 10.000 meest recente berichten van de afgelopen 6 maanden."
           create_export: "Export maken"
           export_has_started: "Het exporteren is begonnen. Je ontvangt een privébericht als het klaar is."
       direct_messages:
@@ -544,7 +531,6 @@ nl:
       thread:
         title: "Titel"
         view_thread: Thread weergeven
-        default_title: "Thread"
         replies:
           one: "%{count} antwoord"
           other: "%{count} antwoorden"
@@ -614,6 +600,9 @@ nl:
       types:
         chat_reviewable_message:
           title: "Gemarkeerd chatbericht"
+        reviewable_chat_message:
+          title: "Gemarkeerd chatbericht"
+          noun: "chatbericht"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"
@@ -649,3 +638,7 @@ nl:
       sections:
         chat:
           title: Chat
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

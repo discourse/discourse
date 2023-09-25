@@ -5,8 +5,11 @@ globalThis.deprecationWorkflow.config = {
   workflow: [
     { handler: "silence", matchId: "route-render-template" },
     { handler: "silence", matchId: "route-disconnect-outlet" },
-    { handler: "silence", matchId: "routing.transition-methods" },
-    { handler: "silence", matchId: "this-property-fallback" },
+    {
+      handler: "silence",
+      matchId: "ember-this-fallback.this-property-fallback",
+    },
     { handler: "silence", matchId: "discourse.select-kit" },
+    { handler: "silence", matchId: "discourse.d-section" },
   ],
 };

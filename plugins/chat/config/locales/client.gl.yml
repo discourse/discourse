@@ -6,7 +6,13 @@
 
 gl:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Sempre"
+          never: "Nunca"
     chat:
+      deleted_chat_username: eliminado
       create: "Crear"
       cancel: "Cancelar"
       channel_settings:
@@ -15,6 +21,7 @@ gl:
         join: "Participar"
         leave: "Abandonar"
       close: "Pechar"
+      remove: "Retirar"
       delete: "Eliminar"
       edited: "editado"
       muted: "silenciado"
@@ -26,8 +33,6 @@ gl:
       flag: "Sinalar"
       join: "Participar"
       last_visit: "última visita"
-      mention_warning:
-        dismiss: "desbotar"
       reply: "Responder"
       edit: "Editar"
       rebake_message: "Reconstruír HTML"

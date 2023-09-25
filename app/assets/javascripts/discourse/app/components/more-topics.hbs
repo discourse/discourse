@@ -1,22 +1,23 @@
-<div class="more-content-wrapper" {{did-insert this.buildListPills}}>
-  {{#if this.showTopicListsNav}}
+<div class="more-topics__container">
+  {{#unless this.singleList}}
     <div class="row">
-      <ul class="nav nav-pills" {{did-insert this.buildListPills}}>
-        {{#each this.availablePills as |pill|}}
+      <ul class="nav nav-pills">
+        {{#each this.availableTabs as |tab|}}
           <li>
             <DButton
-              @translatedTitle={{pill.name}}
-              @translatedLabel={{pill.name}}
-              @class={{if pill.selected "active"}}
-              @action={{action "rememberTopicListPreference" pill.id}}
+              @translatedTitle={{tab.name}}
+              @translatedLabel={{tab.name}}
+              @action={{fn this.rememberTopicListPreference tab.id}}
+              @icon={{tab.icon}}
+              class={{if (eq tab.id this.selectedTab) "active"}}
             />
           </li>
         {{/each}}
       </ul>
     </div>
-  {{/if}}
+  {{/unless}}
 
-  <div class="more-topics-lists {{if this.singleList 'single-list'}}">
+  <div class="more-topics__lists {{if this.singleList 'single-list'}}">
     {{#if @topic.relatedMessages.length}}
       <RelatedMessages @topic={{@topic}} />
     {{/if}}
@@ -41,7 +42,7 @@
   </div>
 
   {{#if @topic.suggestedTopics.length}}
-    <h3 class="suggested-topics-message">
+    <h3 class="more-topics__browse-more">
       {{html-safe this.browseMoreMessage}}
     </h3>
   {{/if}}

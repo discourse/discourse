@@ -1,21 +1,19 @@
 <div class="search-input">
-  {{#if @inTopicContext}}
+  {{#if this.search.inTopicContext}}
     <DButton
       @icon="times"
       @label="search.in_this_topic"
       @title="search.in_this_topic_tooltip"
-      class="btn btn-small search-context"
       @action={{@clearTopicContext}}
-      @iconRight={{true}}
+      class="btn-small search-context"
     />
   {{else if @inPMInboxContext}}
     <DButton
       @icon="times"
       @label="search.in_messages"
       @title="search.in_messages_tooltip"
-      @class="btn btn-small search-context"
       @action={{@clearPMInboxContext}}
-      @iconRight={{true}}
+      class="btn-small search-context"
     />
   {{/if}}
 
@@ -44,7 +42,7 @@
   {{/if}}
 </div>
 
-{{#if (and @inTopicContext (not @includesTopics))}}
+{{#if (and this.search.inTopicContext (not @includesTopics))}}
   <SearchMenu::BrowserSearchTip />
 {{else}}
   {{#unless @loading}}

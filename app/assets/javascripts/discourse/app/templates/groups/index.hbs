@@ -2,16 +2,18 @@
   {{hide-application-footer}}
 {{/if}}
 
+{{body-class "groups-page"}}
+
 <PluginOutlet @name="before-groups-index-container" @connectorTagName="div" />
 
-<DSection @pageClass="groups">
+<section class="container groups-index">
   <div class="groups-header">
     {{#if this.currentUser.can_create_group}}
       <DButton
-        @action={{action "new"}}
-        @class="btn-default groups-header-new pull-right"
+        @action={{this.new}}
         @icon="plus"
         @label="admin.groups.new.title"
+        class="btn-default groups-header-new pull-right"
       />
     {{/if}}
 
@@ -126,7 +128,6 @@
       <p role="status">{{i18n "groups.index.empty"}}</p>
     {{/if}}
   </ConditionalLoadingSpinner>
-
-</DSection>
+</section>
 
 <PluginOutlet @name="after-groups-index-container" @connectorTagName="div" />

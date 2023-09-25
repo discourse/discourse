@@ -1,3 +1,14 @@
+@keyframes popIn {
+  0% {
+    transform: scale(0.1);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 .chat-message-creator {
   display: flex;
   align-items: center;
@@ -219,6 +230,9 @@
     height: calc(var(--row-height) - 6);
     padding-inline: 0.25rem;
     margin: 3px;
+    @media (prefers-reduced-motion: no-preference) {
+      animation: popIn 0.1s ease-out;
+    }
 
     .d-icon-times {
       margin-top: 4px;

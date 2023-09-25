@@ -6,6 +6,6 @@ export default class PluginCommitHash extends Component {
   }
 
   get commitHash() {
-    return this.args.plugin.commit_hash;
+    return this.args.plugin.commitHash;
   }
 }

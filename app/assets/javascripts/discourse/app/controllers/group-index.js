@@ -11,7 +11,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 export default Controller.extend({
   queryParams: ["order", "asc", "filter"],
 
-  order: "",
+  order: null,
   asc: true,
   filter: null,
   filterInput: null,
@@ -23,7 +23,7 @@ export default Controller.extend({
   bulkSelection: null,
 
   get canLoadMore() {
-    return this.get("model.members")?.length >= this.get("model.user_count");
+    return this.get("model.members")?.length < this.get("model.user_count");
   },
 
   @observes("filterInput")

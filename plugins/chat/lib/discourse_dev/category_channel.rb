@@ -45,8 +45,10 @@ module DiscourseDev
         Faker::Number
           .between(from: 20, to: 80)
           .times do
-            Chat::MessageCreator.create(
-              { user: users.sample, chat_channel: channel, content: Faker::Lorem.paragraph },
+            Chat::CreateMessage.call(
+              guardian: users.sample.guardian,
+              chat_channel_id: channel.id,
+              message: Faker::Lorem.paragraph,
             )
           end
       end

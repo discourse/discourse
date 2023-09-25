@@ -2,6 +2,8 @@
 
 module Chat
   class IncomingWebhooksController < ::ApplicationController
+    include Chat::WithServiceHelper
+
     requires_plugin Chat::PLUGIN_NAME
 
     WEBHOOK_MESSAGES_PER_MINUTE_LIMIT = 10
@@ -50,20 +52,37 @@ module Chat
     private
 
     def process_webhook_payload(text:, key:)
-      validate_message_length(text)
       webhook = find_and_rate_limit_webhook(key)
+      webhook.chat_channel.add(Discourse.system_user)
 
-      chat_message_creator =
-        Chat::MessageCreator.create(
-          chat_channel: webhook.chat_channel,
-          user: Discourse.system_user,
-          content: text,
-          incoming_chat_webhook: webhook,
-        )
-      if chat_message_creator.failed?
-        render_json_error(chat_message_creator.error)
-      else
-        render json: success_json
+      with_service(
+        Chat::CreateMessage,
+        chat_channel_id: webhook.chat_channel_id,
+        guardian: Discourse.system_user.guardian,
+        message: text,
+        incoming_chat_webhook: webhook,
+      ) do
+        on_success { render json: success_json }
+        on_failed_contract do |contract|
+          raise Discourse::InvalidParameters.new(contract.errors.full_messages)
+        end
+        on_failed_policy(:no_silenced_user) { raise Discourse::InvalidAccess }
+        on_model_not_found(:channel) { raise Discourse::NotFound }
+        on_failed_policy(:allowed_to_join_channel) { raise Discourse::InvalidAccess }
+        on_model_not_found(:channel_membership) { raise Discourse::InvalidAccess }
+        on_failed_policy(:ensure_reply_consistency) { raise Discourse::NotFound }
+        on_failed_policy(:allowed_to_create_message_in_channel) do |policy|
+          render_json_error(policy.reason)
+        end
+        on_failed_policy(:ensure_valid_thread_for_channel) do
+          render_json_error(I18n.t("chat.errors.thread_invalid_for_channel"))
+        end
+        on_failed_policy(:ensure_thread_matches_parent) do
+          render_json_error(I18n.t("chat.errors.thread_does_not_match_parent"))
+        end
+        on_model_errors(:message) do |model|
+          render_json_error(model.errors.map(&:full_message).join(", "))
+        end
       end
     end
 
@@ -79,13 +98,6 @@ module Chat
         1.minute,
       ).performed!
       webhook
-    end
-
-    def validate_message_length(message)
-      return if message.length <= SiteSetting.chat_maximum_message_length
-      raise Discourse::InvalidParameters.new(
-              "Body cannot be over #{SiteSetting.chat_maximum_message_length} characters",
-            )
     end
 
     # The webhook POST body can be in 3 different formats:

@@ -10,6 +10,9 @@ fr:
       site_settings:
         categories:
           chat: Discussion
+        chat_separate_sidebar_mode:
+          always: "Toujours"
+          never: "Jamais"
       logs:
         staff_actions:
           actions:
@@ -26,6 +29,7 @@ fr:
       chat_channels_count: "Canaux de discussion"
       chat_users_count: "Utilisateurs de la discussion"
     chat:
+      deleted_chat_username: supprimé
       dates:
         time_tiny: "h:mm"
       all_loaded: "Affichage de tous les messages"
@@ -81,6 +85,7 @@ fr:
         create: "Nouveau canal"
       click_to_join: "Cliquez ici pour voir les canaux disponibles."
       close: "Fermer"
+      remove: "Supprimer"
       collapse: "Réduire le tiroir de discussion"
       expand: "Développer le tiroir de discussion"
       confirm_flag: "Voulez-vous vraiment signaler le message de %{username} ?"
@@ -124,27 +129,10 @@ fr:
           one: "Dernière heure"
           other: "%{count} dernières heures"
       mention_warning:
-        dismiss: "rejeter"
-        cannot_see: "%{username} ne peut pas accéder à ce canal et n'a pas été averti(e)."
-        cannot_see_multiple:
-          one: "%{username} et %{count} autre utilisateur ne peuvent pas accéder à ce canal et n'ont pas été avertis."
-          other: "%{username} et %{count} autres utilisateurs ne peuvent pas accéder à ce canal et n'ont pas été avertis."
         invitations_sent:
           one: "Invitation envoyée"
           other: "Invitations envoyées"
         invite: "Inviter à rejoindre le canal"
-        without_membership: "%{username} n'a pas rejoint ce canal."
-        without_membership_multiple:
-          one: "%{username} et %{count} autre utilisateur n'ont pas rejoint ce canal."
-          other: "%{username} et %{count} autres utilisateurs n'ont pas rejoint ce canal."
-        group_mentions_disabled: "%{group_name} n'autorise pas les mentions."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} et %{count} autre groupe n'autorisent pas les mentions."
-          other: "%{group_name} et %{count} autres groupes n'autorisent pas les mentions."
-        too_many_members: "%{group_name} a trop de membres. Personne n'a reçu de notification."
-        too_many_members_multiple:
-          one: "%{group_name} et %{count} autre groupe comprennent trop de membres. Personne n'a été prévenu."
-          other: "%{group_name} et %{count} autres groupes comprennent trop de membres. Personne n'a été prévenu."
         groups:
           header:
             some: "Certains utilisateurs ne recevront pas de notification"
@@ -446,7 +434,6 @@ fr:
         title: "Discussion"
         export_messages:
           title: "Exporter les messages de la discussion"
-          description: "L'exportation est actuellement limitée au 10 000 messages les plus récents au cours des 6 derniers mois."
           create_export: "Créer une exportation"
           export_has_started: "L'exportation a commencé. Vous recevrez un MP quand elle sera prête."
       direct_messages:
@@ -544,7 +531,6 @@ fr:
       thread:
         title: "Titre"
         view_thread: Afficher le fil
-        default_title: "Fil"
         replies:
           one: "%{count} réponse"
           other: "%{count} réponses"
@@ -614,6 +600,9 @@ fr:
       types:
         chat_reviewable_message:
           title: "Message de discussion signalé"
+        reviewable_chat_message:
+          title: "Message de discussion marqué"
+          noun: "message de discussion"
     keyboard_shortcuts_help:
       chat:
         title: "Discussion"
@@ -649,3 +638,7 @@ fr:
       sections:
         chat:
           title: Discussion
+    sidebar:
+      panels:
+        chat:
+          label: "Discussion"

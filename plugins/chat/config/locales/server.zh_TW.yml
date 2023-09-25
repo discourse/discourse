@@ -5,11 +5,11 @@
 # https://translate.discourse.org/
 
 zh_TW:
-  site_settings:
-    chat_enabled: "啟用聊天外掛程式。"
   chat:
     deleted_chat_username: 已刪除
     errors:
+      minimum_length_not_met:
+        other: "訊息過短，必須至少有 %{count} 個字元。"
       message_too_long:
         other: "訊息過長，不得超過 %{count} 個字元。"
       not_accepting_dms: "對不起，%{username} 目前不接收訊息。"
@@ -28,15 +28,13 @@ zh_TW:
           description: "同意檢舉並禁止使用者發文"
         agree_and_delete:
           title: "刪除訊息"
-        delete_and_agree:
-          title: "刪除訊息"
         disagree:
           title: "不同意"
-        ignore:
-          title: "忽略"
     channel:
       dm_title:
         single_user: "%{username}"
+    mention_warning:
+      dismiss: "忽略"
     category_channel:
       errors:
         is_already_in_use: "已被使用"

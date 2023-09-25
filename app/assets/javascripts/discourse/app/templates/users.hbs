@@ -2,7 +2,8 @@
   {{hide-application-footer}}
 {{/if}}
 
-<DSection @pageClass="users">
+{{body-class "users-page"}}
+<section>
   <LoadMore
     @selector=".directory-table .directory-table__cell"
     @action={{action "loadMore"}}
@@ -57,8 +58,8 @@
             {{#if this.currentUser.staff}}
               <DButton
                 @icon="wrench"
-                @action={{action "showEditColumnsModal"}}
-                @class="btn-default open-edit-columns-btn"
+                @action={{this.showEditColumnsModal}}
+                class="btn-default open-edit-columns-btn"
               />
             {{/if}}
             <PluginOutlet
@@ -83,8 +84,7 @@
             <p>{{i18n "directory.no_results"}}</p>
           {{/if}}
         </ConditionalLoadingSpinner>
-
       </div>
     </div>
   </LoadMore>
-</DSection>
+</section>

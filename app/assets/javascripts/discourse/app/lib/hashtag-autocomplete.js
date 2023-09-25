@@ -48,6 +48,22 @@ export function decorateHashtags(element, site) {
   });
 }
 
+export function generatePlaceholderHashtagHTML(type, spanEl, data) {
+  // NOTE: When changing the HTML structure here, you must also change
+  // it in the hashtag-autocomplete markdown rule, and vice-versa.
+  const link = document.createElement("a");
+  link.classList.add("hashtag-cooked");
+  link.href = data.relative_url;
+  link.dataset.type = type;
+  link.dataset.id = data.id;
+  link.dataset.slug = data.slug;
+  const hashtagTypeClass = new getHashtagTypeClasses()[type];
+  link.innerHTML = `${hashtagTypeClass.generateIconHTML(
+    data
+  )}<span>${emojiUnescape(data.text)}</span>`;
+  spanEl.replaceWith(link);
+}
+
 /**
  * Sets up a textarea using the jQuery autocomplete plugin, specifically
  * to match on the hashtag (#) character for autocompletion of categories,
@@ -243,19 +259,7 @@ function _findAndReplaceSeenHashtagPlaceholder(
     // Replace raw span for the hashtag with a cooked one
     const matchingSeenHashtag = seenHashtags[type]?.[slugRef];
     if (matchingSeenHashtag) {
-      // NOTE: When changing the HTML structure here, you must also change
-      // it in the hashtag-autocomplete markdown rule, and vice-versa.
-      const link = document.createElement("a");
-      link.classList.add("hashtag-cooked");
-      link.href = matchingSeenHashtag.relative_url;
-      link.dataset.type = type;
-      link.dataset.id = matchingSeenHashtag.id;
-      link.dataset.slug = matchingSeenHashtag.slug;
-      const hashtagType = new getHashtagTypeClasses()[type];
-      link.innerHTML = `${hashtagType.generateIconHTML(
-        matchingSeenHashtag
-      )}<span>${emojiUnescape(matchingSeenHashtag.text)}</span>`;
-      hashtagSpan.replaceWith(link);
+      generatePlaceholderHashtagHTML(type, hashtagSpan, matchingSeenHashtag);
     }
   });
 }

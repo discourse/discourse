@@ -1,8 +1,11 @@
 import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import { applyLocalDates } from "../initializers/discourse-local-dates";
 import { freezeTime } from "./local-date-builder-test";
 
-module("Unit | Discourse Local Dates | discourse-local-dates", function () {
+module("Unit | discourse-local-dates", function (hooks) {
+  setupTest(hooks);
+
   function createElementFromHTML(htmlString) {
     const div = document.createElement("div");
     div.innerHTML = htmlString.trim();
@@ -41,7 +44,9 @@ module("Unit | Discourse Local Dates | discourse-local-dates", function () {
     freezeTime(
       { date: "2022-10-07T10:10:10", timezone: "Asia/Singapore" },
       () => {
-        applyLocalDates(dateElements, { discourse_local_dates_enabled: true });
+        applyLocalDates(dateElements, {
+          discourse_local_dates_enabled: true,
+        });
 
         assert.equal(
           from.querySelector(".relative-time").textContent,
@@ -64,7 +69,9 @@ module("Unit | Discourse Local Dates | discourse-local-dates", function () {
     freezeTime(
       { date: "2022-10-07T10:10:10", timezone: "Asia/Singapore" },
       () => {
-        applyLocalDates(dateElements, { discourse_local_dates_enabled: true });
+        applyLocalDates(dateElements, {
+          discourse_local_dates_enabled: true,
+        });
 
         assert.equal(
           from.querySelector(".relative-time").textContent,

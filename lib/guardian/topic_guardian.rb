@@ -201,11 +201,11 @@ module TopicGuardian
   alias can_create_unlisted_topic? can_toggle_topic_visibility?
 
   def can_convert_topic?(topic)
-    return false unless @user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
     return false if topic.blank?
     return false if topic.trashed?
     return false if topic.is_category_topic?
     return true if is_admin?
+    return false if !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
     is_moderator? && can_create_post?(topic)
   end
 

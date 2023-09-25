@@ -7,7 +7,7 @@ function initializePlugin(api) {
   const siteSettings = api.container.lookup("site-settings:main");
 
   if (siteSettings.checklist_enabled) {
-    api.decorateCookedElement(checklistSyntax, { id: "checklist" });
+    api.decorateCookedElement(checklistSyntax);
   }
 }
 

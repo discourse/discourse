@@ -26,7 +26,7 @@ async function pressEnter(element, modifier) {
 }
 
 acceptance("flagging", function (needs) {
-  needs.user();
+  needs.user({ admin: true });
   needs.pretender((server, helper) => {
     server.get("/u/uwe_keim.json", () => {
       return helper.response(userFixtures["/u/charlie.json"]);
@@ -53,7 +53,8 @@ acceptance("flagging", function (needs) {
         public_admission: false,
         allow_membership_requests: true,
         membership_request_template: "Please add me",
-        full_name: null,
+        can_be_deleted: true,
+        can_delete_all_posts: true,
       });
     });
     server.get("/admin/users/5.json", () => {
@@ -123,10 +124,18 @@ acceptance("flagging", function (needs) {
     await silenceUntilCombobox.expand();
     await silenceUntilCombobox.selectRowByValue("tomorrow");
     assert.ok(exists(".modal-body"));
-    await fillIn(".silence-reason", "for breaking the rules");
+    await fillIn("input.silence-reason", "for breaking the rules");
 
     await click(".perform-penalize");
     assert.ok(!exists(".modal-body"));
+  });
+
+  test("Can delete spammer from spam", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await openFlagModal();
+    await click("#radio_spam");
+
+    assert.ok(exists(".delete-spammer"));
   });
 
   test("Gets dismissable warning from canceling incomplete silence from take action", async function (assert) {
@@ -139,7 +148,7 @@ acceptance("flagging", function (needs) {
     const silenceUntilCombobox = selectKit(".silence-until .combobox");
     await silenceUntilCombobox.expand();
     await silenceUntilCombobox.selectRowByValue("tomorrow");
-    await fillIn(".silence-reason", "for breaking the rules");
+    await fillIn("input.silence-reason", "for breaking the rules");
     await click(".d-modal-cancel");
     assert.ok(exists(".dialog-body"));
 
@@ -158,31 +167,31 @@ acceptance("flagging", function (needs) {
     await visit("/t/internationalization-localization/280");
     await openFlagModal();
 
-    const modal = query("#discourse-modal");
+    const modal = query(".d-modal");
     await pressEnter(modal, "ctrlKey");
     assert.ok(
-      exists("#discourse-modal:visible"),
+      exists(".d-modal:visible"),
       "The modal wasn't closed because the accept button was disabled"
     );
 
     await click("#radio_inappropriate"); // this enables the accept button
     await pressEnter(modal, "ctrlKey");
-    assert.ok(!exists("#discourse-modal:visible"), "The modal was closed");
+    assert.ok(!exists(".d-modal:visible"), "The modal was closed");
   });
 
   test("CMD or WINDOWS-KEY + ENTER accepts the modal", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await openFlagModal();
 
-    const modal = query("#discourse-modal");
+    const modal = query(".d-modal");
     await pressEnter(modal, "metaKey");
     assert.ok(
-      exists("#discourse-modal:visible"),
+      exists(".d-modal:visible"),
       "The modal wasn't closed because the accept button was disabled"
     );
 
     await click("#radio_inappropriate"); // this enables the accept button
     await pressEnter(modal, "ctrlKey");
-    assert.ok(!exists("#discourse-modal:visible"), "The modal was closed");
+    assert.ok(!exists(".d-modal:visible"), "The modal was closed");
   });
 });

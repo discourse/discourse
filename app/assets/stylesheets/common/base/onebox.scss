@@ -199,7 +199,6 @@ aside.onebox {
           max-width: initial;
           max-height: initial;
           float: none;
-          margin-right: none;
         }
       }
 
@@ -413,6 +412,7 @@ pre.onebox code ol.lines li {
   border-left: 1px solid #cfcfcf;
   min-height: 1.5em; //show empty li lines
   white-space: pre;
+  width: max-content;
 }
 
 pre.onebox code li.selected {
@@ -935,6 +935,9 @@ iframe.vimeo-onebox {
     position: absolute;
     width: calc(100% - 40px);
     animation: 0.5s fadeIn;
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
   }
 }
 

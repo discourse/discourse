@@ -6,7 +6,13 @@
 
 nb_NO:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Alltid"
+          never: "Aldri"
     chat:
+      deleted_chat_username: slettet
       create: "Opprett"
       cancel: "Avbryt"
       channel_settings:
@@ -15,6 +21,7 @@ nb_NO:
         join: "Bli medlem"
         leave: "Forlat"
       close: "Lukk"
+      remove: "Fjern"
       delete: "Slett"
       edited: "redigert"
       muted: "ignorert"
@@ -26,8 +33,6 @@ nb_NO:
       flag: "Flagg"
       join: "Bli medlem"
       last_visit: "siste besøk"
-      mention_warning:
-        dismiss: "forkast"
       reply: "Svar"
       edit: "Endre"
       rebake_message: "Generer HTML på nytt"

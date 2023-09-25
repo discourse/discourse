@@ -45,6 +45,31 @@ RSpec.describe "New message", type: :system do
     end
   end
 
+  context "when selecting more users than allowed" do
+    fab!(:current_user) { Fabricate(:trust_level_1) }
+    fab!(:user_1) { Fabricate(:user) }
+    fab!(:user_2) { Fabricate(:user) }
+
+    before { SiteSetting.chat_max_direct_message_users = 1 }
+
+    it "shows an error" do
+      visit("/")
+      chat_page.open_new_message
+      chat_page.message_creator.filter(user_1.username)
+      chat_page.message_creator.shift_click_row(user_1)
+      chat_page.message_creator.filter(user_2.username)
+      chat_page.message_creator.shift_click_row(user_2)
+      chat_page.message_creator.click_cta
+
+      expect(page).to have_content(
+        I18n.t(
+          "chat.errors.over_chat_max_direct_message_users",
+          count: SiteSetting.chat_max_direct_message_users,
+        ),
+      )
+    end
+  end
+
   context "when public channels are disabled and user can't create direct message" do
     fab!(:current_user) { Fabricate(:user) }
 
@@ -61,7 +86,7 @@ RSpec.describe "New message", type: :system do
     end
   end
 
-  context "when the the content is not filtered" do
+  context "when the content is not filtered" do
     fab!(:channel_1) { Fabricate(:chat_channel) }
     fab!(:channel_2) { Fabricate(:chat_channel) }
     fab!(:user_1) { Fabricate(:user) }

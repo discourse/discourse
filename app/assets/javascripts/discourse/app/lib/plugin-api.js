@@ -1,5 +1,5 @@
 import I18n from "I18n";
-import ComposerEditor, {
+import {
   addComposerUploadHandler,
   addComposerUploadMarkdownResolver,
   addComposerUploadPreProcessor,
@@ -41,7 +41,6 @@ import {
 import Composer, {
   registerCustomizationCallback,
 } from "discourse/models/composer";
-import DiscourseBanner from "discourse/components/discourse-banner";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import Sharing from "discourse/lib/sharing";
 import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
@@ -55,7 +54,10 @@ import { addGlobalNotice } from "discourse/components/global-notice";
 import { addNavItem } from "discourse/models/nav-item";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
-import { addPluginReviewableParam } from "discourse/components/reviewable-item";
+import {
+  addPluginReviewableParam,
+  registerReviewableActionModal,
+} from "discourse/components/reviewable-item";
 import {
   addComposerSaveErrorCallback,
   addPopupMenuOptionsCallback,
@@ -80,7 +82,6 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import { h } from "virtual-dom";
 import { includeAttributes } from "discourse/lib/transform-post";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
-import { on } from "@ember/object/evented";
 import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import {
@@ -125,12 +126,14 @@ import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/
 import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
 import { registerHashtagType } from "discourse/lib/hashtag-autocomplete";
 import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
+import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
+import { isTesting } from "discourse-common/config/environment";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-export const PLUGIN_API_VERSION = "1.9.0";
+export const PLUGIN_API_VERSION = "1.11.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -162,6 +165,9 @@ function wrapWithErrorHandler(func, messageKey) {
           detail: { messageKey, error },
         })
       );
+      if (isTesting()) {
+        throw error;
+      }
       return;
     }
   };
@@ -363,13 +369,9 @@ class PluginApi {
    *
    * ```
    * api.decorateCookedElement(
-   *   elem => { elem.style.backgroundColor = 'yellow' },
-   *   { id: 'yellow-decorator' }
+   *   elem => { elem.style.backgroundColor = 'yellow' }
    * );
    * ```
-   *
-   * NOTE: To avoid memory leaks, it is highly recommended to pass a unique `id` parameter.
-   * You will receive a warning if you do not.
    **/
   decorateCookedElement(callback, opts) {
     opts = opts || {};
@@ -379,12 +381,7 @@ class PluginApi {
     addDecorator(callback, { afterAdopt: !!opts.afterAdopt });
 
     if (!opts.onlyStream) {
-      decorate(ComposerEditor, "previewRefreshed", callback, opts.id);
-      decorate(DiscourseBanner, "didInsertElement", callback, opts.id);
-      ["didInsertElement", "user-stream:new-item-inserted"].forEach((event) => {
-        const klass = this.container.factoryFor("component:user-stream").class;
-        decorate(klass, event, callback, opts.id);
-      });
+      this.onAppEvent("decorate-non-stream-cooked-element", callback);
     }
   }
 
@@ -1648,8 +1645,42 @@ class PluginApi {
   addSaveableUserOptionField(fieldName) {
     addSaveableUserOptionField(fieldName);
   }
+
+  /**
+   * Adds additional params to be sent to the reviewable/:id/perform/:action
+   * endpoint for a given reviewable type. This is so plugins can provide more
+   * complex reviewable actions that may depend on a custom modal.
+   *
+   * This is copied from the reviewable model instance when performing an action
+   * on the ReviewableItem component.
+   *
+   * ```
+   * api.addPluginReviewableParam("ReviewablePluginType", "some_param");
+   * ```
+   **/
   addPluginReviewableParam(reviewableType, param) {
     addPluginReviewableParam(reviewableType, param);
+  }
+
+  /**
+   * Registers a mapping between a JavaScript modal component class and a server-side reviewable
+   * action, which is registered via `actions.add` and `build_actions`.
+   *
+   * For more information about modal classes, which are special Ember components used with
+   * the DModal API, see:
+   *
+   * https://meta.discourse.org/t/using-the-dmodal-api-to-render-modal-windows-aka-popups-dialogs-in-discourse/268304.
+   *
+   * @param {String} reviewableAction - The action name, as registered in the server-side.
+   * @param {Class} modalClass - The actual JavaScript class of the modal.
+   *
+   * @example
+   * ```
+   * api.registerReviewableActionModal("approve_category_expert", ExpertGroupChooserModal);
+   * ```
+   **/
+  registerReviewableActionModal(reviewableType, modalClass) {
+    registerReviewableActionModal(reviewableType, modalClass);
   }
 
   /**
@@ -2088,7 +2119,7 @@ class PluginApi {
    * Support for setting a Sidebar panel.
    */
   setSidebarPanel(name) {
-    this._lookupContainer("service:sidebar-state").setPanel(name);
+    this._lookupContainer("service:sidebar-state")?.setPanel(name);
   }
 
   /**
@@ -2096,7 +2127,7 @@ class PluginApi {
    * Set combined sidebar section mode. In this mode, sections from all panels are displayed together.
    */
   setCombinedSidebarMode() {
-    this._lookupContainer("service:sidebar-state").setCombinedMode();
+    this._lookupContainer("service:sidebar-state")?.setCombinedMode();
   }
 
   /**
@@ -2120,7 +2151,7 @@ class PluginApi {
    * Hide sidebar switch panels buttons in separated mode.
    */
   hideSidebarSwitchPanelButtons() {
-    this._lookupContainer("service:sidebar-state").hideSwitchPanelButtons();
+    this._lookupContainer("service:sidebar-state")?.hideSwitchPanelButtons();
   }
 
   /**
@@ -2364,6 +2395,15 @@ class PluginApi {
   }
 
   /**
+   * @param {function} fn - Function that will be called before the auth complete logic is run
+   * in instance-initializers/auth-complete.js. If any single callback returns false, the
+   * auth-complete logic will be aborted.
+   */
+  addBeforeAuthCompleteCallback(fn) {
+    addBeforeAuthCompleteCallback(fn);
+  }
+
+  /**
    * Registers a hashtag type and its corresponding class.
    * This is used when generating CSS classes in the hashtag-css-generator.
    *
@@ -2479,43 +2519,4 @@ export function withPluginApi(version, apiCodeCallback, opts) {
   if (api) {
     return apiCodeCallback(api, opts);
   }
-}
-
-let _decorateId = 0;
-let _decorated = new WeakMap();
-
-function decorate(klass, evt, cb, id) {
-  if (!id) {
-    // eslint-disable-next-line no-console
-    console.warn(
-      consolePrefix(),
-      "`decorateCooked` should be supplied with an `id` option to avoid memory leaks in test mode. The id will be used to ensure the decorator is only applied once."
-    );
-  } else {
-    if (!_decorated.has(klass)) {
-      _decorated.set(klass, new Set());
-    }
-    id = `${id}:${evt}`;
-    let set = _decorated.get(klass);
-    if (set.has(id)) {
-      return;
-    }
-    set.add(id);
-  }
-
-  const mixin = {};
-  let name = `_decorate_${_decorateId++}`;
-
-  if (id) {
-    name += `_${id.replaceAll(/\W/g, "_")}`;
-  }
-
-  mixin[name] = on(evt, function (elem) {
-    elem = elem || this.element;
-    if (elem) {
-      cb(elem);
-    }
-  });
-
-  klass.reopen(mixin);
 }

@@ -107,7 +107,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     appEvents.on("composer:upload-started", () => {
       assert.strictEqual(
         query(".d-editor-input").value,
-        "The image:\n[Uploading: avatar.png...]()\n"
+        "The image:\n[Uploading: avatar.png…]()\n"
       );
     });
 
@@ -254,7 +254,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
       if (uploadStarted === 2) {
         assert.strictEqual(
           query(".d-editor-input").value,
-          "The image:\n[Uploading: avatar.png...]()\n[Uploading: avatar2.png...]()\n",
+          "The image:\n[Uploading: avatar.png…]()\n[Uploading: avatar2.png…]()\n",
           "it should show the upload placeholders when the upload starts"
         );
       }
@@ -286,7 +286,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     appEvents.on("composer:upload-started", () => {
       assert.strictEqual(
         query(".d-editor-input").value,
-        "The image:\n[Uploading: avatar.png...]()\n"
+        "The image:\n[Uploading: avatar.png…]()\n"
       );
     });
 
@@ -317,7 +317,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     appEvents.on("composer:upload-started", () => {
       assert.strictEqual(
         query(".d-editor-input").value,
-        "The image:\n[Uploading: avatar.png...]()\n Text after the image."
+        "The image:\n[Uploading: avatar.png…]()\n Text after the image."
       );
     });
 
@@ -351,7 +351,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     appEvents.on("composer:upload-started", () => {
       assert.strictEqual(
         query(".d-editor-input").value,
-        "The image:\n[Uploading: avatar.png...]()\n Text after the image."
+        "The image:\n[Uploading: avatar.png…]()\n Text after the image."
       );
     });
 
@@ -377,7 +377,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     appEvents.on("composer:upload-started", () => {
       assert.strictEqual(
         query(".d-editor-input").value,
-        "[Uploading: avatar.png...]()\n"
+        "[Uploading: avatar.png…]()\n"
       );
     });
 
@@ -404,7 +404,7 @@ acceptance("Uppy Composer Attachment - Upload Placeholder", function (needs) {
     appEvents.on("composer:upload-started", () => {
       assert.strictEqual(
         query(".d-editor-input").value,
-        "The image:\n[Uploading: avatar.png...]()\n"
+        "The image:\n[Uploading: avatar.png…]()\n"
       );
     });
 

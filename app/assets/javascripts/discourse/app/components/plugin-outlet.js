@@ -3,19 +3,22 @@ import ClassicComponent from "@ember/component";
 
 import {
   buildArgsWithDeprecations,
+  connectorsExist,
   renderedConnectorsFor,
 } from "discourse/lib/plugin-connectors";
 import { helperContext } from "discourse-common/lib/helpers";
 import deprecated from "discourse-common/lib/deprecated";
 import { get } from "@ember/object";
 import { cached } from "@glimmer/tracking";
+import { bind } from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
 
 const PARENT_VIEW_DEPRECATION_MSG =
   "parentView should not be used within plugin outlets. Use the available outlet arguments, or inject a service which can provide the context you need.";
 const GET_DEPRECATION_MSG =
   "Plugin outlet context is no longer an EmberObject - using `get()` is deprecated.";
 const TAG_NAME_DEPRECATION_MSG =
-  "The `tagName` argument to PluginOutlet is deprecated. If a wrapper element is required, define it manually around the outlet call.";
+  "The `tagName` argument to PluginOutlet is deprecated. If a wrapper element is required, define it manually around the outlet call. Using tagName will prevent wrapper PluginOutlets from functioning correctly.";
 const ARGS_DEPRECATION_MSG =
   "PluginOutlet arguments should now be passed using `@outletArgs=` instead of `@args=`";
 
@@ -47,6 +50,8 @@ const ARGS_DEPRECATION_MSG =
 **/
 
 export default class PluginOutletComponent extends GlimmerComponentWithDeprecatedParentView {
+  @service clientErrorHandler;
+
   context = {
     ...helperContext(),
     get parentView() {
@@ -78,12 +83,28 @@ export default class PluginOutletComponent extends GlimmerComponentWithDeprecate
     return result;
   }
 
-  get connectors() {
-    return renderedConnectorsFor(
+  @bind
+  getConnectors({ hasBlock }) {
+    const connectors = renderedConnectorsFor(
       this.args.name,
       this.outletArgsWithDeprecations,
       this.context
     );
+    if (connectors.length > 1 && hasBlock) {
+      const message = `Multiple connectors were registered for the ${this.args.name} outlet. Using the first.`;
+      this.clientErrorHandler.displayErrorNotice(message);
+      // eslint-disable-next-line no-console
+      console.error(
+        message,
+        connectors.map((c) => c.humanReadableName)
+      );
+      return [connectors[0]];
+    }
+    return connectors;
+  }
+
+  get connectorsExist() {
+    return connectorsExist(this.args.name);
   }
 
   // Traditionally, pluginOutlets had an argument named 'args'. However, that name is reserved

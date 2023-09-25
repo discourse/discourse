@@ -1,4 +1,6 @@
-<DSection @bodyClass="navigation-filter" @class="navigation-container">
+{{body-class "navigation-filter"}}
+
+<section class="navigation-container">
   <div class="topic-query-filter">
     <div class="topic-query-filter__input">
       {{d-icon "filter" class="topic-query-filter__icon"}}
@@ -26,19 +28,19 @@
       <div class="topic-query-filter__controls">
         <DButton
           @icon="times"
-          @action={{action this.clearInput}}
+          @action={{this.clearInput}}
           @disabled={{unless this.newQueryString "true"}}
         />
 
         {{#if this.discoveryFilter.q}}
           <DButton
             @icon={{this.copyIcon}}
-            @class={{this.copyClass}}
             @action={{this.copyQueryString}}
             @disabled={{unless this.newQueryString "true"}}
+            class={{this.copyClass}}
           />
         {{/if}}
       </div>
     {{/if}}
   </div>
-</DSection>
+</section>

@@ -144,6 +144,7 @@ group :test do
   gem "selenium-webdriver", "~> 4.11", require: false
   gem "test-prof"
   gem "rails-dom-testing", require: false
+  gem "minio_runner", require: false
 end
 
 group :test, :development do

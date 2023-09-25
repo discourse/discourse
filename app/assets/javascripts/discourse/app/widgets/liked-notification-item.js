@@ -9,7 +9,7 @@ createWidgetFrom(DefaultNotificationItem, "liked-notification-item", {
     const description = this.description(data);
 
     if (data.count > 1) {
-      const count = data.count - 2;
+      const count = data.count - 1;
       const username2 = formatUsername(data.username2);
 
       if (count === 0) {
@@ -22,7 +22,6 @@ createWidgetFrom(DefaultNotificationItem, "liked-notification-item", {
         return I18n.t("notifications.liked_many", {
           description,
           username: `<span class="multi-username">${username}</span>`,
-          username2: `<span class="multi-username">${username2}</span>`,
           count,
         });
       }

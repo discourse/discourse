@@ -78,7 +78,7 @@ const CORE_TOP_TABS = [
     }
 
     // TODO(osama): reaction is a type used by the reactions plugin, but it's
-    // added here temporarily unitl we add a plugin API for extending
+    // added here temporarily until we add a plugin API for extending
     // filterByTypes in lists
     get notificationTypes() {
       return ["liked", "liked_consolidated", "reaction"];
@@ -270,6 +270,10 @@ export default class UserMenu extends Component {
   handleTabClick(tab, event) {
     if (wantsNewWindow(event) || this.currentTabId === tab.id) {
       // Allow normal navigation to href
+      return;
+    }
+
+    if (event.type === "keydown" && event.keyCode !== 13) {
       return;
     }
 

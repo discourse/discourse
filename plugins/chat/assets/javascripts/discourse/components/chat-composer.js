@@ -5,7 +5,6 @@ import { tracked } from "@glimmer/tracking";
 import { cancel, next } from "@ember/runloop";
 import { cloneJSON } from "discourse-common/lib/object";
 import { chatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
-import showModal from "discourse/lib/show-modal";
 import TextareaInteractor from "discourse/plugins/chat/discourse/lib/textarea-interactor";
 import { getOwner } from "discourse-common/lib/get-owner";
 import userSearch from "discourse/lib/user-search";
@@ -18,10 +17,9 @@ import { translations } from "pretty-text/emoji/data";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import { isPresent } from "@ember/utils";
 import { Promise } from "rsvp";
-import User from "discourse/models/user";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import {
-  destroyTippyInstances,
+  destroyUserStatuses,
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
@@ -32,6 +30,7 @@ export default class ChatComposer extends Component {
   @service capabilities;
   @service site;
   @service siteSettings;
+  @service store;
   @service chat;
   @service chatComposerPresenceManager;
   @service chatComposerWarningsTracker;
@@ -98,6 +97,7 @@ export default class ChatComposer extends Component {
     this.cancelPersistDraft();
     this.composer.textarea.value = this.currentMessage.message;
     this.persistDraft();
+    this.captureMentions({ skipDebounce: true });
   }
 
   @action
@@ -126,8 +126,12 @@ export default class ChatComposer extends Component {
     const minLength = this.siteSettings.chat_minimum_message_length || 1;
     return (
       this.currentMessage?.message?.length >= minLength ||
-      (this.canAttachUploads && this.currentMessage?.uploads?.length > 0)
+      (this.canAttachUploads && this.hasUploads)
     );
+  }
+
+  get hasUploads() {
+    return this.currentMessage?.uploads?.length > 0;
   }
 
   get sendEnabled() {
@@ -161,13 +165,19 @@ export default class ChatComposer extends Component {
 
   @action
   insertDiscourseLocalDate() {
-    showModal("discourse-local-dates-create-modal").setProperties({
-      insertDate: (markup) => {
-        this.composer.textarea.addText(
-          this.composer.textarea.getSelected(),
-          markup
-        );
-        this.composer.focus();
+    // JIT import because local-dates isn't necessarily enabled
+    const LocalDatesCreateModal =
+      require("discourse/plugins/discourse-local-dates/discourse/components/modal/local-dates-create").default;
+
+    this.modal.show(LocalDatesCreateModal, {
+      model: {
+        insertDate: (markup) => {
+          this.composer.textarea.addText(
+            this.composer.textarea.getSelected(),
+            markup
+          );
+          this.composer.focus();
+        },
       },
     });
   }
@@ -229,14 +239,10 @@ export default class ChatComposer extends Component {
 
     if (
       this.currentMessage.editing &&
+      !this.hasUploads &&
       this.currentMessage.message.length === 0
     ) {
-      new ChatMessageInteractor(
-        getOwner(this),
-        this.currentMessage,
-        this.context
-      ).delete();
-      this.reset(this.args.channel, this.args.thread);
+      this.#deleteEmptyMessage();
       return;
     }
 
@@ -372,11 +378,14 @@ export default class ChatComposer extends Component {
   }
 
   @action
-  captureMentions() {
+  captureMentions(opts = { skipDebounce: false }) {
     if (this.hasContent) {
       this.chatComposerWarningsTracker.trackMentions(
-        this.currentMessage.message
+        this.currentMessage,
+        opts.skipDebounce
       );
+    } else {
+      this.chatComposerWarningsTracker.reset();
     }
   }
 
@@ -388,7 +397,7 @@ export default class ChatComposer extends Component {
   }
 
   #addMentionedUser(userData) {
-    const user = User.create(userData);
+    const user = this.store.createRecord("user", userData);
     this.currentMessage.mentionedUsers.set(user.id, user);
   }
 
@@ -411,7 +420,7 @@ export default class ChatComposer extends Component {
         return obj.username || obj.name;
       },
       dataSource: (term) => {
-        destroyTippyInstances();
+        destroyUserStatuses();
         return userSearch({ term, includeGroups: true }).then((result) => {
           if (result?.users?.length > 0) {
             const presentUserNames =
@@ -435,7 +444,7 @@ export default class ChatComposer extends Component {
         this.composer.focus();
         this.captureMentions();
       },
-      onClose: destroyTippyInstances,
+      onClose: destroyUserStatuses,
     });
   }
 
@@ -584,5 +593,14 @@ export default class ChatComposer extends Component {
 
   #isAutocompleteDisplayed() {
     return document.querySelector(".autocomplete");
+  }
+
+  #deleteEmptyMessage() {
+    new ChatMessageInteractor(
+      getOwner(this),
+      this.currentMessage,
+      this.context
+    ).delete();
+    this.reset(this.args.channel, this.args.thread);
   }
 }

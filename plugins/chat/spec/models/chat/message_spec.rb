@@ -7,6 +7,12 @@ describe Chat::Message do
 
   it { is_expected.to have_many(:chat_mentions).dependent(:destroy) }
 
+  describe "validations" do
+    subject(:message) { described_class.new(message: "") }
+
+    it { is_expected.to validate_length_of(:cooked).is_at_most(20_000) }
+  end
+
   describe ".cook" do
     it "does not support HTML tags" do
       cooked = described_class.cook("<h1>test</h1>")
@@ -581,6 +587,20 @@ describe Chat::Message do
 
       expect(message.chat_mentions.pluck(:user_id)).to match_array(already_mentioned)
       expect(message.chat_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated
+    end
+  end
+
+  describe "#url" do
+    it "returns message permalink" do
+      expect(message.url).to eq("/chat/c/-/#{message.chat_channel_id}/#{message.id}")
+    end
+
+    it "returns message permalink when in thread" do
+      thread = Fabricate(:chat_thread)
+      first_message = thread.chat_messages.first
+      expect(first_message.url).to eq(
+        "/chat/c/-/#{first_message.chat_channel_id}/t/#{first_message.thread_id}/#{first_message.id}",
+      )
     end
   end
 end

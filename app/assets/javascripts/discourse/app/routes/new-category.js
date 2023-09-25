@@ -2,6 +2,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
 import { Promise } from "rsvp";
 import { SEARCH_PRIORITIES } from "discourse/lib/constants";
+import { inject as service } from "@ember/service";
 
 let _newCategoryColor = "0088CC";
 let _newCategoryTextColor = "FFFFFF";
@@ -12,12 +13,14 @@ export function setNewCategoryDefaultColors(backgroundColor, textColor) {
 }
 
 export default DiscourseRoute.extend({
+  router: service(),
+
   controllerName: "edit-category-tabs",
   templateName: "edit-category-tabs",
 
   beforeModel() {
     if (!this.currentUser) {
-      this.replaceWith("/404");
+      this.router.replaceWith("/404");
       return;
     }
     if (!this.currentUser.admin) {
@@ -25,7 +28,7 @@ export default DiscourseRoute.extend({
         !this.currentUser.moderator ||
         this.siteSettings.moderators_manage_categories_and_groups === false
       ) {
-        this.replaceWith("/404");
+        this.router.replaceWith("/404");
       }
     }
   },

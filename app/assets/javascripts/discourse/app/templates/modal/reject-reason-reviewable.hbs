@@ -11,13 +11,13 @@
 <div class="modal-footer">
   <DButton
     @icon="trash-alt"
-    @class="btn-danger"
-    @action={{action "perform"}}
+    @action={{this.perform}}
     @label="admin.user.delete"
+    class="btn-danger"
   />
   <DButton
     @action={{route-action "closeModal"}}
     @label="cancel"
-    @class="cancel"
+    class="cancel"
   />
 </div>
