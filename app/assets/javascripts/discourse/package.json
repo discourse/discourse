@@ -94,7 +94,7 @@
     "message-bus-client": "^4.3.8",
     "messageformat": "0.1.5",
     "pretender": "^3.4.7",
-    "qunit": "^2.19.4",
+    "qunit": "^2.20.0",
     "qunit-dom": "^2.0.0",
     "sass": "^1.66.1",
     "select-kit": "1.0.0",
