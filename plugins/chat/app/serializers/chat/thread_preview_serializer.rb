@@ -20,19 +20,19 @@ module Chat
     end
 
     def last_reply_created_at
-      object.last_message.created_at.iso8601
+      object.last_message&.created_at&.iso8601
     end
 
     def last_reply_id
-      object.last_message.id
+      object.last_message&.id
     end
 
     def last_reply_excerpt
-      object.last_message.excerpt(max_length: Chat::Thread::EXCERPT_LENGTH)
+      object.last_message&.excerpt(max_length: Chat::Thread::EXCERPT_LENGTH)
     end
 
     def last_reply_user
-      object.last_message.user
+      object.last_message&.user
     end
 
     def include_participant_data?
