@@ -29,6 +29,11 @@
         margin-right: 0.25rem;
       }
     }
+
+    .chat-onebox-cooked p img {
+      float: none;
+      max-height: none;
+    }
   }
 }
 

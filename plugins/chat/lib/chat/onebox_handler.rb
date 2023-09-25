@@ -45,6 +45,18 @@ module Chat
       }
     end
 
+    def self.build_image_args(args, target)
+      image = get_first_image(target)
+      return if !image
+
+      args.merge!(
+        image_url: image.url,
+        image_width: image.width,
+        image_height: image.height,
+        image_filename: image.original_filename,
+      )
+    end
+
     def self.render_thread_onebox(args, thread)
       args.merge!(
         cooked: build_thread_snippet(thread),
@@ -52,6 +64,8 @@ module Chat
         thread_title: build_thread_title(thread),
         thread_title_connector: I18n.t("chat.onebox.thread_title_connector"),
       )
+
+      build_image_args(args, thread)
 
       Mustache.render(Chat.thread_onebox_template, args)
     end
@@ -67,6 +81,8 @@ module Chat
         thread_id: message.thread_id,
         thread_title: build_thread_title(thread),
       )
+
+      build_image_args(args, message)
 
       Mustache.render(Chat.message_onebox_template, args)
     end
@@ -84,6 +100,17 @@ module Chat
       )
 
       Mustache.render(Chat.channel_onebox_template, args)
+    end
+
+    def self.get_first_image(target)
+      if target.is_a?(Message)
+        message = target
+      elsif target.is_a?(Thread)
+        message = Chat::Message.find_by(id: target.original_message_id)
+      end
+
+      return if !message
+      message.uploads.find { |u| u.height.present? || u.width.present? }
     end
 
     def self.build_users_list(chat_channel)
