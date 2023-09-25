@@ -1,5 +1,6 @@
-import { buildResolver, setResolverOption } from "discourse-common/resolver";
 import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
+import { buildResolver, setResolverOption } from "discourse-common/resolver";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 
@@ -20,6 +21,8 @@ function setTemplates(templateModuleNames) {
 const DiscourseResolver = buildResolver("discourse");
 
 module("Unit | Ember | resolver", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     DiscourseTemplateMap.setModuleNames(Object.keys(requirejs.entries));
     resolver = DiscourseResolver.create({

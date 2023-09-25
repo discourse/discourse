@@ -69,7 +69,7 @@ export default RestModel.extend({
         const promises = result.drafts.map((draft) => {
           draft.data = JSON.parse(draft.data);
           return cookAsync(draft.data.reply).then((cooked) => {
-            draft.excerpt = excerpt(cooked.string, 300);
+            draft.excerpt = excerpt(cooked.toString(), 300);
             draft.post_number = draft.data.postId || null;
             if (
               draft.draft_key === NEW_PRIVATE_MESSAGE_KEY ||

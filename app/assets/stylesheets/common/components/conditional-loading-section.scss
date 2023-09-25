@@ -16,6 +16,9 @@
 
   &:not(.is-loading) {
     animation: fadein 0.5s;
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
   }
 
   @keyframes fadein {

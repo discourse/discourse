@@ -21,7 +21,9 @@
   position: relative;
   overflow: hidden;
   &:before {
-    animation: placeHolderShimmer 4s linear infinite forwards;
+    @media (prefers-reduced-motion: no-preference) {
+      animation: placeHolderShimmer 4s linear infinite forwards;
+    }
     position: absolute;
     left: 0;
     content: "";
@@ -444,7 +446,9 @@ nav.post-controls {
 }
 
 .has-like .d-icon.heart-animation {
-  animation: heartBump 0.4s;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: heartBump 0.4s;
+  }
 }
 
 @keyframes slideout {
@@ -486,7 +490,9 @@ aside.quote {
     margin-top: 0;
     .expanded-quote {
       overflow: hidden;
-      animation: slideout 1s ease-in-out;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: slideout 1s ease-in-out;
+      }
       &.icon-only {
         text-align: center;
         font-size: var(--font-up-4);
@@ -944,8 +950,10 @@ aside.quote {
     border-top: 1px solid var(--primary-low);
     padding-top: 0.5em;
   }
-  &.highlighted {
-    animation: background-fade-highlight 2.5s ease-out;
+  @media (prefers-reduced-motion: no-preference) {
+    &.highlighted {
+      animation: background-fade-highlight 2.5s ease-out;
+    }
   }
   .deleted & {
     // Disable so the deleted background is visible immediately

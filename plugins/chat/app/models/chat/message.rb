@@ -250,7 +250,11 @@ module Chat
     end
 
     def url
-      "/chat/c/-/#{self.chat_channel_id}/#{self.id}"
+      if in_thread?
+        "#{Discourse.base_path}/chat/c/-/#{self.chat_channel_id}/t/#{self.thread_id}/#{self.id}"
+      else
+        "#{Discourse.base_path}/chat/c/-/#{self.chat_channel_id}/#{self.id}"
+      end
     end
 
     def create_mentions

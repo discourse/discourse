@@ -2110,14 +2110,14 @@ tr_TR:
     default_sidebar_switch_panel_position: "Kenar çubuğu geçiş paneli düğmelerinin konumu"
     retain_web_hook_events_period_days: "Web kancası olay kayıtlarının saklanacağı gün sayısı."
     retry_web_hook_events: "Başarısız web kancası olaylarını otomatik olarak 4 kez yeniden deneyin. Yeniden denemeler arasındaki zaman aralıkları 1, 5, 25 ve 125 dakikadır."
-    revoke_api_keys_days: "Kullanılmayan bir API anahtarının otomatik olarak iptal edilmesinden önceki gün sayısı (asla için 0)"
+    revoke_api_keys_unused_days: "Kullanılmayan bir API anahtarının otomatik olarak iptal edilmesinden önceki gün sayısı (asla için 0)"
     allow_user_api_key_scopes: "Kullanıcı API anahtarları için izin verilen kapsamların listesi"
     min_trust_level_for_user_api_key: |
       Kullanıcı API anahtarlarının oluşturulması için gereken güven seviyesi.<br>
       <b>UYARI</b>: Güven seviyesinin değiştirilmesi, daha düşük güven seviyesine sahip kullanıcıların Discourse Hub üzerinden giriş yapmasını engeller
     allowed_user_api_auth_redirects: "Kullanıcı API anahtarları için kimlik doğrulama yönlendirmesi için izin verilen URL. Joker karakter sembolü * herhangi bir bölümüyle eşleşmek için kullanılabilir (ör. www.example.com/*)."
     allowed_user_api_push_urls: "Kullanıcı API'sine sunucu anlık iletimi için izin verilen URL'ler"
-    expire_user_api_keys_days: "Bir kullanıcı API anahtarının otomatik olarak sona ermesinden önceki gün sayısı (asla için 0)"
+    revoke_user_api_keys_unused_days: "Bir kullanıcı API anahtarının otomatik olarak sona ermesinden önceki gün sayısı (asla için 0)"
     tagging_enabled: "Konularda etiketler etkinleştirilsin mi?"
     min_trust_to_create_tag: "Etiket oluşturmak için gereken minimum güven seviyesi."
     max_tags_per_topic: "Bir konuya uygulanabilecek maksimum etiket sayısı."

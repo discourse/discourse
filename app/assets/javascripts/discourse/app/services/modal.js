@@ -22,9 +22,6 @@ const KNOWN_LEGACY_MODALS = [
   "group-default-notifications",
   "reject-reason-reviewable",
   "reorder-categories",
-  "request-group-membership-form",
-  "share-and-invite",
-  "tag-upload",
 ];
 
 const LEGACY_OPTS = new Set([

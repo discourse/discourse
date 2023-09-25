@@ -310,7 +310,9 @@ RSpec.configure do |config|
 
     Capybara.configure do |capybara_config|
       capybara_config.server_host = ENV["CAPYBARA_SERVER_HOST"].presence || "localhost"
-      capybara_config.server_port = 31_337 + ENV["TEST_ENV_NUMBER"].to_i
+
+      capybara_config.server_port =
+        (ENV["CAPYBARA_SERVER_PORT"].presence || "31_337").to_i + ENV["TEST_ENV_NUMBER"].to_i
     end
 
     module IgnoreUnicornCapturedErrors

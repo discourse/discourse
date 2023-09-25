@@ -18,7 +18,9 @@
   position: relative;
   overflow: hidden;
   &:before {
-    animation: placeHolderShimmer 4s linear infinite forwards;
+    @media (prefers-reduced-motion: no-preference) {
+      animation: placeHolderShimmer 4s linear infinite forwards;
+    }
     position: absolute;
     left: 0;
     content: "";

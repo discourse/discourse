@@ -5,12 +5,12 @@ import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import showModal from "discourse/lib/show-modal";
-
 import { inject as service } from "@ember/service";
+import TagUpload from "discourse/components/modal/tag-upload";
 
 export default Controller.extend({
   dialog: service(),
+  modal: service(),
   sortedByCount: true,
   sortedByName: false,
   canAdminTags: alias("currentUser.staff"),
@@ -63,7 +63,7 @@ export default Controller.extend({
 
   actions: {
     showUploader() {
-      showModal("tag-upload");
+      this.modal.show(TagUpload);
     },
 
     deleteUnused() {

@@ -1,8 +1,11 @@
 import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 
 module("Unit | Utility | bookmark", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     this.clock = fakeTime("2020-04-11 08:00:00", "Australia/Brisbane");
   });

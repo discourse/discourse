@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Chat
-  class DeletedUser < User
+  class NullUser < User
     def username
       I18n.t("chat.deleted_chat_username")
     end

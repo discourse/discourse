@@ -7,7 +7,6 @@ import ChatThreadsManager from "discourse/plugins/chat/discourse/lib/chat-thread
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import { getOwner } from "discourse-common/lib/get-owner";
 import guid from "pretty-text/guid";
-import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 import ChatDirectMessage from "discourse/plugins/chat/discourse/models/chat-direct-message";
 import ChatChannelArchive from "discourse/plugins/chat/discourse/models/chat-channel-archive";
 import Category from "discourse/models/category";
@@ -188,23 +187,6 @@ export default class ChatChannel {
 
   get canJoin() {
     return this.meta.can_join_chat_channel;
-  }
-
-  createStagedThread(message) {
-    const clonedMessage = message.duplicate();
-
-    const thread = new ChatThread(this, {
-      id: `staged-thread-${message.channel.id}-${message.id}`,
-      original_message: message,
-      staged: true,
-      created_at: moment.utc().format(),
-    });
-
-    clonedMessage.thread = thread;
-    clonedMessage.manager = thread.messagesManager;
-    thread.messagesManager.addMessages([clonedMessage]);
-
-    return thread;
   }
 
   async stageMessage(message) {
