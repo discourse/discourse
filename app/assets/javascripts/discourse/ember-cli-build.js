@@ -229,6 +229,13 @@ module.exports = function (defaults) {
             },
           },
         },
+        resolve: {
+          fallback: {
+            // For source-map-support
+            path: require.resolve("path-browserify"),
+            fs: false,
+          },
+        },
       },
     },
   });
