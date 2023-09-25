@@ -71,6 +71,9 @@ module.exports = function (defaults) {
             util: require.resolve("util/"),
             // Also for sinon
             timers: false,
+            // For source-map-support
+            path: require.resolve("path-browserify"),
+            fs: false,
           },
         },
         module: {
