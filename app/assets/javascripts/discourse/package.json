@@ -25,8 +25,8 @@
     "pretty-text": "1.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.20",
-    "@babel/standalone": "^7.22.20",
+    "@babel/core": "^7.23.0",
+    "@babel/standalone": "^7.23.1",
     "@colors/colors": "^1.6.0",
     "@discourse/backburner.js": "^2.7.1-0",
     "@discourse/itsatrap": "^2.0.10",
