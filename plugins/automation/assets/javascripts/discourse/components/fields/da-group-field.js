@@ -8,7 +8,9 @@ export default class GroupField extends BaseField {
   init() {
     super.init(...arguments);
 
-    Group.findAll().then((groups) => {
+    Group.findAll({
+      ignore_automatic: this.field.extra.ignore_automatic ?? false,
+    }).then((groups) => {
       if (this.isDestroying || this.isDestroyed) {
         return;
       }

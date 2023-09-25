@@ -10,7 +10,7 @@ DiscourseAutomation::Scriptable.add(
   version 1
 
   field :badge_name, component: :text, required: true
-  field :group, component: :group, required: true
+  field :group, component: :group, required: true, extra: { ignore_automatic: true }
   field :update_user_title_and_flair, component: :boolean
   field :remove_members_without_badge, component: :boolean
 
