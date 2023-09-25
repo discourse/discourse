@@ -42,6 +42,11 @@ html {
   &.text-size-largest {
     font-size: var(--base-font-size-largest);
   }
+
+  &.prefers-reduced-motion * {
+    // allows all CSS animations to be force-disabled by using api.enableClientReducedMotion();
+    animation-duration: 0s !important;
+  }
 }
 
 // Links

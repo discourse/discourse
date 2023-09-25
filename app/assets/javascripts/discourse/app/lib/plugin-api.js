@@ -91,7 +91,10 @@ import {
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
-import { replaceFormatter } from "discourse/lib/utilities";
+import {
+  enableClientReducedMotion,
+  replaceFormatter,
+} from "discourse/lib/utilities";
 import { replaceTagRenderer } from "discourse/lib/render-tag";
 import { registerCustomLastUnreadUrlCallback } from "discourse/models/topic";
 import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
@@ -133,7 +136,7 @@ import { isTesting } from "discourse-common/config/environment";
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-export const PLUGIN_API_VERSION = "1.11.0";
+export const PLUGIN_API_VERSION = "1.12.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -2456,6 +2459,19 @@ class PluginApi {
    */
   addBulkActionButton(opts) {
     _addBulkButton(opts);
+  }
+
+  /**
+   * Forces prefersReducedMotion() to true regardless of OS preference
+   * and also sets all CSS animation durations to 0s
+   *
+   * Example:
+   * ```
+   * api.enableClientReducedMotion();
+   * ```
+   **/
+  enableClientReducedMotion() {
+    enableClientReducedMotion();
   }
 }
 

@@ -8,6 +8,7 @@ import * as AvatarUtils from "discourse-common/lib/avatar-utils";
 import { capabilities } from "discourse/services/capabilities";
 
 let _defaultHomepage;
+let _clientReducedMotion;
 
 function deprecatedAvatarUtil(name) {
   return function () {
@@ -406,8 +407,16 @@ export function areCookiesEnabled() {
   }
 }
 
+export function enableClientReducedMotion() {
+  _clientReducedMotion = true;
+  document.documentElement.classList.add("prefers-reduced-motion");
+}
+
 export function prefersReducedMotion() {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const osSetting = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+  return osSetting || _clientReducedMotion || false;
 }
 
 export function postRNWebviewMessage(prop, value) {
