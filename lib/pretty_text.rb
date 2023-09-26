@@ -112,14 +112,14 @@ module PrettyText
     ctx.eval("__setUnicode(#{Emoji.unicode_replacements_json})")
 
     to_load = []
-    DiscoursePluginRegistry.each_globbed_asset do |a|
-      to_load << a if File.file?(a) && a =~ /discourse-markdown/
+    Discourse.plugins.each do |plugin|
+      Dir
+        .glob("#{plugin.path}/assets/javascripts/**/discourse-markdown/**/*.js")
+        .each { |a| to_load << a if File.file?(a) && a.end_with?(".js", ".js.es6") }
     end
-    to_load.uniq.each do |f|
-      if f =~ %r{\A.+assets/javascripts/}
-        root = Regexp.last_match[0]
-        apply_es6_file(ctx, root, f.sub(root, "").sub(/\.js(\.es6)?\z/, ""))
-      end
+    to_load.each do |f|
+      root = f[%r{\A.+assets/javascripts/}, 0]
+      apply_es6_file(ctx, root, f.sub(root, "").sub(/\.js(\.es6)?\z/, ""))
     end
 
     DiscoursePluginRegistry.vendored_core_pretty_text.each { |vpt| ctx.eval(File.read(vpt)) }
