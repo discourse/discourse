@@ -7,12 +7,12 @@ import { action, get } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { inject as service } from "@ember/service";
 import { setTopicId } from "discourse/lib/topic-list-tracker";
-import showModal from "discourse/lib/show-modal";
 import TopicFlag from "discourse/lib/flag-targets/topic-flag";
 import PostFlag from "discourse/lib/flag-targets/post-flag";
 import HistoryModal from "discourse/components/modal/history";
 import PublishPageModal from "discourse/components/modal/publish-page";
 import EditSlowModeModal from "discourse/components/modal/edit-slow-mode";
+import ChangeOwnerModal from "discourse/components/modal/change-owner";
 import ChangeTimestampModal from "discourse/components/modal/change-timestamp";
 import EditTopicTimerModal from "discourse/components/modal/edit-topic-timer";
 import FeatureTopicModal from "discourse/components/modal/feature-topic";
@@ -226,9 +226,11 @@ const TopicRoute = DiscourseRoute.extend({
 
   @action
   changeOwner() {
-    showModal("change-owner", {
-      model: this.modelFor("topic"),
-      title: "topic.change_owner.title",
+    this.modal.show(ChangeOwnerModal, {
+      model: {
+        topicController: this.controllerFor("topic"),
+        topic: this.modelFor("topic"),
+      },
     });
   },
 
