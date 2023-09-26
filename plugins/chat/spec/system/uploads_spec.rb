@@ -19,6 +19,7 @@ describe "Uploading files in chat messages", type: :system do
     it "allows uploading a single file" do
       chat.visit_channel(channel_1)
       file_path = file_from_fixtures("logo.png", "images").path
+
       attach_file(file_path) do
         channel_page.open_action_menu
         channel_page.click_action_button("chat-upload-btn")
@@ -29,7 +30,12 @@ describe "Uploading files in chat messages", type: :system do
       channel_page.send_message("upload testing")
 
       expect(page).not_to have_css(".chat-composer-upload")
-      expect(channel_page.messages).to have_message(text: "upload testing", persisted: true)
+
+      expect(channel_page.messages).to have_message(
+        text: "upload testing\n#{File.basename(file_path)}",
+        persisted: true,
+      )
+
       expect(Chat::Message.last.uploads.count).to eq(1)
     end
 
@@ -47,14 +53,20 @@ describe "Uploading files in chat messages", type: :system do
       channel_page.send_message("upload testing")
 
       expect(page).not_to have_css(".chat-composer-upload")
-      expect(channel_page.messages).to have_message(text: "upload testing", persisted: true)
+      expect(channel_page.messages).to have_message(
+        text: "upload testing\n#{I18n.t("js.chat.uploaded_files", count: 2)}",
+        persisted: true,
+      )
       expect(Chat::Message.last.uploads.count).to eq(2)
     end
 
-    xit "allows uploading a huge image file with preprocessing" do
+    it "allows uploading a huge image file with preprocessing" do
+      skip("This test is flaky on CI") if ENV["CI"]
+
       SiteSetting.composer_media_optimization_image_bytes_optimization_threshold = 200.kilobytes
       chat.visit_channel(channel_1)
       file_path = file_from_fixtures("huge.jpg", "images").path
+
       attach_file(file_path) do
         channel_page.open_action_menu
         channel_page.click_action_button("chat-upload-btn")
@@ -69,7 +81,12 @@ describe "Uploading files in chat messages", type: :system do
       channel_page.send_message("upload testing")
 
       expect(page).not_to have_css(".chat-composer-upload")
-      expect(channel_page.messages).to have_message(text: "upload testing", persisted: true)
+
+      expect(channel_page.messages).to have_message(
+        text: "upload testing\n#{File.basename(file_path)}",
+        persisted: true,
+      )
+
       expect(Chat::Message.last.uploads.count).to eq(1)
     end
   end
