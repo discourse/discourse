@@ -1,12 +1,10 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
-import { inject as service } from "@ember/service";
 import $ from "jquery";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 export default Component.extend({
-  router: service(),
   classNameBindings: [":wizard-container__step", "stepClass"],
   saving: null,
 
@@ -114,7 +112,7 @@ export default Component.extend({
   @action
   quit(event) {
     event?.preventDefault();
-    this.router.transitionTo("discovery.latest");
+    this.goHome();
   },
 
   @action
