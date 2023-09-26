@@ -3,7 +3,7 @@ import { inject as service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import UserTipContainer from "discourse/components/user-tip-container";
 import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { schedule } from "@ember/runloop";
 import { escape } from "pretty-text/sanitizer";
 import I18n from "I18n";

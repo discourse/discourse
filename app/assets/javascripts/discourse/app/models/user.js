@@ -26,7 +26,7 @@ import { ajax } from "discourse/lib/ajax";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
 import { emojiUnescape } from "discourse/lib/text";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { isEmpty } from "@ember/utils";
 import { longDate } from "discourse/lib/formatter";
 import { url } from "discourse/lib/computed";
@@ -959,7 +959,7 @@ const User = RestModel.extend({
   },
 
   summary() {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
 
     return ajax(userPath(`${this.username_lower}/summary.json`)).then(
       (json) => {
@@ -1199,7 +1199,7 @@ User.reopenClass(Singleton, {
         this._saveTimezone(userJson);
       }
 
-      const store = getOwner(this).lookup("service:store");
+      const store = getOwnerWithFallback(this).lookup("service:store");
       const currentUser = store.createRecord("user", userJson);
       currentUser.trackStatus();
       return currentUser;

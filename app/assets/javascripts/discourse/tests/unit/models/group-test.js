@@ -1,12 +1,12 @@
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 
 module("Unit | Model | group", function (hooks) {
   setupTest(hooks);
 
   test("displayName", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const group = store.createRecord("group", {
       name: "test",
       display_name: "donkey",

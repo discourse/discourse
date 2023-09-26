@@ -1,13 +1,13 @@
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { settled } from "@ember/test-helpers";
 
 module("Unit | Model | pending-post", function (hooks) {
   setupTest(hooks);
 
   test("Properties", async function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const category = store.createRecord("category", { id: 2 });
     const post = store.createRecord("pending-post", {
       id: 1,
@@ -38,7 +38,7 @@ module("Unit | Model | pending-post", function (hooks) {
   });
 
   test("it cooks raw_text", async function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const post = store.createRecord("pending-post", {
       raw_text: "**bold text**",
     });

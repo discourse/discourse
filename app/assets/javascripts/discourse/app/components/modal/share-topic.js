@@ -11,7 +11,7 @@ import showModal from "discourse/lib/show-modal";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import I18n from "I18n";
 import Category from "discourse/models/category";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 
 const ShareTopicModal = Component.extend(bufferedProperty("invite"), {
   topic: readOnly("model.topic"),
@@ -108,7 +108,8 @@ const ShareTopicModal = Component.extend(bufferedProperty("invite"), {
     const postStream = this.topic.postStream;
     const postId = this.post?.id || postStream.findPostIdForPostNumber(1);
     const post = postStream.findLoadedPost(postId);
-    const topicController = getOwner(this).lookup("controller:topic");
+    const topicController =
+      getOwnerWithFallback(this).lookup("controller:topic");
     topicController.actions.replyAsNewTopic.call(topicController, post);
     this.closeModal();
   },

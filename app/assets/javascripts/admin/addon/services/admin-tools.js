@@ -3,7 +3,7 @@ import I18n from "I18n";
 import { Promise } from "rsvp";
 import Service, { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { htmlSafe } from "@ember/template";
 import { action } from "@ember/object";
 import PenalizeUserModal from "admin/components/modal/penalize-user";

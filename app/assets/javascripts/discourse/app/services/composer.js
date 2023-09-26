@@ -26,7 +26,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression, modKeysPressed } from "discourse/lib/utilities";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 import { isEmpty } from "@ember/utils";
 import { isTesting } from "discourse-common/config/environment";
@@ -138,7 +138,7 @@ export default class ComposerService extends Service {
   @or("replyingToWhisper", "model.whisper") isWhispering;
 
   get topicController() {
-    return getOwner(this).lookup("controller:topic");
+    return getOwnerWithFallback(this).lookup("controller:topic");
   }
 
   @on("init")
@@ -239,7 +239,9 @@ export default class ComposerService extends Service {
 
   @computed
   get showToolbar() {
-    const keyValueStore = getOwner(this).lookup("service:key-value-store");
+    const keyValueStore = getOwnerWithFallback(this).lookup(
+      "service:key-value-store"
+    );
     const storedVal = keyValueStore.get("toolbar-enabled");
     if (this._toolbarEnabled === undefined && storedVal === undefined) {
       // iPhone 6 is 375, anything narrower and toolbar should
@@ -252,7 +254,9 @@ export default class ComposerService extends Service {
   }
 
   set showToolbar(val) {
-    const keyValueStore = getOwner(this).lookup("service:key-value-store");
+    const keyValueStore = getOwnerWithFallback(this).lookup(
+      "service:key-value-store"
+    );
     this._toolbarEnabled = val;
     keyValueStore.set({
       key: "toolbar-enabled",

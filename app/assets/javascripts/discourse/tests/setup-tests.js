@@ -13,7 +13,10 @@ import pretender, {
   resetPretender,
 } from "discourse/tests/helpers/create-pretender";
 import { resetSettings } from "discourse/tests/helpers/site-settings";
-import { getOwner, setDefaultOwner } from "discourse-common/lib/get-owner";
+import {
+  getOwnerWithFallback,
+  setDefaultOwner,
+} from "discourse-common/lib/get-owner";
 import {
   getSettledState,
   isSettled,
@@ -340,7 +343,7 @@ export default function setupTests(config) {
   });
 
   QUnit.testDone(function () {
-    testCleanup(getOwner(app), app);
+    testCleanup(getOwnerWithFallback(app), app);
 
     sinon.restore();
     resetPretender();

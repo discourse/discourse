@@ -1,4 +1,4 @@
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 
@@ -6,7 +6,7 @@ module("Unit | Model | Wizard | wizard-field", function (hooks) {
   setupTest(hooks);
 
   test("basic state", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const field = store.createRecord("wizard-field", { type: "text" });
     assert.ok(field.unchecked);
     assert.ok(!field.valid);
@@ -14,7 +14,7 @@ module("Unit | Model | Wizard | wizard-field", function (hooks) {
   });
 
   test("text - required - validation", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const field = store.createRecord("wizard-field", {
       type: "text",
       required: true,
@@ -34,7 +34,7 @@ module("Unit | Model | Wizard | wizard-field", function (hooks) {
   });
 
   test("text - optional - validation", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const field = store.createRecord("wizard-field", { type: "text" });
     assert.ok(field.unchecked);
 

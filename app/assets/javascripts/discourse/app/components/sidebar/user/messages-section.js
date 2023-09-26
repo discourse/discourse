@@ -1,6 +1,6 @@
 import { cached } from "@glimmer/tracking";
 
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import Component from "@glimmer/component";
 import { bind } from "discourse-common/utils/decorators";
 import GroupMessageSectionLink from "discourse/lib/sidebar/user/messages-section/group-message-section-link";
@@ -85,7 +85,8 @@ export default class SidebarUserMessagesSection extends Component {
       };
 
       if (currentRouteParentName === "topic") {
-        const topicController = getOwner(this).lookup("controller:topic");
+        const topicController =
+          getOwnerWithFallback(this).lookup("controller:topic");
 
         if (topicController.model.isPrivateMessage) {
           attrs.privateMessageTopic = topicController.model;

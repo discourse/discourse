@@ -6,7 +6,7 @@ import { inject as service } from "@ember/service";
 import DFloatBody from "float-kit/components/d-float-body";
 import concatClass from "discourse/helpers/concat-class";
 import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import and from "truth-helpers/helpers/and";
 
 export default class DTooltip extends Component {

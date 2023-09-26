@@ -13,7 +13,7 @@ import { setPrefix } from "discourse-common/lib/get-url";
 import sinon from "sinon";
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 
 module("Unit | Utility | computed", function (hooks) {
   setupTest(hooks);
@@ -29,7 +29,9 @@ module("Unit | Utility | computed", function (hooks) {
   });
 
   test("setting", function (assert) {
-    const siteSettings = getOwner(this).lookup("service:site-settings");
+    const siteSettings = getOwnerWithFallback(this).lookup(
+      "service:site-settings"
+    );
 
     let t = EmberObject.extend({
       siteSettings,

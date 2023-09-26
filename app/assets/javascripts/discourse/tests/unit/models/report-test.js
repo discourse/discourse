@@ -1,10 +1,10 @@
 import { module, test } from "qunit";
 import { setPrefix } from "discourse-common/lib/get-url";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 
 function reportWithData(data) {
-  const store = getOwner(this).lookup("service:store");
+  const store = getOwnerWithFallback(this).lookup("service:store");
 
   return store.createRecord("report", {
     type: "topics",
@@ -352,7 +352,7 @@ module("Unit | Model | report", function (hooks) {
       { type: "bytes", property: "filesize", title: "Filesize" },
     ];
 
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const report = store.createRecord("report", {
       type: "topics",
       labels,

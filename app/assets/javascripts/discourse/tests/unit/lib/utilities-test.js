@@ -23,7 +23,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 
 module("Unit | Utilities", function (hooks) {
   setupTest(hooks);
@@ -88,7 +88,9 @@ module("Unit | Utilities", function (hooks) {
     meta.content = "hot";
     document.body.appendChild(meta);
 
-    const siteSettings = getOwner(this).lookup("service:site-settings");
+    const siteSettings = getOwnerWithFallback(this).lookup(
+      "service:site-settings"
+    );
     initializeDefaultHomepage(siteSettings);
 
     assert.strictEqual(
@@ -100,7 +102,9 @@ module("Unit | Utilities", function (hooks) {
   });
 
   test("defaultHomepage via site settings", function (assert) {
-    const siteSettings = getOwner(this).lookup("service:site-settings");
+    const siteSettings = getOwnerWithFallback(this).lookup(
+      "service:site-settings"
+    );
     siteSettings.top_menu = "top|latest|hot";
     initializeDefaultHomepage(siteSettings);
 
@@ -112,7 +116,9 @@ module("Unit | Utilities", function (hooks) {
   });
 
   test("setDefaultHomepage", function (assert) {
-    const siteSettings = getOwner(this).lookup("service:site-settings");
+    const siteSettings = getOwnerWithFallback(this).lookup(
+      "service:site-settings"
+    );
     initializeDefaultHomepage(siteSettings);
 
     assert.strictEqual(defaultHomepage(), "latest");

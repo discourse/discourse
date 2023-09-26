@@ -4,13 +4,13 @@ import PreloadStore from "discourse/lib/preload-store";
 import sinon from "sinon";
 import { settled } from "@ember/test-helpers";
 import User from "discourse/models/user";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 
 module("Unit | Model | user", function (hooks) {
   setupTest(hooks);
 
   test("staff", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const user = store.createRecord("user", { id: 1, username: "eviltrout" });
 
     assert.ok(!user.staff, "user is not staff");
@@ -23,7 +23,7 @@ module("Unit | Model | user", function (hooks) {
   });
 
   test("searchContext", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const user = store.createRecord("user", { id: 1, username: "EvilTrout" });
 
     assert.deepEqual(
@@ -34,7 +34,7 @@ module("Unit | Model | user", function (hooks) {
   });
 
   test("isAllowedToUploadAFile", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const user = store.createRecord("user", { trust_level: 0, admin: true });
     assert.ok(
       user.isAllowedToUploadAFile("image"),
@@ -49,7 +49,7 @@ module("Unit | Model | user", function (hooks) {
   });
 
   test("canMangeGroup", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const user = store.createRecord("user", { admin: true });
     const group = store.createRecord("group", { automatic: true });
 
@@ -79,7 +79,7 @@ module("Unit | Model | user", function (hooks) {
   });
 
   test("muted ids", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const user = store.createRecord("user", {
       username: "chuck",
       muted_category_ids: [],
@@ -118,7 +118,7 @@ module("Unit | Model | user", function (hooks) {
   });
 
   test("subsequent calls to trackStatus and stopTrackingStatus increase and decrease subscribers counter", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const user = store.createRecord("user");
     assert.strictEqual(user._subscribersCount, 0);
 
@@ -136,7 +136,7 @@ module("Unit | Model | user", function (hooks) {
   });
 
   test("attempt to stop tracking status if status wasn't tracked doesn't throw", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const user = store.createRecord("user");
     user.stopTrackingStatus();
     assert.ok(true);
@@ -151,7 +151,7 @@ module("Unit | Model | user", function (hooks) {
       description: "user2 status",
       emoji: "speech_balloon",
     };
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const user1 = store.createRecord("user", {
       id: 1,
       status: status1,
@@ -179,7 +179,7 @@ module("Unit | Model | user", function (hooks) {
   });
 
   test("create() doesn't set internal status tracking fields", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const user = store.createRecord("user", {
       _subscribersCount: 10,
       _clearStatusTimerId: 100,

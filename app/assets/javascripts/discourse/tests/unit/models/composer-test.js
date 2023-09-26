@@ -7,7 +7,7 @@ import {
 import { currentUser } from "discourse/tests/helpers/qunit-helpers";
 import AppEvents from "discourse/services/app-events";
 import { module, test } from "qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { setupTest } from "ember-qunit";
 import pretender, {
   parsePostData,
@@ -17,7 +17,7 @@ import pretender, {
 function createComposer(opts = {}) {
   opts.user ??= currentUser();
   opts.appEvents = AppEvents.create();
-  const store = getOwner(this).lookup("service:store");
+  const store = getOwnerWithFallback(this).lookup("service:store");
   return store.createRecord("composer", opts);
 }
 
@@ -31,7 +31,9 @@ module("Unit | Model | composer", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    this.siteSettings = getOwner(this).lookup("service:site-settings");
+    this.siteSettings = getOwnerWithFallback(this).lookup(
+      "service:site-settings"
+    );
   });
 
   test("replyLength", function (assert) {
@@ -253,7 +255,7 @@ module("Unit | Model | composer", function (hooks) {
   });
 
   test("Post length for private messages with non human users", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const topic = store.createRecord("topic", { pm_with_non_human_user: true });
     const composer = createComposer.call(this, {
       topic,
@@ -266,7 +268,7 @@ module("Unit | Model | composer", function (hooks) {
     const composer = createComposer();
     assert.ok(!composer.editingFirstPost, "it's false by default");
 
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const post = store.createRecord("post", { id: 123, post_number: 2 });
     composer.setProperties({ post, action: EDIT });
     assert.ok(
@@ -282,7 +284,7 @@ module("Unit | Model | composer", function (hooks) {
   });
 
   test("clearState", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const composer = createComposer.call(this, {
       originalText: "asdf",
       reply: "asdf2",
@@ -364,7 +366,7 @@ module("Unit | Model | composer", function (hooks) {
     this.siteSettings.max_topic_title_length = 10;
     const composer = createComposer();
 
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const post = store.createRecord("post", {
       id: 123,
       post_number: 2,

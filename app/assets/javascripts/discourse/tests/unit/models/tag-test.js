@@ -1,12 +1,12 @@
 import { module, test } from "qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { setupTest } from "ember-qunit";
 
 module("Unit | Model | tag", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    this.store = getOwner(this).lookup("service:store");
+    this.store = getOwnerWithFallback(this).lookup("service:store");
   });
 
   test("totalCount when pm_count is not present", function (assert) {

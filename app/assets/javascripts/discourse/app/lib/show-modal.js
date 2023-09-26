@@ -1,6 +1,6 @@
 // Remove when legacy modals are dropped (deprecation: discourse.modal-controllers)
 
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 
 /**
  * Render a modal
@@ -26,7 +26,7 @@ export default function showModal(name, opts) {
   }
   opts = opts || {};
 
-  let container = getOwner(this);
+  let container = getOwnerWithFallback(this);
   if (container.isDestroying || container.isDestroyed) {
     return;
   }
