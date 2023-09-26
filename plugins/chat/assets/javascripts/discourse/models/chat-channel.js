@@ -5,7 +5,7 @@ import { tracked } from "@glimmer/tracking";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
 import ChatThreadsManager from "discourse/plugins/chat/discourse/lib/chat-threads-manager";
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import guid from "pretty-text/guid";
 import ChatDirectMessage from "discourse/plugins/chat/discourse/models/chat-direct-message";
 import ChatChannelArchive from "discourse/plugins/chat/discourse/models/chat-channel-archive";
@@ -70,8 +70,8 @@ export default class ChatChannel {
   @tracked tracking;
   @tracked threadingEnabled = false;
 
-  threadsManager = new ChatThreadsManager(getOwner(this));
-  messagesManager = new ChatMessagesManager(getOwner(this));
+  threadsManager = new ChatThreadsManager(getOwnerWithFallback(this));
+  messagesManager = new ChatMessagesManager(getOwnerWithFallback(this));
 
   @tracked _currentUserMembership;
   @tracked _lastMessage;
@@ -101,7 +101,7 @@ export default class ChatChannel {
       this.archive = ChatChannelArchive.create(args);
     }
 
-    this.tracking = new ChatTrackingState(getOwner(this));
+    this.tracking = new ChatTrackingState(getOwnerWithFallback(this));
     this.lastMessage = args.last_message;
     this.meta = args.meta;
   }

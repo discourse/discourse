@@ -6,7 +6,7 @@ import Bookmark from "discourse/models/bookmark";
 import I18n from "I18n";
 import { generateCookFunction, parseMentions } from "discourse/lib/text";
 import transformAutolinks from "discourse/plugins/chat/discourse/lib/transform-auto-links";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import discourseLater from "discourse-common/lib/later";
 
 export default class ChatMessage {
@@ -329,7 +329,7 @@ export default class ChatMessage {
   }
 
   get #markdownOptions() {
-    const site = getOwner(this).lookup("service:site");
+    const site = getOwnerWithFallback(this).lookup("service:site");
     return {
       featuresOverride:
         site.markdown_additional_options?.chat?.limited_pretty_text_features,

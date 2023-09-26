@@ -1,4 +1,4 @@
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
@@ -33,7 +33,7 @@ export default class ChatThread {
   @tracked currentUserMembership = null;
   @tracked preview = null;
 
-  messagesManager = new ChatMessagesManager(getOwner(this));
+  messagesManager = new ChatMessagesManager(getOwnerWithFallback(this));
 
   constructor(channel, args = {}) {
     this.id = args.id;
@@ -55,7 +55,7 @@ export default class ChatThread {
       );
     }
 
-    this.tracking = new ChatTrackingState(getOwner(this));
+    this.tracking = new ChatTrackingState(getOwnerWithFallback(this));
     this.preview = ChatThreadPreview.create(args.preview);
   }
 
