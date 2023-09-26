@@ -78,7 +78,7 @@ module PageObjects
             page.find(context).send(
               selector_method,
               selector + " " + ".chat-message-text",
-              text: /#{Regexp.escape(text)}/,
+              exact_text: text,
             )
           else
             page.find(context).send(selector_method, selector)
