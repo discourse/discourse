@@ -12,7 +12,7 @@ import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import { module, test } from "qunit";
 import domFromString from "discourse-common/lib/dom-from-string";
 import { setupTest } from "ember-qunit";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 function formatMins(mins, opts = {}) {
   const dt = new Date(new Date() - mins * 60 * 1000);
@@ -150,9 +150,7 @@ module("Unit | Utility | formatter", function (hooks) {
   });
 
   test("formatting tiny dates", function (assert) {
-    const siteSettings = getOwnerWithFallback(this).lookup(
-      "service:site-settings"
-    );
+    const siteSettings = getOwner(this).lookup("service:site-settings");
 
     const shortDateYear = shortDateTester("MMM 'YY");
     siteSettings.relative_date_duration = 14;

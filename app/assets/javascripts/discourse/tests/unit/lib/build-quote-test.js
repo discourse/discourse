@@ -1,6 +1,6 @@
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { buildQuote } from "discourse/lib/quote";
 import PrettyText from "pretty-text/pretty-text";
 
@@ -8,7 +8,7 @@ module("Unit | Utility | build-quote", function (hooks) {
   setupTest(hooks);
 
   test("quotes", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const post = store.createRecord("post", {
       cooked: "<p><b>lorem</b> ipsum</p>",
       username: "eviltrout",
@@ -58,7 +58,7 @@ module("Unit | Utility | build-quote", function (hooks) {
   });
 
   test("quoting a quote", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const post = store.createRecord("post", {
       cooked: new PrettyText().cook(
         '[quote="sam, post:1, topic:1, full:true"]\nhello\n[/quote]\n*Test*'

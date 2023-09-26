@@ -1,6 +1,6 @@
 import { module, test } from "qunit";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
 import { helperContext } from "discourse-common/lib/helpers";
 
@@ -12,7 +12,7 @@ module("Unit | Utility | category-badge", function (hooks) {
   });
 
   test("Regular categoryBadge", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const category = store.createRecord("category", {
       name: "hello",
       id: 123,
@@ -43,7 +43,7 @@ module("Unit | Utility | category-badge", function (hooks) {
   });
 
   test("undefined color", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const noColor = store.createRecord("category", { name: "hello", id: 123 });
     const tag = $.parseHTML(categoryBadgeHTML(noColor))[0];
 
@@ -54,7 +54,7 @@ module("Unit | Utility | category-badge", function (hooks) {
   });
 
   test("topic count", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const category = store.createRecord("category", { name: "hello", id: 123 });
 
     assert.ok(
@@ -69,7 +69,7 @@ module("Unit | Utility | category-badge", function (hooks) {
   });
 
   test("allowUncategorized", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const uncategorized = store.createRecord("category", {
       name: "uncategorized",
       id: 345,
@@ -89,12 +89,10 @@ module("Unit | Utility | category-badge", function (hooks) {
   });
 
   test("category names are wrapped in dir-spans", function (assert) {
-    const siteSettings = getOwnerWithFallback(this).lookup(
-      "service:site-settings"
-    );
+    const siteSettings = getOwner(this).lookup("service:site-settings");
     siteSettings.support_mixed_text_direction = true;
 
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const rtlCategory = store.createRecord("category", {
       name: "תכנות עם Ruby",
       id: 123,
@@ -118,10 +116,8 @@ module("Unit | Utility | category-badge", function (hooks) {
   });
 
   test("recursive", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
-    const siteSettings = getOwnerWithFallback(this).lookup(
-      "service:site-settings"
-    );
+    const store = getOwner(this).lookup("service:store");
+    const siteSettings = getOwner(this).lookup("service:site-settings");
 
     const foo = store.createRecord("category", {
       name: "foo",

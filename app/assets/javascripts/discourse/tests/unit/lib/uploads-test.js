@@ -12,16 +12,14 @@ import I18n from "I18n";
 import sinon from "sinon";
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 module("Unit | Utility | uploads", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    this.siteSettings = getOwnerWithFallback(this).lookup(
-      "service:site-settings"
-    );
-    this.store = getOwnerWithFallback(this).lookup("service:store");
+    this.siteSettings = getOwner(this).lookup("service:site-settings");
+    this.store = getOwner(this).lookup("service:store");
   });
 
   test("validateUploadedFiles", function (assert) {
@@ -349,9 +347,7 @@ module("Unit | Utility | uploads", function (hooks) {
       "![8F2B469B-6B2C-4213-BC68-57B4876365A0|100x200](/uploads/123/abcdef.ext)"
     );
 
-    const capabilities = getOwnerWithFallback(this).lookup(
-      "service:capabilities"
-    );
+    const capabilities = getOwner(this).lookup("service:capabilities");
     sinon.stub(capabilities, "isIOS").get(() => true);
     assert.strictEqual(
       testUploadMarkdown("8F2B469B-6B2C-4213-BC68-57B4876365A0.jpeg"),
