@@ -33,6 +33,7 @@ body.wizard {
   }
 
   .discourse-logo svg {
+    position: relative;
     height: 70px;
     width: auto;
     @include breakpoint("mobile-extra-large") {
@@ -46,7 +47,9 @@ body.wizard {
   }
 
   .wizard-canvas {
-    position: absolute;
+    position: fixed;
+    top: 0;
+    pointer-events: none;
   }
 }
 
