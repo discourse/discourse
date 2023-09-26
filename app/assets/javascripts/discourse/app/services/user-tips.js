@@ -11,8 +11,13 @@ export default class UserTips extends Service {
   @service currentUser;
 
   @tracked availableTips = [];
+  @tracked renderedId;
 
-  get renderedId() {
+  computeRenderedId() {
+    if (this.availableTips.find((tip) => tip.id === this.renderedId)) {
+      return this.renderedId;
+    }
+
     return this.availableTips
       .sortBy("priority")
       .reverse()
@@ -26,6 +31,7 @@ export default class UserTips extends Service {
   addAvailableTip(tip) {
     next(() => {
       this.availableTips = [...this.availableTips, tip];
+      this.renderedId = this.computeRenderedId();
     });
   }
 
@@ -34,6 +40,8 @@ export default class UserTips extends Service {
       this.availableTips = this.availableTips.filter((availableTip) => {
         return tip.id !== availableTip.id;
       });
+
+      this.renderedId = this.computeRenderedId();
     });
   }
 
