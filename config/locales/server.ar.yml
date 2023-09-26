@@ -68,8 +68,11 @@ ar:
       generic: حدث خطأ في أثناء استيراد هذه السمة
       upload: "خطأ في إنشاء أصل التحميل: %{name}. %{errors}"
       about_json: "خطأ في الاستيراد: ملف about.json غير موجود أو غير صالح. هل أنت متأكد أن هذه سمة Discourse؟"
+      about_json_too_big: "خطأ في الاستيراد: about.json أكبر من الحد %{limit}."
       about_json_values: "يتضمَّن ملف about.json قيمًا غير صالحة: %{errors}"
       modifier_values: "تتضمَّن معدِّلات ملف about.json قيمًا غير صالحة: %{errors}"
+      asset_too_big: "الأصل %{filename} أكبر من الحد %{limit}"
+      theme_too_big: "السمة أكبر من الحد %{limit}"
       git: "حدث خطأ في أثناء استنساخ مستودع Git، تم رفض الوصول أو لم يتم العثور على المستودع"
       git_ref_not_found: "يتعذَّر التحقُّق من مرجع Git:%{ref}"
       git_unsupported_scheme: "يتعذَّر استنساخ git repo: مخطط غير مدعوم"
@@ -78,6 +81,7 @@ ar:
       unknown_file_type: "يبدو أن الملف الذي حمَّلته ليس سمة Discourse صالحة."
       not_allowed_theme: "`%{repo}` غير مُدرَج في قائمة السمات المسموح بها (ضع علامة في مربع الإعداد العام `allowed_theme_repos`)."
       ssh_key_gone: "لقد انتظرت طويلًا لتثبيت السمة وانتهت صلاحية مفتاح SSH. يُرجى إعادة المحاولة."
+      too_many_files: "لقد تجاوز عدد الملفات (%{count}) في سمة الحد الأقصى المسموح به لعدد الملفات (%{limit})"
     errors:
       component_no_user_selectable: "لا يمكن أن تكون مكونات السمة قابلة للتحديد بواسطة المستخدم"
       component_no_default: "لا يمكن أن تكون مكونات السمة تابعة للسمة الافتراضية"
@@ -1113,6 +1117,9 @@ ar:
     sequence_conflict_error:
       title: "خطأ في المسودة"
       description: "المسودة قيد التعديل في نافذة أخرى. يُرجى إعادة تحميل هذه الصفحة."
+    too_many_drafts:
+      title: "عدد كبير جدًا من المسودات"
+      description: "لقد وصلت إلى الحد الأقصى لعدد المسودات المسموح بها. يُرجى حذف بعض [مسوداتك](%{base_url}/my/activity/drafts) ثم حاول مرة أخرى."
   draft_backup:
     pm_title: "المسودات الاحتياطية من الموضوعات الجارية"
     pm_body: "موضوع يحتوي على مسودات احتياطية"
@@ -2693,6 +2700,7 @@ ar:
     invalid_security_key: "مفتاح الأمان غير صالح."
     missing_second_factor_name: "يُرجى إدخال اسم."
     missing_second_factor_code: "يُرجى إدخال رمز."
+    too_many_security_keys: "عذرًا، لا يمكنك الحصول على أكثر من 50 مفتاح أمان. الرجاء إزالة واحدة موجودة والمحاولة مرة أخرى."
     second_factor_toggle:
       totp: "استخدام تطبيق المصادقة أو مفتاح الأمان بدلًا من ذلك"
       backup_code: "استخدام رمز احتياطي بدلًا من ذلك"
@@ -4395,7 +4403,7 @@ ar:
       name: محرِّر Wiki
       description: أول تعديل wiki
       long_description: |
-        يتم منحك هذه الشارة عند تعديل أحد منشورات wiki لأول مرة.
+        تُمنح هذه الشارة متى ما عدّلت مشاركة ويكي واحدة أوّل مرة.
     basic_user:
       name: أولي
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">تم منحك</a> جميع الوظائف الأساسية في المجتمع

@@ -68,8 +68,11 @@ he:
       generic: אירעה שגיאה בעת ייבוא ערכת העיצוב הזו
       upload: "שגיאה ביצירת משאב להעלאה: %{name}. %{errors}"
       about_json: "שגיאת ייבוא: about.json לא קיים או שהוא שגוי. האם אכן מדובר בערכת עיצוב של Discourse?"
+      about_json_too_big: "שגיאת ייבוא: about.json גדול ממגבלת %{limit}."
       about_json_values: "about.json מכיל ערכים שגויים: %{errors}"
       modifier_values: "המחליפים ב־about.json מכילים ערכים שגויים: %{errors}"
+      asset_too_big: "הנכס %{filename} גדול ממגבלת %{limit}"
+      theme_too_big: "ערכת העיצוב גדולה ממגבלת %{limit}"
       git: "שגיאה בעת שכפול מאגר git, הגישה נדחיתה או שהמאגר לא נמצא"
       git_ref_not_found: "לא ניתן למשוך (checkout) הפניית git:‏ %{ref}"
       git_unsupported_scheme: "לא ניתן לשבט מאגר git: אין תמיכה בסכמה"
@@ -78,6 +81,7 @@ he:
       unknown_file_type: "הקובץ שהעלית הוא כפי הנראה אינה ערכת עיצוב תקנית של Discourse."
       not_allowed_theme: "‚%{repo}’ אינו ברשימת הנושאים המורשים (יש לבדוק את ההגדרה הגלובלית `allowed_theme_repos` - מאגרי ערכות עיצוב מורשים)."
       ssh_key_gone: "המתנת זמן רב מדי להתקנת ערכת העיצוב ותוקף מפתח ה־SSH פג. נא לנסות שוב."
+      too_many_files: "מספר הקבצים (%{count}) בערכת העיצוב חרג ממספר הקבצים המרבי המותר (%{limit})"
     errors:
       component_no_user_selectable: "רכיבי ערכת העיצוב לא יכולים להיות לבחירת המשתמש"
       component_no_default: "רכיבי ערכת העיצוב לא יכולים להיות בררת המחדל של ערכת העיצוב"
@@ -1009,6 +1013,9 @@ he:
     sequence_conflict_error:
       title: "שגיאת טיוטה"
       description: "הטיוטה נערכת בחלון אחר. נא לרענן את העמוד הזה."
+    too_many_drafts:
+      title: "יותר מדי טיוטות"
+      description: "הגעת למספר הטיוטות המרבי המותר. נא למחוק חלק מה[טיוטות שלך](%{base_url}/my/activity/drafts) ולנסות שוב."
   draft_backup:
     pm_title: "טיוטות גיבוי מנושאים שמתנהלים כרגע"
     pm_body: "נושא שמכיל טיוטות גיבוי"
@@ -2549,6 +2556,8 @@ he:
     invalid_security_key: "מפתח אבטחה שגוי."
     missing_second_factor_name: "נא לציין שם."
     missing_second_factor_code: "נא לציין קוד."
+    too_many_authenticators: "לא יכולים להיות לך יותר מ־50 מאמתים. נא להסיר אחד קיים ולנסות שוב."
+    too_many_security_keys: "לא יכולים להיות לך יותר מ־50 מפתחות אבטחה. נא להסיר אחד קיים ולנסות שוב."
     second_factor_toggle:
       totp: "יש להשתמש ביישומון מאמת או במפתח אבטחה במקום"
       backup_code: "להשתמש בקוד גיבוי במקום"
