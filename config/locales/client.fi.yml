@@ -2719,9 +2719,7 @@ fi:
           false { tai <a href="{basePath}/latest">katso viimeisimmät ketjut</a>}
           other {}
         }
-      bumped_at_title: |
-        Ensimmäinen viesti: %{createdAtDate}
-        Lähetetty: %{bumpedAtDate}
+      bumped_at: "Viimeisin: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Selaa kaikkia alueita</a> tai <a href='%{basePath}/latest'>katso viimeisimmät ketjut</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Selaa kaikkia alueita</a>, <a href='%{basePath}/latest'>katso viimeisimmät ketjut</a> tai katso suosituimmat:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Selaa kaikkia tunnisteita</a> tai <a href='%{basePath}/latest'>katso viimeisimmät ketjut</a>."
@@ -3131,6 +3129,7 @@ fi:
       errors:
         create: "Viestin luonti epäonnistui. Yritä uudelleen."
         edit: "Viestin muokkaus epäonnistui. Yritä uudelleen."
+        backup_too_large: "Valitettavasti varmuuskopiotiedosto on liian suuri."
         file_too_large: "Tiedosto on valitettavasti liian suuri (enimmäiskoko on %{max_size_kb} kt). Mitäpä jos lataisit suuren tiedostosi johonkin pilvipalveluun ja jakaisit linkin?"
         file_size_zero: "Jokin näyttää menneen vikaan. Tiedosto, jota yrität ladata, on 0 tavua. Yritä uudelleen."
         file_too_large_humanized: "Tiedosto on valitettavasti liian suuri (enimmäiskoko on %{max_size}). Mitäpä jos lataisit suuren tiedostosi johonkin pilvipalveluun ja jakaisit linkin?"
@@ -5629,6 +5628,7 @@ fi:
         show_outdated: "Näytä vain vanhentuneet/virheelliset"
         locale: "Kieli:"
         more_than_50_results: "Hakutuloksia on yli 50. Rajaa hakuasi."
+        no_results: "Sivustolta ei ei löytynyt vastaavia tekstejä"
         interpolation_keys: "Käytettävissä olevat interpolaatioavaimet:"
         outdated:
           title: "Käännös on vanhentunut"

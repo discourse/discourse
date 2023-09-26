@@ -2170,6 +2170,7 @@ el:
       options: "Επιλογές Θέματος"
       show_links: "εμφάνιση συνδέσμων εντός του θέματος"
       unread_indicator: "Κανένα μέλος δεν έχει διαβάσει ακόμη την τελευταία ανάρτηση αυτού του θέματος."
+      bumped_at: "Πρόσφατα: %{date}"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Περιηγηθείτε σε όλες τις ετικέτες</a> ή <a href='%{basePath}/latest'>δείτε τα τελευταία θέματα</a>."
       deleted: "Το θέμα έχει διαγραφεί"
       slow_mode_update:

@@ -2719,9 +2719,7 @@ es:
           false { o <a href="{basePath}/latest">consulta otros temas</a>}
           other {}
         }
-      bumped_at_title: |
-        Primera publicación: %{createdAtDate}
-        Publicado: %{bumpedAtDate}
+      bumped_at: "Recientes: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Explorar todas las categorías</a> o <a href='%{basePath}/latest'>ver los temas más recientes</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Explorar todas las categorías</a>, <a href='%{basePath}/latest'>ver los temas más recientes</a> o ver la parte superior:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Explorar todas las etiquetas</a> o <a href='%{basePath}/latest'>ver los temas más recientes</a>."

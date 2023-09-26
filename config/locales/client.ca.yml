@@ -1918,6 +1918,7 @@ ca:
       options: "Opcions del tema"
       show_links: "mostra enllaços dins d'aquest tema"
       unread_indicator: "Cap membre encara no ha llegit la darrera publicació d'aquest tema."
+      bumped_at: "Més recent: %{date}"
       deleted: "El tema ha estat suprimit"
       slow_mode_update:
         enable: "Activa"

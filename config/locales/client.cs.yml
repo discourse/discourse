@@ -2429,6 +2429,7 @@ cs:
       back_to_list: "Zpátky na seznam témat"
       options: "Možnosti"
       show_links: "zobrazit odkazy v tomto tématu"
+      bumped_at: "Poslední: %{date}"
       deleted: "Téma bylo smazáno"
       slow_mode_update:
         enable: "Zapnout"

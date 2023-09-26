@@ -25,6 +25,10 @@ uk:
           descriptions:
             chat:
               create_message: "Створіть повідомлення чату у вказаному каналі."
+      web_hooks:
+        chat_message_event:
+          name: "Подія повідомлення в чаті"
+          details: "При створенні, редагуванні, видаленні або відновленні повідомлення чату."
     about:
       chat_messages_count: "Повідомлення чату"
       chat_channels_count: "Канали чату"

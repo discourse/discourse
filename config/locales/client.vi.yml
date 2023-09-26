@@ -2311,6 +2311,7 @@ vi:
       collapse_details: "thu gọn chi tiết chủ đề"
       expand_details: "mở rộng chi tiết chủ đề"
       unread_indicator: "Chưa có thành viên nào đọc bài cuối cùng của chủ đề này."
+      bumped_at: "Mới nhất: %{date}"
       suggest_create_topic: Bạn đã sẵn sàng để <a href>đầu một cuộc trò chuyện mới chưa?</a>
       deleted: "Chủ đề này đã bị xóa"
       slow_mode_update:
