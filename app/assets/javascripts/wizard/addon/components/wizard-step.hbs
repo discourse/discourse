@@ -60,61 +60,57 @@
   </div>
 
   <div class="wizard-container__step-footer">
-    <div class="wizard-container__buttons">
+    <div class="wizard-container__buttons-left">
       {{#if this.showBackButton}}
         <button
           {{on "click" this.backStep}}
           disabled={{this.saving}}
           type="button"
-          class="wizard-container__button btn-back"
+          class="wizard-container__button back"
         >
           {{i18n "wizard.back"}}
         </button>
       {{/if}}
     </div>
 
-    <div class="wizard-container__step-progress">
+    <div class="wizard-container__buttons-right">
       {{#if this.showFinishButton}}
         <button
-          {{on "click" this.exitEarly}}
+          {{on "click" this.finish}}
           disabled={{this.saving}}
           type="button"
-          class="wizard-container__button jump-in"
+          class="wizard-container__button finish"
         >
-          {{i18n "wizard.jump_in"}}
+          {{i18n "wizard.finish"}}
         </button>
-      {{/if}}
-
-      {{#if this.showConfigureMore}}
+      {{else if this.showConfigureMore}}
         <button
           {{on "click" this.nextStep}}
           disabled={{this.saving}}
           type="button"
-          class="wizard-container__button primary {{this.nextButtonClass}}"
+          class="wizard-container__button configure-more"
         >
-          {{i18n this.nextButtonLabel}}
+          {{i18n "wizard.configure_more"}}
         </button>
       {{/if}}
 
       {{#if this.showJumpInButton}}
         <button
-          {{on "click" this.quit}}
+          {{on "click" this.jumpIn}}
           disabled={{this.saving}}
           type="button"
-          class="wizard-container__button {{this.jumpInButtonClass}}"
+          class="wizard-container__button primary jump-in"
         >
-          {{i18n this.jumpInButtonLabel}}
+          {{i18n "wizard.jump_in"}}
         </button>
-      {{/if}}
-
-      {{#if this.showNextButton}}
+      {{else}}
         <button
           {{on "click" this.nextStep}}
           disabled={{this.saving}}
           type="button"
-          class="wizard-container__button primary {{this.nextButtonClass}}"
+          class="wizard-container__button primary next"
         >
-          {{i18n this.nextButtonLabel}}
+          {{i18n "wizard.next"}}
         </button>
       {{/if}}
 
