@@ -86,7 +86,9 @@
   {{#if this.showNotificationUserTip}}
     <UserTip
       @id="topic_notification_levels"
-      @selector=".notifications-button"
+      @triggerSelector=".notifications-button"
+      @titleText={{i18n "user_tips.topic_notification_levels.title"}}
+      @contentText={{i18n "user_tips.topic_notification_levels.content"}}
     />
   {{/if}}
 

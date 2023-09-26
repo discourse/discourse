@@ -1,0 +1,40 @@
+import Component from "@glimmer/component";
+import { inject as service } from "@ember/service";
+import { modifier } from "ember-modifier";
+
+import deprecated from "discourse-common/lib/deprecated";
+
+export default class DPopover extends Component {
+  <template>
+    {{! template-lint-disable modifier-name-case }}
+    <div style="display:inline-flex;" {{this.registerDTooltip}}>
+      {{yield}}
+    </div>
+  </template>
+
+  @service tooltip;
+
+  registerDTooltip = modifier((element) => {
+    deprecated(
+      "`<DPopover />` is deprecated. Use `<DTooltip />` or the `tooltip` service instead.",
+      { id: "discourse.d-popover" }
+    );
+
+    const trigger = element.children[0];
+    const content = element.children[1];
+
+    if (!trigger || !content) {
+      return;
+    }
+
+    const instance = this.tooltip.register(trigger, {
+      content,
+    });
+
+    content.remove();
+
+    return () => {
+      instance.destroy();
+    };
+  });
+}

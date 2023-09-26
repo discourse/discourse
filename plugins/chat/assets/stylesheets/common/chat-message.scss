@@ -24,6 +24,14 @@
   }
 }
 
+[data-content][data-identifier="chat-message-reaction-tooltip"] {
+  font-size: var(--font-down-1);
+
+  .emoji {
+    padding-left: 0.5rem;
+  }
+}
+
 .chat-message {
   align-items: flex-start;
   padding: 0.25em 0.5em 0.25em 0.75em;
@@ -226,10 +234,6 @@
     }
   }
 
-  &:has(.tippy-box) {
-    position: relative;
-    z-index: 1;
-  }
   .chat-message-reaction-list .chat-message-react-btn {
     display: none;
   }
