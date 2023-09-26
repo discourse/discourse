@@ -6,7 +6,7 @@ import { module, test } from "qunit";
 import { click } from "@ember/test-helpers";
 import { LIGHTBOX_APP_EVENT_NAMES } from "discourse/lib/lightbox/constants";
 import domFromString from "discourse-common/lib/dom-from-string";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
 import sinon from "sinon";
 
@@ -17,8 +17,8 @@ module("Unit | Service | Experimental Lightbox", function (hooks) {
   const selector = ".lightbox";
 
   hooks.beforeEach(function () {
-    this.lightbox = getOwnerWithFallback(this).lookup("service:lightbox");
-    this.appEvents = getOwnerWithFallback(this).lookup("service:app-events");
+    this.lightbox = getOwner(this).lookup("service:lightbox");
+    this.appEvents = getOwner(this).lookup("service:app-events");
   });
 
   test("Lightbox Service has appEvents", async function (assert) {
