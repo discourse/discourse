@@ -4,13 +4,13 @@ import { click, render } from "@ember/test-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import TopicStatusIcons from "discourse/helpers/topic-status-icons";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 module("Integration | Component | Widget | topic-status", function (hooks) {
   setupRenderingTest(hooks);
 
   test("basics", async function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     this.set("args", {
       topic: store.createRecord("topic", { closed: true }),
       disableActions: true,
@@ -24,7 +24,7 @@ module("Integration | Component | Widget | topic-status", function (hooks) {
   });
 
   test("extendability", async function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     TopicStatusIcons.addObject([
       "has_accepted_answer",
       "far-check-square",
@@ -45,7 +45,7 @@ module("Integration | Component | Widget | topic-status", function (hooks) {
   });
 
   test("toggling pin status", async function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     this.set("args", {
       topic: store.createRecord("topic", { closed: true, pinned: true }),
     });

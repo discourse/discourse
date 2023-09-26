@@ -6,7 +6,7 @@ import { action } from "@ember/object";
 import { extraConnectorClass } from "discourse/lib/plugin-connectors";
 import { hbs } from "ember-cli-htmlbars";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import Component from "@glimmer/component";
 import templateOnly from "@ember/component/template-only";
 import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
@@ -256,9 +256,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
       "doesn't render conditional outlet"
     );
 
-    getOwnerWithFallback(this).lookup(
-      "service:site-settings"
-    ).always_display = true;
+    getOwner(this).lookup("service:site-settings").always_display = true;
     await settled();
     assert.true(exists(".conditional-render"), "renders conditional outlet");
   });

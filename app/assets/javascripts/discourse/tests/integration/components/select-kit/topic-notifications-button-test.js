@@ -5,7 +5,7 @@ import I18n from "I18n";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 function buildTopic(opts) {
   return this.store.createRecord("topic", {
@@ -30,7 +30,7 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      this.store = getOwnerWithFallback(this).lookup("service:store");
+      this.store = getOwner(this).lookup("service:store");
     });
 
     hooks.afterEach(function () {

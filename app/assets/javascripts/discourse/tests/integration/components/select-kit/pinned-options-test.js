@@ -3,7 +3,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 module("Integration | Component | select-kit/pinned-options", function (hooks) {
   setupRenderingTest(hooks);
@@ -12,7 +12,7 @@ module("Integration | Component | select-kit/pinned-options", function (hooks) {
     this.siteSettings.automatically_unpin_topics = false;
     this.set("subject", selectKit());
 
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     this.set(
       "topic",
       store.createRecord("topic", {
@@ -38,7 +38,7 @@ module("Integration | Component | select-kit/pinned-options", function (hooks) {
   test("pinning", async function (assert) {
     this.siteSettings.automatically_unpin_topics = false;
     this.set("subject", selectKit());
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     this.set(
       "topic",
       store.createRecord("topic", {
