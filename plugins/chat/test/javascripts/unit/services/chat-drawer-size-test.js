@@ -1,7 +1,10 @@
 import { module, test } from "qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
+import { setupTest } from "ember-qunit";
 
 module("Discourse Chat | Unit | Service | chat-drawer-size", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     this.subject = getOwner(this).lookup("service:chat-drawer-size");
   });

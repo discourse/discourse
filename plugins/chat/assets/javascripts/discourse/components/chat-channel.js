@@ -26,7 +26,7 @@ import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messag
 import { cached, tracked } from "@glimmer/tracking";
 import discourseDebounce from "discourse-common/lib/debounce";
 import DiscourseURL from "discourse/lib/url";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import {
   FUTURE,
   PAST,

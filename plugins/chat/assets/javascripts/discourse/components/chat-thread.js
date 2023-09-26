@@ -10,7 +10,7 @@ import { inject as service } from "@ember/service";
 import { cancel, next } from "@ember/runloop";
 import { resetIdle } from "discourse/lib/desktop-notifications";
 import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import {
   FUTURE,
   PAST,

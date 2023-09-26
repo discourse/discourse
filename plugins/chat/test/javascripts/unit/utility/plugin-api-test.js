@@ -1,6 +1,6 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import User from "discourse/models/user";
 import ChatMessageInteractor, {
