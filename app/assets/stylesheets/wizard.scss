@@ -290,17 +290,21 @@ body.wizard {
     }
   }
 
-  &__step.ready {
-    .wizard-container__buttons {
-      flex-direction: row-reverse;
-    }
-  }
-
   &__step.branding .wizard-container__description {
     font-size: var(--font-0);
   }
 
-  &__step-progress {
+  &__buttons-left {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    align-items: center;
+    @include breakpoint("mobile-extra-large") {
+      order: 2;
+    }
+  }
+
+  &__buttons-right {
     display: flex;
     align-items: center;
     font-weight: bold;
@@ -308,15 +312,6 @@ body.wizard {
     @include breakpoint("mobile-extra-large") {
       margin-right: 0;
       flex-direction: column;
-    }
-    .wizard-container__link {
-      color: var(--primary-400);
-      margin: 0 1em;
-      &.inactive {
-        // disabling instead of removing, to hold space
-        pointer-events: none;
-        opacity: 0;
-      }
     }
   }
 
@@ -381,8 +376,13 @@ body.wizard {
   }
 
   &__button.primary {
+    margin-left: 1em;
     background-color: var(--tertiary);
     color: var(--secondary);
+    @include breakpoint("mobile-extra-large") {
+      order: 1;
+      margin-left: 0;
+    }
   }
   &__button.primary:hover,
   &__button.primary:focus {
@@ -412,13 +412,6 @@ body.wizard {
   }
 
   &__button.jump-in {
-    background-color: var(--tertiary);
-    color: var(--secondary);
-    margin-left: 1em;
-    @include breakpoint("mobile-extra-large") {
-      order: 1;
-      margin-left: 0;
-    }
     &:hover {
       background-color: var(--primary-300);
     }
@@ -503,16 +496,6 @@ body.wizard {
       flex-direction: column;
       justify-content: center;
       align-items: stretch;
-    }
-  }
-
-  &__buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1em;
-    align-items: center;
-    @include breakpoint("mobile-extra-large") {
-      order: 2;
     }
   }
 

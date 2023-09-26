@@ -13,27 +13,43 @@ export default Component.extend({
     this.autoFocus();
   },
 
+  /**
+    Step        Back Button?     Primary Action      Secondary Action
+    ------------------------------------------------------------------
+    First            No               Next                  N/A
+    ------------------------------------------------------------------
+    ...             Yes               Next                  N/A
+    ------------------------------------------------------------------
+    Ready           Yes              Jump In          Configure More
+    ------------------------------------------------------------------
+    ...             Yes               Next              Exit Setup
+    ------------------------------------------------------------------
+    Last            Yes              Jump In                N/A
+    ------------------------------------------------------------------
+
+    Back Button: without saving, go back to the last page
+    Next Button: save, and if successful, go to the next page
+    Configure More: re-skinned next button
+    Exit Setup: without saving, go to the home page ("finish")
+    Jump In: on the "ready" page, it exits the setup ("finish"), on the
+    last page, it saves, and if successful, go to the home page
+   */
+
+  @discourseComputed("step.displayIndex", "wizard.steps.length")
+  isFinalStep(current, total) {
+    return current === total;
+  },
+
   @discourseComputed("step.index")
   showBackButton(index) {
     return index > 0;
   },
 
-  @discourseComputed("step.displayIndex", "wizard.totalSteps")
-  showNextButton(current, total) {
-    if (this.showConfigureMore === true) {
-      return false;
-    }
-    return current < total;
-  },
-
-  @discourseComputed("step.id")
-  nextButtonLabel(step) {
-    return `wizard.${step === "ready" ? "configure_more" : "next"}`;
-  },
-
-  @discourseComputed("step.id")
-  nextButtonClass(step) {
-    return step === "ready" ? "configure-more" : "next";
+  @discourseComputed("wizard", "step.index", "isFinalStep")
+  showFinishButton(wizard, index, isFinalStep) {
+    const ready = wizard.findStep("ready");
+    const isReady = ready && index > ready.index;
+    return isReady && !isFinalStep;
   },
 
   @discourseComputed("step.id")
@@ -41,24 +57,9 @@ export default Component.extend({
     return step === "ready";
   },
 
-  @discourseComputed("step.id")
-  showJumpInButton(step) {
-    return ["ready", "styling", "branding"].includes(step);
-  },
-
-  @discourseComputed("step.id")
-  jumpInButtonLabel(step) {
-    return `wizard.${step === "ready" ? "jump_in" : "finish"}`;
-  },
-
-  @discourseComputed("step.id")
-  jumpInButtonClass(step) {
-    return step === "ready" ? "jump-in" : "finish";
-  },
-
-  @discourseComputed("step.id")
-  showFinishButton(step) {
-    return step === "corporate";
+  @discourseComputed("step.id", "isFinalStep")
+  showJumpInButton(step, isFinalStep) {
+    return step === "ready" || isFinalStep;
   },
 
   @discourseComputed("step.id")
@@ -75,9 +76,9 @@ export default Component.extend({
   keyPress(event) {
     if (event.key === "Enter") {
       if (this.showJumpInButton) {
-        this.send("quit");
+        this.jumpIn();
       } else {
-        this.send("nextStep");
+        this.nextStep();
       }
     }
   },
@@ -110,25 +111,28 @@ export default Component.extend({
   },
 
   @action
-  quit(event) {
+  finish(event) {
     event?.preventDefault();
+
+    if (this.saving) {
+      return;
+    }
+
     this.goHome();
   },
 
   @action
-  exitEarly(event) {
+  jumpIn(event) {
     event?.preventDefault();
-    const step = this.step;
 
-    if (step.validate()) {
-      this.set("saving", true);
+    if (this.saving) {
+      return;
+    }
 
-      step
-        .save()
-        .then((response) => this.goNext(response))
-        .finally(() => this.set("saving", false));
+    if (this.step.id === "ready") {
+      this.finish();
     } else {
-      this.autoFocus();
+      this.nextStep();
     }
   },
 
