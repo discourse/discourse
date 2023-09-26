@@ -116,7 +116,7 @@ export function updateCurrentUser(properties) {
 
 // Note: do not use this in acceptance tests. Use `loggedIn: true` instead
 export function logIn() {
-  User.resetCurrent(currentUser());
+  return User.resetCurrent(currentUser());
 }
 
 // Note: Only use if `loggedIn: true` has been used in an acceptance test

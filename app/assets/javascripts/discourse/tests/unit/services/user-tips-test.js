@@ -1,15 +1,21 @@
-import { test } from "qunit";
+import { module, test } from "qunit";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { getOwner } from "@ember/application";
+import { setupTest } from "ember-qunit";
+import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Unit | Service | user-tips", function (needs) {
-  needs.user();
+module("Unit | Service | user-tips", function (hooks) {
+  setupTest(hooks);
 
   test("hideUserTipForever() makes a single request", async function (assert) {
-    const site = getOwnerWithFallback(this).lookup("service:site");
+    const currentUser = logIn();
+    this.owner.unregister("service:current-user");
+    this.owner.register("service:current-user", currentUser, {
+      instantiate: false,
+    });
+
+    const site = getOwner(this).lookup("service:site");
     site.set("user_tips", { first_notification: 1 });
-    const userTips = getOwnerWithFallback(this).lookup("service:user-tips");
 
     let requestsCount = 0;
     pretender.put("/u/eviltrout.json", () => {
@@ -23,6 +29,7 @@ acceptance("Unit | Service | user-tips", function (needs) {
       });
     });
 
+    const userTips = getOwner(this).lookup("service:user-tips");
     await userTips.hideUserTipForever("first_notification");
     assert.strictEqual(requestsCount, 1);
 
