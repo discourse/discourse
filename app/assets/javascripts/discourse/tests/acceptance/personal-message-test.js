@@ -12,7 +12,7 @@ import {
   getCachedTopicList,
   setCachedTopicList,
 } from "discourse/lib/cached-topic-list";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 acceptance("Personal Message", function (needs) {
   needs.user();
@@ -27,7 +27,7 @@ acceptance("Personal Message", function (needs) {
   });
 
   test("redirects to inbox after topic is archived and clears topicList cache", async function (assert) {
-    const session = getOwnerWithFallback(this).lookup("service:session");
+    const session = getOwner(this).lookup("service:session");
     setCachedTopicList(session, {});
 
     await visit("/t/pm-for-testing/12");

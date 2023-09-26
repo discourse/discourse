@@ -1,13 +1,13 @@
 import { module, test } from "qunit";
 import Site from "discourse/models/site";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
 
 module("Unit | Model | site", function (hooks) {
   setupTest(hooks);
 
   test("create", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     assert.ok(store.createRecord("site"), "it can create with no parameters");
   });
 
@@ -21,7 +21,7 @@ module("Unit | Model | site", function (hooks) {
   });
 
   test("create categories", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const site = store.createRecord("site", {
       categories: [
         { id: 3456, name: "Test Subcategory", parent_category_id: 1234 },
@@ -73,7 +73,7 @@ module("Unit | Model | site", function (hooks) {
   });
 
   test("sortedCategories returns categories sorted by topic counts and sorts child categories after parent", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const site = store.createRecord("site", {
       categories: [
         {

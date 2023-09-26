@@ -4,7 +4,7 @@ import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
 import MessageBus from "message-bus-client";
 import PrivateMessageTopicTrackingState from "discourse/services/pm-topic-tracking-state";
 import { setupTest } from "ember-qunit";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 function setupPretender() {
   pretender.get(`/u/test/private-message-topic-tracking-state`, () => {
@@ -24,7 +24,7 @@ module("Unit | Model | private-message-topic-tracking-state", function (hooks) {
   setupTest(hooks);
 
   test("modifying state calls onStateChange callbacks", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const pmTopicTrackingState = PrivateMessageTopicTrackingState.create({
       messageBus: MessageBus,
       currentUser: store.createRecord("user", { id: 77889, username: "test" }),
@@ -50,7 +50,7 @@ module(
 
     test("modifies the topic state only if the topic was not created by the current user", async function (assert) {
       setupPretender();
-      const store = getOwnerWithFallback(this).lookup("service:store");
+      const store = getOwner(this).lookup("service:store");
       const pmTopicTrackingState = PrivateMessageTopicTrackingState.create({
         messageBus: MessageBus,
         currentUser: store.createRecord("user", {
@@ -110,7 +110,7 @@ module(
 
     test("modifies the last_read_post_number and highest_post_number", async function (assert) {
       setupPretender();
-      const store = getOwnerWithFallback(this).lookup("service:store");
+      const store = getOwner(this).lookup("service:store");
       const pmTopicTrackingState = PrivateMessageTopicTrackingState.create({
         messageBus: MessageBus,
         currentUser: store.createRecord("user", {

@@ -3,15 +3,13 @@ import { emojiUnescape } from "discourse/lib/text";
 import { module, test } from "qunit";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { setupTest } from "ember-qunit";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 module("Unit | Utility | emoji", function (hooks) {
   setupTest(hooks);
 
   test("emojiUnescape", function (assert) {
-    const siteSettings = getOwnerWithFallback(this).lookup(
-      "service:site-settings"
-    );
+    const siteSettings = getOwner(this).lookup("service:site-settings");
 
     const testUnescape = (input, expected, description, settings = {}) => {
       const originalSettings = {};

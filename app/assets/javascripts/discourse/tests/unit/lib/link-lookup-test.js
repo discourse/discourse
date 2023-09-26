@@ -1,13 +1,13 @@
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
 import LinkLookup from "discourse/lib/link-lookup";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 module("Unit | Utility | link-lookup", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     this.post = store.createRecord("post");
     this.linkLookup = new LinkLookup({
       "en.wikipedia.org/wiki/handheld_game_console": {

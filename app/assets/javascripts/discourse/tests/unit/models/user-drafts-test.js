@@ -2,13 +2,13 @@ import { module, test } from "qunit";
 import I18n from "I18n";
 import { NEW_TOPIC_KEY } from "discourse/models/composer";
 import { setupTest } from "ember-qunit";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 module("Unit | Model | user-draft", function (hooks) {
   setupTest(hooks);
 
   test("stream", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const user = store.createRecord("user", { id: 1, username: "eviltrout" });
     const stream = user.userDraftsStream;
 
@@ -22,7 +22,7 @@ module("Unit | Model | user-draft", function (hooks) {
   });
 
   test("draft", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const drafts = [
       store.createRecord("user-draft", {
         draft_key: "topic_1",

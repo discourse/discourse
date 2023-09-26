@@ -4,7 +4,7 @@ import { render } from "@ember/test-helpers";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import Category from "discourse/models/category";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 const createArgs = (topic) => {
   return {
@@ -37,7 +37,7 @@ module(
         id: 123,
       });
 
-      const store = getOwnerWithFallback(this).lookup("service:store");
+      const store = getOwner(this).lookup("service:store");
       const topic = store.createRecord("topic", {
         user_id: this.currentUser.id,
       });
@@ -60,7 +60,7 @@ module(
         id: 123,
       });
 
-      const store = getOwnerWithFallback(this).lookup("service:store");
+      const store = getOwner(this).lookup("service:store");
       const topic = store.createRecord("topic", {
         user_id: this.currentUser.id,
       });

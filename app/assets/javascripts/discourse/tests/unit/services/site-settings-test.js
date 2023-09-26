@@ -1,6 +1,6 @@
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { inject as service } from "@ember/service";
 import EmberObject, { computed } from "@ember/object";
 
@@ -17,9 +17,7 @@ module("Unit | Service | site-settings", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    this.siteSettings = getOwnerWithFallback(this).lookup(
-      "service:site-settings"
-    );
+    this.siteSettings = getOwner(this).lookup("service:site-settings");
   });
 
   test("contains settings", function (assert) {
@@ -29,8 +27,8 @@ module("Unit | Service | site-settings", function (hooks) {
   test("notifies getters", function (assert) {
     this.siteSettings.title = "original";
 
-    getOwnerWithFallback(this).register("test-class:main", TestClass);
-    const object = getOwnerWithFallback(this).lookup("test-class:main");
+    getOwner(this).register("test-class:main", TestClass);
+    const object = getOwner(this).lookup("test-class:main");
     assert.strictEqual(object.text, "The title: original");
 
     this.siteSettings.title = "updated";

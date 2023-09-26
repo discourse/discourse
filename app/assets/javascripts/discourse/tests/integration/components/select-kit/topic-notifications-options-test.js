@@ -4,7 +4,7 @@ import { render } from "@ember/test-helpers";
 import I18n from "I18n";
 import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 function extractDescriptions(rows) {
   return [...rows].map((el) => el.querySelector(".desc").textContent.trim());
@@ -22,7 +22,7 @@ module(
     setupRenderingTest(hooks);
 
     test("regular topic notification level descriptions", async function (assert) {
-      const store = getOwnerWithFallback(this).lookup("service:store");
+      const store = getOwner(this).lookup("service:store");
       this.set(
         "topic",
         store.createRecord("topic", {
@@ -63,7 +63,7 @@ module(
     });
 
     test("PM topic notification level descriptions", async function (assert) {
-      const store = getOwnerWithFallback(this).lookup("service:store");
+      const store = getOwner(this).lookup("service:store");
       this.set(
         "topic",
         store.createRecord("topic", {

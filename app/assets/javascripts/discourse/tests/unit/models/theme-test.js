@@ -1,12 +1,12 @@
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 module("Unit | Model | theme", function (hooks) {
   setupTest(hooks);
 
   test("can add an upload correctly", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const theme = store.createRecord("theme");
 
     assert.strictEqual(

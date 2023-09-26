@@ -5,13 +5,13 @@ import pretender, {
 } from "discourse/tests/helpers/create-pretender";
 import Badge from "discourse/models/badge";
 import { setupTest } from "ember-qunit";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 module("Unit | Model | badge", function (hooks) {
   setupTest(hooks);
 
   test("newBadge", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const badge1 = store.createRecord("badge", { name: "New Badge" });
     const badge2 = store.createRecord("badge", { id: 1, name: "Old Badge" });
 
@@ -50,7 +50,7 @@ module("Unit | Model | badge", function (hooks) {
   });
 
   test("updateFromJson", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const badge = store.createRecord("badge", { name: "Badge 1" });
     badge.updateFromJson({
       badge_types: [{ id: 6, name: "Silver 1" }],
@@ -66,7 +66,7 @@ module("Unit | Model | badge", function (hooks) {
   });
 
   test("save", async function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const badge = store.createRecord("badge", {
       id: 1999,
       name: "New Badge",
@@ -89,7 +89,7 @@ module("Unit | Model | badge", function (hooks) {
   });
 
   test("destroy", async function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const badge = store.createRecord("badge", {
       name: "New Badge",
       description: "This is a new badge.",

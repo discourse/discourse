@@ -3,7 +3,7 @@ import EmberObject from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupTest } from "ember-qunit";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 module("Unit | Utility | plugin-api", function (hooks) {
   setupTest(hooks);
@@ -16,7 +16,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
       },
     });
 
-    getOwnerWithFallback(this).register("test-thingy:main", TestThingy);
+    getOwner(this).register("test-thingy:main", TestThingy);
 
     withPluginApi("1.1.0", (api) => {
       api.modifyClass("test-thingy:main", {
@@ -29,7 +29,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
       });
     });
 
-    const thingy = getOwnerWithFallback(this).lookup("test-thingy:main");
+    const thingy = getOwner(this).lookup("test-thingy:main");
     assert.strictEqual(thingy.prop, "hello there");
   });
 
@@ -41,10 +41,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
       }
     }
 
-    getOwnerWithFallback(this).register(
-      "native-test-thingy:main",
-      NativeTestThingy
-    );
+    getOwner(this).register("native-test-thingy:main", NativeTestThingy);
 
     withPluginApi("1.1.0", (api) => {
       api.modifyClass("native-test-thingy:main", {
@@ -57,7 +54,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
       });
     });
 
-    const thingy = getOwnerWithFallback(this).lookup("native-test-thingy:main");
+    const thingy = getOwner(this).lookup("native-test-thingy:main");
     assert.strictEqual(thingy.prop, "howdy partner");
   });
 
@@ -72,13 +69,9 @@ module("Unit | Utility | plugin-api", function (hooks) {
       }
     }
 
-    getOwnerWithFallback(this).register(
-      "class-test-thingy:main",
-      new ClassTestThingy(),
-      {
-        instantiate: false,
-      }
-    );
+    getOwner(this).register("class-test-thingy:main", new ClassTestThingy(), {
+      instantiate: false,
+    });
 
     withPluginApi("1.1.0", (api) => {
       api.modifyClass("class-test-thingy:main", {
@@ -90,7 +83,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
       });
     });
 
-    const thingy = getOwnerWithFallback(this).lookup("class-test-thingy:main");
+    const thingy = getOwner(this).lookup("class-test-thingy:main");
     assert.strictEqual(thingy.keep, "hey!");
     assert.strictEqual(thingy.prop, "g'day");
   });
@@ -102,7 +95,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
       },
     });
 
-    getOwnerWithFallback(this).register("test-class:main", Base, {
+    getOwner(this).register("test-class:main", Base, {
       instantiate: false,
     });
 

@@ -2,13 +2,13 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 module("Integration | Component | topic-list", function (hooks) {
   setupRenderingTest(hooks);
 
   test("bulk select", async function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     this.setProperties({
       topics: [
         store.createRecord("topic", { id: 24234 }),
