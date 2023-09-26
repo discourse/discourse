@@ -196,7 +196,22 @@ WebHookEventType.seed do |b|
   b.group = WebHookEventType.groups[:voting]
 end
 WebHookEventType.seed do |b|
-  b.id = WebHookEventType::TYPES[:chat][:message]
-  b.name = "chat_message"
+  b.id = WebHookEventType::TYPES[:chat][:message_created]
+  b.name = "chat_message_created"
+  b.group = WebHookEventType.groups[:chat]
+end
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::TYPES[:chat][:message_edited]
+  b.name = "chat_message_edited"
+  b.group = WebHookEventType.groups[:chat]
+end
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::TYPES[:chat][:message_trashed]
+  b.name = "chat_message_trashed"
+  b.group = WebHookEventType.groups[:chat]
+end
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::TYPES[:chat][:message_restored]
+  b.name = "chat_message_restored"
   b.group = WebHookEventType.groups[:chat]
 end

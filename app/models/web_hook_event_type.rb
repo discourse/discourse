@@ -109,7 +109,10 @@ class WebHookEventType < ActiveRecord::Base
       topic_upvote: 1701,
     },
     chat: {
-      message: 1801,
+      message_created: 1801,
+      message_edited: 1802,
+      message_trashed: 1803,
+      message_restored: 1804,
     },
   }
 

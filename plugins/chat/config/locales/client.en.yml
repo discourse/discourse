@@ -21,8 +21,11 @@ en:
               create_message: "Create a chat message in a specified channel."
       web_hooks:
         chat_event:
-          group_name: "When a chat message is created, edited, trashed or restored."
-          chat_message: "Chat message event"
+          group_name: "Chat events"
+          chat_message_created: "Message is created"
+          chat_message_edited: "Message is edited"
+          chat_message_trashed: "Message is trashed"
+          chat_message_restored: "Message is restored"
     about:
       chat_messages_count: "Chat messages"
       chat_channels_count: "Chat channels"
