@@ -15,7 +15,7 @@ import UserMenuReviewablesList from "./reviewables-list";
 import UserMenuProfileTabContent from "./profile-tab-content";
 import UserMenuOtherNotificationsList from "./other-notifications-list";
 import deprecated from "discourse-common/lib/deprecated";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 const DEFAULT_TAB_ID = "all-notifications";
 const DEFAULT_PANEL_COMPONENT = UserMenuNotificationsList;
@@ -281,7 +281,7 @@ export default class UserMenu extends Component {
 
     this.currentTabId = tab.id;
     this.currentPanelComponent = resolvePanelComponent(
-      getOwnerWithFallback(this),
+      getOwner(this),
       tab.panelComponent
     );
 
