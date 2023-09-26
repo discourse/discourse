@@ -145,5 +145,5 @@ end
 #
 #  id    :integer          not null, primary key
 #  name  :string           not null
-#  group :string
+#  group :integer
 #
