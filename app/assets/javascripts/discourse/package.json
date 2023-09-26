@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@glimmer/syntax": "^0.84.3",
+    "content-tag": "^1.1.0",
     "discourse-hbr": "1.0.0",
     "discourse-widget-hbs": "1.0.0",
     "ember-route-template": "^1.0.1",
@@ -89,6 +90,7 @@
     "ember-test-selectors": "^6.0.0",
     "eslint": "^8.50.0",
     "eslint-plugin-qunit": "^8.0.0",
+    "float-kit": "1.0.0",
     "html-entities": "^2.4.0",
     "imports-loader": "^4.0.1",
     "js-yaml": "^4.1.0",
@@ -103,7 +105,6 @@
     "sass": "^1.68.0",
     "select-kit": "1.0.0",
     "sinon": "^16.0.0",
-    "float-kit": "1.0.0",
     "source-map": "^0.7.4",
     "source-map-support": "^0.5.21",
     "terser": "^5.20.0",

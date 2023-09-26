@@ -111,17 +111,9 @@ class DiscourseJsProcessor
 
     def self.generate_js_processor
       Discourse::Utils.execute_command(
-        "yarn",
-        "--silent",
-        "esbuild",
-        "--minify",
-        "--log-level=warning",
-        "--bundle",
-        "--external:fs",
-        "--alias:path=./app/assets/javascripts/node_modules/path-browserify",
-        "--define:process='{\"env\":{}}'",
-        "app/assets/javascripts/js-processor.js",
-        "--outfile=#{JS_PROCESSOR_PATH}",
+        "node",
+        "app/assets/javascripts/esbuild.js",
+        JS_PROCESSOR_PATH,
       )
       JS_PROCESSOR_PATH
     end
