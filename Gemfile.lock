@@ -124,12 +124,6 @@ GEM
       addressable
     dartsass-ruby (3.0.1)
       sass-embedded (~> 1.54)
-    dartsass-sprockets (3.0.0)
-      dartsass-ruby (~> 3.0)
-      railties (>= 4.0.0)
-      sprockets (> 3.0)
-      sprockets-rails
-      tilt
     date (3.3.3)
     debug_inspector (1.1.0)
     diff-lcs (1.5.0)
@@ -497,7 +491,6 @@ GEM
     syntax_tree-disable_ternary (1.0.0)
     test-prof (1.2.3)
     thor (1.2.2)
-    tilt (2.3.0)
     timeout (0.4.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
@@ -566,7 +559,6 @@ DEPENDENCIES
   cppjieba_rb
   css_parser
   dartsass-ruby
-  dartsass-sprockets
   diffy
   digest
   discourse-fonts

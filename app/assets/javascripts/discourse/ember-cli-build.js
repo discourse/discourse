@@ -24,7 +24,6 @@ module.exports = function (defaults) {
 
   const isEmbroider = process.env.USE_EMBROIDER === "1";
   const isProduction = EmberApp.env().includes("production");
-  const isTest = EmberApp.env().includes("test");
 
   // This is more or less the same as the one in @embroider/test-setup
   const maybeEmbroider = (app, options) => {
@@ -162,20 +161,16 @@ module.exports = function (defaults) {
     .findAddonByName("pretty-text")
     .treeForMarkdownItBundle();
 
-  const extraPublicTrees = [];
+  const testStylesheetTree = mergeTrees([
+    discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
+    discourseScss(
+      `${discourseRoot}/app/assets/stylesheets`,
+      "qunit-custom.scss"
+    ),
+  ]);
+  app.project.liveReloadFilterPatterns = [/.*\.scss/];
 
-  if (isTest) {
-    const testemStylesheetTree = mergeTrees([
-      discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
-      discourseScss(
-        `${discourseRoot}/app/assets/stylesheets`,
-        "qunit-custom.scss"
-      ),
-    ]);
-    extraPublicTrees.push(testemStylesheetTree);
-  }
-
-  extraPublicTrees.push(
+  const extraPublicTrees = [
     createI18nTree(discourseRoot, vendorJs),
     parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
@@ -197,8 +192,9 @@ module.exports = function (defaults) {
       outputFile: `assets/markdown-it-bundle.js`,
     }),
     generateScriptsTree(app),
-    discoursePluginsTree
-  );
+    discoursePluginsTree,
+    testStylesheetTree,
+  ];
 
   return maybeEmbroider(app, {
     extraPublicTrees,
