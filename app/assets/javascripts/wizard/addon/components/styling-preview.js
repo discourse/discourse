@@ -76,7 +76,7 @@ export default WizardPreviewBaseComponent.extend({
     if (slider.scrollLeft < 50) {
       this.set("previewTopic", true);
     }
-    if (slider.scrollLeft > slider.offsetWidth) {
+    if (slider.scrollLeft > slider.offsetWidth - 50) {
       this.set("previewTopic", false);
     }
   },
