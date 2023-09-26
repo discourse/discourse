@@ -2,14 +2,14 @@ import { module, test } from "qunit";
 import RestAdapter from "discourse/adapters/rest";
 import RestModel from "discourse/models/rest";
 import sinon from "sinon";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
 
 module("Unit | Model | rest-model", function (hooks) {
   setupTest(hooks);
 
   test("munging", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     class Grape extends RestModel {}
     Grape.reopenClass({
       munge: function (json) {
@@ -18,13 +18,13 @@ module("Unit | Model | rest-model", function (hooks) {
       },
     });
 
-    getOwnerWithFallback(this).register("model:grape", Grape);
+    getOwner(this).register("model:grape", Grape);
     const g = store.createRecord("grape", { store, percent: 0.4 });
     assert.strictEqual(g.inverse, 0.6, "it runs `munge` on `create`");
   });
 
   test("update", async function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const widget = await store.find("widget", 123);
     assert.strictEqual(widget.name, "Trout Lure");
     assert.ok(!widget.isSaving, "it is not saving");
@@ -45,7 +45,7 @@ module("Unit | Model | rest-model", function (hooks) {
   });
 
   test("updating simultaneously", async function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const widget = await store.find("widget", 123);
 
     const firstPromise = widget.update({ name: "new name" });
@@ -58,7 +58,7 @@ module("Unit | Model | rest-model", function (hooks) {
   });
 
   test("save new", async function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const widget = store.createRecord("widget");
 
     assert.ok(widget.isNew, "it is a new record");
@@ -84,7 +84,7 @@ module("Unit | Model | rest-model", function (hooks) {
   });
 
   test("creating simultaneously", async function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const widget = store.createRecord("widget");
 
     const firstPromise = widget.save({ name: "Evil Widget" });
@@ -97,15 +97,15 @@ module("Unit | Model | rest-model", function (hooks) {
   });
 
   test("destroyRecord", async function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const widget = await store.find("widget", 123);
 
     assert.ok(await widget.destroyRecord());
   });
 
   test("custom api name", async function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
-    getOwnerWithFallback(this).register(
+    const store = getOwner(this).lookup("service:store");
+    getOwner(this).register(
       "adapter:my-widget",
       class extends RestAdapter {
         // An adapter like this is used when the server-side key/url

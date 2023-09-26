@@ -1,13 +1,13 @@
 import { module, test } from "qunit";
 import User from "discourse/models/user";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
 
 module("Unit | Model | topic-details", function (hooks) {
   setupTest(hooks);
 
   test("defaults", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", { id: 1234 });
     const details = topic.details;
 
@@ -16,7 +16,7 @@ module("Unit | Model | topic-details", function (hooks) {
   });
 
   test("updateFromJson", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", { id: 1234 });
     const details = topic.details;
 

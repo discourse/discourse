@@ -2,14 +2,14 @@ import { module, test } from "qunit";
 import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
 
 module("Unit | Model | topic", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    this.store = getOwnerWithFallback(this).lookup("service:store");
+    this.store = getOwner(this).lookup("service:store");
   });
 
   test("defaults", function (assert) {
@@ -204,9 +204,7 @@ module("Unit | Model | topic", function (hooks) {
       fancy_title: "This is a test",
     });
 
-    const siteSettings = getOwnerWithFallback(this).lookup(
-      "service:site-settings"
-    );
+    const siteSettings = getOwner(this).lookup("service:site-settings");
     siteSettings.support_mixed_text_direction = true;
 
     assert.strictEqual(

@@ -1,12 +1,12 @@
 import { module, test } from "qunit";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
 
 module("Unit | Model | result-set", function (hooks) {
   setupTest(hooks);
 
   test("defaults", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const resultSet = store.createRecord("result-set", { content: [] });
     assert.strictEqual(resultSet.length, 0);
     assert.strictEqual(resultSet.totalRows, 0);
@@ -17,7 +17,7 @@ module("Unit | Model | result-set", function (hooks) {
   });
 
   test("pagination support", async function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const resultSet = await store.findAll("widget");
     assert.strictEqual(resultSet.length, 2);
     assert.strictEqual(resultSet.totalRows, 4);
@@ -36,7 +36,7 @@ module("Unit | Model | result-set", function (hooks) {
   });
 
   test("refresh support", async function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const resultSet = await store.findAll("widget");
     assert.strictEqual(
       resultSet.refreshUrl,

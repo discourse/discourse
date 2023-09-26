@@ -1,14 +1,14 @@
 import { module, test } from "qunit";
 import Category from "discourse/models/category";
 import sinon from "sinon";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
 
 module("Unit | Model | category", function (hooks) {
   setupTest(hooks);
 
   test("slugFor", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
 
     const slugFor = function (cat, val, text) {
       assert.strictEqual(Category.slugFor(cat), val, text);
@@ -69,7 +69,7 @@ module("Unit | Model | category", function (hooks) {
   });
 
   test("findBySlug", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const darth = store.createRecord("category", { id: 1, slug: "darth" }),
       luke = store.createRecord("category", {
         id: 2,
@@ -132,7 +132,7 @@ module("Unit | Model | category", function (hooks) {
   });
 
   test("findSingleBySlug", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const darth = store.createRecord("category", { id: 1, slug: "darth" }),
       luke = store.createRecord("category", {
         id: 2,
@@ -195,7 +195,7 @@ module("Unit | Model | category", function (hooks) {
   });
 
   test("findBySlugPathWithID", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
 
     const foo = store.createRecord("category", { id: 1, slug: "foo" });
     const bar = store.createRecord("category", {
@@ -219,7 +219,7 @@ module("Unit | Model | category", function (hooks) {
   });
 
   test("minimumRequiredTags", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
 
     const foo = store.createRecord("category", {
       id: 1,
@@ -283,7 +283,7 @@ module("Unit | Model | category", function (hooks) {
   });
 
   test("search with category name", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const category1 = store.createRecord("category", {
       id: 1,
       name: "middle term",
@@ -389,7 +389,7 @@ module("Unit | Model | category", function (hooks) {
   });
 
   test("search with category slug", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const category1 = store.createRecord("category", {
       id: 1,
       name: "middle term",

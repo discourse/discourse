@@ -1,13 +1,13 @@
 import { module, test } from "qunit";
 import UserAction from "discourse/models/user-action";
 import { setupTest } from "ember-qunit";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 module("Unit | Model | user-action", function (hooks) {
   setupTest(hooks);
 
   test("collapsing likes", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const actions = UserAction.collapseStream([
       store.createRecord("user-action", {
         action_type: UserAction.TYPES.likes_given,

@@ -1,13 +1,13 @@
 import { module, test } from "qunit";
 import UserAction from "discourse/models/user-action";
 import { setupTest } from "ember-qunit";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 module("Unit | Model | user-stream", function (hooks) {
   setupTest(hooks);
 
   test("basics", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const user = store.createRecord("user", { id: 1, username: "eviltrout" });
     const stream = user.stream;
     assert.present(stream, "a user has a stream by default");
@@ -21,7 +21,7 @@ module("Unit | Model | user-stream", function (hooks) {
   });
 
   test("filterParam", function (assert) {
-    const store = getOwnerWithFallback(this).lookup("service:store");
+    const store = getOwner(this).lookup("service:store");
     const user = store.createRecord("user", { id: 1, username: "eviltrout" });
     const stream = user.stream;
 
