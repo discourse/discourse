@@ -7,10 +7,10 @@ import I18n from "I18n";
 import DiscourseURL from "discourse/lib/url";
 
 export default class BootstrapModeNotice extends Component {
-  @service currentUser;
   @service siteSettings;
+  @service userTips;
 
-  @tracked showUserTip = this.currentUser?.canSeeUserTip("admin_guide");
+  @tracked showUserTip = this.userTips.canSeeUserTip("admin_guide");
 
   @action
   routeToAdminGuide() {

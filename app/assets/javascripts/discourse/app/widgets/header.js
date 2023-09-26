@@ -68,13 +68,15 @@ createWidget("header-notifications", {
       avatarImg(
         this.settings.avatarSize,
         Object.assign(
-          {
-            alt: "user.avatar.header_title",
-          },
+          { alt: "user.avatar.header_title" },
           addExtraUserClasses(user, avatarAttrs)
         )
       ),
     ];
+
+    if (this.currentUser && this._shouldHighlightAvatar()) {
+      contents.push(this.attach("header-user-tip-shim"));
+    }
 
     if (this.currentUser.status) {
       contents.push(this.attach("user-status-bubble", this.currentUser.status));
@@ -136,6 +138,7 @@ createWidget("header-notifications", {
         );
       }
     }
+
     return contents;
   },
 
@@ -147,34 +150,6 @@ createWidget("header-notifications", {
       !user.enforcedSecondFactor &&
       !attrs.active
     );
-  },
-
-  didRenderWidget() {
-    if (!this.currentUser || !this._shouldHighlightAvatar()) {
-      return;
-    }
-
-    this.currentUser.showUserTip({
-      id: "first_notification",
-
-      titleText: I18n.t("user_tips.first_notification.title"),
-      contentText: I18n.t("user_tips.first_notification.content"),
-
-      reference: document
-        .querySelector(".d-header .badge-notification")
-        ?.parentElement?.querySelector(".avatar"),
-      appendTo: document.querySelector(".d-header"),
-
-      placement: "bottom-end",
-    });
-  },
-
-  destroy() {
-    this.userTips.hideTip("first_notification");
-  },
-
-  willRerenderWidget() {
-    this.userTips.hideTip("first_notification");
   },
 });
 

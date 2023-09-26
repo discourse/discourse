@@ -1,0 +1,20 @@
+[data-content][data-identifier="admin-post-menu"] {
+  ul {
+    padding: 0.5rem;
+    margin: 0;
+    list-style: none;
+
+    li .btn {
+      width: 100%;
+      justify-content: flex-start;
+    }
+
+    li {
+      margin-bottom: 2px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
