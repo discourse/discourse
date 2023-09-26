@@ -1,7 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import I18n from "I18n";
 import { bind } from "discourse-common/utils/decorators";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { MENTION_KEYWORDS } from "discourse/plugins/chat/discourse/components/chat-message";
 import { clearChatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-types/channel";
@@ -121,7 +121,9 @@ export default {
       // we want to decorate the chat quote dates regardless
       // of whether the current user has chat enabled
       api.decorateCookedElement((elem) => {
-        const currentUser = getOwner(this).lookup("service:current-user");
+        const currentUser = getOwnerWithFallback(this).lookup(
+          "service:current-user"
+        );
         const currentUserTimezone = currentUser?.user_option?.timezone;
         const chatTranscriptElements =
           elem.querySelectorAll(".chat-transcript");
