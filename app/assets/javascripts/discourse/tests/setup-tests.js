@@ -43,6 +43,8 @@ import { setupDeprecationCounter } from "discourse/tests/helpers/deprecation-cou
 import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
 import SourceMapSupport from "source-map-support";
 
+// Updates Error.stack to include source-mapped locations.
+// Makes QUnit errors more human-readable
 SourceMapSupport.install({
   handleUncaughtExceptions: false,
 });
@@ -312,6 +314,7 @@ export default function setupTests(config) {
         requestUrl.origin === location.origin &&
         requestUrl.pathname.startsWith("/assets/")
       ) {
+        // Likely a request from source-map-support package
         return true;
       }
 
