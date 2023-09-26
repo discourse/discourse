@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 export default class BulkSelectToggle extends Component {
   @action
   toggleBulkSelect() {
-    const controller = getOwnerWithFallback(this).lookup(
+    const controller = getOwner(this).lookup(
       `controller:${this.args.parentController}`
     );
     const helper = controller.bulkSelectHelper;

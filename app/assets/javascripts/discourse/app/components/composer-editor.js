@@ -42,7 +42,7 @@ import {
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 // original string `![image|foo=bar|690x220, 50%|bar=baz](upload://1TjaobgKObzpU7xRMw2HuUc87vO.png "image title")`
 // group 1 `image|foo=bar`
@@ -224,7 +224,7 @@ export default Component.extend(ComposerUploadUppy, {
             categoryId: this.topic?.category_id || this.composer?.categoryId,
             includeGroups: true,
           }).then((result) => {
-            initUserStatusHtml(getOwnerWithFallback(this), result.users);
+            initUserStatusHtml(getOwner(this), result.users);
             return result;
           });
         },

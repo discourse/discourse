@@ -3,7 +3,7 @@ import { filterTypeForMode } from "discourse/lib/filter-mode";
 import NavItem from "discourse/models/nav-item";
 import discourseComputed from "discourse-common/utils/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { htmlSafe } from "@ember/template";
 import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
@@ -144,9 +144,7 @@ export default Component.extend({
 
   @discourseComputed()
   canBulk() {
-    const controller = getOwnerWithFallback(this).lookup(
-      "controller:discovery/topics"
-    );
+    const controller = getOwner(this).lookup("controller:discovery/topics");
     return controller.canBulkSelect;
   },
 

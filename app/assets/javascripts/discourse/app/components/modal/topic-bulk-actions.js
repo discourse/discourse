@@ -9,7 +9,7 @@ import ChangeCategory from "../bulk-actions/change-category";
 import NotificationLevel from "../bulk-actions/notification-level";
 import ChangeTags from "../bulk-actions/change-tags";
 import AppendTags from "../bulk-actions/append-tags";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 const _customButtons = [];
 
@@ -72,7 +72,7 @@ export default class TopicBulkActions extends Component {
       class: "btn-default",
       visible: ({ topics }) => topics.some((t) => t.isPrivateMessage),
       action: ({ performAndRefresh }) => {
-        const userPrivateMessages = getOwnerWithFallback(this).lookup(
+        const userPrivateMessages = getOwner(this).lookup(
           "controller:user-private-messages"
         );
         let params = { type: "archive_messages" };
@@ -90,7 +90,7 @@ export default class TopicBulkActions extends Component {
       class: "btn-default",
       visible: ({ topics }) => topics.some((t) => t.isPrivateMessage),
       action: ({ performAndRefresh }) => {
-        const userPrivateMessages = getOwnerWithFallback(this).lookup(
+        const userPrivateMessages = getOwner(this).lookup(
           "controller:user-private-messages"
         );
         let params = { type: "move_messages_to_inbox" };
