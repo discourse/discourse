@@ -1,12 +1,15 @@
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import {
   fetchUnseenMentions,
   linkSeenMentions,
 } from "discourse/lib/link-mentions";
-import { module, test } from "qunit";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import domFromString from "discourse-common/lib/dom-from-string";
 
-module("Unit | Utility | link-mentions", function () {
+module("Unit | Utility | link-mentions", function (hooks) {
+  setupTest(hooks);
+
   test("linkSeenMentions replaces users and groups", async function (assert) {
     pretender.get("/composer/mentions", () =>
       response({

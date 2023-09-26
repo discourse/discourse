@@ -77,6 +77,7 @@ hu:
         create: "Új csatorna"
       click_to_join: "Kattintson ide az elérhető csatornák megtekintéséhez."
       close: "Lezárás"
+      remove: "Eltávolítás"
       collapse: "Csevegőfiók összecsukása"
       expand: "Chat fiók bővítése"
       confirm_flag: "Biztos, hogy jelenti %{username} üzenetét?"

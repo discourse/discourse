@@ -1,3 +1,4 @@
+import I18n from "I18n";
 import QUnit, { module, skip, test } from "qunit";
 import { cloneJSON, deepMerge } from "discourse-common/lib/object";
 import MessageBus from "message-bus-client";
@@ -17,7 +18,7 @@ import {
   settled,
   triggerKeyEvent,
 } from "@ember/test-helpers";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { run } from "@ember/runloop";
 import { setupApplicationTest } from "ember-qunit";
 import Site from "discourse/models/site";
@@ -115,7 +116,7 @@ export function updateCurrentUser(properties) {
 
 // Note: do not use this in acceptance tests. Use `loggedIn: true` instead
 export function logIn() {
-  User.resetCurrent(currentUser());
+  return User.resetCurrent(currentUser());
 }
 
 // Note: Only use if `loggedIn: true` has been used in an acceptance test
@@ -246,7 +247,7 @@ export function discourseModule(name, options) {
   if (typeof options === "function") {
     module(name, function (hooks) {
       hooks.beforeEach(function () {
-        this.container = getOwner(this);
+        this.container = getOwnerWithFallback(this);
         this.registry = this.container.registry;
         this.owner = this.container;
         this.siteSettings = currentSettings();
@@ -273,7 +274,7 @@ export function discourseModule(name, options) {
 
   module(name, {
     beforeEach() {
-      this.container = getOwner(this);
+      this.container = getOwnerWithFallback(this);
       this.siteSettings = currentSettings();
       options?.beforeEach?.call(this);
     },
@@ -322,6 +323,8 @@ export function acceptance(name, optionsOrCallback) {
 
   const setup = {
     beforeEach() {
+      I18n.testing = true;
+
       resetMobile();
 
       resetExtraClasses();
@@ -335,7 +338,8 @@ export function acceptance(name, optionsOrCallback) {
           updateCurrentUser(userChanges);
         }
 
-        User.current().appEvents = getOwner(this).lookup("service:app-events");
+        User.current().appEvents =
+          getOwnerWithFallback(this).lookup("service:app-events");
         User.current().trackStatus();
       }
 
@@ -347,7 +351,7 @@ export function acceptance(name, optionsOrCallback) {
 
       resetSite(siteChanges);
 
-      this.container = getOwner(this);
+      this.container = getOwnerWithFallback(this);
 
       if (!this.owner) {
         this.owner = this.container;
@@ -359,6 +363,7 @@ export function acceptance(name, optionsOrCallback) {
     },
 
     afterEach() {
+      I18n.testing = false;
       resetMobile();
       let app = getApplication();
       options?.afterEach?.call(this);
@@ -429,7 +434,7 @@ export function controllerFor(controller, model) {
     }
   );
 
-  controller = getOwner(this).lookup("controller:" + controller);
+  controller = getOwnerWithFallback(this).lookup("controller:" + controller);
   if (model) {
     controller.set("model", model);
   }

@@ -283,6 +283,8 @@ th:
       resume: "ดำเนินการต่อ"
       remove: "ลบ"
       new_topic: "แบบร่างกระทู้ใหม่"
+    topic_count_all:
+      other: "ดู%{count}กระทู้ใหม่"
     topic_count_categories:
       other: "ดู %{count} กระทู้ใหม่หรือที่อัปเดต"
     topic_count_latest:

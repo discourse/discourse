@@ -20,12 +20,8 @@ const KNOWN_LEGACY_MODALS = [
   "create-invite",
   "grant-badge",
   "group-default-notifications",
-  "raw-email",
   "reject-reason-reviewable",
   "reorder-categories",
-  "request-group-membership-form",
-  "share-and-invite",
-  "tag-upload",
 ];
 
 const LEGACY_OPTS = new Set([

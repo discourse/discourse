@@ -28,7 +28,7 @@ export default class InitialOptions extends Component {
         this.contextTypeComponent =
           SEARCH_CONTEXT_TYPE_COMPONENTS[this.search.searchContext.type];
         // set attributes for the component
-        this.attributesForSearchContextType(this.search.searchContext.type);
+        this.setAttributesForSearchContextType(this.search.searchContext.type);
       }
     }
   }
@@ -39,7 +39,7 @@ export default class InitialOptions extends Component {
       : false;
   }
 
-  attributesForSearchContextType(type) {
+  setAttributesForSearchContextType(type) {
     switch (type) {
       case "topic":
         this.topicContextType();

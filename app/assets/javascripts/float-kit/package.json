@@ -1,0 +1,49 @@
+{
+  "name": "float-kit",
+  "version": "1.0.0",
+  "description": "Discourse's floating panels component.",
+  "author": "Discourse",
+  "license": "GPL-2.0-only",
+  "keywords": [
+    "ember-addon"
+  ],
+  "scripts": {
+    "build": "ember build",
+    "lint:hbs": "ember-template-lint .",
+    "lint:js": "eslint .",
+    "start": "ember serve"
+  },
+  "dependencies": {
+    "ember-auto-import": "^2.6.3",
+    "ember-cli-babel": "^8.1.0",
+    "ember-cli-htmlbars": "^6.3.0",
+    "ember-template-imports": "^3.4.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.10",
+    "@ember/optional-features": "^2.0.0",
+    "@ember/string": "^3.1.1",
+    "@embroider/test-setup": "^3.0.1",
+    "@glimmer/component": "^1.1.2",
+    "broccoli-asset-rev": "^3.0.0",
+    "ember-cli": "~5.0.0",
+    "ember-cli-inject-live-reload": "^2.1.0",
+    "ember-cli-sri": "^2.1.1",
+    "ember-cli-terser": "^4.0.2",
+    "ember-disable-prototype-extensions": "^1.1.3",
+    "ember-load-initializers": "^2.1.1",
+    "ember-resolver": "^10.1.1",
+    "ember-source": "~3.28.12",
+    "ember-source-channel-url": "^3.0.0",
+    "loader.js": "^4.7.0",
+    "webpack": "^5.88.2"
+  },
+  "engines": {
+    "node": "16.* || >= 18",
+    "npm": "please-use-yarn",
+    "yarn": ">= 1.21.1"
+  },
+  "ember": {
+    "edition": "default"
+  }
+}

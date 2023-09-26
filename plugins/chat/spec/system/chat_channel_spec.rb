@@ -287,4 +287,31 @@ RSpec.describe "Chat channel", type: :system do
       )
     end
   end
+
+  context "when opening message secondary options" do
+    it "doesn’t hide dropdown on mouseleave" do
+      chat.visit_channel(channel_1)
+      last_message = find(".chat-message-container:last-child")
+      last_message.hover
+
+      expect(page).to have_css(
+        ".chat-message-actions-container[data-id='#{last_message["data-id"]}']",
+      )
+
+      find(".chat-message-actions-container .secondary-actions").click
+      expect(page).to have_css(
+        ".chat-message-actions-container .secondary-actions .select-kit-body",
+      )
+
+      find("#site-logo").hover
+      expect(page).to have_css(
+        ".chat-message-actions-container .secondary-actions .select-kit-body",
+      )
+
+      find("#site-logo").click
+      expect(page).to have_no_css(
+        ".chat-message-actions-container .secondary-actions .select-kit-body",
+      )
+    end
+  end
 end

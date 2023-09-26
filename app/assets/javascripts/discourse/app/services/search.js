@@ -11,6 +11,8 @@ export default class Search extends Service {
   @tracked activeGlobalSearchTerm = "";
   @tracked searchContext;
   @tracked highlightTerm;
+  @tracked inTopicContext = false;
+  @tracked visible = false;
 
   // only relative for the widget search menu
   searchContextEnabled = false; // checkbox to scope search

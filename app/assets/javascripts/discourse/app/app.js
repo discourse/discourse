@@ -90,7 +90,7 @@ function loadInitializers(app) {
   let discourseInitializers = [];
   let discourseInstanceInitializers = [];
 
-  for (let moduleName of Object.keys(requirejs._eak_seen)) {
+  for (let moduleName of Object.keys(requirejs.entries)) {
     if (moduleName.startsWith("discourse/") && !moduleName.endsWith("-test")) {
       // In discourse core, initializers follow standard Ember conventions
       if (moduleName.startsWith("discourse/initializers/")) {

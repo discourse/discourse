@@ -48,6 +48,9 @@
     align-items: center;
     height: 100%;
     animation: fadein 0.5s;
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
     // min-width acts as a placeholder if the small logo takes a while to load
     // it prevents topic title from shifting after the small logo loads
     // it's set to match the #site-logo height so square small logos don't resize when titles dock
@@ -276,6 +279,9 @@
     overflow: hidden;
     width: 100%;
     animation: fadein 0.5s;
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
   }
   .title-wrapper {
     display: grid;

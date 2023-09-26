@@ -70,6 +70,7 @@ da:
         create: "Ny kanal"
       click_to_join: "Klik her for at se tilgængelige kanaler."
       close: "Luk"
+      remove: "Fjern"
       delete: "Slet"
       edited: "redigeret"
       muted: "stille!"

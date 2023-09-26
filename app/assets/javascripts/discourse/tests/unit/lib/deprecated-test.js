@@ -1,5 +1,6 @@
-import {
-  default as deprecated,
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
+import deprecated, {
   withSilencedDeprecations,
   withSilencedDeprecationsAsync,
 } from "discourse-common/lib/deprecated";
@@ -8,10 +9,11 @@ import {
   enableRaiseOnDeprecation,
 } from "discourse/tests/helpers/raise-on-deprecation";
 import DeprecationCounter from "discourse/tests/helpers/deprecation-counter";
-import { module, test } from "qunit";
 import Sinon from "sinon";
 
 module("Unit | Utility | deprecated", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     disableRaiseOnDeprecation();
     this.warnStub = Sinon.stub(console, "warn");
@@ -21,7 +23,7 @@ module("Unit | Utility | deprecated", function (hooks) {
     );
   });
 
-  hooks.afterEach(() => {
+  hooks.afterEach(function () {
     enableRaiseOnDeprecation();
   });
 

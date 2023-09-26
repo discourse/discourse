@@ -374,6 +374,10 @@ hr:
       abandon:
         yes_value: "Odbaci"
         no_value: "Nastavi uređivati"
+    topic_count_all:
+      one: "Pregledajte %{count} nepročitanu temu."
+      few: "Pregledajte %{count} nove teme."
+      other: "Pregledajte %{count} nove teme."
     topic_count_categories:
       one: "Pregledajte %{count} novu ili ažuriranu temu."
       few: "Pregledajte %{count} nove ili ažurirane teme."

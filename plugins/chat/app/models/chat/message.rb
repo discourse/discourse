@@ -73,6 +73,7 @@ module Chat
 
     before_save { ensure_last_editor_id }
 
+    validates :cooked, length: { maximum: 20_000 }
     validate :validate_message
 
     def self.polymorphic_class_mapping = { "ChatMessage" => Chat::Message }
@@ -249,7 +250,11 @@ module Chat
     end
 
     def url
-      "/chat/c/-/#{self.chat_channel_id}/#{self.id}"
+      if in_thread?
+        "#{Discourse.base_path}/chat/c/-/#{self.chat_channel_id}/t/#{self.thread_id}/#{self.id}"
+      else
+        "#{Discourse.base_path}/chat/c/-/#{self.chat_channel_id}/#{self.id}"
+      end
     end
 
     def create_mentions

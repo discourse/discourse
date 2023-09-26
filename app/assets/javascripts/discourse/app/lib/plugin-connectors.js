@@ -99,6 +99,12 @@ class ConnectorInfo {
     }
   }
 
+  get humanReadableName() {
+    return `${this.outletName}/${this.connectorName} (${
+      this.classModule || this.templateModule
+    })`;
+  }
+
   #buildComponentClass() {
     const klass = this.connectorClass;
     if (klass && hasInternalComponentManager(klass)) {

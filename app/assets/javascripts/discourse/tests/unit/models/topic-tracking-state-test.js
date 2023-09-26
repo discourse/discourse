@@ -11,7 +11,7 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
 import sinon from "sinon";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
 
 module("Unit | Model | topic-tracking-state", function (hooks) {

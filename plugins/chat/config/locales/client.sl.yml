@@ -21,6 +21,7 @@ sl:
         join: "Pridruži se"
         leave: "Zapusti"
       close: "Zapri"
+      remove: "Odstrani"
       delete: "Izbriši"
       edited: "urejen"
       muted: "utišani"

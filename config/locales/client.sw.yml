@@ -230,6 +230,9 @@ sw:
     drafts:
       remove: "Ondoa"
       new_topic: "Mswadajaribio wa mada mpya"
+    topic_count_all:
+      one: "Angalia Topiki %{count} Mpya"
+      other: "Angalia Topiki %{count} Mpya"
     topic_count_categories:
       one: "Angalia Topiki Mpya au Masahisho %{count}"
       other: "Angalia Topiki Mpya au Masahisho %{count}"

@@ -1,6 +1,6 @@
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { buildQuote } from "discourse/lib/quote";
 import PrettyText from "pretty-text/pretty-text";
 

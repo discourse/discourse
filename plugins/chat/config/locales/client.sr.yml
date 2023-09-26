@@ -19,6 +19,7 @@ sr:
         edit: "Izmeni"
         add: "Dodaj"
       close: "Zatvori"
+      remove: "Ukloni"
       delete: "Obriši"
       muted: "utišano"
       joined: "pridružen"

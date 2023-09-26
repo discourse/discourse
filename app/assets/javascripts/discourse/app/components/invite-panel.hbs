@@ -93,11 +93,7 @@
 
 <div class="footer">
   {{#if this.inviteModel.finished}}
-    <DButton
-      @action={{this.sendCloseModal}}
-      @label="close"
-      class="btn-primary"
-    />
+    <DButton @action={{@closeModal}} @label="close" class="btn-primary" />
   {{else}}
     <DButton
       @icon={{this.inviteIcon}}

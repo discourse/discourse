@@ -11,6 +11,8 @@
 }
 
 .search-container {
+  background: var(--d-content-background);
+
   .search-header {
     @include search-page-spacing();
     background: var(--primary-very-low);

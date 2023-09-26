@@ -167,32 +167,30 @@
   </:body>
   <:footer>
     {{#unless this.popular}}
-      <div class="modal-footer">
-        {{#if this.duplicateRemoteThemeWarning}}
-          <div class="install-theme-warning">
-            ⚠️
-            {{this.duplicateRemoteThemeWarning}}
-          </div>
-        {{/if}}
-        {{#if this.themeCannotBeInstalled}}
-          <div class="install-theme-warning">
-            ⚠️
-            {{this.themeCannotBeInstalled}}
-          </div>
-        {{/if}}
-        <DButton
-          @action={{this.installTheme}}
-          @disabled={{this.installDisabled}}
-          class="btn
-            {{if this.themeCannotBeInstalled 'btn-danger' 'btn-primary'}}"
-          @label={{this.submitLabel}}
-        />
-        <DButton
-          class="btn-flat d-modal-cancel"
-          @action={{@closeModal}}
-          @label="cancel"
-        />
-      </div>
+      {{#if this.duplicateRemoteThemeWarning}}
+        <div class="install-theme-warning">
+          ⚠️
+          {{this.duplicateRemoteThemeWarning}}
+        </div>
+      {{/if}}
+      {{#if this.themeCannotBeInstalled}}
+        <div class="install-theme-warning">
+          ⚠️
+          {{this.themeCannotBeInstalled}}
+        </div>
+      {{/if}}
+      <DButton
+        @action={{this.installTheme}}
+        @disabled={{this.installDisabled}}
+        class="btn
+          {{if this.themeCannotBeInstalled 'btn-danger' 'btn-primary'}}"
+        @label={{this.submitLabel}}
+      />
+      <DButton
+        class="btn-flat d-modal-cancel"
+        @action={{@closeModal}}
+        @label="cancel"
+      />
     {{/unless}}
   </:footer>
 </DModal>

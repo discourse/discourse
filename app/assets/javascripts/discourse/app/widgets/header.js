@@ -68,13 +68,15 @@ createWidget("header-notifications", {
       avatarImg(
         this.settings.avatarSize,
         Object.assign(
-          {
-            alt: "user.avatar.header_title",
-          },
+          { alt: "user.avatar.header_title" },
           addExtraUserClasses(user, avatarAttrs)
         )
       ),
     ];
+
+    if (this.currentUser && this._shouldHighlightAvatar()) {
+      contents.push(this.attach("header-user-tip-shim"));
+    }
 
     if (this.currentUser.status) {
       contents.push(this.attach("user-status-bubble", this.currentUser.status));
@@ -136,6 +138,7 @@ createWidget("header-notifications", {
         );
       }
     }
+
     return contents;
   },
 
@@ -147,34 +150,6 @@ createWidget("header-notifications", {
       !user.enforcedSecondFactor &&
       !attrs.active
     );
-  },
-
-  didRenderWidget() {
-    if (!this.currentUser || !this._shouldHighlightAvatar()) {
-      return;
-    }
-
-    this.currentUser.showUserTip({
-      id: "first_notification",
-
-      titleText: I18n.t("user_tips.first_notification.title"),
-      contentText: I18n.t("user_tips.first_notification.content"),
-
-      reference: document
-        .querySelector(".d-header .badge-notification")
-        ?.parentElement?.querySelector(".avatar"),
-      appendTo: document.querySelector(".d-header"),
-
-      placement: "bottom-end",
-    });
-  },
-
-  destroy() {
-    this.userTips.hideTip("first_notification");
-  },
-
-  willRerenderWidget() {
-    this.userTips.hideTip("first_notification");
   },
 });
 
@@ -244,6 +219,7 @@ createWidget(
 );
 
 createWidget("header-icons", {
+  services: ["search"],
   tagName: "ul.icons.d-header-icons",
 
   html(attrs) {
@@ -264,7 +240,7 @@ createWidget("header-icons", {
       icon: "search",
       iconId: SEARCH_BUTTON_ID,
       action: "toggleSearchMenu",
-      active: attrs.searchVisible,
+      active: attrs.searchVisible || this.search.visible,
       href: getURL("/search"),
       classNames: ["search-dropdown"],
     });
@@ -421,6 +397,7 @@ createWidget("revamped-user-menu-wrapper", {
 });
 
 createWidget("glimmer-search-menu-wrapper", {
+  services: ["search"],
   buildAttributes() {
     return { "data-click-outside": true, "aria-live": "polite" };
   },
@@ -434,18 +411,8 @@ createWidget("glimmer-search-menu-wrapper", {
       new RenderGlimmer(
         this,
         "div.widget-component-connector",
-        hbs`<SearchMenu
-          @inTopicContext={{@data.inTopicContext}}
-          @searchVisible={{@data.searchVisible}}
-          @animationClass={{@data.animationClass}}
-          @closeSearchMenu={{@data.closeSearchMenu}}
-        />`,
-        {
-          closeSearchMenu: this.closeSearchMenu.bind(this),
-          inTopicContext: this.attrs.inTopicContext,
-          searchVisible: this.attrs.searchVisible,
-          animationClass: this.attrs.animationClass,
-        }
+        hbs`<SearchMenu @closeSearchMenu={{@data.closeSearchMenu}} />`,
+        { closeSearchMenu: this.closeSearchMenu.bind(this) }
       ),
     ];
   },
@@ -481,8 +448,7 @@ export default createWidget("header", {
 
   html(attrs, state) {
     let inTopicRoute = false;
-
-    if (this.state.inTopicContext) {
+    if (this.state.inTopicContext || this.search.inTopicContext) {
       inTopicRoute = this.router.currentRouteName.startsWith("topic.");
     }
 
@@ -490,7 +456,7 @@ export default createWidget("header", {
       const headerIcons = this.attach("header-icons", {
         hamburgerVisible: state.hamburgerVisible,
         userVisible: state.userVisible,
-        searchVisible: state.searchVisible,
+        searchVisible: state.searchVisible || this.search.visible,
         flagCount: attrs.flagCount,
         user: this.currentUser,
         sidebarEnabled: attrs.sidebarEnabled,
@@ -502,15 +468,11 @@ export default createWidget("header", {
 
       const panels = [this.attach("header-buttons", attrs), headerIcons];
 
-      if (state.searchVisible) {
+      if (state.searchVisible || this.search.visible) {
         if (this.currentUser?.experimental_search_menu_groups_enabled) {
-          panels.push(
-            this.attach("glimmer-search-menu-wrapper", {
-              inTopicContext: state.inTopicContext && inTopicRoute,
-              searchVisible: state.searchVisible,
-              animationClass: this.animationClass(),
-            })
-          );
+          this.search.inTopicContext =
+            this.search.inTopicContext && inTopicRoute;
+          panels.push(this.attach("glimmer-search-menu-wrapper"));
         } else {
           panels.push(
             this.attach("search-menu", {
@@ -563,21 +525,16 @@ export default createWidget("header", {
   },
 
   updateHighlight() {
-    if (!this.state.searchVisible) {
-      this.search.set("highlightTerm", "");
+    if (!this.state.searchVisible || !this.search.visible) {
+      this.search.highlightTerm = "";
     }
-  },
-
-  animationClass() {
-    return this.site.mobileView || this.site.narrowDesktopView
-      ? "slide-in"
-      : "drop-down";
   },
 
   closeAll() {
     this.state.userVisible = false;
     this.state.hamburgerVisible = false;
     this.state.searchVisible = false;
+    this.search.visible = false;
     this.toggleBodyScrolling(false);
   },
 
@@ -618,12 +575,15 @@ export default createWidget("header", {
     }
 
     this.state.searchVisible = !this.state.searchVisible;
+    this.search.visible = !this.search.visible;
     this.updateHighlight();
 
     if (this.state.searchVisible) {
+      // only used by the widget search-menu
       this.focusSearchInput();
     } else {
       this.state.inTopicContext = false;
+      this.search.inTopicContext = false;
     }
   },
 
@@ -706,6 +666,7 @@ export default createWidget("header", {
 
   togglePageSearch() {
     const { state } = this;
+    this.search.inTopicContext = false;
     state.inTopicContext = false;
 
     let showSearch = this.router.currentRouteName.startsWith("topic.");
@@ -721,13 +682,14 @@ export default createWidget("header", {
         $(".topic-post .cooked, .small-action:not(.time-gap)").length < total;
     }
 
-    if (state.searchVisible) {
+    if (state.searchVisible || this.search.visible) {
       this.toggleSearchMenu();
       return showSearch;
     }
 
     if (showSearch) {
       state.inTopicContext = true;
+      this.search.inTopicContext = true;
       this.toggleSearchMenu();
       return false;
     }
@@ -738,7 +700,12 @@ export default createWidget("header", {
   domClean() {
     const { state } = this;
 
-    if (state.searchVisible || state.hamburgerVisible || state.userVisible) {
+    if (
+      state.searchVisible ||
+      this.search.visible ||
+      state.hamburgerVisible ||
+      state.userVisible
+    ) {
       this.closeAll();
     }
   },
@@ -763,9 +730,8 @@ export default createWidget("header", {
     }
   },
 
+  // only used by the widget search-menu
   focusSearchInput() {
-    // the glimmer search menu handles the focusing of the search
-    // input within the search component
     if (
       this.state.searchVisible &&
       !this.currentUser?.experimental_search_menu_groups_enabled
@@ -778,11 +744,13 @@ export default createWidget("header", {
     }
   },
 
+  // only used by the widget search-menu
   setTopicContext() {
     this.state.inTopicContext = true;
     this.focusSearchInput();
   },
 
+  // only used by the widget search-menu
   clearContext() {
     this.state.inTopicContext = false;
     this.focusSearchInput();

@@ -1,5 +1,5 @@
 <div class="search-input">
-  {{#if @inTopicContext}}
+  {{#if this.search.inTopicContext}}
     <DButton
       @icon="times"
       @label="search.in_this_topic"
@@ -42,7 +42,7 @@
   {{/if}}
 </div>
 
-{{#if (and @inTopicContext (not @includesTopics))}}
+{{#if (and this.search.inTopicContext (not @includesTopics))}}
   <SearchMenu::BrowserSearchTip />
 {{else}}
   {{#unless @loading}}

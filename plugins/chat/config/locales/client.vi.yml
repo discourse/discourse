@@ -21,6 +21,7 @@ vi:
         join: "Tham gia"
         leave: "Rời nhóm"
       close: "Đóng"
+      remove: "Xoá"
       delete: "Xóa"
       edited: "đã chỉnh sửa"
       muted: "im lặng"

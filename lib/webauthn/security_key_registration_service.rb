@@ -109,7 +109,7 @@ module DiscourseWebauthn
       #     then register the new credential with the account that was denoted in options.user, by
       #     associating it with the credentialId and credentialPublicKey in the attestedCredentialData
       #     in authData, as appropriate for the Relying Party's system.
-      UserSecurityKey.create(
+      UserSecurityKey.create!(
         user: @current_user,
         credential_id: encoded_credential_id,
         public_key: endcoded_public_key,

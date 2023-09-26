@@ -7,7 +7,7 @@ module PageObjects
         attr_reader :context
         attr_reader :component
 
-        SELECTOR = ".chat-message-container:not(.has-thread-indicator)"
+        SELECTOR = ".chat-message-container"
 
         def initialize(context)
           @context = context
@@ -78,7 +78,7 @@ module PageObjects
             page.find(context).send(
               selector_method,
               selector + " " + ".chat-message-text",
-              text: /#{Regexp.escape(text)}/,
+              exact_text: text,
             )
           else
             page.find(context).send(selector_method, selector)

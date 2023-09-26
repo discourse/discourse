@@ -33,7 +33,7 @@ function initLazyEmbed(api) {
         }
       });
     },
-    { onlyStream: true, id: "discourse-lazy-videos" }
+    { onlyStream: true }
   );
 }
 

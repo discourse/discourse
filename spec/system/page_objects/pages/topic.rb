@@ -87,6 +87,20 @@ module PageObjects
         end
       end
 
+      def expand_post_admin_actions(post)
+        post_by_number(post).find(".show-post-admin-menu").click
+      end
+
+      def click_post_admin_action_button(post, button)
+        element_klass = "[data-content][data-identifier='admin-post-menu']"
+        case button
+        when :grant_badge
+          element_klass += " .grant-badge"
+        end
+
+        find(element_klass).click
+      end
+
       def click_topic_footer_button(button)
         find_topic_footer_button(button).click
       end

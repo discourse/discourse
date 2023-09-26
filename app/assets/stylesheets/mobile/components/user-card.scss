@@ -1,11 +1,14 @@
+[data-content][data-identifier="card"] {
+  z-index: z("max");
+}
+
 // shared styles for user and group cards
 .user-card,
 .group-card {
-  // mobile cards should always be on top of everything - 1102
-  z-index: z("mobile-composer") + 2;
   max-width: 95vw;
-  margin: 0 2.5vw;
+  margin: 0;
   max-height: 85vh; // 2.5vh margin-top and margin-bottom. 10vh top
+  box-sizing: border-box;
   // avatar - names - controls
   .first-row {
     flex-wrap: wrap;
@@ -105,4 +108,7 @@
   width: 100vw;
   background-color: rgba(black, 0.5);
   animation: fadein 0.2s;
+  @media (prefers-reduced-motion) {
+    animation-duration: 0s;
+  }
 }

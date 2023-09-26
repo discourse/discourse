@@ -61,7 +61,9 @@ module(
     });
 
     test("it shows status on mentions", async function (assert) {
-      await render(hbs`<ChatChannel @channel={{this.channel}} />`);
+      await render(
+        hbs`<ChatChannel @channel={{this.channel}} /><DInlineTooltip />`
+      );
 
       assertStatusIsRendered(
         assert,
@@ -76,7 +78,9 @@ module(
     });
 
     test("it updates status on mentions", async function (assert) {
-      await render(hbs`<ChatChannel @channel={{this.channel}} />`);
+      await render(
+        hbs`<ChatChannel @channel={{this.channel}} /><DInlineTooltip />`
+      );
 
       const newStatus = {
         description: "off to dentist",
@@ -89,11 +93,13 @@ module(
 
       const selector = statusSelector(mentionedUser.username);
       await waitFor(selector);
+
       assertStatusIsRendered(
         assert,
         statusSelector(mentionedUser.username),
         newStatus
       );
+
       await assertStatusTooltipIsRendered(
         assert,
         statusSelector(mentionedUser.username),
@@ -102,7 +108,9 @@ module(
     });
 
     test("it deletes status on mentions", async function (assert) {
-      await render(hbs`<ChatChannel @channel={{this.channel}} />`);
+      await render(
+        hbs`<ChatChannel @channel={{this.channel}} /><DInlineTooltip />`
+      );
 
       this.appEvents.trigger("user-status:changed", {
         [mentionedUser.id]: null,
@@ -114,7 +122,9 @@ module(
     });
 
     test("it shows status on mentions on messages that came from Message Bus", async function (assert) {
-      await render(hbs`<ChatChannel @channel={{this.channel}} />`);
+      await render(
+        hbs`<ChatChannel @channel={{this.channel}} /><DInlineTooltip />`
+      );
 
       await receiveChatMessageViaMessageBus();
 
@@ -131,7 +141,9 @@ module(
     });
 
     test("it updates status on mentions on messages that came from Message Bus", async function (assert) {
-      await render(hbs`<ChatChannel @channel={{this.channel}} />`);
+      await render(
+        hbs`<ChatChannel @channel={{this.channel}} /><DInlineTooltip />`
+      );
       await receiveChatMessageViaMessageBus();
 
       const newStatus = {
@@ -157,7 +169,9 @@ module(
     });
 
     test("it deletes status on mentions on messages that came from Message Bus", async function (assert) {
-      await render(hbs`<ChatChannel @channel={{this.channel}} />`);
+      await render(
+        hbs`<ChatChannel @channel={{this.channel}} /><DInlineTooltip />`
+      );
       await receiveChatMessageViaMessageBus();
 
       this.appEvents.trigger("user-status:changed", {
@@ -181,7 +195,7 @@ module(
     }
 
     async function assertStatusTooltipIsRendered(assert, selector, status) {
-      await triggerEvent(selector, "mouseenter");
+      await triggerEvent(selector, "mousemove");
 
       assert.equal(
         document

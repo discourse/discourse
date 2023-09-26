@@ -128,7 +128,7 @@
     <label>
       <Input
         @type="checkbox"
-        @checked={{this.category.custom_fields.require_topic_approval}}
+        @checked={{this.category.category_setting.require_topic_approval}}
       />
       {{i18n "category.require_topic_approval"}}
     </label>
@@ -138,7 +138,7 @@
     <label>
       <Input
         @type="checkbox"
-        @checked={{this.category.custom_fields.require_reply_approval}}
+        @checked={{this.category.category_setting.require_reply_approval}}
       />
       {{i18n "category.require_reply_approval"}}
     </label>
@@ -333,10 +333,7 @@
         @class="email-in"
         @value={{this.category.email_in}}
       />
-      <span>
-        {{d-icon "info-circle"}}
-        <DTooltip>{{i18n "category.email_in_tooltip"}}</DTooltip>
-      </span>
+
     </section>
 
     <section class="field email-in-allow-strangers">

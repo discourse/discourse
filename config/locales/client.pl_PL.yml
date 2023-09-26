@@ -416,6 +416,11 @@ pl_PL:
         confirm: "Masz już wersję roboczą w toku. Co chcesz z nią zrobić?"
         yes_value: "Odrzuć"
         no_value: "Wznów edycję"
+    topic_count_all:
+      one: "Zobacz %{count} nowy temat"
+      few: "Zobacz %{count} nowe tematy"
+      many: "Zobacz %{count} nowych tematów"
+      other: "Zobacz %{count} nowych tematów"
     topic_count_categories:
       one: "Zobacz %{count} nowy albo zaktualizowany temat"
       few: "Zobacz %{count} nowe albo zaktualizowane tematy"
@@ -5713,7 +5718,6 @@ pl_PL:
       form_templates:
         nav_title: "Szablony"
         title: "Szablony formularzy"
-        help: "Utwórz strukturę szablonów, której można użyć do tworzenia nowych tematów, postów i wiadomości."
         new_template: "Nowy szablon"
         list_table:
           headings:

@@ -65,12 +65,6 @@ export default class ChannelsList extends Component {
     return this.chat.userCanDirectMessage;
   }
 
-  get publicChannelClasses() {
-    return `channels-list-container public-channels ${
-      this.inSidebar ? "collapsible-sidebar-section" : ""
-    }`;
-  }
-
   get displayPublicChannels() {
     if (!this.siteSettings.enable_public_channels) {
       return false;

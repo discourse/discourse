@@ -8,6 +8,7 @@ import I18n from "I18n";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
+import { MAX_SECOND_FACTOR_NAME_LENGTH } from "discourse/models/user";
 
 export default class SecondFactorAddSecurityKey extends Component {
   @service capabilities;
@@ -15,6 +16,8 @@ export default class SecondFactorAddSecurityKey extends Component {
   @tracked loading = false;
   @tracked errorMessage = null;
   @tracked securityKeyName;
+
+  maxSecondFactorNameLength = MAX_SECOND_FACTOR_NAME_LENGTH;
 
   get webauthnUnsupported() {
     return !isWebauthnSupported();
@@ -30,7 +33,7 @@ export default class SecondFactorAddSecurityKey extends Component {
     } else {
       key = "user.second_factor.security_key.default_name";
     }
-    this.securityKeyName = key;
+    this.securityKeyName = I18n.t(key);
 
     this.loading = true;
     this.args.model.secondFactor

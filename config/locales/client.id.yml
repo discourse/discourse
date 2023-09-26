@@ -323,6 +323,8 @@ id:
         confirm: "Anda sudah memiliki draf yang sedang diproses. Apa yang ingin Anda lakukan dengannya?"
         yes_value: "Batalkan"
         no_value: "Lanjut menyunting"
+    topic_count_all:
+      other: "Lihat %{count} topik baru"
     topic_count_categories:
       other: "Lihat %{count} topik baru atau diperbarui"
     topic_count_latest:
@@ -510,12 +512,14 @@ id:
         all:
           title: "Semuanya"
       context_question:
+        is_this_post: "Apakah ini %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "atau"
+        something_else_wrong: "Apakah ada yang salah dengan %{reviewable_type} ini?"
       types:
         reviewable_flagged_post:
           title: "Pos yang Dipanji"
           flagged_by: "Dipanji Oleh"
-          noun: "postingan"
+          noun: "post"
         reviewable_queued_topic:
           title: "Topik Antri"
           noun: "topik"
@@ -1566,6 +1570,8 @@ id:
       empty: "Tidak ada pemberitahuan."
       post_approved: "Tulisan Anda telah disetujui"
       watching_first_post_label: "Topik Baru"
+      liked_many:
+        other: "<span class='multi-user'>%{username} dan %{count} lainnya</span> %{description}"
       liked_by_multiple_users:
         other: "%{username} dan %{count} lainnya"
       liked_consolidated_description:
@@ -1895,6 +1901,7 @@ id:
         notifications: "%{shortcut} Buka notifikasi"
       actions:
         title: "Aksi"
+        archive_private_message: "%{shortcut} Alihkan arsipkan pesan pribadi"
     badges:
       others_count:
         other: "Diberi kepada orang lain %{count} kali"
@@ -2254,6 +2261,7 @@ id:
         test:
           no_matches: "Tidak ditemukan yang cocok"
       form_templates:
+        help: "Membuat struktur templat formulir yang bisa digunakan untuk membuat topik baru."
         list_table:
           headings:
             name: "Nama"

@@ -55,7 +55,7 @@ jobs:
       - name: Set working directory owner
         run: chown root:root .
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
@@ -277,7 +277,7 @@ jobs:
       TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
 

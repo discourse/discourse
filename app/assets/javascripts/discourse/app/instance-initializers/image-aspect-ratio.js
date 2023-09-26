@@ -14,42 +14,35 @@ export default {
   initWithApi(api) {
     const supportsAspectRatio = CSS.supports("aspect-ratio: 1");
 
-    api.decorateCookedElement(
-      (element) => {
-        element.querySelectorAll("img").forEach((img) => {
-          const declaredHeight = parseFloat(img.getAttribute("height"));
-          const declaredWidth = parseFloat(img.getAttribute("width"));
+    api.decorateCookedElement((element) => {
+      element.querySelectorAll("img").forEach((img) => {
+        const declaredHeight = parseFloat(img.getAttribute("height"));
+        const declaredWidth = parseFloat(img.getAttribute("width"));
 
-          if (
-            isNaN(declaredHeight) ||
-            isNaN(declaredWidth) ||
-            img.style.aspectRatio
-          ) {
-            return;
-          }
+        if (
+          isNaN(declaredHeight) ||
+          isNaN(declaredWidth) ||
+          img.style.aspectRatio
+        ) {
+          return;
+        }
 
-          if (supportsAspectRatio) {
-            img.style.setProperty(
-              "aspect-ratio",
-              `${declaredWidth} / ${declaredHeight}`
-            );
-          } else {
-            // For older browsers (e.g. iOS < 15), we need to apply the aspect ratio manually.
-            // It's not perfect, because it won't recompute on browser resize.
-            // This property is consumed in `topic-post.scss` for responsive images only.
-            // It's a no-op for non-responsive images.
-            const calculatedHeight =
-              img.width / (declaredWidth / declaredHeight);
+        if (supportsAspectRatio) {
+          img.style.setProperty(
+            "aspect-ratio",
+            `${declaredWidth} / ${declaredHeight}`
+          );
+        } else {
+          // For older browsers (e.g. iOS < 15), we need to apply the aspect ratio manually.
+          // It's not perfect, because it won't recompute on browser resize.
+          // This property is consumed in `topic-post.scss` for responsive images only.
+          // It's a no-op for non-responsive images.
+          const calculatedHeight = img.width / (declaredWidth / declaredHeight);
 
-            img.style.setProperty(
-              "--calculated-height",
-              `${calculatedHeight}px`
-            );
-          }
-        });
-      },
-      { id: "image-aspect-ratio" }
-    );
+          img.style.setProperty("--calculated-height", `${calculatedHeight}px`);
+        }
+      });
+    });
   },
 
   initialize() {

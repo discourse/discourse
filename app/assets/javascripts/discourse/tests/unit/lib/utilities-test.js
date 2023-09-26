@@ -23,7 +23,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 module("Unit | Utilities", function (hooks) {
   setupTest(hooks);

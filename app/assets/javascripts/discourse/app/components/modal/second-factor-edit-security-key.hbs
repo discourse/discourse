@@ -10,6 +10,7 @@
           }}</label>
         <Input
           name="security-key-name"
+          maxlength={{this.maxSecondFactorNameLength}}
           @type="text"
           @value={{@model.securityKey.name}}
         />

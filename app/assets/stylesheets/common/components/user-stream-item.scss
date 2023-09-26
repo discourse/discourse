@@ -7,7 +7,7 @@
   // selectors below are its children
   .item,
   .user-stream-item {
-    background-color: var(--secondary);
+    background: var(--d-content-background, var(--secondary));
     border-bottom: 1px solid var(--primary-low);
     padding: 1em 0.53em;
     list-style: none;

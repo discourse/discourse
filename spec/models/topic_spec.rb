@@ -2368,9 +2368,10 @@ RSpec.describe Topic do
         topic = Fabricate(:topic, category: category, created_at: 1.minute.ago)
         topic2 = Fabricate(:topic, category: category, created_at: 1.minute.ago)
         tag = Fabricate(:tag)
+        tag2 = Fabricate(:tag)
         Fabricate(:topic_tag, topic: topic, tag: tag)
 
-        SiteSetting.digest_suppress_tags = "#{tag.id}"
+        SiteSetting.digest_suppress_tags = "#{tag.name}|#{tag2.name}"
         topics = Topic.for_digest(user, 1.year.ago, top_order: true)
         expect(topics).to eq([topic2])
 

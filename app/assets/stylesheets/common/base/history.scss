@@ -12,23 +12,59 @@
   }
 
   #revision {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 0.5em;
+    align-items: center;
     overflow: auto;
     border-bottom: 3px solid var(--primary-low);
   }
 
-  table.markdown > tbody > tr > td,
-  .revision-content {
-    width: 47.5%;
-    float: left;
-    min-height: 1px;
-
-    &:nth-of-type(2) {
-      margin-left: 5%;
+  #revision-details {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5em;
+    .d-icon {
+      align-self: center;
     }
   }
 
-  #revision-details {
-    padding: 5px;
+  .revision__title,
+  .body-diff,
+  table.markdown > tbody > tr,
+  .-tag-revisions {
+    --gap-width: 1rem;
+    display: flex;
+    gap: 0 var(--gap-width);
+  }
+
+  .revision__title {
+    margin: 0;
+    line-height: var(--line-height-medium);
+  }
+
+  .-tag-revisions span,
+  .revision-content {
+    flex: 0 0 calc(50% - (var(--gap-width) / 2));
+  }
+
+  table.markdown {
+    tbody {
+      border: none;
+    }
+  }
+
+  #revision-controls {
+    display: flex;
+    align-items: center;
+    .btn {
+      margin: 0;
+    }
+  }
+
+  [class^="revision-controls--"] {
+    display: flex;
+    gap: 0 1em;
   }
 
   #revisions {
@@ -50,6 +86,14 @@
           max-width: none;
         }
       }
+    }
+  }
+
+  #revision-footer-buttons {
+    display: flex;
+    gap: 0.5em;
+    button {
+      margin: 0;
     }
   }
 
@@ -126,7 +170,7 @@
     padding: 3px 5px 5px 5px;
   }
   .d-icon-ban {
-    color: #f00;
+    color: var(--danger);
   }
   .hidden-revision-either {
     opacity: 0.5;

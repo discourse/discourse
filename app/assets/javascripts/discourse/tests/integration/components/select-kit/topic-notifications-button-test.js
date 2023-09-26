@@ -5,7 +5,7 @@ import I18n from "I18n";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 function buildTopic(opts) {
   return this.store.createRecord("topic", {

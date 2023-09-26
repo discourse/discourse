@@ -88,6 +88,7 @@ he:
         create: "ערוץ חדש"
       click_to_join: "לחיצה כאן תציג את הערוצים הזמינים."
       close: "סגירה"
+      remove: "הסרה"
       collapse: "צמצום מגירת צ׳אט"
       expand: "הרחבת מגירת הצ׳אט"
       confirm_flag: "לסמן את ההודעה של %{username}?"

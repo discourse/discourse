@@ -3013,9 +3013,8 @@ en:
           other {}
         }
 
-      bumped_at_title: |
-        First post: %{createdAtDate}
-        Posted: %{bumpedAtDate}
+      created_at: "Created: %{date}"
+      bumped_at: "Latest: %{date}"
 
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Browse all categories</a> or <a href='%{basePath}/latest'>view latest topics</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Browse all categories</a>, <a href='%{basePath}/latest'>view latest topics</a> or see top:"
@@ -3473,6 +3472,7 @@ en:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
         upload: "Sorry, there was an error uploading %{file_name}. Please try again."
+        backup_too_large: "Sorry, that backup file is too large."
         file_too_large: "Sorry, that file is too big (maximum size is %{max_size_kb}kb). Why not upload your large file to a cloud sharing service, then paste the link?"
         file_size_zero: "Sorry, it looks like something has gone wrong, the file you are trying to upload is 0 bytes. Please try again."
         file_too_large_humanized: "Sorry, that file is too big (maximum size is %{max_size}). Why not upload your large file to a cloud sharing service, then paste the link?"
@@ -4229,7 +4229,6 @@ en:
       other_tags: "Other Tags"
       selector_all_tags: "all tags"
       selector_no_tags: "no tags"
-      changed: "tags changed:"
       tags: "Tags"
       choose_for_topic: "optional tags"
       choose_for_topic_required:
@@ -5691,7 +5690,7 @@ en:
       form_templates:
         nav_title: "Templates"
         title: "Form Templates"
-        help: "Create a template structure that can be used to create new topics, posts, and messages."
+        help: "Create a form template structure that can be used to create new topics."
         new_template: "New Template"
         list_table:
           headings:
@@ -6142,6 +6141,7 @@ en:
         show_outdated: "Only show outdated/invalid"
         locale: "Language:"
         more_than_50_results: "There are more than 50 results. Please refine your search."
+        no_results: "No matching site texts found"
         interpolation_keys: "Available interpolation keys:"
         outdated:
           title: "This translation is outdated"

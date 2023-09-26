@@ -27,6 +27,7 @@ sk:
       channel_delete:
         instructions: "<p>Odstráni kanál <strong>%{name}</strong> a históriu chatu. Všetky správy a súvisiace údaje, ako sú reakcie a médiá, budú natrvalo vymazané. Ak chcete zachovať históriu kanála a vyradiť ho z prevádzky, môžete namiesto toho kanál archivovať.</p> <p>Ste si istí, že chcete kanál <strong>natrvalo odstrániť</strong>? Pre potvrdenie zadajte názov kanála do poľa nižšie.</p>"
       close: "Zavrieť"
+      remove: "Odstrániť"
       expand: "Rozbaliť chat"
       deleted:
         one: "Správa bola vymazaná. [view]"

@@ -325,6 +325,7 @@ it:
     more_replies:
       one: "%{count} ulteriore risposta"
       other: "%{count} ulteriori risposte"
+    loading: "Caricamento discussione…"
     permalink: "Collegamento permanente"
     imported_from: "Questo è un argomento di discussione collegato all'originale su: %{link}"
     in_reply_to: "▶ %{username}"
@@ -1579,7 +1580,7 @@ it:
     content_security_policy_report_only: "Abilita Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_collect_reports: "Abilita raccolta di report di violazioni CSP in /csp_reports"
     content_security_policy_frame_ancestors: "Limita chi può incorporare questo sito in iframes tramite CSP. Controlla gli host ammessi su <a href='%{base_path}/admin/customize/embedding'>Incorporamenti</a>"
-    content_security_policy_script_src: "Sorgenti di script aggiuntivi consentiti. L'host e la rete CDN correnti sono inclusi per impostazione predefinita. Consulta la sezione <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigare gli attacchi XSS con i criteri di sicurezza dei contenuti.</a> (CSP)"
+    content_security_policy_script_src: "Sorgenti di script aggiuntivi consentiti. Il server e la rete CDN attualmente in uso sono inclusi per impostazione predefinita. Consulta la sezione <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigare gli attacchi XSS con i criteri di sicurezza dei contenuti.</a> (CSP)"
     invalidate_inactive_admin_email_after_days: "Gli account amministratore che non hanno visitato il sito in questo numero di giorni dovranno riconvalidare il proprio indirizzo email prima di accedere. Impostare su 0 per disabilitare."
     include_secure_categories_in_tag_counts: "Se abilitato, il conteggio degli argomenti per un tag includerà gli argomenti che si trovano nelle categorie con restrizioni di lettura per tutti gli utenti. Se disabilitato, agli utenti normali viene mostrato solo un conteggio degli argomenti per un tag in cui tutti gli argomenti sono nelle categorie pubbliche."
     display_personal_messages_tag_counts: "Se abilitato, verrà visualizzato il conteggio dei messaggi personali contrassegnati con un determinato tag."
@@ -1967,6 +1968,7 @@ it:
     digest_min_excerpt_length: "Lunghezza minima dell'estratto del messaggio nell'email riepilogativa, in caratteri."
     suppress_digest_email_after_days: "Sopprimi le email riepilogative per gli utenti che non visitano il sito per più di (n) giorni."
     digest_suppress_categories: "Sopprimi queste categorie dalle email riepilogative."
+    digest_suppress_tags: "Elimina questi tag dalle email di riepilogo."
     disable_digest_emails: "Disabilita le email riepilogative per tutti gli utenti."
     apply_custom_styles_to_digest: "I modelli email e css personalizzati sono applicati alle email di riepilogo."
     email_accent_bg_color: "Colore da usare come background per alcuni elementi delle email HTML. Inserire il nome di un colore ('red') o un valore esadecimale ('#FF0000')."
@@ -2121,14 +2123,14 @@ it:
     default_sidebar_switch_panel_position: "Posizione dei pulsanti della barra laterale"
     retain_web_hook_events_period_days: "Numero di giorni per mantenere i record degli eventi di web hook."
     retry_web_hook_events: "Riprova automaticamente gli eventi di hook Web falliti per 4 volte. Gli intervalli di tempo tra i tentativi sono 1, 5, 25 e 125 minuti."
-    revoke_api_keys_days: "Numero di giorni prima che una chiave API non utilizzata sia revocata automaticamente (0 per non avere mai revoca)"
+    revoke_api_keys_unused_days: "Numero di giorni prima che una chiave API non utilizzata sia revocata automaticamente (0 per non avere mai revoca)"
     allow_user_api_key_scopes: "Elenco di ambiti consentiti per le chiavi API utente"
     min_trust_level_for_user_api_key: |
       Livello di attendibilità richiesto per la generazione di chiavi API utente.<br>
       <b>AVVISO</b>: la modifica del livello di attendibilità impedirà agli utenti con un livello di attendibilità inferiore di accedere tramite Discourse Hub
     allowed_user_api_auth_redirects: "URL consentito per il reindirizzamento dell'autenticazione per le chiavi API utente. Il simbolo jolly * può essere utilizzato per abbinare qualsiasi parte di esso (ad esempio www.example.com/*)."
     allowed_user_api_push_urls: "URL consentiti per il push del server alle API utente"
-    expire_user_api_keys_days: "Numero di giorni prima che una chiave API utente scada automaticamente (0 per non avere scadenza)"
+    revoke_user_api_keys_unused_days: "Numero di giorni prima che una chiave API utente scada automaticamente (0 per non avere scadenza)"
     tagging_enabled: "Abilitare le etichette per gli argomenti?"
     min_trust_to_create_tag: "Il livello di attendibilità minimo per creare un'etichetta."
     max_tags_per_topic: "Il numero massimo di etichette che si possono applicare ad un argomento."
@@ -2417,6 +2419,18 @@ it:
   admin:
     email:
       sent_test: "inviata!"
+    user:
+      merge_user:
+        updating_username: "Aggiornamento nome utente…"
+        changing_post_ownership: "Modifica della proprietà del messaggio…"
+        merging_given_daily_likes: "Unione dati Mi piace giornalieri…"
+        merging_post_timings: "Unione dei tempi dei post…"
+        merging_user_visits: "Unione delle visite degli utenti…"
+        updating_site_settings: "Aggiornamento delle impostazioni del sito…"
+        updating_user_stats: "Aggiornamento delle statistiche utente..."
+        merging_user_attributes: "Unione degli attributi utente…"
+        updating_user_ids: "Aggiornamento degli ID utente…"
+        deleting_source_user: "Eliminazione dell'utente di origine…"
   user:
     deactivated: "È stato disattivato a causa di troppe email rimbalzate a '%{email}'."
     deactivated_by_staff: "Disattivato dallo staff"
@@ -4208,6 +4222,8 @@ it:
         description: "Accetta la segnalazione, nascondi il messaggio e invia automaticamente all'utente un messaggio privato che lo invita a modificarlo."
       delete_single:
         title: "Elimina"
+      delete:
+        title: "Elimina…"
       delete_and_ignore:
         title: "Ignora segnalazione ed elimina post"
         description: "Ignora segnalazione rimuovendola dalla coda ed elimina il messaggio; se è li primo messaggio, eliminare anche l'argomento. "
@@ -4228,7 +4244,7 @@ it:
       disagree:
         title: "No"
       discard_post:
-        title: "Scarta il Messaggio"
+        title: "Annulla messaggio"
       ignore:
         title: "Ignora"
       ignore_and_do_nothing:
@@ -4244,6 +4260,7 @@ it:
       approve_user:
         title: "Approva Utente"
       reject_user:
+        title: "Elimina utente…"
         delete:
           title: "Cancella utente"
           description: "L'utente sarà eliminato dal forum."
@@ -4252,6 +4269,7 @@ it:
           description: "L'utente sarà eliminato, e ne bloccheremo l'IP e l'indirizzo email."
       reject:
         title: "Rifiuta"
+        bundle_title: "Rifiuta…"
       reject_and_suspend:
         title: "Rifiuta e Sospendi l'utente"
       reject_and_silence:

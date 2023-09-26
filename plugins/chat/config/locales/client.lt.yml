@@ -21,6 +21,7 @@ lt:
         join: "Prisijungti"
         leave: "Palikti"
       close: "Uždaryti"
+      remove: "Pašalinti"
       delete: "Pašalinti"
       edited: "taisytas"
       muted: "nutyldita"

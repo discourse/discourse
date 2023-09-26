@@ -43,7 +43,7 @@ export default Component.extend({
     return userPath(username.toLowerCase());
   },
 
-  @discourseComputed("post.topic.title", "post.post_number")
+  @discourseComputed("post.title", "post.post_number")
   titleAriaLabel(title, postNumber) {
     return I18n.t("groups.aria_post_number", { postNumber, title });
   },

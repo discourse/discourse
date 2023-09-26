@@ -90,17 +90,20 @@
         >
           <label class="checkbox-label">
             {{#if this.transformedModel.sectionType}}
-              <DTooltip @placement="top-start">
-                {{i18n "sidebar.sections.custom.always_public"}}
-              </DTooltip>
+              <DTooltip
+                @icon="check-square"
+                @content={{i18n "sidebar.sections.custom.always_public"}}
+                class="always-public-tooltip"
+              />
+            {{else}}
+              <Input
+                @type="checkbox"
+                @checked={{this.transformedModel.public}}
+                class="mark-public"
+                disabled={{this.transformedModel.sectionType}}
+              />
             {{/if}}
-            <Input
-              @type="checkbox"
-              @checked={{this.transformedModel.public}}
-              class="mark-public"
-              disabled={{this.transformedModel.sectionType}}
-            />
-            {{i18n "sidebar.sections.custom.public"}}
+            <span>{{i18n "sidebar.sections.custom.public"}}</span>
           </label>
         </div>
       {{/if}}

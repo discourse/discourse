@@ -309,6 +309,8 @@ vi:
       abandon:
         yes_value: "Hủy bỏ"
         no_value: "Tiếp tục chỉnh sửa"
+    topic_count_all:
+      other: "Xem %{count} chủ đề mới"
     topic_count_categories:
       other: "Xem %{count} chủ đề mới hoặc được cập nhật"
     topic_count_latest:

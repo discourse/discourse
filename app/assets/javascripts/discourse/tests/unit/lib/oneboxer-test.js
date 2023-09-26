@@ -1,5 +1,6 @@
-import { failedCache, localCache } from "pretty-text/oneboxer-cache";
 import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
+import { failedCache, localCache } from "pretty-text/oneboxer-cache";
 import { ajax } from "discourse/lib/ajax";
 import { load } from "pretty-text/oneboxer";
 
@@ -14,7 +15,9 @@ function loadOnebox(element) {
   });
 }
 
-module("Unit | Utility | oneboxer", function () {
+module("Unit | Utility | oneboxer", function (hooks) {
+  setupTest(hooks);
+
   test("load - failed onebox", async function (assert) {
     let element = document.createElement("A");
     element.setAttribute("href", "http://somebadurl.com");

@@ -167,7 +167,11 @@ class PostCreator
     DiscourseEvent.trigger :before_create_post, @post, @opts
     DiscourseEvent.trigger :validate_post, @post
 
-    post_validator = PostValidator.new(skip_topic: true)
+    post_validator =
+      PostValidator.new(
+        skip_topic: true,
+        private_message: @opts[:archetype] == Archetype.private_message,
+      )
     post_validator.validate(@post)
 
     valid = @post.errors.blank?

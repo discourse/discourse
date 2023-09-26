@@ -1,11 +1,14 @@
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import {
   convertIconClass,
   iconHTML,
   iconNode,
 } from "discourse-common/lib/icon-library";
-import { module, test } from "qunit";
 
-module("Unit | Utility | icon-library", function () {
+module("Unit | Utility | icon-library", function (hooks) {
+  setupTest(hooks);
+
   test("return icon markup", function (assert) {
     assert.ok(iconHTML("bars").includes('use href="#bars"'));
 

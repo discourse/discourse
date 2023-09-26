@@ -4,6 +4,10 @@
 
 @use "sass:math";
 
+.container.group {
+  background: var(--d-content-background);
+}
+
 .group-details-container {
   background: var(--primary-very-low);
   padding: 20px;

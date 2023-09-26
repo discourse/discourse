@@ -24,7 +24,6 @@ module.exports = function (defaults) {
 
   const isEmbroider = process.env.USE_EMBROIDER === "1";
   const isProduction = EmberApp.env().includes("production");
-  const isTest = EmberApp.env().includes("test");
 
   // This is more or less the same as the one in @embroider/test-setup
   const maybeEmbroider = (app, options) => {
@@ -71,6 +70,9 @@ module.exports = function (defaults) {
             util: require.resolve("util/"),
             // Also for sinon
             timers: false,
+            // For source-map-support
+            path: require.resolve("path-browserify"),
+            fs: false,
           },
         },
         module: {
@@ -101,14 +103,15 @@ module.exports = function (defaults) {
       enabled: false,
     },
 
+    "ember-cli-deprecation-workflow": {
+      enabled: true,
+    },
+
     "ember-cli-terser": {
       enabled: isProduction,
-      exclude: [
-        "**/test-*.js",
-        "**/core-tests*.js",
-        "**/highlightjs/*",
-        "**/javascripts/*",
-      ],
+      exclude:
+        ["**/highlightjs/*", "**/javascripts/*"] +
+        (isEmbroider ? [] : ["**/test-*.js", "**/core-tests*.js"]),
     },
 
     "ember-cli-babel": {
@@ -119,8 +122,9 @@ module.exports = function (defaults) {
       plugins: [require.resolve("deprecation-silencer")],
     },
 
-    // We need to build tests in prod for theme tests
-    tests: true,
+    // Was previously true so that we could run theme tests in production
+    // but we're moving away from that as part of the Embroider migration
+    tests: isEmbroider ? !isProduction : true,
 
     vendorFiles: {
       // Freedom patch - includes bug fix and async stack support
@@ -157,20 +161,16 @@ module.exports = function (defaults) {
     .findAddonByName("pretty-text")
     .treeForMarkdownItBundle();
 
-  const extraPublicTrees = [];
+  const testStylesheetTree = mergeTrees([
+    discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
+    discourseScss(
+      `${discourseRoot}/app/assets/stylesheets`,
+      "qunit-custom.scss"
+    ),
+  ]);
+  app.project.liveReloadFilterPatterns = [/.*\.scss/];
 
-  if (isTest) {
-    const testemStylesheetTree = mergeTrees([
-      discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
-      discourseScss(
-        `${discourseRoot}/app/assets/stylesheets`,
-        "qunit-custom.scss"
-      ),
-    ]);
-    extraPublicTrees.push(testemStylesheetTree);
-  }
-
-  extraPublicTrees.push(
+  const extraPublicTrees = [
     createI18nTree(discourseRoot, vendorJs),
     parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
@@ -192,8 +192,9 @@ module.exports = function (defaults) {
       outputFile: `assets/markdown-it-bundle.js`,
     }),
     generateScriptsTree(app),
-    discoursePluginsTree
-  );
+    discoursePluginsTree,
+    testStylesheetTree,
+  ];
 
   return maybeEmbroider(app, {
     extraPublicTrees,
@@ -222,6 +223,13 @@ module.exports = function (defaults) {
             javascript: {
               exportsPresence: "error",
             },
+          },
+        },
+        resolve: {
+          fallback: {
+            // For source-map-support
+            path: require.resolve("path-browserify"),
+            fs: false,
           },
         },
       },

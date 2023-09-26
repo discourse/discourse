@@ -85,6 +85,7 @@ zh_CN:
         create: "新建频道"
       click_to_join: "点击此处查看可用频道。"
       close: "关闭"
+      remove: "移除"
       collapse: "收起聊天抽屉"
       expand: "展开聊天栏"
       confirm_flag: "确定要举报 %{username} 的消息吗？"

@@ -1,7 +1,10 @@
 import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import AllowLister from "pretty-text/allow-lister";
 
-module("Unit | Utility | allowLister", function () {
+module("Unit | Utility | allowLister", function (hooks) {
+  setupTest(hooks);
+
   test("allowLister", function (assert) {
     const allowLister = new AllowLister();
 

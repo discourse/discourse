@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { clipboardCopyAsync } from "discourse/lib/utilities";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { isTesting } from "discourse-common/config/environment";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";

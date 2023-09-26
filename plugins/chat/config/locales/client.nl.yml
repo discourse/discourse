@@ -85,6 +85,7 @@ nl:
         create: "Nieuw kanaal"
       click_to_join: "Klik hier om de beschikbare kanalen te bekijken."
       close: "Sluiten"
+      remove: "Verwijderen"
       collapse: "Chatlade samenvouwen"
       expand: "Chatlade uitvouwen"
       confirm_flag: "Weet je zeker dat je het bericht van %{username} wilt markeren?"

@@ -1,8 +1,8 @@
-import Service from "@ember/service";
-import { getOwner } from "@ember/application";
+import Service, { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
 import { fileToImageData } from "discourse/lib/media-optimization-utils";
 import { getAbsoluteURL, getURLWithCDN } from "discourse-common/lib/get-url";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 /**
  * This worker follows a particular promise/callback flow to ensure
@@ -20,8 +20,11 @@ import { getAbsoluteURL, getURLWithCDN } from "discourse-common/lib/get-url";
  * will wait for the "installed" message to be handled before continuing
  * with any image optimization work.
  */
+@disableImplicitInjections
 export default class MediaOptimizationWorkerService extends Service {
-  appEvents = getOwner(this).lookup("service:app-events");
+  @service appEvents;
+  @service siteSettings;
+
   worker = null;
   workerUrl = getAbsoluteURL("/javascripts/media-optimization-worker.js");
   currentComposerUploadData = null;
