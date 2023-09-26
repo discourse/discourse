@@ -1,8 +1,9 @@
 import { action } from "@ember/object";
 import { bind, observes } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
-import { chooseDarker, darkLightDiff } from "wizard/lib/preview";
-import WizardPreviewBaseComponent from "./wizard-preview-base";
+import { chooseDarker, darkLightDiff } from "../../../lib/preview";
+import HomepagePreview from "./-homepage-preview";
+import PreviewBaseComponent from "./-preview-base";
 
 const LOREM = `
 Lorem ipsum dolor sit amet, consectetur adipiscing.
@@ -10,7 +11,7 @@ Nullam eget sem non elit tincidunt rhoncus. Fusce
 velit nisl, porttitor sed nisl ac, consectetur interdum
 metus. Fusce in consequat augue, vel facilisis felis.`;
 
-export default WizardPreviewBaseComponent.extend({
+export default PreviewBaseComponent.extend({
   width: 628,
   height: 322,
   logo: null,
@@ -19,6 +20,7 @@ export default WizardPreviewBaseComponent.extend({
   draggingActive: false,
   startX: 0,
   scrollLeft: 0,
+  HomepagePreview,
 
   init() {
     this._super(...arguments);
