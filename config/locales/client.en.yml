@@ -4229,7 +4229,6 @@ en:
       other_tags: "Other Tags"
       selector_all_tags: "all tags"
       selector_no_tags: "no tags"
-      changed: "tags changed:"
       tags: "Tags"
       choose_for_topic: "optional tags"
       choose_for_topic_required:
