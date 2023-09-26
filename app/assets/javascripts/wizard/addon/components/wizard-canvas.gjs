@@ -1,10 +1,11 @@
-import Component from "@ember/component";
+import Component from "@glimmer/component";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { bind } from "discourse-common/utils/decorators";
+
 const MAX_PARTICLES = 150;
 
 const SIZE = 144;
-
-let width, height;
 
 const COLORS = [
   "--tertiary",
@@ -14,13 +15,12 @@ const COLORS = [
 ];
 
 class Particle {
-  constructor() {
-    this.reset();
-    this.y = Math.random() * (height + SIZE) - SIZE;
+  constructor(width, height) {
+    this.reset(width, height);
   }
 
-  reset() {
-    this.y = -SIZE;
+  reset(width, height) {
+    this.y = Math.random() * (height + SIZE) - SIZE;
     this.origX = Math.random() * (width + SIZE);
     this.speed = 0.5 + Math.random();
     this.ang = Math.random() * 2 * Math.PI;
@@ -31,11 +31,13 @@ class Particle {
     this.flipped = Math.random() > 0.5 ? 1 : -1;
   }
 
-  move() {
+  move(width, height) {
     this.y += this.speed;
 
     if (this.y > height + SIZE) {
-      this.reset();
+      this.reset(width, height);
+      // start at the top
+      this.y = -SIZE;
     }
 
     this.ang += this.speed / 30.0;
@@ -47,66 +49,74 @@ class Particle {
   }
 }
 
-export default Component.extend({
-  classNames: ["wizard-canvas"],
-  tagName: "canvas",
-  ctx: null,
-  ready: false,
-  particles: null,
+export default class WizardCanvasComponent extends Component {
+  canvas = null;
+  particles = null;
 
-  didInsertElement() {
-    this._super(...arguments);
+  <template>
+    <canvas
+      class="wizard-canvas"
+      {{didInsert this.setup}}
+      {{willDestroy this.teardown}}
+    />
+  </template>
 
-    const canvas = this.element;
-    this.ctx = canvas.getContext("2d");
+  get ready() {
+    return this.canvas !== null;
+  }
+
+  get ctx() {
+    return this.canvas.getContext("2d");
+  }
+
+  @bind
+  setup(canvas) {
+    this.canvas = canvas;
     this.resized();
+
+    let { width, height } = canvas;
 
     this.particles = [];
     for (let i = 0; i < MAX_PARTICLES; i++) {
-      this.particles.push(new Particle());
+      this.particles.push(new Particle(width, height));
     }
 
-    this.ready = true;
-    this.paint();
+    this.paint(width, height);
 
     window.addEventListener("resize", this.resized);
-  },
+  }
 
-  willDestroyElement() {
-    this._super(...arguments);
-
+  @bind
+  teardown() {
+    this.canvas = null;
     window.removeEventListener("resize", this.resized);
-  },
+  }
 
   @bind
   resized() {
-    width = window.innerWidth;
-    height = window.innerHeight;
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+  }
 
-    const canvas = this.element;
-    canvas.width = width;
-    canvas.height = height;
-  },
-
+  @bind
   paint() {
-    if (this.isDestroying || this.isDestroyed || !this.ready) {
+    if (!this.ready) {
       return;
     }
 
-    const { ctx } = this;
+    let { ctx } = this;
+    let { width, height } = this.canvas;
     ctx.clearRect(0, 0, width, height);
 
-    this.particles.forEach((particle) => {
-      particle.move();
-      this.drawParticle(particle);
-    });
+    for (let particle of this.particles) {
+      particle.move(width, height);
+      this.drawParticle(ctx, particle);
+    }
 
-    window.requestAnimationFrame(() => this.paint());
-  },
+    window.requestAnimationFrame(this.paint);
+  }
 
-  drawParticle(p) {
-    const c = this.ctx;
-
+  drawParticle(c, p) {
     c.save();
     c.translate(p.x - SIZE, p.y - SIZE);
     c.scale(p.scale * p.flipped, p.scale);
@@ -174,5 +184,5 @@ export default Component.extend({
     c.fill();
     c.stroke();
     c.restore();
-  },
-});
+  }
+}
