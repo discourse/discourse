@@ -9,7 +9,6 @@ import { htmlSafe } from "@ember/template";
 import emoji from "discourse/helpers/emoji";
 import I18n from "discourse-i18n";
 import WizardField from "./wizard-field";
-import WizardStepForm from "./wizard-step-form";
 
 const i18n = (...args) => I18n.t(...args);
 
@@ -55,7 +54,7 @@ export default class WizardStepComponent extends Component {
 
           <div class="wizard-container__step-container">
             {{#if @step.fields}}
-              <WizardStepForm @step={{@step}}>
+              <div class="wizard-container__step-form">
                 {{#if this.includeSidebar}}
                   <div class="wizard-container__sidebar">
                     {{#each @step.fields as |field|}}
@@ -80,7 +79,7 @@ export default class WizardStepComponent extends Component {
                     {{/unless}}
                   {{/each}}
                 </div>
-              </WizardStepForm>
+              </div>
             {{/if}}
           </div>
         </div>
