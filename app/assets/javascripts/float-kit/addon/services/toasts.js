@@ -4,7 +4,7 @@ import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { action } from "@ember/object";
 import DDefaultToast from "float-kit/components/d-default-toast";
 import DToastInstance from "float-kit/lib/d-toast-instance";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 export default class Toasts extends Service {
   @tracked activeToasts = new TrackedArray();
