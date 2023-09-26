@@ -89,7 +89,7 @@ export default class UserTips extends Service {
       return;
     }
 
-    this.removeAvailableTip(tipId);
+    this.removeAvailableTip({ id: tipId });
 
     // Update list of seen user tips.
     let seenUserTips = this.currentUser.user_option?.seen_popups || [];
