@@ -5,7 +5,7 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import EmberObject from "@ember/object";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import { next } from "@ember/runloop";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import sinon from "sinon";
 
 function topicWithStream(streamDetails) {
@@ -18,11 +18,11 @@ module("Unit | Controller | topic", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    this.store = getOwner(this).lookup("service:store");
+    this.store = getOwnerWithFallback(this).lookup("service:store");
   });
 
   test("editTopic", function (assert) {
-    const controller = getOwner(this).lookup("controller:topic");
+    const controller = getOwnerWithFallback(this).lookup("controller:topic");
     const model = this.store.createRecord("topic");
     controller.setProperties({ model });
     assert.notOk(controller.editingTopic, "we are not editing by default");
@@ -59,10 +59,12 @@ module("Unit | Controller | topic", function (hooks) {
     let modalDisplayed = false;
     model.destroy = async () => (destroyed = true);
 
-    const siteSettings = getOwner(this).lookup("service:site-settings");
+    const siteSettings = getOwnerWithFallback(this).lookup(
+      "service:site-settings"
+    );
     siteSettings.min_topic_views_for_delete_confirm = 5;
 
-    const controller = getOwner(this).lookup("controller:topic");
+    const controller = getOwnerWithFallback(this).lookup("controller:topic");
     controller.setProperties({
       model,
       deleteTopicModal: () => (modalDisplayed = true),
@@ -101,7 +103,7 @@ module("Unit | Controller | topic", function (hooks) {
 
   test("toggleMultiSelect", async function (assert) {
     const model = this.store.createRecord("topic");
-    const controller = getOwner(this).lookup("controller:topic");
+    const controller = getOwnerWithFallback(this).lookup("controller:topic");
     controller.setProperties({ model });
 
     assert.notOk(
@@ -146,7 +148,7 @@ module("Unit | Controller | topic", function (hooks) {
     const model = topicWithStream.call(this, {
       posts: [{ id: 1 }, { id: 2 }, { id: 3 }],
     });
-    const controller = getOwner(this).lookup("controller:topic");
+    const controller = getOwnerWithFallback(this).lookup("controller:topic");
     controller.setProperties({ model });
 
     controller.set("selectedPostIds", [1, 2, 42]);
@@ -164,7 +166,7 @@ module("Unit | Controller | topic", function (hooks) {
 
   test("selectedAllPosts", function (assert) {
     const model = topicWithStream.call(this, { stream: [1, 2, 3] });
-    const controller = getOwner(this).lookup("controller:topic");
+    const controller = getOwnerWithFallback(this).lookup("controller:topic");
     controller.setProperties({ model });
 
     controller.set("selectedPostIds", [1, 2]);
@@ -198,7 +200,7 @@ module("Unit | Controller | topic", function (hooks) {
       ],
       stream: [1, 2, 3],
     });
-    const controller = getOwner(this).lookup("controller:topic");
+    const controller = getOwnerWithFallback(this).lookup("controller:topic");
     controller.setProperties({ model });
 
     assert.strictEqual(
@@ -238,12 +240,12 @@ module("Unit | Controller | topic", function (hooks) {
 
   test("showSelectedPostsAtBottom", function (assert) {
     const model = this.store.createRecord("topic", { posts_count: 3 });
-    const controller = getOwner(this).lookup("controller:topic");
+    const controller = getOwnerWithFallback(this).lookup("controller:topic");
     controller.setProperties({ model });
 
     assert.notOk(controller.showSelectedPostsAtBottom, "false on desktop");
 
-    const site = getOwner(this).lookup("service:site");
+    const site = getOwnerWithFallback(this).lookup("service:site");
     site.set("mobileView", true);
 
     assert.notOk(
@@ -269,7 +271,7 @@ module("Unit | Controller | topic", function (hooks) {
       stream: [1, 2, 3],
     });
 
-    const controller = getOwner(this).lookup("controller:topic");
+    const controller = getOwnerWithFallback(this).lookup("controller:topic");
     controller.setProperties({
       model,
       currentUser,
@@ -316,7 +318,7 @@ module("Unit | Controller | topic", function (hooks) {
     });
     model.set("details.can_move_posts", false);
 
-    const controller = getOwner(this).lookup("controller:topic");
+    const controller = getOwnerWithFallback(this).lookup("controller:topic");
     controller.setProperties({ model });
 
     assert.notOk(
@@ -362,7 +364,7 @@ module("Unit | Controller | topic", function (hooks) {
     });
     model.set("currentUser", currentUser);
 
-    const controller = getOwner(this).lookup("controller:topic");
+    const controller = getOwnerWithFallback(this).lookup("controller:topic");
     controller.setProperties({ model, currentUser });
 
     assert.notOk(controller.canChangeOwner, "false when no posts are selected");
@@ -394,10 +396,12 @@ module("Unit | Controller | topic", function (hooks) {
     });
     model.set("currentUser", currentUser);
 
-    const siteSettings = getOwner(this).lookup("service:site-settings");
+    const siteSettings = getOwnerWithFallback(this).lookup(
+      "service:site-settings"
+    );
     siteSettings.moderators_change_post_ownership = true;
 
-    const controller = getOwner(this).lookup("controller:topic");
+    const controller = getOwnerWithFallback(this).lookup("controller:topic");
     controller.setProperties({ model, currentUser });
 
     assert.notOk(controller.canChangeOwner, "false when no posts are selected");
@@ -429,7 +433,7 @@ module("Unit | Controller | topic", function (hooks) {
       stream: [1, 2, 3],
     });
 
-    const controller = getOwner(this).lookup("controller:topic");
+    const controller = getOwnerWithFallback(this).lookup("controller:topic");
     controller.setProperties({ model });
 
     assert.notOk(controller.canMergePosts, "false when no posts are selected");
@@ -460,7 +464,7 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("Select/deselect all", function (assert) {
-    const controller = getOwner(this).lookup("controller:topic");
+    const controller = getOwnerWithFallback(this).lookup("controller:topic");
     const model = topicWithStream.call(this, { stream: [1, 2, 3] });
     controller.setProperties({ model });
 
@@ -486,7 +490,7 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("togglePostSelection", function (assert) {
-    const controller = getOwner(this).lookup("controller:topic");
+    const controller = getOwnerWithFallback(this).lookup("controller:topic");
 
     assert.strictEqual(
       controller.selectedPostIds[0],
@@ -510,7 +514,7 @@ module("Unit | Controller | topic", function (hooks) {
   });
 
   test("selectBelow", function (assert) {
-    const site = getOwner(this).lookup("service:site");
+    const site = getOwnerWithFallback(this).lookup("service:site");
     site.set("post_types", { small_action: 3, whisper: 4 });
 
     const model = topicWithStream.call(this, {
@@ -522,7 +526,7 @@ module("Unit | Controller | topic", function (hooks) {
       ],
     });
 
-    const controller = getOwner(this).lookup("controller:topic");
+    const controller = getOwnerWithFallback(this).lookup("controller:topic");
     controller.setProperties({ model });
 
     assert.deepEqual(
@@ -544,7 +548,7 @@ module("Unit | Controller | topic", function (hooks) {
       posts: [{ id: 1 }, { id: 2 }],
     });
 
-    const controller = getOwner(this).lookup("controller:topic");
+    const controller = getOwnerWithFallback(this).lookup("controller:topic");
     controller.setProperties({ model });
 
     controller.send("selectReplies", { id: 1 });
@@ -582,7 +586,7 @@ module("Unit | Controller | topic", function (hooks) {
     const model = topicWithStream.call(this, {
       posts: [{ id: 1 }],
     });
-    const controller = getOwner(this).lookup("controller:topic");
+    const controller = getOwnerWithFallback(this).lookup("controller:topic");
     controller.setProperties({ model });
     const placeholder = new Placeholder("post-placeholder");
 
@@ -613,7 +617,7 @@ module("Unit | Controller | topic", function (hooks) {
       posts: [post, { id: 3 }, { id: 4 }],
     });
 
-    const controller = getOwner(this).lookup("controller:topic");
+    const controller = getOwnerWithFallback(this).lookup("controller:topic");
     controller.setProperties({ model, currentUser });
 
     const done = assert.async();

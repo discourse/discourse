@@ -1,13 +1,13 @@
 import { module, test } from "qunit";
 import { setPrefix } from "discourse-common/lib/get-url";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 
 module("Unit | Model | email-log", function (hooks) {
   setupTest(hooks);
 
   test("create", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     assert.ok(
       store.createRecord("email-log"),
       "it can be created without arguments"
@@ -32,7 +32,7 @@ module("Unit | Model | email-log", function (hooks) {
           "/forum/letter_avatar_proxy/v2/letter/w/dfb087/{size}.png",
       },
     };
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const emailLog = store.createRecord("email-log", attrs);
 
     assert.strictEqual(

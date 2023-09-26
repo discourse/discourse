@@ -1,6 +1,6 @@
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import pretender, {
   fixturesByUrl,
   response,
@@ -10,7 +10,7 @@ module("Unit | Service | store", function (hooks) {
   setupTest(hooks);
 
   test("createRecord", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const widget = store.createRecord("widget", { id: 111, name: "hello" });
 
     assert.false(widget.isNew, "it is not a new record");
@@ -19,7 +19,7 @@ module("Unit | Service | store", function (hooks) {
   });
 
   test("createRecord without an `id`", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const widget = store.createRecord("widget", { name: "hello" });
 
     assert.true(widget.isNew, "it is a new record");
@@ -27,7 +27,7 @@ module("Unit | Service | store", function (hooks) {
   });
 
   test("createRecord doesn't modify the input `id` field", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const widget = store.createRecord("widget", { id: 1, name: "hello" });
 
     const obj = { id: 1, name: "something" };
@@ -39,7 +39,7 @@ module("Unit | Service | store", function (hooks) {
   });
 
   test("createRecord without attributes", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const widget = store.createRecord("widget");
 
     assert.strictEqual(widget.id, undefined, "there is no id");
@@ -47,7 +47,7 @@ module("Unit | Service | store", function (hooks) {
   });
 
   test("createRecord with a record as attributes returns that record from the map", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const widget = store.createRecord("widget", { id: 33 });
     const secondWidget = store.createRecord("widget", { id: 33 });
 
@@ -55,7 +55,7 @@ module("Unit | Service | store", function (hooks) {
   });
 
   test("find", async function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
 
     const widget = await store.find("widget", 123);
     assert.strictEqual(widget.name, "Trout Lure");
@@ -78,19 +78,19 @@ module("Unit | Service | store", function (hooks) {
   });
 
   test("find with object id", async function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const widget = await store.find("widget", { id: 123 });
     assert.strictEqual(widget.firstObject.name, "Trout Lure");
   });
 
   test("find with query param", async function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const widget = await store.find("widget", { name: "Trout Lure" });
     assert.strictEqual(widget.firstObject.id, 123);
   });
 
   test("findStale with no stale results", async function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const stale = store.findStale("widget", { name: "Trout Lure" });
 
     assert.false(stale.hasResults, "there are no stale results");
@@ -118,7 +118,7 @@ module("Unit | Service | store", function (hooks) {
       }
     });
 
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const notifications = await store.find("notification", { slug: "souna" });
     assert.strictEqual(notifications.content[0].slug, "souna");
 
@@ -131,19 +131,19 @@ module("Unit | Service | store", function (hooks) {
   });
 
   test("update", async function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const result = await store.update("widget", 123, { name: "hello" });
     assert.strictEqual(result.payload.name, "hello");
   });
 
   test("update with a multi world name", async function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const result = await store.update("cool-thing", 123, { name: "hello" });
     assert.strictEqual(result.payload.name, "hello");
   });
 
   test("findAll", async function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const result = await store.findAll("widget");
     assert.strictEqual(result.length, 2);
 
@@ -153,7 +153,7 @@ module("Unit | Service | store", function (hooks) {
   });
 
   test("destroyRecord", async function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const widget = await store.find("widget", 123);
 
     const result = await store.destroyRecord("widget", widget);
@@ -161,14 +161,14 @@ module("Unit | Service | store", function (hooks) {
   });
 
   test("destroyRecord when new", async function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const widget = store.createRecord("widget", { name: "hello" });
 
     assert.true(await store.destroyRecord("widget", widget));
   });
 
   test("find embedded", async function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const fruit = await store.find("fruit", 1);
 
     assert.propContains(
@@ -182,7 +182,7 @@ module("Unit | Service | store", function (hooks) {
   });
 
   test("embedded records can be cleared", async function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     let fruit = await store.find("fruit", 4);
     fruit.set("farmer", { dummy: "object" });
 
@@ -191,7 +191,7 @@ module("Unit | Service | store", function (hooks) {
   });
 
   test("meta types", async function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const barn = await store.find("barn", 1);
     assert.strictEqual(
       barn.owner.name,
@@ -201,7 +201,7 @@ module("Unit | Service | store", function (hooks) {
   });
 
   test("findAll embedded", async function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const fruits = await store.findAll("fruit");
     assert.strictEqual(fruits.objectAt(0).farmer.name, "Old MacDonald");
     assert.strictEqual(
@@ -235,7 +235,7 @@ module("Unit | Service | store", function (hooks) {
       });
     });
 
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const users = await store.findAll("user");
     assert.strictEqual(users.objectAt(0).username, "souna");
   });
@@ -249,7 +249,7 @@ module("Unit | Service | store", function (hooks) {
       return response(fixturesByUrl["/c/bug/1/l/latest.json"]);
     });
 
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const result = await store.findFiltered("topicList", {
       filter: "topics/created-by/trout",
       params: {
@@ -265,7 +265,7 @@ module("Unit | Service | store", function (hooks) {
   });
 
   test("Spec incompliant embedded record name", async function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const fruit = await store.find("fruit", 4);
 
     assert.propContains(

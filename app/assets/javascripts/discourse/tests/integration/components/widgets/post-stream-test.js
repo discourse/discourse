@@ -3,7 +3,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { count } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 
 function postStreamTest(name, attrs) {
   test(name, async function (assert) {
@@ -22,8 +22,8 @@ module("Integration | Component | Widget | post-stream", function (hooks) {
 
   postStreamTest("basics", {
     posts() {
-      const site = getOwner(this).lookup("service:site");
-      const store = getOwner(this).lookup("service:store");
+      const site = getOwnerWithFallback(this).lookup("service:site");
+      const store = getOwnerWithFallback(this).lookup("service:store");
       const topic = store.createRecord("topic");
       topic.set("details.created_by", { id: 123 });
 
@@ -129,7 +129,7 @@ module("Integration | Component | Widget | post-stream", function (hooks) {
 
   postStreamTest("deleted posts", {
     posts() {
-      const store = getOwner(this).lookup("service:store");
+      const store = getOwnerWithFallback(this).lookup("service:store");
       const topic = store.createRecord("topic");
       topic.set("details.created_by", { id: 123 });
 

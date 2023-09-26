@@ -1,12 +1,12 @@
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 
 module("Unit | Service | emoji-store", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    this.emojiStore = getOwner(this).lookup("service:emoji-store");
+    this.emojiStore = getOwnerWithFallback(this).lookup("service:emoji-store");
     this.emojiStore.reset();
   });
 

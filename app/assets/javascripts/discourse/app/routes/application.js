@@ -6,7 +6,7 @@ import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import { findAll } from "discourse/models/login-method";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 import logout from "discourse/lib/logout";
 import mobile from "discourse/lib/mobile";
@@ -202,7 +202,7 @@ const ApplicationRoute = DiscourseRoute.extend({
         "createNewTopicViaParam on the application route is deprecated. Use the composer service instead",
         { id: "discourse.createNewTopicViaParams" }
       );
-      getOwner(this).lookup("service:composer").openNewTopic({
+      getOwnerWithFallback(this).lookup("service:composer").openNewTopic({
         title,
         body,
         categoryId,
@@ -220,7 +220,7 @@ const ApplicationRoute = DiscourseRoute.extend({
         "createNewMessageViaParams on the application route is deprecated. Use the composer service instead",
         { id: "discourse.createNewMessageViaParams" }
       );
-      getOwner(this).lookup("service:composer").openNewMessage({
+      getOwnerWithFallback(this).lookup("service:composer").openNewMessage({
         recipients,
         title: topicTitle,
         body: topicBody,

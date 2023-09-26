@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
 import { Promise } from "rsvp";
 import { equal } from "@ember/object/computed";
-import { getOwner as getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback as getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { getOwner, setOwner } from "@ember/application";
 import { warn } from "@ember/debug";
 

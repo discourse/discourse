@@ -11,7 +11,7 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 import TopicTrackingState from "discourse/models/topic-tracking-state";
 import User from "discourse/models/user";
 import sinon from "sinon";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { setupTest } from "ember-qunit";
 
 module("Unit | Model | topic-tracking-state", function (hooks) {
@@ -19,7 +19,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
 
   hooks.beforeEach(function () {
     this.clock = fakeTime("2012-12-31 12:00");
-    this.store = getOwner(this).lookup("service:store");
+    this.store = getOwnerWithFallback(this).lookup("service:store");
   });
 
   hooks.afterEach(function () {
@@ -672,7 +672,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
   });
 
   test("getSubCategoryIds", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const foo = store.createRecord("category", { id: 1, slug: "foo" });
     const bar = store.createRecord("category", {
       id: 2,
@@ -693,7 +693,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
   });
 
   test("countNew", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const foo = store.createRecord("category", {
       id: 1,
       slug: "foo",
@@ -842,8 +842,10 @@ module("Unit | Model | topic-tracking-state | /unread", function (hooks) {
   };
 
   hooks.beforeEach(function () {
-    const store = getOwner(this).lookup("service:store");
-    const siteSettings = getOwner(this).lookup("service:site-settings");
+    const store = getOwnerWithFallback(this).lookup("service:store");
+    const siteSettings = getOwnerWithFallback(this).lookup(
+      "service:site-settings"
+    );
 
     this.currentUser = store.createRecord("user", {
       username: "chuck",
@@ -1095,8 +1097,10 @@ module("Unit | Model | topic-tracking-state | /new", function (hooks) {
   };
 
   hooks.beforeEach(function () {
-    const store = getOwner(this).lookup("service:store");
-    const siteSettings = getOwner(this).lookup("service:site-settings");
+    const store = getOwnerWithFallback(this).lookup("service:store");
+    const siteSettings = getOwnerWithFallback(this).lookup(
+      "service:site-settings"
+    );
 
     this.currentUser = store.createRecord("user", {
       username: "chuck",

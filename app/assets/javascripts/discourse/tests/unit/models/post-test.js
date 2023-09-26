@@ -1,12 +1,12 @@
 import { module, test } from "qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { setupTest } from "ember-qunit";
 
 module("Unit | Model | post", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    this.store = getOwner(this).lookup("service:store");
+    this.store = getOwnerWithFallback(this).lookup("service:store");
   });
 
   test("defaults", function (assert) {

@@ -4,11 +4,11 @@ import Post from "discourse/models/post";
 import User from "discourse/models/user";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import sinon from "sinon";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { setupTest } from "ember-qunit";
 
 function buildStream(id, stream) {
-  const store = getOwner(this).lookup("service:store");
+  const store = getOwnerWithFallback(this).lookup("service:store");
   const topic = store.createRecord("topic", { id, chunk_size: 5 });
 
   if (stream) {
@@ -24,7 +24,7 @@ module("Unit | Model | post-stream", function (hooks) {
   setupTest(hooks);
 
   test("create", function (assert) {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     assert.ok(
       store.createRecord("postStream"),
       "it can be created with no parameters"
@@ -40,7 +40,7 @@ module("Unit | Model | post-stream", function (hooks) {
 
   test("appending posts", function (assert) {
     const postStream = buildStream.call(this, 4567, [1, 3, 4]);
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
 
     assert.strictEqual(postStream.lastPostId, 4, "the last post id is 4");
 
@@ -110,7 +110,7 @@ module("Unit | Model | post-stream", function (hooks) {
 
   test("closestPostNumberFor", function (assert) {
     const postStream = buildStream.call(this, 1231);
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
 
     assert.blank(
       postStream.closestPostNumberFor(1),
@@ -193,7 +193,7 @@ module("Unit | Model | post-stream", function (hooks) {
 
   test("removePosts", function (assert) {
     const postStream = buildStream.call(this, 10000001, [1, 2, 3]);
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
 
     const p1 = store.createRecord("post", { id: 1, post_number: 2 }),
       p2 = store.createRecord("post", { id: 2, post_number: 3 }),
@@ -532,7 +532,7 @@ module("Unit | Model | post-stream", function (hooks) {
 
   test("identity map", async function (assert) {
     const postStream = buildStream.call(this, 1234);
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
 
     const p1 = postStream.appendPost(
       store.createRecord("post", { id: 1, post_number: 1 })
@@ -577,7 +577,7 @@ module("Unit | Model | post-stream", function (hooks) {
 
   test("appendMore for megatopic", async function (assert) {
     const postStream = buildStream.call(this, 1234);
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const post = store.createRecord("post", { id: 1, post_number: 1 });
 
     postStream.setProperties({
@@ -600,7 +600,7 @@ module("Unit | Model | post-stream", function (hooks) {
 
   test("prependMore for megatopic", async function (assert) {
     const postStream = buildStream.call(this, 1234);
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const post = store.createRecord("post", { id: 6, post_number: 6 });
 
     postStream.setProperties({
@@ -623,7 +623,7 @@ module("Unit | Model | post-stream", function (hooks) {
 
   test("staging and undoing a new post", function (assert) {
     const postStream = buildStream.call(this, 10101, [1]);
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
 
     const original = store.createRecord("post", {
       id: 1,
@@ -724,7 +724,7 @@ module("Unit | Model | post-stream", function (hooks) {
 
   test("staging and committing a post", function (assert) {
     const postStream = buildStream.call(this, 10101, [1]);
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
 
     const original = store.createRecord("post", {
       id: 1,
@@ -808,7 +808,7 @@ module("Unit | Model | post-stream", function (hooks) {
     // This can happen in a race condition between staging a post and it coming through on the
     // message bus. If the id of a post changes we should reconsider the loadedAllPosts property.
     const postStream = buildStream.call(this, 10101, [1, 2]);
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const postWithoutId = store.createRecord("post", {
       raw: "hello world this is my new post",
     });
@@ -828,7 +828,7 @@ module("Unit | Model | post-stream", function (hooks) {
 
   test("triggerRecoveredPost", async function (assert) {
     const postStream = buildStream.call(this, 4567);
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
 
     [1, 2, 3, 5].forEach((id) => {
       postStream.appendPost(
@@ -857,7 +857,7 @@ module("Unit | Model | post-stream", function (hooks) {
 
   test("committing and triggerNewPostsInStream race condition", function (assert) {
     const postStream = buildStream.call(this, 4964);
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
 
     postStream.appendPost(
       store.createRecord("post", { id: 1, post_number: 1 })
@@ -893,7 +893,7 @@ module("Unit | Model | post-stream", function (hooks) {
 
   test("triggerNewPostInStream for ignored posts", async function (assert) {
     const postStream = buildStream.call(this, 280, [1]);
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     User.resetCurrent(
       store.createRecord("user", {
         username: "eviltrout",
@@ -956,7 +956,7 @@ module("Unit | Model | post-stream", function (hooks) {
       [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     );
     const postsWithPlaceholders = postStream.postsWithPlaceholders;
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
 
     const testProxy = ArrayProxy.create({ content: postsWithPlaceholders });
 
@@ -1029,7 +1029,7 @@ module("Unit | Model | post-stream", function (hooks) {
 
   test("progressIndexOfPostId", function (assert) {
     const postStream = buildStream.call(this, 4567, [1, 3, 4]);
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const post = store.createRecord("post", { id: 1, post_number: 5 });
 
     assert.strictEqual(postStream.progressIndexOfPostId(post), 1);

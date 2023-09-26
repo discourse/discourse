@@ -9,7 +9,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { action, set } from "@ember/object";
 import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
 
 let _components = {};
@@ -121,7 +121,7 @@ export default Component.extend({
     }
 
     const dasherized = dasherize(type);
-    const owner = getOwner(this);
+    const owner = getOwnerWithFallback(this);
     const componentExists =
       owner.hasRegistration(`component:${dasherized}`) ||
       owner.hasRegistration(`template:components/${dasherized}`);

@@ -9,7 +9,7 @@ import Singleton from "discourse/mixins/singleton";
 import TrustLevel from "discourse/models/trust-level";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { isEmpty } from "@ember/utils";
 import { htmlSafe } from "@ember/template";
 
@@ -132,7 +132,7 @@ const Site = RestModel.extend({
 Site.reopenClass(Singleton, {
   // The current singleton will retrieve its attributes from the `PreloadStore`.
   createCurrent() {
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     const siteAttributes = PreloadStore.get("site");
     siteAttributes["isReadOnly"] = PreloadStore.get("isReadOnly");
     siteAttributes["isStaffWritesOnly"] = PreloadStore.get("isStaffWritesOnly");

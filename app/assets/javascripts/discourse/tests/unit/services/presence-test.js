@@ -7,7 +7,7 @@ import { PresenceChannelNotFound } from "discourse/services/presence";
 import { setTestPresence } from "discourse/lib/user-presence";
 import sinon from "sinon";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 function usersFixture() {
@@ -63,7 +63,7 @@ module("Unit | Service | presence | subscribing", function (hooks) {
   });
 
   test("subscribing and receiving updates", async function (assert) {
-    let presenceService = getOwner(this).lookup("service:presence");
+    let presenceService = getOwnerWithFallback(this).lookup("service:presence");
     let channel = presenceService.getChannel("/test/ch1");
     let changes = 0;
     const countChanges = () => changes++;
@@ -106,7 +106,7 @@ module("Unit | Service | presence | subscribing", function (hooks) {
   });
 
   test("fetches data when no initial state", async function (assert) {
-    let presenceService = getOwner(this).lookup("service:presence");
+    let presenceService = getOwnerWithFallback(this).lookup("service:presence");
     let channel = presenceService.getChannel("/test/ch1");
 
     await channel.subscribe();
@@ -152,7 +152,7 @@ module("Unit | Service | presence | subscribing", function (hooks) {
   });
 
   test("raises error when subscribing to nonexistent channel", async function (assert) {
-    let presenceService = getOwner(this).lookup("service:presence");
+    let presenceService = getOwnerWithFallback(this).lookup("service:presence");
     let channel = presenceService.getChannel("/nonexistent/ch1");
 
     assert.rejects(
@@ -163,7 +163,7 @@ module("Unit | Service | presence | subscribing", function (hooks) {
   });
 
   test("can subscribe to count_only channel", async function (assert) {
-    let presenceService = getOwner(this).lookup("service:presence");
+    let presenceService = getOwnerWithFallback(this).lookup("service:presence");
     let channel = presenceService.getChannel("/count-only/ch1");
 
     await channel.subscribe();
@@ -200,7 +200,7 @@ module("Unit | Service | presence | subscribing", function (hooks) {
   });
 
   test("can share data between multiple PresenceChannel objects", async function (assert) {
-    let presenceService = getOwner(this).lookup("service:presence");
+    let presenceService = getOwnerWithFallback(this).lookup("service:presence");
     let channel = presenceService.getChannel("/test/ch1");
     let channelDup = presenceService.getChannel("/test/ch1");
 
@@ -285,7 +285,8 @@ module("Unit | Service | presence | entering and leaving", function (hooks) {
   });
 
   test("can join and leave channels", async function (assert) {
-    const presenceService = getOwner(this).lookup("service:presence");
+    const presenceService =
+      getOwnerWithFallback(this).lookup("service:presence");
     presenceService.currentUser = currentUser();
     const channel = presenceService.getChannel("/test/ch1");
 
@@ -312,7 +313,8 @@ module("Unit | Service | presence | entering and leaving", function (hooks) {
   });
 
   test("join should be a no-op if already present", async function (assert) {
-    const presenceService = getOwner(this).lookup("service:presence");
+    const presenceService =
+      getOwnerWithFallback(this).lookup("service:presence");
     presenceService.currentUser = currentUser();
     const channel = presenceService.getChannel("/test/ch1");
 
@@ -328,7 +330,8 @@ module("Unit | Service | presence | entering and leaving", function (hooks) {
   });
 
   test("leave should be a no-op if not present", async function (assert) {
-    const presenceService = getOwner(this).lookup("service:presence");
+    const presenceService =
+      getOwnerWithFallback(this).lookup("service:presence");
     presenceService.currentUser = currentUser();
     const channel = presenceService.getChannel("/test/ch1");
 
@@ -352,7 +355,8 @@ module("Unit | Service | presence | entering and leaving", function (hooks) {
       (resolve) => (resolveServerResponse = resolve)
     );
 
-    const presenceService = getOwner(this).lookup("service:presence");
+    const presenceService =
+      getOwnerWithFallback(this).lookup("service:presence");
     presenceService.currentUser = currentUser();
     const channel = presenceService.getChannel("/test/ch1");
 
@@ -377,7 +381,8 @@ module("Unit | Service | presence | entering and leaving", function (hooks) {
   });
 
   test("raises an error when entering a non-existent channel", async function (assert) {
-    const presenceService = getOwner(this).lookup("service:presence");
+    const presenceService =
+      getOwnerWithFallback(this).lookup("service:presence");
     presenceService.currentUser = currentUser();
     const channel = presenceService.getChannel("/blah/does-not-exist");
     await assert.rejects(
@@ -388,7 +393,8 @@ module("Unit | Service | presence | entering and leaving", function (hooks) {
   });
 
   test("deduplicates calls from multiple PresenceChannel instances", async function (assert) {
-    const presenceService = getOwner(this).lookup("service:presence");
+    const presenceService =
+      getOwnerWithFallback(this).lookup("service:presence");
     presenceService.currentUser = currentUser();
     const channel = presenceService.getChannel("/test/ch1");
     const channelDup = presenceService.getChannel("/test/ch1");
@@ -427,7 +433,8 @@ module("Unit | Service | presence | entering and leaving", function (hooks) {
   });
 
   test("updates the server presence after going idle", async function (assert) {
-    const presenceService = getOwner(this).lookup("service:presence");
+    const presenceService =
+      getOwnerWithFallback(this).lookup("service:presence");
     presenceService.currentUser = currentUser();
     const channel = presenceService.getChannel("/test/ch1");
 
@@ -464,7 +471,8 @@ module("Unit | Service | presence | entering and leaving", function (hooks) {
   });
 
   test("handles the onlyWhileActive flag", async function (assert) {
-    const presenceService = getOwner(this).lookup("service:presence");
+    const presenceService =
+      getOwnerWithFallback(this).lookup("service:presence");
     presenceService.currentUser = currentUser();
     const channel = presenceService.getChannel("/test/ch1");
     await channel.enter();
@@ -523,7 +531,8 @@ module("Unit | Service | presence | entering and leaving", function (hooks) {
       return response(429, { extras: { wait_seconds: 2 } });
     });
 
-    const presenceService = getOwner(this).lookup("service:presence");
+    const presenceService =
+      getOwnerWithFallback(this).lookup("service:presence");
     presenceService.currentUser = currentUser();
     const channel = presenceService.getChannel("/test/ch1");
 

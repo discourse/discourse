@@ -1,6 +1,6 @@
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { currentUser } from "discourse/tests/helpers/qunit-helpers";
 import Session from "discourse/models/session";
 
@@ -9,7 +9,9 @@ module("Unit | Service | document-title", function (hooks) {
 
   hooks.beforeEach(function () {
     Session.current().hasFocus = true;
-    this.documentTitle = getOwner(this).lookup("service:document-title");
+    this.documentTitle = getOwnerWithFallback(this).lookup(
+      "service:document-title"
+    );
   });
 
   test("it updates the document title", function (assert) {

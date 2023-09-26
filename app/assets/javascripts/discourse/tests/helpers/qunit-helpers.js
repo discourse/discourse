@@ -18,7 +18,7 @@ import {
   settled,
   triggerKeyEvent,
 } from "@ember/test-helpers";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { run } from "@ember/runloop";
 import { setupApplicationTest } from "ember-qunit";
 import Site from "discourse/models/site";
@@ -247,7 +247,7 @@ export function discourseModule(name, options) {
   if (typeof options === "function") {
     module(name, function (hooks) {
       hooks.beforeEach(function () {
-        this.container = getOwner(this);
+        this.container = getOwnerWithFallback(this);
         this.registry = this.container.registry;
         this.owner = this.container;
         this.siteSettings = currentSettings();
@@ -274,7 +274,7 @@ export function discourseModule(name, options) {
 
   module(name, {
     beforeEach() {
-      this.container = getOwner(this);
+      this.container = getOwnerWithFallback(this);
       this.siteSettings = currentSettings();
       options?.beforeEach?.call(this);
     },
@@ -338,7 +338,8 @@ export function acceptance(name, optionsOrCallback) {
           updateCurrentUser(userChanges);
         }
 
-        User.current().appEvents = getOwner(this).lookup("service:app-events");
+        User.current().appEvents =
+          getOwnerWithFallback(this).lookup("service:app-events");
         User.current().trackStatus();
       }
 
@@ -350,7 +351,7 @@ export function acceptance(name, optionsOrCallback) {
 
       resetSite(siteChanges);
 
-      this.container = getOwner(this);
+      this.container = getOwnerWithFallback(this);
 
       if (!this.owner) {
         this.owner = this.container;
@@ -433,7 +434,7 @@ export function controllerFor(controller, model) {
     }
   );
 
-  controller = getOwner(this).lookup("controller:" + controller);
+  controller = getOwnerWithFallback(this).lookup("controller:" + controller);
   if (model) {
     controller.set("model", model);
   }
