@@ -1010,6 +1010,9 @@ pl_PL:
     sequence_conflict_error:
       title: "błąd wersji roboczej"
       description: "Szkic jest edytowany w innym oknie. Załaduj ponownie tę stronę."
+    too_many_drafts:
+      title: "Zbyt wiele szkiców"
+      description: "Osiągnąłeś maksymalną liczbę dozwolonych szkiców. Usuń niektóre z [twoich szkiców](%{base_url}/my/activity/draft) i spróbuj ponownie."
   draft_backup:
     pm_title: "Kopie zapasowe wersje robocze z bieżących tematów"
     pm_body: "Temat zawierający kopie zapasowe"

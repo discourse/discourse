@@ -125,6 +125,8 @@ da:
       facebook: "Del på Facebook"
       email: "Send via e-mail"
       url: "Kopiér og del URL"
+    word_connector:
+      comma: ", "
     action_codes:
       public_topic: "Offentliggjorde dette emne %{when}"
       open_topic: "Konverterede dette til et emne %{when}"
@@ -136,6 +138,8 @@ da:
       removed_user: "Fjernede %{who} %{when}"
       removed_group: "Fjernede %{who} %{when}"
       autobumped: "Automatisk 'bumpet' %{when}"
+      tags_changed: "Mærker opdateret %{when}"
+      category_changed: "Kategori opdateret %{when}"
       autoclosed:
         enabled: "Lukket %{when}"
         disabled: "Åbnet %{when}"
@@ -368,6 +372,8 @@ da:
         search: "Søg efter en besked"
         placeholder: "indtast beskeds titel, url eller id her"
     review:
+      show_more: "Vis mere"
+      show_less: "Vis mindre"
       order_by: "Sorter efter"
       date_filter: "Skrevet mellem"
       in_reply_to: "som svar til"
@@ -495,6 +501,10 @@ da:
           title: "Afventende"
         approved:
           title: "Godkendt"
+        approved_user:
+          title: "Bruger godkendt"
+        approved_post:
+          title: "Indlæg godkendt"
         rejected:
           title: "Afvist"
         reviewed:
@@ -929,6 +939,8 @@ da:
       profile: "Profil"
       mute: "Ignorer"
       edit: "Redigér indstillinger"
+      download_archive:
+        title: "Eksporter dine data"
       new_private_message: "Ny Besked"
       private_message: "Besked"
       private_messages: "Beskeder"
@@ -1145,6 +1157,7 @@ da:
         tags: "Mærker"
         interface: "Grænseflade"
         apps: "Apps"
+        navigation_menu: "Navigationsmenu"
       change_password:
         success: "(e-mail sendt)"
         in_progress: "(sender e-mail)"
@@ -1641,6 +1654,8 @@ da:
       hide_session: "Måske senere"
       hide_forever: "nej tak"
       intro: "Hej! Det ser ud til, at du nyder diskussionen, men du har ikke tilmeldt dig en konto endnu."
+    offline_indicator:
+      no_internet: "Ingen internetforbindelse."
     summary:
       description:
         one: "Der er <b>%{count}</b> svar."
@@ -1648,6 +1663,7 @@ da:
       description_time_MF: |
         Der {replyCount, plural, one {er <b>#</b> svar} other {er <b>#</b> svar}} med en anslået læsetid på <b>{readingTime, plural, one {# minut} other {# minutter}}</b>.
       disable: "Vis alle indlæg"
+      short_label: "Top svar"
     deleted_filter:
       enabled_description: "Dette emne indeholder slettede indlæg, som er blevet skjult."
       disabled_description: "Slettede indlæg i emnet bliver vist."
@@ -1714,6 +1730,9 @@ da:
       username: "Bruger"
       password: "Adgangskode"
       show_password: "Vis"
+      hide_password: "Skjul"
+      show_password_title: "Vis adgangskode"
+      hide_password_title: "Skjul adgangskode"
       second_factor_title: "To-faktor godkendelse"
       second_factor_description: "Indtast venligst godkendelseskoden fra din app:"
       second_factor_backup: "Log ind ved hjælp af en backup kode"
@@ -1734,6 +1753,7 @@ da:
       blank_username_or_password: "Indtast venligst din e-mail eller dit brugernavn og adgangskode."
       reset_password: "Nulstil adgangskode"
       logging_in: "Logger ind..."
+      previous_sign_up: "Har du allerede en konto?"
       or: "Eller"
       authenticating: "Godkender..."
       awaiting_activation: "Din konto mangler at blive aktiveret. Brug “Jeg har glemt min adgangskode”-linket for at få en ny aktiverings-mail."
@@ -1897,6 +1917,8 @@ da:
       group_mentioned:
         one: "Ved at nævne %{group} sender du en notifikation til <a href='%{group_link}'>%{count} person</a> - vil du fortsætte?"
         other: "Ved at nævne %{group} sender du en notifikation til <a href='%{group_link}'>%{count} personer</a> - vil du fortsætte?"
+      cannot_see_group_mention:
+        not_mentionable: "Du kan ikke nævne gruppen @%{group}."
       duplicate_link: "Det ser ud til, at dit link til <b>%{domain}</b> allerede var sendt i emnet af <b>@ %{username}</b> i <a href='%{post_url}'>et svar på %{ago}</a> - er du sikker på, at du vil sende det igen?"
       reference_topic_title: "SV: %{title}"
       error:
@@ -2069,6 +2091,7 @@ da:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - afsluttet"
+      new_features: "Nye funktioner tilgængelige!"
       dismiss_confirmation:
         dismiss: "Ignorer Alle"
         cancel: "Afbryd"
@@ -2176,6 +2199,7 @@ da:
         status: "filtrerer efter emnestatus"
         full_search: "starter fuldsidesøgning"
         full_search_key: "%{modifier} + Enter"
+        me: "viser kun dine indlæg"
       advanced:
         title: Avancerede filtre
         posted_by:
@@ -2189,6 +2213,7 @@ da:
           label: Med Badge
         with_tags:
           label: Mærket
+          aria_label: Filtrer vha. mærker
         filters:
           label: Returner kun emner / indlæg ...
           title: Kun matchende i titel
@@ -2317,6 +2342,7 @@ da:
         tag: "Der er ikke flere %{tag} emner."
         top: "Der er ikke flere top emner"
         bookmarks: "Der er ikke flere bogmærkede emner."
+        filter: "Der er ikke flere emner."
     topic:
       filter_to:
         one: "%{count} indlæg i emnet"
@@ -2892,6 +2918,7 @@ da:
         updated: "Opdateret"
         name: "Navn"
         name_placeholder: "Hvad er dette bogmærke til?"
+        name_input_label: "Bogmærkenavn"
         set_reminder: "Påmind mig"
         options: "Indstillinger"
         actions:
@@ -2927,6 +2954,7 @@ da:
       back: "Tilbage til kategori"
       general: "Overordnet"
       settings: "Indstillinger"
+      topic_template: "Skabelon"
       tags: "Mærker"
       tags_allowed_tags: "Begræns disse mærker til denne kategori:"
       tags_allowed_tag_groups: "Begræns disse mærkegrupper til denne kategori:"
@@ -2937,6 +2965,7 @@ da:
       allow_global_tags_label: "Tillad også andre mærker"
       required_tag_group:
         delete: "Slet"
+        placeholder: "vælg mærkegruppe…"
       topic_featured_link_allowed: "Tillad fremhævede links i denne kategori"
       delete: "Slet kategori"
       create: "Ny kategori"
@@ -3153,14 +3182,17 @@ da:
         other {}}
     original_post: "Oprindeligt indlæg"
     views: "Visninger"
+    sr_views: "Sorter efter visninger"
     views_lowercase:
       one: "visning"
       other: "visninger"
     replies: "Svar"
+    sr_replies: "Sorter efter svar"
     views_long:
       one: "emnet er læst %{count} gang"
       other: "emnet er læst %{number} gange"
     activity: "Aktivitet"
+    sr_activity: "Sorter efter aktivitet"
     likes: "Likes"
     likes_lowercase:
       one: "like"
@@ -3383,6 +3415,7 @@ da:
       favorite_max_reached: "Du kan ikke favorisere flere emblemer."
       favorite_max_not_reached: "Markér dette emblem som favorit"
     download_calendar:
+      title: "Hent kalender"
       save_ics: "Hent .ics fil"
       save_google: "Tilføj til Google kalender"
       remember: "Spørg mig ikke igen"
@@ -3473,6 +3506,7 @@ da:
           title: "Lydløs"
           description: "Du vil ikke blive underrettet om noget vedr. nye emner med dette mærke, og de vises ikke på din ulæste fane."
       groups:
+        back_btn: "Tilbage til alle mærker"
         title: "Mærkegrupper"
         about_heading: "Vælg en mærkegruppe eller opret en ny"
         about_heading_empty: "Opret en ny mærkegruppe for at komme i gang"
@@ -3558,6 +3592,8 @@ da:
     fullscreen_table:
       expand_btn: "Udvid Tabel"
     sidebar:
+      show_sidebar: "Vis sidebjælke"
+      hide_sidebar: "Skjul sidebjælke"
       unread_count:
         one: "%{count} ulæst"
         other: "%{count} ulæste"
@@ -3574,12 +3610,19 @@ da:
         custom:
           save: "Gem"
           delete: "Slet"
+          more_menu: "Mere menu"
           links:
+            add: "Tilføj endnu et link"
+            delete: "Slet link"
             reset: "Nulstil til standard"
             icon:
               label: "Ikon"
+              validation:
+                blank: "Ikonet må ikke være tomt"
             name:
               label: "Navn"
+              validation:
+                blank: "Gruppenavnet kan ikke være tomt"
             value:
               label: "Link"
         about:
@@ -3614,6 +3657,7 @@ da:
               content: "Emblemer"
             topics:
               content: "Emner"
+              title: "Alle emner"
             faq:
               content: "OSS"
             groups:
@@ -3622,9 +3666,13 @@ da:
               content: "Brugere"
             my_posts:
               content: "Mine indlæg"
+              content_drafts: "Mine Kladder"
               title_drafts: "Mine uopslåede kladder"
             review:
               content: "Anmeldelse"
+      panels:
+        forum:
+          label: Forum
     until: "Indtil:"
     form_templates:
       errors:
@@ -3834,6 +3882,7 @@ da:
             Du kan også definere hvilke parametre der vil blive tilladt. Brug kommaer til at adskille flere værdier.
           title: Anvendelsesområder
           read_only: Læs kun
+          global: Globalt
           resource: Ressource
           action: Handling
           allowed_parameters: Tilladte parametre
@@ -3966,6 +4015,7 @@ da:
         enabled: "Aktiveret?"
         is_enabled: "J"
         not_enabled: "N"
+        change_settings: "Plugin Indstillinger"
         change_settings_short: "Indstillinger"
         howto: "Hvordan installerer jeg plugins?"
         official: "Officielt plugin"
@@ -4046,6 +4096,7 @@ da:
         title: "Tilpasning"
         preview: "forhåndsvisning"
         explain_preview: "Se sitet med dette tema slået til"
+        syntax_error: "Syntaksfejl"
         save: "Gem"
         new: "Ny"
         new_style: "Ny style"
@@ -4575,6 +4626,7 @@ da:
           replace: "Erstat ord i indlæg med andre ord."
           link: "Erstat ord i indlæg med links."
         form:
+          label: "Har ord eller sætning"
           placeholder: "Indtast ord eller sætning (* er et jokertegn)"
           placeholder_regexp: "almindelig udtryk"
           replace_label: "Erstatning"
@@ -4594,10 +4646,17 @@ da:
           no_matches: "Ingen match fundet"
       form_templates:
         nav_title: "Skabeloner"
+        title: "Formular Skabeloner"
+        new_template: "Ny Skabelon"
         list_table:
           headings:
             name: "Navn"
+            active_categories: "Aktive kategorier"
             actions: "Handlinger"
+          actions:
+            view: "Vis Skabelon"
+            edit: "Rediger Skabelon"
+            delete: "Slet Skabelon"
         view_template:
           close: "Luk"
           edit: "Redigér"
@@ -4605,11 +4664,20 @@ da:
         new_template_form:
           submit: "Gem"
           cancel: "Annuller"
+          template:
+            label: "Skabelon"
+            placeholder: "Opret en YAML skabelon her..."
           preview: "Forhåndsvisning"
         quick_insert_fields:
           add_new_field: "Tilføj"
+          checkbox: "Afkrydsningsfelt"
+          input: "Kort svar"
+          textarea: "Langt svar"
           dropdown: "Rulleboks"
+          upload: "Overfør en fil"
         validations_modal:
+          button_title: "Valideringer"
+          modal_title: "Valideringsindstillinger"
           table_headers:
             key: "Nøgle"
             type: "Type"
@@ -4619,10 +4687,20 @@ da:
               key: "krævet"
             minimum:
               key: "minimum"
+              type: "heltal"
             maximum:
               key: "maksimum"
+              type: "heltal"
+            pattern:
+              key: "mønster"
             type:
               key: "type"
+              type: "streng"
+        field_placeholders:
+          choices:
+            first: "Mulighed 1"
+            second: "Mulighed 2"
+            third: "Mulighed 3"
       impersonate:
         title: "Skift personlighed"
         help: "Brug dette værktøj til at udgive dig for en anden bruger til brug for debugging. Du skal logge ud når du er færdig."
@@ -4942,6 +5020,8 @@ da:
         locale: "Sprog:"
         more_than_50_results: "Der er mere end 50 resultater. Begræns din søgning."
         outdated:
+          old_default: "Gammel standard"
+          new_default: "Ny standard"
           dismiss: "Ignorer Alle"
       settings:
         show_overriden: "Vis kun tilsidesatte"
@@ -5165,6 +5245,7 @@ da:
       next: "Næste"
       step-text: "Trin"
       step: "%{current} af %{total}"
+      upload: "Overfør en fil"
       uploading: "Overfører…"
       upload_error: "Beklager, der opstod en fejl under overførsel af filen. Prøv venligst igen."
       staff_count:

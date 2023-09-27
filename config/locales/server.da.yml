@@ -793,6 +793,8 @@ da:
     sequence_conflict_error:
       title: "kladdefejl"
       description: "Kladde redigeres i et andet vindue. Genindlæs venligst denne side."
+    too_many_drafts:
+      title: "For mange kladder"
   draft_backup:
     pm_title: "Sikkerhedskopiér Kladder fra igangværende emner"
     pm_body: "Emne, der indeholder backup-kladder"

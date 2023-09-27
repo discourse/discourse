@@ -70,6 +70,7 @@ tr_TR:
       about_json: "İçe Aktarma Hatası: about.json mevcut değil veya geçersiz. Bunun bir Discourse Teması olduğundan emin misiniz?"
       about_json_values: "about.json geçersiz değerler içeriyor: %{errors}"
       modifier_values: "about.json değiştiricileri geçersiz değerler içeriyor: %{errors}"
+      theme_too_big: "Tema %{limit} sınırından büyük"
       git: "Git deposu klonlanırken hata oluştu, erişim reddedildi veya depo bulunamadı"
       git_ref_not_found: "Git referansı kontrol edilemiyor: %{ref}"
       git_unsupported_scheme: "Git deposu klonlanamıyor: Şema desteklenmiyor"
@@ -898,6 +899,8 @@ tr_TR:
     sequence_conflict_error:
       title: "taslak hatası"
       description: "Taslak başka bir pencerede düzenleniyor. Lütfen bu sayfayı yeniden yükleyin."
+    too_many_drafts:
+      title: "Çok fazla taslak"
   draft_backup:
     pm_title: "Açık konulardaki Taslakları yedekle"
     pm_body: "Yedek taslak içeren konu"
