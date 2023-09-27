@@ -265,6 +265,16 @@ class Admin::ThemesController < Admin::AdminController
     respond_to { |format| format.json { head :no_content } }
   end
 
+  def bulk_destroy
+    themes = Theme.where(id: params[:theme_ids])
+    raise Discourse::InvalidParameters.new(:id) unless themes.present?
+
+    themes.each { |theme| StaffActionLogger.new(current_user).log_theme_destroy(theme) }
+    themes.destroy_all
+
+    respond_to { |format| format.json { head :no_content } }
+  end
+
   def show
     @theme = Theme.include_relations.find_by(id: params[:id])
     raise Discourse::InvalidParameters.new(:id) unless @theme

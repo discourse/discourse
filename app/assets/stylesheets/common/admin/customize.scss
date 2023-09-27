@@ -266,10 +266,14 @@
       border-bottom: 1px solid var(--primary-low);
       display: flex;
 
+      .select-inactive-mode-label {
+        color: var(--tertiary);
+        font-weight: bold;
+      }
+
       &.inactive-theme {
         color: var(--primary-high);
         background: var(--primary-very-low);
-        font-size: var(--font-down-1);
         &:not(.selected):hover {
           color: var(--primary);
         }
@@ -284,6 +288,11 @@
         span.empty {
           padding-left: 0.33em;
           padding-top: 1em;
+        }
+        .btn.select-inactive-mode {
+          padding-left: 0;
+          padding-top: 0;
+          padding-bottom: 0;
         }
       }
       &:not(.inactive-indicator):not(.selected):hover {
@@ -319,10 +328,24 @@
       .info {
         overflow: hidden;
         display: flex;
-        font-size: var(--font-up-1);
-
+        align-items: center;
+        height: 2em;
         .icons {
           margin-left: auto;
+        }
+
+        .cancel-select-inactive-mode {
+          margin-left: auto;
+        }
+        .btn-delete {
+          font-size: var(--font-down-1);
+          margin-left: 0.5em;
+          svg {
+            margin-right: 0.5em;
+          }
+        }
+        input {
+          margin-top: 0;
         }
       }
 

@@ -7,6 +7,41 @@ describe "Admin Customize Themes", type: :system do
 
   before { sign_in(admin) }
 
+  describe "when visiting the page to customize themes" do
+    fab!(:theme_2) { Fabricate(:theme) }
+    fab!(:theme_3) { Fabricate(:theme) }
+    let(:admin_customize_themes_page) { PageObjects::Pages::AdminCustomizeThemes.new }
+    let(:delete_themes_confirm_modal) { PageObjects::Modals::DeleteThemesConfirm.new }
+
+    it "should allow admin to bulk delete inactive themes" do
+      visit("/admin/customize/themes")
+
+      expect(admin_customize_themes_page).to have_inactive_themes
+
+      admin_customize_themes_page.click_select_inactive_mode
+      expect(admin_customize_themes_page).to have_inactive_themes_selected(count: 0)
+      admin_customize_themes_page.toggle_all_inactive
+      expect(admin_customize_themes_page).to have_inactive_themes_selected(count: 3)
+
+      admin_customize_themes_page.cancel_select_inactive_mode
+      expect(admin_customize_themes_page).to have_select_inactive_mode_button
+
+      admin_customize_themes_page.click_select_inactive_mode
+      expect(admin_customize_themes_page).to have_disabled_delete_theme_button
+
+      admin_customize_themes_page.toggle_all_inactive
+
+      admin_customize_themes_page.click_delete_themes_button
+
+      expect(delete_themes_confirm_modal).to have_theme("Cool theme 1")
+      expect(delete_themes_confirm_modal).to have_theme("Cool theme 2")
+      expect(delete_themes_confirm_modal).to have_theme("Cool theme 3")
+      delete_themes_confirm_modal.confirm
+
+      expect(admin_customize_themes_page).to have_no_inactive_themes
+    end
+  end
+
   describe "when visiting the page to customize the theme" do
     it "should allow admin to update the color scheme of the theme" do
       visit("/admin/customize/themes/#{theme.id}")

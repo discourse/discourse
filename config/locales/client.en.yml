@@ -5111,6 +5111,8 @@ en:
         install: "Install"
         delete: "Delete"
         delete_confirm: 'Are you sure you want to delete "%{theme_name}"?'
+        bulk_delete: 'Are you sure?'
+        bulk_delete_confirm: "This will uninstall the following themes / components, they will no longer be useable by any users on your site:"
         color: "Color"
         opacity: "Opacity"
         copy: "Duplicate"
@@ -5181,6 +5183,8 @@ en:
           convert_theme_tooltip: "Convert this theme to component"
           inactive_themes: "Inactive themes:"
           inactive_components: "Unused components:"
+          selected: "%{count} selected"
+          cancel: "Cancel"
           broken_theme_tooltip: "This theme has errors in its CSS, HTML or YAML"
           disabled_component_tooltip: "This component has been disabled"
           default_theme_tooltip: "This theme is the site's default theme"

@@ -3,16 +3,19 @@ import { inject as service } from "@ember/service";
 import { equal, gt, gte } from "@ember/object/computed";
 import { COMPONENTS, THEMES } from "admin/models/theme";
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
+import DeleteThemesConfirm from "discourse/components/modal/delete-themes-confirm";
 
 @classNames("themes-list")
 export default class ThemesList extends Component {
   @service router;
+  @service modal;
 
   THEMES = THEMES;
   COMPONENTS = COMPONENTS;
   filterTerm = null;
+  selectInactiveMode = false;
 
   @gt("themesList.length", 0) hasThemes;
 
@@ -40,6 +43,7 @@ export default class ThemesList extends Component {
     "currentTab",
     "themesList.@each.user_selectable",
     "themesList.@each.default",
+    "themesList.@each.markedToDelete",
     "filterTerm"
   )
   inactiveThemes(themes) {
@@ -54,6 +58,16 @@ export default class ThemesList extends Component {
       );
     }
     return this._filterThemes(results, this.filterTerm);
+  }
+
+  @discourseComputed("themesList.@each.markedToDelete")
+  selectedThemesOrComponents() {
+    return this.themesList.filter((theme) => theme.markedToDelete);
+  }
+
+  @discourseComputed("themesList.@each.markedToDelete")
+  selectedCount() {
+    return this.selectedThemesOrComponents.length;
   }
 
   @discourseComputed(
@@ -84,6 +98,18 @@ export default class ThemesList extends Component {
     }
     return this._filterThemes(results, this.filterTerm);
   }
+  @discourseComputed("themesList.@each.markedToDelete")
+  someInactiveSelected() {
+    return (
+      this.selectedCount > 0 &&
+      this.selectedCount !== this.inactiveThemes.length
+    );
+  }
+
+  @discourseComputed("themesList.@each.markedToDelete")
+  allInactiveSelected() {
+    return this.selectedCount === this.inactiveThemes.length;
+  }
 
   _filterThemes(themes, term) {
     term = term?.trim()?.toLowerCase();
@@ -93,9 +119,17 @@ export default class ThemesList extends Component {
     return themes.filter(({ name }) => name.toLowerCase().includes(term));
   }
 
+  @bind
+  toggleInactiveMode(event) {
+    event?.preventDefault();
+    this.inactiveThemes.forEach((theme) => theme.set("markedToDelete", false));
+    this.toggleProperty("selectInactiveMode");
+  }
+
   @action
   changeView(newTab) {
     if (newTab !== this.currentTab) {
+      this.set("selectInactiveMode", false);
       this.set("currentTab", newTab);
       if (!this.showFilter) {
         this.set("filterTerm", null);
@@ -106,5 +140,41 @@ export default class ThemesList extends Component {
   @action
   navigateToTheme(theme) {
     this.router.transitionTo("adminCustomizeThemes.show", theme);
+  }
+
+  @action
+  toggleAllInactive() {
+    const markedToDelete = this.selectedCount === 0;
+    this.inactiveThemes.forEach((theme) =>
+      theme.set("markedToDelete", markedToDelete)
+    );
+  }
+
+  @action
+  deleteConfirmation() {
+    this.modal.show(DeleteThemesConfirm, {
+      model: {
+        themes: this.selectedThemesOrComponents,
+        refreshAfterDelete: () => {
+          this.set("selectInactiveMode", false);
+          if (this.themesTabActive) {
+            this.set(
+              "themes",
+              this.themes.filter(
+                (theme) => !this.selectedThemesOrComponents.includes(theme)
+              )
+            );
+          } else {
+            this.set(
+              "components",
+              this.components.filter(
+                (component) =>
+                  !this.selectedThemesOrComponents.includes(component)
+              )
+            );
+          }
+        },
+      },
+    });
   }
 }

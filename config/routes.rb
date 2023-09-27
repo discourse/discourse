@@ -230,6 +230,7 @@ Discourse::Application.routes.draw do
           post "import" => "themes#import"
           post "upload_asset" => "themes#upload_asset"
           post "generate_key_pair" => "themes#generate_key_pair"
+          delete "bulk_destroy" => "themes#bulk_destroy"
         end
       end
 
