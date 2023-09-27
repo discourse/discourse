@@ -16,9 +16,6 @@ globalThis.console = {
   },
 };
 
-import getRandomValues from "polyfill-crypto.getrandomvalues";
-globalThis.crypto = { getRandomValues };
-
 import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
 import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
 import * as EmberTemplateCompiler from "ember-source/dist/ember-template-compiler";
@@ -28,6 +25,9 @@ import { minify as terserMinify } from "terser";
 import RawHandlebars from "discourse-common/addon/lib/raw-handlebars";
 import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
 import EmberThisFallback from "ember-this-fallback";
+
+import getRandomValues from "polyfill-crypto.getrandomvalues";
+globalThis.crypto = { getRandomValues };
 import { Preprocessor } from "content-tag";
 
 const thisFallbackPlugin = EmberThisFallback._buildPlugin({
