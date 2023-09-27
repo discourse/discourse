@@ -33,4 +33,19 @@ describe "Topic page", type: :system do
       end
     end
   end
+
+  context "with a post containing a code block" do
+    before { Fabricate(:post, topic: topic, raw: <<~RAW) }
+      this a code block
+      ```
+      echo "hello world"
+      ```
+      RAW
+
+    it "includes the copy button" do
+      visit("/t/#{topic.slug}/#{topic.id}")
+
+      expect(".codeblock-button-wrapper").to be_present
+    end
+  end
 end
