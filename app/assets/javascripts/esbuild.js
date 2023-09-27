@@ -57,7 +57,7 @@ esbuild
   .build({
     logLevel: "warning",
     bundle: true,
-    // minify: true,
+    minify: true,
     alias: {
       util: "./app/assets/javascripts/node_modules/@zxing/text-encoding",
     },
