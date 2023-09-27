@@ -114,9 +114,7 @@ class UsersController < ApplicationController
   end
 
   def show(for_card: false)
-    if SiteSetting.hide_user_profiles_from_public && !current_user
-      raise Discourse::NotFound.new(custom_message: "invalid_access", status: 403)
-    end
+    guardian.ensure_public_can_see_profiles!
 
     @user =
       fetch_user_from_params(
@@ -165,9 +163,7 @@ class UsersController < ApplicationController
 
   # This route is not used in core, but is used by theme components (e.g. https://meta.discourse.org/t/144479)
   def cards
-    if SiteSetting.hide_user_profiles_from_public && !current_user
-      raise Discourse::NotFound.new(custom_message: "invalid_access", status: 403)
-    end
+    guardian.ensure_public_can_see_profiles!
 
     user_ids = params.require(:user_ids).split(",").map(&:to_i)
     raise Discourse::InvalidParameters.new(:user_ids) if user_ids.length > 50
@@ -496,6 +492,8 @@ class UsersController < ApplicationController
   end
 
   def summary
+    guardian.ensure_public_can_see_profiles!
+
     @user =
       fetch_user_from_params(
         include_inactive:
