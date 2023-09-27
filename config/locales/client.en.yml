@@ -1076,6 +1076,7 @@ en:
     user:
       said: "%{username}:"
       profile: "Profile"
+      profile_posessive: "%{username}'s profile"
       mute: "Mute"
       edit: "Edit Preferences"
       download_archive:
