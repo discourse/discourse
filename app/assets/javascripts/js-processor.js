@@ -15,6 +15,12 @@ globalThis.console = {
     rails.logger.error(CONSOLE_PREFIX + args.join(" "));
   },
 };
+globalThis.process = process;
+// globalThis.global = globalThis;
+
+// import crypto from "crypto";
+import getRandomValues from "polyfill-crypto.getrandomvalues";
+globalThis.crypto = { getRandomValues };
 
 import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
 import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
@@ -25,10 +31,17 @@ import { minify as terserMinify } from "terser";
 import RawHandlebars from "discourse-common/addon/lib/raw-handlebars";
 import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
 import EmberThisFallback from "ember-this-fallback";
-import {
-  preprocessEmbeddedTemplates,
-  babelPlugin as templateImportsPlugin,
-} from "ember-template-imports";
+// import {
+//   preprocessEmbeddedTemplates,
+//   babelPlugin as templateImportsPlugin,
+// } from "ember-template-imports";
+// import { TextDecoder, TextEncoder } from "@zxing/text-encoding";
+// const util = require("util");
+// throw util;
+// util.TextDecoder = TextDecoder;
+// util.TextEncoder = TextEncoder;
+import { Preprocessor } from "content-tag";
+// const output = p.process("<template>Hi</template>");
 
 const thisFallbackPlugin = EmberThisFallback._buildPlugin({
   enableLogging: false,
@@ -91,7 +104,7 @@ function buildTemplateCompilerBabelPlugins({ themeId }) {
   }
 
   return [
-    templateImportsPlugin,
+    // templateImportsPlugin,
     colocatedBabelPlugin,
     WidgetHbsCompiler,
     [
@@ -134,16 +147,17 @@ globalThis.transpile = function (source, options = {}) {
   const plugins = [];
 
   // if (GJS) {
-  const templateTagConfig = {
-    getTemplateLocalsExportPath: "_GlimmerSyntax.getTemplateLocals",
-    templateTag: "template",
-    templateTagReplacement: "__GLIMMER_TEMPLATE",
-    includeSourceMaps: false,
-    includeTemplateTokens: true,
-    relativePath: filename, // TODO?
-    getTemplateLocalsRequirePath: EmberTemplateCompiler,
-  };
-  source = preprocessEmbeddedTemplates(source, templateTagConfig).output;
+  // const templateTagConfig = {
+  //   getTemplateLocalsExportPath: "_GlimmerSyntax.getTemplateLocals",
+  //   templateTag: "template",
+  //   templateTagReplacement: "__GLIMMER_TEMPLATE",
+  //   includeSourceMaps: false,
+  //   includeTemplateTokens: true,
+  //   relativePath: filename, // TODO?
+  //   getTemplateLocalsRequirePath: EmberTemplateCompiler,
+  // };
+  const p = new Preprocessor();
+  source = p.process(source);
   // }
 
   plugins.push(...buildTemplateCompilerBabelPlugins({ themeId }));

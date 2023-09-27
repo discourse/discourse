@@ -58,12 +58,21 @@ esbuild
     logLevel: "warning",
     bundle: true,
     // minify: true,
-    external: ["fs", "util"],
-    alias: {
-      path: "./app/assets/javascripts/node_modules/path-browserify",
-      // crypto: "./app/assets/javascripts/node_modules/crypto-browserify",
+    external: ["fs"],
+    banner: {
+      js: "global = globalThis;\n",
     },
-    define: { process: `{"env": {}}` },
+    alias: {
+      // crypto: "./app/assets/javascripts/node_modules/crypto-browserify",
+      path: "./app/assets/javascripts/node_modules/path-browserify",
+      // stream: "./app/assets/javascripts/node_modules/stream",
+      util: "./app/assets/javascripts/node_modules/@zxing/text-encoding",
+    },
+    define: {
+      process: `{ "env": {} }`,
+      // , "versions": { "node": "_discourse_stub" }
+      __filename: `"_discourse_filename_stub"`,
+    },
     entryPoints: ["./app/assets/javascripts/js-processor.js"],
     // platform: "node",
     outfile: argv[2],
