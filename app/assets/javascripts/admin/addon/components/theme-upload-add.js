@@ -4,6 +4,7 @@ import { tracked } from "@glimmer/tracking";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
 import { isEmpty } from "@ember/utils";
+import { extractError } from "discourse/lib/ajax-error";
 
 const THEME_FIELD_VARIABLE_TYPE_IDS = [2, 3, 4];
 const SCSS_VARIABLE_NAMES = [
@@ -108,7 +109,7 @@ export default class ThemeUploadAdd extends Component {
       this.args.model.addUpload(upload);
       this.args.closeModal();
     } catch (e) {
-      this.flash = e.jqXHR.responseJSON.errors.join(". ");
+      this.flash = extractError(e);
     }
   }
 }
