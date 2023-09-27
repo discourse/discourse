@@ -87,8 +87,7 @@ sk:
           title: "Načítavanie"
         empty_state:
           title: "Prázdny stav"
-        rich_tooltip:
-          title: "Rozšírená nápoveda"
+        tooltips:
           description: "Popis"
           header: "Hlavička"
           hover_to_see: "Ak chcete zobraziť nápovedu, prejdite myšou"

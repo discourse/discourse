@@ -87,8 +87,8 @@ fa_IR:
           title: "اسپینرها"
         empty_state:
           title: "حالت خالی"
-        rich_tooltip:
-          description: "توضیحات"
+        tooltips:
+          description: "توضیح"
           header: "سربرگ"
         char_counter:
           placeholder: "متن خود را اینجا وارد کنید..."

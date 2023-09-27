@@ -2718,9 +2718,7 @@ sv:
           false { eller <a href="{basePath}/latest">visa senaste ämnen</a>}
           other {}
         }
-      bumped_at_title: |
-        Första inlägget: %{createdAtDate}
-        Upplagt: %{bumpedAtDate}
+      bumped_at: "Senaste: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Bläddra bland alla kategorier</a> eller <a href='%{basePath}/latest'>visa senaste ämnen</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Bläddra bland alla kategorier</a>, <a href='%{basePath}/latest'>visa senaste ämnen</a> eller se toppämnen:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Bläddra bland alla taggar</a> eller <a href='%{basePath}/latest'>visa senaste ämnen</a>."

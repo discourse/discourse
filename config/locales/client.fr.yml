@@ -2719,9 +2719,7 @@ fr:
           false { ou <a href="{basePath}/latest">consultez les derniers sujets</a>}
           other {}
         }
-      bumped_at_title: |
-        Premier message : %{createdAtDate}
-        Publié : %{bumpedAtDate}
+      bumped_at: "Dernière sauvegarde : %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Parcourez toutes les catégories</a> ou <a href='%{basePath}/latest'>consultez les derniers sujets</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Parcourez toutes les catégories</a>, <a href='%{basePath}/latest'>consultez les derniers sujets</a> ou consultez les principaux sujets :"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Parcourez toutes les étiquettes</a> ou <a href='%{basePath}/latest'>consultez les derniers sujets</a>."

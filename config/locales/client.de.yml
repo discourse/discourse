@@ -2768,9 +2768,7 @@ de:
           false { Oder <a href="{basePath}/latest">sieh dir die aktuellen Themen an</a>}
           other {}
         }
-      bumped_at_title: |
-        Erster Beitrag: %{createdAtDate}
-        Gepostet: %{bumpedAtDate}
+      bumped_at: "Letztes: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Durchstöbere alle Kategorien</a> oder <a href='%{basePath}/latest'>sieh dir die aktuellen Themen an</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Durchstöbere alle Kategorien</a>, <a href='%{basePath}/latest'>sieh dir die aktuellen Themen</a> oder die Top-Themen an:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Durchstöbere alle Schlagwörter</a> oder <a href='%{basePath}/latest'>sieh dir die aktuellen Themen an</a>."
@@ -3188,6 +3186,7 @@ de:
         create: "Entschuldige, es gab einen Fehler beim Anlegen des Beitrags. Bitte versuche es noch einmal."
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Bitte versuche es noch einmal."
         upload: "Entschuldige, beim Hochladen von %{file_name} ist leider ein Fehler aufgetreten. Bitte versuche es noch einmal."
+        backup_too_large: "Leider ist die Backup-Datei zu groß."
         file_too_large: "Entschuldige, die Datei ist zu groß (die maximale Größe beträgt %{max_size_kb} KB). Wie wäre es, die Datei bei einem Cloud-Sharing-Service hochzuladen und dann den Link einzufügen?"
         file_size_zero: "Entschuldigung, es sieht so aus, als ob etwas schiefgelaufen ist. Die Datei, die du hochladen möchtest, ist 0 Byte groß. Bitte versuche es erneut."
         file_too_large_humanized: "Entschuldigung, diese Datei ist zu groß (die maximale Größe beträgt %{max_size}). Lade deine große Datei bitte bei einem Cloud-Sharing-Dienst hoch und füge den Link ein."
@@ -5729,6 +5728,7 @@ de:
         show_outdated: "Nur veraltete/ungültige Elemente anzeigen"
         locale: "Sprache:"
         more_than_50_results: "Es gibt mehr als 50 Ergebnisse. Bitte grenze deine Suche weiter ein."
+        no_results: "Keine passenden Website-Texte gefunden"
         interpolation_keys: "Verfügbare Variablennamen:"
         outdated:
           title: "Diese Übersetzung ist veraltet"

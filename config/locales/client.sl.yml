@@ -2176,6 +2176,7 @@ sl:
       options: "Možnosti teme"
       show_links: "pokaži povezave v tej temi"
       unread_indicator: "Noben član ni še prebral zadnjega prispevka v tej temi."
+      bumped_at: "Zadnja: %{date}"
       deleted: "Tema je bila izbrisana"
       slow_mode_update:
         title: "Počasni način"
