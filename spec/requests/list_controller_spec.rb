@@ -226,10 +226,11 @@ RSpec.describe ListController do
 
     context "with lazy_load_categories" do
       fab!(:category) { Fabricate(:category) }
+      fab!(:subcategory) { Fabricate(:category, parent_category: category) }
 
-      before { topic.update!(category: category) }
+      before { topic.update!(category: subcategory) }
 
-      it "returns categories if true" do
+      it "returns categories and parent categories if true" do
         SiteSetting.lazy_load_categories = true
 
         get "/latest.json"
@@ -237,8 +238,10 @@ RSpec.describe ListController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["topic_list"]["topics"].length).to eq(1)
         expect(response.parsed_body["topic_list"]["topics"][0]["id"]).to eq(topic.id)
-        expect(response.parsed_body["categories"].length).to eq(1)
-        expect(response.parsed_body["categories"][0]["id"]).to eq(topic.category_id)
+        expect(response.parsed_body["topic_list"]["categories"].length).to eq(2)
+        expect(
+          response.parsed_body["topic_list"]["categories"].map { |c| c["id"] },
+        ).to contain_exactly(category.id, subcategory.id)
       end
 
       it "does not return categories if not true" do
@@ -249,7 +252,7 @@ RSpec.describe ListController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["topic_list"]["topics"].length).to eq(1)
         expect(response.parsed_body["topic_list"]["topics"][0]["id"]).to eq(topic.id)
-        expect(response.parsed_body["categories"]).to eq(nil)
+        expect(response.parsed_body["topic_list"]["categories"]).to eq(nil)
       end
     end
   end

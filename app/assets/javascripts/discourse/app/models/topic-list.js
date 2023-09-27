@@ -169,8 +169,8 @@ TopicList.reopenClass({
     const users = extractByKey(result.users, User);
     const groups = extractByKey(result.primary_groups, EmberObject);
 
-    if (result.categories) {
-      result.categories.forEach((c) => {
+    if (result.topic_list.categories) {
+      result.topic_list.categories.forEach((c) => {
         Site.current().updateCategory(c);
       });
     }
