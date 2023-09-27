@@ -44,12 +44,13 @@ export default class Reseed extends Component {
         },
         type: "POST",
       });
+
+      this.flash = null;
+      this.args.closeModal();
     } catch {
       this.flash = I18n.t("generic_error");
     } finally {
       this.reseeding = false;
-      this.flash = null;
-      this.args.closeModal();
     }
   }
 }

@@ -27,8 +27,8 @@ export default class EditUserDirectoryColumns extends Component {
       this.columns = response.directory_columns
         .sort((a, b) => (a.position > b.position ? 1 : -1))
         .map((c) => ({ ...c, enabled: Boolean(c.enabled) }));
-    } catch {
-      popupAjaxError;
+    } catch (e) {
+      popupAjaxError(e);
     }
   }
 
