@@ -63,18 +63,13 @@ esbuild
       js: "global = globalThis;\n",
     },
     alias: {
-      // crypto: "./app/assets/javascripts/node_modules/crypto-browserify",
       path: "./app/assets/javascripts/node_modules/path-browserify",
-      // stream: "./app/assets/javascripts/node_modules/stream",
       util: "./app/assets/javascripts/node_modules/@zxing/text-encoding",
     },
     define: {
       process: `{ "env": {} }`,
-      // , "versions": { "node": "_discourse_stub" }
-      __filename: `"_discourse_filename_stub"`,
     },
     entryPoints: ["./app/assets/javascripts/js-processor.js"],
-    // platform: "node",
     outfile: argv[2],
     plugins: [wasmPlugin],
   })
