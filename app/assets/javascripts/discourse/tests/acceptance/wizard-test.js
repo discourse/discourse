@@ -5,6 +5,7 @@ import {
   fillIn,
   visit,
 } from "@ember/test-helpers";
+import "discourse/routes/wizard";
 import { test } from "qunit";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 

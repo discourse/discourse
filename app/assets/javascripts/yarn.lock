@@ -1191,6 +1191,16 @@
     ember-cli-version-checker "^5.1.2"
     semver "^7.3.5"
 
+"@ember/test-waiters@^3.0.2":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@ember/test-waiters/-/test-waiters-3.1.0.tgz#61399919cbf793978da0b8bfdfdb7bca0cb80e9e"
+  integrity sha512-bb9h95ktG2wKY9+ja1sdsFBdOms2lB19VWs8wmNpzgHv1NCetonBoV5jHBV4DHt0uS1tg9z66cZqhUVlYs96KQ==
+  dependencies:
+    calculate-cache-key-for-tree "^2.0.0"
+    ember-cli-babel "^7.26.6"
+    ember-cli-version-checker "^5.1.2"
+    semver "^7.3.5"
+
 "@embroider/addon-shim@^1.0.0", "@embroider/addon-shim@^1.8.3", "@embroider/addon-shim@^1.8.4", "@embroider/addon-shim@^1.8.7":
   version "1.8.7"
   resolved "https://registry.yarnpkg.com/@embroider/addon-shim/-/addon-shim-1.8.7.tgz#ba2dcb0647ed2cb0c500c835326266b89ceec595"
@@ -1303,6 +1313,14 @@
     lodash "^4.17.21"
     resolve "^1.20.0"
     semver "^7.3.2"
+
+"@embroider/router@^2.1.4":
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/@embroider/router/-/router-2.1.5.tgz#8f96b7a563138790abcb56fffc352a7092ac2387"
+  integrity sha512-N62xwql7jDlpTn5/QEhTFS23p9xU4AchImlUrnnNZGK9BDg+9tmIU6y1boY2Z5zj+62btwMnh0JMV75ORnDyCA==
+  dependencies:
+    "@ember/test-waiters" "^3.0.2"
+    "@embroider/addon-shim" "^1.8.7"
 
 "@embroider/shared-internals@2.5.1", "@embroider/shared-internals@^2.0.0", "@embroider/shared-internals@^2.5.1":
   version "2.5.1"

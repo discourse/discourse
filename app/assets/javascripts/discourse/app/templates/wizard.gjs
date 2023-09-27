@@ -1,6 +1,6 @@
 import RouteTemplate from "ember-route-template";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
-import DiscourseLogo from "../components/discourse-logo";
+import DiscourseLogo from "discourse/static/wizard/components/discourse-logo";
 
 export default RouteTemplate(<template>
   {{hideApplicationFooter}}

@@ -1,4 +1,5 @@
 import { click, visit } from "@ember/test-helpers";
+import "discourse/routes/wizard";
 import { test } from "qunit";
 import Sinon from "sinon";
 import {
