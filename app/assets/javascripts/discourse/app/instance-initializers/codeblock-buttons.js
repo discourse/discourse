@@ -23,7 +23,12 @@ export default {
           return;
         }
 
-        const post = helper.getModel();
+        const post = helper.getModel?.();
+
+        if (!post) {
+          return;
+        }
+
         const cb = new CodeblockButtons({
           showFullscreen: true,
           showCopy: true,
