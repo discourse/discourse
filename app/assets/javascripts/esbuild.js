@@ -68,8 +68,4 @@ esbuild
     outfile: argv[2],
     plugins: [wasmPlugin],
   })
-  .then(async () => {
-    const data = await fs.promises.readFile(argv[2], { encoding: "utf8" });
-    const newData = data.replace(/module.require/g, "__require");
-    await fs.promises.writeFile(argv[2], newData);
-  });
+  .then(() => {});
