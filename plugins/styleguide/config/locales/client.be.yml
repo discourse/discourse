@@ -24,8 +24,8 @@ be:
           title: "Паведамленне"
         suggested_topics:
           title: "Прапанаваныя тэмы"
-        rich_tooltip:
-          description: "апісанне"
+        tooltips:
+          description: "Апісанне"
           header: "Header"
         char_counter:
           placeholder: "Увядзіце свой тэкст тут..."

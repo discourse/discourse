@@ -157,6 +157,7 @@ pl_PL:
         few: "%{first_identifier} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
         many: "%{first_identifier} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
         other: "%{first_identifier} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
+      invite: "Zaproś do kanału"
       without_membership: "%{first_identifier} nie dołączył(a) do tego kanału."
       without_membership_multiple:
         one: "%{first_identifier} i %{count} inny użytkownik nie dołączył do tego kanału."

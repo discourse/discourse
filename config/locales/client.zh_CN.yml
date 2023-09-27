@@ -2627,9 +2627,7 @@ zh_CN:
           false {或<a href="{basePath}/latest">查看最新话题</a>}
           other {}
         }
-      bumped_at_title: |
-        第一篇帖子：%{createdAtDate}
-        发布日期：%{bumpedAtDate}
+      bumped_at: "最新：%{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>浏览所有类别</a>或<a href='%{basePath}/latest'>查看最新话题</a>。"
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>浏览所有类别</a>、<a href='%{basePath}/latest'>查看最新话题</a>或查看热门话题："
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>浏览所有标签</a>或<a href='%{basePath}/latest'>查看最新话题</a>。"
@@ -3023,6 +3021,7 @@ zh_CN:
         create: "抱歉，创建您的帖子时出错。请重试。"
         edit: "抱歉，编辑您的帖子时出错。请重试。"
         upload: "抱歉，上传 %{file_name} 时出错。请重试。"
+        backup_too_large: "抱歉，该备份文件太大。"
         file_too_large: "抱歉，该文件太大（大小上限为 %{max_size_kb}KB）。为什么不将您的大文件上传到云共享服务，然后粘贴链接呢？"
         file_size_zero: "抱歉，好像出了点问题，您要上传的文件是 0 字节。请再试一次。"
         file_too_large_humanized: "抱歉，该文件太大（大小上限为 %{max_size}）。为什么不将您的大文件上传到云共享服务，然后粘贴链接呢？"
@@ -3648,6 +3647,7 @@ zh_CN:
         print: "%{shortcut} 打印话题"
         defer: "%{shortcut} 延迟话题"
         topic_admin_actions: "%{shortcut} 打开话题管理员操作"
+        archive_private_message: "%{shortcut} 切换存档私信"
       search_menu:
         title: "搜索菜单"
         prev_next: "%{shortcut} 上下移动所选内容"
@@ -5503,6 +5503,7 @@ zh_CN:
         show_outdated: "仅显示过期/无效"
         locale: "语言："
         more_than_50_results: "结果超过 50 个。请优化您的搜索。"
+        no_results: "未找到匹配的站点文本"
         interpolation_keys: "可用的插值键："
         outdated:
           title: "此翻译已过时"

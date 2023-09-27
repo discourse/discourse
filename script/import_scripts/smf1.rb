@@ -452,10 +452,10 @@ class ImportScripts::Smf1 < ImportScripts::Base
 
         if upload = create_upload(post.user_id, path, u["filename"])
           html = html_for_upload(upload, u["filename"])
-          unless post.raw[html] || PostUpload.where(upload: upload, post: post).exists?
+          unless post.raw[html] || UploadReference.where(upload: upload, target: post).exists?
             post.raw += "\n\n#{html}\n\n"
             post.save
-            PostUpload.create(upload: upload, post: post)
+            UploadReference.ensure_exist!(upload_ids: [upload.id], target: post)
           end
         end
 

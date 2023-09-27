@@ -2552,9 +2552,7 @@ hu:
       collapse_details: "téma részleteinek összecsukása"
       expand_details: "téma részleteinek kibontása"
       unread_indicator: "Egyetlen tag sem olvasta még a téma utolsó bejegyzését."
-      bumped_at_title: |
-        Első bejegyzés: %{createdAtDate}
-        Elküldve: %{bumpedAtDate}
+      bumped_at: "Legutóbbi: %{date}"
       suggest_create_topic: Készen áll, hogy <a href>új beszélgetést kezdjen?</a>
       jump_reply: "Ugrás a hozzászólás eredeti helyére"
       jump_reply_aria: "Ugrás @%{username} bejegyzésére az eredeti helyén"
