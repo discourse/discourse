@@ -58,9 +58,7 @@ esbuild
     logLevel: "warning",
     bundle: true,
     // minify: true,
-    external: ["fs"],
     alias: {
-      path: "./app/assets/javascripts/node_modules/path-browserify",
       util: "./app/assets/javascripts/node_modules/@zxing/text-encoding",
     },
     define: {
