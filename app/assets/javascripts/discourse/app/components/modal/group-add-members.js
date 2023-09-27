@@ -63,7 +63,7 @@ export default class GroupAddMembers extends Component {
         });
         this.args.closeModal();
       })
-      .catch((e) => (this.flash = e))
+      .catch((e) => (this.flash = e.jqXHR.responseJSON.errors.join(". ")))
       .finally(() => (this.loading = false));
   }
 }
