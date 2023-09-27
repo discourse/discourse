@@ -1,9 +1,5 @@
 // See: https://esbuild.github.io/plugins/#webassembly-plugin
 
-// import * as esbuild from "esbuild";
-// import path from "node:path";
-// import fs from "node:fs";
-// import { argv } from "node:process";
 const esbuild = require("esbuild");
 const path = require("node:path");
 const fs = require("node:fs");
