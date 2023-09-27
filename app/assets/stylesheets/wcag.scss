@@ -7,6 +7,12 @@
   opacity: 1;
 }
 
+:root {
+  --bronze: #d38f42 !important;
+}
+
+$quaternary-high: #c4e9ff;
+
 html.discourse-no-touch {
   .btn-default:not(.btn-flat, .btn-danger, .btn-primary),
   .btn-icon:not(.btn-flat, .btn-danger, .btn-primary) {
@@ -280,7 +286,46 @@ html {
     color: var(--primary-medium);
   }
 
-  // Admin
+  .alert.alert-success a {
+    color: dark-light-choose($tertiary, $quaternary-high);
+  }
+
+  // User Preference
+  .user-menu.revamped .quick-access-panel li.unread,
+  .user-menu.revamped .quick-access-panel li.pending {
+    background-color: var(--tertiary-very-low);
+  }
+
+  .user-main .deleted-posts {
+    color: var(--primary);
+  }
+
+  .uploaded-image-preview
+    .image-upload-controls
+    .image-uploader-lightbox-btn
+    .d-icon {
+    color: var(--primary);
+  }
+
+  .settings .setting .setting-value .uploaded-image-preview {
+    background-color: var(--primary-very-low);
+  }
+
+  // Notifications
+
+  .user-menu.revamped .tabs-list .btn .badge-notification {
+    background-color: dark-light-choose($tertiary-high, $tertiary);
+  }
+
+  .user-stream .notification.unread {
+    background-color: var(--tertiary-very-low);
+  }
+
+  .user-stream .time {
+    color: var(--primary-very-high);
+  }
+
+  // Admin Settings
 
   .admin-controls {
     .nav-pills > li > a:not(.active):hover {
@@ -293,6 +338,36 @@ html {
   .d-editor-preview mark {
     background-color: yellow; // resets to browser default
   }
+
+  .settings .setting.overridden h3:before {
+    background-color: var(--tertiary);
+  }
+
+  // Dashboard
+
+  .user-metrics .table-cell.user-basic .label,
+  .user-metrics .table-cell.user-member .label,
+  .user-metrics .table-cell.user-leader .label {
+    color: dark-light-choose($primary, $secondary);
+  }
+
+  .admin-contents.admin-plugins td.version .commit-hash {
+    color: var(--primary-medium);
+  }
+
+  // Search
+
+  .search-container
+    .search-filters
+    details.search-advanced-additional-options
+    > summary {
+    color: var(--highlight-high);
+  }
+
+  .chat-notices__notice,
+  .chat-notices .chat-retention-reminder {
+    background-color: var(--tertiary-very-low);
+  }
 }
 
 // chat
@@ -304,6 +379,10 @@ html {
   .d-icon {
     color: var(--primary) !important;
   }
+}
+
+.chat-channel .open-drawer-btn {
+  color: var(--primary-medium) !important;
 }
 
 // sidebar
