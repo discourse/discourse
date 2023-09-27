@@ -226,9 +226,15 @@ const TopicRoute = DiscourseRoute.extend({
 
   @action
   changeOwner() {
+    const topicController = this.controllerFor("topic");
     this.modal.show(ChangeOwnerModal, {
       model: {
-        topicController: this.controllerFor("topic"),
+        deselectAll: topicController.deselectAll,
+        multiSelect: topicController.multiSelect,
+        selectedPostsCount: topicController.selectedPostsCount,
+        selectedPostIds: topicController.selectedPostIds,
+        selectedPostUsername: topicController.selectedPostsUsername,
+        toggleMultiSelect: topicController.toggleMultiSelect,
         topic: this.modelFor("topic"),
       },
     });

@@ -26,7 +26,7 @@
       <EmailGroupUserChooser
         @value={{this.newOwner}}
         @autofocus={{true}}
-        @onChange={{action "updateNewOwner"}}
+        @onChange={{this.updateNewOwner}}
         @options={{hash
           maximum=1
           filterPlaceholder="topic.change_owner.placeholder"

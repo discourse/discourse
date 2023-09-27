@@ -9,28 +9,21 @@ import { isEmpty } from "@ember/utils";
 export default class ChangeOwnerModal extends Component {
   @tracked saving = false;
   @tracked newOwner = null;
-  topicController = null;
-  topic = null;
 
-  constructor() {
-    super(...arguments);
-    this.topicController = this.args.model.topicController;
-    this.topic = this.args.model.topic;
-  }
   get buttonDisabled() {
     return this.saving || isEmpty(this.newOwner);
   }
 
   get selectedPostsUsername() {
-    return this.topicController.selectedPostsUsername;
+    return this.args.model.selectedPostsUsername;
   }
 
   get selectedPostIds() {
-    return this.topicController.selectedPostIds;
+    return this.args.model.selectedPostIds;
   }
 
   get selectedPostsCount() {
-    return this.topicController.selectedPostsCount;
+    return this.args.model.selectedPostsCount;
   }
   @action
   async changeOwnershipOfPosts() {
@@ -42,13 +35,13 @@ export default class ChangeOwnerModal extends Component {
     };
 
     try {
-      await Topic.changeOwners(this.topic.id, options);
+      await Topic.changeOwners(this.args.model.topic.id, options);
       this.args.closeModal();
-      this.topicController.send("deselectAll");
-      if (this.topicController.multiSelect) {
-        this.topicController.send("toggleMultiSelect");
+      this.args.model.deselectAll();
+      if (this.args.model.multiSelect) {
+        this.args.model.toggleMultiSelect();
       }
-      DiscourseURL.routeTo(this.topic.url);
+      DiscourseURL.routeTo(this.args.model.topic.url);
     } catch (error) {
       this.flash = I18n.t("topic.change_owner.error");
       this.saving = false;
