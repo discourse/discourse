@@ -59,9 +59,6 @@ esbuild
     bundle: true,
     // minify: true,
     external: ["fs"],
-    banner: {
-      js: "global = globalThis;\n",
-    },
     alias: {
       path: "./app/assets/javascripts/node_modules/path-browserify",
       util: "./app/assets/javascripts/node_modules/@zxing/text-encoding",
