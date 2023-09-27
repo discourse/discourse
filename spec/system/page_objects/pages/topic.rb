@@ -96,6 +96,8 @@ module PageObjects
         case button
         when :grant_badge
           element_klass += " .grant-badge"
+        when :change_owner
+          element_klass += " .change-owner"
         end
 
         find(element_klass).click
