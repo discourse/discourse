@@ -37,7 +37,7 @@ export default class TagShowRoute extends DiscourseRoute {
   }
 
   get noSubcategories() {
-    return this.routeConfig.no_subcategories;
+    return this.routeConfig.noSubcategories;
   }
 
   beforeModel() {
