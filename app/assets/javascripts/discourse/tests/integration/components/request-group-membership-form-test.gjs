@@ -10,7 +10,7 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("does things", async function (assert) {
+    test("correctly enables/disables the submit button", async function (assert) {
       const store = getOwner(this).lookup("service:store");
       const group = store.createRecord("group", {
         name: "a-team",
