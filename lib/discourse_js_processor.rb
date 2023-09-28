@@ -112,7 +112,7 @@ class DiscourseJsProcessor
     def self.generate_js_processor
       Discourse::Utils.execute_command(
         "node",
-        "app/assets/javascripts/esbuild.js",
+        "app/assets/javascripts/build-js-processor.js",
         JS_PROCESSOR_PATH,
       )
       JS_PROCESSOR_PATH
