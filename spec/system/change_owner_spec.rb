@@ -23,6 +23,8 @@ describe "Change Owner Modal", type: :system do
     change_owner_modal.select_new_owner(other_user)
     change_owner_modal.confirm_new_owner
     expect(page).not_to have_css ".change-ownership-modal"
-    expect(post.reload.user).to eq other_user
+
+    displayed_username = topic_page.post_by_number(post).find(".first.username").text
+    expect(displayed_username).to eq other_user.username
   end
 end
