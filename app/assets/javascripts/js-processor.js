@@ -18,7 +18,7 @@ globalThis.console = {
 
 import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
 import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
-import * as EmberTemplateCompiler from "ember-source/dist/ember-template-compiler";
+import { precompile } from "ember-source/dist/ember-template-compiler";
 import Handlebars from "handlebars";
 import { transform as babelTransform } from "@babel/standalone";
 import { minify as terserMinify } from "terser";
@@ -65,13 +65,11 @@ function buildEmberTemplateManipulatorPlugin(themeId) {
 }
 
 function buildTemplateCompilerBabelPlugins({ themeId }) {
-  const compiler = {
-    precompile: EmberTemplateCompiler.precompile,
-  };
+  const compiler = { precompile };
 
   if (themeId) {
     compiler.precompile = (src, opts) => {
-      return EmberTemplateCompiler.precompile(src, {
+      return precompile(src, {
         ...opts,
         plugins: {
           ast: [
