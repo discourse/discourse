@@ -3933,6 +3933,7 @@ en:
         other {}
       }
 
+    latest_poster_link: "%{username}'s profile, latest poster"
     original_post: "Original Post"
     views: "Views"
     sr_views: "Sort by views"
