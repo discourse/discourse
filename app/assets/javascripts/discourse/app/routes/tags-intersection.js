@@ -1,4 +1,4 @@
-import buildTagRoute from "discourse/routes/tag-show";
+import { buildTagRoute } from "discourse/routes/tag-show";
 
 export default buildTagRoute();
 
