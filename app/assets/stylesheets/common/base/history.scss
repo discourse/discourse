@@ -45,7 +45,8 @@
 
   .-tag-revisions span,
   .revision-content {
-    flex: 0 0 calc(50% - (var(--gap-width) / 2));
+    flex: 0 1 calc(50% - (var(--gap-width) / 2));
+    min-width: 0;
   }
 
   table.markdown {
