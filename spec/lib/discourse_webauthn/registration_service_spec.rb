@@ -169,7 +169,7 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
     end
   end
 
-  it "works" do
+  it "registers a valid second-factor key" do
     key = service.register_security_key
     expect(key).to be_a(UserSecurityKey)
     expect(key.user).to eq(current_user)
@@ -181,7 +181,7 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
       { factor_type: UserSecurityKey.factor_types[:first_factor], session: secure_session }
     end
 
-    it "does not work since second factor key does not have the user verification flag" do
+    it "does not work since second-factor key does not have the user verification flag" do
       expect { service.register_security_key }.to raise_error(
         DiscourseWebauthn::UserVerificationError,
         I18n.t("webauthn.validation.user_verification_error"),
@@ -202,7 +202,7 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
       "o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YVikSZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2NFAAAAAK3OAAI1vMYKZIsLJfHwVQMAICRXq4sFZ9XpWZOzfJ8EguJmoEPMzNVyFMUWQfT5u1QzpQECAyYgASFYILjOiAHAwNrXkCk/tmyYRiE87QyV/15wUvhcXhr1JfwtIlggClQywgQvSxTsqV/FSK0cNHTTmuwfzzREqE6eLDmPxmI="
     end
 
-    it "works" do
+    it "works with a valid key" do
       key = service.register_security_key
       expect(key).to be_a(UserSecurityKey)
       expect(key.user).to eq(current_user)
@@ -213,10 +213,10 @@ RSpec.describe DiscourseWebauthn::RegistrationService do
       it "raises a UserVerificationError" do
         # simulate missing user verification by flipping third bit to 0
         flags = "10000010" # correct flag sequence is "10100010"
-        overridenAuthData = service.send(:auth_data)
-        overridenAuthData[32] = [flags].pack("b*")
+        overriden_auth_data = service.send(:auth_data)
+        overriden_auth_data[32] = [flags].pack("b*")
 
-        service.instance_variable_set(:@auth_data, overridenAuthData)
+        service.instance_variable_set(:@auth_data, overriden_auth_data)
 
         expect { service.register_security_key }.to raise_error(
           DiscourseWebauthn::UserVerificationError,

@@ -285,11 +285,9 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
       )
     end
 
-    it "works" do
+    it "works and returns the correct key credential" do
       key = service.authenticate_security_key
       expect(key).to eq(security_key)
-      expect(key).to be_a(UserSecurityKey)
-      expect(key.user).to eq(current_user)
       expect(key.factor_type).to eq(UserSecurityKey.factor_types[:first_factor])
     end
 
@@ -298,10 +296,10 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
         # simulate missing user verification in the key data
         # by setting third bit to 0
         flags = "10000010" # correct flag sequence is "10100010"
-        overridenAuthData = service.send(:auth_data)
-        overridenAuthData[32] = [flags].pack("b*")
+        overriden_auth_data = service.send(:auth_data)
+        overriden_auth_data[32] = [flags].pack("b*")
 
-        service.instance_variable_set(:@auth_data, overridenAuthData)
+        service.instance_variable_set(:@auth_data, overriden_auth_data)
 
         expect { service.authenticate_security_key }.to raise_error(
           DiscourseWebauthn::UserVerificationError,
