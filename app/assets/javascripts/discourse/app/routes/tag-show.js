@@ -27,10 +27,18 @@ export default class TagShowRoute extends DiscourseRoute {
   @service router;
   @service currentUser;
 
-  navMode = "latest";
   queryParams = queryParams;
   controllerName = "tag.show";
   templateName = "tag.show";
+  routeConfig = {};
+
+  get navMode() {
+    return this.routeConfig.navMode || "latest";
+  }
+
+  get noSubcategories() {
+    return this.routeConfig.noSubcategories;
+  }
 
   beforeModel() {
     const controller = this.controllerFor("tag.show");
@@ -267,4 +275,10 @@ export default class TagShowRoute extends DiscourseRoute {
       .filter(Boolean)
       .filter((tag) => ![NONE, ALL].includes(tag));
   }
+}
+
+export function buildTagRoute(routeConfig = {}) {
+  return class extends TagShowRoute {
+    routeConfig = routeConfig;
+  };
 }
