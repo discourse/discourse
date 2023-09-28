@@ -1482,6 +1482,67 @@ RSpec.describe DiscourseTagging do
     end
   end
 
+  describe "something" do
+    fab!(:parent) { Fabricate(:tag) }
+
+    fab!(:child_1) { Fabricate(:tag) }
+    fab!(:child_2) { Fabricate(:tag) }
+    fab!(:no_show_1) { Fabricate(:tag) }
+
+    fab!(:no_show_tag_group) do
+      Fabricate(:tag_group, permissions: { "everyone" => 1 }, tag_names: [no_show_1.name])
+    end
+
+    fab!(:child_1_tag_group) do
+      Fabricate(
+        :tag_group,
+        permissions: {
+          "everyone" => 1,
+        },
+        tag_names: [child_1.name],
+        parent_tag_id: parent.id,
+      )
+    end
+
+    fab!(:child_2_tag_group) do
+      Fabricate(
+        :tag_group,
+        permissions: {
+          "everyone" => 1,
+        },
+        tag_names: [child_2.name, no_show_1.name],
+        parent_tag_id: parent.id,
+      )
+    end
+
+    fab!(:parent_tag_group) do
+      Fabricate(:tag_group, permissions: { "everyone" => 1 }, tag_names: [parent.name])
+    end
+
+    fab!(:category) do
+      Fabricate(
+        :category,
+        allowed_tag_groups: [parent_tag_group.name, child_1_tag_group.name, child_2_tag_group.name],
+      )
+    end
+
+    it "shouldn't show some" do
+      tags =
+        DiscourseTagging.filter_allowed_tags(
+          Guardian.new(user),
+          selected_tags: nil,
+          for_input: true,
+          category: category,
+          term: "",
+        ).map(&:name)
+
+      expect(tags).to include(parent.name)
+      expect(tags).not_to include(child_1.name)
+      expect(tags).not_to include(child_2.name)
+      expect(tags).not_to include(no_show_1.name)
+    end
+  end
+
   describe "staff_tag_names" do
     fab!(:tag) { Fabricate(:tag) }
 
