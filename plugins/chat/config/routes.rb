@@ -30,6 +30,7 @@ Chat::Engine.routes.draw do
     get "/mentions/groups" => "hints#check_group_mentions", :format => :json
 
     get "/channels/:channel_id/threads" => "channel_threads#index"
+    post "/channels/:channel_id/threads" => "channel_threads#create"
     put "/channels/:channel_id/threads/:thread_id" => "channel_threads#update"
     get "/channels/:channel_id/threads/:thread_id" => "channel_threads#show"
     get "/channels/:channel_id/threads/:thread_id/messages" => "channel_thread_messages#index"

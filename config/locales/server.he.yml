@@ -68,8 +68,11 @@ he:
       generic: אירעה שגיאה בעת ייבוא ערכת העיצוב הזו
       upload: "שגיאה ביצירת משאב להעלאה: %{name}. %{errors}"
       about_json: "שגיאת ייבוא: about.json לא קיים או שהוא שגוי. האם אכן מדובר בערכת עיצוב של Discourse?"
+      about_json_too_big: "שגיאת ייבוא: about.json גדול ממגבלת %{limit}."
       about_json_values: "about.json מכיל ערכים שגויים: %{errors}"
       modifier_values: "המחליפים ב־about.json מכילים ערכים שגויים: %{errors}"
+      asset_too_big: "הנכס %{filename} גדול ממגבלת %{limit}"
+      theme_too_big: "ערכת העיצוב גדולה ממגבלת %{limit}"
       git: "שגיאה בעת שכפול מאגר git, הגישה נדחיתה או שהמאגר לא נמצא"
       git_ref_not_found: "לא ניתן למשוך (checkout) הפניית git:‏ %{ref}"
       git_unsupported_scheme: "לא ניתן לשבט מאגר git: אין תמיכה בסכמה"
@@ -78,6 +81,7 @@ he:
       unknown_file_type: "הקובץ שהעלית הוא כפי הנראה אינה ערכת עיצוב תקנית של Discourse."
       not_allowed_theme: "‚%{repo}’ אינו ברשימת הנושאים המורשים (יש לבדוק את ההגדרה הגלובלית `allowed_theme_repos` - מאגרי ערכות עיצוב מורשים)."
       ssh_key_gone: "המתנת זמן רב מדי להתקנת ערכת העיצוב ותוקף מפתח ה־SSH פג. נא לנסות שוב."
+      too_many_files: "מספר הקבצים (%{count}) בערכת העיצוב חרג ממספר הקבצים המרבי המותר (%{limit})"
     errors:
       component_no_user_selectable: "רכיבי ערכת העיצוב לא יכולים להיות לבחירת המשתמש"
       component_no_default: "רכיבי ערכת העיצוב לא יכולים להיות בררת המחדל של ערכת העיצוב"
@@ -1009,6 +1013,9 @@ he:
     sequence_conflict_error:
       title: "שגיאת טיוטה"
       description: "הטיוטה נערכת בחלון אחר. נא לרענן את העמוד הזה."
+    too_many_drafts:
+      title: "יותר מדי טיוטות"
+      description: "הגעת למספר הטיוטות המרבי המותר. נא למחוק חלק מה[טיוטות שלך](%{base_url}/my/activity/drafts) ולנסות שוב."
   draft_backup:
     pm_title: "טיוטות גיבוי מנושאים שמתנהלים כרגע"
     pm_body: "נושא שמכיל טיוטות גיבוי"
@@ -1524,9 +1531,9 @@ he:
     allow_user_locale: "לאפשר למשתמשים לבחור את העדפת שפת המנשק לעצמם באופן עצמאי"
     set_locale_from_accept_language_header: "הגדרת שפת המנשק למשתמשים אלמוניים לפי כותרי השפה בדפדפן שלהם"
     support_mixed_text_direction: "תמיכה בכיווני שמאל לימין וימין לשמאל בצורה מעורבת."
-    min_post_length: "מספר התווים המותר כאורך מזערי לפוסט"
-    min_first_post_length: "אורך מזערי מותר לפוסט ראשון (בגוף הנושא) בתווים"
-    min_personal_message_post_length: "האורך המזערי המותר לפוסט בתווים להודעות"
+    min_post_length: "אורך פוסט מזערי מותר בתווים (לא כולל הודעות אישיות)"
+    min_first_post_length: "אורך מזערי מותר לנושא ראשון (גוף הנושא - לא כולל הודעות אישיות)"
+    min_personal_message_post_length: "אורך פוסט מזערי מותר בתווים עבור הודעות (הן פוסט ראשון והן תשובות)"
     max_post_length: "מספר התווים המקסימלי כאורך פוסט"
     topic_featured_link_enabled: "לאפשר פרסום קישור עם נושאים."
     show_topic_featured_link_in_digest: "הצגת קישור מומלץ של הנושא בהודעת התמצית בדוא״ל."
@@ -2229,14 +2236,16 @@ he:
     default_sidebar_switch_panel_position: "מיקום כפתורי החלפת לוח בסרגל הצד"
     retain_web_hook_events_period_days: "מספר הימים לשמירת רשומות אירועי התלייה."
     retry_web_hook_events: "לנסות מחדש אירועי התליה שנכשלו במשך 4 פעמים. פרקי הזמן שבין הניסיונות החוזרים הם 1, 5, 25 ו־125 דקות."
-    revoke_api_keys_days: "מספר הימים בטרם שלילה אוטומטית של מפתח API שלא היה בשימוש (0 - לעולם לא)."
+    revoke_api_keys_unused_days: "מספר הימים אחרי השימוש האחרון במפתח API לפני שלילתו אוטומטית (0 כדי לא לשלול לעולם)"
+    revoke_api_keys_maxlife_days: "מספר הימים בטרם שלילה אוטומטית של מפתח API (0 - לעולם לא)."
     allow_user_api_key_scopes: "רשימת אזורים מותרים למפתחות API של משתמשים"
     min_trust_level_for_user_api_key: |
       נדרשת דרגת אמון ליצירת מפתחות API למשתמש.<br>
       <b>אזהרה</b>: שינוי דרגת האמון ימנע ממשתמשים עם דרגת אמון נמוכה יותר להיכנס דרך Discourse Hub
     allowed_user_api_auth_redirects: "כתובת מורשית להפניית אימות למפתחות API של משתמש. בסימן התו־כל * ניתן להשתמש כדי ללכוד חלק ממנה (למשל: www.example.com/*‎)."
     allowed_user_api_push_urls: "URLים מורשים לדחיפת שרת ל API של משתמשים."
-    expire_user_api_keys_days: "מספר הימים בטרם פקיעת תוקף מפתח ה־API של המשתמש אוטומטית (0 - לעולם לא)."
+    revoke_user_api_keys_unused_days: "מספר הימים אחרי השימוש האחרון במפתח API של משתמש לפני שלילתו אוטומטית (0 כדי לא לשלול לעולם)"
+    revoke_user_api_keys_maxlife_days: "מספר הימים בטרם שלילה אוטומטית של מפתח API של משתמש (0 - לעולם לא)."
     tagging_enabled: "לאפשר תגיות על נושאים?"
     min_trust_to_create_tag: "דרגת האמון המזערית שנדרשת כדי ליצור תגית."
     max_tags_per_topic: "כמות התגיות המרבית שניתן להקצות לנושא."
@@ -2294,6 +2303,7 @@ he:
     experimental_topics_filter: "ניסיוני: מפעיל את נתיב סינון הנושאים הניסיוני תחת ‎/filter"
     experimental_search_menu_groups: "ניסיוני: מאפשר את תפריט החיפוש החדש ששודרג כך שישתמש ב־glimmer"
     enable_experimental_lightbox: "ניסיוני: להחליף את התיבה הקלילה לתמונות כברירת מחדל לעיצוב המשופר."
+    experimental_form_templates: "ניסיוני: יש להפעיל את יכולת תבניות הטפסים. <b>לאחר ההפעלה,</b> אפשר לנהל את התבניות דרך <a href='%{base_path}/admin/customize/form-templates'>התאמה / תבניות</a>."
     page_loading_indicator: "הגדרת מחוון הטעינה שמופיע במהלך ניווט בין עמודים ב־Discourse. ‚שבשבת’ הוא מחוון עמוד מלא. ‚מד התקדמות’ מציג סרגל צר בראש המסך."
     errors:
       invalid_css_color: "צבע שגוי. נא למלא את שם הצבע או ערך הקסדצימלי."
@@ -2548,6 +2558,8 @@ he:
     invalid_security_key: "מפתח אבטחה שגוי."
     missing_second_factor_name: "נא לציין שם."
     missing_second_factor_code: "נא לציין קוד."
+    too_many_authenticators: "לא יכולים להיות לך יותר מ־50 מאמתים. נא להסיר אחד קיים ולנסות שוב."
+    too_many_security_keys: "לא יכולים להיות לך יותר מ־50 מפתחות אבטחה. נא להסיר אחד קיים ולנסות שוב."
     second_factor_toggle:
       totp: "יש להשתמש ביישומון מאמת או במפתח אבטחה במקום"
       backup_code: "להשתמש בקוד גיבוי במקום"
@@ -4806,6 +4818,11 @@ he:
         two: "נשלל אוטומטית, הפעילות האחרונה התבצעה לפני למעלה מיומיים (%{count})"
         many: "נשלל אוטומטית, הפעילות האחרונה התבצעה לפני למעלה מ־%{count} ימים"
         other: "נשלל אוטומטית, הפעילות האחרונה התבצעה לפני למעלה מ־%{count} ימים"
+      automatic_revoked_max_life:
+        one: "נשלל אוטומטית, נוצר לפני למעלה מיום"
+        two: "נשלל אוטומטית, נוצר לפני למעלה מיומיים"
+        many: "נשלל אוטומטית, נוצר לפני יותר מ־%{count} ימים"
+        other: "נשלל אוטומטית, נוצר לפני יותר מ־%{count} ימים"
       revoked: נשל
       restored: שוחזר
   reviewables:

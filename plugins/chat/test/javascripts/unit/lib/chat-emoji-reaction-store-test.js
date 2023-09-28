@@ -1,7 +1,10 @@
 import { module, test } from "qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
+import { setupTest } from "ember-qunit";
 
 module("Discourse Chat | Unit | chat-emoji-reaction-store", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     this.siteSettings = getOwner(this).lookup("service:site-settings");
     this.chatEmojiReactionStore = getOwner(this).lookup(

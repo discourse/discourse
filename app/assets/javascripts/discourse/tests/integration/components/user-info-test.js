@@ -118,31 +118,17 @@ module("Integration | Component | user-info", function (hooks) {
       .exists();
   });
 
-  test("doesn't show status tooltip by default", async function (assert) {
-    this.currentUser.name = "Evil Trout";
-    this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
-
-    await render(
-      hbs`<UserInfo @user={{this.currentUser}} @showStatus={{true}} />`
-    );
-    await triggerEvent(query(".user-status-message"), "mouseenter");
-
-    assert.notOk(
-      document.querySelector("[data-tippy-root] .user-status-message-tooltip")
-    );
-  });
-
   test("shows status tooltip if enabled", async function (assert) {
     this.currentUser.name = "Evil Trout";
     this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
 
     await render(
-      hbs`<UserInfo @user={{this.currentUser}} @showStatus={{true}} @showStatusTooltip={{true}} />`
+      hbs`<UserInfo @user={{this.currentUser}} @showStatus={{true}}  /><DInlineTooltip />`
     );
-    await triggerEvent(query(".user-status-message"), "mouseenter");
+    await triggerEvent(query(".user-status-message"), "mousemove");
 
-    assert.ok(
-      document.querySelector("[data-tippy-root] .user-status-message-tooltip")
-    );
+    assert
+      .dom("[data-content][data-identifier='user-status-message-tooltip']")
+      .exists();
   });
 });

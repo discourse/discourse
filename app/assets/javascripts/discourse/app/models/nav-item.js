@@ -7,7 +7,7 @@ import { deepMerge } from "discourse-common/lib/object";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
 import { emojiUnescape } from "discourse/lib/text";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import {
   hasTrackedFilter,
   isTrackedTopic,
@@ -228,7 +228,7 @@ NavItem.reopenClass({
       deepMerge(args, cb.call(this, filterType, opts))
     );
 
-    let store = getOwner(this).lookup("service:store");
+    let store = getOwnerWithFallback(this).lookup("service:store");
     return store.createRecord("nav-item", args);
   },
 
@@ -245,11 +245,13 @@ NavItem.reopenClass({
         dropFrom: "2.7.0",
         id: "discourse.nav-item.built-list-site-settings",
       });
-      args.siteSettings = getOwner(this).lookup("service:site-settings");
+      args.siteSettings = getOwnerWithFallback(this).lookup(
+        "service:site-settings"
+      );
     }
     let items = args.siteSettings.top_menu.split("|");
 
-    const user = getOwner(this).lookup("service:current-user");
+    const user = getOwnerWithFallback(this).lookup("service:current-user");
     if (user?.new_new_view_enabled) {
       items = items.reject((item) => item === "unread");
     }

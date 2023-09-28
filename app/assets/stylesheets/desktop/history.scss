@@ -7,21 +7,6 @@
   .modal-body {
     height: 70vh;
   }
-  #revision-controls {
-    .btn[disabled] {
-      cursor: not-allowed;
-      background-color: var(--primary-low);
-    }
-    .btn-danger[disabled] {
-      background-color: var(--danger-medium);
-    }
-  }
-
-  #revision {
-    display: flex;
-    justify-content: space-between;
-    padding-bottom: 0.5em;
-  }
 
   #revisions {
     word-wrap: break-word;
@@ -46,14 +31,10 @@
   }
   .markdown {
     font-family: monospace;
-    font-size: var(--font-down-1);
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
     td {
-      width: 50%;
-      vertical-align: top;
-      max-width: 440px;
       word-wrap: break-word;
       white-space: pre-wrap;
     }
@@ -65,12 +46,8 @@
       box-sizing: border-box;
     }
   }
-  .modal-header {
-    height: 42px;
-  }
 
   .modal-footer {
-    display: flex;
     justify-content: space-between;
   }
 }

@@ -3313,9 +3313,8 @@ ar:
           false { أو <a href="{basePath}/latest">شاهد آخر الموضوعات</a>}
           other {}
         }
-      bumped_at_title: |
-        أول منشور: %{createdAtDate}
-        تاريخ النشر: %{bumpedAtDate}
+      created_at: "تاريخ الإنشاء: %{date}"
+      bumped_at: "تاريخ آخر نسخ احتياطي: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>استعرض كل الفئات</a> أو <a href='%{basePath}/latest'>شاهد آخر الموضوعات</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>استعرض كل الفئات</a> أو <a href='%{basePath}/latest'>شاهد آخر الموضوعات</a>، أو انظر أبرز:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>استعرض كل الوسوم</a> أو <a href='%{basePath}/latest'>شاهد آخر الموضوعات</a>."
@@ -3829,6 +3828,7 @@ ar:
         create: "عذرًا، حدث خطأ في أثناء إنشاء منشورك. يُرجى إعادة المحاولة."
         edit: "عذرا، حدث خطأ في أثناء تعديل منشورك. يُرجى إعادة المحاولة."
         upload: "عذرًا، حدث خطأ في أثناء الرفع %{file_name}. يُرجى إعادة المحاولة."
+        backup_too_large: "عذرًا، ملف النسخ الاحتياطي هذا كبير جدًا."
         file_too_large: "عذرًا، لكن الملف كبير جدًا (أقصى حجم هو %{max_size_kb} ك.ب). لماذا لا تحمِّل ملفك الكبير إلى خدمة مشاركة سحابية، ثم تلصق الرابط؟"
         file_size_zero: "عذرًا، يبدو أنه حدث خطأ ما؛ فحجم الملف الذي تحاول تحميله هو 0 بايت. حاول مرة أخرى."
         file_too_large_humanized: "عذرًا، هذا الملف كبير جدًا (الحد الأقصى للحجم هو %{max_size}). لماذا لا تقوم بتحميل ملفك الكبير إلى خدمة مشاركة سحابية، ثم تلصق الرابط؟"
@@ -6167,6 +6167,7 @@ ar:
       form_templates:
         nav_title: "القوالب"
         title: "قوالب النموذج"
+        help: "أنشئ بنية قالب النموذج يمكن استخدامها لإنشاء موضوعات جديدة."
         new_template: "قالب جديد"
         list_table:
           headings:
@@ -6605,6 +6606,7 @@ ar:
         show_outdated: "عرض القديمة/غير الصالحة فقط"
         locale: "اللغة:"
         more_than_50_results: "هناك أكثر من 50 نتيجة. يُرجى تحسين البحث."
+        no_results: "لم يتم العثور على نصوص موقع مطابقة"
         interpolation_keys: "مفاتيح الاستيفاء المتاحة:"
         outdated:
           title: "هذه الترجمة قديمة"
@@ -6711,7 +6713,7 @@ ar:
         grant_badge: منح شارة
         granted_badges: الشارات الممنوحة
         grant: منح
-        no_user_badges: "لم يتم منح %{name} أي شارة."
+        no_user_badges: "لم يُمنح %{name} أيّ شارة."
         no_badges: لا توجد شارات يمكن منحها.
         none_selected: "تحديد شارة للبدء"
         allow_title: السماح للمستخدمين باستخدام الشارة كعنوان

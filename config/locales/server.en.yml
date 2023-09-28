@@ -336,6 +336,8 @@ en:
   reading_time: "Reading time"
   likes: "Likes"
 
+  action_already_performed: "Oops! You already performed this action. Can you try refreshing the page?"
+
   too_many_replies:
     one: "We're sorry, but new users are temporarily limited to %{count} reply in the same topic."
     other: "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
@@ -2369,7 +2371,8 @@ en:
 
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
     retry_web_hook_events: "Automatically retry failed web hook events for 4 times. Time gaps between the retries are 1, 5, 25 and 125 minutes."
-    revoke_api_keys_days: "Number of days before an unused API key is automatically revoked (0 for never)"
+    revoke_api_keys_unused_days: "Number of days since an API key was last used before it is automatically revoked (0 for never)"
+    revoke_api_keys_maxlife_days: "Number of days before an API key is automatically revoked (0 for never)"
 
     allow_user_api_key_scopes: "List of scopes allowed for user API keys"
     min_trust_level_for_user_api_key: |
@@ -2377,7 +2380,8 @@ en:
       <b>WARNING</b>: Changing the trust level will prevent users with a lower trust level from logging in via Discourse Hub
     allowed_user_api_auth_redirects: "Allowed URL for authentication redirect for user API keys. Wildcard symbol * can be used to match any part of it (e.g. www.example.com/*)."
     allowed_user_api_push_urls: "Allowed URLs for server push to user API"
-    expire_user_api_keys_days: "Number of days before a user API key automatically expires (0 for never)"
+    revoke_user_api_keys_unused_days: "Number of days since a user API key was last used before it is automatically revoked (0 for never)"
+    revoke_user_api_keys_maxlife_days: "Number of days before a user API key is automatically revoked (0 for never)"
 
     tagging_enabled: "Enable tags on topics?"
     min_trust_to_create_tag: "The minimum trust level required to create a tag."
@@ -2449,6 +2453,8 @@ en:
     experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
     experimental_search_menu_groups: "EXPERIMENTAL: Enables the new search menu that has been upgraded to use glimmer"
     enable_experimental_lightbox: "EXPERIMENTAL: Replace the default image lightbox with the revamped design."
+
+    experimental_form_templates: "EXPERIMENTAL: Enable the form templates feature. <b>After enabled,</b> manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
 
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
 
@@ -2537,6 +2543,7 @@ en:
     email_error: "An account could not be registered with the email address <b>%{email}</b>. Please contact the site's administrator."
     missing_secret: "Authentication failed due to missing secret. Contact the site administrators to fix this problem."
     invite_redeem_failed: "Invite redemption failed. Please contact the site's administrator."
+    invalid_parameter_value: "Authentication failed due to invalid value for `%{param}` parameter. Contact the site administrators to fix this problem."
 
   original_poster: "Original Poster"
   most_recent_poster: "Most Recent Poster"
@@ -5130,6 +5137,9 @@ en:
       automatic_revoked:
         one: "Automatically revoked, last activity more than %{count} day ago"
         other: "Automatically revoked, last activity more than %{count} days ago"
+      automatic_revoked_max_life:
+        one: "Automatically revoked, created at more than %{count} day ago"
+        other: "Automatically revoked, created at more than %{count} days ago"
       revoked: Revoked
       restored: Restored
 

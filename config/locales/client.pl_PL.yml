@@ -1771,6 +1771,7 @@ pl_PL:
         reinvite: "Wyślij ponownie e-mail"
         reinvited: "Ponowne wysłanie zaproszenia"
         removed: "Usunięto"
+        search: "wpisz, aby wyszukać zaproszenia…"
         user: "Zaproszony(-a) użytkownik(-czka)"
         none: "Brak zaproszeń do wyświetlenia."
         truncated:
@@ -1832,6 +1833,7 @@ pl_PL:
             <p>Zaproś grupę użytkowników, aby Twoja społeczność rosła szybko. Przygotuj <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">plik CSV</a> zawierający co najmniej jeden wiersz na adres e-mail użytkowników, których chcesz zaprosić. Poniższe informacje oddzielone przecinkami można podać, jeśli chcesz dodać osoby do grup lub wysłać je do określonego tematu przy pierwszym logowaniu.</p>
             <pre>john @ smith.com, first_group_name; second_group_name, topic_id</pre>
             <p>Na każdy adres e-mail w przesłanym pliku CSV zostanie wysłane zaproszenie, którym będziesz mógł zarządzać później.</p>
+          progress: "Przesłano %{progress}%…"
           success: "Plik został przesłany pomyślnie. Po zakończeniu procesu otrzymasz powiadomienie za pośrednictwem wiadomości."
           error: "Przykro nam, ale wymagany format pliku to CSV."
       password:
@@ -3041,9 +3043,7 @@ pl_PL:
           false { lub <a href="{basePath}/latest">zobacz najnowsze tematy</a>}
           other {}
         }
-      bumped_at_title: |
-        Pierwszy post: %{createdAtDate}
-        Opublikowany: %{bumpedAtDate}
+      bumped_at: "Ostatnie: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Przeglądaj wszystkie kategorie</a> lub <a href='%{basePath}/latest'>przeglądaj najnowsze tematy</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Przeglądaj wszystkie kategorie</a>, <a href='%{basePath}/latest'>zobacz najnowsze tematy</a> lub zobacz popularne:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Przeglądaj wszystkie tagi</a> lub <a href='%{basePath}/latest'>zobacz najnowsze tematy</a>."
@@ -3506,6 +3506,7 @@ pl_PL:
       errors:
         create: "Przepraszamy, podczas tworzenia twojego wpisu wystąpił błąd. Spróbuj ponownie."
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
+        backup_too_large: "Przepraszamy, ten plik kopii zapasowej jest zbyt duży."
         file_too_large: "Przepraszamy, ten plik jest zbyt duży (maksymalny rozmiar to %{max_size_kb}kB). Dlaczego nie przesłać dużego pliku do usługi udostępniania w chmurze, a następnie wkleić link?"
         file_size_zero: "Przepraszamy, wygląda na to, że coś poszło nie tak. Plik, który próbujesz przesłać, ma 0 bajtów. Spróbuj przesłać go ponownie."
         file_too_large_humanized: "Przepraszamy, ten plik jest za duży (maksymalny rozmiar to %{max_size}). Dlaczego nie przesłać dużego pliku do usługi udostępniania w chmurze, a następnie wkleić link?"
@@ -5740,6 +5741,7 @@ pl_PL:
             label: "Nazwa szablonu"
           template:
             label: "Szablon"
+            placeholder: "Utwórz tutaj szablon YAML…"
           preview: "Podgląd"
         delete_confirm: "Czy na pewno chcesz usunąć ten szablon?"
         quick_insert_fields:
@@ -5853,6 +5855,7 @@ pl_PL:
           combative: "Zbyt wojowniczy"
           in_wrong_place: "W złym miejscu"
           no_constructive_purpose: "Nie ma żadnego konstruktywnego celu dla swoich działań z wyjątkiem tworzenia kłótni wewnątrz społeczności."
+          custom: "Niestandardowe…"
         suspend_message: "Wiadomość Email"
         suspend_message_placeholder: "Ewentualnie podaj więcej informacji o zawieszeniu użytkownika, a zostaną wysłane do niego poprzez email."
         suspended_by: "Zawieszony przez"
@@ -6142,6 +6145,7 @@ pl_PL:
         show_outdated: "Pokaż tylko nieaktualne/nieprawidłowe"
         locale: "Język:"
         more_than_50_results: "Istnieje ponad 50 wyników. Zawęź wyszukiwanie."
+        no_results: "Nie znaleziono pasujących tekstów witryny"
         interpolation_keys: "Dostępne klucze interpolacji:"
         outdated:
           title: "To tłumaczenie jest nieaktualne"

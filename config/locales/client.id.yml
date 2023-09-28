@@ -2364,6 +2364,7 @@ id:
       site_text:
         edit: "ubah"
         show_outdated: "Hanya tampilkan yang usang/tidak valid"
+        no_results: "Tidak ditemukan teks situs yang cocok"
         interpolation_keys: "Kunci interpolasi yang tersedia:"
         outdated:
           title: "Terjemahan ini sudah usang"

@@ -1,5 +1,6 @@
-import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
+import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 
 class FakeUppy {
   constructor() {
@@ -34,7 +35,9 @@ class FakeUppy {
   }
 }
 
-module("Unit | Utility | UppyMediaOptimization Plugin", function () {
+module("Unit | Utility | UppyMediaOptimization Plugin", function (hooks) {
+  setupTest(hooks);
+
   test("sets the options passed in", function (assert) {
     const fakeUppy = new FakeUppy();
     const plugin = new UppyMediaOptimization(fakeUppy, {

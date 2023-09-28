@@ -1,5 +1,6 @@
-import highlightSyntax from "discourse/lib/highlight-syntax";
 import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
+import highlightSyntax from "discourse/lib/highlight-syntax";
 import { fixture } from "discourse/tests/helpers/qunit-helpers";
 
 let siteSettings = { autohighlight_all_code: true },
@@ -7,7 +8,9 @@ let siteSettings = { autohighlight_all_code: true },
     highlightJsPath: "/assets/highlightjs/highlight-test-bundle.min.js",
   };
 
-module("Unit | Utility | highlight-syntax", function () {
+module("Unit | Utility | highlight-syntax", function (hooks) {
+  setupTest(hooks);
+
   test("highlighting code", async function (assert) {
     fixture().innerHTML = `
       <pre>

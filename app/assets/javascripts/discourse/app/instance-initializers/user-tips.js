@@ -9,6 +9,7 @@ export default {
       return;
     }
 
+    this.userTips = owner.lookup("service:user-tips");
     this.messageBus = owner.lookup("service:message-bus");
     this.site = owner.lookup("service:site");
 
@@ -40,7 +41,7 @@ export default {
     this.currentUser.set("user_option.seen_popups", seenUserTips);
 
     (seenUserTips || []).forEach((userTipId) => {
-      this.currentUser.hideUserTipForever(
+      this.userTips.hideUserTipForever(
         Object.keys(this.site.user_tips).find(
           (id) => this.site.user_tips[id] === userTipId
         )

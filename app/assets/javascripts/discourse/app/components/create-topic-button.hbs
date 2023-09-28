@@ -1,11 +1,22 @@
 {{#if this.canCreateTopic}}
-  <DButton
-    @action={{this.action}}
-    @icon="plus"
-    @disabled={{this.disabled}}
-    @label={{this.label}}
-    id="create-topic"
-    class={{this.btnClass}}
-  />
-  {{yield}}
+  <DButtonTooltip>
+    <:button>
+      <DButton
+        @action={{this.action}}
+        @icon="plus"
+        @disabled={{this.disabled}}
+        @label={{this.label}}
+        id="create-topic"
+        class={{this.btnClass}}
+      />
+    </:button>
+    <:tooltip>
+      {{#if @disabled}}
+        <DTooltip
+          @icon="info-circle"
+          @content={{i18n "topic.create_disabled_category"}}
+        />
+      {{/if}}
+    </:tooltip>
+  </DButtonTooltip>
 {{/if}}

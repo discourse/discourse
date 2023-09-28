@@ -1,7 +1,10 @@
 import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import KeyValueStore from "discourse/lib/key-value-store";
 
-module("Unit | Utility | key-value-store", function () {
+module("Unit | Utility | key-value-store", function (hooks) {
+  setupTest(hooks);
+
   test("is able to get the result back from the store", function (assert) {
     const store = new KeyValueStore("example");
     store.set({ key: "bob", value: "uncle" });

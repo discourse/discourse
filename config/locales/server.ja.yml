@@ -1345,9 +1345,6 @@ ja:
     allow_user_locale: "ユーザーが独自の言語インターフェース設定を選択することを許可する"
     set_locale_from_accept_language_header: "ウェブブラウザの言語ヘッダーから匿名ユーザーのインターフェース言語を設定します"
     support_mixed_text_direction: "左から右および右から左の混在するテキスト方向をサポートします。"
-    min_post_length: "投稿の最低文字数"
-    min_first_post_length: "最初の投稿 (トピック本文) の最低文字数"
-    min_personal_message_post_length: "メッセージ投稿の最低文字数"
     max_post_length: "投稿の最大文字数"
     topic_featured_link_enabled: "トピックでリンクの投稿を有効にします。"
     show_topic_featured_link_in_digest: "ダイジェストメールにトピックの注目のリンクを表示します。"
@@ -2046,14 +2043,12 @@ ja:
     default_sidebar_switch_panel_position: "サイドバー切り替えパネルボタンの位置"
     retain_web_hook_events_period_days: "Webhook イベントレコードを保持する日数。"
     retry_web_hook_events: "失敗した Webhook イベントを自動的に 4 回再試行する。再試行間の時間差は、1、5、25、および 125 分です。"
-    revoke_api_keys_days: "未使用の API キーが自動的に取り消されるまでの日数 (0 に設定すると取り消されません)"
     allow_user_api_key_scopes: "ユーザー API キーに許可されるスコープのリスト"
     min_trust_level_for_user_api_key: |
       ユーザー API キーの生成に必要な信頼レベル。<br>
       <b>警告</b>: 信頼レベルを変更すると、それより低い信頼レベルのユーザーは DiscourseHub からログインできなくなります。
     allowed_user_api_auth_redirects: "ユーザー API キーの認証リダイレクトに許可された URL。任意の部分を照合するには、ワイルドカード記号 * を使用できます (例: www.example.com/*)。"
     allowed_user_api_push_urls: "ユーザー API へのサーバープッシュで許可される URL"
-    expire_user_api_keys_days: "ユーザー API キーが自動的に期限切れになるまでの日数 (0 に設定すると期限切れになりません)"
     tagging_enabled: "トピックでタグを有効にしますか？"
     min_trust_to_create_tag: "タグを作成するために必要な最低信頼レベル。"
     max_tags_per_topic: "トピックに適用できる最大タグ数。"

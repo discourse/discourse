@@ -2,7 +2,7 @@ import { module, test } from "qunit";
 import RestAdapter from "discourse/adapters/rest";
 import RestModel from "discourse/models/rest";
 import sinon from "sinon";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
 
 module("Unit | Model | rest-model", function (hooks) {

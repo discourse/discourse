@@ -28,8 +28,10 @@
         background: var(--tertiary-very-low);
       }
       .topic-body.highlighted {
-        .cooked {
-          animation: current-user-background-fade-highlight 2.5s ease-out;
+        @media (prefers-reduced-motion: no-preference) {
+          .cooked {
+            animation: current-user-background-fade-highlight 2.5s ease-out;
+          }
         }
       }
     }
@@ -69,8 +71,10 @@
 
   .topic-body.highlighted {
     animation: none;
-    .cooked {
-      animation: background-fade-highlight 2.5s ease-out;
+    @media (prefers-reduced-motion: no-preference) {
+      .cooked {
+        animation: background-fade-highlight 2.5s ease-out;
+      }
     }
   }
 

@@ -3052,9 +3052,8 @@ he:
           false { או <a href="{basePath}/latest">לצפות בנושאים העדכניים ביותר</a>}
           other {}
         }
-      bumped_at_title: |
-        פוסט ראשון: %{createdAtDate}
-        פורסם: %{bumpedAtDate}
+      created_at: "מועד יצירה: %{date}"
+      bumped_at: "האחרון: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>עיון בכל הקטגוריות</a> או <a href='%{basePath}/latest'>הצגת הנושאים העדכניים ביותר</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>עיון בכל הקטגוריות</a>, <a href='%{basePath}/latest'>הצגת הנושאים העדכניים ביותר</a> או צפייה במובילים:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>עיון בכל התגיות</a> או <a href='%{basePath}/latest'>הצגת הנושאים העדכניים ביותר</a>."
@@ -3520,6 +3519,7 @@ he:
         create: "אירעה שגיאה ביצירת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
         edit: "אירעה שגיאה בעריכת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
         upload: "אירעה שגיאה בהעלאת %{file_name}. נא לנסות שוב, עמך סליחה."
+        backup_too_large: "קובץ הגיבוי הזה גדול מדי, עמך הסליחה."
         file_too_large: "הקובץ הזה גדול מדי (הגודל המרבי הוא %{max_size_kb} ק״ב), עמך הסליחה. למה שלא להעלות את הקובץ שלך לשירות שיתוף בענן ואז להדביק את הקישור?"
         file_size_zero: "נראה שמשהו השתבש, הקובץ שניסית להעלות הוא בגודל 0 בתים. נא לנסות שוב, עמך הסליחה."
         file_too_large_humanized: "הקובץ הזה גדול מדי (הגודל המרבי הוא %{max_size}), עמך הסליחה. למה שלא להעלות את הקובץ שלך לשירות שיתוף בענן ואז להדביק את הקישור?"
@@ -6179,6 +6179,7 @@ he:
         show_outdated: "להציג רק מיושן/שגוי"
         locale: "שפה:"
         more_than_50_results: "יש למעלה מ־50 תוצאות. נא למקד את החיפוש שלך."
+        no_results: "לא נמצאו טקסטים תואמים באתר"
         interpolation_keys: "מפתחות השילוב הזמינים:"
         outdated:
           title: "התרגום אינו עדכני"
