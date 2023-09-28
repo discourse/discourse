@@ -124,8 +124,8 @@ globalThis.transpile = function (source, options = {}) {
     options;
 
   if (extension === "gjs") {
-    const p = new Preprocessor();
-    source = p.process(source);
+    const preprocessor = new Preprocessor();
+    source = preprocessor.process(source);
   }
 
   const plugins = [];
