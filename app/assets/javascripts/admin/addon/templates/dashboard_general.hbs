@@ -12,12 +12,19 @@
               {{i18n "admin.dashboard.community_health"}}
             </a>
           </h2>
-          <PeriodChooser
-            @period={{this.period}}
-            @action={{action "changePeriod"}}
-            @content={{this.availablePeriods}}
-            @fullDay={{false}}
-          />
+          <span>
+            <PeriodChooser
+              @period={{this.period}}
+              @action={{action "changePeriod"}}
+              @content={{this.availablePeriods}}
+              @fullDay={{false}}
+            />
+            <DButton
+              @icon="cog"
+              class="custom-date-range-button"
+              @action={{action "openCustomDateRangeModal"}}
+            />
+          </span>
         </div>
 
         <div class="section-body">
