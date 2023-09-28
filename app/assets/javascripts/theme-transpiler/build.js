@@ -60,6 +60,7 @@ esbuild
     define: {
       process: `{ "env": {} }`,
     },
+    external: ["fs", "path"],
     entryPoints: ["./app/assets/javascripts/theme-transpiler/index.js"],
     outfile: argv[2],
     plugins: [wasmPlugin],

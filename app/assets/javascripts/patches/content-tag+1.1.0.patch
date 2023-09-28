@@ -1,8 +1,8 @@
 diff --git a/node_modules/content-tag/content_tag.js b/node_modules/content-tag/content_tag.js
-index 6ff5969..5395e3c 100644
+index 6ff5969..38915da 100644
 --- a/node_modules/content-tag/content_tag.js
 +++ b/node_modules/content-tag/content_tag.js
-@@ -448,11 +448,7 @@ module.exports.__wbindgen_memory = function() {
+@@ -448,11 +448,17 @@ module.exports.__wbindgen_memory = function() {
      return addHeapObject(ret);
  };
  
@@ -12,7 +12,18 @@ index 6ff5969..5395e3c 100644
 -const wasmModule = new WebAssembly.Module(bytes);
 -const wasmInstance = new WebAssembly.Instance(wasmModule, imports);
 -wasm = wasmInstance.exports;
-+const load = require('./content_tag_bg.wasm').default;
-+wasm = load(imports);
- module.exports.__wasm = wasm;
+-module.exports.__wasm = wasm;
++// Check for nodejs environment
++if (process.version) {
++  const path = require('path').join(__dirname, 'content_tag_bg.wasm');
++  const bytes = require('fs').readFileSync(path);
++
++  const wasmModule = new WebAssembly.Module(bytes);
++  const wasmInstance = new WebAssembly.Instance(wasmModule, imports);
++  wasm = wasmInstance.exports;
++} else {
++  const load = require('./content_tag_bg.wasm').default;
++  wasm = load(imports);
++  module.exports.__wasm = wasm;
++}
  
