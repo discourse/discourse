@@ -26,8 +26,11 @@ import RawHandlebars from "discourse-common/addon/lib/raw-handlebars";
 import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
 import EmberThisFallback from "ember-this-fallback";
 
+// A sub-dependency of content-tag (getrandom) needs `getRandomValues`
+// so we polyfill it
 import getRandomValues from "polyfill-crypto.getrandomvalues";
 globalThis.crypto = { getRandomValues };
+
 import { Preprocessor } from "content-tag";
 
 const thisFallbackPlugin = EmberThisFallback._buildPlugin({
