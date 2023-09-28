@@ -102,6 +102,9 @@ export default class PostTextSelection extends Component {
     const selection = window.getSelection();
 
     if (selection.isCollapsed) {
+      if (!this.menuInstance?.expanded) {
+        this.args.quoteState.clear();
+      }
       return;
     }
 
