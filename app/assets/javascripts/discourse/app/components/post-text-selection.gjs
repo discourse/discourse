@@ -102,6 +102,9 @@ export default class PostTextSelection extends Component {
     const selection = window.getSelection();
 
     if (selection.isCollapsed) {
+      if (!this.menuInstance?.expanded) {
+        this.args.quoteState.clear();
+      }
       return;
     }
 
@@ -233,12 +236,8 @@ export default class PostTextSelection extends Component {
   }
 
   @bind
-  mousedown(event) {
+  mousedown() {
     this.holdingMouseDown = false;
-
-    if (!event.target.closest(".cooked")) {
-      return;
-    }
 
     this.isMousedown = true;
     this.holdingMouseDownHandler = discourseLater(() => {
