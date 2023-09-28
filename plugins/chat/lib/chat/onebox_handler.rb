@@ -61,7 +61,7 @@ module Chat
       args.merge!(
         cooked: build_thread_snippet(thread),
         thread_id: thread.id,
-        thread_title: build_thread_title(thread),
+        thread_title: thread.title,
         thread_title_connector: I18n.t("chat.onebox.thread_title_connector"),
       )
 
@@ -79,7 +79,7 @@ module Chat
         created_at: message.created_at,
         created_at_str: message.created_at.iso8601,
         thread_id: message.thread_id,
-        thread_title: build_thread_title(thread),
+        thread_title: thread&.title,
       )
 
       build_image_args(args, message)
@@ -128,11 +128,6 @@ module Chat
       if chat_channel.user_count > users.size
         I18n.t("chat.onebox.and_x_others", count: chat_channel.user_count - users.size)
       end
-    end
-
-    def self.build_thread_title(thread)
-      return nil if !thread
-      thread.title || I18n.t("chat.onebox.default_thread_title")
     end
 
     def self.build_thread_snippet(thread)
