@@ -49,9 +49,9 @@ class DiscourseJsProcessor
     { data: data }
   end
 
-  def self.transpile(data, root_path, logical_path, theme_id: nil)
+  def self.transpile(data, root_path, logical_path, theme_id: nil, extension: nil)
     transpiler = Transpiler.new(skip_module: skip_module?(data))
-    transpiler.perform(data, root_path, logical_path, theme_id: theme_id)
+    transpiler.perform(data, root_path, logical_path, theme_id: theme_id, extension: extension)
   end
 
   def self.should_transpile?(filename)
@@ -184,7 +184,7 @@ class DiscourseJsProcessor
       @skip_module = skip_module
     end
 
-    def perform(source, root_path = nil, logical_path = nil, theme_id: nil)
+    def perform(source, root_path = nil, logical_path = nil, theme_id: nil, extension: nil)
       self.class.v8_call(
         "transpile",
         source,
@@ -192,6 +192,7 @@ class DiscourseJsProcessor
           skipModule: @skip_module,
           moduleId: module_name(root_path, logical_path),
           filename: logical_path || "unknown",
+          extension: extension,
           themeId: theme_id,
           commonPlugins: DISCOURSE_COMMON_BABEL_PLUGINS,
         },

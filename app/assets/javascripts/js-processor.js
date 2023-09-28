@@ -129,14 +129,15 @@ globalThis.compileRawTemplate = function (source, themeId) {
 };
 
 globalThis.transpile = function (source, options = {}) {
-  const { moduleId, filename, skipModule, themeId, commonPlugins } = options;
-  const plugins = [];
+  const { moduleId, filename, extension, skipModule, themeId, commonPlugins } =
+    options;
 
-  if (/* GJS */ true) {
+  if (extension === "gjs") {
     const p = new Preprocessor();
     source = p.process(source);
   }
 
+  const plugins = [];
   plugins.push(...buildTemplateCompilerBabelPlugins({ themeId }));
   if (moduleId && !skipModule) {
     plugins.push(["transform-modules-amd", { noInterop: true }]);
