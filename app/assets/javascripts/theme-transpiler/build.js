@@ -60,7 +60,7 @@ esbuild
     define: {
       process: `{ "env": {} }`,
     },
-    entryPoints: ["./app/assets/javascripts/js-processor.js"],
+    entryPoints: ["./app/assets/javascripts/theme-transpiler/index.js"],
     outfile: argv[2],
     plugins: [wasmPlugin],
   })

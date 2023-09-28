@@ -309,16 +309,16 @@ task "assets:precompile:compress_js": "environment" do
   end
 end
 
-task "assets:precompile:js_processor": "environment" do
-  path = DiscourseJsProcessor::Transpiler.generate_js_processor
-  puts "Compiled js-processor: #{path}"
+task "assets:precompile:theme_transpiler": "environment" do
+  path = DiscourseJsProcessor::Transpiler.build_theme_transpiler
+  puts "Compiled theme-transpiler: #{path}"
 end
 
 # Run these tasks **before** Rails' "assets:precompile" task
 task "assets:precompile": %w[
        assets:precompile:before
        maxminddb:refresh
-       assets:precompile:js_processor
+       assets:precompile:theme_transpiler
      ]
 
 # Run these tasks **after** Rails' "assets:precompile" task

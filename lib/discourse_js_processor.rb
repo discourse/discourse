@@ -98,8 +98,14 @@ class DiscourseJsProcessor
   end
 
   class Transpiler
-    JS_PROCESSOR_PATH =
-      Rails.env.production? ? "tmp/js-processor.js" : "tmp/js-processor/#{Process.pid}.js"
+    TRANSPILER_PATH =
+      (
+        if Rails.env.production?
+          "tmp/theme-transpiler.js"
+        else
+          "tmp/theme-transpiler/#{Process.pid}.js"
+        end
+      )
 
     @mutex = Mutex.new
     @ctx_init = Mutex.new
@@ -109,13 +115,13 @@ class DiscourseJsProcessor
       @mutex
     end
 
-    def self.generate_js_processor
+    def self.build_theme_transpiler
       Discourse::Utils.execute_command(
         "node",
-        "app/assets/javascripts/build-js-processor.js",
-        JS_PROCESSOR_PATH,
+        "app/assets/javascripts/theme-transpiler/build.js",
+        TRANSPILER_PATH,
       )
-      JS_PROCESSOR_PATH
+      TRANSPILER_PATH
     end
 
     def self.create_new_context
@@ -129,10 +135,10 @@ class DiscourseJsProcessor
 
       # Theme template AST transformation plugins
       if Rails.env.development? || Rails.env.test?
-        @processor_mutex.synchronize { generate_js_processor }
+        @processor_mutex.synchronize { build_theme_transpiler }
       end
 
-      ctx.eval(File.read(JS_PROCESSOR_PATH), filename: "js-processor.js")
+      ctx.eval(File.read(TRANSPILER_PATH), filename: "theme-transpiler.js")
 
       ctx
     end

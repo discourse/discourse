@@ -220,7 +220,7 @@ task "db:migrate" => %w[
        load_config
        environment
        set_locale
-       assets:precompile:js_processor
+       assets:precompile:build_theme_transpiler
      ] do |_, args|
   DistributedMutex.synchronize(
     "db_migration",

@@ -15,9 +15,10 @@
     "discourse-widget-hbs",
     "ember-cli-progress-ci",
     "ember-production-deprecations",
+    "float-kit",
     "pretty-text",
     "select-kit",
-    "float-kit",
+    "theme-transpiler",
     "truth-helpers",
     "wizard"
   ],
