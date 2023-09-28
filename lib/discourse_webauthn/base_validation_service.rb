@@ -2,11 +2,11 @@
 
 module DiscourseWebauthn
   class BaseValidationService
-    def initialize(current_user, params, options = {})
+    def initialize(current_user, params, session:, factor_type:)
       @current_user = current_user
       @params = params
-      @factor_type = options[:factor_type]
-      @session = options[:session]
+      @factor_type = factor_type
+      @session = session
     end
 
     def validate_webauthn_type(type_to_check)

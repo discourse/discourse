@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 require "discourse_webauthn"
-require "webauthn/registration_service"
 
 ##
 # These tests use the following parameters generated on a local discourse
@@ -39,7 +38,7 @@ require "webauthn/registration_service"
 # The origin param needs to be http://localhost:3000 (that's the port tests run on)
 
 RSpec.describe DiscourseWebauthn::AuthenticationService do
-  subject(:service) { described_class.new(current_user, params, options) }
+  subject(:service) { described_class.new(current_user, params, **options) }
 
   let(:security_key_user) { current_user }
   let!(:security_key) do

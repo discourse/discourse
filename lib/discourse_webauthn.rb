@@ -1,8 +1,4 @@
 # frozen_string_literal: true
-require "webauthn/challenge_generator"
-require "webauthn/base_validation_service"
-require "webauthn/registration_service"
-require "webauthn/authentication_service"
 
 module DiscourseWebauthn
   ACCEPTABLE_REGISTRATION_TYPE = "webauthn.create"

@@ -167,6 +167,7 @@ module SecondFactorManager
       self,
       security_key_credential,
       session: secure_session,
+      factor_type: UserSecurityKey.factor_types[:second_factor],
     ).authenticate_security_key
   end
 
