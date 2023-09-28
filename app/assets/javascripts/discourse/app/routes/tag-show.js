@@ -1,3 +1,4 @@
+import { inject as service } from "@ember/service";
 import {
   filterQueryParams,
   findTopicList,
@@ -17,21 +18,19 @@ import { setTopicList } from "discourse/lib/topic-list-tracker";
 import showModal from "discourse/lib/show-modal";
 import { action } from "@ember/object";
 import PreloadStore from "discourse/lib/preload-store";
-import { inject as service } from "@ember/service";
 
 const NONE = "none";
 const ALL = "all";
 
-export default DiscourseRoute.extend({
-  composer: service(),
-  router: service(),
-  currentUser: service(),
-  navMode: "latest",
+export default class TagShowRoute extends DiscourseRoute {
+  @service composer;
+  @service router;
+  @service currentUser;
 
-  queryParams,
-
-  controllerName: "tag.show",
-  templateName: "tag.show",
+  navMode = "latest";
+  queryParams = queryParams;
+  controllerName = "tag.show";
+  templateName = "tag.show";
 
   beforeModel() {
     const controller = this.controllerFor("tag.show");
@@ -39,7 +38,7 @@ export default DiscourseRoute.extend({
       loading: true,
       showInfo: false,
     });
-  },
+  }
 
   async model(params, transition) {
     const tag = this.store.createRecord("tag", {
@@ -138,7 +137,7 @@ export default DiscourseRoute.extend({
       canCreateTopicOnCategory: category?.permission === PermissionType.FULL,
       canCreateTopicOnTag: !tag.staff || this.currentUser?.staff,
     };
-  },
+  }
 
   setupController(controller, model) {
     const noSubcategories = this.noSubcategories;
@@ -166,7 +165,7 @@ export default DiscourseRoute.extend({
     } else {
       this.searchService.searchContext = model.tag.searchContext;
     }
-  },
+  }
 
   titleToken() {
     const filterText = I18n.t(
@@ -199,17 +198,17 @@ export default DiscourseRoute.extend({
         });
       }
     }
-  },
+  }
 
   deactivate() {
-    this._super(...arguments);
+    super.deactivate(...arguments);
     this.searchService.searchContext = null;
-  },
+  }
 
   @action
   renameTag(tag) {
     showModal("rename-tag", { model: tag });
-  },
+  }
 
   @action
   createTopic() {
@@ -231,13 +230,13 @@ export default DiscourseRoute.extend({
           }
         });
     }
-  },
+  }
 
   @action
   dismissReadTopics(dismissTopics) {
     const operationType = dismissTopics ? "topics" : "posts";
     this.send("dismissRead", operationType);
-  },
+  }
 
   @action
   dismissRead(operationType) {
@@ -256,16 +255,16 @@ export default DiscourseRoute.extend({
     }
 
     controller.send("dismissRead", operationType, options);
-  },
+  }
 
   @action
   resetParams(skipParams = []) {
     resetParams.call(this, skipParams);
-  },
+  }
 
   _controllerTags(controller) {
     return [controller.get("model.id"), ...makeArray(controller.additionalTags)]
       .filter(Boolean)
       .filter((tag) => ![NONE, ALL].includes(tag));
-  },
-});
+  }
+}
