@@ -70,9 +70,6 @@ module.exports = function (defaults) {
             util: require.resolve("util/"),
             // Also for sinon
             timers: false,
-            // For source-map-support
-            path: require.resolve("path-browserify"),
-            fs: false,
           },
         },
         module: {
@@ -223,13 +220,6 @@ module.exports = function (defaults) {
             javascript: {
               exportsPresence: "error",
             },
-          },
-        },
-        resolve: {
-          fallback: {
-            // For source-map-support
-            path: require.resolve("path-browserify"),
-            fs: false,
           },
         },
       },
