@@ -91,7 +91,7 @@ export default class DiscoveryTopics extends Component {
     const tracker = this.topicTrackingState;
 
     // Move inserted into topics
-    this.model.loadBefore(tracker.get("newIncoming"), true);
+    this.args.model.loadBefore(tracker.get("newIncoming"), true);
     tracker.resetTracking();
   }
 
@@ -168,7 +168,7 @@ export default class DiscoveryTopics extends Component {
       return;
     }
 
-    const segments = (this.get("model.filter") || "").split("/");
+    const segments = (this.args.model.get("filter") || "").split("/");
 
     let tab = segments[segments.length - 1];
 
