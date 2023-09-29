@@ -311,6 +311,29 @@ RSpec.describe Admin::UsersController do
         )
       end
 
+      context "with webhook" do
+        fab!(:user_web_hook) { Fabricate(:user_web_hook) }
+
+        it "enqueues a user_suspended webhook event" do
+          expect do
+            put "/admin/users/#{user.id}/suspend.json",
+                params: {
+                  suspend_until: 5.hours.from_now,
+                  reason: "because I said so",
+                }
+          end.to change { Jobs::EmitWebHookEvent.jobs.size }.by(2)
+
+          user.reload
+          job_args =
+            Jobs::EmitWebHookEvent.jobs.last["args"].find do |args|
+              args["event_name"] == "user_suspended"
+            end
+          expect(job_args).to be_present
+          expect(job_args["id"]).to eq(user.id)
+          expect(job_args["payload"]).to eq(WebHook.generate_payload(:user, user))
+        end
+      end
+
       it "requires suspend_until and reason" do
         expect(user).not_to be_suspended
         put "/admin/users/#{user.id}/suspend.json", params: {}
@@ -492,6 +515,29 @@ RSpec.describe Admin::UsersController do
         expect(user.suspended_at).to be_nil
         expect(user.suspended_till).to be_nil
         expect(user.suspend_record).to be_nil
+      end
+    end
+  end
+
+  describe "#unsuspend" do
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+
+      context "with webhook" do
+        fab!(:user_web_hook) { Fabricate(:user_web_hook) }
+
+        it "enqueues a user_unsuspended webhook event" do
+          user.update!(suspended_at: DateTime.now, suspended_till: 2.years.from_now)
+
+          expect do put "/admin/users/#{user.id}/unsuspend.json" end.to change {
+            Jobs::EmitWebHookEvent.jobs.size
+          }.by(1)
+
+          user.reload
+          job_args = Jobs::EmitWebHookEvent.jobs.last["args"].first
+          expect(job_args["id"]).to eq(user.id)
+          expect(job_args["payload"]).to eq(WebHook.generate_payload(:user, user))
+        end
       end
     end
   end

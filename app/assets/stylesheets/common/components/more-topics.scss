@@ -35,11 +35,13 @@
     }
   }
 
-  .topic-list .topic-list-data:first-of-type {
-    padding-left: 5px;
-  }
-
   .more-topics__list {
+    .topic-list-header:after {
+      content: "";
+      display: block;
+      height: 10px;
+    }
+
     .topic-list-body {
       border-top: none;
 
