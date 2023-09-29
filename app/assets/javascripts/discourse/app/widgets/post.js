@@ -79,7 +79,7 @@ export function avatarFor(wanted, attrs, linkAttrs) {
   // making them redundant for screen readers
   // so we hide the avatar from screen readers by default
   if (attrs.ariaHidden === false) {
-    attributes["aria-label"] = I18n.t("user.profile_posessive", {
+    attributes["aria-label"] = I18n.t("user.profile_possessive", {
       username: attrs.username,
     });
   } else {
