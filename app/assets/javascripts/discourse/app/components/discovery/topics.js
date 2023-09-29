@@ -81,6 +81,7 @@ export default class DiscoveryTopics extends Component.extend(DismissTopics) {
       return this.topicTrackingState.countUnread({
         categoryId: this.category?.id,
         noSubcategories: this.noSubcategories,
+        tagId: this.tag?.id,
       });
     } else {
       return 0;
@@ -93,6 +94,7 @@ export default class DiscoveryTopics extends Component.extend(DismissTopics) {
       return this.topicTrackingState.countNew({
         categoryId: this.category?.id,
         noSubcategories: this.noSubcategories,
+        tagId: this.tag?.id,
       });
     } else {
       return 0;
