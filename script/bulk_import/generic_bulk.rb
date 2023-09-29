@@ -925,7 +925,7 @@ class BulkImport::Generic < BulkImport::Base
 
     votable_type = "Post"
     existing_votes =
-      PostVotingComment.where(votable_type: votable_type).pluck(:user_id, :votable_id).to_set
+      PostVotingVote.where(votable_type: votable_type).pluck(:user_id, :votable_id).to_set
 
     create_post_voting_votes(votes) do |row|
       user_id = user_id_from_imported_id(row["user_id"])
