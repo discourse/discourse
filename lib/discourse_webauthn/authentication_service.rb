@@ -15,12 +15,13 @@ module DiscourseWebauthn
         )
       end
 
-      # 3. Identify the user being authenticated and verify that this user is the
-      #    owner of the public key credential source credentialSource identified by credential.id:
       security_key = UserSecurityKey.find_by(credential_id: @params[:credentialId])
       raise(KeyNotFoundError, I18n.t("webauthn.validation.not_found_error")) if security_key.blank?
+
+      # 3. Identify the user being authenticated and verify that this user is the
+      #    owner of the public key credential source credentialSource identified by credential.id:
       if @factor_type == UserSecurityKey.factor_types[:second_factor] &&
-           security_key.user != @current_user
+           (@current_user == nil || security_key.user == nil || security_key.user != @current_user)
         raise(OwnershipError, I18n.t("webauthn.validation.ownership_error"))
       end
 

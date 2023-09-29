@@ -5889,6 +5889,10 @@ RSpec.describe UsersController do
             expect(user1.reload.user_second_factors).to be_empty
             expect(user1.second_factor_security_keys).to be_empty
             expect(user1.security_keys.length).to eq(1)
+            expect(user1.security_keys[0].factor_type).to eq(
+              UserSecurityKey.factor_types[:first_factor],
+            )
+            expect(user1.passkey_credential_ids.length).to eq(1)
           end
         end
       end

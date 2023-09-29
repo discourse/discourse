@@ -1727,16 +1727,13 @@ class User < ActiveRecord::Base
   end
 
   def second_factor_security_key_credential_ids
-    security_keys.where(factor_type: UserSecurityKey.factor_types[:second_factor]).pluck(
-      :credential_id,
-    )
+    second_factor_security_keys.pluck(:credential_id)
   end
 
   def passkey_credential_ids
-    security_keys
-      .select(:credential_id)
-      .where(factor_type: UserSecurityKey.factor_types[:first_factor])
-      .pluck(:credential_id)
+    security_keys.where(factor_type: UserSecurityKey.factor_types[:first_factor]).pluck(
+      :credential_id,
+    )
   end
 
   def encoded_username(lower: false)

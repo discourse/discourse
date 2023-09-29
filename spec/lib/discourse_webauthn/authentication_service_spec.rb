@@ -148,6 +148,18 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
     end
   end
 
+  context "when the second-factor authentication is initiated without a user" do
+    let(:current_user) { nil }
+    let(:security_key_user) { Fabricate(:user) }
+
+    it "raises an OwnershipError" do
+      expect { service.authenticate_security_key }.to raise_error(
+        DiscourseWebauthn::OwnershipError,
+        I18n.t("webauthn.validation.ownership_error"),
+      )
+    end
+  end
+
   context "when the client data webauthn type is not webauthn.get" do
     let(:client_data_webauthn_type) { "webauthn.explode" }
 
