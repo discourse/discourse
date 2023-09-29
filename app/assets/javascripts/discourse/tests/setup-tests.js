@@ -42,13 +42,6 @@ import SiteSettingService from "discourse/services/site-settings";
 import jQuery from "jquery";
 import { setupDeprecationCounter } from "discourse/tests/helpers/deprecation-counter";
 import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
-import SourceMapSupport from "source-map-support";
-
-// Updates Error.stack to include source-mapped locations.
-// Makes QUnit errors more human-readable
-SourceMapSupport.install({
-  handleUncaughtExceptions: false,
-});
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;
@@ -309,18 +302,8 @@ export default function setupTests(config) {
       throw new Error(error);
     };
 
-    pretender.checkPassthrough = (request) => {
-      const requestUrl = new URL(request.url, location.href);
-      if (
-        requestUrl.origin === location.origin &&
-        requestUrl.pathname.startsWith("/assets/")
-      ) {
-        // Likely a request from source-map-support package
-        return true;
-      }
-
-      return request.requestHeaders["Discourse-Script"];
-    };
+    pretender.checkPassthrough = (request) =>
+      request.requestHeaders["Discourse-Script"];
 
     applyPretender(ctx.module, pretender, pretenderHelpers());
 
@@ -412,7 +395,6 @@ export default function setupTests(config) {
   setupToolbar();
   reportMemoryUsageAfterTests();
   patchFailedAssertion();
-  patchStacktraceOrigin();
 
   if (!hasPluginJs && !hasThemeJs) {
     configureRaiseOnDeprecation();
@@ -433,25 +415,6 @@ function patchFailedAssertion() {
       console.warn(
         "ℹ️ Hint: when the assertion failed, the Ember runloop was not in a settled state. Maybe you missed an `await` further up the test? Or maybe you need to manually add `await settled()` before your assertion?",
         getSettledState()
-      );
-    }
-
-    oldPushResult.call(this, resultInfo);
-  };
-}
-
-/**
- * Stacktraces tend to look something like `http://localhost:4200/assets/...`.
- * This patch removes the `http://localhost:4200` part to make things cleaner.
- */
-function patchStacktraceOrigin() {
-  const oldPushResult = QUnit.assert.pushResult;
-
-  QUnit.assert.pushResult = function (resultInfo) {
-    if (resultInfo.source) {
-      resultInfo.source = resultInfo.source.replaceAll(
-        `${window.origin}/`,
-        "/"
       );
     }
 
