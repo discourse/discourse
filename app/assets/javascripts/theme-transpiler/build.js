@@ -61,7 +61,7 @@ esbuild
       process: `{ "env": {} }`,
     },
     external: ["fs", "path"],
-    entryPoints: ["./app/assets/javascripts/theme-transpiler/index.js"],
+    entryPoints: ["./app/assets/javascripts/theme-transpiler/transpiler.js"],
     outfile: argv[2],
     plugins: [wasmPlugin],
   })
