@@ -190,7 +190,7 @@ export default class DiscoveryTopics extends Component {
   get renderNewListHeaderControls() {
     return (
       this.site.mobileView &&
-      this.args.showTopicsAndRepliesToggle &&
+      this.showTopicsAndRepliesToggle &&
       !this.args.bulkSelectEnabled
     );
   }
