@@ -404,6 +404,22 @@ module DiscourseTagging
     )
   SQL
 
+  TAGS_FROM_UNASSOCIATED_TAG_GROUPS ||= <<~SQL
+    tags_from_unassociated_tag_groups AS (
+      SELECT tgm.tag_id
+      FROM tag_group_memberships tgm
+      WHERE tgm.tag_group_id NOT IN (
+        SELECT ctg.tag_group_id
+        FROM category_tag_groups ctg
+        WHERE ctg.category_id = :category_id
+        UNION
+        SELECT crt.tag_group_id
+        FROM category_required_tag_groups crt
+        WHERE crt.category_id = :category_id
+      )
+    )
+  SQL
+
   # Options:
   #   term: a search term to filter tags by name
   #   term_type: whether to search by "starts_with" or "contains" with the term
@@ -432,6 +448,12 @@ module DiscourseTagging
     builder_params[:selected_tag_ids] = selected_tag_ids unless selected_tag_ids.empty?
 
     sql = +"WITH #{TAG_GROUP_RESTRICTIONS_SQL}, #{CATEGORY_RESTRICTIONS_SQL}"
+
+    if category.present?
+      builder_params[:category_id] = category.id
+      sql << ", #{TAGS_FROM_UNASSOCIATED_TAG_GROUPS}"
+    end
+
     if (opts[:for_input] || opts[:for_topic]) && filter_for_non_staff
       sql << ", #{PERMITTED_TAGS_SQL} "
       builder_params[:group_ids] = permitted_group_ids(guardian)
@@ -503,6 +525,11 @@ module DiscourseTagging
       builder.where(
         "tag_group_id IS NULL OR tag_group_id IN (SELECT tag_group_id FROM permitted_tag_groups)",
       )
+    end
+
+    if opts[:for_input] && selected_tag_ids.blank? && category.present?
+      builder_params[:category_id] = category.id
+      builder.where("t.id NOT IN (SELECT tag_id FROM tags_from_unassociated_tag_groups)")
     end
 
     term = opts[:term]
