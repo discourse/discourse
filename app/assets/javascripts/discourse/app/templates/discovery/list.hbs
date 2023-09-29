@@ -2,18 +2,6 @@
   @category={{this.category}}
   @createTopicDisabled={{this.createTopicDisabled}}
 >
-  <:header>
-    {{#if this.subcategoriesComponent}}
-      {{! TODO: More HTML wrappers required here for theme compat? Previously this was rendering the entire discovery/categories controller}}
-      <this.subcategoriesComponent
-        @categories={{this.subcategoryList.categories}}
-      />
-    {{/if}}
-    {{#if this.showTagInfo}}
-      <TagInfo @tag={{this.tag}} @list={{this.model}} />
-    {{/if}}
-  </:header>
-
   <:navigation>
     <Navigation::Default
       @category={{this.navigationArgs.category}}
@@ -30,6 +18,18 @@
       @tagNotification={{this.tagNotification}}
     />
   </:navigation>
+
+  <:header>
+    {{#if this.subcategoriesComponent}}
+      <this.subcategoriesComponent
+        @categories={{this.subcategoryList.categories}}
+      />
+    {{/if}}
+    {{#if this.showTagInfo}}
+      <TagInfo @tag={{this.tag}} @list={{this.model}} />
+    {{/if}}
+  </:header>
+
   <:list>
     {{this.setTrackingTopicList this.model}}
     <Discovery::Topics
