@@ -318,9 +318,12 @@ html {
     background-color: var(--tertiary-very-low);
   }
 
-  .user-main .flagged-posts,
   .user-main .deleted-posts {
     color: var(--primary);
+  }
+
+  .user-main .flagged-posts {
+    color: dark-light-choose($primary, $secondary);
   }
 
   .uploaded-image-preview
@@ -406,6 +409,11 @@ html {
     background: dark-light-choose($primary-very-low, $secondary-very-high);
   }
 
+  .reviewable .status span.approved {
+    color: var(--success-hover);
+  }
+
+  // Chat
   .chat-channel .open-drawer-btn {
     color: var(--primary-medium);
   }
