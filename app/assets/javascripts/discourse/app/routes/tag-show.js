@@ -22,7 +22,7 @@ export default class TagShowRoute extends DiscourseRoute {
   @service currentUser;
 
   queryParams = queryParams;
-  controllerName = "discovery-sortable";
+  controllerName = "discovery/list";
   templateName = "discovery/list";
   routeConfig = {};
 
