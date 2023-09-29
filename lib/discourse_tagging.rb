@@ -527,11 +527,6 @@ module DiscourseTagging
       )
     end
 
-    if opts[:for_input] && selected_tag_ids.blank? && category.present?
-      builder_params[:category_id] = category.id
-      builder.where("t.id NOT IN (SELECT tag_id FROM tags_from_unassociated_tag_groups)")
-    end
-
     term = opts[:term]
     if term.present?
       term = term.gsub("_", "\\_").downcase
@@ -599,12 +594,15 @@ module DiscourseTagging
          WHERE tg.one_per_topic
       SQL
 
-      if !one_tag_per_group_ids.empty?
+      if one_tag_per_group_ids.present?
         builder.where(
           "t.id NOT IN (SELECT DISTINCT tag_id FROM tag_group_restrictions WHERE tag_group_id IN (?)) OR id IN (:selected_tag_ids)",
           one_tag_per_group_ids,
         )
       end
+    elsif opts[:for_input] && selected_tag_ids.blank? && category.present?
+      builder_params[:category_id] = category.id
+      builder.where("t.id NOT IN (SELECT tag_id FROM tags_from_unassociated_tag_groups)")
     end
 
     builder.where("target_tag_id IS NULL") if opts[:exclude_synonyms]
