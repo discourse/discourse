@@ -484,11 +484,11 @@ class BulkImport::Base
 
   GROUP_USER_COLUMNS ||= %i[group_id user_id created_at updated_at]
 
-  USER_CUSTOM_FIELD_COLUMNS ||= %i[id user_id name value created_at updated_at]
+  USER_CUSTOM_FIELD_COLUMNS ||= %i[user_id name value created_at updated_at]
 
-  POST_CUSTOM_FIELD_COLUMNS ||= %i[id post_id name value created_at updated_at]
+  POST_CUSTOM_FIELD_COLUMNS ||= %i[post_id name value created_at updated_at]
 
-  TOPIC_CUSTOM_FIELD_COLUMNS ||= %i[id topic_id name value created_at updated_at]
+  TOPIC_CUSTOM_FIELD_COLUMNS ||= %i[topic_id name value created_at updated_at]
 
   USER_ACTION_COLUMNS ||= %i[
     action_type
