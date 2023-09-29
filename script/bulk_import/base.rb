@@ -614,7 +614,7 @@ class BulkImport::Base
 
   UPLOAD_REFERENCE_COLUMNS ||= %i[upload_id target_type target_id created_at updated_at]
 
-  QUESTION_ANSWER_VOTE_COLUMNS ||= %i[user_id votable_type votable_id direction created_at]
+  POST_VOTING_VOTE_COLUMNS ||= %i[user_id votable_type votable_id direction created_at]
 
   def create_groups(rows, &block)
     create_records(rows, "group", GROUP_COLUMNS, &block)
@@ -716,8 +716,8 @@ class BulkImport::Base
     create_records(rows, "upload_reference", UPLOAD_REFERENCE_COLUMNS, &block)
   end
 
-  def create_question_answer_votes(rows, &block)
-    create_records(rows, "question_answer_vote", QUESTION_ANSWER_VOTE_COLUMNS, &block)
+  def create_post_voting_votes(rows, &block)
+    create_records(rows, "post_voting_vote", POST_VOTING_VOTE_COLUMNS, &block)
   end
 
   def create_post_custom_fields(rows, &block)
@@ -999,6 +999,7 @@ class BulkImport::Base
     end
     post[:raw] = normalize_text(post[:raw])
     post[:like_count] ||= 0
+    post[:score] ||= 0
     post[:cooked] = pre_cook post[:raw]
     post[:hidden] ||= false
     post[:word_count] = post[:raw].scan(/[[:word:]]+/).size
@@ -1073,9 +1074,9 @@ class BulkImport::Base
     upload_reference
   end
 
-  def process_question_answer_vote(question_answer_vote)
-    question_answer_vote[:created_at] ||= NOW
-    question_answer_vote
+  def process_post_voting_vote(vote)
+    vote[:created_at] ||= NOW
+    vote
   end
 
   def process_user_avatar(avatar)
