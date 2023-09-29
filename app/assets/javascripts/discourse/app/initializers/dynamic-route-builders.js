@@ -1,4 +1,3 @@
-import DiscoverySortableController from "discourse/controllers/discovery-sortable";
 import Site from "discourse/models/site";
 import { buildTagRoute } from "discourse/routes/tag-show";
 import buildCategoryRoute from "discourse/routes/build-category-route";
@@ -9,19 +8,6 @@ export default {
   after: "inject-discourse-objects",
 
   initialize(app) {
-    app.register(
-      "controller:discovery.category",
-      DiscoverySortableController.extend()
-    );
-    app.register(
-      "controller:discovery.category-none",
-      DiscoverySortableController.extend()
-    );
-    app.register(
-      "controller:discovery.category-all",
-      DiscoverySortableController.extend()
-    );
-
     app.register(
       "route:discovery.category",
       buildCategoryRoute({ filter: "default" })
@@ -38,18 +24,6 @@ export default {
     const site = Site.current();
     site.get("filters").forEach((filter) => {
       const filterDasherized = dasherize(filter);
-      app.register(
-        `controller:discovery.${filterDasherized}`,
-        DiscoverySortableController.extend()
-      );
-      app.register(
-        `controller:discovery.${filterDasherized}-category`,
-        DiscoverySortableController.extend()
-      );
-      app.register(
-        `controller:discovery.${filterDasherized}-category-none`,
-        DiscoverySortableController.extend()
-      );
 
       app.register(
         `route:discovery.${filterDasherized}`,

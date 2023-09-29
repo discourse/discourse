@@ -1,7 +1,4 @@
-import {
-  queryParams,
-  resetParams,
-} from "discourse/controllers/discovery-sortable";
+import { queryParams, resetParams } from "discourse/controllers/discovery/list";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
 import Session from "discourse/models/session";
@@ -98,6 +95,7 @@ class AbstractTopicRoute extends DiscourseRoute {
   @service screenTrack;
   queryParams = queryParams;
   templateName = "discovery/list";
+  controllerName = "discovery/list";
 
   model(data, transition) {
     // attempt to stop early cause we need this to be called before .sync

@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
 import { inject as service } from "@ember/service";
-import { categoriesComponent } from "./discovery/categories";
+import { categoriesComponent } from "./categories";
 import { getOwner } from "@ember/application";
 import { tracked } from "@glimmer/tracking";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
@@ -47,7 +47,7 @@ export function addDiscoveryQueryParam(p, opts) {
 }
 
 @disableImplicitInjections
-export default class DiscoverySortableController extends Controller {
+export default class DiscoveryListController extends Controller {
   @service composer;
   @service siteSettings;
   @service site;

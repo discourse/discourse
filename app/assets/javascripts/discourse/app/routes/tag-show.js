@@ -3,10 +3,7 @@ import {
   filterQueryParams,
   findTopicList,
 } from "discourse/routes/build-topic-route";
-import {
-  queryParams,
-  resetParams,
-} from "discourse/controllers/discovery-sortable";
+import { queryParams, resetParams } from "discourse/controllers/discovery/list";
 import Category from "discourse/models/category";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";

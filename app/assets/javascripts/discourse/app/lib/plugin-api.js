@@ -47,7 +47,7 @@ import { addAdvancedSearchOptions } from "discourse/components/search-advanced-o
 import { addCardClickListenerSelector } from "discourse/mixins/card-contents-base";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 import { addDecorator } from "discourse/widgets/post-cooked";
-import { addDiscoveryQueryParam } from "discourse/controllers/discovery-sortable";
+import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
 import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
 import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
 import { addGlobalNotice } from "discourse/components/global-notice";

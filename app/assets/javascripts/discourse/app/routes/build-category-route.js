@@ -1,9 +1,6 @@
 import { inject as service } from "@ember/service";
 import { Promise, all } from "rsvp";
-import {
-  queryParams,
-  resetParams,
-} from "discourse/controllers/discovery-sortable";
+import { queryParams, resetParams } from "discourse/controllers/discovery/list";
 import {
   filterQueryParams,
   findTopicList,
@@ -23,6 +20,7 @@ class AbstractCategoryRoute extends DiscourseRoute {
   queryParams = queryParams;
 
   templateName = "discovery/list";
+  controllerName = "discovery/list";
 
   model(modelParams) {
     const category = Category.findBySlugPathWithID(

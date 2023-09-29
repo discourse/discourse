@@ -13,7 +13,8 @@ import { inject as service } from "@ember/service";
 export default class DiscoveryCategoriesRoute extends DiscourseRoute {
   @service router;
 
-  templateName = "discovery/categories-route";
+  templateName = "discovery/categories";
+  controllerName = "discovery/categories";
 
   findCategories() {
     let style =
