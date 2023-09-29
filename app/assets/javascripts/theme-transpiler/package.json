@@ -2,7 +2,7 @@
   "name": "theme-transpiler",
   "version": "1.0.0",
   "private": true,
-  "description": "TODO",
+  "description": "Uses esbuild to create a 'theme transpiler' bundle for loading into mini-racer",
   "author": "Discourse",
   "license": "GPL-2.0-only",
   "keywords": [],
