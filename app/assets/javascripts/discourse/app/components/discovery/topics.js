@@ -1,47 +1,59 @@
 import { inject as service } from "@ember/service";
-import { alias, empty, equal, gt, readOnly } from "@ember/object/computed";
-import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import I18n from "I18n";
 import Topic from "discourse/models/topic";
-import discourseComputed from "discourse-common/utils/decorators";
-import { endWith } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
 import { action } from "@ember/object";
-import Component from "@ember/component";
+import Component from "@glimmer/component";
 import DismissNew from "discourse/components/modal/dismiss-new";
+import { filterTypeForMode } from "discourse/lib/filter-mode";
 
 export default class DiscoveryTopics extends Component {
   @service router;
   @service composer;
   @service modal;
+  @service currentUser;
+  @service topicTrackingState;
+  @service site;
 
-  bulkSelectHelper = new BulkSelectHelper(this);
+  get redirectedReason() {
+    return this.currentUser?.user_option.redirected_to_top?.reason;
+  }
 
-  period = null;
-  expandGloballyPinned = false;
-  expandAllPinned = false;
+  get order() {
+    return this.args.model.get("params.order");
+  }
 
-  @alias("currentUser.id") canStar;
-  @alias("currentUser.user_option.redirected_to_top.reason") redirectedReason;
-  @readOnly("model.params.order") order;
-  @readOnly("model.params.ascending") ascending;
-  @gt("model.topics.length", 0) hasTopics;
-  @empty("model.more_topics_url") allLoaded;
-  @endWith("model.filter", "latest") latest;
-  @endWith("model.filter", "top") top;
-  @equal("period", "yearly") yearly;
-  @equal("period", "quarterly") quarterly;
-  @equal("period", "monthly") monthly;
-  @equal("period", "weekly") weekly;
-  @equal("period", "daily") daily;
+  get ascending() {
+    return this.args.model.get("params.ascending");
+  }
+
+  get hasTopics() {
+    return this.args.model.get("topics.length") > 0;
+  }
+
+  get allLoaded() {
+    return !this.args.model.get("more_topics_url");
+  }
+
+  get latest() {
+    return filterTypeForMode(this.args.model.filter) === "latest";
+  }
+
+  get top() {
+    return filterTypeForMode(this.args.model.filter) === "top";
+  }
+
+  get new() {
+    return filterTypeForMode(this.args.model.filter) === "new";
+  }
 
   callResetNew(dismissPosts = false, dismissTopics = false, untrack = false) {
     const tracked =
       (this.router.currentRoute.queryParams["f"] ||
         this.router.currentRoute.queryParams["filter"]) === "tracked";
 
-    let topicIds = this.bulkSelectHelper.selected.map((topic) => topic.id);
-    Topic.resetNew(this.category, !this.noSubcategories, {
+    let topicIds = this.args.bulkSelectHelper.selected.map((topic) => topic.id);
+    Topic.resetNew(this.args.category, !this.args.noSubcategories, {
       tracked,
       topicIds,
       dismissPosts,
@@ -52,6 +64,23 @@ export default class DiscoveryTopics extends Component {
         this.topicTrackingState.removeTopics(result.topic_ids);
       }
       this.router.refresh();
+    });
+  }
+
+  @action
+  resetNew() {
+    if (!this.currentUser.new_new_view_enabled) {
+      return this.callResetNew();
+    }
+
+    this.modal.show(DismissNew, {
+      model: {
+        selectedTopics: this.args.bulkSelectHelper.selected,
+        subset: this.args.model.listParams?.subset,
+        dismissCallback: ({ dismissPosts, dismissTopics, untrack }) => {
+          this.callResetNew(dismissPosts, dismissTopics, untrack);
+        },
+      },
     });
   }
 
@@ -66,64 +95,60 @@ export default class DiscoveryTopics extends Component {
     tracker.resetTracking();
   }
 
-  @discourseComputed("model.filter")
-  new(filter) {
-    return filter?.endsWith("new");
+  get showTopicsAndRepliesToggle() {
+    return this.new && this.currentUser?.new_new_view_enabled;
   }
 
-  @discourseComputed("new")
-  showTopicsAndRepliesToggle(isNew) {
-    return isNew && this.currentUser?.new_new_view_enabled;
-  }
+  get newRepliesCount() {
+    this.topicTrackingState.get("messageCount"); // Autotrack this
 
-  @discourseComputed("topicTrackingState.messageCount")
-  newRepliesCount() {
     if (this.currentUser?.new_new_view_enabled) {
       return this.topicTrackingState.countUnread({
-        categoryId: this.category?.id,
-        noSubcategories: this.noSubcategories,
-        tagId: this.tag?.id,
+        categoryId: this.args.category?.id,
+        noSubcategories: this.args.noSubcategories,
+        tagId: this.args.tag?.id,
       });
     } else {
       return 0;
     }
   }
 
-  @discourseComputed("topicTrackingState.messageCount")
-  newTopicsCount() {
+  get newTopicsCount() {
+    this.topicTrackingState.get("messageCount"); // Autotrack this
+
     if (this.currentUser?.new_new_view_enabled) {
       return this.topicTrackingState.countNew({
-        categoryId: this.category?.id,
-        noSubcategories: this.noSubcategories,
-        tagId: this.tag?.id,
+        categoryId: this.args.category?.id,
+        noSubcategories: this.args.noSubcategories,
+        tagId: this.args.tag?.id,
       });
     } else {
       return 0;
     }
   }
 
-  @discourseComputed("new")
-  showTopicPostBadges(isNew) {
-    return !isNew || this.currentUser?.new_new_view_enabled;
+  get showTopicPostBadges() {
+    return !this.new || this.currentUser?.new_new_view_enabled;
   }
 
-  @discourseComputed("allLoaded", "model.topics.length")
-  footerMessage(allLoaded, topicsLength) {
+  get footerMessage() {
+    const allLoaded = this.allLoaded;
+    const topicsLength = this.args.model.get("topics.length");
     if (!allLoaded) {
       return;
     }
 
-    const category = this.category;
+    const { category, tag } = this.args;
     if (category) {
       return I18n.t("topics.bottom.category", {
         category: category.get("name"),
       });
-    } else if (this.tag) {
+    } else if (tag) {
       return I18n.t("topics.bottom.tag", {
-        tag: this.tag.id,
+        tag: tag.id,
       });
     } else {
-      const split = (this.get("model.filter") || "").split("/");
+      const split = (this.args.model.get("filter") || "").split("/");
       if (topicsLength === 0) {
         return I18n.t("topics.none." + split[0], {
           category: split[1],
@@ -136,9 +161,10 @@ export default class DiscoveryTopics extends Component {
     }
   }
 
-  @discourseComputed("allLoaded", "model.topics.length")
-  footerEducation(allLoaded, topicsLength) {
-    if (!allLoaded || topicsLength > 0 || !this.currentUser) {
+  get footerEducation() {
+    const topicsLength = this.args.model.get("topics.length");
+
+    if (!this.allLoaded || topicsLength > 0 || !this.currentUser) {
       return;
     }
 
@@ -164,8 +190,8 @@ export default class DiscoveryTopics extends Component {
   get renderNewListHeaderControls() {
     return (
       this.site.mobileView &&
-      this.get("showTopicsAndRepliesToggle") &&
-      !this.get("bulkSelectEnabled")
+      this.args.showTopicsAndRepliesToggle &&
+      !this.args.bulkSelectEnabled
     );
   }
 
@@ -176,23 +202,6 @@ export default class DiscoveryTopics extends Component {
       categoryId: this.category?.id,
       tagName: this.tag?.id,
       includeSubcategories: this.noSubcategories,
-    });
-  }
-
-  @action
-  resetNew() {
-    if (!this.currentUser.new_new_view_enabled) {
-      return this.callResetNew();
-    }
-
-    this.modal.show(DismissNew, {
-      model: {
-        selectedTopics: this.bulkSelectHelper.selected,
-        subset: this.model.listParams?.subset,
-        dismissCallback: ({ dismissPosts, dismissTopics, untrack }) => {
-          this.callResetNew(dismissPosts, dismissTopics, untrack);
-        },
-      },
     });
   }
 }
