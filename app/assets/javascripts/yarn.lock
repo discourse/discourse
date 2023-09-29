@@ -1163,10 +1163,10 @@
     jquery "^3.5.0"
     resolve "^1.15.1"
 
-"@ember/legacy-built-in-components@^0.4.2":
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/@ember/legacy-built-in-components/-/legacy-built-in-components-0.4.2.tgz#79a97d66153ff17909759b368b2a117bc9e168e5"
-  integrity sha512-rJulbyVQIVe1zEDQDqAQHechHy44DsS2qxO24+NmU/AYxwPFSzWC/OZNCDFSfLU+Y5BVd/00qjxF0pu7Nk+TNA==
+"@ember/legacy-built-in-components@^0.5.0-alpha.0":
+  version "0.5.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/@ember/legacy-built-in-components/-/legacy-built-in-components-0.5.0-alpha.0.tgz#35307110d88b911e6bf1bd56e1a7e304f3ff0fb4"
+  integrity sha512-1FLeOfcTmXDvcNnlH+rdTsngq2Nr0LOLZ4JT9D7D1uT5qieZV07umxKUN33ImY00Zc265mDO+nyxuqfGntxh+A==
   dependencies:
     "@embroider/macros" "^1.0.0"
     ember-cli-babel "^7.26.6"
