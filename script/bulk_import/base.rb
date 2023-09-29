@@ -325,21 +325,6 @@ class BulkImport::Base
     if @last_post_action_id > 0
       @raw_connection.exec("SELECT setval('#{PostAction.sequence_name}', #{@last_post_action_id})")
     end
-    if @last_user_custom_field_id && @last_user_custom_field_id > 0
-      @raw_connection.exec(
-        "SELECT setval('#{UserCustomField.sequence_name}', #{@last_user_custom_field_id})",
-      )
-    end
-    if @last_post_custom_field_id && @last_post_custom_field_id > 0
-      @raw_connection.exec(
-        "SELECT setval('#{PostCustomField.sequence_name}', #{@last_post_custom_field_id})",
-      )
-    end
-    if @last_topic_custom_field_id && @last_topic_custom_field_id > 0
-      @raw_connection.exec(
-        "SELECT setval('#{TopicCustomField.sequence_name}', #{@last_topic_custom_field_id})",
-      )
-    end
     if @last_muted_user_id > 0
       @raw_connection.exec("SELECT setval('#{MutedUser.sequence_name}', #{@last_muted_user_id})")
     end
@@ -674,7 +659,6 @@ class BulkImport::Base
   end
 
   def create_user_custom_fields(rows, &block)
-    @last_user_custom_field_id = last_id(UserCustomField)
     create_records(rows, "user_custom_field", USER_CUSTOM_FIELD_COLUMNS, &block)
   end
 
@@ -737,12 +721,10 @@ class BulkImport::Base
   end
 
   def create_post_custom_fields(rows, &block)
-    @last_post_custom_field_id = last_id(PostCustomField)
     create_records(rows, "post_custom_field", POST_CUSTOM_FIELD_COLUMNS, &block)
   end
 
   def create_topic_custom_fields(rows, &block)
-    @last_topic_custom_field_id = last_id(TopicCustomField)
     create_records(rows, "topic_custom_field", TOPIC_CUSTOM_FIELD_COLUMNS, &block)
   end
 
@@ -1252,21 +1234,18 @@ class BulkImport::Base
   end
 
   def process_user_custom_field(field)
-    field[:id] ||= @last_user_custom_field_id += 1
     field[:created_at] ||= NOW
     field[:updated_at] ||= NOW
     field
   end
 
   def process_post_custom_field(field)
-    field[:id] ||= @last_post_custom_field_id += 1
     field[:created_at] ||= NOW
     field[:updated_at] ||= NOW
     field
   end
 
   def process_topic_custom_field(field)
-    field[:id] ||= @last_topic_custom_field_id += 1
     field[:created_at] ||= NOW
     field[:updated_at] ||= NOW
     field
