@@ -1,7 +1,6 @@
 import { inject as service } from "@ember/service";
 import { alias, empty, equal, gt, readOnly } from "@ember/object/computed";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
-import DismissTopics from "discourse/mixins/dismiss-topics";
 import I18n from "I18n";
 import Topic from "discourse/models/topic";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -9,10 +8,12 @@ import { endWith } from "discourse/lib/computed";
 import { userPath } from "discourse/lib/url";
 import { action } from "@ember/object";
 import Component from "@ember/component";
+import DismissNew from "discourse/components/modal/dismiss-new";
 
-export default class DiscoveryTopics extends Component.extend(DismissTopics) {
+export default class DiscoveryTopics extends Component {
   @service router;
   @service composer;
+  @service modal;
 
   bulkSelectHelper = new BulkSelectHelper(this);
 
@@ -175,6 +176,23 @@ export default class DiscoveryTopics extends Component.extend(DismissTopics) {
       categoryId: this.category?.id,
       tagName: this.tag?.id,
       includeSubcategories: this.noSubcategories,
+    });
+  }
+
+  @action
+  resetNew() {
+    if (!this.currentUser.new_new_view_enabled) {
+      return this.callResetNew();
+    }
+
+    this.modal.show(DismissNew, {
+      model: {
+        selectedTopics: this.bulkSelectHelper.selected,
+        subset: this.model.listParams?.subset,
+        dismissCallback: ({ dismissPosts, dismissTopics, untrack }) => {
+          this.callResetNew(dismissPosts, dismissTopics, untrack);
+        },
+      },
     });
   }
 }
