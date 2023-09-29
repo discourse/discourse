@@ -2354,7 +2354,7 @@ en:
       drafts_offline: "drafts offline"
       edit_conflict: "edit conflict"
       esc: "esc"
-      esc_label: "Click or press Esc to dismiss"
+      esc_label: "dismiss message"
       ok_proceed: "Ok, proceed"
 
       group_mentioned_limit:
