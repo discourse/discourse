@@ -77,7 +77,10 @@ import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-usernam
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import deprecated from "discourse-common/lib/deprecated";
 import { disableNameSuppression } from "discourse/widgets/poster-name";
-import { extraConnectorClass } from "discourse/lib/plugin-connectors";
+import {
+  extraConnectorClass,
+  extraConnectorComponent,
+} from "discourse/lib/plugin-connectors";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { h } from "virtual-dom";
 import { includeAttributes } from "discourse/lib/transform-post";
@@ -938,6 +941,28 @@ class PluginApi {
    **/
   registerConnectorClass(outletName, connectorName, klass) {
     extraConnectorClass(`${outletName}/${connectorName}`, klass);
+  }
+
+  /**
+   * Register a component to be rendered in a particular outlet.
+   *
+   * For example, if the outlet is `user-profile-primary`, you could register
+   * a component like
+   *
+   * ```javascript
+   * import MyComponent from "discourse/plugins/my-plugin/components/my-component";
+   * api.renderIntoOutlet('user-profile-primary', MyComponent);
+   * ```
+   *
+   * Alternatively, a component could be defined inline using gjs:
+   *
+   * ```javascript
+   * api.renderIntoOutlet('user-profile-primary', <template>Hello world</template>);
+   * ```
+   *
+   */
+  renderIntoOutlet(outletName, klass) {
+    extraConnectorComponent(outletName, klass);
   }
 
   /**
