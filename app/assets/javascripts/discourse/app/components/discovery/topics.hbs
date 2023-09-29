@@ -128,7 +128,11 @@
       @education={{this.footerEducation}}
       @message={{this.footerMessage}}
     >
-      {{#if this.latest}}
+      {{#if this.tag}}
+        {{html-safe
+          (i18n "topic.browse_all_tags_or_latest" basePath=(base-path))
+        }}
+      {{else if this.latest}}
         {{#if this.category.canCreateTopic}}
           <DiscourseLinkedText
             @action={{fn

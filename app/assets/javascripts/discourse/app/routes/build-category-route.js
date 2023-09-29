@@ -156,7 +156,6 @@ class AbstractCategoryRoute extends DiscourseRoute {
       category = model.category;
 
     controller.setProperties({
-      discovery: this.controllerFor("discovery"),
       navigationArgs: this._navigationArgs(category),
       subcategoryList: this._categoryList,
     });

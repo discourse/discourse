@@ -7,6 +7,7 @@ import { htmlSafe } from "@ember/template";
 import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import { dependentKeyCompat } from "@ember/object/compat";
+import { action } from "@ember/object";
 
 export default Component.extend({
   router: service(),
@@ -139,6 +140,25 @@ export default Component.extend({
   @discourseComputed("filterType")
   notCategoriesRoute(filterType) {
     return filterType !== "categories";
+  },
+
+  @action
+  changeTagNotificationLevel(notificationLevel) {
+    this.tagNotification
+      .update({ notification_level: notificationLevel })
+      .then((response) => {
+        const payload = response.responseJson;
+
+        this.tagNotification.set("notification_level", notificationLevel);
+
+        this.currentUser.setProperties({
+          watched_tags: payload.watched_tags,
+          watching_first_post_tags: payload.watching_first_post_tags,
+          tracked_tags: payload.tracked_tags,
+          muted_tags: payload.muted_tags,
+          regular_tags: payload.regular_tags,
+        });
+      });
   },
 
   actions: {

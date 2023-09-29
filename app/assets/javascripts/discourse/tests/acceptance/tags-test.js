@@ -543,7 +543,7 @@ acceptance("Tag info", function (needs) {
     await visit("/tag/planters");
     await click("#create-topic");
     let composer = this.owner.lookup("service:composer");
-    assert.strictEqual(composer.get("model").tags, undefined);
+    assert.deepEqual(composer.get("model").tags, []);
   });
 });
 

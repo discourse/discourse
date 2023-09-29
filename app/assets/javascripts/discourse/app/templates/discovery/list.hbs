@@ -9,17 +9,25 @@
         @categories={{this.subcategoryList.categories}}
       />
     {{/if}}
+    {{#if this.showTagInfo}}
+      <TagInfo @tag={{this.tag}} @list={{this.model}} />
+    {{/if}}
   </:header>
 
   <:navigation>
     <Navigation::Default
       @category={{this.navigationArgs.category}}
+      @tag={{this.navigationArgs.tag}}
+      @additionalTags={{this.additionalTags}}
       @filterType={{this.navigationArgs.filterType}}
       @noSubcategories={{this.navigationArgs.noSubcategories}}
       @canBulkSelect={{this.canBulkSelect}}
       @bulkSelectHelper={{this.bulkSelectHelper}}
       @createTopic={{this.createTopic}}
       @createTopicDisabled={{this.createTopicDisabled}}
+      @canCreateTopicOnTag={{this.canCreateTopicOnTag}}
+      @toggleTagInfo={{this.toggleTagInfo}}
+      @tagNotification={{this.tagNotification}}
     />
   </:navigation>
   <:list>
@@ -35,6 +43,7 @@
       @showDismissRead={{this.showDismissRead}}
       @showResetNew={{this.showResetNew}}
       @category={{this.category}}
+      @tag={{this.tag}}
       @changeSort={{this.changeSort}}
       @changeNewListSubset={{this.changeNewListSubset}}
     />

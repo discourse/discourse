@@ -121,6 +121,10 @@ export default class DiscoverySortableController extends Controller {
   createTopic() {
     this.composer.openNewTopic({
       category: this.createTopicTargetCategory,
+      tags: [this.tag?.id, ...(this.additionalTags ?? [])]
+        .filter(Boolean)
+        .reject((t) => ["none", "all"].includes(t))
+        .join(","),
       preferDraft: true,
     });
   }
@@ -151,5 +155,10 @@ export default class DiscoverySortableController extends Controller {
   changeNewListSubset(subset) {
     this.subset = subset;
     this.model.updateNewListSubsetParam(subset);
+  }
+
+  @action
+  toggleTagInfo() {
+    this.toggleProperty("showTagInfo");
   }
 }

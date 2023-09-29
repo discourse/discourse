@@ -115,6 +115,10 @@ export default class DiscoveryTopics extends Component.extend(DismissTopics) {
       return I18n.t("topics.bottom.category", {
         category: category.get("name"),
       });
+    } else if (this.tag) {
+      return I18n.t("topics.bottom.tag", {
+        tag: this.tag.id,
+      });
     } else {
       const split = (this.get("model.filter") || "").split("/");
       if (topicsLength === 0) {
@@ -167,6 +171,7 @@ export default class DiscoveryTopics extends Component.extend(DismissTopics) {
     const operationType = dismissTopics ? "topics" : "posts";
     this.bulkSelectHelper.dismissRead(operationType, {
       categoryId: this.category?.id,
+      tagName: this.tag?.id,
       includeSubcategories: this.noSubcategories,
     });
   }

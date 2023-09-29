@@ -1,6 +1,6 @@
-{{#if @category}}
-  <AddCategoryTagClasses @category={{@category}} />
+<AddCategoryTagClasses @category={{@category}} @tags={{array @tag.id}} />
 
+{{#if @category}}
   <section class="category-heading">
     {{#if @category.uploaded_logo.url}}
       <CategoryLogo @category={{@category}} />
@@ -29,9 +29,12 @@
 >
   <DNavigation
     @category={{@category}}
+    @tag={{@tag}}
+    @additionalTags={{@additionalTags}}
     @filterMode={{this.filterMode}}
     @noSubcategories={{@noSubcategories}}
     @canCreateTopic={{this.canCreateTopic}}
+    @canCreateTopicOnTag={{@canCreateTopicOnTag}}
     @createTopic={{@createTopic}}
     @createTopicDisabled={{@createTopicDisabled}}
     @hasDraft={{this.currentUser.has_topic_draft}}
@@ -42,5 +45,15 @@
     @canBulkSelect={{@canBulkSelect}}
     @bulkSelectHelper={{@bulkSelectHelper}}
     @skipCategoriesNavItem={{this.skipCategoriesNavItem}}
+    @toggleInfo={{@toggleTagInfo}}
+    @tagNotification={{@tagNotification}}
   />
+
+  {{#if @tag}}
+    <PluginOutlet
+      @name="tag-navigation"
+      @connectorTagName="div"
+      @outletArgs={{hash category=@category tag=@tag}}
+    />
+  {{/if}}
 </section>

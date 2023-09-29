@@ -29,7 +29,14 @@ export default class NavigationDefault extends Component {
   }
 
   get bodyClass() {
-    if (this.filterMode === "categories") {
+    if (this.args.tag) {
+      return [
+        "tags-page",
+        this.args.additionalTags ? "tags-intersection" : null,
+      ]
+        .filter(Boolean)
+        .join(" ");
+    } else if (this.filterMode === "categories") {
       return "navigation-categories";
     } else if (this.category) {
       return "navigation-category";

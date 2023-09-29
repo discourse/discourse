@@ -791,7 +791,7 @@ const Composer = RestModel.extend({
       composerTotalOpened: opts.composerTime,
       typingTime: opts.typingTime,
       whisper: opts.whisper,
-      tags: opts.tags,
+      tags: opts.tags || [],
       noBump: opts.noBump,
     });
 

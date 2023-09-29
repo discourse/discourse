@@ -8,16 +8,13 @@ import {
   resetParams,
 } from "discourse/controllers/discovery-sortable";
 import Category from "discourse/models/category";
-import Composer from "discourse/models/composer";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
 import PermissionType from "discourse/models/permission-type";
 import { escapeExpression } from "discourse/lib/utilities";
-import { makeArray } from "discourse-common/lib/helpers";
-import { setTopicList } from "discourse/lib/topic-list-tracker";
-import showModal from "discourse/lib/show-modal";
 import { action } from "@ember/object";
 import PreloadStore from "discourse/lib/preload-store";
+import { filterTypeForMode } from "discourse/lib/filter-mode";
 
 const NONE = "none";
 const ALL = "all";
@@ -28,8 +25,8 @@ export default class TagShowRoute extends DiscourseRoute {
   @service currentUser;
 
   queryParams = queryParams;
-  controllerName = "tag.show";
-  templateName = "tag.show";
+  controllerName = "discovery-sortable";
+  templateName = "discovery/list";
   routeConfig = {};
 
   get navMode() {
@@ -63,7 +60,7 @@ export default class TagShowRoute extends DiscourseRoute {
       });
     }
 
-    const filterType = this.navMode.split("/")[0];
+    const filterType = filterTypeForMode(this.navMode);
 
     let tagNotification;
     if (tag && tag.id !== NONE && this.currentUser && !additionalTags) {
@@ -132,8 +129,6 @@ export default class TagShowRoute extends DiscourseRoute {
       });
     }
 
-    setTopicList(list);
-
     return {
       tag,
       category,
@@ -148,15 +143,20 @@ export default class TagShowRoute extends DiscourseRoute {
   }
 
   setupController(controller, model) {
-    const noSubcategories = this.noSubcategories;
-
-    this.controllerFor("tag.show").setProperties({
-      model: model.tag,
-      ...model,
-      period: model.list.for_period,
-      navMode: this.navMode,
-      noSubcategories,
-      loading: false,
+    controller.setProperties({
+      model: model.list,
+      tag: model.tag,
+      category: model.category,
+      additionalTags: model.additionalTags,
+      filterType: model.filterType,
+      noSubcategories: this.noSubcategories,
+      canCreateTopicOnTag: model.canCreateTopicOnTag,
+      navigationArgs: {
+        filterType: model.filterType,
+        category: model.category,
+        tag: model.tag,
+      },
+      tagNotification: model.tagNotification,
     });
 
     if (model.category || model.additionalTags) {
@@ -214,66 +214,8 @@ export default class TagShowRoute extends DiscourseRoute {
   }
 
   @action
-  renameTag(tag) {
-    showModal("rename-tag", { model: tag });
-  }
-
-  @action
-  createTopic() {
-    if (this.currentUser?.has_topic_draft) {
-      this.openTopicDraft();
-    } else {
-      const controller = this.controllerFor("tag.show");
-      this.composer
-        .open({
-          categoryId: controller.category?.id,
-          action: Composer.CREATE_TOPIC,
-          draftKey: Composer.NEW_TOPIC_KEY,
-        })
-        .then(() => {
-          // Pre-fill the tags input field
-          if (this.composer.canEditTags && controller.tag?.id) {
-            const composerModel = this.composer.model;
-            composerModel.set("tags", this._controllerTags(controller));
-          }
-        });
-    }
-  }
-
-  @action
-  dismissReadTopics(dismissTopics) {
-    const operationType = dismissTopics ? "topics" : "posts";
-    this.send("dismissRead", operationType);
-  }
-
-  @action
-  dismissRead(operationType) {
-    const controller = this.controllerFor("tag-show");
-    let options = {
-      tagName: controller.tag?.id,
-    };
-    const categoryId = controller.category?.id;
-
-    if (categoryId) {
-      options = {
-        ...options,
-        categoryId,
-        includeSubcategories: !controller.noSubcategories,
-      };
-    }
-
-    controller.send("dismissRead", operationType, options);
-  }
-
-  @action
   resetParams(skipParams = []) {
     resetParams.call(this, skipParams);
-  }
-
-  _controllerTags(controller) {
-    return [controller.get("model.id"), ...makeArray(controller.additionalTags)]
-      .filter(Boolean)
-      .filter((tag) => ![NONE, ALL].includes(tag));
   }
 }
 
