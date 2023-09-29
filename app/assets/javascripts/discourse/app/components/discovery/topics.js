@@ -198,10 +198,10 @@ export default class DiscoveryTopics extends Component {
   @action
   dismissRead(dismissTopics) {
     const operationType = dismissTopics ? "topics" : "posts";
-    this.bulkSelectHelper.dismissRead(operationType, {
-      categoryId: this.category?.id,
-      tagName: this.tag?.id,
-      includeSubcategories: this.noSubcategories,
+    this.args.bulkSelectHelper.dismissRead(operationType, {
+      categoryId: this.args.category?.id,
+      tagName: this.args.tag?.id,
+      includeSubcategories: this.args.noSubcategories,
     });
   }
 }
