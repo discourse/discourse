@@ -5,7 +5,7 @@ import { bind } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { resettableTracked } from "discourse/lib/tracked-tools";
 
-export default class NavigationFilter extends Component {
+export default class DiscoveryFilterNavigation extends Component {
   @tracked copyIcon = "link";
   @tracked copyClass = "btn-default";
   @resettableTracked newQueryString = this.args.queryString;

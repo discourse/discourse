@@ -7,7 +7,7 @@ import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import showModal from "discourse/lib/show-modal";
 
-export default class NavigationDefault extends Component {
+export default class DiscoveryNavigation extends Component {
   @service router;
   @service currentUser;
   @service composer;
