@@ -1,19 +1,24 @@
 section.about {
-  margin-bottom: 40px;
+  margin-bottom: 3em;
 
   h3 {
-    margin-bottom: 15px;
+    margin-bottom: 1em;
+    display: flex;
+    align-items: center;
+    .d-icon {
+      margin-right: 0.5em;
+      color: var(--primary-high);
+    }
   }
 
-  table {
-    width: auto;
-
-    td {
-      padding: 10px;
-    }
-
-    td.title {
-      width: 33%;
+  &.stats {
+    table {
+      td {
+        padding: 0.67em;
+        &:not(:first-child) {
+          text-align: center;
+        }
+      }
     }
   }
 }

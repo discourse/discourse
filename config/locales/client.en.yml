@@ -318,15 +318,15 @@ en:
       moderators: "Moderators"
       stat:
         all_time: "All Time"
-        last_day: "Last 24 hours"
-        last_7_days: "Last 7 days"
-        last_30_days: "Last 30 days"
+        last_day: "24 hours"
+        last_7_days: "7 days"
+        last_30_days: "30 days"
       like_count: "Likes"
       topic_count: "Topics"
       post_count: "Posts"
-      user_count: "Sign-Ups"
-      active_user_count: "Active Users"
-      contact: "Contact Us"
+      user_count: "Sign-ups"
+      active_user_count: "Active users"
+      contact: "Contact us"
       contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact us at %{contact_info}."
 
     bookmarked:
