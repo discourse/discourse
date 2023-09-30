@@ -27,9 +27,15 @@
       }
     }
 
-    .chat-onebox-cooked p img {
-      float: none;
-      max-height: none;
+    .chat-onebox-images.onebox {
+      display: flex;
+      flex-wrap: wrap;
+      img {
+        width: auto;
+        max-height: 150px;
+        margin-right: 0.5rem;
+        margin-top: 0.5em;
+      }
     }
   }
 }

@@ -45,27 +45,14 @@ module Chat
       }
     end
 
-    def self.build_image_args(args, target)
-      image = get_first_image(target)
-      return if !image
-
-      args.merge!(
-        image_url: image.url,
-        image_width: image.width,
-        image_height: image.height,
-        image_filename: image.original_filename,
-      )
-    end
-
     def self.render_thread_onebox(args, thread)
       args.merge!(
         cooked: build_thread_snippet(thread),
         thread_id: thread.id,
         thread_title: thread.title,
         thread_title_connector: I18n.t("chat.onebox.thread_title_connector"),
+        images: get_image_uploads(thread),
       )
-
-      build_image_args(args, thread)
 
       Mustache.render(Chat.thread_onebox_template, args)
     end
@@ -80,9 +67,8 @@ module Chat
         created_at_str: message.created_at.iso8601,
         thread_id: message.thread_id,
         thread_title: thread&.title,
+        images: get_image_uploads(message),
       )
-
-      build_image_args(args, message)
 
       Mustache.render(Chat.message_onebox_template, args)
     end
@@ -102,7 +88,7 @@ module Chat
       Mustache.render(Chat.channel_onebox_template, args)
     end
 
-    def self.get_first_image(target)
+    def self.get_image_uploads(target)
       if target.is_a?(Message)
         message = target
       elsif target.is_a?(Thread)
@@ -110,7 +96,7 @@ module Chat
       end
 
       return if !message
-      message.uploads.find { |u| u.height.present? || u.width.present? }
+      message.uploads.select { |u| u.height.present? || u.width.present? }
     end
 
     def self.build_users_list(chat_channel)

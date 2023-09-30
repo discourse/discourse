@@ -83,6 +83,17 @@
     }
   }
 
+  .chat-transcript-images.onebox {
+    display: flex;
+    flex-wrap: wrap;
+    img {
+      width: auto;
+      max-height: 150px;
+      margin-right: 0.5rem;
+      margin-top: 0.5em;
+    }
+  }
+
   pre code {
     box-sizing: border-box;
   }

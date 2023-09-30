@@ -20,10 +20,12 @@
     {{#cooked}}
       <div class="chat-onebox-cooked">
       {{{cooked}}}
-      {{#image_url}}
-        <p><img src="{{image_url}}" loading="lazy" alt="{{image_filename}}" width="{{image_width}}" height="{{image_height}}" style="aspect-ratio: {{image_width}} / {{image_height}};"></p>
-      {{/image_url}}
       </div>
     {{/cooked}}
+    <div class="chat-onebox-images onebox">
+      {{#images}}
+        <img src="{{url}}" loading="lazy" alt="{{original_filename}}" width="{{width}}" height="{{height}}">
+      {{/images}}
+    </div>
   </article>
 </aside>
