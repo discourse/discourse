@@ -19,7 +19,7 @@ const FormTemplateField = <template>
     @validations={{@content.validations}}
     @value={{@initialValue}}
   />
-</template>
+</template>;
 
 export default class FormTemplateFieldWrapper extends Component {
   <template>
@@ -30,9 +30,10 @@ export default class FormTemplateFieldWrapper extends Component {
         {{didUpdate this.refreshTemplate @id}}
       >
         {{#each this.parsedTemplate as |content|}}
-          <FormTemplateField @component={{get this.fieldTypes content.type}}
-                             @content={{content}}
-                             @initialValue={{get this.initialValues content.id}}
+          <FormTemplateField
+            @component={{get this.fieldTypes content.type}}
+            @content={{content}}
+            @initialValue={{get this.initialValues content.id}}
           />
         {{/each}}
       </div>
