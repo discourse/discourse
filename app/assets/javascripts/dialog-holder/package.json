@@ -8,7 +8,7 @@
     "ember-addon"
   ],
   "dependencies": {
-    "a11y-dialog": "8.0.2",
+    "a11y-dialog": "8.0.3",
     "ember-auto-import": "^2.6.3",
     "ember-cli-babel": "^8.1.0",
     "ember-cli-htmlbars": "^6.3.0"
