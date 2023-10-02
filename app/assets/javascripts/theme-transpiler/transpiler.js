@@ -26,6 +26,13 @@ import RawHandlebars from "discourse-common/addon/lib/raw-handlebars";
 import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
 import EmberThisFallback from "ember-this-fallback";
 
+// A sub-dependency of content-tag (getrandom) needs `getRandomValues`
+// so we polyfill it
+import getRandomValues from "polyfill-crypto.getrandomvalues";
+globalThis.crypto = { getRandomValues };
+
+import { Preprocessor } from "content-tag";
+
 const thisFallbackPlugin = EmberThisFallback._buildPlugin({
   enableLogging: false,
   isTheme: true,
@@ -60,10 +67,10 @@ function buildEmberTemplateManipulatorPlugin(themeId) {
   };
 }
 
-function buildTemplateCompilerBabelPlugins({ themeId }) {
+function buildTemplateCompilerBabelPlugins({ extension, themeId }) {
   const compiler = { precompile };
 
-  if (themeId) {
+  if (themeId && extension !== "gjs") {
     compiler.precompile = (src, opts) => {
       return precompile(src, {
         ...opts,
@@ -116,10 +123,16 @@ globalThis.compileRawTemplate = function (source, themeId) {
 };
 
 globalThis.transpile = function (source, options = {}) {
-  const { moduleId, filename, skipModule, themeId, commonPlugins } = options;
-  const plugins = [];
+  const { moduleId, filename, extension, skipModule, themeId, commonPlugins } =
+    options;
 
-  plugins.push(...buildTemplateCompilerBabelPlugins({ themeId }));
+  if (extension === "gjs") {
+    const preprocessor = new Preprocessor();
+    source = preprocessor.process(source);
+  }
+
+  const plugins = [];
+  plugins.push(...buildTemplateCompilerBabelPlugins({ extension, themeId }));
   if (moduleId && !skipModule) {
     plugins.push(["transform-modules-amd", { noInterop: true }]);
   }

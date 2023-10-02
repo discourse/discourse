@@ -10,7 +10,7 @@ export default class NotActivated extends Component {
 
   @action
   sendActivationEmail() {
-    resendActivationEmail(this.username).then(() => {
+    resendActivationEmail(this.args.model.currentEmail).then(() => {
       this.modal.show(ActivationResent, {
         model: { currentEmail: this.args.model.currentEmail },
       });
