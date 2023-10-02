@@ -156,6 +156,12 @@ en:
             ignore_automated:
               label: Ignore automated
               description: Skip the trigger if the sender has a noreply email or is from an automated source. Only applies to posts created via email
+            first_post_only:
+              label: First post only
+              description: Will trigger only if the post is the first post a user created
+            first_topic_only:
+              label: First topic only
+              description: Will trigger only if the topic is the first topic a user created
           created: Created
           edited: Edited
         category_created_edited:

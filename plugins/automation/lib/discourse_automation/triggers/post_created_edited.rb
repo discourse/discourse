@@ -14,4 +14,6 @@ DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggerable::POST_CREA
   field :ignore_automated, component: :boolean
   field :ignore_group_members, component: :boolean
   field :valid_trust_levels, component: :"trust-levels"
+  field :first_post_only, component: :boolean
+  field :first_topic_only, component: :boolean
 end

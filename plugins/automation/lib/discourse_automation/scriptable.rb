@@ -2,7 +2,7 @@
 
 module DiscourseAutomation
   class Scriptable
-    attr_reader :fields, :name, :not_found, :forced_triggerable
+    attr_reader :fields, :name, :not_found, :forced_triggerable, :background
 
     @@plugin_triggerables ||= {}
 
@@ -27,8 +27,13 @@ module DiscourseAutomation
       @on_reset = proc {}
       @not_found = false
       @forced_triggerable = nil
+      @background = false
 
       eval! if @name
+    end
+
+    def run_in_background
+      @background = true
     end
 
     def id

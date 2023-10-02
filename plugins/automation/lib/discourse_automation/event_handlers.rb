@@ -12,6 +12,17 @@ module DiscourseAutomation
       DiscourseAutomation::Automation
         .where(trigger: name, enabled: true)
         .find_each do |automation|
+          first_post_only = automation.trigger_field("first_post_only")
+          if first_post_only["value"]
+            next if post.user.user_stat.post_count != 1
+          end
+
+          first_topic_only = automation.trigger_field("first_topic_only")
+          if first_topic_only["value"]
+            next if post.post_number != 1
+            next if post.user.user_stat.topic_count != 1
+          end
+
           valid_trust_levels = automation.trigger_field("valid_trust_levels")
           if valid_trust_levels["value"]
             next unless valid_trust_levels["value"].include?(post.user.trust_level)

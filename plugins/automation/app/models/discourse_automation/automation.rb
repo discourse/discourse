@@ -19,6 +19,12 @@ module DiscourseAutomation
 
     validates :script, presence: true
 
+    attr_accessor :running_in_background
+
+    def running_in_background!
+      @running_in_background = true
+    end
+
     MIN_NAME_LENGTH = 5
     MAX_NAME_LENGTH = 30
     validates :name, length: { in: MIN_NAME_LENGTH..MAX_NAME_LENGTH }
@@ -75,12 +81,55 @@ module DiscourseAutomation
       field.update!(metadata: metadata)
     end
 
+    def self.deserialize_context(context)
+      new_context = ActiveSupport::HashWithIndifferentAccess.new
+
+      context.each do |key, value|
+        if key.start_with?("_serialized_")
+          new_key = key[12..-1]
+          found = nil
+          if value["class"] == "Symbol"
+            found = value["value"].to_sym
+          else
+            found = value["class"].constantize.find_by(id: value["id"])
+          end
+          new_context[new_key] = found
+        else
+          new_context[key] = value
+        end
+      end
+      new_context
+    end
+
+    def self.serialize_context(context)
+      new_context = {}
+      context.each do |k, v|
+        if v.is_a?(Symbol)
+          new_context["_serialized_#{k}"] = { "class" => "Symbol", "value" => v.to_s }
+        elsif v.is_a?(ActiveRecord::Base)
+          new_context["_serialized_#{k}"] = { "class" => v.class.name, "id" => v.id }
+        else
+          new_context[k] = v
+        end
+      end
+      new_context
+    end
+
     def trigger!(context = {})
       if enabled
-        triggerable&.on_call&.call(self, serialized_fields)
-
+        # we need this unconditionally for testing
         scriptable = DiscourseAutomation::Scriptable.new(script)
-        scriptable.script.call(context, serialized_fields, self)
+
+        if scriptable.background && !running_in_background
+          Jobs.enqueue(
+            :discourse_automation_trigger,
+            automation_id: id,
+            context: self.class.serialize_context(context),
+          )
+        else
+          triggerable&.on_call&.call(self, serialized_fields)
+          scriptable.script.call(context, serialized_fields, self)
+        end
       end
     end
 

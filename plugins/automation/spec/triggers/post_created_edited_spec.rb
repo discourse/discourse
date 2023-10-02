@@ -16,6 +16,68 @@ describe "PostCreatedEdited" do
     Fabricate(:automation, trigger: DiscourseAutomation::Triggerable::POST_CREATED_EDITED)
   end
 
+  context "when filtering on first post only" do
+    before do
+      automation.upsert_field!("first_post_only", "boolean", { value: true }, target: "trigger")
+    end
+
+    it "fires on first post, but not on second" do
+      post = create_post(title: "hello world topic", raw: "my name is fred")
+      topic = post.topic
+
+      list =
+        capture_contexts do
+          PostCreator.create!(user, raw: "this is a test reply", topic_id: topic.id)
+        end
+
+      expect(list.length).to eq(1)
+      expect(list[0]["kind"]).to eq("post_created_edited")
+      expect(list[0]["action"].to_s).to eq("create")
+
+      list =
+        capture_contexts do
+          PostCreator.create!(user, raw: "this is another test reply", topic_id: topic.id)
+        end
+      expect(list.length).to eq(0)
+    end
+  end
+
+  context "when filtering on first topic only" do
+    before do
+      automation.upsert_field!("first_topic_only", "boolean", { value: true }, target: "trigger")
+    end
+
+    it "does not fire if it is not a topic" do
+      post = create_post(title: "hello world topic", raw: "my name is fred")
+      topic = post.topic
+
+      list =
+        capture_contexts do
+          PostCreator.create!(user, raw: "this is a test reply", topic_id: topic.id)
+        end
+
+      expect(list.length).to eq(0)
+    end
+
+    it "fires if it is a first topic (and not on second)" do
+      list =
+        capture_contexts do
+          PostCreator.create!(user, raw: "this is a test reply", title: "hello there mister")
+        end
+
+      expect(list.length).to eq(1)
+      expect(list[0]["kind"]).to eq("post_created_edited")
+      expect(list[0]["action"].to_s).to eq("create")
+
+      list =
+        capture_contexts do
+          PostCreator.create!(user, raw: "this is a test reply 2", title: "hello there mister 2")
+        end
+
+      expect(list.length).to eq(0)
+    end
+  end
+
   context "when editing/creating a post" do
     it "fires the trigger" do
       post = nil
