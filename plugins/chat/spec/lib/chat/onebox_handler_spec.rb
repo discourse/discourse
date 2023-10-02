@@ -104,6 +104,7 @@ describe Chat::OneboxHandler do
             </a>
           </div>
         <div class="chat-transcript-messages"><p>Hello world!</p></div>
+        <div class="chat-transcript-images onebox">
       </div>
       HTML
       end
