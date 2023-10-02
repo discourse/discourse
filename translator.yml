@@ -79,3 +79,10 @@ files:
   - source_path: plugins/checklist/config/locales/server.en.yml
     destination_path: plugins/checklist/server.yml
     label: checklist
+
+  - source_path: plugins/automation/config/locales/client.en.yml
+    destination_path: plugins/automation/client.yml
+    label: automation
+  - source_path: plugins/automation/config/locales/server.en.yml
+    destination_path: plugins/automation/server.yml
+    label: automation

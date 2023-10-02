@@ -16,7 +16,6 @@ class Plugin::Metadata
         discourse-apple-auth
         discourse-assign
         discourse-auto-deactivate
-        discourse-automation
         discourse-bbcode
         discourse-bbcode-color
         discourse-bcc
@@ -98,6 +97,7 @@ class Plugin::Metadata
         poll
         styleguide
         checklist
+        automation
       ],
     )
 

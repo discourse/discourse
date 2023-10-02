@@ -1,0 +1,20 @@
+<section class="field post-field">
+  <div class="control-group">
+    {{fields/da-field-label label=label field=field}}
+
+    <div class="controls">
+      <div class="field-wrapper">
+        {{d-editor value=field.metadata.value}}
+
+        {{fields/da-field-description description=description}}
+
+        {{#if displayPlaceholders}}
+          {{placeholders-list
+            currentValue=field.metadata.value
+            placeholders=placeholders
+          }}
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</section>

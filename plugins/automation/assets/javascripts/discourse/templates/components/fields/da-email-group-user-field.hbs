@@ -1,0 +1,21 @@
+<section class="field email-group-user-field">
+  <div class="control-group">
+    {{fields/da-field-label label=label field=field}}
+
+    <div class="controls">
+      {{email-group-user-chooser
+        value=field.metadata.value
+        onChange=(action (mut field.metadata.value))
+        options=(hash
+          includeGroups=true
+          includeMessageableGroups=true
+          allowEmails=true
+          autoWrap=true
+          disabled=field.isDisabled
+        )
+      }}
+
+      {{fields/da-field-description description=description}}
+    </div>
+  </div>
+</section>
