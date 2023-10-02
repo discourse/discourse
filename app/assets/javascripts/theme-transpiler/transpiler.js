@@ -67,10 +67,10 @@ function buildEmberTemplateManipulatorPlugin(themeId) {
   };
 }
 
-function buildTemplateCompilerBabelPlugins({ themeId }) {
+function buildTemplateCompilerBabelPlugins({ extension, themeId }) {
   const compiler = { precompile };
 
-  if (themeId) {
+  if (themeId && extension !== "gjs") {
     compiler.precompile = (src, opts) => {
       return precompile(src, {
         ...opts,
@@ -132,7 +132,7 @@ globalThis.transpile = function (source, options = {}) {
   }
 
   const plugins = [];
-  plugins.push(...buildTemplateCompilerBabelPlugins({ themeId }));
+  plugins.push(...buildTemplateCompilerBabelPlugins({ extension, themeId }));
   if (moduleId && !skipModule) {
     plugins.push(["transform-modules-amd", { noInterop: true }]);
   }
