@@ -3,14 +3,13 @@ import Yaml from "js-yaml";
 import { tracked } from "@glimmer/tracking";
 import FormTemplate from "discourse/models/form-template";
 import { action, get } from "@ember/object";
-import { concat } from "@ember/helper";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import CheckboxField from "./checkbox"
-import InputField from "./input"
-import DropdownField from "./dropdown"
-import MultiSelectField from "./multi-select"
-import TextareaField from "./textarea"
-import UploadField from "./upload"
+import CheckboxField from "./checkbox";
+import InputField from "./input";
+import DropdownField from "./dropdown";
+import MultiSelectField from "./multi-select";
+import TextareaField from "./textarea";
+import UploadField from "./upload";
 
 const FormTemplateField = <template>
   <@component
@@ -27,6 +26,7 @@ export default class FormTemplateFieldWrapper extends Component {
     {{#if this.parsedTemplate}}
       <div
         class="form-template-form__wrapper"
+        {{! template-lint-disable modifier-name-case }}
         {{didUpdate this.refreshTemplate @id}}
       >
         {{#each this.parsedTemplate as |content|}}
@@ -43,7 +43,10 @@ export default class FormTemplateFieldWrapper extends Component {
     {{/if}}
   </template>
 
-  initialValues = this.args.initialValues ?? {}
+  @tracked error = null;
+  @tracked parsedTemplate = null;
+
+  initialValues = this.args.initialValues ?? {};
 
   fieldTypes = {
     checkbox: CheckboxField,
@@ -52,10 +55,7 @@ export default class FormTemplateFieldWrapper extends Component {
     "multi-select": MultiSelectField,
     textarea: TextareaField,
     upload: UploadField,
-  }
-
-  @tracked error = null;
-  @tracked parsedTemplate = null;
+  };
 
   constructor() {
     super(...arguments);
