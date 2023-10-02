@@ -1,7 +1,4 @@
-<ComposerTipCloseButton
-  @closeAction={{this.closeMessage}}
-  @message={{this.message}}
-/>
+<ComposerTipCloseButton @action={{fn this.closeMessage this.message}} />
 
 {{html-safe this.message.body}}
 

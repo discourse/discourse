@@ -1,7 +1,4 @@
-<ComposerTipCloseButton
-  @closeAction={{this.closeMessage}}
-  @message={{this.message}}
-/>
+<ComposerTipCloseButton @action={{fn this.closeMessage this.message}} />
 
 <h3>{{i18n "composer.similar_topics"}}</h3>
 
