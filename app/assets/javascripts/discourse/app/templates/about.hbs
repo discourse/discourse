@@ -46,9 +46,9 @@
       {{#if this.model.admins}}
         <section class="about admins">
           <h3>{{d-icon "users"}} {{i18n "about.our_admins"}}</h3>
-
-          <AboutPageUsers @users={{this.model.admins}} />
-          <div class="clearfix"></div>
+          <div class="users">
+            <AboutPageUsers @users={{this.model.admins}} />
+          </div>
         </section>
       {{/if}}
 
@@ -63,11 +63,9 @@
       {{#if this.model.moderators}}
         <section class="about moderators">
           <h3>{{d-icon "users"}} {{i18n "about.our_moderators"}}</h3>
-
           <div class="users">
             <AboutPageUsers @users={{this.model.moderators}} />
           </div>
-          <div class="clearfix"></div>
         </section>
       {{/if}}
 
@@ -95,7 +93,6 @@
       {{#if this.model.can_see_about_stats}}
         <section class="about stats">
           <h3>{{d-icon "far-chart-bar"}} {{i18n "about.stats"}}</h3>
-
           <table class="table">
             <thead>
               <tr>
