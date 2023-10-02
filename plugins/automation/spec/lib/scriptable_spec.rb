@@ -86,7 +86,7 @@ describe DiscourseAutomation::Scriptable do
 
   describe "#placeholders" do
     it "returns the specified placeholders" do
-      expect(automation.scriptable.placeholders).to eq(%i[site_title foo bar])
+      expect(automation.scriptable.placeholders).to eq(%i[foo bar])
     end
   end
 
@@ -158,6 +158,12 @@ describe DiscourseAutomation::Scriptable do
         map = { cool_cat: "siberian cat" }
         output = automation.scriptable.utils.apply_placeholders(input, map)
         expect(output).to eq("hello siberian cat")
+      end
+
+      it "replaces site_title by default" do
+        input = "hello %%SITE_TITLE%%"
+        output = automation.scriptable.utils.apply_placeholders(input)
+        expect(output).to eq("hello #{SiteSetting.title}")
       end
 
       context "when using the REPORT key" do

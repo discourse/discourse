@@ -21,7 +21,7 @@ module DiscourseAutomation
       @name = name
       @version = 0
       @fields = []
-      @placeholders = [:site_title]
+      @placeholders = []
       @triggerables = (@@plugin_triggerables[name&.to_sym] || [])
       @script = proc {}
       @on_reset = proc {}
@@ -153,7 +153,7 @@ module DiscourseAutomation
         table
       end
 
-      def self.apply_placeholders(input, map)
+      def self.apply_placeholders(input, map = {})
         input = input.dup
         map[:site_title] = SiteSetting.title
 

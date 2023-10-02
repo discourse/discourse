@@ -28,7 +28,7 @@ module DiscourseAutomation
     end
 
     def placeholders
-      (scriptable.placeholders || []) + (triggerable.placeholders || []) + ["report=report_name"]
+      (scriptable.placeholders || []) + (triggerable.placeholders || [])
     end
 
     def script
