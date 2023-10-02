@@ -29,6 +29,14 @@ module DiscourseAutomation
       end
     end
 
+    validate :validator
+    def validator
+      if template && template[:validator]
+        error = template[:validator].call(metadata["value"])
+        errors.add(:base, error) if error
+      end
+    end
+
     def targetable
       target == "trigger" ? automation.triggerable : automation.scriptable
     end

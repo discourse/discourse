@@ -74,6 +74,44 @@ describe DiscourseAutomation::Automation do
     end
   end
 
+  context "when automation’s script has a field with validor" do
+    before do
+      DiscourseAutomation::Scriptable.add("required_dogs") do
+        field :dog, component: :text, validator: ->(input) { "must have dog" if input != "dog" }
+      end
+    end
+
+    context "when validating automation" do
+      fab!(:automation) { Fabricate(:automation, enabled: false, script: "required_dogs") }
+
+      it "raises an error if invalid" do
+        expect {
+          automation.fields.create!(
+            name: "dog",
+            component: "text",
+            metadata: {
+              value: nil,
+            },
+            target: "script",
+          )
+        }.to raise_error(ActiveRecord::RecordInvalid, /must have dog/)
+      end
+
+      it "does nothing if valid" do
+        expect {
+          automation.fields.create!(
+            name: "dog",
+            component: "text",
+            metadata: {
+              value: "dog",
+            },
+            target: "script",
+          )
+        }.not_to raise_error
+      end
+    end
+  end
+
   context "when automation’s script has a required field" do
     before do
       DiscourseAutomation::Scriptable.add("required_dogs") do
