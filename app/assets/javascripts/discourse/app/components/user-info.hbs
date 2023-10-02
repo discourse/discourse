@@ -2,7 +2,7 @@
   href={{if this.includeLink this.userPath}}
   data-user-card={{if this.includeLink @user.username}}
   aria-label={{if
-    this.includeLink
+    (and this.includeLink @user.username)
     (i18n "user.profile_possessive" username=@user.username)
   }}
 >
