@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 module DiscourseWebauthn
-  class SecurityKeyBaseValidationService
-    def initialize(current_user, params, challenge_params)
+  class BaseValidationService
+    def initialize(current_user, params, session:, factor_type:)
       @current_user = current_user
       @params = params
-      @challenge_params = challenge_params
+      @factor_type = factor_type
+      @session = session
     end
 
     def validate_webauthn_type(type_to_check)
@@ -31,9 +32,26 @@ module DiscourseWebauthn
       )
     end
 
+    ## flags per specification
+    # https://www.w3.org/TR/webauthn-2/#sctn-authenticator-data
+    # bit 0 - user presence
+    # bit 1 - reserved for future use
+    # bit 2 - user verification
+    # bit 3-5 - reserved for future use
+    # bit 6 - attested credential data
+    # bit 7 - extension data
+
+    def validate_user_presence
+      flags = auth_data[32].unpack("b*")[0].split("")
+      # bit 0 - user presence
+      return if flags[0] == "1"
+      raise(UserPresenceError, I18n.t("webauthn.validation.user_presence_error"))
+    end
+
     def validate_user_verification
       flags = auth_data[32].unpack("b*")[0].split("")
-      return if flags[0] == "1"
+      # bit 2 - user verification
+      return if flags[2] == "1"
       raise(UserVerificationError, I18n.t("webauthn.validation.user_verification_error"))
     end
 
@@ -52,15 +70,16 @@ module DiscourseWebauthn
     end
 
     def challenge_match?
-      Base64.decode64(client_data["challenge"]) == @challenge_params[:challenge]
+      Base64.decode64(client_data["challenge"]) ==
+        DiscourseWebauthn.challenge(@current_user, @session)
     end
 
     def origin_match?
-      client_data["origin"] == @challenge_params[:origin]
+      client_data["origin"] == DiscourseWebauthn.origin
     end
 
     def rp_id_hash_match?
-      auth_data[0..31] == OpenSSL::Digest::SHA256.digest(@challenge_params[:rp_id])
+      auth_data[0..31] == OpenSSL::Digest::SHA256.digest(DiscourseWebauthn.rp_id)
     end
 
     def client_data_hash

@@ -1578,13 +1578,12 @@ class UsersController < ApplicationController
     params.require(:attestation)
     params.require(:clientData)
 
-    ::DiscourseWebauthn::SecurityKeyRegistrationService.new(
+    ::DiscourseWebauthn::RegistrationService.new(
       current_user,
       params,
-      challenge: DiscourseWebauthn.challenge(current_user, secure_session),
-      rp_id: DiscourseWebauthn.rp_id,
-      origin: Discourse.base_url,
-    ).register_second_factor_security_key
+      session: secure_session,
+      factor_type: UserSecurityKey.factor_types[:second_factor],
+    ).register_security_key
     render json: success_json
   rescue ::DiscourseWebauthn::SecurityKeyError => err
     render json: failed_json.merge(error: err.message)
@@ -1631,7 +1630,7 @@ class UsersController < ApplicationController
   def disable_second_factor
     # delete all second factors for a user
     current_user.user_second_factors.destroy_all
-    current_user.security_keys.destroy_all
+    current_user.second_factor_security_keys.destroy_all
 
     Jobs.enqueue(
       :critical_user_email,
