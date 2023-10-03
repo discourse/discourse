@@ -13,8 +13,8 @@ module("Integration | Component | user-info", function (hooks) {
 
     await render(hbs`<UserInfo @user={{this.currentUser}} />`);
 
-    assert.strictEqual(query(".name.bold").innerText.trim(), "Evil Trout");
-    assert.strictEqual(query(".username.margin").innerText.trim(), "eviltrout");
+    assert.strictEqual(query(".name").innerText.trim(), "Evil Trout");
+    assert.strictEqual(query(".username").innerText.trim(), "eviltrout");
   });
 
   test("prioritized username", async function (assert) {
@@ -23,8 +23,8 @@ module("Integration | Component | user-info", function (hooks) {
 
     await render(hbs`<UserInfo @user={{this.currentUser}} />`);
 
-    assert.strictEqual(query(".username.bold").innerText.trim(), "eviltrout");
-    assert.strictEqual(query(".name.margin").innerText.trim(), "Evil Trout");
+    assert.strictEqual(query(".username").innerText.trim(), "eviltrout");
+    assert.strictEqual(query(".name").innerText.trim(), "Evil Trout");
   });
 
   test("includeLink", async function (assert) {
@@ -33,10 +33,10 @@ module("Integration | Component | user-info", function (hooks) {
     );
 
     this.set("includeLink", true);
-    assert.ok(exists(`.username a[href="/u/${this.currentUser.username}"]`));
+    assert.ok(exists(`a[href="/u/${this.currentUser.username}"]`));
 
     this.set("includeLink", false);
-    assert.notOk(exists(`.username a[href="/u/${this.currentUser.username}"]`));
+    assert.notOk(exists(`a[href="/u/${this.currentUser.username}"]`));
   });
 
   test("includeAvatar", async function (assert) {

@@ -1,15 +1,16 @@
 {{#each this.usersTemplates as |userTemplate|}}
-  <a
-    href={{userTemplate.userPath}}
-    data-user-card={{userTemplate.username}}
-    aria-label={{i18n "user.profile_possessive" username=userTemplate.username}}
-  >
-    <div data-username={{userTemplate.username}} class="user-info small">
+  <div data-username={{userTemplate.username}} class="user-info small">
+    <a
+      href={{userTemplate.userPath}}
+      data-user-card={{userTemplate.username}}
+      aria-label={{i18n
+        "user.profile_possessive"
+        username=userTemplate.username
+      }}
+    >
       <div class="user-image">
         <div class="user-image-inner">
-
           {{html-safe userTemplate.avatar}}
-
         </div>
       </div>
       <div class="user-detail">
@@ -27,6 +28,6 @@
         </div>
         <div class="title">{{userTemplate.title}}</div>
       </div>
-    </div>
-  </a>
+    </a>
+  </div>
 {{/each}}
