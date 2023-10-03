@@ -4,10 +4,7 @@ RSpec.describe TopicTrackingStateItemSerializer do
   fab!(:user) { Fabricate(:user) }
   fab!(:post) { create_post }
 
-  before do
-    SiteSetting.navigation_menu = "legacy"
-    SiteSetting.chat_enabled = false if defined?(::Chat)
-  end
+  before { SiteSetting.navigation_menu = "legacy" }
 
   it "serializes topic tracking state reports" do
     report = TopicTrackingState.report(user)
