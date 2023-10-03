@@ -15,6 +15,8 @@ class WebHookEventType < ActiveRecord::Base
   GROUP_USER = 14
   LIKE = 15
   USER_PROMOTED = 16
+  TOPIC_VOTING = 17
+  CHAT_MESSAGE = 18
 
   has_and_belongs_to_many :web_hooks
 
@@ -29,6 +31,12 @@ class WebHookEventType < ActiveRecord::Base
     end
     unless defined?(SiteSetting.assign_enabled) && SiteSetting.assign_enabled
       ids_to_exclude << ASSIGN
+    end
+    unless defined?(SiteSetting.voting_enabled) && SiteSetting.voting_enabled
+      ids_to_exclude << TOPIC_VOTING
+    end
+    unless defined?(SiteSetting.chat_enabled) && SiteSetting.chat_enabled
+      ids_to_exclude << CHAT_MESSAGE
     end
 
     self.where.not(id: ids_to_exclude)

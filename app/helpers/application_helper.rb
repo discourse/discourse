@@ -64,8 +64,10 @@ module ApplicationHelper
     google_universal_analytics_json
   end
 
-  def self.google_tag_manager_nonce
-    @gtm_nonce ||= SecureRandom.hex
+  def google_tag_manager_nonce_placeholder
+    placeholder = "[[csp_nonce_placeholder_#{SecureRandom.hex}]]"
+    response.headers["Discourse-GTM-Nonce-Placeholder"] = placeholder
+    placeholder
   end
 
   def shared_session_key
@@ -131,10 +133,12 @@ module ApplicationHelper
   end
 
   def preload_script(script)
-    scripts = [script]
+    scripts = []
 
     if chunks = EmberCli.script_chunks[script]
       scripts.push(*chunks)
+    else
+      scripts.push(script)
     end
 
     scripts
@@ -369,6 +373,7 @@ module ApplicationHelper
         "@context" => "http://schema.org",
         "@type" => "WebSite",
         :url => Discourse.base_url,
+        :name => SiteSetting.title,
         :potentialAction => {
           "@type" => "SearchAction",
           :target => "#{Discourse.base_url}/search?q={search_term_string}",

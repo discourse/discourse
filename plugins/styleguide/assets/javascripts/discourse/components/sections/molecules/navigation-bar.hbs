@@ -1,0 +1,31 @@
+<StyleguideExample @title="<NavigationBar>">
+  <NavigationBar @navItems={{@dummy.navItems}} @filterMode="latest" />
+</StyleguideExample>
+
+<StyleguideExample @title=".user-main .nav-pills">
+  <MobileNav @class="main-nav" @desktopClass="nav nav-pills user-nav">
+    {{#each @dummy.navItems as |ni|}}
+      <li>
+        <a href={{ni.href}} class={{if ni.styleGuideActive "active"}}>
+          {{ni.displayName}}
+        </a>
+      </li>
+    {{/each}}
+  </MobileNav>
+</StyleguideExample>
+
+<StyleguideExample @title="group page <NavigationBar>">
+  <MobileNav @class="group-nav" @desktopClass="nav nav-pills">
+    <li class="group-dropdown">
+      <GroupDropdown @groups={{@dummy.groupNames}} @value="staff" />
+    </li>
+
+    {{#each @dummy.navItems as |ni|}}
+      <li>
+        <a href={{ni.href}} class={{if ni.styleGuideActive "active"}}>
+          {{ni.displayName}}
+        </a>
+      </li>
+    {{/each}}
+  </MobileNav>
+</StyleguideExample>

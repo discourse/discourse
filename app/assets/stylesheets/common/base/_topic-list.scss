@@ -1,6 +1,8 @@
 // Topic list navigation & controls
 
 .list-controls {
+  background: var(--d-content-background);
+
   a.badge-category {
     padding: 3px 12px;
     font-size: var(--font-up-1);
@@ -113,6 +115,10 @@
 
 .topic-list.shared-drafts {
   margin-bottom: 1.5em;
+}
+
+#header-list-area {
+  background: var(--d-content-background);
 }
 
 // Topic list body
@@ -260,9 +266,34 @@
       padding-top: 0;
       padding-bottom: 0;
     }
-    .discourse-tag.simple:after,
     .discourse-tag.box {
       margin-right: 0.25em;
+    }
+
+    .participant-group-wrapper {
+      display: flex;
+      margin-left: 0.5em;
+
+      .participant-group {
+        padding: 0 5px;
+        border: 1px solid var(--primary-low);
+        border-radius: 0.25em;
+        min-width: 3em;
+        @include ellipsis;
+
+        > a {
+          display: flex;
+          align-items: center;
+          height: 1.25em;
+          color: var(--primary-high);
+          .mobile-view & {
+            height: 1.1em;
+          }
+          .d-icon {
+            margin-right: 5px;
+          }
+        }
+      }
     }
   }
 
@@ -303,6 +334,9 @@
   .num.activity {
     a {
       padding: 15px 5px;
+      span.relative-date {
+        pointer-events: none;
+      }
     }
   }
 }
@@ -341,6 +375,7 @@
 }
 
 #list-area {
+  background: var(--d-content-background);
   margin-bottom: 100px;
 
   .empty-topic-list {
@@ -354,18 +389,6 @@
     color: var(--danger-medium);
     font-size: var(--font-0);
     cursor: default;
-  }
-
-  .show-more {
-    width: 100%;
-    z-index: z("base");
-    position: absolute;
-    top: 0;
-
-    .alert {
-      margin: 0;
-      padding: 1.1em 2em 1.1em 0.65em;
-    }
   }
 }
 

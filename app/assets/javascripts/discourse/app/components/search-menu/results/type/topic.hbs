@@ -1,0 +1,24 @@
+<span class="topic">
+  <span class="first-line">
+    <TopicStatus @topic={{@result.topic}} @disableActions={{true}} />
+    <span class="topic-title" data-topic-id={{@result.topic.id}}>
+      {{#if
+        (and
+          this.siteSettings.use_pg_headlines_for_excerpt
+          @result.topic_title_headline
+        )
+      }}
+        <span>{{replace-emoji @result.topic_title_headline}}</span>
+      {{else}}
+        <SearchMenu::HighlightedSearch @string={{@result.topic.fancyTitle}} />
+      {{/if}}
+    </span>
+  </span>
+  <span class="second-line">
+    {{category-link @result.topic.category link=false}}
+    {{#if this.siteSettings.tagging_enabled}}
+      {{discourse-tags @result.topic tagName="span"}}
+    {{/if}}
+  </span>
+</span>
+<SearchMenu::Results::Blurb @result={{@result}} />

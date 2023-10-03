@@ -15,16 +15,11 @@ th:
       results:
         groups:
           title: "คุณต้องเป็นสมาชิกของ %{groups} จึงจะโหวตในแบบสำรวจนี้ได้"
-      multiple:
-        help:
-          at_least_min_options:
-            other: "เลือกอย่างน้อย <strong>%{count}</strong> ตัวเลือก"
       cast-votes:
         title: "โหวต"
         label: "โหวตเดี๋ยวนี้"
       show-results:
         title: "แสดงผลโหวต"
-        label: "แสดงผล"
       hide-results:
         title: "กลับสู่การโหวต"
       export-results:
@@ -37,6 +32,8 @@ th:
         title: "ปิดโพล"
         label: "ปิด"
         confirm: "คุณแน่ใจหรือไม่ที่จะปิดโพลนี้"
+      options:
+        label: "ตัวเลือก"
       error_while_toggling_status: "ขออภัย มีข้อผิดพลาดในการแสดงสถานะของโพล"
       error_while_casting_votes: "ขออภัย มีข้อผิดพลาดในการโหวต"
       error_while_fetching_voters: "ขออภัย มีข้อผิดพลาดในการแสดงผู้โหวต"

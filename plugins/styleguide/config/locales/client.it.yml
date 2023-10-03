@@ -87,8 +87,10 @@ it:
           title: "Icone di Caricamento"
         empty_state:
           title: "Stato Vuoto"
-        rich_tooltip:
-          title: "Descrizione estesa"
+        tooltips:
           description: "Descrizione"
           header: "Intestazione"
           hover_to_see: "Passa il mouse per vedere una descrizione"
+        char_counter:
+          title: "Contatore di caratteri"
+          placeholder: "Inserisci qui il tuo testo..."

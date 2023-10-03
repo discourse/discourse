@@ -91,7 +91,6 @@ export default Component.extend({
       this.dialog.alert(message);
       return;
     }
-    this.onFilesPicked(files);
   },
 
   _haveAcceptedTypes(files) {

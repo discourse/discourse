@@ -10,8 +10,16 @@ module PageObjects
         TOPIC_LIST_BODY_SELECTOR
       end
 
-      def has_topics?(count:)
-        page.has_css?(TOPIC_LIST_ITEM_SELECTOR, count: count)
+      def has_topics?(count: nil)
+        if count.nil?
+          page.has_css?(TOPIC_LIST_ITEM_SELECTOR)
+        else
+          page.has_css?(TOPIC_LIST_ITEM_SELECTOR, count: count)
+        end
+      end
+
+      def has_no_topics?
+        page.has_no_css?(TOPIC_LIST_ITEM_SELECTOR)
       end
 
       def has_topic?(topic)
@@ -24,6 +32,19 @@ module PageObjects
 
       def visit_topic_with_title(title)
         find("#{TOPIC_LIST_BODY_SELECTOR} a", text: title).click
+      end
+
+      def visit_topic(topic)
+        find("#{topic_list_item_class(topic)} a.raw-topic-link").click
+      end
+
+      def visit_topic_last_reply_via_keyboard(topic)
+        find("#{topic_list_item_class(topic)} a.post-activity").native.send_keys(:return)
+      end
+
+      def visit_topic_first_reply_via_keyboard(topic)
+        find("#{topic_list_item_class(topic)} button.posts-map").native.send_keys(:return)
+        find("#topic-entrance button.jump-top").native.send_keys(:return)
       end
 
       private

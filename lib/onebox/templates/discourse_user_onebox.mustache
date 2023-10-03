@@ -1,7 +1,7 @@
 <aside class="onebox">
   <article class="onebox-body user-onebox">
     {{{avatar}}}
-    <h3><a href="{{original_url}}">{{{username}}}</a></h3>
+    <h3><a href="{{original_url}}">@{{{username}}}</a></h3>
     <div>
       {{#name}}
         <span class="full-name">{{name}}</span>
@@ -26,7 +26,7 @@
     {{#bio}}
       <p>{{{bio}}}</p>
     {{/bio}}
-    <span>{{joined}}</span>
+    <div class="user-onebox--joined">{{joined}}</div>
   </article>
   <div class="clearfix"></div>
 </aside>

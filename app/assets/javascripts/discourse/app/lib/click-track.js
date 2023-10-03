@@ -7,7 +7,7 @@ import getURL, { samePrefix } from "discourse-common/lib/get-url";
 import { isTesting } from "discourse-common/config/environment";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import deprecated from "discourse-common/lib/deprecated";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import jQuery from "jquery";
 
 export function isValidLink(link) {
@@ -46,7 +46,7 @@ export function isValidLink(link) {
   return (
     link.classList.contains("track-link") ||
     !link.closest(
-      ".hashtag, .hashtag-cooked, .badge-category, .onebox-result, .onebox-body"
+      ".hashtag, .hashtag-cooked, .hashtag-icon-placeholder, .badge-category, .onebox-result, .onebox-body"
     )
   );
 }
@@ -102,7 +102,7 @@ export default {
         siteSettings?.prevent_anons_from_downloading_files &&
         !User.current()
       ) {
-        const dialog = getOwner(this).lookup("service:dialog");
+        const dialog = getOwnerWithFallback(this).lookup("service:dialog");
         dialog.alert(I18n.t("post.errors.attachment_download_requires_login"));
       } else if (wantsNewWindow(e)) {
         const newWindow = window.open(href, "_blank");

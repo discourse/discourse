@@ -25,8 +25,11 @@ $search-pad-horizontal: 0.5em;
     display: flex;
     align-items: center;
     border: 1px solid var(--primary-medium);
+    border-radius: var(--d-border-radius-large);
+
     input#search-term {
       border-width: 0;
+      border-radius: var(--d-border-radius-large);
       margin-bottom: 0;
       width: auto;
       flex-grow: 1;
@@ -95,11 +98,7 @@ $search-pad-horizontal: 0.5em;
           margin-right: 0.5em;
         }
         .discourse-tags .discourse-tag {
-          margin-right: 0.25em;
-
-          .d-icon {
-            margin-right: 0;
-          }
+          margin-right: 0.35em;
         }
       }
     }
@@ -321,8 +320,11 @@ $search-pad-horizontal: 0.5em;
       .d-icon {
         color: var(--primary-low-mid);
       }
-      &:hover .d-icon {
-        color: var(--primary-high);
+      &:focus,
+      &:hover {
+        .d-icon {
+          color: var(--primary-high);
+        }
       }
     }
 
@@ -364,6 +366,25 @@ $search-pad-horizontal: 0.5em;
   .search-result-post {
     .search-link {
       padding: 0.5em;
+    }
+  }
+}
+
+// these styles will become the default once the glimmer search menu
+// is enabled for all users, and the old search menu is removed
+// we can then drop any '!important' rules
+.search-menu.glimmer-search-menu {
+  .search-item-tag .d-icon {
+    margin-right: 0 !important;
+  }
+
+  .search-item-user {
+    .username {
+      margin-right: 0.33rem;
+    }
+
+    img.avatar {
+      margin-right: 0 !important;
     }
   }
 }

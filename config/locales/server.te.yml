@@ -9,21 +9,6 @@ te:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
-  date:
-    month_names:
-    - null
-    - January
-    - February
-    - March
-    - April
-    - May
-    - June
-    - July
-    - August
-    - September
-    - October
-    - November
-    - December
   title: "డిస్కోర్స్"
   topics: "విషయాలు"
   posts: "టపాలు"
@@ -101,7 +86,6 @@ te:
     more_replies:
       one: "మరో జవాబు ఉంది"
       other: "ఇంకా %{count} జవాబులు ఉన్నాయి"
-    loading: "చర్చ లోడవుతోంది"
     permalink: "శాస్వత లంకె"
     imported_from: "%{link} వద్ద మూల పద్దుకు జోడు చర్చా విషయం ఉంది."
     in_reply_to: "▶ %{username}"
@@ -543,7 +527,6 @@ te:
     censored_words: "వీటితో పదాలు స్వయంచాలకంగా భర్తీ చేయబడతాయి &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "30 రోజుల కంటే ఎక్కువ దాగివున్న టపాలు స్వయంసిధ్ధంగా తొలగింపబడతాయి."
     allow_user_locale: "వినియోగదారులు వారి సొంత భాష ఇంటర్ఫేస్ ప్రాధాన్యతను ఎంచుకోవడానికి అనుమతించు"
-    min_post_length: "టపా అనుమతించే అక్షరాల కనిష్ఠ పొడవు"
     max_post_length: "టపా అనుమతించే అక్షరాల గరిష్ఠ పొడవు"
     min_topic_title_length: "శీర్షిక కు అనుమతించే అక్షరాల కనిష్ఠ పొడవు"
     max_topic_title_length: "శీర్షిక కు అనుమతించే అక్షరాల గరిష్ఠ పొడవు"

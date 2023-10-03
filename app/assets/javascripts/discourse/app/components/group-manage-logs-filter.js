@@ -16,10 +16,4 @@ export default Component.extend({
       ? I18n.t(`group_histories.actions.${value}`)
       : value;
   },
-
-  actions: {
-    clearFilter(param) {
-      this.clearFilter(param);
-    },
-  },
 });

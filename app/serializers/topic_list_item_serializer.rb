@@ -14,10 +14,15 @@ class TopicListItemSerializer < ListableTopicSerializer
              :liked_post_numbers,
              :featured_link,
              :featured_link_root_domain,
-             :allowed_user_count
+             :allowed_user_count,
+             :participant_groups
 
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
   has_many :participants, serializer: TopicPosterSerializer, embed: :objects
+
+  def include_participant_groups?
+    object.private_message?
+  end
 
   def posters
     object.posters || object.posters_summary || []
@@ -42,6 +47,10 @@ class TopicListItemSerializer < ListableTopicSerializer
 
   def participants
     object.participants_summary || []
+  end
+
+  def participant_groups
+    object.participant_groups_summary || []
   end
 
   def include_liked_post_numbers?

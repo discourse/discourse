@@ -108,11 +108,13 @@ function translateGroupedSearchResults(results, opts) {
   const groupedSearchResult = results.grouped_search_result;
   if (groupedSearchResult) {
     [
+      // We are defining the order that the result types will be
+      // displayed in. We should make this customizable.
       ["topic", "posts"],
-      ["user", "users"],
-      ["group", "groups"],
       ["category", "categories"],
       ["tag", "tags"],
+      ["user", "users"],
+      ["group", "groups"],
     ].forEach(function (pair) {
       const type = pair[0];
       const name = pair[1];

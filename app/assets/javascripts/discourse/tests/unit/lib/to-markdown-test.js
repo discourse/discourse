@@ -1,10 +1,13 @@
 import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import toMarkdown, {
   addBlockDecorateCallback,
   addTagDecorateCallback,
 } from "discourse/lib/to-markdown";
 
-module("Unit | Utility | to-markdown", function () {
+module("Unit | Utility | to-markdown", function (hooks) {
+  setupTest(hooks);
+
   test("converts styles between normal words", function (assert) {
     const html = `Line with <s>styles</s> <b><i>between</i></b> words.`;
     const markdown = `Line with ~~styles~~ ***between*** words.`;

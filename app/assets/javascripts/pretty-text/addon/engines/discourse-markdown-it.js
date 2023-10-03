@@ -479,7 +479,7 @@ export function setup(opts, siteSettings, state) {
   // all of the modules under discourse-markdown or markdown-it
   // directories are considered additional markdown "features" which
   // may define their own rules
-  Object.keys(require._eak_seen).forEach((entry) => {
+  Object.keys(require.entries).forEach((entry) => {
     if (check.test(entry)) {
       const module = requirejs(entry);
       if (module && module.setup) {
@@ -547,8 +547,6 @@ export function setup(opts, siteSettings, state) {
     markdownTypographerQuotationMarks:
       siteSettings.markdown_typographer_quotation_marks,
     markdownLinkifyTlds: siteSettings.markdown_linkify_tlds,
-    enableExperimentalHashtagAutocomplete:
-      siteSettings.enable_experimental_hashtag_autocomplete,
   };
 
   const markdownitOpts = {

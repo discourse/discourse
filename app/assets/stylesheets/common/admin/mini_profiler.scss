@@ -9,17 +9,22 @@ div.profiler-results.profiler-top {
   top: var(--header-offset);
   z-index: z("header") - 1;
 
+  .profiler-result {
+    font-size: var(--font-down-1);
+  }
+
   .profiler-button {
     background-color: var(--header_background);
     color: var(--header_primary);
     border-bottom: 1px solid var(--header_primary-low);
 
-    .profiler-number {
+    .profiler-number,
+    .profiler-unit {
       color: var(--header_primary);
     }
 
-    .profiler-unit {
-      color: var(--header_primary-medium);
+    .profiler-reqs {
+      font-size: var(--font-down-1);
     }
   }
 

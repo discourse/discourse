@@ -34,6 +34,7 @@ module SvgSprite
         book
         book-reader
         bookmark
+        bookmark-delete
         briefcase
         bullseye
         calendar-alt
@@ -72,6 +73,7 @@ module SvgSprite
         discourse-emojis
         discourse-expand
         discourse-other-tab
+        discourse-threads
         download
         ellipsis-h
         ellipsis-v
@@ -81,6 +83,7 @@ module SvgSprite
         exclamation-circle
         exclamation-triangle
         external-link-alt
+        eye
         fab-android
         fab-apple
         fab-chrome
@@ -147,6 +150,7 @@ module SvgSprite
         hourglass-start
         id-card
         image
+        images
         inbox
         info-circle
         italic
@@ -185,6 +189,8 @@ module SvgSprite
         reply
         rocket
         search
+        search-plus
+        search-minus
         share
         shield-alt
         sign-in-alt
@@ -202,6 +208,7 @@ module SvgSprite
         tag
         tags
         tasks
+        th
         thermometer-three-quarters
         thumbs-down
         thumbs-up
@@ -236,6 +243,8 @@ module SvgSprite
   CORE_SVG_SPRITES = Dir.glob("#{Rails.root}/vendor/assets/svg-icons/**/*.svg")
 
   THEME_SPRITE_VAR_NAME = "icons-sprite"
+
+  MAX_THEME_SPRITE_SIZE = 1024.kilobytes
 
   def self.preload
     settings_icons
@@ -291,37 +300,45 @@ module SvgSprite
 
   def self.theme_svgs(theme_id)
     if theme_id.present?
-      theme_ids = Theme.transform_ids(theme_id)
+      cache
+        .defer_get_set_bulk(
+          Theme.transform_ids(theme_id),
+          lambda { |theme_id| "theme_svg_sprites_#{theme_id}" },
+        ) do |theme_ids|
+          theme_field_uploads =
+            ThemeField.where(
+              type_id: ThemeField.types[:theme_upload_var],
+              name: THEME_SPRITE_VAR_NAME,
+              theme_id: theme_ids,
+            ).pluck(:upload_id)
 
-      get_set_cache("theme_svg_sprites_#{theme_ids.join(",")}") do
-        theme_field_uploads =
-          ThemeField.where(
-            type_id: ThemeField.types[:theme_upload_var],
-            name: THEME_SPRITE_VAR_NAME,
-            theme_id: theme_ids,
-          ).pluck(:upload_id)
+          theme_sprites =
+            ThemeSvgSprite.where(theme_id: theme_ids).pluck(:theme_id, :upload_id, :sprite)
+          missing_sprites = (theme_field_uploads - theme_sprites.map(&:second))
 
-        theme_sprites = ThemeSvgSprite.where(theme_id: theme_ids).pluck(:upload_id, :sprite)
-        missing_sprites = (theme_field_uploads - theme_sprites.map(&:first))
-
-        if missing_sprites.present?
-          Rails.logger.warn(
-            "Missing ThemeSvgSprites for theme #{theme_id}, uploads #{missing_sprites.join(", ")}",
-          )
-        end
-
-        theme_sprites.reduce({}) do |symbols, (upload_id, sprite)|
-          begin
-            symbols.merge!(symbols_for("theme_#{theme_id}_#{upload_id}.svg", sprite, strict: false))
-          rescue => e
+          if missing_sprites.present?
             Rails.logger.warn(
-              "Bad XML in custom sprite in theme with ID=#{theme_id}. Error info: #{e.inspect}",
+              "Missing ThemeSvgSprites for theme #{theme_id}, uploads #{missing_sprites.join(", ")}",
             )
           end
 
-          symbols
+          theme_sprites
+            .map do |(theme_id, upload_id, sprite)|
+              begin
+                [theme_id, symbols_for("theme_#{theme_id}_#{upload_id}.svg", sprite, strict: false)]
+              rescue => e
+                Rails.logger.warn(
+                  "Bad XML in custom sprite in theme with ID=#{theme_id}. Error info: #{e.inspect}",
+                )
+              end
+            end
+            .compact
+            .to_h
+            .values_at(*theme_ids)
         end
-      end
+        .values
+        .compact
+        .reduce({}) { |a, b| a.merge!(b) }
     else
       {}
     end

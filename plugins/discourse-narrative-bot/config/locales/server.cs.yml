@@ -371,16 +371,6 @@ cs:
 
           Všimněte si, že máte pouze %{deletion_after} hodiny (y) vrátit příspěvek.
       category_hashtag:
-        instructions: |-
-          Věděli jste, že ve svém příspěvku můžete odkazovat na kategorie a značky? Viděli jste například kategorii %{category}
-
-          Uprostřed věty napište „#“ a vyberte libovolnou kategorii nebo značku.
-        not_found: |-
-          Hmm, nikde tam nevidím kategorii. Všimněte si, že `#` nemůže být první znak. Můžete to zkopírovat do své příští odpovědi?
-
-          `` `text
-          mohu vytvořit odkaz kategorie přes #
-          ` ``
         reply: |-
           Vynikající! Pamatujte, že toto funguje pro kategorie _i_ značky, pokud jsou tyto povoleny.
       change_topic_notification_level:

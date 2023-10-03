@@ -1,0 +1,19 @@
+.more-topics__container {
+  .nav {
+    margin-block: 0.5em 1em;
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  .more-content-topics {
+    padding: 15px 0 15px 0;
+
+    a.badge-category,
+    a.badge-category-parent {
+      font-size: var(--font-down-1);
+      vertical-align: top;
+    }
+    .suggested-topics-message {
+      margin-top: 1em;
+    }
+  }
+}

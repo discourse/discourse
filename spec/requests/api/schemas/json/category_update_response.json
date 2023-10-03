@@ -79,7 +79,7 @@
         },
         "form_template_ids": {
           "type": "array",
-          "items": []
+          "items": {}
         },
         "has_children": {
           "type": [

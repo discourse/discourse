@@ -28,7 +28,7 @@ def upload(path, remote_path, content_type, content_encoding = nil)
   options = {
     cache_control: "max-age=31556952, public, immutable",
     content_type: content_type,
-    acl: "public-read",
+    acl: SiteSetting.s3_use_acls ? "public-read" : nil,
   }
 
   options[:content_encoding] = content_encoding if content_encoding
@@ -104,6 +104,11 @@ end
 task "s3:correct_acl" => :environment do
   ensure_s3_configured!
 
+  if !SiteSetting.s3_use_acls
+    $stderr.puts "Not correcting ACLs as the site is configured to not use ACLs"
+    return
+  end
+
   puts "ensuring public-read is set on every upload and optimized image"
 
   i = 0
@@ -158,7 +163,7 @@ task "s3:correct_cachecontrol" => :environment do
         object = Discourse.store.s3_helper.object(key)
         object.copy_from(
           copy_source: "#{object.bucket_name}/#{object.key}",
-          acl: "public-read",
+          acl: SiteSetting.s3_use_acls ? "public-read" : nil,
           cache_control: cache_control,
           content_type: object.content_type,
           content_disposition: object.content_disposition,

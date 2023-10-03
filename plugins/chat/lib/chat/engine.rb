@@ -13,10 +13,18 @@ module ::Chat
     SiteSetting.chat_allowed_groups_map
   end
 
-  def self.onebox_template
-    @onebox_template ||=
+  def self.message_onebox_template
+    @message_onebox_template ||=
       begin
-        path = "#{Rails.root}/plugins/chat/lib/onebox/templates/discourse_chat.mustache"
+        path = "#{Rails.root}/plugins/chat/lib/onebox/templates/discourse_chat_message.mustache"
+        File.read(path)
+      end
+  end
+
+  def self.channel_onebox_template
+    @channel_onebox_template ||=
+      begin
+        path = "#{Rails.root}/plugins/chat/lib/onebox/templates/discourse_chat_channel.mustache"
         File.read(path)
       end
   end

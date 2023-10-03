@@ -9,6 +9,7 @@ import { helperContext } from "discourse-common/lib/helpers";
 import { htmlSafe } from "@ember/template";
 import loadScript from "discourse/lib/load-script";
 import { sanitize as textSanitize } from "pretty-text/sanitizer";
+import { MentionsParser } from "discourse/lib/mentions-parser";
 
 function getOpts(opts) {
   let context = helperContext();
@@ -19,6 +20,7 @@ function getOpts(opts) {
       currentUser: context.currentUser,
       censoredRegexp: context.site.censored_regexp,
       customEmojiTranslation: context.site.custom_emoji_translation,
+      emojiDenyList: context.site.denied_emojis,
       siteSettings: context.siteSettings,
       formatUsername,
       watchedWordsReplace: context.site.watched_words_replace,
@@ -70,8 +72,15 @@ export function sanitizeAsync(text, options) {
 
 export function parseAsync(md, options = {}, env = {}) {
   return loadMarkdownIt().then(() => {
-    return createPrettyText(options).opts.engine.parse(md, env);
+    return createPrettyText(options).parse(md, env);
   });
+}
+
+export async function parseMentions(markdown, options) {
+  await loadMarkdownIt();
+  const prettyText = createPrettyText(options);
+  const mentionsParser = new MentionsParser(prettyText);
+  return mentionsParser.parse(markdown);
 }
 
 function loadMarkdownIt() {
@@ -96,6 +105,7 @@ function createPrettyText(options) {
 
 function emojiOptions() {
   let siteSettings = helperContext().siteSettings;
+  let context = helperContext();
   if (!siteSettings.enable_emoji) {
     return;
   }
@@ -105,6 +115,7 @@ function emojiOptions() {
     emojiSet: siteSettings.emoji_set,
     enableEmojiShortcuts: siteSettings.enable_emoji_shortcuts,
     inlineEmoji: siteSettings.enable_inline_emoji_translation,
+    emojiDenyList: context.site.denied_emojis,
     emojiCDNUrl: siteSettings.external_emoji_url,
   };
 }

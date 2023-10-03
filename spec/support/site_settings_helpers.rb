@@ -8,6 +8,10 @@ module SiteSettingsHelpers
       # so we set listen_for_changes to false
       self.listen_for_changes = false
       self.provider = provider
+
+      def self.setting(*args)
+        super
+      end
     end
   end
 end

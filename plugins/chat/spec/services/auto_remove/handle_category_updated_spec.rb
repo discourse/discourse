@@ -66,8 +66,6 @@ RSpec.describe Chat::AutoRemove::HandleCategoryUpdated do
       end
 
       context "when the category still has category_group records" do
-        let(:action) { UserHistory.where(custom_type: "chat_auto_remove_membership").last }
-
         before do
           [user_1, user_2, admin_1, admin_2].each do |user|
             channel_1.add(user)
@@ -142,10 +140,24 @@ RSpec.describe Chat::AutoRemove::HandleCategoryUpdated do
 
         it "logs a staff action" do
           result
-          expect(action).to have_attributes(
-            details: "users_removed: 1\nchannel_id: #{channel_2.id}\nevent: category_updated",
-            acting_user_id: Discourse.system_user.id,
-            custom_type: "chat_auto_remove_membership",
+
+          changes =
+            UserHistory
+              .where(custom_type: "chat_auto_remove_membership")
+              .all
+              .map { |uh| uh.slice(:details, :acting_user_id) }
+
+          expect(changes).to match_array(
+            [
+              {
+                details: "users_removed: 1\nchannel_id: #{channel_1.id}\nevent: category_updated",
+                acting_user_id: Discourse.system_user.id,
+              },
+              {
+                details: "users_removed: 1\nchannel_id: #{channel_2.id}\nevent: category_updated",
+                acting_user_id: Discourse.system_user.id,
+              },
+            ],
           )
         end
       end

@@ -1,9 +1,6 @@
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
-import {
-  avatarUrl,
-  formatUsername,
-  translateSize,
-} from "discourse/lib/utilities";
+import { formatUsername } from "discourse/lib/utilities";
+import { avatarUrl, translateSize } from "discourse-common/lib/avatar-utils";
 import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import DiscourseURL from "discourse/lib/url";
@@ -23,9 +20,9 @@ import {
 import { relativeAgeMediumSpan } from "discourse/lib/formatter";
 import { transformBasicPost } from "discourse/lib/transform-post";
 import autoGroupFlairForUser from "discourse/lib/avatar-flair";
-import showModal from "discourse/lib/show-modal";
 import { nativeShare } from "discourse/lib/pwa-utils";
-import { hideUserTip } from "discourse/lib/user-tips";
+import ShareTopicModal from "discourse/components/modal/share-topic";
+import { getOwner } from "@ember/application";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
@@ -226,13 +223,15 @@ createWidget("post-avatar", {
 
     const postAvatarBody = [body];
 
-    if (attrs.flair_url || attrs.flair_bg_color) {
-      postAvatarBody.push(this.attach("avatar-flair", attrs));
-    } else {
-      const autoFlairAttrs = autoGroupFlairForUser(this.site, attrs);
+    if (attrs.flair_group_id) {
+      if (attrs.flair_url || attrs.flair_bg_color) {
+        postAvatarBody.push(this.attach("avatar-flair", attrs));
+      } else {
+        const autoFlairAttrs = autoGroupFlairForUser(this.site, attrs);
 
-      if (autoFlairAttrs) {
-        postAvatarBody.push(this.attach("avatar-flair", autoFlairAttrs));
+        if (autoFlairAttrs) {
+          postAvatarBody.push(this.attach("avatar-flair", autoFlairAttrs));
+        }
       }
     }
 
@@ -408,8 +407,11 @@ createWidget("post-date", {
   showShareModal() {
     const post = this.findAncestorModel();
     const topic = post.topic;
-    const controller = showModal("share-topic", { model: topic.category });
-    controller.setProperties({ topic, post });
+    getOwner(this)
+      .lookup("service:modal")
+      .show(ShareTopicModal, {
+        model: { category: topic.category, topic, post },
+      });
   },
 });
 
@@ -495,7 +497,7 @@ createWidget("post-contents", {
 
     result = result.concat(applyDecorators(this, "after-cooked", attrs, state));
 
-    if (attrs.cooked_hidden) {
+    if (attrs.cooked_hidden && attrs.canSeeHiddenPost) {
       result.push(this.attach("expand-hidden", attrs));
     }
 
@@ -618,15 +620,14 @@ createWidget("post-contents", {
   },
 
   share() {
-    if (this.currentUser && this.siteSettings.enable_user_tips) {
-      this.currentUser.hideUserTipForever("post_menu");
-    }
-
     const post = this.findAncestorModel();
     nativeShare(this.capabilities, { url: post.shareUrl }).catch(() => {
       const topic = post.topic;
-      const controller = showModal("share-topic", { model: topic.category });
-      controller.setProperties({ topic, post });
+      getOwner(this)
+        .lookup("service:modal")
+        .show(ShareTopicModal, {
+          model: { category: topic.category, topic, post },
+        });
     });
   },
 
@@ -718,8 +719,11 @@ createWidget("post-article", {
     return `post_${attrs.post_number}`;
   },
 
-  buildClasses(attrs) {
+  buildClasses(attrs, state) {
     let classNames = [];
+    if (state.repliesAbove.length) {
+      classNames.push("replies-above");
+    }
     if (attrs.via_email) {
       classNames.push("via-email");
     }
@@ -862,7 +866,7 @@ export function addPostClassesCallback(callback) {
 
 export default createWidget("post", {
   buildKey: (attrs) => `post-${attrs.id}`,
-  services: ["dialog"],
+  services: ["dialog", "user-tips"],
   shadowTree: true,
 
   buildAttributes(attrs) {
@@ -935,7 +939,10 @@ export default createWidget("post", {
       return "";
     }
 
-    return this.attach("post-article", attrs);
+    return [
+      this.attach("post-user-tip-shim"),
+      this.attach("post-article", attrs),
+    ];
   },
 
   toggleLike() {
@@ -970,35 +977,5 @@ export default createWidget("post", {
       this.dialog.alert(I18n.t("post.few_likes_left"));
       kvs.set({ key: "lastWarnedLikes", value: Date.now() });
     }
-  },
-
-  didRenderWidget() {
-    if (!this.currentUser || !this.siteSettings.enable_user_tips) {
-      return;
-    }
-
-    const reference = document.querySelector(
-      ".post-controls .actions .show-more-actions"
-    );
-
-    this.currentUser.showUserTip({
-      id: "post_menu",
-
-      titleText: I18n.t("user_tips.post_menu.title"),
-      contentText: I18n.t("user_tips.post_menu.content"),
-
-      reference,
-      appendTo: reference?.closest(".post-controls"),
-
-      placement: "top",
-    });
-  },
-
-  destroy() {
-    hideUserTip("post_menu");
-  },
-
-  willRerenderWidget() {
-    hideUserTip("post_menu");
   },
 });

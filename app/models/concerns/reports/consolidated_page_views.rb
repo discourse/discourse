@@ -9,16 +9,11 @@ module Reports::ConsolidatedPageViews
 
       report.modes = [:stacked_chart]
 
-      tertiary = ColorScheme.hex_for_name("tertiary") || "0088cc"
-      danger = ColorScheme.hex_for_name("danger") || "e45735"
-
       requests =
         filters.map do |filter|
-          color = report.rgba_color(tertiary)
-
-          color = report.lighten_color(tertiary, 0.25) if filter == "page_view_anon"
-
-          color = report.rgba_color(danger, 0.75) if filter == "page_view_crawler"
+          color = report.colors[0]
+          color = report.colors[1] if filter == "page_view_anon"
+          color = report.colors[2] if filter == "page_view_crawler"
 
           {
             req: filter,

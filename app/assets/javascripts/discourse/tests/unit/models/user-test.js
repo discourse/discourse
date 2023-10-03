@@ -4,9 +4,7 @@ import PreloadStore from "discourse/lib/preload-store";
 import sinon from "sinon";
 import { settled } from "@ember/test-helpers";
 import User from "discourse/models/user";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { getOwner } from "discourse-common/lib/get-owner";
-import * as userTips from "discourse/lib/user-tips";
+import { getOwner } from "@ember/application";
 
 module("Unit | Model | user", function (hooks) {
   setupTest(hooks);
@@ -195,56 +193,5 @@ module("Unit | Model | user", function (hooks) {
       user.hasOwnProperty("_clearStatusTimerId"),
       "_clearStatusTimerId wasn't set"
     );
-  });
-
-  test("hideUserTipForever() makes a single request", async function (assert) {
-    const site = getOwner(this).lookup("service:site");
-    site.set("user_tips", { first_notification: 1 });
-    const store = getOwner(this).lookup("service:store");
-    const user = store.createRecord("user", { username: "eviltrout" });
-
-    let requestsCount = 0;
-    pretender.put("/u/eviltrout.json", () => {
-      requestsCount += 1;
-      return response(200, {
-        user: {
-          user_option: {
-            seen_popups: [1],
-          },
-        },
-      });
-    });
-
-    await user.hideUserTipForever("first_notification");
-    assert.strictEqual(requestsCount, 1);
-
-    await user.hideUserTipForever("first_notification");
-    assert.strictEqual(requestsCount, 1);
-  });
-
-  test("hideUserTipForever() can hide the user tip", async function (assert) {
-    const site = getOwner(this).lookup("service:site");
-    site.set("user_tips", { first_notification: 1 });
-    const store = getOwner(this).lookup("service:store");
-    const user = store.createRecord("user", { username: "eviltrout" });
-
-    const hideSpy = sinon.spy(userTips, "hideUserTip");
-    const showNextSpy = sinon.spy(userTips, "showNextUserTip");
-    await user.hideUserTipForever("first_notification");
-
-    assert.ok(hideSpy.calledWith("first_notification"));
-    assert.ok(showNextSpy.calledWith());
-  });
-
-  test("hideUserTipForever() can hide all the user tips", async function (assert) {
-    const site = getOwner(this).lookup("service:site");
-    site.set("user_tips", { first_notification: 1 });
-    const store = getOwner(this).lookup("service:store");
-    const user = store.createRecord("user", { username: "eviltrout" });
-
-    const hideAllSpy = sinon.spy(userTips, "hideAllUserTips");
-    await user.hideUserTipForever();
-
-    assert.ok(hideAllSpy.calledWith());
   });
 });

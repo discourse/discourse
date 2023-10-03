@@ -1,8 +1,11 @@
 import getUrl from "discourse-common/lib/get-url";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 
 export default Controller.extend({
+  router: service(),
+
   wizard: null,
   step: null,
 
@@ -13,14 +16,14 @@ export default Controller.extend({
     if (response?.refresh_required) {
       document.location = getUrl(`/wizard/steps/${next}`);
     } else if (response?.success && next) {
-      this.transitionToRoute("wizard.step", next);
+      this.router.transitionTo("wizard.step", next);
     } else if (response?.success) {
-      this.transitionToRoute("discovery.latest");
+      this.router.transitionTo("discovery.latest");
     }
   },
 
   @action
   goBack() {
-    this.transitionToRoute("wizard.step", this.step.previous);
+    this.router.transitionTo("wizard.step", this.step.previous);
   },
 });

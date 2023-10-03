@@ -1,0 +1,84 @@
+<DModal
+  @closeModal={{@closeModal}}
+  @title={{i18n "user.second_factor.totp.add"}}
+  {{did-insert this.totpRequested}}
+>
+  <:body>
+    <ConditionalLoadingSpinner @condition={{this.loading}}>
+      {{#if this.errorMessage}}
+        <div class="control-group">
+          <div class="controls">
+            <div class="alert alert-error">{{this.errorMessage}}</div>
+          </div>
+        </div>
+      {{/if}}
+
+      <div class="control-group">
+        <div class="controls">
+          {{html-safe (i18n "user.second_factor.enable_description")}}
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div class="controls">
+          <div class="qr-code">
+            <img src={{html-safe this.secondFactorImage}} />
+          </div>
+          <p>
+            {{#if this.showSecondFactorKey}}
+              <div class="second-factor-key">
+                {{this.secondFactorKey}}
+              </div>
+            {{else}}
+              <a
+                href
+                class="show-second-factor-key"
+                {{on "click" this.enableShowSecondFactorKey}}
+              >{{i18n "user.second_factor.show_key_description"}}</a>
+            {{/if}}
+          </p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label input-prepend">{{i18n
+            "user.second_factor.name"
+          }}</label>
+        <div class="controls">
+          <SecondFactorInput
+            maxlength={{this.maxSecondFactorNameLength}}
+            @value={{this.secondFactorName}}
+            @inputId="second-factor-name"
+            @placeholder={{i18n "user.second_factor.totp.default_name"}}
+          />
+        </div>
+
+        <label class="control-label input-prepend">{{i18n
+            "user.second_factor.label"
+          }}</label>
+        <div class="controls">
+          <TextField
+            class="second-factor-token-input"
+            maxlength={{6}}
+            @value={{this.secondFactorToken}}
+            @inputId="second-factor-token"
+            placeholder="123456"
+            autocorrect="off"
+            autocapitalize="off"
+            autofocus="autofocus"
+          />
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div class="controls">
+          <DButton
+            class="btn-primary add-totp"
+            @action={{this.enableSecondFactor}}
+            @label="enable"
+          />
+        </div>
+      </div>
+    </ConditionalLoadingSpinner>
+  </:body>
+</DModal>

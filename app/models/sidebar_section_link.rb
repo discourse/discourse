@@ -12,7 +12,7 @@ class SidebarSectionLink < ActiveRecord::Base
 
   SUPPORTED_LINKABLE_TYPES = %w[Category Tag SidebarUrl]
 
-  before_validation { self.user_id ||= self.sidebar_section&.user_id }
+  before_validation :inherit_user_id
   before_create do
     if self.user_id && self.sidebar_section
       self.position = self.sidebar_section.sidebar_section_links.maximum(:position).to_i + 1
@@ -21,7 +21,13 @@ class SidebarSectionLink < ActiveRecord::Base
 
   after_destroy { self.linkable.destroy! if self.linkable_type == "SidebarUrl" }
 
-  private def ensure_supported_linkable_type
+  private
+
+  def inherit_user_id
+    self.user_id = sidebar_section.user_id if sidebar_section
+  end
+
+  def ensure_supported_linkable_type
     if (!SUPPORTED_LINKABLE_TYPES.include?(self.linkable_type)) ||
          (self.linkable_type == "Tag" && !SiteSetting.tagging_enabled)
       self.errors.add(

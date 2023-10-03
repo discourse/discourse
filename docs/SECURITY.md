@@ -14,10 +14,7 @@ For a list of recent security commits, check [our GitHub commits prefixed with S
 
 Discourse uses the PBKDF2 algorithm to encrypt salted passwords. This algorithm is blessed by NIST. Security experts on the web [tend to agree that PBKDF2 is a secure choice](https://security.stackexchange.com/questions/4781/do-any-security-experts-recommend-bcrypt-for-password-storage).
 
-**options you can customize in your production.rb file**
-
-- `pbkdf2_algorithm`: the hashing algorithm used (default "sha256")
-- `pbkdf2_iterations`: the number of iterations to run (default 64000)
+Discourse currently uses PBKDF2 with the sha256 hashing algorithm and 600,000 iterations.
 
 ### XSS
 

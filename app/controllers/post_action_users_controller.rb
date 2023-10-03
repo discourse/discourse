@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 class PostActionUsersController < ApplicationController
+  INDEX_LIMIT = 200
+
   def index
     params.require(:post_action_type_id)
     params.require(:id)
     post_action_type_id = params[:post_action_type_id].to_i
 
     page = params[:page].to_i
-    page_size = (params[:limit] || 200).to_i
+    page_size = fetch_limit_from_params(default: INDEX_LIMIT, max: INDEX_LIMIT)
 
     # Find the post, and then determine if they can see the post (if deleted)
     post = Post.with_deleted.where(id: params[:id].to_i).first

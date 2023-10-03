@@ -2,7 +2,6 @@ import Service, { inject as service } from "@ember/service";
 import { cancel, debounce } from "@ember/runloop";
 import { isTesting } from "discourse-common/config/environment";
 
-const CHAT_PRESENCE_CHANNEL_PREFIX = "/chat-reply";
 const KEEP_ALIVE_DURATION_SECONDS = 10;
 
 // This service is loosely based on discourse-presence's ComposerPresenceManager service
@@ -16,15 +15,15 @@ export default class ChatComposerPresenceManager extends Service {
     this.leave();
   }
 
-  notifyState(chatChannelId, replying) {
+  notifyState(channelName, replying) {
     if (!replying) {
       this.leave();
       return;
     }
 
-    if (this._chatChannelId !== chatChannelId) {
-      this._enter(chatChannelId);
-      this._chatChannelId = chatChannelId;
+    if (this._channelName !== channelName) {
+      this._enter(channelName);
+      this._channelName = channelName;
     }
 
     if (!isTesting()) {
@@ -39,17 +38,16 @@ export default class ChatComposerPresenceManager extends Service {
   leave() {
     this._presentChannel?.leave();
     this._presentChannel = null;
-    this._chatChannelId = null;
+    this._channelName = null;
     if (this._autoLeaveTimer) {
       cancel(this._autoLeaveTimer);
       this._autoLeaveTimer = null;
     }
   }
 
-  _enter(chatChannelId) {
+  _enter(channelName) {
     this.leave();
 
-    let channelName = `${CHAT_PRESENCE_CHANNEL_PREFIX}/${chatChannelId}`;
     this._presentChannel = this.presence.getChannel(channelName);
     this._presentChannel.enter();
   }

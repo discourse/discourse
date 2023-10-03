@@ -29,6 +29,7 @@ class TopicTrackingState
   DESTROY_MESSAGE_TYPE = "destroy"
   READ_MESSAGE_TYPE = "read"
   DISMISS_NEW_MESSAGE_TYPE = "dismiss_new"
+  DISMISS_NEW_POSTS_MESSAGE_TYPE = "dismiss_new_posts"
   MAX_TOPICS = 5000
 
   NEW_MESSAGE_BUS_CHANNEL = "/new"
@@ -231,6 +232,11 @@ class TopicTrackingState
     MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
   end
 
+  def self.publish_dismiss_new_posts(user_id, topic_ids: [])
+    message = { message_type: DISMISS_NEW_POSTS_MESSAGE_TYPE, payload: { topic_ids: topic_ids } }
+    MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
+  end
+
   def self.new_filter_sql
     TopicQuery
       .new_filter(Topic, treat_as_new_topic_clause_sql: treat_as_new_topic_clause)
@@ -298,6 +304,7 @@ class TopicTrackingState
           topic_id: topic_id,
           min_new_topic_date: Time.at(SiteSetting.min_new_topics_time).to_datetime,
           max_topics: TopicTrackingState::MAX_TOPICS,
+          user_first_unread_at: user.user_stat.first_unread_at,
         }.merge(treat_as_new_topic_params),
       )
 
@@ -376,7 +383,7 @@ class TopicTrackingState
 
     filter_old_unread_sql =
       if filter_old_unread
-        " topics.updated_at >= us.first_unread_at AND "
+        " topics.updated_at >= :user_first_unread_at AND "
       else
         ""
       end
@@ -407,7 +414,6 @@ class TopicTrackingState
            c.id as category_id,
            #{category_topic_id_column_select}
            tu.notification_level,
-           us.first_unread_at,
            GREATEST(
               CASE
               WHEN COALESCE(uo.new_topic_duration_minutes, :default_duration) = :always THEN u.created_at
@@ -469,7 +475,6 @@ class TopicTrackingState
       SELECT #{select_sql}
       FROM topics
       JOIN users u on u.id = :user_id
-      JOIN user_stats AS us ON us.user_id = u.id
       JOIN user_options AS uo ON uo.user_id = u.id
       JOIN categories c ON c.id = topics.category_id
       LEFT JOIN topic_users tu ON tu.topic_id = topics.id AND tu.user_id = u.id
@@ -578,6 +583,8 @@ class TopicTrackingState
 
   def self.secure_category_group_ids(topic)
     category = topic.category
+
+    return [Group::AUTO_GROUPS[:admins]] if category.nil?
 
     if category.read_restricted
       ids = [Group::AUTO_GROUPS[:admins]]

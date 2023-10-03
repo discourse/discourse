@@ -259,10 +259,11 @@ class NewPostManager
 
     reviewable =
       ReviewableQueuedPost.new(
-        created_by: @user,
+        created_by: Discourse.system_user,
         payload: payload,
         topic_id: @args[:topic_id],
         reviewable_by_moderator: true,
+        target_created_by: @user,
       )
     reviewable.payload["title"] = @args[:title] if @args[:title].present?
     reviewable.category_id = args[:category] if args[:category].present?
@@ -299,7 +300,7 @@ class NewPostManager
     result.reviewable = reviewable
     result.reason = reason if reason
     result.check_errors(errors)
-    result.pending_count = ReviewableQueuedPost.where(created_by: @user).pending.count
+    result.pending_count = ReviewableQueuedPost.where(target_created_by: @user).pending.count
     result
   end
 

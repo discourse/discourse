@@ -199,6 +199,16 @@ a.reply-to-tab {
     background: var(--blend-primary-secondary-5);
     width: 100%;
   }
+
+  .toggle-summary {
+    .summarization-buttons {
+      flex-direction: column;
+
+      .top-replies {
+        margin-top: 10px;
+      }
+    }
+  }
 }
 
 #topic-footer-buttons {
@@ -242,24 +252,6 @@ a.reply-to-tab {
   }
 }
 
-.suggested-topics {
-  clear: left;
-  padding: 20px 0 15px 0;
-  th.views,
-  td.views,
-  td.activity,
-  th.activity,
-  th.likes,
-  td.likes {
-    display: none;
-  }
-  a.badge-category,
-  a.badge-category-parent {
-    font-size: var(--font-down-1);
-    vertical-align: top;
-  }
-}
-
 span.post-count {
   background: var(--primary);
   color: var(--secondary);
@@ -274,10 +266,6 @@ span.post-count {
 
 .quote-button.visible {
   z-index: z("tooltip");
-}
-
-iframe {
-  max-width: 100%;
 }
 
 .btn-group {

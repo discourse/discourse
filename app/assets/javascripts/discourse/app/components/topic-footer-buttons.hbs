@@ -28,17 +28,18 @@
   {{#each this.inlineActionables as |actionable|}}
     {{#if (eq actionable.type "inline-button")}}
       <DButton
-        @id={{concat "topic-footer-button-" actionable.id}}
-        @class={{concat
-          "btn-default topic-footer-button "
-          actionable.classNames
-        }}
         @action={{actionable.action}}
         @icon={{actionable.icon}}
         @translatedLabel={{actionable.label}}
         @translatedTitle={{actionable.title}}
         @translatedAriaLabel={{actionable.ariaLabel}}
         @disabled={{actionable.disabled}}
+        id={{concat "topic-footer-button-" actionable.id}}
+        class={{concat-class
+          "btn-default"
+          "topic-footer-button"
+          actionable.classNames
+        }}
       />
     {{else}}
       <DropdownSelectBox
@@ -64,11 +65,11 @@
 
   {{#if this.topic.details.can_create_post}}
     <DButton
-      @class="btn-primary create"
       @icon="reply"
       @action={{this.replyToPost}}
       @label="topic.reply.title"
       @title="topic.reply.help"
+      class="btn-primary create"
     />
   {{/if}}
 
@@ -85,7 +86,9 @@
   {{#if this.showNotificationUserTip}}
     <UserTip
       @id="topic_notification_levels"
-      @selector=".notifications-button"
+      @triggerSelector=".notifications-button"
+      @titleText={{i18n "user_tips.topic_notification_levels.title"}}
+      @contentText={{i18n "user_tips.topic_notification_levels.content"}}
     />
   {{/if}}
 

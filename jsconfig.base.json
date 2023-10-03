@@ -9,4 +9,10 @@
     "**/node_modules",
     "**/dist",
   ],
+  "glint": {
+    "environment": [
+      "ember-loose",
+      "ember-template-imports"
+    ]
+  }
 }

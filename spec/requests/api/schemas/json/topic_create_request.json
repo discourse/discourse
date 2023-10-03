@@ -34,6 +34,10 @@
     "created_at": {
       "type": "string"
     },
+    "reply_to_post_number": {
+      "type": "integer",
+      "description": "Optional, the post number to reply to inside a topic."
+    },
     "embed_url": {
       "type": "string",
       "description": "Provide a URL from a remote system to associate a forum topic with that URL, typically for using Discourse as a comments system for an external blog."

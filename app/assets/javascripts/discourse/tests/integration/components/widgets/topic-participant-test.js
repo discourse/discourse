@@ -34,6 +34,7 @@ module(
         flair_name: "devs",
         flair_url: "/images/d-logo-sketch-small.png",
         flair_bg_color: "222",
+        flair_group_id: "41",
       });
 
       await render(

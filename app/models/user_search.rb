@@ -198,7 +198,8 @@ class UserSearch
 
   def search
     ids = search_ids
-    return User.where("0=1") if ids.empty?
+    ids = DiscoursePluginRegistry.apply_modifier(:user_search_ids, ids)
+    return User.none if ids.empty?
 
     results =
       User.joins(

@@ -45,6 +45,9 @@ es:
       trigger: "tirar"
       invalid: |-
         Lo siento, es matemáticamente imposible tirar esa combinación de dados. :confounded:
+      not_enough_dice:
+        one: "Solo tengo %{count} dados. ¡Vergonzoso, lo sé!"
+        other: "Solo tengo %{count} dados. ¡Vergonzoso, lo sé!"
       out_of_range: |-
         ¿Sabías que [el número máximo de lados](https://www.wired.com/2016/05/mathematical-challenge-of-designing-the-worlds-most-complex-120-sided-dice) que un dado matemáticamente correcto puede tener es 120?
       results: |-
@@ -370,14 +373,14 @@ es:
           Ten en cuenta que solo tienes %{deletion_after} hora(s) para deshacer la eliminación de una publicación.
       category_hashtag:
         instructions: |-
-          ¿Sabías que puedes hacer referencia a categorías y etiquetas en tu publicación? Por ejemplo, ¿has visto la categoría %{category}?
+          ¿Sabías que puedes hacer referencia a categorías y etiquetas en tus publicaciones? Por ejemplo, ¿has visto la categoría %{category}?
 
-          Escribe «#» en el medio de una oración y selecciona cualquier categoría o etiqueta.
+          Escribe `#` en cualquier lugar de una frase y selecciona cualquier categoría o etiqueta.
         not_found: |-
-          Umm, no veo ninguna categoría. Ten en cuenta que «#» no puede ser el primer carácter. ¿Puedes copiar esto en tu próxima respuesta?
+          Hmm, no veo ninguna categoría por ninguna parte. ¿Puedes copiar esto en tu próxima respuesta?
 
-          ```text
-          Yo puedo crear un enlace a la categoría usando #
+          ```texto
+          Puedo crear un enlace de categoría mediante #
           ```
         reply: |-
           ¡Excelente! Recuerda que esto funciona para categorías _y_ etiquetas, si las etiquetas están disponibles.

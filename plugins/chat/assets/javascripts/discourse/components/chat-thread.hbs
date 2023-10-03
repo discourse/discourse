@@ -1,62 +1,61 @@
 <div
-  class={{concat-class "chat-thread" (if this.loading "loading")}}
-  data-id={{this.thread.id}}
-  {{did-insert this.loadMessages}}
+  class={{concat-class
+    "chat-thread"
+    (if this.messagesLoader.loading "loading")
+  }}
+  data-id={{@thread.id}}
+  {{did-insert this.setUploadDropZone}}
+  {{did-insert this.didUpdateThread}}
+  {{did-update this.didUpdateThread @thread.id}}
+  {{will-destroy this.teardown}}
 >
-  <div class="chat-thread__header">
-    <div class="chat-thread__info">
-      <div class="chat-thread__title">
-        <h2>{{this.title}}</h2>
+  {{#if @includeHeader}}
+    <Chat::Thread::Header @channel={{@thread.channel}} @thread={{@thread}} />
+  {{/if}}
 
-        <LinkTo
-          class="chat-thread__close"
-          @route="chat.channel"
-          @models={{this.chat.activeChannel.routeModels}}
-        >
-          {{d-icon "times"}}
-        </LinkTo>
-      </div>
-
-      <p class="chat-thread__om">
-        {{replace-emoji this.thread.originalMessage.excerpt}}
-      </p>
-
-      <div class="chat-thread__omu">
-        <span class="chat-thread__started-by">{{i18n
-            "chat.threads.started_by"
-          }}</span>
-        <ChatMessageAvatar
-          class="chat-thread__omu-avatar"
-          @message={{this.thread.originalMessage}}
+  <div
+    class="chat-thread__body popper-viewport chat-messages-scroll"
+    {{did-insert this.setScrollable}}
+    {{chat/scrollable-list
+      (hash onScroll=this.onScroll onScrollEnd=this.onScrollEnd reverse=true)
+    }}
+  >
+    <div
+      class="chat-messages-container"
+      {{chat/on-resize this.didResizePane (hash delay=100 immediate=true)}}
+    >
+      {{#each this.messagesManager.messages key="id" as |message|}}
+        <ChatMessage
+          @message={{message}}
+          @disableMouseEvents={{this.isScrolling}}
+          @resendStagedMessage={{this.resendStagedMessage}}
+          @context="thread"
         />
-        <span
-          class="chat-thread__omu-username"
-        >{{this.thread.originalMessageUser.username}}</span>
-      </div>
+      {{/each}}
+
+      {{#unless this.messagesLoader.fetchedOnce}}
+        {{#if this.messagesLoader.loading}}
+          <ChatSkeleton />
+        {{/if}}
+      {{/unless}}
     </div>
   </div>
-  <div class="chat-thread__messages">
-    <ul>
-      {{#each this.thread.messages as |message|}}
-        <li><strong>{{message.user.username}}</strong>: {{message.message}}</li>
-      {{/each}}
-    </ul>
-    {{#if (or this.loading this.loadingMoreFuture)}}
-      <ChatSkeleton />
-    {{/if}}
-  </div>
 
-  <ChatComposer
-    @canInteractWithChat="true"
-    @sendMessage={{this.sendMessage}}
-    @editMessage={{this.editMessage}}
-    @setReplyTo={{this.setReplyTo}}
-    @loading={{this.sendingLoading}}
-    @editingMessage={{readonly this.editingMessage}}
-    @onCancelEditing={{this.cancelEditing}}
-    @setInReplyToMsg={{this.setInReplyToMsg}}
-    @onEditLastMessageRequested={{this.editLastMessageRequested}}
-    @onValueChange={{this.composerValueChanged}}
-    @chatChannel={{this.channel}}
+  <Chat::ScrollToBottomArrow
+    @onScrollToBottom={{this.scrollToLatestMessage}}
+    @isVisible={{this.needsArrow}}
   />
+
+  {{#if this.chatThreadPane.selectingMessages}}
+    <Chat::SelectionManager @pane={{this.chatThreadPane}} />
+  {{else}}
+    <Chat::Composer::Thread
+      @channel={{@channel}}
+      @thread={{@thread}}
+      @onSendMessage={{this.onSendMessage}}
+      @uploadDropZone={{this.uploadDropZone}}
+    />
+  {{/if}}
+
+  <ChatUploadDropZone @model={{@thread}} />
 </div>

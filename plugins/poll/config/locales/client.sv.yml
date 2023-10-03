@@ -28,27 +28,27 @@ sv:
       multiple:
         help:
           at_least_min_options:
-            one: "Välj minst <strong>%{count}</strong> alternativ."
-            other: "Välj minst <strong>%{count}</strong> alternativ."
+            one: "Välj minst <strong>%{count} alternativ</strong>."
+            other: "Välj minst <strong>%{count} alternativ</strong>."
           up_to_max_options:
-            one: "Välj upp till <strong>%{count}</strong> alternativ."
-            other: "Välj upp till <strong>%{count}</strong> alternativ."
+            one: "Välj upp till <strong>%{count} alternativ</strong>."
+            other: "Välj upp till <strong>%{count} alternativ</strong>."
           x_options:
-            one: "Välj <strong>%{count}</strong> alternativ."
-            other: "Välj <strong>%{count}</strong> alternativ."
-          between_min_and_max_options: "Välj mellan <strong>%{min}</strong> och <strong>%{max}</strong> alternativ."
+            one: "Välj <strong>%{count} alternativ</strong>."
+            other: "Välj <strong>%{count} alternativ</strong>."
+          between_min_and_max_options: "Välj mellan <strong>%{min} och %{max} alternativ</strong>."
       cast-votes:
         title: "Lägg dina röster"
         label: "Rösta nu!"
       show-results:
         title: "Visa omröstningsresultatet"
-        label: "Visa resultat"
+        label: "Resultat"
       remove-vote:
         title: "Ta bort din röst"
-        label: "Ta bort röst"
+        label: "Ångra röst"
       hide-results:
         title: "Tillbaka till dina röster"
-        label: "Visa röst"
+        label: "Rösta"
       group-results:
         title: "Gruppera röster baserat på användarfält"
         label: "Visa uppdelning"
@@ -72,6 +72,8 @@ sv:
         breakdown: "Fördelning"
         percentage: "Procent"
         count: "Räkna"
+      options:
+        label: "Alternativ"
       error_while_toggling_status: "Tyvärr uppstod det ett fel vid ändring av status för den här omröstningen."
       error_while_casting_votes: "Tyvärr uppstod det ett fel vid röstningen."
       error_while_fetching_voters: "Tyvärr uppstod det ett fel vid visningen av röster."

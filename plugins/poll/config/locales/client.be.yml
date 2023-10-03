@@ -18,12 +18,16 @@ be:
         many: "галасоў"
         other: "галасоў"
       average_rating: "Сярэдні рэйтынг: <strong>%{average}strong>."
+      show-results:
+        label: "вынікі"
       export-results:
         label: "экспарт"
       close:
         label: "зачыніць"
       breakdown:
         count: "падлічваць"
+      options:
+        label: "Налады"
       ui_builder:
         poll_type:
           label: тып

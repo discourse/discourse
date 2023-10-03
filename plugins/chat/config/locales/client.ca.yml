@@ -6,7 +6,13 @@
 
 ca:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Sempre"
+          never: "Mai"
     chat:
+      deleted_chat_username: suprimit
       create: "Crea"
       cancel: "Cancel·la"
       channel_settings:
@@ -15,6 +21,7 @@ ca:
         join: "Registre"
         leave: "Abandona"
       close: "Tanca"
+      remove: "Elimina"
       delete: "Suprimeix"
       edited: "editat"
       muted: "silenciat"
@@ -26,8 +33,6 @@ ca:
       flag: "Bandera"
       join: "Registre"
       last_visit: "darrera visita"
-      mention_warning:
-        dismiss: "descarta-ho"
       reply: "Respon"
       edit: "Edita"
       rebake_message: "Refés HTML"
@@ -57,6 +62,8 @@ ca:
           about: Quant a
           members: Membres
           settings: Configuració
+      new_message_modal:
+        no_items: "Sense elements"
       direct_message_creator:
         title: Missatge nou
         prefix: "A:"
@@ -68,11 +75,14 @@ ca:
       composer:
         italic_text: "text en cursiva"
         bold_text: "text en negreta"
+        send: "Envia"
       notification_levels:
         never: "Mai"
       settings:
         follow: "Registre"
         followed: "Registrat"
+        threading_enabled: "Activat"
+        threading_disabled: "Desactivat"
         notifications: "Notificacions"
         preview: "Previsualitza"
         save: "Desa"
@@ -104,6 +114,18 @@ ca:
         activities: "Activitats"
         flags: "Banderes"
         symbols: "Símbols"
+      thread:
+        title: "Títol"
+        replies:
+          one: "%{count} resposta"
+          other: "%{count} respostes"
+        settings: "Configuració"
+        last_reply: "darrera resposta"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Seguint"
       draft_channel_screen:
         header: "Missatge nou"
         cancel: "Cancel·la"
@@ -115,7 +137,3 @@ ca:
           fields:
             message:
               label: Missatge
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Marcat amb bandera per"

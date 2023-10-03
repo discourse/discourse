@@ -80,9 +80,14 @@ class PostActionCreator
       @post_action_name,
       opts: {
         is_warning: @is_warning,
-        taken_actions: PostAction.counts_for([@post].compact, @created_by)[@post&.id],
+        taken_actions: taken_actions,
       },
     )
+  end
+
+  def taken_actions
+    return @taken_actions if defined?(@taken_actions)
+    @taken_actions = PostAction.counts_for([@post].compact, @created_by)[@post&.id]
   end
 
   def perform
@@ -90,7 +95,12 @@ class PostActionCreator
 
     if !post_can_act? || (@queue_for_review && !guardian.is_staff?)
       result.forbidden = true
-      result.add_error(I18n.t("invalid_access"))
+
+      if taken_actions&.keys&.include?(PostActionType.types[@post_action_name])
+        result.add_error(I18n.t("action_already_performed"))
+      else
+        result.add_error(I18n.t("invalid_access"))
+      end
       return result
     end
 
@@ -279,9 +289,9 @@ class PostActionCreator
     if post_action
       case @post_action_type_id
       when *PostActionType.notify_flag_type_ids
-        DiscourseEvent.trigger(:flag_created, post_action)
+        DiscourseEvent.trigger(:flag_created, post_action, self)
       when PostActionType.types[:like]
-        DiscourseEvent.trigger(:like_created, post_action)
+        DiscourseEvent.trigger(:like_created, post_action, self)
       end
     end
 

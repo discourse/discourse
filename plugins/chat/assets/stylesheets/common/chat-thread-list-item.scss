@@ -1,0 +1,127 @@
+@mixin thread-list-item {
+  display: flex;
+  flex-direction: row;
+  padding: 0.5rem;
+  border-radius: var(--d-border-radius);
+  background-color: var(--primary-very-low);
+  border: 1px solid transparent;
+}
+
+.chat-thread-list-item {
+  @include thread-list-item;
+  cursor: pointer;
+  margin: 0.75rem;
+
+  & + .chat-thread-list-item {
+    margin-top: 0;
+  }
+
+  .touch & {
+    &:active {
+      background-color: var(--d-hover);
+      border: 1px solid var(--primary-300);
+    }
+  }
+
+  .no-touch & {
+    &:hover,
+    &:active {
+      background-color: var(--d-hover);
+      border: 1px solid var(--primary-300);
+    }
+  }
+
+  &__participants {
+    display: flex;
+    align-items: center;
+  }
+
+  &__main {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  &__body {
+    padding-bottom: 0.25rem;
+    word-break: break-word;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+
+    > * {
+      pointer-events: none;
+    }
+  }
+
+  &__last-reply-author {
+    font-weight: 700;
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+  }
+
+  &__metadata {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    .chat-user-avatar {
+      .avatar {
+        border: 1px solid var(--primary-very-low);
+      }
+
+      &:not(:last-child) {
+        margin-right: -8px;
+      }
+    }
+  }
+
+  &__participants {
+    margin-right: 0.25rem;
+  }
+
+  &__last-reply-timestamp {
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+    @include ellipsis;
+    margin-right: auto;
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 0.25rem;
+  }
+
+  &__title {
+    flex: 1 1 auto;
+    font-weight: bold;
+    @include ellipsis;
+  }
+
+  &__last-reply-excerpt {
+    font-size: var(--font-down-1);
+  }
+
+  &__unread-indicator {
+    flex: 0 0 auto;
+
+    .chat-thread-list-item-unread-indicator__number {
+      color: var(--primary);
+      font-size: var(--font-up-1);
+    }
+  }
+
+  &__open-button {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    justify-content: center;
+  }
+
+  &__om-user-avatar {
+    margin-right: 0.5rem;
+    flex: 0 0 auto;
+  }
+}

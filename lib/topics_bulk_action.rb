@@ -86,6 +86,7 @@ class TopicsBulkAction
   def dismiss_posts
     highest_number_source_column =
       @user.whisperer? ? "highest_staff_post_number" : "highest_post_number"
+
     sql = <<~SQL
       UPDATE topic_users tu
       SET last_read_post_number = t.#{highest_number_source_column}
@@ -94,11 +95,13 @@ class TopicsBulkAction
     SQL
 
     DB.exec(sql, user_id: @user.id, topic_ids: @topic_ids)
+    TopicTrackingState.publish_dismiss_new_posts(@user.id, topic_ids: @topic_ids.sort)
+
     @changed_ids.concat @topic_ids
   end
 
   def dismiss_topics
-    rows =
+    ids =
       Topic
         .where(id: @topic_ids)
         .joins(
@@ -108,9 +111,17 @@ class TopicsBulkAction
         .where("topic_users.last_read_post_number IS NULL")
         .order("topics.created_at DESC")
         .limit(SiteSetting.max_new_topics)
-        .map { |topic| { topic_id: topic.id, user_id: @user.id, created_at: Time.zone.now } }
-    DismissedTopicUser.insert_all(rows) if rows.present?
-    @changed_ids = rows.map { |row| row[:topic_id] }
+        .filter { |t| guardian.can_see?(t) }
+        .map(&:id)
+
+    if ids.present?
+      now = Time.zone.now
+      rows = ids.map { |id| { topic_id: id, user_id: @user.id, created_at: now } }
+      DismissedTopicUser.insert_all(rows)
+      TopicTrackingState.publish_dismiss_new(@user.id, topic_ids: ids.sort)
+    end
+
+    @changed_ids = ids
   end
 
   def destroy_post_timing

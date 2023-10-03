@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class SiteSerializer < ApplicationSerializer
+  include NavigationMenuTagsMixin
+
   attributes(
     :default_archetype,
     :notification_types,
@@ -21,6 +23,7 @@ class SiteSerializer < ApplicationSerializer
     :can_tag_pms,
     :tags_filter_regexp,
     :top_tags,
+    :navigation_menu_site_top_tags,
     :can_associate_groups,
     :wizard_required,
     :topic_featured_link_allowed_category_ids,
@@ -37,9 +40,12 @@ class SiteSerializer < ApplicationSerializer
     :hashtag_configurations,
     :hashtag_icons,
     :displayed_about_plugin_stat_groups,
-    :show_welcome_topic_banner,
-    :anonymous_default_sidebar_tags,
+    :anonymous_default_navigation_menu_tags,
+    :anonymous_sidebar_sections,
     :whispers_allowed_groups_names,
+    :denied_emojis,
+    :tos_url,
+    :privacy_policy_url,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -184,7 +190,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def top_tags
-    Tag.top_tags(guardian: scope)
+    @top_tags ||= Tag.top_tags(guardian: scope)
   end
 
   def wizard_required
@@ -204,7 +210,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def censored_regexp
-    WordWatcher.serializable_word_matcher_regexp(:censor)
+    WordWatcher.serializable_word_matcher_regexp(:censor, engine: :js)
   end
 
   def custom_emoji_translation
@@ -220,11 +226,11 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def watched_words_replace
-    WordWatcher.word_matcher_regexps(:replace)
+    WordWatcher.word_matcher_regexps(:replace, engine: :js)
   end
 
   def watched_words_link
-    WordWatcher.word_matcher_regexps(:link)
+    WordWatcher.word_matcher_regexps(:link, engine: :js)
   end
 
   def categories
@@ -240,24 +246,58 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def hashtag_icons
-    HashtagAutocompleteService.data_source_icons
+    HashtagAutocompleteService.data_source_icon_map
   end
 
   def displayed_about_plugin_stat_groups
     About.displayed_plugin_stat_groups
   end
 
-  def show_welcome_topic_banner
-    Site.show_welcome_topic_banner?(scope)
+  SIDEBAR_TOP_TAGS_TO_SHOW = 5
+
+  def navigation_menu_site_top_tags
+    if top_tags.present?
+      tag_names = top_tags[0...SIDEBAR_TOP_TAGS_TO_SHOW]
+      serialized = serialize_tags(Tag.where(name: tag_names))
+
+      # Ensures order of top tags is preserved
+      serialized.sort_by { |tag| tag_names.index(tag[:name]) }
+    else
+      []
+    end
   end
 
-  def anonymous_default_sidebar_tags
-    SiteSetting.default_sidebar_tags.split("|") - DiscourseTagging.hidden_tag_names(scope)
+  def include_navigation_menu_site_top_tags?
+    !SiteSetting.legacy_navigation_menu? && SiteSetting.tagging_enabled
   end
 
-  def include_anonymous_default_sidebar_tags?
+  def anonymous_default_navigation_menu_tags
+    @anonymous_default_navigation_menu_tags ||=
+      begin
+        tag_names =
+          SiteSetting.default_navigation_menu_tags.split("|") -
+            DiscourseTagging.hidden_tag_names(scope)
+
+        serialize_tags(Tag.where(name: tag_names))
+      end
+  end
+
+  def include_anonymous_default_navigation_menu_tags?
     scope.anonymous? && !SiteSetting.legacy_navigation_menu? && SiteSetting.tagging_enabled &&
-      SiteSetting.default_sidebar_tags.present?
+      SiteSetting.default_navigation_menu_tags.present? &&
+      anonymous_default_navigation_menu_tags.present?
+  end
+
+  def anonymous_sidebar_sections
+    SidebarSection
+      .public_sections
+      .includes(:sidebar_urls)
+      .order("(section_type IS NOT NULL) DESC, (public IS TRUE) DESC")
+      .map { |section| SidebarSectionSerializer.new(section, root: false) }
+  end
+
+  def include_anonymous_sidebar_sections?
+    scope.anonymous?
   end
 
   def whispers_allowed_groups_names
@@ -266,6 +306,30 @@ class SiteSerializer < ApplicationSerializer
 
   def include_whispers_allowed_groups_names?
     scope.can_see_whispers?
+  end
+
+  def denied_emojis
+    @denied_emojis ||= Emoji.denied
+  end
+
+  def include_denied_emojis?
+    denied_emojis.present?
+  end
+
+  def tos_url
+    Discourse.tos_url
+  end
+
+  def include_tos_url?
+    tos_url.present?
+  end
+
+  def privacy_policy_url
+    Discourse.privacy_policy_url
+  end
+
+  def include_privacy_policy_url?
+    privacy_policy_url.present?
   end
 
   private

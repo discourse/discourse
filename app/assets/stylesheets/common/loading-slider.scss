@@ -1,0 +1,74 @@
+.loading-indicator-container {
+  --loading-width: 0.8;
+  --still-loading-width: 0.9;
+
+  --still-loading-duration: 10s;
+  --done-duration: 0.4s;
+  --fade-out-duration: 0.4s;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: z("header") + 1;
+
+  height: 3px;
+  width: 100%;
+
+  opacity: 0;
+  transition: opacity var(--fade-out-duration) ease var(--done-duration);
+
+  background-color: var(--primary-low);
+
+  .loading-indicator {
+    height: 100%;
+    width: 100%;
+    transform: scaleX(0);
+    transform-origin: left;
+    background-color: var(--tertiary);
+  }
+
+  &.loading,
+  &.still-loading {
+    opacity: 1;
+    transition: opacity 0s;
+  }
+
+  &.loading .loading-indicator {
+    transition: transform var(--loading-duration) ease-in;
+    transform: scaleX(var(--loading-width));
+  }
+
+  &.still-loading .loading-indicator {
+    transition: transform var(--still-loading-duration) linear;
+    transform: scaleX(var(--still-loading-width));
+  }
+
+  &.done .loading-indicator {
+    transition: transform var(--done-duration) ease-out;
+    transform: scaleX(1);
+  }
+
+  &.discourse-hub-webview {
+    // DiscourseHub obscures the top 1px to work around an iOS bug
+    top: 1px;
+  }
+
+  body.footer-nav-ipad & {
+    top: var(--footer-nav-height);
+  }
+}
+
+.loading-slider-fallback-spinner {
+  padding-top: 1.8em;
+  display: none;
+}
+
+body.still-loading {
+  .loading-slider-fallback-spinner {
+    display: block;
+  }
+
+  #main-outlet {
+    display: none;
+  }
+}

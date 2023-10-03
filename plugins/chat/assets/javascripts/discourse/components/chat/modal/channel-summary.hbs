@@ -1,0 +1,22 @@
+<DModal
+  @closeModal={{@closeModal}}
+  class="chat-modal-channel-summary"
+  @title={{i18n "chat.summarization.title"}}
+>
+  <:body>
+    <span>{{i18n "chat.summarization.description"}}</span>
+    <ComboBox
+      @value={{this.sinceHours}}
+      @content={{this.sinceOptions}}
+      @onChange={{this.summarize}}
+      @valueProperty="value"
+      @class="summarization-since"
+    />
+    <ConditionalLoadingSection @isLoading={{this.loading}}>
+      <p class="summary-area">{{this.summary}}</p>
+    </ConditionalLoadingSection>
+  </:body>
+  <:footer>
+    <DModalCancel @close={{@closeModal}} />
+  </:footer>
+</DModal>

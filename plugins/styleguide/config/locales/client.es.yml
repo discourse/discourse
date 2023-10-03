@@ -87,8 +87,10 @@ es:
           title: "Indicadores de carga"
         empty_state:
           title: "Estado vacío"
-        rich_tooltip:
-          title: "Información sobre herramientas enriquecida"
+        tooltips:
           description: "Descripción"
           header: "Encabezado"
           hover_to_see: "Pase el cursor para ver una información sobre herramientas"
+        char_counter:
+          title: "Contador de caracteres"
+          placeholder: "Introduce aquí tu texto..."

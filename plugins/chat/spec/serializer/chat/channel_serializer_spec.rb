@@ -3,23 +3,25 @@
 require "rails_helper"
 
 describe Chat::ChannelSerializer do
+  subject(:serializer) { described_class.new(chat_channel, scope: guardian, root: nil) }
+
   fab!(:user) { Fabricate(:user) }
   fab!(:admin) { Fabricate(:admin) }
   fab!(:chat_channel) { Fabricate(:chat_channel) }
+
   let(:guardian_user) { user }
   let(:guardian) { Guardian.new(guardian_user) }
-  subject { described_class.new(chat_channel, scope: guardian, root: nil) }
 
   describe "archive status" do
     context "when user is not staff" do
       let(:guardian_user) { user }
 
       it "does not return any sort of archive status" do
-        expect(subject.as_json.key?(:archive_completed)).to eq(false)
+        expect(serializer.as_json.key?(:archive_completed)).to eq(false)
       end
 
       it "includes allow_channel_wide_mentions" do
-        expect(subject.as_json.key?(:allow_channel_wide_mentions)).to eq(true)
+        expect(serializer.as_json.key?(:allow_channel_wide_mentions)).to eq(true)
       end
     end
 
@@ -27,10 +29,10 @@ describe Chat::ChannelSerializer do
       let(:guardian_user) { admin }
 
       it "includes the archive status if the channel is archived and the archive record exists" do
-        expect(subject.as_json.key?(:archive_completed)).to eq(false)
+        expect(serializer.as_json.key?(:archive_completed)).to eq(false)
 
         chat_channel.update!(status: Chat::Channel.statuses[:archived])
-        expect(subject.as_json.key?(:archive_completed)).to eq(false)
+        expect(serializer.as_json.key?(:archive_completed)).to eq(false)
 
         Chat::ChannelArchive.create!(
           chat_channel: chat_channel,
@@ -39,11 +41,11 @@ describe Chat::ChannelSerializer do
           total_messages: 10,
         )
         chat_channel.reload
-        expect(subject.as_json.key?(:archive_completed)).to eq(true)
+        expect(serializer.as_json.key?(:archive_completed)).to eq(true)
       end
 
       it "includes allow_channel_wide_mentions" do
-        expect(subject.as_json.key?(:allow_channel_wide_mentions)).to eq(true)
+        expect(serializer.as_json.key?(:allow_channel_wide_mentions)).to eq(true)
       end
     end
   end
@@ -63,7 +65,7 @@ describe Chat::ChannelSerializer do
         MessageBus.expects(:last_id).with(
           Chat::Publisher.kick_users_message_bus_channel(chat_channel.id),
         )
-        expect(subject.as_json.dig(:meta, :message_bus_last_ids).keys).to eq(
+        expect(serializer.as_json.dig(:meta, :message_bus_last_ids).keys).to eq(
           %i[channel_message_bus_last_id new_messages new_mentions kick],
         )
       end
@@ -73,7 +75,7 @@ describe Chat::ChannelSerializer do
         MessageBus.expects(:last_id).with(
           Chat::Publisher.kick_users_message_bus_channel(chat_channel.id),
         )
-        expect(subject.as_json[:meta][:message_bus_last_ids].key?(:kick)).to eq(true)
+        expect(serializer.as_json[:meta][:message_bus_last_ids].key?(:kick)).to eq(true)
       end
 
       it "does not call MessageBus for last_id if all the last IDs are already passed in" do
@@ -101,7 +103,7 @@ describe Chat::ChannelSerializer do
         MessageBus.expects(:last_id).with(
           Chat::Publisher.new_mentions_message_bus_channel(chat_channel.id),
         )
-        expect(subject.as_json.dig(:meta, :message_bus_last_ids).keys).to eq(
+        expect(serializer.as_json.dig(:meta, :message_bus_last_ids).keys).to eq(
           %i[channel_message_bus_last_id new_messages new_mentions],
         )
       end
@@ -109,7 +111,7 @@ describe Chat::ChannelSerializer do
       it "does not get the kick_message_bus_last_id" do
         MessageBus.expects(:last_id).at_least_once
         MessageBus.expects(:last_id).never
-        expect(subject.as_json[:meta][:message_bus_last_ids].key?(:kick)).to eq(false)
+        expect(serializer.as_json[:meta][:message_bus_last_ids].key?(:kick)).to eq(false)
       end
     end
   end

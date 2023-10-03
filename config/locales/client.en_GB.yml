@@ -30,7 +30,6 @@ en_GB:
         date_year: "MMM 'YY"
       medium:
         date_year: "D MMM 'YY"
-    bootstrap_invite_button_title: "Send invitations"
     groups:
       manage:
         email:
@@ -61,8 +60,6 @@ en_GB:
     read_only_mode:
       login_disabled: "Login is disabled whilst the site is in read only mode."
       logout_disabled: "Logout is disabled whilst the site is in read only mode."
-    summary:
-      enable: "Summarise This Topic"
     composer:
       italic_text: "emphasised text"
       collapse: "minimise the composer panel"
@@ -89,6 +86,11 @@ en_GB:
       colors_disabled: "You can’t select colours because you have a category style of none."
     tagging:
       manage_groups_description: "Define groups to organise tags"
+    sidebar:
+      sections:
+        community:
+          edit_section:
+            header_dropdown: "Customise"
   admin_js:
     admin:
       dashboard:

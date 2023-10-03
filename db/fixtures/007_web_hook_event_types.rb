@@ -69,3 +69,13 @@ WebHookEventType.seed do |b|
   b.id = WebHookEventType::USER_PROMOTED
   b.name = "user_promoted"
 end
+
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::TOPIC_VOTING
+  b.name = "topic_voting"
+end
+
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::CHAT_MESSAGE
+  b.name = "chat_message"
+end

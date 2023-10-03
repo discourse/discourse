@@ -34,8 +34,4 @@ export default class IncomingEmail extends EmberObject {
       incomings.map((incoming) => IncomingEmail.create(incoming))
     );
   }
-
-  static loadRawEmail(id) {
-    return ajax(`/admin/email/incoming/${id}/raw.json`);
-  }
 }

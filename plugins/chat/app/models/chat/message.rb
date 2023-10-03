@@ -3,18 +3,19 @@
 module Chat
   class Message < ActiveRecord::Base
     include Trashable
+    include TypeMappable
 
     self.table_name = "chat_messages"
 
-    attribute :has_oneboxes, default: false
-
     BAKED_VERSION = 2
+
+    attribute :has_oneboxes, default: false
 
     belongs_to :chat_channel, class_name: "Chat::Channel"
     belongs_to :user
-    belongs_to :in_reply_to, class_name: "Chat::Message"
+    belongs_to :in_reply_to, class_name: "Chat::Message", autosave: true
     belongs_to :last_editor, class_name: "User"
-    belongs_to :thread, class_name: "Chat::Thread"
+    belongs_to :thread, class_name: "Chat::Thread", optional: true, autosave: true
 
     has_many :replies,
              class_name: "Chat::Message",
@@ -30,41 +31,18 @@ module Chat
              foreign_key: :chat_message_id
     has_many :bookmarks,
              -> {
-               unscope(where: :bookmarkable_type).where(bookmarkable_type: Chat::Message.sti_name)
+               unscope(where: :bookmarkable_type).where(
+                 bookmarkable_type: Chat::Message.polymorphic_name,
+               )
              },
              as: :bookmarkable,
              dependent: :destroy
     has_many :upload_references,
-             -> { unscope(where: :target_type).where(target_type: Chat::Message.sti_name) },
+             -> { unscope(where: :target_type).where(target_type: Chat::Message.polymorphic_name) },
              dependent: :destroy,
              foreign_key: :target_id
     has_many :uploads, through: :upload_references, class_name: "::Upload"
 
-    CLASS_MAPPING = { "ChatMessage" => Chat::Message }
-
-    # the model used when loading type column
-    def self.sti_class_for(name)
-      CLASS_MAPPING[name] if CLASS_MAPPING.key?(name)
-    end
-    # the type column value
-    def self.sti_name
-      CLASS_MAPPING.invert.fetch(self)
-    end
-
-    # the model used when loading chatable_type column
-    def self.polymorphic_class_for(name)
-      CLASS_MAPPING[name] if CLASS_MAPPING.key?(name)
-    end
-    # the type stored in *_type column of polymorphic associations
-    def self.polymorphic_name
-      CLASS_MAPPING.invert.fetch(self) || super
-    end
-
-    # TODO (martin) Remove this when we drop the ChatUpload table
-    has_many :chat_uploads,
-             dependent: :destroy,
-             class_name: "Chat::Upload",
-             foreign_key: :chat_message_id
     has_one :chat_webhook_event,
             dependent: :destroy,
             class_name: "Chat::WebhookEvent",
@@ -82,7 +60,6 @@ module Chat
               },
             )
           }
-
     scope :in_dm_channel,
           -> {
             joins(:chat_channel).where(
@@ -91,19 +68,27 @@ module Chat
               },
             )
           }
-
     scope :created_before, ->(date) { where("chat_messages.created_at < ?", date) }
+    scope :uncooked, -> { where("cooked_version <> ? or cooked_version IS NULL", BAKED_VERSION) }
 
     before_save { ensure_last_editor_id }
 
-    def validate_message(has_uploads:)
+    validates :cooked, length: { maximum: 20_000 }
+    validate :validate_message
+
+    def self.polymorphic_class_mapping = { "ChatMessage" => Chat::Message }
+
+    def validate_message
+      self.message =
+        TextCleaner.clean(self.message, strip_whitespaces: true, strip_zero_width_spaces: true)
+
       WatchedWordsValidator.new(attributes: [:message]).validate(self)
 
       if self.new_record? || self.changed.include?("message")
         Chat::DuplicateMessageValidator.new(self).validate
       end
 
-      if !has_uploads && message_too_short?
+      if uploads.empty? && message_too_short?
         self.errors.add(
           :base,
           I18n.t(
@@ -121,23 +106,6 @@ module Chat
       end
     end
 
-    def attach_uploads(uploads)
-      return if uploads.blank? || self.new_record?
-
-      now = Time.now
-      ref_record_attrs =
-        uploads.map do |upload|
-          {
-            upload_id: upload.id,
-            target_id: self.id,
-            target_type: self.class.sti_name,
-            created_at: now,
-            updated_at: now,
-          }
-        end
-      UploadReference.insert_all!(ref_record_attrs)
-    end
-
     def excerpt(max_length: 50)
       # just show the URL if the whole message is a URL, because we cannot excerpt oneboxes
       return message if UrlHelper.relaxed_parse(message).is_a?(URI)
@@ -146,7 +114,11 @@ module Chat
       return uploads.first.original_filename if cooked.blank? && uploads.present?
 
       # this may return blank for some complex things like quotes, that is acceptable
-      PrettyText.excerpt(message, max_length, { text_entities: true })
+      PrettyText.excerpt(cooked, max_length, strip_links: true)
+    end
+
+    def censored_excerpt(max_length: 50)
+      WordWatcher.censor(excerpt(max_length: max_length))
     end
 
     def cooked_for_excerpt
@@ -178,6 +150,8 @@ module Chat
 
       self.cooked = self.class.cook(self.message, user_id: self.last_editor_id)
       self.cooked_version = BAKED_VERSION
+
+      invalidate_parsed_mentions
     end
 
     def rebake!(invalidate_oneboxes: false, priority: nil)
@@ -196,10 +170,6 @@ module Chat
       args[:is_dirty] = true if previous_cooked != new_cooked
 
       Jobs.enqueue(Jobs::Chat::ProcessMessage, args)
-    end
-
-    def self.uncooked
-      where("cooked_version <> ? or cooked_version IS NULL", BAKED_VERSION)
     end
 
     MARKDOWN_FEATURES = %w[
@@ -280,10 +250,56 @@ module Chat
     end
 
     def url
-      "/chat/c/-/#{self.chat_channel_id}/#{self.id}"
+      if in_thread?
+        "#{Discourse.base_path}/chat/c/-/#{self.chat_channel_id}/t/#{self.thread_id}/#{self.id}"
+      else
+        "#{Discourse.base_path}/chat/c/-/#{self.chat_channel_id}/#{self.id}"
+      end
     end
 
-    def create_mentions(user_ids)
+    def create_mentions
+      insert_mentions(parsed_mentions.all_mentioned_users_ids)
+    end
+
+    def update_mentions
+      mentioned_user_ids = parsed_mentions.all_mentioned_users_ids
+
+      old_mentions = chat_mentions.pluck(:user_id)
+      updated_mentions = mentioned_user_ids
+      mentioned_user_ids_to_drop = old_mentions - updated_mentions
+      mentioned_user_ids_to_add = updated_mentions - old_mentions
+
+      delete_mentions(mentioned_user_ids_to_drop)
+      insert_mentions(mentioned_user_ids_to_add)
+    end
+
+    def in_thread?
+      self.thread_id.present?
+    end
+
+    def thread_reply?
+      in_thread? && !thread_om?
+    end
+
+    def thread_om?
+      in_thread? && self.thread.original_message_id == self.id
+    end
+
+    def parsed_mentions
+      @parsed_mentions ||= Chat::ParsedMentions.new(self)
+    end
+
+    def invalidate_parsed_mentions
+      @parsed_mentions = nil
+    end
+
+    private
+
+    def delete_mentions(user_ids)
+      chat_mentions.where(user_id: user_ids).destroy_all
+    end
+
+    def insert_mentions(user_ids)
       return if user_ids.empty?
 
       now = Time.zone.now
@@ -300,22 +316,6 @@ module Chat
         end
 
       Chat::Mention.insert_all(mentions)
-    end
-
-    def update_mentions(mentioned_user_ids)
-      old_mentions = chat_mentions.pluck(:user_id)
-      updated_mentions = mentioned_user_ids
-      mentioned_user_ids_to_drop = old_mentions - updated_mentions
-      mentioned_user_ids_to_add = updated_mentions - old_mentions
-
-      delete_mentions(mentioned_user_ids_to_drop)
-      create_mentions(mentioned_user_ids_to_add)
-    end
-
-    private
-
-    def delete_mentions(user_ids)
-      chat_mentions.where(user_id: user_ids).destroy_all
     end
 
     def message_too_short?
@@ -353,6 +353,7 @@ end
 # Indexes
 #
 #  idx_chat_messages_by_created_at_not_deleted            (created_at) WHERE (deleted_at IS NULL)
+#  idx_chat_messages_by_thread_id_not_deleted             (thread_id) WHERE (deleted_at IS NULL)
 #  index_chat_messages_on_chat_channel_id_and_created_at  (chat_channel_id,created_at)
 #  index_chat_messages_on_chat_channel_id_and_id          (chat_channel_id,id) WHERE (deleted_at IS NULL)
 #  index_chat_messages_on_last_editor_id                  (last_editor_id)

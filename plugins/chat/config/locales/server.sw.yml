@@ -19,11 +19,11 @@ sw:
           description: "Kubaliana na bendera na nyamazisha mtumiaji."
         disagree:
           title: "Kataa"
-        ignore:
-          title: "Puuzia"
     channel:
       dm_title:
         single_user: "%{username}"
+    mention_warning:
+      dismiss: "ondosha..."
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

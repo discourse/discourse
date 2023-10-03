@@ -1,7 +1,6 @@
 import I18n from "I18n";
 import EmberObject from "@ember/object";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import sinon from "sinon";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
@@ -11,7 +10,6 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import * as logout from "discourse/lib/logout";
 import { click, currentRouteName, visit } from "@ember/test-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import { test } from "qunit";
@@ -318,14 +316,14 @@ acceptance(
       );
 
       await notificationLevelDropdown.selectRowByValue("changeToIgnored");
-      assert.ok(exists(".ignore-duration-modal"));
+      assert.ok(exists(".ignore-duration-with-username-modal"));
 
       const durationDropdown = selectKit(
-        ".ignore-duration-modal .future-date-input-selector"
+        ".ignore-duration-with-username-modal .future-date-input-selector"
       );
       await durationDropdown.expand();
       await durationDropdown.selectRowByIndex(0);
-      await click(".modal-footer .ignore-duration-save");
+      await click(".modal-footer .btn-primary");
       await notificationLevelDropdown.expand();
       assert.strictEqual(
         notificationLevelDropdown.selectedRow().value(),
@@ -335,11 +333,34 @@ acceptance(
   }
 );
 
+acceptance("User - Invalid view_user_route setting", function (needs) {
+  needs.settings({
+    view_user_route: "X",
+  });
+
+  test("It defaults to summary", async function (assert) {
+    await visit("/u/eviltrout");
+
+    assert.strictEqual(currentRouteName(), "user.summary");
+  });
+});
+
+acceptance("User - Valid view_user_route setting", function (needs) {
+  needs.settings({
+    view_user_route: "activity",
+  });
+
+  test("It defaults to summary", async function (assert) {
+    await visit("/u/eviltrout");
+
+    assert.strictEqual(currentRouteName(), "userActivity.index");
+  });
+});
+
 acceptance("User - Logout", function (needs) {
   needs.user({ username: "eviltrout" });
 
   test("Dialog works", async function (assert) {
-    sinon.stub(logout, "default");
     await visit("/u/eviltrout");
     await publishToMessageBus("/logout/19");
 
@@ -355,6 +376,5 @@ acceptance("User - Logout", function (needs) {
     );
 
     await click(".dialog-overlay");
-    assert.ok(logout.default.called, "logout helper was called");
   });
 });

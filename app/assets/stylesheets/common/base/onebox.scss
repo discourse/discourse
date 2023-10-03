@@ -199,7 +199,6 @@ aside.onebox {
           max-width: initial;
           max-height: initial;
           float: none;
-          margin-right: none;
         }
       }
 
@@ -267,6 +266,16 @@ aside.onebox {
       .full-name,
       .location {
         margin-right: 10px;
+      }
+      .user-onebox--joined {
+        color: var(--primary-medium);
+        margin-top: 10px;
+      }
+      .aspect-image {
+        width: 80px;
+        height: 80px;
+        float: left;
+        margin-right: 1em;
       }
     }
 
@@ -403,6 +412,7 @@ pre.onebox code ol.lines li {
   border-left: 1px solid #cfcfcf;
   min-height: 1.5em; //show empty li lines
   white-space: pre;
+  width: max-content;
 }
 
 pre.onebox code li.selected {
@@ -669,6 +679,11 @@ aside.onebox.twitterstatus .onebox-body {
       margin-right: 0.25em;
     }
   }
+
+  .is-reply {
+    color: var(--primary-medium);
+    margin-right: 0.25em;
+  }
 }
 
 // Onebox - Imgur/Flickr - Album
@@ -753,16 +768,10 @@ aside.onebox.xkcd .onebox-body img {
 }
 
 .onebox {
-  &.allowlistedgeneric,
-  &.whitelistedgeneric,
-  &.discoursetopic,
-  &.gfycat,
-  &.githubfolder {
-    .site-icon {
-      width: 16px;
-      height: 16px;
-      margin-right: 0.5em;
-    }
+  .site-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 0.5em;
   }
   &.category-onebox {
     border: 1px solid var(--primary-low);
@@ -926,6 +935,9 @@ iframe.vimeo-onebox {
     position: absolute;
     width: calc(100% - 40px);
     animation: 0.5s fadeIn;
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
   }
 }
 
@@ -1000,4 +1012,82 @@ aside.onebox.preview-error .site-icon {
   width: 16px;
   height: 16px;
   margin-right: 0.5em;
+}
+
+.onebox.threadsstatus .onebox-body {
+  .thumbnail,
+  .thumbnail.onebox-avatar {
+    width: 36px;
+    height: 36px;
+    margin-right: 12px;
+  }
+  .threads-screen-name {
+    font-size: var(--font-down-1);
+  }
+  h4 {
+    margin-bottom: 0;
+  }
+
+  .thread-contents .thread-description {
+    white-space: pre-line;
+  }
+
+  p,
+  .thread-contents {
+    clear: left;
+    padding: 1em 0;
+
+    .quoted {
+      border: 1px solid var(--primary-low);
+      padding: 0.5em 1em;
+      margin-top: 1em;
+      white-space: normal;
+
+      .quoted-link {
+        color: inherit;
+      }
+
+      .quoted-title {
+        font-weight: bold;
+        margin: 0.5em 0;
+        padding: 0;
+
+        span {
+          font-weight: lighter;
+          color: var(--primary-medium);
+        }
+      }
+
+      div {
+        margin-bottom: 5px;
+      }
+    }
+  }
+
+  .date {
+    display: flex;
+    line-height: var(--line-height-small);
+
+    .timestamp {
+      color: var(--primary-medium);
+    }
+  }
+
+  .like,
+  .replies {
+    align-items: center;
+    color: var(--primary-medium);
+    display: flex;
+    margin-left: 0.75em;
+
+    svg {
+      fill: currentColor;
+      margin-right: 0.25em;
+    }
+  }
+
+  .is-reply {
+    color: var(--primary-medium);
+    margin-right: 0.25em;
+  }
 }

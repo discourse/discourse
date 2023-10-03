@@ -6,7 +6,13 @@
 
 el:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Πάντα"
+          never: "Ποτέ"
     chat:
+      deleted_chat_username: διεγράφη
       create: "Δημιουργία"
       cancel: "Ακύρωση"
       channel_settings:
@@ -15,6 +21,7 @@ el:
         join: "Γίνετε μέλος"
         leave: "Αποχώρηση"
       close: "Κλείσιμο"
+      remove: "Αφαίρεση"
       delete: "Σβήσιμο"
       edited: "επεξεργάστηκε"
       muted: "σε σίγαση"
@@ -26,8 +33,6 @@ el:
       flag: "Επισήμανση"
       join: "Γίνετε μέλος"
       last_visit: "τελευταία επίσκεψη"
-      mention_warning:
-        dismiss: "απόρριψη"
       reply: "Απάντηση"
       edit: "Επεξεργασία"
       rebake_message: "Ανανέωση HTML"
@@ -56,6 +61,8 @@ el:
           about: Σχετικά
           members: Μέλη
           settings: Ρυθμίσεις
+      new_message_modal:
+        no_items: "Δεν υπάρχουν στοιχεία"
       direct_message_creator:
         title: Νέο Μήνυμα
         prefix: "Προς:"
@@ -67,11 +74,13 @@ el:
       composer:
         italic_text: "κείμενο σε έμφαση"
         bold_text: "έντονη γραφή"
+        send: "Αποστολή"
       notification_levels:
         never: "Ποτέ"
       settings:
         follow: "Γίνετε μέλος"
         followed: "Έγινε μέλος"
+        threading_disabled: "Απενεργοποιημένο"
         notifications: "Ειδοποιήσεις"
         preview: "Προεπισκόπηση"
         save: "Αποθήκευση"
@@ -103,6 +112,18 @@ el:
         activities: "Δραστηριότητες"
         flags: "Σημάνσεις"
         symbols: "Σύμβολα"
+      thread:
+        title: "Τίτλος"
+        replies:
+          one: "%{count} απάντηση"
+          other: "%{count} απαντήσεις"
+        settings: "Ρυθμίσεις"
+        last_reply: "τελευταία απάντηση"
+        notifications:
+          regular:
+            title: "Φυσιολογικό"
+          tracking:
+            title: "Παρακολουθείται"
       draft_channel_screen:
         header: "Νέο Μήνυμα"
         cancel: "Ακύρωση"
@@ -114,7 +135,3 @@ el:
           fields:
             message:
               label: Μήνυμα
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Επισήμανση από"

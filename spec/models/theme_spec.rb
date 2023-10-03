@@ -254,7 +254,7 @@ HTML
 
       expect(javascript_cache.content).to include("if ('define' in window) {")
       expect(javascript_cache.content).to include(
-        "define(\"discourse/theme-#{field.theme_id}/initializers/theme-field-#{field.id}-mobile-html-script-1\"",
+        "define(\"discourse/theme-#{field.theme_id}/discourse/initializers/theme-field-#{field.id}-mobile-html-script-1\"",
       )
       expect(javascript_cache.content).to include(
         "settings = require(\"discourse/lib/theme-settings-store\").getObjectForTheme(#{field.theme_id});",
@@ -406,7 +406,7 @@ HTML
       )
       expect(theme_field.javascript_cache.content).to include("if ('define' in window) {")
       expect(theme_field.javascript_cache.content).to include(
-        "define(\"discourse/theme-#{theme_field.theme.id}/initializers/theme-field-#{theme_field.id}-common-html-script-1\",",
+        "define(\"discourse/theme-#{theme_field.theme.id}/discourse/initializers/theme-field-#{theme_field.id}-common-html-script-1\",",
       )
       expect(theme_field.javascript_cache.content).to include(
         "name: \"theme-field-#{theme_field.id}-common-html-script-1\",",
@@ -1091,6 +1091,132 @@ HTML
           .filter { |m| m.channel == "/global/asset-version" }
 
       expect(messages.count).to eq(0)
+    end
+  end
+
+  describe "development experience" do
+    it "sends 'development-mode-theme-changed event when non-css fields are updated" do
+      Theme.any_instance.stubs(:should_refresh_development_clients?).returns(true)
+
+      theme.set_field(target: :common, name: :scss, value: "body {background: green;}")
+
+      messages =
+        MessageBus
+          .track_publish { theme.save! }
+          .filter { |m| m.channel == "/file-change" }
+          .map(&:data)
+
+      expect(messages).not_to include("development-mode-theme-changed")
+
+      theme.set_field(target: :common, name: :header, value: "<p>Hello world</p>")
+
+      messages =
+        MessageBus
+          .track_publish { theme.save! }
+          .filter { |m| m.channel == "/file-change" }
+          .map(&:data)
+
+      expect(messages).to include(["development-mode-theme-changed"])
+    end
+  end
+
+  describe "#lookup_field when a theme component is used in multiple themes" do
+    fab!(:theme_1) { Fabricate(:theme, user: user) }
+    fab!(:theme_2) { Fabricate(:theme, user: user) }
+    fab!(:child) { Fabricate(:theme, user: user, component: true) }
+
+    before_all do
+      theme_1.add_relative_theme!(:child, child)
+      theme_2.add_relative_theme!(:child, child)
+    end
+
+    it "efficiently caches fields of theme component by only caching the fields once across multiple themes" do
+      child.set_field(target: :common, name: "header", value: "World")
+      child.save!
+
+      expect(Theme.lookup_field(theme_1.id, :desktop, "header")).to eq("World")
+      expect(Theme.lookup_field(theme_2.id, :desktop, "header")).to eq("World")
+
+      expect(
+        Theme.cache.defer_get_set("#{child.id}:common:header:#{Theme.compiler_version}") { raise },
+      ).to eq(["World"])
+      expect(
+        Theme.cache.defer_get_set("#{child.id}:desktop:header:#{Theme.compiler_version}") { raise },
+      ).to eq(nil)
+
+      expect(
+        Theme
+          .cache
+          .defer_get_set("#{theme_1.id}:common:header:#{Theme.compiler_version}") { raise },
+      ).to eq(nil)
+      expect(
+        Theme
+          .cache
+          .defer_get_set("#{theme_1.id}:desktop:header:#{Theme.compiler_version}") { raise },
+      ).to eq(nil)
+
+      expect(
+        Theme
+          .cache
+          .defer_get_set("#{theme_2.id}:common:header:#{Theme.compiler_version}") { raise },
+      ).to eq(nil)
+      expect(
+        Theme
+          .cache
+          .defer_get_set("#{theme_2.id}:desktop:header:#{Theme.compiler_version}") { raise },
+      ).to eq(nil)
+    end
+
+    it "puts the parent value ahead of the child" do
+      theme_1.set_field(target: :common, name: "header", value: "theme_1")
+      theme_1.save!
+
+      child.set_field(target: :common, name: "header", value: "child")
+      child.save!
+
+      expect(Theme.lookup_field(theme_1.id, :desktop, "header")).to eq("theme_1\nchild")
+    end
+
+    it "puts parent translations ahead of child translations" do
+      theme_1.set_field(target: :translations, name: "en", value: <<~YAML)
+        en:
+          theme_1: "test"
+      YAML
+      theme_1.save!
+      theme_field = ThemeField.order(:id).last
+
+      child.set_field(target: :translations, name: "en", value: <<~YAML)
+        en:
+          child: "test"
+      YAML
+      child.save!
+      child_field = ThemeField.order(:id).last
+
+      expect(theme_field.value_baked).not_to eq(child_field.value_baked)
+      expect(Theme.lookup_field(theme_1.id, :translations, :en)).to eq(
+        [theme_field, child_field].map(&:value_baked).join("\n"),
+      )
+    end
+
+    it "prioritizes a locale over its fallback" do
+      theme_1.set_field(target: :translations, name: "en", value: <<~YAML)
+        en:
+          theme_1: "hello"
+      YAML
+      theme_1.save!
+      en_field = ThemeField.order(:id).last
+
+      theme_1.set_field(target: :translations, name: "es", value: <<~YAML)
+        es:
+          theme_1: "hola"
+      YAML
+      theme_1.save!
+      es_field = ThemeField.order(:id).last
+
+      expect(es_field.value_baked).not_to eq(en_field.value_baked)
+      expect(Theme.lookup_field(theme_1.id, :translations, :en)).to eq(en_field.value_baked)
+      expect(Theme.lookup_field(theme_1.id, :translations, :es)).to eq(es_field.value_baked)
+      expect(Theme.lookup_field(theme_1.id, :translations, :fr)).to eq(en_field.value_baked)
     end
   end
 end

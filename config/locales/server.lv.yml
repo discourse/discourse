@@ -18,7 +18,7 @@ lv:
       no_day: "%Y %B"
   date:
     month_names:
-    - null
+    -
     - Janvāris
     - Februāris
     - Marts
@@ -69,7 +69,6 @@ lv:
       zero: "vel %{count} atbildes"
       one: "vel %{count} atbilde"
       other: "vel %{count} atbildes"
-    loading: "Diskusijas Ielādēšana..."
     in_reply_to: "▶ %{username}"
     replies:
       zero: "%{count} atbildes"

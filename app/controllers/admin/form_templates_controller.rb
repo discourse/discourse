@@ -4,7 +4,7 @@ class Admin::FormTemplatesController < Admin::StaffController
   before_action :ensure_form_templates_enabled
 
   def index
-    form_templates = FormTemplate.all
+    form_templates = FormTemplate.all.order(:id)
     render_serialized(form_templates, AdminFormTemplateSerializer, root: "form_templates")
   end
 

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# Deprecated, should be removed once users have sufficient opportunity to do so
 class QueuedPostSerializer < ApplicationSerializer
   attributes(
     :id,
@@ -18,6 +17,11 @@ class QueuedPostSerializer < ApplicationSerializer
   )
   has_one :created_by, serializer: AdminUserListSerializer, root: :users
   has_one :topic, serializer: BasicTopicSerializer
+
+  def initialize(object, options = {})
+    Discourse.deprecate("QueuedPostSerializer is deprecated.", drop_from: "3.3.0")
+    super
+  end
 
   def queue
     "default"

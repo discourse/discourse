@@ -1,0 +1,13 @@
+<LinkTo
+  @route="chat.channel.threads"
+  @models={{@channel.routeModels}}
+  title={{i18n "chat.threads.list"}}
+  class={{concat-class
+    "chat-threads-list-button btn btn-flat"
+    (if @channel.threadsManager.unreadThreadCount "has-unreads")
+  }}
+>
+  {{d-icon "discourse-threads"}}
+
+  <Chat::Thread::HeaderUnreadIndicator @channel={{@channel}} />
+</LinkTo>

@@ -154,10 +154,9 @@ RSpec.describe Admin::BackupsController do
       end
 
       context "with rate limiting enabled" do
-        before do
-          RateLimiter.clear_all!
-          RateLimiter.enable
-        end
+        before { RateLimiter.enable }
+
+        use_redis_snapshotting
 
         after { RateLimiter.disable }
 
@@ -595,7 +594,7 @@ RSpec.describe Admin::BackupsController do
           )
         end
 
-        it "works with multiple chunks when the final chunk is just the remaninder" do
+        it "works with multiple chunks when the final chunk is just the remainder" do
           freeze_time
           described_class.any_instance.expects(:has_enough_space_on_disk?).times(3).returns(true)
 

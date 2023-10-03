@@ -293,7 +293,7 @@ class S3Helper
   def create_multipart(key, content_type, metadata: {})
     response =
       s3_client.create_multipart_upload(
-        acl: "private",
+        acl: SiteSetting.s3_use_acls ? "private" : nil,
         bucket: s3_bucket_name,
         key: key,
         content_type: content_type,
@@ -348,6 +348,19 @@ class S3Helper
 
   def presigned_url(key, method:, expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS, opts: {})
     Aws::S3::Presigner.new(client: s3_client).presigned_url(
+      method,
+      { bucket: s3_bucket_name, key: key, expires_in: expires_in }.merge(opts),
+    )
+  end
+
+  # Returns url, headers in a tuple which is needed in some cases.
+  def presigned_request(
+    key,
+    method:,
+    expires_in: S3Helper::UPLOAD_URL_EXPIRES_AFTER_SECONDS,
+    opts: {}
+  )
+    Aws::S3::Presigner.new(client: s3_client).presigned_request(
       method,
       { bucket: s3_bucket_name, key: key, expires_in: expires_in }.merge(opts),
     )

@@ -1,3 +1,4 @@
+import { inject as service } from "@ember/service";
 import {
   filterQueryParams,
   findTopicList,
@@ -9,7 +10,6 @@ import {
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import DiscourseRoute from "discourse/routes/discourse";
-import FilterModeMixin from "discourse/mixins/filter-mode";
 import I18n from "I18n";
 import PermissionType from "discourse/models/permission-type";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -22,13 +22,23 @@ import PreloadStore from "discourse/lib/preload-store";
 const NONE = "none";
 const ALL = "all";
 
-export default DiscourseRoute.extend(FilterModeMixin, {
-  navMode: "latest",
+export default class TagShowRoute extends DiscourseRoute {
+  @service composer;
+  @service router;
+  @service currentUser;
 
-  queryParams,
+  queryParams = queryParams;
+  controllerName = "tag.show";
+  templateName = "tag.show";
+  routeConfig = {};
 
-  controllerName: "tag.show",
-  templateName: "tag.show",
+  get navMode() {
+    return this.routeConfig.navMode || "latest";
+  }
+
+  get noSubcategories() {
+    return this.routeConfig.noSubcategories;
+  }
 
   beforeModel() {
     const controller = this.controllerFor("tag.show");
@@ -36,7 +46,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       loading: true,
       showInfo: false,
     });
-  },
+  }
 
   async model(params, transition) {
     const tag = this.store.createRecord("tag", {
@@ -56,7 +66,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
     const filterType = this.navMode.split("/")[0];
 
     let tagNotification;
-    if (tag && tag.id !== NONE && this.currentUser) {
+    if (tag && tag.id !== NONE && this.currentUser && !additionalTags) {
       // If logged in, we should get the tag's user settings
       tagNotification = await this.store.find(
         "tagNotification",
@@ -97,7 +107,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
     ) {
       // TODO: avoid throwing away preload data by redirecting on the server
       PreloadStore.getAndRemove("topic_list");
-      return this.replaceWith(
+      return this.router.replaceWith(
         "tags.showCategoryNone",
         params.category_slug_path_with_id,
         tagId
@@ -135,7 +145,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       canCreateTopicOnCategory: category?.permission === PermissionType.FULL,
       canCreateTopicOnTag: !tag.staff || this.currentUser?.staff,
     };
-  },
+  }
 
   setupController(controller, model) {
     const noSubcategories = this.noSubcategories;
@@ -159,11 +169,11 @@ export default DiscourseRoute.extend(FilterModeMixin, {
         category: model.category || null,
       };
 
-      this.searchService.set("searchContext", tagIntersectionSearchContext);
+      this.searchService.searchContext = tagIntersectionSearchContext;
     } else {
-      this.searchService.set("searchContext", model.tag.searchContext);
+      this.searchService.searchContext = model.tag.searchContext;
     }
-  },
+  }
 
   titleToken() {
     const filterText = I18n.t(
@@ -196,17 +206,17 @@ export default DiscourseRoute.extend(FilterModeMixin, {
         });
       }
     }
-  },
+  }
 
   deactivate() {
-    this._super(...arguments);
-    this.searchService.set("searchContext", null);
-  },
+    super.deactivate(...arguments);
+    this.searchService.searchContext = null;
+  }
 
   @action
   renameTag(tag) {
     showModal("rename-tag", { model: tag });
-  },
+  }
 
   @action
   createTopic() {
@@ -214,8 +224,7 @@ export default DiscourseRoute.extend(FilterModeMixin, {
       this.openTopicDraft();
     } else {
       const controller = this.controllerFor("tag.show");
-      const composerController = this.controllerFor("composer");
-      composerController
+      this.composer
         .open({
           categoryId: controller.category?.id,
           action: Composer.CREATE_TOPIC,
@@ -223,19 +232,19 @@ export default DiscourseRoute.extend(FilterModeMixin, {
         })
         .then(() => {
           // Pre-fill the tags input field
-          if (composerController.canEditTags && controller.tag?.id) {
-            const composerModel = this.controllerFor("composer").model;
+          if (this.composer.canEditTags && controller.tag?.id) {
+            const composerModel = this.composer.model;
             composerModel.set("tags", this._controllerTags(controller));
           }
         });
     }
-  },
+  }
 
   @action
   dismissReadTopics(dismissTopics) {
     const operationType = dismissTopics ? "topics" : "posts";
     this.send("dismissRead", operationType);
-  },
+  }
 
   @action
   dismissRead(operationType) {
@@ -246,29 +255,30 @@ export default DiscourseRoute.extend(FilterModeMixin, {
     const categoryId = controller.category?.id;
 
     if (categoryId) {
-      options = Object.assign({}, options, {
+      options = {
+        ...options,
         categoryId,
         includeSubcategories: !controller.noSubcategories,
-      });
+      };
     }
 
     controller.send("dismissRead", operationType, options);
-  },
+  }
 
   @action
   resetParams(skipParams = []) {
     resetParams.call(this, skipParams);
-  },
-
-  @action
-  didTransition() {
-    this.controllerFor("tag.show")._showFooter();
-    return true;
-  },
+  }
 
   _controllerTags(controller) {
     return [controller.get("model.id"), ...makeArray(controller.additionalTags)]
       .filter(Boolean)
       .filter((tag) => ![NONE, ALL].includes(tag));
-  },
-});
+  }
+}
+
+export function buildTagRoute(routeConfig = {}) {
+  return class extends TagShowRoute {
+    routeConfig = routeConfig;
+  };
+}

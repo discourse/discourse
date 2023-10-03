@@ -3,10 +3,11 @@
 require "rails_helper"
 
 describe Chat::PostNotificationHandler do
+  subject(:handler) { described_class.new(post, notified_users) }
+
   let(:acting_user) { Fabricate(:user) }
   let(:post) { Fabricate(:post) }
   let(:notified_users) { [] }
-  let(:subject) { described_class.new(post, notified_users) }
 
   fab!(:channel) { Fabricate(:category_channel) }
   fab!(:message1) do
@@ -24,7 +25,7 @@ describe Chat::PostNotificationHandler do
 
   def expect_no_notification
     return_val = nil
-    expect { return_val = subject.handle }.not_to change { Notification.count }
+    expect { return_val = handler.handle }.not_to change { Notification.count }
     expect(return_val).to eq(false)
   end
 
@@ -51,7 +52,7 @@ describe Chat::PostNotificationHandler do
 
   it "sends notifications to all of the quoted users" do
     update_post_with_chat_quote([message1, message2])
-    subject.handle
+    handler.handle
     expect(
       Notification.where(
         user: message1.user,
@@ -68,8 +69,8 @@ describe Chat::PostNotificationHandler do
 
   it "does not send the same chat_quoted notification twice to the same post and user" do
     update_post_with_chat_quote([message1, message2])
-    subject.handle
-    subject.handle
+    handler.handle
+    handler.handle
     expect(
       Notification.where(
         user: message1.user,
@@ -87,7 +88,7 @@ describe Chat::PostNotificationHandler do
       topic: post.topic,
       user: message1.user,
     )
-    subject.handle
+    handler.handle
     expect(
       Notification.where(
         user: message1.user,
@@ -101,7 +102,7 @@ describe Chat::PostNotificationHandler do
 
     it "does not send notifications to those users" do
       update_post_with_chat_quote([message1, message2])
-      subject.handle
+      handler.handle
       expect(
         Notification.where(
           user: message1.user,

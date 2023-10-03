@@ -1,4 +1,5 @@
 import { fixture, logIn } from "discourse/tests/helpers/qunit-helpers";
+import { setupTest } from "ember-qunit";
 import { module, skip, test } from "qunit";
 import ClickTrack from "discourse/lib/click-track";
 import DiscourseURL from "discourse/lib/url";
@@ -14,6 +15,8 @@ function generateClickEventOn(selector) {
 }
 
 module("Unit | Utility | click-track", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     logIn();
 
@@ -57,7 +60,6 @@ module("Unit | Utility | click-track", function (hooks) {
   });
 
   skip("tracks internal URLs", async function (assert) {
-    assert.expect(2);
     sinon.stub(DiscourseURL, "origin").returns("http://discuss.domain.com");
 
     const done = assert.async();
@@ -121,8 +123,6 @@ module("Unit | Utility | click-track", function (hooks) {
   });
 
   skip("tracks external URLs", async function (assert) {
-    assert.expect(2);
-
     const done = assert.async();
     pretender.post("/clicks/track", (request) => {
       assert.ok(
@@ -136,7 +136,6 @@ module("Unit | Utility | click-track", function (hooks) {
   });
 
   skip("tracks external URLs when opening in another window", async function (assert) {
-    assert.expect(3);
     User.currentProp("user_option.external_links_in_new_tab", true);
 
     const done = assert.async();

@@ -141,9 +141,9 @@ TemplateCompiler.prototype.processString = function (string, relativePath) {
   if (pluginName) {
     filename = relativePath
       .replace(`discourse/plugins/${pluginName}/`, "")
-      .replace(/^(discourse\/)?templates\//, "javascripts/");
+      .replace(/^(discourse\/)?raw-templates\//, "javascripts/");
   } else {
-    filename = relativePath.replace(/^templates\//, "");
+    filename = relativePath.replace(/^raw-templates\//, "");
   }
 
   filename = filename.replace(/\.hbr$/, "");

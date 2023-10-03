@@ -40,7 +40,7 @@ class GroupSmtpMailer < ActionMailer::Base
       template: "user_notifications.user_posted_pm",
       use_topic_title_subject: true,
       topic_title: op_incoming_email&.subject || post.topic.title,
-      add_re_to_subject: true,
+      add_re_to_subject: !post.is_first_post?,
       locale: SiteSetting.default_locale,
       delivery_method_options: delivery_options,
       from: from_group.smtp_from_address,

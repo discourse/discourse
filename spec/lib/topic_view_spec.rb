@@ -1004,9 +1004,14 @@ RSpec.describe TopicView do
 
   describe "#reviewable_counts" do
     it "exclude posts queued because the category needs approval" do
-      category = Fabricate.build(:category, user: admin)
-      category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
-      category.save!
+      category =
+        Fabricate.create(
+          :category,
+          user: admin,
+          category_setting_attributes: {
+            require_topic_approval: true,
+          },
+        )
       manager =
         NewPostManager.new(
           user,
@@ -1081,14 +1086,43 @@ RSpec.describe TopicView do
       let(:queue_enabled) { false }
 
       context "when category is moderated" do
-        before { category.custom_fields[Category::REQUIRE_REPLY_APPROVAL] = true }
+        before do
+          category.require_reply_approval = true
+          category.save!
+        end
 
         it { expect(topic_view.queued_posts_enabled?).to be(true) }
       end
 
       context "when category is not moderated" do
-        it { expect(topic_view.queued_posts_enabled?).to be(nil) }
+        it { expect(topic_view.queued_posts_enabled?).to be(false) }
       end
+    end
+  end
+
+  describe "with topic_view_suggested_topics_options modifier" do
+    let!(:topic1) { Fabricate(:topic) }
+    let!(:topic2) { Fabricate(:topic) }
+
+    after { DiscoursePluginRegistry.clear_modifiers! }
+
+    it "allows disabling of random suggested" do
+      topic_view = TopicView.new(topic1)
+
+      Plugin::Instance
+        .new
+        .register_modifier(
+          :topic_view_suggested_topics_options,
+        ) do |suggested_options, inner_topic_view|
+          expect(inner_topic_view).to eq(topic_view)
+          suggested_options.merge(include_random: false)
+        end
+
+      expect(topic_view.suggested_topics.topics.count).to eq(0)
+
+      DiscoursePluginRegistry.clear_modifiers!
+
+      expect(TopicView.new(topic1).suggested_topics.topics.count).to be > 0
     end
   end
 end

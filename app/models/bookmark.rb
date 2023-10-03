@@ -22,7 +22,7 @@ class Bookmark < ActiveRecord::Base
   end
 
   def self.valid_bookmarkable_types
-    Bookmark.registered_bookmarkables.map { |bm| bm.model.to_s }
+    Bookmark.registered_bookmarkables.map { |bm| bm.model.polymorphic_name }
   end
 
   belongs_to :user
@@ -121,6 +121,10 @@ class Bookmark < ActiveRecord::Base
 
   def clear_reminder!
     update!(reminder_last_sent_at: Time.zone.now, reminder_set_at: nil)
+  end
+
+  def reminder_at_in_zone(timezone)
+    self.reminder_at.in_time_zone(timezone)
   end
 
   scope :with_reminders, -> { where("reminder_at IS NOT NULL") }

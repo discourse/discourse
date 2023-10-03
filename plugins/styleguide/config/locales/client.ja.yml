@@ -87,8 +87,10 @@ ja:
           title: "スピナー"
         empty_state:
           title: "エンプティステート"
-        rich_tooltip:
-          title: "リッチツールヒント"
+        tooltips:
           description: "説明"
           header: "ヘッダー"
           hover_to_see: "マウスを合わせるとツールヒントを表示"
+        char_counter:
+          title: "文字カウンター"
+          placeholder: "ここにテキストを入力してください..."

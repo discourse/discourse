@@ -25,7 +25,7 @@ module Onebox
 
         def to_html
           <<~HTML
-          <iframe src="https://#{base_url}#{query_params}&parent=#{options[:hostname]}&autoplay=false" width="620" height="378" frameborder="0" style="overflow: hidden;" scrolling="no" allowfullscreen="allowfullscreen"></iframe>
+          <iframe src="https://#{base_url}#{query_params}&parent=#{Discourse.current_hostname}&autoplay=false" width="620" height="378" frameborder="0" style="overflow: hidden;" scrolling="no" allowfullscreen="allowfullscreen"></iframe>
           HTML
         end
       end

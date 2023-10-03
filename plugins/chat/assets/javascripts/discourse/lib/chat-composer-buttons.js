@@ -66,54 +66,60 @@ export function chatComposerButtonsDependentKeys() {
   );
 }
 
-export function chatComposerButtons(context, position) {
+export function chatComposerButtons(composer, position, context) {
   return Object.values(_chatComposerButtons)
-    .filter(
-      (button) =>
-        computeButton(context, button, "displayed") &&
-        computeButton(context, button, "position") === position
-    )
+    .filter((button) => {
+      let valid =
+        computeButton(composer, button, "displayed") &&
+        computeButton(composer, button, "position") === position;
+
+      if (button.context) {
+        valid = valid && computeButton(composer, button, "context") === context;
+      }
+
+      return valid;
+    })
     .map((button) => {
       const result = { id: button.id };
 
-      const label = computeButton(context, button, "label");
+      const label = computeButton(composer, button, "label");
       result.label = label
         ? label
-        : computeButton(context, button, "translatedLabel");
+        : computeButton(composer, button, "translatedLabel");
 
-      const ariaLabel = computeButton(context, button, "ariaLabel");
+      const ariaLabel = computeButton(composer, button, "ariaLabel");
       if (ariaLabel) {
         result.ariaLabel = I18n.t(ariaLabel);
       } else {
         const translatedAriaLabel = computeButton(
-          context,
+          composer,
           button,
           "translatedAriaLabel"
         );
         result.ariaLabel = translatedAriaLabel || result.label;
       }
 
-      const title = computeButton(context, button, "title");
+      const title = computeButton(composer, button, "title");
       result.title = title
         ? I18n.t(title)
-        : computeButton(context, button, "translatedTitle");
+        : computeButton(composer, button, "translatedTitle");
 
       result.classNames = (
-        computeButton(context, button, "classNames") || []
+        computeButton(composer, button, "classNames") || []
       ).join(" ");
 
-      result.icon = computeButton(context, button, "icon");
-      result.disabled = computeButton(context, button, "disabled");
-      result.priority = computeButton(context, button, "priority");
+      result.icon = computeButton(composer, button, "icon");
+      result.disabled = computeButton(composer, button, "disabled");
+      result.priority = computeButton(composer, button, "priority");
 
       if (isFunction(button.action)) {
         result.action = () => {
-          button.action.apply(context);
+          button.action.apply(composer, [context]);
         };
       } else {
         const actionName = button.action;
         result.action = () => {
-          context[actionName]();
+          composer[actionName](context);
         };
       }
 

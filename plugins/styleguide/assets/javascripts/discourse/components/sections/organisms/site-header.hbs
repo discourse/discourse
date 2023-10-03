@@ -1,0 +1,19 @@
+<StyleguideExample @title="site header - in topic - scrolled">
+  <div class="d-header-wrap">
+    <header class="d-header">
+      <div class="wrap">
+        <div class="contents">
+          <MountWidget @widget="home-logo" @args={{hash minimized=true}} />
+          <MountWidget @widget="header-topic-info" @args={{@dummy}} />
+
+          <div class="panel clearfix">
+            <MountWidget
+              @widget="header-icons"
+              @args={{hash user=@dummy.user}}
+            />
+          </div>
+        </div>
+      </div>
+    </header>
+  </div>
+</StyleguideExample>

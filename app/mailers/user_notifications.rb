@@ -291,6 +291,7 @@ class UserNotifications < ActionMailer::Base
       end
       @counts = [
         {
+          id: "new_topics",
           label_key: "user_notifications.digest.new_topics",
           value: new_topics_count,
           href: "#{Discourse.base_url}/new",
@@ -303,6 +304,7 @@ class UserNotifications < ActionMailer::Base
       value = user.unread_notifications + user.unread_high_priority_notifications
       if value > 0
         @counts << {
+          id: "unread_notifications",
           label_key: "user_notifications.digest.unread_notifications",
           value: value,
           href: "#{Discourse.base_url}/my/notifications",
@@ -310,9 +312,10 @@ class UserNotifications < ActionMailer::Base
       end
 
       if @counts.size < 3
-        value = user.unread_notifications_of_type(Notification.types[:liked])
+        value = user.unread_notifications_of_type(Notification.types[:liked], since: min_date)
         if value > 0
           @counts << {
+            id: "likes_received",
             label_key: "user_notifications.digest.liked_received",
             value: value,
             href: "#{Discourse.base_url}/my/notifications",
@@ -324,6 +327,7 @@ class UserNotifications < ActionMailer::Base
         value = summary_new_users_count(min_date)
         if value > 0
           @counts << {
+            id: "new_users",
             label_key: "user_notifications.digest.new_users",
             value: value,
             href: "#{Discourse.base_url}/about",
@@ -597,12 +601,20 @@ class UserNotifications < ActionMailer::Base
 
     # tag names
     if opts[:show_tags_in_subject] && post.topic_id
+      max_tags =
+        if SiteSetting.enable_max_tags_per_email_subject
+          SiteSetting.max_tags_per_email_subject
+        else
+          SiteSetting.max_tags_per_topic
+        end
+
       tags =
         DiscourseTagging
           .visible_tags(Guardian.new(user))
           .joins(:topic_tags)
           .where("topic_tags.topic_id = ?", post.topic_id)
-          .limit(SiteSetting.max_tags_per_topic)
+          .order("tags.public_topic_count DESC", "tags.name ASC")
+          .limit(max_tags)
           .pluck(:name)
 
       show_tags_in_subject = tags.any? ? tags.join(" ") : nil

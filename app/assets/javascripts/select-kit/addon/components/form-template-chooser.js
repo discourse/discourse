@@ -1,12 +1,12 @@
 import MultiSelectComponent from "select-kit/components/multi-select";
-import FormTemplate from "admin/models/form-template";
+import FormTemplate from "discourse/models/form-template";
 import { computed } from "@ember/object";
 
 export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["form-template-chooser"],
   classNames: ["form-template-chooser"],
   selectKitOptions: {
-    none: "admin.form_templates.edit_category.select_template",
+    none: "form_template_chooser.select_template",
   },
 
   init() {
@@ -15,6 +15,11 @@ export default MultiSelectComponent.extend({
     if (!this.templates) {
       this._fetchTemplates();
     }
+  },
+
+  didUpdateAttrs() {
+    this._super(...arguments);
+    this._fetchTemplates();
   },
 
   @computed("templates")
@@ -28,7 +33,14 @@ export default MultiSelectComponent.extend({
 
   _fetchTemplates() {
     FormTemplate.findAll().then((result) => {
-      const sortedTemplates = this._sortTemplatesByName(result);
+      let sortedTemplates = this._sortTemplatesByName(result);
+
+      if (this.filteredIds) {
+        sortedTemplates = sortedTemplates.filter((t) =>
+          this.filteredIds.includes(t.id)
+        );
+      }
+
       if (sortedTemplates.length > 0) {
         return this.set("templates", sortedTemplates);
       } else {

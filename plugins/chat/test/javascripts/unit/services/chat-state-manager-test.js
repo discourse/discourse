@@ -2,7 +2,7 @@ import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
 import Site from "discourse/models/site";
 import sinon from "sinon";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import {
   addChatDrawerStateCallback,
   resetChatDrawerStateCallbacks,
@@ -52,11 +52,6 @@ module(
 
     test("lastKnownChatURL", function (assert) {
       assert.strictEqual(this.subject.lastKnownChatURL, "/chat");
-
-      sinon.stub(this.subject.router, "currentURL").value("/foo");
-      this.subject.storeChatURL();
-
-      assert.strictEqual(this.subject.lastKnownChatURL, "/foo");
 
       this.subject.storeChatURL("/bar");
 

@@ -1,15 +1,18 @@
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import DiscourseURL, {
   getCategoryAndTagUrl,
   prefixProtocol,
   userPath,
 } from "discourse/lib/url";
-import { module, test } from "qunit";
 import User from "discourse/models/user";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import { setPrefix } from "discourse-common/lib/get-url";
 import sinon from "sinon";
 
-module("Unit | Utility | url", function () {
+module("Unit | Utility | url", function (hooks) {
+  setupTest(hooks);
+
   test("isInternal with a HTTP url", function (assert) {
     sinon.stub(DiscourseURL, "origin").returns("http://eviltrout.com");
 
@@ -87,6 +90,19 @@ module("Unit | Utility | url", function () {
     assert.ok(
       DiscourseURL.handleURL.calledWith(`/u/${user.username}/messages`),
       "it should navigate to the messages page"
+    );
+  });
+
+  test("routeTo does not rewrite routes started with /my", async function (assert) {
+    logIn();
+    sinon.stub(DiscourseURL, "router").get(() => {
+      return { currentURL: "/" };
+    });
+    sinon.stub(DiscourseURL, "handleURL");
+    DiscourseURL.routeTo("/myfeed");
+    assert.ok(
+      DiscourseURL.handleURL.calledWith(`/myfeed`),
+      "it should navigate to the unmodified route"
     );
   });
 

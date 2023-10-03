@@ -16,7 +16,7 @@ export default class ChatMessageInReplyToIndicator extends Component {
     if (this.hasThread) {
       return [
         ...this.args.message.channel.routeModels,
-        this.args.message.threadId,
+        this.args.message.thread.id,
       ];
     } else {
       return [
@@ -28,8 +28,8 @@ export default class ChatMessageInReplyToIndicator extends Component {
 
   get hasThread() {
     return (
-      this.args.message?.channel?.get("threading_enabled") &&
-      this.args.message?.threadId
+      this.args.message?.channel?.threadingEnabled &&
+      this.args.message?.thread?.id
     );
   }
 }

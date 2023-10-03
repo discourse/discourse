@@ -7,7 +7,7 @@ import {
   triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
-import { toggleCheckDraftPopup } from "discourse/controllers/composer";
+import { toggleCheckDraftPopup } from "discourse/services/composer";
 import { cloneJSON } from "discourse-common/lib/object";
 import TopicFixtures from "discourse/tests/fixtures/topic";
 import LinkLookup from "discourse/lib/link-lookup";
@@ -22,6 +22,7 @@ import {
   count,
   exists,
   invisible,
+  metaModifier,
   query,
   updateCurrentUser,
   visible,
@@ -216,16 +217,7 @@ acceptance("Composer", function (needs) {
     textarea.selectionStart = textarea.value.length;
     textarea.selectionEnd = textarea.value.length;
 
-    // Testing keyboard events is tough!
-    const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
-    const event = document.createEvent("Event");
-    event.initEvent("keydown", true, true);
-    event[mac ? "metaKey" : "ctrlKey"] = true;
-    event.key = "B";
-    event.keyCode = 66;
-
-    textarea.dispatchEvent(event);
-    await settled();
+    await triggerKeyEvent(textarea, "keydown", "B", metaModifier);
 
     const example = I18n.t(`composer.bold_text`);
     assert.strictEqual(
@@ -342,6 +334,22 @@ acceptance("Composer", function (needs) {
     );
   });
 
+  test("Replying to the first post in a topic is a topic reply", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    await click("#post_1 .reply.create");
+    assert.strictEqual(
+      query(".reply-details a.topic-link").innerText,
+      "Internationalization / localization"
+    );
+
+    await click("#post_1 .reply.create");
+    assert.strictEqual(
+      query(".reply-details a.topic-link").innerText,
+      "Internationalization / localization"
+    );
+  });
+
   test("Can edit a post after starting a reply", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
@@ -360,13 +368,34 @@ acceptance("Composer", function (needs) {
     );
 
     await click(".topic-post:nth-of-type(1) button.edit");
-    await click(".modal-footer button.save-draft");
+    assert.ok(invisible(".modal-footer button.save-draft"));
+    await click(".modal-footer button.discard-draft");
     assert.ok(invisible(".discard-draft-modal.modal"));
 
     assert.strictEqual(
       query(".d-editor-input").value,
       query(".topic-post:nth-of-type(1) .cooked > p").innerText,
       "composer has contents of post to be edited"
+    );
+  });
+
+  test("Can Keep Editing when replying on a different topic", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    await click("#topic-footer-buttons .create");
+    await fillIn(".d-editor-input", "this is the content of my reply");
+
+    await visit("/t/this-is-a-test-topic/9");
+    await click("#topic-footer-buttons .create");
+    assert.ok(visible(".discard-draft-modal.modal"));
+
+    await click(".modal-footer button.keep-editing");
+    assert.ok(invisible(".discard-draft-modal.modal"));
+
+    assert.strictEqual(
+      query(".d-editor-input").value,
+      "this is the content of my reply",
+      "composer does not switch when using Keep Editing button"
     );
   });
 
@@ -769,23 +798,6 @@ acceptance("Composer", function (needs) {
     );
   });
 
-  test("Composer with dirty reply can toggle to edit", async function (assert) {
-    await visit("/t/this-is-a-test-topic/9");
-
-    await click(".topic-post:nth-of-type(1) button.reply");
-    await fillIn(".d-editor-input", "This is a dirty reply");
-    await click(".topic-post:nth-of-type(1) button.edit");
-    assert.ok(
-      exists(".discard-draft-modal.modal"),
-      "it pops up a confirmation dialog"
-    );
-    await click(".modal-footer button.discard-draft");
-    assert.ok(
-      query(".d-editor-input").value.startsWith("This is the first post."),
-      "it populates the input with the post text"
-    );
-  });
-
   test("Composer draft with dirty reply can toggle to edit", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
 
@@ -797,17 +809,13 @@ acceptance("Composer", function (needs) {
       exists(".discard-draft-modal.modal"),
       "it pops up a confirmation dialog"
     );
-    assert.strictEqual(
-      query(".modal-footer button.save-draft").innerText.trim(),
-      I18n.t("post.cancel_composer.save_draft"),
-      "has save draft button"
-    );
+    assert.ok(invisible(".modal-footer button.save-draft"));
     assert.strictEqual(
       query(".modal-footer button.keep-editing").innerText.trim(),
       I18n.t("post.cancel_composer.keep_editing"),
       "has keep editing button"
     );
-    await click(".modal-footer button.save-draft");
+    await click(".modal-footer button.discard-draft");
     assert.ok(
       query(".d-editor-input").value.startsWith("This is the second post."),
       "it populates the input with the post text"
@@ -996,7 +1004,7 @@ acceptance("Composer", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-buttons .create");
 
-    this.container.lookup("controller:composer").set(
+    this.container.lookup("service:composer").set(
       "linkLookup",
       new LinkLookup({
         "github.com": {
@@ -1165,7 +1173,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
   test("Focusing a composer which is not open with create topic", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    const composer = this.container.lookup("controller:composer");
+    const composer = this.container.lookup("service:composer");
     await composer.focusComposer({ fallbackToNewTopic: true });
 
     await settled();
@@ -1180,7 +1188,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
   test("Focusing a composer which is not open with create topic and append text", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    const composer = this.container.lookup("controller:composer");
+    const composer = this.container.lookup("service:composer");
     await composer.focusComposer({
       fallbackToNewTopic: true,
       insertText: "this is appended",
@@ -1202,7 +1210,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    const composer = this.container.lookup("controller:composer");
+    const composer = this.container.lookup("service:composer");
     await composer.focusComposer();
 
     await settled();
@@ -1217,7 +1225,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     await visit("/");
     await click("#create-topic");
 
-    const composer = this.container.lookup("controller:composer");
+    const composer = this.container.lookup("service:composer");
     await composer.focusComposer({ insertText: "this is some appended text" });
 
     await settled();
@@ -1239,7 +1247,7 @@ acceptance("Composer - Focus Open and Closed", function (needs) {
     await fillIn(".d-editor-input", "This is a dirty reply");
     await click(".toggle-minimize");
 
-    const composer = this.container.lookup("controller:composer");
+    const composer = this.container.lookup("service:composer");
     await composer.focusComposer({ insertText: "this is some appended text" });
 
     await settled();
@@ -1371,13 +1379,11 @@ acceptance("Composer - current time", function (needs) {
     assert.ok(exists(".d-editor-input"), "the composer input is visible");
     await fillIn(".d-editor-input", "and the time now is: ");
 
-    const mac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
     const date = moment().format("YYYY-MM-DD");
 
     await triggerKeyEvent(".d-editor-input", "keydown", ".", {
+      ...metaModifier,
       shiftKey: true,
-      ctrlKey: !mac,
-      metaKey: mac,
     });
 
     const inputValue = query("#reply-control .d-editor-input").value.trim();

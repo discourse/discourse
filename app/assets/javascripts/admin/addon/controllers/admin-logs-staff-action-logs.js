@@ -5,9 +5,14 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { scheduleOnce } from "@ember/runloop";
-import showModal from "discourse/lib/show-modal";
+import { inject as service } from "@ember/service";
+import ThemeChangeModal from "../components/modal/theme-change";
+import StaffActionLogDetailsModal from "../components/modal/staff-action-log-details";
 
 export default class AdminLogsStaffActionLogsController extends Controller {
+  @service modal;
+  @service store;
+
   queryParams = ["filters"];
   model = null;
   filters = null;
@@ -151,21 +156,14 @@ export default class AdminLogsStaffActionLogsController extends Controller {
   @action
   showDetailsModal(model, event) {
     event?.preventDefault();
-    showModal("admin-staff-action-log-details", {
-      model,
-      admin: true,
-      modalClass: "log-details-modal",
+    this.modal.show(StaffActionLogDetailsModal, {
+      model: { staffActionLog: model },
     });
   }
 
   @action
   showCustomDetailsModal(model, event) {
     event?.preventDefault();
-    let modal = showModal("admin-theme-change", {
-      model,
-      admin: true,
-      modalClass: "history-modal",
-    });
-    modal.loadDiff();
+    this.modal.show(ThemeChangeModal, { model: { staffActionLog: model } });
   }
 }

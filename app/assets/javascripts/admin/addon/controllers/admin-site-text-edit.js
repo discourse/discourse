@@ -16,6 +16,11 @@ export default Controller.extend(bufferedProperty("siteText"), {
     return this.siteText.value === value;
   },
 
+  @discourseComputed("siteText.status")
+  isOutdated(status) {
+    return status === "outdated";
+  },
+
   @action
   saveChanges() {
     const attrs = this.buffered.getProperties("value");
@@ -47,5 +52,19 @@ export default Controller.extend(bufferedProperty("siteText"), {
           .catch(popupAjaxError);
       },
     });
+  },
+
+  @action
+  dismissOutdated() {
+    this.siteText
+      .dismissOutdated(this.locale)
+      .then(() => {
+        this.siteText.set("status", "up_to_date");
+      })
+      .catch(popupAjaxError);
+  },
+
+  get interpolationKeys() {
+    return this.siteText.interpolation_keys.join(", ");
   },
 });

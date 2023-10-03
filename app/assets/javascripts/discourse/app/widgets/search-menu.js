@@ -27,6 +27,15 @@ export const DEFAULT_TYPE_FILTER = "exclude_topics";
 
 const searchData = {};
 
+const onKeyDownCallbacks = [];
+
+export function addOnKeyDownCallback(fn) {
+  onKeyDownCallbacks.push(fn);
+}
+export function resetOnKeyDownCallbacks() {
+  onKeyDownCallbacks.clear();
+}
+
 export function initSearchData() {
   searchData.loading = false;
   searchData.results = {};
@@ -322,6 +331,8 @@ export default createWidget("search-menu", {
           suggestionResults: searchData.suggestionResults,
           searchTopics: SearchHelper.includesTopics(),
           inPMInboxContext: this.state.inPMInboxContext,
+          inTopicContext: this.state.inTopicContext,
+          onLinkClicked: this.onLinkClicked.bind(this),
         })
       );
     }
@@ -348,8 +359,21 @@ export default createWidget("search-menu", {
     });
   },
 
-  mouseDownOutside() {
-    this.sendWidgetAction("toggleSearchMenu");
+  onLinkClicked() {
+    return this.sendWidgetAction("linkClickedEvent");
+  },
+
+  mouseDown(e) {
+    if (e.target === document.querySelector("input#search-term")) {
+      this.state.inputSelectionEvent = true;
+    }
+  },
+
+  clickOutside() {
+    if (this.key === "search-menu" && !this.state.inputSelectionEvent) {
+      this.sendWidgetAction("toggleSearchMenu");
+    }
+    this.state.inputSelectionEvent = false;
   },
 
   clearTopicContext() {
@@ -362,6 +386,18 @@ export default createWidget("search-menu", {
   },
 
   keyDown(e) {
+    if (
+      onKeyDownCallbacks.length &&
+      !onKeyDownCallbacks.some((fn) => fn(this, e))
+    ) {
+      // Return early if any callbacks return false
+      return;
+    }
+
+    this.handleKeyDown(e);
+  },
+
+  handleKeyDown(e) {
     if (e.key === "Escape") {
       this.sendWidgetAction("toggleSearchMenu");
       document.querySelector("#search-button").focus();

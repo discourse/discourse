@@ -1,7 +1,6 @@
 import UserMenuNotificationsList from "discourse/components/user-menu/notifications-list";
 import { ajax } from "discourse/lib/ajax";
 import Notification from "discourse/models/notification";
-import showModal from "discourse/lib/show-modal";
 import I18n from "I18n";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
 import UserMenuBookmarkItem from "discourse/lib/user-menu/bookmark-item";
@@ -45,6 +44,12 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
     return this.currentUser.get(key) || 0;
   }
 
+  get dismissConfirmationText() {
+    return I18n.t("notifications.dismiss_confirmation.body.bookmarks", {
+      count: this.#unreadBookmarkRemindersCount,
+    });
+  }
+
   async fetchItems() {
     const data = await ajax(
       `/u/${this.currentUser.username}/user-menu-bookmarks`
@@ -73,16 +78,5 @@ export default class UserMenuBookmarksList extends UserMenuNotificationsList {
     );
 
     return content;
-  }
-
-  dismissWarningModal() {
-    const modalController = showModal("dismiss-notification-confirmation");
-    modalController.set(
-      "confirmationMessage",
-      I18n.t("notifications.dismiss_confirmation.body.bookmarks", {
-        count: this.#unreadBookmarkRemindersCount,
-      })
-    );
-    return modalController;
   }
 }

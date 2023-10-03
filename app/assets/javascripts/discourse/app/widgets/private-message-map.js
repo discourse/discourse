@@ -185,7 +185,7 @@ export default createWidget("private-message-map", {
         this.attach("button", {
           action: "showInvite",
           icon: "plus",
-          className: "btn btn-default no-text btn-icon",
+          className: "btn btn-default no-text btn-icon add-participant-btn",
         })
       );
     }

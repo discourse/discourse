@@ -76,7 +76,7 @@ RSpec.describe Admin::GroupsController do
       context "with Group.plugin_permitted_params" do
         after { DiscoursePluginRegistry.reset! }
 
-        it "filter unpermitted params" do
+        it "filter non-permitted params" do
           params = group_params
           params[:group].merge!(allow_unknown_sender_topic_replies: true)
 
@@ -448,7 +448,7 @@ RSpec.describe Admin::GroupsController do
         expect(response.parsed_body["user_count"]).to eq(2)
       end
 
-      it "doesn't responde with 500 if domain is invalid" do
+      it "doesn't respond with 500 if domain is invalid" do
         group = Fabricate(:group)
 
         put "/admin/groups/automatic_membership_count.json",

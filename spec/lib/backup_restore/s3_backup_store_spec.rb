@@ -5,6 +5,8 @@ require "backup_restore/s3_backup_store"
 require_relative "shared_examples_for_backup_store"
 
 RSpec.describe BackupRestore::S3BackupStore do
+  subject(:store) { BackupRestore::BackupStore.create(s3_options: @s3_options) }
+
   before do
     @s3_client = Aws::S3::Client.new(stub_responses: true)
     @s3_options = { client: @s3_client }
@@ -86,7 +88,6 @@ RSpec.describe BackupRestore::S3BackupStore do
     SiteSetting.backup_location = BackupLocationSiteSetting::S3
   end
 
-  subject(:store) { BackupRestore::BackupStore.create(s3_options: @s3_options) }
   let(:expected_type) { BackupRestore::S3BackupStore }
 
   it_behaves_like "backup store"

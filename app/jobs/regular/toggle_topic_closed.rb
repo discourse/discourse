@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 module Jobs
-  # TODO: DEPRECATED - Use OpenTopic and CloseTopic instead.
-  # (martin - 2021-05-01) - Delete once topic timer revamp is completed.
   class ToggleTopicClosed < ::Jobs::Base
     def execute(args)
+      Discourse.deprecate(
+        "ToggleTopicClosed is deprecated. Use OpenTopic and CloseTopic instead.",
+        drop_from: "3.3.0",
+      )
+
       topic_timer = TopicTimer.find_by(id: args[:topic_timer_id] || args[:topic_status_update_id])
 
       # state false is Open Topic

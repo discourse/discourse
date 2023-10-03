@@ -10,15 +10,16 @@
     ]
   },
   "packages": {
+    "cli-table": "0.3.11",
     "component-bind": "1.0.0",
     "component-inherit": "0.0.3",
     "duplex": "1.0.0",
     "glob": "3.1.21",
     "indexof": "0.0.1",
     "inherits": "1.0.2",
-    "jsonify": "0.0.0",
-    "messageformat": "0.1.5",
+    "jsonify": "0.0.1",
     "line-stream": "0.0.0",
+    "messageformat": "0.1.5",
     "regenerator-transform": "0.10.1",
     "source-map": "0.1.43",
     "sourcemap-validator": "1.1.1"

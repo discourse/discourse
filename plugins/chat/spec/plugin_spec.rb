@@ -17,12 +17,12 @@ describe Chat do
     fab!(:unused_upload) { Fabricate(:upload, user: user, created_at: 1.month.ago) }
 
     let!(:chat_message) do
-      Chat::MessageCreator.create(
+      Fabricate(
+        :chat_message,
         chat_channel: chat_channel,
         user: user,
-        in_reply_to_id: nil,
-        content: "Hello world!",
-        upload_ids: [upload.id],
+        message: "Hello world!",
+        uploads: [upload],
       )
     end
 
@@ -43,15 +43,13 @@ describe Chat do
     fab!(:unused_upload) { Fabricate(:upload, user: user, created_at: 1.month.ago) }
 
     let!(:chat_message) do
-      Chat::MessageCreator.create(
+      Fabricate(
+        :chat_message,
         chat_channel: chat_channel,
         user: user,
-        in_reply_to_id: nil,
-        content: "Hello world! #{message_upload.sha1}",
-        upload_ids: [],
+        message: "Hello world! #{message_upload.sha1}",
       )
     end
-
     let!(:draft_message) do
       Chat::Draft.create!(
         user: user,
@@ -129,19 +127,10 @@ describe Chat do
 
   describe "chat oneboxes" do
     fab!(:chat_channel) { Fabricate(:category_channel) }
-    fab!(:user) { Fabricate(:user, active: true) }
-    fab!(:user_2) { Fabricate(:user, active: false) }
-    fab!(:user_3) { Fabricate(:user, staged: true) }
-    fab!(:user_4) { Fabricate(:user, suspended_till: 3.weeks.from_now) }
+    fab!(:user) { Fabricate(:user) }
 
-    let!(:chat_message) do
-      Chat::MessageCreator.create(
-        chat_channel: chat_channel,
-        user: user,
-        in_reply_to_id: nil,
-        content: "Hello world!",
-        upload_ids: [],
-      ).chat_message
+    fab!(:chat_message) do
+      Fabricate(:chat_message, chat_channel: chat_channel, user: user, message: "Hello world!")
     end
 
     let(:chat_url) { "#{Discourse.base_url}/chat/c/-/#{chat_channel.id}" }
@@ -161,63 +150,6 @@ describe Chat do
         expect(results[0][:title]).to eq(
           "Message ##{chat_message.id} by #{chat_message.user.username} – ##{chat_channel.name}",
         )
-      end
-    end
-
-    context "when regular" do
-      it "renders channel, excluding inactive, staged, and suspended users" do
-        user.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
-        user_2.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
-        user_3.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
-        user_4.user_chat_channel_memberships.create!(chat_channel: chat_channel, following: true)
-        Jobs::Chat::UpdateUserCountsForChannels.new.execute({})
-
-        expect(Oneboxer.preview(chat_url)).to match_html <<~HTML
-          <aside class="onebox chat-onebox">
-            <article class="onebox-body chat-onebox-body">
-              <h3 class="chat-onebox-title">
-                <a href="#{chat_url}">
-                  <span class="category-chat-badge" style="color: ##{chat_channel.chatable.color}">
-                    <svg class="fa d-icon d-icon-d-chat svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#d-chat"></use></svg>
-                 </span>
-                  <span class="clear-badge">#{chat_channel.name}</span>
-                </a>
-              </h3>
-              <div class="chat-onebox-members-count">1 member</div>
-              <div class="chat-onebox-members">
-               <a class="trigger-user-card" data-user-card="#{user.username}" aria-hidden="true" tabindex="-1">
-                 <img loading="lazy" alt="#{user.username}" width="30" height="30" src="#{user.avatar_template_url.gsub("{size}", "60")}" class="avatar">
-               </a>
-              </div>
-            </article>
-        </aside>
-
-        HTML
-      end
-
-      it "renders messages" do
-        expect(Oneboxer.preview("#{chat_url}/#{chat_message.id}")).to match_html <<~HTML
-          <div class="chat-transcript" data-message-id="#{chat_message.id}" data-username="#{user.username}" data-datetime="#{chat_message.created_at.iso8601}" data-channel-name="#{chat_channel.name}" data-channel-id="#{chat_channel.id}">
-          <div class="chat-transcript-user">
-            <div class="chat-transcript-user-avatar">
-              <a class="trigger-user-card" data-user-card="#{user.username}" aria-hidden="true" tabindex="-1">
-                <img loading="lazy" alt="#{user.username}" width="20" height="20" src="#{user.avatar_template_url.gsub("{size}", "20")}" class="avatar">
-              </a>
-            </div>
-            <div class="chat-transcript-username">#{user.username}</div>
-              <div class="chat-transcript-datetime">
-                <a href="#{chat_url}/#{chat_message.id}" title="#{chat_message.created_at}">#{chat_message.created_at}</a>
-              </div>
-              <a class="chat-transcript-channel" href="/chat/c/-/#{chat_channel.id}">
-                <span class="category-chat-badge" style="color: ##{chat_channel.chatable.color}">
-                  <svg class="fa d-icon d-icon-d-chat svg-icon svg-string" xmlns="http://www.w3.org/2000/svg"><use href="#d-chat"></use></svg>
-                </span>
-                #{chat_channel.name}
-              </a>
-            </div>
-          <div class="chat-transcript-messages"><p>Hello world!</p></div>
-        </div>
-        HTML
       end
     end
   end
@@ -367,6 +299,27 @@ describe Chat do
         expect(serializer.chat_channels[:direct_message_channels]).to eq([])
         expect(serializer.chat_channels[:public_channels].count).to eq(1)
         expect(serializer.chat_channels[:public_channels][0].id).to eq(channel.id)
+      end
+    end
+
+    context "when the category is restricted and user has readonly persmissions" do
+      fab!(:channel_1) { Fabricate(:chat_channel) }
+      fab!(:group_1) { Fabricate(:group) }
+      fab!(:private_channel_1) { Fabricate(:private_category_channel, group: group_1) }
+
+      before do
+        private_channel_1.chatable.category_groups.first.update!(
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
+        group_1.add(user)
+        channel_1.add(user)
+        private_channel_1.add(user)
+      end
+
+      it "doesn’t list the associated channel" do
+        expect(serializer.chat_channels[:public_channels].map(&:id)).to contain_exactly(
+          channel_1.id,
+        )
       end
     end
   end

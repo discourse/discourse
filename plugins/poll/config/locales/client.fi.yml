@@ -28,27 +28,27 @@ fi:
       multiple:
         help:
           at_least_min_options:
-            one: "Valitse ainakin <strong>%{count}</strong> vaihtoehto."
-            other: "Valitse ainakin <strong>%{count}</strong> vaihtoehtoa."
+            one: "Valitse ainakin <strong>%{count} vaihtoehto</strong>."
+            other: "Valitse ainakin <strong>%{count} vaihtoehtoa</strong>."
           up_to_max_options:
-            one: "Valitse enintään <strong>%{count}</strong> vaihtoehtoa."
-            other: "Valitse enintään <strong>%{count}</strong> vaihtoehtoa."
+            one: "Valitse enintään <strong>%{count} vaihtoehto</strong>."
+            other: "Valitse enintään <strong>%{count} vaihtoehtoa</strong>."
           x_options:
-            one: "Valitse <strong>%{count}</strong> vaihtoehto."
-            other: "Valitse <strong>%{count}</strong> vaihtoehtoa."
-          between_min_and_max_options: "Valitse vähintään <strong>%{min}</strong> ja enintään <strong>%{max}</strong> vaihtoehtoa."
+            one: "Valitse <strong>%{count} vaihtoehto</strong>."
+            other: "Valitse <strong>%{count} vaihtoehtoa</strong>."
+          between_min_and_max_options: "Valitse <strong>%{min}–%{max} vaihtoehtoa</strong>."
       cast-votes:
         title: "Antakaa äänenne"
         label: "Äänestä nyt!"
       show-results:
         title: "Näytä kyselyn tulos"
-        label: "Näytä tulokset"
+        label: "Tulokset"
       remove-vote:
         title: "Poista äänesi"
-        label: "Poista ääni"
+        label: "Kumoa äänestys"
       hide-results:
         title: "Palaa äänestysvalintaasi"
-        label: "Näytä äänestys"
+        label: "Äänestä"
       group-results:
         title: "Lajittele äänet käyttäjäkentän perusteella"
         label: "Näytä erittely"
@@ -72,6 +72,8 @@ fi:
         breakdown: "Erittely"
         percentage: "Prosenttiosuus"
         count: "Lukumäärä"
+      options:
+        label: "Asetukset"
       error_while_toggling_status: "Kyselyn tilaa muutettaessa tapahtui virhe."
       error_while_casting_votes: "Ääntä annettaessa tapahtui virhe."
       error_while_fetching_voters: "Äänestäneiden näyttämisessä tapahtui virhe."

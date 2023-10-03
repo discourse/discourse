@@ -119,6 +119,7 @@ RSpec.describe Chat::Admin::IncomingWebhooksController do
 
   describe "#delete" do
     fab!(:existing) { Fabricate(:incoming_chat_webhook, chat_channel: chat_channel1) }
+    fab!(:webhook_event) { Fabricate(:chat_webhook_event, incoming_chat_webhook: existing) }
 
     it "errors for non-staff" do
       sign_in(user)
@@ -130,6 +131,14 @@ RSpec.describe Chat::Admin::IncomingWebhooksController do
       sign_in(admin)
       expect { delete "/admin/plugins/chat/hooks/#{existing.id}.json" }.to change {
         Chat::IncomingWebhook.count
+      }.by(-1)
+    end
+
+    it "destroys webhook events records" do
+      sign_in(admin)
+
+      expect { delete "/admin/plugins/chat/hooks/#{existing.id}.json" }.to change {
+        Chat::WebhookEvent.count
       }.by(-1)
     end
   end

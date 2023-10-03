@@ -54,3 +54,8 @@ desc "Add replies to a topic"
 task "replies:populate", %i[topic_id count] => ["db:load_config"] do |_, args|
   DiscourseDev::Post.add_replies!(args)
 end
+
+desc "Creates sample email logs"
+task "email_logs:populate" => ["db:load_config"] do |_, args|
+  DiscourseDev::EmailLog.populate!
+end

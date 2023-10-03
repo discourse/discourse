@@ -18,7 +18,7 @@ th:
       no_day: "%Y %B"
   date:
     month_names:
-    - null
+    -
     - มกราคม
     - กุมภาพันธ์
     - มีนาคม
@@ -73,7 +73,6 @@ th:
   embed:
     start_discussion: "เริ่มการสนทนา"
     continue: "ดำเนินการสนทนาต่อ"
-    loading: "กำลังโหลดการสนทนา"
     in_reply_to: "▶ %{username}"
     replies:
       other: "%{count} ตอบ"

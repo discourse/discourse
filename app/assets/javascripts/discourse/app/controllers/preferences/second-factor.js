@@ -8,12 +8,17 @@ import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import { findAll } from "discourse/models/login-method";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
 import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
+import SecondFactorAddSecurityKey from "discourse/components/modal/second-factor-add-security-key";
+import SecondFactorEditSecurityKey from "discourse/components/modal/second-factor-edit-security-key";
+import SecondFactorEdit from "discourse/components/modal/second-factor-edit";
+import SecondFactorAddTotp from "discourse/components/modal/second-factor-add-totp";
+import SecondFactorBackupEdit from "discourse/components/modal/second-factor-backup-edit";
 
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),
+  modal: service(),
   loading: false,
   dirty: false,
   resetPasswordLoading: false,
@@ -42,6 +47,7 @@ export default Controller.extend(CanCheckEmails, {
     return user && user.enforcedSecondFactor;
   },
 
+  @action
   handleError(error) {
     if (error.jqXHR) {
       error = error.jqXHR;
@@ -57,6 +63,17 @@ export default Controller.extend(CanCheckEmails, {
     }
   },
 
+  @action
+  setBackupEnabled(value) {
+    this.set("backupEnabled", value);
+  },
+
+  @action
+  setCodesRemaining(value) {
+    this.model.set("second_factor_remaining_backup_codes", value);
+  },
+
+  @action
   loadSecondFactors() {
     if (this.dirty === false) {
       return;
@@ -89,6 +106,7 @@ export default Controller.extend(CanCheckEmails, {
       .finally(() => this.set("loading", false));
   },
 
+  @action
   markDirty() {
     this.set("dirty", true);
   },
@@ -256,65 +274,61 @@ export default Controller.extend(CanCheckEmails, {
       });
     },
 
-    createTotp() {
-      const controller = showModal("second-factor-add-totp", {
-        model: this.model,
-        title: "user.second_factor.totp.add",
+    async createTotp() {
+      await this.modal.show(SecondFactorAddTotp, {
+        model: {
+          secondFactor: this.model,
+          markDirty: () => this.markDirty(),
+          onError: (e) => this.handleError(e),
+        },
       });
-      controller.setProperties({
-        onClose: () => this.loadSecondFactors(),
-        markDirty: () => this.markDirty(),
-        onError: (e) => this.handleError(e),
-      });
+      this.loadSecondFactors();
     },
 
-    createSecurityKey() {
-      const controller = showModal("second-factor-add-security-key", {
-        model: this.model,
-        title: "user.second_factor.security_key.add",
+    async createSecurityKey() {
+      await this.modal.show(SecondFactorAddSecurityKey, {
+        model: {
+          secondFactor: this.model,
+          markDirty: this.markDirty,
+          onError: this.handleError,
+        },
       });
-      controller.setProperties({
-        onClose: () => this.loadSecondFactors(),
-        markDirty: () => this.markDirty(),
-        onError: (e) => this.handleError(e),
-      });
+      this.loadSecondFactors();
     },
 
-    editSecurityKey(security_key) {
-      const controller = showModal("second-factor-edit-security-key", {
-        model: security_key,
-        title: "user.second_factor.security_key.edit",
+    async editSecurityKey(security_key) {
+      await this.modal.show(SecondFactorEditSecurityKey, {
+        model: {
+          securityKey: security_key,
+          user: this.model,
+          markDirty: () => this.markDirty(),
+          onError: (e) => this.handleError(e),
+        },
       });
-      controller.setProperties({
-        user: this.model,
-        onClose: () => this.loadSecondFactors(),
-        markDirty: () => this.markDirty(),
-        onError: (e) => this.handleError(e),
-      });
+      this.loadSecondFactors();
     },
 
-    editSecondFactor(second_factor) {
-      const controller = showModal("second-factor-edit", {
-        model: second_factor,
-        title: "user.second_factor.edit_title",
+    async editSecondFactor(second_factor) {
+      await this.modal.show(SecondFactorEdit, {
+        model: {
+          secondFactor: second_factor,
+          user: this.model,
+          markDirty: () => this.markDirty(),
+          onError: (e) => this.handleError(e),
+        },
       });
-      controller.setProperties({
-        user: this.model,
-        onClose: () => this.loadSecondFactors(),
-        markDirty: () => this.markDirty(),
-        onError: (e) => this.handleError(e),
-      });
+      this.loadSecondFactors();
     },
 
-    editSecondFactorBackup() {
-      const controller = showModal("second-factor-backup-edit", {
-        model: this.model,
-        title: "user.second_factor_backup.title",
-      });
-      controller.setProperties({
-        onClose: () => this.loadSecondFactors(),
-        markDirty: () => this.markDirty(),
-        onError: (e) => this.handleError(e),
+    async editSecondFactorBackup() {
+      await this.modal.show(SecondFactorBackupEdit, {
+        model: {
+          secondFactor: this.model,
+          markDirty: () => this.markDirty(),
+          onError: (e) => this.handleError(e),
+          setBackupEnabled: (e) => this.setBackupEnabled(e),
+          setCodesRemaining: (e) => this.setCodesRemaining(e),
+        },
       });
     },
   },

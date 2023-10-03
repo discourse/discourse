@@ -8,6 +8,11 @@ module PageObjects
         self
       end
 
+      def click_interface_tab
+        click_link "Interface"
+        self
+      end
+
       def click_secondary_navigation_menu_scroll_right
         find(".horizontal-overflow-nav__scroll-right").click
       end

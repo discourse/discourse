@@ -59,9 +59,14 @@ class SessionController < ApplicationController
       end
 
       if data[:no_current_user]
-        cookies[:sso_payload] = payload || request.query_string
-        redirect_to path("/login")
-        return
+        if data[:prompt] == "none"
+          redirect_to data[:sso_redirect_url], allow_other_host: true
+          return
+        else
+          cookies[:sso_payload] = payload || request.query_string
+          redirect_to path("/login")
+          return
+        end
       end
 
       if request.xhr?
@@ -88,6 +93,8 @@ class SessionController < ApplicationController
     render plain: I18n.t("discourse_connect.login_error"), status: 422
   rescue DiscourseConnectProvider::BlankReturnUrl
     render plain: "return_sso_url is blank, it must be provided", status: 400
+  rescue DiscourseConnectProvider::InvalidParameterValueError => e
+    render plain: I18n.t("discourse_connect.invalid_parameter_value", param: e.param), status: 400
   end
 
   # For use in development mode only when login options could be limited or disabled.
@@ -208,7 +215,7 @@ class SessionController < ApplicationController
             uri = URI(return_path)
             if (uri.hostname == Discourse.current_hostname)
               return_path = uri.to_s
-            elsif !SiteSetting.discourse_connect_allows_all_return_paths
+            elsif !domain_redirect_allowed?(uri.hostname)
               return_path = path("/")
             end
           rescue StandardError
@@ -344,9 +351,9 @@ class SessionController < ApplicationController
       end
 
       if matched_user&.security_keys_enabled?
-        Webauthn.stage_challenge(matched_user, secure_session)
+        DiscourseWebauthn.stage_challenge(matched_user, secure_session)
         response.merge!(
-          Webauthn.allowed_credentials(matched_user, secure_session).merge(
+          DiscourseWebauthn.allowed_credentials(matched_user, secure_session).merge(
             security_key_required: true,
           ),
         )
@@ -433,8 +440,8 @@ class SessionController < ApplicationController
         allowed_methods: challenge[:allowed_methods],
       )
       if user.security_keys_enabled?
-        Webauthn.stage_challenge(user, secure_session)
-        json.merge!(Webauthn.allowed_credentials(user, secure_session))
+        DiscourseWebauthn.stage_challenge(user, secure_session)
+        json.merge!(DiscourseWebauthn.allowed_credentials(user, secure_session))
         json[:security_keys_enabled] = true
       else
         json[:security_keys_enabled] = false
@@ -660,8 +667,8 @@ class SessionController < ApplicationController
     if !second_factor_authentication_result.ok
       failure_payload = second_factor_authentication_result.to_h
       if user.security_keys_enabled?
-        Webauthn.stage_challenge(user, secure_session)
-        failure_payload.merge!(Webauthn.allowed_credentials(user, secure_session))
+        DiscourseWebauthn.stage_challenge(user, secure_session)
+        failure_payload.merge!(DiscourseWebauthn.allowed_credentials(user, secure_session))
       end
       @second_factor_failure_payload = failed_json.merge(failure_payload)
       return second_factor_authentication_result
@@ -807,5 +814,13 @@ class SessionController < ApplicationController
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
     Rails.logger.warn("SSO invite redemption failed: #{e}")
     raise Invite::RedemptionFailed
+  end
+
+  def domain_redirect_allowed?(hostname)
+    allowed_domains = SiteSetting.discourse_connect_allowed_redirect_domains
+    return false if allowed_domains.blank?
+    return true if allowed_domains.split("|").include?("*")
+
+    allowed_domains.split("|").include?(hostname)
   end
 end

@@ -19,7 +19,7 @@ lt:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - Sausis
     - Vasaris
     - Kovas
@@ -175,7 +175,6 @@ lt:
       local_login_cannot_be_disabled_if_second_factor_enforced: "Negalite išjungti vietinio prisijungimo, jei taikomas 2FA. Prieš išjungdami vietinius prisijungimus, išjunkite priverstinį 2FA."
       cannot_enable_s3_uploads_when_s3_enabled_globally: "Negalite įgalinti S3 įkėlimų, nes S3 įkėlimai jau įgalinti visame pasaulyje, o įjungus šį svetainės lygį gali kilti kritinių įkėlimų problemų"
       cors_origins_should_not_have_trailing_slash: "Neturėtumėte pridėti galinio brūkšnio (/) prie CORS šaltinių."
-      slow_down_crawler_user_agent_must_be_at_least_3_characters: "Vartotojų agentai turi būti ne trumpesni kaip 3 simboliai, kad būtų išvengta klaidingo greičio ribojimo žmonių vartotojams."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "Prie nustatymo negalite pridėti nė vienos iš šių reikšmių: %{values}."
     onebox:
       invalid_address: "Deja, nepavyko sukurti šio tinklalapio peržiūros, nes nepavyko rasti serverio %{hostname}Vietoj peržiūros jūsų įraše bus rodoma tik nuoroda. :cry:"
@@ -246,7 +245,6 @@ lt:
       few: "dar %{count} atsakymai"
       many: "dar %{count} atsakymų"
       other: "dar %{count} atsakymų"
-    loading: "Kraunama diskusija..."
     permalink: "Nuoroda"
     in_reply_to: "▶ %{username}"
     replies:
@@ -496,22 +494,6 @@ lt:
   meta_category_description: "Diskusijos apie svetainę, jos organizavimą, kaip ji veikia ir kaip galima ja dar patobulinti."
   staff_category_name: "Personalas"
   staff_category_description: "Privati kategorija personalo diskusijoms. Temos matomos tik administratoriams ir moderatoriams."
-  discourse_welcome_topic:
-    body: |2
-
-      Pirmoji šios prisegtos temos pastraipa bus matoma kaip sveikinimo žinutė visiems naujiems pagrindinio puslapio lankytojams. Tai svarbu!
-
-      **Redaguokite tai** į trumpą savo bendruomenės aprašymą:
-
-      – Kam tai skirta?
-      – Ką jie čia gali rasti?
-      – Kodėl jie turėtų čia ateiti?
-      – Kur jie gali skaityti daugiau (nuorodos, šaltiniai ir pan.)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      Galbūt norėsite uždaryti šią temą per administratorių :wrench: (viršuje dešinėje ir apačioje), kad atsakymai nesikauptų ant skelbimo.
-  admin_quick_start_title: "PERSKAITYKITE PIRMIAUSIA: administratoriaus greitas pradžios vadovas"
   category:
     topic_prefix: "Viskas apie %{category} kategoriją"
     post_template: "%{replace_paragraph}\n\nNaudokite šias pastraipas ilgesniam aprašymui arba kategorijų gairėms ar taisyklėms nustatyti:\n\n– Kodėl žmonės turėtų naudoti šią kategoriją? Kam tai?\n\n– Kuo tai skiriasi nuo kitų jau turimų kategorijų?\n\n– Kas apskritai turėtų būti šios kategorijos temose?\n\n– Ar mums reikia šios kategorijos? Ar galime sujungti su kita kategorija ar subkategorija?\n"
@@ -537,7 +519,6 @@ lt:
   post:
     image_placeholder:
       broken: "Šis paveikslėlis yra sugadintas"
-    hidden_bidi_character: "Dvikrypčiai simboliai gali pakeisti teksto pateikimo tvarką. Tai gali būti naudojama kenkėjiškam kodui paslėpti."
     has_likes:
       one: "%{count} patinka"
       few: "%{count} Patinka"
@@ -806,8 +787,6 @@ lt:
   draft_backup:
     pm_title: "Atsarginės temų juodraščių kopijos"
     pm_body: "Tema, kurioje yra atsarginių juodraščių"
-  user_activity:
-    no_log_search_queries: "Paieškos žurnalo užklausos šiuo metu išjungtos (administratorius gali jas įjungti svetainės nustatymuose)."
   email_settings:
     pop3_authentication_error: "Iškilo problema dėl pateiktų POP3 prisijungimo duomenų, patikrinkite naudotojo vardą ir slaptažodį ir bandykite dar kartą."
     imap_no_response_error: "Ryšio su IMAP serveriu metu įvyko klaida. %{message}"
@@ -991,7 +970,7 @@ lt:
       title: "DAU/MAU"
       xaxis: "Diena"
       yaxis: "DAU/MAU"
-      description: "Paskutinę dieną prisijungusių narių skaičius, padalytas iš narių, prisijungusių per pastarąjį mėnesį, skaičiaus – pateikiamas %, kuris rodo bendruomenės „lipnumą“. Siekite >30 proc."
+      description: "Paskutinę dieną prisijungusių narių skaičius, padalytas iš narių, prisijungusių per pastarąjį mėnesį, skaičiaus – pateikiamas %, kuris rodo bendruomenės „lipnumą“. Siekite >20 proc."
     daily_engaged_users:
       title: "Kasdien dalyvaujantys vartotojai"
       xaxis: "Diena"
@@ -1233,9 +1212,6 @@ lt:
     allow_user_locale: "Leisti vartotojams pasirinkti savo kalbos sąsajos pageidavimus"
     set_locale_from_accept_language_header: "nustatyti sąsajos kalbą anoniminiams vartotojams iš jų interneto naršyklės kalbos antraščių"
     support_mixed_text_direction: "Palaikykite įvairias teksto kryptis iš kairės į dešinę ir iš dešinės į kairę."
-    min_post_length: "Mažiausias leistinas įrašo ilgis simboliais"
-    min_first_post_length: "Mažiausias leistinas pirmojo įrašo (temos turinio) ilgis simboliais"
-    min_personal_message_post_length: "Mažiausias leistinas pranešimų ilgis simboliais"
     max_post_length: "Didžiausias leistinas įrašo ilgis simboliais"
     topic_featured_link_enabled: "Įgalinti nuorodos su temomis paskelbimą."
     show_topic_featured_link_in_digest: "Rodyti temos nuorodą santraukos el. laiške."
@@ -1342,7 +1318,6 @@ lt:
     enable_safe_mode: "Leisti vartotojams įjungti saugųjį režimą, kad būtų derinami papildiniai."
     rate_limit_create_topic: "Sukūrę temą, vartotojai turi palaukti (n) sekundžių prieš kurdami kitą temą."
     rate_limit_create_post: "Po paskelbimo, vartotojai turi palaukti (n) sekundžių prieš kurdami kitą įrašą."
-    rate_limit_new_user_create_topic: "Sukūrę temą, nauji vartotojai, prieš sukurdami kitą temą, turi palaukti (n) sekundžių."
     rate_limit_new_user_create_post: "Po paskelbimo nauji vartotojai turi palaukti (n) sekundžių prieš kurdami kitą įrašą."
     max_likes_per_day: "Didžiausias paspaudimų „Patinka“ skaičius vienam vartotojui per dieną."
     max_flags_per_day: "Maksimalus vėliavų skaičius vienam vartotojui per dieną."
@@ -1439,7 +1414,6 @@ lt:
     max_notifications_per_user: "Maksimalus vieno vartotojo pranešimų skaičius, jei šis skaičius viršijamas, senieji pranešimai bus ištrinti. Taikoma kas savaitę. Norėdami išjungti, nustatykite 0"
     disable_avatar_education_message: "Išjungti švietimo pranešimą keičiant avataras."
     header_dropdown_category_count: "Kiek kategorijų gali būti rodoma antraštės išskleidžiamajame meniu."
-    disable_category_edit_notifications: "Išjungti pranešimus apie temų kategorijų redagavimą."
     automatically_unpin_topics: "Automatiškai atsegti temas, kai vartotojas pasiekia apačią."
     read_time_word_count: "Žodžių skaičius per minutę apskaičiuojant numatomą skaitymo laiką."
     full_name_required: "Pilnas vardas yra būtinas vartotojo profilio laukas."
@@ -1476,9 +1450,7 @@ lt:
     default_categories_muted: "Kategorijų, kurios yra nutildytos pagal numatytuosius nustatymus, sąrašas."
     default_text_size: "Teksto dydis, kuris pasirenkamas pagal numatytuosius nustatymus"
     default_title_count_mode: "Numatytasis puslapio pavadinimo skaitiklio režimas"
-    allow_user_api_keys: "Leisti generuoti vartotojo API raktus"
     allow_user_api_key_scopes: "Leidžiamų naudotojo API raktų apimčių sąrašas"
-    min_trust_level_for_user_api_key: "Patikimumo lygis, reikalingas generuoti vartotojo API raktus"
     allowed_user_api_auth_redirects: "Leidžiamas vartotojo API raktų autentifikavimo peradresavimo URL. Pakaitos simbolis * gali būti naudojamas norint atitikti bet kurią jo dalį (pvz., www.example.com/*)."
     allowed_user_api_push_urls: "Leidžiami serverio siuntimo naudotojui API URL adresai"
     tagging_enabled: "Įgalinti žymas temose?"
@@ -1605,16 +1577,6 @@ lt:
   admin:
     email:
       sent_test: "išsiųsta!"
-    user:
-      merge_user:
-        updating_username: "Atnaujinamas vartotojo vardas ..."
-        changing_post_ownership: "Keičiama įrašo nuosavybė ..."
-        merging_given_daily_likes: "Sujungiama atsižvelgiant į kasdienius mėgstamus dalykus ..."
-        merging_user_visits: "Vartotojų apsilankymų sujungimas..."
-        updating_site_settings: "Atnaujinami svetainės nustatymai ..."
-        updating_user_stats: "Vartotojo statistikos atnaujinimas..."
-        merging_user_attributes: "Sujungiami naudotojo atributai ..."
-        deleting_source_user: "Ištrinamas šaltinio vartotojas ..."
   user:
     deactivated_by_staff: "Išjungė darbuotojai"
     activated_by_staff: "Aktyvuoja darbuotojai"
@@ -1922,14 +1884,6 @@ lt:
         Tai automatinis pranešimas nuo %{site_name} , informuojantis, kad jūsų paskyra nebėra sulaikyta po darbuotojų peržiūros.
 
         Dabar galite vėl kurti naujus atsakymus ir temas. Ačiū už kantrybę.
-    dashboard_problems:
-      subject_template: "Nauji patarimai jūsų svetainės informacijos suvestinėje"
-      text_body_template: |
-        Atsižvelgdami į dabartinius svetainės nustatymus, turime jums keletą naujų patarimų ir rekomendacijų.
-
-        [Apsilankykite savo svetainės informacijos suvestinėje](%{base_url}/admin), kad ją pamatytumėte.
-
-        Jei suvestinėje nieko nematote, kitas darbuotojas jau galėjo pasinaudoti šiuo patarimu. Personalo veiksmų sąrašą galite rasti [Personalo veiksmų%{base_url}/admin/logs/staff_action_logs).
     new_user_of_the_month:
       title: "Jūs esate naujas mėnesio vartotojas!"
       subject_template: "Jūs esate naujas mėnesio vartotojas!"
@@ -2343,8 +2297,6 @@ lt:
   offline:
     title: "Nepavyko įkelti programos"
     offline_page_message: "Atrodo, kad esate neprisijungę! Patikrinkite tinklo ryšį ir bandykite dar kartą."
-  login_required:
-    welcome_message: "## [Sveiki atvykę į %{title}] (#sveiki atvykę)"
   upload:
     edit_reason: "atsiųsti mano pranešimų archyvą"
     unauthorized: "Atsiprašome, failas, kurį bandote įkelti, nėra autorizuotas (įgalioti plėtiniai: %{authorized_extensions})."
@@ -2787,8 +2739,6 @@ lt:
         description: "Atkurkite įrašą, kad visi vartotojai jį matytų."
       delete_single:
         title: "Pašalinti"
-      delete:
-        title: "Ištrinti..."
       delete_and_ignore_replies:
         confirm: "Ar tikrai norite ištrinti ir įrašo atsakymus?"
       delete_and_agree_replies:
@@ -2810,7 +2760,6 @@ lt:
       approve_user:
         title: "Patvirtinti vartotoją"
       reject_user:
-        title: "Ištrinti vartotoją..."
         delete:
           title: "Ištrinti vartotoją"
           description: "Vartotojas bus pašalintas iš forumo."
@@ -2818,7 +2767,6 @@ lt:
           title: "Ištrinti ir blokuoti vartotoją"
       reject:
         title: "Atmesti"
-        bundle_title: "Atmesti..."
       reject_and_suspend:
         title: "Atmesti ir sustabdyti vartotoją"
       reject_and_silence:

@@ -54,4 +54,12 @@ export default createWidget("embedded-post", {
       ]),
     ];
   },
+
+  init() {
+    this.postContentsDestroyCallbacks = [];
+  },
+
+  destroy() {
+    this.postContentsDestroyCallbacks.forEach((c) => c());
+  },
 });

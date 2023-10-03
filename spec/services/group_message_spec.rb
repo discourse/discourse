@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
 RSpec.describe GroupMessage do
+  subject(:send_group_message) do
+    GroupMessage.create(moderators_group, :user_automatically_silenced, user: user)
+  end
+
   let(:moderators_group) { Group[:moderators].name }
 
   let!(:admin) { Fabricate.build(:admin, id: 999) }
   let!(:user) { Fabricate.build(:user, id: 111) }
 
   before { Discourse.stubs(:system_user).returns(admin) }
-
-  subject(:send_group_message) do
-    GroupMessage.create(moderators_group, :user_automatically_silenced, user: user)
-  end
 
   describe "not sent recently" do
     before { GroupMessage.any_instance.stubs(:sent_recently?).returns(false) }
@@ -42,14 +42,17 @@ RSpec.describe GroupMessage do
   end
 
   describe "sent recently" do
+    subject(:group_message) do
+      GroupMessage.create(moderators_group, :user_automatically_silenced, user: user)
+    end
+
     before { GroupMessage.any_instance.stubs(:sent_recently?).returns(true) }
-    subject { GroupMessage.create(moderators_group, :user_automatically_silenced, user: user) }
 
     it { is_expected.to eq(false) }
 
     it "should not send the same notification again" do
       PostCreator.expects(:create).never
-      subject
+      group_message
     end
   end
 
@@ -57,29 +60,35 @@ RSpec.describe GroupMessage do
     let(:user) { Fabricate.build(:user, id: 123_123) }
     shared_examples "common message params for group messages" do
       it "returns the correct params" do
-        expect(subject[:username]).to eq(user.username)
-        expect(subject[:user_url]).to be_present
+        expect(message_params[:username]).to eq(user.username)
+        expect(message_params[:user_url]).to be_present
       end
     end
 
     context "with user_automatically_silenced" do
-      subject do
+      subject(:message_params) do
         GroupMessage.new(moderators_group, :user_automatically_silenced, user: user).message_params
       end
+
       include_examples "common message params for group messages"
     end
 
     context "with spam_post_blocked" do
-      subject { GroupMessage.new(moderators_group, :spam_post_blocked, user: user).message_params }
+      subject(:message_params) do
+        GroupMessage.new(moderators_group, :spam_post_blocked, user: user).message_params
+      end
+
       include_examples "common message params for group messages"
     end
   end
 
   describe "methods that use redis" do
-    let(:user) { Fabricate.build(:user, id: 123_123) }
     subject(:group_message) do
       GroupMessage.new(moderators_group, :user_automatically_silenced, user: user)
     end
+
+    let(:user) { Fabricate.build(:user, id: 123_123) }
+
     before do
       PostCreator.stubs(:create).returns(stub_everything)
       group_message.stubs(:sent_recently_key).returns("the_key")

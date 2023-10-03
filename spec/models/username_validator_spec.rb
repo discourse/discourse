@@ -1,27 +1,39 @@
 # frozen_string_literal: true
 
 RSpec.describe UsernameValidator do
-  def expect_valid(*usernames)
+  def expect_valid(*usernames, failure_reason: "")
     usernames.each do |username|
       validator = UsernameValidator.new(username)
 
+      message = "expected '#{username}' to be valid"
+      message = "#{message}, #{failure_reason}" if failure_reason.present?
       aggregate_failures do
-        expect(validator.valid_format?).to eq(true), "expected '#{username}' to be valid"
+        expect(validator.valid_format?).to eq(true), message
         expect(validator.errors).to be_empty
       end
     end
   end
 
-  def expect_invalid(*usernames, error_message:)
+  def expect_invalid(*usernames, error_message:, failure_reason: "")
     usernames.each do |username|
       validator = UsernameValidator.new(username)
 
+      message = "expected '#{username}' to be invalid"
+      message = "#{message}, #{failure_reason}" if failure_reason.present?
       aggregate_failures do
-        expect(validator.valid_format?).to eq(false), "expected '#{username}' to be invalid"
+        expect(validator.valid_format?).to eq(false), message
         expect(validator.errors).to include(error_message)
       end
     end
   end
+
+  let(:max_username_length) do
+    [
+      User.maximum("length(username)"),
+      MaxUsernameLengthValidator::MAX_USERNAME_LENGTH_RANGE.begin,
+    ].max
+  end
+  let(:min_username_length) { User.minimum("length(username)") }
 
   shared_examples "ASCII username" do
     it "is invalid when the username is blank" do
@@ -29,27 +41,39 @@ RSpec.describe UsernameValidator do
     end
 
     it "is invalid when the username is too short" do
-      SiteSetting.min_username_length = 4
+      SiteSetting.min_username_length = min_username_length
 
-      expect_invalid("a", "ab", "abc", error_message: I18n.t(:"user.username.short", min: 4))
+      usernames = min_username_length.times.map { |i| "a" * i }.filter(&:present?)
+
+      expect_invalid(
+        *usernames,
+        error_message: I18n.t(:"user.username.short", min: min_username_length),
+      )
     end
 
     it "is valid when the username has the minimum length" do
-      SiteSetting.min_username_length = 4
+      SiteSetting.min_username_length = min_username_length
 
-      expect_valid("abcd")
+      expect_valid("a" * min_username_length)
     end
 
     it "is invalid when the username is too long" do
-      SiteSetting.max_username_length = 8
+      SiteSetting.max_username_length = max_username_length
 
-      expect_invalid("abcdefghi", error_message: I18n.t(:"user.username.long", max: 8))
+      expect_invalid(
+        "a" * (max_username_length + 1),
+        error_message: I18n.t(:"user.username.long", max: max_username_length),
+        failure_reason: "Should be invalid as username length > #{max_username_length}",
+      )
     end
 
     it "is valid when the username has the maximum length" do
-      SiteSetting.max_username_length = 8
+      SiteSetting.max_username_length = max_username_length
 
-      expect_valid("abcdefgh")
+      expect_valid(
+        "a" * max_username_length,
+        failure_reason: "Should be valid as username length = #{max_username_length}",
+      )
     end
 
     it "is valid when the username contains alphanumeric characters, dots, underscores and dashes" do
@@ -124,31 +148,42 @@ RSpec.describe UsernameValidator do
       before { SiteSetting.min_username_length = 1 }
 
       it "is invalid when the username is too short" do
-        SiteSetting.min_username_length = 3
+        SiteSetting.min_username_length = min_username_length
 
-        expect_invalid("鳥", "পাখি", error_message: I18n.t(:"user.username.short", min: 3))
+        usernames = min_username_length.times.map { |i| "鳥" * i }.filter(&:present?)
+
+        expect_invalid(
+          *usernames,
+          error_message: I18n.t(:"user.username.short", min: min_username_length),
+        )
       end
 
       it "is valid when the username has the minimum length" do
-        SiteSetting.min_username_length = 2
+        SiteSetting.min_username_length = min_username_length
 
-        expect_valid("পাখি", "طائر")
+        expect_valid("ط" * min_username_length)
       end
 
       it "is invalid when the username is too long" do
-        SiteSetting.max_username_length = 8
+        SiteSetting.max_username_length = max_username_length
 
         expect_invalid(
-          "חוטב_עצים",
-          "Holzfäller",
-          error_message: I18n.t(:"user.username.long", max: 8),
+          "ם" * (max_username_length + 1),
+          "äl" * (max_username_length + 1),
+          error_message: I18n.t(:"user.username.long", max: max_username_length),
+          failure_reason: "Should be invalid as username length are > #{max_username_length}",
         )
       end
 
       it "is valid when the username has the maximum length" do
-        SiteSetting.max_username_length = 9
+        SiteSetting.max_username_length = max_username_length
 
-        expect_valid("Дровосек", "چوب-لباسی", "தமிழ்-தமிழ்")
+        expect_valid(
+          "Д" * (max_username_length),
+          "س" * (max_username_length),
+          "மி" * (max_username_length),
+          failure_reason: "Should be valid as usernames are <= #{max_username_length}",
+        )
       end
 
       it "is invalid when the username has too many Unicode codepoints" do
@@ -197,6 +232,26 @@ RSpec.describe UsernameValidator do
           "‿",
           "😃",
           "🚗",
+          error_message: I18n.t(:"user.username.characters"),
+        )
+      end
+
+      it "is invalid when the username contains invisible characters" do
+        expect_invalid(
+          "a\u{034F}b",
+          "a\u{115F}b",
+          "a\u{1160}b",
+          "a\u{17B4}b",
+          "a\u{17B5}b",
+          "a\u{180B}b",
+          "a\u{180C}b",
+          "a\u{180D}b",
+          "a\u{3164}b",
+          "a\u{FFA0}b",
+          "a\u{FE00}b",
+          "a\u{FE0F}b",
+          "a\u{E0100}b",
+          "a\u{E01EF}b",
           error_message: I18n.t(:"user.username.characters"),
         )
       end

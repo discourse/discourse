@@ -222,7 +222,8 @@ module("Integration | Component | user-menu", function (hooks) {
           },
         ];
       } else if (
-        queryParams.filter_by_types === "mentioned,posted,quoted,replied"
+        queryParams.filter_by_types ===
+        "mentioned,group_mentioned,posted,quoted,replied"
       ) {
         data = [
           {
@@ -280,7 +281,7 @@ module("Integration | Component | user-menu", function (hooks) {
     assert.ok(exists("#quick-access-replies.quick-access-panel"));
     assert.strictEqual(
       queryParams.filter_by_types,
-      "mentioned,posted,quoted,replied",
+      "mentioned,group_mentioned,posted,quoted,replied",
       "request params has filter_by_types set to `mentioned`, `posted`, `quoted` and `replied`"
     );
     assert.strictEqual(queryParams.silent, "true");
@@ -302,5 +303,24 @@ module("Integration | Component | user-menu", function (hooks) {
       "active tab is now the reviewables tab"
     );
     assert.strictEqual(queryAll("#quick-access-review-queue ul li").length, 8);
+  });
+
+  test("count on the likes tab", async function (assert) {
+    this.currentUser.set("grouped_unread_notifications", {
+      [NOTIFICATION_TYPES.liked]: 1,
+      [NOTIFICATION_TYPES.liked_consolidated]: 2,
+      [NOTIFICATION_TYPES.reaction]: 3,
+      [NOTIFICATION_TYPES.bookmark_reminder]: 10,
+    });
+    await render(template);
+
+    const likesCountBadge = query(
+      "#user-menu-button-likes .badge-notification"
+    );
+    assert.strictEqual(
+      likesCountBadge.textContent,
+      (1 + 2 + 3).toString(),
+      "combines unread counts for `liked`, `liked_consolidated` and `reaction` types"
+    );
   });
 });

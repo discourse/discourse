@@ -6,7 +6,9 @@
 
 de:
   site_settings:
-    chat_enabled: "Chat-Plug-in aktivieren."
+    chat_separate_sidebar_mode: "Zeige separate Seitenleisten-Modi für Forum und Chat."
+    chat_enabled: "Chat aktivieren."
+    enable_public_channels: "Öffentliche Kanäle basierend auf Kategorien aktivieren."
     chat_allowed_groups: "Benutzer in diesen Gruppen können chatten. Bitte beachte, dass Teammitglieder jederzeit auf den Chat zugreifen können."
     chat_channel_retention_days: "Chat-Nachrichten in regulären Kanälen werden so viele Tage lang aufbewahrt. Auf „0“ setzen, um Nachrichten für immer aufzubewahren."
     chat_dm_retention_days: "Chat-Nachrichten in persönlichen Chat-Kanälen werden so viele Tage lang aufbewahrt. Auf „0“ setzen, um Nachrichten für immer aufzubewahren."
@@ -49,7 +51,7 @@ de:
 
           %{topic_validation_errors}
 
-        Besuche den Kanal unter %{channel_url} , um es erneut zu versuchen.
+        Besuche den Kanal unter %{channel_url}, um es erneut zu versuchen.
   chat:
     deleted_chat_username: gelöscht
     errors:
@@ -87,9 +89,11 @@ de:
       user_cannot_send_direct_messages: "Du kannst leider keine Direktnachrichten senden."
       over_chat_max_direct_message_users_allow_self: "Du kannst nur eine Direktnachricht an dich selbst erstellen."
       over_chat_max_direct_message_users:
-        one: "Du kannst keine Direktnachricht an mehr als %{count} andere Benutzer erstellen."
+        one: "Du kannst keine Direktnachricht an mehr als %{count} anderen Benutzer erstellen."
         other: "Du kannst keine Direktnachricht an mehr als %{count} andere Benutzer erstellen."
-      original_message_not_found: "Der Vorgänger der Nachricht, die du beantwortest, kann nicht gefunden werden oder wurde gelöscht."
+      original_message_not_found: "Der Vorgänger der Nachricht, auf die du antwortest, kann nicht gefunden werden oder wurde gelöscht."
+      thread_invalid_for_channel: "Der Thread ist nicht Teil des bereitgestellten Kanals."
+      thread_does_not_match_parent: "Der Thread stimmt nicht mit der übergeordneten Nachricht überein."
     reviewables:
       message_already_handled: "Danke, aber wir haben diese Nachricht bereits überprüft und festgestellt, dass sie nicht erneut markiert werden muss."
       actions:
@@ -114,14 +118,16 @@ de:
           title: "Nachricht löschen"
           description: "Nachricht löschen, damit Benutzer sie nicht sehen können."
         delete_and_agree:
-          title: "Nachricht löschen"
+          title: "Meldung ignorieren und Nachricht löschen"
+          description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst und die Nachricht löschst."
         disagree_and_restore:
           title: "Ablehnen und Nachricht wiederherstellen"
           description: "Nachricht wiederherstellen, damit alle Benutzer sie sehen können."
         disagree:
           title: "Ablehnen"
         ignore:
-          title: "Ignorieren"
+          title: "Nichts tun"
+          description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst, ohne etwas zu unternehmen."
       direct_messages:
         transcript_title: "Transkript früherer Nachrichten in %{channel_name}"
         transcript_body: "Um dir mehr Kontext zu geben, haben wir ein Transkript der vorherigen Nachrichten in dieser Unterhaltung beigefügt (bis zu zehn):\n\n%{transcript}"
@@ -135,8 +141,31 @@ de:
         single_user: "%{username}"
         multi_user: "%{comma_separated_usernames}"
         multi_user_truncated:
-          one: "%{comma_separated_usernames} und %{count} anderer"
+          one: "%{comma_separated_usernames} und %{count} andere Person"
           other: "%{comma_separated_usernames} und %{count} andere"
+    mention_warning:
+      dismiss: "schließen"
+      cannot_see: "%{first_identifier} kann nicht auf diesen Kanal zugreifen und wurde nicht benachrichtigt."
+      cannot_see_multiple:
+        one: "%{first_identifier} und %{count} anderer Benutzer können nicht auf diesen Kanal zugreifen und wurden nicht benachrichtigt."
+        other: "%{first_identifier} und %{count} andere Benutzer können nicht auf diesen Kanal zugreifen und wurden nicht benachrichtigt."
+      invitations_sent:
+        one: "Einladung gesendet"
+        other: "Einladungen gesendet"
+      invite: "Zum Kanal einladen"
+      without_membership: "%{first_identifier} ist diesem Kanal nicht beigetreten."
+      without_membership_multiple:
+        one: "%{first_identifier} und %{count} anderer Benutzer sind diesem Kanal nicht beigetreten."
+        other: "%{first_identifier} und %{count} andere Benutzer sind diesem Kanal nicht beigetreten."
+      group_mentions_disabled: "%{first_identifier} erlaubt keine Erwähnungen."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} und %{count} andere Gruppe erlauben keine Erwähnungen."
+        other: "%{first_identifier} und %{count} andere Gruppen erlauben keine Erwähnungen."
+      global_mentions_disallowed: "Die Erwähnungen von @here und @all sind in diesem Kanal deaktiviert."
+      too_many_members: "%{first_identifier} hat zu viele Mitglieder. Niemand wurde benachrichtigt."
+      too_many_members_multiple:
+        one: "%{first_identifier} und %{count} andere Gruppe haben zu viele Mitglieder. Es wurde niemand benachrichtigt."
+        other: "%{first_identifier} und %{count} andere Gruppen haben zu viele Mitglieder. Es wurde niemand benachrichtigt."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "enthält Nicht-ASCII-Zeichen"
@@ -154,6 +183,8 @@ de:
       and_x_others:
         one: "und %{count} andere Person"
         other: "und %{count} andere"
+    summaries:
+      no_targets: "Im ausgewählten Zeitraum gab es keine Nachrichten."
   discourse_push_notifications:
     popup:
       chat_mention:

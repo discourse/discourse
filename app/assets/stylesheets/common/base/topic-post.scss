@@ -1,3 +1,7 @@
+#main-outlet > .regular {
+  background: var(--d-content-background);
+}
+
 .button-count.has-pending {
   span {
     background-color: var(--danger);
@@ -17,7 +21,9 @@
   position: relative;
   overflow: hidden;
   &:before {
-    animation: placeHolderShimmer 4s linear infinite forwards;
+    @media (prefers-reduced-motion: no-preference) {
+      animation: placeHolderShimmer 4s linear infinite forwards;
+    }
     position: absolute;
     left: 0;
     content: "";
@@ -107,6 +113,7 @@
         margin-left: -20px;
         padding-right: 4px;
         position: absolute;
+        z-index: 2;
       }
     }
 
@@ -314,6 +321,11 @@ nav.post-controls {
       vertical-align: top;
       background: transparent;
       border: none;
+      .d-icon {
+        // this avoids an issue where hovering off the icon
+        // removes the .d-hover class from the button prematurely
+        pointer-events: none;
+      }
       &.d-hover,
       &:focus,
       &:active {
@@ -328,7 +340,7 @@ nav.post-controls {
         position: relative;
       }
       &.delete.d-hover,
-      &.delete:hover,
+      &.delete:active,
       &.delete:focus {
         background: var(--danger);
         color: var(--secondary);
@@ -434,7 +446,9 @@ nav.post-controls {
 }
 
 .has-like .d-icon.heart-animation {
-  animation: heartBump 0.4s;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: heartBump 0.4s;
+  }
 }
 
 @keyframes slideout {
@@ -476,7 +490,9 @@ aside.quote {
     margin-top: 0;
     .expanded-quote {
       overflow: hidden;
-      animation: slideout 1s ease-in-out;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: slideout 1s ease-in-out;
+      }
       &.icon-only {
         text-align: center;
         font-size: var(--font-up-4);
@@ -550,17 +566,7 @@ aside.quote {
 }
 
 .quote-button {
-  display: none;
-  position: absolute;
-  z-index: z("dropdown");
-  background-color: var(--secondary);
-  border: 1px solid var(--primary-low);
-  box-shadow: shadow("card");
   flex-direction: column;
-
-  &.animated {
-    transition: top 0.1s linear, left 0.1s linear;
-  }
 
   &.visible {
     display: flex;
@@ -599,12 +605,9 @@ aside.quote {
   }
 
   .btn-flat {
-    .d-icon {
-      color: var(--primary-high);
-    }
-    .discourse-no-touch & {
-      &:hover {
-        background-color: var(--tertiary-low);
+    &:hover {
+      .d-icon {
+        color: var(--tertiary);
       }
     }
   }
@@ -637,7 +640,7 @@ aside.quote {
         opacity: 1;
         transition: opacity 0.3s ease-in-out;
       }
-      // this psuedo element creates a transition buffer zone
+      // this pseudo element creates a transition buffer zone
       // without it, the width change on hover can cause transition jitter
       // the width is roughly wide enough to cover long translations of "share"
       &:after {
@@ -673,16 +676,24 @@ aside.quote {
   border-top: none; // would cause double top border
 
   .avatars {
-    > div {
-      float: left;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    box-sizing: border-box;
+    a {
+      display: block;
       position: relative;
-      margin: 3px 0;
+    }
+
+    .avatar {
+      width: 2.15em;
+      height: 2.15em;
     }
     .post-count {
       position: absolute;
       right: 0;
       border-radius: 100px;
-      padding: 3px 5px;
+      padding: 0.15em 0.4em 0.2em;
       text-align: center;
       font-weight: normal;
       font-size: var(--font-down-2);
@@ -691,8 +702,7 @@ aside.quote {
   }
 
   .avatar {
-    float: left;
-    margin-right: 4px;
+    margin-right: 0.33em;
   }
 
   section {
@@ -700,12 +710,15 @@ aside.quote {
   }
 
   ul {
+    display: flex;
+    flex-wrap: wrap;
     margin: 0;
     list-style: none;
   }
 
   h3 {
-    margin-bottom: 4px;
+    width: 100%;
+    margin-bottom: 0.33em;
     color: var(--primary);
     line-height: var(--line-height-large);
     font-weight: normal;
@@ -924,8 +937,10 @@ aside.quote {
     border-top: 1px solid var(--primary-low);
     padding-top: 0.5em;
   }
-  &.highlighted {
-    animation: background-fade-highlight 2.5s ease-out;
+  @media (prefers-reduced-motion: no-preference) {
+    &.highlighted {
+      animation: background-fade-highlight 2.5s ease-out;
+    }
   }
   .deleted & {
     // Disable so the deleted background is visible immediately
@@ -965,17 +980,13 @@ aside.quote {
     .widget-button {
       display: flex;
       align-items: center;
-
       .d-button-label {
         order: 0;
         padding-right: 0.25em;
         color: var(--primary-med-or-secondary-med);
-        transition: color 0.25s;
       }
-
       .d-icon {
         order: 1;
-        transition: color 0.25s;
         color: var(--primary-med-or-secondary-med);
       }
       .discourse-no-touch & {
@@ -1057,7 +1068,6 @@ kbd {
   border-bottom-width: 2px;
   border-radius: 3px;
   box-sizing: border-box;
-  color: var(--primary);
   display: inline-flex;
   gap: 0 0.5em; // space between text and images/emoji
   font-size: var(--font-down-1);
@@ -1166,7 +1176,7 @@ blockquote > *:last-child {
 
     p {
       margin: 0;
-      padding-right: 0.5em;
+      padding: 0.15em 0.5em 0 0;
     }
   }
 
@@ -1378,7 +1388,7 @@ span.mention {
         margin-left: 8px;
         background-color: var(--primary-low);
         color: var(--primary);
-        box-shadow: shadow("dropdown");
+        box-shadow: var(--shadow-dropdown);
       }
     }
   }
@@ -1400,7 +1410,7 @@ span.mention {
   box-sizing: border-box;
   max-width: calc(var(--topic-body-width) + 4.5em);
   padding: 3em 5em 2em
-    calc(var(--topic-avatar-width + var(--topic-body-width-padding)));
+    calc(var(--topic-avatar-width) + var(--topic-body-width-padding));
   @include breakpoint(mobile-extra-large) {
     padding: 1.5em 1.5em 0.25em;
   }
@@ -1526,6 +1536,11 @@ span.mention {
   }
 }
 
+iframe {
+  max-width: 100%;
+  max-height: #{"min(1000px, 200vh)"};
+}
+
 .post-admin-menu {
   display: inline-flex;
   flex-direction: column;
@@ -1646,7 +1661,7 @@ span.mention {
   &--buttons {
     position: absolute;
     top: 0.5rem;
-    left: 0.5rem;
+    right: 0.5rem;
   }
 }
 

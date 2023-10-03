@@ -159,10 +159,6 @@ const rule = {
     header.push(token);
 
     token = new state.Token("poll_open", "div", 1);
-    token.block = true;
-    header.push(token);
-
-    token = new state.Token("poll_open", "div", 1);
     token.attrs = [["class", "poll-container"]];
     header.push(token);
 
@@ -236,7 +232,11 @@ const rule = {
     token = state.push("poll_open", "div", 1);
     token.attrs = [["class", "poll-info"]];
 
-    state.push("paragraph_open", "p", 1);
+    token = state.push("poll_open", "div", 1);
+    token.attrs = [["class", "poll-info_counts"]];
+
+    token = state.push("poll_open", "div", 1);
+    token.attrs = [["class", "poll-info_counts-count"]];
 
     token = state.push("span_open", "span", 1);
     token.block = false;
@@ -252,8 +252,7 @@ const rule = {
     token.content = I18n.t("poll.voters", { count: 0 });
     state.push("span_close", "span", -1);
 
-    state.push("paragraph_close", "p", -1);
-
+    state.push("poll_close", "div", -1);
     state.push("poll_close", "div", -1);
     state.push("poll_close", "div", -1);
     state.push("poll_close", "div", -1);
@@ -277,6 +276,8 @@ export function setup(helper) {
   helper.allowList([
     "div.poll",
     "div.poll-info",
+    "div.poll-info_counts",
+    "div.poll-info_counts-count",
     "div.poll-container",
     "div.poll-title",
     "div.poll-buttons",

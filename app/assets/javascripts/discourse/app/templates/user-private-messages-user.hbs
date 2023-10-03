@@ -7,9 +7,8 @@
 <UserNav::MessagesSecondaryNav>
   <DNavigationItem
     @route="userPrivateMessages.user.index"
-    @class="user-nav__messages-latest"
-    @model={{this.model}}
     @ariaCurrentContext="subNav"
+    class="user-nav__messages-latest"
   >
     {{d-icon "envelope"}}
     <span>{{i18n "categories.latest"}}</span>
@@ -17,9 +16,8 @@
 
   <DNavigationItem
     @route="userPrivateMessages.user.sent"
-    @class="user-nav__messages-sent"
-    @model={{this.model}}
     @ariaCurrentContext="subNav"
+    class="user-nav__messages-sent"
   >
     {{d-icon "reply"}}
     <span>{{i18n "user.messages.sent"}}</span>
@@ -28,9 +26,8 @@
   {{#if this.viewingSelf}}
     <DNavigationItem
       @route="userPrivateMessages.user.new"
-      @class="user-nav__messages-new"
-      @model={{this.model}}
       @ariaCurrentContext="subNav"
+      class="user-nav__messages-new"
     >
       {{d-icon "exclamation-circle"}}
       <span>{{this.newLinkText}}</span>
@@ -38,9 +35,8 @@
 
     <DNavigationItem
       @route="userPrivateMessages.user.unread"
-      @class="user-nav__messages-unread"
-      @model={{this.model}}
       @ariaCurrentContext="subNav"
+      class="user-nav__messages-unread"
     >
       {{d-icon "plus-circle"}}
       <span>{{this.unreadLinkText}}</span>
@@ -50,9 +46,8 @@
 
   <DNavigationItem
     @route="userPrivateMessages.user.archive"
-    @class="user-nav__messages-archive"
-    @model={{this.model}}
     @ariaCurrentContext="subNav"
+    class="user-nav__messages-archive"
   >
     {{d-icon "archive"}}
     <span>{{i18n "user.messages.archive"}}</span>

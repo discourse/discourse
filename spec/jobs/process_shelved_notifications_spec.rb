@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::ProcessShelvedNotifications do
+  subject(:job) { described_class.new }
+
   fab!(:user) { Fabricate(:user) }
   let(:post) { Fabricate(:post) }
 
@@ -8,7 +10,7 @@ RSpec.describe Jobs::ProcessShelvedNotifications do
     future = Fabricate(:do_not_disturb_timing, ends_at: 1.day.from_now)
     past = Fabricate(:do_not_disturb_timing, starts_at: 2.day.ago, ends_at: 1.minute.ago)
 
-    expect { subject.execute({}) }.to change { DoNotDisturbTiming.count }.by (-1)
+    expect { job.execute({}) }.to change { DoNotDisturbTiming.count }.by (-1)
     expect(DoNotDisturbTiming.find_by(id: future.id)).to eq(future)
     expect(DoNotDisturbTiming.find_by(id: past.id)).to eq(nil)
   end
@@ -25,7 +27,7 @@ RSpec.describe Jobs::ProcessShelvedNotifications do
         notification_type: 1,
       )
     expect(notification.shelved_notification).to be_present
-    subject.execute({})
+    job.execute({})
     expect(notification.shelved_notification).to be_present
   end
 
@@ -43,7 +45,7 @@ RSpec.describe Jobs::ProcessShelvedNotifications do
     user.do_not_disturb_timings.last.update(ends_at: 1.days.ago)
 
     expect(notification.shelved_notification).to be_present
-    subject.execute({})
+    job.execute({})
     expect { notification.shelved_notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
   end
 end

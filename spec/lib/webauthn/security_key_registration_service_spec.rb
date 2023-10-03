@@ -1,8 +1,10 @@
 # frozen_string_literal: true
-require "webauthn"
+require "discourse_webauthn"
 require "webauthn/security_key_registration_service"
 
-RSpec.describe Webauthn::SecurityKeyRegistrationService do
+RSpec.describe DiscourseWebauthn::SecurityKeyRegistrationService do
+  subject(:service) { described_class.new(current_user, params, challenge_params) }
+
   let(:client_data_challenge) { Base64.encode64(challenge) }
   let(:client_data_webauthn_type) { "webauthn.create" }
   let(:client_data_origin) { "http://localhost:3000" }
@@ -34,14 +36,13 @@ RSpec.describe Webauthn::SecurityKeyRegistrationService do
   let(:challenge_params) { { challenge: challenge, rp_id: rp_id, origin: "http://localhost:3000" } }
   let(:challenge) { "f1e04530f34a1b6a08d032d8550e23eb8330be04e4166008f26c0e1b42ad" }
   let(:current_user) { Fabricate(:user) }
-  let(:subject) { described_class.new(current_user, params, challenge_params) }
 
   context "when the client data webauthn type is not webauthn.create" do
     let(:client_data_webauthn_type) { "webauthn.explode" }
 
     it "raises an InvalidTypeError" do
-      expect { subject.register_second_factor_security_key }.to raise_error(
-        Webauthn::InvalidTypeError,
+      expect { service.register_second_factor_security_key }.to raise_error(
+        DiscourseWebauthn::InvalidTypeError,
         I18n.t("webauthn.validation.invalid_type_error"),
       )
     end
@@ -51,8 +52,8 @@ RSpec.describe Webauthn::SecurityKeyRegistrationService do
     let(:client_data_challenge) { Base64.encode64("invalid challenge") }
 
     it "raises a ChallengeMismatchError" do
-      expect { subject.register_second_factor_security_key }.to raise_error(
-        Webauthn::ChallengeMismatchError,
+      expect { service.register_second_factor_security_key }.to raise_error(
+        DiscourseWebauthn::ChallengeMismatchError,
         I18n.t("webauthn.validation.challenge_mismatch_error"),
       )
     end
@@ -62,8 +63,8 @@ RSpec.describe Webauthn::SecurityKeyRegistrationService do
     let(:client_data_origin) { "https://someothersite.com" }
 
     it "raises a InvalidOriginError" do
-      expect { subject.register_second_factor_security_key }.to raise_error(
-        Webauthn::InvalidOriginError,
+      expect { service.register_second_factor_security_key }.to raise_error(
+        DiscourseWebauthn::InvalidOriginError,
         I18n.t("webauthn.validation.invalid_origin_error"),
       )
     end
@@ -73,8 +74,8 @@ RSpec.describe Webauthn::SecurityKeyRegistrationService do
     let(:rp_id) { "bad_rp_id" }
 
     it "raises a InvalidRelyingPartyIdError" do
-      expect { subject.register_second_factor_security_key }.to raise_error(
-        Webauthn::InvalidRelyingPartyIdError,
+      expect { service.register_second_factor_security_key }.to raise_error(
+        DiscourseWebauthn::InvalidRelyingPartyIdError,
         I18n.t("webauthn.validation.invalid_relying_party_id_error"),
       )
     end
@@ -82,50 +83,54 @@ RSpec.describe Webauthn::SecurityKeyRegistrationService do
 
   context "when the public key algorithm is not supported by the server" do
     before do
-      @original_supported_alg_value = Webauthn::SUPPORTED_ALGORITHMS
-      silence_warnings { Webauthn::SUPPORTED_ALGORITHMS = [-999] }
+      @original_supported_alg_value = DiscourseWebauthn::SUPPORTED_ALGORITHMS
+      silence_warnings { DiscourseWebauthn::SUPPORTED_ALGORITHMS = [-999] }
     end
 
     it "raises a UnsupportedPublicKeyAlgorithmError" do
-      expect { subject.register_second_factor_security_key }.to raise_error(
-        Webauthn::UnsupportedPublicKeyAlgorithmError,
+      expect { service.register_second_factor_security_key }.to raise_error(
+        DiscourseWebauthn::UnsupportedPublicKeyAlgorithmError,
         I18n.t("webauthn.validation.unsupported_public_key_algorithm_error"),
       )
     end
 
-    after { silence_warnings { Webauthn::SUPPORTED_ALGORITHMS = @original_supported_alg_value } }
+    after do
+      silence_warnings { DiscourseWebauthn::SUPPORTED_ALGORITHMS = @original_supported_alg_value }
+    end
   end
 
   context "when the attestation format is not supported" do
     before do
-      @original_supported_alg_value = Webauthn::VALID_ATTESTATION_FORMATS
-      silence_warnings { Webauthn::VALID_ATTESTATION_FORMATS = ["err"] }
+      @original_supported_alg_value = DiscourseWebauthn::VALID_ATTESTATION_FORMATS
+      silence_warnings { DiscourseWebauthn::VALID_ATTESTATION_FORMATS = ["err"] }
     end
 
     it "raises a UnsupportedAttestationFormatError" do
-      expect { subject.register_second_factor_security_key }.to raise_error(
-        Webauthn::UnsupportedAttestationFormatError,
+      expect { service.register_second_factor_security_key }.to raise_error(
+        DiscourseWebauthn::UnsupportedAttestationFormatError,
         I18n.t("webauthn.validation.unsupported_attestation_format_error"),
       )
     end
 
     after do
-      silence_warnings { Webauthn::VALID_ATTESTATION_FORMATS = @original_supported_alg_value }
+      silence_warnings do
+        DiscourseWebauthn::VALID_ATTESTATION_FORMATS = @original_supported_alg_value
+      end
     end
   end
 
   context "when the credential id is already in use for any user" do
     it "raises a CredentialIdInUseError" do
       # register the key to the current user
-      security_key = subject.register_second_factor_security_key
+      security_key = service.register_second_factor_security_key
 
       # update the key to be on a different user
       other_user = Fabricate(:user)
       security_key.update(user: other_user)
 
       # error!
-      expect { subject.register_second_factor_security_key }.to raise_error(
-        Webauthn::CredentialIdInUseError,
+      expect { service.register_second_factor_security_key }.to raise_error(
+        DiscourseWebauthn::CredentialIdInUseError,
         I18n.t("webauthn.validation.credential_id_in_use_error"),
       )
     end
@@ -137,8 +142,8 @@ RSpec.describe Webauthn::SecurityKeyRegistrationService do
     end
 
     it "raises a MalformedAttestationError" do
-      expect { subject.register_second_factor_security_key }.to raise_error(
-        Webauthn::MalformedAttestationError,
+      expect { service.register_second_factor_security_key }.to raise_error(
+        DiscourseWebauthn::MalformedAttestationError,
         I18n.t("webauthn.validation.malformed_attestation_error"),
       )
     end

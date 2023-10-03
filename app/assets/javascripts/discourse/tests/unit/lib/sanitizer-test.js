@@ -1,9 +1,12 @@
-import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
+import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import { hrefAllowed, sanitize } from "pretty-text/sanitizer";
 import AllowLister from "pretty-text/allow-lister";
 
-module("Unit | Utility | sanitizer", function () {
+module("Unit | Utility | sanitizer", function (hooks) {
+  setupTest(hooks);
+
   test("sanitize", function (assert) {
     const pt = new PrettyText(
       buildOptions({

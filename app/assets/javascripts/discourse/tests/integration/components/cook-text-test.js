@@ -14,7 +14,7 @@ module("Integration | Component | cook-text", function (hooks) {
   });
 
   test("renders markdown", async function (assert) {
-    await render(hbs`<CookText @rawText="_foo_" @class="post-body" />`);
+    await render(hbs`<CookText @rawText="_foo_" class="post-body" />`);
 
     const html = query(".post-body").innerHTML.trim();
     assert.strictEqual(html, "<p><em>foo</em></p>");
@@ -32,7 +32,7 @@ module("Integration | Component | cook-text", function (hooks) {
     );
 
     await render(
-      hbs`<CookText @rawText="![an image](upload://a.png)" @class="post-body" />`
+      hbs`<CookText @rawText="![an image](upload://a.png)" class="post-body" />`
     );
 
     const html = query(".post-body").innerHTML.trim();

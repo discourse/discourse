@@ -1,15 +1,30 @@
-<Sidebar::SectionLink
-  @shouldDisplay={{@sectionLink.shouldDisplay}}
-  @linkName={{@sectionLink.name}}
-  @route={{@sectionLink.route}}
-  @href={{@sectionLink.href}}
-  @query={{@sectionLink.query}}
-  @title={{@sectionLink.title}}
-  @content={{@sectionLink.text}}
-  @currentWhen={{@sectionLink.currentWhen}}
-  @badgeText={{@sectionLink.badgeText}}
-  @model={{@sectionLink.model}}
-  @models={{@sectionLink.models}}
-  @prefixType={{@sectionLink.prefixType}}
-  @prefixValue={{@sectionLink.prefixValue}}
-/>
+{{#if @sectionLink.externalOrFullReload}}
+  <Sidebar::SectionLink
+    @shouldDisplay={{@sectionLink.shouldDisplay}}
+    @linkName={{@sectionLink.name}}
+    @content={{replace-emoji @sectionLink.text}}
+    @prefixType="icon"
+    @prefixValue={{@sectionLink.prefixValue}}
+    @fullReload={{@sectionLink.fullReload}}
+    @href={{@sectionLink.value}}
+  />
+{{else}}
+  <Sidebar::SectionLink
+    @shouldDisplay={{@sectionLink.shouldDisplay}}
+    @href={{@sectionLink.href}}
+    @title={{@sectionLink.title}}
+    @linkName={{@sectionLink.name}}
+    @route={{@sectionLink.route}}
+    @model={{@sectionLink.model}}
+    @models={{@sectionLink.models}}
+    @query={{@sectionLink.query}}
+    @content={{replace-emoji @sectionLink.text}}
+    @badgeText={{@sectionLink.badgeText}}
+    @prefixType="icon"
+    @prefixValue={{@sectionLink.prefixValue}}
+    @suffixCSSClass={{@sectionLink.suffixCSSClass}}
+    @suffixValue={{@sectionLink.suffixValue}}
+    @suffixType={{@sectionLink.suffixType}}
+    @currentWhen={{@sectionLink.currentWhen}}
+  />
+{{/if}}

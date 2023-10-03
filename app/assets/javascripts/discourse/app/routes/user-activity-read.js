@@ -24,12 +24,6 @@ export default UserTopicListRoute.extend({
       });
   },
 
-  afterModel(model, transition) {
-    if (!this.isPoppedState(transition)) {
-      this.session.set("topicListScrollPosition", null);
-    }
-  },
-
   emptyState() {
     const title = I18n.t("user_activity.no_read_topics_title");
     const body = htmlSafe(

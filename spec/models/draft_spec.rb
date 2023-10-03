@@ -5,6 +5,8 @@ RSpec.describe Draft do
 
   fab!(:post) { Fabricate(:post) }
 
+  it { is_expected.to have_many(:upload_references).dependent(:delete_all) }
+
   describe "system user" do
     it "can not set drafts" do
       # fake a sequence
@@ -296,4 +298,6 @@ RSpec.describe Draft do
       expect(drafts[0].post.id).to eq(post.id)
     end
   end
+
+  it { is_expected.to validate_length_of(:draft_key).is_at_most(25) }
 end

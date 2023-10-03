@@ -1,13 +1,11 @@
-<DSection
-  @bodyClass="navigation-topics"
-  @class="navigation-container"
-  @scrollTop={{false}}
->
+{{body-class "navigation-topics"}}
+
+<section class="navigation-container">
   <DNavigation
     @filterMode={{this.filterMode}}
     @canCreateTopic={{this.canCreateTopic}}
     @hasDraft={{this.currentUser.has_topic_draft}}
-    @createTopic={{route-action "createTopic"}}
+    @createTopic={{fn this.composer.openNewTopic (hash preferDraft=true)}}
     @skipCategoriesNavItem={{this.skipCategoriesNavItem}}
   />
-</DSection>
+</section>

@@ -1,9 +1,10 @@
 import RestrictedUserRoute from "discourse/routes/restricted-user";
+import { inject as service } from "@ember/service";
 
 export default RestrictedUserRoute.extend({
-  showFooter: true,
+  router: service(),
 
   redirect() {
-    this.transitionTo("preferences.account");
+    this.router.transitionTo("preferences.account");
   },
 });

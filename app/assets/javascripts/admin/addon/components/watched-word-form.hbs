@@ -77,11 +77,11 @@
 </div>
 
 <DButton
-  @type="submit"
-  @class="btn btn-primary"
-  @action={{action "submitForm"}}
+  @action={{this.submitForm}}
   @disabled={{this.submitDisabled}}
   @label="admin.watched_words.form.add"
+  type="submit"
+  class="btn-primary"
 />
 
 {{#if this.showMessage}}

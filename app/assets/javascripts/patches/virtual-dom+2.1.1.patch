@@ -1,0 +1,43 @@
+diff --git a/node_modules/virtual-dom/vtree/diff.js b/node_modules/virtual-dom/vtree/diff.js
+index b5bccbd..058d6b3 100644
+--- a/node_modules/virtual-dom/vtree/diff.js
++++ b/node_modules/virtual-dom/vtree/diff.js
+@@ -311,6 +311,38 @@ function reorder(aChildren, bChildren) {
+     var inserts = []
+     var simulateItem
+ 
++    // handle prepends without reordering old elements
++    var shift = bChildren.length - aChildren.length
++    if (shift > 0 && simulate.length === bChildren.length) {
++        var prepend = true
++        for (var i = 0; prepend && i < simulate.length; i++) {
++            prepend = simulate[i] && simulate[i].key
++        }
++        for (var i = 0; prepend && i < aChildren.length; i++) {
++            prepend = aChildren[i].key === bChildren[i + shift].key
++        }
++
++        if (prepend) {
++            for (var i = 0; i < shift; i++) {
++                removes.push({
++                    from: aChildren.length,
++                    key: bChildren[i].key
++                })
++                inserts.push({
++                    to: i,
++                    key: bChildren[i].key
++                })
++            }
++            return {
++                children: newChildren,
++                moves: {
++                    removes: removes,
++                    inserts: inserts
++                }
++            }
++        }
++    }
++
+     for (var k = 0; k < bChildren.length;) {
+         var wantedItem = bChildren[k]
+         simulateItem = simulate[simulateIndex]

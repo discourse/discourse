@@ -4,19 +4,8 @@ module Chat
   module BookmarkExtension
     extend ActiveSupport::Concern
 
-    prepended do
-      def valid_bookmarkable_type
-        return true if self.bookmarkable_type == Chat::Message.sti_name
-        super if defined?(super)
-      end
+    prepended { include TypeMappable }
 
-      CLASS_MAPPING = { "ChatMessage" => Chat::Message }
-
-      # the model used when loading chatable_type column
-      def self.polymorphic_class_for(name)
-        return CLASS_MAPPING[name] if CLASS_MAPPING.key?(name)
-        super if defined?(super)
-      end
-    end
+    class_methods { def polymorphic_class_mapping = { "ChatMessage" => Chat::Message } }
   end
 end

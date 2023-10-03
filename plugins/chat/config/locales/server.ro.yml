@@ -17,11 +17,23 @@ ro:
           title: "Suspendă utilizatorul"
         disagree:
           title: "Nu sunt de acord"
-        ignore:
-          title: "Ignoră"
     channel:
       dm_title:
         single_user: "%{username}"
+    mention_warning:
+      dismiss: "renunță"
+      cannot_see: "%{first_identifier} nu poate accesa acest canal și nu a fost notificat."
+      without_membership: "%{first_identifier} nu s-a alăturat acestui canal."
+      without_membership_multiple:
+        one: "%{first_identifier} și încă %{count} utilizator nu s-au alăturat acestui canal."
+        few: "%{first_identifier} și alți %{count} utilizatori nu s-au alăturat acestui canal."
+        other: "%{first_identifier} și alți %{count} utilizatori nu s-au alăturat acestui canal."
+      group_mentions_disabled: "%{first_identifier} nu permite mențiuni."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} și %{count} alt grup nu permit mențiuni."
+        few: "%{first_identifier} și %{count} alte grupuri nu permit mențiuni."
+        other: "%{first_identifier} și %{count} alte grupuri nu permit mențiuni."
+      too_many_members: "%{first_identifier} are prea mulți membri. Nimeni nu a fost anunțat."
   discourse_push_notifications:
     popup:
       chat_mention:

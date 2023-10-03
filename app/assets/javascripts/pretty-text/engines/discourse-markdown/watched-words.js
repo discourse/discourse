@@ -16,22 +16,26 @@ function isLinkClose(str) {
 function findAllMatches(text, matchers) {
   const matches = [];
 
-  let count = 0;
-
-  matchers.forEach((matcher) => {
-    let match;
-    while (
-      (match = matcher.pattern.exec(text)) !== null &&
-      count++ < MAX_MATCHES
-    ) {
-      matches.push({
-        index: match.index + match[0].indexOf(match[1]),
-        text: match[1],
-        replacement: matcher.replacement,
-        link: matcher.link,
-      });
+  for (const { word, pattern, replacement, link } of matchers) {
+    if (matches.length >= MAX_MATCHES) {
+      break;
     }
-  });
+
+    if (word.test(text)) {
+      for (const match of text.matchAll(pattern)) {
+        matches.push({
+          index: match.index + match[0].indexOf(match[1]),
+          text: match[1],
+          replacement,
+          link,
+        });
+
+        if (matches.length >= MAX_MATCHES) {
+          break;
+        }
+      }
+    }
+  }
 
   return matches.sort((a, b) => a.index - b.index);
 }
@@ -43,6 +47,7 @@ const NONE = 0;
 const MENTION = 1;
 const HASHTAG_LINK = 2;
 const HASHTAG_SPAN = 3;
+const HASHTAG_ICON_SPAN = 4;
 
 export function setup(helper) {
   const opts = helper.getOptions();
@@ -51,11 +56,12 @@ export function setup(helper) {
     const matchers = [];
 
     if (md.options.discourse.watchedWordsReplace) {
-      Object.entries(md.options.discourse.watchedWordsReplace).map(
+      Object.entries(md.options.discourse.watchedWordsReplace).forEach(
         ([regexpString, options]) => {
           const word = toWatchedWord({ [regexpString]: options });
 
           matchers.push({
+            word: new RegExp(options.word, options.case_sensitive ? "" : "i"),
             pattern: createWatchedWordRegExp(word),
             replacement: options.replacement,
             link: false,
@@ -65,11 +71,12 @@ export function setup(helper) {
     }
 
     if (md.options.discourse.watchedWordsLink) {
-      Object.entries(md.options.discourse.watchedWordsLink).map(
+      Object.entries(md.options.discourse.watchedWordsLink).forEach(
         ([regexpString, options]) => {
           const word = toWatchedWord({ [regexpString]: options });
 
           matchers.push({
+            word: new RegExp(options.word, options.case_sensitive ? "" : "i"),
             pattern: createWatchedWordRegExp(word),
             replacement: options.replacement,
             link: true,
@@ -97,6 +104,7 @@ export function setup(helper) {
         // We scan once to mark tokens that must be skipped because they are
         // mentions or hashtags
         let lastType = NONE;
+        let currentType = NONE;
         for (let i = 0; i < tokens.length; ++i) {
           const currentToken = tokens[i];
 
@@ -109,12 +117,24 @@ export function setup(helper) {
             currentToken.attrs.some(
               (attr) =>
                 attr[0] === "class" &&
-                (attr[1].includes("hashtag") ||
-                  attr[1].includes("hashtag-cooked"))
+                (attr[1] === "hashtag" ||
+                  attr[1] === "hashtag-cooked" ||
+                  attr[1] === "hashtag-raw")
             )
           ) {
             lastType =
               currentToken.type === "link_open" ? HASHTAG_LINK : HASHTAG_SPAN;
+          }
+
+          if (
+            currentToken.type === "span_open" &&
+            currentToken.attrs &&
+            currentToken.attrs.some(
+              (attr) =>
+                attr[0] === "class" && attr[1] === "hashtag-icon-placeholder"
+            )
+          ) {
+            currentType = HASHTAG_ICON_SPAN;
           }
 
           if (lastType !== NONE) {
@@ -124,7 +144,9 @@ export function setup(helper) {
           if (
             (lastType === MENTION && currentToken.type === "mention_close") ||
             (lastType === HASHTAG_LINK && currentToken.type === "link_close") ||
-            (lastType === HASHTAG_SPAN && currentToken.type === "span_close")
+            (lastType === HASHTAG_SPAN &&
+              currentToken.type === "span_close" &&
+              currentType !== HASHTAG_ICON_SPAN)
           ) {
             lastType = NONE;
           }

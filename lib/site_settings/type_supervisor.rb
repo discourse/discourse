@@ -54,6 +54,7 @@ class SiteSettings::TypeSupervisor
         simple_list: 23,
         emoji_list: 24,
         html_deprecated: 25,
+        tag_group_list: 26,
       )
   end
 

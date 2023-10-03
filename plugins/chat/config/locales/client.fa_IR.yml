@@ -10,6 +10,9 @@ fa_IR:
       site_settings:
         categories:
           chat: گفتگو
+        chat_separate_sidebar_mode:
+          always: "همیشه"
+          never: "هرگز"
       logs:
         staff_actions:
           actions:
@@ -20,6 +23,7 @@ fa_IR:
       chat_channels_count: "کانال‌های گفتگو"
       chat_users_count: "کاربران گفتگو"
     chat:
+      deleted_chat_username: حذف شد
       dates:
         time_tiny: "HH:mm"
       all_loaded: "نمایش همه پیام‌ها"
@@ -63,8 +67,8 @@ fa_IR:
         create: "کانال جدید"
       click_to_join: "برای مشاهده کانال‌های موجود، اینجا را کلیک کنید."
       close: "بستن"
+      remove: "پاک کردن"
       confirm_flag: "آیا برای پرچم گذاری پیام %{username} مطمئن هستید؟"
-      deleted: "یک پیام حذف شد. [view]"
       hidden: "یک پیام پنهان شده است. [view]"
       delete: "حذف"
       edited: "ویرایش شده"
@@ -90,7 +94,6 @@ fa_IR:
       join: "عضو شدن"
       last_visit: "آخرین بازدید"
       mention_warning:
-        dismiss: "رد کردن"
         invitations_sent:
           one: "دعوت‌نامه ارسال شد"
           other: "دعوت‌نامه‌ها ارسال شد"
@@ -117,6 +120,10 @@ fa_IR:
       save: "ذخیره"
       select: "انتخاب کنید"
       return_to_list: "بازگشت به فهرست کانال‌ها"
+      return_to_threads_list: "بازگشت به گفتگوی جاری"
+      unread_threads_count:
+        one: "شما %{count} گفتگوی خوانده نشده دارید"
+        other: "شما %{count} گفتگوی خوانده نشده دارید"
       scroll_to_bottom: "حرکت به پایین"
       scroll_to_new_messages: "مشاهده پیام‌های جدید"
       sound:
@@ -178,8 +185,6 @@ fa_IR:
         title: پیام جدید
         prefix: "به:"
         no_results: هیج نتیجه‌ای نداشت
-      channel_selector:
-        no_channels: "هیچ کانالی با جستجوی شما مطابقت ندارد"
       channel:
         no_memberships: این کانال هنوز هیچ عضوی ندارد
         no_memberships_found: هیچ عضوی یافت نشد
@@ -205,6 +210,7 @@ fa_IR:
       composer:
         italic_text: "متن تاکید شده"
         bold_text: "نوشته‌ی ضخیم "
+        send: "ارسال"
       quote:
         copy_success: "نقل قول گفتگو در کلیپ‌بورد کپی شد"
       notification_levels:
@@ -219,6 +225,7 @@ fa_IR:
         follow: "عضو شدن"
         followed: "عضو شده"
         mute: "بی‌صدا کردن کانال"
+        threading_disabled: "غیرفعال"
         muted_on: "روشن"
         muted_off: "خاموش"
         notifications: "اعلان‌ها"
@@ -277,6 +284,23 @@ fa_IR:
         flags: "پرچم‌ها"
         symbols: "نشانه ها"
         no_results: "هیج نتیجه‌ای نداشت"
+      thread:
+        title: "عنوان"
+        view_thread: مشاهده موضوع
+        replies:
+          one: "%{count} پاسخ"
+          other: "%{count} پاسخ"
+        original_message:
+          started_by: "شروع شده توسط"
+        settings: "تنظیمات"
+        last_reply: "آخرین پاسخ"
+        notifications:
+          regular:
+            title: "معمولی"
+          tracking:
+            title: "پیگیری"
+      threads:
+        list: "گفتگوهای در حال انجام"
       draft_channel_screen:
         header: "پیام جدید"
         cancel: "انصراف"
@@ -307,10 +331,6 @@ fa_IR:
     review:
       transcript:
         view: "مشاهده رونوشت متن پیام‌های قبلی"
-      types:
-        reviewable_chat_message:
-          title: "پیام گفتگوی پرچم گذاری شده"
-          flagged_by: "پرچم شده توسط"
     keyboard_shortcuts_help:
       chat:
         title: "گفتگو"
@@ -334,3 +354,11 @@ fa_IR:
         chat_notifications_with_unread:
           one: "آگاه‌سازی‌های گفتگو - %{count} آگاه‌سازی خوانده نشده"
           other: "آگاه‌سازی‌های گفتگو - %{count} آگاه‌سازی خوانده نشده"
+    styleguide:
+      sections:
+        chat:
+          title: گفتگو
+    sidebar:
+      panels:
+        chat:
+          label: "گفتگو"

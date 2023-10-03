@@ -147,9 +147,9 @@
   <div class="controls">
     <DButton
       @translatedLabel={{this.saveButtonText}}
-      @action={{action "save"}}
+      @action={{this.save}}
       @disabled={{this.saveButtonDisabled}}
-      @class="btn-primary admin-webhooks__save-button"
+      class="btn-primary admin-webhooks__save-button"
     />
 
     {{#if this.model.isNew}}

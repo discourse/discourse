@@ -101,6 +101,25 @@ export default class extends Controller {
       )
       .filter((t) => t);
   }
+  @computed(
+    "model.watchedCategories",
+    "model.mutedCategories",
+    "model.watched_tags.[]",
+    "model.muted_tags.[]"
+  )
+  get showMutePrecedenceSetting() {
+    const show =
+      (this.model.watchedCategories?.length > 0 &&
+        this.model.muted_tags?.length > 0) ||
+      (this.model.watched_tags?.length > 0 &&
+        this.model.mutedCategories?.length > 0);
+
+    if (show && this.model.user_option.watched_precedence_over_muted === null) {
+      this.model.user_option.watched_precedence_over_muted =
+        this.siteSettings.watched_precedence_over_muted;
+    }
+    return show;
+  }
 
   @computed(
     "model.watchedCategories",
@@ -147,6 +166,7 @@ export default class extends Controller {
       "watched_category_ids",
       "tracked_category_ids",
       "watched_first_post_category_ids",
+      "watched_precedence_over_muted",
     ];
 
     if (this.siteSettings.tagging_enabled) {

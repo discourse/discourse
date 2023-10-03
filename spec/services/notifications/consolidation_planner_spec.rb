@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Notifications::ConsolidationPlanner do
+  subject(:planner) { described_class.new }
+
   describe "#consolidate_or_save!" do
     let(:threshold) { 1 }
     fab!(:user) { Fabricate(:user) }
@@ -11,7 +13,7 @@ RSpec.describe Notifications::ConsolidationPlanner do
     it "does nothing it haven't passed the consolidation threshold yet" do
       notification = build_notification(:liked, { display_username: like_user })
 
-      saved_like = subject.consolidate_or_save!(notification)
+      saved_like = planner.consolidate_or_save!(notification)
 
       expect(saved_like.id).to be_present
       expect(saved_like.notification_type).to eq(Notification.types[:liked])
@@ -27,7 +29,7 @@ RSpec.describe Notifications::ConsolidationPlanner do
         )
       notification = build_notification(:liked, { display_username: like_user })
 
-      consolidated_like = subject.consolidate_or_save!(notification)
+      consolidated_like = planner.consolidate_or_save!(notification)
 
       expect(consolidated_like.id).not_to eq(first_notification.id)
       expect(consolidated_like.notification_type).to eq(Notification.types[:liked_consolidated])
@@ -45,7 +47,7 @@ RSpec.describe Notifications::ConsolidationPlanner do
       )
       notification = build_notification(:liked, { display_username: like_user })
 
-      updated = subject.consolidate_or_save!(notification)
+      updated = planner.consolidate_or_save!(notification)
 
       expect { notification.reload }.to raise_error(ActiveRecord::RecordNotFound)
       data = JSON.parse(updated.data)
@@ -63,6 +65,6 @@ RSpec.describe Notifications::ConsolidationPlanner do
   end
 
   def plan_for(notification)
-    subject.plan_for(notification)
+    planner.plan_for(notification)
   end
 end

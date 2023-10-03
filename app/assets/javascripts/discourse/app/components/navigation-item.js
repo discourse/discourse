@@ -1,8 +1,10 @@
 import Component from "@ember/component";
-import FilterModeMixin from "discourse/mixins/filter-mode";
 import discourseComputed from "discourse-common/utils/decorators";
+import { filterTypeForMode } from "discourse/lib/filter-mode";
+import { dependentKeyCompat } from "@ember/object/compat";
+import { tracked } from "@glimmer/tracking";
 
-export default Component.extend(FilterModeMixin, {
+export default Component.extend({
   tagName: "li",
   classNameBindings: [
     "active",
@@ -15,6 +17,12 @@ export default Component.extend(FilterModeMixin, {
   hidden: false,
   activeClass: "",
   hrefLink: null,
+  filterMode: tracked(),
+
+  @dependentKeyCompat
+  get filterType() {
+    return filterTypeForMode(this.filterMode);
+  },
 
   @discourseComputed("content.filterType", "filterType", "content.active")
   active(contentFilterType, filterType, active) {

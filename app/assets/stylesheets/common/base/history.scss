@@ -1,6 +1,10 @@
 // styles that apply to the popup that appears when you show the edit history of a post
 
 .modal.history-modal {
+  .modal-body:not(.theme-change-modal-body) {
+    max-height: 70vh;
+  }
+
   #revision-numbers {
     display: inline-block;
     min-width: 96px;
@@ -8,28 +12,92 @@
   }
 
   #revision {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 0.5em;
+    align-items: center;
     overflow: auto;
     border-bottom: 3px solid var(--primary-low);
   }
 
-  table.markdown > tbody > tr > td,
-  .revision-content {
-    width: 47.5%;
-    float: left;
-    min-height: 1px;
-
-    &:nth-of-type(2) {
-      margin-left: 5%;
+  #revision-details {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5em;
+    .d-icon {
+      align-self: center;
     }
   }
 
-  #revision-details {
-    padding: 5px;
+  .revision__title,
+  .body-diff,
+  table.markdown > tbody > tr,
+  .-tag-revisions {
+    --gap-width: 1rem;
+    display: flex;
+    gap: 0 var(--gap-width);
   }
 
-  #revisions .row:first-of-type {
-    margin-top: 10px;
+  .revision__title {
+    margin: 0;
+    line-height: var(--line-height-medium);
   }
+
+  .-tag-revisions span,
+  .revision-content {
+    flex: 0 1 calc(50% - (var(--gap-width) / 2));
+    min-width: 0;
+  }
+
+  table.markdown {
+    tbody {
+      border: none;
+    }
+  }
+
+  #revision-controls {
+    display: flex;
+    align-items: center;
+    .btn {
+      margin: 0;
+    }
+  }
+
+  [class^="revision-controls--"] {
+    display: flex;
+    gap: 0 1em;
+  }
+
+  #revisions {
+    .row:first-of-type {
+      margin-top: 10px;
+    }
+    .revision-content table {
+      thead {
+        th {
+          padding-bottom: 2px;
+          font-weight: bold;
+          color: var(--primary);
+        }
+      }
+
+      td {
+        padding: 3px 3px 3px 0.5em;
+        img {
+          max-width: none;
+        }
+      }
+    }
+  }
+
+  #revision-footer-buttons {
+    display: flex;
+    gap: 0.5em;
+    button {
+      margin: 0;
+    }
+  }
+
   ins,
   .diff-ins {
     code,
@@ -103,7 +171,7 @@
     padding: 3px 5px 5px 5px;
   }
   .d-icon-ban {
-    color: #f00;
+    color: var(--danger);
   }
   .hidden-revision-either {
     opacity: 0.5;

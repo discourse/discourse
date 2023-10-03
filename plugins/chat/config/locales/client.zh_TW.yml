@@ -10,6 +10,9 @@ zh_TW:
       site_settings:
         categories:
           chat: 聊天
+        chat_separate_sidebar_mode:
+          always: "總是"
+          never: "永不"
       logs:
         staff_actions:
           actions:
@@ -25,6 +28,7 @@ zh_TW:
       chat_channels_count: "聊天頻道"
       chat_users_count: "聊天使用者"
     chat:
+      deleted_chat_username: 已刪除
       dates:
         time_tiny: "h:mm"
       all_loaded: "顯示所有訊息"
@@ -63,6 +67,7 @@ zh_TW:
       channel_delete:
         title: "刪除頻道"
       close: "關閉"
+      remove: "移除"
       delete: "刪除"
       edited: "已編輯"
       muted: "靜音"
@@ -73,14 +78,17 @@ zh_TW:
       email_frequency:
         never: "永不"
       header_indicator_preference:
+        all_new: "所有新訊息"
         never: "永不"
       flag: "檢舉"
       heading: "聊天"
       join: "加入"
       last_visit: "上次到訪"
-      mention_warning:
-        dismiss: "忽略"
-      placeholder_start_conversation_users: "從 %{commaSeparatedUsernames}開始對話"
+      summarization:
+        title: "摘要訊息"
+        summarize: "總結"
+        since:
+          other: "前 %{count} 小時"
       remove_upload: "移除檔案"
       react: "用表情符號反應"
       reply: "回覆"
@@ -101,8 +109,10 @@ zh_TW:
         title: "桌面聊天通知聲音"
       sounds:
         none: "無"
+        bell: "鐘聲"
       title: "聊天"
       title_capitalized: "聊天"
+      upload_to_channel: "上傳至 %{title}"
       exit: "上一步"
       channel_status:
         read_only_header: "頻道為唯讀"
@@ -134,6 +144,14 @@ zh_TW:
           about: 關於
           members: 成員
           settings: 設定
+      new_message_modal:
+        title: 傳送訊息
+        add_user_short: <span>新增使用者</span>
+        open_channel: <span>開啟頻道</span>
+        no_items: "沒有項目"
+      channel_edit_name_slug_modal:
+        title: 編輯頻道
+        name: 變更名稱
       channel_edit_description_modal:
         title: 編輯描述
         input_placeholder: 新增描述
@@ -142,21 +160,28 @@ zh_TW:
         prefix: "發至:"
         no_results: 沒有結果
         selected_user_title: "取消選取 %{username}"
-      channel_selector:
-        title: "跳轉到頻道"
       create_channel:
         type: "類型"
         types:
           category: "分類"
           topic: "話題"
+      reviewable:
+        type: "聊天訊息"
+      reactions:
+        single_user: "%{username} 以 :%{emoji}: 回應"
       composer:
         italic_text: "斜體字"
         bold_text: "粗體字"
+        send: "傳送"
       notification_levels:
         never: "永不"
       settings:
         follow: "加入"
         followed: "建立日期"
+        threading_enabled: "啟用"
+        threading_disabled: "停用"
+        muted_on: "開啟"
+        muted_off: "關閉"
         notifications: "通知"
         preview: "預覽"
         save: "保存"
@@ -165,14 +190,21 @@ zh_TW:
         admin_title: "管理員"
       admin:
         title: "聊天"
+        export_messages:
+          title: "匯出聊天訊息"
+          create_export: "建立匯出"
+      direct_messages:
+        create: "開始"
       incoming_webhooks:
         back: "上一步"
         description: "簡述"
         delete: "刪除"
         emoji: "Emoji"
         name: "姓名"
+        name_placeholder: "名字..."
         save: "保存"
         edit: "編輯"
+        select_emoji: "選擇表情符號"
         system: "系統"
         url: "網址"
         username: "使用者名稱"
@@ -185,12 +217,33 @@ zh_TW:
           title: "移至已存在的話題"
         new_message:
           title: "移動到新訊息"
+      flagging:
+        action: "檢舉訊息"
       emoji_picker:
         objects: "物品"
         activities: "活動"
         flags: "投訴"
         symbols: "象徵<br>"
         no_results: "沒有結果"
+      thread:
+        title: "標題"
+        view_thread: 檢視討論串
+        replies:
+          other: "%{count}個回覆"
+        label: 討論串
+        close: "關閉討論串"
+        settings: "設定"
+        last_reply: "最新回覆"
+        notifications:
+          regular:
+            title: "一般"
+          tracking:
+            title: "跟蹤"
+        participants_other_count:
+          other: "+%{count}"
+      threads:
+        open: "開啟討論串"
+        list: "進行中的討論"
       draft_channel_screen:
         header: "新訊息"
         cancel: "取消"
@@ -205,7 +258,15 @@ zh_TW:
     review:
       types:
         reviewable_chat_message:
-          flagged_by: "標記由"
+          noun: "聊天訊息"
     keyboard_shortcuts_help:
       chat:
         title: "聊天"
+    styleguide:
+      sections:
+        chat:
+          title: 聊天
+    sidebar:
+      panels:
+        chat:
+          label: "聊天"

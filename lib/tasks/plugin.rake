@@ -6,13 +6,11 @@ desc "install all official plugins (use GIT_WRITE=1 to pull with write access)"
 task "plugin:install_all_official" do
   skip = Set.new(%w[customer-flair poll])
 
-  map = { "Canned Replies" => "https://github.com/discourse/discourse-canned-replies" }
-
   STDERR.puts "Allowing write to all repos!" if ENV["GIT_WRITE"]
 
   Plugin::Metadata::OFFICIAL_PLUGINS.each do |name|
     next if skip.include? name
-    repo = map[name] || "https://github.com/discourse/#{name}"
+    repo = "https://github.com/discourse/#{name}"
     dir = repo.split("/").last
     path = File.expand_path("plugins/" + dir)
 
@@ -168,34 +166,38 @@ task "plugin:install_gems", :plugin do |t, args|
   puts "Done"
 end
 
-def spec(plugin, parallel: false)
+def spec(plugin, parallel: false, argv: nil)
   params = []
   params << "--profile" if !parallel
   params << "--fail-fast" if ENV["RSPEC_FAILFAST"]
   params << "--seed #{ENV["RSPEC_SEED"]}" if Integer(ENV["RSPEC_SEED"], exception: false)
+  params << argv if argv
 
-  ruby = `which ruby`.strip
   # reject system specs as they are slow and need dedicated setup
   files =
     Dir.glob("./plugins/#{plugin}/spec/**/*_spec.rb").reject { |f| f.include?("spec/system/") }.sort
+
   if files.length > 0
     cmd = parallel ? "bin/turbo_rspec" : "bin/rspec"
-    sh "LOAD_PLUGINS=1 #{cmd} #{files.join(" ")} #{params.join(" ")}"
+
+    Rake::FileUtilsExt.verbose(!parallel) do
+      sh("LOAD_PLUGINS=1 #{cmd} #{files.join(" ")} #{params.join(" ")}")
+    end
   else
     abort "No specs found."
   end
 end
 
 desc "run plugin specs"
-task "plugin:spec", :plugin do |t, args|
+task "plugin:spec", %i[plugin argv] do |_, args|
   args.with_defaults(plugin: "*")
-  spec(args[:plugin])
+  spec(args[:plugin], argv: args[:argv])
 end
 
 desc "run plugin specs in parallel"
-task "plugin:turbo_spec", :plugin do |t, args|
+task "plugin:turbo_spec", %i[plugin argv] do |_, args|
   args.with_defaults(plugin: "*")
-  spec(args[:plugin], parallel: true)
+  spec(args[:plugin], parallel: true, argv: args[:argv])
 end
 
 desc "run plugin qunit tests"
@@ -205,14 +207,17 @@ task "plugin:qunit", %i[plugin timeout] do |t, args|
   rake = "#{Rails.root}/bin/rake"
 
   cmd = "LOAD_PLUGINS=1 "
-  cmd += "QUNIT_SKIP_CORE=1 "
 
-  if args[:plugin] == "*"
-    puts "Running qunit tests for all plugins"
-  else
-    puts "Running qunit tests for #{args[:plugin]}"
-    cmd += "QUNIT_SINGLE_PLUGIN='#{args[:plugin]}' "
-  end
+  target =
+    if args[:plugin] == "*"
+      puts "Running qunit tests for all plugins"
+      "plugins"
+    else
+      puts "Running qunit tests for #{args[:plugin]}"
+      args[:plugin]
+    end
+
+  cmd += "TARGET='#{target}' "
 
   cmd += "#{rake} qunit:test"
   cmd += "[#{args[:timeout]}]" if args[:timeout]

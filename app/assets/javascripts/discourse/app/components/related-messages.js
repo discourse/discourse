@@ -1,12 +1,36 @@
-import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import Component from "@glimmer/component";
+import { action, computed } from "@ember/object";
 import getURL from "discourse-common/lib/get-url";
+import { inject as service } from "@ember/service";
+import I18n from "I18n";
 
-export default Component.extend({
-  tagName: "",
+export default class RelatedMessages extends Component {
+  @service moreTopicsPreferenceTracking;
+  @service currentUser;
 
-  @discourseComputed("topic")
-  targetUser(topic) {
+  listId = "related-Messages";
+
+  @computed("moreTopicsPreferenceTracking.selectedTab")
+  get hidden() {
+    return this.moreTopicsPreferenceTracking.selectedTab !== this.listId;
+  }
+
+  @action
+  registerList() {
+    this.moreTopicsPreferenceTracking.registerTopicList({
+      name: I18n.t("related_messages.pill"),
+      id: this.listId,
+    });
+  }
+
+  @action
+  removeList() {
+    this.moreTopicsPreferenceTracking.removeTopicList(this.listId);
+  }
+
+  get targetUser() {
+    const topic = this.args.topic;
+
     if (!topic || !topic.isPrivateMessage) {
       return;
     }
@@ -22,12 +46,11 @@ export default Component.extend({
     ) {
       return allowedUsers.find((u) => u.username !== this.currentUser.username);
     }
-  },
+  }
 
-  @discourseComputed
-  searchLink() {
+  get searchLink() {
     return getURL(
       `/search?expanded=true&q=%40${this.targetUser.username}%20in%3Apersonal-direct`
     );
-  },
-});
+  }
+}

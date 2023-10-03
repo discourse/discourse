@@ -27,9 +27,20 @@ RSpec.describe Chat::ChannelHashtagDataSource do
   let!(:guardian) { Guardian.new(user) }
 
   before do
-    SiteSetting.enable_experimental_hashtag_autocomplete = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
     Group.refresh_automatic_groups!
+  end
+
+  describe "#enabled?" do
+    it "returns false if public channels are disabled" do
+      SiteSetting.enable_public_channels = false
+      expect(described_class.enabled?).to eq(false)
+    end
+
+    it "returns true if public channels are disabled" do
+      SiteSetting.enable_public_channels = true
+      expect(described_class.enabled?).to eq(true)
+    end
   end
 
   describe "#lookup" do
@@ -41,6 +52,7 @@ RSpec.describe Chat::ChannelHashtagDataSource do
           text: "Zany Things",
           description: "Just weird stuff",
           icon: "comment",
+          id: channel1.id,
           type: "channel",
           ref: nil,
           slug: "random",
@@ -60,6 +72,7 @@ RSpec.describe Chat::ChannelHashtagDataSource do
           text: "Secret Stuff",
           description: nil,
           icon: "comment",
+          id: channel2.id,
           type: "channel",
           ref: nil,
           slug: "secret",
@@ -94,6 +107,7 @@ RSpec.describe Chat::ChannelHashtagDataSource do
           text: "Zany Things",
           description: "Just weird stuff",
           icon: "comment",
+          id: channel1.id,
           type: "channel",
           ref: nil,
           slug: "random",
@@ -109,6 +123,7 @@ RSpec.describe Chat::ChannelHashtagDataSource do
           text: "Zany Things",
           description: "Just weird stuff",
           icon: "comment",
+          id: channel1.id,
           type: "channel",
           ref: nil,
           slug: "random",
@@ -127,6 +142,7 @@ RSpec.describe Chat::ChannelHashtagDataSource do
           text: "Secret Stuff",
           description: nil,
           icon: "comment",
+          id: channel2.id,
           type: "channel",
           ref: nil,
           slug: "secret",

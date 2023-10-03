@@ -10,7 +10,7 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
 
 function setupGroupPretender(server, helper) {
-  server.post("/groups/Macdonald/request_membership", () => {
+  server.post("/groups/Macdonald/request_membership.json", () => {
     return helper.response({
       relative_url: "/t/internationalization-localization/280",
     });

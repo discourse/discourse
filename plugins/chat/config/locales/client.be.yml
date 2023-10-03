@@ -6,13 +6,20 @@
 
 be:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "заўсёды"
+          never: "ніколі"
     chat:
+      deleted_chat_username: аддалены
       create: "стварыць"
       cancel: "адмяніць"
       channel_settings:
         edit: "рэдагаваць"
         add: "дадаць"
       close: "зачыніць"
+      remove: "выдаліць"
       delete: "выдаляць"
       muted: "ігнаруемай"
       joined: "рэгістрацыя"
@@ -57,10 +64,12 @@ be:
       composer:
         italic_text: "выдзялення тэксту"
         bold_text: "Моцнае вылучэнне тэксту"
+        send: "адправіць"
       notification_levels:
         never: "ніколі"
       settings:
         followed: "рэгістрацыя"
+        threading_disabled: "Адключана"
         notifications: "Натыфікацыі"
         preview: "папярэдні прагляд"
         save: "захаваць"
@@ -86,6 +95,13 @@ be:
           title: "Перанос наяўнай тэмы"
       emoji_picker:
         flags: "сцягі"
+      thread:
+        title: "Загаловак"
+        settings: "Налады"
+        last_reply: "апошні адказ"
+        notifications:
+          tracking:
+            title: "Сачыць"
       draft_channel_screen:
         header: "новае паведамленне"
         cancel: "адмяніць"

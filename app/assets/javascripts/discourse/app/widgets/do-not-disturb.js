@@ -3,11 +3,13 @@ import { createWidget } from "discourse/widgets/widget";
 import { dateNode } from "discourse/helpers/node";
 import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
-import showModal from "discourse/lib/show-modal";
 import DoNotDisturb from "discourse/lib/do-not-disturb";
+import DoNotDisturbModal from "discourse/components/modal/do-not-disturb";
 
 export default createWidget("do-not-disturb", {
   tagName: "li.do-not-disturb",
+  services: ["modal"],
+
   saving: false,
 
   html() {
@@ -27,7 +29,7 @@ export default createWidget("do-not-disturb", {
       });
     } else {
       this.saving = false;
-      return showModal("do-not-disturb");
+      return this.modal.show(DoNotDisturbModal);
     }
   },
 

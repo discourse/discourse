@@ -3,10 +3,13 @@ import I18n from "I18n";
 import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { popupAutomaticMembershipAlert } from "discourse/controllers/groups-new";
-import showModal from "discourse/lib/show-modal";
 import { or } from "@ember/object/computed";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import GroupDefaultNotificationsModal from "discourse/components/modal/group-default-notifications";
 
 export default Component.extend({
+  modal: service(),
   saving: null,
   disabled: false,
   updateExistingUsers: null,
@@ -38,53 +41,61 @@ export default Component.extend({
     }
   },
 
-  actions: {
-    save() {
-      if (this.beforeSave) {
-        this.beforeSave();
-      }
+  @action
+  setUpdateExistingUsers(value) {
+    this.updateExistingUsers = value;
+  },
 
-      this.set("saving", true);
-      const group = this.model;
+  @action
+  save() {
+    if (this.beforeSave) {
+      this.beforeSave();
+    }
 
-      popupAutomaticMembershipAlert(
-        group.id,
-        group.automatic_membership_email_domains
-      );
+    this.set("saving", true);
+    const group = this.model;
 
-      const opts = {};
-      if (this.updateExistingUsers !== null) {
-        opts.update_existing_users = this.updateExistingUsers;
-      }
+    popupAutomaticMembershipAlert(
+      group.id,
+      group.automatic_membership_email_domains
+    );
 
-      return group
-        .save(opts)
-        .then(() => {
-          this.setProperties({
-            saved: true,
-            updateExistingUsers: null,
-          });
+    const opts = {};
+    if (this.updateExistingUsers !== null) {
+      opts.update_existing_users = this.updateExistingUsers;
+    }
 
-          if (this.afterSave) {
-            this.afterSave();
-          }
-        })
-        .catch((error) => {
-          const json = error.jqXHR.responseJSON;
-          if (error.jqXHR.status === 422 && json.user_count) {
-            const controller = showModal("group-default-notifications", {
-              model: { count: json.user_count },
-            });
+    return group
+      .save(opts)
+      .then(() => {
+        this.setProperties({
+          saved: true,
+          updateExistingUsers: null,
+        });
 
-            controller.set("onClose", () => {
-              this.updateExistingUsers = controller.updateExistingUsers;
-              this.send("save");
-            });
-          } else {
-            popupAjaxError(error);
-          }
-        })
-        .finally(() => this.set("saving", false));
-    },
+        if (this.afterSave) {
+          this.afterSave();
+        }
+      })
+      .catch((error) => {
+        const json = error.jqXHR.responseJSON;
+        if (error.jqXHR.status === 422 && json.user_count) {
+          this.editGroupNotifications(json);
+        } else {
+          popupAjaxError(error);
+        }
+      })
+      .finally(() => this.set("saving", false));
+  },
+
+  @action
+  async editGroupNotifications(json) {
+    await this.modal.show(GroupDefaultNotificationsModal, {
+      model: {
+        count: json.user_count,
+        setUpdateExistingUsers: this.setUpdateExistingUsers,
+      },
+    });
+    this.save();
   },
 });

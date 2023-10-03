@@ -9,41 +9,24 @@ export default class Flag {
     return true;
   }
 
-  create(controller, opts) {
+  create(flagModal, opts) {
     // an instance of ActionSummary
-    let postAction = this.postActionFor(controller);
-
-    controller.appEvents.trigger(
+    const postAction = this.postActionFor(flagModal);
+    flagModal.appEvents.trigger(
       this.flagCreatedEvent,
-      controller.model,
+      flagModal.args.model.flagModel,
       postAction,
       opts
     );
 
-    controller.send("hideModal");
-
+    flagModal.args.closeModal();
     postAction
-      .act(controller.model, opts)
+      .act(flagModal.args.model.flagModel, opts)
       .then(() => {
-        if (controller.isDestroying || controller.isDestroyed) {
-          return;
-        }
-
-        if (!opts.skipClose) {
-          controller.send("closeModal");
-        }
-        if (opts.message) {
-          controller.set("message", "");
-        }
-        controller.appEvents.trigger("post-stream:refresh", {
-          id: controller.get("model.id"),
+        flagModal.appEvents.trigger("post-stream:refresh", {
+          id: flagModal.args.model.flagModel.id,
         });
       })
-      .catch((error) => {
-        if (!controller.isDestroying && !controller.isDestroyed) {
-          controller.send("closeModal");
-        }
-        popupAjaxError(error);
-      });
+      .catch((error) => popupAjaxError(error));
   }
 }

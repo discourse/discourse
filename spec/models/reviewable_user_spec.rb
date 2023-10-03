@@ -49,7 +49,9 @@ RSpec.describe ReviewableUser, type: :model do
     def assert_require_reject_reason(id, expected)
       actions = reviewable.actions_for(Guardian.new(moderator))
 
-      expect(actions.to_a.find { |a| a.id == id }.require_reject_reason).to eq(expected)
+      expect(actions.to_a.find { |a| a.server_action.to_sym == id }.require_reject_reason).to eq(
+        expected,
+      )
     end
   end
 

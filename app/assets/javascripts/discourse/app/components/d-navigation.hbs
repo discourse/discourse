@@ -17,7 +17,7 @@
 
 <div class="navigation-controls">
   {{#if (and this.notCategoriesRoute this.site.mobileView this.canBulk)}}
-    <BulkSelectToggle @parentController={{"discovery/topics"}} @tagName="" />
+    <BulkSelectToggle @parentController="discovery/topics" />
   {{/if}}
 
   {{#if this.showCategoryAdmin}}
@@ -29,10 +29,10 @@
 
   {{#if (and this.category this.showCategoryEdit)}}
     <DButton
-      @class="btn-default edit-category"
       @action={{this.editCategory}}
       @icon="wrench"
       @title="category.edit_title"
+      class="btn-default edit-category"
     />
   {{/if}}
 
@@ -40,17 +40,16 @@
     {{#if this.showToggleInfo}}
       <DButton
         @icon={{if this.currentUser.staff "wrench" "info-circle"}}
-        @class="btn-default"
         @ariaLabel="tagging.info"
         @action={{this.toggleInfo}}
-        @id="show-tag-info"
+        id="show-tag-info"
+        class="btn-default"
       />
     {{/if}}
   {{/if}}
 
   <PluginOutlet
     @name="before-create-topic-button"
-    @connectorTagName="div"
     @outletArgs={{hash
       canCreateTopic=this.canCreateTopic
       createTopicDisabled=this.createTopicDisabled
@@ -68,15 +67,10 @@
     @label={{this.createTopicLabel}}
     @btnClass={{this.createTopicClass}}
     @canCreateTopicOnTag={{this.canCreateTopicOnTag}}
-  >
-    {{#if this.createTopicButtonDisabled}}
-      <DTooltip>{{i18n "topic.create_disabled_category"}}</DTooltip>
-    {{/if}}
-  </CreateTopicButton>
+  />
 
   <PluginOutlet
     @name="after-create-topic-button"
-    @connectorTagName="div"
     @outletArgs={{hash
       canCreateTopic=this.canCreateTopic
       createTopicDisabled=this.createTopicDisabled
@@ -109,5 +103,4 @@
       {{/if}}
     {{/unless}}
   {{/if}}
-
 </div>

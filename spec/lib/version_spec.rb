@@ -103,6 +103,54 @@ RSpec.describe Discourse::VERSION do
         YML
       include_examples "test compatible resource"
     end
+
+    context "with different version operators" do
+      let(:version_list) { <<~YML }
+        <= 3.2.0.beta1: lteBeta1
+        3.2.0.beta2: lteBeta2
+        < 3.2.0.beta4: ltBeta4
+        <= 3.2.0.beta4: lteBeta4
+      YML
+
+      it "supports <= operator" do
+        expect(Discourse.find_compatible_resource(version_list, "3.2.0.beta1")).to eq("lteBeta1")
+        expect(Discourse.find_compatible_resource(version_list, "3.2.0.beta0")).to eq("lteBeta1")
+      end
+
+      it "defaults to <= operator" do
+        expect(Discourse.find_compatible_resource(version_list, "3.2.0.beta2")).to eq("lteBeta2")
+      end
+
+      it "supports < operator" do
+        expect(Discourse.find_compatible_resource(version_list, "3.2.0.beta3")).to eq("ltBeta4")
+        expect(Discourse.find_compatible_resource(version_list, "3.2.0.beta4")).not_to eq("ltBeta4")
+      end
+
+      it "prioritises <= over <, regardless of file order" do
+        expect(Discourse.find_compatible_resource(version_list, "3.2.0.beta3")).to eq("ltBeta4")
+        expect(
+          Discourse.find_compatible_resource(version_list.lines.reverse.join("\n"), "3.2.0.beta3"),
+        ).to eq("ltBeta4")
+      end
+
+      it "raises error for >= operator" do
+        expect { Discourse.find_compatible_resource(">= 3.1.0: test", "3.1.0") }.to raise_error(
+          Discourse::InvalidVersionListError,
+        )
+      end
+
+      it "raises error for ~> operator" do
+        expect { Discourse.find_compatible_resource("~> 3.1.0: test", "3.1.0") }.to raise_error(
+          Discourse::InvalidVersionListError,
+        )
+      end
+
+      it "raises error for invalid version" do
+        expect { Discourse.find_compatible_resource("1.1.: test", "3.1.0") }.to raise_error(
+          Discourse::InvalidVersionListError,
+        )
+      end
+    end
   end
 
   describe ".find_compatible_git_resource" do
@@ -128,6 +176,15 @@ RSpec.describe Discourse::VERSION do
         capture_stderr { expect(Discourse.find_compatible_git_resource(git_directory)).to be_nil }
 
       expect(output).to include("Invalid version list")
+    end
+
+    it "gracefully handles large .discourse-compatibility files" do
+      stub_const(Discourse, "MAX_METADATA_FILE_SIZE", 1) do
+        output =
+          capture_stderr { expect(Discourse.find_compatible_git_resource(git_directory)).to be_nil }
+
+        expect(output).to include(Discourse::VERSION_COMPATIBILITY_FILENAME)
+      end
     end
   end
 end

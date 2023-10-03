@@ -18,7 +18,7 @@ sl:
       no_day: "%B %Y"
   date:
     month_names:
-    - null
+    -
     - Januar
     - Februar
     - Marec
@@ -282,22 +282,6 @@ sl:
   general_category_name: "Splošno"
   staff_category_name: "Osebje"
   staff_category_description: "Privatna kategorija za diskusije osebja foruma. Teme so vidne samo administratorjem in moderatorjem."
-  discourse_welcome_topic:
-    body: |2
-
-      Prvi odstavek te pripete teme bo viden kot pozdravno sporočilo vsem novim uporabnikom na vaši domači strani. Zato je pomembno!
-
-      **Uredite** to vsebino kot kratek opis vaše skupnosti:
-
-      - Za koga je ta skupnost?
-      - Kaj lahko tukaj najdejo?
-      - Zakaj naj obiskujejo to stran?
-      - Kje lahko preberejo več (povezave, vsebine, ...)?
-
-      <img src="%{base_path}/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
-
-      To temo lahko zaprete z administratorsko :wrench: (zgoraj desno ali spodaj), tako da se odgovori ne bodo nabirali pod to objavo.
-  admin_quick_start_title: "PREBERI ME NAJPREJ: Admin vodnik za hitri začetek"
   category:
     replace_paragraph: "(Zamenjajte ta prvi odstavek s kratkim opisom vaše nove kategorije. Ta opis se bo pojavil v izbiri kategorije, tako da poskrbite, da je krajši od 200 znakov.)"
     post_template: "%{replace_paragraph}\n\nUporabite naslednje odstavke za daljši opis and za določitev pravil in vodil te kategorije:\n\n- Zakaj naj uporabniku uporabljajo to kategorijo? Čemu je namenjena?\n\n- Kako se razlikuje od ostalih kategorij, ki jih že imamo?\n\n- Katere teme sodijo v to kategorijo?\n\n- Ali potrebujemo to kategorijo? Ali jo lahko združimo z drugo kategorijo ali podkategorijo?\n"
@@ -874,17 +858,6 @@ sl:
   admin:
     email:
       sent_test: "poslano!"
-    user:
-      merge_user:
-        updating_username: "Posodabljanje uporabniškega imena ..."
-        changing_post_ownership: "Spreminjanje lastništva objave ..."
-        merging_given_daily_likes: "Združevanje danih dnevnih všečkov ..."
-        merging_user_visits: "Združevanje obiskov uporabnikov ..."
-        updating_site_settings: "Posodabljanje nastavitev mesta..."
-        updating_user_stats: "Posodabljanje uporabniške statistike ..."
-        merging_user_attributes: "Združevanje uporabniških atributov..."
-        updating_user_ids: "Posodabljanje uporabniških ID-jev ..."
-        deleting_source_user: "Brisanje izvornega uporabnika..."
   user:
     email:
       does_not_exist: "N/A"
@@ -1295,9 +1268,6 @@ sl:
       title: "Prenos oddaljenih slik onemogočen"
       subject_template: "Prenos oddaljenih slik onemogočen"
       text_body_template: "Nastavitev `download_remote_images_to_local` je onemogočena, ker je bil dosežena `download_remote_images_threshold` omejitev prostora na disku ."
-    dashboard_problems:
-      title: "Težave nadzorne plošče"
-      subject_template: "Nov nasvet na vaši nadzorni plošči"
     new_user_of_the_month:
       title: "Vi ste nov uporabnik meseca!"
       subject_template: "Vi ste nov uporabnik meseca!"
@@ -1677,8 +1647,6 @@ sl:
     see_more: "Več"
     search_title: "Išči na tem spletnem mestu"
     search_button: "Išči"
-  login_required:
-    welcome_message: "## [Dobrodošli na %{title}](#welcome)"
   upload:
     edit_reason: "prenos slik v lokalno kopijo"
     unauthorized: "Oprostite, datoteka ki ste jo hoteli naložiti ni podprta (podprte pripone:%{authorized_extensions})."
@@ -2028,8 +1996,6 @@ sl:
         description: "Povrni prispevek tako da ga lahko vidijo vsi uporabniki"
       delete_single:
         title: "Izbriši"
-      delete:
-        title: "Izbriši..."
       delete_and_ignore_replies:
         confirm: "Ali ste prepričani, da hočete izbrisati tudi odgovore na prispevek?"
       delete_and_agree_replies:
@@ -2051,7 +2017,6 @@ sl:
       approve_user:
         title: "Odobri uporabnika"
       reject_user:
-        title: "Izbriši uporabnika..."
         delete:
           title: "Izbriši uporabnika"
           description: "Ta uporabnik bo izbrisan iz foruma."

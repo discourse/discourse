@@ -1,3 +1,7 @@
+{{#if this.canLoadMore}}
+  {{hide-application-footer}}
+{{/if}}
+
 <div class="container show-badge {{this.model.slug}}">
   <h1>
     <LinkTo @route="badges.index">{{i18n "badges.title"}}</LinkTo>
@@ -17,9 +21,9 @@
           <div class="grant-info-item">
             {{i18n "badges.allow_title"}}
             <DButton
-              @class="btn-default pad-left"
-              @action={{action "toggleSetUserTitle"}}
+              @action={{this.toggleSetUserTitle}}
               @icon="pencil-alt"
+              class="btn-default pad-left"
             />
           </div>
         {{/if}}
@@ -35,9 +39,9 @@
       <div class="badge-set-title {{if this.hiddenSetTitle 'hidden' ''}}">
         <BadgeTitle @selectableUserBadges={{this.selectableUserBadges}} />
         <DButton
-          @class="btn-default close-btn"
-          @action={{action "toggleSetUserTitle"}}
+          @action={{this.toggleSetUserTitle}}
           @label="close"
+          class="btn-default close-btn"
         />
       </div>
     {{/if}}
@@ -54,10 +58,12 @@
               @class="badge-info"
               @date={{ub.granted_at}}
             >
-              <div class="granted-on">{{i18n
-                  "badges.granted_on"
-                  date=(inline-date ub.granted_at)
-                }}</div>
+              <div class="granted-on">
+                {{html-safe
+                  (i18n "badges.granted_on" date=(format-date ub.granted_at))
+                }}
+              </div>
+
               {{#if ub.post_number}}
                 <a
                   class="post-link"

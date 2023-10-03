@@ -28,7 +28,6 @@ export function buildOptions(state) {
     getTopicInfo,
     topicId,
     forceQuoteLink,
-    categoryHashtagLookup,
     userId,
     getCurrentUser,
     currentUser,
@@ -43,6 +42,7 @@ export function buildOptions(state) {
     customEmojiTranslation,
     watchedWordsReplace,
     watchedWordsLink,
+    emojiDenyList,
     featuresOverride,
     markdownItRules,
     additionalOptions,
@@ -66,7 +66,6 @@ export function buildOptions(state) {
     getTopicInfo,
     topicId,
     forceQuoteLink,
-    categoryHashtagLookup,
     userId,
     getCurrentUser,
     currentUser,
@@ -88,6 +87,7 @@ export function buildOptions(state) {
     disableEmojis,
     watchedWordsReplace,
     watchedWordsLink,
+    emojiDenyList,
     featuresOverride,
     markdownItRules,
     additionalOptions,
@@ -123,6 +123,10 @@ export default class {
     let result;
     result = cookIt(raw, this.opts);
     return result ? result : "";
+  }
+
+  parse(markdown, env = {}) {
+    return this.opts.engine.parse(markdown, env);
   }
 
   sanitize(html) {

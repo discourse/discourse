@@ -429,7 +429,6 @@ class ImportScripts::DiscuzX < ImportScripts::Base
               FROM #{posts_table} p
               JOIN #{posts_table} p2 ON p2.first AND p2.tid = p.tid
               JOIN #{topics_table} t ON t.tid = p.tid
-              where t.tid < 10000
              ORDER BY id ASC, topic_id ASC
              LIMIT #{BATCH_SIZE}
             OFFSET #{offset};

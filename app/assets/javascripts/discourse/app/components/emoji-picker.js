@@ -277,7 +277,7 @@ export default Component.extend({
       if (fromTopicComposer) {
         document.querySelector(".d-editor-input")?.focus();
       } else if (fromChatComposer) {
-        document.querySelector(".chat-composer-input")?.focus();
+        document.querySelector(".chat-composer__input")?.focus();
       } else {
         document.querySelector("textarea")?.focus();
       }
@@ -380,6 +380,7 @@ export default Component.extend({
     if (filter) {
       results.innerHTML = emojiSearch(filter.toLowerCase(), {
         diversity: this.emojiStore.diversity,
+        exclude: this.site.denied_emojis,
       })
         .map(this._replaceEmoji)
         .join("");

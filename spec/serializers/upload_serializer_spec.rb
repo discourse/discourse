@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe UploadSerializer do
+  subject(:serializer) { UploadSerializer.new(upload, root: false) }
+
   fab!(:upload) { Fabricate(:upload) }
-  let(:subject) { UploadSerializer.new(upload, root: false) }
 
   it "should render without errors" do
-    json_data = JSON.parse(subject.to_json)
+    json_data = JSON.parse(serializer.to_json)
 
     expect(json_data["id"]).to eql upload.id
     expect(json_data["width"]).to eql upload.width
@@ -21,7 +22,7 @@ RSpec.describe UploadSerializer do
     context "when secure uploads is disabled" do
       it "just returns the normal URL, otherwise S3 errors are encountered" do
         UrlHelper.expects(:cook_url).with(upload.url, secure: false)
-        subject.to_json
+        serializer.to_json
       end
     end
 
@@ -33,7 +34,7 @@ RSpec.describe UploadSerializer do
 
       it "returns the cooked URL based on the upload URL" do
         UrlHelper.expects(:cook_url).with(upload.url, secure: true)
-        subject.to_json
+        serializer.to_json
       end
     end
   end

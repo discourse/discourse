@@ -127,7 +127,7 @@ RSpec.describe UploadReference do
   describe "theme field uploads" do
     fab!(:upload) { Fabricate(:upload) }
 
-    it "creates upload refererences" do
+    it "creates upload references" do
       theme_field = nil
       expect do
         theme_field =
@@ -152,7 +152,7 @@ RSpec.describe UploadReference do
   describe "theme setting uploads" do
     fab!(:upload) { Fabricate(:upload) }
 
-    it "creates upload refererences" do
+    it "creates upload references" do
       theme_setting = nil
       expect do
         theme_setting =

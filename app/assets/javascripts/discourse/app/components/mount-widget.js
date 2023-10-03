@@ -9,9 +9,24 @@ import { getRegister } from "discourse-common/lib/get-owner";
 import ArrayProxy from "@ember/array/proxy";
 
 let _cleanCallbacks = {};
+
 export function addWidgetCleanCallback(widgetName, fn) {
   _cleanCallbacks[widgetName] = _cleanCallbacks[widgetName] || [];
   _cleanCallbacks[widgetName].push(fn);
+}
+
+export function removeWidgetCleanCallback(widgetName, fn) {
+  const callbacks = _cleanCallbacks[widgetName];
+  if (!callbacks) {
+    return;
+  }
+
+  const index = callbacks.indexOf(fn);
+  if (index === -1) {
+    return;
+  }
+
+  callbacks.splice(index, 1);
 }
 
 export function resetWidgetCleanCallbacks() {
@@ -165,5 +180,9 @@ export default Component.extend({
 
   unmountChildComponent(info) {
     this._childComponents.removeObject(info);
+  },
+
+  didUpdateAttrs() {
+    this.queueRerender();
   },
 });

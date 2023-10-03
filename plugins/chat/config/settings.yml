@@ -2,6 +2,9 @@ chat:
   chat_enabled:
     default: true
     client: true
+  enable_public_channels:
+    default: true
+    client: true
   chat_allowed_groups:
     client: true
     type: group_list
@@ -113,7 +116,8 @@ chat:
   max_chat_draft_length:
     default: 50_000
     hidden: true
-  enable_experimental_chat_threaded_discussions:
-    default: false
-    hidden: true
+  chat_separate_sidebar_mode:
     client: true
+    default: "never"
+    type: enum
+    enum: "Chat::SeparateSidebarModeSiteSetting"

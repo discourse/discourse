@@ -13,6 +13,7 @@ allowed:
 
 ignored:
   bundler:
+    - base64 # Ruby (default gem)
     - cgi # Ruby (default gem)
     - date # Ruby (default gem)
     - digest # Ruby (default gem)
@@ -51,6 +52,7 @@ reviewed:
     - net-imap # Ruby (bundled gem)
     - net-pop # Ruby (bundled gem)
     - net-smtp # Ruby (bundled gem)
+    - nio4r # MIT + BSD
     - omniauth # MIT
     - pg # Ruby
     - r2 # Apache-2.0 (Twitter)

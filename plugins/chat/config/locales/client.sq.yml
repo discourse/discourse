@@ -6,12 +6,19 @@
 
 sq:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Gjithmonë"
+          never: "Asnjëherë"
     chat:
+      deleted_chat_username: deleted
       cancel: "Anulo"
       channel_settings:
         edit: "Redakto"
         add: "Shto"
       close: "Mbyll"
+      remove: "Hiq"
       delete: "Fshij"
       muted: "të heshtur"
       joined: "anëtarësuar"
@@ -21,8 +28,6 @@ sq:
         never: "Asnjëherë"
       flag: "Sinjalizoni"
       last_visit: "vizita e fundit"
-      mention_warning:
-        dismiss: "hiqe"
       reply: "Përgjigju"
       edit: "Redakto"
       rebake_message: "Rindërtoni HTML"
@@ -64,6 +69,7 @@ sq:
         never: "Asnjëherë"
       settings:
         followed: "Anëtarësuar"
+        threading_enabled: "Aktivizuar"
         notifications: "Njoftimet"
         preview: "Parashikimi"
         save: "Ruaj"
@@ -89,6 +95,18 @@ sq:
           title: "Transfero tek një Temë tjetër"
       emoji_picker:
         flags: "Sinjalizime"
+      thread:
+        title: "Titulli"
+        replies:
+          one: "%{count} përgjigje"
+          other: "%{count} përgjigje"
+        settings: "Rregullimet"
+        last_reply: "përgjigja e fundit"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Në gjurmim"
       draft_channel_screen:
         header: "Mesazh i ri"
         cancel: "Anulo"

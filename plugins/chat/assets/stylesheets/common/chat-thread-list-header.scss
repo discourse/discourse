@@ -1,0 +1,15 @@
+.chat-thread-list-header {
+  height: var(--chat-header-offset);
+  min-height: var(--chat-header-offset);
+  border-bottom: 1px solid var(--primary-low);
+  border-top: 1px solid var(--primary-low);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding-inline: 0.5rem;
+
+  &__buttons {
+    display: flex;
+    margin-left: auto;
+  }
+}

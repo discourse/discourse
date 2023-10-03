@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "User status | sidebar", type: :system, js: true do
+RSpec.describe "User status | sidebar", type: :system do
   fab!(:current_user) { Fabricate(:user) }
   fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user]) }
 
@@ -20,8 +20,8 @@ RSpec.describe "User status | sidebar", type: :system, js: true do
 
     visit("/")
 
-    expect(find(".user-status .emoji")["title"]).to eq("online")
-    expect(find(".user-status .emoji")["src"]).to include("heart")
+    expect(find(".user-status-message .emoji")["alt"]).to eq("heart")
+    expect(find(".user-status-message .emoji")["src"]).to include("heart")
   end
 
   context "when changing status" do
@@ -31,8 +31,8 @@ RSpec.describe "User status | sidebar", type: :system, js: true do
       visit("/")
       current_user.set_status!("offline", "tooth")
 
-      expect(page).to have_css('.user-status .emoji[title="offline"]')
-      expect(find(".user-status .emoji")["src"]).to include("tooth")
+      expect(page).to have_css('.user-status-message .emoji[alt="tooth"]')
+      expect(find(".user-status-message .emoji")["src"]).to include("tooth")
     end
   end
 
@@ -43,7 +43,7 @@ RSpec.describe "User status | sidebar", type: :system, js: true do
       visit("/")
       current_user.clear_status!
 
-      expect(page).to have_no_css(".user-status")
+      expect(page).to have_no_css(".user-status-message")
     end
   end
 end

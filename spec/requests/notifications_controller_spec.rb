@@ -87,6 +87,15 @@ RSpec.describe NotificationsController do
           Discourse.clear_redis_readonly!
         end
 
+        describe "when limit params is invalid" do
+          include_examples "invalid limit params",
+                           "/notifications.json",
+                           described_class::INDEX_LIMIT,
+                           params: {
+                             recent: true,
+                           }
+        end
+
         it "get notifications with all filters" do
           notification = Fabricate(:notification, user: user)
           notification2 = Fabricate(:notification, user: user)
@@ -167,24 +176,6 @@ RSpec.describe NotificationsController do
                 notification.id,
                 unread_regular.id,
                 read_regular.id,
-                read_high_priority.id,
-              ],
-            )
-          end
-
-          it "gets notifications list with unread high priority notifications at the top when navigation menu is legacy" do
-            SiteSetting.navigation_menu = "legacy"
-
-            get "/notifications.json", params: { recent: true }
-
-            expect(response.status).to eq(200)
-
-            expect(response.parsed_body["notifications"].map { |n| n["id"] }).to eq(
-              [
-                unread_high_priority.id,
-                notification.id,
-                read_regular.id,
-                unread_regular.id,
                 read_high_priority.id,
               ],
             )
@@ -284,16 +275,6 @@ RSpec.describe NotificationsController do
             expect(response.parsed_body["pending_reviewables"].map { |r| r["id"] }).to eq(
               [pending_reviewable.id, claimed_by_user.id, unclaimed.id],
             )
-          end
-
-          it "doesn't include reviewables when navigation menu is legacy" do
-            SiteSetting.navigation_menu = "legacy"
-            user.update!(admin: true)
-
-            get "/notifications.json", params: { recent: true }
-
-            expect(response.status).to eq(200)
-            expect(response.parsed_body.key?("pending_reviewables")).to eq(false)
           end
 
           it "doesn't include reviewables if the user can't see the review queue" do

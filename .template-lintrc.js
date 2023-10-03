@@ -16,11 +16,14 @@ module.exports = {
         "directory-table-header-title",
         "loading-spinner",
         "directory-item-label",
+        "hide-application-footer",
       ],
     },
     "no-implicit-this": {
-      allow: ["loading-spinner"],
+      allow: ["loading-spinner", "hide-application-footer"],
     },
+    "require-mandatory-role-attributes": false,
+    "require-media-caption": false,
     // Begin prettier compatibility
     "eol-last": false,
     "self-closing-void-elements": false,

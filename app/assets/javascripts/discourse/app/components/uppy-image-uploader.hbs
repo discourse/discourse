@@ -21,18 +21,16 @@
     {{#if this.imageUrl}}
       <DButton
         @action={{action "trash"}}
-        @class="btn-danger pad-left no-text"
         @icon="far-trash-alt"
-        @type="button"
+        class="btn-danger pad-left no-text"
       />
-
       <DButton
         @icon="discourse-expand"
         @title="expand"
-        @type="button"
-        @class="image-uploader-lightbox-btn no-text"
-        @action={{action "toggleLightbox"}}
         @disabled={{this.loadingLightbox}}
+        @action={{unless this.experimentalLightboxEnabled this.toggleLightbox}}
+        data-lightbox-trigger={{if this.experimentalLightboxEnabled "true"}}
+        class="image-uploader-lightbox-btn no-text"
       />
     {{/if}}
 

@@ -2,6 +2,7 @@
 
 class DirectoryItemsController < ApplicationController
   PAGE_SIZE = 50
+  before_action :set_groups_exclusion, if: -> { params[:exclude_groups].present? }
 
   def index
     unless SiteSetting.enable_user_directory?
@@ -23,6 +24,8 @@ class DirectoryItemsController < ApplicationController
     else
       result = result.includes(user: :primary_group)
     end
+
+    result = apply_exclude_groups_filter(result)
 
     if params[:exclude_usernames]
       result =
@@ -55,7 +58,7 @@ class DirectoryItemsController < ApplicationController
     end
 
     result = result.includes(:user_stat) if period_type == DirectoryItem.period_types[:all]
-    page = params[:page].to_i
+    page = fetch_int_from_params(:page, default: 0)
 
     user_ids = nil
     if params[:name].present?
@@ -78,8 +81,10 @@ class DirectoryItemsController < ApplicationController
       end
     end
 
+    limit = fetch_limit_from_params(default: PAGE_SIZE, max: PAGE_SIZE)
+
     result_count = result.count
-    result = result.limit(PAGE_SIZE).offset(PAGE_SIZE * page).to_a
+    result = result.limit(limit).offset(limit * page).to_a
 
     more_params = params.slice(:period, :order, :asc, :group, :user_field_ids).permit!
     more_params[:page] = page + 1
@@ -92,8 +97,10 @@ class DirectoryItemsController < ApplicationController
 
       # Don't show the record unless you're not in the top positions already
       if (position || 10) >= 10
-        your_item = DirectoryItem.where(period_type: period_type, user_id: current_user.id).first
-        result.insert(0, your_item) if your_item
+        unless @users_in_exclude_groups&.include?(current_user.id)
+          your_item = DirectoryItem.where(period_type: period_type, user_id: current_user.id).first
+          result.insert(0, your_item) if your_item
+        end
       end
     end
 
@@ -126,5 +133,18 @@ class DirectoryItemsController < ApplicationController
         load_more_directory_items: load_more_directory_items_json,
       },
     )
+  end
+
+  private
+
+  def set_groups_exclusion
+    @exclude_group_names = params[:exclude_groups].split("|")
+    @exclude_group_ids = Group.where(name: @exclude_group_names).pluck(:id)
+    @users_in_exclude_groups = GroupUser.where(group_id: @exclude_group_ids).pluck(:user_id)
+  end
+
+  def apply_exclude_groups_filter(result)
+    result = result.where.not(user_id: @users_in_exclude_groups) if params[:exclude_groups]
+    result
   end
 end

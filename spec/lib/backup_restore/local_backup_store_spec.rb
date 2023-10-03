@@ -4,6 +4,8 @@ require "backup_restore/local_backup_store"
 require_relative "shared_examples_for_backup_store"
 
 RSpec.describe BackupRestore::LocalBackupStore do
+  subject(:store) { BackupRestore::BackupStore.create(root_directory: @root_directory) }
+
   before do
     @root_directory = Dir.mktmpdir
     @paths = []
@@ -12,7 +14,6 @@ RSpec.describe BackupRestore::LocalBackupStore do
 
   after { FileUtils.remove_dir(@root_directory, true) }
 
-  subject(:store) { BackupRestore::BackupStore.create(root_directory: @root_directory) }
   let(:expected_type) { BackupRestore::LocalBackupStore }
 
   it_behaves_like "backup store"

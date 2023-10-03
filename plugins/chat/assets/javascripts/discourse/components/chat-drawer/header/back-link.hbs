@@ -1,7 +1,8 @@
 <LinkTo
-  title={{i18n "chat.return_to_list"}}
-  class="chat-drawer-header__return-to-channels-btn"
-  @route="chat"
+  title={{@title}}
+  class="chat-drawer-header__back-btn"
+  @route={{@route}}
+  @models={{or @routeModels (array)}}
 >
   {{d-icon "chevron-left"}}
 </LinkTo>

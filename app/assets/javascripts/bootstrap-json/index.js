@@ -7,7 +7,7 @@ const path = require("path");
 const fs = require("fs");
 const fsPromises = fs.promises;
 const { JSDOM } = require("jsdom");
-const { shouldLoadPluginTestJs } = require("discourse-plugins");
+const { shouldLoadPlugins } = require("discourse-plugins");
 const { Buffer } = require("node:buffer");
 const { cwd, env } = require("node:process");
 
@@ -206,7 +206,14 @@ function replaceIn(bootstrap, template, id, headers, baseURL) {
   BUILDERS[id](buffer, bootstrap, headers, baseURL);
   let contents = buffer.filter((b) => b && b.length > 0).join("\n");
 
-  return template.replace(`<bootstrap-content key="${id}">`, contents);
+  if (id === "html-tag") {
+    return template.replace(`<html>`, contents);
+  } else {
+    return template.replace(
+      `<bootstrap-content key="${id}"></bootstrap-content>`,
+      contents
+    );
+  }
 }
 
 function extractPreloadJson(html) {
@@ -343,9 +350,9 @@ async function handleRequest(proxy, baseURL, req, res) {
   const csp = response.headers.get("content-security-policy");
   if (csp) {
     const emberCliAdditions = [
-      `http://${originalHost}/assets/`,
-      `http://${originalHost}/ember-cli-live-reload.js`,
-      `http://${originalHost}/_lr/`,
+      `http://${originalHost}${baseURL}assets/`,
+      `http://${originalHost}${baseURL}ember-cli-live-reload.js`,
+      `http://${originalHost}${baseURL}_lr/`,
     ].join(" ");
 
     const newCSP = csp
@@ -390,7 +397,7 @@ module.exports = {
   },
 
   contentFor(type, config) {
-    if (shouldLoadPluginTestJs() && type === "test-plugin-js") {
+    if (shouldLoadPlugins() && type === "test-plugin-js") {
       const scripts = [];
 
       const pluginInfos = this.app.project
@@ -431,7 +438,7 @@ module.exports = {
             `<script src="${config.rootURL}assets/${src}" data-discourse-plugin="${name}"></script>`
         )
         .join("\n");
-    } else if (shouldLoadPluginTestJs() && type === "test-plugin-tests-js") {
+    } else if (shouldLoadPlugins() && type === "test-plugin-tests-js") {
       return this.app.project
         .findAddonByName("discourse-plugins")
         .pluginInfos()
@@ -441,7 +448,7 @@ module.exports = {
             `<script src="${config.rootURL}assets/plugins/test/${directoryName}_tests.js" data-discourse-plugin="${pluginName}"></script>`
         )
         .join("\n");
-    } else if (shouldLoadPluginTestJs() && type === "test-plugin-css") {
+    } else if (shouldLoadPlugins() && type === "test-plugin-css") {
       return `<link rel="stylesheet" href="${config.rootURL}bootstrap/plugin-css-for-tests.css" data-discourse-plugin="_all" />`;
     }
   },
@@ -516,7 +523,16 @@ to serve API requests. For example:
       return false;
     }
 
-    if (request.path.startsWith("/_lr/")) {
+    // All JS assets are served by Ember CLI, except for
+    // plugin assets which end in _extra.js
+    if (
+      request.path.startsWith(`${baseURL}assets/`) &&
+      !request.path.endsWith("_extra.js")
+    ) {
+      return false;
+    }
+
+    if (request.path.startsWith(`${baseURL}_lr/`)) {
       return false;
     }
 

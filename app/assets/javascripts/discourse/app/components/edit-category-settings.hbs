@@ -128,7 +128,7 @@
     <label>
       <Input
         @type="checkbox"
-        @checked={{this.category.custom_fields.require_topic_approval}}
+        @checked={{this.category.category_setting.require_topic_approval}}
       />
       {{i18n "category.require_topic_approval"}}
     </label>
@@ -138,7 +138,7 @@
     <label>
       <Input
         @type="checkbox"
-        @checked={{this.category.custom_fields.require_reply_approval}}
+        @checked={{this.category.category_setting.require_reply_approval}}
       />
       {{i18n "category.require_reply_approval"}}
     </label>
@@ -187,7 +187,7 @@
       {{i18n "category.num_auto_bump_daily"}}
     </label>
     <NumberField
-      @number={{this.category.custom_fields.num_auto_bump_daily}}
+      @number={{this.category.category_setting.num_auto_bump_daily}}
       @id="category-number-daily-bump"
       @type="number"
       @min="0"
@@ -333,10 +333,7 @@
         @class="email-in"
         @value={{this.category.email_in}}
       />
-      <span>
-        {{d-icon "info-circle"}}
-        <DTooltip>{{i18n "category.email_in_tooltip"}}</DTooltip>
-      </span>
+
     </section>
 
     <section class="field email-in-allow-strangers">

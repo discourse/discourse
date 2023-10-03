@@ -7,7 +7,7 @@ import { PresenceChannelNotFound } from "discourse/services/presence";
 import { setTestPresence } from "discourse/lib/user-presence";
 import sinon from "sinon";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 function usersFixture() {
@@ -423,6 +423,43 @@ module("Unit | Service | presence | entering and leaving", function (hooks) {
     assert.false(
       presenceService._presentChannels.has("/test/ch1"),
       "service shows absent"
+    );
+  });
+
+  test("updates the server presence after going idle", async function (assert) {
+    const presenceService = getOwner(this).lookup("service:presence");
+    presenceService.currentUser = currentUser();
+    const channel = presenceService.getChannel("/test/ch1");
+
+    await channel.enter();
+    requests.pop(); // Throw away this request
+
+    setTestPresence(false);
+
+    await presenceService._updateServer();
+    assert.strictEqual(
+      requests.length,
+      1,
+      "updated the server after going idle"
+    );
+    let request = requests.pop();
+    assert.true(
+      request.getAll("leave_channels[]").includes("/test/ch1"),
+      "left ch1"
+    );
+
+    // Go back online
+    setTestPresence(true);
+    await presenceService._updateServer();
+    assert.strictEqual(
+      requests.length,
+      1,
+      "updated the server after going back online"
+    );
+    request = requests.pop();
+    assert.true(
+      request.getAll("present_channels[]").includes("/test/ch1"),
+      "rejoined ch1"
     );
   });
 

@@ -1,12 +1,13 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
+import { inject as service } from "@ember/service";
 
 export default DiscourseRoute.extend({
-  showFooter: true,
+  router: service(),
 
   beforeModel() {
     if (!this.siteSettings.tagging_enabled) {
-      this.transitionTo("tagGroups");
+      this.router.transitionTo("tagGroups");
     }
   },
 

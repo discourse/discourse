@@ -1,6 +1,8 @@
+//appears in: header of chat pane, channel info, preview card
 .chat-channel-title-wrapper {
   display: flex;
   align-items: center;
+  overflow: hidden;
 }
 
 .chat-channel-title {
@@ -8,8 +10,21 @@
   align-items: center;
   @include ellipsis;
 
+  .chat-channel-preview-card & {
+    max-width: 100%;
+  }
+
+  &__user-info {
+    overflow: hidden;
+  }
+
   .user-status-message {
     display: none; // we only show when in channels list
+  }
+
+  &__user-status-message {
+    flex-shrink: 3;
+    overflow: hidden;
   }
 
   .chat-name,

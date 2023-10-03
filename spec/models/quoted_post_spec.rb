@@ -79,7 +79,6 @@ RSpec.describe QuotedPost do
       </aside>
     HTML
 
-    QuotedPost.create!(post_id: post2.id, quoted_post_id: 999)
     quote = QuotedPost.create!(post_id: post2.id, quoted_post_id: post1.id)
     original_date = quote.created_at
 

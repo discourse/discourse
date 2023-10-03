@@ -27,6 +27,11 @@ class RemoteTheme < ActiveRecord::Base
   GITHUB_REGEXP = %r{\Ahttps?://github\.com/}
   GITHUB_SSH_REGEXP = %r{\Assh://git@github\.com:}
 
+  MAX_METADATA_FILE_SIZE = Discourse::MAX_METADATA_FILE_SIZE
+  MAX_ASSET_FILE_SIZE = 8.megabytes
+  MAX_THEME_FILE_COUNT = 1024
+  MAX_THEME_SIZE = 256.megabytes
+
   has_one :theme, autosave: false
   scope :joined_remotes,
         -> {
@@ -41,26 +46,56 @@ class RemoteTheme < ActiveRecord::Base
                       allow_nil: true
 
   def self.extract_theme_info(importer)
-    json = JSON.parse(importer["about.json"])
-    json.fetch("name")
-    json
-  rescue TypeError, JSON::ParserError, KeyError
-    raise ImportError.new I18n.t("themes.import_error.about_json")
+    if importer.file_size("about.json") > MAX_METADATA_FILE_SIZE
+      raise ImportError.new I18n.t(
+                              "themes.import_error.about_json_too_big",
+                              limit:
+                                ActiveSupport::NumberHelper.number_to_human_size(
+                                  MAX_METADATA_FILE_SIZE,
+                                ),
+                            )
+    end
+
+    begin
+      json = JSON.parse(importer["about.json"])
+      json.fetch("name")
+      json
+    rescue TypeError, JSON::ParserError, KeyError
+      raise ImportError.new I18n.t("themes.import_error.about_json")
+    end
   end
 
   def self.update_zipped_theme(
     filename,
     original_filename,
-    match_theme: false,
     user: Discourse.system_user,
     theme_id: nil,
     update_components: nil
   )
-    importer = ThemeStore::ZipImporter.new(filename, original_filename)
+    update_theme(
+      ThemeStore::ZipImporter.new(filename, original_filename),
+      user:,
+      theme_id:,
+      update_components:,
+    )
+  end
+
+  # This is only used in the tests environment and is currently not supported for other environments
+  if Rails.env.test?
+    def self.import_theme_from_directory(directory)
+      update_theme(ThemeStore::DirectoryImporter.new(directory))
+    end
+  end
+
+  def self.update_theme(
+    importer,
+    user: Discourse.system_user,
+    theme_id: nil,
+    update_components: nil
+  )
     importer.import!
 
     theme_info = RemoteTheme.extract_theme_info(importer)
-    theme = Theme.find_by(name: theme_info["name"]) if match_theme # Old theme CLI method, remove Jan 2020
     theme = Theme.find_by(id: theme_id) if theme_id # New theme CLI method
 
     existing = true
@@ -107,6 +142,7 @@ class RemoteTheme < ActiveRecord::Base
       Rails.logger.warn("Failed cleanup remote path #{e}")
     end
   end
+  private_class_method :update_theme
 
   def self.import_theme(url, user = Discourse.system_user, private_key: nil, branch: nil)
     importer = ThemeStore::GitImporter.new(url.strip, private_key: private_key, branch: branch)
@@ -232,6 +268,7 @@ class RemoteTheme < ActiveRecord::Base
     METADATA_PROPERTIES.each do |property|
       self.public_send(:"#{property}=", theme_info[property.to_s])
     end
+
     if !self.valid?
       raise ImportError,
             I18n.t(
@@ -246,6 +283,7 @@ class RemoteTheme < ActiveRecord::Base
         theme_info.dig("modifiers", modifier_name.to_s),
       )
     end
+
     if !theme.theme_modifier_set.valid?
       raise ImportError,
             I18n.t(
@@ -254,8 +292,43 @@ class RemoteTheme < ActiveRecord::Base
             )
     end
 
-    importer.all_files.each do |filename|
+    all_files = importer.all_files
+
+    if all_files.size > MAX_THEME_FILE_COUNT
+      raise ImportError,
+            I18n.t(
+              "themes.import_error.too_many_files",
+              count: all_files.size,
+              limit: MAX_THEME_FILE_COUNT,
+            )
+    end
+
+    theme_size = 0
+
+    all_files.each do |filename|
       next unless opts = ThemeField.opts_from_file_path(filename)
+
+      file_size = importer.file_size(filename)
+
+      if file_size > MAX_ASSET_FILE_SIZE
+        raise ImportError,
+              I18n.t(
+                "themes.import_error.asset_too_big",
+                filename: filename,
+                limit: ActiveSupport::NumberHelper.number_to_human_size(MAX_ASSET_FILE_SIZE),
+              )
+      end
+
+      theme_size += file_size
+
+      if theme_size > MAX_THEME_SIZE
+        raise ImportError,
+              I18n.t(
+                "themes.import_error.theme_too_big",
+                limit: ActiveSupport::NumberHelper.number_to_human_size(MAX_THEME_SIZE),
+              )
+      end
+
       value = importer[filename]
       updated_fields << theme.set_field(**opts.merge(value: value))
     end

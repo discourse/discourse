@@ -69,6 +69,31 @@ acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {
       "pressing k moves selection to previous post"
     );
   });
+
+  test("j/k navigation skips hidden elements", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    document.querySelector("#qunit-fixture").innerHTML = `
+      <style>
+        #post_2, #post_3 { display: none; }
+      </style>
+    `;
+
+    await triggerKeyEvent(document, "keypress", "J");
+    assert
+      .dom(".post-stream .topic-post.selected #post_1")
+      .exists("first post is selected");
+
+    await triggerKeyEvent(document, "keypress", "J");
+    assert
+      .dom(".post-stream .topic-post.selected #post_4")
+      .exists("pressing j moves selection to next visible post");
+
+    await triggerKeyEvent(document, "keypress", "K");
+    assert
+      .dom(".post-stream .topic-post.selected #post_1")
+      .exists("pressing k moves selection to previous visible post");
+  });
 });
 
 acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
@@ -218,5 +243,37 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
     await triggerKeyEvent(document, "keypress", "R");
 
     assert.strictEqual(resetNewCalled, 1);
+  });
+
+  test("share shortcuts", async function (assert) {
+    await visit("/t/this-is-a-test-topic/9");
+    await triggerKeyEvent(document, "keypress", "J");
+    assert.ok(
+      exists(".post-stream .topic-post.selected #post_1"),
+      "first post is selected"
+    );
+
+    await triggerKeyEvent(document, "keypress", "J");
+    assert.ok(
+      exists(".post-stream .topic-post.selected #post_2"),
+      "pressing j moves selection to next post"
+    );
+
+    await triggerKeyEvent(document, "keypress", "S");
+    assert
+      .dom(".d-modal.share-topic-modal")
+      .exists("post-specific share modal is open");
+    assert
+      .dom("#discourse-modal-title")
+      .hasText(I18n.t("post.share.title", { post_number: 2 }));
+    await click(".modal-close");
+
+    await triggerKeyEvent(document, "keydown", "S", { shiftKey: true });
+    assert
+      .dom(".d-modal.share-topic-modal")
+      .exists("topic level share modal is open");
+    assert.dom("#discourse-modal-title").hasText(I18n.t("topic.share.title"));
+
+    await click(".modal-close");
   });
 });

@@ -1,10 +1,12 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import I18n from "I18n";
 import { bind } from "discourse-common/utils/decorators";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { MENTION_KEYWORDS } from "discourse/plugins/chat/discourse/components/chat-message";
 import { clearChatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
+import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-types/channel";
 import { replaceIcon } from "discourse-common/lib/icon-library";
+import chatStyleguide from "../components/styleguide/organisms/chat";
 
 let _lastForcedRefreshAt;
 const MIN_REFRESH_DURATION_MS = 180000; // 3 minutes
@@ -13,11 +15,16 @@ replaceIcon("d-chat", "comment");
 
 export default {
   name: "chat-setup",
+  before: "hashtag-css-generator",
 
   initialize(container) {
+    this.router = container.lookup("service:router");
     this.chatService = container.lookup("service:chat");
+    this.chatHistory = container.lookup("service:chat-history");
+    this.site = container.lookup("service:site");
     this.siteSettings = container.lookup("service:site-settings");
-    this.appEvents = container.lookup("service:appEvents");
+    this.currentUser = container.lookup("service:current-user");
+    this.appEvents = container.lookup("service:app-events");
     this.appEvents.on("discourse:focus-changed", this, "_handleFocusChanged");
 
     if (!this.chatService.userCanChat) {
@@ -25,6 +32,15 @@ export default {
     }
 
     withPluginApi("0.12.1", (api) => {
+      api.onPageChange((path) => {
+        const route = this.router.recognize(path);
+        if (route.name.startsWith("chat.")) {
+          this.chatHistory.visit(route);
+        }
+      });
+
+      api.registerHashtagType("channel", new ChannelHashtagType(container));
+
       api.registerChatComposerButton({
         id: "chat-upload-btn",
         icon: "far-image",
@@ -54,46 +70,83 @@ export default {
         label: "chat.emoji",
         id: "emoji",
         class: "chat-emoji-btn",
-        icon: "discourse-emojis",
-        position: "dropdown",
+        icon: "far-smile",
+        position: this.site.desktopView ? "inline" : "dropdown",
+        context: "channel",
         action() {
           const chatEmojiPickerManager = container.lookup(
             "service:chat-emoji-picker-manager"
           );
-          chatEmojiPickerManager.startFromComposer(this.didSelectEmoji);
+          chatEmojiPickerManager.open({ context: "channel" });
         },
       });
 
+      api.registerChatComposerButton({
+        label: "chat.emoji",
+        id: "channel-emoji",
+        class: "chat-emoji-btn",
+        icon: "discourse-emojis",
+        position: "dropdown",
+        context: "thread",
+        action() {
+          const chatEmojiPickerManager = container.lookup(
+            "service:chat-emoji-picker-manager"
+          );
+          chatEmojiPickerManager.open({ context: "thread" });
+        },
+      });
+
+      const summarizationAllowedGroups =
+        this.siteSettings.custom_summarization_allowed_groups
+          .split("|")
+          .map((id) => parseInt(id, 10));
+
+      const canSummarize =
+        this.siteSettings.summarization_strategy &&
+        this.currentUser &&
+        this.currentUser.groups.some((g) =>
+          summarizationAllowedGroups.includes(g.id)
+        );
+
+      if (canSummarize) {
+        api.registerChatComposerButton({
+          translatedLabel: "chat.summarization.title",
+          id: "channel-summary",
+          icon: "magic",
+          position: "dropdown",
+          action: "showChannelSummaryModal",
+        });
+      }
+
       // we want to decorate the chat quote dates regardless
       // of whether the current user has chat enabled
-      api.decorateCookedElement(
-        (elem) => {
-          const currentUser = getOwner(this).lookup("service:current-user");
-          const currentUserTimezone = currentUser?.user_option?.timezone;
-          const chatTranscriptElements =
-            elem.querySelectorAll(".chat-transcript");
+      api.decorateCookedElement((elem) => {
+        const currentUser = getOwnerWithFallback(this).lookup(
+          "service:current-user"
+        );
+        const currentUserTimezone = currentUser?.user_option?.timezone;
+        const chatTranscriptElements =
+          elem.querySelectorAll(".chat-transcript");
 
-          chatTranscriptElements.forEach((el) => {
-            const dateTimeRaw = el.dataset["datetime"];
-            const dateTimeEl = el.querySelector(
-              ".chat-transcript-datetime a, .chat-transcript-datetime span"
+        chatTranscriptElements.forEach((el) => {
+          const dateTimeRaw = el.dataset["datetime"];
+          const dateTimeEl = el.querySelector(
+            ".chat-transcript-datetime a, .chat-transcript-datetime span"
+          );
+
+          if (currentUserTimezone) {
+            dateTimeEl.innerText = moment
+              .tz(dateTimeRaw, currentUserTimezone)
+              .format(I18n.t("dates.long_no_year"));
+          } else {
+            dateTimeEl.innerText = moment(dateTimeRaw).format(
+              I18n.t("dates.long_no_year")
             );
+          }
 
-            if (currentUserTimezone) {
-              dateTimeEl.innerText = moment
-                .tz(dateTimeRaw, currentUserTimezone)
-                .format(I18n.t("dates.long_no_year"));
-            } else {
-              dateTimeEl.innerText = moment(dateTimeRaw).format(
-                I18n.t("dates.long_no_year")
-              );
-            }
-
-            dateTimeEl.dataset.dateFormatted = true;
-          });
-        },
-        { id: "chat-transcript-datetime" }
-      );
+          dateTimeEl.dataset.dateFormatted = true;
+        });
+      });
 
       if (!this.chatService.userCanChat) {
         return;
@@ -102,6 +155,9 @@ export default {
       document.body.classList.add("chat-enabled");
 
       const currentUser = api.getCurrentUser();
+
+      // NOTE: chat_channels is more than a simple array, it also contains
+      // tracking and membership data, see Chat::StructuredChannelSerializer
       if (currentUser?.chat_channels) {
         this.chatService.setupWithPreloadedChannels(currentUser.chat_channels);
       }
@@ -120,6 +176,12 @@ export default {
 
       api.addToHeaderIcons("chat-header-icon");
 
+      api.addStyleguideSection?.({
+        component: chatStyleguide,
+        category: "organisms",
+        id: "chat",
+      });
+
       api.addChatDrawerStateCallback(({ isDrawerActive }) => {
         if (isDrawerActive) {
           document.body.classList.add("chat-drawer-active");
@@ -134,7 +196,7 @@ export default {
         }
 
         const highlightable = [`@${this.currentUser.username}`];
-        if (chatChannel.allow_channel_wide_mentions) {
+        if (chatChannel.allowChannelWideMentions) {
           highlightable.push(...MENTION_KEYWORDS.map((k) => `@${k}`));
         }
 

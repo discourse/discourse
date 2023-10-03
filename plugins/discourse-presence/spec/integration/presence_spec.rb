@@ -66,7 +66,7 @@ RSpec.describe "discourse-presence" do
     end
 
     it "handles category moderators for edit" do
-      SiteSetting.trusted_users_can_edit_others = false
+      SiteSetting.edit_all_post_groups = nil
       p = Fabricate(:post, topic: private_topic, user: private_topic.user)
 
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
@@ -77,6 +77,20 @@ RSpec.describe "discourse-presence" do
 
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}", use_cache: false)
       expect(c.config.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff], group.id)
+    end
+
+    it "adds edit_all_post_groups to the presence channel" do
+      p = Fabricate(:post, topic: public_topic, user: user)
+      g = Fabricate(:group)
+
+      SiteSetting.edit_all_post_groups = "#{Group::AUTO_GROUPS[:trust_level_1]}|#{g.id}"
+
+      c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
+      expect(c.config.allowed_group_ids).to contain_exactly(
+        Group::AUTO_GROUPS[:staff],
+        Group::AUTO_GROUPS[:trust_level_1],
+        g.id,
+      )
     end
 
     it "handles permissions for a public topic" do
@@ -135,27 +149,13 @@ RSpec.describe "discourse-presence" do
       expect(c.config.allowed_user_ids).to contain_exactly(user.id)
     end
 
-    it "allows only author and staff when editing a public post with tl4 editing disabled" do
-      SiteSetting.trusted_users_can_edit_others = false
-
-      p = Fabricate(:post, topic: public_topic, user: user)
-      c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
-      expect(c.config.public).to eq(false)
-      expect(c.config.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff])
-      expect(c.config.allowed_user_ids).to contain_exactly(user.id)
-    end
-
     it "follows the wiki edit trust level site setting" do
       p = Fabricate(:post, topic: public_topic, user: user, wiki: true)
       SiteSetting.min_trust_to_edit_wiki_post = TrustLevel.levels[:basic]
-      SiteSetting.trusted_users_can_edit_others = false
 
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
       expect(c.config.public).to eq(false)
-      expect(c.config.allowed_group_ids).to contain_exactly(
-        Group::AUTO_GROUPS[:staff],
-        Group::AUTO_GROUPS[:trust_level_1],
-      )
+      expect(c.config.allowed_group_ids).to include(Group::AUTO_GROUPS[:trust_level_1])
       expect(c.config.allowed_user_ids).to contain_exactly(user.id)
     end
 

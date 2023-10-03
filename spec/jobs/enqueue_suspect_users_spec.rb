@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::EnqueueSuspectUsers do
+  subject(:job) { described_class.new }
+
   before { SiteSetting.approve_suspect_users = true }
 
   it "does nothing when there are no suspect users" do
-    subject.execute({})
+    job.execute({})
 
     expect(ReviewableUser.count).to be_zero
   end
@@ -13,7 +15,7 @@ RSpec.describe Jobs::EnqueueSuspectUsers do
     let!(:suspect_user) { Fabricate(:active_user, created_at: 1.day.ago) }
 
     it "creates a reviewable when there is a suspect user" do
-      subject.execute({})
+      job.execute({})
 
       expect(ReviewableUser.count).to eq(1)
     end
@@ -26,14 +28,14 @@ RSpec.describe Jobs::EnqueueSuspectUsers do
           reviewable_by_moderator: true,
         )
 
-      subject.execute({})
+      job.execute({})
 
       expect(ReviewableUser.count).to eq(1)
       expect(ReviewableUser.last).to eq(review_user)
     end
 
     it "adds a score" do
-      subject.execute({})
+      job.execute({})
       score = ReviewableScore.last
 
       expect(score.reason).to eq("suspect_user")
@@ -42,7 +44,7 @@ RSpec.describe Jobs::EnqueueSuspectUsers do
     it "only enqueues non-approved users" do
       suspect_user.update!(approved: true)
 
-      subject.execute({})
+      job.execute({})
 
       expect(ReviewableUser.where(target: suspect_user).exists?).to eq(false)
     end
@@ -51,7 +53,7 @@ RSpec.describe Jobs::EnqueueSuspectUsers do
       SiteSetting.must_approve_users = true
       suspect_user.update!(approved: false)
 
-      subject.execute({})
+      job.execute({})
 
       expect(ReviewableUser.where(target: suspect_user).exists?).to eq(false)
     end
@@ -59,7 +61,7 @@ RSpec.describe Jobs::EnqueueSuspectUsers do
     it "ignores users created more than six months ago" do
       suspect_user.update!(created_at: 1.year.ago)
 
-      subject.execute({})
+      job.execute({})
 
       expect(ReviewableUser.where(target: suspect_user).exists?).to eq(false)
     end
@@ -67,7 +69,7 @@ RSpec.describe Jobs::EnqueueSuspectUsers do
     it "ignores users that were imported from another site" do
       suspect_user.upsert_custom_fields({ import_id: "fake_id" })
 
-      subject.execute({})
+      job.execute({})
 
       expect(ReviewableUser.where(target: suspect_user).exists?).to eq(false)
     end
@@ -75,7 +77,7 @@ RSpec.describe Jobs::EnqueueSuspectUsers do
     it "enqueues a suspect users with custom fields" do
       suspect_user.upsert_custom_fields({ field_a: "value", field_b: "value" })
 
-      subject.execute({})
+      job.execute({})
 
       expect(ReviewableUser.where(target: suspect_user).exists?).to eq(true)
     end
@@ -85,7 +87,7 @@ RSpec.describe Jobs::EnqueueSuspectUsers do
         { field_a: "value", field_b: "value", import_id: "fake_id" },
       )
 
-      subject.execute({})
+      job.execute({})
 
       expect(ReviewableUser.where(target: suspect_user).exists?).to eq(false)
     end
@@ -97,7 +99,7 @@ RSpec.describe Jobs::EnqueueSuspectUsers do
         time_read: 30.seconds.to_i,
       )
 
-      subject.execute({})
+      job.execute({})
 
       expect(ReviewableUser.count).to eq(1)
     end
@@ -109,7 +111,7 @@ RSpec.describe Jobs::EnqueueSuspectUsers do
         time_read: 2.minutes.to_i,
       )
 
-      subject.execute({})
+      job.execute({})
 
       expect(ReviewableUser.count).to eq(0)
     end

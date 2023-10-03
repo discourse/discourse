@@ -31,7 +31,7 @@ module PageObjects
       end
 
       def toggle_setting(setting, text = "")
-        find(".edit-category-tab .#{setting} label.checkbox-label", text: text).click
+        find(".edit-category-tab .#{setting} label.checkbox-label", text: text, visible: :all).click
         self
       end
 
@@ -40,12 +40,18 @@ module PageObjects
         find(".d-toggle-switch .toggle-template-type", visible: false)["aria-checked"] == "true"
       end
 
+      D_EDITOR_SELECTOR = ".d-editor"
+
       def has_d_editor?
-        page.has_selector?(".d-editor")
+        page.has_selector?(D_EDITOR_SELECTOR)
+      end
+
+      def has_no_d_editor?
+        page.has_no_selector?(D_EDITOR_SELECTOR)
       end
 
       def has_selected_template?(template_name)
-        find(".select-category-template .select-kit-header")["data-name"] == template_name
+        has_css?(".select-category-template .select-kit-header[data-name='#{template_name}']")
       end
 
       def toggle_form_templates
@@ -57,6 +63,10 @@ module PageObjects
         find(".select-category-template").click
         find(".select-kit-collection .select-kit-row", text: template_name).click
         find(".select-category-template").click
+      end
+
+      def new_topic_button
+        find("#create-topic")
       end
 
       CATEGORY_NAVIGATION_NEW_NAV_ITEM_SELECTOR = ".category-navigation .nav-item_new"

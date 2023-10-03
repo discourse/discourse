@@ -33,7 +33,11 @@ module ImportScripts::PhpBB3
             username_from_user_id: lambda { |user_id| @lookup.find_username_by_import_id(user_id) },
             smilie_to_emoji: lambda { |smilie| @smiley_processor.emoji(smilie).dup },
             quoted_post_from_post_id:
-              lambda { |post_id| @lookup.topic_lookup_from_imported_post_id(post_id) },
+              lambda do |post_id|
+                post_metadata = @lookup.topic_lookup_from_imported_post_id(post_id)
+                post_metadata[:username] ||= Post.joins(:user).where(id: post_id).pick(:username)
+                post_metadata
+              end,
             upload_md_from_file:
               (
                 lambda do |filename, index|

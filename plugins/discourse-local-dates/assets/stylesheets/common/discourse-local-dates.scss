@@ -23,32 +23,32 @@
   }
 }
 
-div[data-tippy-root] {
-  .locale-dates-previews {
-    max-width: 360px;
-    .preview {
-      display: flex;
-      flex-direction: column;
-      padding: 5px;
+.locale-dates-previews {
+  max-width: 250px;
 
-      .timezone {
-        font-weight: 700;
-      }
+  .preview {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    margin: 0;
 
-      &.current {
-        background: var(--tertiary-low);
-      }
+    .timezone {
+      font-weight: 700;
     }
-  }
 
-  .download-calendar {
-    text-align: right;
-    cursor: pointer;
-    margin-top: 0.5em;
+    &.current {
+      background: var(--tertiary-low);
+    }
   }
 }
 
-.discourse-local-dates-create-modal-footer {
+.download-calendar {
+  text-align: right;
+  cursor: pointer;
+  margin-top: 0.5em;
+}
+
+.discourse-local-dates-create-modal .modal-footer {
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -69,25 +69,7 @@ div[data-tippy-root] {
   display: flex;
   flex-direction: row;
   padding: 0.5em;
-
-  .picker-panel {
-    padding: 5px;
-    border: 1px solid var(--primary-low);
-  }
-
-  .date-picker {
-    display: flex;
-    flex-direction: column;
-    width: auto;
-    box-sizing: border-box;
-
-    .pika-single {
-      position: relative !important;
-      flex: 1;
-      display: flex;
-      border: 0;
-    }
-  }
+  overflow: auto;
 
   .form {
     flex: 1 0 0px;
@@ -210,37 +192,6 @@ div[data-tippy-root] {
       .inputs-panel {
         flex: 1;
       }
-
-      .picker-panel {
-        z-index: 1;
-        background: var(--secondary);
-        width: 200px;
-        box-sizing: border-box;
-        margin-left: 1em;
-      }
-
-      .time-pickers {
-        display: flex;
-        justify-content: center;
-        flex: 1;
-        margin-top: 1em;
-        align-items: center;
-        padding: 0.25em;
-        border-top: 1px solid var(--primary-low-mid);
-        box-sizing: border-box;
-
-        .d-icon {
-          color: var(--primary-medium);
-          margin-right: 0.5em;
-        }
-
-        .time-picker {
-          box-shadow: none;
-          margin: 0;
-          box-sizing: border-box;
-          width: 100%;
-        }
-      }
     }
 
     .preview {
@@ -303,7 +254,7 @@ div[data-tippy-root] {
 }
 
 html:not(.mobile-view) {
-  .fixed-modal .discourse-local-dates-create-modal.modal-body {
+  .discourse-local-dates-create-modal .modal-body {
     width: 40em; // using ems to scale with user font size
     max-width: 100vw; // avoids overflow if someone has extreme font-sizes impacting width
     max-height: 400px !important;
@@ -311,24 +262,24 @@ html:not(.mobile-view) {
 }
 
 html.mobile-view {
-  .fixed-modal .discourse-local-dates-create-modal.modal-body {
+  .discourse-local-dates-create-modal .modal-body {
     max-height: 400px !important;
 
     .date-time-configuration {
       flex-direction: column;
     }
 
-    .picker-panel {
+    .calendar-date-time-input {
       width: 100%;
       margin: 0 0 1em 0;
 
       .pika-single {
         justify-content: center;
       }
-    }
 
-    .time-picker {
-      padding-top: 6px;
+      .time-picker {
+        padding-top: 6px;
+      }
     }
   }
 }

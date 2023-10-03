@@ -13,28 +13,8 @@ RSpec.describe Discourse do
 
   describe "avatar_sizes" do
     it "returns a list of integers" do
-      expect(Discourse.avatar_sizes).to contain_exactly(
-        20,
-        25,
-        30,
-        32,
-        37,
-        40,
-        45,
-        48,
-        50,
-        60,
-        64,
-        67,
-        75,
-        90,
-        96,
-        120,
-        135,
-        180,
-        240,
-        360,
-      )
+      SiteSetting.avatar_sizes = "10|20|30"
+      expect(Discourse.avatar_sizes).to contain_exactly(10, 20, 30)
     end
   end
 
@@ -311,7 +291,7 @@ RSpec.describe Discourse do
     describe ".received_postgres_readonly!" do
       it "sets the right time" do
         time = Discourse.received_postgres_readonly!
-        expect(Discourse.postgres_last_read_only["default"]).to eq(time)
+        expect(Discourse.redis.get(Discourse::LAST_POSTGRES_READONLY_KEY).to_i).to eq(time.to_i)
       end
     end
 
@@ -328,7 +308,7 @@ RSpec.describe Discourse do
         messages = []
 
         expect do messages = MessageBus.track_publish { Discourse.clear_readonly! } end.to change {
-          Discourse.postgres_last_read_only["default"]
+          Discourse.redis.get(Discourse::LAST_POSTGRES_READONLY_KEY)
         }.to(nil)
 
         expect(messages.any? { |m| m.channel == Site::SITE_JSON_CHANNEL }).to eq(true)

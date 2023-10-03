@@ -6,32 +6,80 @@
 
 id:
   js:
+    admin:
+      site_settings:
+        categories:
+          chat: Obrolan
+        chat_separate_sidebar_mode:
+          always: "Selalu"
+          never: "Tidak pernah"
+      logs:
+        staff_actions:
+          actions:
+            chat_channel_status_change: "Status kanal obrolan berubah"
+            chat_channel_delete: "Kanal obrolan dihapus"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "Buat pesan obrolan di kanal tertentu"
+    about:
+      chat_messages_count: "Pesan Obrolan"
+      chat_channels_count: "Kanal Obrolan"
+      chat_users_count: "Pengguna Obrolan"
     chat:
+      deleted_chat_username: dihapus
+      dates:
+        time_tiny: "h:mm"
+      all_loaded: "Menampilkan semua pesan"
+      already_enabled: "Obrolan sudah diaktifkan pada topik ini. Segarkan."
+      disabled_for_topic: "Obrolan dinonaktifkan pada topik ini."
+      bot: "bot"
+      create: "Buat"
       cancel: "Batal"
+      cancel_reply: "Batalkan balasan"
+      chat_channels: "Kanal"
+      browse_all_channels: "Jelajahi semua kanal"
+      move_to_channel:
+        title: "Pindahkan pesan ke kanal"
+        confirm_move: "Pindahkan Pesan"
       channel_settings:
+        title: "Pengaturan kanal"
         edit: "Ubah"
         add: "Menambahkan"
+        close_channel: "Tutup kanal"
+        open_channel: "Buka kanal"
         join: "Gabung"
         leave: "Keluar"
       close: "Tutup"
+      remove: "Hapus"
       delete: "Hapus"
       muted: "diredam"
       joined: "joined"
       email_frequency:
         never: "Tidak pernah"
       header_indicator_preference:
+        all_new: "Semua Pesan Baru"
         never: "Tidak pernah"
       join: "Gabung"
+      summarization:
+        title: "Meringkas pesan"
+        description: "Pilih opsi di bawah untuk meringkas percakapan yang dikirim selama jangka waktu yang diinginkan."
+        summarize: "Meringkas"
+        since:
+          other: "%{count} jam terakhir"
       mention_warning:
-        dismiss: "bubar"
+        channel_wide_mentions_disallowed: "Penyebutan @here dan @all dinonaktifkan di kanal ini."
       reply: "Balas"
       edit: "Ubah"
       bookmark_message: "Penandaan"
       bookmark_message_edit: "Edit Bookmark"
       save: "Simpan"
+      return_to_threads_list: "Kembali ke diskusi yang sedang berlangsung"
       sounds:
         none: "Tidak ada"
       channel_status:
+        archive_failed: "Arsip kanal gagal. %{completed}/%{total} pesan telah diarsipkan. <a target=\"_blank\" href=\"%{topic_url}\">Topik tujuan</a> telah dibuat. Tekan coba lagi untuk mencoba menyelesaikan arsip."
         closed: "Tertutup"
         open: "Buka"
       browse:
@@ -45,10 +93,23 @@ id:
           about: Tentang
           members: Anggota
           settings: Pengaturan
+      new_message_modal:
+        title: Kirim pesan
+        add_user_long: <kbd>shift + click</kbd> atau <kbd>shift + enter</kbd><span>Tambahkan @%{username}</span>
+        add_user_short: <span>Tambahkan pengguna</span>
+        open_channel: <span>Buka saluran</span>
+        default_search_placeholder: "#a-channel, @somebody atau apapun"
+        default_channel_search_placeholder: "#a-channel"
+        default_user_search_placeholder: "@somebody"
+        user_search_placeholder: "...menambahkan lebih banyak pengguna"
+        disabled_user: "telah menonaktifkan obrolan"
+        no_items: "Tidak ada item"
       direct_message_creator:
         title: Pesan Baru
         prefix: "Kepada:"
       create_channel:
+        threading:
+          label: "Aktifkan threading"
         type: "Tipe"
         types:
           category: "Kategori"
@@ -56,13 +117,23 @@ id:
       notification_levels:
         never: "Tidak pernah"
       settings:
+        channel_threading_label: "Threading"
+        channel_threading_description: "Ketika threading diaktifkan, balasan ke pesan obrolan akan membuat percakapan terpisah, yang akan ada di samping saluran utama."
         follow: "Gabung"
         followed: "Joined"
+        threading_enabled: "Diaktifkan"
+        threading_disabled: "Dinonaktifkan"
         notifications: "Pemberitahuan"
         save: "Simpan"
         saved: "Tersimpan"
         unfollow: "Keluar"
         admin_title: "Admin"
+      admin:
+        export_messages:
+          title: "Ekspor pesan obrolan"
+          description: "Ini mengekspor semua pesan dari semua kanal."
+          create_export: "Buat ekspor"
+          export_has_started: "Ekspor telah dimulai. Anda akan menerima PM jika sudah siap."
       incoming_webhooks:
         delete: "Hapus"
         name: "Name"
@@ -77,6 +148,27 @@ id:
       emoji_picker:
         objects: "Objek"
         flags: "Flags"
+      thread:
+        title: "Judul"
+        replies:
+          other: "%{count} balasan"
+        label: Utas
+        original_message:
+          started_by: "Dimulai oleh"
+        settings: "Pengaturan"
+        last_reply: "balasan terakhir"
+        notifications:
+          regular:
+            title: "Normal"
+            description: "Anda akan diberi tahu jika seseorang menyebut @nama Anda di utas ini."
+          tracking:
+            title: "Pelacakan"
+            description: "Jumlah balasan baru untuk utas ini akan ditampilkan di daftar utas dan kanal. Anda akan diberi tahu jika seseorang menyebut @nama Anda di utas ini."
+        participants_other_count:
+          other: "+%{count}"
+      threads:
+        list: "Diskusi yang sedang berlangsung"
+        none: "Anda tidak berpartisipasi dalam utas apa pun di kanal ini."
       draft_channel_screen:
         header: "Pesan Baru"
         cancel: "Batal"
@@ -89,4 +181,13 @@ id:
     review:
       types:
         reviewable_chat_message:
-          flagged_by: "Dipanji Oleh"
+          title: "Pesan obrolan yang ditandai"
+          noun: "pesan obrolan"
+    styleguide:
+      sections:
+        chat:
+          title: Obrolan
+    sidebar:
+      panels:
+        chat:
+          label: "Obrolan"

@@ -8,18 +8,15 @@ module PageObjects
       end
 
       def category_drop
-        element = page.find(".category-breadcrumb li:first-of-type .category-drop")
-        Components::SelectKit.new(element)
+        Components::SelectKit.new(".category-breadcrumb li:first-of-type .category-drop")
       end
 
       def subcategory_drop
-        element = page.find(".category-breadcrumb li:nth-of-type(2) .category-drop")
-        Components::SelectKit.new(element)
+        Components::SelectKit.new(".category-breadcrumb li:nth-of-type(2) .category-drop")
       end
 
       def tag_drop
-        element = page.find(".category-breadcrumb .tag-drop")
-        Components::SelectKit.new(element)
+        Components::SelectKit.new(".category-breadcrumb .tag-drop")
       end
     end
   end

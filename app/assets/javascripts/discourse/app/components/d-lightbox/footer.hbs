@@ -1,0 +1,48 @@
+<div class="d-lightbox__footer">
+  {{#if @shouldDisplayTitle}}
+    <div
+      aria-hidden="true"
+      class="d-lightbox__main-title"
+      tabindex="0"
+      {{on "click" @toggleExpandTitle passive=true capture=true}}
+    >
+      <span class="d-lightbox__item-title">
+        {{~@currentItem.title~}}
+      </span>
+      <span class="d-lightbox__item-file-details">
+        {{~@currentItem.fileDetails~}}
+      </span>
+    </div>
+  {{/if}}
+  <div class="d-lightbox__footer-buttons">
+    {{#if @canZoom}}
+      <DButton
+        {{on "click" @toggleZoom passive=true capture=true}}
+        @title="experimental_lightbox.buttons.zoom"
+        @icon={{@zoomButtonIcon}}
+        @ariaHidden="true"
+        aria-hidden="true"
+        class="d-lightbox__zoom-button btn-flat"
+      />
+    {{/if}}
+    {{#if @canRotate}}
+      <DButton
+        {{on "click" @rotateImage passive=true capture=true}}
+        @title="experimental_lightbox.buttons.rotate"
+        @icon="redo"
+        @ariaHidden="true"
+        aria-hidden="true"
+        class="d-lightbox__rotate-button btn-flat"
+      />
+    {{/if}}
+    {{#if @canDownload}}
+      <DButton
+        {{on "click" @downloadImage passive=true capture=true}}
+        @title="experimental_lightbox.buttons.download"
+        @icon="download"
+        @ariaHidden="true"
+        class="d-lightbox__download-button btn-flat"
+      />
+    {{/if}}
+  </div>
+</div>

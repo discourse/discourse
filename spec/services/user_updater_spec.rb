@@ -46,6 +46,42 @@ RSpec.describe UserUpdater do
       expect(user.reload.name).to eq "Jim Tom"
     end
 
+    describe "the within_user_updater_transaction event" do
+      it "allows plugins to perform additional updates" do
+        update_attributes = { name: "Jimmmy Johnny" }
+        handler =
+          Proc.new do |user, attrs|
+            user.user_profile.update!(bio_raw: "hello world I'm Jimmmy")
+            expect(attrs).to eq(update_attributes)
+          end
+        DiscourseEvent.on(:within_user_updater_transaction, &handler)
+
+        updater = UserUpdater.new(user, user)
+        updater.update(update_attributes)
+
+        expect(user.reload.name).to eq("Jimmmy Johnny")
+        expect(user.user_profile.bio_raw).to eq("hello world I'm Jimmmy")
+      ensure
+        DiscourseEvent.off(:within_user_updater_transaction, &handler)
+      end
+
+      it "can cancel the whole update transaction if a handler raises" do
+        error_class = Class.new(StandardError)
+        handler = Proc.new { raise error_class.new }
+
+        DiscourseEvent.on(:within_user_updater_transaction, &handler)
+
+        old_name = user.name
+        updater = UserUpdater.new(user, user)
+
+        expect { updater.update(name: "Failure McClario") }.to raise_error(error_class)
+
+        expect(user.reload.name).to eq(old_name)
+      ensure
+        DiscourseEvent.off(:within_user_updater_transaction, &handler)
+      end
+    end
+
     it "can update categories and tags" do
       updater = UserUpdater.new(user, user)
       updater.update(watched_tags: "#{tag.name},#{tag2.name}", muted_category_ids: [category.id])

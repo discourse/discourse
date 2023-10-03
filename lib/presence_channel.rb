@@ -314,7 +314,10 @@ class PresenceChannel
         else
           raise InvalidConfig.new "Expected PresenceChannel::Config or nil. Got a #{result.class.name}"
         end
-      PresenceChannel.redis.set(redis_key_config, to_cache, ex: CONFIG_CACHE_SECONDS)
+
+      DiscourseRedis.ignore_readonly do
+        PresenceChannel.redis.set(redis_key_config, to_cache, ex: CONFIG_CACHE_SECONDS)
+      end
 
       raise PresenceChannel::NotFound if result.nil?
       result

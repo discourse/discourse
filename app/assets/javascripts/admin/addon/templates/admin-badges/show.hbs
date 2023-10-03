@@ -1,4 +1,4 @@
-<DSection @class="current-badge content-body">
+<section class="current-badge content-body">
   <div class="control-group current-badge__toggle-badge">
     <DToggleSwitch
       @state={{this.buffered.enabled}}
@@ -103,9 +103,9 @@
           @onChange={{action (mut this.buffered.badge_grouping_id)}}
         />
         <DButton
-          @class="btn-default"
           @action={{route-action "editGroupings"}}
           @icon="pencil-alt"
+          class="btn-default"
         />
       </div>
     </div>
@@ -175,11 +175,17 @@
         <a
           href
           {{on "click" (fn this.showPreview this.buffered "false")}}
-        >{{i18n "admin.badges.preview.link_text"}}</a>
+          class="preview-badge"
+        >
+          {{i18n "admin.badges.preview.link_text"}}</a>
         |
-        <a href {{on "click" (fn this.showPreview this.buffered "true")}}>{{i18n
-            "admin.badges.preview.plan_text"
-          }}</a>
+        <a
+          href
+          {{on "click" (fn this.showPreview this.buffered "true")}}
+          class="preview-badge-plan"
+        >
+          {{i18n "admin.badges.preview.plan_text"}}
+        </a>
         {{#if this.preview_loading}}
           {{i18n "loading"}}
         {{/if}}
@@ -265,30 +271,35 @@
 
     <div class="buttons">
       <DButton
-        @class="btn-primary"
-        @action={{action "save"}}
-        @type="submit"
+        @action={{this.save}}
         @disabled={{this.saving}}
         @label="admin.badges.save"
+        type="submit"
+        class="btn-primary"
       />
       <span class="saving">{{this.savingStatus}}</span>
       {{#unless this.readOnly}}
         <DButton
-          @action={{action "destroyBadge"}}
-          @class="btn-danger"
+          @action={{this.destroyBadge}}
           @label="admin.badges.delete"
+          class="btn-danger"
         />
       {{/unless}}
     </div>
   </form>
-</DSection>
+</section>
 
 {{#if this.grant_count}}
   <div class="content-body current-badge-actions">
     <div>
       <LinkTo @route="badges.show" @model={{this}}>
-        {{number this.grant_count}}
-        {{i18n "badges.awarded"}}
+        {{html-safe
+          (i18n
+            "badges.awarded"
+            count=this.displayCount
+            number=(number this.displayCount)
+          )
+        }}
       </LinkTo>
     </div>
   </div>

@@ -29,19 +29,19 @@ RSpec.describe Tag do
 
       expect { tag_sidebar_section_link.linkable.destroy! }.to change {
         SidebarSectionLink.count
-      }.from(3).to(1)
-      expect(SidebarSectionLink.first).to eq(category_sidebar_section_link)
+      }.from(12).to(10)
+      expect(SidebarSectionLink.last).to eq(category_sidebar_section_link)
     end
   end
 
   describe "new" do
-    subject { Fabricate.build(:tag) }
+    subject(:tag) { Fabricate.build(:tag) }
 
     it "triggers a extensibility event" do
-      event = DiscourseEvent.track_events { subject.save! }.last
+      event = DiscourseEvent.track_events { tag.save! }.last
 
       expect(event[:event_name]).to eq(:tag_created)
-      expect(event[:params].first).to eq(subject)
+      expect(event[:params].first).to eq(tag)
     end
 
     it "prevents case-insensitive duplicates" do
@@ -59,13 +59,13 @@ RSpec.describe Tag do
   end
 
   describe "destroy" do
-    subject { Fabricate(:tag) }
+    subject(:tag) { Fabricate(:tag) }
 
     it "triggers a extensibility event" do
-      event = DiscourseEvent.track_events { subject.destroy! }.last
+      event = DiscourseEvent.track_events { tag.destroy! }.last
 
       expect(event[:event_name]).to eq(:tag_destroyed)
-      expect(event[:params].first).to eq(subject)
+      expect(event[:params].first).to eq(tag)
     end
 
     it "removes it from its tag group" do
@@ -380,6 +380,17 @@ RSpec.describe Tag do
       SiteSetting.include_secure_categories_in_tag_counts = true
 
       expect(Tag.topic_count_column(Guardian.new(user))).to eq("staff_topic_count")
+    end
+  end
+
+  describe "description" do
+    it "uses the HTMLSanitizer to remove unsafe tags and attributes" do
+      tag.description =
+        "<div>hi</div><script>a=0;</script> <a onclick='const a=0;' href=\"https://www.discourse.org\">discourse</a>"
+      tag.save!
+      expect(tag.description.strip).to eq(
+        "<div>hi</div>a=0; <a href=\"https://www.discourse.org\">discourse</a>",
+      )
     end
   end
 end

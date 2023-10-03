@@ -9,7 +9,7 @@
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s;
-  box-shadow: shadow("header");
+  box-shadow: var(--shadow-header);
   z-index: z("header") - 10;
 
   .update-prompt-main-content {

@@ -5,12 +5,7 @@
   />
 
   <div
-    style={{unless
-      this.noCategoryStyle
-      (html-safe
-        (concat (border-color c.color) (category-color-variable c.color))
-      )
-    }}
+    style={{unless this.noCategoryStyle (category-color-variable c.color)}}
     data-category-id={{c.id}}
     data-notification-level={{c.notificationLevelString}}
     data-url={{c.url}}

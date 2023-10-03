@@ -6,8 +6,8 @@ import {
   REJECTED,
 } from "discourse/models/reviewable";
 import I18n from "I18n";
-import { htmlHelper } from "discourse-common/lib/helpers";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import { htmlSafe } from "@ember/template";
 
 function dataFor(status, type) {
   switch (status) {
@@ -21,7 +21,7 @@ function dataFor(status, type) {
             name: "approved_post",
             cssClass: "approved",
           };
-        case "User":
+        case "ReviewableUser":
           return {
             icon: "check",
             name: "approved_user",
@@ -42,7 +42,7 @@ function dataFor(status, type) {
             name: "rejected_post",
             cssClass: "rejected",
           };
-        case "User":
+        case "ReviewableUser":
           return {
             icon: "times",
             name: "rejected_user",
@@ -74,13 +74,13 @@ export function htmlStatus(status, type) {
   let icon = data.icon ? iconHTML(data.icon) : "";
 
   return `
-      <span class="${data.cssClass || data.name}">
-        ${icon}
-        ${I18n.t("review.statuses." + data.name + ".title")}
-      </span>
+    <span class="${data.cssClass || data.name}">
+      ${icon}
+      ${I18n.t("review.statuses." + data.name + ".title")}
+    </span>
   `;
 }
 
-export default htmlHelper((status, type) => {
-  return htmlStatus(status, type);
-});
+export default function (status, type) {
+  return htmlSafe(htmlStatus(status, type));
+}

@@ -35,9 +35,16 @@ export function defaultRenderTag(tag, params) {
   if (siteSettings.tag_style || params.style) {
     classes.push(params.style || siteSettings.tag_style);
   }
+  if (params.extraClass) {
+    classes.push(params.extraClass);
+  }
   if (params.size) {
     classes.push(params.size);
   }
+
+  // remove all html tags from hover text
+  const hoverDescription =
+    params.description && params.description.replace(/<.+?>/g, "");
 
   let val =
     "<" +
@@ -45,11 +52,11 @@ export function defaultRenderTag(tag, params) {
     href +
     " data-tag-name=" +
     tag +
-    (params.description ? ' title="' + escape(params.description) + '" ' : "") +
+    (params.description ? ' title="' + escape(hoverDescription) + '" ' : "") +
     " class='" +
     classes.join(" ") +
     "'>" +
-    visibleName +
+    (params.displayName ? escape(params.displayName) : visibleName) +
     "</" +
     tagName +
     ">";

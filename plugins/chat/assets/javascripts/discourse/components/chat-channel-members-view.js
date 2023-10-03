@@ -19,7 +19,7 @@ export default class ChatChannelMembersView extends Component {
   didInsertElement() {
     this._super(...arguments);
 
-    if (!this.channel || this.channel.isDraft) {
+    if (!this.channel) {
       return;
     }
 
@@ -36,13 +36,10 @@ export default class ChatChannelMembersView extends Component {
     this.appEvents.off("chat:refresh-channel-members", this, "onFilterMembers");
   }
 
-  get chatProgressBarContainer() {
-    return document.querySelector("#chat-progress-bar-container");
-  }
-
   @action
   onFilterMembers(username) {
     this.set("filter", username);
+    this.set("members", this.chatApi.listChannelMemberships(this.channel.id));
 
     discourseDebounce(
       this,
@@ -53,8 +50,8 @@ export default class ChatChannelMembersView extends Component {
   }
 
   @action
-  loadMore() {
-    discourseDebounce(this, this.members.loadMore, INPUT_DELAY);
+  load() {
+    discourseDebounce(this, this.members.load, INPUT_DELAY);
   }
 
   _focusSearch() {

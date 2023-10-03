@@ -27,30 +27,14 @@ bs_BA:
           title: "Rezultati će biti prikazani onda kada glasanje bude <strong>završeno</strong>."
         staff:
           title: "Rezultati su prikazani samo <strong>uredništvu i admin</strong> korisnicima."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Odaberite najmanje <strong>%{count}</strong> opciju."
-            few: "Odaberite najmanje <strong>%{count}</strong> opcije."
-            other: "Odaberite najmanje <strong>%{count}</strong> opcija."
-          up_to_max_options:
-            one: "Odaberite najviše <strong>%{count}</strong> opciju."
-            few: "Odaberite najviše <strong>%{count}</strong> opcije."
-            other: "Odaberite najviše <strong>%{count}</strong> opcija."
-          x_options:
-            one: "Odaberite <strong>%{count}</strong> opciju."
-            few: "Odaberite <strong>%{count}</strong> opcije."
-            other: "Odaberite <strong>%{count}</strong> opcija."
-          between_min_and_max_options: "Odaberite između <strong>%{min}</strong> i <strong>%{max}</strong> mogućnosti."
       cast-votes:
         title: "ukupno glasova"
         label: "Glasaj"
       show-results:
         title: "Prikaži rezultate ankete"
-        label: "Prikaži rezultate"
+        label: "Rezultati"
       hide-results:
         title: "Nazad na glasove"
-        label: "Prikaži glasanje"
       group-results:
         title: "Grupiraj glasove po polju korisnika"
         label: "Prikaži raspodjelu"
@@ -74,6 +58,8 @@ bs_BA:
         breakdown: "Razloženo"
         percentage: "Procentualno"
         count: "Broj"
+      options:
+        label: "Opcije"
       error_while_toggling_status: "Izvinjavamo se, pojavio se problem u prebacivanju statutusa ove ankete"
       error_while_casting_votes: "Izvinjavamo se, pojavila se greška prikazivanja vaših glasova"
       error_while_fetching_voters: "Izvinjavamo se, pojavila se greška pri prikazivanju glasača"

@@ -575,7 +575,7 @@ class TopicView
 
   def pending_posts
     @pending_posts ||=
-      ReviewableQueuedPost.pending.where(created_by: @user, topic: @topic).order(:created_at)
+      ReviewableQueuedPost.pending.where(target_created_by: @user, topic: @topic).order(:created_at)
   end
 
   def actions_summary
@@ -605,7 +605,16 @@ class TopicView
 
   def suggested_topics
     if @include_suggested
-      @suggested_topics ||= TopicQuery.new(@user).list_suggested_for(topic, pm_params: pm_params)
+      @suggested_topics ||=
+        begin
+          kwargs =
+            DiscoursePluginRegistry.apply_modifier(
+              :topic_view_suggested_topics_options,
+              { include_random: true, pm_params: pm_params },
+              self,
+            )
+          TopicQuery.new(@user).list_suggested_for(topic, **kwargs)
+        end
     else
       nil
     end
@@ -711,6 +720,10 @@ class TopicView
           hash
         end
       end
+  end
+
+  def summarizable?
+    Summarization::Base.can_see_summary?(@topic, @user)
   end
 
   protected

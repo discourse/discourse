@@ -2,18 +2,14 @@
   <div class="admin-controls">
     <div class="controls">
       <div class="inline-form">
-        <DButton
-          @action={{action "toggleMenu"}}
-          @class="menu-toggle"
-          @icon="bars"
-        />
+        <DButton @action={{this.toggleMenu}} @icon="bars" class="menu-toggle" />
         <TextField
           @value={{this.filter}}
           @placeholderKey="admin.watched_words.search"
           @class="no-blur"
         />
         <DButton
-          @action={{action "clearFilter"}}
+          @action={{this.clearFilter}}
           @label="admin.watched_words.clear_filter"
         />
       </div>

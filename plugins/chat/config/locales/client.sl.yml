@@ -6,7 +6,13 @@
 
 sl:
   js:
+    admin:
+      site_settings:
+        chat_separate_sidebar_mode:
+          always: "Vedno"
+          never: "Nikoli"
     chat:
+      deleted_chat_username: izbrisano
       create: "Ustvari"
       cancel: "Prekliči"
       channel_settings:
@@ -15,6 +21,7 @@ sl:
         join: "Pridruži se"
         leave: "Zapusti"
       close: "Zapri"
+      remove: "Odstrani"
       delete: "Izbriši"
       edited: "urejen"
       muted: "utišani"
@@ -26,8 +33,6 @@ sl:
       flag: "Prijavi"
       join: "Pridruži se"
       last_visit: "zadnji obisk"
-      mention_warning:
-        dismiss: "opusti"
       reply: "Odgovori"
       edit: "Uredi"
       rebake_message: "Obnovi HTML"
@@ -72,6 +77,8 @@ sl:
       settings:
         follow: "Pridruži se"
         followed: "Pridružen"
+        threading_enabled: "Vključeno"
+        threading_disabled: "Onemogočeno"
         notifications: "Obvestila"
         preview: "Predogled"
         save: "Shrani"
@@ -103,6 +110,25 @@ sl:
         activities: "Dejavnosti"
         flags: "Zastave"
         symbols: "Simboli"
+      thread:
+        title: "Naziv"
+        replies:
+          one: "%{count} odgovor"
+          two: "%{count} odgovora"
+          few: "%{count} odgovori"
+          other: "%{count} odgovorov"
+        settings: "Nastavitve"
+        last_reply: "zadnji odgovor"
+        notifications:
+          regular:
+            title: "Običajna"
+          tracking:
+            title: "Sledim"
+        participants_other_count:
+          one: "+%{count}"
+          two: "+%{count}"
+          few: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Novo zasebno sporočilo"
         cancel: "Prekliči"
@@ -114,7 +140,3 @@ sl:
           fields:
             message:
               label: Opozorilo
-    review:
-      types:
-        reviewable_chat_message:
-          flagged_by: "Prijavljen od"

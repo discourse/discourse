@@ -155,11 +155,6 @@ vi:
     software_update_prompt:
       message: "Chúng tôi đã cập nhật trang web này, <span>vui lòng làm mới</span>, nếu không bạn có thể gặp phải hành vi không mong muốn."
       dismiss: "Hủy bỏ"
-    bootstrap_mode_enabled:
-      other: "Để đơn giản hoá quá trình triển khai trang web, bạn đang ở trong chế độ bootstrap. Mọi người dùng mới đều có mức độ tin cậy 1 và sẽ nhận được email cập nhật thông tin mỗi ngày. Chế độ này sẽ tự động tắt khi số người dùng vượt qua %{count}"
-    bootstrap_mode_disabled: "Chế độ bootstrap sẽ bị vô hiệu trong 24 giờ tới."
-    bootstrap_invite_button_title: "Gửi Lời Mời"
-    bootstrap_wizard_link_title: "Hoàn tất trình hướng dẫn thiết lập"
     themes:
       default_description: "Mặc định"
       broken_theme_alert: "Trang web của bạn có thể không hoạt động vì một chủ đề / thành phần có lỗi."
@@ -240,9 +235,8 @@ vi:
       aria_label: "Lọc theo khoảng thời gian"
     related_messages:
       title: "Tin nhắn liên quan"
-      see_all: 'Xem <a href="%{path}"> toàn bộ tin nhắn </a> từ %{username}...'
+      pill: "Tin nhắn liên quan"
     suggested_topics:
-      title: "Chủ đề tương tự"
       pm_title: "Tin nhắn gợi ý"
     about:
       simple_title: "Giới thiệu"
@@ -313,9 +307,10 @@ vi:
       new_topic: "Chủ đề nháp mới"
       new_private_message: "Bản nháp tin nhắn cá nhân mới"
       abandon:
-        confirm: "Bạn đang có một bản nháp cho chủ đề này. Bạn muốn làm gì với nó?"
         yes_value: "Hủy bỏ"
         no_value: "Tiếp tục chỉnh sửa"
+    topic_count_all:
+      other: "Xem %{count} chủ đề mới"
     topic_count_categories:
       other: "Xem %{count} chủ đề mới hoặc được cập nhật"
     topic_count_latest:
@@ -328,18 +323,11 @@ vi:
       other: "Xem %{count} chủ đề mới"
     preview: "xem trước"
     cancel: "hủy"
-    deleting: "Đang xóa ..."
     save: "Lưu thay đổi"
-    saving: "Đang lưu ..."
     saved: "Đã lưu!"
     upload: "Tải lên"
-    uploading: "Đang tải lên..."
-    processing: "Đang xử lý..."
-    uploading_filename: "Tải lên: %{filename}..."
-    processing_filename: "Đang xử lý: %{filename}..."
     clipboard: "clipboard"
     uploaded: "Đã tải lên!"
-    pasting: "Đang gõ"
     enable: "Kích hoạt"
     disable: "Vô hiệu hóa"
     continue: "Tiếp tục"
@@ -494,14 +482,19 @@ vi:
         reviewable_flagged_post:
           title: "Bài viết bị gắn cờ"
           flagged_by: "Gắn cờ bởi"
+          noun: "bài đăng"
         reviewable_queued_topic:
           title: "Chủ đề được lên lịch"
+          noun: "chủ đề"
         reviewable_queued_post:
           title: "Bài viết được xếp lịch"
+          noun: "bài đăng"
         reviewable_user:
           title: "Người dùng"
+          noun: "người dùng"
         reviewable_post:
           title: "Bài viết"
+          noun: "bài đăng"
       approval:
         title: "Bài viết cần phê duyệt"
         description: "Chúng tôi đã nhận được bài viết mới của bạn, nhưng nó cần phải được phê duyệt bởi admin trước khi được hiện. Xin hãy kiên nhẫn."
@@ -877,7 +870,6 @@ vi:
         other: "%{count}chủ đề mới trong tuần qua."
       topic_stat_sentence_month:
         other: "%{count}chủ đề mới trong tháng qua."
-      n_more: "Chuyên mục (thêm %{count} ) ..."
     ip_lookup:
       title: Tìm kiếm địa chỉ IP
       hostname: Hostname
@@ -922,7 +914,6 @@ vi:
         ignore_no_users: "Bạn không có thành viên bị chặn nào."
         ignore_option: "Đã bỏ qua"
         ignore_option_title: "Bạn sẽ không nhận được thông báo liên quan đến người dùng này và tất cả các chủ đề và câu trả lời của họ sẽ bị ẩn."
-        add_ignored_user: "Thêm..."
         mute_option: "Im lặng"
         mute_option_title: "Bạn sẽ không nhận được bất kỳ thông báo nào liên quan đến người dùng này."
         normal_option: "Bình thường"
@@ -1014,14 +1005,7 @@ vi:
       experimental_sidebar:
         enable: "Bật thanh bên"
         options: "Tùy chọn"
-        categories_section: "Phần danh mục"
-        categories_section_instruction: "Các danh mục đã chọn sẽ được hiển thị trong phần danh mục của Thanh bên."
-        tags_section: "Phần thẻ"
-        tags_section_instruction: "Các thẻ đã chọn sẽ được hiển thị trong phần thẻ của Thanh bên."
         navigation_section: "Điều hướng"
-        list_destination_instruction: "Khi có nội dung mới trong thanh bên..."
-        list_destination_default: "sử dụng liên kết mặc định và hiển thị huy hiệu cho các mục mới"
-        list_destination_unread_new: "liên kết đến chưa đọc/mới và hiển thị số lượng mục mới"
       change: "thay đổi"
       featured_topic: "Chủ đề nổi bật"
       moderator: "%{user} trong ban quản trị"
@@ -1093,13 +1077,6 @@ vi:
       save_to_change_theme: 'Chủ đề sẽ được cập nhật sau khi bạn nhấp vào "%{save_text}"'
       home: "Trang chủ mặc định"
       staged: "Theo giai đoạn"
-      staff_counters:
-        flags_given: "cờ hữu ích"
-        flagged_posts: "bài viết gắn cờ"
-        deleted_posts: "bài viết bị xoá"
-        suspensions: "đình chỉ"
-        warnings_received: "cảnh báo"
-        rejected_posts: "bài viết bị từ chối"
       messages:
         all: "tất cả hộp thư đến"
         inbox: "Hộp thư"
@@ -1134,7 +1111,6 @@ vi:
         tags: "Thẻ"
         interface: "Giao diện"
         apps: "Ứng dụng"
-        sidebar: "Thanh bên"
       change_password:
         success: "(email đã gửi)"
         in_progress: "(đang gửi email)"
@@ -1148,10 +1124,8 @@ vi:
         title: "Mã dự phòng đăng nhập hai yếu tố"
         regenerate: "Khởi tạo lại"
         disable: "Vô hiệu hóa"
-        enable: "Kích hoạt"
-        enable_long: "Bật backup codes"
         manage:
-          other: "Quản lý mã dự phòng. Bạn còn lại <strong>%{count}</strong> mã dự phòng."
+          other: "Bạn còn lại <strong>%{count}</strong> mã dự phòng."
         copy_to_clipboard: "Sao chép vào clipboard"
         copy_to_clipboard_error: "Lỗi sao chép dữ liệu vào Clipboard"
         copied_to_clipboard: "Sao chép vào Clipboard"
@@ -1248,7 +1222,6 @@ vi:
         primary_label: "chính"
         unconfirmed_label: "chưa được xác nhận"
         resend_label: "Gửi lại email xác nhận"
-        resending_label: "đang gửi..."
         resent_label: "email đã gửi"
         update_email: "Thay đổi Email"
         set_primary: "Đặt email chính"
@@ -1293,7 +1266,6 @@ vi:
         not_available_no_suggestion: "Không sẵn có"
         too_short: "Tên đăng nhập của bạn quá ngắn"
         too_long: "Tên đăng nhập của bạn quá dài"
-        checking: "Đang kiểm tra username sẵn sàng để sử dụng...."
         prefilled: "Thư điện tử trủng với tên đăng nhập này."
         required: "Vui lòng nhập tên người dùng"
         edit: "Chỉnh sửa tên người dùng"
@@ -1411,7 +1383,6 @@ vi:
         reinvite: "Gửi lại email"
         reinvited: "Gửi lại lời mời"
         removed: "Đã xóa"
-        search: "gõ để tìm kiếm thư mời "
         user: "User được mời"
         none: "Không tìm thấy lời mời nào."
         truncated:
@@ -1470,7 +1441,6 @@ vi:
             <p>Mời danh sách người dùng để giúp cộng đồng của bạn hoạt động nhanh chóng. Chuẩn bị <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">tệp CSV</a> chứa ít nhất một hàng cho mỗi địa chỉ email của người dùng bạn muốn mời. Thông tin được phân tách bằng dấu phẩy sau đây có thể được cung cấp nếu bạn muốn thêm người vào nhóm hoặc gửi họ đến một chủ đề cụ thể trong lần đầu tiên họ đăng nhập.</p>
             <pre>john@smith.com,first_group_name;second_group_name,topic_id</pre>
             <p>Mọi địa chỉ email trong tệp CSV đã tải lên của bạn sẽ được gửi một lời mời và bạn sẽ có thể quản lý nó sau.</p>
-          progress: "Đã tải lên %{progress}%..."
           success: "Tải lên thành công, bạn sẽ được thông báo qua tin nhắn khi quá trình hoàn tất."
           error: "Xin lỗi, file phải ở định dạng CSV."
       password:
@@ -1555,7 +1525,6 @@ vi:
       set_custom_status: "Đặt trạng thái tùy chỉnh"
       what_are_you_doing: "Bạn đang làm gì đấy?"
       remove_status: "Xóa trạng thái"
-    loading: "Đang tải..."
     errors:
       prev_page: "trong khi cố gắng để tải"
       reasons:
@@ -1587,8 +1556,6 @@ vi:
       enabled: "Website đang ở chế độ chỉ đọc, bạn có thể duyệt xem nhưng không thể trả lời, likes, hay thực hiện các hành động khác."
       login_disabled: "Chức năng Đăng nhập đã bị tắt khi website trong trạng thái chỉ đọc"
       logout_disabled: "Chức năng đăng xuất đã bị tắt khi website đang trong trạng thái chỉ đọc."
-    too_few_posts_notice_MF: |
-      Hãy cùng <a href="https://blog.discourse.org/2014/08/building-a-discourse-community/" target="_blank" rel="noopener noreferrer">bắt đầu thảo luận!</a> Đó {currentPosts, plural, other {là <strong>bài #</strong> }}. Khách truy cập cần nhiều hơn để đọc và trả lời - chúng tôi khuyên bạn nên ít nhất {requiredPosts, plural, other {<strong>#</strong> bài viết}}. Chỉ nhân viên mới có thể nhìn thấy thông báo này.
     logs_error_rate_notice:
       reached_hour_MF: |
         <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / giờ}}</a> trang web đạt đến giới hạn thiết lập của {limit, plural, other {# lỗi / giờ}}.
@@ -1598,7 +1565,6 @@ vi:
         <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / giờ}}</a> vượt quá giới hạn thiết lập trang web của {limit, plural, other {# lỗi / giờ}}.
       exceeded_minute_MF: |
         <b>{relativeAge}</b> - <a href='{url}' target='_blank'>{rate, plural, other {# lỗi / phút}}</a> vượt quá giới hạn thiết lập trang web của {limit, plural, other {# lỗi / phút}}.
-    learn_more: "tìm hiểu thêm..."
     mute: Im lặng
     unmute: Bỏ im lặng
     last_post: Được gửi
@@ -1618,13 +1584,9 @@ vi:
       intro: "Xin chào! Có vẻ như bạn đang quan tâm chủ đề này, nhưng bạn chưa đăng ký tài khoản."
       value_prop: "Bạn mệt mỏi khi phải cuộn qua các bài viết giống nhau? Khi tạo tài khoản, bạn sẽ luôn quay lại nơi bạn đã dừng lại. Với một tài khoản, bạn cũng có thể được thông báo về các câu trả lời mới, lưu dấu trang và sử dụng lượt thích để cảm ơn người khác. Tất cả chúng ta có thể làm việc cùng nhau để làm cho cộng đồng này trở nên tuyệt vời. :heart:"
     summary:
-      enabled_description: "Bạn đang xem một bản tóm tắt của chủ đề này: các bài viết thú vị nhất được xác định bởi cộng đồng."
       description:
         other: "Có <b>%{count}</b> trả lời."
-      enable: "Tóm tắt lại chủ đề"
       disable: "HIển thị tất cả các bài viết"
-      short_label: "Tóm tắt"
-      short_title: "Hiển thị tóm tắt về chủ đề này: các bài đăng thú vị nhất do cộng đồng xác định"
     deleted_filter:
       enabled_description: "Chủ để này có chứa các bài viết bị xoá, chúng đã bị ẩn đi"
       disabled_description: "Xoá các bài viết trong các chủ để được hiển thị"
@@ -1632,10 +1594,6 @@ vi:
       disable: "Xem các bài viết bị xoá"
     private_message_info:
       title: "Tin nhắn"
-      invite: "Mời những người khác ..."
-      edit: "Thêm hoặc loại bỏ..."
-      remove: "Xóa..."
-      add: "Thêm..."
       leave_message: "Bạn có thực sự muốn để lại tin nhắn này không?"
       remove_allowed_user: "Bạn thực sự muốn xóa %{name} từ tin nhắn này?"
       remove_allowed_group: "Bạn thực sự muốn xóa %{name} từ tin nhắn này?"
@@ -1710,9 +1668,7 @@ vi:
       blank_username: "Nhập địa chỉ email và tên người dùng của bạn."
       blank_username_or_password: "Bạn phải nhập email hoặc username, và mật khẩu"
       reset_password: "Khởi tạo mật khẩu"
-      logging_in: "Đăng nhập..."
       or: "Hoặc"
-      authenticating: "Đang xác thực..."
       awaiting_activation: "Tài khoản của bạn đang đợi kích hoạt, sử dụng liên kết quên mật khẩu trong trường hợp kích hoạt ở 1 email khác."
       awaiting_approval: "Tài khoản của bạn chưa được chấp nhận bới thành viên. Bạn sẽ được gửi một email khi được chấp thuận "
       requires_invite: "Xin lỗi, bạn phải được mời để tham gia diễn đàn"
@@ -1792,8 +1748,6 @@ vi:
       ctrl: "Ctrl"
       alt: "Alt"
       enter: "Nhập"
-    conditional_loading_section:
-      loading: Đang tải...
     category_row:
       topic_count:
         other: "%{count} chủ đề trong danh mục này"
@@ -1805,20 +1759,15 @@ vi:
       delete_item: "Xoá %{name}"
       filter_by: "Lọc theo: %{name}"
       select_to_filter: "Chọn một giá trị để lọc"
-      default_header_text: Chọn...
       no_content: Không tìm thấy
       results_count:
         other: "%{count} kết quả"
-      filter_placeholder: Tìm kiến...
-      filter_placeholder_with_any: Tìm kiếm hoặc tạo mới...
       create: "Tạo mới: '%{content}'"
       max_content_reached:
         other: "Bạn chỉ có thể chọn %{count} mục."
       min_content_not_reached:
         other: "Chọn ít nhất %{count} mục."
       components:
-        tag_drop:
-          filter_for_more: Lọc để biết thêm...
         categories_admin_dropdown:
           title: "Quản lý Danh mục"
     date_time_picker:
@@ -1849,10 +1798,8 @@ vi:
       destination_category: "Loại điểm đến"
       publish: "Xuất bản bản nháp"
       confirm_publish: "Bạn có chắc chắn muốn xuất bản bản nháp này không?"
-      publishing: "Đang xuất bản Chủ đề..."
     composer:
       emoji: "Emoji :)"
-      more_emoji: "thêm..."
       options: "Lựa chọn"
       whisper: "nói chuyện"
       unlist: "chưa được liệt kê"
@@ -1861,7 +1808,6 @@ vi:
       toggle_unlisted: "Chuyển sang chế độ Không công khai"
       posting_not_on_topic: "Bài viết nào bạn muốn trả lời "
       saved_local_draft_tip: "Đã lưu locally"
-      similar_topics: "Bài viết của bạn tương tự với "
       drafts_offline: "Nháp offline"
       edit_conflict: "chỉnh sửa xung đột"
       group_mentioned_limit:
@@ -1914,7 +1860,6 @@ vi:
       saving: "Đang lưu"
       saved: "Đã lưu"
       saved_draft: "Đang đăng bản nháp. Nhấn để tiếp tục."
-      uploading: "Đang đăng "
       show_preview: "hiển thị bản xem trước"
       hide_preview: "ẩn bản xem trước"
       quote_post_title: "Trích dẫn cả bài viết"
@@ -2015,11 +1960,9 @@ vi:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        other: "<span class='multi-user'>%{username}, %{username2} và %{count} người khác</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
-        other: "%{username}, %{username2} và %{count} người khác"
+        other: "%{username} và %{count} khác"
       liked_consolidated_description:
         other: "đã thích %{count} bài viết của bạn"
       liked_consolidated: "<span>%{username}</span> %{description}"
@@ -2039,6 +1982,7 @@ vi:
       reaction: "<span>%{username}</span> %{description}"
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - hoàn thành"
+      admin_problems: "Lời khuyên mới trên bảng điều khiển trang web của bạn"
       dismiss_confirmation:
         body:
           default:
@@ -2166,7 +2110,6 @@ vi:
           label: Được gắn thẻ
           aria_label: Lọc bằng cách sử dụng thẻ
         filters:
-          label: Chỉ trả lại chủ đề/bài đăng ...
           title: Chỉ khớp với tiêu đề
           likes: Tôi đã thích
           posted: Tôi đã gửi trong
@@ -2283,11 +2226,9 @@ vi:
           other: "Loại bỏ Mới (%{count})"
         toggle: "chuyển sang chọn chủ đề theo lô"
         actions: "Hành động theo lô"
-        change_category: "Đặt danh mục..."
         close_topics: "Đóng các chủ đề"
         archive_topics: "Chủ đề Lưu trữ"
         move_messages_to_inbox: "Chuyển sang hộp thư"
-        notification_level: "Thông báo..."
         change_notification_level: "Thay đổi mức thông báo"
         choose_new_category: "Chọn chuyên mục mới cho chủ đề này:"
         selected:
@@ -2314,7 +2255,7 @@ vi:
         top: "Không có chủ đề top."
         educate:
           new: '<p>Các chủ đề mới của bạn sẽ xuất hiện ở đây. Theo mặc định, các chủ đề được coi là mới và sẽ hiển thị chỉ báo <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"></span> nếu chúng được tạo trong 2 ngày qua.</p><p>Truy cập <a href="%{userPrefsUrl}">tùy chọn</a> của bạn để thay đổi.</p>'
-          unread: "<p>Các chủ đề chưa đọc của bạn xuất hiện ở đây.</p><p>Theo mặc định, các chủ đề được coi là chưa đọc và sẽ hiển thị số lượng chưa đọc <span class=\"badge unread-posts badge-notification\">1</span> nếu bạn:</p><ul><li>Đã tạo chủ đề</li><li>Đã trả lời chủ đề</li><li>Đọc chủ đề trong hơn 4 phút</li></ul><p>Hoặc nếu bạn đã đặt chủ đề một cách rõ ràng thành Theo dõi hoặc Đã theo dõi qua \U0001F514 trong mỗi chủ đề.</p><p>Truy cập <a href=\"%{userPrefsUrl}\">tùy chọn</a> của bạn để thay đổi điều này.</p>"
+          unread: "<p>Các chủ đề chưa đọc của bạn xuất hiện ở đây.</p><p>Theo mặc định, các chủ đề được coi là chưa đọc và sẽ hiển thị số lượng chưa đọc <span class=\"badge unread-posts badge-notification\">1</span> nếu bạn:</p><ul><li>Đã tạo chủ đề</li><li>Đã trả lời chủ đề</li><li>Đọc chủ đề trong hơn 5 phút</li></ul><p>Hoặc nếu bạn đã đặt chủ đề một cách rõ ràng thành Theo dõi hoặc Đã theo dõi qua \U0001F514 trong mỗi chủ đề.</p><p>Truy cập <a href=\"%{userPrefsUrl}\">tùy chọn</a> của bạn để thay đổi điều này.</p>"
       bottom:
         latest: "Không còn thêm chủ đề nào nữa."
         posted: "Ở đây không có thêm chủ đề nào được đăng."
@@ -2370,6 +2311,7 @@ vi:
       collapse_details: "thu gọn chi tiết chủ đề"
       expand_details: "mở rộng chi tiết chủ đề"
       unread_indicator: "Chưa có thành viên nào đọc bài cuối cùng của chủ đề này."
+      bumped_at: "Mới nhất: %{date}"
       suggest_create_topic: Bạn đã sẵn sàng để <a href>đầu một cuộc trò chuyện mới chưa?</a>
       deleted: "Chủ đề này đã bị xóa"
       slow_mode_update:
@@ -2452,10 +2394,8 @@ vi:
         replies_short: "%{current} / %{total}"
       progress:
         title: tiến trình của chủ đề
-        jump_prompt: "Nhảy đến..."
         jump_prompt_of:
           other: "của %{count} bài viết"
-        jump_prompt_long: "Chuyển đến ..."
         jump_prompt_to_date: "đến nay"
         jump_prompt_or: "hoặc"
       notifications:
@@ -2511,8 +2451,6 @@ vi:
         open: "Mở Chủ Đề"
         close: "Đóng Chủ Đề"
         multi_select: "Chọn Bài Viết..."
-        slow_mode: "Đặt Chế độ Chậm ..."
-        timed_update: "Đặt bộ hẹn giờ chủ đề ..."
         pin: "Ghim Chủ Đề..."
         unpin: "Bỏ-Ghim Chủ Đề..."
         unarchive: "Chủ đề Không Lưu Trữ"
@@ -2520,7 +2458,6 @@ vi:
         invisible: "Hủy Liệt kê chủ đề"
         visible: "Liệt kê Chủ đề"
         reset_read: "Đặt lại dữ liệu đọc"
-        make_public: "Đặt chủ đề công khai ..."
         make_private: "Gửi tin nhắn cá nhân"
         reset_bump_date: "Đặt lại ngày Bump"
       feature:
@@ -2574,7 +2511,6 @@ vi:
         banner_note: "Người dùng có thể bỏ qua banner này bằng cách đóng nó. Chỉ một chủ đề có thể được đặt là banner tại một thời điểm."
         no_banner_exists: "Không có chủ đề banner nào."
         banner_exists: "Có <strong class='badge badge-notification unread'>is</strong> đang là chủ đề banner."
-      inviting: "Đang mời..."
       automatically_add_to_groups: "Lời mời này cũng bao gồm quyền truy cập vào các nhóm sau:"
       invite_private:
         title: "Mời thảo luận"
@@ -2670,7 +2606,6 @@ vi:
         instructions_without_old_user:
           other: "Vui lòng chọn chủ sở hữu mới cho %{count} bài viết"
       change_timestamp:
-        title: "Thay đổi Dấu thời gian ..."
         action: "đổi timestamp"
         invalid_timestamp: "Timestamp không thể trong tương lai."
         error: "Có lỗi khi thay đổi timestamp của chủ đề."
@@ -2749,7 +2684,6 @@ vi:
       errors:
         create: "Xin lỗi, có lỗi xảy ra khi tạo bài viết của bạn. Vui lòng thử lại."
         edit: "Xin lỗi, có lỗi xảy ra khi sửa bài viết của bạn. Vui lòng thử lại."
-        upload: "Xin lỗi, có lỗi xảy ra khi tải lên tập tin này. Vui lòng thử lại."
         file_too_large: "Xin lỗi, tệp đó quá lớn (kích thước tối đa là %{max_size_kb}kb). Bạn có thể tải dữ liệu lớn của bạn lên dịch vụ chia sẻ đám mây, sau đó dán liên kết tại đây"
         file_size_zero: "Rất tiếc, có vẻ như đã xảy ra sự cố, tệp bạn đang cố tải lên có dung lượng là 0 byte. Vui lòng thử lại."
         file_too_large_humanized: "Xin lỗi, tệp đó quá lớn (kích thước tối đa là %{max_size}). Tại sao không tải tệp lớn của bạn lên dịch vụ chia sẻ đám mây, sau đó dán liên kết?"
@@ -2802,8 +2736,6 @@ vi:
         rebake: "Tạo lại HTML"
         publish_page: "Xuất bản trang"
         unhide: "Bỏ ẩn"
-        change_owner: "Thay đổi quyền sở hữu ..."
-        grant_badge: "Cấp Huy hiệu ..."
         lock_post: "Khóa bài đăng"
         lock_post_description: "ngăn người đăng chỉnh sửa bài đăng này"
         unlock_post: "Mở khóa bài đăng"
@@ -2816,8 +2748,6 @@ vi:
         delete_topic_confirm_modal_no: "Không, giữ chủ đề này"
         delete_topic_error: "Đã xảy ra lỗi khi xóa chủ đề này"
         delete_topic: "xóa chủ đề"
-        add_post_notice: "Thêm thông báo cho nhân viên..."
-        change_post_notice: "Thay đổi Thông báo nhân viên..."
         delete_post_notice: "Xóa thông báo từ nhân viên"
         remove_timer: "gỡ bỏ bộ đếm thời gian"
         edit_timer: "chỉnh sửa bộ đếm thời gian"
@@ -2904,7 +2834,6 @@ vi:
       filtered_replies:
         viewing_posts_by: "Đang xem %{post_count} bài viết của"
         viewing_subset: "Một số câu trả lời bị thu gọn"
-        viewing_summary: "Xem tóm tắt về chủ đề này"
         post_number: "%{username}, bài số #%{post_number}"
         show_all: "Hiển thị tất cả"
       share:
@@ -2932,7 +2861,6 @@ vi:
         description: "Yêu cầu các chủ đề mới có thẻ từ các nhóm thẻ:"
         delete: "Xóa"
         add: "Thêm nhóm thẻ bắt buộc"
-        placeholder: "chọn nhóm thẻ..."
       topic_featured_link_allowed: "Cho phép các liên kết nổi bật trong danh mục này"
       delete: "Xóa chuyên mục"
       create: "Chuyên mục mới"
@@ -3057,7 +2985,6 @@ vi:
     flagging:
       title: "Cám ơn bạn đã giúp phát triển cộng đồng!"
       action: "Đánh dấu Bài viết"
-      take_action: "Thực hiện hành động..."
       take_action_options:
         default:
           title: "Hành động"
@@ -3088,8 +3015,6 @@ vi:
       custom_message:
         at_least:
           other: "nhập ít nhất %{count} kí tự"
-        more:
-          other: "vẫn còn %{count} ..."
         left:
           other: "%{count} còn lại"
     flagging_topic:
@@ -3100,7 +3025,6 @@ vi:
       title: "Tóm tắt Chủ đề"
       participants_title: "Poster thường xuyên"
       links_title: "Liên kết phổ biến"
-      links_shown: "hiển thị thêm liên kết..."
       clicks:
         other: "%{count} nhấp chuột"
     post_links:
@@ -3206,6 +3130,9 @@ vi:
         title_with_count:
           other: "Mới (%{count})"
         help: "chủ đề đã tạo cách đây vài ngày"
+        all: "All"
+        topics: "Các chủ đề"
+        replies: "Trả lời"
       posted:
         title: "Bài viết của tôi"
         help: "chủ đề của bạn đã được đăng trong"
@@ -3252,6 +3179,9 @@ vi:
       close: "Đóng (Esc)"
       content_load_error: '<a href="%url%">Không thể tải nội dung</a>.'
       image_load_error: '<a href="%url%">Không thể tải hình ảnh</a>.'
+    experimental_lightbox:
+      buttons:
+        close: "Đóng (Esc)"
     cannot_render_video: Không thể hiển thị video này vì trình duyệt của bạn không hỗ trợ codec.
     keyboard_shortcuts_help:
       shortcut_key_delimiter_comma: ", "
@@ -3342,7 +3272,6 @@ vi:
       earned_n_times:
         other: "Đã giành được huy hiệu này %{count} lần"
       granted_on: "Cấp ngày %{date}"
-      others_count: "Người có huy hiệu này (%{count})"
       title: Huy hiệu
       allow_title: "Bạn có thể sử dụng huy hiệu này làm tiêu đề"
       multiple_grant: "Bạn có thể có được nhiều lần"
@@ -3350,8 +3279,6 @@ vi:
         other: "%{count} huy hiệu"
       more_badges:
         other: "+%{count} Khác"
-      granted:
-        other: "%{count} được cấp"
       select_badge_for_title: Chọn huy hiệu để sử dụng như là tên
       none: "(không có gì)"
       successfully_granted: "Đã cấp %{badge} cho %{username}"
@@ -3389,10 +3316,6 @@ vi:
       changed: "thẻ đã đổi:"
       tags: "Thẻ"
       choose_for_topic: "thẻ không bắt buộc"
-      choose_for_topic_required:
-        other: "chọn ít nhất %{count} thẻ ..."
-      choose_for_topic_required_group:
-        other: "chọn %{count} thẻ từ '%{name} '..."
       info: "Thông tin"
       default_info: "Thẻ này không bị giới hạn đối với bất kỳ danh mục nào và không có từ đồng nghĩa."
       staff_info: "Để thêm các hạn chế, hãy đặt thẻ này vào <a href=%{basePath}/tag_groups>nhóm thẻ</a>."
@@ -3482,7 +3405,6 @@ vi:
         cannot_save: "Không thể lưu nhóm thẻ. Đảm bảo rằng có ít nhất một thẻ hiện diện, tên nhóm thẻ không trống và một nhóm được chọn cho quyền đối với thẻ."
         tags_placeholder: "Tìm kiếm hoặc tạo thẻ"
         parent_tag_placeholder: "Tùy chọn"
-        select_groups_placeholder: "Chọn nhóm..."
         disabled: "Gắn thẻ bị vô hiệu hóa. "
       topics:
         none:
@@ -3557,14 +3479,21 @@ vi:
       more: "Thêm"
       all_categories: "Tất cả danh mục"
       all_tags: "Tất cả các thẻ"
+      edit_navigation_modal_form:
+        filter_dropdown:
+          all: "All"
       sections:
         custom:
           save: "Lưu lại"
           delete: "Xóa"
           links:
-            icon: "Biểu tượng"
-            name: "Tên"
-            value: "Liên kết"
+            reset: "Đặt lại về mặc định"
+            icon:
+              label: "Biểu tượng"
+            name:
+              label: "T"
+            value:
+              label: "Liên kết"
         about:
           header_link_text: "Giới thiệu"
         messages:
@@ -3586,7 +3515,8 @@ vi:
           click_to_get_started: "Bấm vào đây để bắt đầu."
           header_link_text: "Thư mục"
         community:
-          header_link_text: "Cộng đồng"
+          edit_section:
+            header_dropdown: "Tùy biến"
           links:
             about:
               content: "Giới thiệu"
@@ -3594,8 +3524,8 @@ vi:
               content: "Quản trị"
             badges:
               content: "Huy hiệu"
-            everything:
-              content: "Mọi thứ"
+            topics:
+              content: "Chủ đề"
               title: "Tất cả các chủ đề"
             faq:
               content: "Câu hỏi thường gặp"
@@ -3610,8 +3540,13 @@ vi:
             review:
               content: "Review"
     until: "Cho đến khi:"
+    form_templates:
+      errors:
+        typeMismatch:
+          default: "Hãy nhập giá trị hợp lệ."
+          email: "Vùi lòng nhập một thư điện tử hợp lệ."
   admin_js:
-    type_to_filter: "gõ để lọc..."
+    type_to_filter: "gõ vào bộ lọc…"
     admin:
       title: "Quản trị Diễn đàn"
       moderator: "Điều hành"
@@ -3722,7 +3657,6 @@ vi:
           name:
             too_short: "Tên nhóm quá ngắn"
             too_long: "Tên nhóm quá dài"
-            checking: "Đang kiểm tra tên nhóm ..."
             available: "Tên nhóm dùng được"
             not_available: "Tên nhóm đã sử dụng"
             blank: "Tên nhóm không thể trống"
@@ -3920,9 +3854,6 @@ vi:
         user_promoted_event:
           name: "Sự kiện do người dùng quảng cáo"
           details: "Khi người dùng được thăng cấp từ cấp độ tin cậy này sang cấp độ tin cậy khác."
-        user_badge_event:
-          name: "Sự kiện cấp huy hiệu"
-          details: "Khi người dùng nhận được một huy hiệu."
         group_user_event:
           name: "Sự kiện người dùng nhóm"
           details: "Khi một người dùng được thêm vào hoặc bị xóa trong một nhóm."
@@ -3982,20 +3913,15 @@ vi:
           disable:
             title: "Tắt chế độ chỉ đọc"
             label: "Tắt chỉ đọc"
-        logs:
-          none: "Chưa có log..."
         columns:
           filename: "Tên tập tin"
           size: "Kích thước"
         upload:
           label: "Tải lên"
           title: "Tải lên bản sao lưu cho phiên bản này"
-          uploading: "Đang tải lên..."
-          uploading_progress: "Đang tải lên ... %{progress}%"
           success: "'%{filename}' đã được tải lên thành công. Tệp hiện đang được xử lý và sẽ mất đến một phút để hiển thị trong danh sách."
           error: "Có lõi trong quá trình tải lên '%{filename}': %{message}"
         operations:
-          is_running: "Tác vụ đang chạy..."
           failed: "%{operation} Thấy bại. Vui lòng xem log."
           cancel:
             label: "Hủy"
@@ -4005,7 +3931,6 @@ vi:
             label: "Sao lưu"
             title: "Tạo bản sao lưu"
             confirm: "Bạn muốn bắt đầu một bản sao lưu mới?"
-            without_uploads: "Có (không bao gồm tải lên)"
           download:
             label: "Tải xuống"
             title: "Gửi email với liên kết tải xuống"
@@ -4082,6 +4007,7 @@ vi:
           create: "Tạo"
           create_type: "Loại"
           create_name: "Tên"
+          save: "Lưu lại"
           long_title: "Sửa đổi màu sắc, nội dung CSS và HTML của trang web của bạn"
           edit: "Sửa"
           edit_confirm: "Đây là một Theme từ xa, nếu bạn chỉnh sửa CSS / HTML, các thay đổi của bạn sẽ bị xóa trong lần cập nhật Theme tiếp theo."
@@ -4128,7 +4054,6 @@ vi:
           uploads: "Tải lên"
           no_uploads: "Bạn có thể tải lên nội dung được liên kết với chủ đề của mình, chẳng hạn như phông chữ và hình ảnh"
           add_upload: "Thêm tải lên"
-          upload_file_tip: "Chọn một nội dung để tải lên (png, woff2, v.v.)"
           variable_name: "Tên var SCSS:"
           variable_name_invalid: "Tên biến không hợp lệ. Chỉ cho phép chữ và số. Phải bắt đầu bằng một chữ cái. Phải là duy nhất."
           variable_name_error:
@@ -4136,7 +4061,6 @@ vi:
             no_overwrite: "Tên biến không hợp lệ. Không được ghi đè biến hiện có."
             must_be_unique: "Tên biến không hợp lệ. Phải là duy nhất."
           upload: "Tải lên"
-          select_component: "Chọn một thành phần..."
           unsaved_changes_alert: "Bạn chưa lưu các thay đổi của mình, bạn có muốn loại bỏ chúng và tiếp tục không?"
           unsaved_parent_themes: "Bạn chưa gán thành phần cho các chủ đề, bạn có muốn tiếp tục không?"
           discard: "Hủy bỏ"
@@ -4150,7 +4074,6 @@ vi:
           add_all: "Thêm tất cả"
           import_web_tip: "Kho chứa chủ đề"
           direct_install_tip: "Bạn có chắc chắn muốn cài đặt <strong>%{name}</strong> từ kho lưu trữ được liệt kê bên dưới không?"
-          import_web_advanced: "Nâng cao..."
           import_file_tip: "Tệp .tar.gz, .zip hoặc .dcstyle.json chứa chủ đề"
           is_private: "Theme nằm trong kho git riêng"
           remote_branch: "Tên chi nhánh (không bắt buộc)"
@@ -4178,7 +4101,6 @@ vi:
             maximum: "Yêu cầu phiên bản Discourse %{version} hoặc thấp hơn."
           update_to_latest: "Cập nhật lên mới nhất"
           check_for_updates: "Kiểm tra cập nhật"
-          updating: "Đang cập nhật ..."
           up_to_date: "Chủ đề được cập nhật, kiểm tra lần cuối:"
           has_overwritten_history: "Phiên bản chủ đề hiện tại không còn tồn tại vì lịch sử Git đã bị ghi đè bởi một lực đẩy."
           add: "Thêm"
@@ -4300,7 +4222,6 @@ vi:
           run: "Chạy thử nghiệm"
           text: "Nội dung văn bản đã chọn"
           elided: "Văn bản Elided"
-        sending_test: "Đang gửi Email test..."
         error: "<b>LỖI</b> - %{server_error}"
         test_error: "Có vấn đề khi gửi email test. Vui lòng kiểm tra lại cấu hình email của bạn, chắc chắn host mail của bạn không bị khóa kết nối, và thử lại."
         sent: "Đã gửi"
@@ -4321,7 +4242,6 @@ vi:
         refresh: "Tải lại"
         send_digest_label: "Gửi kết quả này tới:"
         send_digest: "Gửi"
-        sending_email: "Đang gửi email..."
         format: "Định dạng"
         html: "html"
         text: "text"
@@ -4348,7 +4268,6 @@ vi:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
             cc_placeholder: "cc@example.com"
-            subject_placeholder: "Chủ đề..."
             error_placeholder: "Lỗi"
         logs:
           none: "Không tìm thấy log."
@@ -4356,7 +4275,6 @@ vi:
             title: "Lọc"
             user_placeholder: "tên người dùng"
             address_placeholder: "name@example.com"
-            type_placeholder: "tập san, đăng ký..."
             reply_key_placeholder: "key phản hồi"
             smtp_transaction_response_placeholder: "SMTP ID"
       moderation_history:
@@ -4547,10 +4465,6 @@ vi:
           replace: "Thay thế"
           silence: "Im lặng"
           link: "Liên kết"
-        action_descriptions:
-          censor: "Cho phép các bài đăng có chứa những từ này nhưng hãy thay thế chúng bằng các ký tự ẩn các từ đã được kiểm duyệt."
-          tag: "Tự động gắn thẻ các chủ đề dựa trên bài đăng đầu tiên"
-          silence: "Các bài đăng đầu tiên của người dùng có chứa những từ này sẽ yêu cầu nhân viên phê duyệt trước khi họ có thể được nhìn thấy và người dùng sẽ tự động bị tắt tiếng."
         form:
           replace_label: "Sự thay thế"
           replace_placeholder: "thí dụ"
@@ -4592,6 +4506,8 @@ vi:
               key: "tối thiểu"
             maximum:
               key: "tối đa"
+            type:
+              key: "loại"
       impersonate:
         title: "Mạo danh"
         help: "Sử dụng công cụ này để mạo danh một tài khoản thành viên cho mục đích gỡ lỗi, bạn sẽ phải đăng xuất sau khi hoàn tất."
@@ -4645,7 +4561,6 @@ vi:
           consuming_staff_time: "Tiêu tốn lượng thời gian không tương xứng của nhân viên"
           in_wrong_place: "Ở sai chỗ"
           no_constructive_purpose: "Hành động của họ không có mục đích xây dựng nào khác ngoài việc tạo ra bất đồng trong cộng đồng"
-          custom: "Tùy chỉnh..."
         suspend_message: "Tin nhắn Email"
         suspend_message_placeholder: "Theo tùy chọn, cung cấp thêm thông tin về việc tạm ngưng và thông tin này sẽ được gửi qua email cho người dùng."
         suspended_by: "Tạm khóa bởi"
@@ -4724,7 +4639,6 @@ vi:
           button: "Xóa tất cả bài viết"
           progress:
             title: "Tiến trình xóa bài viết"
-            description: "Đang xóa bài đăng..."
           confirmation:
             title: "Xóa tất cả các bài đăng của @%{username}"
             description: |
@@ -4760,7 +4674,6 @@ vi:
             text: "chuyển @%{username} sang @%{targetUsername}"
             transfer_and_delete: "Chuyển & Xóa @%{username}"
             cancel: "Hủy"
-        merging_user: "Đang hợp nhất người dùng..."
         merge_failed: "Đã xảy ra lỗi khi hợp nhất người dùng."
         delete_forbidden_because_staff: "Admin và mod không thể xóa."
         delete_posts_forbidden_because_staff: "Không thể xóa tất cả bài viết của quản trị và điều hành viên."
@@ -4772,7 +4685,6 @@ vi:
           other: "Không thể xóa tất cả các bài viết do tài khoản có hơn %{count} bài viết. (delete_all_posts_max)"
         delete_and_block: "Xóa và <b>khóa</b> email này và địa chỉ IP"
         delete_dont_block: "Chỉ xóa"
-        deleting_user: "Đang xóa người dùng..."
         deleted: "Thành viên này đã bị xóa"
         delete_failed: "Có lỗi trong quá trình xóa thành viên này. Chắc chắn rằng tất cả bài viết đã được xóa trước khi xóa thành viên."
         send_activation_email: "Gửi email kích hoạt"
@@ -4896,6 +4808,8 @@ vi:
         show_overriden: "Chỉ hiển thị chỗ ghi đè"
         locale: "Ngôn ngữ:"
         more_than_50_results: "Có hơn 50 kết quả. Vui lòng tinh chỉnh tìm kiếm của bạn."
+        outdated:
+          dismiss: "Bỏ qua"
       settings:
         show_overriden: "Chỉ hiển thị chỗ ghi đè"
         history: "Xem lịch sử thay đổi"
@@ -4908,7 +4822,6 @@ vi:
             label: "Thêm biểu tượng cảm xúc"
         title: "Cài đặt"
         no_results: "Không tìm thấy kết quả."
-        more_than_30_results: "Có hơn 30 kết quả. Vui lòng tinh chỉnh tìm kiếm của bạn hoặc chọn một danh mục."
         clear_filter: "Xóa"
         add_url: "thêm URL"
         add_host: "thêm host"
@@ -4957,8 +4870,6 @@ vi:
           modal_description: "Bạn có muốn áp dụng thay đổi này trong lịch sử không? Điều này sẽ thay đổi tùy chọn cho %{count} người dùng hiện tại."
           modal_yes: "Đồng ý"
           modal_no: "Không, chỉ áp dụng thay đổi về sau"
-        simple_list:
-          add_item: "Thêm mục..."
         json_schema:
           edit: Khởi chạy trình chỉnh sửa
           modal_title: "Chỉnh sửa %{name}"
@@ -5055,7 +4966,6 @@ vi:
         help: "Thêm biểu tượng cảm xúc mới sẽ có sẵn cho tất cả mọi người. Kéo và thả nhiều tệp cùng một lúc mà không cần nhập tên để tạo biểu tượng cảm xúc bằng tên tệp của chúng. Nhóm đã chọn sẽ được sử dụng cho tất cả các tệp được thêm vào cùng một lúc. Bạn cũng có thể nhấp vào 'Thêm biểu tượng cảm xúc mới' để mở bộ chọn tệp."
         add: "Thêm emoji mới"
         choose_files: "Chọn tệp"
-        uploading: "Đang tải lên..."
         name: "Tên"
         group: "Nhóm"
         image: "Hình ảnh"
@@ -5119,7 +5029,6 @@ vi:
       next: "Kế tiếp"
       step-text: "Bước"
       step: "%{current} trên %{total}"
-      uploading: "Đang tải lên..."
       upload_error: "Xin lỗi, có lỗi xảy ra khi tải lên tập tin này. Vui lòng thử lại."
       staff_count:
         other: "Cộng đồng của bạn có %{count} nhân viên, bao gồm cả bạn."

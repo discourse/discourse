@@ -1,7 +1,5 @@
 // Styles for /admin section
 
-@import "common/foundation/helpers";
-
 $mobile-breakpoint: 700px;
 
 // Common admin styles
@@ -12,6 +10,7 @@ $mobile-breakpoint: 700px;
   width: 100%;
   overflow: hidden;
   height: 100%;
+  background: var(--d-content-background);
 
   @include breakpoint(tablet) {
     width: calc(100% + 10px);
@@ -271,8 +270,13 @@ $mobile-breakpoint: 700px;
   }
   .edit-site-text {
     textarea {
+      display: block;
       width: 100%;
       max-width: 800px;
+      margin: 0;
+    }
+    .save-button {
+      margin-top: 1em;
     }
     .save-button,
     .title {
@@ -285,6 +289,24 @@ $mobile-breakpoint: 700px;
     }
     .go-back {
       margin-top: 1em;
+    }
+    .desc {
+      padding-top: 3px;
+      font-size: var(--font-down-1);
+      line-height: var(--line-height-large);
+      color: var(--primary-medium);
+    }
+    .outdated {
+      border: 1px solid var(--primary-low);
+      box-sizing: border-box;
+      color: var(--primary);
+      margin-bottom: 1em;
+      max-width: 800px;
+      padding: 1em;
+
+      p {
+        color: var(--primary-high);
+      }
     }
   }
   p.warning {
@@ -382,7 +404,7 @@ $mobile-breakpoint: 700px;
     width: 460px;
     right: 0;
     z-index: z("dropdown");
-    box-shadow: shadow("card");
+    box-shadow: var(--shadow-card);
     margin-top: -2px;
     background-color: var(--secondary);
     padding: 12px 12px 5px;
@@ -412,6 +434,10 @@ $mobile-breakpoint: 700px;
 
 .admin-container {
   margin-top: 10px;
+
+  .admin-section {
+    margin-bottom: 1em;
+  }
 
   .username {
     input {

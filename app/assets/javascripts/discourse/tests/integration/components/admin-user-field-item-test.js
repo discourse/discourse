@@ -17,10 +17,18 @@ module("Integration | Component | admin-user-field-item", function (hooks) {
   test("cancel action", async function (assert) {
     this.set("userField", { id: 1, field_type: "text" });
     this.set("isEditing", true);
+    this.set("destroyAction", () => {});
+    this.set("moveUpAction", () => {});
+    this.set("moveDownAction", () => {});
 
-    await render(
-      hbs`<AdminUserFieldItem @isEditing={{this.isEditing}} @destroyAction={{this.destroyAction}} @userField={{this.userField}} />`
-    );
+    await render(hbs`
+      <AdminUserFieldItem
+        @isEditing={{this.isEditing}}
+        @destroyAction={{this.destroyAction}}
+        @moveUpAction={{this.moveUpAction}}
+        @moveDownAction={{this.moveDownAction}}
+        @userField={{this.userField}}
+      />`);
 
     await click(".cancel");
     assert.ok(exists(".edit"));
@@ -28,24 +36,43 @@ module("Integration | Component | admin-user-field-item", function (hooks) {
 
   test("edit action", async function (assert) {
     this.set("userField", { id: 1, field_type: "text" });
+    this.set("destroyAction", () => {});
+    this.set("moveUpAction", () => {});
+    this.set("moveDownAction", () => {});
 
-    await render(
-      hbs`<AdminUserFieldItem @destroyAction={{this.destroyAction}} @userField={{this.userField}} />`
-    );
+    await render(hbs`
+      <AdminUserFieldItem
+        @destroyAction={{this.destroyAction}}
+        @moveUpAction={{this.moveUpAction}}
+        @moveDownAction={{this.moveDownAction}}
+        @userField={{this.userField}}
+      />`);
 
     await click(".edit");
     assert.ok(exists(".save"));
   });
 
-  test("user field with an id", async function (assert) {
+  test("field attributes are rendered correctly", async function (assert) {
     this.set("userField", {
       id: 1,
       field_type: "text",
       name: "foo",
       description: "what is foo",
+      show_on_profile: true,
+      show_on_user_card: true,
+      searchable: true,
     });
+    this.set("destroyAction", () => {});
+    this.set("moveUpAction", () => {});
+    this.set("moveDownAction", () => {});
 
-    await render(hbs`<AdminUserFieldItem @userField={{this.userField}} />`);
+    await render(hbs`
+      <AdminUserFieldItem
+        @destroyAction={{this.destroyAction}}
+        @moveUpAction={{this.moveUpAction}}
+        @moveDownAction={{this.moveDownAction}}
+        @userField={{this.userField}}
+      />`);
 
     assert.strictEqual(query(".name").innerText, this.userField.name);
     assert.strictEqual(
@@ -56,5 +83,13 @@ module("Integration | Component | admin-user-field-item", function (hooks) {
       query(".field-type").innerText,
       I18n.t("admin.user_fields.field_types.text")
     );
+
+    assert
+      .dom(".user-field-flags")
+      .hasText(
+        `${I18n.t("admin.user_fields.show_on_profile.enabled")}, ${I18n.t(
+          "admin.user_fields.show_on_user_card.enabled"
+        )}, ${I18n.t("admin.user_fields.searchable.enabled")}`
+      );
   });
 });

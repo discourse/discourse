@@ -1,0 +1,64 @@
+<Sidebar::EditNavigationMenu::Modal
+  @class="sidebar__edit-navigation-menu__tags-modal"
+  @title="sidebar.tags_form_modal.title"
+  @saving={{this.saving}}
+  @save={{this.save}}
+  @showResetDefaultsButton={{gt
+    this.siteSettings.default_navigation_menu_tags.length
+    0
+  }}
+  @resetToDefaults={{this.resetToDefaults}}
+  @deselectAll={{this.deselectAll}}
+  @deselectAllText={{i18n "sidebar.tags_form_modal.subtitle.text"}}
+  @inputFilterPlaceholder={{i18n "sidebar.tags_form_modal.filter_placeholder"}}
+  @onFilterInput={{this.onFilterInput}}
+  @resetFilter={{this.resetFilter}}
+  @filterSelected={{this.filterSelected}}
+  @filterUnselected={{this.filterUnselected}}
+  @closeModal={{@closeModal}}
+>
+  <form class="sidebar-tags-form">
+    {{#if this.tagsLoading}}
+      <div class="spinner"></div>
+    {{else}}
+      {{#if (gt this.tags.length 0)}}
+        {{#each this.tags as |tag|}}
+          <div
+            class="sidebar-tags-form__tag"
+            data-tag-name={{tag.name}}
+            {{did-insert this.didInsertTag}}
+          >
+            <Input
+              id={{concat "sidebar-tags-form__input--" tag.name}}
+              class="sidebar-tags-form__input"
+              @type="checkbox"
+              @checked={{includes this.selectedTags tag.name}}
+              {{on "click" (action "toggleTag" tag.name)}}
+            />
+
+            <label
+              class="sidebar-tags-form__tag-label"
+              for={{concat "sidebar-tags-form__input--" tag.name}}
+            >
+              <p>
+                <span class="sidebar-tags-form__tag-label-name">
+                  {{tag.name}}
+                </span>
+
+                <span class="sidebar-tags-form__tag-label-count">
+                  ({{tag.topic_count}})
+                </span>
+              </p>
+            </label>
+          </div>
+        {{/each}}
+      {{else}}
+        <div class="sidebar-tags-form__no-tags">
+          {{i18n "sidebar.tags_form_modal.no_tags"}}
+        </div>
+      {{/if}}
+    {{/if}}
+  </form>
+
+  <ConditionalLoadingSpinner @condition={{this.tags.loadingMore}} />
+</Sidebar::EditNavigationMenu::Modal>

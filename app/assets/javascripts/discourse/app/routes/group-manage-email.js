@@ -1,13 +1,14 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
+import { inject as service } from "@ember/service";
 
 export default DiscourseRoute.extend({
-  showFooter: true,
+  router: service(),
 
   beforeModel() {
     // cannot configure IMAP without SMTP being enabled
     if (!this.siteSettings.enable_smtp) {
-      return this.transitionTo("group.manage.profile");
+      return this.router.transitionTo("group.manage.profile");
     }
   },
 

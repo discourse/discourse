@@ -40,11 +40,11 @@
         accept=".png,.gif"
       />
       <DButton
-        @class="btn-primary"
         @translatedLabel={{this.buttonLabel}}
         @icon="plus"
-        @action={{action "chooseFiles"}}
+        @action={{this.chooseFiles}}
         @disabled={{this.uploading}}
+        class="btn-primary"
       />
     </div>
   </div>

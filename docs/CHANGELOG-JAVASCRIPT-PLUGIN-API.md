@@ -7,6 +7,90 @@ in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.12.0] - 2023-09-06
+
+### Added
+
+- Adds `addPostAdminMenuButton` which allows to register a new button in the post admin menu.
+
+## [1.11.0] - 2023-08-30
+
+### Added
+
+- Adds `addBeforeAuthCompleteCallback` which allows plugins and themes to add functions to be
+  evaluated before the auth-complete logic is run. If any of these callbacks return false, the
+  auth-complete logic will be aborted.
+
+## [1.10.0] - 2023-08-25
+
+### Added
+
+- Adds `registerReviewableActionModal` which allows core and plugins to register a modal component class
+  which is used to show a modal for certain reviewable actions.
+
+## [1.9.0] - 2023-08-09
+
+### Added
+
+- Adds `showSidebarSwitchPanelButtons` which is experimental, and allows plugins to show sidebar switch panel buttons in separated mode
+
+- Adds `hideSidebarSwitchPanelButtons` which is experimental, and allows plugins to hide sidebar switch panel buttons in separated mode
+
+## [1.8.1] - 2023-08-08
+
+### Added
+
+- Adds `replacePostMenuButton` which allows plugins to replace a post menu button with a widget.
+
+## [1.8.0] - 2023-07-18
+
+### Added
+- Adds `addSidebarPanel` which is experimental, and adds a Sidebar panel by returning a class which extends from the
+  BaseCustomSidebarPanel class.
+
+- Adds `setSidebarPanel` which is experimental, and sets the current sidebar panel.
+
+## [1.7.1] - 2023-07-18
+
+### Added
+
+- Adds `addBulkActionButton` which adds actions to the Bulk Topic modal
+
+## [1.7.0] - 2023-07-17
+
+### Added
+
+- Adds `addCommunitySectionLink` which allows plugins to add a navigation link to the Sidebar community section under
+  the "More..." links drawer.
+
+- Adds `registerUserCategorySectionLinkCountable` which allows plugins to register a new countable for section links
+  under Sidebar Categories section on top of the default countables of unread topics count and new topics count.
+
+- Adds `registerCustomCategorySectionLinkLockIcon` which allows plugins to change the lock icon used for a sidebar
+  category section link to indicate that a category is read restricted.
+
+- Adds `registerCustomCategorySectionLinkPrefix` which allows plugins to register a custom prefix for a sidebar category
+  section link.
+
+- Adds `registerCustomTagSectionLinkPrefixValue` which allows plugins to register a custom prefix for a sidebar tag
+  section link.
+
+- Adds `refreshUserSidebarCategoriesSectionCounts` which allows plugins to trigger a refresh of the counts for all
+  category section links under the categories section for a logged in user.
+
+- Adds `addSidebarSection` which allows plugins to add a Sidebar section.
+
+- Adds `registerNotificationTypeRenderer` which allows plugins to register a custom renderer for a notification type
+  or override the renderer of an existing type. See lib/notification-types/base.js for documentation and the default
+  renderer.
+
+- Adds `registerModelTransformer` which allows plugins to apply transformation using a callback on a list of model
+  instances of a specific type. Currently, this API only works on lists rendered in the user menu such as notifications,
+  bookmarks and topics (i.e. messages), but it may be extended to other lists in other parts of the app.
+
+- Adds `addUserMessagesNavigationDropdownRow` which allows plugins to add a row to the dropdown used on the
+  `userPrivateMessages` route used to navigate between the different user messages pages.
+
 ## [1.6.0] - 2022-12-13
 
 ### Added

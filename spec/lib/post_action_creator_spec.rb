@@ -9,10 +9,9 @@ RSpec.describe PostActionCreator do
   before { Group.refresh_automatic_groups! }
 
   describe "rate limits" do
-    before do
-      RateLimiter.clear_all!
-      RateLimiter.enable
-    end
+    before { RateLimiter.enable }
+
+    use_redis_snapshotting
 
     it "limits redo/undo" do
       PostActionCreator.like(user, post)
@@ -62,6 +61,12 @@ RSpec.describe PostActionCreator do
       expect(result.post_action.user).to eq(user)
       expect(result.post_action.post).to eq(post)
       expect(result.post_action.post_action_type_id).to eq(like_type_id)
+
+      # also test double like
+      result = PostActionCreator.new(user, post, like_type_id).perform
+      expect(result.success).not_to eq(true)
+      expect(result.forbidden).to eq(true)
+      expect(result.errors.full_messages.join).to eq(I18n.t("action_already_performed"))
     end
 
     it "notifies subscribers" do
@@ -123,6 +128,28 @@ RSpec.describe PostActionCreator do
 
       expect(Notification.where(notification_type: Notification.types[:liked]).exists?).to eq(false)
     end
+
+    it "triggers the right flag events" do
+      events = DiscourseEvent.track_events { PostActionCreator.create(user, post, :inappropriate) }
+      event_names = events.map { |event| event[:event_name] }
+      expect(event_names).to include(:flag_created)
+      expect(event_names).not_to include(:like_created)
+    end
+
+    it "triggers the right like events" do
+      events = DiscourseEvent.track_events { PostActionCreator.create(user, post, :like) }
+      event_names = events.map { |event| event[:event_name] }
+      expect(event_names).to include(:like_created)
+      expect(event_names).not_to include(:flag_created)
+    end
+
+    it "sends the right event arguments" do
+      events = DiscourseEvent.track_events { PostActionCreator.create(user, post, :like) }
+      event = events.find { |e| e[:event_name] == :like_created }
+      expect(event.present?).to eq(true)
+      expect(event[:params].first).to be_instance_of(PostAction)
+      expect(event[:params].second).to be_instance_of(PostActionCreator)
+    end
   end
 
   describe "flags" do
@@ -151,7 +178,7 @@ RSpec.describe PostActionCreator do
       end
 
       it "hides the post when the flagger is a TL3 user and the poster is a TL0 user" do
-        result = PostActionCreator.create(user, post, :spam)
+        PostActionCreator.create(user, post, :spam)
 
         expect(post.hidden?).to eq(true)
       end
@@ -159,7 +186,7 @@ RSpec.describe PostActionCreator do
       it "does not hide the post if the setting is disabled" do
         SiteSetting.high_trust_flaggers_auto_hide_posts = false
 
-        result = PostActionCreator.create(user, post, :spam)
+        PostActionCreator.create(user, post, :spam)
 
         expect(post.hidden?).to eq(false)
       end
@@ -202,14 +229,14 @@ RSpec.describe PostActionCreator do
 
         it "succeeds with other flag action types" do
           freeze_time 10.seconds.from_now
-          spam_result = PostActionCreator.create(user, post, :spam)
+          _spam_result = PostActionCreator.create(user, post, :spam)
 
           expect(reviewable.reload.pending?).to eq(true)
         end
 
         it "fails when other flag action types are open" do
           freeze_time 10.seconds.from_now
-          spam_result = PostActionCreator.create(user, post, :spam)
+          _spam_result = PostActionCreator.create(user, post, :spam)
 
           inappropriate_result = PostActionCreator.create(Fabricate(:user), post, :inappropriate)
 
@@ -286,7 +313,7 @@ RSpec.describe PostActionCreator do
     it "hides the topic even if it has replies" do
       Fabricate(:post, topic: post.topic)
 
-      result = build_creator.perform
+      _result = build_creator.perform
 
       expect(post.topic.reload.visible?).to eq(false)
     end

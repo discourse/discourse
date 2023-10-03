@@ -63,7 +63,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           expect(result.created_post.topic).to eq(topic)
           expect(result.created_post.custom_fields["hello"]).to eq("world")
           expect(result.created_post_topic).to eq(topic)
-          expect(result.created_post.user).to eq(reviewable.created_by)
+          expect(result.created_post.user).to eq(reviewable.target_created_by)
           expect(reviewable.target_id).to eq(result.created_post.id)
 
           expect(Topic.count).to eq(topic_count)
@@ -71,7 +71,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
           notifications =
             Notification.where(
-              user: reviewable.created_by,
+              user: reviewable.target_created_by,
               notification_type: Notification.types[:post_approved],
             )
           expect(notifications).to be_present
@@ -127,15 +127,17 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
       context "with delete_user" do
         it "deletes the user and rejects the post" do
-          other_reviewable = Fabricate(:reviewable_queued_post, created_by: reviewable.created_by)
+          other_reviewable =
+            Fabricate(:reviewable_queued_post, created_by: reviewable.target_created_by)
 
           result = reviewable.perform(moderator, :delete_user)
           expect(result.success?).to eq(true)
-          expect(User.find_by(id: reviewable.created_by)).to be_blank
+          expect(User.find_by(id: reviewable.target_created_by)).to be_blank
+
           expect(result.remove_reviewable_ids).to include(reviewable.id)
           expect(result.remove_reviewable_ids).to include(other_reviewable.id)
 
-          expect(ReviewableQueuedPost.where(id: reviewable.id)).to be_blank
+          expect(ReviewableQueuedPost.where(id: reviewable.id)).to be_present
           expect(ReviewableQueuedPost.where(id: other_reviewable.id)).to be_blank
         end
       end
@@ -222,7 +224,12 @@ RSpec.describe ReviewableQueuedPost, type: :model do
   describe "Callbacks" do
     context "when creating a new pending reviewable" do
       let(:reviewable) do
-        Fabricate.build(:reviewable_queued_post_topic, category: category, created_by: user)
+        Fabricate.build(
+          :reviewable_queued_post_topic,
+          category: category,
+          created_by: moderator,
+          target_created_by: user,
+        )
       end
       let(:user) { Fabricate(:user) }
       let(:user_stats) { user.user_stat }
@@ -235,7 +242,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
     context "when updating an existing reviewable" do
       let!(:reviewable) { Fabricate(:reviewable_queued_post_topic, category: category) }
-      let(:user_stats) { reviewable.created_by.user_stat }
+      let(:user_stats) { reviewable.target_created_by.user_stat }
 
       context "when status changes from 'pending' to something else" do
         it "updates user stats" do

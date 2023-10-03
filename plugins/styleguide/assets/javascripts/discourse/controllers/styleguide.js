@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
 
-export default Controller.extend({
-  sections: null,
-});
+export default class Styleguide extends Controller {
+  sections = null;
+}

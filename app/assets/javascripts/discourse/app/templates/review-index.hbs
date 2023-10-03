@@ -100,10 +100,10 @@
         <div class="reviewable-filter topic-filter">
           {{i18n "review.filtered_topic"}}
           <DButton
-            @class="btn-default"
             @label="review.show_all_topics"
             @icon="times"
             @action={{action "resetTopic"}}
+            class="btn-default"
           />
         </div>
       {{/if}}
@@ -133,16 +133,16 @@
       <DButton
         @icon="sync"
         @label="review.filters.refresh"
-        @class="btn-primary refresh"
         @action={{action "refresh"}}
+        class="btn-primary refresh"
       />
 
       {{#if this.site.mobileView}}
         <DButton
           @label="show_help"
           @icon={{this.toggleFiltersIcon}}
-          @class="btn-default expand-secondary-filters"
           @action={{action "toggleFilters"}}
+          class="btn-default expand-secondary-filters"
         />
       {{/if}}
     </div>

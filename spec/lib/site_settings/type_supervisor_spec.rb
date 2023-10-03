@@ -9,8 +9,6 @@ RSpec.describe SiteSettings::TypeSupervisor do
     new_settings(provider_local)
   end
 
-  subject { SiteSettings::TypeSupervisor }
-
   describe "constants" do
     it "validator opts are the subset of consumed opts" do
       expect(
@@ -95,38 +93,41 @@ RSpec.describe SiteSettings::TypeSupervisor do
       it "'emoji_list' should be at the right position" do
         expect(SiteSettings::TypeSupervisor.types[:emoji_list]).to eq(24)
       end
+      it "'tag_group_list' should be at the right position" do
+        expect(SiteSettings::TypeSupervisor.types[:tag_group_list]).to eq(26)
+      end
     end
   end
 
   describe "#parse_value_type" do
     it "returns :null type when the value is nil" do
-      expect(subject.parse_value_type(nil)).to eq(SiteSetting.types[:null])
+      expect(described_class.parse_value_type(nil)).to eq(SiteSetting.types[:null])
     end
 
     it "returns :integer type when the value is int" do
-      expect(subject.parse_value_type(2)).to eq(SiteSetting.types[:integer])
+      expect(described_class.parse_value_type(2)).to eq(SiteSetting.types[:integer])
     end
 
     it "returns :integer type when the value is large int" do
-      expect(subject.parse_value_type(99_999_999_999_999_999_999_999_999_999_999_999)).to eq(
-        SiteSetting.types[:integer],
-      )
+      expect(
+        described_class.parse_value_type(99_999_999_999_999_999_999_999_999_999_999_999),
+      ).to eq(SiteSetting.types[:integer])
     end
 
     it "returns :float type when the value is float" do
-      expect(subject.parse_value_type(1.23)).to eq(SiteSetting.types[:float])
+      expect(described_class.parse_value_type(1.23)).to eq(SiteSetting.types[:float])
     end
 
     it "returns :bool type when the value is true" do
-      expect(subject.parse_value_type(true)).to eq(SiteSetting.types[:bool])
+      expect(described_class.parse_value_type(true)).to eq(SiteSetting.types[:bool])
     end
 
     it "returns :bool type when the value is false" do
-      expect(subject.parse_value_type(false)).to eq(SiteSetting.types[:bool])
+      expect(described_class.parse_value_type(false)).to eq(SiteSetting.types[:bool])
     end
 
     it "raises when the value is not listed" do
-      expect { subject.parse_value_type(Object.new) }.to raise_error ArgumentError
+      expect { described_class.parse_value_type(Object.new) }.to raise_error ArgumentError
     end
   end
 

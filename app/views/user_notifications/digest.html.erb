@@ -4,13 +4,12 @@
   </span>
   <table border="0" cellspacing="0" width="100%">
     <tr>
-      <td></td>
-      <td width="650">
+      <td>
         <%- if I18n.t('user_notifications.digest.custom.html.header').present? %>
           <table width="100%" class="digest-header logo-header" dir="<%= rtl? ? 'rtl' : 'ltr' %>" style="border-spacing:0;padding:0;">
             <tr>
               <td></td>
-              <td style="padding:0;">
+              <td width="650" style="padding:0;">
                 <%= raw(t 'user_notifications.digest.custom.html.header') %>
               </td>
               <td></td>
@@ -20,7 +19,7 @@
           <table width="100%" class="digest-header text-header with-dir" style="background-color:#<%= @header_bgcolor -%>;">
             <tr>
               <td></td>
-              <td align="center" style="text-align: center;padding: 20px 0; font-family:Arial,sans-serif;">
+              <td width="650" align="center" style="text-align: center;padding: 20px 0; font-family:Arial,sans-serif;">
                 <a href="<%= Discourse.base_url %>" style="color:#<%= @header_color -%>;font-size:22px;text-decoration:none;">
                 <%- if logo_url.blank? %>
                   <%= SiteSetting.title %>
@@ -35,7 +34,7 @@
         <%- end %>
         <table width="100%" class="body digest-content with-dir" style="background:#f3f3f3;padding:0;border-spacing:0;font-family:Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;vertical-align:top;">
           <tr>
-            <td class="side-spacer" style="width:5%;vertical-align:top;padding:0;">
+            <td class="side-spacer" style="vertical-align:top;padding:0;">
               <div class="with-accent-colors">
                 <table class="spacer with-accent-colors" style="border-spacing:0;padding:0;width:100%">
                   <tbody>
@@ -46,7 +45,7 @@
                 </table>
               </div>
             </td>
-            <td style="vertical-align:top;padding:0;font-family:Arial,sans-serif;">
+            <td  width="650" style="vertical-align:top;padding:0;font-family:Arial,sans-serif;">
               <table align="center" class="digest-content-header with-accent-colors with-dir" style="border-spacing:0;margin:0;padding:0;vertical-align:top;width:100%">
                 <tbody>
                   <tr>
@@ -57,14 +56,14 @@
                         <tbody>
                           <tr class="header-stat-count">
                             <%- @counts.each do |count| -%>
-                              <td style="text-align:center;font-size:36px;font-weight:400;">
+                              <td id="<%= count[:id] %>_stat_count" style="text-align:center;font-size:36px;font-weight:400;">
                                 <a class="with-accent-colors" href="<%= count[:href] -%>"><strong><%= count[:value] -%></strong></a>
                               </td>
                             <%- end -%>
                           </tr>
                           <tr class="header-stat-description">
                             <%- @counts.each do |count| -%>
-                              <td style="font-size:14px;font-weight:400;text-align:center;">
+                              <td id="<%= count[:id] %>_stat_description" style="font-size:14px;font-weight:400;text-align:center;">
                                 <a class="with-accent-colors" href="<%= count[:href] -%>"><strong><%=t count[:label_key] -%></strong></a>
                               </td>
                             <%- end -%>
@@ -186,7 +185,7 @@
                 </tbody>
               </table>
             </td>
-            <td class="side-spacer" style="width:5%;vertical-align:top;padding:0;">
+            <td class="side-spacer" style="vertical-align:top;padding:0;">
               <!-- Background that goes down part-way behind content -->
               <div class="with-accent-colors">
                 <table class="spacer with-dir with-accent-colors" style="border-spacing:0;padding:0;width:100%">
@@ -208,8 +207,8 @@
       
           <table width="100%" class="body with-dir" style="background:#f3f3f3;border-spacing:0;border-collapse:collapse!important;font-family:Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;padding:0;vertical-align:top;">
             <tr>
-              <td class="side-spacer" style="width:5%;padding:0;">&nbsp;</td>
-              <td class="with-dir" align="center" valign="top" style="border-collapse:collapse!important;line-height:1.3;margin:0;padding:0;vertical-align:top;">
+              <td class="side-spacer" style="padding:0;">&nbsp;</td>
+              <td class="with-dir" width="650" align="center" valign="top" style="border-collapse:collapse!important;line-height:1.3;margin:0;padding:0;vertical-align:top;">
 
                 <% @popular_posts.each do |post| %>
 
@@ -270,7 +269,7 @@
                 <% end %>
 
               </td>
-              <td class="side-spacer" style="width:5%;padding:0;">&nbsp;</td>
+              <td class="side-spacer" style="padding:0;">&nbsp;</td>
             </tr>
           </table>
         <% end %>
@@ -283,8 +282,8 @@
          
           <table width="100%" class="digest-new-topics body with-dir" style="background:#f3f3f3;border-spacing:0;border-collapse:collapse!important;font-family:Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;padding:0;vertical-align:top;">
             <tr>
-              <td class="side-spacer" style="width:5%;padding:0;">&nbsp;</td>
-              <td align="center" valign="top" style="border-collapse:collapse!important;margin:0;padding:0;">
+              <td class="side-spacer" style="padding:0;">&nbsp;</td>
+              <td width="650" align="center" valign="top" style="border-collapse:collapse!important;margin:0;padding:0;">
 
                 <table class="digest-new-topic with-dir" style="padding:0;vertical-align:top;width:100%">
                   <tbody>
@@ -323,7 +322,7 @@
                 </table>
 
               </td>
-              <td class="side-spacer" style="width:5%;padding:0;">&nbsp;</td>
+              <td class="side-spacer" style="padding:0;">&nbsp;</td>
             </tr>
           </table>
 
@@ -374,7 +373,7 @@
         <table width="100%" class='summary-footer with-dir'>
           <tr>
             <td></td>
-            <td align="center">
+            <td width="650" align="center">
               <%=raw(t 'user_notifications.digest.unsubscribe',
                       site_link: html_site_link,
                       email_preferences_link: link_to(t('user_notifications.digest.your_email_settings'), Discourse.base_url + '/my/preferences/emails'),

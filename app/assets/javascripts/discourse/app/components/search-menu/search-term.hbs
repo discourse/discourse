@@ -1,0 +1,11 @@
+<input
+  id={{this.inputId}}
+  type="text"
+  autocomplete="off"
+  value={{this.search.activeGlobalSearchTerm}}
+  placeholder={{i18n "search.title"}}
+  aria-label={{i18n "search.title"}}
+  {{on "keyup" this.onKeyup}}
+  {{on "input" this.updateSearchTerm}}
+  {{did-insert this.focus}}
+/>

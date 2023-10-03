@@ -1,47 +1,20 @@
 import Component from "@ember/component";
+import { BookmarkFormData } from "discourse/lib/bookmark";
+import BookmarkModal from "discourse/components/modal/bookmark";
 import { action } from "@ember/object";
-import { next, schedule } from "@ember/runloop";
-import { openBookmarkModal } from "discourse/controllers/bookmark";
 import { ajax } from "discourse/lib/ajax";
 import {
   openLinkInNewTab,
   shouldOpenInNewTab,
 } from "discourse/lib/click-track";
-import Scrolling from "discourse/mixins/scrolling";
 import I18n from "I18n";
 import { Promise } from "rsvp";
 import { inject as service } from "@ember/service";
 
-export default Component.extend(Scrolling, {
+export default Component.extend({
   dialog: service(),
+  modal: service(),
   classNames: ["bookmark-list-wrapper"],
-
-  didInsertElement() {
-    this._super(...arguments);
-    this.bindScrolling();
-    this.scrollToLastPosition();
-  },
-
-  willDestroyElement() {
-    this._super(...arguments);
-    this.unbindScrolling();
-  },
-
-  scrollToLastPosition() {
-    const scrollTo = this.session.bookmarkListScrollPosition;
-    if (scrollTo >= 0) {
-      schedule("afterRender", () => {
-        if (this.element && !this.isDestroying && !this.isDestroyed) {
-          next(() => window.scrollTo(0, scrollTo));
-        }
-      });
-    }
-  },
-
-  scrolled() {
-    this._super(...arguments);
-    this.session.set("bookmarkListScrollPosition", window.scrollY);
-  },
 
   @action
   removeBookmark(bookmark) {
@@ -84,17 +57,20 @@ export default Component.extend(Scrolling, {
 
   @action
   editBookmark(bookmark) {
-    openBookmarkModal(bookmark, {
-      onAfterSave: (savedData) => {
-        this.appEvents.trigger(
-          "bookmarks:changed",
-          savedData,
-          bookmark.attachedTo()
-        );
-        this.reload();
-      },
-      onAfterDelete: () => {
-        this.reload();
+    this.modal.show(BookmarkModal, {
+      model: {
+        bookmark: new BookmarkFormData(bookmark),
+        afterSave: (savedData) => {
+          this.appEvents.trigger(
+            "bookmarks:changed",
+            savedData,
+            bookmark.attachedTo()
+          );
+          this.reload();
+        },
+        afterDelete: () => {
+          this.reload();
+        },
       },
     });
   },

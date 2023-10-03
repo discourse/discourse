@@ -31,7 +31,7 @@ RSpec.describe Admin::FormTemplatesController do
       end
     end
 
-    context "when experiemental form templates is disabled" do
+    context "when experimental form templates is disabled" do
       before do
         sign_in(admin)
         SiteSetting.experimental_form_templates = false
@@ -74,7 +74,7 @@ RSpec.describe Admin::FormTemplatesController do
                params: {
                  name: "Bug Reports",
                  template:
-                   "- type: input\n  attributes:\n    label: Website or apps\n    description: |\n      Which website or app were you using when the bug happened?\n    placeholder: |\n      e.g. website URL, name of the app\n    validations:\n      required: true",
+                   "- type: input\n  id: website\n  attributes:\n    label: Website or apps\n    description: |\n      Which website or app were you using when the bug happened?\n    placeholder: |\n      e.g. website URL, name of the app\n    validations:\n      required: true",
                }
 
           expect(response.status).to eq(200)
@@ -112,13 +112,13 @@ RSpec.describe Admin::FormTemplatesController do
             params: {
               id: form_template.id,
               name: "Updated Template",
-              template: "- type: checkbox",
+              template: "- type: checkbox\n  id: checkbox",
             }
 
         expect(response.status).to eq(200)
         form_template.reload
         expect(form_template.name).to eq("Updated Template")
-        expect(form_template.template).to eq("- type: checkbox")
+        expect(form_template.template).to eq("- type: checkbox\n  id: checkbox")
       end
     end
 

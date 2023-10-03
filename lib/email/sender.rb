@@ -363,7 +363,7 @@ module Email
             if attached_upload.local?
               Discourse.store.path_for(attached_upload)
             else
-              Discourse.store.download(attached_upload).path
+              Discourse.store.download!(attached_upload).path
             end
 
           @message_attachments_index[original_upload.sha1] = @message.attachments.size

@@ -54,7 +54,7 @@ export function loadColorSchemeStylesheet(
   darkMode = false
 ) {
   const themeId = theme_id ? `/${theme_id}` : "";
-  ajax(`/color-scheme-stylesheet/${colorSchemeId}${themeId}.json`).then(
+  return ajax(`/color-scheme-stylesheet/${colorSchemeId}${themeId}.json`).then(
     (result) => {
       if (result && result.new_href) {
         const elementId = darkMode ? "cs-preview-dark" : "cs-preview-light";

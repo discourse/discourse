@@ -1,38 +1,42 @@
 /*!
-  Highlight.js v11.6.0 (git: bed790f3f3)
-  (c) 2006-2022 undefined and other contributors
+  Highlight.js v11.8.0 (git: 65687a907b)
+  (c) 2006-2023 undefined and other contributors
   License: BSD-3-Clause
  */
-var deepFreezeEs6 = {exports: {}};
+/* eslint-disable no-multi-assign */
 
 function deepFreeze(obj) {
-    if (obj instanceof Map) {
-        obj.clear = obj.delete = obj.set = function () {
-            throw new Error('map is read-only');
+  if (obj instanceof Map) {
+    obj.clear =
+      obj.delete =
+      obj.set =
+        function () {
+          throw new Error('map is read-only');
         };
-    } else if (obj instanceof Set) {
-        obj.add = obj.clear = obj.delete = function () {
-            throw new Error('set is read-only');
+  } else if (obj instanceof Set) {
+    obj.add =
+      obj.clear =
+      obj.delete =
+        function () {
+          throw new Error('set is read-only');
         };
+  }
+
+  // Freeze self
+  Object.freeze(obj);
+
+  Object.getOwnPropertyNames(obj).forEach((name) => {
+    const prop = obj[name];
+    const type = typeof prop;
+
+    // Freeze prop if it is an object or function and also not already frozen
+    if ((type === 'object' || type === 'function') && !Object.isFrozen(prop)) {
+      deepFreeze(prop);
     }
+  });
 
-    // Freeze self
-    Object.freeze(obj);
-
-    Object.getOwnPropertyNames(obj).forEach(function (name) {
-        var prop = obj[name];
-
-        // Freeze prop if it is an object
-        if (typeof prop == 'object' && !Object.isFrozen(prop)) {
-            deepFreeze(prop);
-        }
-    });
-
-    return obj;
+  return obj;
 }
-
-deepFreezeEs6.exports = deepFreeze;
-deepFreezeEs6.exports.default = deepFreeze;
 
 /** @typedef {import('highlight.js').CallbackResponse} CallbackResponse */
 /** @typedef {import('highlight.js').CompiledMode} CompiledMode */
@@ -112,7 +116,7 @@ const SPAN_CLOSE = '</span>';
 const emitsWrappingTags = (node) => {
   // rarely we can have a sublanguage where language is undefined
   // TODO: track down why
-  return !!node.scope || (node.sublanguage && node.language);
+  return !!node.scope;
 };
 
 /**
@@ -121,6 +125,11 @@ const emitsWrappingTags = (node) => {
  * @param {{prefix:string}} options
  */
 const scopeToCSSClass = (name, { prefix }) => {
+  // sub-language
+  if (name.startsWith("language:")) {
+    return name.replace("language:", "language-");
+  }
+  // tiered scope: comment.line
   if (name.includes(".")) {
     const pieces = name.split(".");
     return [
@@ -128,6 +137,7 @@ const scopeToCSSClass = (name, { prefix }) => {
       ...(pieces.map((x, i) => `${x}${"_".repeat(i + 1)}`))
     ].join(" ");
   }
+  // simple scope
   return `${prefix}${name}`;
 };
 
@@ -160,12 +170,8 @@ class HTMLRenderer {
   openNode(node) {
     if (!emitsWrappingTags(node)) return;
 
-    let className = "";
-    if (node.sublanguage) {
-      className = `language-${node.language}`;
-    } else {
-      className = scopeToCSSClass(node.scope, { prefix: this.classPrefix });
-    }
+    const className = scopeToCSSClass(node.scope,
+      { prefix: this.classPrefix });
     this.span(className);
   }
 
@@ -303,13 +309,11 @@ class TokenTree {
 
   Minimal interface:
 
-  - addKeyword(text, scope)
   - addText(text)
-  - addSublanguage(emitter, subLanguageName)
+  - __addSublanguage(emitter, subLanguageName)
+  - startScope(scope)
+  - endScope()
   - finalize()
-  - openNode(scope)
-  - closeNode()
-  - closeAllNodes()
   - toHTML()
 
 */
@@ -328,18 +332,6 @@ class TokenTreeEmitter extends TokenTree {
 
   /**
    * @param {string} text
-   * @param {string} scope
-   */
-  addKeyword(text, scope) {
-    if (text === "") { return; }
-
-    this.openNode(scope);
-    this.addText(text);
-    this.closeNode();
-  }
-
-  /**
-   * @param {string} text
    */
   addText(text) {
     if (text === "") { return; }
@@ -347,15 +339,24 @@ class TokenTreeEmitter extends TokenTree {
     this.add(text);
   }
 
+  /** @param {string} scope */
+  startScope(scope) {
+    this.openNode(scope);
+  }
+
+  endScope() {
+    this.closeNode();
+  }
+
   /**
    * @param {Emitter & {root: DataNode}} emitter
    * @param {string} name
    */
-  addSublanguage(emitter, name) {
+  __addSublanguage(emitter, name) {
     /** @type DataNode */
     const node = emitter.root;
-    node.sublanguage = true;
-    node.language = name;
+    if (name) node.scope = `language:${name}`;
+
     this.add(node);
   }
 
@@ -365,6 +366,7 @@ class TokenTreeEmitter extends TokenTree {
   }
 
   finalize() {
+    this.closeAllNodes();
     return true;
   }
 }
@@ -726,31 +728,31 @@ const END_SAME_AS_BEGIN = function(mode) {
 };
 
 var MODES = /*#__PURE__*/Object.freeze({
-    __proto__: null,
-    MATCH_NOTHING_RE: MATCH_NOTHING_RE,
-    IDENT_RE: IDENT_RE,
-    UNDERSCORE_IDENT_RE: UNDERSCORE_IDENT_RE,
-    NUMBER_RE: NUMBER_RE,
-    C_NUMBER_RE: C_NUMBER_RE,
-    BINARY_NUMBER_RE: BINARY_NUMBER_RE,
-    RE_STARTERS_RE: RE_STARTERS_RE,
-    SHEBANG: SHEBANG,
-    BACKSLASH_ESCAPE: BACKSLASH_ESCAPE,
-    APOS_STRING_MODE: APOS_STRING_MODE,
-    QUOTE_STRING_MODE: QUOTE_STRING_MODE,
-    PHRASAL_WORDS_MODE: PHRASAL_WORDS_MODE,
-    COMMENT: COMMENT,
-    C_LINE_COMMENT_MODE: C_LINE_COMMENT_MODE,
-    C_BLOCK_COMMENT_MODE: C_BLOCK_COMMENT_MODE,
-    HASH_COMMENT_MODE: HASH_COMMENT_MODE,
-    NUMBER_MODE: NUMBER_MODE,
-    C_NUMBER_MODE: C_NUMBER_MODE,
-    BINARY_NUMBER_MODE: BINARY_NUMBER_MODE,
-    REGEXP_MODE: REGEXP_MODE,
-    TITLE_MODE: TITLE_MODE,
-    UNDERSCORE_TITLE_MODE: UNDERSCORE_TITLE_MODE,
-    METHOD_GUARD: METHOD_GUARD,
-    END_SAME_AS_BEGIN: END_SAME_AS_BEGIN
+  __proto__: null,
+  MATCH_NOTHING_RE: MATCH_NOTHING_RE,
+  IDENT_RE: IDENT_RE,
+  UNDERSCORE_IDENT_RE: UNDERSCORE_IDENT_RE,
+  NUMBER_RE: NUMBER_RE,
+  C_NUMBER_RE: C_NUMBER_RE,
+  BINARY_NUMBER_RE: BINARY_NUMBER_RE,
+  RE_STARTERS_RE: RE_STARTERS_RE,
+  SHEBANG: SHEBANG,
+  BACKSLASH_ESCAPE: BACKSLASH_ESCAPE,
+  APOS_STRING_MODE: APOS_STRING_MODE,
+  QUOTE_STRING_MODE: QUOTE_STRING_MODE,
+  PHRASAL_WORDS_MODE: PHRASAL_WORDS_MODE,
+  COMMENT: COMMENT,
+  C_LINE_COMMENT_MODE: C_LINE_COMMENT_MODE,
+  C_BLOCK_COMMENT_MODE: C_BLOCK_COMMENT_MODE,
+  HASH_COMMENT_MODE: HASH_COMMENT_MODE,
+  NUMBER_MODE: NUMBER_MODE,
+  C_NUMBER_MODE: C_NUMBER_MODE,
+  BINARY_NUMBER_MODE: BINARY_NUMBER_MODE,
+  REGEXP_MODE: REGEXP_MODE,
+  TITLE_MODE: TITLE_MODE,
+  UNDERSCORE_TITLE_MODE: UNDERSCORE_TITLE_MODE,
+  METHOD_GUARD: METHOD_GUARD,
+  END_SAME_AS_BEGIN: END_SAME_AS_BEGIN
 });
 
 /**
@@ -904,7 +906,7 @@ const DEFAULT_KEYWORD_SCOPE = "keyword";
  * @param {boolean} caseInsensitive
  */
 function compileKeywords(rawKeywords, caseInsensitive, scopeName = DEFAULT_KEYWORD_SCOPE) {
-  /** @type KeywordDict */
+  /** @type {import("highlight.js/private").KeywordDict} */
   const compiledKeywords = Object.create(null);
 
   // input can be a string of keywords, an array of keywords, or a object with
@@ -1563,7 +1565,7 @@ function expandOrCloneMode(mode) {
   return mode;
 }
 
-var version = "11.6.0";
+var version = "11.8.0";
 
 class HTMLInjectionError extends Error {
   constructor(reason, html) {
@@ -1577,6 +1579,7 @@ class HTMLInjectionError extends Error {
 Syntax highlighting with language autodetection.
 https://highlightjs.org/
 */
+
 
 /**
 @typedef {import('highlight.js').Mode} Mode
@@ -1787,7 +1790,7 @@ const HLJS = function(hljs) {
             buf += match[0];
           } else {
             const cssClass = language.classNameAliases[kind] || kind;
-            emitter.addKeyword(match[0], cssClass);
+            emitKeyword(match[0], cssClass);
           }
         } else {
           buf += match[0];
@@ -1822,7 +1825,7 @@ const HLJS = function(hljs) {
       if (top.relevance > 0) {
         relevance += result.relevance;
       }
-      emitter.addSublanguage(result._emitter, result.language);
+      emitter.__addSublanguage(result._emitter, result.language);
     }
 
     function processBuffer() {
@@ -1832,6 +1835,18 @@ const HLJS = function(hljs) {
         processKeywords();
       }
       modeBuffer = '';
+    }
+
+    /**
+     * @param {string} text
+     * @param {string} scope
+     */
+    function emitKeyword(keyword, scope) {
+      if (keyword === "") return;
+
+      emitter.startScope(scope);
+      emitter.addText(keyword);
+      emitter.endScope();
     }
 
     /**
@@ -1846,7 +1861,7 @@ const HLJS = function(hljs) {
         const klass = language.classNameAliases[scope[i]] || scope[i];
         const text = match[i];
         if (klass) {
-          emitter.addKeyword(text, klass);
+          emitKeyword(text, klass);
         } else {
           modeBuffer = text;
           processKeywords();
@@ -1867,7 +1882,7 @@ const HLJS = function(hljs) {
       if (mode.beginScope) {
         // beginScope just wraps the begin match itself in a scope
         if (mode.beginScope._wrap) {
-          emitter.addKeyword(modeBuffer, language.classNameAliases[mode.beginScope._wrap] || mode.beginScope._wrap);
+          emitKeyword(modeBuffer, language.classNameAliases[mode.beginScope._wrap] || mode.beginScope._wrap);
           modeBuffer = "";
         } else if (mode.beginScope._multi) {
           // at this point modeBuffer should just be the match
@@ -1978,7 +1993,7 @@ const HLJS = function(hljs) {
       const origin = top;
       if (top.endScope && top.endScope._wrap) {
         processBuffer();
-        emitter.addKeyword(lexeme, top.endScope._wrap);
+        emitKeyword(lexeme, top.endScope._wrap);
       } else if (top.endScope && top.endScope._multi) {
         processBuffer();
         emitMultiClass(top.endScope, match);
@@ -2121,37 +2136,41 @@ const HLJS = function(hljs) {
     let resumeScanAtSamePosition = false;
 
     try {
-      top.matcher.considerAll();
+      if (!language.__emitTokens) {
+        top.matcher.considerAll();
 
-      for (;;) {
-        iterations++;
-        if (resumeScanAtSamePosition) {
-          // only regexes not matched previously will now be
-          // considered for a potential match
-          resumeScanAtSamePosition = false;
-        } else {
-          top.matcher.considerAll();
+        for (;;) {
+          iterations++;
+          if (resumeScanAtSamePosition) {
+            // only regexes not matched previously will now be
+            // considered for a potential match
+            resumeScanAtSamePosition = false;
+          } else {
+            top.matcher.considerAll();
+          }
+          top.matcher.lastIndex = index;
+
+          const match = top.matcher.exec(codeToHighlight);
+          // console.log("match", match[0], match.rule && match.rule.begin)
+
+          if (!match) break;
+
+          const beforeMatch = codeToHighlight.substring(index, match.index);
+          const processedCount = processLexeme(beforeMatch, match);
+          index = match.index + processedCount;
         }
-        top.matcher.lastIndex = index;
-
-        const match = top.matcher.exec(codeToHighlight);
-        // console.log("match", match[0], match.rule && match.rule.begin)
-
-        if (!match) break;
-
-        const beforeMatch = codeToHighlight.substring(index, match.index);
-        const processedCount = processLexeme(beforeMatch, match);
-        index = match.index + processedCount;
+        processLexeme(codeToHighlight.substring(index));
+      } else {
+        language.__emitTokens(codeToHighlight, emitter);
       }
-      processLexeme(codeToHighlight.substring(index));
-      emitter.closeAllNodes();
+
       emitter.finalize();
       result = emitter.toHTML();
 
       return {
         language: languageName,
         value: result,
-        relevance: relevance,
+        relevance,
         illegal: false,
         _emitter: emitter,
         _top: top
@@ -2165,7 +2184,7 @@ const HLJS = function(hljs) {
           relevance: 0,
           _illegalBy: {
             message: err.message,
-            index: index,
+            index,
             context: codeToHighlight.slice(index - 100, index + 100),
             mode: err.mode,
             resultSoFar: result
@@ -2287,7 +2306,7 @@ const HLJS = function(hljs) {
     if (shouldNotHighlight(language)) return;
 
     fire("before:highlightElement",
-      { el: element, language: language });
+      { el: element, language });
 
     // we should be all text, no child nodes (unescaped HTML) - this is possibly
     // an HTML injection attack - it's likely too late if this is already in
@@ -2492,6 +2511,16 @@ const HLJS = function(hljs) {
   }
 
   /**
+   * @param {HLJSPlugin} plugin
+   */
+  function removePlugin(plugin) {
+    const index = plugins.indexOf(plugin);
+    if (index !== -1) {
+      plugins.splice(index, 1);
+    }
+  }
+
+  /**
    *
    * @param {PluginEvent} event
    * @param {any} args
@@ -2534,7 +2563,8 @@ const HLJS = function(hljs) {
     registerAliases,
     autoDetection,
     inherit,
-    addPlugin
+    addPlugin,
+    removePlugin
   });
 
   hljs.debugMode = function() { SAFE_MODE = false; };
@@ -2553,7 +2583,7 @@ const HLJS = function(hljs) {
     // @ts-ignore
     if (typeof MODES[key] === "object") {
       // @ts-ignore
-      deepFreezeEs6.exports(MODES[key]);
+      deepFreeze(MODES[key]);
     }
   }
 
@@ -2563,7 +2593,11 @@ const HLJS = function(hljs) {
   return hljs;
 };
 
-// export an "instance" of the highlighter
-var highlight = HLJS({});
+// Other names for the variable may break build script
+const highlight = HLJS({});
+
+// returns a new instance of the highlighter to be used for extensions
+// check https://github.com/wooorm/lowlight/issues/47
+highlight.newInstance = () => HLJS({});
 
 export { highlight as default };

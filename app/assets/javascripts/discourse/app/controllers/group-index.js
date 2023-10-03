@@ -1,4 +1,4 @@
-import Controller, { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import discourseComputed, {
   debounce,
   observes,
@@ -9,11 +9,9 @@ import { gt } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
-  application: controller(),
-
   queryParams: ["order", "asc", "filter"],
 
-  order: "",
+  order: null,
   asc: true,
   filter: null,
   filterInput: null,
@@ -23,6 +21,10 @@ export default Controller.extend({
   showActions: false,
 
   bulkSelection: null,
+
+  get canLoadMore() {
+    return this.get("model.members")?.length < this.get("model.user_count");
+  },
 
   @observes("filterInput")
   filterInputChanged() {
@@ -44,18 +46,13 @@ export default Controller.extend({
       return;
     }
 
-    if (!refresh && this.model.members.length >= this.model.user_count) {
-      this.set("application.showFooter", true);
+    if (!refresh && !this.canLoadMore) {
       return;
     }
 
     this.set("loading", true);
     this.model.reloadMembers(this.memberParams, refresh).finally(() => {
-      this.setProperties({
-        "application.showFooter":
-          this.model.members.length >= this.model.user_count,
-        loading: false,
-      });
+      this.set("loading", false);
 
       if (this.refresh) {
         this.set("bulkSelection", []);

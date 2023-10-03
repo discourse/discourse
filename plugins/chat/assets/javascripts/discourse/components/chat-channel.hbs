@@ -1,0 +1,88 @@
+<div
+  class={{concat-class
+    "chat-channel"
+    (if this.messagesLoader.loading "loading")
+    (if this.pane.sending "chat-channel--sending")
+    (unless this.messagesLoader.fetchedOnce "chat-channel--not-loaded-once")
+  }}
+  {{did-insert this.setUploadDropZone}}
+  {{did-insert this.setupListeners}}
+  {{will-destroy this.teardownListeners}}
+  {{did-update this.loadMessages @targetMessageId}}
+  {{did-insert this.didUpdateChannel}}
+  {{did-update this.didUpdateChannel @channel.id}}
+  {{did-insert this.addAutoFocusEventListener}}
+  {{will-destroy this.removeAutoFocusEventListener}}
+  data-id={{@channel.id}}
+>
+  <ChatFullPageHeader
+    @channel={{@channel}}
+    @onCloseFullScreen={{this.onCloseFullScreen}}
+    @displayed={{this.includeHeader}}
+  />
+
+  <Chat::Notices @channel={{@channel}} />
+
+  <ChatMentionWarnings />
+
+  <div
+    class="chat-messages-scroll chat-messages-container popper-viewport"
+    {{did-insert this.setScrollable}}
+    {{chat/scrollable-list
+      (hash onScroll=this.onScroll onScrollEnd=this.onScrollEnd reverse=true)
+    }}
+  >
+    <div
+      class="chat-messages-container"
+      {{chat/on-resize this.didResizePane (hash delay=100 immediate=true)}}
+    >
+      {{#each this.messagesManager.messages key="id" as |message|}}
+        <ChatMessage
+          @message={{message}}
+          @disableMouseEvents={{this.isScrolling}}
+          @resendStagedMessage={{this.resendStagedMessage}}
+          @fetchMessagesByDate={{this.fetchMessagesByDate}}
+          @context="channel"
+        />
+      {{else}}
+        {{#unless this.messagesLoader.fetchedOnce}}
+          <ChatSkeleton />
+        {{/unless}}
+      {{/each}}
+    </div>
+
+    {{! at bottom even if shown at top due to column-reverse  }}
+    {{#if this.messagesLoader.loadedPast}}
+      <div class="all-loaded-message">
+        {{i18n "chat.all_loaded"}}
+      </div>
+    {{/if}}
+  </div>
+
+  <Chat::ScrollToBottomArrow
+    @onScrollToBottom={{this.scrollToLatestMessage}}
+    @isVisible={{this.needsArrow}}
+  />
+
+  {{#if this.pane.selectingMessages}}
+    <Chat::SelectionManager
+      @enableMove={{and
+        (not @channel.isDirectMessageChannel)
+        @channel.canModerate
+      }}
+      @pane={{this.pane}}
+    />
+  {{else}}
+    {{#if (and (not @channel.isFollowing) @channel.isCategoryChannel)}}
+      <ChatChannelPreviewCard @channel={{@channel}} />
+    {{else}}
+      <Chat::Composer::Channel
+        @channel={{@channel}}
+        @uploadDropZone={{this.uploadDropZone}}
+        @onSendMessage={{this.onSendMessage}}
+      />
+    {{/if}}
+  {{/if}}
+
+  <ChatUploadDropZone @model={{@channel}} />
+</div>

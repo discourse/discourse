@@ -1,6 +1,3 @@
-$wizard-bg: absolute-image-url("/branded-background.svg");
-$wizard-mobile-bg: absolute-image-url("/branded-background-mobile.svg");
-
 @keyframes bump {
   0% {
     transform: scale(1);
@@ -16,11 +13,7 @@ $wizard-mobile-bg: absolute-image-url("/branded-background-mobile.svg");
 }
 
 body.wizard {
-  background: $wizard-bg;
-  background-size: 110vw 110vh; // crops better than cover at various viewport sizes
-  background-repeat: no-repeat;
-  background-position: bottom;
-  background-color: var(--secondary);
+  background-color: var(--primary-50);
   color: var(--primary-very-high);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, Arial, sans-serif;
@@ -40,6 +33,7 @@ body.wizard {
   }
 
   .discourse-logo svg {
+    position: relative;
     height: 70px;
     width: auto;
     @include breakpoint("mobile-extra-large") {
@@ -52,11 +46,10 @@ body.wizard {
     }
   }
 
-  @include breakpoint("mobile-extra-large") {
-    background: $wizard-mobile-bg;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: bottom;
+  .wizard-canvas {
+    position: fixed;
+    top: 0;
+    pointer-events: none;
   }
 }
 
@@ -113,12 +106,6 @@ body.wizard {
     color: var(--primary-medium);
   }
 
-  &__step-banner {
-    @include breakpoint("large") {
-      display: none;
-    }
-  }
-
   &__step-description {
     font-size: var(--font-up-2);
     flex: 1 0 40%;
@@ -158,8 +145,10 @@ body.wizard {
   &__field.invalid input {
     outline: 0;
     border: 3px solid var(--danger);
-    animation: bump 0.25s ease-in-out;
-    animation-iteration-count: 2;
+    @media (prefers-reduced-motion: no-preference) {
+      animation: bump 0.25s ease-in-out;
+      animation-iteration-count: 2;
+    }
   }
 
   &__field label {
@@ -295,36 +284,7 @@ body.wizard {
     }
   }
 
-  @media only screen and (max-device-width: 568px) {
-    &__step.introduction .wizard-container__step-banner,
-    &__step.privacy .wizard-container__step-banner {
-      display: none;
-    }
-  }
-
-  &__step-banner {
-    flex: 0 1 40%;
-  }
-
-  &__step-banner-image {
-    width: 100%;
-  }
-
   &__step.ready {
-    .wizard-container__step-banner {
-      display: flex;
-      flex: 1 0 100%;
-      gap: 2em;
-    }
-    .wizard-container__step-banner-image {
-      padding-top: 2em;
-      flex: 0 1 40%;
-      margin-left: 2em;
-      max-height: 300px;
-      @include breakpoint("large") {
-        display: none;
-      }
-    }
     .wizard-container__buttons {
       flex-direction: row-reverse;
     }
@@ -704,6 +664,7 @@ body.wizard {
   .finish-installation {
     .wizard-congratulations-wrap {
       display: flex;
+      gap: 1em;
       @media screen and (max-width: 750px) {
         flex-direction: column-reverse;
       }
@@ -717,13 +678,9 @@ body.wizard {
       margin: 0 auto 1em 0;
     }
 
-    &-image {
-      margin-bottom: 1em;
-    }
-
     .tada {
       height: 15vw;
-      max-height: 10em;
+      max-height: 9em;
     }
 
     .help-text {

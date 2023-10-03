@@ -1,19 +1,19 @@
-import buildStaticRoute from "discourse/routes/build-static-route";
+import DiscourseRoute from "discourse/routes/discourse";
+import { inject as service } from "@ember/service";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { next } from "@ember/runloop";
+import ForgotPassword from "discourse/components/modal/forgot-password";
 
-const ForgotPasswordRoute = buildStaticRoute("password-reset");
+export default class ForgotPasswordRoute extends DiscourseRoute {
+  @service modal;
+  @service router;
 
-ForgotPasswordRoute.reopen({
-  beforeModel() {
-    const loginRequired =
-      this.controllerFor("application").get("loginRequired");
-    this.replaceWith(
+  async beforeModel() {
+    const { loginRequired } = this.controllerFor("application");
+
+    await this.router.replaceWith(
       loginRequired ? "login" : `discovery.${defaultHomepage()}`
-    ).then((e) => {
-      next(() => e.send("showForgotPassword"));
-    });
-  },
-});
-
-export default ForgotPasswordRoute;
+    );
+    next(() => this.modal.show(ForgotPassword));
+  }
+}

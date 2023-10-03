@@ -20,6 +20,10 @@ const Tab = EmberObject.extend({
 export default Controller.extend({
   application: controller(),
   dialog: service(),
+  currentUser: service(),
+  router: service(),
+  composer: service(),
+
   counts: null,
   showing: "members",
   destroying: null,
@@ -127,7 +131,7 @@ export default Controller.extend({
 
   @action
   messageGroup() {
-    this.send("createNewMessageViaParams", {
+    this.composer.openNewMessage({
       recipients: this.get("model.name"),
       hasGroups: true,
     });
@@ -146,7 +150,7 @@ export default Controller.extend({
       didConfirm: () => {
         model
           .destroy()
-          .then(() => this.transitionToRoute("groups.index"))
+          .then(() => this.router.transitionTo("groups.index"))
           .catch((error) => {
             // eslint-disable-next-line no-console
             console.error(error);

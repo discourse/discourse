@@ -129,7 +129,7 @@ module(
       this.set("input", moment("2032-01-01 11:10"));
 
       await render(
-        hbs`<FutureDateInput @input={{this.input}} @onChangeInput={{action (mut input)}} />`
+        hbs`<FutureDateInput @input={{this.input}} @onChangeInput={{action (mut this.input)}} />`
       );
 
       await fillIn(".time-input", "11:15");

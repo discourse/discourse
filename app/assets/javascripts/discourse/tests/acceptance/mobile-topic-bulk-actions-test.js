@@ -1,6 +1,5 @@
 import {
   acceptance,
-  invisible,
   query,
   queryAll,
   updateCurrentUser,
@@ -124,9 +123,8 @@ acceptance("Topic - Bulk Actions - Mobile", function (needs) {
     await click(".bulk-select-actions");
     await click(".modal-body .delete-topics");
 
-    assert.ok(
-      invisible(".topic-bulk-actions-modal"),
-      "it closes the bulk select modal"
-    );
+    assert
+      .dom(".topic-bulk-actions-modal")
+      .doesNotExist("it closes the bulk select modal");
   });
 });

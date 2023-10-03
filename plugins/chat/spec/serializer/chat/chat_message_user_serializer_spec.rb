@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Chat::MessageUserSerializer do
-  subject do
+  subject(:serializer) do
     user = Fabricate(:user, **params)
     guardian = Guardian.new(user)
     described_class.new(user, scope: guardian, root: nil).as_json
@@ -15,11 +15,11 @@ RSpec.describe Chat::MessageUserSerializer do
 
   context "with default user" do
     it "displays user as regular" do
-      expect(subject[:new_user]).to eq(false)
-      expect(subject[:staff]).to eq(false)
-      expect(subject[:admin]).to eq(false)
-      expect(subject[:moderator]).to eq(false)
-      expect(subject[:primary_group_name]).to be_blank
+      expect(serializer[:new_user]).to eq(false)
+      expect(serializer[:staff]).to eq(false)
+      expect(serializer[:admin]).to eq(false)
+      expect(serializer[:moderator]).to eq(false)
+      expect(serializer[:primary_group_name]).to be_blank
     end
   end
 
@@ -27,7 +27,7 @@ RSpec.describe Chat::MessageUserSerializer do
     before { params[:trust_level] = TrustLevel[0] }
 
     it "displays user as new" do
-      expect(subject[:new_user]).to eq(true)
+      expect(serializer[:new_user]).to eq(true)
     end
   end
 
@@ -35,7 +35,7 @@ RSpec.describe Chat::MessageUserSerializer do
     before { params[:admin] = true }
 
     it "displays user as staff" do
-      expect(subject[:staff]).to eq(true)
+      expect(serializer[:staff]).to eq(true)
     end
   end
 
@@ -43,7 +43,7 @@ RSpec.describe Chat::MessageUserSerializer do
     before { params[:admin] = true }
 
     it "displays user as admin" do
-      expect(subject[:admin]).to eq(true)
+      expect(serializer[:admin]).to eq(true)
     end
   end
 
@@ -51,7 +51,7 @@ RSpec.describe Chat::MessageUserSerializer do
     before { params[:moderator] = true }
 
     it "displays user as moderator" do
-      expect(subject[:moderator]).to eq(true)
+      expect(serializer[:moderator]).to eq(true)
     end
   end
 
@@ -61,7 +61,7 @@ RSpec.describe Chat::MessageUserSerializer do
     before { params[:primary_group_id] = group.id }
 
     it "displays user as moderator" do
-      expect(subject[:primary_group_name]).to eq(group.name)
+      expect(serializer[:primary_group_name]).to eq(group.name)
     end
   end
 end

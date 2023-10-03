@@ -2,7 +2,6 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, fillIn, render, settled } from "@ember/test-helpers";
 import {
-  chromeTest,
   exists,
   paste,
   query,
@@ -45,16 +44,6 @@ module("Integration | Component | d-editor", function (hooks) {
     );
   });
 
-  test("preview sanitizes HTML", async function (assert) {
-    await render(hbs`<DEditor @value={{this.value}} />`);
-
-    await fillIn(".d-editor-input", `"><svg onload="prompt(/xss/)"></svg>`);
-    assert.strictEqual(
-      query(".d-editor-preview").innerHTML.trim(),
-      '<p>"&gt;</p>'
-    );
-  });
-
   test("updating the value refreshes the preview", async function (assert) {
     this.set("value", "evil trout");
 
@@ -81,7 +70,7 @@ module("Integration | Component | d-editor", function (hooks) {
   }
 
   function testCase(title, testFunc) {
-    chromeTest(title, async function (assert) {
+    test(title, async function (assert) {
       this.set("value", "hello world.");
 
       await render(hbs`<DEditor @value={{this.value}} />`);

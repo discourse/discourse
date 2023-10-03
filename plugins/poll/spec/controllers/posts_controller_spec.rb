@@ -129,8 +129,7 @@ RSpec.describe PostsController do
 
       expect(response.status).to eq(200)
       json = response.parsed_body
-      expect(json["cooked"]).to match("data-poll-")
-      expect(json["cooked"]).to include("&lt;script&gt;")
+      expect(json["cooked"]).to include("data-poll-name=\"<script>alert('xss')</script>\"")
       expect(Poll.find_by(post_id: json["id"]).name).to eq(
         "&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;",
       )

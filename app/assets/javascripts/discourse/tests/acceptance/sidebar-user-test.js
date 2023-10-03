@@ -7,9 +7,10 @@ import {
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import Sinon from "sinon";
 
 acceptance(
-  "Sidebar - Logged on user - Experimental sidebar and hamburger setting disabled",
+  "Sidebar - Logged on user - Legacy navigation menu enabled",
   function (needs) {
     needs.user();
 
@@ -27,7 +28,29 @@ acceptance(
 );
 
 acceptance(
-  "Sidebar - Logged on user - Experimental sidebar and hamburger setting enabled - Sidebar disabled",
+  "Sidebar - Logged on user - Mobile view - Header dropdown navigation menu enabled",
+  function (needs) {
+    needs.user();
+    needs.mobileView();
+
+    needs.settings({
+      navigation_menu: "header dropdown",
+    });
+
+    test("sections are collapsable", async function (assert) {
+      await visit("/");
+      await click(".hamburger-dropdown");
+
+      assert.ok(
+        exists(".sidebar-section-header.sidebar-section-header-collapsable"),
+        "sections are collapsable"
+      );
+    });
+  }
+);
+
+acceptance(
+  "Sidebar - Logged on user - Desktop view - Header dropdown navigation menu enabled",
   function (needs) {
     needs.user();
 
@@ -51,13 +74,38 @@ acceptance(
         "hides the sidebar dropdown"
       );
     });
+
+    test("sections are not collapsable", async function (assert) {
+      await visit("/");
+      await click(".hamburger-dropdown");
+
+      assert.notOk(
+        exists(".sidebar-section-header.sidebar-section-header-collapsable"),
+        "sections are not collapsable"
+      );
+    });
+
+    test("'more' dropdown should display as regular list items in header dropdown mode", async function (assert) {
+      await visit("/");
+      await click(".hamburger-dropdown");
+
+      assert.ok(
+        exists("[data-link-name='admin']"),
+        "the admin link is not within the 'more' dropdown"
+      );
+
+      assert.notOk(
+        exists(".sidebar-more-section-links-details-summary"),
+        "the 'more' dropdown should not be present in header dropdown mode"
+      );
+    });
   }
 );
 
 acceptance(
   "Sidebar - Experimental sidebar and hamburger setting enabled - Sidebar enabled",
   function (needs) {
-    needs.user();
+    needs.user({});
 
     needs.settings({
       navigation_menu: "sidebar",
@@ -115,7 +163,7 @@ acceptance(
 
     test("button to toggle between mobile and desktop view on touch devices ", async function (assert) {
       const capabilities = this.container.lookup("service:capabilities");
-      capabilities.touch = true;
+      Sinon.stub(capabilities, "touch").value(true);
 
       await visit("/");
 
@@ -161,7 +209,7 @@ acceptance(
 
       assert.ok(
         exists(
-          ".sidebar-section[data-section-name='community'] .sidebar-section-header[aria-expanded='true'][aria-controls='sidebar-section-content-community']"
+          ".sidebar-section[data-section-name='categories'] .sidebar-section-header[aria-expanded='true'][aria-controls='sidebar-section-content-categories']"
         ),
         "accessibility attributes are set correctly on sidebar section header when section is expanded"
       );
@@ -170,7 +218,7 @@ acceptance(
 
       assert.ok(
         exists(
-          ".sidebar-section[data-section-name='community'] .sidebar-section-header[aria-expanded='false'][aria-controls='sidebar-section-content-community']"
+          ".sidebar-section[data-section-name='categories'] .sidebar-section-header[aria-expanded='false'][aria-controls='sidebar-section-content-categories']"
         ),
         "accessibility attributes are set correctly on sidebar section header when section is collapsed"
       );

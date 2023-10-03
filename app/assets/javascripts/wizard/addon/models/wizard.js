@@ -41,13 +41,13 @@ const Wizard = EmberObject.extend(Evented, {
   get font() {
     const fontChoice = this.steps.findBy("id", "styling")?.fieldsById
       ?.body_font;
-    return fontChoice.choices?.findBy("id", fontChoice.value)?.label;
+    return fontChoice.choices?.findBy("id", fontChoice.value);
   },
 
   get headingFont() {
     const fontChoice = this.steps.findBy("id", "styling")?.fieldsById
       ?.heading_font;
-    return fontChoice.choices?.findBy("id", fontChoice.value)?.label;
+    return fontChoice.choices?.findBy("id", fontChoice.value);
   },
 });
 

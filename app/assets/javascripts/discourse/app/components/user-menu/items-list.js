@@ -28,6 +28,10 @@ export default class UserMenuItemsList extends Component {
     return "user-menu/items-list-empty-state";
   }
 
+  get renderDismissConfirmation() {
+    return false;
+  }
+
   async fetchItems() {
     throw new Error(
       `the fetchItems method must be implemented in ${this.constructor.name}`
@@ -36,10 +40,6 @@ export default class UserMenuItemsList extends Component {
 
   async refreshList() {
     await this.#load();
-  }
-
-  dismissWarningModal() {
-    return null;
   }
 
   async #load() {

@@ -48,6 +48,13 @@ RSpec.describe Email::Processor do
     end
   end
 
+  describe "when mail is not set" do
+    it "does not raise an error" do
+      expect { Email::Processor.process!(nil) }.not_to raise_error
+      expect { Email::Processor.process!("") }.not_to raise_error
+    end
+  end
+
   describe "rate limits" do
     let(:mail) { "From: #{from}\nTo: bar@foo.com\nSubject: FOO BAR\n\nFoo foo bar bar?" }
     let(:limit_exceeded) { RateLimiter::LimitExceeded.new(10) }

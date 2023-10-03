@@ -1,0 +1,26 @@
+<th data-sort-order='{{order}}' class='{{view.className}} topic-list-data' scope="col" {{#if ariaLabel}}aria-label='{{ariaLabel}}'{{/if}} {{#if sortable}}tabindex="0" role="button" aria-pressed='{{view.ariaPressed}}' {{#if view.ariaSort}}aria-sort='{{view.ariaSort}}'{{/if}} {{/if}}>
+  {{~#if canBulkSelect}}
+    {{~#if showBulkToggle}}
+      {{raw "flat-button" class="bulk-select" icon="list" title="topics.bulk.toggle"}}
+    {{/if ~}}
+    {{~#if bulkSelectEnabled}}
+      <span class='bulk-select-topics'>
+        {{~#if canDoBulkActions}}
+          <button class='btn btn-icon no-text bulk-select-actions'>{{d-icon "cog"}}&#8203;</button>
+        {{/if ~}}
+        <button class='btn btn-default bulk-select-all'>{{i18n "topics.bulk.select_all"}}</button>
+        <button class='btn btn-default bulk-clear-all'>{{i18n "topics.bulk.clear_all"}}</button>
+      </span>
+    {{/if ~}}
+  {{/if ~}}
+  {{~#unless bulkSelectEnabled}}
+    {{~#if view.showTopicsAndRepliesToggle}}
+      {{raw "list/new-list-header-controls" current=newListSubset newRepliesCount=newRepliesCount newTopicsCount=newTopicsCount}}
+    {{else}}
+      <span>{{view.localizedName}}</span>
+    {{/if ~}}
+  {{/unless ~}}
+  {{~#if view.isSorting}}
+    {{d-icon view.sortIcon}}
+  {{/if ~}}
+</th>

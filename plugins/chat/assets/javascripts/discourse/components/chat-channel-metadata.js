@@ -5,8 +5,8 @@ export default class ChatChannelMetadata extends Component {
     return this.args.unreadIndicator ?? false;
   }
 
-  get lastMessageFormatedDate() {
-    return moment(this.args.channel.lastMessageSentAt).calendar(null, {
+  get lastMessageFormattedDate() {
+    return moment(this.args.channel.lastMessage.createdAt).calendar(null, {
       sameDay: "LT",
       nextDay: "[Tomorrow]",
       nextWeek: "dddd",

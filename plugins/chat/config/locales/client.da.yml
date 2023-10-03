@@ -10,6 +10,10 @@ da:
       site_settings:
         categories:
           chat: Chat
+        chat_separate_sidebar_mode:
+          always: "Altid"
+          fullscreen: "Når chat er i fuld skærm"
+          never: "Aldrig"
       logs:
         staff_actions:
           actions:
@@ -25,6 +29,7 @@ da:
       chat_channels_count: "Chatkanaler"
       chat_users_count: "Chatbrugere"
     chat:
+      deleted_chat_username: slettet
       dates:
         time_tiny: "tt:mm"
       all_loaded: "Viser alle beskeder"
@@ -65,6 +70,7 @@ da:
         create: "Ny kanal"
       click_to_join: "Klik her for at se tilgængelige kanaler."
       close: "Luk"
+      remove: "Fjern"
       delete: "Slet"
       edited: "redigeret"
       muted: "stille!"
@@ -73,6 +79,8 @@ da:
         never: "Aldrig"
       header_indicator_preference:
         never: "Aldrig"
+      separate_sidebar_mode:
+        title: "Vis separate sidebjælke-tilstande for forum og chat"
       enable: "Aktiver chat"
       flag: "Rapportér"
       invalid_access: "Du har ikke adgang til at se denne chatkanal"
@@ -81,8 +89,6 @@ da:
       heading: "Chat"
       join: "Tilslut"
       last_visit: "sidste besøg"
-      mention_warning:
-        dismiss: "afvis"
       reply: "Svar"
       edit: "Rediger"
       rebake_message: "Gendan HTML"
@@ -128,12 +134,11 @@ da:
           about: Om
           members: Brugere
           settings: Indstillinger
+      new_message_modal:
+        no_items: "Ingen punkter"
       direct_message_creator:
         title: Ny Besked
         prefix: "Til:"
-      channel_selector:
-        title: "Hop til kanal"
-        no_channels: "Ingen kanaler matcher din søgning"
       create_channel:
         choose_category:
           label: "Vælg en kategori"
@@ -154,6 +159,7 @@ da:
         italic_text: "kursiv skrift"
         bold_text: "fed skrift"
         code_text: "kode tekst"
+        send: "Send"
       quote:
         copy_success: "Chat-citat kopieret til udklipsholderen"
       notification_levels:
@@ -161,6 +167,8 @@ da:
       settings:
         follow: "Tilslut"
         followed: "Tilmeldt"
+        threading_enabled: "Aktiveret"
+        threading_disabled: "Deaktiveret"
         notifications: "Notifikationer"
         preview: "Forhåndsvisning"
         save: "Gem"
@@ -169,6 +177,8 @@ da:
         admin_title: "Admin"
       admin:
         title: "Chat"
+        export_messages:
+          description: "Dette eksporterer alle beskeder fra alle kanaler."
       incoming_webhooks:
         back: "Tilbage"
         description: "Beskrivelse"
@@ -199,6 +209,21 @@ da:
         activities: "Aktiviteter"
         flags: "Flag"
         symbols: "Symboler"
+      thread:
+        title: "Titel"
+        replies:
+          one: "%{count} svar"
+          other: "%{count} svar"
+        settings: "Indstillinger"
+        last_reply: "seneste svar"
+        notifications:
+          regular:
+            title: "Normal"
+          tracking:
+            title: "Følger"
+        participants_other_count:
+          one: "+%{count}"
+          other: "+%{count}"
       draft_channel_screen:
         header: "Ny Besked"
         cancel: "Annuller"
@@ -237,9 +262,13 @@ da:
     review:
       types:
         reviewable_chat_message:
-          flagged_by: "Markeret af"
+          noun: "chatbesked"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Skift kanal"
+    sidebar:
+      panels:
+        chat:
+          label: "Chat"

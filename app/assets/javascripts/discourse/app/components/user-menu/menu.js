@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { NO_REMINDER_ICON } from "discourse/models/bookmark";
 import UserMenuTab, { CUSTOM_TABS_CLASSES } from "discourse/lib/user-menu/tab";
@@ -15,7 +15,7 @@ import UserMenuReviewablesList from "./reviewables-list";
 import UserMenuProfileTabContent from "./profile-tab-content";
 import UserMenuOtherNotificationsList from "./other-notifications-list";
 import deprecated from "discourse-common/lib/deprecated";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 const DEFAULT_TAB_ID = "all-notifications";
 const DEFAULT_PANEL_COMPONENT = UserMenuNotificationsList;
@@ -37,11 +37,18 @@ const CORE_TOP_TABS = [
     id = "replies";
     icon = "reply";
     panelComponent = UserMenuRepliesNotificationsList;
-    notificationTypes = ["mentioned", "posted", "quoted", "replied"];
+    notificationTypes = [
+      "mentioned",
+      "group_mentioned",
+      "posted",
+      "quoted",
+      "replied",
+    ];
 
     get count() {
       return (
         this.getUnreadCountForType("mentioned") +
+        this.getUnreadCountForType("group_mentioned") +
         this.getUnreadCountForType("posted") +
         this.getUnreadCountForType("quoted") +
         this.getUnreadCountForType("replied")
@@ -63,11 +70,15 @@ const CORE_TOP_TABS = [
     }
 
     get count() {
-      return this.getUnreadCountForType("liked");
+      return (
+        this.getUnreadCountForType("liked") +
+        this.getUnreadCountForType("liked_consolidated") +
+        this.getUnreadCountForType("reaction")
+      );
     }
 
     // TODO(osama): reaction is a type used by the reactions plugin, but it's
-    // added here temporarily unitl we add a plugin API for extending
+    // added here temporarily until we add a plugin API for extending
     // filterByTypes in lists
     get notificationTypes() {
       return ["liked", "liked_consolidated", "reaction"];
@@ -185,13 +196,8 @@ export default class UserMenu extends Component {
   @tracked currentPanelComponent = DEFAULT_PANEL_COMPONENT;
   @tracked currentNotificationTypes;
 
-  constructor() {
-    super(...arguments);
-    this.topTabs = this._topTabs;
-    this.bottomTabs = this._bottomTabs;
-  }
-
-  get _topTabs() {
+  @cached
+  get topTabs() {
     const tabs = [];
 
     CORE_TOP_TABS.forEach((tabClass) => {
@@ -232,7 +238,8 @@ export default class UserMenu extends Component {
     });
   }
 
-  get _bottomTabs() {
+  @cached
+  get bottomTabs() {
     const tabs = [];
 
     CORE_BOTTOM_TABS.forEach((tabClass) => {
@@ -266,6 +273,10 @@ export default class UserMenu extends Component {
       return;
     }
 
+    if (event.type === "keydown" && event.keyCode !== 13) {
+      return;
+    }
+
     event.preventDefault();
 
     this.currentTabId = tab.id;
@@ -273,6 +284,8 @@ export default class UserMenu extends Component {
       getOwner(this),
       tab.panelComponent
     );
+
+    this.appEvents.trigger("user-menu:tab-click", tab.id);
     this.currentNotificationTypes = tab.notificationTypes;
   }
 

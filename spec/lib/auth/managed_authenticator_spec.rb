@@ -372,7 +372,7 @@ RSpec.describe Auth::ManagedAuthenticator do
         expect(result.user).to eq(nil)
       end
 
-      it "does not match if default match_by_username not overriden" do
+      it "does not match if default match_by_username not overridden" do
         SiteSetting.username_change_period = 0
         authenticator =
           Class

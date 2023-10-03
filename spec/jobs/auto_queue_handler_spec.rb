@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::AutoQueueHandler do
-  subject { Jobs::AutoQueueHandler.new.execute({}) }
+  subject(:job) { Jobs::AutoQueueHandler.new.execute({}) }
 
   describe "old flagged post" do
     fab!(:spam_result) do
@@ -23,7 +23,7 @@ RSpec.describe Jobs::AutoQueueHandler do
 
     it "defers the old flag if auto_handle_queued_age is 60" do
       SiteSetting.auto_handle_queued_age = 60
-      subject
+      job
       expect(not_old.reload).to be_pending
       expect(old.reload).not_to be_pending
       expect(post_action.related_post.topic.posts_count).to eq(1)
@@ -31,7 +31,7 @@ RSpec.describe Jobs::AutoQueueHandler do
 
     it "doesn't defer the old flag if auto_handle_queued_age is 0" do
       SiteSetting.auto_handle_queued_age = 0
-      subject
+      job
       expect(not_old.reload).to be_pending
       expect(old.reload).to be_pending
     end
@@ -45,7 +45,7 @@ RSpec.describe Jobs::AutoQueueHandler do
 
     it "rejects the post when auto_handle_queued_age is 60" do
       SiteSetting.auto_handle_queued_age = 60
-      subject
+      job
       expect(new_post.reload.pending?).to eq(true)
       expect(old_post.reload.rejected?).to eq(true)
       expect(new_user.reload.pending?).to eq(true)
@@ -54,7 +54,7 @@ RSpec.describe Jobs::AutoQueueHandler do
 
     it "leaves reviewables as pending auto_handle_queued_age is 0" do
       SiteSetting.auto_handle_queued_age = 0
-      subject
+      job
       expect(new_post.reload.pending?).to eq(true)
       expect(new_user.reload.pending?).to eq(true)
       expect(old_post.reload.pending?).to eq(true)

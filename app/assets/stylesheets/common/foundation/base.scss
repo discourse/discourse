@@ -7,9 +7,11 @@
   --topic-body-width-padding: #{$topic-body-width-padding};
   --topic-avatar-width: #{$topic-avatar-width};
   --d-border-radius: initial;
+  --d-border-radius-large: initial;
   --d-nav-pill-border-radius: var(--d-border-radius);
   --d-button-border-radius: var(--d-border-radius);
   --d-input-border-radius: var(--d-border-radius);
+  --d-content-background: initial;
 }
 
 // --------------------------------------------------
@@ -144,8 +146,10 @@ tbody {
 .topic-list-item,
 tr {
   border-bottom: 1px solid var(--primary-low);
-  &.highlighted {
-    animation: background-fade-highlight 2.5s ease-out;
+  @media (prefers-reduced-motion: no-preference) {
+    &.highlighted {
+      animation: background-fade-highlight 2.5s ease-out;
+    }
   }
 }
 

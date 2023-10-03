@@ -40,6 +40,8 @@ module Jobs
           is_direct_message_channel: @chat_channel.direct_message_channel?,
         }
 
+        data[:chat_thread_id] = @chat_message.thread_id if @chat_message.in_thread?
+
         if !@is_direct_message_channel
           data[:chat_channel_title] = @chat_channel.title(membership.user)
           data[:chat_channel_slug] = @chat_channel.slug
@@ -61,12 +63,19 @@ module Jobs
       end
 
       def build_payload_for(membership, identifier_type:)
+        post_url =
+          if @chat_message.in_thread?
+            @chat_message.thread.relative_url
+          else
+            "#{@chat_channel.relative_url}/#{@chat_message.id}"
+          end
+
         payload = {
           notification_type: ::Notification.types[:chat_mention],
           username: @creator.username,
           tag: ::Chat::Notifier.push_notification_tag(:mention, @chat_channel.id),
           excerpt: @chat_message.push_notification_excerpt,
-          post_url: "#{@chat_channel.relative_url}/#{@chat_message.id}",
+          post_url: post_url,
         }
 
         translation_prefix =
