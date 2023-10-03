@@ -64,14 +64,6 @@ RSpec.describe User do
         ).to contain_exactly(tag.id, hidden_tag.id)
       end
 
-      it "should not create any sidebar section link records when navigation_menu site setting is still legacy" do
-        SiteSetting.navigation_menu = "legacy"
-
-        user = Fabricate(:user)
-
-        expect(SidebarSectionLink.exists?(user_id: user.id)).to eq(false)
-      end
-
       it "should not create any sidebar section link records for staged users" do
         user = Fabricate(:user, staged: true)
 

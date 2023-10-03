@@ -1520,7 +1520,6 @@ he:
     unreachable_themes: "לא הצלחתי לבדוק אם יש עדכונים לערכות העיצוב הבאות:"
     watched_word_regexp_error: "הביטוי הרגולרי למילים במעקב ‚%{action}’ שגוי. נא לבדוק את <a href='%{base_path}/admin/customize/watched_words'>הגדרות המילים במעקב</a> או ךהשבית את הגדרת האתר ‚ביטוי רגולרי למילים במעקב’."
     v3_analytics_deprecated: "ה־Discourse שלך משתמש כרגע ב־Google Analytics 3, שהתמיכה בו תיפסק אחרי יולי 2023. כדאי <a href='https://meta.discourse.org/t/260498'>לשדרג ל־Google Analytics 4</a> כעת כדי להמשיך לקבל תובנות מועילות בנוגע לביצועי האתר שלך."
-    legacy_navigation_menu_deprecated: "ה־Discourse שלך משתמש עדיין בתפריט הניווט ה‚מיושן’ ש<a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>יוסר במהדורת הבטא הראשונה של Discourse 3.2</a>. כדי לעבור לתפריט הניווט החדש על ידי עדכון <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>הגדרת תפריט הניווט באתר</a> שלך ל־‚sidebar’ (סרגל צד) או ל־‚header dropdown’ (תפריט נגלל משורת הכותרת)."
   site_settings:
     allow_bulk_invite: "לאפשר הזמנות במרוכז על ידי העלאת קובץ CSV"
     disabled: "מושבת"

@@ -1406,7 +1406,6 @@ fi:
     unreachable_themes: "Näille teemoille ei voitu tarkistaa päivityksiä:"
     watched_word_regexp_error: "Säännöllinen lauseke %{action}-tyypin tarkkailuille sanoille ei kelpaa. Tarkista <a href='%{base_path}/admin/customize/watched_words'>tarkkailtujen sanojen asetukset</a> tai poista käytöstä \"watched words regular expressions\" -sivustoasetus."
     v3_analytics_deprecated: "Discoursesi käyttää tällä hetkellä Google Analytics 3:a, jota ei enää tueta heinäkuun 2023 jälkeen. <a href='https://meta.discourse.org/t/260498'>Päivitä Google Analytics 4:ään</a> nyt, jotta saat jatkossakin arvokkaita tietoja ja analytiikkaa verkkosivustosi suoriutumisesta."
-    legacy_navigation_menu_deprecated: "Discoursesi käyttää tällä hetkellä vanhaa navigointivalikkoa, joka <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>poistetaan Discourse 3.2:n ensimmäisessä beetaversiossa</a>. Siirry uuteen navigointivalikkoon päivittämällä <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>navigation menu -sivustoasetukseksi</a> \"sidebar\" tai \"header dropdown\"."
   site_settings:
     allow_bulk_invite: "Salli joukkokutsut lataamalla CSV-tiedosto"
     disabled: "poistettu käytöstä"

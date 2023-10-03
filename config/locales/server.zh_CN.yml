@@ -1340,7 +1340,6 @@ zh_CN:
     unreachable_themes: "我们无法检查以下主题的更新："
     watched_word_regexp_error: "'%{action}' 关注词的正则表达式无效。请检查您的<a href='%{base_path}/admin/customize/watched_words'>关注词设置</a>，或禁用“关注词正则表达式”站点设置。"
     v3_analytics_deprecated: "您的 Discourse 目前使用的是 Google Analytics（分析）3，2023 年 7 月后该版本将不受支持。立即<a href='https://meta.discourse.org/t/260498'>升级到Google Analytics（分析）4</a> ，以继续接收有价值的见解和分析，了解您的网站性能。"
-    legacy_navigation_menu_deprecated: "您的 Discourse 目前使用的是“旧版”导航菜单，<a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>该菜单将在 Discourse 3.2 的第一个测试版中移除</a>。更新您的<a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>导航菜单站点设置</a>为 'sidebar' 或 'header dropdown'，迁移到新的导航菜单。"
   site_settings:
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
     disabled: "已禁用"

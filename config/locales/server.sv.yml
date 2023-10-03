@@ -1401,7 +1401,6 @@ sv:
     unreachable_themes: "Vi kunde inte kontrollera uppdateringar för följande teman:"
     watched_word_regexp_error: "Det reguljära uttrycket för '%{action}'-bevakade ord är ogiltigt. Kontrollera dina <a href='%{base_path}/admin/customize/watched_words'>inställningar för bevakade ord</a> eller inaktivera webbplatsinställningen 'Reguljära uttryck för bevakade ord'."
     v3_analytics_deprecated: "Din Discourse använder för närvarande Google Analytics 3, som inte längre kommer att stödjas efter juli 2023. <a href='https://meta.discourse.org/t/260498'>Uppgradera till Google Analytics 4</a> nu för att fortsätta att få värdefulla insikter i, och analyser av, din webbplats prestanda."
-    legacy_navigation_menu_deprecated: "Din Discourse använder för närvarande den \"äldre\" navigeringsmenyn som <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>kommer att tas bort i den första betaversionen av Discourse 3.2</a>. Migrera till den nya navigeringsmenyn genom att uppdatera din <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>webbplatsinställning för navigeringsmenyer</a> till 'sidebar' eller 'header dropdown'."
   site_settings:
     allow_bulk_invite: "Tillåt massinbjudningar genom att ladda upp en CSV-fil"
     disabled: "inaktiverade"

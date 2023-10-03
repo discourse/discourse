@@ -1407,7 +1407,6 @@ it:
     unreachable_themes: "Non è stato possibile verificare la presenza di aggiornamenti per i seguenti temi:"
     watched_word_regexp_error: "L'espressione regolare per le parole osservate %{action} non è valida. Per favore verifica le tue <a href='%{base_path}/admin/customize/watched_words'>Impostazioni sulle Parole Osservate</a>, o disabilita l'impostazione del sito 'watched words regular expressions'."
     v3_analytics_deprecated: "Il tuo Discourse utilizza attualmente Google Analytics 3, che non sarà più supportato dopo luglio 2023. <a href='https://meta.discourse.org/t/260498'>Passa a Google Analytics 4</a> ora per continuare a ricevere preziose informazioni e analisi per le prestazioni del tuo sito web."
-    legacy_navigation_menu_deprecated: "Il tuo Discourse sta attualmente utilizzando il menu di navigazione \"legacy\" che <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>verrà rimosso nella prima versione beta di Discourse 3.2</a>. Passa al nuovo menu di navigazione aggiornando la tua impostazione <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>del sito del menu di navigazione</a> su \"barra laterale\" o \"elenco a discesa dell'intestazione\"."
   site_settings:
     allow_bulk_invite: "Consenti inviti di massa caricando un file CSV"
     disabled: "disabilitato"

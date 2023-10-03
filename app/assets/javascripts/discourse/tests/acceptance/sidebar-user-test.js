@@ -10,24 +10,6 @@ import {
 import Sinon from "sinon";
 
 acceptance(
-  "Sidebar - Logged on user - Legacy navigation menu enabled",
-  function (needs) {
-    needs.user();
-
-    needs.settings({
-      navigation_menu: "legacy",
-    });
-
-    test("clicking header hamburger icon displays old hamburger dropdown", async function (assert) {
-      await visit("/");
-      await click(".hamburger-dropdown");
-
-      assert.ok(exists(".menu-container-general-links"));
-    });
-  }
-);
-
-acceptance(
   "Sidebar - Logged on user - Mobile view - Header dropdown navigation menu enabled",
   function (needs) {
     needs.user();

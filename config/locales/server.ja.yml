@@ -1334,7 +1334,6 @@ ja:
     unreachable_themes: "次のテーマの更新を確認できませんでした:"
     watched_word_regexp_error: "'%{action}' のウォッチ語の正規表現は無効です。<a href='%{base_path}/admin/customize/watched_words'>ウォッチ語の設定</a>を確認するか、'ウォッチ語の正規表現' サイト設定を無効にしてください。"
     v3_analytics_deprecated: "あなたの Discourse は現在 Google Analytics 3 を使用していますが、2023 年 7 月以降はサポートされなくなります。今すぐ <a href='https://meta.discourse.org/t/260498'>Google Analytics 4 にアップグレード</a>して、ウェブサイトのパフォーマンスに関する貴重なインサイトと分析を引き続き受け取りましょう。"
-    legacy_navigation_menu_deprecated: "Discourse は現在「レガシー」ナビゲーションメニューを使用していますが、<a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>Discourse 3.2 の最初のベータリリースで削除されます</a>。<a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>ナビゲーションメニューのサイトの設定</a>を「サイドバー」または「ヘッダードロップダウン」に更新して、新しいナビゲーションメニューに移行してください。"
   site_settings:
     allow_bulk_invite: "CSV ファイルのアップロードによる一括招待を許可する"
     disabled: "無効"

@@ -521,45 +521,45 @@ class PluginApi {
     decorateWidget(name, fn);
   }
 
+  /**
+   * This is a bridge to support the legacy hamburger widget links that are added by decorating the widgets. This can
+   * be removed once the legacy hamburger widget no longer exists.
+   */
   _deprecateDecoratingHamburgerWidgetLinks(name, fn) {
     if (
       name === "hamburger-menu:generalLinks" ||
       name === "hamburger-menu:footerLinks"
     ) {
-      const siteSettings = this.container.lookup("service:site-settings");
-
-      if (siteSettings.navigation_menu !== "legacy") {
-        try {
-          const { href, route, label, rawLabel, className } = fn();
-          const textContent = rawLabel || I18n.t(label);
-
-          const args = {
-            name: className || textContent.replace(/\s+/g, "-").toLowerCase(),
-            title: textContent,
-            text: textContent,
-          };
-
-          if (href) {
-            if (DiscourseURL.isInternal(href)) {
-              args.href = href;
-            } else {
-              // Skip external links support for now
-              return;
-            }
-          } else {
-            args.route = route;
-          }
-
-          this.addCommunitySectionLink(args, name.match(/footerLinks/));
-        } catch {
-          deprecated(
-            `Usage of \`api.decorateWidget('hamburger-menu:generalLinks')\` is incompatible with the \`navigation_menu\` site setting when not set to "legacy". Please use \`api.addCommunitySectionLink\` instead.`,
-            { id: "discourse.decorate-widget.hamburger-widget-links" }
-          );
+      deprecated(
+        `Usage of \`api.decorateWidget('${name}')\` is deprecated, please use \`api.addCommunitySectionLink\` instead.`,
+        {
+          id: "discourse.decorate-widget.hamburger-widget-links",
+          since: "3.2",
+          dropFrom: "3.3",
         }
+      );
 
-        return;
+      const { href, route, label, rawLabel, className } = fn();
+      const textContent = rawLabel || I18n.t(label);
+
+      const args = {
+        name: className || textContent.replace(/\s+/g, "-").toLowerCase(),
+        title: textContent,
+        text: textContent,
+      };
+
+      if (href) {
+        if (DiscourseURL.isInternal(href)) {
+          args.href = href;
+        } else {
+          // Skip external links support for now
+          return;
+        }
+      } else {
+        args.route = route;
       }
+
+      this.addCommunitySectionLink(args, name.match(/footerLinks/));
     }
   }
 

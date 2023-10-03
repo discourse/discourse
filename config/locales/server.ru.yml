@@ -1493,7 +1493,6 @@ ru:
     unreachable_themes: "Не удается проверить наличие обновлений для следующих тем:"
     watched_word_regexp_error: "Недопустимое регулярное выражение для контролируемых слов типа «%{action}». Проверьте <a href='%{base_path}/admin/customize/watched_words'>параметры контролируемых слов</a> или отключите в настройках сайта пункт «Контролируемые слова представлены регулярными выражениями»."
     v3_analytics_deprecated: "Ваша версия Discourse использует Google Аналитику 3, поддержка которой прекратится после июля 2023 года. <a href='https://meta.discourse.org/t/260498'>Обновитесь до Google Аналитики 4</a> — так вы сможете и в дальнейшем получать ценную информацию и статистику о работе веб-сайта."
-    legacy_navigation_menu_deprecated: "Ваша версия Discourse использует настройку меню навигации «Старая версия», которая <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>будет удалено в первой бета-версии Discourse 3.2</a>. Перейдите на новое меню навигации — измените <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>настройку сайта для меню навигации</a> на «Боковую панель» или «Выпадающий список заголовка»."
   site_settings:
     allow_bulk_invite: "Разрешить массовые приглашения путём загрузки CSV-файла"
     disabled: "отключено"

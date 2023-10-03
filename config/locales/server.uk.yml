@@ -1520,7 +1520,6 @@ uk:
     unreachable_themes: "Ми не змогли перевірити наявність оновлень для наступних тем:"
     watched_word_regexp_error: "Неприпустимий регулярний вираз для '%{action}' контрольованих слів. Будь ласка, перевірте ваші <a href='%{base_path}/admin/customize/watched_words'>Налаштування контрольованих слів</a>, або вимкніть параметр 'контрольовані слова представлені регулярними виразами'."
     v3_analytics_deprecated: "Ваш Discourse наразі використовує Google Analytics 3, яка більше не підтримуватиметься після липня 2023 року. <a href='https://meta.discourse.org/t/260498'>Оновіть Google Analytics 4</a> зараз, щоб і надалі отримувати цінну статистику та аналітику щодо ефективності вашого веб-сайту."
-    legacy_navigation_menu_deprecated: "У вашому Discourse наразі використовується «застаріле» навігаційне меню, <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>буде видалено в першій бета-версії Discourse 3.2</a>. Перейдіть до нового навігаційного меню, оновивши налаштування сайту <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>навігаційного меню</a> на «бічній панелі» або «випадаючому списку заголовка»."
   site_settings:
     allow_bulk_invite: "Дозволити масові запрошення, шляхом завантаження файлу CSV"
     disabled: "вимкнуто"
