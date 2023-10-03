@@ -81,6 +81,16 @@ WebHookEventType.seed do |b|
   b.group = WebHookEventType.groups[:user]
 end
 WebHookEventType.seed do |b|
+  b.id = WebHookEventType::TYPES[:user][:suspended]
+  b.name = "user_suspended"
+  b.group = WebHookEventType.groups[:user]
+end
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::TYPES[:user][:unsuspended]
+  b.name = "user_unsuspended"
+  b.group = WebHookEventType.groups[:user]
+end
+WebHookEventType.seed do |b|
   b.id = WebHookEventType::TYPES[:group][:created]
   b.name = "group_created"
   b.group = WebHookEventType.groups[:group]

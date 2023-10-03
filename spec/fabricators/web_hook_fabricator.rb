@@ -46,6 +46,8 @@ Fabricator(:user_web_hook, from: :web_hook) do
           user_approved
           user_updated
           user_destroyed
+          user_suspended
+          user_unsuspended
         ],
       )
   end

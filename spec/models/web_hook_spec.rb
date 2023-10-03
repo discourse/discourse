@@ -54,24 +54,22 @@ RSpec.describe WebHook do
 
     it "includes enabled plugin web_hooks" do
       SiteSetting.stubs(:assign_enabled).returns(true)
-      assign_event_types = WebHookEventType.active.where(name: "assigned")
-      expect(assign_event_types.count).to eq(1)
-      assign_event_types = WebHookEventType.active.where(name: "unassigned")
-      expect(assign_event_types.count).to eq(1)
+      assign_event_types = WebHookEventType.active.where(group: "assign").pluck(:name)
+      expect(assign_event_types).to eq(%w[assigned unassigned])
 
       SiteSetting.stubs(:voting_enabled).returns(true)
-      voting_event_types = WebHookEventType.active.where(name: "topic_upvote")
-      expect(voting_event_types.count).to eq(1)
-
+      voting_event_types = WebHookEventType.active.where(group: "voting").pluck(:name)
+      expect(voting_event_types).to eq(%w[topic_upvote])
+      #
       SiteSetting.stubs(:solved_enabled).returns(true)
-      web_hook_event_types = WebHookEventType.active.where(name: "accepted_solution")
-      expect(web_hook_event_types.count).to eq(1)
-      web_hook_event_types = WebHookEventType.active.where(name: "unaccepted_solution")
-      expect(web_hook_event_types.count).to eq(1)
-
+      solved_event_types = WebHookEventType.active.where(group: "solved").pluck(:name)
+      expect(solved_event_types).to eq(%w[accepted_solution unaccepted_solution])
+      #
       SiteSetting.stubs(:chat_enabled).returns(true)
-      chat_enabled_types = WebHookEventType.active.where("name LIKE 'chat_%'")
-      expect(chat_enabled_types.count).to eq(1)
+      chat_event_types = WebHookEventType.active.where(group: "chat").pluck(:name)
+      expect(chat_event_types).to eq(
+        %w[chat_message_created chat_message_edited chat_message_trashed chat_message_restored],
+      )
     end
 
     describe "#active_web_hooks" do

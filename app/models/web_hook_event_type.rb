@@ -60,6 +60,8 @@ class WebHookEventType < ActiveRecord::Base
       approved: 305,
       updated: 306,
       destroyed: 307,
+      suspended: 308,
+      unsuspended: 309,
     },
     group: {
       created: 401,

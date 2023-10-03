@@ -4974,6 +4974,8 @@ en:
           user_approved: "User is approved"
           user_updated: "User is updated"
           user_destroyed: "User is deleted"
+          user_suspended: "User is suspended"
+          user_unsuspended: "User is unsuspended"
         reviewable_event:
           group_name: "Reviewable Events"
           reviewable_created: "Reviewable item is ready"
