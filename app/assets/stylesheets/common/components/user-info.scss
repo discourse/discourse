@@ -25,24 +25,16 @@
 
     .name-line {
       @include ellipsis;
-    }
+      color: var(--primary-high);
 
-    .bold a {
-      font-weight: bold;
-    }
-
-    .margin a {
-      margin-left: 5px;
-    }
-
-    .name a,
-    .username a {
-      color: var(--primary-high-or-secondary-low);
+      span:first-child {
+        color: var(--primary);
+      }
     }
 
     .title {
       margin-top: 3px;
-      color: var(--primary-med-or-secondary-med);
+      color: var(--primary-medium);
     }
   }
 

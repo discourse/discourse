@@ -59,7 +59,7 @@ export function avatarImg(wanted, attrs) {
       height: size,
       src: getURLWithCDN(url),
       title,
-      "aria-label": title,
+      "aria-hidden": true,
       loading: "lazy",
       tabindex: "-1",
     },
@@ -73,8 +73,19 @@ export function avatarFor(wanted, attrs, linkAttrs) {
   const attributes = {
     href: attrs.url,
     "data-user-card": attrs.username,
-    "aria-hidden": true,
   };
+
+  // often avatars are paired with usernames,
+  // making them redundant for screen readers
+  // so we hide the avatar from screen readers by default
+  if (attrs.ariaHidden === false) {
+    attributes["aria-label"] = I18n.t("user.profile_possessive", {
+      username: attrs.username,
+    });
+  } else {
+    attributes["aria-hidden"] = true;
+  }
+
   if (linkAttrs) {
     Object.assign(attributes, linkAttrs);
   }

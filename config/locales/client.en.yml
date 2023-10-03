@@ -317,16 +317,16 @@ en:
       our_moderators: "Our Moderators"
       moderators: "Moderators"
       stat:
-        all_time: "All Time"
-        last_day: "Last 24 hours"
-        last_7_days: "Last 7 days"
-        last_30_days: "Last 30 days"
+        all_time: "All time"
+        last_day: "24 hours"
+        last_7_days: "7 days"
+        last_30_days: "30 days"
       like_count: "Likes"
       topic_count: "Topics"
       post_count: "Posts"
-      user_count: "Sign-Ups"
-      active_user_count: "Active Users"
-      contact: "Contact Us"
+      user_count: "Sign-ups"
+      active_user_count: "Active users"
+      contact: "Contact us"
       contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact us at %{contact_info}."
 
     bookmarked:
@@ -1076,6 +1076,7 @@ en:
     user:
       said: "%{username}:"
       profile: "Profile"
+      profile_possessive: "%{username}'s profile"
       mute: "Mute"
       edit: "Edit Preferences"
       download_archive:
@@ -2113,6 +2114,7 @@ en:
       title: "Create your account"
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
       associate: "Already have an account? <a href='%{associate_link}'>Log In</a> to link your %{provider} account."
+      activation_title: "Activate your account"
 
     forgot_password:
       title: "Password Reset"
@@ -4854,6 +4856,11 @@ en:
               list: List latest posts and private posts. RSS is also supported.
             tags:
               list: List tags.
+            tag_groups:
+              list: Get a list of tag groups.
+              show: Get a single tag group by id.
+              create: Creates a tag group.
+              update: Updates a tag group specified by id.
             categories:
               list: Get a list of categories.
               show: Get a single category by id.
