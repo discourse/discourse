@@ -11,9 +11,7 @@ acceptance(
   "Opening the hamburger menu with some reviewables",
   function (needs) {
     needs.user();
-    needs.settings({
-      navigation_menu: "legacy",
-    });
+
     test("As a staff member", async function (assert) {
       updateCurrentUser({ moderator: true, admin: false, reviewable_count: 3 });
 
@@ -28,10 +26,7 @@ acceptance(
   }
 );
 
-acceptance("Hamburger Menu accessibility", function (needs) {
-  needs.settings({
-    navigation_menu: "legacy",
-  });
+acceptance("Hamburger Menu accessibility", function () {
   test("Escape key closes hamburger menu", async function (assert) {
     await visit("/");
     await click("#toggle-hamburger-menu");

@@ -143,7 +143,7 @@ class TopicTrackingState
     #   perhaps cut down to users that are around in the last 7 days as well
     tags = nil
     tag_ids = nil
-    tag_ids, tags = post.topic.tags.pluck(:id, :name).transpose if include_tags_in_report?
+    tag_ids, tags = post.topic.tags.pluck(:id, :name).transpose
 
     # We don't need to publish unread to the person who just made the post,
     # this is why they are excluded from the initial scope.
@@ -276,11 +276,7 @@ class TopicTrackingState
   end
 
   def self.include_tags_in_report?
-    SiteSetting.tagging_enabled && (@include_tags_in_report || !SiteSetting.legacy_navigation_menu?)
-  end
-
-  def self.include_tags_in_report=(v)
-    @include_tags_in_report = v
+    SiteSetting.tagging_enabled
   end
 
   # Sam: this is a hairy report, in particular I need custom joins and fancy conditions
@@ -340,7 +336,7 @@ class TopicTrackingState
   end
 
   def self.tags_included_wrapped_sql(sql)
-    return <<~SQL if SiteSetting.tagging_enabled && TopicTrackingState.include_tags_in_report?
+    return <<~SQL if SiteSetting.tagging_enabled
         WITH tags_included_cte AS (
           #{sql}
         )

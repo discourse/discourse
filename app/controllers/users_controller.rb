@@ -2014,20 +2014,18 @@ class UsersController < ApplicationController
     permitted.concat UserUpdater::TAG_NAMES.keys
     permitted << UserUpdater::NOTIFICATION_SCHEDULE_ATTRS
 
-    if !SiteSetting.legacy_navigation_menu?
-      if params.has_key?(:sidebar_category_ids) && params[:sidebar_category_ids].blank?
-        params[:sidebar_category_ids] = []
+    if params.has_key?(:sidebar_category_ids) && params[:sidebar_category_ids].blank?
+      params[:sidebar_category_ids] = []
+    end
+
+    permitted << { sidebar_category_ids: [] }
+
+    if SiteSetting.tagging_enabled
+      if params.has_key?(:sidebar_tag_names) && params[:sidebar_tag_names].blank?
+        params[:sidebar_tag_names] = []
       end
 
-      permitted << { sidebar_category_ids: [] }
-
-      if SiteSetting.tagging_enabled
-        if params.has_key?(:sidebar_tag_names) && params[:sidebar_tag_names].blank?
-          params[:sidebar_tag_names] = []
-        end
-
-        permitted << { sidebar_tag_names: [] }
-      end
+      permitted << { sidebar_tag_names: [] }
     end
 
     if SiteSetting.enable_user_status

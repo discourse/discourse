@@ -268,7 +268,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def include_navigation_menu_site_top_tags?
-    !SiteSetting.legacy_navigation_menu? && SiteSetting.tagging_enabled
+    SiteSetting.tagging_enabled
   end
 
   def anonymous_default_navigation_menu_tags

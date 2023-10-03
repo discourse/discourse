@@ -23,8 +23,8 @@ RSpec.describe TopicTrackingStateItemSerializer do
     expect(serialized.has_key?(:tags)).to eq(false)
   end
 
-  it "includes tags attribute when tags are present" do
-    TopicTrackingState.include_tags_in_report = true
+  it "includes tags attribute when `tagging_enabled` site settings" do
+    SiteSetting.tagging_enabled = true
 
     post.topic.notifier.watch_topic!(post.topic.user_id)
 
@@ -38,7 +38,5 @@ RSpec.describe TopicTrackingStateItemSerializer do
     serialized = described_class.new(report[0], scope: Guardian.new(user), root: false).as_json
 
     expect(serialized[:tags]).to contain_exactly("bananas", "apples")
-  ensure
-    TopicTrackingState.include_tags_in_report = false
   end
 end

@@ -688,21 +688,20 @@ RSpec.describe TopicTrackingState do
       expect(row.tags).to contain_exactly("apples", "bananas")
     end
 
-    it "includes tags when TopicTrackingState.include_tags_in_report option is enabled" do
-      SiteSetting.navigation_menu = "legacy"
+    it "includes tags based on the `tagging_enabled` site setting" do
+      SiteSetting.tagging_enabled = false
+
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(1)
       row = report[0]
       expect(row.respond_to? :tags).to eq(false)
 
-      TopicTrackingState.include_tags_in_report = true
+      SiteSetting.tagging_enabled = true
 
       report = TopicTrackingState.report(user)
       expect(report.length).to eq(1)
       row = report[0]
       expect(row.tags).to contain_exactly("apples", "bananas")
-    ensure
-      TopicTrackingState.include_tags_in_report = false
     end
   end
 
