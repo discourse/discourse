@@ -4,7 +4,7 @@ module.exports = function (environment) {
   const ENV = {
     modulePrefix: "discourse",
     environment,
-    rootURL: `${process.env.DISCOURSE_RELATIVE_URL_ROOT}/`, // Add a trailing slash (not required by the Rails app in this env variable)
+    rootURL: `${process.env.DISCOURSE_RELATIVE_URL_ROOT ?? ""}/`, // Add a trailing slash (not required by the Rails app in this env variable)
     locationType: "history",
     historySupportMiddleware: false,
     EmberENV: {
