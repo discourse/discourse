@@ -13,7 +13,7 @@ import { setPrefix } from "discourse-common/lib/get-url";
 import sinon from "sinon";
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 module("Unit | Utility | computed", function (hooks) {
   setupTest(hooks);

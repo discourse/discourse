@@ -569,8 +569,7 @@ class Topic < ActiveRecord::Base
     topics = topics.limit(opts[:limit]) if opts[:limit]
 
     # Remove category topics
-    category_topic_ids = Category.pluck(:topic_id).compact!
-    topics = topics.where("topics.id NOT IN (?)", category_topic_ids) if category_topic_ids.present?
+    topics = topics.where.not(id: Category.select(:topic_id).where.not(topic_id: nil))
 
     # Remove muted and shared draft categories
     remove_category_ids =

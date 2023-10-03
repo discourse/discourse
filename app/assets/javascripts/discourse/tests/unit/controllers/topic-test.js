@@ -5,7 +5,7 @@ import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import EmberObject from "@ember/object";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import { next } from "@ember/runloop";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import sinon from "sinon";
 
 function topicWithStream(streamDetails) {

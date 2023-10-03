@@ -1493,6 +1493,7 @@ sw:
       back_to_list: "Rudi tena kwenye Orodha ya Mada"
       options: "Machaguo ya Mada"
       show_links: "onyesha viungo ndani ya hii mada"
+      bumped_at: "Hivi karibuni: %{date}"
       deleted: "Mada imefutwa"
       slow_mode_update:
         enable: "Ruhusu"

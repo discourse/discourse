@@ -1,7 +1,10 @@
 import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import Sharing from "discourse/lib/sharing";
 
 module("Unit | Utility | sharing", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     Sharing._reset();
   });

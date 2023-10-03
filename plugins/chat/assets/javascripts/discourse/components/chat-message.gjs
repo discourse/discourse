@@ -6,7 +6,7 @@ import { cancel, schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import discourseLater from "discourse-common/lib/later";
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
@@ -34,7 +34,6 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import ChatOnLongPress from "discourse/plugins/chat/discourse/modifiers/chat/on-long-press";
 
 let _chatMessageDecorators = [];
-let _tippyInstances = [];
 
 export function addChatMessageDecorator(decorator) {
   _chatMessageDecorators.push(decorator);
@@ -297,13 +296,6 @@ export default class ChatMessage extends Component {
     this.#teardownMentionedUsers();
   }
 
-  #destroyTippyInstances() {
-    _tippyInstances.forEach((instance) => {
-      instance.destroy();
-    });
-    _tippyInstances = [];
-  }
-
   @action
   refreshStatusOnMentions() {
     schedule("afterRender", () => {
@@ -314,7 +306,7 @@ export default class ChatMessage extends Component {
         );
 
         mentions.forEach((mention) => {
-          updateUserStatusOnMention(mention, user.status, _tippyInstances);
+          updateUserStatusOnMention(getOwner(this), mention, user.status);
         });
       });
     });
@@ -596,6 +588,5 @@ export default class ChatMessage extends Component {
       user.stopTrackingStatus();
       user.off("status-changed", this, "refreshStatusOnMentions");
     });
-    this.#destroyTippyInstances();
   }
 }

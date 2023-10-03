@@ -24,9 +24,9 @@ en:
           name: "Chat message event"
           details: "When a chat message is created, edited, trashed or restored."
     about:
-      chat_messages_count: "Chat Messages"
-      chat_channels_count: "Chat Channels"
-      chat_users_count: "Chat Users"
+      chat_messages_count: "Chat messages"
+      chat_channels_count: "Chat channels"
+      chat_users_count: "Chat users"
 
     chat:
       deleted_chat_username: deleted

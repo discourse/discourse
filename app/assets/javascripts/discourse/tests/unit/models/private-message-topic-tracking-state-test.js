@@ -4,7 +4,7 @@ import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
 import MessageBus from "message-bus-client";
 import PrivateMessageTopicTrackingState from "discourse/services/pm-topic-tracking-state";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 function setupPretender() {
   pretender.get(`/u/test/private-message-topic-tracking-state`, () => {

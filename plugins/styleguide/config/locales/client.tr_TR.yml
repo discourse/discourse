@@ -87,10 +87,9 @@ tr_TR:
           title: "Değer Değiştiriciler"
         empty_state:
           title: "Boş Durum"
-        rich_tooltip:
-          title: "Zengin Araç İpucu"
+        tooltips:
           description: "Açıklama"
-          header: "Başlık"
+          header: "Üstbilgi"
           hover_to_see: "Araç ipucunu görmek için üzerine gidin"
         char_counter:
           title: "Karakter Sayacı"

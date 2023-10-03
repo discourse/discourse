@@ -70,6 +70,7 @@ tr_TR:
       about_json: "İçe Aktarma Hatası: about.json mevcut değil veya geçersiz. Bunun bir Discourse Teması olduğundan emin misiniz?"
       about_json_values: "about.json geçersiz değerler içeriyor: %{errors}"
       modifier_values: "about.json değiştiricileri geçersiz değerler içeriyor: %{errors}"
+      theme_too_big: "Tema %{limit} sınırından büyük"
       git: "Git deposu klonlanırken hata oluştu, erişim reddedildi veya depo bulunamadı"
       git_ref_not_found: "Git referansı kontrol edilemiyor: %{ref}"
       git_unsupported_scheme: "Git deposu klonlanamıyor: Şema desteklenmiyor"
@@ -895,6 +896,8 @@ tr_TR:
     sequence_conflict_error:
       title: "taslak hatası"
       description: "Taslak başka bir pencerede düzenleniyor. Lütfen bu sayfayı yeniden yükleyin."
+    too_many_drafts:
+      title: "Çok fazla taslak"
   draft_backup:
     pm_title: "Açık konulardaki Taslakları yedekle"
     pm_body: "Yedek taslak içeren konu"
@@ -1405,9 +1408,9 @@ tr_TR:
     allow_user_locale: "Kullanıcıların kendi dil arayüzü tercihlerini seçmelerine izin verin"
     set_locale_from_accept_language_header: "anonim kullanıcılar için arayüz dilini web tarayıcılarının dil başlıklarından ayarlayın"
     support_mixed_text_direction: "Soldan sağa ve sağdan sola karışık metin yönlerini destekler."
-    min_post_length: "Karakter cinsinden izin verilen minimum gönderi uzunluğu"
-    min_first_post_length: "Karakter cinsinden izin verilen minimum ilk gönderi (konu gövdesi) uzunluğu"
-    min_personal_message_post_length: "Mesajlar için karakter cinsinden izin verilen minimum gönderi uzunluğu"
+    min_post_length: "Karakter cinsinden izin verilen minimum gönderi uzunluğu (kişisel mesajlar hariç)"
+    min_first_post_length: "İzin verilen minimum ilk gönderi (konu gövdesi) uzunluğu (kişisel mesajlar hariç)"
+    min_personal_message_post_length: "İletiler için karakter cinsinden izin verilen minimum gönderi uzunluğu (hem ilk gönderi hem de yanıtlar)"
     max_post_length: "Karakter cinsinden izin verilen maksimum gönderi uzunluğu"
     topic_featured_link_enabled: "Konuları içeren bir bağlantı göndermeyi etkinleştirin."
     show_topic_featured_link_in_digest: "Özet e-postasında öne çıkan konu bağlantısını gösterin."
@@ -2110,14 +2113,12 @@ tr_TR:
     default_sidebar_switch_panel_position: "Kenar çubuğu geçiş paneli düğmelerinin konumu"
     retain_web_hook_events_period_days: "Web kancası olay kayıtlarının saklanacağı gün sayısı."
     retry_web_hook_events: "Başarısız web kancası olaylarını otomatik olarak 4 kez yeniden deneyin. Yeniden denemeler arasındaki zaman aralıkları 1, 5, 25 ve 125 dakikadır."
-    revoke_api_keys_unused_days: "Kullanılmayan bir API anahtarının otomatik olarak iptal edilmesinden önceki gün sayısı (asla için 0)"
     allow_user_api_key_scopes: "Kullanıcı API anahtarları için izin verilen kapsamların listesi"
     min_trust_level_for_user_api_key: |
       Kullanıcı API anahtarlarının oluşturulması için gereken güven seviyesi.<br>
       <b>UYARI</b>: Güven seviyesinin değiştirilmesi, daha düşük güven seviyesine sahip kullanıcıların Discourse Hub üzerinden giriş yapmasını engeller
     allowed_user_api_auth_redirects: "Kullanıcı API anahtarları için kimlik doğrulama yönlendirmesi için izin verilen URL. Joker karakter sembolü * herhangi bir bölümüyle eşleşmek için kullanılabilir (ör. www.example.com/*)."
     allowed_user_api_push_urls: "Kullanıcı API'sine sunucu anlık iletimi için izin verilen URL'ler"
-    revoke_user_api_keys_unused_days: "Bir kullanıcı API anahtarının otomatik olarak sona ermesinden önceki gün sayısı (asla için 0)"
     tagging_enabled: "Konularda etiketler etkinleştirilsin mi?"
     min_trust_to_create_tag: "Etiket oluşturmak için gereken minimum güven seviyesi."
     max_tags_per_topic: "Bir konuya uygulanabilecek maksimum etiket sayısı."
@@ -2175,6 +2176,7 @@ tr_TR:
     experimental_topics_filter: "DENEYSEL: /filter konumunda deneysel konu filtrelemeyi etkinleştiririn"
     experimental_search_menu_groups: "DENEYSEL: Glimmer kullanmak üzere yükseltilen yeni arama menüsünü etkinleştirir"
     enable_experimental_lightbox: "DENEYSEL: Varsayılan görüntü lightbox'ını yenilenen tasarımla değiştirin."
+    experimental_form_templates: "DENEYSEL: Form şablonları özelliğini etkinleştirin. <b>Etkinleştirildikten sonra,</b> bu şablonları <a href='%{base_path}/admin/customize/form-templates'>Özelleştir / Şablonlar</a> altında yönetin."
     page_loading_indicator: "Discourse içinde sayfa geçişleri sırasında görünen yükleme göstergesini yapılandırın. \"Spinner\" bir tam sayfa göstergesidir. \"Slider\" ekranın üst kısmındaki dar bir çubuğu gösterir."
     errors:
       invalid_css_color: "Geçersiz renk. Bir renk adı veya hex değeri girin."

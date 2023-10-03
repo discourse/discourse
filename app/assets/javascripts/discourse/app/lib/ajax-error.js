@@ -1,5 +1,5 @@
 import I18n from "I18n";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { htmlSafe } from "@ember/template";
 
 function extractErrorInfo(error, defaultMessage) {
@@ -90,7 +90,7 @@ export function flashAjaxError(modal, defaultMessage) {
 }
 
 export function popupAjaxError(error) {
-  const dialog = getOwner(this).lookup("service:dialog");
+  const dialog = getOwnerWithFallback(this).lookup("service:dialog");
   const errorInfo = extractErrorInfo(error);
 
   if (errorInfo.html) {

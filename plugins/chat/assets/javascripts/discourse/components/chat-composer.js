@@ -6,7 +6,7 @@ import { cancel, next } from "@ember/runloop";
 import { cloneJSON } from "discourse-common/lib/object";
 import { chatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import TextareaInteractor from "discourse/plugins/chat/discourse/lib/textarea-interactor";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import userSearch from "discourse/lib/user-search";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
@@ -430,7 +430,7 @@ export default class ChatComposer extends Component {
                 user.cssClasses = "is-online";
               }
             });
-            initUserStatusHtml(result.users);
+            initUserStatusHtml(getOwner(this), result.users);
           }
           return result;
         });

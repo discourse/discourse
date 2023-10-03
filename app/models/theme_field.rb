@@ -149,6 +149,7 @@ class ThemeField < ActiveRecord::Base
           js_compiler.append_module(
             js,
             "discourse/initializers/#{initializer_name}",
+            "js",
             include_variables: true,
           )
         rescue ThemeJavascriptCompiler::CompileError => ex
@@ -276,6 +277,7 @@ class ThemeField < ActiveRecord::Base
       js_compiler.append_module(
         js,
         "discourse/pre-initializers/theme-#{theme_id}-translations",
+        "js",
         include_variables: false,
       )
     rescue ThemeTranslationParser::InvalidYaml => e

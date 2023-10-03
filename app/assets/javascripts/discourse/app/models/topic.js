@@ -127,10 +127,17 @@ const Topic = RestModel.extend({
 
   @discourseComputed("bumpedAt", "createdAt")
   bumpedAtTitle(bumpedAt, createdAt) {
-    return I18n.t("topic.bumped_at_title", {
-      createdAtDate: longDate(createdAt),
-      bumpedAtDate: longDate(bumpedAt),
-    });
+    const BUMPED_FORMAT = "YYYY-MM-DDTHH:mm:ss";
+    if (moment(bumpedAt).isValid() && moment(createdAt).isValid()) {
+      const bumpedAtStr = moment(bumpedAt).format(BUMPED_FORMAT);
+      const createdAtStr = moment(createdAt).format(BUMPED_FORMAT);
+
+      return bumpedAtStr !== createdAtStr
+        ? `${I18n.t("topic.created_at", {
+            date: longDate(createdAt),
+          })}\n${I18n.t("topic.bumped_at", { date: longDate(bumpedAt) })}`
+        : I18n.t("topic.created_at", { date: longDate(createdAt) });
+    }
   },
 
   @discourseComputed("created_at")

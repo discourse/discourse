@@ -78,7 +78,7 @@ import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import deprecated from "discourse-common/lib/deprecated";
 import { disableNameSuppression } from "discourse/widgets/poster-name";
 import { extraConnectorClass } from "discourse/lib/plugin-connectors";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { h } from "virtual-dom";
 import { includeAttributes } from "discourse/lib/transform-post";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
@@ -133,7 +133,8 @@ import { isTesting } from "discourse-common/config/environment";
 // based on Semantic Versioning 2.0.0. Please update the changelog at
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
-export const PLUGIN_API_VERSION = "1.11.0";
+
+export const PLUGIN_API_VERSION = "1.12.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -631,6 +632,30 @@ class PluginApi {
   addPostMenuButton(name, callback) {
     apiExtraButtons[name] = callback;
     addButton(name, callback);
+  }
+
+  /**
+   * Add a new button in the post admin menu.
+   *
+   * Example:
+   *
+   * ```
+   * api.addPostAdminMenuButton((name, attrs) => {
+   *   return {
+   *     action: () => {
+   *       alert('You clicked on the coffee button!');
+   *     },
+   *     icon: 'coffee',
+   *     className: 'hot-coffee',
+   *     title: 'coffee.title',
+   *   };
+   * });
+   * ```
+   **/
+  addPostAdminMenuButton(name, callback) {
+    this.container
+      .lookup("service:admin-post-menu-buttons")
+      .addButton(name, callback);
   }
 
   /**
@@ -2480,7 +2505,7 @@ function getPluginApi(version) {
   version = version.toString();
 
   if (cmpVersions(version, PLUGIN_API_VERSION) <= 0) {
-    const owner = getOwner(this);
+    const owner = getOwnerWithFallback(this);
     let pluginApi = owner.lookup("plugin-api:main");
 
     if (!pluginApi) {

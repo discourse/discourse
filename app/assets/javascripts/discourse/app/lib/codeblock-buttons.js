@@ -6,7 +6,7 @@ import I18n from "I18n";
 import { guidFor } from "@ember/object/internals";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import FullscreenCodeModal from "discourse/components/modal/fullscreen-code";
 
 // Use to attach copy/fullscreen buttons to a block of code, either
@@ -173,7 +173,7 @@ export default class CodeblockButtons {
           this._copyComplete(button);
         }
       } else if (action === "fullscreen") {
-        const modal = getOwner(this).lookup("service:modal");
+        const modal = getOwnerWithFallback(this).lookup("service:modal");
         modal.show(FullscreenCodeModal, {
           model: {
             code: text,

@@ -22,7 +22,7 @@ module Chat
     policy :threading_enabled_for_channel
     model :original_message
     transaction do
-      step :create_thread
+      step :find_or_create_thread
       step :associate_thread_to_message
       step :fetch_membership
       step :publish_new_thread
@@ -59,7 +59,11 @@ module Chat
       channel.threading_enabled
     end
 
-    def create_thread(channel:, original_message:, contract:, **)
+    def find_or_create_thread(channel:, original_message:, contract:, **)
+      if original_message.thread_id.present?
+        return context.thread = ::Chat::Thread.find_by(id: original_message.thread_id)
+      end
+
       context.thread =
         channel.threads.create(
           title: contract.title,

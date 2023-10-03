@@ -2,6 +2,7 @@ import EmberObject from "@ember/object";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { guidFor } from "@ember/object/internals";
 import { withoutPrefix } from "discourse-common/lib/get-url";
+
 let popstateFired = false;
 const supportsHistoryState = window.history && "state" in window.history;
 const popstateCallbacks = [];

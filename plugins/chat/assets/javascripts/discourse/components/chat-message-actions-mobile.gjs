@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { tracked } from "@glimmer/tracking";
 import discourseLater from "discourse-common/lib/later";
 import { action } from "@ember/object";

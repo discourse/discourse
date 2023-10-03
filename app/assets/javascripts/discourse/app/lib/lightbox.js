@@ -3,7 +3,7 @@ import { postRNWebviewMessage } from "discourse/lib/utilities";
 import I18n from "I18n";
 import User from "discourse/models/user";
 import deprecated from "discourse-common/lib/deprecated";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { helperContext } from "discourse-common/lib/helpers";
 import { isTesting } from "discourse-common/config/environment";
 import loadScript from "discourse/lib/load-script";
@@ -12,12 +12,12 @@ import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
 
 export async function setupLightboxes({ container, selector }) {
-  const lightboxService = getOwner(this).lookup("service:lightbox");
+  const lightboxService = getOwnerWithFallback(this).lookup("service:lightbox");
   lightboxService.setupLightboxes({ container, selector });
 }
 
 export function cleanupLightboxes() {
-  const lightboxService = getOwner(this).lookup("service:lightbox");
+  const lightboxService = getOwnerWithFallback(this).lookup("service:lightbox");
   return lightboxService.cleanupLightboxes();
 }
 

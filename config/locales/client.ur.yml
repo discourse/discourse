@@ -2325,6 +2325,7 @@ ur:
       collapse_details: "موضوع کی تفصیلات کوسکیڑیں"
       expand_details: "موضوع کی تفصیلات کو پھیلائیں"
       unread_indicator: "کسی ممبر نے ابھی تک اِس ٹاپک کی آخری پوسٹ نہیں پڑھی ہے۔"
+      bumped_at: "تازہ ترین: %{date}"
       suggest_create_topic: <a href>نئی گفتگو شروع</a> کرنے کے لیے تیار ہیں؟
       deleted: "ٹاپک مٹادیا گیا ہے"
       slow_mode_update:

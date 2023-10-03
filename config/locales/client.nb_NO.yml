@@ -2188,6 +2188,7 @@ nb_NO:
       collapse_details: "vis/skjul detaljer for emnet"
       expand_details: "utvid emnebeskrivelse"
       unread_indicator: "Ingen medlem har lest den siste posten i dette emnet ennå."
+      bumped_at: "Siste: %{date}"
       suggest_create_topic: Klar til å <a href>starte en ny samtale?</a>
       deleted: "Emnet ble slettet"
       slow_mode_update:

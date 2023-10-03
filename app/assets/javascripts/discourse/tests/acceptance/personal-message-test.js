@@ -12,7 +12,7 @@ import {
   getCachedTopicList,
   setCachedTopicList,
 } from "discourse/lib/cached-topic-list";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 acceptance("Personal Message", function (needs) {
   needs.user();

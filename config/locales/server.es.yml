@@ -1398,9 +1398,6 @@ es:
     allow_user_locale: "Permitir que los usuarios escojan su propio idioma para la interfaz"
     set_locale_from_accept_language_header: "establecer el idioma de la interfaz para usuarios anónimos desde los encabezados de idioma del navegador web"
     support_mixed_text_direction: "Admite direcciones mixtas de texto de izquierda a derecha y de derecha a izquierda."
-    min_post_length: "Extensión mínima de las publicaciones en número de caracteres"
-    min_first_post_length: "Extensión mínima en la primera publicación (cuerpo del tema) en número de caracteres"
-    min_personal_message_post_length: "Longitud mínima de una publicación en número de caracteres para mensajes"
     max_post_length: "Extensión máxima de las publicaciones en número de caracteres"
     topic_featured_link_enabled: "Activar la publicación de temas a partir de un enlace."
     show_topic_featured_link_in_digest: "Mostrar el enlace destacado del tema en el correo electrónico de resumen."
@@ -2099,14 +2096,12 @@ es:
     default_sidebar_switch_panel_position: "Posición de los botones del panel conmutador de la barra lateral"
     retain_web_hook_events_period_days: "Número de días para retener registros de eventos de web hook."
     retry_web_hook_events: "Reintentar automáticamente 4 veces los eventos del web hook fallidos. Los intervalos de tiempo entre los reintentos son 1, 5, 25 y 125 minutos."
-    revoke_api_keys_unused_days: "Número de días antes de que una clave de API sin usar sea revocada automáticamente (0 para nunca)"
     allow_user_api_key_scopes: "Lista de ámbitos permitidos para las claves API de usuario"
     min_trust_level_for_user_api_key: |
       Nivel de confianza requerido para la generación de claves API de usuario.<br>
       <b>ADVERTENCIA</b>: Cambiar el nivel de confianza impedirá a los usuarios con un nivel de confianza inferior iniciar sesión a través de Discourse Hub
     allowed_user_api_auth_redirects: "URL permitida para autenticar redirección para claves API de usuario. Símbolo comodín * puede ser usado para que coincida cualquier parte de la misma (por ejemplo www.ejemplo.com/*)."
     allowed_user_api_push_urls: "URLs permitidas para el push del servidor al API de usuario"
-    revoke_user_api_keys_unused_days: "Número de días antes de que la clave API del usuario caduque automáticamente (0 para nunca)"
     tagging_enabled: "¿Activar etiquetas para los temas?"
     min_trust_to_create_tag: "El nivel de confianza mínimo requerido para crear una etiqueta."
     max_tags_per_topic: "El número máximo de etiquetas que se pueden añadir a un tema."

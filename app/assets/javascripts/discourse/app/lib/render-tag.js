@@ -35,6 +35,9 @@ export function defaultRenderTag(tag, params) {
   if (siteSettings.tag_style || params.style) {
     classes.push(params.style || siteSettings.tag_style);
   }
+  if (params.extraClass) {
+    classes.push(params.extraClass);
+  }
   if (params.size) {
     classes.push(params.size);
   }

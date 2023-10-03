@@ -97,14 +97,17 @@
           <h3>{{d-icon "far-chart-bar"}} {{i18n "about.stats"}}</h3>
 
           <table class="table">
-            <tbody>
+            <thead>
               <tr>
-                <th>&nbsp;</th>
+                <th>
+                </th>
                 <th>{{i18n "about.stat.last_day"}}</th>
                 <th>{{i18n "about.stat.last_7_days"}}</th>
                 <th>{{i18n "about.stat.last_30_days"}}</th>
                 <th>{{i18n "about.stat.all_time"}}</th>
               </tr>
+            </thead>
+            <tbody>
               <tr class="about-topic-count">
                 <td class="title">{{i18n "about.topic_count"}}</td>
                 <td>{{number this.model.stats.topics_last_day}}</td>

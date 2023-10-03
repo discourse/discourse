@@ -2719,9 +2719,7 @@ nl:
           false { of <a href="{basePath}/latest">bekijk de nieuwste topics</a>}
           other {}
         }
-      bumped_at_title: |
-        Eerste bericht: %{createdAtDate}
-        Geplaatst: %{bumpedAtDate}
+      bumped_at: "Nieuwste: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Blader door alle categorieën</a> of <a href='%{basePath}/latest'>bekijk de nieuwste topics</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Blader door alle categorieën</a>, <a href='%{basePath}/latest'>bekijk de nieuwste topics</a> of zie de top:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Blader door alle tags</a> of <a href='%{basePath}/latest'>bekijk de nieuwste topics</a>."

@@ -69,7 +69,7 @@ module("Unit | Utilities", function (hooks) {
         size: "tiny",
         title: "evilest trout",
       }),
-      "<img loading='lazy' alt='' width='24' height='24' src='/path/to/avatar/48.png' class='avatar' title='evilest trout' aria-label='evilest trout'>",
+      "<img loading='lazy' alt='' width='24' height='24' src='/path/to/avatar/48.png' class='avatar' title='evilest trout'>",
       "it adds a title if supplied"
     );
 

@@ -33,6 +33,7 @@ body.wizard {
   }
 
   .discourse-logo svg {
+    position: relative;
     height: 70px;
     width: auto;
     @include breakpoint("mobile-extra-large") {
@@ -43,6 +44,12 @@ body.wizard {
         display: none;
       }
     }
+  }
+
+  .wizard-canvas {
+    position: fixed;
+    top: 0;
+    pointer-events: none;
   }
 }
 
@@ -97,12 +104,6 @@ body.wizard {
     text-align: center;
     font-weight: 700;
     color: var(--primary-medium);
-  }
-
-  &__step-banner {
-    @include breakpoint("large") {
-      display: none;
-    }
   }
 
   &__step-description {
@@ -283,36 +284,7 @@ body.wizard {
     }
   }
 
-  @media only screen and (max-device-width: 568px) {
-    &__step.introduction .wizard-container__step-banner,
-    &__step.privacy .wizard-container__step-banner {
-      display: none;
-    }
-  }
-
-  &__step-banner {
-    flex: 0 1 40%;
-  }
-
-  &__step-banner-image {
-    width: 100%;
-  }
-
   &__step.ready {
-    .wizard-container__step-banner {
-      display: flex;
-      flex: 1 0 100%;
-      gap: 2em;
-    }
-    .wizard-container__step-banner-image {
-      padding-top: 2em;
-      flex: 0 1 40%;
-      margin-left: 2em;
-      max-height: 300px;
-      @include breakpoint("large") {
-        display: none;
-      }
-    }
     .wizard-container__buttons {
       flex-direction: row-reverse;
     }

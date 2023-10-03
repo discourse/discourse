@@ -1,6 +1,6 @@
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { settled } from "@ember/test-helpers";
 
 module("Unit | Model | pending-post", function (hooks) {

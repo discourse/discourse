@@ -1,3 +1,5 @@
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import getURL, {
   getAbsoluteURL,
   getURLWithCDN,
@@ -7,9 +9,10 @@ import getURL, {
   setupURL,
   withoutPrefix,
 } from "discourse-common/lib/get-url";
-import { module, test } from "qunit";
 
-module("Unit | Utility | get-url", function () {
+module("Unit | Utility | get-url", function (hooks) {
+  setupTest(hooks);
+
   test("isAbsoluteURL", function (assert) {
     setupURL(null, "https://example.com", "/forum");
     assert.ok(isAbsoluteURL("https://example.com/test/thing"));

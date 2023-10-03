@@ -1989,6 +1989,7 @@ bs_BA:
       back_to_list: "Vrati se na Listu Tema"
       options: "Opcije Teme"
       show_links: "pokaži linkove unutar ove teme"
+      bumped_at: "Zadnje: %{date}"
       deleted: "Ova tema je obrisana"
       slow_mode_update:
         enable: "Omogući"

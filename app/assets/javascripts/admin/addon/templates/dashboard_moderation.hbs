@@ -14,12 +14,20 @@
             {{i18n "admin.dashboard.moderators_activity"}}
           </a>
         </h2>
-        <PeriodChooser
-          @period={{this.period}}
-          @action={{action "changePeriod"}}
-          @content={{this.availablePeriods}}
-          @fullDay={{false}}
-        />
+        <span>
+          <PeriodChooser
+            @period={{this.period}}
+            @action={{action "changePeriod"}}
+            @content={{this.availablePeriods}}
+            @fullDay={{false}}
+          />
+          <DButton
+            @icon="cog"
+            class="custom-date-range-button"
+            @action={{this.openCustomDateRangeModal}}
+            @title="admin.dashboard.custom_date_range"
+          />
+        </span>
       </div>
 
       <div class="section-body">

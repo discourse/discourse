@@ -233,7 +233,7 @@ basic:
   share_quote_visibility:
     client: true
     type: enum
-    default: "anonymous"
+    default: "all"
     choices:
       - none
       - anonymous
@@ -1006,7 +1006,8 @@ posting:
     list_type: compact
   show_copy_button_on_codeblocks:
     client: true
-    default: false
+    default: true
+    hidden: true
   delete_old_hidden_posts: true
   enable_emoji:
     default: true
@@ -2144,7 +2145,6 @@ developer:
   experimental_form_templates:
     client: true
     default: false
-    hidden: true
   experimental_new_new_view_groups:
     client: true
     type: group_list

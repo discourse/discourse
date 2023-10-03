@@ -23,29 +23,29 @@
   }
 }
 
-div[data-tippy-root] {
-  .locale-dates-previews {
-    max-width: 360px;
-    .preview {
-      display: flex;
-      flex-direction: column;
-      padding: 5px;
+.locale-dates-previews {
+  max-width: 250px;
 
-      .timezone {
-        font-weight: 700;
-      }
+  .preview {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    margin: 0;
 
-      &.current {
-        background: var(--tertiary-low);
-      }
+    .timezone {
+      font-weight: 700;
+    }
+
+    &.current {
+      background: var(--tertiary-low);
     }
   }
+}
 
-  .download-calendar {
-    text-align: right;
-    cursor: pointer;
-    margin-top: 0.5em;
-  }
+.download-calendar {
+  text-align: right;
+  cursor: pointer;
+  margin-top: 0.5em;
 }
 
 .discourse-local-dates-create-modal .modal-footer {

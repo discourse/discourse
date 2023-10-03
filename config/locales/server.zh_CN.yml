@@ -1351,9 +1351,6 @@ zh_CN:
     allow_user_locale: "允许用户选择他们自己的语言界面偏好设置"
     set_locale_from_accept_language_header: "从网络浏览器的语言标头为匿名用户设置界面语言"
     support_mixed_text_direction: "支持从左到右和从右到左的混合文本方向。"
-    min_post_length: "允许的最小帖子长度（以字符为单位）"
-    min_first_post_length: "允许的第一个帖子（话题正文）最小长度（以字符为单位）"
-    min_personal_message_post_length: "消息允许的最小帖子长度（以字符为单位）"
     max_post_length: "允许的最大帖子长度（以字符为单位）"
     topic_featured_link_enabled: "启用在话题中发布链接。"
     show_topic_featured_link_in_digest: "在摘要电子邮件中显示话题精选链接。"
@@ -2055,14 +2052,16 @@ zh_CN:
     default_sidebar_switch_panel_position: "边栏开关面板按钮的位置"
     retain_web_hook_events_period_days: "保留网络钩子事件记录的天数。"
     retry_web_hook_events: "自动重试失败的网络钩子事件 4 次。重试之间的时间间隔为 1、5、25 和 125 分钟。"
-    revoke_api_keys_unused_days: "未使用的 API 密钥被自动撤消前的天数（0 表示从不撤消）"
+    revoke_api_keys_unused_days: "自上次使用 API 密钥后的天数，该密钥将被自动撤销 (0 表示永不撤销)"
+    revoke_api_keys_maxlife_days: "API 密钥自动撤销前的天数 (0 表示永不撤销)"
     allow_user_api_key_scopes: "用户 API 密钥允许的范围列表"
     min_trust_level_for_user_api_key: |
       生成用户 API 密钥所需的信任级别。<br>
       <b>警告</b>：更改信任级别将阻止信任级别较低的用户通过 Discourse Hub 登录
     allowed_user_api_auth_redirects: "用户 API 密钥身份验证重定向的允许 URL。通配符 * 可用于匹配它的任何部分（例如 www.example.com/*）。"
     allowed_user_api_push_urls: "服务器推送到用户 API 的允许 URL"
-    revoke_user_api_keys_unused_days: "用户 API 密钥自动过期前的天数（0 表示从不过期）"
+    revoke_user_api_keys_unused_days: "用户 API 密钥最后一次使用后被自动撤销的天数 (0 表示永不撤销)"
+    revoke_user_api_keys_maxlife_days: "用户 API 密钥自动撤销前的天数 (0 表示从不撤销)"
     tagging_enabled: "在话题上启用标签？"
     min_trust_to_create_tag: "创建标签所需的最低信任级别。"
     max_tags_per_topic: "可应用于话题的最大标签数。"
@@ -2332,6 +2331,18 @@ zh_CN:
   admin:
     email:
       sent_test: "已发送！"
+    user:
+      merge_user:
+        updating_username: "正在更新用户名…"
+        changing_post_ownership: "正在更改帖子所有权…"
+        merging_given_daily_likes: "正在合并每日赞…"
+        merging_post_timings: "正在合并帖子时间数据…"
+        merging_user_visits: "正在合并用户访问…"
+        updating_site_settings: "正在更新站点设置…"
+        updating_user_stats: "正在更新用户状态…"
+        merging_user_attributes: "正在合并用户属性…"
+        updating_user_ids: "正在更新用户 ID…"
+        deleting_source_user: "正在删除源用户…"
   user:
     deactivated: "由于 '%{email}' 的退回电子邮件过多，已被停用。"
     deactivated_by_staff: "被管理人员停用"
@@ -4540,6 +4551,8 @@ zh_CN:
     api_key:
       automatic_revoked:
         other: "已被自动撤消，上次活动超过 %{count} 天前"
+      automatic_revoked_max_life:
+        other: "已被自动撤消，创建于超过 %{count} 天前"
       revoked: 已撤消
       restored: 已恢复
   reviewables:
@@ -4600,6 +4613,8 @@ zh_CN:
         description: "同意举报并隐藏此帖子 + 自动向用户发送信息，敦促他们进行编辑。"
       delete_single:
         title: "删除"
+      delete:
+        title: "删除…"
       delete_and_ignore:
         title: "忽略举报并删除帖子"
         description: "忽略举报，将举报从队列中移除，并删除该帖子；如果是第一篇帖子，同时删除该话题。 "
@@ -4636,6 +4651,7 @@ zh_CN:
       approve_user:
         title: "批准用户"
       reject_user:
+        title: "删除用户…"
         delete:
           title: "删除用户"
           description: "该用户将被从论坛中删除。"
@@ -4644,6 +4660,7 @@ zh_CN:
           description: "该用户将被删除，我们将屏蔽他们的 IP 和电子邮件地址。"
       reject:
         title: "拒绝"
+        bundle_title: "拒绝…"
       reject_and_suspend:
         title: "拒绝并封禁用户"
       reject_and_silence:

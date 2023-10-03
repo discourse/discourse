@@ -4,7 +4,7 @@ import RestModel from "discourse/models/rest";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { isEmpty } from "@ember/utils";
 import { notEmpty } from "@ember/object/computed";
 import deprecated from "discourse-common/lib/deprecated";
@@ -217,7 +217,7 @@ TopicList.reopenClass({
       }
     );
 
-    const store = getOwner(this).lookup("service:store");
+    const store = getOwnerWithFallback(this).lookup("service:store");
     return store.findFiltered("topicList", { filter, params });
   },
 
