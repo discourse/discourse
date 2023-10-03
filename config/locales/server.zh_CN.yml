@@ -68,8 +68,10 @@ zh_CN:
       generic: 导入该主题时发生错误
       upload: "创建上传资源时出错：%{name}。%{errors}"
       about_json: "导入错误：about.json 不存在或无效。确定这是一个 Discourse 主题码？"
+      about_json_too_big: "导入错误：about.json 超过 %{limit} 限制。"
       about_json_values: "about.json 包含无效值：%{errors}"
       modifier_values: "about.json 修饰符包含无效值：%{errors}"
+      asset_too_big: "资产 %{filename} 大于 %{limit} 限制"
       git: "克隆 git 仓库时出错，访问被拒绝或找不到仓库"
       git_ref_not_found: "无法签出 git 参考：%{ref}"
       git_unsupported_scheme: "无法克隆 git 仓库：方案不受支持"
