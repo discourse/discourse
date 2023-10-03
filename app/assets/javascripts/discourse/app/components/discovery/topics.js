@@ -55,7 +55,7 @@ export default class DiscoveryTopics extends Component {
     let topicIds = this.args.bulkSelectHelper.selected.map((topic) => topic.id);
     Topic.resetNew(this.args.category, !this.args.noSubcategories, {
       tracked,
-      tag: this.tag,
+      tag: this.args.tag,
       topicIds,
       dismissPosts,
       dismissTopics,
