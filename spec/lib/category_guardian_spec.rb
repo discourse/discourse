@@ -4,7 +4,9 @@ RSpec.describe CategoryGuardian do
   fab!(:admin) { Fabricate(:admin) }
   fab!(:user) { Fabricate(:user) }
   fab!(:can_create_user) { Fabricate(:user) }
-  fab!(:category) { Fabricate(:category) }
+  fab!(:category) do
+    Fabricate(:category, category_setting_attributes: { require_topic_approval: false })
+  end
 
   describe "can_post_in_category?" do
     context "when not restricted category" do
@@ -87,12 +89,12 @@ RSpec.describe CategoryGuardian do
 
     it "returns the value of require_topic_approval when group moderation is off" do
       SiteSetting.enable_category_group_moderation = false
-      category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = false
+      category.require_topic_approval = false
       category.save!
 
       expect(Guardian.new(user).topics_need_approval?(category)).to eq(false)
 
-      category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+      category.require_topic_approval = true
       category.save!
 
       expect(Guardian.new(user).topics_need_approval?(category)).to eq(true)
@@ -102,12 +104,12 @@ RSpec.describe CategoryGuardian do
       SiteSetting.enable_category_group_moderation = true
       category.reviewable_by_group_id = nil
 
-      category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = false
+      category.require_topic_approval = false
       category.save!
 
       expect(Guardian.new(user).topics_need_approval?(category)).to eq(false)
 
-      category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+      category.require_topic_approval = true
       category.save!
 
       expect(Guardian.new(user).topics_need_approval?(category)).to eq(true)
@@ -115,7 +117,7 @@ RSpec.describe CategoryGuardian do
 
     it "returns false when group moderation is on and the user is in the reviewable group" do
       SiteSetting.enable_category_group_moderation = true
-      category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = true
+      category.require_topic_approval = true
       category.reviewable_by_group_id = reviewable_group.id
       category.save!
       Fabricate(:group_user, group: reviewable_group, user: user)
@@ -125,7 +127,7 @@ RSpec.describe CategoryGuardian do
 
     it "returns true when group moderation is on and the user is not in the reviewable group" do
       SiteSetting.enable_category_group_moderation = true
-      category.custom_fields[Category::REQUIRE_TOPIC_APPROVAL] = false
+      category.require_topic_approval = false
       category.reviewable_by_group_id = Fabricate(:group).id
       category.save!
 
