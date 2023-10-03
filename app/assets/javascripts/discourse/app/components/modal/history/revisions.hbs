@@ -45,7 +45,7 @@
           {{discourse-tag t.name extraClass=(if t.deleted "diff-del")}}
         {{/each}}
       </span>
-      {{#if (and @mobileView @previousTagChanges @currentTagChanges)}}
+      {{#if (or @mobileView (eq @viewMode "inline"))}}
         &rarr;&nbsp;
       {{/if}}
       <span class="discourse-tags">
