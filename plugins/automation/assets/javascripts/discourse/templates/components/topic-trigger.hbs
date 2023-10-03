@@ -4,9 +4,9 @@
   </label>
 
   <div class="controls">
-    {{input
-      value=metadata.topic_id
-      input=(action (mut metadata.topic_id) value="target.value")
-    }}
+    <Input
+      @value={{metadata.topic_id}}
+      {{on "input" (action (mut metadata.topic_id) value="target.value")}}
+    />
   </div>
 </div>

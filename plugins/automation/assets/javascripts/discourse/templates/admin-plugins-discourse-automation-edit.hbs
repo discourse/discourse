@@ -1,8 +1,8 @@
-{{scroll-tracker name="discourse-automation-edit"}}
+<ScrollTracker @name="discourse-automation-edit" />
 
 <section class="discourse-automation-form edit">
   <form class="form-horizontal">
-    {{form-error error=error}}
+    <FormError @error={{error}} />
 
     <section class="form-section edit">
       <div class="control-group">
@@ -16,6 +16,7 @@
             @type="text"
             @classNames="input-large"
             @autofocus="autofocus"
+            @name="automation-name"
           />
         </div>
       </div>
@@ -102,12 +103,11 @@
         {{/if}}
 
         {{#each triggerFields as |field|}}
-          {{automation-field
-            automation=automation
-            field=field
-            onChangeField=(action "onChangeField")
-            saveAutomation=(action "saveAutomation" automation)
-          }}
+          <AutomationField
+            @automation={{automation}}
+            @field={{field}}
+            @saveAutomation={{action "saveAutomation" automation}}
+          />
         {{/each}}
       {{/if}}
     </section>
@@ -127,12 +127,11 @@
 
           <div class="control-group">
             {{#each scriptFields as |field|}}
-              {{automation-field
-                automation=automation
-                field=field
-                onChangeField=(action "onChangeField")
-                saveAutomation=(action "saveAutomation" automation)
-              }}
+              <AutomationField
+                @automation={{automation}}
+                @field={{field}}
+                @saveAutomation={{action "saveAutomation" automation}}
+              />
             {{/each}}
           </div>
         </section>
@@ -143,18 +142,21 @@
           <span>{{i18n
               "discourse_automation.models.automation.enabled.label"
             }}</span>
-          {{input
-            type="checkbox"
-            checked=automationForm.enabled
-            click=(action (mut automationForm.enabled) value="target.checked")
-          }}
+          <Input
+            @type="checkbox"
+            @checked={{automationForm.enabled}}
+            {{on
+              "click"
+              (action (mut automationForm.enabled) value="target.checked")
+            }}
+          />
         </div>
       {{/if}}
 
       <div class="control-group">
         <DButton
           @isLoading={{isUpdatingAutomation}}
-          class="btn-primary"
+          class="btn-primary update-automation"
           @label="discourse_automation.update"
           @type="submit"
           @action={{action "saveAutomation" automation}}

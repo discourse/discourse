@@ -48,11 +48,6 @@ export default class AutomationEdit extends Controller {
   }
 
   @action
-  onChangeField(field, identifier, value) {
-    set(field, `metadata.${identifier}`, value);
-  }
-
-  @action
   onChangeTrigger(id) {
     if (this.automationForm.trigger && this.automationForm.trigger !== id) {
       this._confirmReset(() => {

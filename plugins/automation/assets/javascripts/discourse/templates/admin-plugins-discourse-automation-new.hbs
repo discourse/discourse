@@ -1,6 +1,6 @@
 <section class="discourse-automation-form new">
   <form class="form-horizontal">
-    {{form-error error=error}}
+    <FormError @error={{error}} />
 
     <div class="control-group">
       <label class="control-label">
@@ -13,6 +13,7 @@
           @type="text"
           @class="input-large"
           @autofocus="autofocus"
+          @name="automation-name"
         />
       </div>
     </div>
@@ -23,17 +24,17 @@
       </label>
 
       <div class="controls">
-        {{dropdown-select-box
-          class="scriptables"
-          value=form.script
-          content=model.scriptables.content
-          onChange=(action (mut form.script))
-          options=(hash
+        <DropdownSelectBox
+          @class="scriptables"
+          @value={{form.script}}
+          @content={{model.scriptables.content}}
+          @onChange={{action (mut form.script)}}
+          @options={{hash
             showCaret=true
             filterable=true
             none="discourse_automation.select_script"
-          )
-        }}
+          }}
+        />
       </div>
     </div>
 
@@ -42,7 +43,7 @@
       <div class="controls">
         <DButton
           @icon="plus"
-          class="btn-primary"
+          class="btn-primary create-automation"
           @label="discourse_automation.create"
           @action={{action "saveAutomation" model.automation}}
         />

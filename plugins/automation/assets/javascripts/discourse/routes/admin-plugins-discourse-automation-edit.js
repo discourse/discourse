@@ -1,8 +1,8 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import { isPresent } from "@ember/utils";
-import EmberObject, { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { hash } from "rsvp";
+import Field from "../admin/models/discourse-automation-field";
+import { action } from "@ember/object";
 
 export default class AutomationEdit extends DiscourseRoute {
   controllerName = "admin-plugins-discourse-automation-edit";
@@ -21,23 +21,10 @@ export default class AutomationEdit extends DiscourseRoute {
 
   _fieldsForTarget(automation, target) {
     return (automation[target].templates || []).map((template) => {
-      const field = automation[target].fields.find(
+      const jsonField = automation[target].fields.find(
         (f) => f.name === template.name && f.component === template.component
       );
-
-      return EmberObject.create({
-        acceptsPlaceholders: template.accepts_placeholders,
-        target,
-        name: template.name,
-        component: template.component,
-        metadata: {
-          value:
-            template.default_value || template.value || field?.metadata?.value,
-        },
-        isDisabled: isPresent(template.default_value),
-        isRequired: template.is_required,
-        extra: template.extra,
-      });
+      return Field.create(template, target, jsonField);
     });
   }
 

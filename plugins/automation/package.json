@@ -5,6 +5,7 @@
   "author": "jjaffeux",
   "license": "MIT",
   "devDependencies": {
-    "eslint-config-discourse": "^2.0.0"
+    "eslint-config-discourse": "^4.0.0",
+    "prettier-plugin-ember-template-tag": "^0.3.2"
   }
 }
