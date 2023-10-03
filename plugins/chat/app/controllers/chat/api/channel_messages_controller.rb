@@ -20,6 +20,12 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
     end
   end
 
+  def update
+    with_service(Chat::UpdateMessage) do
+      on_success { render json: success_json.merge(message_id: result[:message].id) }
+    end
+  end
+
   def create
     Chat::MessageRateLimiter.run!(current_user)
 
