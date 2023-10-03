@@ -65,7 +65,7 @@ RSpec.describe CategoryGuardian do
     end
   end
 
-  describe "topics_need_approval?" do
+  describe "#topics_need_approval?" do
     fab!(:reviewable_group) { Fabricate(:group) }
 
     it "returns false when admin" do
