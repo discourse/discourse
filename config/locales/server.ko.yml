@@ -1368,7 +1368,6 @@ ko:
     tl2_additional_flags_per_day_multiplier: "tl2(회원)의 일일 신고 한도를 올릴 배수"
     tl3_additional_flags_per_day_multiplier: "tl3(정회원)의 일일 신고 한도를 올릴 배수"
     tl4_additional_flags_per_day_multiplier: "tl4(리더)의 일일 신고 한도를 올릴 배수"
-    num_users_to_silence_new_user: "신규 사용자의 게시물이 많은 다른 사용자로부터 num_spam_flags_to_silence_new_user 스팸 신고를 받으면 해당 사용자의 모든 게시물을 숨기고 향후 게시를 방지합니다. 비활성화하려면 0으로 설정하세요."
     num_tl3_flags_to_silence_new_user: "신규 사용자의 게시물이 num_tl3_users_to_silence_new_user 다른 신뢰 레벨 3 사용자로부터 많은 신고를 받으면 모든 게시물을 숨기고 향후 게시를 방지합니다. 비활성화하려면 0으로 설정하세요."
     num_tl3_users_to_silence_new_user: "신규 사용자의 게시물이 많은 다른 사용자로부터 num_tl3_flags_to_silence_new_user 신고를 받으면 해당 사용자의 모든 게시물을 숨기고 향후 게시를 방지합니다. 비활성화하려면 0으로 설정하세요."
     notify_mods_when_user_silenced: "사용자가 자동으로 차단되면 모든 운영자에게 메시지를 전송합니다."

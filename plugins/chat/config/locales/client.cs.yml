@@ -24,10 +24,6 @@ cs:
           descriptions:
             chat:
               create_message: "Vytvořit chatovací zprávu v určeném kanálu."
-    about:
-      chat_messages_count: "Zprávy v chatu"
-      chat_channels_count: "Chatovací kanály"
-      chat_users_count: "Uživatelé chatu"
     chat:
       deleted_chat_username: smazáno
       dates:

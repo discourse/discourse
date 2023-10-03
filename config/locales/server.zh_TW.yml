@@ -1143,7 +1143,6 @@ zh_TW:
     tl2_additional_likes_per_day_multiplier: "增加信任等級2（成員）的贊限制，可提供一個乘數與原始值相乘"
     tl3_additional_likes_per_day_multiplier: "增加信任等級3（常規）的每日贊限制，將此設置項與原始值相乘"
     tl4_additional_likes_per_day_multiplier: "增加信任等級4（資深）的贊限制，可提供一個乘數與原始值相乘"
-    num_users_to_silence_new_user: "如果新使用者的貼文被不同使用者多次標記為垃圾信息，隱藏他們的所有貼文並不讓其繼續發表內容。0 為禁用。"
     num_tl3_flags_to_silence_new_user: "如果新使用者的貼文被多個不同的信任等級3的使用者標記，隱藏他們的所有貼文並不讓其繼續發表內容。0 為禁用。"
     num_tl3_users_to_silence_new_user: "如果新使用者的貼文被不同的信任等級3的使用者標記多次，隱藏他們的所有貼文子，並不讓其繼續發表內容。0 為禁用。"
     notify_mods_when_user_silenced: "若使用者被自動禁言，傳訊息通知所有管理員。"

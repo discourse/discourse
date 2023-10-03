@@ -31,7 +31,7 @@ uk:
           details: "При створенні, редагуванні, видаленні або відновленні повідомлення чату."
     about:
       chat_messages_count: "Повідомлення чату"
-      chat_channels_count: "Канали чату"
+      chat_channels_count: "Чат-канали"
       chat_users_count: "Користувачі чату"
     chat:
       deleted_chat_username: видалено

@@ -1464,7 +1464,6 @@ ja:
     tl2_additional_flags_per_day_multiplier: "TL2 (メンバー) の 1 日あたりの通報数の上限をこの数を倍数として増加する"
     tl3_additional_flags_per_day_multiplier: "TL3 (レギュラー) の 1 日あたりの通報数の上限をこの数を倍数として増加する"
     tl4_additional_flags_per_day_multiplier: "TL4 (リーダー) の 1 日あたりの通報数の上限をこの数を倍数として増加する"
-    num_users_to_silence_new_user: "新しいユーザーの投稿がこの数のユーザーから num_spam_flags_to_silence_new_user 件の迷惑通報を受けると、そのユーザーのすべての投稿を非表示にして、以降で投稿できないようにします。0 を指定すると無効になります。"
     num_tl3_flags_to_silence_new_user: "新しいユーザーの投稿が num_tl3_users_to_silence_new_user 人の信頼レベル 3 ユーザーからこの件数の通報を受けると、そのユーザーのすべての投稿を非表示にして、以降で投稿できないようにします。0 を指定すると、無効になります。"
     num_tl3_users_to_silence_new_user: "新しいユーザーの投稿がこの数の信頼レベル 3 ユーザーから num_tl3_flags_to_silence_new_user 件の迷惑通報を受けると、そのユーザーのすべての投稿を非表示にして、以降で投稿できないようにします。0 を指定すると無効になります。"
     notify_mods_when_user_silenced: "ユーザーが自動的に投稿禁止にされると、すべてのモデレーターにメッセージを送信します。"

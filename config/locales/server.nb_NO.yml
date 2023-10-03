@@ -951,7 +951,6 @@ nb_NO:
     force_https: "Tving dette nettstedet til å bare tillate HTTPS. ADVARSEL: Du må IKKE aktivere dette valget før du har verifisert at HTTPS er riktig satt opp og fungerer absolutt alle steder! Har du sjekket CDN, alle sosiale loginmetoder og eventuelle eksterne ressurser for å sikre at de også er kompatible med HTTPS?"
     summary_score_threshold: "Minste score for at et innlegg skal inkluderes i 'Sammendrag for Emnet'"
     summary_percent_filter: "Når en bruker klikker 'Summér Dette Emnet', vis topp % av innlegg"
-    num_users_to_silence_new_user: "Hvis en ny brukers innlegg flagges som spam num_spam_flags_to_silence_new_user ganger av dette antallet brukere, skjul den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     num_tl3_flags_to_silence_new_user: "Hvis en ny brukers innlegg flagges av num_tl3_users_to_silence_new_user forskjellige brukere med tillitsnivå 3, skjul alle den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     num_tl3_users_to_silence_new_user: "Hvis en ny brukers innlegg flagges num_tl3_flags_to_silence_new_user ganger fra dette antallet brukere med tillitsnivå 3, skjul alle den nye brukerens innlegg og stans fremtidige innlegg. 0 for å deaktivere."
     notify_mods_when_user_silenced: "Hvis en bruker har blitt automatisk dempet, send en melding til alle moderatorene."

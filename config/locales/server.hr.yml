@@ -1140,7 +1140,6 @@ hr:
     tl2_additional_flags_per_day_multiplier: "Povećajte ograničenje zastavica po danu za tl2 (član) množenjem s ovim brojem"
     tl3_additional_flags_per_day_multiplier: "Povećajte ograničenje zastavica po danu za tl3 (regular) množenjem s ovim brojem"
     tl4_additional_flags_per_day_multiplier: "Povećajte ograničenje zastavica po danu za tl4 (voditelj) množenjem s ovim brojem"
-    num_users_to_silence_new_user: "Ako postovi novog korisnika dobiju num_spam_flags_to_silence_new_user zastavice neželjene pošte od toliko različitih korisnika, sakrijte sve njihove postove i spriječite buduće objavljivanje. 0 za onemogućavanje."
     num_tl3_flags_to_silence_new_user: "Ako postovi novog korisnika dobiju ovoliko oznaka od num_tl3_users_to_silence_new_user različitih korisnika razine povjerenja 3, sakrijte sve njihove postove i spriječite buduća objavljivanja. 0 za onemogućavanje."
     num_tl3_users_to_silence_new_user: "Ako postovi novog korisnika dobiju oznake num_tl3_flags_to_silence_new_user od toliko različitih korisnika razine povjerenja 3, sakrijte sve njihove postove i spriječite buduća objavljivanja. 0 za onemogućavanje."
     notify_mods_when_user_silenced: "Ako je korisnik automatski utišan, pošaljite poruku svim moderatorima."
