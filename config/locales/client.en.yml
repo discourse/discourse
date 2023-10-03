@@ -4938,39 +4938,6 @@ en:
         groups_filter: "Triggered Groups"
         delete_confirm: "Delete this webhook?"
         topic_event:
-          name: "Topic Event"
-          details: "When there is a new topic, revised, changed or deleted."
-        post_event:
-          name: "Post Event"
-          details: "When there is a new reply, edit, deleted or recovered."
-        user_event:
-          name: "User Event"
-          details: "When a user logs in, logs out, confirms their email, is created, approved, updated, suspended or unsuspended."
-        group_event:
-          name: "Group Event"
-          details: "When a group is created, updated or destroyed."
-        category_event:
-          name: "Category Event"
-          details: "When a category is created, updated or destroyed."
-        tag_event:
-          name: "Tag Event"
-          details: "When a tag is created, updated or destroyed."
-        reviewable_event:
-          name: "Reviewable Event"
-          details: "When a new item is ready for review and when its status is updated."
-        notification_event:
-          name: "Notification Event"
-          details: "When a user receives a notification in their feed."
-        user_promoted_event:
-          name: "User Promoted Event"
-          details: "When a user is promoted from one trust level to another."
-        user_badge_event:
-          name: "Badge Event"
-          details: "When a badge is granted or revoked."
-        group_user_event:
-          name: "Group User Event"
-          details: "When a user is added or removed in a group."
-        topic_event:
           group_name: "Topic Events"
           topic_created: "Topic is created"
           topic_revised: "Topic is revised"
