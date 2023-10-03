@@ -46,27 +46,24 @@ class WebHook < ActiveRecord::Base
   }
 
   def self.translate_event_name_to_type(event_name)
-    EVENT_NAME_TO_EVENT_TYPE_MAP
-      .find do |key, value|
-        if key.is_a?(Regexp)
-          event_name.to_s =~ key
-        else
-          event_name.to_s == key
-        end
+    EVENT_NAME_TO_EVENT_TYPE_MAP.each do |key, value|
+      if key.is_a?(Regexp)
+        return value if event_name.to_s =~ key
+      else
+        return value if event_name.to_s == key
       end
-      &.last || event_name.to_s
+    end
+    event_name.to_s
   end
 
   def self.active_web_hooks(event)
     event_type = translate_event_name_to_type(event)
 
-    hook =
-      WebHook
-        .where(active: true)
-        .joins(:web_hook_event_types)
-        .where("web_hooks.wildcard_web_hook = ? OR web_hook_event_types.name = ?", true, event_type)
-        .distinct
-    hook
+    WebHook
+      .where(active: true)
+      .joins(:web_hook_event_types)
+      .where("web_hooks.wildcard_web_hook = ? OR web_hook_event_types.name = ?", true, event_type)
+      .distinct
   end
 
   def self.enqueue_hooks(type, event, opts = {})
