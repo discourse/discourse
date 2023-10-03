@@ -184,7 +184,6 @@ class Category < ActiveRecord::Base
           if !SiteSetting.allow_uncategorized_topics && !guardian.is_staff?
             scoped = scoped.where.not(id: SiteSetting.uncategorized_category_id)
           end
-
           scoped
         }
 
