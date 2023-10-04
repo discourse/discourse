@@ -29,6 +29,8 @@ en:
       chat_users_count: "Chat users"
 
     chat:
+      text_copied: Text copied to clipboard
+      link_copied: Link copied to clipboard
       deleted_chat_username: deleted
       dates:
         time_tiny: "h:mm"
@@ -241,6 +243,7 @@ en:
       reply: "Reply"
       edit: "Edit"
       copy_link: "Copy link"
+      copy_text: "Copy text"
       rebake_message: "Rebuild HTML"
       retry_staged_message:
         title: "Network error"
