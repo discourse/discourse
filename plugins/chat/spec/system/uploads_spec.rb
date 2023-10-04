@@ -112,7 +112,7 @@ describe "Uploading files in chat messages", type: :system do
 
     it "allows deleting uploads" do
       chat.visit_channel(channel_1)
-      channel_page.open_edit_message(message_2)
+      channel_page.messages.edit(message_2)
       find(".chat-composer-upload").hover
       find(".chat-composer-upload__remove-btn").click
       channel_page.click_send_message
@@ -122,7 +122,7 @@ describe "Uploading files in chat messages", type: :system do
 
     it "allows adding more uploads" do
       chat.visit_channel(channel_1)
-      channel_page.open_edit_message(message_2)
+      channel_page.messages.edit(message_2)
 
       file_path = file_from_fixtures("logo.png", "images").path
       attach_file(file_path) do

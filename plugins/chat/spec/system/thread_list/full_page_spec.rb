@@ -168,7 +168,7 @@ describe "Thread list in side panel | full page", type: :system do
           sign_in(other_user)
           chat_page.visit_thread(thread_1)
           expect(side_panel_page).to have_open_thread(thread_1)
-          thread_page.delete_message(thread_1.original_message)
+          thread_page.messages.delete(thread_1.original_message)
           session.quit
         end
 
@@ -192,7 +192,7 @@ describe "Thread list in side panel | full page", type: :system do
           channel_page.expand_deleted_message(thread_1.original_message)
           channel_page.message_thread_indicator(thread_1.original_message).click
           expect(side_panel_page).to have_open_thread(thread_1)
-          thread_page.restore_message(thread_1.original_message)
+          thread_page.messages.restore(thread_1.original_message)
           session.quit
         end
 
