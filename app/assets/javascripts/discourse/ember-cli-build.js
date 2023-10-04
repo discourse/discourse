@@ -96,10 +96,6 @@ module.exports = function (defaults) {
 
   const wizardTree = app.project.findAddonByName("wizard").treeForAddonBundle();
 
-  const markdownItBundleTree = app.project
-    .findAddonByName("pretty-text")
-    .treeForMarkdownItBundle();
-
   const testStylesheetTree = mergeTrees([
     discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
     discourseScss(
@@ -129,10 +125,6 @@ module.exports = function (defaults) {
       inputFiles: ["**/*.js"],
       outputFile: `assets/wizard.js`,
     }),
-    concat(markdownItBundleTree, {
-      inputFiles: ["**/*.js"],
-      outputFile: `assets/markdown-it-bundle.js`,
-    }),
     generateScriptsTree(app),
     discoursePluginsTree,
     testStylesheetTree,
@@ -151,8 +143,6 @@ module.exports = function (defaults) {
               (request === "jquery" ||
                 request.startsWith("admin/") ||
                 request.startsWith("wizard/") ||
-                (request.startsWith("pretty-text/engines/") &&
-                  request !== "pretty-text/engines/discourse-markdown-it") ||
                 request.startsWith("discourse/plugins/") ||
                 request.startsWith("discourse/theme-"))
             ) {

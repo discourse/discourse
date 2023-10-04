@@ -84,6 +84,7 @@
     "dialog-holder": "1.0.0",
     "discourse-common": "1.0.0",
     "discourse-i18n": "1.0.0",
+    "discourse-markdown-it": "1.0.0",
     "discourse-plugins": "1.0.0",
     "ember-auto-import": "^2.6.3",
     "ember-buffered-proxy": "^2.1.1",
