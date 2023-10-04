@@ -8,7 +8,7 @@ import FastEditModal from "discourse/components/modal/fast-edit";
 import Component from "@glimmer/component";
 import concatClass from "discourse/helpers/concat-class";
 import DButton from "discourse/components/d-button";
-import { fn } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import FastEdit from "discourse/components/fast-edit";
 import { on } from "@ember/modifier";
@@ -33,25 +33,35 @@ export default class PostTextSelectionToolbar extends Component {
       {{this.appEventsListeners}}
     >
       <div class="buttons">
-        {{#if this.embedQuoteButton}}
-          <DButton
-            @icon="quote-left"
-            @label="post.quote_reply"
-            @title="post.quote_reply_shortcut"
-            class="btn-flat insert-quote"
-            @action={{@data.insertQuote}}
-          />
+        {{#if this.showPrimaryActions}}
+          {{#if this.embedQuoteButton}}
+            <DButton
+              @icon="quote-left"
+              @label="post.quote_reply"
+              @title="post.quote_reply_shortcut"
+              class="btn-flat insert-quote"
+              @action={{@data.insertQuote}}
+            />
+          {{/if}}
+
+          {{#if @data.canEditPost}}
+            <DButton
+              @icon="pencil-alt"
+              @label="post.quote_edit"
+              @title="post.quote_edit_shortcut"
+              class="btn-flat quote-edit-label"
+              {{on "click" this.toggleFastEdit}}
+            />
+          {{/if}}
         {{/if}}
 
-        {{#if @data.canEditPost}}
-          <DButton
-            @icon="pencil-alt"
-            @label="post.quote_edit"
-            @title="post.quote_edit_shortcut"
-            class="btn-flat quote-edit-label"
-            {{on "click" this.toggleFastEdit}}
-          />
-        {{/if}}
+        <PluginOutlet
+          @name="post-text-selection-buttons-after"
+          @outletArgs={{hash
+            data=@data
+            hidePrimaryActions=this.hidePrimaryActions
+          }}
+        />
 
         {{#if this.quoteSharingEnabled}}
           <span class="quote-sharing">
@@ -103,6 +113,7 @@ export default class PostTextSelectionToolbar extends Component {
   @service appEvents;
 
   @tracked isFastEditing = false;
+  @tracked showPrimaryActions = true;
 
   appEventsListeners = modifier(() => {
     this.appEvents.on("quote-button:edit", this, "toggleFastEdit");
@@ -128,6 +139,7 @@ export default class PostTextSelectionToolbar extends Component {
 
   get quoteSharingEnabled() {
     return (
+      this.showPrimaryActions &&
       this.site.desktopView &&
       this.quoteSharingSources.length > 0 &&
       !this.topic.invisible &&
@@ -163,6 +175,11 @@ export default class PostTextSelectionToolbar extends Component {
       (canCreatePost || canReplyAsNewTopic) &&
       this.currentUser?.get("user_option.enable_quoting")
     );
+  }
+
+  @action
+  hidePrimaryActions() {
+    this.showPrimaryActions = false;
   }
 
   @action
