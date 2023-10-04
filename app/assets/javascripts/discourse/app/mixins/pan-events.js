@@ -72,30 +72,23 @@ export default Mixin.create({
     if (timeDiffSeconds === 0) {
       return oldState;
     }
-    //calculate delta x, y, distance from START location
+    //calculate delta x, y from START location
     const deltaX = e.clientX - oldState.startLocation.x;
     const deltaY = e.clientY - oldState.startLocation.y;
-    const distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
 
     //calculate velocity from previous event center location
     const eventDeltaX = e.clientX - oldState.center.x;
     const eventDeltaY = e.clientY - oldState.center.y;
     const velocityX = eventDeltaX / timeDiffSeconds;
     const velocityY = eventDeltaY / timeDiffSeconds;
-    const deltaDistance = Math.sqrt(
-      Math.pow(eventDeltaX, 2) + Math.pow(eventDeltaY, 2)
-    );
-    const velocity = deltaDistance / timeDiffSeconds;
 
     return {
       startLocation: oldState.startLocation,
       center: { x: e.clientX, y: e.clientY },
-      velocity,
       velocityX,
       velocityY,
       deltaX,
       deltaY,
-      distance,
       start: false,
       timestamp: newTimestamp,
       direction: this._calculateDirection(oldState, deltaX, deltaY),
@@ -106,12 +99,10 @@ export default Mixin.create({
     const newState = {
       center: { x: e.clientX, y: e.clientY },
       startLocation: { x: e.clientX, y: e.clientY },
-      velocity: 0,
       velocityX: 0,
       velocityY: 0,
       deltaX: 0,
       deltaY: 0,
-      distance: 0,
       start: true,
       timestamp: Date.now(),
       direction: null,
@@ -127,7 +118,11 @@ export default Mixin.create({
 
     const previousState = this._panState;
     const newState = this._calculateNewPanState(previousState, e);
-    if (previousState.start && newState.distance < MINIMUM_SWIPE_DISTANCE) {
+    if (
+      previousState.start &&
+      Math.abs(newState.deltaX) < MINIMUM_SWIPE_DISTANCE &&
+      Math.abs(newState.deltaY) < MINIMUM_SWIPE_DISTANCE
+    ) {
       return;
     }
     this.set("_panState", newState);

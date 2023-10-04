@@ -81,7 +81,7 @@ const SiteHeaderComponent = MountWidget.extend(
         panel.classList.remove("animate");
         headerCloak.classList.remove("animate");
       }, 200);
-      panel.style.setProperty("--offset", 0);
+      panel.style["transform"] = `translate3d(0, 0, 0)`;
       headerCloak.style.setProperty("--opacity", 0.5);
       this._panMenuOffset = 0;
     },
@@ -92,9 +92,9 @@ const SiteHeaderComponent = MountWidget.extend(
       panel.classList.add("animate");
       headerCloak.classList.add("animate");
       if (menuOrigin === "left") {
-        panel.style.setProperty("--offset", `-100vw`);
+        panel.style["transform"] = `translate3d(-100vw, 0, 0)`;
       } else {
-        panel.style.setProperty("--offset", `100vw`);
+        panel.style["transform"] = `translate3d(100vw, 0, 0)`;
       }
 
       headerCloak.style.setProperty("--opacity", 0);
@@ -167,6 +167,8 @@ const SiteHeaderComponent = MountWidget.extend(
         if (panel) {
           panel.classList.add("moving");
         }
+        this.movingElement = document.querySelector(".menu-panel");
+        this.cloakElement = document.querySelector(".header-cloak");
       } else {
         this._isPanning = false;
       }
@@ -184,18 +186,18 @@ const SiteHeaderComponent = MountWidget.extend(
       if (!this._isPanning) {
         return;
       }
-      const panel = document.querySelector(".menu-panel");
-      const headerCloak = document.querySelector(".header-cloak");
+      const panel = this.movingElement;
+      const headerCloak = this.cloakElement;
       if (this._panMenuOrigin === "right") {
         const pxClosed = Math.min(0, -e.deltaX + this._panMenuOffset);
-        panel.style.setProperty("--offset", `${-pxClosed}px`);
+        panel.style["transform"] = `translate3d(${-pxClosed}px, 0, 0)`;
         headerCloak.style.setProperty(
           "--opacity",
           Math.min(0.5, (300 + pxClosed) / 600)
         );
       } else {
         const pxClosed = Math.min(0, e.deltaX + this._panMenuOffset);
-        panel.style.setProperty("--offset", `${pxClosed}px`);
+        panel.style["transform"] = `translate3d(${pxClosed}px, 0, 0)`;
         headerCloak.style.setProperty(
           "--opacity",
           Math.min(0.5, (300 + pxClosed) / 600)
@@ -389,10 +391,10 @@ const SiteHeaderComponent = MountWidget.extend(
             panel.parentElement.classList.contains(this._leftMenuClass())
           ) {
             this._panMenuOrigin = "left";
-            panel.style.setProperty("--offset", `-100vw`);
+            panel.style["transform"] = `translate3d(-100vw, 0, 0)`;
           } else {
             this._panMenuOrigin = "right";
-            panel.style.setProperty("--offset", `100vw`);
+            panel.style["transform"] = `translate3d(100vw, 0, 0)`;
           }
           headerCloak.style.setProperty("--opacity", 0);
         }

@@ -626,7 +626,6 @@
     height: calc(var(--base-height) - var(--footer-nav-height));
   }
 
-  transform: translateX(var(--offset));
   @media (prefers-reduced-motion: no-preference) {
     &.animate {
       transition: transform 0.1s linear;
@@ -634,10 +633,7 @@
   }
   &.moving,
   &.animate {
-    // PERF: only render first 20 items in a list to allow for smooth
-    // pan events
-    li:nth-child(n + 20) {
-      display: none;
-    }
+    // PERF: remove shadow on pan events
+    box-shadow: none;
   }
 }

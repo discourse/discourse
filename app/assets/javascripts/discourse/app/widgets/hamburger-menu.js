@@ -377,9 +377,11 @@ export default createWidget("hamburger-menu", {
         document.querySelector("html").classList["direction"] === "rtl"
           ? -offsetDirection
           : offsetDirection;
-      panel.style.setProperty("--offset", `${offsetDirection * windowWidth}px`);
       const headerCloak = document.querySelector(".header-cloak");
       headerCloak.classList.add("animate");
+      panel.style["transform"] = `translate3d(${
+        offsetDirection * windowWidth
+      }px, 0, 0)`;
       headerCloak.style.setProperty("--opacity", 0);
       discourseLater(() => this.sendWidgetAction("toggleHamburger"), 200);
     }

@@ -136,21 +136,25 @@ export default Component.extend(PanEvents, {
     }
   },
 
-  _handlePanDone(offset, event) {
-    const $timelineContainer = $(".timeline-container");
-    const maxOffset = parseInt($timelineContainer.css("height"), 10);
+  _handlePanDone(event) {
+    const timelineContainer = document.querySelector(".timeline-container");
+    const maxOffset = timelineContainer.offsetHeight;
 
-    $timelineContainer.addClass("animate");
+    timelineContainer.classList.add("animate");
+    timelineContainer.classList.remove("moving");
     if (this._shouldPanClose(event)) {
-      $timelineContainer.css("--offset", `${maxOffset}px`);
+      timelineContainer.style[
+        "transform"
+      ] = `translate3d(0, ${maxOffset}px, 0)`;
+
       discourseLater(() => {
         this._collapseFullscreen();
-        $timelineContainer.removeClass("animate");
+        timelineContainer.classList.remove("animate");
       }, 200);
     } else {
-      $timelineContainer.css("--offset", 0);
+      timelineContainer.style["transform"] = `translate3d(0, 0, 0)`;
       discourseLater(() => {
-        $timelineContainer.removeClass("animate");
+        timelineContainer.classList.remove("animate");
       }, 200);
     }
   },
@@ -179,6 +183,8 @@ export default Component.extend(PanEvents, {
       this.isPanning = false;
     } else if (e.direction === "up" || e.direction === "down") {
       this.isPanning = true;
+      this.movingElement = document.querySelector(".timeline-container");
+      this.movingElement.classList.add("moving");
     }
   },
 
@@ -188,7 +194,7 @@ export default Component.extend(PanEvents, {
     }
     e.originalEvent.preventDefault();
     this.isPanning = false;
-    this._handlePanDone(e.deltaY, e);
+    this._handlePanDone(e);
   },
 
   panMove(e) {
@@ -196,7 +202,10 @@ export default Component.extend(PanEvents, {
       return;
     }
     e.originalEvent.preventDefault();
-    $(".timeline-container").css("--offset", `${Math.max(0, e.deltaY)}px`);
+    this.movingElement.style["transform"] = `translate3d(0, ${Math.max(
+      0,
+      e.deltaY
+    )}px, 0)`;
   },
 
   didInsertElement() {

@@ -37,12 +37,14 @@
   }
 
   &.timeline-fullscreen {
-    transform: translateY(var(--offset));
     @media (prefers-reduced-motion: no-preference) {
       &.animate {
         transition: transform 0.1s linear;
       }
       transition: max-height 0.3s ease-in;
+    }
+    &.moving {
+      box-shadow: none;
     }
     max-height: 0;
     position: fixed;
