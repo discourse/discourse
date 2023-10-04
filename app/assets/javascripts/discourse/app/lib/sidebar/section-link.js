@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { bind } from "discourse-common/utils/decorators";
 import RouteInfoHelper from "discourse/lib/sidebar/route-info-helper";
 import discourseLater from "discourse-common/lib/later";
+import { defaultHomepage } from "discourse/lib/utilities";
 
 const TOUCH_SCREEN_DELAY = 300;
 const MOUSE_DELAY = 250;
@@ -26,7 +27,13 @@ export default class SectionLink {
 
     if (!this.externalOrFullReload) {
       const routeInfoHelper = new RouteInfoHelper(router, value);
-      this.route = routeInfoHelper.route;
+
+      if (routeInfoHelper.route === "discovery.index") {
+        this.route = `discovery.${defaultHomepage()}`;
+      } else {
+        this.route = routeInfoHelper.route;
+      }
+
       this.models = routeInfoHelper.models;
       this.query = routeInfoHelper.query;
     }

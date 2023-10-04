@@ -1,7 +1,7 @@
 import { module, test } from "qunit";
 import Category from "discourse/models/category";
 import sinon from "sinon";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
 
 module("Unit | Model | category", function (hooks) {

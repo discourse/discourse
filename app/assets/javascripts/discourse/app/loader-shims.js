@@ -8,6 +8,7 @@ loaderShim("@ember-compat/tracked-built-ins", () =>
   importSync("@ember-compat/tracked-built-ins")
 );
 loaderShim("@popperjs/core", () => importSync("@popperjs/core"));
+loaderShim("@floating-ui/dom", () => importSync("@floating-ui/dom"));
 loaderShim("@uppy/aws-s3", () => importSync("@uppy/aws-s3"));
 loaderShim("@uppy/aws-s3-multipart", () =>
   importSync("@uppy/aws-s3-multipart")
@@ -24,9 +25,9 @@ loaderShim("@uppy/utils/lib/EventTracker", () =>
 loaderShim("@uppy/xhr-upload", () => importSync("@uppy/xhr-upload"));
 loaderShim("a11y-dialog", () => importSync("a11y-dialog"));
 loaderShim("ember-modifier", () => importSync("ember-modifier"));
+loaderShim("ember-route-template", () => importSync("ember-route-template"));
 loaderShim("handlebars", () => importSync("handlebars"));
 loaderShim("js-yaml", () => importSync("js-yaml"));
 loaderShim("message-bus-client", () => importSync("message-bus-client"));
-loaderShim("tippy.js", () => importSync("tippy.js"));
 loaderShim("virtual-dom", () => importSync("virtual-dom"));
 loaderShim("xss", () => importSync("xss"));

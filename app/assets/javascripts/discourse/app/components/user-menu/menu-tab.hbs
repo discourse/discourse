@@ -9,6 +9,7 @@
   data-tab-number={{@tab.position}}
   href={{@tab.linkWhenActive}}
   {{on "click" @onTabClick}}
+  {{on "keydown" @onTabClick}}
 >
   {{d-icon @tab.icon}}
   {{#if @tab.count}}

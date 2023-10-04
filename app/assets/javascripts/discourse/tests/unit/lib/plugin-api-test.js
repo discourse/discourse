@@ -3,7 +3,7 @@ import EmberObject from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 module("Unit | Utility | plugin-api", function (hooks) {
   setupTest(hooks);

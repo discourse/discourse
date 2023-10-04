@@ -87,8 +87,7 @@ id:
           title: "Spinners"
         empty_state:
           title: "Keadaan Kosong"
-        rich_tooltip:
-          title: "Tooltip yang beragam"
+        tooltips:
           description: "Deskripsi"
           header: "Header"
           hover_to_see: "Arahkan kursor untuk melihat tooltip"

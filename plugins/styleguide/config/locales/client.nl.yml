@@ -87,8 +87,7 @@ nl:
           title: "Kringvelden"
         empty_state:
           title: "Lege toestand"
-        rich_tooltip:
-          title: "Rijke tooltip"
+        tooltips:
           description: "Beschrijving"
           header: "Koptekst"
           hover_to_see: "Plaats de aanwijzer om een tooltip te zien"

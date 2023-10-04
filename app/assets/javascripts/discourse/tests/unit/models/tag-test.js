@@ -1,5 +1,5 @@
 import { module, test } from "qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
 
 module("Unit | Model | tag", function (hooks) {

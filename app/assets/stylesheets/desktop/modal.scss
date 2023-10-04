@@ -11,6 +11,9 @@
 
 .modal.in {
   animation: fade 0.25s;
+  @media (prefers-reduced-motion) {
+    animation-duration: 0s;
+  }
 }
 
 .modal-footer .btn.right {

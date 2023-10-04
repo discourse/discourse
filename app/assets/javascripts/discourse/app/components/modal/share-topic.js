@@ -11,7 +11,7 @@ import showModal from "discourse/lib/show-modal";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import I18n from "I18n";
 import Category from "discourse/models/category";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 const ShareTopicModal = Component.extend(bufferedProperty("invite"), {
   topic: readOnly("model.topic"),

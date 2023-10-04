@@ -4526,7 +4526,9 @@ RSpec.describe UsersController do
       it "should redirect to login page for anonymous user when profiles are hidden" do
         SiteSetting.hide_user_profiles_from_public = true
         get "/u/#{user.username}.json"
-        expect(response).to redirect_to "/login"
+        expect(response).to have_http_status(:forbidden)
+        get "/u/#{user.username}/messages.json"
+        expect(response).to have_http_status(:forbidden)
       end
 
       describe "user profile views" do
@@ -4729,10 +4731,10 @@ RSpec.describe UsersController do
         expect(parsed["trust_level"]).to be_present
       end
 
-      it "should redirect to login page for anonymous user when profiles are hidden" do
+      it "should have http status 403 for anonymous user when profiles are hidden" do
         SiteSetting.hide_user_profiles_from_public = true
         get "/u/#{user.username}/card.json"
-        expect(response).to redirect_to "/login"
+        expect(response).to have_http_status(:forbidden)
       end
     end
 
@@ -4788,10 +4790,10 @@ RSpec.describe UsersController do
       expect(parsed.map { |u| u["username"] }).to contain_exactly(user.username, user2.username)
     end
 
-    it "should redirect to login page for anonymous user when profiles are hidden" do
+    it "should have http status 403 for anonymous user when profiles are hidden" do
       SiteSetting.hide_user_profiles_from_public = true
       get "/user-cards.json?user_ids=#{user.id},#{user2.id}"
-      expect(response).to redirect_to "/login"
+      expect(response).to have_http_status(:forbidden)
     end
 
     context "when `hide_profile_and_presence` user option is checked" do
@@ -5833,7 +5835,6 @@ RSpec.describe UsersController do
 
     context "when the creation parameters are invalid" do
       it "shows a security key error and does not create a key" do
-        stub_as_dev_localhost
         create_second_factor_security_key
         _response_parsed = response.parsed_body
 
@@ -5870,9 +5871,10 @@ RSpec.describe UsersController do
               user: user1,
               factor_type: UserSecurityKey.factor_types[:second_factor],
             )
+          Fabricate(:passkey_with_random_credential, user: user1)
         end
 
-        it "should disable all totp and security keys" do
+        it "should disable all totp and security keys (but not passkeys)" do
           expect_enqueued_with(
             job: :critical_user_email,
             args: {
@@ -5885,7 +5887,12 @@ RSpec.describe UsersController do
             expect(response.status).to eq(200)
 
             expect(user1.reload.user_second_factors).to be_empty
-            expect(user1.security_keys).to be_empty
+            expect(user1.second_factor_security_keys).to be_empty
+            expect(user1.security_keys.length).to eq(1)
+            expect(user1.security_keys[0].factor_type).to eq(
+              UserSecurityKey.factor_types[:first_factor],
+            )
+            expect(user1.passkey_credential_ids.length).to eq(1)
           end
         end
       end

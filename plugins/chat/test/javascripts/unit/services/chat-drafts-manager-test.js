@@ -1,6 +1,6 @@
 import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(

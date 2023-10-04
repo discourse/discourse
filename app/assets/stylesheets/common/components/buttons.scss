@@ -381,6 +381,60 @@
   }
 }
 
+.btn-transparent {
+  background: none;
+  border: 0;
+  color: var(--primary);
+
+  &.btn-primary,
+  &.btn-primary:focus,
+  &.btn-primary:hover {
+    .d-icon {
+      color: var(--tertiary) !important;
+    }
+  }
+  &.btn-danger,
+  &.btn-danger:focus,
+  &.btn-danger:hover {
+    .d-icon {
+      color: var(--danger) !important;
+    }
+  }
+  &.btn-success,
+  &.btn-success:focus,
+  &.btn-success:hover {
+    .d-icon {
+      color: var(--success) !important;
+    }
+  }
+
+  .discourse-no-touch & {
+    &:hover {
+      color: var(--primary);
+      background: var(--d-hover);
+      .d-icon {
+        color: var(--primary);
+      }
+    }
+  }
+
+  &:focus {
+    color: var(--primary);
+    background: var(--d-hover);
+    .d-icon {
+      color: var(--primary);
+    }
+  }
+
+  &:focus-visible {
+    color: var(--primary);
+    background: var(--d-hover);
+    .d-icon {
+      color: var(--primary);
+    }
+  }
+}
+
 .btn-mini-toggle {
   border-radius: var(--d-border-radius);
   padding: 0.4em 0.467em;

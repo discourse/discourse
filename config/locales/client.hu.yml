@@ -279,16 +279,10 @@ hu:
       our_moderators: "Moderátoraink"
       moderators: "Moderátorok"
       stat:
-        all_time: "Összes"
-        last_day: "Elmúlt 24 óra"
-        last_7_days: "Elmúlt 7 nap"
-        last_30_days: "Elmúlt 30 nap"
+        last_day: "24 óráig"
       like_count: "Kedvelés"
       topic_count: "Téma"
       post_count: "Bejegyzés"
-      user_count: "Regisztráció"
-      active_user_count: "Aktív felhasználó"
-      contact: "Kapcsolat"
       contact_info: "A webhellyel kapcsolatos sürgős vagy kritikus probléma esetén lépjen velünk kapcsolatba a következő elérhetőségen: %{contact_info}."
     bookmarked:
       title: "Könyvjelző"
@@ -1235,7 +1229,6 @@ hu:
         success: "(az e-mail elküldve)"
         in_progress: "(az e-mail küldése folyamatban)"
         error: "(hiba)"
-        emoji: "zár emodzsi"
         action: "Jelszó-visszaállítási e-mail küldése"
         set_password: "Jelszó megadása"
         choose_new: "Válasszon új jelszót"
@@ -1806,7 +1799,6 @@ hu:
       link_label: "Küldjön e-mailben egy bejelentkezési hivatkozást"
       button_label: "e-maillel"
       login_link: "Nem írom be a jelszót; inkább küldjön egy bejelentkezési hivatkozást"
-      emoji: "zár emodzsi"
       complete_username: "Amennyiben létezik fiók a(z) <b>%{username}</b> felhasználónévvel, hamarosan kapni fog egy levelet, amelyben megtalálhatja a jelszó visszaállításához szükséges további lépéseket."
       complete_email: "Amennyiben létezik fiók a(z) <b>%{email}</b> e-mail-címmel, hamarosan kapni fog egy levelet, amelyben megtalálhatja a belépéshez szükséges hivatkozást."
       complete_username_found: "Találtunk egy fiókot ezzel a felhasználónévvel: <b>%{username}</b>. Hamarosan kapni fog egy levelet, amelyben megtalálhatja a belépéshez szükséges hivatkozást."
@@ -1894,7 +1886,6 @@ hu:
         security_key: "Helyette biztonsági kulcs használata"
     invites:
       accept_title: "Meghívás"
-      emoji: "boríték emodzsi"
       welcome_to: "Üdvözöljük a(z) %{site_name} oldalon."
       invited_by: "Önt ő hívta meg:"
       social_login_available: "Bármely közösségi bejelentkezéssel be tud jelentkezni ennek az e-mail-címnek a használatával."
@@ -2552,9 +2543,7 @@ hu:
       collapse_details: "téma részleteinek összecsukása"
       expand_details: "téma részleteinek kibontása"
       unread_indicator: "Egyetlen tag sem olvasta még a téma utolsó bejegyzését."
-      bumped_at_title: |
-        Első bejegyzés: %{createdAtDate}
-        Elküldve: %{bumpedAtDate}
+      bumped_at: "Legutóbbi: %{date}"
       suggest_create_topic: Készen áll, hogy <a href>új beszélgetést kezdjen?</a>
       jump_reply: "Ugrás a hozzászólás eredeti helyére"
       jump_reply_aria: "Ugrás @%{username} bejegyzésére az eredeti helyén"
@@ -3443,7 +3432,6 @@ hu:
       other_tags: "Egyéb címkék"
       selector_all_tags: "összes címke"
       selector_no_tags: "címke nélküli"
-      changed: "megváltozott címkék:"
       tags: "Címkék"
       choose_for_topic: "Megadható címke"
       info: "Információ"
@@ -4091,7 +4079,6 @@ hu:
           theme_name: "A téma neve"
           component_name: "Összetevő neve"
           themes_intro: "A kezdéshez válasszon egy meglévő témát, vagy telepítsen újat"
-          themes_intro_emoji: "női művész emodzsi"
           beginners_guide_title: "Útmutató kezdőknek a Discourse Themes használatához"
           developers_guide_title: "Fejlesztői útmutató a Discourse témákhoz"
           browse_themes: "Közösségi témák böngészése"
@@ -4853,7 +4840,6 @@ hu:
             with: <span class="username">%{username}</span>
         badge_intro:
           title: "A kezdéshez válasszon egy meglévő jelvényt, vagy hozzon létre egy újat"
-          emoji: "női diák emodzsi"
           what_are_badges_title: "Mik azok a jelvények?"
           badge_query_examples_title: "Jelvény lekérdezési példák"
       emoji:

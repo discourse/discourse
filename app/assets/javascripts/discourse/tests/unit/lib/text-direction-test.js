@@ -1,5 +1,6 @@
-import { isLTR, isRTL, setTextDirections } from "discourse/lib/text-direction";
 import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
+import { isLTR, isRTL, setTextDirections } from "discourse/lib/text-direction";
 
 function quoteHtml() {
   return `
@@ -30,7 +31,9 @@ function assertDirection(assert, elem, expected, message) {
   assert.strictEqual(elem.getAttribute("dir"), expected, message);
 }
 
-module("Unit | Utility | text-direction", function () {
+module("Unit | Utility | text-direction", function (hooks) {
+  setupTest(hooks);
+
   test("isRTL", function (assert) {
     // Hebrew
     assert.strictEqual(isRTL("זה מבחן"), true);

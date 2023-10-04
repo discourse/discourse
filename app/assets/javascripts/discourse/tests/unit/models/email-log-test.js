@@ -1,7 +1,7 @@
 import { module, test } from "qunit";
 import { setPrefix } from "discourse-common/lib/get-url";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 module("Unit | Model | email-log", function (hooks) {
   setupTest(hooks);

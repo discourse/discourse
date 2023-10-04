@@ -1,8 +1,11 @@
 import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import PreloadStore from "discourse/lib/preload-store";
 import { Promise } from "rsvp";
 
 module("Unit | Utility | preload-store", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     PreloadStore.store("bane", "evil");
   });

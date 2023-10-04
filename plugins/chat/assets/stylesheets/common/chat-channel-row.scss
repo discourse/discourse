@@ -7,6 +7,14 @@
   cursor: pointer;
   color: var(--primary-high);
 
+  &__content {
+    display: flex;
+    justify-content: space-between;
+    max-width: 100%;
+    align-items: center;
+    flex-grow: 1;
+  }
+
   @media (hover: none) {
     &:hover,
     &:focus {
@@ -63,6 +71,8 @@
   }
 
   .chat-channel-title {
+    overflow: hidden;
+
     &__users-count {
       width: var(--channel-list-avatar-size);
       height: var(--channel-list-avatar-size);

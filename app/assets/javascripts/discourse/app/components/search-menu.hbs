@@ -1,6 +1,5 @@
-<MenuPanel @animationClass={{@animationClass}}>
+<MenuPanel @animationClass={{this.animationClass}}>
   <SearchMenu::MenuPanelContents
-    @inTopicContext={{this.inTopicContext}}
     @clearTopicContext={{this.clearTopicContext}}
     @clearPMInboxContext={{this.clearPMInboxContext}}
     @inPMInboxContext={{this.inPMInboxContext}}
@@ -19,7 +18,6 @@
     @searchTopics={{this.includesTopics}}
     @typeFilter={{this.typeFilter}}
     @updateTypeFilter={{this.updateTypeFilter}}
-    @toggleSearchMenu={{@toggleSearchMenu}}
     @closeSearchMenu={{@closeSearchMenu}}
   />
 </MenuPanel>

@@ -5,9 +5,8 @@ import { tracked } from "@glimmer/tracking";
 import { cancel, next } from "@ember/runloop";
 import { cloneJSON } from "discourse-common/lib/object";
 import { chatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
-import showModal from "discourse/lib/show-modal";
 import TextareaInteractor from "discourse/plugins/chat/discourse/lib/textarea-interactor";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import userSearch from "discourse/lib/user-search";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
@@ -18,7 +17,6 @@ import { translations } from "pretty-text/emoji/data";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import { isPresent } from "@ember/utils";
 import { Promise } from "rsvp";
-import User from "discourse/models/user";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import {
   destroyUserStatuses,
@@ -32,6 +30,7 @@ export default class ChatComposer extends Component {
   @service capabilities;
   @service site;
   @service siteSettings;
+  @service store;
   @service chat;
   @service chatComposerPresenceManager;
   @service chatComposerWarningsTracker;
@@ -166,13 +165,19 @@ export default class ChatComposer extends Component {
 
   @action
   insertDiscourseLocalDate() {
-    showModal("discourse-local-dates-create-modal").setProperties({
-      insertDate: (markup) => {
-        this.composer.textarea.addText(
-          this.composer.textarea.getSelected(),
-          markup
-        );
-        this.composer.focus();
+    // JIT import because local-dates isn't necessarily enabled
+    const LocalDatesCreateModal =
+      require("discourse/plugins/discourse-local-dates/discourse/components/modal/local-dates-create").default;
+
+    this.modal.show(LocalDatesCreateModal, {
+      model: {
+        insertDate: (markup) => {
+          this.composer.textarea.addText(
+            this.composer.textarea.getSelected(),
+            markup
+          );
+          this.composer.focus();
+        },
       },
     });
   }
@@ -392,7 +397,7 @@ export default class ChatComposer extends Component {
   }
 
   #addMentionedUser(userData) {
-    const user = User.create(userData);
+    const user = this.store.createRecord("user", userData);
     this.currentMessage.mentionedUsers.set(user.id, user);
   }
 
@@ -425,7 +430,7 @@ export default class ChatComposer extends Component {
                 user.cssClasses = "is-online";
               }
             });
-            initUserStatusHtml(result.users);
+            initUserStatusHtml(getOwner(this), result.users);
           }
           return result;
         });

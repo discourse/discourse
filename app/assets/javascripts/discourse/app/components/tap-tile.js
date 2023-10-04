@@ -21,6 +21,7 @@ export default Component.extend({
 
   keyDown(e) {
     if (e.key === "Enter") {
+      e.stopPropagation();
       this.onChange(this.tileId);
     }
   },

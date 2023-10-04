@@ -1412,9 +1412,6 @@ fr:
     allow_user_locale: "Autoriser les utilisateurs à choisir la langue de l'interface dans leurs préférences"
     set_locale_from_accept_language_header: "définir la langue de l'interface pour les utilisateurs anonymes à partir des en-têtes de langue de leur navigateur Web"
     support_mixed_text_direction: "Permettre le mélange de textes gauche-droite et droite-gauche."
-    min_post_length: "Longueur minimale autorisée des messages en nombre de caractères"
-    min_first_post_length: "Longueur minimale d'un premier message (corps de sujet) en nombre de caractères"
-    min_personal_message_post_length: "Longueur minimale des messages en nombre de caractères"
     max_post_length: "Longueur maximale autorisée des messages en nombres de caractères"
     topic_featured_link_enabled: "Activer la publication de liens avec les sujets."
     show_topic_featured_link_in_digest: "Afficher le lien du sujet à la une dans le résumé par e-mail."
@@ -1534,7 +1531,6 @@ fr:
     tl2_additional_flags_per_day_multiplier: "Augmenter la limite maximale de signalements quotidiens pour les utilisateurs de niveau de confiance 2 (membres) en la multipliant par ce nombre."
     tl3_additional_flags_per_day_multiplier: "Augmenter la limite maximale de signalements quotidiens pour les utilisateurs de niveau de confiance 3 (habitués) en la multipliant par ce nombre."
     tl4_additional_flags_per_day_multiplier: "Augmenter la limite maximale de signalements quotidiens pour les utilisateurs de niveau de confiance 4 (meneurs) en la multipliant par ce nombre."
-    num_users_to_silence_new_user: "Si les messages d'un nouvel utilisateur obtiennent num_spam_flags_to_silence_new_user signalements de la part de ce nombre d'utilisateurs différents, masquer tous ses messages et l'empêcher de publier à l'avenir. 0 désactive cette fonctionnalité."
     num_tl3_flags_to_silence_new_user: "Si les messages d'un nouvel utilisateur obtiennent ce nombre de signalements de la part de num_tl3_users_to_silence_new_user utilisateurs différents de niveau de confiance 3, masquer tous ses messages et l'empêcher de publier à l'avenir. 0 désactive cette fonctionnalité."
     num_tl3_users_to_silence_new_user: "Si les messages d'un nouvel utilisateur obtiennent num_tl3_flags_to_silence_new_user signalements de la part de plusieurs utilisateurs différents de niveau de confiance 3, masquer tous ses messages et l'empêcher de publier à l'avenir. 0 désactive cette fonctionnalité."
     notify_mods_when_user_silenced: "Si un utilisateur est automatiquement mis en sourdine, envoyer un message à tous les modérateurs."
@@ -2113,14 +2109,12 @@ fr:
     default_sidebar_switch_panel_position: "Position des boutons du panneau de commande de la barre latérale"
     retain_web_hook_events_period_days: "Nombre de jours de conservation des événements des Webhooks."
     retry_web_hook_events: "Réessayer jusqu'à 4 fois les événements de Webhooks qui ont échoué. Les intervalles entre chaque tentative sont de 1, 5, 25 et 125 minutes."
-    revoke_api_keys_days: "Nombre de jours avant qu'une clé API inutilisée soit automatiquement révoquée (0 pour jamais)"
     allow_user_api_key_scopes: "Liste des champs d'action autorisés pour les clés de l'API utilisateur"
     min_trust_level_for_user_api_key: |
       Niveau de confiance requis pour la génération de clés API utilisateur.<br>
       <b>AVERTISSEMENT</b> : la modification du niveau de confiance empêchera les utilisateurs dont le niveau de confiance est inférieur de se connecter via Discourse Hub
     allowed_user_api_auth_redirects: "URL autorisée pour la redirection d'un utilisateur lors de l'authentification via les clés d'API. Le symbole « * » peut être utilisé pour remplacer n'importe quelle partie de cette adresse (p. ex. : www.exemple.fr/*)."
     allowed_user_api_push_urls: "Adresses URL autorisées pour le service push du serveur vers l'API utilisateur"
-    expire_user_api_keys_days: "Nombre de jours avant l'expiration automatique d'une clé API utilisateur (0 pour jamais)"
     tagging_enabled: "Activer l'étiquetage des sujets ?"
     min_trust_to_create_tag: "Le niveau de confiance minimal requis pour créer une étiquette."
     max_tags_per_topic: "Le nombre maximal d'étiquettes pouvant être ajoutées à un sujet."

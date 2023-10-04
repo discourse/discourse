@@ -106,7 +106,9 @@ class UsersController < ApplicationController
   end
 
   def show(for_card: false)
-    return redirect_to path("/login") if SiteSetting.hide_user_profiles_from_public && !current_user
+    if SiteSetting.hide_user_profiles_from_public && !current_user
+      raise Discourse::NotFound.new(custom_message: "invalid_access", status: 403)
+    end
 
     @user =
       fetch_user_from_params(
@@ -155,7 +157,9 @@ class UsersController < ApplicationController
 
   # This route is not used in core, but is used by theme components (e.g. https://meta.discourse.org/t/144479)
   def cards
-    return redirect_to path("/login") if SiteSetting.hide_user_profiles_from_public && !current_user
+    if SiteSetting.hide_user_profiles_from_public && !current_user
+      raise Discourse::NotFound.new(custom_message: "invalid_access", status: 403)
+    end
 
     user_ids = params.require(:user_ids).split(",").map(&:to_i)
     raise Discourse::InvalidParameters.new(:user_ids) if user_ids.length > 50
@@ -1574,13 +1578,12 @@ class UsersController < ApplicationController
     params.require(:attestation)
     params.require(:clientData)
 
-    ::DiscourseWebauthn::SecurityKeyRegistrationService.new(
+    ::DiscourseWebauthn::RegistrationService.new(
       current_user,
       params,
-      challenge: DiscourseWebauthn.challenge(current_user, secure_session),
-      rp_id: DiscourseWebauthn.rp_id,
-      origin: Discourse.base_url,
-    ).register_second_factor_security_key
+      session: secure_session,
+      factor_type: UserSecurityKey.factor_types[:second_factor],
+    ).register_security_key
     render json: success_json
   rescue ::DiscourseWebauthn::SecurityKeyError => err
     render json: failed_json.merge(error: err.message)
@@ -1627,7 +1630,7 @@ class UsersController < ApplicationController
   def disable_second_factor
     # delete all second factors for a user
     current_user.user_second_factors.destroy_all
-    current_user.security_keys.destroy_all
+    current_user.second_factor_security_keys.destroy_all
 
     Jobs.enqueue(
       :critical_user_email,

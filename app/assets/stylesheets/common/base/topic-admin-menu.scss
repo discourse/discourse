@@ -17,6 +17,9 @@
       }
     }
     animation: slideUp 0.3s;
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
   }
 
   .mobile-view & {

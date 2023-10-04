@@ -52,3 +52,6 @@ updates:
       babel:
         patterns:
           - "@babel*"
+      embroider:
+        patterns:
+          - "@embroider*"

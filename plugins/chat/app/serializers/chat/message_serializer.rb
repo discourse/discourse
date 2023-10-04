@@ -49,7 +49,7 @@ module Chat
     end
 
     def user
-      object.user || Chat::DeletedUser.new
+      object.user || Chat::NullUser.new
     end
 
     def excerpt

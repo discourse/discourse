@@ -20,7 +20,9 @@ RSpec.describe "Quoting chat message transcripts", type: :system do
     messages = Array.wrap(messages)
     messages.each { |message| channel_page.messages.select(message) }
     channel_page.selection_management.copy
-    expect(page).to have_css(".chat-selection-management[data-last-copy-successful]")
+    expect(PageObjects::Components::Toasts.new).to have_success(
+      I18n.t("js.chat.quote.copy_success"),
+    )
     clip_text = cdp.read_clipboard
     expect(clip_text.chomp).to eq(generate_transcript(messages, current_user))
     clip_text

@@ -230,6 +230,16 @@
                   {{/each}}
                 </div>
               {{/if}}
+
+              <PluginOutlet
+                @name="create-account-after-user-fields"
+                @outletArgs={{hash
+                  accountName=this.accountName
+                  accountUsername=this.accountUsername
+                  accountPassword=this.accountPassword
+                  userFields=this.userFields
+                }}
+              />
             </form>
           </div>
 

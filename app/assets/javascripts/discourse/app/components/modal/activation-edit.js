@@ -4,6 +4,7 @@ import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import { changeEmail } from "discourse/lib/user-activation";
 import ActivationResent from "./activation-resent";
+import { extractError } from "discourse/lib/ajax-error";
 
 export default class ActivationEdit extends Component {
   @service login;
@@ -17,18 +18,20 @@ export default class ActivationEdit extends Component {
   }
 
   @action
-  changeEmail() {
-    changeEmail({
-      username: this.login?.loginName,
-      password: this.login?.loginPassword,
-      email: this.args.model.newEmail,
-    })
-      .then(() => {
-        this.modal.show(ActivationResent, {
-          model: { currentEmail: this.args.model.newEmail },
-        });
-      })
-      .catch((e) => (this.flash = e));
+  async changeEmail() {
+    try {
+      await changeEmail({
+        username: this.login?.loginName,
+        password: this.login?.loginPassword,
+        email: this.args.model.newEmail,
+      });
+
+      this.modal.show(ActivationResent, {
+        model: { currentEmail: this.args.model.newEmail },
+      });
+    } catch (e) {
+      this.flash = extractError(e);
+    }
   }
 
   @action

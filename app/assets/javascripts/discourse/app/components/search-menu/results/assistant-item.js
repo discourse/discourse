@@ -95,6 +95,7 @@ export default class AssistantItem extends Component {
     } else {
       updatedValue = this.prefix.trim();
     }
+
     const inTopicContext = this.search.searchContext?.type === "topic";
     this.args.searchTermChanged(updatedValue, {
       searchTopics: !inTopicContext || this.search.activeGlobalSearchTerm,

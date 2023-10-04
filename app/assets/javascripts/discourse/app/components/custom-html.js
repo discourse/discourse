@@ -1,6 +1,6 @@
 import Component from "@ember/component";
 import { getCustomHTML } from "discourse/helpers/custom-html";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { hbs } from "ember-cli-htmlbars";
 import deprecated from "discourse-common/lib/deprecated";
 

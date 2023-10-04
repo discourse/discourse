@@ -1,8 +1,11 @@
 import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import EmberObject from "@ember/object";
 import Setting from "admin/mixins/setting-object";
 
-module("Unit | Mixin | setting-object", function () {
+module("Unit | Mixin | setting-object", function (hooks) {
+  setupTest(hooks);
+
   test("flat array", function (assert) {
     const FooSetting = EmberObject.extend(Setting);
 
