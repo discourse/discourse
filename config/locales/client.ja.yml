@@ -256,16 +256,10 @@ ja:
       our_moderators: "モデレーター"
       moderators: "モデレーター"
       stat:
-        all_time: "全期間"
-        last_day: "過去 24 時間"
-        last_7_days: "過去 7 日間"
-        last_30_days: "過去 30 日間"
+        last_day: "24 時間"
       like_count: "「いいね！」数"
       topic_count: "トピック"
       post_count: "投稿"
-      user_count: "登録数"
-      active_user_count: "アクティブユーザー"
-      contact: "お問い合わせ"
       contact_info: "このサイトに影響を与える重要な問題や緊急の問題が発生した場合は、%{contact_info} までご連絡ください。"
     bookmarked:
       title: "ブックマーク"
@@ -1241,7 +1235,6 @@ ja:
         success: "(メール送信済み)"
         in_progress: "(メール送信中)"
         error: "(エラー)"
-        emoji: "絵文字をロックする"
         action: "パスワードのリセットメールを送信"
         set_password: "パスワードを設定"
         choose_new: "新しいパスワードを選択する"
@@ -1827,7 +1820,6 @@ ja:
       link_label: "ログインリンクをメールする"
       button_label: "メール"
       login_link: "パスワードをスキップします。ログインリンクを送信してください"
-      emoji: "絵文字をロックする"
       complete_username: "アカウントがユーザー名 <b>%{username}</b> と一致する場合、まもなくログインリンクが記載されたメールが届きます。"
       complete_email: "アカウントが <b>%{email}</b> と一致する場合、まもなくログインリンクが記載されたメールが届きます。"
       complete_username_found: "<b>%{username}</b> に一致するアカウントが見つかりました。まもなく、ログインリンクが記載されたメールが届きます。"
@@ -1916,7 +1908,6 @@ ja:
         security_key: "代わりにセキュリティキーを使用する"
     invites:
       accept_title: "招待"
-      emoji: "絵文字をエンベロープ"
       welcome_to: "%{site_name} へようこそ！"
       invited_by: "あなたは次の人から招待されました:"
       social_login_available: "このメールアドレスを使ってソーシャルログインすることも可能です。"
@@ -2581,9 +2572,7 @@ ja:
           false {または、<a href="{basePath}/latest">最新のトピックを表示</a>してください}
           other {}
         }
-      bumped_at_title: |
-        最初の投稿: %{createdAtDate}
-        投稿: %{bumpedAtDate}
+      bumped_at: "最新: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>すべてのカテゴリを閲覧</a>するか<a href='%{basePath}/latest'>最新のトピックを表示</a>します。"
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>すべてのカテゴリを閲覧</a>するか、<a href='%{basePath}/latest'>最新のトピックを表示</a>するか、トップを見ます。"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>すべてのタグを閲覧</a>するか<a href='%{basePath}/latest'>最新のトピックを表示</a>します。"
@@ -3636,7 +3625,6 @@ ja:
       other_tags: "他のタグ"
       selector_all_tags: "すべてのタグ"
       selector_no_tags: "タグなし"
-      changed: "タグを変更しました:"
       tags: "タグ"
       choose_for_topic: "オプションのタグ"
       info: "情報"
@@ -4286,7 +4274,6 @@ ja:
           details: "返信が新規作成、編集、削除、または復元された場合。"
         user_event:
           name: "ユーザーイベント"
-          details: "ユーザーがログイン、ログアウト、メール確認した場合または、作成、承認、更新された場合。"
         group_event:
           name: "グループイベント"
           details: "グループが作成、更新、または消去された場合。"
@@ -4460,7 +4447,6 @@ ja:
           theme_name: "テーマ名"
           component_name: "コンポーネント名"
           themes_intro: "まず既存のテーマを選択するか、新しいテーマをインストールしてください"
-          themes_intro_emoji: "女性芸術家の絵文字"
           beginners_guide_title: "Discourse テーマの使用に関する初心者ガイド"
           developers_guide_title: "Discourse テーマの開発者ガイド"
           browse_themes: "コミュニティーのテーマを閲覧"
@@ -5554,7 +5540,6 @@ ja:
             with_time: <span class="time">%{time}</span> の <span class="username">%{username}</span>
         badge_intro:
           title: "既存のバッジを選択するか、新しいバッジを作成してください"
-          emoji: "女子学生の絵文字"
           what_are_badges_title: "バッジとは何ですか？"
           badge_query_examples_title: "バッジクエリの例"
         mass_award:

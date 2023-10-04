@@ -1,20 +1,33 @@
-<DButton
-  class="btn-default bootstrap-mode"
-  @label="bootstrap_mode"
-  @action={{this.routeToAdminGuide}}
->
-  {{#if this.showUserTip}}
-    <UserTip @id="admin_guide" @content={{this.userTipContent}} />
-  {{else}}
-    <DTooltip @theme="user-tip" @arrow={{true}}>
-      <div class="user-tip__container">
-        <div class="user-tip__title">
-          {{i18n "user_tips.admin_guide.title"}}
+<DButtonTooltip>
+  <:button>
+    <DButton
+      class="btn-default bootstrap-mode"
+      @label="bootstrap_mode"
+      @action={{this.routeToAdminGuide}}
+    >
+      {{#if this.showUserTip}}
+        <UserTip
+          @id="admin_guide"
+          @priority={{900}}
+          @titleText={{i18n "user_tips.admin_guide.title"}}
+          @contentHtml={{this.userTipContent}}
+        />
+      {{/if}}
+    </DButton>
+  </:button>
+
+  <:tooltip>
+    {{#unless this.showUserTip}}
+      <DTooltip @theme="user-tip" @icon="info-circle" @arrow={{true}}>
+        <div class="user-tip__container">
+          <div class="user-tip__title">
+            {{i18n "user_tips.admin_guide.title"}}
+          </div>
+          <div class="user-tip__content">
+            {{i18n "user_tips.admin_guide.content_no_url"}}
+          </div>
         </div>
-        <div class="user-tip__content">
-          {{i18n "user_tips.admin_guide.content_no_url"}}
-        </div>
-      </div>
-    </DTooltip>
-  {{/if}}
-</DButton>
+      </DTooltip>
+    {{/unless}}
+  </:tooltip>
+</DButtonTooltip>

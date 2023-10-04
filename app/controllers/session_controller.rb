@@ -59,9 +59,14 @@ class SessionController < ApplicationController
       end
 
       if data[:no_current_user]
-        cookies[:sso_payload] = payload || request.query_string
-        redirect_to path("/login")
-        return
+        if data[:prompt] == "none"
+          redirect_to data[:sso_redirect_url], allow_other_host: true
+          return
+        else
+          cookies[:sso_payload] = payload || request.query_string
+          redirect_to path("/login")
+          return
+        end
       end
 
       if request.xhr?
@@ -88,6 +93,8 @@ class SessionController < ApplicationController
     render plain: I18n.t("discourse_connect.login_error"), status: 422
   rescue DiscourseConnectProvider::BlankReturnUrl
     render plain: "return_sso_url is blank, it must be provided", status: 400
+  rescue DiscourseConnectProvider::InvalidParameterValueError => e
+    render plain: I18n.t("discourse_connect.invalid_parameter_value", param: e.param), status: 400
   end
 
   # For use in development mode only when login options could be limited or disabled.

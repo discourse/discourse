@@ -267,13 +267,9 @@ bs_BA:
       our_admins: "Naši administratori"
       our_moderators: "Naši moderatori"
       moderators: "Moderators"
-      stat:
-        all_time: "Ukupno vrijeme"
       like_count: "Sviđanja"
       topic_count: "Tema"
       post_count: "Objave"
-      active_user_count: "Aktivnih korisnika"
-      contact: "Kontaktirajte nas"
       contact_info: "U slučaju da forum ne radi, molimo kontaktirajte nas na %{contact_info}."
     bookmarked:
       title: "Zabilješka"
@@ -1036,7 +1032,6 @@ bs_BA:
         success: "(email poslat)"
         in_progress: "(šaljem email)"
         error: "(greška)"
-        emoji: "zaključavanje emotikona"
         action: "Pošalji Email za resetovanje šifre"
         set_password: "Namjesti šifru"
         choose_new: "Izaberite novu šifru"
@@ -1476,7 +1471,6 @@ bs_BA:
     email_login:
       link_label: "Pošalji mi mejlom moj login link"
       button_label: "pomoću email-a"
-      emoji: "zaključaj emoji"
       complete_username: "Ukoliko korisnički račun se podudara sa <b>%{username}</b>, trebali bi uskoro dobiti email sa linkom za ulogovanje."
       complete_email: "Ukoliko korisnički račun se podudara sa <b>%{email}</b>, trebali bi uskoro dobiti email sa linkom za ulogovanje."
       complete_username_found: "Pronašli smo korisnički račun koji se podudara sa <b>%{username}</b>, trebali bi uskoro dobiti email sa linkom za ulogovanje."
@@ -1989,6 +1983,7 @@ bs_BA:
       back_to_list: "Vrati se na Listu Tema"
       options: "Opcije Teme"
       show_links: "pokaži linkove unutar ove teme"
+      bumped_at: "Zadnje: %{date}"
       deleted: "Ova tema je obrisana"
       slow_mode_update:
         enable: "Omogući"
@@ -2862,7 +2857,6 @@ bs_BA:
       other_tags: "Druge oznake"
       selector_all_tags: "sve oznake"
       selector_no_tags: "bez oznaka"
-      changed: "oznake  promijenjene:"
       tags: "Oznake"
       choose_for_topic: "neobavezne oznake"
       info: "Informacija"

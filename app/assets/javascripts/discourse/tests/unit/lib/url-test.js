@@ -1,15 +1,18 @@
+import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import DiscourseURL, {
   getCategoryAndTagUrl,
   prefixProtocol,
   userPath,
 } from "discourse/lib/url";
-import { module, test } from "qunit";
 import User from "discourse/models/user";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import { setPrefix } from "discourse-common/lib/get-url";
 import sinon from "sinon";
 
-module("Unit | Utility | url", function () {
+module("Unit | Utility | url", function (hooks) {
+  setupTest(hooks);
+
   test("isInternal with a HTTP url", function (assert) {
     sinon.stub(DiscourseURL, "origin").returns("http://eviltrout.com");
 

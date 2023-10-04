@@ -5913,7 +5913,6 @@ RSpec.describe UsersController do
 
     context "when the creation parameters are invalid" do
       it "shows a security key error and does not create a key" do
-        stub_as_dev_localhost
         create_second_factor_security_key
         _response_parsed = response.parsed_body
 
@@ -5950,9 +5949,10 @@ RSpec.describe UsersController do
               user: user1,
               factor_type: UserSecurityKey.factor_types[:second_factor],
             )
+          Fabricate(:passkey_with_random_credential, user: user1)
         end
 
-        it "should disable all totp and security keys" do
+        it "should disable all totp and security keys (but not passkeys)" do
           expect_enqueued_with(
             job: :critical_user_email,
             args: {
@@ -5965,7 +5965,12 @@ RSpec.describe UsersController do
             expect(response.status).to eq(200)
 
             expect(user1.reload.user_second_factors).to be_empty
-            expect(user1.security_keys).to be_empty
+            expect(user1.second_factor_security_keys).to be_empty
+            expect(user1.security_keys.length).to eq(1)
+            expect(user1.security_keys[0].factor_type).to eq(
+              UserSecurityKey.factor_types[:first_factor],
+            )
+            expect(user1.passkey_credential_ids.length).to eq(1)
           end
         end
       end

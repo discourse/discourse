@@ -1,15 +1,16 @@
 import Service from "@ember/service";
 import { tracked } from "@glimmer/tracking";
-
 import {
   currentPanelKey,
   customPanels as panels,
 } from "discourse/lib/sidebar/custom-sections";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 const COMBINED_MODE = "combined";
 const SEPARATED_MODE = "separated";
 const MAIN_PANEL = "main";
 
+@disableImplicitInjections
 export default class SidebarState extends Service {
   @tracked currentPanelKey = currentPanelKey;
   @tracked panels = panels;

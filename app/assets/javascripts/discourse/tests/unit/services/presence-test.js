@@ -7,7 +7,7 @@ import { PresenceChannelNotFound } from "discourse/services/presence";
 import { setTestPresence } from "discourse/lib/user-presence";
 import sinon from "sinon";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 function usersFixture() {

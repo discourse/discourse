@@ -12,7 +12,7 @@ import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import { module, test } from "qunit";
 import domFromString from "discourse-common/lib/dom-from-string";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 function formatMins(mins, opts = {}) {
   const dt = new Date(new Date() - mins * 60 * 1000);

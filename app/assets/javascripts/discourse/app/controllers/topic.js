@@ -11,6 +11,7 @@ import { isEmpty, isPresent } from "@ember/utils";
 import { next, schedule } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import BookmarkModal from "discourse/components/modal/bookmark";
+import ChangePostNoticeModal from "discourse/components/modal/change-post-notice";
 import {
   CLOSE_INITIATED_BY_BUTTON,
   CLOSE_INITIATED_BY_ESC,
@@ -32,7 +33,6 @@ import { escapeExpression, modKeysPressed } from "discourse/lib/utilities";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
-import showModal from "discourse/lib/show-modal";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { BookmarkFormData } from "discourse/lib/bookmark";
 import DeleteTopicConfirmModal from "discourse/components/modal/delete-topic-confirm";
@@ -631,10 +631,6 @@ export default Controller.extend(bufferedProperty("model"), {
 
     // Post related methods
     replyToPost(post) {
-      if (this.currentUser && this.siteSettings.enable_user_tips) {
-        this.currentUser.hideUserTipForever("post_menu");
-      }
-
       const composerController = this.composer;
       const topic = post ? post.get("topic") : this.model;
       const quoteState = this.quoteState;
@@ -1001,15 +997,8 @@ export default Controller.extend(bufferedProperty("model"), {
       this.send("showGrantBadgeModal");
     },
 
-    changeNotice(post) {
-      return new Promise(function (resolve, reject) {
-        const modal = showModal("change-post-notice", { model: post });
-        modal.setProperties({
-          resolve,
-          reject,
-          notice: post.notice ? post.notice.raw : "",
-        });
-      });
+    async changeNotice(post) {
+      await this.modal.show(ChangePostNoticeModal, { model: { post } });
     },
 
     filterParticipant(user) {

@@ -569,8 +569,7 @@ class Topic < ActiveRecord::Base
     topics = topics.limit(opts[:limit]) if opts[:limit]
 
     # Remove category topics
-    category_topic_ids = Category.pluck(:topic_id).compact!
-    topics = topics.where("topics.id NOT IN (?)", category_topic_ids) if category_topic_ids.present?
+    topics = topics.where.not(id: Category.select(:topic_id).where.not(topic_id: nil))
 
     # Remove muted and shared draft categories
     remove_category_ids =
@@ -586,11 +585,14 @@ class Topic < ActiveRecord::Base
         )
     end
     if SiteSetting.digest_suppress_tags.present?
-      topics =
-        topics.joins("LEFT JOIN topic_tags tg ON topics.id = tg.topic_id").where(
-          "tg.tag_id NOT IN (?) OR tg.tag_id IS NULL",
-          SiteSetting.digest_suppress_tags.split("|").map(&:to_i),
-        )
+      tag_ids = Tag.where_name(SiteSetting.digest_suppress_tags.split("|")).pluck(:id)
+      if tag_ids.present?
+        topics =
+          topics.joins("LEFT JOIN topic_tags tg ON topics.id = tg.topic_id").where(
+            "tg.tag_id NOT IN (?) OR tg.tag_id IS NULL",
+            tag_ids,
+          )
+      end
     end
     remove_category_ids << SiteSetting.shared_drafts_category if SiteSetting.shared_drafts_enabled?
     if remove_category_ids.present?

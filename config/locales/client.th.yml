@@ -239,16 +239,9 @@ th:
       our_admins: "แอดมินของเรา"
       our_moderators: "ผู้ดูแลของเรา"
       moderators: "ผู้ดูแล"
-      stat:
-        all_time: "ตลอดเวลา"
-        last_day: "24 ชั่วโมงที่ผ่านมา"
-        last_7_days: "7 วันที่ผ่านมา"
-        last_30_days: "30 วันที่ผ่านมา"
       like_count: "ถูกใจ"
       topic_count: "กระทู้"
       post_count: "โพสต์"
-      active_user_count: "ผู้ใช้ที่ใช้งานอยู่"
-      contact: "ติดต่อเรา"
       contact_info: "ในกรณีที่เกิดเหตุฉุกเฉินหรือประเด็นสำคัญที่ส่งผลต่อเว็บไซต์นี้ กรุณาติดต่อเราที่ %{contact_info}"
     bookmarked:
       title: "บุ๊กมาร์ก"
@@ -1650,6 +1643,7 @@ th:
       options: "ตัวเลือกกระทู้"
       show_links: "แสดงลิงก์ในกระทู้นี้"
       unread_indicator: "ยังไม่มีสมาชิกอ่านโพสต์ล่าสุดของกระทู้นี้"
+      bumped_at: "ล่าสุด: %{date}"
       deleted: "กระทู้ถูกลบ"
       slow_mode_update:
         enable: "เปิดใช้งาน"
@@ -2322,7 +2316,6 @@ th:
       other_tags: "แท็กอื่น"
       selector_all_tags: "แท็กทั้งหมด"
       selector_no_tags: "ไม่มีแท็ก"
-      changed: "เปลี่ยนแท็ก:"
       tags: "แท็ก"
       choose_for_topic: "แท็กทางเลือก"
       info: "ข้อมูล"
@@ -3126,7 +3119,6 @@ th:
             with_post_time: <span class="username">%{username}</span> สำหรับโพสต์ใน %{link} เมื่อ <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> เมื่อ <span class="time">%{time}</span>
         badge_intro:
-          emoji: "อีโมจินักเรียนหญิง"
           what_are_badges_title: "เหรียญคืออะไร"
         mass_award:
           replace_owners: ลบเหรียญจากผู้ใช้ก่อนหน้านี้

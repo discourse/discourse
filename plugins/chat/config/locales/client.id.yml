@@ -23,10 +23,6 @@ id:
           descriptions:
             chat:
               create_message: "Buat pesan obrolan di kanal tertentu"
-    about:
-      chat_messages_count: "Pesan Obrolan"
-      chat_channels_count: "Kanal Obrolan"
-      chat_users_count: "Pengguna Obrolan"
     chat:
       deleted_chat_username: dihapus
       dates:

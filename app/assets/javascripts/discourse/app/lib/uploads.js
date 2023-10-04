@@ -1,7 +1,7 @@
 import I18n from "I18n";
 import deprecated from "discourse-common/lib/deprecated";
 import { isAppleDevice } from "discourse/lib/utilities";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 
 function isGUID(value) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
@@ -12,7 +12,7 @@ function isGUID(value) {
 // This wrapper simplifies unit testing the dialog service
 export const dialog = {
   alert(msg) {
-    const dg = getOwner(this).lookup("service:dialog");
+    const dg = getOwnerWithFallback(this).lookup("service:dialog");
     dg.alert(msg);
   },
 };

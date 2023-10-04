@@ -37,7 +37,7 @@ export default class Section {
   }
 
   get headerActions() {
-    if (!this.section.public || this.currentUser?.staff) {
+    if (!this.section.public || this.currentUser?.admin) {
       return [
         {
           action: () => {

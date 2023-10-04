@@ -10,7 +10,7 @@ import { inject as service } from "@ember/service";
 import { cancel, next } from "@ember/runloop";
 import { resetIdle } from "discourse/lib/desktop-notifications";
 import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import {
   FUTURE,
   PAST,
@@ -177,14 +177,6 @@ export default class ChatThread extends Component {
   }
 
   async fetchMessages(findArgs = {}) {
-    if (this.args.thread.staged) {
-      const message = this.args.thread.originalMessage;
-      message.thread = this.args.thread;
-      message.manager = this.messagesManager;
-      this.messagesManager.addMessages([message]);
-      return;
-    }
-
     if (this.messagesLoader.loading) {
       return;
     }
@@ -326,7 +318,7 @@ export default class ChatThread extends Component {
   // and scrolling; for now it's enough to do it when the thread panel
   // opens/messages are loaded since we have no pagination for threads.
   markThreadAsRead() {
-    if (!this.args.thread || this.args.thread.staged) {
+    if (!this.args.thread) {
       return;
     }
 
@@ -375,13 +367,10 @@ export default class ChatThread extends Component {
         this.args.thread.channel.id,
         {
           message: message.message,
-          in_reply_to_id: message.thread.staged
-            ? message.thread.originalMessage?.id
-            : null,
+          in_reply_to_id: null,
           staged_id: message.id,
           upload_ids: message.uploads.map((upload) => upload.id),
-          thread_id: message.thread.staged ? null : message.thread.id,
-          staged_thread_id: message.thread.staged ? message.thread.id : null,
+          thread_id: message.thread.id,
         }
       );
 

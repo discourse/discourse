@@ -35,8 +35,8 @@ export default DiscourseRoute.extend({
         `/associate/${encodeURIComponent(params.token)}.json`
       );
       showModal("associate-account-confirm", { model });
-    } catch {
-      popupAjaxError;
+    } catch (e) {
+      popupAjaxError(e);
     }
   },
 });

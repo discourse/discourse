@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
+import { extractError } from "discourse/lib/ajax-error";
 
 const DESCRIPTION_MAX_LENGTH = 280;
 
@@ -27,18 +28,16 @@ export default class ChatModalEditChannelDescription extends Component {
   }
 
   @action
-  onSaveChatChannelDescription() {
-    return this.chatApi
-      .updateChannel(this.channel.id, { description: this.editedDescription })
-      .then((result) => {
-        this.channel.description = result.channel.description;
-        this.args.closeModal();
-      })
-      .catch((event) => {
-        if (event.jqXHR?.responseJSON?.errors) {
-          this.flash = event.jqXHR.responseJSON.errors.join("\n");
-        }
+  async onSaveChatChannelDescription() {
+    try {
+      const result = await this.chatApi.updateChannel(this.channel.id, {
+        description: this.editedDescription,
       });
+      this.channel.description = result.channel.description;
+      this.args.closeModal();
+    } catch (error) {
+      this.flash = extractError(error);
+    }
   }
 
   @action

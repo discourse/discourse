@@ -4,9 +4,11 @@ import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse-common/utils/decorators";
 import { cancel } from "@ember/runloop";
 import { tracked } from "@glimmer/tracking";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 const CONNECTIVITY_ERROR_CLASS = "network-disconnected";
 
+@disableImplicitInjections
 export default class NetworkConnectivity extends Service {
   @tracked connected = true;
 

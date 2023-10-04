@@ -1,8 +1,11 @@
 import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import I18n from "I18n";
 import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 
 module("Unit | Utility | i18n", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     this._locale = I18n.locale;
     this._fallbackLocale = I18n.fallbackLocale;

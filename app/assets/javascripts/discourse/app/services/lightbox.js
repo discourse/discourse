@@ -9,14 +9,16 @@ import {
   getSiteThemeColor,
   setSiteThemeColor,
 } from "discourse/lib/lightbox/helpers";
-
 import { bind } from "discourse-common/utils/decorators";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { processHTML } from "discourse/lib/lightbox/process-html";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
+@disableImplicitInjections
 export default class LightboxService extends Service {
   @service appEvents;
   @service site;
+  @service siteSettings;
 
   lightboxIsOpen = false;
   lightboxClickElements = [];

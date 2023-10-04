@@ -1,6 +1,6 @@
 import { module, test } from "qunit";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
 import { helperContext } from "discourse-common/lib/helpers";
 

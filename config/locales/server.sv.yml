@@ -1412,9 +1412,6 @@ sv:
     allow_user_locale: "Tillåt användare att själva välja gränssnittsspråk"
     set_locale_from_accept_language_header: "basera anonyma användares gränssnittsspråk på deras webbläsares språkinställning"
     support_mixed_text_direction: "Stöd blandade vänster till höger- och höger till vänster-textriktningar."
-    min_post_length: "Lägsta tillåtna inläggslängd uttryckt i tecken"
-    min_first_post_length: "Lägsta antal tillåtna tecken i första inlägget (ämnestext)"
-    min_personal_message_post_length: "Lägsta antal tillåtna tecken i inlägg för meddelanden"
     max_post_length: "Högsta tillåtna längd på inlägg uttryckt i tecken"
     topic_featured_link_enabled: "Tillåt att lägga upp en länk med ämnen."
     show_topic_featured_link_in_digest: "Visa den aktuella länken i det sammanfattade e-postmeddelandet."
@@ -1534,7 +1531,6 @@ sv:
     tl2_additional_flags_per_day_multiplier: "Öka gränsen för flaggningar per dag för tl2 (medlem) genom att multiplicera med detta nummer"
     tl3_additional_flags_per_day_multiplier: "Öka gränsen för flaggningar per dag för tl3 (vanlig) genom att multiplicera med detta nummer"
     tl4_additional_flags_per_day_multiplier: "Öka gränsen för flaggningar per dag för tl4 (ledare) genom att multiplicera med detta nummer"
-    num_users_to_silence_new_user: "Om en ny användares inlägg får num_spam_flags_to_silence_new_user skräppost-flaggor från detta antalet olika användare, dölj alla deras inlägg och förhindra framtida inlägg. 0 för att inaktivera."
     num_tl3_flags_to_silence_new_user: "Om en ny användares inlägg får så här många flaggningar från num_tl3_users_to_silence_new_user olika användare med förtroendenivå 3, dölj alla deras inlägg och förhindra framtida inlägg. Ange 0 för att inaktivera."
     num_tl3_users_to_silence_new_user: "Om en ny användares inlägg får num_tl3_flags_to_silence_new_user flaggningar från så här många olika användare med förtroendenivå 3, dölj alla deras inlägg och förhindra framtida inlägg. 0 för att inaktivera."
     notify_mods_when_user_silenced: "Om en användare tystas automatiskt, skicka ett meddelande till alla moderatorer."
@@ -2113,14 +2109,12 @@ sv:
     default_sidebar_switch_panel_position: "Placering av panelknappar för sidofältsomkoppling"
     retain_web_hook_events_period_days: "Antal dagar för att behålla register över webhook-händelsedata."
     retry_web_hook_events: "Försök automatiskt igen för misslyckade händelser för webhooken 4 gånger. Tidsspannet mellan försöken är 1, 5, 25 och 125 minuter."
-    revoke_api_keys_days: "Antal dagar innan en oanvänd API-nyckel automatiskt återkallas (0 för aldrig)"
     allow_user_api_key_scopes: "Lista över samtliga tillåtna användar-API-nycklar"
     min_trust_level_for_user_api_key: |
       Förtroendenivå som krävs för generering av användar-API-nycklar.<br>
       <b>VARNING</b>: Ändring av förtroendenivån kommer att förhindra användare med en lägre förtroendenivå från att logga in via Discourse Hub
     allowed_user_api_auth_redirects: "Tillåten URL för omdirigering efter verifiering av användares API-nycklar. Jokersymbol * kan användas för att matcha vilken del som helst av denna (t.ex. www.exempel.se/*)."
     allowed_user_api_push_urls: "Tillåtna URL:er för serverframstötning till användar-API"
-    expire_user_api_keys_days: "Antal dagar innan en användares API-nyckel automatiskt upphör (0 för aldrig)"
     tagging_enabled: "Vill du aktivera taggar på ämnen?"
     min_trust_to_create_tag: "Lägsta förtroendenivå som krävs för att skapa en tagg."
     max_tags_per_topic: "Högsta antal taggar som kan tillskrivas ett ämne."

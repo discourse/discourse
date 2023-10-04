@@ -589,4 +589,18 @@ describe Chat::Message do
       expect(message.chat_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated
     end
   end
+
+  describe "#url" do
+    it "returns message permalink" do
+      expect(message.url).to eq("/chat/c/-/#{message.chat_channel_id}/#{message.id}")
+    end
+
+    it "returns message permalink when in thread" do
+      thread = Fabricate(:chat_thread)
+      first_message = thread.chat_messages.first
+      expect(first_message.url).to eq(
+        "/chat/c/-/#{first_message.chat_channel_id}/t/#{first_message.thread_id}/#{first_message.id}",
+      )
+    end
+  end
 end

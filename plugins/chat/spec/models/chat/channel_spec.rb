@@ -11,6 +11,14 @@ RSpec.describe Chat::Channel do
   it { is_expected.to validate_length_of(:chatable_type).is_at_most(100) }
   it { is_expected.to validate_length_of(:type).is_at_most(100) }
 
+  describe ".last_message" do
+    context "when there are no last message" do
+      it "returns an instance of NullMessage" do
+        expect(channel.last_message).to be_a(Chat::NullMessage)
+      end
+    end
+  end
+
   describe ".find_by_id_or_slug" do
     subject(:find_channel) { described_class.find_by_id_or_slug(channel_id) }
 

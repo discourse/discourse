@@ -24,10 +24,6 @@ ja:
           descriptions:
             chat:
               create_message: "特定のチャンネルでチャットメッセージを作成します。"
-    about:
-      chat_messages_count: "チャットメッセージ"
-      chat_channels_count: "チャットチャンネル"
-      chat_users_count: "チャットユーザー"
     chat:
       deleted_chat_username: 削除
       dates:

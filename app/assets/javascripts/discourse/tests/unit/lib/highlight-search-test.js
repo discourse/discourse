@@ -1,8 +1,11 @@
-import highlightSearch, { CLASS_NAME } from "discourse/lib/highlight-search";
 import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
+import highlightSearch, { CLASS_NAME } from "discourse/lib/highlight-search";
 import { fixture } from "discourse/tests/helpers/qunit-helpers";
 
-module("Unit | Utility | highlight-search", function () {
+module("Unit | Utility | highlight-search", function (hooks) {
+  setupTest(hooks);
+
   test("highlighting text", function (assert) {
     fixture().innerHTML = `
       <p>This is some text to highlight</p>

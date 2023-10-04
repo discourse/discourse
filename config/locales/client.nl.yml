@@ -287,16 +287,10 @@ nl:
       our_moderators: "Onze moderators"
       moderators: "Moderators"
       stat:
-        all_time: "Sinds het begin"
-        last_day: "Afgelopen 24 uur"
-        last_7_days: "Afgelopen 7 dagen"
-        last_30_days: "Afgelopen 30 dagen"
+        last_day: "24 uur"
       like_count: "Likes"
       topic_count: "Topics"
       post_count: "Berichten"
-      user_count: "Registraties"
-      active_user_count: "Actieve gebruikers"
-      contact: "Contact"
       contact_info: "Neem in het geval van een kritieke kwestie of dringende vraagstukken in verband met deze website contact met ons op via %{contact_info}."
     bookmarked:
       title: "Bladwijzer"
@@ -1314,7 +1308,6 @@ nl:
         success: "(e-mail verzonden)"
         in_progress: "(e-mail verzenden)"
         error: "(fout)"
-        emoji: "slotemoji"
         action: "E-mail voor wachtwoordherstel verzenden"
         set_password: "Wachtwoord instellen"
         choose_new: "Kies een nieuw wachtwoord"
@@ -1915,7 +1908,6 @@ nl:
       link_label: "E-mail mij een aanmeldlink"
       button_label: "met e-mailadres"
       login_link: "Wachtwoord overslaan, e-mail me een aanmeldlink"
-      emoji: "slotemoji"
       complete_username: "Als een account overeenkomt met <b>%{username}</b>, zou je binnen enkele ogenblikken een e-mail met een aanmeldlink moeten ontvangen."
       complete_email: "Als een account overeenkomt met <b>%{email}</b>, zou je binnen enkele ogenblikken een e-mail met een aanmeldlink moeten ontvangen."
       complete_username_found: "We hebben een account gevonden dat overeenkomt met de gebruikersnaam <b>%{username}</b>. Je zou binnen enkele ogenblikken een e-mail met een aanmeldlink moeten ontvangen."
@@ -2004,7 +1996,6 @@ nl:
         security_key: "Beveiligingssleutel gebruiken"
     invites:
       accept_title: "Uitnodiging"
-      emoji: "envelopemoji"
       welcome_to: "Welkom bij %{site_name}!"
       invited_by: "Je bent uitgenodigd door:"
       social_login_available: "Je kunt je ook aanmelden met een sociale-media-account dat dat e-mailadres gebruikt."
@@ -2719,9 +2710,7 @@ nl:
           false { of <a href="{basePath}/latest">bekijk de nieuwste topics</a>}
           other {}
         }
-      bumped_at_title: |
-        Eerste bericht: %{createdAtDate}
-        Geplaatst: %{bumpedAtDate}
+      bumped_at: "Nieuwste: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Blader door alle categorieën</a> of <a href='%{basePath}/latest'>bekijk de nieuwste topics</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Blader door alle categorieën</a>, <a href='%{basePath}/latest'>bekijk de nieuwste topics</a> of zie de top:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Blader door alle tags</a> of <a href='%{basePath}/latest'>bekijk de nieuwste topics</a>."
@@ -3827,7 +3816,6 @@ nl:
       other_tags: "Andere tags"
       selector_all_tags: "alle tags"
       selector_no_tags: "geen tags"
-      changed: "gewijzigde tags:"
       tags: "Tags"
       choose_for_topic: "optionele tags"
       info: "Info"
@@ -4495,7 +4483,6 @@ nl:
           details: "Wanneer een (nieuw) bericht wordt geplaatst, bewerkt, verwijderd of hersteld."
         user_event:
           name: "Gebruikersgebeurtenis"
-          details: "Wanneer een gebruiker zich aanmeldt, zich afmeldt, het e-mailadres bevestigt of wordt gemaakt, goedgekeurd of bijgewerkt."
         group_event:
           name: "Groepsgebeurtenis"
           details: "Wanneer een groep wordt gemaakt, bijgewerkt of verwijderd."
@@ -4671,7 +4658,6 @@ nl:
           theme_name: "Themanaam"
           component_name: "Onderdeelnaam"
           themes_intro: "Selecteer een bestaand of installeer een nieuw thema om te beginnen"
-          themes_intro_emoji: "kunstenares-emoji"
           beginners_guide_title: "Beginnersgids voor het gebruik van Discourse-thema's"
           developers_guide_title: "Ontwikkelaarsgids voor Discourse-thema's"
           browse_themes: "Communitythema's bekijken"
@@ -5774,7 +5760,6 @@ nl:
             with_time: <span class="username">%{username}</span> om <span class="time">%{time}</span>
         badge_intro:
           title: "Selecteer een bestaande badge of maak een nieuwe om te beginnen"
-          emoji: "studente-emoji"
           what_are_badges_title: "Wat zijn badges?"
           badge_query_examples_title: "Voorbeelden van badgequery's"
         mass_award:
