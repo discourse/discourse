@@ -652,6 +652,22 @@ Category.reopenClass({
 
     return data.sortBy("read_restricted");
   },
+
+  async asyncSearch(term, opts) {
+    opts ||= {};
+
+    const result = await ajax("/categories/search", {
+      data: {
+        term,
+        parent_category_id: opts.parentCategoryId,
+        limit: opts.limit,
+      },
+    });
+
+    return result["categories"].map((category) =>
+      Site.current().updateCategory(category)
+    );
+  },
 });
 
 export default Category;

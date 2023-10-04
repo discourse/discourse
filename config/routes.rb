@@ -1155,6 +1155,7 @@ Discourse::Application.routes.draw do
 
     resources :categories, except: %i[show new edit]
     post "categories/reorder" => "categories#reorder"
+    get "categories/search" => "categories#search"
 
     scope path: "category/:category_id" do
       post "/move" => "categories#move"

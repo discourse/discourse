@@ -132,12 +132,14 @@ export default ComboBoxComponent.extend({
     }
   ),
 
-  search(filter) {
+  async search(filter) {
+    let opts = {
+      parentCategoryId: this.options.parentCategory?.id,
+    };
     if (filter) {
-      let opts = {
-        parentCategoryId: this.options.parentCategory?.id,
-      };
-      let results = Category.search(filter, opts);
+      let results = this.siteSettings.lazy_load_categories
+        ? await Category.asyncSearch(filter, opts)
+        : Category.search(filter, opts);
       results = this._filterUncategorized(results).sort((a, b) => {
         if (a.parent_category_id && !b.parent_category_id) {
           return 1;
@@ -149,7 +151,9 @@ export default ComboBoxComponent.extend({
       });
       return results;
     } else {
-      return this._filterUncategorized(this.content);
+      return this.siteSettings.lazy_load_categories
+        ? await Category.asyncSearch(filter, opts)
+        : this._filterUncategorized(this.content);
     }
   },
 

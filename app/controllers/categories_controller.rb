@@ -19,6 +19,8 @@ class CategoriesController < ApplicationController
 
   SYMMETRICAL_CATEGORIES_TO_TOPICS_FACTOR = 1.5
   MIN_CATEGORIES_TOPICS = 5
+  DEFAULT_CATEGORIES_LIMIT = 5
+  MAX_CATEGORIES_LIMIT = 25
 
   def redirect
     return if handle_permalink("/category/#{params[:path]}")
@@ -295,6 +297,31 @@ class CategoriesController < ApplicationController
       end
 
     render json: success_json.merge(groups: groups || [])
+  end
+
+  def search
+    term = params[:term].to_s.strip
+    parent_category_id = params[:parent_category_id].to_i if params[:parent_category_id].present?
+    limit = params[:limit].to_i.clamp(1, MAX_CATEGORIES_LIMIT) if params[:limit].present?
+
+    categories = Category.secured(guardian)
+
+    categories =
+      categories
+        .includes(:category_search_data)
+        .references(:category_search_data)
+        .where(
+          "category_search_data.search_data @@ #{Search.ts_query(term: term)}",
+        ) if term.present?
+
+    categories =
+      categories.where(parent_category_id: parent_category_id) if parent_category_id.present?
+
+    categories = categories.limit(limit || DEFAULT_CATEGORIES_LIMIT)
+
+    categorie = categories.order(:read_restricted)
+
+    render json: categories, each_serializer: SiteCategorySerializer
   end
 
   private
