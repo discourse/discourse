@@ -6,8 +6,8 @@ import Bookmark from "discourse/models/bookmark";
 import I18n from "I18n";
 import { generateCookFunction, parseMentions } from "discourse/lib/text";
 import transformAutolinks from "discourse/plugins/chat/discourse/lib/transform-auto-links";
-import { getOwner } from "@ember/application";
 import discourseLater from "discourse-common/lib/later";
+import { inject as service } from "@ember/service";
 
 export default class ChatMessage {
   static cookFunction = null;
@@ -56,6 +56,10 @@ export default class ChatMessage {
   @tracked _cooked;
   @tracked _thread;
 
+  @service site;
+  @service siteSettings;
+  @service usersApi;
+
   constructor(channel, args = {}) {
     this.id = args.id;
     this.channel = channel;
@@ -96,10 +100,6 @@ export default class ChatMessage {
     if (args.thread) {
       this.thread = args.thread;
     }
-
-    this.site = getOwner(this).lookup("service:site");
-    this.siteSettings = getOwner(this).lookup("service:site-settings");
-    this.usersApi = getOwner(this).lookup("service:usersApi");
   }
 
   get persisted() {
