@@ -35,13 +35,11 @@
         @showDescription={{@showStatusDescription}}
       />
     {{/if}}
-    <span>
-      <PluginOutlet
-        @name="after-user-name"
-        @connectorTagName="span"
-        @outletArgs={{hash user=this.user}}
-      />
-    </span>
+    <PluginOutlet
+      @name="after-user-name"
+      @connectorTagName="span"
+      @outletArgs={{hash user=this.user}}
+    />
   </div>
   <div class="title">{{@user.title}}</div>
   {{#if (has-block)}}
