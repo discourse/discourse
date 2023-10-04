@@ -30,6 +30,7 @@ const SiteHeaderComponent = MountWidget.extend(
     _topic: null,
     _itsatrap: null,
     _applicationElement: null,
+    _MAX_ANIMATION_TIME: 200,
 
     @observes(
       "currentUser.unread_notifications",
@@ -57,7 +58,7 @@ const SiteHeaderComponent = MountWidget.extend(
       }
     },
 
-    _animateOpening(panel) {
+    _animateOpening(event, panel) {
       let waiter;
       if (DEBUG && isTesting()) {
         waiter = () => false;
@@ -65,7 +66,7 @@ const SiteHeaderComponent = MountWidget.extend(
       }
 
       window.requestAnimationFrame(() => {
-        this._setAnimateOpeningProperties(panel);
+        this._setAnimateOpeningProperties(event, panel);
 
         if (DEBUG && isTesting()) {
           unregisterWaiter(waiter);
@@ -73,39 +74,71 @@ const SiteHeaderComponent = MountWidget.extend(
       });
     },
 
-    _setAnimateOpeningProperties(panel) {
+    _setAnimateOpeningProperties(event, panel) {
       const headerCloak = document.querySelector(".header-cloak");
       panel.classList.add("animate");
       headerCloak.classList.add("animate");
+      document.body.style.setProperty("--swipe-timing", "ease-out");
+      let durationMs = this._MAX_ANIMATION_TIME;
+      if (event && this.pxClosed > 0) {
+        const distancePx = this.pxClosed;
+        durationMs = Math.min(
+          distancePx / Math.abs(event.velocityX),
+          this._MAX_ANIMATION_TIME
+        );
+        document.body.style.setProperty(
+          "--swipe-duration",
+          `${durationMs / 1000}s`
+        );
+      }
       this._scheduledRemoveAnimate = discourseLater(() => {
         panel.classList.remove("animate");
         headerCloak.classList.remove("animate");
-      }, 200);
+        document.body.style.removeProperty("--swipe-timing");
+        document.body.style.removeProperty("--swipe-duration");
+      }, durationMs);
       panel.style["transform"] = `translate3d(0, 0, 0)`;
       headerCloak.style.setProperty("--opacity", 0.5);
       this._panMenuOffset = 0;
+      this.pxClosed = null;
     },
 
-    _animateClosing(panel, menuOrigin) {
+    _animateClosing(event, panel, menuOrigin) {
       this._animate = true;
       const headerCloak = document.querySelector(".header-cloak");
       panel.classList.add("animate");
       headerCloak.classList.add("animate");
+      let durationMs = this._MAX_ANIMATION_TIME;
+      const offsetWidth = panel.offsetWidth;
+      if (event && this.pxClosed > 0) {
+        const distancePx = offsetWidth - this.pxClosed;
+        durationMs = Math.min(
+          distancePx / Math.abs(event.velocityX),
+          this._MAX_ANIMATION_TIME
+        );
+        document.body.style.setProperty(
+          "--swipe-duration",
+          `${durationMs / 1000}s`
+        );
+      }
+
       if (menuOrigin === "left") {
-        panel.style["transform"] = `translate3d(-100vw, 0, 0)`;
+        panel.style["transform"] = `translate3d(-${offsetWidth}px, 0, 0)`;
       } else {
-        panel.style["transform"] = `translate3d(100vw, 0, 0)`;
+        panel.style["transform"] = `translate3d(${offsetWidth}px, 0, 0)`;
       }
 
       headerCloak.style.setProperty("--opacity", 0);
+      this.pxClosed = null;
       this._scheduledRemoveAnimate = discourseLater(() => {
         panel.classList.remove("animate");
         headerCloak.classList.remove("animate");
         schedule("afterRender", () => {
           this.eventDispatched("dom:clean", "header");
           this._panMenuOffset = 0;
+          document.body.style.removeProperty("--swipe-duration");
         });
-      }, 200);
+      }, durationMs);
     },
 
     _isRTL() {
@@ -122,9 +155,9 @@ const SiteHeaderComponent = MountWidget.extend(
       menuPanels.forEach((panel) => {
         panel.classList.remove("moving");
         if (this._shouldMenuClose(event, menuOrigin)) {
-          this._animateClosing(panel, menuOrigin);
+          this._animateClosing(event, panel, menuOrigin);
         } else {
-          this._animateOpening(panel);
+          this._animateOpening(event, panel);
         }
       });
     },
@@ -190,6 +223,7 @@ const SiteHeaderComponent = MountWidget.extend(
       const headerCloak = this.cloakElement;
       if (this._panMenuOrigin === "right") {
         const pxClosed = Math.min(0, -e.deltaX + this._panMenuOffset);
+        this.pxClosed = Math.abs(pxClosed);
         panel.style["transform"] = `translate3d(${-pxClosed}px, 0, 0)`;
         headerCloak.style.setProperty(
           "--opacity",
@@ -197,6 +231,7 @@ const SiteHeaderComponent = MountWidget.extend(
         );
       } else {
         const pxClosed = Math.min(0, e.deltaX + this._panMenuOffset);
+        this.pxClosed = Math.abs(pxClosed);
         panel.style["transform"] = `translate3d(${pxClosed}px, 0, 0)`;
         headerCloak.style.setProperty(
           "--opacity",
@@ -403,7 +438,7 @@ const SiteHeaderComponent = MountWidget.extend(
           headerCloak.style.display = "block";
         }
         if (this._animate) {
-          this._animateOpening(panel);
+          this._animateOpening(null, panel);
         }
         this._animate = false;
       });
