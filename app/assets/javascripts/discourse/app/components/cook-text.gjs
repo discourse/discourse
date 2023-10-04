@@ -16,6 +16,7 @@ export default class CookText extends Component {
       {{didUpdate this.buildOneboxes this.cooked}}
       {{didUpdate this.resolveShortUrls this.cooked}}
       {{didUpdate this.calculateOffsetHeight this.cooked}}
+      {{didUpdate this.loadCookedText @rawText}}
     >
       {{this.cooked}}
     </div>
@@ -29,6 +30,7 @@ export default class CookText extends Component {
     this.loadCookedText();
   }
 
+  @action
   async loadCookedText() {
     const cooked = await cook(this.args.rawText);
     this.cooked = cooked;

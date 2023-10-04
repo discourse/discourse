@@ -16,7 +16,7 @@ async function prepare(raw) {
   const model = Post.create({ id: 42, can_edit: true });
   const decoratorHelper = { widget, getModel: () => model };
 
-  const $elem = $(`<div>${cooked.string}</div>`);
+  const $elem = $(`<div>${cooked.toString()}</div>`);
   checklistSyntax($elem[0], decoratorHelper);
 
   currentRaw = raw;

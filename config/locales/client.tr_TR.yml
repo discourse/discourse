@@ -288,15 +288,15 @@ tr_TR:
       moderators: "Moderatörler"
       stat:
         all_time: "Tüm Zamanlar"
-        last_day: "Son 24 saat"
-        last_7_days: "Son 7 gün"
-        last_30_days: "Son 30 gün"
+        last_day: "24 saat"
+        last_7_days: "7 gün"
+        last_30_days: "30 gün"
       like_count: "Beğeniler"
       topic_count: "Konular"
       post_count: "Gönderiler"
-      user_count: "Kaydolmalar"
-      active_user_count: "Aktif Kullanıcılar"
-      contact: "İletişim"
+      user_count: "Yeni kayıtlar"
+      active_user_count: "Aktif kullanıcılar"
+      contact: "Bize ulaşın"
       contact_info: "Bu siteyi etkileyen ciddi bir sorun veya acil bir durum olduğunda, lütfen %{contact_info} adresi üzerinden bizimle iletişime geçin."
     bookmarked:
       title: "Yer İmi"
@@ -993,6 +993,7 @@ tr_TR:
     user:
       said: "%{username}:"
       profile: "Profil"
+      profile_possessive: "%{username} adlı kullanıcının profili"
       mute: "Sessiz"
       edit: "Tercihleri Düzenle"
       download_archive:
@@ -1314,7 +1315,6 @@ tr_TR:
         success: "(e-posta gönderildi)"
         in_progress: "(e-posta gönderiliyor)"
         error: "(hata)"
-        emoji: "emoji'yi kilitle"
         action: "Şifre Sıfırlama E-postası Gönder"
         set_password: "Şifre Belirle"
         choose_new: "Yeni bir şifre seç"
@@ -1896,6 +1896,7 @@ tr_TR:
       title: "Hesabınızı oluşturun"
       failed: "Bir şeyler ters gitti, belki de bu e-posta zaten kayıtlıdır, şifremi unuttum bağlantısını deneyin"
       associate: "Zaten bir hesabınız var mı? %{provider} hesabınızı bağlamak için <a href='%{associate_link}'>giriş yapın</a>."
+      activation_title: "Hesabınızı etkinleştirin"
     forgot_password:
       title: "Şifre Sıfırlama"
       action: "Şifremi unuttum"
@@ -1915,7 +1916,6 @@ tr_TR:
       link_label: "Bana e-postayla bir giriş bağlantısı gönder"
       button_label: "e-posta ile"
       login_link: "Şifreyi atla; bana e-posta ile bir giriş bağlantısı gönder"
-      emoji: "emoji'yi kilitle"
       complete_username: "<b>%{username}</b> kullanıcı adı bir hesap ile eşleşirse kısa bir süre içinde giriş bağlantısına sahip bir e-posta alırsınız."
       complete_email: "<b>%{email}</b> e-posta adresi bir hesap ile eşleşirse kısa bir süre içinde giriş bağlantısına sahip bir e-posta alırsınız."
       complete_username_found: "<b>%{username}</b> kullanıcı adıyla eşleşen bir hesap bulduk, kısa bir süre içerisinde giriş bağlantısına sahip bir e-posta alacaksınız."
@@ -2004,7 +2004,6 @@ tr_TR:
         security_key: "Bunun yerine bir güvenlik anahtarı kullanın"
     invites:
       accept_title: "Davet"
-      emoji: "zarf emoji'si"
       welcome_to: "%{site_name}'a hoş geldiniz!"
       invited_by: "Davet gönderen:"
       social_login_available: "Ayrıca bu e-posta adresini kullanan tüm sosyal ağ giriş bilgileriyle oturum açabileceksiniz."
@@ -2727,9 +2726,8 @@ tr_TR:
           false { veya <a href="{basePath}/latest">en son konuları görüntüleyin</a>}
           other {}
         }
-      bumped_at_title: |
-        Birinci gönderi: %{createdAtDate}
-        Gönderildi: %{bumpedAtDate}
+      created_at: "Oluşturulduğu tarih: %{date}"
+      bumped_at: "En Son: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Tüm kategorilere göz atın</a> veya <a href='%{basePath}/latest'>en son konuları görüntüleyin</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Tüm kategorilere göz atın</a>, <a href='%{basePath}/latest'>en son konuları görüntüleyin</a> veya en üste bakın:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Tüm etiketlere göz atın</a> veya <a href='%{basePath}/latest'>en son konuları görüntüleyin</a>."
@@ -3556,6 +3554,7 @@ tr_TR:
         med {çok yüksek beğeni/gönderi oranına sahip}
         high {aşırı derecede yüksek beğeni/gönderi oranına sahip}
         other {}}
+    latest_poster_link: "%{username}'in profili, son yazan"
     original_post: "Orijinal Gönderi"
     views: "Görüntüleme"
     sr_views: "Görüntülemeye göre sırala"
@@ -3840,7 +3839,6 @@ tr_TR:
       other_tags: "Diğer Etiketler"
       selector_all_tags: "tüm etiketler"
       selector_no_tags: "etiket yok"
-      changed: "değişen etiketler:"
       tags: "Etiketler"
       choose_for_topic: "isteğe bağlı etiketler"
       info: "Bilgi"
@@ -4254,6 +4252,7 @@ tr_TR:
         too_many_requests: Bu eylemi birçok kez gerçekleştirdiniz. Tekrar denemeden önce lütfen bekleyin.
         not_found_error: Üzgünüz, bu rapor mevcut değil
         filter_reports: Raporları filtrele
+        custom_date_range: Özel tarih aralığı
         reports:
           trend_title: "%{percent} değişiklik. Şu anda %{current}, önceki periyotta %{prev} idi."
           today: "Bugün"
@@ -4425,6 +4424,11 @@ tr_TR:
               list: Son gönderileri ve özel gönderileri listeleyin. RSS de desteklenir.
             tags:
               list: Etiketleri listeleyin.
+            tag_groups:
+              list: Etiket gruplarının bir listesini alın.
+              show: Id ile bir etiket grubu alın.
+              create: Bir etiket grubu oluşturur.
+              update: Id ile belirtilen bir etiket grubunu günceller.
             categories:
               list: Kategorilerin bir listesini alın.
               show: Kimliğe göre tek bir kategori alın.
@@ -4508,7 +4512,6 @@ tr_TR:
           details: "Yeni bir yanıt olduğunda, düzenlendiğinde, silindiğinde veya kurtarıldığında."
         user_event:
           name: "Kullanıcı Olayı"
-          details: "Bir kullanıcı giriş yaptığında, çıkış yaptığında, e-postasını onayladığında, oluşturulduğunda, onaylandığında veya güncellendiğinde."
         group_event:
           name: "Grup Olayı"
           details: "Bir grup oluşturulduğunda, güncellendiğinde veya yok edildiğinde."
@@ -4686,7 +4689,6 @@ tr_TR:
           theme_name: "Tema adı"
           component_name: "Bileşen adı"
           themes_intro: "Başlamak için mevcut bir tema seçin veya yeni bir tema\nyükleyin"
-          themes_intro_emoji: "kadın sanatçı emojisi"
           beginners_guide_title: "Yeni Başlayanlar İçin Discourse Temaları kılavuzu"
           developers_guide_title: "Discourse Temaları için geliştirici kılavuzu"
           browse_themes: "Topluluk temalarına göz atın"
@@ -5642,6 +5644,7 @@ tr_TR:
         show_outdated: "Yalnızca eski/geçersiz olanları göster"
         locale: "Dil:"
         more_than_50_results: "50'den fazla sonuç var. Lütfen aramanızı daraltın."
+        no_results: "Eşleşen site metni yok"
         interpolation_keys: "Mevcut enterpolasyon tuşları:"
         outdated:
           title: "Bu çeviri güncel değil"
@@ -5790,7 +5793,6 @@ tr_TR:
             with_time: <span class="username">%{username}</span>, <span class="time">%{time}</span>
         badge_intro:
           title: "Başlamak için var olan bir rozeti seçin veya yeni bir tane oluşturun"
-          emoji: "kadın öğrenci emoji'si"
           what_are_badges_title: "Rozet nedir?"
           badge_query_examples_title: "Rozet sorgusu örnekleri"
         mass_award:

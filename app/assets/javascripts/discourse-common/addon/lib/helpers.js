@@ -82,7 +82,23 @@ function resolveParams(ctx, options) {
   return params;
 }
 
+/**
+ * Register a helper for Ember and raw-hbs. This exists for
+ * legacy reasons, and should be avoided in new code. Instead, you should
+ * do `export default ...` from a `helpers/*.js` file.
+ */
 export function registerUnbound(name, fn) {
+  _helpers[name] = Helper.extend({
+    compute: (params, args) => fn(...params, args),
+  });
+
+  registerRawHelper(name, fn);
+}
+
+/**
+ * Register a helper for raw-hbs only
+ */
+export function registerRawHelper(name, fn) {
   const func = function (...args) {
     const options = args.pop();
     const properties = args;
@@ -99,8 +115,5 @@ export function registerUnbound(name, fn) {
     return fn.call(this, ...properties, resolveParams(this, options));
   };
 
-  _helpers[name] = Helper.extend({
-    compute: (params, args) => fn(...params, args),
-  });
   RawHandlebars.registerHelper(name, func);
 }

@@ -344,7 +344,7 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:id])
     guardian.ensure_can_edit!(topic)
 
-    category = Category.where(id: params[:category_id].to_i).first
+    category = Category.find_by(id: params[:category_id].to_i)
     guardian.ensure_can_publish_topic!(topic, category)
 
     row_count = SharedDraft.where(topic_id: topic.id).update_all(category_id: category.id)

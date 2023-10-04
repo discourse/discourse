@@ -1,7 +1,10 @@
 import { module, test } from "qunit";
+import { setupTest } from "ember-qunit";
 import { cook, excerpt, parseAsync, parseMentions } from "discourse/lib/text";
 
-module("Unit | Utility | text", function () {
+module("Unit | Utility | text", function (hooks) {
+  setupTest(hooks);
+
   test("parseAsync", async function (assert) {
     await parseAsync("**test**").then((tokens) => {
       assert.strictEqual(
@@ -36,7 +39,9 @@ module("Unit | Utility | text", function () {
   });
 });
 
-module("Unit | Utility | text | parseMentions", function () {
+module("Unit | Utility | text | parseMentions", function (hooks) {
+  setupTest(hooks);
+
   test("parses mentions from markdown", async function (assert) {
     const markdown = "Hey @user1, @user2, @group1, @group2, @here, @all";
     const mentions = await parseMentions(markdown);

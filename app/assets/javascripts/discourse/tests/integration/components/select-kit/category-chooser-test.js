@@ -4,7 +4,7 @@ import { render } from "@ember/test-helpers";
 import I18n from "I18n";
 import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 module(
   "Integration | Component | select-kit/category-chooser",

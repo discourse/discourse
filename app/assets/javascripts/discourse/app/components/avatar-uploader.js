@@ -2,6 +2,8 @@ import Component from "@ember/component";
 import { isBlank } from "@ember/utils";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import discourseComputed from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
+import I18n from "I18n";
 
 export default Component.extend(UppyUploadMixin, {
   type: "avatar",
@@ -30,5 +32,17 @@ export default Component.extend(UppyUploadMixin, {
   @discourseComputed("user_id")
   data(user_id) {
     return { user_id };
+  },
+
+  @discourseComputed("uploading", "uploadProgress")
+  uploadLabel() {
+    return this.uploading
+      ? `${I18n.t("uploading")} ${this.uploadProgress}%`
+      : I18n.t("upload");
+  },
+
+  @action
+  chooseImage() {
+    this.fileInputEl.click();
   },
 });

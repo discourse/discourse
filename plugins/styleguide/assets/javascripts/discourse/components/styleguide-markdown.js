@@ -6,6 +6,8 @@ export default Component.extend({
     this._super(...arguments);
 
     const contents = $(this.element).html();
-    cook(contents).then((cooked) => $(this.element).html(cooked.string));
+    cook(contents).then((cooked) =>
+      $(this.element).html(cooked.toString())
+    );
   },
 });

@@ -24,10 +24,6 @@ da:
           descriptions:
             chat:
               create_message: "Opret en chatbesked i en angivet kanal."
-    about:
-      chat_messages_count: "Chatbeskeder"
-      chat_channels_count: "Chatkanaler"
-      chat_users_count: "Chatbrugere"
     chat:
       deleted_chat_username: slettet
       dates:

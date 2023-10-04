@@ -6,7 +6,7 @@ import { cancel, schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import discourseLater from "discourse-common/lib/later";
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
@@ -34,7 +34,6 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import ChatOnLongPress from "discourse/plugins/chat/discourse/modifiers/chat/on-long-press";
 
 let _chatMessageDecorators = [];
-let _tippyInstances = [];
 
 export function addChatMessageDecorator(decorator) {
   _chatMessageDecorators.push(decorator);
@@ -85,6 +84,7 @@ export default class ChatMessage extends Component {
         {{on "mouseenter" this.onMouseEnter passive=true}}
         {{on "mouseleave" this.onMouseLeave passive=true}}
         {{on "mousemove" this.onMouseMove passive=true}}
+        {{on "click" this.toggleCheckIfPossible passive=true}}
         {{ChatOnLongPress
           this.onLongPressStart
           this.onLongPressEnd
@@ -194,6 +194,7 @@ export default class ChatMessage extends Component {
   @service chatThreadPane;
   @service chatChannelsManager;
   @service router;
+  @service toasts;
 
   @tracked isActive = false;
 
@@ -280,9 +281,26 @@ export default class ChatMessage extends Component {
   }
 
   @action
+  toggleCheckIfPossible(event) {
+    if (!this.pane.selectingMessages) {
+      return;
+    }
+
+    if (event.shiftKey) {
+      this.messageInteractor.bulkSelect(!this.args.message.selected);
+      return;
+    }
+
+    this.messageInteractor.select(!this.args.message.selected);
+  }
+
+  @action
   toggleChecked(event) {
+    event.stopPropagation();
+
     if (event.shiftKey) {
       this.messageInteractor.bulkSelect(event.target.checked);
+      return;
     }
 
     this.messageInteractor.select(event.target.checked);
@@ -297,13 +315,6 @@ export default class ChatMessage extends Component {
     this.#teardownMentionedUsers();
   }
 
-  #destroyTippyInstances() {
-    _tippyInstances.forEach((instance) => {
-      instance.destroy();
-    });
-    _tippyInstances = [];
-  }
-
   @action
   refreshStatusOnMentions() {
     schedule("afterRender", () => {
@@ -314,7 +325,7 @@ export default class ChatMessage extends Component {
         );
 
         mentions.forEach((mention) => {
-          updateUserStatusOnMention(mention, user.status, _tippyInstances);
+          updateUserStatusOnMention(getOwner(this), mention, user.status);
         });
       });
     });
@@ -460,7 +471,7 @@ export default class ChatMessage extends Component {
 
   @action
   onLongPressStart(element, event) {
-    if (!this.args.message.expanded) {
+    if (!this.args.message.expanded || !this.args.message.persisted) {
       return;
     }
 
@@ -596,6 +607,5 @@ export default class ChatMessage extends Component {
       user.stopTrackingStatus();
       user.off("status-changed", this, "refreshStatusOnMentions");
     });
-    this.#destroyTippyInstances();
   }
 }

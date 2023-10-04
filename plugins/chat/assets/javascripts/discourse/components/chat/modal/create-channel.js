@@ -9,6 +9,7 @@ import { inject as service } from "@ember/service";
 import { isBlank, isPresent } from "@ember/utils";
 import { htmlSafe } from "@ember/template";
 import { tracked } from "@glimmer/tracking";
+import { extractError } from "discourse/lib/ajax-error";
 
 const DEFAULT_HINT = htmlSafe(
   I18n.t("chat.create_channel.choose_category.default_hint", {
@@ -108,17 +109,16 @@ export default class ChatModalCreateChannel extends Component {
     }
   }
 
-  #createChannel(data) {
-    return this.chatApi
-      .createChannel(data)
-      .then((channel) => {
-        this.args.closeModal();
-        this.chatChannelsManager.follow(channel);
-        this.router.transitionTo("chat.channel", ...channel.routeModels);
-      })
-      .catch((e) => {
-        this.flash = e.jqXHR.responseJSON.errors[0];
-      });
+  async #createChannel(data) {
+    try {
+      const channel = await this.chatApi.createChannel(data);
+
+      this.args.closeModal();
+      this.chatChannelsManager.follow(channel);
+      this.router.transitionTo("chat.channel", ...channel.routeModels);
+    } catch (e) {
+      this.flash = extractError(e);
+    }
   }
 
   #buildCategorySlug(category) {

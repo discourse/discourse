@@ -4,7 +4,7 @@ import Post from "discourse/models/post";
 import User from "discourse/models/user";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import sinon from "sinon";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
 
 function buildStream(id, stream) {

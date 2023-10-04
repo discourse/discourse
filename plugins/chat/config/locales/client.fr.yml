@@ -24,10 +24,6 @@ fr:
           descriptions:
             chat:
               create_message: "Créez un message instantané dans un canal spécifié."
-    about:
-      chat_messages_count: "Messages instantanés"
-      chat_channels_count: "Canaux de discussion"
-      chat_users_count: "Utilisateurs de la discussion"
     chat:
       deleted_chat_username: supprimé
       dates:

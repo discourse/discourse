@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 export default Component.extend({
   classNameBindings: [":composer-popup", "message.extraClass"],

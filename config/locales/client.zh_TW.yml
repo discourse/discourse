@@ -249,16 +249,10 @@ zh_TW:
       our_moderators: "我們的版主"
       moderators: "板主"
       stat:
-        all_time: "所有時間"
-        last_day: "過去 24 小時"
-        last_7_days: "過去 7 天"
-        last_30_days: "過去 30 天"
+        last_day: "24 小時"
       like_count: "讚"
       topic_count: "話題"
       post_count: "貼文"
-      user_count: "註冊"
-      active_user_count: "活躍使用者"
-      contact: "聯絡我們"
       contact_info: "若有重大問題或關係到網站的緊急時間，請透過 %{contact_info} 聯絡我們"
     bookmarked:
       title: "書籤"
@@ -1939,6 +1933,7 @@ zh_TW:
       back_to_list: "回到話題列表"
       options: "話題選項"
       show_links: "在話題裡顯示連結"
+      bumped_at: "最新：%{date}"
       suggest_create_topic: 準備好 <a href>開始新的對話了嗎？</a>
       deleted: "此話題已被刪除"
       slow_mode_update:
@@ -2755,7 +2750,6 @@ zh_TW:
       other_tags: "其他標記"
       selector_all_tags: "所有標籤"
       selector_no_tags: "無標記"
-      changed: "標籤被修改："
       tags: "標記"
       choose_for_topic: "可選標籤"
       info: "資訊"

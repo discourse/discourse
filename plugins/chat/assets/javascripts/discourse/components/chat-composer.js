@@ -6,7 +6,7 @@ import { cancel, next } from "@ember/runloop";
 import { cloneJSON } from "discourse-common/lib/object";
 import { chatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import TextareaInteractor from "discourse/plugins/chat/discourse/lib/textarea-interactor";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import userSearch from "discourse/lib/user-search";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
@@ -17,7 +17,6 @@ import { translations } from "pretty-text/emoji/data";
 import { setupHashtagAutocomplete } from "discourse/lib/hashtag-autocomplete";
 import { isPresent } from "@ember/utils";
 import { Promise } from "rsvp";
-import User from "discourse/models/user";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import {
   destroyUserStatuses,
@@ -31,6 +30,7 @@ export default class ChatComposer extends Component {
   @service capabilities;
   @service site;
   @service siteSettings;
+  @service store;
   @service chat;
   @service chatComposerPresenceManager;
   @service chatComposerWarningsTracker;
@@ -397,7 +397,7 @@ export default class ChatComposer extends Component {
   }
 
   #addMentionedUser(userData) {
-    const user = User.create(userData);
+    const user = this.store.createRecord("user", userData);
     this.currentMessage.mentionedUsers.set(user.id, user);
   }
 
@@ -430,7 +430,7 @@ export default class ChatComposer extends Component {
                 user.cssClasses = "is-online";
               }
             });
-            initUserStatusHtml(result.users);
+            initUserStatusHtml(getOwner(this), result.users);
           }
           return result;
         });

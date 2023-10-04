@@ -25,10 +25,14 @@ tr_TR:
           descriptions:
             chat:
               create_message: "Belirtilen kanalda bir sohbet mesajı oluşturun."
+      web_hooks:
+        chat_message_event:
+          name: "Sohbet mesajı etkinliği"
+          details: "Bir sohbet mesajı oluşturulduğunda, düzenlendiğinde, çöpe atıldığında veya geri yüklendiğinde."
     about:
-      chat_messages_count: "Sohbet Mesajları"
-      chat_channels_count: "Sohbet Kanalları"
-      chat_users_count: "Sohbet Kullanıcıları"
+      chat_messages_count: "Sohbet mesajları"
+      chat_channels_count: "Sohbet kanalları"
+      chat_users_count: "Sohbet kullanıcıları"
     chat:
       deleted_chat_username: silindi
       dates:

@@ -349,16 +349,10 @@ ru:
       our_moderators: "Наши модераторы"
       moderators: "Модераторы"
       stat:
-        all_time: "За всё время"
-        last_day: "За последние 24 часа"
-        last_7_days: "За последние 7 дней"
-        last_30_days: "За последние 30 дней"
+        last_day: "24 часа"
       like_count: "Лайки"
       topic_count: "Темы"
       post_count: "Сообщения"
-      user_count: "Регистрации"
-      active_user_count: "Активные пользователи"
-      contact: "Контакты"
       contact_info: "В случае возникновения критической ошибки или срочного вопроса, касающегося этого сайта, свяжитесь с нами по адресу %{contact_info}."
     bookmarked:
       title: "Закладки"
@@ -1460,7 +1454,6 @@ ru:
         success: "(письмо отправлено)"
         in_progress: "(отправка письма)"
         error: "(ошибка)"
-        emoji: "эмодзи «замок»"
         action: "Отправить письмо для сброса пароля"
         set_password: "Установить пароль"
         choose_new: "Введите новый пароль"
@@ -2091,7 +2084,6 @@ ru:
       link_label: "Пришлите мне ссылку для входа"
       button_label: "с помощью эл. почты"
       login_link: "Пропустить пароль; выслать мне ссылку для входа"
-      emoji: "эмодзи «замок»"
       complete_username: "Если аккаунт соответствует имени пользователя <b>%{username}</b>, вы должны в ближайшее время получить электронное письмо со ссылкой для входа в систему."
       complete_email: "Если аккаунт соответствует <b>%{email}</b>, вы должны в ближайшее время получить электронное письмо со ссылкой для входа в систему."
       complete_username_found: "Мы нашли аккаунт, который соответствует имени пользователя <b>%{username}</b>, в ближайшее время вы получите электронное письмо со ссылкой для входа."
@@ -2180,7 +2172,6 @@ ru:
         security_key: "Использовать электронный ключ"
     invites:
       accept_title: "Приглашение"
-      emoji: "эмодзи «конверт»"
       welcome_to: "Добро пожаловать на сайт %{site_name}!"
       invited_by: "Вы были приглашены пользователем"
       social_login_available: "Вы также сможете входить через социальные сети, используя этот адрес электронной почты."
@@ -2995,9 +2986,7 @@ ru:
           false { вы также можете <a href="{basePath}/latest">просмотреть последние темы</a>}
           other {}
         }
-      bumped_at_title: |
-        Первое сообщение: %{createdAtDate}
-        Последнее: %{bumpedAtDate}
+      bumped_at: "Последняя: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Просмотрите все категории</a> или <a href='%{basePath}/latest'>ознакомьтесь с последними темами</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Просмотрите все категории</a>, <a href='%{basePath}/latest'>ознакомьтесь с последними</a> или самыми популярными темами:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Просмотрите все теги</a> или <a href='%{basePath}/latest'>ознакомьтесь с последними темами</a>."
@@ -4209,7 +4198,6 @@ ru:
       other_tags: "Другие теги"
       selector_all_tags: "Все теги"
       selector_no_tags: "Без тегов"
-      changed: "Теги изменены:"
       tags: "Теги"
       choose_for_topic: "Выберите теги..."
       info: "Информация"
@@ -4903,7 +4891,6 @@ ru:
           details: "При создании, изменении, удалении или восстановлении ответа."
         user_event:
           name: "Событие пользователя"
-          details: "При входе, выходе, создании, утверждении или изменении пользователя, а также при подтверждении электронной почты."
         group_event:
           name: "Событие группы"
           details: "При создании, обновлении или удалении группы."
@@ -5083,7 +5070,6 @@ ru:
           theme_name: "Название темы"
           component_name: "Название компонента"
           themes_intro: "Для начала выберите существующую тему или установите новую"
-          themes_intro_emoji: "эмодзи «художница»"
           beginners_guide_title: "Руководство для начинающих по использованию тем Discourse"
           developers_guide_title: "Руководство разработчика по темам Discourse"
           browse_themes: "Просмотр тем сообщества"
@@ -6214,7 +6200,6 @@ ru:
             with_time: <span class="username">%{username}</span> в <span class="time">%{time}</span>
         badge_intro:
           title: "Выберите существующую награду или создайте новую, чтобы начать работу"
-          emoji: "эмодзи «студентка»"
           what_are_badges_title: "Что такое награды?"
           badge_query_examples_title: "Примеры запроса награды"
         mass_award:

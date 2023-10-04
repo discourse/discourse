@@ -889,7 +889,7 @@ class Post < ActiveRecord::Base
       if include_subcategories
         result = result.where("topics.category_id IN (?)", Category.subcategory_ids(category_id))
       else
-        result = result.where("topics.category_id = ?", category_id)
+        result = result.where("topics.category_id IN (?)", category_id)
       end
     end
     if group_ids
