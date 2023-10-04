@@ -7,9 +7,11 @@ import { inject as service } from "@ember/service";
 
 export default class AutomationIndex extends Controller {
   @service dialog;
+  @service router;
+
   @action
   editAutomation(automation) {
-    this.transitionToRoute(
+    this.router.transitionTo(
       "adminPlugins.discourse-automation.edit",
       automation.id
     );
@@ -17,7 +19,7 @@ export default class AutomationIndex extends Controller {
 
   @action
   newAutomation() {
-    this.transitionToRoute("adminPlugins.discourse-automation.new");
+    this.router.transitionTo("adminPlugins.discourse-automation.new");
   }
 
   @action
