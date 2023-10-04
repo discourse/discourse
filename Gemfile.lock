@@ -311,7 +311,7 @@ GEM
     parallel (1.23.0)
     parallel_tests (4.2.2)
       parallel
-    parser (3.2.2.3)
+    parser (3.2.2.4)
       ast (~> 2.4.1)
       racc
     pg (1.4.6)
