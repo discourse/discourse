@@ -40,6 +40,7 @@ import prepareFormTemplateData from "discourse/lib/form-template-validation";
 import DiscardDraftModal from "discourse/components/modal/discard-draft";
 import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 
 async function loadDraft(store, opts = {}) {
   let { draft, draftKey, draftSequence } = opts;
@@ -75,21 +76,12 @@ async function loadDraft(store, opts = {}) {
   return composer;
 }
 
-const _popupMenuOptionsCallbacks = [];
 const _composerSaveErrorCallbacks = [];
 
 let _checkDraftPopup = !isTesting();
 
 export function toggleCheckDraftPopup(enabled) {
   _checkDraftPopup = enabled;
-}
-
-export function clearPopupMenuOptionsCallback() {
-  _popupMenuOptionsCallbacks.length = 0;
-}
-
-export function addPopupMenuOptionsCallback(callback) {
-  _popupMenuOptionsCallbacks.push(callback);
 }
 
 export function clearComposerSaveErrorCallback() {
@@ -342,16 +334,25 @@ export default class ComposerService extends Service {
     return whisperer && modelAction === Composer.REPLY;
   }
 
-  _setupPopupMenuOption(callback) {
-    let option = callback(this);
+  _setupPopupMenuOption(option) {
+    // Backwards compatibility support for when we used to accept a function.
+    // This can be dropped when `addToolbarPopupMenuOptionsCallback` is removed from `plugin-api.js`.
+    if (typeof option === "function") {
+      option = option(this);
+    }
+
     if (typeof option === "undefined") {
       return null;
     }
 
-    if (typeof option.condition === "undefined") {
+    const conditionType = typeof option.condition;
+
+    if (conditionType === "undefined") {
       option.condition = true;
-    } else if (typeof option.condition === "boolean") {
+    } else if (conditionType === "boolean") {
       // uses existing value
+    } else if (conditionType === "function") {
+      option.condition = option.condition(this);
     } else {
       option.condition = this.get(option.condition);
     }
@@ -370,62 +371,52 @@ export default class ComposerService extends Service {
       const options = [];
 
       options.push(
-        this._setupPopupMenuOption(() => {
-          return {
-            action: "toggleInvisible",
-            icon: "far-eye-slash",
-            label: "composer.toggle_unlisted",
-            condition: "canUnlistTopic",
-          };
+        this._setupPopupMenuOption({
+          action: "toggleInvisible",
+          icon: "far-eye-slash",
+          label: "composer.toggle_unlisted",
+          condition: "canUnlistTopic",
         })
       );
 
       if (this.capabilities.touch) {
         options.push(
-          this._setupPopupMenuOption(() => {
-            return {
-              action: "applyFormatCode",
-              icon: "code",
-              label: "composer.code_title",
-            };
+          this._setupPopupMenuOption({
+            action: "applyFormatCode",
+            icon: "code",
+            label: "composer.code_title",
           })
         );
 
         options.push(
-          this._setupPopupMenuOption(() => {
-            return {
-              action: "applyUnorderedList",
-              icon: "list-ul",
-              label: "composer.ulist_title",
-            };
+          this._setupPopupMenuOption({
+            action: "applyUnorderedList",
+            icon: "list-ul",
+            label: "composer.ulist_title",
           })
         );
 
         options.push(
-          this._setupPopupMenuOption(() => {
-            return {
-              action: "applyOrderedList",
-              icon: "list-ol",
-              label: "composer.olist_title",
-            };
+          this._setupPopupMenuOption({
+            action: "applyOrderedList",
+            icon: "list-ol",
+            label: "composer.olist_title",
           })
         );
       }
 
       options.push(
-        this._setupPopupMenuOption(() => {
-          return {
-            action: "toggleWhisper",
-            icon: "far-eye-slash",
-            label: "composer.toggle_whisper",
-            condition: "showWhisperToggle",
-          };
+        this._setupPopupMenuOption({
+          action: "toggleWhisper",
+          icon: "far-eye-slash",
+          label: "composer.toggle_whisper",
+          condition: "showWhisperToggle",
         })
       );
 
       return options.concat(
-        _popupMenuOptionsCallbacks
-          .map((callback) => this._setupPopupMenuOption(callback))
+        customPopupMenuOptions
+          .map((option) => this._setupPopupMenuOption(option))
           .filter((o) => o)
       );
     }
@@ -600,10 +591,14 @@ export default class ComposerService extends Service {
 
   @action
   onPopupMenuAction(menuAction) {
-    return (
-      this.actions?.[menuAction]?.bind(this) || // Legacy-style contributions from themes/plugins
-      this[menuAction]
-    )();
+    if (typeof menuAction === "function") {
+      return menuAction(this.toolbarEvent);
+    } else {
+      return (
+        this.actions?.[menuAction]?.bind(this) || // Legacy-style contributions from themes/plugins
+        this[menuAction]
+      )();
+    }
   }
 
   @action

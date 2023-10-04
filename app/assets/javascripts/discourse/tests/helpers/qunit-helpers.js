@@ -93,6 +93,7 @@ import { resetModelTransformers } from "discourse/lib/model-transformers";
 import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper";
 import { clearBulkButtons } from "discourse/components/modal/topic-bulk-actions";
 import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializers/auth-complete";
+import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 
 export function currentUser() {
   return User.create(sessionFixtures["/session/current.json"].current_user);
@@ -231,6 +232,7 @@ export function testCleanup(container, app) {
   cleanupCssGeneratorTags();
   clearBulkButtons();
   resetBeforeAuthCompleteCallbacks();
+  clearPopupMenuOptions();
 }
 
 function cleanupCssGeneratorTags() {
