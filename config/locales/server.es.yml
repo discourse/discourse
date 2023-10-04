@@ -1517,7 +1517,6 @@ es:
     tl2_additional_flags_per_day_multiplier: "Aumenta el límite de reportes por día para nc2 (miembro) al multiplicar con este número"
     tl3_additional_flags_per_day_multiplier: "Aumenta el límite de reportes por día para nc3 (regular) al multiplicar con este número"
     tl4_additional_flags_per_day_multiplier: "Aumenta el límite de reportes por día para nc4 (líder) al multiplicar con este número"
-    num_users_to_silence_new_user: "Si las publicaciones de un usuario nuevo se denuncian como spam por num_spam_flags_to_silence_new_user usuarios diferentes, ocultar todas sus publicaciones y evitar que publique en el futuro. Establece el valor en 0 para desactivar."
     num_tl3_flags_to_silence_new_user: "Si las publicaciones de un usuario nuevo obtienen este número de denuncias de num_tl3_users_to_silence_new_user diferentes usuarios con nivel de confianza 3, se ocultarán todas sus publicaciones y no podrá publicar más en un futuro. Establece el valor en 0 para desactivar."
     num_tl3_users_to_silence_new_user: "Si las publicaciones de un usuario nuevo reciben num_tl3_flags_to_silence_new_user denuncias de este número de usuarios de nivel 3 de confianza, ocultar todas sus publicaciones y prevenir futuras publicaciones. Establece el valor en 0 para desactivar."
     notify_mods_when_user_silenced: "Si un usuario es silenciado automáticamente, enviar un mensaje a todos los moderadores."

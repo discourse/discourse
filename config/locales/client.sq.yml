@@ -206,13 +206,9 @@ sq:
       our_admins: "Administratorët tanë"
       our_moderators: "Moderatorët tanë"
       moderators: "Moderatorë"
-      stat:
-        all_time: "Gjithë kohës"
       like_count: "Pëlqime"
       topic_count: "Tema"
       post_count: "Postime"
-      active_user_count: "Përdorues Aktivë"
-      contact: "Na kontaktoni"
       contact_info: "Në rast të një problemi madhor ose të një çështjeje urgjente që prek faqen, ju lutemi të kontaktoni %{contact_info}."
     bookmarked:
       title: "Të preferuarat"
@@ -1834,7 +1830,6 @@ sq:
     tagging:
       selector_all_tags: "të gjitha etiketat"
       selector_no_tags: "asnjë etiketë"
-      changed: "etiketat e ndryshuara:"
       tags: "Etiketat"
       add_synonyms: "Shto"
       delete_tag: "Fshi etiketën"

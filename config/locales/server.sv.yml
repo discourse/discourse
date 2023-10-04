@@ -1531,7 +1531,6 @@ sv:
     tl2_additional_flags_per_day_multiplier: "Öka gränsen för flaggningar per dag för tl2 (medlem) genom att multiplicera med detta nummer"
     tl3_additional_flags_per_day_multiplier: "Öka gränsen för flaggningar per dag för tl3 (vanlig) genom att multiplicera med detta nummer"
     tl4_additional_flags_per_day_multiplier: "Öka gränsen för flaggningar per dag för tl4 (ledare) genom att multiplicera med detta nummer"
-    num_users_to_silence_new_user: "Om en ny användares inlägg får num_spam_flags_to_silence_new_user skräppost-flaggor från detta antalet olika användare, dölj alla deras inlägg och förhindra framtida inlägg. 0 för att inaktivera."
     num_tl3_flags_to_silence_new_user: "Om en ny användares inlägg får så här många flaggningar från num_tl3_users_to_silence_new_user olika användare med förtroendenivå 3, dölj alla deras inlägg och förhindra framtida inlägg. Ange 0 för att inaktivera."
     num_tl3_users_to_silence_new_user: "Om en ny användares inlägg får num_tl3_flags_to_silence_new_user flaggningar från så här många olika användare med förtroendenivå 3, dölj alla deras inlägg och förhindra framtida inlägg. 0 för att inaktivera."
     notify_mods_when_user_silenced: "Om en användare tystas automatiskt, skicka ett meddelande till alla moderatorer."

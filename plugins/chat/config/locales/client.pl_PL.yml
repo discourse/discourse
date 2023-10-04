@@ -25,10 +25,6 @@ pl_PL:
           descriptions:
             chat:
               create_message: "Utwórz wiadomość na czacie w określonym kanale."
-    about:
-      chat_messages_count: "Wiadomości czatu"
-      chat_channels_count: "Kanały czatu"
-      chat_users_count: "Użytkownicy czatu"
     chat:
       deleted_chat_username: usunięte
       dates:

@@ -255,17 +255,9 @@ id:
       our_admins: "Admin Kami"
       our_moderators: "Moderator Kami"
       moderators: "Moderator"
-      stat:
-        all_time: "Sepanjang Waktu"
-        last_day: "24 jam terakhir"
-        last_7_days: "7 hari terakhir"
-        last_30_days: "30 hari terakhir"
       like_count: "Suka"
       topic_count: "Topik"
       post_count: "Pos"
-      user_count: "Pendaftaran"
-      active_user_count: "Pengguna Aktif"
-      contact: "Kontak kami"
       contact_info: "Pada kegiatan dari sebuah isu kritikal atau penting terjadi pada situs ini, silahkan kontak kami di %{contact_info}."
     bookmarked:
       title: "Penandaan"

@@ -260,16 +260,10 @@ da:
       our_moderators: "Vores Moderatorer"
       moderators: "Moderatorer"
       stat:
-        all_time: "Altid"
-        last_day: "Seneste 24 timer"
-        last_7_days: "Seneste 7 dage"
-        last_30_days: "Seneste 30 dage"
+        last_day: "24 timer"
       like_count: "Synes godt om"
       topic_count: "Emner"
       post_count: "Indlæg"
-      user_count: "Tilmeldinger"
-      active_user_count: "Aktive brugere"
-      contact: "Kontakt os"
       contact_info: "I tilfælde af en kritisk begivenhed eller vigtige spørgsmål angående denne side, kontakt os venligst på %{contact_info}."
     bookmarked:
       title: "Bogmærke"
@@ -1170,7 +1164,6 @@ da:
         success: "(e-mail sendt)"
         in_progress: "(sender e-mail)"
         error: "(fejl)"
-        emoji: "lås emoji"
         action: "Send e-mail til nulstilling af adgangskode"
         set_password: "Skriv password"
         choose_new: "Vælg et nyt kodeord"
@@ -1719,7 +1712,6 @@ da:
       link_label: "Email mig et login link"
       button_label: "med email"
       login_link: "Spring adgangskoden over; send mig et login link"
-      emoji: "lås emoji"
       complete_username: "Hvis en konto findes med brugernavnet <b>%{username}</b>, vil du snart modtage en email med et login link."
       complete_email: "Hvis en konto findes med <b>%{email}</b>, vil du snart modtage en email med et login link."
       complete_username_found: "Vi fandt en konto, der anvender brugernavnet <b>%{username}</b>, du vil snart modtage en email med et login link."
@@ -1809,7 +1801,6 @@ da:
         security_key: "Brug en sikkerhedsnøgle i stedet"
     invites:
       accept_title: "Invitation"
-      emoji: "konvolut humørikon"
       welcome_to: "Velkommen til %{site_name}!"
       invited_by: "Du blev inviteret af:"
       social_login_available: "Du vil også kunne logge ind med enhvert socialt login med brug af denne e-mail."
@@ -3430,7 +3421,6 @@ da:
       other_tags: "Andre Mærker"
       selector_all_tags: "alle mærker"
       selector_no_tags: "ingen mærker"
-      changed: "mærker skiftet:"
       tags: "Mærker"
       choose_for_topic: "valgfrie mærker"
       choose_for_topic_required:
@@ -3961,7 +3951,6 @@ da:
           details: "Når der er et nyt svar, redigering, sletning eller gendannelse."
         user_event:
           name: "Bruger-event"
-          details: "Når en bruger logger ind, logger ud, bekræfter deres e-mail, oprettes, godkendes eller opdateres."
         group_event:
           name: "Gruppebegivenhed"
           details: "Når en gruppe bliver oprettet, opdateret eller ødelagt."
@@ -4127,7 +4116,6 @@ da:
           theme_name: "Tema navn"
           component_name: "Komponent navn"
           themes_intro: "Vælg et eksisterende tema, eller installer et nyt for at komme i gang"
-          themes_intro_emoji: "kvinde kunstner emoji"
           beginners_guide_title: "Begyndervejledning til brug af Discourse Temaer"
           developers_guide_title: "Udviklervejledning til brug af Discourse Temaer"
           browse_themes: "Gennemse fællesskabs temaer"
@@ -5166,7 +5154,6 @@ da:
             with_time: <span class="username">%{username}</span> klokken <span class="time">%{time}</span>
         badge_intro:
           title: "Vælg et eksisterende emblem, eller opret et nyt for at komme i gang"
-          emoji: "kvinde studerende emoji"
           what_are_badges_title: "Hvad er emblemer?"
           badge_query_examples_title: "Eksempler på emblem-forespørgsel"
         mass_award:

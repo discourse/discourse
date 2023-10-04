@@ -1531,7 +1531,6 @@ pt_BR:
     tl2_additional_flags_per_day_multiplier: "Aumente o limite de etiquetas por dia para tl2 (membro) ao multiplicar por este número"
     tl3_additional_flags_per_day_multiplier: "Aumente o limite de edições por dia para tl3 (regular) ao multiplicar por este número"
     tl4_additional_flags_per_day_multiplier: "Aumente o limite de etiquetas por dia para tl4 (líder) ao multiplicar por este número"
-    num_users_to_silence_new_user: "Se as postagens de um(a) novo(a) usuário(a) receberem num_spam_flags_to_silence_new_user spam sinalizador(es) de usuários(as) diferentes, oculte todas as suas postagens e evite postagens futuras. 0 para desativar."
     num_tl3_flags_to_silence_new_user: "Se as postagens do(a) novo(a) usuário(a) obtiverem muitos sinalizadores de num_tl3_users_to_silence_new_user usuários(as) diferentes do nível de confiança 3, oculte todos as publicações e evite postagens futuras. 0 para desativar."
     num_tl3_users_to_silence_new_user: "Se as postagens de um(a) novo(a) usuário(a) receberem num_tl3_flags_to_silence_new_user sinalizador(es) de usuários(as) de nível de confiança 3, oculte todas as suas postagens e evite postagens futuras. 0 para desativar."
     notify_mods_when_user_silenced: "Se um(a) usuário(a) for silenciado(a) automaticamente, envie uma mensagem para todos(as) os(as) moderadores(as)."

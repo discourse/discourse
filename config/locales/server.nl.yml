@@ -1531,7 +1531,6 @@ nl:
     tl2_additional_flags_per_day_multiplier: "Limiet van aantal markeringen per dag voor TL2 (lid) verhogen door met dit getal te vermenigvuldigen"
     tl3_additional_flags_per_day_multiplier: "Limiet van aantal markeringen per dag voor TL3 (regulier) verhogen door met dit getal te vermenigvuldigen"
     tl4_additional_flags_per_day_multiplier: "Limiet van aantal markeringen per dag voor TL4 (leider) verhogen door met dit getal te vermenigvuldigen"
-    num_users_to_silence_new_user: "Als berichten van een nieuwe gebruiker num_spam_flags_to_silence_new_user spammarkeringen krijgen van dit aantal verschillende gebruikers, alle berichten ervan verbergen en het plaatsen van berichten in de toekomst tegengaan. 0 voor uitschakelen."
     num_tl3_flags_to_silence_new_user: "Als berichten van een nieuwe gebruiker dit aantal markeringen krijgen van num_tl3_users_to_silence_new_user verschillende gebruikers met vertrouwensniveau 3, alle berichten ervan verbergen en het plaatsen van berichten in de toekomst tegengaan. 0 voor uitschakelen."
     num_tl3_users_to_silence_new_user: "Als berichten van een nieuwe gebruiker num_tl3_flags_to_silence_new_user markeringen krijgen van dit aantal verschillende gebruikers met vertrouwensniveau 3, alle berichten ervan verbergen en het plaatsen van berichten in de toekomst tegengaan. 0 voor uitschakelen."
     notify_mods_when_user_silenced: "Als een gebruiker automatisch wordt gedempt, een bericht naar alle moderators sturen."

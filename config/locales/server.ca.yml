@@ -1201,7 +1201,6 @@ ca:
     tl2_additional_likes_per_day_multiplier: "Augmenta el límit de 'M'agrada' per dia per al nivell de confiança 2 (membre) multiplicant per aquesta xifra"
     tl3_additional_likes_per_day_multiplier: "Augmenta la quantitat de 'M'agrada' per dia per al nivell de confiança 3 (habitual) multiplicant per aquesta xifra"
     tl4_additional_likes_per_day_multiplier: "Augmenta el límit de 'M'agrada' per dia per al nivell de confiança 4 (líder) multiplicant per aquesta xifra"
-    num_users_to_silence_new_user: "Si les publicacions d'un nou usuari obtenen num_spam_flags_to_silence_new_user banderes de brossa de tants altres usuaris, amaga totes les seves publicacions, i impedeix la publicació futura. 0 per a desactivar."
     num_tl3_flags_to_silence_new_user: "Si les publicacions d'un usuari nou obtenen aquest nombre de banderes des de num_tl3_users_to_silence_new_user usuaris diferents de nivell de confiança 3, amaga'n totes les publicacions, i impedeix publicacions futures. 0 per a desactivar."
     num_tl3_users_to_silence_new_user: "Si les publicacions d'un usuari nou obtenen num_tl3_flags_to_silence_new_user banderes de tants altres usuaris de nivell de confiança 3, oculta tots els seus missatges i impedeix publicacions futures. 0 per a desactivar."
     notify_mods_when_user_silenced: "Si un usuari és silenciat automàticament, envia un missatge a tots els moderadors."
