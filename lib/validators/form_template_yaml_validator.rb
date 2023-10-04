@@ -45,14 +45,18 @@ class FormTemplateYamlValidator < ActiveModel::Validator
     record.errors.add(:template, I18n.t("form_templates.errors.missing_id")) if field["id"].blank?
   end
 
+  def html_sanitization_options
+    { elements: ["a"], attributes: { "a" => %w[href target] } }
+  end
+
   def check_descriptions_html(record, field)
     description = field.dig("attributes", "description")
 
     return if description.blank?
 
-    is_safe_html =
-      Loofah.scrub_html5_fragment(description, :prune).to_s ==
-        Loofah.html5_fragment(description).to_s
+    sanitized_html = Sanitize.fragment(description, html_sanitization_options)
+
+    is_safe_html = sanitized_html == Loofah.html5_fragment(description).to_s
 
     unless is_safe_html
       record.errors.add(:template, I18n.t("form_templates.errors.unsafe_description"))
