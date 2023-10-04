@@ -19,7 +19,6 @@
   .touch & {
     &:active {
       background-color: var(--d-hover);
-      border: 1px solid var(--primary-300);
     }
   }
 
@@ -27,7 +26,6 @@
     &:hover,
     &:active {
       background-color: var(--d-hover);
-      border: 1px solid var(--primary-300);
     }
   }
 
@@ -67,7 +65,11 @@
 
     .chat-user-avatar {
       .avatar {
-        border: 1px solid var(--primary-very-low);
+        border: 2px solid var(--primary-very-low);
+
+        .chat-thread-list-item:hover & {
+          border-color: var(--d-hover);
+        }
       }
 
       &:not(:last-child) {
