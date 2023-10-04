@@ -96,12 +96,8 @@
 
   &__title {
     flex: 1 1 auto;
-    font-weight: bold;
     @include ellipsis;
-  }
-
-  &__last-reply-excerpt {
-    font-size: var(--font-down-1);
+    margin-left: 0.5rem;
   }
 
   &__unread-indicator {
