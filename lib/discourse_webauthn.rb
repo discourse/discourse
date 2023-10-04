@@ -1,11 +1,4 @@
 # frozen_string_literal: true
-<<<<<<< HEAD
-=======
-require "webauthn/challenge_generator"
-require "webauthn/base_validation_service"
-require "webauthn/registration_service"
-require "webauthn/authentication_service"
->>>>>>> 16439dba2a (DEV: Refactor webauthn to support passkeys)
 
 module DiscourseWebauthn
   ACCEPTABLE_REGISTRATION_TYPE = "webauthn.create"
