@@ -47,7 +47,11 @@ module Chat
           :bookmarks,
           :chat_webhook_event,
           :uploads,
-          chat_channel: [:last_message, :chat_channel_archive, chatable: :topic_only_relative_url],
+          chat_channel: [
+            :last_message,
+            :chat_channel_archive,
+            chatable: [:topic_only_relative_url, direct_message_users: [user: :user_option]],
+          ],
           user: :user_status,
         )
         .find_by(id: contract.message_id)
