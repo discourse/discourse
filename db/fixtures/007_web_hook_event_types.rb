@@ -206,6 +206,11 @@ WebHookEventType.seed do |b|
   b.group = WebHookEventType.groups[:voting]
 end
 WebHookEventType.seed do |b|
+  b.id = WebHookEventType::TYPES[:voting][:topic_unvote]
+  b.name = "topic_unvote"
+  b.group = WebHookEventType.groups[:voting]
+end
+WebHookEventType.seed do |b|
   b.id = WebHookEventType::TYPES[:chat][:message_created]
   b.name = "chat_message_created"
   b.group = WebHookEventType.groups[:chat]

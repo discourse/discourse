@@ -59,7 +59,7 @@ RSpec.describe WebHook do
 
       SiteSetting.stubs(:voting_enabled).returns(true)
       voting_event_types = WebHookEventType.active.where(group: "voting").pluck(:name)
-      expect(voting_event_types).to eq(%w[topic_upvote])
+      expect(voting_event_types).to eq(%w[topic_upvote topic_unvote])
       #
       SiteSetting.stubs(:solved_enabled).returns(true)
       solved_event_types = WebHookEventType.active.where(group: "solved").pluck(:name)
