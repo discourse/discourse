@@ -134,7 +134,7 @@ class DiscourseJsProcessor
       ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
 
       # Theme template AST transformation plugins
-      if Rails.env.development? || Rails.env.test?
+      if !Rails.env.production?
         @processor_mutex.synchronize { build_theme_transpiler }
       end
 
