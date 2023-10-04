@@ -345,21 +345,6 @@ export default {
             get hoverTitle() {
               return I18n.t("chat.direct_messages.leave");
             }
-
-            _userStatusTitle(status) {
-              let title = `${escapeExpression(status.description)}`;
-
-              if (status.ends_at) {
-                const untilFormatted = until(
-                  status.ends_at,
-                  this.chatService.currentUser.user_option.timezone,
-                  this.chatService.currentUser.locale
-                );
-                title += ` ${untilFormatted}`;
-              }
-
-              return title;
-            }
           };
 
           const SidebarChatDirectMessagesSection = class extends BaseCustomSidebarSection {
