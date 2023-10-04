@@ -8,7 +8,6 @@ import { avatarUrl } from "discourse-common/lib/avatar-utils";
 import { dasherize } from "@ember/string";
 import { emojiUnescape } from "discourse/lib/text";
 import { decorateUsername } from "discourse/helpers/decorate-username-selector";
-import { until } from "discourse/lib/formatter";
 import { inject as service } from "@ember/service";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import getURL from "discourse-common/lib/get-url";
