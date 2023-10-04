@@ -3,6 +3,7 @@
 class FormTemplateYamlValidator < ActiveModel::Validator
   RESERVED_KEYWORDS = %w[title body category category_id tags]
   ALLOWED_TYPES = %w[checkbox dropdown input multi-select textarea upload]
+  HTML_SANITIZATION_OPTIONS = { elements: ["a"], attributes: { "a" => %w[href target] } }
 
   def validate(record)
     begin
@@ -45,16 +46,12 @@ class FormTemplateYamlValidator < ActiveModel::Validator
     record.errors.add(:template, I18n.t("form_templates.errors.missing_id")) if field["id"].blank?
   end
 
-  def html_sanitization_options
-    { elements: ["a"], attributes: { "a" => %w[href target] } }
-  end
-
   def check_descriptions_html(record, field)
     description = field.dig("attributes", "description")
 
     return if description.blank?
 
-    sanitized_html = Sanitize.fragment(description, html_sanitization_options)
+    sanitized_html = Sanitize.fragment(description, HTML_SANITIZATION_OPTIONS)
 
     is_safe_html = sanitized_html == Loofah.html5_fragment(description).to_s
 
