@@ -16,6 +16,10 @@ export default class extends NotificationTypeBase {
     return super.description || this.notification.data.title;
   }
 
+  get label() {
+    return null;
+  }
+
   get linkHref() {
     let linkHref = super.linkHref;
     if (linkHref) {

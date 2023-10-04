@@ -24,10 +24,6 @@ fi:
           descriptions:
             chat:
               create_message: "Luo chat-viesti tietyllä kanavalla."
-    about:
-      chat_messages_count: "Chat-viestit"
-      chat_channels_count: "Chat-kanavat"
-      chat_users_count: "Chat-käyttäjät"
     chat:
       deleted_chat_username: poistettu
       dates:

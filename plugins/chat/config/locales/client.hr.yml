@@ -24,8 +24,6 @@ hr:
           descriptions:
             chat:
               create_message: "Izradite chat poruku na određenom kanalu."
-    about:
-      chat_messages_count: "Chat poruke"
     chat:
       deleted_chat_username: izbrisao
       dates:

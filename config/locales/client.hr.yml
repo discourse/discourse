@@ -310,16 +310,10 @@ hr:
       our_moderators: "Naši Moderatori"
       moderators: "Moderatori"
       stat:
-        all_time: "Ukupno"
-        last_day: "Posljednja 24 sata"
-        last_7_days: "Zadnjih 7 dana"
-        last_30_days: "Zadnjih 30 dana"
+        last_day: "24 sata"
       like_count: "Likeovi"
       topic_count: "Teme"
       post_count: "Objave"
-      user_count: "Učlani se"
-      active_user_count: "Aktivni korisnici"
-      contact: "Kontaktirajte nas"
       contact_info: "U slučaju kritičnog problema ili hitnosti koje utječu na rad stranice, kontaktirajte nas na %{contact_info}."
     bookmarked:
       title: "Zabilješka"
@@ -1317,7 +1311,6 @@ hr:
         success: "(email je poslan)"
         in_progress: "(email se šalje)"
         error: "(greška)"
-        emoji: "zaključavanje emotikona"
         action: "Pošalj e-mail za povratak zaporke."
         set_password: "Postavi zaporku"
         choose_new: "Izaberite novu lozinku"
@@ -1906,7 +1899,6 @@ hr:
       link_label: "Pošaljite mi link za prijavu"
       button_label: "s e-mailom"
       login_link: "Preskoči lozinku; pošalji mi link za prijavu"
-      emoji: "zaključajte emoji"
       complete_username: "Ako se račun podudara s korisničkim imenom <b>%{username}</b>, uskoro biste trebali dobiti e-poštu s vezom za prijavu."
       complete_email: "Ako se račun podudara s <b>%{email}</b>, uskoro biste trebali dobiti e-poštu s vezom za prijavu."
       complete_username_found: "Pronašli smo račun koji odgovara korisničkom imenu <b>%{username}</b>, trebali biste uskoro primiti e-mail s linkom za prijavu."
@@ -1995,7 +1987,6 @@ hr:
         security_key: "Umjesto toga upotrijebite sigurnosni ključ"
     invites:
       accept_title: "Pozivnica"
-      emoji: "emoji omotnice"
       welcome_to: "Dobrodošli na %{site_name}"
       invited_by: "Pozvao/la vas je:"
       social_login_available: "Također ćete se moći prijaviti s bilo kojom društvenim profilom pomoću te e-pošte."
@@ -2746,9 +2737,7 @@ hr:
           false { ili <a href="{basePath}/latest">pogledajte najnovije teme</a>}
           other {}
         }
-      bumped_at_title: |
-        Prvi post: %{createdAtDate}
-        Objavljeno: %{bumpedAtDate}
+      bumped_at: "Najnovije: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Pregledajte sve kategorije</a> ili <a href='%{basePath}/latest'>pogledajte najnovije teme</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Pregledajte sve kategorije</a>, <a href='%{basePath}/latest'>pogledajte najnovije teme</a> ili pogledajte vrh:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Pregledajte sve oznake</a> ili <a href='%{basePath}/latest'>pogledajte najnovije teme</a>."
@@ -3872,7 +3861,6 @@ hr:
       other_tags: "Ostale oznake"
       selector_all_tags: "sve oznake"
       selector_no_tags: "bez oznaka"
-      changed: "promijenjene oznake:"
       tags: "Oznake"
       choose_for_topic: "neobavezne oznake"
       info: "Info"
@@ -4482,7 +4470,6 @@ hr:
           details: "Kada postoji novi odgovor, uređivanje, brisanje ili oporavak."
         user_event:
           name: "Korisnički događaj"
-          details: "Kada se korisnik prijavi, odjavljuje se, potvrđuje svoju e-poštu, kreira račun, odobrava ili ažurira."
         group_event:
           name: "Grupni događaj"
           details: "Kada se grupa kreira, ažurira ili uništi."
@@ -4652,7 +4639,6 @@ hr:
           theme_name: "Naziv teme"
           component_name: "Naziv komponente"
           themes_intro: "Odaberite postojeću temu ili instalirajte novu da biste započeli"
-          themes_intro_emoji: "umjetnica emoji"
           beginners_guide_title: "Vodič za početnike za korištenje tema diskursa"
           developers_guide_title: "Vodič za programere za teme diskursa"
           browse_themes: "Pregledaj teme zajednice"
@@ -5686,7 +5672,6 @@ hr:
             with_time: <span class="username">%{username}</span> u <span class="time">%{time}</span>
         badge_intro:
           title: "Odaberite postojeću značku ili izradite novu da biste započeli"
-          emoji: "studentica emoji"
           what_are_badges_title: "Što su značke?"
           badge_query_examples_title: "Primjeri upita za značke"
         mass_award:

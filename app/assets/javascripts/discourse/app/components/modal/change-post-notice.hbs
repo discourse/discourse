@@ -1,0 +1,30 @@
+<DModal
+  @title={{if
+    @model.post.notice
+    (i18n "post.controls.change_post_notice")
+    (i18n "post.controls.add_post_notice")
+  }}
+  @closeModal={{@closeModal}}
+  class="change-post-notice-modal"
+>
+  <:body>
+    <form><Textarea @value={{this.notice}} /></form>
+  </:body>
+  <:footer>
+    <DButton
+      @label={{if this.saving "saving" "save"}}
+      @action={{fn this.setNotice this.notice}}
+      @disabled={{this.disabled}}
+      class="btn-primary"
+    />
+    {{#if @model.post.notice}}
+      <DButton
+        @label="post.controls.delete_post_notice"
+        @action={{this.setNotice}}
+        @disabled={{this.saving}}
+        class="btn-danger"
+      />
+    {{/if}}
+    <DModalCancel @close={{@closeModal}} />
+  </:footer>
+</DModal>

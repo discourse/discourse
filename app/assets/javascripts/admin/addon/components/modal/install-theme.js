@@ -163,8 +163,8 @@ export default class InstallTheme extends Component {
         await theme.save({ name: this.name, component: this.component });
         this.args.model.addTheme(theme);
         this.args.closeModal();
-      } catch {
-        popupAjaxError;
+      } catch (e) {
+        popupAjaxError(e);
       } finally {
         this.loading = false;
       }

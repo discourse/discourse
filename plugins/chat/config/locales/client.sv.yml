@@ -24,10 +24,6 @@ sv:
           descriptions:
             chat:
               create_message: "Skapa ett chattmeddelande i en angiven kanal."
-    about:
-      chat_messages_count: "Chattmeddelanden"
-      chat_channels_count: "Chattkanaler"
-      chat_users_count: "Chattanvändare"
     chat:
       deleted_chat_username: raderat
       dates:

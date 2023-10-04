@@ -8,6 +8,7 @@ RSpec.describe "Chat message - thread", type: :system do
     Fabricate(:chat_message, in_reply_to: message_1, use_service: true)
   end
 
+  let(:cdp) { PageObjects::CDP.new }
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
 
@@ -29,6 +30,20 @@ RSpec.describe "Chat message - thread", type: :system do
     end
   end
 
+  context "when copying text of a message" do
+    before { cdp.allow_clipboard }
+
+    it "[mobile] copies the text of a single message", mobile: true do
+      chat_page.visit_thread(thread_message_1.thread)
+      thread_page.click_composer # ensures we don't block on vibrate due to no action
+
+      thread_page.messages.copy_text(thread_message_1)
+
+      expect(cdp.read_clipboard.chomp).to eq(thread_message_1.message)
+      expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.chat.text_copied"))
+    end
+  end
+
   context "when copying link to a message" do
     let(:cdp) { PageObjects::CDP.new }
 
@@ -37,11 +52,23 @@ RSpec.describe "Chat message - thread", type: :system do
     it "copies the link to the thread" do
       chat_page.visit_thread(thread_message_1.thread)
 
-      thread_page.copy_link(thread_message_1)
+      thread_page.messages.copy_link(thread_message_1)
 
       expect(cdp.read_clipboard).to include(
         "/chat/c/-/#{channel_1.id}/t/#{thread_message_1.thread.id}/#{thread_message_1.id}",
       )
+      expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.chat.link_copied"))
+    end
+
+    it "[mobile] copies the link to the thread", mobile: true do
+      chat_page.visit_thread(thread_message_1.thread)
+
+      thread_page.messages.copy_link(thread_message_1)
+
+      expect(cdp.read_clipboard).to include(
+        "/chat/c/-/#{channel_1.id}/t/#{thread_message_1.thread.id}/#{thread_message_1.id}",
+      )
+      expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.chat.link_copied"))
     end
   end
 end

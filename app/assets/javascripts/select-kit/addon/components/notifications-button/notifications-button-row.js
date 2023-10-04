@@ -13,9 +13,7 @@ export default DropdownSelectBoxRowComponent.extend({
     return escapeExpression(I18n.t(`${this._start}.title`));
   }),
 
-  title: readOnly("label"),
-
-  icons: computed("title", "item.icon", function () {
+  icons: computed("item.icon", function () {
     return [escapeExpression(this.item.icon)];
   }),
 

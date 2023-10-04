@@ -96,44 +96,8 @@ module PageObjects
         find(".more-buttons").click
       end
 
-      def flag_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='flag']").click
-      end
-
-      def copy_link(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='copyLink']").click
-      end
-
-      def flag_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='flag']").click
-      end
-
-      def delete_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='delete']").click
-      end
-
-      def restore_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='restore']").click
-      end
-
-      def open_edit_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='edit']").click
-      end
-
       def edit_message(message, text = nil)
-        open_edit_message(message)
+        messages.edit(message)
         send_message(message.message + text) if text
       end
 

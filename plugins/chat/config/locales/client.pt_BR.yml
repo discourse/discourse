@@ -24,10 +24,6 @@ pt_BR:
           descriptions:
             chat:
               create_message: "Crie uma mensagem de chat em um canal especificado."
-    about:
-      chat_messages_count: "Mensagens de chat"
-      chat_channels_count: "Canais de chat"
-      chat_users_count: "Usuários do chat"
     chat:
       deleted_chat_username: excluído(a)
       dates:

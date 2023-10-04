@@ -1,6 +1,6 @@
 import autocomplete from "discourse/lib/autocomplete";
 import bootbox from "bootbox";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import deprecated from "discourse-common/lib/deprecated";
 
 let jqueryPluginsConfigured = false;
@@ -19,7 +19,7 @@ export default {
     const originalAlert = bootbox.alert;
     bootbox.alert = function () {
       if (arguments.length === 1) {
-        const dialog = getOwner(this).lookup("service:dialog");
+        const dialog = getOwnerWithFallback(this).lookup("service:dialog");
         if (dialog) {
           deprecated(
             "`bootbox.alert` is deprecated, please use the dialog service instead.",

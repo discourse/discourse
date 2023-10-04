@@ -24,10 +24,6 @@ ru:
           descriptions:
             chat:
               create_message: "Создать сообщение чата в указанном канале."
-    about:
-      chat_messages_count: "Сообщения чата"
-      chat_channels_count: "Каналы чата"
-      chat_users_count: "Пользователи чата"
     chat:
       deleted_chat_username: удалён
       dates:

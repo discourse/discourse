@@ -87,8 +87,7 @@ cs:
           title: "Spinnery"
         empty_state:
           title: "Prázdný stav"
-        rich_tooltip:
-          title: "Popis"
+        tooltips:
           description: "Popis"
           header: "Hlavička"
           hover_to_see: "Přejetím zobrazit popisek"

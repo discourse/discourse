@@ -6,7 +6,7 @@ import { module, test } from "qunit";
 import { click } from "@ember/test-helpers";
 import { LIGHTBOX_APP_EVENT_NAMES } from "discourse/lib/lightbox/constants";
 import domFromString from "discourse-common/lib/dom-from-string";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
 import sinon from "sinon";
 

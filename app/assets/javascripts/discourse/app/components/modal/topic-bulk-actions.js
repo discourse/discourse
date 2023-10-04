@@ -9,7 +9,7 @@ import ChangeCategory from "../bulk-actions/change-category";
 import NotificationLevel from "../bulk-actions/notification-level";
 import ChangeTags from "../bulk-actions/change-tags";
 import AppendTags from "../bulk-actions/append-tags";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 
 const _customButtons = [];
 

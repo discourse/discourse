@@ -6,7 +6,7 @@ import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
 import { get } from "@ember/object";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 
 const STAFF_GROUP_NAME = "staff";
@@ -383,7 +383,9 @@ Category.reopenClass({
   },
 
   slugEncoded() {
-    let siteSettings = getOwner(this).lookup("service:site-settings");
+    let siteSettings = getOwnerWithFallback(this).lookup(
+      "service:site-settings"
+    );
     return siteSettings.slug_generation_method === "encoded";
   },
 

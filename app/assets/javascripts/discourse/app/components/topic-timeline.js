@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import optionalService from "discourse/lib/optional-service";
 import { inject as service } from "@ember/service";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
 import { action } from "@ember/object";
 
 export default class TopicTimeline extends Component {
@@ -49,22 +48,6 @@ export default class TopicTimeline extends Component {
     if (this.args.fullscreen && !this.args.addShowClass) {
       element.classList.add("show");
     }
-  }
-
-  @bind
-  addUserTip(element) {
-    if (!this.currentUser) {
-      return;
-    }
-
-    this.currentUser.showUserTip({
-      id: "topic_timeline",
-      titleText: I18n.t("user_tips.topic_timeline.title"),
-      contentText: I18n.t("user_tips.topic_timeline.content"),
-      reference: document.querySelector("div.timeline-scrollarea-wrapper"),
-      appendTo: element,
-      placement: "left",
-    });
   }
 
   @action

@@ -16,14 +16,14 @@
   "dependencies": {
     "discourse-common": "1.0.0",
     "ember-auto-import": "^2.6.3",
-    "ember-cli-babel": "^8.0.0",
+    "ember-cli-babel": "^8.1.0",
     "ember-cli-htmlbars": "^6.3.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.17",
+    "@babel/core": "^7.23.0",
     "@ember/optional-features": "^2.0.0",
     "@ember/string": "^3.1.1",
-    "@embroider/test-setup": "^3.0.1",
+    "@embroider/test-setup": "^3.0.2",
     "@glimmer/component": "^1.1.2",
     "broccoli-asset-rev": "^3.0.0",
     "ember-cli": "~5.0.0",
@@ -36,7 +36,7 @@
     "ember-source": "~3.28.12",
     "ember-source-channel-url": "^3.0.0",
     "loader.js": "^4.7.0",
-    "markdown-it": "^13.0.1",
+    "markdown-it": "^13.0.2",
     "webpack": "^5.88.2"
   },
   "engines": {

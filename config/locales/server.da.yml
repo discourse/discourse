@@ -792,6 +792,8 @@ da:
     sequence_conflict_error:
       title: "kladdefejl"
       description: "Kladde redigeres i et andet vindue. Genindlæs venligst denne side."
+    too_many_drafts:
+      title: "For mange kladder"
   draft_backup:
     pm_title: "Sikkerhedskopiér Kladder fra igangværende emner"
     pm_body: "Emne, der indeholder backup-kladder"
@@ -1266,9 +1268,6 @@ da:
     allow_user_locale: "Tillad brugere at vælge egne sprog præferencer på site"
     set_locale_from_accept_language_header: "indstil grænsefladesprog for anonyme brugere ud fra deres webbrowsers sprog headere"
     support_mixed_text_direction: "Understøt blandede tekstretninger fra venstre til højre og højre mod venstre."
-    min_post_length: "Minimumlængde tilladt for indlæg i tegn"
-    min_first_post_length: "Minimum tilladte antal tegn (i emne felt) i første indlæg"
-    min_personal_message_post_length: "Minimumlængde tilladt for indlæg i tegn"
     max_post_length: "Maksimal længde af indlæg i tegn"
     topic_featured_link_enabled: "Tillad opslag af et link med emner."
     show_topic_featured_link_in_digest: "Vis link med det fremhævede emne i e-mail-sammendraget."
@@ -1335,7 +1334,6 @@ da:
     tl2_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr dag for tl2 (medlemmer) ved at gange med dette tal"
     tl3_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr. dag for tl3 (regular) ved at gange med dette tal"
     tl4_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr. dag for tl4 (leader) ved at gange med dette tal"
-    num_users_to_silence_new_user: "Hvis en ny brugers indlæg får num_spam_flags_to_silence_new_user spam-flag fra disse mange forskellige brugere, så skjul alle deres indlæg og forhindre fremtidige indlæg. 0 for at deaktivere."
     num_tl3_flags_to_silence_new_user: "Hvis en ny brugers indlæg får så mange rapporteringer fra num_tl3_users_to_silence_new_user forskellige tillidsniveauer 3 brugere, skal du skjule alle deres indlæg og forhindre fremtidige indlæg. 0 for at deaktivere."
     num_tl3_users_to_silence_new_user: "Hvis en ny brugers indlæg får num_tl3_flags_to_silence_new_user rapporteringer fra så mange forskellige tillidsniveau 3-brugere, skal du skjule alle deres indlæg og forhindrer fremtidige indlæg. 0 til at deaktivere."
     flag_sockpuppets: "Hvis en ny bruger svarer på et emne fra den samme IP-adresse som den bruger, der startede emnet, skal begges deres indlæg anmeldes som potentiel spam."
@@ -1619,8 +1617,11 @@ da:
     default_tags_tracking: "Liste over mærker, der spores som standard."
     default_tags_muted: "Liste over mærker, der er tavse som standard."
     default_tags_watching_first_post: "Liste over mærker, hvor første indlæg i hvert nyt emne vil blive overvåget som standard."
+    revoke_api_keys_unused_days: "Antal dage siden en API-nøgle sidst blev brugt, før den automatisk tilbagekaldes (0 for aldrig)"
+    revoke_api_keys_maxlife_days: "Antal dage før en API-nøgle tilbagekaldes automatisk (0 for aldrig)"
     allow_user_api_key_scopes: "Liste over tilladte anvendelsesområder for bruger-API-nøgler"
-    expire_user_api_keys_days: "Antal dage før en bruger API-nøgle automatisk udløber (0 for aldrig)"
+    revoke_user_api_keys_unused_days: "Antal dage siden en bruger-API-nøgle sidst blev brugt, før den automatisk tilbagekaldes (0 for aldrig)"
+    revoke_user_api_keys_maxlife_days: "Antal dage før en bruger-API-nøgle automatisk tilbagekaldes (0 for aldrig)"
     tagging_enabled: "Aktivér mærker på emner?"
     max_tags_per_topic: "Det maksimale antal mærker, der kan anvendes i et emne."
     max_tag_search_results: "Ved søger efter mærker, skal der maksimalt vises følgende antal resultater."
@@ -1778,6 +1779,11 @@ da:
   admin:
     email:
       sent_test: "sendt!"
+    user:
+      merge_user:
+        updating_username: "Opdaterer brugernavn…"
+        changing_post_ownership: "Ændrer ejerskab af indlæg…"
+        updating_user_ids: "Opdaterer bruger-id'er…"
   user:
     deactivated: "Blev deaktiveret på grund af for mange returnerede e-mails til '%{email}'."
     deactivated_by_staff: "Deaktiveret af hjælperteamet"
@@ -3268,6 +3274,9 @@ da:
       automatic_revoked:
         one: "Automatisk tilbagekaldt, sidste aktivitet for mere end %{count} dag siden"
         other: "Automatisk tilbagekaldt, sidste aktivitet for mere end %{count} dage siden"
+      automatic_revoked_max_life:
+        one: "Automatisk tilbagekaldt, oprettet for mere end %{count} dag siden"
+        other: "Automatisk tilbagekaldt, oprettet for mere end %{count} dage siden"
       revoked: Tilbagekaldt
       restored: Gendannet
   reviewables:
@@ -3294,6 +3303,8 @@ da:
         description: "Gendan indlægget, så alle brugere kan se det."
       delete_single:
         title: "Slet"
+      delete:
+        title: "Slet…"
       delete_and_ignore_replies:
         confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
       delete_and_agree_replies:
@@ -3315,6 +3326,7 @@ da:
       approve_user:
         title: "Godkend Bruger"
       reject_user:
+        title: "Slet Bruger…"
         delete:
           title: "Slet Bruger"
           description: "Brugeren vil blive slettet fra forummet."
@@ -3323,6 +3335,7 @@ da:
           description: "Brugeren vil blive slettet, og vi vil blokere deres IP og e-mail-adresse."
       reject:
         title: "Afvis"
+        bundle_title: "Afvis…"
       delete_user:
         reason: "Slettet via gennemgangskø"
   email_style:
@@ -3331,6 +3344,11 @@ da:
     ignore_error: "Beklager, du kan ikke ignorere denne bruger."
     mute_error: "Beklager, du kan ikke gøre denne bruger tavs."
   fallback_username: "bruger"
+  form_templates:
+    errors:
+      missing_id: "mangler et felt-id"
+      duplicate_ids: "har duplikerede id'er"
+      reserved_id: "har et reserveret nøgleord som id: %{id}"
   activemodel:
     errors:
       <<: *errors

@@ -2166,6 +2166,32 @@ RSpec.describe Post do
       expect(Post.public_posts_count_per_day(10.days.ago, 5.days.ago)).to be_empty
     end
 
+    it "returns the correct number of public posts per day with category filter" do
+      category = Fabricate(:category)
+      another_category = Fabricate(:category)
+
+      topic = Fabricate(:topic, category: category)
+      another_topic = Fabricate(:topic, category: another_category)
+
+      Fabricate(:post, topic: topic, created_at: 6.days.ago)
+      Fabricate(:post, topic: topic, created_at: 7.days.ago)
+      Fabricate(:post, topic: another_topic, created_at: 6.days.ago)
+      Fabricate(:post, topic: another_topic, created_at: 7.days.ago)
+
+      expect(Post.public_posts_count_per_day(10.days.ago, 5.days.ago, category.id)).to eq(
+        6.days.ago.to_date => 1,
+        7.days.ago.to_date => 1,
+      )
+
+      expect(
+        Post.public_posts_count_per_day(
+          10.days.ago,
+          5.days.ago,
+          [category.id, another_category.id],
+        ),
+      ).to eq(6.days.ago.to_date => 2, 7.days.ago.to_date => 2)
+    end
+
     it "returns the correct number of public posts per day with group filter" do
       user = Fabricate(:user)
       group_user = Fabricate(:user)

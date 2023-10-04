@@ -45,12 +45,12 @@ class ApiKey < ActiveRecord::Base
   end
 
   def self.revoke_unused_keys!
-    return if SiteSetting.revoke_api_keys_days == 0 # Never expire keys
+    return if SiteSetting.revoke_api_keys_unused_days == 0 # Never expire keys
     to_revoke =
       active.where(
         "GREATEST(last_used_at, created_at, updated_at, :epoch) < :threshold",
         epoch: last_used_epoch,
-        threshold: SiteSetting.revoke_api_keys_days.days.ago,
+        threshold: SiteSetting.revoke_api_keys_unused_days.days.ago,
       )
 
     to_revoke.find_each do |api_key|
@@ -64,7 +64,31 @@ class ApiKey < ActiveRecord::Base
           context:
             I18n.t(
               "staff_action_logs.api_key.automatic_revoked",
-              count: SiteSetting.revoke_api_keys_days,
+              count: SiteSetting.revoke_api_keys_unused_days,
+            ),
+        )
+      end
+    end
+  end
+
+  def self.revoke_max_life_keys!
+    return if SiteSetting.revoke_api_keys_maxlife_days == 0
+
+    revoke_days_ago = SiteSetting.revoke_api_keys_maxlife_days.days.ago
+    to_revoke = ApiKey.active.where("created_at < ?", revoke_days_ago)
+
+    to_revoke.find_each do |api_key|
+      ApiKey.transaction do
+        api_key.update!(revoked_at: Time.zone.now)
+
+        StaffActionLogger.new(Discourse.system_user).log_api_key(
+          api_key,
+          UserHistory.actions[:api_key_update],
+          changes: api_key.saved_changes,
+          context:
+            I18n.t(
+              "staff_action_logs.api_key.automatic_revoked_max_life",
+              count: SiteSetting.revoke_api_keys_maxlife_days,
             ),
         )
       end
