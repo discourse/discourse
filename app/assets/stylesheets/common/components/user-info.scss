@@ -10,7 +10,7 @@
 
   .user-detail {
     min-width: 0;
-    @include breakpoint(tablet) {
+    @include breakpoint(mobile-medium) {
       font-size: var(--font-down-1);
     }
 

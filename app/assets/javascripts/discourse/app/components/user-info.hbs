@@ -51,10 +51,8 @@
   {{/if}}
 </div>
 
-<span>
-  <PluginOutlet
-    @name="after-user-info"
-    @connectorTagName="div"
-    @outletArgs={{hash user=this.user}}
-  />
-</span>
+<PluginOutlet
+  @name="after-user-info"
+  @connectorTagName="div"
+  @outletArgs={{hash user=this.user}}
+/>
