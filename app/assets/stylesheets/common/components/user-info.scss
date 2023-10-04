@@ -1,10 +1,7 @@
 // Common styles for "user-info" component
 .user-info {
-  > a {
-    display: flex;
-    gap: 1em;
-    min-width: 0;
-  }
+  display: flex;
+  gap: 1em;
 
   .user-image-inner {
     position: relative;
@@ -18,16 +15,17 @@
     }
 
     .name-line {
-      display: flex;
-      gap: 0.5em;
-      color: var(--primary-high);
+      > a {
+        display: flex;
+        gap: 0.5em;
+        color: var(--primary-high);
+      }
       .name,
       .username {
         @include ellipsis;
       }
 
       span:first-child {
-        flex: 0 0 auto;
         font-weight: bold;
       }
     }
@@ -40,7 +38,6 @@
     }
 
     .title {
-      margin-top: 0.25em;
       color: var(--primary-medium);
     }
   }
