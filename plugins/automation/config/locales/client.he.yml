@@ -139,6 +139,12 @@ he:
               label: קטגוריה
             restricted_group:
               label: קבוצה
+            first_post_only:
+              label: פוסט ראשון בלבד
+              description: יוקפץ רק אם הפוסט הוא הפוסט הראשון שיצר המשתמש
+            first_topic_only:
+              label: נושא ראשון בלבד
+              description: יוקפץ רק אם הנושא הוא הנושא הראשון שיצר המשתמש
           created: נוצרו
           edited: נערכו
         category_created_edited:
