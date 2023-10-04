@@ -183,4 +183,15 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     assert.dom(".fk-d-menu").hasAttribute("style", /left: /);
     assert.ok(find(".fk-d-menu").getAttribute("style").includes("top: "));
   });
+
+  test("content close argument", async function (assert) {
+    await render(
+      hbs`<DMenu @inline={{true}}><:trigger>test</:trigger><:content as |args|><DButton @icon="times" @action={{args.close}} /></:content></DMenu>`
+    );
+    await open();
+
+    await click(".d-icon-times");
+
+    assert.dom(".fk-d-menu").doesNotExist();
+  });
 });
