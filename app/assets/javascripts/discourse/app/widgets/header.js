@@ -1,6 +1,7 @@
 import { schedule } from "@ember/runloop";
 import { hbs } from "ember-cli-htmlbars";
 import { h } from "virtual-dom";
+import { SEARCH_BUTTON_ID } from "discourse/components/search-menu";
 import { addExtraUserClasses } from "discourse/helpers/user-avatar";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
@@ -11,9 +12,8 @@ import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
 import { iconNode } from "discourse-common/lib/icon-library";
+import discourseLater from "discourse-common/lib/later";
 import I18n from "I18n";
-
-const SEARCH_BUTTON_ID = "search-button";
 
 let _extraHeaderIcons = [];
 
@@ -256,6 +256,24 @@ createWidget("header-icons", {
       action: "toggleHamburger",
       href: "",
       classNames: ["hamburger-dropdown"],
+
+      contents() {
+        let { currentUser } = this;
+        if (
+          currentUser?.reviewable_count &&
+          this.siteSettings.navigation_menu === "legacy"
+        ) {
+          return h(
+            "div.badge-notification.reviewables",
+            {
+              attributes: {
+                title: I18n.t("notifications.reviewable_items"),
+              },
+            },
+            this.currentUser.reviewable_count
+          );
+        }
+      },
     });
 
     if (!attrs.sidebarEnabled || this.site.mobileView) {
@@ -347,8 +365,27 @@ createWidget("revamped-hamburger-menu-wrapper", {
     }
   },
 
-  clickOutside() {
-    this.sendWidgetAction("toggleHamburger");
+  clickOutside(e) {
+    if (e.target.classList.contains("header-cloak")) {
+      const panel = document.querySelector(".menu-panel");
+      const headerCloak = document.querySelector(".header-cloak");
+      headerCloak.classList.add("animate");
+      panel.classList.add("animate");
+
+      const finishPosition =
+        document.querySelector("html").classList["direction"] === "rtl"
+          ? "100vw"
+          : "-100vw";
+      panel.style["transform"] = `translate3d(${finishPosition}, 0, 0)`;
+      headerCloak.style.setProperty("--opacity", 0);
+      discourseLater(() => {
+        this.sendWidgetAction("toggleHamburger");
+        headerCloak.classList.remove("animate");
+        panel.classList.remove("animate");
+      }, 200);
+    } else {
+      this.sendWidgetAction("toggleHamburger");
+    }
   },
 });
 
@@ -374,8 +411,27 @@ createWidget("revamped-user-menu-wrapper", {
     this.sendWidgetAction("toggleUserMenu");
   },
 
-  clickOutside() {
-    this.closeUserMenu();
+  clickOutside(e) {
+    if (e.target.classList.contains("header-cloak")) {
+      const panel = document.querySelector(".menu-panel");
+      const headerCloak = document.querySelector(".header-cloak");
+      headerCloak.classList.add("animate");
+      panel.classList.add("animate");
+
+      const finishPosition =
+        document.querySelector("html").classList["direction"] === "rtl"
+          ? "-100vw"
+          : "100vw";
+      panel.style["transform"] = `translate3d(${finishPosition}, 0, 0)`;
+      headerCloak.style.setProperty("--opacity", 0);
+      discourseLater(() => {
+        this.closeUserMenu();
+        headerCloak.classList.remove("animate");
+        panel.classList.remove("animate");
+      }, 200);
+    } else {
+      this.closeUserMenu();
+    }
   },
 });
 
@@ -394,17 +450,14 @@ createWidget("glimmer-search-menu-wrapper", {
       new RenderGlimmer(
         this,
         "div.widget-component-connector",
-        hbs`<SearchMenuPanel @closeSearchMenu={{@data.closeSearchMenu}} />`,
-        {
-          closeSearchMenu: this.closeSearchMenu.bind(this),
-        }
+        hbs`<SearchMenu @closeSearchMenu={{@data.closeSearchMenu}} />`,
+        { closeSearchMenu: this.closeSearchMenu.bind(this) }
       ),
     ];
   },
 
   closeSearchMenu() {
     this.sendWidgetAction("toggleSearchMenu");
-    document.getElementById(SEARCH_BUTTON_ID)?.focus();
   },
 
   clickOutside() {
@@ -469,8 +522,9 @@ export default createWidget("header", {
       } else if (state.hamburgerVisible) {
         if (
           attrs.navigationMenuQueryParamOverride === "header_dropdown" ||
-          !attrs.sidebarEnabled ||
-          this.site.narrowDesktopView
+          (attrs.navigationMenuQueryParamOverride !== "legacy" &&
+            this.siteSettings.navigation_menu !== "legacy" &&
+            (!attrs.sidebarEnabled || this.site.narrowDesktopView))
         ) {
           panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));
         } else {
@@ -583,15 +637,24 @@ export default createWidget("header", {
   },
 
   toggleHamburger() {
-    if (this.attrs.sidebarEnabled && !this.site.narrowDesktopView) {
+    if (
+      this.siteSettings.navigation_menu !== "legacy" &&
+      this.attrs.sidebarEnabled &&
+      !this.site.narrowDesktopView
+    ) {
       this.sendWidgetAction("toggleSidebar");
     } else {
       this.state.hamburgerVisible = !this.state.hamburgerVisible;
       this.toggleBodyScrolling(this.state.hamburgerVisible);
 
       schedule("afterRender", () => {
-        // Remove focus from hamburger toggle button
-        document.querySelector("#toggle-hamburger-menu")?.blur();
+        if (this.siteSettings.navigation_menu !== "legacy") {
+          // Remove focus from hamburger toggle button
+          document.querySelector("#toggle-hamburger-menu")?.blur();
+        } else {
+          // auto focus on first link in dropdown
+          document.querySelector(".hamburger-panel .menu-links a")?.focus();
+        }
       });
     }
   },
