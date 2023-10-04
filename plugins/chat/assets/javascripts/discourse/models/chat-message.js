@@ -7,7 +7,7 @@ import I18n from "I18n";
 import { generateCookFunction, parseMentions } from "discourse/lib/text";
 import transformAutolinks from "discourse/plugins/chat/discourse/lib/transform-auto-links";
 import discourseLater from "discourse-common/lib/later";
-import { inject as service } from "@ember/service";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 
 export default class ChatMessage {
   static cookFunction = null;
@@ -20,10 +20,6 @@ export default class ChatMessage {
     args.draft = true;
     return ChatMessage.create(channel, args);
   }
-
-  @service site;
-  @service siteSettings;
-  @service usersApi;
 
   @tracked id;
   @tracked error;
@@ -99,6 +95,12 @@ export default class ChatMessage {
     if (args.thread) {
       this.thread = args.thread;
     }
+
+    this.site = getOwnerWithFallback(this).lookup("service:site");
+    this.siteSettings = getOwnerWithFallback(this).lookup(
+      "service:site-settings"
+    );
+    this.usersApi = getOwnerWithFallback(this).lookup("service:usersApi");
   }
 
   get persisted() {
