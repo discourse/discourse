@@ -536,7 +536,6 @@ export function setup(opts, siteSettings, state) {
   };
 
   opts.discourse = copy;
-  getOptions.f = () => opts.discourse;
 
   opts.discourse.limitedSiteSettings = {
     secureUploads: siteSettings.secure_uploads,
