@@ -21,6 +21,10 @@ export default class ChatMessage {
     return ChatMessage.create(channel, args);
   }
 
+  @service site;
+  @service siteSettings;
+  @service usersApi;
+
   @tracked id;
   @tracked error;
   @tracked selected;
@@ -51,14 +55,9 @@ export default class ChatMessage {
   @tracked message;
   @tracked manager;
   @tracked deletedById;
-
   @tracked _deletedAt;
   @tracked _cooked;
   @tracked _thread;
-
-  @service site;
-  @service siteSettings;
-  @service usersApi;
 
   constructor(channel, args = {}) {
     this.id = args.id;
