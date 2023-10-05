@@ -121,3 +121,18 @@ chat:
     default: "never"
     type: enum
     enum: "Chat::SeparateSidebarModeSiteSetting"
+  edit_message_grace_period_seconds:
+    client: true
+    type: integer
+    default: 30
+    min: 0
+  edit_message_grace_period_max_chars_low_trust:
+    client: true
+    type: integer
+    default: 10
+    min: 0
+  edit_message_grace_period_max_chars_high_trust:
+    client: true
+    type: integer
+    default: 40
+    min: 0

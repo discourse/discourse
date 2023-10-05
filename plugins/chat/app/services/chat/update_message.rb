@@ -47,6 +47,7 @@ module Chat
           :bookmarks,
           :chat_webhook_event,
           :uploads,
+          :revisions,
           chat_channel: [
             :last_message,
             :chat_channel_archive,
@@ -93,6 +94,8 @@ module Chat
     end
 
     def save_revision(message:, guardian:, **)
+      return if !should_create_revision?(message: message, guardian: guardian)
+
       context.revision =
         message.revisions.create!(
           old_message: message.message_before_last_save,
@@ -101,10 +104,32 @@ module Chat
         )
     end
 
+    def should_create_revision?(message:, guardian:, **)
+      maxSeconds = SiteSetting.edit_message_grace_period_seconds
+      maxEditedChars =
+        (
+          if guardian.user.has_trust_level?(TrustLevel[2])
+            SiteSetting.edit_message_grace_period_max_chars_high_trust
+          else
+            SiteSetting.edit_message_grace_period_max_chars_low_trust
+          end
+        )
+      secondsSinceCreated = Time.now.to_i - message&.created_at.iso8601.to_time.to_i
+      charsEdited =
+        ONPDiff
+          .new(message.message_before_last_save, message.message)
+          .short_diff
+          .sum { |str, type| type == :common ? 0 : str.size }
+
+      secondsSinceCreated > maxSeconds || charsEdited > maxEditedChars
+    end
+
     def publish(message:, guardian:, **)
       ::Chat::Publisher.publish_edit!(message.chat_channel, message)
       Jobs.enqueue(Jobs::Chat::ProcessMessage, { chat_message_id: message.id })
-      ::Chat::Notifier.notify_edit(chat_message: message, timestamp: context.revision.created_at)
+
+      edit_timestamp = context.revision&.created_at || Time.zone.now
+      ::Chat::Notifier.notify_edit(chat_message: message, timestamp: edit_timestamp)
       DiscourseEvent.trigger(:chat_message_edited, message, message.chat_channel, guardian.user)
 
       if message.thread.present?
