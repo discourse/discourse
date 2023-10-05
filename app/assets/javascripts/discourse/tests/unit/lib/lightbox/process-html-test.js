@@ -82,7 +82,7 @@ module("Unit | lib | Experimental lightbox | processHTML()", function (hooks) {
     assert.strictEqual(items.length, 3);
   });
 
-  test("fallbacks to src when no href is defined for fullsizeURL", async function (assert) {
+  test("falls back to src when no href is defined for fullsizeURL", async function (assert) {
     const container = wrap.cloneNode(true);
 
     container.querySelector("a").removeAttribute("href");
