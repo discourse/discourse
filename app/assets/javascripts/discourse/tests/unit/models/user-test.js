@@ -119,7 +119,7 @@ module("Unit | Model | user", function (hooks) {
 
   test("subsequent calls to trackStatus and stopTrackingStatus increase and decrease subscribers counter", function (assert) {
     const store = getOwner(this).lookup("service:store");
-    const user = store.createRecord("user");
+    const user = store.createRecord("user", { id: 1 });
     assert.strictEqual(user._subscribersCount, 0);
 
     user.trackStatus();
@@ -137,7 +137,7 @@ module("Unit | Model | user", function (hooks) {
 
   test("attempt to stop tracking status if status wasn't tracked doesn't throw", function (assert) {
     const store = getOwner(this).lookup("service:store");
-    const user = store.createRecord("user");
+    const user = store.createRecord("user", { id: 1 });
     user.stopTrackingStatus();
     assert.ok(true);
   });
@@ -165,11 +165,11 @@ module("Unit | Model | user", function (hooks) {
       assert.strictEqual(user1.status, status1);
       assert.strictEqual(user2.status, status2);
 
-      appEvents.trigger("user-status:changed", { [user1.id]: null });
+      appEvents.trigger("user-status:changed:1", null);
       assert.strictEqual(user1.status, null);
       assert.strictEqual(user2.status, status2);
 
-      appEvents.trigger("user-status:changed", { [user2.id]: null });
+      appEvents.trigger("user-status:changed:2", null);
       assert.strictEqual(user1.status, null);
       assert.strictEqual(user2.status, null);
     } finally {
@@ -181,6 +181,7 @@ module("Unit | Model | user", function (hooks) {
   test("create() doesn't set internal status tracking fields", function (assert) {
     const store = getOwner(this).lookup("service:store");
     const user = store.createRecord("user", {
+      id: 1,
       _subscribersCount: 10,
       _clearStatusTimerId: 100,
     });

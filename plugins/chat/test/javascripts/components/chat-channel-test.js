@@ -87,9 +87,10 @@ module(
         emoji: "tooth",
       };
 
-      this.appEvents.trigger("user-status:changed", {
-        [mentionedUser.id]: newStatus,
-      });
+      this.appEvents.trigger(
+        `user-status:changed:${mentionedUser.id}`,
+        newStatus
+      );
 
       const selector = statusSelector(mentionedUser.username);
       await waitFor(selector);
@@ -112,9 +113,7 @@ module(
         hbs`<ChatChannel @channel={{this.channel}} /><DInlineTooltip />`
       );
 
-      this.appEvents.trigger("user-status:changed", {
-        [mentionedUser.id]: null,
-      });
+      this.appEvents.trigger(`user-status:changed:${mentionedUser.id}`, null);
 
       const selector = statusSelector(mentionedUser.username);
       await waitFor(selector, { count: 0 });
@@ -150,9 +149,10 @@ module(
         description: "off to meeting",
         emoji: "calendar",
       };
-      this.appEvents.trigger("user-status:changed", {
-        [mentionedUser2.id]: newStatus,
-      });
+      this.appEvents.trigger(
+        `user-status:changed:${mentionedUser2.id}`,
+        newStatus
+      );
 
       const selector = statusSelector(mentionedUser2.username);
       await waitFor(selector);
@@ -174,9 +174,7 @@ module(
       );
       await receiveChatMessageViaMessageBus();
 
-      this.appEvents.trigger("user-status:changed", {
-        [mentionedUser2.id]: null,
-      });
+      this.appEvents.trigger(`user-status:changed:${mentionedUser2.id}`, null);
 
       const selector = statusSelector(mentionedUser2.username);
       await waitFor(selector, { count: 0 });

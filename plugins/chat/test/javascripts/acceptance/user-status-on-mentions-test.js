@@ -128,9 +128,10 @@ acceptance("Chat | User status on mentions", function (needs) {
     await visit(`/chat/c/-/${channelId}`);
     await typeWithAutocompleteAndSend(`mentioning @${mentionedUser2.username}`);
 
-    loggedInUser().appEvents.trigger("user-status:changed", {
-      [mentionedUser2.id]: newStatus,
-    });
+    loggedInUser().appEvents.trigger(
+      `user-status:changed:${mentionedUser2.id}`,
+      newStatus
+    );
 
     const selector = statusSelector(mentionedUser2.username);
     await waitFor(selector);
@@ -143,9 +144,10 @@ acceptance("Chat | User status on mentions", function (needs) {
 
     await typeWithAutocompleteAndSend(`mentioning @${mentionedUser2.username}`);
 
-    loggedInUser().appEvents.trigger("user-status:changed", {
-      [mentionedUser2.id]: null,
-    });
+    loggedInUser().appEvents.trigger(
+      `user-status:changed:${mentionedUser2.id}`,
+      null
+    );
 
     const selector = statusSelector(mentionedUser2.username);
     await waitFor(selector, { count: 0 });
@@ -179,9 +181,10 @@ acceptance("Chat | User status on mentions", function (needs) {
       `mentioning @${mentionedUser3.username}`
     );
 
-    loggedInUser().appEvents.trigger("user-status:changed", {
-      [mentionedUser3.id]: newStatus,
-    });
+    loggedInUser().appEvents.trigger(
+      `user-status:changed:${mentionedUser3.id}`,
+      newStatus
+    );
 
     const selector = statusSelector(mentionedUser3.username);
     await waitFor(selector);
@@ -197,9 +200,10 @@ acceptance("Chat | User status on mentions", function (needs) {
       `mentioning @${mentionedUser3.username}`
     );
 
-    loggedInUser().appEvents.trigger("user-status:changed", {
-      [mentionedUser3.id]: null,
-    });
+    loggedInUser().appEvents.trigger(
+      `user-status:changed:${mentionedUser3.id}`,
+      null
+    );
 
     const selector = statusSelector(mentionedUser3.username);
     await waitFor(selector, { count: 0 });
@@ -230,9 +234,10 @@ acceptance("Chat | User status on mentions", function (needs) {
     await deleteMessage(".chat-message-content");
     await click(".chat-message-expand");
 
-    loggedInUser().appEvents.trigger("user-status:changed", {
-      [mentionedUser1.id]: newStatus,
-    });
+    loggedInUser().appEvents.trigger(
+      `user-status:changed:${mentionedUser1.id}`,
+      newStatus
+    );
 
     const selector = statusSelector(mentionedUser1.username);
     await waitFor(selector);
@@ -246,9 +251,10 @@ acceptance("Chat | User status on mentions", function (needs) {
     await deleteMessage(".chat-message-content");
     await click(".chat-message-expand");
 
-    loggedInUser().appEvents.trigger("user-status:changed", {
-      [mentionedUser1.id]: null,
-    });
+    loggedInUser().appEvents.trigger(
+      `user-status:changed:${mentionedUser1.id}`,
+      null
+    );
 
     const selector = statusSelector(mentionedUser1.username);
     await waitFor(selector, { count: 0 });
@@ -279,9 +285,10 @@ acceptance("Chat | User status on mentions", function (needs) {
     await deleteMessage(".chat-message-content");
     await restoreMessage(".chat-message-text.-deleted");
 
-    loggedInUser().appEvents.trigger("user-status:changed", {
-      [mentionedUser1.id]: newStatus,
-    });
+    loggedInUser().appEvents.trigger(
+      `user-status:changed:${mentionedUser1.id}`,
+      newStatus
+    );
 
     const selector = statusSelector(mentionedUser1.username);
     await waitFor(selector);
@@ -295,9 +302,10 @@ acceptance("Chat | User status on mentions", function (needs) {
     await deleteMessage(".chat-message-content");
     await restoreMessage(".chat-message-text.-deleted");
 
-    loggedInUser().appEvents.trigger("user-status:changed", {
-      [mentionedUser1.id]: null,
-    });
+    loggedInUser().appEvents.trigger(
+      `user-status:changed:${mentionedUser1.id}`,
+      null
+    );
 
     const selector = statusSelector(mentionedUser1.username);
     await waitFor(selector, { count: 0 });
