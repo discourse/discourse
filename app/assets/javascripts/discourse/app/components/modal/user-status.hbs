@@ -36,7 +36,7 @@
   <:footer>
     <DButton
       @label="user_status.save"
-      @disabled={{not this.statusIsSet}}
+      @disabled={{this.saveDisabled}}
       @action={{this.saveAndClose}}
       class="btn-primary"
     />

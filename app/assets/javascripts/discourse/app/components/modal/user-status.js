@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { action } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ItsATrap from "@discourse/itsatrap";
@@ -12,7 +13,7 @@ export default class UserStatusModal extends Component {
   @service currentUser;
   @service dialog;
 
-  status = { ...this.args.model.status };
+  status = new TrackedObject({ ...this.args.model.status });
   timeShortcuts = this.#buildTimeShortcuts();
   _itsatrap = new ItsATrap();
 
@@ -22,15 +23,15 @@ export default class UserStatusModal extends Component {
   }
 
   get showDeleteButton() {
-    return !!this.status;
+    return !!this.args.model.status;
   }
 
   get prefilledDateTime() {
     return this.status?.ends_at;
   }
 
-  get statusIsSet() {
-    return !!this.status?.emoji && !!this.status?.description;
+  get saveDisabled() {
+    return !this.status?.emoji || !this.status?.description;
   }
 
   get customTimeShortcutLabels() {
@@ -58,7 +59,7 @@ export default class UserStatusModal extends Component {
 
   @action
   onTimeSelected(_, time) {
-    this.status.set("endsAt", time);
+    this.status.endsAt = time;
   }
 
   @action
