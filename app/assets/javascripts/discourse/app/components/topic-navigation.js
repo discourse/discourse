@@ -150,10 +150,7 @@ export default Component.extend(PanEvents, {
         distancePx / Math.abs(event.velocityY),
         this._MAX_ANIMATION_TIME
       );
-      document.documentElement.style.setProperty(
-        "--swipe-duration",
-        `${durationMs / 1000}s`
-      );
+      timelineContainer.style["transition-duration"] = `${durationMs / 1000}s`;
       timelineContainer.style[
         "transform"
       ] = `translate3d(0, ${maxOffset}px, 0)`;
@@ -161,25 +158,21 @@ export default Component.extend(PanEvents, {
       discourseLater(() => {
         this._collapseFullscreen(0);
         timelineContainer.classList.remove("animate");
-        document.documentElement.style.removeProperty("--swipe-timing");
-        document.documentElement.style.removeProperty("--swipe-duration");
+        timelineContainer.style["transition-duration"] = null;
       }, durationMs);
     } else {
-      document.documentElement.style.setProperty("--swipe-timing", "ease-out");
+      timelineContainer.style["transition-timing-function"] = "ease-out";
       const distancePx = this.pxClosed;
       durationMs = Math.min(
         distancePx / Math.abs(event.velocityY),
         this._MAX_ANIMATION_TIME
       );
-      document.documentElement.style.setProperty(
-        "--swipe-duration",
-        `${durationMs / 1000}s`
-      );
+      timelineContainer.style["transition-duration"] = `${durationMs / 1000}s`;
       timelineContainer.style["transform"] = `translate3d(0, 0, 0)`;
       discourseLater(() => {
         timelineContainer.classList.remove("animate");
-        document.documentElement.style.removeProperty("--swipe-timing");
-        document.documentElement.style.removeProperty("--swipe-duration");
+        timelineContainer.style["transition-timing-function"] = null;
+        timelineContainer.style["transition-duration"] = null;
       }, durationMs);
     }
   },

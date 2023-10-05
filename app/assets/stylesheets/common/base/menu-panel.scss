@@ -602,8 +602,7 @@
 
   @media (prefers-reduced-motion: no-preference) {
     &.animate {
-      transition: opacity var(--swipe-duration, 0.2s)
-        var(--swipe-timing, linear);
+      transition: opacity 0.2s linear;
     }
   }
 }
@@ -629,8 +628,7 @@
 
   @media (prefers-reduced-motion: no-preference) {
     &.animate {
-      transition: transform var(--swipe-duration, 0.2s)
-        var(--swipe-timing, linear);
+      transition: transform 0.2s linear;
     }
   }
   &.moving,

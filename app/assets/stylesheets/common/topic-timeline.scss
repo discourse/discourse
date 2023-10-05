@@ -39,8 +39,7 @@
   &.timeline-fullscreen {
     @media (prefers-reduced-motion: no-preference) {
       &.animate {
-        transition: transform var(--swipe-duration, 0.2s)
-          var(--swipe-timing, linear);
+        transition: transform 0.2s linear;
       }
       transition: max-height 0.3s ease-in;
     }

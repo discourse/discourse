@@ -78,7 +78,8 @@ const SiteHeaderComponent = MountWidget.extend(
       const headerCloak = document.querySelector(".header-cloak");
       panel.classList.add("animate");
       headerCloak.classList.add("animate");
-      document.documentElement.style.setProperty("--swipe-timing", "ease-out");
+      panel.style["transition-timing-function"] = "ease-out";
+      headerCloak.style["transition-timing-function"] = "ease-out";
       let durationMs = this._MAX_ANIMATION_TIME;
       if (event && this.pxClosed > 0) {
         const distancePx = this.pxClosed;
@@ -86,16 +87,16 @@ const SiteHeaderComponent = MountWidget.extend(
           distancePx / Math.abs(event.velocityX),
           this._MAX_ANIMATION_TIME
         );
-        document.documentElement.style.setProperty(
-          "--swipe-duration",
-          `${durationMs / 1000}s`
-        );
+        headerCloak.style["transition-duration"] = `${durationMs / 1000}s`;
+        panel.style["transition-duration"] = `${durationMs / 1000}s`;
       }
       this._scheduledRemoveAnimate = discourseLater(() => {
         panel.classList.remove("animate");
         headerCloak.classList.remove("animate");
-        document.documentElement.style.removeProperty("--swipe-timing");
-        document.documentElement.style.removeProperty("--swipe-duration");
+        panel.style["transition-duration"] = null;
+        headerCloak.style["transition-duration"] = null;
+        panel.style["transition-timing-function"] = null;
+        headerCloak.style["transition-timing-function"] = null;
       }, durationMs);
       panel.style["transform"] = `translate3d(0, 0, 0)`;
       headerCloak.style.setProperty("--opacity", 0.5);
@@ -116,10 +117,8 @@ const SiteHeaderComponent = MountWidget.extend(
           distancePx / Math.abs(event.velocityX),
           this._MAX_ANIMATION_TIME
         );
-        document.documentElement.style.setProperty(
-          "--swipe-duration",
-          `${durationMs / 1000}s`
-        );
+        panel.style["transition-duration"] = `${durationMs / 1000}s`;
+        headerCloak.style["transition-duration"] = `${durationMs / 1000}s`;
       }
 
       if (menuOrigin === "left") {
@@ -136,7 +135,8 @@ const SiteHeaderComponent = MountWidget.extend(
         schedule("afterRender", () => {
           this.eventDispatched("dom:clean", "header");
           this._panMenuOffset = 0;
-          document.documentElement.style.removeProperty("--swipe-duration");
+          panel.style["transition-duration"] = null;
+          headerCloak.style["transition-duration"] = null;
         });
       }, durationMs);
     },
