@@ -56,4 +56,10 @@ export default class CapabilitiesService {
   static create() {
     return capabilities;
   }
+
+  get userHasbeenActive() {
+    return (
+      !("userActivation" in navigator) || navigator.userActivation.hasBeenActive
+    );
+  }
 }

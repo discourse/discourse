@@ -10,7 +10,6 @@ import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
-import { isTesting } from "discourse-common/config/environment";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { hbs } from "ember-cli-htmlbars";
@@ -820,7 +819,7 @@ export default createWidget("post-menu", {
       return this.sendWidgetAction("showLogin");
     }
 
-    if (this.capabilities.canVibrate && !isTesting()) {
+    if (this.capabilities.userHasbeenActive && this.capabilities.canVibrate) {
       navigator.vibrate(VIBRATE_DURATION);
     }
 
