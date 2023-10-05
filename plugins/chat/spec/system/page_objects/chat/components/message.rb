@@ -53,7 +53,7 @@ module PageObjects
           end
 
           if page.has_css?("html.mobile-view", wait: 0)
-            component.click(delay: 0.4)
+            component.click(delay: 0.6)
             page.find(".chat-message-actions [data-id=\"select\"]").click
           else
             hover
