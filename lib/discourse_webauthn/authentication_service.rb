@@ -8,6 +8,7 @@ module DiscourseWebauthn
     # the steps followed here. Memoized methods are called in their
     # place in the step flow to make the process clearer.
     def authenticate_security_key
+      # Steps 1-5 of this authentication flow are in the frontend at lib/webauthn.js
       if @params.blank? || (!@params.is_a?(Hash) && !@params.is_a?(ActionController::Parameters))
         raise(
           MalformedPublicKeyCredentialError,
@@ -15,63 +16,75 @@ module DiscourseWebauthn
         )
       end
 
+      # 6. Identify the user being authenticated and verify that this user is the
+      #    owner of the public key credential source credentialSource identified by credential.id:
+
+      # 6a. If the user was identified before the authentication ceremony was initiated,
+      #     verify that the identified user account contains a credential record whose id equals credential.rawId.
       security_key = UserSecurityKey.find_by(credential_id: @params[:credentialId])
       raise(KeyNotFoundError, I18n.t("webauthn.validation.not_found_error")) if security_key.blank?
 
-      # 3. Identify the user being authenticated and verify that this user is the
-      #    owner of the public key credential source credentialSource identified by credential.id:
       if @factor_type == UserSecurityKey.factor_types[:second_factor] &&
            (@current_user == nil || security_key.user == nil || security_key.user != @current_user)
         raise(OwnershipError, I18n.t("webauthn.validation.ownership_error"))
       end
 
-      # 4. Using credential.id (or credential.rawId, if base64url encoding is inappropriate for your use case),
-      #    look up the corresponding credential public key and let credentialPublicKey be that credential public key.
-      public_key = security_key.public_key
+      # 6b. If the user was not identified before the authentication ceremony was initiated,
+      #     verify that response.userHandle is present. Verify that the user account identified by response.userHandle
+      #     contains a credential record whose id equals credential.rawId
+      if @factor_type == UserSecurityKey.factor_types[:first_factor] &&
+           Base64.decode64(@params[:userHandle]) != @current_user.secure_identifier
+        raise(OwnershipError, I18n.t("webauthn.validation.ownership_error"))
+      end
 
-      # 5. Let cData, authData and sig denote the value of credential’s response's clientDataJSON, authenticatorData, and signature respectively.
-      # 6. Let JSONtext be the result of running UTF-8 decode on the value of cData.
-      # 7. Let C, the client data claimed as used for the signature, be the result of running an implementation-specific JSON parser on JSONtext.
+      # 7. No upstream step
+      # 8. No upstream step
+
+      # 9. Let cData, authData and sig denote the value of credential’s response's clientDataJSON, authenticatorData, and signature respectively.
+      # 10. Let JSONtext be the result of running UTF-8 decode on the value of cData.
+      # 11. Let C, the client data claimed as used for the signature, be the result of running an implementation-specific JSON parser on JSONtext.
       client_data
 
-      # 8. Verify that the value of C.type is the string webauthn.get.
+      # 12. Verify that the value of C.type is the string webauthn.get.
       validate_webauthn_type(::DiscourseWebauthn::ACCEPTABLE_AUTHENTICATION_TYPE)
 
-      # 9. Verify that the value of C.challenge equals the base64url encoding of options.challenge.
+      # 13. Verify that the value of C.challenge equals the base64url encoding of options.challenge.
       validate_challenge
 
-      # 10. Verify that the value of C.origin matches the Relying Party's origin.
+      # 14. Verify that the value of C.origin matches the Relying Party's origin.
       validate_origin
 
-      # 11. Verify that the value of C.tokenBinding.status matches the state of Token Binding for the TLS connection
-      #     over which the attestation was obtained. If Token Binding was used on that TLS connection, also verify
-      #     that C.tokenBinding.id matches the base64url encoding of the Token Binding ID for the connection.
-      #     Not using this right now.
+      # 15. If C.topOrigin is present:
+      # - Verify that the Relying Party expects this credential to be used within an iframe that is not same-origin with its ancestors.
+      # - Verify that the value of C.topOrigin matches the origin of a page that the Relying Party expects to be sub-framed within.
+      # We are not using this.
 
-      # 12. Verify that the rpIdHash in authData is the SHA-256 hash of the RP ID expected by the Relying Party.
+      # 16. Verify that the rpIdHash in authData is the SHA-256 hash of the RP ID expected by the Relying Party.
       validate_rp_id_hash
 
-      # 13. Verify that the User Present bit of the flags in authData is set.
+      # 17. Verify that the User Present bit of the flags in authData is set.
       # https://blog.bigbinary.com/2011/07/20/ruby-pack-unpack.html
       #
       validate_user_presence
 
       #
-      # 14. If user verification is required for this registration, verify that
-      #     the User Verified bit of the flags in authData is set.
+      # 18. Determine whether user verification is required for this assertion.
+      #     User verification SHOULD be required if, and only if, options.userVerification is set to required.
+      #     If user verification was determined to be required, verify that the UV bit of the flags in authData is set.
+      #     Otherwise, ignore the value of the UV flag.
       validate_user_verification if @factor_type == UserSecurityKey.factor_types[:first_factor]
 
-      # 15. Verify that the values of the client extension outputs in clientExtensionResults and the authenticator
-      #     extension outputs in the extensions in authData are as expected, considering the client extension input
-      #     values that were given in options.extensions and any specific policy of the Relying Party regarding
-      #     unsolicited extensions, i.e., those that were not specified as part of options.extensions. In the
-      #     general case, the meaning of "are as expected" is specific to the Relying Party and which extensions are in use.
+      # 19. If the BE bit of the flags in authData is not set, verify that the BS bit is not set.
+      #     Not using this right now.
+      # 20. If the credential backup state is used as part of Relying Party business logic or policy...
+      #     Not using this right now.
+      # 21. Verify that the values of the client extension outputs in clientExtensionResults...
       #     Not using this right now.
 
-      # 16. Let hash be the result of computing a hash over response.clientDataJSON using SHA-256.
+      # 22. Let hash be the result of computing a hash over response.clientDataJSON using SHA-256.
       client_data_hash
 
-      # 17. Using credentialPublicKey, verify that sig is a valid signature over the binary concatenation of authData and hash.
+      # 23. Using credentialPublicKey, verify that sig is a valid signature over the binary concatenation of authData and hash.
       cose_key = COSE::Key.deserialize(Base64.decode64(security_key.public_key))
       cose_algorithm = COSE::Algorithm.find(cose_key.alg)
 
@@ -90,7 +103,13 @@ module DiscourseWebauthn
         raise(PublicKeyError, I18n.t("webauthn.validation.public_key_error"))
       end
 
-      # Success! Update the last used at time for the key.
+      # 24. If authData.signCount is nonzero or credentialRecord.signCount is nonzero...
+      #     Not using this right now.
+
+      # 25. If response.attestationObject is present and the Relying Party wishes to verify the attestation...
+      #     Not using this right now.
+
+      # 26. Success! Update the last used at time for the key (credentialRecord).
       security_key.update(last_used: Time.zone.now)
 
       # Return security key record so controller can use it to update the session
