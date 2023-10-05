@@ -17,10 +17,10 @@
   @filterUnselected={{this.filterUnselected}}
   @closeModal={{@closeModal}}
 >
-  <form class="sidebar-tags-form">
-    {{#if this.tagsLoading}}
-      <div class="spinner"></div>
-    {{else}}
+  {{#if this.tagsLoading}}
+    {{loading-spinner size="large"}}
+  {{else}}
+    <form class="sidebar-tags-form">
       {{#if (gt this.tags.length 0)}}
         {{#each this.tags as |tag|}}
           <div
@@ -57,8 +57,8 @@
           {{i18n "sidebar.tags_form_modal.no_tags"}}
         </div>
       {{/if}}
-    {{/if}}
-  </form>
+    </form>
+  {{/if}}
 
   <ConditionalLoadingSpinner @condition={{this.tags.loadingMore}} />
 </Sidebar::EditNavigationMenu::Modal>
