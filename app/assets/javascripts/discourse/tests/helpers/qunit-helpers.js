@@ -338,8 +338,6 @@ export function acceptance(name, optionsOrCallback) {
           updateCurrentUser(userChanges);
         }
 
-        User.current().appEvents =
-          getOwnerWithFallback(this).lookup("service:app-events");
         User.current().trackStatus();
       }
 

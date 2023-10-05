@@ -5,7 +5,6 @@ import {
   REPLY,
 } from "discourse/models/composer";
 import { currentUser } from "discourse/tests/helpers/qunit-helpers";
-import AppEvents from "discourse/services/app-events";
 import { module, test } from "qunit";
 import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
@@ -16,7 +15,6 @@ import pretender, {
 
 function createComposer(opts = {}) {
   opts.user ??= currentUser();
-  opts.appEvents = AppEvents.create();
   const store = getOwner(this).lookup("service:store");
   return store.createRecord("composer", opts);
 }
