@@ -2,7 +2,14 @@ const APPLE_NAVIGATOR_PLATFORMS = /iPhone|iPod|iPad|Macintosh|MacIntel/;
 const APPLE_USER_AGENT_DATA_PLATFORM = /macOS/;
 
 function calculateCapabilities() {
-  const capabilities = {};
+  const capabilities = {
+    get userHasBeenActive() {
+      return (
+        !("userActivation" in navigator) ||
+        navigator.userActivation.hasBeenActive
+      );
+    },
+  };
 
   const ua = navigator.userAgent;
 
@@ -31,10 +38,7 @@ function calculateCapabilities() {
   capabilities.hasContactPicker =
     "contacts" in navigator && "ContactsManager" in window;
 
-  capabilities.canVibrate =
-    "vibrate" in navigator &&
-    (!("userActivation" in navigator) ||
-      navigator.userActivation.hasBeenActive);
+  capabilities.canVibrate = "vibrate" in navigator;
 
   capabilities.isPwa =
     window.matchMedia("(display-mode: standalone)").matches ||
