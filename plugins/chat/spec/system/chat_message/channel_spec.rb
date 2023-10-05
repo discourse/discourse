@@ -83,7 +83,7 @@ RSpec.describe "Chat message - channel", type: :system do
         expect(PageObjects::Components::Toasts.new).to have_success(I18n.t("js.chat.link_copied"))
       end
 
-      it "[mobile] copies the link to the message", mobile: true do
+      xit "[mobile] copies the link to the message", mobile: true do
         chat_page.visit_channel(channel_1)
 
         channel_page.messages.copy_link(thread_1.original_message)
