@@ -137,7 +137,7 @@ import { isTesting } from "discourse-common/config/environment";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.12.0";
+export const PLUGIN_API_VERSION = "1.13.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -951,17 +951,20 @@ class PluginApi {
    *
    * ```javascript
    * import MyComponent from "discourse/plugins/my-plugin/components/my-component";
-   * api.renderIntoOutlet('user-profile-primary', MyComponent);
+   * api.renderInOutlet('user-profile-primary', MyComponent);
    * ```
    *
    * Alternatively, a component could be defined inline using gjs:
    *
    * ```javascript
-   * api.renderIntoOutlet('user-profile-primary', <template>Hello world</template>);
+   * api.renderInOutlet('user-profile-primary', <template>Hello world</template>);
    * ```
    *
+   * @param {string} outletName - Name of plugin outlet to render into
+   * @param {Component} klass - Component class definition to be rendered
+   *
    */
-  renderIntoOutlet(outletName, klass) {
+  renderInOutlet(outletName, klass) {
     extraConnectorComponent(outletName, klass);
   }
 
