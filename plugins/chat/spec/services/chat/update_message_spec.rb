@@ -46,7 +46,7 @@ RSpec.describe Chat::UpdateMessage do
     before do
       SiteSetting.chat_editing_grace_period = 10
       SiteSetting.chat_editing_grace_period_max_diff_low_trust = 10
-      SiteSetting.chat_editing_grace_period_max_diff_high_trust = 20
+      SiteSetting.chat_editing_grace_period_max_diff_high_trust = 40
     end
 
     context "when all steps pass" do
@@ -121,6 +121,13 @@ RSpec.describe Chat::UpdateMessage do
         message_1.update!(message: "hey there, how are you doing today?")
 
         expect { result }.to change { Chat::MessageRevision.count }.by(1)
+      end
+
+      it "allows trusted users to make larger edits without creating revision" do
+        current_user.update!(trust_level: TrustLevel[4])
+        message_1.update!(message: "good morning, how are you doing today??")
+
+        expect { result }.to not_change { Chat::MessageRevision.count }
       end
     end
   end
