@@ -1317,17 +1317,25 @@ User.reopen(Evented, {
 
   // always call stopTrackingStatus() when done with a user
   trackStatus() {
-    if (!this.id && !isTesting()) {
-      // eslint-disable-next-line no-console
-      console.warn(
-        "It's impossible to track user status on a user model that doesn't have id. This user model won't be receiving live user status updates."
-      );
+    if (!this.id) {
+      if (!isTesting()) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          "It's impossible to track user status on a user model that doesn't have id. This user model won't be receiving live user status updates."
+        );
+      }
+
+      return;
     }
 
     if (this._subscribersCount === 0) {
       this.addObserver("status", this, "_statusChanged");
 
-      this.appEvents.on("user-status:changed", this, this._updateStatus);
+      this.appEvents.on(
+        `user-status:changed:${this.id}`,
+        this,
+        this._updateStatus
+      );
 
       if (this.status && this.status.ends_at) {
         this._scheduleStatusClearing(this.status.ends_at);
@@ -1345,7 +1353,11 @@ User.reopen(Evented, {
     if (this._subscribersCount === 1) {
       // the last subscriber is unsubscribing
       this.removeObserver("status", this, "_statusChanged");
-      this.appEvents.off("user-status:changed", this, this._updateStatus);
+      this.appEvents.off(
+        `user-status:changed:${this.id}`,
+        this,
+        this._updateStatus
+      );
       this._unscheduleStatusClearing();
     }
 
@@ -1394,10 +1406,8 @@ User.reopen(Evented, {
     this.set("status", null);
   },
 
-  _updateStatus(statuses) {
-    if (statuses.hasOwnProperty(this.id)) {
-      this.set("status", statuses[this.id]);
-    }
+  _updateStatus(status) {
+    this.set("status", status);
   },
 });
 

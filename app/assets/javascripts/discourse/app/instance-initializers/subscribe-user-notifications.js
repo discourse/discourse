@@ -223,7 +223,9 @@ export default {
 
   @bind
   onUserStatus(data) {
-    this.appEvents.trigger("user-status:changed", data);
+    for (const [id, status] of Object.entries(data)) {
+      this.appEvents.trigger(`user-status:changed:${id}`, status);
+    }
   },
 
   @bind
