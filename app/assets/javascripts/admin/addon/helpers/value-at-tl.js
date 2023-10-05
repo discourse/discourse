@@ -1,6 +1,8 @@
-import { registerUnbound } from "discourse-common/lib/helpers";
+import { registerRawHelper } from "discourse-common/lib/helpers";
 
-registerUnbound("value-at-tl", function (data, params) {
+registerRawHelper("value-at-tl", valueAtTl);
+
+export default function valueAtTl(data, params = {}) {
   let tl = parseInt(params.level, 10);
   if (data) {
     let item = data.find(function (d) {
@@ -12,4 +14,4 @@ registerUnbound("value-at-tl", function (data, params) {
       return 0;
     }
   }
-});
+}
