@@ -3103,20 +3103,6 @@ RSpec.describe SessionController do
           )
         end
 
-        it "logs the user in" do
-          simulate_localhost_passkey_challenge
-          user.activate
-          post "/session/passkey/auth.json",
-               params: {
-                 publicKeyCredential: valid_passkey_auth_data,
-               }
-          expect(response.status).to eq(200)
-          expect(response.parsed_body["error"]).not_to be_present
-          user.reload
-
-          expect(session[:current_user_id]).to eq(user.id)
-        end
-
         it "fails if local logins are not allowed" do
           SiteSetting.enable_local_logins = false
 
@@ -3125,6 +3111,40 @@ RSpec.describe SessionController do
                  publicKeyCredential: valid_passkey_auth_data,
                }
           expect(response.status).to eq(403)
+        end
+
+        it "fails when the key is registered to another user" do
+          simulate_localhost_passkey_challenge
+          user.activate
+          user.create_or_fetch_secure_identifier
+          post "/session/passkey/auth.json",
+               params: {
+                 publicKeyCredential:
+                   valid_passkey_auth_data.merge(
+                     { userHandle: Base64.strict_encode64(SecureRandom.hex(20)) },
+                   ),
+               }
+          expect(response.status).to eq(401)
+          json = response.parsed_body
+          expect(json["errors"][0]).to eq(I18n.t("webauthn.validation.ownership_error"))
+        end
+
+        it "logs the user in" do
+          simulate_localhost_passkey_challenge
+          user.activate
+          user.create_or_fetch_secure_identifier
+          post "/session/passkey/auth.json",
+               params: {
+                 publicKeyCredential:
+                   valid_passkey_auth_data.merge(
+                     { userHandle: Base64.strict_encode64(user.secure_identifier) },
+                   ),
+               }
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["error"]).not_to be_present
+          user.reload
+
+          expect(session[:current_user_id]).to eq(user.id)
         end
       end
     end

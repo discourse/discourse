@@ -174,7 +174,7 @@ class UserSerializer < UserCardSerializer
   end
 
   def include_user_passkeys?
-    SiteSetting.experimental_passkeys
+    SiteSetting.experimental_passkeys?
   end
 
   def bio_raw
