@@ -1368,12 +1368,11 @@ User.reopen(Evented, {
     return this._subscribersCount > 0;
   },
 
-  _statusChanged(sender, key) {
+  _statusChanged() {
     this.trigger("status-changed");
 
-    const status = this.get(key);
-    if (status && status.ends_at) {
-      this._scheduleStatusClearing(status.ends_at);
+    if (this.status?.ends_at) {
+      this._scheduleStatusClearing(this.status.ends_at);
     } else {
       this._unscheduleStatusClearing();
     }
