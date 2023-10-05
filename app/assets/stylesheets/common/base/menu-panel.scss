@@ -593,18 +593,10 @@
   width: 100%;
   position: fixed;
   background-color: black;
-  --opacity: 0.5;
-  opacity: var(--opacity);
   top: var(--header-top);
   left: 0;
   display: none;
   touch-action: pan-y pinch-zoom;
-
-  @media (prefers-reduced-motion: no-preference) {
-    &.animate {
-      transition: opacity 0.2s linear;
-    }
-  }
 }
 
 .menu-panel.slide-in {
@@ -624,22 +616,5 @@
 
   body.footer-nav-ipad & {
     height: calc(var(--base-height) - var(--footer-nav-height));
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    &.animate {
-      transition: transform 0.2s linear;
-    }
-  }
-  &.moving,
-  &.animate {
-    // PERF: remove shadow on pan events
-    box-shadow: none;
-
-    // PERF: only render first 20 items in a list to allow for smooth
-    // pan events
-    li:nth-child(n + 20) {
-      display: none;
-    }
   }
 }

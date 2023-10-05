@@ -38,13 +38,7 @@
 
   &.timeline-fullscreen {
     @media (prefers-reduced-motion: no-preference) {
-      &.animate {
-        transition: transform 0.2s linear;
-      }
       transition: max-height 0.3s ease-in;
-    }
-    &.moving {
-      box-shadow: none;
     }
     max-height: 0;
     position: fixed;

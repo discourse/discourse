@@ -137,43 +137,38 @@ export default Component.extend(PanEvents, {
     }
   },
 
+  _getMaxAnimationTime(durationMs = this._MAX_ANIMATION_TIME) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return 0;
+    }
+    return Math.min(durationMs, this._MAX_ANIMATION_TIME);
+  },
+
   _handlePanDone(event) {
     const timelineContainer = document.querySelector(".timeline-container");
     const maxOffset = timelineContainer.offsetHeight;
 
-    timelineContainer.classList.add("animate");
-    timelineContainer.classList.remove("moving");
-    let durationMs = this._MAX_ANIMATION_TIME;
+    let durationMs = this._getMaxAnimationTime();
     if (this._shouldPanClose(event)) {
       const distancePx = maxOffset - this.pxClosed;
-      durationMs = Math.min(
-        distancePx / Math.abs(event.velocityY),
-        this._MAX_ANIMATION_TIME
+      durationMs = this._getMaxAnimationTime(
+        distancePx / Math.abs(event.velocityY)
       );
-      timelineContainer.style["transition-duration"] = `${durationMs / 1000}s`;
-      timelineContainer.style[
-        "transform"
-      ] = `translate3d(0, ${maxOffset}px, 0)`;
+      timelineContainer.animate(
+        [{ transform: `translate3d(0, ${maxOffset}px, 0)` }],
+        { duration: durationMs, fill: "forwards" }
+      );
 
-      discourseLater(() => {
-        this._collapseFullscreen(0);
-        timelineContainer.classList.remove("animate");
-        timelineContainer.style["transition-duration"] = null;
-      }, durationMs);
+      this._collapseFullscreen(durationMs);
     } else {
-      timelineContainer.style["transition-timing-function"] = "ease-out";
       const distancePx = this.pxClosed;
-      durationMs = Math.min(
-        distancePx / Math.abs(event.velocityY),
-        this._MAX_ANIMATION_TIME
+      durationMs = this._getMaxAnimationTime(
+        distancePx / Math.abs(event.velocityY)
       );
-      timelineContainer.style["transition-duration"] = `${durationMs / 1000}s`;
-      timelineContainer.style["transform"] = `translate3d(0, 0, 0)`;
-      discourseLater(() => {
-        timelineContainer.classList.remove("animate");
-        timelineContainer.style["transition-timing-function"] = null;
-        timelineContainer.style["transition-duration"] = null;
-      }, durationMs);
+      timelineContainer.animate(
+        [{ transform: `translate3d(0, 0, 0)`, easing: "ease-out" }],
+        { duration: durationMs, fill: "forwards" }
+      );
     }
   },
 
@@ -202,7 +197,6 @@ export default Component.extend(PanEvents, {
     } else if (e.direction === "up" || e.direction === "down") {
       this.isPanning = true;
       this.movingElement = document.querySelector(".timeline-container");
-      this.movingElement.classList.add("moving");
     }
   },
 
@@ -221,9 +215,11 @@ export default Component.extend(PanEvents, {
     }
     e.originalEvent.preventDefault();
     this.pxClosed = Math.max(0, e.deltaY);
-    this.movingElement.style[
-      "transform"
-    ] = `translate3d(0, ${this.pxClosed}px, 0)`;
+
+    this.movingElement.animate(
+      [{ transform: `translate3d(0, ${this.pxClosed}px, 0)` }],
+      { fill: "forwards" }
+    );
   },
 
   didInsertElement() {

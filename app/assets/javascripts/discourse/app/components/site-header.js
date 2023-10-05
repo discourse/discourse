@@ -74,32 +74,29 @@ const SiteHeaderComponent = MountWidget.extend(
       });
     },
 
+    _getMaxAnimationTime(durationMs = this._MAX_ANIMATION_TIME) {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return 0;
+      }
+      return Math.min(durationMs, this._MAX_ANIMATION_TIME);
+    },
+
     _setAnimateOpeningProperties(event, panel) {
       const headerCloak = document.querySelector(".header-cloak");
-      panel.classList.add("animate");
-      headerCloak.classList.add("animate");
-      panel.style["transition-timing-function"] = "ease-out";
-      headerCloak.style["transition-timing-function"] = "ease-out";
-      let durationMs = this._MAX_ANIMATION_TIME;
+      let durationMs = this._getMaxAnimationTime();
       if (event && this.pxClosed > 0) {
-        const distancePx = this.pxClosed;
-        durationMs = Math.min(
-          distancePx / Math.abs(event.velocityX),
-          this._MAX_ANIMATION_TIME
+        durationMs = this._getMaxAnimationTime(
+          this.pxClosed / Math.abs(event.velocityX)
         );
-        headerCloak.style["transition-duration"] = `${durationMs / 1000}s`;
-        panel.style["transition-duration"] = `${durationMs / 1000}s`;
       }
-      this._scheduledRemoveAnimate = discourseLater(() => {
-        panel.classList.remove("animate");
-        headerCloak.classList.remove("animate");
-        panel.style["transition-duration"] = null;
-        headerCloak.style["transition-duration"] = null;
-        panel.style["transition-timing-function"] = null;
-        headerCloak.style["transition-timing-function"] = null;
-      }, durationMs);
-      panel.style["transform"] = `translate3d(0, 0, 0)`;
-      headerCloak.style.setProperty("--opacity", 0.5);
+      panel.animate(
+        [{ transform: `translate3d(0, 0, 0)`, easing: "ease-out" }],
+        { duration: durationMs, fill: "forwards" }
+      );
+      headerCloak.animate([{ opacity: 0.5, easing: "ease-out" }], {
+        duration: durationMs,
+        fill: "forwards",
+      });
       this._panMenuOffset = 0;
       this.pxClosed = null;
     },
@@ -107,36 +104,36 @@ const SiteHeaderComponent = MountWidget.extend(
     _animateClosing(event, panel, menuOrigin) {
       this._animate = true;
       const headerCloak = document.querySelector(".header-cloak");
-      panel.classList.add("animate");
-      headerCloak.classList.add("animate");
-      let durationMs = this._MAX_ANIMATION_TIME;
+      let durationMs = this._getMaxAnimationTime();
       const offsetWidth = panel.offsetWidth;
       if (event && this.pxClosed > 0) {
         const distancePx = offsetWidth - this.pxClosed;
-        durationMs = Math.min(
-          distancePx / Math.abs(event.velocityX),
-          this._MAX_ANIMATION_TIME
+        durationMs = this._getMaxAnimationTime(
+          distancePx / Math.abs(event.velocityX)
         );
-        panel.style["transition-duration"] = `${durationMs / 1000}s`;
-        headerCloak.style["transition-duration"] = `${durationMs / 1000}s`;
       }
 
       if (menuOrigin === "left") {
-        panel.style["transform"] = `translate3d(-${offsetWidth}px, 0, 0)`;
+        panel.animate([{ transform: `translate3d(-${offsetWidth}px, 0, 0)` }], {
+          duration: durationMs,
+          fill: "forwards",
+        });
       } else {
-        panel.style["transform"] = `translate3d(${offsetWidth}px, 0, 0)`;
+        panel.animate([{ transform: `translate3d(${offsetWidth}px, 0, 0)` }], {
+          duration: durationMs,
+          fill: "forwards",
+        });
       }
 
-      headerCloak.style.setProperty("--opacity", 0);
+      headerCloak.animate([{ opacity: 0 }], {
+        duration: durationMs,
+        fill: "forwards",
+      });
       this.pxClosed = null;
       this._scheduledRemoveAnimate = discourseLater(() => {
-        panel.classList.remove("animate");
-        headerCloak.classList.remove("animate");
         schedule("afterRender", () => {
           this.eventDispatched("dom:clean", "header");
           this._panMenuOffset = 0;
-          panel.style["transition-duration"] = null;
-          headerCloak.style["transition-duration"] = null;
         });
       }, durationMs);
     },
@@ -153,7 +150,6 @@ const SiteHeaderComponent = MountWidget.extend(
       const menuPanels = document.querySelectorAll(".menu-panel");
       const menuOrigin = this._panMenuOrigin;
       menuPanels.forEach((panel) => {
-        panel.classList.remove("moving");
         if (this._shouldMenuClose(event, menuOrigin)) {
           this._animateClosing(event, panel, menuOrigin);
         } else {
@@ -196,10 +192,6 @@ const SiteHeaderComponent = MountWidget.extend(
       ) {
         e.originalEvent.preventDefault();
         this._isPanning = true;
-        const panel = document.querySelector(".menu-panel");
-        if (panel) {
-          panel.classList.add("moving");
-        }
         this.movingElement = document.querySelector(".menu-panel");
         this.cloakElement = document.querySelector(".header-cloak");
       } else {
@@ -224,18 +216,22 @@ const SiteHeaderComponent = MountWidget.extend(
       if (this._panMenuOrigin === "right") {
         const pxClosed = Math.min(0, -e.deltaX + this._panMenuOffset);
         this.pxClosed = Math.abs(pxClosed);
-        panel.style["transform"] = `translate3d(${-pxClosed}px, 0, 0)`;
-        headerCloak.style.setProperty(
-          "--opacity",
-          Math.min(0.5, (300 + pxClosed) / 600)
+        panel.animate([{ transform: `translate3d(${-pxClosed}px, 0, 0)` }], {
+          fill: "forwards",
+        });
+        headerCloak.animate(
+          [{ opacity: Math.min(0.5, (300 + pxClosed) / 600) }],
+          { fill: "forwards" }
         );
       } else {
         const pxClosed = Math.min(0, e.deltaX + this._panMenuOffset);
         this.pxClosed = Math.abs(pxClosed);
-        panel.style["transform"] = `translate3d(${pxClosed}px, 0, 0)`;
-        headerCloak.style.setProperty(
-          "--opacity",
-          Math.min(0.5, (300 + pxClosed) / 600)
+        panel.animate([{ transform: `translate3d(${pxClosed}px, 0, 0)` }], {
+          fill: "forwards",
+        });
+        headerCloak.animate(
+          [{ opacity: Math.min(0.5, (300 + pxClosed) / 600) }],
+          { fill: "forwards" }
         );
       }
     },
@@ -426,12 +422,16 @@ const SiteHeaderComponent = MountWidget.extend(
             panel.parentElement.classList.contains(this._leftMenuClass())
           ) {
             this._panMenuOrigin = "left";
-            panel.style["transform"] = `translate3d(-100vw, 0, 0)`;
+            panel.animate([{ transform: `translate3d(-100vw, 0, 0)` }], {
+              fill: "forwards",
+            });
           } else {
             this._panMenuOrigin = "right";
-            panel.style["transform"] = `translate3d(100vw, 0, 0)`;
+            panel.animate([{ transform: `translate3d(100vw, 0, 0)` }], {
+              fill: "forwards",
+            });
           }
-          headerCloak.style.setProperty("--opacity", 0);
+          headerCloak.animate([{ opacity: 0 }], { fill: "forwards" });
         }
 
         if (viewMode === "slide-in") {

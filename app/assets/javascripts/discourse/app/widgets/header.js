@@ -369,19 +369,20 @@ createWidget("revamped-hamburger-menu-wrapper", {
     if (e.target.classList.contains("header-cloak")) {
       const panel = document.querySelector(".menu-panel");
       const headerCloak = document.querySelector(".header-cloak");
-      headerCloak.classList.add("animate");
-      panel.classList.add("animate");
-
       const finishPosition =
         document.querySelector("html").classList["direction"] === "rtl"
           ? "100vw"
           : "-100vw";
-      panel.style["transform"] = `translate3d(${finishPosition}, 0, 0)`;
-      headerCloak.style.setProperty("--opacity", 0);
+      panel.animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
+        duration: 200,
+        fill: "forwards",
+      });
+      headerCloak.animate([{ opacity: 0 }], {
+        duration: 200,
+        fill: "forwards",
+      });
       discourseLater(() => {
         this.sendWidgetAction("toggleHamburger");
-        headerCloak.classList.remove("animate");
-        panel.classList.remove("animate");
       }, 200);
     } else {
       this.sendWidgetAction("toggleHamburger");
@@ -415,19 +416,21 @@ createWidget("revamped-user-menu-wrapper", {
     if (e.target.classList.contains("header-cloak")) {
       const panel = document.querySelector(".menu-panel");
       const headerCloak = document.querySelector(".header-cloak");
-      headerCloak.classList.add("animate");
-      panel.classList.add("animate");
-
       const finishPosition =
         document.querySelector("html").classList["direction"] === "rtl"
           ? "-100vw"
           : "100vw";
-      panel.style["transform"] = `translate3d(${finishPosition}, 0, 0)`;
-      headerCloak.style.setProperty("--opacity", 0);
+      panel.animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
+        duration: 200,
+        fill: "forwards",
+      });
+      headerCloak.animate([{ opacity: 0 }], {
+        duration: 200,
+        fill: "forwards",
+      });
+
       discourseLater(() => {
         this.closeUserMenu();
-        headerCloak.classList.remove("animate");
-        panel.classList.remove("animate");
       }, 200);
     } else {
       this.closeUserMenu();
