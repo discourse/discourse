@@ -78,7 +78,7 @@ const SiteHeaderComponent = MountWidget.extend(
       const headerCloak = document.querySelector(".header-cloak");
       panel.classList.add("animate");
       headerCloak.classList.add("animate");
-      document.body.style.setProperty("--swipe-timing", "ease-out");
+      document.documentElement.style.setProperty("--swipe-timing", "ease-out");
       let durationMs = this._MAX_ANIMATION_TIME;
       if (event && this.pxClosed > 0) {
         const distancePx = this.pxClosed;
@@ -86,7 +86,7 @@ const SiteHeaderComponent = MountWidget.extend(
           distancePx / Math.abs(event.velocityX),
           this._MAX_ANIMATION_TIME
         );
-        document.body.style.setProperty(
+        document.documentElement.style.setProperty(
           "--swipe-duration",
           `${durationMs / 1000}s`
         );
@@ -94,8 +94,8 @@ const SiteHeaderComponent = MountWidget.extend(
       this._scheduledRemoveAnimate = discourseLater(() => {
         panel.classList.remove("animate");
         headerCloak.classList.remove("animate");
-        document.body.style.removeProperty("--swipe-timing");
-        document.body.style.removeProperty("--swipe-duration");
+        document.documentElement.style.removeProperty("--swipe-timing");
+        document.documentElement.style.removeProperty("--swipe-duration");
       }, durationMs);
       panel.style["transform"] = `translate3d(0, 0, 0)`;
       headerCloak.style.setProperty("--opacity", 0.5);
@@ -116,7 +116,7 @@ const SiteHeaderComponent = MountWidget.extend(
           distancePx / Math.abs(event.velocityX),
           this._MAX_ANIMATION_TIME
         );
-        document.body.style.setProperty(
+        document.documentElement.style.setProperty(
           "--swipe-duration",
           `${durationMs / 1000}s`
         );
@@ -136,7 +136,7 @@ const SiteHeaderComponent = MountWidget.extend(
         schedule("afterRender", () => {
           this.eventDispatched("dom:clean", "header");
           this._panMenuOffset = 0;
-          document.body.style.removeProperty("--swipe-duration");
+          document.documentElement.style.removeProperty("--swipe-duration");
         });
       }, durationMs);
     },

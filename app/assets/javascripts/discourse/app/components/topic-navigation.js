@@ -150,7 +150,7 @@ export default Component.extend(PanEvents, {
         distancePx / Math.abs(event.velocityY),
         this._MAX_ANIMATION_TIME
       );
-      document.body.style.setProperty(
+      document.documentElement.style.setProperty(
         "--swipe-duration",
         `${durationMs / 1000}s`
       );
@@ -161,25 +161,25 @@ export default Component.extend(PanEvents, {
       discourseLater(() => {
         this._collapseFullscreen(0);
         timelineContainer.classList.remove("animate");
-        document.body.style.removeProperty("--swipe-timing");
-        document.body.style.removeProperty("--swipe-duration");
+        document.documentElement.style.removeProperty("--swipe-timing");
+        document.documentElement.style.removeProperty("--swipe-duration");
       }, durationMs);
     } else {
-      document.body.style.setProperty("--swipe-timing", "ease-out");
+      document.documentElement.style.setProperty("--swipe-timing", "ease-out");
       const distancePx = this.pxClosed;
       durationMs = Math.min(
         distancePx / Math.abs(event.velocityY),
         this._MAX_ANIMATION_TIME
       );
-      document.body.style.setProperty(
+      document.documentElement.style.setProperty(
         "--swipe-duration",
         `${durationMs / 1000}s`
       );
       timelineContainer.style["transform"] = `translate3d(0, 0, 0)`;
       discourseLater(() => {
         timelineContainer.classList.remove("animate");
-        document.body.style.removeProperty("--swipe-timing");
-        document.body.style.removeProperty("--swipe-duration");
+        document.documentElement.style.removeProperty("--swipe-timing");
+        document.documentElement.style.removeProperty("--swipe-duration");
       }, durationMs);
     }
   },
