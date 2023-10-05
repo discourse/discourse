@@ -53,6 +53,17 @@ export default MultiSelectComponent.extend({
     return "category-row";
   },
 
+  async search(filter) {
+    return this.siteSettings.lazy_load_categories
+      ? await Category.asyncSearch(filter, {
+          includeUncategorized:
+            this.attrs.options?.allowUncategorized !== undefined
+              ? this.attrs.options.allowUncategorized
+              : this.selectKit.options.allowUncategorized,
+        })
+      : this._super(filter);
+  },
+
   select(value, item) {
     if (item.multiCategory) {
       const items = item.multiCategory.map((id) =>

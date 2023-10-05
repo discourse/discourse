@@ -138,7 +138,7 @@ export default ComboBoxComponent.extend({
     };
     if (filter) {
       let results = this.siteSettings.lazy_load_categories
-        ? await Category.asyncSearch(filter, opts)
+        ? await Category.asyncSearch(filter, { ...opts, limit: 5 })
         : Category.search(filter, opts);
       results = this._filterUncategorized(results).sort((a, b) => {
         if (a.parent_category_id && !b.parent_category_id) {

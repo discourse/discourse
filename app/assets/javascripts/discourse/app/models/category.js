@@ -660,6 +660,9 @@ Category.reopenClass({
       data: {
         term,
         parent_category_id: opts.parentCategoryId,
+        include_uncategorized: opts.includeUncategorized,
+        include_subcategories: opts.includeSubcategories,
+        prioritized_category_id: opts.prioritizedCategoryId,
         limit: opts.limit,
       },
     });

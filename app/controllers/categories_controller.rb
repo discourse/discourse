@@ -19,7 +19,6 @@ class CategoriesController < ApplicationController
 
   SYMMETRICAL_CATEGORIES_TO_TOPICS_FACTOR = 1.5
   MIN_CATEGORIES_TOPICS = 5
-  DEFAULT_CATEGORIES_LIMIT = 5
   MAX_CATEGORIES_LIMIT = 25
 
   def redirect
@@ -302,6 +301,23 @@ class CategoriesController < ApplicationController
   def search
     term = params[:term].to_s.strip
     parent_category_id = params[:parent_category_id].to_i if params[:parent_category_id].present?
+    include_uncategorized =
+      (
+        if params[:include_uncategorized].present?
+          ActiveModel::Type::Boolean.new.cast(params[:include_uncategorized])
+        else
+          true
+        end
+      )
+    include_subcategories =
+      if params[:include_subcategories].present?
+        ActiveModel::Type::Boolean.new.cast(params[:include_subcategories])
+      else
+        true
+      end
+    prioritized_category_id = params[:prioritized_category_id].to_i if params[
+      :prioritized_category_id
+    ].present?
     limit = params[:limit].to_i.clamp(1, MAX_CATEGORIES_LIMIT) if params[:limit].present?
 
     categories = Category.secured(guardian)
@@ -315,11 +331,26 @@ class CategoriesController < ApplicationController
         ) if term.present?
 
     categories =
-      categories.where(parent_category_id: parent_category_id) if parent_category_id.present?
+      categories.where(
+        "id = :id OR parent_category_id = :id",
+        id: parent_category_id,
+      ) if parent_category_id.present?
 
-    categories = categories.limit(limit || DEFAULT_CATEGORIES_LIMIT)
+    categories =
+      categories.where.not(id: SiteSetting.uncategorized_category_id) if !include_uncategorized
 
-    categorie = categories.order(:read_restricted)
+    categories = categories.where(parent_category_id: nil) if !include_subcategories
+
+    categories = categories.limit(limit || MAX_CATEGORIES_LIMIT)
+
+    categories = categories.order(<<~SQL) if prioritized_category_id.present?
+      CASE
+      WHEN id = #{prioritized_category_id} OR parent_category_id = #{prioritized_category_id} THEN 0
+      ELSE 1
+      END
+    SQL
+
+    categories = categories.order(:read_restricted)
 
     render json: categories, each_serializer: SiteCategorySerializer
   end
