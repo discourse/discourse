@@ -283,7 +283,7 @@ export default class ChatMessageInteractor {
       return;
     }
 
-    if (this.capabilities.userHasbeenActive && this.capabilities.canVibrate) {
+    if (this.capabilities.userHasBeenActive && this.capabilities.canVibrate) {
       navigator.vibrate(5);
     }
 

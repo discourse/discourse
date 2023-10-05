@@ -819,7 +819,7 @@ export default createWidget("post-menu", {
       return this.sendWidgetAction("showLogin");
     }
 
-    if (this.capabilities.userHasbeenActive && this.capabilities.canVibrate) {
+    if (this.capabilities.userHasBeenActive && this.capabilities.canVibrate) {
       navigator.vibrate(VIBRATE_DURATION);
     }
 

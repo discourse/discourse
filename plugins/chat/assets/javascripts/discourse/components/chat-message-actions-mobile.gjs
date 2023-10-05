@@ -141,7 +141,7 @@ export default class ChatMessageActionsMobile extends Component {
   fadeAndVibrate() {
     discourseLater(this.#addFadeIn.bind(this));
 
-    if (this.capabilities.userHasbeenActive && this.capabilities.canVibrate) {
+    if (this.capabilities.userHasBeenActive && this.capabilities.canVibrate) {
       navigator.vibrate(5);
     }
   }

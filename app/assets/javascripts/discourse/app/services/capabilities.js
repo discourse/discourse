@@ -3,7 +3,7 @@ const APPLE_USER_AGENT_DATA_PLATFORM = /macOS/;
 
 function calculateCapabilities() {
   const capabilities = {
-    get userHasbeenActive() {
+    get userHasBeenActive() {
       return (
         !("userActivation" in navigator) ||
         navigator.userActivation.hasBeenActive
