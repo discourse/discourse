@@ -183,6 +183,12 @@ RSpec.describe Chat::CreateMessage do
             it { is_expected.to fail_a_policy(:allowed_to_join_channel) }
           end
 
+          context "when user is system" do
+            fab!(:user) { Discourse.system_user }
+
+            it { is_expected.to be_a_success }
+          end
+
           context "when user can join channel" do
             before { user.groups << Group.find(Group::AUTO_GROUPS[:trust_level_1]) }
 

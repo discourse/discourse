@@ -287,16 +287,10 @@ sv:
       our_moderators: "Våra moderatorer"
       moderators: "Moderatorer"
       stat:
-        all_time: "Alla dagar"
-        last_day: "Senaste 24 timmarna"
-        last_7_days: "Senaste 7 dagarna"
-        last_30_days: "Senaste 30 dagarna"
+        last_day: "24 timmar"
       like_count: "Gillningar"
       topic_count: "Ämnen"
       post_count: "Inlägg"
-      user_count: "Registreringar"
-      active_user_count: "Aktiva användare"
-      contact: "Kontakta oss"
       contact_info: "Vid brådskande ärenden rörande webbplatsen, kontakta oss på %{contact_info}."
     bookmarked:
       title: "Bokmärke"
@@ -1312,7 +1306,6 @@ sv:
         success: "(e-post skickat)"
         in_progress: "(skickar e-post)"
         error: "(fel)"
-        emoji: "lås emoji"
         action: "Skicka e-post för att återställa lösenord"
         set_password: "Ange lösenord"
         choose_new: "Välj ett nytt lösenord"
@@ -1914,7 +1907,6 @@ sv:
       link_label: "E-posta mig en inloggningslänk"
       button_label: "per e-post"
       login_link: "Hoppa över lösenordet; skicka en inloggningslänk till mig per e-post"
-      emoji: "lås emoji"
       complete_username: "Om ett konto matchar användarnamnet <b>%{username}</b>, bör du snart få ett e-postmeddelande med en inloggningslänk."
       complete_email: "Om ett konto matchar <b>%{email}</b>, bör du snart få ett e-postmeddelande med en inloggningslänk."
       complete_username_found: "Vi hittade ett konto som matchade användarnamnet <b> %{username} </b>, du kommer snart att få ett e-postmeddelande med länk för inloggning."
@@ -2003,7 +1995,6 @@ sv:
         security_key: "Använd en säkerhetsnyckel istället"
     invites:
       accept_title: "Inbjudan"
-      emoji: "kuvert-emoji"
       welcome_to: "Välkommen till %{site_name}!"
       invited_by: "Du bjöds in av:"
       social_login_available: "Du kommer också att kunna logga in med sociala medier-inloggningar som använder denna e-postadress."
@@ -3824,7 +3815,6 @@ sv:
       other_tags: "Övriga taggar"
       selector_all_tags: "alla taggar"
       selector_no_tags: "inga taggar"
-      changed: "taggar ändrade:"
       tags: "Taggar"
       choose_for_topic: "alternativa taggar"
       info: "Info"
@@ -4486,7 +4476,6 @@ sv:
           details: "När det finns ett nytt, redigerat, borttaget eller återskapat svar."
         user_event:
           name: "Användarhändelse"
-          details: "När en användare loggar in, loggar ut, bekräftar sin e-postadress, skapas, godkänns eller uppdateras."
         group_event:
           name: "Grupphändelse"
           details: "När en grupp skapas, uppdateras eller förstörs."
@@ -4662,7 +4651,6 @@ sv:
           theme_name: "Temanamn"
           component_name: "Komponentnamn"
           themes_intro: "Välj ett befintligt tema eller installera ett nytt för att komma igång"
-          themes_intro_emoji: "kvinnlig artist emoji"
           beginners_guide_title: "Nybörjarguide för användning av Discourse-teman"
           developers_guide_title: "Utvecklarguide för Discourse-teman"
           browse_themes: "Visa gemenskapens teman"
@@ -5765,7 +5753,6 @@ sv:
             with_time: <span class="username">%{username}</span> kl. <span class="time">%{time}</span>
         badge_intro:
           title: "Välj en befintlig utmärkelse eller skapa en ny för att komma igång"
-          emoji: "kvinnlig student emoji"
           what_are_badges_title: "Vad är utmärkelser?"
           badge_query_examples_title: "Exempel på utmärkelsefråga"
         mass_award:

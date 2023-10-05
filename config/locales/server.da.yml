@@ -1334,7 +1334,6 @@ da:
     tl2_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr dag for tl2 (medlemmer) ved at gange med dette tal"
     tl3_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr. dag for tl3 (regular) ved at gange med dette tal"
     tl4_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr. dag for tl4 (leader) ved at gange med dette tal"
-    num_users_to_silence_new_user: "Hvis en ny brugers indlæg får num_spam_flags_to_silence_new_user spam-flag fra disse mange forskellige brugere, så skjul alle deres indlæg og forhindre fremtidige indlæg. 0 for at deaktivere."
     num_tl3_flags_to_silence_new_user: "Hvis en ny brugers indlæg får så mange rapporteringer fra num_tl3_users_to_silence_new_user forskellige tillidsniveauer 3 brugere, skal du skjule alle deres indlæg og forhindre fremtidige indlæg. 0 for at deaktivere."
     num_tl3_users_to_silence_new_user: "Hvis en ny brugers indlæg får num_tl3_flags_to_silence_new_user rapporteringer fra så mange forskellige tillidsniveau 3-brugere, skal du skjule alle deres indlæg og forhindrer fremtidige indlæg. 0 til at deaktivere."
     flag_sockpuppets: "Hvis en ny bruger svarer på et emne fra den samme IP-adresse som den bruger, der startede emnet, skal begges deres indlæg anmeldes som potentiel spam."

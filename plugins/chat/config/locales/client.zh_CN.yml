@@ -29,10 +29,6 @@ zh_CN:
         chat_message_event:
           name: "聊天消息事件"
           details: "创建、编辑、删除或恢复聊天消息时。"
-    about:
-      chat_messages_count: "聊天消息"
-      chat_channels_count: "聊天频道"
-      chat_users_count: "聊天用户"
     chat:
       deleted_chat_username: 已删除
       dates:

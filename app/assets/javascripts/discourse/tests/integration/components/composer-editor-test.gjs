@@ -1,23 +1,23 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fillIn, render } from "@ember/test-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { query } from "discourse/tests/helpers/qunit-helpers";
+import ComposerEditor from "discourse/components/composer-editor";
 
 module("Integration | Component | ComposerEditor", function (hooks) {
   setupRenderingTest(hooks);
 
   test("warns about users that will not see a mention", async function (assert) {
-    this.set("model", {});
-    this.set("noop", () => {});
-    this.set("expectation", (warning) => {
+    const model = {};
+    const noop = () => {};
+    const expectation = (warning) => {
       if (warning.name === "user-no") {
         assert.deepEqual(warning, { name: "user-no", reason: "a reason" });
       } else if (warning.name === "user-nope") {
         assert.deepEqual(warning, { name: "user-nope", reason: "a reason" });
       }
-    });
+    };
 
     pretender.get("/composer/mentions", () => {
       return response({
@@ -32,27 +32,24 @@ module("Integration | Component | ComposerEditor", function (hooks) {
       });
     });
 
-    await render(hbs`
+    await render(<template>
       <ComposerEditor
-        @composer={{this.model}}
-        @afterRefresh={{this.noop}}
-        @cannotSeeMention={{this.expectation}}
+        @composer={{model}}
+        @afterRefresh={{noop}}
+        @cannotSeeMention={{expectation}}
       />
-    `);
+    </template>);
 
     await fillIn("textarea", "@user-no @user-ok @user-nope");
   });
 
   test("preview sanitizes HTML", async function (assert) {
-    this.set("model", {});
-    this.set("noop", () => {});
+    const model = {};
+    const noop = () => {};
 
-    await render(hbs`
-      <ComposerEditor
-        @composer={{this.model}}
-        @afterRefresh={{this.noop}}
-      />
-    `);
+    await render(<template>
+      <ComposerEditor @composer={{model}} @afterRefresh={{noop}} />
+    </template>);
 
     await fillIn(".d-editor-input", `"><svg onload="prompt(/xss/)"></svg>`);
     assert.strictEqual(

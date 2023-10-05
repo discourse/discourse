@@ -288,16 +288,10 @@ it:
       our_moderators: "I Nostri Moderatori"
       moderators: "Moderatori"
       stat:
-        all_time: "Sempre"
-        last_day: "Ultime 24 ore"
-        last_7_days: "Ultimi 7 giorni"
-        last_30_days: "Ultimi 30 giorni"
+        last_day: "24 ore"
       like_count: "Mi piace"
       topic_count: "Argomenti"
       post_count: "Messaggi"
-      user_count: "Iscrizioni"
-      active_user_count: "Utenti Attivi"
-      contact: "Contattaci"
       contact_info: "Nel caso di un problema grave o urgente riguardante il sito, per favore contattaci all'indirizzo %{contact_info}."
     bookmarked:
       title: "Segnalibro"
@@ -1326,7 +1320,6 @@ it:
         success: "(email inviata)"
         in_progress: "(invio email in corso)"
         error: "(errore)"
-        emoji: "blocca emoji"
         action: "Invia l'email per il ripristino della password"
         set_password: "Imposta Password"
         choose_new: "Scegli una nuova password"
@@ -1937,7 +1930,6 @@ it:
       link_label: "Inviami un link di accesso"
       button_label: "con email"
       login_link: "Salta la password; inviami un link di accesso"
-      emoji: "blocco emoji"
       complete_username: "Se un account corrisponde al nome utente <b>%{username}</b> , a breve dovresti ricevere un'email con un collegamento per l'accesso."
       complete_email: "Se un account corrisponde a <b>%{email}</b>, a breve dovresti ricevere un'email con un collegamento per l'accesso."
       complete_username_found: "Abbiamo trovato un account che corrisponde al nome utente <b>%{username}</b>, a breve dovresti ricevere un'email con un collegamento per l'accesso."
@@ -2028,7 +2020,6 @@ it:
         security_key: "Usa invece una chiave di sicurezza"
     invites:
       accept_title: "Invito"
-      emoji: "emoji envelope"
       welcome_to: "Benvenuto su %{site_name}!"
       invited_by: "Sei stato invitato da:"
       social_login_available: "Sarai anche in grado di accedere con qualsiasi account social usando questa email."
@@ -3612,6 +3603,7 @@ it:
         med {con una percentuale molto alta di 'mi piace' sulle risposte}
         high {con una percentuale estremamente alta di 'mi piace' sulle risposte}
         other {}}
+    latest_poster_link: "Profilo di %{username}, ultimo a pubblicare"
     original_post: "Messaggio Originale"
     views: "Visualizzazioni"
     sr_views: "Ordina per visualizzazioni"
@@ -3896,7 +3888,6 @@ it:
       other_tags: "Altre Etichette"
       selector_all_tags: "tutte le etichette"
       selector_no_tags: "nessuna etichetta"
-      changed: "etichette cambiate:"
       tags: "Etichette"
       choose_for_topic: "etichette facoltative"
       choose_for_topic_required:
@@ -4318,6 +4309,7 @@ it:
         too_many_requests: Hai eseguito questa operazione troppe volte. Attendi prima di riprovare.
         not_found_error: Spiacenti, questo rapporto non esiste
         filter_reports: Filtra rapporti
+        custom_date_range: Data e ora personalizzate
         reports:
           trend_title: "Variazione del %{percent}. Attualmente %{current}, era %{prev} nel periodo precedente."
           today: "Oggi"
@@ -4573,7 +4565,7 @@ it:
           details: "Quando c'è una nuova risposta, modifica, cancellazione o recupero."
         user_event:
           name: "Evento Utente"
-          details: "Quando un utente si connette, si disconnette, conferma email, viene creato, approvato o aggiornato."
+          details: "Quando un utente accede, si disconnette, conferma la propria e-mail, viene creato, approvato, aggiornato, sospeso o riattivato."
         group_event:
           name: "Evento di Gruppo"
           details: "Quando un Gruppo viene creato, aggiornato o eliminato."
@@ -4756,7 +4748,6 @@ it:
           theme_name: "Nome del Tema"
           component_name: "Nome del Componente"
           themes_intro: "Seleziona un tema esistente o installane uno nuovo per iniziare"
-          themes_intro_emoji: "emoji woman artist"
           beginners_guide_title: "Guida per principianti all'uso dei Temi di Discourse"
           developers_guide_title: "Guida per sviluppatori ai Temi di Discourse"
           browse_themes: "Sfoglia i temi della comunità"
@@ -5877,7 +5868,6 @@ it:
             with_time: <span class="username">%{username}</span> in data <span class="time">%{time}</span>
         badge_intro:
           title: "Seleziona un Distintivo esistente o creane uno nuovo per iniziare"
-          emoji: "emoji woman student"
           what_are_badges_title: "Cosa sono i Distintivi?"
           badge_query_examples_title: "Esempi di Query Distintivo"
         mass_award:

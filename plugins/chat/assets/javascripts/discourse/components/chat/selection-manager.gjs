@@ -6,22 +6,61 @@ import { isTesting } from "discourse-common/config/environment";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as service } from "@ember/service";
 import { bind } from "discourse-common/utils/decorators";
-import { tracked } from "@glimmer/tracking";
 import ChatModalMoveMessageToChannel from "discourse/plugins/chat/discourse/components/chat/modal/move-message-to-channel";
+import DButton from "discourse/components/d-button";
+import not from "truth-helpers/helpers/not";
+import I18n from "I18n";
 
 export default class ChatSelectionManager extends Component {
+  <template>
+    <div
+      class="chat-selection-management"
+      data-last-copy-successful={{this.lastCopySuccessful}}
+    >
+      <div class="chat-selection-management__buttons">
+        <DButton
+          @icon="quote-left"
+          @label="chat.selection.quote_selection"
+          @disabled={{not this.anyMessagesSelected}}
+          @action={{this.quoteMessages}}
+          id="chat-quote-btn"
+        />
+
+        <DButton
+          @icon="copy"
+          @label="chat.selection.copy"
+          @disabled={{not this.anyMessagesSelected}}
+          @action={{this.copyMessages}}
+          id="chat-copy-btn"
+        />
+
+        {{#if this.enableMove}}
+          <DButton
+            @icon="sign-out-alt"
+            @label="chat.selection.move_selection_to_channel"
+            @disabled={{not this.anyMessagesSelected}}
+            @action={{this.openMoveMessageModal}}
+            id="chat-move-to-channel-btn"
+          />
+        {{/if}}
+
+        <DButton
+          @icon="times"
+          @label="chat.selection.cancel"
+          @action={{@pane.cancelSelecting}}
+          id="chat-cancel-selection-btn"
+          class="btn-secondary cancel-btn"
+        />
+      </div>
+    </div>
+  </template>
+
   @service("composer") topicComposer;
   @service router;
   @service modal;
   @service site;
+  @service toasts;
   @service("chat-api") api;
-
-  // NOTE: showCopySuccess is used to display the message which animates
-  // after a delay. The on-animation-end helper is not really usable in
-  // system specs because it fires straight away, so we use lastCopySuccessful
-  // with a data attr instead so it's not instantly mutated.
-  @tracked showCopySuccess = false;
-  @tracked lastCopySuccessful = false;
 
   get enableMove() {
     return this.args.enableMove ?? false;
@@ -96,16 +135,17 @@ export default class ChatSelectionManager extends Component {
   @action
   async copyMessages() {
     try {
-      this.lastCopySuccessful = false;
-      this.showCopySuccess = false;
-
       if (!isTesting()) {
         // clipboard API throws errors in tests
         await clipboardCopyAsync(this.generateQuote);
-      }
 
-      this.showCopySuccess = true;
-      this.lastCopySuccessful = true;
+        this.toasts.success({
+          duration: 3000,
+          data: {
+            message: I18n.t("chat.quote.copy_success"),
+          },
+        });
+      }
     } catch (error) {
       popupAjaxError(error);
     }

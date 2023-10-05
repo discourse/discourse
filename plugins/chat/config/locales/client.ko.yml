@@ -19,10 +19,6 @@ ko:
             chat_channel_status_change: "채팅 채널 상태 변경됨"
             chat_channel_delete: "채팅 채널 삭제됨"
             chat_auto_remove_membership: "채널에서 자동으로 제거된 멤버십"
-    about:
-      chat_messages_count: "채팅 메시지"
-      chat_channels_count: "채팅 채널"
-      chat_users_count: "채팅 사용자"
     chat:
       deleted_chat_username: 삭제되었습니다
       dates:

@@ -349,16 +349,10 @@ pl_PL:
       our_moderators: "Moderatorzy"
       moderators: "Moderatorzy"
       stat:
-        all_time: "Ogółem"
-        last_day: "Ostatnie 24 godziny"
-        last_7_days: "Ostatnie 7 dni"
-        last_30_days: "Ostatnie 30 dni"
+        last_day: "24 godziny"
       like_count: "Polubienia"
       topic_count: "Tematy"
       post_count: "Posty"
-      user_count: "Rejestracje"
-      active_user_count: "Aktywni użytkownicy"
-      contact: "Kontakt"
       contact_info: "W sprawach wymagających szybkiej reakcji lub związanych z poprawnym funkcjonowaniem serwisu, prosimy o kontakt: %{contact_info}."
     bookmarked:
       title: "Zakładka"
@@ -1470,7 +1464,6 @@ pl_PL:
         success: "(email wysłany)"
         in_progress: "(email wysyłany)"
         error: "(błąd)"
-        emoji: "zablokuj emoji"
         action: "Wyślij wiadomość email resetującą hasło"
         set_password: "Ustaw hasło"
         choose_new: "Wyberz nowe hasło"
@@ -2111,7 +2104,6 @@ pl_PL:
       link_label: "Wyślij mi link do logowania"
       button_label: "z e-mailem"
       login_link: "Pomiń hasło; wyślij mi e-mailem link do logowania"
-      emoji: "zablokuj emoji"
       complete_username: "Jeśli konto pasuje do nazwy użytkownika <b>%{username}</b>, wkrótce otrzymasz wiadomość e-mail z linkiem do logowania."
       complete_email: "Jeśli konto pasuje do <b>%{email}</b> , wkrótce otrzymasz wiadomość e-mail z linkiem do logowania."
       complete_username_found: "Znaleźliśmy konto pasujące do nazwy użytkownika <b>%{username}</b>, wkrótce otrzymasz wiadomość e-mail z linkiem do logowania."
@@ -2202,7 +2194,6 @@ pl_PL:
         security_key: "Zamiast tego użyj klucza zabezpieczeń"
     invites:
       accept_title: "Zaproszenie"
-      emoji: "envelope emoji"
       welcome_to: "Witaj na %{site_name}!"
       invited_by: "Zostałeś/łaś zaproszony przez:"
       social_login_available: "Będziesz mógł zalogować się za pomocą dowolnej platformy społecznościowej używając tego adresu e-mail."
@@ -3506,6 +3497,7 @@ pl_PL:
       errors:
         create: "Przepraszamy, podczas tworzenia twojego wpisu wystąpił błąd. Spróbuj ponownie."
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
+        upload: "Przepraszamy, wystąpił błąd podczas przesyłania %{file_name}. Spróbuj ponownie."
         backup_too_large: "Przepraszamy, ten plik kopii zapasowej jest zbyt duży."
         file_too_large: "Przepraszamy, ten plik jest zbyt duży (maksymalny rozmiar to %{max_size_kb}kB). Dlaczego nie przesłać dużego pliku do usługi udostępniania w chmurze, a następnie wkleić link?"
         file_size_zero: "Przepraszamy, wygląda na to, że coś poszło nie tak. Plik, który próbujesz przesłać, ma 0 bajtów. Spróbuj przesłać go ponownie."
@@ -4269,7 +4261,6 @@ pl_PL:
       other_tags: "Inne tagi"
       selector_all_tags: "wszystkie tagi"
       selector_no_tags: "brak tagów"
-      changed: "zmienione tagi:"
       tags: "Tagi"
       choose_for_topic: "tagi opcjonalne"
       choose_for_topic_required:
@@ -4980,7 +4971,6 @@ pl_PL:
           details: "Kiedy pojawia się nowa odpowiedź, edytuj, usuń lub odzyskaj."
         user_event:
           name: "Wydarzenie użytkownika"
-          details: "Gdy użytkownik się loguje, wylogowuje, potwierdza swój adres e-mail, jest utworzony, zatwierdzony lub zaktualizowany."
         group_event:
           name: "Zdarzenie grupowe"
           details: "Kiedy grupa jest tworzona, aktualizowana lub niszczona. "
@@ -5165,7 +5155,6 @@ pl_PL:
           theme_name: "Nazwa motywu"
           component_name: "Nazwa komponentu"
           themes_intro: "Wybierz istniejący motyw lub zainstaluj nowy, by rozpocząć"
-          themes_intro_emoji: "woman artist emoji"
           beginners_guide_title: "Poradnik początkującego użytkownika motywów Discourse"
           developers_guide_title: "Poradnik kreatora motywów Discourse"
           browse_themes: "Przeglądaj motywy społeczności"
@@ -6300,7 +6289,6 @@ pl_PL:
             with_time: <span class="username">%{username}</span> o <span class="time">%{time}</span>
         badge_intro:
           title: "Wybierz istniejącą odznakę lub utwórz nową, aby rozpocząć"
-          emoji: "woman student emoji"
           what_are_badges_title: "Czym są odznaki?"
           badge_query_examples_title: "Przykład wykonania zapytania odznaki"
         mass_award:

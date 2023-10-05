@@ -84,6 +84,7 @@ export default class ChatMessage extends Component {
         {{on "mouseenter" this.onMouseEnter passive=true}}
         {{on "mouseleave" this.onMouseLeave passive=true}}
         {{on "mousemove" this.onMouseMove passive=true}}
+        {{on "click" this.toggleCheckIfPossible passive=true}}
         {{ChatOnLongPress
           this.onLongPressStart
           this.onLongPressEnd
@@ -193,6 +194,7 @@ export default class ChatMessage extends Component {
   @service chatThreadPane;
   @service chatChannelsManager;
   @service router;
+  @service toasts;
 
   @tracked isActive = false;
 
@@ -279,9 +281,26 @@ export default class ChatMessage extends Component {
   }
 
   @action
+  toggleCheckIfPossible(event) {
+    if (!this.pane.selectingMessages) {
+      return;
+    }
+
+    if (event.shiftKey) {
+      this.messageInteractor.bulkSelect(!this.args.message.selected);
+      return;
+    }
+
+    this.messageInteractor.select(!this.args.message.selected);
+  }
+
+  @action
   toggleChecked(event) {
+    event.stopPropagation();
+
     if (event.shiftKey) {
       this.messageInteractor.bulkSelect(event.target.checked);
+      return;
     }
 
     this.messageInteractor.select(event.target.checked);

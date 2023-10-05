@@ -1265,7 +1265,6 @@ lt:
     tl2_additional_edits_per_day_multiplier: "Padidinkite tl2 (nario) pakeitimų limitą per dieną, padaugindami iš šio skaičiaus"
     tl3_additional_edits_per_day_multiplier: "Padidinkite tl3 (įprasto) pakeitimų limitą per dieną, padaugindami iš šio skaičiaus"
     tl4_additional_edits_per_day_multiplier: "Padidinkite tl4 (lyderio) pakeitimų limitą per dieną, padaugindami iš šio skaičiaus"
-    num_users_to_silence_new_user: "Jei naujo vartotojo įrašai gauna num_spam_flags_to_silence_new_user šlamšto žymas nuo daugelio skirtingų vartotojų, paslėpkite visus jų įrašus ir neleiskite skelbti ateityje. 0, kad išjungtumėte."
     num_tl3_flags_to_silence_new_user: "Jei naujo vartotojo įrašai gauna tiek daug žymų iš num_tl3_users_to_silence_new_user skirtingų 3 patikimumo lygio vartotojų, paslėpkite visus jų įrašus ir neleiskite skelbti ateityje. 0, kad išjungtumėte."
     must_approve_users: "Darbuotojai turi patvirtinti visas naujas vartotojų paskyras, prieš jiems leidžiant pasiekti svetainę."
     persistent_sessions: "Vartotojai liks prisijungę, kai interneto naršyklė bus uždaryta"

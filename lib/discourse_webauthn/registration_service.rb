@@ -3,12 +3,12 @@ require "cbor"
 require "cose"
 
 module DiscourseWebauthn
-  class SecurityKeyRegistrationService < SecurityKeyBaseValidationService
+  class RegistrationService < BaseValidationService
     ##
     # See https://w3c.github.io/webauthn/#sctn-registering-a-new-credential for
     # the registration steps followed here. Memoized methods are called in their
     # place in the step flow to make the process clearer.
-    def register_second_factor_security_key
+    def register_security_key
       # 4. Verify that the value of C.type is webauthn.create.
       validate_webauthn_type(::DiscourseWebauthn::ACCEPTABLE_REGISTRATION_TYPE)
 
@@ -38,11 +38,12 @@ module DiscourseWebauthn
       # 11. Verify that the User Present bit of the flags in authData is set.
       # https://blog.bigbinary.com/2011/07/20/ruby-pack-unpack.html
       #
-      # bit 0 is the least significant bit - LSB first
+      validate_user_presence
+
       #
       # 12. If user verification is required for this registration, verify that
       #     the User Verified bit of the flags in authData is set.
-      validate_user_verification
+      validate_user_verification if @factor_type == UserSecurityKey.factor_types[:first_factor]
 
       # 13. Verify that the "alg" parameter in the credential public key in authData matches the alg
       #     attribute of one of the items in options.pubKeyCredParams.
@@ -100,7 +101,7 @@ module DiscourseWebauthn
       #     the Relying Party SHOULD fail this registration ceremony, or it MAY decide to accept
       #     the registration, e.g. while deleting the older registration.
       encoded_credential_id = Base64.strict_encode64(credential_id)
-      endcoded_public_key = Base64.strict_encode64(credential_public_key_bytes)
+      encoded_public_key = Base64.strict_encode64(credential_public_key_bytes)
       if UserSecurityKey.exists?(credential_id: encoded_credential_id)
         raise(CredentialIdInUseError, I18n.t("webauthn.validation.credential_id_in_use_error"))
       end
@@ -112,9 +113,9 @@ module DiscourseWebauthn
       UserSecurityKey.create!(
         user: @current_user,
         credential_id: encoded_credential_id,
-        public_key: endcoded_public_key,
+        public_key: encoded_public_key,
         name: @params[:name],
-        factor_type: UserSecurityKey.factor_types[:second_factor],
+        factor_type: @factor_type,
       )
     rescue CBOR::UnpackError, CBOR::TypeError, CBOR::MalformedFormatError, CBOR::StackError
       raise MalformedAttestationError, I18n.t("webauthn.validation.malformed_attestation_error")

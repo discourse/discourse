@@ -1012,6 +1012,7 @@ en:
       invalid_origin_error: "The origin of the authentication request does not match the server origin."
       malformed_attestation_error: "There was an error decoding the attestation data."
       invalid_relying_party_id_error: "The Relying Party ID of the authentication request does not match the server Relying Party ID."
+      user_presence_error: "User presence is required."
       user_verification_error: "User verification is required."
       unsupported_public_key_algorithm_error: "The provided public key algorithm is not supported by the server."
       unsupported_attestation_format_error: "The attestation format is not supported by the server."
@@ -1020,6 +1021,7 @@ en:
       ownership_error: "The security key is not owned by the user."
       not_found_error: "A security key with the provided credential ID could not be found."
       unknown_cose_algorithm_error: "The algorithm used for the security key is not recognized."
+      malformed_public_key_credential_error: "The provided public key is invalid."
 
   topic_flag_types:
     spam:
@@ -1667,7 +1669,7 @@ en:
     ga_universal_tracking_code: "Google Universal Analytics tracking code ID, eg: UA-12345678-9; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics domain name, eg: mysite.com; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Enable Google Universal Analytics cross-domain tracking. Outgoing links to these domains will have the client id added to them. See <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
-    gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF. <br/>Note: Third-party scripts loaded by GTM may need to be allowlisted in 'content security policy script src'."
+    gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCD12E. <br/>Note: To use GTM when the Content Security Policy (CSP) is enabled, see the documentation on meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Use nonces in Google Tag Manager scripts</a>."
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Allow moderators to create and manage categories and groups"
     moderators_change_post_ownership: "Allow moderators to change post ownership"
@@ -5311,3 +5313,4 @@ en:
       missing_id: "is missing a field id"
       duplicate_ids: "has duplicate ids"
       reserved_id: "has a reserved keyword as id: %{id}"
+      unsafe_description: "has an unsafe HTML description"

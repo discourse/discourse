@@ -29,10 +29,6 @@ it:
         chat_message_event:
           name: "Evento messaggio chat"
           details: "Quando un messaggio di chat viene creato, modificato, eliminato o ripristinato."
-    about:
-      chat_messages_count: "Messaggi di chat"
-      chat_channels_count: "Canali di chat"
-      chat_users_count: "Utenti della chat"
     chat:
       deleted_chat_username: cancellati
       dates:

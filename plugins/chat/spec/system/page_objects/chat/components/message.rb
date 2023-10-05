@@ -30,6 +30,16 @@ module PageObjects
           component.find(".chat-message-expand").click
         end
 
+        def secondary_action(action)
+          if page.has_css?("html.mobile-view", wait: 0)
+            component.click(delay: 0.4)
+            page.find(".chat-message-actions [data-id=\"#{action}\"]").click
+          else
+            open_more_menu
+            page.find("[data-value='#{action}']").click
+          end
+        end
+
         def select(shift: false)
           if component[:class].include?("-selectable")
             message_selector = component.find(".chat-message-selector")

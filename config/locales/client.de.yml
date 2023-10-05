@@ -289,9 +289,9 @@ de:
       moderators: "Moderatoren"
       stat:
         all_time: "Gesamt"
-        last_day: "Letzte 24 Stunden"
-        last_7_days: "Letzte 7 Tage"
-        last_30_days: "Letzte 30 Tage"
+        last_day: "24 stunden"
+        last_7_days: "7 Tage"
+        last_30_days: "30 Tage"
       like_count: "„Gefällt mir“"
       topic_count: "Themen"
       post_count: "Beiträge"
@@ -1004,6 +1004,7 @@ de:
     user:
       said: "%{username}:"
       profile: "Profil"
+      profile_possessive: "%{username}s Profil"
       mute: "Stummschalten"
       edit: "Einstellungen bearbeiten"
       download_archive:
@@ -1326,7 +1327,6 @@ de:
         success: "(E-Mail gesendet)"
         in_progress: "(E-Mail wird gesendet)"
         error: "(Fehler)"
-        emoji: "Emoji sperren"
         action: "Sende eine E-Mail zum Zurücksetzen des Passworts"
         set_password: "Passwort ändern"
         choose_new: "Wähle ein neues Passwort"
@@ -1918,6 +1918,7 @@ de:
       title: "Erstelle dein Konto"
       failed: "Etwas ist schiefgelaufen. Vielleicht ist diese E-Mail-Adresse bereits registriert. Versuche es mit dem „Passwort vergessen“-Link."
       associate: "Hast du bereits ein Konto? <a href='%{associate_link}'>Logge dich ein</a>, um dein %{provider}-Konto zu verknüpfen."
+      activation_title: "Aktiviere dein Konto"
     forgot_password:
       title: "Passwort zurücksetzen"
       action: "Ich habe mein Passwort vergessen"
@@ -1937,7 +1938,6 @@ de:
       link_label: "Sende mir einen Anmeldelink"
       button_label: "über E-Mail"
       login_link: "Überspringe das Passwort; sende mir einen Anmeldelink"
-      emoji: "Emoji sperren"
       complete_username: "Sofern ein Benutzerkonto mit dem Benutzernamen <b>%{username}</b> existiert, solltest du in Kürze eine E-Mail mit einem Anmeldelink erhalten."
       complete_email: "Sofern ein Benutzerkonto für <b>%{email}</b> existiert, solltest du in Kürze eine E-Mail mit einem Anmeldelink erhalten."
       complete_username_found: "Wir haben ein Benutzerkonto mit dem Benutzernamen <b>%{username}</b> gefunden, du solltest in Kürze einen Anmeldelink erhalten."
@@ -2028,7 +2028,6 @@ de:
         security_key: "Stattdessen einen Sicherheitsschlüssel verwenden"
     invites:
       accept_title: "Einladung"
-      emoji: "Umschlag-Emoji"
       welcome_to: "Willkommen bei %{site_name}!"
       invited_by: "Du wurdest eingeladen von:"
       social_login_available: "Du wirst dich auch über andere soziale Netzwerke mit dieser E-Mail-Adresse anmelden können."
@@ -2768,6 +2767,7 @@ de:
           false { Oder <a href="{basePath}/latest">sieh dir die aktuellen Themen an</a>}
           other {}
         }
+      created_at: "Erstellt: %{date}"
       bumped_at: "Letztes: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Durchstöbere alle Kategorien</a> oder <a href='%{basePath}/latest'>sieh dir die aktuellen Themen an</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Durchstöbere alle Kategorien</a>, <a href='%{basePath}/latest'>sieh dir die aktuellen Themen</a> oder die Top-Themen an:"
@@ -3613,6 +3613,7 @@ de:
         med {mit einem sehr hohen Verhältnis von „Gefällt mir“ zu Beiträgen}
         high {mit einem extrem hohen Verhältnis von „Gefällt mir“ zu Beiträgen}
         other {}}
+    latest_poster_link: "%{username}s Profil, neuester Beitragender"
     original_post: "Original-Beitrag"
     views: "Aufrufe"
     sr_views: "Nach Aufrufen sortieren"
@@ -3897,7 +3898,6 @@ de:
       other_tags: "Sonstige Schlagwörter"
       selector_all_tags: "alle Schlagwörter"
       selector_no_tags: "keine Schlagwörter"
-      changed: "Geänderte Schlagwörter:"
       tags: "Schlagwörter"
       choose_for_topic: "optionale Schlagwörter"
       choose_for_topic_required:
@@ -4319,6 +4319,7 @@ de:
         too_many_requests: Du hast diese Aktion zu oft ausgeführt. Bitte warte, bevor du es erneut probierst.
         not_found_error: Entschuldige bitte, dieser Bericht existiert nicht
         filter_reports: Berichte filtern
+        custom_date_range: Benutzerdefinierter Datumsbereich
         reports:
           trend_title: "%{percent} Veränderung. Aktuell %{current}, war %{prev} in vorherigem Zeitraum."
           today: "Heute"
@@ -4491,6 +4492,11 @@ de:
               list: Die neuesten und private Beiträge auflisten. RSS wird ebenfalls unterstützt.
             tags:
               list: Schlagwörter auflisten.
+            tag_groups:
+              list: Eine Liste der Schlagwort-Gruppen abrufen.
+              show: Eine einzelne Schlagwort-Gruppe nach ID abrufen.
+              create: Erzeugt eine Schlagwort-Gruppe.
+              update: Aktualisiert eine durch id angegebene Schlagwort-Gruppe.
             categories:
               list: Eine Liste der Kategorien abrufen.
               show: Eine einzelne Kategorie nach ID abrufen.
@@ -4574,7 +4580,7 @@ de:
           details: "Wenn auf einen Beitrag geantwortet wird oder der Beitrag geändert, gelöscht oder wiederhergestellt wird."
         user_event:
           name: "Benutzer-Ereignis"
-          details: "Wenn sich ein Benutzer anmeldet, abmeldet, seine E-Mail bestätigt, erstellt, genehmigt oder aktualisiert wird."
+          details: "Wenn sich ein Benutzer anmeldet, sich abmeldet, seine E-Mail bestätigt, erstellt, genehmigt, aktualisiert, gesperrt oder entsperrt wird."
         group_event:
           name: "Gruppen-Ereignis"
           details: "Wenn eine Gruppe erstellt, aktualisiert oder gelöscht wird."
@@ -4757,7 +4763,6 @@ de:
           theme_name: "Theme-Name"
           component_name: "Komponenten-Name"
           themes_intro: "Wähle ein bestehendes Theme oder installiere ein neues, um anzufangen"
-          themes_intro_emoji: "Künstlerin-Emoji"
           beginners_guide_title: "Leitfaden für Einsteiger zur Verwendung von Discourse-Themes"
           developers_guide_title: "Entwickler-Leitfaden für Discourse-Themes"
           browse_themes: "Community-Themes durchsuchen"
@@ -5879,7 +5884,6 @@ de:
             with_time: <span class="username">%{username}</span> um <span class="time">%{time}</span>
         badge_intro:
           title: "Wähle ein bestehendes Abzeichen oder erstelle ein neues, um loszulegen"
-          emoji: "Studentin-Emoji"
           what_are_badges_title: "Was sind Abzeichen?"
           badge_query_examples_title: "Beispiele für Abzeichen-Abfragen"
         mass_award:

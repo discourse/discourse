@@ -97,7 +97,7 @@ export default class DMenu extends Component {
 
   get componentArgs() {
     return {
-      close: this.menu.close,
+      close: this.menuInstance.close,
       data: this.options.data,
     };
   }
