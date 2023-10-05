@@ -2,7 +2,14 @@ const APPLE_NAVIGATOR_PLATFORMS = /iPhone|iPod|iPad|Macintosh|MacIntel/;
 const APPLE_USER_AGENT_DATA_PLATFORM = /macOS/;
 
 function calculateCapabilities() {
-  const capabilities = {};
+  const capabilities = {
+    get userHasbeenActive() {
+      return (
+        !("userActivation" in navigator) ||
+        navigator.userActivation.hasBeenActive
+      );
+    },
+  };
 
   const ua = navigator.userAgent;
 
@@ -55,11 +62,5 @@ export default class CapabilitiesService {
 
   static create() {
     return capabilities;
-  }
-
-  get userHasbeenActive() {
-    return (
-      !("userActivation" in navigator) || navigator.userActivation.hasBeenActive
-    );
   }
 }
