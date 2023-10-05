@@ -105,13 +105,13 @@ module Chat
     end
 
     def should_create_revision?(message:, guardian:, **)
-      maxSeconds = SiteSetting.edit_message_grace_period_seconds
+      maxSeconds = SiteSetting.chat_editing_grace_period
       maxEditedChars =
         (
           if guardian.user.has_trust_level?(TrustLevel[2])
-            SiteSetting.edit_message_grace_period_max_chars_high_trust
+            SiteSetting.chat_editing_grace_period_max_diff_high_trust
           else
-            SiteSetting.edit_message_grace_period_max_chars_low_trust
+            SiteSetting.chat_editing_grace_period_max_diff_low_trust
           end
         )
       secondsSinceCreated = Time.now.to_i - message&.created_at.iso8601.to_time.to_i
