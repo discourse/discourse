@@ -44,16 +44,7 @@ export default Component.extend(bufferedProperty("invite"), {
       this.set("allGroups", groups.filterBy("automatic", false));
     });
 
-    this.setProperties({
-      topics: [],
-      flashText: null,
-      flashClass: null,
-      flashLink: false,
-      invite: this.model.invite || Invite.create(),
-      inviteToTopic: false,
-      limitToEmail: false,
-    });
-
+    this.set("invite", this.model.invite || Invite.create());
     this.set("topics", this.invite?.topics || []);
 
     this.buffered.setProperties({
