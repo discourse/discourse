@@ -69,11 +69,13 @@
                   }}
                 </span>
               {{else if this.themesTabActive}}
-                <span class="name">
+                <span class="header">
                   {{i18n "admin.customize.theme.inactive_themes"}}
                 </span>
               {{else}}
-                {{i18n "admin.customize.theme.inactive_components"}}
+                <span class="header">
+                  {{i18n "admin.customize.theme.inactive_components"}}
+                </span>
               {{/if}}
 
               {{#if this.selectInactiveMode}}
