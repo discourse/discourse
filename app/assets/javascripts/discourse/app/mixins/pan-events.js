@@ -116,6 +116,8 @@ export default Mixin.create({
       return;
     }
 
+    originalEvent.stopPropagation();
+
     const previousState = this._panState;
     const newState = this._calculateNewPanState(previousState, e);
     if (
