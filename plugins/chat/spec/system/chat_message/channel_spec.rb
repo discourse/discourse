@@ -32,7 +32,6 @@ RSpec.describe "Chat message - channel", type: :system do
 
     it "[mobile] copies the text of a single message", mobile: true do
       chat_page.visit_channel(channel_1)
-      channel_page.click_composer # ensures we don't block on vibrate due to no action
 
       channel_page.messages.copy_text(message_1)
 

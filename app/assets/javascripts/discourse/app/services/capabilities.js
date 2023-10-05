@@ -30,7 +30,14 @@ function calculateCapabilities() {
 
   capabilities.hasContactPicker =
     "contacts" in navigator && "ContactsManager" in window;
+
   capabilities.canVibrate = "vibrate" in navigator;
+  const supportsStickyActivation = "userActivation" in navigator;
+  if (supportsStickyActivation) {
+    capabilities.canVibrate =
+      capabilities.canVibrate && navigator.userActivation.hasBeenActive;
+  }
+
   capabilities.isPwa =
     window.matchMedia("(display-mode: standalone)").matches ||
     window.navigator.standalone ||

@@ -35,7 +35,6 @@ RSpec.describe "Chat message - thread", type: :system do
 
     it "[mobile] copies the text of a single message", mobile: true do
       chat_page.visit_thread(thread_message_1.thread)
-      thread_page.click_composer # ensures we don't block on vibrate due to no action
 
       thread_page.messages.copy_text(thread_message_1)
 
