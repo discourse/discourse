@@ -3,9 +3,9 @@
   @title={{i18n "admin.customize.bulk_delete"}}
 >
   <:body>
-    {{i18n "admin.customize.bulk_delete_confirm"}}
+    {{i18n (concat "admin.customize.bulk_" @model.type "_delete_confirm")}}
     <ul>
-      {{#each @model.themes as |theme|}}
+      {{#each @model.selectedThemesOrComponents as |theme|}}
         <li>{{theme.name}}</li>
       {{/each}}
     </ul>

@@ -5112,7 +5112,8 @@ en:
         delete: "Delete"
         delete_confirm: 'Are you sure you want to delete "%{theme_name}"?'
         bulk_delete: 'Are you sure?'
-        bulk_delete_confirm: "This will uninstall the following themes / components, they will no longer be useable by any users on your site:"
+        bulk_themes_delete_confirm: "This will uninstall the following themes, they will no longer be useable by any users on your site:"
+        bulk_components_delete_confirm: "This will uninstall the following components, they will no longer be useable by any users on your site:"
         color: "Color"
         opacity: "Opacity"
         copy: "Duplicate"

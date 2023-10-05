@@ -9,7 +9,7 @@ export default class DeleteThemesConfirmComponent extends Component {
     ajax(`/admin/themes/bulk_destroy.json`, {
       type: "DELETE",
       data: {
-        theme_ids: this.args.model.themes.mapBy("id"),
+        theme_ids: this.args.model.selectedThemesOrComponents.mapBy("id"),
       },
     })
       .then(() => {

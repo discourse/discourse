@@ -154,7 +154,8 @@ export default class ThemesList extends Component {
   deleteConfirmation() {
     this.modal.show(DeleteThemesConfirm, {
       model: {
-        themes: this.selectedThemesOrComponents,
+        selectedThemesOrComponents: this.selectedThemesOrComponents,
+        type: this.themesTabActive ? "themes" : "components",
         refreshAfterDelete: () => {
           this.set("selectInactiveMode", false);
           if (this.themesTabActive) {
