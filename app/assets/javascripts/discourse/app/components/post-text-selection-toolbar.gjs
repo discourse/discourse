@@ -56,7 +56,7 @@ export default class PostTextSelectionToolbar extends Component {
         {{/if}}
 
         <PluginOutlet
-          @name="post-text-selection-buttons-after"
+          @name="post-text-after-primary-actions"
           @outletArgs={{hash
             data=@data
             hidePrimaryActions=this.hidePrimaryActions
