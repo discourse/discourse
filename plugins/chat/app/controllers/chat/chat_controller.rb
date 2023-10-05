@@ -77,34 +77,6 @@ module Chat
       end
     end
 
-    def edit_message
-      chat_message_updater =
-        Chat::MessageUpdater.update(
-          guardian: guardian,
-          chat_message: @message,
-          new_content: params[:new_message],
-          upload_ids: params[:upload_ids] || [],
-        )
-
-      return render_json_error(chat_message_updater.error) if chat_message_updater.failed?
-
-      render json: success_json
-    end
-
-    def edit_message
-      chat_message_updater =
-        Chat::MessageUpdater.update(
-          guardian: guardian,
-          chat_message: @message,
-          new_content: params[:new_message],
-          upload_ids: params[:upload_ids] || [],
-        )
-
-      return render_json_error(chat_message_updater.error) if chat_message_updater.failed?
-
-      render json: success_json
-    end
-
     def react
       params.require(%i[message_id emoji react_action])
       guardian.ensure_can_react!
