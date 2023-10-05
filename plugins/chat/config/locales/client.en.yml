@@ -317,7 +317,6 @@ en:
         back_to_all_channels: "All channels"
         back_to_channel: "Back"
         tabs:
-          about: About
           members: Members
           settings: Settings
 
@@ -459,6 +458,13 @@ en:
         saved: "Saved"
         unfollow: "Leave"
         admin_title: "Admin"
+        settings_title: "Settings"
+        info_title: "Channel info"
+        category_label: "Category"
+        history_label: "History"
+        members_label: "Members"
+        description_title: "Description"
+        title_title: "Title"
 
       admin:
         title: "Chat"
@@ -535,14 +541,14 @@ en:
           other: "%{commaSeparatedUsernames} and %{count} others are typing"
 
       retention_reminders:
-        public_none: "Channel history is retained indefinitely."
+        public_none: "indefinitely"
         public:
-          one: "Channel history is retained for %{count} day."
-          other: "Channel history is retained for %{count} days."
-        dm_none: "Personal chat history is retained indefinitely."
+          one: "%{count} day"
+          other: "%{count} days"
+        dm_none: "indefinitely"
         dm:
-          one: "Personal chat history is retained for %{count} day."
-          other: "Personal chat history is retained for %{count} days."
+          one: "%{count} day"
+          other: "%{count} days"
 
       flags:
         off_topic: "This message is not relevant to the current discussion as defined by the channel title, and should probably be moved elsewhere."

@@ -12,7 +12,6 @@ export default function () {
       "channel.info",
       { path: "/c/:channelTitle/:channelId/info" },
       function () {
-        this.route("about", { path: "/about" });
         this.route("members", { path: "/members" });
         this.route("settings", { path: "/settings" });
       }

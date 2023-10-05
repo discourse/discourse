@@ -70,7 +70,7 @@ import DDefaultToast from "float-kit/components/d-default-toast";
 export const TOAST = {
   options: {
     autoClose: true,
-    duration: 10000,
+    duration: 3000,
     component: DDefaultToast,
   },
 };
