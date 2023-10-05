@@ -29,6 +29,14 @@ module BulkImport
       queue = SizedQueue.new(QUEUE_SIZE)
       consumer_threads = []
 
+      if @settings[:delete_missing_uploads]
+        puts "Deleting missing uploads from output database..."
+        @output_db.execute(<<~SQL)
+          DELETE FROM uploads
+          WHERE upload IS NULL
+        SQL
+      end
+
       output_existing_ids = Set.new
       query("SELECT id FROM uploads", @output_db).tap do |result_set|
         result_set.each { |row| output_existing_ids << row["id"] }
@@ -48,9 +56,9 @@ module BulkImport
           surplus_upload_ids.each_slice(TRANSACTION_SIZE) do |ids|
             placeholders = (["?"] * ids.size).join(",")
             @output_db.execute(<<~SQL, ids)
-            DELETE FROM uploads
-            WHERE id IN (#{placeholders})
-          SQL
+              DELETE FROM uploads
+              WHERE id IN (#{placeholders})
+            SQL
           end
 
           output_existing_ids -= surplus_upload_ids
@@ -91,8 +99,8 @@ module BulkImport
               end
 
               @output_db.execute(<<~SQL, params)
-                INSERT INTO uploads (id, upload, skip_reason)
-                VALUES (:id, :upload, :skip_reason)
+                INSERT INTO uploads (id, upload, markdown, skip_reason)
+                VALUES (:id, :upload, :markdown, :skip_reason)
               SQL
             rescue StandardError => e
               puts "", "Failed to insert upload: #{params[:id]} (#{e.message}))", ""
@@ -147,6 +155,7 @@ module BulkImport
                   status_queue << {
                     id: row["id"],
                     upload: upload.attributes.to_json,
+                    markdown: UploadMarkdown.new(upload).to_markdown,
                     skip_reason: nil,
                   }
                   break
@@ -155,6 +164,7 @@ module BulkImport
                   status_queue << {
                     id: row["id"],
                     upload: nil,
+                    markdown: nil,
                     error: "too many retries: #{error_message}",
                     skip_reason: "too many retries",
                   }
@@ -165,7 +175,13 @@ module BulkImport
                 sleep 0.25 * retry_count
               end
             rescue StandardError => e
-              status_queue << { id: row["id"], upload: nil, error: e.message, skip_reason: "error" }
+              status_queue << {
+                id: row["id"],
+                upload: nil,
+                markdown: nil,
+                error: e.message,
+                skip_reason: "error",
+              }
             end
           end
         end
@@ -201,6 +217,7 @@ module BulkImport
         CREATE TABLE IF NOT EXISTS uploads (
           id TEXT PRIMARY KEY,
           upload JSON_TEXT,
+          markdown TEXT,
           skip_reason TEXT
         )
       SQL
