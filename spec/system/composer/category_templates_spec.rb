@@ -292,7 +292,7 @@ describe "Composer Form Templates", type: :system do
     expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css("a.attachment")
     expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css("audio")
     expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css(
-      "video-placeholder-container",
+      ".video-placeholder-container",
     )
   end
 end
