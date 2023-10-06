@@ -73,8 +73,13 @@ export default class AdminUserBadgesController extends Controller {
 
   @action
   performGrantBadge() {
-    UserBadge.grant(this.selectedBadgeId, this.get("user.username")).then(
+    UserBadge.grant(
+      this.selectedBadgeId,
+      this.get("user.username"),
+      this.badgeReason
+    ).then(
       (newBadge) => {
+        this.set("badgeReason", "");
         this.userBadges.pushObject(newBadge);
         next(() => {
           // Update the selected badge ID after the combobox has re-rendered.

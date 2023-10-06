@@ -7,7 +7,6 @@ import { BookmarkFormData } from "discourse/lib/bookmark";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { isTesting } from "discourse-common/config/environment";
 import { clipboardCopy } from "discourse/lib/utilities";
 import ChatMessageReaction, {
   REACTIONS,
@@ -284,7 +283,7 @@ export default class ChatMessageInteractor {
       return;
     }
 
-    if (this.capabilities.canVibrate && !isTesting()) {
+    if (this.capabilities.userHasBeenActive && this.capabilities.canVibrate) {
       navigator.vibrate(5);
     }
 

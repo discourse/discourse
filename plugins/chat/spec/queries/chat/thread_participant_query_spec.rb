@@ -3,6 +3,7 @@
 RSpec.describe Chat::ThreadParticipantQuery do
   fab!(:thread_1) { Fabricate(:chat_thread) }
   fab!(:thread_2) { Fabricate(:chat_thread) }
+  fab!(:thread_3) { Fabricate(:chat_thread) }
 
   context "when users have messaged in the thread" do
     fab!(:user_1) { Fabricate(:user) }
@@ -34,10 +35,8 @@ RSpec.describe Chat::ThreadParticipantQuery do
       )
     end
 
-    it "does not return more than 3 thread participants" do
-      other_user = Fabricate(:user)
-      thread_1.add(other_user)
-      Fabricate(:chat_message, thread: thread_1, user: other_user)
+    it "does not return more than 3 thread participants by default" do
+      thread_1.add(Fabricate(:user))
       result = described_class.call(thread_ids: [thread_1.id])
       expect(result[thread_1.id][:users].length).to eq(3)
     end
@@ -103,6 +102,29 @@ RSpec.describe Chat::ThreadParticipantQuery do
         [thread_2.original_message.user_id],
       )
       expect(result[thread_2.id][:total_count]).to eq(1)
+    end
+  end
+
+  context "when using preview false" do
+    1..9.times do |i|
+      user = "user_#{i}".to_sym
+      fab!(user) { Fabricate(:user) }
+    end
+
+    before do
+      1..9.times do |i|
+        user = "user_#{i}".to_sym
+        thread_3.add(public_send(user))
+        Fabricate(:chat_message, thread: thread_3, user: public_send(user))
+      end
+    end
+
+    it "does not return more than 10 thread participants when preview is false" do
+      other_user = Fabricate(:user)
+      thread_3.add(other_user)
+      Fabricate(:chat_message, thread: thread_3, user: other_user)
+      result = described_class.call(thread_ids: [thread_3.id], preview: false)
+      expect(result[thread_3.id][:users].length).to eq(10)
     end
   end
 end

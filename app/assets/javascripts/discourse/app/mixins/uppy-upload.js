@@ -350,9 +350,9 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
   _useXHRUploads() {
     this._uppyInstance.use(XHRUpload, {
       endpoint: this._xhrUploadUrl(),
-      headers: {
+      headers: () => ({
         "X-CSRF-Token": this.session.csrfToken,
-      },
+      }),
     });
   },
 

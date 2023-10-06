@@ -58,10 +58,8 @@ import {
   addPluginReviewableParam,
   registerReviewableActionModal,
 } from "discourse/components/reviewable-item";
-import {
-  addComposerSaveErrorCallback,
-  addPopupMenuOptionsCallback,
-} from "discourse/services/composer";
+import { addComposerSaveErrorCallback } from "discourse/services/composer";
+import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
 import { addPostClassesCallback } from "discourse/widgets/post";
 import {
   addGroupPostSmallActionCode,
@@ -77,7 +75,10 @@ import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-usernam
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import deprecated from "discourse-common/lib/deprecated";
 import { disableNameSuppression } from "discourse/widgets/poster-name";
-import { extraConnectorClass } from "discourse/lib/plugin-connectors";
+import {
+  extraConnectorClass,
+  extraConnectorComponent,
+} from "discourse/lib/plugin-connectors";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { h } from "virtual-dom";
 import { includeAttributes } from "discourse/lib/transform-post";
@@ -134,7 +135,7 @@ import { isTesting } from "discourse-common/config/environment";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.12.0";
+export const PLUGIN_API_VERSION = "1.14.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -721,23 +722,50 @@ class PluginApi {
   }
 
   /**
-   * Add a new button in the options popup menu.
+   * Add a new button in the composer's toolbar options popup menu.
    *
-   * Example:
+   * @callback action
+   * @param {Object} toolbarEvent - A toolbar event object.
+   * @param {function} toolbarEvent.applySurround - Surrounds the selected text with the given text.
+   * @param {function} toolbarEvent.addText - Append the given text to the selected text in the composer.
    *
-   * ```
-   * api.addToolbarPopupMenuOptionsCallback(() => {
-   *  return {
-   *    action: 'toggleWhisper',
-   *    icon: 'far-eye-slash',
-   *    label: 'composer.toggle_whisper',
-   *    condition: "canWhisper"
-   *  };
+   * @callback condition
+   * @param {Object} composer - The composer service object.
+   * @returns {boolean} - Whether the button should be displayed.
+   *
+   * @param {Object} opts - An Object.
+   * @param {string} opts.icon - The name of the FontAwesome icon to display for the button.
+   * @param {string} opts.label - The I18n translation key for the button's label.
+   * @param {action} opts.action - The action to perform when the button is clicked.
+   * @param {condition} opts.condition - A condition that must be met for the button to be displayed.
+   *
+   * @example
+   * api.addComposerToolbarPopupMenuOption({
+   *   action: (toolbarEvent) => {
+   *     toolbarEvent.applySurround("**", "**");
+   *   },
+   *   icon: 'far-bold',
+   *   label: 'composer.bold_some_text',
+   *   condition: (composer) => {
+   *     return composer.editingPost;
+   *   }
    * });
-   * ```
    **/
-  addToolbarPopupMenuOptionsCallback(callback) {
-    addPopupMenuOptionsCallback(callback);
+  addComposerToolbarPopupMenuOption(opts) {
+    addPopupMenuOption(opts);
+  }
+
+  addToolbarPopupMenuOptionsCallback(opts) {
+    deprecated(
+      "`addToolbarPopupMenuOptionsCallback` has been renamed to `addToolbarPopupMenuOption`",
+      {
+        id: "discourse.add-toolbar-popup-menu-options-callback",
+        since: "3.3",
+        dropFrom: "3.4",
+      }
+    );
+
+    this.addComposerToolbarPopupMenuOption(opts);
   }
 
   /**
@@ -938,6 +966,31 @@ class PluginApi {
    **/
   registerConnectorClass(outletName, connectorName, klass) {
     extraConnectorClass(`${outletName}/${connectorName}`, klass);
+  }
+
+  /**
+   * Register a component to be rendered in a particular outlet.
+   *
+   * For example, if the outlet is `user-profile-primary`, you could register
+   * a component like
+   *
+   * ```javascript
+   * import MyComponent from "discourse/plugins/my-plugin/components/my-component";
+   * api.renderInOutlet('user-profile-primary', MyComponent);
+   * ```
+   *
+   * Alternatively, a component could be defined inline using gjs:
+   *
+   * ```javascript
+   * api.renderInOutlet('user-profile-primary', <template>Hello world</template>);
+   * ```
+   *
+   * @param {string} outletName - Name of plugin outlet to render into
+   * @param {Component} klass - Component class definition to be rendered
+   *
+   */
+  renderInOutlet(outletName, klass) {
+    extraConnectorComponent(outletName, klass);
   }
 
   /**

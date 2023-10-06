@@ -170,6 +170,14 @@ module PageObjects
         page.has_css?(".form-template-field__error", text: error)
       end
 
+      def has_form_template_field_label?(label)
+        page.has_css?(".form-template-field__label", text: label)
+      end
+
+      def has_form_template_field_description?(description)
+        page.has_css?(".form-template-field__description", text: description)
+      end
+
       def composer_input
         find("#{COMPOSER_ID} .d-editor .d-editor-input")
       end
