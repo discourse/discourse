@@ -61,6 +61,10 @@
           font-weight: normal;
           color: var(--primary-medium);
           font-size: var(--font-down-1);
+
+          &:before {
+            content: "× ";
+          }
         }
 
         .badge-wrapper {
