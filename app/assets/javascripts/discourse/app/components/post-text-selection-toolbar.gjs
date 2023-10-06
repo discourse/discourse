@@ -59,7 +59,7 @@ export default class PostTextSelectionToolbar extends Component {
           @name="post-text-after-primary-actions"
           @outletArgs={{hash
             data=@data
-            hidePrimaryActions=this.hidePrimaryActions
+            togglePrimaryActions=this.togglePrimaryActions
           }}
         />
 
@@ -178,8 +178,8 @@ export default class PostTextSelectionToolbar extends Component {
   }
 
   @action
-  hidePrimaryActions() {
-    this.showPrimaryActions = false;
+  togglePrimaryActions(value) {
+    this.showPrimaryActions = value;
   }
 
   @action
