@@ -1037,11 +1037,8 @@ eviltrout</p>
         siteSettings: { secure_uploads: true },
         lookupUploadUrls,
       },
-      `<p><div class="video-container">
-    <video width="100%" height="100%" preload="metadata" controls>
-      <source src="/secure-uploads/original/3X/c/b/test.mp4">
-      <a href="/secure-uploads/original/3X/c/b/test.mp4">/secure-uploads/original/3X/c/b/test.mp4</a>
-    </video>
+      `<p><div class="video-placeholder-container" data-video-src="/secure-uploads/original/3X/c/b/test.mp4">
+    <img src>
   </div></p>`,
       "It returns the correct video HTML when the URL is mapped with secure uploads, removing data-orig-src"
     );
