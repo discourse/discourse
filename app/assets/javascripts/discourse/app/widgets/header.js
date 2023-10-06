@@ -366,7 +366,10 @@ createWidget("revamped-hamburger-menu-wrapper", {
   },
 
   clickOutside(e) {
-    if (e.target.classList.contains("header-cloak")) {
+    if (
+      e.target.classList.contains("header-cloak") &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
       const panel = document.querySelector(".menu-panel");
       const headerCloak = document.querySelector(".header-cloak");
       const finishPosition =
@@ -413,7 +416,10 @@ createWidget("revamped-user-menu-wrapper", {
   },
 
   clickOutside(e) {
-    if (e.target.classList.contains("header-cloak")) {
+    if (
+      e.target.classList.contains("header-cloak") &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
       const panel = document.querySelector(".menu-panel");
       const headerCloak = document.querySelector(".header-cloak");
       const finishPosition =
