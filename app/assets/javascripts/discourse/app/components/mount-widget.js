@@ -47,6 +47,21 @@ export default Component.extend({
     this._super(...arguments);
     const name = this.widget;
 
+    if (name === "post-cooked") {
+      throw [
+        "Cannot use <MountWidget /> with `post-cooked`.",
+        "It's a special-case that needs to be wrapped in another widget.",
+        "For example:",
+        "  createWidget('test-widget', {",
+        "    html(attrs) {",
+        "      return [",
+        "        new PostCooked(attrs, new DecoratorHelper(this), this.currentUser),",
+        "      ];",
+        "    },",
+        "  });",
+      ].join("\n");
+    }
+
     this.register = getRegister(this);
 
     this._widgetClass =

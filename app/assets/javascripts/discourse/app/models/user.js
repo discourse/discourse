@@ -170,6 +170,7 @@ function userOption(userOptionKey) {
 }
 
 const User = RestModel.extend({
+  appEvents: service(),
   userTips: service(),
 
   mailing_list_mode: userOption("mailing_list_mode"),
