@@ -159,7 +159,7 @@ function videoHTML(token) {
   const src = token.attrGet("src");
   const origSrc = token.attrGet("data-orig-src");
   const dataOrigSrcAttr = origSrc !== null ? `data-orig-src="${origSrc}"` : "";
-  return `<div class="video-placeholder-container" data-video-src="${src}" data-orig-src="${dataOrigSrcAttr}">
+  return `<div class="video-placeholder-container" data-video-src="${src}" ${dataOrigSrcAttr}>
     <img class="video-placeholder" src="" />
   </div>`;
 }
