@@ -15,6 +15,7 @@ import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-
 
 const CUSTOM_TYPES = [
   "bool",
+  "integer",
   "enum",
   "list",
   "url_list",
