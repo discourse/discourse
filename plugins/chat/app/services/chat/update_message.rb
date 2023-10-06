@@ -72,15 +72,19 @@ module Chat
 
       return if contract.upload_ids.nil? || !SiteSetting.chat_allow_uploads
 
-      uploads = ::Upload.where(id: contract.upload_ids, user_id: guardian.user.id)
-      return if uploads.count != contract.upload_ids.count
+      upload_info = get_upload_info
+      message.uploads = upload_info[:uploads] if upload_info[:changed]
+      validate_message!
 
-      new_upload_ids = uploads.map(&:id)
-      existing_upload_ids = message.upload_ids
-      difference = (existing_upload_ids + new_upload_ids) - (existing_upload_ids & new_upload_ids)
-      return if !difference.any?
+      # uploads = ::Upload.where(id: contract.upload_ids, user_id: guardian.user.id)
+      # return if uploads.count != contract.upload_ids.count
 
-      message.upload_ids = new_upload_ids
+      # new_upload_ids = uploads.map(&:id)
+      # existing_upload_ids = message.upload_ids
+      # difference = (existing_upload_ids + new_upload_ids) - (existing_upload_ids & new_upload_ids)
+      # return if !difference.any?
+
+      # message.upload_ids = new_upload_ids
     end
 
     def ensures_message_validity(message:, **)
@@ -135,6 +139,26 @@ module Chat
       if message.thread.present?
         ::Chat::Publisher.publish_thread_original_message_metadata!(message.thread)
       end
+    end
+
+    def get_upload_info
+      return { uploads: [] } if @upload_ids.nil? || !SiteSetting.chat_allow_uploads
+
+      uploads = ::Upload.where(id: @upload_ids, user_id: @user.id)
+      if uploads.count != @upload_ids.count
+        # User is passing upload_ids for uploads that they don't own. Don't change anything.
+        return { uploads: @chat_message.uploads, changed: false }
+      end
+
+      new_upload_ids = uploads.map(&:id)
+      existing_upload_ids = @chat_message.upload_ids
+      difference = (existing_upload_ids + new_upload_ids) - (existing_upload_ids & new_upload_ids)
+      { uploads: uploads, changed: difference.any? }
+    end
+
+    def validate_message!
+      return if @chat_message.valid?
+      raise StandardError.new(@chat_message.errors.map(&:full_message).join(", "))
     end
   end
 end
