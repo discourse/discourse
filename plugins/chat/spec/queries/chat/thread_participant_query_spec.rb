@@ -8,6 +8,12 @@ RSpec.describe Chat::ThreadParticipantQuery do
     fab!(:user_1) { Fabricate(:user) }
     fab!(:user_2) { Fabricate(:user) }
     fab!(:user_3) { Fabricate(:user) }
+    fab!(:user_4) { Fabricate(:user) }
+    fab!(:user_5) { Fabricate(:user) }
+    fab!(:user_6) { Fabricate(:user) }
+    fab!(:user_7) { Fabricate(:user) }
+    fab!(:user_8) { Fabricate(:user) }
+    fab!(:user_9) { Fabricate(:user) }
 
     before do
       Fabricate(:chat_message, thread: thread_1, user: user_1)
@@ -16,10 +22,22 @@ RSpec.describe Chat::ThreadParticipantQuery do
       Fabricate(:chat_message, thread: thread_1, user: user_2)
       Fabricate(:chat_message, thread: thread_1, user: user_2)
       Fabricate(:chat_message, thread: thread_1, user: user_3)
+      Fabricate(:chat_message, thread: thread_1, user: user_4)
+      Fabricate(:chat_message, thread: thread_1, user: user_5)
+      Fabricate(:chat_message, thread: thread_1, user: user_6)
+      Fabricate(:chat_message, thread: thread_1, user: user_7)
+      Fabricate(:chat_message, thread: thread_1, user: user_8)
+      Fabricate(:chat_message, thread: thread_1, user: user_9)
 
       thread_1.add(user_1)
       thread_1.add(user_2)
       thread_1.add(user_3)
+      thread_1.add(user_4)
+      thread_1.add(user_5)
+      thread_1.add(user_6)
+      thread_1.add(user_7)
+      thread_1.add(user_8)
+      thread_1.add(user_9)
     end
 
     it "has all the user details needed for BasicUserSerializer" do
@@ -34,12 +52,12 @@ RSpec.describe Chat::ThreadParticipantQuery do
       )
     end
 
-    it "does not return more than 3 thread participants" do
+    it "does not return more than 9 thread participants" do
       other_user = Fabricate(:user)
       thread_1.add(other_user)
       Fabricate(:chat_message, thread: thread_1, user: other_user)
       result = described_class.call(thread_ids: [thread_1.id])
-      expect(result[thread_1.id][:users].length).to eq(3)
+      expect(result[thread_1.id][:users].length).to eq(9)
     end
 
     it "calculates the top messagers in a thread as well as the last messager" do
@@ -74,8 +92,21 @@ RSpec.describe Chat::ThreadParticipantQuery do
     end
 
     it "calculates the total number of thread participants" do
-      result = described_class.call(thread_ids: [thread_1.id, thread_2.id])
-      expect(result[thread_1.id][:total_count]).to eq(4)
+      result =
+        described_class.call(
+          thread_ids: [
+            thread_1.id,
+            thread_2.id,
+            thread_3.id,
+            thread_4.id,
+            thread_5.id,
+            thread_6.id,
+            thread_7.id,
+            thread_8.id,
+            thread_9.id,
+          ],
+        )
+      expect(result[thread_1.id][:total_count]).to eq(10)
     end
 
     it "gets results for both threads" do
