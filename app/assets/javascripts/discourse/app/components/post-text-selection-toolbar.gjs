@@ -33,7 +33,11 @@ export default class PostTextSelectionToolbar extends Component {
       {{this.appEventsListeners}}
     >
       <div class="buttons">
-        {{#if this.showPrimaryActions}}
+        <PluginOutlet
+          @name="post-text-buttons"
+          @defaultGlimmer={{true}}
+          @outletArgs={{hash data=@data}}
+        >
           {{#if this.embedQuoteButton}}
             <DButton
               @icon="quote-left"
@@ -53,43 +57,35 @@ export default class PostTextSelectionToolbar extends Component {
               {{on "click" this.toggleFastEdit}}
             />
           {{/if}}
-        {{/if}}
 
-        <PluginOutlet
-          @name="post-text-after-primary-actions"
-          @outletArgs={{hash
-            data=@data
-            togglePrimaryActions=this.togglePrimaryActions
-          }}
-        />
-
-        {{#if this.quoteSharingEnabled}}
-          <span class="quote-sharing">
-            {{#if this.quoteSharingShowLabel}}
-              <DButton
-                @icon="share"
-                @label="post.quote_share"
-                class="btn-flat quote-share-label"
-              />
-            {{/if}}
-
-            <span class="quote-share-buttons">
-              {{#each this.quoteSharingSources as |source|}}
+          {{#if this.quoteSharingEnabled}}
+            <span class="quote-sharing">
+              {{#if this.quoteSharingShowLabel}}
                 <DButton
-                  @action={{fn this.share source}}
-                  @translatedTitle={{source.title}}
-                  @icon={{source.icon}}
-                  class="btn-flat"
+                  @icon="share"
+                  @label="post.quote_share"
+                  class="btn-flat quote-share-label"
                 />
-              {{/each}}
+              {{/if}}
 
-              <PluginOutlet
-                @name="quote-share-buttons-after"
-                @connectorTagName="span"
-              />
+              <span class="quote-share-buttons">
+                {{#each this.quoteSharingSources as |source|}}
+                  <DButton
+                    @action={{fn this.share source}}
+                    @translatedTitle={{source.title}}
+                    @icon={{source.icon}}
+                    class="btn-flat"
+                  />
+                {{/each}}
+
+                <PluginOutlet
+                  @name="quote-share-buttons-after"
+                  @connectorTagName="span"
+                />
+              </span>
             </span>
-          </span>
-        {{/if}}
+          {{/if}}
+        </PluginOutlet>
       </div>
 
       <div class="extra">
@@ -113,7 +109,6 @@ export default class PostTextSelectionToolbar extends Component {
   @service appEvents;
 
   @tracked isFastEditing = false;
-  @tracked showPrimaryActions = true;
 
   appEventsListeners = modifier(() => {
     this.appEvents.on("quote-button:edit", this, "toggleFastEdit");
@@ -139,7 +134,6 @@ export default class PostTextSelectionToolbar extends Component {
 
   get quoteSharingEnabled() {
     return (
-      this.showPrimaryActions &&
       this.site.desktopView &&
       this.quoteSharingSources.length > 0 &&
       !this.topic.invisible &&
@@ -175,11 +169,6 @@ export default class PostTextSelectionToolbar extends Component {
       (canCreatePost || canReplyAsNewTopic) &&
       this.currentUser?.get("user_option.enable_quoting")
     );
-  }
-
-  @action
-  togglePrimaryActions(value) {
-    this.showPrimaryActions = value;
   }
 
   @action
