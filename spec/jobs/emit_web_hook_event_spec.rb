@@ -34,7 +34,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
     job.execute(
       web_hook_id: post_hook.id,
       payload: { id: post.id }.to_json,
-      event_type: WebHookEventType::TYPES[:post][:created],
+      event_type: WebHookEventType::TYPES[:post_created],
     )
 
     expect(WebHookEvent.last.web_hook_id).to eq(post_hook.id)

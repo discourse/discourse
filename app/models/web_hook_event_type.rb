@@ -39,84 +39,52 @@ class WebHookEventType < ActiveRecord::Base
        _scopes: false
 
   TYPES = {
-    topic: {
-      created: 101,
-      revised: 102,
-      edited: 103,
-      destroyed: 104,
-      recovered: 105,
-    },
-    post: {
-      created: 201,
-      edited: 202,
-      destroyed: 203,
-      recovered: 204,
-    },
-    user: {
-      logged_in: 301,
-      logged_out: 302,
-      confirmed_email: 303,
-      created: 304,
-      approved: 305,
-      updated: 306,
-      destroyed: 307,
-      suspended: 308,
-      unsuspended: 309,
-    },
-    group: {
-      created: 401,
-      updated: 402,
-      destroyed: 403,
-    },
-    category: {
-      created: 501,
-      updated: 502,
-      destroyed: 503,
-    },
-    tag: {
-      created: 601,
-      updated: 602,
-      destroyed: 603,
-    },
-    reviewable: {
-      created: 901,
-      updated: 902,
-    },
-    notification: {
-      created: 1001,
-    },
-    solved: {
-      accepted_solution: 1101,
-      unaccepted_solution: 1102,
-    },
-    assign: {
-      assigned: 1201,
-      unassigned: 1202,
-    },
-    user_badge: {
-      granted: 1301,
-      revoked: 1302,
-    },
-    group_user: {
-      added: 1401,
-      removed: 1402,
-    },
-    like: {
-      created: 1501,
-    },
-    user_promoted: {
-      created: 1601,
-    },
-    voting: {
-      topic_upvote: 1701,
-      topic_unvote: 1702,
-    },
-    chat: {
-      message_created: 1801,
-      message_edited: 1802,
-      message_trashed: 1803,
-      message_restored: 1804,
-    },
+    topic_created: 101,
+    topic_revised: 102,
+    topic_edited: 103,
+    topic_destroyed: 104,
+    topic_recovered: 105,
+    post_created: 201,
+    post_edited: 202,
+    post_destroyed: 203,
+    post_recovered: 204,
+    user_logged_in: 301,
+    user_logged_out: 302,
+    user_confirmed_email: 303,
+    user_created: 304,
+    user_approved: 305,
+    user_updated: 306,
+    user_destroyed: 307,
+    user_suspended: 308,
+    user_unsuspended: 309,
+    group_created: 401,
+    group_updated: 402,
+    group_destroyed: 403,
+    category_created: 501,
+    category_updated: 502,
+    category_destroyed: 503,
+    tag_created: 601,
+    tag_updated: 602,
+    tag_destroyed: 603,
+    reviewable_created: 901,
+    reviewable_updated: 902,
+    notification_created: 1001,
+    solved_accepted_solution: 1101,
+    solved_unaccepted_solution: 1102,
+    assign_assigned: 1201,
+    assign_unassigned: 1202,
+    user_badge_granted: 1301,
+    user_badge_revoked: 1302,
+    group_user_added: 1401,
+    group_user_removed: 1402,
+    like_created: 1501,
+    user_promoted_created: 1601,
+    voting_topic_upvote: 1701,
+    voting_topic_unvote: 1702,
+    chat_message_created: 1801,
+    chat_message_edited: 1802,
+    chat_message_trashed: 1803,
+    chat_message_restored: 1804,
   }
 
   has_and_belongs_to_many :web_hooks
@@ -130,16 +98,16 @@ class WebHookEventType < ActiveRecord::Base
   def self.active
     ids_to_exclude = []
     unless defined?(SiteSetting.solved_enabled) && SiteSetting.solved_enabled
-      ids_to_exclude << TYPES[:solved][:accept_unaccept]
+      ids_to_exclude << TYPES[:solved_accept_unaccept]
     end
     unless defined?(SiteSetting.assign_enabled) && SiteSetting.assign_enabled
-      ids_to_exclude << TYPES[:assign][:assign_unassign]
+      ids_to_exclude << TYPES[:assign_assign_unassign]
     end
     unless defined?(SiteSetting.voting_enabled) && SiteSetting.voting_enabled
-      ids_to_exclude << TYPES[:voting][:voted_unvoted]
+      ids_to_exclude << TYPES[:voting_voted_unvoted]
     end
     unless defined?(SiteSetting.chat_enabled) && SiteSetting.chat_enabled
-      ids_to_exclude << TYPES[:chat][:message]
+      ids_to_exclude << TYPES[:chat_message]
     end
     self.where.not(id: ids_to_exclude)
   end
