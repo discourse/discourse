@@ -1,14 +1,14 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import getURL from "discourse-common/lib/get-url";
+import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default {
   initialize() {
     withPluginApi("0.8.7", (api) => {
       function _handleEvent(event) {
-        const img = event.target;
-        const parentDiv = img.parentElement;
+        const parentDiv = event.target;
 
-        img.style.display = "none";
+        const wrapper = parentDiv.querySelector(".video-placeholder-wrapper");
+        wrapper.style.display = "none";
 
         const videoHTML = `
         <video width="100%" height="100%" preload="metadata" controls>
@@ -27,12 +27,21 @@ export default {
           return;
         }
 
-        let images = post.querySelectorAll(".video-placeholder-container img");
+        let containers = post.querySelectorAll(".video-placeholder-container");
 
-        images.forEach((img) => {
-          img.src = getURL("/images/video-placeholder.svg");
-          img.style.cursor = "pointer";
-          img.addEventListener("click", _handleEvent, false);
+        containers.forEach((container) => {
+          container.style.cursor = "pointer";
+          container.addEventListener("click", _handleEvent, false);
+
+          const wrapper = document.createElement("div"),
+            overlay = document.createElement("div");
+
+          container.appendChild(wrapper);
+          wrapper.classList.add("video-placeholder-wrapper");
+
+          overlay.classList.add("video-placeholder-overlay");
+          overlay.innerHTML = `${iconHTML("play")}`;
+          wrapper.appendChild(overlay);
         });
       }
 
