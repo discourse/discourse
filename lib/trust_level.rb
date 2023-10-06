@@ -4,6 +4,10 @@ class InvalidTrustLevel < StandardError
 end
 
 class TrustLevel
+  include Comparable
+
+  LEVELS = %i[newuser basic member regular leader].freeze
+
   def self.[](level)
     raise InvalidTrustLevel if !valid?(level)
 
@@ -11,7 +15,7 @@ class TrustLevel
   end
 
   def self.levels
-    @levels ||= Enum.new(:newuser, :basic, :member, :regular, :leader, start: 0)
+    @levels ||= Enum.new(*LEVELS, start: 0)
   end
 
   def self.valid?(level)
@@ -41,8 +45,6 @@ class TrustLevel
     [granted_trust_level, previous_trust_level, SiteSetting.default_trust_level].max
   end
 
-  private
-
   def self.find_previous_trust_level(user)
     UserHistory
       .where(action: UserHistory.actions[:change_trust_level])
@@ -51,4 +53,45 @@ class TrustLevel
       .pick(:new_value)
       .to_i
   end
+
+  class << self
+    LEVELS.each { |l| define_method("#{l}") { new(levels[l]) } }
+  end
+
+  def initialize(level)
+    @level = level
+  end
+
+  attr_reader :level
+
+  def <=>(other)
+    case other
+    when Integer
+      level <=> other
+    when Symbol
+      level <=> self.class.levels[other]
+    when TrustLevel
+      level <=> other.level
+    else
+      nil
+    end
+  end
+
+  def to_i
+    level
+  end
+
+  def to_sym
+    self.class.levels[level]
+  end
+
+  def to_s
+    to_sym.to_s
+  end
+
+  def name
+    I18n.t("js.trust_levels.names.#{self}")
+  end
+
+  LEVELS.each { |l| define_method("#{l}?") { level == self.class.levels[l] } }
 end
