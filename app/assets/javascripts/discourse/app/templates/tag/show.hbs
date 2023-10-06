@@ -153,6 +153,20 @@
                 @newTopicsCount={{this.newTopicsCount}}
               />
             {{/if}}
+            <span>
+              <PluginOutlet
+                @name="after-topic-list"
+                @connectorTagName="div"
+                @outletArgs={{hash
+                  category=this.category
+                  data=this.model
+                  selected=this.selected
+                  showResetNew=this.showResetNew
+                  showDismissRead=this.showDismissRead
+                  resetNew=this.resetNew
+                }}
+              />
+            </span>
           </DiscoveryTopicsList>
 
           <footer class="topic-list-bottom">
