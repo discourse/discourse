@@ -1015,7 +1015,6 @@ eviltrout</p>
     assert.cooked(
       "![baby shark|video](upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4)",
       `<p><div class="video-placeholder-container" data-video-src="/404" data-orig-src="upload://eyPnj7UzkU0AkGkx2dx8G4YM1Jx.mp4">
-    <img src>
   </div></p>`,
       "It returns the correct video player HTML"
     );
@@ -1038,7 +1037,6 @@ eviltrout</p>
         lookupUploadUrls,
       },
       `<p><div class="video-placeholder-container" data-video-src="/secure-uploads/original/3X/c/b/test.mp4">
-    <img src>
   </div></p>`,
       "It returns the correct video HTML when the URL is mapped with secure uploads, removing data-orig-src"
     );
