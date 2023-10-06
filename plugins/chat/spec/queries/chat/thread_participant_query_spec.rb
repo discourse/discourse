@@ -107,13 +107,13 @@ RSpec.describe Chat::ThreadParticipantQuery do
 
   context "when using preview false" do
     1..9.times do |i|
-      user = "user_#{i + 1}".to_sym
+      user = "user_#{i}".to_sym
       fab!(user) { Fabricate(:user) }
     end
 
     before do
       1..9.times do |i|
-        user = "user_#{i + 1}".to_sym
+        user = "user_#{i}".to_sym
         thread_3.add(public_send(user))
         Fabricate(:chat_message, thread: thread_3, user: public_send(user))
       end
