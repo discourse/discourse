@@ -21,6 +21,11 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
   }
 
   get unreadCount() {
+    if (
+      this.indicatorPreference === HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS
+    ) {
+      return 0;
+    }
     return (
       this.args.unreadCount ||
       this.chatTrackingStateManager.publicChannelUnreadCount
@@ -36,15 +41,11 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
 
   get showUrgentIndicator() {
     return (
-      (this.urgentCount > 0 &&
-        this.#hasAnyIndicatorPreference([
-          HEADER_INDICATOR_PREFERENCE_ALL_NEW,
-          HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
-        ])) ||
-      (this.#hasAnyIndicatorPreference([
-        HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
-      ]) &&
-        this.mentionsCount > 0)
+      this.urgentCount > 0 &&
+      this.#hasAnyIndicatorPreference([
+        HEADER_INDICATOR_PREFERENCE_ALL_NEW,
+        HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
+      ])
     );
   }
 
