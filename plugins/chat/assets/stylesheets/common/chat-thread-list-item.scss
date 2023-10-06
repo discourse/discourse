@@ -1,24 +1,25 @@
 @mixin thread-list-item {
   display: flex;
   flex-direction: row;
-  padding: 0.5rem;
+  padding: 1rem;
+  margin-inline: 0.5rem;
   border-radius: var(--d-border-radius);
-  background-color: var(--primary-very-low);
-  border: 1px solid transparent;
+  border-bottom: 1px solid var(--primary-low);
+  cursor: pointer;
 }
 
 .chat-thread-list-item {
   @include thread-list-item;
-  cursor: pointer;
-  margin: 0.75rem;
 
   & + .chat-thread-list-item {
-    margin-top: 0;
+    margin-top: -1px;
   }
 
   .touch & {
     &:active {
       background-color: var(--d-hover);
+      padding-inline: 1.5rem;
+      margin-inline: 0;
     }
   }
 
@@ -26,6 +27,8 @@
     &:hover,
     &:active {
       background-color: var(--d-hover);
+      padding-inline: 1.5rem;
+      margin-inline: 0;
     }
   }
 
