@@ -101,7 +101,7 @@ function buildTopicCount(count) {
   return `<span class="topic-count" aria-label="${I18n.t(
     "category_row.topic_count",
     { count }
-  )}">&times; ${count}</span>`;
+  )}">${count}</span>`;
 }
 
 export function defaultCategoryLinkRenderer(category, opts) {
