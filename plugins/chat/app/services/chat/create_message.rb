@@ -24,6 +24,7 @@ module Chat
     model :channel
     policy :allowed_to_join_channel
     policy :allowed_to_create_message_in_channel, class_name: Chat::Channel::MessageCreationPolicy
+    step :enforce_system_membership
     model :channel_membership
     model :reply, optional: true
     policy :ensure_reply_consistency
@@ -70,6 +71,10 @@ module Chat
 
     def allowed_to_join_channel(guardian:, channel:, **)
       guardian.can_join_chat_channel?(channel)
+    end
+
+    def enforce_system_membership(guardian:, channel:, **)
+      channel.add(guardian.user) if guardian.user.is_system_user?
     end
 
     def fetch_channel_membership(guardian:, channel:, **)

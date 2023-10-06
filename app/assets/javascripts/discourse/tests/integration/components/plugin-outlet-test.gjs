@@ -3,14 +3,16 @@ import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, render, settled } from "@ember/test-helpers";
 import { action } from "@ember/object";
-import { extraConnectorClass } from "discourse/lib/plugin-connectors";
+import {
+  extraConnectorClass,
+  extraConnectorComponent,
+} from "discourse/lib/plugin-connectors";
 import { hbs } from "ember-cli-htmlbars";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 import { getOwner } from "@ember/application";
 import Component from "@glimmer/component";
 import templateOnly from "@ember/component/template-only";
 import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
-import { setComponentTemplate } from "@glimmer/manager";
 import sinon from "sinon";
 
 const TEMPLATE_PREFIX = "discourse/plugins/some-plugin/templates/connectors";
@@ -57,13 +59,13 @@ module("Integration | Component | plugin-outlet", function (hooks) {
     registerTemporaryModule(
       `${TEMPLATE_PREFIX}/test-name/hello`,
       hbs`<span class='hello-username'>{{this.username}}</span>
-        <button class='say-hello' {{on "click" (action "sayHello")}}></button>
-        <button class='say-hello-using-this' {{on "click" this.sayHello}}></button>
+        <button type="button" class='say-hello' {{on "click" (action "sayHello")}}></button>
+        <button type="button" class='say-hello-using-this' {{on "click" this.sayHello}}></button>
         <span class='hello-result'>{{this.hello}}</span>`
     );
     registerTemporaryModule(
       `${TEMPLATE_PREFIX}/test-name/hi`,
-      hbs`<button class='say-hi' {{on "click" (action "sayHi")}}></button>
+      hbs`<button type="button" class='say-hi' {{on "click" (action "sayHi")}}></button>
         <span class='hi-result'>{{this.hi}}</span>`
     );
     registerTemporaryModule(
@@ -427,13 +429,9 @@ module(
     setupRenderingTest(hooks);
 
     hooks.beforeEach(function () {
-      const template = hbs`<span class='gjs-test'>Hello world</span>`;
-      const component = templateOnly();
-      setComponentTemplate(template, component);
-
       registerTemporaryModule(
         `${CLASS_PREFIX}/test-name/my-connector`,
-        component
+        <template><span class="gjs-test">Hello world</span></template>
       );
     });
 
@@ -441,6 +439,24 @@ module(
       await render(hbs`<PluginOutlet @name="test-name" />`);
 
       assert.dom(".gjs-test").hasText("Hello world");
+    });
+  }
+);
+
+module(
+  "Integration | Component | plugin-outlet | extraConnectorComponent",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      extraConnectorComponent("test-name", <template>
+        <span class="gjs-test">Hello world from gjs</span>
+      </template>);
+    });
+
+    test("renders the component in the outlet", async function (assert) {
+      await render(hbs`<PluginOutlet @name="test-name" />`);
+      assert.dom(".gjs-test").hasText("Hello world from gjs");
     });
   }
 );

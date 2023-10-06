@@ -6,26 +6,17 @@ function initializeDetails(api) {
     id: "discourse-details",
   });
 
-  api.addToolbarPopupMenuOptionsCallback(() => {
-    return {
-      action: "insertDetails",
-      icon: "caret-right",
-      label: "details.title",
-    };
-  });
-
-  api.modifyClass("controller:composer", {
-    pluginId: "discourse-details",
-    actions: {
-      insertDetails() {
-        this.toolbarEvent.applySurround(
-          "\n" + `[details="${I18n.t("composer.details_title")}"]` + "\n",
-          "\n[/details]\n",
-          "details_text",
-          { multiline: false }
-        );
-      },
+  api.addComposerToolbarPopupMenuOption({
+    action: function (toolbarEvent) {
+      toolbarEvent.applySurround(
+        "\n" + `[details="${I18n.t("composer.details_title")}"]` + "\n",
+        "\n[/details]\n",
+        "details_text",
+        { multiline: false }
+      );
     },
+    icon: "caret-right",
+    label: "details.title",
   });
 }
 
@@ -33,6 +24,6 @@ export default {
   name: "apply-details",
 
   initialize() {
-    withPluginApi("0.8.7", initializeDetails);
+    withPluginApi("1.14.0", initializeDetails);
   },
 };

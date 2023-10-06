@@ -57,5 +57,18 @@ module(
 
       assert.dom(".form-template-field__label").doesNotExist();
     });
+
+    test("renders a description if present", async function (assert) {
+      const attributes = {
+        description: "Your full name",
+      };
+      this.set("attributes", attributes);
+
+      await render(
+        hbs`<FormTemplateField::Input @attributes={{this.attributes}} />`
+      );
+
+      assert.dom(".form-template-field__description").hasText("Your full name");
+    });
   }
 );

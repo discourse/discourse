@@ -269,7 +269,7 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
     end
   end
 
-  describe "authenticating a valid passkey" do
+  describe "authenticating passkeys" do
     let(:options) do
       { factor_type: UserSecurityKey.factor_types[:first_factor], session: secure_session }
     end
@@ -297,10 +297,20 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
       )
     end
 
-    it "works and returns the correct key credential" do
-      key = service.authenticate_security_key
-      expect(key).to eq(security_key)
-      expect(key.factor_type).to eq(UserSecurityKey.factor_types[:first_factor])
+    before do
+      # this essentially bypasses the user handle check for this key
+      # a real test would need to go through the full registration/authentication flow in one go
+      params[:userHandle] = Base64.strict_encode64(
+        security_key_user.create_or_fetch_secure_identifier,
+      )
+    end
+
+    context "with a valid passkey" do
+      it "works and returns the correct key credential" do
+        key = service.authenticate_security_key
+        expect(key).to eq(security_key)
+        expect(key.factor_type).to eq(UserSecurityKey.factor_types[:first_factor])
+      end
     end
 
     context "when the user verification flag in the key is false" do
@@ -316,6 +326,17 @@ RSpec.describe DiscourseWebauthn::AuthenticationService do
         expect { service.authenticate_security_key }.to raise_error(
           DiscourseWebauthn::UserVerificationError,
           I18n.t("webauthn.validation.user_verification_error"),
+        )
+      end
+    end
+
+    context "when the user handle does not match" do
+      it "raises an OwnershipError" do
+        params[:userHandle] = Base64.strict_encode64(SecureRandom.hex(20))
+
+        expect { service.authenticate_security_key }.to raise_error(
+          DiscourseWebauthn::OwnershipError,
+          I18n.t("webauthn.validation.ownership_error"),
         )
       end
     end

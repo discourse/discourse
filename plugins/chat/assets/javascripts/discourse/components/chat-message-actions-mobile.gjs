@@ -4,7 +4,6 @@ import { getOwner } from "@ember/application";
 import { tracked } from "@glimmer/tracking";
 import discourseLater from "discourse-common/lib/later";
 import { action } from "@ember/object";
-import { isTesting } from "discourse-common/config/environment";
 import { inject as service } from "@ember/service";
 import and from "truth-helpers/helpers/and";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -142,7 +141,7 @@ export default class ChatMessageActionsMobile extends Component {
   fadeAndVibrate() {
     discourseLater(this.#addFadeIn.bind(this));
 
-    if (this.capabilities.canVibrate && !isTesting()) {
+    if (this.capabilities.userHasBeenActive && this.capabilities.canVibrate) {
       navigator.vibrate(5);
     }
   }
