@@ -1,6 +1,6 @@
 import { DEBUG } from "@glimmer/env";
 import { schedule } from "@ember/runloop";
-import { registerWaiter, unregisterWaiter } from "@ember/test";
+import { waitForPromise } from "@ember/test-waiters";
 import ItsATrap from "@discourse/itsatrap";
 import MountWidget from "discourse/components/mount-widget";
 import { topicTitleDecorators } from "discourse/components/topic-title";
@@ -28,6 +28,7 @@ const SiteHeaderComponent = MountWidget.extend(
     _itsatrap: null,
     _applicationElement: null,
     _MAX_ANIMATION_TIME: 200,
+    _PANEL_WIDTH: 320,
 
     @observes(
       "currentUser.unread_notifications",
@@ -55,87 +56,71 @@ const SiteHeaderComponent = MountWidget.extend(
       }
     },
 
-    _animateOpening(event, panel) {
-      let waiter;
-      if (DEBUG && isTesting()) {
-        waiter = () => false;
-        registerWaiter(waiter);
+    _animateOpening(
+      panel,
+      { event = null, animationFinished = new Promise((r) => r()) } = {}
+    ) {
+      if (isTesting()) {
+        waitForPromise(animationFinished);
       }
 
-      window.requestAnimationFrame(() => {
-        this._setAnimateOpeningProperties(event, panel);
-
-        if (DEBUG && isTesting()) {
-          unregisterWaiter(waiter);
+      animationFinished.then(() => {
+        const headerCloak = document.querySelector(".header-cloak");
+        let durationMs = this._getMaxAnimationTime();
+        if (event && this.pxClosed > 0) {
+          durationMs = this._getMaxAnimationTime(
+            this.pxClosed / Math.abs(event.velocityX)
+          );
         }
+        const timing = {
+          duration: durationMs,
+          fill: "forwards",
+          easing: "ease-out",
+        };
+        panel.animate([{ transform: `translate3d(0, 0, 0)` }], timing);
+        headerCloak.animate([{ opacity: 0.5 }], timing);
+        this.pxClosed = null;
       });
     },
 
     _getMaxAnimationTime(durationMs = this._MAX_ANIMATION_TIME) {
       if (
         window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-        (DEBUG && isTesting())
+        isTesting()
       ) {
         return 0;
       }
       return Math.min(durationMs, this._MAX_ANIMATION_TIME);
     },
 
-    _setAnimateOpeningProperties(event, panel) {
-      const headerCloak = document.querySelector(".header-cloak");
-      let durationMs = this._getMaxAnimationTime();
-      if (event && this.pxClosed > 0) {
-        durationMs = this._getMaxAnimationTime(
-          this.pxClosed / Math.abs(event.velocityX)
-        );
-      }
-      panel.animate([{ transform: `translate3d(0, 0, 0)` }], {
-        duration: durationMs,
-        fill: "forwards",
-        easing: "ease-out",
-      });
-      headerCloak.animate([{ opacity: 0.5 }], {
-        duration: durationMs,
-        fill: "forwards",
-        easing: "ease-out",
-      });
-      this.pxClosed = null;
-    },
-
     _animateClosing(event, panel, menuOrigin) {
       this._animate = true;
       const headerCloak = document.querySelector(".header-cloak");
       let durationMs = this._getMaxAnimationTime();
-      const offsetWidth = panel.offsetWidth;
       if (event && this.pxClosed > 0) {
-        const distancePx = offsetWidth - this.pxClosed;
+        const distancePx = this._PANEL_WIDTH - this.pxClosed;
         durationMs = this._getMaxAnimationTime(
           distancePx / Math.abs(event.velocityX)
         );
       }
+      const timing = {
+        duration: durationMs,
+        fill: "forwards",
+      };
 
+      let endPosition = this._PANEL_WIDTH;
       if (menuOrigin === "left") {
-        panel.animate([{ transform: `translate3d(-${offsetWidth}px, 0, 0)` }], {
-          duration: durationMs,
-          fill: "forwards",
-        });
-      } else {
-        panel.animate([{ transform: `translate3d(${offsetWidth}px, 0, 0)` }], {
-          duration: durationMs,
-          fill: "forwards",
-        });
+        endPosition = -this._PANEL_WIDTH;
       }
-
-      headerCloak
-        .animate([{ opacity: 0 }], {
-          duration: durationMs,
-          fill: "forwards",
-        })
+      panel
+        .animate([{ transform: `translate3d(${endPosition}px, 0, 0)` }], timing)
         .finished.then(() => {
           schedule("afterRender", () => {
             this.eventDispatched("dom:clean", "header");
           });
         });
+
+      headerCloak.animate([{ opacity: 0 }], timing);
       this.pxClosed = null;
     },
 
@@ -154,7 +139,7 @@ const SiteHeaderComponent = MountWidget.extend(
         if (this._shouldMenuClose(event, menuOrigin)) {
           this._animateClosing(event, panel, menuOrigin);
         } else {
-          this._animateOpening(event, panel);
+          this._animateOpening(panel, { event });
         }
       });
     },
@@ -214,27 +199,26 @@ const SiteHeaderComponent = MountWidget.extend(
       }
       const panel = this.movingElement;
       const headerCloak = this.cloakElement;
+      this.pxClosed = Math.max(0, -e.deltaX);
+      let translation = -this.pxClosed;
       if (this._panMenuOrigin === "right") {
-        const pxClosed = Math.min(0, -e.deltaX);
-        this.pxClosed = Math.abs(pxClosed);
-        panel.animate([{ transform: `translate3d(${-pxClosed}px, 0, 0)` }], {
-          fill: "forwards",
-        });
-        headerCloak.animate(
-          [{ opacity: Math.min(0.5, (300 + pxClosed) / 600) }],
-          { fill: "forwards" }
-        );
-      } else {
-        const pxClosed = Math.min(0, e.deltaX);
-        this.pxClosed = Math.abs(pxClosed);
-        panel.animate([{ transform: `translate3d(${pxClosed}px, 0, 0)` }], {
-          fill: "forwards",
-        });
-        headerCloak.animate(
-          [{ opacity: Math.min(0.5, (300 + pxClosed) / 600) }],
-          { fill: "forwards" }
-        );
+        this.pxClosed = Math.max(0, e.deltaX);
+        translation = this.pxClosed;
       }
+      panel.animate([{ transform: `translate3d(${translation}px, 0, 0)` }], {
+        fill: "forwards",
+      });
+      headerCloak.animate(
+        [
+          {
+            opacity: Math.min(
+              0.5,
+              (this._PANEL_WIDTH - this.pxClosed) / (this._PANEL_WIDTH * 2)
+            ),
+          },
+        ],
+        { fill: "forwards" }
+      );
     },
 
     dockCheck() {
@@ -412,23 +396,25 @@ const SiteHeaderComponent = MountWidget.extend(
         panel.classList.add(viewMode);
 
         if (this._animate) {
+          let animationFinished = null;
+          let finalPosition = this._PANEL_WIDTH;
+          this._panMenuOrigin = "right";
           if (
             (this.site.mobileView || this.site.narrowDesktopView) &&
             panel.parentElement.classList.contains(this._leftMenuClass())
           ) {
             this._panMenuOrigin = "left";
-            panel.animate([{ transform: `translate3d(-100vw, 0, 0)` }], {
-              fill: "forwards",
-            });
-          } else {
-            this._panMenuOrigin = "right";
-            panel.animate([{ transform: `translate3d(100vw, 0, 0)` }], {
-              fill: "forwards",
-            });
+            finalPosition = -this._PANEL_WIDTH;
           }
+          animationFinished = panel.animate(
+            [{ transform: `translate3d(${finalPosition}px, 0, 0)` }],
+            {
+              fill: "forwards",
+            }
+          ).finished;
           headerCloak.animate([{ opacity: 0 }], { fill: "forwards" });
           headerCloak.style.display = "block";
-          this._animateOpening(null, panel);
+          this._animateOpening(panel, { animationFinished });
         }
 
         this._animate = false;

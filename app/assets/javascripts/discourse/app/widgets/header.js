@@ -373,8 +373,8 @@ createWidget("revamped-hamburger-menu-wrapper", {
       const headerCloak = document.querySelector(".header-cloak");
       const finishPosition =
         document.querySelector("html").classList["direction"] === "rtl"
-          ? "100vw"
-          : "-100vw";
+          ? "320px"
+          : "-320px";
       panel
         .animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
           duration: 200,
@@ -424,8 +424,8 @@ createWidget("revamped-user-menu-wrapper", {
       const headerCloak = document.querySelector(".header-cloak");
       const finishPosition =
         document.querySelector("html").classList["direction"] === "rtl"
-          ? "-100vw"
-          : "100vw";
+          ? "-320px"
+          : "320px";
       panel
         .animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
           duration: 200,
