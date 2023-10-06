@@ -108,9 +108,9 @@ const SiteHeaderComponent = MountWidget.extend(
         fill: "forwards",
       };
 
-      let endPosition = this._PANEL_WIDTH;
-      if (menuOrigin === "left") {
-        endPosition = -this._PANEL_WIDTH;
+      let endPosition = -this._PANEL_WIDTH; //origin left
+      if (menuOrigin === "right") {
+        endPosition = this._PANEL_WIDTH;
       }
       panel
         .animate([{ transform: `translate3d(${endPosition}px, 0, 0)` }], timing)
@@ -155,6 +155,7 @@ const SiteHeaderComponent = MountWidget.extend(
           e.velocityX > 0
         );
       } else {
+        //originleft
         return (
           (e.deltaX < -SWIPE_DISTANCE_THRESHOLD &&
             e.velocityX < SWIPE_VELOCITY_THRESHOLD) ||
@@ -199,6 +200,8 @@ const SiteHeaderComponent = MountWidget.extend(
       }
       const panel = this.movingElement;
       const headerCloak = this.cloakElement;
+
+      //origin left
       this.pxClosed = Math.max(0, -e.deltaX);
       let translation = -this.pxClosed;
       if (this._panMenuOrigin === "right") {
