@@ -19,7 +19,6 @@
   .touch & {
     &:active {
       background-color: var(--d-hover);
-      border: 1px solid var(--primary-300);
     }
   }
 
@@ -27,13 +26,21 @@
     &:hover,
     &:active {
       background-color: var(--d-hover);
-      border: 1px solid var(--primary-300);
     }
   }
 
-  &__participants {
+  &__members {
     display: flex;
     align-items: center;
+    overflow: hidden;
+  }
+
+  &__participants {
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    margin-right: 0.25rem;
   }
 
   &__main {
@@ -63,45 +70,48 @@
   &__metadata {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-
+    gap: 0.5rem;
     .chat-user-avatar {
+      &__container {
+        padding: 0;
+      }
       .avatar {
-        border: 1px solid var(--primary-very-low);
+        border: 2px solid var(--primary-very-low);
+        padding: 0;
+
+        .chat-thread-list-item:hover & {
+          border-color: var(--d-hover);
+        }
       }
 
       &:not(:last-child) {
-        margin-right: -8px;
+        margin-right: -6px;
       }
+    }
+    .chat-thread-participants__avatar-group {
+      overflow: hidden;
+      justify-content: flex-start;
     }
   }
 
-  &__participants {
-    margin-right: 0.25rem;
-  }
-
   &__last-reply-timestamp {
+    flex-shrink: 0;
     color: var(--primary-medium);
     font-size: var(--font-down-2);
     @include ellipsis;
-    margin-right: auto;
+    margin-left: auto;
   }
 
   &__header {
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
   }
 
   &__title {
     flex: 1 1 auto;
-    font-weight: bold;
     @include ellipsis;
-  }
-
-  &__last-reply-excerpt {
-    font-size: var(--font-down-1);
   }
 
   &__unread-indicator {
