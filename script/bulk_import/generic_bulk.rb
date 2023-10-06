@@ -529,27 +529,12 @@ class BulkImport::Generic < BulkImport::Base
       # TODO Ensure that we calculate the `like_count` if the column is empty, but the DB contains likes.
       # Otherwise #import_user_stats will not be able to calculate the correct `likes_received` value.
 
-      raw = row["raw"]
-
-      if row["mentions"].present?
-        mentions = JSON.parse(row["mentions"])
-
-        # TODO Implement mentions for types other than groups
-
-        mentions.each do |mention|
-          group_id = group_id_from_imported_id(mention["id"])
-          group_name = group_names[group_id]
-          puts "group not found -- #{mention["id"]}" unless group_name
-          raw.gsub!(mention["placeholder"], "@#{group_name}")
-        end
-      end
-
       {
         imported_id: row["id"],
         topic_id: topic_id,
         user_id: user_id_from_imported_id(row["user_id"]),
         created_at: to_datetime(row["created_at"]),
-        raw: raw,
+        raw: post_raw(row),
         like_count: row["like_count"],
         reply_to_post_number:
           row["reply_to_post_id"] ? post_number_from_imported_id(row["reply_to_post_id"]) : nil,
@@ -557,6 +542,40 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     posts.close
+  end
+
+  def post_raw(row)
+    raw = row["raw"]
+
+    if row["mentions"].present?
+      mentions = JSON.parse(row["mentions"])
+
+      # TODO Implement mentions for types other than groups
+
+      mentions.each do |mention|
+        group_id = group_id_from_imported_id(mention["id"])
+        group_name = group_names[group_id]
+        puts "group not found -- #{mention["id"]}" unless group_name
+        raw.gsub!(mention["placeholder"], "@#{group_name}")
+      end
+    end
+
+    if row["uploads_ids"].present?
+      upload_ids = JSON.parse(row["uploads_ids"])
+
+      placeholders = (["?"] * upload_ids.size).join(",")
+      sql = "SELECT id, markdown FROM uploads WHERE id IN (#{placeholders})"
+      @uploads_db
+        .execute(sql, upload_ids)
+        .tap do |result_set|
+          result_set.each do |upload|
+            raw.gsub!("[upload|#{upload["id"]}]", upload["markdown"] || "")
+          end
+          result_set.close
+        end
+    end
+
+    raw
   end
 
   def process_raw(original_raw)
