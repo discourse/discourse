@@ -75,7 +75,10 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     _getMaxAnimationTime(durationMs = this._MAX_ANIMATION_TIME) {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      if (
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+        (DEBUG && isTesting())
+      ) {
         return 0;
       }
       return Math.min(durationMs, this._MAX_ANIMATION_TIME);
