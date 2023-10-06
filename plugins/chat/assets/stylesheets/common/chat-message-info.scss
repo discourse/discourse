@@ -11,6 +11,9 @@
   & + .chat-message-info__bot-indicator,
   & + .chat-message-info__date {
     margin-left: 0.25em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
