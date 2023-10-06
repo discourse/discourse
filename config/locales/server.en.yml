@@ -2404,7 +2404,7 @@ en:
     create_post_for_category_and_tag_changes: "Create a small action post when a topic's category or tags change"
     watched_precedence_over_muted: "Notify me about topics in categories or tags I’m watching that also belong to one I have muted"
 
-    company_name: "Company Name"
+    company_name: "Name of your company or organization. If left blank, no boilerplate Terms of Service or Privacy Notice will be provided."
     governing_law: "Governing Law"
     city_for_disputes: "City for Disputes"
 
