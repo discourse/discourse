@@ -5,9 +5,11 @@ export default {
   initialize() {
     withPluginApi("0.8.7", (api) => {
       function _handleEvent(event) {
-        const parentDiv = event.target;
+        const svgIcon = event.target;
+        const overlay = svgIcon.parentElement;
+        const wrapper = overlay.parentElement;
+        const parentDiv = wrapper.parentElement;
 
-        const wrapper = parentDiv.querySelector(".video-placeholder-wrapper");
         wrapper.style.display = "none";
 
         const videoHTML = `
@@ -30,9 +32,6 @@ export default {
         let containers = post.querySelectorAll(".video-placeholder-container");
 
         containers.forEach((container) => {
-          container.style.cursor = "pointer";
-          container.addEventListener("click", _handleEvent, false);
-
           const wrapper = document.createElement("div"),
             overlay = document.createElement("div");
 
@@ -40,6 +39,8 @@ export default {
           wrapper.classList.add("video-placeholder-wrapper");
 
           overlay.classList.add("video-placeholder-overlay");
+          overlay.style.cursor = "pointer";
+          overlay.addEventListener("click", _handleEvent, false);
           overlay.innerHTML = `${iconHTML("play")}`;
           wrapper.appendChild(overlay);
         });
