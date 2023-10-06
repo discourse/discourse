@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { cookAsync } from "discourse/lib/text";
+import { cook } from "discourse/lib/text";
 import { isEmpty } from "@ember/utils";
 
 export default class ChangePostNoticeModal extends Component {
@@ -42,7 +42,7 @@ export default class ChangePostNoticeModal extends Component {
       .updatePostField("notice", notice)
       .then(() => {
         if (notice) {
-          return cookAsync(notice, { features: { onebox: false } });
+          return cook(notice, { features: { onebox: false } });
         }
       })
       .then((cooked) =>
