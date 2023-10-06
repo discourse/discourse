@@ -154,21 +154,22 @@ export default Component.extend(PanEvents, {
       durationMs = this._getMaxAnimationTime(
         distancePx / Math.abs(event.velocityY)
       );
-      timelineContainer.animate(
-        [{ transform: `translate3d(0, ${maxOffset}px, 0)` }],
-        { duration: durationMs, fill: "forwards" }
-      );
-
-      this._collapseFullscreen(durationMs);
+      timelineContainer
+        .animate([{ transform: `translate3d(0, ${maxOffset}px, 0)` }], {
+          duration: durationMs,
+          fill: "forwards",
+        })
+        .finished.then(() => this._collapseFullscreen(0));
     } else {
       const distancePx = this.pxClosed;
       durationMs = this._getMaxAnimationTime(
         distancePx / Math.abs(event.velocityY)
       );
-      timelineContainer.animate(
-        [{ transform: `translate3d(0, 0, 0)`, easing: "ease-out" }],
-        { duration: durationMs, fill: "forwards" }
-      );
+      timelineContainer.animate([{ transform: `translate3d(0, 0, 0)` }], {
+        duration: durationMs,
+        fill: "forwards",
+        easing: "ease-out",
+      });
     }
   },
 

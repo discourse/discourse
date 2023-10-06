@@ -1,5 +1,5 @@
 import { DEBUG } from "@glimmer/env";
-import { cancel, schedule } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
 import { registerWaiter, unregisterWaiter } from "@ember/test";
 import ItsATrap from "@discourse/itsatrap";
 import MountWidget from "discourse/components/mount-widget";
@@ -11,7 +11,6 @@ import PanEvents, {
 } from "discourse/mixins/pan-events";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
 import { isTesting } from "discourse-common/config/environment";
-import discourseLater from "discourse-common/lib/later";
 import { bind, observes } from "discourse-common/utils/decorators";
 
 const SiteHeaderComponent = MountWidget.extend(
@@ -25,8 +24,6 @@ const SiteHeaderComponent = MountWidget.extend(
     _animate: false,
     _isPanning: false,
     _panMenuOrigin: "right",
-    _panMenuOffset: 0,
-    _scheduledRemoveAnimate: null,
     _topic: null,
     _itsatrap: null,
     _applicationElement: null,
@@ -92,15 +89,16 @@ const SiteHeaderComponent = MountWidget.extend(
           this.pxClosed / Math.abs(event.velocityX)
         );
       }
-      panel.animate(
-        [{ transform: `translate3d(0, 0, 0)`, easing: "ease-out" }],
-        { duration: durationMs, fill: "forwards" }
-      );
-      headerCloak.animate([{ opacity: 0.5, easing: "ease-out" }], {
+      panel.animate([{ transform: `translate3d(0, 0, 0)` }], {
         duration: durationMs,
         fill: "forwards",
+        easing: "ease-out",
       });
-      this._panMenuOffset = 0;
+      headerCloak.animate([{ opacity: 0.5 }], {
+        duration: durationMs,
+        fill: "forwards",
+        easing: "ease-out",
+      });
       this.pxClosed = null;
     },
 
@@ -128,17 +126,17 @@ const SiteHeaderComponent = MountWidget.extend(
         });
       }
 
-      headerCloak.animate([{ opacity: 0 }], {
-        duration: durationMs,
-        fill: "forwards",
-      });
-      this.pxClosed = null;
-      this._scheduledRemoveAnimate = discourseLater(() => {
-        schedule("afterRender", () => {
-          this.eventDispatched("dom:clean", "header");
-          this._panMenuOffset = 0;
+      headerCloak
+        .animate([{ opacity: 0 }], {
+          duration: durationMs,
+          fill: "forwards",
+        })
+        .finished.then(() => {
+          schedule("afterRender", () => {
+            this.eventDispatched("dom:clean", "header");
+          });
         });
-      }, durationMs);
+      this.pxClosed = null;
     },
 
     _isRTL() {
@@ -217,7 +215,7 @@ const SiteHeaderComponent = MountWidget.extend(
       const panel = this.movingElement;
       const headerCloak = this.cloakElement;
       if (this._panMenuOrigin === "right") {
-        const pxClosed = Math.min(0, -e.deltaX + this._panMenuOffset);
+        const pxClosed = Math.min(0, -e.deltaX);
         this.pxClosed = Math.abs(pxClosed);
         panel.animate([{ transform: `translate3d(${-pxClosed}px, 0, 0)` }], {
           fill: "forwards",
@@ -227,7 +225,7 @@ const SiteHeaderComponent = MountWidget.extend(
           { fill: "forwards" }
         );
       } else {
-        const pxClosed = Math.min(0, e.deltaX + this._panMenuOffset);
+        const pxClosed = Math.min(0, e.deltaX);
         this.pxClosed = Math.abs(pxClosed);
         panel.animate([{ transform: `translate3d(${pxClosed}px, 0, 0)` }], {
           fill: "forwards",
@@ -369,8 +367,6 @@ const SiteHeaderComponent = MountWidget.extend(
         this.currentUser.off("status-changed", this, "queueRerender");
       }
 
-      cancel(this._scheduledRemoveAnimate);
-
       this._itsatrap?.destroy();
       this._itsatrap = null;
     },
@@ -410,16 +406,12 @@ const SiteHeaderComponent = MountWidget.extend(
 
       menuPanels.forEach((panel) => {
         const headerCloak = document.querySelector(".header-cloak");
-        let width = parseInt(panel.getAttribute("data-max-width"), 10) || 300;
-        if (this._panMenuOffset) {
-          this._panMenuOffset = -width;
-        }
 
         panel.classList.remove("drop-down");
         panel.classList.remove("slide-in");
         panel.classList.add(viewMode);
 
-        if (this._animate || this._panMenuOffset !== 0) {
+        if (this._animate) {
           if (
             (this.site.mobileView || this.site.narrowDesktopView) &&
             panel.parentElement.classList.contains(this._leftMenuClass())
@@ -435,20 +427,20 @@ const SiteHeaderComponent = MountWidget.extend(
             });
           }
           headerCloak.animate([{ opacity: 0 }], { fill: "forwards" });
-        }
-
-        if (viewMode === "slide-in") {
           headerCloak.style.display = "block";
-        }
-        if (this._animate) {
           this._animateOpening(null, panel);
         }
+
         this._animate = false;
       });
     },
 
     _dropDownHeaderEnabled() {
-      return !this.sidebarEnabled || this.site.narrowDesktopView;
+      return (
+        (!this.sidebarEnabled &&
+          this.siteSettings.navigation_menu !== "legacy") ||
+        this.site.narrowDesktopView
+      );
     },
   }
 );

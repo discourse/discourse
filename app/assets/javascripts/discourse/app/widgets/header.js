@@ -12,7 +12,6 @@ import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
 import { iconNode } from "discourse-common/lib/icon-library";
-import discourseLater from "discourse-common/lib/later";
 import I18n from "I18n";
 
 let _extraHeaderIcons = [];
@@ -376,17 +375,18 @@ createWidget("revamped-hamburger-menu-wrapper", {
         document.querySelector("html").classList["direction"] === "rtl"
           ? "100vw"
           : "-100vw";
-      panel.animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
-        duration: 200,
-        fill: "forwards",
-      });
+      panel
+        .animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
+          duration: 200,
+          fill: "forwards",
+          easing: "ease-in",
+        })
+        .finished.then(() => this.sendWidgetAction("toggleHamburger"));
       headerCloak.animate([{ opacity: 0 }], {
         duration: 200,
         fill: "forwards",
+        easing: "ease-in",
       });
-      discourseLater(() => {
-        this.sendWidgetAction("toggleHamburger");
-      }, 200);
     } else {
       this.sendWidgetAction("toggleHamburger");
     }
@@ -426,18 +426,18 @@ createWidget("revamped-user-menu-wrapper", {
         document.querySelector("html").classList["direction"] === "rtl"
           ? "-100vw"
           : "100vw";
-      panel.animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
-        duration: 200,
-        fill: "forwards",
-      });
+      panel
+        .animate([{ transform: `translate3d(${finishPosition}, 0, 0)` }], {
+          duration: 200,
+          fill: "forwards",
+          easing: "ease-in",
+        })
+        .finished.then(() => this.closeUserMenu());
       headerCloak.animate([{ opacity: 0 }], {
         duration: 200,
         fill: "forwards",
+        easing: "ease-in",
       });
-
-      discourseLater(() => {
-        this.closeUserMenu();
-      }, 200);
     } else {
       this.closeUserMenu();
     }
