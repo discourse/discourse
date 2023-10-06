@@ -6,8 +6,11 @@ module Chat
   # participants in the thread. The participants will be made up
   # of:
   #
-  # - Participant 1 -9 - The most frequent participants in the thread.
-  # - Participant 10 - The most recent participant in the thread.
+  # The most frequent participants in the thread:
+  # - Participant 1-2 (preview)
+  # - Participant 1-9 (thread list)
+  # The most recent participant in the thread.
+  # - Participant 10
   #
   # This result should be cached to avoid unnecessary queries,
   # since the participants will not often change for a thread,
@@ -15,8 +18,9 @@ module Chat
   # count it is not a big deal.
   class ThreadParticipantQuery
     # @param thread_ids [Array<Integer>] The IDs of the threads to query.
+    # @param preview [Boolean] Determines the number of participants to return.
     # @return [Hash<Integer, Hash>] A hash of thread IDs to participant data.
-    def self.call(thread_ids:)
+    def self.call(thread_ids:, preview: true)
       return {} if thread_ids.blank?
 
       # We only want enough data for BasicUserSerializer, since the participants
@@ -60,6 +64,8 @@ module Chat
           hash
         end
 
+      total_participants = preview ? 2 : 9
+
       thread_participants = {}
       thread_participant_stats.each do |thread_participant_stat|
         thread_id = thread_participant_stat.thread_id
@@ -69,7 +75,7 @@ module Chat
 
         # If we want to return more of the top N users in the thread we
         # can just increase the number here.
-        if thread_participants[thread_id][:users].length < 9 &&
+        if thread_participants[thread_id][:users].length < total_participants &&
              thread_participant_stat.user_id != most_recent_participants[thread_id][:id]
           thread_participants[thread_id][:users].push(
             {
