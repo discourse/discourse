@@ -14,10 +14,6 @@
       {{on "click" (fn this.openThread @thread) passive=true}}
     >
       <div class="chat-thread-list-item__header">
-        <Chat::UserAvatar
-          @user={{@thread.originalMessage.user}}
-          @showPresence={{false}}
-        />
         <div class="chat-thread-list-item__title">
           {{#if this.title}}
             {{replace-emoji this.title}}
@@ -32,18 +28,24 @@
 
       <div class="chat-thread-list-item__metadata">
 
+        <div class="chat-thread-list-item__members">
+          <Chat::UserAvatar
+            @user={{@thread.originalMessage.user}}
+            @showPresence={{false}}
+          />
+          <Chat::Thread::Participants
+            @thread={{@thread}}
+            @includeOriginalMessageUser={{false}}
+            class="chat-thread-list-item__participants"
+          />
+        </div>
+
         <div class="chat-thread-list-item__last-reply-timestamp">
           {{#if @thread.preview.lastReplyCreatedAt}}
-            <span>{{i18n "chat.thread.last_reply"}}</span>
             {{format-date @thread.preview.lastReplyCreatedAt leaveAgo="true"}}
           {{/if}}
         </div>
 
-        <Chat::Thread::Participants
-          @thread={{@thread}}
-          @includeOriginalMessageUser={{false}}
-          class="chat-thread-list-item__participants"
-        />
       </div>
     </div>
   </div>

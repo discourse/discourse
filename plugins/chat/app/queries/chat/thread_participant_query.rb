@@ -2,12 +2,12 @@
 
 module Chat
   # Builds a query to find the total count of participants for one
-  # or more threads (on a per-thread basis), as well as up to 3
+  # or more threads (on a per-thread basis), as well as up to 10
   # participants in the thread. The participants will be made up
   # of:
   #
-  # - Participant 1 & 2 - The most frequent participants in the thread.
-  # - Participant 3 - The most recent participant in the thread.
+  # - Participant 1 -9 - The most frequent participants in the thread.
+  # - Participant 10 - The most recent participant in the thread.
   #
   # This result should be cached to avoid unnecessary queries,
   # since the participants will not often change for a thread,
@@ -69,7 +69,7 @@ module Chat
 
         # If we want to return more of the top N users in the thread we
         # can just increase the number here.
-        if thread_participants[thread_id][:users].length < 2 &&
+        if thread_participants[thread_id][:users].length < 9 &&
              thread_participant_stat.user_id != most_recent_participants[thread_id][:id]
           thread_participants[thread_id][:users].push(
             {
