@@ -7,6 +7,13 @@
       {{/if}}
     </label>
   {{/if}}
+
+  {{#if @attributes.description}}
+    <span class="form-template-field__description">
+      {{html-safe @attributes.description}}
+    </span>
+  {{/if}}
+
   <Textarea
     name={{@id}}
     @value={{@value}}

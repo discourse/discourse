@@ -2169,6 +2169,7 @@ en:
       security_key_not_allowed_error: "The security key authentication process either timed out or was cancelled."
       security_key_no_matching_credential_error: "No matching credentials could be found in the provided security key."
       security_key_support_missing_error: "Your current device or browser does not support the use of security keys. Please use a different method."
+      security_key_invalid_response_error: "The security key authentication process failed due to an invalid response."
       email_placeholder: "Email / Username"
       caps_lock_warning: "Caps Lock is on"
       error: "Unknown error"

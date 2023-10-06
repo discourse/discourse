@@ -89,7 +89,7 @@ module(
             id: 1,
             name: "Bug Reports",
             template:
-              '- type: checkbox\n  choices:\n    - "Option 1"\n    - "Option 2"\n    - "Option 3"\n  attributes:\n    label: "Enter question here"\n    description: "Enter description here"\n    validations:\n      required: true',
+              '- type: checkbox\n  id: options\n  choices:\n    - "Option 1"\n    - "Option 2"\n    - "Option 3"\n  attributes:\n    label: "Enter question here"\n    description: "Enter description here"\n    validations:\n      required: true',
           },
         });
       });

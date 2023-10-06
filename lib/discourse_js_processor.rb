@@ -134,9 +134,7 @@ class DiscourseJsProcessor
       ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
 
       # Theme template AST transformation plugins
-      if Rails.env.development? || Rails.env.test?
-        @processor_mutex.synchronize { build_theme_transpiler }
-      end
+      @processor_mutex.synchronize { build_theme_transpiler } if !Rails.env.production?
 
       ctx.eval(File.read(TRANSPILER_PATH), filename: "theme-transpiler.js")
 

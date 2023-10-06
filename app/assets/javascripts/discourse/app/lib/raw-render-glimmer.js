@@ -41,12 +41,14 @@ export default function rawRenderGlimmer(owner, renderInto, component, data) {
 
   schedule("afterRender", () => {
     const element = document.getElementById(id);
-    const componentInfo = {
-      element,
-      component,
-      data,
-    };
-    renderGlimmerService.add(componentInfo);
+    if (element) {
+      const componentInfo = {
+        element,
+        component,
+        data,
+      };
+      renderGlimmerService.add(componentInfo);
+    }
   });
 
   return `<${type} id="${id}" class="${classNames.join(" ")}"></${type}>`;

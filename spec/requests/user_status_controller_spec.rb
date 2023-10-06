@@ -28,7 +28,7 @@ RSpec.describe UserStatusController do
       it "returns user status" do
         status = "off to dentist"
         status_emoji = "tooth"
-        ends_at = "2100-01-01T18:00:00.000Z"
+        ends_at = "2100-01-01T18:00:00Z"
         user.set_status!(status, status_emoji, DateTime.parse(ends_at))
 
         get "/user-status.json"

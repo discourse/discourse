@@ -7,11 +7,11 @@ import discourseComputed, {
   observes,
 } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import showModal from "discourse/lib/show-modal";
 import Invite from "discourse/models/invite";
 import I18n from "I18n";
 import { inject as service } from "@ember/service";
 import CreateInviteBulk from "discourse/components/modal/create-invite-bulk";
+import CreateInvite from "discourse/components/modal/create-invite";
 
 export default Controller.extend({
   dialog: service(),
@@ -73,8 +73,7 @@ export default Controller.extend({
 
   @action
   createInvite() {
-    const controller = showModal("create-invite");
-    controller.set("invites", this.model.invites);
+    this.modal.show(CreateInvite, { model: { invites: this.model.invites } });
   },
 
   @action
@@ -84,9 +83,7 @@ export default Controller.extend({
 
   @action
   editInvite(invite) {
-    const controller = showModal("create-invite");
-    controller.set("editing", true);
-    controller.setInvite(invite);
+    this.modal.show(CreateInvite, { model: { editing: true, invite } });
   },
 
   @action

@@ -8,7 +8,6 @@ import { avatarUrl } from "discourse-common/lib/avatar-utils";
 import { dasherize } from "@ember/string";
 import { emojiUnescape } from "discourse/lib/text";
 import { decorateUsername } from "discourse/helpers/decorate-username-selector";
-import { until } from "discourse/lib/formatter";
 import { inject as service } from "@ember/service";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import getURL from "discourse-common/lib/get-url";
@@ -344,21 +343,6 @@ export default {
 
             get hoverTitle() {
               return I18n.t("chat.direct_messages.leave");
-            }
-
-            _userStatusTitle(status) {
-              let title = `${escapeExpression(status.description)}`;
-
-              if (status.ends_at) {
-                const untilFormatted = until(
-                  status.ends_at,
-                  this.chatService.currentUser.user_option.timezone,
-                  this.chatService.currentUser.locale
-                );
-                title += ` ${untilFormatted}`;
-              }
-
-              return title;
             }
           };
 
