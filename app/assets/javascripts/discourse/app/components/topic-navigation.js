@@ -21,7 +21,6 @@ export default Component.extend({
   ],
   composerOpen: null,
   info: null,
-  isSwiping: false,
   canRender: true,
   _lastTopicId: null,
   _swipeEvents: null,
@@ -148,19 +147,14 @@ export default Component.extend({
     e.originalEvent.preventDefault();
     const centeredElement = document.elementFromPoint(e.center.x, e.center.y);
     if (centeredElement.closest(".timeline-scrollarea-wrapper")) {
-      this.isSwiping = false;
+      event.preventDefault();
     } else if (e.direction === "up" || e.direction === "down") {
-      this.isSwiping = true;
       this.movingElement = document.querySelector(".timeline-container");
     }
   },
 
   onSwipeEnd(event) {
-    if (!this.isSwiping) {
-      return;
-    }
     const e = event.detail;
-    this.isSwiping = false;
     const timelineContainer = document.querySelector(".timeline-container");
     const maxOffset = timelineContainer.offsetHeight;
 
@@ -190,9 +184,6 @@ export default Component.extend({
   },
 
   onSwipe(event) {
-    if (!this.isSwiping) {
-      return;
-    }
     const e = event.detail;
     e.originalEvent.preventDefault();
     this.pxClosed = Math.max(0, e.deltaY);

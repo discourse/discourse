@@ -18,7 +18,6 @@ const SiteHeaderComponent = MountWidget.extend(
     docAt: null,
     dockedHeader: null,
     _animate: false,
-    _isSwiping: false,
     _swipeMenuOrigin: "right",
     _topic: null,
     _itsatrap: null,
@@ -53,31 +52,22 @@ const SiteHeaderComponent = MountWidget.extend(
       }
     },
 
-    _animateOpening(
-      panel,
-      { event = null, animationFinished = Promise.resolve() } = {}
-    ) {
-      if (isTesting()) {
-        waitForPromise(animationFinished);
+    _animateOpening(panel, event = null) {
+      const headerCloak = document.querySelector(".header-cloak");
+      let durationMs = this._swipeEvents.getMaxAnimationTimeMs();
+      if (event && this.pxClosed > 0) {
+        durationMs = this._swipeEvents.getMaxAnimationTimeMs(
+          this.pxClosed / Math.abs(event.velocityX)
+        );
       }
-
-      animationFinished.then(() => {
-        const headerCloak = document.querySelector(".header-cloak");
-        let durationMs = this._swipeEvents.getMaxAnimationTimeMs();
-        if (event && this.pxClosed > 0) {
-          durationMs = this._swipeEvents.getMaxAnimationTimeMs(
-            this.pxClosed / Math.abs(event.velocityX)
-          );
-        }
-        const timing = {
-          duration: durationMs,
-          fill: "forwards",
-          easing: "ease-out",
-        };
-        panel.animate([{ transform: `translate3d(0, 0, 0)` }], timing);
-        headerCloak.animate([{ opacity: 0.5 }], timing);
-        this.pxClosed = null;
-      });
+      const timing = {
+        duration: durationMs,
+        fill: "forwards",
+        easing: "ease-out",
+      };
+      panel.animate([{ transform: `translate3d(0, 0, 0)` }], timing).finished;
+      headerCloak.animate([{ opacity: 0.5 }], timing);
+      this.pxClosed = null;
     },
 
     _animateClosing(event, panel, menuOrigin) {
@@ -133,35 +123,27 @@ const SiteHeaderComponent = MountWidget.extend(
         swipeOverValidElement &&
         (e.direction === "left" || e.direction === "right")
       ) {
-        this._isSwiping = true;
         this.movingElement = document.querySelector(".menu-panel");
         this.cloakElement = document.querySelector(".header-cloak");
       } else {
-        this._isSwiping = false;
+        event.preventDefault();
       }
     },
 
     onSwipeEnd(event) {
-      if (!this._isSwiping) {
-        return;
-      }
       const e = event.detail;
-      this._isSwiping = false;
       const menuPanels = document.querySelectorAll(".menu-panel");
       const menuOrigin = this._swipeMenuOrigin;
       menuPanels.forEach((panel) => {
         if (this._swipeEvents.shouldCloseMenu(e, menuOrigin)) {
           this._animateClosing(e, panel, menuOrigin);
         } else {
-          this._animateOpening(panel, { event: e });
+          this._animateOpening(panel, e);
         }
       });
     },
 
     onSwipe(event) {
-      if (!this._isSwiping) {
-        return;
-      }
       const e = event.detail;
       const panel = this.movingElement;
       const headerCloak = this.cloakElement;
@@ -380,9 +362,14 @@ const SiteHeaderComponent = MountWidget.extend(
               fill: "forwards",
             }
           ).finished;
+
+          if (isTesting()) {
+            waitForPromise(animationFinished);
+          }
+
           headerCloak.animate([{ opacity: 0 }], { fill: "forwards" });
           headerCloak.style.display = "block";
-          this._animateOpening(panel, { animationFinished });
+          animationFinished.then(() => this._animateOpening(panel));
         }
 
         this._animate = false;

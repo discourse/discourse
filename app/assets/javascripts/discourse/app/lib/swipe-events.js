@@ -2,7 +2,9 @@ import { isTesting } from "discourse-common/config/environment";
 
 /**
    Swipe events is a class that allows components to detect and respond to swipe gestures
-   It sets up custom events for swipestart, swipeend, and swipe for beginning swipe, end swipe, and during swipe. Event returns detail.state with swipe state, and the original event..
+   It sets up custom events for swipestart, swipeend, and swipe for beginning swipe, end swipe, and during swipe. Event returns detail.state with swipe state, and the original event.
+
+   Calling preventDefault() on the swipestart event stops swipe and swipeend events for the current gesture. it is re-enabled on future swipe events.
 **/
 export const SWIPE_DISTANCE_THRESHOLD = 50;
 export const SWIPE_VELOCITY_THRESHOLD = 0.12;
@@ -25,8 +27,14 @@ export default class SwipeEvents {
       touchEvent.type = "pointermove";
       this.#swipeMove(touchEvent, e);
     };
-    this.touchEnd = (e) => this.#swipeMove({ type: "pointerup" }, e);
-    this.touchCancel = (e) => this.#swipeMove({ type: "pointercancel" }, e);
+    this.touchEnd = (e) => {
+      this.cancelled = false;
+      this.#swipeMove({ type: "pointerup" }, e);
+    };
+    this.touchCancel = (e) => {
+      this.cancelled = false;
+      this.#swipeMove({ type: "pointercancel" }, e);
+    };
 
     const opts = {
       passive: false,
@@ -150,12 +158,15 @@ export default class SwipeEvents {
   }
 
   #swipeMove(e, originalEvent) {
+    if (this.cancelled) {
+      return;
+    }
     if (!this.swipeState) {
       this.#swipeStart(e);
       return;
     }
-    originalEvent.stopPropagation();
 
+    originalEvent.stopPropagation();
     const previousState = this.swipeState;
     const newState = this.#calculateNewSwipeState(previousState, e);
     if (
@@ -168,9 +179,20 @@ export default class SwipeEvents {
     this.swipeState = newState;
     newState.originalEvent = originalEvent;
     if (previousState.start) {
-      const event = new CustomEvent("swipestart", { detail: newState });
-      this.element.dispatchEvent(event);
-    } else if (e.type === "pointerup" || e.type === "pointercancel") {
+      const event = new CustomEvent("swipestart", {
+        cancelable: true,
+        detail: newState,
+      });
+      this.cancelled = !this.element.dispatchEvent(event);
+      if (this.cancelled) {
+        return;
+      }
+      this.swiping = true;
+    } else if (
+      (e.type === "pointerup" || e.type === "pointercancel") &&
+      this.swiping
+    ) {
+      this.swiping = false;
       const event = new CustomEvent("swipeend", { detail: newState });
       this.element.dispatchEvent(event);
     } else if (e.type === "pointermove") {
@@ -179,7 +201,8 @@ export default class SwipeEvents {
       }
       this.animationPending = true;
       window.requestAnimationFrame(() => {
-        if (!this.animationPending) {
+        if (!this.animationPending || !this.swiping) {
+          this.animationPending = false;
           return;
         }
         const event = new CustomEvent("swipe", { detail: newState });

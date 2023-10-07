@@ -833,3 +833,8 @@ a#skip-link {
     transition: top 0.15s ease-in;
   }
 }
+
+.scroll-lock {
+  overflow: hidden;
+  margin-right: var(--scroll-gap, 0);
+}

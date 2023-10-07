@@ -4,6 +4,7 @@ import { h } from "virtual-dom";
 import { SEARCH_BUTTON_ID } from "discourse/components/search-menu";
 import { addExtraUserClasses } from "discourse/helpers/user-avatar";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import ScrollLock from "discourse/lib/scroll-lock";
 import { logSearchLinkClick } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
 import { scrollTop } from "discourse/mixins/scroll-top";
@@ -672,44 +673,7 @@ export default createWidget("header", {
     if (!this.site.mobileView) {
       return;
     }
-    if (bool) {
-      document.body.addEventListener("touchmove", this.preventDefault, {
-        passive: false,
-      });
-    } else {
-      document.body.removeEventListener("touchmove", this.preventDefault, {
-        passive: false,
-      });
-    }
-  },
-
-  preventDefault(e) {
-    const windowHeight = window.innerHeight;
-
-    // allow profile menu tabs to scroll if they're taller than the window
-    if (e.target.closest(".menu-panel .menu-tabs-container")) {
-      const topTabs = document.querySelector(".menu-panel .top-tabs");
-      const bottomTabs = document.querySelector(".menu-panel .bottom-tabs");
-      const profileTabsHeight =
-        topTabs?.offsetHeight + bottomTabs?.offsetHeight || 0;
-
-      if (profileTabsHeight > windowHeight) {
-        return;
-      }
-    }
-
-    // allow menu panels to scroll if contents are taller than the window
-    if (e.target.closest(".menu-panel")) {
-      const menuContentHeight =
-        document.querySelector(".menu-panel .panel-body-contents")
-          .offsetHeight || 0;
-
-      if (menuContentHeight > windowHeight) {
-        return;
-      }
-    }
-
-    e.preventDefault();
+    ScrollLock.toggle(bool);
   },
 
   togglePageSearch() {
