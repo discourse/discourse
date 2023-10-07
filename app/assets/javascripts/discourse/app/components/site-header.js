@@ -55,7 +55,7 @@ const SiteHeaderComponent = MountWidget.extend(
 
     _animateOpening(
       panel,
-      { event = null, animationFinished = new Promise((r) => r()) } = {}
+      { event = null, animationFinished = Promise.resolve() } = {}
     ) {
       if (isTesting()) {
         waitForPromise(animationFinished);
