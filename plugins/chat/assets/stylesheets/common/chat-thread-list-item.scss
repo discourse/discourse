@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: row;
   padding: 1rem 0;
-  margin-inline: 1rem;
+  margin-inline: 1rem 0.75rem;
   border-radius: var(--d-border-radius);
   background-color: var(--primary-very-low);
   border: 1px solid transparent;
@@ -29,7 +29,7 @@
     &:hover,
     &:active {
       background-color: var(--d-hover);
-      padding-inline: 1rem;
+      padding-inline: 1rem 0.75rem;
       margin-inline: 0;
     }
   }
