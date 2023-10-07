@@ -92,21 +92,6 @@ export default class SwipeEvents {
     return false;
   }
 
-  isSwipingRight(e) {
-    return (
-      (e.detail.deltaX > SWIPE_DISTANCE_THRESHOLD &&
-        e.detail.velocityX > -SWIPE_VELOCITY_THRESHOLD) ||
-      e.detail.velocityX > 0
-    );
-  }
-  isSwipingLeft(e) {
-    return (
-      (e.detail.deltaX < -SWIPE_DISTANCE_THRESHOLD &&
-        e.detail.velocityX < SWIPE_VELOCITY_THRESHOLD) ||
-      e.detail.velocityX < 0
-    );
-  }
-
   #calculateDirection(oldState, deltaX, deltaY) {
     if (oldState.start || !oldState.direction) {
       if (Math.abs(deltaX) > Math.abs(deltaY)) {
