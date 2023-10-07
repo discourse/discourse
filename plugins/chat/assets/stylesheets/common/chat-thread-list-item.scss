@@ -1,7 +1,8 @@
 @mixin thread-list-item {
   display: flex;
   flex-direction: row;
-  padding: 0.5rem;
+  padding: 1rem 0;
+  margin-inline: 1rem;
   border-radius: var(--d-border-radius);
   background-color: var(--primary-very-low);
   border: 1px solid transparent;
@@ -19,8 +20,8 @@
   .touch & {
     &:active {
       background-color: var(--d-hover);
-      padding-inline: 0.75rem;
-      margin-inline: 0;
+      padding: 1rem 0;
+      margin-inline: 1rem;
     }
   }
 
@@ -28,6 +29,8 @@
     &:hover,
     &:active {
       background-color: var(--d-hover);
+      padding-inline: 1rem;
+      margin-inline: 0;
     }
   }
 
