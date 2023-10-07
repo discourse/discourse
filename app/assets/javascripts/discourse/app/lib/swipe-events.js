@@ -2,7 +2,7 @@ import { isTesting } from "discourse-common/config/environment";
 
 /**
    Swipe events is a class that allows components to detect and respond to swipe gestures
-   It sets up custom events for swipestart, swipeend, and swipe for beginning swipe, end swipe, and during swipe. Event returns detail.state with swipe state.
+   It sets up custom events for swipestart, swipeend, and swipe for beginning swipe, end swipe, and during swipe. Event returns detail.state with swipe state, and the original event..
 **/
 export const SWIPE_DISTANCE_THRESHOLD = 50;
 export const SWIPE_VELOCITY_THRESHOLD = 0.12;
@@ -58,7 +58,7 @@ export default class SwipeEvents {
     return Math.min(durationMs, MAX_ANIMATION_TIME);
   }
 
-  //convenience functions to calculate if a swipe should close
+  //functions to calculate if a swipe should close
   //based on origin of right, left, top, bottom
   // menu should close after a swipe either:
   // if a user moved the panel closed past a threshold and away and is NOT swiping back open
@@ -182,6 +182,7 @@ export default class SwipeEvents {
       return;
     }
     this.swipeState = newState;
+    newState.originalEvent = originalEvent;
     if (previousState.start) {
       const event = new CustomEvent("swipestart", { detail: newState });
       this.element.dispatchEvent(event);

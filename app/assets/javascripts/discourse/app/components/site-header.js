@@ -18,17 +18,14 @@ const SiteHeaderComponent = MountWidget.extend(
     docAt: null,
     dockedHeader: null,
     _animate: false,
-    _isPanning: false,
-    _panMenuOrigin: "right",
+    _isSwiping: false,
+    _swipeMenuOrigin: "right",
     _topic: null,
     _itsatrap: null,
     _applicationElement: null,
     _MAX_ANIMATION_TIME: 200,
     _PANEL_WIDTH: 320,
     _swipeEvents: null,
-    _swipeStart: null,
-    _swipeEnd: null,
-    _swipe: null,
 
     @observes(
       "currentUser.unread_notifications",
@@ -122,22 +119,10 @@ const SiteHeaderComponent = MountWidget.extend(
       return this._isRTL() ? "user-menu" : "hamburger-panel";
     },
 
-    _handlePanDone(event) {
-      const menuPanels = document.querySelectorAll(".menu-panel");
-      const menuOrigin = this._panMenuOrigin;
-      menuPanels.forEach((panel) => {
-        if (this._swipeEvents.shouldCloseMenu(event, menuOrigin)) {
-          this._animateClosing(event, panel, menuOrigin);
-        } else {
-          this._animateOpening(panel, { event });
-        }
-      });
-    },
-
     onSwipeStart(event) {
       const e = event.detail;
       const center = e.center;
-      const panOverValidElement = document
+      const swipeOverValidElement = document
         .elementsFromPoint(center.x, center.y)
         .some(
           (ele) =>
@@ -145,28 +130,36 @@ const SiteHeaderComponent = MountWidget.extend(
             ele.classList.contains("header-cloak")
         );
       if (
-        panOverValidElement &&
+        swipeOverValidElement &&
         (e.direction === "left" || e.direction === "right")
       ) {
-        this._isPanning = true;
+        this._isSwiping = true;
         this.movingElement = document.querySelector(".menu-panel");
         this.cloakElement = document.querySelector(".header-cloak");
       } else {
-        this._isPanning = false;
+        this._isSwiping = false;
       }
     },
 
     onSwipeEnd(event) {
-      if (!this._isPanning) {
+      if (!this._isSwiping) {
         return;
       }
       const e = event.detail;
-      this._isPanning = false;
-      this._handlePanDone(e);
+      this._isSwiping = false;
+      const menuPanels = document.querySelectorAll(".menu-panel");
+      const menuOrigin = this._swipeMenuOrigin;
+      menuPanels.forEach((panel) => {
+        if (this._swipeEvents.shouldCloseMenu(e, menuOrigin)) {
+          this._animateClosing(e, panel, menuOrigin);
+        } else {
+          this._animateOpening(panel, { event: e });
+        }
+      });
     },
 
     onSwipe(event) {
-      if (!this._isPanning) {
+      if (!this._isSwiping) {
         return;
       }
       const e = event.detail;
@@ -176,7 +169,7 @@ const SiteHeaderComponent = MountWidget.extend(
       //origin left
       this.pxClosed = Math.max(0, -e.deltaX);
       let translation = -this.pxClosed;
-      if (this._panMenuOrigin === "right") {
+      if (this._swipeMenuOrigin === "right") {
         this.pxClosed = Math.max(0, e.deltaX);
         translation = this.pxClosed;
       }
@@ -373,12 +366,12 @@ const SiteHeaderComponent = MountWidget.extend(
         if (this._animate) {
           let animationFinished = null;
           let finalPosition = this._PANEL_WIDTH;
-          this._panMenuOrigin = "right";
+          this._swipeMenuOrigin = "right";
           if (
             (this.site.mobileView || this.site.narrowDesktopView) &&
             panel.parentElement.classList.contains(this._leftMenuClass())
           ) {
-            this._panMenuOrigin = "left";
+            this._swipeMenuOrigin = "left";
             finalPosition = -this._PANEL_WIDTH;
           }
           animationFinished = panel.animate(

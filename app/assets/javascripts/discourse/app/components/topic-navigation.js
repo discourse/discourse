@@ -3,10 +3,7 @@ import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import PanEvents, {
-  SWIPE_DISTANCE_THRESHOLD,
-  SWIPE_VELOCITY_THRESHOLD,
-} from "discourse/mixins/pan-events";
+import SwipeEvents from "discourse/lib/swipe-events";
 import discourseDebounce from "discourse-common/lib/debounce";
 import discourseLater from "discourse-common/lib/later";
 import { bind, observes } from "discourse-common/utils/decorators";
@@ -15,7 +12,7 @@ import JumpToPost from "./modal/jump-to-post";
 const MIN_WIDTH_TIMELINE = 925;
 const MIN_HEIGHT_TIMELINE = 325;
 
-export default Component.extend(PanEvents, {
+export default Component.extend({
   modal: service(),
 
   classNameBindings: [
@@ -24,10 +21,10 @@ export default Component.extend(PanEvents, {
   ],
   composerOpen: null,
   info: null,
-  isPanning: false,
+  isSwiping: false,
   canRender: true,
   _lastTopicId: null,
-  _MAX_ANIMATION_TIME: 200,
+  _swipeEvents: null,
 
   init() {
     this._super(...arguments);
@@ -137,51 +134,8 @@ export default Component.extend(PanEvents, {
     }
   },
 
-  _getMaxAnimationTime(durationMs = this._MAX_ANIMATION_TIME) {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return 0;
-    }
-    return Math.min(durationMs, this._MAX_ANIMATION_TIME);
-  },
-
-  _handlePanDone(event) {
-    const timelineContainer = document.querySelector(".timeline-container");
-    const maxOffset = timelineContainer.offsetHeight;
-
-    let durationMs = this._getMaxAnimationTime();
-    if (this._shouldPanClose(event)) {
-      const distancePx = maxOffset - this.pxClosed;
-      durationMs = this._getMaxAnimationTime(
-        distancePx / Math.abs(event.velocityY)
-      );
-      timelineContainer
-        .animate([{ transform: `translate3d(0, ${maxOffset}px, 0)` }], {
-          duration: durationMs,
-          fill: "forwards",
-        })
-        .finished.then(() => this._collapseFullscreen(0));
-    } else {
-      const distancePx = this.pxClosed;
-      durationMs = this._getMaxAnimationTime(
-        distancePx / Math.abs(event.velocityY)
-      );
-      timelineContainer.animate([{ transform: `translate3d(0, 0, 0)` }], {
-        duration: durationMs,
-        fill: "forwards",
-        easing: "ease-out",
-      });
-    }
-  },
-
-  _shouldPanClose(e) {
-    return (
-      (e.deltaY > SWIPE_DISTANCE_THRESHOLD &&
-        e.velocityY > -SWIPE_VELOCITY_THRESHOLD) ||
-      e.velocityY > SWIPE_VELOCITY_THRESHOLD
-    );
-  },
-
-  panStart(e) {
+  onSwipeStart(event) {
+    const e = event.detail;
     const target = e.originalEvent.target;
 
     if (
@@ -194,26 +148,52 @@ export default Component.extend(PanEvents, {
     e.originalEvent.preventDefault();
     const centeredElement = document.elementFromPoint(e.center.x, e.center.y);
     if (centeredElement.closest(".timeline-scrollarea-wrapper")) {
-      this.isPanning = false;
+      this.isSwiping = false;
     } else if (e.direction === "up" || e.direction === "down") {
-      this.isPanning = true;
+      this.isSwiping = true;
       this.movingElement = document.querySelector(".timeline-container");
     }
   },
 
-  panEnd(e) {
-    if (!this.isPanning) {
+  onSwipeEnd(event) {
+    if (!this.isSwiping) {
       return;
     }
-    e.originalEvent.preventDefault();
-    this.isPanning = false;
-    this._handlePanDone(e);
+    const e = event.detail;
+    this.isSwiping = false;
+    const timelineContainer = document.querySelector(".timeline-container");
+    const maxOffset = timelineContainer.offsetHeight;
+
+    let durationMs = this._swipeEvents.getMaxAnimationTimeMs();
+    if (this._swipeEvents.shouldCloseMenu(e, "bottom")) {
+      const distancePx = maxOffset - this.pxClosed;
+      durationMs = this._swipeEvents.getMaxAnimationTimeMs(
+        distancePx / Math.abs(e.velocityY)
+      );
+      timelineContainer
+        .animate([{ transform: `translate3d(0, ${maxOffset}px, 0)` }], {
+          duration: durationMs,
+          fill: "forwards",
+        })
+        .finished.then(() => this._collapseFullscreen(0));
+    } else {
+      const distancePx = this.pxClosed;
+      durationMs = this._swipeEvents.getMaxAnimationTimeMs(
+        distancePx / Math.abs(e.velocityY)
+      );
+      timelineContainer.animate([{ transform: `translate3d(0, 0, 0)` }], {
+        duration: durationMs,
+        fill: "forwards",
+        easing: "ease-out",
+      });
+    }
   },
 
-  panMove(e) {
-    if (!this.isPanning) {
+  onSwipe(event) {
+    if (!this.isSwiping) {
       return;
     }
+    const e = event.detail;
     e.originalEvent.preventDefault();
     this.pxClosed = Math.max(0, e.deltaY);
 
@@ -243,6 +223,15 @@ export default Component.extend(PanEvents, {
     }
 
     this._checkSize();
+    if (this.site.mobileView) {
+      this._swipeEvents = new SwipeEvents(this.element);
+      this._swipeStart = (e) => this.onSwipeStart(e);
+      this._swipeEnd = (e) => this.onSwipeEnd(e);
+      this._swipe = (e) => this.onSwipe(e);
+      this.element.addEventListener("swipestart", this._swipeStart);
+      this.element.addEventListener("swipeend", this._swipeEnd);
+      this.element.addEventListener("swipe", this._swipe);
+    }
   },
 
   willDestroyElement() {
@@ -261,6 +250,12 @@ export default Component.extend(PanEvents, {
       this.appEvents.off("composer:resize-ended", this, this.composerOpened);
       this.appEvents.off("composer:closed", this, this.composerClosed);
       $("#reply-control").off("div-resized", this._checkSize);
+    }
+    if (this.site.mobileView) {
+      this.element.removeEventListener("swipestart", this._swipeStart);
+      this.element.removeEventListener("swipeend", this._swipeEnd);
+      this.element.removeEventListener("swipe", this._swipe);
+      this._swipeEvents.removeTouchListeners();
     }
   },
 });
