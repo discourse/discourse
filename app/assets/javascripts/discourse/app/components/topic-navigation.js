@@ -223,8 +223,9 @@ export default Component.extend({
     }
 
     this._checkSize();
+    this._swipeEvents = new SwipeEvents(this.element);
     if (this.site.mobileView) {
-      this._swipeEvents = new SwipeEvents(this.element);
+      this._swipeEvents.addTouchListeners();
       this._swipeStart = (e) => this.onSwipeStart(e);
       this._swipeEnd = (e) => this.onSwipeEnd(e);
       this._swipe = (e) => this.onSwipe(e);

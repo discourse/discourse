@@ -16,7 +16,6 @@ export default class SwipeEvents {
 
   constructor(element) {
     this.element = element;
-    this.addTouchListeners();
   }
 
   addTouchListeners() {
