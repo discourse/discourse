@@ -6,7 +6,13 @@
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  padding-inline: 0.5rem;
+  padding-inline: 1rem;
+
+  .touch & {
+    &__label {
+      font-size: var(--font-up-1-rem);
+    }
+  }
 
   .chat-thread__back-to-previous-route {
     padding: 0.5rem 0;
