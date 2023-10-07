@@ -19,6 +19,8 @@
   .touch & {
     &:active {
       background-color: var(--d-hover);
+      padding-inline: 0.75rem;
+      margin-inline: 0;
     }
   }
 

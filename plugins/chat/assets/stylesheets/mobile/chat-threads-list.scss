@@ -1,11 +1,9 @@
 .chat-thread-list {
-  &__items {
-    .chat-thread-list-item {
-      margin: 0.5rem;
-    }
-
-    &__no-threads {
-      margin: 0.5rem;
-    }
+  &__no-threads {
+    margin: 0.5rem;
   }
+}
+
+.chat-thread-list-item {
+  padding: 0.5rem 0.25rem;
 }
