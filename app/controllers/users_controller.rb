@@ -17,6 +17,8 @@ class UsersController < ApplicationController
                    enable_second_factor_totp
                    disable_second_factor
                    list_second_factors
+                   confirm_session
+                   trusted_session
                    update_second_factor
                    create_second_factor_backup
                    select_avatar
@@ -64,7 +66,7 @@ class UsersController < ApplicationController
                        user_menu_messages
                      ]
 
-  before_action :second_factor_check_confirmed_password,
+  before_action :check_confirmed_session,
                 only: %i[
                   create_second_factor_totp
                   enable_second_factor_totp
@@ -73,6 +75,8 @@ class UsersController < ApplicationController
                   create_second_factor_backup
                   register_second_factor_security_key
                   create_second_factor_security_key
+                  register_passkey
+                  delete_passkey
                 ]
 
   before_action :respond_to_suspicious_request, only: [:create]
@@ -1494,28 +1498,34 @@ class UsersController < ApplicationController
     end
   end
 
+  def confirm_session
+    # TODO(pmusaraj): add support for confirming via passkey, 2FA
+    params.require(:password)
+
+    if SiteSetting.enable_discourse_connect || !SiteSetting.enable_local_logins
+      raise Discourse::NotFound
+    end
+
+    if confirm_secure_session
+      render json: success_json
+    else
+      render json: failed_json.merge(error: I18n.t("login.incorrect_password"))
+    end
+  end
+
+  def trusted_session
+    render json: secure_session_confirmed? ? success_json : failed_json
+  end
+
   def list_second_factors
     if SiteSetting.enable_discourse_connect || !SiteSetting.enable_local_logins
       raise Discourse::NotFound
     end
 
-    unless params[:password].empty?
-      RateLimiter.new(
-        nil,
-        "login-hr-#{request.remote_ip}",
-        SiteSetting.max_logins_per_ip_per_hour,
-        1.hour,
-      ).performed!
-      RateLimiter.new(
-        nil,
-        "login-min-#{request.remote_ip}",
-        SiteSetting.max_logins_per_ip_per_minute,
-        1.minute,
-      ).performed!
-      unless current_user.confirm_password?(params[:password])
+    if params[:password].present?
+      if !confirm_secure_session
         return render json: failed_json.merge(error: I18n.t("login.incorrect_password"))
       end
-      confirm_secure_session
     end
 
     if secure_session_confirmed?
@@ -1734,7 +1744,7 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
-  def second_factor_check_confirmed_password
+  def check_confirmed_session
     if SiteSetting.enable_discourse_connect || !SiteSetting.enable_local_logins
       raise Discourse::NotFound
     end
@@ -2165,6 +2175,20 @@ class UsersController < ApplicationController
   end
 
   def confirm_secure_session
+    RateLimiter.new(
+      nil,
+      "login-hr-#{request.remote_ip}",
+      SiteSetting.max_logins_per_ip_per_hour,
+      1.hour,
+    ).performed!
+    RateLimiter.new(
+      nil,
+      "login-min-#{request.remote_ip}",
+      SiteSetting.max_logins_per_ip_per_minute,
+      1.minute,
+    ).performed!
+    return false if !current_user.confirm_password?(params[:password])
+
     secure_session["confirmed-password-#{current_user.id}"] = "true"
   end
 
