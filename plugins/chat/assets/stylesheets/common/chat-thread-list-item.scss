@@ -4,17 +4,15 @@
   padding: 1rem 0;
   margin-inline: 1rem 0.75rem;
   border-radius: var(--d-border-radius);
-  background-color: var(--primary-very-low);
-  border: 1px solid transparent;
+  border-bottom: 1px solid var(--primary-low);
+  cursor: pointer;
 }
 
 .chat-thread-list-item {
   @include thread-list-item;
-  cursor: pointer;
-  margin: 0.75rem;
 
   & + .chat-thread-list-item {
-    margin-top: 0;
+    margin-top: -1px;
   }
 
   .touch & {
