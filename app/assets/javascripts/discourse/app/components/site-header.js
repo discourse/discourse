@@ -4,18 +4,14 @@ import { waitForPromise } from "@ember/test-waiters";
 import ItsATrap from "@discourse/itsatrap";
 import MountWidget from "discourse/components/mount-widget";
 import { topicTitleDecorators } from "discourse/components/topic-title";
+import SwipeEvents from "discourse/lib/swipe-events";
 import Docking from "discourse/mixins/docking";
-import PanEvents, {
-  SWIPE_DISTANCE_THRESHOLD,
-  SWIPE_VELOCITY_THRESHOLD,
-} from "discourse/mixins/pan-events";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
 import { isTesting } from "discourse-common/config/environment";
 import { bind, observes } from "discourse-common/utils/decorators";
 
 const SiteHeaderComponent = MountWidget.extend(
   Docking,
-  PanEvents,
   RerenderOnDoNotDisturbChange,
   {
     widget: "header",
@@ -29,6 +25,10 @@ const SiteHeaderComponent = MountWidget.extend(
     _applicationElement: null,
     _MAX_ANIMATION_TIME: 200,
     _PANEL_WIDTH: 320,
+    _swipeEvents: null,
+    _swipeStart: null,
+    _swipeEnd: null,
+    _swipe: null,
 
     @observes(
       "currentUser.unread_notifications",
@@ -66,9 +66,9 @@ const SiteHeaderComponent = MountWidget.extend(
 
       animationFinished.then(() => {
         const headerCloak = document.querySelector(".header-cloak");
-        let durationMs = this._getMaxAnimationTime();
+        let durationMs = this._swipeEvents.getMaxAnimationTimeMs();
         if (event && this.pxClosed > 0) {
-          durationMs = this._getMaxAnimationTime(
+          durationMs = this._swipeEvents.getMaxAnimationTimeMs(
             this.pxClosed / Math.abs(event.velocityX)
           );
         }
@@ -83,23 +83,13 @@ const SiteHeaderComponent = MountWidget.extend(
       });
     },
 
-    _getMaxAnimationTime(durationMs = this._MAX_ANIMATION_TIME) {
-      if (
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-        isTesting()
-      ) {
-        return 0;
-      }
-      return Math.min(durationMs, this._MAX_ANIMATION_TIME);
-    },
-
     _animateClosing(event, panel, menuOrigin) {
       this._animate = true;
       const headerCloak = document.querySelector(".header-cloak");
-      let durationMs = this._getMaxAnimationTime();
+      let durationMs = this._swipeEvents.getMaxAnimationTimeMs();
       if (event && this.pxClosed > 0) {
         const distancePx = this._PANEL_WIDTH - this.pxClosed;
-        durationMs = this._getMaxAnimationTime(
+        durationMs = this._swipeEvents.getMaxAnimationTimeMs(
           distancePx / Math.abs(event.velocityX)
         );
       }
@@ -136,7 +126,7 @@ const SiteHeaderComponent = MountWidget.extend(
       const menuPanels = document.querySelectorAll(".menu-panel");
       const menuOrigin = this._panMenuOrigin;
       menuPanels.forEach((panel) => {
-        if (this._shouldMenuClose(event, menuOrigin)) {
+        if (this._swipeEvents.shouldCloseMenu(event, menuOrigin)) {
           this._animateClosing(event, panel, menuOrigin);
         } else {
           this._animateOpening(panel, { event });
@@ -144,27 +134,8 @@ const SiteHeaderComponent = MountWidget.extend(
       });
     },
 
-    _shouldMenuClose(e, menuOrigin) {
-      // menu should close after a pan either:
-      // if a user moved the panel closed past a threshold and away and is NOT swiping back open
-      // if a user swiped to close fast enough regardless of distance
-      if (menuOrigin === "right") {
-        return (
-          (e.deltaX > SWIPE_DISTANCE_THRESHOLD &&
-            e.velocityX > -SWIPE_VELOCITY_THRESHOLD) ||
-          e.velocityX > 0
-        );
-      } else {
-        //originleft
-        return (
-          (e.deltaX < -SWIPE_DISTANCE_THRESHOLD &&
-            e.velocityX < SWIPE_VELOCITY_THRESHOLD) ||
-          e.velocityX < 0
-        );
-      }
-    },
-
-    panStart(e) {
+    onSwipeStart(event) {
+      const e = event.detail;
       const center = e.center;
       const panOverValidElement = document
         .elementsFromPoint(center.x, center.y)
@@ -177,7 +148,6 @@ const SiteHeaderComponent = MountWidget.extend(
         panOverValidElement &&
         (e.direction === "left" || e.direction === "right")
       ) {
-        e.originalEvent.preventDefault();
         this._isPanning = true;
         this.movingElement = document.querySelector(".menu-panel");
         this.cloakElement = document.querySelector(".header-cloak");
@@ -186,18 +156,20 @@ const SiteHeaderComponent = MountWidget.extend(
       }
     },
 
-    panEnd(e) {
+    onSwipeEnd(event) {
       if (!this._isPanning) {
         return;
       }
+      const e = event.detail;
       this._isPanning = false;
       this._handlePanDone(e);
     },
 
-    panMove(e) {
+    onSwipe(event) {
       if (!this._isPanning) {
         return;
       }
+      const e = event.detail;
       const panel = this.movingElement;
       const headerCloak = this.cloakElement;
 
@@ -515,6 +487,16 @@ export default SiteHeaderComponent.extend({
 
       this._resizeObserver.observe(this.headerWrap);
     }
+
+    if (this.site.mobileView) {
+      this._swipeEvents = new SwipeEvents(this.element);
+      this._swipeStart = (e) => this.onSwipeStart(e);
+      this._swipeEnd = (e) => this.onSwipeEnd(e);
+      this._swipe = (e) => this.onSwipe(e);
+      this.element.addEventListener("swipestart", this._swipeStart);
+      this.element.addEventListener("swipeend", this._swipeEnd);
+      this.element.addEventListener("swipe", this._swipe);
+    }
   },
 
   willDestroyElement() {
@@ -522,5 +504,11 @@ export default SiteHeaderComponent.extend({
     window.removeEventListener("scroll", this.onScroll);
     this._resizeObserver?.disconnect();
     this.appEvents.off("site-header:force-refresh", this, "queueRerender");
+    if (this.site.mobileView) {
+      this.element.removeEventListener("swipestart", this._swipeStart);
+      this.element.removeEventListener("swipeend", this._swipeEnd);
+      this.element.removeEventListener("swipe", this._swipe);
+      this._swipeEvents.removeTouchListeners();
+    }
   },
 });
