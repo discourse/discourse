@@ -835,6 +835,6 @@ a#skip-link {
 }
 
 .scroll-lock {
-  overflow: hidden;
+  overflow: hidden !important;
   margin-right: var(--scroll-gap, 0);
 }

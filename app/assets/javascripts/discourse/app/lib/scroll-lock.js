@@ -4,17 +4,24 @@
 */
 export default class ScrollLock {
   static scrollingElement = document.scrollingElement;
-  static lock() {
-    const scrollGap = Math.max(
-      0,
-      window.innerWidth - this.scrollingElement.clientWidth
-    );
-    this.scrollingElement.style.setProperty("--scroll-gap", `${scrollGap}px`);
-    this.scrollingElement.classList.add("scroll-lock");
+  static lock(element) {
+    let scrollGap = 0;
+
+    //Add scroll gap if using default scrolling element
+    if (!element) {
+      element = this.scrollingElement;
+      scrollGap = Math.max(
+        0,
+        window.innerWidth - this.scrollingElement.clientWidth
+      );
+      this.scrollingElement.style.setProperty("--scroll-gap", `${scrollGap}px`);
+    }
+    element.classList.add("scroll-lock");
   }
-  static unlock() {
-    this.scrollingElement.classList.remove("scroll-lock");
-    this.scrollingElement.style.setProperty("--scroll-gap", null);
+  static unlock(element) {
+    element = element || this.scrollingElement;
+    element.classList.remove("scroll-lock");
+    element.style.setProperty("--scroll-gap", null);
   }
   static toggle(bool) {
     if (bool) {
