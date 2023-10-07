@@ -20,8 +20,8 @@
   .touch & {
     &:active {
       background-color: var(--d-hover);
-      padding: 1rem 0;
-      margin-inline: 1rem;
+      padding-inline: 1rem 0.75rem;
+      margin-inline: 0;
     }
   }
 
