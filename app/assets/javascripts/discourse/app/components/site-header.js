@@ -4,7 +4,7 @@ import { waitForPromise } from "@ember/test-waiters";
 import ItsATrap from "@discourse/itsatrap";
 import MountWidget from "discourse/components/mount-widget";
 import { topicTitleDecorators } from "discourse/components/topic-title";
-import ScrollLock from "discourse/lib/scroll-lock";
+import scrollLock from "discourse/lib/scroll-lock";
 import SwipeEvents from "discourse/lib/swipe-events";
 import Docking from "discourse/mixins/docking";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
@@ -126,7 +126,7 @@ const SiteHeaderComponent = MountWidget.extend(
       ) {
         this.movingElement = document.querySelector(".menu-panel");
         this.cloakElement = document.querySelector(".header-cloak");
-        ScrollLock.lock(document.querySelector(".panel-body"));
+        scrollLock(true, document.querySelector(".panel-body"));
       } else {
         event.preventDefault();
       }
@@ -136,7 +136,7 @@ const SiteHeaderComponent = MountWidget.extend(
       const e = event.detail;
       const menuPanels = document.querySelectorAll(".menu-panel");
       const menuOrigin = this._swipeMenuOrigin;
-      ScrollLock.unlock(document.querySelector(".panel-body"));
+      scrollLock(false, document.querySelector(".panel-body"));
       menuPanels.forEach((panel) => {
         if (this._swipeEvents.shouldCloseMenu(e, menuOrigin)) {
           this._animateClosing(e, panel, menuOrigin);

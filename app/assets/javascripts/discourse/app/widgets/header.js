@@ -4,7 +4,7 @@ import { h } from "virtual-dom";
 import { SEARCH_BUTTON_ID } from "discourse/components/search-menu";
 import { addExtraUserClasses } from "discourse/helpers/user-avatar";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
-import ScrollLock from "discourse/lib/scroll-lock";
+import scrollLock from "discourse/lib/scroll-lock";
 import { logSearchLinkClick } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
 import { scrollTop } from "discourse/mixins/scroll-top";
@@ -673,7 +673,7 @@ export default createWidget("header", {
     if (!this.site.mobileView) {
       return;
     }
-    ScrollLock.toggle(bool);
+    scrollLock(bool);
   },
 
   togglePageSearch() {
