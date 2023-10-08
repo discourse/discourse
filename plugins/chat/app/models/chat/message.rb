@@ -211,6 +211,7 @@ module Chat
       strikethrough
       blockquote
       emphasis
+      replacements
     ]
 
     def self.cook(message, opts = {})

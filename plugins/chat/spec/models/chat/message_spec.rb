@@ -20,6 +20,13 @@ describe Chat::Message do
       expect(cooked).to eq("<p>&lt;h1&gt;test&lt;/h1&gt;</p>")
     end
 
+    it "correctly extracts mentions with dots" do
+      user = Fabricate(:user)
+      cooked = described_class.cook("@#{user.username}...test")
+
+      expect(cooked).to eq("<p><a class=\"mention\" href=\"/u/bruce2\">@bruce2</a>…test</p>")
+    end
+
     it "does not support headings" do
       cooked = described_class.cook("## heading 2")
 
