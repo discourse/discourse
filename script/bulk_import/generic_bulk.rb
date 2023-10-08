@@ -534,7 +534,7 @@ class BulkImport::Generic < BulkImport::Base
         topic_id: topic_id,
         user_id: user_id_from_imported_id(row["user_id"]),
         created_at: to_datetime(row["created_at"]),
-        raw: post_raw(row),
+        raw: post_raw(row, group_names),
         like_count: row["like_count"],
         reply_to_post_number:
           row["reply_to_post_id"] ? post_number_from_imported_id(row["reply_to_post_id"]) : nil,
@@ -544,7 +544,7 @@ class BulkImport::Generic < BulkImport::Base
     posts.close
   end
 
-  def post_raw(row)
+  def post_raw(row, group_names)
     raw = row["raw"]
 
     if row["mentions"].present?
