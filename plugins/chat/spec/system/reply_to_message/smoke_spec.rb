@@ -4,6 +4,7 @@ RSpec.describe "Reply to message - smoke", type: :system do
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
+  let(:side_panel) { PageObjects::Pages::ChatSidePanel.new }
 
   fab!(:user_1) { Fabricate(:user) }
   fab!(:user_2) { Fabricate(:user) }
@@ -29,6 +30,7 @@ RSpec.describe "Reply to message - smoke", type: :system do
         sign_in(user_2)
         chat_page.visit_channel(channel_1)
         channel_page.reply_to(original_message)
+        expect(side_panel).to have_open_thread(original_message.thread)
       end
 
       using_session(:user_1) do
@@ -36,7 +38,6 @@ RSpec.describe "Reply to message - smoke", type: :system do
         thread_page.click_send_message
 
         expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(1)
-
         expect(thread_page.messages).to have_message(text: "user1reply")
       end
 
