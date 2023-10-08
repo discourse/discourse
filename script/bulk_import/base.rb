@@ -616,6 +616,15 @@ class BulkImport::Base
 
   POST_VOTING_VOTE_COLUMNS ||= %i[user_id votable_type votable_id direction created_at]
 
+  BADGE_COLUMNS ||= %i[
+    name
+    description
+    badge_type_id
+    badge_grouping_id
+    long_description
+    image_upload_id
+  ]
+
   def create_groups(rows, &block)
     create_records(rows, "group", GROUP_COLUMNS, &block)
   end
@@ -730,6 +739,10 @@ class BulkImport::Base
 
   def create_user_actions(rows, &block)
     create_records(rows, "user_action", USER_ACTION_COLUMNS, &block)
+  end
+
+  def create_badges(rows, &block)
+    create_records(rows, "badge", BADGE_COLUMNS, &block)
   end
 
   def process_group(group)
@@ -1256,6 +1269,12 @@ class BulkImport::Base
     user_action[:created_at] ||= NOW
     user_action[:updated_at] ||= NOW
     user_action
+  end
+
+  def process_badge(badge)
+    badge[:created_at] ||= NOW
+    badge[:updated_at] ||= NOW
+    badge
   end
 
   def create_records(all_rows, name, columns)

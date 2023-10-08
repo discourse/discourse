@@ -63,6 +63,7 @@ class BulkImport::Generic < BulkImport::Base
     import_likes
     import_votes
     import_answers
+    import_badges
 
     import_upload_references
     import_user_stats
@@ -1084,6 +1085,30 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     tag_users.close
+  end
+
+  def import_badges
+    puts "", "Importing badges..."
+
+    badges = query(<<~SQL)
+      SELECT *
+        FROM badges
+    SQL
+
+    create_badges(badges) do |row|
+      badge_group = BadgeGrouping.create!(name: row["badge_group"], position: 1)
+      {
+        name: row["name"],
+        description: row["description"],
+        badge_type_id: row["badge_type_id"].to_i,
+        badge_grouping_id: badge_group.id,
+        long_description: row["long_description"],
+        image_upload_id:
+          row["image_upload_id"] ? upload_id_from_original_id(row["image_upload_id"]) : nil,
+      }
+    end
+
+    badges.close
   end
 
   def enable_category_settings
