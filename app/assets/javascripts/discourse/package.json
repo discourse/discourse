@@ -99,7 +99,7 @@
     "pretender": "^3.4.7",
     "qunit": "^2.20.0",
     "qunit-dom": "^2.0.0",
-    "sass": "^1.68.0",
+    "sass": "^1.69.0",
     "select-kit": "1.0.0",
     "sinon": "^16.1.0",
     "source-map": "^0.7.4",
