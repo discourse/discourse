@@ -9,17 +9,6 @@ module Onebox
 
     IGNORE_CANONICAL_DOMAINS ||= %w[www.instagram.com medium.com youtube.com]
 
-    def self.symbolize_keys(hash)
-      return {} if hash.nil?
-
-      hash.inject({}) do |result, (key, value)|
-        new_key = key.is_a?(String) ? key.to_sym : key
-        new_value = value.is_a?(Hash) ? symbolize_keys(value) : value
-        result[new_key] = new_value
-        result
-      end
-    end
-
     def self.clean(html)
       html.gsub(/<[^>]+>/, " ").gsub(/\n/, "")
     end
