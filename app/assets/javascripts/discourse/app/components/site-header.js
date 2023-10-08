@@ -408,11 +408,7 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     _dropDownHeaderEnabled() {
-      return (
-        (!this.sidebarEnabled &&
-          this.siteSettings.navigation_menu !== "legacy") ||
-        this.site.narrowDesktopView
-      );
+      return !this.sidebarEnabled || this.site.narrowDesktopView;
     },
   }
 );

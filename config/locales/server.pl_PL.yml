@@ -1517,7 +1517,6 @@ pl_PL:
     unreachable_themes: "Nie byliśmy w stanie sprawdzić aktualizacji następujących tematów:"
     watched_word_regexp_error: "Wyrażenie regularne dla '%{action}' jest nieprawidłowe. Sprawdź ustawienia <a href='%{base_path}/admin/customize/watched_words'>obserwowanych słów</a> lub wyłącz ustawienie witryny „obserwowane słowa regularne”."
     v3_analytics_deprecated: "Twój Discourse używa obecnie Google Analytics 3, które nie będzie już wspierane po lipcu 2023 roku. <a href='https://meta.discourse.org/t/260498'>Uaktualnij do Google Analytics 4</a> teraz, aby nadal otrzymywać cenne informacje i analizy dotyczące wydajności twojej strony."
-    legacy_navigation_menu_deprecated: "Twój Discourse używa obecnie \"starszego\" menu nawigacyjnego, które <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>zostanie usunięte w pierwszej wersji beta Discourse 3.2</a>. Przeprowadź migrację do nowego menu nawigacyjnego, aktualizując ustawienia witryny menu nawigacyjnego <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'></a> do 'sidebar' lub 'header dropdown'."
   site_settings:
     allow_bulk_invite: "Zezwalaj na zaproszenia zbiorcze, przesyłając plik CSV"
     disabled: "wyłączone"

@@ -1401,7 +1401,6 @@ nl:
     unreachable_themes: "We konden niet op updates controleren voor de volgende thema's:"
     watched_word_regexp_error: "De reguliere expressie voor '%{action}' geobserveerde woorden is ongeldig. Controleer je <a href='%{base_path}/admin/customize/watched_words'>instellingen voor geobserveerde woorden</a> of schakel de website-instelling 'reguliere expressies voor geobserveerde woorden' uit."
     v3_analytics_deprecated: "Je Discourse gebruikt momenteel Google Analytics 3, dat na juli 2023 niet meer wordt ondersteund. <a href='https://meta.discourse.org/t/260498'>Upgrade nu naar Google Analytics 4</a> om waardevolle inzichten en analyses te blijven ontvangen voor de prestaties van je website."
-    legacy_navigation_menu_deprecated: "Je Discourse gebruikt momenteel het 'verouderde' navigatiemenu dat <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>wordt verwijderd in de eerste bètaversie van Discourse 3.2</a>. Migreer naar het nieuwe navigatiemenu door de site-instelling van je <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>navigatiemenu</a> bij te werken naar 'Zijbalk' of 'Vervolgkeuzelijst kop'."
   site_settings:
     allow_bulk_invite: "Bulkuitnodigingen toestaan door een CSV-bestand te uploaden"
     disabled: "uitgeschakeld"

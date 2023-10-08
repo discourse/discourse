@@ -87,10 +87,7 @@ export default Controller.extend({
       return true;
     }
 
-    if (
-      navigationMenuQueryParamOverride === "legacy" ||
-      navigationMenuQueryParamOverride === "header_dropdown"
-    ) {
+    if (navigationMenuQueryParamOverride === "header_dropdown") {
       return false;
     }
 

@@ -1415,7 +1415,6 @@ de:
     unreachable_themes: "Wir konnten die folgenden Themes nicht auf Updates prüfen:"
     watched_word_regexp_error: "Der reguläre Ausdruck für „%{action}“ überwachte Wörter ist ungültig. Bitte überprüfe deine <a href='%{base_path}/admin/customize/watched_words'>Einstellungen für überwachte Wörter</a> oder deaktiviere die Website-Einstellung „watched words regular expressions“."
     v3_analytics_deprecated: "Dein Discourse verwendet derzeit Google Analytics 3, das ab Juli 2023 nicht mehr unterstützt wird. <a href='https://meta.discourse.org/t/260498'>Aktualisiere jetzt auf Google Analytics 4</a>, um weiterhin wertvolle Einblicke und Analysen zur Leistung deiner Website zu erhalten."
-    legacy_navigation_menu_deprecated: "Dein Discourse verwendet derzeit das „alte“ Navigationsmenü, das <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>in der ersten Betaversion von Discourse 3.2</a> entfernt wird. Stelle auf das neue Navigationsmenü um, indem du deine <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>Navigationsmenü-Website-Einstellung</a> auf „Seitenleiste“ oder „Kopfzeilen-Drop-down“ aktualisierst."
   site_settings:
     allow_bulk_invite: "Erlaube Masseneinladungen durch Hochladen einer CSV-Datei"
     disabled: "deaktiviert"

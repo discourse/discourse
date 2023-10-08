@@ -2048,7 +2048,6 @@ class User < ActiveRecord::Base
   private
 
   def set_default_sidebar_section_links(update: false)
-    return if SiteSetting.legacy_navigation_menu?
     return if staged? || bot?
 
     if SiteSetting.default_navigation_menu_categories.present?

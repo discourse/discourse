@@ -1186,7 +1186,6 @@ id:
       other: "Email polling telah menghasilkan %{count} kesalahan dalam 24 jam terakhir. Lihatlah <a href='%{base_path}/logs' target='_blank'>log</a> untuk lebih jelasnya."
     missing_mailgun_api_key: "Server dikonfigurasi untuk mengirim email melalui Mailgun tetapi Anda belum memberikan kunci API yang digunakan untuk memverifikasi pesan webhook."
     v3_analytics_deprecated: "Wacana Anda saat ini menggunakan Google Analytics 3, yang tidak akan didukung lagi setelah Juli 2023.0 <a href='https://meta.discourse.org/t/260498'>ke Google Analytics 4</a> sekarang untuk terus menerima wawasan dan analitik berharga untuk kinerja situs web Anda."
-    legacy_navigation_menu_deprecated: "Discourse Anda saat ini menggunakan menu navigasi 'lama' yang <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>akan dihapus pada rilis beta pertama Discourse 3.2</a>. Migrasi ke menu navigasi yang baru dengan memperbarui pengaturan situs menu navigasi <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'></a> ke 'sidebar' atau 'header dropdown'."
   site_settings:
     disabled: "dinonaktifkan"
     allow_user_locale: "Perbolehkan pengguna untuk memilih bahasa sendiri"

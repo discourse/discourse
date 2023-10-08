@@ -37,16 +37,6 @@ module("Integration | Component | site-header", function (hooks) {
     assert.strictEqual(unreadBadge.textContent, "5");
   });
 
-  test("hamburger menu icon shows pending reviewables count", async function (assert) {
-    this.siteSettings.navigation_menu = "legacy";
-    this.currentUser.set("reviewable_count", 1);
-    await render(hbs`<SiteHeader />`);
-    let pendingReviewablesBadge = query(
-      ".hamburger-dropdown .badge-notification"
-    );
-    assert.strictEqual(pendingReviewablesBadge.textContent, "1");
-  });
-
   test("hamburger menu icon doesn't show pending reviewables count for non-legacy navigation menu", async function (assert) {
     this.currentUser.set("reviewable_count", 1);
     this.siteSettings.navigation_menu = "sidebar";
