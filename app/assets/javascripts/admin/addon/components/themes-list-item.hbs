@@ -8,6 +8,13 @@
   </span>
 
   <div class="info">
+    {{#if @selectInactiveMode}}
+      <Input
+        @checked={{this.theme.markedToDelete}}
+        id={{this.theme.id}}
+        @type="checkbox"
+      />
+    {{/if}}
     <span class="name">
       {{this.theme.name}}
     </span>
