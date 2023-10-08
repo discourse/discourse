@@ -66,7 +66,11 @@ const SiteHeaderComponent = MountWidget.extend(
         fill: "forwards",
         easing: "ease-out",
       };
-      panel.animate([{ transform: `translate3d(0, 0, 0)` }], timing).finished;
+      panel
+        .animate([{ transform: `translate3d(0, 0, 0)` }], timing)
+        .finished.then(() => {
+          panel.classList.remove("animating");
+        });
       headerCloak.animate([{ opacity: 0.5 }], timing);
       this.pxClosed = null;
     },
@@ -359,6 +363,7 @@ const SiteHeaderComponent = MountWidget.extend(
             this._swipeMenuOrigin = "left";
             finalPosition = -this._PANEL_WIDTH;
           }
+          panel.classList.add("animating");
           animationFinished = panel.animate(
             [{ transform: `translate3d(${finalPosition}px, 0, 0)` }],
             {
