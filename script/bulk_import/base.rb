@@ -115,7 +115,7 @@ class BulkImport::Base
     ActiveSupport::Inflector.transliterate("test")
   end
 
-  MAPPING_TYPES = Enum.new(upload: 1)
+  MAPPING_TYPES = Enum.new(upload: 1, badge: 2)
 
   def create_migration_mappings_table
     puts "Creating migration mappings table..."
@@ -279,6 +279,10 @@ class BulkImport::Base
     puts "Loading upload indexes..."
     @uploads_mapping = load_index(MAPPING_TYPES[:upload])
     @uploads_by_sha1 = Upload.pluck(:sha1, :id).to_h
+
+    puts "Loading badge indexes..."
+    @badge_mapping = load_index(MAPPING_TYPES[:badge])
+    @last_badge_id = last_id(Badge)
   end
 
   def use_bbcode_to_md?
@@ -339,6 +343,9 @@ class BulkImport::Base
     if @last_upload_id > 0
       @raw_connection.exec("SELECT setval('#{Upload.sequence_name}', #{@last_upload_id})")
     end
+    if @last_badge_id > 0
+      @raw_connection.exec("SELECT setval('#{Badge.sequence_name}', #{@last_badge_id})")
+    end
   end
 
   def group_id_from_imported_id(id)
@@ -377,6 +384,10 @@ class BulkImport::Base
   def topic_id_from_imported_post_id(id)
     post_id = post_id_from_imported_id(id)
     post_id && @topic_id_by_post_id[post_id]
+  end
+
+  def badge_id_from_original_id(id)
+    @badge_mapping[id.to_s]&.to_i
   end
 
   GROUP_COLUMNS ||= %i[
@@ -617,12 +628,15 @@ class BulkImport::Base
   POST_VOTING_VOTE_COLUMNS ||= %i[user_id votable_type votable_id direction created_at]
 
   BADGE_COLUMNS ||= %i[
+    id
     name
     description
     badge_type_id
     badge_grouping_id
     long_description
     image_upload_id
+    created_at
+    multiple_grant
   ]
 
   def create_groups(rows, &block)
@@ -716,9 +730,7 @@ class BulkImport::Base
   end
 
   def create_uploads(rows, &block)
-    @imported_uploads = {}
-    create_records(rows, "upload", UPLOAD_COLUMNS, &block)
-    store_mappings(MAPPING_TYPES[:upload], @imported_uploads)
+    create_records_with_mapping(rows, "upload", UPLOAD_COLUMNS, &block)
   end
 
   def create_upload_references(rows, &block)
@@ -742,7 +754,7 @@ class BulkImport::Base
   end
 
   def create_badges(rows, &block)
-    create_records(rows, "badge", BADGE_COLUMNS, &block)
+    create_records_with_mapping(rows, "badge", BADGE_COLUMNS, &block)
   end
 
   def process_group(group)
@@ -1064,7 +1076,7 @@ class BulkImport::Base
 
   def process_upload(upload)
     if (existing_upload_id = upload_id_from_sha1(upload[:sha1]))
-      @imported_uploads[upload[:original_id]] = existing_upload_id
+      @imported_records[upload[:original_id]] = existing_upload_id
       @uploads_mapping[upload[:original_id]] = existing_upload_id
       return { skip: true }
     end
@@ -1074,7 +1086,7 @@ class BulkImport::Base
     upload[:created_at] ||= NOW
     upload[:updated_at] ||= NOW
 
-    @imported_uploads[upload[:original_id]] = upload[:id]
+    @imported_records[upload[:original_id]] = upload[:id]
     @uploads_mapping[upload[:original_id]] = upload[:id]
     @uploads_by_sha1[upload[:sha1]] = upload[:id]
 
@@ -1272,12 +1284,18 @@ class BulkImport::Base
   end
 
   def process_badge(badge)
+    badge[:id] = @last_badge_id += 1
     badge[:created_at] ||= NOW
     badge[:updated_at] ||= NOW
+    badge[:multiple_grant] = false if badge[:multiple_grant].nil?
+
+    @imported_records[badge[:original_id].to_s] = badge[:id]
+    @badge_mapping[badge[:original_id].to_s] = badge[:id]
+
     badge
   end
 
-  def create_records(all_rows, name, columns)
+  def create_records(all_rows, name, columns, &block)
     start = Time.now
     imported_ids = []
     process_method_name = "process_#{name}"
@@ -1329,6 +1347,12 @@ class BulkImport::Base
     # FIXME: errors catched here stop the rest of the COPY
     puts e.message
     puts e.backtrace.join("\n")
+  end
+
+  def create_records_with_mapping(all_rows, name, columns, &block)
+    @imported_records = {}
+    create_records(all_rows, name, columns, &block)
+    store_mappings(MAPPING_TYPES[name.to_sym], @imported_records)
   end
 
   def create_custom_fields(table, name, rows)

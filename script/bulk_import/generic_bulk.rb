@@ -63,6 +63,8 @@ class BulkImport::Generic < BulkImport::Base
     import_likes
     import_votes
     import_answers
+
+    import_badge_groupings
     import_badges
 
     import_upload_references
@@ -819,6 +821,23 @@ class BulkImport::Generic < BulkImport::Base
     SQL
     puts "  Import took #{(Time.now - start_time).to_i} seconds."
 
+    puts "", "Importing upload references for badges..."
+    start_time = Time.now
+    DB.exec(<<~SQL)
+      INSERT INTO upload_references (upload_id, target_type, target_id, created_at, updated_at)
+      SELECT image_upload_id, 'Badge', id, created_at, updated_at
+        FROM badges b
+       WHERE NOT EXISTS (
+                          SELECT 1
+                            FROM upload_references ur
+                           WHERE ur.upload_id = b.image_upload_id
+                             AND ur.target_type = 'Badge'
+                             AND ur.target_id = b.id
+                        )
+          ON CONFLICT DO NOTHING
+    SQL
+    puts "  Import took #{(Time.now - start_time).to_i} seconds."
+
     puts "", "Importing upload references for posts..."
     post_uploads = query(<<~SQL)
       SELECT p.id AS post_id, u.value AS upload_id
@@ -874,7 +893,7 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     tag_groups.each do |row|
-      tag_group = TagGroup.find_or_create_by(name: row["name"])
+      tag_group = TagGroup.find_or_create_by!(name: row["name"])
       @tag_group_mapping[row["id"]] = tag_group.id
     end
 
@@ -896,11 +915,11 @@ class BulkImport::Generic < BulkImport::Base
 
     tags.each do |row|
       cleaned_tag_name = DiscourseTagging.clean_tag(row["name"])
-      tag = Tag.find_or_create_by(name: cleaned_tag_name)
+      tag = Tag.find_or_create_by!(name: cleaned_tag_name)
       @tag_mapping[row["id"]] = tag.id
 
       if row["tag_group_id"]
-        TagGroupMembership.find_or_create_by(
+        TagGroupMembership.find_or_create_by!(
           tag_id: tag.id,
           tag_group_id: @tag_group_mapping[row["tag_group_id"]],
         )
@@ -1087,6 +1106,29 @@ class BulkImport::Generic < BulkImport::Base
     tag_users.close
   end
 
+  def import_badge_groupings
+    puts "", "Importing badge groupings..."
+
+    rows = query(<<~SQL)
+      SELECT DISTINCT badge_group
+        FROM badges
+       ORDER BY badge_group
+    SQL
+
+    @badge_group_mapping = {}
+    max_position = BadgeGrouping.maximum(:position) || 0
+
+    rows.each do |row|
+      grouping =
+        BadgeGrouping.find_or_create_by!(name: row["badge_group"]) do |bg|
+          bg.position = max_position += 1
+        end
+      @badge_group_mapping[row["badge_group"]] = grouping.id
+    end
+
+    rows.close
+  end
+
   def import_badges
     puts "", "Importing badges..."
 
@@ -1096,12 +1138,14 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     create_badges(badges) do |row|
-      badge_group = BadgeGrouping.create!(name: row["badge_group"], position: 1)
+      next if badge_id_from_original_id(row["id"]).present?
+
       {
+        original_id: row["id"],
         name: row["name"],
         description: row["description"],
-        badge_type_id: row["badge_type_id"].to_i,
-        badge_grouping_id: badge_group.id,
+        badge_type_id: row["badge_type_id"],
+        badge_grouping_id: @badge_group_mapping[row["badge_group"]],
         long_description: row["long_description"],
         image_upload_id:
           row["image_upload_id"] ? upload_id_from_original_id(row["image_upload_id"]) : nil,
