@@ -58,7 +58,17 @@ module PostGuardian
 
         if action_key == :notify_user &&
              !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
-          return false
+          # the modifier here is used here to add additional permissions to `notify_user` as the behavior
+          # of `notify_user` can be swapped in a plugin to use another system like chat to notify users.
+          can_notify = false
+          can_notify =
+            DiscoursePluginRegistry.apply_modifier(
+              :post_guardian_can_notify_user,
+              can_notify,
+              self,
+              post,
+            )
+          return can_notify
         end
 
         # we allow flagging for trust level 1 and higher
