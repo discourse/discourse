@@ -115,6 +115,11 @@ export default class ChatMessage {
   }
 
   set thread(thread) {
+    if (!thread) {
+      this._thread = null;
+      return;
+    }
+
     this._thread = this.channel.threadsManager.add(this.channel, thread, {
       replace: true,
     });
