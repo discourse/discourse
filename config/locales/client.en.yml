@@ -426,7 +426,6 @@ en:
     uploading: "Uploading…"
     processing: "Processing…"
     uploading_filename: "Uploading: %{filename}…"
-    processing_filename: "Processing: %{filename}…"
     clipboard: "clipboard"
     uploaded: "Uploaded!"
 

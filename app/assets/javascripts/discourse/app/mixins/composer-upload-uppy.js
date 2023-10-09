@@ -99,7 +99,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
   _bindUploadTarget() {
     this.set("inProgressUploads", []);
-    this.placeholders = {};
+    this.placeholders = new Map();
     this._preProcessorStatus = {};
     this.editorEl = this.element.querySelector(this.editorClass);
     this.fileInputEl = document.getElementById(this.fileUploadElementId);
@@ -296,12 +296,11 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
               extension: file.extension,
             })
           );
-          const placeholder = this._uploadPlaceholder(file);
-          this.placeholders[file.id] = {
-            uploadPlaceholder: placeholder,
-          };
 
           if (this.useUploadPlaceholders) {
+            const placeholder = this._uploadPlaceholder(file);
+            this.placeholders.set(file.id, placeholder);
+
             this.appEvents.trigger(
               `${this.composerEventPrefix}:insert-text`,
               placeholder
@@ -337,7 +336,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
             if (this.useUploadPlaceholders) {
               this.appEvents.trigger(
                 `${this.composerEventPrefix}:replace-text`,
-                this.placeholders[file.id].uploadPlaceholder.trim(),
+                this.placeholders.get(file.id).trim(),
                 markdown
               );
             }
@@ -364,17 +363,17 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     this._uppyInstance.on("cancel-all", () => {
       // Do the manual cancelling work only if the user clicked cancel
       if (this.userCancelled) {
-        Object.values(this.placeholders).forEach((data) => {
-          run(() => {
-            if (this.useUploadPlaceholders) {
+        if (this.useUploadPlaceholders) {
+          for (const placeholder of Object.values(this.placeholders)) {
+            run(() => {
               this.appEvents.trigger(
                 `${this.composerEventPrefix}:replace-text`,
-                data.uploadPlaceholder,
+                placeholder,
                 ""
               );
-            }
-          });
-        });
+            });
+          }
+        }
 
         this.set("userCancelled", false);
         this._reset();
@@ -447,42 +446,8 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
         );
       });
 
-    this._onPreProcessProgress((file) => {
-      let placeholderData = this.placeholders[file.id];
-      placeholderData.processingPlaceholder = `[${I18n.t(
-        "processing_filename",
-        {
-          filename: file.name,
-        }
-      )}]()\n`;
-
-      this.appEvents.trigger(
-        `${this.composerEventPrefix}:replace-text`,
-        placeholderData.uploadPlaceholder,
-        placeholderData.processingPlaceholder
-      );
-
-      // Safari applies user-defined replacements to text inserted programmatically.
-      // One of the most common replacements is ... -> …, so we take care of the case
-      // where that transformation has been applied to the original placeholder
-      this.appEvents.trigger(
-        `${this.composerEventPrefix}:replace-text`,
-        placeholderData.uploadPlaceholder.replace("...", "…"),
-        placeholderData.processingPlaceholder
-      );
-    });
-
     this._onPreProcessComplete(
-      (file) => {
-        run(() => {
-          let placeholderData = this.placeholders[file.id];
-          this.appEvents.trigger(
-            `${this.composerEventPrefix}:replace-text`,
-            placeholderData.processingPlaceholder,
-            placeholderData.uploadPlaceholder
-          );
-        });
-      },
+      () => {},
       () => {
         run(() => {
           this.setProperties({
@@ -532,11 +497,10 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   _uploadPlaceholder(file) {
     const clipboard = I18n.t("clipboard");
     const uploadFilenamePlaceholder = this._uploadFilenamePlaceholder(file);
-    const filename = uploadFilenamePlaceholder
-      ? uploadFilenamePlaceholder
-      : clipboard;
+    const filename = uploadFilenamePlaceholder || clipboard;
+    const text = I18n.t("uploading_filename", { filename });
 
-    let placeholder = `[${I18n.t("uploading_filename", { filename })}]()\n`;
+    let placeholder = `[${text}]()\n`;
     if (!this._cursorIsOnEmptyLine()) {
       placeholder = `\n${placeholder}`;
     }
@@ -570,7 +534,7 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
     if (opts.removePlaceholder) {
       this.appEvents.trigger(
         `${this.composerEventPrefix}:replace-text`,
-        this.placeholders[file.id].uploadPlaceholder,
+        this.placeholders.get(file.id),
         ""
       );
     }
