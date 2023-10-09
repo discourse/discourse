@@ -89,7 +89,9 @@ Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
     resolved_class.call(
       chat_channel_id: channel.id,
       guardian: user.guardian,
-      message: transients[:message] || "test..ok..arf...bar..".gsub("...", "…").gsub("..", "…"),
+      message:
+        transients[:message] ||
+          Faker::Lorem.paragraph_by_chars(number: 500).gsub("...", "…").gsub("..", "…"),
       thread_id: transients[:thread]&.id,
       in_reply_to_id: transients[:in_reply_to]&.id,
       upload_ids: transients[:upload_ids],
