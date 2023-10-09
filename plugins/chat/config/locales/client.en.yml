@@ -463,8 +463,6 @@ en:
         category_label: "Category"
         history_label: "History"
         members_label: "Members"
-        description_title: "Description"
-        title_title: "Title"
 
       admin:
         title: "Chat"
