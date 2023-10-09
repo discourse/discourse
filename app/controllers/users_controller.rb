@@ -1639,7 +1639,6 @@ class UsersController < ApplicationController
   end
 
   def delete_passkey
-    # TODO(pmusaraj): require password/passkey confirmation before deleting?
     raise Discourse::NotFound unless SiteSetting.experimental_passkeys
 
     passkey = current_user.security_keys.find_by(id: params[:id].to_i)
