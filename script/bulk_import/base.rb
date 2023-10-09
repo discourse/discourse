@@ -636,8 +636,11 @@ class BulkImport::Base
     long_description
     image_upload_id
     created_at
+    updated_at
     multiple_grant
   ]
+
+  USER_BADGE_COLUMNS ||= %i[badge_id user_id granted_at granted_by_id seq post_id created_at]
 
   def create_groups(rows, &block)
     create_records(rows, "group", GROUP_COLUMNS, &block)
@@ -755,6 +758,10 @@ class BulkImport::Base
 
   def create_badges(rows, &block)
     create_records_with_mapping(rows, "badge", BADGE_COLUMNS, &block)
+  end
+
+  def create_user_badges(rows, &block)
+    create_records(rows, "user_badge", USER_BADGE_COLUMNS, &block)
   end
 
   def process_group(group)
@@ -1295,6 +1302,13 @@ class BulkImport::Base
     badge
   end
 
+  def process_user_badge(user_badge)
+    user_badge[:granted_at] ||= NOW
+    user_badge[:granted_by_id] ||= Discourse::SYSTEM_USER_ID
+    user_badge[:created_at] ||= user_badge[:granted_at]
+    user_badge
+  end
+
   def create_records(all_rows, name, columns, &block)
     start = Time.now
     imported_ids = []
@@ -1339,20 +1353,23 @@ class BulkImport::Base
     end
 
     id_mapping_method_name = "#{name}_id_from_imported_id".freeze
-    return unless respond_to?(id_mapping_method_name)
+    return true unless respond_to?(id_mapping_method_name)
     create_custom_fields(name, "id", imported_ids) do |imported_id|
       { record_id: send(id_mapping_method_name, imported_id), value: imported_id }
     end
+    true
   rescue => e
     # FIXME: errors catched here stop the rest of the COPY
     puts e.message
     puts e.backtrace.join("\n")
+    false
   end
 
   def create_records_with_mapping(all_rows, name, columns, &block)
     @imported_records = {}
-    create_records(all_rows, name, columns, &block)
-    store_mappings(MAPPING_TYPES[name.to_sym], @imported_records)
+    if create_records(all_rows, name, columns, &block)
+      store_mappings(MAPPING_TYPES[name.to_sym], @imported_records)
+    end
   end
 
   def create_custom_fields(table, name, rows)

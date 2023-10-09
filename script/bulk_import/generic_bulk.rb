@@ -66,6 +66,7 @@ class BulkImport::Generic < BulkImport::Base
 
     import_badge_groupings
     import_badges
+    import_user_badges
 
     import_upload_references
     import_user_stats
@@ -827,7 +828,8 @@ class BulkImport::Generic < BulkImport::Base
       INSERT INTO upload_references (upload_id, target_type, target_id, created_at, updated_at)
       SELECT image_upload_id, 'Badge', id, created_at, updated_at
         FROM badges b
-       WHERE NOT EXISTS (
+       WHERE image_upload_id IS NOT NULL
+         AND NOT EXISTS (
                           SELECT 1
                             FROM upload_references ur
                            WHERE ur.upload_id = b.image_upload_id
@@ -1135,14 +1137,23 @@ class BulkImport::Generic < BulkImport::Base
     badges = query(<<~SQL)
       SELECT *
         FROM badges
+       ORDER BY id
     SQL
+
+    existing_badge_names = Badge.pluck(:name).to_set
 
     create_badges(badges) do |row|
       next if badge_id_from_original_id(row["id"]).present?
 
+      badge_name = row["name"]
+      unless existing_badge_names.add?(badge_name)
+        badge_name = badge_name + "_1"
+        badge_name.next! until existing_badge_names.add?(badge_name)
+      end
+
       {
         original_id: row["id"],
-        name: row["name"],
+        name: badge_name,
         description: row["description"],
         badge_type_id: row["badge_type_id"],
         badge_grouping_id: @badge_group_mapping[row["badge_group"]],
@@ -1153,6 +1164,50 @@ class BulkImport::Generic < BulkImport::Base
     end
 
     badges.close
+  end
+
+  def import_user_badges
+    puts "", "Importing user badges..."
+
+    user_badges = query(<<~SQL)
+      SELECT user_id, badge_id, granted_at,
+             ROW_NUMBER() OVER (PARTITION BY user_id, badge_id ORDER BY granted_at) - 1 AS seq
+        FROM user_badges
+       ORDER BY user_id, badge_id, granted_at
+    SQL
+
+    existing_user_badges = UserBadge.distinct.pluck(:user_id, :badge_id, :seq).to_set
+
+    create_user_badges(user_badges) do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+      badge_id = badge_id_from_original_id(row["badge_id"])
+      seq = row["seq"]
+
+      next unless user_id && badge_id
+      next if existing_user_badges.include?([user_id, badge_id, seq])
+
+      { user_id: user_id, badge_id: badge_id, granted_at: to_datetime(row["granted_at"]), seq: seq }
+    end
+
+    user_badges.close
+
+    puts "", "Updating badge grant counts..."
+    start_time = Time.now
+
+    DB.exec(<<~SQL)
+        WITH
+          grants AS (
+                      SELECT badge_id, COUNT(*) AS grant_count FROM user_badges GROUP BY badge_id
+                    )
+
+      UPDATE badges
+         SET grant_count = grants.grant_count
+        FROM grants
+       WHERE badges.id = grants.badge_id
+         AND badges.grant_count <> grants.grant_count
+    SQL
+
+    puts "  Update took #{(Time.now - start_time).to_i} seconds."
   end
 
   def enable_category_settings
