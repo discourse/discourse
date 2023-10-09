@@ -99,6 +99,9 @@ export default class SearchMenu extends Component {
       return this.args.closeSearchMenu();
     }
 
+    // We want to blur the active element (search input) when in stand-alone mode
+    // so that when we focus on the search input again, the menu panel pops up
+    document.activeElement.blur();
     this.menuPanelOpen = false;
   }
 
