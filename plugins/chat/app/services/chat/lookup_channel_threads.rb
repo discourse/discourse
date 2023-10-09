@@ -135,8 +135,7 @@ module Chat
     end
 
     def fetch_participants(threads:, **)
-      context.participants =
-        ::Chat::ThreadParticipantQuery.call(thread_ids: threads.map(&:id), preview: false)
+      context.participants = ::Chat::ThreadParticipantQuery.call(thread_ids: threads.map(&:id))
     end
 
     def build_load_more_url(contract:, **)
