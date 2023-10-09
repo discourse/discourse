@@ -279,6 +279,7 @@ class BulkImport::Base
     puts "Loading upload indexes..."
     @uploads_mapping = load_index(MAPPING_TYPES[:upload])
     @uploads_by_sha1 = Upload.pluck(:sha1, :id).to_h
+    @upload_urls_by_id = Upload.pluck(:id, :url).to_h
 
     puts "Loading badge indexes..."
     @badge_mapping = load_index(MAPPING_TYPES[:badge])
@@ -374,6 +375,10 @@ class BulkImport::Base
 
   def upload_id_from_sha1(sha1)
     @uploads_by_sha1[sha1]
+  end
+
+  def upload_url_from_id(id)
+    @upload_urls_by_id[id]
   end
 
   def post_number_from_imported_id(id)
@@ -1096,6 +1101,7 @@ class BulkImport::Base
     @imported_records[upload[:original_id]] = upload[:id]
     @uploads_mapping[upload[:original_id]] = upload[:id]
     @uploads_by_sha1[upload[:sha1]] = upload[:id]
+    @upload_urls_by_id[upload[:id]] = upload[:url]
 
     upload
   end
@@ -1469,6 +1475,32 @@ class BulkImport::Base
           </aside>
         HTML
       end
+    end
+
+    # Attachments
+    cooked.gsub!(%r{<a href="upload://(.*?)">(.*?)\|attachment</a>}) do
+      upload_base62, filename = $1, $2
+      %{<a class="attachment" href="#{Discourse.base_url}/uploads/short-url/#{upload_base62}">#{filename}</a>}
+    end
+
+    # Images
+    cooked.gsub!(%r{<img src="(upload://.*?)"(?:\salt="(.*?)(?:\|(\d+)x(\d+))?")?.*?>}) do
+      short_url, alt, width, height = $1, $2, $3, $4
+      upload_sha1 = Upload.sha1_from_short_url(short_url)
+      upload_base62 = Upload.base62_sha1(upload_sha1)
+      upload_id = @uploads_by_sha1[upload_sha1]
+      upload_url = @upload_urls_by_id[upload_id]
+      cdn_url = Discourse.store.cdn_url(upload_url)
+
+      attributes = %{loading="lazy"}
+      attributes << %{ alt="#{alt}"} if alt.present?
+      attributes << %{ width="#{width}"} if width.present?
+      attributes << %{ height="#{height}"} if height.present?
+      if width.present? && height.present?
+        attributes << %{ style="aspect-ratio: #{width} / #{height};"}
+      end
+
+      %{<img src="#{cdn_url}" data-base62-sha1="#{upload_base62} #{attributes}>"}
     end
 
     # TODO Make this work for usernames as well
