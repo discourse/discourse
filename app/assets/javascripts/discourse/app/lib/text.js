@@ -44,8 +44,8 @@ export function cook(text, options) {
 // todo drop this function after migrating everything to cook()
 export function cookAsync(text, options) {
   deprecated("cookAsync() is deprecated, call cook() instead", {
-    since: "3.1",
-    dropFrom: "3.2.0.beta1",
+    since: "3.2.0.beta2",
+    dropFrom: "3.2.0.beta5",
     id: "discourse.text.cook-async",
   });
   return cook(text, options);
