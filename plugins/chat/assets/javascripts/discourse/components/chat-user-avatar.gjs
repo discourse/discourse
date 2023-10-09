@@ -9,7 +9,6 @@ export default class ChatUserAvatar extends Component {
     <div
       class={{concatClass "chat-user-avatar" (if this.isOnline "is-online")}}
     >
-      {{log this.interactive}}
       {{#if this.interactive}}
         <div
           role="button"
@@ -33,7 +32,6 @@ export default class ChatUserAvatar extends Component {
   }
 
   get interactive() {
-    console.log(this.args.interactive);
     return this.args.interactive ?? true;
   }
 
