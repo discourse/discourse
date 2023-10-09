@@ -8,7 +8,10 @@ module ThemeStore
 
     def import!
       FileUtils.mkdir_p(temp_folder)
-      FileUtils.cp_r("#{@theme_dir}/.", temp_folder)
+      Dir.glob("*", base: @theme_dir) do |entry|
+        next if %w[node_modules src spec].include?(entry)
+        FileUtils.cp_r(File.join(@theme_dir, entry), temp_folder)
+      end
     end
   end
 end

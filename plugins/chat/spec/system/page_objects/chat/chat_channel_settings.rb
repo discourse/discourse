@@ -2,7 +2,7 @@
 
 module PageObjects
   module Pages
-    class ChatChannelAbout < PageObjects::Pages::Base
+    class ChatChannelSettings < PageObjects::Pages::Base
       EDIT_MODAL_SELECTOR = ".chat-modal-edit-channel-name"
 
       def open_edit_modal
@@ -12,11 +12,11 @@ module PageObjects
       end
 
       def has_slug?(slug)
-        page.has_css?(".channel-info-about-view__slug", text: slug)
+        page.has_css?(".chat-channel-settings__slug", text: slug)
       end
 
       def has_name?(name)
-        page.has_css?(".channel-info-about-view__name", text: name)
+        page.has_css?(".chat-channel-settings__name", text: name)
       end
     end
   end

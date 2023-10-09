@@ -5,7 +5,7 @@ import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { cookAsync } from "discourse/lib/text";
+import { cook } from "discourse/lib/text";
 import { shortDateNoYear } from "discourse/lib/formatter";
 import { bind } from "discourse-common/utils/decorators";
 
@@ -44,7 +44,7 @@ export default class SummaryBox extends Component {
     const topicSummary = update.topic_summary;
 
     if (topicSummary.summarized_text) {
-      cookAsync(topicSummary.summarized_text).then((cooked) => {
+      cook(topicSummary.summarized_text).then((cooked) => {
         this.summary = cooked;
       });
     }

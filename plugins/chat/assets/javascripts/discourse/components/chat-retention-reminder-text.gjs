@@ -3,6 +3,12 @@ import I18n from "I18n";
 import { inject as service } from "@ember/service";
 
 export default class ChatRetentionReminderText extends Component {
+  <template>
+    <span class="chat-retention-reminder-text">
+      {{this.text}}
+    </span>
+  </template>
+
   @service siteSettings;
 
   get text() {

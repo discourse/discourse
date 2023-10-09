@@ -4,7 +4,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
-import { cookAsync } from "discourse/lib/text";
+import { cook } from "discourse/lib/text";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
 
@@ -32,7 +32,7 @@ export default class CookText extends Component {
 
   @action
   async loadCookedText() {
-    const cooked = await cookAsync(this.args.rawText);
+    const cooked = await cook(this.args.rawText);
     this.cooked = cooked;
   }
 
