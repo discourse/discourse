@@ -379,13 +379,13 @@ module DiscourseTagging
 
   CATEGORY_RESTRICTIONS_SQL ||= <<~SQL
     category_restrictions AS (
-      SELECT t.id as tag_id, ct.id as ct_id, ct.category_id as category_id
+      SELECT t.id as tag_id, ct.id as ct_id, ct.category_id as category_id, NULL AS category_tag_group_id
       FROM tags t
       INNER JOIN category_tags ct ON t.id = ct.tag_id /*and_name_like*/
 
       UNION
 
-      SELECT t.id as tag_id, ctg.id as ctg_id, ctg.category_id as category_id
+      SELECT t.id as tag_id, ctg.id as ctg_id, ctg.category_id as category_id, ctg.tag_group_id AS category_tag_group_id
       FROM tags t
       INNER JOIN tag_group_memberships tgm ON tgm.tag_id = t.id /*and_name_like*/
       INNER JOIN category_tag_groups ctg ON tgm.tag_group_id = ctg.tag_group_id
@@ -401,22 +401,6 @@ module DiscourseTagging
       INNER JOIN tag_group_permissions tgp
       ON tg.id = tgp.tag_group_id /*and_group_ids*/
       AND tgp.permission_type = #{TagGroupPermission.permission_types[:full]}
-    )
-  SQL
-
-  TAGS_FROM_UNASSOCIATED_TAG_GROUPS ||= <<~SQL
-    tags_from_unassociated_tag_groups AS (
-      SELECT tgm.tag_id
-      FROM tag_group_memberships tgm
-      WHERE tgm.tag_group_id NOT IN (
-        SELECT ctg.tag_group_id
-        FROM category_tag_groups ctg
-        WHERE ctg.category_id = :category_id
-        UNION
-        SELECT crt.tag_group_id
-        FROM category_required_tag_groups crt
-        WHERE crt.category_id = :category_id
-      )
     )
   SQL
 
@@ -448,12 +432,6 @@ module DiscourseTagging
     builder_params[:selected_tag_ids] = selected_tag_ids unless selected_tag_ids.empty?
 
     sql = +"WITH #{TAG_GROUP_RESTRICTIONS_SQL}, #{CATEGORY_RESTRICTIONS_SQL}"
-
-    if category.present?
-      builder_params[:category_id] = category.id
-      sql << ", #{TAGS_FROM_UNASSOCIATED_TAG_GROUPS}"
-    end
-
     if (opts[:for_input] || opts[:for_topic]) && filter_for_non_staff
       sql << ", #{PERMITTED_TAGS_SQL} "
       builder_params[:group_ids] = permitted_group_ids(guardian)
@@ -480,7 +458,7 @@ module DiscourseTagging
       FROM tags t
       INNER JOIN tag_group_restrictions tgr ON tgr.tag_id = t.id
       #{outer_join ? "LEFT OUTER" : "INNER"}
-        JOIN category_restrictions cr ON t.id = cr.tag_id
+        JOIN category_restrictions cr ON t.id = cr.tag_id AND (tgr.tag_group_id = cr.category_tag_group_id OR cr.category_tag_group_id IS NULL)
       /*where*/
       /*order_by*/
       /*limit*/
@@ -600,9 +578,6 @@ module DiscourseTagging
           one_tag_per_group_ids,
         )
       end
-    elsif opts[:for_input] && selected_tag_ids.blank? && category.present?
-      builder_params[:category_id] = category.id
-      builder.where("t.id NOT IN (SELECT tag_id FROM tags_from_unassociated_tag_groups)")
     end
 
     builder.where("target_tag_id IS NULL") if opts[:exclude_synonyms]

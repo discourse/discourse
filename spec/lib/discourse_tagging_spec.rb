@@ -1510,7 +1510,9 @@ RSpec.describe DiscourseTagging do
       Fabricate(:category, allowed_tag_groups: [parent_tag_group.name, child_tag_group.name])
     end
 
-    it "Will not return the child tag or the tag in the child and tag group outside of category" do
+    # this test is to make sure that the parent tag is the only one returned when the child tag is also in a tag group
+    # allowed in the category
+    it "Will only return the parent tag" do
       tags =
         DiscourseTagging.filter_allowed_tags(
           Guardian.new(user),
