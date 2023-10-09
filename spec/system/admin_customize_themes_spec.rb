@@ -33,9 +33,9 @@ describe "Admin Customize Themes", type: :system do
 
       admin_customize_themes_page.click_delete_themes_button
 
-      expect(delete_themes_confirm_modal).to have_theme("Cool theme 1")
-      expect(delete_themes_confirm_modal).to have_theme("Cool theme 2")
-      expect(delete_themes_confirm_modal).to have_theme("Cool theme 3")
+      expect(delete_themes_confirm_modal).to have_theme(theme.name)
+      expect(delete_themes_confirm_modal).to have_theme(theme_2.name)
+      expect(delete_themes_confirm_modal).to have_theme(theme_3.name)
       delete_themes_confirm_modal.confirm
 
       expect(admin_customize_themes_page).to have_no_inactive_themes
