@@ -36,7 +36,9 @@ import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import renderTags from "discourse/lib/render-tags";
 import { htmlSafe } from "@ember/template";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import prepareFormTemplateData from "discourse/lib/form-template-validation";
+import prepareFormTemplateData, {
+  getFormTemplateObject,
+} from "discourse/lib/form-template-validation";
 import DiscardDraftModal from "discourse/components/modal/discard-draft";
 import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
@@ -178,6 +180,14 @@ export default class ComposerService extends Service {
     }
 
     return this.model.category?.get("form_template_ids");
+  }
+
+  get hasFormTemplate() {
+    return (
+      this.formTemplateIds?.length > 0 &&
+      !this.get("model.replyingToTopic") &&
+      !this.get("model.editingPost")
+    );
   }
 
   get formTemplateInitialValues() {
@@ -731,7 +741,11 @@ export default class ComposerService extends Service {
 
     const composer = this.model;
 
-    if (isEmpty(composer?.reply) && isEmpty(composer?.title)) {
+    if (
+      isEmpty(composer?.reply) &&
+      isEmpty(composer?.title) &&
+      !this.hasFormTemplate
+    ) {
       this.close();
     } else if (composer?.viewOpenOrFullscreen) {
       this.shrink();
@@ -928,21 +942,15 @@ export default class ComposerService extends Service {
       this.set("showPreview", false);
     }
 
-    if (this.siteSettings.experimental_form_templates) {
-      if (
-        this.formTemplateIds?.length > 0 &&
-        !this.get("model.replyingToTopic") &&
-        !this.get("model.editingPost")
-      ) {
-        const formTemplateData = prepareFormTemplateData(
-          document.querySelector("#form-template-form"),
-          this.selectedFormTemplate
-        );
-        if (formTemplateData) {
-          this.model.set("reply", formTemplateData);
-        } else {
-          return;
-        }
+    if (this.hasFormTemplate) {
+      const formTemplateData = prepareFormTemplateData(
+        document.querySelector("#form-template-form"),
+        this.selectedFormTemplate
+      );
+      if (formTemplateData) {
+        this.model.set("reply", formTemplateData);
+      } else {
+        return;
       }
     }
 
@@ -1615,7 +1623,8 @@ export default class ComposerService extends Service {
   shrink() {
     if (
       this.get("model.replyDirty") ||
-      (this.get("model.canEditTitle") && this.get("model.titleDirty"))
+      (this.get("model.canEditTitle") && this.get("model.titleDirty")) ||
+      this.hasFormTemplate
     ) {
       this.collapse();
     } else {
@@ -1631,6 +1640,15 @@ export default class ComposerService extends Service {
     if (this.model.draftSaving) {
       this._saveDraftDebounce = discourseDebounce(this, this._saveDraft, 2000);
     } else {
+      // This is a temporary solution to avoid losing the current form template state
+      // until we have a proper draft system for these forms
+      if (this.hasFormTemplate) {
+        const form = document.querySelector("#form-template-form");
+        if (form) {
+          this.set("formTemplateInitialValues", getFormTemplateObject(form));
+        }
+      }
+
       this._saveDraftPromise = this.model
         .saveDraft(this.currentUser)
         .finally(() => {
@@ -1728,6 +1746,9 @@ export default class ComposerService extends Service {
     document.activeElement?.blur();
     document.documentElement.style.removeProperty("--composer-height");
     this.setProperties({ model: null, lastValidatedAt: null });
+
+    // This is a temporary solution to reset the saved form template state while we don't store drafts
+    this.set("formTemplateInitialValues", undefined);
   }
 
   closeAutocomplete() {
