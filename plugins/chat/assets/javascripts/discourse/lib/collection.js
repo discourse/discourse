@@ -12,9 +12,10 @@ export default class Collection {
   @tracked loading = false;
   @tracked fetchedOnce = false;
 
-  constructor(resourceURL, handler) {
+  constructor(resourceURL, handler, params = {}) {
     this._resourceURL = resourceURL;
     this._handler = handler;
+    this._params = params;
     this._fetchedAll = false;
   }
 
@@ -94,6 +95,6 @@ export default class Collection {
   }
 
   #fetch(url) {
-    return ajax(url, { type: "GET" });
+    return ajax(url, { type: "GET", data: this._params });
   }
 }

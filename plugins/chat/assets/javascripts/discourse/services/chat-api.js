@@ -233,14 +233,15 @@ export default class ChatApi extends Service {
    * @param {number} channelId - The ID of the channel.
    * @returns {Collection}
    */
-  listChannelMemberships(channelId) {
+  listChannelMemberships(channelId, params = {}) {
     return new Collection(
       `${this.#basePath}/channels/${channelId}/memberships`,
       (response) => {
         return response.memberships.map((membership) =>
           UserChatChannelMembership.create(membership)
         );
-      }
+      },
+      params
     );
   }
 

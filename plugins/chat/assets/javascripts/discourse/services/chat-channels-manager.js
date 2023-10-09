@@ -18,6 +18,7 @@ export default class ChatChannelsManager extends Service {
   @service chatSubscriptionsManager;
   @service chatApi;
   @service currentUser;
+  @service router;
   @tracked _cached = new TrackedObject();
 
   async find(id, options = { fetchIfNotFound: true }) {
@@ -131,12 +132,12 @@ export default class ChatChannelsManager extends Service {
   }
 
   async #find(id) {
-    return this.chatApi
-      .channel(id)
-      .catch(popupAjaxError)
-      .then((result) => {
-        return this.store(result.channel);
-      });
+    try {
+      const result = await this.chatApi.channel(id);
+      return this.store(result.channel);
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   #cache(channel) {
