@@ -34,7 +34,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
     job.execute(
       web_hook_id: post_hook.id,
       payload: { id: post.id }.to_json,
-      event_type: WebHookEventType::POST,
+      event_type: WebHookEventType::TYPES[:post_created],
     )
 
     expect(WebHookEvent.last.web_hook_id).to eq(post_hook.id)
@@ -280,7 +280,7 @@ RSpec.describe Jobs::EmitWebHookEvent do
       stub_request(:post, post_hook.payload_url).to_return(body: "OK", status: 200)
 
       topic_event_type = WebHookEventType.all.first
-      web_hook_id = Fabricate("#{topic_event_type.name}_web_hook").id
+      web_hook_id = Fabricate("#{topic_event_type.name.gsub("_created", "")}_web_hook").id
 
       expect do
         job.execute(

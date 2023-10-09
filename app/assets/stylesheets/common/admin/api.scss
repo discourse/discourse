@@ -232,9 +232,15 @@ table.api-keys {
   }
 
   .event-selector {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: auto auto;
     margin: 0.5em 0;
+    margin-left: 1.5em;
+
+    .event-group {
+      display: inline-block;
+      margin-bottom: 1em;
+    }
 
     .hook-event {
       margin-bottom: 0.5em;
@@ -344,8 +350,7 @@ table.api-keys {
 
 .hook-event {
   display: inline-block;
-  width: 40%;
-  margin-left: 20px;
+  width: 100%;
   label {
     display: inline-block;
   }
