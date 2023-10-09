@@ -316,7 +316,7 @@ export default class ChatAboutScreen extends Component {
   categoryLabel = I18n.t("chat.settings.category_label");
   historyLabel = I18n.t("chat.settings.history_label");
   adminSectionTitle = I18n.t("chat.settings.admin_title");
-  membersLabel = I18n.t("chat.settings.tabs.members_label");
+  membersLabel = I18n.t("chat.channel_info.tabs.members");
   descriptionSectionTitle = I18n.t("chat.about_view.description");
   titleSectionTitle = I18n.t("chat.about_view.title");
   descriptionPlaceholder = I18n.t(
