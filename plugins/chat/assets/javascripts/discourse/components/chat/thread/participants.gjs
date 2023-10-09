@@ -37,7 +37,7 @@ export default class ChatThreadParticipants extends Component {
   }
 
   get participantsUsers() {
-    let users = this.args.thread.preview.participantUsers;
+    const users = this.args.thread.preview.participantUsers;
 
     if (this.includeOriginalMessageUser) {
       if (users.length > 3) {
