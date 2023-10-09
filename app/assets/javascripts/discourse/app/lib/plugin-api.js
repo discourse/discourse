@@ -760,8 +760,8 @@ class PluginApi {
       "`addToolbarPopupMenuOptionsCallback` has been renamed to `addToolbarPopupMenuOption`",
       {
         id: "discourse.add-toolbar-popup-menu-options-callback",
-        since: "3.3",
-        dropFrom: "3.4",
+        since: "3.2",
+        dropFrom: "3.3",
       }
     );
 
