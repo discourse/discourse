@@ -20,16 +20,25 @@ describe Chat::Message do
       expect(cooked).to eq("<p>&lt;h1&gt;test&lt;/h1&gt;</p>")
     end
 
+    it "correctly extracts mentions with dots" do
+      user = Fabricate(:user)
+      cooked = described_class.cook("@#{user.username}...test")
+
+      expect(cooked).to eq(
+        "<p><a class=\"mention\" href=\"/u/#{user.username}\">@#{user.username}</a>…test</p>",
+      )
+    end
+
     it "does not support headings" do
       cooked = described_class.cook("## heading 2")
 
       expect(cooked).to eq("<p>## heading 2</p>")
     end
 
-    it "does not support horizontal rules" do
+    it "supports horizontal replacement" do
       cooked = described_class.cook("---")
 
-      expect(cooked).to eq("<p>---</p>")
+      expect(cooked).to eq("<p>—</p>")
     end
 
     it "supports backticks rule" do
@@ -95,7 +104,7 @@ describe Chat::Message do
       <div class="quote-controls"></div>
       <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src}" class="avatar"><a href="http://test.localhost/t/some-quotable-topic/#{topic.id}/#{post.post_number}">#{topic.title}</a></div>
       <blockquote>
-      <p>Mark me...this will go down in history.</p>
+      <p>Mark me…this will go down in history.</p>
       </blockquote>
       </aside>
       COOKED
