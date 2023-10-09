@@ -3,7 +3,7 @@ import { run } from "@ember/runloop";
 import ExtendableUploader from "discourse/mixins/extendable-uploader";
 import { or } from "@ember/object/computed";
 import EmberObject from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
+import { ajax, updateCsrfToken } from "discourse/lib/ajax";
 import {
   bindFileInputChangeListener,
   displayErrorForUpload,
@@ -429,8 +429,13 @@ export default Mixin.create(UppyS3Multipart, ExtendableUploader, {
   },
 
   @bind
-  _addFiles(files, opts = {}) {
+  async _addFiles(files, opts = {}) {
+    if (!this.session.csrfToken) {
+      await updateCsrfToken();
+    }
+
     files = Array.isArray(files) ? files : [files];
+
     try {
       this._uppyInstance.addFiles(
         files.map((file) => {

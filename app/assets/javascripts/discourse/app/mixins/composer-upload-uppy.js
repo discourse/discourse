@@ -24,6 +24,7 @@ import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
 import { inject as service } from "@ember/service";
 import { run } from "@ember/runloop";
 import escapeRegExp from "discourse-common/utils/escape-regexp";
+import { updateCsrfToken } from "discourse/lib/ajax";
 
 // Note: This mixin is used _in addition_ to the ComposerUpload mixin
 // on the composer-editor component. It overrides some, but not all,
@@ -39,6 +40,8 @@ import escapeRegExp from "discourse-common/utils/escape-regexp";
 //
 export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   dialog: service(),
+  session: service(),
+
   uploadRootPath: "/uploads",
   uploadTargetBound: false,
   useUploadPlaceholders: true,
@@ -596,8 +599,13 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   },
 
   @bind
-  _addFiles(files, opts = {}) {
+  async _addFiles(files, opts = {}) {
+    if (!this.session.csrfToken) {
+      await updateCsrfToken();
+    }
+
     files = Array.isArray(files) ? files : [files];
+
     try {
       this._uppyInstance.addFiles(
         files.map((file) => {
