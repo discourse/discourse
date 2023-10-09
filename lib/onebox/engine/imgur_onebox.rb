@@ -53,7 +53,7 @@ module Onebox
           rescue StandardError
             "{}"
           end
-        oembed_data = Onebox::Helpers.symbolize_keys(::MultiJson.load(response))
+        oembed_data = ::MultiJson.load(response, symbolize_keys: true)
         imgur_data_id = Nokogiri.HTML(oembed_data[:html]).xpath("//blockquote").attr("data-id")
         imgur_data_id.to_s[%r{a/}]
       end

@@ -1626,7 +1626,6 @@ ar:
     unreachable_themes: "لم نتمكن من التحقُّق من وجود تحديثات للسمات التالية:"
     watched_word_regexp_error: "التعبير العادي للكلمات المُراقَبة للإجراء \"%{action}\" غير صالح. يُرجى التحقُّق من <a href='%{base_path}/admin/customize/watched_words'>إعدادات الكلمات المُراقَبة</a>، أو إيقاف إعداد الموقع `watched words regular expressions`."
     v3_analytics_deprecated: "يستخدم Discourse لديك حاليًا Google Analytics 3، والذي سيتوقف دعمه بعد يوليو 2023. <a href='https://meta.discourse.org/t/260498'>قم بالترقية إلى Google Analytics 4</a> الآن للاستمرار في تلقي رؤى وتحليلات قيمة لأداء موقعك الإلكتروني."
-    legacy_navigation_menu_deprecated: "يستخدم Discourse لديك حاليًا قائمة التنقل \"القديمة\"، والتي <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>ستتم إزالتها في الإصدار التجريبي الأول من Discourse 3.2</a>. انتقل إلى قائمة التنقل الجديدة عن طريق تحديث <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>إعداد موقع قائمة التنقل</a> إلى \"الشريط الجانبي\" أو \"القائمة المنسدلة للرأس\"."
   site_settings:
     allow_bulk_invite: "السماح بالدعوات الجماعية عن طريق تحميل ملف CSV"
     disabled: "متوقف"

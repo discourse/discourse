@@ -209,10 +209,7 @@ function replaceIn(bootstrap, template, id, headers, baseURL) {
   if (id === "html-tag") {
     return template.replace(`<html>`, contents);
   } else {
-    return template.replace(
-      `<bootstrap-content key="${id}"></bootstrap-content>`,
-      contents
-    );
+    return template.replace(`<!-- bootstrap-content ${id} -->`, contents);
   }
 }
 

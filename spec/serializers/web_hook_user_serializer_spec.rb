@@ -13,8 +13,6 @@ RSpec.describe WebHookUserSerializer do
     WebHookUserSerializer.new(user, scope: Guardian.new(admin), root: false)
   end
 
-  before { SiteSetting.navigation_menu = "legacy" }
-
   it "should include relevant user info" do
     payload = serializer.as_json
     expect(payload[:email]).to eq(user.email)

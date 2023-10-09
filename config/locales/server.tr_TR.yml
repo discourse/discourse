@@ -1398,7 +1398,6 @@ tr_TR:
     unreachable_themes: "Aşağıdaki temalarda güncelleme olup olmadığını kontrol edemedik:"
     watched_word_regexp_error: "\"%{action}\" izlenen sözcükler için normal ifade geçersiz. Lütfen <a href='%{base_path}/admin/customize/watched_words'>İzlenen Kelime ayarlarınızı</a>kontrol edin veya \"izlenen kelimeler sıradan ifadeler\" site ayarını devre dışı bırakın."
     v3_analytics_deprecated: "Discourse'unuz şu anda Temmuz 2023'ten sonra artık desteklenmeyecek olan Google Analytics 3'ü kullanıyor. Web sitenizin performansı hakkında değerli bilgiler ve analizler almaya devam etmek için hemen <a href='https://meta.discourse.org/t/260498'>Google Analytics 4'e yükseltin</a>."
-    legacy_navigation_menu_deprecated: "Discourse'unuz şu anda <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>Discourse 3.2'nin</a>ilk beta sürümünde kaldırılacak olan \"eski\" gezinme menüsünü kullanıyor. <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>Gezinme menüsü site ayarınızı</a> \"yan çubuk\" veya \"başlık açılır menüsü\" olarak güncelleyerek yeni gezinme menüsüne geçiş yapın."
   site_settings:
     allow_bulk_invite: "Bir CSV dosyası yükleyerek toplu davetlere izin verin"
     disabled: "devre dışı"

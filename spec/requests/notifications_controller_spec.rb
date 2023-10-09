@@ -389,24 +389,12 @@ RSpec.describe NotificationsController do
               get "/notifications.json", params: { recent: true }
               expect(response.status).to eq(200)
               expect_correct_notifications(response)
-
-              SiteSetting.navigation_menu = "legacy"
-
-              get "/notifications.json", params: { recent: true }
-              expect(response.status).to eq(200)
-              expect_correct_notifications(response)
             end
           end
 
           context "without 'recent' filter" do
             it "doesn't include notifications from topics the user isn't allowed to see" do
               SiteSetting.navigation_menu = "sidebar"
-
-              get "/notifications.json"
-              expect(response.status).to eq(200)
-              expect_correct_notifications(response)
-
-              SiteSetting.navigation_menu = "legacy"
 
               get "/notifications.json"
               expect(response.status).to eq(200)

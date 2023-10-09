@@ -2169,6 +2169,7 @@ en:
       security_key_not_allowed_error: "The security key authentication process either timed out or was cancelled."
       security_key_no_matching_credential_error: "No matching credentials could be found in the provided security key."
       security_key_support_missing_error: "Your current device or browser does not support the use of security keys. Please use a different method."
+      security_key_invalid_response_error: "The security key authentication process failed due to an invalid response."
       email_placeholder: "Email / Username"
       caps_lock_warning: "Caps Lock is on"
       error: "Unknown error"
@@ -4938,41 +4939,65 @@ en:
         groups_filter: "Triggered Groups"
         delete_confirm: "Delete this webhook?"
         topic_event:
-          name: "Topic Event"
-          details: "When there is a new topic, revised, changed or deleted."
+          group_name: "Topic Events"
+          topic_created: "Topic is created"
+          topic_revised: "Topic is revised"
+          topic_edited: "Topic is updated"
+          topic_destroyed: "Topic is deleted"
+          topic_recovered: "Topic is recovered"
         post_event:
-          name: "Post Event"
-          details: "When there is a new reply, edit, deleted or recovered."
-        user_event:
-          name: "User Event"
-          details: "When a user logs in, logs out, confirms their email, is created, approved, updated, suspended or unsuspended."
+          group_name: "Post Events"
+          post_created: "Post is created"
+          post_edited: "Post is updated"
+          post_destroyed: "Post is deleted"
+          post_recovered: "Post is recovered"
         group_event:
-          name: "Group Event"
-          details: "When a group is created, updated or destroyed."
-        category_event:
-          name: "Category Event"
-          details: "When a category is created, updated or destroyed."
+          group_name: "Group Events"
+          group_created: "Group is created"
+          group_updated: "Group is updated"
+          group_destroyed: "Group is deleted"
         tag_event:
-          name: "Tag Event"
-          details: "When a tag is created, updated or destroyed."
+          group_name: "Tag Events"
+          tag_created: "Tag is created"
+          tag_updated: "Tag is updated"
+          tag_destroyed: "Tag is deleted"
+        category_event:
+          group_name: "Category Events"
+          category_created: "Category is created"
+          category_updated: "Category is updated"
+          category_destroyed: "Category is deleted"
+        user_event:
+          group_name: "User Events"
+          user_logged_in: "User logged in"
+          user_logged_out: "User logged out"
+          user_confirmed_email: "User confirmed e-mail"
+          user_created: "User is created"
+          user_approved: "User is approved"
+          user_updated: "User is updated"
+          user_destroyed: "User is deleted"
+          user_suspended: "User is suspended"
+          user_unsuspended: "User is unsuspended"
         reviewable_event:
-          name: "Reviewable Event"
-          details: "When a new item is ready for review and when its status is updated."
-        notification_event:
-          name: "Notification Event"
-          details: "When a user receives a notification in their feed."
-        user_promoted_event:
-          name: "User Promoted Event"
-          details: "When a user is promoted from one trust level to another."
+          group_name: "Reviewable Events"
+          reviewable_created: "Reviewable item is ready"
+          reviewable_updated: "Reviewable item is updated"
         user_badge_event:
-          name: "Badge Event"
-          details: "When a badge is granted or revoked."
-        group_user_event:
-          name: "Group User Event"
-          details: "When a user is added or removed in a group."
+          group_name: "Badge Events"
+          user_badge_granted: "User badge is granted"
+          user_badge_revoked: "User badge is revoked"
         like_event:
-          name: "Like Event"
-          details: "When a user likes a post."
+          group_name: "Like Events"
+          post_liked: "When a user likes a post."
+        notification_event:
+          group_name: "Notification Events"
+          notification_created: "An user receives a notification in their feed"
+        group_user_event:
+          group_name: "Group User Events"
+          user_added_to_group: "An user is added to a group"
+          user_removed_from_group: "An user is removed from a group"
+        user_promoted_event:
+          group_name: "User Promoted Events"
+          user_promoted: "An user is promoted"
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
@@ -5111,6 +5136,9 @@ en:
         install: "Install"
         delete: "Delete"
         delete_confirm: 'Are you sure you want to delete "%{theme_name}"?'
+        bulk_delete: 'Are you sure?'
+        bulk_themes_delete_confirm: "This will uninstall the following themes, they will no longer be useable by any users on your site:"
+        bulk_components_delete_confirm: "This will uninstall the following components, they will no longer be useable by any users on your site:"
         color: "Color"
         opacity: "Opacity"
         copy: "Duplicate"
@@ -5181,6 +5209,8 @@ en:
           convert_theme_tooltip: "Convert this theme to component"
           inactive_themes: "Inactive themes:"
           inactive_components: "Unused components:"
+          selected: "%{count} selected"
+          cancel: "Cancel"
           broken_theme_tooltip: "This theme has errors in its CSS, HTML or YAML"
           disabled_component_tooltip: "This component has been disabled"
           default_theme_tooltip: "This theme is the site's default theme"

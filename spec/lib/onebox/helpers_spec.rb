@@ -1,19 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe Onebox::Helpers do
-  describe ".blank?" do
-    it { expect(described_class.blank?("")).to be(true) }
-    it { expect(described_class.blank?(" ")).to be(true) }
-    it { expect(described_class.blank?("test")).to be(false) }
-    it { expect(described_class.blank?(%w[test testing])).to be(false) }
-    it { expect(described_class.blank?([])).to be(true) }
-    it { expect(described_class.blank?({})).to be(true) }
-    it { expect(described_class.blank?(nil)).to be(true) }
-    it { expect(described_class.blank?(true)).to be(false) }
-    it { expect(described_class.blank?(false)).to be(true) }
-    it { expect(described_class.blank?(a: "test")).to be(false) }
-  end
-
   describe ".truncate" do
     let(:test_string) { "Chops off on spaces" }
     it { expect(described_class.truncate(test_string)).to eq(test_string) }

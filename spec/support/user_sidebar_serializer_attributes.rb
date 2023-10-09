@@ -25,14 +25,6 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
       Fabricate(:category_sidebar_section_link, user: user, linkable: private_category)
     end
 
-    it "is not included when navigation menu is legacy" do
-      SiteSetting.navigation_menu = "legacy"
-
-      json = serializer.as_json
-
-      expect(json[:sidebar_category_ids]).to eq(nil)
-    end
-
     it 'serializes only the categories that the user can see when sidebar has been enabled"' do
       SiteSetting.navigation_menu = "sidebar"
 
@@ -73,15 +65,6 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
       Fabricate(:tag_sidebar_section_link, user: user, linkable: hidden_tag)
     end
 
-    it "is not included when navigation menu is legacy" do
-      SiteSetting.navigation_menu = "legacy"
-      SiteSetting.tagging_enabled = true
-
-      json = serializer.as_json
-
-      expect(json[:sidebar_tags]).to eq(nil)
-    end
-
     it "is not included when tagging has not been enabled" do
       SiteSetting.navigation_menu = "sidebar"
       SiteSetting.tagging_enabled = false
@@ -116,13 +99,6 @@ RSpec.shared_examples "User Sidebar Serializer Attributes" do |serializer_klass|
 
   describe "#display_sidebar_tags" do
     fab!(:tag) { Fabricate(:tag) }
-
-    it "should not be included in serialised object when navigation menu is legacy" do
-      SiteSetting.tagging_enabled = true
-      SiteSetting.navigation_menu = "legacy"
-
-      expect(serializer.as_json[:display_sidebar_tags]).to eq(nil)
-    end
 
     it "should not be included in serialised object when tagging has been disabled" do
       SiteSetting.tagging_enabled = false

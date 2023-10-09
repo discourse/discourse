@@ -14,14 +14,13 @@ module Onebox
     def method_missing(attr, *args, &block)
       value = get(attr, *args)
 
-      return nil if Onebox::Helpers.blank?(value)
+      return nil if value.blank?
 
       method_name = attr.to_s
       if method_name.end_with?(*integer_suffixes)
         value.to_i
       elsif method_name.end_with?(*url_suffixes)
-        result = Onebox::Helpers.normalize_url_for_output(value)
-        result unless Onebox::Helpers.blank?(result)
+        Onebox::Helpers.normalize_url_for_output(value).presence
       else
         value
       end

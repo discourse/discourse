@@ -1,6 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
+import { inject as service } from "@ember/service";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
-import Session from "discourse/models/session";
 import { setDefaultHomepage } from "discourse/lib/utilities";
 import {
   listColorSchemes,
@@ -30,6 +30,8 @@ const TEXT_SIZES = ["smallest", "smaller", "normal", "larger", "largest"];
 const TITLE_COUNT_MODES = ["notifications", "contextual"];
 
 export default Controller.extend({
+  session: service(),
+
   currentThemeId: -1,
   previewingColorScheme: false,
   selectedDarkColorSchemeId: null,
@@ -409,10 +411,10 @@ export default Controller.extend({
           this.themeId,
           true
         );
-        Session.currentProp("darkModeAvailable", false);
+        this.session.set("darkModeAvailable", false);
       } else {
         loadColorSchemeStylesheet(colorSchemeId, this.themeId, true);
-        Session.currentProp("darkModeAvailable", true);
+        this.session.set("darkModeAvailable", true);
       }
     },
 
