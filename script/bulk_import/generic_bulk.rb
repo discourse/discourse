@@ -564,13 +564,14 @@ class BulkImport::Generic < BulkImport::Base
       end
     end
 
-    if row["uploads_ids"].present?
-      upload_ids = JSON.parse(row["uploads_ids"])
+    if row["upload_ids"].present? && @uploads_db
+      upload_ids = JSON.parse(row["upload_ids"])
 
       placeholders = (["?"] * upload_ids.size).join(",")
       sql = "SELECT id, markdown FROM uploads WHERE id IN (#{placeholders})"
       @uploads_db
-        .execute(sql, upload_ids)
+        .prepare(sql)
+        .execute(upload_ids)
         .tap do |result_set|
           result_set.each do |upload|
             raw.gsub!("[upload|#{upload["id"]}]", upload["markdown"] || "")
