@@ -31,8 +31,7 @@ module(
 
       await render(hbs`<ChatThreadParticipants @thread={{this.thread}} />`);
 
-      assert.dom('.chat-user-avatar [data-user-card="bob"]').exists();
-      assert.dom('.chat-user-avatar [data-user-card="alice"]').exists();
+      assert.dom(".chat-user-avatar[data-username]").exists({ count: 2 });
     });
 
     test("@includeOriginalMessageUser=false", async function (assert) {
@@ -52,8 +51,8 @@ module(
         hbs`<ChatThreadParticipants @thread={{this.thread}} @includeOriginalMessageUser={{false}} />`
       );
 
-      assert.dom('.chat-user-avatar [data-user-card="bob"]').doesNotExist();
-      assert.dom('.chat-user-avatar [data-user-card="alice"]').exists();
+      assert.dom('.chat-user-avatar[data-username="bob"]').doesNotExist();
+      assert.dom('.chat-user-avatar[data-username="alice"]').exists();
     });
   }
 );

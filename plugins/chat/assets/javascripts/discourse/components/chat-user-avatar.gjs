@@ -8,6 +8,7 @@ export default class ChatUserAvatar extends Component {
   <template>
     <div
       class={{concatClass "chat-user-avatar" (if this.isOnline "is-online")}}
+      data-username={{@user.username}}
     >
       {{#if this.interactive}}
         <div
