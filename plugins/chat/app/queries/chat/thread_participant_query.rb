@@ -17,6 +17,8 @@ module Chat
   # and if there is a delay in updating them based on message
   # count it is not a big deal.
   class ThreadParticipantQuery
+    MAX_PARTICIPANTS = 10
+
     # @param thread_ids [Array<Integer>] The IDs of the threads to query.
     # @param preview [Boolean] Determines the number of participants to return.
     # @return [Hash<Integer, Hash>] A hash of thread IDs to participant data.
@@ -73,7 +75,7 @@ module Chat
 
         # If we want to return more of the top N users in the thread we
         # can just increase the number here.
-        if thread_participants[thread_id][:users].length < 9 &&
+        if thread_participants[thread_id][:users].length < (MAX_PARTICIPANTS - 1) &&
              thread_participant_stat.user_id != most_recent_participants[thread_id][:id]
           thread_participants[thread_id][:users].push(
             {
