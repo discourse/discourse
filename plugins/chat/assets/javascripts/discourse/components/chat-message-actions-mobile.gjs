@@ -10,7 +10,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import concatClass from "discourse/helpers/concat-class";
 import DButton from "discourse/components/d-button";
 import { on } from "@ember/modifier";
-import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat/user-avatar";
+import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
 import { fn } from "@ember/helper";
 import or from "truth-helpers/helpers/or";

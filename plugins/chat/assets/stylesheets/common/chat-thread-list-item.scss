@@ -75,6 +75,8 @@
     align-items: center;
     gap: 0.5rem;
     .chat-user-avatar {
+      cursor: pointer;
+
       &__container {
         padding: 0;
       }

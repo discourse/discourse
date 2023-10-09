@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { userPath } from "discourse/lib/url";
-import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat/user-avatar";
+import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 import ChatUserDisplayName from "discourse/plugins/chat/discourse/components/chat-user-display-name";
 
 export default class ChatUserInfo extends Component {
