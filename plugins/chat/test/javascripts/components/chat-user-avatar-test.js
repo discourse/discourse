@@ -13,15 +13,15 @@ function containerSelector(user, options = {}) {
   return `.chat-user-avatar${onlineSelector} .chat-user-avatar__container[data-user-card=${user.username}] .avatar[title=${user.username}]`;
 }
 
-module("Discourse Chat | Component | <Chat::UserAvatar />", function (hooks) {
+module("Discourse Chat | Component | <ChatUserAvatar />", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("user is not online", async function (assert) {
+  test("when user is not online", async function (assert) {
     this.user = fabricators.user();
     this.chat = { presenceChannel: { users: [] } };
 
     await render(
-      hbs`<Chat::UserAvatar @chat={{this.chat}} @user={{this.user}} />`
+      hbs`<ChatUserAvatar @chat={{this.chat}} @user={{this.user}} />`
     );
 
     assert.dom(containerSelector(this.user, { online: false })).exists();
@@ -34,22 +34,32 @@ module("Discourse Chat | Component | <Chat::UserAvatar />", function (hooks) {
     };
 
     await render(
-      hbs`<Chat::UserAvatar @chat={{this.chat}} @user={{this.user}} />`
+      hbs`<ChatUserAvatar @chat={{this.chat}} @user={{this.user}} />`
     );
 
     assert.dom(containerSelector(this.user, { online: true })).exists();
   });
 
-  test("showPresence=false", async function (assert) {
+  test("@showPresence=false", async function (assert) {
     this.user = fabricators.user();
     this.chat = {
       presenceChannel: { users: [{ id: this.user.id }] },
     };
 
     await render(
-      hbs`<Chat::UserAvatar @showPresence={{false}} @chat={{this.chat}} @user={{this.user}} />`
+      hbs`<ChatUserAvatar @showPresence={{false}} @chat={{this.chat}} @user={{this.user}} />`
     );
 
     assert.dom(containerSelector(this.user, { online: false })).exists();
+  });
+
+  test("@interactive=true", async function (assert) {
+    this.user = fabricators.user();
+
+    await render(
+      hbs`<ChatUserAvatar @interactive={{false}}  @user={{this.user}} />`
+    );
+
+    assert.dom(".clickable").doesNotExist();
   });
 });

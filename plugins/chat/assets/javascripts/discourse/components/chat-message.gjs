@@ -32,6 +32,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import ChatOnLongPress from "discourse/plugins/chat/discourse/modifiers/chat/on-long-press";
+import { modifier } from "ember-modifier";
 
 let _chatMessageDecorators = [];
 
@@ -84,7 +85,7 @@ export default class ChatMessage extends Component {
         {{on "mouseenter" this.onMouseEnter passive=true}}
         {{on "mouseleave" this.onMouseLeave passive=true}}
         {{on "mousemove" this.onMouseMove passive=true}}
-        {{on "click" this.toggleCheckIfPossible passive=true}}
+        {{this.toggleCheckIfPossible}}
         {{ChatOnLongPress
           this.onLongPressStart
           this.onLongPressEnd
@@ -200,6 +201,34 @@ export default class ChatMessage extends Component {
 
   @optionalService adminTools;
 
+  toggleCheckIfPossible = modifier((element) => {
+    let addedListener = false;
+
+    const handler = () => {
+      if (!this.pane.selectingMessages) {
+        return;
+      }
+
+      if (event.shiftKey) {
+        this.messageInteractor.bulkSelect(!this.args.message.selected);
+        return;
+      }
+
+      this.messageInteractor.select(!this.args.message.selected);
+    };
+
+    if (this.pane.selectingMessages) {
+      element.addEventListener("click", handler, { passive: true });
+      addedListener = true;
+    }
+
+    return () => {
+      if (addedListener) {
+        element.removeEventListener("click", handler);
+      }
+    };
+  });
+
   constructor() {
     super(...arguments);
     this.initMentionedUsers();
@@ -278,20 +307,6 @@ export default class ChatMessage extends Component {
     this.args.message.expanded = true;
     this.refreshStatusOnMentions();
     recursiveExpand(this.args.message);
-  }
-
-  @action
-  toggleCheckIfPossible(event) {
-    if (!this.pane.selectingMessages) {
-      return;
-    }
-
-    if (event.shiftKey) {
-      this.messageInteractor.bulkSelect(!this.args.message.selected);
-      return;
-    }
-
-    this.messageInteractor.select(!this.args.message.selected);
   }
 
   @action

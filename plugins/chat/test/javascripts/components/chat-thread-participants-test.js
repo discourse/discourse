@@ -5,18 +5,18 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 
 module(
-  "Discourse Chat | Component | <Chat::Thread::Participants />",
+  "Discourse Chat | Component | <ChatThreadParticipants />",
   function (hooks) {
     setupRenderingTest(hooks);
 
     test("no participants", async function (assert) {
       this.thread = fabricators.thread();
-      await render(hbs`<Chat::Thread::Participants @thread={{this.thread}} />`);
+      await render(hbs`<ChatThreadParticipants @thread={{this.thread}} />`);
 
       assert.dom(".chat-thread-participants").doesNotExist();
     });
 
-    test("includeOriginalMessageUser=true", async function (assert) {
+    test("@includeOriginalMessageUser=true", async function (assert) {
       const orignalMessageUser = fabricators.user({ username: "bob" });
       this.thread = fabricators.thread({
         original_message: fabricators.message({ user: orignalMessageUser }),
@@ -29,13 +29,13 @@ module(
         }),
       });
 
-      await render(hbs`<Chat::Thread::Participants @thread={{this.thread}} />`);
+      await render(hbs`<ChatThreadParticipants @thread={{this.thread}} />`);
 
       assert.dom('.chat-user-avatar [data-user-card="bob"]').exists();
       assert.dom('.chat-user-avatar [data-user-card="alice"]').exists();
     });
 
-    test("includeOriginalMessageUser=false", async function (assert) {
+    test("@includeOriginalMessageUser=false", async function (assert) {
       const orignalMessageUser = fabricators.user({ username: "bob" });
       this.thread = fabricators.thread({
         original_message: fabricators.message({ user: orignalMessageUser }),
@@ -49,7 +49,7 @@ module(
       });
 
       await render(
-        hbs`<Chat::Thread::Participants @thread={{this.thread}} @includeOriginalMessageUser={{false}} />`
+        hbs`<ChatThreadParticipants @thread={{this.thread}} @includeOriginalMessageUser={{false}} />`
       );
 
       assert.dom('.chat-user-avatar [data-user-card="bob"]').doesNotExist();
