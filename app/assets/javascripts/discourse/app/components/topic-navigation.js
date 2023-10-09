@@ -141,6 +141,7 @@ export default Component.extend({
       target.classList.contains("docked") ||
       !target.closest(".timeline-container")
     ) {
+      event.preventDefault();
       return;
     }
 
