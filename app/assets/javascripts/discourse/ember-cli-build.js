@@ -139,6 +139,7 @@ module.exports = function (defaults) {
   ];
 
   const appTree = compatBuild(app, Webpack, {
+    staticAppPaths: ["static"],
     packagerOptions: {
       webpackConfig: {
         devtool: "source-map",
