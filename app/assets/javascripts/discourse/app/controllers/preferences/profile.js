@@ -2,7 +2,7 @@ import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
 import { ajax } from "discourse/lib/ajax";
-import { cookAsync } from "discourse/lib/text";
+import { cook } from "discourse/lib/text";
 import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -128,7 +128,7 @@ export default Controller.extend({
       return model
         .save(this.saveAttrNames)
         .then(() => {
-          cookAsync(model.get("bio_raw"))
+          cook(model.get("bio_raw"))
             .then(() => {
               model.set("bio_cooked");
               this.set("saved", true);

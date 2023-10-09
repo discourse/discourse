@@ -10,6 +10,7 @@ import { htmlSafe } from "@ember/template";
 import loadScript from "discourse/lib/load-script";
 import { sanitize as textSanitize } from "pretty-text/sanitizer";
 import { MentionsParser } from "discourse/lib/mentions-parser";
+import deprecated from "discourse-common/lib/deprecated";
 
 function getOpts(opts) {
   let context = helperContext();
@@ -33,15 +34,21 @@ function getOpts(opts) {
   return buildOptions(opts);
 }
 
-// Use this to easily create a pretty text instance with proper options
 export function cook(text, options) {
-  return htmlSafe(createPrettyText(options).cook(text));
+  return loadMarkdownIt().then(() => {
+    const cooked = createPrettyText(options).cook(text);
+    return htmlSafe(cooked);
+  });
 }
 
-// everything should eventually move to async API and this should be renamed
-// cook
+// todo drop this function after migrating everything to cook()
 export function cookAsync(text, options) {
-  return loadMarkdownIt().then(() => cook(text, options));
+  deprecated("cookAsync() is deprecated, call cook() instead", {
+    since: "3.2.0.beta2",
+    dropFrom: "3.2.0.beta5",
+    id: "discourse.text.cook-async",
+  });
+  return cook(text, options);
 }
 
 // Warm up pretty text with a set of options and return a function

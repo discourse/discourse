@@ -1,6 +1,6 @@
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
-import { cookAsync } from "discourse/lib/text";
+import { cook } from "discourse/lib/text";
 import Post from "discourse/models/post";
 import { checklistSyntax } from "discourse/plugins/checklist/discourse/initializers/checklist";
 import { Promise } from "rsvp";
@@ -8,7 +8,7 @@ import { Promise } from "rsvp";
 let currentRaw;
 
 async function prepare(raw) {
-  const cooked = await cookAsync(raw, {
+  const cooked = await cook(raw, {
     siteSettings: { checklist_enabled: true },
   });
 

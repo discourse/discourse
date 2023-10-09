@@ -8,7 +8,7 @@ import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { ajax } from "discourse/lib/ajax";
-import { cookAsync } from "discourse/lib/text";
+import { cook } from "discourse/lib/text";
 import discourseComputed from "discourse-common/utils/decorators";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
 import { isEmpty } from "@ember/utils";
@@ -217,7 +217,7 @@ const Post = RestModel.extend({
         this.post_number === 1
           ? "topic.deleted_by_author_simple"
           : "post.deleted_by_author_simple";
-      promise = cookAsync(I18n.t(key)).then((cooked) => {
+      promise = cook(I18n.t(key)).then((cooked) => {
         this.setProperties({
           cooked,
           can_delete: false,
