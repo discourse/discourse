@@ -592,7 +592,7 @@
   height: 100%;
   width: 100%;
   position: fixed;
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.3);
   top: var(--header-top);
   left: 0;
   display: none;
@@ -609,6 +609,7 @@
   @supports (height: 100dvh) {
     --100dvh: 100dvh;
   }
+  box-shadow: 0px 0 30px -2px rgba(0, 0, 0, 0.5);
 
   --base-height: calc(var(--100dvh) - var(--header-top));
 

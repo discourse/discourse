@@ -71,7 +71,7 @@ const SiteHeaderComponent = MountWidget.extend(
         .finished.then(() => {
           panel.classList.remove("animating");
         });
-      headerCloak.animate([{ opacity: 0.5 }], timing);
+      headerCloak.animate([{ opacity: 1 }], timing);
       this.pxClosed = null;
     },
 
@@ -168,10 +168,7 @@ const SiteHeaderComponent = MountWidget.extend(
       headerCloak.animate(
         [
           {
-            opacity: Math.min(
-              0.5,
-              (this._PANEL_WIDTH - this.pxClosed) / (this._PANEL_WIDTH * 2)
-            ),
+            opacity: (this._PANEL_WIDTH - this.pxClosed) / this._PANEL_WIDTH,
           },
         ],
         { fill: "forwards" }
