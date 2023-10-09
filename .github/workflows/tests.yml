@@ -113,6 +113,13 @@ jobs:
         if: matrix.target == 'plugins'
         run: bin/rake plugin:pull_compatible_all
 
+      - name: Fetch the discourse-calendar PR
+        if: matrix.target == 'plugins'
+        run: |
+          cd plugins/discourse-calendar
+          git fetch origin pull/450/head:x-test-branch
+          git switch x-test-branch
+
       - name: Add hosts to /etc/hosts, otherwise Chrome cannot reach minio
         run: |
           echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
