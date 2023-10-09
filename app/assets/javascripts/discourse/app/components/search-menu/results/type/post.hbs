@@ -1,4 +1,8 @@
-<a href={{(or @result.url @result.path)}} {{on "click" this.onClick}} class="search-link">
+<a
+  href={{(or @result.url @result.path)}}
+  {{on "click" this.onClick}}
+  class="search-link"
+>
   {{i18n "search.post_format" @result}}
   <SearchMenu::Results::Blurb @result={{@result}} />
 </a>
