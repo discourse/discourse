@@ -1,9 +1,7 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { getOwner } from "@ember/application";
 import { click, fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
 import SearchMenu from "discourse/components/search-menu";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   exists,
   query,
