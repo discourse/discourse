@@ -362,24 +362,26 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
 
     this._uppyInstance.on("cancel-all", () => {
       // Do the manual cancelling work only if the user clicked cancel
-      if (this.userCancelled) {
-        if (this.useUploadPlaceholders) {
-          for (const placeholder of Object.values(this.placeholders)) {
-            run(() => {
+      run(() => {
+        if (this.userCancelled) {
+          if (this.useUploadPlaceholders) {
+            for (const placeholder of this.placeholders.values()) {
               this.appEvents.trigger(
                 `${this.composerEventPrefix}:replace-text`,
                 placeholder,
                 ""
               );
-            });
+            }
           }
+
+          this.set("userCancelled", false);
+          this._reset();
+
+          this.appEvents.trigger(
+            `${this.composerEventPrefix}:uploads-cancelled`
+          );
         }
-
-        this.set("userCancelled", false);
-        this._reset();
-
-        this.appEvents.trigger(`${this.composerEventPrefix}:uploads-cancelled`);
-      }
+      });
     });
 
     this._setupPreProcessors();
