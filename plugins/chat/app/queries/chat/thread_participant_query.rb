@@ -17,10 +17,12 @@ module Chat
   # and if there is a delay in updating them based on message
   # count it is not a big deal.
   class ThreadParticipantQuery
+    MAX_PARTICIPANTS = 10
+
     # @param thread_ids [Array<Integer>] The IDs of the threads to query.
     # @param preview [Boolean] Determines the number of participants to return.
     # @return [Hash<Integer, Hash>] A hash of thread IDs to participant data.
-    def self.call(thread_ids:, preview: true)
+    def self.call(thread_ids:)
       return {} if thread_ids.blank?
 
       # We only want enough data for BasicUserSerializer, since the participants
@@ -64,8 +66,6 @@ module Chat
           hash
         end
 
-      total_participants = preview ? 2 : 9
-
       thread_participants = {}
       thread_participant_stats.each do |thread_participant_stat|
         thread_id = thread_participant_stat.thread_id
@@ -75,7 +75,7 @@ module Chat
 
         # If we want to return more of the top N users in the thread we
         # can just increase the number here.
-        if thread_participants[thread_id][:users].length < total_participants &&
+        if thread_participants[thread_id][:users].length < (MAX_PARTICIPANTS - 1) &&
              thread_participant_stat.user_id != most_recent_participants[thread_id][:id]
           thread_participants[thread_id][:users].push(
             {

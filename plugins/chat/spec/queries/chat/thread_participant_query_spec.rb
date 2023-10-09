@@ -35,16 +35,15 @@ RSpec.describe Chat::ThreadParticipantQuery do
       )
     end
 
-    it "does not return more than 3 thread participants by default" do
-      thread_1.add(Fabricate(:user))
+    it "returns up to 10 thread participants" do
       result = described_class.call(thread_ids: [thread_1.id])
-      expect(result[thread_1.id][:users].length).to eq(3)
+      expect(result[thread_1.id][:users].length).to eq(4)
     end
 
     it "calculates the top messagers in a thread as well as the last messager" do
       result = described_class.call(thread_ids: [thread_1.id, thread_2.id])
-      expect(result[thread_1.id][:users].map { |u| u[:id] }).to eq(
-        [user_1.id, user_2.id, user_3.id],
+      expect(result[thread_1.id][:users].map { |u| u[:id] }).to match_array(
+        [thread_1.original_message_user_id, user_1.id, user_2.id, user_3.id],
       )
     end
 
@@ -82,8 +81,8 @@ RSpec.describe Chat::ThreadParticipantQuery do
       Fabricate(:chat_message, thread: thread_2, user: user_2)
       Fabricate(:chat_message, thread: thread_2, user: user_2)
       result = described_class.call(thread_ids: [thread_1.id, thread_2.id])
-      expect(result[thread_1.id][:users].map { |u| u[:id] }).to eq(
-        [user_1.id, user_2.id, user_3.id],
+      expect(result[thread_1.id][:users].map { |u| u[:id] }).to match_array(
+        [thread_1.original_message_user_id, user_1.id, user_2.id, user_3.id],
       )
       expect(result[thread_2.id][:users].map { |u| u[:id] }).to eq(
         [thread_2.original_message_user_id, user_2.id],
@@ -119,11 +118,11 @@ RSpec.describe Chat::ThreadParticipantQuery do
       end
     end
 
-    it "does not return more than 10 thread participants when preview is false" do
+    it "does not return more than 10 thread participants" do
       other_user = Fabricate(:user)
       thread_3.add(other_user)
       Fabricate(:chat_message, thread: thread_3, user: other_user)
-      result = described_class.call(thread_ids: [thread_3.id], preview: false)
+      result = described_class.call(thread_ids: [thread_3.id])
       expect(result[thread_3.id][:users].length).to eq(10)
     end
   end

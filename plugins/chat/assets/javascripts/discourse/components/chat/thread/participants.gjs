@@ -37,11 +37,17 @@ export default class ChatThreadParticipants extends Component {
   }
 
   get participantsUsers() {
+    const users = this.args.thread.preview.participantUsers;
+
     if (this.includeOriginalMessageUser) {
-      return this.args.thread.preview.participantUsers;
+      if (users.length > 3) {
+        return users.slice(0, 2).concat(users[users.length - 1]);
+      } else {
+        return users;
+      }
     }
 
-    return this.args.thread.preview.participantUsers.filter((user) => {
+    return users.filter((user) => {
       return user.id !== this.args.thread.originalMessage.user.id;
     });
   }
