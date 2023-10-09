@@ -355,7 +355,7 @@ export default class ChatAboutScreen extends Component {
   }
 
   get shouldRenderArchiveRow() {
-    return this.chatGuardian.canEditChatChannel() && this.canArchiveChannel;
+    return this.chatGuardian.canArchiveChannel(this.args.channel);
   }
 
   get toggleChannelWideMentionsAvailable() {
@@ -401,14 +401,6 @@ export default class ChatAboutScreen extends Component {
       this.siteSettings.max_chat_auto_joined_users > 0 &&
       this.args.channel.isCategoryChannel &&
       this.args.channel.isOpen
-    );
-  }
-
-  get canArchiveChannel() {
-    return (
-      this.siteSettings.chat_allow_archiving_channels &&
-      !this.args.channel.isArchived &&
-      !this.args.channel.isReadOnly
     );
   }
 
