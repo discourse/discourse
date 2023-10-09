@@ -1,11 +1,9 @@
+import I18n from "I18n";
+import SearchMenu from "discourse/components/search-menu";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
-import SearchMenu from "discourse/components/search-menu";
-import {
-  exists,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 
 // Note this isn't a full-fledge test of the search menu. Those tests are in
 // acceptance/glimmer-search-test.js. This is simply about the rendering of the
@@ -52,7 +50,6 @@ module("Integration | Component | search-menu", function (hooks) {
     await click("#search-term");
     await click("#search-term");
 
-    debugger;
     assert.ok(
       exists(".search-result-topic"),
       "Clicking the term brought back search results"
