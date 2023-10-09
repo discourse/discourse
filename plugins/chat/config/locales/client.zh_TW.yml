@@ -23,10 +23,6 @@ zh_TW:
           descriptions:
             chat:
               create_message: "在指定頻道中建立聊天訊息。"
-    about:
-      chat_messages_count: "聊天訊息"
-      chat_channels_count: "聊天頻道"
-      chat_users_count: "聊天使用者"
     chat:
       deleted_chat_username: 已刪除
       dates:

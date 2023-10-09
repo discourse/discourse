@@ -1344,7 +1344,6 @@ gl:
     tl2_additional_likes_per_day_multiplier: "Incrementar o número de gústame por día para usuarios con nivel de confianza 2 (membros) multiplicándoo por este número"
     tl3_additional_likes_per_day_multiplier: "Incrementar o límite de gústame por día para usuarios con nivel de confianza 3 (habituais) multiplicándoo por este número"
     tl4_additional_likes_per_day_multiplier: "Incrementar o número de gústame por día para usuarios con nivel de confianza 4 (líderes) multiplicándoo por este número"
-    num_users_to_silence_new_user: "Se as publicacións dun usuario novo se denuncian como lixo ou non desexadas por num_spam_flags_to_silence_new_user, agochar todas as súas publicacións e evitar que publique no futuro. Valor en 0 para desactivar."
     num_tl3_flags_to_silence_new_user: "Se as publicacións dun usuario novo reciben este número de denuncias num_tl3_users_to_silence_new_user de diferentes usuarios con nivel de confianza 3, agochar todas as súas publicacións e evitar que publique no futuro. Valor en 0 para desactivar."
     num_tl3_users_to_silence_new_user: "Se as publicacións dun usuario novo reciben num_tl3_users_to_silence_new_user denuncias deste número de usuarios con nivel de confianza 3, agochar todas as súas publicacións e evitar que publique no futuro. Valor en 0 para desactivar."
     notify_mods_when_user_silenced: "Se un usuario é silenciado automaticamente, enviarlles unha mensaxe a todos os moderadores."

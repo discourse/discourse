@@ -4,7 +4,6 @@ import {
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import { test } from "qunit";
 import { click, visit } from "@ember/test-helpers";
 
@@ -14,7 +13,7 @@ acceptance("Poll breakdown", function (needs) {
     poll_enabled: true,
     poll_groupable_user_fields: "something",
   });
-  needs.hooks.beforeEach(() => clearPopupMenuOptionsCallback());
+
   needs.pretender((server, helper) => {
     server.get("/polls/grouped_poll_results.json", () =>
       helper.response({

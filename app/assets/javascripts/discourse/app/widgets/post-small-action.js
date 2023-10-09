@@ -94,7 +94,17 @@ export function resetPostSmallActionClassesCallbacks() {
 
 export default createWidget("post-small-action", {
   buildKey: (attrs) => `post-small-act-${attrs.id}`,
-  tagName: "div.small-action.onscreen-post",
+  tagName: "article.small-action.onscreen-post",
+
+  buildAttributes(attrs) {
+    return {
+      "aria-label": I18n.t("share.post", {
+        postNumber: attrs.post_number,
+        username: attrs.username,
+      }),
+      role: "region",
+    };
+  },
 
   buildId(attrs) {
     return `post_${attrs.post_number}`;
@@ -130,6 +140,7 @@ export default createWidget("post-small-action", {
         template: attrs.avatar_template,
         username: attrs.username,
         url: attrs.usernameUrl,
+        ariaHidden: false,
       })
     );
 

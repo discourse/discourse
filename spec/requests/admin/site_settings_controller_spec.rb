@@ -269,6 +269,13 @@ RSpec.describe Admin::SiteSettingsController do
         expect(SiteSetting.title).to eq("")
       end
 
+      it "sanitizes integer values" do
+        put "/admin/site_settings/suggested_topics.json", params: { suggested_topics: "1,000" }
+
+        expect(response.status).to eq(200)
+        expect(SiteSetting.suggested_topics).to eq(1000)
+      end
+
       context "with default user options" do
         let!(:user1) { Fabricate(:user) }
         let!(:user2) { Fabricate(:user) }

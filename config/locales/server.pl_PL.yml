@@ -1647,7 +1647,6 @@ pl_PL:
     tl2_additional_flags_per_day_multiplier: "Zwiększ dzienny limit flag dla tl2 (członek) mnożąc przez tę liczbę"
     tl3_additional_flags_per_day_multiplier: "Zwiększ dzienny limit flag dla tl3 (zwykły) mnożąc przez tę liczbę"
     tl4_additional_flags_per_day_multiplier: "Zwiększ dzienny limit flag dla tl4 (lider) mnożąc przez tę liczbę"
-    num_users_to_silence_new_user: "Jeśli wpisy nowego użytkownika otrzymają znaczniki spamu num_spam_flags_to_silence_new_user od wielu różnych użytkowników, ukryj wszystkie ich wpisy i zapobiegaj publikowaniu w przyszłości. 0, aby wyłączyć."
     num_tl3_flags_to_silence_new_user: "Jeśli wpisy nowego użytkownika otrzymają tyle flag od num_tl3_users_to_silence_new_user różnych użytkowników poziomu zaufania 3, ukryj wszystkie ich wpisy i zapobiegaj publikowaniu w przyszłości. 0, aby wyłączyć."
     num_tl3_users_to_silence_new_user: "Jeśli wpisy nowego użytkownika otrzymają flagi num_tl3_flags_to_silence_new_user od wielu różnych użytkowników poziomu zaufania 3, ukryj wszystkie ich wpisy i zapobiegaj publikowaniu w przyszłości. 0, aby wyłączyć."
     notify_mods_when_user_silenced: "Jeśli użytkownik zostanie automatycznie wyciszony, wyślij wiadomość do wszystkich moderatorów."
@@ -2377,6 +2376,7 @@ pl_PL:
     email_error: "Konto nie może być zarejestrowane pod adresem e-mail <b>%{email}</b>. Skontaktuj się z administratorem witryny."
     missing_secret: "Uwierzytelnianie nie powiodło się z powodu braku sekretnego klucza. Skontaktuj się z administratorami, aby rozwiązać ten problem."
     invite_redeem_failed: "Zaproszenie nie powiodło się. Skontaktuj się z administratorem serwisu."
+    invalid_parameter_value: "Uwierzytelnianie nie powiodło się z powodu nieprawidłowej wartości parametru `%{param}`. Skontaktuj się z administratorami witryny, aby rozwiązać ten problem."
   original_poster: "Autor pierwszego wpisu"
   most_recent_poster: "Autor najnowszego wpisu"
   frequent_poster: "Aktywny uczestnik"
@@ -4979,6 +4979,7 @@ pl_PL:
       invalid_yaml: "nie jest prawidłowym ciągiem YAML"
       invalid_type: "zawiera nieprawidłowy typ szablonu: %{type} (prawidłowe typy to: %{valid_types})"
       missing_type: "brakuje typu pola"
+      duplicate_ids: "ma zduplikowane identyfikatory"
   activemodel:
     errors:
       <<: *errors

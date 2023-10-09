@@ -15,6 +15,9 @@
   top: 5px;
   right: 5px;
   z-index: z("max");
+  display: flex;
+  flex-direction: column;
+  gap: 5px 0;
 
   .mobile-view & {
     left: 5px;

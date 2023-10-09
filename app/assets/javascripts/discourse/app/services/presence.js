@@ -3,7 +3,6 @@ import EmberObject, { computed } from "@ember/object";
 import { ajax } from "discourse/lib/ajax";
 import { cancel, debounce, next, once, throttle } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
-import Session from "discourse/models/session";
 import { Promise } from "rsvp";
 import User from "discourse/models/user";
 import userPresent, {
@@ -254,8 +253,9 @@ class PresenceChannelState extends EmberObject.extend(Evented) {
 @disableImplicitInjections
 export default class PresenceService extends Service {
   @service currentUser;
-  @service siteSettings;
   @service messageBus;
+  @service session;
+  @service siteSettings;
 
   _presenceDebounceMs = DEFAULT_PRESENCE_DEBOUNCE_MS;
 
@@ -486,7 +486,7 @@ export default class PresenceService extends Service {
     data.append("client_id", this.messageBus.clientId);
     channelsToLeave.forEach((ch) => data.append("leave_channels[]", ch));
 
-    data.append("authenticity_token", Session.currentProp("csrfToken"));
+    data.append("authenticity_token", this.session.csrfToken);
     navigator.sendBeacon(getURL("/presence/update"), data);
   }
 

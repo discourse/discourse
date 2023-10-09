@@ -8,11 +8,11 @@ import { ajax } from "discourse/lib/ajax";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { hash } from "rsvp";
 import showModal from "discourse/lib/show-modal";
-import Session from "discourse/models/session";
 import { inject as service } from "@ember/service";
 
 export default class DiscoveryCategoriesRoute extends DiscourseRoute {
   @service router;
+  @service session;
 
   renderTemplate() {
     this.render("navigation/categories", { outlet: "navigation-bar" });
@@ -51,6 +51,8 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
   }
 
   _loadBefore(store) {
+    const session = this.session;
+
     return function (topic_ids, storeInSession) {
       // refresh dupes
       this.topics.removeObjects(
@@ -73,7 +75,7 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
         });
 
         if (storeInSession) {
-          Session.currentProp("topicList", this);
+          session.set("topicList", this);
         }
       });
     };

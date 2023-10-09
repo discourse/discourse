@@ -412,16 +412,10 @@ ar:
       our_moderators: "مشرفونا"
       moderators: "المشرفون"
       stat:
-        all_time: "طوال الوقت"
-        last_day: "آخر 24 ساعة"
-        last_7_days: "آخر 7 أيام"
-        last_30_days: "آخر 30 يومًا"
+        last_day: "24 ساعة"
       like_count: "تسجيلات الإعجاب"
       topic_count: "الموضوعات"
       post_count: "المنشورات"
-      user_count: "عمليات التسجيل"
-      active_user_count: "المستخدمون النشطون"
-      contact: "تواصل معنا"
       contact_info: "في حال حدوث مشكلة خطيرة أو أمر عاجل يؤثر على الموقع، يُرجى مراسلتنا على %{contact_info}."
     bookmarked:
       title: "وضع إشارة مرجعية"
@@ -1610,7 +1604,6 @@ ar:
         success: "(تم إرسال رسالة البريد الإلكتروني)"
         in_progress: "(جارٍ إرسال رسالة البريد الإلكتروني)"
         error: "(خطأ)"
-        emoji: "رمز قفل"
         action: "إرسال رسالة إلكترونية لإعادة تعيين كلمة المرور"
         set_password: "تعيين كلمة المرور"
         choose_new: "اختيار كلمة مرور جديدة"
@@ -2281,7 +2274,6 @@ ar:
       link_label: "مراسلتي عبر البريد الإلكتروني برابط تسجيل الدخول"
       button_label: "عبر البريد الإلكتروني"
       login_link: "تخطي كلمة المرور؛ مراسلتي عبر البريد الإلكتروني برابط تسجيل الدخول"
-      emoji: "رمز قفل"
       complete_username: "إذا تطابق أحد الحسابات مع اسم المستخدم <b>%{username}</b>، فمن المفترض أن تتلقى رسالة إلكترونية برابط تسجيل الدخول قريبًا."
       complete_email: "إذا تطابق أحد الحسابات مع عنوان البريد الإلكتروني <b>%{email}</b>، فمن المفترض أن تتلقى رسالة إلكترونية برابط تسجيل الدخول قريبًا."
       complete_username_found: "لقد عثرنا على حساب مطابق لاسم المستخدم <b>%{username}</b>. ومن المفترض أن تتلقى رسالة إلكتروني برابط تسجيل الدخول قريبًا."
@@ -2372,7 +2364,6 @@ ar:
         security_key: "استخدم مفتاح أمان بدلًا من ذلك"
     invites:
       accept_title: "الدعوة"
-      emoji: "رمز مظروف"
       welcome_to: "مرحبًا بك في %{site_name}!"
       invited_by: "دعاك:"
       social_login_available: "يمكنك أيضًا تسجيل الدخول بأي حساب تواصل اجتماعي باستخدام هذا البريد الإلكتروني."
@@ -4659,7 +4650,6 @@ ar:
       other_tags: "وسوم أخرى"
       selector_all_tags: "كل الوسوم"
       selector_no_tags: "لا توجد وسوم"
-      changed: "الوسوم التي تم تغييرها:"
       tags: "الوسوم"
       choose_for_topic: "الوسوم الاختيارية"
       choose_for_topic_required:
@@ -5416,7 +5406,6 @@ ar:
           details: "عندما يكون هناك رد جديد، أو تم تعديله أو حذفه أو استعادته."
         user_event:
           name: "حدث المستخدم"
-          details: "عند تسجيل المستخدم للدخول أو الخروج، أو تأكيده لبريده الإلكتروني أو إنشائه أو الموافقة عليه أو تحديثه."
         group_event:
           name: "حدث المجموعة"
           details: "عند إنشاء مجموعة أو تحديثها أو مسحها."
@@ -5607,7 +5596,6 @@ ar:
           theme_name: "اسم السمة"
           component_name: "اسم المكوِّن"
           themes_intro: "حدِّد سمة موجودة أو ثبِّت سمة جديدة للبدء"
-          themes_intro_emoji: "الرمز التعبيري لفنانة"
           beginners_guide_title: "دليل المبتدئين لاستخدام سمات Discourse"
           developers_guide_title: "دليل المطوِّرين لاستخدام سمات Discourse"
           browse_themes: "تصفُّح سمات المجتمع"
@@ -6765,7 +6753,6 @@ ar:
             with_time: '‏<span class="username">%{username}</span> في <span class="time">%{time}</span>'
         badge_intro:
           title: "حدِّد شارة موجودة أو أنشئ شارة جديدة للبدء"
-          emoji: "الرمز التعبيري لطالبة"
           what_are_badges_title: "ما الشارات؟"
           badge_query_examples_title: "أمثلة على استعلامات الشارات"
         mass_award:

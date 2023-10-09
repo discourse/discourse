@@ -287,16 +287,10 @@ fr:
       our_moderators: "Nos modérateurs"
       moderators: "Modérateurs"
       stat:
-        all_time: "Depuis toujours"
-        last_day: "Ces dernières 24 heures"
-        last_7_days: "Ces 7 derniers jours"
-        last_30_days: "Ces 30 derniers jours"
+        last_day: "24 heures"
       like_count: "J'aime"
       topic_count: "Sujets"
       post_count: "Nombre de messages"
-      user_count: "Inscriptions"
-      active_user_count: "Utilisateurs actifs"
-      contact: "Nous contacter"
       contact_info: "En cas de problème critique ou de sujet urgent concernant ce site, veuillez nous contacter à : %{contact_info}."
     bookmarked:
       title: "Mettre un signet"
@@ -1314,7 +1308,6 @@ fr:
         success: "(e-mail envoyé)"
         in_progress: "(e-mail en cours d'envoi)"
         error: "(erreur)"
-        emoji: "émoji de cadenas"
         action: "Envoyer un e-mail de réinitialisation du mot de passe"
         set_password: "Définir le mot de passe"
         choose_new: "Choisissez un nouveau mot de passe"
@@ -1915,7 +1908,6 @@ fr:
       link_label: "M'envoyer un lien de connexion par e-mail"
       button_label: "par e-mail"
       login_link: "Ignorez le mot de passe ; envoyez-moi un lien de connexion"
-      emoji: "émoji de cadenas"
       complete_username: "Si un compte correspond au nom d'utilisateur <b>%{username}</b>, vous devriez recevoir rapidement un e-mail contenant un lien pour vous connecter."
       complete_email: "Si un compte correspond à l'adresse e-mail <b>%{email}</b>, vous devriez recevoir rapidement un e-mail contenant un lien pour vous connecter."
       complete_username_found: "Nous avons trouvé un compte correspondant au nom d'utilisateur <b>%{username}</b>, vous devriez recevoir rapidement un e-mail contenant un lien pour vous connecter."
@@ -2004,7 +1996,6 @@ fr:
         security_key: "Utilisez plutôt une clé de sécurité"
     invites:
       accept_title: "Invitation"
-      emoji: "émoji d'enveloppe"
       welcome_to: "Bienvenue sur %{site_name} !"
       invited_by: "Vous avez été invité(e) par :"
       social_login_available: "Vous pourrez aussi vous connecter avec un compte de réseau social utilisant cette adresse."
@@ -3828,7 +3819,6 @@ fr:
       other_tags: "Autres étiquettes"
       selector_all_tags: "toutes les étiquettes"
       selector_no_tags: "aucune étiquette"
-      changed: "étiquettes modifiées :"
       tags: "Étiquettes"
       choose_for_topic: "étiquettes optionnelles"
       info: "Détails"
@@ -4496,7 +4486,6 @@ fr:
           details: "Lorsqu'une réponse est publiée, modifiée, supprimée ou restaurée."
         user_event:
           name: "Événement d'utilisateur"
-          details: "Lorsqu'un utilisateur se connecte, se déconnecte, confirme son adresse e-mail, est créé, approuvé ou quand ses informations sont mises à jour."
         group_event:
           name: "Événement de groupe"
           details: "Lorsqu'un groupe est créé, mis à jour ou supprimé."
@@ -4672,7 +4661,6 @@ fr:
           theme_name: "Nom du thème"
           component_name: "Nom du composant"
           themes_intro: "Sélectionnez un thème existant ou installez-en un nouveau pour commencer"
-          themes_intro_emoji: "émoji de femme artiste"
           beginners_guide_title: "Guide d'utilisation des thèmes de Discourse pour débutants"
           developers_guide_title: "Guide de développement de thèmes pour Discourse"
           browse_themes: "Parcourir les thèmes de la communauté"
@@ -5775,7 +5763,6 @@ fr:
             with_time: <span class="username">%{username}</span> à <span class="time">%{time}</span>
         badge_intro:
           title: "Choisissez un badge existant ou créez-en un nouveau pour commencer"
-          emoji: "émoji de femme étudiante"
           what_are_badges_title: "Que sont les badges ?"
           badge_query_examples_title: "Exemple de requête de badge"
         mass_award:

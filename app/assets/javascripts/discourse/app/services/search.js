@@ -30,7 +30,7 @@ export default class Search extends Service {
   // - Results::MoreLink
   // - Results::RecentSearches
   //
-  // To minimze the duplicate logic we will create a shared action here
+  // To minimize the duplicate logic we will create a shared action here
   // that can be reused across all of the components
   @action
   handleResultInsertion(e) {

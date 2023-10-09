@@ -169,8 +169,8 @@ class ThemeJavascriptCompiler
     tree.each_pair do |filename, content|
       module_name, extension = filename.split(".", 2)
       module_name = "test/#{module_name}" if for_tests
-      if extension == "js"
-        append_module(content, module_name)
+      if extension == "js" || extension == "gjs"
+        append_module(content, module_name, extension)
       elsif extension == "hbs"
         append_ember_template(module_name, content)
       elsif extension == "hbr"
@@ -232,15 +232,15 @@ class ThemeJavascriptCompiler
     @output_tree << [filename, script + "\n"]
   end
 
-  def append_module(script, name, include_variables: true)
+  def append_module(script, name, extension, include_variables: true)
     original_filename = name
     name = "discourse/theme-#{@theme_id}/#{name}"
 
     script = "#{theme_settings}#{script}" if include_variables
     transpiler = DiscourseJsProcessor::Transpiler.new
-    @output_tree << ["#{original_filename}.js", <<~JS]
+    @output_tree << ["#{original_filename}.#{extension}", <<~JS]
       if ('define' in window) {
-      #{transpiler.perform(script, "", name, theme_id: @theme_id).strip}
+      #{transpiler.perform(script, "", name, theme_id: @theme_id, extension: extension).strip}
       }
     JS
   rescue MiniRacer::RuntimeError, DiscourseJsProcessor::TranspileError => ex

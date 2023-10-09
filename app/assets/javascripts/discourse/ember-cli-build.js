@@ -22,7 +22,7 @@ module.exports = function (defaults) {
   DeprecationSilencer.silence(console, "warn");
   DeprecationSilencer.silence(defaults.project.ui, "writeWarnLine");
 
-  const isEmbroider = process.env.USE_EMBROIDER === "1";
+  const isEmbroider = process.env.USE_EMBROIDER !== "0";
   const isProduction = EmberApp.env().includes("production");
 
   // This is more or less the same as the one in @embroider/test-setup
@@ -70,9 +70,6 @@ module.exports = function (defaults) {
             util: require.resolve("util/"),
             // Also for sinon
             timers: false,
-            // For source-map-support
-            path: require.resolve("path-browserify"),
-            fs: false,
           },
         },
         module: {
@@ -223,13 +220,6 @@ module.exports = function (defaults) {
             javascript: {
               exportsPresence: "error",
             },
-          },
-        },
-        resolve: {
-          fallback: {
-            // For source-map-support
-            path: require.resolve("path-browserify"),
-            fs: false,
           },
         },
       },

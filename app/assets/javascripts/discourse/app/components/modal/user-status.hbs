@@ -1,20 +1,22 @@
 <DModal
+  @title={{i18n "user_status.set_custom_status"}}
   @closeModal={{@closeModal}}
   class="user-status"
-  @title={{i18n "user_status.set_custom_status"}}
 >
   <:body>
     <div class="control-group">
       <UserStatusPicker @status={{this.status}} />
     </div>
-    {{#unless this.hidePauseNotifications}}
+
+    {{#unless @model.hidePauseNotifications}}
       <div class="control-group pause-notifications">
         <label class="checkbox-label">
-          <Input @type="checkbox" @checked={{this.pauseNotifications}} />
+          <Input @type="checkbox" @checked={{@model.pauseNotifications}} />
           {{i18n "user_status.pause_notifications"}}
         </label>
       </div>
     {{/unless}}
+
     <div class="control-group control-group-remove-status">
       <label class="control-label">
         {{i18n "user_status.remove_status"}}
@@ -30,14 +32,17 @@
       />
     </div>
   </:body>
+
   <:footer>
     <DButton
       @label="user_status.save"
-      @disabled={{not this.statusIsSet}}
+      @disabled={{this.saveDisabled}}
       @action={{this.saveAndClose}}
       class="btn-primary"
     />
+
     <DModalCancel @close={{@closeModal}} />
+
     {{#if this.showDeleteButton}}
       <DButton
         @icon="trash-alt"
