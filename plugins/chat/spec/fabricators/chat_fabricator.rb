@@ -63,7 +63,7 @@ end
 Fabricator(:chat_message_without_service, class_name: "Chat::Message") do
   user
   chat_channel
-  message { Faker::Lorem.paragraph_by_chars(number: 500).gsub("...", "…") }
+  message { Faker::Lorem.paragraph_by_chars(number: 500).gsub("...", "…").gsub("..", "…") }
 
   after_build { |message, attrs| message.cook }
   after_create { |message, attrs| message.create_mentions }
@@ -89,8 +89,7 @@ Fabricator(:chat_message_with_service, class_name: "Chat::CreateMessage") do
     resolved_class.call(
       chat_channel_id: channel.id,
       guardian: user.guardian,
-      message:
-        transients[:message] || Faker::Lorem.paragraph_by_chars(number: 500).gsub("...", "…"),
+      message: transients[:message] || "test..ok..arf...bar..".gsub("...", "…").gsub("..", "…"),
       thread_id: transients[:thread]&.id,
       in_reply_to_id: transients[:in_reply_to]&.id,
       upload_ids: transients[:upload_ids],
