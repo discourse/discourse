@@ -5,7 +5,7 @@
         @icon="times"
         @label="search.in_this_topic"
         @title="search.in_this_topic_tooltip"
-        @action={{@clearTopicContext}}
+        @action={{this.clearTopicContext}}
         class="btn-small search-context"
       />
     {{else if this.inPMInboxContext}}
@@ -13,7 +13,7 @@
         @icon="times"
         @label="search.in_messages"
         @title="search.in_messages_tooltip"
-        @action={{@clearPMInboxContext}}
+        @action={{this.clearPMInboxContext}}
         class="btn-small search-context"
       />
     {{/if}}
