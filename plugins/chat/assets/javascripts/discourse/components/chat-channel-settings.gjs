@@ -51,10 +51,10 @@ export default class ChatAboutScreen extends Component {
               </:default>
 
               <:action>
-                {{#if this.canEditChatChannel}}
+                {{#if this.canEditChannel}}
                   <DButton
                     @label="chat.channel_settings.edit"
-                    @action={{this.onEditChatChannelName}}
+                    @action={{this.onEditChannelName}}
                     class="edit-name-slug-btn btn-flat"
                   />
                 {{/if}}
@@ -76,14 +76,14 @@ export default class ChatAboutScreen extends Component {
               </:default>
 
               <:action>
-                {{#if this.canEditChatChannel}}
+                {{#if this.canEditChannel}}
                   <DButton
                     @label={{if
                       @channel.description.length
                       "chat.channel_settings.edit"
                       "chat.channel_settings.add"
                     }}
-                    @action={{this.onEditChatChannelDescription}}
+                    @action={{this.onEditChannelDescription}}
                     class="edit-description-btn btn-flat"
                   />
                 {{/if}}
@@ -168,7 +168,7 @@ export default class ChatAboutScreen extends Component {
           </section.row>
         </form.section>
 
-        {{#if this.shouldRenderAdminSection}}
+        {{#if this.canEditChannel}}
           <form.section
             @title={{this.adminSectionTitle}}
             data-section="admin"
@@ -338,7 +338,7 @@ export default class ChatAboutScreen extends Component {
     "chat.settings.mobile_notification_level"
   );
 
-  get canEditChatChannel() {
+  get canEditChannel() {
     return this.chatGuardian.canEditChatChannel();
   }
 
@@ -386,14 +386,6 @@ export default class ChatAboutScreen extends Component {
 
   get shouldRenderMobileNotificationsLevelSection() {
     return !this.isChannelMuted;
-  }
-
-  get shouldRenderAdminSection() {
-    return (
-      this.chatGuardian.canEditChatChannel() &&
-      (this.toggleChannelWideMentionsAvailable ||
-        this.args.channel.isCategoryChannel)
-    );
   }
 
   get autoJoinAvailable() {
@@ -566,14 +558,14 @@ export default class ChatAboutScreen extends Component {
   }
 
   @action
-  onEditChatChannelName() {
+  onEditChannelName() {
     return this.modal.show(ChatModalEditChannelName, {
       model: this.args.channel,
     });
   }
 
   @action
-  onEditChatChannelDescription() {
+  onEditChannelDescription() {
     return this.modal.show(ChatModalEditChannelDescription, {
       model: this.args.channel,
     });
