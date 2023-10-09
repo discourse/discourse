@@ -64,11 +64,9 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
   }
 
   get onlyMentions() {
-    let isMentions = this.#hasAnyIndicatorPreference([
+    return this.#hasAnyIndicatorPreference([
       HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
     ]);
-
-    return isMentions;
   }
 
   #hasAnyIndicatorPreference(preferences) {
