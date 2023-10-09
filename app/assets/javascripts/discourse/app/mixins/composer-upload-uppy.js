@@ -544,9 +544,9 @@ export default Mixin.create(ExtendableUploader, UppyS3Multipart, {
   _useXHRUploads() {
     this._uppyInstance.use(XHRUpload, {
       endpoint: getURL(`/uploads.json?client_id=${this.messageBus.clientId}`),
-      headers: {
+      headers: () => ({
         "X-CSRF-Token": this.session.csrfToken,
-      },
+      }),
     });
   },
 

@@ -1052,4 +1052,23 @@ RSpec.describe Admin::ThemesController do
       include_examples "theme update not allowed"
     end
   end
+
+  describe "#bulk_destroy" do
+    fab!(:theme) { Fabricate(:theme, name: "Awesome Theme") }
+    fab!(:theme_2) { Fabricate(:theme, name: "Another awesome Theme") }
+    let(:theme_ids) { [theme.id, theme_2.id] }
+
+    before { sign_in(admin) }
+
+    it "destroys all selected the themes" do
+      expect do
+        delete "/admin/themes/bulk_destroy.json", params: { theme_ids: theme_ids }
+      end.to change { Theme.count }.by(-2)
+    end
+
+    it "logs the theme destroy action for each theme" do
+      StaffActionLogger.any_instance.expects(:log_theme_destroy).twice
+      delete "/admin/themes/bulk_destroy.json", params: { theme_ids: theme_ids }
+    end
+  end
 end

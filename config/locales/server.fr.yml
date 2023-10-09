@@ -1401,7 +1401,6 @@ fr:
     unreachable_themes: "Nous n'avons pas pu vérifier les mises à jour pour les thèmes suivants :"
     watched_word_regexp_error: "L'expression régulière pour détecter des mots suivis et déclencher l'action « %{action} » n'est pas valide. Veuillez vérifier la <a href='%{base_path}/admin/customize/watched_words'>configuration des mots surveillés</a> ou désactiver le paramètre « watched words regular expressions »."
     v3_analytics_deprecated: "Votre Discourse utilise actuellement Google Analytics 3, qui ne sera plus pris en charge après le mois de juillet 2023. <a href='https://meta.discourse.org/t/260498'>Passez à Google Analytics 4</a> dès maintenant pour continuer à recevoir des informations et des analyses précieuses sur les performances de votre site Web."
-    legacy_navigation_menu_deprecated: "Votre Discourse utilise actuellement le menu de navigation hérité qui <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>sera supprimé dans la première version bêta de Discourse 3.2</a>. Migrez vers le nouveau menu de navigation en mettant à jour le <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>paramètre du menu de navigation</a> sur « barre latérale » ou « menu déroulant d'en-tête »."
   site_settings:
     allow_bulk_invite: "Autoriser l'envoi d'invitations multiples via l'importation d'un fichier CSV"
     disabled: "désactivé"

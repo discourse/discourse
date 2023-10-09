@@ -61,16 +61,9 @@ module(
     });
 
     test("it shows status on mentions", async function (assert) {
-      await render(
-        hbs`<ChatChannel @channel={{this.channel}} /><DInlineTooltip />`
-      );
+      await render(hbs`<ChatChannel @channel={{this.channel}} />`);
 
       assertStatusIsRendered(
-        assert,
-        statusSelector(mentionedUser.username),
-        mentionedUser.status
-      );
-      await assertStatusTooltipIsRendered(
         assert,
         statusSelector(mentionedUser.username),
         mentionedUser.status
@@ -78,9 +71,7 @@ module(
     });
 
     test("it updates status on mentions", async function (assert) {
-      await render(
-        hbs`<ChatChannel @channel={{this.channel}} /><DInlineTooltip />`
-      );
+      await render(hbs`<ChatChannel @channel={{this.channel}} />`);
 
       const newStatus = {
         description: "off to dentist",
@@ -99,18 +90,10 @@ module(
         statusSelector(mentionedUser.username),
         newStatus
       );
-
-      await assertStatusTooltipIsRendered(
-        assert,
-        statusSelector(mentionedUser.username),
-        newStatus
-      );
     });
 
     test("it deletes status on mentions", async function (assert) {
-      await render(
-        hbs`<ChatChannel @channel={{this.channel}} /><DInlineTooltip />`
-      );
+      await render(hbs`<ChatChannel @channel={{this.channel}} />`);
 
       this.appEvents.trigger("user-status:changed", {
         [mentionedUser.id]: null,
@@ -122,9 +105,7 @@ module(
     });
 
     test("it shows status on mentions on messages that came from Message Bus", async function (assert) {
-      await render(
-        hbs`<ChatChannel @channel={{this.channel}} /><DInlineTooltip />`
-      );
+      await render(hbs`<ChatChannel @channel={{this.channel}} />`);
 
       await receiveChatMessageViaMessageBus();
 
@@ -133,17 +114,10 @@ module(
         statusSelector(mentionedUser2.username),
         mentionedUser2.status
       );
-      await assertStatusTooltipIsRendered(
-        assert,
-        statusSelector(mentionedUser2.username),
-        mentionedUser2.status
-      );
     });
 
     test("it updates status on mentions on messages that came from Message Bus", async function (assert) {
-      await render(
-        hbs`<ChatChannel @channel={{this.channel}} /><DInlineTooltip />`
-      );
+      await render(hbs`<ChatChannel @channel={{this.channel}} />`);
       await receiveChatMessageViaMessageBus();
 
       const newStatus = {
@@ -161,17 +135,10 @@ module(
         statusSelector(mentionedUser2.username),
         newStatus
       );
-      await assertStatusTooltipIsRendered(
-        assert,
-        statusSelector(mentionedUser2.username),
-        newStatus
-      );
     });
 
     test("it deletes status on mentions on messages that came from Message Bus", async function (assert) {
-      await render(
-        hbs`<ChatChannel @channel={{this.channel}} /><DInlineTooltip />`
-      );
+      await render(hbs`<ChatChannel @channel={{this.channel}} />`);
       await receiveChatMessageViaMessageBus();
 
       this.appEvents.trigger("user-status:changed", {
@@ -183,6 +150,28 @@ module(
       assert.dom(selector).doesNotExist("status is deleted");
     });
 
+    test("it shows status tooltip", async function (assert) {
+      await render(
+        hbs`<ChatChannel @channel={{this.channel}} /><DInlineTooltip />`
+      );
+      await triggerEvent(statusSelector(mentionedUser.username), "mousemove");
+
+      assert.equal(
+        document
+          .querySelector(".user-status-tooltip-description")
+          .textContent.trim(),
+        mentionedUser.status.description,
+        "status description is correct"
+      );
+
+      assert.ok(
+        document.querySelector(
+          `.user-status-message-tooltip img[alt='${mentionedUser.status.emoji}']`
+        ),
+        "status emoji is correct"
+      );
+    });
+
     function assertStatusIsRendered(assert, selector, status) {
       assert
         .dom(selector)
@@ -192,27 +181,6 @@ module(
           new RegExp(`${status.emoji}.png`),
           "status emoji is updated"
         );
-    }
-
-    async function assertStatusTooltipIsRendered(assert, selector, status) {
-      await triggerEvent(selector, "mousemove");
-
-      assert.equal(
-        document
-          .querySelector(".user-status-tooltip-description")
-          .textContent.trim(),
-        status.description,
-        "status description is correct"
-      );
-
-      assert.ok(
-        document.querySelector(
-          `.user-status-message-tooltip img[alt='${status.emoji}']`
-        ),
-        "status emoji is correct"
-      );
-
-      await triggerEvent(selector, "mouseleave");
     }
 
     async function receiveChatMessageViaMessageBus() {

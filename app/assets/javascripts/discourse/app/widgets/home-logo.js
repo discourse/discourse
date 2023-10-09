@@ -7,6 +7,7 @@ import { iconNode } from "discourse-common/lib/icon-library";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 
 export default createWidget("home-logo", {
+  services: ["session"],
   tagName: "div.title",
 
   settings: {
@@ -37,21 +38,18 @@ export default createWidget("home-logo", {
   },
 
   logo() {
-    const { siteSettings } = this,
-      mobileView = this.site.mobileView;
-
-    const darkModeOptions = Session.currentProp("darkModeAvailable")
+    const darkModeOptions = this.session.darkModeAvailable
       ? { dark: true }
       : {};
 
     const mobileLogoUrl = this.mobileLogoUrl(),
       mobileLogoUrlDark = this.mobileLogoUrl(darkModeOptions);
 
-    const showMobileLogo = mobileView && mobileLogoUrl.length > 0;
+    const showMobileLogo = this.site.mobileView && mobileLogoUrl.length > 0;
 
     const logoUrl = this.logoUrl(),
       logoUrlDark = this.logoUrl(darkModeOptions);
-    const title = siteSettings.title;
+    const title = this.siteSettings.title;
 
     if (this.attrs.minimized) {
       const logoSmallUrl = this.smallLogoUrl(),
