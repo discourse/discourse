@@ -20,12 +20,11 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
     );
   }
 
+  get mentionCount() {
+    return this.chatTrackingStateManager.allChannelMentionCount;
+  }
+
   get unreadCount() {
-    if (
-      this.indicatorPreference === HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS
-    ) {
-      return 0;
-    }
     return (
       this.args.unreadCount ||
       this.chatTrackingStateManager.publicChannelUnreadCount
@@ -40,11 +39,14 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
   }
 
   get showUrgentIndicator() {
+    let totalCount = this.onlyMentions ? this.mentionCount : this.unreadCount;
+
     return (
-      this.urgentCount > 0 &&
+      totalCount > 0 &&
       this.#hasAnyIndicatorPreference([
         HEADER_INDICATOR_PREFERENCE_ALL_NEW,
         HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
+        HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
       ])
     );
   }
@@ -57,9 +59,16 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
   }
 
   get unreadCountLabel() {
-    return this.urgentCount > MAX_UNREAD_COUNT
-      ? `${MAX_UNREAD_COUNT}+`
-      : this.urgentCount;
+    let totalCount = this.onlyMentions ? this.mentionCount : this.unreadCount;
+    return totalCount > MAX_UNREAD_COUNT ? `${MAX_UNREAD_COUNT}+` : totalCount;
+  }
+
+  get onlyMentions() {
+    let isMentions = this.#hasAnyIndicatorPreference([
+      HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
+    ]);
+
+    return isMentions;
   }
 
   #hasAnyIndicatorPreference(preferences) {

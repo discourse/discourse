@@ -47,6 +47,24 @@ export default class ChatTrackingStateManager extends Service {
     }, 0);
   }
 
+  get allChannelMentionCount() {
+    let mentionTotal = this.#publicChannels().reduce(
+      (mentionCount, channel) => {
+        return mentionCount + channel.tracking.mentionCount;
+      },
+      0
+    );
+
+    let dmChannelMentionCount = this.#directMessageChannels().reduce(
+      (mentionCount, channel) => {
+        return mentionCount + channel.tracking.mentionCount;
+      },
+      0
+    );
+
+    return mentionTotal + dmChannelMentionCount;
+  }
+
   get allChannelUrgentCount() {
     let publicChannelMentionCount = this.#publicChannels().reduce(
       (mentionCount, channel) => {
