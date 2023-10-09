@@ -168,7 +168,7 @@ export default class ChatAboutScreen extends Component {
           </section.row>
         </form.section>
 
-        {{#if this.canEditChannel}}
+        {{#if this.shouldRenderAdminSection}}
           <form.section
             @title={{this.adminSectionTitle}}
             data-section="admin"
@@ -393,6 +393,14 @@ export default class ChatAboutScreen extends Component {
       this.siteSettings.max_chat_auto_joined_users > 0 &&
       this.args.channel.isCategoryChannel &&
       this.args.channel.isOpen
+    );
+  }
+
+  get shouldRenderAdminSection() {
+    return (
+      this.canEditChannel &&
+      (this.toggleChannelWideMentionsAvailable ||
+        this.args.channel.isCategoryChannel)
     );
   }
 
