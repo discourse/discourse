@@ -313,6 +313,7 @@ export default class ChatMessage extends Component {
     cancel(this._makeMessageActiveHandler);
     cancel(this._debounceDecorateCookedMessageHandler);
     this.#teardownMentionedUsers();
+    this.chat.activeMessage = null;
   }
 
   @action
