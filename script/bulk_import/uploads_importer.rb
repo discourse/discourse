@@ -133,6 +133,8 @@ module BulkImport
         consumer_threads << Thread.new do
           Thread.current.name = "worker-#{index}"
 
+          store = Discourse.store
+
           while (row = queue.pop)
             begin
               path = File.join(@root_path, row["relative_path"], row["filename"])
