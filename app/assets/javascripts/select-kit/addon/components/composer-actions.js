@@ -225,9 +225,7 @@ export default DropdownSelectBoxComponent.extend({
     if (items.length === 0) {
       items.push({
         name: I18n.t("composer.composer_actions.create_topic.label"),
-        description: I18n.t(
-          "composer.composer_actions.reply_as_new_topic.desc"
-        ),
+        description: I18n.t("composer.composer_actions.create_topic.desc"),
         icon: "share",
         id: "create_topic",
       });
