@@ -1,8 +1,13 @@
-define("I18n", ["exports", "discourse-common/lib/deprecated"], function (
-  exports,
-  deprecated
-) {
-  exports.default = I18n;
+define("I18n", [
+  "exports",
+  "discourse-i18n",
+  "discourse-common/lib/deprecated",
+], function (exports, I18n, deprecated) {
+  exports.default = I18n.default;
+
+  exports.I18nMissingInterpolationArgument =
+    I18n.I18nMissingInterpolationArgument;
+
   exports.t = function () {
     deprecated.default(
       "Importing t from I18n is deprecated. Use the default export instead.",
@@ -10,7 +15,7 @@ define("I18n", ["exports", "discourse-common/lib/deprecated"], function (
         id: "discourse.i18n-t-import",
       }
     );
-    return I18n.t(...arguments);
+    return I18n.default.t(...arguments);
   };
 });
 
