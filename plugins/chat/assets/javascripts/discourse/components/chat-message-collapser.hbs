@@ -28,5 +28,8 @@
         {{cooked.body}}
       {{/if}}
     {{/each}}
+    {{#if @isEdited}}
+      <span class="chat-message-edited">({{i18n "chat.edited"}})</span>
+    {{/if}}
   {{/if}}
 </div>
