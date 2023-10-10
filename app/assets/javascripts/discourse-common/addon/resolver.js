@@ -147,7 +147,14 @@ function lookupModuleBySuffix(suffix) {
       }
     });
   }
-  return moduleSuffixTrie.withSuffix(suffix, 1)[0];
+  return (
+    moduleSuffixTrie.withSuffix(suffix, 1)[0] ||
+    moduleSuffixTrie.withSuffix(`${suffix}/index`, 1)[0]
+  );
+}
+
+export function expireModuleTrieCache() {
+  moduleSuffixTrie = null;
 }
 
 export function buildResolver(baseName) {
