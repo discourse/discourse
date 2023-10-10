@@ -13,6 +13,8 @@ delete_surplus_uploads: false
 # Delete uploads from the output database that do not have a Discourse upload record.
 delete_missing_uploads: false
 
+fix_missing: false
+
 site_settings:
   authorized_extensions: "*"
   max_attachment_size_kb: 102_400

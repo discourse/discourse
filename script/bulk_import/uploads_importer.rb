@@ -26,6 +26,17 @@ module BulkImport
       # disable logging for EXIFR which is used by ImageOptim
       EXIFR.logger = Logger.new(nil)
 
+      if @settings[:fix_missing]
+        puts "Fixing missing uploads..."
+        fix_missing
+      else
+        puts "Uploading uploads..."
+        upload
+      end
+      puts ""
+    end
+
+    def upload
       queue = SizedQueue.new(QUEUE_SIZE)
       consumer_threads = []
 
@@ -182,6 +193,83 @@ module BulkImport
                 error: e.message,
                 skip_reason: "error",
               }
+            end
+          end
+        end
+      end
+
+      producer_thread.join
+      queue.close
+      consumer_threads.each(&:join)
+      status_queue.close
+      status_thread.join
+    ensure
+      close
+    end
+
+    def fix_missing
+      queue = SizedQueue.new(QUEUE_SIZE)
+      consumer_threads = []
+
+      max_count = @output_db.get_first_value("SELECT COUNT(*) FROM uploads")
+
+      producer_thread =
+        Thread.new do
+          query("SELECT id, upload FROM uploads", @output_db).tap do |result_set|
+            result_set.each { |row| queue << row }
+            result_set.close
+          end
+        end
+
+      status_queue = SizedQueue.new(QUEUE_SIZE)
+      status_thread =
+        Thread.new do
+          error_count = 0
+          current_count = 0
+          missing_count = 0
+
+          while !(status = status_queue.pop).nil?
+            current_count += 1
+
+            if status == true
+              # ignore
+            elsif status == false
+              error_count += 1
+            else
+              missing_count += 1
+            end
+
+            error_count_text = error_count > 0 ? "#{error_count} errors".red : "0 errors"
+
+            print "\r%7d / %7d (%s, %s missing)" %
+                    [current_count, max_count, error_count_text, missing_count]
+          end
+        end
+
+      store = Discourse.store
+
+      (Etc.nprocessors * @settings[:thread_count_factor]).to_i.times do |index|
+        consumer_threads << Thread.new do
+          Thread.current.name = "worker-#{index}"
+          fake_upload = OpenStruct.new(url: "")
+          while (row = queue.pop)
+            begin
+              upload = JSON.parse(row["upload"])
+              fake_upload.url = upload["url"]
+              path = store.get_path_for_upload(fake_upload)
+
+              file_exists =
+                if store.external?
+                  store.object_from_path(path).exists?
+                else
+                  File.exist?(File.join(store.public_dir, path))
+                end
+
+              # Upload.destroy_by(id: upload["id"]) if !file_exists
+
+              status_queue << file_exists ? true : row["id"]
+            rescue StandardError => e
+              status_queue << false
             end
           end
         end
