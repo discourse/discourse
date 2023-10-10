@@ -23,7 +23,6 @@ const SiteHeaderComponent = MountWidget.extend(
     _topic: null,
     _itsatrap: null,
     _applicationElement: null,
-    _MAX_ANIMATION_TIME: 200,
     _PANEL_WIDTH: 320,
     _swipeEvents: null,
 
