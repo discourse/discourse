@@ -12,7 +12,7 @@ RSpec.describe "Message notifications - with sidebar", type: :system do
   end
 
   def create_message(text: nil, channel:, creator: Fabricate(:user))
-    Fabricate(:chat_message_with_service, chat_channel: channel, user: creator, message: text)
+    Fabricate(:chat_message_with_service, chat_channel: channel, message: text, user: creator)
   end
 
   context "as a user" do
@@ -176,10 +176,8 @@ RSpec.describe "Message notifications - with sidebar", type: :system do
           context "when a message is created" do
             it "doesn't show any indicator on chat-header-icon" do
               visit("/")
-              using_session(:user_1) do |session|
-                create_message(channel: dm_channel_1, creator: user_1)
-                session.quit
-              end
+
+              create_message(channel: dm_channel_1, creator: user_1)
 
               expect(page).to have_no_css(
                 ".chat-header-icon .chat-channel-unread-indicator.-urgent",
@@ -192,13 +190,12 @@ RSpec.describe "Message notifications - with sidebar", type: :system do
               Jobs.run_immediately!
 
               visit("/")
-              using_session(:user_1) do
-                create_message(
-                  text: "hey what's up @#{current_user.username}?",
-                  channel: dm_channel_1,
-                  creator: user_1,
-                )
-              end
+
+              create_message(
+                text: "hey what's up @#{current_user.username}?",
+                channel: dm_channel_1,
+                creator: user_1,
+              )
 
               expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator.-urgent")
             end
