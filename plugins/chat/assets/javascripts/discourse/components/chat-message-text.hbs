@@ -4,14 +4,13 @@
       @cooked={{@cooked}}
       @uploads={{@uploads}}
       @onToggleCollapse={{@onToggleCollapse}}
+      @isEdited={{this.isEdited}}
     />
   {{else}}
     {{html-safe @cooked}}
+    {{#if this.isEdited}}
+      <span class="chat-message-edited">({{i18n "chat.edited"}})</span>
+    {{/if}}
   {{/if}}
-
-  {{#if this.isEdited}}
-    <span class="chat-message-edited">({{i18n "chat.edited"}})</span>
-  {{/if}}
-
   {{yield}}
 </div>
