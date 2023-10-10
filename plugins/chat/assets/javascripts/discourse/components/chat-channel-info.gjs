@@ -7,6 +7,22 @@ import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-
 import I18n from "I18n";
 
 export default class ChatChannelMessageEmojiPicker extends Component {
+  @service chatChannelInfoRouteOriginManager;
+  @service site;
+
+  membersLabel = I18n.t("chat.channel_info.tabs.members");
+  settingsLabel = I18n.t("chat.channel_info.tabs.settings");
+  backToChannelLabel = I18n.t("chat.channel_info.back_to_all_channel");
+  backToAllChannelsLabel = I18n.t("chat.channel_info.back_to_channel");
+
+  get showTabs() {
+    return (
+      this.site.desktopView &&
+      this.args.channel.membershipsCount > 1 &&
+      this.args.channel.isOpen
+    );
+  }
+
   <template>
     <div class="chat-full-page-header">
       <div class="chat-channel-header-details">
@@ -66,20 +82,4 @@ export default class ChatChannelMessageEmojiPicker extends Component {
       {{outlet}}
     </div>
   </template>
-
-  @service chatChannelInfoRouteOriginManager;
-  @service site;
-
-  membersLabel = I18n.t("chat.channel_info.tabs.members");
-  settingsLabel = I18n.t("chat.channel_info.tabs.settings");
-  backToChannelLabel = I18n.t("chat.channel_info.back_to_all_channel");
-  backToAllChannelsLabel = I18n.t("chat.channel_info.back_to_channel");
-
-  get showTabs() {
-    return (
-      this.site.desktopView &&
-      this.args.channel.membershipsCount > 1 &&
-      this.args.channel.isOpen
-    );
-  }
 }

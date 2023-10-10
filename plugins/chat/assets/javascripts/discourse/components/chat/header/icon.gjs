@@ -8,24 +8,6 @@ import concatClass from "discourse/helpers/concat-class";
 import I18n from "I18n";
 
 export default class ChatHeaderIcon extends Component {
-  <template>
-    <a
-      href={{this.href}}
-      tabindex="0"
-      class={{concatClass "icon" "btn-flat" (if this.isActive "active")}}
-      title={{this.title}}
-    >
-      {{~icon this.icon~}}
-      {{#if this.showUnreadIndicator}}
-        <ChatHeaderIconUnreadIndicator
-          @urgentCount={{@urgentCount}}
-          @unreadCount={{@unreadCount}}
-          @indicatorPreference={{@indicatorPreference}}
-        />
-      {{/if}}
-    </a>
-  </template>
-
   @service currentUser;
   @service site;
   @service chatStateManager;
@@ -96,4 +78,22 @@ export default class ChatHeaderIcon extends Component {
 
     return getURL(this.chatStateManager.lastKnownChatURL || "/chat");
   }
+
+  <template>
+    <a
+      href={{this.href}}
+      tabindex="0"
+      class={{concatClass "icon" "btn-flat" (if this.isActive "active")}}
+      title={{this.title}}
+    >
+      {{~icon this.icon~}}
+      {{#if this.showUnreadIndicator}}
+        <ChatHeaderIconUnreadIndicator
+          @urgentCount={{@urgentCount}}
+          @unreadCount={{@unreadCount}}
+          @indicatorPreference={{@indicatorPreference}}
+        />
+      {{/if}}
+    </a>
+  </template>
 }

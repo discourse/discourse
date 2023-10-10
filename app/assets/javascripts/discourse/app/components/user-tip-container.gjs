@@ -5,6 +5,19 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 
 export default class UserTipContainer extends Component {
+  @service userTips;
+
+  get safeHtmlContent() {
+    return htmlSafe(this.args.data.contentHtml);
+  }
+
+  @action
+  handleDismiss(_, event) {
+    event.preventDefault();
+    this.args.close();
+    this.userTips.hideUserTipForever(this.args.data.id);
+  }
+
   <template>
     <div class="user-tip__container">
       <div class="user-tip__title">{{@data.titleText}}</div>
@@ -27,17 +40,4 @@ export default class UserTipContainer extends Component {
       {{/if}}
     </div>
   </template>
-
-  @service userTips;
-
-  get safeHtmlContent() {
-    return htmlSafe(this.args.data.contentHtml);
-  }
-
-  @action
-  handleDismiss(_, event) {
-    event.preventDefault();
-    this.args.close();
-    this.userTips.hideUserTipForever(this.args.data.id);
-  }
 }

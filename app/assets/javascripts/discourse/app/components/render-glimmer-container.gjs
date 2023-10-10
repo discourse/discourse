@@ -2,6 +2,8 @@ import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 
 export default class RenderGlimmerContainer extends Component {
+  @service renderGlimmer;
+
   <template>
     {{#each this.renderGlimmer._registrations as |info|}}
       {{#in-element info.element insertBefore=null}}
@@ -12,6 +14,4 @@ export default class RenderGlimmerContainer extends Component {
       {{/in-element}}
     {{/each}}
   </template>
-
-  @service renderGlimmer;
 }
