@@ -792,18 +792,22 @@ class PostsController < ApplicationController
   end
 
   def create_params
-    permitted = %i[
-      raw
-      topic_id
-      archetype
-      category
-      target_recipients
-      reply_to_post_number
-      auto_track
-      typing_duration_msecs
-      composer_open_duration_msecs
-      visible
-      draft_key
+    permitted = [
+      :raw,
+      :topic_id,
+      :archetype,
+      :category,
+      :target_recipients,
+      :reply_to_post_number,
+      :auto_track,
+      :typing_duration_msecs,
+      :composer_open_duration_msecs,
+      :visible,
+      :draft_key,
+      image_sizes: {
+      },
+      meta_data: {
+      }, # TODO this does not feel right, we should name what meta_data is allowed
     ]
 
     Post.plugin_permitted_create_params.each do |key, value|
@@ -841,14 +845,7 @@ class PostsController < ApplicationController
       permitted << :external_id
     end
 
-    result =
-      params
-        .permit(*permitted)
-        .tap do |allowed|
-          allowed[:image_sizes] = params[:image_sizes]
-          # TODO this does not feel right, we should name what meta_data is allowed
-          allowed[:meta_data] = params[:meta_data]
-        end
+    result = params.permit(*permitted)
 
     # Staff are allowed to pass `is_warning`
     if current_user.staff?
