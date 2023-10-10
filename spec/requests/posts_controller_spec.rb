@@ -1333,9 +1333,6 @@ RSpec.describe PostsController do
                raw: "this is the test content",
                title: "this is the test title for the topic",
                category: category.id,
-               meta_data: {
-                 xyz: "abc",
-               },
              }
 
         expect(response.status).to eq(403)
@@ -1407,15 +1404,12 @@ RSpec.describe PostsController do
         expect(Post.last.topic.tags.count).to eq(1)
       end
 
-      it "creates the post" do
+      it "creates the topic and post with the right attributes" do
         post "/posts.json",
              params: {
                raw: "this is the test content",
                title: "this is the test title for the topic",
                category: category.id,
-               meta_data: {
-                 xyz: "abc",
-               },
              }
 
         expect(response.status).to eq(200)
@@ -1427,8 +1421,110 @@ RSpec.describe PostsController do
         expect(new_post.raw).to eq("this is the test content")
         expect(topic.title).to eq("This is the test title for the topic")
         expect(topic.category).to eq(category)
-        expect(topic.meta_data).to eq("xyz" => "abc")
         expect(topic.visible).to eq(true)
+      end
+
+      context "when adding custom fields to topic via the `topic_custom_fields` param" do
+        it "should return a 400 response code when no custom fields has been permitted" do
+          sign_in(user)
+
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 title: "this is the test title for the topic",
+                 category: category.id,
+                 topic_custom_fields: {
+                   xyz: "abc",
+                   abc: "xyz",
+                 },
+               }
+
+          expect(response.status).to eq(400)
+          expect(Topic.last.custom_fields).to eq({})
+        end
+
+        context "when custom fields has been permitted" do
+          fab!(:plugin) do
+            plugin = Plugin::Instance.new
+            plugin.register_editable_topic_custom_field(:xyz)
+            plugin.register_editable_topic_custom_field(:abc, staff_only: true)
+            plugin
+          end
+
+          it "should return a 400 response when trying to add a staff ony custom field for a non-staff user" do
+            sign_in(user)
+
+            post "/posts.json",
+                 params: {
+                   raw: "this is the test content",
+                   title: "this is the test title for the topic",
+                   category: category.id,
+                   topic_custom_fields: {
+                     abc: "xyz",
+                   },
+                 }
+
+            expect(response.status).to eq(400)
+            expect(Topic.last.custom_fields).to eq({})
+          end
+
+          it "should add custom fields to topic that is permitted for a non-staff user" do
+            sign_in(user)
+
+            post "/posts.json",
+                 params: {
+                   raw: "this is the test content",
+                   title: "this is the test title for the topic",
+                   category: category.id,
+                   topic_custom_fields: {
+                     xyz: "abc",
+                   },
+                 }
+
+            expect(response.status).to eq(200)
+            expect(Topic.last.custom_fields).to eq({ "xyz" => "abc" })
+          end
+
+          it "should add custom fields to topic that is permitted for a non-staff user via the deprecated `meta_data` param" do
+            sign_in(user)
+
+            Discourse.expects(:deprecate).with(
+              "the :meta_data param is deprecated, use the :topic_custom_fields param instead",
+              anything,
+            )
+
+            post "/posts.json",
+                 params: {
+                   raw: "this is the test content",
+                   title: "this is the test title for the topic",
+                   category: category.id,
+                   meta_data: {
+                     xyz: "abc",
+                   },
+                 }
+
+            expect(response.status).to eq(200)
+            expect(Topic.last.custom_fields).to eq({ "xyz" => "abc" })
+          end
+
+          it "should add custom fields to topic that is permitted for a staff user and public user" do
+            sign_in(Fabricate(:admin))
+
+            post "/posts.json",
+                 params: {
+                   raw: "this is the test content",
+                   title: "this is the test title for the topic",
+                   category: category.id,
+                   topic_custom_fields: {
+                     xyz: "abc",
+                     abc: "xyz",
+                   },
+                 }
+
+            expect(response.status).to eq(200)
+            expect(Topic.last.custom_fields).to eq({ "xyz" => "abc", "abc" => "xyz" })
+          end
+        end
       end
 
       it "can create an uncategorized topic" do
@@ -1562,9 +1658,6 @@ RSpec.describe PostsController do
                  raw:
                    "this is the test content http://fakespamwebsite.com http://fakespamwebsite.com/spam http://fakespamwebsite.com/spammy",
                  title: "this is the test title for the topic",
-                 meta_data: {
-                   xyz: "abc",
-                 },
                }
 
           expect(response.parsed_body["errors"]).to include(I18n.t(:spamming_host))
