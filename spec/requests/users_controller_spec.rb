@@ -5972,7 +5972,9 @@ RSpec.describe UsersController do
     end
 
     context "with an existing passkey" do
-      fab!(:passkey) { Fabricate(:passkey_with_random_credential, user: user1) }
+      fab!(:passkey) do
+        Fabricate(:passkey_with_random_credential, user: user1, name: "original name")
+      end
 
       it "renames the key" do
         sign_in(user1)
@@ -5982,50 +5984,48 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
         expect(passkey.reload.name).to eq("new name")
       end
+
+      it "does not let an admin delete a passkey associated with user1" do
+        sign_in(admin)
+
+        post "/u/rename_passkey/#{passkey.id}.json", params: { name: "new name" }
+
+        expect(passkey.reload.name).to eq("original name")
+      end
     end
   end
 
   describe "#delete_passkey" do
     before { SiteSetting.experimental_passkeys = true }
+    fab!(:passkey) { Fabricate(:passkey_with_random_credential, user: user1) }
 
-    it "fails if user is not logged in" do
-      stub_secure_session_confirmed
-      delete "/u/delete_passkey/ID.json"
-      expect(response.status).to eq(403)
-    end
-
-    it "fails if session is not confirmed" do
+    it "fails if user does not have a confirmed session" do
       sign_in(user1)
-      post "/u/register_passkey.json"
+      delete "/u/delete_passkey/#{passkey.id}.json"
       expect(response.status).to eq(403)
     end
 
     context "with a confirmed session" do
       before { stub_secure_session_confirmed }
 
-      it "fails if key is not present" do
-        sign_in(user1)
-        delete "/u/delete_passkey/12.json"
-        expect(response.status).to eq(400)
-        expect(response.parsed_body["errors"][0]).to include("Discourse::InvalidParameters")
+      it "fails if user is not logged in" do
+        delete "/u/delete_passkey/#{passkey.id}.json"
+        expect(response.status).to eq(403)
       end
 
-      context "if the user has a passkey" do
-        fab!(:passkey) { Fabricate(:passkey_with_random_credential, user: user1) }
+      it "deletes the key" do
+        sign_in(user1)
+        delete "/u/delete_passkey/#{passkey.id}.json"
+        expect(response.status).to eq(200)
+        expect(user1.passkey_credential_ids).to eq([])
+      end
 
-        it "works" do
-          sign_in(user1)
-          delete "/u/delete_passkey/#{passkey.id}.json"
-          expect(response.status).to eq(200)
-          expect(user1.passkey_credential_ids).to eq([])
-        end
+      it "does not let an admin delete a passkey associated with user1" do
+        sign_in(admin)
+        delete "/u/delete_passkey/#{passkey.id}.json"
+        expect(response.status).to eq(200)
 
-        it "does not let another user delete a passkey associated with another user" do
-          sign_in(admin)
-          delete "/u/delete_passkey/#{passkey.id}.json"
-          expect(response.status).to eq(400)
-          expect(response.parsed_body["errors"][0]).to include("Discourse::InvalidParameters")
-        end
+        expect(user1.passkey_credential_ids[0]).to eq(passkey.credential_id)
       end
     end
   end

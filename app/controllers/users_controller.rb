@@ -1641,10 +1641,8 @@ class UsersController < ApplicationController
   def delete_passkey
     raise Discourse::NotFound unless SiteSetting.experimental_passkeys
 
-    passkey = current_user.security_keys.find_by(id: params[:id].to_i)
-    raise Discourse::InvalidParameters unless passkey
+    current_user.security_keys.find_by(id: params[:id].to_i)&.destroy!
 
-    passkey.destroy
     render json: success_json
   end
 
