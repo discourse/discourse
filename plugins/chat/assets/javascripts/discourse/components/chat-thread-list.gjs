@@ -13,6 +13,7 @@ import ConditionalLoadingSpinner from "discourse/components/conditional-loading-
 
 export default class ChatThreadList extends Component {
   <template>
+    {{! template-lint-disable modifier-name-case }}
     {{#if this.shouldRender}}
       <div class="chat-thread-list" {{this.subscribe @channel}}>
         {{#if @includeHeader}}
