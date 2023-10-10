@@ -120,7 +120,7 @@ describe "Thread list in side panel | full page", type: :system do
       freeze_time
       last_reply = Fabricate(:chat_message, thread: thread_1, use_service: true)
       chat_page.visit_channel(channel)
-      channel_page.open_thread_list
+
       expect(thread_list_page.item_by_id(thread_1.id)).to have_css(
         thread_list_page.last_reply_datetime_selector(last_reply),
       )
@@ -161,7 +161,7 @@ describe "Thread list in side panel | full page", type: :system do
 
       it "hides the thread in the list when another user deletes the original message" do
         chat_page.visit_channel(channel)
-        channel_page.open_thread_list
+
         expect(thread_list_page).to have_thread(thread_1)
 
         using_session(:tab_2) do |session|

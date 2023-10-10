@@ -82,6 +82,7 @@ describe "Thread tracking state | full page", type: :system do
     it "allows the user to start tracking a thread they have not replied to" do
       new_thread = Fabricate(:chat_thread, channel: channel, use_service: true)
       Fabricate(:chat_message, thread: new_thread, use_service: true)
+      chat_page.visit_thread(new_thread)
       thread_page.notification_level = :tracking
 
       expect(thread_page).to have_notification_level("tracking")
