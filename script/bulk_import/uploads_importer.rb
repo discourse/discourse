@@ -235,17 +235,19 @@ module BulkImport
           current_count = 0
           missing_count = 0
 
-          while !(status = status_queue.pop).nil?
+          while !(result = status_queue.pop).nil?
             current_count += 1
 
-            if status == true
+            case result[:status]
+            when :ok
               # ignore
-            elsif status == false
+            when :error
               error_count += 1
-            else
-              puts status
-              @output_db.execute("DELETE FROM uploads WHERE id = ?", [status])
+              puts "Error in #{result[:id]}"
+            when :missing
               missing_count += 1
+              puts "Missing #{result[:id]}"
+              @output_db.execute("DELETE FROM uploads WHERE id = ?", result[:id])
             end
 
             error_count_text = error_count > 0 ? "#{error_count} errors".red : "0 errors"
@@ -276,9 +278,13 @@ module BulkImport
 
               Upload.destroy_by(id: upload["id"]) if !file_exists
 
-              status_queue << file_exists ? true : row["id"]
+              if file_exists
+                status_queue << { id: row["id"], status: :ok }
+              else
+                status_queue << { id: row["id"], status: :missing }
+              end
             rescue StandardError => e
-              status_queue << false
+              status_queue << { id: row["id"], status: :error }
             end
           end
         end
