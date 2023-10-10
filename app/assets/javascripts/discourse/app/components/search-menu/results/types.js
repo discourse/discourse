@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import DiscourseURL from "discourse/lib/url";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 
@@ -20,7 +21,9 @@ export default class Types extends Component {
   }
 
   @action
-  onClick() {
+  onClick(event) {
+    event.preventDefault();
+    DiscourseURL.routeTo(event.currentTarget.href);
     this.args.closeSearchMenu();
   }
 
