@@ -1,7 +1,1 @@
-<a
-  href={{(or @result.url @result.path)}}
-  {{on "click" this.onClick}}
-  class="search-link"
->
-  {{category-link @result link=false allowUncategorized=true}}
-</a>
+{{category-link @result link=false allowUncategorized=true}}

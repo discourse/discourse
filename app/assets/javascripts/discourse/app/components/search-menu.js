@@ -71,6 +71,7 @@ export default class SearchMenu extends Component {
       this.menuPanelOpen = false;
     }
   }
+
   get classNames() {
     const classes = ["search-menu-container"];
 

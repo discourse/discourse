@@ -1,6 +1,6 @@
-import SearchMenuResultComponent from "discourse/components/search-menu/results/type/result";
+import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 
-export default class TopicResult extends SearchMenuResultComponent {
+export default class Results extends Component {
   @service siteSettings;
 }

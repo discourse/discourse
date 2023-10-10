@@ -20,6 +20,11 @@ export default class Types extends Component {
   }
 
   @action
+  onClick() {
+    this.args.closeSearchMenu();
+  }
+
+  @action
   onKeydown(e) {
     if (e.key === "Escape") {
       this.args.closeSearchMenu();
