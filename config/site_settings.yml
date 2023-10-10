@@ -2882,6 +2882,8 @@ tags:
     client: true
   create_post_for_category_and_tag_changes:
     default: false
+  automatically_clean_tags:
+    default: false
 
 dashboard:
   dashboard_hidden_reports:
