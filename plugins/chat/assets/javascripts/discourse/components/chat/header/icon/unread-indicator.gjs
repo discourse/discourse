@@ -3,8 +3,8 @@ import { inject as service } from "@ember/service";
 import {
   HEADER_INDICATOR_PREFERENCE_ALL_NEW,
   HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
-  HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
   HEADER_INDICATOR_PREFERENCE_NEVER,
+  HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
 } from "discourse/plugins/chat/discourse/controllers/preferences-chat";
 
 const MAX_UNREAD_COUNT = 99;
