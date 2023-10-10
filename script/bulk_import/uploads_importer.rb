@@ -236,7 +236,7 @@ module BulkImport
       producer_thread =
         Thread.new do
           query(
-            "SELECT id, upload FROM uploads WHERE upload IS NOT NULL",
+            "SELECT id, upload FROM uploads WHERE upload IS NOT NULL ORDER BY rowid DESC",
             @source_db,
           ).tap do |result_set|
             result_set.each { |row| queue << row }
