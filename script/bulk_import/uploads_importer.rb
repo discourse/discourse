@@ -263,7 +263,9 @@ module BulkImport
             when :missing
               missing_count += 1
               puts "Missing #{result[:id]}"
+
               @output_db.execute("DELETE FROM uploads WHERE id = ?", result[:id])
+              Upload.delete_by(id: result[:upload_id])
             end
 
             error_count_text = error_count > 0 ? "#{error_count} errors".red : "0 errors"
@@ -292,16 +294,14 @@ module BulkImport
                   File.exist?(File.join(store.public_dir, path))
                 end
 
-              Upload.delete_by(id: upload["id"]) if !file_exists
-
               if file_exists
-                status_queue << { id: row["id"], status: :ok }
+                status_queue << { id: row["id"], upload_id: upload["id"], status: :ok }
               else
-                status_queue << { id: row["id"], status: :missing }
+                status_queue << { id: row["id"], upload_id: upload["id"], status: :missing }
               end
             rescue StandardError => e
               puts e.message
-              status_queue << { id: row["id"], status: :error }
+              status_queue << { id: row["id"], upload_id: upload["id"], status: :error }
             end
           end
         end
