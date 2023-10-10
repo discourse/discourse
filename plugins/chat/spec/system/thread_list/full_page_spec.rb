@@ -39,17 +39,9 @@ describe "Thread list in side panel | full page", type: :system do
 
     it "does not show new threads in the channel in the thread list if the user is not tracking them" do
       chat_page.visit_channel(channel)
-
-      using_session(:other_user) do |session|
-        sign_in(other_user)
-        chat_page.visit_channel(channel)
-        channel_page.reply_to(thread_om)
-        thread_page.send_message("hey everyone!")
-        expect(channel_page).to have_thread_indicator(thread_om)
-        session.quit
-      end
-
+      Fabricate(:chat_message_with_service, chat_channel: channel, in_reply_to: thread_om)
       channel_page.open_thread_list
+
       expect(page).to have_content(I18n.t("js.chat.threads.none"))
     end
 
@@ -57,7 +49,7 @@ describe "Thread list in side panel | full page", type: :system do
       it "does not double up the staged thread and the actual thread in the list" do
         chat_page.visit_channel(channel)
         channel_page.reply_to(thread_om)
-        thread_page.send_message("hey everyone!")
+        thread_page.send_message
         expect(channel_page).to have_thread_indicator(thread_om)
         thread_page.close
         channel_page.open_thread_list
@@ -162,13 +154,11 @@ describe "Thread list in side panel | full page", type: :system do
 
         expect(thread_list_page).to have_thread(thread_1)
 
-        using_session(:tab_2) do |session|
-          sign_in(other_user)
-          chat_page.visit_thread(thread_1)
-          expect(side_panel_page).to have_open_thread(thread_1)
-          thread_page.messages.delete(thread_1.original_message)
-          session.quit
-        end
+        Chat::TrashMessage.call(
+          message_id: thread_1.original_message.id,
+          channel_id: thread_1.channel.id,
+          guardian: other_user.guardian,
+        )
 
         expect(thread_list_page).to have_no_thread(thread_1)
       end
