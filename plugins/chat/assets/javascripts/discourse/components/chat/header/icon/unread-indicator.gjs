@@ -21,7 +21,10 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
   }
 
   get mentionCount() {
-    return this.chatTrackingStateManager.allChannelMentionCount;
+    return (
+      this.args.mentionCount ||
+      this.chatTrackingStateManager.allChannelMentionCount
+    );
   }
 
   get unreadCount() {
