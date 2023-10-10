@@ -1500,7 +1500,7 @@ class BulkImport::Base
         attributes << %{ style="aspect-ratio: #{width} / #{height};"}
       end
 
-      %{<img src="#{cdn_url}" data-base62-sha1="#{upload_base62} #{attributes}>"}
+      %{<img src="#{cdn_url}" data-base62-sha1="#{upload_base62} #{attributes}>}
     end
 
     # TODO Make this work for usernames as well
