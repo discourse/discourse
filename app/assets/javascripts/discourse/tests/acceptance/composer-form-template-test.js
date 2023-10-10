@@ -84,10 +84,9 @@ acceptance("Composer Form Template", function (needs) {
 
     assert.strictEqual(selectKit(".category-chooser").header().value(), "1");
 
-    assert.strictEqual(
-      document.documentElement.style.getPropertyValue("--composer-height"),
-      "var(--new-topic-composer-height, 400px)",
-      "sets --composer-height to 400px when creating topic"
+    assert.ok(
+      document.querySelector("#reply-control").classList.contains("open"),
+      "reply control is open"
     );
 
     await fillIn(".form-template-field__input[name='full-name']", "John Smith");
@@ -99,17 +98,16 @@ acceptance("Composer Form Template", function (needs) {
 
     await click(".toggle-minimize");
 
-    assert.strictEqual(
-      document.documentElement.style.getPropertyValue("--composer-height"),
-      "40px",
-      "sets --composer-height to 40px when composer is minimized to draft mode"
+    assert.ok(
+      document.querySelector("#reply-control").classList.contains("draft"),
+      "reply control is minimized into draft mode"
     );
 
     await click(".toggle-fullscreen");
-    assert.strictEqual(
-      document.documentElement.style.getPropertyValue("--composer-height"),
-      "var(--new-topic-composer-height, 400px)",
-      "sets --composer-height back to 400px when composer is opened from draft mode"
+
+    assert.ok(
+      document.querySelector("#reply-control").classList.contains("open"),
+      "reply control is opened from draft mode"
     );
 
     assert.strictEqual(
