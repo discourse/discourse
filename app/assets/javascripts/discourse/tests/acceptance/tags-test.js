@@ -1,4 +1,5 @@
-import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
@@ -8,8 +9,7 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Tags", function (needs) {
   needs.user();

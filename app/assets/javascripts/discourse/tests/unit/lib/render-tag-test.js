@@ -1,6 +1,6 @@
-import renderTag from "discourse/lib/render-tag";
-import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import renderTag from "discourse/lib/render-tag";
 
 module("Unit | Utility | render-tag", function (hooks) {
   setupTest(hooks);

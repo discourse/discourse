@@ -1,5 +1,5 @@
-import { bind } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import { bind } from "discourse-common/utils/decorators";
 const MAX_PARTICLES = 150;
 
 const SIZE = 144;

@@ -1,9 +1,9 @@
-import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
+import { inject as service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
-import ChatPaneBaseSubscriptionsManager from "./chat-pane-base-subscriptions-manager";
-import ChatThreadPreview from "../models/chat-thread-preview";
 import ChatNotice from "../models/chat-notice";
+import ChatThreadPreview from "../models/chat-thread-preview";
+import ChatPaneBaseSubscriptionsManager from "./chat-pane-base-subscriptions-manager";
 
 export default class ChatChannelPaneSubscriptionsManager extends ChatPaneBaseSubscriptionsManager {
   @service chat;

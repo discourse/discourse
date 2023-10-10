@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { tracked } from "@glimmer/tracking";
+import { extractError } from "discourse/lib/ajax-error";
 import { changeEmail } from "discourse/lib/user-activation";
 import ActivationResent from "./activation-resent";
-import { extractError } from "discourse/lib/ajax-error";
 
 export default class ActivationEdit extends Component {
   @service login;

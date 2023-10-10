@@ -1,9 +1,9 @@
-import I18n from "I18n";
-import SearchMenu from "discourse/components/search-menu";
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
+import { module, test } from "qunit";
+import SearchMenu from "discourse/components/search-menu";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "I18n";
 
 // Note this isn't a full-fledge test of the search menu. Those tests are in
 // acceptance/glimmer-search-test.js. This is simply about the rendering of the

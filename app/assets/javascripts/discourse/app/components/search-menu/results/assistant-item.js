@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
-import getURL from "discourse-common/lib/get-url";
-import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
-import { debounce } from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
 import { focusSearchInput } from "discourse/components/search-menu";
+import getURL from "discourse-common/lib/get-url";
+import { debounce } from "discourse-common/utils/decorators";
 
 export default class AssistantItem extends Component {
   @service search;

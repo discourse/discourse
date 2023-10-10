@@ -1,6 +1,6 @@
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNames: ["top-title-buttons"],

@@ -1,13 +1,13 @@
+import { click, fillIn, render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { click, fillIn, render } from "@ember/test-helpers";
 import {
   count,
   exists,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import Theme, { COMPONENTS, THEMES } from "admin/models/theme";
 import I18n from "I18n";
 

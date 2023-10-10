@@ -1,6 +1,6 @@
-import { module, test } from "qunit";
-import { setupTest } from "ember-qunit";
 import EmberObject from "@ember/object";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
 import Setting from "admin/mixins/setting-object";
 
 module("Unit | Mixin | setting-object", function (hooks) {

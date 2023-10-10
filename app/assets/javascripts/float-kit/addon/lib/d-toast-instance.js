@@ -1,11 +1,11 @@
 import { setOwner } from "@ember/application";
-import { TOAST } from "float-kit/lib/constants";
-import uniqueId from "discourse/helpers/unique-id";
 import { action } from "@ember/object";
+import { cancel } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import uniqueId from "discourse/helpers/unique-id";
 import discourseLater from "discourse-common/lib/later";
-import { cancel } from "@ember/runloop";
+import { TOAST } from "float-kit/lib/constants";
 
 const CSS_TRANSITION_DELAY_MS = 500;
 const TRANSITION_CLASS = "-fade-out";

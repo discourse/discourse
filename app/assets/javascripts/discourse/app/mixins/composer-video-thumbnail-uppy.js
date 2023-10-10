@@ -1,12 +1,12 @@
-import { setOwner } from "@ember/application";
-import { isVideo } from "discourse/lib/uploads";
 import { tracked } from "@glimmer/tracking";
-import UppyUploadMixin from "discourse/mixins/uppy-upload";
-import EmberObject from "@ember/object";
-import Uppy from "@uppy/core";
+import { setOwner } from "@ember/application";
 import { warn } from "@ember/debug";
-import I18n from "I18n";
+import EmberObject from "@ember/object";
 import { inject as service } from "@ember/service";
+import Uppy from "@uppy/core";
+import { isVideo } from "discourse/lib/uploads";
+import UppyUploadMixin from "discourse/mixins/uppy-upload";
+import I18n from "I18n";
 
 // It is not ideal that this is a class extending a mixin, but in the case
 // where this is needed (a second background uppy uploader on a class that

@@ -1,10 +1,10 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { render, settled } from "@ember/test-helpers";
-import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 
 module(

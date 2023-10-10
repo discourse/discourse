@@ -1,9 +1,9 @@
-import Service, { inject as service } from "@ember/service";
+import { tracked } from "@glimmer/tracking";
 import Evented from "@ember/object/evented";
 import { cancel, later, schedule } from "@ember/runloop";
-import { tracked } from "@glimmer/tracking";
-import { bind } from "discourse-common/utils/decorators";
+import Service, { inject as service } from "@ember/service";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { bind } from "discourse-common/utils/decorators";
 
 const STORE_LOADING_TIMES = 5;
 const DEFAULT_LOADING_TIME = 0.3;

@@ -1,6 +1,6 @@
 import EmberObject from "@ember/object";
-import RestModel from "discourse/models/rest";
 import { i18n } from "discourse/lib/computed";
+import RestModel from "discourse/models/rest";
 
 export default class UserField extends RestModel {
   static fieldTypes() {

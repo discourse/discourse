@@ -1,12 +1,12 @@
-import { cancel, scheduleOnce } from "@ember/runloop";
-import { diff, patch } from "virtual-dom";
-import { queryRegistry, traverseCustomWidgets } from "discourse/widgets/widget";
+import ArrayProxy from "@ember/array/proxy";
 import Component from "@ember/component";
+import { cancel, scheduleOnce } from "@ember/runloop";
+import { camelize } from "@ember/string";
+import { diff, patch } from "virtual-dom";
 import DirtyKeys from "discourse/lib/dirty-keys";
 import { WidgetClickHook } from "discourse/widgets/hooks";
-import { camelize } from "@ember/string";
+import { queryRegistry, traverseCustomWidgets } from "discourse/widgets/widget";
 import { getRegister } from "discourse-common/lib/get-owner";
-import ArrayProxy from "@ember/array/proxy";
 
 let _cleanCallbacks = {};
 

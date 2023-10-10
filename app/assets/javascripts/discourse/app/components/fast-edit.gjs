@@ -1,14 +1,14 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import DButton from "discourse/components/d-button";
+import { fixQuotes } from "discourse/components/post-text-selection";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { fixQuotes } from "discourse/components/post-text-selection";
 import { translateModKey } from "discourse/lib/utilities";
-import I18n from "I18n";
-import DButton from "discourse/components/d-button";
-import { on } from "@ember/modifier";
 import autoFocus from "discourse/modifiers/auto-focus";
+import I18n from "I18n";
 
 export default class FastEdit extends Component {
   @tracked value = this.args.initialValue;

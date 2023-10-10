@@ -1,8 +1,8 @@
-import discourseComputed, { on } from "discourse-common/utils/decorators";
-import { isBlank } from "@ember/utils";
 import Component from "@ember/component";
-import I18n from "I18n";
 import { action } from "@ember/object";
+import { isBlank } from "@ember/utils";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 export default Component.extend({
   tagName: "",

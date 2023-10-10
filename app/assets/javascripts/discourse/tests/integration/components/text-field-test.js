@@ -1,9 +1,9 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fillIn, render } from "@ember/test-helpers";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
 import sinon from "sinon";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 
 module("Integration | Component | text-field", function (hooks) {

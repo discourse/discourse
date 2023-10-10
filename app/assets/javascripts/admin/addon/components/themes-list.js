@@ -1,11 +1,11 @@
-import { classNames } from "@ember-decorators/component";
-import { inject as service } from "@ember/service";
-import { equal, gt, gte } from "@ember/object/computed";
-import { COMPONENTS, THEMES } from "admin/models/theme";
 import Component from "@ember/component";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
+import { equal, gt, gte } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
+import { classNames } from "@ember-decorators/component";
 import DeleteThemesConfirm from "discourse/components/modal/delete-themes-confirm";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
+import { COMPONENTS, THEMES } from "admin/models/theme";
 
 @classNames("themes-list")
 export default class ThemesList extends Component {

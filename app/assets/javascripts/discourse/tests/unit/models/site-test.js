@@ -1,7 +1,7 @@
-import { module, test } from "qunit";
-import Site from "discourse/models/site";
 import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import Site from "discourse/models/site";
 
 module("Unit | Model | site", function (hooks) {
   setupTest(hooks);

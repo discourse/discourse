@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
-import { modifier } from "ember-modifier";
 import { tracked } from "@glimmer/tracking";
-import icon from "discourse-common/helpers/d-icon";
-import { inject as service } from "@ember/service";
-import DFloatBody from "float-kit/components/d-float-body";
-import concatClass from "discourse/helpers/concat-class";
-import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 import { getOwner } from "@ember/application";
+import { inject as service } from "@ember/service";
+import { modifier } from "ember-modifier";
+import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse-common/helpers/d-icon";
+import DFloatBody from "float-kit/components/d-float-body";
+import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 import and from "truth-helpers/helpers/and";
 
 export default class DTooltip extends Component {

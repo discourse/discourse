@@ -1,4 +1,4 @@
-import discourseComputed from "discourse-common/utils/decorators";
+import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { cook, emojiUnescape, excerpt } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -8,7 +8,7 @@ import {
 } from "discourse/models/composer";
 import RestModel from "discourse/models/rest";
 import UserDraft from "discourse/models/user-draft";
-import { Promise } from "rsvp";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default RestModel.extend({
   limit: 30,

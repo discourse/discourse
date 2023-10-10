@@ -1,9 +1,9 @@
+import { render } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
+import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
 import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
-import { module, test } from "qunit";
-import { render } from "@ember/test-helpers";
 
 module("Discourse Chat | Component | chat-channel-metadata", function (hooks) {
   setupRenderingTest(hooks);

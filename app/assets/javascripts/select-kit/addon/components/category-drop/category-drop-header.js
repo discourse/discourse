@@ -1,8 +1,8 @@
-import ComboBoxSelectBoxHeaderComponent from "select-kit/components/combo-box/combo-box-header";
-import discourseComputed from "discourse-common/utils/decorators";
 import { readOnly } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
+import discourseComputed from "discourse-common/utils/decorators";
+import ComboBoxSelectBoxHeaderComponent from "select-kit/components/combo-box/combo-box-header";
 
 export default ComboBoxSelectBoxHeaderComponent.extend({
   classNames: ["category-drop-header"],

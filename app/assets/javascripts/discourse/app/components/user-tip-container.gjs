@@ -1,8 +1,8 @@
-import { htmlSafe } from "@ember/template";
 import Component from "@glimmer/component";
-import DButton from "discourse/components/d-button";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import DButton from "discourse/components/d-button";
 
 export default class UserTipContainer extends Component {
   @service userTips;

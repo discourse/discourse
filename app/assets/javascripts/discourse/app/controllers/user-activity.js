@@ -1,9 +1,9 @@
 import Controller, { inject as controller } from "@ember/controller";
-import I18n from "I18n";
 import { alias } from "@ember/object/computed";
-import { exportUserArchive } from "discourse/lib/export-csv";
 import { inject as service } from "@ember/service";
+import { exportUserArchive } from "discourse/lib/export-csv";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 export default Controller.extend({
   dialog: service(),

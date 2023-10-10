@@ -1,9 +1,9 @@
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { getOwner } from "@ember/application";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import pretender from "discourse/tests/helpers/create-pretender";
-import { getOwner } from "@ember/application";
 import { ajax } from "discourse/lib/ajax";
+import pretender from "discourse/tests/helpers/create-pretender";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 const trackViewHeaderName = "Discourse-Track-View";
 

@@ -1,7 +1,7 @@
-import autocomplete from "discourse/lib/autocomplete";
 import bootbox from "bootbox";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import autocomplete from "discourse/lib/autocomplete";
 import deprecated from "discourse-common/lib/deprecated";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 
 let jqueryPluginsConfigured = false;
 

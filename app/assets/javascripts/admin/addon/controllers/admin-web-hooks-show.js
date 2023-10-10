@@ -1,8 +1,8 @@
-import { inject as service } from "@ember/service";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
-import I18n from "I18n";
+import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import I18n from "I18n";
 
 export default class AdminWebHooksShowController extends Controller {
   @service dialog;

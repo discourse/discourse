@@ -1,3 +1,6 @@
+import { visit } from "@ember/test-helpers";
+import { compile } from "handlebars";
+import { test } from "qunit";
 import {
   acceptance,
   exists,
@@ -7,9 +10,6 @@ import {
   addRawTemplate,
   removeRawTemplate,
 } from "discourse-common/lib/raw-templates";
-import { compile } from "handlebars";
-import { test } from "qunit";
-import { visit } from "@ember/test-helpers";
 
 const CONNECTOR =
   "javascripts/raw-test/connectors/topic-list-before-status/lala";

@@ -1,9 +1,9 @@
+import { click, currentRouteName, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentRouteName, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 
 async function catchAbortedTransition() {
   try {

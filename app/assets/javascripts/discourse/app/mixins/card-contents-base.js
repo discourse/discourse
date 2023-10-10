@@ -1,13 +1,13 @@
 import { alias, match } from "@ember/object/computed";
-import { schedule, throttle } from "@ember/runloop";
-import DiscourseURL from "discourse/lib/url";
 import Mixin from "@ember/object/mixin";
-import { escapeExpression } from "discourse/lib/utilities";
+import { schedule, throttle } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { bind } from "discourse-common/utils/decorators";
-import discourseLater from "discourse-common/lib/later";
 import { headerOffset } from "discourse/lib/offset-calculator";
+import DiscourseURL from "discourse/lib/url";
+import { escapeExpression } from "discourse/lib/utilities";
+import discourseLater from "discourse-common/lib/later";
+import { bind } from "discourse-common/utils/decorators";
 
 const DEFAULT_SELECTOR = "#main-outlet";
 

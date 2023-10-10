@@ -1,17 +1,17 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-import { SECOND_FACTOR_METHODS } from "discourse/models/user";
+import { isEmpty } from "@ember/utils";
+import { escape } from "pretty-text/sanitizer";
 import { ajax } from "discourse/lib/ajax";
-import { findAll } from "discourse/models/login-method";
+import cookie, { removeCookie } from "discourse/lib/cookie";
 import { areCookiesEnabled } from "discourse/lib/utilities";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
-import { schedule } from "@ember/runloop";
-import cookie, { removeCookie } from "discourse/lib/cookie";
-import { isEmpty } from "@ember/utils";
+import { findAll } from "discourse/models/login-method";
+import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import I18n from "I18n";
-import { escape } from "pretty-text/sanitizer";
 
 export default class Login extends Component {
   @service dialog;

@@ -1,8 +1,8 @@
 import Component from "@ember/component";
-import { afterRender } from "discourse-common/utils/decorators";
-import { loadOneboxes } from "discourse/lib/load-oneboxes";
-import { ajax } from "discourse/lib/ajax";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
+import { ajax } from "discourse/lib/ajax";
+import { loadOneboxes } from "discourse/lib/load-oneboxes";
+import { afterRender } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   didRender() {

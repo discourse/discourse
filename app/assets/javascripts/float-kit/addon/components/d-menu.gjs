@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
-import { modifier } from "ember-modifier";
 import { tracked } from "@glimmer/tracking";
-import { inject as service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DFloatBody from "float-kit/components/d-float-body";
-import concatClass from "discourse/helpers/concat-class";
 import { getOwner } from "@ember/application";
+import { inject as service } from "@ember/service";
+import { modifier } from "ember-modifier";
+import DButton from "discourse/components/d-button";
+import concatClass from "discourse/helpers/concat-class";
+import DFloatBody from "float-kit/components/d-float-body";
 import DMenuInstance from "float-kit/lib/d-menu-instance";
 
 export default class DMenu extends Component {

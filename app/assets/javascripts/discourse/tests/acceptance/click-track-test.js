@@ -1,10 +1,10 @@
+import { click, currentURL, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
   exists,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentURL, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 
 acceptance("Click Track", function (needs) {
   let tracked = false;

@@ -1,11 +1,11 @@
+import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
   exists,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
-import { click, visit } from "@ember/test-helpers";
 
 acceptance("Poll results", function (needs) {
   needs.user();

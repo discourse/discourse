@@ -1,12 +1,12 @@
-import I18n from "I18n";
+import { click } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click } from "@ember/test-helpers";
+import I18n from "I18n";
 import { displayPollBuilderButton } from "discourse/plugins/poll/helpers/display-poll-builder-button";
-import { test } from "qunit";
 
 acceptance("Poll Builder - polls are enabled", function (needs) {
   needs.user();

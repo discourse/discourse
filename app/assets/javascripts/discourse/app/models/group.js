@@ -1,14 +1,14 @@
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
-import GroupHistory from "discourse/models/group-history";
+import { equal } from "@ember/object/computed";
+import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import Category from "discourse/models/category";
+import GroupHistory from "discourse/models/group-history";
 import RestModel from "discourse/models/rest";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
-import { ajax } from "discourse/lib/ajax";
-import { equal } from "@ember/object/computed";
-import { isEmpty } from "@ember/utils";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 const Group = RestModel.extend({
   user_count: 0,

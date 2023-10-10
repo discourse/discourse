@@ -1,8 +1,8 @@
-import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
-import { filterTypeForMode } from "discourse/lib/filter-mode";
-import { dependentKeyCompat } from "@ember/object/compat";
 import { tracked } from "@glimmer/tracking";
+import Component from "@ember/component";
+import { dependentKeyCompat } from "@ember/object/compat";
+import { filterTypeForMode } from "discourse/lib/filter-mode";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "li",

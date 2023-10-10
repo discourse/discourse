@@ -1,9 +1,9 @@
 import Route from "@ember/routing/route";
 import { once } from "@ember/runloop";
-import { seenUser } from "discourse/lib/user-presence";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import deprecated from "discourse-common/lib/deprecated";
 import { inject as service } from "@ember/service";
+import { seenUser } from "discourse/lib/user-presence";
+import deprecated from "discourse-common/lib/deprecated";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 
 const DiscourseRoute = Route.extend({
   router: service(),

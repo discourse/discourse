@@ -1,7 +1,7 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DecoratorHelper from "discourse/widgets/decorator-helper";
 import PostCooked from "discourse/widgets/post-cooked";
 import { createWidget } from "discourse/widgets/widget";

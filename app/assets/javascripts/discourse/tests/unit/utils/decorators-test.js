@@ -1,18 +1,18 @@
+import Component from "@ember/component";
+import EmberObject from "@ember/object";
+import { clearRender, render, settled } from "@ember/test-helpers";
+import { observes as nativeClassObserves } from "@ember-decorators/object";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import Component from "@ember/component";
-import { clearRender, render, settled } from "@ember/test-helpers";
+import { exists } from "discourse/tests/helpers/qunit-helpers";
+import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 import discourseComputed, {
   afterRender,
   debounce,
   observes,
   on,
 } from "discourse-common/utils/decorators";
-import { observes as nativeClassObserves } from "@ember-decorators/object";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
-import { hbs } from "ember-cli-htmlbars";
-import EmberObject from "@ember/object";
-import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 
 const fooComponent = Component.extend({
   classNames: ["foo-component"],

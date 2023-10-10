@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
+import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
-import { fn } from "@ember/helper";
-import and from "truth-helpers/helpers/and";
-import or from "truth-helpers/helpers/or";
-import not from "truth-helpers/helpers/not";
-import { action } from "@ember/object";
 import concatClass from "discourse/helpers/concat-class";
+import and from "truth-helpers/helpers/and";
+import not from "truth-helpers/helpers/not";
+import or from "truth-helpers/helpers/or";
 
 export default class AdminPostMenu extends Component {
   @service currentUser;

@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
-import I18n from "I18n";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import getURL from "discourse-common/lib/get-url";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { isPresent } from "@ember/utils";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import getURL from "discourse-common/lib/get-url";
+import I18n from "I18n";
 
 export default class ChatChannelArchiveStatus extends Component {
   @service chatApi;

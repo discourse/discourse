@@ -1,6 +1,6 @@
 import Controller from "@ember/controller";
-import { THEMES } from "admin/models/theme";
 import discourseComputed from "discourse-common/utils/decorators";
+import { THEMES } from "admin/models/theme";
 
 export default class AdminCustomizeThemesController extends Controller {
   currentTab = THEMES;

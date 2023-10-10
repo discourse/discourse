@@ -6,11 +6,11 @@ import {
   offset,
   shift,
 } from "@floating-ui/dom";
-import { FLOAT_UI_PLACEMENTS } from "float-kit/lib/constants";
-import { isTesting } from "discourse-common/config/environment";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import { iconHTML } from "discourse-common/lib/icon-library";
+import { isTesting } from "discourse-common/config/environment";
 import domFromString from "discourse-common/lib/dom-from-string";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import { FLOAT_UI_PLACEMENTS } from "float-kit/lib/constants";
 
 export async function updatePosition(trigger, content, options) {
   let padding = 0;

@@ -1,15 +1,15 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import { clipboardCopyAsync } from "discourse/lib/utilities";
 import { getOwner } from "@ember/application";
-import { isTesting } from "discourse-common/config/environment";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { bind } from "discourse-common/utils/decorators";
-import ChatModalMoveMessageToChannel from "discourse/plugins/chat/discourse/components/chat/modal/move-message-to-channel";
 import DButton from "discourse/components/d-button";
-import not from "truth-helpers/helpers/not";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { clipboardCopyAsync } from "discourse/lib/utilities";
+import { isTesting } from "discourse-common/config/environment";
+import { bind } from "discourse-common/utils/decorators";
 import I18n from "I18n";
+import not from "truth-helpers/helpers/not";
+import ChatModalMoveMessageToChannel from "discourse/plugins/chat/discourse/components/chat/modal/move-message-to-channel";
 
 export default class ChatSelectionManager extends Component {
   @service("composer") topicComposer;

@@ -1,7 +1,7 @@
-import Modifier from "ember-modifier";
 import { registerDestructor } from "@ember/destroyable";
-import { bind } from "discourse-common/utils/decorators";
 import { autoUpdate } from "@floating-ui/dom";
+import Modifier from "ember-modifier";
+import { bind } from "discourse-common/utils/decorators";
 import { updatePosition } from "float-kit/lib/update-position";
 
 export default class FloatKitApplyFloatingUi extends Modifier {

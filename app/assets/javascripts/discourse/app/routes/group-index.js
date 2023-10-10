@@ -1,9 +1,9 @@
-import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import GroupAddMembersModal from "discourse/components/modal/group-add-members";
 import CreateInvite from "discourse/components/modal/create-invite";
+import GroupAddMembersModal from "discourse/components/modal/group-add-members";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 
 export default DiscourseRoute.extend({
   modal: service(),

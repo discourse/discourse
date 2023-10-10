@@ -1,5 +1,5 @@
-import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
 import KeyValueStore from "discourse/lib/key-value-store";
 
 module("Unit | Utility | key-value-store", function (hooks) {

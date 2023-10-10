@@ -1,17 +1,17 @@
-import { bind } from "discourse-common/utils/decorators";
-import LocalDateBuilder from "../lib/local-date-builder";
-import { withPluginApi } from "discourse/lib/plugin-api";
-import LocalDatesCreateModal from "../discourse/components/modal/local-dates-create";
+import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { downloadCalendar } from "discourse/lib/download-calendar";
-import { renderIcon } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   addTagDecorateCallback,
   addTextDecorateCallback,
 } from "discourse/lib/to-markdown";
+import { renderIcon } from "discourse-common/lib/icon-library";
+import { bind } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
-import { inject as service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
+import LocalDatesCreateModal from "../discourse/components/modal/local-dates-create";
+import LocalDateBuilder from "../lib/local-date-builder";
 
 // Import applyLocalDates from discourse/lib/local-dates instead
 export function applyLocalDates(dates, siteSettings) {

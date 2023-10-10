@@ -1,10 +1,10 @@
+import { click, render, triggerKeyEvent } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { click, render, triggerKeyEvent } from "@ember/test-helpers";
 import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
-import { hbs } from "ember-cli-htmlbars";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import I18n from "I18n";
 
 module(
   "Integration | Component | select-kit/mini-tag-chooser",

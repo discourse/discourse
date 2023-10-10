@@ -1,6 +1,6 @@
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
 import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Poll in a post reply history", function (needs) {
   needs.user();

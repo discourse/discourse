@@ -1,5 +1,5 @@
-import { classNames, tagName } from "@ember-decorators/component";
 import Component from "@ember/component";
+import { classNames, tagName } from "@ember-decorators/component";
 
 @tagName("tr")
 @classNames("admin-report-table-row")

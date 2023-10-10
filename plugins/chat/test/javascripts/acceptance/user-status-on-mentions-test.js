@@ -1,3 +1,6 @@
+import { click, triggerEvent, visit, waitFor } from "@ember/test-helpers";
+import { skip, test } from "qunit";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   emulateAutocomplete,
@@ -5,9 +8,6 @@ import {
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { skip, test } from "qunit";
-import { click, triggerEvent, visit, waitFor } from "@ember/test-helpers";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 acceptance("Chat | User status on mentions", function (needs) {
   const channelId = 1;

@@ -1,7 +1,7 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render, settled } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Helper | body-class", function (hooks) {
   setupRenderingTest(hooks);

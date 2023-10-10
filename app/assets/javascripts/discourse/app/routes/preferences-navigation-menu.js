@@ -1,5 +1,5 @@
-import RestrictedUserRoute from "discourse/routes/restricted-user";
 import Category from "discourse/models/category";
+import RestrictedUserRoute from "discourse/routes/restricted-user";
 
 export default RestrictedUserRoute.extend({
   setupController(controller, user) {

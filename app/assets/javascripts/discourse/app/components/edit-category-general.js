@@ -1,13 +1,13 @@
-import { cancel } from "@ember/runloop";
-import Category from "discourse/models/category";
 import { action } from "@ember/object";
+import { not } from "@ember/object/computed";
+import { cancel } from "@ember/runloop";
+import { isEmpty } from "@ember/utils";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import discourseComputed from "discourse-common/utils/decorators";
+import Category from "discourse/models/category";
 import getURL from "discourse-common/lib/get-url";
-import { isEmpty } from "@ember/utils";
-import { not } from "@ember/object/computed";
 import discourseLater from "discourse-common/lib/later";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default buildCategoryPanel("general", {
   init() {

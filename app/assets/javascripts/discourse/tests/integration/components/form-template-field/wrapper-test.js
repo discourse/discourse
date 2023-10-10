@@ -1,9 +1,9 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 
 module(
   "Integration | Component | form-template-field | wrapper",

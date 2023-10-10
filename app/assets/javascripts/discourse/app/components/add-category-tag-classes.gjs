@@ -1,5 +1,5 @@
-import bodyClass from "discourse/helpers/body-class";
 import { concat } from "@ember/helper";
+import bodyClass from "discourse/helpers/body-class";
 
 const AddCategoryTagClasses = <template>
   {{#if @category}}

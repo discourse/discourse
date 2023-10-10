@@ -1,11 +1,11 @@
 import { equal, or } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
-import categoryFromId from "discourse-common/utils/category-macro";
+import { userPath } from "discourse/lib/url";
+import { postUrl } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
 import User from "discourse/models/user";
 import UserActionGroup from "discourse/models/user-action-group";
-import { postUrl } from "discourse/lib/utilities";
-import { userPath } from "discourse/lib/url";
+import categoryFromId from "discourse-common/utils/category-macro";
+import discourseComputed from "discourse-common/utils/decorators";
 
 const UserActionTypes = {
   likes_given: 1,

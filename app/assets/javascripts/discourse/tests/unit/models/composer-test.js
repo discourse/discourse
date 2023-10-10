@@ -1,17 +1,17 @@
+import { getOwner } from "@ember/application";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
 import {
   CREATE_TOPIC,
   EDIT,
   PRIVATE_MESSAGE,
   REPLY,
 } from "discourse/models/composer";
-import { currentUser } from "discourse/tests/helpers/qunit-helpers";
-import { module, test } from "qunit";
-import { getOwner } from "@ember/application";
-import { setupTest } from "ember-qunit";
 import pretender, {
   parsePostData,
   response,
 } from "discourse/tests/helpers/create-pretender";
+import { currentUser } from "discourse/tests/helpers/qunit-helpers";
 
 function createComposer(opts = {}) {
   opts.user ??= currentUser();

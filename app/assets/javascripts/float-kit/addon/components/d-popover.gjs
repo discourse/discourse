@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { modifier } from "ember-modifier";
-
 import deprecated from "discourse-common/lib/deprecated";
 
 export default class DPopover extends Component {

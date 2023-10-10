@@ -1,7 +1,7 @@
+import { h } from "virtual-dom";
 import Connector from "discourse/widgets/connector";
 import PostCooked from "discourse/widgets/post-cooked";
 import RawHtml from "discourse/widgets/raw-html";
-import { h } from "virtual-dom";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 
 class DecoratorHelper {

@@ -1,10 +1,9 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
-
-import Category from "discourse/models/category";
-import CategorySectionLink from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { canDisplayCategory } from "discourse/lib/sidebar/helpers";
+import CategorySectionLink from "discourse/lib/sidebar/user/categories-section/category-section-link";
+import Category from "discourse/models/category";
 
 export const TOP_SITE_CATEGORIES_TO_SHOW = 5;
 

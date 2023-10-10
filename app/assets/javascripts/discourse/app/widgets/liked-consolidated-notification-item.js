@@ -1,9 +1,9 @@
-import { DefaultNotificationItem } from "discourse/widgets/default-notification-item";
-import I18n from "I18n";
-import { createWidgetFrom } from "discourse/widgets/widget";
-import { escapeExpression } from "discourse/lib/utilities";
 import { isEmpty } from "@ember/utils";
 import { userPath } from "discourse/lib/url";
+import { escapeExpression } from "discourse/lib/utilities";
+import { DefaultNotificationItem } from "discourse/widgets/default-notification-item";
+import { createWidgetFrom } from "discourse/widgets/widget";
+import I18n from "I18n";
 
 createWidgetFrom(
   DefaultNotificationItem,

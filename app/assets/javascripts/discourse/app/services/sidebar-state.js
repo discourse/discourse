@@ -1,10 +1,10 @@
-import Service from "@ember/service";
 import { tracked } from "@glimmer/tracking";
+import Service from "@ember/service";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import {
   currentPanelKey,
   customPanels as panels,
 } from "discourse/lib/sidebar/custom-sections";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 const COMBINED_MODE = "combined";
 const SEPARATED_MODE = "separated";

@@ -1,5 +1,5 @@
-import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
 import highlightSyntax from "discourse/lib/highlight-syntax";
 import { fixture } from "discourse/tests/helpers/qunit-helpers";
 

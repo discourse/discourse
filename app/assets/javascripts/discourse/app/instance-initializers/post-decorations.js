@@ -1,16 +1,16 @@
 import { schedule } from "@ember/runloop";
-import discourseLater from "discourse-common/lib/later";
-import I18n from "I18n";
-import highlightSyntax from "discourse/lib/highlight-syntax";
-import lightbox from "discourse/lib/lightbox";
-import Columns from "discourse/lib/columns";
-import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
-import { setTextDirections } from "discourse/lib/text-direction";
-import { nativeLazyLoading } from "discourse/lib/lazy-load-images";
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { create } from "virtual-dom";
 import FullscreenTableModal from "discourse/components/modal/fullscreen-table";
+import Columns from "discourse/lib/columns";
+import highlightSyntax from "discourse/lib/highlight-syntax";
+import { nativeLazyLoading } from "discourse/lib/lazy-load-images";
+import lightbox from "discourse/lib/lightbox";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { setTextDirections } from "discourse/lib/text-direction";
+import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
+import discourseLater from "discourse-common/lib/later";
+import I18n from "I18n";
 
 export default {
   initialize(owner) {

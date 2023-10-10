@@ -1,5 +1,5 @@
-import Modifier from "ember-modifier";
 import { registerDestructor } from "@ember/destroyable";
+import Modifier from "ember-modifier";
 import { bind } from "discourse-common/utils/decorators";
 
 const FOCUSABLE_ELEMENTS =

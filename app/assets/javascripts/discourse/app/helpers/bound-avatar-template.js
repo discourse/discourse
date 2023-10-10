@@ -1,6 +1,6 @@
 import { htmlSafe } from "@ember/template";
-import { avatarImg } from "discourse-common/lib/avatar-utils";
 import { isEmpty } from "@ember/utils";
+import { avatarImg } from "discourse-common/lib/avatar-utils";
 
 export default function boundAvatarTemplate(avatarTemplate, size) {
   if (isEmpty(avatarTemplate)) {

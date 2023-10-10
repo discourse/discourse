@@ -1,14 +1,14 @@
+import { triggerEvent, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   exists,
   publishToMessageBus,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { triggerEvent, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import { cloneJSON } from "discourse-common/lib/object";
 import topicFixtures from "../fixtures/topic";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 function topicWithoutUserStatus(topicId, mentionedUserId) {
   const topic = cloneJSON(topicFixtures[`/t/${topicId}.json`]);

@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { ajax } from "discourse/lib/ajax";
-import { cancel } from "@ember/runloop";
-import { action } from "@ember/object";
-import { extractError } from "discourse/lib/ajax-error";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { cancel } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
+import { extractError } from "discourse/lib/ajax-error";
+import discourseDebounce from "discourse-common/lib/debounce";
 
 const SLUG_MAX_LENGTH = 100;
 

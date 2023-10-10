@@ -1,10 +1,10 @@
-import Service, { inject as service } from "@ember/service";
-import { debounce } from "discourse-common/utils/decorators";
-import Promise from "rsvp";
-import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import { cached, tracked } from "@glimmer/tracking";
+import Service, { inject as service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import Promise from "rsvp";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { debounce } from "discourse-common/utils/decorators";
+import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
 const DIRECT_MESSAGE_CHANNELS_LIMIT = 20;
 

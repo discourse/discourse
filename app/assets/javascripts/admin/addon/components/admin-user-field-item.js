@@ -1,13 +1,13 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import { i18n, propertyEqual } from "discourse/lib/computed";
 import Component from "@ember/component";
-import I18n from "I18n";
-import UserField from "admin/models/user-field";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
+import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { schedule } from "@ember/runloop";
-import { action } from "@ember/object";
+import { i18n, propertyEqual } from "discourse/lib/computed";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
+import discourseComputed from "discourse-common/utils/decorators";
+import UserField from "admin/models/user-field";
+import I18n from "I18n";
 
 export default Component.extend(bufferedProperty("userField"), {
   tagName: "",

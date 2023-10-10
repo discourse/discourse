@@ -1,11 +1,11 @@
 import Controller from "@ember/controller";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse-common/config/environment";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
-import { action } from "@ember/object";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { CHAT_SOUNDS } from "discourse/plugins/chat/discourse/services/chat-audio-manager";
-import { inject as service } from "@ember/service";
 
 const CHAT_ATTRS = [
   "chat_enabled",

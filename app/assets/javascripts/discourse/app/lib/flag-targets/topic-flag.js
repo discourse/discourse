@@ -1,6 +1,6 @@
-import ActionSummary from "discourse/models/action-summary";
 import EmberObject from "@ember/object";
 import Flag from "discourse/lib/flag-targets/flag";
+import ActionSummary from "discourse/models/action-summary";
 
 export default class TopicFlag extends Flag {
   title() {

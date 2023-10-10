@@ -1,7 +1,7 @@
-import { module, test } from "qunit";
-import { setupTest } from "ember-qunit";
-import LinkLookup from "discourse/lib/link-lookup";
 import { getOwner } from "@ember/application";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import LinkLookup from "discourse/lib/link-lookup";
 
 module("Unit | Utility | link-lookup", function (hooks) {
   setupTest(hooks);

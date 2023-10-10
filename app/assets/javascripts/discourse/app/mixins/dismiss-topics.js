@@ -1,6 +1,6 @@
+import { action } from "@ember/object";
 import Mixin from "@ember/object/mixin";
 import { inject as service } from "@ember/service";
-import { action } from "@ember/object";
 import DismissNew from "discourse/components/modal/dismiss-new";
 
 export default Mixin.create({

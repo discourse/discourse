@@ -1,7 +1,7 @@
-import { module, test } from "qunit";
 import { render, triggerEvent } from "@ember/test-helpers";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, fakeTime, query } from "discourse/tests/helpers/qunit-helpers";
 
 async function mouseenter() {

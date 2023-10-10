@@ -1,13 +1,13 @@
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { exportEntity } from "discourse/lib/export-csv";
-import { outputExportResult } from "discourse/lib/export-result";
 import { scheduleOnce } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-import ThemeChangeModal from "../components/modal/theme-change";
+import { exportEntity } from "discourse/lib/export-csv";
+import { outputExportResult } from "discourse/lib/export-result";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 import StaffActionLogDetailsModal from "../components/modal/staff-action-log-details";
+import ThemeChangeModal from "../components/modal/theme-change";
 
 export default class AdminLogsStaffActionLogsController extends Controller {
   @service modal;

@@ -1,8 +1,8 @@
-import ChatComposer from "../../chat-composer";
-import { inject as service } from "@ember/service";
-import I18n from "I18n";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import discourseDebounce from "discourse-common/lib/debounce";
+import I18n from "I18n";
+import ChatComposer from "../../chat-composer";
 
 export default class ChatComposerChannel extends ChatComposer {
   @service("chat-channel-composer") composer;

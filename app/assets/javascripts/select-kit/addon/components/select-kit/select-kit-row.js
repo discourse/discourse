@@ -1,11 +1,11 @@
-import { action, computed } from "@ember/object";
 import Component from "@ember/component";
+import { action, computed } from "@ember/object";
+import { reads } from "@ember/object/computed";
+import { guidFor } from "@ember/object/internals";
+import { dasherize } from "@ember/string";
+import { makeArray } from "discourse-common/lib/helpers";
 import I18n from "I18n";
 import UtilsMixin from "select-kit/mixins/utils";
-import { guidFor } from "@ember/object/internals";
-import { makeArray } from "discourse-common/lib/helpers";
-import { reads } from "@ember/object/computed";
-import { dasherize } from "@ember/string";
 
 export default Component.extend(UtilsMixin, {
   classNames: ["select-kit-row"],

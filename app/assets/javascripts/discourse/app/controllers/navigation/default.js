@@ -1,9 +1,9 @@
-import { inject as service } from "@ember/service";
-import Controller, { inject as controller } from "@ember/controller";
-import { TRACKED_QUERY_PARAM_VALUE } from "discourse/lib/topic-list-tracked-filter";
-import { calculateFilterMode } from "discourse/lib/filter-mode";
-import { dependentKeyCompat } from "@ember/object/compat";
 import { tracked } from "@glimmer/tracking";
+import Controller, { inject as controller } from "@ember/controller";
+import { dependentKeyCompat } from "@ember/object/compat";
+import { inject as service } from "@ember/service";
+import { calculateFilterMode } from "discourse/lib/filter-mode";
+import { TRACKED_QUERY_PARAM_VALUE } from "discourse/lib/topic-list-tracked-filter";
 
 export default class NavigationDefaultController extends Controller {
   @service router;

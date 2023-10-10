@@ -1,19 +1,19 @@
-import { and, equal, not, or } from "@ember/object/computed";
-import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
-import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
-import { Promise } from "rsvp";
-import RestModel from "discourse/models/rest";
-import User from "discourse/models/user";
-import { ajax } from "discourse/lib/ajax";
-import { deepMerge } from "discourse-common/lib/object";
-import deprecated from "discourse-common/lib/deprecated";
-import discourseComputed from "discourse-common/utils/decorators";
 import { get } from "@ember/object";
-import { highlightPost } from "discourse/lib/utilities";
-import { isEmpty } from "@ember/utils";
-import { loadTopicView } from "discourse/models/topic";
+import { and, equal, not, or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
+import { isEmpty } from "@ember/utils";
+import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
+import DiscourseURL from "discourse/lib/url";
+import { highlightPost } from "discourse/lib/utilities";
+import RestModel from "discourse/models/rest";
+import { loadTopicView } from "discourse/models/topic";
+import User from "discourse/models/user";
+import deprecated from "discourse-common/lib/deprecated";
+import { deepMerge } from "discourse-common/lib/object";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 let _lastEditNotificationClick = null;
 export function setLastEditNotificationClick(

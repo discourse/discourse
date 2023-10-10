@@ -1,8 +1,8 @@
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { cancel, next } from "@ember/runloop";
-import { tracked } from "@glimmer/tracking";
-import discourseLater from "discourse-common/lib/later";
 import { makeArray } from "discourse-common/lib/helpers";
+import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
 
 const TOUCH_OPTIONS = { passive: true, capture: true };

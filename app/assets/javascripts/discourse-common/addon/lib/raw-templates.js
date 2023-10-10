@@ -1,5 +1,5 @@
-import { getResolverOption } from "discourse-common/resolver";
 import require from "require";
+import { getResolverOption } from "discourse-common/resolver";
 
 export const __DISCOURSE_RAW_TEMPLATES = {};
 

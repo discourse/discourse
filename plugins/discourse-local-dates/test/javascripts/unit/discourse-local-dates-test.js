@@ -1,5 +1,5 @@
-import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
 import { applyLocalDates } from "../initializers/discourse-local-dates";
 import { freezeTime } from "./local-date-builder-test";
 

@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { inject as service } from "@ember/service";
 import DInlineFloat from "float-kit/components/d-inline-float";
 import { TOOLTIP } from "float-kit/lib/constants";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import and from "truth-helpers/helpers/and";
 
 export default class DInlineTooltip extends Component {

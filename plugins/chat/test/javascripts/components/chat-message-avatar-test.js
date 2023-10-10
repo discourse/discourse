@@ -1,10 +1,10 @@
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import hbs from "htmlbars-inline-precompile";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import { module, test } from "qunit";
 import { render } from "@ember/test-helpers";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import hbs from "htmlbars-inline-precompile";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 module("Discourse Chat | Component | chat-message-avatar", function (hooks) {
   setupRenderingTest(hooks);

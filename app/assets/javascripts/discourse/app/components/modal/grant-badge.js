@@ -1,15 +1,15 @@
-import { action } from "@ember/object";
-import { tracked } from "@glimmer/tracking";
 import Component from "@glimmer/component";
-import Badge from "discourse/models/badge";
-import I18n from "I18n";
-import UserBadge from "discourse/models/user-badge";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import { extractError } from "discourse/lib/ajax-error";
-import getURL from "discourse-common/lib/get-url";
 import {
   grantableBadges,
   isBadgeGrantable,
 } from "discourse/lib/grant-badge-utils";
+import Badge from "discourse/models/badge";
+import UserBadge from "discourse/models/user-badge";
+import getURL from "discourse-common/lib/get-url";
+import I18n from "I18n";
 
 export default class GrantBadgeModal extends Component {
   @tracked loading = true;

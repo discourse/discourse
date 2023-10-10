@@ -1,10 +1,10 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { click, render, settled } from "@ember/test-helpers";
-import DModal from "discourse/components/d-modal";
-import { on } from "@ember/modifier";
 import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { click, render, settled } from "@ember/test-helpers";
+import { module, test } from "qunit";
+import DModal from "discourse/components/d-modal";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | d-modal", function (hooks) {
   setupRenderingTest(hooks);

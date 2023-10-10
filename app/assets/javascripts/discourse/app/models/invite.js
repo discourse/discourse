@@ -1,13 +1,13 @@
 import EmberObject from "@ember/object";
 import { alias } from "@ember/object/computed";
-import { Promise } from "rsvp";
-import discourseComputed from "discourse-common/utils/decorators";
-import Topic from "discourse/models/topic";
-import User from "discourse/models/user";
-import { ajax } from "discourse/lib/ajax";
 import { isNone } from "@ember/utils";
+import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { userPath } from "discourse/lib/url";
+import Topic from "discourse/models/topic";
+import User from "discourse/models/user";
+import discourseComputed from "discourse-common/utils/decorators";
 
 const Invite = EmberObject.extend({
   save(data) {

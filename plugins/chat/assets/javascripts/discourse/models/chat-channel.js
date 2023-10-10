@@ -1,16 +1,16 @@
-import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
-import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
-import ChatThreadsManager from "discourse/plugins/chat/discourse/lib/chat-threads-manager";
-import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import guid from "pretty-text/guid";
-import ChatDirectMessage from "discourse/plugins/chat/discourse/models/chat-direct-message";
-import ChatChannelArchive from "discourse/plugins/chat/discourse/models/chat-channel-archive";
+import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
+import ChatThreadsManager from "discourse/plugins/chat/discourse/lib/chat-threads-manager";
+import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
+import ChatChannelArchive from "discourse/plugins/chat/discourse/models/chat-channel-archive";
+import ChatDirectMessage from "discourse/plugins/chat/discourse/models/chat-direct-message";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatTrackingState from "discourse/plugins/chat/discourse/models/chat-tracking-state";
+import UserChatChannelMembership from "discourse/plugins/chat/discourse/models/user-chat-channel-membership";
 
 export const CHATABLE_TYPES = {
   directMessageChannel: "DirectMessage",
