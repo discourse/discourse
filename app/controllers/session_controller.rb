@@ -2,7 +2,7 @@
 
 class SessionController < ApplicationController
   before_action :check_local_login_allowed,
-                only: %i[create forgot_password passkey_challenge passkey_auth_perform]
+                only: %i[create forgot_password passkey_challenge passkey_login]
   before_action :rate_limit_login, only: %i[create email_login]
   skip_before_action :redirect_to_login_if_required
   skip_before_action :preload_json,
@@ -337,7 +337,7 @@ class SessionController < ApplicationController
     render json: DiscourseWebauthn.stage_challenge(current_user, secure_session)
   end
 
-  def passkey_auth_perform
+  def passkey_login
     raise Discourse::NotFound unless SiteSetting.experimental_passkeys
 
     params.require(:publicKeyCredential)

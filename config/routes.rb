@@ -429,7 +429,7 @@ Discourse::Application.routes.draw do
       post "session/2fa/test-action" => "session#test_second_factor_restricted_route"
     end
     get "session/passkey/challenge" => "session#passkey_challenge"
-    post "session/passkey/auth" => "session#passkey_auth_perform"
+    post "session/passkey/auth" => "session#passkey_login"
     get "session/scopes" => "session#scopes"
     get "composer/mentions" => "composer#mentions"
     get "composer_messages" => "composer_messages#index"

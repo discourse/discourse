@@ -3041,7 +3041,7 @@ RSpec.describe SessionController do
     end
   end
 
-  describe "#passkey_auth_perform" do
+  describe "#passkey_login" do
     it "returns 404 if feature is not enabled" do
       SiteSetting.experimental_passkeys = false
 
