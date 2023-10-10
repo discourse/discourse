@@ -15,6 +15,7 @@ module BulkImport
       @settings = YAML.load_file(settings_path, symbolize_names: true)
 
       @root_path = @settings[:root_path]
+      @output_db = create_connection(@settings[:output_db_path])
 
       initialize_output_db
       configure_site_settings
@@ -26,13 +27,11 @@ module BulkImport
 
       if @settings[:fix_missing]
         @source_db = create_connection(@settings[:output_db_path])
-        @output_db = create_connection(@settings[:output_db_path])
 
         puts "Fixing missing uploads..."
         fix_missing
       else
         @source_db = create_connection(@settings[:source_db_path])
-        @output_db = create_connection(@settings[:output_db_path])
 
         puts "Uploading uploads..."
         upload
