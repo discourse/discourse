@@ -221,7 +221,7 @@ module JsLocaleHelper
 
     return "" if translations.blank?
 
-    # output = +"if (!I18n.extras) { I18n.extras = {}; }"
+    output = +"if (!I18n.extras) { I18n.extras = {}; }"
     locales.each do |l|
       translations_json = translations[l].to_json
       output << <<~JS
