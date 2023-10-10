@@ -214,11 +214,15 @@ module BulkImport
       queue = SizedQueue.new(QUEUE_SIZE)
       consumer_threads = []
 
-      max_count = @source_db.get_first_value("SELECT COUNT(*) FROM uploads")
+      max_count =
+        @source_db.get_first_value("SELECT COUNT(*) FROM uploads WHERE upload IS NOT NULL")
 
       producer_thread =
         Thread.new do
-          query("SELECT id, upload FROM uploads", @source_db).tap do |result_set|
+          query(
+            "SELECT id, upload FROM uploads WHERE upload IS NOT NULL",
+            @source_db,
+          ).tap do |result_set|
             result_set.each { |row| queue << row }
             result_set.close
           end
