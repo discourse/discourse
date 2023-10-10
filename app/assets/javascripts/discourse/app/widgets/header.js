@@ -257,24 +257,6 @@ createWidget("header-icons", {
       action: "toggleHamburger",
       href: "",
       classNames: ["hamburger-dropdown"],
-
-      contents() {
-        let { currentUser } = this;
-        if (
-          currentUser?.reviewable_count &&
-          this.siteSettings.navigation_menu === "legacy"
-        ) {
-          return h(
-            "div.badge-notification.reviewables",
-            {
-              attributes: {
-                title: I18n.t("notifications.reviewable_items"),
-              },
-            },
-            this.currentUser.reviewable_count
-          );
-        }
-      },
     });
 
     if (!attrs.sidebarEnabled || this.site.mobileView) {
@@ -536,9 +518,8 @@ export default createWidget("header", {
       } else if (state.hamburgerVisible) {
         if (
           attrs.navigationMenuQueryParamOverride === "header_dropdown" ||
-          (attrs.navigationMenuQueryParamOverride !== "legacy" &&
-            this.siteSettings.navigation_menu !== "legacy" &&
-            (!attrs.sidebarEnabled || this.site.narrowDesktopView))
+          !attrs.sidebarEnabled ||
+          this.site.narrowDesktopView
         ) {
           panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));
         } else {
@@ -651,17 +632,15 @@ export default createWidget("header", {
   },
 
   toggleHamburger() {
-    if (
-      this.siteSettings.navigation_menu !== "legacy" &&
-      this.attrs.sidebarEnabled &&
-      !this.site.narrowDesktopView
-    ) {
+    if (this.attrs.sidebarEnabled && !this.site.narrowDesktopView) {
       this.sendWidgetAction("toggleSidebar");
     } else {
       this.state.hamburgerVisible = !this.state.hamburgerVisible;
       this.toggleBodyScrolling(this.state.hamburgerVisible);
 
       schedule("afterRender", () => {
+        // Remove focus from hamburger toggle button
+        document.querySelector("#toggle-hamburger-menu")?.blur();
         if (this.siteSettings.navigation_menu !== "legacy") {
           // Remove focus from hamburger toggle button
           document.querySelector("#toggle-hamburger-menu")?.blur();
