@@ -265,10 +265,10 @@ jobs:
         embroider: ["1", "0"]
         browser: ["Chrome", "Firefox ESR", "Firefox Evergreen"]
         exclude:
-          # Testing Embroider on one browser is good enough for now
-          - embroider: "1"
+          # Testing the classic build on one browser is good enough
+          - embroider: "0"
             browser: Firefox ESR
-          - embroider: "1"
+          - embroider: "0"
             browser: Firefox Evergreen
 
     env:
