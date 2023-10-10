@@ -116,6 +116,8 @@ class DiscoursePluginRegistry
 
   define_filtered_register :summarization_strategies
 
+  define_filtered_register :post_action_notify_user_handlers
+
   def self.register_auth_provider(auth_provider)
     self.auth_providers << auth_provider
   end
