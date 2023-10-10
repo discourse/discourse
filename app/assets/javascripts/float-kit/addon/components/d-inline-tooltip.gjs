@@ -6,6 +6,8 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import and from "truth-helpers/helpers/and";
 
 export default class DInlineTooltip extends Component {
+  @service tooltip;
+
   <template>
     {{! template-lint-disable modifier-name-case }}
     <div
@@ -26,6 +28,4 @@ export default class DInlineTooltip extends Component {
       @inline={{@inline}}
     />
   </template>
-
-  @service tooltip;
 }

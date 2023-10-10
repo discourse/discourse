@@ -10,15 +10,6 @@ import I18n from "I18n";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default class UserTip extends Component {
-  <template>
-    {{! template-lint-disable modifier-name-case }}
-    <div {{this.registerTip}}>
-      {{#if this.shouldRenderTip}}
-        <span {{this.tip}}></span>
-      {{/if}}
-    </div>
-  </template>
-
   @service currentUser;
   @service userTips;
   @service tooltip;
@@ -80,4 +71,13 @@ export default class UserTip extends Component {
   get shouldRenderTip() {
     return this.userTips.renderedId === this.args.id;
   }
+
+  <template>
+    {{! template-lint-disable modifier-name-case }}
+    <div {{this.registerTip}}>
+      {{#if this.shouldRenderTip}}
+        <span {{this.tip}}></span>
+      {{/if}}
+    </div>
+  </template>
 }

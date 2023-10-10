@@ -12,49 +12,6 @@ import not from "truth-helpers/helpers/not";
 import I18n from "I18n";
 
 export default class ChatSelectionManager extends Component {
-  <template>
-    <div
-      class="chat-selection-management"
-      data-last-copy-successful={{this.lastCopySuccessful}}
-    >
-      <div class="chat-selection-management__buttons">
-        <DButton
-          @icon="quote-left"
-          @label="chat.selection.quote_selection"
-          @disabled={{not this.anyMessagesSelected}}
-          @action={{this.quoteMessages}}
-          id="chat-quote-btn"
-        />
-
-        <DButton
-          @icon="copy"
-          @label="chat.selection.copy"
-          @disabled={{not this.anyMessagesSelected}}
-          @action={{this.copyMessages}}
-          id="chat-copy-btn"
-        />
-
-        {{#if this.enableMove}}
-          <DButton
-            @icon="sign-out-alt"
-            @label="chat.selection.move_selection_to_channel"
-            @disabled={{not this.anyMessagesSelected}}
-            @action={{this.openMoveMessageModal}}
-            id="chat-move-to-channel-btn"
-          />
-        {{/if}}
-
-        <DButton
-          @icon="times"
-          @label="chat.selection.cancel"
-          @action={{@pane.cancelSelecting}}
-          id="chat-cancel-selection-btn"
-          class="btn-secondary cancel-btn"
-        />
-      </div>
-    </div>
-  </template>
-
   @service("composer") topicComposer;
   @service router;
   @service modal;
@@ -150,4 +107,47 @@ export default class ChatSelectionManager extends Component {
       popupAjaxError(error);
     }
   }
+
+  <template>
+    <div
+      class="chat-selection-management"
+      data-last-copy-successful={{this.lastCopySuccessful}}
+    >
+      <div class="chat-selection-management__buttons">
+        <DButton
+          @icon="quote-left"
+          @label="chat.selection.quote_selection"
+          @disabled={{not this.anyMessagesSelected}}
+          @action={{this.quoteMessages}}
+          id="chat-quote-btn"
+        />
+
+        <DButton
+          @icon="copy"
+          @label="chat.selection.copy"
+          @disabled={{not this.anyMessagesSelected}}
+          @action={{this.copyMessages}}
+          id="chat-copy-btn"
+        />
+
+        {{#if this.enableMove}}
+          <DButton
+            @icon="sign-out-alt"
+            @label="chat.selection.move_selection_to_channel"
+            @disabled={{not this.anyMessagesSelected}}
+            @action={{this.openMoveMessageModal}}
+            id="chat-move-to-channel-btn"
+          />
+        {{/if}}
+
+        <DButton
+          @icon="times"
+          @label="chat.selection.cancel"
+          @action={{@pane.cancelSelecting}}
+          id="chat-cancel-selection-btn"
+          class="btn-secondary cancel-btn"
+        />
+      </div>
+    </div>
+  </template>
 }

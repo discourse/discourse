@@ -14,6 +14,39 @@ export default class AdminPostMenu extends Component {
   @service store;
   @service adminPostMenuButtons;
 
+  get reviewUrl() {
+    return `/review?topic_id=${this.args.data.transformedPost.id}&status=all`;
+  }
+
+  get extraButtons() {
+    return this.adminPostMenuButtons.callbacks
+      .map((callback) => {
+        return callback(this.args.data.transformedPost);
+      })
+      .filter(Boolean);
+  }
+
+  @action
+  async topicAction(actionName) {
+    await this.args.close();
+
+    try {
+      await this.args.data[actionName]?.();
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(`Unknown error while attempting \`${actionName}\`:`, error);
+    }
+
+    await this.args.data.scheduleRerender();
+  }
+
+  @action
+  async extraAction(button) {
+    await this.args.close();
+    await button.action(this.args.data.post);
+    await this.args.data.scheduleRerender();
+  }
+
   <template>
     <ul>
       {{#if this.currentUser.staff}}
@@ -205,37 +238,4 @@ export default class AdminPostMenu extends Component {
       {{/each}}
     </ul>
   </template>
-
-  get reviewUrl() {
-    return `/review?topic_id=${this.args.data.transformedPost.id}&status=all`;
-  }
-
-  get extraButtons() {
-    return this.adminPostMenuButtons.callbacks
-      .map((callback) => {
-        return callback(this.args.data.transformedPost);
-      })
-      .filter(Boolean);
-  }
-
-  @action
-  async topicAction(actionName) {
-    await this.args.close();
-
-    try {
-      await this.args.data[actionName]?.();
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(`Unknown error while attempting \`${actionName}\`:`, error);
-    }
-
-    await this.args.data.scheduleRerender();
-  }
-
-  @action
-  async extraAction(button) {
-    await this.args.close();
-    await button.action(this.args.data.post);
-    await this.args.data.scheduleRerender();
-  }
 }

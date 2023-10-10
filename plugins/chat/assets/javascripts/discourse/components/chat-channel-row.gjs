@@ -22,70 +22,6 @@ import { htmlSafe } from "@ember/template";
 const FADEOUT_CLASS = "-fade-out";
 
 export default class ChatChannelRow extends Component {
-  <template>
-    {{! template-lint-disable modifier-name-case }}
-    <LinkTo
-      @route="chat.channel"
-      @models={{@channel.routeModels}}
-      class={{concatClass
-        "chat-channel-row"
-        (if @channel.focused "focused")
-        (if @channel.currentUserMembership.muted "muted")
-        (if @options.leaveButton "can-leave")
-        (if (eq this.chat.activeChannel.id @channel.id) "active")
-        (if this.channelHasUnread "has-unread")
-      }}
-      tabindex="0"
-      data-chat-channel-id={{@channel.id}}
-      {{didInsert this.startTrackingStatus}}
-      {{willDestroy this.stopTrackingStatus}}
-      {{(if this.shouldRemoveChannel (modifier this.onRemoveChannel))}}
-    >
-      <div
-        class={{concatClass
-          "chat-channel-row__content"
-          (if this.shouldReset "-animate-reset")
-        }}
-        {{(if this.shouldHandleSwipe (modifier this.registerSwipableRow))}}
-        {{(if this.shouldHandleSwipe (modifier this.handleSwipe))}}
-        {{(if this.shouldReset (modifier this.onReset))}}
-        style={{this.rowStyle}}
-      >
-        <ChatChannelTitle @channel={{@channel}} />
-        <ChatChannelMetadata @channel={{@channel}} @unreadIndicator={{true}} />
-
-        {{#if
-          (and @options.leaveButton @channel.isFollowing this.site.desktopView)
-        }}
-          <ToggleChannelMembershipButton
-            @channel={{@channel}}
-            @options={{hash
-              leaveClass="btn-flat chat-channel-leave-btn"
-              labelType="none"
-              leaveIcon="times"
-              leaveTitle=(if
-                @channel.isDirectMessageChannel
-                this.leaveDirectMessageLabel
-                this.leaveChannelLabel
-              )
-            }}
-          />
-        {{/if}}
-      </div>
-
-      {{#if this.showRemoveButton}}
-        <div
-          class={{concatClass
-            "chat-channel-row__action-btn"
-            (if this.isAtThreshold "-at-threshold" "-not-at-threshold")
-          }}
-        >
-          {{icon "times-circle"}}
-        </div>
-      {{/if}}
-    </LinkTo>
-  </template>
-
   @service api;
   @service capabilities;
   @service chat;
@@ -219,4 +155,68 @@ export default class ChatChannelRow extends Component {
   stopTrackingStatus() {
     this.#firstDirectMessageUser?.stopTrackingStatus();
   }
+
+  <template>
+    {{! template-lint-disable modifier-name-case }}
+    <LinkTo
+      @route="chat.channel"
+      @models={{@channel.routeModels}}
+      class={{concatClass
+        "chat-channel-row"
+        (if @channel.focused "focused")
+        (if @channel.currentUserMembership.muted "muted")
+        (if @options.leaveButton "can-leave")
+        (if (eq this.chat.activeChannel.id @channel.id) "active")
+        (if this.channelHasUnread "has-unread")
+      }}
+      tabindex="0"
+      data-chat-channel-id={{@channel.id}}
+      {{didInsert this.startTrackingStatus}}
+      {{willDestroy this.stopTrackingStatus}}
+      {{(if this.shouldRemoveChannel (modifier this.onRemoveChannel))}}
+    >
+      <div
+        class={{concatClass
+          "chat-channel-row__content"
+          (if this.shouldReset "-animate-reset")
+        }}
+        {{(if this.shouldHandleSwipe (modifier this.registerSwipableRow))}}
+        {{(if this.shouldHandleSwipe (modifier this.handleSwipe))}}
+        {{(if this.shouldReset (modifier this.onReset))}}
+        style={{this.rowStyle}}
+      >
+        <ChatChannelTitle @channel={{@channel}} />
+        <ChatChannelMetadata @channel={{@channel}} @unreadIndicator={{true}} />
+
+        {{#if
+          (and @options.leaveButton @channel.isFollowing this.site.desktopView)
+        }}
+          <ToggleChannelMembershipButton
+            @channel={{@channel}}
+            @options={{hash
+              leaveClass="btn-flat chat-channel-leave-btn"
+              labelType="none"
+              leaveIcon="times"
+              leaveTitle=(if
+                @channel.isDirectMessageChannel
+                this.leaveDirectMessageLabel
+                this.leaveChannelLabel
+              )
+            }}
+          />
+        {{/if}}
+      </div>
+
+      {{#if this.showRemoveButton}}
+        <div
+          class={{concatClass
+            "chat-channel-row__action-btn"
+            (if this.isAtThreshold "-at-threshold" "-not-at-threshold")
+          }}
+        >
+          {{icon "times-circle"}}
+        </div>
+      {{/if}}
+    </LinkTo>
+  </template>
 }

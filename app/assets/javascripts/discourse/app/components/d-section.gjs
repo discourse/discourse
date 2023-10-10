@@ -6,6 +6,18 @@ import deprecated from "discourse-common/lib/deprecated";
 
 // Can add a body class from within a component
 export default class DSection extends Component {
+  constructor() {
+    super(...arguments);
+    deprecated(
+      `<DSection> is deprecated. Use {{body-class "foo-page" "bar"}} and/or <section></section> instead.`,
+      {
+        since: "3.2.0.beta1",
+        dropFrom: "3.3.0.beta1",
+        id: "discourse.d-section",
+      }
+    );
+  }
+
   <template>
     {{#if @pageClass}}
       {{bodyClass (concat @pageClass "-page")}}
@@ -21,16 +33,4 @@ export default class DSection extends Component {
       {{yield}}
     {{/if}}
   </template>
-
-  constructor() {
-    super(...arguments);
-    deprecated(
-      `<DSection> is deprecated. Use {{body-class "foo-page" "bar"}} and/or <section></section> instead.`,
-      {
-        since: "3.2.0.beta1",
-        dropFrom: "3.3.0.beta1",
-        id: "discourse.d-section",
-      }
-    );
-  }
 }

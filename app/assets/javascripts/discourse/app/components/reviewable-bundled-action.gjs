@@ -9,6 +9,33 @@ import { action } from "@ember/object";
 import { isRTL } from "discourse/lib/text-direction";
 
 export default class ReviewableBundledAction extends Component {
+  @service site;
+
+  get multiple() {
+    return this.args.bundle.actions.length > 1;
+  }
+
+  get first() {
+    return this.args.bundle.actions[0];
+  }
+
+  get placement() {
+    const vertical = this.site.mobileView ? "top" : "bottom";
+    const horizontal = isRTL() ? "end" : "start";
+
+    return `${vertical}-${horizontal}`;
+  }
+
+  @action
+  perform(id) {
+    if (id) {
+      const _action = this.args.bundle.actions.find((a) => a.id === id);
+      this.args.performAction(_action);
+    } else {
+      this.args.performAction(this.first);
+    }
+  }
+
   <template>
     {{#if this.multiple}}
       <DropdownSelectBox
@@ -41,31 +68,4 @@ export default class ReviewableBundledAction extends Component {
       />
     {{/if}}
   </template>
-
-  @service site;
-
-  get multiple() {
-    return this.args.bundle.actions.length > 1;
-  }
-
-  get first() {
-    return this.args.bundle.actions[0];
-  }
-
-  get placement() {
-    const vertical = this.site.mobileView ? "top" : "bottom";
-    const horizontal = isRTL() ? "end" : "start";
-
-    return `${vertical}-${horizontal}`;
-  }
-
-  @action
-  perform(id) {
-    if (id) {
-      const _action = this.args.bundle.actions.find((a) => a.id === id);
-      this.args.performAction(_action);
-    } else {
-      this.args.performAction(this.first);
-    }
-  }
 }

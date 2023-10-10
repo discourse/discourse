@@ -7,18 +7,6 @@ import ChatEmojiPicker from "discourse/plugins/chat/discourse/components/chat-em
 import { modifier } from "ember-modifier";
 
 export default class ChatChannelMessageEmojiPicker extends Component {
-  <template>
-    {{! template-lint-disable modifier-name-case }}
-    <ChatEmojiPicker
-      @context="chat-channel-message"
-      @didInsert={{this.didInsert}}
-      @willDestroy={{this.willDestroy}}
-      @didSelectEmoji={{this.didSelectEmoji}}
-      @class="hidden"
-      {{this.listenToBodyScroll}}
-    />
-  </template>
-
   @service site;
   @service chatEmojiPickerManager;
 
@@ -74,4 +62,16 @@ export default class ChatChannelMessageEmojiPicker extends Component {
   willDestroy() {
     this._popper?.destroy();
   }
+
+  <template>
+    {{! template-lint-disable modifier-name-case }}
+    <ChatEmojiPicker
+      @context="chat-channel-message"
+      @didInsert={{this.didInsert}}
+      @willDestroy={{this.willDestroy}}
+      @didSelectEmoji={{this.didSelectEmoji}}
+      @class="hidden"
+      {{this.listenToBodyScroll}}
+    />
+  </template>
 }

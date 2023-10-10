@@ -11,29 +11,6 @@ import { on } from "@ember/modifier";
 import autoFocus from "discourse/modifiers/auto-focus";
 
 export default class FastEdit extends Component {
-  <template>
-    {{! template-lint-disable modifier-name-case }}
-    {{! template-lint-disable no-pointer-down-event-binding }}
-    {{! template-lint-disable no-invalid-interactive }}
-    <div class="fast-edit-container" {{on "keydown" this.onKeydown}}>
-      <textarea
-        {{on "input" this.updateValue}}
-        id="fast-edit-input"
-        {{autoFocus}}
-      >{{@initialValue}}</textarea>
-
-      <DButton
-        class="btn-small btn-primary save-fast-edit"
-        @action={{this.save}}
-        @icon="pencil-alt"
-        @label="composer.save_edit"
-        @translatedTitle={{this.buttonTitle}}
-        @isLoading={{this.isSaving}}
-        @disabled={{this.disabled}}
-      />
-    </div>
-  </template>
-
   @tracked value = this.args.initialValue;
   @tracked isSaving = false;
 
@@ -81,4 +58,27 @@ export default class FastEdit extends Component {
       this.args.close();
     }
   }
+
+  <template>
+    {{! template-lint-disable modifier-name-case }}
+    {{! template-lint-disable no-pointer-down-event-binding }}
+    {{! template-lint-disable no-invalid-interactive }}
+    <div class="fast-edit-container" {{on "keydown" this.onKeydown}}>
+      <textarea
+        {{on "input" this.updateValue}}
+        id="fast-edit-input"
+        {{autoFocus}}
+      >{{@initialValue}}</textarea>
+
+      <DButton
+        class="btn-small btn-primary save-fast-edit"
+        @action={{this.save}}
+        @icon="pencil-alt"
+        @label="composer.save_edit"
+        @translatedTitle={{this.buttonTitle}}
+        @isLoading={{this.isSaving}}
+        @disabled={{this.disabled}}
+      />
+    </div>
+  </template>
 }
