@@ -163,6 +163,22 @@ module BulkImport
                     end
                   end
 
+                if upload.present?
+                  upload_path = store.get_path_for_upload(upload)
+
+                  file_exists =
+                    if store.external?
+                      store.object_from_path(upload_path).exists?
+                    else
+                      File.exist?(File.join(store.public_dir, upload_path))
+                    end
+
+                  unless file_exists
+                    upload.destroy
+                    upload = nil
+                  end
+                end
+
                 upload_okay = upload.present? && upload.persisted? && upload.errors.blank?
 
                 if upload_okay
@@ -276,7 +292,7 @@ module BulkImport
                   File.exist?(File.join(store.public_dir, path))
                 end
 
-              Upload.destroy_by(id: upload["id"]) if !file_exists
+              Upload.delete_by(id: upload["id"]) if !file_exists
 
               if file_exists
                 status_queue << { id: row["id"], status: :ok }
@@ -284,6 +300,7 @@ module BulkImport
                 status_queue << { id: row["id"], status: :missing }
               end
             rescue StandardError => e
+              puts e.message
               status_queue << { id: row["id"], status: :error }
             end
           end
