@@ -2131,7 +2131,6 @@ es:
       drafts_offline: "borradores sin conexión"
       edit_conflict: "conflicto de edición"
       esc: "esc"
-      esc_label: "Haz clic o pulsa escape para cerrar"
       ok_proceed: "Vale, continuar"
       group_mentioned_limit:
         one: "<b>Aviso</b> Has mencionado al grupo <a href='%{group_link}'>%{group}</a>, pero tiene más miembros que los que los administradores permiten mencionar (%{count} usuario) de una vez. No se notificará a nadie."
@@ -4558,42 +4557,8 @@ es:
         groups_filter_instructions: "Los webhooks relevantes solo se activarán si el evento está relacionado con los grupos específicados. Déjalo en blanco para activar los webhooks con todas los grupos."
         groups_filter: "Grupos activados"
         delete_confirm: "¿Eliminar este webhook?"
-        topic_event:
-          name: "Evento de tema"
-          details: "Cuando se crea, revisa, cambia o elimina un tema."
-        post_event:
-          name: "Evento de publicación"
-          details: "Cuando se publica, edita, elimina o recupera una respuesta."
-        user_event:
-          name: "Evento de usuario"
-          details: "Cuando un usuario inicia o cierra sesión, confirma su correo electrónico, se registra o es aprobado, actualizado, suspendido o reactivado."
-        group_event:
-          name: "Evento de grupo"
-          details: "Cuando se crea, actualiza o destruye un grupo."
-        category_event:
-          name: "Evento de categoría"
-          details: "Cuando se crea, actualiza o destruye una categoría."
-        tag_event:
-          name: "Evento de etiqueta"
-          details: "Cuando se crea, actualiza o destruye una etiqueta."
-        reviewable_event:
-          name: "Evento de revisión"
-          details: "Cuando un elemento nuevo está disponible para ser revisado y cuando su estado se actualiza."
-        notification_event:
-          name: "Evento de notificación"
-          details: "Cuando un usuario recibe una notificación."
-        user_promoted_event:
-          name: "Evento por ascenso de usuario"
-          details: "Cuando un usuario asciende de nivel de confianza."
-        user_badge_event:
-          name: "Evento de insignia"
-          details: "Cuando se concede o se revoca una insignia."
-        group_user_event:
-          name: "Evento de usuario de grupo"
-          details: "Cuando se agrega o elimina un usuario en un grupo."
         like_event:
-          name: "Evento de me gusta"
-          details: "Cuando un usuario le da me gusta a una publicación."
+          post_liked: "Cuando un usuario le da me gusta a una publicación."
         delivery_status:
           title: "Estado de entrega"
           inactive: "Inactivo"
@@ -4796,6 +4761,7 @@ es:
           convert_theme_tooltip: "Convertir este tema en componente"
           inactive_themes: "Temas inactivos:"
           inactive_components: "Componentes sin usar:"
+          cancel: "Cancelar"
           broken_theme_tooltip: "Este tema tiene errores en CSS, HTML o YAML"
           disabled_component_tooltip: "Este componente ha sido desactivado"
           default_theme_tooltip: "Este es el tema por defecto del sitio"

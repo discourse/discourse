@@ -97,7 +97,6 @@ bg:
       channel_info:
         back_to_channel: "Назад"
         tabs:
-          about: Относно
           members: Членове
           settings: Настройки
       direct_message_creator:
@@ -123,6 +122,10 @@ bg:
         saved: "Запазено"
         unfollow: "Напусни"
         admin_title: "Администратор"
+        settings_title: "Настройки"
+        category_label: "Категория"
+        history_label: "История"
+        members_label: "Членове"
       incoming_webhooks:
         back: "Назад"
         description: "Описание"
@@ -141,6 +144,13 @@ bg:
           title: "Премести в нова тема"
         existing_topic:
           title: "Преместете в съществуваща тема."
+      retention_reminders:
+        public:
+          one: "%{count} ден"
+          other: "%{count} дни"
+        dm:
+          one: "%{count} ден"
+          other: "%{count} дни"
       emoji_picker:
         objects: "Обекти"
         activities: "Дейности"

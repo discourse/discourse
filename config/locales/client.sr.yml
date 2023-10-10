@@ -2010,6 +2010,7 @@ sr:
           save: "Sačuvaj"
           edit: "Izmeni"
           settings: "Podešavanje"
+          cancel: "Odustani"
           upload: "Učitaj"
           discard: "Odbaci"
           installed: "Instalirano"

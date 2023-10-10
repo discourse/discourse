@@ -26,14 +26,19 @@ uk:
             chat:
               create_message: "Створіть повідомлення чату у вказаному каналі."
       web_hooks:
-        chat_message_event:
-          name: "Подія повідомлення в чаті"
-          details: "При створенні, редагуванні, видаленні або відновленні повідомлення чату."
+        chat_event:
+          group_name: "Події чату"
+          chat_message_created: "Повідомлення створено"
+          chat_message_edited: "Повідомлення відредаговано"
+          chat_message_trashed: "Повідомлення знищено"
+          chat_message_restored: "Повідомлення відновлено"
     about:
       chat_messages_count: "Повідомлення чату"
       chat_channels_count: "Чат-канали"
       chat_users_count: "Користувачі чату"
     chat:
+      text_copied: Текст скопійовано в буфер обміну
+      link_copied: Посилання скопійовано до буфера обміну
       deleted_chat_username: видалено
       dates:
         time_tiny: "h:mm"
@@ -266,6 +271,7 @@ uk:
       reply: "Відповідь"
       edit: "Редагувати"
       copy_link: "Скопіювати посилання"
+      copy_text: "Копіювати текст"
       rebake_message: "Перебудувати HTML"
       retry_staged_message:
         title: "Помилка мережі"
@@ -338,7 +344,6 @@ uk:
         back_to_all_channels: "Всі канали"
         back_to_channel: "Назад"
         tabs:
-          about: Про
           members: Учасники
           settings: Налаштування
       new_message_modal:
@@ -500,6 +505,11 @@ uk:
         saved: "Збережено"
         unfollow: "Покинути"
         admin_title: "Адміністратор"
+        settings_title: "Налаштування"
+        info_title: "Інформація про канал"
+        category_label: "Категорія"
+        history_label: "Історія"
+        members_label: "Учасники"
       admin:
         title: "Чат"
         export_messages:
@@ -578,18 +588,18 @@ uk:
           many: "%{commaSeparatedUsernames} та %{count} інших набирають текст"
           other: "%{commaSeparatedUsernames} та %{count} інших набирають текст"
       retention_reminders:
-        public_none: "Історія каналу зберігається нескінченно довго."
+        public_none: "безстроково"
         public:
-          one: "Історія каналу зберігається протягом %{count} дня."
-          few: "Історія каналу зберігається протягом %{count} днів."
-          many: "Історія каналу зберігається протягом %{count} днів."
-          other: "Історія каналу зберігається протягом %{count} днів."
-        dm_none: "Історія особистого чату зберігається безстроково."
+          one: "%{count} день"
+          few: "%{count} дні"
+          many: "%{count} днів"
+          other: "%{count} днів"
+        dm_none: "безстроково"
         dm:
-          one: "Особиста історія чату зберігається %{count} день."
-          few: "Особиста історія чату зберігається %{count} дні."
-          many: "Особиста історія чату зберігається %{count} днів."
-          other: "Особиста історія чату зберігається %{count} днів."
+          one: "%{count} день"
+          few: "%{count} дні"
+          many: "%{count} днів"
+          other: "%{count} днів"
       flags:
         off_topic: "Це повідомлення не має відношення до поточної дискусії як визначено назвою каналів, і, ймовірно, має бути переміщене в інше місце."
         inappropriate: "Це повідомлення містить вміст, який розумна людина вважає образливим або порушенням <a href=\"%{basePath}/guidelines\">наших правил спільноти</a>."

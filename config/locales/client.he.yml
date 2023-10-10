@@ -699,7 +699,7 @@ he:
       days:
         one: "יום"
         two: "יומיים"
-        many: "ימים"
+        many: "יום"
         other: "ימים"
       months:
         one: "חודש"
@@ -2147,6 +2147,7 @@ he:
       security_key_not_allowed_error: "זמן תהליך אימות מפתח האבטחה פג או שבוטל."
       security_key_no_matching_credential_error: "לא ניתן למצוא פרטי גישה במפתח האבטחה שסופק."
       security_key_support_missing_error: "המכשיר או הדפדפן הנוכחי שלך לא תומך בשימוש במפתחות אבטחה, נא להשתמש בשיטה אחרת."
+      security_key_invalid_response_error: "תהליך אימות מפתח האבטחה נכשלה עקב תגובה שגויה."
       email_placeholder: "דוא״ל / שם משתמש"
       caps_lock_warning: "מקש Caps Lock לחוץ"
       error: "שגיאה לא ידועה"
@@ -2329,7 +2330,7 @@ he:
       drafts_offline: "טיוטות מנותקות"
       edit_conflict: "עריכת סתירה"
       esc: "esc"
-      esc_label: "יש ללחוץ עם העכבר או על Esc כדי להתעלם"
+      esc_label: "התעלמות מהודעה"
       ok_proceed: "בסדר, להמשיך"
       group_mentioned_limit:
         one: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד משתמש %{count}. אף אחד לא יקבל הודעה."
@@ -5005,41 +5006,65 @@ he:
         groups_filter: "קבוצות שהופעלו"
         delete_confirm: "להסיר webhook זה?"
         topic_event:
-          name: "אירוע נושא"
-          details: "כאשר יש נושא חדש, מעודכן, ששונה, או נמחק."
+          group_name: "אירועי נושא"
+          topic_created: "נושא נוצר"
+          topic_revised: "נושא מתוקן"
+          topic_edited: "נושא מעודכן"
+          topic_destroyed: "נושא נמחק"
+          topic_recovered: "נושא משוחזר"
         post_event:
-          name: "אירוע פוסט"
-          details: "כאשר יש תגובה חדשה, עריכה, מחיקה או שחזור."
-        user_event:
-          name: "אירוע משתמש"
-          details: "כאשר משתמש מתחבר, מתנתק, מאשר את כתובת הדוא\"ל שלו, נוצר, מאושר, מעודכן, מושעה או בוטלה השעייתו."
+          group_name: "אירועי פוסט"
+          post_created: "פוסט נוצר"
+          post_edited: "פוסט מעודכן"
+          post_destroyed: "פוסט נמחק"
+          post_recovered: "נושא משוחזר"
         group_event:
-          name: "אירוע קבוצה"
-          details: "כאשר קבוצה נוצרת, מתעדכנת או מושמדת."
-        category_event:
-          name: "אירוע קטגוריה"
-          details: "כאשר קטגוריה נוצרת, מתעדכנת או מושמדת."
+          group_name: "אירועי קבוצה"
+          group_created: "קבוצה נוצרה"
+          group_updated: "קבוצה מעודכנת"
+          group_destroyed: "קבוצה נמחקת"
         tag_event:
-          name: "אירוע תגית"
-          details: "כאשר תגית נוצרת, מתעדכנת או מושמדת."
+          group_name: "אירועי תגית"
+          tag_created: "תגית נוצרת"
+          tag_updated: "תגית מתעדכנת"
+          tag_destroyed: "תגית נמחקת"
+        category_event:
+          group_name: "אירועי קטגוריה"
+          category_created: "קטגוריה נוצרת"
+          category_updated: "קטגוריה מעודכנת"
+          category_destroyed: "קטגוריה נמחקת"
+        user_event:
+          group_name: "אירועי משתמש"
+          user_logged_in: "משתמש נכנס"
+          user_logged_out: "משתמש יצא"
+          user_confirmed_email: "משתמש אימת דוא״ל"
+          user_created: "משתמש נוצר"
+          user_approved: "משתמש אושר"
+          user_updated: "משתמש עודכן"
+          user_destroyed: "משתמש נמחק"
+          user_suspended: "משתמש הושעה"
+          user_unsuspended: "בוטלה השעיית משתמש"
         reviewable_event:
-          name: "אירוע סקירה"
-          details: "כאשר פריט חדש ממתין לסקירה וכאשר המצב שלו מתעדכן."
-        notification_event:
-          name: "אירוע התראה"
-          details: "כשמשתמש מקבל התראה בהזנה שלו."
-        user_promoted_event:
-          name: "אירוע שקודם על ידי משתמש"
-          details: "כאשר משתמש מקודם מדרגת אמון אחת לאחרת."
+          group_name: "אירועי סקירה"
+          reviewable_created: "פריט לסקירה מוכן"
+          reviewable_updated: "פריט לסקירה מעודכן"
         user_badge_event:
-          name: "אירוע עיטור"
-          details: "מתי עיטור מוענק או נשלל."
-        group_user_event:
-          name: "אירוע משתמש בקבוצה"
-          details: "כאשר משתמש מתווסף או נגרע מקבוצה."
+          group_name: "אירועי עיטור"
+          user_badge_granted: "עיטור משתמש מוענק"
+          user_badge_revoked: "עיטור משתמש נשלל"
         like_event:
-          name: "אירוע לייק"
-          details: "כשמשתמש מצביע לייק בפוסט."
+          group_name: "אירועי לייק"
+          post_liked: "כשמשתמש מצביע לייק בפוסט."
+        notification_event:
+          group_name: "אירועי התראה"
+          notification_created: "משתמש מקבל התראה בערוץ העדכונים שלו"
+        group_user_event:
+          group_name: "אירועי משתמש בקבוצה"
+          user_added_to_group: "משתמש נוסף לקבוצה"
+          user_removed_from_group: "משתמש מוסר מקבוצה"
+        user_promoted_event:
+          group_name: "אירועי קידום משתמש"
+          user_promoted: "משתמש מקודם"
         delivery_status:
           title: "מצב שליחה"
           inactive: "לא פעיל"
@@ -5177,6 +5202,9 @@ he:
         install: "התקנה"
         delete: "מחיקה"
         delete_confirm: 'למחוק את „%{theme_name}”?'
+        bulk_delete: 'להמשיך?'
+        bulk_themes_delete_confirm: "פעולה זו תסיר את ערכות העיצוב הבאות, הן לא תהיינה זמינות לשימוש על ידי משתמשים באתר שלך:"
+        bulk_components_delete_confirm: "פעולה זו תסיר את הרכיבים הבאים, הם לא יהיו זמינים לשימוש על ידי משתמשים באתר שלך:"
         color: "צבע"
         opacity: "שקיפות"
         copy: "שכפול"
@@ -5246,6 +5274,8 @@ he:
           convert_theme_tooltip: "המרת ערכת עיצוב זו לרכיב"
           inactive_themes: "ערכות עיצוב בלתי פעילות:"
           inactive_components: "רכיבים שאינם בשימוש:"
+          selected: "%{count} נבחרו"
+          cancel: "ביטול"
           broken_theme_tooltip: "לערכת עיצוב זו יש שגיאות ב־CSS,‏ HTML או YAML"
           disabled_component_tooltip: "הרכיב הזה נוטרל"
           default_theme_tooltip: "ערכת עיצוב זו מכהנת כברירת המחדל של האתר"

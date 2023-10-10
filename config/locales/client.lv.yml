@@ -2908,14 +2908,6 @@ lv:
         individual_event: "Izvēlēties individuālus notikumus."
         active: "Aktīvs"
         active_notice: "Mēs nosūtīsim detalizētu informāciju par notikumu, tiklīdz būs signāls."
-        topic_event:
-          name: "Tēmas notikums"
-          details: "Kad ir izveidota jauna tēma, vai arī tā ir labota, izmainīta vai dzēsta."
-        post_event:
-          name: "Ieraksta notikums"
-          details: "Kad ir jauna, labota, dzēsta vai atjaunota atbilde."
-        user_event:
-          name: "Lietotāja notikums"
         delivery_status:
           title: "Piegādes statuss"
           inactive: "Neaktīvs"
@@ -3049,6 +3041,7 @@ lv:
           color_scheme_select: "Izvēlieties krāsas, kuras lietos šis dizains"
           custom_sections: "Specifiskas sadaļas:"
           theme_components: "Dizaina komponenti"
+          cancel: "Atcelt"
           collapse: Sakļaut
           uploads: "Augšupielādes"
           no_uploads: "Jūs varat augšupielādēt resursus, kas ir saistīti ar jūsu dizainu, piemēram, fontus un attēlus"

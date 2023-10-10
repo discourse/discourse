@@ -1632,7 +1632,6 @@ da:
     suppress_overlapping_tags_in_list: "Hvis mærkerne matcher nøjagtige ord i emnetitler, skal du ikke vise mærket"
     remove_muted_tags_from_latest: "Vis ikke emner, der kun er mærket med tavse mærker på den seneste emneliste."
     force_lowercase_tags: "Tving alle nye mærker til at kun benytte små bogstaver."
-    company_name: "Virksomhedens navn"
     governing_law: "Gældende Lov"
     city_for_disputes: "By for tvister"
     shared_drafts_category: "Aktiver funktionen Delte kladder ved at angive en kategori for emneudkast. Emner i denne kategori vil blive undertrykt fra emnelister for personalebrugere."

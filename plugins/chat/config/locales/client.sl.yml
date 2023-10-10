@@ -58,7 +58,6 @@ sl:
       channel_info:
         back_to_channel: "Nazaj"
         tabs:
-          about: O nas
           members: Člani
           settings: Nastavitve
       direct_message_creator:
@@ -85,6 +84,10 @@ sl:
         saved: "Shranjeno"
         unfollow: "Zapusti"
         admin_title: "Admin"
+        settings_title: "Nastavitve"
+        category_label: "Kategorija"
+        history_label: "Zgodovina"
+        members_label: "Člani"
       incoming_webhooks:
         back: "Nazaj"
         description: "Opis"
@@ -105,6 +108,17 @@ sl:
           title: "Prestavi v obstoječo temo"
         new_message:
           title: "Prestavi v novo ZS"
+      retention_reminders:
+        public:
+          one: "%{count} dan"
+          two: "%{count} dneva"
+          few: "%{count} dnevi"
+          other: "%{count} dni"
+        dm:
+          one: "%{count} dan"
+          two: "%{count} dneva"
+          few: "%{count} dnevi"
+          other: "%{count} dni"
       emoji_picker:
         objects: "Stvari"
         activities: "Dejavnosti"

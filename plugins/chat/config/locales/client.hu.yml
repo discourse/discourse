@@ -198,7 +198,6 @@ hu:
         back_to_all_channels: "Összes csatorna"
         back_to_channel: "Vissza"
         tabs:
-          about: Névjegy
           members: Tagok
           settings: Beállítások
       channel_edit_name_slug_modal:
@@ -269,6 +268,10 @@ hu:
         saved: "Mentve"
         unfollow: "Elhagyás"
         admin_title: "Adminisztrátor"
+        settings_title: "Beállítások"
+        category_label: "Kategória"
+        history_label: "Idővonal"
+        members_label: "Tagok"
       admin:
         title: "Csevegés"
       direct_messages:
@@ -331,8 +334,12 @@ hu:
           one: "%{commaSeparatedUsernames} és még %{count} valaki gépel"
           other: "%{commaSeparatedUsernames} és még %{count} valaki gépel"
       retention_reminders:
-        public_none: "A csatornaelőzmények korlátlan ideig megőrződnek."
-        dm_none: "A személyes csevegési előzmények korlátlan ideig megőrződnek."
+        public:
+          one: "%{count} nap"
+          other: "%{count} nap"
+        dm:
+          one: "%{count} nap"
+          other: "%{count} nap"
       flagging:
         action: "Üzenet megjelölése"
       emoji_picker:
