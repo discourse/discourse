@@ -5921,7 +5921,7 @@ RSpec.describe UsersController do
       expect(response_parsed["rp_id"]).to eq(DiscourseWebauthn.rp_id)
       expect(response_parsed["rp_name"]).to eq(DiscourseWebauthn.rp_name)
       expect(response_parsed["user_secure_id"]).to eq(
-        user1.reload.create_or_fetch_secure_identifier,
+        user1.create_or_fetch_secure_identifier,
       )
       expect(response_parsed["supported_algorithms"]).to eq(
         ::DiscourseWebauthn::SUPPORTED_ALGORITHMS,
@@ -5963,7 +5963,7 @@ RSpec.describe UsersController do
       )
     end
 
-    it "fails if key is not present" do
+    it "fails if key is invalid" do
       sign_in(user1)
       post "/u/rename_passkey/ID.json", params: { name: "new name" }
 

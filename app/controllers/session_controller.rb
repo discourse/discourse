@@ -350,9 +350,9 @@ class SessionController < ApplicationController
         factor_type: UserSecurityKey.factor_types[:first_factor],
       ).authenticate_security_key
 
-    user = User.find_by_id(security_key.user_id)
+    user = User.where(id: security_key.user_id, active: true).first
 
-    if user.active && user.email_confirmed?
+    if user.email_confirmed?
       login(user, false)
     else
       not_activated(user)

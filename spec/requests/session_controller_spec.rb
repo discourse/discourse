@@ -3091,7 +3091,7 @@ RSpec.describe SessionController do
       end
 
       context "when user has a valid registered passkey" do
-        let!(:passkey) do
+        fab!(:passkey) do
           Fabricate(
             :user_security_key,
             credential_id: valid_passkey_data[:credential_id],
@@ -3142,7 +3142,6 @@ RSpec.describe SessionController do
                }
           expect(response.status).to eq(200)
           expect(response.parsed_body["error"]).not_to be_present
-          user.reload
 
           expect(session[:current_user_id]).to eq(user.id)
         end

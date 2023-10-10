@@ -1653,7 +1653,7 @@ class UsersController < ApplicationController
     params.require(:name)
 
     passkey = current_user.security_keys.find_by(id: params[:id].to_i)
-    raise Discourse::InvalidParameters unless passkey
+    raise Discourse::InvalidParameters.new(:id) unless passkey
 
     passkey.update!(name: params[:name])
     render json: success_json
