@@ -76,14 +76,14 @@ describe "Thread list in side panel | full page", type: :system do
     end
 
     it "shows the OM excerpt for threads without a title" do
-      chat_page.visit_channel(channel)
+      chat_page.visit_threads_list(channel)
 
       expect(page).to have_content(thread_1.original_message.excerpt)
     end
 
     it "shows the thread title with emoji" do
       thread_1.update!(title: "What is for dinner? :hamburger:")
-      chat_page.visit_channel(channel)
+      chat_page.visit_threads_list(channel)
 
       expect(thread_list_page.item_by_id(thread_1.id)).to have_content("What is for dinner?")
       expect(thread_list_page.item_by_id(thread_1.id)).to have_css("img.emoji[alt='hamburger']")
@@ -92,7 +92,7 @@ describe "Thread list in side panel | full page", type: :system do
     it "shows an excerpt of the original message of the thread" do
       thread_1.original_message.update!(message: "This is a long message for the excerpt")
       thread_1.original_message.rebake!
-      chat_page.visit_channel(channel)
+      chat_page.visit_threads_list(channel)
 
       expect(thread_list_page.item_by_id(thread_1.id)).to have_content(
         "This is a long message for the excerpt",
@@ -100,7 +100,7 @@ describe "Thread list in side panel | full page", type: :system do
     end
 
     it "doesn’t show the thread original message user avatar" do
-      chat_page.visit_channel(channel)
+      chat_page.visit_threads_list(channel)
 
       expect(thread_list_page.item_by_id(thread_1.id)).to have_no_css(
         thread_list_page.avatar_selector(thread_1.original_message.user),
@@ -110,7 +110,7 @@ describe "Thread list in side panel | full page", type: :system do
     it "shows the last reply date of the thread" do
       freeze_time
       last_reply = Fabricate(:chat_message, thread: thread_1, use_service: true)
-      chat_page.visit_channel(channel)
+      chat_page.visit_threads_list(channel)
 
       expect(thread_list_page.item_by_id(thread_1.id)).to have_css(
         thread_list_page.last_reply_datetime_selector(last_reply),
@@ -118,7 +118,7 @@ describe "Thread list in side panel | full page", type: :system do
     end
 
     it "shows participants" do
-      chat_page.visit_channel(channel)
+      chat_page.visit_threads_list(channel)
 
       expect(thread_list_page.item_by_id(thread_1.id)).to have_css(
         ".avatar[title='#{current_user.username}']",
@@ -129,7 +129,7 @@ describe "Thread list in side panel | full page", type: :system do
     end
 
     it "opens a thread" do
-      chat_page.visit_channel(channel)
+      chat_page.visit_threads_list(channel)
 
       thread_list_page.item_by_id(thread_1.id).click
       expect(side_panel).to have_open_thread(thread_1)
@@ -150,7 +150,7 @@ describe "Thread list in side panel | full page", type: :system do
       end
 
       it "hides the thread in the list when another user deletes the original message" do
-        chat_page.visit_channel(channel)
+        chat_page.visit_threads_list(channel)
 
         expect(thread_list_page).to have_thread(thread_1)
 
@@ -169,7 +169,7 @@ describe "Thread list in side panel | full page", type: :system do
         current_user.update!(admin: true)
 
         thread_1.original_message.trash!
-        chat_page.visit_channel(channel)
+        chat_page.visit_threads_list(channel)
 
         expect(thread_list_page).to have_no_thread(thread_1)
 
@@ -193,7 +193,7 @@ describe "Thread list in side panel | full page", type: :system do
 
       it "allows updating when user is admin" do
         current_user.update!(admin: true)
-        chat_page.visit_channel(channel)
+        chat_page.visit_threads_list(channel)
         thread_list_page.item_by_id(thread_1.id).click
         thread_page.header.open_settings
         find(".chat-modal-thread-settings__title-input").fill_in(with: new_title)
@@ -205,7 +205,7 @@ describe "Thread list in side panel | full page", type: :system do
       it "allows updating when user is same as the chat original message user" do
         thread_1.update!(original_message_user: current_user)
         thread_1.original_message.update!(user: current_user)
-        chat_page.visit_channel(channel)
+        chat_page.visit_threads_list(channel)
         thread_list_page.item_by_id(thread_1.id).click
         thread_page.header.open_settings
         find(".chat-modal-thread-settings__title-input").fill_in(with: new_title)
@@ -217,7 +217,7 @@ describe "Thread list in side panel | full page", type: :system do
       it "does not allow updating if user is neither admin nor original message user" do
         thread_1.update!(original_message_user: other_user)
         thread_1.original_message.update!(user: other_user)
-        chat_page.visit_channel(channel)
+        chat_page.visit_threads_list(channel)
         thread_list_page.item_by_id(thread_1.id).click
 
         expect(thread_page.header).to have_no_settings_button

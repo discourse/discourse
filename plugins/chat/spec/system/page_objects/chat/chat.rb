@@ -59,6 +59,12 @@ module PageObjects
         has_css?(".chat-thread:not(.loading)[data-id=\"#{thread.id}\"]")
       end
 
+      def visit_threads_list(channel)
+        visit(channel.url + "/t")
+        has_no_css?(".chat-channel--not-loaded-once")
+        has_no_css?(".chat-skeleton")
+      end
+
       def visit_channel_settings(channel)
         visit(channel.url + "/info/settings")
       end
