@@ -14,8 +14,6 @@ module BulkImport
     def initialize(settings_path)
       @settings = YAML.load_file(settings_path, symbolize_names: true)
 
-      @source_db = create_connection(@settings[:source_db_path])
-      @output_db = create_connection(@settings[:output_db_path])
       @root_path = @settings[:root_path]
 
       initialize_output_db
@@ -27,9 +25,15 @@ module BulkImport
       EXIFR.logger = Logger.new(nil)
 
       if @settings[:fix_missing]
+        @source_db = create_connection(@settings[:output_db_path])
+        @output_db = create_connection(@settings[:output_db_path])
+
         puts "Fixing missing uploads..."
         fix_missing
       else
+        @source_db = create_connection(@settings[:source_db_path])
+        @output_db = create_connection(@settings[:output_db_path])
+
         puts "Uploading uploads..."
         upload
       end
@@ -211,11 +215,11 @@ module BulkImport
       queue = SizedQueue.new(QUEUE_SIZE)
       consumer_threads = []
 
-      max_count = @output_db.get_first_value("SELECT COUNT(*) FROM uploads")
+      max_count = @source_db.get_first_value("SELECT COUNT(*) FROM uploads")
 
       producer_thread =
         Thread.new do
-          query("SELECT id, upload FROM uploads", @output_db).tap do |result_set|
+          query("SELECT id, upload FROM uploads", @source_db).tap do |result_set|
             result_set.each { |row| queue << row }
             result_set.close
           end
@@ -236,6 +240,8 @@ module BulkImport
             elsif status == false
               error_count += 1
             else
+              puts status
+              @output_db.execute("DELETE FROM uploads WHERE id = ?", [status])
               missing_count += 1
             end
 
@@ -248,7 +254,7 @@ module BulkImport
 
       store = Discourse.store
 
-      (Etc.nprocessors * @settings[:thread_count_factor]).to_i.times do |index|
+      (Etc.nprocessors * @settings[:thread_count_factor] * 2).to_i.times do |index|
         consumer_threads << Thread.new do
           Thread.current.name = "worker-#{index}"
           fake_upload = OpenStruct.new(url: "")
@@ -265,7 +271,7 @@ module BulkImport
                   File.exist?(File.join(store.public_dir, path))
                 end
 
-              # Upload.destroy_by(id: upload["id"]) if !file_exists
+              Upload.destroy_by(id: upload["id"]) if !file_exists
 
               status_queue << file_exists ? true : row["id"]
             rescue StandardError => e
