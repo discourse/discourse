@@ -689,7 +689,7 @@ he:
       days:
         one: "יום"
         two: "יומיים"
-        many: "ימים"
+        many: "יום"
         other: "ימים"
       months:
         one: "חודש"

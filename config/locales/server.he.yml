@@ -814,7 +814,7 @@ he:
       x_days:
         one: "יום"
         two: "יומיים"
-        many: "%{count} ימים"
+        many: "%{count} יום"
         other: "%{count} ימים"
       about_x_months:
         one: "חודש"

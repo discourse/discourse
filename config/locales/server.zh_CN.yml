@@ -72,6 +72,7 @@ zh_CN:
       about_json_values: "about.json 包含无效值：%{errors}"
       modifier_values: "about.json 修饰符包含无效值：%{errors}"
       asset_too_big: "资产 %{filename} 大于 %{limit} 限制"
+      theme_too_big: "主题大于 %{limit} 限制"
       git: "克隆 git 仓库时出错，访问被拒绝或找不到仓库"
       git_ref_not_found: "无法签出 git 参考：%{ref}"
       git_unsupported_scheme: "无法克隆 git 仓库：方案不受支持"
@@ -80,6 +81,7 @@ zh_CN:
       unknown_file_type: "您上传的文件似乎不是一个有效的 Discourse 主题。"
       not_allowed_theme: "`%{repo}` 不在允许的主题列表中（请检查 `allowed_theme_repos` 全局设置）。"
       ssh_key_gone: "您安装主题等待的时间太长，并且 SSH 密钥已过期。请再试一次。"
+      too_many_files: "主题中的文件数 (%{count}) 已超过允许的最大文件数 (%{limit})"
     errors:
       component_no_user_selectable: "主题组件无法由用户选择"
       component_no_default: "主题组件不能是默认主题"
@@ -842,6 +844,9 @@ zh_CN:
     sequence_conflict_error:
       title: "草稿错误"
       description: "正在另一个窗口中编辑草稿。请重新加载此页面。"
+    too_many_drafts:
+      title: "草稿过多"
+      description: "您已达到允许的最大草稿数。请删除一些[您的草稿](%{base_url}/my/activity/drafts)，然后重试。"
   draft_backup:
     pm_title: "正在进行的话题的备份草稿"
     pm_body: "包含备份草稿的话题"
@@ -2322,6 +2327,8 @@ zh_CN:
     invalid_security_key: "无效的安全密钥。"
     missing_second_factor_name: "请提供一个名称。"
     missing_second_factor_code: "请提供一个代码。"
+    too_many_authenticators: "抱歉，身份验证器不能超过 50 个。请删除一个现有的并重试。"
+    too_many_security_keys: "抱歉，您不能拥有超过 50 个安全密钥。请删除一个现有密钥并重试。"
     second_factor_toggle:
       totp: "改用身份验证器应用或安全密钥"
       backup_code: "改用备份代码"
