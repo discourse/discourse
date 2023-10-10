@@ -37,18 +37,6 @@ class PostActionCreator
         create(created_by, post, action, message: message)
       end
     end
-
-    def notify_user_handlers
-      @notify_user_handlers ||= Set.new
-    end
-
-    def add_notify_user_handler(&block)
-      notify_user_handlers << block
-    end
-
-    def reset_notify_user_handlers
-      @notify_user_handlers = Set.new
-    end
   end
 
   def initialize(
@@ -129,7 +117,7 @@ class PostActionCreator
     if @message.present? && %i[notify_moderators notify_user spam].include?(@post_action_name)
       creator = create_message_creator
       # We need to check if the creator exists because it's possible `create_message_creator` returns nil
-      # in the event that a `notify_user_handler` evaluated to false, haulting the post creation.
+      # in the event that a `post_action_notify_user_handler` evaluated to false, haulting the post creation.
       if creator
         post = creator.create
         if creator.errors.present?
@@ -358,9 +346,10 @@ class PostActionCreator
       if @post_action_name == :notify_user
         create_args[:target_usernames] = @post.user.username
 
-        # Evaluate notify_user_handlers, and if any return false, return early from this method
+        # Evaluate DiscoursePluginRegistry.post_action_notify_user_handlers.
+        # If any return false, return early from this method
         handler_values =
-          self.class.notify_user_handlers.map do |handler|
+          DiscoursePluginRegistry.post_action_notify_user_handlers.map do |handler|
             handler.call(@created_by, @post, @message)
           end
         return if handler_values.any? { |value| value == false }

@@ -58,9 +58,9 @@ module PostGuardian
 
         if action_key == :notify_user &&
              !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
-          # The modifier below is used here to add additional permissions for notifying users.
+          # The modifier below is used to add additional permissions for notifying users.
           # In core the only method of notifying a user is personal messages so we check if the
-          # user can PM. Plugins can extend the behavior of users are notifier via `notify_user`
+          # user can PM. Plugins can extend the behavior of how users are notifier via `notify_user`
           # post action, and this allows extension for that use case.
           can_notify = false
           can_notify =
