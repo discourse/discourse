@@ -48,21 +48,21 @@ export default class ChatTrackingStateManager extends Service {
   }
 
   get allChannelMentionCount() {
-    let mentionTotal = this.#publicChannels().reduce(
-      (mentionCount, channel) => {
-        return mentionCount + channel.tracking.mentionCount;
+    let totalPublicMentions = this.#publicChannels().reduce(
+      (channelMentionCount, channel) => {
+        return channelMentionCount + channel.tracking.mentionCount;
       },
       0
     );
 
-    let dmChannelMentionCount = this.#directMessageChannels().reduce(
-      (mentionCount, channel) => {
-        return mentionCount + channel.tracking.mentionCount;
+    let totalPrivateMentions = this.#directMessageChannels().reduce(
+      (dmMentionCount, channel) => {
+        return dmMentionCount + channel.tracking.mentionCount;
       },
       0
     );
 
-    return mentionTotal + dmChannelMentionCount;
+    return totalPublicMentions + totalPrivateMentions;
   }
 
   get allChannelUrgentCount() {

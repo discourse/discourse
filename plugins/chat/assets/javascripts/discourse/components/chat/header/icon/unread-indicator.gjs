@@ -42,14 +42,15 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
   }
 
   get showUrgentIndicator() {
-    let totalCount = this.onlyMentions ? this.mentionCount : this.unreadCount;
+    if (this.onlyMentions) {
+      return this.mentionCount > 0;
+    }
 
     return (
-      totalCount > 0 &&
+      this.urgentCount > 0 &&
       this.#hasAnyIndicatorPreference([
         HEADER_INDICATOR_PREFERENCE_ALL_NEW,
         HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
-        HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
       ])
     );
   }
@@ -61,8 +62,8 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
     );
   }
 
-  get unreadCountLabel() {
-    let totalCount = this.onlyMentions ? this.mentionCount : this.unreadCount;
+  get urgentCountLabel() {
+    let totalCount = this.onlyMentions ? this.mentionCount : this.urgentCount;
     return totalCount > MAX_UNREAD_COUNT ? `${MAX_UNREAD_COUNT}+` : totalCount;
   }
 
@@ -87,7 +88,7 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
     {{#if this.showUrgentIndicator}}
       <div class="chat-channel-unread-indicator -urgent">
         <div class="chat-channel-unread-indicator__number">
-          {{this.unreadCountLabel}}
+          {{this.urgentCountLabel}}
         </div>
       </div>
     {{else if this.showUnreadIndicator}}
