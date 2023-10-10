@@ -165,6 +165,46 @@ RSpec.describe "Message notifications - with sidebar", type: :system do
         fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, user_1]) }
         fab!(:dm_channel_2) { Fabricate(:direct_message_channel, users: [current_user, user_2]) }
 
+        context "when user chat_header_indicator_preference is set to 'only_mentions'" do
+          before do
+            current_user.user_option.update!(
+              chat_header_indicator_preference:
+                UserOption.chat_header_indicator_preferences[:only_mentions],
+            )
+          end
+
+          context "when a message is created" do
+            it "doesn't show any indicator on chat-header-icon" do
+              visit("/")
+              using_session(:user_1) do |session|
+                create_message(channel: dm_channel_1, creator: user_1)
+                session.quit
+              end
+
+              expect(page).to have_no_css(
+                ".chat-header-icon .chat-channel-unread-indicator.-urgent",
+              )
+            end
+          end
+
+          context "when a message with a mention is created" do
+            it "does show an indicator on chat-header-icon" do
+              Jobs.run_immediately!
+
+              visit("/")
+              using_session(:user_1) do
+                create_message(
+                  text: "hey what's up @#{current_user.username}?",
+                  channel: dm_channel_1,
+                  creator: user_1,
+                )
+              end
+
+              expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator.-urgent")
+            end
+          end
+        end
+
         context "when a message is created" do
           it "correctly renders notifications" do
             visit("/")
