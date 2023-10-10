@@ -8,7 +8,11 @@ import { inject as service } from "@ember/service";
 
 export default class AdminPluginsChatController extends Controller {
   @service dialog;
-  queryParams = { selectedWebhookId: "id" };
+  queryParams = [
+    {
+      selectedWebhookId: "id",
+    },
+  ];
 
   loading = false;
   creatingNew = false;

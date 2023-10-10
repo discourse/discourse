@@ -7,7 +7,7 @@
             {{@channel.chatable.users.length}}
           </span>
         {{else}}
-          <Chat::UserAvatar @user={{get @channel.chatable.users "0"}} />
+          <ChatUserAvatar @user={{get @channel.chatable.users "0"}} />
         {{/if}}
       </div>
     {{/if}}

@@ -29,11 +29,12 @@
       <div class="chat-thread-list-item__metadata">
 
         <div class="chat-thread-list-item__members">
-          <Chat::UserAvatar
+          <ChatUserAvatar
             @user={{@thread.originalMessage.user}}
             @showPresence={{false}}
+            @interactive={{false}}
           />
-          <Chat::Thread::Participants
+          <ChatThreadParticipants
             @thread={{@thread}}
             @includeOriginalMessageUser={{false}}
             class="chat-thread-list-item__participants"

@@ -101,7 +101,17 @@ class Plugin::Metadata
       ],
     )
 
-  FIELDS ||= %i[name about version authors contact_emails url required_version transpile_js]
+  FIELDS ||= %i[
+    name
+    about
+    version
+    authors
+    contact_emails
+    url
+    required_version
+    transpile_js
+    meta_topic_id
+  ]
   attr_accessor(*FIELDS)
 
   def self.parse(text)
