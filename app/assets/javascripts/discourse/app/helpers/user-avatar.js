@@ -1,10 +1,10 @@
-import { formatUsername } from "discourse/lib/utilities";
-import { avatarImg } from "discourse-common/lib/avatar-utils";
-import I18n from "I18n";
 import { get } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import { formatUsername } from "discourse/lib/utilities";
+import { avatarImg } from "discourse-common/lib/avatar-utils";
 import { registerUnbound } from "discourse-common/lib/helpers";
+import I18n from "I18n";
 
 let _customAvatarHelpers;
 

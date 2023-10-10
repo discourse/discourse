@@ -1,6 +1,6 @@
 import Controller from "@ember/controller";
-import EmailLog from "admin/models/email-log";
 import EmberObject, { action } from "@ember/object";
+import EmailLog from "admin/models/email-log";
 
 export default class AdminEmailLogsController extends Controller {
   loading = false;

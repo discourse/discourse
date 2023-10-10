@@ -1,22 +1,22 @@
 import EmberObject, { get } from "@ember/object";
 import { and, equal, not, or } from "@ember/object/computed";
+import { isEmpty } from "@ember/utils";
+import { Promise } from "rsvp";
+import { resolveShareUrl } from "discourse/helpers/share-url";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { propertyEqual } from "discourse/lib/computed";
+import { cook } from "discourse/lib/text";
+import { fancyTitle } from "discourse/lib/topic-fancy-title";
+import { userPath } from "discourse/lib/url";
+import { postUrl } from "discourse/lib/utilities";
 import ActionSummary from "discourse/models/action-summary";
 import Composer from "discourse/models/composer";
-import I18n from "I18n";
-import { Promise } from "rsvp";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
-import { ajax } from "discourse/lib/ajax";
-import { cook } from "discourse/lib/text";
 import discourseComputed from "discourse-common/utils/decorators";
-import { fancyTitle } from "discourse/lib/topic-fancy-title";
-import { isEmpty } from "@ember/utils";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { postUrl } from "discourse/lib/utilities";
-import { propertyEqual } from "discourse/lib/computed";
-import { resolveShareUrl } from "discourse/helpers/share-url";
-import { userPath } from "discourse/lib/url";
+import I18n from "I18n";
 
 const Post = RestModel.extend({
   customShare: null,

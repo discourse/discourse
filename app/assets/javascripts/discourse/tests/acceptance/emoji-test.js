@@ -1,3 +1,6 @@
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
+import { test } from "qunit";
 import {
   acceptance,
   exists,
@@ -5,9 +8,6 @@ import {
   query,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 
 acceptance("Emoji", function (needs) {
   needs.user();

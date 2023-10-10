@@ -1,10 +1,10 @@
-import { module, test } from "qunit";
-import { setupTest } from "ember-qunit";
-import PreloadStore from "discourse/lib/preload-store";
-import sinon from "sinon";
-import { settled } from "@ember/test-helpers";
-import User from "discourse/models/user";
 import { getOwner } from "@ember/application";
+import { settled } from "@ember/test-helpers";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import sinon from "sinon";
+import PreloadStore from "discourse/lib/preload-store";
+import User from "discourse/models/user";
 
 module("Unit | Model | user", function (hooks) {
   setupTest(hooks);

@@ -1,21 +1,21 @@
-import I18n from "I18n";
-import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
-import RawHtml from "discourse/widgets/raw-html";
-import { ajax } from "discourse/lib/ajax";
-import { avatarFor } from "discourse/widgets/post";
-import { createWidget } from "discourse/widgets/widget";
-import evenRound from "discourse/plugins/poll/lib/even-round";
-import { getColors } from "discourse/plugins/poll/lib/chart-colors";
+import { getOwner } from "@ember/application";
 import { h } from "virtual-dom";
-import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
-import loadScript from "discourse/lib/load-script";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { relativeAge } from "discourse/lib/formatter";
-import round from "discourse/lib/round";
+import loadScript from "discourse/lib/load-script";
 import { applyLocalDates } from "discourse/lib/local-dates";
+import round from "discourse/lib/round";
 import hbs from "discourse/widgets/hbs-compiler";
+import { avatarFor } from "discourse/widgets/post";
+import RawHtml from "discourse/widgets/raw-html";
+import { createWidget } from "discourse/widgets/widget";
+import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
+import I18n from "I18n";
+import { getColors } from "discourse/plugins/poll/lib/chart-colors";
+import evenRound from "discourse/plugins/poll/lib/even-round";
 import PollBreakdownModal from "../components/modal/poll-breakdown";
-import { getOwner } from "@ember/application";
+import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
 
 const FETCH_VOTERS_COUNT = 25;
 

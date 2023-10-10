@@ -1,16 +1,16 @@
-import Category from "discourse/models/category";
-import Component from "@ember/component";
-import I18n from "I18n";
-import { ajax } from "discourse/lib/ajax";
-import { classify, dasherize } from "@ember/string";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import optionalService from "discourse/lib/optional-service";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { action, set } from "@ember/object";
-import showModal from "discourse/lib/show-modal";
-import { inject as service } from "@ember/service";
 import { getOwner } from "@ember/application";
+import Component from "@ember/component";
+import { action, set } from "@ember/object";
+import { inject as service } from "@ember/service";
+import { classify, dasherize } from "@ember/string";
 import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import optionalService from "discourse/lib/optional-service";
+import showModal from "discourse/lib/show-modal";
+import Category from "discourse/models/category";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 let _components = {};
 

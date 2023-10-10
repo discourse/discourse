@@ -1,5 +1,5 @@
-import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
 import UppyMediaOptimization from "discourse/lib/uppy-media-optimization-plugin";
 
 class FakeUppy {

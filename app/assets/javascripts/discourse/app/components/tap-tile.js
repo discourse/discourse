@@ -1,5 +1,5 @@
-import { reads } from "@ember/object/computed";
 import Component from "@ember/component";
+import { reads } from "@ember/object/computed";
 import { propertyEqual } from "discourse/lib/computed";
 
 export default Component.extend({

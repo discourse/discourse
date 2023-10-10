@@ -1,9 +1,9 @@
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
+import { Promise } from "rsvp";
 import { cook } from "discourse/lib/text";
 import Post from "discourse/models/post";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { checklistSyntax } from "discourse/plugins/checklist/discourse/initializers/checklist";
-import { Promise } from "rsvp";
 
 let currentRaw;
 

@@ -1,8 +1,8 @@
 import { tracked } from "@glimmer/tracking";
-import { bind } from "discourse-common/utils/decorators";
 import RouteInfoHelper from "discourse/lib/sidebar/route-info-helper";
-import discourseLater from "discourse-common/lib/later";
 import { defaultHomepage } from "discourse/lib/utilities";
+import discourseLater from "discourse-common/lib/later";
+import { bind } from "discourse-common/utils/decorators";
 
 const TOUCH_SCREEN_DELAY = 300;
 const MOUSE_DELAY = 250;

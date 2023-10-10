@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import optionalService from "discourse/lib/optional-service";
-import { inject as service } from "@ember/service";
-import { bind } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import optionalService from "discourse/lib/optional-service";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class TopicTimeline extends Component {
   @service siteSettings;

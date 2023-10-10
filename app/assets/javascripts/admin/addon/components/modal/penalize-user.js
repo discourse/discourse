@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { isEmpty } from "@ember/utils";
 import { inject as service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import { extractError } from "discourse/lib/ajax-error";
 import I18n from "I18n";
 

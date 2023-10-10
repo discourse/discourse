@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { computed } from "@ember/object";
-import { prioritizeNameInUx } from "discourse/lib/settings";
 import { renderAvatar } from "discourse/helpers/user-avatar";
+import { prioritizeNameInUx } from "discourse/lib/settings";
 import { userPath } from "discourse/lib/url";
 
 export default Component.extend({

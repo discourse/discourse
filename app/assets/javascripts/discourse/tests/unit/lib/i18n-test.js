@@ -1,7 +1,7 @@
-import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import I18n from "I18n";
+import { module, test } from "qunit";
 import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
+import I18n from "I18n";
 
 module("Unit | Utility | i18n", function (hooks) {
   setupTest(hooks);

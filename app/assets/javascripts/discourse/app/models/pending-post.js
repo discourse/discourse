@@ -1,9 +1,9 @@
-import discourseComputed from "discourse-common/utils/decorators";
-import RestModel from "discourse/models/rest";
-import categoryFromId from "discourse-common/utils/category-macro";
-import { userPath } from "discourse/lib/url";
 import { reads } from "@ember/object/computed";
 import { cook } from "discourse/lib/text";
+import { userPath } from "discourse/lib/url";
+import RestModel from "discourse/models/rest";
+import categoryFromId from "discourse-common/utils/category-macro";
+import discourseComputed from "discourse-common/utils/decorators";
 
 const PendingPost = RestModel.extend({
   expandedExcerpt: null,

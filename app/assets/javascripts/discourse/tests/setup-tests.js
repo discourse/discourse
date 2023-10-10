@@ -1,4 +1,31 @@
+import { getOwner } from "@ember/application";
+import {
+  getSettledState,
+  isSettled,
+  setApplication,
+  setResolver,
+} from "@ember/test-helpers";
 import "./loader-shims";
+import bootbox from "bootbox";
+import { addModuleExcludeMatcher } from "ember-cli-test-loader/test-support/index";
+import jQuery from "jquery";
+import MessageBus from "message-bus-client";
+import QUnit from "qunit";
+import sinon from "sinon";
+import PreloadStore from "discourse/lib/preload-store";
+import { resetSettings as resetThemeSettings } from "discourse/lib/theme-settings-store";
+import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
+import Session from "discourse/models/session";
+import User from "discourse/models/user";
+import SiteSettingService from "discourse/services/site-settings";
+import { flushMap } from "discourse/services/store";
+import pretender, {
+  applyDefaultHandlers,
+  pretenderHelpers,
+  resetPretender,
+} from "discourse/tests/helpers/create-pretender";
+import { setupDeprecationCounter } from "discourse/tests/helpers/deprecation-counter";
+import { clearState as clearPresenceState } from "discourse/tests/helpers/presence-pretender";
 import {
   applyPretender,
   exists,
@@ -7,41 +34,14 @@ import {
   testsInitialized,
   testsTornDown,
 } from "discourse/tests/helpers/qunit-helpers";
-import pretender, {
-  applyDefaultHandlers,
-  pretenderHelpers,
-  resetPretender,
-} from "discourse/tests/helpers/create-pretender";
-import { resetSettings } from "discourse/tests/helpers/site-settings";
-import { getOwner } from "@ember/application";
-import { setDefaultOwner } from "discourse-common/lib/get-owner";
-import {
-  getSettledState,
-  isSettled,
-  setApplication,
-  setResolver,
-} from "@ember/test-helpers";
-import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
-import Application from "../app";
-import MessageBus from "message-bus-client";
-import PreloadStore from "discourse/lib/preload-store";
-import { resetSettings as resetThemeSettings } from "discourse/lib/theme-settings-store";
-import QUnit from "qunit";
-import { ScrollingDOMMethods } from "discourse/mixins/scrolling";
-import Session from "discourse/models/session";
-import User from "discourse/models/user";
-import bootbox from "bootbox";
-import { buildResolver } from "discourse-common/resolver";
-import deprecated from "discourse-common/lib/deprecated";
-import { flushMap } from "discourse/services/store";
-import sinon from "sinon";
-import { disableCloaking } from "discourse/widgets/post-stream";
-import { clearState as clearPresenceState } from "discourse/tests/helpers/presence-pretender";
-import { addModuleExcludeMatcher } from "ember-cli-test-loader/test-support/index";
-import SiteSettingService from "discourse/services/site-settings";
-import jQuery from "jquery";
-import { setupDeprecationCounter } from "discourse/tests/helpers/deprecation-counter";
 import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
+import { resetSettings } from "discourse/tests/helpers/site-settings";
+import { disableCloaking } from "discourse/widgets/post-stream";
+import deprecated from "discourse-common/lib/deprecated";
+import { setDefaultOwner } from "discourse-common/lib/get-owner";
+import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
+import { buildResolver } from "discourse-common/resolver";
+import Application from "../app";
 
 const Plugin = $.fn.modal;
 const Modal = Plugin.Constructor;

@@ -1,8 +1,8 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { getOwner } from "@ember/application";
 import { click, fillIn, render } from "@ember/test-helpers";
+import { module, test } from "qunit";
 import RequestGroupMembershipForm from "discourse/components/modal/request-group-membership-form";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module(

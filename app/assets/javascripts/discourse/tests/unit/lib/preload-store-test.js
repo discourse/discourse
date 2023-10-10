@@ -1,7 +1,7 @@
-import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import PreloadStore from "discourse/lib/preload-store";
+import { module, test } from "qunit";
 import { Promise } from "rsvp";
+import PreloadStore from "discourse/lib/preload-store";
 
 module("Unit | Utility | preload-store", function (hooks) {
   setupTest(hooks);

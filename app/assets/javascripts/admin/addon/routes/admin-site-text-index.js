@@ -1,6 +1,6 @@
 import Route from "@ember/routing/route";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { inject as service } from "@ember/service";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 @disableImplicitInjections
 export default class AdminSiteTextIndexRoute extends Route {

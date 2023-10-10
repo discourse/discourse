@@ -1,14 +1,13 @@
 import Controller from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
 import { or, reads } from "@ember/object/computed";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
-import { action } from "@ember/object";
 import Topic from "discourse/models/topic";
-
 import {
   NEW_FILTER,
   UNREAD_FILTER,
 } from "discourse/routes/build-private-messages-route";
+import discourseComputed from "discourse-common/utils/decorators";
 
 // Lists of topics on a user's page.
 export default class UserTopicsListController extends Controller {

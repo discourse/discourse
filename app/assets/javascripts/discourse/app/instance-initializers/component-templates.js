@@ -1,7 +1,7 @@
-import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 import * as GlimmerManager from "@glimmer/manager";
 import ClassicComponent from "@ember/component";
 import { isTesting } from "discourse-common/config/environment";
+import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 
 const COLOCATED_TEMPLATE_OVERRIDES = new Map();
 

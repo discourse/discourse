@@ -5,19 +5,19 @@ styleguide to use them, and eventually to generate dummy data
 in a placeholder component. It should not be used for any other case.
 */
 
+import Bookmark from "discourse/models/bookmark";
+import Category from "discourse/models/category";
+import Group from "discourse/models/group";
+import User from "discourse/models/user";
 import ChatChannel, {
   CHANNEL_STATUSES,
   CHATABLE_TYPES,
 } from "discourse/plugins/chat/discourse/models/chat-channel";
+import ChatDirectMessage from "discourse/plugins/chat/discourse/models/chat-direct-message";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 import ChatThread from "discourse/plugins/chat/discourse/models/chat-thread";
 import ChatThreadPreview from "discourse/plugins/chat/discourse/models/chat-thread-preview";
-import ChatDirectMessage from "discourse/plugins/chat/discourse/models/chat-direct-message";
-import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
-import User from "discourse/models/user";
-import Bookmark from "discourse/models/bookmark";
-import Category from "discourse/models/category";
-import Group from "discourse/models/group";
 
 let sequence = 0;
 

@@ -1,6 +1,6 @@
+import { computed } from "@ember/object";
 import { and, reads } from "@ember/object/computed";
 import SingleSelectHeaderComponent from "select-kit/components/select-kit/single-select-header";
-import { computed } from "@ember/object";
 
 export default SingleSelectHeaderComponent.extend({
   classNames: ["combo-box-header"],

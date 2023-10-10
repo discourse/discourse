@@ -1,5 +1,5 @@
-import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import { h } from "virtual-dom";
+import { applyDecorators, createWidget } from "discourse/widgets/widget";
 
 createWidget("admin-menu-button", {
   tagName: "li",

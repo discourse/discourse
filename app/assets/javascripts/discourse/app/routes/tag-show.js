@@ -1,23 +1,23 @@
+import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import {
-  filterQueryParams,
-  findTopicList,
-} from "discourse/routes/build-topic-route";
 import {
   queryParams,
   resetParams,
 } from "discourse/controllers/discovery-sortable";
+import PreloadStore from "discourse/lib/preload-store";
+import showModal from "discourse/lib/show-modal";
+import { setTopicList } from "discourse/lib/topic-list-tracker";
+import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
-import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
 import PermissionType from "discourse/models/permission-type";
-import { escapeExpression } from "discourse/lib/utilities";
+import {
+  filterQueryParams,
+  findTopicList,
+} from "discourse/routes/build-topic-route";
+import DiscourseRoute from "discourse/routes/discourse";
 import { makeArray } from "discourse-common/lib/helpers";
-import { setTopicList } from "discourse/lib/topic-list-tracker";
-import showModal from "discourse/lib/show-modal";
-import { action } from "@ember/object";
-import PreloadStore from "discourse/lib/preload-store";
+import I18n from "I18n";
 
 const NONE = "none";
 const ALL = "all";

@@ -1,7 +1,7 @@
-import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
+import { module, test } from "qunit";
 import { formattedReminderTime } from "discourse/lib/bookmark";
+import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 
 module("Unit | Utility | bookmark", function (hooks) {
   setupTest(hooks);

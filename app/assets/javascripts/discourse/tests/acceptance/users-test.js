@@ -1,13 +1,13 @@
+import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import directoryFixtures from "discourse/tests/fixtures/directory-fixtures";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   exists,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
-import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import directoryFixtures from "discourse/tests/fixtures/directory-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("User Directory", function () {

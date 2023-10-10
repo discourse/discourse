@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import I18n from "I18n";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { tracked } from "@glimmer/tracking";
-import { FORMAT } from "select-kit/components/future-date-input-selector";
-import TopicTimer from "discourse/models/topic-timer";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import TopicTimer from "discourse/models/topic-timer";
+import I18n from "I18n";
+import { FORMAT } from "select-kit/components/future-date-input-selector";
 
 export const CLOSE_STATUS_TYPE = "close";
 export const CLOSE_AFTER_LAST_POST_STATUS_TYPE = "close_after_last_post";

@@ -1,13 +1,13 @@
 import EmberObject from "@ember/object";
+import { notEmpty } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 import User from "discourse/models/user";
-import { ajax } from "discourse/lib/ajax";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import { isEmpty } from "@ember/utils";
-import { notEmpty } from "@ember/object/computed";
 import deprecated from "discourse-common/lib/deprecated";
-import { inject as service } from "@ember/service";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 
 function extractByKey(collection, klass) {
   const retval = {};

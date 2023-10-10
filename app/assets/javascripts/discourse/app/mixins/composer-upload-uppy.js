@@ -1,30 +1,30 @@
-import Mixin from "@ember/object/mixin";
 import { getOwner } from "@ember/application";
-import ExtendableUploader from "discourse/mixins/extendable-uploader";
+import { warn } from "@ember/debug";
 import EmberObject from "@ember/object";
-import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
-import { deepMerge } from "discourse-common/lib/object";
-import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
+import Mixin from "@ember/object/mixin";
+import { run } from "@ember/runloop";
+import { inject as service } from "@ember/service";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
-import { warn } from "@ember/debug";
-import I18n from "I18n";
-import getURL from "discourse-common/lib/get-url";
-import { clipboardHelpers } from "discourse/lib/utilities";
-import ComposerVideoThumbnailUppy from "discourse/mixins/composer-video-thumbnail-uppy";
-import { bind, observes, on } from "discourse-common/utils/decorators";
+import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
+import { updateCsrfToken } from "discourse/lib/ajax";
 import {
   bindFileInputChangeListener,
   displayErrorForUpload,
   getUploadMarkdown,
   validateUploadedFile,
 } from "discourse/lib/uploads";
-import { cacheShortUploadUrl } from "pretty-text/upload-short-url";
-import { inject as service } from "@ember/service";
-import { run } from "@ember/runloop";
+import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
+import { clipboardHelpers } from "discourse/lib/utilities";
+import ComposerVideoThumbnailUppy from "discourse/mixins/composer-video-thumbnail-uppy";
+import ExtendableUploader from "discourse/mixins/extendable-uploader";
+import UppyS3Multipart from "discourse/mixins/uppy-s3-multipart";
+import getURL from "discourse-common/lib/get-url";
+import { deepMerge } from "discourse-common/lib/object";
+import { bind, observes, on } from "discourse-common/utils/decorators";
 import escapeRegExp from "discourse-common/utils/escape-regexp";
-import { updateCsrfToken } from "discourse/lib/ajax";
+import I18n from "I18n";
 
 // Note: This mixin is used _in addition_ to the ComposerUpload mixin
 // on the composer-editor component. It overrides some, but not all,

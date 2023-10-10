@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import { until } from "discourse/lib/formatter";
 import { inject as service } from "@ember/service";
+import { until } from "discourse/lib/formatter";
 
 export default class UserStatusMessage extends Component {
   @service currentUser;

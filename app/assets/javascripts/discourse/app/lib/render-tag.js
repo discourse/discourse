@@ -1,8 +1,8 @@
-import User from "discourse/models/user";
+import { escape } from "pretty-text/sanitizer";
 import { escapeExpression } from "discourse/lib/utilities";
+import User from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
 import { helperContext } from "discourse-common/lib/helpers";
-import { escape } from "pretty-text/sanitizer";
 
 let _renderer = defaultRenderTag;
 

@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
-import { renderAvatar } from "discourse/helpers/user-avatar";
 import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
+import { renderAvatar } from "discourse/helpers/user-avatar";
 
 export default class ChatUserAvatar extends Component {
   @service chat;

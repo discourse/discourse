@@ -1,10 +1,10 @@
-import { classNameBindings, classNames } from "@ember-decorators/component";
-import { and, gt } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
+import { action } from "@ember/object";
+import { and, gt } from "@ember/object/computed";
+import { classNameBindings, classNames } from "@ember-decorators/component";
 import { escape } from "pretty-text/sanitizer";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import { action } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
 
 const MAX_COMPONENTS = 4;
 

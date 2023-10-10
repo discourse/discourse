@@ -1,11 +1,11 @@
+import { visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   exists,
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
-import { visit } from "@ember/test-helpers";
 import I18n from "I18n";
 
 acceptance("Email Disabled Banner", function (needs) {

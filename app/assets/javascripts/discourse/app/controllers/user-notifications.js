@@ -1,12 +1,12 @@
 import Controller from "@ember/controller";
+import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
+import { ajax } from "discourse/lib/ajax";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseComputed from "discourse-common/utils/decorators";
-import { ajax } from "discourse/lib/ajax";
 import I18n from "I18n";
-import { htmlSafe } from "@ember/template";
-import { inject as service } from "@ember/service";
-import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
 
 export default Controller.extend({
   modal: service(),

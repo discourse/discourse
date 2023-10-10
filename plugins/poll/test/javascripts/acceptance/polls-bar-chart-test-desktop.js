@@ -1,6 +1,6 @@
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
 import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Rendering polls with bar charts - desktop", function (needs) {
   needs.user();

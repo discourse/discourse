@@ -1,7 +1,7 @@
-import SelectKitFilterComponent from "select-kit/components/select-kit/select-kit-filter";
+import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import discourseComputed from "discourse-common/utils/decorators";
-import { action } from "@ember/object";
+import SelectKitFilterComponent from "select-kit/components/select-kit/select-kit-filter";
 
 export default SelectKitFilterComponent.extend({
   classNames: ["multi-select-filter"],

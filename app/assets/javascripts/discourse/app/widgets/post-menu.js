@@ -1,19 +1,19 @@
-import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import { next } from "@ember/runloop";
-import discourseLater from "discourse-common/lib/later";
+import { hbs } from "ember-cli-htmlbars";
 import { Promise } from "rsvp";
-import { formattedReminderTime } from "discourse/lib/bookmark";
 import { h } from "virtual-dom";
-import { smallUserAtts } from "discourse/widgets/actions-summary";
-import I18n from "I18n";
+import AdminPostMenu from "discourse/components/admin-post-menu";
+import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
+import { formattedReminderTime } from "discourse/lib/bookmark";
 import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
-import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
+import { smallUserAtts } from "discourse/widgets/actions-summary";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
-import { hbs } from "ember-cli-htmlbars";
-import AdminPostMenu from "discourse/components/admin-post-menu";
+import { applyDecorators, createWidget } from "discourse/widgets/widget";
+import discourseLater from "discourse-common/lib/later";
+import I18n from "I18n";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;

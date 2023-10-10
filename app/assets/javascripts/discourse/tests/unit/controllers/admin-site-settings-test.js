@@ -1,5 +1,5 @@
-import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
 import SiteSetting from "admin/models/site-setting";
 
 module("Unit | Controller | admin-site-settings", function (hooks) {

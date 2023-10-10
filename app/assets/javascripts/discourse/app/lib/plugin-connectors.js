@@ -1,11 +1,11 @@
-import { buildRawConnectorCache } from "discourse-common/lib/raw-templates";
-import deprecated from "discourse-common/lib/deprecated";
 import {
   getComponentTemplate,
   hasInternalComponentManager,
   setComponentTemplate,
 } from "@glimmer/manager";
 import templateOnly from "@ember/component/template-only";
+import deprecated from "discourse-common/lib/deprecated";
+import { buildRawConnectorCache } from "discourse-common/lib/raw-templates";
 
 let _connectorCache;
 let _rawConnectorCache;

@@ -1,6 +1,6 @@
+import { inject as service } from "@ember/service";
 import Topic, { ID_CONSTRAINT } from "discourse/models/topic";
 import DiscourseRoute from "discourse/routes/discourse";
-import { inject as service } from "@ember/service";
 
 export default DiscourseRoute.extend({
   router: service(),

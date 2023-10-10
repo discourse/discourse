@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { LinkTo } from "@ember/routing";
-import icon from "discourse-common/helpers/d-icon";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse-common/helpers/d-icon";
 
 export default class ChatFormRow extends Component {
   <template>

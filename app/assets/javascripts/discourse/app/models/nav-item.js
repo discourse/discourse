@@ -1,19 +1,19 @@
-import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
-import I18n from "I18n";
-import Site from "discourse/models/site";
-import User from "discourse/models/user";
-import { deepMerge } from "discourse-common/lib/object";
-import deprecated from "discourse-common/lib/deprecated";
-import discourseComputed from "discourse-common/utils/decorators";
+import { reads } from "@ember/object/computed";
 import { emojiUnescape } from "discourse/lib/text";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import {
   hasTrackedFilter,
   isTrackedTopic,
 } from "discourse/lib/topic-list-tracked-filter";
+import Category from "discourse/models/category";
+import Site from "discourse/models/site";
+import User from "discourse/models/user";
+import deprecated from "discourse-common/lib/deprecated";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
-import { reads } from "@ember/object/computed";
+import { deepMerge } from "discourse-common/lib/object";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 const NavItem = EmberObject.extend({
   @discourseComputed("name")

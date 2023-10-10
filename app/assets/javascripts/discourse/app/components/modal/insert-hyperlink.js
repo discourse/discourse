@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { isEmpty } from "@ember/utils";
-import { prefixProtocol } from "discourse/lib/url";
 import { searchForTerm } from "discourse/lib/search";
+import { prefixProtocol } from "discourse/lib/url";
+import discourseDebounce from "discourse-common/lib/debounce";
 
 export default class InsertHyperlink extends Component {
   @tracked linkText = this.args.model.linkText;

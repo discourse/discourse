@@ -1,7 +1,7 @@
 import Service, { inject as service } from "@ember/service";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { cloneJSON } from "discourse-common/lib/object";
 import { bind } from "discourse-common/utils/decorators";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 export function handleStagedMessage(channel, messagesManager, data) {
   const stagedMessage = messagesManager.findStagedMessage(data.staged_id);

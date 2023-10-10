@@ -1,8 +1,8 @@
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
-import { clearCustomLastUnreadUrlCallbacks } from "discourse/models/topic";
-import { test } from "qunit";
 import { visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { clearCustomLastUnreadUrlCallbacks } from "discourse/models/topic";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Topic list plugin API", function () {
   function customLastUnreadUrl(context) {

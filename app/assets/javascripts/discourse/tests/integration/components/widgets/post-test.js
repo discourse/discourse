@@ -1,16 +1,16 @@
+import { getOwner } from "@ember/application";
+import EmberObject from "@ember/object";
+import { click, render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { click, render } from "@ember/test-helpers";
 import {
   count,
   exists,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { hbs } from "ember-cli-htmlbars";
-import EmberObject from "@ember/object";
 import I18n from "I18n";
-import { getOwner } from "@ember/application";
 
 module("Integration | Component | Widget | post", function (hooks) {
   setupRenderingTest(hooks);

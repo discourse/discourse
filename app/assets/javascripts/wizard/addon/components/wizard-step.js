@@ -1,9 +1,9 @@
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
-import I18n from "I18n";
-import { schedule } from "@ember/runloop";
 import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 const alreadyWarned = {};
 

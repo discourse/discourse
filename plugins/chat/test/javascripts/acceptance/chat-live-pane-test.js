@@ -1,6 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { skip } from "qunit";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance(
   "Discourse Chat - Chat live pane - handling 429 errors",

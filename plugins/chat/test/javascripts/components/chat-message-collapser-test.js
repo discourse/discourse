@@ -1,12 +1,12 @@
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { click, render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   query,
   queryAll,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
-import { module, test } from "qunit";
 
 const youtubeCooked =
   "<p>written text</p>" +

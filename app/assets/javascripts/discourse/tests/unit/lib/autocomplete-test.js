@@ -1,7 +1,7 @@
-import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import autocomplete from "discourse/lib/autocomplete";
 import { compile } from "handlebars";
+import { module, test } from "qunit";
+import autocomplete from "discourse/lib/autocomplete";
 
 module("Unit | Utility | autocomplete", function (hooks) {
   setupTest(hooks);

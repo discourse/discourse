@@ -1,14 +1,14 @@
+import { readOnly } from "@ember/object/computed";
+import Service from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import { isEmpty } from "@ember/utils";
+import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
+import getURL from "discourse-common/lib/get-url";
 import discourseComputed, {
   bind,
   observes,
 } from "discourse-common/utils/decorators";
-import Service from "@ember/service";
 import I18n from "I18n";
-import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
-import getURL from "discourse-common/lib/get-url";
-import { htmlSafe } from "@ember/template";
-import { isEmpty } from "@ember/utils";
-import { readOnly } from "@ember/object/computed";
 
 const LOGS_NOTICE_KEY = "logs-notice-text";
 

@@ -1,22 +1,22 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
-import { action } from "@ember/object";
-import { bind } from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { cancel } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import { Promise } from "rsvp";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
+import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import {
   isValidSearchTerm,
   searchForTerm,
   updateRecentSearches,
 } from "discourse/lib/search";
 import DiscourseURL from "discourse/lib/url";
+import userSearch from "discourse/lib/user-search";
 import discourseDebounce from "discourse-common/lib/debounce";
 import getURL from "discourse-common/lib/get-url";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { Promise } from "rsvp";
-import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
-import userSearch from "discourse/lib/user-search";
-import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
-import { cancel } from "@ember/runloop";
+import { bind } from "discourse-common/utils/decorators";
 
 const CATEGORY_SLUG_REGEXP = /(\#[a-zA-Z0-9\-:]*)$/gi;
 const USERNAME_REGEXP = /(\@[a-zA-Z0-9\-\_]*)$/gi;

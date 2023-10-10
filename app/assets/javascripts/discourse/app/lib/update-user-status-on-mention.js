@@ -1,5 +1,5 @@
-import { UserStatusMessage } from "discourse/lib/user-status-message";
 import { guidFor } from "@ember/object/internals";
+import { UserStatusMessage } from "discourse/lib/user-status-message";
 
 const userStatusMessages = {};
 

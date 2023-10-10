@@ -1,11 +1,11 @@
 import { visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import User from "discourse/models/user";
 import {
   acceptance,
   exists,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
-import User from "discourse/models/user";
 
 acceptance("Category Notifications", function (needs) {
   needs.user({ muted_category_ids: [1], indirectly_muted_category_ids: [2] });

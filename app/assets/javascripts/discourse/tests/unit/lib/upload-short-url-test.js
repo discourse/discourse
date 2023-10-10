@@ -1,14 +1,14 @@
-import { module, test } from "qunit";
+import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import {
   lookupCachedUploadUrl,
   resetCache,
   resolveAllShortUrls,
 } from "pretty-text/upload-short-url";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { module, test } from "qunit";
 import { ajax } from "discourse/lib/ajax";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { fixture } from "discourse/tests/helpers/qunit-helpers";
-import { settled } from "@ember/test-helpers";
 
 function stubUrls(imageSrcs, attachmentSrcs, otherMediaSrcs) {
   if (!imageSrcs) {

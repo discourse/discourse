@@ -1,10 +1,10 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import { toggleCheckDraftPopup } from "discourse/services/composer";
-import { cloneJSON } from "discourse-common/lib/object";
 import TopicFixtures from "discourse/tests/fixtures/topic";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
+import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Composer Form Template", function (needs) {
   needs.user({

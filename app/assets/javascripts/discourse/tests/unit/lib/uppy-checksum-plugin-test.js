@@ -1,8 +1,8 @@
-import { module, skip, test } from "qunit";
 import { setupTest } from "ember-qunit";
+import { module, skip, test } from "qunit";
+import sinon from "sinon";
 import UppyChecksum from "discourse/lib/uppy-checksum-plugin";
 import { createFile } from "discourse/tests/helpers/qunit-helpers";
-import sinon from "sinon";
 
 class FakeUppy {
   constructor() {

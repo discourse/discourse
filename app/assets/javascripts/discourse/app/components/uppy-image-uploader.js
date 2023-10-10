@@ -1,17 +1,17 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { or } from "@ember/object/computed";
-import UppyUploadMixin from "discourse/mixins/uppy-upload";
-import discourseComputed, { on } from "discourse-common/utils/decorators";
-import { getURLWithCDN } from "discourse-common/lib/get-url";
+import { next } from "@ember/runloop";
+import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import lightbox, {
   cleanupLightboxes,
   setupLightboxes,
 } from "discourse/lib/lightbox";
-import { next } from "@ember/runloop";
-import { htmlSafe } from "@ember/template";
 import { authorizesOneOrMoreExtensions } from "discourse/lib/uploads";
+import UppyUploadMixin from "discourse/mixins/uppy-upload";
+import { getURLWithCDN } from "discourse-common/lib/get-url";
+import discourseComputed, { on } from "discourse-common/utils/decorators";
 import I18n from "I18n";
 
 export default Component.extend(UppyUploadMixin, {

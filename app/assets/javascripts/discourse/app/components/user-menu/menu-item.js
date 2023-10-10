@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
+import { htmlSafe } from "@ember/template";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
-import { htmlSafe } from "@ember/template";
-import { action } from "@ember/object";
 
 export default class UserMenuItem extends Component {
   get className() {

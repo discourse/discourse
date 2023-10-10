@@ -1,9 +1,9 @@
+import { computed } from "@ember/object";
 import { gte, reads } from "@ember/object/computed";
-import ComboBoxComponent from "select-kit/components/combo-box";
+import { setting } from "discourse/lib/computed";
 import DiscourseURL from "discourse/lib/url";
 import I18n from "I18n";
-import { computed } from "@ember/object";
-import { setting } from "discourse/lib/computed";
+import ComboBoxComponent from "select-kit/components/combo-box";
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["group-dropdown"],

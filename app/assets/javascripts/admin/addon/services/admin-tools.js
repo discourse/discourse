@@ -1,12 +1,12 @@
+import { getOwner } from "@ember/application";
+import { action } from "@ember/object";
+import Service, { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import PenalizeUserModal from "admin/components/modal/penalize-user";
 import AdminUser from "admin/models/admin-user";
 import I18n from "I18n";
-import { Promise } from "rsvp";
-import Service, { inject as service } from "@ember/service";
-import { ajax } from "discourse/lib/ajax";
-import { getOwner } from "@ember/application";
-import { htmlSafe } from "@ember/template";
-import { action } from "@ember/object";
-import PenalizeUserModal from "admin/components/modal/penalize-user";
 
 // A service that can act as a bridge between the front end Discourse application
 // and the admin application. Use this if you need front end code to access admin

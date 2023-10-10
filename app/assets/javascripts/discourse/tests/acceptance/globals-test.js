@@ -1,10 +1,10 @@
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { getOwner } from "@ember/application";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { getOwner } from "@ember/application";
-import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
-import User from "discourse/models/user";
 import Site from "discourse/models/site";
+import User from "discourse/models/user";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 
 acceptance("Acceptance | Globals", function () {
   test("Globals function as expected", async function (assert) {

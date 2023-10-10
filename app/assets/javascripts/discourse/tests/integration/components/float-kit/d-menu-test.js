@@ -1,5 +1,3 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   click,
   find,
@@ -8,6 +6,8 @@ import {
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DDefaultToast from "float-kit/components/d-default-toast";
 
 module("Integration | Component | FloatKit | d-menu", function (hooks) {

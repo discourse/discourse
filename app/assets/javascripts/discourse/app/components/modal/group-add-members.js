@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import { isEmpty } from "@ember/utils";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
+import { extractError } from "discourse/lib/ajax-error";
 import { emailValid } from "discourse/lib/utilities";
 import I18n from "I18n";
-import { inject as service } from "@ember/service";
-import { extractError } from "discourse/lib/ajax-error";
 
 export default class GroupAddMembers extends Component {
   @service currentUser;

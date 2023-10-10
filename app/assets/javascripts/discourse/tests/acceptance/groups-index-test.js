@@ -1,3 +1,5 @@
+import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
@@ -5,8 +7,6 @@ import {
   invisible,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 
 acceptance("Groups", function () {
   test("Browsing Groups", async function (assert) {

@@ -1,14 +1,14 @@
-import Category from "discourse/models/category";
-import ComboBoxComponent from "select-kit/components/combo-box";
+import { computed } from "@ember/object";
+import { readOnly } from "@ember/object/computed";
+import { htmlSafe } from "@ember/template";
+import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import DiscourseURL, {
   getCategoryAndTagUrl,
   getEditCategoryUrl,
 } from "discourse/lib/url";
+import Category from "discourse/models/category";
 import I18n from "I18n";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import { computed } from "@ember/object";
-import { readOnly } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
+import ComboBoxComponent from "select-kit/components/combo-box";
 
 export const NO_CATEGORIES_ID = "no-categories";
 export const ALL_CATEGORIES_ID = "all-categories";

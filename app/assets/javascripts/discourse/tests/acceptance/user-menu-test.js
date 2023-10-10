@@ -1,4 +1,12 @@
+import { later } from "@ember/runloop";
 import { click, currentURL, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import { Promise } from "rsvp";
+import DButton from "discourse/components/d-button";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
+import TopicFixtures from "discourse/tests/fixtures/topic";
+import UserMenuFixtures from "discourse/tests/fixtures/user-menu";
 import {
   acceptance,
   exists,
@@ -8,16 +16,8 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
 import { cloneJSON } from "discourse-common/lib/object";
-import { withPluginApi } from "discourse/lib/plugin-api";
-import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
-import UserMenuFixtures from "discourse/tests/fixtures/user-menu";
-import TopicFixtures from "discourse/tests/fixtures/topic";
-import { Promise } from "rsvp";
-import { later } from "@ember/runloop";
 import I18n from "I18n";
-import DButton from "discourse/components/d-button";
 
 acceptance("User menu", function (needs) {
   needs.user({

@@ -1,6 +1,6 @@
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Chat | Hashtag CSS Generator", function (needs) {
   const category1 = { id: 1, color: "ff0000", name: "category1" };

@@ -1,6 +1,6 @@
-import { module, test } from "qunit";
-import { setupTest } from "ember-qunit";
 import EmberObject from "@ember/object";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
 import Singleton from "discourse/mixins/singleton";
 
 module("Unit | Mixin | singleton", function (hooks) {

@@ -1,7 +1,7 @@
-import { alias, not } from "@ember/object/computed";
 import Component from "@ember/component";
-import { iconHTML } from "discourse-common/lib/icon-library";
+import { alias, not } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
+import { iconHTML } from "discourse-common/lib/icon-library";
 
 export default Component.extend({
   classNameBindings: [":tip", "good", "bad"],

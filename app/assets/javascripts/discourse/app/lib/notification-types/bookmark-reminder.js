@@ -1,6 +1,6 @@
 import NotificationTypeBase from "discourse/lib/notification-types/base";
-import I18n from "I18n";
 import getUrl from "discourse-common/lib/get-url";
+import I18n from "I18n";
 
 export default class extends NotificationTypeBase {
   get linkTitle() {

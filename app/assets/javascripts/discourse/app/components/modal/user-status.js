@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { action } from "@ember/object";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { inject as service } from "@ember/service";
 import ItsATrap from "@discourse/itsatrap";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   TIME_SHORTCUT_TYPES,
   timeShortcuts,

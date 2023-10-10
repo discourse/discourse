@@ -1,7 +1,7 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
+import { module, test } from "qunit";
 import DSection from "discourse/components/d-section";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | d-section", function (hooks) {
   setupRenderingTest(hooks);

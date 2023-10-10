@@ -1,20 +1,20 @@
 import Component from "@glimmer/component";
-import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
-import { getOwner } from "@ember/application";
 import { tracked } from "@glimmer/tracking";
-import discourseLater from "discourse-common/lib/later";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import and from "truth-helpers/helpers/and";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import concatClass from "discourse/helpers/concat-class";
-import DButton from "discourse/components/d-button";
-import { on } from "@ember/modifier";
-import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
-import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
+import { getOwner } from "@ember/application";
 import { fn } from "@ember/helper";
-import or from "truth-helpers/helpers/or";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { inject as service } from "@ember/service";
 import BookmarkIcon from "discourse/components/bookmark-icon";
+import DButton from "discourse/components/d-button";
+import concatClass from "discourse/helpers/concat-class";
+import discourseLater from "discourse-common/lib/later";
+import and from "truth-helpers/helpers/and";
+import or from "truth-helpers/helpers/or";
+import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
+import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
+import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 
 export default class ChatMessageActionsMobile extends Component {
   @service chat;

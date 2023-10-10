@@ -1,7 +1,7 @@
-import Service, { inject as service } from "@ember/service";
-import { action } from "@ember/object";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import Service, { inject as service } from "@ember/service";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 export default class ChatChannelComposer extends Service {
   @service chat;

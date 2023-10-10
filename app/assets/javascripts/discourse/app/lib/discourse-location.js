@@ -1,6 +1,6 @@
 import EmberObject from "@ember/object";
-import { defaultHomepage } from "discourse/lib/utilities";
 import { guidFor } from "@ember/object/internals";
+import { defaultHomepage } from "discourse/lib/utilities";
 import { withoutPrefix } from "discourse-common/lib/get-url";
 
 let popstateFired = false;

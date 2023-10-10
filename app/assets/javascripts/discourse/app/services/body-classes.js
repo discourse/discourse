@@ -1,6 +1,6 @@
+import { registerDestructor } from "@ember/destroyable";
 import Service from "@ember/service";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import { registerDestructor } from "@ember/destroyable";
 
 @disableImplicitInjections
 export default class BodyClassesService extends Service {

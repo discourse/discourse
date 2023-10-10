@@ -1,8 +1,8 @@
-import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
+import AllowLister from "pretty-text/allow-lister";
 import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import { hrefAllowed, sanitize } from "pretty-text/sanitizer";
-import AllowLister from "pretty-text/allow-lister";
+import { module, test } from "qunit";
 
 module("Unit | Utility | sanitizer", function (hooks) {
   setupTest(hooks);

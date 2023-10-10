@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import I18n from "I18n";
-import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { cook } from "discourse/lib/text";
 import { shortDateNoYear } from "discourse/lib/formatter";
+import { cook } from "discourse/lib/text";
 import { bind } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 const MIN_POST_READ_TIME = 4;
 

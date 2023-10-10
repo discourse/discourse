@@ -1,48 +1,48 @@
+import EmberObject, { action, computed } from "@ember/object";
+import { alias, and, or, reads } from "@ember/object/computed";
+import { cancel, scheduleOnce } from "@ember/runloop";
+import Service, { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import { isEmpty } from "@ember/utils";
+import { observes, on } from "@ember-decorators/object";
+import { Promise } from "rsvp";
+import DiscardDraftModal from "discourse/components/modal/discard-draft";
+import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
+import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import {
+  cannotPostAgain,
+  durationTextFromSeconds,
+} from "discourse/helpers/slow-mode";
+import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
+import prepareFormTemplateData, {
+  getFormTemplateObject,
+} from "discourse/lib/form-template-validation";
+import { shortDate } from "discourse/lib/formatter";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { buildQuote } from "discourse/lib/quote";
+import renderTags from "discourse/lib/render-tags";
+import { emojiUnescape } from "discourse/lib/text";
+import {
+  authorizesOneOrMoreExtensions,
+  uploadIcon,
+} from "discourse/lib/uploads";
+import DiscourseURL from "discourse/lib/url";
+import { escapeExpression, modKeysPressed } from "discourse/lib/utilities";
 import Composer, {
   CREATE_TOPIC,
   NEW_TOPIC_KEY,
   SAVE_ICONS,
   SAVE_LABELS,
 } from "discourse/models/composer";
-import EmberObject, { action, computed } from "@ember/object";
-import { alias, and, or, reads } from "@ember/object/computed";
-import {
-  authorizesOneOrMoreExtensions,
-  uploadIcon,
-} from "discourse/lib/uploads";
-import { cancel, scheduleOnce } from "@ember/runloop";
-import {
-  cannotPostAgain,
-  durationTextFromSeconds,
-} from "discourse/helpers/slow-mode";
-import discourseComputed from "discourse-common/utils/decorators";
-import { observes, on } from "@ember-decorators/object";
-import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
-import I18n from "I18n";
-import { Promise } from "rsvp";
-import { buildQuote } from "discourse/lib/quote";
-import deprecated from "discourse-common/lib/deprecated";
+import { isTesting } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { emojiUnescape } from "discourse/lib/text";
-import { escapeExpression, modKeysPressed } from "discourse/lib/utilities";
+import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
-import { isEmpty } from "@ember/utils";
-import { isTesting } from "discourse-common/config/environment";
-import Service, { inject as service } from "@ember/service";
-import { shortDate } from "discourse/lib/formatter";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import renderTags from "discourse/lib/render-tags";
-import { htmlSafe } from "@ember/template";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import prepareFormTemplateData, {
-  getFormTemplateObject,
-} from "discourse/lib/form-template-validation";
-import DiscardDraftModal from "discourse/components/modal/discard-draft";
-import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 async function loadDraft(store, opts = {}) {
   let { draft, draftKey, draftSequence } = opts;

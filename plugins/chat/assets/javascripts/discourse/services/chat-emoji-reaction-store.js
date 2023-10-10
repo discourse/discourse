@@ -1,8 +1,8 @@
 // This class is adapted from emoji-store class in core. We want to maintain separate emoji store for reactions in chat plugin.
 // https://github.com/discourse/discourse/blob/892f7e0506f3a4d40d9a59a4c926ff0a2aa0947e/app/assets/javascripts/discourse/app/services/emoji-store.js
 
-import KeyValueStore from "discourse/lib/key-value-store";
 import Service from "@ember/service";
+import KeyValueStore from "discourse/lib/key-value-store";
 
 export default class ChatEmojiReactionStore extends Service {
   STORE_NAMESPACE = "discourse_chat_emoji_reaction_";

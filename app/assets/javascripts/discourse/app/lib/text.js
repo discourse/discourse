@@ -1,16 +1,16 @@
-import PrettyText, { buildOptions } from "pretty-text/pretty-text";
-import { buildEmojiUrl, performEmojiUnescape } from "pretty-text/emoji";
+import { htmlSafe } from "@ember/template";
 import AllowLister from "pretty-text/allow-lister";
+import { buildEmojiUrl, performEmojiUnescape } from "pretty-text/emoji";
+import PrettyText, { buildOptions } from "pretty-text/pretty-text";
+import { sanitize as textSanitize } from "pretty-text/sanitizer";
 import { Promise } from "rsvp";
-import Session from "discourse/models/session";
+import loadScript from "discourse/lib/load-script";
+import { MentionsParser } from "discourse/lib/mentions-parser";
 import { formatUsername } from "discourse/lib/utilities";
+import Session from "discourse/models/session";
+import deprecated from "discourse-common/lib/deprecated";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
 import { helperContext } from "discourse-common/lib/helpers";
-import { htmlSafe } from "@ember/template";
-import loadScript from "discourse/lib/load-script";
-import { sanitize as textSanitize } from "pretty-text/sanitizer";
-import { MentionsParser } from "discourse/lib/mentions-parser";
-import deprecated from "discourse-common/lib/deprecated";
 
 function getOpts(opts) {
   let context = helperContext();

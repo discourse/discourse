@@ -1,5 +1,5 @@
-import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
 import User from "discourse/models/user";
+import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
 
 let channels = {};
 

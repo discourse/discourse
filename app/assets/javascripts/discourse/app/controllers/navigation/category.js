@@ -1,8 +1,8 @@
+import { tracked } from "@glimmer/tracking";
+import { dependentKeyCompat } from "@ember/object/compat";
+import { inject as service } from "@ember/service";
 import NavigationDefaultController from "discourse/controllers/navigation/default";
 import { calculateFilterMode } from "discourse/lib/filter-mode";
-import { dependentKeyCompat } from "@ember/object/compat";
-import { tracked } from "@glimmer/tracking";
-import { inject as service } from "@ember/service";
 
 export default class NavigationCategoryController extends NavigationDefaultController {
   @service composer;

@@ -1,14 +1,14 @@
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
-import I18n from "I18n";
-import { ajax } from "discourse/lib/ajax";
-import { cook } from "discourse/lib/text";
-import discourseComputed from "discourse-common/utils/decorators";
-import { isEmpty } from "@ember/utils";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { readOnly } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import FeatureTopicOnProfileModal from "discourse/components/modal/feature-topic-on-profile";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { cook } from "discourse/lib/text";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 export default Controller.extend({
   dialog: service(),

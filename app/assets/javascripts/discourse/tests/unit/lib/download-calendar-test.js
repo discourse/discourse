@@ -1,11 +1,11 @@
-import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import sinon from "sinon";
 import {
   downloadGoogle,
   formatDates,
   generateIcsData,
 } from "discourse/lib/download-calendar";
-import sinon from "sinon";
 
 module("Unit | Utility | download-calendar", function (hooks) {
   setupTest(hooks);

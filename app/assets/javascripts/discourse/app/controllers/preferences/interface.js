@@ -1,20 +1,20 @@
 import Controller, { inject as controller } from "@ember/controller";
+import { computed } from "@ember/object";
+import { not, reads } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
-import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
-import { setDefaultHomepage } from "discourse/lib/utilities";
+import { reload } from "discourse/helpers/page-reloader";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   listColorSchemes,
   loadColorSchemeStylesheet,
   updateColorSchemeCookie,
 } from "discourse/lib/color-scheme-picker";
-import { listThemes, setLocalTheme } from "discourse/lib/theme-selector";
-import { not, reads } from "@ember/object/computed";
-import I18n from "I18n";
-import { computed } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { reload } from "discourse/helpers/page-reloader";
 import { propertyEqual } from "discourse/lib/computed";
+import { listThemes, setLocalTheme } from "discourse/lib/theme-selector";
+import { setDefaultHomepage } from "discourse/lib/utilities";
+import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 const USER_HOMES = {
   1: "latest",

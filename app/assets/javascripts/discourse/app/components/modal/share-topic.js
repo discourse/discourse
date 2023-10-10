@@ -1,17 +1,17 @@
+import { getOwner } from "@ember/application";
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import { getAbsoluteURL } from "discourse-common/lib/get-url";
-import discourseComputed, {
-  afterRender,
-} from "discourse-common/utils/decorators";
 import { readOnly } from "@ember/object/computed";
 import { longDateNoYear } from "discourse/lib/formatter";
 import Sharing from "discourse/lib/sharing";
 import showModal from "discourse/lib/show-modal";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
-import I18n from "I18n";
 import Category from "discourse/models/category";
-import { getOwner } from "@ember/application";
+import { getAbsoluteURL } from "discourse-common/lib/get-url";
+import discourseComputed, {
+  afterRender,
+} from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 const ShareTopicModal = Component.extend(bufferedProperty("invite"), {
   topic: readOnly("model.topic"),

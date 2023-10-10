@@ -1,8 +1,8 @@
 import Helper from "@ember/component/helper";
-import RawHandlebars from "discourse-common/lib/raw-handlebars";
 import { get } from "@ember/object";
-import { htmlSafe } from "@ember/template";
 import { dasherize } from "@ember/string";
+import { htmlSafe } from "@ember/template";
+import RawHandlebars from "discourse-common/lib/raw-handlebars";
 
 export function makeArray(obj) {
   if (obj === null || obj === undefined) {

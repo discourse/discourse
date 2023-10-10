@@ -1,8 +1,8 @@
-import Category from "discourse/models/category";
-import DiscourseRoute from "discourse/routes/discourse";
-import cookie from "discourse/lib/cookie";
 import { next } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import cookie from "discourse/lib/cookie";
+import Category from "discourse/models/category";
+import DiscourseRoute from "discourse/routes/discourse";
 
 export default class extends DiscourseRoute {
   @service composer;

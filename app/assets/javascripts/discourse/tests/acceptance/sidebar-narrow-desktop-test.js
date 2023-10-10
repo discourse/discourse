@@ -1,5 +1,5 @@
-import { test } from "qunit";
 import { click, settled, visit, waitFor } from "@ember/test-helpers";
+import { test } from "qunit";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Sidebar - Narrow Desktop", function (needs) {

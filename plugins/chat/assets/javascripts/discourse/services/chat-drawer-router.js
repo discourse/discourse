@@ -1,9 +1,9 @@
-import Service, { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
+import Service, { inject as service } from "@ember/service";
 import ChatDrawerChannel from "discourse/plugins/chat/discourse/components/chat-drawer/channel";
+import ChatDrawerIndex from "discourse/plugins/chat/discourse/components/chat-drawer/index";
 import ChatDrawerThread from "discourse/plugins/chat/discourse/components/chat-drawer/thread";
 import ChatDrawerThreads from "discourse/plugins/chat/discourse/components/chat-drawer/threads";
-import ChatDrawerIndex from "discourse/plugins/chat/discourse/components/chat-drawer/index";
 
 const ROUTES = {
   "chat.channel": { name: ChatDrawerChannel },

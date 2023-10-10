@@ -1,6 +1,6 @@
 import Component from "@ember/component";
-import Scrolling from "discourse/mixins/scrolling";
 import { next } from "@ember/runloop";
+import Scrolling from "discourse/mixins/scrolling";
 
 export default Component.extend(Scrolling, {
   didReceiveAttrs() {

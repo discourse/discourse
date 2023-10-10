@@ -1,9 +1,9 @@
+import { tracked } from "@glimmer/tracking";
+import { cancel } from "@ember/runloop";
 import Service, { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
-import { cancel } from "@ember/runloop";
-import { tracked } from "@glimmer/tracking";
 
 const MENTION_RESULT = {
   invalid: -1,

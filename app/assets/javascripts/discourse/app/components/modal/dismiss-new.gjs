@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import DModal from "discourse/components/d-modal";
 import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
 import I18n from "I18n";
-import { tracked } from "@glimmer/tracking";
 
 const REPLIES_SUBSET = "replies";
 const TOPICS_SUBSET = "topics";

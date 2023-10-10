@@ -1,12 +1,12 @@
-import { alias } from "@ember/object/computed";
 import Controller from "@ember/controller";
-import I18n from "I18n";
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import { isEmpty } from "@ember/utils";
-import { debounce } from "discourse-common/utils/decorators";
-import { observes } from "@ember-decorators/object";
 import { action } from "@ember/object";
+import { alias } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
+import { observes } from "@ember-decorators/object";
+import { INPUT_DELAY } from "discourse-common/config/environment";
+import { debounce } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 export default class AdminSiteSettingsController extends Controller {
   @service router;

@@ -1,8 +1,8 @@
-import DiscourseRoute from "discourse/routes/discourse";
+import { next } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { defaultHomepage } from "discourse/lib/utilities";
-import { next } from "@ember/runloop";
 import StaticPage from "discourse/models/static-page";
+import DiscourseRoute from "discourse/routes/discourse";
 
 export default class LoginRoute extends DiscourseRoute {
   @service siteSettings;

@@ -1,16 +1,16 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
-import { schedule } from "@ember/runloop";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { getOwner, setOwner } from "@ember/application";
+import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { escapeExpression } from "discourse/lib/utilities";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import discourseDebounce from "discourse-common/lib/debounce";
 import I18n from "I18n";
 import ChatChatable from "discourse/plugins/chat/discourse/models/chat-chatable";
-import { escapeExpression } from "discourse/lib/utilities";
-import { htmlSafe } from "@ember/template";
 
 const MAX_RESULTS = 10;
 const USER_PREFIX = "@";

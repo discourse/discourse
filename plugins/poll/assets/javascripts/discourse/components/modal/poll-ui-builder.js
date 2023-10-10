@@ -1,8 +1,8 @@
-import { gt, or } from "@ember/object/computed";
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
+import { gt, or } from "@ember/object/computed";
 import { observes } from "@ember-decorators/object";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
 
 export const BAR_CHART_TYPE = "bar";

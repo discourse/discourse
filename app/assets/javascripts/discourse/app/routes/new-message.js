@@ -1,9 +1,9 @@
-import DiscourseRoute from "discourse/routes/discourse";
-import Group from "discourse/models/group";
-import I18n from "I18n";
-import cookie from "discourse/lib/cookie";
 import { next } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import cookie from "discourse/lib/cookie";
+import Group from "discourse/models/group";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 
 export default DiscourseRoute.extend({
   dialog: service(),

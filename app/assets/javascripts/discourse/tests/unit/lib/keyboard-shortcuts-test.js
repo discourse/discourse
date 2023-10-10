@@ -1,8 +1,8 @@
-import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import DiscourseURL from "discourse/lib/url";
-import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import { module, test } from "qunit";
 import sinon from "sinon";
+import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import DiscourseURL from "discourse/lib/url";
 
 module("Unit | Utility | keyboard-shortcuts", function (hooks) {
   setupTest(hooks);

@@ -1,5 +1,5 @@
-import RestrictedUserRoute from "discourse/routes/restricted-user";
 import { currentThemeId } from "discourse/lib/theme-selector";
+import RestrictedUserRoute from "discourse/routes/restricted-user";
 
 export default RestrictedUserRoute.extend({
   setupController(controller, user) {

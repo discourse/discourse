@@ -1,7 +1,6 @@
-import I18n from "I18n";
-
-import DiscourseRoute from "discourse/routes/discourse";
 import { action } from "@ember/object";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 
 export default class DiscoveryFilterRoute extends DiscourseRoute {
   queryParams = {

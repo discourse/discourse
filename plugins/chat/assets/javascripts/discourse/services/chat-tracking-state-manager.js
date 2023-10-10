@@ -1,8 +1,8 @@
+import { getOwner } from "@ember/application";
+import { cancel } from "@ember/runloop";
 import Service, { inject as service } from "@ember/service";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { cancel } from "@ember/runloop";
 import ChatTrackingState from "discourse/plugins/chat/discourse/models/chat-tracking-state";
-import { getOwner } from "@ember/application";
 
 /**
  * This service is used to provide a global interface to tracking individual
