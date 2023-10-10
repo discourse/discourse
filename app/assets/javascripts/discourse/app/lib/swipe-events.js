@@ -21,19 +21,38 @@ export default class SwipeEvents {
   }
 
   addTouchListeners() {
-    this.touchStart = (e) => e.touches && this.#swipeStart(e.touches[0]);
+    this.touchStart = (e) => {
+      // multitouch cancels current swipe event
+      if (e.touches.length > 1) {
+        if (this.cancelled) {
+          return;
+        }
+        this.cancelled = true;
+        const event = new CustomEvent("swipecancel", {
+          detail: { originalEvent: e },
+        });
+        this.element.dispatchEvent(event);
+        return;
+      }
+      this.#swipeStart(e.touches[0]);
+    };
     this.touchMove = (e) => {
       const touchEvent = e.touches[0];
       touchEvent.type = "pointermove";
       this.#swipeMove(touchEvent, e);
     };
     this.touchEnd = (e) => {
-      this.cancelled = false;
       this.#swipeMove({ type: "pointerup" }, e);
+      // only reset when no touches remain
+      if (e.touches.length === 0) {
+        this.cancelled = false;
+      }
     };
     this.touchCancel = (e) => {
-      this.cancelled = false;
       this.#swipeMove({ type: "pointercancel" }, e);
+      if (e.touches.length === 0) {
+        this.cancelled = false;
+      }
     };
 
     const opts = {
@@ -201,7 +220,7 @@ export default class SwipeEvents {
       }
       this.animationPending = true;
       window.requestAnimationFrame(() => {
-        if (!this.animationPending || !this.swiping) {
+        if (!this.animationPending || !this.swiping || this.cancelled) {
           this.animationPending = false;
           return;
         }

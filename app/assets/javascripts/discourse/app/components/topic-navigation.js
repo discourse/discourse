@@ -154,6 +154,16 @@ export default Component.extend({
     }
   },
 
+  onSwipeCancel() {
+    let durationMs = this._swipeEvents.getMaxAnimationTimeMs();
+    const timelineContainer = document.querySelector(".timeline-container");
+    timelineContainer.animate([{ transform: `translate3d(0, 0, 0)` }], {
+      duration: durationMs,
+      fill: "forwards",
+      easing: "ease-out",
+    });
+  },
+
   onSwipeEnd(event) {
     const e = event.detail;
     const timelineContainer = document.querySelector(".timeline-container");
@@ -220,9 +230,11 @@ export default Component.extend({
       this._swipeEvents.addTouchListeners();
       this._swipeStart = (e) => this.onSwipeStart(e);
       this._swipeEnd = (e) => this.onSwipeEnd(e);
+      this._swipeCancel = (e) => this.onSwipeCancel(e);
       this._swipe = (e) => this.onSwipe(e);
       this.element.addEventListener("swipestart", this._swipeStart);
       this.element.addEventListener("swipeend", this._swipeEnd);
+      this.element.addEventListener("swipecancel", this._swipeCancel);
       this.element.addEventListener("swipe", this._swipe);
     }
   },
@@ -247,6 +259,7 @@ export default Component.extend({
     if (this.site.mobileView) {
       this.element.removeEventListener("swipestart", this._swipeStart);
       this.element.removeEventListener("swipeend", this._swipeEnd);
+      this.element.removeEventListener("swipecancel", this._swipeCancel);
       this.element.removeEventListener("swipe", this._swipe);
       this._swipeEvents.removeTouchListeners();
     }

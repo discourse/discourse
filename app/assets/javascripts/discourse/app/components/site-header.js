@@ -150,6 +150,14 @@ const SiteHeaderComponent = MountWidget.extend(
       });
     },
 
+    onSwipeCancel() {
+      const menuPanels = document.querySelectorAll(".menu-panel");
+      scrollLock(false, document.querySelector(".panel-body"));
+      menuPanels.forEach((panel) => {
+        this._animateOpening(panel);
+      });
+    },
+
     onSwipe(event) {
       const e = event.detail;
       const panel = this.movingElement;
@@ -478,9 +486,11 @@ export default SiteHeaderComponent.extend({
       this._swipeEvents.addTouchListeners();
       this._swipeStart = (e) => this.onSwipeStart(e);
       this._swipeEnd = (e) => this.onSwipeEnd(e);
+      this._swipeCancel = (e) => this.onSwipeCancel(e);
       this._swipe = (e) => this.onSwipe(e);
       this.element.addEventListener("swipestart", this._swipeStart);
       this.element.addEventListener("swipeend", this._swipeEnd);
+      this.element.addEventListener("swipecancel", this._swipeCancel);
       this.element.addEventListener("swipe", this._swipe);
     }
   },
@@ -493,6 +503,7 @@ export default SiteHeaderComponent.extend({
     if (this.site.mobileView) {
       this.element.removeEventListener("swipestart", this._swipeStart);
       this.element.removeEventListener("swipeend", this._swipeEnd);
+      this.element.removeEventListener("swipecancel", this._swipeCancel);
       this.element.removeEventListener("swipe", this._swipe);
       this._swipeEvents.removeTouchListeners();
     }
