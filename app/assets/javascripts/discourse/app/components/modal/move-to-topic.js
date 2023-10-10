@@ -19,6 +19,7 @@ export default class MoveToTopic extends Component {
   @tracked chronologicalOrder = false;
   @tracked selection = "new_topic";
   @tracked selectedTopicId;
+  @tracked flash;
 
   constructor() {
     super(...arguments);
