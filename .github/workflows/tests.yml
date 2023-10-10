@@ -209,8 +209,14 @@ jobs:
 
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: QUNIT_PARALLEL=3 bin/rake plugin:qunit['*','1200000']
+        run: QUNIT_WRITE_EXECUTION_FILE=1 QUNIT_PARALLEL=3 bin/rake plugin:qunit['*','1200000']
         timeout-minutes: 30
+
+      - uses: actions/upload-artifact@v3
+        if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
+        with:
+          name: ember-exam-execution-plugins-frontend-${{(matrix.embroider == '1') && 'embroider' || 'classic'}}
+          path: ./app/assets/javascripts/discourse/test-execution-*.json
 
       - name: Ember Build for System Tests
         if: matrix.build_type == 'system'
