@@ -5920,9 +5920,7 @@ RSpec.describe UsersController do
       expect(response_parsed["challenge"]).to eq(DiscourseWebauthn.challenge(user1, secure_session))
       expect(response_parsed["rp_id"]).to eq(DiscourseWebauthn.rp_id)
       expect(response_parsed["rp_name"]).to eq(DiscourseWebauthn.rp_name)
-      expect(response_parsed["user_secure_id"]).to eq(
-        user1.create_or_fetch_secure_identifier,
-      )
+      expect(response_parsed["user_secure_id"]).to eq(user1.create_or_fetch_secure_identifier)
       expect(response_parsed["supported_algorithms"]).to eq(
         ::DiscourseWebauthn::SUPPORTED_ALGORITHMS,
       )
@@ -5948,14 +5946,14 @@ RSpec.describe UsersController do
     before { SiteSetting.experimental_passkeys = true }
 
     it "fails if no user is logged in" do
-      post "/u/rename_passkey/NONE.json"
+      put "/u/rename_passkey/NONE.json"
 
       expect(response.status).to eq(403)
     end
 
     it "fails if no name parameter is provided" do
       sign_in(user1)
-      post "/u/rename_passkey/ID.json"
+      put "/u/rename_passkey/ID.json"
 
       expect(response.status).to eq(400)
       expect(response.parsed_body["errors"][0]).to eq(
@@ -5965,10 +5963,12 @@ RSpec.describe UsersController do
 
     it "fails if key is invalid" do
       sign_in(user1)
-      post "/u/rename_passkey/ID.json", params: { name: "new name" }
+      put "/u/rename_passkey/ID.json", params: { name: "new name" }
 
       expect(response.status).to eq(400)
-      expect(response.parsed_body["errors"][0]).to include("Discourse::InvalidParameters")
+      expect(response.parsed_body["errors"][0]).to include(
+        "You supplied invalid parameters to the request: id",
+      )
     end
 
     context "with an existing passkey" do
@@ -5978,7 +5978,7 @@ RSpec.describe UsersController do
 
       it "renames the key" do
         sign_in(user1)
-        post "/u/rename_passkey/#{passkey.id}.json", params: { name: "new name" }
+        put "/u/rename_passkey/#{passkey.id}.json", params: { name: "new name" }
         response_parsed = response.parsed_body
 
         expect(response.status).to eq(200)
@@ -5988,7 +5988,7 @@ RSpec.describe UsersController do
       it "does not let an admin delete a passkey associated with user1" do
         sign_in(admin)
 
-        post "/u/rename_passkey/#{passkey.id}.json", params: { name: "new name" }
+        put "/u/rename_passkey/#{passkey.id}.json", params: { name: "new name" }
 
         expect(passkey.reload.name).to eq("original name")
       end

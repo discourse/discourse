@@ -486,7 +486,7 @@ Discourse::Application.routes.draw do
 
       post "#{root_path}/create_passkey" => "users#create_passkey"
       post "#{root_path}/register_passkey" => "users#register_passkey"
-      post "#{root_path}/rename_passkey/:id" => "users#rename_passkey"
+      put "#{root_path}/rename_passkey/:id" => "users#rename_passkey"
       delete "#{root_path}/delete_passkey/:id" => "users#delete_passkey"
 
       put "#{root_path}/update-activation-email" => "users#update_activation_email"

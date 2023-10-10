@@ -3091,7 +3091,7 @@ RSpec.describe SessionController do
       end
 
       context "when user has a valid registered passkey" do
-        fab!(:passkey) do
+        let!(:passkey) do
           Fabricate(
             :user_security_key,
             credential_id: valid_passkey_data[:credential_id],
@@ -3127,6 +3127,7 @@ RSpec.describe SessionController do
           expect(response.status).to eq(401)
           json = response.parsed_body
           expect(json["errors"][0]).to eq(I18n.t("webauthn.validation.ownership_error"))
+          expect(session[:current_user_id]).to eq(nil)
         end
 
         it "logs the user in" do
