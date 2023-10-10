@@ -85,7 +85,6 @@ describe "Thread list in side panel | full page", type: :system do
 
     it "shows the OM excerpt for threads without a title" do
       chat_page.visit_channel(channel)
-      channel_page.open_thread_list
 
       expect(page).to have_content(thread_1.original_message.excerpt)
     end
@@ -93,7 +92,7 @@ describe "Thread list in side panel | full page", type: :system do
     it "shows the thread title with emoji" do
       thread_1.update!(title: "What is for dinner? :hamburger:")
       chat_page.visit_channel(channel)
-      channel_page.open_thread_list
+
       expect(thread_list_page.item_by_id(thread_1.id)).to have_content("What is for dinner?")
       expect(thread_list_page.item_by_id(thread_1.id)).to have_css("img.emoji[alt='hamburger']")
     end
@@ -102,7 +101,7 @@ describe "Thread list in side panel | full page", type: :system do
       thread_1.original_message.update!(message: "This is a long message for the excerpt")
       thread_1.original_message.rebake!
       chat_page.visit_channel(channel)
-      channel_page.open_thread_list
+
       expect(thread_list_page.item_by_id(thread_1.id)).to have_content(
         "This is a long message for the excerpt",
       )
@@ -110,7 +109,7 @@ describe "Thread list in side panel | full page", type: :system do
 
     it "doesn’t show the thread original message user avatar" do
       chat_page.visit_channel(channel)
-      channel_page.open_thread_list
+
       expect(thread_list_page.item_by_id(thread_1.id)).to have_no_css(
         thread_list_page.avatar_selector(thread_1.original_message.user),
       )
@@ -128,7 +127,6 @@ describe "Thread list in side panel | full page", type: :system do
 
     it "shows participants" do
       chat_page.visit_channel(channel)
-      channel_page.open_thread_list
 
       expect(thread_list_page.item_by_id(thread_1.id)).to have_css(
         ".avatar[title='#{current_user.username}']",
@@ -140,7 +138,7 @@ describe "Thread list in side panel | full page", type: :system do
 
     it "opens a thread" do
       chat_page.visit_channel(channel)
-      channel_page.open_thread_list
+
       thread_list_page.item_by_id(thread_1.id).click
       expect(side_panel).to have_open_thread(thread_1)
     end
@@ -182,7 +180,7 @@ describe "Thread list in side panel | full page", type: :system do
 
         thread_1.original_message.trash!
         chat_page.visit_channel(channel)
-        channel_page.open_thread_list
+
         expect(thread_list_page).to have_no_thread(thread_1)
 
         using_session(:tab_2) do |session|
@@ -203,39 +201,35 @@ describe "Thread list in side panel | full page", type: :system do
     describe "updating the title of the thread" do
       let(:new_title) { "wow new title" }
 
-      def open_thread_list
-        chat_page.visit_channel(channel)
-        channel_page.open_thread_list
-        expect(side_panel).to have_open_thread_list
-      end
-
       it "allows updating when user is admin" do
         current_user.update!(admin: true)
-        open_thread_list
+        chat_page.visit_channel(channel)
         thread_list_page.item_by_id(thread_1.id).click
         thread_page.header.open_settings
         find(".chat-modal-thread-settings__title-input").fill_in(with: new_title)
         find(".modal-footer .btn-primary").click
+
         expect(thread_page.header).to have_title_content(new_title)
       end
 
       it "allows updating when user is same as the chat original message user" do
         thread_1.update!(original_message_user: current_user)
         thread_1.original_message.update!(user: current_user)
-        open_thread_list
+        chat_page.visit_channel(channel)
         thread_list_page.item_by_id(thread_1.id).click
         thread_page.header.open_settings
         find(".chat-modal-thread-settings__title-input").fill_in(with: new_title)
         find(".modal-footer .btn-primary").click
+
         expect(thread_page.header).to have_title_content(new_title)
       end
 
       it "does not allow updating if user is neither admin nor original message user" do
         thread_1.update!(original_message_user: other_user)
         thread_1.original_message.update!(user: other_user)
-
-        open_thread_list
+        chat_page.visit_channel(channel)
         thread_list_page.item_by_id(thread_1.id).click
+
         expect(thread_page.header).to have_no_settings_button
       end
     end
