@@ -60,7 +60,7 @@ export default class ChatThreadList extends Component {
     this.messageBus.subscribe(
       `/chat/${channel.id}`,
       this.onMessageBus,
-      channel.messageBusLastId
+      channel.channelMessageBusLastId
     );
 
     return () => {
