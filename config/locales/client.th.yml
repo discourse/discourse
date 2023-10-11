@@ -2651,6 +2651,7 @@ th:
           preview: "แสดงตัวอย่าง"
           add_all_themes: "เพิ่มธีมทั้งหมด"
           inactive_themes: "ธีมที่ไม่ได้ใช้งาน:"
+          cancel: "ยกเลิก"
           and_x_more: "และอีก%{count}"
           collapse: ย่อ
           uploads: "อัปโหลด"

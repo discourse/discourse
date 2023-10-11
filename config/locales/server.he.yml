@@ -815,7 +815,7 @@ he:
       x_days:
         one: "יום"
         two: "יומיים"
-        many: "%{count} ימים"
+        many: "%{count} יום"
         other: "%{count} ימים"
       about_x_months:
         one: "חודש"
@@ -1041,6 +1041,7 @@ he:
       invalid_origin_error: "מקור בקשת האימות לא תואמת למקור השרת."
       malformed_attestation_error: "איך שגיאה בעת פענוח נתוני העדות."
       invalid_relying_party_id_error: "ה־Relying Party ID של בקשת האימות לא תואמת ל־Relying Party ID של השרת."
+      user_presence_error: "נוכחות משתמש נחוצה."
       user_verification_error: "נדרש אימות משתמש."
       unsupported_public_key_algorithm_error: "אלגוריתם המפתח הציבורי שסופק לא נתמך על ידי השרת."
       unsupported_attestation_format_error: "תצורת העדות לא נתמכת על ידי השרת."
@@ -1049,6 +1050,7 @@ he:
       ownership_error: "מפתח האבטחה אינו בבעלות המשתמש."
       not_found_error: "לא ניתן למצוא מפתח אבטחה עם מזהה פרטי הגישה שסופק."
       unknown_cose_algorithm_error: "האלגוריתם בו נעשה שימוש למפתח האבטחה אינו מוכר."
+      malformed_public_key_credential_error: "המפתח הציבורי שסופק שגוי."
   topic_flag_types:
     spam:
       title: "ספאם"
@@ -1675,7 +1677,7 @@ he:
     ga_universal_tracking_code: "מזהה קוד המעקב של Google Universal Analytics, למשל: UA-12345678-9; יש לעיין ב־<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "שם התחום של Google Universal Analytics, למשל: mysite.com; יש לעיין ב־<a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "הפעלת מעקב חוצה שמות תחום של Google Universal Analytics. לקישורים יוצאים לשמות תחום אלו יתווסף מזהה לקוח. ניתן לעיין ב<a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>במדריך למעקב חוצה שמות תחום של Google.</a>"
-    gtm_container_id: "מזהה מכולה של Google Tag Manager. למשל: GTM-ABCDEF. <br/>לתשומת לבך: סקריפטים של צד‏־שלישי שנטענים על ידי GTM דורשים הוספה לרשימת ההיתר תחת ‚content security policy script src’."
+    gtm_container_id: "מזהה מיכל מנהל התגיות של Google, למשל: GTM-ABCD12E. <br/>לתשומת ליבך: כדי להשתמש ב־GTM (מנהל התגיות של Google) כאשר מדיניות אבטחת תוכן (CSP) פעילה, יש לעיין בתיעוד בפורום ה־meta שלנו: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>שימוש במחרוזות אקראיות חד־פעמיות בסקריפטים של מנהל התגיות של Google</a>."
     enable_escaped_fragments: "נסיגה ל־API של Google's Ajax-Crawling אם לא זוהה סורק אינטרנט. מידע נוסף בכתובת <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "לאפשר למפקחים ליצור ולנהל קטגוריות וקבוצות"
     moderators_change_post_ownership: "לאפשר למפקחים לשנות בעלות על פוסטים"
@@ -2264,7 +2266,7 @@ he:
     force_lowercase_tags: "לאלץ את כל התגיות החדשות להיות באותיות קטנות בלבד."
     create_post_for_category_and_tag_changes: "ליצור פוסט פעולה קטן כאשר קטגוריה או תגיות של נושא משתנים"
     watched_precedence_over_muted: "להודיע לי על נושאים בקטגוריות או תגיות שאני עוקב אחריהם שגם שייכים לזה שהשתקתי"
-    company_name: "שם החברה"
+    company_name: "שם החברה או הארגון שלך. בהעדר תוכן לא יסופקו תבניות תנאי שירות או הצהרת פרטיות."
     governing_law: "החוק המחייב"
     city_for_disputes: "עיר המחלוקת"
     shared_drafts_category: "הפעלת תכונת הטיוטות המשותפות על ידי הקצאת קטגוריה שתשמש לטובת טיוטות לנושאים. נושאים בקטגוריה זו יוסתרו מרשימות הנושאים לחברי הסגל."
@@ -4987,6 +4989,7 @@ he:
       missing_id: "חסר מזהה שדה"
       duplicate_ids: "יש מזהים כפולים"
       reserved_id: "יש מילת מפתח שמורה בתור מזהה: %{id}"
+      unsafe_description: "יש תיאור HTML מפוקפק"
   activemodel:
     errors:
       <<: *errors

@@ -3066,14 +3066,6 @@ ro:
         groups_filter_instructions: "Webhook-urile relevante vor fi declanșate dacă evenimentul este legat de grupuri specificate. Lasă liber pentru a declanșa webhooks pentru toate grupurile."
         groups_filter: "Grupuri declanșate"
         delete_confirm: "Șterge acest webhook?"
-        topic_event:
-          name: "Eveniment subiect"
-          details: "Atunci când există un subiect nou, revizuit, schimbat sau șters."
-        post_event:
-          name: "Eveniment postare"
-          details: "Atunci când exista un răspuns nou, editat, șters sau recuperat."
-        user_event:
-          name: "Eveniment utilizator"
         delivery_status:
           title: "Starea livrării"
           inactive: "Inactivă"
@@ -3216,6 +3208,7 @@ ro:
           color_scheme_select: "Alege culorile folosite de către temă"
           custom_sections: "Secțiuni personalizate:"
           theme_components: "Componentele temei"
+          cancel: "Anulare"
           collapse: Colaps
           uploads: "Urcări"
           variable_name: "Numele variabilei SCSS:"

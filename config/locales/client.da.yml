@@ -1906,7 +1906,6 @@ da:
       drafts_offline: "kladder offline"
       edit_conflict: "rediger konflikt"
       esc: "esc"
-      esc_label: "Klik eller tryk på Esc for at afvise"
       ok_proceed: "Ok, fortsæt"
       group_mentioned_limit:
         one: "<b>Advarsel!</b> Du nævnte <a href='%{group_link}'>%{group}</a> , men denne gruppe har flere medlemmer end administratorens opsatte omtale-grænse på %{count} bruger. Ingen bliver underrettet."
@@ -3943,35 +3942,8 @@ da:
         groups_filter_instructions: "De relevante webhooks vil kun blive udløst, hvis eventet er relateret med angivne grupper. Lad stå tom for at udløse webhook for alle grupper."
         groups_filter: "Udløste grupper"
         delete_confirm: "Slet denne webhook?"
-        topic_event:
-          name: "Emne-event"
-          details: "Når der er et nyt emne, revideret, ændret eller slettet."
-        post_event:
-          name: "Send event"
-          details: "Når der er et nyt svar, redigering, sletning eller gendannelse."
-        user_event:
-          name: "Bruger-event"
-        group_event:
-          name: "Gruppebegivenhed"
-          details: "Når en gruppe bliver oprettet, opdateret eller ødelagt."
-        category_event:
-          name: "Kategori begivenhed"
-          details: "Når en kategori bliver oprettet, opdateret eller ødelagt."
-        tag_event:
-          name: "Marker begivenhed med Mærke"
-          details: "Når et mærke bliver oprettet, opdateret eller ødelagt."
-        reviewable_event:
-          name: "Begivenhed, der kan gennemgås"
-          details: "Når et nyt punkt er klar til gennemgang, og når dets status opdateres."
-        notification_event:
-          name: "Meddelelsesbegivenhed"
-          details: "Når en bruger modtager en underretning i deres beskedstrøm."
-        group_user_event:
-          name: "Gruppe Bruger Begivenhed"
-          details: "Når en bruger tilføjes eller fjernes en gruppe."
         like_event:
-          name: "'Synes godt om' Begivenhed"
-          details: "Når en bruger 'Synes godt om' et indlæg."
+          post_liked: "Når en bruger 'Synes godt om' et indlæg."
         delivery_status:
           title: "Leveringsstatus"
           inactive: "Inaktiv"
@@ -4162,6 +4134,7 @@ da:
           convert_theme_tooltip: "Konverter dette tema til komponent"
           inactive_themes: "Inaktive temaer:"
           inactive_components: "Ubrugte komponenter:"
+          cancel: "Annuller"
           broken_theme_tooltip: "Dette tema har fejl i dets CSS, HTML eller YAML"
           disabled_component_tooltip: "Denne komponent er deaktiveret"
           default_theme_tooltip: "Dette tema er sidens standard tema"

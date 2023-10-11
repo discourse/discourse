@@ -2097,7 +2097,6 @@ nl:
       drafts_offline: "concepten offline"
       edit_conflict: "bewerkingsconflict"
       esc: "Esc"
-      esc_label: "Klik of druk op Esc om te sluiten"
       ok_proceed: "OK, doorgaan"
       group_mentioned_limit:
         one: "<b>Waarschuwing!</b> Je hebt <a href='%{group_link}'>%{group}</a> genoemd, maar deze groep heeft meer leden dan de door een beheerder geconfigureerde vermeldingslimiet van %{count} gebruiker. Niemand krijgt een melding."
@@ -4475,41 +4474,8 @@ nl:
         groups_filter_instructions: "Relevante webhooks worden alleen geactiveerd als de gebeurtenis bij opgegeven groepen hoort. Laat dit leeg om webhooks voor alle groepen te activeren."
         groups_filter: "Geactiveerde groepen"
         delete_confirm: "Deze webhook verwijderen?"
-        topic_event:
-          name: "Topicgebeurtenis"
-          details: "Wanneer een nieuw topic wordt geplaatst, gereviseerd, gewijzigd of verwijderd."
-        post_event:
-          name: "Berichtgebeurtenis"
-          details: "Wanneer een (nieuw) bericht wordt geplaatst, bewerkt, verwijderd of hersteld."
-        user_event:
-          name: "Gebruikersgebeurtenis"
-        group_event:
-          name: "Groepsgebeurtenis"
-          details: "Wanneer een groep wordt gemaakt, bijgewerkt of verwijderd."
-        category_event:
-          name: "Categoriegebeurtenis"
-          details: "Wanneer een categorie wordt gemaakt, bijgewerkt of verwijderd."
-        tag_event:
-          name: "Tag-gebeurtenis"
-          details: "Wanneer een tag wordt gemaakt, bijgewerkt of verwijderd."
-        reviewable_event:
-          name: "Beoordeelbare gebeurtenis"
-          details: "Wanneer een nieuw item gereed is voor beoordeling en wanneer de status ervan is bijgewerkt."
-        notification_event:
-          name: "Meldingsgebeurtenis"
-          details: "Wanneer een gebruiker een melding in diens feed ontvangt."
-        user_promoted_event:
-          name: "Door gebruiker gepromoot evenement"
-          details: "Wanneer een gebruiker wordt gepromoveerd van het ene vertrouwensniveau naar het andere."
-        user_badge_event:
-          name: "Badgegebeurtenis"
-          details: "Wanneer een badge wordt toegekend of ingetrokken."
-        group_user_event:
-          name: "Groepgebruikersgebeurtenis"
-          details: "Wanneer een gebruiker wordt toegevoegd of verwijderd in een groep."
         like_event:
-          name: "Likegebeurtenis"
-          details: "Wanneer een gebruiker een bericht liket."
+          post_liked: "Wanneer een gebruiker een bericht liket."
         delivery_status:
           title: "Afleveringsstatus"
           inactive: "Inactief"
@@ -4705,6 +4671,7 @@ nl:
           convert_theme_tooltip: "Dit thema naar een onderdeel converteren"
           inactive_themes: "Inactieve thema's:"
           inactive_components: "Ongebruikte onderdelen:"
+          cancel: "Annuleren"
           broken_theme_tooltip: "Dit thema bevat fouten in de CSS, HTML of YAML ervan"
           disabled_component_tooltip: "Dit onderdeel is uitgeschakeld"
           default_theme_tooltip: "Dit thema is het standaardthema van de website"

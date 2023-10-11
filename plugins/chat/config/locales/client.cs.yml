@@ -78,7 +78,6 @@ cs:
       channel_info:
         back_to_channel: "Zpět"
         tabs:
-          about: O fóru
           members: Členové
           settings: Nastavení
       direct_message_creator:
@@ -106,6 +105,10 @@ cs:
         saved: "Uloženo"
         unfollow: "Opustit skupinu"
         admin_title: "Administrace"
+        settings_title: "Nastavení"
+        category_label: "Kategorie"
+        history_label: "Historie"
+        members_label: "Členové"
       incoming_webhooks:
         back: "Zpět"
         description: "Popis"
@@ -124,6 +127,17 @@ cs:
           title: "Rozdělit téma"
         existing_topic:
           title: "Sloučit téma"
+      retention_reminders:
+        public:
+          one: "%{count} den"
+          few: "%{count} dny"
+          many: "%{count} dní"
+          other: "%{count} dní"
+        dm:
+          one: "%{count} den"
+          few: "%{count} dny"
+          many: "%{count} dní"
+          other: "%{count} dní"
       emoji_picker:
         objects: "Objekty"
         flags: "Nahlášení"

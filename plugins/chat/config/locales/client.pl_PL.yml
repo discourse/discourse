@@ -26,6 +26,8 @@ pl_PL:
             chat:
               create_message: "Utwórz wiadomość na czacie w określonym kanale."
     chat:
+      text_copied: Tekst skopiowany do schowka
+      link_copied: Link skopiowany do schowka
       deleted_chat_username: usunięte
       dates:
         time_tiny: "h:mm"
@@ -246,6 +248,7 @@ pl_PL:
       reply: "Odpowiedz"
       edit: "Edytuj"
       copy_link: "Skopiuj link"
+      copy_text: "Skopiuj tekst"
       rebake_message: "Odśwież HTML"
       retry_staged_message:
         title: "Błąd sieci"
@@ -318,7 +321,6 @@ pl_PL:
         back_to_all_channels: "Wszystkie kanały"
         back_to_channel: "Poprzednia"
         tabs:
-          about: O stronie
           members: Członkowie
           settings: Ustawienia
       new_message_modal:
@@ -464,6 +466,10 @@ pl_PL:
         saved: "Zapisano"
         unfollow: "Opuść"
         admin_title: "Administratorzy"
+        settings_title: "Ustawienia"
+        category_label: "Kategoria"
+        history_label: "Historia"
+        members_label: "Członkowie"
       admin:
         title: "Czat"
         export_messages:
@@ -542,18 +548,16 @@ pl_PL:
           many: "%{commaSeparatedUsernames} i %{count} inni piszą"
           other: "%{commaSeparatedUsernames} i %{count} innych piszą"
       retention_reminders:
-        public_none: "Historia kanału jest przechowywana przez czas nieokreślony."
         public:
-          one: "Historia kanału jest przechowywana przez %{count} dzień."
-          few: "Historia kanału jest przechowywana przez %{count} dni."
-          many: "Historia kanału jest przechowywana przez %{count} dni."
-          other: "Historia kanału jest przechowywana przez %{count} dni."
-        dm_none: "Osobista historia czatu jest przechowywana przez czas nieokreślony."
+          one: "%{count} dzień"
+          few: "%{count} dni"
+          many: "%{count} dni"
+          other: "%{count} dni"
         dm:
-          one: "Osobista historia czatu jest zachowywana przez %{count} dzień."
-          few: "Osobista historia czatu jest zachowywana przez %{count} dni."
-          many: "Osobista historia czatu jest zachowywana przez %{count} dni."
-          other: "Osobista historia czatu jest zachowywana przez %{count} dni."
+          one: "%{count} dzień"
+          few: "%{count} dni"
+          many: "%{count} dni"
+          other: "%{count} dni"
       flags:
         off_topic: "Ta wiadomość nie jest związana z bieżącą dyskusją określoną w tytule kanału i prawdopodobnie powinna zostać przeniesiona w inne miejsce."
         inappropriate: "Ta wiadomość zawiera treści, które rozsądna osoba mogłaby uznać za obraźliwe, krzywdzące lub stanowiące naruszenie <a href=\"%{basePath}/guidelines\">naszych wytycznych dotyczących społeczności</a>."

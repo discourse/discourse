@@ -101,7 +101,6 @@ sk:
       channel_info:
         back_to_channel: "Späť"
         tabs:
-          about: O stránke
           members: Členovia
           settings: Nastavenia
       new_message_modal:
@@ -153,6 +152,10 @@ sk:
         saved: "Uložené"
         unfollow: "Opustiť"
         admin_title: "Admin"
+        settings_title: "Nastavenia"
+        category_label: "Kategória"
+        history_label: "História"
+        members_label: "Členovia"
       admin:
         export_messages:
           title: "Exportovať správy z chatu"
@@ -177,13 +180,16 @@ sk:
         existing_topic:
           title: "Presuň do existujúcej témy."
       retention_reminders:
-        public_none: "História kanálov sa uchováva na neurčito."
-        dm_none: "História osobných chatov sa uchováva na neurčito."
+        public:
+          one: "%{count} deň"
+          few: "%{count} dni"
+          many: "%{count} dní"
+          other: "%{count} dní"
         dm:
-          one: "História súkromných správ sa uchováva na %{count} deň."
-          few: "História súkromných správ sa uchováva počas %{count} dní."
-          many: "História súkromných správ sa uchováva počas %{count} dní."
-          other: "História súkromných správ sa uchováva počas %{count} dní."
+          one: "%{count} deň"
+          few: "%{count} dni"
+          many: "%{count} dní"
+          other: "%{count} dní"
       emoji_picker:
         objects: "Objekty"
         flags: "Označenia"

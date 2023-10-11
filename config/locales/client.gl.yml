@@ -3572,29 +3572,6 @@ gl:
         groups_filter_instructions: "Os enganches de web relevantes soamente se dispararán se o evento está relacionado con grupos específicos. Déixeo en branco para que os enganches de web se disparen con calquera grupo."
         groups_filter: "Grupos disparados"
         delete_confirm: "Eliminar este enganche de web?"
-        topic_event:
-          name: "Evento de tema"
-          details: "Cando se publica, revisa, cambia ou elimina un novo tema."
-        post_event:
-          name: "Evento de publicación"
-          details: "Cando se publica, cambia, elimina ou recupera unha nova resposta."
-        user_event:
-          name: "Evento de usuario"
-        group_event:
-          name: "Evento de grupo"
-          details: "Cando se crea, actualiza ou destrúe un grupo."
-        category_event:
-          name: "Evento de categoría"
-          details: "Cando se crea, actualiza ou destrúe unha categoría."
-        tag_event:
-          name: "Evento de etiqueta"
-          details: "Cando se crea, actualiza ou destrúe unha etiqueta."
-        reviewable_event:
-          name: "Evento revisábel"
-          details: "Cando hai un novo elemento para revisar e se actualiza o seu estado."
-        notification_event:
-          name: "Evento de notificación"
-          details: "Cando o usuario recibe unha notificación na fonte."
         delivery_status:
           title: "Estado de entrega"
           inactive: "Inactivo"
@@ -3777,6 +3754,7 @@ gl:
           convert_theme_tooltip: "Converter este tema nun compoñente"
           inactive_themes: "Temas inactivos:"
           inactive_components: "Compoñentes non utilizados:"
+          cancel: "Cancelar"
           broken_theme_tooltip: "Este tema ten erros no CSS, HTML ou YAML"
           disabled_component_tooltip: "Este compoñente foi desactivado"
           default_theme_tooltip: "Este tema é o predeterminado do sitio"

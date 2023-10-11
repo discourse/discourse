@@ -2094,7 +2094,6 @@ hr:
       drafts_offline: "nacrti offline"
       edit_conflict: "uredi sukob"
       esc: "esc"
-      esc_label: "Kliknite ili pritisnite Esc za odbacivanje"
       ok_proceed: "Ok, nastavi"
       group_mentioned_limit:
         one: "<b>Upozorenje!</b> Spomenuli ste <a href='%{group_link}'>%{group}</a>, međutim ova grupa ima više članova od administratora konfiguriranog ograničenja spominjanja od %{count} korisnika. Nitko neće biti obaviješten."
@@ -4462,38 +4461,8 @@ hr:
         groups_filter_instructions: "Relevantne web dojave pokrenut će se samo ako je događaj povezan s navedenim skupinama. Ostavite prazno da biste pokrenuli web dojave za sve grupe."
         groups_filter: "Pokrenute grupe"
         delete_confirm: "Izbrisati ovu web dojavu?"
-        topic_event:
-          name: "Tema događaja"
-          details: "Kada postoji nova tema, revidirana, promijenjena ili izbrisana."
-        post_event:
-          name: "Post Event"
-          details: "Kada postoji novi odgovor, uređivanje, brisanje ili oporavak."
-        user_event:
-          name: "Korisnički događaj"
-        group_event:
-          name: "Grupni događaj"
-          details: "Kada se grupa kreira, ažurira ili uništi."
-        category_event:
-          name: "Kategorija Događaj"
-          details: "Kada se kategorija kreira, ažurira ili uništi."
-        tag_event:
-          name: "Tag Event"
-          details: "Kada se oznaka kreira, ažurira ili uništi."
-        reviewable_event:
-          name: "Događaj koji se može pregledati"
-          details: "Kada je nova stavka spremna za pregled i kada se njezin status ažurira."
-        notification_event:
-          name: "Događaj obavijesti"
-          details: "Kada korisnik primi obavijest u svom feedu."
-        user_promoted_event:
-          name: "Događaj koji promovira korisnik"
-          details: "Kada se korisnik unaprijedi s jedne razine povjerenja na drugu."
-        group_user_event:
-          name: "Grupni korisnički događaj"
-          details: "Kada se korisnik doda ili ukloni u grupi."
         like_event:
-          name: "Kao Događaj"
-          details: "Kada korisnik lajka objavu."
+          post_liked: "Kada korisnik lajka objavu."
         delivery_status:
           title: "Status isporuke"
           inactive: "Neaktivan"
@@ -4685,6 +4654,7 @@ hr:
           convert_theme_tooltip: "Pretvorite ovu temu u komponentu"
           inactive_themes: "Neaktivne teme:"
           inactive_components: "Neiskorištene komponente:"
+          cancel: "Odustani"
           broken_theme_tooltip: "Ova tema ima pogreške u svom CSS -u, HTML -u ili YAML -u"
           disabled_component_tooltip: "Ova komponenta je onemogućena"
           default_theme_tooltip: "Ova je tema zadana tema web stranice"

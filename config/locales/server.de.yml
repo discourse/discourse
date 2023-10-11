@@ -937,6 +937,7 @@ de:
       invalid_origin_error: "Die Herkunft der Authentifizierungsanfrage entspricht nicht der Server-Herkunft."
       malformed_attestation_error: "Beim Decodieren der Attestierungsdaten ist ein Fehler aufgetreten."
       invalid_relying_party_id_error: "Die ID der vertrauenden Partei der Authentifizierungsanforderung stimmt nicht mit der ID der vertrauenden Partei des Servers überein."
+      user_presence_error: "Die Anwesenheit des Benutzers ist erforderlich."
       user_verification_error: "Benutzerüberprüfung erforderlich."
       unsupported_public_key_algorithm_error: "Der angegebene Algorithmus des öffentlichen Schlüssels wird vom Server nicht unterstützt."
       unsupported_attestation_format_error: "Das Attestierungsformat wird vom Server nicht unterstützt."
@@ -945,6 +946,7 @@ de:
       ownership_error: "Der Sicherheitsschlüssel gehört dem Benutzer nicht."
       not_found_error: "Ein Sicherheitsschlüssel mit der bereitgestellten Zugangs-ID konnte nicht gefunden werden."
       unknown_cose_algorithm_error: "Der Algorithmus, der für den Sicherheitsschlüssel verwendet wird, konnte nicht erkannt werden."
+      malformed_public_key_credential_error: "Der angegebene öffentliche Schlüssel ist ungültig."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -1569,7 +1571,7 @@ de:
     ga_universal_tracking_code: "Google Universal Analytics Tracking-Code-ID, z. B.: UA-12345678-9; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics Domainname, z. B.: mysite.com; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Aktiviere Cross-Domain-Tracking von Google Universal Analytics. Bei ausgehenden Links zu diesen Domains wird die Client-ID hinzugefügt. Siehe <a href='https://support.google.com/analytics/answer/1034342?hl=de' target='_blank'>Googles Cross-Domain-Tracking-Handbuch.</a>"
-    gtm_container_id: "Google-Tag-Manager-Container-ID. Zum Beispiel: GTM-ABCDEF. <br/>Hinweis: Skripte von Drittanbietern, die von GTM geladen werden, müssen unter Umständen in der Liste „content security policy script src“ erlaubt werden (Positivliste)."
+    gtm_container_id: "Google Tag Manager Container-ID, z.B.: GTM-ABCD12E. <br/>Hinweis: Um GTM zu verwenden, wenn die Content Security Policy (CSP) aktiviert ist, siehe die Dokumentation auf meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Nonces in Google Tag Manager-Skripten verwenden</a>."
     enable_escaped_fragments: "Auf die Ajax-Crawling-API von Google zurückgreifen, wenn kein Webcrawler gefunden wird. Siehe <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Moderatoren erlauben, Kategorien und Gruppen zu erstellen und zu verwalten"
     moderators_change_post_ownership: "Moderatoren erlauben, die Eigentümerschaft des Beitrags zu ändern"
@@ -2158,7 +2160,7 @@ de:
     force_lowercase_tags: "Kleinschreibung für alle neuen Schlagwörter erzwingen."
     create_post_for_category_and_tag_changes: "Einen kleinen Aktionsbeitrag erstellen, wenn sich die Kategorie oder die Schlagwörter eines Themas ändern"
     watched_precedence_over_muted: "Benachrichtige mich über Themen in Kategorien oder Schlagwörtern, die ich beobachte und die auch zu einem Thema gehören, das ich stummgeschaltet habe"
-    company_name: "Firmenname"
+    company_name: "Name deines Unternehmens oder deiner Organisation. Wenn du nichts angibst, werden keine allgemeinen Geschäftsbedingungen oder Datenschutzhinweise bereitgestellt."
     governing_law: "Anzuwendendes Recht"
     city_for_disputes: "Stadt für Rechtsstreitigkeiten"
     shared_drafts_category: "Aktiviere die Funktion „Gemeinsame Entwürfe“, indem du eine Kategorie für Themenentwürfe bestimmst. Themen in dieser Kategorie werden in den Themenlisten für Team-Mitglieder unterdrückt."
@@ -4834,6 +4836,7 @@ de:
       missing_id: "fehlt eine Feld-ID"
       duplicate_ids: "hat doppelte IDs"
       reserved_id: "hat ein reserviertes Schlüsselwort als id: %{id}"
+      unsafe_description: "hat eine unsichere HTML-Beschreibung"
   activemodel:
     errors:
       <<: *errors

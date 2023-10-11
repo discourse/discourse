@@ -296,7 +296,6 @@ nl:
         back_to_all_channels: "Alle kanalen"
         back_to_channel: "Vorige"
         tabs:
-          about: Over
           members: Leden
           settings: Instellingen
       new_message_modal:
@@ -426,6 +425,10 @@ nl:
         saved: "Opgeslagen"
         unfollow: "Verlaten"
         admin_title: "Beheerder"
+        settings_title: "Instellingen"
+        category_label: "Categorie"
+        history_label: "Geschiedenis"
+        members_label: "Leden"
       admin:
         title: "Chat"
         export_messages:
@@ -495,14 +498,12 @@ nl:
           one: "%{commaSeparatedUsernames} en %{count} ander zijn aan het typen"
           other: "%{commaSeparatedUsernames} en %{count} anderen zijn aan het typen"
       retention_reminders:
-        public_none: "De kanaalgeschiedenis wordt voor onbepaalde tijd bewaard."
         public:
-          one: "Kanaalgeschiedenis wordt %{count} dag bewaard."
-          other: "Kanaalgeschiedenis wordt %{count} dagen bewaard."
-        dm_none: "De persoonlijke chatgeschiedenis wordt voor onbepaalde tijd bewaard."
+          one: "%{count} dag"
+          other: "%{count} dagen"
         dm:
-          one: "Persoonlijke chatgeschiedenis wordt %{count} dag bewaard."
-          other: "Persoonlijke chatgeschiedenis wordt %{count} dagen bewaard."
+          one: "%{count} dag"
+          other: "%{count} dagen"
       flags:
         off_topic: "Dit bericht is niet relevant voor de huidige discussie zoals gedefinieerd door de kanaaltitel en moet waarschijnlijk worden verplaats naar elders."
         inappropriate: "Dit bericht bevat inhoud die een redelijk persoon als aanstootgevend, kwetsend of een overtreding van <a href=\"%{basePath}/guidelines\">onze communityrichtlijnen</a> zou beschouwen."

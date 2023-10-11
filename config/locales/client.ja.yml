@@ -2003,7 +2003,6 @@ ja:
       drafts_offline: "オフラインの下書き"
       edit_conflict: "競合を編集する"
       esc: "esc"
-      esc_label: "クリックまたは Esc を押して閉じる"
       ok_proceed: "OK、続行する"
       group_mentioned_limit:
         other: "<b>警告！</b> <a href='%{group_link}'>%{group}</a> をメンションしましたが、このグループのメンバー数は、管理者がメンション数制限として設定した %{count} 人を超えています。そのため誰にも通知されません。"
@@ -4266,41 +4265,8 @@ ja:
         groups_filter_instructions: "関連する Webhook はイベントが指定されたグループに関連している場合にのみトリガーされます。すべてのグループに Webhook をトリガーするには空のままにします。"
         groups_filter: "トリガーされたグループ"
         delete_confirm: "この Webhook を削除しますか？"
-        topic_event:
-          name: "トピックイベント"
-          details: "トピックが新規作成、編集、変更、または削除された場合。"
-        post_event:
-          name: "投稿イベント"
-          details: "返信が新規作成、編集、削除、または復元された場合。"
-        user_event:
-          name: "ユーザーイベント"
-        group_event:
-          name: "グループイベント"
-          details: "グループが作成、更新、または消去された場合。"
-        category_event:
-          name: "カテゴリイベント"
-          details: "カテゴリが作成、更新、または消去された場合。"
-        tag_event:
-          name: "タグイベント"
-          details: "タグが作成、更新、または消去された場合。"
-        reviewable_event:
-          name: "レビュー待ち項目イベント"
-          details: "新しいアイテムのレビュー準備が整った場合、ステータスが更新された場合。"
-        notification_event:
-          name: "通知イベント"
-          details: "ユーザーがフィードに通知を受け取った場合。"
-        user_promoted_event:
-          name: "ユーザー昇格イベント"
-          details: "ユーザーがある信頼レベルから別の信頼レベルに昇格したとき。"
-        user_badge_event:
-          name: "バッジイベント"
-          details: "バッジが付与または取り消されたとき。"
-        group_user_event:
-          name: "グループユーザーイベント"
-          details: "ユーザーがグループに追加またはグループから削除された場合。"
         like_event:
-          name: "「いいね！」イベント"
-          details: "ユーザーが投稿に「いいね！」した場合。"
+          post_liked: "ユーザーが投稿に「いいね！」した場合。"
         delivery_status:
           title: "配信ステータス"
           inactive: "非アクティブ"
@@ -4494,6 +4460,7 @@ ja:
           convert_theme_tooltip: "このテーマをコンポーネントに変換します"
           inactive_themes: "非アクティブなテーマ:"
           inactive_components: "未使用のコンポーネント:"
+          cancel: "キャンセル"
           broken_theme_tooltip: "このテーマの CSS、HTML、または YAML にエラーがあります"
           disabled_component_tooltip: "このコンポーネントは削除されています"
           default_theme_tooltip: "このテーマはサイトのデフォルトのテーマです"
