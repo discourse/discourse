@@ -1,32 +1,13 @@
-import I18n from "I18n";
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
-import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import { ajax } from "discourse/lib/ajax";
+import I18n from "I18n";
 
 export default class RenamePasskey extends Component {
-  <template>
-    <div class="rename-passkey__form">
-      <div class="rename-passkey__message">
-        <p>{{this.instructions}}</p>
-      </div>
-      <form>
-        <div class="rename-passkey__form inline-form">
-          <Input @value={{this.passkeyName}} autofocus={{true}} @type="text" />
-          <DButton
-            @class="btn-primary"
-            @type="submit"
-            @action={{this.saveRename}}
-            @label="user.passkeys.save"
-          />
-        </div>
-      </form>
-    </div>
-  </template>
-
   @service router;
   @service dialog;
 
@@ -53,4 +34,23 @@ export default class RenamePasskey extends Component {
     this.router.refresh();
     this.dialog.didConfirmWrapped();
   }
+
+  <template>
+    <div class="rename-passkey__form">
+      <div class="rename-passkey__message">
+        <p>{{this.instructions}}</p>
+      </div>
+      <form>
+        <div class="rename-passkey__form inline-form">
+          <Input @value={{this.passkeyName}} autofocus={{true}} @type="text" />
+          <DButton
+            @class="btn-primary"
+            @type="submit"
+            @action={{this.saveRename}}
+            @label="user.passkeys.save"
+          />
+        </div>
+      </form>
+    </div>
+  </template>
 }

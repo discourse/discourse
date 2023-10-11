@@ -1,14 +1,51 @@
-import I18n from "I18n";
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
 import { tracked } from "@glimmer/tracking";
-import { inject as service } from "@ember/service";
 import { Input } from "@ember/component";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import UserLink from "discourse/components/user-link";
+import { ajax } from "discourse/lib/ajax";
+import I18n from "I18n";
 
 export default class ConfirmSession extends Component {
+  @service dialog;
+  @service currentUser;
+
+  @tracked errorMessage = null;
+
+  get passwordLabel() {
+    return I18n.t("user.password.title");
+  }
+  get instructions() {
+    return I18n.t("user.confirm_access.instructions");
+  }
+
+  get loggedInAs() {
+    return I18n.t("user.confirm_access.logged_in_as");
+  }
+
+  get finePrint() {
+    return I18n.t("user.confirm_access.fine_print");
+  }
+
+  @action
+  async submit() {
+    const result = await ajax("/u/confirm-session", {
+      type: "POST",
+      data: {
+        password: this.password,
+      },
+    });
+
+    if (result.success) {
+      this.errorMessage = null;
+      this.dialog.didConfirmWrapped();
+    } else {
+      this.errorMessage = I18n.t("user.confirm_access.incorrect_password");
+    }
+  }
+
   <template>
     {{#if this.errorMessage}}
       <div class="alert alert-error">
@@ -55,41 +92,4 @@ export default class ConfirmSession extends Component {
 
     </div>
   </template>
-
-  @service dialog;
-  @service currentUser;
-
-  @tracked errorMessage = null;
-
-  get passwordLabel() {
-    return I18n.t("user.password.title");
-  }
-  get instructions() {
-    return I18n.t("user.confirm_access.instructions");
-  }
-
-  get loggedInAs() {
-    return I18n.t("user.confirm_access.logged_in_as");
-  }
-
-  get finePrint() {
-    return I18n.t("user.confirm_access.fine_print");
-  }
-
-  @action
-  async submit() {
-    const result = await ajax("/u/confirm-session", {
-      type: "POST",
-      data: {
-        password: this.password,
-      },
-    });
-
-    if (result.success) {
-      this.errorMessage = null;
-      this.dialog.didConfirmWrapped();
-    } else {
-      this.errorMessage = I18n.t("user.confirm_access.incorrect_password");
-    }
-  }
 }
