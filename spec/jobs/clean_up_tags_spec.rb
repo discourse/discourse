@@ -46,7 +46,7 @@ describe Jobs::CleanUpTags do
   fab!(:tag_group) { Fabricate(:tag_group, tag_names: [tag_in_group.name]) }
 
   it "deletes unused tags" do
-    SiteSetting.automatically_clean_tags = true
+    SiteSetting.automatically_clean_unused_tags = true
     expect { job.execute({}) }.to change { Tag.count }.by(-1)
     expect { unused_tag.reload }.to raise_error(ActiveRecord::RecordNotFound)
   end
