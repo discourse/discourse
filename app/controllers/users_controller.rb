@@ -1203,7 +1203,10 @@ class UsersController < ApplicationController
   SEARCH_USERS_LIMIT = 50
 
   def search_users
+    # the search can specify the parameter term or usernames, term will perform the classic user search algorithm while
+    # usernames will perform an exact search on the usernames passed as parameter
     term = params[:term].to_s.strip
+    usernames = params[:usernames]&.split(",")&.map { |username| username.downcase.strip }
 
     topic_id = params[:topic_id].to_i if params[:topic_id].present?
     category_id = params[:category_id].to_i if params[:category_id].present?
@@ -1232,13 +1235,18 @@ class UsersController < ApplicationController
     options[:topic_id] = topic_id if topic_id
     options[:category_id] = category_id if category_id
 
-    results = UserSearch.new(term, options).search
+    results =
+      if usernames.blank?
+        UserSearch.new(term, options).search
+      else
+        User.where(username_lower: usernames).limit(limit)
+      end
     to_render = serialize_found_users(results)
 
     # blank term is only handy for in-topic search of users after @
     # we do not want group results ever if term is blank
     groups =
-      if term.present? && current_user
+      if (term.present? || usernames.present?) && current_user
         if params[:include_groups] == "true"
           Group.visible_groups(current_user)
         elsif params[:include_mentionable_groups] == "true"
@@ -1260,7 +1268,12 @@ class UsersController < ApplicationController
       # register_modifier(:groups_for_users_search) will be evaluated without needing the
       # param.
       groups = DiscoursePluginRegistry.apply_modifier(:groups_for_users_search, groups)
-      groups = Group.search_groups(term, groups: groups, sort: :auto)
+      groups =
+        if usernames.blank?
+          Group.search_groups(term, groups: groups, sort: :auto)
+        else
+          groups.where(name: usernames).limit(limit)
+        end
 
       to_render[:groups] = groups.map { |m| { name: m.name, full_name: m.full_name } }
     end
