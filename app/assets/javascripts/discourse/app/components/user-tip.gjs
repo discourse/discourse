@@ -15,13 +15,15 @@ export default class UserTip extends Component {
   @service tooltip;
 
   registerTip = modifier(() => {
-    this.userTips.addAvailableTip({
+    const tip = {
       id: this.args.id,
       priority: this.args.priority ?? 0,
-    });
+    };
+
+    this.userTips.addAvailableTip(tip);
 
     return () => {
-      this.userTips.removeAvailableTip({ id: this.args.id });
+      this.userTips.removeAvailableTip(tip);
     };
   });
 
@@ -69,7 +71,7 @@ export default class UserTip extends Component {
   });
 
   get shouldRenderTip() {
-    return this.userTips.renderedId === this.args.id;
+    return this.userTips.shouldRender(this.args.id);
   }
 
   <template>
