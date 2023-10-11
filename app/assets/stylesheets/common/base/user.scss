@@ -710,13 +710,17 @@
       justify-content: space-between;
       align-items: flex-start;
 
+      .row-passkey__name {
+        font-weight: bold;
+      }
+
       .row-passkey__created-date,
       .row-passkey__used-date {
         color: var(--primary-medium);
       }
     }
 
-    &__add {
+    .row__add {
       margin-top: 1em;
     }
   }

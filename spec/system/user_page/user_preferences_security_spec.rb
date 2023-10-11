@@ -13,13 +13,13 @@ describe "User preferences for Security", type: :system do
   end
 
   describe "Security keys" do
-    it "adds a 2F security key and logs in with it" do
+    it "adds a 2FA security key and logs in with it" do
       # system specs run on their own host + port
       DiscourseWebauthn.stubs(:origin).returns(current_host + ":" + Capybara.server_port.to_s)
 
       # simulate browser credential authorization
       options = ::Selenium::WebDriver::VirtualAuthenticatorOptions.new
-      page.driver.browser.add_virtual_authenticator(options)
+      authenticator = page.driver.browser.add_virtual_authenticator(options)
 
       user_preferences_security_page.visit(user)
       user_preferences_security_page.visit_second_factor(password)
@@ -43,6 +43,55 @@ describe "User preferences for Security", type: :system do
       find("#security-key .btn-primary").click
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
+
+      # cleanup
+      authenticator.remove!
+    end
+  end
+
+  describe "Passkeys" do
+    before { SiteSetting.experimental_passkeys = true }
+
+    it "adds a passkey to user account" do
+      # system specs run on their own host + port
+      DiscourseWebauthn.stubs(:origin).returns(current_host + ":" + Capybara.server_port.to_s)
+
+      # simulate browser credentials
+      options =
+        ::Selenium::WebDriver::VirtualAuthenticatorOptions.new(
+          user_verification: true,
+          user_verified: true,
+        )
+      authenticator = page.driver.browser.add_virtual_authenticator(options)
+
+      user_preferences_security_page.visit(user)
+
+      find(".pref-passkeys__add .btn").click
+      expect(user_preferences_security_page).to have_css("input#password")
+
+      find(".dialog-body input#password").fill_in(with: password)
+      find(".confirm-session .btn-primary").click
+
+      expect(user_preferences_security_page).to have_css(".rename-passkey__form")
+
+      find(".dialog-header .btn").click
+
+      expect(user_preferences_security_page).to have_css(".pref-passkeys__rows .row")
+
+      find(".passkey-options-dropdown .select-kit-header").click
+      find(".passkey-options-dropdown li[data-name='Delete']").click
+
+      # confirm deletion screen shown without requiring password confirmation
+      # since this was already done when adding the passkey
+      find(".dialog-footer .btn-danger").click
+
+      expect(user_preferences_security_page).not_to have_css(".pref-passkeys__rows .row")
+
+      # ideally we should test a login flow with passkey here
+      # but I haven't figured out how to make it work with Selenium's virtual authenticator
+
+      # clear simulated credentials
+      authenticator.remove!
     end
   end
 end
