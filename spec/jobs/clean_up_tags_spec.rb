@@ -13,6 +13,7 @@ describe Jobs::CleanUpTags do
         staff_topic_count: 2,
         public_topic_count: 2,
         pm_topic_count: 0,
+        created_at: 10.minutes.ago,
       ),
       Fabricate(
         :tag,
@@ -20,6 +21,7 @@ describe Jobs::CleanUpTags do
         staff_topic_count: 0,
         public_topic_count: 0,
         pm_topic_count: 3,
+        created_at: 10.minutes.ago,
       ),
       Fabricate(
         :tag,
@@ -27,11 +29,19 @@ describe Jobs::CleanUpTags do
         staff_topic_count: 3,
         public_topic_count: 0,
         pm_topic_count: 0,
+        created_at: 10.minutes.ago,
       ),
     ]
   end
   fab!(:unused_tag) do
-    Fabricate(:tag, name: "unused1", staff_topic_count: 0, public_topic_count: 0, pm_topic_count: 0)
+    Fabricate(
+      :tag,
+      name: "unused1",
+      staff_topic_count: 0,
+      public_topic_count: 0,
+      pm_topic_count: 0,
+      created_at: 10.minutes.ago,
+    )
   end
 
   fab!(:tag_in_group) do
