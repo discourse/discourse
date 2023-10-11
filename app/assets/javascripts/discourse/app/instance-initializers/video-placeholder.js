@@ -1,8 +1,10 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import discourseLater from "discourse-common/lib/later";
+import I18n from "I18n";
 
 export default {
-  initialize() {
+  initialize(owner) {
     withPluginApi("0.8.7", (api) => {
       function handleVideoPlaceholderClick(helper, event) {
         const parentDiv = event.target.closest(".video-placeholder-container");
@@ -17,6 +19,35 @@ export default {
         parentDiv.classList.add("video-container");
 
         const video = parentDiv.querySelector("video");
+
+        const caps = owner.lookup("service:capabilities");
+        if (caps.isSafari || caps.isIOS) {
+          const source = video.querySelector("source");
+          if (source) {
+            // In post-cooked.js, we create the video element in a detached DOM
+            // then adopt it into to the real DOM.
+            // This confuses safari, and preloading/autoplay do not happen.
+
+            // Calling `.load()` tricks Safari into loading the video element correctly
+            source.parentElement.load();
+          }
+        }
+
+        video.addEventListener("loadeddata", () => {
+          discourseLater(() => {
+            if (video.videoWidth === 0 || video.videoHeight === 0) {
+              const notice = document.createElement("div");
+              notice.className = "notice";
+              notice.innerHTML =
+                iconHTML("exclamation-triangle") +
+                " " +
+                I18n.t("cannot_render_video");
+
+              parentDiv.appendChild(notice);
+            }
+          }, 500);
+        });
+
         video.addEventListener("canplay", function () {
           video.play();
           wrapper.remove();
