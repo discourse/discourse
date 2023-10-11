@@ -931,7 +931,7 @@ class ApplicationController < ActionController::Base
         Discourse
           .cache
           .fetch(key, expires_in: 10.minutes) do
-            category_topic_ids = Category.pluck(:topic_id).compact
+            category_topic_ids = Category.select(:topic_id).where.not(topic_id: nil)
             @top_viewed =
               TopicQuery
                 .new(nil, except_topic_ids: category_topic_ids)

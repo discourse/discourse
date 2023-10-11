@@ -1,8 +1,8 @@
-import Composer from "discourse/models/composer";
-import DiscourseRoute from "discourse/routes/discourse";
-import Draft from "discourse/models/draft";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import Composer from "discourse/models/composer";
+import Draft from "discourse/models/draft";
+import DiscourseRoute from "discourse/routes/discourse";
 
 export default DiscourseRoute.extend({
   templateName: "user/messages",

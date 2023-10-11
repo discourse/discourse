@@ -1,12 +1,12 @@
 import { computed, set } from "@ember/object";
-import Category from "discourse/models/category";
-import ComboBoxComponent from "select-kit/components/combo-box";
-import I18n from "I18n";
-import PermissionType from "discourse/models/permission-type";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import { isNone } from "@ember/utils";
-import { setting } from "discourse/lib/computed";
 import { htmlSafe } from "@ember/template";
+import { isNone } from "@ember/utils";
+import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import { setting } from "discourse/lib/computed";
+import Category from "discourse/models/category";
+import PermissionType from "discourse/models/permission-type";
+import I18n from "I18n";
+import ComboBoxComponent from "select-kit/components/combo-box";
 
 export default ComboBoxComponent.extend({
   pluginApiIdentifiers: ["category-chooser"],

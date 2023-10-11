@@ -1,8 +1,8 @@
 import Controller from "@ember/controller";
+import { inject as service } from "@ember/service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { changeEmail } from "discourse/lib/user-activation";
 import discourseComputed from "discourse-common/utils/decorators";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { inject as service } from "@ember/service";
 
 export default Controller.extend({
   router: service(),

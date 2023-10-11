@@ -303,16 +303,10 @@ lt:
       our_moderators: "Mūsų Moderatoriai"
       moderators: "Moderatoriai"
       stat:
-        all_time: "Per visą laiką"
-        last_day: "Paskutinės 24 valandos"
-        last_7_days: "Paskutinės 7 dienos"
-        last_30_days: "Paskutinės 30 dienų"
+        last_day: "24 valandos"
       like_count: "Patinka"
       topic_count: "Temos"
       post_count: "Įrašai"
-      user_count: "Prisiregistravimai"
-      active_user_count: "Aktyvūs vartotojai"
-      contact: "Kontaktai"
       contact_info: "Atsiradus bet kokiai problemai susijusiai su puslapiu, prašome kontaktuoti %{contact_info}."
     bookmarked:
       title: "Žymės"
@@ -1191,7 +1185,6 @@ lt:
         success: "(el. laiškas išsiųstas)"
         in_progress: "(siunčiamas el. laiškas)"
         error: "(klaida)"
-        emoji: "užrakinti jaustukus"
         action: "Siųsti Slaptažodžio priminimo elektroninę žinutę"
         set_password: "Nustatyti Slaptažodį"
         choose_new: "Pasirinkite naują slaptažodį"
@@ -1685,7 +1678,6 @@ lt:
       link_label: "Atsiųskite man prisijungimo nuorodą el. paštu"
       button_label: "su el. paštu"
       login_link: "Praleisti slaptažodį; atsiųskite man prisijungimo nuorodą el. paštu"
-      emoji: "užrakinti jaustukus"
       complete_username: "Jei paskyra sutampa su vartotojo vardu <b>%{username}</b>, turėtumėte gauti el.laišką su slaptažodžio keitimo instrukcijomis."
       complete_email: "Jei paskyra atitinka <b>%{email}</b>, netrukus turėtumėte gauti el. laišką su prisijungimo nuoroda."
       complete_username_not_found: "Jokia paskyra nesutampa su vartotojo vardu <b>%{username}</b>"
@@ -2313,6 +2305,7 @@ lt:
       collapse_details: "sutraukti temos informaciją"
       expand_details: "išplėsti temos informaciją"
       unread_indicator: "Nė vienas narys dar neperskaitė paskutinio šios temos įrašo."
+      bumped_at: "Naujausi: %{date}"
       suggest_create_topic: Pasirengę <a href>pradėti naują pokalbį?</a>
       deleted: "Tema buvo ištrinta"
       slow_mode_update:
@@ -3325,7 +3318,6 @@ lt:
       other_tags: "Kitos žymos"
       selector_all_tags: "visos žymos"
       selector_no_tags: "nėra žymų"
-      changed: "žymės pakeistos:"
       tags: "Žymos"
       choose_for_topic: "pasirenkamos žymos"
       info: "Informacija"
@@ -3780,33 +3772,8 @@ lt:
         categories_filter: "Suaktyvintos kategorijos"
         tags_filter: "Suaktyvintos žymos"
         groups_filter: "Suaktyvintos grupės"
-        topic_event:
-          name: "Temos įvykis"
-          details: "Kai yra nauja tema, peržiūrėta, pakeista arba ištrinta."
-        post_event:
-          name: "Paskelbti įvykį"
-          details: "Kai yra naujas atsakymas, redaguokite, ištrinkite arba atkurkite."
-        user_event:
-          name: "Vartotojo įvykis"
-        group_event:
-          name: "Grupės renginys"
-        category_event:
-          name: "Kategorijos įvykis"
-          details: "Kai sukuriama, atnaujinama ar sunaikinama kategorija."
-        tag_event:
-          name: "Žymos įvykis"
-          details: "Kai žyma sukuriama, atnaujinama arba sunaikinama."
-        reviewable_event:
-          name: "Įvykis, kurį galima peržiūrėti"
-          details: "Kai naujas elementas yra paruoštas peržiūrėti ir kai jo būsena atnaujinama."
-        notification_event:
-          name: "Pranešimo įvykis"
-          details: "Kai vartotojas gauna pranešimą savo sklaidos kanale."
-        group_user_event:
-          name: "Grupės vartotojo įvykis"
-          details: "Kai vartotojas įtraukiamas arba pašalinamas iš grupės."
         like_event:
-          details: "Kai vartotojui patinka įrašas."
+          post_liked: "Kai vartotojui patinka įrašas."
         delivery_status:
           title: "Pristatymo būsena"
           inactive: "Neaktyvus"
@@ -3978,6 +3945,7 @@ lt:
           convert_theme_tooltip: "Konvertuoti šią temą į komponentą"
           inactive_themes: "Neaktyvios temos:"
           inactive_components: "Nepanaudoti komponentai:"
+          cancel: "Atšaukti"
           broken_theme_tooltip: "Ši tema turi klaidų savo CSS, HTML arba YAML"
           disabled_component_tooltip: "Šis komponentas buvo išjungtas"
           default_theme_tooltip: "Ši tema yra numatytoji svetainės tema"
@@ -4845,7 +4813,6 @@ lt:
             with_time: <span class="username">%{username}</span> <span class="time">%{time}</span> laiku
         badge_intro:
           title: "Norėdami pradėti, pasirinkite esamą ženklelį arba sukurkite naują"
-          emoji: "moters studentės jaustukas"
           what_are_badges_title: "Kas yra ženkleliai?"
           badge_query_examples_title: "Ženklelių užklausų pavyzdžiai"
         mass_award:

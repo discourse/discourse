@@ -1,8 +1,8 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import SiteSetting from "admin/models/site-setting";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import SiteSetting from "admin/models/site-setting";
 
 export default class AdminPluginsIndexController extends Controller {
   @service session;

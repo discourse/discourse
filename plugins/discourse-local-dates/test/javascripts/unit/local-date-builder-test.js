@@ -1,7 +1,7 @@
+import QUnit, { module, test } from "qunit";
+import sinon from "sinon";
 import I18n from "I18n";
 import LocalDateBuilder from "../lib/local-date-builder";
-import sinon from "sinon";
-import QUnit, { module, test } from "qunit";
 
 const UTC = "Etc/UTC";
 const SYDNEY = "Australia/Sydney";

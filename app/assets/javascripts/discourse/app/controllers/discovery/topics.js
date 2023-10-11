@@ -1,18 +1,18 @@
 import { inject as controller } from "@ember/controller";
-import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
 import { alias, empty, equal, gt, or, readOnly } from "@ember/object/computed";
-import BulkSelectHelper from "discourse/lib/bulk-select-helper";
-import DismissTopics from "discourse/mixins/dismiss-topics";
+import { inject as service } from "@ember/service";
 import DiscoveryController from "discourse/controllers/discovery";
-import I18n from "I18n";
+import { routeAction } from "discourse/helpers/route-action";
+import BulkSelectHelper from "discourse/lib/bulk-select-helper";
+import { endWith } from "discourse/lib/computed";
+import { filterTypeForMode } from "discourse/lib/filter-mode";
+import { userPath } from "discourse/lib/url";
+import DismissTopics from "discourse/mixins/dismiss-topics";
 import Topic from "discourse/models/topic";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
-import { endWith } from "discourse/lib/computed";
-import { routeAction } from "discourse/helpers/route-action";
-import { userPath } from "discourse/lib/url";
-import { action } from "@ember/object";
-import { filterTypeForMode } from "discourse/lib/filter-mode";
+import I18n from "I18n";
 
 export default class TopicsController extends DiscoveryController.extend(
   DismissTopics

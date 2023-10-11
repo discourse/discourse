@@ -1,12 +1,14 @@
-import Service from "@ember/service";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { ajax } from "discourse/lib/ajax";
-import { bind } from "discourse-common/utils/decorators";
-import { cancel } from "@ember/runloop";
 import { tracked } from "@glimmer/tracking";
+import { cancel } from "@ember/runloop";
+import Service from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { bind } from "discourse-common/utils/decorators";
 
 const CONNECTIVITY_ERROR_CLASS = "network-disconnected";
 
+@disableImplicitInjections
 export default class NetworkConnectivity extends Service {
   @tracked connected = true;
 

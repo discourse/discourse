@@ -1,5 +1,6 @@
-import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 import { expireConnectorCache } from "discourse/lib/plugin-connectors";
+import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
+import { expireModuleTrieCache } from "discourse-common/resolver";
 
 const modifications = [];
 
@@ -21,6 +22,7 @@ export function registerTemporaryModule(moduleName, defaultExport) {
   define(moduleName, ["exports"], generateTemporaryModule(defaultExport));
   modifications.push(modificationData);
   expireConnectorCache();
+  expireModuleTrieCache();
   DiscourseTemplateMap.setModuleNames(Object.keys(requirejs.entries));
 }
 

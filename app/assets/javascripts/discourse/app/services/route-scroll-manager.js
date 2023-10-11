@@ -1,7 +1,8 @@
-import Service, { inject as service } from "@ember/service";
-import { bind } from "discourse-common/utils/decorators";
 import { schedule } from "@ember/runloop";
+import Service, { inject as service } from "@ember/service";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { isTesting } from "discourse-common/config/environment";
+import { bind } from "discourse-common/utils/decorators";
 
 const MAX_SCROLL_LOCATIONS = 100;
 
@@ -14,6 +15,7 @@ const MAX_SCROLL_LOCATIONS = 100;
  * To opt-out of the behaviour, individual routes can add a scrollOnTransition
  * boolean to their RouteInfo metadata using Ember's `buildRouteInfoMetadata` hook.
  */
+@disableImplicitInjections
 export default class RouteScrollManager extends Service {
   @service router;
 

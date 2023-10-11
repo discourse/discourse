@@ -1,23 +1,24 @@
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import ForgotPassword from "discourse/components/modal/forgot-password";
+import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
+import LoginModal from "discourse/components/modal/login";
+import { ajax } from "discourse/lib/ajax";
+import { setting } from "discourse/lib/computed";
+import cookie from "discourse/lib/cookie";
+import logout from "discourse/lib/logout";
+import mobile from "discourse/lib/mobile";
+import showModal from "discourse/lib/show-modal";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
-import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
-import { ajax } from "discourse/lib/ajax";
 import { findAll } from "discourse/models/login-method";
-import { getOwner } from "discourse-common/lib/get-owner";
-import getURL from "discourse-common/lib/get-url";
-import logout from "discourse/lib/logout";
-import mobile from "discourse/lib/mobile";
-import { inject as service } from "@ember/service";
-import { setting } from "discourse/lib/computed";
-import showModal from "discourse/lib/show-modal";
-import { action } from "@ember/object";
-import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
-import NotActivatedModal from "../components/modal/not-activated";
-import ForgotPassword from "discourse/components/modal/forgot-password";
+import DiscourseRoute from "discourse/routes/discourse";
 import deprecated from "discourse-common/lib/deprecated";
-import LoginModal from "discourse/components/modal/login";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import getURL from "discourse-common/lib/get-url";
+import I18n from "I18n";
+import NotActivatedModal from "../components/modal/not-activated";
 
 function unlessStrictlyReadOnly(method, message) {
   return function () {
@@ -201,7 +202,7 @@ const ApplicationRoute = DiscourseRoute.extend({
         "createNewTopicViaParam on the application route is deprecated. Use the composer service instead",
         { id: "discourse.createNewTopicViaParams" }
       );
-      getOwner(this).lookup("service:composer").openNewTopic({
+      getOwnerWithFallback(this).lookup("service:composer").openNewTopic({
         title,
         body,
         categoryId,
@@ -219,7 +220,7 @@ const ApplicationRoute = DiscourseRoute.extend({
         "createNewMessageViaParams on the application route is deprecated. Use the composer service instead",
         { id: "discourse.createNewMessageViaParams" }
       );
-      getOwner(this).lookup("service:composer").openNewMessage({
+      getOwnerWithFallback(this).lookup("service:composer").openNewMessage({
         recipients,
         title: topicTitle,
         body: topicBody,
@@ -230,7 +231,9 @@ const ApplicationRoute = DiscourseRoute.extend({
 
   handleShowLogin() {
     if (this.siteSettings.enable_discourse_connect) {
-      const returnPath = encodeURIComponent(window.location.pathname);
+      const returnPath = cookie("destination_url")
+        ? getURL("/")
+        : encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
       this.modal.show(LoginModal, {

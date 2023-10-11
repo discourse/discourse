@@ -1,84 +1,55 @@
+import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
 import ItsATrap from "@discourse/itsatrap";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
-import Component from "@ember/component";
 
-export default class ModalUserStatus extends Component {
-  showDeleteButton = false;
-  prefilledDateTime = null;
-  timeShortcuts = null;
-  _itsatrap = null;
+export default class UserStatusModal extends Component {
+  @service currentUser;
+  @service dialog;
 
-  init() {
-    super.init(...arguments);
-
-    const currentStatus = { ...this.model.status };
-    this.setProperties({
-      status: currentStatus,
-      hidePauseNotifications: this.model.hidePauseNotifications,
-      pauseNotifications: this.model.pauseNotifications,
-      showDeleteButton: !!this.model.status,
-      timeShortcuts: this._buildTimeShortcuts(),
-      prefilledDateTime: currentStatus?.ends_at,
-    });
-
-    this.set("_itsatrap", new ItsATrap());
-  }
+  status = new TrackedObject({ ...this.args.model.status });
+  timeShortcuts = this.#buildTimeShortcuts();
+  _itsatrap = new ItsATrap();
 
   willDestroy() {
+    super.willDestroy(...arguments);
     this._itsatrap.destroy();
-    this.set("_itsatrap", null);
-    this.set("timeShortcuts", null);
   }
 
-  @discourseComputed("status.emoji", "status.description")
-  statusIsSet(emoji, description) {
-    return !!emoji && !!description;
+  get showDeleteButton() {
+    return !!this.args.model.status;
   }
 
-  @discourseComputed
-  customTimeShortcutLabels() {
-    const labels = {};
-    labels[TIME_SHORTCUT_TYPES.NONE] = "time_shortcut.never";
-    return labels;
+  get prefilledDateTime() {
+    return this.status?.ends_at;
   }
 
-  @discourseComputed
-  hiddenTimeShortcutOptions() {
+  get saveDisabled() {
+    return !this.status?.emoji || !this.status?.description;
+  }
+
+  get customTimeShortcutLabels() {
+    return {
+      [TIME_SHORTCUT_TYPES.NONE]: "time_shortcut.never",
+    };
+  }
+
+  get hiddenTimeShortcutOptions() {
     return [TIME_SHORTCUT_TYPES.LAST_CUSTOM];
   }
 
-  @action
-  delete() {
-    Promise.resolve(this.model.deleteAction())
-      .then(() => this.closeModal())
-      .catch((e) => this._handleError(e));
+  #buildTimeShortcuts() {
+    const shortcuts = timeShortcuts(this.currentUser.user_option.timezone);
+    return [shortcuts.oneHour(), shortcuts.twoHours(), shortcuts.tomorrow()];
   }
 
-  @action
-  onTimeSelected(_, time) {
-    this.set("status.endsAt", time);
-  }
-
-  @action
-  saveAndClose() {
-    const newStatus = {
-      description: this.status.description,
-      emoji: this.status.emoji,
-      ends_at: this.status.endsAt?.toISOString(),
-    };
-
-    Promise.resolve(this.model.saveAction(newStatus, this.pauseNotifications))
-      .then(() => this.closeModal())
-      .catch((e) => this._handleError(e));
-  }
-
-  _handleError(e) {
+  #handleError(e) {
     if (typeof e === "string") {
       this.dialog.alert(e);
     } else {
@@ -86,9 +57,37 @@ export default class ModalUserStatus extends Component {
     }
   }
 
-  _buildTimeShortcuts() {
-    const timezone = this.currentUser.user_option.timezone;
-    const shortcuts = timeShortcuts(timezone);
-    return [shortcuts.oneHour(), shortcuts.twoHours(), shortcuts.tomorrow()];
+  @action
+  onTimeSelected(_, time) {
+    this.status.endsAt = time;
+  }
+
+  @action
+  async delete() {
+    try {
+      await this.args.model.deleteAction();
+      this.args.closeModal();
+    } catch (e) {
+      this.#handleError(e);
+    }
+  }
+
+  @action
+  async saveAndClose() {
+    const newStatus = {
+      description: this.status.description,
+      emoji: this.status.emoji,
+      ends_at: this.status.endsAt?.toISOString(),
+    };
+
+    try {
+      await this.args.model.saveAction(
+        newStatus,
+        this.args.model.pauseNotifications
+      );
+      this.args.closeModal();
+    } catch (e) {
+      this.#handleError(e);
+    }
   }
 }

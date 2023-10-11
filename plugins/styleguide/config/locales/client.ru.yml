@@ -87,10 +87,9 @@ ru:
           title: "Спиннеры"
         empty_state:
           title: "Пустое состояние"
-        rich_tooltip:
-          title: "Всплывающая подсказка"
+        tooltips:
           description: "Описание"
-          header: "Заголовок"
+          header: "Шапка"
           hover_to_see: "Наведите курсор, чтобы увидеть всплывающую подсказку"
         char_counter:
           title: "Счетчик символов"

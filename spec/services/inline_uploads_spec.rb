@@ -385,6 +385,18 @@ RSpec.describe InlineUploads do
         MD
       end
 
+      it "should not replace identical markdown in code blocks", skip: "Known issue" do
+        md = <<~MD
+        `![image|690x290](#{upload.url})`
+        ![image|690x290](#{upload.url})
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        `![image|690x290](#{upload.url})`
+        ![image|690x290](#{upload.short_url})
+        MD
+      end
+
       it "should not be affected by an emoji" do
         CustomEmoji.create!(name: "test", upload: upload3)
         Emoji.clear_cache

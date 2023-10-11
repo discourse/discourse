@@ -324,6 +324,15 @@
             "null"
           ]
         },
+        "sidebar_tags": {
+          "type": "array"
+        },
+        "sidebar_category_ids": {
+          "type": "array"
+        },
+        "display_sidebar_tags": {
+          "type": "boolean"
+        },
         "user_auth_tokens": {
           "type": "array",
           "items":

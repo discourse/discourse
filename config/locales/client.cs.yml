@@ -315,16 +315,10 @@ cs:
       our_moderators: "Naši Moderátoři"
       moderators: "Moderátoři"
       stat:
-        all_time: "Za celou dobu"
-        last_day: "Posledních 24 hodin"
-        last_7_days: "Posledních 7 dní"
-        last_30_days: "Posledních 30 dní"
+        last_day: "24 hodin"
       like_count: "Líbí se"
       topic_count: "Témata"
       post_count: "Příspěvky"
-      user_count: "Registrace"
-      active_user_count: "Aktivní uživatelé"
-      contact: "Kontaktujte nás"
       contact_info: "V případě kritické chyby nebo urgentní záležitosti ovlivňující tuto stránku nás prosím kontaktujte na %{contact_info}."
     bookmarked:
       title: "Záložka"
@@ -1251,7 +1245,6 @@ cs:
         success: "(email odeslán)"
         in_progress: "(odesílám)"
         error: "(chyba)"
-        emoji: "uzamknout emoji"
         action: "Odeslat email na obnovu hesla"
         set_password: "Nastavit heslo"
         choose_new: "Zvolte si nové heslo"
@@ -1808,7 +1801,6 @@ cs:
     email_login:
       link_label: "Chci odkaz na login do emailu"
       button_label: "přes email"
-      emoji: "uzamknout emoji"
       complete_username: "Pokud je tu účet, který používá uživatelské jméno <b>%{username}</b>, měl by vám za chvilku přijít email s přihlašovacím odkazem."
       complete_email: "Pokud je tu účet s emailovou adresou <b>%{email}</b>, měl by vám za chvilku přijít email s přihlašovacím odkazem."
       complete_username_found: "Našli jsme účet s uživatelským jménem <b>%{username}</b>, za chvilku by měl přijít email s přihlašovacím odkazem."
@@ -1978,7 +1970,6 @@ cs:
       drafts_offline: "koncepty offline"
       edit_conflict: "upravit konflikt"
       esc: "esc"
-      esc_label: "Kliknutím nebo stisknutím klávesy Esc zavřete"
       ok_proceed: "Ok, pokračovat"
       group_mentioned:
         one: "Zmíněním %{group}, upozorníš <a href='%{group_link}'>%{count} člověka</a> – jste si jistý/á?"
@@ -2429,6 +2420,7 @@ cs:
       back_to_list: "Zpátky na seznam témat"
       options: "Možnosti"
       show_links: "zobrazit odkazy v tomto tématu"
+      bumped_at: "Poslední: %{date}"
       deleted: "Téma bylo smazáno"
       slow_mode_update:
         enable: "Zapnout"
@@ -3471,7 +3463,6 @@ cs:
       other_tags: "Ostatní štítky "
       selector_all_tags: "všechny štítky"
       selector_no_tags: "bez štítků"
-      changed: "změněné štítky:"
       tags: "Štítky"
       choose_for_topic: "volitelné štítky"
       info: "Informace"
@@ -3983,17 +3974,8 @@ cs:
         groups_filter_instructions: "Relevantní webhooky budou spuštěny pouze tehdy, pokud událost souvisí se specifikovanými skupinami. Nechte prázdné pro spuštění webhooků pro všechny skupiny."
         groups_filter: "Spuštěné skupiny"
         delete_confirm: "Smazat tento webhook? "
-        topic_event:
-          name: "Téma události "
-          details: "Pokud je zde nové téma, reviduj, změň nebo smaž. "
-        post_event:
-          name: "Zveřejnit událost"
-          details: "Pokud je zde nová odpověď, uprav, smaž nebo odeber."
-        user_event:
-          name: "Uživatelské události"
         like_event:
-          name: "Líbí se mi událost"
-          details: "Když se uživateli líbí příspěvek."
+          post_liked: "Když se uživateli líbí příspěvek."
         delivery_status:
           title: "Stav doručení"
           inactive: "Neaktivní"
@@ -4169,6 +4151,7 @@ cs:
           color_scheme_select: "Vybrat barvy motivu"
           custom_sections: "vlastí sekce:"
           theme_components: "Komponenty motivu"
+          cancel: "Zrušit"
           collapse: Sbalit
           uploads: "nahrání"
           no_uploads: "Můžeš nahrát položku spojenou s tvým motivem jako jsou fonty a obrázky."

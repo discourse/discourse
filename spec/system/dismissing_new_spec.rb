@@ -6,6 +6,7 @@ RSpec.describe "Dismissing New", type: :system do
   let(:topic_list_controls) { PageObjects::Components::TopicListControls.new }
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:dismiss_new_modal) { PageObjects::Modals::DismissNew.new }
+  let(:topic_view) { PageObjects::Components::TopicView.new }
 
   describe "when a user has an unread post" do
     fab!(:topic) { Fabricate(:topic, user: user) }
@@ -32,6 +33,24 @@ RSpec.describe "Dismissing New", type: :system do
       expect(topic_list_controls).to have_unread(count: 0)
 
       using_session(:tab_1) { expect(topic_list_controls).to have_unread(count: 0) }
+    end
+
+    it "should untrack topics across sessions after the user dismisses it" do
+      sign_in(user)
+
+      visit("/unread")
+
+      using_session(:tab_1) do
+        sign_in(user)
+
+        visit("/t/#{topic.id}")
+
+        expect(topic_view).to have_tracking_status("tracking")
+      end
+
+      topic_list_controls.dismiss_unread(untrack: true)
+
+      using_session(:tab_1) { expect(topic_view).to have_tracking_status("regular") }
     end
   end
 

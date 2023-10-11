@@ -62,6 +62,7 @@
   flex-direction: column;
   margin-left: 16px;
   overflow: auto;
+  overflow-anchor: none;
   cursor: default;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
@@ -85,6 +86,7 @@
   height: 100%;
   overflow-x: hidden;
   overscroll-behavior: contain;
+  overflow-anchor: none;
   resize: none;
 }
 

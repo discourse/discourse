@@ -1,9 +1,9 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
-import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
-import Session from "discourse/models/session";
+import { module, test } from "qunit";
 import MountWidget from "discourse/components/mount-widget";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 
 const bigLogo = "/images/d-logo-sketch.png?test";
 const smallLogo = "/images/d-logo-sketch-small.png?test";
@@ -16,8 +16,9 @@ module("Integration | Component | Widget | home-logo", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.afterEach(function () {
-    Session.currentProp("darkModeAvailable", null);
-    Session.currentProp("defaultColorSchemeIsDark", null);
+    this.session = getOwner(this).lookup("service:session");
+    this.session.set("darkModeAvailable", null);
+    this.session.set("defaultColorSchemeIsDark", null);
   });
 
   test("basics", async function (assert) {
@@ -103,7 +104,7 @@ module("Integration | Component | Widget | home-logo", function (hooks) {
   test("logo with dark mode alternative", async function (assert) {
     this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_dark_url = darkLogo;
-    Session.currentProp("darkModeAvailable", true);
+    this.session.set("darkModeAvailable", true);
 
     await render(<template><MountWidget @widget="home-logo" /></template>);
 
@@ -126,7 +127,7 @@ module("Integration | Component | Widget | home-logo", function (hooks) {
     this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_mobile_logo_url = mobileLogo;
     this.siteSettings.site_mobile_logo_dark_url = darkLogo;
-    Session.currentProp("darkModeAvailable", true);
+    this.session.set("darkModeAvailable", true);
 
     this.site.mobileView = true;
 
@@ -149,7 +150,7 @@ module("Integration | Component | Widget | home-logo", function (hooks) {
   test("dark mode enabled but no dark logo set", async function (assert) {
     this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_dark_url = "";
-    Session.currentProp("darkModeAvailable", true);
+    this.session.set("darkModeAvailable", true);
 
     await render(<template><MountWidget @widget="home-logo" /></template>);
 
@@ -172,7 +173,7 @@ module("Integration | Component | Widget | home-logo", function (hooks) {
   test("dark color scheme and dark logo set", async function (assert) {
     this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_dark_url = darkLogo;
-    Session.currentProp("defaultColorSchemeIsDark", true);
+    this.session.set("defaultColorSchemeIsDark", true);
 
     await render(<template><MountWidget @widget="home-logo" /></template>);
 
@@ -188,7 +189,7 @@ module("Integration | Component | Widget | home-logo", function (hooks) {
   test("dark color scheme and dark logo not set", async function (assert) {
     this.siteSettings.site_logo_url = bigLogo;
     this.siteSettings.site_logo_dark_url = "";
-    Session.currentProp("defaultColorSchemeIsDark", true);
+    this.session.set("defaultColorSchemeIsDark", true);
 
     await render(<template><MountWidget @widget="home-logo" /></template>);
 

@@ -1,8 +1,8 @@
-import Badge from "discourse/models/badge";
-import DiscourseRoute from "discourse/routes/discourse";
-import PreloadStore from "discourse/lib/preload-store";
-import UserBadge from "discourse/models/user-badge";
 import { hash } from "rsvp";
+import PreloadStore from "discourse/lib/preload-store";
+import Badge from "discourse/models/badge";
+import UserBadge from "discourse/models/user-badge";
+import DiscourseRoute from "discourse/routes/discourse";
 
 export default DiscourseRoute.extend({
   queryParams: {

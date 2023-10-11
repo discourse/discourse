@@ -24,6 +24,14 @@
   }
 }
 
+[data-content][data-identifier="chat-message-reaction-tooltip"] {
+  font-size: var(--font-down-1);
+
+  .emoji {
+    padding-left: 0.5rem;
+  }
+}
+
 .chat-message {
   align-items: flex-start;
   padding: 0.25em 0.5em 0.25em 0.75em;
@@ -51,6 +59,10 @@
   .chat-message-text {
     min-width: 0;
     width: 100%;
+
+    p {
+      display: inline-block;
+    }
 
     code {
       box-sizing: border-box;
@@ -85,6 +97,7 @@
     display: inline-block;
     color: var(--primary-medium);
     font-size: var(--font-down-2);
+    user-select: none;
   }
 
   .chat-message-reaction-list,
@@ -169,6 +182,7 @@
 
 .chat-message-container {
   background-color: var(--d-content-background, var(--secondary));
+  width: 100%;
 
   &.-errored {
     color: var(--primary-medium);
@@ -226,10 +240,6 @@
     }
   }
 
-  &:has(.tippy-box) {
-    position: relative;
-    z-index: 1;
-  }
   .chat-message-reaction-list .chat-message-react-btn {
     display: none;
   }

@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import Component from "@glimmer/component";
+import I18n from "I18n";
 import {
   CHANNEL_STATUSES,
   channelStatusIcon,

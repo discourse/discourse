@@ -233,12 +233,10 @@ et:
       our_moderators: "Meie moderaatorid"
       moderators: "Moderaatorid"
       stat:
-        all_time: "Alates algusest"
+        last_day: "24 tundi"
       like_count: "Meeldimisi"
       topic_count: "Teemad"
       post_count: "Postitused"
-      active_user_count: "Aktiivsed kasutajad"
-      contact: "Võta meiega ühendust"
       contact_info: "Kriitilise vea või edasilükkamatu probleemi korral võta palun meiega ühendust aadressil %{contact_info}."
     bookmarked:
       title: "Järjehoidja"
@@ -2402,7 +2400,6 @@ et:
       other_tags: "Muud sildid"
       selector_all_tags: "kõik sildid"
       selector_no_tags: "sildid puuduvad"
-      changed: "muudetud sildid:"
       tags: "Sildid"
       choose_for_topic: "valikulised sildid"
       add_synonyms: "Lisa"
@@ -2696,14 +2693,6 @@ et:
         groups_filter_instructions: "Asjakohased veebihaagid vallanduvad vaid juhul, kui sündmus on seotud määratud gruppidega. Jäta tühjaks, kui soovid veebihaagid vallandada kõigi gruppide jaoks."
         groups_filter: "Käivitatud grupid"
         delete_confirm: "Kustutame selle veebihaagi?"
-        topic_event:
-          name: "Teema sündmus"
-          details: "Kui teema luuakse, muudetakse või kustutatakse."
-        post_event:
-          name: "Postituse sündmus"
-          details: "Kui teemas on uus vastus, muudatus, kustutamine või taastamine."
-        user_event:
-          name: "Kasutaja sündmus"
         delivery_status:
           title: "Kättetoimetamise staatus"
           inactive: "Mitteaktiivne"
@@ -2844,6 +2833,7 @@ et:
           color_scheme: "Värvipalett"
           theme_components: "Kujunduse osad"
           convert: "Konverdi"
+          cancel: "Tühista"
           collapse: Ahenda
           uploads: "Üleslaadimised"
           add_upload: "Lisa üleslaadimine"

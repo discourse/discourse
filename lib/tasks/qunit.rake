@@ -83,13 +83,16 @@ task "qunit:test", %i[timeout qunit_path filter] do |_, args|
 
     # wait for server to accept connections
     require "net/http"
-    warmup_path = "/srv/status"
-    uri = URI("http://localhost:#{unicorn_port}/#{warmup_path}")
+    uri = URI("http://localhost:#{unicorn_port}/srv/status")
     puts "Warming up Rails server"
 
     begin
       Net::HTTP.get(uri)
-    rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL, Net::ReadTimeout, EOFError
+    rescue Errno::ECONNREFUSED,
+           Errno::EADDRNOTAVAIL,
+           Net::ReadTimeout,
+           Net::HTTPBadResponse,
+           EOFError
       sleep 1
       retry if elapsed() <= 60
       puts "Timed out. Can not connect to forked server!"
@@ -111,6 +114,7 @@ task "qunit:test", %i[timeout qunit_path filter] do |_, args|
         cmd += ["--load-balance", "--parallel", parallel]
       end
       cmd += ["--filter", filter] if filter
+      cmd << "--write-execution-file" if ENV["QUNIT_WRITE_EXECUTION_FILE"]
     end
 
     system(*cmd, chdir: "#{Rails.root}/app/assets/javascripts/discourse")

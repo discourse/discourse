@@ -1,13 +1,13 @@
-import User from "discourse/models/user";
 import { cached, tracked } from "@glimmer/tracking";
 import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
-import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
-import Bookmark from "discourse/models/bookmark";
-import I18n from "I18n";
 import { generateCookFunction, parseMentions } from "discourse/lib/text";
-import transformAutolinks from "discourse/plugins/chat/discourse/lib/transform-auto-links";
-import { getOwner } from "discourse-common/lib/get-owner";
+import Bookmark from "discourse/models/bookmark";
+import User from "discourse/models/user";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import discourseLater from "discourse-common/lib/later";
+import I18n from "I18n";
+import transformAutolinks from "discourse/plugins/chat/discourse/lib/transform-auto-links";
+import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 
 export default class ChatMessage {
   static cookFunction = null;
@@ -57,7 +57,6 @@ export default class ChatMessage {
   @tracked _thread;
 
   constructor(channel, args = {}) {
-    // when modifying constructor, be sure to update duplicate function accordingly
     this.id = args.id;
     this.channel = channel;
     this.manager = args.manager;
@@ -70,7 +69,9 @@ export default class ChatMessage {
     this.availableFlags = args.availableFlags || args.available_flags;
     this.hidden = args.hidden || false;
     this.chatWebhookEvent = args.chatWebhookEvent || args.chat_webhook_event;
-    this.createdAt = args.created_at ? new Date(args.created_at) : null;
+    this.createdAt = args.created_at
+      ? new Date(args.created_at)
+      : new Date(args.createdAt);
     this.deletedById = args.deletedById || args.deleted_by_id;
     this._deletedAt = args.deletedAt || args.deleted_at;
     this.expanded =
@@ -97,35 +98,8 @@ export default class ChatMessage {
     }
   }
 
-  duplicate() {
-    // This is important as a message can exist in the context of a channel or a thread
-    // The current strategy is to have a different message object in each cases to avoid
-    // side effects
-    const message = new ChatMessage(this.channel, {
-      id: this.id,
-      newest: this.newest,
-      staged: this.staged,
-      edited: this.edited,
-      availableFlags: this.availableFlags,
-      hidden: this.hidden,
-      chatWebhookEvent: this.chatWebhookEvent,
-      createdAt: this.createdAt,
-      deletedAt: this.deletedAt,
-      excerpt: this.excerpt,
-      reviewableId: this.reviewableId,
-      userFlagStatus: this.userFlagStatus,
-      draft: this.draft,
-      message: this.message,
-      cooked: this.cooked,
-    });
-
-    message.reactions = this.reactions;
-    message.user = this.user;
-    message.inReplyTo = this.inReplyTo;
-    message.bookmark = this.bookmark;
-    message.uploads = this.uploads;
-
-    return message;
+  get persisted() {
+    return !!this.id && !this.staged;
   }
 
   get replyable() {
@@ -141,6 +115,11 @@ export default class ChatMessage {
   }
 
   set thread(thread) {
+    if (!thread) {
+      this._thread = null;
+      return;
+    }
+
     this._thread = this.channel.threadsManager.add(this.channel, thread, {
       replace: true,
     });
@@ -355,7 +334,7 @@ export default class ChatMessage {
   }
 
   get #markdownOptions() {
-    const site = getOwner(this).lookup("service:site");
+    const site = getOwnerWithFallback(this).lookup("service:site");
     return {
       featuresOverride:
         site.markdown_additional_options?.chat?.limited_pretty_text_features,

@@ -1,9 +1,9 @@
-import Component from "@ember/component";
-import UppyUploadMixin from "discourse/mixins/uppy-upload";
-import { computed } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
+import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { dasherize } from "@ember/string";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
+import UppyUploadMixin from "discourse/mixins/uppy-upload";
 
 export default class FormTemplateFieldUpload extends Component.extend(
   UppyUploadMixin

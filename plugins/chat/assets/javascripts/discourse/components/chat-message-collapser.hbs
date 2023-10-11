@@ -1,6 +1,9 @@
 <div class="chat-message-collapser">
   {{#if this.hasUploads}}
     {{html-safe @cooked}}
+    {{#if @isEdited}}
+      <span class="chat-message-edited">({{i18n "chat.edited"}})</span>
+    {{/if}}
 
     <Collapser @header={{this.uploadsHeader}} @onToggle={{@onToggleCollapse}}>
       <div class="chat-uploads">
@@ -25,5 +28,8 @@
         {{cooked.body}}
       {{/if}}
     {{/each}}
+    {{#if @isEdited}}
+      <span class="chat-message-edited">({{i18n "chat.edited"}})</span>
+    {{/if}}
   {{/if}}
 </div>

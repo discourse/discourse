@@ -287,16 +287,10 @@ pt_BR:
       our_moderators: "Nossos moderadores"
       moderators: "Moderadores"
       stat:
-        all_time: "Desde o início"
-        last_day: "Últimas 24 horas"
-        last_7_days: "Últimos sete dias"
-        last_30_days: "Últimos 30 dias"
+        last_day: "24 horas"
       like_count: "Curtidas"
       topic_count: "Tópicos"
       post_count: "Mensagens"
-      user_count: "Cadastros"
-      active_user_count: "Usuários(as) ativos(as)"
-      contact: "Fale conosco"
       contact_info: "Em caso de algum problema crítico ou assunto urgente relacionado a este site, fale conosco em %{contact_info}."
     bookmarked:
       title: "Favorito"
@@ -1314,7 +1308,6 @@ pt_BR:
         success: "(e-mail enviado)"
         in_progress: "(enviando e-mail)"
         error: "(erro)"
-        emoji: "emoji de bloqueio"
         action: "Enviar e-mail de redefinição de senha"
         set_password: "Definir senha"
         choose_new: "Escolha uma nova senha"
@@ -1915,7 +1908,6 @@ pt_BR:
       link_label: "Envie por e-mail um link para entrar"
       button_label: "com e-mail"
       login_link: "Pular a senha, enviar um link por e-mail para entrar com a conta"
-      emoji: "emoji de bloqueio"
       complete_username: "Se uma conta corresponder ao nome de usuário(a) <b>%{username}</b>, em breve você deverá receber um e-mail com um link para entrar."
       complete_email: "Se uma conta corresponder à <b>%{email}</b>, em breve você deverá receber um e-mail com um link para entrar."
       complete_username_found: "Encontramos uma conta que corresponde ao nome de usuário(a) <b>%{username}</b>, em breve você deverá receber um e-mail com um link para entrar."
@@ -2004,7 +1996,6 @@ pt_BR:
         security_key: "Em vez disso, utilizar uma chave de segurança"
     invites:
       accept_title: "Convite"
-      emoji: "emoji de envelope"
       welcome_to: "Boas-vindas ao %{site_name}!"
       invited_by: "Você foi convidado(a) por:"
       social_login_available: "Você também poderá entrar com qualquer rede social usando este e-mail."
@@ -2106,7 +2097,6 @@ pt_BR:
       drafts_offline: "rascunhos off-line"
       edit_conflict: "editar conflito"
       esc: "esc"
-      esc_label: "Clique ou pressione Esc para dispensar"
       ok_proceed: "Ok, prossiga"
       group_mentioned_limit:
         one: "<b>Aviso!</b> Você menciou <a href='%{group_link}'>%{group}</a>, mas este grupo tem mais membros do que o limite de menções configurado pelo(a) administrador(a) de %{count} usuário(a). Ninguém será notificado(a)."
@@ -2719,9 +2709,7 @@ pt_BR:
           false { ou <a href="{basePath}/latest">veja os tópicos mais recentes</a>}
           other {}
         }
-      bumped_at_title: |
-        Primeira postagem: %{createdAtDate}
-        Postada: %{bumpedAtDate}
+      bumped_at: "Mais recentes: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Navegue por todas as categorias</a> ou <a href='%{basePath}/latest'>veja os tópicos mais recentes</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Navegue por todas as categorias</a>, <a href='%{basePath}/latest'>veja os tópicos mais recentes</a> ou veja os principais:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Navegue por todas as etiquetas</a> ou <a href='%{basePath}/latest'>visualize os tópicos mais recentes</a>."
@@ -3827,7 +3815,6 @@ pt_BR:
       other_tags: "Outras etiquetas"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sem etiquetas"
-      changed: "etiquetas alteradas:"
       tags: "Etiquetas"
       choose_for_topic: "etiquetas opcionais"
       info: "Informações"
@@ -4481,42 +4468,8 @@ pt_BR:
         groups_filter_instructions: "Os webhooks aplicáveis serão acionados apenas se o evento estiver relacionado com os grupos especificados. Deixe em branco para acionar webhooks para todos os grupos."
         groups_filter: "Grupos acionados"
         delete_confirm: "Excluir este webhook?"
-        topic_event:
-          name: "Evento do tópico"
-          details: "Quando existir um tópico novo, revisado, modificado ou excluído."
-        post_event:
-          name: "Postar evento"
-          details: "Quando existir uma resposta nova, edição, exclusão ou recuperação."
-        user_event:
-          name: "Evento do(a) usuário(a)"
-          details: "Quando um(a) usuário(a) entrar com a conta e sair, confirma seu e-mail, é criada, aprovada ou atualizada."
-        group_event:
-          name: "Evento de grupo"
-          details: "Quando um grupo é criado, atualizado ou desfeito."
-        category_event:
-          name: "Evento de categoria"
-          details: "Quando uma categoria é criada, atualizada ou desfeita."
-        tag_event:
-          name: "Evento de etiqueta"
-          details: "Quando uma etiqueta é criada, atualizada ou desfeita."
-        reviewable_event:
-          name: "Evento revisável"
-          details: "Quando um novo item está pronto para revisão e quando seu status é atualizado."
-        notification_event:
-          name: "Evento de notificação"
-          details: "Quando um(a) usuário(a) recebe uma notificação no feed dele."
-        user_promoted_event:
-          name: "Evento promovido pelo usuário"
-          details: "Quando um usuário é promovido de um nível de confiança para outro."
-        user_badge_event:
-          name: "Evento de emblema"
-          details: "Quando um emblema é concedido ou revogado."
-        group_user_event:
-          name: "Evento de usuário(a) em grupo"
-          details: "Quando um(a) usuário(a) for adicionado(a) ou removido(a) em um grupo."
         like_event:
-          name: "Evento de curtida"
-          details: "Quando um usuário curte uma postagem."
+          post_liked: "Quando um usuário curte uma postagem."
         delivery_status:
           title: "Status de entrega"
           inactive: "Inativo(a)"
@@ -4665,7 +4618,6 @@ pt_BR:
           theme_name: "Nome do tema"
           component_name: "Nome do componente"
           themes_intro: "Selecione um tema existente ou instale um novo para começar"
-          themes_intro_emoji: "emoji de artista mulher"
           beginners_guide_title: "Guia para iniciantes para usar os temas do Discourse"
           developers_guide_title: "Guia para desenvolvedores para usar os temas do Discourse"
           browse_themes: "Explore os temas da comunidade"
@@ -4713,6 +4665,7 @@ pt_BR:
           convert_theme_tooltip: "Converter este tema em componente"
           inactive_themes: "Temas inativos:"
           inactive_components: "Componentes não usados"
+          cancel: "Cancelar"
           broken_theme_tooltip: "Este tema possui erros em seu CSS, HTML ou YAML"
           disabled_component_tooltip: "Este componente foi desativado"
           default_theme_tooltip: "Este tema é o tema padrão do site"
@@ -5768,7 +5721,6 @@ pt_BR:
             with_time: <span class="username">%{username}</span> às <span class="time">%{time}</span>
         badge_intro:
           title: "Selecione um emblema ou crie um novo para começar"
-          emoji: "emoji de aluna"
           what_are_badges_title: "O que são emblemas?"
           badge_query_examples_title: "Exemplos de consultas de emblemas"
         mass_award:

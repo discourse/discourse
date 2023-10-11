@@ -9,7 +9,7 @@ module Chat
   class CreateMessage
     include Service::Base
 
-    # @!method call(chat_channel_id:, guardian:, in_reply_to_id:, message:, staged_id:, upload_ids:, thread_id:, staged_thread_id:, incoming_chat_webhook:)
+    # @!method call(chat_channel_id:, guardian:, in_reply_to_id:, message:, staged_id:, upload_ids:, thread_id:, incoming_chat_webhook:)
     #   @param guardian [Guardian]
     #   @param chat_channel_id [Integer]
     #   @param message [String]
@@ -17,7 +17,6 @@ module Chat
     #   @param thread_id [Integer] ID of a thread to reply to
     #   @param upload_ids [Array<Integer>] IDs of uploaded documents
     #   @param staged_id [String] arbitrary string that will be sent back to the client
-    #   @param staged_thread_id [String] arbitrary string that will be sent back to the client (for a new thread)
     #   @param incoming_chat_webhook [Chat::IncomingWebhook]
 
     policy :no_silenced_user
@@ -25,6 +24,7 @@ module Chat
     model :channel
     policy :allowed_to_join_channel
     policy :allowed_to_create_message_in_channel, class_name: Chat::Channel::MessageCreationPolicy
+    step :enforce_system_membership
     model :channel_membership
     model :reply, optional: true
     policy :ensure_reply_consistency
@@ -53,7 +53,6 @@ module Chat
       attribute :staged_id, :string
       attribute :upload_ids, :array
       attribute :thread_id, :string
-      attribute :staged_thread_id, :string
       attribute :incoming_chat_webhook
 
       validates :chat_channel_id, presence: true
@@ -72,6 +71,10 @@ module Chat
 
     def allowed_to_join_channel(guardian:, channel:, **)
       guardian.can_join_chat_channel?(channel)
+    end
+
+    def enforce_system_membership(guardian:, channel:, **)
+      channel.add(guardian.user) if guardian.user.is_system_user?
     end
 
     def fetch_channel_membership(guardian:, channel:, **)
@@ -167,16 +170,11 @@ module Chat
     def publish_new_thread(reply:, contract:, channel:, thread:, **)
       return unless channel.threading_enabled?
       return unless reply&.thread_id_previously_changed?(from: nil)
-      Chat::Publisher.publish_thread_created!(channel, reply, thread.id, contract.staged_thread_id)
+      Chat::Publisher.publish_thread_created!(channel, reply, thread.id)
     end
 
     def publish_new_message_events(channel:, message:, contract:, guardian:, **)
-      Chat::Publisher.publish_new!(
-        channel,
-        message,
-        contract.staged_id,
-        staged_thread_id: contract.staged_thread_id,
-      )
+      Chat::Publisher.publish_new!(channel, message, contract.staged_id)
       Jobs.enqueue(Jobs::Chat::ProcessMessage, { chat_message_id: message.id })
       Chat::Notifier.notify_new(chat_message: message, timestamp: message.created_at)
       DiscourseEvent.trigger(:chat_message_created, message, channel, guardian.user)

@@ -9,6 +9,9 @@
 
   &__content {
     display: flex;
+    justify-content: space-between;
+    max-width: 100%;
+    align-items: center;
     flex-grow: 1;
   }
 
@@ -68,6 +71,8 @@
   }
 
   .chat-channel-title {
+    overflow: hidden;
+
     &__users-count {
       width: var(--channel-list-avatar-size);
       height: var(--channel-list-avatar-size);

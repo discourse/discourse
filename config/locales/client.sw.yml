@@ -209,13 +209,9 @@ sw:
       our_admins: "Viongozi Wetu"
       our_moderators: "Wasimamizi Wetu"
       moderators: "Wasimamizi"
-      stat:
-        all_time: "Mda Wote"
       like_count: "Upendo"
       topic_count: "Mada"
       post_count: "Machapisho"
-      active_user_count: "Watumiaji wa Mara kwa Mara"
-      contact: "Wasiliana Nasi"
       contact_info: "Iwapo kuna suala la muhimu au haraka linalohusiana na mtandao huu, tafadhali wasiliana nasi kupitia %{contact_info}."
     bookmarked:
       title: "Alamisho"
@@ -1493,6 +1489,7 @@ sw:
       back_to_list: "Rudi tena kwenye Orodha ya Mada"
       options: "Machaguo ya Mada"
       show_links: "onyesha viungo ndani ya hii mada"
+      bumped_at: "Hivi karibuni: %{date}"
       deleted: "Mada imefutwa"
       slow_mode_update:
         enable: "Ruhusu"
@@ -2142,7 +2139,6 @@ sw:
       other_tags: "Lebo Zingine"
       selector_all_tags: "lebo zote"
       selector_no_tags: "hakuna lebo"
-      changed: "lebo zilizobadilishwa:"
       tags: "Lebo"
       choose_for_topic: "lebo zisizo muhimu"
       add_synonyms: "Ongeza"
@@ -2420,23 +2416,6 @@ sw:
         individual_event: "Chagua matukio rejareja."
         active: "Amilifu"
         active_notice: "Tutakuletea taarifa za tukio zinapotokea."
-        topic_event:
-          name: "Mada Tukio"
-          details: "Wakati kuna mada mpya, iliyotadubiriwa, badilisha au kufutwa."
-        post_event:
-          name: "Chapisho Tukio"
-          details: "Wakati kuna jibu jipya, uhariri, kufutwa au kurejeshwa."
-        user_event:
-          name: "Mtumiaji Tukio"
-        group_event:
-          name: "Kikundi Tukio"
-          details: "Wakati kikundi kinapotengenezwa, sasishwa au kuvunjwa."
-        category_event:
-          name: "Kategoria Tukio"
-          details: "Wakati kitengo kinapotengenezwa, sasishwa au kuvunjwa."
-        tag_event:
-          name: "Lebo Tukio"
-          details: "Wakati lebo inapotengenezwa, sasishwa au kufutwa."
         delivery_status:
           title: "Hali ya Uwasilishaji"
           inactive: "Isiyo Amilifu"
@@ -2571,6 +2550,7 @@ sw:
           color_scheme_select: "Chagua rangi zitakazotumika kwenye mandhari"
           custom_sections: "Vifungu binafsi:"
           theme_components: "Vipengele vya Mandhari"
+          cancel: "Ghairi"
           collapse: Kunja
           uploads: "Upakiaji"
           no_uploads: "Unaweza kupakia vitu vinavyoendana na mandhari yako kama picha na fonti"

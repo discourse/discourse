@@ -1,18 +1,18 @@
-import categoryFromId from "discourse-common/utils/category-macro";
-import I18n from "I18n";
-import { Promise } from "rsvp";
-import RestModel from "discourse/models/rest";
-import User from "discourse/models/user";
-import Topic from "discourse/models/topic";
-import { ajax } from "discourse/lib/ajax";
 import { computed } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
-import { formattedReminderTime } from "discourse/lib/bookmark";
-import getURL from "discourse-common/lib/get-url";
-import { longDate } from "discourse/lib/formatter";
 import { none } from "@ember/object/computed";
 import { capitalize } from "@ember/string";
+import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import { formattedReminderTime } from "discourse/lib/bookmark";
+import { longDate } from "discourse/lib/formatter";
 import { applyModelTransformations } from "discourse/lib/model-transformers";
+import RestModel from "discourse/models/rest";
+import Topic from "discourse/models/topic";
+import User from "discourse/models/user";
+import getURL from "discourse-common/lib/get-url";
+import categoryFromId from "discourse-common/utils/category-macro";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 export const AUTO_DELETE_PREFERENCES = {
   NEVER: 0,
@@ -89,10 +89,17 @@ const Bookmark = RestModel.extend({
 
   @discourseComputed("bumpedAt", "createdAt")
   bumpedAtTitle(bumpedAt, createdAt) {
-    return I18n.t("topic.bumped_at_title", {
-      createdAtDate: longDate(createdAt),
-      bumpedAtDate: longDate(bumpedAt),
-    });
+    const BUMPED_FORMAT = "YYYY-MM-DDTHH:mm:ss";
+    if (moment(bumpedAt).isValid() && moment(createdAt).isValid()) {
+      const bumpedAtStr = moment(bumpedAt).format(BUMPED_FORMAT);
+      const createdAtStr = moment(createdAt).format(BUMPED_FORMAT);
+
+      return bumpedAtStr !== createdAtStr
+        ? `${I18n.t("topic.created_at", {
+            date: longDate(createdAt),
+          })}\n${I18n.t("topic.bumped_at", { date: longDate(bumpedAt) })}`
+        : I18n.t("topic.created_at", { date: longDate(createdAt) });
+    }
   },
 
   @discourseComputed("created_at")

@@ -1,6 +1,6 @@
-import { classNames } from "@ember-decorators/component";
-import { action, computed } from "@ember/object";
 import Component from "@ember/component";
+import { action, computed } from "@ember/object";
+import { classNames } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 
 /**

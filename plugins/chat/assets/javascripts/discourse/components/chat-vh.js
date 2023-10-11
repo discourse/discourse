@@ -1,6 +1,6 @@
-import { bind } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { inject as service } from "@ember/service";
+import { bind } from "discourse-common/utils/decorators";
 import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
 
 const CSS_VAR = "--chat-vh";

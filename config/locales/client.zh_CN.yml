@@ -258,9 +258,9 @@ zh_CN:
       moderators: "版主"
       stat:
         all_time: "所有时间"
-        last_day: "过去 24 小时"
-        last_7_days: "过去 7 天"
-        last_30_days: "过去 30 天"
+        last_day: "24 小时"
+        last_7_days: "7 天"
+        last_30_days: "30 天"
       like_count: "赞"
       topic_count: "话题"
       post_count: "帖子"
@@ -947,6 +947,7 @@ zh_CN:
     user:
       said: "%{username}："
       profile: "个人资料"
+      profile_possessive: "%{username} 的个人资料"
       mute: "免打扰"
       edit: "编辑偏好设置"
       download_archive:
@@ -1253,7 +1254,6 @@ zh_CN:
         success: "（电子邮件已发送）"
         in_progress: "（正在发送电子邮件）"
         error: "（错误）"
-        emoji: "挂锁表情符号"
         action: "发送密码重置电子邮件"
         set_password: "设置密码"
         choose_new: "选择一个新密码"
@@ -1830,6 +1830,7 @@ zh_CN:
       title: "创建您的帐户"
       failed: "出了点问题，可能此电子邮件已被注册，试试点击忘记密码链接"
       associate: "已经有帐户？<a href='%{associate_link}'>登录</a>以关联您的 %{provider} 帐户。"
+      activation_title: "激活您的账户"
     forgot_password:
       title: "密码重置"
       action: "我忘记密码了"
@@ -1849,7 +1850,6 @@ zh_CN:
       link_label: "通过电子邮件向我发送登录链接"
       button_label: "通过电子邮件"
       login_link: "跳过密码；通过电子邮件向我发送登录链接"
-      emoji: "挂锁表情符号"
       complete_username: "如果存在与用户名 <b>%{username}</b> 相匹配的帐户，您应该很快就会收到一封包含登录链接的电子邮件。"
       complete_email: "如果存在与 <b>%{email}</b> 相匹配的帐户，您应该很快就会收到一封包含登录链接的电子邮件。"
       complete_username_found: "我们找到一个与用户名 <b>%{username}</b> 相匹配的帐户，您应该很快就会收到一封包含登录链接的电子邮件。"
@@ -1881,6 +1881,7 @@ zh_CN:
       security_key_not_allowed_error: "安全密钥身份验证过程超时或被取消。"
       security_key_no_matching_credential_error: "在提供的安全密钥中找不到匹配的凭据。"
       security_key_support_missing_error: "您当前的设备或浏览器不支持使用安全密钥。请使用其他方法。"
+      security_key_invalid_response_error: "由于响应无效，安全密钥身份验证过程失败。"
       email_placeholder: "电子邮件/用户名"
       caps_lock_warning: "大写锁定已开启"
       error: "未知错误"
@@ -1940,7 +1941,6 @@ zh_CN:
         security_key: "改用安全密钥"
     invites:
       accept_title: "邀请"
-      emoji: "信封表情符号"
       welcome_to: "欢迎来到 %{site_name}！"
       invited_by: "邀请您的是："
       social_login_available: "您还可以通过使用该电子邮件的任何社交登录信息登录。"
@@ -2046,7 +2046,7 @@ zh_CN:
       drafts_offline: "离线草稿"
       edit_conflict: "编辑冲突"
       esc: "esc"
-      esc_label: "点击或按 Esc 忽略"
+      esc_label: "关闭消息"
       ok_proceed: "好的，继续"
       group_mentioned_limit:
         other: "<b>警告</b>！您提及了 <a href='%{group_link}'> %{group} </a>，但是此群组的成员数量超过了管理员配置的 %{count} 个用户的最大可提及数量限制。没有人会收到通知。"
@@ -2627,9 +2627,8 @@ zh_CN:
           false {或<a href="{basePath}/latest">查看最新话题</a>}
           other {}
         }
-      bumped_at_title: |
-        第一篇帖子：%{createdAtDate}
-        发布日期：%{bumpedAtDate}
+      created_at: "已创建： %{date}"
+      bumped_at: "最新：%{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>浏览所有类别</a>或<a href='%{basePath}/latest'>查看最新话题</a>。"
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>浏览所有类别</a>、<a href='%{basePath}/latest'>查看最新话题</a>或查看热门话题："
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>浏览所有标签</a>或<a href='%{basePath}/latest'>查看最新话题</a>。"
@@ -3023,6 +3022,7 @@ zh_CN:
         create: "抱歉，创建您的帖子时出错。请重试。"
         edit: "抱歉，编辑您的帖子时出错。请重试。"
         upload: "抱歉，上传 %{file_name} 时出错。请重试。"
+        backup_too_large: "抱歉，该备份文件太大。"
         file_too_large: "抱歉，该文件太大（大小上限为 %{max_size_kb}KB）。为什么不将您的大文件上传到云共享服务，然后粘贴链接呢？"
         file_size_zero: "抱歉，好像出了点问题，您要上传的文件是 0 字节。请再试一次。"
         file_too_large_humanized: "抱歉，该文件太大（大小上限为 %{max_size}）。为什么不将您的大文件上传到云共享服务，然后粘贴链接呢？"
@@ -3434,6 +3434,7 @@ zh_CN:
         med {，并且点赞发帖比例非常高}
         high {，并且点赞发帖比例极高}
         other {}}
+    latest_poster_link: "%{username} 的个人资料、最新海报"
     original_post: "原始帖子"
     views: "浏览量"
     sr_views: "按浏览量排序"
@@ -3648,6 +3649,7 @@ zh_CN:
         print: "%{shortcut} 打印话题"
         defer: "%{shortcut} 延迟话题"
         topic_admin_actions: "%{shortcut} 打开话题管理员操作"
+        archive_private_message: "%{shortcut} 切换存档私信"
       search_menu:
         title: "搜索菜单"
         prev_next: "%{shortcut} 上下移动所选内容"
@@ -3667,7 +3669,7 @@ zh_CN:
       more_badges:
         other: "其他 (+%{count})"
       awarded:
-        other: "%{number} 已获奖"
+        other: "已授予 %{number} 人"
       select_badge_for_title: 选择一个徽章作为您的头衔使用
       none: "（无）"
       successfully_granted: "已成功将“%{badge}”授予 %{username}"
@@ -3702,7 +3704,6 @@ zh_CN:
       other_tags: "其他标签"
       selector_all_tags: "所有标签"
       selector_no_tags: "无标签"
-      changed: "标签更改："
       tags: "标签"
       choose_for_topic: "可选标签"
       choose_for_topic_required:
@@ -4107,6 +4108,7 @@ zh_CN:
         too_many_requests: 您执行此操作的次数过多。请稍后再试。
         not_found_error: 抱歉，此报告不存在
         filter_reports: 筛选报告
+        custom_date_range: 自定义日期范围
         reports:
           trend_title: "变化 %{percent}。目前为 %{current}，上一个期间为 %{prev}。"
           today: "今天"
@@ -4276,6 +4278,11 @@ zh_CN:
               list: 列出最新帖子和不公开帖子。也支持 RSS。
             tags:
               list: 列出标签。
+            tag_groups:
+              list: 获取标签组列表。
+              show: 通过 id 获取单个标签组。
+              create: 创建标签组。
+              update: 更新由 id 指定的标签组。
             categories:
               list: 获取类别列表。
               show: 通过 id 获取单个类别。
@@ -4352,41 +4359,65 @@ zh_CN:
         groups_filter: "触发的群组"
         delete_confirm: "删除此网络钩子？"
         topic_event:
-          name: "话题事件"
-          details: "有新的话题，话题被修改、更改或删除时。"
+          group_name: "话题事件"
+          topic_created: "话题被创建"
+          topic_revised: "话题被修订"
+          topic_edited: "话题被更新"
+          topic_destroyed: "话题被删除"
+          topic_recovered: "话题被恢复"
         post_event:
-          name: "帖子事件"
-          details: "有新的回复、编辑，帖子被删除或者恢复时。"
-        user_event:
-          name: "用户事件"
-          details: "当用户登录、退出、确认其电子邮件，用户被创建、批准或更新时。"
+          group_name: "帖子事件"
+          post_created: "帖子被创建"
+          post_edited: "帖子被更新"
+          post_destroyed: "帖子被删除"
+          post_recovered: "帖子被恢复"
         group_event:
-          name: "群组事件"
-          details: "当群组被创建、更新或销毁时。"
-        category_event:
-          name: "类别事件"
-          details: "当类别被创建、更新或销毁时。"
+          group_name: "群组事件"
+          group_created: "群组被创建"
+          group_updated: "群组被更新"
+          group_destroyed: "群组被删除"
         tag_event:
-          name: "标签事件"
-          details: "当标签被创建、更新或销毁时。"
+          group_name: "标签事件"
+          tag_created: "标签被创建"
+          tag_updated: "标签被更新"
+          tag_destroyed: "标签被删除"
+        category_event:
+          group_name: "类别事件"
+          category_created: "类别被创建"
+          category_updated: "类别被更新"
+          category_destroyed: "类别被删除"
+        user_event:
+          group_name: "用户事件"
+          user_logged_in: "用户登录"
+          user_logged_out: "用户登出"
+          user_confirmed_email: "用户确认电子邮件"
+          user_created: "用户被创建"
+          user_approved: "用户被批准"
+          user_updated: "用户更新"
+          user_destroyed: "用户被删除"
+          user_suspended: "用户被封禁"
+          user_unsuspended: "用户被解除封禁"
         reviewable_event:
-          name: "可审核的事件"
-          details: "当新条目可以进行审核及其状态更新时。"
-        notification_event:
-          name: "通知事件"
-          details: "当用户在 Feed 中收到通知时。"
-        user_promoted_event:
-          name: "用户信任级别提升事件"
-          details: "当用户从一个信任级别提升到另一个信任级别时。"
+          group_name: "审核事件"
+          reviewable_created: "新的待审核项目"
+          reviewable_updated: "可审核项目被更新"
         user_badge_event:
-          name: "徽章活动"
-          details: "当徽章被授予或撤销时。"
-        group_user_event:
-          name: "群组用户事件"
-          details: "在群组中添加或移除用户时。"
+          group_name: "徽章事件"
+          user_badge_granted: "授予用户徽章"
+          user_badge_revoked: "用户的徽章被撤销"
         like_event:
-          name: "点赞事件"
-          details: "当用户点赞一个帖子时。"
+          group_name: "点赞事件"
+          post_liked: "当用户点赞一篇帖子时。"
+        notification_event:
+          group_name: "通知事件"
+          notification_created: "用户在他们的推送中收到通知"
+        group_user_event:
+          group_name: "群组用户事件"
+          user_added_to_group: "用户被添加到群组"
+          user_removed_from_group: "用户被从群组中移除"
+        user_promoted_event:
+          group_name: "用户信任级别提升事件"
+          user_promoted: "用户信任级别被提升"
         delivery_status:
           title: "传送状态"
           inactive: "停用"
@@ -4467,6 +4498,7 @@ zh_CN:
             title: "创建备份"
             confirm: "要开始新备份吗？"
             include_uploads: "包括所有上传的内容"
+            s3_upload_warning: '这仅适用于数据库备份。上传将不包括在内，这意味着如果备份恢复到另一个托管服务器，所有图片和其他文件上传都可能丢失。 <b>要启用包括 S3 上传在内的完整备份，请参阅 <a href="https://meta.discourse.org/t/-/276535" target="_blank">本指南</a>。</b>'
           download:
             label: "下载"
             title: "发送带有下载链接的电子邮件"
@@ -4517,6 +4549,9 @@ zh_CN:
         install: "安装"
         delete: "删除"
         delete_confirm: '确定要删除“%{theme_name}”吗？'
+        bulk_delete: '你确定吗？'
+        bulk_themes_delete_confirm: "这将卸载以下主题，您网站上的任何用户将无法再使用它们："
+        bulk_components_delete_confirm: "这将卸载以下主题组件，您网站上的任何用户将无法再使用它们："
         color: "颜色"
         opacity: "不透明度"
         copy: "复制"
@@ -4539,7 +4574,6 @@ zh_CN:
           theme_name: "主题名称"
           component_name: "组件名称"
           themes_intro: "选择现有主题或安装新主题以开始"
-          themes_intro_emoji: "女艺术家表情符号"
           beginners_guide_title: "Discourse 主题初学者使用指南"
           developers_guide_title: "Discourse 主题开发者指南"
           browse_themes: "浏览社区主题"
@@ -4587,6 +4621,8 @@ zh_CN:
           convert_theme_tooltip: "将此主题转换为组件"
           inactive_themes: "停用主题："
           inactive_components: "未使用的组件："
+          selected: "已选择 %{count} 个"
+          cancel: "取消"
           broken_theme_tooltip: "此主题的 CSS、HTML 或 YAML 中存在错误"
           disabled_component_tooltip: "此组件已被禁用"
           default_theme_tooltip: "此主题是站点的默认主题"
@@ -5503,6 +5539,7 @@ zh_CN:
         show_outdated: "仅显示过期/无效"
         locale: "语言："
         more_than_50_results: "结果超过 50 个。请优化您的搜索。"
+        no_results: "未找到匹配的站点文本"
         interpolation_keys: "可用的插值键："
         outdated:
           title: "此翻译已过时"
@@ -5572,6 +5609,8 @@ zh_CN:
           modal_description: "要回溯应用此变更吗？这将更改 %{count} 个现有用户的偏好设置。"
           modal_yes: "是"
           modal_no: "不，仅对以后应用变更"
+        simple_list:
+          add_item: "添加条目…"
         json_schema:
           edit: 启动编辑器
           modal_title: "编辑 %{name}"
@@ -5649,7 +5688,6 @@ zh_CN:
             with_time: <span class="username">%{username}</span>，在 <span class="time">%{time}</span>
         badge_intro:
           title: "选择现有徽章或创建新徽章以开始"
-          emoji: "女学生表情符号"
           what_are_badges_title: "什么是徽章？"
           badge_query_examples_title: "徽章查询示例"
         mass_award:
@@ -5669,6 +5707,7 @@ zh_CN:
         help: "添加可供所有人使用的新表情符号。一次拖放多个文件，无需输入名称即可使用文件名创建表情符号。所选组将用于同时添加的所有文件。您还可以点击“添加新表情符号”以打开文件选择器。"
         add: "添加新表情符号"
         choose_files: "选择文件"
+        uploading: "正在上传…"
         name: "名称"
         group: "组"
         image: "图片"
@@ -5737,9 +5776,11 @@ zh_CN:
       finish: "退出设置"
       back: "返回"
       next: "下一步"
+      configure_more: "配置更多…"
       step-text: "步骤"
       step: "%{current}/%{total}"
       upload: "上传文件"
+      uploading: "正在上传…"
       upload_error: "抱歉，上传该文件时出错。请重试。"
       staff_count:
         other: "您的社区有 %{count} 位管理人员，包括您。"

@@ -1,5 +1,5 @@
-import { SELECTORS } from "./constants";
 import { htmlSafe } from "@ember/template";
+import { SELECTORS } from "./constants";
 
 export async function processHTML({ container, selector, clickTarget }) {
   selector ??= SELECTORS.DEFAULT_ITEM_SELECTOR;

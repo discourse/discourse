@@ -1,12 +1,10 @@
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import {
-  cookAsync,
-  excerpt,
-  parseAsync,
-  parseMentions,
-} from "discourse/lib/text";
+import { cook, excerpt, parseAsync, parseMentions } from "discourse/lib/text";
 
-module("Unit | Utility | text", function () {
+module("Unit | Utility | text", function (hooks) {
+  setupTest(hooks);
+
   test("parseAsync", async function (assert) {
     await parseAsync("**test**").then((tokens) => {
       assert.strictEqual(
@@ -18,22 +16,22 @@ module("Unit | Utility | text", function () {
   });
 
   test("excerpt", async function (assert) {
-    let cooked = await cookAsync("Hello! :wave:");
+    let cooked = await cook("Hello! :wave:");
     assert.strictEqual(
       await excerpt(cooked, 300),
       'Hello! <img src="/images/emoji/twitter/wave.png?v=12" title=":wave:" class="emoji" alt=":wave:" loading="lazy" width="20" height="20">'
     );
 
-    cooked = await cookAsync("[:wave:](https://example.com)");
+    cooked = await cook("[:wave:](https://example.com)");
     assert.strictEqual(
       await excerpt(cooked, 300),
       '<a href="https://example.com"><img src="/images/emoji/twitter/wave.png?v=12" title=":wave:" class="emoji only-emoji" alt=":wave:" loading="lazy" width="20" height="20"></a>'
     );
 
-    cooked = await cookAsync('<script>alert("hi")</script>');
+    cooked = await cook('<script>alert("hi")</script>');
     assert.strictEqual(await excerpt(cooked, 300), "");
 
-    cooked = await cookAsync("[`<script>alert('hi')</script>`]()");
+    cooked = await cook("[`<script>alert('hi')</script>`]()");
     assert.strictEqual(
       await excerpt(cooked, 300),
       "<a><code>&lt;script&gt;alert('hi')&lt;/script&gt;</code></a>"
@@ -41,7 +39,9 @@ module("Unit | Utility | text", function () {
   });
 });
 
-module("Unit | Utility | text | parseMentions", function () {
+module("Unit | Utility | text | parseMentions", function (hooks) {
+  setupTest(hooks);
+
   test("parses mentions from markdown", async function (assert) {
     const markdown = "Hey @user1, @user2, @group1, @group2, @here, @all";
     const mentions = await parseMentions(markdown);

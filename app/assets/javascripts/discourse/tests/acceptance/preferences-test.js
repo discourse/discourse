@@ -1,18 +1,18 @@
 import {
-  acceptance,
-  exists,
-  query,
-  updateCurrentUser,
-} from "discourse/tests/helpers/qunit-helpers";
-import {
   click,
   currentRouteName,
   currentURL,
   fillIn,
   visit,
 } from "@ember/test-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
+import {
+  acceptance,
+  exists,
+  query,
+  updateCurrentUser,
+} from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 function preferencesPretender(server, helper) {
   server.post("/u/create_second_factor_totp.json", () => {

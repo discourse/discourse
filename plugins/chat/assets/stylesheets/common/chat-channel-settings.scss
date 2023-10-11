@@ -1,0 +1,18 @@
+.chat-channel-settings {
+  width: 50%;
+  min-width: 320px;
+
+  .chat-channel-settings__slug {
+    max-width: 250px;
+    @include ellipsis;
+  }
+
+  // category badge margin reset
+  .badge-wrapper.bullet {
+    margin-right: 0;
+  }
+
+  .chat-retention-reminder-text {
+    color: var(--primary-medium);
+  }
+}

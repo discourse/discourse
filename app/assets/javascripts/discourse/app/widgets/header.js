@@ -1,18 +1,19 @@
-import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
-import { addExtraUserClasses } from "discourse/helpers/user-avatar";
-import { avatarImg } from "discourse/widgets/post";
-import { createWidget } from "discourse/widgets/widget";
-import getURL from "discourse-common/lib/get-url";
-import { h } from "virtual-dom";
-import { iconNode } from "discourse-common/lib/icon-library";
 import { schedule } from "@ember/runloop";
-import { scrollTop } from "discourse/mixins/scroll-top";
+import { hbs } from "ember-cli-htmlbars";
+import { h } from "virtual-dom";
+import { addExtraUserClasses } from "discourse/helpers/user-avatar";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
+import DiscourseURL from "discourse/lib/url";
+import { scrollTop } from "discourse/mixins/scroll-top";
+import { avatarImg } from "discourse/widgets/post";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
-import { hbs } from "ember-cli-htmlbars";
-import { SEARCH_BUTTON_ID } from "discourse/components/search-menu";
+import { createWidget } from "discourse/widgets/widget";
+import getURL from "discourse-common/lib/get-url";
+import { iconNode } from "discourse-common/lib/icon-library";
+import I18n from "I18n";
+
+const SEARCH_BUTTON_ID = "search-button";
 
 let _extraHeaderIcons = [];
 
@@ -68,13 +69,15 @@ createWidget("header-notifications", {
       avatarImg(
         this.settings.avatarSize,
         Object.assign(
-          {
-            alt: "user.avatar.header_title",
-          },
+          { alt: "user.avatar.header_title" },
           addExtraUserClasses(user, avatarAttrs)
         )
       ),
     ];
+
+    if (this.currentUser && this._shouldHighlightAvatar()) {
+      contents.push(this.attach("header-user-tip-shim"));
+    }
 
     if (this.currentUser.status) {
       contents.push(this.attach("user-status-bubble", this.currentUser.status));
@@ -136,6 +139,7 @@ createWidget("header-notifications", {
         );
       }
     }
+
     return contents;
   },
 
@@ -147,34 +151,6 @@ createWidget("header-notifications", {
       !user.enforcedSecondFactor &&
       !attrs.active
     );
-  },
-
-  didRenderWidget() {
-    if (!this.currentUser || !this._shouldHighlightAvatar()) {
-      return;
-    }
-
-    this.currentUser.showUserTip({
-      id: "first_notification",
-
-      titleText: I18n.t("user_tips.first_notification.title"),
-      contentText: I18n.t("user_tips.first_notification.content"),
-
-      reference: document
-        .querySelector(".d-header .badge-notification")
-        ?.parentElement?.querySelector(".avatar"),
-      appendTo: document.querySelector(".d-header"),
-
-      placement: "bottom-end",
-    });
-  },
-
-  destroy() {
-    this.userTips.hideTip("first_notification");
-  },
-
-  willRerenderWidget() {
-    this.userTips.hideTip("first_notification");
   },
 });
 
@@ -280,24 +256,6 @@ createWidget("header-icons", {
       action: "toggleHamburger",
       href: "",
       classNames: ["hamburger-dropdown"],
-
-      contents() {
-        let { currentUser } = this;
-        if (
-          currentUser?.reviewable_count &&
-          this.siteSettings.navigation_menu === "legacy"
-        ) {
-          return h(
-            "div.badge-notification.reviewables",
-            {
-              attributes: {
-                title: I18n.t("notifications.reviewable_items"),
-              },
-            },
-            this.currentUser.reviewable_count
-          );
-        }
-      },
     });
 
     if (!attrs.sidebarEnabled || this.site.mobileView) {
@@ -436,14 +394,17 @@ createWidget("glimmer-search-menu-wrapper", {
       new RenderGlimmer(
         this,
         "div.widget-component-connector",
-        hbs`<SearchMenu @closeSearchMenu={{@data.closeSearchMenu}} />`,
-        { closeSearchMenu: this.closeSearchMenu.bind(this) }
+        hbs`<SearchMenuPanel @closeSearchMenu={{@data.closeSearchMenu}} />`,
+        {
+          closeSearchMenu: this.closeSearchMenu.bind(this),
+        }
       ),
     ];
   },
 
   closeSearchMenu() {
     this.sendWidgetAction("toggleSearchMenu");
+    document.getElementById(SEARCH_BUTTON_ID)?.focus();
   },
 
   clickOutside() {
@@ -508,9 +469,8 @@ export default createWidget("header", {
       } else if (state.hamburgerVisible) {
         if (
           attrs.navigationMenuQueryParamOverride === "header_dropdown" ||
-          (attrs.navigationMenuQueryParamOverride !== "legacy" &&
-            this.siteSettings.navigation_menu !== "legacy" &&
-            (!attrs.sidebarEnabled || this.site.narrowDesktopView))
+          !attrs.sidebarEnabled ||
+          this.site.narrowDesktopView
         ) {
           panels.push(this.attach("revamped-hamburger-menu-wrapper", {}));
         } else {
@@ -623,24 +583,15 @@ export default createWidget("header", {
   },
 
   toggleHamburger() {
-    if (
-      this.siteSettings.navigation_menu !== "legacy" &&
-      this.attrs.sidebarEnabled &&
-      !this.site.narrowDesktopView
-    ) {
+    if (this.attrs.sidebarEnabled && !this.site.narrowDesktopView) {
       this.sendWidgetAction("toggleSidebar");
     } else {
       this.state.hamburgerVisible = !this.state.hamburgerVisible;
       this.toggleBodyScrolling(this.state.hamburgerVisible);
 
       schedule("afterRender", () => {
-        if (this.siteSettings.navigation_menu !== "legacy") {
-          // Remove focus from hamburger toggle button
-          document.querySelector("#toggle-hamburger-menu")?.blur();
-        } else {
-          // auto focus on first link in dropdown
-          document.querySelector(".hamburger-panel .menu-links a")?.focus();
-        }
+        // Remove focus from hamburger toggle button
+        document.querySelector("#toggle-hamburger-menu")?.blur();
       });
     }
   },

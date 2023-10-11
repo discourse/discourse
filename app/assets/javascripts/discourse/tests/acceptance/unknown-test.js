@@ -1,7 +1,7 @@
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Category 404", function (needs) {
   needs.pretender((server, helper) => {

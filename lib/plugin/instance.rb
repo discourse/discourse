@@ -1238,6 +1238,14 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_summarization_strategy(strategy, self)
   end
 
+  ##
+  # Register a block that will be called when PostActionCreator is going to notify a
+  # user of a post action. If any of these handlers returns false the default PostCreator
+  # call will be skipped.
+  def register_post_action_notify_user_handler(handler)
+    DiscoursePluginRegistry.register_post_action_notify_user_handler(handler, self)
+  end
+
   protected
 
   def self.js_path

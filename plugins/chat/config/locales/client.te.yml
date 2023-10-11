@@ -41,7 +41,6 @@ te:
       channel_info:
         back_to_channel: "వెనుకకు"
         tabs:
-          about: గురించి
           members: సభ్యులు
           settings: అమరికలు
       create_channel:
@@ -57,6 +56,10 @@ te:
         notifications: "ప్రకటనలు"
         save: "భద్రపరుచు"
         admin_title: "అధికారి"
+        settings_title: "అమరికలు"
+        category_label: "వర్గం"
+        history_label: "చరిత్ర"
+        members_label: "సభ్యులు"
       incoming_webhooks:
         back: "వెనుకకు"
         description: "వివరణ"
@@ -75,6 +78,13 @@ te:
           title: "కొత్త విషయానికి జరుపు"
         existing_topic:
           title: "ఇప్పటికే ఉన్న విషయానికి జరుపు"
+      retention_reminders:
+        public:
+          one: "%{count} రోజు"
+          other: "%{count} రోజులు"
+        dm:
+          one: "%{count} రోజు"
+          other: "%{count} రోజులు"
       emoji_picker:
         flags: "కేతనాలు"
       thread:

@@ -1,5 +1,5 @@
-import { computed } from "@ember/object";
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 
 export default class Bool extends Component {

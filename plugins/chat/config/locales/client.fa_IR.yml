@@ -18,10 +18,6 @@ fa_IR:
           actions:
             chat_channel_status_change: "وضعیت کانال گفتگو تغییر کرد"
             chat_channel_delete: "کانال گفتگو حذف شد"
-    about:
-      chat_messages_count: "پیام‌های گفتگو"
-      chat_channels_count: "کانال‌های گفتگو"
-      chat_users_count: "کاربران گفتگو"
     chat:
       deleted_chat_username: حذف شد
       dates:
@@ -170,7 +166,6 @@ fa_IR:
         back_to_all_channels: "همه کانال‌ها"
         back_to_channel: "بازگشت"
         tabs:
-          about: درباره
           members: اعضاء
           settings: تنظیمات
       channel_edit_name_slug_modal:
@@ -234,6 +229,10 @@ fa_IR:
         saved: "ذخیره شد"
         unfollow: "ترک کردن"
         admin_title: "مدیر کل"
+        settings_title: "تنظیمات"
+        category_label: "دسته‌بندی"
+        history_label: "تاریخچه"
+        members_label: "اعضاء"
       admin:
         title: "گفتگو"
       direct_messages:
@@ -274,6 +273,13 @@ fa_IR:
       replying_indicator:
         single_user: "%{username} در حال نوشتن"
         multiple_users: "%{commaSeparatedUsernames} و %{lastUsername} در حال نوشتن"
+      retention_reminders:
+        public:
+          one: "%{count} روز"
+          other: "%{count} روز"
+        dm:
+          one: "%{count} روز"
+          other: "%{count} روز"
       emoji_picker:
         favorites: "اغلب استفاده می‌شه"
         objects: "اشیا"

@@ -68,8 +68,11 @@ zh_CN:
       generic: 导入该主题时发生错误
       upload: "创建上传资源时出错：%{name}。%{errors}"
       about_json: "导入错误：about.json 不存在或无效。确定这是一个 Discourse 主题码？"
+      about_json_too_big: "导入错误：about.json 超过 %{limit} 限制。"
       about_json_values: "about.json 包含无效值：%{errors}"
       modifier_values: "about.json 修饰符包含无效值：%{errors}"
+      asset_too_big: "资产 %{filename} 大于 %{limit} 限制"
+      theme_too_big: "主题大于 %{limit} 限制"
       git: "克隆 git 仓库时出错，访问被拒绝或找不到仓库"
       git_ref_not_found: "无法签出 git 参考：%{ref}"
       git_unsupported_scheme: "无法克隆 git 仓库：方案不受支持"
@@ -78,6 +81,7 @@ zh_CN:
       unknown_file_type: "您上传的文件似乎不是一个有效的 Discourse 主题。"
       not_allowed_theme: "`%{repo}` 不在允许的主题列表中（请检查 `allowed_theme_repos` 全局设置）。"
       ssh_key_gone: "您安装主题等待的时间太长，并且 SSH 密钥已过期。请再试一次。"
+      too_many_files: "主题中的文件数 (%{count}) 已超过允许的最大文件数 (%{limit})"
     errors:
       component_no_user_selectable: "主题组件无法由用户选择"
       component_no_default: "主题组件不能是默认主题"
@@ -298,6 +302,7 @@ zh_CN:
   delete_topic_failed: "删除该话题时出错。请与站点管理员联系。"
   reading_time: "阅读时间"
   likes: "赞"
+  action_already_performed: "Oops！你已经执行了此操作。试试刷新页面？"
   too_many_replies:
     other: "抱歉，新用户被暂时限制为在同一个话题中回复不超过 %{count} 次。"
   max_consecutive_replies:
@@ -313,6 +318,7 @@ zh_CN:
     configure: "配置嵌入"
     more_replies:
       other: "其他 %{count} 个回复"
+    loading: "正在加载讨论…"
     permalink: "永久链接"
     imported_from: "这是一个从 %{link} 下的原始话题分离的讨论话题"
     in_reply_to: "▶ %{username}"
@@ -839,6 +845,9 @@ zh_CN:
     sequence_conflict_error:
       title: "草稿错误"
       description: "正在另一个窗口中编辑草稿。请重新加载此页面。"
+    too_many_drafts:
+      title: "草稿过多"
+      description: "您已达到允许的最大草稿数。请删除一些[您的草稿](%{base_url}/my/activity/drafts)，然后重试。"
   draft_backup:
     pm_title: "正在进行的话题的备份草稿"
     pm_body: "包含备份草稿的话题"
@@ -863,6 +872,7 @@ zh_CN:
       invalid_origin_error: "身份验证请求的来源与服务器来源不匹配。"
       malformed_attestation_error: "解码证明数据时出错。"
       invalid_relying_party_id_error: "身份验证请求的信赖方 ID 与服务器信赖方 ID 不匹配。"
+      user_presence_error: "用户必须存在。"
       user_verification_error: "需要用户验证。"
       unsupported_public_key_algorithm_error: "服务器不支持提供的公钥算法。"
       unsupported_attestation_format_error: "服务器不支持该证明格式。"
@@ -871,6 +881,7 @@ zh_CN:
       ownership_error: "安全密钥不归用户所有。"
       not_found_error: "找不到具有提供的凭据 ID 的安全密钥。"
       unknown_cose_algorithm_error: "无法识别用于安全密钥的算法。"
+      malformed_public_key_credential_error: "提供的公钥无效。"
   topic_flag_types:
     spam:
       title: "垃圾信息"
@@ -1340,7 +1351,6 @@ zh_CN:
     unreachable_themes: "我们无法检查以下主题的更新："
     watched_word_regexp_error: "'%{action}' 关注词的正则表达式无效。请检查您的<a href='%{base_path}/admin/customize/watched_words'>关注词设置</a>，或禁用“关注词正则表达式”站点设置。"
     v3_analytics_deprecated: "您的 Discourse 目前使用的是 Google Analytics（分析）3，2023 年 7 月后该版本将不受支持。立即<a href='https://meta.discourse.org/t/260498'>升级到Google Analytics（分析）4</a> ，以继续接收有价值的见解和分析，了解您的网站性能。"
-    legacy_navigation_menu_deprecated: "您的 Discourse 目前使用的是“旧版”导航菜单，<a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>该菜单将在 Discourse 3.2 的第一个测试版中移除</a>。更新您的<a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>导航菜单站点设置</a>为 'sidebar' 或 'header dropdown'，迁移到新的导航菜单。"
   site_settings:
     allow_bulk_invite: "允许通过上传 CSV 文件批量邀请"
     disabled: "已禁用"
@@ -1351,9 +1361,9 @@ zh_CN:
     allow_user_locale: "允许用户选择他们自己的语言界面偏好设置"
     set_locale_from_accept_language_header: "从网络浏览器的语言标头为匿名用户设置界面语言"
     support_mixed_text_direction: "支持从左到右和从右到左的混合文本方向。"
-    min_post_length: "允许的最小帖子长度（以字符为单位）"
-    min_first_post_length: "允许的第一个帖子（话题正文）最小长度（以字符为单位）"
-    min_personal_message_post_length: "消息允许的最小帖子长度（以字符为单位）"
+    min_post_length: "帖子允许的最小长度，以字符为单位 (不包含私信)"
+    min_first_post_length: "允许的最小第一篇帖子 (即话题正文) 的长度，以字符为单位 (不包含私信)"
+    min_personal_message_post_length: "私信帖子 (包括第一篇帖子和回复) 允许的最小帖子长度，以字符为单位"
     max_post_length: "允许的最大帖子长度（以字符为单位）"
     topic_featured_link_enabled: "启用在话题中发布链接。"
     show_topic_featured_link_in_digest: "在摘要电子邮件中显示话题精选链接。"
@@ -1473,7 +1483,7 @@ zh_CN:
     tl2_additional_flags_per_day_multiplier: "通过乘以此数字来提升 tl2（成员）每天的举报限值"
     tl3_additional_flags_per_day_multiplier: "通过乘以此数字来提升 tl3（常规）每天的举报限值"
     tl4_additional_flags_per_day_multiplier: "通过乘以此数字来提升 tl4（领导者）每天的举报限值"
-    num_users_to_silence_new_user: "如果新用户的帖子收到来自此数量的不同用户的 num_spam_flags_to_silence_new_user spam 次举报，则隐藏他们的所有帖子并阻止以后发帖。设置为 0 将禁用。"
+    num_users_to_silence_new_user: "如果新用户的帖子超过了 hide_post_sensitivity 设置，并有来自这么多不同用户的垃圾信息举报，则隐藏其所有帖子并阻止其今后再发帖。0 表示禁用。"
     num_tl3_flags_to_silence_new_user: "如果新用户的帖子收到来自 num_tl3_users_to_silence_new_user 个信任级别为 3 的不同用户的此数量的举报，则隐藏他们的所有帖子并阻止以后发帖。设置为 0 将禁用。"
     num_tl3_users_to_silence_new_user: "如果新用户的帖子收到此数量的来自信任级别为 3 的不同用户的 num_tl3_flags_to_silence_new_user 次举报，则隐藏他们的所有帖子并阻止以后发帖。设置为 0 将禁用。"
     notify_mods_when_user_silenced: "如果用户被自动禁言，则向所有版主发送消息。"
@@ -1495,7 +1505,7 @@ zh_CN:
     ga_universal_tracking_code: "Google Universal Analytics 跟踪代码 ID，例如：UA-12345678-9；请参阅 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics 域名，例如：mysite.com；请参阅 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "启用 Google Universal Analytics 跨网域跟踪。指向这些网域的出站链接将在其中添加客户端 ID。请参阅 <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google 的跨网域跟踪指南</a>。"
-    gtm_container_id: "Google 跟踪代码管理器容器 ID。例如：GTM-ABCDEF。<br/>注意：可能需要在 'content security policy script src' 中将 GTM 加载的第三方脚本列入许可名单。"
+    gtm_container_id: "Google 跟踪代码管理器容器 ID。例如：GTM-ABCD12E。 <br/>注意：要在启用内容安全策略 (CSP) 时使用 GTM，请参阅Meta上的文档： <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>在 Google 跟踪代码管理器脚本中使用随机数</a>。"
     enable_escaped_fragments: "如果未检测到网络抓取工具，则回退到 Google 的 Ajax-Crawling API。请参阅 <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "允许版主创建和管理类别和群组"
     moderators_change_post_ownership: "允许版主更改帖子所有权"
@@ -1901,6 +1911,7 @@ zh_CN:
     digest_min_excerpt_length: "电子邮件总结中的最少帖子摘录，以字符为单位。"
     suppress_digest_email_after_days: "禁止向超过 (n) 天未在站点上看到的用户发送总结电子邮件。"
     digest_suppress_categories: "从总结电子邮件中禁止这些类别。"
+    digest_suppress_tags: "从摘要电子邮件中禁止这些标签。"
     disable_digest_emails: "禁用所有用户的总结电子邮件。"
     apply_custom_styles_to_digest: "自定义电子邮件模板和 CSS 应用于总结电子邮件。"
     email_accent_bg_color: "用作 HTML 电子邮件中某些元素背景的强调色。输入颜色名称 ('red') 或十六进制值 ('#FF0000')。"
@@ -2055,14 +2066,16 @@ zh_CN:
     default_sidebar_switch_panel_position: "边栏开关面板按钮的位置"
     retain_web_hook_events_period_days: "保留网络钩子事件记录的天数。"
     retry_web_hook_events: "自动重试失败的网络钩子事件 4 次。重试之间的时间间隔为 1、5、25 和 125 分钟。"
-    revoke_api_keys_days: "未使用的 API 密钥被自动撤消前的天数（0 表示从不撤消）"
+    revoke_api_keys_unused_days: "自上次使用 API 密钥后的天数，该密钥将被自动撤销 (0 表示永不撤销)"
+    revoke_api_keys_maxlife_days: "API 密钥自动撤销前的天数 (0 表示永不撤销)"
     allow_user_api_key_scopes: "用户 API 密钥允许的范围列表"
     min_trust_level_for_user_api_key: |
       生成用户 API 密钥所需的信任级别。<br>
       <b>警告</b>：更改信任级别将阻止信任级别较低的用户通过 Discourse Hub 登录
     allowed_user_api_auth_redirects: "用户 API 密钥身份验证重定向的允许 URL。通配符 * 可用于匹配它的任何部分（例如 www.example.com/*）。"
     allowed_user_api_push_urls: "服务器推送到用户 API 的允许 URL"
-    expire_user_api_keys_days: "用户 API 密钥自动过期前的天数（0 表示从不过期）"
+    revoke_user_api_keys_unused_days: "用户 API 密钥最后一次使用后被自动撤销的天数 (0 表示永不撤销)"
+    revoke_user_api_keys_maxlife_days: "用户 API 密钥自动撤销前的天数 (0 表示从不撤销)"
     tagging_enabled: "在话题上启用标签？"
     min_trust_to_create_tag: "创建标签所需的最低信任级别。"
     max_tags_per_topic: "可应用于话题的最大标签数。"
@@ -2081,7 +2094,7 @@ zh_CN:
     force_lowercase_tags: "强制所有新标签完全小写。"
     create_post_for_category_and_tag_changes: "当话题的类别或标签发生变化时创建一篇小的行动帖子"
     watched_precedence_over_muted: "如果我正在关注的类别或标签中有我已设为免打扰的话题，请通知我。"
-    company_name: "公司名称"
+    company_name: "您的公司或组织的名称。如果留空，则不会按照模板提供服务条款或隐私声明。"
     governing_law: "适用法律"
     city_for_disputes: "争议之城"
     shared_drafts_category: "通过为话题草稿指定类别来启用共享草稿功能。此类别中的话题将在管理人员用户的话题列表中被禁止。"
@@ -2120,6 +2133,7 @@ zh_CN:
     experimental_topics_filter: "实验性：在 /filter 下启用实验性话题筛选路由"
     experimental_search_menu_groups: "实验性：启用已升级为使用 glimmer 的新搜索菜单"
     enable_experimental_lightbox: "实验性：将默认图片灯箱替换为全新设计。"
+    experimental_form_templates: "实验性：启用表单模板功能。 <b>启用后，</b> 可在<a href='%{base_path}/admin/customize/form-templates'>自定义/模板</a>管理模板。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
@@ -2203,6 +2217,7 @@ zh_CN:
     email_error: "无法使用电子邮件地址 <b>%{email}</b> 注册帐户。请联系站点管理员。"
     missing_secret: "由于缺少密钥，身份验证失败。请联系站点管理员解决此问题。"
     invite_redeem_failed: "邀请确认失败。请联系站点管理员。"
+    invalid_parameter_value: "由于“%{param}”参数值无效，身份验证失败。请联系站点管理员解决此问题。"
   original_poster: "原始发帖人"
   most_recent_poster: "最新发帖人"
   frequent_poster: "频繁发帖人"
@@ -2317,6 +2332,8 @@ zh_CN:
     invalid_security_key: "无效的安全密钥。"
     missing_second_factor_name: "请提供一个名称。"
     missing_second_factor_code: "请提供一个代码。"
+    too_many_authenticators: "抱歉，身份验证器不能超过 50 个。请删除一个现有的并重试。"
+    too_many_security_keys: "抱歉，您不能拥有超过 50 个安全密钥。请删除一个现有密钥并重试。"
     second_factor_toggle:
       totp: "改用身份验证器应用或安全密钥"
       backup_code: "改用备份代码"
@@ -2332,6 +2349,18 @@ zh_CN:
   admin:
     email:
       sent_test: "已发送！"
+    user:
+      merge_user:
+        updating_username: "正在更新用户名…"
+        changing_post_ownership: "正在更改帖子所有权…"
+        merging_given_daily_likes: "正在合并每日赞…"
+        merging_post_timings: "正在合并帖子时间数据…"
+        merging_user_visits: "正在合并用户访问…"
+        updating_site_settings: "正在更新站点设置…"
+        updating_user_stats: "正在更新用户状态…"
+        merging_user_attributes: "正在合并用户属性…"
+        updating_user_ids: "正在更新用户 ID…"
+        deleting_source_user: "正在删除源用户…"
   user:
     deactivated: "由于 '%{email}' 的退回电子邮件过多，已被停用。"
     deactivated_by_staff: "被管理人员停用"
@@ -4540,6 +4569,8 @@ zh_CN:
     api_key:
       automatic_revoked:
         other: "已被自动撤消，上次活动超过 %{count} 天前"
+      automatic_revoked_max_life:
+        other: "已被自动撤消，创建于超过 %{count} 天前"
       revoked: 已撤消
       restored: 已恢复
   reviewables:
@@ -4600,6 +4631,8 @@ zh_CN:
         description: "同意举报并隐藏此帖子 + 自动向用户发送信息，敦促他们进行编辑。"
       delete_single:
         title: "删除"
+      delete:
+        title: "删除…"
       delete_and_ignore:
         title: "忽略举报并删除帖子"
         description: "忽略举报，将举报从队列中移除，并删除该帖子；如果是第一篇帖子，同时删除该话题。 "
@@ -4636,6 +4669,7 @@ zh_CN:
       approve_user:
         title: "批准用户"
       reject_user:
+        title: "删除用户…"
         delete:
           title: "删除用户"
           description: "该用户将被从论坛中删除。"
@@ -4644,6 +4678,7 @@ zh_CN:
           description: "该用户将被删除，我们将屏蔽他们的 IP 和电子邮件地址。"
       reject:
         title: "拒绝"
+        bundle_title: "拒绝…"
       reject_and_suspend:
         title: "拒绝并封禁用户"
       reject_and_silence:
@@ -4696,6 +4731,7 @@ zh_CN:
       missing_id: "缺少一个字段 ID"
       duplicate_ids: "有重复的 id"
       reserved_id: "有一个保留关键字 id: %{id}"
+      unsafe_description: "有不安全的 HTML 描述"
   activemodel:
     errors:
       <<: *errors

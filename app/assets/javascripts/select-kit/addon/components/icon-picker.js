@@ -1,13 +1,13 @@
+import { computed } from "@ember/object";
+import { ajax } from "discourse/lib/ajax";
+import { isDevelopment } from "discourse-common/config/environment";
+import { makeArray } from "discourse-common/lib/helpers";
 import {
   convertIconClass,
   disableMissingIconWarning,
   enableMissingIconWarning,
 } from "discourse-common/lib/icon-library";
 import MultiSelectComponent from "select-kit/components/multi-select";
-import { computed } from "@ember/object";
-import { isDevelopment } from "discourse-common/config/environment";
-import { makeArray } from "discourse-common/lib/helpers";
-import { ajax } from "discourse/lib/ajax";
 
 export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["icon-picker"],

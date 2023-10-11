@@ -287,16 +287,10 @@ sv:
       our_moderators: "Våra moderatorer"
       moderators: "Moderatorer"
       stat:
-        all_time: "Alla dagar"
-        last_day: "Senaste 24 timmarna"
-        last_7_days: "Senaste 7 dagarna"
-        last_30_days: "Senaste 30 dagarna"
+        last_day: "24 timmar"
       like_count: "Gillningar"
       topic_count: "Ämnen"
       post_count: "Inlägg"
-      user_count: "Registreringar"
-      active_user_count: "Aktiva användare"
-      contact: "Kontakta oss"
       contact_info: "Vid brådskande ärenden rörande webbplatsen, kontakta oss på %{contact_info}."
     bookmarked:
       title: "Bokmärke"
@@ -1312,7 +1306,6 @@ sv:
         success: "(e-post skickat)"
         in_progress: "(skickar e-post)"
         error: "(fel)"
-        emoji: "lås emoji"
         action: "Skicka e-post för att återställa lösenord"
         set_password: "Ange lösenord"
         choose_new: "Välj ett nytt lösenord"
@@ -1914,7 +1907,6 @@ sv:
       link_label: "E-posta mig en inloggningslänk"
       button_label: "per e-post"
       login_link: "Hoppa över lösenordet; skicka en inloggningslänk till mig per e-post"
-      emoji: "lås emoji"
       complete_username: "Om ett konto matchar användarnamnet <b>%{username}</b>, bör du snart få ett e-postmeddelande med en inloggningslänk."
       complete_email: "Om ett konto matchar <b>%{email}</b>, bör du snart få ett e-postmeddelande med en inloggningslänk."
       complete_username_found: "Vi hittade ett konto som matchade användarnamnet <b> %{username} </b>, du kommer snart att få ett e-postmeddelande med länk för inloggning."
@@ -2003,7 +1995,6 @@ sv:
         security_key: "Använd en säkerhetsnyckel istället"
     invites:
       accept_title: "Inbjudan"
-      emoji: "kuvert-emoji"
       welcome_to: "Välkommen till %{site_name}!"
       invited_by: "Du bjöds in av:"
       social_login_available: "Du kommer också att kunna logga in med sociala medier-inloggningar som använder denna e-postadress."
@@ -2105,7 +2096,6 @@ sv:
       drafts_offline: "utkast offline"
       edit_conflict: "redigera konflikt"
       esc: "esc"
-      esc_label: "Klicka eller tryck på Esc för att avfärda"
       ok_proceed: "Ok, fortsätt"
       group_mentioned_limit:
         one: "<b>Varning!</b> Du nämnde <a href='%{group_link}'>%{group}</a> och denna grupp har fler medlemmar än vad administratorn tillåter för omnämningar. Begränsningsregeln för omnämnanden är satt till %{count} användare. Ingen kommer därför att aviseras."
@@ -2718,9 +2708,7 @@ sv:
           false { eller <a href="{basePath}/latest">visa senaste ämnen</a>}
           other {}
         }
-      bumped_at_title: |
-        Första inlägget: %{createdAtDate}
-        Upplagt: %{bumpedAtDate}
+      bumped_at: "Senaste: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Bläddra bland alla kategorier</a> eller <a href='%{basePath}/latest'>visa senaste ämnen</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Bläddra bland alla kategorier</a>, <a href='%{basePath}/latest'>visa senaste ämnen</a> eller se toppämnen:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Bläddra bland alla taggar</a> eller <a href='%{basePath}/latest'>visa senaste ämnen</a>."
@@ -3826,7 +3814,6 @@ sv:
       other_tags: "Övriga taggar"
       selector_all_tags: "alla taggar"
       selector_no_tags: "inga taggar"
-      changed: "taggar ändrade:"
       tags: "Taggar"
       choose_for_topic: "alternativa taggar"
       info: "Info"
@@ -4480,42 +4467,8 @@ sv:
         groups_filter_instructions: "Relevanta webhookar kommer endast att utlösas om händelsen är relaterad till specifierade grupper. Lämna blankt för att utlösa webhookar för alla grupper."
         groups_filter: "Utlösta grupper"
         delete_confirm: "Vill du ta bort den här webhooken?"
-        topic_event:
-          name: "Ämneshändelse"
-          details: "När det finns ett nytt, granskat, ändrat eller borttaget ämne."
-        post_event:
-          name: "Inläggshändelse"
-          details: "När det finns ett nytt, redigerat, borttaget eller återskapat svar."
-        user_event:
-          name: "Användarhändelse"
-          details: "När en användare loggar in, loggar ut, bekräftar sin e-postadress, skapas, godkänns eller uppdateras."
-        group_event:
-          name: "Grupphändelse"
-          details: "När en grupp skapas, uppdateras eller förstörs."
-        category_event:
-          name: "Kategorihändelse"
-          details: "När en kategori skapas, uppdateras eller förstörs."
-        tag_event:
-          name: "Tagghändelse"
-          details: "När en tagg skapas, uppdateras eller förstörs."
-        reviewable_event:
-          name: "Granskningshändelse"
-          details: "När ett föremål är redo för granskning och när dess status är uppdaterad."
-        notification_event:
-          name: "Aviseringshändelse"
-          details: "När en användare får en avisering i sitt flöde."
-        user_promoted_event:
-          name: "Användarfrämjande händelse"
-          details: "När en användare befordras från en förtroendenivå till en annan."
-        user_badge_event:
-          name: "Utmärkelsehändelse"
-          details: "När en utmärkelse beviljas eller återkallas."
-        group_user_event:
-          name: "Gruppanvändarhändelse"
-          details: "När en användare läggs till i, eller tas bort från, en grupp."
         like_event:
-          name: "Gilla händelse"
-          details: "När en användare gillar ett inlägg."
+          post_liked: "När en användare gillar ett inlägg."
         delivery_status:
           title: "Leveransstatus"
           inactive: "Inaktiv"
@@ -4664,7 +4617,6 @@ sv:
           theme_name: "Temanamn"
           component_name: "Komponentnamn"
           themes_intro: "Välj ett befintligt tema eller installera ett nytt för att komma igång"
-          themes_intro_emoji: "kvinnlig artist emoji"
           beginners_guide_title: "Nybörjarguide för användning av Discourse-teman"
           developers_guide_title: "Utvecklarguide för Discourse-teman"
           browse_themes: "Visa gemenskapens teman"
@@ -4712,6 +4664,7 @@ sv:
           convert_theme_tooltip: "Konvertera detta tema till komponent"
           inactive_themes: "Inaktiva teman:"
           inactive_components: "Oanvända komponenter:"
+          cancel: "Avbryt"
           broken_theme_tooltip: "Detta tema har fel i sin CSS, HTML eller YAML"
           disabled_component_tooltip: "Den här komponenten har inaktiverats"
           default_theme_tooltip: "Detta tema är webbplatsens standardtema"
@@ -5767,7 +5720,6 @@ sv:
             with_time: <span class="username">%{username}</span> kl. <span class="time">%{time}</span>
         badge_intro:
           title: "Välj en befintlig utmärkelse eller skapa en ny för att komma igång"
-          emoji: "kvinnlig student emoji"
           what_are_badges_title: "Vad är utmärkelser?"
           badge_query_examples_title: "Exempel på utmärkelsefråga"
         mass_award:

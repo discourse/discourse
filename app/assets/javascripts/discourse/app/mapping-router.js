@@ -1,9 +1,9 @@
 import EmberRouter from "@ember/routing/router";
-import Site from "discourse/models/site";
-import { defaultHomepage } from "discourse/lib/utilities";
-import getURL from "discourse-common/lib/get-url";
-import { isTesting } from "discourse-common/config/environment";
 import { rewritePath } from "discourse/lib/url";
+import { defaultHomepage } from "discourse/lib/utilities";
+import Site from "discourse/models/site";
+import { isTesting } from "discourse-common/config/environment";
+import getURL from "discourse-common/lib/get-url";
 
 const BareRouter = EmberRouter.extend({
   location: isTesting() ? "none" : "discourse-location",

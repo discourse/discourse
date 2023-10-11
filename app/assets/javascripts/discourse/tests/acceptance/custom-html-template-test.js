@@ -1,7 +1,7 @@
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { visit } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { test } from "qunit";
-import { visit } from "@ember/test-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
 

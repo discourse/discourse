@@ -1,14 +1,14 @@
+import { getOwner } from "@ember/application";
+import { click } from "@ember/test-helpers";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import sinon from "sinon";
+import { LIGHTBOX_APP_EVENT_NAMES } from "discourse/lib/lightbox/constants";
 import {
   generateLightboxMarkup,
   generateLightboxObject,
 } from "discourse/tests/helpers/lightbox-helpers";
-import { module, test } from "qunit";
-import { click } from "@ember/test-helpers";
-import { LIGHTBOX_APP_EVENT_NAMES } from "discourse/lib/lightbox/constants";
 import domFromString from "discourse-common/lib/dom-from-string";
-import { getOwner } from "discourse-common/lib/get-owner";
-import { setupTest } from "ember-qunit";
-import sinon from "sinon";
 
 module("Unit | Service | Experimental Lightbox", function (hooks) {
   setupTest(hooks);

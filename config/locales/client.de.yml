@@ -289,9 +289,9 @@ de:
       moderators: "Moderatoren"
       stat:
         all_time: "Gesamt"
-        last_day: "Letzte 24 Stunden"
-        last_7_days: "Letzte 7 Tage"
-        last_30_days: "Letzte 30 Tage"
+        last_day: "24 stunden"
+        last_7_days: "7 Tage"
+        last_30_days: "30 Tage"
       like_count: "„Gefällt mir“"
       topic_count: "Themen"
       post_count: "Beiträge"
@@ -1004,6 +1004,7 @@ de:
     user:
       said: "%{username}:"
       profile: "Profil"
+      profile_possessive: "%{username}s Profil"
       mute: "Stummschalten"
       edit: "Einstellungen bearbeiten"
       download_archive:
@@ -1326,7 +1327,6 @@ de:
         success: "(E-Mail gesendet)"
         in_progress: "(E-Mail wird gesendet)"
         error: "(Fehler)"
-        emoji: "Emoji sperren"
         action: "Sende eine E-Mail zum Zurücksetzen des Passworts"
         set_password: "Passwort ändern"
         choose_new: "Wähle ein neues Passwort"
@@ -1918,6 +1918,7 @@ de:
       title: "Erstelle dein Konto"
       failed: "Etwas ist schiefgelaufen. Vielleicht ist diese E-Mail-Adresse bereits registriert. Versuche es mit dem „Passwort vergessen“-Link."
       associate: "Hast du bereits ein Konto? <a href='%{associate_link}'>Logge dich ein</a>, um dein %{provider}-Konto zu verknüpfen."
+      activation_title: "Aktiviere dein Konto"
     forgot_password:
       title: "Passwort zurücksetzen"
       action: "Ich habe mein Passwort vergessen"
@@ -1937,7 +1938,6 @@ de:
       link_label: "Sende mir einen Anmeldelink"
       button_label: "über E-Mail"
       login_link: "Überspringe das Passwort; sende mir einen Anmeldelink"
-      emoji: "Emoji sperren"
       complete_username: "Sofern ein Benutzerkonto mit dem Benutzernamen <b>%{username}</b> existiert, solltest du in Kürze eine E-Mail mit einem Anmeldelink erhalten."
       complete_email: "Sofern ein Benutzerkonto für <b>%{email}</b> existiert, solltest du in Kürze eine E-Mail mit einem Anmeldelink erhalten."
       complete_username_found: "Wir haben ein Benutzerkonto mit dem Benutzernamen <b>%{username}</b> gefunden, du solltest in Kürze einen Anmeldelink erhalten."
@@ -1969,6 +1969,7 @@ de:
       security_key_not_allowed_error: "Der Authentifizierungsprozess für den Sicherheitsschlüssel ist abgelaufen oder wurde abgebrochen."
       security_key_no_matching_credential_error: "Im angegebenen Sicherheitsschlüssel wurden keine übereinstimmenden Anmeldedaten gefunden."
       security_key_support_missing_error: "Dein aktuelles Gerät oder Browser unterstützt die Verwendung von Sicherheitsschlüsseln nicht. Bitte verwende eine andere Methode."
+      security_key_invalid_response_error: "Der Authentifizierungsprozess des Sicherheitsschlüssels ist aufgrund einer ungültigen Antwort fehlgeschlagen."
       email_placeholder: "E-Mail/Benutzername"
       caps_lock_warning: "Feststelltaste ist aktiviert"
       error: "Unbekannter Fehler"
@@ -2028,7 +2029,6 @@ de:
         security_key: "Stattdessen einen Sicherheitsschlüssel verwenden"
     invites:
       accept_title: "Einladung"
-      emoji: "Umschlag-Emoji"
       welcome_to: "Willkommen bei %{site_name}!"
       invited_by: "Du wurdest eingeladen von:"
       social_login_available: "Du wirst dich auch über andere soziale Netzwerke mit dieser E-Mail-Adresse anmelden können."
@@ -2140,7 +2140,7 @@ de:
       drafts_offline: "Entwürfe offline"
       edit_conflict: "Konflikt bearbeiten"
       esc: "esc"
-      esc_label: "Klicken oder Esc drücken, um zu schließen"
+      esc_label: "Nachricht verwerfen"
       ok_proceed: "Ok, weiter"
       group_mentioned_limit:
         one: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzer. Deshalb wird niemand benachrichtigt."
@@ -2768,9 +2768,8 @@ de:
           false { Oder <a href="{basePath}/latest">sieh dir die aktuellen Themen an</a>}
           other {}
         }
-      bumped_at_title: |
-        Erster Beitrag: %{createdAtDate}
-        Gepostet: %{bumpedAtDate}
+      created_at: "Erstellt: %{date}"
+      bumped_at: "Letztes: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Durchstöbere alle Kategorien</a> oder <a href='%{basePath}/latest'>sieh dir die aktuellen Themen an</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Durchstöbere alle Kategorien</a>, <a href='%{basePath}/latest'>sieh dir die aktuellen Themen</a> oder die Top-Themen an:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Durchstöbere alle Schlagwörter</a> oder <a href='%{basePath}/latest'>sieh dir die aktuellen Themen an</a>."
@@ -3188,6 +3187,7 @@ de:
         create: "Entschuldige, es gab einen Fehler beim Anlegen des Beitrags. Bitte versuche es noch einmal."
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Bitte versuche es noch einmal."
         upload: "Entschuldige, beim Hochladen von %{file_name} ist leider ein Fehler aufgetreten. Bitte versuche es noch einmal."
+        backup_too_large: "Leider ist die Backup-Datei zu groß."
         file_too_large: "Entschuldige, die Datei ist zu groß (die maximale Größe beträgt %{max_size_kb} KB). Wie wäre es, die Datei bei einem Cloud-Sharing-Service hochzuladen und dann den Link einzufügen?"
         file_size_zero: "Entschuldigung, es sieht so aus, als ob etwas schiefgelaufen ist. Die Datei, die du hochladen möchtest, ist 0 Byte groß. Bitte versuche es erneut."
         file_too_large_humanized: "Entschuldigung, diese Datei ist zu groß (die maximale Größe beträgt %{max_size}). Lade deine große Datei bitte bei einem Cloud-Sharing-Dienst hoch und füge den Link ein."
@@ -3614,6 +3614,7 @@ de:
         med {mit einem sehr hohen Verhältnis von „Gefällt mir“ zu Beiträgen}
         high {mit einem extrem hohen Verhältnis von „Gefällt mir“ zu Beiträgen}
         other {}}
+    latest_poster_link: "%{username}s Profil, neuester Beitragender"
     original_post: "Original-Beitrag"
     views: "Aufrufe"
     sr_views: "Nach Aufrufen sortieren"
@@ -3898,7 +3899,6 @@ de:
       other_tags: "Sonstige Schlagwörter"
       selector_all_tags: "alle Schlagwörter"
       selector_no_tags: "keine Schlagwörter"
-      changed: "Geänderte Schlagwörter:"
       tags: "Schlagwörter"
       choose_for_topic: "optionale Schlagwörter"
       choose_for_topic_required:
@@ -4320,6 +4320,7 @@ de:
         too_many_requests: Du hast diese Aktion zu oft ausgeführt. Bitte warte, bevor du es erneut probierst.
         not_found_error: Entschuldige bitte, dieser Bericht existiert nicht
         filter_reports: Berichte filtern
+        custom_date_range: Benutzerdefinierter Datumsbereich
         reports:
           trend_title: "%{percent} Veränderung. Aktuell %{current}, war %{prev} in vorherigem Zeitraum."
           today: "Heute"
@@ -4492,6 +4493,11 @@ de:
               list: Die neuesten und private Beiträge auflisten. RSS wird ebenfalls unterstützt.
             tags:
               list: Schlagwörter auflisten.
+            tag_groups:
+              list: Eine Liste der Schlagwort-Gruppen abrufen.
+              show: Eine einzelne Schlagwort-Gruppe nach ID abrufen.
+              create: Erzeugt eine Schlagwort-Gruppe.
+              update: Aktualisiert eine durch id angegebene Schlagwort-Gruppe.
             categories:
               list: Eine Liste der Kategorien abrufen.
               show: Eine einzelne Kategorie nach ID abrufen.
@@ -4568,41 +4574,65 @@ de:
         groups_filter: "Ausgelöste Gruppen"
         delete_confirm: "Diesen Webhook löschen?"
         topic_event:
-          name: "Themenereignis"
-          details: "Wenn ein neues Thema erstellt, bearbeitet oder gelöscht wird."
+          group_name: "Themenereignisse"
+          topic_created: "Thema wird erstellt"
+          topic_revised: "Thema wird überarbeitet"
+          topic_edited: "Thema wird aktualisiert"
+          topic_destroyed: "Thema wird gelöscht"
+          topic_recovered: "Thema wird wiederhergestellt"
         post_event:
-          name: "Beitragsereignis"
-          details: "Wenn auf einen Beitrag geantwortet wird oder der Beitrag geändert, gelöscht oder wiederhergestellt wird."
-        user_event:
-          name: "Benutzer-Ereignis"
-          details: "Wenn sich ein Benutzer anmeldet, abmeldet, seine E-Mail bestätigt, erstellt, genehmigt oder aktualisiert wird."
+          group_name: "Veranstaltung posten"
+          post_created: "Erstellte Beiträge"
+          post_edited: "Beitrag wird aktualisiert"
+          post_destroyed: "Beitrag wird gelöscht"
+          post_recovered: "Beitrag wird wiederhergestellt"
         group_event:
-          name: "Gruppen-Ereignis"
-          details: "Wenn eine Gruppe erstellt, aktualisiert oder gelöscht wird."
-        category_event:
-          name: "Kategorie-Ereignis"
-          details: "Wenn eine Kategorie erstellt, aktualisiert oder gelöscht wird."
+          group_name: "Gruppenveranstaltungen"
+          group_created: "Gruppe wird erstellt"
+          group_updated: "Gruppe wird aktualisiert"
+          group_destroyed: "Gruppe wird gelöscht"
         tag_event:
-          name: "Schlagwort-Ereignis"
-          details: "Wenn ein Schlagwort erstellt, aktualisiert oder gelöscht wird."
+          group_name: "Schlagwort-Ereignisse"
+          tag_created: "Schlagwort wird erstellt"
+          tag_updated: "Schlagwort wird aktualisiert"
+          tag_destroyed: "Schlagwort wird gelöscht"
+        category_event:
+          group_name: "Kategorie Veranstaltungen"
+          category_created: "Kategorie wird erstellt"
+          category_updated: "Kategorie wird aktualisiert"
+          category_destroyed: "Kategorie wird gelöscht"
+        user_event:
+          group_name: "Benutzer-Ereignisse"
+          user_logged_in: "Benutzer hat sich angemeldet"
+          user_logged_out: "Benutzer hat sich abgemeldet"
+          user_confirmed_email: "Vom Benutzer bestätigte E-Mail"
+          user_created: "Benutzer wird erstellt"
+          user_approved: "Benutzer wird zugelassen"
+          user_updated: "Benutzer wird aktualisiert"
+          user_destroyed: "Benutzer wird gelöscht"
+          user_suspended: "Benutzer wird gesperrt"
+          user_unsuspended: "Benutzer wird entsperrt"
         reviewable_event:
-          name: "Überprüfbares Ereignis"
-          details: "Wenn ein neuer Eintrag zur Überprüfung bereit ist und wenn sich sein Status ändert."
-        notification_event:
-          name: "Benachrichtigungs-Ereignis"
-          details: "Wenn ein Benutzer eine Benachrichtigung in seinem Feed erhält."
-        user_promoted_event:
-          name: "Benutzer-Beförderungs-Ereignis"
-          details: "Wenn ein Benutzer von einer Vertrauensstufe zur nächsten befördert wird."
+          group_name: "Überprüfbare Ereignisse"
+          reviewable_created: "Überprüfbares Element ist bereit"
+          reviewable_updated: "Überprüfbares Element wird aktualisiert"
         user_badge_event:
-          name: "Abzeichen-Ereignis"
-          details: "Wenn ein Abzeichen vergeben oder widerrufen wird."
-        group_user_event:
-          name: "Gruppenbenutzer-Ereignis"
-          details: "Wenn ein Benutzer in einer Gruppe hinzugefügt oder entfernt wird."
+          group_name: "Abzeichen-Ereignisse"
+          user_badge_granted: "Benutzer-Abzeichen wird gewährt"
+          user_badge_revoked: "Benutzer-Abzeichen wird widerrufen"
         like_event:
-          name: "„Gefällt mir“-Ereignis"
-          details: "Wenn ein Benutzer einen Beitrag mit einem „Gefällt mir“ versieht."
+          group_name: "„Gefällt mir“-Ereignisse"
+          post_liked: "Wenn ein Benutzer einen Beitrag mit einem „Gefällt mir“ versieht."
+        notification_event:
+          group_name: "Benachrichtigungs-Ereignisse"
+          notification_created: "Ein Benutzer erhält eine Benachrichtigung in seinem Feed"
+        group_user_event:
+          group_name: "Gruppenbenutzer-Ereignisse"
+          user_added_to_group: "Ein Benutzer wird zu einer Gruppe hinzugefügt"
+          user_removed_from_group: "Ein Benutzer wird aus einer Gruppe entfernt"
+        user_promoted_event:
+          group_name: "Benutzer-Beförderungs-Ereignisse"
+          user_promoted: "Ein Benutzer wird befördert"
         delivery_status:
           title: "Versandstatus"
           inactive: "Inaktiv"
@@ -4736,6 +4766,9 @@ de:
         install: "Installieren"
         delete: "Löschen"
         delete_confirm: 'Möchtest du wirklich „%{theme_name}“ löschen?'
+        bulk_delete: 'Bist du sicher?'
+        bulk_themes_delete_confirm: "Dadurch werden die folgenden Themes deinstalliert und können von den Nutzern auf deiner Website nicht mehr verwendet werden:"
+        bulk_components_delete_confirm: "Dadurch werden die folgenden Komponenten deinstalliert und können von den Nutzern deiner Website nicht mehr verwendet werden:"
         color: "Farbe"
         opacity: "Transparenz"
         copy: "Duplizieren"
@@ -4758,7 +4791,6 @@ de:
           theme_name: "Theme-Name"
           component_name: "Komponenten-Name"
           themes_intro: "Wähle ein bestehendes Theme oder installiere ein neues, um anzufangen"
-          themes_intro_emoji: "Künstlerin-Emoji"
           beginners_guide_title: "Leitfaden für Einsteiger zur Verwendung von Discourse-Themes"
           developers_guide_title: "Entwickler-Leitfaden für Discourse-Themes"
           browse_themes: "Community-Themes durchsuchen"
@@ -4806,6 +4838,8 @@ de:
           convert_theme_tooltip: "Wandle dieses Theme in eine Komponente um"
           inactive_themes: "Inaktive Themes:"
           inactive_components: "Nicht verwendete Komponenten:"
+          selected: "%{count} ausgewählt"
+          cancel: "Abbrechen"
           broken_theme_tooltip: "Dieses Theme hat fehlerhaftes CSS, HTML oder YAML."
           disabled_component_tooltip: "Diese Komponente wurde deaktiviert"
           default_theme_tooltip: "Dieses Theme ist das Standardtheme der Website."
@@ -5729,6 +5763,7 @@ de:
         show_outdated: "Nur veraltete/ungültige Elemente anzeigen"
         locale: "Sprache:"
         more_than_50_results: "Es gibt mehr als 50 Ergebnisse. Bitte grenze deine Suche weiter ein."
+        no_results: "Keine passenden Website-Texte gefunden"
         interpolation_keys: "Verfügbare Variablennamen:"
         outdated:
           title: "Diese Übersetzung ist veraltet"
@@ -5879,7 +5914,6 @@ de:
             with_time: <span class="username">%{username}</span> um <span class="time">%{time}</span>
         badge_intro:
           title: "Wähle ein bestehendes Abzeichen oder erstelle ein neues, um loszulegen"
-          emoji: "Studentin-Emoji"
           what_are_badges_title: "Was sind Abzeichen?"
           badge_query_examples_title: "Beispiele für Abzeichen-Abfragen"
         mass_award:

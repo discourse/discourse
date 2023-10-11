@@ -1,11 +1,23 @@
 import Component from "@glimmer/component";
-import bodyClass from "discourse/helpers/body-class";
 import { concat } from "@ember/helper";
-import notEq from "truth-helpers/helpers/not-eq";
+import bodyClass from "discourse/helpers/body-class";
 import deprecated from "discourse-common/lib/deprecated";
+import notEq from "truth-helpers/helpers/not-eq";
 
 // Can add a body class from within a component
 export default class DSection extends Component {
+  constructor() {
+    super(...arguments);
+    deprecated(
+      `<DSection> is deprecated. Use {{body-class "foo-page" "bar"}} and/or <section></section> instead.`,
+      {
+        since: "3.2.0.beta1",
+        dropFrom: "3.3.0.beta1",
+        id: "discourse.d-section",
+      }
+    );
+  }
+
   <template>
     {{#if @pageClass}}
       {{bodyClass (concat @pageClass "-page")}}
@@ -21,16 +33,4 @@ export default class DSection extends Component {
       {{yield}}
     {{/if}}
   </template>
-
-  constructor() {
-    super(...arguments);
-    deprecated(
-      `<DSection> is deprecated. Use {{body-class "foo-page" "bar"}} and/or <section></section> instead.`,
-      {
-        since: "3.2.0.beta1",
-        dropFrom: "3.3.0.beta1",
-        id: "discourse.d-section",
-      }
-    );
-  }
 }

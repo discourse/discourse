@@ -2,6 +2,8 @@
 
 require_relative "base"
 
+raise "This importer needs to be updated from using PostUpload to UploadReference"
+
 class BulkImport::DiscourseMerger < BulkImport::Base
   NOW ||= "now()"
   CUSTOM_FIELDS = %w[category group post topic user]

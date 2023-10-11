@@ -25,11 +25,9 @@ it:
           descriptions:
             chat:
               create_message: "Crea un messaggio di chat in un canale specifico."
-    about:
-      chat_messages_count: "Messaggi di chat"
-      chat_channels_count: "Canali di chat"
-      chat_users_count: "Utenti della chat"
     chat:
+      text_copied: Testo copiato nella clipboard
+      link_copied: Link copiato nella clipboard
       deleted_chat_username: cancellati
       dates:
         time_tiny: "h:mm"
@@ -236,6 +234,7 @@ it:
       reply: "Rispondi"
       edit: "Modifica"
       copy_link: "Copia link"
+      copy_text: "Copia testo"
       rebake_message: "Ricompila HTML"
       retry_staged_message:
         title: "Errore di rete"
@@ -304,7 +303,6 @@ it:
         back_to_all_channels: "Tutti i canali"
         back_to_channel: "Indietro"
         tabs:
-          about: Informazioni
           members: Membri
           settings: Impostazioni
       new_message_modal:
@@ -434,6 +432,11 @@ it:
         saved: "Salvato"
         unfollow: "Esci"
         admin_title: "Amministratore"
+        settings_title: "Impostazioni"
+        info_title: "Informazioni sul canale"
+        category_label: "Categoria"
+        history_label: "Cronologia"
+        members_label: "Membri"
       admin:
         title: "Chat"
         export_messages:
@@ -504,14 +507,14 @@ it:
           one: "%{commaSeparatedUsernames} e %{count} altro stanno scrivendo"
           other: "%{commaSeparatedUsernames} e altri %{count} stanno scrivendo"
       retention_reminders:
-        public_none: "La cronologia del canale viene conservata a tempo indeterminato."
+        public_none: "indefinitamente"
         public:
-          one: "La cronologia del canale è conservata per %{count} giorno."
-          other: "La cronologia del canale è conservata per %{count} giorni."
-        dm_none: "La cronologia della chat personale viene conservata a tempo indeterminato."
+          one: "%{count} giorno"
+          other: "%{count} giorni"
+        dm_none: "indefinitamente"
         dm:
-          one: "La cronologia della chat personale è conservata per %{count} giorno."
-          other: "La cronologia della chat personale è conservata per %{count} giorni."
+          one: "%{count} giorno"
+          other: "%{count} giorni"
       flags:
         off_topic: "Questo messaggio non è rilevante per la discussione in corso in base alla definizione del titolo del canale e probabilmente dovrebbe essere spostato altrove."
         inappropriate: "Questo messaggio ha contenuti che chiunque considererebbe offensivi o ingiuriosi, oppure contiene violazioni delle <a href=\"%{basePath}/guidelines\">nostre linee guida della community</a>."

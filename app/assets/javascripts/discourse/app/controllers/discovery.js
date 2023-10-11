@@ -1,9 +1,9 @@
-import { inject as service } from "@ember/service";
-import { alias, equal } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
-import Category from "discourse/models/category";
+import { alias, equal } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
 import DiscourseURL from "discourse/lib/url";
+import Category from "discourse/models/category";
 
 export default class DiscoveryController extends Controller {
   @service router;

@@ -1,6 +1,6 @@
-import PreloadStore from "discourse/lib/preload-store";
 import { registerEmoji } from "pretty-text/emoji";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import PreloadStore from "discourse/lib/preload-store";
 
 export default {
   initialize(owner) {

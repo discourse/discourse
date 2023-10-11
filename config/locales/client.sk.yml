@@ -271,13 +271,9 @@ sk:
       our_admins: "Naši admini"
       our_moderators: "Naši moderátori"
       moderators: "Moderátori"
-      stat:
-        all_time: "Za celú dobu"
       like_count: "Páči sa mi"
       topic_count: "Témy"
       post_count: "Príspevky"
-      active_user_count: "Aktívni používatelia"
-      contact: "Kontaktujte nás"
       contact_info: "V prípade kritickej chyby alebo naliehavej záležitosti nás prosím konaktujte na %{contact_info}."
     bookmarked:
       title: "Záložka"
@@ -2201,7 +2197,6 @@ sk:
     tagging:
       selector_all_tags: "všetky štítky"
       selector_no_tags: "žiadne štítky"
-      changed: "zmenené štítky:"
       tags: "Štítky"
       choose_for_topic: "voliteľné štítky"
       add_synonyms: "Pridať"
@@ -2569,6 +2564,7 @@ sk:
           mobile: "Mobil"
           settings: "Nastavenia"
           preview: "Ukážka"
+          cancel: "Zrušiť"
           collapse: Zbaliť
           upload: "Upload"
           discard: "Zahodiť"

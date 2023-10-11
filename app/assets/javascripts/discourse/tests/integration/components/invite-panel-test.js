@@ -1,11 +1,11 @@
+import { getOwner } from "@ember/application";
+import { click, render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { click, render } from "@ember/test-helpers";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import User from "discourse/models/user";
 
 module("Integration | Component | invite-panel", function (hooks) {
   setupRenderingTest(hooks);
@@ -19,8 +19,11 @@ module("Integration | Component | invite-panel", function (hooks) {
       })
     );
 
-    this.currentUser.set("details", { can_invite_via_email: true });
-    this.set("inviteModel", User.create(this.currentUser));
+    const store = getOwner(this).lookup("service:store");
+    const user = store.createRecord("user", {
+      details: { can_invite_via_email: true },
+    });
+    this.set("inviteModel", user);
 
     await render(hbs`<InvitePanel @inviteModel={{this.inviteModel}} />`);
 

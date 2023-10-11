@@ -1,7 +1,7 @@
+import { i18n } from "discourse/lib/computed";
 import RestModel from "discourse/models/rest";
 import UserAction from "discourse/models/user-action";
 import discourseComputed from "discourse-common/utils/decorators";
-import { i18n } from "discourse/lib/computed";
 
 export default RestModel.extend({
   @discourseComputed("action_type")

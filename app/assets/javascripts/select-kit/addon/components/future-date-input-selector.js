@@ -1,6 +1,6 @@
-import ComboBoxComponent from "select-kit/components/combo-box";
 import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
+import ComboBoxComponent from "select-kit/components/combo-box";
 
 export const FORMAT = "YYYY-MM-DD HH:mmZ";
 

@@ -258,15 +258,10 @@ ur:
       our_moderators: "ہمارے ماڈریٹرز"
       moderators: "ماڈریٹرز"
       stat:
-        all_time: "تمام اوقات"
-        last_day: "پچھلے 24 گھنٹے"
-        last_7_days: "پچھلے 7 دن"
-        last_30_days: "پچھلے 30 دن"
+        last_day: "24 گھنٹے"
       like_count: "لائیکس"
       topic_count: "ٹاپک"
       post_count: "پوسٹ"
-      active_user_count: "متحرک صارفین"
-      contact: "ہم سے رابطہ کریں"
       contact_info: "اس سائٹ کے بارے میں کسی اہم مسئلہ یا فوری معاملہ کی صورت میں، براہ مہربانی %{contact_info} پر رابطہ کریں۔"
     bookmarked:
       title: "بُک مارک"
@@ -1149,7 +1144,6 @@ ur:
         success: "(اِی میل بھیج دی گئ)"
         in_progress: "(اِی میل بھیجی جا رہی ہے)"
         error: "(خرابی)"
-        emoji: "لاک ایموجی"
         action: "پاس ورڈ دوبارہ سیٹ کرنے کی اِی میل بھیجیں"
         set_password: "پاس ورڈ رکھیں"
         choose_new: "نیا پاس ورڈ منتخب کریں"
@@ -1669,7 +1663,6 @@ ur:
       link_label: "مجھے ایک لاگ اِن لِنک ای میل کریں"
       button_label: "ای میل کے ساتھ"
       login_link: "پاس ورڈ کو چھوڑ دیں؛ مجھے ایک لاگ ان لنک ای میل کریں"
-      emoji: "لاک ایموجی"
       complete_username: "اگر ایک اکاؤنٹ صارف نام <b>%{username}</b> سے میچ کرتا ہے، تو آپ کو جلد ہی لاگ اِن لِنک کے ساتھ ایک ای میل موصول ہو جانی چاہئے۔"
       complete_email: "اگر ایک اکاؤنٹ <b>%{email}</b> سے میچ کرتا ہے، تو آپ کو جلد ہی لاگ اِن لِنک کے ساتھ ایک ای میل موصول ہو جانی چاہئے۔"
       complete_username_found: "ہمیں ایک ایسا اکاؤنٹ مل گیا جو صارف نام <b>%{username}</b> سے میچ کرتا ہے، آپ کو جلد ہی لاگ اِن لِنک کے ساتھ ایک ای میل موصول ہو جانی چاہئے۔"
@@ -1741,7 +1734,6 @@ ur:
         security_key: "اس کے بجائے سیکیورٹی کی استعمال کریں۔"
     invites:
       accept_title: "دعوت نامہ"
-      emoji: "لفافہ اموجی"
       welcome_to: "%{site_name} پر خوش آمدید!"
       invited_by: "آپ کو جن کی طرف سے مدعو کیا گیا تھا:"
       social_login_available: "آپ اِس اِیمیل کا استعمال کرتے ہوئے کسی بھی سوشل لاگ اِن کے ساتھ سائن اِن بھی کرسکیں گے۔"
@@ -2325,6 +2317,7 @@ ur:
       collapse_details: "موضوع کی تفصیلات کوسکیڑیں"
       expand_details: "موضوع کی تفصیلات کو پھیلائیں"
       unread_indicator: "کسی ممبر نے ابھی تک اِس ٹاپک کی آخری پوسٹ نہیں پڑھی ہے۔"
+      bumped_at: "تازہ ترین: %{date}"
       suggest_create_topic: <a href>نئی گفتگو شروع</a> کرنے کے لیے تیار ہیں؟
       deleted: "ٹاپک مٹادیا گیا ہے"
       slow_mode_update:
@@ -3361,7 +3354,6 @@ ur:
       other_tags: "دیگر ٹیگز"
       selector_all_tags: "تمام ٹیگز"
       selector_no_tags: "کوئی ٹیگ نہیں"
-      changed: "تبدیل کیے گئے ٹیگ:"
       tags: "ٹیگز"
       choose_for_topic: "اختیاری ٹیگز"
       info: "معلومات"
@@ -3869,39 +3861,8 @@ ur:
         groups_filter_instructions: "متعلقہ وَیب ھُوک٘س٘ صرف اُس صورت میں متحرک کیے جائیں گے اگر واقعہ مخصوص گروپوں کے ساتھ تعلق رکھتا ہے۔ تمام گروپوں کے لئے وَیب ھُوک٘س٘ متحرک کرنے کیلئے خالی چھوڑ دیں۔"
         groups_filter: "متحرک کیے گئے گروپ"
         delete_confirm: "اِس وَیب ھُوک کومٹائیں؟"
-        topic_event:
-          name: "ٹاپک واقعہ"
-          details: "جب ایک نیا ٹاپک، رِیوائز، تبدیل یا حذف کیا جائے۔"
-        post_event:
-          name: "پوسٹ واقعہ"
-          details: "جب ایک نیا جواب، ترمیم، حذف یا رِِیکور کیا جائے۔"
-        user_event:
-          name: "صارف واقعہ"
-          details: "جب کوئی صارف لاگ ان ہوتا ہے، لاگ آؤٹ ہوتا ہے، اپنے ای میل کی تصدیق کرتا ہے، تخلیق، منظور یا اپ ڈیٹ ہوتا ہے۔"
-        group_event:
-          name: "گروپ واقعہ"
-          details: "جب ایک گروپ بنایا، اَپ ڈیٹ یا ختم کیا جاتا ہے۔"
-        category_event:
-          name: "زُمرَہ واقعہ"
-          details: "جب ایک زُمرَہ بنایا، اَپ ڈیٹ یا ختم کیا جاتا ہے۔"
-        tag_event:
-          name: "ٹَیگ واقعہ"
-          details: "جب ایک ٹَیگ بنایا، اَپ ڈیٹ یا ختم کیا جاتا ہے۔"
-        reviewable_event:
-          name: "قابل تجدید واقعہ"
-          details: "جب ایک نئی چیز جائزہ کیلئے تیار ہو اور جب اُس کا اسٹیٹس اپ ڈیٹ کیا جائے۔"
-        notification_event:
-          name: "اطلاع واقعہ"
-          details: "جب صارف کو اپنی فِیڈ میں اطلاع موصول ہوتی ہے۔"
-        user_promoted_event:
-          name: "یوزر پروموٹڈ ایونٹ"
-          details: "جب کسی صارف کو ایک اعتماد کی سطح سے دوسری سطح پر ترقی دی جاتی ہے۔"
-        group_user_event:
-          name: "گروپ یوزر ایونٹ"
-          details: "جب کسی صارف کو گروپ میں شامل یا ہٹا دیا جاتا ہے۔"
         like_event:
-          name: "ایونٹ کی طرح"
-          details: "جب کوئی صارف کسی پوسٹ کو پسند کرتا ہے۔"
+          post_liked: "جب کوئی صارف کسی پوسٹ کو پسند کرتا ہے۔"
         delivery_status:
           title: "موصول ہونے کی آگاہی"
           inactive: "غیر فعال"
@@ -4040,7 +4001,6 @@ ur:
           theme_name: "تھیم نام"
           component_name: "جزو نام"
           themes_intro: " شروعات کیلئے، ایک موجودہ تھیم منتخب کریں یا ایک نئی انسٹال کریں"
-          themes_intro_emoji: "خاتون آرٹسٹ ایموجی"
           beginners_guide_title: "ڈسکورس تِھیمز کا استعمال کرنے کیلئے ابتدائی رہنمائی"
           developers_guide_title: "ڈسکورس تِھیمز کیلئے ڈویلپر رہنمائی"
           browse_themes: "کمیونٹی تِھیمز دیکھیں"
@@ -4087,6 +4047,7 @@ ur:
           convert_theme_tooltip: "اِس تِھیم کو کمپنَینٹ میں تبدیل کریں"
           inactive_themes: "غیر فعال تِھیمز:"
           inactive_components: "غیر استعمال شدہ کمپنَینٹ:"
+          cancel: "منسوخ"
           broken_theme_tooltip: "اِس تِھیم کے CSS، HTML یا YAML میں غلطیاں موجود ہیں"
           disabled_component_tooltip: "یہ کمپنَینٹ غیر فعال کردیا گیا ہے"
           default_theme_tooltip: "یہ تِھیم سائٹ کی ڈیفالٹ تِھیم ہے"
@@ -5035,7 +4996,6 @@ ur:
             with_time: <span class="username">%{username}</span> <span class="time">%{time}</span> پر
         badge_intro:
           title: "شروعات کیلئے، ایک موجودہ بَیج منتخب کریں یا ایک نیا بنائیں"
-          emoji: "خاتون طالب علم ایموجی"
           what_are_badges_title: "بَیج کیا ہیں؟"
           badge_query_examples_title: "بَیج قُوَیری کی مثالیں"
         mass_award:

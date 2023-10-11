@@ -24,7 +24,7 @@ RSpec.describe "Drawer", type: :system do
         drawer_page.open_channel(channel)
         page.find(".chat-channel-title").click
 
-        expect(page).to have_current_path("/chat/c/#{channel.slug}/#{channel.id}/info/about")
+        expect(page).to have_current_path("/chat/c/#{channel.slug}/#{channel.id}/info/settings")
       end
     end
   end

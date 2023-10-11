@@ -249,16 +249,10 @@ zh_TW:
       our_moderators: "我們的版主"
       moderators: "板主"
       stat:
-        all_time: "所有時間"
-        last_day: "過去 24 小時"
-        last_7_days: "過去 7 天"
-        last_30_days: "過去 30 天"
+        last_day: "24 小時"
       like_count: "讚"
       topic_count: "話題"
       post_count: "貼文"
-      user_count: "註冊"
-      active_user_count: "活躍使用者"
-      contact: "聯絡我們"
       contact_info: "若有重大問題或關係到網站的緊急時間，請透過 %{contact_info} 聯絡我們"
     bookmarked:
       title: "書籤"
@@ -1939,6 +1933,7 @@ zh_TW:
       back_to_list: "回到話題列表"
       options: "話題選項"
       show_links: "在話題裡顯示連結"
+      bumped_at: "最新：%{date}"
       suggest_create_topic: 準備好 <a href>開始新的對話了嗎？</a>
       deleted: "此話題已被刪除"
       slow_mode_update:
@@ -2755,7 +2750,6 @@ zh_TW:
       other_tags: "其他標記"
       selector_all_tags: "所有標籤"
       selector_no_tags: "無標記"
-      changed: "標籤被修改："
       tags: "標記"
       choose_for_topic: "可選標籤"
       info: "資訊"
@@ -3143,26 +3137,6 @@ zh_TW:
         groups_filter_instructions: "相關 Webhook 事件將在滿足特定群組的情況下才發送。留空忽略群組限制。"
         groups_filter: "觸發的群組"
         delete_confirm: "刪除這個 webhook？"
-        topic_event:
-          name: "話題事件"
-          details: "當有新話題、話題被修訂、修改或者刪除時。"
-        post_event:
-          name: "貼文事件"
-          details: "當有新回覆、編輯、貼文被刪除或者恢復時。"
-        user_event:
-          name: "使用者事件"
-        group_event:
-          name: "群組活動"
-          details: "當群組被建立、更新或刪除時"
-        category_event:
-          name: "分類事件"
-          details: "當分類被建立、更新或刪除時"
-        tag_event:
-          name: "標籤事件"
-          details: "當標籤被建立、更新或刪除。"
-        reviewable_event:
-          name: "可審核的事件"
-          details: "當新項目已經準備好審核並狀態已更好時"
         delivery_status:
           title: "分髮狀態"
           inactive: "不活躍"
@@ -3338,6 +3312,7 @@ zh_TW:
           convert_theme_tooltip: "轉換此佈景主題為元件"
           inactive_themes: "未啟用的佈景主題"
           inactive_components: "未使用的元件："
+          cancel: "取消"
           broken_theme_tooltip: "此佈景主題的 CSS、HTML 或 YAML 中有錯誤。"
           default_theme_tooltip: "此佈景主題是網站的預設佈景主題"
           updates_available_tooltip: "此佈景主題可更新"

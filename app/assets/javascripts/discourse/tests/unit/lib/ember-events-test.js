@@ -2,13 +2,13 @@
 /* eslint-disable ember/no-classic-classes */
 /* eslint-disable ember/no-classic-components */
 
-import { module, test } from "qunit";
-import { setupRenderingTest } from "ember-qunit";
+import GlimmerComponent from "@glimmer/component";
+import ClassicComponent from "@ember/component";
+import { action } from "@ember/object";
 import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import ClassicComponent from "@ember/component";
-import GlimmerComponent from "@glimmer/component";
-import { action } from "@ember/object";
+import { setupRenderingTest } from "ember-qunit";
+import { module, test } from "qunit";
 
 // Configure test-local Classic and Glimmer components that
 // will be immune from upgrades to actual Discourse components.

@@ -26,33 +26,27 @@
         </div>
       </div>
 
-      <div class="chat-thread-list-item__body">
-        <span class="chat-thread-list-item__last-reply-author">
-          @{{@thread.preview.lastReplyUser.username}}:
-        </span>
-        <span class="chat-thread-list-item__last-reply-excerpt">
-          {{replace-emoji (html-safe @thread.preview.lastReplyExcerpt)}}
-        </span>
-      </div>
-
       <div class="chat-thread-list-item__metadata">
+
+        <div class="chat-thread-list-item__members">
+          <ChatUserAvatar
+            @user={{@thread.originalMessage.user}}
+            @showPresence={{false}}
+            @interactive={{false}}
+          />
+          <ChatThreadParticipants
+            @thread={{@thread}}
+            @includeOriginalMessageUser={{false}}
+            class="chat-thread-list-item__participants"
+          />
+        </div>
 
         <div class="chat-thread-list-item__last-reply-timestamp">
           {{#if @thread.preview.lastReplyCreatedAt}}
-            <span>{{i18n "chat.thread.last_reply"}}</span>
             {{format-date @thread.preview.lastReplyCreatedAt leaveAgo="true"}}
           {{/if}}
         </div>
 
-        <Chat::UserAvatar
-          @user={{@thread.originalMessage.user}}
-          @showPresence={{false}}
-        />
-        <Chat::Thread::Participants
-          @thread={{@thread}}
-          @includeOriginalMessageUser={{false}}
-          class="chat-thread-list-item__participants"
-        />
       </div>
     </div>
   </div>

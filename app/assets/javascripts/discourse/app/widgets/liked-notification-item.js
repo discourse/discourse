@@ -1,7 +1,7 @@
-import { DefaultNotificationItem } from "discourse/widgets/default-notification-item";
-import I18n from "I18n";
-import { createWidgetFrom } from "discourse/widgets/widget";
 import { formatUsername } from "discourse/lib/utilities";
+import { DefaultNotificationItem } from "discourse/widgets/default-notification-item";
+import { createWidgetFrom } from "discourse/widgets/widget";
+import I18n from "I18n";
 
 createWidgetFrom(DefaultNotificationItem, "liked-notification-item", {
   text(notificationName, data) {

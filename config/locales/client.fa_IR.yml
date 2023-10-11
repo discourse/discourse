@@ -260,16 +260,10 @@ fa_IR:
       our_moderators: "مدیران ما"
       moderators: "مدیران"
       stat:
-        all_time: "کل"
-        last_day: "۲۴ ساعت گذشته"
-        last_7_days: "۷ روز گذشته"
-        last_30_days: "۳۰ روز گذشته"
+        last_day: "۲۴ ساعت"
       like_count: "پسند‌ها "
       topic_count: "موضوعات"
       post_count: "نوشته‌ها"
-      user_count: "ثبت‌نام‌ها"
-      active_user_count: "کاربران فعال"
-      contact: "ارتباط با ما"
       contact_info: "در شرایط حساس و مسائل اضطراری مربوط به سایت٬‌ لطفا از طریق %{contact_info} با تماس بگیرید."
     bookmarked:
       title: "نشانک"
@@ -1137,7 +1131,6 @@ fa_IR:
         success: "(ایمیل ارسال شد)"
         in_progress: "(فرستادن ایمیل)"
         error: "(خطا)"
-        emoji: "قفل ایموجی"
         action: "ارسال بازنشانی رمز عبور به ایمیل"
         set_password: "تغییر رمز‌عبور"
         choose_new: "یک رمز‌عبور جدید وارد کنید"
@@ -1673,7 +1666,6 @@ fa_IR:
       link_label: "یک لینک ورود به من ایمیل کن"
       button_label: "با ایمیل"
       login_link: "عدم استفاده از رمز; ورود از طریق لینک"
-      emoji: "قفل ایموجی"
       complete_username: "اگر حساب کاربری با نام کاربری <b>%{username}</b> وجود داشته باشد، شما الان یک ایمیل با لینک ورود دریافت می‌کنید."
       complete_email: "اگر حساب کاربری با <b>%{email}</b> وجود داشته باشد، شما الان یک لینک ورود دریافت می‌کنید."
       complete_username_found: "یک حساب کاربری با نام کاربری <b>%{username}</b> پیدا کردیم، شما الان یک ایمیل با لینک ورود دریافت می‌کنید."
@@ -1762,7 +1754,6 @@ fa_IR:
         backup_code: "به جای آن از یک کد پشتیبان استفاده کنید"
     invites:
       accept_title: "دعوت‌نامه"
-      emoji: "ایموجی پاکت نامه"
       welcome_to: "به %{site_name} خوش آمدید!"
       invited_by: "توسط این شخص دعوت شده‌اید:"
       social_login_available: "شما می‌توانید به شبکه‌های اجتماعی که از ایمیل فعلی شما استفاده می‌کنند وارد شوید."
@@ -2336,6 +2327,7 @@ fa_IR:
       read_more_in_category: "می‌خواهید بیشتر بخوانید؟ موضوعات دیگر را در %{categoryLink} مرور کنید یا <a href='%{latestLink}'>آخرین موضوعات را مشاهده کنید</a>."
       read_more: "می‌خواهید بیشتر بخوانید؟ <a href='%{categoryLink}'>همه دسته‌‌بندی‌ها را مرور کنید</a> یا <a href='%{latestLink}'>آخرین موضوعات را مشاهده کنید</a>."
       unread_indicator: "هیچ کاربری آخرین فرستهٔ این مبحث را نخوانده است."
+      bumped_at: "جدیدترین: %{date}"
       suggest_create_topic: برای <a href>شروع یک موضوع جدید آماده‌اید؟</a>
       deleted: "موضوع پاک شده است"
       slow_mode_update:
@@ -3221,7 +3213,6 @@ fa_IR:
       other_tags: "برچسب‌های دیگر"
       selector_all_tags: "تمام برچسب‌ها"
       selector_no_tags: "بدون برچسب"
-      changed: "برچسب‌های تغییر یافته:"
       tags: "برچسب‌ها"
       choose_for_topic: "برچسب‌های اختیاری"
       info: "اطلاعات"
@@ -3638,25 +3629,6 @@ fa_IR:
         groups_filter_instructions: "webhook مرتبط فقط در صورتی فعال می‌شود که رویداد به گروه‌های مشخص مرتبط باشد. برای فعال‌سازی webhook در تمام گروه‌ها این قسمت را خالی بگذارید."
         groups_filter: "گروه‌های عامل"
         delete_confirm: "حذف وب هوک؟"
-        topic_event:
-          name: "رویداد موضوع"
-          details: "وقتی یک موضوع جدید اصلاح، عوض یا حذف می‌شود."
-        post_event:
-          name: "رویداد نوشته"
-          details: "وقتی یک پاسخ، ویرایش، حذف یا بازگردانده شده."
-        user_event:
-          name: "رویداد کاربر"
-        group_event:
-          name: "رویداد گروه"
-          details: "زمانی که یک گروه ساخته، بروزرسانی یا نابود شد."
-        category_event:
-          details: "زمانی که یک دسته‌بندی ساخته، بروزرسانی یا نابود شد."
-        tag_event:
-          details: "زمانی که یک برچسب ساخته، بروزرسانی یا نابود شد"
-        reviewable_event:
-          name: "رویداد قابل بررسی "
-        notification_event:
-          name: "رویداد آگاه‌سازی"
         delivery_status:
           title: "وضعیت تحویل"
           inactive: "غیر‌فعال"
@@ -3829,6 +3801,7 @@ fa_IR:
           convert_theme_tooltip: "تبدیل این تم به کامپوننت"
           inactive_themes: "تم های غیر فعال:"
           inactive_components: "کامپوننت‌های بلااستفاده:"
+          cancel: "انصراف"
           broken_theme_tooltip: "این تم خطا‌هایی در CSS ،HTML یا YAML دارد."
           disabled_component_tooltip: "این کامپوننت غیر فعال شده"
           default_theme_tooltip: "این تم، تم پیش‌فرض انجمن است"

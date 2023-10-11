@@ -250,15 +250,10 @@ nb_NO:
       our_moderators: "Våre moderatorer"
       moderators: "Moderatorer"
       stat:
-        all_time: "Gjennom tidene"
-        last_day: "Siste 24 timer"
-        last_7_days: "Siste 7 dager"
-        last_30_days: "Siste 30 dager"
+        last_day: "24 timer"
       like_count: "Likes"
       topic_count: "Emner"
       post_count: "Innlegg"
-      active_user_count: "Aktive brukere"
-      contact: "Kontakt oss"
       contact_info: "I tilfelle en kritisk hendelse skulle inntreffe eller det er en hastesak som påvirker siden, ta kontakt på %{contact_info}."
     bookmarked:
       title: "Bokmerke"
@@ -1108,7 +1103,6 @@ nb_NO:
         success: "(e-post sendt)"
         in_progress: "(sender e-post)"
         error: "(feil)"
-        emoji: "lås emoji"
         action: "Send e-post for nullstilling av passord"
         set_password: "Sett passord"
         choose_new: "Velg et nytt passord"
@@ -1614,7 +1608,6 @@ nb_NO:
       link_label: "Send meg lenke til innlogging via e-post"
       button_label: "med e-post"
       login_link: "Hopp over passordet; send meg en innloggingslenke"
-      emoji: "lås emoji"
       complete_username: "Hvis en konto matcher brukernavnet <b>%{username}</b>, vil du snart motta en e-post med en lenke som logger deg inn."
       complete_email: "Hvis en konto matcher <b>%{email}</b>, vil du snart motta en e-post med en lenke som logger deg inn."
       complete_username_found: "Vi fant en konto som matcher brukernavnet <b>%{username}</b>, du vil snart motta en e-post med lenke for innlogging."
@@ -1685,7 +1678,6 @@ nb_NO:
         backup_code: "Bruk en sikkerhetskode i stedet"
     invites:
       accept_title: "Invitasjon"
-      emoji: "konvolutt emoji"
       welcome_to: "Velkommen til %{site_name}!"
       invited_by: "Du ble invitert av:"
       social_login_available: "Du vil også kunne logge inn med hvilken som helst annen sosial innloggingstjeneste ved bruk av den e-posten."
@@ -2188,6 +2180,7 @@ nb_NO:
       collapse_details: "vis/skjul detaljer for emnet"
       expand_details: "utvid emnebeskrivelse"
       unread_indicator: "Ingen medlem har lest den siste posten i dette emnet ennå."
+      bumped_at: "Siste: %{date}"
       suggest_create_topic: Klar til å <a href>starte en ny samtale?</a>
       deleted: "Emnet ble slettet"
       slow_mode_update:
@@ -3176,7 +3169,6 @@ nb_NO:
       other_tags: "Andre stikkord"
       selector_all_tags: "alle stikkord"
       selector_no_tags: "ingen stikkord"
-      changed: "stikkord endret:"
       tags: "Stikkord"
       choose_for_topic: "valgfrie stikkord"
       info: "Informasjon"
@@ -3584,36 +3576,8 @@ nb_NO:
         groups_filter_instructions: "Relevante webhooker vil bare bli utløst hvis hendelsene er relatert til valgte grupper. La være blank for å utløse webhooker for alle grupper."
         groups_filter: "Utløse grupper"
         delete_confirm: "Slette denne webhooken?"
-        topic_event:
-          name: "Hendelse for emne"
-          details: "Når det finnes et nytt, revidert, endret eller slettet emne."
-        post_event:
-          name: "Innleggshendelse"
-          details: "Når det er et nytt, redigert, slettet eller gjenopprettet innlegg."
-        user_event:
-          name: "Brukerhendelse"
-          details: "Når en bruker logger inn, logger ut, bekrefter e-posten, blir opprettet, godkjent eller oppdatert."
-        group_event:
-          name: "Gruppehandling"
-          details: "Når en gruppe lages, oppdateres eller slettes."
-        category_event:
-          name: "Kategorihandling"
-          details: "Når en kategori lages, oppdateres eller slettes."
-        tag_event:
-          name: "Stikkordshandling"
-          details: "Når et stikkord lages, oppdateres eller slettes."
-        reviewable_event:
-          name: "Visbar hendelse"
-          details: "Når et nytt element er klar for gjennomgang og når dets status oppdateres."
-        notification_event:
-          name: "Varslingshendelse"
-          details: "Når en bruker mottar et varsel i feeden."
-        group_user_event:
-          name: "Gruppebrukerhendelse"
-          details: "Når en bruker er lagt til eller fjernet i en gruppe."
         like_event:
-          name: "Lik hendelsen"
-          details: "Når en bruker liker et innlegg."
+          post_liked: "Når en bruker liker et innlegg."
         delivery_status:
           title: "Sendingsstatus"
           inactive: "Inaktiv"
@@ -3751,7 +3715,6 @@ nb_NO:
           theme_name: "Navn på tema"
           component_name: "Komponent navn"
           themes_intro: "Velg et eksisterende tema eller installer et nytt for å komme i gang"
-          themes_intro_emoji: "kvinne artist emoji"
           beginners_guide_title: "Begynner guide til å bruke Discourse tema"
           developers_guide_title: "Utviklers guide til Discourse tema"
           browse_themes: "Bla gjennom samfunnstemaer"
@@ -3798,6 +3761,7 @@ nb_NO:
           convert_theme_tooltip: "Konverter dette temaet til komponenten"
           inactive_themes: "Inaktive temaer:"
           inactive_components: "Ubrukte komponenter:"
+          cancel: "Avbryt"
           broken_theme_tooltip: "Dette temaet har feil i CSS, HTML eller YAML"
           disabled_component_tooltip: "Denne komponenten har blitt deaktivert"
           default_theme_tooltip: "Dette temaet er nettstedets standardtema"

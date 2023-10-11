@@ -19,8 +19,6 @@
   }
 
   &__content {
-    display: flex;
-    flex-grow: 1;
     padding-inline: 1.5rem;
     z-index: 2;
     background: var(--primary-very-low);
@@ -32,11 +30,16 @@
       transition: margin-right 0.15s ease-out;
       margin-right: 0px !important;
     }
+    &:not(.-animate-reset) {
+      border-top-right-radius: 0.25rem;
+      border-bottom-right-radius: 0.25rem;
+    }
   }
 
   &__action-btn {
     z-index: 1;
     display: flex;
+    justify-content: flex-end;
     align-items: center;
     position: absolute;
     top: 0px;
@@ -50,8 +53,7 @@
       transform-origin: 50% 50%;
       transform-box: fill-box;
       transition: scale 0.2s ease-out;
-      margin: 0 1rem 0 auto;
-      padding-left: 1rem;
+      margin-inline: 0 1.5rem;
     }
 
     &.-not-at-threshold {

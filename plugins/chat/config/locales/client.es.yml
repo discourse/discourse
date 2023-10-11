@@ -24,10 +24,6 @@ es:
           descriptions:
             chat:
               create_message: "Crea un mensaje de chat en un canal especificado."
-    about:
-      chat_messages_count: "Mensajes de chat"
-      chat_channels_count: "Canales de chat"
-      chat_users_count: "Usuarios del chat"
     chat:
       deleted_chat_username: eliminado
       dates:
@@ -300,7 +296,6 @@ es:
         back_to_all_channels: "Todos los canales"
         back_to_channel: "Atrás"
         tabs:
-          about: Acerca de
           members: Miembros
           settings: Ajustes
       new_message_modal:
@@ -430,6 +425,10 @@ es:
         saved: "Guardado"
         unfollow: "Abandonar"
         admin_title: "Administrador"
+        settings_title: "Ajustes"
+        category_label: "Categoría"
+        history_label: "Historial"
+        members_label: "Miembros"
       admin:
         title: "Chat"
         export_messages:
@@ -499,14 +498,12 @@ es:
           one: "%{commaSeparatedUsernames} y %{count} más está escribiendo"
           other: "%{commaSeparatedUsernames} y %{count} más están escribiendo"
       retention_reminders:
-        public_none: "El historial del canal se conserva indefinidamente."
         public:
-          one: "El historial del canal se conserva durante %{count} día."
-          other: "El historial del canal se conserva durante %{count} días."
-        dm_none: "El historial personal de chat se conserva indefinidamente."
+          one: "%{count} día"
+          other: "%{count} días"
         dm:
-          one: "El historial de chat personal se conserva durante %{count} día."
-          other: "El historial de chat personal se conserva durante %{count} días."
+          one: "%{count} día"
+          other: "%{count} días"
       flags:
         off_topic: "Este mensaje no es relevante para la discusión actual, tal y como se define en el título del canal, y probablemente debería moverse a otro lugar."
         inappropriate: "Este mensaje tiene un contenido que una persona razonable consideraría ofensivo, abusivo o que viola las <a href=\"%{basePath}/guidelines\">directrices de nuestra comunidad</a>."

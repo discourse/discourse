@@ -1,11 +1,11 @@
 import ArrayProxy from "@ember/array/proxy";
-import Category from "discourse/models/category";
-import I18n from "I18n";
-import PreloadStore from "discourse/lib/preload-store";
-import Site from "discourse/models/site";
-import Topic from "discourse/models/topic";
 import { ajax } from "discourse/lib/ajax";
 import { number } from "discourse/lib/formatter";
+import PreloadStore from "discourse/lib/preload-store";
+import Category from "discourse/models/category";
+import Site from "discourse/models/site";
+import Topic from "discourse/models/topic";
+import I18n from "I18n";
 
 const CategoryList = ArrayProxy.extend({
   init() {

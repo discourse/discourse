@@ -1,9 +1,9 @@
-import { module, test } from "qunit";
+import { getOwner } from "@ember/application";
 import EmberObject from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { module, test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import discourseComputed from "discourse-common/utils/decorators";
 
 module("Unit | Utility | plugin-api", function (hooks) {
   setupTest(hooks);

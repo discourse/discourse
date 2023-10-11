@@ -1,19 +1,15 @@
+import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
   exists,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
-import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
-import { click, visit } from "@ember/test-helpers";
 
 acceptance("Poll results", function (needs) {
   needs.user();
   needs.settings({ poll_enabled: true });
-  needs.hooks.beforeEach(() => {
-    clearPopupMenuOptionsCallback();
-  });
 
   needs.pretender((server, helper) => {
     server.get("/posts/by_number/134/1", () => {
@@ -659,9 +655,6 @@ acceptance("Poll results", function (needs) {
 acceptance("Poll results - no voters", function (needs) {
   needs.user();
   needs.settings({ poll_enabled: true });
-  needs.hooks.beforeEach(() => {
-    clearPopupMenuOptionsCallback();
-  });
 
   needs.pretender((server, helper) => {
     server.get("/posts/by_number/134/1", () => {

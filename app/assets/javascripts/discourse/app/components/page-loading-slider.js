@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
-import { cancel, next } from "@ember/runloop";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { bind } from "discourse-common/utils/decorators";
+import { cancel, next } from "@ember/runloop";
+import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class extends Component {
   @service loadingSlider;

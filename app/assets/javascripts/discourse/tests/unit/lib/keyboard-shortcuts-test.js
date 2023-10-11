@@ -1,9 +1,12 @@
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import DiscourseURL from "discourse/lib/url";
-import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
 import sinon from "sinon";
+import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import DiscourseURL from "discourse/lib/url";
 
 module("Unit | Utility | keyboard-shortcuts", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     sinon.stub(DiscourseURL, "routeTo");
   });

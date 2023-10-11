@@ -258,16 +258,9 @@ lv:
       our_admins: "Mūsu administratori"
       our_moderators: "Mūsu moderatori"
       moderators: "Moderātori"
-      stat:
-        all_time: "Visi"
-        last_day: "Pēdējās 24 stundas"
-        last_7_days: "Pēdējās 7 dienas"
-        last_30_days: "Pēdējās 30 dienas"
       like_count: "Atzinības"
       topic_count: "Tēmas"
       post_count: "Ieraksti"
-      active_user_count: "Aktīvi lietotāji"
-      contact: "Sazinies ar mums"
       contact_info: "Ar šo vietni saistītu kritisku problēmu gadījumā lūdzu sazinieties ar mums %{contact_info}."
     bookmarked:
       title: "Grāmatzīmes"
@@ -1058,7 +1051,6 @@ lv:
         success: "(e-pasts nosūtīts)"
         in_progress: "(sūta e-pastu)"
         error: "(kļūda)"
-        emoji: "bloķēšanas emocijzīmes"
         action: "Sūtīt paroles atjaunošanas e-pastu"
         set_password: "Uzstādīt paroli"
         choose_new: "Izvēlēties jaunu paroli"
@@ -1520,7 +1512,6 @@ lv:
       link_label: "Nosūtiet man e -pastu pieteikšanās saiti"
       button_label: "ar e -pastu"
       login_link: "Izlaist paroli; nosūtiet man e -pastu pieteikšanās saiti"
-      emoji: "bloķēt emocijzīmes"
       complete_username: "Ja konts atbilst lietotājvārdam <b>%{username}</b>, drīzumā jums jāsaņem e -pasts ar pieteikšanās saiti."
       complete_email: "Ja konts atbilst <b>%{email}</b>, drīzumā jums jāsaņem e -pasts ar pieteikšanās saiti."
       complete_username_found: "Mēs atradām kontu, kas atbilst lietotājvārdam <b>%{username}</b>Drīzumā jums jāsaņem e -pasts ar pieteikšanās saiti."
@@ -1591,7 +1582,6 @@ lv:
         backup_code: "Tā vietā izmantojiet rezerves kodu"
     invites:
       accept_title: "Ielūgums"
-      emoji: "aploksnes emocijzīmes"
       welcome_to: "Laipni lūdzam %{site_name}!"
       invited_by: "Jūs uzaicināja: "
       social_login_available: "Jūs varēsiet ieiet ar šo e-pastu, arī izmantojot sociālo tīklu profilus."
@@ -2660,7 +2650,6 @@ lv:
     tagging:
       selector_all_tags: "visi tagi"
       selector_no_tags: "bez tagiem"
-      changed: "mainītie tagi:"
       tags: "Tagi"
       add_synonyms: "Pievienot"
       delete_tag: "Dzēst tagu"
@@ -2919,14 +2908,6 @@ lv:
         individual_event: "Izvēlēties individuālus notikumus."
         active: "Aktīvs"
         active_notice: "Mēs nosūtīsim detalizētu informāciju par notikumu, tiklīdz būs signāls."
-        topic_event:
-          name: "Tēmas notikums"
-          details: "Kad ir izveidota jauna tēma, vai arī tā ir labota, izmainīta vai dzēsta."
-        post_event:
-          name: "Ieraksta notikums"
-          details: "Kad ir jauna, labota, dzēsta vai atjaunota atbilde."
-        user_event:
-          name: "Lietotāja notikums"
         delivery_status:
           title: "Piegādes statuss"
           inactive: "Neaktīvs"
@@ -3060,6 +3041,7 @@ lv:
           color_scheme_select: "Izvēlieties krāsas, kuras lietos šis dizains"
           custom_sections: "Specifiskas sadaļas:"
           theme_components: "Dizaina komponenti"
+          cancel: "Atcelt"
           collapse: Sakļaut
           uploads: "Augšupielādes"
           no_uploads: "Jūs varat augšupielādēt resursus, kas ir saistīti ar jūsu dizainu, piemēram, fontus un attēlus"

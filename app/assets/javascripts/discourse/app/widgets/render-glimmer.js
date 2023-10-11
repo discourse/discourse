@@ -1,6 +1,6 @@
-import templateOnly from "@ember/component/template-only";
-import { setComponentTemplate } from "@ember/component";
 import { tracked } from "@glimmer/tracking";
+import { setComponentTemplate } from "@ember/component";
+import templateOnly from "@ember/component/template-only";
 import { assert } from "@ember/debug";
 import { createWidgetFrom } from "discourse/widgets/widget";
 

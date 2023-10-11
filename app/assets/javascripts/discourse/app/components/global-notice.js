@@ -1,11 +1,11 @@
-import EmberObject, { action } from "@ember/object";
-import cookie, { removeCookie } from "discourse/lib/cookie";
 import Component from "@ember/component";
-import I18n from "I18n";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import { htmlSafe } from "@ember/template";
+import EmberObject, { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
+import cookie, { removeCookie } from "discourse/lib/cookie";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 const _pluginNotices = [];
 

@@ -1,13 +1,12 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
-import { isiPad } from "discourse/lib/utilities";
+import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import {
   DEFAULT_TYPE_FILTER,
   SEARCH_INPUT_ID,
-  focusSearchButton,
 } from "discourse/components/search-menu";
+import { isiPad } from "discourse/lib/utilities";
 
 const SECOND_ENTER_MAX_DELAY = 15000;
 
@@ -35,18 +34,21 @@ export default class SearchTerm extends Component {
 
   @action
   focus(element) {
-    element.focus();
-    element.select();
+    if (this.args.autofocus) {
+      element.focus();
+      element.select();
+    }
   }
 
   @action
   onKeyup(e) {
     if (e.key === "Escape") {
-      focusSearchButton();
       this.args.closeSearchMenu();
       e.preventDefault();
       return false;
     }
+
+    this.args.openSearchMenu();
 
     this.search.handleArrowUpOrDown(e);
 

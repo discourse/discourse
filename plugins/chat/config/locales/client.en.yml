@@ -20,15 +20,20 @@ en:
             chat:
               create_message: "Create a chat message in a specified channel."
       web_hooks:
-        chat_message_event:
-          name: "Chat message event"
-          details: "When a chat message is created, edited, trashed or restored."
+        chat_event:
+          group_name: "Chat events"
+          chat_message_created: "Message is created"
+          chat_message_edited: "Message is edited"
+          chat_message_trashed: "Message is trashed"
+          chat_message_restored: "Message is restored"
     about:
-      chat_messages_count: "Chat Messages"
-      chat_channels_count: "Chat Channels"
-      chat_users_count: "Chat Users"
+      chat_messages_count: "Chat messages"
+      chat_channels_count: "Chat channels"
+      chat_users_count: "Chat users"
 
     chat:
+      text_copied: Text copied to clipboard
+      link_copied: Link copied to clipboard
       deleted_chat_username: deleted
       dates:
         time_tiny: "h:mm"
@@ -241,6 +246,7 @@ en:
       reply: "Reply"
       edit: "Edit"
       copy_link: "Copy link"
+      copy_text: "Copy text"
       rebake_message: "Rebuild HTML"
       retry_staged_message:
         title: "Network error"
@@ -314,7 +320,6 @@ en:
         back_to_all_channels: "All channels"
         back_to_channel: "Back"
         tabs:
-          about: About
           members: Members
           settings: Settings
 
@@ -456,6 +461,11 @@ en:
         saved: "Saved"
         unfollow: "Leave"
         admin_title: "Admin"
+        settings_title: "Settings"
+        info_title: "Channel info"
+        category_label: "Category"
+        history_label: "History"
+        members_label: "Members"
 
       admin:
         title: "Chat"
@@ -532,14 +542,14 @@ en:
           other: "%{commaSeparatedUsernames} and %{count} others are typing"
 
       retention_reminders:
-        public_none: "Channel history is retained indefinitely."
+        public_none: "indefinitely"
         public:
-          one: "Channel history is retained for %{count} day."
-          other: "Channel history is retained for %{count} days."
-        dm_none: "Personal chat history is retained indefinitely."
+          one: "%{count} day"
+          other: "%{count} days"
+        dm_none: "indefinitely"
         dm:
-          one: "Personal chat history is retained for %{count} day."
-          other: "Personal chat history is retained for %{count} days."
+          one: "%{count} day"
+          other: "%{count} days"
 
       flags:
         off_topic: "This message is not relevant to the current discussion as defined by the channel title, and should probably be moved elsewhere."

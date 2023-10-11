@@ -1,13 +1,13 @@
 import Component from "@ember/component";
+import EmberObject from "@ember/object";
+import { next } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import PanEvents, {
   SWIPE_DISTANCE_THRESHOLD,
   SWIPE_VELOCITY_THRESHOLD,
 } from "discourse/mixins/pan-events";
-import EmberObject from "@ember/object";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { headerOffset } from "discourse/lib/offset-calculator";
-import { next } from "@ember/runloop";
 import discourseLater from "discourse-common/lib/later";
 import { bind, observes } from "discourse-common/utils/decorators";
 import JumpToPost from "./modal/jump-to-post";

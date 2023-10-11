@@ -1,7 +1,7 @@
-import { helperContext, registerUnbound } from "discourse-common/lib/helpers";
 import { htmlSafe } from "@ember/template";
 import { isRTL } from "discourse/lib/text-direction";
 import { escapeExpression } from "discourse/lib/utilities";
+import { helperContext, registerUnbound } from "discourse-common/lib/helpers";
 
 function setDir(text) {
   let content = text ? text : "";

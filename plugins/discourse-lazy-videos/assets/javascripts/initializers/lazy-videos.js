@@ -1,6 +1,6 @@
+import { hbs } from "ember-cli-htmlbars";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import getVideoAttributes from "../lib/lazy-video-attributes";
-import { hbs } from "ember-cli-htmlbars";
 
 function initLazyEmbed(api) {
   api.decorateCookedElement(

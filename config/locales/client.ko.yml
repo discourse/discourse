@@ -247,16 +247,10 @@ ko:
       our_moderators: "관리자"
       moderators: "관리자"
       stat:
-        all_time: "전체 기간"
-        last_day: "지난 24시간"
-        last_7_days: "지난 7일"
-        last_30_days: "지난 30일"
+        last_day: "24시간"
       like_count: "좋아요"
       topic_count: "글"
       post_count: "게시물"
-      user_count: "가입"
-      active_user_count: "활성 사용자"
-      contact: "문의하기"
       contact_info: "이 사이트에 영향을 미치는 중대하거나 긴급한 문제가 발생한 경우 %{contact_info}으로 문의하세요."
     bookmarked:
       title: "북마크"
@@ -1131,7 +1125,6 @@ ko:
         success: "(이메일 전송됨)"
         in_progress: "(이메일 전송 중)"
         error: "(오류)"
-        emoji: "이모티콘 잠금"
         action: "비밀번호 리셋 이메일 보내기"
         set_password: "비밀번호 설정"
         choose_new: "새 비밀번호를 입력하세요"
@@ -1656,7 +1649,6 @@ ko:
       link_label: "이메일로 로그인 링크 보내기"
       button_label: "이메일 사용"
       login_link: "비밀번호 건너뛰기. 로그인 링크를 이메일로 보내주세요"
-      emoji: "이모티콘 잠금"
       complete_username: "계정이 <b>%{username}</b> 아이디와 일치하면 곧 로그인 링크가 포함된 이메일을 받게 됩니다."
       complete_email: "계정이 <b>%{email}</b> 이메일과 일치하면 곧 로그인 링크가 포함된 이메일을 받게 됩니다."
       complete_username_found: "<b>%{username}</b> 아이디와 일치하는 계정을 찾았습니다. 곧 로그인 링크가 포함된 이메일을 받게 됩니다."
@@ -1740,7 +1732,6 @@ ko:
         security_key: "대신 보안 키 사용"
     invites:
       accept_title: "초대"
-      emoji: "봉투 이모티콘"
       welcome_to: "%{site_name}에 오신 것을 환영합니다!"
       invited_by: "초대자:"
       social_login_available: "또한, 이 이메일을 사용하여 소셜 로그인으로 로그인할 수 있습니다."
@@ -1833,7 +1824,6 @@ ko:
       saved_local_draft_tip: "로컬에 저장됨"
       drafts_offline: "오프라인 초안"
       edit_conflict: "충돌 편집"
-      esc_label: "닫으려면 클릭하거나 Esc를 누르십시오."
       ok_proceed: "알겠습니다. 계속 진행하세요."
       group_mentioned_limit:
         other: "<b>경고!</b> <a href='%{group_link}'>%{group}</a> 그룹을 멘션했지만 이 그룹에는 관리자가 구성한 멘션 제한인 %{count}명의 사용자보다 많은 회원이 있습니다. 아무도 알림을 받지 않습니다."
@@ -2313,6 +2303,7 @@ ko:
       expand_details: "주제 상세 정보 펼치기"
       read_more_in_category: "더 읽고 싶으신가요? %{categoryLink}의 다른 토픽을 살펴보거나 <a href='%{latestLink}'>최신 토픽</a>을 확인해 보세요."
       unread_indicator: "아직 이 주제의 마지막 게시물을 읽은 회원이 없습니다."
+      bumped_at: "최근: %{date}"
       suggest_create_topic: <a href>새 대화를 시작</a>할 준비가 되었나요?
       deleted: "글이 삭제되었습니다."
       slow_mode_update:
@@ -3303,7 +3294,6 @@ ko:
       other_tags: "기타 태그"
       selector_all_tags: "모든 태그"
       selector_no_tags: "태그 없음"
-      changed: "변경된 태그:"
       tags: "태그"
       choose_for_topic: "태그(선택사항)"
       info: "정보"
@@ -3807,36 +3797,8 @@ ko:
         groups_filter_instructions: "관련 Webhook는 이벤트가 특정 그룹과 관계가 있을 때만 트리거됩니다. 모든 그룹에 Webhook를 트리거하려면 공백으로 두세요."
         groups_filter: "트리거된 그룹"
         delete_confirm: "이 Webhook를 삭제할까요?"
-        topic_event:
-          name: "주제 이벤트"
-          details: "새 주제, 수정, 변경, 삭제 활동이 있을 경우"
-        post_event:
-          name: "게시물 이벤트"
-          details: "새 댓글, 편집, 삭제, 복구 활동이 있을 경우"
-        user_event:
-          name: "사용자 이벤트"
-          details: "사용자의 로그인/로그아웃, 이메일 확인, 생성, 승인 또는 업데이트 활동이 있을 경우"
-        group_event:
-          name: "그룹 이벤트"
-          details: "그룹이 생성, 업데이트 또는 제거된 경우"
-        category_event:
-          name: "카테고리 이벤트"
-          details: "카테고리가 생성, 업데이트 또는 제거된 경우"
-        tag_event:
-          name: "태그 이벤트"
-          details: "태그가 생성, 업데이트 또는 제거된 경우"
-        reviewable_event:
-          name: "검토 가능 이벤트"
-          details: "새 항목을 검토할 준비가 되었고 상태가 업데이트된 경우"
-        notification_event:
-          name: "알림 이벤트"
-          details: "사용자가 피드에서 알림을 받은 경우"
-        group_user_event:
-          name: "그룹 사용자 이벤트"
-          details: "사용자가 그룹에 추가 또는 제거된 경우"
         like_event:
-          name: "좋아요 이벤트"
-          details: "사용자가 게시물에 좋아요를 누른 경우"
+          post_liked: "사용자가 게시물을 좋아할 때."
         delivery_status:
           title: "전달 상태"
           inactive: "비활성화"
@@ -3974,7 +3936,6 @@ ko:
           theme_name: "테마명"
           component_name: "구성 요소 이름"
           themes_intro: "기존 테마를 선택하거나 새 테마를 설치하여 시작하세요."
-          themes_intro_emoji: "여자 아티스트 이모티콘"
           beginners_guide_title: "Discourse 테마 사용에 대한 초보자 가이드"
           developers_guide_title: "Discourse 테마에 대한 개발자 가이드"
           browse_themes: "커뮤니티 테마 탐색"
@@ -4021,6 +3982,7 @@ ko:
           convert_theme_tooltip: "이 테마를 구성 요소로 변환"
           inactive_themes: "비활성 테마:"
           inactive_components: "사용하지 않은 구성 요소:"
+          cancel: "취소"
           broken_theme_tooltip: "이 테마는 CSS, HTML 또는 YAML에 오류가 있습니다"
           disabled_component_tooltip: "이 구성 요소가 비활성화되었습니다"
           default_theme_tooltip: "이 테마는 사이트의 디폴트 테마입니다"
@@ -4979,7 +4941,6 @@ ko:
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
         badge_intro:
           title: "시작하려면 기존 배지를 선택하거나 새 배지를 생성하세요"
-          emoji: "여학생 이모티콘"
           what_are_badges_title: "배지가 무엇인가요?"
           badge_query_examples_title: "배지 쿼리 예시"
         mass_award:

@@ -1,9 +1,9 @@
-import discourseComputed from "discourse-common/utils/decorators";
+import { reads } from "@ember/object/computed";
+import { cook } from "discourse/lib/text";
+import { userPath } from "discourse/lib/url";
 import RestModel from "discourse/models/rest";
 import categoryFromId from "discourse-common/utils/category-macro";
-import { userPath } from "discourse/lib/url";
-import { reads } from "@ember/object/computed";
-import { cookAsync } from "discourse/lib/text";
+import discourseComputed from "discourse-common/utils/decorators";
 
 const PendingPost = RestModel.extend({
   expandedExcerpt: null,
@@ -12,7 +12,7 @@ const PendingPost = RestModel.extend({
 
   init() {
     this._super(...arguments);
-    cookAsync(this.raw_text).then((cooked) => {
+    cook(this.raw_text).then((cooked) => {
       this.set("expandedExcerpt", cooked);
     });
   },

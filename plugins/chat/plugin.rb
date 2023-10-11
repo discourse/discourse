@@ -6,6 +6,7 @@
 # authors: Kane York, Mark VanLandingham, Martin Brennan, Joffrey Jaffeux
 # url: https://github.com/discourse/discourse/tree/main/plugins/chat
 # transpile_js: true
+# meta_topic_id: 230881
 
 enabled_site_setting :chat_enabled
 
@@ -18,13 +19,13 @@ register_asset "stylesheets/mobile/index.scss", :mobile
 register_svg_icon "comments"
 register_svg_icon "comment-slash"
 register_svg_icon "lock"
+register_svg_icon "clipboard"
 register_svg_icon "file-audio"
 register_svg_icon "file-video"
 register_svg_icon "file-image"
 
 # route: /admin/plugins/chat
 add_admin_route "chat.admin.title", "chat"
-hide_plugin
 
 GlobalSetting.add_default(:allow_unsecure_chat_uploads, false)
 

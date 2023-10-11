@@ -1,22 +1,22 @@
 import {
-  acceptance,
-  count,
-  exists,
-  query,
-  queryAll,
-} from "discourse/tests/helpers/qunit-helpers";
-import {
   click,
   fillIn,
   settled,
   triggerKeyEvent,
   visit,
 } from "@ember/test-helpers";
-import I18n from "I18n";
-import searchFixtures from "discourse/tests/fixtures/search-fixtures";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
+import searchFixtures from "discourse/tests/fixtures/search-fixtures";
+import {
+  acceptance,
+  count,
+  exists,
+  query,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { DEFAULT_TYPE_FILTER } from "discourse/widgets/search-menu";
+import I18n from "I18n";
 
 acceptance("Search - Anonymous", function (needs) {
   needs.pretender((server, helper) => {

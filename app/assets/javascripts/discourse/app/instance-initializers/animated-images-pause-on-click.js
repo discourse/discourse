@@ -1,6 +1,6 @@
-import { iconHTML } from "discourse-common/lib/icon-library";
-import { prefersReducedMotion } from "discourse/lib/utilities";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { prefersReducedMotion } from "discourse/lib/utilities";
+import { iconHTML } from "discourse-common/lib/icon-library";
 
 let _gifClickHandlers = {};
 

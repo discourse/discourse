@@ -278,15 +278,10 @@ pt:
       our_moderators: "Os Nossos Moderadores"
       moderators: "Moderadores"
       stat:
-        all_time: "Sempre"
-        last_day: "Últimas 24 horas"
-        last_7_days: "Últimos 7 Dias"
-        last_30_days: "Últimos 30 Dias"
+        last_day: "24 horas"
       like_count: "Gostos"
       topic_count: "Tópicos"
       post_count: "Publicações"
-      active_user_count: "Utilizadores Activos"
-      contact: "Contacte-nos"
       contact_info: "No caso de um problema crítico ou de algum assunto urgente que afecte este sítio, por favor contacte-nos em %{contact_info}."
     bookmarked:
       title: "Adicionar Marcador"
@@ -1156,7 +1151,6 @@ pt:
         success: "(email enviado)"
         in_progress: "(a enviar email)"
         error: "(erro)"
-        emoji: "emoji de bloqueio"
         action: "Enviar email de recuperação de palavra-passe"
         set_password: "Definir Palavra-passe"
         choose_new: "Escolha uma nova palavra-passe"
@@ -1680,7 +1674,6 @@ pt:
       link_label: "Enviem-me uma ligação para entrar"
       button_label: "com e-mail"
       login_link: "Ignorar a senha; enviar-me um link de login"
-      emoji: "emoji de bloqueio"
       complete_username: "Se houver uma conta com o nome de utilizador <b>%{username}</b>, deverá receber um email com uma ligação para ligar dentro de poucos instantes."
       complete_email: "Se houver uma conta com o endereço <b>%{email}</b>, irá receber um email com uma ligação para entrar dentro de poucos instantes."
       complete_username_found: "Encontrámos uma conta que usa o nome de utilizador <b>%{username}</b>, deverá receber um email com uma ligação para entrar dentro de poucos instantes."
@@ -1762,7 +1755,6 @@ pt:
         security_key: "Em vez disso, usar uma chave de segurança"
     invites:
       accept_title: "Convite"
-      emoji: "emoji de envelope"
       welcome_to: "Bem-vindo a %{site_name}!"
       invited_by: "Foi convidado por:"
       social_login_available: "Também irá poder iniciar a sessão com qualquer credencial das redes sociais, utilizando esse e-mail."
@@ -1861,7 +1853,6 @@ pt:
       drafts_offline: "rascunhos off-line"
       edit_conflict: "editar conflito"
       esc: "esc"
-      esc_label: "Clique ou precione Esc para descartar"
       ok_proceed: "Ok, continuar"
       group_mentioned:
         one: "Ao usar %{group}, estará a notificar <a href='%{group_link}'>%{count} pessoa</a> – tem a certeza?"
@@ -2315,6 +2306,7 @@ pt:
       collapse_details: "ocultar detalhes do tópico"
       expand_details: "expandir detalhes do tópico"
       unread_indicator: "Nenhum membro leu o último post deste tópico ainda."
+      bumped_at: "Mais recente: %{date}"
       suggest_create_topic: Pronto para <a href>iniciar uma nova conversa?</a>
       deleted: "Este tópico foi eliminado"
       slow_mode_update:
@@ -3270,7 +3262,6 @@ pt:
       other_tags: "Outras Tags"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sem etiquetas"
-      changed: "etiquetas modificadas:"
       tags: "Etiquetas"
       choose_for_topic: "tags opcionais"
       info: "Informações"
@@ -3707,14 +3698,6 @@ pt:
         groups_filter_instructions: "Webhooks relevantes serão despoletados apenas se o evento estiver relacionado com grupos especificados. Deixar em branco para despoletar webhooks para todos os grupos."
         groups_filter: "Grupos Despoletados"
         delete_confirm: "Apagar este webhook?"
-        topic_event:
-          name: "Evento de Tópico"
-          details: "Quando um tópico é novo, revisto, modificado ou apagado. "
-        post_event:
-          name: "Evento de Publicação"
-          details: "Quando uma resposta é nova, editada, apagada ou recuperada. "
-        user_event:
-          name: "Evento de Utilizador"
         delivery_status:
           title: "Estado de Entrega"
           inactive: "Inativo"
@@ -3852,7 +3835,6 @@ pt:
           theme_name: "Nome do tema"
           component_name: "Nome do componente"
           themes_intro: "Selecione um tema existente ou instale um novo para começar"
-          themes_intro_emoji: "emoji mulher artista"
           beginners_guide_title: "Guia para iniciantes ao uso de Temas do Discourse"
           developers_guide_title: "Guia para desenvolvedores de Temas do Discourse"
           browse_themes: "Navegue pelos temas da comunidade"
@@ -3896,6 +3878,7 @@ pt:
           convert_component_alert_generic: "Tem certeza de que deseja converter este componente em tema?"
           convert_theme_alert: "Tem certeza de que deseja converter este tema em componente? Ele será removido como superior de %{relatives}."
           convert_theme_alert_generic: "Tem certeza de que deseja converter este tema em componente?"
+          cancel: "Cancelar"
           collapse: Colapsar
           uploads: "Uploads"
           upload: "Carregar"

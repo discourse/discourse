@@ -1,6 +1,6 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Composer - Image Grid", function (needs) {
   needs.user();

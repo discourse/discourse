@@ -1,26 +1,26 @@
-import { cancel, schedule } from "@ember/runloop";
-import discourseLater from "discourse-common/lib/later";
-import DiscourseRoute from "discourse/routes/discourse";
-import DiscourseURL from "discourse/lib/url";
-import { ID_CONSTRAINT } from "discourse/models/topic";
 import { action, get } from "@ember/object";
-import { isEmpty } from "@ember/utils";
+import { cancel, schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-import { setTopicId } from "discourse/lib/topic-list-tracker";
-import showModal from "discourse/lib/show-modal";
-import TopicFlag from "discourse/lib/flag-targets/topic-flag";
-import PostFlag from "discourse/lib/flag-targets/post-flag";
-import HistoryModal from "discourse/components/modal/history";
-import PublishPageModal from "discourse/components/modal/publish-page";
-import EditSlowModeModal from "discourse/components/modal/edit-slow-mode";
+import { isEmpty } from "@ember/utils";
+import AddPmParticipants from "discourse/components/modal/add-pm-participants";
+import ChangeOwnerModal from "discourse/components/modal/change-owner";
 import ChangeTimestampModal from "discourse/components/modal/change-timestamp";
+import EditSlowModeModal from "discourse/components/modal/edit-slow-mode";
 import EditTopicTimerModal from "discourse/components/modal/edit-topic-timer";
 import FeatureTopicModal from "discourse/components/modal/feature-topic";
 import FlagModal from "discourse/components/modal/flag";
 import GrantBadgeModal from "discourse/components/modal/grant-badge";
+import HistoryModal from "discourse/components/modal/history";
 import MoveToTopicModal from "discourse/components/modal/move-to-topic";
+import PublishPageModal from "discourse/components/modal/publish-page";
 import RawEmailModal from "discourse/components/modal/raw-email";
-import AddPmParticipants from "discourse/components/modal/add-pm-participants";
+import PostFlag from "discourse/lib/flag-targets/post-flag";
+import TopicFlag from "discourse/lib/flag-targets/topic-flag";
+import { setTopicId } from "discourse/lib/topic-list-tracker";
+import DiscourseURL from "discourse/lib/url";
+import { ID_CONSTRAINT } from "discourse/models/topic";
+import DiscourseRoute from "discourse/routes/discourse";
+import discourseLater from "discourse-common/lib/later";
 
 const SCROLL_DELAY = 500;
 
@@ -226,9 +226,17 @@ const TopicRoute = DiscourseRoute.extend({
 
   @action
   changeOwner() {
-    showModal("change-owner", {
-      model: this.modelFor("topic"),
-      title: "topic.change_owner.title",
+    const topicController = this.controllerFor("topic");
+    this.modal.show(ChangeOwnerModal, {
+      model: {
+        deselectAll: topicController.deselectAll,
+        multiSelect: topicController.multiSelect,
+        selectedPostsCount: topicController.selectedPostsCount,
+        selectedPostIds: topicController.selectedPostIds,
+        selectedPostUsername: topicController.selectedPostsUsername,
+        toggleMultiSelect: topicController.toggleMultiSelect,
+        topic: this.modelFor("topic"),
+      },
     });
   },
 

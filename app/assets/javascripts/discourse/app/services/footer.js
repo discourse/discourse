@@ -1,8 +1,8 @@
-import Service from "@ember/service";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
+import Service from "@ember/service";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 @disableImplicitInjections
 export default class FooterService extends Service {

@@ -25,11 +25,20 @@ he:
           descriptions:
             chat:
               create_message: "יצירת הודעת צ׳אט בערוץ מסוים."
+      web_hooks:
+        chat_event:
+          group_name: "אירועי צ׳אט"
+          chat_message_created: "הודעה נוצרה"
+          chat_message_edited: "הודעה נערכת"
+          chat_message_trashed: "הודעה מועברת לאשפה"
+          chat_message_restored: "הודעה משוחזרת"
     about:
       chat_messages_count: "הודעות צ׳אט"
       chat_channels_count: "ערוצי צ׳אט"
       chat_users_count: "משתמשי צ׳אט"
     chat:
+      text_copied: טקסט הועתק ללוח הגזירים
+      link_copied: קישור הועתק ללוח הגזירים
       deleted_chat_username: נמחק
       dates:
         time_tiny: "h:mm"
@@ -250,6 +259,7 @@ he:
       reply: "להגיב"
       edit: "עריכה"
       copy_link: "העתקת קישור"
+      copy_text: "העתקת טקסט"
       rebake_message: "בנייה מחודשת של HTML"
       retry_staged_message:
         title: "שגיאת רשת"
@@ -322,7 +332,6 @@ he:
         back_to_all_channels: "כל הערוצים"
         back_to_channel: "חזרה"
         tabs:
-          about: אודות
           members: חברים
           settings: הגדרות
       new_message_modal:
@@ -464,6 +473,11 @@ he:
         saved: "נשמר"
         unfollow: "עזוב"
         admin_title: "הנהלה"
+        settings_title: "הגדרות"
+        info_title: "פרטי ערוץ"
+        category_label: "קטגוריה"
+        history_label: "היסטוריה"
+        members_label: "חברים"
       admin:
         title: "צ׳אט"
         export_messages:
@@ -542,18 +556,18 @@ he:
           many: "%{commaSeparatedUsernames} ועוד %{count} נוספים מקלידים"
           other: "%{commaSeparatedUsernames} ועוד %{count} נוספים מקלידים"
       retention_reminders:
-        public_none: "היסטוריית הערוץ נשמרת לעד."
+        public_none: "ללא הגבלת זמן"
         public:
-          one: "היסטוריית הערוץ נשמרת למשך יום %{count}."
-          two: "היסטוריית הערוץ נשמרת למשך %{count} ימים."
-          many: "היסטוריית הערוץ נשמרת למשך %{count} ימים."
-          other: "היסטוריית הערוץ נשמרת למשך %{count} ימים."
-        dm_none: "היסטוריית הצ׳אט האישי נשמרת לעד."
+          one: "יום"
+          two: "יומיים"
+          many: "%{count} יום"
+          other: "%{count} ימים"
+        dm_none: "ללא הגבלת זמן"
         dm:
-          one: "היסטוריית הצ׳אט האישי נשמרת למשך יום %{count}."
-          two: "היסטוריית הצ׳אט האישי נשמרת למשך %{count} ימים."
-          many: "היסטוריית הצ׳אט האישי נשמרת למשך %{count} ימים."
-          other: "היסטוריית הצ׳אט האישי נשמרת למשך %{count} ימים."
+          one: "יום"
+          two: "יומיים"
+          many: "%{count} יום"
+          other: "%{count} ימים"
       flags:
         off_topic: "הודעה זו לא תואמת לדיון הנוכחי כפי שהוגדר בכותרת הערוץ וכנראה שצריך להעביר אותה."
         inappropriate: "הודעה זו מכילה תוכן שאדם מן השורה עשוי להחשיב כפוגעני, נצלני או מפר את <a href=\"%{basePath}/guidelines\">הכללים המנחים את הקהילה שלנו</a>."

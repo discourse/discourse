@@ -23,10 +23,6 @@ id:
           descriptions:
             chat:
               create_message: "Buat pesan obrolan di kanal tertentu"
-    about:
-      chat_messages_count: "Pesan Obrolan"
-      chat_channels_count: "Kanal Obrolan"
-      chat_users_count: "Pengguna Obrolan"
     chat:
       deleted_chat_username: dihapus
       dates:
@@ -90,7 +86,6 @@ id:
         name: Nama
       channel_info:
         tabs:
-          about: Tentang
           members: Anggota
           settings: Pengaturan
       new_message_modal:
@@ -128,6 +123,9 @@ id:
         saved: "Tersimpan"
         unfollow: "Keluar"
         admin_title: "Admin"
+        settings_title: "Pengaturan"
+        category_label: "Kategori"
+        members_label: "Anggota"
       admin:
         export_messages:
           title: "Ekspor pesan obrolan"
@@ -145,6 +143,11 @@ id:
         cancel: "Batal"
         new_topic:
           title: "Pindahkan sebagai Topik Baru"
+      retention_reminders:
+        public:
+          other: "%{count} hari"
+        dm:
+          other: "%{count} hari"
       emoji_picker:
         objects: "Objek"
         flags: "Flags"

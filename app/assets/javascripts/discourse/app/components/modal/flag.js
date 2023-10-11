@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { tracked } from "@glimmer/tracking";
-import I18n from "I18n";
+import { reload } from "discourse/helpers/page-reloader";
 import { MAX_MESSAGE_LENGTH } from "discourse/models/post-action-type";
 import User from "discourse/models/user";
-import { reload } from "discourse/helpers/page-reloader";
+import I18n from "I18n";
 
 const NOTIFY_MODERATORS_KEY = "notify_moderators";
 
@@ -65,6 +65,10 @@ export default class Flag extends Component {
       this.currentUser.staff &&
       this.selected?.name_key === "notify_user"
     );
+  }
+
+  get showDeleteSpammer() {
+    return this.spammerDetails?.canDelete && this.selected?.name_key === "spam";
   }
 
   get submitLabel() {

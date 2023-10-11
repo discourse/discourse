@@ -69,12 +69,7 @@ RSpec.describe Chat::CreateMessage do
       end
 
       it "publishes the new message" do
-        Chat::Publisher.expects(:publish_new!).with(
-          channel,
-          instance_of(Chat::Message),
-          nil,
-          staged_thread_id: nil,
-        )
+        Chat::Publisher.expects(:publish_new!).with(channel, instance_of(Chat::Message), nil)
         result
       end
 
@@ -148,7 +143,7 @@ RSpec.describe Chat::CreateMessage do
       end
 
       it "doesn't update channel last_message attribute" do
-        expect { result }.not_to change { channel.reload.last_message }
+        expect { result }.not_to change { channel.reload.last_message.id }
       end
 
       it "updates thread last_message attribute" do
@@ -186,6 +181,12 @@ RSpec.describe Chat::CreateMessage do
             let(:guardian) { Guardian.new }
 
             it { is_expected.to fail_a_policy(:allowed_to_join_channel) }
+          end
+
+          context "when user is system" do
+            fab!(:user) { Discourse.system_user }
+
+            it { is_expected.to be_a_success }
           end
 
           context "when user can join channel" do

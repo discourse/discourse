@@ -1,7 +1,7 @@
-import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 import * as GlimmerManager from "@glimmer/manager";
 import ClassicComponent from "@ember/component";
 import { isTesting } from "discourse-common/config/environment";
+import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
 
 const COLOCATED_TEMPLATE_OVERRIDES = new Map();
 
@@ -54,7 +54,9 @@ export default {
       const finalOverrideModuleName = moduleNames[moduleNames.length - 1];
 
       if (isStrictMode) {
-        const message = `[${finalOverrideModuleName}] ${componentName} was authored using gjs and its template cannot be overridden. Ignoring override.`;
+        const message =
+          `[${finalOverrideModuleName}] ${componentName} was authored using gjs and its template cannot be overridden. ` +
+          `Ignoring override. For more information on the future of template overrides, see https://meta.discourse.org/t/247487`;
         if (THROW_GJS_ERROR) {
           throw new Error(message);
         } else {

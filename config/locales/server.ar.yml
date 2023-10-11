@@ -68,8 +68,11 @@ ar:
       generic: حدث خطأ في أثناء استيراد هذه السمة
       upload: "خطأ في إنشاء أصل التحميل: %{name}. %{errors}"
       about_json: "خطأ في الاستيراد: ملف about.json غير موجود أو غير صالح. هل أنت متأكد أن هذه سمة Discourse؟"
+      about_json_too_big: "خطأ في الاستيراد: about.json أكبر من الحد %{limit}."
       about_json_values: "يتضمَّن ملف about.json قيمًا غير صالحة: %{errors}"
       modifier_values: "تتضمَّن معدِّلات ملف about.json قيمًا غير صالحة: %{errors}"
+      asset_too_big: "الأصل %{filename} أكبر من الحد %{limit}"
+      theme_too_big: "السمة أكبر من الحد %{limit}"
       git: "حدث خطأ في أثناء استنساخ مستودع Git، تم رفض الوصول أو لم يتم العثور على المستودع"
       git_ref_not_found: "يتعذَّر التحقُّق من مرجع Git:%{ref}"
       git_unsupported_scheme: "يتعذَّر استنساخ git repo: مخطط غير مدعوم"
@@ -78,6 +81,7 @@ ar:
       unknown_file_type: "يبدو أن الملف الذي حمَّلته ليس سمة Discourse صالحة."
       not_allowed_theme: "`%{repo}` غير مُدرَج في قائمة السمات المسموح بها (ضع علامة في مربع الإعداد العام `allowed_theme_repos`)."
       ssh_key_gone: "لقد انتظرت طويلًا لتثبيت السمة وانتهت صلاحية مفتاح SSH. يُرجى إعادة المحاولة."
+      too_many_files: "لقد تجاوز عدد الملفات (%{count}) في سمة الحد الأقصى المسموح به لعدد الملفات (%{limit})"
     errors:
       component_no_user_selectable: "لا يمكن أن تكون مكونات السمة قابلة للتحديد بواسطة المستخدم"
       component_no_default: "لا يمكن أن تكون مكونات السمة تابعة للسمة الافتراضية"
@@ -1113,6 +1117,9 @@ ar:
     sequence_conflict_error:
       title: "خطأ في المسودة"
       description: "المسودة قيد التعديل في نافذة أخرى. يُرجى إعادة تحميل هذه الصفحة."
+    too_many_drafts:
+      title: "عدد كبير جدًا من المسودات"
+      description: "لقد وصلت إلى الحد الأقصى لعدد المسودات المسموح بها. يُرجى حذف بعض [مسوداتك](%{base_url}/my/activity/drafts) ثم حاول مرة أخرى."
   draft_backup:
     pm_title: "المسودات الاحتياطية من الموضوعات الجارية"
     pm_body: "موضوع يحتوي على مسودات احتياطية"
@@ -1619,7 +1626,6 @@ ar:
     unreachable_themes: "لم نتمكن من التحقُّق من وجود تحديثات للسمات التالية:"
     watched_word_regexp_error: "التعبير العادي للكلمات المُراقَبة للإجراء \"%{action}\" غير صالح. يُرجى التحقُّق من <a href='%{base_path}/admin/customize/watched_words'>إعدادات الكلمات المُراقَبة</a>، أو إيقاف إعداد الموقع `watched words regular expressions`."
     v3_analytics_deprecated: "يستخدم Discourse لديك حاليًا Google Analytics 3، والذي سيتوقف دعمه بعد يوليو 2023. <a href='https://meta.discourse.org/t/260498'>قم بالترقية إلى Google Analytics 4</a> الآن للاستمرار في تلقي رؤى وتحليلات قيمة لأداء موقعك الإلكتروني."
-    legacy_navigation_menu_deprecated: "يستخدم Discourse لديك حاليًا قائمة التنقل \"القديمة\"، والتي <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>ستتم إزالتها في الإصدار التجريبي الأول من Discourse 3.2</a>. انتقل إلى قائمة التنقل الجديدة عن طريق تحديث <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>إعداد موقع قائمة التنقل</a> إلى \"الشريط الجانبي\" أو \"القائمة المنسدلة للرأس\"."
   site_settings:
     allow_bulk_invite: "السماح بالدعوات الجماعية عن طريق تحميل ملف CSV"
     disabled: "متوقف"
@@ -1630,9 +1636,9 @@ ar:
     allow_user_locale: "السماح للمستخدمين باختيار لغة الواجهة التي يفضِّلونها"
     set_locale_from_accept_language_header: "تعيين لغة الواجهة للمستخدمين المجهولين من رؤوس لغة متصفح الويب لديهم"
     support_mixed_text_direction: "دعم الاتجاهات النصية المختلطة من اليمين إلى اليسار ومن اليسار إلى اليمين."
-    min_post_length: "الحد الأدنى المسموح به لطول المنشور بالأحرف"
-    min_first_post_length: "الحد الأدنى المسموح به لطول أول منشور (نص الموضوع) بالأحرف"
-    min_personal_message_post_length: "الحد الأدنى المسموح به لطول المنشور بالأحرف في الرسائل"
+    min_post_length: "الحد الأدنى لطول المنشور المسموح به بالأحرف (باستثناء الرسائل الشخصية)"
+    min_first_post_length: "الحد الأدنى لطول المنشور الأول المسموح به (نص الموضوع) (باستثناء الرسائل الشخصية)"
+    min_personal_message_post_length: "الحد الأدنى لطول المنشور المسموح به بأحرف الرسائل (كل من المشاركة الأولى والردود)"
     max_post_length: "الحد الأقصى المسموح به لطول المنشور بالأحرف"
     topic_featured_link_enabled: "السماح بنشر روابط في الموضوعات"
     show_topic_featured_link_in_digest: "إظهار رابط الموضوع المميز في ملخص البريد الإلكتروني"
@@ -1752,7 +1758,6 @@ ar:
     tl2_additional_flags_per_day_multiplier: "زيادة حد البلاغات اليومية لمستوى الثقة 2 (عضو) بالضرب في هذا الرقم"
     tl3_additional_flags_per_day_multiplier: "زيادة حد البلاغات اليومية لمستوى الثقة 3 (منتظم) بالضرب في هذا الرقم"
     tl4_additional_flags_per_day_multiplier: "زيادة حد البلاغات اليومية لمستوى الثقة 4 (قائد) بالضرب في هذا الرقم"
-    num_users_to_silence_new_user: "إخفاء جميع منشورات المستخدم الجديد ومنع النشر في المستقبل إذا تلقَّت منشوراته spam_flags_to_silence_new_user بلاغ عن سلوك غير مرغوب فيه من هذا العدد من المستخدمين المختلفين. اتعيين القيمة على 0 للإيقاف."
     num_tl3_flags_to_silence_new_user: "إخفاء جميع منشورات المستخدم الجديد ومنع النشر في المستقبل إذا تلقَّت منشوراته العديد من البلاغات من num_tl3_users_to_silence_new_user مستخدم مختلف من مستوى الثقة 3. اتعيين القيمة على 0 للإيقاف."
     num_tl3_users_to_silence_new_user: "إخفاء جميع منشورات المستخدم الجديد ومنع النشر في المستقبل إذا تلقَّت منشوراته num_tl3_flags_to_silence_new_user من هذا العدد من المستخدمين المختلفين من مستوى الثقة 3. اتعيين القيمة على 0 للإيقاف."
     notify_mods_when_user_silenced: "إرسال رسالة إلى جميع المشرفين إذا تم كتم الخدمة تلقائيًا"
@@ -1774,7 +1779,6 @@ ar:
     ga_universal_tracking_code: "معرِّف رمز تتبُّع Google Universal Analytics، على سبيل المثال: UA-12345678-9؛ راجع <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "اسم نطاق Google Universal Analytics، على سبيل المثال: eg: mysite.com؛ راجع <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "تفعيل تتبُّع Google Universal Analytics عبر النطاقات. ستتم إضافة معرِّف العميل إلى الروابط الصادرة إلى هذه النطاقات. راجع <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>دليل التتبُّع عبر النطاقات من Google.</a>"
-    gtm_container_id: "معرِّف حاوية إدارة العلامات من Google. على سبيل المثال: GTM-ABCDEF. <br/>ملاحظة: قد يلزم إدراج البرامج النصية المضمَّنة لجعة خارجية والتي تم تحميلها بواسطة GTM في قائمة السماح في `content security policy script src`."
     enable_escaped_fragments: "ارجع إلى واجهة برمجة تطبيقات Ajax-Crawling من Google إذا لم يتم اكتشاف زاحف ويب. راجع <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "السماح للمشرفين بإنشاء وإدارة الفئات والمجموعات"
     moderators_change_post_ownership: "السماح للمشرفين بتغيير ملكية المنشور"
@@ -2335,14 +2339,12 @@ ar:
     default_sidebar_switch_panel_position: "موضع أزرار لوحة تبديل الشريط الجانبي"
     retain_web_hook_events_period_days: "عدد أيام الاحتفاظ بسجلات أحداث خطافات الويب"
     retry_web_hook_events: "إعادة المحاولة تلقائيًا 4 مرات لأحداث خطافات الويب التي فشلت. الفجوات الزمنية بين مرات إعادة المحاولة هي 1 و5 و25 و125 دقيقة."
-    revoke_api_keys_days: "عدد الأيام قبل إلغاء مفتاح API غير المُستخدَم تلقائيًا (0 للتعيين على \"أبدًا\")"
     allow_user_api_key_scopes: "قائمة النطاقات المسموح بها لمفاتيح API للمستخدم"
     min_trust_level_for_user_api_key: |
       مستوى الثقة المطلوب لإنشاء مفاتيح واجهة برمجة تطبيقات المستخدم<br>
       <b>تحذير</b>: سيؤدي تغيير مستوى الثقة إلى منع المستخدمين في مستويات الثقة الأقل من تسجيل الدخول عبر Discourse Hub
     allowed_user_api_auth_redirects: "عنوان URL المسموح به لإعادة توجيه المصادقة لمفاتيح API للمستخدم. يمكن استخدام رمز البدل * لمطابقة أي جزء منه (على سبيل المثال،www.example.com/*)."
     allowed_user_api_push_urls: "عناوين URL المسموح لها بإرسال المعلومات إلى API للمستخدم قبل طلبها من الخادم"
-    expire_user_api_keys_days: "عدد الأيام قبل انتهاء صلاحية مفتاح API للمستخدم تلقائيًا (0 للتعيين على \"أبدًا\")"
     tagging_enabled: "السماح بالوسوم في الموضوعات؟"
     min_trust_to_create_tag: "الحد الأدنى لمستوى الثقة المطلوب لإنشاء وسم"
     max_tags_per_topic: "الحد الأقصى لعدد الوسوم التي يمكن تطبيقها على موضوع"
@@ -2361,7 +2363,6 @@ ar:
     force_lowercase_tags: "فرض استخدام الحروف الصغيرة فقط في جميع الوسوم الجديدة"
     create_post_for_category_and_tag_changes: "إنشاء منشور صغير بالإجراء الذي تم اتخاذه عند تغيير فئة موضوع أو وسومه"
     watched_precedence_over_muted: "إرسال إشعار إليَّ بشأن الفئات أو الوسوم التي أراقبها وتنتمي أيضًا إلى الفئات أو الوسوم التي كتمتها"
-    company_name: "اسم الشركة"
     governing_law: "القانون المعمول به"
     city_for_disputes: "مدينة النزاعات"
     shared_drafts_category: "تفعيل ميزة المسودات المشتركة من خلال تخصيص فئة لمسودات الموضوعات. سيتم حذف الموضوعات في هذه الفئة من قوائم الموضوعات للمستخدمين من فريق العمل."
@@ -2400,6 +2401,7 @@ ar:
     experimental_topics_filter: "تجريبي: تفعيل مسار تصفية الموضوعات التجريبية في /filter"
     experimental_search_menu_groups: "تجريبي: تفعيل قائمة البحث الجديدة التي تمت ترقيتها لاستخدام glimmer"
     enable_experimental_lightbox: "تجريبي: استبدال الصور المبسَّطة الافتراضية بالتصميم الذي تم تجديده"
+    experimental_form_templates: "تجريبي: تمكين ميزة قوالب النماذج. <b>بعد التمكين،</b> قم بإدارة القوالب في <a href='%{base_path}/admin/customize/form-templates'>تخصيص / القوالب</a>."
     page_loading_indicator: "تكوين مؤشر التحميل الذي يظهر في أثناء التنقل في الصفحة داخل Discourse. يكون 'Spinner' مؤشرًا لصفحة كاملة، بينما يعرض 'Slider' شريطًا ضيقًا أعلى الشاشة."
     errors:
       invalid_css_color: "لون غير صالح. أدخِل اسم لون أو قيمة سداسية عشرية."
@@ -2692,6 +2694,7 @@ ar:
     invalid_security_key: "مفتاح الأمان غير صالح."
     missing_second_factor_name: "يُرجى إدخال اسم."
     missing_second_factor_code: "يُرجى إدخال رمز."
+    too_many_security_keys: "عذرًا، لا يمكنك الحصول على أكثر من 50 مفتاح أمان. الرجاء إزالة واحدة موجودة والمحاولة مرة أخرى."
     second_factor_toggle:
       totp: "استخدام تطبيق المصادقة أو مفتاح الأمان بدلًا من ذلك"
       backup_code: "استخدام رمز احتياطي بدلًا من ذلك"
@@ -4394,7 +4397,7 @@ ar:
       name: محرِّر Wiki
       description: أول تعديل wiki
       long_description: |
-        يتم منحك هذه الشارة عند تعديل أحد منشورات wiki لأول مرة.
+        تُمنح هذه الشارة متى ما عدّلت مشاركة ويكي واحدة أوّل مرة.
     basic_user:
       name: أولي
       description: <a href="https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/">تم منحك</a> جميع الوظائف الأساسية في المجتمع

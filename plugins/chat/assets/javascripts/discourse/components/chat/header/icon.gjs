@@ -1,31 +1,13 @@
-import { inject as service } from "@ember/service";
 import Component from "@glimmer/component";
-import getURL from "discourse-common/lib/get-url";
-import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
-import ChatHeaderIconUnreadIndicator from "discourse/plugins/chat/discourse/components/chat/header/icon/unread-indicator";
-import icon from "discourse-common/helpers/d-icon";
+import { inject as service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse-common/helpers/d-icon";
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
+import ChatHeaderIconUnreadIndicator from "discourse/plugins/chat/discourse/components/chat/header/icon/unread-indicator";
+import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
 
 export default class ChatHeaderIcon extends Component {
-  <template>
-    <a
-      href={{this.href}}
-      tabindex="0"
-      class={{concatClass "icon" "btn-flat" (if this.isActive "active")}}
-      title={{this.title}}
-    >
-      {{~icon this.icon~}}
-      {{#if this.showUnreadIndicator}}
-        <ChatHeaderIconUnreadIndicator
-          @urgentCount={{@urgentCount}}
-          @unreadCount={{@unreadCount}}
-          @indicatorPreference={{@indicatorPreference}}
-        />
-      {{/if}}
-    </a>
-  </template>
-
   @service currentUser;
   @service site;
   @service chatStateManager;
@@ -96,4 +78,22 @@ export default class ChatHeaderIcon extends Component {
 
     return getURL(this.chatStateManager.lastKnownChatURL || "/chat");
   }
+
+  <template>
+    <a
+      href={{this.href}}
+      tabindex="0"
+      class={{concatClass "icon" "btn-flat" (if this.isActive "active")}}
+      title={{this.title}}
+    >
+      {{~icon this.icon~}}
+      {{#if this.showUnreadIndicator}}
+        <ChatHeaderIconUnreadIndicator
+          @urgentCount={{@urgentCount}}
+          @unreadCount={{@unreadCount}}
+          @indicatorPreference={{@indicatorPreference}}
+        />
+      {{/if}}
+    </a>
+  </template>
 }

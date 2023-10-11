@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import { prioritizeNameInUx } from "discourse/lib/settings";
 import { inject as service } from "@ember/service";
+import { prioritizeNameInUx } from "discourse/lib/settings";
 import { bind } from "discourse-common/utils/decorators";
 
 export default class ChatMessageInfo extends Component {

@@ -13,7 +13,7 @@ RSpec.describe "Navigation", type: :system do
   before do
     chat_system_bootstrap(user, [category_channel, category_channel_2])
     sign_in(user)
-    SiteSetting.navigation_menu = "legacy"
+    SiteSetting.navigation_menu = "header dropdown"
   end
 
   it "uses chat (not core) sidebar" do

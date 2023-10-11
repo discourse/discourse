@@ -1,9 +1,9 @@
 import { module, test } from "qunit";
-import {
-  MAX_DISPLAYED_USERNAMES,
-  getReactionText,
-} from "discourse/plugins/chat/discourse/lib/get-reaction-text";
 import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
+import {
+  getReactionText,
+  MAX_DISPLAYED_USERNAMES,
+} from "discourse/plugins/chat/discourse/lib/get-reaction-text";
 
 module("Discourse Chat | Unit | get-reaction-text", function () {
   test("no reaction ", function (assert) {

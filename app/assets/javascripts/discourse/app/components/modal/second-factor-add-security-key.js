@@ -1,14 +1,14 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 import {
   bufferToBase64,
   isWebauthnSupported,
   stringToBuffer,
 } from "discourse/lib/webauthn";
-import Component from "@glimmer/component";
-import I18n from "I18n";
-import { inject as service } from "@ember/service";
-import { action } from "@ember/object";
-import { tracked } from "@glimmer/tracking";
 import { MAX_SECOND_FACTOR_NAME_LENGTH } from "discourse/models/user";
+import I18n from "I18n";
 
 export default class SecondFactorAddSecurityKey extends Component {
   @service capabilities;

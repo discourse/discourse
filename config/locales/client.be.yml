@@ -151,13 +151,9 @@ be:
       our_admins: "адміны"
       our_moderators: "мадэратары"
       moderators: "мадэратары"
-      stat:
-        all_time: "ўвесь час"
       like_count: "перавагі"
       topic_count: "Тэмы"
       post_count: "Паведамленні"
-      active_user_count: "дзеючыя карыстальнікі"
-      contact: "Кантакты"
       contact_info: "У выпадку сур'ёзных праблем з гэтым сайтам, калі ласка, звяжыцеся з намі праз %{contact_info}."
     bookmarked:
       title: "Абранае"
@@ -1612,6 +1608,7 @@ be:
           mobile: "Мабільны"
           settings: "Налады"
           preview: "папярэдні прагляд"
+          cancel: "адмяніць"
           uploads: "Загрузкі"
           upload: "Загрузіць"
           installed: "устаноўленая"

@@ -1,13 +1,13 @@
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { alias, empty, sort } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
-import UserBadge from "discourse/models/user-badge";
-import { grantableBadges } from "discourse/lib/grant-badge-utils";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
+import { alias, empty, sort } from "@ember/object/computed";
 import { next } from "@ember/runloop";
+import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { grantableBadges } from "discourse/lib/grant-badge-utils";
+import UserBadge from "discourse/models/user-badge";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 export default class AdminUserBadgesController extends Controller {
   @service dialog;
@@ -73,8 +73,13 @@ export default class AdminUserBadgesController extends Controller {
 
   @action
   performGrantBadge() {
-    UserBadge.grant(this.selectedBadgeId, this.get("user.username")).then(
+    UserBadge.grant(
+      this.selectedBadgeId,
+      this.get("user.username"),
+      this.badgeReason
+    ).then(
       (newBadge) => {
+        this.set("badgeReason", "");
         this.userBadges.pushObject(newBadge);
         next(() => {
           // Update the selected badge ID after the combobox has re-rendered.

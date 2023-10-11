@@ -1,10 +1,10 @@
+import { action } from "@ember/object";
+import { htmlSafe } from "@ember/template";
 import UserAction from "discourse/models/user-action";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
-import { action } from "@ember/object";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import getURL from "discourse-common/lib/get-url";
+import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "I18n";
-import { htmlSafe } from "@ember/template";
 
 export default UserTopicListRoute.extend({
   userActionType: UserAction.TYPES.topics,

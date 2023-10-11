@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { tracked } from "@glimmer/tracking";
-import I18n from "I18n";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import FormTemplateValidationOptionsModal from "admin/components/modal/form-template-validation-options";
 import { templateFormFields } from "admin/lib/template-form-fields";
 import FormTemplate from "admin/models/form-template";
-import FormTemplateValidationOptionsModal from "admin/components/modal/form-template-validation-options";
+import I18n from "I18n";
 
 export default class FormTemplateForm extends Component {
   @service router;

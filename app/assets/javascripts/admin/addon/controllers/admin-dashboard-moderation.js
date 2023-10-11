@@ -1,12 +1,16 @@
-import { computed } from "@ember/object";
 import Controller from "@ember/controller";
-import PeriodComputationMixin from "admin/mixins/period-computation";
-import discourseComputed from "discourse-common/utils/decorators";
+import { action, computed } from "@ember/object";
+import { inject as service } from "@ember/service";
 import getURL from "discourse-common/lib/get-url";
+import discourseComputed from "discourse-common/utils/decorators";
+import PeriodComputationMixin from "admin/mixins/period-computation";
+import CustomDateRangeModal from "../components/modal/custom-date-range";
 
 export default class AdminDashboardModerationController extends Controller.extend(
   PeriodComputationMixin
 ) {
+  @service modal;
+
   @discourseComputed
   flagsStatusOptions() {
     return {
@@ -47,5 +51,21 @@ export default class AdminDashboardModerationController extends Controller.exten
 
   _reportsForPeriodURL(period) {
     return getURL(`/admin/dashboard/moderation?period=${period}`);
+  }
+
+  @action
+  setCustomDateRange(startDate, endDate) {
+    this.setProperties({ startDate, endDate });
+  }
+
+  @action
+  openCustomDateRangeModal() {
+    this.modal.show(CustomDateRangeModal, {
+      model: {
+        startDate: this.startDate,
+        endDate: this.endDate,
+        setCustomDateRange: this.setCustomDateRange,
+      },
+    });
   }
 }

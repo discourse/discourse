@@ -307,6 +307,7 @@ it:
   delete_topic_failed: "Si è verificato un errore durante l'eliminazione di questo argomento. Si prega di contattare l'amministratore del sito."
   reading_time: "Tempo di lettura"
   likes: "Mi piace"
+  action_already_performed: "Ops! Hai già eseguito questa azione. Puoi provare ad aggiornare la pagina?"
   too_many_replies:
     one: "Spiacenti, ma i nuovi utenti possono temporaneamente inserire solo %{count} risposta nello stesso argomento."
     other: "Spiacenti, ma i nuovi utenti possono temporaneamente inserire solo %{count} risposte nello stesso argomento."
@@ -1407,7 +1408,6 @@ it:
     unreachable_themes: "Non è stato possibile verificare la presenza di aggiornamenti per i seguenti temi:"
     watched_word_regexp_error: "L'espressione regolare per le parole osservate %{action} non è valida. Per favore verifica le tue <a href='%{base_path}/admin/customize/watched_words'>Impostazioni sulle Parole Osservate</a>, o disabilita l'impostazione del sito 'watched words regular expressions'."
     v3_analytics_deprecated: "Il tuo Discourse utilizza attualmente Google Analytics 3, che non sarà più supportato dopo luglio 2023. <a href='https://meta.discourse.org/t/260498'>Passa a Google Analytics 4</a> ora per continuare a ricevere preziose informazioni e analisi per le prestazioni del tuo sito web."
-    legacy_navigation_menu_deprecated: "Il tuo Discourse sta attualmente utilizzando il menu di navigazione \"legacy\" che <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>verrà rimosso nella prima versione beta di Discourse 3.2</a>. Passa al nuovo menu di navigazione aggiornando la tua impostazione <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>del sito del menu di navigazione</a> su \"barra laterale\" o \"elenco a discesa dell'intestazione\"."
   site_settings:
     allow_bulk_invite: "Consenti inviti di massa caricando un file CSV"
     disabled: "disabilitato"
@@ -1418,9 +1418,6 @@ it:
     allow_user_locale: "Permetti agli utenti di personalizzare la lingua dell'interfaccia"
     set_locale_from_accept_language_header: "imposta la lingua dell'interfaccia per gli utenti anonimi dalla intestazione lingue del loro browser web"
     support_mixed_text_direction: "Supporto misto di direzioni del testo da sinistra a destra e da destra a sinistra."
-    min_post_length: "Lunghezza minima dei messaggi in caratteri"
-    min_first_post_length: "Lunghezza minima del primo messaggio (corpo del testo), in caratteri"
-    min_personal_message_post_length: "Lunghezza minima in caratteri per i messaggi"
     max_post_length: "Lunghezza massima dei messaggi in caratteri"
     topic_featured_link_enabled: "Abilita la pubblicazione di collegamenti con gli argomenti."
     show_topic_featured_link_in_digest: "Mostra i collegamenti in primo piano dell'argomento nella email riepilogativa."
@@ -1540,7 +1537,7 @@ it:
     tl2_additional_flags_per_day_multiplier: "Aumenta il limite giornaliero di segnalazioni per gli utenti con livello di attendibilità 2 (Membro), moltiplicandolo per questo numero"
     tl3_additional_flags_per_day_multiplier: "Aumenta il limite giornaliero di segnalazioni per gli utenti con livello di attendibilità 3 (Assiduo) moltiplicandolo per questo numero"
     tl4_additional_flags_per_day_multiplier: "Aumenta il limite giornaliero di segnalazioni per gli utenti con livello di attendibilità 4 (veterano), moltiplicandolo per questo numero"
-    num_users_to_silence_new_user: "Se i messaggi di un nuovo utente ricevono num_spam_flags_to_silence_new_user segnalazioni di spam da così tanti utenti diversi, nascondi tutti i suoi messaggi e impediscigli ulteriori invii. 0 per disabilitare. "
+    num_users_to_silence_new_user: "Se i post di un nuovo utente superano l'impostazione hide_post_sensitivity e ricevono flag di spam da questo numero di utenti diversi, nascondi tutti i suoi post e impedisci la pubblicazione futura. 0 per disabilitare."
     num_tl3_flags_to_silence_new_user: "Se i messaggi di un nuovo utente ricevono questo numero di segnalazioni da num_tl3_users_to_silence_new_user differenti utenti a livello di attendibilità 3, nascondi tutti i messaggi e previenine la futura pubblicazione. 0 per disabilitare."
     num_tl3_users_to_silence_new_user: "Se i messaggi di un nuovo utente ricevono num_tl3_flags_to_silence_new_user segnalazioni da questo numero di utenti a livello di attendibilità 3, nascondi tutti i messaggi e previenine la futura pubblicazione. 0 per disabilitare."
     notify_mods_when_user_silenced: "Se un utente è silenziato automaticamente, manda un messaggio ai moderatori."
@@ -1562,7 +1559,6 @@ it:
     ga_universal_tracking_code: "ID del codice di monitoraggio di Google Universal Analytics, ad esempio: UA-12345678-9; vedi <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Nome del dominio di Google Universal Analytics, ad esempio: mysite.com; vedi <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Abilita il monitoraggio tra domini di Google Universal Analytics. I collegamenti in uscita verso questi domini avranno l'ID del client aggiunto. Vedi <a href='https://support.google.com/analytics/answer/1034342?hl=it' target='_blank'>Impostare il monitoraggio tra domini.</a>"
-    gtm_container_id: "ID del contenitore di Google Tag Manager. ad esempio: GTM-ABCDEF. <br/>Nota: potrebbe essere necessario inserire l'abilitazione degli script di terze parti caricati da GTM in \"Content Security Policy Script src\"."
     enable_escaped_fragments: "Tornare all'API Ajax-Crawling di Google se non viene rilevato alcun webcrawler. Vedi <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Permetti ai moderatori di creare e gestire categorie e gruppi"
     moderators_change_post_ownership: "Consenti ai moderatori di modificare la proprietà del messaggio"
@@ -2123,14 +2119,16 @@ it:
     default_sidebar_switch_panel_position: "Posizione dei pulsanti della barra laterale"
     retain_web_hook_events_period_days: "Numero di giorni per mantenere i record degli eventi di web hook."
     retry_web_hook_events: "Riprova automaticamente gli eventi di hook Web falliti per 4 volte. Gli intervalli di tempo tra i tentativi sono 1, 5, 25 e 125 minuti."
-    revoke_api_keys_days: "Numero di giorni prima che una chiave API non utilizzata sia revocata automaticamente (0 per non avere mai revoca)"
+    revoke_api_keys_unused_days: "Numero di giorni trascorsi dall'ultimo utilizzo di una chiave API prima che venga revocata automaticamente (0 per mai)"
+    revoke_api_keys_maxlife_days: "Numero di giorni prima che una chiave API sia revocata automaticamente (0 per mai)"
     allow_user_api_key_scopes: "Elenco di ambiti consentiti per le chiavi API utente"
     min_trust_level_for_user_api_key: |
       Livello di attendibilità richiesto per la generazione di chiavi API utente.<br>
       <b>AVVISO</b>: la modifica del livello di attendibilità impedirà agli utenti con un livello di attendibilità inferiore di accedere tramite Discourse Hub
     allowed_user_api_auth_redirects: "URL consentito per il reindirizzamento dell'autenticazione per le chiavi API utente. Il simbolo jolly * può essere utilizzato per abbinare qualsiasi parte di esso (ad esempio www.example.com/*)."
     allowed_user_api_push_urls: "URL consentiti per il push del server alle API utente"
-    expire_user_api_keys_days: "Numero di giorni prima che una chiave API utente scada automaticamente (0 per non avere scadenza)"
+    revoke_user_api_keys_unused_days: "Numero di giorni trascorsi dall'ultimo utilizzo di una chiave API utente prima che venga revocata automaticamente (0 per mai)"
+    revoke_user_api_keys_maxlife_days: "Numero di giorni prima che una chiave API utente venga revocata automaticamente (0 per mai)"
     tagging_enabled: "Abilitare le etichette per gli argomenti?"
     min_trust_to_create_tag: "Il livello di attendibilità minimo per creare un'etichetta."
     max_tags_per_topic: "Il numero massimo di etichette che si possono applicare ad un argomento."
@@ -2149,7 +2147,6 @@ it:
     force_lowercase_tags: "Forza tutte le nuove Etichette interamente in minuscolo."
     create_post_for_category_and_tag_changes: "Crea un piccolo post di azione quando la categoria o i tag di un argomento cambiano"
     watched_precedence_over_muted: "Inviami notifiche sugli argomenti nelle categorie o nei tag che sto osservando anche se appartengono a un oggetto silenziato"
-    company_name: "Nome azienda"
     governing_law: "Diritto applicabile"
     city_for_disputes: "Sede per eventuali controversie"
     shared_drafts_category: "Abilita la funzione Bozze Condivise designando una categoria per le bozze di argomento. Gli argomenti in questa categoria verranno eliminati dagli elenchi di argomenti per gli utenti dello staff."
@@ -2188,6 +2185,7 @@ it:
     experimental_topics_filter: "SPERIMENTALE: abilita il percorso del filtro degli argomenti sperimentali in /filter"
     experimental_search_menu_groups: "SPERIMENTALE: attiva il nuovo menu di ricerca che è stato aggiornato per utilizzare glimmer."
     enable_experimental_lightbox: "SPERIMENTALE: sostituisci la lightbox dell'immagine predefinita con il design rinnovato."
+    experimental_form_templates: "SPERIMENTALE: abilita la funzionalità dei modelli di modulo. <b>Dopo l'abilitazione,</b> gestisci i modelli in <a href='%{base_path}/admin/customize/form-templates'>Personalizza / Modelli</a>."
     page_loading_indicator: "Configura l'indicatore di caricamento che appare durante la navigazione delle pagine all'interno di Discourse. 'Spinner' come un indicatore a pagina intera. 'Slider' mostra una barra stretta nella parte superiore dello schermo."
     errors:
       invalid_css_color: "Colore non valido. Immettere un nome o un valore esadecimale per il colore."
@@ -4162,6 +4160,9 @@ it:
       automatic_revoked:
         one: "Revocata automaticamente, ultima attività più di %{count} giorno fa"
         other: "Revocata automaticamente, ultima attività più di %{count} giorni fa"
+      automatic_revoked_max_life:
+        one: "Revocata automaticamente, creata più di %{count} giorno fa"
+        other: "Revocata automaticamente, creata più di %{count} giorni fa"
       revoked: Revocata
       restored: Ripristinato
   reviewables:

@@ -1,9 +1,9 @@
+import { tracked } from "@glimmer/tracking";
+import { getOwner, setOwner } from "@ember/application";
+import { inject as service } from "@ember/service";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import Topic from "discourse/models/topic";
-import { inject as service } from "@ember/service";
-import { getOwner, setOwner } from "@ember/application";
-import { tracked } from "@glimmer/tracking";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 
 export default class BulkSelectHelper {
   @service router;

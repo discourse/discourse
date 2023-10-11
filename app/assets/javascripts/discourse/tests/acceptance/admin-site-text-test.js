@@ -1,10 +1,10 @@
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 
 acceptance("Admin - Site Texts", function (needs) {
   needs.user();
