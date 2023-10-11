@@ -1,7 +1,7 @@
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { currentRouteName, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Auth Complete", function (needs) {
   needs.hooks.beforeEach(() => {

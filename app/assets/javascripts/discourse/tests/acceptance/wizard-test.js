@@ -1,4 +1,3 @@
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import {
   click,
   currentRouteName,
@@ -7,6 +6,7 @@ import {
   visit,
 } from "@ember/test-helpers";
 import { test } from "qunit";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Wizard", function (needs) {
   needs.user();

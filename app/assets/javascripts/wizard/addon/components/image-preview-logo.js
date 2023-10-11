@@ -1,5 +1,5 @@
-import { drawHeader } from "wizard/lib/preview";
 import { observes } from "discourse-common/utils/decorators";
+import { drawHeader } from "wizard/lib/preview";
 import WizardPreviewBaseComponent from "./wizard-preview-base";
 
 export default WizardPreviewBaseComponent.extend({

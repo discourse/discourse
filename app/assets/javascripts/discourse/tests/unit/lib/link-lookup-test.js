@@ -1,8 +1,11 @@
-import LinkLookup from "discourse/lib/link-lookup";
+import { getOwner } from "@ember/application";
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import LinkLookup from "discourse/lib/link-lookup";
 
 module("Unit | Utility | link-lookup", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     const store = getOwner(this).lookup("service:store");
     this.post = store.createRecord("post");

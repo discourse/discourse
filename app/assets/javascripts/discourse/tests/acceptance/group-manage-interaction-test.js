@@ -1,3 +1,5 @@
+import { visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
@@ -5,8 +7,6 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
-import { visit } from "@ember/test-helpers";
 
 acceptance("Managing Group Interaction Settings", function (needs) {
   needs.user();

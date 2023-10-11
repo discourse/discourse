@@ -349,16 +349,10 @@ pl_PL:
       our_moderators: "Moderatorzy"
       moderators: "Moderatorzy"
       stat:
-        all_time: "Ogółem"
-        last_day: "Ostatnie 24 godziny"
-        last_7_days: "Ostatnie 7 dni"
-        last_30_days: "Ostatnie 30 dni"
+        last_day: "24 godziny"
       like_count: "Polubienia"
       topic_count: "Tematy"
       post_count: "Posty"
-      user_count: "Rejestracje"
-      active_user_count: "Aktywni użytkownicy"
-      contact: "Kontakt"
       contact_info: "W sprawach wymagających szybkiej reakcji lub związanych z poprawnym funkcjonowaniem serwisu, prosimy o kontakt: %{contact_info}."
     bookmarked:
       title: "Zakładka"
@@ -416,6 +410,11 @@ pl_PL:
         confirm: "Masz już wersję roboczą w toku. Co chcesz z nią zrobić?"
         yes_value: "Odrzuć"
         no_value: "Wznów edycję"
+    topic_count_all:
+      one: "Zobacz %{count} nowy temat"
+      few: "Zobacz %{count} nowe tematy"
+      many: "Zobacz %{count} nowych tematów"
+      other: "Zobacz %{count} nowych tematów"
     topic_count_categories:
       one: "Zobacz %{count} nowy albo zaktualizowany temat"
       few: "Zobacz %{count} nowe albo zaktualizowane tematy"
@@ -1465,7 +1464,6 @@ pl_PL:
         success: "(email wysłany)"
         in_progress: "(email wysyłany)"
         error: "(błąd)"
-        emoji: "zablokuj emoji"
         action: "Wyślij wiadomość email resetującą hasło"
         set_password: "Ustaw hasło"
         choose_new: "Wyberz nowe hasło"
@@ -1766,6 +1764,7 @@ pl_PL:
         reinvite: "Wyślij ponownie e-mail"
         reinvited: "Ponowne wysłanie zaproszenia"
         removed: "Usunięto"
+        search: "wpisz, aby wyszukać zaproszenia…"
         user: "Zaproszony(-a) użytkownik(-czka)"
         none: "Brak zaproszeń do wyświetlenia."
         truncated:
@@ -1827,6 +1826,7 @@ pl_PL:
             <p>Zaproś grupę użytkowników, aby Twoja społeczność rosła szybko. Przygotuj <a href="https://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">plik CSV</a> zawierający co najmniej jeden wiersz na adres e-mail użytkowników, których chcesz zaprosić. Poniższe informacje oddzielone przecinkami można podać, jeśli chcesz dodać osoby do grup lub wysłać je do określonego tematu przy pierwszym logowaniu.</p>
             <pre>john @ smith.com, first_group_name; second_group_name, topic_id</pre>
             <p>Na każdy adres e-mail w przesłanym pliku CSV zostanie wysłane zaproszenie, którym będziesz mógł zarządzać później.</p>
+          progress: "Przesłano %{progress}%…"
           success: "Plik został przesłany pomyślnie. Po zakończeniu procesu otrzymasz powiadomienie za pośrednictwem wiadomości."
           error: "Przykro nam, ale wymagany format pliku to CSV."
       password:
@@ -2104,7 +2104,6 @@ pl_PL:
       link_label: "Wyślij mi link do logowania"
       button_label: "z e-mailem"
       login_link: "Pomiń hasło; wyślij mi e-mailem link do logowania"
-      emoji: "zablokuj emoji"
       complete_username: "Jeśli konto pasuje do nazwy użytkownika <b>%{username}</b>, wkrótce otrzymasz wiadomość e-mail z linkiem do logowania."
       complete_email: "Jeśli konto pasuje do <b>%{email}</b> , wkrótce otrzymasz wiadomość e-mail z linkiem do logowania."
       complete_username_found: "Znaleźliśmy konto pasujące do nazwy użytkownika <b>%{username}</b>, wkrótce otrzymasz wiadomość e-mail z linkiem do logowania."
@@ -2195,7 +2194,6 @@ pl_PL:
         security_key: "Zamiast tego użyj klucza zabezpieczeń"
     invites:
       accept_title: "Zaproszenie"
-      emoji: "envelope emoji"
       welcome_to: "Witaj na %{site_name}!"
       invited_by: "Zostałeś/łaś zaproszony przez:"
       social_login_available: "Będziesz mógł zalogować się za pomocą dowolnej platformy społecznościowej używając tego adresu e-mail."
@@ -3036,9 +3034,7 @@ pl_PL:
           false { lub <a href="{basePath}/latest">zobacz najnowsze tematy</a>}
           other {}
         }
-      bumped_at_title: |
-        Pierwszy post: %{createdAtDate}
-        Opublikowany: %{bumpedAtDate}
+      bumped_at: "Ostatnie: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Przeglądaj wszystkie kategorie</a> lub <a href='%{basePath}/latest'>przeglądaj najnowsze tematy</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Przeglądaj wszystkie kategorie</a>, <a href='%{basePath}/latest'>zobacz najnowsze tematy</a> lub zobacz popularne:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Przeglądaj wszystkie tagi</a> lub <a href='%{basePath}/latest'>zobacz najnowsze tematy</a>."
@@ -3501,6 +3497,8 @@ pl_PL:
       errors:
         create: "Przepraszamy, podczas tworzenia twojego wpisu wystąpił błąd. Spróbuj ponownie."
         edit: "Przepraszamy, podczas edytowania twojego wpisu wystąpił błąd. Spróbuj ponownie."
+        upload: "Przepraszamy, wystąpił błąd podczas przesyłania %{file_name}. Spróbuj ponownie."
+        backup_too_large: "Przepraszamy, ten plik kopii zapasowej jest zbyt duży."
         file_too_large: "Przepraszamy, ten plik jest zbyt duży (maksymalny rozmiar to %{max_size_kb}kB). Dlaczego nie przesłać dużego pliku do usługi udostępniania w chmurze, a następnie wkleić link?"
         file_size_zero: "Przepraszamy, wygląda na to, że coś poszło nie tak. Plik, który próbujesz przesłać, ma 0 bajtów. Spróbuj przesłać go ponownie."
         file_too_large_humanized: "Przepraszamy, ten plik jest za duży (maksymalny rozmiar to %{max_size}). Dlaczego nie przesłać dużego pliku do usługi udostępniania w chmurze, a następnie wkleić link?"
@@ -4263,7 +4261,6 @@ pl_PL:
       other_tags: "Inne tagi"
       selector_all_tags: "wszystkie tagi"
       selector_no_tags: "brak tagów"
-      changed: "zmienione tagi:"
       tags: "Tagi"
       choose_for_topic: "tagi opcjonalne"
       choose_for_topic_required:
@@ -4974,7 +4971,6 @@ pl_PL:
           details: "Kiedy pojawia się nowa odpowiedź, edytuj, usuń lub odzyskaj."
         user_event:
           name: "Wydarzenie użytkownika"
-          details: "Gdy użytkownik się loguje, wylogowuje, potwierdza swój adres e-mail, jest utworzony, zatwierdzony lub zaktualizowany."
         group_event:
           name: "Zdarzenie grupowe"
           details: "Kiedy grupa jest tworzona, aktualizowana lub niszczona. "
@@ -5159,7 +5155,6 @@ pl_PL:
           theme_name: "Nazwa motywu"
           component_name: "Nazwa komponentu"
           themes_intro: "Wybierz istniejący motyw lub zainstaluj nowy, by rozpocząć"
-          themes_intro_emoji: "woman artist emoji"
           beginners_guide_title: "Poradnik początkującego użytkownika motywów Discourse"
           developers_guide_title: "Poradnik kreatora motywów Discourse"
           browse_themes: "Przeglądaj motywy społeczności"
@@ -5713,7 +5708,6 @@ pl_PL:
       form_templates:
         nav_title: "Szablony"
         title: "Szablony formularzy"
-        help: "Utwórz strukturę szablonów, której można użyć do tworzenia nowych tematów, postów i wiadomości."
         new_template: "Nowy szablon"
         list_table:
           headings:
@@ -5736,6 +5730,7 @@ pl_PL:
             label: "Nazwa szablonu"
           template:
             label: "Szablon"
+            placeholder: "Utwórz tutaj szablon YAML…"
           preview: "Podgląd"
         delete_confirm: "Czy na pewno chcesz usunąć ten szablon?"
         quick_insert_fields:
@@ -5849,6 +5844,7 @@ pl_PL:
           combative: "Zbyt wojowniczy"
           in_wrong_place: "W złym miejscu"
           no_constructive_purpose: "Nie ma żadnego konstruktywnego celu dla swoich działań z wyjątkiem tworzenia kłótni wewnątrz społeczności."
+          custom: "Niestandardowe…"
         suspend_message: "Wiadomość Email"
         suspend_message_placeholder: "Ewentualnie podaj więcej informacji o zawieszeniu użytkownika, a zostaną wysłane do niego poprzez email."
         suspended_by: "Zawieszony przez"
@@ -6138,6 +6134,7 @@ pl_PL:
         show_outdated: "Pokaż tylko nieaktualne/nieprawidłowe"
         locale: "Język:"
         more_than_50_results: "Istnieje ponad 50 wyników. Zawęź wyszukiwanie."
+        no_results: "Nie znaleziono pasujących tekstów witryny"
         interpolation_keys: "Dostępne klucze interpolacji:"
         outdated:
           title: "To tłumaczenie jest nieaktualne"
@@ -6292,7 +6289,6 @@ pl_PL:
             with_time: <span class="username">%{username}</span> o <span class="time">%{time}</span>
         badge_intro:
           title: "Wybierz istniejącą odznakę lub utwórz nową, aby rozpocząć"
-          emoji: "woman student emoji"
           what_are_badges_title: "Czym są odznaki?"
           badge_query_examples_title: "Przykład wykonania zapytania odznaki"
         mass_award:

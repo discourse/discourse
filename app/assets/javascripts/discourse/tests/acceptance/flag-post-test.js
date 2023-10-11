@@ -1,12 +1,12 @@
+import { click, fillIn, settled, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
-import userFixtures from "discourse/tests/fixtures/user-fixtures";
 
 async function openFlagModal() {
   if (exists(".topic-post:first-child button.show-more-actions")) {
@@ -26,7 +26,7 @@ async function pressEnter(element, modifier) {
 }
 
 acceptance("flagging", function (needs) {
-  needs.user();
+  needs.user({ admin: true });
   needs.pretender((server, helper) => {
     server.get("/u/uwe_keim.json", () => {
       return helper.response(userFixtures["/u/charlie.json"]);
@@ -53,7 +53,8 @@ acceptance("flagging", function (needs) {
         public_admission: false,
         allow_membership_requests: true,
         membership_request_template: "Please add me",
-        full_name: null,
+        can_be_deleted: true,
+        can_delete_all_posts: true,
       });
     });
     server.get("/admin/users/5.json", () => {
@@ -127,6 +128,14 @@ acceptance("flagging", function (needs) {
 
     await click(".perform-penalize");
     assert.ok(!exists(".modal-body"));
+  });
+
+  test("Can delete spammer from spam", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await openFlagModal();
+    await click("#radio_spam");
+
+    assert.ok(exists(".delete-spammer"));
   });
 
   test("Gets dismissable warning from canceling incomplete silence from take action", async function (assert) {

@@ -13,7 +13,7 @@
   <div class="admin-container user-badges">
     <h2>{{i18n "admin.badges.grant_badge"}}</h2>
     <br />
-    {{#if this.noGrantableBadges}}
+    {{#if this.noAvailableBadges}}
       <p>{{i18n "admin.badges.no_badges"}}</p>
     {{else}}
       <form class="form-horizontal">
@@ -21,7 +21,7 @@
           <label>{{i18n "admin.badges.badge"}}</label>
           <ComboBox
             @value={{this.selectedBadgeId}}
-            @content={{this.grantableBadges}}
+            @content={{this.availableBadges}}
             @onChange={{action (mut this.selectedBadgeId)}}
             @options={{hash filterable=true}}
           />

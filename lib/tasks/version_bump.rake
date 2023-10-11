@@ -406,11 +406,7 @@ task "version_bump:stage_security_fixes", [:base] do |t, args|
       git "fetch", origin, origin_branch
 
       first_commit_on_branch = git("log", "--format=%H", "origin/#{base}..#{ref}").lines.last.strip
-      author = git("log", "-n", "1", "--format=%an <%ae>", first_commit_on_branch).strip
-      message = git("log", "-n", "1", "--format=%B", first_commit_on_branch).strip
-
-      git "merge", "--squash", ref
-      git "commit", "--author", author, "-m", message
+      git "cherry-pick", "#{first_commit_on_branch}^..#{ref}"
     end
 
     puts "Finished merging commits into a locally-staged #{branch} branch. Git log is:"

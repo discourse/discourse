@@ -1,10 +1,10 @@
+import { click, triggerEvent, visit } from "@ember/test-helpers";
 import {
   acceptance,
   chromeTest,
   count,
   exists,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, triggerEvent, visit } from "@ember/test-helpers";
 
 async function triggerSwipeStart(touchTarget) {
   const emberTesting = document.querySelector("#ember-testing-container");

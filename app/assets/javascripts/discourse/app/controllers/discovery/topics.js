@@ -1,28 +1,29 @@
 import { inject as controller } from "@ember/controller";
+import { action } from "@ember/object";
+import { alias, empty, equal, gt, or, readOnly } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
-import { alias, empty, equal, gt, readOnly } from "@ember/object/computed";
-import BulkTopicSelection from "discourse/mixins/bulk-topic-selection";
-import DismissTopics from "discourse/mixins/dismiss-topics";
 import DiscoveryController from "discourse/controllers/discovery";
-import I18n from "I18n";
+import { routeAction } from "discourse/helpers/route-action";
+import BulkSelectHelper from "discourse/lib/bulk-select-helper";
+import { endWith } from "discourse/lib/computed";
+import { filterTypeForMode } from "discourse/lib/filter-mode";
+import { userPath } from "discourse/lib/url";
+import DismissTopics from "discourse/mixins/dismiss-topics";
 import Topic from "discourse/models/topic";
 import deprecated from "discourse-common/lib/deprecated";
 import discourseComputed from "discourse-common/utils/decorators";
-import { endWith } from "discourse/lib/computed";
-import { routeAction } from "discourse/helpers/route-action";
-import { userPath } from "discourse/lib/url";
-import { action } from "@ember/object";
+import I18n from "I18n";
 
 export default class TopicsController extends DiscoveryController.extend(
-  BulkTopicSelection,
   DismissTopics
 ) {
   @service router;
   @service composer;
   @controller discovery;
 
+  bulkSelectHelper = new BulkSelectHelper(this);
+
   period = null;
-  selected = null;
   expandGloballyPinned = false;
   expandAllPinned = false;
 
@@ -40,14 +41,25 @@ export default class TopicsController extends DiscoveryController.extend(
   @equal("period", "weekly") weekly;
   @equal("period", "daily") daily;
 
-  @discourseComputed("model.filter", "model.topics.length")
-  showDismissRead(filter, topicsLength) {
-    return this._isFilterPage(filter, "unread") && topicsLength > 0;
+  @or("currentUser.canManageTopic", "showDismissRead", "showResetNew")
+  canBulkSelect;
+
+  get bulkSelectEnabled() {
+    return this.bulkSelectHelper.bulkSelectEnabled;
+  }
+
+  get selected() {
+    return this.bulkSelectHelper.selected;
   }
 
   @discourseComputed("model.filter", "model.topics.length")
-  showResetNew(filter, topicsLength) {
-    return this._isFilterPage(filter, "new") && topicsLength > 0;
+  showDismissRead(filterMode, topicsLength) {
+    return filterTypeForMode(filterMode) === "unread" && topicsLength > 0;
+  }
+
+  @discourseComputed("model.filter", "model.topics.length")
+  showResetNew(filterMode, topicsLength) {
+    return filterTypeForMode(filterMode) === "new" && topicsLength > 0;
   }
 
   callResetNew(dismissPosts = false, dismissTopics = false, untrack = false) {
@@ -211,5 +223,25 @@ export default class TopicsController extends DiscoveryController.extend(
       this.get("showTopicsAndRepliesToggle") &&
       !this.get("bulkSelectEnabled")
     );
+  }
+
+  @action
+  toggleBulkSelect() {
+    this.bulkSelectHelper.toggleBulkSelect();
+  }
+
+  @action
+  dismissRead(operationType, options) {
+    this.bulkSelectHelper.dismissRead(operationType, options);
+  }
+
+  @action
+  updateAutoAddTopicsToBulkSelect(value) {
+    this.bulkSelectHelper.autoAddTopicsToBulkSelect = value;
+  }
+
+  @action
+  addTopicsToBulkSelect(topics) {
+    this.bulkSelectHelper.addTopics(topics);
   }
 }

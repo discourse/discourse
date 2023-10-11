@@ -258,15 +258,10 @@ ur:
       our_moderators: "ہمارے ماڈریٹرز"
       moderators: "ماڈریٹرز"
       stat:
-        all_time: "تمام اوقات"
-        last_day: "پچھلے 24 گھنٹے"
-        last_7_days: "پچھلے 7 دن"
-        last_30_days: "پچھلے 30 دن"
+        last_day: "24 گھنٹے"
       like_count: "لائیکس"
       topic_count: "ٹاپک"
       post_count: "پوسٹ"
-      active_user_count: "متحرک صارفین"
-      contact: "ہم سے رابطہ کریں"
       contact_info: "اس سائٹ کے بارے میں کسی اہم مسئلہ یا فوری معاملہ کی صورت میں، براہ مہربانی %{contact_info} پر رابطہ کریں۔"
     bookmarked:
       title: "بُک مارک"
@@ -318,6 +313,9 @@ ur:
       abandon:
         yes_value: "منسوخ"
         no_value: "ترمیم دوبارہ شروع کریں"
+    topic_count_all:
+      one: "%{count} نیا ٹاپک دیکھیں۔"
+      other: "%{count} نئے ٹاپک دیکھیں۔"
     topic_count_categories:
       one: "%{count} نیا یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
       other: "%{count} نئے یا اَپ ڈیٹ کردہ ٹاپک دیکھیں۔"
@@ -1146,7 +1144,6 @@ ur:
         success: "(اِی میل بھیج دی گئ)"
         in_progress: "(اِی میل بھیجی جا رہی ہے)"
         error: "(خرابی)"
-        emoji: "لاک ایموجی"
         action: "پاس ورڈ دوبارہ سیٹ کرنے کی اِی میل بھیجیں"
         set_password: "پاس ورڈ رکھیں"
         choose_new: "نیا پاس ورڈ منتخب کریں"
@@ -1666,7 +1663,6 @@ ur:
       link_label: "مجھے ایک لاگ اِن لِنک ای میل کریں"
       button_label: "ای میل کے ساتھ"
       login_link: "پاس ورڈ کو چھوڑ دیں؛ مجھے ایک لاگ ان لنک ای میل کریں"
-      emoji: "لاک ایموجی"
       complete_username: "اگر ایک اکاؤنٹ صارف نام <b>%{username}</b> سے میچ کرتا ہے، تو آپ کو جلد ہی لاگ اِن لِنک کے ساتھ ایک ای میل موصول ہو جانی چاہئے۔"
       complete_email: "اگر ایک اکاؤنٹ <b>%{email}</b> سے میچ کرتا ہے، تو آپ کو جلد ہی لاگ اِن لِنک کے ساتھ ایک ای میل موصول ہو جانی چاہئے۔"
       complete_username_found: "ہمیں ایک ایسا اکاؤنٹ مل گیا جو صارف نام <b>%{username}</b> سے میچ کرتا ہے، آپ کو جلد ہی لاگ اِن لِنک کے ساتھ ایک ای میل موصول ہو جانی چاہئے۔"
@@ -1738,7 +1734,6 @@ ur:
         security_key: "اس کے بجائے سیکیورٹی کی استعمال کریں۔"
     invites:
       accept_title: "دعوت نامہ"
-      emoji: "لفافہ اموجی"
       welcome_to: "%{site_name} پر خوش آمدید!"
       invited_by: "آپ کو جن کی طرف سے مدعو کیا گیا تھا:"
       social_login_available: "آپ اِس اِیمیل کا استعمال کرتے ہوئے کسی بھی سوشل لاگ اِن کے ساتھ سائن اِن بھی کرسکیں گے۔"
@@ -2322,6 +2317,7 @@ ur:
       collapse_details: "موضوع کی تفصیلات کوسکیڑیں"
       expand_details: "موضوع کی تفصیلات کو پھیلائیں"
       unread_indicator: "کسی ممبر نے ابھی تک اِس ٹاپک کی آخری پوسٹ نہیں پڑھی ہے۔"
+      bumped_at: "تازہ ترین: %{date}"
       suggest_create_topic: <a href>نئی گفتگو شروع</a> کرنے کے لیے تیار ہیں؟
       deleted: "ٹاپک مٹادیا گیا ہے"
       slow_mode_update:
@@ -3358,7 +3354,6 @@ ur:
       other_tags: "دیگر ٹیگز"
       selector_all_tags: "تمام ٹیگز"
       selector_no_tags: "کوئی ٹیگ نہیں"
-      changed: "تبدیل کیے گئے ٹیگ:"
       tags: "ٹیگز"
       choose_for_topic: "اختیاری ٹیگز"
       info: "معلومات"
@@ -3874,7 +3869,6 @@ ur:
           details: "جب ایک نیا جواب، ترمیم، حذف یا رِِیکور کیا جائے۔"
         user_event:
           name: "صارف واقعہ"
-          details: "جب کوئی صارف لاگ ان ہوتا ہے، لاگ آؤٹ ہوتا ہے، اپنے ای میل کی تصدیق کرتا ہے، تخلیق، منظور یا اپ ڈیٹ ہوتا ہے۔"
         group_event:
           name: "گروپ واقعہ"
           details: "جب ایک گروپ بنایا، اَپ ڈیٹ یا ختم کیا جاتا ہے۔"
@@ -4037,7 +4031,6 @@ ur:
           theme_name: "تھیم نام"
           component_name: "جزو نام"
           themes_intro: " شروعات کیلئے، ایک موجودہ تھیم منتخب کریں یا ایک نئی انسٹال کریں"
-          themes_intro_emoji: "خاتون آرٹسٹ ایموجی"
           beginners_guide_title: "ڈسکورس تِھیمز کا استعمال کرنے کیلئے ابتدائی رہنمائی"
           developers_guide_title: "ڈسکورس تِھیمز کیلئے ڈویلپر رہنمائی"
           browse_themes: "کمیونٹی تِھیمز دیکھیں"
@@ -5032,7 +5025,6 @@ ur:
             with_time: <span class="username">%{username}</span> <span class="time">%{time}</span> پر
         badge_intro:
           title: "شروعات کیلئے، ایک موجودہ بَیج منتخب کریں یا ایک نیا بنائیں"
-          emoji: "خاتون طالب علم ایموجی"
           what_are_badges_title: "بَیج کیا ہیں؟"
           badge_query_examples_title: "بَیج قُوَیری کی مثالیں"
         mass_award:

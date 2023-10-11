@@ -1,58 +1,15 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import DModal from "discourse/components/d-modal";
 import DButton from "discourse/components/d-button";
+import DModal from "discourse/components/d-modal";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
 import I18n from "I18n";
-import { tracked } from "@glimmer/tracking";
 
 const REPLIES_SUBSET = "replies";
 const TOPICS_SUBSET = "topics";
 
 export default class DismissNew extends Component {
-  <template>
-    <DModal
-      @closeModal={{@closeModal}}
-      @title={{this.modalTitle}}
-      @inline={{@inline}}
-    >
-      <:body>
-        <p>
-          {{#if this.showDismissNewTopics}}
-            <PreferenceCheckbox
-              @labelKey={{this.dismissNewTopicsLabel}}
-              @labelCount={{this.countNewTopics}}
-              @checked={{this.dismissTopics}}
-              @class="dismiss-topics"
-            />
-          {{/if}}
-          {{#if this.showDismissNewReplies}}
-            <PreferenceCheckbox
-              @labelKey={{this.dismissNewRepliesLabel}}
-              @labelCount={{this.countNewReplies}}
-              @checked={{this.dismissPosts}}
-              @class="dismiss-posts"
-            />
-          {{/if}}
-          <PreferenceCheckbox
-            @labelKey="topics.bulk.dismiss_new_modal.untrack"
-            @checked={{this.untrack}}
-            @class="untrack"
-          />
-        </p>
-      </:body>
-      <:footer>
-        <DButton
-          @action={{this.dismissed}}
-          @icon="check"
-          @label="topics.bulk.dismiss"
-          id="dismiss-read-confirm"
-          class="btn-primary"
-        />
-      </:footer>
-    </DModal>
-  </template>
-
   @tracked untrack = false;
   @tracked dismissTopics = true;
   @tracked dismissPosts = true;
@@ -141,4 +98,47 @@ export default class DismissNew extends Component {
 
     this.args.closeModal();
   }
+
+  <template>
+    <DModal
+      @closeModal={{@closeModal}}
+      @title={{this.modalTitle}}
+      @inline={{@inline}}
+    >
+      <:body>
+        <p>
+          {{#if this.showDismissNewTopics}}
+            <PreferenceCheckbox
+              @labelKey={{this.dismissNewTopicsLabel}}
+              @labelCount={{this.countNewTopics}}
+              @checked={{this.dismissTopics}}
+              @class="dismiss-topics"
+            />
+          {{/if}}
+          {{#if this.showDismissNewReplies}}
+            <PreferenceCheckbox
+              @labelKey={{this.dismissNewRepliesLabel}}
+              @labelCount={{this.countNewReplies}}
+              @checked={{this.dismissPosts}}
+              @class="dismiss-posts"
+            />
+          {{/if}}
+          <PreferenceCheckbox
+            @labelKey="topics.bulk.dismiss_new_modal.untrack"
+            @checked={{this.untrack}}
+            @class="untrack"
+          />
+        </p>
+      </:body>
+      <:footer>
+        <DButton
+          @action={{this.dismissed}}
+          @icon="check"
+          @label="topics.bulk.dismiss"
+          id="dismiss-read-confirm"
+          class="btn-primary"
+        />
+      </:footer>
+    </DModal>
+  </template>
 }

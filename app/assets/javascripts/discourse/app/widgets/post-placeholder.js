@@ -1,5 +1,5 @@
-import { createWidget } from "discourse/widgets/widget";
 import hbs from "discourse/widgets/hbs-compiler";
+import { createWidget } from "discourse/widgets/widget";
 
 export default createWidget("post-placeholder", {
   tagName: "article.placeholder",

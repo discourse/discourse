@@ -2,6 +2,6 @@
   {{#if @message.chatWebhookEvent.emoji}}
     <ChatEmojiAvatar @emoji={{@message.chatWebhookEvent.emoji}} />
   {{else}}
-    <Chat::UserAvatar @user={{@message.user}} @avatarSize="medium" />
+    <ChatUserAvatar @user={{@message.user}} @avatarSize="medium" />
   {{/if}}
 </div>

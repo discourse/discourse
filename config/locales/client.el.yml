@@ -254,16 +254,10 @@ el:
       our_moderators: "Οι συντονιστές μας"
       moderators: "Συντονιστές"
       stat:
-        all_time: "Συνολικά"
-        last_day: "Τελευταίες 24 ώρες"
-        last_7_days: "Τελευταίες 7 ημέρες"
-        last_30_days: "Τελευταίες 30 ημέρες"
+        last_day: "24 ώρες"
       like_count: "Μου αρέσει"
       topic_count: "Θέματα"
       post_count: "Αναρτήσεις"
-      user_count: "Εγγραφές"
-      active_user_count: "Ενεργοί χρήστες"
-      contact: "Επικοινωνήστε μαζί μας"
       contact_info: "Σε περίπτωση που προκύψει κάποιο κρίσιμο πρόβλημα ή κάποιο επείγον θέμα που αφορά αυτόν τον ιστότοπο, παρακαλούμε να επικοινωνήσετε μαζί μας στο %{contact_info}."
     bookmarked:
       title: "Σελιδοδείκτης"
@@ -318,6 +312,9 @@ el:
       abandon:
         yes_value: "Απόρριψη"
         no_value: "Συνέχιση επεξεργασίας"
+    topic_count_all:
+      one: "Δείτε %{count} νέο θέμα"
+      other: "Δείτε %{count} νέα θέματα"
     topic_count_categories:
       one: "Δείτε %{count} νέο ή ενημερωμένο θέμα"
       other: "Δείτε %{count} νέα ή ενημερωμένα θέματα"
@@ -1096,7 +1093,6 @@ el:
         success: "(το email στάλθηκε)"
         in_progress: "(αποστολή email)"
         error: "(σφάλμα)"
-        emoji: "κλειδώστε τα emoji"
         action: "Αποστολή Email Επαναφοράς Συνθηματικού"
         set_password: "Ορισμός Συνθηματικού"
         choose_new: "Επιλέξτε νέο κωδικό πρόσβασης"
@@ -1573,7 +1569,6 @@ el:
       link_label: "Στείλτε μου ένα σύνδεσμο σύνδεσης"
       button_label: "με email"
       login_link: "Παράκαμψη κωδικού πρόσβασης, στείλτε μου ένα σύνδεσμο σύνδεσης"
-      emoji: "κλειδώστε τα emoji"
       complete_username: "Εάν ένας λογαριασμός αντιστοιχεί στο όνομα χρήστη <b>%{username}</b>, θα πρέπει να λάβετε σύντομα ένα email με έναν σύνδεσμο σύνδεσης."
       complete_email: "Εάν ένας λογαριασμός αντιστοιχεί στο <b>%{email}</b>, θα πρέπει να λάβετε σύντομα ένα email με έναν σύνδεσμο σύνδεσης."
       complete_username_found: "Βρήκαμε έναν λογαριασμό που αντιστοιχεί στο όνομα χρήστη <b>%{username}</b>, θα πρέπει να λάβετε σύντομα ένα email με έναν σύνδεσμο σύνδεσης."
@@ -1655,7 +1650,6 @@ el:
         backup_code: "Χρησιμοποιήστε αντ 'αυτού έναν εφεδρικό κωδικό"
     invites:
       accept_title: "Πρόσκληση"
-      emoji: "emoji φακέλου"
       welcome_to: "Καλώς ήλθατε στην %{site_name}!"
       invited_by: "Προσκληθήκατε από:"
       social_login_available: "Μπορείτε επίσης να συνδεθείτε μέσω λογαριασμών κοινωνικής δικτύωσης στους οποίους χρησιμοποιείτε αυτό το email."
@@ -2167,6 +2161,7 @@ el:
       options: "Επιλογές Θέματος"
       show_links: "εμφάνιση συνδέσμων εντός του θέματος"
       unread_indicator: "Κανένα μέλος δεν έχει διαβάσει ακόμη την τελευταία ανάρτηση αυτού του θέματος."
+      bumped_at: "Πρόσφατα: %{date}"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Περιηγηθείτε σε όλες τις ετικέτες</a> ή <a href='%{basePath}/latest'>δείτε τα τελευταία θέματα</a>."
       deleted: "Το θέμα έχει διαγραφεί"
       slow_mode_update:
@@ -3112,7 +3107,6 @@ el:
       other_tags: "Άλλες ετικέτες"
       selector_all_tags: "όλες οι ετικέτες"
       selector_no_tags: "καμία ετικέτα"
-      changed: "αλλαγμένες ετικέτες:"
       tags: "Ετικέτες"
       choose_for_topic: "προαιρετικές ετικέτες"
       info: "Πληροφορίες"
@@ -3722,7 +3716,6 @@ el:
           theme_name: "Όνομα θέματος"
           component_name: "Όνομα συστατικού"
           themes_intro: "Επιλέξτε ένα υπάρχον θέμα ή εγκαταστήστε ένα νέο για να ξεκινήσετε"
-          themes_intro_emoji: "γυναίκα καλλιτέχνης emoji"
           beginners_guide_title: "Οδηγός αρχαρίου για τη χρήση θεμάτων του Discourse"
           developers_guide_title: "Οδηγός προγραμματιστή για τα θέματα του Discourse"
           browse_themes: "Περιήγηση σε κοινοτικά θέματα"
@@ -4615,7 +4608,6 @@ el:
             with_time: <span class="username">%{username}</span> στις <span class="time">%{time}</span>
         badge_intro:
           title: "Επιλέξτε ένα υπάρχον σήμα ή δημιουργήστε ένα νέο για να ξεκινήσετε"
-          emoji: "φοιτήτρια emoji"
           what_are_badges_title: "Τι είναι τα σήματα;"
           badge_query_examples_title: "Παραδείγματα ερωτημάτων σήματος"
         mass_award:

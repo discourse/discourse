@@ -1,6 +1,6 @@
-import { iconHTML } from "discourse-common/lib/icon-library";
-import { prefersReducedMotion } from "discourse/lib/utilities";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { prefersReducedMotion } from "discourse/lib/utilities";
+import { iconHTML } from "discourse-common/lib/icon-library";
 
 let _gifClickHandlers = {};
 
@@ -27,7 +27,9 @@ function _resumeAnimation(img) {
 }
 
 function animatedImgs() {
-  return document.querySelectorAll("img.animated:not(.manually-paused)");
+  return document.querySelectorAll(
+    ".topic-post img.animated:not(.manually-paused)"
+  );
 }
 
 export default {
@@ -100,7 +102,6 @@ export default {
 
       api.decorateCookedElement(_attachCommands, {
         onlyStream: true,
-        id: "animated-images-pause-on-click",
       });
 
       api.cleanupStream(_cleanUp);

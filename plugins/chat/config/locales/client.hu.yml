@@ -24,10 +24,6 @@ hu:
           descriptions:
             chat:
               create_message: "Csevegőüzenet létrehozása egy megadott csatornán."
-    about:
-      chat_messages_count: "Csevegőüzenetek"
-      chat_channels_count: "Csevegőcsatornák"
-      chat_users_count: "Csevegőfelhasználók"
     chat:
       deleted_chat_username: törölt
       dates:
@@ -77,6 +73,7 @@ hu:
         create: "Új csatorna"
       click_to_join: "Kattintson ide az elérhető csatornák megtekintéséhez."
       close: "Lezárás"
+      remove: "Eltávolítás"
       collapse: "Csevegőfiók összecsukása"
       expand: "Chat fiók bővítése"
       confirm_flag: "Biztos, hogy jelenti %{username} üzenetét?"

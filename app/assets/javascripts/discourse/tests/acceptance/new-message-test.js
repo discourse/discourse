@@ -1,11 +1,11 @@
-import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
-import { visit } from "@ember/test-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("New Message - Anonymous", function () {
   test("accessing new-message route when logged out", async function (assert) {

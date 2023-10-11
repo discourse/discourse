@@ -1,4 +1,6 @@
-<DSection @pageClass="invite">
+{{body-class "invite-page"}}
+
+<section>
   <div class="container invites-show clearfix">
     <div class="login-welcome-header">
       <h1 class="login-title">{{this.welcomeTitle}}</h1>
@@ -11,7 +13,7 @@
     <div class={{if this.successMessage "invite-success" "invite-form"}}>
       <div class="two-col">
         <div class="col-image">
-          <img src={{this.inviteImageUrl}} alt={{i18n "invites.emoji"}} />
+          <img src={{this.inviteImageUrl}} alt="" />
         </div>
 
         <div class="col-form">
@@ -231,4 +233,4 @@
       </div>
     </div>
   </div>
-</DSection>
+</section>

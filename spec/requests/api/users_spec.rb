@@ -8,7 +8,6 @@ RSpec.describe "users" do
 
   before do
     SiteSetting.tagging_enabled = true
-    SiteSetting.navigation_menu = "legacy"
     Jobs.run_immediately!
     sign_in(admin)
   end

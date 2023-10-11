@@ -8,6 +8,12 @@
     </label>
   {{/if}}
 
+  {{#if @attributes.description}}
+    <span class="form-template-field__description">
+      {{html-safe @attributes.description}}
+    </span>
+  {{/if}}
+
   {{! TODO(@keegan): Update implementation to use <ComboBox/> instead }}
   {{! Current using <select> as it integrates easily with FormData (will update in v2) }}
   <select

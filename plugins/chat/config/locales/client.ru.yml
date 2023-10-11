@@ -24,10 +24,6 @@ ru:
           descriptions:
             chat:
               create_message: "Создать сообщение чата в указанном канале."
-    about:
-      chat_messages_count: "Сообщения чата"
-      chat_channels_count: "Каналы чата"
-      chat_users_count: "Пользователи чата"
     chat:
       deleted_chat_username: удалён
       dates:
@@ -87,6 +83,7 @@ ru:
         create: "Новый канал"
       click_to_join: "Нажмите здесь для просмотра доступных каналов."
       close: "Закрыть"
+      remove: "Отозвать"
       collapse: "Свернуть чат"
       expand: "Развернуть панель чата"
       confirm_flag: "Действительно пожаловаться на сообщение пользователя %{username}?"

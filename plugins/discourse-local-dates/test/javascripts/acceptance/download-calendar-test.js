@@ -1,10 +1,10 @@
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
-import I18n from "I18n";
 import { test } from "qunit";
-import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 import sinon from "sinon";
+import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
+import I18n from "I18n";
 
 acceptance(
   "Local Dates - Download calendar without default calendar option set",

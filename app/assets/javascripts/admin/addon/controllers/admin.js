@@ -1,5 +1,5 @@
-import { inject as service } from "@ember/service";
 import Controller from "@ember/controller";
+import { inject as service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import discourseComputed from "discourse-common/utils/decorators";
 

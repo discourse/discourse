@@ -24,10 +24,6 @@ es:
           descriptions:
             chat:
               create_message: "Crea un mensaje de chat en un canal especificado."
-    about:
-      chat_messages_count: "Mensajes de chat"
-      chat_channels_count: "Canales de chat"
-      chat_users_count: "Usuarios del chat"
     chat:
       deleted_chat_username: eliminado
       dates:
@@ -85,6 +81,7 @@ es:
         create: "Nuevo canal"
       click_to_join: "Haz clic aquí para ver los canales disponibles."
       close: "Cerrar"
+      remove: "Eliminar"
       collapse: "Contraer contenedor del chat"
       expand: "Ampliar el cajón de chat"
       confirm_flag: "¿Seguro que quieres denunciar el mensaje de %{username}?"

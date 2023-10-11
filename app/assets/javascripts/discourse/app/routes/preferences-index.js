@@ -1,5 +1,5 @@
-import RestrictedUserRoute from "discourse/routes/restricted-user";
 import { inject as service } from "@ember/service";
+import RestrictedUserRoute from "discourse/routes/restricted-user";
 
 export default RestrictedUserRoute.extend({
   router: service(),

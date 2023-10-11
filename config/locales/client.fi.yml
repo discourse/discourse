@@ -287,16 +287,10 @@ fi:
       our_moderators: "Valvojat"
       moderators: "Valvojat"
       stat:
-        all_time: "Yhteensä"
-        last_day: "Viimeiset 24 tuntia"
-        last_7_days: "Viimeiset 7 päivää"
-        last_30_days: "Viimeiset 30 päivää"
+        last_day: "24 tuntia"
       like_count: "Tykkäyksiä"
       topic_count: "Ketjuja"
       post_count: "Viestejä"
-      user_count: "Rekisteröitymiset"
-      active_user_count: "Aktiivisia käyttäjiä"
-      contact: "Ota yhteyttä"
       contact_info: "Sivustoon liittyvissä kiireellisissä asioissa, ota yhteyttä osoitteeseen %{contact_info}."
     bookmarked:
       title: "Kirjanmerkki"
@@ -354,6 +348,9 @@ fi:
         confirm: "Sinulla on jo keskeneräinen luonnos. Mitä haluat tehdä sille?"
         yes_value: "Hylkää"
         no_value: "Jatka muokkausta"
+    topic_count_all:
+      one: "Näytä %{count} uusi ketju"
+      other: "Näytä %{count} uutta ketjua"
     topic_count_categories:
       one: "Katso %{count} uusi tai päivitetty ketju"
       other: "Katso %{count} uutta tai päivitettyä ketjua"
@@ -1311,7 +1308,6 @@ fi:
         success: "(sähköposti lähetetty)"
         in_progress: "(sähköpostia lähetetään)"
         error: "(virhe)"
-        emoji: "lukkoemoji"
         action: "Lähetä sähköposti salasanan palauttamista varten"
         set_password: "Aseta salasana"
         choose_new: "Valitse uusi salasana"
@@ -1912,7 +1908,6 @@ fi:
       link_label: "Lähetä minulle kirjautumislinkki"
       button_label: "sähköpostilla"
       login_link: "Ohita salasana; lähetä minulle kirjautumislinkki sähköpostitse"
-      emoji: "lukkoemoji"
       complete_username: "Jos tili vastaa käyttäjänimeä <b>%{username}</b>, sinun tulisi saada pian kirjautumislinkki sähköpostitse."
       complete_email: "Jos tili vastaa sähköpostiosoitetta <b>%{email}</b>, sinun tulisi saada pian kirjautumislinkki sähköpostitse."
       complete_username_found: "Tili käyttäjänimellä <b>%{username}</b> löytyi, sinun tulisi saada pian kirjautumislinkki sähköpostitse."
@@ -2001,7 +1996,6 @@ fi:
         security_key: "Käytä sen sijaan tunnistautumislaitetta"
     invites:
       accept_title: "Kutsu"
-      emoji: "kirjekuoriemoji"
       welcome_to: "Tervetuloa sivustolle %{site_name}!"
       invited_by: "Sinut kutsui"
       social_login_available: "Voit myös kirjautua yhteisökirjautumisen avulla, joka on saman sähköpostiosoitteen alainen."
@@ -2716,9 +2710,7 @@ fi:
           false { tai <a href="{basePath}/latest">katso viimeisimmät ketjut</a>}
           other {}
         }
-      bumped_at_title: |
-        Ensimmäinen viesti: %{createdAtDate}
-        Lähetetty: %{bumpedAtDate}
+      bumped_at: "Viimeisin: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Selaa kaikkia alueita</a> tai <a href='%{basePath}/latest'>katso viimeisimmät ketjut</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Selaa kaikkia alueita</a>, <a href='%{basePath}/latest'>katso viimeisimmät ketjut</a> tai katso suosituimmat:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Selaa kaikkia tunnisteita</a> tai <a href='%{basePath}/latest'>katso viimeisimmät ketjut</a>."
@@ -3128,6 +3120,7 @@ fi:
       errors:
         create: "Viestin luonti epäonnistui. Yritä uudelleen."
         edit: "Viestin muokkaus epäonnistui. Yritä uudelleen."
+        backup_too_large: "Valitettavasti varmuuskopiotiedosto on liian suuri."
         file_too_large: "Tiedosto on valitettavasti liian suuri (enimmäiskoko on %{max_size_kb} kt). Mitäpä jos lataisit suuren tiedostosi johonkin pilvipalveluun ja jakaisit linkin?"
         file_size_zero: "Jokin näyttää menneen vikaan. Tiedosto, jota yrität ladata, on 0 tavua. Yritä uudelleen."
         file_too_large_humanized: "Tiedosto on valitettavasti liian suuri (enimmäiskoko on %{max_size}). Mitäpä jos lataisit suuren tiedostosi johonkin pilvipalveluun ja jakaisit linkin?"
@@ -3827,7 +3820,6 @@ fi:
       other_tags: "Muut tunnisteet"
       selector_all_tags: "kaikki tunnisteet"
       selector_no_tags: "ei tunnisteita"
-      changed: "muutetut tunnisteet"
       tags: "Tunnisteet"
       choose_for_topic: "valinnaiset tunnisteet"
       info: "Tietoa"
@@ -4494,7 +4486,6 @@ fi:
           details: "Luodaan uusi vastaus, muokataan, poistetaan tai palautetaan."
         user_event:
           name: "Käyttäjätapahtuma"
-          details: "Kun käyttäjä kirjautuu sisään tai ulos, vahvistaa sähköpostiosoitteensa tai käyttäjä luodaan, hyväksytään tai päivittyy."
         group_event:
           name: "Ryhmätapahtuma"
           details: "Kun ryhmä luodaan, päivitetään tai poistetaan."
@@ -4670,7 +4661,6 @@ fi:
           theme_name: "Teeman nimi"
           component_name: "Komponentin nimi"
           themes_intro: "Aloita valitsemalla olemassa oleva teema tai asenna uusi"
-          themes_intro_emoji: "naistaiteilijaemoji"
           beginners_guide_title: "Aloittelijan opas Discourse-teemojen käyttämiseen"
           developers_guide_title: "Kehittäjän opas Discourse-teemoihin"
           browse_themes: "Selaile yhteisön kehittämiä teemoja"
@@ -5214,7 +5204,7 @@ fi:
       form_templates:
         nav_title: "Mallit"
         title: "Lomakemallit"
-        help: "Luo mallirakenne, jonka avulla voit luoda uusia ketjuja ja viestejä."
+        help: "Luo mallirakenne, jonta voidaan käyttää luotaessa ketjuja."
         new_template: "Uusi malli"
         list_table:
           headings:
@@ -5626,6 +5616,7 @@ fi:
         show_outdated: "Näytä vain vanhentuneet/virheelliset"
         locale: "Kieli:"
         more_than_50_results: "Hakutuloksia on yli 50. Rajaa hakuasi."
+        no_results: "Sivustolta ei ei löytynyt vastaavia tekstejä"
         interpolation_keys: "Käytettävissä olevat interpolaatioavaimet:"
         outdated:
           title: "Käännös on vanhentunut"
@@ -5774,7 +5765,6 @@ fi:
             with_time: <span class="username">%{username}</span> klo <span class="time">%{time}</span>
         badge_intro:
           title: "Aloita valitsemalla olemassa oleva kunniamerkki tai luomalla uusi"
-          emoji: "naisopiskelijaemoji"
           what_are_badges_title: "Mitä kunniamerkit ovat?"
           badge_query_examples_title: "Esimerkkejä kunniamerkkikyselyistä"
         mass_award:

@@ -1,7 +1,7 @@
-import { module, test } from "qunit";
-import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { getOwner } from "@ember/application";
 import { settled } from "@ember/test-helpers";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
 
 module("Unit | Model | pending-post", function (hooks) {
   setupTest(hooks);
@@ -47,7 +47,7 @@ module("Unit | Model | pending-post", function (hooks) {
     await settled();
 
     assert.strictEqual(
-      post.expandedExcerpt.string,
+      post.expandedExcerpt.toString(),
       "<p><strong>bold text</strong></p>"
     );
   });

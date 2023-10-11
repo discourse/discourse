@@ -1,18 +1,18 @@
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import domFromString from "discourse-common/lib/dom-from-string";
-import discourseLater from "discourse-common/lib/later";
-import { INPUT_DELAY, isTesting } from "discourse-common/config/environment";
 import { cancel } from "@ember/runloop";
-import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
+import { htmlSafe } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
-import discourseDebounce from "discourse-common/lib/debounce";
+import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
+import { emojiUnescape } from "discourse/lib/text";
 import {
   caretPosition,
   escapeExpression,
   inCodeBlock,
 } from "discourse/lib/utilities";
-import { emojiUnescape } from "discourse/lib/text";
-import { htmlSafe } from "@ember/template";
+import { INPUT_DELAY, isTesting } from "discourse-common/config/environment";
+import discourseDebounce from "discourse-common/lib/debounce";
+import domFromString from "discourse-common/lib/dom-from-string";
+import discourseLater from "discourse-common/lib/later";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
 
 let hashtagTypeClasses = {};
 export function registerHashtagType(type, typeClassInstance) {

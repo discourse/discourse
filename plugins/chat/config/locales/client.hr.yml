@@ -24,8 +24,6 @@ hr:
           descriptions:
             chat:
               create_message: "Izradite chat poruku na određenom kanalu."
-    about:
-      chat_messages_count: "Chat poruke"
     chat:
       deleted_chat_username: izbrisao
       dates:
@@ -73,6 +71,7 @@ hr:
         browse: "Pretražujte kanale"
       click_to_join: "Kliknite ovdje da biste vidjeli dostupne kanale."
       close: "Zatvori"
+      remove: "Ukloni"
       collapse: "Sažmi ladicu za chat"
       expand: "Proširi ladicu za čavrljanje"
       confirm_flag: "Jeste li sigurni da želite označiti poruku korisnika %{username}?"

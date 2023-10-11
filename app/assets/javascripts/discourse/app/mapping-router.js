@@ -1,9 +1,9 @@
 import EmberRouter from "@ember/routing/router";
-import Site from "discourse/models/site";
-import { defaultHomepage } from "discourse/lib/utilities";
-import getURL from "discourse-common/lib/get-url";
-import { isTesting } from "discourse-common/config/environment";
 import { rewritePath } from "discourse/lib/url";
+import { defaultHomepage } from "discourse/lib/utilities";
+import Site from "discourse/models/site";
+import { isTesting } from "discourse-common/config/environment";
+import getURL from "discourse-common/lib/get-url";
 
 const BareRouter = EmberRouter.extend({
   location: isTesting() ? "none" : "discourse-location",
@@ -111,7 +111,7 @@ export function mapRoutes() {
   // will be built automatically. You can supply a `resource` property to
   // automatically put it in that resource, such as `admin`. That way plugins
   // can define admin routes.
-  Object.keys(requirejs._eak_seen).forEach(function (key) {
+  Object.keys(requirejs.entries).forEach(function (key) {
     if (/route-map$/.test(key)) {
       let module = requirejs(key, null, null, true);
       if (!module || !module.default) {

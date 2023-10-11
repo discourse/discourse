@@ -1,4 +1,5 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
@@ -10,7 +11,6 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "I18n";
-import { test } from "qunit";
 
 acceptance("Admin - Suspend User", function (needs) {
   needs.user();

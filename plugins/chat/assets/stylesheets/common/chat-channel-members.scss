@@ -1,0 +1,32 @@
+.chat-channel-members {
+  width: 50%;
+  min-width: 320px;
+
+  &__filter {
+    margin-bottom: 1rem;
+  }
+
+  &__list {
+    display: flex;
+    margin: 0;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    &-item {
+      display: flex;
+      gap: 0.5rem;
+      list-style: none;
+      border-bottom: 1px solid var(--primary-low);
+      height: 42px;
+      align-items: center;
+
+      &.-no-results {
+        box-sizing: border-box;
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+}

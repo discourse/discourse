@@ -1,10 +1,10 @@
 import Component from "@ember/component";
-import PreloadStore from "discourse/lib/preload-store";
+import { scheduleOnce } from "@ember/runloop";
+import { htmlSafe } from "@ember/template";
 import { Promise } from "rsvp";
+import PreloadStore from "discourse/lib/preload-store";
 /*eslint no-bitwise:0 */
 import getUrl from "discourse-common/lib/get-url";
-import { htmlSafe } from "@ember/template";
-import { scheduleOnce } from "@ember/runloop";
 import { observes } from "discourse-common/utils/decorators";
 import { darkLightDiff, drawHeader } from "wizard/lib/preview";
 

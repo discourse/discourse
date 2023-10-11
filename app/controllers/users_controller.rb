@@ -106,7 +106,9 @@ class UsersController < ApplicationController
   end
 
   def show(for_card: false)
-    return redirect_to path("/login") if SiteSetting.hide_user_profiles_from_public && !current_user
+    if SiteSetting.hide_user_profiles_from_public && !current_user
+      raise Discourse::NotFound.new(custom_message: "invalid_access", status: 403)
+    end
 
     @user =
       fetch_user_from_params(
@@ -155,7 +157,9 @@ class UsersController < ApplicationController
 
   # This route is not used in core, but is used by theme components (e.g. https://meta.discourse.org/t/144479)
   def cards
-    return redirect_to path("/login") if SiteSetting.hide_user_profiles_from_public && !current_user
+    if SiteSetting.hide_user_profiles_from_public && !current_user
+      raise Discourse::NotFound.new(custom_message: "invalid_access", status: 403)
+    end
 
     user_ids = params.require(:user_ids).split(",").map(&:to_i)
     raise Discourse::InvalidParameters.new(:user_ids) if user_ids.length > 50
@@ -767,7 +771,12 @@ class UsersController < ApplicationController
           user.errors[:primary_email]&.include?(I18n.t("errors.messages.taken"))
       session["user_created_message"] = activation.success_message
 
-      if existing_user = User.find_by_email(user.primary_email&.email)
+      existing_user = User.find_by_email(user.primary_email&.email)
+      if !existing_user && SiteSetting.normalize_emails
+        existing_user =
+          UserEmail.find_by_normalized_email(user.primary_email&.normalized_email)&.user
+      end
+      if existing_user
         Jobs.enqueue(:critical_user_email, type: "account_exists", user_id: existing_user.id)
       end
 
@@ -1546,6 +1555,11 @@ class UsersController < ApplicationController
   end
 
   def create_second_factor_security_key
+    if current_user.all_security_keys.count >= UserSecurityKey::MAX_KEYS_PER_USER
+      render_json_error(I18n.t("login.too_many_security_keys"), status: 422)
+      return
+    end
+
     challenge_session = DiscourseWebauthn.stage_challenge(current_user, secure_session)
     render json:
              success_json.merge(
@@ -1564,13 +1578,12 @@ class UsersController < ApplicationController
     params.require(:attestation)
     params.require(:clientData)
 
-    ::DiscourseWebauthn::SecurityKeyRegistrationService.new(
+    ::DiscourseWebauthn::RegistrationService.new(
       current_user,
       params,
-      challenge: DiscourseWebauthn.challenge(current_user, secure_session),
-      rp_id: DiscourseWebauthn.rp_id,
-      origin: Discourse.base_url,
-    ).register_second_factor_security_key
+      session: secure_session,
+      factor_type: UserSecurityKey.factor_types[:second_factor],
+    ).register_security_key
     render json: success_json
   rescue ::DiscourseWebauthn::SecurityKeyError => err
     render json: failed_json.merge(error: err.message)
@@ -1617,7 +1630,7 @@ class UsersController < ApplicationController
   def disable_second_factor
     # delete all second factors for a user
     current_user.user_second_factors.destroy_all
-    current_user.security_keys.destroy_all
+    current_user.second_factor_security_keys.destroy_all
 
     Jobs.enqueue(
       :critical_user_email,
@@ -2000,20 +2013,18 @@ class UsersController < ApplicationController
     permitted.concat UserUpdater::TAG_NAMES.keys
     permitted << UserUpdater::NOTIFICATION_SCHEDULE_ATTRS
 
-    if !SiteSetting.legacy_navigation_menu?
-      if params.has_key?(:sidebar_category_ids) && params[:sidebar_category_ids].blank?
-        params[:sidebar_category_ids] = []
+    if params.has_key?(:sidebar_category_ids) && params[:sidebar_category_ids].blank?
+      params[:sidebar_category_ids] = []
+    end
+
+    permitted << { sidebar_category_ids: [] }
+
+    if SiteSetting.tagging_enabled
+      if params.has_key?(:sidebar_tag_names) && params[:sidebar_tag_names].blank?
+        params[:sidebar_tag_names] = []
       end
 
-      permitted << { sidebar_category_ids: [] }
-
-      if SiteSetting.tagging_enabled
-        if params.has_key?(:sidebar_tag_names) && params[:sidebar_tag_names].blank?
-          params[:sidebar_tag_names] = []
-        end
-
-        permitted << { sidebar_tag_names: [] }
-      end
+      permitted << { sidebar_tag_names: [] }
     end
 
     if SiteSetting.enable_user_status

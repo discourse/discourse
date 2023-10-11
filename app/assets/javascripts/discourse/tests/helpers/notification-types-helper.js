@@ -1,7 +1,7 @@
 import { getRenderDirector } from "discourse/lib/notification-types-manager";
-import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
-import User from "discourse/models/user";
 import Site from "discourse/models/site";
+import User from "discourse/models/user";
+import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 
 export function createRenderDirector(
   notification,

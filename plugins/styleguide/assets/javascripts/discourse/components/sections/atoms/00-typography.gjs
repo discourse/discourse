@@ -1,5 +1,5 @@
-import StyleguideExample from "../../styleguide-example";
 import I18n from "I18n";
+import StyleguideExample from "../../styleguide-example";
 
 const t = I18n.t.bind(I18n);
 

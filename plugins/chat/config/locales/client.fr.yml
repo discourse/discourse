@@ -24,10 +24,6 @@ fr:
           descriptions:
             chat:
               create_message: "Créez un message instantané dans un canal spécifié."
-    about:
-      chat_messages_count: "Messages instantanés"
-      chat_channels_count: "Canaux de discussion"
-      chat_users_count: "Utilisateurs de la discussion"
     chat:
       deleted_chat_username: supprimé
       dates:
@@ -85,6 +81,7 @@ fr:
         create: "Nouveau canal"
       click_to_join: "Cliquez ici pour voir les canaux disponibles."
       close: "Fermer"
+      remove: "Supprimer"
       collapse: "Réduire le tiroir de discussion"
       expand: "Développer le tiroir de discussion"
       confirm_flag: "Voulez-vous vraiment signaler le message de %{username} ?"

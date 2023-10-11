@@ -21,6 +21,7 @@ lv:
         join: "Pievienojieties"
         leave: "Iziet"
       close: "Aizvērt"
+      remove: "Atcelt"
       delete: "Dzēst"
       edited: "rediģēts"
       muted: "klusināts"

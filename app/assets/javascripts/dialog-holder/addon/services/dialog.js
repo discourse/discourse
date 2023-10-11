@@ -1,7 +1,7 @@
+import { next } from "@ember/runloop";
 import Service from "@ember/service";
 import A11yDialog from "a11y-dialog";
 import { bind } from "discourse-common/utils/decorators";
-import { next } from "@ember/runloop";
 
 export default Service.extend({
   dialogInstance: null,

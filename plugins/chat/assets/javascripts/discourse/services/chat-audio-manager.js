@@ -1,7 +1,7 @@
 import Service from "@ember/service";
-import { debounce } from "discourse-common/utils/decorators";
 import { isTesting } from "discourse-common/config/environment";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
+import { debounce } from "discourse-common/utils/decorators";
 
 const AUDIO_DEBOUNCE_DELAY = 3000;
 

@@ -25,10 +25,6 @@ ar:
           descriptions:
             chat:
               create_message: "أنشئ رسالة دردشة في قناة محدَّدة."
-    about:
-      chat_messages_count: "رسائل الدردشة"
-      chat_channels_count: "قنوات الدردشة"
-      chat_users_count: "مستخدمو الدردشة"
     chat:
       deleted_chat_username: تم الحذف
       dates:
@@ -90,6 +86,7 @@ ar:
         create: "قناة جديدة"
       click_to_join: "انقر هنا لعرض القنوات المتاحة"
       close: "إغلاق"
+      remove: "إزالة"
       collapse: "طي ساحب الدردشة"
       expand: "توسيع درج الدردشة"
       confirm_flag: "هل تريد بالتأكيد الإبلاغ عن رسالة %{username}؟"

@@ -1,9 +1,9 @@
+import { getOwner } from "@ember/application";
 import { A } from "@ember/array";
 import Helper from "@ember/component/helper";
-import { computed, get } from "@ember/object";
-import { getOwner } from "@ember/application";
-import { join } from "@ember/runloop";
 import { assert, runInDebug } from "@ember/debug";
+import { computed, get } from "@ember/object";
+import { join } from "@ember/runloop";
 
 function getCurrentRouteInfos(router) {
   let routerLib = router._routerMicrolib || router.router;

@@ -1,28 +1,28 @@
-import { applyDecorators, createWidget } from "discourse/widgets/widget";
-import { formatUsername } from "discourse/lib/utilities";
-import { avatarUrl, translateSize } from "discourse-common/lib/avatar-utils";
-import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
-import DecoratorHelper from "discourse/widgets/decorator-helper";
-import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
-import PostCooked from "discourse/widgets/post-cooked";
+import { getOwner } from "@ember/application";
 import { Promise } from "rsvp";
-import RawHtml from "discourse/widgets/raw-html";
-import { dateNode } from "discourse/helpers/node";
 import { h } from "virtual-dom";
-import hbs from "discourse/widgets/hbs-compiler";
-import { iconNode } from "discourse-common/lib/icon-library";
-import { postTransformCallbacks } from "discourse/widgets/post-stream";
+import ShareTopicModal from "discourse/components/modal/share-topic";
+import { dateNode } from "discourse/helpers/node";
+import autoGroupFlairForUser from "discourse/lib/avatar-flair";
+import { relativeAgeMediumSpan } from "discourse/lib/formatter";
+import { nativeShare } from "discourse/lib/pwa-utils";
 import {
   prioritizeNameFallback,
   prioritizeNameInUx,
 } from "discourse/lib/settings";
-import { relativeAgeMediumSpan } from "discourse/lib/formatter";
 import { transformBasicPost } from "discourse/lib/transform-post";
-import autoGroupFlairForUser from "discourse/lib/avatar-flair";
-import { nativeShare } from "discourse/lib/pwa-utils";
-import ShareTopicModal from "discourse/components/modal/share-topic";
-import { getOwner } from "@ember/application";
+import DiscourseURL from "discourse/lib/url";
+import { formatUsername } from "discourse/lib/utilities";
+import DecoratorHelper from "discourse/widgets/decorator-helper";
+import hbs from "discourse/widgets/hbs-compiler";
+import PostCooked from "discourse/widgets/post-cooked";
+import { postTransformCallbacks } from "discourse/widgets/post-stream";
+import RawHtml from "discourse/widgets/raw-html";
+import { applyDecorators, createWidget } from "discourse/widgets/widget";
+import { avatarUrl, translateSize } from "discourse-common/lib/avatar-utils";
+import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
+import { iconNode } from "discourse-common/lib/icon-library";
+import I18n from "I18n";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);
@@ -59,7 +59,7 @@ export function avatarImg(wanted, attrs) {
       height: size,
       src: getURLWithCDN(url),
       title,
-      "aria-label": title,
+      "aria-hidden": true,
       loading: "lazy",
       tabindex: "-1",
     },
@@ -73,8 +73,19 @@ export function avatarFor(wanted, attrs, linkAttrs) {
   const attributes = {
     href: attrs.url,
     "data-user-card": attrs.username,
-    "aria-hidden": true,
   };
+
+  // often avatars are paired with usernames,
+  // making them redundant for screen readers
+  // so we hide the avatar from screen readers by default
+  if (attrs.ariaHidden === false) {
+    attributes["aria-label"] = I18n.t("user.profile_possessive", {
+      username: attrs.username,
+    });
+  } else {
+    attributes["aria-hidden"] = true;
+  }
+
   if (linkAttrs) {
     Object.assign(attributes, linkAttrs);
   }
@@ -620,10 +631,6 @@ createWidget("post-contents", {
   },
 
   share() {
-    if (this.currentUser && this.siteSettings.enable_user_tips) {
-      this.currentUser.hideUserTipForever("post_menu");
-    }
-
     const post = this.findAncestorModel();
     nativeShare(this.capabilities, { url: post.shareUrl }).catch(() => {
       const topic = post.topic;
@@ -943,7 +950,10 @@ export default createWidget("post", {
       return "";
     }
 
-    return this.attach("post-article", attrs);
+    return [
+      this.attach("post-user-tip-shim"),
+      this.attach("post-article", attrs),
+    ];
   },
 
   toggleLike() {
@@ -978,35 +988,5 @@ export default createWidget("post", {
       this.dialog.alert(I18n.t("post.few_likes_left"));
       kvs.set({ key: "lastWarnedLikes", value: Date.now() });
     }
-  },
-
-  didRenderWidget() {
-    if (!this.currentUser || !this.siteSettings.enable_user_tips) {
-      return;
-    }
-
-    const reference = document.querySelector(
-      ".post-controls .actions .show-more-actions"
-    );
-
-    this.currentUser.showUserTip({
-      id: "post_menu",
-
-      titleText: I18n.t("user_tips.post_menu.title"),
-      contentText: I18n.t("user_tips.post_menu.content"),
-
-      reference,
-      appendTo: reference?.closest(".post-controls"),
-
-      placement: "top",
-    });
-  },
-
-  destroy() {
-    this.userTips.hideTip("post_menu");
-  },
-
-  willRerenderWidget() {
-    this.userTips.hideTip("post_menu");
   },
 });

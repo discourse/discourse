@@ -18,10 +18,6 @@ fa_IR:
           actions:
             chat_channel_status_change: "وضعیت کانال گفتگو تغییر کرد"
             chat_channel_delete: "کانال گفتگو حذف شد"
-    about:
-      chat_messages_count: "پیام‌های گفتگو"
-      chat_channels_count: "کانال‌های گفتگو"
-      chat_users_count: "کاربران گفتگو"
     chat:
       deleted_chat_username: حذف شد
       dates:
@@ -67,6 +63,7 @@ fa_IR:
         create: "کانال جدید"
       click_to_join: "برای مشاهده کانال‌های موجود، اینجا را کلیک کنید."
       close: "بستن"
+      remove: "پاک کردن"
       confirm_flag: "آیا برای پرچم گذاری پیام %{username} مطمئن هستید؟"
       hidden: "یک پیام پنهان شده است. [view]"
       delete: "حذف"

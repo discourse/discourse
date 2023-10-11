@@ -1,6 +1,6 @@
-import { action } from "@ember/object";
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import I18n from "I18n";
 
 export default class extends Component {

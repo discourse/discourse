@@ -32,7 +32,7 @@ module SidekiqHelpers
       eq(expectation),
       (
         if expectation
-          "No enqueued job with #{expected} found"
+          "No enqueued job with #{expected}\nFound:\n #{jobs.inspect}"
         else
           "Enqueued job with #{expected} found"
         end

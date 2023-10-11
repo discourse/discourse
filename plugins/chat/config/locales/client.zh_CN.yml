@@ -25,10 +25,10 @@ zh_CN:
           descriptions:
             chat:
               create_message: "在指定频道创建聊天消息。"
-    about:
-      chat_messages_count: "聊天消息"
-      chat_channels_count: "聊天频道"
-      chat_users_count: "聊天用户"
+      web_hooks:
+        chat_message_event:
+          name: "聊天消息事件"
+          details: "创建、编辑、删除或恢复聊天消息时。"
     chat:
       deleted_chat_username: 已删除
       dates:
@@ -85,6 +85,7 @@ zh_CN:
         create: "新建频道"
       click_to_join: "点击此处查看可用频道。"
       close: "关闭"
+      remove: "移除"
       collapse: "收起聊天抽屉"
       expand: "展开聊天栏"
       confirm_flag: "确定要举报 %{username} 的消息吗？"

@@ -1,12 +1,12 @@
-import Service, { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
-import I18n from "I18n";
-import { dasherize } from "@ember/string";
 import { action } from "@ember/object";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import Service, { inject as service } from "@ember/service";
+import { dasherize } from "@ember/string";
 import { CLOSE_INITIATED_BY_MODAL_SHOW } from "discourse/components/d-modal";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import deprecated from "discourse-common/lib/deprecated";
+import I18n from "I18n";
 
 // Known legacy modals in core. Silence deprecation warnings for these so the messages
 // don't cause unnecessary noise.
@@ -20,12 +20,8 @@ const KNOWN_LEGACY_MODALS = [
   "create-invite",
   "grant-badge",
   "group-default-notifications",
-  "raw-email",
   "reject-reason-reviewable",
   "reorder-categories",
-  "request-group-membership-form",
-  "share-and-invite",
-  "tag-upload",
 ];
 
 const LEGACY_OPTS = new Set([

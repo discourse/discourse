@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import { formatUsername } from "discourse/lib/utilities";
 import { inject as service } from "@ember/service";
+import { formatUsername } from "discourse/lib/utilities";
 
 export default class ChatUserDisplayName extends Component {
   @service siteSettings;

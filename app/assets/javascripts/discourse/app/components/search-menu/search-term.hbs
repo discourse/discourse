@@ -7,5 +7,6 @@
   aria-label={{i18n "search.title"}}
   {{on "keyup" this.onKeyup}}
   {{on "input" this.updateSearchTerm}}
+  {{on "focus" @openSearchMenu}}
   {{did-insert this.focus}}
 />

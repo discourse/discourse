@@ -1,11 +1,11 @@
-import Service, { inject as service } from "@ember/service";
-import { defaultHomepage } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
+import Service, { inject as service } from "@ember/service";
 import KeyValueStore from "discourse/lib/key-value-store";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { defaultHomepage } from "discourse/lib/utilities";
 import Site from "discourse/models/site";
 import getURL from "discourse-common/lib/get-url";
 import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
-import { withPluginApi } from "discourse/lib/plugin-api";
 
 const PREFERRED_MODE_KEY = "preferred_mode";
 const PREFERRED_MODE_STORE_NAMESPACE = "discourse_chat_";

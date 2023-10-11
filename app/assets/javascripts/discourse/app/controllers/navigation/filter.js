@@ -1,8 +1,8 @@
-import Controller, { inject as controller } from "@ember/controller";
 import { tracked } from "@glimmer/tracking";
+import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
-import { bind } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class NavigationFilterController extends Controller {
   @controller("discovery/filter") discoveryFilter;

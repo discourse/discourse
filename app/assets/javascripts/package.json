@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "postinstall": "patch-package"
+    "postinstall": "./run-patch-package"
   },
   "workspaces": [
     "admin",
@@ -15,8 +15,10 @@
     "discourse-widget-hbs",
     "ember-cli-progress-ci",
     "ember-production-deprecations",
+    "float-kit",
     "pretty-text",
     "select-kit",
+    "theme-transpiler",
     "truth-helpers",
     "wizard"
   ],

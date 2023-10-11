@@ -1,10 +1,10 @@
-import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
-import { PUBLIC_JS_VERSIONS } from "discourse/lib/public-js-versions";
+import { run } from "@ember/runloop";
+import { registerWaiter } from "@ember/test";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
-import { run } from "@ember/runloop";
+import { PUBLIC_JS_VERSIONS } from "discourse/lib/public-js-versions";
 import { isTesting } from "discourse-common/config/environment";
-import { registerWaiter } from "@ember/test";
+import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
 
 const _loaded = {};
 const _loading = {};

@@ -139,7 +139,22 @@ id:
           other: "%{comma_separated_usernames} dan %{count} lainnya"
     mention_warning:
       dismiss: "bubar"
+      cannot_see: "%{first_identifier} tidak dapat mengakses kanal ini dan tidak diberi tahu."
+      cannot_see_multiple:
+        other: "%{first_identifier} dan %{count} pengguna lainnya tidak dapat mengakses kanal ini dan tidak diberi tahu."
+      invitations_sent:
+        other: "Undangan terkirim"
+      invite: "Undang ke kanal"
+      without_membership: "%{first_identifier} belum bergabung dengan kanal ini."
+      without_membership_multiple:
+        other: "%{first_identifier} dan %{count} pengguna lainnya belum bergabung dengan kanal ini."
+      group_mentions_disabled: "%{first_identifier} tidak mengizinkan penyebutan."
+      group_mentions_disabled_multiple:
+        other: "%{first_identifier} dan %{count} grup lainnya tidak mengizinkan penyebutan."
       global_mentions_disallowed: "Penyebutan @here dan @all dinonaktifkan di kanal ini."
+      too_many_members: "%{first_identifier} memiliki terlalu banyak anggota. Tidak ada yang diberitahu."
+      too_many_members_multiple:
+        other: "%{first_identifier} dan %{count} grup lainnya memiliki terlalu banyak anggota. Tidak ada yang diberitahu."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "berisi karakter non-ascii"

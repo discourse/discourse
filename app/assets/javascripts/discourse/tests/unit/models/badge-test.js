@@ -1,11 +1,11 @@
+import { getOwner } from "@ember/application";
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import Badge from "discourse/models/badge";
 import pretender, {
   parsePostData,
   response,
 } from "discourse/tests/helpers/create-pretender";
-import Badge from "discourse/models/badge";
-import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
 
 module("Unit | Model | badge", function (hooks) {
   setupTest(hooks);

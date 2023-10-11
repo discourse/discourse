@@ -1,9 +1,12 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { MAX_SECOND_FACTOR_NAME_LENGTH } from "discourse/models/user";
 
 export default class SecondFactorEdit extends Component {
   @tracked loading = false;
+
+  maxSecondFactorNameLength = MAX_SECOND_FACTOR_NAME_LENGTH;
 
   @action
   editSecondFactor() {

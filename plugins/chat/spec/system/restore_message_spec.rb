@@ -7,7 +7,7 @@ RSpec.describe "Restore message", type: :system do
   fab!(:channel_1) { Fabricate(:category_channel) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
-  let(:chat_channel_page) { PageObjects::Pages::ChatChannel.new }
+  let(:channel_page) { PageObjects::Pages::ChatChannel.new }
 
   before do
     chat_system_bootstrap
@@ -23,10 +23,10 @@ RSpec.describe "Restore message", type: :system do
       sign_in(regular_user)
       chat_page.visit_channel(channel_1)
 
-      chat_channel_page.delete_message(message_1)
+      channel_page.messages.delete(message_1)
 
-      expect(chat_channel_page.messages).to have_deleted_message(message_1, count: 1)
-      expect(chat_channel_page.messages).to have_action("restore", id: message_1.id)
+      expect(channel_page.messages).to have_deleted_message(message_1, count: 1)
+      expect(channel_page.messages).to have_action("restore", id: message_1.id)
     end
 
     it "can't be restored by another user" do
@@ -38,12 +38,12 @@ RSpec.describe "Restore message", type: :system do
       using_session(:regular_user) do |session|
         sign_in(regular_user)
         chat_page.visit_channel(channel_1)
-        chat_channel_page.delete_message(message_1)
+        channel_page.messages.delete(message_1)
         session.quit
       end
 
       using_session(:another_user) do |session|
-        expect(chat_channel_page.messages).to have_no_message(id: message_1.id)
+        expect(channel_page.messages).to have_no_message(id: message_1.id)
         session.quit
       end
     end
@@ -61,14 +61,14 @@ RSpec.describe "Restore message", type: :system do
       using_session(:admin_user) do |session|
         sign_in(admin_user)
         chat_page.visit_channel(channel_1)
-        chat_channel_page.delete_message(message_1)
+        channel_page.messages.delete(message_1)
         session.quit
       end
 
       using_session(:regular_user) do |session|
-        expect(chat_channel_page.messages).to have_deleted_message(message_1, count: 1)
-        chat_channel_page.messages.expand(id: message_1.id)
-        expect(chat_channel_page.messages).to have_no_action("restore", id: message_1.id)
+        expect(channel_page.messages).to have_deleted_message(message_1, count: 1)
+        channel_page.messages.expand(id: message_1.id)
+        expect(channel_page.messages).to have_no_action("restore", id: message_1.id)
         session.quit
       end
     end

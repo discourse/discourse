@@ -238,13 +238,9 @@ hy:
       our_admins: "Մեր Ադմինները"
       our_moderators: "Մեր Մոդերատորները"
       moderators: "Մոդերատորներ"
-      stat:
-        all_time: "Ամբողջ Ժամանակ"
       like_count: "Հավանումներ"
       topic_count: "Թեմաներ"
       post_count: "Գրառում"
-      active_user_count: "Ակտիվ Օգտատերեր"
-      contact: "Հետադարձ Կապ"
       contact_info: "Այս կայքի հետ կապված կրիտիկական խնդիրների կամ հրատապ հարցերի դեպքում խնդրում ենք կապվել մեզ հետ %{contact_info} էլ. հասցեով:"
     bookmarked:
       title: "Էջանշել"
@@ -277,6 +273,9 @@ hy:
       new_topic: "Նոր թեմայի սևագիր"
       abandon:
         yes_value: "Չեղարկել"
+    topic_count_all:
+      one: "Տեսնել %{count} նոր թեման"
+      other: "Դիտել %{count} նոր թեմաները"
     topic_count_categories:
       one: "Տեսնել %{count} նոր կամ թարմացված թեման"
       other: "Դիտել %{count} նոր կամ թարմացված թեմաները"
@@ -916,7 +915,6 @@ hy:
         success: "(էլ. նամակն ուղարկված է)"
         in_progress: "(էլ. նամակն ուղարկվում է)"
         error: "(սխալ)"
-        emoji: "կողպեք էմոջի"
         action: "Ուղարկել Գաղտնաբառի Վերականգման Էլ. Նամակ"
         set_password: "Առաջադրել Գաղտնաբառ"
         choose_new: "Ընտրել նոր գաղտնաբառ"
@@ -1331,7 +1329,6 @@ hy:
     email_login:
       link_label: "Ուղարկեք ինձ մուտքի հղում"
       button_label: "էլ. նամակով"
-      emoji: "կողպեք էմոջի"
       complete_username: "Եթե <b>%{username}</b> օգտանվանը համապատասխանող հաշիվ գոյություն ունի, ապա Դուք շուտով կստանաք էլ-նամակ մուտքի հղումով:"
       complete_email: "Եթե <b>%{email}</b> էլ. հասցեին համապատասխանող հաշիվ գոյություն ունի, ապա Դուք շուտով կստանաք էլ. նամակ մուտքի հղումով:"
       complete_username_found: "Մենք գտել ենք <b>%{username}</b> օգտանվանը համապատասխանող հաշիվ, Դուք շուտով կստանաք մուտքի հղումով էլ. նամակ:"
@@ -1394,7 +1391,6 @@ hy:
         backup_code: "Փոխարենը օգտագործել պահուստային կոդը"
     invites:
       accept_title: "Հրավեր"
-      emoji: "ծրար էմոջի"
       welcome_to: "Բարի Գալուստ %{site_name}!"
       invited_by: "Ձեզ հրավիրել է՝"
       social_login_available: "Դուք նաև կկարողանաք մուտք գործել ցանկացած սոցիալական կայքով՝ օգտագործելով այդ էլ. հասցեն:"
@@ -1840,6 +1836,7 @@ hy:
       options: "Թեմաների Տարբերակները"
       show_links: "ցուցադրել այս թեմայի հղումները"
       unread_indicator: "Ոչ մի անդամ դեռ չի կարդացել այս թեմայի մինչև վերջին գրառումը: "
+      bumped_at: "Վերջինը՝ %{date}"
       deleted: "Թեման ջնջվել է"
       slow_mode_update:
         enable: "Միացնել"
@@ -2697,7 +2694,6 @@ hy:
       other_tags: "Այլ Թեգեր"
       selector_all_tags: "բոլոր թեգերը"
       selector_no_tags: "առանց թեգերի"
-      changed: "փոփոխված թեգերը՝ "
       tags: "Թեգեր"
       choose_for_topic: "ընտրովի թեգեր"
       info: "Ինֆորմացիա"
@@ -3240,7 +3236,6 @@ hy:
           theme_name: "Թեմայի անվանում"
           component_name: "Բաղադրիչի անուն"
           themes_intro: "Ընտրել գոյություն ունեցող թեմա կամ տեղադրել նորը՝ մեկնարկի համար"
-          themes_intro_emoji: "կին արտիստ էմոջի"
           beginners_guide_title: "Discourse Թեմաների օգտագործման Սկսնակի ուղեցույց"
           developers_guide_title: " Discourse Թեմաների՝ Ծրագրավորողի ուղեցույց"
           browse_themes: "Դիտել համայնքի թեմաները"
@@ -4113,7 +4108,6 @@ hy:
             with_time: <span class="username">%{username}</span>-ին <span class="time">%{time}</span>-ին
         badge_intro:
           title: "Ընտրեք գոյություն ունեցող կրծքանշան կամ ստեղծեք նորը՝ մեկնարկի համար"
-          emoji: "կին ուսանող էմոջի"
           what_are_badges_title: "Ի՞նչ է կրծքանշանը:"
           badge_query_examples_title: "Կրծքանշանների հարցման օրինակներ"
         mass_award:

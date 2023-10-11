@@ -22,8 +22,27 @@ module.exports = function (defaults) {
   DeprecationSilencer.silence(console, "warn");
   DeprecationSilencer.silence(defaults.project.ui, "writeWarnLine");
 
+  const isEmbroider = process.env.USE_EMBROIDER !== "0";
   const isProduction = EmberApp.env().includes("production");
-  const isTest = EmberApp.env().includes("test");
+
+  // This is more or less the same as the one in @embroider/test-setup
+  const maybeEmbroider = (app, options) => {
+    if (isEmbroider) {
+      const { compatBuild } = require("@embroider/compat");
+      const { Webpack } = require("@embroider/webpack");
+
+      // https://github.com/embroider-build/embroider/issues/1581
+      if (Array.isArray(options?.extraPublicTrees)) {
+        options.extraPublicTrees = [
+          app.addonPostprocessTree("all", mergeTrees(options.extraPublicTrees)),
+        ];
+      }
+
+      return compatBuild(app, Webpack, options);
+    } else {
+      return app.toTree(options?.extraPublicTrees);
+    }
+  };
 
   const app = new EmberApp(defaults, {
     autoRun: false,
@@ -81,14 +100,15 @@ module.exports = function (defaults) {
       enabled: false,
     },
 
+    "ember-cli-deprecation-workflow": {
+      enabled: true,
+    },
+
     "ember-cli-terser": {
       enabled: isProduction,
-      exclude: [
-        "**/test-*.js",
-        "**/core-tests*.js",
-        "**/highlightjs/*",
-        "**/javascripts/*",
-      ],
+      exclude:
+        ["**/highlightjs/*", "**/javascripts/*"] +
+        (isEmbroider ? [] : ["**/test-*.js", "**/core-tests*.js"]),
     },
 
     "ember-cli-babel": {
@@ -99,8 +119,9 @@ module.exports = function (defaults) {
       plugins: [require.resolve("deprecation-silencer")],
     },
 
-    // We need to build tests in prod for theme tests
-    tests: true,
+    // Was previously true so that we could run theme tests in production
+    // but we're moving away from that as part of the Embroider migration
+    tests: isEmbroider ? !isProduction : true,
 
     vendorFiles: {
       // Freedom patch - includes bug fix and async stack support
@@ -137,18 +158,16 @@ module.exports = function (defaults) {
     .findAddonByName("pretty-text")
     .treeForMarkdownItBundle();
 
-  let testemStylesheetTree;
-  if (isTest) {
-    testemStylesheetTree = mergeTrees([
-      discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
-      discourseScss(
-        `${discourseRoot}/app/assets/stylesheets`,
-        "qunit-custom.scss"
-      ),
-    ]);
-  }
+  const testStylesheetTree = mergeTrees([
+    discourseScss(`${discourseRoot}/app/assets/stylesheets`, "qunit.scss"),
+    discourseScss(
+      `${discourseRoot}/app/assets/stylesheets`,
+      "qunit-custom.scss"
+    ),
+  ]);
+  app.project.liveReloadFilterPatterns = [/.*\.scss/];
 
-  return app.toTree([
+  const extraPublicTrees = [
     createI18nTree(discourseRoot, vendorJs),
     parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
@@ -171,6 +190,39 @@ module.exports = function (defaults) {
     }),
     generateScriptsTree(app),
     discoursePluginsTree,
-    testemStylesheetTree,
-  ]);
+    testStylesheetTree,
+  ];
+
+  return maybeEmbroider(app, {
+    extraPublicTrees,
+    packagerOptions: {
+      webpackConfig: {
+        devtool: "source-map",
+        externals: [
+          function ({ request }, callback) {
+            if (
+              !request.includes("-embroider-implicit") &&
+              (request.startsWith("admin/") ||
+                request.startsWith("wizard/") ||
+                (request.startsWith("pretty-text/engines/") &&
+                  request !== "pretty-text/engines/discourse-markdown-it") ||
+                request.startsWith("discourse/plugins/") ||
+                request.startsWith("discourse/theme-"))
+            ) {
+              callback(null, request, "commonjs");
+            } else {
+              callback();
+            }
+          },
+        ],
+        module: {
+          parser: {
+            javascript: {
+              exportsPresence: "error",
+            },
+          },
+        },
+      },
+    },
+  });
 };

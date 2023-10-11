@@ -153,7 +153,6 @@ export default class ChatApi extends Service {
    * @param {number} [data.in_reply_to_id] - The ID of the replied-to message.
    * @param {number} [data.staged_id] - The staged ID of the message before it was persisted.
    * @param {number} [data.thread_id] - The ID of the thread where this message should be posted.
-   * @param {number} [data.staged_thread_id] - The staged ID of the thread before it was persisted.
    * @param {Array.<number>} [data.upload_ids] - Array of upload ids linked to the message.
    * @returns {Promise}
    */
@@ -205,6 +204,21 @@ export default class ChatApi extends Service {
   }
 
   /**
+   * Creates a thread.
+   * @param {number} channelId - The ID of the channel.
+   * @param {number} originalMessageId - The ID of the original message.
+   * @param {object} data - Params of the thread.
+   * @param {string} [data.title] - Title of the thread.
+   * @returns {Promise}
+   */
+  createThread(channelId, originalMessageId, data = {}) {
+    return this.#postRequest(`/channels/${channelId}/threads`, {
+      title: data.title,
+      original_message_id: originalMessageId,
+    });
+  }
+
+  /**
    * Updates the status of a channel.
    * @param {number} channelId - The ID of the channel.
    * @param {string} status - The new status, can be "open" or "closed".
@@ -219,14 +233,15 @@ export default class ChatApi extends Service {
    * @param {number} channelId - The ID of the channel.
    * @returns {Collection}
    */
-  listChannelMemberships(channelId) {
+  listChannelMemberships(channelId, params = {}) {
     return new Collection(
       `${this.#basePath}/channels/${channelId}/memberships`,
       (response) => {
         return response.memberships.map((membership) =>
           UserChatChannelMembership.create(membership)
         );
-      }
+      },
+      params
     );
   }
 

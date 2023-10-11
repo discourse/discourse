@@ -1,6 +1,6 @@
-import { tagName } from "@ember-decorators/component";
-import { action } from "@ember/object";
 import Component from "@ember/component";
+import { action } from "@ember/object";
+import { tagName } from "@ember-decorators/component";
 import DiscourseURL from "discourse/lib/url";
 
 @tagName("")

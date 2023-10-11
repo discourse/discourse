@@ -11,6 +11,7 @@ RSpec.describe Plugin::Metadata do
 # contact emails: frankz@example.com
 # url: http://discourse.org
 # required version: 1.3.0beta6+48
+# meta_topic_id: 1234
 
 some_ruby
 TEXT
@@ -22,6 +23,7 @@ TEXT
       expect(metadata.contact_emails).to eq("frankz@example.com")
       expect(metadata.url).to eq("http://discourse.org")
       expect(metadata.required_version).to eq("1.3.0beta6+48")
+      expect(metadata.meta_topic_id).to eq("1234")
     end
   end
 

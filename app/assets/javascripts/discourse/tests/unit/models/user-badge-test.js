@@ -1,9 +1,9 @@
+import { getOwner } from "@ember/application";
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import UserBadge from "discourse/models/user-badge";
 import badgeFixtures from "discourse/tests/fixtures/user-badges";
 import { cloneJSON } from "discourse-common/lib/object";
-import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
 
 module("Unit | Model | user-badge", function (hooks) {
   setupTest(hooks);

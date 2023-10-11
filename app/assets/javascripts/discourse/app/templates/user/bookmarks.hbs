@@ -1,4 +1,8 @@
+{{body-class "user-activity-bookmarks-page"}}
+
 <ConditionalLoadingSpinner @condition={{this.loading}}>
+  <PluginOutlet @name="above-user-bookmarks" @connectorTagName="div" />
+
   {{#if this.permissionDenied}}
     <div class="alert alert-info">{{i18n
         "bookmarks.list_permission_denied"

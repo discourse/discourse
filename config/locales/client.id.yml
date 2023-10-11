@@ -255,17 +255,9 @@ id:
       our_admins: "Admin Kami"
       our_moderators: "Moderator Kami"
       moderators: "Moderator"
-      stat:
-        all_time: "Sepanjang Waktu"
-        last_day: "24 jam terakhir"
-        last_7_days: "7 hari terakhir"
-        last_30_days: "30 hari terakhir"
       like_count: "Suka"
       topic_count: "Topik"
       post_count: "Pos"
-      user_count: "Pendaftaran"
-      active_user_count: "Pengguna Aktif"
-      contact: "Kontak kami"
       contact_info: "Pada kegiatan dari sebuah isu kritikal atau penting terjadi pada situs ini, silahkan kontak kami di %{contact_info}."
     bookmarked:
       title: "Penandaan"
@@ -323,6 +315,8 @@ id:
         confirm: "Anda sudah memiliki draf yang sedang diproses. Apa yang ingin Anda lakukan dengannya?"
         yes_value: "Batalkan"
         no_value: "Lanjut menyunting"
+    topic_count_all:
+      other: "Lihat %{count} topik baru"
     topic_count_categories:
       other: "Lihat %{count} topik baru atau diperbarui"
     topic_count_latest:
@@ -510,12 +504,14 @@ id:
         all:
           title: "Semuanya"
       context_question:
+        is_this_post: "Apakah ini %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "atau"
+        something_else_wrong: "Apakah ada yang salah dengan %{reviewable_type} ini?"
       types:
         reviewable_flagged_post:
           title: "Pos yang Dipanji"
           flagged_by: "Dipanji Oleh"
-          noun: "postingan"
+          noun: "post"
         reviewable_queued_topic:
           title: "Topik Antri"
           noun: "topik"
@@ -1566,6 +1562,8 @@ id:
       empty: "Tidak ada pemberitahuan."
       post_approved: "Tulisan Anda telah disetujui"
       watching_first_post_label: "Topik Baru"
+      liked_many:
+        other: "<span class='multi-user'>%{username} dan %{count} lainnya</span> %{description}"
       liked_by_multiple_users:
         other: "%{username} dan %{count} lainnya"
       liked_consolidated_description:
@@ -1895,6 +1893,7 @@ id:
         notifications: "%{shortcut} Buka notifikasi"
       actions:
         title: "Aksi"
+        archive_private_message: "%{shortcut} Alihkan arsipkan pesan pribadi"
     badges:
       others_count:
         other: "Diberi kepada orang lain %{count} kali"
@@ -2254,6 +2253,7 @@ id:
         test:
           no_matches: "Tidak ditemukan yang cocok"
       form_templates:
+        help: "Membuat struktur templat formulir yang bisa digunakan untuk membuat topik baru."
         list_table:
           headings:
             name: "Nama"
@@ -2356,6 +2356,7 @@ id:
       site_text:
         edit: "ubah"
         show_outdated: "Hanya tampilkan yang usang/tidak valid"
+        no_results: "Tidak ditemukan teks situs yang cocok"
         interpolation_keys: "Kunci interpolasi yang tersedia:"
         outdated:
           title: "Terjemahan ini sudah usang"

@@ -1,12 +1,11 @@
+import Application from "@ember/application";
 import "./global-compat";
 import "./loader-shims";
-
 import require from "require";
-import Application from "@ember/application";
-import { buildResolver } from "discourse-common/resolver";
-import { isTesting } from "discourse-common/config/environment";
-import { normalizeEmberEventHandling } from "./lib/ember-events";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
+import { isTesting } from "discourse-common/config/environment";
+import { buildResolver } from "discourse-common/resolver";
+import { normalizeEmberEventHandling } from "./lib/ember-events";
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
@@ -90,7 +89,7 @@ function loadInitializers(app) {
   let discourseInitializers = [];
   let discourseInstanceInitializers = [];
 
-  for (let moduleName of Object.keys(requirejs._eak_seen)) {
+  for (let moduleName of Object.keys(requirejs.entries)) {
     if (moduleName.startsWith("discourse/") && !moduleName.endsWith("-test")) {
       // In discourse core, initializers follow standard Ember conventions
       if (moduleName.startsWith("discourse/initializers/")) {

@@ -1,11 +1,10 @@
+import { test } from "qunit";
 import {
   acceptance,
   exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { clearPopupMenuOptionsCallback } from "discourse/controllers/composer";
 import { displayPollBuilderButton } from "discourse/plugins/poll/helpers/display-poll-builder-button";
-import { test } from "qunit";
 
 acceptance("Poll Builder - polls are disabled", function (needs) {
   needs.user();
@@ -13,7 +12,6 @@ acceptance("Poll Builder - polls are disabled", function (needs) {
     poll_enabled: false,
     poll_minimum_trust_level_to_create: 2,
   });
-  needs.hooks.beforeEach(() => clearPopupMenuOptionsCallback());
 
   test("regular user - sufficient trust level", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false, trust_level: 3 });

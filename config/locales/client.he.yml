@@ -350,16 +350,16 @@ he:
       our_moderators: "המפקחים שלנו"
       moderators: "מפקחים"
       stat:
-        all_time: "כל הזמן"
-        last_day: "24 השעות האחרונות"
-        last_7_days: "7 הימים האחרונים"
-        last_30_days: "30 הימים האחרונים"
+        all_time: "מאז ומעולם"
+        last_day: "24 שעות"
+        last_7_days: "7 ימים"
+        last_30_days: "30 ימים"
       like_count: "לייקים"
       topic_count: "נושאים"
       post_count: "פוסטים"
       user_count: "הרשמות"
       active_user_count: "משתמשים פעילים"
-      contact: "יצירת קשר"
+      contact: "יצירת קשר אתנו"
       contact_info: "במקרה של בעיה קריטית או דחופה המשפיעה על אתר זה, נא ליצור אתנו קשר דרך: %{contact_info}."
     bookmarked:
       title: "סימנייה"
@@ -417,6 +417,11 @@ he:
         confirm: "כבר יש טיוטה שהתחלת לערוך. מה לעשות אתה?"
         yes_value: "להשליך"
         no_value: "לחזור לעריכה"
+    topic_count_all:
+      one: "הצגת נושא %{count} חדש"
+      two: "הצגת %{count} נושאים חדשים"
+      many: "הצגת %{count} נושאים חדשים"
+      other: "הצגת %{count} נושאים חדשים"
     topic_count_categories:
       one: "הצגת נושא %{count} חדש או עדכני"
       two: "הצגת %{count} נושאים חדשים או עדכניים"
@@ -1113,6 +1118,7 @@ he:
     user:
       said: "%{username}:"
       profile: "פרופיל"
+      profile_possessive: "הפרופיל של %{username}"
       mute: "השתקה"
       edit: "עריכת העדפות"
       download_archive:
@@ -1467,7 +1473,6 @@ he:
         success: "(דוא״ל נשלח)"
         in_progress: "(דוא״ל בשליחה)"
         error: "(שגיאה)"
-        emoji: "אמוג׳י של מנעול"
         action: "שליחת דוא״ל לאיפוס סיסמה"
         set_password: "הזן סיסמה"
         choose_new: "בחירת סיסמה חדשה"
@@ -2091,6 +2096,7 @@ he:
       title: "יצירת חשבון משלך"
       failed: "משהו לא בסדר, אולי כבר קיימת כתובת דואר אלקטרוני כזו. נסו את קישור שכחתי סיסמה."
       associate: "כבר יש לך חשבון? ניתן <a href='%{associate_link}'>להיכנס</a> כדי לקשר את חשבון ה־%{provider} שלך."
+      activation_title: "הפעלת החשבון שלך"
     forgot_password:
       title: "אתחול סיסמה"
       action: "שכחתי את הסיסמה שלי"
@@ -2110,7 +2116,6 @@ he:
       link_label: "נא לשלוח לי קישור לכניסה בדוא״ל"
       button_label: "עם דוא״ל"
       login_link: "לדלג על הססמה, פשוט לשלוח לי קישור כניסה בדוא״ל"
-      emoji: "אמוג׳י של מנעול"
       complete_username: "אם קיים חשבון שמתאים לשם המשתמש <b>%{username}</b>, בקרוב אמורה להגיע אליך הודעה בדוא״ל עם קישור כניסה למערכת."
       complete_email: "אם קיים חשבון שמתאים ל־<b>%{email}</b>, בקרוב אמורה להגיע אליך הודעה בדוא״ל עם קישור כניסה למערכת."
       complete_username_found: "נמצא חשבון תואם לשם המשתמש <b>%{username}</b>, בקרוב תגיע אליך הודעה בדוא״ל עם קישור לכניסה."
@@ -2201,7 +2206,6 @@ he:
         security_key: "להשתמש במפתח אבטחה במקום"
     invites:
       accept_title: "הזמנה"
-      emoji: "אמוג׳י של מעטפה"
       welcome_to: "ברוך בואך אל %{site_name}!"
       invited_by: "הוזמנתם על ידי:"
       social_login_available: "מעתה יתאפשר לך להיכנס עם כל כניסה מרשת חברתית בעזרת כתובת הדוא״ל הזאת."
@@ -2532,6 +2536,11 @@ he:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
+      liked_many:
+        one: "<span class='multi-user'>%{username} ועוד %{count}</span> %{description}"
+        two: "<span class='multi-user'>%{username} ועוד %{count}</span> %{description}"
+        many: "<span class='multi-user'>%{username} ועוד %{count}</span> %{description}"
+        other: "<span class='multi-user'>%{username} ועוד %{count}</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
         one: "%{username} ועוד %{count}"
@@ -3042,9 +3051,8 @@ he:
           false { או <a href="{basePath}/latest">לצפות בנושאים העדכניים ביותר</a>}
           other {}
         }
-      bumped_at_title: |
-        פוסט ראשון: %{createdAtDate}
-        פורסם: %{bumpedAtDate}
+      created_at: "מועד יצירה: %{date}"
+      bumped_at: "האחרון: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>עיון בכל הקטגוריות</a> או <a href='%{basePath}/latest'>הצגת הנושאים העדכניים ביותר</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>עיון בכל הקטגוריות</a>, <a href='%{basePath}/latest'>הצגת הנושאים העדכניים ביותר</a> או צפייה במובילים:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>עיון בכל התגיות</a> או <a href='%{basePath}/latest'>הצגת הנושאים העדכניים ביותר</a>."
@@ -3510,6 +3518,7 @@ he:
         create: "אירעה שגיאה ביצירת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
         edit: "אירעה שגיאה בעריכת הפוסט שלך. נא לנסות שוב, עמך הסליחה."
         upload: "אירעה שגיאה בהעלאת %{file_name}. נא לנסות שוב, עמך סליחה."
+        backup_too_large: "קובץ הגיבוי הזה גדול מדי, עמך הסליחה."
         file_too_large: "הקובץ הזה גדול מדי (הגודל המרבי הוא %{max_size_kb} ק״ב), עמך הסליחה. למה שלא להעלות את הקובץ שלך לשירות שיתוף בענן ואז להדביק את הקישור?"
         file_size_zero: "נראה שמשהו השתבש, הקובץ שניסית להעלות הוא בגודל 0 בתים. נא לנסות שוב, עמך הסליחה."
         file_too_large_humanized: "הקובץ הזה גדול מדי (הגודל המרבי הוא %{max_size}), עמך הסליחה. למה שלא להעלות את הקובץ שלך לשירות שיתוף בענן ואז להדביק את הקישור?"
@@ -3966,6 +3975,7 @@ he:
         med {עם יחס גבוה מאוד של לייקים לפוסט}
         high {עם יחס גבוה במיוחד של לייקים לפוסט}
         other {}}
+    latest_poster_link: "הפרופיל של %{username}, פרסום אחרון"
     original_post: "פוסט מקורי"
     views: "צפיות"
     sr_views: "מיון לפי תצוגות"
@@ -4280,7 +4290,6 @@ he:
       other_tags: "תגיות אחרות"
       selector_all_tags: "כל התגיות"
       selector_no_tags: "ללא תגיות"
-      changed: "תגיות ששונו:"
       tags: "תגיות"
       choose_for_topic: "תגיות רשות"
       choose_for_topic_required:
@@ -4736,6 +4745,7 @@ he:
         too_many_requests: ביצעת את הפעולה הזו פעמים רבות מדי. נא להמתין בטרם ביצוע ניסיון חוזר.
         not_found_error: הדוח אינו קיים, עמך הסליחה
         filter_reports: סינון דוחות
+        custom_date_range: טווח תאריכים מותאם אישית
         reports:
           trend_title: "%{percent} שינוי. כרגע הערך עומד על %{current}, היה %{prev} בתקופת הבדיקה הקודמת."
           today: "היום"
@@ -4914,6 +4924,11 @@ he:
               list: הצגת הפוסטים העדכניים ביותר ופוסטים פרטיים. יש תמיכה גם ב־RSS.
             tags:
               list: הצגת תגיות.
+            tag_groups:
+              list: משיכת רשימת קבוצות תגיות.
+              show: משיכת קבוצת תגיות בודדת באמצעות מזהה.
+              create: יוצר קבוצת תגיות.
+              update: מעדכן קבוצת תגיות לפי מזהה.
             categories:
               list: קבלת רשימת קטגוריות.
               show: קבלת קטגוריה יחידה לפי מזהה.
@@ -4997,7 +5012,7 @@ he:
           details: "כאשר יש תגובה חדשה, עריכה, מחיקה או שחזור."
         user_event:
           name: "אירוע משתמש"
-          details: "כאשר משתמש נכנס, יוצא, מאשר את כתובת הדוא״ל שלו, נוצר, מאושר או מעודכן."
+          details: "כאשר משתמש מתחבר, מתנתק, מאשר את כתובת הדוא\"ל שלו, נוצר, מאושר, מעודכן, מושעה או בוטלה השעייתו."
         group_event:
           name: "אירוע קבוצה"
           details: "כאשר קבוצה נוצרת, מתעדכנת או מושמדת."
@@ -5184,7 +5199,6 @@ he:
           theme_name: "שם ערכת העיצוב"
           component_name: "שם רכיב"
           themes_intro: "נא לבחור בערכת עיצוב קיימת או להתקין חדשה כדי להתחיל"
-          themes_intro_emoji: "אמוג׳י של אומנית"
           beginners_guide_title: "המדריך למתחילים בערכות העיצוב של Discourse"
           developers_guide_title: "המדריך למפתחי ערכות עיצוב של Discourse"
           browse_themes: "עיון בערכות העיצוב של הקהילה"
@@ -5740,7 +5754,7 @@ he:
       form_templates:
         nav_title: "תבניות"
         title: "תבניות טפסים"
-        help: "יצירת מבנה תבנית בו ניתן להשתמש ליצירת נושאים, פוסטים והודעות חדשים."
+        help: "יצירת מבנה תבנית בו ניתן להשתמש ליצירת נושאים חדשים."
         new_template: "תבנית חדשה"
         list_table:
           headings:
@@ -6169,6 +6183,7 @@ he:
         show_outdated: "להציג רק מיושן/שגוי"
         locale: "שפה:"
         more_than_50_results: "יש למעלה מ־50 תוצאות. נא למקד את החיפוש שלך."
+        no_results: "לא נמצאו טקסטים תואמים באתר"
         interpolation_keys: "מפתחות השילוב הזמינים:"
         outdated:
           title: "התרגום אינו עדכני"
@@ -6323,7 +6338,6 @@ he:
             with_time: <span class="username">%{username}</span> ב <span class="time">%{time}</span>
         badge_intro:
           title: "נא לבחור בעיטור קיים או ליצור אחד חדש כדי להתחיל"
-          emoji: "אמוג׳י של סטודנטית"
           what_are_badges_title: "מה הם עיטורים?"
           badge_query_examples_title: "דוגמאות לתשאול עיטורים"
         mass_award:

@@ -63,10 +63,6 @@ module PageObjects
         visit(channel.url + "/info/settings")
       end
 
-      def visit_channel_about(channel)
-        visit(channel.url + "/info/about")
-      end
-
       def visit_channel_members(channel)
         visit(channel.url + "/info/members")
       end

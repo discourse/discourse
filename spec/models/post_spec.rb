@@ -1392,6 +1392,37 @@ RSpec.describe Post do
     ensure
       InlineOneboxer.invalidate("http://testonebox.com/vvf22")
     end
+
+    context "when secure uploads are enabled" do
+      before do
+        setup_s3
+        SiteSetting.secure_uploads = true
+      end
+
+      it "does not enqueue job to update secure status by default" do
+        post = create_post
+        expect_not_enqueued_with(
+          job: :update_post_uploads_secure_status,
+          args: {
+            post_id: post.id,
+            source: "post rebake",
+          },
+        ) { post.rebake! }
+      end
+
+      context "when passing update_upload_security: true option" do
+        it "does enqueue job to update secure status" do
+          post = create_post
+          expect_enqueued_with(
+            job: :update_post_uploads_secure_status,
+            args: {
+              post_id: post.id,
+              source: "post rebake",
+            },
+          ) { post.rebake!(update_upload_security: true) }
+        end
+      end
+    end
   end
 
   describe "#set_owner" do
@@ -2164,6 +2195,32 @@ RSpec.describe Post do
       Fabricate(:post, post_type: Post.types[:whisper], created_at: 7.days.ago)
 
       expect(Post.public_posts_count_per_day(10.days.ago, 5.days.ago)).to be_empty
+    end
+
+    it "returns the correct number of public posts per day with category filter" do
+      category = Fabricate(:category)
+      another_category = Fabricate(:category)
+
+      topic = Fabricate(:topic, category: category)
+      another_topic = Fabricate(:topic, category: another_category)
+
+      Fabricate(:post, topic: topic, created_at: 6.days.ago)
+      Fabricate(:post, topic: topic, created_at: 7.days.ago)
+      Fabricate(:post, topic: another_topic, created_at: 6.days.ago)
+      Fabricate(:post, topic: another_topic, created_at: 7.days.ago)
+
+      expect(Post.public_posts_count_per_day(10.days.ago, 5.days.ago, category.id)).to eq(
+        6.days.ago.to_date => 1,
+        7.days.ago.to_date => 1,
+      )
+
+      expect(
+        Post.public_posts_count_per_day(
+          10.days.ago,
+          5.days.ago,
+          [category.id, another_category.id],
+        ),
+      ).to eq(6.days.ago.to_date => 2, 7.days.ago.to_date => 2)
     end
 
     it "returns the correct number of public posts per day with group filter" do

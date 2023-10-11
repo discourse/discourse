@@ -1,12 +1,12 @@
 import Component from "@ember/component";
-import { bind, observes } from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
 import { cancel, throttle } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { escapeExpression } from "discourse/lib/utilities";
 import DiscourseURL from "discourse/lib/url";
+import { escapeExpression } from "discourse/lib/utilities";
 import getURL from "discourse-common/lib/get-url";
+import { bind, observes } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   tagName: "",

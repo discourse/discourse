@@ -78,8 +78,11 @@ en:
       generic: An error occurred while importing that theme
       upload: "Error creating upload asset: %{name}. %{errors}"
       about_json: "Import Error: about.json does not exist, or is invalid. Are you sure this is a Discourse Theme?"
+      about_json_too_big: "Import Error: about.json is bigger than the %{limit} limit."
       about_json_values: "about.json contains invalid values: %{errors}"
       modifier_values: "about.json modifiers contain invalid values: %{errors}"
+      asset_too_big: "Asset %{filename} is bigger than the %{limit} limit"
+      theme_too_big: "Theme is bigger than the %{limit} limit"
       git: "Error cloning git repository, access is denied or repository is not found"
       git_ref_not_found: "Unable to checkout git reference: %{ref}"
       git_unsupported_scheme: "Unable to clone git repo: scheme unsupported"
@@ -88,6 +91,7 @@ en:
       unknown_file_type: "The file you uploaded does not appear to be a valid Discourse theme."
       not_allowed_theme: "`%{repo}` is not in the list of allowed themes (check `allowed_theme_repos` global setting)."
       ssh_key_gone: "You waited too long to install the theme and SSH key expired. Please try again."
+      too_many_files: "The number of files (%{count}) in the theme has exceeded the maximum allowed number of files (%{limit})"
     errors:
       component_no_user_selectable: "Theme components can't be user-selectable"
       component_no_default: "Theme components can't be default theme"
@@ -331,6 +335,8 @@ en:
 
   reading_time: "Reading time"
   likes: "Likes"
+
+  action_already_performed: "Oops! You already performed this action. Can you try refreshing the page?"
 
   too_many_replies:
     one: "We're sorry, but new users are temporarily limited to %{count} reply in the same topic."
@@ -978,6 +984,9 @@ en:
     sequence_conflict_error:
       title: "draft error"
       description: "Draft is being edited in another window. Please reload this page."
+    too_many_drafts:
+      title: "Too many drafts"
+      description: "You have reached the maximum number of allowed drafts. Please delete some of [your drafts](%{base_url}/my/activity/drafts) and try again."
   draft_backup:
     pm_title: "Backup Drafts from ongoing topics"
     pm_body: "Topic containing backup drafts"
@@ -1003,6 +1012,7 @@ en:
       invalid_origin_error: "The origin of the authentication request does not match the server origin."
       malformed_attestation_error: "There was an error decoding the attestation data."
       invalid_relying_party_id_error: "The Relying Party ID of the authentication request does not match the server Relying Party ID."
+      user_presence_error: "User presence is required."
       user_verification_error: "User verification is required."
       unsupported_public_key_algorithm_error: "The provided public key algorithm is not supported by the server."
       unsupported_attestation_format_error: "The attestation format is not supported by the server."
@@ -1011,6 +1021,7 @@ en:
       ownership_error: "The security key is not owned by the user."
       not_found_error: "A security key with the provided credential ID could not be found."
       unknown_cose_algorithm_error: "The algorithm used for the security key is not recognized."
+      malformed_public_key_credential_error: "The provided public key is invalid."
 
   topic_flag_types:
     spam:
@@ -1491,7 +1502,6 @@ en:
     unreachable_themes: "We were unable to check for updates on the following themes:"
     watched_word_regexp_error: "The regular expression for '%{action}' watched words is invalid. Please check your <a href='%{base_path}/admin/customize/watched_words'>Watched Word settings</a>, or disable the 'watched words regular expressions' site setting."
     v3_analytics_deprecated: "Your Discourse is currently using Google Analytics 3, which will no longer be supported after July 2023. <a href='https://meta.discourse.org/t/260498'>Upgrade to Google Analytics 4</a> now to continue receiving valuable insights and analytics for your website's performance."
-    legacy_navigation_menu_deprecated: "Your Discourse is currently using the 'legacy' navigation menu which <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>will be removed in the first beta release of Discourse 3.2</a>. Migrate to the new navigation menu by updating your <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>navigation menu site setting</a> to 'sidebar' or 'header dropdown'."
 
   site_settings:
     allow_bulk_invite: "Allow bulk invites by uploading a CSV file"
@@ -1503,9 +1513,9 @@ en:
     allow_user_locale: "Allow users to choose their own language interface preference"
     set_locale_from_accept_language_header: "set interface language for anonymous users from their web browser's language headers"
     support_mixed_text_direction: "Support mixed left-to-right and right-to-left text directions."
-    min_post_length: "Minimum allowed post length in characters"
-    min_first_post_length: "Minimum allowed first post (topic body) length in characters"
-    min_personal_message_post_length: "Minimum allowed post length in characters for messages"
+    min_post_length: "Minimum allowed post length in characters (excluding personal messages)"
+    min_first_post_length: "Minimum allowed first post (topic body) length (excluding personal messages)"
+    min_personal_message_post_length: "Minimum allowed post length in characters for messages (both first post and replies)"
     max_post_length: "Maximum allowed post length in characters"
     topic_featured_link_enabled: "Enable posting a link with topics."
     show_topic_featured_link_in_digest: "Show the topic featured link in the digest email."
@@ -1635,7 +1645,7 @@ en:
     tl3_additional_flags_per_day_multiplier: "Increase limit of flags per day for tl3 (regular) by multiplying with this number"
     tl4_additional_flags_per_day_multiplier: "Increase limit of flags per day for tl4 (leader) by multiplying with this number"
 
-    num_users_to_silence_new_user: "If a new user's posts get num_spam_flags_to_silence_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
+    num_users_to_silence_new_user: "If a new user's posts exceed the hide_post_sensitivity setting, and has spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
     num_tl3_flags_to_silence_new_user: "If a new user's posts get this many flags from num_tl3_users_to_silence_new_user different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
     num_tl3_users_to_silence_new_user: "If a new user's posts get num_tl3_flags_to_silence_new_user flags from this many different trust level 3 users, hide all their posts and prevent future posting. 0 to disable."
     notify_mods_when_user_silenced: "If a user is automatically silenced, send a message to all moderators."
@@ -1658,7 +1668,7 @@ en:
     ga_universal_tracking_code: "Google Universal Analytics tracking code ID, eg: UA-12345678-9; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics domain name, eg: mysite.com; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Enable Google Universal Analytics cross-domain tracking. Outgoing links to these domains will have the client id added to them. See <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
-    gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCDEF. <br/>Note: Third-party scripts loaded by GTM may need to be allowlisted in 'content security policy script src'."
+    gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCD12E. <br/>Note: To use GTM when the Content Security Policy (CSP) is enabled, see the documentation on meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Use nonces in Google Tag Manager scripts</a>."
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Allow moderators to create and manage categories and groups"
     moderators_change_post_ownership: "Allow moderators to change post ownership"
@@ -2362,7 +2372,8 @@ en:
 
     retain_web_hook_events_period_days: "Number of days to retain web hook event records."
     retry_web_hook_events: "Automatically retry failed web hook events for 4 times. Time gaps between the retries are 1, 5, 25 and 125 minutes."
-    revoke_api_keys_days: "Number of days before an unused API key is automatically revoked (0 for never)"
+    revoke_api_keys_unused_days: "Number of days since an API key was last used before it is automatically revoked (0 for never)"
+    revoke_api_keys_maxlife_days: "Number of days before an API key is automatically revoked (0 for never)"
 
     allow_user_api_key_scopes: "List of scopes allowed for user API keys"
     min_trust_level_for_user_api_key: |
@@ -2370,7 +2381,8 @@ en:
       <b>WARNING</b>: Changing the trust level will prevent users with a lower trust level from logging in via Discourse Hub
     allowed_user_api_auth_redirects: "Allowed URL for authentication redirect for user API keys. Wildcard symbol * can be used to match any part of it (e.g. www.example.com/*)."
     allowed_user_api_push_urls: "Allowed URLs for server push to user API"
-    expire_user_api_keys_days: "Number of days before a user API key automatically expires (0 for never)"
+    revoke_user_api_keys_unused_days: "Number of days since a user API key was last used before it is automatically revoked (0 for never)"
+    revoke_user_api_keys_maxlife_days: "Number of days before a user API key is automatically revoked (0 for never)"
 
     tagging_enabled: "Enable tags on topics?"
     min_trust_to_create_tag: "The minimum trust level required to create a tag."
@@ -2391,7 +2403,7 @@ en:
     create_post_for_category_and_tag_changes: "Create a small action post when a topic's category or tags change"
     watched_precedence_over_muted: "Notify me about topics in categories or tags I’m watching that also belong to one I have muted"
 
-    company_name: "Company Name"
+    company_name: "Name of your company or organization. If left blank, no boilerplate Terms of Service or Privacy Notice will be provided."
     governing_law: "Governing Law"
     city_for_disputes: "City for Disputes"
 
@@ -2442,6 +2454,8 @@ en:
     experimental_topics_filter: "EXPERIMENTAL: Enables the experimental topics filter route at /filter"
     experimental_search_menu_groups: "EXPERIMENTAL: Enables the new search menu that has been upgraded to use glimmer"
     enable_experimental_lightbox: "EXPERIMENTAL: Replace the default image lightbox with the revamped design."
+
+    experimental_form_templates: "EXPERIMENTAL: Enable the form templates feature. <b>After enabled,</b> manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
 
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
 
@@ -2530,6 +2544,7 @@ en:
     email_error: "An account could not be registered with the email address <b>%{email}</b>. Please contact the site's administrator."
     missing_secret: "Authentication failed due to missing secret. Contact the site administrators to fix this problem."
     invite_redeem_failed: "Invite redemption failed. Please contact the site's administrator."
+    invalid_parameter_value: "Authentication failed due to invalid value for `%{param}` parameter. Contact the site administrators to fix this problem."
 
   original_poster: "Original Poster"
   most_recent_poster: "Most Recent Poster"
@@ -2674,6 +2689,8 @@ en:
     invalid_security_key: "Invalid security key."
     missing_second_factor_name: "Please provide a name."
     missing_second_factor_code: "Please provide a code."
+    too_many_authenticators: "Sorry, you can't have more than 50 authenticators. Please remove an existing one and try again."
+    too_many_security_keys: "Sorry, you can't have more than 50 security keys. Please remove an existing one and try again."
     second_factor_toggle:
       totp: "Use an authenticator app or security key instead"
       backup_code: "Use a backup code instead"
@@ -5144,6 +5161,9 @@ en:
       automatic_revoked:
         one: "Automatically revoked, last activity more than %{count} day ago"
         other: "Automatically revoked, last activity more than %{count} days ago"
+      automatic_revoked_max_life:
+        one: "Automatically revoked, created at more than %{count} day ago"
+        other: "Automatically revoked, created at more than %{count} days ago"
       revoked: Revoked
       restored: Restored
 
@@ -5317,3 +5337,4 @@ en:
       missing_id: "is missing a field id"
       duplicate_ids: "has duplicate ids"
       reserved_id: "has a reserved keyword as id: %{id}"
+      unsafe_description: "has an unsafe HTML description"

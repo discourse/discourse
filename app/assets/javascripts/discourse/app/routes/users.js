@@ -1,9 +1,9 @@
-import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
+import { inject as service } from "@ember/service";
+import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { Promise } from "rsvp";
-import { inject as service } from "@ember/service";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 
 export default DiscourseRoute.extend({
   router: service(),

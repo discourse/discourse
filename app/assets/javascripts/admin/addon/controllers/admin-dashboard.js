@@ -1,10 +1,10 @@
-import { action, computed } from "@ember/object";
 import Controller, { inject as controller } from "@ember/controller";
+import { action, computed } from "@ember/object";
+import { inject as service } from "@ember/service";
+import { setting } from "discourse/lib/computed";
+import discourseComputed from "discourse-common/utils/decorators";
 import AdminDashboard from "admin/models/admin-dashboard";
 import VersionCheck from "admin/models/version-check";
-import discourseComputed from "discourse-common/utils/decorators";
-import { setting } from "discourse/lib/computed";
-import { inject as service } from "@ember/service";
 
 const PROBLEMS_CHECK_MINUTES = 1;
 

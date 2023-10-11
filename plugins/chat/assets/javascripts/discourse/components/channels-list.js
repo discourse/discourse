@@ -1,9 +1,9 @@
-import { bind } from "discourse-common/utils/decorators";
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-import { tracked } from "@glimmer/tracking";
+import { bind } from "discourse-common/utils/decorators";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 
 export default class ChannelsList extends Component {
@@ -63,12 +63,6 @@ export default class ChannelsList extends Component {
 
   get canCreateDirectMessageChannel() {
     return this.chat.userCanDirectMessage;
-  }
-
-  get publicChannelClasses() {
-    return `channels-list-container public-channels ${
-      this.inSidebar ? "collapsible-sidebar-section" : ""
-    }`;
   }
 
   get displayPublicChannels() {

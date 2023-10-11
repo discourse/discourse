@@ -1,20 +1,20 @@
-import DiscourseURL, { userPath } from "discourse/lib/url";
+import { isEmpty } from "@ember/utils";
+import { h } from "virtual-dom";
 import { ajax, setTransientHeader } from "discourse/lib/ajax";
+import cookie from "discourse/lib/cookie";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { emojiUnescape } from "discourse/lib/text";
+import DiscourseURL, { userPath } from "discourse/lib/url";
 import {
   escapeExpression,
   formatUsername,
   postUrl,
 } from "discourse/lib/utilities";
-import I18n from "I18n";
 import RawHtml from "discourse/widgets/raw-html";
 import { createWidget } from "discourse/widgets/widget";
-import { emojiUnescape } from "discourse/lib/text";
 import getURL from "discourse-common/lib/get-url";
-import { h } from "virtual-dom";
 import { iconNode } from "discourse-common/lib/icon-library";
-import { isEmpty } from "@ember/utils";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
-import cookie from "discourse/lib/cookie";
+import I18n from "I18n";
 
 export const DefaultNotificationItem = createWidget(
   "default-notification-item",

@@ -1,7 +1,8 @@
-import { buildResolver, setResolverOption } from "discourse-common/resolver";
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
+import { buildResolver, setResolverOption } from "discourse-common/resolver";
 
 let resolver;
 
@@ -9,6 +10,10 @@ function lookupTemplate(assert, name, expectedTemplate, message) {
   let parseName = resolver.parseName(name);
   let result = resolver.resolveTemplate(parseName);
   assert.strictEqual(result, expectedTemplate, message);
+}
+
+function resolve(name) {
+  return resolver.resolve(name);
 }
 
 function setTemplates(templateModuleNames) {
@@ -20,6 +25,8 @@ function setTemplates(templateModuleNames) {
 const DiscourseResolver = buildResolver("discourse");
 
 module("Unit | Ember | resolver", function (hooks) {
+  setupTest(hooks);
+
   hooks.beforeEach(function () {
     DiscourseTemplateMap.setModuleNames(Object.keys(requirejs.entries));
     resolver = DiscourseResolver.create({
@@ -678,6 +685,23 @@ module("Unit | Ember | resolver", function (hooks) {
       "template:components/bar",
       "discourse/templates/components/bar",
       "uses standard match when both exist"
+    );
+  });
+
+  test("resolves plugin/theme components with and without /index", function (assert) {
+    registerTemporaryModule(
+      "discourse/plugins/my-fake-plugin/discourse/components/my-component",
+      "my-component"
+    );
+    registerTemporaryModule(
+      "discourse/plugins/my-fake-plugin/discourse/components/my-second-component/index",
+      "my-second-component"
+    );
+
+    assert.strictEqual(resolve("component:my-component"), "my-component");
+    assert.strictEqual(
+      resolve("component:my-second-component"),
+      "my-second-component"
     );
   });
 });

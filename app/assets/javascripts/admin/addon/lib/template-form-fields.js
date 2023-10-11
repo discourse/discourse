@@ -47,7 +47,6 @@ export const templateFormFields = [
       "admin.form_templates.field_placeholders.none_label"
     )}"
     label: "${I18n.t("admin.form_templates.field_placeholders.label")}"
-    filterable: false
   validations:
     # ${I18n.t("admin.form_templates.field_placeholders.validations")}`,
   },

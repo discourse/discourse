@@ -1,14 +1,14 @@
+import Component from "@ember/component";
 import { action } from "@ember/object";
 import { alias, gt } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
+import { Promise } from "rsvp";
+import { setting } from "discourse/lib/computed";
+import { groupPath } from "discourse/lib/url";
+import { modKeysPressed } from "discourse/lib/utilities";
 import CardContentsBase from "discourse/mixins/card-contents-base";
 import CleansUp from "discourse/mixins/cleans-up";
-import Component from "@ember/component";
-import { Promise } from "rsvp";
 import discourseComputed from "discourse-common/utils/decorators";
-import { groupPath } from "discourse/lib/url";
-import { setting } from "discourse/lib/computed";
-import { modKeysPressed } from "discourse/lib/utilities";
-import { inject as service } from "@ember/service";
 
 const maxMembersToDisplay = 10;
 

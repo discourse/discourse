@@ -1,6 +1,6 @@
+import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import Category from "discourse/models/category";
-import Component from "@ember/component";
 
 export default class CategoryList extends Component {
   @computed("value")

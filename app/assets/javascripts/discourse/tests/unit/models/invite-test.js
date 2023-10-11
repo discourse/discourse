@@ -1,6 +1,6 @@
-import { module, test } from "qunit";
+import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { module, test } from "qunit";
 
 module("Unit | Model | invite", function (hooks) {
   setupTest(hooks);

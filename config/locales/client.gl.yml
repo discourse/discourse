@@ -245,12 +245,10 @@ gl:
       our_moderators: "Os moderadores"
       moderators: "Moderadores"
       stat:
-        all_time: "Todos"
+        last_day: "24 horas"
       like_count: "Gústames"
       topic_count: "Temas"
       post_count: "Publicacións"
-      active_user_count: "Usuarios activos"
-      contact: "Contacte connosco"
       contact_info: "No caso dunha incidencia crítica ou asunto urxente que afecte este sitio, contacte connosco en %{contact_info}."
     bookmarked:
       title: "Marcador"
@@ -291,6 +289,9 @@ gl:
       abandon:
         yes_value: "Desbotar"
         no_value: "Retomar a edición"
+    topic_count_all:
+      one: "Ver %{count} tema novo"
+      other: "Ver %{count} temas novos"
     topic_count_categories:
       one: "Ver %{count} tema novo ou actualizado"
       other: "Ver %{count} temas novos ou actualizados"
@@ -1066,7 +1067,6 @@ gl:
         success: "(correo enviado)"
         in_progress: "(enviando o correo)"
         error: "(erro)"
-        emoji: "bloquear emoji"
         action: "Enviar correo para restabelecer o contrasinal"
         set_password: "Estabelecer o contrasinal"
         choose_new: "Elixir un novo contrasinal"
@@ -1574,7 +1574,6 @@ gl:
       link_label: "Envíeme ao correo unha ligazón de acceso"
       button_label: "con correo electrónico"
       login_link: "Saltar o contrasinal; envíeme por correo unha ligazón de inicio de sesión"
-      emoji: "bloquear emoji"
       complete_username: "Se unha conta corresponde ao nome de usuario <b>%{username}</b>, deberá recibir en breve un correo electrónico cunha ligazón de inicio de sesión."
       complete_email: "Se unha conta corresponde a <b>%{email}</b>, deberá recibir en breve unha ligazón de inicio de sesión."
       complete_username_found: "Atopamos unha conta que co nome de usuario <b>%{username}</b>, deberá recibir en breve un correo electrónico cunha ligazón de inicio de sesión."
@@ -1643,7 +1642,6 @@ gl:
         backup_code: "Usar no seu lugar un código de copia de seguranza"
     invites:
       accept_title: "Convite"
-      emoji: "emoji de sobre"
       welcome_to: "Dámoslle a benvida a %{site_name}!"
       invited_by: "Recibiu o convite de:"
       social_login_available: "Con ese correo electrónico tamén poderá iniciar a sesión a través de calquera rede social."
@@ -2156,6 +2154,7 @@ gl:
       options: "Opcións de temas"
       show_links: "amosar as ligazóns a este tema"
       unread_indicator: "Ningún membro leu aínda a última publicación neste tema."
+      bumped_at: "Últimas: %{date}"
       deleted: "Eliminouse o tema"
       slow_mode_update:
         title: "Modo lento"
@@ -3129,7 +3128,6 @@ gl:
       other_tags: "Outras etiquetas"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sen etiquetas"
-      changed: "etiquetas cambiadas:"
       tags: "Etiquetas"
       choose_for_topic: "etiquetas opcionais"
       info: "Información"
@@ -3733,7 +3731,6 @@ gl:
           theme_name: "Nome do tema"
           component_name: "Nome do compoñente"
           themes_intro: "Seleccione un tema existente ou instale un novo para comezar"
-          themes_intro_emoji: "muller artista emoji"
           beginners_guide_title: "Guía de uso dos temas do Discourse para principiantes"
           developers_guide_title: "Guía de uso dos temas do Discourse para desenvolvedores"
           browse_themes: "Explorar temas da comunidade"
@@ -4696,7 +4693,6 @@ gl:
             with_time: <span class="username">%{username}</span> o <span class="time">%{time}</span>
         badge_intro:
           title: "Seleccione unha insignia existente ou cree unha nova para comezar"
-          emoji: "emoji de muller estudante"
           what_are_badges_title: "Que son as insignias?"
           badge_query_examples_title: "Exemplos de consulta de insignias"
         mass_award:

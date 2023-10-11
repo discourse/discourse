@@ -1,7 +1,7 @@
-import ReviewableTypeBase from "discourse/lib/reviewable-types/base";
 import { htmlSafe } from "@ember/template";
-import { escapeExpression } from "discourse/lib/utilities";
+import ReviewableTypeBase from "discourse/lib/reviewable-types/base";
 import { emojiUnescape } from "discourse/lib/text";
+import { escapeExpression } from "discourse/lib/utilities";
 import I18n from "I18n";
 
 export default class extends ReviewableTypeBase {

@@ -12,6 +12,7 @@ it:
           chat: Chat
         chat_separate_sidebar_mode:
           always: "Sempre"
+          fullscreen: "Quando la chat è a schermo intero"
           never: "Mai"
       logs:
         staff_actions:
@@ -24,10 +25,10 @@ it:
           descriptions:
             chat:
               create_message: "Crea un messaggio di chat in un canale specifico."
-    about:
-      chat_messages_count: "Messaggi di chat"
-      chat_channels_count: "Canali di chat"
-      chat_users_count: "Utenti della chat"
+      web_hooks:
+        chat_message_event:
+          name: "Evento messaggio chat"
+          details: "Quando un messaggio di chat viene creato, modificato, eliminato o ripristinato."
     chat:
       deleted_chat_username: cancellati
       dates:
@@ -85,6 +86,7 @@ it:
         create: "Nuovo canale"
       click_to_join: "Fai clic qui per visualizzare i canali disponibili."
       close: "Chiudi"
+      remove: "Rimuovi"
       collapse: "Comprimi il cassetto della chat"
       expand: "Espandi il pannello della chat"
       confirm_flag: "Vuoi segnalare il messaggio di %{username}?"
@@ -110,6 +112,8 @@ it:
         all_new: "Tutti i nuovi messaggi"
         dm_and_mentions: "Messaggi diretti e menzioni"
         never: "Mai"
+      separate_sidebar_mode:
+        title: "Mostra modalità separate della barra laterale per forum e chat"
       enable: "Abilita chat"
       flag: "Segnala"
       emoji: "Inserisci emoji"

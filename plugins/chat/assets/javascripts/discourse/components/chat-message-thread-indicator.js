@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
-import { action } from "@ember/object";
-import { bind } from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class ChatMessageThreadIndicator extends Component {
   @service capabilities;

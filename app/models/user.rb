@@ -96,6 +96,7 @@ class User < ActiveRecord::Base
   has_many :directory_items
   has_many :email_logs
   has_many :security_keys, -> { where(enabled: true) }, class_name: "UserSecurityKey"
+  has_many :all_security_keys, class_name: "UserSecurityKey"
 
   has_many :badges, through: :user_badges
   has_many :default_featured_user_badges,
@@ -1396,10 +1397,6 @@ class User < ActiveRecord::Base
     cats.pluck("categories.id").sort
   end
 
-  def topic_create_allowed_category_ids
-    Category.topic_create_allowed(self.id).select(:id)
-  end
-
   # Flag all posts from a user as spam
   def flag_linked_posts_as_spam
     results = []
@@ -1725,11 +1722,18 @@ class User < ActiveRecord::Base
     new_secure_identifier
   end
 
+  def second_factor_security_keys
+    security_keys.where(factor_type: UserSecurityKey.factor_types[:second_factor])
+  end
+
   def second_factor_security_key_credential_ids
-    security_keys
-      .select(:credential_id)
-      .where(factor_type: UserSecurityKey.factor_types[:second_factor])
-      .pluck(:credential_id)
+    second_factor_security_keys.pluck(:credential_id)
+  end
+
+  def passkey_credential_ids
+    security_keys.where(factor_type: UserSecurityKey.factor_types[:first_factor]).pluck(
+      :credential_id,
+    )
   end
 
   def encoded_username(lower: false)
@@ -2044,7 +2048,6 @@ class User < ActiveRecord::Base
   private
 
   def set_default_sidebar_section_links(update: false)
-    return if SiteSetting.legacy_navigation_menu?
     return if staged? || bot?
 
     if SiteSetting.default_navigation_menu_categories.present?

@@ -1,7 +1,7 @@
-import RestModel from "discourse/models/rest";
-import { ajax } from "discourse/lib/ajax";
 import { or } from "@ember/object/computed";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import RestModel from "discourse/models/rest";
 
 export default RestModel.extend({
   canToggle: or("can_undo", "can_act"),

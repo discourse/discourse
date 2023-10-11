@@ -1,11 +1,11 @@
+import { click, currentRouteName, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import PreloadStore from "discourse/lib/preload-store";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentRouteName, fillIn, visit } from "@ember/test-helpers";
-import PreloadStore from "discourse/lib/preload-store";
-import { test } from "qunit";
 
 acceptance("Account Created", function () {
   test("account created - message", async function (assert) {

@@ -1,10 +1,10 @@
-import { next } from "@ember/runloop";
-import cookie, { removeCookie } from "discourse/lib/cookie";
-import { getURL } from "discourse/lib/url";
 import EmberObject from "@ember/object";
-import showModal from "discourse/lib/show-modal";
-import I18n from "I18n";
+import { next } from "@ember/runloop";
 import LoginModal from "discourse/components/modal/login";
+import cookie, { removeCookie } from "discourse/lib/cookie";
+import showModal from "discourse/lib/show-modal";
+import DiscourseUrl from "discourse/lib/url";
+import I18n from "I18n";
 
 // This is happening outside of the app via popup
 const AuthErrors = [
@@ -106,8 +106,10 @@ export default {
                 // redirect client to the original URL
                 removeCookie("destination_url");
                 window.location.href = destinationUrl;
-              } else if (window.location.pathname === getURL("/login")) {
-                window.location = getURL("/");
+              } else if (
+                window.location.pathname === DiscourseUrl.getURL("/login")
+              ) {
+                window.location = DiscourseUrl.getURL("/");
               } else {
                 window.location.reload();
               }

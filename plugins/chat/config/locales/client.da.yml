@@ -24,10 +24,6 @@ da:
           descriptions:
             chat:
               create_message: "Opret en chatbesked i en angivet kanal."
-    about:
-      chat_messages_count: "Chatbeskeder"
-      chat_channels_count: "Chatkanaler"
-      chat_users_count: "Chatbrugere"
     chat:
       deleted_chat_username: slettet
       dates:
@@ -70,6 +66,7 @@ da:
         create: "Ny kanal"
       click_to_join: "Klik her for at se tilgængelige kanaler."
       close: "Luk"
+      remove: "Fjern"
       delete: "Slet"
       edited: "redigeret"
       muted: "stille!"

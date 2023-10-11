@@ -1,7 +1,7 @@
 import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
+import { escapeExpression } from "discourse/lib/utilities";
 import RawHtml from "discourse/widgets/raw-html";
 import { createWidget } from "discourse/widgets/widget";
-import { escapeExpression } from "discourse/lib/utilities";
 
 export function replaceEmoji(str) {
   const escaped = emojiUnescape(escapeExpression(str));

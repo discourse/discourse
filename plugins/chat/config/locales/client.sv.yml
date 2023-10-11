@@ -24,10 +24,6 @@ sv:
           descriptions:
             chat:
               create_message: "Skapa ett chattmeddelande i en angiven kanal."
-    about:
-      chat_messages_count: "Chattmeddelanden"
-      chat_channels_count: "Chattkanaler"
-      chat_users_count: "Chattanvändare"
     chat:
       deleted_chat_username: raderat
       dates:
@@ -85,6 +81,7 @@ sv:
         create: "Ny kanal"
       click_to_join: "Klicka här för att se tillgängliga kanaler."
       close: "Stäng"
+      remove: "Ta bort"
       collapse: "Komprimera chattruta"
       expand: "Expandera chattlådan"
       confirm_flag: "Är du säker på att du vill flagga %{username}:s meddelande?"

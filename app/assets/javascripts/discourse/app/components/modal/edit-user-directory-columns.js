@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { reload } from "discourse/helpers/page-reloader";
 import { ajax } from "discourse/lib/ajax";
 import { extractError, popupAjaxError } from "discourse/lib/ajax-error";
-import { reload } from "discourse/helpers/page-reloader";
 
 const UP = "up";
 const DOWN = "down";
@@ -27,8 +27,8 @@ export default class EditUserDirectoryColumns extends Component {
       this.columns = response.directory_columns
         .sort((a, b) => (a.position > b.position ? 1 : -1))
         .map((c) => ({ ...c, enabled: Boolean(c.enabled) }));
-    } catch {
-      popupAjaxError;
+    } catch (e) {
+      popupAjaxError(e);
     }
   }
 

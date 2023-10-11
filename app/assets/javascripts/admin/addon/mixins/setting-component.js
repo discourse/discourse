@@ -1,20 +1,21 @@
-import { isNone } from "@ember/utils";
-import { fmt, propertyNotEqual } from "discourse/lib/computed";
-import { alias, oneWay } from "@ember/object/computed";
-import I18n from "I18n";
-import Mixin from "@ember/object/mixin";
-import { ajax } from "discourse/lib/ajax";
-import { categoryLinkHTML } from "discourse/helpers/category-link";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import { htmlSafe } from "@ember/template";
 import { warn } from "@ember/debug";
 import { action } from "@ember/object";
-import { splitString } from "discourse/lib/utilities";
+import { alias, oneWay } from "@ember/object/computed";
+import Mixin from "@ember/object/mixin";
 import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import { isNone } from "@ember/utils";
+import { categoryLinkHTML } from "discourse/helpers/category-link";
+import { ajax } from "discourse/lib/ajax";
+import { fmt, propertyNotEqual } from "discourse/lib/computed";
+import { splitString } from "discourse/lib/utilities";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-default-categories";
 
 const CUSTOM_TYPES = [
   "bool",
+  "integer",
   "enum",
   "list",
   "url_list",

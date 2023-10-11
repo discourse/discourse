@@ -1,10 +1,10 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { getOwner } from "@ember/application";
 import { click, render } from "@ember/test-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
 import TopicStatusIcons from "discourse/helpers/topic-status-icons";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { exists } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | Widget | topic-status", function (hooks) {
   setupRenderingTest(hooks);

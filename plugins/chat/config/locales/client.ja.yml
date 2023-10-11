@@ -24,10 +24,6 @@ ja:
           descriptions:
             chat:
               create_message: "特定のチャンネルでチャットメッセージを作成します。"
-    about:
-      chat_messages_count: "チャットメッセージ"
-      chat_channels_count: "チャットチャンネル"
-      chat_users_count: "チャットユーザー"
     chat:
       deleted_chat_username: 削除
       dates:
@@ -84,6 +80,7 @@ ja:
         create: "新しいチャンネル"
       click_to_join: "利用可能なチャンネルを表示するにはここをクリックします。"
       close: "閉じる"
+      remove: "削除"
       collapse: "チャットドロワーを折りたたむ"
       expand: "チャットドロワーを展開"
       confirm_flag: "%{username} のメッセージを通報してよろしいですか？"

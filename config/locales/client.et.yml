@@ -233,12 +233,10 @@ et:
       our_moderators: "Meie moderaatorid"
       moderators: "Moderaatorid"
       stat:
-        all_time: "Alates algusest"
+        last_day: "24 tundi"
       like_count: "Meeldimisi"
       topic_count: "Teemad"
       post_count: "Postitused"
-      active_user_count: "Aktiivsed kasutajad"
-      contact: "Võta meiega ühendust"
       contact_info: "Kriitilise vea või edasilükkamatu probleemi korral võta palun meiega ühendust aadressil %{contact_info}."
     bookmarked:
       title: "Järjehoidja"
@@ -271,6 +269,9 @@ et:
       remove: "Eemalda"
       remove_confirmation: "Oled kindel, et soovid selle mustandi kustutada?"
       new_topic: "Uus teema mustand"
+    topic_count_all:
+      one: "Vaata %{count} uut teemat"
+      other: "Vaata %{count} uut teemat"
     topic_count_categories:
       one: "Vaata %{count} uut või uuendatud teemat"
       other: "Vaata %{count} uut või uuendatud teemat"
@@ -2399,7 +2400,6 @@ et:
       other_tags: "Muud sildid"
       selector_all_tags: "kõik sildid"
       selector_no_tags: "sildid puuduvad"
-      changed: "muudetud sildid:"
       tags: "Sildid"
       choose_for_topic: "valikulised sildid"
       add_synonyms: "Lisa"

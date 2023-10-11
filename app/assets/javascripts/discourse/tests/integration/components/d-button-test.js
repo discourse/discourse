@@ -1,11 +1,11 @@
+import ClassicComponent from "@ember/component";
+import { click, render, triggerKeyEvent } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { click, render, triggerKeyEvent } from "@ember/test-helpers";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
-import { hbs } from "ember-cli-htmlbars";
-import ClassicComponent from "@ember/component";
 import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
+import I18n from "I18n";
 
 module("Integration | Component | d-button", function (hooks) {
   setupRenderingTest(hooks);

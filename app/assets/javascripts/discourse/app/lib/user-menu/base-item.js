@@ -1,5 +1,5 @@
-import DiscourseURL from "discourse/lib/url";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
+import DiscourseURL from "discourse/lib/url";
 
 export default class UserMenuBaseItem {
   get className() {}

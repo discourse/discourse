@@ -6,6 +6,7 @@
 # authors: Kane York, Mark VanLandingham, Martin Brennan, Joffrey Jaffeux
 # url: https://github.com/discourse/discourse/tree/main/plugins/chat
 # transpile_js: true
+# meta_topic_id: 230881
 
 enabled_site_setting :chat_enabled
 
@@ -18,13 +19,13 @@ register_asset "stylesheets/mobile/index.scss", :mobile
 register_svg_icon "comments"
 register_svg_icon "comment-slash"
 register_svg_icon "lock"
+register_svg_icon "clipboard"
 register_svg_icon "file-audio"
 register_svg_icon "file-video"
 register_svg_icon "file-image"
 
 # route: /admin/plugins/chat
 add_admin_route "chat.admin.title", "chat"
-hide_plugin
 
 GlobalSetting.add_default(:allow_unsecure_chat_uploads, false)
 
@@ -67,6 +68,7 @@ after_initialize do
     Jobs::UserEmail.prepend Chat::UserEmailExtension
     Plugin::Instance.prepend Chat::PluginInstanceExtension
     Jobs::ExportCsvFile.class_eval { prepend Chat::MessagesExporter }
+    WebHook.prepend Chat::OutgoingWebHookExtension
   end
 
   if Oneboxer.respond_to?(:register_local_handler)
@@ -381,6 +383,35 @@ after_initialize do
     end
   end
 
+  # outgoing webhook events
+  %i[
+    chat_message_created
+    chat_message_edited
+    chat_message_trashed
+    chat_message_restored
+  ].each do |chat_message_event|
+    on(chat_message_event) do |message, channel, user|
+      guardian = Guardian.new(user)
+
+      payload = {
+        message: Chat::MessageSerializer.new(message, { scope: guardian, root: false }).as_json,
+        channel:
+          Chat::ChannelSerializer.new(
+            channel,
+            { scope: guardian, membership: channel.membership_for(user), root: false },
+          ).as_json,
+      }
+
+      category_id = channel.chatable_type == "Category" ? channel.chatable_id : nil
+
+      WebHook.enqueue_chat_message_hooks(
+        chat_message_event,
+        payload.to_json,
+        category_id: category_id,
+      )
+    end
+  end
+
   Discourse::Application.routes.append do
     mount ::Chat::Engine, at: "/chat"
 
@@ -417,14 +448,14 @@ after_initialize do
         placeholders = { channel_name: channel.title(sender) }.merge(context["placeholders"] || {})
 
         creator =
-          Chat::MessageCreator.create(
-            chat_channel: channel,
-            user: sender,
-            content: utils.apply_placeholders(fields.dig("message", "value"), placeholders),
+          ::Chat::CreateMessage.call(
+            chat_channel_id: channel.id,
+            guardian: sender.guardian,
+            message: utils.apply_placeholders(fields.dig("message", "value"), placeholders),
           )
 
-        if creator.failed?
-          Rails.logger.warn "[discourse-automation] Chat message failed to send, error was: #{creator.error}"
+        if creator.failure?
+          Rails.logger.warn "[discourse-automation] Chat message failed to send:\n#{creator.inspect_steps.inspect}\n#{creator.inspect_steps.error}"
         end
       end
     end
@@ -432,7 +463,12 @@ after_initialize do
 
   add_api_key_scope(
     :chat,
-    { create_message: { actions: %w[chat/chat#create_message], params: %i[chat_channel_id] } },
+    {
+      create_message: {
+        actions: %w[chat/api/channel_messages#create],
+        params: %i[chat_channel_id],
+      },
+    },
   )
 
   # Dark mode email styles

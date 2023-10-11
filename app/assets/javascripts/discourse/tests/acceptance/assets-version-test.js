@@ -1,11 +1,11 @@
+import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import Sinon from "sinon";
+import DiscourseURL from "discourse/lib/url";
 import {
   acceptance,
   publishToMessageBus,
 } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
-import { click, visit } from "@ember/test-helpers";
-import DiscourseURL from "discourse/lib/url";
-import Sinon from "sinon";
 
 acceptance("Software update refresh", function (needs) {
   needs.user();
