@@ -2,53 +2,16 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import isElementInViewport from "discourse/lib/is-element-in-viewport";
+import { bind } from "discourse-common/utils/decorators";
+import I18n from "I18n";
+import eq from "truth-helpers/helpers/eq";
 import ChatThreadListHeader from "discourse/plugins/chat/discourse/components/chat/thread-list/header";
 import ChatThreadListItem from "discourse/plugins/chat/discourse/components/chat/thread-list/item";
-import eq from "truth-helpers/helpers/eq";
-import I18n from "I18n";
 import ChatTrackMessage from "discourse/plugins/chat/discourse/modifiers/chat/track-message";
-import isElementInViewport from "discourse/lib/is-element-in-viewport";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import { bind } from "discourse-common/utils/decorators";
 
 export default class ChatThreadList extends Component {
-  <template>
-    {{! template-lint-disable modifier-name-case }}
-    {{#if this.shouldRender}}
-      <div class="chat-thread-list" {{this.subscribe @channel}}>
-        {{#if @includeHeader}}
-          <ChatThreadListHeader @channel={{@channel}} />
-        {{/if}}
-
-        <div class="chat-thread-list__items" {{this.fill}}>
-          {{#each this.sortedThreads key="id" as |thread|}}
-            <ChatThreadListItem
-              @thread={{thread}}
-              {{(if
-                (eq thread this.lastThread)
-                (modifier ChatTrackMessage this.load)
-              )}}
-            />
-          {{else}}
-            {{#if this.threadsCollection.fetchedOnce}}
-              <div class="chat-thread-list__no-threads">
-                {{this.noThreadsLabel}}
-              </div>
-            {{/if}}
-          {{/each}}
-
-          <ConditionalLoadingSpinner
-            @condition={{this.threadsCollection.loading}}
-          />
-
-          <div {{this.loadMore}}>
-            <br />
-          </div>
-        </div>
-      </div>
-    {{/if}}
-  </template>
-
   @service chat;
   @service chatApi;
   @service messageBus;
@@ -214,4 +177,41 @@ export default class ChatThreadList extends Component {
       return threadModel;
     });
   }
+
+  <template>
+    {{! template-lint-disable modifier-name-case }}
+    {{#if this.shouldRender}}
+      <div class="chat-thread-list" {{this.subscribe @channel}}>
+        {{#if @includeHeader}}
+          <ChatThreadListHeader @channel={{@channel}} />
+        {{/if}}
+
+        <div class="chat-thread-list__items" {{this.fill}}>
+          {{#each this.sortedThreads key="id" as |thread|}}
+            <ChatThreadListItem
+              @thread={{thread}}
+              {{(if
+                (eq thread this.lastThread)
+                (modifier ChatTrackMessage this.load)
+              )}}
+            />
+          {{else}}
+            {{#if this.threadsCollection.fetchedOnce}}
+              <div class="chat-thread-list__no-threads">
+                {{this.noThreadsLabel}}
+              </div>
+            {{/if}}
+          {{/each}}
+
+          <ConditionalLoadingSpinner
+            @condition={{this.threadsCollection.loading}}
+          />
+
+          <div {{this.loadMore}}>
+            <br />
+          </div>
+        </div>
+      </div>
+    {{/if}}
+  </template>
 }
