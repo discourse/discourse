@@ -12,7 +12,11 @@ module PageObjects
       end
 
       def has_tracking_status?(name)
-        page.has_css?("summary[data-name='#{name}']")
+        select_kit =
+          PageObjects::Components::SelectKit.new(
+            "#topic-footer-buttons .topic-notifications-options",
+          )
+        expect(select_kit).to have_selected_name(name)
       end
     end
   end
