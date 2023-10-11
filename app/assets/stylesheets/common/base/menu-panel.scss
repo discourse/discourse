@@ -454,9 +454,9 @@
       span.double-user,
       // e.g., "username, username2"
       span.multi-user
-      // e.g., "username, username2, and n others"
+      // e.g., "username and n others"
       {
-        display: inline-flex;
+        display: inline;
         max-width: 100%;
         align-items: baseline;
         white-space: nowrap;
