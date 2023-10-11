@@ -48,6 +48,24 @@ module("Integration | Component | simple-list", function (hooks) {
     );
   });
 
+  test("adding a value when list is predefined", async function (assert) {
+    this.set("values", "vinkas\nosama");
+    this.set("choices", ["vinkas", "osama", "kris"]);
+
+    await render(
+      hbs`<SimpleList @values={{this.values}} @allowAny={{false}} @choices={{this.choices}}/>`
+    );
+
+    await click(".add-value-input summary");
+    await click(".select-kit-row");
+
+    assert.strictEqual(
+      count(".values .value"),
+      3,
+      "it adds the value to the list of values"
+    );
+  });
+
   test("changing a value", async function (assert) {
     const done = assert.async();
 
