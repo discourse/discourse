@@ -10,6 +10,10 @@ module PageObjects
           wait: Capybara.default_max_wait_time * 2,
         )
       end
+
+      def has_tracking_status?(name)
+        page.has_css?("summary[data-name='#{name}']")
+      end
     end
   end
 end
