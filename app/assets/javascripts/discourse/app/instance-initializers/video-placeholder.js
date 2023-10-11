@@ -4,16 +4,12 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 export default {
   initialize() {
     withPluginApi("0.8.7", (api) => {
-      function _handleEvent(event) {
-        const svgIcon = event.target;
-        const overlay = svgIcon.parentElement;
-        const wrapper = overlay.parentElement;
-        const parentDiv = wrapper.parentElement;
-
-        wrapper.style.display = "none";
+      function handleVideoPlaceholderClick(helper, event) {
+        const parentDiv = event.target.closest(".video-placeholder-container");
+        const wrapper = event.target.closest(".video-placeholder-wrapper");
 
         const videoHTML = `
-        <video width="100%" height="100%" preload="metadata" controls>
+        <video width="100%" height="100%" preload="metadata" controls style="display:none">
           <source src="${parentDiv.dataset.videoSrc}" ${parentDiv.dataset.origSrc}>
           <a href="${parentDiv.dataset.videoSrc}">${parentDiv.dataset.videoSrc}</a>
         </video>`;
@@ -21,32 +17,43 @@ export default {
         parentDiv.classList.add("video-container");
 
         const video = parentDiv.querySelector("video");
-        video.play();
+        video.addEventListener("canplay", function () {
+          video.play();
+          wrapper.remove();
+          video.style.display = "";
+          parentDiv.classList.remove("video-placeholder-container");
+        });
       }
 
-      function _attachCommands(post, helper) {
+      function applyVideoPlaceholder(post, helper) {
         if (!helper) {
           return;
         }
 
-        let containers = post.querySelectorAll(".video-placeholder-container");
+        const containers = post.querySelectorAll(
+          ".video-placeholder-container"
+        );
 
         containers.forEach((container) => {
           const wrapper = document.createElement("div"),
             overlay = document.createElement("div");
 
-          container.appendChild(wrapper);
           wrapper.classList.add("video-placeholder-wrapper");
+          container.appendChild(wrapper);
 
           overlay.classList.add("video-placeholder-overlay");
           overlay.style.cursor = "pointer";
-          overlay.addEventListener("click", _handleEvent, false);
+          overlay.addEventListener(
+            "click",
+            handleVideoPlaceholderClick.bind(null, helper),
+            false
+          );
           overlay.innerHTML = `${iconHTML("play")}`;
           wrapper.appendChild(overlay);
         });
       }
 
-      api.decorateCookedElement(_attachCommands, {
+      api.decorateCookedElement(applyVideoPlaceholder, {
         onlyStream: true,
       });
     });
