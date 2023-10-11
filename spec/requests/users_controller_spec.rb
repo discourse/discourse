@@ -5901,10 +5901,12 @@ RSpec.describe UsersController do
   end
 
   describe "#create_passkey" do
-    before { SiteSetting.experimental_passkeys = true }
+    before do
+      SiteSetting.experimental_passkeys = true
+      stub_secure_session_confirmed
+    end
 
     it "fails if user is not logged in" do
-      stub_secure_session_confirmed
       post "/u/create_passkey.json"
 
       expect(response.status).to eq(403)
@@ -5912,7 +5914,6 @@ RSpec.describe UsersController do
 
     it "stores the challenge in the session and returns challenge data, user id, and supported algorithms" do
       sign_in(user1)
-      stub_secure_session_confirmed
       post "/u/create_passkey.json"
 
       secure_session = read_secure_session
@@ -5920,18 +5921,17 @@ RSpec.describe UsersController do
       expect(response_parsed["challenge"]).to eq(DiscourseWebauthn.challenge(user1, secure_session))
       expect(response_parsed["rp_id"]).to eq(DiscourseWebauthn.rp_id)
       expect(response_parsed["rp_name"]).to eq(DiscourseWebauthn.rp_name)
-      expect(response_parsed["user_secure_id"]).to eq(user1.create_or_fetch_secure_identifier)
+      expect(response_parsed["user_secure_id"]).to eq(user1.reload.secure_identifier)
       expect(response_parsed["supported_algorithms"]).to eq(
         ::DiscourseWebauthn::SUPPORTED_ALGORITHMS,
       )
     end
 
-    context "if the user has a passkey already" do
+    context "when user has a passkey" do
       fab!(:user_security_key) { Fabricate(:passkey_with_random_credential, user: user1) }
 
       it "returns existing active credentials" do
         sign_in(user1)
-        stub_secure_session_confirmed
         post "/u/create_passkey.json"
 
         response_parsed = response.parsed_body
