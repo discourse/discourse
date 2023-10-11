@@ -641,13 +641,6 @@ export default createWidget("header", {
       schedule("afterRender", () => {
         // Remove focus from hamburger toggle button
         document.querySelector("#toggle-hamburger-menu")?.blur();
-        if (this.siteSettings.navigation_menu !== "legacy") {
-          // Remove focus from hamburger toggle button
-          document.querySelector("#toggle-hamburger-menu")?.blur();
-        } else {
-          // auto focus on first link in dropdown
-          document.querySelector(".hamburger-panel .menu-links a")?.focus();
-        }
       });
     }
   },
