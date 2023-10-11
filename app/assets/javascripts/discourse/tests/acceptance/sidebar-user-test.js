@@ -1,13 +1,13 @@
-import I18n from "I18n";
-import { test } from "qunit";
 import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import Sinon from "sinon";
 import {
   acceptance,
   exists,
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import Sinon from "sinon";
+import I18n from "I18n";
 
 acceptance(
   "Sidebar - Logged on user - Mobile view - Header dropdown navigation menu enabled",

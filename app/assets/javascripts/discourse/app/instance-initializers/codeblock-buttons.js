@@ -1,6 +1,6 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { schedule } from "@ember/runloop";
 import CodeblockButtons from "discourse/lib/codeblock-buttons";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 let _codeblockButtons = [];
 

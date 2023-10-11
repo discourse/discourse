@@ -1,22 +1,102 @@
 import Component from "@glimmer/component";
-import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
-import { getOwner } from "@ember/application";
 import { tracked } from "@glimmer/tracking";
-import discourseLater from "discourse-common/lib/later";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import and from "truth-helpers/helpers/and";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import concatClass from "discourse/helpers/concat-class";
-import DButton from "discourse/components/d-button";
-import { on } from "@ember/modifier";
-import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
-import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
+import { getOwner } from "@ember/application";
 import { fn } from "@ember/helper";
-import or from "truth-helpers/helpers/or";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { inject as service } from "@ember/service";
 import BookmarkIcon from "discourse/components/bookmark-icon";
+import DButton from "discourse/components/d-button";
+import concatClass from "discourse/helpers/concat-class";
+import discourseLater from "discourse-common/lib/later";
+import and from "truth-helpers/helpers/and";
+import or from "truth-helpers/helpers/or";
+import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
+import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
+import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 
 export default class ChatMessageActionsMobile extends Component {
+  @service chat;
+  @service site;
+  @service capabilities;
+
+  @tracked hasExpandedReply = false;
+  @tracked showFadeIn = false;
+
+  get message() {
+    return this.chat.activeMessage.model;
+  }
+
+  get context() {
+    return this.chat.activeMessage.context;
+  }
+
+  get messageInteractor() {
+    return new ChatMessageInteractor(
+      getOwner(this),
+      this.message,
+      this.context
+    );
+  }
+
+  @action
+  fadeAndVibrate() {
+    discourseLater(this.#addFadeIn.bind(this));
+
+    if (this.capabilities.userHasBeenActive && this.capabilities.canVibrate) {
+      navigator.vibrate(5);
+    }
+  }
+
+  @action
+  expandReply(event) {
+    event.stopPropagation();
+    this.hasExpandedReply = true;
+  }
+
+  @action
+  collapseMenu(event) {
+    event.preventDefault();
+    this.#onCloseMenu();
+  }
+
+  @action
+  actAndCloseMenu(fnId) {
+    this.messageInteractor[fnId]();
+    this.#onCloseMenu();
+  }
+
+  @action
+  openEmojiPicker(_, event) {
+    this.messageInteractor.openEmojiPicker(_, event);
+    this.#onCloseMenu();
+  }
+
+  #onCloseMenu() {
+    this.#removeFadeIn();
+
+    // we don't want to remove the component right away as it's animating
+    // 200 is equal to the duration of the css animation
+    discourseLater(() => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      // by ensuring we are not hovering any message anymore
+      // we also ensure the menu is fully removed
+      this.chat.activeMessage = null;
+    }, 200);
+  }
+
+  #addFadeIn() {
+    this.showFadeIn = true;
+  }
+
+  #removeFadeIn() {
+    this.showFadeIn = false;
+  }
+
   <template>
     {{! template-lint-disable modifier-name-case }}
     {{#if (and this.site.mobileView this.chat.activeMessage.model.persisted)}}
@@ -113,84 +193,4 @@ export default class ChatMessageActionsMobile extends Component {
       </div>
     {{/if}}
   </template>
-
-  @service chat;
-  @service site;
-  @service capabilities;
-
-  @tracked hasExpandedReply = false;
-  @tracked showFadeIn = false;
-
-  get message() {
-    return this.chat.activeMessage.model;
-  }
-
-  get context() {
-    return this.chat.activeMessage.context;
-  }
-
-  get messageInteractor() {
-    return new ChatMessageInteractor(
-      getOwner(this),
-      this.message,
-      this.context
-    );
-  }
-
-  @action
-  fadeAndVibrate() {
-    discourseLater(this.#addFadeIn.bind(this));
-
-    if (this.capabilities.userHasBeenActive && this.capabilities.canVibrate) {
-      navigator.vibrate(5);
-    }
-  }
-
-  @action
-  expandReply(event) {
-    event.stopPropagation();
-    this.hasExpandedReply = true;
-  }
-
-  @action
-  collapseMenu(event) {
-    event.preventDefault();
-    this.#onCloseMenu();
-  }
-
-  @action
-  actAndCloseMenu(fnId) {
-    this.messageInteractor[fnId]();
-    this.#onCloseMenu();
-  }
-
-  @action
-  openEmojiPicker(_, event) {
-    this.messageInteractor.openEmojiPicker(_, event);
-    this.#onCloseMenu();
-  }
-
-  #onCloseMenu() {
-    this.#removeFadeIn();
-
-    // we don't want to remove the component right away as it's animating
-    // 200 is equal to the duration of the css animation
-    discourseLater(() => {
-      if (this.isDestroying || this.isDestroyed) {
-        return;
-      }
-
-      // by ensuring we are not hovering any message anymore
-      // we also ensure the menu is fully removed
-      this.chat.activeMessage = null;
-    }, 200);
-  }
-
-  #addFadeIn() {
-    this.showFadeIn = true;
-  }
-
-  #removeFadeIn() {
-    this.showFadeIn = false;
-  }
 }

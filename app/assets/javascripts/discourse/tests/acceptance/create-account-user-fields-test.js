@@ -1,11 +1,11 @@
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 
 acceptance("Create Account - User Fields", function (needs) {
   needs.site({

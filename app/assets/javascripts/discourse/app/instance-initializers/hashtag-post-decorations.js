@@ -1,5 +1,5 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { decorateHashtags } from "discourse/lib/hashtag-autocomplete";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 export default {
   after: "hashtag-css-generator",

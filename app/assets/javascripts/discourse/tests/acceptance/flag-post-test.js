@@ -1,12 +1,12 @@
+import { click, fillIn, settled, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, settled, visit } from "@ember/test-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
-import userFixtures from "discourse/tests/fixtures/user-fixtures";
 
 async function openFlagModal() {
   if (exists(".topic-post:first-child button.show-more-actions")) {

@@ -1,7 +1,7 @@
-import { emojiUnescape, sanitize } from "discourse/lib/text";
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
+import { emojiUnescape, sanitize } from "discourse/lib/text";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   size: "medium",

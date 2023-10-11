@@ -1,15 +1,15 @@
+import EmberObject from "@ember/object";
+import { click, render } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { click, render } from "@ember/test-helpers";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   count,
   exists,
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import EmberObject from "@ember/object";
 import I18n from "I18n";
 
 let requests = 0;

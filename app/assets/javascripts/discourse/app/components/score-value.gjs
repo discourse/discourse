@@ -2,20 +2,6 @@ import Component from "@glimmer/component";
 import I18n from "I18n";
 
 export default class ScoreValue extends Component {
-  <template>
-    {{#if @value}}
-      <span class="op">{{if this.isNegative "-" "+"}}</span>
-      <span class="score-value">
-        <span class="score-number">{{this.numericValue}}</span>
-        {{#if @label}}
-          <span title={{this.explanationTitle}} class="score-value-type">
-            {{this.explanationContent}}
-          </span>
-        {{/if}}
-      </span>
-    {{/if}}
-  </template>
-
   get numericValue() {
     return parseFloat(Math.abs(this.args.value)).toFixed(1);
   }
@@ -31,4 +17,18 @@ export default class ScoreValue extends Component {
   get explanationContent() {
     return I18n.t(`review.explain.${this.args.label}.name`);
   }
+
+  <template>
+    {{#if @value}}
+      <span class="op">{{if this.isNegative "-" "+"}}</span>
+      <span class="score-value">
+        <span class="score-number">{{this.numericValue}}</span>
+        {{#if @label}}
+          <span title={{this.explanationTitle}} class="score-value-type">
+            {{this.explanationContent}}
+          </span>
+        {{/if}}
+      </span>
+    {{/if}}
+  </template>
 }

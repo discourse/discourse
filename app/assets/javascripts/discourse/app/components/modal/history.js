@@ -1,13 +1,13 @@
-import { action } from "@ember/object";
-import { tracked } from "@glimmer/tracking";
-import Category from "discourse/models/category";
 import Component from "@glimmer/component";
-import I18n from "I18n";
-import Post from "discourse/models/post";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import { sanitizeAsync } from "discourse/lib/text";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import { sanitizeAsync } from "discourse/lib/text";
+import Category from "discourse/models/category";
+import Post from "discourse/models/post";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import I18n from "I18n";
 
 function customTagArray(val) {
   if (!val) {

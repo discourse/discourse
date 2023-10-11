@@ -1,48 +1,16 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
-import { inject as service } from "@ember/service";
 import { cached, tracked } from "@glimmer/tracking";
-import { getReactionText } from "discourse/plugins/chat/discourse/lib/get-reaction-text";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
-import { on } from "@ember/modifier";
-import and from "truth-helpers/helpers/and";
 import concatClass from "discourse/helpers/concat-class";
+import { emojiUnescape, emojiUrlFor } from "discourse/lib/text";
+import and from "truth-helpers/helpers/and";
+import { getReactionText } from "discourse/plugins/chat/discourse/lib/get-reaction-text";
 
 export default class ChatMessageReaction extends Component {
-  <template>
-    {{! template-lint-disable modifier-name-case }}
-    {{#if (and @reaction this.emojiUrl)}}
-      <button
-        type="button"
-        tabindex="0"
-        class={{concatClass
-          "chat-message-reaction"
-          (if @reaction.reacted "reacted")
-          (if this.isActive "-active")
-        }}
-        data-emoji-name={{@reaction.emoji}}
-        title={{this.emojiString}}
-        {{on "click" this.handleClick passive=true}}
-        {{this.registerTooltip}}
-      >
-        <img
-          loading="lazy"
-          class="emoji"
-          width="20"
-          height="20"
-          alt={{this.emojiString}}
-          src={{this.emojiUrl}}
-        />
-
-        {{#if (and this.showCount @reaction.count)}}
-          <span class="count">{{@reaction.count}}</span>
-        {{/if}}
-      </button>
-    {{/if}}
-  </template>
-
   @service capabilities;
   @service currentUser;
   @service tooltip;
@@ -101,4 +69,36 @@ export default class ChatMessageReaction extends Component {
 
     return emojiUnescape(getReactionText(this.args.reaction, this.currentUser));
   }
+
+  <template>
+    {{! template-lint-disable modifier-name-case }}
+    {{#if (and @reaction this.emojiUrl)}}
+      <button
+        type="button"
+        tabindex="0"
+        class={{concatClass
+          "chat-message-reaction"
+          (if @reaction.reacted "reacted")
+          (if this.isActive "-active")
+        }}
+        data-emoji-name={{@reaction.emoji}}
+        title={{this.emojiString}}
+        {{on "click" this.handleClick passive=true}}
+        {{this.registerTooltip}}
+      >
+        <img
+          loading="lazy"
+          class="emoji"
+          width="20"
+          height="20"
+          alt={{this.emojiString}}
+          src={{this.emojiUrl}}
+        />
+
+        {{#if (and this.showCount @reaction.count)}}
+          <span class="count">{{@reaction.count}}</span>
+        {{/if}}
+      </button>
+    {{/if}}
+  </template>
 }

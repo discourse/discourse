@@ -1482,6 +1482,52 @@ RSpec.describe DiscourseTagging do
     end
   end
 
+  describe "Tag in multiple tag groups" do
+    fab!(:parent) { Fabricate(:tag) }
+    fab!(:child) { Fabricate(:tag) }
+    fab!(:no_show_tag) { Fabricate(:tag) }
+
+    fab!(:no_show_tag_group) do
+      Fabricate(:tag_group, permissions: { "everyone" => 1 }, tag_names: [no_show_tag.name])
+    end
+
+    fab!(:child_tag_group) do
+      Fabricate(
+        :tag_group,
+        permissions: {
+          "everyone" => 1,
+        },
+        tag_names: [child.name, no_show_tag.name],
+        parent_tag_id: parent.id,
+      )
+    end
+
+    fab!(:parent_tag_group) do
+      Fabricate(:tag_group, permissions: { "everyone" => 1 }, tag_names: [parent.name])
+    end
+
+    fab!(:category) do
+      Fabricate(:category, allowed_tag_groups: [parent_tag_group.name, child_tag_group.name])
+    end
+
+    # this test is to make sure that the parent tag is the only one returned when the child tag is also in a tag group
+    # allowed in the category
+    it "Will only return the parent tag" do
+      tags =
+        DiscourseTagging.filter_allowed_tags(
+          Guardian.new(user),
+          selected_tags: nil,
+          for_input: true,
+          category: category,
+          term: "",
+        ).map(&:name)
+
+      expect(tags).to include(parent.name)
+      expect(tags).not_to include(child.name)
+      expect(tags).not_to include(no_show_tag.name)
+    end
+  end
+
   describe "staff_tag_names" do
     fab!(:tag) { Fabricate(:tag) }
 

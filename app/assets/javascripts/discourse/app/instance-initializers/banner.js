@@ -1,6 +1,6 @@
 import EmberObject from "@ember/object";
-import { bind } from "discourse-common/utils/decorators";
 import PreloadStore from "discourse/lib/preload-store";
+import { bind } from "discourse-common/utils/decorators";
 
 export default {
   after: "message-bus",

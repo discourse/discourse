@@ -2,6 +2,10 @@ import Component from "@glimmer/component";
 import { isTesting } from "discourse-common/config/environment";
 
 export default class DFloatPortal extends Component {
+  get inline() {
+    return this.args.inline ?? isTesting();
+  }
+
   <template>
     {{#if this.inline}}
       {{yield}}
@@ -11,8 +15,4 @@ export default class DFloatPortal extends Component {
       {{/in-element}}
     {{/if}}
   </template>
-
-  get inline() {
-    return this.args.inline ?? isTesting();
-  }
 }

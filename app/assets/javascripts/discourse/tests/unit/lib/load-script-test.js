@@ -1,5 +1,5 @@
-import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
 import { cacheBuster } from "discourse/lib/load-script";
 import { PUBLIC_JS_VERSIONS as jsVersions } from "discourse/lib/public-js-versions";
 

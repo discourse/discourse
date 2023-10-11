@@ -1,5 +1,5 @@
-import virtualDom from "virtual-dom";
 import widgetHelpers from "discourse-widget-hbs/helpers";
+import virtualDom from "virtual-dom";
 
 window.__widget_helpers = widgetHelpers;
 

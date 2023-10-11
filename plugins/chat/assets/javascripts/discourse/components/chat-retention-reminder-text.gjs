@@ -1,14 +1,8 @@
 import Component from "@glimmer/component";
-import I18n from "I18n";
 import { inject as service } from "@ember/service";
+import I18n from "I18n";
 
 export default class ChatRetentionReminderText extends Component {
-  <template>
-    <span class="chat-retention-reminder-text">
-      {{this.text}}
-    </span>
-  </template>
-
   @service siteSettings;
 
   get text() {
@@ -36,4 +30,10 @@ export default class ChatRetentionReminderText extends Component {
       ? this.siteSettings.chat_dm_retention_days
       : this.siteSettings.chat_channel_retention_days;
   }
+
+  <template>
+    <span class="chat-retention-reminder-text">
+      {{this.text}}
+    </span>
+  </template>
 }

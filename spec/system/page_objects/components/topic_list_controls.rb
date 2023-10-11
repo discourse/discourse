@@ -25,8 +25,9 @@ module PageObjects
         has_css?(".nav-item_unread", text: text)
       end
 
-      def dismiss_unread
+      def dismiss_unread(untrack: false)
         click_button("dismiss-topics-bottom")
+        find(".dismiss-read-modal__stop-tracking").click if untrack
         click_button("dismiss-read-confirm")
         self
       end

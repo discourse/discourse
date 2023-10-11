@@ -1,8 +1,8 @@
-import SelectKitComponent from "select-kit/components/select-kit";
 import { computed } from "@ember/object";
-import { isPresent } from "@ember/utils";
 import { next } from "@ember/runloop";
+import { isPresent } from "@ember/utils";
 import { makeArray } from "discourse-common/lib/helpers";
+import SelectKitComponent from "select-kit/components/select-kit";
 
 export default SelectKitComponent.extend({
   pluginApiIdentifiers: ["multi-select"],

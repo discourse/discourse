@@ -1,5 +1,5 @@
-import Service, { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
+import Service, { inject as service } from "@ember/service";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 
 const TOPIC_LIST_PREFERENCE_KEY = "more-topics-list-preference";

@@ -1,13 +1,13 @@
-import { assert, module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import Component from "@glimmer/component";
+import { setComponentTemplate } from "@glimmer/manager";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import { registerTemporaryModule } from "../helpers/temporary-module-helper";
-import { setComponentTemplate } from "@glimmer/manager";
-import Component from "@glimmer/component";
-import { forceMobile, resetMobile } from "discourse/lib/mobile";
+import { assert, module, test } from "qunit";
 import sinon from "sinon";
 import { overrideThrowGjsError } from "discourse/instance-initializers/component-templates";
+import { forceMobile, resetMobile } from "discourse/lib/mobile";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 
 class MockColocatedComponent extends Component {}
 setComponentTemplate(hbs`Colocated Original`, MockColocatedComponent);

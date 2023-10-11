@@ -1,9 +1,9 @@
 import Component from "@ember/component";
-import I18n from "I18n";
+import { inject as service } from "@ember/service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import cookie from "discourse/lib/cookie";
 import discourseComputed from "discourse-common/utils/decorators";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { inject as service } from "@ember/service";
+import I18n from "I18n";
 import RequestGroupMembershipForm from "./modal/request-group-membership-form";
 
 export default Component.extend({

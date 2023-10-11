@@ -1,7 +1,7 @@
-import RestModel from "discourse/models/rest";
 import EmberObject from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
 import { inject as service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
+import RestModel from "discourse/models/rest";
 
 /**
   A model representing a Topic's details that aren't always present, such as a list of participants.

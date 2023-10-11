@@ -2496,6 +2496,7 @@ en:
           desc: Whispers are only visible to staff members
         create_topic:
           label: "New Topic"
+          desc: Create a new topic
         shared_draft:
           label: "Shared Draft"
           desc: "Draft a topic that will only be visible to allowed users"

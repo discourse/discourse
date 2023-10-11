@@ -1,7 +1,7 @@
-import getUrl from "discourse-common/lib/get-url";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import getUrl from "discourse-common/lib/get-url";
 
 export default Controller.extend({
   router: service(),

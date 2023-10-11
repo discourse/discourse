@@ -1,9 +1,9 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
-import { count, exists, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { count, exists, queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 const topCategoryIds = [2, 3, 1];
 let mutedCategoryIds = [];

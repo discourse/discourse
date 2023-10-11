@@ -1,13 +1,13 @@
+import { guidFor } from "@ember/object/internals";
 import { cancel } from "@ember/runloop";
-import discourseLater from "discourse-common/lib/later";
+import FullscreenCodeModal from "discourse/components/modal/fullscreen-code";
 import Mobile from "discourse/lib/mobile";
+import { clipboardCopy } from "discourse/lib/utilities";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "I18n";
-import { guidFor } from "@ember/object/internals";
-import { clipboardCopy } from "discourse/lib/utilities";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import FullscreenCodeModal from "discourse/components/modal/fullscreen-code";
 
 // Use to attach copy/fullscreen buttons to a block of code, either
 // within the post stream or for a regular element that contains

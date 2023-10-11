@@ -114,6 +114,7 @@ task "qunit:test", %i[timeout qunit_path filter] do |_, args|
         cmd += ["--load-balance", "--parallel", parallel]
       end
       cmd += ["--filter", filter] if filter
+      cmd << "--write-execution-file" if ENV["QUNIT_WRITE_EXECUTION_FILE"]
     end
 
     system(*cmd, chdir: "#{Rails.root}/app/assets/javascripts/discourse")

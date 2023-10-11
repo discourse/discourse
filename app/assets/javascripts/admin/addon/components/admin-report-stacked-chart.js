@@ -1,12 +1,12 @@
-import { classNames } from "@ember-decorators/component";
-import Report from "admin/models/report";
 import Component from "@ember/component";
-import discourseDebounce from "discourse-common/lib/debounce";
-import loadScript from "discourse/lib/load-script";
-import { makeArray } from "discourse-common/lib/helpers";
-import { number } from "discourse/lib/formatter";
 import { schedule } from "@ember/runloop";
+import { classNames } from "@ember-decorators/component";
+import { number } from "discourse/lib/formatter";
+import loadScript from "discourse/lib/load-script";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { makeArray } from "discourse-common/lib/helpers";
 import { bind } from "discourse-common/utils/decorators";
+import Report from "admin/models/report";
 
 @classNames("admin-report-chart", "admin-report-stacked-chart")
 export default class AdminReportStackedChart extends Component {

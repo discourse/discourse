@@ -1,6 +1,6 @@
+import Component from "@ember/component";
 import { readOnly } from "@ember/object/computed";
 import BufferedContent from "discourse/mixins/buffered-content";
-import Component from "@ember/component";
 import SettingComponent from "admin/mixins/setting-component";
 import SiteSetting from "admin/models/site-setting";
 

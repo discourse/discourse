@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
 import { getOwner } from "@ember/application";
+import { action } from "@ember/object";
 
 export default class BulkSelectToggle extends Component {
   @action

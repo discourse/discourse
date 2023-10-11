@@ -1,14 +1,14 @@
-import CategoryList from "discourse/models/category-list";
-import DiscourseRoute from "discourse/routes/discourse";
 import EmberObject, { action } from "@ember/object";
-import I18n from "I18n";
-import PreloadStore from "discourse/lib/preload-store";
-import TopicList from "discourse/models/topic-list";
-import { ajax } from "discourse/lib/ajax";
-import { defaultHomepage } from "discourse/lib/utilities";
-import { hash } from "rsvp";
-import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
+import { hash } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import PreloadStore from "discourse/lib/preload-store";
+import showModal from "discourse/lib/show-modal";
+import { defaultHomepage } from "discourse/lib/utilities";
+import CategoryList from "discourse/models/category-list";
+import TopicList from "discourse/models/topic-list";
+import DiscourseRoute from "discourse/routes/discourse";
+import I18n from "I18n";
 
 export default class DiscoveryCategoriesRoute extends DiscourseRoute {
   @service router;

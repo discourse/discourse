@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
 import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { escapeExpression } from "discourse/lib/utilities";
 import domFromString from "discourse-common/lib/dom-from-string";
 import I18n from "I18n";

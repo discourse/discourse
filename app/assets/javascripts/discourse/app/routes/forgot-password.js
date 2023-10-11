@@ -1,8 +1,8 @@
-import DiscourseRoute from "discourse/routes/discourse";
-import { inject as service } from "@ember/service";
-import { defaultHomepage } from "discourse/lib/utilities";
 import { next } from "@ember/runloop";
+import { inject as service } from "@ember/service";
 import ForgotPassword from "discourse/components/modal/forgot-password";
+import { defaultHomepage } from "discourse/lib/utilities";
+import DiscourseRoute from "discourse/routes/discourse";
 
 export default class ForgotPasswordRoute extends DiscourseRoute {
   @service modal;

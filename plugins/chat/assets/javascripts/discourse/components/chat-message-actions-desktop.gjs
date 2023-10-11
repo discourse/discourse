@@ -1,23 +1,23 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
-import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
-import { getOwner } from "@ember/application";
-import { schedule } from "@ember/runloop";
-import { createPopper } from "@popperjs/core";
-import chatMessageContainer from "discourse/plugins/chat/discourse/lib/chat-message-container";
-import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
+import { getOwner } from "@ember/application";
+import { concat, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import concatClass from "discourse/helpers/concat-class";
+import { schedule } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import { createPopper } from "@popperjs/core";
 import BookmarkIcon from "discourse/components/bookmark-icon";
-import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
 import DButton from "discourse/components/d-button";
+import concatClass from "discourse/helpers/concat-class";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
-import { on } from "@ember/modifier";
 import and from "truth-helpers/helpers/and";
-import { concat, hash } from "@ember/helper";
+import ChatMessageReaction from "discourse/plugins/chat/discourse/components/chat-message-reaction";
+import chatMessageContainer from "discourse/plugins/chat/discourse/lib/chat-message-container";
+import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 
 const MSG_ACTIONS_VERTICAL_PADDING = -10;
 const FULL = "full";
@@ -25,6 +25,91 @@ const REDUCED = "reduced";
 const REDUCED_WIDTH_THRESHOLD = 500;
 
 export default class ChatMessageActionsDesktop extends Component {
+  @service chat;
+  @service chatEmojiPickerManager;
+  @service site;
+
+  @tracked size = FULL;
+
+  popper = null;
+
+  get message() {
+    return this.chat.activeMessage.model;
+  }
+
+  get context() {
+    return this.chat.activeMessage.context;
+  }
+
+  get messageInteractor() {
+    return new ChatMessageInteractor(
+      getOwner(this),
+      this.message,
+      this.context
+    );
+  }
+
+  get shouldRenderFavoriteReactions() {
+    return this.size === FULL;
+  }
+
+  @action
+  onWheel() {
+    // prevents menu to stop scroll on the list of messages
+    this.chat.activeMessage = null;
+  }
+
+  @action
+  setup(element) {
+    this.popper?.destroy();
+
+    schedule("afterRender", () => {
+      const messageContainer = chatMessageContainer(
+        this.message.id,
+        this.context
+      );
+
+      if (!messageContainer) {
+        return;
+      }
+
+      const viewport = messageContainer.closest(".popper-viewport");
+      this.size =
+        viewport.clientWidth < REDUCED_WIDTH_THRESHOLD ? REDUCED : FULL;
+
+      if (!messageContainer) {
+        return;
+      }
+
+      this.popper = createPopper(messageContainer, element, {
+        placement: "top-end",
+        strategy: "fixed",
+        modifiers: [
+          {
+            name: "flip",
+            enabled: true,
+            options: {
+              boundary: viewport,
+              fallbackPlacements: ["bottom-end"],
+            },
+          },
+          { name: "hide", enabled: true },
+          { name: "eventListeners", options: { scroll: false } },
+          {
+            name: "offset",
+            options: { offset: [-2, MSG_ACTIONS_VERTICAL_PADDING] },
+          },
+        ],
+      });
+    });
+  }
+
+  @action
+  teardown() {
+    this.popper?.destroy();
+    this.popper = null;
+  }
+
   <template>
     {{! template-lint-disable modifier-name-case }}
     {{#if (and this.site.desktopView this.chat.activeMessage.model.persisted)}}
@@ -112,89 +197,4 @@ export default class ChatMessageActionsDesktop extends Component {
       </div>
     {{/if}}
   </template>
-
-  @service chat;
-  @service chatEmojiPickerManager;
-  @service site;
-
-  @tracked size = FULL;
-
-  popper = null;
-
-  get message() {
-    return this.chat.activeMessage.model;
-  }
-
-  get context() {
-    return this.chat.activeMessage.context;
-  }
-
-  get messageInteractor() {
-    return new ChatMessageInteractor(
-      getOwner(this),
-      this.message,
-      this.context
-    );
-  }
-
-  get shouldRenderFavoriteReactions() {
-    return this.size === FULL;
-  }
-
-  @action
-  onWheel() {
-    // prevents menu to stop scroll on the list of messages
-    this.chat.activeMessage = null;
-  }
-
-  @action
-  setup(element) {
-    this.popper?.destroy();
-
-    schedule("afterRender", () => {
-      const messageContainer = chatMessageContainer(
-        this.message.id,
-        this.context
-      );
-
-      if (!messageContainer) {
-        return;
-      }
-
-      const viewport = messageContainer.closest(".popper-viewport");
-      this.size =
-        viewport.clientWidth < REDUCED_WIDTH_THRESHOLD ? REDUCED : FULL;
-
-      if (!messageContainer) {
-        return;
-      }
-
-      this.popper = createPopper(messageContainer, element, {
-        placement: "top-end",
-        strategy: "fixed",
-        modifiers: [
-          {
-            name: "flip",
-            enabled: true,
-            options: {
-              boundary: viewport,
-              fallbackPlacements: ["bottom-end"],
-            },
-          },
-          { name: "hide", enabled: true },
-          { name: "eventListeners", options: { scroll: false } },
-          {
-            name: "offset",
-            options: { offset: [-2, MSG_ACTIONS_VERTICAL_PADDING] },
-          },
-        ],
-      });
-    });
-  }
-
-  @action
-  teardown() {
-    this.popper?.destroy();
-    this.popper = null;
-  }
 }

@@ -1,8 +1,8 @@
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import IncomingEmail from "admin/models/incoming-email";
 import AdminEmailIncomings from "admin/routes/admin-email-incomings";
 import IncomingEmailModal from "../components/modal/incoming-email";
-import IncomingEmail from "admin/models/incoming-email";
-import { inject as service } from "@ember/service";
 
 export default class AdminEmailRejectedRoute extends AdminEmailIncomings {
   @service modal;

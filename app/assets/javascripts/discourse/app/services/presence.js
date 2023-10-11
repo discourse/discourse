@@ -1,19 +1,19 @@
-import Service, { inject as service } from "@ember/service";
 import EmberObject, { computed } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
+import Evented from "@ember/object/evented";
 import { cancel, debounce, next, once, throttle } from "@ember/runloop";
-import discourseLater from "discourse-common/lib/later";
+import Service, { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
-import User from "discourse/models/user";
+import { ajax } from "discourse/lib/ajax";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import userPresent, {
   onPresenceChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
-import { bind } from "discourse-common/utils/decorators";
-import Evented from "@ember/object/evented";
+import User from "discourse/models/user";
 import { isTesting } from "discourse-common/config/environment";
 import getURL from "discourse-common/lib/get-url";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import discourseLater from "discourse-common/lib/later";
+import { bind } from "discourse-common/utils/decorators";
 
 const PRESENCE_INTERVAL_S = 30;
 const DEFAULT_PRESENCE_DEBOUNCE_MS = isTesting() ? 0 : 500;

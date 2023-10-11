@@ -1,8 +1,8 @@
-import { module, test } from "qunit";
+import EmberObject from "@ember/object";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
 import sinon from "sinon";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import EmberObject from "@ember/object";
 
 module("Unit | Controller | user-notifications", function (hooks) {
   setupTest(hooks);

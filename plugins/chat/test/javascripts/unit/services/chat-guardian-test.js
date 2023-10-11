@@ -1,6 +1,6 @@
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
 import { set } from "@ember/object";
+import { test } from "qunit";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 acceptance("Discourse Chat | Unit | Service | chat-guardian", function (needs) {

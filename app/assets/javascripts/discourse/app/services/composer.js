@@ -1,46 +1,48 @@
+import EmberObject, { action, computed } from "@ember/object";
+import { alias, and, or, reads } from "@ember/object/computed";
+import { cancel, scheduleOnce } from "@ember/runloop";
+import Service, { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import { isEmpty } from "@ember/utils";
+import { observes, on } from "@ember-decorators/object";
+import { Promise } from "rsvp";
+import DiscardDraftModal from "discourse/components/modal/discard-draft";
+import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
+import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import {
+  cannotPostAgain,
+  durationTextFromSeconds,
+} from "discourse/helpers/slow-mode";
+import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
+import prepareFormTemplateData, {
+  getFormTemplateObject,
+} from "discourse/lib/form-template-validation";
+import { shortDate } from "discourse/lib/formatter";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import { buildQuote } from "discourse/lib/quote";
+import renderTags from "discourse/lib/render-tags";
+import { emojiUnescape } from "discourse/lib/text";
+import {
+  authorizesOneOrMoreExtensions,
+  uploadIcon,
+} from "discourse/lib/uploads";
+import DiscourseURL from "discourse/lib/url";
+import { escapeExpression, modKeysPressed } from "discourse/lib/utilities";
 import Composer, {
   CREATE_TOPIC,
   NEW_TOPIC_KEY,
   SAVE_ICONS,
   SAVE_LABELS,
 } from "discourse/models/composer";
-import EmberObject, { action, computed } from "@ember/object";
-import { alias, and, or, reads } from "@ember/object/computed";
-import {
-  authorizesOneOrMoreExtensions,
-  uploadIcon,
-} from "discourse/lib/uploads";
-import { cancel, scheduleOnce } from "@ember/runloop";
-import {
-  cannotPostAgain,
-  durationTextFromSeconds,
-} from "discourse/helpers/slow-mode";
-import discourseComputed from "discourse-common/utils/decorators";
-import { observes, on } from "@ember-decorators/object";
-import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
-import I18n from "I18n";
-import { Promise } from "rsvp";
-import { buildQuote } from "discourse/lib/quote";
-import deprecated from "discourse-common/lib/deprecated";
+import { isTesting } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { emojiUnescape } from "discourse/lib/text";
-import { escapeExpression, modKeysPressed } from "discourse/lib/utilities";
+import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
-import { isEmpty } from "@ember/utils";
-import { isTesting } from "discourse-common/config/environment";
-import Service, { inject as service } from "@ember/service";
-import { shortDate } from "discourse/lib/formatter";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import renderTags from "discourse/lib/render-tags";
-import { htmlSafe } from "@ember/template";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import prepareFormTemplateData from "discourse/lib/form-template-validation";
-import DiscardDraftModal from "discourse/components/modal/discard-draft";
-import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 async function loadDraft(store, opts = {}) {
   let { draft, draftKey, draftSequence } = opts;
@@ -170,6 +172,14 @@ export default class ComposerService extends Service {
     }
 
     return this.model.category?.get("form_template_ids");
+  }
+
+  get hasFormTemplate() {
+    return (
+      this.formTemplateIds?.length > 0 &&
+      !this.get("model.replyingToTopic") &&
+      !this.get("model.editingPost")
+    );
   }
 
   get formTemplateInitialValues() {
@@ -726,7 +736,11 @@ export default class ComposerService extends Service {
 
     const composer = this.model;
 
-    if (isEmpty(composer?.reply) && isEmpty(composer?.title)) {
+    if (
+      isEmpty(composer?.reply) &&
+      isEmpty(composer?.title) &&
+      !this.hasFormTemplate
+    ) {
       this.close();
     } else if (composer?.viewOpenOrFullscreen) {
       this.shrink();
@@ -923,21 +937,15 @@ export default class ComposerService extends Service {
       this.set("showPreview", false);
     }
 
-    if (this.siteSettings.experimental_form_templates) {
-      if (
-        this.formTemplateIds?.length > 0 &&
-        !this.get("model.replyingToTopic") &&
-        !this.get("model.editingPost")
-      ) {
-        const formTemplateData = prepareFormTemplateData(
-          document.querySelector("#form-template-form"),
-          this.selectedFormTemplate
-        );
-        if (formTemplateData) {
-          this.model.set("reply", formTemplateData);
-        } else {
-          return;
-        }
+    if (this.hasFormTemplate) {
+      const formTemplateData = prepareFormTemplateData(
+        document.querySelector("#form-template-form"),
+        this.selectedFormTemplate
+      );
+      if (formTemplateData) {
+        this.model.set("reply", formTemplateData);
+      } else {
+        return;
       }
     }
 
@@ -1610,7 +1618,8 @@ export default class ComposerService extends Service {
   shrink() {
     if (
       this.get("model.replyDirty") ||
-      (this.get("model.canEditTitle") && this.get("model.titleDirty"))
+      (this.get("model.canEditTitle") && this.get("model.titleDirty")) ||
+      this.hasFormTemplate
     ) {
       this.collapse();
     } else {
@@ -1626,6 +1635,15 @@ export default class ComposerService extends Service {
     if (this.model.draftSaving) {
       this._saveDraftDebounce = discourseDebounce(this, this._saveDraft, 2000);
     } else {
+      // This is a temporary solution to avoid losing the current form template state
+      // until we have a proper draft system for these forms
+      if (this.hasFormTemplate) {
+        const form = document.querySelector("#form-template-form");
+        if (form) {
+          this.set("formTemplateInitialValues", getFormTemplateObject(form));
+        }
+      }
+
       this._saveDraftPromise = this.model
         .saveDraft(this.currentUser)
         .finally(() => {
@@ -1723,6 +1741,9 @@ export default class ComposerService extends Service {
     document.activeElement?.blur();
     document.documentElement.style.removeProperty("--composer-height");
     this.setProperties({ model: null, lastValidatedAt: null });
+
+    // This is a temporary solution to reset the saved form template state while we don't store drafts
+    this.set("formTemplateInitialValues", undefined);
   }
 
   closeAutocomplete() {

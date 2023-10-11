@@ -1,9 +1,9 @@
 import EmberObject from "@ember/object";
+import { readOnly } from "@ember/object/computed";
 import Evented from "@ember/object/evented";
+import { ajax } from "discourse/lib/ajax";
 import Step from "wizard/models/step";
 import WizardField from "wizard/models/wizard-field";
-import { ajax } from "discourse/lib/ajax";
-import { readOnly } from "@ember/object/computed";
 
 const Wizard = EmberObject.extend(Evented, {
   totalSteps: readOnly("steps.length"),

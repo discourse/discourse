@@ -1,16 +1,50 @@
 import Component from "@glimmer/component";
-import FloatKitApplyFloatingUi from "float-kit/modifiers/apply-floating-ui";
-import FloatKitCloseOnEscape from "float-kit/modifiers/close-on-escape";
-import FloatKitCloseOnClickOutside from "float-kit/modifiers/close-on-click-outside";
-import { modifier } from "ember-modifier";
-import { getScrollParent } from "float-kit/lib/get-scroll-parent";
-import concatClass from "discourse/helpers/concat-class";
-import { htmlSafe } from "@ember/template";
 import { concat } from "@ember/helper";
+import { htmlSafe } from "@ember/template";
+import { modifier } from "ember-modifier";
+import concatClass from "discourse/helpers/concat-class";
 import TrapTab from "discourse/modifiers/trap-tab";
 import DFloatPortal from "float-kit/components/d-float-portal";
+import { getScrollParent } from "float-kit/lib/get-scroll-parent";
+import FloatKitApplyFloatingUi from "float-kit/modifiers/apply-floating-ui";
+import FloatKitCloseOnClickOutside from "float-kit/modifiers/close-on-click-outside";
+import FloatKitCloseOnEscape from "float-kit/modifiers/close-on-escape";
 
 export default class DFloatBody extends Component {
+  closeOnScroll = modifier(() => {
+    const firstScrollParent = getScrollParent(this.trigger);
+
+    const handler = () => {
+      this.args.instance.close();
+    };
+
+    firstScrollParent.addEventListener("scroll", handler, { passive: true });
+
+    return () => {
+      firstScrollParent.removeEventListener("scroll", handler);
+    };
+  });
+
+  get supportsCloseOnClickOutside() {
+    return this.args.instance.expanded && this.options.closeOnClickOutside;
+  }
+
+  get supportsCloseOnEscape() {
+    return this.args.instance.expanded && this.options.closeOnEscape;
+  }
+
+  get supportsCloseOnScroll() {
+    return this.args.instance.expanded && this.options.closeOnScroll;
+  }
+
+  get trigger() {
+    return this.args.instance.trigger;
+  }
+
+  get options() {
+    return this.args.instance.options;
+  }
+
   <template>
     {{! template-lint-disable modifier-name-case }}
     <DFloatPortal
@@ -48,38 +82,4 @@ export default class DFloatBody extends Component {
       </div>
     </DFloatPortal>
   </template>
-
-  closeOnScroll = modifier(() => {
-    const firstScrollParent = getScrollParent(this.trigger);
-
-    const handler = () => {
-      this.args.instance.close();
-    };
-
-    firstScrollParent.addEventListener("scroll", handler, { passive: true });
-
-    return () => {
-      firstScrollParent.removeEventListener("scroll", handler);
-    };
-  });
-
-  get supportsCloseOnClickOutside() {
-    return this.args.instance.expanded && this.options.closeOnClickOutside;
-  }
-
-  get supportsCloseOnEscape() {
-    return this.args.instance.expanded && this.options.closeOnEscape;
-  }
-
-  get supportsCloseOnScroll() {
-    return this.args.instance.expanded && this.options.closeOnScroll;
-  }
-
-  get trigger() {
-    return this.args.instance.trigger;
-  }
-
-  get options() {
-    return this.args.instance.options;
-  }
 }

@@ -1,12 +1,12 @@
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
-import { escapeExpression } from "discourse/lib/utilities";
 import { tracked } from "@glimmer/tracking";
 import guid from "pretty-text/guid";
+import { escapeExpression } from "discourse/lib/utilities";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import ChatMessagesManager from "discourse/plugins/chat/discourse/lib/chat-messages-manager";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import ChatThreadPreview from "discourse/plugins/chat/discourse/models/chat-thread-preview";
 import ChatTrackingState from "discourse/plugins/chat/discourse/models/chat-tracking-state";
 import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
-import ChatThreadPreview from "discourse/plugins/chat/discourse/models/chat-thread-preview";
 
 export const THREAD_STATUSES = {
   open: "open",

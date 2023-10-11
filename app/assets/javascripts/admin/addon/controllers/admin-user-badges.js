@@ -1,13 +1,13 @@
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { alias, empty, sort } from "@ember/object/computed";
 import Controller, { inject as controller } from "@ember/controller";
-import UserBadge from "discourse/models/user-badge";
-import { grantableBadges } from "discourse/lib/grant-badge-utils";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
+import { alias, empty, sort } from "@ember/object/computed";
 import { next } from "@ember/runloop";
+import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { grantableBadges } from "discourse/lib/grant-badge-utils";
+import UserBadge from "discourse/models/user-badge";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 export default class AdminUserBadgesController extends Controller {
   @service dialog;

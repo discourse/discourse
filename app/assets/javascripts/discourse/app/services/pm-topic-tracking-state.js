@@ -1,16 +1,16 @@
-import { Promise } from "rsvp";
 import Service from "@ember/service";
+import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
-import { bind } from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { deepEqual, deepMerge } from "discourse-common/lib/object";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 import {
   ARCHIVE_FILTER,
   INBOX_FILTER,
   NEW_FILTER,
   UNREAD_FILTER,
 } from "discourse/routes/build-private-messages-route";
-import { NotificationLevels } from "discourse/lib/notification-levels";
+import { deepEqual, deepMerge } from "discourse-common/lib/object";
+import { bind } from "discourse-common/utils/decorators";
 
 // See private_message_topic_tracking_state.rb for documentation
 const PrivateMessageTopicTrackingState = Service.extend({

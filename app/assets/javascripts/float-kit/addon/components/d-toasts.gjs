@@ -1,9 +1,11 @@
 import Component from "@glimmer/component";
+import { on } from "@ember/modifier";
 import { inject as service } from "@ember/service";
 import concatClass from "discourse/helpers/concat-class";
-import { on } from "@ember/modifier";
 
 export default class DToasts extends Component {
+  @service toasts;
+
   <template>
     <div class="fk-d-toasts">
       {{#each this.toasts.activeToasts as |toast|}}
@@ -22,6 +24,4 @@ export default class DToasts extends Component {
       {{/each}}
     </div>
   </template>
-
-  @service toasts;
 }

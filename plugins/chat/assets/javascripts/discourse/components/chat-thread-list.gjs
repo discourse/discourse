@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { bind } from "discourse-common/utils/decorators";
 import { cached } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 import { modifier } from "ember-modifier";
@@ -10,6 +9,7 @@ import I18n from "I18n";
 import ChatTrackMessage from "discourse/plugins/chat/discourse/modifiers/chat/track-message";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class ChatThreadList extends Component {
   <template>

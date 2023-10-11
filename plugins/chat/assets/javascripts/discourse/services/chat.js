@@ -1,18 +1,18 @@
-import deprecated from "discourse-common/lib/deprecated";
 import { tracked } from "@glimmer/tracking";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { computed } from "@ember/object";
+import { and } from "@ember/object/computed";
+import { cancel, next } from "@ember/runloop";
 import Service, { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import { cancel, next } from "@ember/runloop";
-import { and } from "@ember/object/computed";
-import { computed } from "@ember/object";
-import discourseLater from "discourse-common/lib/later";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   onPresenceChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
+import deprecated from "discourse-common/lib/deprecated";
+import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 const CHAT_ONLINE_OPTIONS = {
   userUnseenTime: 300000, // 5 minutes seconds with no interaction

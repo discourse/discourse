@@ -1,5 +1,5 @@
-import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
 import highlightSearch, { CLASS_NAME } from "discourse/lib/highlight-search";
 import { fixture } from "discourse/tests/helpers/qunit-helpers";
 

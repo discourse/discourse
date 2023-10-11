@@ -1,6 +1,6 @@
-import AdminUser from "admin/models/admin-user";
-import DiscourseRoute from "discourse/routes/discourse";
 import { get } from "@ember/object";
+import DiscourseRoute from "discourse/routes/discourse";
+import AdminUser from "admin/models/admin-user";
 
 export default class AdminUserRoute extends DiscourseRoute {
   serialize(model) {

@@ -1,8 +1,8 @@
+import Component from "@ember/component";
 import {
   openLinkInNewTab,
   shouldOpenInNewTab,
 } from "discourse/lib/click-track";
-import Component from "@ember/component";
 
 export default Component.extend({
   click(event) {

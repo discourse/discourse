@@ -1,5 +1,5 @@
-import loadScript from "discourse/lib/load-script";
 import mergeHTMLPlugin from "discourse/lib/highlight-syntax-merge-html-plugin";
+import loadScript from "discourse/lib/load-script";
 
 /*global hljs:true */
 let _moreLanguages = [];

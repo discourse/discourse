@@ -1,43 +1,43 @@
-import Category from "discourse/models/category";
 import Controller from "@ember/controller";
-import DiscourseURL, { userPath } from "discourse/lib/url";
+import EmberObject, { action } from "@ember/object";
 import { alias, and, not, or } from "@ember/object/computed";
-import discourseComputed, {
-  bind,
-  observes,
-} from "discourse-common/utils/decorators";
-import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
-import { isEmpty, isPresent } from "@ember/utils";
 import { next, schedule } from "@ember/runloop";
-import discourseLater from "discourse-common/lib/later";
-import BookmarkModal from "discourse/components/modal/bookmark";
-import ChangePostNoticeModal from "discourse/components/modal/change-post-notice";
+import { inject as service } from "@ember/service";
+import { isEmpty, isPresent } from "@ember/utils";
+import { Promise } from "rsvp";
 import {
   CLOSE_INITIATED_BY_BUTTON,
   CLOSE_INITIATED_BY_ESC,
 } from "discourse/components/d-modal";
-import Bookmark, { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
-import Composer from "discourse/models/composer";
-import EmberObject, { action } from "@ember/object";
-import I18n from "I18n";
-import Post from "discourse/models/post";
-import { Promise } from "rsvp";
+import BookmarkModal from "discourse/components/modal/bookmark";
+import ChangePostNoticeModal from "discourse/components/modal/change-post-notice";
+import ConvertToPublicTopicModal from "discourse/components/modal/convert-to-public-topic";
+import DeleteTopicConfirmModal from "discourse/components/modal/delete-topic-confirm";
+import JumpToPost from "discourse/components/modal/jump-to-post";
+import { spinnerHTML } from "discourse/helpers/loading-spinner";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { BookmarkFormData } from "discourse/lib/bookmark";
+import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
+import { buildQuote } from "discourse/lib/quote";
 import QuoteState from "discourse/lib/quote-state";
+import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
+import DiscourseURL, { userPath } from "discourse/lib/url";
+import { escapeExpression, modKeysPressed } from "discourse/lib/utilities";
+import { bufferedProperty } from "discourse/mixins/buffered-content";
+import Bookmark, { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
+import Category from "discourse/models/category";
+import Composer from "discourse/models/composer";
+import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
 import TopicTimer from "discourse/models/topic-timer";
-import { ajax } from "discourse/lib/ajax";
-import { bufferedProperty } from "discourse/mixins/buffered-content";
-import { buildQuote } from "discourse/lib/quote";
+import discourseLater from "discourse-common/lib/later";
 import { deepMerge } from "discourse-common/lib/object";
-import { escapeExpression, modKeysPressed } from "discourse/lib/utilities";
-import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { inject as service } from "@ember/service";
-import { spinnerHTML } from "discourse/helpers/loading-spinner";
-import { BookmarkFormData } from "discourse/lib/bookmark";
-import DeleteTopicConfirmModal from "discourse/components/modal/delete-topic-confirm";
-import ConvertToPublicTopicModal from "discourse/components/modal/convert-to-public-topic";
-import JumpToPost from "discourse/components/modal/jump-to-post";
+import discourseComputed, {
+  bind,
+  observes,
+} from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 let customPostMessageCallbacks = {};
 

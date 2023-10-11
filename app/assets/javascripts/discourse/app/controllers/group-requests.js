@@ -1,10 +1,10 @@
 import Controller, { inject as controller } from "@ember/controller";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed, {
   debounce,
   observes,
 } from "discourse-common/utils/decorators";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
   application: controller(),

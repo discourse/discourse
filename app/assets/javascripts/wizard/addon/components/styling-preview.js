@@ -1,7 +1,7 @@
+import { action } from "@ember/object";
+import { bind, observes } from "discourse-common/utils/decorators";
 import { chooseDarker, darkLightDiff } from "wizard/lib/preview";
 import I18n from "I18n";
-import { bind, observes } from "discourse-common/utils/decorators";
-import { action } from "@ember/object";
 import WizardPreviewBaseComponent from "./wizard-preview-base";
 
 const LOREM = `

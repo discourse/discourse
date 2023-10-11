@@ -1,14 +1,57 @@
 import Component from "@glimmer/component";
-import { modifier } from "ember-modifier";
 import { tracked } from "@glimmer/tracking";
-import { inject as service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DFloatBody from "float-kit/components/d-float-body";
-import concatClass from "discourse/helpers/concat-class";
 import { getOwner } from "@ember/application";
+import { inject as service } from "@ember/service";
+import { modifier } from "ember-modifier";
+import DButton from "discourse/components/d-button";
+import concatClass from "discourse/helpers/concat-class";
+import DFloatBody from "float-kit/components/d-float-body";
 import DMenuInstance from "float-kit/lib/d-menu-instance";
 
 export default class DMenu extends Component {
+  @service menu;
+
+  @tracked menuInstance = null;
+
+  registerTrigger = modifier((element) => {
+    const options = {
+      ...this.args,
+      ...{
+        autoUpdate: true,
+        listeners: true,
+        beforeTrigger: () => {
+          this.menu.close();
+        },
+      },
+    };
+    const instance = new DMenuInstance(getOwner(this), element, options);
+
+    this.menuInstance = instance;
+
+    return () => {
+      instance.destroy();
+
+      if (this.isDestroying) {
+        this.menuInstance = null;
+      }
+    };
+  });
+
+  get menuId() {
+    return `d-menu-${this.menuInstance.id}`;
+  }
+
+  get options() {
+    return this.menuInstance?.options ?? {};
+  }
+
+  get componentArgs() {
+    return {
+      close: this.menuInstance.close,
+      data: this.options.data,
+    };
+  }
+
   <template>
     {{! template-lint-disable modifier-name-case }}
     <DButton
@@ -58,47 +101,4 @@ export default class DMenu extends Component {
       </DFloatBody>
     {{/if}}
   </template>
-
-  @service menu;
-
-  @tracked menuInstance = null;
-
-  registerTrigger = modifier((element) => {
-    const options = {
-      ...this.args,
-      ...{
-        autoUpdate: true,
-        listeners: true,
-        beforeTrigger: () => {
-          this.menu.close();
-        },
-      },
-    };
-    const instance = new DMenuInstance(getOwner(this), element, options);
-
-    this.menuInstance = instance;
-
-    return () => {
-      instance.destroy();
-
-      if (this.isDestroying) {
-        this.menuInstance = null;
-      }
-    };
-  });
-
-  get menuId() {
-    return `d-menu-${this.menuInstance.id}`;
-  }
-
-  get options() {
-    return this.menuInstance?.options ?? {};
-  }
-
-  get componentArgs() {
-    return {
-      close: this.menuInstance.close,
-      data: this.options.data,
-    };
-  }
 }

@@ -1,5 +1,5 @@
-import DiscourseRoute from "discourse/routes/discourse";
 import ViewingActionType from "discourse/mixins/viewing-action-type";
+import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
 
 export default DiscourseRoute.extend(ViewingActionType, {

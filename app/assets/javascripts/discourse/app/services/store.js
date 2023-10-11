@@ -1,12 +1,12 @@
-import Service from "@ember/service";
+import { warn } from "@ember/debug";
 import { set } from "@ember/object";
+import Service from "@ember/service";
+import { underscore } from "@ember/string";
 import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
 import ResultSet from "discourse/models/result-set";
-import { ajax } from "discourse/lib/ajax";
 import { getRegister } from "discourse-common/lib/get-owner";
-import { underscore } from "@ember/string";
-import { warn } from "@ember/debug";
 
 let _identityMap;
 

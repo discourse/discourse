@@ -1,7 +1,7 @@
-import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
-import User from "discourse/models/user";
 import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
+import User from "discourse/models/user";
+import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
 export default class ChatChatable {
   static create(args = {}) {

@@ -1,7 +1,7 @@
-import { module, test } from "qunit";
-import User from "discourse/models/user";
 import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import User from "discourse/models/user";
 
 module("Unit | Model | topic-details", function (hooks) {
   setupTest(hooks);

@@ -1,13 +1,12 @@
+import { visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import PreloadStore from "discourse/lib/preload-store";
+import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
-import { test } from "qunit";
-
-import PreloadStore from "discourse/lib/preload-store";
-import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Categories - 'categories_only'", function (needs) {

@@ -1,6 +1,6 @@
-import { module, test } from "qunit";
-import { setupTest } from "ember-qunit";
 import { getOwner } from "@ember/application";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
 
 module("Unit | Service | emoji-store", function (hooks) {
   setupTest(hooks);

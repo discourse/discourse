@@ -1,5 +1,5 @@
-import { action } from "@ember/object";
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
 
 export default class DiscardDraftModal extends Component {
   @action

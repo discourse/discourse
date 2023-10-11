@@ -1,17 +1,17 @@
-import { inject as service } from "@ember/service";
+import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { or, readOnly } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
 import DiscoverySortableController from "discourse/controllers/discovery-sortable";
-import discourseComputed from "discourse-common/utils/decorators";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
+import { endWith } from "discourse/lib/computed";
+import { calculateFilterMode } from "discourse/lib/filter-mode";
 import DismissTopics from "discourse/mixins/dismiss-topics";
-import I18n from "I18n";
 import NavItem from "discourse/models/nav-item";
 import Topic from "discourse/models/topic";
-import { endWith } from "discourse/lib/computed";
-import { action } from "@ember/object";
-import { calculateFilterMode } from "discourse/lib/filter-mode";
-import { dependentKeyCompat } from "@ember/object/compat";
-import { tracked } from "@glimmer/tracking";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 export default class TagShowController extends DiscoverySortableController.extend(
   DismissTopics

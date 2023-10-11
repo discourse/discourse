@@ -1,8 +1,8 @@
 import Component from "@ember/component";
+import { action } from "@ember/object";
 import { isBlank } from "@ember/utils";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
 import discourseComputed from "discourse-common/utils/decorators";
-import { action } from "@ember/object";
 import I18n from "I18n";
 
 export default Component.extend(UppyUploadMixin, {

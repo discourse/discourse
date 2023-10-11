@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
-import { hbs } from "ember-cli-htmlbars";
 import { setComponentTemplate } from "@ember/component";
-import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
+import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Acceptance | decorateCookedElement", function () {
   test("decorator with renderGlimmer works", async function (assert) {

@@ -1,13 +1,13 @@
+import { render } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
+import Notification from "discourse/models/notification";
+import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
-import { render } from "@ember/test-helpers";
 import { deepMerge } from "discourse-common/lib/object";
-import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
-import Notification from "discourse/models/notification";
-import hbs from "htmlbars-inline-precompile";
-import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
 import I18n from "I18n";
+import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
 
 function getNotification(overrides = {}) {
   return Notification.create(

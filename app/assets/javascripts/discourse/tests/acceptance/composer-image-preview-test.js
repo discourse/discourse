@@ -1,4 +1,5 @@
 import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
@@ -7,7 +8,6 @@ import {
   query,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
 
 acceptance("Composer - Image Preview", function (needs) {
   needs.user({});

@@ -1,7 +1,7 @@
-import { tagName } from "@ember-decorators/component";
-import { equal } from "@ember/object/computed";
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import { equal } from "@ember/object/computed";
+import { tagName } from "@ember-decorators/component";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
 

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 
 export default class ColorSchemeSelectBase extends Component {
   @tracked

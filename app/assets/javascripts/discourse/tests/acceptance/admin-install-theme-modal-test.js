@@ -1,6 +1,6 @@
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
 
 acceptance("Admin - Themes - Install modal", function (needs) {

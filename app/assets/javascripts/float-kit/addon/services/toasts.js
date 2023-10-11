@@ -1,10 +1,10 @@
-import Service from "@ember/service";
 import { tracked } from "@glimmer/tracking";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
+import Service from "@ember/service";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import DDefaultToast from "float-kit/components/d-default-toast";
 import DToastInstance from "float-kit/lib/d-toast-instance";
-import { getOwner } from "@ember/application";
 
 export default class Toasts extends Service {
   @tracked activeToasts = new TrackedArray();

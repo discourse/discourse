@@ -1,18 +1,19 @@
-import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
-import { addExtraUserClasses } from "discourse/helpers/user-avatar";
-import { avatarImg } from "discourse/widgets/post";
-import { createWidget } from "discourse/widgets/widget";
-import getURL from "discourse-common/lib/get-url";
-import { h } from "virtual-dom";
-import { iconNode } from "discourse-common/lib/icon-library";
 import { schedule } from "@ember/runloop";
-import { scrollTop } from "discourse/mixins/scroll-top";
+import { hbs } from "ember-cli-htmlbars";
+import { h } from "virtual-dom";
+import { addExtraUserClasses } from "discourse/helpers/user-avatar";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { logSearchLinkClick } from "discourse/lib/search";
+import DiscourseURL from "discourse/lib/url";
+import { scrollTop } from "discourse/mixins/scroll-top";
+import { avatarImg } from "discourse/widgets/post";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
-import { hbs } from "ember-cli-htmlbars";
-import { SEARCH_BUTTON_ID } from "discourse/components/search-menu";
+import { createWidget } from "discourse/widgets/widget";
+import getURL from "discourse-common/lib/get-url";
+import { iconNode } from "discourse-common/lib/icon-library";
+import I18n from "I18n";
+
+const SEARCH_BUTTON_ID = "search-button";
 
 let _extraHeaderIcons = [];
 
@@ -393,14 +394,17 @@ createWidget("glimmer-search-menu-wrapper", {
       new RenderGlimmer(
         this,
         "div.widget-component-connector",
-        hbs`<SearchMenu @closeSearchMenu={{@data.closeSearchMenu}} />`,
-        { closeSearchMenu: this.closeSearchMenu.bind(this) }
+        hbs`<SearchMenuPanel @closeSearchMenu={{@data.closeSearchMenu}} />`,
+        {
+          closeSearchMenu: this.closeSearchMenu.bind(this),
+        }
       ),
     ];
   },
 
   closeSearchMenu() {
     this.sendWidgetAction("toggleSearchMenu");
+    document.getElementById(SEARCH_BUTTON_ID)?.focus();
   },
 
   clickOutside() {

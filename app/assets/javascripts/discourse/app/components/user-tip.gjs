@@ -1,24 +1,15 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
-import { modifier } from "ember-modifier";
-import UserTipContainer from "discourse/components/user-tip-container";
-import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 import { getOwner } from "@ember/application";
 import { schedule } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import { escape } from "pretty-text/sanitizer";
-import I18n from "I18n";
+import UserTipContainer from "discourse/components/user-tip-container";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import I18n from "I18n";
+import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 
 export default class UserTip extends Component {
-  <template>
-    {{! template-lint-disable modifier-name-case }}
-    <div {{this.registerTip}}>
-      {{#if this.shouldRenderTip}}
-        <span {{this.tip}}></span>
-      {{/if}}
-    </div>
-  </template>
-
   @service currentUser;
   @service userTips;
   @service tooltip;
@@ -80,4 +71,13 @@ export default class UserTip extends Component {
   get shouldRenderTip() {
     return this.userTips.renderedId === this.args.id;
   }
+
+  <template>
+    {{! template-lint-disable modifier-name-case }}
+    <div {{this.registerTip}}>
+      {{#if this.shouldRenderTip}}
+        <span {{this.tip}}></span>
+      {{/if}}
+    </div>
+  </template>
 }

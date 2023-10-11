@@ -1,19 +1,19 @@
-import { bind } from "discourse-common/utils/decorators";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { getOwner, setOwner } from "@ember/application";
 import { run, throttle } from "@ember/runloop";
-import discourseLater from "discourse-common/lib/later";
+import { ajax } from "discourse/lib/ajax";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import {
   nextTopicUrl,
   previousTopicUrl,
 } from "discourse/lib/topic-list-tracker";
-import Composer from "discourse/models/composer";
 import DiscourseURL from "discourse/lib/url";
-import domUtils from "discourse-common/utils/dom-utils";
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import { ajax } from "discourse/lib/ajax";
-import { headerOffset } from "discourse/lib/offset-calculator";
+import Composer from "discourse/models/composer";
 import { capabilities } from "discourse/services/capabilities";
+import { INPUT_DELAY } from "discourse-common/config/environment";
+import discourseDebounce from "discourse-common/lib/debounce";
+import discourseLater from "discourse-common/lib/later";
+import { bind } from "discourse-common/utils/decorators";
+import domUtils from "discourse-common/utils/dom-utils";
 
 let extraKeyboardShortcutsHelp = {};
 function addExtraKeyboardShortcutHelp(help) {

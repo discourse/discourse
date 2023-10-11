@@ -1,6 +1,6 @@
-import DiscourseRoute from "discourse/routes/discourse";
-import ViewingActionType from "discourse/mixins/viewing-action-type";
 import { setTopicList } from "discourse/lib/topic-list-tracker";
+import ViewingActionType from "discourse/mixins/viewing-action-type";
+import DiscourseRoute from "discourse/routes/discourse";
 
 export default DiscourseRoute.extend(ViewingActionType, {
   templateName: "user-topics-list",

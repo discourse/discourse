@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { cook } from "discourse/lib/text";
 import { isEmpty } from "@ember/utils";
+import { cook } from "discourse/lib/text";
 
 export default class ChangePostNoticeModal extends Component {
   @tracked post = this.args.model.post;

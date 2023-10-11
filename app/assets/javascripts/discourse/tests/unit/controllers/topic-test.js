@@ -1,12 +1,12 @@
-import { module, test } from "qunit";
-import { setupTest } from "ember-qunit";
-import { settled } from "@ember/test-helpers";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import EmberObject from "@ember/object";
-import { Placeholder } from "discourse/lib/posts-with-placeholders";
-import { next } from "@ember/runloop";
 import { getOwner } from "@ember/application";
+import EmberObject from "@ember/object";
+import { next } from "@ember/runloop";
+import { settled } from "@ember/test-helpers";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
 import sinon from "sinon";
+import { Placeholder } from "discourse/lib/posts-with-placeholders";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 function topicWithStream(streamDetails) {
   const topic = this.store.createRecord("topic");

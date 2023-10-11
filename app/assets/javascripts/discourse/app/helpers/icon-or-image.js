@@ -1,6 +1,6 @@
-import { convertIconClass, iconHTML } from "discourse-common/lib/icon-library";
-import { isEmpty } from "@ember/utils";
 import { htmlSafe } from "@ember/template";
+import { isEmpty } from "@ember/utils";
+import { convertIconClass, iconHTML } from "discourse-common/lib/icon-library";
 
 export default function iconOrImage({ icon, image }) {
   if (!isEmpty(image)) {

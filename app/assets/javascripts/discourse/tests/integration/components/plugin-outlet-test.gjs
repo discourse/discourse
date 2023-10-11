@@ -1,19 +1,19 @@
-import { module, test } from "qunit";
-import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { click, render, settled } from "@ember/test-helpers";
+import Component from "@glimmer/component";
+import { getOwner } from "@ember/application";
+import templateOnly from "@ember/component/template-only";
 import { action } from "@ember/object";
+import { click, render, settled } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import sinon from "sinon";
 import {
   extraConnectorClass,
   extraConnectorComponent,
 } from "discourse/lib/plugin-connectors";
-import { hbs } from "ember-cli-htmlbars";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
-import { getOwner } from "@ember/application";
-import Component from "@glimmer/component";
-import templateOnly from "@ember/component/template-only";
 import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
-import sinon from "sinon";
 
 const TEMPLATE_PREFIX = "discourse/plugins/some-plugin/templates/connectors";
 const CLASS_PREFIX = "discourse/plugins/some-plugin/connectors";

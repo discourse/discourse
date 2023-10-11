@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
-import { htmlSafe } from "@ember/template";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
 import { tracked } from "@glimmer/tracking";
-import { emojiUrlFor } from "discourse/lib/text";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import { bind } from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
 import { later, schedule } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import { emojiUrlFor } from "discourse/lib/text";
+import { INPUT_DELAY } from "discourse-common/config/environment";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { bind } from "discourse-common/utils/decorators";
 
 export const FITZPATRICK_MODIFIERS = [
   {

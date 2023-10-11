@@ -1,9 +1,9 @@
-import { emojiUnescape } from "discourse/lib/text";
-import { escapeExpression } from "discourse/lib/utilities";
-import { until } from "discourse/lib/formatter";
-import User from "discourse/models/user";
 import { setOwner } from "@ember/application";
 import { inject as service } from "@ember/service";
+import { until } from "discourse/lib/formatter";
+import { emojiUnescape } from "discourse/lib/text";
+import { escapeExpression } from "discourse/lib/utilities";
+import User from "discourse/models/user";
 
 export class UserStatusMessage {
   @service tooltip;

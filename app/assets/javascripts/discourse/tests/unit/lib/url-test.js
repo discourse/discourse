@@ -1,5 +1,6 @@
-import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import sinon from "sinon";
 import DiscourseURL, {
   getCategoryAndTagUrl,
   prefixProtocol,
@@ -8,7 +9,6 @@ import DiscourseURL, {
 import User from "discourse/models/user";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import { setPrefix } from "discourse-common/lib/get-url";
-import sinon from "sinon";
 
 module("Unit | Utility | url", function (hooks) {
   setupTest(hooks);

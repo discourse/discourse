@@ -1,6 +1,6 @@
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { click, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Topic Entrance Modal", function () {
   test("can be closed with the esc key", async function (assert) {

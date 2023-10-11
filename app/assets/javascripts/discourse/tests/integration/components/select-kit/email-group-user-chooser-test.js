@@ -1,9 +1,9 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { fillIn, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, paste, query } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import pretender, { response } from "../../../helpers/create-pretender";
 
 module(

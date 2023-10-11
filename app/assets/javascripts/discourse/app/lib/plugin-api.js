@@ -1,112 +1,59 @@
-import I18n from "I18n";
+import { h } from "virtual-dom";
 import {
   addComposerUploadHandler,
   addComposerUploadMarkdownResolver,
   addComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
-import {
-  addButton,
-  apiExtraButtons,
-  removeButton,
-  replaceButton,
-} from "discourse/widgets/post-menu";
-import {
-  addExtraIconRenderer,
-  replaceCategoryLinkRenderer,
-} from "discourse/helpers/category-link";
-import {
-  addPostTransformCallback,
-  preventCloak,
-} from "discourse/widgets/post-stream";
-import {
-  addSaveableUserField,
-  addSaveableUserOptionField,
-} from "discourse/models/user";
-import {
-  addToHeaderIcons,
-  attachAdditionalPanel,
-} from "discourse/widgets/header";
-import {
-  changeSetting,
-  createWidget,
-  decorateWidget,
-  queryRegistry,
-  reopenWidget,
-} from "discourse/widgets/widget";
-import {
-  iconNode,
-  registerIconRenderer,
-  replaceIcon,
-} from "discourse-common/lib/icon-library";
-import Composer, {
-  registerCustomizationCallback,
-} from "discourse/models/composer";
-import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
-import Sharing from "discourse/lib/sharing";
-import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
-import { addCardClickListenerSelector } from "discourse/mixins/card-contents-base";
-import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
-import { addDecorator } from "discourse/widgets/post-cooked";
-import { addDiscoveryQueryParam } from "discourse/controllers/discovery-sortable";
-import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
-import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
-import { addGlobalNotice } from "discourse/components/global-notice";
-import { addNavItem } from "discourse/models/nav-item";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
+import { addToolbarCallback } from "discourse/components/d-editor";
+import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
+import { addGlobalNotice } from "discourse/components/global-notice";
+import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
+import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
 import {
   addPluginReviewableParam,
   registerReviewableActionModal,
 } from "discourse/components/reviewable-item";
-import { addComposerSaveErrorCallback } from "discourse/services/composer";
-import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
-import { addPostClassesCallback } from "discourse/widgets/post";
-import {
-  addGroupPostSmallActionCode,
-  addPostSmallActionClassesCallback,
-  addPostSmallActionIcon,
-} from "discourse/widgets/post-small-action";
-import { addTagsHtmlCallback } from "discourse/lib/render-tags";
-import { addToolbarCallback } from "discourse/components/d-editor";
-import { addTopicParticipantClassesCallback } from "discourse/widgets/topic-map";
+import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
+import { addSearchSuggestion as addGlimmerSearchSuggestion } from "discourse/components/search-menu/results/assistant";
+import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
-import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
-import { addWidgetCleanCallback } from "discourse/components/mount-widget";
-import deprecated from "discourse-common/lib/deprecated";
-import { disableNameSuppression } from "discourse/widgets/poster-name";
-import {
-  extraConnectorClass,
-  extraConnectorComponent,
-} from "discourse/lib/plugin-connectors";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import { h } from "virtual-dom";
-import { includeAttributes } from "discourse/lib/transform-post";
-import { modifySelectKit } from "select-kit/mixins/plugin-api";
-import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
+import { addDiscoveryQueryParam } from "discourse/controllers/discovery-sortable";
+import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
+import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
+import {
+  addExtraIconRenderer,
+  replaceCategoryLinkRenderer,
+} from "discourse/helpers/category-link";
+import { addUsernameSelectorDecorator } from "discourse/helpers/decorate-username-selector";
+import { registerCustomAvatarHelper } from "discourse/helpers/user-avatar";
+import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
+import { addPopupMenuOption } from "discourse/lib/composer/custom-popup-menu-options";
+import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
+import { downloadCalendar } from "discourse/lib/download-calendar";
+import { registerHashtagType } from "discourse/lib/hashtag-autocomplete";
 import {
   registerHighlightJSLanguage,
   registerHighlightJSPlugin,
 } from "discourse/lib/highlight-syntax";
+import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
+import { registerModelTransformer } from "discourse/lib/model-transformers";
+import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
+import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
+import {
+  extraConnectorClass,
+  extraConnectorComponent,
+} from "discourse/lib/plugin-connectors";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
-import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
-import { replaceFormatter } from "discourse/lib/utilities";
 import { replaceTagRenderer } from "discourse/lib/render-tag";
-import { registerCustomLastUnreadUrlCallback } from "discourse/models/topic";
-import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
+import { addTagsHtmlCallback } from "discourse/lib/render-tags";
+import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
 import { addSearchResultsCallback } from "discourse/lib/search";
-import { addOnKeyDownCallback } from "discourse/widgets/search-menu";
-import {
-  addQuickSearchRandomTip,
-  addSearchSuggestion,
-  removeDefaultQuickSearchRandomTips,
-} from "discourse/widgets/search-menu-results";
-import { addSearchSuggestion as addGlimmerSearchSuggestion } from "discourse/components/search-menu/results/assistant";
-import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
-import { downloadCalendar } from "discourse/lib/download-calendar";
-import { consolePrefix } from "discourse/lib/source-identifier";
+import Sharing from "discourse/lib/sharing";
 import { addSectionLink as addCustomCommunitySectionLink } from "discourse/lib/sidebar/custom-community-section-links";
 import {
   addSidebarPanel,
@@ -118,17 +65,70 @@ import {
   registerCustomCountable as registerUserCategorySectionLinkCountable,
 } from "discourse/lib/sidebar/user/categories-section/category-section-link";
 import { registerCustomTagSectionLinkPrefixIcon } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
-import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
+import { consolePrefix } from "discourse/lib/source-identifier";
+import { includeAttributes } from "discourse/lib/transform-post";
 import DiscourseURL from "discourse/lib/url";
-import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
-import { registerModelTransformer } from "discourse/lib/model-transformers";
-import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";
-import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
-import { registerHashtagType } from "discourse/lib/hashtag-autocomplete";
-import { _addBulkButton } from "discourse/components/modal/topic-bulk-actions";
-import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/auth-complete";
+import { replaceFormatter } from "discourse/lib/utilities";
+import { addCardClickListenerSelector } from "discourse/mixins/card-contents-base";
+import Composer, {
+  registerCustomizationCallback,
+} from "discourse/models/composer";
+import { addNavItem } from "discourse/models/nav-item";
+import { registerCustomLastUnreadUrlCallback } from "discourse/models/topic";
+import {
+  addSaveableUserField,
+  addSaveableUserOptionField,
+} from "discourse/models/user";
+import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
+import { addComposerSaveErrorCallback } from "discourse/services/composer";
+import {
+  addToHeaderIcons,
+  attachAdditionalPanel,
+} from "discourse/widgets/header";
+import { addPostClassesCallback } from "discourse/widgets/post";
+import { addDecorator } from "discourse/widgets/post-cooked";
+import {
+  addButton,
+  apiExtraButtons,
+  removeButton,
+  replaceButton,
+} from "discourse/widgets/post-menu";
+import {
+  addGroupPostSmallActionCode,
+  addPostSmallActionClassesCallback,
+  addPostSmallActionIcon,
+} from "discourse/widgets/post-small-action";
+import {
+  addPostTransformCallback,
+  preventCloak,
+} from "discourse/widgets/post-stream";
+import { disableNameSuppression } from "discourse/widgets/poster-name";
+import { addOnKeyDownCallback } from "discourse/widgets/search-menu";
+import {
+  addQuickSearchRandomTip,
+  addSearchSuggestion,
+  removeDefaultQuickSearchRandomTips,
+} from "discourse/widgets/search-menu-results";
+import { addTopicParticipantClassesCallback } from "discourse/widgets/topic-map";
+import {
+  changeSetting,
+  createWidget,
+  decorateWidget,
+  queryRegistry,
+  reopenWidget,
+} from "discourse/widgets/widget";
 import { isTesting } from "discourse-common/config/environment";
+import deprecated from "discourse-common/lib/deprecated";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import {
+  iconNode,
+  registerIconRenderer,
+  replaceIcon,
+} from "discourse-common/lib/icon-library";
+import I18n from "I18n";
+import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
+import { modifySelectKit } from "select-kit/mixins/plugin-api";
 
 // If you add any methods to the API ensure you bump up the version number
 // based on Semantic Versioning 2.0.0. Please update the changelog at
@@ -760,8 +760,8 @@ class PluginApi {
       "`addToolbarPopupMenuOptionsCallback` has been renamed to `addToolbarPopupMenuOption`",
       {
         id: "discourse.add-toolbar-popup-menu-options-callback",
-        since: "3.3",
-        dropFrom: "3.4",
+        since: "3.2",
+        dropFrom: "3.3",
       }
     );
 

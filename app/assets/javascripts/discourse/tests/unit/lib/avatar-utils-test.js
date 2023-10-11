@@ -1,11 +1,11 @@
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
 import {
   avatarImg,
   avatarUrl,
   getRawAvatarSize,
 } from "discourse-common/lib/avatar-utils";
-import { module, test } from "qunit";
 import { setupURL } from "discourse-common/lib/get-url";
-import { setupTest } from "ember-qunit";
 
 module("Unit | Utilities", function (hooks) {
   setupTest(hooks);

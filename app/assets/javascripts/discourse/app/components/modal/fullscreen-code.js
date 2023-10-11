@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import highlightSyntax from "discourse/lib/highlight-syntax";
 import CodeblockButtons from "discourse/lib/codeblock-buttons";
+import highlightSyntax from "discourse/lib/highlight-syntax";
 
 export default class FullscreenCode extends Component {
   @service siteSettings;

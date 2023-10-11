@@ -327,4 +327,73 @@ RSpec.describe PostActionCreator do
       )
     end
   end
+
+  describe "With plugin adding post_action_notify_user_handlers" do
+    let(:message) { "oh that was really bad what you said there" }
+    let(:plugin) { Plugin::Instance.new }
+
+    after { DiscoursePluginRegistry.reset! }
+
+    it "evaluates all handlers and creates post if none return false" do
+      plugin.register_post_action_notify_user_handler(
+        Proc.new do |user, post, message|
+          MessageBus.publish("notify_user", { user_id: user.id, message: message })
+        end,
+      )
+
+      plugin.register_post_action_notify_user_handler(
+        Proc.new do |user, post, message|
+          MessageBus.publish("notify_user", { poster_id: post.user_id, message: message })
+        end,
+      )
+
+      messages =
+        MessageBus.track_publish("notify_user") do
+          result =
+            PostActionCreator.new(
+              user,
+              post,
+              PostActionType.types[:notify_user],
+              message: message,
+              flag_topic: false,
+            ).perform
+          post_action = result.post_action
+          expect(post_action.related_post).to be_present
+        end
+
+      expect(
+        messages.find { |m| m.data[:user_id] == user.id && m.data[:message] == message },
+      ).to be_present
+      expect(
+        messages.find { |m| m.data[:poster_id] == post.user_id && m.data[:message] == message },
+      ).to be_present
+    end
+
+    it "evaluates all handlers and doesn't create a post one returns false" do
+      plugin.register_post_action_notify_user_handler(
+        Proc.new do |user, post, message|
+          MessageBus.publish("notify_user", { user_id: user.id, message: message })
+          false
+        end,
+      )
+
+      messages =
+        MessageBus.track_publish("notify_user") do
+          result =
+            PostActionCreator.new(
+              user,
+              post,
+              PostActionType.types[:notify_user],
+              message: message,
+              flag_topic: false,
+            ).perform
+          post_action = result.post_action
+          expect(post_action.related_post).not_to be_present
+        end
+
+      expect(
+        messages.find { |m| m.data[:user_id] == user.id && m.data[:message] == message },
+      ).to be_present
+    end
+  end
 end

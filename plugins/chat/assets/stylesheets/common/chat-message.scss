@@ -60,6 +60,10 @@
     min-width: 0;
     width: 100%;
 
+    p {
+      display: inline-block;
+    }
+
     code {
       box-sizing: border-box;
       font-size: var(--font-down-1);
@@ -93,6 +97,7 @@
     display: inline-block;
     color: var(--primary-medium);
     font-size: var(--font-down-2);
+    user-select: none;
   }
 
   .chat-message-reaction-list,

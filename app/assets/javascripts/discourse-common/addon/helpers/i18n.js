@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import { registerUnbound } from "discourse-common/lib/helpers";
+import I18n from "I18n";
 
 export default function i18n(key, params) {
   return I18n.t(key, params);

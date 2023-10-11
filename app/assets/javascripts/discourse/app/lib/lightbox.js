@@ -1,15 +1,14 @@
+import { spinnerHTML } from "discourse/helpers/loading-spinner";
+import { SELECTORS } from "discourse/lib/lightbox/constants";
+import loadScript from "discourse/lib/load-script";
 import { postRNWebviewMessage } from "discourse/lib/utilities";
-
-import I18n from "I18n";
 import User from "discourse/models/user";
+import { isTesting } from "discourse-common/config/environment";
 import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { helperContext } from "discourse-common/lib/helpers";
-import { isTesting } from "discourse-common/config/environment";
-import loadScript from "discourse/lib/load-script";
 import { renderIcon } from "discourse-common/lib/icon-library";
-import { spinnerHTML } from "discourse/helpers/loading-spinner";
-import { SELECTORS } from "discourse/lib/lightbox/constants";
+import I18n from "I18n";
 
 export async function setupLightboxes({ container, selector }) {
   const lightboxService = getOwnerWithFallback(this).lookup("service:lightbox");

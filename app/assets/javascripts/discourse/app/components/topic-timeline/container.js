@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import I18n from "I18n";
-import { htmlSafe } from "@ember/template";
 import { inject as service } from "@ember/service";
-import { bind, debounce } from "discourse-common/utils/decorators";
-import { actionDescriptionHtml } from "discourse/widgets/post-small-action";
-import domUtils from "discourse-common/utils/dom-utils";
+import { htmlSafe } from "@ember/template";
 import { headerOffset } from "discourse/lib/offset-calculator";
+import { actionDescriptionHtml } from "discourse/widgets/post-small-action";
+import { bind, debounce } from "discourse-common/utils/decorators";
+import domUtils from "discourse-common/utils/dom-utils";
+import I18n from "I18n";
 
 export const SCROLLER_HEIGHT = 50;
 const MIN_SCROLLAREA_HEIGHT = 170;

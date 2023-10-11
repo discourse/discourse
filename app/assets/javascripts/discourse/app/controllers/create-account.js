@@ -1,30 +1,30 @@
+import { A } from "@ember/array";
 import Controller from "@ember/controller";
+import EmberObject, { action } from "@ember/object";
+import { notEmpty } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
+import { Promise } from "rsvp";
+import LoginModal from "discourse/components/modal/login";
+import { ajax } from "discourse/lib/ajax";
+import { setting } from "discourse/lib/computed";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import { userPath } from "discourse/lib/url";
+import { emailValid } from "discourse/lib/utilities";
+import { wavingHandURL } from "discourse/lib/waving-hand-url";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
+import NameValidation from "discourse/mixins/name-validation";
+import PasswordValidation from "discourse/mixins/password-validation";
+import UserFieldsValidation from "discourse/mixins/user-fields-validation";
+import UsernameValidation from "discourse/mixins/username-validation";
+import { findAll } from "discourse/models/login-method";
+import User from "discourse/models/user";
+import discourseDebounce from "discourse-common/lib/debounce";
 import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
-import { A } from "@ember/array";
-import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
-import NameValidation from "discourse/mixins/name-validation";
-import PasswordValidation from "discourse/mixins/password-validation";
-import { Promise } from "rsvp";
-import User from "discourse/models/user";
-import UserFieldsValidation from "discourse/mixins/user-fields-validation";
-import UsernameValidation from "discourse/mixins/username-validation";
-import { ajax } from "discourse/lib/ajax";
-import { emailValid } from "discourse/lib/utilities";
-import { findAll } from "discourse/models/login-method";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { isEmpty } from "@ember/utils";
-import { notEmpty } from "@ember/object/computed";
-import { setting } from "discourse/lib/computed";
-import { userPath } from "discourse/lib/url";
-import { wavingHandURL } from "discourse/lib/waving-hand-url";
-import { inject as service } from "@ember/service";
-import LoginModal from "discourse/components/modal/login";
 
 export default Controller.extend(
   ModalFunctionality,

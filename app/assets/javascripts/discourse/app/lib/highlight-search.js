@@ -1,6 +1,6 @@
+import { isEmpty } from "@ember/utils";
 import { SEARCH_PHRASE_REGEXP } from "discourse/lib/constants";
 import highlightHTML from "discourse/lib/highlight-html";
-import { isEmpty } from "@ember/utils";
 
 export const CLASS_NAME = "search-highlight";
 

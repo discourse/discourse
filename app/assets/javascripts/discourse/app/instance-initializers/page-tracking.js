@@ -1,9 +1,9 @@
+import { resetAjax, trackNextAjaxAsPageview } from "discourse/lib/ajax";
 import {
   googleTagManagerPageChanged,
   resetPageTracking,
   startPageTracking,
 } from "discourse/lib/page-tracker";
-import { resetAjax, trackNextAjaxAsPageview } from "discourse/lib/ajax";
 
 export default {
   after: "inject-objects",

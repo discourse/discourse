@@ -1,10 +1,10 @@
-import { action } from "@ember/object";
-import { classNames } from "@ember-decorators/component";
-import discourseComputed from "discourse-common/utils/decorators";
-import { on } from "@ember-decorators/object";
-import { empty, reads } from "@ember/object/computed";
 import Component from "@ember/component";
+import { action } from "@ember/object";
+import { empty, reads } from "@ember/object/computed";
+import { classNames } from "@ember-decorators/component";
+import { on } from "@ember-decorators/object";
 import { makeArray } from "discourse-common/lib/helpers";
+import discourseComputed from "discourse-common/utils/decorators";
 
 @classNames("value-list")
 export default class ValueList extends Component {

@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { tracked } from "@glimmer/tracking";
-import DummyComponent from "discourse/plugins/styleguide/discourse/components/dummy-component";
 import { htmlSafe } from "@ember/template";
 import { MENU } from "float-kit/lib/constants";
+import DummyComponent from "discourse/plugins/styleguide/discourse/components/dummy-component";
 
 export default class Menus extends Component {
   @service menu;

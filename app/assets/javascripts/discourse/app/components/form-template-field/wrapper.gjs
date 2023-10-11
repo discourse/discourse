@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
-import Yaml from "js-yaml";
 import { tracked } from "@glimmer/tracking";
-import FormTemplate from "discourse/models/form-template";
 import { action, get } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import Yaml from "js-yaml";
+import FormTemplate from "discourse/models/form-template";
 import CheckboxField from "./checkbox";
-import InputField from "./input";
 import DropdownField from "./dropdown";
+import InputField from "./input";
 import MultiSelectField from "./multi-select";
 import TextareaField from "./textarea";
 import UploadField from "./upload";
@@ -22,28 +22,6 @@ const FormTemplateField = <template>
 </template>;
 
 export default class FormTemplateFieldWrapper extends Component {
-  <template>
-    {{#if this.parsedTemplate}}
-      <div
-        class="form-template-form__wrapper"
-        {{! template-lint-disable modifier-name-case }}
-        {{didUpdate this.refreshTemplate @id}}
-      >
-        {{#each this.parsedTemplate as |content|}}
-          <FormTemplateField
-            @component={{get this.fieldTypes content.type}}
-            @content={{content}}
-            @initialValue={{get this.initialValues content.id}}
-          />
-        {{/each}}
-      </div>
-    {{else}}
-      <div class="alert alert-error">
-        {{this.error}}
-      </div>
-    {{/if}}
-  </template>
-
   @tracked error = null;
   @tracked parsedTemplate = null;
 
@@ -94,4 +72,26 @@ export default class FormTemplateFieldWrapper extends Component {
     const templateContent = await response.form_template.template;
     return this._loadTemplate(templateContent);
   }
+
+  <template>
+    {{#if this.parsedTemplate}}
+      <div
+        class="form-template-form__wrapper"
+        {{! template-lint-disable modifier-name-case }}
+        {{didUpdate this.refreshTemplate @id}}
+      >
+        {{#each this.parsedTemplate as |content|}}
+          <FormTemplateField
+            @component={{get this.fieldTypes content.type}}
+            @content={{content}}
+            @initialValue={{get this.initialValues content.id}}
+          />
+        {{/each}}
+      </div>
+    {{else}}
+      <div class="alert alert-error">
+        {{this.error}}
+      </div>
+    {{/if}}
+  </template>
 }

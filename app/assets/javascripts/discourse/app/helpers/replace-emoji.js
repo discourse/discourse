@@ -1,5 +1,5 @@
-import { emojiUnescape } from "discourse/lib/text";
 import { htmlSafe, isHTMLSafe } from "@ember/template";
+import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { registerRawHelper } from "discourse-common/lib/helpers";
 

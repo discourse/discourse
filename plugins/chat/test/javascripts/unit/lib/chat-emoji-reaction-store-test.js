@@ -1,6 +1,6 @@
-import { module, test } from "qunit";
 import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
 
 module("Discourse Chat | Unit | chat-emoji-reaction-store", function (hooks) {
   setupTest(hooks);

@@ -1,9 +1,9 @@
 import Controller from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import discourseDebounce from "discourse-common/lib/debounce";
 import deprecated from "discourse-common/lib/deprecated";
+import discourseComputed from "discourse-common/utils/decorators";
 
 const HIDE_SIDEBAR_KEY = "sidebar-hidden";
 

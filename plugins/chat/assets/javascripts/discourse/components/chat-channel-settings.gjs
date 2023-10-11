@@ -1,24 +1,24 @@
 import Component from "@glimmer/component";
-import ChatForm from "discourse/plugins/chat/discourse/components/chat/form";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
+import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { inject as service } from "@ember/service";
+import DButton from "discourse/components/d-button";
+import DToggleSwitch from "discourse/components/d-toggle-switch";
+import categoryBadge from "discourse/helpers/category-badge";
+import replaceEmoji from "discourse/helpers/replace-emoji";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import I18n from "I18n";
+import ComboBox from "select-kit/components/combo-box";
+import ChatForm from "discourse/plugins/chat/discourse/components/chat/form";
 import ChatModalArchiveChannel from "discourse/plugins/chat/discourse/components/chat/modal/archive-channel";
 import ChatModalDeleteChannel from "discourse/plugins/chat/discourse/components/chat/modal/delete-channel";
-import ChatModalToggleChannelStatus from "discourse/plugins/chat/discourse/components/chat/modal/toggle-channel-status";
-import { on } from "@ember/modifier";
-import I18n from "I18n";
-import { fn, hash } from "@ember/helper";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import ComboBox from "select-kit/components/combo-box";
-import ChatRetentionReminderText from "discourse/plugins/chat/discourse/components/chat-retention-reminder-text";
-import DButton from "discourse/components/d-button";
-import ToggleChannelMembershipButton from "discourse/plugins/chat/discourse/components/toggle-channel-membership-button";
-import replaceEmoji from "discourse/helpers/replace-emoji";
-import ChatModalEditChannelName from "discourse/plugins/chat/discourse/components/chat/modal/edit-channel-name";
-import categoryBadge from "discourse/helpers/category-badge";
 import ChatModalEditChannelDescription from "discourse/plugins/chat/discourse/components/chat/modal/edit-channel-description";
-import { LinkTo } from "@ember/routing";
+import ChatModalEditChannelName from "discourse/plugins/chat/discourse/components/chat/modal/edit-channel-name";
+import ChatModalToggleChannelStatus from "discourse/plugins/chat/discourse/components/chat/modal/toggle-channel-status";
+import ChatRetentionReminderText from "discourse/plugins/chat/discourse/components/chat-retention-reminder-text";
+import ToggleChannelMembershipButton from "discourse/plugins/chat/discourse/components/toggle-channel-membership-button";
 
 const NOTIFICATION_LEVELS = [
   { name: I18n.t("chat.notification_levels.never"), value: "never" },
@@ -27,279 +27,6 @@ const NOTIFICATION_LEVELS = [
 ];
 
 export default class ChatAboutScreen extends Component {
-  <template>
-    <div class="chat-channel-settings">
-      <ChatForm as |form|>
-        {{#if this.shouldRenderTitleSection}}
-          <form.section @title={{this.titleSectionTitle}} as |section|>
-            <section.row>
-              <:default>
-                <div class="chat-channel-settings__name">
-                  {{replaceEmoji @channel.title}}
-                </div>
-
-                {{#if @channel.isCategoryChannel}}
-                  <div class="chat-channel-settings__slug">
-                    <LinkTo
-                      @route="chat.channel"
-                      @models={{@channel.routeModels}}
-                    >
-                      /chat/c/{{@channel.slug}}/{{@channel.id}}
-                    </LinkTo>
-                  </div>
-                {{/if}}
-              </:default>
-
-              <:action>
-                {{#if this.canEditChannel}}
-                  <DButton
-                    @label="chat.channel_settings.edit"
-                    @action={{this.onEditChannelName}}
-                    class="edit-name-slug-btn btn-flat"
-                  />
-                {{/if}}
-              </:action>
-
-            </section.row>
-          </form.section>
-        {{/if}}
-
-        {{#if this.shouldRenderDescriptionSection}}
-          <form.section @title={{this.descriptionSectionTitle}} as |section|>
-            <section.row>
-              <:default>
-                {{#if @channel.description.length}}
-                  {{@channel.description}}
-                {{else}}
-                  {{this.descriptionPlaceholder}}
-                {{/if}}
-              </:default>
-
-              <:action>
-                {{#if this.canEditChannel}}
-                  <DButton
-                    @label={{if
-                      @channel.description.length
-                      "chat.channel_settings.edit"
-                      "chat.channel_settings.add"
-                    }}
-                    @action={{this.onEditChannelDescription}}
-                    class="edit-description-btn btn-flat"
-                  />
-                {{/if}}
-              </:action>
-            </section.row>
-          </form.section>
-        {{/if}}
-
-        {{#if this.site.mobileView}}
-          <form.section as |section|>
-            <section.row
-              @label={{this.membersLabel}}
-              @route="chat.channel.info.members"
-              @routeModels={{@channel.routeModels}}
-            />
-          </form.section>
-        {{/if}}
-
-        {{#if @channel.isOpen}}
-          <form.section @title={{this.settingsSectionTitle}} as |section|>
-            <section.row @label={{this.muteSectionLabel}}>
-              <:action>
-                <DToggleSwitch
-                  @state={{@channel.currentUserMembership.muted}}
-                  class="chat-channel-settings__mute-switch"
-                  {{on "click" this.onToggleMuted}}
-                />
-              </:action>
-            </section.row>
-
-            {{#if this.shouldRenderDesktopNotificationsLevelSection}}
-              <section.row @label={{this.desktopNotificationsLevelLabel}}>
-                <:action>
-                  <ComboBox
-                    @content={{this.notificationLevels}}
-                    @value={{@channel.currentUserMembership.desktopNotificationLevel}}
-                    @valueProperty="value"
-                    @class="chat-channel-settings__selector chat-channel-settings__desktop-notifications-selector"
-                    @onChange={{fn
-                      this.saveNotificationSettings
-                      "desktopNotificationLevel"
-                      "desktop_notification_level"
-                    }}
-                  />
-                </:action>
-              </section.row>
-            {{/if}}
-
-            {{#if this.shouldRenderMobileNotificationsLevelSection}}
-              <section.row @label={{this.mobileNotificationsLevelLabel}}>
-                <:action>
-                  <ComboBox
-                    @content={{this.notificationLevels}}
-                    @value={{@channel.currentUserMembership.mobileNotificationLevel}}
-                    @valueProperty="value"
-                    @class="chat-channel-settings__selector chat-channel-settings__mobile-notifications-selector"
-                    @onChange={{fn
-                      this.saveNotificationSettings
-                      "mobileNotificationLevel"
-                      "mobile_notification_level"
-                    }}
-                  />
-                </:action>
-              </section.row>
-            {{/if}}
-          </form.section>
-        {{/if}}
-
-        <form.section @title={{this.channelInfoSectionTitle}} as |section|>
-          {{#if @channel.isCategoryChannel}}
-            <section.row @label={{this.categoryLabel}}>
-              {{categoryBadge
-                @channel.chatable
-                link=true
-                allowUncategorized=true
-              }}
-            </section.row>
-          {{/if}}
-
-          <section.row @label={{this.historyLabel}}>
-            <ChatRetentionReminderText @channel={{@channel}} />
-          </section.row>
-        </form.section>
-
-        {{#if this.shouldRenderAdminSection}}
-          <form.section
-            @title={{this.adminSectionTitle}}
-            data-section="admin"
-            as |section|
-          >
-            {{#if this.autoJoinAvailable}}
-              <section.row @label={{this.autoJoinLabel}}>
-                <:action>
-                  <DToggleSwitch
-                    @state={{@channel.autoJoinUsers}}
-                    class="chat-channel-settings__auto-join-switch"
-                    {{on
-                      "click"
-                      (fn this.onToggleAutoJoinUsers @channel.autoJoinUsers)
-                    }}
-                  />
-                </:action>
-              </section.row>
-            {{/if}}
-
-            {{#if this.toggleChannelWideMentionsAvailable}}
-              <section.row @label={{this.channelWideMentionsLabel}}>
-                <:action>
-                  <DToggleSwitch
-                    class="chat-channel-settings__channel-wide-mentions"
-                    @state={{@channel.allowChannelWideMentions}}
-                    {{on
-                      "click"
-                      (fn
-                        this.onToggleChannelWideMentions
-                        @channel.allowChannelWideMentions
-                      )
-                    }}
-                  />
-                </:action>
-
-                <:description>
-                  {{this.channelWideMentionsDescription}}
-                </:description>
-              </section.row>
-            {{/if}}
-
-            {{#if this.toggleThreadingAvailable}}
-              <section.row @label={{this.toggleThreadingLabel}}>
-                <:action>
-                  <DToggleSwitch
-                    @state={{@channel.threadingEnabled}}
-                    class="chat-channel-settings__threading-switch"
-                    {{on
-                      "click"
-                      (fn
-                        this.onToggleThreadingEnabled @channel.threadingEnabled
-                      )
-                    }}
-                  />
-                </:action>
-
-                <:description>
-                  {{this.toggleThreadingDescription}}
-                </:description>
-              </section.row>
-            {{/if}}
-
-            {{#if this.shouldRenderStatusSection}}
-              {{#if this.shouldRenderArchiveRow}}
-                <section.row>
-                  <:action>
-                    <DButton
-                      @action={{this.onArchiveChannel}}
-                      @label="chat.channel_settings.archive_channel"
-                      @icon="archive"
-                      class="archive-btn chat-form__btn btn-flat"
-                    />
-                  </:action>
-                </section.row>
-              {{/if}}
-
-              <section.row>
-                <:action>
-                  {{#if @channel.isOpen}}
-                    <DButton
-                      @action={{this.onToggleChannelState}}
-                      @label="chat.channel_settings.close_channel"
-                      @icon="lock"
-                      class="close-btn chat-form__btn btn-flat"
-                    />
-                  {{else}}
-                    <DButton
-                      @action={{this.onToggleChannelState}}
-                      @label="chat.channel_settings.open_channel"
-                      @icon="unlock"
-                      class="open-btn chat-form__btn btn-flat"
-                    />
-                  {{/if}}
-                </:action>
-              </section.row>
-
-              <section.row>
-                <:action>
-                  <DButton
-                    @action={{this.onDeleteChannel}}
-                    @label="chat.channel_settings.delete_channel"
-                    @icon="trash-alt"
-                    class="delete-btn chat-form__btn btn-flat"
-                  />
-                </:action>
-              </section.row>
-            {{/if}}
-
-          </form.section>
-        {{/if}}
-
-        <form.section as |section|>
-          <section.row>
-            <:action>
-              <ToggleChannelMembershipButton
-                @channel={{@channel}}
-                @options={{hash
-                  joinClass="btn-primary"
-                  leaveClass="btn-flat"
-                  joinIcon="sign-in-alt"
-                  leaveIcon="sign-out-alt"
-                }}
-              />
-            </:action>
-          </section.row>
-        </form.section>
-      </ChatForm>
-    </div>
-  </template>
-
   @service chatApi;
   @service chatGuardian;
   @service currentUser;
@@ -578,4 +305,277 @@ export default class ChatAboutScreen extends Component {
       model: this.args.channel,
     });
   }
+
+  <template>
+    <div class="chat-channel-settings">
+      <ChatForm as |form|>
+        {{#if this.shouldRenderTitleSection}}
+          <form.section @title={{this.titleSectionTitle}} as |section|>
+            <section.row>
+              <:default>
+                <div class="chat-channel-settings__name">
+                  {{replaceEmoji @channel.title}}
+                </div>
+
+                {{#if @channel.isCategoryChannel}}
+                  <div class="chat-channel-settings__slug">
+                    <LinkTo
+                      @route="chat.channel"
+                      @models={{@channel.routeModels}}
+                    >
+                      /chat/c/{{@channel.slug}}/{{@channel.id}}
+                    </LinkTo>
+                  </div>
+                {{/if}}
+              </:default>
+
+              <:action>
+                {{#if this.canEditChannel}}
+                  <DButton
+                    @label="chat.channel_settings.edit"
+                    @action={{this.onEditChannelName}}
+                    class="edit-name-slug-btn btn-flat"
+                  />
+                {{/if}}
+              </:action>
+
+            </section.row>
+          </form.section>
+        {{/if}}
+
+        {{#if this.shouldRenderDescriptionSection}}
+          <form.section @title={{this.descriptionSectionTitle}} as |section|>
+            <section.row>
+              <:default>
+                {{#if @channel.description.length}}
+                  {{@channel.description}}
+                {{else}}
+                  {{this.descriptionPlaceholder}}
+                {{/if}}
+              </:default>
+
+              <:action>
+                {{#if this.canEditChannel}}
+                  <DButton
+                    @label={{if
+                      @channel.description.length
+                      "chat.channel_settings.edit"
+                      "chat.channel_settings.add"
+                    }}
+                    @action={{this.onEditChannelDescription}}
+                    class="edit-description-btn btn-flat"
+                  />
+                {{/if}}
+              </:action>
+            </section.row>
+          </form.section>
+        {{/if}}
+
+        {{#if this.site.mobileView}}
+          <form.section as |section|>
+            <section.row
+              @label={{this.membersLabel}}
+              @route="chat.channel.info.members"
+              @routeModels={{@channel.routeModels}}
+            />
+          </form.section>
+        {{/if}}
+
+        {{#if @channel.isOpen}}
+          <form.section @title={{this.settingsSectionTitle}} as |section|>
+            <section.row @label={{this.muteSectionLabel}}>
+              <:action>
+                <DToggleSwitch
+                  @state={{@channel.currentUserMembership.muted}}
+                  class="chat-channel-settings__mute-switch"
+                  {{on "click" this.onToggleMuted}}
+                />
+              </:action>
+            </section.row>
+
+            {{#if this.shouldRenderDesktopNotificationsLevelSection}}
+              <section.row @label={{this.desktopNotificationsLevelLabel}}>
+                <:action>
+                  <ComboBox
+                    @content={{this.notificationLevels}}
+                    @value={{@channel.currentUserMembership.desktopNotificationLevel}}
+                    @valueProperty="value"
+                    @class="chat-channel-settings__selector chat-channel-settings__desktop-notifications-selector"
+                    @onChange={{fn
+                      this.saveNotificationSettings
+                      "desktopNotificationLevel"
+                      "desktop_notification_level"
+                    }}
+                  />
+                </:action>
+              </section.row>
+            {{/if}}
+
+            {{#if this.shouldRenderMobileNotificationsLevelSection}}
+              <section.row @label={{this.mobileNotificationsLevelLabel}}>
+                <:action>
+                  <ComboBox
+                    @content={{this.notificationLevels}}
+                    @value={{@channel.currentUserMembership.mobileNotificationLevel}}
+                    @valueProperty="value"
+                    @class="chat-channel-settings__selector chat-channel-settings__mobile-notifications-selector"
+                    @onChange={{fn
+                      this.saveNotificationSettings
+                      "mobileNotificationLevel"
+                      "mobile_notification_level"
+                    }}
+                  />
+                </:action>
+              </section.row>
+            {{/if}}
+          </form.section>
+        {{/if}}
+
+        <form.section @title={{this.channelInfoSectionTitle}} as |section|>
+          {{#if @channel.isCategoryChannel}}
+            <section.row @label={{this.categoryLabel}}>
+              {{categoryBadge
+                @channel.chatable
+                link=true
+                allowUncategorized=true
+              }}
+            </section.row>
+          {{/if}}
+
+          <section.row @label={{this.historyLabel}}>
+            <ChatRetentionReminderText @channel={{@channel}} />
+          </section.row>
+        </form.section>
+
+        {{#if this.shouldRenderAdminSection}}
+          <form.section
+            @title={{this.adminSectionTitle}}
+            data-section="admin"
+            as |section|
+          >
+            {{#if this.autoJoinAvailable}}
+              <section.row @label={{this.autoJoinLabel}}>
+                <:action>
+                  <DToggleSwitch
+                    @state={{@channel.autoJoinUsers}}
+                    class="chat-channel-settings__auto-join-switch"
+                    {{on
+                      "click"
+                      (fn this.onToggleAutoJoinUsers @channel.autoJoinUsers)
+                    }}
+                  />
+                </:action>
+              </section.row>
+            {{/if}}
+
+            {{#if this.toggleChannelWideMentionsAvailable}}
+              <section.row @label={{this.channelWideMentionsLabel}}>
+                <:action>
+                  <DToggleSwitch
+                    class="chat-channel-settings__channel-wide-mentions"
+                    @state={{@channel.allowChannelWideMentions}}
+                    {{on
+                      "click"
+                      (fn
+                        this.onToggleChannelWideMentions
+                        @channel.allowChannelWideMentions
+                      )
+                    }}
+                  />
+                </:action>
+
+                <:description>
+                  {{this.channelWideMentionsDescription}}
+                </:description>
+              </section.row>
+            {{/if}}
+
+            {{#if this.toggleThreadingAvailable}}
+              <section.row @label={{this.toggleThreadingLabel}}>
+                <:action>
+                  <DToggleSwitch
+                    @state={{@channel.threadingEnabled}}
+                    class="chat-channel-settings__threading-switch"
+                    {{on
+                      "click"
+                      (fn
+                        this.onToggleThreadingEnabled @channel.threadingEnabled
+                      )
+                    }}
+                  />
+                </:action>
+
+                <:description>
+                  {{this.toggleThreadingDescription}}
+                </:description>
+              </section.row>
+            {{/if}}
+
+            {{#if this.shouldRenderStatusSection}}
+              {{#if this.shouldRenderArchiveRow}}
+                <section.row>
+                  <:action>
+                    <DButton
+                      @action={{this.onArchiveChannel}}
+                      @label="chat.channel_settings.archive_channel"
+                      @icon="archive"
+                      class="archive-btn chat-form__btn btn-flat"
+                    />
+                  </:action>
+                </section.row>
+              {{/if}}
+
+              <section.row>
+                <:action>
+                  {{#if @channel.isOpen}}
+                    <DButton
+                      @action={{this.onToggleChannelState}}
+                      @label="chat.channel_settings.close_channel"
+                      @icon="lock"
+                      class="close-btn chat-form__btn btn-flat"
+                    />
+                  {{else}}
+                    <DButton
+                      @action={{this.onToggleChannelState}}
+                      @label="chat.channel_settings.open_channel"
+                      @icon="unlock"
+                      class="open-btn chat-form__btn btn-flat"
+                    />
+                  {{/if}}
+                </:action>
+              </section.row>
+
+              <section.row>
+                <:action>
+                  <DButton
+                    @action={{this.onDeleteChannel}}
+                    @label="chat.channel_settings.delete_channel"
+                    @icon="trash-alt"
+                    class="delete-btn chat-form__btn btn-flat"
+                  />
+                </:action>
+              </section.row>
+            {{/if}}
+
+          </form.section>
+        {{/if}}
+
+        <form.section as |section|>
+          <section.row>
+            <:action>
+              <ToggleChannelMembershipButton
+                @channel={{@channel}}
+                @options={{hash
+                  joinClass="btn-primary"
+                  leaveClass="btn-flat"
+                  joinIcon="sign-in-alt"
+                  leaveIcon="sign-out-alt"
+                }}
+              />
+            </:action>
+          </section.row>
+        </form.section>
+      </ChatForm>
+    </div>
+  </template>
 }

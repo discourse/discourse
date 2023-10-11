@@ -1,7 +1,7 @@
-import { extendThemeCookie } from "discourse/lib/theme-selector";
-import { extendColorSchemeCookies } from "discourse/lib/color-scheme-picker";
-import { extendTextSizeCookie } from "discourse/models/user";
 import { later } from "@ember/runloop";
+import { extendColorSchemeCookies } from "discourse/lib/color-scheme-picker";
+import { extendThemeCookie } from "discourse/lib/theme-selector";
+import { extendTextSizeCookie } from "discourse/models/user";
 import { isTesting } from "discourse-common/config/environment";
 
 const DELAY = isTesting() ? 0 : 5000;

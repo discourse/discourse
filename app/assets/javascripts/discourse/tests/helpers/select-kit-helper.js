@@ -1,7 +1,7 @@
 import { click, fillIn, triggerEvent } from "@ember/test-helpers";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { isEmpty } from "@ember/utils";
 import jQuery from "jquery";
+import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 function checkSelectKitIsNotExpanded(selector) {
   if (query(selector).classList.contains("is-expanded")) {

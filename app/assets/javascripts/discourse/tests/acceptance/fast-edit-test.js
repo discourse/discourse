@@ -1,12 +1,12 @@
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import postFixtures from "discourse/tests/fixtures/post";
 import {
   acceptance,
   metaModifier,
   query,
   selectText,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import postFixtures from "discourse/tests/fixtures/post";
 import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Fast Edit", function (needs) {

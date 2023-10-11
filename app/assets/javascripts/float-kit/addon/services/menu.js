@@ -1,9 +1,9 @@
-import Service from "@ember/service";
+import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/application";
 import { action } from "@ember/object";
-import DMenuInstance from "float-kit/lib/d-menu-instance";
 import { guidFor } from "@ember/object/internals";
-import { tracked } from "@glimmer/tracking";
+import Service from "@ember/service";
+import DMenuInstance from "float-kit/lib/d-menu-instance";
 import { updatePosition } from "float-kit/lib/update-position";
 
 export default class Menu extends Service {

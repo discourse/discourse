@@ -1,8 +1,8 @@
-import { inject as service } from "@ember/service";
-import { action } from "@ember/object";
 import { setOwner } from "@ember/application";
-import { MENU } from "float-kit/lib/constants";
+import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
+import { inject as service } from "@ember/service";
+import { MENU } from "float-kit/lib/constants";
 import FloatKitInstance from "float-kit/lib/float-kit-instance";
 
 export default class DMenuInstance extends FloatKitInstance {
