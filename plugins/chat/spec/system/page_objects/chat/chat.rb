@@ -50,8 +50,7 @@ module PageObjects
 
       def visit_channel(channel, message_id: nil)
         visit(channel.url + (message_id ? "/#{message_id}" : ""))
-        has_no_css?(".chat-channel--not-loaded-once")
-        has_no_css?(".chat-skeleton")
+        has_finished_loading?
       end
 
       def visit_thread(thread)
@@ -61,8 +60,7 @@ module PageObjects
 
       def visit_threads_list(channel)
         visit(channel.url + "/t")
-        has_no_css?(".chat-channel--not-loaded-once")
-        has_no_css?(".chat-skeleton")
+        has_finished_loading?
       end
 
       def visit_channel_settings(channel)
@@ -82,6 +80,11 @@ module PageObjects
         url += "/" + filter.to_s if filter
         visit(url)
         PageObjects::Pages::ChatBrowse.new.has_finished_loading?
+      end
+
+      def has_finished_loading?
+        has_no_css?(".chat-channel--not-loaded-once")
+        has_no_css?(".chat-skeleton")
       end
 
       def minimize_full_page
