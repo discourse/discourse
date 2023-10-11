@@ -187,13 +187,26 @@ function renderImageOrPlayableMedia(tokens, idx, options, env, slf) {
   if (split[1] === "video") {
     if (
       options.discourse.previewing &&
-      !options.discourse.limitedSiteSettings.enableDiffhtmlPreview
+      options.discourse.limitedSiteSettings.enableDiffhtmlPreview
     ) {
-      return `<div class="onebox-placeholder-container">
+      const src = token.attrGet("src");
+      const origSrc = token.attrGet("data-orig-src");
+      const dataOrigSrcAttr =
+        origSrc !== null ? `data-orig-src="${origSrc}"` : "";
+      return `<div class="video-container">
+        <video width="100%" height="100%" preload="metadata" controls>
+          <source src="${src}" ${dataOrigSrcAttr}>
+          <a href="${src}">${src}</a>
+        </video>
+        </div>`;
+    } else {
+      if (options.discourse.previewing) {
+        return `<div class="onebox-placeholder-container">
         <span class="placeholder-icon video"></span>
       </div>`;
-    } else {
-      return videoHTML(token);
+      } else {
+        return videoHTML(token);
+      }
     }
   } else if (split[1] === "audio") {
     return audioHTML(token);
