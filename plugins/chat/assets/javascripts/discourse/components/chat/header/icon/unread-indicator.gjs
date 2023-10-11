@@ -3,6 +3,7 @@ import { inject as service } from "@ember/service";
 import {
   HEADER_INDICATOR_PREFERENCE_ALL_NEW,
   HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
+  HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
   HEADER_INDICATOR_PREFERENCE_NEVER,
 } from "discourse/plugins/chat/discourse/controllers/preferences-chat";
 
@@ -35,11 +36,15 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
 
   get showUrgentIndicator() {
     return (
-      this.urgentCount > 0 &&
-      this.#hasAnyIndicatorPreference([
-        HEADER_INDICATOR_PREFERENCE_ALL_NEW,
-        HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
-      ])
+      (this.urgentCount > 0 &&
+        this.#hasAnyIndicatorPreference([
+          HEADER_INDICATOR_PREFERENCE_ALL_NEW,
+          HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
+        ])) ||
+      (this.#hasAnyIndicatorPreference([
+        HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
+      ]) &&
+        this.mentionsCount > 0)
     );
   }
 

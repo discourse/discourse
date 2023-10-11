@@ -5,6 +5,7 @@ import {
   HEADER_INDICATOR_PREFERENCE_ALL_NEW,
   HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
   HEADER_INDICATOR_PREFERENCE_NEVER,
+  HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
 } from "discourse/plugins/chat/discourse/controllers/preferences-chat";
 
 export default class ChatStyleguideChatHeaderIcon extends Component {
@@ -18,6 +19,7 @@ export default class ChatStyleguideChatHeaderIcon extends Component {
     return [
       HEADER_INDICATOR_PREFERENCE_ALL_NEW,
       HEADER_INDICATOR_PREFERENCE_DM_AND_MENTIONS,
+      HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
       HEADER_INDICATOR_PREFERENCE_NEVER,
     ];
   }
