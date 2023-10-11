@@ -7,6 +7,10 @@ import { registerUnbound } from "discourse-common/lib/helpers";
   update the dates on a regular interval.
 **/
 registerUnbound("format-date", function (val, params) {
+  return formatDate(val, params);
+});
+
+export default function formatDate(val, params = {}) {
   let leaveAgo,
     format = "medium",
     title = true;
@@ -32,4 +36,4 @@ registerUnbound("format-date", function (val, params) {
       })
     );
   }
-});
+}
