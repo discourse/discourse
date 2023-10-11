@@ -15,15 +15,19 @@
     </div>
   </div>
 
+  {{#if this.canUsePasskeys}}
+    <UserPreferences::UserPasskeys @model={{@model}} />
+  {{/if}}
+
   <div
     class="control-group pref-second-factor"
     data-setting-name="user-second-factor"
   >
     <label class="control-label">{{i18n "user.second_factor.title"}}</label>
     {{#unless this.model.second_factor_enabled}}
-      <label>
+      <div class="instructions">
         {{i18n "user.second_factor.short_description"}}
-      </label>
+      </div>
     {{/unless}}
     <div class="controls pref-second-factor">
       {{#if this.isCurrentUser}}
@@ -45,7 +49,9 @@
     data-setting-name="user-auth-tokens"
   >
     <label class="control-label">{{i18n "user.auth_tokens.title"}}</label>
-
+    <div class="instructions">
+      {{i18n "user.auth_tokens.short_description"}}
+    </div>
     <div class="auth-tokens">
       {{#each this.authTokens as |token|}}
         <div class="row auth-token">

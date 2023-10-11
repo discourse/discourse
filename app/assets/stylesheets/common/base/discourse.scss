@@ -711,55 +711,6 @@ table {
   }
 }
 
-.pref-auth-tokens {
-  .row {
-    border-bottom: 1px solid #ddd;
-    margin: 5px 0px;
-    padding-bottom: 5px;
-
-    &:last-child {
-      border-bottom: 0;
-    }
-  }
-
-  .auth-token-icon {
-    color: var(--primary-medium);
-    font-size: 2.25em;
-    float: left;
-    margin-right: 10px;
-  }
-
-  .auth-token-first {
-    font-size: 1.1em;
-
-    .auth-token-device {
-      font-weight: bold;
-    }
-  }
-
-  .auth-token-second {
-    color: var(--primary-medium);
-
-    .active {
-      color: var(--success);
-      font-weight: bold;
-    }
-  }
-
-  .auth-token-dropdown {
-    float: right;
-
-    .btn,
-    .btn:hover {
-      background: transparent;
-
-      .d-icon {
-        color: var(--primary-high);
-      }
-    }
-  }
-}
-
 .topic-statuses {
   // avoid adding margin/padding on this parent; sometimes it appears as an empty container
   float: left;
