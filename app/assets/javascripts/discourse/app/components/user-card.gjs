@@ -2,10 +2,11 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { array, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
+import EmberObject, { action, set } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { LinkTo } from "@ember/routing";
 import { inject as service } from "@ember/service";
+import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import DButton from "discourse/components/d-button";
@@ -22,30 +23,31 @@ import formatDate from "discourse/helpers/format-date";
 import formatDuration from "discourse/helpers/format-duration";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import userStatus from "discourse/helpers/user-status";
-import { formatUsername } from "discourse/lib/utilities";
+import { durationTiny } from "discourse/lib/formatter";
+import { prioritizeNameInUx } from "discourse/lib/settings";
+import DiscourseURL, { userPath } from "discourse/lib/url";
+import { formatUsername, modKeysPressed } from "discourse/lib/utilities";
 import User from "discourse/models/user";
 import icon from "discourse-common/helpers/d-icon";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
 import I18n from "I18n";
+import eq from "truth-helpers/helpers/eq";
 import or from "truth-helpers/helpers/or";
 
 export default class UserCard extends Component {
+  @service site;
   @service siteSettings;
 
-  @tracked showUserLocalTime = false;
   @tracked hasUserFilters = false;
-  @tracked showDelete = false;
   @tracked themeSettingValid = false;
-  @tracked showMoreBadges = false;
-  @tracked nameFirst = false;
   @tracked showFeaturedTopic = false;
   @tracked showCheckEmail = false;
+
   @tracked loading = true;
-  @tracked newUser = false;
-  @tracked staff = false;
   @tracked user;
 
   allowBackgrounds = this.siteSettings.allow_profile_backgrounds;
+  showUserLocalTime = this.siteSettings.display_local_time_in_user_card;
   showBadges = this.siteSettings.enable_badges;
   moreBadgesLabel = I18n.t("more_badges", { count: this.moreBadgesCount });
   stagedUserLabel = I18n.t("user.staged");
@@ -60,6 +62,21 @@ export default class UserCard extends Component {
     time_read: this.recentTimeRead,
   });
   lastPostLabel = I18n.t("last_post");
+
+  get showMoreBadges() {
+    return this.moreBadgesCount > 0;
+  }
+
+  get userTimezone() {
+    if (!this.showUserLocalTime) {
+      return;
+    }
+    return this.user.get("user_option.timezone");
+  }
+
+  get formattedUserLocalTime() {
+    return moment.tz(this.userTimezone).format(I18n.t("dates.time"));
+  }
 
   get isSuspendedOrHasBio() {
     return this.user.suspend_reason || this.user.bio_excerpt;
@@ -89,14 +106,63 @@ export default class UserCard extends Component {
     return `url(${getURLWithCDN(this.user.card_background_upload_url)})`;
   }
 
-  @action
-  handleShowUser(user) {
-    console.log("handleShowUser", user);
+  get nameFirst() {
+    return prioritizeNameInUx(this.user.name);
+  }
+
+  get showDelete() {
+    return this.showName && this.user.canBeDeleted;
+  }
+
+  get removeNoFollow() {
+    return this.user.trust_level > 2 && !this.siteSettings.tl3_links_no_follow;
+  }
+
+  get moreBadgesCount() {
+    return this.user?.badge_count - this.user?.featured_user_badges?.length;
+  }
+
+  get showRecentTimeRead() {
+    const recentTimeRead = this.user.recent_time_read;
+    return this.user.time_read !== recentTimeRead && recentTimeRead !== 0;
+  }
+
+  get recentTimeRead() {
+    return durationTiny(this.user?.recent_time_read);
+  }
+
+  get publicUserFields() {
+    const siteUserFields = this.site.get("user_fields");
+    if (!isEmpty(siteUserFields)) {
+      const userFields = this.user.get("user_fields");
+      return siteUserFields
+        .filterBy("show_on_user_card", true)
+        .sortBy("position")
+        .map((field) => {
+          set(field, "dasherized_name", dasherize(field.name));
+          const value = userFields ? userFields[field.id] : null;
+          return isEmpty(value) ? null : EmberObject.create({ value, field });
+        })
+        .compact();
+    }
   }
 
   @action
-  checkEmail() {
-    console.log("checkEmail");
+  handleShowUser(user, event) {
+    if (event && modKeysPressed(event).length > 0) {
+      return false;
+    }
+    event?.preventDefault();
+
+    this.args.data.showUser?.(user) ||
+      DiscourseURL.routeTo(userPath(user.username_lower));
+
+    this.close();
+  }
+
+  @action
+  checkEmail(user) {
+    user.checkEmail();
   }
 
   @action
@@ -110,8 +176,8 @@ export default class UserCard extends Component {
   }
 
   @action
-  close() {
-    console.log("close");
+  async close() {
+    await this.args.close();
   }
 
   @action
@@ -120,13 +186,10 @@ export default class UserCard extends Component {
   }
 
   @action
-  deleteUser() {
-    console.log("delete user");
-  }
+  deleteUser(user) {
+    user.delete();
 
-  @action
-  removeNoFollow() {
-    console.log("removeNoFollow");
+    this.close();
   }
 
   @action
@@ -242,8 +305,8 @@ export default class UserCard extends Component {
                     <h1
                       class={{concatClass
                         "d-user-card__name"
-                        this.staff
-                        this.newUser
+                        this.user.staff
+                        (eq this.user.trust_level 0)
                         (if this.nameFirst "full-name" "username")
                       }}
                       title="@{{this.user.username}}"
@@ -311,9 +374,9 @@ export default class UserCard extends Component {
               <div class="d-user-card__user-content">
                 {{#if this.showFeaturedTopic}}
                   <div class="d-user-card__featured-topic">
-                    <span class="d-user-card__featured-topic-title">{{emoji
-                        "pushpin"
-                      }}</span>
+                    <span class="d-user-card__featured-topic-title">
+                      {{emoji "pushpin"}}
+                    </span>
                     <LinkTo
                       @route="topic"
                       @models={{array
@@ -322,9 +385,11 @@ export default class UserCard extends Component {
                       }}
                       title={{this.featutedTopicLabel}}
                       class="d-user-card__link"
-                    >{{replaceEmoji
+                    >
+                      {{replaceEmoji
                         (htmlSafe this.user.featured_topic.fancy_title)
-                      }}</LinkTo>
+                      }}
+                    </LinkTo>
                   </div>
                 {{/if}}
                 {{#if this.user.profile_hidden}}
@@ -346,21 +411,23 @@ export default class UserCard extends Component {
                           {{/if}}
                         </div>
                         <div class="d-user-card__suspension-reason">
-                          <span
-                            class="d-user-card__suspension-reason-title"
-                          >{{this.suspendedReasonLabel}}</span>
+                          <span class="d-user-card__suspension-reason-title">
+                            {{this.suspendedReasonLabel}}
+                          </span>
                           <span
                             class="d-user-card__suspension-reason-description"
-                          >{{this.user.suspend_reason}}</span>
+                          >
+                            {{this.user.suspend_reason}}
+                          </span>
                         </div>
                       </div>
                     {{else}}
                       {{#if this.user.bio_excerpt}}
                         <div class="d-user-card__bio-excerpt">
                           <HtmlWithLinks>
-                            <p>{{replaceEmoji
-                                (htmlSafe this.user.bio_excerpt)
-                              }}</p>
+                            <p>
+                              {{replaceEmoji (htmlSafe this.user.bio_excerpt)}}
+                            </p>
                           </HtmlWithLinks>
                         </div>
                       {{/if}}
@@ -420,28 +487,26 @@ export default class UserCard extends Component {
                         @connectorTagName="div"
                         @outletArgs={{hash user=this.user}}
                       />
-                      {{#if this.publicUserFields}}
-                        {{#each this.publicUserFields as |uf|}}
-                          {{#if uf.value}}
-                            <div
-                              class="d-user-card__field
-                                {{uf.field.dasherized_name}}"
-                            >
-                              <span
-                                class="d-user-card__custom-field-title"
-                              >{{uf.field.name}}</span>
-                              <span class="d-user-card__custom-field-data">
-                                {{#each uf.value as |v|}}
-                                  {{! some values are arrays }}
-                                  {{v}}
-                                {{else}}
-                                  {{uf.value}}
-                                {{/each}}
-                              </span>
-                            </div>
-                          {{/if}}
-                        {{/each}}
-                      {{/if}}
+                      {{#each this.publicUserFields as |uf|}}
+                        {{#if uf.value}}
+                          <div
+                            class="d-user-card__field
+                              {{uf.field.dasherized_name}}"
+                          >
+                            <span
+                              class="d-user-card__custom-field-title"
+                            >{{uf.field.name}}</span>
+                            <span class="d-user-card__custom-field-data">
+                              {{#each uf.value as |v|}}
+                                {{! some values are arrays }}
+                                {{v}}
+                              {{else}}
+                                {{uf.value}}
+                              {{/each}}
+                            </span>
+                          </div>
+                        {{/if}}
+                      {{/each}}
                     </div>
                   </div>
                 {{/unless}}
@@ -512,7 +577,7 @@ export default class UserCard extends Component {
                   <PluginOutlet
                     @name="user-card-below-message-button"
                     @connectorTagName="li"
-                    @outletArgs={{hash user=this.user close=(this.close)}}
+                    @outletArgs={{hash user=this.user close=this.close}}
                   />
                   {{#if this.showFilter}}
                     <li class="d-user-card__action">
@@ -538,7 +603,7 @@ export default class UserCard extends Component {
                     <li class="d-user-card__action">
                       <DButton
                         @class="d-user-card__button btn-danger"
-                        @action={{this.deleteUser}}
+                        @action={{fn this.deleteUser this.user}}
                         @actionParam={{this.user}}
                         @icon="exclamation-triangle"
                         @label="admin.user.delete"
@@ -547,13 +612,13 @@ export default class UserCard extends Component {
                   {{/if}}
                   <PluginOutlet
                     @name="user-card-additional-buttons"
-                    @outletArgs={{hash user=this.user close=(this.close)}}
+                    @outletArgs={{hash user=this.user close=this.close}}
                   />
                 </ul>
                 <PluginOutlet
                   @name="user-card-additional-controls"
                   @connectorTagName="div"
-                  @outletArgs={{hash user=this.user close=(this.close)}}
+                  @outletArgs={{hash user=this.user close=this.close}}
                 />
               </div>
             {{/if}}
