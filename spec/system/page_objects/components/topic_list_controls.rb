@@ -27,7 +27,7 @@ module PageObjects
 
       def dismiss_unread(untrack: false)
         click_button("dismiss-topics-bottom")
-        find(".stop-tracking").click if untrack
+        find(".dismiss-read-modal__stop-tracking").click if untrack
         click_button("dismiss-read-confirm")
         self
       end
