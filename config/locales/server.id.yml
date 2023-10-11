@@ -68,8 +68,11 @@ id:
       generic: Terjadi kesalahan saat mengimpor tema itu
       upload: "Kesalahan saat membuat aset unggahan: %{name}. %{errors}"
       about_json: "Kesalahan Impor: about.json tidak ada, atau tidak valid. Apakah Anda yakin ini adalah Tema Discourse?"
+      about_json_too_big: "Kesalahan Impor: about.json lebih besar dari batas %{limit}."
       about_json_values: "about.json berisi nilai yang tidak valid: %{errors}"
       modifier_values: "pengubah about.json berisi nilai yang tidak valid: %{errors}"
+      asset_too_big: "Aset %{filename} lebih besar dari batas %{limit}"
+      theme_too_big: "Tema lebih besar dari batas %{limit}"
       git: "Kesalahan kloning repositori git, akses ditolak atau repositori tidak ditemukan"
       git_ref_not_found: "Tidak dapat checkout referensi git: %{ref}"
       git_unsupported_scheme: "Tidak dapat clone git repo: skema tidak didukung"
@@ -78,6 +81,7 @@ id:
       unknown_file_type: "File yang Anda unggah tampaknya bukan tema Discourse yang valid."
       not_allowed_theme: "`%{repo}` tidak ada dalam daftar tema yang diizinkan (centang pengaturan global `allowed_theme_repos`)."
       ssh_key_gone: "Anda menunggu terlalu lama untuk memasang tema dan kunci SSH kedaluwarsa. Silakan coba lagi."
+      too_many_files: "Jumlah file (%{count}) dalam tema telah melampaui jumlah maksimum file yang diperbolehkan (%{limit})"
     errors:
       component_no_user_selectable: "Komponen tema tidak dapat dipilih oleh pengguna"
       component_no_default: "Komponen tema tidak bisa menjadi tema default"
@@ -794,6 +798,9 @@ id:
     sequence_conflict_error:
       title: "kesalahan draf"
       description: "Draf sedang diedit di jendela lain. Muat ulang halaman ini."
+    too_many_drafts:
+      title: "Terlalu banyak draf"
+      description: "Anda telah mencapai jumlah maksimum draf yang diperbolehkan. Harap hapus beberapa [draf Anda](%{base_url}/my/activity/drafts) dan coba lagi."
   draft_backup:
     pm_title: "Draf Cadangan dari topik yang sedang berlangsung"
     pm_body: "Topik berisi draf cadangan"
@@ -1273,6 +1280,8 @@ id:
   login:
     not_available: "Tidak tersedia. Coba %{suggestion}?"
     omniauth_confirm_button: "Lanjutkan"
+    too_many_authenticators: "Maaf, Anda tidak dapat memiliki lebih dari 50 autentikator. Harap hapus yang sudah ada dan coba lagi."
+    too_many_security_keys: "Maaf, Anda tidak boleh memiliki lebih dari 50 kunci keamanan. Silakan hapus yang sudah ada dan coba lagi."
   admin:
     email:
       sent_test: "terkirim!"

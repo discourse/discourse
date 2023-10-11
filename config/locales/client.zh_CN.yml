@@ -3649,7 +3649,7 @@ zh_CN:
       more_badges:
         other: "其他 (+%{count})"
       awarded:
-        other: "%{number} 已获奖"
+        other: "已授予 %{number} 人"
       select_badge_for_title: 选择一个徽章作为您的头衔使用
       none: "（无）"
       successfully_granted: "已成功将“%{badge}”授予 %{username}"
