@@ -1,6 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class extends Controller {
   @controller user;

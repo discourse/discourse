@@ -6,7 +6,7 @@ import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import UserLink from "discourse/components/user-link";
 import { ajax } from "discourse/lib/ajax";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class ConfirmSession extends Component {
   @service dialog;

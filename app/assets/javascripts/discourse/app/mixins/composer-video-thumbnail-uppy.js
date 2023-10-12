@@ -6,7 +6,7 @@ import { inject as service } from "@ember/service";
 import Uppy from "@uppy/core";
 import { isVideo } from "discourse/lib/uploads";
 import UppyUploadMixin from "discourse/mixins/uppy-upload";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 // It is not ideal that this is a class extending a mixin, but in the case
 // where this is needed (a second background uppy uploader on a class that

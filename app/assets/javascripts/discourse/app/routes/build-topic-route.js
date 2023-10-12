@@ -13,7 +13,7 @@ import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import DiscourseRoute from "discourse/routes/discourse";
 import { deepEqual } from "discourse-common/lib/object";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 // A helper to build a topic route for a filter
 export function filterQueryParams(params, defaultParams) {

@@ -4,7 +4,7 @@ import { resendActivationEmail } from "discourse/lib/user-activation";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
 import getUrl from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Controller.extend({
   router: service(),

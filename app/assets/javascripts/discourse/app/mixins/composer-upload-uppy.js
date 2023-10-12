@@ -24,7 +24,7 @@ import getURL from "discourse-common/lib/get-url";
 import { deepMerge } from "discourse-common/lib/object";
 import { bind, observes, on } from "discourse-common/utils/decorators";
 import escapeRegExp from "discourse-common/utils/escape-regexp";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 // Note: This mixin is used _in addition_ to the ComposerUpload mixin
 // on the composer-editor component. It overrides some, but not all,

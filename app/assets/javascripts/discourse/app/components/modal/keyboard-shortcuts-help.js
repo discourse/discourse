@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { extraKeyboardShortcutsHelp } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const KEY = "keyboard_shortcuts_help";
 const SHIFT = I18n.t("shortcut_modifier_key.shift");

@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class WebhookStatus extends Component {
   iconNames = ["far-circle", "times-circle", "circle", "circle"];

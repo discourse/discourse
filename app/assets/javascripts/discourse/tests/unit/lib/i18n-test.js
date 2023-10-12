@@ -1,7 +1,7 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
-import I18n, { I18nMissingInterpolationArgument } from "I18n";
+import I18n, { I18nMissingInterpolationArgument } from "discourse-i18n";
 
 module("Unit | Utility | i18n", function (hooks) {
   setupTest(hooks);

@@ -5,7 +5,7 @@ import { schedule } from "@ember/runloop";
 import { Promise } from "rsvp";
 import loadScript from "discourse/lib/load-script";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 function isInputDateSupported() {
   const input = document.createElement("input");

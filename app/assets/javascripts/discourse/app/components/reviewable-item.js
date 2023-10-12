@@ -11,7 +11,7 @@ import optionalService from "discourse/lib/optional-service";
 import showModal from "discourse/lib/show-modal";
 import Category from "discourse/models/category";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 let _components = {};
 

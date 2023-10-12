@@ -5,7 +5,7 @@ import { setting } from "discourse/lib/computed";
 import User from "discourse/models/user";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { observes } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 function failedResult(attrs) {
   let result = EmberObject.create({

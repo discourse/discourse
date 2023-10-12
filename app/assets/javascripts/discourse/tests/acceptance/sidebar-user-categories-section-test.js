@@ -15,7 +15,7 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 acceptance(
   "Sidebar - Logged on user - Categories Section - allow_uncategorized_topics disabled",

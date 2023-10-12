@@ -23,7 +23,7 @@ import {
   twoMonths,
   twoWeeks,
 } from "discourse/lib/time-utils";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export const TIME_SHORTCUT_TYPES = {
   ONE_HOUR: "one_hour",

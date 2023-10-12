@@ -7,7 +7,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { grantableBadges } from "discourse/lib/grant-badge-utils";
 import UserBadge from "discourse/models/user-badge";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class AdminUserBadgesController extends Controller {
   @service dialog;

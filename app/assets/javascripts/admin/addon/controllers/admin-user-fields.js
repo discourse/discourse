@@ -3,7 +3,7 @@ import { action } from "@ember/object";
 import { gte, sort } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const MAX_FIELDS = 30;
 

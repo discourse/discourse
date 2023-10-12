@@ -12,7 +12,7 @@ import {
 import escape from "discourse-common/lib/escape";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const TITLES = {
   [PRIVATE_MESSAGE]: "topic.private_message",

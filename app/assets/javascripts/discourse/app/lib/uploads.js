@@ -1,7 +1,7 @@
 import { isAppleDevice } from "discourse/lib/utilities";
 import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 function isGUID(value) {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(

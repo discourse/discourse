@@ -7,7 +7,7 @@ import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import {
   ALL_CATEGORIES_ID,
   NO_CATEGORIES_ID,

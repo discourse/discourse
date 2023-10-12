@@ -2,7 +2,7 @@ import Component from "@ember/component";
 import { equal } from "@ember/object/computed";
 import { propertyEqual } from "discourse/lib/computed";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
   tagName: "li",
