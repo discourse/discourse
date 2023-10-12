@@ -38,15 +38,6 @@ export function fixQuotes(str) {
 }
 
 export default class PostTextSelection extends Component {
-  <template>
-    {{! template-lint-disable modifier-name-case }}
-    <div
-      {{this.documentListeners}}
-      {{this.appEventsListeners}}
-      {{this.runLoopHandlers}}
-    ></div>
-  </template>
-
   @service appEvents;
   @service capabilities;
   @service currentUser;
@@ -284,4 +275,13 @@ export default class PostTextSelection extends Component {
     await this.args.selectText();
     await this.hideToolbar();
   }
+
+  <template>
+    {{! template-lint-disable modifier-name-case }}
+    <div
+      {{this.documentListeners}}
+      {{this.appEventsListeners}}
+      {{this.runLoopHandlers}}
+    ></div>
+  </template>
 }

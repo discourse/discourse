@@ -5,25 +5,6 @@ import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 
 export default class ChatUserAvatar extends Component {
-  <template>
-    <div
-      class={{concatClass "chat-user-avatar" (if this.isOnline "is-online")}}
-      data-username={{@user.username}}
-    >
-      {{#if this.interactive}}
-        <div
-          role="button"
-          class="chat-user-avatar__container clickable"
-          data-user-card={{@user.username}}
-        >
-          {{this.avatar}}
-        </div>
-      {{else}}
-        {{this.avatar}}
-      {{/if}}
-    </div>
-  </template>
-
   @service chat;
 
   get avatar() {
@@ -55,4 +36,23 @@ export default class ChatUserAvatar extends Component {
       )
     );
   }
+
+  <template>
+    <div
+      class={{concatClass "chat-user-avatar" (if this.isOnline "is-online")}}
+      data-username={{@user.username}}
+    >
+      {{#if this.interactive}}
+        <div
+          role="button"
+          class="chat-user-avatar__container clickable"
+          data-user-card={{@user.username}}
+        >
+          {{this.avatar}}
+        </div>
+      {{else}}
+        {{this.avatar}}
+      {{/if}}
+    </div>
+  </template>
 }

@@ -9,18 +9,6 @@ import {
 const MAX_UNREAD_COUNT = 99;
 
 export default class ChatHeaderIconUnreadIndicator extends Component {
-  <template>
-    {{#if this.showUrgentIndicator}}
-      <div class="chat-channel-unread-indicator -urgent">
-        <div class="chat-channel-unread-indicator__number">
-          {{this.unreadCountLabel}}
-        </div>
-      </div>
-    {{else if this.showUnreadIndicator}}
-      <div class="chat-channel-unread-indicator"></div>
-    {{/if}}
-  </template>
-
   @service chatTrackingStateManager;
   @service currentUser;
 
@@ -78,4 +66,16 @@ export default class ChatHeaderIconUnreadIndicator extends Component {
 
     return preferences.includes(this.indicatorPreference);
   }
+
+  <template>
+    {{#if this.showUrgentIndicator}}
+      <div class="chat-channel-unread-indicator -urgent">
+        <div class="chat-channel-unread-indicator__number">
+          {{this.unreadCountLabel}}
+        </div>
+      </div>
+    {{else if this.showUnreadIndicator}}
+      <div class="chat-channel-unread-indicator"></div>
+    {{/if}}
+  </template>
 }

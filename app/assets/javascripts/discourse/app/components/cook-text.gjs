@@ -9,19 +9,6 @@ import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import { ajax } from "discourse/lib/ajax";
 
 export default class CookText extends Component {
-  <template>
-    {{! template-lint-disable modifier-name-case }}
-    <div
-      ...attributes
-      {{didUpdate this.buildOneboxes this.cooked}}
-      {{didUpdate this.resolveShortUrls this.cooked}}
-      {{didUpdate this.calculateOffsetHeight this.cooked}}
-      {{didUpdate this.loadCookedText @rawText}}
-    >
-      {{this.cooked}}
-    </div>
-  </template>
-
   @service siteSettings;
   @tracked cooked = null;
 
@@ -63,4 +50,17 @@ export default class CookText extends Component {
   resolveShortUrls(element) {
     resolveAllShortUrls(ajax, this.siteSettings, element, this.args.opts);
   }
+
+  <template>
+    {{! template-lint-disable modifier-name-case }}
+    <div
+      ...attributes
+      {{didUpdate this.buildOneboxes this.cooked}}
+      {{didUpdate this.resolveShortUrls this.cooked}}
+      {{didUpdate this.calculateOffsetHeight this.cooked}}
+      {{didUpdate this.loadCookedText @rawText}}
+    >
+      {{this.cooked}}
+    </div>
+  </template>
 }

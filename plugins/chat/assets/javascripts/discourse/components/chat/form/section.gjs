@@ -2,6 +2,10 @@ import Component from "@glimmer/component";
 import ChatFormRow from "discourse/plugins/chat/discourse/components/chat/form/row";
 
 export default class ChatFormSection extends Component {
+  get yieldableArgs() {
+    return { row: ChatFormRow };
+  }
+
   <template>
     <div class="chat-form__section" ...attributes>
       {{#if @title}}
@@ -15,8 +19,4 @@ export default class ChatFormSection extends Component {
       </div>
     </div>
   </template>
-
-  get yieldableArgs() {
-    return { row: ChatFormRow };
-  }
 }

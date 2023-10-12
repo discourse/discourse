@@ -3,10 +3,7 @@ import getURL from "discourse-common/lib/get-url";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 import { debounce } from "discourse-common/utils/decorators";
-import {
-  focusSearchButton,
-  focusSearchInput,
-} from "discourse/components/search-menu";
+import { focusSearchInput } from "discourse/components/search-menu";
 
 export default class AssistantItem extends Component {
   @service search;
@@ -65,7 +62,6 @@ export default class AssistantItem extends Component {
     }
 
     if (e.key === "Escape") {
-      focusSearchButton();
       this.args.closeSearchMenu();
       e.preventDefault();
       return false;

@@ -10,6 +10,44 @@ import { getOwner } from "@ember/application";
 import and from "truth-helpers/helpers/and";
 
 export default class DTooltip extends Component {
+  @service tooltip;
+
+  @tracked tooltipInstance = null;
+
+  registerTrigger = modifier((element) => {
+    const options = {
+      ...this.args,
+      ...{
+        listeners: true,
+        beforeTrigger: () => {
+          this.tooltip.close();
+        },
+      },
+    };
+    const instance = new DTooltipInstance(getOwner(this), element, options);
+
+    this.tooltipInstance = instance;
+
+    return () => {
+      instance.destroy();
+
+      if (this.isDestroying) {
+        this.tooltipInstance = null;
+      }
+    };
+  });
+
+  get options() {
+    return this.tooltipInstance?.options;
+  }
+
+  get componentArgs() {
+    return {
+      close: this.tooltip.close,
+      data: this.options.data,
+    };
+  }
+
   <template>
     {{! template-lint-disable modifier-name-case }}
     <span
@@ -68,42 +106,4 @@ export default class DTooltip extends Component {
       </DFloatBody>
     {{/if}}
   </template>
-
-  @service tooltip;
-
-  @tracked tooltipInstance = null;
-
-  registerTrigger = modifier((element) => {
-    const options = {
-      ...this.args,
-      ...{
-        listeners: true,
-        beforeTrigger: () => {
-          this.tooltip.close();
-        },
-      },
-    };
-    const instance = new DTooltipInstance(getOwner(this), element, options);
-
-    this.tooltipInstance = instance;
-
-    return () => {
-      instance.destroy();
-
-      if (this.isDestroying) {
-        this.tooltipInstance = null;
-      }
-    };
-  });
-
-  get options() {
-    return this.tooltipInstance?.options;
-  }
-
-  get componentArgs() {
-    return {
-      close: this.tooltip.close,
-      data: this.options.data,
-    };
-  }
 }
