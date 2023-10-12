@@ -27,7 +27,7 @@ export default class ReviseAndRejectPostReviewable extends Component {
   get sendPMDisabled() {
     return (
       isEmpty(this.reason) ||
-      (this.reason === "Other" && isEmpty(this.customReason)) ||
+      (this.reason === OTHER_REASON && isEmpty(this.customReason)) ||
       this.submitting
     );
   }

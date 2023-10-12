@@ -126,12 +126,12 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       end
 
       context "with revise_and_reject_post" do
-        it "doesn't create a post" do
-          post_count = Post.count
+        it "doesn't create the post the user intended" do
+          post_count = Post.public_posts.count
           result = reviewable.perform(moderator, :revise_and_reject_post)
           expect(result.success?).to eq(true)
           expect(result.created_post).to be_nil
-          expect(Post.count).to eq(post_count)
+          expect(Post.public_posts.count).to eq(post_count)
         end
 
         it "creates a private message to the creator of the post" do
