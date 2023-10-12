@@ -91,14 +91,13 @@ function head(buffer, bootstrap, headers, baseURL) {
 
 function localeScript(buffer, bootstrap) {
   buffer.push(`<script defer src="${bootstrap.locale_script}"></script>`);
+  (bootstrap.extra_locales || []).forEach((l) =>
+    buffer.push(`<script defer src="${l}"></script>`)
+  );
 }
 
 function beforeScriptLoad(buffer, bootstrap) {
   buffer.push(bootstrap.html.before_script_load);
-  localeScript(buffer, bootstrap);
-  (bootstrap.extra_locales || []).forEach((l) =>
-    buffer.push(`<script defer src="${l}"></script>`)
-  );
 }
 
 function discoursePreloadStylesheets(buffer, bootstrap) {
