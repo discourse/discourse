@@ -4,13 +4,11 @@
   <div class="channels-list">
     chat index list of channels as-is
   </div>
-  <footer class="chat-index__footer">
     <nav class="chat-index__footer-nav">
       <DButton class="btn-flat chat-index__footer-item" @icon="plus" aria-label="Start new chat" @translatedLabel="New"/>
       <DButton class="btn-flat chat-index__footer-item -active" @icon="users" aria-label="Switch to DM list" @translatedLabel="DMs"/>
       <DButton class="btn-flat chat-index__footer-item" @icon="comments" aria-label="Switch to channel list" @translatedLabel="Channels"/>
     </nav>
-  </footer>
 </div>
 </div>
 
@@ -40,11 +38,10 @@
     grid-area: list;
     padding-bottom: 0;
     }
-    .chat-index__footer {
-    grid-area: footer;
-    border-top: 1px solid var(--primary-low);
-    }
+    
     .chat-index__footer-nav {
+     grid-area: footer;
+    border-top: 1px solid var(--primary-low);
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
