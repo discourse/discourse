@@ -1,6 +1,6 @@
-import { module, test } from "qunit";
-import { setupTest } from "ember-qunit";
 import { getOwner } from "@ember/application";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
 module("Unit | Service | document-title", function (hooks) {

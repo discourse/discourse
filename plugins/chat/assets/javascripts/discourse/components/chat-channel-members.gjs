@@ -1,17 +1,17 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import ChatUserInfo from "discourse/plugins/chat/discourse/components/chat-user-info";
-import gt from "truth-helpers/helpers/gt";
 import { cached, tracked } from "@glimmer/tracking";
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
+import { hash } from "@ember/helper";
+import { action } from "@ember/object";
+import { schedule } from "@ember/runloop";
+import { inject as service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
-import DcFilterInput from "discourse/plugins/chat/discourse/components/dc-filter-input";
+import { INPUT_DELAY } from "discourse-common/config/environment";
+import discourseDebounce from "discourse-common/lib/debounce";
 import I18n from "I18n";
-import { hash } from "@ember/helper";
-import { schedule } from "@ember/runloop";
+import gt from "truth-helpers/helpers/gt";
+import ChatUserInfo from "discourse/plugins/chat/discourse/components/chat-user-info";
+import DcFilterInput from "discourse/plugins/chat/discourse/components/dc-filter-input";
 
 export default class ChatChannelMembers extends Component {
   @service chatApi;

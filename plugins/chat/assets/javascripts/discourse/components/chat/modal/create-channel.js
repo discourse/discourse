@@ -1,15 +1,15 @@
-import { escapeExpression } from "discourse/lib/utilities";
-import { ajax } from "discourse/lib/ajax";
-import { cancel } from "@ember/runloop";
-import discourseDebounce from "discourse-common/lib/debounce";
 import Component from "@glimmer/component";
-import I18n from "I18n";
-import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
-import { isBlank, isPresent } from "@ember/utils";
-import { htmlSafe } from "@ember/template";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { cancel } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import { isBlank, isPresent } from "@ember/utils";
+import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
+import { escapeExpression } from "discourse/lib/utilities";
+import discourseDebounce from "discourse-common/lib/debounce";
+import I18n from "I18n";
 
 const DEFAULT_HINT = htmlSafe(
   I18n.t("chat.create_channel.choose_category.default_hint", {

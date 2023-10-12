@@ -1,18 +1,18 @@
+import { DEBUG } from "@glimmer/env";
+import { cancel, schedule } from "@ember/runloop";
+import { registerWaiter, unregisterWaiter } from "@ember/test";
+import ItsATrap from "@discourse/itsatrap";
+import MountWidget from "discourse/components/mount-widget";
+import { topicTitleDecorators } from "discourse/components/topic-title";
+import Docking from "discourse/mixins/docking";
 import PanEvents, {
   SWIPE_DISTANCE_THRESHOLD,
   SWIPE_VELOCITY_THRESHOLD,
 } from "discourse/mixins/pan-events";
-import { cancel, schedule } from "@ember/runloop";
-import discourseLater from "discourse-common/lib/later";
-import Docking from "discourse/mixins/docking";
-import MountWidget from "discourse/components/mount-widget";
-import ItsATrap from "@discourse/itsatrap";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
-import { bind, observes } from "discourse-common/utils/decorators";
-import { topicTitleDecorators } from "discourse/components/topic-title";
 import { isTesting } from "discourse-common/config/environment";
-import { DEBUG } from "@glimmer/env";
-import { registerWaiter, unregisterWaiter } from "@ember/test";
+import discourseLater from "discourse-common/lib/later";
+import { bind, observes } from "discourse-common/utils/decorators";
 
 const SiteHeaderComponent = MountWidget.extend(
   Docking,

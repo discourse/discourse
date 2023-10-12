@@ -1,8 +1,8 @@
-import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import { buildResolver, setResolverOption } from "discourse-common/resolver";
+import { module, test } from "qunit";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 import DiscourseTemplateMap from "discourse-common/lib/discourse-template-map";
+import { buildResolver, setResolverOption } from "discourse-common/resolver";
 
 let resolver;
 

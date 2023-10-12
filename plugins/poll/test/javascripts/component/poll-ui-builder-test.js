@@ -1,7 +1,7 @@
-import { module, test } from "qunit";
 import { click, fillIn, render } from "@ember/test-helpers";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import hbs from "htmlbars-inline-precompile";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 async function setupBuilder(context) {

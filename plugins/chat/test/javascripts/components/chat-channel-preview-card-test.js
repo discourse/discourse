@@ -1,8 +1,8 @@
+import { render } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
+import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
-import { render } from "@ember/test-helpers";
-import { module, test } from "qunit";
 import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module(

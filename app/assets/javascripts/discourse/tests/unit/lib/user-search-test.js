@@ -1,8 +1,8 @@
-import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { module, test } from "qunit";
 import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import userSearch from "discourse/lib/user-search";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module("Unit | Utility | user-search", function (hooks) {
   setupTest(hooks);

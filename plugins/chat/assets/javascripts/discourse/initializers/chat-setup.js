@@ -1,11 +1,11 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import I18n from "I18n";
-import { bind } from "discourse-common/utils/decorators";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import { replaceIcon } from "discourse-common/lib/icon-library";
+import { bind } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 import { MENTION_KEYWORDS } from "discourse/plugins/chat/discourse/components/chat-message";
 import { clearChatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import ChannelHashtagType from "discourse/plugins/chat/discourse/lib/hashtag-types/channel";
-import { replaceIcon } from "discourse-common/lib/icon-library";
 import chatStyleguide from "../components/styleguide/organisms/chat";
 
 let _lastForcedRefreshAt;

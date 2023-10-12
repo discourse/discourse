@@ -1,5 +1,5 @@
-import DiscourseURL from "discourse/lib/url";
 import Mixin from "@ember/object/mixin";
+import DiscourseURL from "discourse/lib/url";
 import discourseComputed from "discourse-common/utils/decorators";
 
 export default Mixin.create({

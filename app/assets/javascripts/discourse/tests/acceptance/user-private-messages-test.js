@@ -1,6 +1,13 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import I18n from "I18n";
+import { resetCustomUserNavMessagesDropdownRows } from "discourse/controllers/user-private-messages";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import {
+  resetHighestReadCache,
+  setHighestReadCache,
+} from "discourse/lib/topic-list-tracker";
+import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   count,
@@ -9,16 +16,9 @@ import {
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
-import selectKit from "../helpers/select-kit-helper";
 import { cloneJSON } from "discourse-common/lib/object";
-import { NotificationLevels } from "discourse/lib/notification-levels";
-import {
-  resetHighestReadCache,
-  setHighestReadCache,
-} from "discourse/lib/topic-list-tracker";
-import { withPluginApi } from "discourse/lib/plugin-api";
-import { resetCustomUserNavMessagesDropdownRows } from "discourse/controllers/user-private-messages";
+import I18n from "I18n";
+import selectKit from "../helpers/select-kit-helper";
 
 acceptance(
   "User Private Messages - user with no group messages",

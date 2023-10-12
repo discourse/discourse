@@ -1,3 +1,7 @@
+import Component from "@ember/component";
+import { alias } from "@ember/object/computed";
+import { htmlSafe } from "@ember/template";
+import { escape } from "pretty-text/sanitizer";
 import {
   CREATE_SHARED_DRAFT,
   CREATE_TOPIC,
@@ -6,13 +10,9 @@ import {
   PRIVATE_MESSAGE,
   REPLY,
 } from "discourse/models/composer";
-import Component from "@ember/component";
-import I18n from "I18n";
-import { alias } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import { htmlSafe } from "@ember/template";
-import { escape } from "pretty-text/sanitizer";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 const TITLES = {
   [PRIVATE_MESSAGE]: "topic.private_message",

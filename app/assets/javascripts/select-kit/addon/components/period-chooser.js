@@ -1,6 +1,6 @@
 import { oneWay, readOnly } from "@ember/object/computed";
-import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import I18n from "I18n";
+import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["period-chooser"],

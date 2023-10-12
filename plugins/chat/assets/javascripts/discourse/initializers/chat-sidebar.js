@@ -1,16 +1,16 @@
-import { htmlSafe } from "@ember/template";
-import { withPluginApi } from "discourse/lib/plugin-api";
-import I18n from "I18n";
-import { bind } from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
+import { inject as service } from "@ember/service";
+import { dasherize } from "@ember/string";
+import { htmlSafe } from "@ember/template";
+import { decorateUsername } from "discourse/helpers/decorate-username-selector";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { avatarUrl } from "discourse-common/lib/avatar-utils";
-import { dasherize } from "@ember/string";
-import { emojiUnescape } from "discourse/lib/text";
-import { decorateUsername } from "discourse/helpers/decorate-username-selector";
-import { inject as service } from "@ember/service";
-import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import getURL from "discourse-common/lib/get-url";
+import { bind } from "discourse-common/utils/decorators";
+import I18n from "I18n";
+import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import { initSidebarState } from "discourse/plugins/chat/discourse/lib/init-sidebar-state";
 
 export default {

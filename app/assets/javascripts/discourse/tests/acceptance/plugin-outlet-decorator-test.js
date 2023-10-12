@@ -1,12 +1,12 @@
+import { visit } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
+import { test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   acceptance,
   exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import { hbs } from "ember-cli-htmlbars";
-import { test } from "qunit";
-import { visit } from "@ember/test-helpers";
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { registerTemporaryModule } from "../helpers/temporary-module-helper";
 
 const PREFIX = "discourse/plugins/some-plugin/templates/connectors";

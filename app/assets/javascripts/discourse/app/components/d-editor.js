@@ -1,45 +1,45 @@
-import { ajax } from "discourse/lib/ajax";
-import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
-import {
-  caretPosition,
-  inCodeBlock,
-  translateModKey,
-} from "discourse/lib/utilities";
-import discourseComputed, {
-  bind,
-  observes,
-  on,
-} from "discourse-common/utils/decorators";
-import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
-import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
-import { schedule, scheduleOnce } from "@ember/runloop";
 import Component from "@ember/component";
-import I18n from "I18n";
+import { action, computed } from "@ember/object";
+import { schedule, scheduleOnce } from "@ember/runloop";
+import { inject as service } from "@ember/service";
 import ItsATrap from "@discourse/itsatrap";
+import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
+import { translations } from "pretty-text/emoji/data";
+import { resolveCachedShortUrls } from "pretty-text/upload-short-url";
 import { Promise } from "rsvp";
+import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
+import { ajax } from "discourse/lib/ajax";
 import { SKIP } from "discourse/lib/autocomplete";
 import {
   linkSeenHashtagsInContext,
   setupHashtagAutocomplete,
 } from "discourse/lib/hashtag-autocomplete";
-import deprecated from "discourse-common/lib/deprecated";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
-import { getRegister } from "discourse-common/lib/get-owner";
-import { isTesting } from "discourse-common/config/environment";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
+import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { linkSeenMentions } from "discourse/lib/link-mentions";
 import { loadOneboxes } from "discourse/lib/load-oneboxes";
 import loadScript from "discourse/lib/load-script";
-import { resolveCachedShortUrls } from "pretty-text/upload-short-url";
-import { inject as service } from "@ember/service";
+import { emojiUrlFor, generateCookFunction } from "discourse/lib/text";
 import { siteDir } from "discourse/lib/text-direction";
-import { translations } from "pretty-text/emoji/data";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
-import { action, computed } from "@ember/object";
+import {
+  caretPosition,
+  inCodeBlock,
+  translateModKey,
+} from "discourse/lib/utilities";
 import TextareaTextManipulation, {
   getHead,
 } from "discourse/mixins/textarea-text-manipulation";
-import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
+import { isTesting } from "discourse-common/config/environment";
+import discourseDebounce from "discourse-common/lib/debounce";
+import deprecated from "discourse-common/lib/deprecated";
+import { getRegister } from "discourse-common/lib/get-owner";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
+import discourseComputed, {
+  bind,
+  observes,
+  on,
+} from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 function getButtonLabel(labelKey, defaultLabel) {
   // use the Font Awesome icon if the label matches the default

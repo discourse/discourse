@@ -1,6 +1,6 @@
 import Mixin from "@ember/object/mixin";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { cancel } from "@ember/runloop";
+import discourseDebounce from "discourse-common/lib/debounce";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
 

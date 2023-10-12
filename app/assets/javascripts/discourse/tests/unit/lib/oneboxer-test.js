@@ -1,8 +1,8 @@
-import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
-import { failedCache, localCache } from "pretty-text/oneboxer-cache";
-import { ajax } from "discourse/lib/ajax";
 import { load } from "pretty-text/oneboxer";
+import { failedCache, localCache } from "pretty-text/oneboxer-cache";
+import { module, test } from "qunit";
+import { ajax } from "discourse/lib/ajax";
 
 function loadOnebox(element) {
   return load({

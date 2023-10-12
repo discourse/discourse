@@ -1,9 +1,9 @@
-import { module, test } from "qunit";
-import RestAdapter from "discourse/adapters/rest";
-import RestModel from "discourse/models/rest";
-import sinon from "sinon";
 import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import sinon from "sinon";
+import RestAdapter from "discourse/adapters/rest";
+import RestModel from "discourse/models/rest";
 
 module("Unit | Model | rest-model", function (hooks) {
   setupTest(hooks);

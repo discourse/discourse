@@ -1,11 +1,11 @@
-import { cloak, uncloak } from "discourse/widgets/post-stream";
 import { schedule, scheduleOnce } from "@ember/runloop";
-import DiscourseURL from "discourse/lib/url";
-import MountWidget from "discourse/components/mount-widget";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { isWorkaroundActive } from "discourse/lib/safari-hacks";
-import offsetCalculator from "discourse/lib/offset-calculator";
 import { inject as service } from "@ember/service";
+import MountWidget from "discourse/components/mount-widget";
+import offsetCalculator from "discourse/lib/offset-calculator";
+import { isWorkaroundActive } from "discourse/lib/safari-hacks";
+import DiscourseURL from "discourse/lib/url";
+import { cloak, uncloak } from "discourse/widgets/post-stream";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { bind } from "discourse-common/utils/decorators";
 import domUtils from "discourse-common/utils/dom-utils";
 

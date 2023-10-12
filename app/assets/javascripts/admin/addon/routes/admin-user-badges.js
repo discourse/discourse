@@ -1,6 +1,6 @@
 import Badge from "discourse/models/badge";
-import DiscourseRoute from "discourse/routes/discourse";
 import UserBadge from "discourse/models/user-badge";
+import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminUserBadgesRoute extends DiscourseRoute {
   model() {

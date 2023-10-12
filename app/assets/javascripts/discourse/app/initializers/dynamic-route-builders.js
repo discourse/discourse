@@ -1,8 +1,7 @@
 import Site from "discourse/models/site";
-import { buildTagRoute } from "discourse/routes/tag-show";
 import buildCategoryRoute from "discourse/routes/build-category-route";
 import buildTopicRoute from "discourse/routes/build-topic-route";
-import { dasherize } from "@ember/string";
+import { buildTagRoute } from "discourse/routes/tag-show";
 
 export default {
   after: "inject-discourse-objects",

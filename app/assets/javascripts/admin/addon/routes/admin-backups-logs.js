@@ -1,6 +1,6 @@
 import EmberObject from "@ember/object";
-import PreloadStore from "discourse/lib/preload-store";
 import Route from "@ember/routing/route";
+import PreloadStore from "discourse/lib/preload-store";
 
 export default class AdminBackupsLogsRoute extends Route {
   // since the logs are pushed via the message bus

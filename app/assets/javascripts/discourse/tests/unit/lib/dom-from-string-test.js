@@ -1,6 +1,6 @@
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import domFromString from "discourse-common/lib/dom-from-string";
-import { setupTest } from "ember-qunit";
 
 module("Unit | Utility | domFromString", function (hooks) {
   setupTest(hooks);

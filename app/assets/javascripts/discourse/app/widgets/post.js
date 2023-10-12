@@ -1,28 +1,28 @@
-import { applyDecorators, createWidget } from "discourse/widgets/widget";
-import { formatUsername } from "discourse/lib/utilities";
-import { avatarUrl, translateSize } from "discourse-common/lib/avatar-utils";
-import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
-import DecoratorHelper from "discourse/widgets/decorator-helper";
-import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
-import PostCooked from "discourse/widgets/post-cooked";
+import { getOwner } from "@ember/application";
 import { Promise } from "rsvp";
-import RawHtml from "discourse/widgets/raw-html";
-import { dateNode } from "discourse/helpers/node";
 import { h } from "virtual-dom";
-import hbs from "discourse/widgets/hbs-compiler";
-import { iconNode } from "discourse-common/lib/icon-library";
-import { postTransformCallbacks } from "discourse/widgets/post-stream";
+import ShareTopicModal from "discourse/components/modal/share-topic";
+import { dateNode } from "discourse/helpers/node";
+import autoGroupFlairForUser from "discourse/lib/avatar-flair";
+import { relativeAgeMediumSpan } from "discourse/lib/formatter";
+import { nativeShare } from "discourse/lib/pwa-utils";
 import {
   prioritizeNameFallback,
   prioritizeNameInUx,
 } from "discourse/lib/settings";
-import { relativeAgeMediumSpan } from "discourse/lib/formatter";
 import { transformBasicPost } from "discourse/lib/transform-post";
-import autoGroupFlairForUser from "discourse/lib/avatar-flair";
-import { nativeShare } from "discourse/lib/pwa-utils";
-import ShareTopicModal from "discourse/components/modal/share-topic";
-import { getOwner } from "@ember/application";
+import DiscourseURL from "discourse/lib/url";
+import { formatUsername } from "discourse/lib/utilities";
+import DecoratorHelper from "discourse/widgets/decorator-helper";
+import hbs from "discourse/widgets/hbs-compiler";
+import PostCooked from "discourse/widgets/post-cooked";
+import { postTransformCallbacks } from "discourse/widgets/post-stream";
+import RawHtml from "discourse/widgets/raw-html";
+import { applyDecorators, createWidget } from "discourse/widgets/widget";
+import { avatarUrl, translateSize } from "discourse-common/lib/avatar-utils";
+import getURL, { getURLWithCDN } from "discourse-common/lib/get-url";
+import { iconNode } from "discourse-common/lib/icon-library";
+import I18n from "I18n";
 
 function transformWithCallbacks(post) {
   let transformed = transformBasicPost(post);

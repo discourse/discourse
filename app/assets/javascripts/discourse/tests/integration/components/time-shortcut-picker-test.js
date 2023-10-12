@@ -1,6 +1,7 @@
+import { click, render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { click, render } from "@ember/test-helpers";
 import {
   exists,
   fakeTime,
@@ -8,7 +9,6 @@ import {
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import I18n from "I18n";
-import { hbs } from "ember-cli-htmlbars";
 
 module("Integration | Component | time-shortcut-picker", function (hooks) {
   setupRenderingTest(hooks);

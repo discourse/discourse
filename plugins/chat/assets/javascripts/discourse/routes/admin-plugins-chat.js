@@ -1,7 +1,7 @@
-import DiscourseRoute from "discourse/routes/discourse";
 import EmberObject from "@ember/object";
-import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import { ajax } from "discourse/lib/ajax";
+import DiscourseRoute from "discourse/routes/discourse";
+import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
 export default class AdminPluginsChatRoute extends DiscourseRoute {
   model() {

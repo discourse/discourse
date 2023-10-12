@@ -1,8 +1,8 @@
-import { on } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import { on } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   @on("init")

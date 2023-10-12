@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
-import { mergeTopic, movePosts } from "discourse/models/topic";
-import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
+import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
+import DiscourseURL from "discourse/lib/url";
+import { mergeTopic, movePosts } from "discourse/models/topic";
+import I18n from "I18n";
 
 export default class MoveToTopic extends Component {
   @service currentUser;

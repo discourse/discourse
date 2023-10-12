@@ -1,6 +1,6 @@
-import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
 import { parseBBCodeTag } from "pretty-text/engines/discourse-markdown/bbcode-block";
+import { module, test } from "qunit";
 
 module("Unit | Utility | parseBBCodeTag", function (hooks) {
   setupTest(hooks);

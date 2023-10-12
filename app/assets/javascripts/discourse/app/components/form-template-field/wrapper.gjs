@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
-import Yaml from "js-yaml";
 import { tracked } from "@glimmer/tracking";
-import FormTemplate from "discourse/models/form-template";
 import { action, get } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import Yaml from "js-yaml";
+import FormTemplate from "discourse/models/form-template";
 import CheckboxField from "./checkbox";
-import InputField from "./input";
 import DropdownField from "./dropdown";
+import InputField from "./input";
 import MultiSelectField from "./multi-select";
 import TextareaField from "./textarea";
 import UploadField from "./upload";

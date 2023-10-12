@@ -1,10 +1,10 @@
 import Component from "@ember/component";
+import { action, computed } from "@ember/object";
+import { not } from "@ember/object/computed";
+import { isPresent } from "@ember/utils";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import UtilsMixin from "select-kit/mixins/utils";
-import { action, computed } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
-import { isPresent } from "@ember/utils";
-import { not } from "@ember/object/computed";
 
 export default Component.extend(UtilsMixin, {
   classNames: ["select-kit-filter"],

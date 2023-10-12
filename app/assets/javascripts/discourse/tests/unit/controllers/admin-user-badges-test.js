@@ -1,9 +1,9 @@
-import { module, test } from "qunit";
+import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import sinon from "sinon";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
-import { settled } from "@ember/test-helpers";
-import sinon from "sinon";
 
 module("Unit | Controller | admin-user-badges", function (hooks) {
   setupTest(hooks);

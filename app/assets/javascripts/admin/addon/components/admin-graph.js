@@ -1,5 +1,5 @@
-import { tagName } from "@ember-decorators/component";
 import Component from "@ember/component";
+import { tagName } from "@ember-decorators/component";
 import loadScript from "discourse/lib/load-script";
 
 @tagName("canvas")

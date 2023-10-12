@@ -1,3 +1,8 @@
+import { getOwner } from "@ember/application";
+import EmberObject from "@ember/object";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import sinon from "sinon";
 import {
   fmt,
   htmlSafe,
@@ -7,13 +12,8 @@ import {
   setting,
   url,
 } from "discourse/lib/computed";
-import EmberObject from "@ember/object";
-import I18n from "I18n";
 import { setPrefix } from "discourse-common/lib/get-url";
-import sinon from "sinon";
-import { module, test } from "qunit";
-import { setupTest } from "ember-qunit";
-import { getOwner } from "@ember/application";
+import I18n from "I18n";
 
 module("Unit | Utility | computed", function (hooks) {
   setupTest(hooks);

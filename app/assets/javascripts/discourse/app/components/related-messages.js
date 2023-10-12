@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action, computed } from "@ember/object";
-import getURL from "discourse-common/lib/get-url";
 import { inject as service } from "@ember/service";
+import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 
 export default class RelatedMessages extends Component {

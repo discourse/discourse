@@ -1,16 +1,16 @@
-import { getAndClearUnhandledThemeErrors } from "discourse/app";
-import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
-import { bind } from "discourse-common/utils/decorators";
+import { getOwner } from "@ember/application";
+import Service, { inject as service } from "@ember/service";
+import Ember from "ember";
 import { escape } from "pretty-text/sanitizer";
+import { getAndClearUnhandledThemeErrors } from "discourse/app";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import identifySource, {
   consolePrefix,
   getThemeInfo,
 } from "discourse/lib/source-identifier";
-import Ember from "ember";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import Service, { inject as service } from "@ember/service";
-import { getOwner } from "@ember/application";
+import getURL from "discourse-common/lib/get-url";
+import { bind } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 const showingErrors = new Set();
 

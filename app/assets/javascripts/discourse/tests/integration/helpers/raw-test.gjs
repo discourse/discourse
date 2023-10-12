@@ -1,16 +1,16 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { getOwner } from "@ember/application";
 import { render, settled } from "@ember/test-helpers";
+import { module, test } from "qunit";
+import RenderGlimmerContainer from "discourse/components/render-glimmer-container";
+import raw from "discourse/helpers/raw";
+import rawRenderGlimmer from "discourse/lib/raw-render-glimmer";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   addRawTemplate,
   removeRawTemplate,
 } from "discourse-common/lib/raw-templates";
-import raw from "discourse/helpers/raw";
-import rawRenderGlimmer from "discourse/lib/raw-render-glimmer";
-import RenderGlimmerContainer from "discourse/components/render-glimmer-container";
-import { tracked } from "@glimmer/tracking";
-import { getOwner } from "@ember/application";
-import Component from "@glimmer/component";
 
 // We don't have any way to actually compile raw hbs inside tests, so this is only testing
 // the helper itself, not the actual rendering of templates.

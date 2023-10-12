@@ -1,6 +1,6 @@
-import I18n from "I18n";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { htmlSafe } from "@ember/template";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import I18n from "I18n";
 
 function extractErrorInfo(error, defaultMessage) {
   if (error instanceof Error) {

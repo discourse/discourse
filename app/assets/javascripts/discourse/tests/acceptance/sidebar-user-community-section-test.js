@@ -1,11 +1,13 @@
-import I18n from "I18n";
-import { test } from "qunit";
 import {
   click,
   currentRouteName,
   currentURL,
   visit,
 } from "@ember/test-helpers";
+import { test } from "qunit";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
   count,
@@ -15,10 +17,8 @@ import {
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import topicFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
-import { withPluginApi } from "discourse/lib/plugin-api";
-import { NotificationLevels } from "discourse/lib/notification-levels";
+import I18n from "I18n";
 
 acceptance("Sidebar - Logged on user - Community Section", function (needs) {
   needs.user({

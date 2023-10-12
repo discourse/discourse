@@ -1,8 +1,8 @@
-import { module, test } from "qunit";
 import { getOwner } from "@ember/application";
-import pretender from "discourse/tests/helpers/create-pretender";
 import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import pretender from "discourse/tests/helpers/create-pretender";
 
 function emojisReponse() {
   return { favorites: [{ name: "sad" }] };

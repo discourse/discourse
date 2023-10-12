@@ -1,7 +1,7 @@
-import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
-import { capabilities } from "discourse/services/capabilities";
 import { next, schedule } from "@ember/runloop";
+import { capabilities } from "discourse/services/capabilities";
 import discourseLater from "discourse-common/lib/later";
+import isZoomed from "discourse/plugins/chat/discourse/lib/zoom-check";
 
 // since -webkit-overflow-scrolling: touch can't be used anymore to disable momentum scrolling
 // we use different hacks to work around this

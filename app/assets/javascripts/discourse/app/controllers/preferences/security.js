@@ -1,15 +1,15 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { gt } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
+import AuthTokenModal from "discourse/components/modal/auth-token";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import logout from "discourse/lib/logout";
 import { userPath } from "discourse/lib/url";
 import CanCheckEmails from "discourse/mixins/can-check-emails";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
-import { inject as service } from "@ember/service";
-import AuthTokenModal from "discourse/components/modal/auth-token";
 
 // Number of tokens shown by default.
 const DEFAULT_AUTH_TOKENS_COUNT = 2;

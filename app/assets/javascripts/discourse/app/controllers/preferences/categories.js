@@ -1,7 +1,7 @@
 import Controller from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
 import { or } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   @discourseComputed("siteSettings.mute_all_categories_by_default")

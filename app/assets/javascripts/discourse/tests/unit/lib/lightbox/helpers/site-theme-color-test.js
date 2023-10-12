@@ -1,10 +1,9 @@
+import { module, test } from "qunit";
+import sinon from "sinon";
 import {
   getSiteThemeColor,
   setSiteThemeColor,
 } from "discourse/lib/lightbox/helpers";
-import { module, test } from "qunit";
-
-import sinon from "sinon";
 
 module(
   "Unit | lib | Experimental Lightbox | Helpers | getSiteThemeColor()",

@@ -1,7 +1,7 @@
-import { module, test } from "qunit";
 import { getOwner } from "@ember/application";
-import { ORIGINS } from "discourse/plugins/chat/discourse/services/chat-channel-info-route-origin-manager";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import { ORIGINS } from "discourse/plugins/chat/discourse/services/chat-channel-info-route-origin-manager";
 
 module(
   "Discourse Chat | Unit | Service | chat-channel-info-route-origin-manager",

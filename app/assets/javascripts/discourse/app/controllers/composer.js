@@ -1,14 +1,12 @@
+import {
+  addPopupMenuOption,
+  clearPopupMenuOptions,
+} from "discourse/lib/composer/custom-popup-menu-options";
 import Composer, {
   addComposerSaveErrorCallback,
   clearComposerSaveErrorCallback,
   toggleCheckDraftPopup,
 } from "discourse/services/composer";
-
-import {
-  addPopupMenuOption,
-  clearPopupMenuOptions,
-} from "discourse/lib/composer/custom-popup-menu-options";
-
 import deprecated from "discourse-common/lib/deprecated";
 
 // TODO add deprecation

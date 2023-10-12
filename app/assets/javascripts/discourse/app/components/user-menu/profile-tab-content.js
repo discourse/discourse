@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
-import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
-import DoNotDisturb from "discourse/lib/do-not-disturb";
+import { inject as service } from "@ember/service";
 import DoNotDisturbModal from "discourse/components/modal/do-not-disturb";
 import UserStatusModal from "discourse/components/modal/user-status";
+import DoNotDisturb from "discourse/lib/do-not-disturb";
 
 const _extraItems = [];
 

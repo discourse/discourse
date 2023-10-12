@@ -1,5 +1,5 @@
-import { withPluginApi } from "discourse/lib/plugin-api";
 import { applyLocalDates } from "discourse/lib/local-dates";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 export default {
   name: "chat-plugin-decorators",

@@ -1,17 +1,17 @@
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { getOwner } from "@ember/application";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { click, settled, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { getOwner } from "@ember/application";
-import Component from "@glimmer/component";
 import DModal, {
   CLOSE_INITIATED_BY_BUTTON,
   CLOSE_INITIATED_BY_CLICK_OUTSIDE,
   CLOSE_INITIATED_BY_ESC,
   CLOSE_INITIATED_BY_MODAL_SHOW,
 } from "discourse/components/d-modal";
-import { action } from "@ember/object";
-import { on } from "@ember/modifier";
-import { tracked } from "@glimmer/tracking";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 
 class MyModalClass extends Component {

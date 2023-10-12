@@ -1,7 +1,7 @@
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
 import { fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Chat | Mentions", function (needs) {
   const channelId = 1;

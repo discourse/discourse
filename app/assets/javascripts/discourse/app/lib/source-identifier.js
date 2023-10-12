@@ -1,6 +1,6 @@
-import getURL from "discourse-common/lib/get-url";
 import PreloadStore from "discourse/lib/preload-store";
 import { isDevelopment } from "discourse-common/config/environment";
+import getURL from "discourse-common/lib/get-url";
 
 export default function identifySource(error) {
   if (!error || !error.stack) {

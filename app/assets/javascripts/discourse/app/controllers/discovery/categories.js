@@ -2,7 +2,9 @@ import Controller from "@ember/controller";
 import { inject as service } from "@ember/service";
 import { reads } from "@ember/object/computed";
 import { action } from "@ember/object";
+import { reads } from "@ember/object/computed";
 import { dasherize } from "@ember/string";
+import DiscoveryController from "discourse/controllers/discovery";
 import discourseComputed from "discourse-common/utils/decorators";
 
 const subcategoryStyleComponentNames = {

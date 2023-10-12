@@ -1,8 +1,8 @@
-import Modifier from "ember-modifier";
 import { registerDestructor } from "@ember/destroyable";
-import { bind } from "discourse-common/utils/decorators";
 import { cancel, throttle } from "@ember/runloop";
+import Modifier from "ember-modifier";
 import discourseLater from "discourse-common/lib/later";
+import { bind } from "discourse-common/utils/decorators";
 
 const UP = "up";
 const DOWN = "down";

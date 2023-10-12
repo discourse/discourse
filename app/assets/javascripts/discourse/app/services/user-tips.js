@@ -1,9 +1,9 @@
-import Service, { inject as service } from "@ember/service";
-import { isTesting } from "discourse-common/config/environment";
-import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import { next } from "@ember/runloop";
-import Site from "discourse/models/site";
 import { tracked } from "@glimmer/tracking";
+import { next } from "@ember/runloop";
+import Service, { inject as service } from "@ember/service";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import Site from "discourse/models/site";
+import { isTesting } from "discourse-common/config/environment";
 
 @disableImplicitInjections
 export default class UserTips extends Service {

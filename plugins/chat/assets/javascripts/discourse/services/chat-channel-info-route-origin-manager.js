@@ -1,6 +1,6 @@
-import KeyValueStore from "discourse/lib/key-value-store";
 import Service from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import KeyValueStore from "discourse/lib/key-value-store";
 
 export const BACK_KEY = "back";
 export const INFO_ROUTE_NAMESPACE = "discourse_chat_info_route";

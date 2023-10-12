@@ -1,5 +1,5 @@
-import isDescriptor from "discourse-common/utils/is-descriptor";
 import deprecated from "discourse-common/lib/deprecated";
+import isDescriptor from "discourse-common/utils/is-descriptor";
 
 function handleDescriptor(target, property, desc, fn, params = []) {
   return {

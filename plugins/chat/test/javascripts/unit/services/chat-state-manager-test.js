@@ -1,8 +1,8 @@
-import { module, test } from "qunit";
-import { setupTest } from "ember-qunit";
-import Site from "discourse/models/site";
-import sinon from "sinon";
 import { getOwner } from "@ember/application";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import sinon from "sinon";
+import Site from "discourse/models/site";
 import {
   addChatDrawerStateCallback,
   resetChatDrawerStateCallbacks,

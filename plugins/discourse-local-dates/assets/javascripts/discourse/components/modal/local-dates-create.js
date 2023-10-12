@@ -1,16 +1,16 @@
+import Component from "@ember/component";
+import EmberObject, { action } from "@ember/object";
+import { notEmpty } from "@ember/object/computed";
+import { schedule } from "@ember/runloop";
+import { propertyNotEqual } from "discourse/lib/computed";
+import { applyLocalDates } from "discourse/lib/local-dates";
+import { cook } from "discourse/lib/text";
+import { INPUT_DELAY } from "discourse-common/config/environment";
 import computed, {
   debounce,
   observes,
 } from "discourse-common/utils/decorators";
-import Component from "@ember/component";
-import EmberObject, { action } from "@ember/object";
 import I18n from "I18n";
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import { cook } from "discourse/lib/text";
-import { notEmpty } from "@ember/object/computed";
-import { propertyNotEqual } from "discourse/lib/computed";
-import { schedule } from "@ember/runloop";
-import { applyLocalDates } from "discourse/lib/local-dates";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 
 export default Component.extend({

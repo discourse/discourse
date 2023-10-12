@@ -1,31 +1,31 @@
 import Component from "@glimmer/component";
-import { NotificationLevels } from "discourse/lib/notification-levels";
-import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
 import { cached, tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { bind } from "discourse-common/utils/decorators";
-import { inject as service } from "@ember/service";
-import { cancel, next } from "@ember/runloop";
-import { resetIdle } from "discourse/lib/desktop-notifications";
-import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
 import { getOwner } from "@ember/application";
+import { action } from "@ember/object";
+import { cancel, next } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { resetIdle } from "discourse/lib/desktop-notifications";
+import { NotificationLevels } from "discourse/lib/notification-levels";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { bind } from "discourse-common/utils/decorators";
 import {
   FUTURE,
   PAST,
   READ_INTERVAL_MS,
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
-import discourseDebounce from "discourse-common/lib/debounce";
 import {
   bodyScrollFix,
   stackingContextFix,
 } from "discourse/plugins/chat/discourse/lib/chat-ios-hacks";
+import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
 import {
   scrollListToBottom,
   scrollListToMessage,
   scrollListToTop,
 } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
+import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
 
 export default class ChatThread extends Component {
   @service appEvents;

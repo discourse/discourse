@@ -10,8 +10,8 @@ import {
   register as registerPushNotifications,
   unsubscribe as unsubscribePushNotifications,
 } from "discourse/lib/push-notifications";
-import { isTesting } from "discourse-common/config/environment";
 import Notification from "discourse/models/notification";
+import { isTesting } from "discourse-common/config/environment";
 import { bind } from "discourse-common/utils/decorators";
 
 export default {

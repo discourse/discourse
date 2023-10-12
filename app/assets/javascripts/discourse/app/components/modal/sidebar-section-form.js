@@ -1,16 +1,16 @@
-import Component from "@ember/component";
-import { ajax } from "discourse/lib/ajax";
-import { isEmpty } from "@ember/utils";
-import { extractError } from "discourse/lib/ajax-error";
-import { inject as service } from "@ember/service";
-import I18n from "I18n";
-import { sanitize } from "discourse/lib/text";
 import { cached, tracked } from "@glimmer/tracking";
 import { A } from "@ember/array";
-import { SIDEBAR_SECTION, SIDEBAR_URL } from "discourse/lib/constants";
-import { bind } from "discourse-common/utils/decorators";
+import Component from "@ember/component";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
+import { ajax } from "discourse/lib/ajax";
+import { extractError } from "discourse/lib/ajax-error";
+import { SIDEBAR_SECTION, SIDEBAR_URL } from "discourse/lib/constants";
 import RouteInfoHelper from "discourse/lib/sidebar/route-info-helper";
+import { sanitize } from "discourse/lib/text";
+import { bind } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 const FULL_RELOAD_LINKS_REGEX = [
   /^\/my\/[a-z_\-\/]+$/,

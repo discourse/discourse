@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { inject as service } from "@ember/service";
 import { MODIFIER_REGEXP } from "discourse/components/search-menu";
-import AssistantItem from "./assistant-item";
-import Assistant from "./assistant";
 import I18n from "I18n";
+import Assistant from "./assistant";
+import AssistantItem from "./assistant-item";
 
 const SEARCH_CONTEXT_TYPE_COMPONENTS = {
   topic: AssistantItem,

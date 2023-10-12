@@ -1,7 +1,7 @@
-import { ajax } from "discourse/lib/ajax";
 import { tracked } from "@glimmer/tracking";
-import { bind } from "discourse-common/utils/decorators";
 import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import { bind } from "discourse-common/utils/decorators";
 
 /**
  * Handles a paginated API response.

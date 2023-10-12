@@ -1,15 +1,15 @@
+import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 import {
   nextTopicUrl,
   previousTopicUrl,
   setTopicId,
 } from "discourse/lib/topic-list-tracker";
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
-import { click, visit } from "@ember/test-helpers";
-import topicFixtures from "discourse/tests/fixtures/topic";
 import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
+import topicFixtures from "discourse/tests/fixtures/topic";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
-import { NotificationLevels } from "discourse/lib/notification-levels";
 
 acceptance("Topic list tracking", function (needs) {
   let notificationLevel;

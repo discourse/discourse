@@ -1,6 +1,6 @@
 import DesktopNotificationConfig from "discourse/components/desktop-notification-config";
-import discourseComputed from "discourse-common/utils/decorators";
 import { keyValueStore as pushNotificationKeyValueStore } from "discourse/lib/push-notifications";
+import discourseComputed from "discourse-common/utils/decorators";
 
 const userDismissedPromptKey = "dismissed-prompt";
 

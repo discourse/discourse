@@ -1,5 +1,5 @@
-import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
 import { isLTR, isRTL, setTextDirections } from "discourse/lib/text-direction";
 
 function quoteHtml() {

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import { isEmpty } from "@ember/utils";
 import { inject as service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 
 export default class ChatChannelPreviewCard extends Component {
   @service chat;

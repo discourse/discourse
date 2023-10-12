@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import renderTag from "discourse/lib/render-tag";
+import I18n from "I18n";
 
 let callbacks = null;
 let priorities = null;

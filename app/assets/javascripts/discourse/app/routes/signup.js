@@ -1,7 +1,7 @@
-import DiscourseRoute from "discourse/routes/discourse";
+import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { inject as service } from "@ember/service";
-import { action } from "@ember/object";
+import DiscourseRoute from "discourse/routes/discourse";
 
 export default class SignupRoute extends DiscourseRoute {
   @service router;

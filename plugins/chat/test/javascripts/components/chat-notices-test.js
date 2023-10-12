@@ -1,11 +1,11 @@
-import I18n from "I18n";
-import pretender from "discourse/tests/helpers/create-pretender";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import hbs from "htmlbars-inline-precompile";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
-import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
-import { module, test } from "qunit";
 import { click, render } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender from "discourse/tests/helpers/create-pretender";
+import { query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "I18n";
+import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 module("Discourse Chat | Component | chat-notice", function (hooks) {
   setupRenderingTest(hooks);

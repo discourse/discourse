@@ -1,12 +1,10 @@
-import { test } from "qunit";
-
 import { click, visit } from "@ember/test-helpers";
-
+import { test } from "qunit";
+import Site from "discourse/models/site";
 import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import Site from "discourse/models/site";
 import I18n from "I18n";
 
 acceptance("User Preferences - Navigation Menu", function (needs) {

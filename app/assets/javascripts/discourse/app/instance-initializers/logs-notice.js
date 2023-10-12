@@ -1,5 +1,5 @@
-import LogsNotice from "discourse/services/logs-notice";
 import Singleton from "discourse/mixins/singleton";
+import LogsNotice from "discourse/services/logs-notice";
 let initializedOnce = false;
 
 export default {

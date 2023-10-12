@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
-import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
-import I18n from "I18n";
-import { ajax } from "discourse/lib/ajax";
+import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
+import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
+import I18n from "I18n";
 
 const THEME_FIELD_VARIABLE_TYPE_IDS = [2, 3, 4];
 const SCSS_VARIABLE_NAMES = [

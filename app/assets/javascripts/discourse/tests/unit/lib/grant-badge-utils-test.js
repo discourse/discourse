@@ -1,9 +1,9 @@
 import { module, test } from "qunit";
-import Badge from "discourse/models/badge";
 import {
   grantableBadges,
   isBadgeGrantable,
 } from "discourse/lib/grant-badge-utils";
+import Badge from "discourse/models/badge";
 module("Unit | Utility | Grant Badge", function (hooks) {
   hooks.beforeEach(() => {
     const firstBadge = Badge.create({

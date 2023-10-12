@@ -1,9 +1,9 @@
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
-import getURL from "discourse-common/lib/get-url";
-import { prioritizeNameInUx } from "discourse/lib/settings";
 import { propertyEqual } from "discourse/lib/computed";
+import { prioritizeNameInUx } from "discourse/lib/settings";
 import { userPath } from "discourse/lib/url";
+import getURL from "discourse-common/lib/get-url";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
 
 export default Component.extend({

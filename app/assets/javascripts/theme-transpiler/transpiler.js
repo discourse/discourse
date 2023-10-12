@@ -16,19 +16,18 @@ globalThis.console = {
   },
 };
 
+import { transform as babelTransform } from "@babel/standalone";
 import HTMLBarsInlinePrecompile from "babel-plugin-ember-template-compilation";
+import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
 import colocatedBabelPlugin from "ember-cli-htmlbars/lib/colocated-babel-plugin";
 import { precompile } from "ember-source/dist/ember-template-compiler";
-import Handlebars from "handlebars";
-import { transform as babelTransform } from "@babel/standalone";
-import { minify as terserMinify } from "terser";
-import RawHandlebars from "discourse-common/addon/lib/raw-handlebars";
-import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
 import EmberThisFallback from "ember-this-fallback";
-
+import Handlebars from "handlebars";
 // A sub-dependency of content-tag (getrandom) needs `getRandomValues`
 // so we polyfill it
 import getRandomValues from "polyfill-crypto.getrandomvalues";
+import { minify as terserMinify } from "terser";
+import RawHandlebars from "discourse-common/addon/lib/raw-handlebars";
 globalThis.crypto = { getRandomValues };
 
 import { Preprocessor } from "content-tag";

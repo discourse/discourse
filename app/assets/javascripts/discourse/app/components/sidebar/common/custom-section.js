@@ -1,11 +1,10 @@
-import { getOwner } from "@ember/application";
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { getOwner } from "@ember/application";
 import { inject as service } from "@ember/service";
-
+import CommonCommunitySection from "discourse/lib/sidebar/common/community-section/section";
 import Section from "discourse/lib/sidebar/section";
 import AdminCommunitySection from "discourse/lib/sidebar/user/community-section/admin-section";
-import CommonCommunitySection from "discourse/lib/sidebar/common/community-section/section";
 
 export default class SidebarCustomSection extends Component {
   @service currentUser;

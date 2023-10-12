@@ -1,8 +1,13 @@
 import Controller, { inject as controller } from "@ember/controller";
-import discourseComputed, {
-  bind,
-  observes,
-} from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
+import { gt, or } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
+import { Promise } from "rsvp";
+import TopicBulkActions from "discourse/components/modal/topic-bulk-actions";
+import { ajax } from "discourse/lib/ajax";
+import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
+import { setTransient } from "discourse/lib/page-tracker";
 import {
   getSearchKey,
   isValidSearchTerm,
@@ -11,21 +16,16 @@ import {
   translateResults,
   updateRecentSearches,
 } from "discourse/lib/search";
+import userSearch from "discourse/lib/user-search";
+import { escapeExpression } from "discourse/lib/utilities";
+import { scrollTop } from "discourse/mixins/scroll-top";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
+import discourseComputed, {
+  bind,
+  observes,
+} from "discourse-common/utils/decorators";
 import I18n from "I18n";
-import { ajax } from "discourse/lib/ajax";
-import { escapeExpression } from "discourse/lib/utilities";
-import { isEmpty } from "@ember/utils";
-import { action } from "@ember/object";
-import { gt, or } from "@ember/object/computed";
-import { scrollTop } from "discourse/mixins/scroll-top";
-import { setTransient } from "discourse/lib/page-tracker";
-import { Promise } from "rsvp";
-import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
-import userSearch from "discourse/lib/user-search";
-import { inject as service } from "@ember/service";
-import TopicBulkActions from "discourse/components/modal/topic-bulk-actions";
 
 const SortOrders = [
   { name: I18n.t("search.relevance"), id: 0 },

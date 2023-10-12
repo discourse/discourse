@@ -1,13 +1,13 @@
+import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
 import { alias, and, equal, readOnly } from "@ember/object/computed";
-import Component from "@ember/component";
-import Group from "discourse/models/group";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { emailValid } from "discourse/lib/utilities";
-import { getNativeContact } from "discourse/lib/pwa-utils";
-import { i18n } from "discourse/lib/computed";
 import { isEmpty } from "@ember/utils";
+import { i18n } from "discourse/lib/computed";
+import { getNativeContact } from "discourse/lib/pwa-utils";
+import { emailValid } from "discourse/lib/utilities";
+import Group from "discourse/models/group";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 export default Component.extend({
   tagName: null,

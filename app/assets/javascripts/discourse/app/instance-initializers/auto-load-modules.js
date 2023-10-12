@@ -1,11 +1,11 @@
+import { setOwner } from "@ember/application";
+import Handlebars from "handlebars";
 import {
   createHelperContext,
   registerHelpers,
 } from "discourse-common/lib/helpers";
-import Handlebars from "handlebars";
 import RawHandlebars from "discourse-common/lib/raw-handlebars";
 import { registerRawHelpers } from "discourse-common/lib/raw-handlebars-helpers";
-import { setOwner } from "@ember/application";
 
 export function autoLoadModules(owner, registry) {
   Object.keys(requirejs.entries).forEach((entry) => {

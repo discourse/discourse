@@ -1,15 +1,15 @@
-import getURL, { withoutPrefix } from "discourse-common/lib/get-url";
-import { next, schedule } from "@ember/runloop";
-import Category from "discourse/models/category";
+import { setOwner } from "@ember/application";
 import EmberObject from "@ember/object";
+import { next, schedule } from "@ember/runloop";
+import { isEmpty } from "@ember/utils";
 import LockOn from "discourse/lib/lock-on";
+import offsetCalculator from "discourse/lib/offset-calculator";
+import { defaultHomepage } from "discourse/lib/utilities";
+import Category from "discourse/models/category";
 import Session from "discourse/models/session";
 import User from "discourse/models/user";
-import { defaultHomepage } from "discourse/lib/utilities";
-import { isEmpty } from "@ember/utils";
-import offsetCalculator from "discourse/lib/offset-calculator";
-import { setOwner } from "@ember/application";
 import { isTesting } from "discourse-common/config/environment";
+import getURL, { withoutPrefix } from "discourse-common/lib/get-url";
 
 const rewrites = [];
 export const TOPIC_URL_REGEXP = /\/t\/([^\/]*[^\d\/][^\/]*)\/(\d+)\/?(\d+)?/;

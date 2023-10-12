@@ -1,9 +1,9 @@
-import { classNames } from "@ember-decorators/component";
-import { inject as service } from "@ember/service";
-import { alias, equal } from "@ember/object/computed";
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
 import { action } from "@ember/object";
+import { alias, equal } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
+import { classNames } from "@ember-decorators/component";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
 
 @classNames("watched-word")

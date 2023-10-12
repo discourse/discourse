@@ -1,13 +1,13 @@
-import Modifier from "ember-modifier";
-import { inject as service } from "@ember/service";
 import { registerDestructor } from "@ember/destroyable";
-import { bind } from "discourse-common/utils/decorators";
+import { schedule } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import Modifier from "ember-modifier";
 import {
   addWidgetCleanCallback,
   removeWidgetCleanCallback,
 } from "discourse/components/mount-widget";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import { schedule } from "@ember/runloop";
+import { bind } from "discourse-common/utils/decorators";
 
 const STICKY_CLASS = "sticky-avatar";
 const TOPIC_POST_SELECTOR = ".post-stream .topic-post";

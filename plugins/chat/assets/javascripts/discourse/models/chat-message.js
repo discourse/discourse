@@ -1,13 +1,13 @@
-import User from "discourse/models/user";
 import { cached, tracked } from "@glimmer/tracking";
 import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
-import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
-import Bookmark from "discourse/models/bookmark";
-import I18n from "I18n";
 import { generateCookFunction, parseMentions } from "discourse/lib/text";
-import transformAutolinks from "discourse/plugins/chat/discourse/lib/transform-auto-links";
+import Bookmark from "discourse/models/bookmark";
+import User from "discourse/models/user";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import discourseLater from "discourse-common/lib/later";
+import I18n from "I18n";
+import transformAutolinks from "discourse/plugins/chat/discourse/lib/transform-auto-links";
+import ChatMessageReaction from "discourse/plugins/chat/discourse/models/chat-message-reaction";
 
 export default class ChatMessage {
   static cookFunction = null;

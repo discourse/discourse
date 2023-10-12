@@ -1,9 +1,9 @@
-import { action } from "@ember/object";
-import { classNameBindings, classNames } from "@ember-decorators/component";
-import { alias } from "@ember/object/computed";
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
+import { alias } from "@ember/object/computed";
+import { classNameBindings, classNames } from "@ember-decorators/component";
 import { makeArray } from "discourse-common/lib/helpers";
+import discourseComputed from "discourse-common/utils/decorators";
 
 const PAGES_LIMIT = 8;
 

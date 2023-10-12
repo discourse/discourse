@@ -5,10 +5,10 @@ import {
   visit,
   waitUntil,
 } from "@ember/test-helpers";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
-import pretender from "discourse/tests/helpers/create-pretender";
 import AboutFixtures from "discourse/tests/fixtures/about";
+import pretender from "discourse/tests/helpers/create-pretender";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 
 // Like settled(), but ignores timers, transitions and network requests
 function isMostlySettled() {

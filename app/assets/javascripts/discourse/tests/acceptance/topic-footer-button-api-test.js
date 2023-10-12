@@ -1,7 +1,7 @@
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Topic - Plugin API - registerTopicFooterButton", function (needs) {
   needs.user();

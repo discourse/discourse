@@ -1,6 +1,6 @@
-import DiscourseRoute from "discourse/routes/discourse";
 import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
+import DiscourseRoute from "discourse/routes/discourse";
 
 export default class UserDeletedPosts extends DiscourseRoute {
   templateName = "user/posts";

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
-import DiscourseURL from "discourse/lib/url";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import DiscourseURL from "discourse/lib/url";
 
 export default class MoreLink extends Component {
   @service search;

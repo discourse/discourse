@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
-import ValidState from "wizard/mixins/valid-state";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
+import ValidState from "wizard/mixins/valid-state";
 
 export default EmberObject.extend(ValidState, {
   id: null,

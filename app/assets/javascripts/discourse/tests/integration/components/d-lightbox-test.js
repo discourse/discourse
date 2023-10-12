@@ -1,13 +1,12 @@
 import { click, render, settled } from "@ember/test-helpers";
-import { query } from "discourse/tests/helpers/qunit-helpers";
-import { module, test } from "qunit";
-
-import domFromString from "discourse-common/lib/dom-from-string";
-import { generateLightboxMarkup } from "discourse/tests/helpers/lightbox-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
 import { setupLightboxes } from "discourse/lib/lightbox";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { generateLightboxMarkup } from "discourse/tests/helpers/lightbox-helpers";
+import { query } from "discourse/tests/helpers/qunit-helpers";
+import domFromString from "discourse-common/lib/dom-from-string";
 
 module("Integration | Component | d-lightbox", function (hooks) {
   setupRenderingTest(hooks);

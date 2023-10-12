@@ -1,7 +1,7 @@
-import DButton from "discourse/components/d-button";
-import icon from "discourse-common/helpers/d-icon";
 import { concat, fn, hash } from "@ember/helper";
+import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse-common/helpers/d-icon";
 import or from "truth-helpers/helpers/or";
 
 const DDefaultToast = <template>

@@ -1,10 +1,10 @@
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { isEmpty } from "@ember/utils";
 import { searchForTerm } from "discourse/lib/search";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import discourseDebounce from "discourse-common/lib/debounce";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   loading: null,

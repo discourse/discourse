@@ -1,7 +1,7 @@
-import { action } from "@ember/object";
 import Controller from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default class AdminEmbeddingController extends Controller {
   saved = false;

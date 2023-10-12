@@ -1,7 +1,7 @@
-import { module, test } from "qunit";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
 module("Unit | Service | user-tips", function (hooks) {

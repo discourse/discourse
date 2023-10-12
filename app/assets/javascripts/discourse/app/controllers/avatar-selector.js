@@ -1,14 +1,14 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import ModalFunctionality from "discourse/mixins/modal-functionality";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { ajax } from "discourse/lib/ajax";
-import { allowsImages } from "discourse/lib/uploads";
-import discourseComputed from "discourse-common/utils/decorators";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { setting } from "discourse/lib/computed";
+import { allowsImages } from "discourse/lib/uploads";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { isTesting } from "discourse-common/config/environment";
-import { dependentKeyCompat } from "@ember/object/compat";
-import { tracked } from "@glimmer/tracking";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend(ModalFunctionality, {
   gravatarName: setting("gravatar_name"),

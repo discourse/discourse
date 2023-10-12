@@ -1,13 +1,13 @@
-import { module, test } from "qunit";
 import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
+import { SELECTORS } from "discourse/lib/lightbox/constants";
+import { processHTML } from "discourse/lib/lightbox/process-html";
 import {
-  LIGHTBOX_IMAGE_FIXTURES,
   generateImageUploaderMarkup,
   generateLightboxMarkup,
+  LIGHTBOX_IMAGE_FIXTURES,
 } from "discourse/tests/helpers/lightbox-helpers";
-import { SELECTORS } from "discourse/lib/lightbox/constants";
 import domFromString from "discourse-common/lib/dom-from-string";
-import { processHTML } from "discourse/lib/lightbox/process-html";
 
 module("Unit | lib | Experimental lightbox | processHTML()", function (hooks) {
   setupTest(hooks);

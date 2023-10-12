@@ -1,14 +1,14 @@
-import I18n from "I18n";
-import RawHtml from "discourse/widgets/raw-html";
-import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
-import { avatarFor } from "discourse/widgets/post";
 import { computed } from "@ember/object";
-import { createWidget } from "discourse/widgets/widget";
-import { h } from "virtual-dom";
-import { iconNode } from "discourse-common/lib/icon-library";
-import { userPath } from "discourse/lib/url";
 import { htmlSafe } from "@ember/template";
+import { h } from "virtual-dom";
+import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import { decorateHashtags } from "discourse/lib/hashtag-autocomplete";
+import { userPath } from "discourse/lib/url";
+import { avatarFor } from "discourse/widgets/post";
+import RawHtml from "discourse/widgets/raw-html";
+import { createWidget } from "discourse/widgets/widget";
+import { iconNode } from "discourse-common/lib/icon-library";
+import I18n from "I18n";
 
 export function actionDescriptionHtml(actionCode, createdAt, username, path) {
   const dt = new Date(createdAt);

@@ -1,14 +1,14 @@
 import Component from "@ember/component";
 import { warn } from "@ember/debug";
-import I18n from "I18n";
+import { inject as service } from "@ember/service";
 import { dasherize } from "@ember/string";
-import discourseComputed from "discourse-common/utils/decorators";
-import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import getUrl from "discourse-common/lib/get-url";
 import Uppy from "@uppy/core";
 import DropTarget from "@uppy/drop-target";
 import XHRUpload from "@uppy/xhr-upload";
-import { inject as service } from "@ember/service";
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import getUrl from "discourse-common/lib/get-url";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 export default Component.extend({
   classNames: ["wizard-container__image-upload"],

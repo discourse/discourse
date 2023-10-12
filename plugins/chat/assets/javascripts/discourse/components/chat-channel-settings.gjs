@@ -1,24 +1,24 @@
 import Component from "@glimmer/component";
-import ChatForm from "discourse/plugins/chat/discourse/components/chat/form";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
+import { fn, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { inject as service } from "@ember/service";
+import DButton from "discourse/components/d-button";
+import DToggleSwitch from "discourse/components/d-toggle-switch";
+import categoryBadge from "discourse/helpers/category-badge";
+import replaceEmoji from "discourse/helpers/replace-emoji";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import I18n from "I18n";
+import ComboBox from "select-kit/components/combo-box";
+import ChatForm from "discourse/plugins/chat/discourse/components/chat/form";
 import ChatModalArchiveChannel from "discourse/plugins/chat/discourse/components/chat/modal/archive-channel";
 import ChatModalDeleteChannel from "discourse/plugins/chat/discourse/components/chat/modal/delete-channel";
-import ChatModalToggleChannelStatus from "discourse/plugins/chat/discourse/components/chat/modal/toggle-channel-status";
-import { on } from "@ember/modifier";
-import I18n from "I18n";
-import { fn, hash } from "@ember/helper";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import ComboBox from "select-kit/components/combo-box";
-import ChatRetentionReminderText from "discourse/plugins/chat/discourse/components/chat-retention-reminder-text";
-import DButton from "discourse/components/d-button";
-import ToggleChannelMembershipButton from "discourse/plugins/chat/discourse/components/toggle-channel-membership-button";
-import replaceEmoji from "discourse/helpers/replace-emoji";
-import ChatModalEditChannelName from "discourse/plugins/chat/discourse/components/chat/modal/edit-channel-name";
-import categoryBadge from "discourse/helpers/category-badge";
 import ChatModalEditChannelDescription from "discourse/plugins/chat/discourse/components/chat/modal/edit-channel-description";
-import { LinkTo } from "@ember/routing";
+import ChatModalEditChannelName from "discourse/plugins/chat/discourse/components/chat/modal/edit-channel-name";
+import ChatModalToggleChannelStatus from "discourse/plugins/chat/discourse/components/chat/modal/toggle-channel-status";
+import ChatRetentionReminderText from "discourse/plugins/chat/discourse/components/chat-retention-reminder-text";
+import ToggleChannelMembershipButton from "discourse/plugins/chat/discourse/components/toggle-channel-membership-button";
 
 const NOTIFICATION_LEVELS = [
   { name: I18n.t("chat.notification_levels.never"), value: "never" },

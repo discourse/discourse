@@ -1,5 +1,5 @@
-import { schedule } from "@ember/runloop";
 import { getOwner } from "@ember/application";
+import { schedule } from "@ember/runloop";
 
 let counter = 0;
 

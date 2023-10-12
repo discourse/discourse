@@ -1,3 +1,7 @@
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
+import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import {
   acceptance,
   count,
@@ -6,12 +10,8 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
-import I18n from "I18n";
-import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
-import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
+import I18n from "I18n";
 
 acceptance("Search - Glimmer - Anonymous", function (needs) {
   needs.user({

@@ -1,9 +1,9 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { render } from "@ember/test-helpers";
-import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
-import MountWidget from "discourse/components/mount-widget";
 import { getOwner } from "@ember/application";
+import { render } from "@ember/test-helpers";
+import { module, test } from "qunit";
+import MountWidget from "discourse/components/mount-widget";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 
 const bigLogo = "/images/d-logo-sketch.png?test";
 const smallLogo = "/images/d-logo-sketch-small.png?test";

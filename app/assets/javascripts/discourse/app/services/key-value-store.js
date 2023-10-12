@@ -1,6 +1,6 @@
 import Service from "@ember/service";
-import KeyValueStore from "discourse/lib/key-value-store";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
+import KeyValueStore from "discourse/lib/key-value-store";
 
 const PROXIED_METHODS = Object.getOwnPropertyNames(
   KeyValueStore.prototype
