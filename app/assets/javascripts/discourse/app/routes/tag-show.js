@@ -157,7 +157,7 @@ export default class TagShowRoute extends DiscourseRoute {
   setupController(controller, model) {
     const noSubcategories = this.noSubcategories;
 
-    this.controllerFor(this.controllerName).setProperties({
+    controller.setProperties({
       model: model.tag,
       ...model,
       period: model.list.for_period,
