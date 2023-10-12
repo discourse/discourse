@@ -1,4 +1,4 @@
-import { computed } from "@ember/object";
+import { action, computed } from "@ember/object";
 import I18n from "I18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 
@@ -25,16 +25,15 @@ export default DropdownSelectBoxComponent.extend({
     ];
   }),
 
-  actions: {
-    onChange(id) {
-      switch (id) {
-        case "edit":
-          this.renamePasskey(this.passkeyId);
-          break;
-        case "delete":
-          this.deletePasskey(this.passkeyId);
-          break;
-      }
-    },
+  @action
+  onChange(id) {
+    switch (id) {
+      case "edit":
+        this.renamePasskey(id);
+        break;
+      case "delete":
+        this.deletePasskey(id);
+        break;
+    }
   },
 });

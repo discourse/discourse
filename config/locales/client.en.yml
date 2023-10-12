@@ -1518,6 +1518,9 @@ en:
         added_prefix: "Added"
         last_used_prefix: "Last Used"
         never_used: "Never Used"
+        not_allowed_error: "The passkey registration process either timed out or was cancelled."
+        already_added_error: "You have already registered this passkey. You don’t have to register it again."
+
       change_about:
         title: "Change About Me"
         error: "There was an error changing this value."
@@ -5163,7 +5166,7 @@ en:
         install: "Install"
         delete: "Delete"
         delete_confirm: 'Are you sure you want to delete "%{theme_name}"?'
-        bulk_delete: 'Are you sure?'
+        bulk_delete: "Are you sure?"
         bulk_themes_delete_confirm: "This will uninstall the following themes, they will no longer be useable by any users on your site:"
         bulk_components_delete_confirm: "This will uninstall the following components, they will no longer be useable by any users on your site:"
         color: "Color"

@@ -4,6 +4,7 @@ import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import RenamePasskey from "discourse/components/user-preferences/rename-passkey";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferToBase64, stringToBuffer } from "discourse/lib/webauthn";
 import I18n from "I18n";
 
@@ -25,8 +26,10 @@ export default class UserPasskeys extends Component {
     return I18n.t("user.passkeys.name.default");
   }
 
-  createPasskey() {
-    this.args.model.createPasskey().then((response) => {
+  async createPasskey() {
+    try {
+      const response = await this.args.model.createPasskey();
+
       const publicKeyCredentialCreationOptions = {
         challenge: Uint8Array.from(response.challenge, (c) => c.charCodeAt(0)),
         rp: {
@@ -57,60 +60,44 @@ export default class UserPasskeys extends Component {
         },
       };
 
-      navigator.credentials
-        .create({
-          publicKey: publicKeyCredentialCreationOptions,
-        })
-        .then(
-          (credential) => {
-            let credentialParam = {
-              id: credential.id,
-              rawId: bufferToBase64(credential.rawId),
-              type: credential.type,
-              attestation: bufferToBase64(
-                credential.response.attestationObject
-              ),
-              clientData: bufferToBase64(credential.response.clientDataJSON),
-              name: this.passkeyDefaultName(),
-            };
+      const credential = await navigator.credentials.create({
+        publicKey: publicKeyCredentialCreationOptions,
+      });
 
-            this.args.model
-              .registerPasskey(credentialParam)
-              .then((resp) => {
-                if (resp.error) {
-                  this.dialog.alert(resp.error);
-                  return;
-                }
+      let credentialParam = {
+        id: credential.id,
+        rawId: bufferToBase64(credential.rawId),
+        type: credential.type,
+        attestation: bufferToBase64(credential.response.attestationObject),
+        clientData: bufferToBase64(credential.response.clientDataJSON),
+        name: this.passkeyDefaultName(),
+      };
 
-                this.router.refresh();
+      const registrationResponse = await this.args.model.registerPasskey(
+        credentialParam
+      );
 
-                // Allow user to rename key after creating
-                this.dialog.dialog({
-                  title: I18n.t("user.passkeys.passkey_successfully_created"),
-                  type: "notice",
-                  bodyComponent: RenamePasskey,
-                  bodyComponentModel: resp,
-                });
-              })
-              .catch((res) => {
-                this.dialog.alert(res.error);
-              });
-          },
-          (err) => {
-            if (err.name === "InvalidStateError") {
-              this.errorMessage = I18n.t(
-                "user.second_factor.security_key.already_added_error"
-              );
-            }
-            if (err.name === "NotAllowedError") {
-              this.errorMessage = I18n.t(
-                "user.second_factor.security_key.not_allowed_error"
-              );
-            }
-            this.dialog.alert(this.errorMessage);
-          }
-        );
-    });
+      if (registrationResponse.error) {
+        this.dialog.alert(registrationResponse.error);
+        return;
+      }
+
+      this.router.refresh();
+
+      // Let user name key after creating
+      this.dialog.dialog({
+        title: I18n.t("user.passkeys.passkey_successfully_created"),
+        type: "notice",
+        bodyComponent: RenamePasskey,
+        bodyComponentModel: registrationResponse,
+      });
+    } catch (error) {
+      this.errorMessage =
+        error.name === "InvalidStateError"
+          ? I18n.t("user.passkeys.already_added_error")
+          : I18n.t("user.passkeys.not_allowed_error");
+      this.dialog.alert(this.errorMessage);
+    }
   }
 
   confirmDelete(id) {
@@ -128,33 +115,41 @@ export default class UserPasskeys extends Component {
 
   @action
   async addPasskey() {
-    const trustedSession = await this.args.model.trustedSession();
+    try {
+      const trustedSession = await this.args.model.trustedSession();
 
-    if (!trustedSession.success) {
-      this.dialog.dialog({
-        title: I18n.t("user.confirm_access.title"),
-        type: "notice",
-        bodyComponent: ConfirmSession,
-        didConfirm: () => this.createPasskey(),
-      });
-    } else {
-      this.createPasskey();
+      if (!trustedSession.success) {
+        this.dialog.dialog({
+          title: I18n.t("user.confirm_access.title"),
+          type: "notice",
+          bodyComponent: ConfirmSession,
+          didConfirm: () => this.createPasskey(),
+        });
+      } else {
+        await this.createPasskey();
+      }
+    } catch (error) {
+      popupAjaxError(error);
     }
   }
 
   @action
   async deletePasskey(id) {
-    const trustedSession = await this.args.model.trustedSession();
+    try {
+      const trustedSession = await this.args.model.trustedSession();
 
-    if (!trustedSession.success) {
-      this.dialog.dialog({
-        title: I18n.t("user.confirm_access.title"),
-        type: "notice",
-        bodyComponent: ConfirmSession,
-        didConfirm: () => this.confirmDelete(id),
-      });
-    } else {
-      this.confirmDelete(id);
+      if (!trustedSession.success) {
+        this.dialog.dialog({
+          title: I18n.t("user.confirm_access.title"),
+          type: "notice",
+          bodyComponent: ConfirmSession,
+          didConfirm: () => this.confirmDelete(id),
+        });
+      } else {
+        this.confirmDelete(id);
+      }
+    } catch (error) {
+      popupAjaxError(error);
     }
   }
 

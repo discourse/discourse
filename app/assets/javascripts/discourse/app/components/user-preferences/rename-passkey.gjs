@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
+import { extractError } from "discourse/lib/ajax-error";
 import I18n from "I18n";
 
 export default class RenamePasskey extends Component {
@@ -12,28 +13,40 @@ export default class RenamePasskey extends Component {
   @service dialog;
 
   @tracked passkeyName;
+  @tracked errorMessage;
+
+  instructions = I18n.t("user.passkeys.rename_passkey_instructions");
 
   constructor() {
     super(...arguments);
     this.passkeyName = this.args.model.name;
   }
 
-  instructions = I18n.t("user.passkeys.rename_passkey_instructions");
-
   @action
   async saveRename() {
-    await ajax(`/u/rename_passkey/${this.args.model.id}`, {
-      type: "PUT",
-      data: {
-        name: this.passkeyName,
-      },
-    });
+    try {
+      await ajax(`/u/rename_passkey/${this.args.model.id}`, {
+        type: "PUT",
+        data: {
+          name: this.passkeyName,
+        },
+      });
 
-    this.router.refresh();
-    this.dialog.didConfirmWrapped();
+      this.errorMessage = null;
+      this.router.refresh();
+      this.dialog.didConfirmWrapped();
+    } catch (error) {
+      this.errorMessage = extractError(error);
+    }
   }
 
   <template>
+    {{#if this.errorMessage}}
+      <div class="alert alert-error">
+        {{this.errorMessage}}
+      </div>
+    {{/if}}
+
     <div class="rename-passkey__form">
       <div class="rename-passkey__message">
         <p>{{this.instructions}}</p>

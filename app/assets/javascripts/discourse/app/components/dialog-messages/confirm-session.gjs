@@ -14,20 +14,10 @@ export default class ConfirmSession extends Component {
 
   @tracked errorMessage;
 
-  get passwordLabel() {
-    return I18n.t("user.password.title");
-  }
-  get instructions() {
-    return I18n.t("user.confirm_access.instructions");
-  }
-
-  get loggedInAs() {
-    return I18n.t("user.confirm_access.logged_in_as");
-  }
-
-  get finePrint() {
-    return I18n.t("user.confirm_access.fine_print");
-  }
+  passwordLabel = I18n.t("user.password.title");
+  instructions = I18n.t("user.confirm_access.instructions");
+  loggedInAs = I18n.t("user.confirm_access.logged_in_as");
+  finePrint = I18n.t("user.confirm_access.fine_print");
 
   @action
   async submit() {
@@ -59,7 +49,7 @@ export default class ConfirmSession extends Component {
       </div>
 
       <div class="confirm-session__instructions">
-        {{this.loggedInAs}}
+        <span>{{this.loggedInAs}}</span>
         <UserLink @user={{this.currentUser}}>
           {{this.currentUser.username}}
         </UserLink>

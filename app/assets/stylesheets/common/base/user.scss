@@ -720,8 +720,19 @@
       }
     }
 
-    .row__add {
+    &__add {
       margin-top: 1em;
+    }
+
+    .passkey-options-dropdown {
+      .btn,
+      .btn:hover {
+        background: transparent;
+
+        .d-icon {
+          color: var(--primary-high);
+        }
+      }
     }
   }
 }

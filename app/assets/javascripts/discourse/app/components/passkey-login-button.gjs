@@ -8,7 +8,6 @@ import { getPasskeyCredential } from "discourse/lib/webauthn";
 
 export default class PasskeyLoginButton extends Component {
   @service dialog;
-  tagName = "";
 
   @action
   async passkeyLogin() {
