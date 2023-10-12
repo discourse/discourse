@@ -60,7 +60,7 @@ export default {
     $.fn.caretPosition = caretPosition;
 
     // For backwards compatibility
-    // window.jQuery = window.$ = $;
+    window.jQuery = window.$ = $;
 
     jqueryPluginsConfigured = true;
   },
