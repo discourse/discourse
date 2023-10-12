@@ -474,6 +474,7 @@ pre.onebox code {
 
   .github-info-container {
     width: 100%;
+    overflow-x: hidden;
   }
 
   .github-info {
@@ -499,6 +500,10 @@ pre.onebox code {
       .removed {
         color: var(--danger);
       }
+    }
+
+    .discourse-local-date {
+      white-space: nowrap;
     }
   }
 
