@@ -8,7 +8,7 @@ export default {
     withPluginApi("0.8.7", (api) => {
       function handleVideoPlaceholderClick(helper, event) {
         const parentDiv = event.target.closest(".video-placeholder-container");
-        const wrapper = event.target.closest(".video-placeholder-wrapper");
+        const wrapper = parentDiv.querySelector(".video-placeholder-wrapper");
 
         const videoHTML = `
         <video width="100%" height="100%" preload="metadata" controls style="display:none">
@@ -73,8 +73,8 @@ export default {
           container.appendChild(wrapper);
 
           overlay.classList.add("video-placeholder-overlay");
-          overlay.style.cursor = "pointer";
-          overlay.addEventListener(
+          container.style.cursor = "pointer";
+          container.addEventListener(
             "click",
             handleVideoPlaceholderClick.bind(null, helper),
             false
