@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import { isEmpty } from "@ember/utils";
+import $ from "jquery";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import discourseComputed, {
   observes,

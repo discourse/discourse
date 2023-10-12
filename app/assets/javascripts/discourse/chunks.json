@@ -1,0 +1,283 @@
+{
+  "entrypoints": {
+    "assets/discourse.js": {
+      "name": "assets/discourse.js",
+      "assets": [
+        {
+          "name": "assets/chunk.9db82a4b8f4c0ea08a41.js",
+          "size": 14008185
+        },
+        {
+          "name": "assets/chunk.9e627ce747183195d08d.js",
+          "size": 649289
+        },
+        {
+          "name": "assets/chunk.99ff1b8cf0c13adc7f39.js",
+          "size": 12325
+        }
+      ],
+      "filteredAssets": 0,
+      "assetsSize": 14669799,
+      "filteredAuxiliaryAssets": 3,
+      "auxiliaryAssetsSize": 12065696
+    },
+    "assets/test.js": {
+      "name": "assets/test.js",
+      "assets": [
+        {
+          "name": "assets/chunk.89aee6de0c08b7102e3b.js",
+          "size": 296885
+        },
+        {
+          "name": "assets/chunk.9db82a4b8f4c0ea08a41.js",
+          "size": 14008185
+        },
+        {
+          "name": "assets/chunk.f4b5b8881d09f9a440c0.js",
+          "size": 7089770
+        },
+        {
+          "name": "assets/chunk.c1db91e5b88818355726.js",
+          "size": 136576
+        },
+        {
+          "name": "assets/chunk.9e627ce747183195d08d.js",
+          "size": 649289
+        },
+        {
+          "name": "assets/chunk.18148eef4c14dc1a9eb2.js",
+          "size": 444250
+        }
+      ],
+      "filteredAssets": 0,
+      "assetsSize": 22624955,
+      "filteredAuxiliaryAssets": 6,
+      "auxiliaryAssetsSize": 22597365
+    },
+    "assets/markdown-it-bundle.js": {
+      "name": "assets/markdown-it-bundle.js",
+      "assets": [
+        {
+          "name": "assets/chunk.89aee6de0c08b7102e3b.js",
+          "size": 296885
+        },
+        {
+          "name": "assets/chunk.c1db91e5b88818355726.js",
+          "size": 136576
+        },
+        {
+          "name": "assets/chunk.35c590a2cca6bdd590df.js",
+          "size": 774
+        }
+      ],
+      "filteredAssets": 0,
+      "assetsSize": 434235,
+      "filteredAuxiliaryAssets": 2,
+      "auxiliaryAssetsSize": 678287
+    }
+  },
+  "chunks": [
+    {
+      "rendered": true,
+      "initial": true,
+      "entry": true,
+      "recorded": false,
+      "size": 7181,
+      "sizes": {
+        "runtime": 7181
+      },
+      "names": [
+        "assets/discourse.js"
+      ],
+      "idHints": [],
+      "runtime": [
+        "assets/discourse.js"
+      ],
+      "files": [
+        "assets/chunk.99ff1b8cf0c13adc7f39.js"
+      ],
+      "auxiliaryFiles": [
+        "assets/chunk.99ff1b8cf0c13adc7f39.js.map"
+      ],
+      "hash": "99ff1b8cf0c13adc7f39",
+      "childrenByOrder": {}
+    },
+    {
+      "rendered": true,
+      "initial": true,
+      "entry": false,
+      "recorded": false,
+      "size": 0,
+      "sizes": {},
+      "names": [
+        "assets/markdown-it-bundle.js"
+      ],
+      "idHints": [],
+      "runtime": [
+        "assets/discourse.js"
+      ],
+      "files": [
+        "assets/chunk.35c590a2cca6bdd590df.js"
+      ],
+      "auxiliaryFiles": [],
+      "hash": "35c590a2cca6bdd590df",
+      "childrenByOrder": {}
+    },
+    {
+      "rendered": true,
+      "initial": true,
+      "entry": true,
+      "recorded": false,
+      "size": 24625,
+      "sizes": {
+        "javascript": 20910,
+        "runtime": 3715
+      },
+      "names": [
+        "assets/test.js"
+      ],
+      "idHints": [],
+      "runtime": [
+        "assets/test.js"
+      ],
+      "files": [
+        "assets/chunk.18148eef4c14dc1a9eb2.js"
+      ],
+      "auxiliaryFiles": [
+        "assets/chunk.18148eef4c14dc1a9eb2.js.map"
+      ],
+      "hash": "18148eef4c14dc1a9eb2",
+      "childrenByOrder": {}
+    },
+    {
+      "rendered": true,
+      "initial": true,
+      "entry": false,
+      "recorded": false,
+      "reason": "split chunk (cache group: default)",
+      "size": 76421,
+      "sizes": {
+        "javascript": 76421
+      },
+      "names": [],
+      "idHints": [],
+      "runtime": [
+        "assets/discourse.js",
+        "assets/test.js"
+      ],
+      "files": [
+        "assets/chunk.9e627ce747183195d08d.js"
+      ],
+      "auxiliaryFiles": [
+        "assets/chunk.9e627ce747183195d08d.js.map"
+      ],
+      "hash": "9e627ce747183195d08d",
+      "childrenByOrder": {}
+    },
+    {
+      "rendered": true,
+      "initial": true,
+      "entry": false,
+      "recorded": false,
+      "reason": "reused as split chunk (cache group: default)",
+      "size": 105819,
+      "sizes": {
+        "javascript": 105819
+      },
+      "names": [],
+      "idHints": [],
+      "runtime": [
+        "assets/discourse.js",
+        "assets/test.js"
+      ],
+      "files": [
+        "assets/chunk.c1db91e5b88818355726.js"
+      ],
+      "auxiliaryFiles": [
+        "assets/chunk.c1db91e5b88818355726.js.map"
+      ],
+      "hash": "c1db91e5b88818355726",
+      "childrenByOrder": {}
+    },
+    {
+      "rendered": true,
+      "initial": true,
+      "entry": false,
+      "recorded": false,
+      "reason": "split chunk (cache group: defaultVendors)",
+      "size": 7985399,
+      "sizes": {
+        "javascript": 7985399
+      },
+      "names": [],
+      "idHints": [
+        "vendors"
+      ],
+      "runtime": [
+        "assets/discourse.js",
+        "assets/test.js"
+      ],
+      "files": [
+        "assets/chunk.9db82a4b8f4c0ea08a41.js"
+      ],
+      "auxiliaryFiles": [
+        "assets/chunk.9db82a4b8f4c0ea08a41.js.map"
+      ],
+      "hash": "9db82a4b8f4c0ea08a41",
+      "childrenByOrder": {}
+    },
+    {
+      "rendered": true,
+      "initial": true,
+      "entry": false,
+      "recorded": false,
+      "reason": "split chunk (cache group: defaultVendors)",
+      "size": 5098038,
+      "sizes": {
+        "javascript": 5098038
+      },
+      "names": [],
+      "idHints": [
+        "vendors"
+      ],
+      "runtime": [
+        "assets/test.js"
+      ],
+      "files": [
+        "assets/chunk.f4b5b8881d09f9a440c0.js"
+      ],
+      "auxiliaryFiles": [
+        "assets/chunk.f4b5b8881d09f9a440c0.js.map"
+      ],
+      "hash": "f4b5b8881d09f9a440c0",
+      "childrenByOrder": {}
+    },
+    {
+      "rendered": true,
+      "initial": true,
+      "entry": false,
+      "recorded": false,
+      "reason": "split chunk (cache group: defaultVendors)",
+      "size": 255230,
+      "sizes": {
+        "javascript": 255230
+      },
+      "names": [],
+      "idHints": [
+        "vendors"
+      ],
+      "runtime": [
+        "assets/discourse.js",
+        "assets/test.js"
+      ],
+      "files": [
+        "assets/chunk.89aee6de0c08b7102e3b.js"
+      ],
+      "auxiliaryFiles": [
+        "assets/chunk.89aee6de0c08b7102e3b.js.map"
+      ],
+      "hash": "89aee6de0c08b7102e3b",
+      "childrenByOrder": {}
+    }
+  ]
+}

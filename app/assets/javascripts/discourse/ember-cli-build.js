@@ -88,6 +88,20 @@ module.exports = function (defaults) {
                 },
               ],
             },
+            {
+              test: require.resolve("bootstrap/js/modal"),
+              use: [
+                {
+                  loader: "imports-loader",
+                  options: {
+                    imports: {
+                      moduleName: "jquery",
+                      name: "jQuery",
+                    },
+                  },
+                },
+              ],
+            },
           ],
         },
       },
@@ -133,10 +147,7 @@ module.exports = function (defaults) {
   });
 
   // WARNING: We should only import scripts here if they are not in NPM.
-  // For example: our very specific version of bootstrap-modal.
   app.import(vendorJs + "bootbox.js");
-  app.import("node_modules/bootstrap/js/modal.js");
-  app.import(vendorJs + "caret_position.js");
   app.import("node_modules/ember-source/dist/ember-template-compiler.js", {
     type: "test",
   });
@@ -229,6 +240,22 @@ module.exports = function (defaults) {
               exportsPresence: "error",
             },
           },
+          rules: [
+            {
+              test: require.resolve("bootstrap/js/modal"),
+              use: [
+                {
+                  loader: "imports-loader",
+                  options: {
+                    imports: {
+                      moduleName: "jquery",
+                      name: "jQuery",
+                    },
+                  },
+                },
+              ],
+            },
+          ],
         },
       },
     },

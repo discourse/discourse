@@ -4,6 +4,7 @@ import { or } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import $ from "jquery";
 import lightbox, {
   cleanupLightboxes,
   setupLightboxes,

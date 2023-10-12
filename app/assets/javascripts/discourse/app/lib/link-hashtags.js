@@ -1,7 +1,7 @@
 // TODO (martin) Delete this after core PR and any other PRs that depend
 // on this file (e.g. discourse-encrypt) are merged.
 
-import jQuery from "jquery";
+import $ from "jquery";
 import { ajax } from "discourse/lib/ajax";
 import { replaceSpan } from "discourse/lib/category-hashtags";
 import { TAG_HASHTAG_POSTFIX } from "discourse/lib/tag-hashtags";
@@ -12,7 +12,7 @@ const tagHashtags = {};
 const checkedHashtags = new Set();
 
 export function linkSeenHashtags(elem) {
-  if (elem instanceof jQuery) {
+  if (elem instanceof $) {
     elem = elem[0];
 
     deprecated("linkSeenHashtags now expects a DOM node as first parameter", {

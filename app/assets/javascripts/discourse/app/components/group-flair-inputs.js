@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import $ from "jquery";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse-common/lib/debounce";
 import getURL from "discourse-common/lib/get-url";

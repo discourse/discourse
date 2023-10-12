@@ -1,4 +1,5 @@
 import Component from "@ember/component";
+import $ from "jquery";
 import { makeArray } from "discourse-common/lib/helpers";
 import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import discourseComputed, {

@@ -1,5 +1,6 @@
 import EmberObject from "@ember/object";
 import { guidFor } from "@ember/object/internals";
+import $ from "jquery";
 import { defaultHomepage } from "discourse/lib/utilities";
 import { withoutPrefix } from "discourse-common/lib/get-url";
 

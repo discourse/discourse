@@ -1,4 +1,5 @@
 import { run } from "@ember/runloop";
+import $ from "jquery";
 import { Promise } from "rsvp";
 import userPresent from "discourse/lib/user-presence";
 import Session from "discourse/models/session";

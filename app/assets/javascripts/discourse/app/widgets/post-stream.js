@@ -1,3 +1,4 @@
+import $ from "jquery";
 import { h } from "virtual-dom";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";

@@ -2,6 +2,7 @@ import { setOwner } from "@ember/application";
 import EmberObject from "@ember/object";
 import { next, schedule } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
+import $ from "jquery";
 import LockOn from "discourse/lib/lock-on";
 import offsetCalculator from "discourse/lib/offset-calculator";
 import { defaultHomepage } from "discourse/lib/utilities";
