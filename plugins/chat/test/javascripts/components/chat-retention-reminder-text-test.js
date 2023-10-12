@@ -20,7 +20,7 @@ module(
 
       assert
         .dom(".chat-retention-reminder-text")
-        .includesText(I18n.t("chat.retention_reminders.public_none"));
+        .includesText(I18n.t("chat.retention_reminders.indefinitely"));
     });
 
     test("when channel is a public channel", async function (assert) {
@@ -34,7 +34,7 @@ module(
 
       assert
         .dom(".chat-retention-reminder-text")
-        .includesText(I18n.t("chat.retention_reminders.public", { count }));
+        .includesText(I18n.t("chat.retention_reminders.long", { count }));
     });
 
     test("when channel is a DM channel", async function (assert) {
@@ -48,7 +48,7 @@ module(
 
       assert
         .dom(".chat-retention-reminder-text")
-        .includesText(I18n.t("chat.retention_reminders.dm", { count }));
+        .includesText(I18n.t("chat.retention_reminders.long", { count }));
     });
   }
 );
