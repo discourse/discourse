@@ -18,9 +18,7 @@ export default class RenamePasskey extends Component {
     this.passkeyName = this.args.model.name;
   }
 
-  get instructions() {
-    return I18n.t("user.passkeys.rename_passkey_instructions");
-  }
+  instructions = I18n.t("user.passkeys.rename_passkey_instructions");
 
   @action
   async saveRename() {
@@ -44,7 +42,7 @@ export default class RenamePasskey extends Component {
         <div class="rename-passkey__form inline-form">
           <Input @value={{this.passkeyName}} autofocus={{true}} @type="text" />
           <DButton
-            @class="btn-primary"
+            class="btn-primary"
             @type="submit"
             @action={{this.saveRename}}
             @label="user.passkeys.save"

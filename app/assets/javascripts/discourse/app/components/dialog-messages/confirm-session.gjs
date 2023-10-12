@@ -12,7 +12,7 @@ export default class ConfirmSession extends Component {
   @service dialog;
   @service currentUser;
 
-  @tracked errorMessage = null;
+  @tracked errorMessage;
 
   get passwordLabel() {
     return I18n.t("user.password.title");
@@ -77,7 +77,7 @@ export default class ConfirmSession extends Component {
               autofocus="autofocus"
             />
             <DButton
-              @class="btn-primary"
+              class="btn-primary"
               @type="submit"
               @action={{this.submit}}
               @label="user.password.confirm"
