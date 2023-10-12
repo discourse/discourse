@@ -1824,7 +1824,6 @@ ko:
       saved_local_draft_tip: "로컬에 저장됨"
       drafts_offline: "오프라인 초안"
       edit_conflict: "충돌 편집"
-      esc_label: "닫으려면 클릭하거나 Esc를 누르십시오."
       ok_proceed: "알겠습니다. 계속 진행하세요."
       group_mentioned_limit:
         other: "<b>경고!</b> <a href='%{group_link}'>%{group}</a> 그룹을 멘션했지만 이 그룹에는 관리자가 구성한 멘션 제한인 %{count}명의 사용자보다 많은 회원이 있습니다. 아무도 알림을 받지 않습니다."
@@ -3798,35 +3797,8 @@ ko:
         groups_filter_instructions: "관련 Webhook는 이벤트가 특정 그룹과 관계가 있을 때만 트리거됩니다. 모든 그룹에 Webhook를 트리거하려면 공백으로 두세요."
         groups_filter: "트리거된 그룹"
         delete_confirm: "이 Webhook를 삭제할까요?"
-        topic_event:
-          name: "주제 이벤트"
-          details: "새 주제, 수정, 변경, 삭제 활동이 있을 경우"
-        post_event:
-          name: "게시물 이벤트"
-          details: "새 댓글, 편집, 삭제, 복구 활동이 있을 경우"
-        user_event:
-          name: "사용자 이벤트"
-        group_event:
-          name: "그룹 이벤트"
-          details: "그룹이 생성, 업데이트 또는 제거된 경우"
-        category_event:
-          name: "카테고리 이벤트"
-          details: "카테고리가 생성, 업데이트 또는 제거된 경우"
-        tag_event:
-          name: "태그 이벤트"
-          details: "태그가 생성, 업데이트 또는 제거된 경우"
-        reviewable_event:
-          name: "검토 가능 이벤트"
-          details: "새 항목을 검토할 준비가 되었고 상태가 업데이트된 경우"
-        notification_event:
-          name: "알림 이벤트"
-          details: "사용자가 피드에서 알림을 받은 경우"
-        group_user_event:
-          name: "그룹 사용자 이벤트"
-          details: "사용자가 그룹에 추가 또는 제거된 경우"
         like_event:
-          name: "좋아요 이벤트"
-          details: "사용자가 게시물에 좋아요를 누른 경우"
+          post_liked: "사용자가 게시물을 좋아할 때."
         delivery_status:
           title: "전달 상태"
           inactive: "비활성화"
@@ -4010,6 +3982,7 @@ ko:
           convert_theme_tooltip: "이 테마를 구성 요소로 변환"
           inactive_themes: "비활성 테마:"
           inactive_components: "사용하지 않은 구성 요소:"
+          cancel: "취소"
           broken_theme_tooltip: "이 테마는 CSS, HTML 또는 YAML에 오류가 있습니다"
           disabled_component_tooltip: "이 구성 요소가 비활성화되었습니다"
           default_theme_tooltip: "이 테마는 사이트의 디폴트 테마입니다"

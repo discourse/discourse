@@ -1,6 +1,5 @@
-import { tracked } from "@glimmer/tracking";
-import { next } from "@ember/runloop";
 import Service, { inject as service } from "@ember/service";
+import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import Site from "discourse/models/site";
 import { isTesting } from "discourse-common/config/environment";
@@ -10,15 +9,17 @@ export default class UserTips extends Service {
   @service site;
   @service currentUser;
 
-  @tracked availableTips = [];
-  @tracked renderedId;
+  #availableTips = new Set();
+  #renderedId;
+  #shouldRenderMap = new TrackedMap();
 
-  computeRenderedId() {
-    if (this.availableTips.find((tip) => tip.id === this.renderedId)) {
-      return this.renderedId;
+  #updateRenderedId() {
+    const tipsArray = [...this.#availableTips];
+    if (tipsArray.find((tip) => tip.id === this.#renderedId)) {
+      return;
     }
 
-    return this.availableTips
+    const newId = tipsArray
       .sortBy("priority")
       .reverse()
       .find((tip) => {
@@ -26,23 +27,26 @@ export default class UserTips extends Service {
           return tip.id;
         }
       })?.id;
+
+    if (this.#renderedId !== newId) {
+      this.#shouldRenderMap.delete(this.#renderedId);
+      this.#shouldRenderMap.set(newId, true);
+      this.#renderedId = newId;
+    }
+  }
+
+  shouldRender(id) {
+    return this.#shouldRenderMap.get(id);
   }
 
   addAvailableTip(tip) {
-    next(() => {
-      this.availableTips = [...this.availableTips, tip];
-      this.renderedId = this.computeRenderedId();
-    });
+    this.#availableTips.add(tip);
+    this.#updateRenderedId();
   }
 
   removeAvailableTip(tip) {
-    next(() => {
-      this.availableTips = this.availableTips.filter((availableTip) => {
-        return tip.id !== availableTip.id;
-      });
-
-      this.renderedId = this.computeRenderedId();
-    });
+    this.#availableTips.delete(tip);
+    this.#updateRenderedId();
   }
 
   canSeeUserTip(tipId) {
@@ -89,7 +93,8 @@ export default class UserTips extends Service {
       return;
     }
 
-    this.removeAvailableTip({ id: tipId });
+    const tipObj = [...this.#availableTips].find((t) => t.id === tipId);
+    this.removeAvailableTip(tipObj);
 
     // Update list of seen user tips.
     let seenUserTips = this.currentUser.user_option?.seen_popups || [];

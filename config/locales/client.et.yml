@@ -2693,14 +2693,6 @@ et:
         groups_filter_instructions: "Asjakohased veebihaagid vallanduvad vaid juhul, kui sündmus on seotud määratud gruppidega. Jäta tühjaks, kui soovid veebihaagid vallandada kõigi gruppide jaoks."
         groups_filter: "Käivitatud grupid"
         delete_confirm: "Kustutame selle veebihaagi?"
-        topic_event:
-          name: "Teema sündmus"
-          details: "Kui teema luuakse, muudetakse või kustutatakse."
-        post_event:
-          name: "Postituse sündmus"
-          details: "Kui teemas on uus vastus, muudatus, kustutamine või taastamine."
-        user_event:
-          name: "Kasutaja sündmus"
         delivery_status:
           title: "Kättetoimetamise staatus"
           inactive: "Mitteaktiivne"
@@ -2841,6 +2833,7 @@ et:
           color_scheme: "Värvipalett"
           theme_components: "Kujunduse osad"
           convert: "Konverdi"
+          cancel: "Tühista"
           collapse: Ahenda
           uploads: "Üleslaadimised"
           add_upload: "Lisa üleslaadimine"

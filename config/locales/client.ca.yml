@@ -3097,29 +3097,6 @@ ca:
         groups_filter_instructions: "Els webhook rellevants només funcionaran si l'esdeveniment està relacionat amb els grups especificats. Deixeu-ho en blanc per a activar els webhooks per a tots els grups."
         groups_filter: "Grups activats"
         delete_confirm: "Voleu suprimir el webhook?"
-        topic_event:
-          name: "Esdeveniment de tema"
-          details: "Quan hi ha un tema nou, revisat, canviat o suprimit."
-        post_event:
-          name: "Esdeveniment de publicació"
-          details: "Quan hi ha una resposta nova, editada, suprimida o recuperada."
-        user_event:
-          name: "Esdeveniment d'usuari"
-        group_event:
-          name: "Esdeveniment de grup"
-          details: "Quan un grup és creat, actualitzat o destruït"
-        category_event:
-          name: "Esdeveniment de categoria"
-          details: "Quan una categoria és creada, actualitzada o destruïda"
-        tag_event:
-          name: "Esdeveniment d'etiqueta"
-          details: "Quan una etiqueta és creada, actualitzada o destruïda."
-        reviewable_event:
-          name: "Esdeveniment revisable"
-          details: "Quan un nou element està a punt per a revisió i quan el seu estatus és actualitzat."
-        notification_event:
-          name: "Esdeveniment de notificació"
-          details: "Quan un usuari rep una notificació en el seu canal de continguts."
         delivery_status:
           title: "Estat de lliurament"
           inactive: "Inactiu"
@@ -3293,6 +3270,7 @@ ca:
           convert_theme_tooltip: "Converteix l'aparença en component"
           inactive_themes: "Aparences inactives:"
           inactive_components: "Components no utilitzats:"
+          cancel: "Cancel·la"
           broken_theme_tooltip: "L'aparença té errors en CSS, HTML o YAML"
           disabled_component_tooltip: "Aquest component s'ha desactivat"
           default_theme_tooltip: "Aquesta aparença és l'aparença predeterminada del lloc web"

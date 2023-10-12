@@ -3818,38 +3818,8 @@ vi:
         groups_filter_instructions: "Các webhook có liên quan sẽ chỉ được kích hoạt nếu sự kiện có liên quan đến các nhóm được chỉ định. Để trống để kích hoạt webhook cho tất cả các nhóm."
         groups_filter: "Nhóm được kích hoạt"
         delete_confirm: "Xóa webhook này?"
-        topic_event:
-          name: "Sự kiện chủ đề"
-          details: "Khi có một chủ đề mới, được sửa đổi, thay đổi hoặc xóa."
-        post_event:
-          name: "Đăng sự kiện"
-          details: "Khi có trả lời mới, hãy chỉnh sửa, xóa hoặc khôi phục."
-        user_event:
-          name: "Sự kiện người dùng"
-        group_event:
-          name: "Sự kiện nhóm"
-          details: "Khi một nhóm được tạo, cập nhật hoặc hủy."
-        category_event:
-          name: "Danh mục sự kiện"
-          details: "Khi một danh mục được tạo, cập nhật hoặc hủy."
-        tag_event:
-          name: "Sự kiện gắn thẻ"
-          details: "Khi một thẻ được tạo, cập nhật hoặc hủy."
-        reviewable_event:
-          name: "Sự kiện có thể đánh giá"
-          details: "Khi một mục mới đã sẵn sàng để xem xét và khi trạng thái của nó được cập nhật."
-        notification_event:
-          name: "Sự kiện thông báo"
-          details: "Khi người dùng nhận được thông báo trong feed của họ."
-        user_promoted_event:
-          name: "Sự kiện do người dùng quảng cáo"
-          details: "Khi người dùng được thăng cấp từ cấp độ tin cậy này sang cấp độ tin cậy khác."
-        group_user_event:
-          name: "Sự kiện người dùng nhóm"
-          details: "Khi một người dùng được thêm vào hoặc bị xóa trong một nhóm."
         like_event:
-          name: "Thích sự kiện"
-          details: "Khi một người dùng thích một bài đăng."
+          post_liked: "Khi một người dùng thích một bài đăng."
         delivery_status:
           title: "Tình trạng"
           inactive: "Không hoạt động"
@@ -4034,6 +4004,7 @@ vi:
           convert_theme_tooltip: "Chuyển đổi chủ đề này thành thành phần"
           inactive_themes: "Chủ đề không hoạt động:"
           inactive_components: "Các thành phần không sử dụng:"
+          cancel: "Huỷ"
           broken_theme_tooltip: "Chủ đề này có lỗi trong CSS, HTML hoặc YAML"
           disabled_component_tooltip: "Thành phần này đã bị vô hiệu hóa"
           default_theme_tooltip: "Chủ đề này là chủ đề mặc định của trang web"

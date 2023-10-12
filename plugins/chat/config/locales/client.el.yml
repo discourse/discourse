@@ -58,7 +58,6 @@ el:
       channel_info:
         back_to_channel: "Πίσω"
         tabs:
-          about: Σχετικά
           members: Μέλη
           settings: Ρυθμίσεις
       new_message_modal:
@@ -87,6 +86,10 @@ el:
         saved: "Αποθηκεύτηκε! "
         unfollow: "Αποχώρηση"
         admin_title: "Διαχειριστής"
+        settings_title: "Ρυθμίσεις"
+        category_label: "Κατηγορία"
+        history_label: "Ιστορικό"
+        members_label: "Μέλη"
       incoming_webhooks:
         back: "Πίσω"
         description: "Περιγραφή"
@@ -107,6 +110,13 @@ el:
           title: "Μετακίνηση σε Υπάρχον Θέμα"
         new_message:
           title: "Μετακίνηση σε νέο μήνυμα"
+      retention_reminders:
+        public:
+          one: "%{count} ημ"
+          other: "%{count} ημ"
+        dm:
+          one: "%{count} ημ"
+          other: "%{count} ημ"
       emoji_picker:
         objects: "Αντικείμενα"
         activities: "Δραστηριότητες"

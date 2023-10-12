@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class SessionController < ApplicationController
-  before_action :check_local_login_allowed, only: %i[create forgot_password]
+  before_action :check_local_login_allowed,
+                only: %i[create forgot_password passkey_challenge passkey_login]
   before_action :rate_limit_login, only: %i[create email_login]
   skip_before_action :redirect_to_login_if_required
   skip_before_action :preload_json,
@@ -330,6 +331,34 @@ class SessionController < ApplicationController
     else
       not_activated(user)
     end
+  end
+
+  def passkey_challenge
+    render json: DiscourseWebauthn.stage_challenge(current_user, secure_session)
+  end
+
+  def passkey_login
+    raise Discourse::NotFound unless SiteSetting.experimental_passkeys
+
+    params.require(:publicKeyCredential)
+
+    security_key =
+      ::DiscourseWebauthn::AuthenticationService.new(
+        nil,
+        params[:publicKeyCredential],
+        session: secure_session,
+        factor_type: UserSecurityKey.factor_types[:first_factor],
+      ).authenticate_security_key
+
+    user = User.where(id: security_key.user_id, active: true).first
+
+    if user.email_confirmed?
+      login(user, false)
+    else
+      not_activated(user)
+    end
+  rescue ::DiscourseWebauthn::SecurityKeyError => err
+    render_json_error(err.message, status: 401)
   end
 
   def email_login_info

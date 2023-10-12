@@ -1548,6 +1548,7 @@ te:
           save: "భద్రపరుచు"
           edit: "సవరించు"
           settings: "అమరికలు"
+          cancel: "రద్దుచేయి"
           upload: "ఎక్కించు"
           installed: "ప్రతిష్టించబడింది"
           install_popular: "ప్రముఖ"
