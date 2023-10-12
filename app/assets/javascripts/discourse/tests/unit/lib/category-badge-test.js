@@ -1,5 +1,6 @@
 import { getOwner } from "@ember/application";
 import { setupTest } from "ember-qunit";
+import $ from "jquery";
 import { module, test } from "qunit";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { helperContext } from "discourse-common/lib/helpers";

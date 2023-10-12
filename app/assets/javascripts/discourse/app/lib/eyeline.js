@@ -1,5 +1,6 @@
 import EmberObject from "@ember/object";
 import Evented from "@ember/object/evented";
+import $ from "jquery";
 import { isTesting } from "discourse-common/config/environment";
 
 let _skipUpdate;

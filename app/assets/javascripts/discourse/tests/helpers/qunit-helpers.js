@@ -7,6 +7,7 @@ import {
 } from "@ember/test-helpers";
 import { isEmpty } from "@ember/utils";
 import { setupApplicationTest } from "ember-qunit";
+import $ from "jquery";
 import MessageBus from "message-bus-client";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, skip, test } from "qunit";

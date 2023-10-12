@@ -2,6 +2,7 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
+import $ from "jquery";
 import loadScript from "discourse/lib/load-script";
 import getURL from "discourse-common/lib/get-url";
 import { bind } from "discourse-common/utils/decorators";
