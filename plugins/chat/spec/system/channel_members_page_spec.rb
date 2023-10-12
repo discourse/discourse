@@ -46,7 +46,7 @@ RSpec.describe "Channel - Info - Members page", type: :system do
 
         expect(page).to have_selector(".chat-channel-members__list-item", count: 60)
 
-        scroll_to(find(".chat-channel-members__list-item:nth-child(50)"))
+        scroll_to(find(".chat-channel-members__list-item:nth-child(60)"))
 
         expect(page).to have_selector(".chat-channel-members__list-item", count: 100)
 
