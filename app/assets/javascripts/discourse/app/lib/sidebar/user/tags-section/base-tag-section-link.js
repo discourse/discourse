@@ -1,4 +1,4 @@
-import { escape } from "pretty-text/sanitizer";
+import escape from "discourse-common/lib/escape";
 
 let customTagSectionLinkPrefixIcons = {};
 

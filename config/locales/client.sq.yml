@@ -2165,6 +2165,7 @@ sq:
           mobile: "Mobile"
           settings: "Rregullimet"
           preview: "Parashikimi"
+          cancel: "Anulo"
           upload: "Ngarko"
           installed: "Instaluar"
           install_popular: "Popullore"

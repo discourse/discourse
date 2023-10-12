@@ -96,7 +96,9 @@ import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper";
 
 export function currentUser() {
-  return User.create(sessionFixtures["/session/current.json"].current_user);
+  return User.create(
+    cloneJSON(sessionFixtures["/session/current.json"].current_user)
+  );
 }
 
 let _initialized = new Set();

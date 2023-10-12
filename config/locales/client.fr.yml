@@ -2097,7 +2097,6 @@ fr:
       drafts_offline: "brouillons hors ligne"
       edit_conflict: "conflit de modification"
       esc: "échap"
-      esc_label: "Cliquez ou appuyez sur Échap pour fermer"
       ok_proceed: "OK. Continuer"
       group_mentioned_limit:
         one: "<b>Attention !</b> Vous avez mentionné <a href='%{group_link}'>%{group}</a>, cependant ce groupe comprend plus de membres que le nombre limite de mentions de %{count} utilisateur configuré par l'administrateur. Personne ne sera notifié."
@@ -4478,41 +4477,8 @@ fr:
         groups_filter_instructions: "Les Webhooks appropriés seront uniquement déclenchés si les événements sont liés aux groupes définis. Laissez l'espace vide pour les déclencher pour tous les groupes."
         groups_filter: "Groupes déclenchés"
         delete_confirm: "Supprimer ce Webhook ?"
-        topic_event:
-          name: "Événement de sujet"
-          details: "Lorsqu'un sujet est créé, supprimé, modifié ou subit une révision."
-        post_event:
-          name: "Événement de message"
-          details: "Lorsqu'une réponse est publiée, modifiée, supprimée ou restaurée."
-        user_event:
-          name: "Événement d'utilisateur"
-        group_event:
-          name: "Événement de groupe"
-          details: "Lorsqu'un groupe est créé, mis à jour ou supprimé."
-        category_event:
-          name: "Événement de catégorie"
-          details: "Lorsqu'une catégorie est créée, mise à jour ou supprimée."
-        tag_event:
-          name: "Événement d'étiquette"
-          details: "Lorsqu'une étiquette est créée, mise à jour ou supprimée."
-        reviewable_event:
-          name: "Événement d'élément à examiner"
-          details: "Lorsqu'un nouvel élément est prêt à être examiné ou que son état est mis à jour."
-        notification_event:
-          name: "Événement de notification"
-          details: "Lorsqu'un utilisateur reçoit une notification dans son flux."
-        user_promoted_event:
-          name: "Événement sponsorisé par l'utilisateur"
-          details: "Lorsqu'un utilisateur est promu d'un niveau de confiance à un autre."
-        user_badge_event:
-          name: "Événement de badge"
-          details: "Lorsqu'un badge est accordé ou retiré."
-        group_user_event:
-          name: "Évènement d'appartenance à un groupe"
-          details: "Lorsqu'un utilisateur est ajouté ou supprimé d'un groupe."
         like_event:
-          name: "Événement de réaction « J'aime »"
-          details: "Lorsqu'un utilisateur attribue un « J'aime »"
+          post_liked: "Lorsqu'un utilisateur attribue un « J'aime »"
         delivery_status:
           title: "État de l'envoi"
           inactive: "Inactif"
@@ -4708,6 +4674,7 @@ fr:
           convert_theme_tooltip: "Convertir ce thème en composant"
           inactive_themes: "Thèmes inactifs :"
           inactive_components: "Composants non utilisés :"
+          cancel: "Annuler"
           broken_theme_tooltip: "Ce thème comporte des erreurs de CSS, HTML ou YAML"
           disabled_component_tooltip: "Ce composant a été désactivé"
           default_theme_tooltip: "Ce thème est le thème par défaut du site"

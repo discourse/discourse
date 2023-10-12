@@ -1033,6 +1033,10 @@ class PluginApi {
    * api.renderInOutlet('user-profile-primary', <template>Hello world</template>);
    * ```
    *
+   * Note that when passing a component definition to an outlet like this, the default
+   * `@connectorTagName` of the outlet is not used. If you need a wrapper element, you'll
+   * need to add it to your component's template.
+   *
    * @param {string} outletName - Name of plugin outlet to render into
    * @param {Component} klass - Component class definition to be rendered
    *

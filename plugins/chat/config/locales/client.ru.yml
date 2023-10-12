@@ -326,7 +326,6 @@ ru:
         back_to_all_channels: "Все каналы"
         back_to_channel: "Назад"
         tabs:
-          about: Информация
           members: Участники
           settings: Настройки
       new_message_modal:
@@ -488,6 +487,10 @@ ru:
         saved: "Сохранено"
         unfollow: "Отписаться"
         admin_title: "Администрирование"
+        settings_title: "Настройки"
+        category_label: "Категория"
+        history_label: "История"
+        members_label: "Участники"
       admin:
         title: "Чат"
         export_messages:
@@ -565,18 +568,16 @@ ru:
           many: "Отвечают %{commaSeparatedUsernames} и ещё %{count} пользователей"
           other: "Отвечают %{commaSeparatedUsernames} и ещё %{count} пользователей"
       retention_reminders:
-        public_none: "История канала хранится неограниченное время."
         public:
-          one: "История канала хранится %{count} день."
-          few: "История канала хранится %{count} дня."
-          many: "История канала хранится %{count} дней."
-          other: "История канала хранится %{count} дня."
-        dm_none: "История личного чата хранится неограниченное время."
+          one: "%{count} день"
+          few: "%{count} дней"
+          many: "%{count} дня"
+          other: "%{count} дня"
         dm:
-          one: "История личного чата хранится %{count} день."
-          few: "История личного чата хранится %{count} дня."
-          many: "История личного чата хранится %{count} дней."
-          other: "История личного чата хранится %{count} дня."
+          one: "%{count} день"
+          few: "%{count} дней"
+          many: "%{count} дня"
+          other: "%{count} дня"
       flags:
         off_topic: "Это сообщение не имеет отношения к текущему обсуждению, как указано в названии канала, и, вероятно, его следует переместить в другое место."
         inappropriate: "Это сообщение содержит контент, который обоснованно можно считать оскорбительным или нарушающим <a href=\"%{basePath}/guidelines\">рекомендации для сообщества</a>."

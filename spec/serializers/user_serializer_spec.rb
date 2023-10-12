@@ -440,6 +440,27 @@ RSpec.describe UserSerializer do
     end
   end
 
+  context "with user_passkeys" do
+    fab!(:user) { Fabricate(:user) }
+    fab!(:passkey) { Fabricate(:passkey_with_random_credential, user: user) }
+
+    it "does not include them if feature is disabled" do
+      json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
+
+      expect(json[:user_passkeys]).to eq(nil)
+    end
+
+    it "includes passkeys if feature is enabled" do
+      SiteSetting.experimental_passkeys = true
+
+      json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
+
+      expect(json[:user_passkeys][0][:id]).to eq(passkey.id)
+      expect(json[:user_passkeys][0][:name]).to eq(passkey.name)
+      expect(json[:user_passkeys][0][:last_used]).to eq(passkey.last_used)
+    end
+  end
+
   context "for user sidebar attributes" do
     include_examples "User Sidebar Serializer Attributes", described_class
 

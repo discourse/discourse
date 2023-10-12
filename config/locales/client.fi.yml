@@ -2097,7 +2097,6 @@ fi:
       drafts_offline: "offline-luonnokset"
       edit_conflict: "muokkauskonflikti"
       esc: "esc"
-      esc_label: "Kuittaa klikkaamalla tai painamalla Esc-näppäintä"
       ok_proceed: "Ok, jatka"
       group_mentioned_limit:
         one: "<b>Varoitus!</b> Olet maininnut ryhmän <a href='%{group_link}'>%{group}</a>, mutta ryhmässä on yli %{count} käyttäjä, mikä on ylläpitäjän asettama rajoitus maininnoille. Kukaan ei saa ilmoitusta."
@@ -4478,41 +4477,8 @@ fi:
         groups_filter_instructions: "Webhookit laukeavat vain, jos tapahtuma liittyy määriteltyihin ryhmiin. Jätä tyhjäksi, jos haluat webhookien laukeavan ryhmistä riippumatta."
         groups_filter: "Laukaisevat ryhmät"
         delete_confirm: "Poistetaanko tämä webhook?"
-        topic_event:
-          name: "Ketjutapahtuma"
-          details: "Kun aloitetaan uusi ketju, ketju päivitetään, muutetaan tai poistetaan"
-        post_event:
-          name: "Viestitapahtuma"
-          details: "Luodaan uusi vastaus, muokataan, poistetaan tai palautetaan."
-        user_event:
-          name: "Käyttäjätapahtuma"
-        group_event:
-          name: "Ryhmätapahtuma"
-          details: "Kun ryhmä luodaan, päivitetään tai poistetaan."
-        category_event:
-          name: "Aluetapahtuma"
-          details: "Kun alue luodaan, päivitetään tai poistetaan."
-        tag_event:
-          name: "Tunnistetapahtuma"
-          details: "Kun tunniste luodaan, päivitetään tai poistetaan."
-        reviewable_event:
-          name: "Käsittelytapahtuma"
-          details: "Kun uusi asia tulee käsiteltäväksi tai kun sen tila muuttuu."
-        notification_event:
-          name: "Ilmoitustapahtuma"
-          details: "Kun käyttäjä saa ilmoituksen syötteeseensä."
-        user_promoted_event:
-          name: "Käyttäjän ylennustapahtuma"
-          details: "Kun käyttäjä ylennetään luottamustasolta toiselle."
-        user_badge_event:
-          name: "Merkittävä tapahtuma"
-          details: "Kun kunniamerkki myönnetään tai mitätöidään."
-        group_user_event:
-          name: "Käyttäjäryhmän tapahtuma"
-          details: "Kun käyttäjä lisätään tai poistetaan ryhmästä."
         like_event:
-          name: "Tykkäystapahtuma"
-          details: "Kun käyttäjä tykkää viestistä."
+          post_liked: "Kun käyttäjä tykkää viestistä."
         delivery_status:
           title: "Toimituksen tila"
           inactive: "Ei aktiivinen"
@@ -4708,6 +4674,7 @@ fi:
           convert_theme_tooltip: "Muunna teema komponentiksi"
           inactive_themes: "Teemat, jotka eivät käytössä:"
           inactive_components: "Käyttämättömät komponentit:"
+          cancel: "Peruuta"
           broken_theme_tooltip: "Teeman CSS:ssä, HTML:ssä tai YAML:ssä on virheitä"
           disabled_component_tooltip: "Komponentti ei ole käytössä"
           default_theme_tooltip: "Tämä on sivuston oletusteema"

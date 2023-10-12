@@ -4,10 +4,7 @@ import { start } from "ember-qunit";
 import * as QUnit from "qunit";
 import { setup } from "qunit-dom";
 import setupTests from "discourse/tests/setup-tests";
-import { setEnvironment } from "discourse-common/config/environment";
 import config from "../config/environment";
-
-setEnvironment("testing");
 
 document.addEventListener("discourse-booted", () => {
   // eslint-disable-next-line no-undef

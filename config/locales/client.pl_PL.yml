@@ -2317,7 +2317,6 @@ pl_PL:
       drafts_offline: "szkice offline"
       edit_conflict: "edytuj konflikt"
       esc: "esc"
-      esc_label: "Kliknij lub naciśnij Esc, aby odrzucić"
       ok_proceed: "Ok, kontynuuj."
       group_mentioned_limit:
         one: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."
@@ -4963,41 +4962,8 @@ pl_PL:
         groups_filter_instructions: "Istotne webhook'i będą uruchamiane tylko wtedy, gdy zdarzenie jest związane z określonymi grupami. Pozostaw puste, aby wywołać webhook'i dla wszystkich grup."
         groups_filter: "Wywołane grupy"
         delete_confirm: "Usunąć ten webhook?"
-        topic_event:
-          name: "Temat wydarzenia"
-          details: "Kiedy pojawia się nowy temat, poprawiony, zmieniony lub usunięty."
-        post_event:
-          name: "Post wydarzenia"
-          details: "Kiedy pojawia się nowa odpowiedź, edytuj, usuń lub odzyskaj."
-        user_event:
-          name: "Wydarzenie użytkownika"
-        group_event:
-          name: "Zdarzenie grupowe"
-          details: "Kiedy grupa jest tworzona, aktualizowana lub niszczona. "
-        category_event:
-          name: "Zdarzenie kategorii"
-          details: "Kiedy kategoria jest tworzona, aktualizowana lub niszczona."
-        tag_event:
-          name: "Zdarzenie tagu"
-          details: "Kiedy tag jest tworzony, aktualizowany lub niszczony."
-        reviewable_event:
-          name: "Zdarzenie przeglądania"
-          details: "Kiedy nowy element jest gotowy do przejrzenia lub kiedy jego status jest aktualizowany."
-        notification_event:
-          name: "Zdarzenie powiadomienia"
-          details: "Kiedy użytkownik otrzymuje powiadomienie."
-        user_promoted_event:
-          name: "Wydarzenie promowania użytkownika"
-          details: "Gdy użytkownik awansuje z jednego poziomu zaufania na inny."
-        user_badge_event:
-          name: "Zdarzenie odznak"
-          details: "Kiedy odznaka zostaje przyznana lub odebrana."
-        group_user_event:
-          name: "Grupowy event użytkownika"
-          details: "Gdy użytkownik jest dodany lub usunięty w grupie."
         like_event:
-          name: "Event polubienia postu"
-          details: "Gdy użytkownik polubi post."
+          post_liked: "Gdy użytkownik polubi post."
         delivery_status:
           title: "Status dostarczenia"
           inactive: "Nieaktywny"
@@ -5202,6 +5168,7 @@ pl_PL:
           convert_theme_tooltip: "Konwertuj ten motyw na komponent"
           inactive_themes: "Nieaktywne motywy:"
           inactive_components: "Nieużywane komponenty:"
+          cancel: "Anuluj"
           broken_theme_tooltip: "Ten motyw ma błędy w CSS, HTML lub YAML"
           disabled_component_tooltip: "Ten komponent został wyłączony"
           default_theme_tooltip: "Ten motyw jest domyślnym motywem witryny"

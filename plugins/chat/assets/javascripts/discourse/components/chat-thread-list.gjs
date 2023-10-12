@@ -1,14 +1,73 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import { modifier } from "ember-modifier";
+import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { bind } from "discourse-common/utils/decorators";
+import I18n from "I18n";
+import eq from "truth-helpers/helpers/eq";
+import ChatThreadListHeader from "discourse/plugins/chat/discourse/components/chat/thread-list/header";
+import ChatThreadListItem from "discourse/plugins/chat/discourse/components/chat/thread-list/item";
+import ChatTrackMessage from "discourse/plugins/chat/discourse/modifiers/chat/track-message";
 
 export default class ChatThreadList extends Component {
   @service chat;
   @service chatApi;
   @service messageBus;
   @service chatTrackingStateManager;
+
+  noThreadsLabel = I18n.t("chat.threads.none");
+
+  subscribe = modifier((element, [channel]) => {
+    this.messageBus.subscribe(
+      `/chat/${channel.id}`,
+      this.onMessageBus,
+      channel.channelMessageBusLastId
+    );
+
+    return () => {
+      // TODO (joffrey) In drawer we won't have channel anymore at this point
+      if (!channel) {
+        return;
+      }
+
+      this.messageBus.unsubscribe(`/chat/${channel.id}`, this.onMessageBus);
+    };
+  });
+
+  fill = modifier((element) => {
+    this.resizeObserver = new ResizeObserver(() => {
+      if (isElementInViewport(element)) {
+        this.loadThreads();
+      }
+    });
+
+    this.resizeObserver.observe(element);
+
+    return () => {
+      this.resizeObserver.disconnect();
+    };
+  });
+
+  loadMore = modifier((element) => {
+    this.intersectionObserver = new IntersectionObserver(this.loadThreads);
+    this.intersectionObserver.observe(element);
+
+    return () => {
+      this.intersectionObserver.disconnect();
+    };
+  });
+
+  @cached
+  get threadsCollection() {
+    return this.chatApi.threads(this.args.channel.id, this.handleLoadedThreads);
+  }
+
+  @bind
+  loadThreads() {
+    this.threadsCollection.load({ limit: 10 });
+  }
 
   get threadsManager() {
     return this.args.channel.threadsManager;
@@ -65,22 +124,6 @@ export default class ChatThreadList extends Component {
     return !!this.args.channel;
   }
 
-  @action
-  loadThreads() {
-    return this.threadsCollection.load({ limit: 10 });
-  }
-
-  @action
-  subscribe() {
-    this.#unsubscribe();
-
-    this.messageBus.subscribe(
-      `/chat/${this.args.channel.id}`,
-      this.onMessageBus,
-      this.args.channel.messageBusLastId
-    );
-  }
-
   @bind
   onMessageBus(busData) {
     switch (busData.type) {
@@ -119,11 +162,6 @@ export default class ChatThreadList extends Component {
     restoredOriginalMessageThread.originalMessage.deletedAt = null;
   }
 
-  @cached
-  get threadsCollection() {
-    return this.chatApi.threads(this.args.channel.id, this.handleLoadedThreads);
-  }
-
   @bind
   handleLoadedThreads(result) {
     return result.threads.map((thread) => {
@@ -140,20 +178,40 @@ export default class ChatThreadList extends Component {
     });
   }
 
-  @action
-  teardown() {
-    this.#unsubscribe();
-  }
+  <template>
+    {{! template-lint-disable modifier-name-case }}
+    {{#if this.shouldRender}}
+      <div class="chat-thread-list" {{this.subscribe @channel}}>
+        {{#if @includeHeader}}
+          <ChatThreadListHeader @channel={{@channel}} />
+        {{/if}}
 
-  #unsubscribe() {
-    // TODO (joffrey) In drawer we won't have channel anymore at this point
-    if (!this.args.channel) {
-      return;
-    }
+        <div class="chat-thread-list__items" {{this.fill}}>
+          {{#each this.sortedThreads key="id" as |thread|}}
+            <ChatThreadListItem
+              @thread={{thread}}
+              {{(if
+                (eq thread this.lastThread)
+                (modifier ChatTrackMessage this.load)
+              )}}
+            />
+          {{else}}
+            {{#if this.threadsCollection.fetchedOnce}}
+              <div class="chat-thread-list__no-threads">
+                {{this.noThreadsLabel}}
+              </div>
+            {{/if}}
+          {{/each}}
 
-    this.messageBus.unsubscribe(
-      `/chat/${this.args.channel.id}`,
-      this.onMessageBus
-    );
-  }
+          <ConditionalLoadingSpinner
+            @condition={{this.threadsCollection.loading}}
+          />
+
+          <div {{this.loadMore}}>
+            <br />
+          </div>
+        </div>
+      </div>
+    {{/if}}
+  </template>
 }

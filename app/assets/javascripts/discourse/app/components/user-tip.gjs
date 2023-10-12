@@ -3,8 +3,8 @@ import { getOwner } from "@ember/application";
 import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import { escape } from "pretty-text/sanitizer";
 import UserTipContainer from "discourse/components/user-tip-container";
+import escape from "discourse-common/lib/escape";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "I18n";
 import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
@@ -15,13 +15,15 @@ export default class UserTip extends Component {
   @service tooltip;
 
   registerTip = modifier(() => {
-    this.userTips.addAvailableTip({
+    const tip = {
       id: this.args.id,
       priority: this.args.priority ?? 0,
-    });
+    };
+
+    this.userTips.addAvailableTip(tip);
 
     return () => {
-      this.userTips.removeAvailableTip({ id: this.args.id });
+      this.userTips.removeAvailableTip(tip);
     };
   });
 
@@ -69,7 +71,7 @@ export default class UserTip extends Component {
   });
 
   get shouldRenderTip() {
-    return this.userTips.renderedId === this.args.id;
+    return this.userTips.shouldRender(this.args.id);
   }
 
   <template>

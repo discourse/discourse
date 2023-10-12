@@ -257,10 +257,16 @@ zh_CN:
       our_moderators: "我们的版主"
       moderators: "版主"
       stat:
+        all_time: "所有时间"
         last_day: "24 小时"
+        last_7_days: "7 天"
+        last_30_days: "30 天"
       like_count: "赞"
       topic_count: "话题"
       post_count: "帖子"
+      user_count: "注册"
+      active_user_count: "活跃用户"
+      contact: "联系我们"
       contact_info: "如果出现影响此站点的关键问题或紧急事项，请联系我们：%{contact_info}。"
     bookmarked:
       title: "加入书签"
@@ -941,6 +947,7 @@ zh_CN:
     user:
       said: "%{username}："
       profile: "个人资料"
+      profile_possessive: "%{username} 的个人资料"
       mute: "免打扰"
       edit: "编辑偏好设置"
       download_archive:
@@ -1823,6 +1830,7 @@ zh_CN:
       title: "创建您的帐户"
       failed: "出了点问题，可能此电子邮件已被注册，试试点击忘记密码链接"
       associate: "已经有帐户？<a href='%{associate_link}'>登录</a>以关联您的 %{provider} 帐户。"
+      activation_title: "激活您的账户"
     forgot_password:
       title: "密码重置"
       action: "我忘记密码了"
@@ -1873,6 +1881,7 @@ zh_CN:
       security_key_not_allowed_error: "安全密钥身份验证过程超时或被取消。"
       security_key_no_matching_credential_error: "在提供的安全密钥中找不到匹配的凭据。"
       security_key_support_missing_error: "您当前的设备或浏览器不支持使用安全密钥。请使用其他方法。"
+      security_key_invalid_response_error: "由于响应无效，安全密钥身份验证过程失败。"
       email_placeholder: "电子邮件/用户名"
       caps_lock_warning: "大写锁定已开启"
       error: "未知错误"
@@ -2037,7 +2046,7 @@ zh_CN:
       drafts_offline: "离线草稿"
       edit_conflict: "编辑冲突"
       esc: "esc"
-      esc_label: "点击或按 Esc 忽略"
+      esc_label: "关闭消息"
       ok_proceed: "好的，继续"
       group_mentioned_limit:
         other: "<b>警告</b>！您提及了 <a href='%{group_link}'> %{group} </a>，但是此群组的成员数量超过了管理员配置的 %{count} 个用户的最大可提及数量限制。没有人会收到通知。"
@@ -3660,7 +3669,7 @@ zh_CN:
       more_badges:
         other: "其他 (+%{count})"
       awarded:
-        other: "%{number} 已获奖"
+        other: "已授予 %{number} 人"
       select_badge_for_title: 选择一个徽章作为您的头衔使用
       none: "（无）"
       successfully_granted: "已成功将“%{badge}”授予 %{username}"
@@ -4269,6 +4278,11 @@ zh_CN:
               list: 列出最新帖子和不公开帖子。也支持 RSS。
             tags:
               list: 列出标签。
+            tag_groups:
+              list: 获取标签组列表。
+              show: 通过 id 获取单个标签组。
+              create: 创建标签组。
+              update: 更新由 id 指定的标签组。
             categories:
               list: 获取类别列表。
               show: 通过 id 获取单个类别。
@@ -4345,41 +4359,65 @@ zh_CN:
         groups_filter: "触发的群组"
         delete_confirm: "删除此网络钩子？"
         topic_event:
-          name: "话题事件"
-          details: "有新的话题，话题被修改、更改或删除时。"
+          group_name: "话题事件"
+          topic_created: "话题被创建"
+          topic_revised: "话题被修订"
+          topic_edited: "话题被更新"
+          topic_destroyed: "话题被删除"
+          topic_recovered: "话题被恢复"
         post_event:
-          name: "帖子事件"
-          details: "有新的回复、编辑，帖子被删除或者恢复时。"
-        user_event:
-          name: "用户事件"
-          details: "当用户登录、退出、确认电子邮件、创建、批准、更新、暂停或取消暂停时。"
+          group_name: "帖子事件"
+          post_created: "帖子被创建"
+          post_edited: "帖子被更新"
+          post_destroyed: "帖子被删除"
+          post_recovered: "帖子被恢复"
         group_event:
-          name: "群组事件"
-          details: "当群组被创建、更新或销毁时。"
-        category_event:
-          name: "类别事件"
-          details: "当类别被创建、更新或销毁时。"
+          group_name: "群组事件"
+          group_created: "群组被创建"
+          group_updated: "群组被更新"
+          group_destroyed: "群组被删除"
         tag_event:
-          name: "标签事件"
-          details: "当标签被创建、更新或销毁时。"
+          group_name: "标签事件"
+          tag_created: "标签被创建"
+          tag_updated: "标签被更新"
+          tag_destroyed: "标签被删除"
+        category_event:
+          group_name: "类别事件"
+          category_created: "类别被创建"
+          category_updated: "类别被更新"
+          category_destroyed: "类别被删除"
+        user_event:
+          group_name: "用户事件"
+          user_logged_in: "用户登录"
+          user_logged_out: "用户登出"
+          user_confirmed_email: "用户确认电子邮件"
+          user_created: "用户被创建"
+          user_approved: "用户被批准"
+          user_updated: "用户更新"
+          user_destroyed: "用户被删除"
+          user_suspended: "用户被封禁"
+          user_unsuspended: "用户被解除封禁"
         reviewable_event:
-          name: "可审核的事件"
-          details: "当新条目可以进行审核及其状态更新时。"
-        notification_event:
-          name: "通知事件"
-          details: "当用户在 Feed 中收到通知时。"
-        user_promoted_event:
-          name: "用户信任级别提升事件"
-          details: "当用户从一个信任级别提升到另一个信任级别时。"
+          group_name: "审核事件"
+          reviewable_created: "新的待审核项目"
+          reviewable_updated: "可审核项目被更新"
         user_badge_event:
-          name: "徽章活动"
-          details: "当徽章被授予或撤销时。"
-        group_user_event:
-          name: "群组用户事件"
-          details: "在群组中添加或移除用户时。"
+          group_name: "徽章事件"
+          user_badge_granted: "授予用户徽章"
+          user_badge_revoked: "用户的徽章被撤销"
         like_event:
-          name: "点赞事件"
-          details: "当用户点赞一个帖子时。"
+          group_name: "点赞事件"
+          post_liked: "当用户点赞一篇帖子时。"
+        notification_event:
+          group_name: "通知事件"
+          notification_created: "用户在他们的推送中收到通知"
+        group_user_event:
+          group_name: "群组用户事件"
+          user_added_to_group: "用户被添加到群组"
+          user_removed_from_group: "用户被从群组中移除"
+        user_promoted_event:
+          group_name: "用户信任级别提升事件"
+          user_promoted: "用户信任级别被提升"
         delivery_status:
           title: "传送状态"
           inactive: "停用"
@@ -4511,6 +4549,9 @@ zh_CN:
         install: "安装"
         delete: "删除"
         delete_confirm: '确定要删除“%{theme_name}”吗？'
+        bulk_delete: '你确定吗？'
+        bulk_themes_delete_confirm: "这将卸载以下主题，您网站上的任何用户将无法再使用它们："
+        bulk_components_delete_confirm: "这将卸载以下主题组件，您网站上的任何用户将无法再使用它们："
         color: "颜色"
         opacity: "不透明度"
         copy: "复制"
@@ -4580,6 +4621,8 @@ zh_CN:
           convert_theme_tooltip: "将此主题转换为组件"
           inactive_themes: "停用主题："
           inactive_components: "未使用的组件："
+          selected: "已选择 %{count} 个"
+          cancel: "取消"
           broken_theme_tooltip: "此主题的 CSS、HTML 或 YAML 中存在错误"
           disabled_component_tooltip: "此组件已被禁用"
           default_theme_tooltip: "此主题是站点的默认主题"
