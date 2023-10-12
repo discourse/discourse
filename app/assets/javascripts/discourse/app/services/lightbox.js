@@ -1,22 +1,24 @@
+import Service, { inject as service } from "@ember/service";
+import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import {
   DOCUMENT_ELEMENT_LIGHTBOX_OPEN_CLASS,
   LIGHTBOX_APP_EVENT_NAMES,
   MIN_CAROUSEL_ARROW_ITEM_COUNT,
   SELECTORS,
 } from "discourse/lib/lightbox/constants";
-import Service, { inject as service } from "@ember/service";
 import {
   getSiteThemeColor,
   setSiteThemeColor,
 } from "discourse/lib/lightbox/helpers";
-
-import { bind } from "discourse-common/utils/decorators";
-import { isDocumentRTL } from "discourse/lib/text-direction";
 import { processHTML } from "discourse/lib/lightbox/process-html";
+import { isDocumentRTL } from "discourse/lib/text-direction";
+import { bind } from "discourse-common/utils/decorators";
 
+@disableImplicitInjections
 export default class LightboxService extends Service {
   @service appEvents;
   @service site;
+  @service siteSettings;
 
   lightboxIsOpen = false;
   lightboxClickElements = [];
@@ -42,7 +44,7 @@ export default class LightboxService extends Service {
     this.options = {
       isMobile: this.site.mobileView,
       isRTL: isDocumentRTL(),
-      minCarosuelArrowItemCount: MIN_CAROUSEL_ARROW_ITEM_COUNT,
+      minCarouselArrowItemCount: MIN_CAROUSEL_ARROW_ITEM_COUNT,
       zoomOnOpen: false,
       canDownload:
         this.currentUser ||

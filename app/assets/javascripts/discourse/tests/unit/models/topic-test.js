@@ -1,9 +1,9 @@
+import { getOwner } from "@ember/application";
+import { setupTest } from "ember-qunit";
+import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { module, test } from "qunit";
 import Category from "discourse/models/category";
 import Topic from "discourse/models/topic";
-import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
-import { getOwner } from "discourse-common/lib/get-owner";
-import { setupTest } from "ember-qunit";
 
 module("Unit | Model | topic", function (hooks) {
   setupTest(hooks);

@@ -1,6 +1,6 @@
-import MultiSelectComponent from "select-kit/components/multi-select";
-import FormTemplate from "discourse/models/form-template";
 import { computed } from "@ember/object";
+import FormTemplate from "discourse/models/form-template";
+import MultiSelectComponent from "select-kit/components/multi-select";
 
 export default MultiSelectComponent.extend({
   pluginApiIdentifiers: ["form-template-chooser"],

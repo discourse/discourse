@@ -68,8 +68,11 @@ de:
       generic: Beim Importieren dieses Themes ist ein Fehler aufgetreten
       upload: "Fehler beim Erstellen des Upload-Assets: %{name}. %{errors}"
       about_json: "Importfehler: about.json existiert nicht oder ist ungültig. Bist du dir sicher, dass dies ein Discourse-Theme ist?"
+      about_json_too_big: "Importfehler: about.json ist größer als das Limit von %{limit} ."
       about_json_values: "about.json enthält ungültige Werte: %{errors}"
       modifier_values: "about.json-Modifikatoren enthalten ungültige Werte: %{errors}"
+      asset_too_big: "Asset %{filename} ist größer als der Grenzwert %{limit}"
+      theme_too_big: "Das Thema ist größer als die %{limit} Grenze"
       git: "Fehler beim Klonen des Git-Repository, Zugriff verweigert oder Repository nicht gefunden."
       git_ref_not_found: "Git-Referenz kann nicht ausgecheckt werden: %{ref}"
       git_unsupported_scheme: "Git-Repo kann nicht geklont werden: Schema wird nicht unterstützt"
@@ -78,6 +81,7 @@ de:
       unknown_file_type: "Die Datei, die du hochgeladen hast, scheint kein gültiges Discourse-Theme zu sein."
       not_allowed_theme: "`%{repo}` ist nicht in der Liste der zulässigen Themes (überprüfe die globale Einstellung `allowed_theme_repos`)."
       ssh_key_gone: "Du hast zu lange mit der Installation des Themes gewartet und der SSH-Schlüssel ist abgelaufen. Bitte versuche es noch einmal."
+      too_many_files: "Die Anzahl der Dateien (%{count}) im Thema hat die maximal zulässige Anzahl von Dateien (%{limit}) überschritten."
     errors:
       component_no_user_selectable: "Theme-Komponenten können nicht vom Benutzer auswählbar sein"
       component_no_default: "Theme-Komponenten können nicht Standard-Theme sein"
@@ -307,6 +311,7 @@ de:
   delete_topic_failed: "Es kam zu einem Fehler beim Löschen des Themas. Bitte kontaktiere den Administrator der Website."
   reading_time: "Lesezeit"
   likes: "„Gefällt mir“"
+  action_already_performed: "Ups! Du hast diese Aktion bereits durchgeführt. Kannst du versuchen, die Seite zu aktualisieren?"
   too_many_replies:
     one: "Entschuldigung, aber neue Benutzer sind vorübergehend auf %{count} Antwort pro Thema beschränkt."
     other: "Entschuldigung, aber neue Benutzer sind vorübergehend auf %{count} Antworten pro Thema beschränkt."
@@ -905,6 +910,9 @@ de:
     sequence_conflict_error:
       title: "Fehler beim Entwurf"
       description: "Der Entwurf wird in einem anderen Fenster bearbeitet. Bitte lade diese Seite neu."
+    too_many_drafts:
+      title: "Zu viele Entwürfe"
+      description: "Du hast die maximale Anzahl der erlaubten Entwürfe erreicht. Bitte lösche einige [deiner Entwürfe](%{base_url}/my/activity/drafts) und versuche es erneut."
   draft_backup:
     pm_title: "Sichere Entwürfe aus laufenden Themen"
     pm_body: "Thema enthält gesicherte Entwürfe"
@@ -929,6 +937,7 @@ de:
       invalid_origin_error: "Die Herkunft der Authentifizierungsanfrage entspricht nicht der Server-Herkunft."
       malformed_attestation_error: "Beim Decodieren der Attestierungsdaten ist ein Fehler aufgetreten."
       invalid_relying_party_id_error: "Die ID der vertrauenden Partei der Authentifizierungsanforderung stimmt nicht mit der ID der vertrauenden Partei des Servers überein."
+      user_presence_error: "Die Anwesenheit des Benutzers ist erforderlich."
       user_verification_error: "Benutzerüberprüfung erforderlich."
       unsupported_public_key_algorithm_error: "Der angegebene Algorithmus des öffentlichen Schlüssels wird vom Server nicht unterstützt."
       unsupported_attestation_format_error: "Das Attestierungsformat wird vom Server nicht unterstützt."
@@ -937,6 +946,7 @@ de:
       ownership_error: "Der Sicherheitsschlüssel gehört dem Benutzer nicht."
       not_found_error: "Ein Sicherheitsschlüssel mit der bereitgestellten Zugangs-ID konnte nicht gefunden werden."
       unknown_cose_algorithm_error: "Der Algorithmus, der für den Sicherheitsschlüssel verwendet wird, konnte nicht erkannt werden."
+      malformed_public_key_credential_error: "Der angegebene öffentliche Schlüssel ist ungültig."
   topic_flag_types:
     spam:
       title: "Spam"
@@ -1407,7 +1417,6 @@ de:
     unreachable_themes: "Wir konnten die folgenden Themes nicht auf Updates prüfen:"
     watched_word_regexp_error: "Der reguläre Ausdruck für „%{action}“ überwachte Wörter ist ungültig. Bitte überprüfe deine <a href='%{base_path}/admin/customize/watched_words'>Einstellungen für überwachte Wörter</a> oder deaktiviere die Website-Einstellung „watched words regular expressions“."
     v3_analytics_deprecated: "Dein Discourse verwendet derzeit Google Analytics 3, das ab Juli 2023 nicht mehr unterstützt wird. <a href='https://meta.discourse.org/t/260498'>Aktualisiere jetzt auf Google Analytics 4</a>, um weiterhin wertvolle Einblicke und Analysen zur Leistung deiner Website zu erhalten."
-    legacy_navigation_menu_deprecated: "Dein Discourse verwendet derzeit das „alte“ Navigationsmenü, das <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>in der ersten Betaversion von Discourse 3.2</a> entfernt wird. Stelle auf das neue Navigationsmenü um, indem du deine <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'>Navigationsmenü-Website-Einstellung</a> auf „Seitenleiste“ oder „Kopfzeilen-Drop-down“ aktualisierst."
   site_settings:
     allow_bulk_invite: "Erlaube Masseneinladungen durch Hochladen einer CSV-Datei"
     disabled: "deaktiviert"
@@ -1418,9 +1427,9 @@ de:
     allow_user_locale: "Erlaube Benutzern, ihre eigene Oberflächensprache zu wählen"
     set_locale_from_accept_language_header: "Oberflächensprache für anonyme Benutzer basierend auf den Sprach-Headern ihres Webbrowsers festlegen"
     support_mixed_text_direction: "Unterstütze die Vermischung von rechtsläufigem und linksläufigem Text"
-    min_post_length: "Minimal zulässige Beitragslänge in Zeichen."
-    min_first_post_length: "Minimal zulässige Länge des ersten Beitrags (eines Themas) in Zeichen"
-    min_personal_message_post_length: "Minimal zulässige Beitragslänge in Zeichen für Nachrichten."
+    min_post_length: "Minimal zulässige Beitragslänge in Zeichen (ohne persönliche Nachrichten)"
+    min_first_post_length: "Zulässige Mindestlänge des ersten Beitrags (Thementext) (ohne persönliche Nachrichten)"
+    min_personal_message_post_length: "Minimal zulässige Beitragslänge in Zeichen für Nachrichten (sowohl erster Beitrag als auch Antworten)"
     max_post_length: "Maximal zulässige Beitragslänge in Zeichen."
     topic_featured_link_enabled: "Aktiviere das Posten eines Links mit Themen."
     show_topic_featured_link_in_digest: "Zeige den hervorgehobene Themen-Link in der E-Mail-Zusammenfassung."
@@ -1540,7 +1549,7 @@ de:
     tl2_additional_flags_per_day_multiplier: "Das Limit der „Meldungen“ pro Tag für Benutzer mit Vertrauensstufe 2 (Mitglied) durch Multiplikation mit dieser Zahl erhöhen"
     tl3_additional_flags_per_day_multiplier: "Das Limit der „Meldungen“ pro Tag für Benutzer mit Vertrauensstufe 3 (Stammgast) durch Multiplikation mit dieser Zahl erhöhen"
     tl4_additional_flags_per_day_multiplier: "Das Limit der „Meldungen“ pro Tag für Benutzer mit Vertrauensstufe 4 (Anführer) durch Multiplikation mit dieser Zahl erhöhen"
-    num_users_to_silence_new_user: "Wenn die Beiträge eines neuen Benutzers num_spam_flags_to_silence_new_user Spam-Meldungen von so vielen verschiedenen Benutzern erhalten, werden alle Beiträge des Benutzers versteckt und zukünftige Beiträge verhindert. 0 zum Deaktivieren."
+    num_users_to_silence_new_user: "Wenn die Beiträge eines neuen Benutzers die hide_post_sensitivity Einstellung überschreiten und Spam-Flags von so vielen verschiedenen Benutzern haben, werden alle seine Beiträge ausgeblendet und zukünftige Beiträge verhindert. 0 zum Deaktivieren."
     num_tl3_flags_to_silence_new_user: "Wenn die Beiträge eines neuen Benutzers so viele Meldungen von num_tl3_users_to_silence_new_user verschiedenen Benutzern mit Vertrauensstufe 3 erhalten, werden alle Beiträge des Benutzers versteckt und zukünftige Beiträge verhindert. 0 zum Deaktivieren."
     num_tl3_users_to_silence_new_user: "Wenn die Beiträge eines neuen Benutzers num_tl3_flags_to_silence_new_user Meldungen von so vielen verschiedenen Benutzern mit Vertrauensstufe 3 erhalten, werden alle Beiträge des Benutzers versteckt und zukünftige Beiträge verhindert. 0 zum Deaktivieren."
     notify_mods_when_user_silenced: "Wenn ein Benutzer automatisch stummgeschaltet wird, sende eine Nachricht an alle Moderatoren."
@@ -1562,7 +1571,7 @@ de:
     ga_universal_tracking_code: "Google Universal Analytics Tracking-Code-ID, z. B.: UA-12345678-9; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Google Universal Analytics Domainname, z. B.: mysite.com; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Aktiviere Cross-Domain-Tracking von Google Universal Analytics. Bei ausgehenden Links zu diesen Domains wird die Client-ID hinzugefügt. Siehe <a href='https://support.google.com/analytics/answer/1034342?hl=de' target='_blank'>Googles Cross-Domain-Tracking-Handbuch.</a>"
-    gtm_container_id: "Google-Tag-Manager-Container-ID. Zum Beispiel: GTM-ABCDEF. <br/>Hinweis: Skripte von Drittanbietern, die von GTM geladen werden, müssen unter Umständen in der Liste „content security policy script src“ erlaubt werden (Positivliste)."
+    gtm_container_id: "Google Tag Manager Container-ID, z.B.: GTM-ABCD12E. <br/>Hinweis: Um GTM zu verwenden, wenn die Content Security Policy (CSP) aktiviert ist, siehe die Dokumentation auf meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Nonces in Google Tag Manager-Skripten verwenden</a>."
     enable_escaped_fragments: "Auf die Ajax-Crawling-API von Google zurückgreifen, wenn kein Webcrawler gefunden wird. Siehe <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories_and_groups: "Moderatoren erlauben, Kategorien und Gruppen zu erstellen und zu verwalten"
     moderators_change_post_ownership: "Moderatoren erlauben, die Eigentümerschaft des Beitrags zu ändern"
@@ -2123,14 +2132,16 @@ de:
     default_sidebar_switch_panel_position: "Position der Panel-Umschaltschaltflächen in der Seitenleiste"
     retain_web_hook_events_period_days: "Anzahl an Tagen, die Webhook-Ereigniseinträge aufbewahrt werden."
     retry_web_hook_events: "Fehlgeschlagene Webhook-Ereignisse automatisch 4 Mal erneut versuchen. Die Wartezeiten zwischen den Versuchen betragen eine, 5, 25 und 125 Minuten."
-    revoke_api_keys_days: "Anzahl der Tage, bevor ein nicht verwendeter API-Schlüssel automatisch widerrufen wird (0 für niemals)"
+    revoke_api_keys_unused_days: "Anzahl der Tage seit der letzten Verwendung eines API-Schlüssels, bevor er automatisch widerrufen wird (0 für nie)"
+    revoke_api_keys_maxlife_days: "Anzahl der Tage, bevor ein API-Schlüssel automatisch widerrufen wird (0 für nie)"
     allow_user_api_key_scopes: "Liste erlaubter Bereiche für Benutzer-API-Schlüssel"
     min_trust_level_for_user_api_key: |
       Vertrauensstufe, die für die Generierung von Benutzer-API-Schlüsseln erforderlich ist.<br>
       <b>WARNUNG</b>: Die Änderung der Vertrauensstufe verhindert, dass sich Benutzer mit einer niedrigeren Vertrauensstufe über Discourse Hub anmelden können.
     allowed_user_api_auth_redirects: "Zulässige URL für Authentifizierungs-Umleitung für Benutzer-API-Schlüssel. Das Platzhaltersymbol * kann verwendet werden, um jeden Bestandteil der Adresse zu ersetzen (z. B. www.example.com/*)."
     allowed_user_api_push_urls: "Erlaubte URLs für Server-Push zur Benutzer-API"
-    expire_user_api_keys_days: "Anzahl der Tage, bevor ein Benutzer-API-Schlüssel automatisch abläuft (0 für niemals)"
+    revoke_user_api_keys_unused_days: "Anzahl der Tage seit der letzten Verwendung eines Benutzer-API-Schlüssels, bevor er automatisch widerrufen wird (0 für nie)"
+    revoke_user_api_keys_maxlife_days: "Anzahl der Tage, bevor ein Benutzer-API-Schlüssel automatisch widerrufen wird (0 für nie)"
     tagging_enabled: "Schlagwörter für Themen aktivieren?"
     min_trust_to_create_tag: "Minimale Vertrauensstufe, um ein Schlagwort zu erstellen."
     max_tags_per_topic: "Maximale Anzahl an Schlagwörtern, die einem Thema hinzugefügt werden können."
@@ -2149,7 +2160,7 @@ de:
     force_lowercase_tags: "Kleinschreibung für alle neuen Schlagwörter erzwingen."
     create_post_for_category_and_tag_changes: "Einen kleinen Aktionsbeitrag erstellen, wenn sich die Kategorie oder die Schlagwörter eines Themas ändern"
     watched_precedence_over_muted: "Benachrichtige mich über Themen in Kategorien oder Schlagwörtern, die ich beobachte und die auch zu einem Thema gehören, das ich stummgeschaltet habe"
-    company_name: "Firmenname"
+    company_name: "Name deines Unternehmens oder deiner Organisation. Wenn du nichts angibst, werden keine allgemeinen Geschäftsbedingungen oder Datenschutzhinweise bereitgestellt."
     governing_law: "Anzuwendendes Recht"
     city_for_disputes: "Stadt für Rechtsstreitigkeiten"
     shared_drafts_category: "Aktiviere die Funktion „Gemeinsame Entwürfe“, indem du eine Kategorie für Themenentwürfe bestimmst. Themen in dieser Kategorie werden in den Themenlisten für Team-Mitglieder unterdrückt."
@@ -2188,6 +2199,7 @@ de:
     experimental_topics_filter: "EXPERIMENTELL: Experimentelle Filterroute für Themen unter /filter aktivieren"
     experimental_search_menu_groups: "EXPERIMENTELL: Das neue Suchmenü aktivieren, das für die Verwendung von Glimmer aktualisiert wurde"
     enable_experimental_lightbox: "EXPERIMENTELL: Die Standard-Bild-Lightbox durch das überarbeitete Design ersetzen."
+    experimental_form_templates: "EXPERIMENTELL: Aktiviere die Funktion der Formularvorlagen. <b>Nachdem du sie aktiviert hast, verwalte</b> die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
@@ -2271,6 +2283,7 @@ de:
     email_error: "Ein Konto konnte nicht mit der E-Mail-Adresse <b>%{email}</b> registriert werden. Bitte wende dich an den Administrator der Website."
     missing_secret: "Die Authentifizierung ist aufgrund des fehlenden Geheimnisses fehlgeschlagen. Kontaktiere die Website-Administratoren, um dieses Problem zu beheben."
     invite_redeem_failed: "Einlösung der Einladung fehlgeschlagen. Bitte kontaktiere den Administrator der Website."
+    invalid_parameter_value: "Die Authentifizierung ist aufgrund eines ungültigen Wertes für den Parameter \"%{param}\" fehlgeschlagen. Wende dich an die Website-Administratoren, um dieses Problem zu beheben."
   original_poster: "Autor des ersten Beitrags"
   most_recent_poster: "Autor des jüngsten Beitrags"
   frequent_poster: "Autor vieler Beiträge"
@@ -2404,6 +2417,8 @@ de:
     invalid_security_key: "Ungültiger Sicherheitsschlüssel."
     missing_second_factor_name: "Bitte gib einen Namen an."
     missing_second_factor_code: "Bitte gib einen Code an."
+    too_many_authenticators: "Du kannst leider nicht mehr als 50 Authentifikatoren haben. Bitte entferne einen bestehenden und versuche es erneut."
+    too_many_security_keys: "Du kannst leider nicht mehr als 50 Sicherheitsschlüel haben. Bitte entferne einen bestehenden und versuche es erneut."
     second_factor_toggle:
       totp: "Verwende stattdessen eine Authentifizierungs-App oder einen Sicherheitsschlüssel"
       backup_code: "Benutze stattdessen einen Wiederherstellungscode"
@@ -4657,6 +4672,9 @@ de:
       automatic_revoked:
         one: "Automatisch widerrufen, letzte Aktivität vor mehr als %{count} Tag"
         other: "Automatisch widerrufen, letzte Aktivität vor mehr als %{count} Tagen"
+      automatic_revoked_max_life:
+        one: "Automatisch widerrufen, erstellt am vor mehr als %{count} Tag"
+        other: "Automatisch widerrufen, erstellt am vor mehr als %{count} Tagen"
       revoked: Widerrufen
       restored: Wiederhergestellt
   reviewables:
@@ -4815,6 +4833,10 @@ de:
       invalid_yaml: "ist keine gültige YAML-Zeichenfolge"
       invalid_type: "enthält einen ungültigen Vorlagentyp: %{type} (gültige Typen sind: %{valid_types})"
       missing_type: "fehlt ein Feldtyp"
+      missing_id: "fehlt eine Feld-ID"
+      duplicate_ids: "hat doppelte IDs"
+      reserved_id: "hat ein reserviertes Schlüsselwort als id: %{id}"
+      unsafe_description: "hat eine unsichere HTML-Beschreibung"
   activemodel:
     errors:
       <<: *errors

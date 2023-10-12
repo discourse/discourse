@@ -23,11 +23,8 @@ zh_TW:
           descriptions:
             chat:
               create_message: "在指定頻道中建立聊天訊息。"
-    about:
-      chat_messages_count: "聊天訊息"
-      chat_channels_count: "聊天頻道"
-      chat_users_count: "聊天使用者"
     chat:
+      deleted_chat_username: 已刪除
       dates:
         time_tiny: "h:mm"
       all_loaded: "顯示所有訊息"
@@ -66,6 +63,7 @@ zh_TW:
       channel_delete:
         title: "刪除頻道"
       close: "關閉"
+      remove: "移除"
       delete: "刪除"
       edited: "已編輯"
       muted: "靜音"
@@ -87,8 +85,6 @@ zh_TW:
         summarize: "總結"
         since:
           other: "前 %{count} 小時"
-      mention_warning:
-        dismiss: "忽略"
       remove_upload: "移除檔案"
       react: "用表情符號反應"
       reply: "回覆"
@@ -141,7 +137,6 @@ zh_TW:
         back_to_all_channels: "所有頻道"
         back_to_channel: "上一步"
         tabs:
-          about: 關於
           members: 成員
           settings: 設定
       new_message_modal:
@@ -188,6 +183,10 @@ zh_TW:
         saved: "已儲存"
         unfollow: "離開"
         admin_title: "管理員"
+        settings_title: "設定"
+        category_label: "分類"
+        history_label: "歷史記錄"
+        members_label: "成員"
       admin:
         title: "聊天"
         export_messages:
@@ -217,6 +216,11 @@ zh_TW:
           title: "移至已存在的話題"
         new_message:
           title: "移動到新訊息"
+      retention_reminders:
+        public:
+          other: "%{count} 天"
+        dm:
+          other: "%{count} 天"
       flagging:
         action: "檢舉訊息"
       emoji_picker:
@@ -255,6 +259,10 @@ zh_TW:
           fields:
             message:
               label: 訊息
+    review:
+      types:
+        reviewable_chat_message:
+          noun: "聊天訊息"
     keyboard_shortcuts_help:
       chat:
         title: "聊天"

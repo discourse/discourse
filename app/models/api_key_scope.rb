@@ -70,6 +70,22 @@ class ApiKeyScope < ActiveRecord::Base
             actions: %w[tags#index],
           },
         },
+        tag_groups: {
+          list: {
+            actions: %w[tag_groups#index],
+          },
+          show: {
+            actions: %w[tag_groups#show],
+            params: %i[id],
+          },
+          create: {
+            actions: %w[tag_groups#create],
+          },
+          update: {
+            actions: %w[tag_groups#update],
+            params: %i[id],
+          },
+        },
         categories: {
           list: {
             actions: %w[categories#index],

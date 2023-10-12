@@ -4,7 +4,6 @@
     class="btn btn-social {{b.name}}"
     {{on "click" (action this.externalLogin b)}}
     aria-label={{b.screenReaderTitle}}
-    tabindex="3"
   >
     {{#if b.isGoogle}}
       <GoogleIcon />

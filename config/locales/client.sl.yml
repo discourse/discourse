@@ -294,15 +294,10 @@ sl:
       our_moderators: "Naši moderatorji"
       moderators: "Moderatorji"
       stat:
-        all_time: "Ves čas"
-        last_day: "Zadnjih 24 ur"
-        last_7_days: "Zadnjih 7 dni"
-        last_30_days: "Zadnjih 30 dni"
+        last_day: "24 uri"
       like_count: "Všečki"
       topic_count: "Teme"
       post_count: "Prispevki"
-      active_user_count: "Aktivni uporabniki"
-      contact: "Pišite nam"
       contact_info: "V primeru kritične napake na strani ali nujne zadeve nam pišite na %{contact_info}."
     bookmarked:
       title: "Zaznamek"
@@ -338,6 +333,11 @@ sl:
       new_topic: "Nov osnutek teme"
       abandon:
         yes_value: "Zavrzi"
+    topic_count_all:
+      one: "Poglej %{count} novo temo"
+      two: "Poglej %{count} novi temi"
+      few: "Poglej %{count} nove teme"
+      other: "Poglej %{count} novih tem"
     topic_count_categories:
       one: "Poglej %{count} novo ali posodobljeno temo"
       two: "Poglej %{count} novi ali posodobljeni temi"
@@ -495,14 +495,19 @@ sl:
         reviewable_flagged_post:
           title: "Prijavljen prispevek"
           flagged_by: "Prijavljen od"
+          noun: "prispevek"
         reviewable_queued_topic:
           title: "Tema v čakalni vrsti"
+          noun: "tema"
         reviewable_queued_post:
           title: "Prispevek za potrditev"
+          noun: "prispevek"
         reviewable_user:
           title: "Uporabnik"
+          noun: "uporabnik"
         reviewable_post:
           title: "Prispevek"
+          noun: "prispevek"
       approval:
         title: "Prispevek za odobritev."
         description: "Prejeli smo vaš nov prispevek, vendar potrebuje odobritev s strani moderatorja preden bo objavljen. Prosimo za potrpežljivost."
@@ -1099,7 +1104,6 @@ sl:
         success: "(e-sporočilo poslano)"
         in_progress: "(pošiljanje e-sporočila)"
         error: "(napaka)"
-        emoji: "emoji za ključavnico"
         action: "Pošlji e-sporočilo za zamenjavo gesla"
         set_password: "Nastavi geslo"
         choose_new: "Izberite novo geslo"
@@ -1589,7 +1593,6 @@ sl:
       link_label: "Pošlji mi povezavo za prijavo na e-pošto"
       button_label: "z e-pošto"
       login_link: "Preskoči geslo; pošljite mi povezavo za prijavo"
-      emoji: "emoji za ključavnico"
       complete_username: "Če obstaja račun za uporabniško ime <b>%{username}</b> boste v kratkem prejeli e-sporočilo s povezavo za prijavo."
       complete_email: "Če obstaja račun z e-naslovom <b>%{email}</b> boste v kratkem prejeli e-sporočilo s povezavo za prijavo."
       complete_username_found: "Račun z uporabniškim imenom <b>%{username}</b> obstaja. V kratkem bi morali prejeti e-sporočilo s povezavo za samodejno prijavo."
@@ -1657,7 +1660,6 @@ sl:
         backup_code: "Namesto tega uporabite rezervno potrditveno kodo"
     invites:
       accept_title: "Povabilo"
-      emoji: "emoji za pismo"
       welcome_to: "Dobrodošli na %{site_name}!"
       invited_by: "Povabljeni ste od:"
       social_login_available: "Omogočena vam bo tudi prijava preko družabnih omrežij s tem e-naslovom."
@@ -1887,17 +1889,7 @@ sl:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} in %{count} drug</span> %{description}"
-        two: "<span class='multi-user'>%{username}, %{username2} in %{count} druga</span> %{description}"
-        few: "<span class='multi-user'>%{username}, %{username2} in %{count} drugi</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} in %{count} drugih</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
-      liked_by_multiple_users:
-        one: "%{username}, %{username2} in %{count} drug"
-        two: "%{username}, %{username2} in %{count} druga"
-        few: "%{username}, %{username2} in %{count} drugi"
-        other: "%{username}, %{username2} in %{count} drugih"
       liked_consolidated_description:
         one: "je všečkal %{count} vaš prispevek"
         two: "je všečkal %{count} vaša prispevka"
@@ -2176,6 +2168,7 @@ sl:
       options: "Možnosti teme"
       show_links: "pokaži povezave v tej temi"
       unread_indicator: "Noben član ni še prebral zadnjega prispevka v tej temi."
+      bumped_at: "Zadnja: %{date}"
       deleted: "Tema je bila izbrisana"
       slow_mode_update:
         title: "Počasni način"
@@ -2552,7 +2545,6 @@ sl:
       errors:
         create: "Oprostite, pri ustvarjanju vašega prispevka je prišlo do napake. Poskusite ponovno."
         edit: "Oprostite, pri ustvarjanju vašega prispevka je prišlo do napake. Poskusite ponovno."
-        upload: "Oprostite, pri prenosu datoteke je prišlo do napake. Poskusite ponovno."
         file_too_large: "Datoteka je prevelika (največja velikost je %{max_size_kb}kb). Naložite vašo veliko datoteko na ponudnika v oblaku in objavite povezavo?"
         too_many_uploads: "Oprostite, naenkrat lahko naložite samo eno datoteko."
         upload_not_authorized: "Oprostite, datoteka ki ste jo hoteli naložiti ni podprta (podprte pripone:%{authorized_extensions})."
@@ -3154,7 +3146,6 @@ sl:
       other_tags: "Druge oznake"
       selector_all_tags: "vse oznake"
       selector_no_tags: "brez oznak"
-      changed: "spremenjene oznake:"
       tags: "Oznake"
       choose_for_topic: "neobvezne oznake"
       default_info: "Ta oznaka ni omejena na nobeno kategorijo in nima sopomenk."
@@ -3543,8 +3534,6 @@ sl:
         secret: "Skriven"
         wildcard_event: "Pošlji mi vse."
         active: "Aktivni"
-        user_event:
-          name: "Dogodek uporabnika"
         delivery_status:
           inactive: "Nedejaven"
           failed: "Spodletelo"
@@ -3589,7 +3578,6 @@ sl:
             label: "Varnostna kopija"
             title: "Ustvari varnostno kopijo"
             confirm: "Želite ustvariti varnostno kopijo?"
-            without_uploads: "Da (brez naloženih datotek)"
           download:
             label: "Naloži"
         location:
@@ -3641,6 +3629,7 @@ sl:
           auto_update: "Samodejno posodobi ob posodobitvi Discourse"
           convert_component_alert_generic: "Ali ste prepričani, da želite pretvoriti to komponento v temo?"
           convert_theme_alert_generic: "Ali ste prepričani, da želite pretvoriti to temo v komponento?"
+          cancel: "Prekliči"
           collapse: Skrči
           uploads: "Prenosi"
           upload: "Prenesi"

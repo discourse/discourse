@@ -1,7 +1,7 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 
 module(
@@ -56,6 +56,19 @@ module(
       );
 
       assert.dom(".form-template-field__label").doesNotExist();
+    });
+
+    test("renders a description if present", async function (assert) {
+      const attributes = {
+        description: "Your full name",
+      };
+      this.set("attributes", attributes);
+
+      await render(
+        hbs`<FormTemplateField::Input @attributes={{this.attributes}} />`
+      );
+
+      assert.dom(".form-template-field__description").hasText("Your full name");
     });
   }
 );

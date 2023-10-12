@@ -1,13 +1,13 @@
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { query } from "discourse/tests/helpers/qunit-helpers";
-import hbs from "htmlbars-inline-precompile";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
-import { module, test } from "qunit";
 import { render } from "@ember/test-helpers";
+import hbs from "htmlbars-inline-precompile";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   joinChannel,
   leaveChannel,
 } from "discourse/tests/helpers/presence-pretender";
+import { query } from "discourse/tests/helpers/qunit-helpers";
+import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 async function addUser(id, username, channelName = "/chat-reply/1") {
   await joinChannel(channelName, {

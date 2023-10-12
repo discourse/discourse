@@ -303,16 +303,10 @@ lt:
       our_moderators: "Mūsų Moderatoriai"
       moderators: "Moderatoriai"
       stat:
-        all_time: "Per visą laiką"
-        last_day: "Paskutinės 24 valandos"
-        last_7_days: "Paskutinės 7 dienos"
-        last_30_days: "Paskutinės 30 dienų"
+        last_day: "24 valandos"
       like_count: "Patinka"
       topic_count: "Temos"
       post_count: "Įrašai"
-      user_count: "Prisiregistravimai"
-      active_user_count: "Aktyvūs vartotojai"
-      contact: "Kontaktai"
       contact_info: "Atsiradus bet kokiai problemai susijusiai su puslapiu, prašome kontaktuoti %{contact_info}."
     bookmarked:
       title: "Žymės"
@@ -366,6 +360,11 @@ lt:
       abandon:
         yes_value: "Išmesti"
         no_value: "Tęsti redagavimą"
+    topic_count_all:
+      one: "Pamatyk %{count} naują temą"
+      few: "Pamatyk %{count} naujas temas"
+      many: "Pamatyk %{count} naujų temų"
+      other: "Pamatyk %{count} naujų temų"
     topic_count_categories:
       one: "Peržiūrėti %{count} naują arba atnaujintą temą"
       few: "Peržiūrėkite %{count} naujų ar atnaujintų temų"
@@ -542,14 +541,19 @@ lt:
         reviewable_flagged_post:
           title: "Pažymėtas pranešimas"
           flagged_by: "Pažymėjo"
+          noun: "įrašai"
         reviewable_queued_topic:
           title: "Tema eilėje"
+          noun: "tema"
         reviewable_queued_post:
           title: "Pranešimas eilėje"
+          noun: "įrašai"
         reviewable_user:
           title: "Narys"
+          noun: "narys"
         reviewable_post:
           title: "Įrašai"
+          noun: "įrašai"
       approval:
         title: "Įrašui reikalingas patvirtinimas"
         description: "Mes gavome tavo naują įrašą, tačiau jis turi būti patvirtintas moderatoriaus. Ačiū už kantrybę!"
@@ -1181,7 +1185,6 @@ lt:
         success: "(el. laiškas išsiųstas)"
         in_progress: "(siunčiamas el. laiškas)"
         error: "(klaida)"
-        emoji: "užrakinti jaustukus"
         action: "Siųsti Slaptažodžio priminimo elektroninę žinutę"
         set_password: "Nustatyti Slaptažodį"
         choose_new: "Pasirinkite naują slaptažodį"
@@ -1675,7 +1678,6 @@ lt:
       link_label: "Atsiųskite man prisijungimo nuorodą el. paštu"
       button_label: "su el. paštu"
       login_link: "Praleisti slaptažodį; atsiųskite man prisijungimo nuorodą el. paštu"
-      emoji: "užrakinti jaustukus"
       complete_username: "Jei paskyra sutampa su vartotojo vardu <b>%{username}</b>, turėtumėte gauti el.laišką su slaptažodžio keitimo instrukcijomis."
       complete_email: "Jei paskyra atitinka <b>%{email}</b>, netrukus turėtumėte gauti el. laišką su prisijungimo nuoroda."
       complete_username_not_found: "Jokia paskyra nesutampa su vartotojo vardu <b>%{username}</b>"
@@ -1973,17 +1975,7 @@ lt:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} ir dar %{count}</span> %{description}"
-        few: "<span class='multi-user'>%{username}, %{username2}ir %{count} kiti</span> %{description}"
-        many: "<span class='multi-user'>%{username}, %{username2} ir %{count}kitų</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} ir %{count}kitų</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
-      liked_by_multiple_users:
-        one: "%{username}, %{username2} ir dar %{count}"
-        few: "%{username}, %{username2}ir %{count} kiti"
-        many: "%{username}, %{username2} ir %{count}kitų"
-        other: "%{username}, %{username2} ir %{count}kitų"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -2313,6 +2305,7 @@ lt:
       collapse_details: "sutraukti temos informaciją"
       expand_details: "išplėsti temos informaciją"
       unread_indicator: "Nė vienas narys dar neperskaitė paskutinio šios temos įrašo."
+      bumped_at: "Naujausi: %{date}"
       suggest_create_topic: Pasirengę <a href>pradėti naują pokalbį?</a>
       deleted: "Tema buvo ištrinta"
       slow_mode_update:
@@ -2685,7 +2678,6 @@ lt:
       errors:
         create: "Atsiprašome, įvyko klaida kuriant įrašą. Prašome pamėginti dar kartą."
         edit: "Atsiprašome, įvyko klaida redaguojant įrašą. Prašome pamėginti dar kartą."
-        upload: "Atsiprašome, įvyko klaida įkeliant šį dokumentą. Prašome pamėginti dar kartą."
         file_too_large: "Deja, failas per didelis (maksimalus dydis yra %{max_size_kb}kb). Kodėl neįkėlus didelio failo į bendrinimo debesyje paslaugą ir tuomet įklijuokite nuorodą?"
         file_too_large_humanized: "Deja, failas per didelis (maksimalus dydis yra %{max_size}kb). Kodėl neįkėlus didelio failo į bendrinimo debesyje paslaugą ir tuomet įklijuokite nuorodą?"
         too_many_uploads: "Atsiprašome, bet jūs galite įkelti tik vieną failą vienu metu."
@@ -3326,7 +3318,6 @@ lt:
       other_tags: "Kitos žymos"
       selector_all_tags: "visos žymos"
       selector_no_tags: "nėra žymų"
-      changed: "žymės pakeistos:"
       tags: "Žymos"
       choose_for_topic: "pasirenkamos žymos"
       info: "Informacija"
@@ -3781,33 +3772,8 @@ lt:
         categories_filter: "Suaktyvintos kategorijos"
         tags_filter: "Suaktyvintos žymos"
         groups_filter: "Suaktyvintos grupės"
-        topic_event:
-          name: "Temos įvykis"
-          details: "Kai yra nauja tema, peržiūrėta, pakeista arba ištrinta."
-        post_event:
-          name: "Paskelbti įvykį"
-          details: "Kai yra naujas atsakymas, redaguokite, ištrinkite arba atkurkite."
-        user_event:
-          name: "Vartotojo įvykis"
-        group_event:
-          name: "Grupės renginys"
-        category_event:
-          name: "Kategorijos įvykis"
-          details: "Kai sukuriama, atnaujinama ar sunaikinama kategorija."
-        tag_event:
-          name: "Žymos įvykis"
-          details: "Kai žyma sukuriama, atnaujinama arba sunaikinama."
-        reviewable_event:
-          name: "Įvykis, kurį galima peržiūrėti"
-          details: "Kai naujas elementas yra paruoštas peržiūrėti ir kai jo būsena atnaujinama."
-        notification_event:
-          name: "Pranešimo įvykis"
-          details: "Kai vartotojas gauna pranešimą savo sklaidos kanale."
-        group_user_event:
-          name: "Grupės vartotojo įvykis"
-          details: "Kai vartotojas įtraukiamas arba pašalinamas iš grupės."
         like_event:
-          details: "Kai vartotojui patinka įrašas."
+          post_liked: "Kai vartotojui patinka įrašas."
         delivery_status:
           title: "Pristatymo būsena"
           inactive: "Neaktyvus"
@@ -3870,7 +3836,6 @@ lt:
             label: "Kurti atsarginę kopiją"
             title: "Sukurti atsarginę kopiją"
             confirm: "Ar tikrai norite pradėti naują atsarginės kopijos darymą?"
-            without_uploads: "Taip (neįtraukti įkėlimų)"
           download:
             label: "Atsisiųsti"
             title: "Siųsti laišką su atsisiuntimo nuoroda"
@@ -3980,6 +3945,7 @@ lt:
           convert_theme_tooltip: "Konvertuoti šią temą į komponentą"
           inactive_themes: "Neaktyvios temos:"
           inactive_components: "Nepanaudoti komponentai:"
+          cancel: "Atšaukti"
           broken_theme_tooltip: "Ši tema turi klaidų savo CSS, HTML arba YAML"
           disabled_component_tooltip: "Šis komponentas buvo išjungtas"
           default_theme_tooltip: "Ši tema yra numatytoji svetainės tema"
@@ -4847,7 +4813,6 @@ lt:
             with_time: <span class="username">%{username}</span> <span class="time">%{time}</span> laiku
         badge_intro:
           title: "Norėdami pradėti, pasirinkite esamą ženklelį arba sukurkite naują"
-          emoji: "moters studentės jaustukas"
           what_are_badges_title: "Kas yra ženkleliai?"
           badge_query_examples_title: "Ženklelių užklausų pavyzdžiai"
         mass_award:

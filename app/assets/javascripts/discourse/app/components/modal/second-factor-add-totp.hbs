@@ -46,6 +46,7 @@
           }}</label>
         <div class="controls">
           <SecondFactorInput
+            maxlength={{this.maxSecondFactorNameLength}}
             @value={{this.secondFactorName}}
             @inputId="second-factor-name"
             @placeholder={{i18n "user.second_factor.totp.default_name"}}

@@ -233,7 +233,7 @@ basic:
   share_quote_visibility:
     client: true
     type: enum
-    default: "anonymous"
+    default: "all"
     choices:
       - none
       - anonymous
@@ -1006,7 +1006,8 @@ posting:
     list_type: compact
   show_copy_button_on_codeblocks:
     client: true
-    default: false
+    default: true
+    hidden: true
   delete_old_hidden_posts: true
   enable_emoji:
     default: true
@@ -1117,6 +1118,9 @@ posting:
     default: false
   max_draft_length:
     default: 400_000
+    hidden: true
+  max_drafts_per_user:
+    default: 10_000
     hidden: true
   max_form_template_title_length:
     default: 100
@@ -1439,6 +1443,10 @@ files:
     default: 1024
     min: 1
     max: 10240
+  secure_uploads_pm_only:
+    default: false
+    hidden: true
+    client: true
   enable_s3_uploads:
     default: false
     client: true
@@ -1930,7 +1938,9 @@ spam:
   auto_respond_to_flag_actions: true
   min_first_post_typing_time: 3000
   auto_silence_fast_typers_on_first_post: true
-  auto_silence_fast_typers_max_trust_level: 0
+  auto_silence_fast_typers_max_trust_level:
+    default: 0
+    enum: "TrustLevelSetting"
   auto_silence_first_post_regex: ""
   high_trust_flaggers_auto_hide_posts: true
   cooldown_hours_until_reflag:
@@ -2135,7 +2145,6 @@ developer:
   experimental_form_templates:
     client: true
     default: false
-    hidden: true
   experimental_new_new_view_groups:
     client: true
     type: group_list
@@ -2149,6 +2158,10 @@ developer:
   experimental_topics_filter:
     client: true
     default: false
+  experimental_passkeys:
+    client: true
+    default: false
+    hidden: true
   experimental_search_menu_groups:
     type: group_list
     list_type: compact
@@ -2766,9 +2779,13 @@ api:
   api_key_last_used_epoch:
     default: "" # Value is added in a migration
     hidden: true
-  revoke_api_keys_days:
+  revoke_api_keys_unused_days:
     default: 180
     max: 36500
+  revoke_api_keys_maxlife_days:
+    default: 0
+    max: 36500
+    hidden: true
 
 user_api:
   allow_user_api_key_scopes:
@@ -2787,9 +2804,13 @@ user_api:
   allowed_user_api_auth_redirects:
     default: "https://api.discourse.org/api/auth_redirect|discourse://auth_redirect"
     type: list
-  expire_user_api_keys_days:
+  revoke_user_api_keys_unused_days:
     default: 180
     max: 36500
+  revoke_user_api_keys_maxlife_days:
+    default: 0
+    max: 36500
+    hidden: true
 
 tags:
   tagging_enabled:
@@ -2864,6 +2885,8 @@ tags:
     default: true
     client: true
   create_post_for_category_and_tag_changes:
+    default: false
+  automatically_clean_unused_tags:
     default: false
 
 dashboard:

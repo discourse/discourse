@@ -256,16 +256,10 @@ ja:
       our_moderators: "モデレーター"
       moderators: "モデレーター"
       stat:
-        all_time: "全期間"
-        last_day: "過去 24 時間"
-        last_7_days: "過去 7 日間"
-        last_30_days: "過去 30 日間"
+        last_day: "24 時間"
       like_count: "「いいね！」数"
       topic_count: "トピック"
       post_count: "投稿"
-      user_count: "登録数"
-      active_user_count: "アクティブユーザー"
-      contact: "お問い合わせ"
       contact_info: "このサイトに影響を与える重要な問題や緊急の問題が発生した場合は、%{contact_info} までご連絡ください。"
     bookmarked:
       title: "ブックマーク"
@@ -323,6 +317,8 @@ ja:
         confirm: "作成中の下書きがあります。どうしますか？"
         yes_value: "破棄"
         no_value: "編集を再開"
+    topic_count_all:
+      other: "%{count} 件の新規トピックを見る"
     topic_count_categories:
       other: "%{count} 件の新規/更新トピックを見る"
     topic_count_latest:
@@ -510,23 +506,24 @@ ja:
         all:
           title: "すべて"
       context_question:
-        is_this_post: "この投稿は%{reviewable_human_score_types}ですか？"
         delimiter: "または"
-        something_else_wrong: "この投稿に何か問題がありますか？"
       types:
         reviewable_flagged_post:
           title: "通報された投稿"
           flagged_by: "通報者:"
+          noun: "投稿"
         reviewable_queued_topic:
           title: "待機中のトピック"
+          noun: "トピック"
         reviewable_queued_post:
           title: "待機中の投稿"
+          noun: "投稿"
         reviewable_user:
           title: "ユーザー"
+          noun: "ユーザー"
         reviewable_post:
           title: "投稿"
-        reviewable_chat_message:
-          title: "通報されたチャットメッセージ"
+          noun: "投稿"
       approval:
         title: "承認待ちの投稿"
         description: "あなたの新しい投稿を受領しましたが、表示するにはモデレーターの承認が必要です。しばらくお待ちください。"
@@ -1238,7 +1235,6 @@ ja:
         success: "(メール送信済み)"
         in_progress: "(メール送信中)"
         error: "(エラー)"
-        emoji: "絵文字をロックする"
         action: "パスワードのリセットメールを送信"
         set_password: "パスワードを設定"
         choose_new: "新しいパスワードを選択する"
@@ -1824,7 +1820,6 @@ ja:
       link_label: "ログインリンクをメールする"
       button_label: "メール"
       login_link: "パスワードをスキップします。ログインリンクを送信してください"
-      emoji: "絵文字をロックする"
       complete_username: "アカウントがユーザー名 <b>%{username}</b> と一致する場合、まもなくログインリンクが記載されたメールが届きます。"
       complete_email: "アカウントが <b>%{email}</b> と一致する場合、まもなくログインリンクが記載されたメールが届きます。"
       complete_username_found: "<b>%{username}</b> に一致するアカウントが見つかりました。まもなく、ログインリンクが記載されたメールが届きます。"
@@ -1913,7 +1908,6 @@ ja:
         security_key: "代わりにセキュリティキーを使用する"
     invites:
       accept_title: "招待"
-      emoji: "絵文字をエンベロープ"
       welcome_to: "%{site_name} へようこそ！"
       invited_by: "あなたは次の人から招待されました:"
       social_login_available: "このメールアドレスを使ってソーシャルログインすることも可能です。"
@@ -2009,7 +2003,6 @@ ja:
       drafts_offline: "オフラインの下書き"
       edit_conflict: "競合を編集する"
       esc: "esc"
-      esc_label: "クリックまたは Esc を押して閉じる"
       ok_proceed: "OK、続行する"
       group_mentioned_limit:
         other: "<b>警告！</b> <a href='%{group_link}'>%{group}</a> をメンションしましたが、このグループのメンバー数は、管理者がメンション数制限として設定した %{count} 人を超えています。そのため誰にも通知されません。"
@@ -2176,11 +2169,9 @@ ja:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}、%{username2}</span> %{description}"
-      liked_many:
-        other: "<span class='multi-user'>%{username}、%{username2}、他 %{count} 人</span> %{description}"
       liked_by_2_users: "%{username}、%{username2}"
       liked_by_multiple_users:
-        other: "%{username}、%{username2}、他 %{count} 人"
+        other: "%{username} および他 %{count} 人"
       liked_consolidated_description:
         other: "はあなたの %{count} 件の投稿に「いいね！」しました"
       liked_consolidated: "<span>%{username}</span> %{description}"
@@ -2580,9 +2571,7 @@ ja:
           false {または、<a href="{basePath}/latest">最新のトピックを表示</a>してください}
           other {}
         }
-      bumped_at_title: |
-        最初の投稿: %{createdAtDate}
-        投稿: %{bumpedAtDate}
+      bumped_at: "最新: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>すべてのカテゴリを閲覧</a>するか<a href='%{basePath}/latest'>最新のトピックを表示</a>します。"
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>すべてのカテゴリを閲覧</a>するか、<a href='%{basePath}/latest'>最新のトピックを表示</a>するか、トップを見ます。"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>すべてのタグを閲覧</a>するか<a href='%{basePath}/latest'>最新のトピックを表示</a>します。"
@@ -2968,7 +2957,6 @@ ja:
       errors:
         create: "投稿を作成中にエラーが発生しました。もう一度お試しください。"
         edit: "投稿を編集中にエラーが発生しました。もう一度お試しください。"
-        upload: "ファイルのアップロード中にエラーが発生しました。もう一度お試しください。"
         file_too_large: "ファイルが大きすぎます (最大サイズは %{max_size_kb} kb です)。クラウド共有サービスにアップロードしてから、そのリンクを貼り付けてはどうですか？"
         file_size_zero: "問題が発生したようです。アップロードしようとしているファイルは 0 バイトです。もう一度お試しください。"
         file_too_large_humanized: "ファイルが大きすぎます (最大サイズは %{max_size} です)。クラウド共有サービスにアップロードしてから、そのリンクを貼り付けてはどうですか？"
@@ -3636,7 +3624,6 @@ ja:
       other_tags: "他のタグ"
       selector_all_tags: "すべてのタグ"
       selector_no_tags: "タグなし"
-      changed: "タグを変更しました:"
       tags: "タグ"
       choose_for_topic: "オプションのタグ"
       info: "情報"
@@ -4278,42 +4265,8 @@ ja:
         groups_filter_instructions: "関連する Webhook はイベントが指定されたグループに関連している場合にのみトリガーされます。すべてのグループに Webhook をトリガーするには空のままにします。"
         groups_filter: "トリガーされたグループ"
         delete_confirm: "この Webhook を削除しますか？"
-        topic_event:
-          name: "トピックイベント"
-          details: "トピックが新規作成、編集、変更、または削除された場合。"
-        post_event:
-          name: "投稿イベント"
-          details: "返信が新規作成、編集、削除、または復元された場合。"
-        user_event:
-          name: "ユーザーイベント"
-          details: "ユーザーがログイン、ログアウト、メール確認した場合または、作成、承認、更新された場合。"
-        group_event:
-          name: "グループイベント"
-          details: "グループが作成、更新、または消去された場合。"
-        category_event:
-          name: "カテゴリイベント"
-          details: "カテゴリが作成、更新、または消去された場合。"
-        tag_event:
-          name: "タグイベント"
-          details: "タグが作成、更新、または消去された場合。"
-        reviewable_event:
-          name: "レビュー待ち項目イベント"
-          details: "新しいアイテムのレビュー準備が整った場合、ステータスが更新された場合。"
-        notification_event:
-          name: "通知イベント"
-          details: "ユーザーがフィードに通知を受け取った場合。"
-        user_promoted_event:
-          name: "ユーザー昇格イベント"
-          details: "ユーザーがある信頼レベルから別の信頼レベルに昇格したとき。"
-        user_badge_event:
-          name: "バッジイベント"
-          details: "バッジが付与または取り消されたとき。"
-        group_user_event:
-          name: "グループユーザーイベント"
-          details: "ユーザーがグループに追加またはグループから削除された場合。"
         like_event:
-          name: "「いいね！」イベント"
-          details: "ユーザーが投稿に「いいね！」した場合。"
+          post_liked: "ユーザーが投稿に「いいね！」した場合。"
         delivery_status:
           title: "配信ステータス"
           inactive: "非アクティブ"
@@ -4348,7 +4301,6 @@ ja:
         enabled: "有効化？"
         is_enabled: "はい"
         not_enabled: "いいえ"
-        change_settings: "プラグインの設定"
         change_settings_short: "設定"
         howto: "プラグインをインストールするには？"
         official: "公式プラグイン"
@@ -4389,7 +4341,6 @@ ja:
             label: "バックアップ"
             title: "バックアップの作成"
             confirm: "新しいバックアップを開始しますか？"
-            without_uploads: "はい (アップロードを含めない)"
           download:
             label: "ダウンロード"
             title: "ダウンロードリンクをメールで送る"
@@ -4462,7 +4413,6 @@ ja:
           theme_name: "テーマ名"
           component_name: "コンポーネント名"
           themes_intro: "まず既存のテーマを選択するか、新しいテーマをインストールしてください"
-          themes_intro_emoji: "女性芸術家の絵文字"
           beginners_guide_title: "Discourse テーマの使用に関する初心者ガイド"
           developers_guide_title: "Discourse テーマの開発者ガイド"
           browse_themes: "コミュニティーのテーマを閲覧"
@@ -4510,6 +4460,7 @@ ja:
           convert_theme_tooltip: "このテーマをコンポーネントに変換します"
           inactive_themes: "非アクティブなテーマ:"
           inactive_components: "未使用のコンポーネント:"
+          cancel: "キャンセル"
           broken_theme_tooltip: "このテーマの CSS、HTML、または YAML にエラーがあります"
           disabled_component_tooltip: "このコンポーネントは削除されています"
           default_theme_tooltip: "このテーマはサイトのデフォルトのテーマです"
@@ -5004,7 +4955,6 @@ ja:
       form_templates:
         nav_title: "テンプレート"
         title: "フォームテンプレート"
-        help: "新規トピック、投稿、およびメッセージを作成するために使用できるテンプレートの構造を作成します。"
         new_template: "新しいテンプレート"
         list_table:
           headings:
@@ -5557,7 +5507,6 @@ ja:
             with_time: <span class="time">%{time}</span> の <span class="username">%{username}</span>
         badge_intro:
           title: "既存のバッジを選択するか、新しいバッジを作成してください"
-          emoji: "女子学生の絵文字"
           what_are_badges_title: "バッジとは何ですか？"
           badge_query_examples_title: "バッジクエリの例"
         mass_award:

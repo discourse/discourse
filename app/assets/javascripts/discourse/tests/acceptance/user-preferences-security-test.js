@@ -1,6 +1,5 @@
-import I18n from "I18n";
-import { test } from "qunit";
 import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   count,
@@ -9,6 +8,7 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import I18n from "I18n";
 
 acceptance("User Preferences - Security", function (needs) {
   needs.user();

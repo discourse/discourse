@@ -1,5 +1,5 @@
-import User from "discourse/models/user";
 import { tracked } from "@glimmer/tracking";
+import User from "discourse/models/user";
 import { CHATABLE_TYPES } from "discourse/plugins/chat/discourse/models/chat-channel";
 
 export default class ChatDirectMessage {

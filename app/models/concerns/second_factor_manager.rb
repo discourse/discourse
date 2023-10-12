@@ -163,12 +163,11 @@ module SecondFactorManager
   end
 
   def authenticate_security_key(secure_session, security_key_credential)
-    ::DiscourseWebauthn::SecurityKeyAuthenticationService.new(
+    ::DiscourseWebauthn::AuthenticationService.new(
       self,
       security_key_credential,
-      challenge: DiscourseWebauthn.challenge(self, secure_session),
-      rp_id: DiscourseWebauthn.rp_id,
-      origin: Discourse.base_url,
+      session: secure_session,
+      factor_type: UserSecurityKey.factor_types[:second_factor],
     ).authenticate_security_key
   end
 

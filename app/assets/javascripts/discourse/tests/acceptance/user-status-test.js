@@ -1,3 +1,5 @@
+import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   exists,
@@ -5,8 +7,6 @@ import {
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 
 async function openUserStatusModal() {
   await click(".header-dropdown-toggle.current-user");

@@ -12,6 +12,7 @@ it:
           chat: Chat
         chat_separate_sidebar_mode:
           always: "Sempre"
+          fullscreen: "Quando la chat è a schermo intero"
           never: "Mai"
       logs:
         staff_actions:
@@ -24,11 +25,10 @@ it:
           descriptions:
             chat:
               create_message: "Crea un messaggio di chat in un canale specifico."
-    about:
-      chat_messages_count: "Messaggi di chat"
-      chat_channels_count: "Canali di chat"
-      chat_users_count: "Utenti della chat"
     chat:
+      text_copied: Testo copiato nella clipboard
+      link_copied: Link copiato nella clipboard
+      deleted_chat_username: cancellati
       dates:
         time_tiny: "h:mm"
       all_loaded: "Mostra tutti i messaggi"
@@ -84,6 +84,7 @@ it:
         create: "Nuovo canale"
       click_to_join: "Fai clic qui per visualizzare i canali disponibili."
       close: "Chiudi"
+      remove: "Rimuovi"
       collapse: "Comprimi il cassetto della chat"
       expand: "Espandi il pannello della chat"
       confirm_flag: "Vuoi segnalare il messaggio di %{username}?"
@@ -109,6 +110,8 @@ it:
         all_new: "Tutti i nuovi messaggi"
         dm_and_mentions: "Messaggi diretti e menzioni"
         never: "Mai"
+      separate_sidebar_mode:
+        title: "Mostra modalità separate della barra laterale per forum e chat"
       enable: "Abilita chat"
       flag: "Segnala"
       emoji: "Inserisci emoji"
@@ -127,28 +130,11 @@ it:
           one: "Ultima ora"
           other: "Ultime %{count} ore"
       mention_warning:
-        dismiss: "ignora"
-        cannot_see: "%{username} non può accedere a questo canale e non è stato avvisato."
-        cannot_see_multiple:
-          one: "%{username} e %{count} altro utente non possono accedere a questo canale e non sono stati avvisati."
-          other: "%{username} e altri %{count} utenti non possono accedere a questo canale e non sono stati avvisati."
         invitations_sent:
           one: "Invito inviato"
           other: "Inviti inviati"
         invite: "Invita al canale"
-        without_membership: "%{username} non ha partecipato a questo canale."
-        without_membership_multiple:
-          one: "%{username} e %{count} altro utente non si sono uniti a questo canale."
-          other: "%{username} e altri %{count} utenti non si sono uniti a questo canale."
-        group_mentions_disabled: "%{group_name} non consente menzioni."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} e %{count} altro gruppo non consentono menzioni."
-          other: "%{group_name} e %{count} altri gruppi non consentono menzioni."
         channel_wide_mentions_disallowed: "Le menzioni di @here e @all sono disabilitate in questo canale."
-        too_many_members: "%{group_name} ha troppi membri. Nessuno è stato avvisato."
-        too_many_members_multiple:
-          one: "%{group_name} e %{count} altro gruppo hanno troppi membri. Nessuno è stato notificato."
-          other: "%{group_name} e %{count} altri gruppi hanno troppi membri. Nessuno è stato notificato."
         groups:
           header:
             some: "Alcuni utenti non riceveranno notifiche"
@@ -248,6 +234,7 @@ it:
       reply: "Rispondi"
       edit: "Modifica"
       copy_link: "Copia link"
+      copy_text: "Copia testo"
       rebake_message: "Ricompila HTML"
       retry_staged_message:
         title: "Errore di rete"
@@ -316,7 +303,6 @@ it:
         back_to_all_channels: "Tutti i canali"
         back_to_channel: "Indietro"
         tabs:
-          about: Informazioni
           members: Membri
           settings: Impostazioni
       new_message_modal:
@@ -446,6 +432,11 @@ it:
         saved: "Salvato"
         unfollow: "Esci"
         admin_title: "Amministratore"
+        settings_title: "Impostazioni"
+        info_title: "Informazioni sul canale"
+        category_label: "Categoria"
+        history_label: "Cronologia"
+        members_label: "Membri"
       admin:
         title: "Chat"
         export_messages:
@@ -516,14 +507,14 @@ it:
           one: "%{commaSeparatedUsernames} e %{count} altro stanno scrivendo"
           other: "%{commaSeparatedUsernames} e altri %{count} stanno scrivendo"
       retention_reminders:
-        public_none: "La cronologia del canale viene conservata a tempo indeterminato."
+        public_none: "indefinitamente"
         public:
-          one: "La cronologia del canale è conservata per %{count} giorno."
-          other: "La cronologia del canale è conservata per %{count} giorni."
-        dm_none: "La cronologia della chat personale viene conservata a tempo indeterminato."
+          one: "%{count} giorno"
+          other: "%{count} giorni"
+        dm_none: "indefinitamente"
         dm:
-          one: "La cronologia della chat personale è conservata per %{count} giorno."
-          other: "La cronologia della chat personale è conservata per %{count} giorni."
+          one: "%{count} giorno"
+          other: "%{count} giorni"
       flags:
         off_topic: "Questo messaggio non è rilevante per la discussione in corso in base alla definizione del titolo del canale e probabilmente dovrebbe essere spostato altrove."
         inappropriate: "Questo messaggio ha contenuti che chiunque considererebbe offensivi o ingiuriosi, oppure contiene violazioni delle <a href=\"%{basePath}/guidelines\">nostre linee guida della community</a>."
@@ -617,6 +608,9 @@ it:
       types:
         chat_reviewable_message:
           title: "Messaggio di chat segnalato"
+        reviewable_chat_message:
+          title: "Messaggio di chat segnalato"
+          noun: "messaggio di chat"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"

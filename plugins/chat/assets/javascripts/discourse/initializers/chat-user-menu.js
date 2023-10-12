@@ -1,7 +1,6 @@
-import I18n from "I18n";
-
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { formatUsername } from "discourse/lib/utilities";
+import I18n from "I18n";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
 
 export default {

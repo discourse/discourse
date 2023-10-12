@@ -1,18 +1,18 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { render, settled } from "@ember/test-helpers";
-import { cloneJSON, deepMerge } from "discourse-common/lib/object";
-import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
+import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import UserMenuBookmarkItem from "discourse/lib/user-menu/bookmark-item";
+import UserMenuMessageItem from "discourse/lib/user-menu/message-item";
+import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
+import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
 import Notification from "discourse/models/notification";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
-import { hbs } from "ember-cli-htmlbars";
-import { withPluginApi } from "discourse/lib/plugin-api";
-import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
-import UserMenuMessageItem from "discourse/lib/user-menu/message-item";
-import UserMenuBookmarkItem from "discourse/lib/user-menu/bookmark-item";
-import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
+import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notification-types";
 import PrivateMessagesFixture from "discourse/tests/fixtures/private-messages-fixtures";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { exists, query } from "discourse/tests/helpers/qunit-helpers";
+import { cloneJSON, deepMerge } from "discourse-common/lib/object";
 import I18n from "I18n";
 
 function getNotification(currentUser, siteSettings, site, overrides = {}) {
@@ -484,7 +484,7 @@ function getBookmark(overrides = {}) {
 }
 
 module(
-  "Integration | Component | user-menu | meun-item | with bookmark items",
+  "Integration | Component | user-menu | menu-item | with bookmark items",
   function (hooks) {
     setupRenderingTest(hooks);
 

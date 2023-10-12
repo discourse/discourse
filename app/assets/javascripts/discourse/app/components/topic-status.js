@@ -1,8 +1,8 @@
 import Component from "@ember/component";
-import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import { htmlSafe } from "@ember/template";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 export default Component.extend({
   disableActions: false,

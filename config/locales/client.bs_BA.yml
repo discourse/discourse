@@ -267,13 +267,9 @@ bs_BA:
       our_admins: "Naši administratori"
       our_moderators: "Naši moderatori"
       moderators: "Moderators"
-      stat:
-        all_time: "Ukupno vrijeme"
       like_count: "Sviđanja"
       topic_count: "Tema"
       post_count: "Objave"
-      active_user_count: "Aktivnih korisnika"
-      contact: "Kontaktirajte nas"
       contact_info: "U slučaju da forum ne radi, molimo kontaktirajte nas na %{contact_info}."
     bookmarked:
       title: "Zabilješka"
@@ -310,6 +306,10 @@ bs_BA:
       new_topic: "Nacrt nove teme"
       abandon:
         yes_value: "Odbaci"
+    topic_count_all:
+      one: "Pogledaj %{count} novu temu"
+      few: "Pogledaj %{count} nove teme"
+      other: "Pogledaj %{count} novih tema"
     topic_count_categories:
       one: "Pogledajte %{count} novu ili ažuriranu temu"
       few: "Pogledajte %{count} nove ili ažurirane teme"
@@ -499,14 +499,19 @@ bs_BA:
         reviewable_flagged_post:
           title: "Kažnjen post"
           flagged_by: "Kaznio je"
+          noun: "objava"
         reviewable_queued_topic:
           title: "Tema u redu čekanja"
+          noun: "topic"
         reviewable_queued_post:
           title: "Post na čekanju"
+          noun: "objava"
         reviewable_user:
           title: "User"
+          noun: "user"
         reviewable_post:
           title: "Objava"
+          noun: "objava"
       approval:
         title: "Post treba odobrenje"
         description: "Primili smo Vaš novi post ali on treba biti odobren od strane moderatora prije nego bude javno dostupan. Molimo za strpljenje."
@@ -1027,7 +1032,6 @@ bs_BA:
         success: "(email poslat)"
         in_progress: "(šaljem email)"
         error: "(greška)"
-        emoji: "zaključavanje emotikona"
         action: "Pošalji Email za resetovanje šifre"
         set_password: "Namjesti šifru"
         choose_new: "Izaberite novu šifru"
@@ -1467,7 +1471,6 @@ bs_BA:
     email_login:
       link_label: "Pošalji mi mejlom moj login link"
       button_label: "pomoću email-a"
-      emoji: "zaključaj emoji"
       complete_username: "Ukoliko korisnički račun se podudara sa <b>%{username}</b>, trebali bi uskoro dobiti email sa linkom za ulogovanje."
       complete_email: "Ukoliko korisnički račun se podudara sa <b>%{email}</b>, trebali bi uskoro dobiti email sa linkom za ulogovanje."
       complete_username_found: "Pronašli smo korisnički račun koji se podudara sa <b>%{username}</b>, trebali bi uskoro dobiti email sa linkom za ulogovanje."
@@ -1727,15 +1730,7 @@ bs_BA:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} and %{count} ostali</span> %{description}"
-        few: "<span class='multi-user'>%{username}, %{username2} i ostalih %{count}</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} i ostalih %{count} </span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
-      liked_by_multiple_users:
-        one: "%{username}, %{username2} and %{count} ostali"
-        few: "%{username}, %{username2} i ostalih %{count}"
-        other: "%{username}, %{username2} i ostalih %{count}"
       liked_consolidated_description:
         one: "vam se svidio %{count} vaših postova"
         few: "vam se svidio %{count} vaših postova"
@@ -1988,6 +1983,7 @@ bs_BA:
       back_to_list: "Vrati se na Listu Tema"
       options: "Opcije Teme"
       show_links: "pokaži linkove unutar ove teme"
+      bumped_at: "Zadnje: %{date}"
       deleted: "Ova tema je obrisana"
       slow_mode_update:
         enable: "Omogući"
@@ -2300,7 +2296,6 @@ bs_BA:
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
-        upload: "Sorry, there was an error uploading that file. Please try again."
         file_too_large: "Nažalost, ta datoteka je prevelika (maksimalna veličina je %{max_size_kb}kb). Zašto ne biste prenijeli vašu veliku datoteku na uslugu dijeljenja u oblaku, a zatim zalijepili vezu?"
         too_many_uploads: "Sorry, you can only upload one file at a time."
         upload_not_authorized: "Nažalost, fajl koji pokušavate da učitate nije dozvoljen za učitavanje (dozvoljene ekstenzije su: %{authorized_extensions})."
@@ -2862,7 +2857,6 @@ bs_BA:
       other_tags: "Druge oznake"
       selector_all_tags: "sve oznake"
       selector_no_tags: "bez oznaka"
-      changed: "oznake  promijenjene:"
       tags: "Oznake"
       choose_for_topic: "neobavezne oznake"
       info: "Informacija"
@@ -3268,26 +3262,6 @@ bs_BA:
         groups_filter_instructions: "Relevantne web-kuke će biti aktivirane samo ako je događaj povezan sa određenim grupama. Ostavite prazno da biste pokrenuli web-kuke za sve grupe."
         groups_filter: "Pokrenute grupe"
         delete_confirm: "Izbrisati ovaj webhook?"
-        topic_event:
-          name: "Teme dogadaj"
-          details: "Kada se stvori nova tema, revidirana, izmijenjena ili izbrisana."
-        post_event:
-          name: "Objavi doađaj"
-          details: "Kada postoji novi odgovor, uredite, obrišite ili oporavite."
-        user_event:
-          name: "Korisnički događaj"
-        group_event:
-          name: "Grupni događaj"
-          details: "Kada se grupa kreira, ažurira ili uništava."
-        category_event:
-          name: "Kategorija Događaj"
-          details: "Kada je kategorija stvorena, ažurirana ili uništena."
-        tag_event:
-          name: "Oznaći događaj"
-          details: "Kada se oznaka kreira, ažurira ili uništava."
-        reviewable_event:
-          name: "Eventable Event"
-          details: "Kada je nova stavka spremna za pregled i kada je njen status ažuriran."
         delivery_status:
           title: "Status isporuke"
           inactive: "Neaktivan"
@@ -3361,7 +3335,6 @@ bs_BA:
             label: "Backup"
             title: "Create a backup"
             confirm: "Do you want to start a new backup?"
-            without_uploads: "Da (ne uključuju učitavanja)"
           download:
             label: "Skinuti"
             title: "Pošaljite e-poštu sa linkom za preuzimanje"
@@ -3462,6 +3435,7 @@ bs_BA:
           convert_theme_tooltip: "Pretvorite ovu temu u komponentu"
           inactive_themes: "Neaktivne teme:"
           inactive_components: "Neiskorištene komponente:"
+          cancel: "Odustani"
           broken_theme_tooltip: "Ova tema ima greške u CSS-u, HTML-u ili YAML-u"
           disabled_component_tooltip: "Ova komponenta je onemogućena"
           default_theme_tooltip: "Ova tema je podrazumevana tema sajta"

@@ -12,7 +12,7 @@ module Onebox
     attr_reader :view
 
     def initialize(name, record)
-      @record = Onebox::Helpers.symbolize_keys(record)
+      @record = record.deep_symbolize_keys
 
       # Fix any relative paths
       if @record[:image] && @record[:image] =~ %r{\A/[^/]}

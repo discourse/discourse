@@ -147,13 +147,9 @@ te:
       our_admins: "మా అధికారులు"
       our_moderators: "మా నిర్వాహకులు"
       moderators: "నిర్వాహకులు"
-      stat:
-        all_time: "ఆల్ టైమ్"
       like_count: "ఇష్టాలు"
       topic_count: "విషయాలు"
       post_count: "టపాలు"
-      active_user_count: "క్రియాశీల సభ్యులు"
-      contact: "మమ్ము సంప్రదించండి"
       contact_info: "ఈ సంధర్భంలో క్లిష్టమైన సమస్య లేదా అత్యవసర విషయం సైట్ ను ప్రభావితం చేస్తుంది, దయచేసి మమ్మల్ని సంప్రదించండి %{contact_info}."
     bookmarked:
       title: "పేజీక"
@@ -211,8 +207,11 @@ te:
       context_question:
         delimiter: "లేదా"
       types:
+        reviewable_queued_topic:
+          noun: "విషయం"
         reviewable_user:
           title: "సభ్యుడు"
+          noun: "సభ్యుడు"
       approval:
         ok: "సరే"
       example_username: "సభ్యనామం"
@@ -977,7 +976,6 @@ te:
       errors:
         create: "క్షమించాలి. మీ టపా సృష్టించుటలో దోషం. దయచేసి మరలా ప్రయత్నించండి. "
         edit: "క్షమించాలి. మీ టపా సవరించుటలో దోషం. మరలా ప్రయత్నించండి"
-        upload: "క్షమించాలి. దస్త్రం ఎగుమతించుటలో దోషం. దయచేసి మరలా ప్రయత్నించండి. "
         too_many_uploads: "క్షమించాలి. మీరు ఒకసారి ఒక దస్త్రం మాత్రమే ఎగుమతించగలరు"
         image_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు బొమ్మలు ఎగుమతి చేయలేరు."
         attachment_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు జోడింపులు ఎగుమతి చేయలేరు."
@@ -1550,6 +1548,7 @@ te:
           save: "భద్రపరుచు"
           edit: "సవరించు"
           settings: "అమరికలు"
+          cancel: "రద్దుచేయి"
           upload: "ఎక్కించు"
           installed: "ప్రతిష్టించబడింది"
           install_popular: "ప్రముఖ"

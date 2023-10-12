@@ -1,7 +1,7 @@
-import UserAction from "discourse/models/user-action";
-import UserTopicListRoute from "discourse/routes/user-topic-list";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import UserAction from "discourse/models/user-action";
+import UserTopicListRoute from "discourse/routes/user-topic-list";
 import getURL from "discourse-common/lib/get-url";
 import I18n from "I18n";
 

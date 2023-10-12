@@ -12,6 +12,7 @@ vi:
           always: "Luôn luôn"
           never: "Không bao giờ"
     chat:
+      deleted_chat_username: đã bị xóa
       create: "Tạo"
       cancel: "Huỷ"
       channel_settings:
@@ -20,6 +21,7 @@ vi:
         join: "Tham gia"
         leave: "Rời nhóm"
       close: "Đóng"
+      remove: "Xoá"
       delete: "Xóa"
       edited: "đã chỉnh sửa"
       muted: "im lặng"
@@ -34,7 +36,6 @@ vi:
       summarization:
         summarize: "Tóm tắt"
       mention_warning:
-        dismiss: "bỏ qua"
         groups:
           header:
             some: "Một số người dùng sẽ không được thông báo"
@@ -65,7 +66,6 @@ vi:
       channel_info:
         back_to_channel: "Quay lại"
         tabs:
-          about: Giới thiệu
           members: Các thành viên
           settings: Cài đặt
       new_message_modal:
@@ -94,6 +94,10 @@ vi:
         saved: "Lưu trữ"
         unfollow: "Rời nhóm"
         admin_title: "Quản trị"
+        settings_title: "Cài đặt"
+        category_label: "Danh mục"
+        history_label: "Lịch sử"
+        members_label: "Các thành viên"
       incoming_webhooks:
         back: "Quay lại"
         description: "Mô tả"
@@ -114,6 +118,11 @@ vi:
           title: "Di chuyển tới chủ đề đang tồn tại"
         new_message:
           title: "Chuyển đến tin nhắn mới"
+      retention_reminders:
+        public:
+          other: "%{count} ngày"
+        dm:
+          other: "%{count} ngày"
       flags:
         notify_moderators: "Thông báo này yêu cầu sự chú ý của nhân viên vì một lý do khác không được liệt kê ở trên."
       emoji_picker:

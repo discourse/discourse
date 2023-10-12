@@ -1,7 +1,11 @@
+import { getOwner } from "@ember/application";
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import Badge from "discourse/models/badge";
-import { setupTest } from "ember-qunit";
-import { getOwner } from "discourse-common/lib/get-owner";
+import pretender, {
+  parsePostData,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 
 module("Unit | Model | badge", function (hooks) {
   setupTest(hooks);
@@ -61,27 +65,48 @@ module("Unit | Model | badge", function (hooks) {
     );
   });
 
-  test("save", function (assert) {
-    assert.expect(0);
+  test("save", async function (assert) {
     const store = getOwner(this).lookup("service:store");
     const badge = store.createRecord("badge", {
+      id: 1999,
       name: "New Badge",
       description: "This is a new badge.",
       badge_type_id: 1,
     });
-    badge.save(["name", "description", "badge_type_id"]);
+
+    pretender.put("/admin/badges/1999", (request) => {
+      const params = parsePostData(request.requestBody);
+      assert.deepEqual(params, { description: "A special badge!" });
+      assert.step("called API");
+      return response({});
+    });
+
+    await badge.save({
+      description: "A special badge!",
+    });
+
+    assert.verifySteps(["called API"]);
   });
 
-  test("destroy", function (assert) {
-    assert.expect(0);
+  test("destroy", async function (assert) {
     const store = getOwner(this).lookup("service:store");
     const badge = store.createRecord("badge", {
       name: "New Badge",
       description: "This is a new badge.",
       badge_type_id: 1,
     });
-    badge.destroy();
+
+    pretender.delete("/admin/badges/3", () => {
+      assert.step("called API");
+      return response({});
+    });
+
+    // Doesn't call the API if destroying a new badge
+    await badge.destroy();
+
     badge.set("id", 3);
-    badge.destroy();
+    await badge.destroy();
+
+    assert.verifySteps(["called API"]);
   });
 });

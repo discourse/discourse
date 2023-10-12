@@ -1,17 +1,16 @@
-import { htmlSafe } from "@ember/template";
-import { withPluginApi } from "discourse/lib/plugin-api";
-import I18n from "I18n";
-import { bind } from "discourse-common/utils/decorators";
 import { tracked } from "@glimmer/tracking";
+import { inject as service } from "@ember/service";
+import { dasherize } from "@ember/string";
+import { htmlSafe } from "@ember/template";
+import { decorateUsername } from "discourse/helpers/decorate-username-selector";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { emojiUnescape } from "discourse/lib/text";
 import { escapeExpression } from "discourse/lib/utilities";
 import { avatarUrl } from "discourse-common/lib/avatar-utils";
-import { dasherize } from "@ember/string";
-import { emojiUnescape } from "discourse/lib/text";
-import { decorateUsername } from "discourse/helpers/decorate-username-selector";
-import { until } from "discourse/lib/formatter";
-import { inject as service } from "@ember/service";
-import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import getURL from "discourse-common/lib/get-url";
+import { bind } from "discourse-common/utils/decorators";
+import I18n from "I18n";
+import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import { initSidebarState } from "discourse/plugins/chat/discourse/lib/init-sidebar-state";
 
 export default {
@@ -210,7 +209,10 @@ export default {
               this.chatService = chatService;
 
               if (this.oneOnOneMessage) {
-                this.channel.chatable.users[0].trackStatus();
+                const user = this.channel.chatable.users[0];
+                if (user.username !== I18n.t("chat.deleted_chat_username")) {
+                  user.trackStatus();
+                }
               }
             }
 
@@ -341,21 +343,6 @@ export default {
 
             get hoverTitle() {
               return I18n.t("chat.direct_messages.leave");
-            }
-
-            _userStatusTitle(status) {
-              let title = `${escapeExpression(status.description)}`;
-
-              if (status.ends_at) {
-                const untilFormatted = until(
-                  status.ends_at,
-                  this.chatService.currentUser.user_option.timezone,
-                  this.chatService.currentUser.locale
-                );
-                title += ` ${untilFormatted}`;
-              }
-
-              return title;
             }
           };
 

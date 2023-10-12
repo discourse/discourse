@@ -1,10 +1,10 @@
 import { click, currentURL, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
 
 acceptance("Glimmer Topic Timeline", function (needs) {
   needs.user({

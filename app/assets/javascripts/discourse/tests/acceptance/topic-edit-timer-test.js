@@ -1,3 +1,6 @@
+import { click, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
   exists,
@@ -7,12 +10,9 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "I18n";
 import { cloneJSON } from "discourse-common/lib/object";
-import topicFixtures from "discourse/tests/fixtures/topic";
+import I18n from "I18n";
 
 acceptance("Topic - Edit timer", function (needs) {
   let clock = null;

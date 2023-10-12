@@ -1,6 +1,6 @@
+import { inject as service } from "@ember/service";
 import HashtagTypeBase from "discourse/lib/hashtag-types/base";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import { inject as service } from "@ember/service";
 
 export default class ChannelHashtagType extends HashtagTypeBase {
   @service chatChannelsManager;

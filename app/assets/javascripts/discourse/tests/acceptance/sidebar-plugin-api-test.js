@@ -1,6 +1,13 @@
-import { test } from "qunit";
-import I18n from "I18n";
 import { click, settled, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import { PLUGIN_API_VERSION, withPluginApi } from "discourse/lib/plugin-api";
+import {
+  resetCustomCategoryLockIcon,
+  resetCustomCategorySectionLinkPrefix,
+  resetCustomCountables,
+} from "discourse/lib/sidebar/user/categories-section/category-section-link";
+import { resetCustomTagSectionLinkPrefixIcons } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
+import Site from "discourse/models/site";
 import {
   acceptance,
   exists,
@@ -8,15 +15,8 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { PLUGIN_API_VERSION, withPluginApi } from "discourse/lib/plugin-api";
-import Site from "discourse/models/site";
-import {
-  resetCustomCategoryLockIcon,
-  resetCustomCategorySectionLinkPrefix,
-  resetCustomCountables,
-} from "discourse/lib/sidebar/user/categories-section/category-section-link";
-import { resetCustomTagSectionLinkPrefixIcons } from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
 import { bind } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 acceptance("Sidebar - Plugin API", function (needs) {
   needs.user({});

@@ -1,7 +1,7 @@
+import { capitalize } from "@ember/string";
+import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
 import createPMRoute from "discourse/routes/build-private-messages-route";
 import I18n from "I18n";
-import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
-import { capitalize } from "@ember/string";
 
 export default (inboxType, filter) => {
   return createPMRoute(inboxType, "private-messages-groups", filter).extend({

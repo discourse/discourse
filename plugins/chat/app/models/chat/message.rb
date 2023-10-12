@@ -13,9 +13,9 @@ module Chat
 
     belongs_to :chat_channel, class_name: "Chat::Channel"
     belongs_to :user
-    belongs_to :in_reply_to, class_name: "Chat::Message"
+    belongs_to :in_reply_to, class_name: "Chat::Message", autosave: true
     belongs_to :last_editor, class_name: "User"
-    belongs_to :thread, class_name: "Chat::Thread", optional: true
+    belongs_to :thread, class_name: "Chat::Thread", optional: true, autosave: true
 
     has_many :replies,
              class_name: "Chat::Message",
@@ -73,6 +73,7 @@ module Chat
 
     before_save { ensure_last_editor_id }
 
+    validates :cooked, length: { maximum: 20_000 }
     validate :validate_message
 
     def self.polymorphic_class_mapping = { "ChatMessage" => Chat::Message }
@@ -210,6 +211,7 @@ module Chat
       strikethrough
       blockquote
       emphasis
+      replacements
     ]
 
     def self.cook(message, opts = {})
@@ -249,7 +251,11 @@ module Chat
     end
 
     def url
-      "/chat/c/-/#{self.chat_channel_id}/#{self.id}"
+      if in_thread?
+        "#{Discourse.base_path}/chat/c/-/#{self.chat_channel_id}/t/#{self.thread_id}/#{self.id}"
+      else
+        "#{Discourse.base_path}/chat/c/-/#{self.chat_channel_id}/#{self.id}"
+      end
     end
 
     def create_mentions

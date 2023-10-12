@@ -310,16 +310,10 @@ hr:
       our_moderators: "Naši Moderatori"
       moderators: "Moderatori"
       stat:
-        all_time: "Ukupno"
-        last_day: "Posljednja 24 sata"
-        last_7_days: "Zadnjih 7 dana"
-        last_30_days: "Zadnjih 30 dana"
+        last_day: "24 sata"
       like_count: "Likeovi"
       topic_count: "Teme"
       post_count: "Objave"
-      user_count: "Učlani se"
-      active_user_count: "Aktivni korisnici"
-      contact: "Kontaktirajte nas"
       contact_info: "U slučaju kritičnog problema ili hitnosti koje utječu na rad stranice, kontaktirajte nas na %{contact_info}."
     bookmarked:
       title: "Zabilješka"
@@ -374,6 +368,10 @@ hr:
       abandon:
         yes_value: "Odbaci"
         no_value: "Nastavi uređivati"
+    topic_count_all:
+      one: "Pregledajte %{count} nepročitanu temu."
+      few: "Pregledajte %{count} nove teme."
+      other: "Pregledajte %{count} nove teme."
     topic_count_categories:
       one: "Pregledajte %{count} novu ili ažuriranu temu."
       few: "Pregledajte %{count} nove ili ažurirane teme."
@@ -569,14 +567,19 @@ hr:
         reviewable_flagged_post:
           title: "Post označen zastavicom"
           flagged_by: "Označio"
+          noun: "objava"
         reviewable_queued_topic:
           title: "Tema u redu čekanja"
+          noun: "tema"
         reviewable_queued_post:
           title: "Objava u redu čekanja"
+          noun: "objava"
         reviewable_user:
           title: "Korisnik"
+          noun: "korisnik"
         reviewable_post:
           title: "Objava"
+          noun: "objava"
       approval:
         title: "natpis čeka potvrdu"
         description: "Zaprimili smo vašu objavu, ali potrebno je odobrenje moderatora prije nego se pojavi. Molim vas budite strpljivi."
@@ -1308,7 +1311,6 @@ hr:
         success: "(email je poslan)"
         in_progress: "(email se šalje)"
         error: "(greška)"
-        emoji: "zaključavanje emotikona"
         action: "Pošalj e-mail za povratak zaporke."
         set_password: "Postavi zaporku"
         choose_new: "Izaberite novu lozinku"
@@ -1897,7 +1899,6 @@ hr:
       link_label: "Pošaljite mi link za prijavu"
       button_label: "s e-mailom"
       login_link: "Preskoči lozinku; pošalji mi link za prijavu"
-      emoji: "zaključajte emoji"
       complete_username: "Ako se račun podudara s korisničkim imenom <b>%{username}</b>, uskoro biste trebali dobiti e-poštu s vezom za prijavu."
       complete_email: "Ako se račun podudara s <b>%{email}</b>, uskoro biste trebali dobiti e-poštu s vezom za prijavu."
       complete_username_found: "Pronašli smo račun koji odgovara korisničkom imenu <b>%{username}</b>, trebali biste uskoro primiti e-mail s linkom za prijavu."
@@ -1986,7 +1987,6 @@ hr:
         security_key: "Umjesto toga upotrijebite sigurnosni ključ"
     invites:
       accept_title: "Pozivnica"
-      emoji: "emoji omotnice"
       welcome_to: "Dobrodošli na %{site_name}"
       invited_by: "Pozvao/la vas je:"
       social_login_available: "Također ćete se moći prijaviti s bilo kojom društvenim profilom pomoću te e-pošte."
@@ -2094,7 +2094,6 @@ hr:
       drafts_offline: "nacrti offline"
       edit_conflict: "uredi sukob"
       esc: "esc"
-      esc_label: "Kliknite ili pritisnite Esc za odbacivanje"
       ok_proceed: "Ok, nastavi"
       group_mentioned_limit:
         one: "<b>Upozorenje!</b> Spomenuli ste <a href='%{group_link}'>%{group}</a>, međutim ova grupa ima više članova od administratora konfiguriranog ograničenja spominjanja od %{count} korisnika. Nitko neće biti obaviješten."
@@ -2286,15 +2285,7 @@ hr:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} i %{count} ostalo</span> %{description}"
-        few: "<span class='multi-user'>%{username}, %{username2} i %{count} ostalih</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} i %{count} ostali</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
-      liked_by_multiple_users:
-        one: "%{username}, %{username2} i %{count} ostalo"
-        few: "%{username}, %{username2} i %{count} ostalih"
-        other: "%{username}, %{username2} i %{count} ostali"
       liked_consolidated_description:
         one: "se sviđa vaš %{count} post"
         few: "se sviđa vaših %{count} postova"
@@ -2745,9 +2736,7 @@ hr:
           false { ili <a href="{basePath}/latest">pogledajte najnovije teme</a>}
           other {}
         }
-      bumped_at_title: |
-        Prvi post: %{createdAtDate}
-        Objavljeno: %{bumpedAtDate}
+      bumped_at: "Najnovije: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Pregledajte sve kategorije</a> ili <a href='%{basePath}/latest'>pogledajte najnovije teme</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Pregledajte sve kategorije</a>, <a href='%{basePath}/latest'>pogledajte najnovije teme</a> ili pogledajte vrh:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Pregledajte sve oznake</a> ili <a href='%{basePath}/latest'>pogledajte najnovije teme</a>."
@@ -3173,7 +3162,6 @@ hr:
       errors:
         create: "Žao nam je, dogodila se greška u stvaranju tvoje objave. Molimo pokušajte ponovo."
         edit: "Žao nam je, dogodila se greška u izmjenjivanju tvoje objave. Molimo pokušajte ponovo."
-        upload: "Žao nam je, dogodila se greška pri učitavanju te datoteke. Molimo pokušajte ponovo."
         file_too_large: "Nažalost, ta je datoteka prevelika (maksimalna veličina je %{max_size_kb}kb). Zašto svoju veliku datoteku ne biste prenijeli na vanjski servis poput imgur.com, a zatim zalijepili vezu?"
         file_size_zero: "Žao nam je, izgleda da je nešto pošlo po zlu, datoteka koju pokušavate prenijeti je 0 bajtova. Molim te pokušaj ponovno."
         file_too_large_humanized: "Nažalost, ta je datoteka prevelika (maksimalna veličina je %{max_size}). Zašto ne biste prenijeli svoju veliku datoteku na uslugu dijeljenja u oblaku, a zatim zalijepili vezu?"
@@ -3872,7 +3860,6 @@ hr:
       other_tags: "Ostale oznake"
       selector_all_tags: "sve oznake"
       selector_no_tags: "bez oznaka"
-      changed: "promijenjene oznake:"
       tags: "Oznake"
       choose_for_topic: "neobavezne oznake"
       info: "Info"
@@ -4474,39 +4461,8 @@ hr:
         groups_filter_instructions: "Relevantne web dojave pokrenut će se samo ako je događaj povezan s navedenim skupinama. Ostavite prazno da biste pokrenuli web dojave za sve grupe."
         groups_filter: "Pokrenute grupe"
         delete_confirm: "Izbrisati ovu web dojavu?"
-        topic_event:
-          name: "Tema događaja"
-          details: "Kada postoji nova tema, revidirana, promijenjena ili izbrisana."
-        post_event:
-          name: "Post Event"
-          details: "Kada postoji novi odgovor, uređivanje, brisanje ili oporavak."
-        user_event:
-          name: "Korisnički događaj"
-          details: "Kada se korisnik prijavi, odjavljuje se, potvrđuje svoju e-poštu, kreira račun, odobrava ili ažurira."
-        group_event:
-          name: "Grupni događaj"
-          details: "Kada se grupa kreira, ažurira ili uništi."
-        category_event:
-          name: "Kategorija Događaj"
-          details: "Kada se kategorija kreira, ažurira ili uništi."
-        tag_event:
-          name: "Tag Event"
-          details: "Kada se oznaka kreira, ažurira ili uništi."
-        reviewable_event:
-          name: "Događaj koji se može pregledati"
-          details: "Kada je nova stavka spremna za pregled i kada se njezin status ažurira."
-        notification_event:
-          name: "Događaj obavijesti"
-          details: "Kada korisnik primi obavijest u svom feedu."
-        user_promoted_event:
-          name: "Događaj koji promovira korisnik"
-          details: "Kada se korisnik unaprijedi s jedne razine povjerenja na drugu."
-        group_user_event:
-          name: "Grupni korisnički događaj"
-          details: "Kada se korisnik doda ili ukloni u grupi."
         like_event:
-          name: "Kao Događaj"
-          details: "Kada korisnik lajka objavu."
+          post_liked: "Kada korisnik lajka objavu."
         delivery_status:
           title: "Status isporuke"
           inactive: "Neaktivan"
@@ -4585,7 +4541,6 @@ hr:
             label: "Napravi sigurnosnu kopiju"
             title: "Stvori sigurnosnu kopiju"
             confirm: "Želite li pokrenuti novu sigurnosnu kopiju?"
-            without_uploads: "Da (ne uključuje prijenose)"
           download:
             label: "Preuzmi"
             title: "Pošaljite e-poštu s vezom za preuzimanje"
@@ -4653,7 +4608,6 @@ hr:
           theme_name: "Naziv teme"
           component_name: "Naziv komponente"
           themes_intro: "Odaberite postojeću temu ili instalirajte novu da biste započeli"
-          themes_intro_emoji: "umjetnica emoji"
           beginners_guide_title: "Vodič za početnike za korištenje tema diskursa"
           developers_guide_title: "Vodič za programere za teme diskursa"
           browse_themes: "Pregledaj teme zajednice"
@@ -4700,6 +4654,7 @@ hr:
           convert_theme_tooltip: "Pretvorite ovu temu u komponentu"
           inactive_themes: "Neaktivne teme:"
           inactive_components: "Neiskorištene komponente:"
+          cancel: "Odustani"
           broken_theme_tooltip: "Ova tema ima pogreške u svom CSS -u, HTML -u ili YAML -u"
           disabled_component_tooltip: "Ova komponenta je onemogućena"
           default_theme_tooltip: "Ova je tema zadana tema web stranice"
@@ -5687,7 +5642,6 @@ hr:
             with_time: <span class="username">%{username}</span> u <span class="time">%{time}</span>
         badge_intro:
           title: "Odaberite postojeću značku ili izradite novu da biste započeli"
-          emoji: "studentica emoji"
           what_are_badges_title: "Što su značke?"
           badge_query_examples_title: "Primjeri upita za značke"
         mass_award:

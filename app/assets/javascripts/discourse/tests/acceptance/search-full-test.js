@@ -1,3 +1,10 @@
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import {
+  SEARCH_TYPE_CATS_TAGS,
+  SEARCH_TYPE_DEFAULT,
+  SEARCH_TYPE_USERS,
+} from "discourse/controllers/full-page-search";
 import {
   acceptance,
   count,
@@ -6,13 +13,6 @@ import {
   selectDate,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import {
-  SEARCH_TYPE_CATS_TAGS,
-  SEARCH_TYPE_DEFAULT,
-  SEARCH_TYPE_USERS,
-} from "discourse/controllers/full-page-search";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 let lastBody;

@@ -1,13 +1,13 @@
-import { setOwner } from "@ember/application";
 import { tracked } from "@glimmer/tracking";
-import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
+import { setOwner } from "@ember/application";
 import { inject as service } from "@ember/service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   DEFAULT_MESSAGE_PAGE_SIZE,
   FUTURE,
   PAST,
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
 export default class ChatMessagesLoader {
   @service chatApi;

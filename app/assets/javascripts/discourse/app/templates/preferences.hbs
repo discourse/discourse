@@ -1,4 +1,4 @@
-<DSection @pageClass="user-preferences" />
+{{body-class "user-preferences-page"}}
 
 <div class="user-navigation user-navigation-secondary">
   <HorizontalOverflowNav @ariaLabel="User secondary - preferences">
@@ -76,16 +76,14 @@
       <span>{{i18n "user.preferences_nav.interface"}}</span>
     </DNavigationItem>
 
-    {{#if (not-eq this.siteSettings.navigation_menu "legacy")}}
-      <DNavigationItem
-        @route="preferences.navigation-menu"
-        @ariaCurrentContext="subNav"
-        class="user-nav__preferences-navigation-menu"
-      >
-        {{d-icon "bars"}}
-        <span>{{i18n "user.preferences_nav.navigation_menu"}}</span>
-      </DNavigationItem>
-    {{/if}}
+    <DNavigationItem
+      @route="preferences.navigation-menu"
+      @ariaCurrentContext="subNav"
+      class="user-nav__preferences-navigation-menu"
+    >
+      {{d-icon "bars"}}
+      <span>{{i18n "user.preferences_nav.navigation_menu"}}</span>
+    </DNavigationItem>
 
     <PluginOutlet
       @name="user-preferences-nav-under-interface"

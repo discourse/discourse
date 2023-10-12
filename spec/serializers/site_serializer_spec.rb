@@ -155,13 +155,6 @@ RSpec.describe SiteSerializer do
       expect(serialized[:anonymous_default_navigation_menu_tags]).to eq(nil)
     end
 
-    it "is not included in the serialised object when navigation menu is legacy" do
-      SiteSetting.navigation_menu = "legacy"
-
-      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-      expect(serialized[:anonymous_default_navigation_menu_tags]).to eq(nil)
-    end
-
     it "is not included in the serialised object when user is not anonymous" do
       guardian = Guardian.new(user)
 
@@ -337,14 +330,6 @@ RSpec.describe SiteSerializer do
           { name: tag2.name, description: tag3.description, pm_only: false },
         ],
       )
-    end
-
-    it "should not be serialized if `navigation_menu` site setting is set to `legacy`" do
-      SiteSetting.set(:navigation_menu, "legacy")
-
-      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
-
-      expect(serialized[:navigation_menu_site_top_tags]).to eq(nil)
     end
 
     it "should not be serialized if `tagging_enabled` site setting is set to false" do

@@ -1,14 +1,14 @@
-import I18n from "I18n";
-import RawHtml from "discourse/widgets/raw-html";
-import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
-import { avatarFor } from "discourse/widgets/post";
 import { computed } from "@ember/object";
-import { createWidget } from "discourse/widgets/widget";
-import { h } from "virtual-dom";
-import { iconNode } from "discourse-common/lib/icon-library";
-import { userPath } from "discourse/lib/url";
 import { htmlSafe } from "@ember/template";
+import { h } from "virtual-dom";
+import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import { decorateHashtags } from "discourse/lib/hashtag-autocomplete";
+import { userPath } from "discourse/lib/url";
+import { avatarFor } from "discourse/widgets/post";
+import RawHtml from "discourse/widgets/raw-html";
+import { createWidget } from "discourse/widgets/widget";
+import { iconNode } from "discourse-common/lib/icon-library";
+import I18n from "I18n";
 
 export function actionDescriptionHtml(actionCode, createdAt, username, path) {
   const dt = new Date(createdAt);
@@ -94,7 +94,17 @@ export function resetPostSmallActionClassesCallbacks() {
 
 export default createWidget("post-small-action", {
   buildKey: (attrs) => `post-small-act-${attrs.id}`,
-  tagName: "div.small-action.onscreen-post",
+  tagName: "article.small-action.onscreen-post",
+
+  buildAttributes(attrs) {
+    return {
+      "aria-label": I18n.t("share.post", {
+        postNumber: attrs.post_number,
+        username: attrs.username,
+      }),
+      role: "region",
+    };
+  },
 
   buildId(attrs) {
     return `post_${attrs.post_number}`;
@@ -130,6 +140,7 @@ export default createWidget("post-small-action", {
         template: attrs.avatar_template,
         username: attrs.username,
         url: attrs.usernameUrl,
+        ariaHidden: false,
       })
     );
 

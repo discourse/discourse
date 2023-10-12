@@ -1,13 +1,14 @@
-import PrettyText, { buildOptions } from "pretty-text/pretty-text";
+import { setupTest } from "ember-qunit";
+import { registerEmoji } from "pretty-text/emoji";
+import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
+import { extractDataAttribute } from "pretty-text/engines/discourse-markdown-it";
 import {
   applyCachedInlineOnebox,
   deleteCachedInlineOnebox,
 } from "pretty-text/inline-oneboxer";
+import PrettyText, { buildOptions } from "pretty-text/pretty-text";
 import QUnit, { module, test } from "qunit";
 import { deepMerge } from "discourse-common/lib/object";
-import { extractDataAttribute } from "pretty-text/engines/discourse-markdown-it";
-import { registerEmoji } from "pretty-text/emoji";
-import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 
 const rawOpts = {
   siteSettings: {
@@ -53,7 +54,9 @@ QUnit.assert.cookedPara = function (input, expected, message) {
   QUnit.assert.cooked(input, `<p>${expected}</p>`, message);
 };
 
-module("Unit | Utility | pretty-text", function () {
+module("Unit | Utility | pretty-text", function (hooks) {
+  setupTest(hooks);
+
   test("buildOptions", function (assert) {
     assert.ok(
       buildOptions({ siteSettings: { enable_emoji: true } }).discourse.features

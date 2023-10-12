@@ -1,10 +1,10 @@
+import { cached, tracked } from "@glimmer/tracking";
 import Service, { inject as service } from "@ember/service";
-import { debounce } from "discourse-common/utils/decorators";
-import Promise from "rsvp";
-import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
-import { tracked } from "@glimmer/tracking";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
+import Promise from "rsvp";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { debounce } from "discourse-common/utils/decorators";
+import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
 const DIRECT_MESSAGE_CHANNELS_LIMIT = 20;
 
@@ -18,6 +18,7 @@ export default class ChatChannelsManager extends Service {
   @service chatSubscriptionsManager;
   @service chatApi;
   @service currentUser;
+  @service router;
   @tracked _cached = new TrackedObject();
 
   async find(id, options = { fetchIfNotFound: true }) {
@@ -106,6 +107,7 @@ export default class ChatChannelsManager extends Service {
     );
   }
 
+  @cached
   get publicMessageChannels() {
     return this.channels
       .filter(
@@ -115,6 +117,7 @@ export default class ChatChannelsManager extends Service {
       .sort((a, b) => a?.slug?.localeCompare?.(b?.slug));
   }
 
+  @cached
   get directMessageChannels() {
     return this.#sortDirectMessageChannels(
       this.channels.filter((channel) => {
@@ -129,12 +132,12 @@ export default class ChatChannelsManager extends Service {
   }
 
   async #find(id) {
-    return this.chatApi
-      .channel(id)
-      .catch(popupAjaxError)
-      .then((result) => {
-        return this.store(result.channel);
-      });
+    try {
+      const result = await this.chatApi.channel(id);
+      return this.store(result.channel);
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   #cache(channel) {
@@ -151,11 +154,11 @@ export default class ChatChannelsManager extends Service {
 
   #sortDirectMessageChannels(channels) {
     return channels.sort((a, b) => {
-      if (!a.lastMessage) {
+      if (!a.lastMessage.id) {
         return 1;
       }
 
-      if (!b.lastMessage) {
+      if (!b.lastMessage.id) {
         return -1;
       }
 

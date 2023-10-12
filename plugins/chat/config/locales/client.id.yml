@@ -23,11 +23,8 @@ id:
           descriptions:
             chat:
               create_message: "Buat pesan obrolan di kanal tertentu"
-    about:
-      chat_messages_count: "Pesan Obrolan"
-      chat_channels_count: "Kanal Obrolan"
-      chat_users_count: "Pengguna Obrolan"
     chat:
+      deleted_chat_username: dihapus
       dates:
         time_tiny: "h:mm"
       all_loaded: "Menampilkan semua pesan"
@@ -51,6 +48,7 @@ id:
         join: "Gabung"
         leave: "Keluar"
       close: "Tutup"
+      remove: "Hapus"
       delete: "Hapus"
       muted: "diredam"
       joined: "joined"
@@ -67,7 +65,7 @@ id:
         since:
           other: "%{count} jam terakhir"
       mention_warning:
-        dismiss: "bubar"
+        channel_wide_mentions_disallowed: "Penyebutan @here dan @all dinonaktifkan di kanal ini."
       reply: "Balas"
       edit: "Ubah"
       bookmark_message: "Penandaan"
@@ -88,7 +86,6 @@ id:
         name: Nama
       channel_info:
         tabs:
-          about: Tentang
           members: Anggota
           settings: Pengaturan
       new_message_modal:
@@ -126,9 +123,13 @@ id:
         saved: "Tersimpan"
         unfollow: "Keluar"
         admin_title: "Admin"
+        settings_title: "Pengaturan"
+        category_label: "Kategori"
+        members_label: "Anggota"
       admin:
         export_messages:
           title: "Ekspor pesan obrolan"
+          description: "Ini mengekspor semua pesan dari semua kanal."
           create_export: "Buat ekspor"
           export_has_started: "Ekspor telah dimulai. Anda akan menerima PM jika sudah siap."
       incoming_webhooks:
@@ -142,6 +143,11 @@ id:
         cancel: "Batal"
         new_topic:
           title: "Pindahkan sebagai Topik Baru"
+      retention_reminders:
+        public:
+          other: "%{count} hari"
+        dm:
+          other: "%{count} hari"
       emoji_picker:
         objects: "Objek"
         flags: "Flags"
@@ -175,6 +181,11 @@ id:
           fields:
             message:
               label: pesan
+    review:
+      types:
+        reviewable_chat_message:
+          title: "Pesan obrolan yang ditandai"
+          noun: "pesan obrolan"
     styleguide:
       sections:
         chat:

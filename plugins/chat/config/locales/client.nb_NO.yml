@@ -12,6 +12,7 @@ nb_NO:
           always: "Alltid"
           never: "Aldri"
     chat:
+      deleted_chat_username: slettet
       create: "Opprett"
       cancel: "Avbryt"
       channel_settings:
@@ -20,6 +21,7 @@ nb_NO:
         join: "Bli medlem"
         leave: "Forlat"
       close: "Lukk"
+      remove: "Fjern"
       delete: "Slett"
       edited: "redigert"
       muted: "ignorert"
@@ -31,8 +33,6 @@ nb_NO:
       flag: "Flagg"
       join: "Bli medlem"
       last_visit: "siste besøk"
-      mention_warning:
-        dismiss: "forkast"
       reply: "Svar"
       edit: "Endre"
       rebake_message: "Generer HTML på nytt"
@@ -59,7 +59,6 @@ nb_NO:
       channel_info:
         back_to_channel: "Forrige"
         tabs:
-          about: Om
           members: Medlemmer
           settings: Instillinger
       direct_message_creator:
@@ -89,6 +88,10 @@ nb_NO:
         saved: "Lagret"
         unfollow: "Forlat"
         admin_title: "Admin"
+        settings_title: "Instillinger"
+        category_label: "Kategori"
+        history_label: "Historie"
+        members_label: "Medlemmer"
       incoming_webhooks:
         back: "Forrige"
         description: "Beskrivelse"
@@ -109,6 +112,13 @@ nb_NO:
           title: "Flytt til eksisterende emne"
         new_message:
           title: "Flytt til ny melding"
+      retention_reminders:
+        public:
+          one: "%{count} dag"
+          other: "%{count} dager"
+        dm:
+          one: "%{count} dag"
+          other: "%{count} dager"
       emoji_picker:
         objects: "Objekter"
         activities: "Aktiviteter"

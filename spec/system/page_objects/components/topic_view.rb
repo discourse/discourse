@@ -10,6 +10,14 @@ module PageObjects
           wait: Capybara.default_max_wait_time * 2,
         )
       end
+
+      def has_tracking_status?(name)
+        select_kit =
+          PageObjects::Components::SelectKit.new(
+            "#topic-footer-buttons .topic-notifications-options",
+          )
+        expect(select_kit).to have_selected_name(name)
+      end
     end
   end
 end

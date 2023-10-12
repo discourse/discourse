@@ -150,6 +150,7 @@ RSpec.describe Post do
   describe "with_secure_uploads?" do
     let(:topic) { Fabricate(:topic) }
     let!(:post) { Fabricate(:post, topic: topic) }
+
     it "returns false if secure uploads is not enabled" do
       expect(post.with_secure_uploads?).to eq(false)
     end
@@ -167,6 +168,14 @@ RSpec.describe Post do
         it "returns true" do
           expect(post.with_secure_uploads?).to eq(true)
         end
+
+        context "if secure_uploads_pm_only" do
+          before { SiteSetting.secure_uploads_pm_only = true }
+
+          it "returns false" do
+            expect(post.with_secure_uploads?).to eq(false)
+          end
+        end
       end
 
       context "if the topic category is read_restricted" do
@@ -176,6 +185,14 @@ RSpec.describe Post do
         it "returns true" do
           expect(post.with_secure_uploads?).to eq(true)
         end
+
+        context "if secure_uploads_pm_only" do
+          before { SiteSetting.secure_uploads_pm_only = true }
+
+          it "returns false" do
+            expect(post.with_secure_uploads?).to eq(false)
+          end
+        end
       end
 
       context "if the post is in a PM topic" do
@@ -183,6 +200,14 @@ RSpec.describe Post do
 
         it "returns true" do
           expect(post.with_secure_uploads?).to eq(true)
+        end
+
+        context "if secure_uploads_pm_only" do
+          before { SiteSetting.secure_uploads_pm_only = true }
+
+          it "returns true" do
+            expect(post.with_secure_uploads?).to eq(true)
+          end
         end
       end
     end
@@ -1367,6 +1392,37 @@ RSpec.describe Post do
     ensure
       InlineOneboxer.invalidate("http://testonebox.com/vvf22")
     end
+
+    context "when secure uploads are enabled" do
+      before do
+        setup_s3
+        SiteSetting.secure_uploads = true
+      end
+
+      it "does not enqueue job to update secure status by default" do
+        post = create_post
+        expect_not_enqueued_with(
+          job: :update_post_uploads_secure_status,
+          args: {
+            post_id: post.id,
+            source: "post rebake",
+          },
+        ) { post.rebake! }
+      end
+
+      context "when passing update_upload_security: true option" do
+        it "does enqueue job to update secure status" do
+          post = create_post
+          expect_enqueued_with(
+            job: :update_post_uploads_secure_status,
+            args: {
+              post_id: post.id,
+              source: "post rebake",
+            },
+          ) { post.rebake!(update_upload_security: true) }
+        end
+      end
+    end
   end
 
   describe "#set_owner" do
@@ -2107,6 +2163,80 @@ RSpec.describe Post do
 
       expect(post3.canonical_url).to eq("#{topic_url}?page=2#post_#{post3.post_number}")
       expect(post4.canonical_url).to eq("#{topic_url}?page=2#post_#{post4.post_number}")
+    end
+  end
+
+  describe "public_posts_count_per_day" do
+    before do
+      freeze_time DateTime.parse("2017-03-01 12:00")
+
+      Fabricate(:post)
+      Fabricate(:post, created_at: 1.day.ago)
+      Fabricate(:post, created_at: 1.day.ago)
+      Fabricate(:post, created_at: 2.days.ago)
+      Fabricate(:post, created_at: 4.days.ago)
+    end
+
+    let(:listable_topics_count_per_day) do
+      { 1.day.ago.to_date => 2, 2.days.ago.to_date => 1, Time.now.utc.to_date => 1 }
+    end
+
+    it "collect closed interval public post count" do
+      expect(Post.public_posts_count_per_day(2.days.ago, Time.now)).to include(
+        listable_topics_count_per_day,
+      )
+      expect(Post.public_posts_count_per_day(2.days.ago, Time.now)).not_to include(
+        4.days.ago.to_date => 1,
+      )
+    end
+
+    it "returns the correct number of public posts per day when there are no public posts" do
+      Fabricate(:post, post_type: Post.types[:whisper], created_at: 6.days.ago)
+      Fabricate(:post, post_type: Post.types[:whisper], created_at: 7.days.ago)
+
+      expect(Post.public_posts_count_per_day(10.days.ago, 5.days.ago)).to be_empty
+    end
+
+    it "returns the correct number of public posts per day with category filter" do
+      category = Fabricate(:category)
+      another_category = Fabricate(:category)
+
+      topic = Fabricate(:topic, category: category)
+      another_topic = Fabricate(:topic, category: another_category)
+
+      Fabricate(:post, topic: topic, created_at: 6.days.ago)
+      Fabricate(:post, topic: topic, created_at: 7.days.ago)
+      Fabricate(:post, topic: another_topic, created_at: 6.days.ago)
+      Fabricate(:post, topic: another_topic, created_at: 7.days.ago)
+
+      expect(Post.public_posts_count_per_day(10.days.ago, 5.days.ago, category.id)).to eq(
+        6.days.ago.to_date => 1,
+        7.days.ago.to_date => 1,
+      )
+
+      expect(
+        Post.public_posts_count_per_day(
+          10.days.ago,
+          5.days.ago,
+          [category.id, another_category.id],
+        ),
+      ).to eq(6.days.ago.to_date => 2, 7.days.ago.to_date => 2)
+    end
+
+    it "returns the correct number of public posts per day with group filter" do
+      user = Fabricate(:user)
+      group_user = Fabricate(:user)
+      group = Fabricate(:group)
+      group.add(group_user)
+
+      Fabricate(:post, user: user, created_at: 6.days.ago)
+      Fabricate(:post, user: user, created_at: 7.days.ago)
+      Fabricate(:post, user: group_user, created_at: 6.days.ago)
+      Fabricate(:post, user: group_user, created_at: 7.days.ago)
+
+      expect(
+        Post.public_posts_count_per_day(10.days.ago, 5.days.ago, nil, false, [group.id]),
+      ).to eq(6.days.ago.to_date => 1, 7.days.ago.to_date => 1)
     end
   end
 end

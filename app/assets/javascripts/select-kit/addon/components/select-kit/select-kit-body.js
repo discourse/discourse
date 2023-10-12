@@ -1,7 +1,7 @@
 import Component from "@ember/component";
-import { bind } from "discourse-common/utils/decorators";
-import { next } from "@ember/runloop";
 import { computed } from "@ember/object";
+import { next } from "@ember/runloop";
+import { bind } from "discourse-common/utils/decorators";
 
 export default Component.extend({
   classNames: ["select-kit-body"],

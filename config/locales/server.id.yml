@@ -68,8 +68,11 @@ id:
       generic: Terjadi kesalahan saat mengimpor tema itu
       upload: "Kesalahan saat membuat aset unggahan: %{name}. %{errors}"
       about_json: "Kesalahan Impor: about.json tidak ada, atau tidak valid. Apakah Anda yakin ini adalah Tema Discourse?"
+      about_json_too_big: "Kesalahan Impor: about.json lebih besar dari batas %{limit}."
       about_json_values: "about.json berisi nilai yang tidak valid: %{errors}"
       modifier_values: "pengubah about.json berisi nilai yang tidak valid: %{errors}"
+      asset_too_big: "Aset %{filename} lebih besar dari batas %{limit}"
+      theme_too_big: "Tema lebih besar dari batas %{limit}"
       git: "Kesalahan kloning repositori git, akses ditolak atau repositori tidak ditemukan"
       git_ref_not_found: "Tidak dapat checkout referensi git: %{ref}"
       git_unsupported_scheme: "Tidak dapat clone git repo: skema tidak didukung"
@@ -78,6 +81,7 @@ id:
       unknown_file_type: "File yang Anda unggah tampaknya bukan tema Discourse yang valid."
       not_allowed_theme: "`%{repo}` tidak ada dalam daftar tema yang diizinkan (centang pengaturan global `allowed_theme_repos`)."
       ssh_key_gone: "Anda menunggu terlalu lama untuk memasang tema dan kunci SSH kedaluwarsa. Silakan coba lagi."
+      too_many_files: "Jumlah file (%{count}) dalam tema telah melampaui jumlah maksimum file yang diperbolehkan (%{limit})"
     errors:
       component_no_user_selectable: "Komponen tema tidak dapat dipilih oleh pengguna"
       component_no_default: "Komponen tema tidak bisa menjadi tema default"
@@ -794,6 +798,9 @@ id:
     sequence_conflict_error:
       title: "kesalahan draf"
       description: "Draf sedang diedit di jendela lain. Muat ulang halaman ini."
+    too_many_drafts:
+      title: "Terlalu banyak draf"
+      description: "Anda telah mencapai jumlah maksimum draf yang diperbolehkan. Harap hapus beberapa [draf Anda](%{base_url}/my/activity/drafts) dan coba lagi."
   draft_backup:
     pm_title: "Draf Cadangan dari topik yang sedang berlangsung"
     pm_body: "Topik berisi draf cadangan"
@@ -1186,10 +1193,12 @@ id:
       other: "Email polling telah menghasilkan %{count} kesalahan dalam 24 jam terakhir. Lihatlah <a href='%{base_path}/logs' target='_blank'>log</a> untuk lebih jelasnya."
     missing_mailgun_api_key: "Server dikonfigurasi untuk mengirim email melalui Mailgun tetapi Anda belum memberikan kunci API yang digunakan untuk memverifikasi pesan webhook."
     v3_analytics_deprecated: "Wacana Anda saat ini menggunakan Google Analytics 3, yang tidak akan didukung lagi setelah Juli 2023.0 <a href='https://meta.discourse.org/t/260498'>ke Google Analytics 4</a> sekarang untuk terus menerima wawasan dan analitik berharga untuk kinerja situs web Anda."
-    legacy_navigation_menu_deprecated: "Discourse Anda saat ini menggunakan menu navigasi 'lama' yang <a href='https://meta.discourse.org/t/removing-the-legacy-hamburger-navigation-menu-option/265274'>akan dihapus pada rilis beta pertama Discourse 3.2</a>. Migrasi ke menu navigasi yang baru dengan memperbarui pengaturan situs menu navigasi <a href='%{base_path}/admin/site_settings/category/all_results?filter=navigation_menu'></a> ke 'sidebar' atau 'header dropdown'."
   site_settings:
     disabled: "dinonaktifkan"
     allow_user_locale: "Perbolehkan pengguna untuk memilih bahasa sendiri"
+    min_post_length: "Panjang post minimum yang diperbolehkan dalam karakter (tidak termasuk pesan pribadi)"
+    min_first_post_length: "Panjang post pertama (isi topik) minimum yang diperbolehkan (tidak termasuk pesan pribadi)"
+    min_personal_message_post_length: "Panjang post minimum yang diperbolehkan dalam karakter untuk pesan (postingan pertama dan balasan)"
     topic_featured_link_enabled: "Aktifkan post tautan dengan topik."
     allow_duplicate_topic_titles: "Perbolehkan topik dengan judul yang sama."
     max_form_template_title_length: "Panjang maksimum yang diperbolehkan untuk judul templat formulir."
@@ -1198,6 +1207,7 @@ id:
     apple_touch_icon: "Ikon yang digunakan untuk perangkat sentuh Apple. Backround transparan tidak disarankan. Akan secara otomatis diubah ukurannya menjadi 180x180. Jika dibiarkan kosong, large_icon akan digunakan."
     summarization_strategy: "Cara tambahan untuk meringkas konten yang didaftarkan oleh plugin"
     custom_summarization_allowed_groups: "Grup diizinkan untuk meringkas konten menggunakan `summarization_strategy`."
+    num_users_to_silence_new_user: "Jika post pengguna baru melebihi pengaturan hide_post_sensitive, dan memiliki tanda spam dari banyak pengguna yang berbeda, sembunyikan semua posting mereka dan cegah post lagi di masa mendatang. 0 untuk menonaktifkan."
     include_secure_categories_in_tag_counts: "Saat diaktifkan, jumlah topik untuk sebuah tag akan menyertakan topik yang berada dalam kategori yang dibatasi untuk dibaca bagi semua pengguna. Saat dinonaktifkan, pengguna normal hanya ditampilkan sejumlah topik untuk tag yang semua topiknya berada dalam kategori publik."
     display_personal_messages_tag_counts: "Saat diaktifkan, jumlah pesan pribadi yang diberi tag dengan tag tertentu akan ditampilkan."
     send_welcome_message: "Kirim semua pengguna ucapan selamat datang dengan panduan awal singkat."
@@ -1275,6 +1285,8 @@ id:
   login:
     not_available: "Tidak tersedia. Coba %{suggestion}?"
     omniauth_confirm_button: "Lanjutkan"
+    too_many_authenticators: "Maaf, Anda tidak dapat memiliki lebih dari 50 autentikator. Harap hapus yang sudah ada dan coba lagi."
+    too_many_security_keys: "Maaf, Anda tidak boleh memiliki lebih dari 50 kunci keamanan. Silakan hapus yang sudah ada dan coba lagi."
   admin:
     email:
       sent_test: "terkirim!"
@@ -1703,6 +1715,8 @@ id:
         title: "Tidak, pulihkan postingan"
       disagree:
         title: "Tidak"
+      discard_post:
+        title: "Buang Post"
       ignore:
         title: "Abaikan"
       ignore_and_do_nothing:
@@ -1721,6 +1735,9 @@ id:
       invalid_yaml: "bukan string YAML yang valid"
       invalid_type: "berisi tipe templat yang tidak valid: %{type} (tipe yang valid adalah: %{valid_types})"
       missing_type: "tidak dapat menemukan tipe bidang"
+      missing_id: "tidak ada id bidang"
+      duplicate_ids: "memiliki id duplikat"
+      reserved_id: "memiliki kata kunci khusus sebagai id: %{id}"
   activemodel:
     errors:
       <<: *errors

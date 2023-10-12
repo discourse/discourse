@@ -1,7 +1,7 @@
-import { cancel } from "@ember/runloop";
-import discourseLater from "discourse-common/lib/later";
 import Mixin from "@ember/object/mixin";
+import { cancel } from "@ember/runloop";
 import { isTesting } from "discourse-common/config/environment";
+import discourseLater from "discourse-common/lib/later";
 
 export default Mixin.create({
   _listenToDoNotDisturbLoop: null,

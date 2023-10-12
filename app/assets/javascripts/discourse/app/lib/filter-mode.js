@@ -11,5 +11,5 @@ export function calculateFilterMode({ category, filterType, noSubcategories }) {
 }
 
 export function filterTypeForMode(mode) {
-  return mode.split("/").pop();
+  return mode?.split("/").pop();
 }

@@ -254,16 +254,9 @@ ca:
       our_admins: "Administradors"
       our_moderators: "Moderadors"
       moderators: "Moderadors"
-      stat:
-        all_time: "Sempre"
-        last_day: "Últimes 24 hores"
-        last_7_days: "Els darrers 7 dies"
-        last_30_days: "Els darrers 30 dies"
       like_count: "'M'agrada'"
       topic_count: "Temes"
       post_count: "Publicacions"
-      active_user_count: "Usuaris actius"
-      contact: "Contacta amb nosaltres"
       contact_info: "En cas d'una qüestió urgent o greu que afecti aquest lloc web, contacteu amb nosaltres en: %{contact_info}."
     bookmarked:
       title: "Preferit"
@@ -308,6 +301,9 @@ ca:
       abandon:
         yes_value: "Descarta"
         no_value: "Reprèn l'edició"
+    topic_count_all:
+      one: "Vegeu %{count} tema nou"
+      other: "Vegeu %{count} temes nous"
     topic_count_categories:
       one: "Vegeu %{count} tema nou o actualitzat"
       other: "Vegeu %{count} temes nous o actualitzats"
@@ -487,14 +483,19 @@ ca:
         reviewable_flagged_post:
           title: "Publicació amb bandera"
           flagged_by: "Marcat amb bandera per"
+          noun: "publicació"
         reviewable_queued_topic:
           title: "Tema en cua"
+          noun: "tema"
         reviewable_queued_post:
           title: "Publicació en cua"
+          noun: "publicació"
         reviewable_user:
           title: "Usuari"
+          noun: "usuari"
         reviewable_post:
           title: "Publicació"
+          noun: "publicació"
       approval:
         title: "Cal aprovar la publicació"
         description: "Hem rebut la vostra nova publicació, però cal que sigui aprovada per un moderador abans d'aparèixer publicada. Tingueu una mica de paciència."
@@ -1664,13 +1665,7 @@ ca:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} i %{count} altre</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} i %{count} altres</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
-      liked_by_multiple_users:
-        one: "%{username}, %{username2} i %{count} altre"
-        other: "%{username}, %{username2} i %{count} altres"
       liked_consolidated_description:
         one: "li agrada %{count} de les vostres publicacions"
         other: " %{count} de les vostres publicacions té 'M'agrada'"
@@ -1916,6 +1911,7 @@ ca:
       options: "Opcions del tema"
       show_links: "mostra enllaços dins d'aquest tema"
       unread_indicator: "Cap membre encara no ha llegit la darrera publicació d'aquest tema."
+      bumped_at: "Més recent: %{date}"
       deleted: "El tema ha estat suprimit"
       slow_mode_update:
         enable: "Activa"
@@ -2214,7 +2210,6 @@ ca:
       errors:
         create: "S'ha produït un error en crear la vostra publicació. Torneu-ho a provar."
         edit: "S'ha produït un error en editar la vostra publicació. Torneu-ho a provar."
-        upload: "Ho sentim. S'ha produït un error en carregar aquest fitxer. Torneu-ho a provar."
         file_too_large: "Ho sentim, el fitxer és massa gros (mida màxima %{max_size_kb} kb). Per què no pugeu el fitxer a un servei en el núvol i llavors enganxeu l'enllaç?"
         too_many_uploads: "Només podeu pujar un fitxer cada vegada."
         upload_not_authorized: "El fitxer que proveu de pujar no està autoritzat (les extensions autoritzades són: %{authorized_extensions})."
@@ -2734,7 +2729,6 @@ ca:
       other_tags: "Altres etiquetes"
       selector_all_tags: "totes les etiquetes"
       selector_no_tags: "sense etiquetes"
-      changed: "etiquetes canviades:"
       tags: "Etiquetes"
       choose_for_topic: "etiquetes opcionals"
       add_synonyms: "Afegeix"
@@ -3103,29 +3097,6 @@ ca:
         groups_filter_instructions: "Els webhook rellevants només funcionaran si l'esdeveniment està relacionat amb els grups especificats. Deixeu-ho en blanc per a activar els webhooks per a tots els grups."
         groups_filter: "Grups activats"
         delete_confirm: "Voleu suprimir el webhook?"
-        topic_event:
-          name: "Esdeveniment de tema"
-          details: "Quan hi ha un tema nou, revisat, canviat o suprimit."
-        post_event:
-          name: "Esdeveniment de publicació"
-          details: "Quan hi ha una resposta nova, editada, suprimida o recuperada."
-        user_event:
-          name: "Esdeveniment d'usuari"
-        group_event:
-          name: "Esdeveniment de grup"
-          details: "Quan un grup és creat, actualitzat o destruït"
-        category_event:
-          name: "Esdeveniment de categoria"
-          details: "Quan una categoria és creada, actualitzada o destruïda"
-        tag_event:
-          name: "Esdeveniment d'etiqueta"
-          details: "Quan una etiqueta és creada, actualitzada o destruïda."
-        reviewable_event:
-          name: "Esdeveniment revisable"
-          details: "Quan un nou element està a punt per a revisió i quan el seu estatus és actualitzat."
-        notification_event:
-          name: "Esdeveniment de notificació"
-          details: "Quan un usuari rep una notificació en el seu canal de continguts."
         delivery_status:
           title: "Estat de lliurament"
           inactive: "Inactiu"
@@ -3197,7 +3168,6 @@ ca:
             label: "Còpia de seguretat"
             title: "Crea una còpia de seguretat"
             confirm: "Voleu començar una nova còpia de seguretat?"
-            without_uploads: "Sí (no s'hi inclouen càrregues)"
           download:
             label: "Descarrega"
             title: "Envia correu amb enllaç de descàrrega"
@@ -3300,6 +3270,7 @@ ca:
           convert_theme_tooltip: "Converteix l'aparença en component"
           inactive_themes: "Aparences inactives:"
           inactive_components: "Components no utilitzats:"
+          cancel: "Cancel·la"
           broken_theme_tooltip: "L'aparença té errors en CSS, HTML o YAML"
           disabled_component_tooltip: "Aquest component s'ha desactivat"
           default_theme_tooltip: "Aquesta aparença és l'aparença predeterminada del lloc web"

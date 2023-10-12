@@ -239,16 +239,9 @@ th:
       our_admins: "แอดมินของเรา"
       our_moderators: "ผู้ดูแลของเรา"
       moderators: "ผู้ดูแล"
-      stat:
-        all_time: "ตลอดเวลา"
-        last_day: "24 ชั่วโมงที่ผ่านมา"
-        last_7_days: "7 วันที่ผ่านมา"
-        last_30_days: "30 วันที่ผ่านมา"
       like_count: "ถูกใจ"
       topic_count: "กระทู้"
       post_count: "โพสต์"
-      active_user_count: "ผู้ใช้ที่ใช้งานอยู่"
-      contact: "ติดต่อเรา"
       contact_info: "ในกรณีที่เกิดเหตุฉุกเฉินหรือประเด็นสำคัญที่ส่งผลต่อเว็บไซต์นี้ กรุณาติดต่อเราที่ %{contact_info}"
     bookmarked:
       title: "บุ๊กมาร์ก"
@@ -283,6 +276,8 @@ th:
       resume: "ดำเนินการต่อ"
       remove: "ลบ"
       new_topic: "แบบร่างกระทู้ใหม่"
+    topic_count_all:
+      other: "ดู%{count}กระทู้ใหม่"
     topic_count_categories:
       other: "ดู %{count} กระทู้ใหม่หรือที่อัปเดต"
     topic_count_latest:
@@ -407,10 +402,17 @@ th:
         reviewable_flagged_post:
           title: "โพสต์ที่ถูกปักธง"
           flagged_by: "ถูกปักธงโดย"
+          noun: "โพส"
+        reviewable_queued_topic:
+          noun: "หัวข้อ"
+        reviewable_queued_post:
+          noun: "โพส"
         reviewable_user:
           title: "ผู้ใช้"
+          noun: "ผู้ใช้"
         reviewable_post:
           title: "โพสต์"
+          noun: "โพส"
       approval:
         title: "โพสต์นี้ต้องได้รับการอนุมัติ"
         description: "เราได้รับโพสต์ใหม่ของคุณแล้ว แต่ต้องได้รับการอนุมัติจากผู้ดูแลก่อนถึงจะปรากฏขึ้น กรุณารอสักครู่"
@@ -1424,8 +1426,6 @@ th:
       edited: "<span>%{username}</span>%{description}"
       liked: "<span>%{username}</span>%{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span>%{description}"
-      liked_many:
-        other: "<span class='multi-user'>%{username}, %{username2} และอื่นๆอีก %{count}</span>%{description}"
       liked_consolidated_description:
         other: "ถูกใจ %{count} ครั้งต่อโพสต์ของคุณ"
       liked_consolidated: "<span>%{username}</span>%{description}"
@@ -1643,6 +1643,7 @@ th:
       options: "ตัวเลือกกระทู้"
       show_links: "แสดงลิงก์ในกระทู้นี้"
       unread_indicator: "ยังไม่มีสมาชิกอ่านโพสต์ล่าสุดของกระทู้นี้"
+      bumped_at: "ล่าสุด: %{date}"
       deleted: "กระทู้ถูกลบ"
       slow_mode_update:
         enable: "เปิดใช้งาน"
@@ -1908,7 +1909,6 @@ th:
       errors:
         create: "ขออภัย เกิดความผิดพลาดขณะกำลังสร้างโพสต์ของคุณ กรุณาลองใหม่อีกครั้ง"
         edit: "ขออภัย เกิดความผิดพลาดขณะกำลังแก้ไขโพสต์ของคุณ กรุณาลองใหม่อีกครั้ง"
-        upload: "ขออภัย เกิดความผิดพลาดขณะกำลังอัปโหลดไฟล์ของคุณ กรุณาลองใหม่อีกครั้ง"
         too_many_uploads: "ขออภัย คุณสามารถอัปโหลดได้ครั้งละหนึ่งไฟล์เท่านั้น"
         too_many_dragged_and_dropped_files:
           other: "ขออภัย คุณสามารถอัปโหลดได้ครั้งละ %{count}ไฟล์เท่านั้น"
@@ -2316,7 +2316,6 @@ th:
       other_tags: "แท็กอื่น"
       selector_all_tags: "แท็กทั้งหมด"
       selector_no_tags: "ไม่มีแท็ก"
-      changed: "เปลี่ยนแท็ก:"
       tags: "แท็ก"
       choose_for_topic: "แท็กทางเลือก"
       info: "ข้อมูล"
@@ -2652,6 +2651,7 @@ th:
           preview: "แสดงตัวอย่าง"
           add_all_themes: "เพิ่มธีมทั้งหมด"
           inactive_themes: "ธีมที่ไม่ได้ใช้งาน:"
+          cancel: "ยกเลิก"
           and_x_more: "และอีก%{count}"
           collapse: ย่อ
           uploads: "อัปโหลด"
@@ -3120,7 +3120,6 @@ th:
             with_post_time: <span class="username">%{username}</span> สำหรับโพสต์ใน %{link} เมื่อ <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> เมื่อ <span class="time">%{time}</span>
         badge_intro:
-          emoji: "อีโมจินักเรียนหญิง"
           what_are_badges_title: "เหรียญคืออะไร"
         mass_award:
           replace_owners: ลบเหรียญจากผู้ใช้ก่อนหน้านี้

@@ -271,13 +271,9 @@ sk:
       our_admins: "Naši admini"
       our_moderators: "Naši moderátori"
       moderators: "Moderátori"
-      stat:
-        all_time: "Za celú dobu"
       like_count: "Páči sa mi"
       topic_count: "Témy"
       post_count: "Príspevky"
-      active_user_count: "Aktívni používatelia"
-      contact: "Kontaktujte nás"
       contact_info: "V prípade kritickej chyby alebo naliehavej záležitosti nás prosím konaktujte na %{contact_info}."
     bookmarked:
       title: "Záložka"
@@ -296,6 +292,11 @@ sk:
       new_topic: "Nová téma"
       abandon:
         yes_value: "Zahodiť"
+    topic_count_all:
+      one: "Pozrieť %{count} novú tému."
+      few: "Pozrieť %{count} nových tém."
+      many: "Pozrieť %{count} nových tém."
+      other: "Pozrieť %{count} nových tém."
     topic_count_categories:
       one: "Pozri si %{count} novú alebo upravenú tému."
       few: "Pozri si %{count} nových alebo upravených tém."
@@ -393,10 +394,18 @@ sk:
       context_question:
         delimiter: "alebo"
       types:
+        reviewable_flagged_post:
+          noun: "príspevok"
+        reviewable_queued_topic:
+          noun: "témy"
+        reviewable_queued_post:
+          noun: "príspevok"
         reviewable_user:
           title: "Používateľ"
+          noun: "používateľ"
         reviewable_post:
           title: "Príspevok"
+          noun: "príspevok"
       approval:
         title: "Príspevok vyžaduje schválenie"
         description: "Váš príspevok sme obdžali, ale skôr než bude zverejnený musí byť schválený moderátorom. Prosíme o trpezlivosť."
@@ -1308,6 +1317,11 @@ sk:
       none: "Notifikácie sa nepodarilo načítať"
       empty: "Žiadne upozornenia sa nenašli."
       watching_first_post_label: "Nová téma"
+      liked_by_multiple_users:
+        one: "%{username} a %{count} ďalší"
+        few: "%{username} a %{count} ďalších"
+        many: "%{username} a %{count} ďalších"
+        other: "%{username} a %{count} ďalších"
       dismiss_confirmation:
         dismiss: "Zahodiť"
         cancel: "Zrušiť"
@@ -1758,7 +1772,6 @@ sk:
       errors:
         create: "Ľutujeme, pri vytváraní príspevku nastala chyba. Prosím, skúste znovu."
         edit: "Ľutujeme, pri úprave príspevku nastala chyba. Prosím, skúste znovu."
-        upload: "Ľutujeme, pri nahrávaní súboru nastala chyba. Prosím, skúste znovu."
         too_many_uploads: "Ľutujeme, ale naraz je možné nahrať iba jeden súbor."
         upload_not_authorized: "Ľutujeme, súbor, ktorý sa pokúšate nahrať nemá povolenú príponu (povolené prípony sú: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Ľutujeme, noví použivatelia nemôžu nahrávať obrázky."
@@ -2184,7 +2197,6 @@ sk:
     tagging:
       selector_all_tags: "všetky štítky"
       selector_no_tags: "žiadne štítky"
-      changed: "zmenené štítky:"
       tags: "Štítky"
       choose_for_topic: "voliteľné štítky"
       add_synonyms: "Pridať"
@@ -2552,6 +2564,7 @@ sk:
           mobile: "Mobil"
           settings: "Nastavenia"
           preview: "Ukážka"
+          cancel: "Zrušiť"
           collapse: Zbaliť
           upload: "Upload"
           discard: "Zahodiť"

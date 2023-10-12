@@ -24,11 +24,8 @@ hu:
           descriptions:
             chat:
               create_message: "Csevegőüzenet létrehozása egy megadott csatornán."
-    about:
-      chat_messages_count: "Csevegőüzenetek"
-      chat_channels_count: "Csevegőcsatornák"
-      chat_users_count: "Csevegőfelhasználók"
     chat:
+      deleted_chat_username: törölt
       dates:
         time_tiny: "h:mm"
       all_loaded: "Összes üzenet megjelenítése"
@@ -76,6 +73,7 @@ hu:
         create: "Új csatorna"
       click_to_join: "Kattintson ide az elérhető csatornák megtekintéséhez."
       close: "Lezárás"
+      remove: "Eltávolítás"
       collapse: "Csevegőfiók összecsukása"
       expand: "Chat fiók bővítése"
       confirm_flag: "Biztos, hogy jelenti %{username} üzenetét?"
@@ -111,7 +109,6 @@ hu:
       summarization:
         summarize: "Összefoglalás"
       mention_warning:
-        dismiss: "elvetés"
         invitations_sent:
           one: "Meghívó elküldve"
           other: "Meghívók elküldve"
@@ -201,7 +198,6 @@ hu:
         back_to_all_channels: "Összes csatorna"
         back_to_channel: "Vissza"
         tabs:
-          about: Névjegy
           members: Tagok
           settings: Beállítások
       channel_edit_name_slug_modal:
@@ -272,6 +268,10 @@ hu:
         saved: "Mentve"
         unfollow: "Elhagyás"
         admin_title: "Adminisztrátor"
+        settings_title: "Beállítások"
+        category_label: "Kategória"
+        history_label: "Idővonal"
+        members_label: "Tagok"
       admin:
         title: "Csevegés"
       direct_messages:
@@ -334,8 +334,12 @@ hu:
           one: "%{commaSeparatedUsernames} és még %{count} valaki gépel"
           other: "%{commaSeparatedUsernames} és még %{count} valaki gépel"
       retention_reminders:
-        public_none: "A csatornaelőzmények korlátlan ideig megőrződnek."
-        dm_none: "A személyes csevegési előzmények korlátlan ideig megőrződnek."
+        public:
+          one: "%{count} nap"
+          other: "%{count} nap"
+        dm:
+          one: "%{count} nap"
+          other: "%{count} nap"
       flagging:
         action: "Üzenet megjelölése"
       emoji_picker:

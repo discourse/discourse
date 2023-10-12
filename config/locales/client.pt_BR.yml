@@ -287,16 +287,10 @@ pt_BR:
       our_moderators: "Nossos moderadores"
       moderators: "Moderadores"
       stat:
-        all_time: "Desde o início"
-        last_day: "Últimas 24 horas"
-        last_7_days: "Últimos sete dias"
-        last_30_days: "Últimos 30 dias"
+        last_day: "24 horas"
       like_count: "Curtidas"
       topic_count: "Tópicos"
       post_count: "Mensagens"
-      user_count: "Cadastros"
-      active_user_count: "Usuários(as) ativos(as)"
-      contact: "Fale conosco"
       contact_info: "Em caso de algum problema crítico ou assunto urgente relacionado a este site, fale conosco em %{contact_info}."
     bookmarked:
       title: "Favorito"
@@ -354,6 +348,9 @@ pt_BR:
         confirm: "Você já tem um rascunho em andamento. O que deseja fazer com ele?"
         yes_value: "Descartar"
         no_value: "Retomar a edição"
+    topic_count_all:
+      one: "Veja %{count} novo tópico"
+      other: "Veja %{count} novos tópicos"
     topic_count_categories:
       one: "Veja %{count} tópico novo ou atualizado"
       other: "Veja %{count} tópicos novos ou atualizados"
@@ -553,23 +550,24 @@ pt_BR:
         all:
           title: "Tudo"
       context_question:
-        is_this_post: "Essa publicação é %{reviewable_human_score_types}?"
         delimiter: "ou"
-        something_else_wrong: "Existe algo errado com essa postagem?"
       types:
         reviewable_flagged_post:
           title: "Postagem sinalizada"
           flagged_by: "Sinalizado por"
+          noun: "postar"
         reviewable_queued_topic:
           title: "Tópico na fila"
+          noun: "tópico"
         reviewable_queued_post:
           title: "Postagem na fila"
+          noun: "postar"
         reviewable_user:
           title: "Usuário"
+          noun: "usuário(a)"
         reviewable_post:
           title: "Postagem"
-        reviewable_chat_message:
-          title: "Mensagem de chat sinalizada"
+          noun: "postar"
       approval:
         title: "A postagem precisa de aprovação"
         description: "Nós recebemos sua nova postagem, mas é necessário ter aprovação da moderação antes de ser exibida. Pedimos paciência."
@@ -1310,7 +1308,6 @@ pt_BR:
         success: "(e-mail enviado)"
         in_progress: "(enviando e-mail)"
         error: "(erro)"
-        emoji: "emoji de bloqueio"
         action: "Enviar e-mail de redefinição de senha"
         set_password: "Definir senha"
         choose_new: "Escolha uma nova senha"
@@ -1911,7 +1908,6 @@ pt_BR:
       link_label: "Envie por e-mail um link para entrar"
       button_label: "com e-mail"
       login_link: "Pular a senha, enviar um link por e-mail para entrar com a conta"
-      emoji: "emoji de bloqueio"
       complete_username: "Se uma conta corresponder ao nome de usuário(a) <b>%{username}</b>, em breve você deverá receber um e-mail com um link para entrar."
       complete_email: "Se uma conta corresponder à <b>%{email}</b>, em breve você deverá receber um e-mail com um link para entrar."
       complete_username_found: "Encontramos uma conta que corresponde ao nome de usuário(a) <b>%{username}</b>, em breve você deverá receber um e-mail com um link para entrar."
@@ -2000,7 +1996,6 @@ pt_BR:
         security_key: "Em vez disso, utilizar uma chave de segurança"
     invites:
       accept_title: "Convite"
-      emoji: "emoji de envelope"
       welcome_to: "Boas-vindas ao %{site_name}!"
       invited_by: "Você foi convidado(a) por:"
       social_login_available: "Você também poderá entrar com qualquer rede social usando este e-mail."
@@ -2102,7 +2097,6 @@ pt_BR:
       drafts_offline: "rascunhos off-line"
       edit_conflict: "editar conflito"
       esc: "esc"
-      esc_label: "Clique ou pressione Esc para dispensar"
       ok_proceed: "Ok, prossiga"
       group_mentioned_limit:
         one: "<b>Aviso!</b> Você menciou <a href='%{group_link}'>%{group}</a>, mas este grupo tem mais membros do que o limite de menções configurado pelo(a) administrador(a) de %{count} usuário(a). Ninguém será notificado(a)."
@@ -2282,13 +2276,10 @@ pt_BR:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} e %{count} outro</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} e %{count} outros</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
-        one: "%{username}, %{username2} e %{count} outro"
-        other: "%{username}, %{username2} e %{count} outros"
+        one: "%{username} e %{count} outro"
+        other: "%{username} e %{count} outros(as)"
       liked_consolidated_description:
         one: "curtiu %{count} de suas postagens"
         other: "curtiu %{count} de suas postagens"
@@ -2718,9 +2709,7 @@ pt_BR:
           false { ou <a href="{basePath}/latest">veja os tópicos mais recentes</a>}
           other {}
         }
-      bumped_at_title: |
-        Primeira postagem: %{createdAtDate}
-        Postada: %{bumpedAtDate}
+      bumped_at: "Mais recentes: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Navegue por todas as categorias</a> ou <a href='%{basePath}/latest'>veja os tópicos mais recentes</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Navegue por todas as categorias</a>, <a href='%{basePath}/latest'>veja os tópicos mais recentes</a> ou veja os principais:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Navegue por todas as etiquetas</a> ou <a href='%{basePath}/latest'>visualize os tópicos mais recentes</a>."
@@ -3130,7 +3119,6 @@ pt_BR:
       errors:
         create: "Desculpe, houve um erro ao criar sua postagem. Tente outra vez."
         edit: "Desculpe, houve um erro ao editar sua postagem. Tente outra vez."
-        upload: "Desculpe, houve um erro ao enviar o arquivo. Tente outra vez."
         file_too_large: "Desculpe, este arquivo é muito grande (o tamanho máximo é de %{max_size_kb} KB). Que tal enviar o arquivo grande para um serviço de nuvem e compartilhar o link?"
         file_size_zero: "Desculpe, parece que algo deu errado, o arquivo que você está tentando enviar tem 0 bytes. Tente novamente."
         file_too_large_humanized: "Desculpe, este arquivo é muito grande (o tamanho máximo é de %{max_size}). Que tal enviar o arquivo grande para um serviço de nuvem e compartilhar o link?"
@@ -3827,7 +3815,6 @@ pt_BR:
       other_tags: "Outras etiquetas"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sem etiquetas"
-      changed: "etiquetas alteradas:"
       tags: "Etiquetas"
       choose_for_topic: "etiquetas opcionais"
       info: "Informações"
@@ -4481,42 +4468,8 @@ pt_BR:
         groups_filter_instructions: "Os webhooks aplicáveis serão acionados apenas se o evento estiver relacionado com os grupos especificados. Deixe em branco para acionar webhooks para todos os grupos."
         groups_filter: "Grupos acionados"
         delete_confirm: "Excluir este webhook?"
-        topic_event:
-          name: "Evento do tópico"
-          details: "Quando existir um tópico novo, revisado, modificado ou excluído."
-        post_event:
-          name: "Postar evento"
-          details: "Quando existir uma resposta nova, edição, exclusão ou recuperação."
-        user_event:
-          name: "Evento do(a) usuário(a)"
-          details: "Quando um(a) usuário(a) entrar com a conta e sair, confirma seu e-mail, é criada, aprovada ou atualizada."
-        group_event:
-          name: "Evento de grupo"
-          details: "Quando um grupo é criado, atualizado ou desfeito."
-        category_event:
-          name: "Evento de categoria"
-          details: "Quando uma categoria é criada, atualizada ou desfeita."
-        tag_event:
-          name: "Evento de etiqueta"
-          details: "Quando uma etiqueta é criada, atualizada ou desfeita."
-        reviewable_event:
-          name: "Evento revisável"
-          details: "Quando um novo item está pronto para revisão e quando seu status é atualizado."
-        notification_event:
-          name: "Evento de notificação"
-          details: "Quando um(a) usuário(a) recebe uma notificação no feed dele."
-        user_promoted_event:
-          name: "Evento promovido pelo usuário"
-          details: "Quando um usuário é promovido de um nível de confiança para outro."
-        user_badge_event:
-          name: "Evento de emblema"
-          details: "Quando um emblema é concedido ou revogado."
-        group_user_event:
-          name: "Evento de usuário(a) em grupo"
-          details: "Quando um(a) usuário(a) for adicionado(a) ou removido(a) em um grupo."
         like_event:
-          name: "Evento de curtida"
-          details: "Quando um usuário curte uma postagem."
+          post_liked: "Quando um usuário curte uma postagem."
         delivery_status:
           title: "Status de entrega"
           inactive: "Inativo(a)"
@@ -4553,7 +4506,6 @@ pt_BR:
         enabled: "Ativado(a)?"
         is_enabled: "S"
         not_enabled: "N"
-        change_settings: "Configurações de plugin"
         change_settings_short: "Configurações"
         howto: "Como instalo plugins?"
         official: "Plugin oficial"
@@ -4594,7 +4546,6 @@ pt_BR:
             label: "Backup"
             title: "Criar um backup"
             confirm: "Você quer iniciar um novo backup?"
-            without_uploads: "Sim (não incluir envios)"
           download:
             label: "Download"
             title: "Enviar e-mail com link para download"
@@ -4667,7 +4618,6 @@ pt_BR:
           theme_name: "Nome do tema"
           component_name: "Nome do componente"
           themes_intro: "Selecione um tema existente ou instale um novo para começar"
-          themes_intro_emoji: "emoji de artista mulher"
           beginners_guide_title: "Guia para iniciantes para usar os temas do Discourse"
           developers_guide_title: "Guia para desenvolvedores para usar os temas do Discourse"
           browse_themes: "Explore os temas da comunidade"
@@ -4715,6 +4665,7 @@ pt_BR:
           convert_theme_tooltip: "Converter este tema em componente"
           inactive_themes: "Temas inativos:"
           inactive_components: "Componentes não usados"
+          cancel: "Cancelar"
           broken_theme_tooltip: "Este tema possui erros em seu CSS, HTML ou YAML"
           disabled_component_tooltip: "Este componente foi desativado"
           default_theme_tooltip: "Este tema é o tema padrão do site"
@@ -5211,7 +5162,6 @@ pt_BR:
       form_templates:
         nav_title: "Modelos"
         title: "Modelos de formulário"
-        help: "Crie uma estrutura de modelo que pode ser usada para criar novos tópicos, postagens e mensagens."
         new_template: "Novo modelo"
         list_table:
           headings:
@@ -5771,7 +5721,6 @@ pt_BR:
             with_time: <span class="username">%{username}</span> às <span class="time">%{time}</span>
         badge_intro:
           title: "Selecione um emblema ou crie um novo para começar"
-          emoji: "emoji de aluna"
           what_are_badges_title: "O que são emblemas?"
           badge_query_examples_title: "Exemplos de consultas de emblemas"
         mass_award:

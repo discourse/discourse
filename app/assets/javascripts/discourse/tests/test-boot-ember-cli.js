@@ -1,13 +1,10 @@
-import config from "../config/environment";
-import { setEnvironment } from "discourse-common/config/environment";
-import { start } from "ember-qunit";
+import Ember from "ember";
 import loadEmberExam from "ember-exam/test-support/load";
+import { start } from "ember-qunit";
 import * as QUnit from "qunit";
 import { setup } from "qunit-dom";
-import Ember from "ember";
 import setupTests from "discourse/tests/setup-tests";
-
-setEnvironment("testing");
+import config from "../config/environment";
 
 document.addEventListener("discourse-booted", () => {
   // eslint-disable-next-line no-undef
@@ -26,7 +23,8 @@ document.addEventListener("discourse-booted", () => {
 
   const params = new URLSearchParams(window.location.search);
   const target = params.get("target");
-  const testingCore = !target || target === "core";
+  const testingTheme = !!document.querySelector("script[data-theme-id]");
+  const testingCore = !testingTheme && (!target || target === "core");
   const disableAutoStart = params.get("qunit_disable_auto_start") === "1";
 
   Ember.ENV.LOG_STACKTRACE_ON_DEPRECATION = false;

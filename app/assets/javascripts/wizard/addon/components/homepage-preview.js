@@ -1,4 +1,4 @@
-import { LOREM, darkLightDiff } from "wizard/lib/preview";
+import { darkLightDiff, LOREM } from "wizard/lib/preview";
 import WizardPreviewBaseComponent from "./wizard-preview-base";
 
 export default WizardPreviewBaseComponent.extend({

@@ -47,19 +47,21 @@
   }
 }
 
-.placeholder-animation {
-  animation-duration: 4s;
-  animation-fill-mode: forwards;
-  animation-iteration-count: infinite;
-  animation-name: placeHolderShimmer;
-  animation-timing-function: linear;
-  background: var(--primary-very-low);
-  background: linear-gradient(
-    to right,
-    var(--primary-very-low) 10%,
-    var(--primary-low) 18%,
-    var(--primary-very-low) 33%
-  );
+@media (prefers-reduced-motion: no-preference) {
+  .placeholder-animation {
+    animation-duration: 4s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: placeHolderShimmer;
+    animation-timing-function: linear;
+    background: var(--primary-very-low);
+    background: linear-gradient(
+      to right,
+      var(--primary-very-low) 10%,
+      var(--primary-low) 18%,
+      var(--primary-very-low) 33%
+    );
+  }
 }
 
 // Base Elements
@@ -777,7 +779,7 @@ table {
   }
 }
 
-.broken-theme-alert {
+.broken-theme-alert-banner {
   font-size: var(--base-font-size);
   font-weight: bold;
   padding: 5px 0;

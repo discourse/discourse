@@ -234,4 +234,63 @@ RSpec.describe Chat::Api::ChannelThreadsController do
       end
     end
   end
+
+  describe "create" do
+    fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
+    fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+
+    let(:title) { "a very nice cat" }
+    let(:params) { { title: title, original_message_id: message_1.id } }
+    let(:channel_id) { channel_1.id }
+
+    context "when channel does not exist" do
+      it "returns 404" do
+        channel_1.destroy!
+        post "/chat/api/channels/#{channel_id}", params: params
+
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when channel exists" do
+      it "creates the thread" do
+        post "/chat/api/channels/#{channel_id}/threads", params: params
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["title"]).to eq(title)
+      end
+
+      context "when user cannot view the channel" do
+        let(:channel_id) { Fabricate(:private_category_channel).id }
+
+        it "returns 403" do
+          post "/chat/api/channels/#{channel_id}/threads", params: params
+
+          expect(response.status).to eq(403)
+        end
+      end
+
+      context "when the title is too long" do
+        let(:title) { "x" * Chat::Thread::MAX_TITLE_LENGTH + "x" }
+
+        it "returns 400" do
+          post "/chat/api/channels/#{channel_id}/threads", params: params
+
+          expect(response.status).to eq(400)
+          expect(response.parsed_body["errors"]).to eq(
+            ["Title is too long (maximum is #{Chat::Thread::MAX_TITLE_LENGTH} characters)"],
+          )
+        end
+      end
+    end
+
+    context "when channel does not have threading enabled" do
+      fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: false) }
+
+      it "returns 404" do
+        post "/chat/api/channels/#{channel_id}/threads", params: params
+        expect(response.status).to eq(404)
+      end
+    end
+  end
 end

@@ -1,6 +1,6 @@
+import Component from "@ember/component";
 import { action } from "@ember/object";
 import { equal } from "@ember/object/computed";
-import Component from "@ember/component";
 import discourseComputed, {
   afterRender,
 } from "discourse-common/utils/decorators";

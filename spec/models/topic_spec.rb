@@ -2368,9 +2368,10 @@ RSpec.describe Topic do
         topic = Fabricate(:topic, category: category, created_at: 1.minute.ago)
         topic2 = Fabricate(:topic, category: category, created_at: 1.minute.ago)
         tag = Fabricate(:tag)
+        tag2 = Fabricate(:tag)
         Fabricate(:topic_tag, topic: topic, tag: tag)
 
-        SiteSetting.digest_suppress_tags = "#{tag.id}"
+        SiteSetting.digest_suppress_tags = "#{tag.name}|#{tag2.name}"
         topics = Topic.for_digest(user, 1.year.ago, top_order: true)
         expect(topics).to eq([topic2])
 
@@ -2571,6 +2572,16 @@ RSpec.describe Topic do
       )
       expect(Topic.listable_count_per_day(2.days.ago, Time.now)).not_to include(
         4.days.ago.to_date => 1,
+      )
+    end
+
+    it "returns the correct count with group filter" do
+      group = Fabricate(:group)
+      group.add(user)
+      topic = Fabricate(:topic, user: user)
+
+      expect(Topic.listable_count_per_day(2.days.ago, Time.now, nil, false, [group.id])).to include(
+        Time.now.utc.to_date => 1,
       )
     end
   end

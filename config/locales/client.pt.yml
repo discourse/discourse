@@ -278,15 +278,10 @@ pt:
       our_moderators: "Os Nossos Moderadores"
       moderators: "Moderadores"
       stat:
-        all_time: "Sempre"
-        last_day: "Últimas 24 horas"
-        last_7_days: "Últimos 7 Dias"
-        last_30_days: "Últimos 30 Dias"
+        last_day: "24 horas"
       like_count: "Gostos"
       topic_count: "Tópicos"
       post_count: "Publicações"
-      active_user_count: "Utilizadores Activos"
-      contact: "Contacte-nos"
       contact_info: "No caso de um problema crítico ou de algum assunto urgente que afecte este sítio, por favor contacte-nos em %{contact_info}."
     bookmarked:
       title: "Adicionar Marcador"
@@ -331,6 +326,9 @@ pt:
       abandon:
         yes_value: "Descartar"
         no_value: "Retomar a edição"
+    topic_count_all:
+      one: "Ver %{count} tópico novo"
+      other: "Ver %{count} tópicos novos"
     topic_count_categories:
       one: "Ver %{count} tópico novo ou atualizado"
       other: "Ver %{count} tópicos novos ou atualizados"
@@ -512,14 +510,19 @@ pt:
         reviewable_flagged_post:
           title: "Publicação Sinalizada"
           flagged_by: "Sinalizado por"
+          noun: "publicação"
         reviewable_queued_topic:
           title: "Tópico na fila"
+          noun: "tópico"
         reviewable_queued_post:
           title: "Post na fila"
+          noun: "publicação"
         reviewable_user:
           title: "Utilizador"
+          noun: "utilizador"
         reviewable_post:
           title: "Mensagem"
+          noun: "publicação"
       approval:
         title: "A Publicação Necessita de Aprovação"
         description: "Recebemos a sua nova publicação mas necessita de ser aprovada pelo moderador antes de aparecer. Por favor seja paciente."
@@ -1148,7 +1151,6 @@ pt:
         success: "(email enviado)"
         in_progress: "(a enviar email)"
         error: "(erro)"
-        emoji: "emoji de bloqueio"
         action: "Enviar email de recuperação de palavra-passe"
         set_password: "Definir Palavra-passe"
         choose_new: "Escolha uma nova palavra-passe"
@@ -1672,7 +1674,6 @@ pt:
       link_label: "Enviem-me uma ligação para entrar"
       button_label: "com e-mail"
       login_link: "Ignorar a senha; enviar-me um link de login"
-      emoji: "emoji de bloqueio"
       complete_username: "Se houver uma conta com o nome de utilizador <b>%{username}</b>, deverá receber um email com uma ligação para ligar dentro de poucos instantes."
       complete_email: "Se houver uma conta com o endereço <b>%{email}</b>, irá receber um email com uma ligação para entrar dentro de poucos instantes."
       complete_username_found: "Encontrámos uma conta que usa o nome de utilizador <b>%{username}</b>, deverá receber um email com uma ligação para entrar dentro de poucos instantes."
@@ -1754,7 +1755,6 @@ pt:
         security_key: "Em vez disso, usar uma chave de segurança"
     invites:
       accept_title: "Convite"
-      emoji: "emoji de envelope"
       welcome_to: "Bem-vindo a %{site_name}!"
       invited_by: "Foi convidado por:"
       social_login_available: "Também irá poder iniciar a sessão com qualquer credencial das redes sociais, utilizando esse e-mail."
@@ -1853,7 +1853,6 @@ pt:
       drafts_offline: "rascunhos off-line"
       edit_conflict: "editar conflito"
       esc: "esc"
-      esc_label: "Clique ou precione Esc para descartar"
       ok_proceed: "Ok, continuar"
       group_mentioned:
         one: "Ao usar %{group}, estará a notificar <a href='%{group_link}'>%{count} pessoa</a> – tem a certeza?"
@@ -1996,13 +1995,7 @@ pt:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} e %{count} outro</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} e %{count} outros</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
-      liked_by_multiple_users:
-        one: "%{username}, %{username2} e %{count} outro"
-        other: "%{username}, %{username2} e %{count} outros"
       liked_consolidated_description:
         one: "gostou de %{count} das suas publicações"
         other: "gostou de %{count} das suas publicações"
@@ -2313,6 +2306,7 @@ pt:
       collapse_details: "ocultar detalhes do tópico"
       expand_details: "expandir detalhes do tópico"
       unread_indicator: "Nenhum membro leu o último post deste tópico ainda."
+      bumped_at: "Mais recente: %{date}"
       suggest_create_topic: Pronto para <a href>iniciar uma nova conversa?</a>
       deleted: "Este tópico foi eliminado"
       slow_mode_update:
@@ -2683,7 +2677,6 @@ pt:
       errors:
         create: "Desculpe, ocorreu um erro ao criar a sua mensagem. Por favor, tente novamente."
         edit: "Desculpe, ocorreu um erro ao editar a sua mensagem. Por favor, tente novamente."
-        upload: "Pedimos desculpa, ocorreu um erro ao carregar esse ficheiro. Por favor, tente novamente."
         file_too_large: "Desculpe, esse ficheiro é demasiado grande (o tamanho máximo é %{max_size_kb}kb). Por que não enviar o seu grande ficheiro para um serviço de partilha na nuvem e, de seguida, colar o link?"
         too_many_uploads: "Pedimos desculpa, só pode carregar um ficheiro de cada vez."
         too_many_dragged_and_dropped_files:
@@ -3269,7 +3262,6 @@ pt:
       other_tags: "Outras Tags"
       selector_all_tags: "todas as etiquetas"
       selector_no_tags: "sem etiquetas"
-      changed: "etiquetas modificadas:"
       tags: "Etiquetas"
       choose_for_topic: "tags opcionais"
       info: "Informações"
@@ -3706,14 +3698,6 @@ pt:
         groups_filter_instructions: "Webhooks relevantes serão despoletados apenas se o evento estiver relacionado com grupos especificados. Deixar em branco para despoletar webhooks para todos os grupos."
         groups_filter: "Grupos Despoletados"
         delete_confirm: "Apagar este webhook?"
-        topic_event:
-          name: "Evento de Tópico"
-          details: "Quando um tópico é novo, revisto, modificado ou apagado. "
-        post_event:
-          name: "Evento de Publicação"
-          details: "Quando uma resposta é nova, editada, apagada ou recuperada. "
-        user_event:
-          name: "Evento de Utilizador"
         delivery_status:
           title: "Estado de Entrega"
           inactive: "Inativo"
@@ -3786,7 +3770,6 @@ pt:
             label: "Fazer Cópia de segurança"
             title: "Criar uma cópia de segurança"
             confirm: "Deseja criar uma nova cópia de segurança?"
-            without_uploads: "Sim (não inclua uploads)"
           download:
             label: "Transferir"
             title: "Enviar mensagem com a hiperligação de transferência"
@@ -3852,7 +3835,6 @@ pt:
           theme_name: "Nome do tema"
           component_name: "Nome do componente"
           themes_intro: "Selecione um tema existente ou instale um novo para começar"
-          themes_intro_emoji: "emoji mulher artista"
           beginners_guide_title: "Guia para iniciantes ao uso de Temas do Discourse"
           developers_guide_title: "Guia para desenvolvedores de Temas do Discourse"
           browse_themes: "Navegue pelos temas da comunidade"
@@ -3896,6 +3878,7 @@ pt:
           convert_component_alert_generic: "Tem certeza de que deseja converter este componente em tema?"
           convert_theme_alert: "Tem certeza de que deseja converter este tema em componente? Ele será removido como superior de %{relatives}."
           convert_theme_alert_generic: "Tem certeza de que deseja converter este tema em componente?"
+          cancel: "Cancelar"
           collapse: Colapsar
           uploads: "Uploads"
           upload: "Carregar"

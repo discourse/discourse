@@ -269,8 +269,8 @@
     {{/if}}
 
     {{#unless this.model.component}}
-      <DSection
-        @class="form-horizontal theme settings control-unit theme-settings__color-scheme"
+      <section
+        class="form-horizontal theme settings control-unit theme-settings__color-scheme"
       >
         <div class="row setting">
           <div class="setting-label">
@@ -305,11 +305,11 @@
             {{/if}}
           </div>
         </div>
-      </DSection>
+      </section>
     {{/unless}}
 
     {{#if this.model.component}}
-      <DSection @class="form-horizontal theme settings control-unit">
+      <section class="form-horizontal theme settings control-unit">
         <div class="row setting">
           <ThemeSettingRelativesSelector
             @setting={{this.relativesSelectorSettingsForComponent}}
@@ -317,9 +317,9 @@
             @class="theme-setting"
           />
         </div>
-      </DSection>
+      </section>
     {{else}}
-      <DSection @class="form-horizontal theme settings control-unit">
+      <section class="form-horizontal theme settings control-unit">
         <div class="row setting">
           <ThemeSettingRelativesSelector
             @setting={{this.relativesSelectorSettingsForTheme}}
@@ -327,7 +327,7 @@
             @class="theme-setting"
           />
         </div>
-      </DSection>
+      </section>
     {{/if}}
 
     {{#unless this.model.remote_theme.is_git}}
@@ -421,7 +421,7 @@
         <p><i>{{i18n
               "admin.customize.theme.overriden_settings_explanation"
             }}</i></p>
-        <DSection @class="form-horizontal theme settings control-unit">
+        <section class="form-horizontal theme settings control-unit">
           {{#each this.settings as |setting|}}
             <ThemeSettingEditor
               @setting={{setting}}
@@ -429,7 +429,7 @@
               @class="theme-setting control-unit"
             />
           {{/each}}
-        </DSection>
+        </section>
       </div>
     {{/if}}
 
@@ -438,8 +438,8 @@
         <div class="mini-title">{{i18n
             "admin.customize.theme.theme_translations"
           }}</div>
-        <DSection
-          @class="form-horizontal theme settings translations control-unit"
+        <section
+          class="form-horizontal theme settings translations control-unit"
         >
           {{#each this.translations as |translation|}}
             <ThemeTranslation
@@ -448,7 +448,7 @@
               @class="theme-translation"
             />
           {{/each}}
-        </DSection>
+        </section>
       </div>
     {{/if}}
 

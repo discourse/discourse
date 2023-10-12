@@ -25,11 +25,10 @@ pl_PL:
           descriptions:
             chat:
               create_message: "Utwórz wiadomość na czacie w określonym kanale."
-    about:
-      chat_messages_count: "Wiadomości czatu"
-      chat_channels_count: "Kanały czatu"
-      chat_users_count: "Użytkownicy czatu"
     chat:
+      text_copied: Tekst skopiowany do schowka
+      link_copied: Link skopiowany do schowka
+      deleted_chat_username: usunięte
       dates:
         time_tiny: "h:mm"
       all_loaded: "Pokazuje wszystkie wiadomości"
@@ -87,6 +86,7 @@ pl_PL:
         create: "Nowy kanał"
       click_to_join: "Kliknij tutaj, aby wyświetlić dostępne kanały."
       close: "Zamknij"
+      remove: "Usuń"
       collapse: "Zwiń szufladę czatu"
       expand: "Rozwiń szufladę czatu"
       confirm_flag: "Czy na pewno chcesz oflagować wiadomość od %{username}?"
@@ -136,38 +136,13 @@ pl_PL:
           many: "Ostatnie %{count} godzin"
           other: "Ostatnie %{count} godzin"
       mention_warning:
-        dismiss: "odrzuć"
-        cannot_see: "%{username} nie ma dostępu do tego kanału i nie został powiadomiony."
-        cannot_see_multiple:
-          one: "%{username} i %{count} inny użytkownik nie ma dostępu do tego kanału i nie został powiadomiony."
-          few: "%{username} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
-          many: "%{username} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
-          other: "%{username} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
         invitations_sent:
           one: "Zaproszenie wysłane"
           few: "Zaproszenia wysłane"
           many: "Zaproszenia wysłane"
           other: "Zaproszenia wysłane"
         invite: "Zaproś do kanału"
-        without_membership: "%{username} nie dołączył(a) do tego kanału."
-        without_membership_multiple:
-          one: "%{username} i %{count} inny użytkownik nie dołączył do tego kanału."
-          few: "%{username} i %{count} inni użytkownicy nie dołączyli do tego kanału."
-          many: "%{username} i %{count} inni użytkownicy nie dołączyli do tego kanału."
-          other: "%{username} i %{count} inni użytkownicy nie dołączyli do tego kanału."
-        group_mentions_disabled: "%{group_name} nie zezwala na wzmianki."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} i %{count} inna grupa nie zezwala na wzmianki."
-          few: "%{group_name} i %{count} inne grupy nie zezwalają na wzmianki."
-          many: "%{group_name} i %{count} inne grupy nie zezwalają na wzmianki."
-          other: "%{group_name} i %{count} inne grupy nie zezwalają na wzmianki."
         channel_wide_mentions_disallowed: "Wzmianki @here i @all są wyłączone na tym kanale."
-        too_many_members: "%{group_name} ma zbyt wielu członków. Nikt nie został powiadomiony."
-        too_many_members_multiple:
-          one: "%{group_name} i %{count} inna grupa ma zbyt wielu członków. Nikt nie został powiadomiony."
-          few: "%{group_name} i %{count} inne grupy mają zbyt wielu członków. Nikt nie został powiadomiony."
-          many: "%{group_name} i %{count} innych grup ma zbyt wielu członków. Nikt nie został powiadomiony."
-          other: "%{group_name} i %{count} innych grup ma zbyt wielu członków. Nikt nie został powiadomiony."
         groups:
           header:
             some: "Niektórzy użytkownicy nie zostaną powiadomieni"
@@ -273,6 +248,7 @@ pl_PL:
       reply: "Odpowiedz"
       edit: "Edytuj"
       copy_link: "Skopiuj link"
+      copy_text: "Skopiuj tekst"
       rebake_message: "Odśwież HTML"
       retry_staged_message:
         title: "Błąd sieci"
@@ -345,7 +321,6 @@ pl_PL:
         back_to_all_channels: "Wszystkie kanały"
         back_to_channel: "Poprzednia"
         tabs:
-          about: O stronie
           members: Członkowie
           settings: Ustawienia
       new_message_modal:
@@ -491,6 +466,10 @@ pl_PL:
         saved: "Zapisano"
         unfollow: "Opuść"
         admin_title: "Administratorzy"
+        settings_title: "Ustawienia"
+        category_label: "Kategoria"
+        history_label: "Historia"
+        members_label: "Członkowie"
       admin:
         title: "Czat"
         export_messages:
@@ -569,18 +548,16 @@ pl_PL:
           many: "%{commaSeparatedUsernames} i %{count} inni piszą"
           other: "%{commaSeparatedUsernames} i %{count} innych piszą"
       retention_reminders:
-        public_none: "Historia kanału jest przechowywana przez czas nieokreślony."
         public:
-          one: "Historia kanału jest przechowywana przez %{count} dzień."
-          few: "Historia kanału jest przechowywana przez %{count} dni."
-          many: "Historia kanału jest przechowywana przez %{count} dni."
-          other: "Historia kanału jest przechowywana przez %{count} dni."
-        dm_none: "Osobista historia czatu jest przechowywana przez czas nieokreślony."
+          one: "%{count} dzień"
+          few: "%{count} dni"
+          many: "%{count} dni"
+          other: "%{count} dni"
         dm:
-          one: "Osobista historia czatu jest zachowywana przez %{count} dzień."
-          few: "Osobista historia czatu jest zachowywana przez %{count} dni."
-          many: "Osobista historia czatu jest zachowywana przez %{count} dni."
-          other: "Osobista historia czatu jest zachowywana przez %{count} dni."
+          one: "%{count} dzień"
+          few: "%{count} dni"
+          many: "%{count} dni"
+          other: "%{count} dni"
       flags:
         off_topic: "Ta wiadomość nie jest związana z bieżącą dyskusją określoną w tytule kanału i prawdopodobnie powinna zostać przeniesiona w inne miejsce."
         inappropriate: "Ta wiadomość zawiera treści, które rozsądna osoba mogłaby uznać za obraźliwe, krzywdzące lub stanowiące naruszenie <a href=\"%{basePath}/guidelines\">naszych wytycznych dotyczących społeczności</a>."
@@ -678,6 +655,9 @@ pl_PL:
       types:
         chat_reviewable_message:
           title: "Oflagowana wiadomość na czacie"
+        reviewable_chat_message:
+          title: "Oflagowana wiadomość na czacie"
+          noun: "wiadomość na czacie"
     keyboard_shortcuts_help:
       chat:
         title: "Czat"

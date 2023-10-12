@@ -1,37 +1,44 @@
-import {
-  filterQueryParams,
-  findTopicList,
-} from "discourse/routes/build-topic-route";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
 import {
   queryParams,
   resetParams,
 } from "discourse/controllers/discovery-sortable";
+import PreloadStore from "discourse/lib/preload-store";
+import showModal from "discourse/lib/show-modal";
+import { setTopicList } from "discourse/lib/topic-list-tracker";
+import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
-import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
 import PermissionType from "discourse/models/permission-type";
-import { escapeExpression } from "discourse/lib/utilities";
+import {
+  filterQueryParams,
+  findTopicList,
+} from "discourse/routes/build-topic-route";
+import DiscourseRoute from "discourse/routes/discourse";
 import { makeArray } from "discourse-common/lib/helpers";
-import { setTopicList } from "discourse/lib/topic-list-tracker";
-import showModal from "discourse/lib/show-modal";
-import { action } from "@ember/object";
-import PreloadStore from "discourse/lib/preload-store";
-import { inject as service } from "@ember/service";
+import I18n from "I18n";
 
 const NONE = "none";
 const ALL = "all";
 
-export default DiscourseRoute.extend({
-  composer: service(),
-  router: service(),
-  currentUser: service(),
-  navMode: "latest",
+export default class TagShowRoute extends DiscourseRoute {
+  @service composer;
+  @service router;
+  @service currentUser;
 
-  queryParams,
+  queryParams = queryParams;
+  controllerName = "tag.show";
+  templateName = "tag.show";
+  routeConfig = {};
 
-  controllerName: "tag.show",
-  templateName: "tag.show",
+  get navMode() {
+    return this.routeConfig.navMode || "latest";
+  }
+
+  get noSubcategories() {
+    return this.routeConfig.noSubcategories;
+  }
 
   beforeModel() {
     const controller = this.controllerFor(this.controllerName);
@@ -39,7 +46,7 @@ export default DiscourseRoute.extend({
       loading: true,
       showInfo: false,
     });
-  },
+  }
 
   async model(params, transition) {
     const tag = this.store.createRecord("tag", {
@@ -145,7 +152,7 @@ export default DiscourseRoute.extend({
       canCreateTopicOnCategory: category?.permission === PermissionType.FULL,
       canCreateTopicOnTag: !tag.staff || this.currentUser?.staff,
     };
-  },
+  }
 
   setupController(controller, model) {
     const noSubcategories = this.noSubcategories;
@@ -173,7 +180,7 @@ export default DiscourseRoute.extend({
     } else {
       this.searchService.searchContext = model.tag.searchContext;
     }
-  },
+  }
 
   titleToken() {
     const filterText = I18n.t(
@@ -206,17 +213,17 @@ export default DiscourseRoute.extend({
         });
       }
     }
-  },
+  }
 
   deactivate() {
-    this._super(...arguments);
+    super.deactivate(...arguments);
     this.searchService.searchContext = null;
-  },
+  }
 
   @action
   renameTag(tag) {
     showModal("rename-tag", { model: tag });
-  },
+  }
 
   @action
   createTopic() {
@@ -238,13 +245,13 @@ export default DiscourseRoute.extend({
           }
         });
     }
-  },
+  }
 
   @action
   dismissReadTopics(dismissTopics) {
     const operationType = dismissTopics ? "topics" : "posts";
     this.send("dismissRead", operationType);
-  },
+  }
 
   @action
   dismissRead(operationType) {
@@ -263,16 +270,22 @@ export default DiscourseRoute.extend({
     }
 
     controller.send("dismissRead", operationType, options);
-  },
+  }
 
   @action
   resetParams(skipParams = []) {
     resetParams.call(this, skipParams);
-  },
+  }
 
   _controllerTags(controller) {
     return [controller.get("model.id"), ...makeArray(controller.additionalTags)]
       .filter(Boolean)
       .filter((tag) => ![NONE, ALL].includes(tag));
-  },
-});
+  }
+}
+
+export function buildTagRoute(routeConfig = {}) {
+  return class extends TagShowRoute {
+    routeConfig = routeConfig;
+  };
+}

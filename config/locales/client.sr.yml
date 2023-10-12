@@ -280,16 +280,9 @@ sr:
       our_admins: "Naši admini"
       our_moderators: "Naši moderatori"
       moderators: "Moderatori"
-      stat:
-        all_time: "Sve vreme"
-        last_day: "Последња 24 сата"
-        last_7_days: "Последњих 7 дана"
-        last_30_days: "Последњих 30 дана"
       like_count: "Sviđanja"
       topic_count: "Teme"
       post_count: "Poruka"
-      active_user_count: "Aktivni korisnici"
-      contact: "Kontaktirajte nas"
       contact_info: "U trenutku kritičnog problema ili hitnog slučaja koji utiče na sajt, molimo vas kontaktirajte nas na %{contact_info}."
     bookmarked:
       title: "Markiraj"
@@ -439,10 +432,18 @@ sr:
       context_question:
         delimiter: "ili"
       types:
+        reviewable_flagged_post:
+          noun: "post"
+        reviewable_queued_topic:
+          noun: "tema"
+        reviewable_queued_post:
+          noun: "post"
         reviewable_user:
           title: "Korisnik"
+          noun: "korisnik"
         reviewable_post:
           title: "Post"
+          noun: "post"
       approval:
         title: "Potrebno odobrenje"
         description: "Primili smo tvoj novi post ali on najpre mora biti odobren od strane moderatora. Budi strpljiv."
@@ -1391,7 +1392,6 @@ sr:
       errors:
         create: "Žao nam je, dogodila se greška pri otvaranju tvoje poruke. Molimo pokušajte ponovo."
         edit: "Žao nam je, dogodila se greška pri izmenjivanju tvoje poruke. Molimo pokušajte ponovo."
-        upload: "Žao nam je, dogodila se greška pri učitavanju te datoteke. Molimo pokušajte ponovo."
         too_many_uploads: "Žao nam je, možete učitati samo jednu datoteku od jednom."
         image_upload_not_allowed_for_new_user: "Žao nam je, novi korisnici ne mogu učitavati slike."
         attachment_upload_not_allowed_for_new_user: "Žao nam je, novi korisnici ne mogu učitavati priloge."
@@ -2010,6 +2010,7 @@ sr:
           save: "Sačuvaj"
           edit: "Izmeni"
           settings: "Podešavanje"
+          cancel: "Odustani"
           upload: "Učitaj"
           discard: "Odbaci"
           installed: "Instalirano"

@@ -118,22 +118,6 @@ module PageObjects
         message_by_id(message.id).find(".chat-message-expand").click
       end
 
-      def copy_link(message)
-        expand_message_actions(message)
-        find("[data-value='copyLink']").click
-      end
-
-      def delete_message(message)
-        expand_message_actions(message)
-        find("[data-value='delete']").click
-      end
-
-      def restore_message(message)
-        expand_deleted_message(message)
-        expand_message_actions(message)
-        find("[data-value='restore']").click
-      end
-
       def expand_message_actions(message)
         hover_message(message)
         click_more_button
@@ -155,14 +139,8 @@ module PageObjects
         ".chat-thread .chat-messages-container .chat-message-container[data-id=\"#{id}\"]"
       end
 
-      def open_edit_message(message)
-        hover_message(message)
-        click_more_button
-        find("[data-value='edit']").click
-      end
-
       def edit_message(message, text = nil)
-        open_edit_message(message)
+        messages.edit(message)
         send_message(message.message + text) if text
       end
     end

@@ -276,15 +276,10 @@ ro:
       our_moderators: "Moderatori"
       moderators: "Moderatori"
       stat:
-        all_time: "Tot timpul"
-        last_day: "Ultimele 24 de ore"
-        last_7_days: "Ultimele 7 zile"
-        last_30_days: "Ultimele 30 de zile"
+        last_day: "24 ore"
       like_count: "Aprecieri"
       topic_count: "Subiecte"
       post_count: "Postări"
-      active_user_count: "Utilizatori activi"
-      contact: "Contactează-ne"
       contact_info: "În cazul în care o problemă critică sau alt aspect urgent afectează site-ul, contactează-ne la %{contact_info}."
     bookmarked:
       title: "Semn de carte"
@@ -335,6 +330,10 @@ ro:
       abandon:
         yes_value: "Renunță"
         no_value: "Reia editarea"
+    topic_count_all:
+      one: "Afișați %{count} subiect nou"
+      few: "Afișați %{count} subiecte noi"
+      other: "Afișați %{count} subiecte noi"
     topic_count_categories:
       one: "Un subiect nou sau actualizat."
       few: "%{count} subiecte noi sau actualizate."
@@ -521,14 +520,19 @@ ro:
         reviewable_flagged_post:
           title: "Postare semnalată"
           flagged_by: "Semnalat de"
+          noun: "postare"
         reviewable_queued_topic:
           title: "Subiect în așteptare"
+          noun: "discuție"
         reviewable_queued_post:
           title: "Postare în așteptare"
+          noun: "postare"
         reviewable_user:
           title: "Utilizatori"
+          noun: "utilizatori"
         reviewable_post:
           title: "Postare"
+          noun: "postare"
       approval:
         title: "Necesită aprobare"
         description: "Am primit noua postare dar trebuie să fie aprobată de un moderator înainte că ea să apară pe site. Te rugăm să ai răbdare."
@@ -1719,15 +1723,7 @@ ro:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} și încă o persoană</span> %{description}"
-        few: "<span class='multi-user'>%{username}, %{username2} și încă o persoană</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} și alți %{count}</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
-      liked_by_multiple_users:
-        one: "%{username}, %{username2} și încă o persoană"
-        few: "%{username}, %{username2} și încă o persoană"
-        other: "%{username}, %{username2} și alți %{count}"
       liked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -2260,7 +2256,6 @@ ro:
       errors:
         create: "Ne pare rău, a apărut o eroare la creerea postării. Te rugăm să încerci iar."
         edit: "Ne pare rău, a apărut o eroare la editarea postării. Te rugăm să încerci iar."
-        upload: "Ne pare rău, a apărut o eroare la încărcarea fișierului. Te rugăm să încerci iar."
         too_many_uploads: "Ne pare rău, poți încărca doar câte un fișier."
         upload_not_authorized: "Ne pare rău, fișierul pe care-l încerci să-l încarci nu este autorizat (extensii autorizate: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Ne pare rău, un utilizator nou nu poate încărca imagini."
@@ -2770,7 +2765,6 @@ ro:
       other_tags: "Alte etichete"
       selector_all_tags: "toate etichetele"
       selector_no_tags: "fără etichete"
-      changed: "etichete schimbate:"
       tags: "Etichete"
       choose_for_topic: "etichete opționale"
       add_synonyms: "Adaugă"
@@ -3072,14 +3066,6 @@ ro:
         groups_filter_instructions: "Webhook-urile relevante vor fi declanșate dacă evenimentul este legat de grupuri specificate. Lasă liber pentru a declanșa webhooks pentru toate grupurile."
         groups_filter: "Grupuri declanșate"
         delete_confirm: "Șterge acest webhook?"
-        topic_event:
-          name: "Eveniment subiect"
-          details: "Atunci când există un subiect nou, revizuit, schimbat sau șters."
-        post_event:
-          name: "Eveniment postare"
-          details: "Atunci când exista un răspuns nou, editat, șters sau recuperat."
-        user_event:
-          name: "Eveniment utilizator"
         delivery_status:
           title: "Starea livrării"
           inactive: "Inactivă"
@@ -3222,6 +3208,7 @@ ro:
           color_scheme_select: "Alege culorile folosite de către temă"
           custom_sections: "Secțiuni personalizate:"
           theme_components: "Componentele temei"
+          cancel: "Anulare"
           collapse: Colaps
           uploads: "Urcări"
           variable_name: "Numele variabilei SCSS:"

@@ -1,10 +1,10 @@
+import EmberObject from "@ember/object";
+import { render, triggerEvent } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { render, triggerEvent } from "@ember/test-helpers";
-import { count, exists } from "discourse/tests/helpers/qunit-helpers";
-import { hbs } from "ember-cli-htmlbars";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import EmberObject from "@ember/object";
+import { count, exists } from "discourse/tests/helpers/qunit-helpers";
 
 module(
   "Integration | Component | Widget | default-notification-item",

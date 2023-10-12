@@ -1,32 +1,24 @@
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import ForgotPassword from "discourse/components/modal/forgot-password";
+import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
+import LoginModal from "discourse/components/modal/login";
+import { ajax } from "discourse/lib/ajax";
+import { setting } from "discourse/lib/computed";
+import cookie from "discourse/lib/cookie";
+import logout from "discourse/lib/logout";
+import mobile from "discourse/lib/mobile";
+import showModal from "discourse/lib/show-modal";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
-import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
-import { ajax } from "discourse/lib/ajax";
 import { findAll } from "discourse/models/login-method";
-import { getOwner } from "discourse-common/lib/get-owner";
-import getURL from "discourse-common/lib/get-url";
-import logout from "discourse/lib/logout";
-import mobile from "discourse/lib/mobile";
-import { inject as service } from "@ember/service";
-import { setting } from "discourse/lib/computed";
-import showModal from "discourse/lib/show-modal";
-import { action } from "@ember/object";
-import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
-import NotActivatedModal from "../components/modal/not-activated";
-import ForgotPassword from "discourse/components/modal/forgot-password";
+import DiscourseRoute from "discourse/routes/discourse";
 import deprecated from "discourse-common/lib/deprecated";
-
-function unlessReadOnly(method, message) {
-  return function () {
-    if (this.site.isReadOnly) {
-      this.dialog.alert(message);
-    } else {
-      this[method]();
-    }
-  };
-}
+import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
+import getURL from "discourse-common/lib/get-url";
+import I18n from "I18n";
+import NotActivatedModal from "../components/modal/not-activated";
 
 function unlessStrictlyReadOnly(method, message) {
   return function () {
@@ -47,6 +39,18 @@ const ApplicationRoute = DiscourseRoute.extend({
   modal: service(),
   loadingSlider: service(),
   router: service(),
+  siteSettings: service(),
+
+  get includeExternalLoginMethods() {
+    return (
+      !this.siteSettings.enable_local_logins &&
+      this.externalLoginMethods.length === 1
+    );
+  },
+
+  get externalLoginMethods() {
+    return findAll();
+  },
 
   @action
   loading(transition) {
@@ -143,10 +147,13 @@ const ApplicationRoute = DiscourseRoute.extend({
       I18n.t("read_only_mode.login_disabled")
     ),
 
-    showCreateAccount: unlessReadOnly(
-      "handleShowCreateAccount",
-      I18n.t("read_only_mode.login_disabled")
-    ),
+    showCreateAccount(createAccountProps = {}) {
+      if (this.site.isReadOnly) {
+        this.dialog.alert(I18n.t("read_only_mode.login_disabled"));
+      } else {
+        this.handleShowCreateAccount(createAccountProps);
+      }
+    },
 
     showForgotPassword() {
       this.modal.show(ForgotPassword);
@@ -195,7 +202,7 @@ const ApplicationRoute = DiscourseRoute.extend({
         "createNewTopicViaParam on the application route is deprecated. Use the composer service instead",
         { id: "discourse.createNewTopicViaParams" }
       );
-      getOwner(this).lookup("service:composer").openNewTopic({
+      getOwnerWithFallback(this).lookup("service:composer").openNewTopic({
         title,
         body,
         categoryId,
@@ -213,7 +220,7 @@ const ApplicationRoute = DiscourseRoute.extend({
         "createNewMessageViaParams on the application route is deprecated. Use the composer service instead",
         { id: "discourse.createNewMessageViaParams" }
       );
-      getOwner(this).lookup("service:composer").openNewMessage({
+      getOwnerWithFallback(this).lookup("service:composer").openNewMessage({
         recipients,
         title: topicTitle,
         body: topicBody,
@@ -224,48 +231,46 @@ const ApplicationRoute = DiscourseRoute.extend({
 
   handleShowLogin() {
     if (this.siteSettings.enable_discourse_connect) {
-      const returnPath = encodeURIComponent(window.location.pathname);
+      const returnPath = cookie("destination_url")
+        ? getURL("/")
+        : encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      this._autoLogin("login", {
-        notAuto: () => getOwner(this).lookup("controller:login").resetForm(),
+      this.modal.show(LoginModal, {
+        model: {
+          ...(this.includeExternalLoginMethods && {
+            isExternalLogin: true,
+            externalLoginMethod: this.externalLoginMethods[0],
+          }),
+          showNotActivated: (props) => this.send("showNotActivated", props),
+          showCreateAccount: (props) => this.send("showCreateAccount", props),
+          canSignUp: this.controller.canSignUp,
+        },
       });
     }
   },
 
-  handleShowCreateAccount() {
+  handleShowCreateAccount(createAccountProps) {
     if (this.siteSettings.enable_discourse_connect) {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = getURL("/session/sso?return_path=" + returnPath);
     } else {
-      this._autoLogin("create-account", {
-        modalClass: "create-account",
-        signup: true,
-        titleAriaElementId: "create-account-title",
-      });
-    }
-  },
-
-  _autoLogin(
-    modal,
-    {
-      modalClass = undefined,
-      notAuto = null,
-      signup = false,
-      titleAriaElementId = null,
-    } = {}
-  ) {
-    const methods = findAll();
-
-    if (!this.siteSettings.enable_local_logins && methods.length === 1) {
-      getOwner(this)
-        .lookup("controller:login")
-        .send("externalLogin", methods[0], {
-          signup,
+      if (this.includeExternalLoginMethods) {
+        // we will automatically redirect to the external auth service
+        this.modal.show(LoginModal, {
+          model: {
+            isExternalLogin: true,
+            externalLoginMethod: this.externalLoginMethods[0],
+            signup: true,
+          },
         });
-    } else {
-      showModal(modal, { modalClass, titleAriaElementId });
-      notAuto?.();
+      } else {
+        const createAccount = showModal("create-account", {
+          modalClass: "create-account",
+          titleAriaElementId: "create-account-title",
+        });
+        createAccount.setProperties(createAccountProps);
+      }
     }
   },
 

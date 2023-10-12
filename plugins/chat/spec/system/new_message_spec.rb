@@ -395,7 +395,7 @@ RSpec.describe "New message", type: :system do
     end
 
     context "when filtering" do
-      it "shows only matching users regarless of prefix" do
+      it "shows only matching users regardless of prefix" do
         chat_page.message_creator.filter("#bob")
 
         expect(chat_page.message_creator).to be_listing(user_1)

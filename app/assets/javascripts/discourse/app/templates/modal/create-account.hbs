@@ -230,10 +230,24 @@
                   {{/each}}
                 </div>
               {{/if}}
+
+              <PluginOutlet
+                @name="create-account-after-user-fields"
+                @outletArgs={{hash
+                  accountName=this.accountName
+                  accountUsername=this.accountUsername
+                  accountPassword=this.accountPassword
+                  userFields=this.userFields
+                }}
+              />
             </form>
           </div>
 
           <div class="modal-footer">
+            <div class="disclaimer">
+              {{html-safe this.disclaimerHtml}}
+            </div>
+
             <DButton
               @action={{action "createAccount"}}
               @disabled={{this.submitDisabled}}
@@ -252,9 +266,6 @@
               />
             {{/unless}}
 
-            <div class="disclaimer">
-              {{html-safe this.disclaimerHtml}}
-            </div>
           </div>
 
           <PluginOutlet

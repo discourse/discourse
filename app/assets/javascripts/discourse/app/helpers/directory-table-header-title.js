@@ -1,7 +1,7 @@
-import { registerUnbound } from "discourse-common/lib/helpers";
-import I18n from "I18n";
-import { iconHTML } from "discourse-common/lib/icon-library";
 import { htmlSafe } from "@ember/template";
+import { registerUnbound } from "discourse-common/lib/helpers";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import I18n from "I18n";
 
 export default registerUnbound("directory-table-header-title", function (args) {
   // Args should include key/values { field, labelKey, icon, translated }

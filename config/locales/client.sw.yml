@@ -209,13 +209,9 @@ sw:
       our_admins: "Viongozi Wetu"
       our_moderators: "Wasimamizi Wetu"
       moderators: "Wasimamizi"
-      stat:
-        all_time: "Mda Wote"
       like_count: "Upendo"
       topic_count: "Mada"
       post_count: "Machapisho"
-      active_user_count: "Watumiaji wa Mara kwa Mara"
-      contact: "Wasiliana Nasi"
       contact_info: "Iwapo kuna suala la muhimu au haraka linalohusiana na mtandao huu, tafadhali wasiliana nasi kupitia %{contact_info}."
     bookmarked:
       title: "Alamisho"
@@ -230,6 +226,9 @@ sw:
     drafts:
       remove: "Ondoa"
       new_topic: "Mswadajaribio wa mada mpya"
+    topic_count_all:
+      one: "Angalia Topiki %{count} Mpya"
+      other: "Angalia Topiki %{count} Mpya"
     topic_count_categories:
       one: "Angalia Topiki Mpya au Masahisho %{count}"
       other: "Angalia Topiki Mpya au Masahisho %{count}"
@@ -308,10 +307,18 @@ sw:
       context_question:
         delimiter: "au"
       types:
+        reviewable_flagged_post:
+          noun: "ujumbe"
+        reviewable_queued_topic:
+          noun: "mada"
+        reviewable_queued_post:
+          noun: "ujumbe"
         reviewable_user:
           title: "Mtumiaji"
+          noun: "Mtumiaji"
         reviewable_post:
           title: "Ujumbe"
+          noun: "ujumbe"
       approval:
         title: "Chapisho Linahitaji Kibali"
         description: "Tumepokea chapisho lako jipya, lakini linahitaji kupata kibali kutoka kwa kiongozi kabla ya kuonyeshwa. Tafadhali kuwa na subira."
@@ -1268,9 +1275,6 @@ sw:
       edited: "<span>%{jina la mtumiaji} </span> %{maelezo}"
       liked: "<span>%{jina la mtumiaji}</span> %{maelezo}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} na %{count} mwingine </span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} na %{count} wengine</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_consolidated: "<span>%{jina la mtumiaji}</span> %{maelezo}"
       private_message: "<span>%{jina la mtumiaji}</span> %{maelezo}"
@@ -1485,6 +1489,7 @@ sw:
       back_to_list: "Rudi tena kwenye Orodha ya Mada"
       options: "Machaguo ya Mada"
       show_links: "onyesha viungo ndani ya hii mada"
+      bumped_at: "Hivi karibuni: %{date}"
       deleted: "Mada imefutwa"
       slow_mode_update:
         enable: "Ruhusu"
@@ -1724,7 +1729,6 @@ sw:
       errors:
         create: "Samahani, hitilafu imetokea wakati wa kutengeneza chapisho lako. Tafadhali jaribu tena."
         edit: "Samahani, hitilafu imetokea wakati wa kuhariri chapisho lako. Tafadhali jaribu tena."
-        upload: "Samahani, hitilafu imetokea wakati wa kupakia faili hilo. Tafadhali jaribu tena."
         too_many_uploads: "Samahani, unaweza kupakia faili 1 tu kwa wakati mmoja."
         upload_not_authorized: "Samahani, faili unalo jaribu kupakia halina kibali (authorized extensions: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Samahani, watumiaji wapya hawawezi kupakia picha."
@@ -2135,7 +2139,6 @@ sw:
       other_tags: "Lebo Zingine"
       selector_all_tags: "lebo zote"
       selector_no_tags: "hakuna lebo"
-      changed: "lebo zilizobadilishwa:"
       tags: "Lebo"
       choose_for_topic: "lebo zisizo muhimu"
       add_synonyms: "Ongeza"
@@ -2413,23 +2416,6 @@ sw:
         individual_event: "Chagua matukio rejareja."
         active: "Amilifu"
         active_notice: "Tutakuletea taarifa za tukio zinapotokea."
-        topic_event:
-          name: "Mada Tukio"
-          details: "Wakati kuna mada mpya, iliyotadubiriwa, badilisha au kufutwa."
-        post_event:
-          name: "Chapisho Tukio"
-          details: "Wakati kuna jibu jipya, uhariri, kufutwa au kurejeshwa."
-        user_event:
-          name: "Mtumiaji Tukio"
-        group_event:
-          name: "Kikundi Tukio"
-          details: "Wakati kikundi kinapotengenezwa, sasishwa au kuvunjwa."
-        category_event:
-          name: "Kategoria Tukio"
-          details: "Wakati kitengo kinapotengenezwa, sasishwa au kuvunjwa."
-        tag_event:
-          name: "Lebo Tukio"
-          details: "Wakati lebo inapotengenezwa, sasishwa au kufutwa."
         delivery_status:
           title: "Hali ya Uwasilishaji"
           inactive: "Isiyo Amilifu"
@@ -2493,7 +2479,6 @@ sw:
             label: "Chelezo"
             title: "Tengeneza chelezo"
             confirm: "Unataka kuanzisha chelezo jipya?"
-            without_uploads: "Ndio (usiweke vilivyopakiwa)"
           download:
             label: "Pakua"
             title: "Tuma barua pepe yenye kiungo cha upakuaji"
@@ -2565,6 +2550,7 @@ sw:
           color_scheme_select: "Chagua rangi zitakazotumika kwenye mandhari"
           custom_sections: "Vifungu binafsi:"
           theme_components: "Vipengele vya Mandhari"
+          cancel: "Ghairi"
           collapse: Kunja
           uploads: "Upakiaji"
           no_uploads: "Unaweza kupakia vitu vinavyoendana na mandhari yako kama picha na fonti"

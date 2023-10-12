@@ -1,12 +1,15 @@
-import "./global-compat";
+/* eslint-disable simple-import-sort/imports */
 import "./loader-shims";
+import "./global-compat";
+/* eslint-enable simple-import-sort/imports */
 
-import require from "require";
 import Application from "@ember/application";
-import { buildResolver } from "discourse-common/resolver";
-import { isTesting } from "discourse-common/config/environment";
-import { normalizeEmberEventHandling } from "./lib/ember-events";
+import require from "require";
+import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { isTesting } from "discourse-common/config/environment";
+import { buildResolver } from "discourse-common/resolver";
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
@@ -90,7 +93,7 @@ function loadInitializers(app) {
   let discourseInitializers = [];
   let discourseInstanceInitializers = [];
 
-  for (let moduleName of Object.keys(requirejs._eak_seen)) {
+  for (let moduleName of Object.keys(requirejs.entries)) {
     if (moduleName.startsWith("discourse/") && !moduleName.endsWith("-test")) {
       // In discourse core, initializers follow standard Ember conventions
       if (moduleName.startsWith("discourse/initializers/")) {
@@ -148,8 +151,6 @@ function loadInitializers(app) {
   }
 
   // Plugins that are registered via `<script>` tags.
-  const { withPluginApi } = require("discourse/lib/plugin-api");
-
   for (let [i, callback] of _pluginCallbacks.entries()) {
     app.instanceInitializer({
       name: `_discourse_plugin_${i}`,

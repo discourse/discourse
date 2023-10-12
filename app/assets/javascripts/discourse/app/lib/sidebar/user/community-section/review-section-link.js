@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
+import I18n from "I18n";
 
 export default class ReviewSectionLink extends BaseSectionLink {
   get shouldDisplay() {

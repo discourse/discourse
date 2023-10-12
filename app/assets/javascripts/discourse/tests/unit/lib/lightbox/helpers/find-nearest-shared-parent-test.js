@@ -1,5 +1,4 @@
 import { module, test } from "qunit";
-
 import { findNearestSharedParent } from "discourse/lib/lightbox/helpers";
 
 module(

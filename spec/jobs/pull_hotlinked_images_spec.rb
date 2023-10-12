@@ -183,6 +183,23 @@ RSpec.describe Jobs::PullHotlinkedImages do
       expect(post.reload.raw).to eq("[Images](#{url})\n![](#{Upload.last.short_url})")
     end
 
+    it "does not replace images in code blocks", skip: "Known issue" do
+      post = Fabricate(:post, raw: <<~RAW)
+        ![realimage](#{image_url})
+        `![codeblockimage](#{image_url})`
+      RAW
+      stub_image_size
+
+      expect do Jobs::PullHotlinkedImages.new.execute(post_id: post.id) end.to change {
+        Upload.count
+      }.by(1)
+
+      expect(post.reload.raw).to eq(<<~RAW)
+        ![realimage](#{Upload.last.short_url})
+        `![codeblockimage](#{image_url})`
+      RAW
+    end
+
     it "replaces images without protocol" do
       url = image_url.sub(/^https?\:/, "")
       post = Fabricate(:post, raw: "<img alt='test' src='#{url}'>")

@@ -1,13 +1,13 @@
 import { click, currentURL, triggerKeyEvent, visit } from "@ember/test-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "I18n";
+import { test } from "qunit";
+import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
-import { test } from "qunit";
+import { cloneJSON } from "discourse-common/lib/object";
+import I18n from "I18n";
 
 acceptance("Keyboard Shortcuts - Anonymous Users", function (needs) {
   needs.pretender((server, helper) => {

@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
+import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
-import { Promise } from "rsvp";
 import I18n from "I18n";
 
 export default DiscourseRoute.extend({

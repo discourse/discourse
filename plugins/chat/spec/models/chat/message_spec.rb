@@ -7,11 +7,26 @@ describe Chat::Message do
 
   it { is_expected.to have_many(:chat_mentions).dependent(:destroy) }
 
+  describe "validations" do
+    subject(:message) { described_class.new(message: "") }
+
+    it { is_expected.to validate_length_of(:cooked).is_at_most(20_000) }
+  end
+
   describe ".cook" do
     it "does not support HTML tags" do
       cooked = described_class.cook("<h1>test</h1>")
 
       expect(cooked).to eq("<p>&lt;h1&gt;test&lt;/h1&gt;</p>")
+    end
+
+    it "correctly extracts mentions with dots" do
+      user = Fabricate(:user)
+      cooked = described_class.cook("@#{user.username}...test")
+
+      expect(cooked).to eq(
+        "<p><a class=\"mention\" href=\"/u/#{user.username}\">@#{user.username}</a>…test</p>",
+      )
     end
 
     it "does not support headings" do
@@ -20,10 +35,10 @@ describe Chat::Message do
       expect(cooked).to eq("<p>## heading 2</p>")
     end
 
-    it "does not support horizontal rules" do
+    it "supports horizontal replacement" do
       cooked = described_class.cook("---")
 
-      expect(cooked).to eq("<p>---</p>")
+      expect(cooked).to eq("<p>—</p>")
     end
 
     it "supports backticks rule" do
@@ -89,7 +104,7 @@ describe Chat::Message do
       <div class="quote-controls"></div>
       <img loading="lazy" alt="" width="24" height="24" src="#{avatar_src}" class="avatar"><a href="http://test.localhost/t/some-quotable-topic/#{topic.id}/#{post.post_number}">#{topic.title}</a></div>
       <blockquote>
-      <p>Mark me...this will go down in history.</p>
+      <p>Mark me…this will go down in history.</p>
       </blockquote>
       </aside>
       COOKED
@@ -581,6 +596,20 @@ describe Chat::Message do
 
       expect(message.chat_mentions.pluck(:user_id)).to match_array(already_mentioned)
       expect(message.chat_mentions.pluck(:id)).to include(*existing_mention_ids) # the mentions weren't recreated
+    end
+  end
+
+  describe "#url" do
+    it "returns message permalink" do
+      expect(message.url).to eq("/chat/c/-/#{message.chat_channel_id}/#{message.id}")
+    end
+
+    it "returns message permalink when in thread" do
+      thread = Fabricate(:chat_thread)
+      first_message = thread.chat_messages.first
+      expect(first_message.url).to eq(
+        "/chat/c/-/#{first_message.chat_channel_id}/t/#{first_message.thread_id}/#{first_message.id}",
+      )
     end
   end
 end

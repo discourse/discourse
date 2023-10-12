@@ -1,4 +1,4 @@
-<DSection @pageClass="user-messages" />
+{{body-class "user-messages-page"}}
 
 <PluginOutlet
   @name="user-messages-above-navigation"
@@ -25,7 +25,7 @@
   <div class="navigation-controls">
     {{#if this.site.mobileView}}
       {{#if this.currentUser.admin}}
-        <BulkSelectToggle @parentController="user-topics-list" @tagName="" />
+        <BulkSelectToggle @parentController="user-topics-list" />
       {{/if}}
     {{/if}}
 
@@ -39,6 +39,10 @@
         class="btn-primary new-private-message"
       />
     {{/if}}
+    <PluginOutlet
+      @name="user-messages-controls-bottom"
+      @outletArgs={{hash showNewPM=this.showNewPM}}
+    />
   </div>
 </div>
 

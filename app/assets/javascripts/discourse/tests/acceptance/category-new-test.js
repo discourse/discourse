@@ -1,14 +1,14 @@
+import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import sinon from "sinon";
+import DiscourseURL from "discourse/lib/url";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
-import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
-import sinon from "sinon";
-import { test } from "qunit";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import I18n from "I18n";
 
 acceptance("New category access for moderators", function (needs) {
   needs.user({ moderator: true, admin: false, trust_level: 1 });

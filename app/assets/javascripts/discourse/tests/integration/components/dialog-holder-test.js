@@ -1,6 +1,3 @@
-import I18n from "I18n";
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   click,
   fillIn,
@@ -9,9 +6,12 @@ import {
   triggerKeyEvent,
 } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import { query } from "discourse/tests/helpers/qunit-helpers";
+import { module, test } from "qunit";
 import GroupDeleteDialogMessage from "discourse/components/dialog-messages/group-delete";
 import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { query } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "I18n";
 
 module("Integration | Component | dialog-holder", function (hooks) {
   setupRenderingTest(hooks);

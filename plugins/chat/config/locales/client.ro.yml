@@ -16,6 +16,7 @@ ro:
           actions:
             chat_auto_remove_membership: "Membrii sunt eliminați automat din canale"
     chat:
+      deleted_chat_username: șters
       create: "Creează"
       cancel: "Anulare"
       move_to_channel:
@@ -31,6 +32,7 @@ ro:
       channel_delete:
         instructions: "<p>Șterge canalul <strong>%{name}</strong> și istoricul de chat. Toate mesajele și datele asociate, cum ar fi reacțiile și încărcările, vor fi șterse permanent. Dacă doriți să păstrați istoricul canalului și să-l decomisionați, s-ar putea să doriți să arhivați canalul în schimb.</p> <p>Sunteți sigur că doriți să ștergeți <strong>permanent</strong> canalul? Pentru a confirma, tastați numele canalului în caseta de mai jos.</p>"
       close: "Închide sondajul"
+      remove: "Elimină"
       expand: "Extinde sertarul de chat"
       delete: "Șterge"
       muted: "silențios"
@@ -50,19 +52,6 @@ ro:
         description: "Selectați o opțiune de mai jos pentru a rezuma conversația trimisă în intervalul de timp dorit."
         summarize: "Rezumat"
       mention_warning:
-        dismiss: "renunță"
-        cannot_see: "%{username} nu poate accesa acest canal și nu a fost notificat."
-        without_membership: "%{username} nu s-a alăturat acestui canal."
-        without_membership_multiple:
-          one: "%{username} și încă %{count} utilizator nu s-au alăturat acestui canal."
-          few: "%{username} și alți %{count} utilizatori nu s-au alăturat acestui canal."
-          other: "%{username} și alți %{count} utilizatori nu s-au alăturat acestui canal."
-        group_mentions_disabled: "%{group_name} nu permite mențiuni."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} și %{count} alt grup nu permit mențiuni."
-          few: "%{group_name} și %{count} alte grupuri nu permit mențiuni."
-          other: "%{group_name} și %{count} alte grupuri nu permit mențiuni."
-        too_many_members: "%{group_name} are prea mulți membri. Nimeni nu a fost anunțat."
         groups:
           unreachable_1: "@%{group} nu permite mențiuni."
           unreachable_multiple:
@@ -95,7 +84,6 @@ ro:
       channel_info:
         back_to_channel: "Înapoi"
         tabs:
-          about: Despre
           members: Membri
           settings: Opțiuni
       direct_message_creator:
@@ -122,6 +110,10 @@ ro:
         saved: "Salvat"
         unfollow: "Părăsește"
         admin_title: "Administrator"
+        settings_title: "Opțiuni"
+        category_label: "Categorie"
+        history_label: "Istoric"
+        members_label: "Membri"
       incoming_webhooks:
         back: "Înapoi"
         description: "Descriere"
@@ -140,6 +132,15 @@ ro:
           title: "Mutare în subiect nou."
         existing_topic:
           title: "Mută în subiect deja existent"
+      retention_reminders:
+        public:
+          one: "%{count} zi"
+          few: "%{count} zile"
+          other: "%{count} de zile"
+        dm:
+          one: "%{count} zi"
+          few: "%{count} zile"
+          other: "%{count} de zile"
       emoji_picker:
         objects: "Obiecte"
         flags: "Marcaje de avertizare"

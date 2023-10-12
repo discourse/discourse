@@ -1,6 +1,6 @@
+import escape from "discourse-common/lib/escape";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
 import { helperContext } from "discourse-common/lib/helpers";
-import { escape } from "pretty-text/sanitizer";
 import { deepMerge } from "discourse-common/lib/object";
 
 let allowedSizes = null;
@@ -75,7 +75,7 @@ export function avatarImg(options, customGetURL) {
   let title = "";
   if (options.title) {
     const escaped = escape(options.title || "");
-    title = ` title='${escaped}' aria-label='${escaped}'`;
+    title = ` title='${escaped}'`;
   }
 
   return `<img loading='lazy' alt='' width='${size}' height='${size}' src='${url}' class='${classes}'${title}>`;

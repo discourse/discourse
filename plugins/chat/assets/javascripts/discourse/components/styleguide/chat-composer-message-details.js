@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
-import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
-import { action } from "@ember/object";
 import { cached } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
+import fabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 export default class ChatStyleguideChatComposerMessageDetails extends Component {
   @service site;

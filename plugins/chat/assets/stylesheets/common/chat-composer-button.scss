@@ -56,7 +56,9 @@
     }
 
     .chat-composer.is-sending & {
-      animation: sendingScales 1s infinite linear;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: sendingScales 1s infinite linear;
+      }
     }
 
     .d-icon {

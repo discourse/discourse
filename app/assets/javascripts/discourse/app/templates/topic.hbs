@@ -5,6 +5,7 @@
 {{/let}}
 
 <DiscourseTopic
+  {{sticky-avatars}}
   @multiSelect={{this.multiSelect}}
   @enteredAt={{this.enteredAt}}
   @topic={{this.model}}
@@ -592,7 +593,7 @@
     </div>
   {{/if}}
 
-  <QuoteButton
+  <PostTextSelection
     @quoteState={{this.quoteState}}
     @selectText={{action "selectText"}}
     @editPost={{action "editPost"}}

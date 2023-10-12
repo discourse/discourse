@@ -1,12 +1,12 @@
+import { schedule } from "@ember/runloop";
+import { inject as service } from "@ember/service";
+import { withPluginApi } from "discourse/lib/plugin-api";
+import { defaultHomepage } from "discourse/lib/utilities";
+import { scrollTop } from "discourse/mixins/scroll-top";
 import DiscourseRoute from "discourse/routes/discourse";
 import I18n from "I18n";
-import { defaultHomepage } from "discourse/lib/utilities";
-import { inject as service } from "@ember/service";
-import { scrollTop } from "discourse/mixins/scroll-top";
-import { schedule } from "@ember/runloop";
-import { withPluginApi } from "discourse/lib/plugin-api";
-import { initSidebarState } from "discourse/plugins/chat/discourse/lib/init-sidebar-state";
 import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
+import { initSidebarState } from "discourse/plugins/chat/discourse/lib/init-sidebar-state";
 
 export default class ChatRoute extends DiscourseRoute {
   @service chat;

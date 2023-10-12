@@ -1,11 +1,11 @@
+import { click, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   exists,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
-import { test } from "qunit";
-import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 acceptance("Tags intersection", function (needs) {
   needs.user();

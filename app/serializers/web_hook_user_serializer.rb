@@ -38,6 +38,9 @@ class WebHookUserSerializer < UserSerializer
     use_logo_small_as_avatar
     pending_posts_count
     status
+    display_sidebar_tags
+    sidebar_category_ids
+    sidebar_tags
   ].each { |attr| define_method("include_#{attr}?") { false } }
 
   def include_email?

@@ -6,7 +6,7 @@
 
 es:
   site_settings:
-    chat_enabled: "Habilitar el complemento de chat."
+    chat_enabled: "Activar chat."
     enable_public_channels: "Habilitar canales públicos basados en categorías."
     chat_allowed_groups: "Los usuarios de estos grupos pueden chatear. Ten en cuenta que el personal siempre puede acceder al chat."
     chat_channel_retention_days: "Los mensajes del chat en los canales regulares se conservarán durante este número de días. Poner a «0» para retener los mensajes para siempre."
@@ -116,15 +116,11 @@ es:
         agree_and_delete:
           title: "Eliminar mensaje"
           description: "Elimina el mensaje para que los usuarios no puedan verlo."
-        delete_and_agree:
-          title: "Eliminar mensaje"
         disagree_and_restore:
           title: "No aceptar y restaurar el mensaje"
           description: "Restaura el mensaje para que todos los usuarios puedan verlo."
         disagree:
           title: "No estoy de acuerdo"
-        ignore:
-          title: "Ignorar"
       direct_messages:
         transcript_title: "Transcripción de los mensajes anteriores en %{channel_name}"
         transcript_body: "Para darte más contexto, incluimos una transcripción de los mensajes anteriores de esta conversación (hasta diez):\n\n%{transcript}"
@@ -140,6 +136,28 @@ es:
         multi_user_truncated:
           one: "%{comma_separated_usernames} y %{count} más"
           other: "%{comma_separated_usernames} y otros %{count}"
+    mention_warning:
+      dismiss: "descartar"
+      cannot_see: "%{first_identifier} no puede acceder a este canal y no ha sido notificado."
+      cannot_see_multiple:
+        one: "%{first_identifier} y otro usuario no pueden acceder a este canal y no fueron notificados."
+        other: "%{first_identifier} y otros %{count} usuarios no pueden acceder a este canal y no fueron notificados."
+      invitations_sent:
+        one: "Invitación enviada"
+        other: "Invitaciones enviadas"
+      invite: "Invitar al canal"
+      without_membership: "%{first_identifier} no se ha unido a este canal."
+      without_membership_multiple:
+        one: "%{first_identifier} y otro usuario no se han unido a este canal."
+        other: "%{first_identifier} y otros %{count} usuarios no se han unido a este canal."
+      group_mentions_disabled: "%{first_identifier} no permite menciones."
+      group_mentions_disabled_multiple:
+        one: "%{first_identifier} y otro grupo no permiten menciones."
+        other: "%{first_identifier} y otros %{count} grupos no permiten menciones."
+      too_many_members: "%{first_identifier} tiene demasiados miembros. No se notificó a nadie."
+      too_many_members_multiple:
+        one: "%{first_identifier} y otro grupo tienen demasiados miembros. No se ha notificado a nadie."
+        other: "%{first_identifier} y otros %{count} grupos tienen demasiados miembros. No se ha notificado a nadie."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "contiene caracteres no ascii"

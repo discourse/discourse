@@ -412,6 +412,7 @@ pre.onebox code ol.lines li {
   border-left: 1px solid #cfcfcf;
   min-height: 1.5em; //show empty li lines
   white-space: pre;
+  width: max-content;
 }
 
 pre.onebox code li.selected {
@@ -473,6 +474,7 @@ pre.onebox code {
 
   .github-info-container {
     width: 100%;
+    overflow-x: hidden;
   }
 
   .github-info {
@@ -498,6 +500,10 @@ pre.onebox code {
       .removed {
         color: var(--danger);
       }
+    }
+
+    .discourse-local-date {
+      white-space: nowrap;
     }
   }
 
@@ -934,6 +940,9 @@ iframe.vimeo-onebox {
     position: absolute;
     width: calc(100% - 40px);
     animation: 0.5s fadeIn;
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
   }
 }
 

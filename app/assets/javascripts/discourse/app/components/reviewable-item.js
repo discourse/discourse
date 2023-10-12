@@ -1,16 +1,16 @@
-import Category from "discourse/models/category";
+import { getOwner } from "@ember/application";
 import Component from "@ember/component";
-import I18n from "I18n";
-import { ajax } from "discourse/lib/ajax";
-import { classify, dasherize } from "@ember/string";
-import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import optionalService from "discourse/lib/optional-service";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { action, set } from "@ember/object";
-import showModal from "discourse/lib/show-modal";
 import { inject as service } from "@ember/service";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { classify, dasherize } from "@ember/string";
 import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import optionalService from "discourse/lib/optional-service";
+import showModal from "discourse/lib/show-modal";
+import Category from "discourse/models/category";
+import discourseComputed, { bind } from "discourse-common/utils/decorators";
+import I18n from "I18n";
 
 let _components = {};
 
@@ -56,6 +56,11 @@ export default Component.extend({
     }
 
     return classes;
+  },
+
+  @discourseComputed("reviewable.created_from_flag", "reviewable.status")
+  displayContextQuestion(createdFromFlag, status) {
+    return createdFromFlag && status === 0;
   },
 
   @discourseComputed(
@@ -149,7 +154,7 @@ export default Component.extend({
       });
 
       return ajax(
-        `/review/${reviewable.id}/perform/${performableAction.id}?version=${version}`,
+        `/review/${reviewable.id}/perform/${performableAction.server_action}?version=${version}`,
         {
           type: "PUT",
           data,
@@ -281,7 +286,8 @@ export default Component.extend({
       const requireRejectReason = performableAction.get(
         "require_reject_reason"
       );
-      const actionModalClass = actionModalClassMap[performableAction.id];
+      const actionModalClass =
+        actionModalClassMap[performableAction.server_action];
 
       if (message) {
         this.dialog.confirm({

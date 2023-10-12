@@ -279,16 +279,10 @@ hu:
       our_moderators: "Moderátoraink"
       moderators: "Moderátorok"
       stat:
-        all_time: "Összes"
-        last_day: "Elmúlt 24 óra"
-        last_7_days: "Elmúlt 7 nap"
-        last_30_days: "Elmúlt 30 nap"
+        last_day: "24 óráig"
       like_count: "Kedvelés"
       topic_count: "Téma"
       post_count: "Bejegyzés"
-      user_count: "Regisztráció"
-      active_user_count: "Aktív felhasználó"
-      contact: "Kapcsolat"
       contact_info: "A webhellyel kapcsolatos sürgős vagy kritikus probléma esetén lépjen velünk kapcsolatba a következő elérhetőségen: %{contact_info}."
     bookmarked:
       title: "Könyvjelző"
@@ -346,6 +340,9 @@ hu:
         confirm: "Már van egy folyamatban lévő tervezete. Mit szeretne vele kezdeni?"
         yes_value: "Elvetés"
         no_value: "Szerkesztés folytatása"
+    topic_count_all:
+      one: "Nézzen meg %{count} új témát"
+      other: "Nézzen meg %{count} új témát"
     topic_count_categories:
       one: "Nézzen meg %{count} új vagy frissített témát"
       other: "Nézzen meg %{count} új vagy frissített témát"
@@ -535,19 +532,24 @@ hu:
           title: "Összes"
       context_question:
         delimiter: "vagy"
-        something_else_wrong: "Valami baj van ezzel a bejegyzéssel?"
+        something_else_wrong: "Valami baj van ezzel a %{reviewable_type}?"
       types:
         reviewable_flagged_post:
           title: "Megjelölt bejegyzés"
           flagged_by: "Megjelölte"
+          noun: "bejegyzéssel"
         reviewable_queued_topic:
           title: "Sorban álló téma"
+          noun: "témával"
         reviewable_queued_post:
           title: "Sorban álló bejegyzés"
+          noun: "bejegyzéssel"
         reviewable_user:
           title: "Felhasználó"
+          noun: "felhasználóval"
         reviewable_post:
           title: "Bejegyzés"
+          noun: "bejegyzéssel"
       approval:
         title: "A bejegyzés jóváhagyásra vár."
         description: "Fogadtuk a bejegyzését, de egy moderátornak jóvá kell hagynia, mielőtt megjelenne. Köszönjük a türelmét."
@@ -1227,7 +1229,6 @@ hu:
         success: "(az e-mail elküldve)"
         in_progress: "(az e-mail küldése folyamatban)"
         error: "(hiba)"
-        emoji: "zár emodzsi"
         action: "Jelszó-visszaállítási e-mail küldése"
         set_password: "Jelszó megadása"
         choose_new: "Válasszon új jelszót"
@@ -1798,7 +1799,6 @@ hu:
       link_label: "Küldjön e-mailben egy bejelentkezési hivatkozást"
       button_label: "e-maillel"
       login_link: "Nem írom be a jelszót; inkább küldjön egy bejelentkezési hivatkozást"
-      emoji: "zár emodzsi"
       complete_username: "Amennyiben létezik fiók a(z) <b>%{username}</b> felhasználónévvel, hamarosan kapni fog egy levelet, amelyben megtalálhatja a jelszó visszaállításához szükséges további lépéseket."
       complete_email: "Amennyiben létezik fiók a(z) <b>%{email}</b> e-mail-címmel, hamarosan kapni fog egy levelet, amelyben megtalálhatja a belépéshez szükséges hivatkozást."
       complete_username_found: "Találtunk egy fiókot ezzel a felhasználónévvel: <b>%{username}</b>. Hamarosan kapni fog egy levelet, amelyben megtalálhatja a belépéshez szükséges hivatkozást."
@@ -1886,7 +1886,6 @@ hu:
         security_key: "Helyette biztonsági kulcs használata"
     invites:
       accept_title: "Meghívás"
-      emoji: "boríték emodzsi"
       welcome_to: "Üdvözöljük a(z) %{site_name} oldalon."
       invited_by: "Önt ő hívta meg:"
       social_login_available: "Bármely közösségi bejelentkezéssel be tud jelentkezni ennek az e-mail-címnek a használatával."
@@ -1988,7 +1987,6 @@ hu:
       drafts_offline: "vázlatok offline"
       edit_conflict: "szerkesztési ütközés"
       esc: "Esc"
-      esc_label: "Kattintson vagy nyomja meg az Esc billentyűt az eltüntetéshez"
       ok_proceed: "Rendben, tovább"
       group_mentioned_limit:
         one: "<b>Figyelem!</b>Megemlítette a(z) <a href='%{group_link}'>%{group}</a> csoportot, azonban ennek a csoportnak több mint %{count} tagja van, amely több, mint a rendszergazda által beállított megemlítési korlát. Senki nem lesz értesítve."
@@ -2154,13 +2152,10 @@ hu:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        one: "<span class='multi-user'>%{username}, %{username2} és még %{count} felhasználó</span> %{description}"
-        other: "<span class='multi-user'>%{username}, %{username2} és még %{count} felhasználó</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
-        one: "%{username}, %{username2} és még %{count} felhasználó"
-        other: "%{username}, %{username2} és még %{count} felhasználó"
+        one: "%{username} és még %{count} fő"
+        other: "%{username} és még %{count} fő"
       liked_consolidated_description:
         one: "kedvelte %{count} bejegyzését"
         other: "kedvelte %{count} bejegyzését"
@@ -2547,9 +2542,7 @@ hu:
       collapse_details: "téma részleteinek összecsukása"
       expand_details: "téma részleteinek kibontása"
       unread_indicator: "Egyetlen tag sem olvasta még a téma utolsó bejegyzését."
-      bumped_at_title: |
-        Első bejegyzés: %{createdAtDate}
-        Elküldve: %{bumpedAtDate}
+      bumped_at: "Legutóbbi: %{date}"
       suggest_create_topic: Készen áll, hogy <a href>új beszélgetést kezdjen?</a>
       jump_reply: "Ugrás a hozzászólás eredeti helyére"
       jump_reply_aria: "Ugrás @%{username} bejegyzésére az eredeti helyén"
@@ -2893,7 +2886,6 @@ hu:
       errors:
         create: "Sajnos hiba történt a bejegyzése létrehozása során. Próbálja újra."
         edit: "Sajnos hiba történt a bejegyzése szerkesztése során. Próbálja újra."
-        upload: "Sajnos hiba történt a fájl feltöltése során. Próbálja újra."
         file_too_large: "Sajnos ez a fájl túl nagy (a maximális méret %{max_size_kb} kB). Töltse fel a nagyméretű fájlt egy felhős megosztási szolgáltatásba, majd illessze be annak a hivatkozását."
         file_size_zero: "Sajnos úgy tűnik, hogy valami hiba történt, a feltöltendő fájl 0 bájtos. Próbálja újra."
         file_too_large_humanized: "Sajnos ez a fájl túl nagy (a maximális méret %{max_size}). Töltse fel a nagyméretű fájlt egy felhőmegosztó szolgáltatásba, majd illessze be annak a linkjét."
@@ -3405,6 +3397,9 @@ hu:
       more_badges:
         one: "+Még %{count}"
         other: "+Még %{count}"
+      awarded:
+        one: "%{number} megszerezve"
+        other: "%{number} megszerezve"
       select_badge_for_title: Válassz egy jelvényt, hogy címként használd
       none: "(semmi)"
       successfully_granted: "Sikeresen megadta a(z) %{badge} jelvényt %{username} számára"
@@ -3436,7 +3431,6 @@ hu:
       other_tags: "Egyéb címkék"
       selector_all_tags: "összes címke"
       selector_no_tags: "címke nélküli"
-      changed: "megváltozott címkék:"
       tags: "Címkék"
       choose_for_topic: "Megadható címke"
       info: "Információ"
@@ -3934,27 +3928,6 @@ hu:
         active_notice: "Az esemény részleteit akkor közöljük, amikor az megtörténik."
         categories_filter: "Elindított kategóriák"
         groups_filter: "Elindított csoportok"
-        topic_event:
-          name: "Témakör"
-        post_event:
-          name: "Bejegyzés témája"
-        user_event:
-          name: "Felhasználói esemény"
-        group_event:
-          name: "Csoport esemény"
-          details: "Amikor egy csoport létrejön, módosul vagy megsemmisül."
-        category_event:
-          name: "Kategória esemény"
-          details: "Amikor egy kategória létrejön, módosul vagy megsemmisül."
-        tag_event:
-          name: "Címke esemény"
-          details: "Amikor egy címke létrejön, módosul vagy megsemmisül."
-        reviewable_event:
-          name: "Áttekinthető esemény"
-          details: "Ha egy új elem készen áll a felülvizsgálatra és állapota frissül."
-        user_badge_event:
-          name: "Jelvény esemény"
-          details: "A jelvény megadásakor vagy visszavonásakor."
         delivery_status:
           title: "Kiszállítás állapota"
           inactive: "Inaktív"
@@ -3983,7 +3956,6 @@ hu:
         enabled: "Engedélyezed?"
         is_enabled: "Y"
         not_enabled: "N"
-        change_settings: "Beépülő modul beállításai"
         change_settings_short: "Beállítások"
         howto: "Hogyan lehet plugin-eket telepíteni?"
         official: "Hivatalos bővítmény"
@@ -4021,7 +3993,6 @@ hu:
             label: "Biztonsági mentés"
             title: "Mentés készítése"
             confirm: "Új biztonsági mentést kívánsz indítani?"
-            without_uploads: "Igen (fájlok feltöltésének kihagyása)"
           download:
             label: "Letöltés"
             title: "Letöltési hivatkozás küldése e-mailben"
@@ -4086,7 +4057,6 @@ hu:
           theme_name: "A téma neve"
           component_name: "Összetevő neve"
           themes_intro: "A kezdéshez válasszon egy meglévő témát, vagy telepítsen újat"
-          themes_intro_emoji: "női művész emodzsi"
           beginners_guide_title: "Útmutató kezdőknek a Discourse Themes használatához"
           developers_guide_title: "Fejlesztői útmutató a Discourse témákhoz"
           browse_themes: "Közösségi témák böngészése"
@@ -4128,6 +4098,7 @@ hu:
           convert_theme_tooltip: "A téma átalakítása komponenssé"
           inactive_themes: "Inaktív témák:"
           inactive_components: "Nem használt komponensek:"
+          cancel: "Mégse"
           broken_theme_tooltip: "A téma CSS, HTML vagy YAML hibákat tartalmaz"
           disabled_component_tooltip: "Ez az összetevő le van tiltva"
           default_theme_tooltip: "Ez a téma a webhely alapértelmezett témája"
@@ -4848,7 +4819,6 @@ hu:
             with: <span class="username">%{username}</span>
         badge_intro:
           title: "A kezdéshez válasszon egy meglévő jelvényt, vagy hozzon létre egy újat"
-          emoji: "női diák emodzsi"
           what_are_badges_title: "Mik azok a jelvények?"
           badge_query_examples_title: "Jelvény lekérdezési példák"
       emoji:

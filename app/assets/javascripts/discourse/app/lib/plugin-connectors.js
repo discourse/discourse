@@ -1,24 +1,37 @@
-import { buildRawConnectorCache } from "discourse-common/lib/raw-templates";
-import deprecated from "discourse-common/lib/deprecated";
 import {
   getComponentTemplate,
   hasInternalComponentManager,
   setComponentTemplate,
 } from "@glimmer/manager";
 import templateOnly from "@ember/component/template-only";
+import deprecated from "discourse-common/lib/deprecated";
+import { buildRawConnectorCache } from "discourse-common/lib/raw-templates";
 
 let _connectorCache;
 let _rawConnectorCache;
 let _extraConnectorClasses = {};
+let _extraConnectorComponents = {};
 
 export function resetExtraClasses() {
   _extraConnectorClasses = {};
+  _extraConnectorComponents = {};
 }
 
 // Note: In plugins, define a class by path and it will be wired up automatically
 // eg: discourse/connectors/<OUTLET NAME>/<CONNECTOR NAME>
 export function extraConnectorClass(name, obj) {
   _extraConnectorClasses[name] = obj;
+}
+
+export function extraConnectorComponent(outletName, klass) {
+  if (!hasInternalComponentManager(klass)) {
+    throw new Error("klass is not an Ember component");
+  }
+  if (outletName.includes("/")) {
+    throw new Error("invalid outlet name");
+  }
+  _extraConnectorComponents[outletName] ??= [];
+  _extraConnectorComponents[outletName].push(klass);
 }
 
 const OUTLET_REGEX =
@@ -87,7 +100,9 @@ class ConnectorInfo {
 
   get connectorClass() {
     if (this.classModule) {
-      return require(this.classModule).default;
+      return this.classModule;
+    } else if (this.classModuleName) {
+      return require(this.classModuleName).default;
     } else {
       return _extraConnectorClasses[`${this.outletName}/${this.connectorName}`];
     }
@@ -97,6 +112,12 @@ class ConnectorInfo {
     if (this.templateModule) {
       return require(this.templateModule).default;
     }
+  }
+
+  get humanReadableName() {
+    return `${this.outletName}/${this.connectorName} (${
+      this.classModuleName || this.templateModule
+    })`;
   }
 
   #buildComponentClass() {
@@ -154,7 +175,7 @@ function buildConnectorCache() {
       if (isTemplate) {
         info.templateModule = moduleName;
       } else {
-        info.classModule = moduleName;
+        info.classModuleName = moduleName;
       }
     }
   );
@@ -162,6 +183,18 @@ function buildConnectorCache() {
   for (const info of Object.values(outletsByModuleName)) {
     _connectorCache[info.outletName] ??= [];
     _connectorCache[info.outletName].push(info);
+  }
+
+  for (const [outletName, components] of Object.entries(
+    _extraConnectorComponents
+  )) {
+    for (const klass of components) {
+      const info = new ConnectorInfo(outletName);
+      info.classModule = klass;
+
+      _connectorCache[info.outletName] ??= [];
+      _connectorCache[info.outletName].push(info);
+    }
   }
 }
 

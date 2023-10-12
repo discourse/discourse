@@ -1,7 +1,7 @@
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 import { click, tab, triggerKeyEvent, visit } from "@ember/test-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
+import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 acceptance("Select-kit - Composer - Accessibility", function (needs) {
   needs.user();

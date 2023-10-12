@@ -246,15 +246,10 @@ vi:
       our_moderators: "Các điều hành viên"
       moderators: "Điều hành viên"
       stat:
-        all_time: "Từ trước tới nay"
-        last_day: "24 giờ qua"
-        last_7_days: "7 ngày qua"
-        last_30_days: "30 ngày qua"
+        last_day: "24 tiếng"
       like_count: "Lượt thích"
       topic_count: "Các chủ đề"
       post_count: "Các bài viết"
-      active_user_count: "Thành viên tích cực"
-      contact: "Liên hệ chúng tôi"
       contact_info: "Trong trường hợp có bất kỳ sự cố nào ảnh hưởng tới trang này, xin vui lòng liên hệ với chúng tôi theo địa chỉ %{contact_info}."
     bookmarked:
       title: "Dấu trang"
@@ -309,6 +304,8 @@ vi:
       abandon:
         yes_value: "Hủy bỏ"
         no_value: "Tiếp tục chỉnh sửa"
+    topic_count_all:
+      other: "Xem %{count} chủ đề mới"
     topic_count_categories:
       other: "Xem %{count} chủ đề mới hoặc được cập nhật"
     topic_count_latest:
@@ -480,14 +477,19 @@ vi:
         reviewable_flagged_post:
           title: "Bài viết bị gắn cờ"
           flagged_by: "Gắn cờ bởi"
+          noun: "bài đăng"
         reviewable_queued_topic:
           title: "Chủ đề được lên lịch"
+          noun: "chủ đề"
         reviewable_queued_post:
           title: "Bài viết được xếp lịch"
+          noun: "bài đăng"
         reviewable_user:
           title: "Người dùng"
+          noun: "người dùng"
         reviewable_post:
           title: "Bài viết"
+          noun: "bài đăng"
       approval:
         title: "Bài viết cần phê duyệt"
         description: "Chúng tôi đã nhận được bài viết mới của bạn, nhưng nó cần phải được phê duyệt bởi admin trước khi được hiện. Xin hãy kiên nhẫn."
@@ -1108,7 +1110,6 @@ vi:
         success: "(email đã gửi)"
         in_progress: "(đang gửi email)"
         error: "(lỗi)"
-        emoji: "khóa biểu tượng cảm xúc"
         action: "Gửi lại mật khẩu tới email"
         set_password: "Nhập Mật khẩu"
         choose_new: "Chọn một mật khẩu mới"
@@ -1625,7 +1626,6 @@ vi:
       link_label: "Gửi liên kết đăng nhập qua email"
       button_label: "với email"
       login_link: "Bỏ qua mật khẩu; gửi email cho tôi một liên kết đăng nhập"
-      emoji: "khóa biểu tượng cảm xúc"
       complete_username: "Nếu một tài khoản khớp với tên người dùng <b>%{username}</b>, bạn sẽ sớm nhận được email có liên kết đăng nhập."
       complete_email: "Nếu một tài khoản phù hợp với <b>%{email}</b>, bạn sẽ sớm nhận được email có liên kết đăng nhập."
       complete_username_found: "Chúng tôi đã tìm thấy một tài khoản phù hợp với tên người dùng <b>%{username}</b>, bạn sẽ sớm nhận được email có liên kết đăng nhập."
@@ -1709,7 +1709,6 @@ vi:
         security_key: "Sử dụng khóa bảo mật thay thế"
     invites:
       accept_title: "Lời mời"
-      emoji: "biểu tượng cảm xúc phong bì"
       welcome_to: "Chào mừng bạn đến với %{site_name}!"
       invited_by: "Bạn đã được mời bởi:"
       social_login_available: "Bạn cũng có thể đăng nhập bằng bất kỳ thông tin đăng nhập xã hội nào bằng email đó."
@@ -1953,11 +1952,9 @@ vi:
       edited: "<span>%{username}</span> %{description}"
       liked: "<span>%{username}</span> %{description}"
       liked_2: "<span class='double-user'>%{username}, %{username2}</span> %{description}"
-      liked_many:
-        other: "<span class='multi-user'>%{username}, %{username2} và %{count} người khác</span> %{description}"
       liked_by_2_users: "%{username}, %{username2}"
       liked_by_multiple_users:
-        other: "%{username}, %{username2} và %{count} người khác"
+        other: "%{username} và %{count} khác"
       liked_consolidated_description:
         other: "đã thích %{count} bài viết của bạn"
       liked_consolidated: "<span>%{username}</span> %{description}"
@@ -2306,6 +2303,7 @@ vi:
       collapse_details: "thu gọn chi tiết chủ đề"
       expand_details: "mở rộng chi tiết chủ đề"
       unread_indicator: "Chưa có thành viên nào đọc bài cuối cùng của chủ đề này."
+      bumped_at: "Mới nhất: %{date}"
       suggest_create_topic: Bạn đã sẵn sàng để <a href>đầu một cuộc trò chuyện mới chưa?</a>
       deleted: "Chủ đề này đã bị xóa"
       slow_mode_update:
@@ -2678,7 +2676,6 @@ vi:
       errors:
         create: "Xin lỗi, có lỗi xảy ra khi tạo bài viết của bạn. Vui lòng thử lại."
         edit: "Xin lỗi, có lỗi xảy ra khi sửa bài viết của bạn. Vui lòng thử lại."
-        upload: "Xin lỗi, có lỗi xảy ra khi tải lên tập tin này. Vui lòng thử lại."
         file_too_large: "Xin lỗi, tệp đó quá lớn (kích thước tối đa là %{max_size_kb}kb). Bạn có thể tải dữ liệu lớn của bạn lên dịch vụ chia sẻ đám mây, sau đó dán liên kết tại đây"
         file_size_zero: "Rất tiếc, có vẻ như đã xảy ra sự cố, tệp bạn đang cố tải lên có dung lượng là 0 byte. Vui lòng thử lại."
         file_too_large_humanized: "Xin lỗi, tệp đó quá lớn (kích thước tối đa là %{max_size}). Tại sao không tải tệp lớn của bạn lên dịch vụ chia sẻ đám mây, sau đó dán liên kết?"
@@ -3308,7 +3305,6 @@ vi:
       other_tags: "Các thẻ khác"
       selector_all_tags: "tất cả thẻ"
       selector_no_tags: "không có thẻ"
-      changed: "thẻ đã đổi:"
       tags: "Thẻ"
       choose_for_topic: "thẻ không bắt buộc"
       info: "Thông tin"
@@ -3822,39 +3818,8 @@ vi:
         groups_filter_instructions: "Các webhook có liên quan sẽ chỉ được kích hoạt nếu sự kiện có liên quan đến các nhóm được chỉ định. Để trống để kích hoạt webhook cho tất cả các nhóm."
         groups_filter: "Nhóm được kích hoạt"
         delete_confirm: "Xóa webhook này?"
-        topic_event:
-          name: "Sự kiện chủ đề"
-          details: "Khi có một chủ đề mới, được sửa đổi, thay đổi hoặc xóa."
-        post_event:
-          name: "Đăng sự kiện"
-          details: "Khi có trả lời mới, hãy chỉnh sửa, xóa hoặc khôi phục."
-        user_event:
-          name: "Sự kiện người dùng"
-          details: "Khi người dùng đăng nhập, đăng xuất, xác nhận email của họ, được tạo, phê duyệt hoặc cập nhật."
-        group_event:
-          name: "Sự kiện nhóm"
-          details: "Khi một nhóm được tạo, cập nhật hoặc hủy."
-        category_event:
-          name: "Danh mục sự kiện"
-          details: "Khi một danh mục được tạo, cập nhật hoặc hủy."
-        tag_event:
-          name: "Sự kiện gắn thẻ"
-          details: "Khi một thẻ được tạo, cập nhật hoặc hủy."
-        reviewable_event:
-          name: "Sự kiện có thể đánh giá"
-          details: "Khi một mục mới đã sẵn sàng để xem xét và khi trạng thái của nó được cập nhật."
-        notification_event:
-          name: "Sự kiện thông báo"
-          details: "Khi người dùng nhận được thông báo trong feed của họ."
-        user_promoted_event:
-          name: "Sự kiện do người dùng quảng cáo"
-          details: "Khi người dùng được thăng cấp từ cấp độ tin cậy này sang cấp độ tin cậy khác."
-        group_user_event:
-          name: "Sự kiện người dùng nhóm"
-          details: "Khi một người dùng được thêm vào hoặc bị xóa trong một nhóm."
         like_event:
-          name: "Thích sự kiện"
-          details: "Khi một người dùng thích một bài đăng."
+          post_liked: "Khi một người dùng thích một bài đăng."
         delivery_status:
           title: "Tình trạng"
           inactive: "Không hoạt động"
@@ -3926,7 +3891,6 @@ vi:
             label: "Sao lưu"
             title: "Tạo bản sao lưu"
             confirm: "Bạn muốn bắt đầu một bản sao lưu mới?"
-            without_uploads: "Có (không bao gồm tải lên)"
           download:
             label: "Tải xuống"
             title: "Gửi email với liên kết tải xuống"
@@ -3994,7 +3958,6 @@ vi:
           theme_name: "Tên chủ đề"
           component_name: "Tên thành phần"
           themes_intro: "Chọn một chủ đề hiện có hoặc cài đặt một chủ đề mới để bắt đầu"
-          themes_intro_emoji: "biểu tượng cảm xúc nữ nghệ sĩ"
           beginners_guide_title: "Hướng dẫn cho người mới bắt đầu sử dụng Themes"
           developers_guide_title: "Hướng dẫn của nhà phát triển về Themes"
           browse_themes: "Duyệt qua các Themes"
@@ -4041,6 +4004,7 @@ vi:
           convert_theme_tooltip: "Chuyển đổi chủ đề này thành thành phần"
           inactive_themes: "Chủ đề không hoạt động:"
           inactive_components: "Các thành phần không sử dụng:"
+          cancel: "Huỷ"
           broken_theme_tooltip: "Chủ đề này có lỗi trong CSS, HTML hoặc YAML"
           disabled_component_tooltip: "Thành phần này đã bị vô hiệu hóa"
           default_theme_tooltip: "Chủ đề này là chủ đề mặc định của trang web"
@@ -4942,7 +4906,6 @@ vi:
             with_time: <span class="username">%{username}</span> lúc <span class="time">%{time}</span>
         badge_intro:
           title: "Chọn một huy hiệu hiện có hoặc tạo một huy hiệu mới để bắt đầu"
-          emoji: "biểu tượng cảm xúc nữ sinh"
           what_are_badges_title: "Huy hiệu là gì?"
           badge_query_examples_title: "Ví dụ về truy vấn huy hiệu"
         mass_award:

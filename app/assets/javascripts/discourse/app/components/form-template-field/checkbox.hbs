@@ -12,4 +12,10 @@
       {{d-icon "asterisk" class="form-template-field__required-indicator"}}
     {{/if}}
   </label>
+
+  {{#if @attributes.description}}
+    <span class="form-template-field__description">
+      {{html-safe @attributes.description}}
+    </span>
+  {{/if}}
 </div>

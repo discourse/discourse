@@ -1,8 +1,8 @@
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { hbs } from "ember-cli-htmlbars";
-import domUtils from "discourse-common/utils/dom-utils";
-import { module, test } from "qunit";
 import { render } from "@ember/test-helpers";
+import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import domUtils from "discourse-common/utils/dom-utils";
 
 module("Unit | Utils | dom-utils", function (hooks) {
   setupRenderingTest(hooks);

@@ -1,9 +1,9 @@
 import Component from "@ember/component";
-import Topic from "discourse/models/topic";
 import { action } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
 import { durationTextFromSeconds } from "discourse/helpers/slow-mode";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import Topic from "discourse/models/topic";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Component.extend({
   @discourseComputed("topic.slow_mode_seconds")

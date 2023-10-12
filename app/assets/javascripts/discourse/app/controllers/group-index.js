@@ -1,17 +1,17 @@
 import Controller from "@ember/controller";
+import { action } from "@ember/object";
+import { gt } from "@ember/object/computed";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed, {
   debounce,
   observes,
 } from "discourse-common/utils/decorators";
-import { action } from "@ember/object";
-import { ajax } from "discourse/lib/ajax";
-import { gt } from "@ember/object/computed";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Controller.extend({
   queryParams: ["order", "asc", "filter"],
 
-  order: "",
+  order: null,
   asc: true,
   filter: null,
   filterInput: null,

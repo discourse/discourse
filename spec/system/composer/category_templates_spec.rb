@@ -56,6 +56,31 @@ describe "Composer Form Templates", type: :system do
             required: false"),
     )
   end
+  fab!(:form_template_6) do
+    Fabricate(
+      :form_template,
+      name: "Descriptions",
+      template:
+        %Q(
+        - type: input
+          id: full-name
+          attributes:
+            label: "Full name"
+            description: "What is your full name?"
+            placeholder: "John Smith"
+          validations:
+            required: false
+        - type: upload
+          id: prescription
+          attributes:
+            file_types: ".jpg, .png"
+            allow_multiple: false
+            label: "Prescription"
+            description: "Upload your prescription"
+          validations:
+            required: true"),
+    )
+  end
   fab!(:category_with_template_1) do
     Fabricate(
       :category,
@@ -112,6 +137,15 @@ describe "Composer Form Templates", type: :system do
       topic_count: 5,
       form_template_ids: [],
       topic_template: "Testing",
+    )
+  end
+  fab!(:category_with_template_6) do
+    Fabricate(
+      :category,
+      name: "Descriptions",
+      slug: "descriptions",
+      topic_count: 2,
+      form_template_ids: [form_template_6.id],
     )
   end
 
@@ -229,13 +263,13 @@ describe "Composer Form Templates", type: :system do
     composer.fill_title(topic_title)
     composer.fill_form_template_field("input", "Bruce Wayne")
     composer.create
-    topic = Topic.where(user: user, title: topic_title)
-    topic_id = Topic.where(user: user, title: topic_title).pluck(:id)
-    post = Post.where(topic_id: topic_id).first
 
     expect(topic_page).to have_topic_title(topic_title)
     expect(find("#{topic_page.post_by_number_selector(1)} .cooked p")).to have_content(
       "Bruce Wayne",
+    )
+    expect(find("#{topic_page.post_by_number_selector(1)} .cooked h3")).to have_content(
+      "What is your full name?",
     )
   end
 
@@ -292,5 +326,20 @@ describe "Composer Form Templates", type: :system do
     expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css("a.attachment")
     expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css("audio")
     expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css("video")
+  end
+
+  it "shows labels and descriptions when a form template is assigned to the category" do
+    category_page.visit(category_with_template_6)
+    category_page.new_topic_button.click
+    expect(composer).to have_no_composer_input
+    expect(composer).to have_form_template
+
+    expect(composer).to have_form_template_field("input")
+    expect(composer).to have_form_template_field_label("Full name")
+    expect(composer).to have_form_template_field_description("What is your full name?")
+
+    expect(composer).to have_form_template_field("upload")
+    expect(composer).to have_form_template_field_label("Prescription")
+    expect(composer).to have_form_template_field_description("Upload your prescription")
   end
 end

@@ -3,6 +3,8 @@
   @title={{i18n "topic.move_to.title"}}
   @closeModal={{@closeModal}}
   class="choose-topic-modal"
+  @flash={{this.flash}}
+  @flashType="error"
 >
   <:body>
     {{#if @model.topic.isPrivateMessage}}

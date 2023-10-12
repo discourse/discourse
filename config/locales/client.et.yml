@@ -233,12 +233,10 @@ et:
       our_moderators: "Meie moderaatorid"
       moderators: "Moderaatorid"
       stat:
-        all_time: "Alates algusest"
+        last_day: "24 tundi"
       like_count: "Meeldimisi"
       topic_count: "Teemad"
       post_count: "Postitused"
-      active_user_count: "Aktiivsed kasutajad"
-      contact: "Võta meiega ühendust"
       contact_info: "Kriitilise vea või edasilükkamatu probleemi korral võta palun meiega ühendust aadressil %{contact_info}."
     bookmarked:
       title: "Järjehoidja"
@@ -271,6 +269,9 @@ et:
       remove: "Eemalda"
       remove_confirmation: "Oled kindel, et soovid selle mustandi kustutada?"
       new_topic: "Uus teema mustand"
+    topic_count_all:
+      one: "Vaata %{count} uut teemat"
+      other: "Vaata %{count} uut teemat"
     topic_count_categories:
       one: "Vaata %{count} uut või uuendatud teemat"
       other: "Vaata %{count} uut või uuendatud teemat"
@@ -379,10 +380,18 @@ et:
       context_question:
         delimiter: "või"
       types:
+        reviewable_flagged_post:
+          noun: "postitus"
+        reviewable_queued_topic:
+          noun: "teema"
+        reviewable_queued_post:
+          noun: "postitus"
         reviewable_user:
           title: "Kasutaja"
+          noun: "kasutaja"
         reviewable_post:
           title: "Postitus"
+          noun: "postitus"
       approval:
         title: "Postitus vajab kinnitust"
         description: "Oleme sinu uue postituse kätte saanud, kuid see vajab enne ilmumist moderaatori kinnitust. Palume veidi kannatust. "
@@ -1923,7 +1932,6 @@ et:
       errors:
         create: "Vabandame, postituse loomisel tekkis viga. Palun proovi uuesti."
         edit: "Vabandame, postituse redigeerimisel tekkis viga. Palun proovi uuesti."
-        upload: "Vabandame, selle faili üleslaadimisel tekkis viga. Palun proovi uuesti."
         file_too_large: "See fail on liiga suur (maksimaalne lubatud suurus on %{max_size_kb}kb). Lae fail üles mõnda pilveteenusesse ja jaga siin linki."
         too_many_uploads: "Vabandame, faile saab üles laadida vaid ühekaupa."
         too_many_dragged_and_dropped_files:
@@ -2392,7 +2400,6 @@ et:
       other_tags: "Muud sildid"
       selector_all_tags: "kõik sildid"
       selector_no_tags: "sildid puuduvad"
-      changed: "muudetud sildid:"
       tags: "Sildid"
       choose_for_topic: "valikulised sildid"
       add_synonyms: "Lisa"
@@ -2686,14 +2693,6 @@ et:
         groups_filter_instructions: "Asjakohased veebihaagid vallanduvad vaid juhul, kui sündmus on seotud määratud gruppidega. Jäta tühjaks, kui soovid veebihaagid vallandada kõigi gruppide jaoks."
         groups_filter: "Käivitatud grupid"
         delete_confirm: "Kustutame selle veebihaagi?"
-        topic_event:
-          name: "Teema sündmus"
-          details: "Kui teema luuakse, muudetakse või kustutatakse."
-        post_event:
-          name: "Postituse sündmus"
-          details: "Kui teemas on uus vastus, muudatus, kustutamine või taastamine."
-        user_event:
-          name: "Kasutaja sündmus"
         delivery_status:
           title: "Kättetoimetamise staatus"
           inactive: "Mitteaktiivne"
@@ -2834,6 +2833,7 @@ et:
           color_scheme: "Värvipalett"
           theme_components: "Kujunduse osad"
           convert: "Konverdi"
+          cancel: "Tühista"
           collapse: Ahenda
           uploads: "Üleslaadimised"
           add_upload: "Lisa üleslaadimine"

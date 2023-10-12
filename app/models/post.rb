@@ -567,8 +567,15 @@ class Post < ActiveRecord::Base
 
   def with_secure_uploads?
     return false if !SiteSetting.secure_uploads?
-    SiteSetting.login_required? ||
-      (topic.present? && (topic.private_message? || topic.category&.read_restricted))
+
+    # NOTE: This is meant to be a stopgap solution to prevent secure uploads
+    # in a single place (private messages) for sensitive admin data exports.
+    # Ideally we would want a more comprehensive way of saying that certain
+    # upload types get secured which is a hybrid/mixed mode secure uploads,
+    # but for now this will do the trick.
+    return topic&.private_message? if SiteSetting.secure_uploads_pm_only?
+
+    SiteSetting.login_required? || topic&.private_message? || topic&.category&.read_restricted?
   end
 
   def hide!(post_action_type_id, reason = nil, custom_message: nil)
@@ -741,7 +748,12 @@ class Post < ActiveRecord::Base
     problems
   end
 
-  def rebake!(invalidate_broken_images: false, invalidate_oneboxes: false, priority: nil)
+  def rebake!(
+    invalidate_broken_images: false,
+    invalidate_oneboxes: false,
+    priority: nil,
+    update_upload_security: false
+  )
     new_cooked = cook(raw, topic_id: topic_id, invalidate_oneboxes: invalidate_oneboxes)
     old_cooked = cooked
 
@@ -757,6 +769,10 @@ class Post < ActiveRecord::Base
     # Extracts urls from the body
     TopicLink.extract_from(self)
     QuotedPost.extract_from(self)
+
+    # Settings may have changed before rebake, so any uploads linked to the post
+    # should have their secure status reexamined.
+    update_uploads_secure_status(source: "post rebake") if update_upload_security
 
     # make sure we trigger the post process
     trigger_post_process(bypass_bump: true, priority: priority)
@@ -868,7 +884,8 @@ class Post < ActiveRecord::Base
     start_date,
     end_date,
     category_id = nil,
-    include_subcategories = false
+    include_subcategories = false,
+    group_ids = nil
   )
     result =
       public_posts.where(
@@ -881,8 +898,15 @@ class Post < ActiveRecord::Base
       if include_subcategories
         result = result.where("topics.category_id IN (?)", Category.subcategory_ids(category_id))
       else
-        result = result.where("topics.category_id = ?", category_id)
+        result = result.where("topics.category_id IN (?)", category_id)
       end
+    end
+    if group_ids
+      result =
+        result
+          .joins("INNER JOIN users ON users.id = posts.user_id")
+          .joins("INNER JOIN group_users ON group_users.user_id = users.id")
+          .where("group_users.group_id IN (?)", group_ids)
     end
 
     result.group("date(posts.created_at)").order("date(posts.created_at)").count

@@ -1,4 +1,6 @@
-<DSection @bodyClass="navigation-topics" @class="navigation-container">
+{{body-class "navigation-topics"}}
+
+<section class="navigation-container">
   <DNavigation
     @filterMode={{this.filterMode}}
     @canCreateTopic={{this.canCreateTopic}}
@@ -6,4 +8,4 @@
     @createTopic={{fn this.composer.openNewTopic (hash preferDraft=true)}}
     @skipCategoriesNavItem={{this.skipCategoriesNavItem}}
   />
-</DSection>
+</section>

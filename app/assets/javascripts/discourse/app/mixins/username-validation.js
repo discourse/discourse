@@ -1,11 +1,11 @@
 import EmberObject from "@ember/object";
-import I18n from "I18n";
 import Mixin from "@ember/object/mixin";
+import { isEmpty } from "@ember/utils";
+import { setting } from "discourse/lib/computed";
 import User from "discourse/models/user";
 import discourseDebounce from "discourse-common/lib/debounce";
-import { isEmpty } from "@ember/utils";
 import { observes } from "discourse-common/utils/decorators";
-import { setting } from "discourse/lib/computed";
+import I18n from "I18n";
 
 function failedResult(attrs) {
   let result = EmberObject.create({

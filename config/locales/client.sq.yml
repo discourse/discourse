@@ -206,13 +206,9 @@ sq:
       our_admins: "Administratorët tanë"
       our_moderators: "Moderatorët tanë"
       moderators: "Moderatorë"
-      stat:
-        all_time: "Gjithë kohës"
       like_count: "Pëlqime"
       topic_count: "Tema"
       post_count: "Postime"
-      active_user_count: "Përdorues Aktivë"
-      contact: "Na kontaktoni"
       contact_info: "Në rast të një problemi madhor ose të një çështjeje urgjente që prek faqen, ju lutemi të kontaktoni %{contact_info}."
     bookmarked:
       title: "Të preferuarat"
@@ -286,10 +282,18 @@ sq:
       context_question:
         delimiter: "ose"
       types:
+        reviewable_flagged_post:
+          noun: "postim"
+        reviewable_queued_topic:
+          noun: "topic"
+        reviewable_queued_post:
+          noun: "postim"
         reviewable_user:
           title: "User"
+          noun: "përdorues"
         reviewable_post:
           title: "Postim"
+          noun: "postim"
       approval:
         title: "Postimi ka nevojë për aprovim"
         description: "Postimi juaj u morr, por duhet të aprovohet nga një moderator para se të shfaqet në faqe. Kini pak durim. "
@@ -1422,7 +1426,6 @@ sq:
       errors:
         create: "Na vjen keq, por ndodhi një gabim gjatë hapjes së temës. Provojeni përsëri."
         edit: "Na vjen keq, ndodhi një gabim gjatë redaktimit të temës. Provojeni përsëri."
-        upload: "Na vjen keq, pati një gabim gjatë ngarkimit të skedarit. Provo përsëri. "
         too_many_uploads: "Na vjen keq, por duhet t'i ngarkoni skedarët një nga një."
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
         image_upload_not_allowed_for_new_user: "Na vjen keq, anëtarët e rinj nuk mund të ngarkojnë skedarë. "
@@ -1827,7 +1830,6 @@ sq:
     tagging:
       selector_all_tags: "të gjitha etiketat"
       selector_no_tags: "asnjë etiketë"
-      changed: "etiketat e ndryshuara:"
       tags: "Etiketat"
       add_synonyms: "Shto"
       delete_tag: "Fshi etiketën"
@@ -2163,6 +2165,7 @@ sq:
           mobile: "Mobile"
           settings: "Rregullimet"
           preview: "Parashikimi"
+          cancel: "Anulo"
           upload: "Ngarko"
           installed: "Instaluar"
           install_popular: "Popullore"

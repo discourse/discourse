@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
-import { isBlank } from "@ember/utils";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { tracked } from "@glimmer/tracking";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { htmlSafe } from "@ember/template";
+import { isBlank } from "@ember/utils";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "I18n";
 
 export default class ChatModalMoveMessageToChannel extends Component {

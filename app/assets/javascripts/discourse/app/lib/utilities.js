@@ -1,11 +1,11 @@
-import getURL from "discourse-common/lib/get-url";
 import Handlebars from "handlebars";
-import I18n from "I18n";
-import { escape } from "pretty-text/sanitizer";
 import toMarkdown from "discourse/lib/to-markdown";
-import deprecated from "discourse-common/lib/deprecated";
-import * as AvatarUtils from "discourse-common/lib/avatar-utils";
 import { capabilities } from "discourse/services/capabilities";
+import * as AvatarUtils from "discourse-common/lib/avatar-utils";
+import deprecated from "discourse-common/lib/deprecated";
+import escape from "discourse-common/lib/escape";
+import getURL from "discourse-common/lib/get-url";
+import I18n from "I18n";
 
 let _defaultHomepage;
 

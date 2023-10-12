@@ -1,5 +1,3 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   blur,
   click,
@@ -7,8 +5,10 @@ import {
   render,
   triggerKeyEvent,
 } from "@ember/test-helpers";
-import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 
 module("Integration | Component | simple-list", function (hooks) {
   setupRenderingTest(hooks);

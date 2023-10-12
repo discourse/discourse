@@ -1,20 +1,20 @@
-import Category from "discourse/models/category";
 import EmberObject from "@ember/object";
-import I18n from "I18n";
+import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
+import { ajax } from "discourse/lib/ajax";
+import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
+import { emojiUnescape } from "discourse/lib/text";
+import { userPath } from "discourse/lib/url";
+import userSearch from "discourse/lib/user-search";
+import { escapeExpression } from "discourse/lib/utilities";
+import Category from "discourse/models/category";
 import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
-import { ajax } from "discourse/lib/ajax";
-import { deepMerge } from "discourse-common/lib/object";
-import { emojiUnescape } from "discourse/lib/text";
-import { escapeExpression } from "discourse/lib/utilities";
-import { findRawTemplate } from "discourse-common/lib/raw-templates";
 import getURL from "discourse-common/lib/get-url";
-import { isEmpty } from "@ember/utils";
-import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
-import { userPath } from "discourse/lib/url";
-import userSearch from "discourse/lib/user-search";
+import { deepMerge } from "discourse-common/lib/object";
+import { findRawTemplate } from "discourse-common/lib/raw-templates";
+import I18n from "I18n";
 
 const translateResultsCallbacks = [];
 const MAX_RECENT_SEARCHES = 5; // should match backend constant with the same name

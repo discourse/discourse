@@ -1,10 +1,10 @@
 import { click, visit } from "@ember/test-helpers";
+import { skip } from "qunit";
 import {
   acceptance,
   exists,
   visible,
 } from "discourse/tests/helpers/qunit-helpers";
-import { skip } from "qunit";
 
 acceptance("Discourse Chat - Chat live pane collapse", function (needs) {
   needs.user({

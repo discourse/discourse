@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
-import { NotificationLevels } from "discourse/lib/notification-levels";
-import { popupAjaxError } from "discourse/lib/ajax-error";
-import { inject as service } from "@ember/service";
-import { action } from "@ember/object";
-import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { NotificationLevels } from "discourse/lib/notification-levels";
 import ChatModalThreadSettings from "discourse/plugins/chat/discourse/components/chat/modal/thread-settings";
+import UserChatThreadMembership from "discourse/plugins/chat/discourse/models/user-chat-thread-membership";
 
 export default class ChatThreadHeader extends Component {
   @service currentUser;

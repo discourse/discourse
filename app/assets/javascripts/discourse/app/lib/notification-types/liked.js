@@ -12,8 +12,7 @@ export default class extends NotificationTypeBase {
     } else if (this.count > 2) {
       return I18n.t("notifications.liked_by_multiple_users", {
         username: this.username,
-        username2: this.#username2,
-        count: this.count - 2,
+        count: this.count - 1,
       });
     } else {
       return super.label;

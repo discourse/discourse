@@ -1,6 +1,6 @@
-import { module, test } from "qunit";
-import { setupTest } from "ember-qunit";
 import EmberObject from "@ember/object";
+import { setupTest } from "ember-qunit";
+import { module, test } from "qunit";
 
 module("Unit | Controller | avatar-selector", function (hooks) {
   setupTest(hooks);

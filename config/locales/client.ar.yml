@@ -412,16 +412,10 @@ ar:
       our_moderators: "مشرفونا"
       moderators: "المشرفون"
       stat:
-        all_time: "طوال الوقت"
-        last_day: "آخر 24 ساعة"
-        last_7_days: "آخر 7 أيام"
-        last_30_days: "آخر 30 يومًا"
+        last_day: "24 ساعة"
       like_count: "تسجيلات الإعجاب"
       topic_count: "الموضوعات"
       post_count: "المنشورات"
-      user_count: "عمليات التسجيل"
-      active_user_count: "المستخدمون النشطون"
-      contact: "تواصل معنا"
       contact_info: "في حال حدوث مشكلة خطيرة أو أمر عاجل يؤثر على الموقع، يُرجى مراسلتنا على %{contact_info}."
     bookmarked:
       title: "وضع إشارة مرجعية"
@@ -479,6 +473,13 @@ ar:
         confirm: "لديك بالفعل مسودة قيد التقدم. ماذا تريد أن تفعل بها؟"
         yes_value: "تجاهل"
         no_value: "استئناف التعديل"
+    topic_count_all:
+      zero: "عرض %{count} موضوعًا جديدًا"
+      one: "عرض موضوع واحد (%{count}) جديد"
+      two: "عرض موضوعين (%{count}) جديدين"
+      few: "عرض %{count} موضوعات جديدة"
+      many: "عرض %{count} موضوعًا جديدًا"
+      other: "طالِع %{count} موضوع جديد"
     topic_count_categories:
       zero: "عرض %{count} موضوع جديد أو محدَّث"
       one: "عرض موضوع واحد (%{count}) جديد أو محدَّث"
@@ -733,23 +734,26 @@ ar:
         all:
           title: "كل شىء"
       context_question:
-        is_this_post: "هل هذا المنشور %{reviewable_human_score_types}؟"
+        is_this_post: "هل هذا %{reviewable_type} %{reviewable_human_score_types}؟"
         delimiter: "أو"
-        something_else_wrong: "هل هناك خطأ في هذا المنشور؟"
+        something_else_wrong: "هل هناك خطأ ما في هذا %{reviewable_type}؟"
       types:
         reviewable_flagged_post:
           title: "المنشورات المُبلَغ عنها"
           flagged_by: "تم الإبلاغ بواسطة"
+          noun: "المنشور"
         reviewable_queued_topic:
           title: "موضوع في قائمة الانتظار"
+          noun: "الموضوع"
         reviewable_queued_post:
           title: "منشور في قائمة الانتظار"
+          noun: "المنشور"
         reviewable_user:
           title: "المستخدم"
+          noun: "مستخدم واحد"
         reviewable_post:
           title: "المنشور"
-        reviewable_chat_message:
-          title: "تم الإبلاغ عن رسالة الدردشة"
+          noun: "المنشور"
       approval:
         title: "المنشور بحاجة للموافقة"
         description: "لقد استلمنا منشورك الجديد، لكنه بحاجة إلى موافقة أحد المشرفين عليه قبل ظهوره. يُرجى الانتظار."
@@ -1600,7 +1604,6 @@ ar:
         success: "(تم إرسال رسالة البريد الإلكتروني)"
         in_progress: "(جارٍ إرسال رسالة البريد الإلكتروني)"
         error: "(خطأ)"
-        emoji: "رمز قفل"
         action: "إرسال رسالة إلكترونية لإعادة تعيين كلمة المرور"
         set_password: "تعيين كلمة المرور"
         choose_new: "اختيار كلمة مرور جديدة"
@@ -2271,7 +2274,6 @@ ar:
       link_label: "مراسلتي عبر البريد الإلكتروني برابط تسجيل الدخول"
       button_label: "عبر البريد الإلكتروني"
       login_link: "تخطي كلمة المرور؛ مراسلتي عبر البريد الإلكتروني برابط تسجيل الدخول"
-      emoji: "رمز قفل"
       complete_username: "إذا تطابق أحد الحسابات مع اسم المستخدم <b>%{username}</b>، فمن المفترض أن تتلقى رسالة إلكترونية برابط تسجيل الدخول قريبًا."
       complete_email: "إذا تطابق أحد الحسابات مع عنوان البريد الإلكتروني <b>%{email}</b>، فمن المفترض أن تتلقى رسالة إلكترونية برابط تسجيل الدخول قريبًا."
       complete_username_found: "لقد عثرنا على حساب مطابق لاسم المستخدم <b>%{username}</b>. ومن المفترض أن تتلقى رسالة إلكتروني برابط تسجيل الدخول قريبًا."
@@ -2362,7 +2364,6 @@ ar:
         security_key: "استخدم مفتاح أمان بدلًا من ذلك"
     invites:
       accept_title: "الدعوة"
-      emoji: "رمز مظروف"
       welcome_to: "مرحبًا بك في %{site_name}!"
       invited_by: "دعاك:"
       social_login_available: "يمكنك أيضًا تسجيل الدخول بأي حساب تواصل اجتماعي باستخدام هذا البريد الإلكتروني."
@@ -2498,7 +2499,6 @@ ar:
       drafts_offline: "مسودات بلا اتصال"
       edit_conflict: "تعارض في التعديل"
       esc: "Esc"
-      esc_label: "انقر أو اضغط على Esc للتجاهل"
       ok_proceed: "حسنًا، المتابعة"
       group_mentioned_limit:
         zero: "<b>تحذير!</b>لقد أشرت إلى <a href='%{group_link}'>%{group}</a>، لكن هذه المجموعة تتضمَّن عدد أعضاء أكثر من حد الإشارة الذي عيَّنه المسؤول وهو %{count} مستخدم. لن يتم إرسال إشعار إلى أي أحد."
@@ -2731,21 +2731,14 @@ ar:
       edited: "‏<span>⁨%{username}⁩</span> ‏%{description}"
       liked: "‏<span>⁨%{username}⁩</span> ‏%{description}"
       liked_2: "<span class='double-user'>%{username}، و%{username2}</span> %{description}"
-      liked_many:
-        zero: "<span class='multi-user'>%{username} و%{username2} و%{count} مستخدم آخر</span> %{description}"
-        one: "<span class='multi-user'>%{username} و%{username2} ومستخدم واحد (%{count}) آخر</span> %{description}"
-        two: "<span class='multi-user'>%{username} و%{username2} ومستخدمان (%{count}) آخران</span> %{description}"
-        few: "<span class='multi-user'>%{username} و%{username2} و%{count} مستخدمين آخرين</span> %{description}"
-        many: "<span class='multi-user'>‏%{username} و%{username2} و%{count} مستخدمًا آخر</span> ‏%{description}"
-        other: "<span class='multi-user'>‏%{username} و%{username2} و%{count} مستخدم آخر</span> ‏%{description}"
       liked_by_2_users: "%{username}، %{username2}"
       liked_by_multiple_users:
-        zero: "%{username} و%{username2} و%{count} مستخدم آخر"
-        one: "%{username} و%{username2} ومستخدم واحد (%{count}) آخر"
-        two: "%{username} و%{username2} ومستخدمان (%{count}) آخران"
-        few: "%{username} و%{username2} و%{count} مستخدمين آخرين"
-        many: "%{username} و%{username2} و%{count} مستخدمًا آخر"
-        other: "%{username} و%{username2} و%{count} مستخدم آخر"
+        zero: "%{username} واثنان (%{count}) آخران"
+        one: "%{username} وواحد (%{count}) آخر"
+        two: "%{username} و%{count} آخرين"
+        few: "%{username} واثنان (%{count}) آخران"
+        many: "%{username} واثنان (%{count}) آخران"
+        other: "%{username} واثنان (%{count}) آخران"
       liked_consolidated_description:
         zero: "سجَّل إعجابه على %{count} من منشوراتك"
         one: "سجَّل إعجابه على واحد (%{count}) من منشوراتك"
@@ -3105,6 +3098,22 @@ ar:
         dismiss_new_modal:
           title: "تجاهل الجديدة"
           topics: "تجاهل الموضوعات الجديدة"
+          posts: "تجاهل الردود الجديدة"
+          topics_with_count:
+            zero: "تجاهل %{count} موضوع جديد"
+            one: "تجاهل موضوع جديد"
+            two: "تجاهل %{count} موضوع جديد"
+            few: "تجاهل %{count} مواضيع جديدة"
+            many: "تجاهل %{count} مواضيع جديدة"
+            other: "تجاهل %{count} مواضيع جديدة"
+          replies_with_count:
+            zero: "تجاهَل %{count} الرد الجديد"
+            one: "تجاهل رد جديد"
+            two: "تجاهل ردين جديدين"
+            few: "تجاهل %{count} ردود جديدة"
+            many: "تجاهل %{count} ردود جديدة"
+            other: "تجاهل %{count} ردود جديدة"
+          replies: "تجاهل الردود الجديدة"
           untrack: "التوقف عن تتبُّع تلك الموضوعات؛ حتى تتوقف عن الظهور في قائمتي الجديدة"
         dismiss_new_with_selected:
           zero: "تجاهل الجديدة (%{count})"
@@ -3294,9 +3303,8 @@ ar:
           false { أو <a href="{basePath}/latest">شاهد آخر الموضوعات</a>}
           other {}
         }
-      bumped_at_title: |
-        أول منشور: %{createdAtDate}
-        تاريخ النشر: %{bumpedAtDate}
+      created_at: "تاريخ الإنشاء: %{date}"
+      bumped_at: "تاريخ آخر نسخ احتياطي: %{date}"
       browse_all_categories_latest: "<a href='%{basePath}/categories'>استعرض كل الفئات</a> أو <a href='%{basePath}/latest'>شاهد آخر الموضوعات</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>استعرض كل الفئات</a> أو <a href='%{basePath}/latest'>شاهد آخر الموضوعات</a>، أو انظر أبرز:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>استعرض كل الوسوم</a> أو <a href='%{basePath}/latest'>شاهد آخر الموضوعات</a>."
@@ -3809,7 +3817,8 @@ ar:
       errors:
         create: "عذرًا، حدث خطأ في أثناء إنشاء منشورك. يُرجى إعادة المحاولة."
         edit: "عذرا، حدث خطأ في أثناء تعديل منشورك. يُرجى إعادة المحاولة."
-        upload: "عذرًا، حدث خطأ في أثناء تحميل هذا الملف. يُرجى إعادة المحاولة."
+        upload: "عذرًا، حدث خطأ في أثناء الرفع %{file_name}. يُرجى إعادة المحاولة."
+        backup_too_large: "عذرًا، ملف النسخ الاحتياطي هذا كبير جدًا."
         file_too_large: "عذرًا، لكن الملف كبير جدًا (أقصى حجم هو %{max_size_kb} ك.ب). لماذا لا تحمِّل ملفك الكبير إلى خدمة مشاركة سحابية، ثم تلصق الرابط؟"
         file_size_zero: "عذرًا، يبدو أنه حدث خطأ ما؛ فحجم الملف الذي تحاول تحميله هو 0 بايت. حاول مرة أخرى."
         file_too_large_humanized: "عذرًا، هذا الملف كبير جدًا (الحد الأقصى للحجم هو %{max_size}). لماذا لا تقوم بتحميل ملفك الكبير إلى خدمة مشاركة سحابية، ثم تلصق الرابط؟"
@@ -4560,6 +4569,7 @@ ar:
         print: "%{shortcut} طباعة الموضوع"
         defer: "%{shortcut} تأجيل الموضوع"
         topic_admin_actions: "%{shortcut} فتح إجراءات المشرف على الموضوع"
+        archive_private_message: "%{shortcut} تبديل أرشيف الرسالة الخاصة"
       search_menu:
         title: "قائمة البحث"
         prev_next: "%{shortcut} نقل التحديد لأعلى ولأسفل"
@@ -4639,7 +4649,6 @@ ar:
       other_tags: "وسوم أخرى"
       selector_all_tags: "كل الوسوم"
       selector_no_tags: "لا توجد وسوم"
-      changed: "الوسوم التي تم تغييرها:"
       tags: "الوسوم"
       choose_for_topic: "الوسوم الاختيارية"
       choose_for_topic_required:
@@ -5388,42 +5397,8 @@ ar:
         groups_filter_instructions: "لن يتم تشغيل خطافات الويب ذات الصلة إلا إذا كان الحدث مرتبطًا بمجموعات محدَّدة. اتركه فارغًا لتشغيل خطافات الويب لجميع المجموعات."
         groups_filter: "المجموعات المشغَّلة"
         delete_confirm: "هل تريد حذف خطاف الويب هذا؟"
-        topic_event:
-          name: "حدث الموضوع"
-          details: "عندما يكون هناك موضوع جديد، أو تمت مراجعته أو تغييره أو حذفه."
-        post_event:
-          name: "حدث المنشور"
-          details: "عندما يكون هناك رد جديد، أو تم تعديله أو حذفه أو استعادته."
-        user_event:
-          name: "حدث المستخدم"
-          details: "عند تسجيل المستخدم للدخول أو الخروج، أو تأكيده لبريده الإلكتروني أو إنشائه أو الموافقة عليه أو تحديثه."
-        group_event:
-          name: "حدث المجموعة"
-          details: "عند إنشاء مجموعة أو تحديثها أو مسحها."
-        category_event:
-          name: "حدث الفئة"
-          details: "عند إنشاء فئة أو تحديثها أو مسحها."
-        tag_event:
-          name: "حدث الوسم"
-          details: "عند إنشاء وسم أو تحديثه أو مسحه."
-        reviewable_event:
-          name: "حدث العنصر القابل للمراجعة"
-          details: "عند وجود عنصر جديد جاهز للمراجعة وعند تحديث حالته."
-        notification_event:
-          name: "حدث الإشعار"
-          details: "عند تلقي المستخدم إشعار في موجزه."
-        user_promoted_event:
-          name: "حدث يروِّج له المستخدم"
-          details: "عندما تتم ترقية المستخدم من مستوى ثقة إلى آخر."
-        user_badge_event:
-          name: "حدث الشارة"
-          details: "عند منح شارة أو سحبها."
-        group_user_event:
-          name: "حدث مستخدم المجموعة"
-          details: "عند إضافة مستخدم أو إزالته في مجموعة."
         like_event:
-          name: "حدث الإعجاب"
-          details: "عند تسجيل المستخدم إعجابه بمنشور."
+          post_liked: "عند تسجيل المستخدم إعجابه بمنشور."
         delivery_status:
           title: "حالة التسليم"
           inactive: "غير نشط"
@@ -5468,7 +5443,6 @@ ar:
         enabled: "مفعَّلة؟"
         is_enabled: "نعم"
         not_enabled: "لا"
-        change_settings: "إعدادات المكوِّن الإضافي"
         change_settings_short: "الإعدادات"
         howto: "كيف يمكنني تثبيت الإضافات؟"
         official: "المكوِّن الإضافي الرسمي"
@@ -5514,7 +5488,8 @@ ar:
             label: "نسخة احتياطية"
             title: "إنشاء نسخة احتياطية"
             confirm: "هل تريد إنشاء نسخة احتياطية جديدة؟"
-            without_uploads: "نعم (عدم تضمين التحميلات)"
+            include_uploads: "شمل جميع المرفُعات"
+            s3_upload_warning: 'هذا للنسخ الاحتياطي لقاعدة البيانات فقط. لن يتم إدراج الرفع، مما يعني أن جميع الصور وغيرها من رفع الملفات يمكن أن تكون مفقودة إذا تم استعادة النسخة الاحتياطية إلى إعداد استضافة آخر. <b>لتمكين نسخة احتياطية كاملة بما في ذلك تحميل S3 الخاص بك يُرجى الاطلاع على <a href="https://meta.discourse.org/t/-/276535" target="_blank">هذا الدليل</a>.</b>'
           download:
             label: "تنزيل"
             title: "مراسلتي عبر البريد الإلكتروني برابط التنزيل"
@@ -5587,7 +5562,6 @@ ar:
           theme_name: "اسم السمة"
           component_name: "اسم المكوِّن"
           themes_intro: "حدِّد سمة موجودة أو ثبِّت سمة جديدة للبدء"
-          themes_intro_emoji: "الرمز التعبيري لفنانة"
           beginners_guide_title: "دليل المبتدئين لاستخدام سمات Discourse"
           developers_guide_title: "دليل المطوِّرين لاستخدام سمات Discourse"
           browse_themes: "تصفُّح سمات المجتمع"
@@ -5635,6 +5609,7 @@ ar:
           convert_theme_tooltip: "تحويل هذه السمة إلى مكوِّن"
           inactive_themes: "السمات غير النشطة:"
           inactive_components: "المكوِّنات غير المستخدمة:"
+          cancel: "إلغاء"
           broken_theme_tooltip: "هذه السمة بها أخطاء في CSS أو HTML أو YAML"
           disabled_component_tooltip: "لقد تم إيقاف هذا المكوِّن"
           default_theme_tooltip: "هذه السمة هي السمة الافتراضية للموقع"
@@ -6147,7 +6122,7 @@ ar:
       form_templates:
         nav_title: "القوالب"
         title: "قوالب النموذج"
-        help: "أنشئ هيكل قالب يمكن استخدامها لإنشاء موضوعات ومنشورات ورسائل جديدة."
+        help: "أنشئ بنية قالب النموذج يمكن استخدامها لإنشاء موضوعات جديدة."
         new_template: "قالب جديد"
         list_table:
           headings:
@@ -6214,6 +6189,7 @@ ar:
           title: "معاينة القالب"
         field_placeholders:
           validations: "أدخل قيم التحقق هنا"
+          id: "أدخل الهوية هنا"
           label: "أدخل التسمية هنا"
           placeholder: "أدخل العنصر النائب هنا"
           none_label: "تحديد عنصر"
@@ -6585,6 +6561,7 @@ ar:
         show_outdated: "عرض القديمة/غير الصالحة فقط"
         locale: "اللغة:"
         more_than_50_results: "هناك أكثر من 50 نتيجة. يُرجى تحسين البحث."
+        no_results: "لم يتم العثور على نصوص موقع مطابقة"
         interpolation_keys: "مفاتيح الاستيفاء المتاحة:"
         outdated:
           title: "هذه الترجمة قديمة"
@@ -6691,7 +6668,7 @@ ar:
         grant_badge: منح شارة
         granted_badges: الشارات الممنوحة
         grant: منح
-        no_user_badges: "لم يتم منح %{name} أي شارة."
+        no_user_badges: "لم يُمنح %{name} أيّ شارة."
         no_badges: لا توجد شارات يمكن منحها.
         none_selected: "تحديد شارة للبدء"
         allow_title: السماح للمستخدمين باستخدام الشارة كعنوان
@@ -6743,7 +6720,6 @@ ar:
             with_time: '‏<span class="username">%{username}</span> في <span class="time">%{time}</span>'
         badge_intro:
           title: "حدِّد شارة موجودة أو أنشئ شارة جديدة للبدء"
-          emoji: "الرمز التعبيري لطالبة"
           what_are_badges_title: "ما الشارات؟"
           badge_query_examples_title: "أمثلة على استعلامات الشارات"
         mass_award:

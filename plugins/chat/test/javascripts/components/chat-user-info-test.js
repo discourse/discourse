@@ -1,7 +1,7 @@
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { render } from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
-import { render } from "@ember/test-helpers";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Discourse Chat | Component | chat-user-info", function (hooks) {
   setupRenderingTest(hooks);

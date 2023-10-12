@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 module EmberCli
+  def self.dist_dir
+    "#{Rails.root}/app/assets/javascripts/discourse/dist"
+  end
+
   def self.assets
     @assets ||=
       begin
@@ -40,12 +44,14 @@ module EmberCli
     chunk_infos = {}
 
     begin
-      chunk_infos.merge! parse_chunks_from_html("tests/index.html")
+      test_html = File.read("#{dist_dir}/tests/index.html")
+      chunk_infos.merge! parse_chunks_from_html(test_html)
     rescue Errno::ENOENT
       # production build
     end
 
-    chunk_infos.merge! parse_chunks_from_html("index.html")
+    index_html = File.read("#{dist_dir}/index.html")
+    chunk_infos.merge! parse_chunks_from_html(index_html)
 
     @@chunk_infos = chunk_infos if Rails.env.production?
     chunk_infos
@@ -53,8 +59,12 @@ module EmberCli
     {}
   end
 
+  def self.parse_source_map_path(file)
+    File.read("#{dist_dir}/assets/#{file}")[%r{//# sourceMappingURL=(.*)$}, 1]
+  end
+
   def self.is_ember_cli_asset?(name)
-    assets.include?(name) || name.start_with?("chunk.")
+    assets.include?(name) || script_chunks.values.flatten.include?(name.delete_suffix(".js"))
   end
 
   def self.ember_version
@@ -75,8 +85,7 @@ module EmberCli
       end
   end
 
-  def self.parse_chunks_from_html(path)
-    html = File.read("#{Rails.root}/app/assets/javascripts/discourse/dist/#{path}")
+  def self.parse_chunks_from_html(html)
     doc = Nokogiri::HTML5.parse(html)
 
     chunk_infos = {}
@@ -87,9 +96,15 @@ module EmberCli
         entrypoint = discourse_script.attr("entrypoint")
         chunk_infos[entrypoint] = discourse_script
           .css("script[src]")
-          .map { |script| script.attr("src")[%r{\A/assets/(.*)\.js\z}, 1] }
+          .map do |script|
+            script.attr("src").delete_prefix("#{Discourse.base_path}/assets/").delete_suffix(".js")
+          end
       end
 
     chunk_infos
+  end
+
+  def self.has_tests?
+    File.exist?("#{dist_dir}/tests/index.html")
   end
 end

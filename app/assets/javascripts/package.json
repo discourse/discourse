@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "postinstall": "patch-package"
+    "postinstall": "./run-patch-package"
   },
   "workspaces": [
     "admin",
@@ -11,17 +11,19 @@
     "discourse",
     "discourse-common",
     "discourse-hbr",
+    "discourse-i18n",
     "discourse-plugins",
     "discourse-widget-hbs",
     "ember-cli-progress-ci",
     "ember-production-deprecations",
+    "float-kit",
     "pretty-text",
     "select-kit",
+    "theme-transpiler",
     "truth-helpers",
     "wizard"
   ],
   "resolutions": {
-    "**/babel-plugin-debug-macros": "npm:@discourse/babel-plugin-debug-macros@0.4.0-pre1",
     "**/unset-value": "2.0.1"
   },
   "devDependencies": {

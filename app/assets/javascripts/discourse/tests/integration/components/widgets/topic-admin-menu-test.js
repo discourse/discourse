@@ -1,10 +1,10 @@
-import { module, test } from "qunit";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { getOwner } from "@ember/application";
 import { render } from "@ember/test-helpers";
-import { exists } from "discourse/tests/helpers/qunit-helpers";
 import { hbs } from "ember-cli-htmlbars";
+import { module, test } from "qunit";
 import Category from "discourse/models/category";
-import { getOwner } from "discourse-common/lib/get-owner";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { exists } from "discourse/tests/helpers/qunit-helpers";
 
 const createArgs = (topic) => {
   return {

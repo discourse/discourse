@@ -1,0 +1,156 @@
+.chat-channel-row {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  cursor: pointer;
+  color: var(--primary-high);
+
+  &__content {
+    display: flex;
+    justify-content: space-between;
+    max-width: 100%;
+    align-items: center;
+    flex-grow: 1;
+  }
+
+  @media (hover: none) {
+    &:hover,
+    &:focus {
+      background: transparent;
+    }
+
+    &:active {
+      background: var(--primary-low);
+    }
+  }
+
+  @media (hover: hover) {
+    &:hover,
+    &.active {
+      background: var(--primary-very-low);
+    }
+
+    &.can-leave:hover {
+      .toggle-channel-membership-button.-leave {
+        display: block;
+
+        > * {
+          pointer-events: auto;
+        }
+      }
+
+      .chat-channel-metadata {
+        display: none;
+      }
+    }
+  }
+
+  &:hover,
+  &.active {
+    .chat-channel-title {
+      &,
+      .category-chat-name,
+      .dm-usernames {
+        color: var(--primary);
+      }
+
+      .d-icon-lock {
+        background-color: var(--primary-low);
+      }
+    }
+  }
+
+  &:visited {
+    color: var(--primary-high);
+  }
+
+  &.muted {
+    opacity: 0.65;
+  }
+
+  .chat-channel-title {
+    overflow: hidden;
+
+    &__users-count {
+      width: var(--channel-list-avatar-size);
+      height: var(--channel-list-avatar-size);
+      padding: 0;
+      font-size: var(--font-up-1);
+      justify-content: center;
+    }
+
+    &__avatar {
+      .chat-user-avatar {
+        img {
+          width: calc(var(--channel-list-avatar-size) - 2px);
+          height: calc(var(--channel-list-avatar-size) - 2px);
+        }
+      }
+    }
+    &__user-info {
+      @include ellipsis;
+    }
+    &__usernames {
+      display: flex;
+      align-items: center;
+      justify-content: start;
+    }
+    .user-status-message {
+      display: inline-block;
+      font-size: var(--font-down-2);
+      margin-right: 0.5rem;
+
+      &-description {
+        color: var(--primary-medium);
+      }
+    }
+  }
+
+  .chat-channel-metadata {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    margin-left: 0.5em;
+
+    &__date {
+      color: var(--primary-high);
+      font-size: var(--font-down-2);
+      white-space: nowrap;
+    }
+
+    .chat-channel-unread-indicator {
+      @include chat-unread-indicator;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 8px;
+      height: 8px;
+
+      &.-urgent {
+        width: auto;
+        height: auto;
+        min-width: 0.6em;
+        padding: 0.3em 0.5em;
+      }
+    }
+  }
+
+  &.unfollowing {
+    opacity: 0;
+  }
+
+  .toggle-channel-membership-button.-leave {
+    display: none;
+    margin-left: auto;
+  }
+  .badge-wrapper {
+    align-items: center;
+    margin-right: 0;
+  }
+
+  .emoji {
+    margin-left: 0.3em;
+  }
+}

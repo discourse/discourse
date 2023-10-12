@@ -1,9 +1,9 @@
+import { click, currentRouteName, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentRouteName, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 
 async function catchAbortedTransition() {
   try {
@@ -25,9 +25,6 @@ acceptance("Enforce Second Factor", function (needs) {
       });
     });
   });
-  needs.settings({
-    navigation_menu: "legacy",
-  });
 
   test("as an admin", async function (assert) {
     await visit("/u/eviltrout/preferences/second-factor");
@@ -41,8 +38,9 @@ acceptance("Enforce Second Factor", function (needs) {
       "it will not transition from second-factor preferences"
     );
 
-    await click("#toggle-hamburger-menu");
-    await click("a.admin-link");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='admin']"
+    );
 
     assert.strictEqual(
       currentRouteName(),
@@ -65,8 +63,13 @@ acceptance("Enforce Second Factor", function (needs) {
       "it will not transition from second-factor preferences"
     );
 
-    await click("#toggle-hamburger-menu");
-    await click("a.about-link");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+    );
+
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='about']"
+    );
 
     assert.strictEqual(
       currentRouteName(),
@@ -90,8 +93,13 @@ acceptance("Enforce Second Factor", function (needs) {
       "it will transition from second-factor preferences"
     );
 
-    await click("#toggle-hamburger-menu");
-    await click("a.about-link");
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-more-section-links-details-summary"
+    );
+
+    await click(
+      ".sidebar-section[data-section-name='community'] .sidebar-section-link[data-link-name='about']"
+    );
 
     assert.strictEqual(
       currentRouteName(),

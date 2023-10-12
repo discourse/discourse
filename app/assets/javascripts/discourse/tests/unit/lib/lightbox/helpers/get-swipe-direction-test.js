@@ -1,5 +1,4 @@
 import { module, test } from "qunit";
-
 import { SWIPE_DIRECTIONS } from "discourse/lib/lightbox/constants";
 import { getSwipeDirection } from "discourse/lib/lightbox/helpers";
 

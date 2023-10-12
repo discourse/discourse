@@ -21,6 +21,7 @@ export default class AdminPlugin {
     this.name = args.name;
     this.url = args.url;
     this.version = args.version;
+    this.metaUrl = args.meta_url;
   }
 
   get settingCategoryName() {

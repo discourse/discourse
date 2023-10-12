@@ -41,11 +41,61 @@
       {{#if this.hasInactiveThemes}}
         <div class="themes-list-item inactive-indicator">
           <span class="empty">
-            {{#if this.themesTabActive}}
-              {{i18n "admin.customize.theme.inactive_themes"}}
-            {{else}}
-              {{i18n "admin.customize.theme.inactive_components"}}
-            {{/if}}
+            <div class="info">
+              {{#if this.selectInactiveMode}}
+                <Input
+                  @type="checkbox"
+                  @checked={{(or
+                    (eq this.allInactiveSelected true)
+                    (eq this.someInactiveSelected true)
+                  )}}
+                  class="toggle-all-inactive"
+                  indeterminate={{this.someInactiveSelected}}
+                  {{on "click" this.toggleAllInactive}}
+                />
+              {{else}}
+                <DButton
+                  class="btn-flat select-inactive-mode"
+                  @action={{this.toggleInactiveMode}}
+                >
+                  {{d-icon "list"}}
+                </DButton>
+              {{/if}}
+              {{#if this.selectInactiveMode}}
+                <span class="select-inactive-mode-label">
+                  {{i18n
+                    "admin.customize.theme.selected"
+                    count=this.selectedCount
+                  }}
+                </span>
+              {{else if this.themesTabActive}}
+                <span class="header">
+                  {{i18n "admin.customize.theme.inactive_themes"}}
+                </span>
+              {{else}}
+                <span class="header">
+                  {{i18n "admin.customize.theme.inactive_components"}}
+                </span>
+              {{/if}}
+
+              {{#if this.selectInactiveMode}}
+                <a
+                  href
+                  {{on "click" this.toggleInactiveMode}}
+                  class="cancel-select-inactive-mode"
+                >
+                  {{i18n "admin.customize.theme.cancel"}}
+                </a>
+                <DButton
+                  class="btn btn-delete"
+                  @action={{this.deleteConfirmation}}
+                  @disabled={{(eq this.selectedCount 0)}}
+                >
+                  {{d-icon "trash-alt"}}
+                  Delete
+                </DButton>
+              {{/if}}
+            </div>
           </span>
         </div>
       {{/if}}
@@ -57,6 +107,7 @@
           @classNames="inactive-theme"
           @theme={{theme}}
           @navigateToTheme={{action "navigateToTheme" theme}}
+          @selectInactiveMode={{this.selectInactiveMode}}
         />
       {{/each}}
     {{/if}}

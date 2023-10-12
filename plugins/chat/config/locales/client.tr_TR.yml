@@ -25,11 +25,19 @@ tr_TR:
           descriptions:
             chat:
               create_message: "Belirtilen kanalda bir sohbet mesajı oluşturun."
+      web_hooks:
+        chat_event:
+          group_name: "Sohbet olayları"
+          chat_message_created: "Mesaj oluşturuldu"
+          chat_message_edited: "Mesaj düzenlendi"
     about:
-      chat_messages_count: "Sohbet Mesajları"
-      chat_channels_count: "Sohbet Kanalları"
-      chat_users_count: "Sohbet Kullanıcıları"
+      chat_messages_count: "Sohbet mesajları"
+      chat_channels_count: "Sohbet kanalları"
+      chat_users_count: "Sohbet kullanıcıları"
     chat:
+      text_copied: Metin panoya kopyalandı
+      link_copied: Bağlantı panoya kopyalandı
+      deleted_chat_username: silindi
       dates:
         time_tiny: "h:mm"
       all_loaded: "Tüm mesajlar gösteriliyor"
@@ -85,6 +93,7 @@ tr_TR:
         create: "Yeni kanal"
       click_to_join: "Mevcut kanalları görüntülemek için buraya tıklayın."
       close: "Kapat"
+      remove: "Kaldır"
       collapse: "Sohbet Çekmecesini Daralt"
       expand: "Sohbet Çekmecesini genişlet"
       confirm_flag: "%{username} adlı kullanıcının mesajına bayrak eklemek istediğinizden emin misiniz?"
@@ -130,28 +139,11 @@ tr_TR:
           one: "Son bir saat"
           other: "Son %{count} saat"
       mention_warning:
-        dismiss: "kapat"
-        cannot_see: "%{username} bu kanala erişemiyor ve bilgilendirilmedi."
-        cannot_see_multiple:
-          one: "%{username} ve %{count} kullanıcı daha bu kanala erişemiyor ve bilgilendirilmediler."
-          other: "%{username} ve %{count} kullanıcı daha bu kanala erişemiyor ve bilgilendirilmediler."
         invitations_sent:
           one: "Davet gönderildi"
           other: "Davet gönderildi"
         invite: "Kanala davet et"
-        without_membership: "%{username} bu kanala katılmadı."
-        without_membership_multiple:
-          one: "%{username} ve %{count} kullanıcı daha bu kanala katılmadı."
-          other: "%{username} ve %{count} kullanıcı daha bu kanala katılmadı."
-        group_mentions_disabled: "%{group_name} bahsetmeye izin vermiyor."
-        group_mentions_disabled_multiple:
-          one: "%{group_name} ve %{count} grup daha bahsetmeye izin vermiyor."
-          other: "%{group_name} ve %{count} grup daha bahsetmeye izin vermiyor."
         channel_wide_mentions_disallowed: "Bu kanalda @here ve @all mentionları devre dışı bırakılmıştır."
-        too_many_members: "%{group_name} çok fazla üyeye sahip. Kimseye bildirim gönderilmedi."
-        too_many_members_multiple:
-          one: "%{group_name} ve %{count} grubun daha çok fazla üyesi var. Kimse bilgilendirilmedi."
-          other: "%{group_name} ve %{count} grubun daha çok fazla üyesi var. Kimse bilgilendirilmedi."
         groups:
           header:
             some: "Bazı kullanıcılara bildirim gönderilmeyecek"
@@ -251,6 +243,7 @@ tr_TR:
       reply: "Yanıtla"
       edit: "Düzenle"
       copy_link: "Bağlantıyı kopyala"
+      copy_text: "Metni kopyala"
       rebake_message: "HTML'yi yeniden oluştur"
       retry_staged_message:
         title: "Ağ hatası"
@@ -319,7 +312,6 @@ tr_TR:
         back_to_all_channels: "Tüm kanallar"
         back_to_channel: "Geri"
         tabs:
-          about: Hakkında
           members: Üyeler
           settings: Ayarlar
       new_message_modal:
@@ -449,6 +441,11 @@ tr_TR:
         saved: "Kaydedildi"
         unfollow: "Ayrıl"
         admin_title: "Yönetici"
+        settings_title: "Ayarlar"
+        info_title: "Kanal bilgisi"
+        category_label: "Kategori"
+        history_label: "Geçmiş"
+        members_label: "Üyeler"
       admin:
         title: "Sohbet"
         export_messages:
@@ -518,14 +515,14 @@ tr_TR:
           one: "%{commaSeparatedUsernames} ve %{count} kişi daha yazıyor"
           other: "%{commaSeparatedUsernames} ve %{count} kişi daha yazıyor"
       retention_reminders:
-        public_none: "Kanal geçmişi süresiz olarak saklanır."
+        public_none: "süresiz olarak"
         public:
-          one: "Kanal geçmişi %{count} gün boyunca saklanır."
-          other: "Kanal geçmişi %{count} gün boyunca saklanır."
-        dm_none: "Kişisel sohbet geçmişi süresiz olarak saklanır."
+          one: "%{count} gün"
+          other: "%{count} gün"
+        dm_none: "süresiz olarak"
         dm:
-          one: "Kişisel sohbet geçmişi %{count} gün boyunca saklanır."
-          other: "Kişisel sohbet geçmişi %{count} gün boyunca saklanır."
+          one: "%{count} gün"
+          other: "%{count} gün"
       flags:
         off_topic: "Bu mesaj, kanal başlığı tarafından tanımlanan mevcut tartışma ile ilgili değildir ve muhtemelen başka bir yere taşınmalıdır."
         inappropriate: "Bu mesaj, makul bir kişinin saldırgan, taciz edici veya <a href=\"%{basePath}/guidelines\">topluluk kurallarımızı</a> ihlal ettiğini düşüneceği içerik içeriyor."
@@ -619,6 +616,9 @@ tr_TR:
       types:
         chat_reviewable_message:
           title: "Bayrak Eklenen Sohbet Mesajı"
+        reviewable_chat_message:
+          title: "Bayrak eklenen sohbet mesajı"
+          noun: "sohbet mesajı"
     keyboard_shortcuts_help:
       chat:
         title: "Sohbet"
