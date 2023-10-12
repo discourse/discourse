@@ -460,3 +460,16 @@ module(
     });
   }
 );
+
+module("Integration | Component | plugin-outlet | tagName", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("supports the `@tagName` argument", async function (assert) {
+    await withSilencedDeprecationsAsync(
+      "discourse.plugin-outlet-tag-name",
+      async () =>
+        await render(hbs`<PluginOutlet @name="test-name" @tagName="div" />`)
+    );
+    assert.dom("div").exists();
+  });
+});
