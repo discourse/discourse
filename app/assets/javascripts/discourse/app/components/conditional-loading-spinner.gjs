@@ -1,5 +1,7 @@
+import { hash } from "@ember/helper";
 import concatClass from "discourse/helpers/concat-class";
 import eq from "truth-helpers/helpers/eq";
+import PluginOutlet from "./plugin-outlet";
 
 const ConditionalLoadingSpinner = <template>
   <PluginOutlet
