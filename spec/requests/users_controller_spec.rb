@@ -4901,6 +4901,35 @@ RSpec.describe UsersController do
       expect(json["users"].map { |u| u["username"] }).to include(user.username)
     end
 
+    context "when searching usernames" do
+      it "searches when provided a list of usernames" do
+        users = Fabricate.times(3, :user)
+
+        get "/u/search/users.json", params: { usernames: users.map(&:username).join(",") }
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["users"].map { |u| u["username"] }).to match_array(users.map(&:username))
+      end
+
+      it "searches groups if include_groups = true" do
+        users = Fabricate.times(3, :user)
+        group = Fabricate(:group)
+
+        sign_in(user)
+
+        get "/u/search/users.json",
+            params: {
+              usernames: [group.name, users.first.username].join(","),
+              include_groups: true,
+            }
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+
+        expect(json["users"].map { |u| u["username"] }).to contain_exactly(users.first.username)
+        expect(json["groups"].map { |u| u["name"] }).to contain_exactly(group.name)
+      end
+    end
+
     it "searches when provided the topic only" do
       get "/u/search/users.json", params: { topic_id: topic.id }
       expect(response.status).to eq(200)
