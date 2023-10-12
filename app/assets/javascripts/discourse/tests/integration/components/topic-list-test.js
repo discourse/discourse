@@ -1,8 +1,9 @@
 import { getOwner } from "@ember/application";
 import { click, render } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
-import { getOwner } from "@ember/application";
+import { module, test } from "qunit";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | topic-list", function (hooks) {
   setupRenderingTest(hooks);

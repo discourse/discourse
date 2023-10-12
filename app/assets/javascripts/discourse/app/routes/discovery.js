@@ -1,9 +1,6 @@
-import DiscourseRoute from "discourse/routes/discourse";
-import User from "discourse/models/user";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
-import { setTopicList } from "discourse/lib/topic-list-tracker";
 import User from "discourse/models/user";
 import DiscourseRoute from "discourse/routes/discourse";
 

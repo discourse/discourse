@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
-import { getOwner } from "@ember/application";
 import Component from "@ember/component";
+import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -8,12 +8,6 @@ import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import NavItem from "discourse/models/nav-item";
 import discourseComputed from "discourse-common/utils/decorators";
-import { NotificationLevels } from "discourse/lib/notification-levels";
-import { htmlSafe } from "@ember/template";
-import { inject as service } from "@ember/service";
-import { tracked } from "@glimmer/tracking";
-import { dependentKeyCompat } from "@ember/object/compat";
-import { action } from "@ember/object";
 
 export default Component.extend({
   router: service(),

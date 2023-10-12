@@ -1,7 +1,11 @@
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { Promise, all } from "rsvp";
+import { all, Promise } from "rsvp";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";
+import PreloadStore from "discourse/lib/preload-store";
+import Category from "discourse/models/category";
+import CategoryList from "discourse/models/category-list";
+import TopicList from "discourse/models/topic-list";
 import {
   filterQueryParams,
   findTopicList,

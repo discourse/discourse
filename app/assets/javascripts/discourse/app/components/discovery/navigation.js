@@ -1,11 +1,11 @@
-import { inject as service } from "@ember/service";
 import Component from "@glimmer/component";
-import { TRACKED_QUERY_PARAM_VALUE } from "discourse/lib/topic-list-tracked-filter";
-import { calculateFilterMode } from "discourse/lib/filter-mode";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import { calculateFilterMode } from "discourse/lib/filter-mode";
+import showModal from "discourse/lib/show-modal";
+import { TRACKED_QUERY_PARAM_VALUE } from "discourse/lib/topic-list-tracked-filter";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
-import showModal from "discourse/lib/show-modal";
 
 export default class DiscoveryNavigation extends Component {
   @service router;

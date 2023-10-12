@@ -4,54 +4,6 @@ import {
   addComposerUploadMarkdownResolver,
   addComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
-import {
-  addButton,
-  apiExtraButtons,
-  removeButton,
-  replaceButton,
-} from "discourse/widgets/post-menu";
-import {
-  addExtraIconRenderer,
-  replaceCategoryLinkRenderer,
-} from "discourse/helpers/category-link";
-import {
-  addPostTransformCallback,
-  preventCloak,
-} from "discourse/widgets/post-stream";
-import {
-  addSaveableUserField,
-  addSaveableUserOptionField,
-} from "discourse/models/user";
-import {
-  addToHeaderIcons,
-  attachAdditionalPanel,
-} from "discourse/widgets/header";
-import {
-  changeSetting,
-  createWidget,
-  decorateWidget,
-  queryRegistry,
-  reopenWidget,
-} from "discourse/widgets/widget";
-import {
-  iconNode,
-  registerIconRenderer,
-  replaceIcon,
-} from "discourse-common/lib/icon-library";
-import Composer, {
-  registerCustomizationCallback,
-} from "discourse/models/composer";
-import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
-import Sharing from "discourse/lib/sharing";
-import { addAdvancedSearchOptions } from "discourse/components/search-advanced-options";
-import { addCardClickListenerSelector } from "discourse/mixins/card-contents-base";
-import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
-import { addDecorator } from "discourse/widgets/post-cooked";
-import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
-import { addFeaturedLinkMetaDecorator } from "discourse/lib/render-topic-featured-link";
-import { addGTMPageChangedCallback } from "discourse/lib/page-tracker";
-import { addGlobalNotice } from "discourse/components/global-notice";
-import { addNavItem } from "discourse/models/nav-item";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addToolbarCallback } from "discourse/components/d-editor";
 import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
@@ -68,7 +20,7 @@ import { addSearchSuggestion as addGlimmerSearchSuggestion } from "discourse/com
 import { REFRESH_COUNTS_APP_EVENT_NAME as REFRESH_USER_SIDEBAR_CATEGORIES_SECTION_COUNTS_APP_EVENT_NAME } from "discourse/components/sidebar/user/categories-section";
 import { addTopicTitleDecorator } from "discourse/components/topic-title";
 import { addUserMenuProfileTabItem } from "discourse/components/user-menu/profile-tab-content";
-import { addDiscoveryQueryParam } from "discourse/controllers/discovery-sortable";
+import { addDiscoveryQueryParam } from "discourse/controllers/discovery/list";
 import { registerFullPageSearchType } from "discourse/controllers/full-page-search";
 import { registerCustomPostMessageCallback as registerCustomPostMessageCallback1 } from "discourse/controllers/topic";
 import { registerCustomUserNavMessagesDropdownRow } from "discourse/controllers/user-private-messages";

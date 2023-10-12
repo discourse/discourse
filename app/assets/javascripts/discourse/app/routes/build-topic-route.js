@@ -1,6 +1,8 @@
+import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";
-import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
+import { defaultHomepage } from "discourse/lib/utilities";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";

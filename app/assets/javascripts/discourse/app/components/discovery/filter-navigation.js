@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
-import discourseDebounce from "discourse-common/lib/debounce";
 import { resettableTracked } from "discourse/lib/tracked-tools";
+import discourseDebounce from "discourse-common/lib/debounce";
+import { bind } from "discourse-common/utils/decorators";
 
 export default class DiscoveryFilterNavigation extends Component {
   @tracked copyIcon = "link";

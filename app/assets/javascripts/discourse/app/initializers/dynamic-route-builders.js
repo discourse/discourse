@@ -1,3 +1,4 @@
+import { dasherize } from "@ember/string";
 import Site from "discourse/models/site";
 import buildCategoryRoute from "discourse/routes/build-category-route";
 import buildTopicRoute from "discourse/routes/build-topic-route";
