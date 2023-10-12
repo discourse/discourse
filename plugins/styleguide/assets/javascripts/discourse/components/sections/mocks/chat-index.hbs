@@ -1,1 +1,80 @@
-hello world
+{{! template-lint-disable }}
+<div class="full-page-chat">
+<div id="main-chat-outlet" class="main-chat-outlet chat-view">
+  <div class="channels-list">
+    chat index list of channels as-is
+  </div>
+  <footer class="chat-index__footer">
+    <nav class="chat-index__footer-nav">
+      <DButton class="btn-flat chat-index__footer-item" @icon="plus" aria-label="Start new chat" @translatedLabel="New"/>
+      <DButton class="btn-flat chat-index__footer-item -active" @icon="users" aria-label="Switch to DM list" @translatedLabel="DMs"/>
+      <DButton class="btn-flat chat-index__footer-item" @icon="comments" aria-label="Switch to channel list" @translatedLabel="Channels"/>
+    </nav>
+  </footer>
+</div>
+</div>
+
+{{! eslint-disable-next-line }}
+<style>
+  @media screen and (max-width: 768px) { 
+    .styleguide-menu, .section-title 
+    { display: none; } 
+
+    .styleguide,
+    .styleguide-section,
+    .styleguide-section-contents,
+    .full-page-chat {
+      height: 100%;
+    }
+  }
+
+  .full-page-chat {
+    #main-chat-outlet.chat-view {
+    height: 100%;
+      grid-template-columns: auto;
+      grid-template-rows: auto min-content;
+      grid-template-areas: "list"
+                          "footer"
+    }
+    .channels-list {
+    grid-area: list;
+    padding-bottom: 0;
+    }
+    .chat-index__footer {
+    grid-area: footer;
+    border-top: 1px solid var(--primary-low);
+    }
+    .chat-index__footer-nav {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+
+    .chat-index__footer-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-basis: 33%;
+      flex-shrink: 0;
+      padding-block: .75rem;
+
+      .d-icon {
+        margin-right: 0;
+        font-size: var(--font-up-2-rem);
+        color: var(--primary-medium);
+      }
+
+      .d-button-label {
+        font-size: var(--font-down-1-rem);
+        color: var(--primary-medium);
+      }
+    }
+    .chat-index__footer-item.-active {
+        .d-icon,
+        .d-button-label {
+          color: var(--quaternary);
+        }
+      }
+    }
+
+</style>
