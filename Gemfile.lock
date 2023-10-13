@@ -314,7 +314,7 @@ GEM
     parser (3.2.2.4)
       ast (~> 2.4.1)
       racc
-    pg (1.4.6)
+    pg (1.5.4)
     prettier_print (1.2.1)
     progress (3.6.0)
     pry (0.14.2)
