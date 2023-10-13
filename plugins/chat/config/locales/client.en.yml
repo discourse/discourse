@@ -542,7 +542,8 @@ en:
           other: "%{commaSeparatedUsernames} and %{count} others are typing"
 
       retention_reminders:
-        indefinitely: "indefinitely"
+        indefinitely_short: "indefinitely"
+        indefinitely_long: "Chat settings have been set to retain channel messages indefinitely."
         short:
           one: "%{count} day"
           other: "%{count} days"

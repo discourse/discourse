@@ -20,7 +20,15 @@ module(
 
       assert
         .dom(".chat-retention-reminder-text")
-        .includesText(I18n.t("chat.retention_reminders.indefinitely"));
+        .includesText(I18n.t("chat.retention_reminders.indefinitely_long"));
+
+      await render(
+        hbs`<ChatRetentionReminderText @channel={{this.channel}} @type="short" />`
+      );
+
+      assert
+        .dom(".chat-retention-reminder-text")
+        .includesText(I18n.t("chat.retention_reminders.indefinitely_short"));
     });
 
     test("when channel is a public channel", async function (assert) {
@@ -35,6 +43,14 @@ module(
       assert
         .dom(".chat-retention-reminder-text")
         .includesText(I18n.t("chat.retention_reminders.long", { count }));
+
+      await render(
+        hbs`<ChatRetentionReminderText @channel={{this.channel}} @type="short" />`
+      );
+
+      assert
+        .dom(".chat-retention-reminder-text")
+        .includesText(I18n.t("chat.retention_reminders.short", { count }));
     });
 
     test("when channel is a DM channel", async function (assert) {
@@ -49,6 +65,14 @@ module(
       assert
         .dom(".chat-retention-reminder-text")
         .includesText(I18n.t("chat.retention_reminders.long", { count }));
+
+      await render(
+        hbs`<ChatRetentionReminderText @channel={{this.channel}} @type="short" />`
+      );
+
+      assert
+        .dom(".chat-retention-reminder-text")
+        .includesText(I18n.t("chat.retention_reminders.short", { count }));
     });
   }
 );

@@ -16,7 +16,7 @@ export default class ChatRetentionReminderText extends Component {
           count: this.siteSettings.chat_dm_retention_days,
         });
       } else {
-        return I18n.t("chat.retention_reminders.indefinitely");
+        return I18n.t(`chat.retention_reminders.indefinitely_${this.type}`);
       }
     } else {
       if (this.#countForChannelType > 0) {
@@ -24,7 +24,7 @@ export default class ChatRetentionReminderText extends Component {
           count: this.siteSettings.chat_channel_retention_days,
         });
       } else {
-        return I18n.t("chat.retention_reminders.indefinitely");
+        return I18n.t(`chat.retention_reminders.indefinitely_${this.type}`);
       }
     }
   }
