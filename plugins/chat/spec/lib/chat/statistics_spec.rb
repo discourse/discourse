@@ -131,8 +131,8 @@ describe Chat::Statistics do
     fab!(:message3) { Fabricate(:chat_message, chat_channel: channel_3, created_at: now - 5.days) }
     fab!(:message4) { Fabricate(:chat_message, chat_channel: channel_1, created_at: now - 10.days) }
     fab!(:message5) { Fabricate(:chat_message, chat_channel: channel_2, created_at: now - 12.days) }
-    fab!(:message6) { Fabricate(:chat_message, chat_channel: channel_3, created_at: now - 20.days) }
-    fab!(:message7) { Fabricate(:chat_message, chat_channel: channel_1, created_at: now - 21.days) }
+    fab!(:message6) { Fabricate(:chat_message, chat_channel: channel_3, created_at: now - 27.days) }
+    fab!(:message7) { Fabricate(:chat_message, chat_channel: channel_1, created_at: now - 29.days) }
     fab!(:message8) { Fabricate(:chat_message, chat_channel: channel_2, created_at: now - 30.days) }
     fab!(:message9) { Fabricate(:chat_message, chat_channel: channel_3, created_at: now - 40.days) }
     fab!(:message10) do
@@ -161,6 +161,7 @@ describe Chat::Statistics do
       channel_messages = described_class.channel_messages
       expect(channel_messages[:last_day]).to eq(1)
       expect(channel_messages["7_days"]).to eq(3)
+      expect(channel_messages["28_days"]).to eq(6)
       expect(channel_messages["30_days"]).to eq(7)
       expect(channel_messages[:count]).to eq(10)
     end
@@ -189,10 +190,10 @@ describe Chat::Statistics do
       Fabricate(:chat_message, chat_channel: dm_channel_2, created_at: now - 12.days)
     end
     fab!(:message6) do
-      Fabricate(:chat_message, chat_channel: dm_channel_3, created_at: now - 20.days)
+      Fabricate(:chat_message, chat_channel: dm_channel_3, created_at: now - 27.days)
     end
     fab!(:message7) do
-      Fabricate(:chat_message, chat_channel: dm_channel_1, created_at: now - 21.days)
+      Fabricate(:chat_message, chat_channel: dm_channel_1, created_at: now - 29.days)
     end
     fab!(:message8) do
       Fabricate(:chat_message, chat_channel: dm_channel_2, created_at: now - 30.days)
@@ -226,6 +227,7 @@ describe Chat::Statistics do
       direct_messages = described_class.direct_messages
       expect(direct_messages[:last_day]).to eq(1)
       expect(direct_messages["7_days"]).to eq(3)
+      expect(direct_messages["28_days"]).to eq(6)
       expect(direct_messages["30_days"]).to eq(7)
       expect(direct_messages[:count]).to eq(10)
     end
@@ -278,10 +280,10 @@ describe Chat::Statistics do
       Fabricate(:chat_message, chat_channel: channel_1, thread: thread_1, created_at: now - 12.days)
     end
     fab!(:threaded_message6) do
-      Fabricate(:chat_message, chat_channel: channel_2, thread: thread_2, created_at: now - 20.days)
+      Fabricate(:chat_message, chat_channel: channel_2, thread: thread_2, created_at: now - 27.days)
     end
     fab!(:threaded_message7) do
-      Fabricate(:chat_message, chat_channel: channel_1, thread: thread_1, created_at: now - 21.days)
+      Fabricate(:chat_message, chat_channel: channel_1, thread: thread_1, created_at: now - 29.days)
     end
     fab!(:threaded_message8) do
       Fabricate(:chat_message, chat_channel: channel_2, thread: thread_2, created_at: now - 30.days)
@@ -329,6 +331,7 @@ describe Chat::Statistics do
       threaded_messages = described_class.threaded_messages
       expect(threaded_messages[:last_day]).to eq(3)
       expect(threaded_messages["7_days"]).to eq(5)
+      expect(threaded_messages["28_days"]).to eq(8)
       expect(threaded_messages["30_days"]).to eq(9)
       expect(threaded_messages[:count]).to eq(12)
     end

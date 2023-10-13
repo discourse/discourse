@@ -48,6 +48,7 @@ module Chat
       {
         :last_day => query.where("chat_messages.created_at > ?", 1.days.ago).count,
         "7_days" => query.where("chat_messages.created_at > ?", 7.days.ago).count,
+        "28_days" => query.where("chat_messages.created_at > ?", 28.days.ago).count,
         "30_days" => query.where("chat_messages.created_at > ?", 30.days.ago).count,
         :count => query.count,
       }
@@ -60,6 +61,7 @@ module Chat
       {
         :last_day => query.where("chat_messages.created_at > ?", 1.days.ago).count,
         "7_days" => query.where("chat_messages.created_at > ?", 7.days.ago).count,
+        "28_days" => query.where("chat_messages.created_at > ?", 28.days.ago).count,
         "30_days" => query.where("chat_messages.created_at > ?", 30.days.ago).count,
         :count => query.count,
       }
@@ -68,7 +70,7 @@ module Chat
     def self.open_channels_with_threads_enabled
       query = Chat::Channel.where(threading_enabled: true, status: :open)
 
-      { :last_day => 0, "7_days" => 0, "30_days" => 0, :count => query.count }
+      { :last_day => 0, "7_days" => 0, "28_days": 0, "30_days" => 0, :count => query.count }
     end
 
     def self.threaded_messages
@@ -77,6 +79,7 @@ module Chat
       {
         :last_day => query.where("chat_messages.created_at > ?", 1.days.ago).count,
         "7_days" => query.where("chat_messages.created_at > ?", 7.days.ago).count,
+        "28_days" => query.where("chat_messages.created_at > ?", 28.days.ago).count,
         "30_days" => query.where("chat_messages.created_at > ?", 30.days.ago).count,
         :count => query.count,
       }
