@@ -442,7 +442,12 @@ RSpec.describe UserSerializer do
 
   context "with user_passkeys" do
     fab!(:user) { Fabricate(:user) }
-    fab!(:passkey) { Fabricate(:passkey_with_random_credential, user: user) }
+    fab!(:passkey0) do
+      Fabricate(:passkey_with_random_credential, user: user, created_at: 5.hours.ago)
+    end
+    fab!(:passkey1) do
+      Fabricate(:passkey_with_random_credential, user: user, created_at: 2.hours.ago)
+    end
 
     it "does not include them if feature is disabled" do
       json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
@@ -455,9 +460,10 @@ RSpec.describe UserSerializer do
 
       json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
 
-      expect(json[:user_passkeys][0][:id]).to eq(passkey.id)
-      expect(json[:user_passkeys][0][:name]).to eq(passkey.name)
-      expect(json[:user_passkeys][0][:last_used]).to eq(passkey.last_used)
+      expect(json[:user_passkeys][0][:id]).to eq(passkey0.id)
+      expect(json[:user_passkeys][0][:name]).to eq(passkey0.name)
+      expect(json[:user_passkeys][0][:last_used]).to eq(passkey0.last_used)
+      expect(json[:user_passkeys][1][:id]).to eq(passkey1.id)
     end
   end
 

@@ -43,11 +43,10 @@ export function getWebauthnCredential(
       publicKey: {
         challenge: challengeBuffer,
         allowCredentials,
-        timeout: 60000,
-
-        // see https://chromium.googlesource.com/chromium/src/+/master/content/browser/webauth/uv_preferred.md for why
-        // default value of preferred is not necessarily what we want, it limits webauthn to only devices that support
-        // user verification, which usually requires entering a PIN
+        timeout: 60000, // this is just a hint
+        // in the backend, we don't check for user verification for 2FA
+        // therefore we should indicate to browser that it's not necessary
+        // (this is only a hint, though, browser may still prompt)
         userVerification: "discouraged",
       },
     })
@@ -86,6 +85,41 @@ export function getWebauthnCredential(
 
       successCallback(credentialData);
       // steps 6+ of this flow are handled by lib/discourse_webauthn/authentication_service.rb
+    })
+    .catch((err) => {
+      if (err.name === "NotAllowedError") {
+        return errorCallback(I18n.t("login.security_key_not_allowed_error"));
+      }
+      errorCallback(err);
+    });
+}
+
+export async function getPasskeyCredential(challenge, errorCallback) {
+  if (!isWebauthnSupported()) {
+    return errorCallback(I18n.t("login.security_key_support_missing_error"));
+  }
+
+  return navigator.credentials
+    .get({
+      publicKey: {
+        challenge: stringToBuffer(challenge),
+        // https://www.w3.org/TR/webauthn-2/#user-verification
+        // for passkeys (first factor), user verification should be marked as required
+        // it ensures browser requests PIN or biometrics before authenticating
+        // lib/discourse_webauthn/authentication_service.rb requires this flag too
+        userVerification: "required",
+      },
+    })
+    .then((credential) => {
+      return {
+        signature: bufferToBase64(credential.response.signature),
+        clientData: bufferToBase64(credential.response.clientDataJSON),
+        authenticatorData: bufferToBase64(
+          credential.response.authenticatorData
+        ),
+        credentialId: bufferToBase64(credential.rawId),
+        userHandle: bufferToBase64(credential.response.userHandle),
+      };
     })
     .catch((err) => {
       if (err.name === "NotAllowedError") {
