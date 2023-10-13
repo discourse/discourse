@@ -547,6 +547,10 @@ class Reviewable < ActiveRecord::Base
     TYPE_TO_BASIC_SERIALIZER[self.type.to_sym] || BasicReviewableSerializer
   end
 
+  def type_class
+    Reviewable.sti_class_for(self.type)
+  end
+
   def self.lookup_serializer_for(type)
     "#{type}Serializer".constantize
   rescue NameError

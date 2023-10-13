@@ -1968,6 +1968,10 @@ spam:
   reviewable_low_priority_threshold:
     default: 0
     min: 0
+  reviewable_revision_reasons:
+    default: "Duplicate|Does not meet posting guidelines"
+    type: list
+    client: true
 
 rate_limits:
   unique_posts_mins: 5
