@@ -35,7 +35,7 @@ export default class TagShowRoute extends DiscourseRoute {
   }
 
   beforeModel() {
-    const controller = this.controllerFor("tag.show");
+    const controller = this.controllerFor(this.controllerName);
     controller.setProperties({
       loading: true,
       showInfo: false,
@@ -68,7 +68,7 @@ export default class TagShowRoute extends DiscourseRoute {
       );
     }
 
-    const category = params.category_slug_path_with_id
+    let category = params.category_slug_path_with_id
       ? Category.findBySlugPathWithID(params.category_slug_path_with_id)
       : null;
     const filteredQueryParams = filterQueryParams(
@@ -90,6 +90,13 @@ export default class TagShowRoute extends DiscourseRoute {
       filter += `/${tagId}/l/${topicFilter}`;
     } else if (additionalTags) {
       filter = `tags/intersection/${tagId}/${additionalTags.join("/")}`;
+
+      if (transition.to.queryParams["category"]) {
+        filteredQueryParams["category"] = transition.to.queryParams["category"];
+        category = Category.findBySlugPathWithID(
+          transition.to.queryParams["category"]
+        );
+      }
     } else {
       filter = `tag/${tagId}/l/${topicFilter}`;
     }
@@ -176,7 +183,7 @@ export default class TagShowRoute extends DiscourseRoute {
     const filterText = I18n.t(
       `filters.${this.navMode.replace("/", ".")}.title`
     );
-    const controller = this.controllerFor("tag.show");
+    const controller = this.controllerFor(this.controllerName);
 
     if (controller.tag?.id) {
       if (controller.category) {

@@ -919,6 +919,23 @@ aside.onebox.mixcloud-preview {
     height: 100%;
   }
 }
+.video-placeholder-container {
+  position: relative;
+  padding: 0 0 56.25% 0;
+  width: 100%;
+  background-color: black;
+
+  .video-placeholder-overlay {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: 150ms;
+    background-repeat: no-repeat;
+    background-position: center;
+    max-width: 30%;
+  }
+}
 
 iframe.vimeo-onebox {
   width: 100%;

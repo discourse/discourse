@@ -9,7 +9,6 @@ import { SELECTORS } from "discourse/lib/lightbox/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setTextDirections } from "discourse/lib/text-direction";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
-import discourseLater from "discourse-common/lib/later";
 import I18n from "I18n";
 
 export default {
@@ -82,30 +81,6 @@ export default {
         });
       });
 
-      const caps = owner.lookup("service:capabilities");
-      if (caps.isSafari || caps.isIOS) {
-        api.decorateCookedElement(
-          (elem) => {
-            elem.querySelectorAll("video").forEach((video) => {
-              if (video.poster && video.poster !== "" && !video.autoplay) {
-                return;
-              }
-
-              const source = video.querySelector("source");
-              if (source) {
-                // In post-cooked.js, we create the video element in a detached DOM
-                // then adopt it into to the real DOM.
-                // This confuses safari, and preloading/autoplay do not happen.
-
-                // Calling `.load()` tricks Safari into loading the video element correctly
-                source.parentElement.load();
-              }
-            });
-          },
-          { afterAdopt: true, onlyStream: true }
-        );
-      }
-
       const oneboxTypes = {
         amazon: "discourse-amazon",
         githubactions: "fab-github",
@@ -129,28 +104,6 @@ export default {
             }
           });
         });
-      });
-
-      api.decorateCookedElement((element) => {
-        element
-          .querySelectorAll(".video-container")
-          .forEach((videoContainer) => {
-            const video = videoContainer.getElementsByTagName("video")[0];
-            video.addEventListener("loadeddata", () => {
-              discourseLater(() => {
-                if (video.videoWidth === 0 || video.videoHeight === 0) {
-                  const notice = document.createElement("div");
-                  notice.className = "notice";
-                  notice.innerHTML =
-                    iconHTML("exclamation-triangle") +
-                    " " +
-                    I18n.t("cannot_render_video");
-
-                  videoContainer.appendChild(notice);
-                }
-              }, 500);
-            });
-          });
       });
 
       function _createButton() {

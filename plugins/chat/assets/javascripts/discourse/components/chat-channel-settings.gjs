@@ -443,7 +443,7 @@ export default class ChatAboutScreen extends Component {
           {{/if}}
 
           <section.row @label={{this.historyLabel}}>
-            <ChatRetentionReminderText @channel={{@channel}} />
+            <ChatRetentionReminderText @channel={{@channel}} @type="short" />
           </section.row>
         </form.section>
 

@@ -22,6 +22,10 @@ module PageObjects
         find(".modal-footer .btn-primary").click
       end
 
+      def has_content?(content)
+        find(".modal-body").has_content?(content)
+      end
+
       def open?
         has_css?(".modal.d-modal")
       end

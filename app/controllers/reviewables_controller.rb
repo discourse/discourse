@@ -222,11 +222,8 @@ class ReviewablesController < ApplicationController
         return render_json_error(error)
       end
 
-      if reviewable.type == "ReviewableUser"
-        args.merge!(
-          reject_reason: params[:reject_reason],
-          send_email: params[:send_email] != "false",
-        )
+      if reviewable.type_class.respond_to?(:additional_args)
+        args.merge!(reviewable.type_class.additional_args(params) || {})
       end
 
       plugin_params =

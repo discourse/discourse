@@ -1,3 +1,7 @@
+/* eslint-disable simple-import-sort/imports */
+import "./loader-shims";
+/* eslint-enable simple-import-sort/imports */
+
 import { getOwner } from "@ember/application";
 import {
   getSettledState,
@@ -5,7 +9,6 @@ import {
   setApplication,
   setResolver,
 } from "@ember/test-helpers";
-import "./loader-shims";
 import bootbox from "bootbox";
 import { addModuleExcludeMatcher } from "ember-cli-test-loader/test-support/index";
 import jQuery from "jquery";

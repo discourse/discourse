@@ -1660,7 +1660,7 @@ en:
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site."
     invite_code: "User must type this code to be allowed account registration, ignored when empty (case-insensitive)"
     approve_suspect_users: "Add suspicious users to the review queue. Suspicious users have entered a bio/website but have no reading activity."
-    review_every_post: "All posts must be reviewed. WARNING! NOT RECOMMENDED FOR BUSY SITES."
+    review_every_post: "Send every new post to the review queue for moderation. Posts are still published immediately and are visible to all users. WARNING! Not recommended for high-traffic sites due to the potential volume of posts needing review."
     pending_users_reminder_delay_minutes: "Notify moderators if new users have been waiting for approval for longer than this many minutes. Set to -1 to disable notifications."
     persistent_sessions: "Users will remain logged in when the web browser is closed"
     maximum_session_age: "User will remain logged in for n hours since last visit"
@@ -2302,6 +2302,7 @@ en:
     approve_new_topics_unless_trust_level: "New topics for users below this trust level must be approved"
     approve_unless_staged: "New topics and posts for staged users must be approved"
     notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, send a notification to all moderators. Set to 0 to disable these notifications."
+    reviewable_revision_reasons: "List of reasons that can be selected when rejecting a reviewable queued post with a revision. Other is always available as well, which allows for a custom reason to be entered."
     auto_close_messages_post_count: "Maximum number of posts allowed in a message before it is automatically closed (0 to disable)"
     auto_close_topics_post_count: "Maximum number of posts allowed in a topic before it is automatically closed (0 to disable)"
     auto_close_topics_create_linked_topic: "Create a new linked topic when a topic is auto-closed based on 'auto close topics post count' setting"
@@ -2984,6 +2985,29 @@ en:
         However, if the post is hidden by the community a second time, it will remain hidden until handled by staff.
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+
+    reviewable_queued_post_revise_and_reject:
+      title: "Feedback on your post"
+      subject_template: "Feedback on your post in %{topic_title}"
+      text_body_template: |
+        Hi %{username},
+
+        We've reviewed your post in [%{topic_title}](%{topic_url}) and have some feedback for you.
+
+        Reason: %{reason}
+
+        Feedback: %{feedback}
+
+        You can edit your original post below and re-submit to make the suggested changes, or reply to this message if you have any questions.
+
+        --------
+
+        %{original_post}
+
+        --------
+
+        Thanks,
+        %{site_name} Moderators
 
     post_hidden_again:
       title: "Post Hidden again"
@@ -5227,6 +5251,8 @@ en:
         title: "No"
       discard_post:
         title: "Discard Post"
+      revise_and_reject_post:
+        title: "Revise Post..."
       ignore:
         title: "Ignore"
       ignore_and_do_nothing:

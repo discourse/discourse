@@ -25,7 +25,7 @@
     "pretty-text": "1.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.0",
+    "@babel/core": "^7.23.2",
     "@babel/standalone": "^7.23.2",
     "@colors/colors": "^1.6.0",
     "@discourse/backburner.js": "^2.7.1-0",
@@ -62,6 +62,7 @@
     "deprecation-silencer": "1.0.0",
     "dialog-holder": "1.0.0",
     "discourse-common": "1.0.0",
+    "discourse-i18n": "1.0.0",
     "discourse-plugins": "1.0.0",
     "ember-auto-import": "^2.6.3",
     "ember-buffered-proxy": "^2.1.1",
@@ -98,8 +99,8 @@
     "messageformat": "0.1.5",
     "pretender": "^3.4.7",
     "qunit": "^2.20.0",
-    "qunit-dom": "^2.0.0",
-    "sass": "^1.69.2",
+    "qunit-dom": "^3.0.0",
+    "sass": "^1.69.3",
     "select-kit": "1.0.0",
     "sinon": "^16.1.0",
     "source-map": "^0.7.4",

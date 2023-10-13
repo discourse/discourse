@@ -222,10 +222,13 @@ module JsLocaleHelper
     return "" if translations.blank?
 
     output = +"if (!I18n.extras) { I18n.extras = {}; }"
-    locales.each { |l| output << <<~JS }
+    locales.each do |l|
+      translations_json = translations[l].to_json
+      output << <<~JS
         if (!I18n.extras["#{l}"]) { I18n.extras["#{l}"] = {}; }
-        Object.assign(I18n.extras["#{l}"], #{translations[l].to_json});
+        Object.assign(I18n.extras["#{l}"], #{translations_json});
       JS
+    end
 
     output
   end
