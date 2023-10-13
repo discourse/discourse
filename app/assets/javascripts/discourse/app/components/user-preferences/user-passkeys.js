@@ -57,6 +57,11 @@ export default class UserPasskeys extends Component {
           // for passkeys (first factor), user verification should be marked as required
           // it ensures browser prompts user for PIN/fingerprint/faceID before authenticating
           userVerification: "required",
+          // See https://w3c.github.io/webauthn/#sctn-createCredential for context
+          // This ensures that the authenticator stores a client-side private key
+          // physical security keys (like Yubikey) need this
+          // TODO(pmusaraj): Add a test/spec for this
+          requireResidentKey: true,
         },
       };
 
