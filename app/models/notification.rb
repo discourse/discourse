@@ -227,6 +227,12 @@ class Notification < ActiveRecord::Base
     Notification.where(user_id: user_id, topic_id: topic_id).delete_all
   end
 
+  def self.filter_inaccessible_topic_notifications(guardian, notifications)
+    topic_ids = notifications.map { |n| n.topic_id }.compact.uniq
+    accessible_topic_ids = guardian.can_see_topic_ids(topic_ids: topic_ids)
+    notifications.select { |n| n.topic_id.blank? || accessible_topic_ids.include?(n.topic_id) }
+  end
+
   # Be wary of calling this frequently. O(n) JSON parsing can suck.
   def data_hash
     @data_hash ||=

@@ -6922,8 +6922,7 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
 
         notifications = response.parsed_body["notifications"]
-        expect(notifications.size).to eq(1)
-        expect(notifications.first["data"]["bookmark_id"]).to be_nil
+        expect(notifications.size).to eq(0)
 
         bookmarks = response.parsed_body["bookmarks"]
         expect(bookmarks.map { |bookmark| bookmark["id"] }).to contain_exactly(
@@ -6969,6 +6968,24 @@ RSpec.describe UsersController do
 
         bookmarks = response.parsed_body["bookmarks"]
         expect(bookmarks.size).to eq(1)
+      end
+
+      it "does not return any unread notifications for bookmarks that the user no longer has access to" do
+        bookmark_with_reminder2 = Fabricate(:bookmark, user: user, bookmarkable: Fabricate(:post))
+        TopicUser.change(user.id, bookmark_with_reminder2.bookmarkable.topic, total_msecs_viewed: 1)
+        BookmarkReminderNotificationHandler.new(bookmark_with_reminder2).send_notification
+
+        bookmark_with_reminder2.bookmarkable.topic.update!(
+          archetype: Archetype.private_message,
+          category: nil,
+        )
+
+        get "/u/#{user.username}/user-menu-bookmarks"
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(1)
+        expect(notifications.first["data"]["bookmark_id"]).to eq(bookmark_with_reminder.id)
       end
     end
   end
