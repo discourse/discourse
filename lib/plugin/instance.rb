@@ -1110,7 +1110,7 @@ class Plugin::Instance
   # but all stats will be shown on the /about.json route. For example take
   # this usage:
   #
-  # register_about_stat_group("chat_messages") do
+  # register_stat("chat_messages") do
   #   { last_day: 1, "7_days" => 10, "30_days" => 100, count: 1000, previous_30_days: 150 }
   # end
   #
@@ -1132,18 +1132,12 @@ class Plugin::Instance
   # group of stats is shown on the site About page in the Site Statistics
   # table. Some stats may be needed purely for reporting purposes and thus
   # do not need to be shown in the UI to admins/users.
-  def register_about_stat_group(plugin_stat_group_name, show_in_ui: false, &block)
+  def register_stat(name, show_in_ui: false, expose_via_api: false, &block)
     # We do not want to register and display the same group multiple times.
-    if DiscoursePluginRegistry.about_stat_groups.any? { |stat_group|
-         stat_group[:name] == plugin_stat_group_name
-       }
-      return
-    end
+    return if DiscoursePluginRegistry.stats.any? { |stat| stat.name == name }
 
-    DiscoursePluginRegistry.register_about_stat_group(
-      { name: plugin_stat_group_name, show_in_ui: show_in_ui, block: block },
-      self,
-    )
+    stat = Stat.new(name, show_in_ui: show_in_ui, expose_via_api: expose_via_api, &block)
+    DiscoursePluginRegistry.register_stat(stat, self)
   end
 
   ##
