@@ -99,7 +99,7 @@
     "messageformat": "0.1.5",
     "pretender": "^3.4.7",
     "qunit": "^2.20.0",
-    "qunit-dom": "^2.0.0",
+    "qunit-dom": "^3.0.0",
     "sass": "^1.69.2",
     "select-kit": "1.0.0",
     "sinon": "^16.1.0",
