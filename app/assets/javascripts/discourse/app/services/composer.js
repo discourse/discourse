@@ -1450,10 +1450,6 @@ export default class ComposerService extends Service {
       this.model.set("title", opts.topicTitle);
     }
 
-    if (opts.topicCategoryId) {
-      this.model.set("categoryId", opts.topicCategoryId);
-    }
-
     if (opts.topicTags && this.site.can_tag_topics) {
       let tags = escapeExpression(opts.topicTags)
         .split(",")
