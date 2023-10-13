@@ -17,7 +17,22 @@ module(
       await render(hbs`<ChatRetentionReminder @channel={{this.channel}} />`);
 
       assert.dom(".chat-retention-reminder").includesText(
-        I18n.t("chat.retention_reminders.public", {
+        I18n.t("chat.retention_reminders.long", {
+          count: this.siteSettings.chat_channel_retention_days,
+        })
+      );
+    });
+
+    test("@type=short", async function (assert) {
+      this.channel = ChatChannel.create({ chatable_type: "Category" });
+      this.currentUser.set("needs_channel_retention_reminder", true);
+
+      await render(
+        hbs`<ChatRetentionReminder @channel={{this.channel}} @type="short" />`
+      );
+
+      assert.dom(".chat-retention-reminder").includesText(
+        I18n.t("chat.retention_reminders.short", {
           count: this.siteSettings.chat_channel_retention_days,
         })
       );
