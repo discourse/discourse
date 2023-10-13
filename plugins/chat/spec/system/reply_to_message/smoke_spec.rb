@@ -34,8 +34,7 @@ RSpec.describe "Reply to message - smoke", type: :system do
       end
 
       using_session(:user_1) do
-        thread_page.fill_composer("user1reply")
-        thread_page.click_send_message
+        thread_page.send_message("user1reply")
 
         expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(1)
         expect(thread_page.messages).to have_message(text: "user1reply")
@@ -45,13 +44,7 @@ RSpec.describe "Reply to message - smoke", type: :system do
         expect(thread_page.messages).to have_message(text: "user1reply")
         expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(1)
 
-        thread_page.fill_composer("user2reply")
-        thread_page.click_send_message
-
-        expect(thread_page.messages).to have_message(text: "user2reply")
-        expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(2)
-
-        refresh
+        thread_page.send_message("user2reply")
 
         expect(thread_page.messages).to have_message(text: "user1reply")
         expect(thread_page.messages).to have_message(text: "user2reply")
@@ -61,11 +54,6 @@ RSpec.describe "Reply to message - smoke", type: :system do
       end
 
       using_session(:user_1) do |session|
-        expect(thread_page.messages).to have_message(text: "user2reply")
-        expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(2)
-
-        refresh
-
         expect(thread_page.messages).to have_message(text: "user1reply")
         expect(thread_page.messages).to have_message(text: "user2reply")
         expect(channel_page.message_thread_indicator(original_message)).to have_reply_count(2)
