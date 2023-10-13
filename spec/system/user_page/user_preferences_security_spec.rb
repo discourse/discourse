@@ -10,14 +10,13 @@ describe "User preferences for Security", type: :system do
   before do
     user.activate
     sign_in(user)
+
+    # system specs run on their own host + port
+    DiscourseWebauthn.stubs(:origin).returns(current_host + ":" + Capybara.server_port.to_s)
   end
 
   describe "Security keys" do
     it "adds a 2FA security key and logs in with it" do
-      # system specs run on their own host + port
-      DiscourseWebauthn.stubs(:origin).returns(current_host + ":" + Capybara.server_port.to_s)
-
-      # simulate browser credential authorization
       options = ::Selenium::WebDriver::VirtualAuthenticatorOptions.new
       authenticator = page.driver.browser.add_virtual_authenticator(options)
 
@@ -44,7 +43,7 @@ describe "User preferences for Security", type: :system do
 
       expect(page).to have_css(".header-dropdown-toggle.current-user")
 
-      # cleanup
+      # clear authenticator (otherwise it will interfere with other tests)
       authenticator.remove!
     end
   end
@@ -52,15 +51,12 @@ describe "User preferences for Security", type: :system do
   describe "Passkeys" do
     before { SiteSetting.experimental_passkeys = true }
 
-    it "adds a passkey to user account" do
-      # system specs run on their own host + port
-      DiscourseWebauthn.stubs(:origin).returns(current_host + ":" + Capybara.server_port.to_s)
-
-      # simulate browser credentials
+    it "adds a passkey and logs in with it" do
       options =
         ::Selenium::WebDriver::VirtualAuthenticatorOptions.new(
           user_verification: true,
           user_verified: true,
+          resident_key: true,
         )
       authenticator = page.driver.browser.add_virtual_authenticator(options)
 
@@ -74,23 +70,29 @@ describe "User preferences for Security", type: :system do
 
       expect(user_preferences_security_page).to have_css(".rename-passkey__form")
 
-      find(".dialog-header .btn").click
+      find(".dialog-close").click
 
       expect(user_preferences_security_page).to have_css(".pref-passkeys__rows .row")
 
       find(".passkey-options-dropdown .select-kit-header").click
       find(".passkey-options-dropdown li[data-name='Delete']").click
 
-      # confirm deletion screen shown without requiring password confirmation
+      # confirm deletion screen shown without requiring session confirmation
       # since this was already done when adding the passkey
-      find(".dialog-footer .btn-danger").click
+      expect(user_preferences_security_page).to have_css(".dialog-footer .btn-danger")
 
-      expect(user_preferences_security_page).not_to have_css(".pref-passkeys__rows .row")
+      # close the dialog (don't delete the key, we need it to login in the next step)
+      find(".dialog-close").click
 
-      # ideally we should test a login flow with passkey here
-      # but I haven't figured out how to make it work with Selenium's virtual authenticator
+      user_menu.sign_out
 
-      # clear simulated credentials
+      # login with the key we just created
+      find(".d-header .login-button").click
+      find(".passkey-login-button").click
+
+      expect(page).to have_css(".header-dropdown-toggle.current-user")
+
+      # clear authenticator (otherwise it will interfere with other tests)
       authenticator.remove!
     end
   end

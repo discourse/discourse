@@ -60,7 +60,6 @@ export default class UserPasskeys extends Component {
           // See https://w3c.github.io/webauthn/#sctn-createCredential for context
           // This ensures that the authenticator stores a client-side private key
           // physical security keys (like Yubikey) need this
-          // TODO(pmusaraj): Add a test/spec for this
           requireResidentKey: true,
         },
       };
