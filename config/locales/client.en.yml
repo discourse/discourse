@@ -490,6 +490,7 @@ en:
         send_pm: "Send PM"
         feedback: "Feedback"
         custom_reason: "Give a clear description of the reason"
+        other_reason: "Other..."
         optional: "optional"
       stale_help: "This reviewable has been resolved by <b>%{username}</b>."
       claim_help:

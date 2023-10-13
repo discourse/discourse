@@ -3,21 +3,31 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import I18n from "I18n";
 
-const OTHER_REASON = "Other...";
+const OTHER_REASON = "other_reason";
 
 export default class ReviseAndRejectPostReviewable extends Component {
   @service siteSettings;
 
-  @tracked reason = null;
-  @tracked customReason = null;
-  @tracked feedback = null;
+  @tracked reason;
+  @tracked customReason;
+  @tracked feedback;
   @tracked submitting = false;
 
   get configuredReasons() {
-    return this.siteSettings.reviewable_revision_reasons
+    const reasons = this.siteSettings.reviewable_revision_reasons
       .split("|")
-      .concat([OTHER_REASON]);
+      .filter(Boolean)
+      .map((reason) => ({ id: reason, name: reason }))
+      .concat([
+        {
+          id: OTHER_REASON,
+          name: I18n.t("review.revise_and_reject_post.other_reason"),
+        },
+      ]);
+    return reasons;
   }
 
   get showCustomReason() {
@@ -33,20 +43,20 @@ export default class ReviseAndRejectPostReviewable extends Component {
   }
 
   @action
-  rejectAndSendPM() {
+  async rejectAndSendPM() {
     this.submitting = true;
-    this.args.model
-      .performConfirmed(this.args.model.action, {
+
+    try {
+      await this.args.model.performConfirmed(this.args.model.action, {
         revise_reason: this.reason,
         revise_custom_reason: this.customReason,
         revise_feedback: this.feedback,
-      })
-      .then(() => {
-        this.submitting = false;
-        this.args.closeModal();
-      })
-      .finally(() => {
-        this.submitting = false;
       });
+      this.args.closeModal();
+    } catch (error) {
+      popupAjaxError(error);
+    } finally {
+      this.submitting = false;
+    }
   }
 }

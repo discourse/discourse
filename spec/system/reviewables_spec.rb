@@ -104,6 +104,27 @@ describe "Reviewables", type: :system do
           ),
         )
       end
+
+      it "allows selecting a custom reason for revise and reject" do
+        revise_modal = PageObjects::Modals::Base.new
+
+        review_page.visit_reviewable(queued_post_reviewable)
+
+        expect(queued_post_reviewable).to be_pending
+        expect(queued_post_reviewable.target_created_by).to be_present
+
+        review_page.select_action(queued_post_reviewable, "revise_and_reject_post")
+        expect(revise_modal).to be_open
+
+        reason_dropdown =
+          PageObjects::Components::SelectKit.new(".revise-and-reject-reviewable__reason")
+        reason_dropdown.select_row_by_value("other_reason")
+        find(".revise-and-reject-reviewable__custom-reason").fill_in(with: "I felt like it")
+        find(".revise-and-reject-reviewable__feedback").fill_in(with: "This is a test")
+        revise_modal.click_primary_button
+
+        expect(review_page).to have_reviewable_with_rejected_status(queued_post_reviewable)
+      end
     end
   end
 end
