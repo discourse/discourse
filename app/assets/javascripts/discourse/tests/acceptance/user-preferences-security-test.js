@@ -138,8 +138,9 @@ acceptance("User Preferences - Security", function (needs) {
 
     await click(".dialog-close");
 
-    await click(".passkey-options-dropdown .select-kit-header");
-    await click(".passkey-options-dropdown li[data-name='Edit']");
+    const dropdown = selectKit(".passkey-options-dropdown");
+    await dropdown.expand();
+    await dropdown.selectRowByName("Edit");
 
     assert
       .dom(".dialog-body .rename-passkey__form")
@@ -147,13 +148,13 @@ acceptance("User Preferences - Security", function (needs) {
 
     await click(".dialog-close");
 
-    await click(".passkey-options-dropdown .select-kit-header");
-    await click(".passkey-options-dropdown li[data-name='Delete']");
+    await dropdown.expand();
+    await dropdown.selectRowByName("Delete");
 
     assert
       .dom(".dialog-body .confirm-session")
       .exists(
-        "displays a dialog to confirm the user's identity before adding a passkey"
+        "displays a dialog to confirm the user's identity before deleting a passkey"
       );
 
     await click(".dialog-close");
@@ -175,7 +176,5 @@ acceptance("User Preferences - Security", function (needs) {
       .exists(
         "displays a dialog to confirm the user's identity before adding a passkey"
       );
-
-    await click(".dialog-close");
   });
 });

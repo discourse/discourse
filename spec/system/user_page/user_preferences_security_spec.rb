@@ -74,8 +74,9 @@ describe "User preferences for Security", type: :system do
 
       expect(user_preferences_security_page).to have_css(".pref-passkeys__rows .row")
 
-      find(".passkey-options-dropdown .select-kit-header").click
-      find(".passkey-options-dropdown li[data-name='Delete']").click
+      select_kit = PageObjects::Components::SelectKit.new(".passkey-options-dropdown")
+      select_kit.expand
+      select_kit.select_row_by_name("Delete")
 
       # confirm deletion screen shown without requiring session confirmation
       # since this was already done when adding the passkey
