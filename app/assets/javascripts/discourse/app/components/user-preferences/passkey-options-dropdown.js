@@ -29,10 +29,10 @@ export default DropdownSelectBoxComponent.extend({
   onChange(id) {
     switch (id) {
       case "edit":
-        this.renamePasskey(id);
+        this.renamePasskey();
         break;
       case "delete":
-        this.deletePasskey(id);
+        this.deletePasskey();
         break;
     }
   },

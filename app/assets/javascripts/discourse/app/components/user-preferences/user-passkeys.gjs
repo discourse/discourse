@@ -1,10 +1,13 @@
 import Component from "@glimmer/component";
+import { getOwner } from "@ember/application";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import DButton from "discourse/components/d-button";
 import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
+import PasskeyOptionsDropdown from "discourse/components/user-preferences/passkey-options-dropdown";
 import RenamePasskey from "discourse/components/user-preferences/rename-passkey";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferToBase64, stringToBuffer } from "discourse/lib/webauthn";
 import I18n from "I18n";
 
@@ -13,6 +16,17 @@ export default class UserPasskeys extends Component {
   @service currentUser;
   @service capabilities;
   @service router;
+
+  instructions = I18n.t("user.passkeys.short_description");
+  title = I18n.t("user.passkeys.title");
+  formatDate = getOwner(this).resolveRegistration("helper:format-date");
+  addedPrefix = I18n.t("user.passkeys.added_prefix");
+  lastUsedPrefix = I18n.t("user.passkeys.last_used_prefix");
+  neverUsed = I18n.t("user.passkeys.never_used");
+
+  isCurrentUser() {
+    return this.currentUser.id === this.args.model.id;
+  }
 
   passkeyDefaultName() {
     if (this.capabilities.isSafari) {
@@ -88,7 +102,7 @@ export default class UserPasskeys extends Component {
 
       this.router.refresh();
 
-      // Let user name key after creating
+      // Prompt to rename key after creating
       this.dialog.dialog({
         title: I18n.t("user.passkeys.passkey_successfully_created"),
         type: "notice",
@@ -166,4 +180,73 @@ export default class UserPasskeys extends Component {
       bodyComponentModel: { id, name },
     });
   }
+
+  <template>
+    <div class="control-group pref-passkeys">
+      <label class="control-label">
+        {{this.title}}
+      </label>
+      <div class="instructions">
+        {{this.instructions}}
+      </div>
+
+      <div class="pref-passkeys__rows">
+        {{#each @model.user_passkeys as |passkey|}}
+          <div class="row">
+            <div class="passkey-left">
+              <div class="row-passkey__name">{{passkey.name}}</div>
+              <div class="row-passkey__created-date">
+                <span class="prefix">
+                  {{this.addedPrefix}}
+                </span>
+                {{this.formatDate
+                  passkey.created_at
+                  format="medium"
+                  leaveAgo="true"
+                }}
+              </div>
+              <div class="row-passkey__used-date">
+                {{#if passkey.last_used}}
+                  <span class="prefix">
+                    {{this.lastUsedPrefix}}
+                  </span>
+                  {{this.formatDate
+                    passkey.last_used
+                    format="medium"
+                    leaveAgo="true"
+                  }}
+                {{else}}
+                  {{this.neverUsed}}
+                {{/if}}
+              </div>
+            </div>
+            {{#if this.isCurrentUser}}
+              <div class="passkey-right">
+                <div class="actions">
+                  <PasskeyOptionsDropdown
+                    @deletePasskey={{fn this.deletePasskey passkey.id}}
+                    @renamePasskey={{fn
+                      this.renamePasskey
+                      passkey.id
+                      passkey.name
+                    }}
+                  />
+                </div>
+              </div>
+            {{/if}}
+          </div>
+        {{/each}}
+      </div>
+
+      <div class="controls pref-passkeys__add">
+        {{#if this.isCurrentUser}}
+          <DButton
+            @action={{this.addPasskey}}
+            @icon="plus"
+            @label="user.passkeys.add_passkey"
+          />
+        {{/if}}
+      </div>
+    </div>
+  </template>
 }
