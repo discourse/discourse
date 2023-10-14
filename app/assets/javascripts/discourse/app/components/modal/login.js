@@ -8,6 +8,7 @@ import { ajax } from "discourse/lib/ajax";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import { areCookiesEnabled } from "discourse/lib/utilities";
 import { wavingHandURL } from "discourse/lib/waving-hand-url";
+import { isWebauthnSupported } from "discourse/lib/webauthn";
 import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import escape from "discourse-common/lib/escape";
@@ -86,8 +87,16 @@ export default class Login extends Component {
     return classes.join(" ");
   }
 
+  get canUsePasskeys() {
+    return (
+      this.siteSettings.enable_local_logins &&
+      this.siteSettings.experimental_passkeys &&
+      isWebauthnSupported()
+    );
+  }
+
   get hasAtLeastOneLoginButton() {
-    return findAll().length > 0;
+    return findAll().length > 0 || this.canUsePasskeys;
   }
 
   get loginButtonLabel() {

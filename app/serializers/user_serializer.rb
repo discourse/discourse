@@ -168,6 +168,7 @@ class UserSerializer < UserCardSerializer
   def user_passkeys
     UserSecurityKey
       .where(user_id: object.id, factor_type: UserSecurityKey.factor_types[:first_factor])
+      .order("created_at ASC")
       .map do |usk|
         { id: usk.id, name: usk.name, last_used: usk.last_used, created_at: usk.created_at }
       end
