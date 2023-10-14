@@ -1,7 +1,11 @@
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { all, Promise } from "rsvp";
-import { queryParams, resetParams } from "discourse/controllers/discovery/list";
+import {
+  queryParams,
+  resetParams,
+  routeControlledPropDefaults,
+} from "discourse/controllers/discovery/list";
 import PreloadStore from "discourse/lib/preload-store";
 import Category from "discourse/models/category";
 import CategoryList from "discourse/models/category-list";
@@ -153,12 +157,10 @@ class AbstractCategoryRoute extends DiscourseRoute {
     const topics = this.topics,
       category = model.category;
 
-    controller.setProperties({
+    const controllerOpts = {
+      ...routeControlledPropDefaults,
       navigationArgs: this._navigationArgs(category),
       subcategoryList: this._categoryList,
-    });
-
-    let topicOpts = {
       model: topics,
       category,
       noSubcategories: !!this.routeConfig?.no_subcategories,
@@ -168,17 +170,17 @@ class AbstractCategoryRoute extends DiscourseRoute {
     const p = category.get("params");
     if (p && Object.keys(p).length) {
       if (p.order !== undefined) {
-        topicOpts.order = p.order;
+        controllerOpts.order = p.order;
       }
       if (p.ascending !== undefined) {
-        topicOpts.ascending = p.ascending;
+        controllerOpts.ascending = p.ascending;
       }
     }
 
     this.searchService.searchContext = category.get("searchContext");
     this.set("topics", null);
 
-    controller.setProperties(topicOpts);
+    controller.setProperties(controllerOpts);
     controller.bulkSelectHelper.clear();
   }
 

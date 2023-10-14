@@ -46,6 +46,26 @@ export function addDiscoveryQueryParam(p, opts) {
   queryParams[p] = opts;
 }
 
+// TODO - having routes control all of these properties is very difficult to reason with
+// we should all route-controlled stuff under `model`
+export const routeControlledPropDefaults = {
+  additionalTags: null,
+  ascending: null,
+  canCreateTopicOnTag: null,
+  category: null,
+  expandAllPinned: null,
+  expandGloballyPinned: null,
+  filterType: null,
+  model: null,
+  navigationArgs: null,
+  noSubcategories: null,
+  noSubcategories: null,
+  order: null,
+  subcategoryList: null,
+  tag: null,
+  tagNotification: null,
+};
+
 @disableImplicitInjections
 export default class DiscoveryListController extends Controller {
   @service composer;
