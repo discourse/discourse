@@ -108,7 +108,7 @@
     "truth-helpers": "1.0.0",
     "util": "^0.12.5",
     "virtual-dom": "^2.1.1",
-    "webpack": "^5.88.2",
+    "webpack": "^5.89.0",
     "wizard": "1.0.0",
     "workbox-cacheable-response": "^7.0.0",
     "workbox-core": "^7.0.0",
