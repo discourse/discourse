@@ -11,7 +11,7 @@ describe Chat::ChatablesSerializer do
       user_1.set_status!("test", ":cat:")
     end
 
-    it "renders status" do
+    it "includes status" do
       serializer =
         described_class.new(
           OpenStruct.new({ users: [user_1] }),
