@@ -79,3 +79,7 @@ openapi/*
 
 # Cached License Data Files
 /.licenses
+
+# Migrations
+!/migrations/**/*.sql
+/migrations/output

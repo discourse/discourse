@@ -268,3 +268,11 @@ gem "net-http"
 gem "cgi", ">= 0.3.6", require: false
 
 gem "tzinfo-data"
+
+group :migrations, optional: true do
+  gem "activesupport"
+  gem "extralite-bundle"
+  gem "msgpack"
+  gem "thor"
+  gem "zeitwerk"
+end

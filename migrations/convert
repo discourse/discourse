@@ -1,2 +1,55 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
+
+require "bundler/setup"
+Bundler.setup(:migrations)
+
+require "zeitwerk"
+require "active_support/core_ext/object/blank"
+require "active_support/inflector"
+require "thor"
+
+module Migrations
+  loader = Zeitwerk::Loader.new
+  %w[common converters].each do |dir|
+    loader.push_dir(File.expand_path(dir, __dir__), namespace: Migrations)
+  end
+  loader.setup
+
+  module Convert
+    class << self
+      attr_accessor :type
+
+      def root_dir
+        @root_dir ||= __dir__
+      end
+
+      def output_dir
+        @output_dir ||= File.join(root_dir, "output")
+      end
+
+      def output_database_path
+        @output_database_path ||= File.join(output_dir, "db.sqlite3")
+      end
+    end
+
+    class CLI < Thor
+      desc "execute", "Run the conversion"
+
+      def execute
+        FileUtils.mkdir_p(Convert.output_dir)
+
+        Migrations::IntermediateDb.reset!(Convert.output_database_path)
+        Migrations::IntermediateDb.migrate(Convert.output_database_path)
+      end
+
+      desc "version", "Print the version"
+
+      def version
+        puts "0.0.1"
+      end
+    end
+  end
+end
+
+Migrations::Convert::CLI.start(ARGV)
