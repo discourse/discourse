@@ -25,8 +25,11 @@ export default class UserPasskeys extends Component {
   lastUsedPrefix = I18n.t("user.passkeys.last_used_prefix");
   neverUsed = I18n.t("user.passkeys.never_used");
 
-  isCurrentUser() {
-    return this.currentUser.id === this.args.model.id;
+  get showActions() {
+    return (
+      this.currentUser.id === this.args.model.id &&
+      !this.capabilities.isAppWebview
+    );
   }
 
   async createPasskey() {
@@ -211,7 +214,7 @@ export default class UserPasskeys extends Component {
                 {{/if}}
               </div>
             </div>
-            {{#if this.isCurrentUser}}
+            {{#if this.showActions}}
               <div class="passkey-right">
                 <div class="actions">
                   <PasskeyOptionsDropdown
@@ -229,15 +232,15 @@ export default class UserPasskeys extends Component {
         {{/each}}
       </div>
 
-      <div class="controls pref-passkeys__add">
-        {{#if this.isCurrentUser}}
+      {{#if this.showActions}}
+        <div class="controls pref-passkeys__add">
           <DButton
             @action={{this.addPasskey}}
             @icon="plus"
             @label="user.passkeys.add_passkey"
           />
-        {{/if}}
-      </div>
+        </div>
+      {{/if}}
     </div>
   </template>
 }
