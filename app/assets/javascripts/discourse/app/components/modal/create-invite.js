@@ -45,7 +45,7 @@ export default Component.extend(bufferedProperty("invite"), {
     });
 
     this.set("invite", this.model.invite || Invite.create());
-    this.set("topics", this.invite?.topics || []);
+    this.set("topics", this.invite?.topics || this.model.topics || []);
 
     this.buffered.setProperties({
       max_redemptions_allowed: 1,
@@ -53,6 +53,8 @@ export default Component.extend(bufferedProperty("invite"), {
         .add(this.siteSettings.invite_expiry_days, "days")
         .format(FORMAT),
       groupIds: this.model?.groupIds,
+      topicId: this.model.topicId,
+      topicTitle: this.model.topicTitle,
     });
   },
 
