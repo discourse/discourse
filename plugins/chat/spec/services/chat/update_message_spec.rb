@@ -65,19 +65,21 @@ RSpec.describe Chat::UpdateMessage do
       chat_message = create_chat_message(user1, og_message, public_chat_channel)
       new_message = "2 short"
 
-      updater =
-        Chat::UpdateMessage.call(
-          guardian: guardian,
-          message_id: chat_message.id,
-          message: new_message,
-        )
-      expect(updater.message).not_to be_valid
-      expect(updater.message.errors.first.message).to match(
-        I18n.t(
-          "chat.errors.minimum_length_not_met",
-          { count: SiteSetting.chat_minimum_message_length },
-        ),
+      expect do
+        update =
+          Chat::UpdateMessage.call(
+            guardian: guardian,
+            message_id: chat_message.id,
+            message: new_message,
+          )
+      end.to raise_error(ActiveRecord::RecordInvalid).with_message(
+        "Validation failed: " +
+          I18n.t(
+            "chat.errors.minimum_length_not_met",
+            { count: SiteSetting.chat_minimum_message_length },
+          ),
       )
+
       expect(chat_message.reload.message).to eq(og_message)
     end
 
@@ -87,16 +89,20 @@ RSpec.describe Chat::UpdateMessage do
       chat_message = create_chat_message(user1, og_message, public_chat_channel)
       new_message = "2 long" * 100
 
-      updater =
+      expect do
         Chat::UpdateMessage.call(
           guardian: guardian,
           message_id: chat_message.id,
           message: new_message,
         )
-      expect(updater.message).not_to be_valid
-      expect(updater.message.errors.first.message).to match(
-        I18n.t("chat.errors.message_too_long", { count: SiteSetting.chat_maximum_message_length }),
+      end.to raise_error(ActiveRecord::RecordInvalid).with_message(
+        "Validation failed: " +
+          I18n.t(
+            "chat.errors.message_too_long",
+            { count: SiteSetting.chat_maximum_message_length },
+          ),
       )
+
       expect(chat_message.reload.message).to eq(og_message)
     end
 
@@ -452,15 +458,15 @@ RSpec.describe Chat::UpdateMessage do
         chat_message_1.update!(created_at: 30.seconds.ago)
         chat_message_2.update!(created_at: 20.seconds.ago)
 
-        updater =
+        expect do
           Chat::UpdateMessage.call(
             guardian: guardian,
             message_id: chat_message_1.id,
             message: "another different chat message here",
           )
-
-        expect(updater.message).not_to be_valid
-        expect(updater.message.errors.first.message).to eq(I18n.t("chat.errors.duplicate_message"))
+        end.to raise_error(ActiveRecord::RecordInvalid).with_message(
+          "Validation failed: " + I18n.t("chat.errors.duplicate_message"),
+        )
       end
 
       it "does not count the message as a duplicate when editing leaves the message the same but changes uploads" do
@@ -664,17 +670,17 @@ RSpec.describe Chat::UpdateMessage do
 
       it "errors when a blocked word is present" do
         chat_message = create_chat_message(user1, "something", public_chat_channel)
-        updater =
+        msg = "Validation failed: " + I18n.t("contains_blocked_word", { word: watched_word.word })
+
+        expect do
           Chat::UpdateMessage.call(
             guardian: guardian,
             message_id: chat_message.id,
             message: "bad word - #{watched_word.word}",
           )
+        end.to raise_error(ActiveRecord::RecordInvalid).with_message(msg)
 
-        expect(updater.message).not_to be_valid
-        expect(updater.message.errors.first.message).to match(
-          I18n.t("contains_blocked_word", { word: watched_word.word }),
-        )
+        expect(chat_message.reload.message).not_to eq("bad word - #{watched_word.word}")
       end
     end
 

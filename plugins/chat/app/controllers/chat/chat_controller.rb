@@ -12,7 +12,7 @@ module Chat
     # these endpoints require a standalone find because they need to be
     # able to get deleted channels and recover them.
     before_action :find_chatable, only: %i[enable_chat disable_chat]
-    before_action :find_chat_message, only: %i[edit_message rebake message_link]
+    before_action :find_chat_message, only: %i[rebake message_link]
     before_action :set_channel_and_chatable_with_access_check,
                   except: %i[
                     respond
