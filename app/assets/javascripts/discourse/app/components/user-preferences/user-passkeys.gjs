@@ -29,18 +29,6 @@ export default class UserPasskeys extends Component {
     return this.currentUser.id === this.args.model.id;
   }
 
-  passkeyDefaultName() {
-    if (this.capabilities.isSafari) {
-      return I18n.t("user.passkeys.name.icloud_keychain");
-    }
-
-    if (this.capabilities.isAndroid || this.capabilities.isChrome) {
-      return I18n.t("user.passkeys.name.google_password_manager");
-    }
-
-    return I18n.t("user.passkeys.name.default");
-  }
-
   async createPasskey() {
     try {
       const response = await this.args.model.createPasskey();
@@ -89,7 +77,7 @@ export default class UserPasskeys extends Component {
         type: credential.type,
         attestation: bufferToBase64(credential.response.attestationObject),
         clientData: bufferToBase64(credential.response.clientDataJSON),
-        name: this.passkeyDefaultName(),
+        name: I18n.t("user.passkeys.name.default"),
       };
 
       const registrationResponse = await this.args.model.registerPasskey(
@@ -111,6 +99,8 @@ export default class UserPasskeys extends Component {
         bodyComponentModel: registrationResponse,
       });
     } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
       this.errorMessage =
         error.name === "InvalidStateError"
           ? I18n.t("user.passkeys.already_added_error")
