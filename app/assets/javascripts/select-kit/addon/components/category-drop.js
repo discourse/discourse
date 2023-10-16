@@ -139,17 +139,16 @@ export default ComboBoxComponent.extend({
     };
 
     if (this.siteSettings.lazy_load_categories) {
-      return await Category.asyncSearch(filter, { ...opts, limit: 5 }).sort(
-        (a, b) => {
-          if (a.parent_category_id && !b.parent_category_id) {
-            return 1;
-          } else if (!a.parent_category_id && b.parent_category_id) {
-            return -1;
-          } else {
-            return 0;
-          }
+      const results = await Category.asyncSearch(filter, { ...opts, limit: 5 });
+      return results.sort((a, b) => {
+        if (a.parent_category_id && !b.parent_category_id) {
+          return 1;
+        } else if (!a.parent_category_id && b.parent_category_id) {
+          return -1;
+        } else {
+          return 0;
         }
-      );
+      });
     }
 
     if (filter) {
