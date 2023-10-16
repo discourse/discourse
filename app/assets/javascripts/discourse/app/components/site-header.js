@@ -113,6 +113,7 @@ const SiteHeaderComponent = MountWidget.extend(
       return this._isRTL() ? "user-menu" : "hamburger-panel";
     },
 
+    @bind
     onSwipeStart(event) {
       const e = event.detail;
       const center = e.center;
@@ -135,6 +136,7 @@ const SiteHeaderComponent = MountWidget.extend(
       }
     },
 
+    @bind
     onSwipeEnd(event) {
       const e = event.detail;
       const menuPanels = document.querySelectorAll(".menu-panel");
@@ -149,6 +151,7 @@ const SiteHeaderComponent = MountWidget.extend(
       });
     },
 
+    @bind
     onSwipeCancel() {
       const menuPanels = document.querySelectorAll(".menu-panel");
       scrollLock(false, document.querySelector(".panel-body"));
@@ -157,6 +160,7 @@ const SiteHeaderComponent = MountWidget.extend(
       });
     },
 
+    @bind
     onSwipe(event) {
       const e = event.detail;
       const panel = this.movingElement;
@@ -479,14 +483,10 @@ export default SiteHeaderComponent.extend({
     this._swipeEvents = new SwipeEvents(this.element);
     if (this.site.mobileView) {
       this._swipeEvents.addTouchListeners();
-      this._swipeStart = (e) => this.onSwipeStart(e);
-      this._swipeEnd = (e) => this.onSwipeEnd(e);
-      this._swipeCancel = (e) => this.onSwipeCancel(e);
-      this._swipe = (e) => this.onSwipe(e);
-      this.element.addEventListener("swipestart", this._swipeStart);
-      this.element.addEventListener("swipeend", this._swipeEnd);
-      this.element.addEventListener("swipecancel", this._swipeCancel);
-      this.element.addEventListener("swipe", this._swipe);
+      this.element.addEventListener("swipestart", this.onSwipeStart);
+      this.element.addEventListener("swipeend", this.onSwipeEnd);
+      this.element.addEventListener("swipecancel", this.onSwipeCancel);
+      this.element.addEventListener("swipe", this.onSwipe);
     }
   },
 
@@ -496,10 +496,10 @@ export default SiteHeaderComponent.extend({
     this._resizeObserver?.disconnect();
     this.appEvents.off("site-header:force-refresh", this, "queueRerender");
     if (this.site.mobileView) {
-      this.element.removeEventListener("swipestart", this._swipeStart);
-      this.element.removeEventListener("swipeend", this._swipeEnd);
-      this.element.removeEventListener("swipecancel", this._swipeCancel);
-      this.element.removeEventListener("swipe", this._swipe);
+      this.element.removeEventListener("swipestart", this.onSwipeStart);
+      this.element.removeEventListener("swipeend", this.onSwipeEnd);
+      this.element.removeEventListener("swipecancel", this.onSwipeCancel);
+      this.element.removeEventListener("swipe", this.onSwipe);
       this._swipeEvents.removeTouchListeners();
     }
   },

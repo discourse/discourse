@@ -1,4 +1,5 @@
 import { isTesting } from "discourse-common/config/environment";
+import { bind } from "discourse-common/utils/decorators";
 
 /**
    Swipe events is a class that allows components to detect and respond to swipe gestures
@@ -20,41 +21,48 @@ export default class SwipeEvents {
     this.element = element;
   }
 
-  addTouchListeners() {
-    this.touchStart = (e) => {
-      // multitouch cancels current swipe event
-      if (e.touches.length > 1) {
-        if (this.cancelled) {
-          return;
-        }
-        this.cancelled = true;
-        const event = new CustomEvent("swipecancel", {
-          detail: { originalEvent: e },
-        });
-        this.element.dispatchEvent(event);
+  @bind
+  touchStart(e) {
+    // multitouch cancels current swipe event
+    if (e.touches.length > 1) {
+      if (this.cancelled) {
         return;
       }
-      this.#swipeStart(e.touches[0]);
-    };
-    this.touchMove = (e) => {
-      const touchEvent = e.touches[0];
-      touchEvent.type = "pointermove";
-      this.#swipeMove(touchEvent, e);
-    };
-    this.touchEnd = (e) => {
-      this.#swipeMove({ type: "pointerup" }, e);
-      // only reset when no touches remain
-      if (e.touches.length === 0) {
-        this.cancelled = false;
-      }
-    };
-    this.touchCancel = (e) => {
-      this.#swipeMove({ type: "pointercancel" }, e);
-      if (e.touches.length === 0) {
-        this.cancelled = false;
-      }
-    };
+      this.cancelled = true;
+      const event = new CustomEvent("swipecancel", {
+        detail: { originalEvent: e },
+      });
+      this.element.dispatchEvent(event);
+      return;
+    }
+    this.#swipeStart(e.touches[0]);
+  }
 
+  @bind
+  touchMove(e) {
+    const touchEvent = e.touches[0];
+    touchEvent.type = "pointermove";
+    this.#swipeMove(touchEvent, e);
+  }
+
+  @bind
+  touchEnd(e) {
+    this.#swipeMove({ type: "pointerup" }, e);
+    // only reset when no touches remain
+    if (e.touches.length === 0) {
+      this.cancelled = false;
+    }
+  }
+
+  @bind
+  touchCancel(e) {
+    this.#swipeMove({ type: "pointercancel" }, e);
+    if (e.touches.length === 0) {
+      this.cancelled = false;
+    }
+  }
+
+  addTouchListeners() {
     const opts = {
       passive: false,
     };

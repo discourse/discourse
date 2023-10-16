@@ -133,6 +133,7 @@ export default Component.extend({
     }
   },
 
+  @bind
   onSwipeStart(event) {
     const e = event.detail;
     const target = e.originalEvent.target;
@@ -154,6 +155,7 @@ export default Component.extend({
     }
   },
 
+  @bind
   onSwipeCancel() {
     let durationMs = this._swipeEvents.getMaxAnimationTimeMs();
     const timelineContainer = document.querySelector(".timeline-container");
@@ -164,6 +166,7 @@ export default Component.extend({
     });
   },
 
+  @bind
   onSwipeEnd(event) {
     const e = event.detail;
     const timelineContainer = document.querySelector(".timeline-container");
@@ -194,6 +197,7 @@ export default Component.extend({
     }
   },
 
+  @bind
   onSwipe(event) {
     const e = event.detail;
     e.originalEvent.preventDefault();
@@ -228,14 +232,10 @@ export default Component.extend({
     this._swipeEvents = new SwipeEvents(this.element);
     if (this.site.mobileView) {
       this._swipeEvents.addTouchListeners();
-      this._swipeStart = (e) => this.onSwipeStart(e);
-      this._swipeEnd = (e) => this.onSwipeEnd(e);
-      this._swipeCancel = (e) => this.onSwipeCancel(e);
-      this._swipe = (e) => this.onSwipe(e);
-      this.element.addEventListener("swipestart", this._swipeStart);
-      this.element.addEventListener("swipeend", this._swipeEnd);
-      this.element.addEventListener("swipecancel", this._swipeCancel);
-      this.element.addEventListener("swipe", this._swipe);
+      this.element.addEventListener("swipestart", this.onSwipeStart);
+      this.element.addEventListener("swipeend", this.onSwipeEnd);
+      this.element.addEventListener("swipecancel", this.onSwipeCancel);
+      this.element.addEventListener("swipe", this.onSwipe);
     }
   },
 
@@ -257,10 +257,10 @@ export default Component.extend({
       $("#reply-control").off("div-resized", this._checkSize);
     }
     if (this.site.mobileView) {
-      this.element.removeEventListener("swipestart", this._swipeStart);
-      this.element.removeEventListener("swipeend", this._swipeEnd);
-      this.element.removeEventListener("swipecancel", this._swipeCancel);
-      this.element.removeEventListener("swipe", this._swipe);
+      this.element.removeEventListener("swipestart", this.onSwipeStart);
+      this.element.removeEventListener("swipeend", this.onSwipeEnd);
+      this.element.removeEventListener("swipecancel", this.onSwipeCancel);
+      this.element.removeEventListener("swipe", this.onSwipe);
       this._swipeEvents.removeTouchListeners();
     }
   },
