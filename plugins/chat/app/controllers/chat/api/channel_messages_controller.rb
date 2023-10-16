@@ -24,7 +24,9 @@ class Chat::Api::ChannelMessagesController < Chat::ApiController
     with_service(Chat::UpdateMessage) do
       on_success { render json: success_json.merge(message_id: result[:message].id) }
       on_model_not_found(:message) { raise Discourse::NotFound }
-      on_failed_policy(:target_message_exists) { raise Discourse::NotFound }
+      on_model_errors(:message) do |model|
+        render_json_error(model.errors.map(&:full_message).join(", "))
+      end
     end
   end
 
