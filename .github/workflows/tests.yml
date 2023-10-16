@@ -217,7 +217,7 @@ jobs:
         timeout-minutes: 30
 
       - uses: actions/upload-artifact@v3
-        if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
+        if: always() && matrix.build_type == 'frontend' && matrix.target == 'plugins'
         with:
           name: ember-exam-execution-plugins-frontend-${{(matrix.embroider == '1') && 'embroider' || 'classic'}}
           path: ./app/assets/javascripts/discourse/test-execution-*.json
