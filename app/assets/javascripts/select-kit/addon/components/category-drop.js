@@ -135,12 +135,26 @@ export default ComboBoxComponent.extend({
   async search(filter) {
     let opts = {
       parentCategoryId: this.options.parentCategory?.id,
+      includeUncategorized: this.siteSettings.allow_uncategorized_topics,
     };
+
+    if (this.siteSettings.lazy_load_categories) {
+      return await Category.asyncSearch(filter, { ...opts, limit: 5 }).sort(
+        (a, b) => {
+          if (a.parent_category_id && !b.parent_category_id) {
+            return 1;
+          } else if (!a.parent_category_id && b.parent_category_id) {
+            return -1;
+          } else {
+            return 0;
+          }
+        }
+      );
+    }
+
     if (filter) {
-      let results = this.siteSettings.lazy_load_categories
-        ? await Category.asyncSearch(filter, { ...opts, limit: 5 })
-        : Category.search(filter, opts);
-      results = this._filterUncategorized(results).sort((a, b) => {
+      let results = Category.search(filter, opts);
+      return this._filterUncategorized(results).sort((a, b) => {
         if (a.parent_category_id && !b.parent_category_id) {
           return 1;
         } else if (!a.parent_category_id && b.parent_category_id) {
@@ -149,11 +163,8 @@ export default ComboBoxComponent.extend({
           return 0;
         }
       });
-      return results;
     } else {
-      return this.siteSettings.lazy_load_categories
-        ? await Category.asyncSearch(filter, opts)
-        : this._filterUncategorized(this.content);
+      return this._filterUncategorized(this.content);
     }
   },
 

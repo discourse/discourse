@@ -60,6 +60,12 @@ export default MultiSelectComponent.extend({
             this.attrs.options?.allowUncategorized !== undefined
               ? this.attrs.options.allowUncategorized
               : this.selectKit.options.allowUncategorized,
+          selectCategoryIds: this.categories
+            ? this.categories.map((x) => x.id)
+            : null,
+          rejectCategoryIds: this.blockedCategories
+            ? this.blockedCategories.map((x) => x.id)
+            : null,
         })
       : this._super(filter);
   },

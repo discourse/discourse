@@ -310,6 +310,8 @@ class CategoriesController < ApplicationController
           true
         end
       )
+    select_category_ids = params[:select_category_ids].presence
+    reject_category_ids = params[:reject_category_ids].presence
     include_subcategories =
       if params[:include_subcategories].present?
         ActiveModel::Type::Boolean.new.cast(params[:include_subcategories])
@@ -339,6 +341,10 @@ class CategoriesController < ApplicationController
 
     categories =
       categories.where.not(id: SiteSetting.uncategorized_category_id) if !include_uncategorized
+
+    categories = categories.where(id: select_category_ids) if select_category_ids
+
+    categories = categories.where.not(id: reject_category_ids) if reject_category_ids
 
     categories = categories.where(parent_category_id: nil) if !include_subcategories
 

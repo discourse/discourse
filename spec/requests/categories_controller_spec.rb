@@ -1099,6 +1099,28 @@ RSpec.describe CategoriesController do
       end
     end
 
+    context "with select_category_ids" do
+      it "returns categories" do
+        get "/categories/search.json", params: { select_category_ids: [category.id] }
+
+        expect(response.parsed_body["categories"].size).to eq(1)
+        expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly("Foo")
+      end
+    end
+
+    context "with reject_category_ids" do
+      it "returns categories" do
+        get "/categories/search.json", params: { reject_category_ids: [category2.id] }
+
+        expect(response.parsed_body["categories"].size).to eq(3)
+        expect(response.parsed_body["categories"].map { |c| c["name"] }).to contain_exactly(
+          "Uncategorized",
+          "Foo",
+          "Foobar",
+        )
+      end
+    end
+
     context "with include_subcategories" do
       it "returns categories" do
         get "/categories/search.json", params: { include_subcategories: false }
