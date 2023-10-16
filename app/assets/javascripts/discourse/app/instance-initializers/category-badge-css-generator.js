@@ -13,12 +13,6 @@ export default {
 
     // If the site is login_required and the user is anon there will be no categories preloaded.
     if (!this.site.categories) {
-      const badgeCssStyleTag = document.getElementById(
-        "category-badge-css-generator"
-      );
-      if (badgeCssStyleTag) {
-        badgeCssStyleTag.remove();
-      }
       return;
     }
 
