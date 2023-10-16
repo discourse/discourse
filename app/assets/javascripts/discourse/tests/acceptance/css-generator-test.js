@@ -49,6 +49,7 @@ acceptance(
 
     test("category CSS variables are not generated", async function (assert) {
       await visit("/");
+
       const cssTag = document.querySelector(
         "style#category-color-css-generator"
       );
