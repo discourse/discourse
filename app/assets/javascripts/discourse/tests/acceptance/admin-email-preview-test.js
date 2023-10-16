@@ -1,6 +1,6 @@
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit, waitUntil } from "@ember/test-helpers";
 import { test } from "qunit";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Admin - email-preview", function (needs) {
   needs.user();
