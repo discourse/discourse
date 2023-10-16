@@ -77,6 +77,18 @@ module Chat
       end
     end
 
+    def edit_message
+      chat_message_updater =
+        Chat::UpdateMessage.call(
+          guardian: guardian,
+          message_id: @message.id,
+          message: params[:message],
+          upload_ids: params[:upload_ids] || [],
+        )
+
+      render json: success_json
+    end
+
     def react
       params.require(%i[message_id emoji react_action])
       guardian.ensure_can_react!

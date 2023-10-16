@@ -17,6 +17,7 @@ module Chat
 
     contract
     model :message
+    model :uploads, optional: true
     policy :can_modify_channel_message
     policy :can_modify_message
 
@@ -48,6 +49,7 @@ module Chat
           :chat_webhook_event,
           :uploads,
           :revisions,
+          thread: [:channel, last_message: [:user]],
           chat_channel: [
             :last_message,
             :chat_channel_archive,
@@ -56,6 +58,11 @@ module Chat
           user: :user_status,
         )
         .find_by(id: contract.message_id)
+    end
+
+    def fetch_uploads(contract:, guardian:, **)
+      return [] if !SiteSetting.chat_allow_uploads
+      guardian.user.uploads.where(id: contract.upload_ids)
     end
 
     def can_modify_channel_message(guardian:, message:, **)
@@ -72,19 +79,15 @@ module Chat
 
       return if contract.upload_ids.nil? || !SiteSetting.chat_allow_uploads
 
-      upload_info = get_upload_info
-      message.uploads = upload_info[:uploads] if upload_info[:changed]
-      validate_message!
+      uploads = ::Upload.where(id: contract.upload_ids, user_id: guardian.user.id)
+      return if uploads.count != contract.upload_ids.count
 
-      # uploads = ::Upload.where(id: contract.upload_ids, user_id: guardian.user.id)
-      # return if uploads.count != contract.upload_ids.count
+      new_upload_ids = uploads.map(&:id)
+      existing_upload_ids = message.upload_ids
+      difference = (existing_upload_ids + new_upload_ids) - (existing_upload_ids & new_upload_ids)
+      return if !difference.any?
 
-      # new_upload_ids = uploads.map(&:id)
-      # existing_upload_ids = message.upload_ids
-      # difference = (existing_upload_ids + new_upload_ids) - (existing_upload_ids & new_upload_ids)
-      # return if !difference.any?
-
-      # message.upload_ids = new_upload_ids
+      message.upload_ids = new_upload_ids
     end
 
     def ensures_message_validity(message:, **)
@@ -93,22 +96,24 @@ module Chat
 
     def save_message(message:, **)
       message.cook
-      message.save
+      message.save!
       message.update_mentions
     end
 
     def save_revision(message:, guardian:, **)
       return if !should_create_revision?(message: message, guardian: guardian)
+      prev_message = message.message_before_last_save || message.message_was
 
       context.revision =
         message.revisions.create!(
-          old_message: message.message_before_last_save,
+          old_message: prev_message,
           new_message: message.message,
           user_id: guardian.user.id,
         )
     end
 
     def should_create_revision?(message:, guardian:, **)
+      prev_message = message.message_before_last_save || message.message_was
       maxSeconds = SiteSetting.chat_editing_grace_period
       maxEditedChars =
         (
@@ -121,7 +126,7 @@ module Chat
       secondsSinceCreated = Time.now.to_i - message&.created_at.iso8601.to_time.to_i
       charsEdited =
         ONPDiff
-          .new(message.message_before_last_save, message.message)
+          .new(prev_message, message.message)
           .short_diff
           .sum { |str, type| type == :common ? 0 : str.size }
 
@@ -139,26 +144,6 @@ module Chat
       if message.thread.present?
         ::Chat::Publisher.publish_thread_original_message_metadata!(message.thread)
       end
-    end
-
-    def get_upload_info
-      return { uploads: [] } if @upload_ids.nil? || !SiteSetting.chat_allow_uploads
-
-      uploads = ::Upload.where(id: @upload_ids, user_id: @user.id)
-      if uploads.count != @upload_ids.count
-        # User is passing upload_ids for uploads that they don't own. Don't change anything.
-        return { uploads: @chat_message.uploads, changed: false }
-      end
-
-      new_upload_ids = uploads.map(&:id)
-      existing_upload_ids = @chat_message.upload_ids
-      difference = (existing_upload_ids + new_upload_ids) - (existing_upload_ids & new_upload_ids)
-      { uploads: uploads, changed: difference.any? }
-    end
-
-    def validate_message!
-      return if @chat_message.valid?
-      raise StandardError.new(@chat_message.errors.map(&:full_message).join(", "))
     end
   end
 end
