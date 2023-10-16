@@ -11,6 +11,7 @@ class CategoriesController < ApplicationController
                    redirect
                    find_by_slug
                    visible_groups
+                   search
                  ]
 
   before_action :fetch_category, only: %i[show update destroy visible_groups]
