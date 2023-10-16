@@ -121,22 +121,17 @@ export function defaultCategoryLinkRenderer(category, opts) {
 
   const categoryStyle = opts.categoryStyle;
 
-  let classNames = "badge-category";
+  let classNames = `badge-category badge-category-${category.id}`;
   if (restricted) {
     classNames += " restricted";
   }
 
   if (parentCat) {
-    classNames += " badge-subcategory";
-  }
-
-  let style = `--category-badge-color: var(--category-${category.id}-color); --category-badge-text-color: #${category.text_color};`;
-  if (parentCat) {
-    style += ` --parent-category-badge-color: var(--category-${parentCat.id}-color);`;
+    classNames += ` badge-subcategory-${parentCat.id}`;
   }
 
   html +=
-    `<span style="${style}" ` +
+    `<span ` +
     'data-drop-close="true" class="' +
     classNames +
     '"' +
