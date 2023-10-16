@@ -30,7 +30,7 @@ class Tag < ActiveRecord::Base
   # tags that have never been used and don't belong to a tag group
   scope :unused,
         -> {
-          where(staff_topic_count: 0, pm_topic_count: 0).joins(
+          where(staff_topic_count: 0, pm_topic_count: 0, target_tag_id: nil).joins(
             "LEFT JOIN tag_group_memberships tgm ON tags.id = tgm.tag_id",
           ).where("tgm.tag_id IS NULL")
         }

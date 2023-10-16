@@ -299,6 +299,7 @@ RSpec.describe Tag do
       )
     end
     let!(:tag_group) { Fabricate(:tag_group, tag_names: [tag_in_group.name]) }
+    let!(:synonym_tag) { Fabricate(:tag, target_tag: tags.first) }
 
     it "returns the correct tags" do
       expect(Tag.unused.pluck(:name)).to contain_exactly("unused1", "unused2")
