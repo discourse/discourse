@@ -21,13 +21,15 @@
         {{#if this.showHtml}}
           <span>{{i18n "admin.email.html"}}</span>
           |
-          <a href {{on "click" this.toggleShowHtml}}>
+          <a href {{on "click" this.toggleShowHtml}} class="show-text-link">
             {{i18n "admin.email.text"}}
           </a>
         {{else}}
-          <a href {{on "click" this.toggleShowHtml}}>{{i18n
-              "admin.email.html"
-            }}</a>
+          <a
+            href
+            {{on "click" this.toggleShowHtml}}
+            class="show-html-link"
+          >{{i18n "admin.email.html"}}</a>
           |
           <span>{{i18n "admin.email.text"}}</span>
         {{/if}}
@@ -77,7 +79,7 @@
           ></iframe>
         {{/if}}
       {{else}}
-        <pre>{{html-safe this.model.text_content}}</pre>
+        <pre>{{this.model.text_content}}</pre>
       {{/if}}
     </div>
   </div>
