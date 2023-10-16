@@ -129,7 +129,7 @@ RSpec.describe "Outgoing chat webhooks" do
       end
 
       it "triggers a webhook when a chat message is edited" do
-        put "/channels/#{chat_channel.id}/messages/#{chat_message.id}.json",
+        put "/chat/api/channels/#{chat_channel.id}/messages/#{chat_message.id}.json",
             params: {
               message: new_message_content,
             }
@@ -195,7 +195,7 @@ RSpec.describe "Outgoing chat webhooks" do
       end
 
       it "triggers a webhook when a chat message is edited" do
-        put "/channels/#{direct_message_channel.id}/messages/#{chat_message.id}.json",
+        put "/chat/api/channels/#{direct_message_channel.id}/messages/#{chat_message.id}.json",
             params: {
               message: new_message_content,
             }
