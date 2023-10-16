@@ -197,6 +197,14 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_public_user_custom_field(field, self)
   end
 
+  def register_editable_topic_custom_field(field, staff_only: false)
+    if staff_only
+      DiscoursePluginRegistry.register_staff_editable_topic_custom_field(field, self)
+    else
+      DiscoursePluginRegistry.register_public_editable_topic_custom_field(field, self)
+    end
+  end
+
   def register_editable_user_custom_field(field, staff_only: false)
     if staff_only
       DiscoursePluginRegistry.register_staff_editable_user_custom_field(field, self)

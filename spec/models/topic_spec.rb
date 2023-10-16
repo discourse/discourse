@@ -1705,48 +1705,6 @@ RSpec.describe Topic do
     end
   end
 
-  describe "meta data" do
-    fab!(:topic) { Fabricate(:topic, meta_data: { "hello" => "world" }) }
-
-    it "allows us to create a topic with meta data" do
-      expect(topic.meta_data["hello"]).to eq("world")
-    end
-
-    context "when updating" do
-      context "with existing key" do
-        before { topic.update_meta_data("hello" => "bane") }
-
-        it "updates the key" do
-          expect(topic.meta_data["hello"]).to eq("bane")
-        end
-      end
-
-      context "with a new key" do
-        before { topic.update_meta_data("city" => "gotham") }
-
-        it "adds the new key" do
-          expect(topic.meta_data["city"]).to eq("gotham")
-          expect(topic.meta_data["hello"]).to eq("world")
-        end
-      end
-
-      context "with a new key" do
-        before_all do
-          topic.update_meta_data("other" => "key")
-          topic.save!
-        end
-
-        it "can be loaded" do
-          expect(Topic.find(topic.id).meta_data["other"]).to eq("key")
-        end
-
-        it "is in sync with custom_fields" do
-          expect(Topic.find(topic.id).custom_fields["other"]).to eq("key")
-        end
-      end
-    end
-  end
-
   describe "after create" do
     fab!(:topic) { Fabricate(:topic) }
 
