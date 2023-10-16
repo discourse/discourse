@@ -6,17 +6,20 @@ class QuoteRewriter
   end
 
   def rewrite_raw_username(raw, old_username, new_username)
+    escaped_old_username = Regexp.escape(old_username)
     pattern =
       Regexp.union(
-        /(?<pre>\[quote\s*=\s*["'']?.*username:)#{old_username}(?<post>\,?[^\]]*\])/i,
-        /(?<pre>\[quote\s*=\s*["'']?)#{old_username}(?<post>\,?[^\]]*\])/i,
+        /(?<pre>\[quote\s*=\s*["'']?.*username:)#{escaped_old_username}(?<post>\,?[^\]]*\])/i,
+        /(?<pre>\[quote\s*=\s*["'']?)#{escaped_old_username}(?<post>\,?[^\]]*\])/i,
       )
 
     raw.gsub(pattern, "\\k<pre>#{new_username}\\k<post>")
   end
 
   def rewrite_cooked_username(cooked, old_username, new_username, avatar_img)
-    pattern = /(?<=\s)#{PrettyText::Helpers.format_username(old_username)}(?=:)/i
+    formatted_old_username = PrettyText::Helpers.format_username(old_username)
+    escaped_old_username = Regexp.escape(formatted_old_username)
+    pattern = /(?<=\s)#{escaped_old_username}(?=:)/i
 
     cooked
       .css("aside.quote")
@@ -42,13 +45,17 @@ class QuoteRewriter
   end
 
   def rewrite_raw_display_name(raw, old_display_name, new_display_name)
-    pattern = /(?<pre>\[quote\s*=\s*["'']?)#{old_display_name}(?<post>\,[^\]]*username[^\]]*\])/i
+    escaped_old_display_name = Regexp.escape(old_display_name)
+    pattern =
+      /(?<pre>\[quote\s*=\s*["'']?)#{escaped_old_display_name}(?<post>\,[^\]]*username[^\]]*\])/i
 
     raw.gsub(pattern, "\\k<pre>#{new_display_name}\\k<post>")
   end
 
   def rewrite_cooked_display_name(cooked, old_display_name, new_display_name)
-    pattern = /(?<=\s)#{PrettyText::Helpers.format_username(old_display_name)}(?=:)/i
+    formatted_old_display_name = PrettyText::Helpers.format_username(old_display_name)
+    escaped_old_display_name = Regexp.escape(formatted_old_display_name)
+    pattern = /(?<=\s)#{escaped_old_display_name}(?=:)/i
 
     cooked
       .css("aside.quote")
