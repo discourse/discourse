@@ -25,7 +25,7 @@ describe Chat::ChatablesSerializer do
     context "with hidden profile" do
       before { user_1.user_option.update!(hide_profile_and_presence: true) }
 
-      it "doesn’t render status" do
+      it "doesn’t include status" do
         serializer =
           described_class.new(
             OpenStruct.new({ users: [user_1] }),
