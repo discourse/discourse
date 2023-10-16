@@ -2,9 +2,10 @@ import { getOwner } from "@ember/application";
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
+import CreateInvite from "discourse/components/modal/create-invite";
 import { longDateNoYear } from "discourse/lib/formatter";
 import Sharing from "discourse/lib/sharing";
-import showModal from "discourse/lib/show-modal";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Category from "discourse/models/category";
 import { getAbsoluteURL } from "discourse-common/lib/get-url";
@@ -18,6 +19,7 @@ const ShareTopicModal = Component.extend(bufferedProperty("invite"), {
   post: readOnly("model.post"),
   category: readOnly("model.category"),
   allowInvites: readOnly("model.allowInvites"),
+  modal: service(),
 
   didInsertElement() {
     this._showRestrictedGroupWarning();
@@ -92,14 +94,13 @@ const ShareTopicModal = Component.extend(bufferedProperty("invite"), {
 
   @action
   inviteUsers() {
-    const controller = showModal("create-invite");
-    controller.setProperties({
-      inviteToTopic: true,
-      topics: [this.topic],
-    });
-    controller.buffered.setProperties({
-      topicId: this.topic.id,
-      topicTitle: this.topic.title,
+    this.modal.show(CreateInvite, {
+      model: {
+        inviteToTopic: true,
+        topics: [this.topic],
+        topicId: this.topic.id,
+        topicTitle: this.topic.title,
+      },
     });
   },
 
