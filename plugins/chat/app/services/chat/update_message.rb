@@ -23,7 +23,6 @@ module Chat
 
     transaction do
       step :modify_message
-      step :ensures_message_validity
       step :save_message
       step :save_revision
       step :publish
@@ -62,7 +61,7 @@ module Chat
     end
 
     def fetch_uploads(contract:, guardian:, **)
-      return [] if !SiteSetting.chat_allow_uploads
+      return if !SiteSetting.chat_allow_uploads
       guardian.user.uploads.where(id: contract.upload_ids)
     end
 
@@ -74,14 +73,11 @@ module Chat
       guardian.can_edit_chat?(message)
     end
 
-    def modify_message(contract:, message:, guardian:, **)
+    def modify_message(contract:, message:, guardian:, uploads:, **)
       message.message = contract.message
       message.last_editor_id = guardian.user.id
 
-      return if !SiteSetting.chat_allow_uploads
-
-      uploads = ::Upload.where(id: contract.upload_ids, user_id: guardian.user.id)
-      return if uploads.size != contract.upload_ids.to_a.size
+      return if uploads&.size != contract.upload_ids.to_a.size
 
       new_upload_ids = uploads.map(&:id)
       existing_upload_ids = message.upload_ids
@@ -89,10 +85,6 @@ module Chat
       return if !difference.any?
 
       message.upload_ids = new_upload_ids
-    end
-
-    def ensures_message_validity(message:, **)
-      message.valid?
     end
 
     def save_message(message:, **)
