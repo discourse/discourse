@@ -376,12 +376,12 @@ RSpec.describe AdminDashboardData do
 
       it "outputs the correct message" do
         expect(dashboard_data.deprecated_category_style_check).to eq(
-          I18n.t("dashboard.category_style_deprecated", base_path: Discourse.base_path),
+          I18n.t("dashboard.category_style_deprecated"),
         )
       end
     end
 
-    context "when there are no outdated translations" do
+    context "with the default category style" do
       before { SiteSetting.set(:category_style, "bullet") }
 
       it "outputs nothing" do

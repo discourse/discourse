@@ -449,9 +449,7 @@ class AdminDashboardData
   end
 
   def deprecated_category_style_check
-    if SiteSetting.category_style != "bullet"
-      I18n.t("dashboard.category_style_deprecated", base_path: Discourse.base_path)
-    end
+    I18n.t("dashboard.category_style_deprecated") if SiteSetting.category_style != "bullet"
   end
 
   private
