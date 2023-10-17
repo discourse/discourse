@@ -19,7 +19,7 @@
   "devDependencies": {
     "@babel/core": "^7.23.2",
     "ember-cli": "~5.0.0",
-    "webpack": "^5.88.2"
+    "webpack": "^5.89.0"
   },
   "engines": {
     "node": "16.* || >= 18",

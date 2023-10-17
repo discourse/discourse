@@ -23,9 +23,6 @@ RSpec.describe PostCreator do
     let(:creator_with_category) do
       PostCreator.new(user, basic_topic_params.merge(category: category.id))
     end
-    let(:creator_with_meta_data) do
-      PostCreator.new(user, basic_topic_params.merge(meta_data: { hello: "world" }))
-    end
     let(:creator_with_image_sizes) do
       PostCreator.new(user, basic_topic_params.merge(image_sizes: image_sizes))
     end
@@ -96,6 +93,7 @@ RSpec.describe PostCreator do
           user,
           basic_topic_params.merge(topic_opts: { custom_fields: { hello: "world" } }),
         )
+
       expect(post.topic.custom_fields).to eq("hello" => "world")
     end
 
@@ -328,10 +326,6 @@ RSpec.describe PostCreator do
 
       it "assigns a category when supplied" do
         expect(creator_with_category.create.topic.category).to eq(category)
-      end
-
-      it "adds  meta data from the post" do
-        expect(creator_with_meta_data.create.topic.meta_data["hello"]).to eq("world")
       end
 
       it "passes the image sizes through" do
