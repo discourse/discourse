@@ -1,11 +1,11 @@
-.topic-bulk-actions-modal {
+.d-modal.topic-bulk-actions-modal {
   .d-modal {
     &__container {
       width: 100%;
     }
   }
 }
-.insert-hyperlink-modal.d-modal {
+.d-modal.insert-hyperlink-modal {
   .insert-link {
     overflow-y: visible;
     input {
@@ -108,6 +108,49 @@
         background: var(--secondary);
         padding: 0.25rem 0.5rem;
         color: var(--primary-medium);
+      }
+    }
+  }
+}
+
+// move-to topic modal
+.d-modal.choose-topic-modal {
+  .d-modal {
+    &__container {
+      width: 40em; //fixed width to avoid jumps when switching to different views
+    }
+  }
+  #split-topic-name,
+  #choose-topic-title,
+  #choose-message-title {
+    width: 100%;
+  }
+
+  .category-chooser {
+    margin-bottom: 9px;
+  }
+
+  .controls.existing-topic {
+    margin-bottom: 0.75em;
+  }
+
+  // move to existing topic
+  .existing-topic {
+    .radio {
+      flex-wrap: wrap;
+    }
+    .topic-title {
+      max-width: 90%;
+    }
+    .topic-categories {
+      width: 100%;
+    }
+  }
+
+  #choosing-topic {
+    form {
+      hr {
+        margin-bottom: 0.5em;
       }
     }
   }
