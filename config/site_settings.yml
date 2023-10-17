@@ -2178,6 +2178,14 @@ developer:
   instrument_gc_stat_per_request:
     default: false
     hidden: true
+  enable_experimental_admin_ui_groups:
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true
+    hidden: true
+    client: true
 
 navigation:
   navigation_menu:

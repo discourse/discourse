@@ -2206,6 +2206,14 @@ class PluginApi {
 
   /**
    * EXPERIMENTAL. Do not use.
+   * Support for getting the current Sidebar panel.
+   */
+  getSidearPanel() {
+    this._lookupContainer("service:sidebar-state")?.currentPanel;
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
    * Set combined sidebar section mode. In this mode, sections from all panels are displayed together.
    */
   setCombinedSidebarMode() {
