@@ -49,6 +49,7 @@ module Chat
           :chat_webhook_event,
           :uploads,
           :revisions,
+          reactions: [:user],
           thread: [:channel, last_message: [:user]],
           chat_channel: [
             :last_message,
