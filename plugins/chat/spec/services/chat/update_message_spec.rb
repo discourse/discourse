@@ -129,7 +129,7 @@ RSpec.describe Chat::UpdateMessage do
       expect(updater.message.reload.message).not_to eq(new_message)
     end
 
-    it "it updates a messages content" do
+    it "updates a message's content" do
       chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
       new_message = "Change to this!"
 
@@ -761,7 +761,6 @@ RSpec.describe Chat::UpdateMessage do
         upload_1 = Fabricate(:upload, user: current_user)
         upload_2 = Fabricate(:upload, user: current_user)
         params[:upload_ids] = [upload_1.id, upload_2.id]
-        # described_class.call(message_id: message_1, upload_ids: [upload_1.id, upload_2.id])
 
         expect(result.message.upload_ids).to contain_exactly(upload_1.id, upload_2.id)
       end
@@ -797,6 +796,9 @@ RSpec.describe Chat::UpdateMessage do
     end
 
     context "when edit grace period" do
+      let(:low_trust_char_limit) { SiteSetting.chat_editing_grace_period_max_diff_low_trust }
+      let(:high_trust_char_limit) { SiteSetting.chat_editing_grace_period_max_diff_high_trust }
+
       it "does not create a revision when under (n) seconds" do
         freeze_time 5.seconds.from_now
         message_1.update!(message: "hello")
@@ -818,16 +820,23 @@ RSpec.describe Chat::UpdateMessage do
       end
 
       it "creates a revision when over (n) chars" do
-        message_1.update!(message: "hey there, how are you doing today?")
+        message_1.update!(message: "a" * (low_trust_char_limit + 1))
 
         expect { result }.to change { Chat::MessageRevision.count }.by(1)
       end
 
       it "allows trusted users to make larger edits without creating revision" do
         current_user.update!(trust_level: TrustLevel[4])
-        message_1.update!(message: "good morning, how are you doing today??")
+        message_1.update!(message: "a" * (low_trust_char_limit + 1))
 
         expect { result }.to not_change { Chat::MessageRevision.count }
+      end
+
+      it "creates a revision when over (n) chars for high trust users" do
+        current_user.update!(trust_level: TrustLevel[4])
+
+        message_1.update!(message: "a" * (high_trust_char_limit + 1))
+        expect { result }.to change { Chat::MessageRevision.count }.by(1)
       end
     end
   end
