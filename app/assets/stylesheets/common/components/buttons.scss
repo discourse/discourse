@@ -326,6 +326,12 @@
         color: var(--primary);
       }
     }
+    &:focus {
+      background: transparent;
+      .d-icon {
+        color: var(--primary);
+      }
+    }
   }
   &.btn-text {
     color: var(--tertiary);
