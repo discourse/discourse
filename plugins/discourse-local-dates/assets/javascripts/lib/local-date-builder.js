@@ -18,7 +18,7 @@ export default class LocalDateBuilder {
     this.recurring = params.recurring;
     this.sameLocalDayAsFrom = params.sameLocalDayAsFrom;
     this.timezones = Array.from(
-      new Set((params.timezones || []).filter(Boolean))
+      new Set((params.timezones || []).filter(Boolean)),
     );
     this.timezone = params.timezone || "UTC";
     this.calendar =
@@ -60,7 +60,7 @@ export default class LocalDateBuilder {
 
       const repetitionsForType = localDate.unitRepetitionsBetweenDates(
         this.recurring,
-        moment.tz(this.localTimezone)
+        moment.tz(this.localTimezone),
       );
 
       localDate = localDate.add(repetitionsForType, type);
@@ -91,7 +91,7 @@ export default class LocalDateBuilder {
     const previewedTimezones = [];
 
     const timezones = this.timezones.filter(
-      (timezone) => !this._isEqualZones(timezone, this.localTimezone)
+      (timezone) => !this._isEqualZones(timezone, this.localTimezone),
     );
 
     previewedTimezones.push({
@@ -101,10 +101,10 @@ export default class LocalDateBuilder {
         DateWithZoneHelper.fromDatetime(
           localDate.datetime,
           localDate.timezone,
-          this.localTimezone
+          this.localTimezone,
         ),
         this.time,
-        this.duration
+        this.duration,
       ),
     });
 
@@ -133,10 +133,10 @@ export default class LocalDateBuilder {
           DateWithZoneHelper.fromDatetime(
             localDate.datetime,
             localDate.timezone,
-            timezone
+            timezone,
           ),
           this.time,
-          this.duration
+          this.duration,
         ),
       });
     });
@@ -162,7 +162,7 @@ export default class LocalDateBuilder {
     const [startDate, endDate] = this._calculateDatesForRange(
       startRange,
       time,
-      duration
+      duration,
     );
     let formatElements = [
       startDate.format(`${DAY_OF_THE_WEEK_FORMAT}, ${DATE_FORMAT}`),
@@ -223,7 +223,7 @@ export default class LocalDateBuilder {
 
     const sameTimezone = this._isEqualZones(
       displayedTimezone,
-      this.localTimezone
+      this.localTimezone,
     );
 
     if (this.calendar) {
@@ -231,7 +231,7 @@ export default class LocalDateBuilder {
         .tz(this.localTimezone)
         .isBetween(
           localDate.subtract(2, "day").datetime,
-          localDate.add(1, "day").datetime.endOf("day")
+          localDate.add(1, "day").datetime.endOf("day"),
         );
 
       if (this.sameLocalDayAsFrom) {
@@ -247,7 +247,7 @@ export default class LocalDateBuilder {
 
         return date.calendar(
           moment.tz(localDate.timezone),
-          this._calendarFormats(this.time ? this.time : null)
+          this._calendarFormats(this.time ? this.time : null),
         );
       }
     }

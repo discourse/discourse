@@ -132,7 +132,7 @@ export function checklistSyntax(elem, postDecorator) {
             }
 
             nth += blocks.every(
-              (b) => b[0] >= off + match.length || off > b[1]
+              (b) => b[0] >= off + match.length || off > b[1],
             );
 
             if (nth === idx) {
@@ -141,7 +141,7 @@ export function checklistSyntax(elem, postDecorator) {
             }
 
             return match;
-          }
+          },
         );
 
         await postModel.save({

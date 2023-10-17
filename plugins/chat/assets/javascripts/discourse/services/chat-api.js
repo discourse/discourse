@@ -20,16 +20,16 @@ export default class ChatApi extends Service {
   channelThreadMessages(channelId, threadId, params = {}) {
     return this.#getRequest(
       `/channels/${channelId}/threads/${threadId}/messages?${new URLSearchParams(
-        params
-      ).toString()}`
+        params,
+      ).toString()}`,
     );
   }
 
   channelMessages(channelId, params = {}) {
     return this.#getRequest(
       `/channels/${channelId}/messages?${new URLSearchParams(
-        params
-      ).toString()}`
+        params,
+      ).toString()}`,
     );
   }
 
@@ -59,7 +59,7 @@ export default class ChatApi extends Service {
   threads(channelId, handler) {
     return new Collection(
       `${this.#basePath}/channels/${channelId}/threads`,
-      handler
+      handler,
     );
   }
 
@@ -74,7 +74,7 @@ export default class ChatApi extends Service {
   channels() {
     return new Collection(`${this.#basePath}/channels`, (response) => {
       return response.channels.map((channel) =>
-        this.chatChannelsManager.store(channel)
+        this.chatChannelsManager.store(channel),
       );
     });
   }
@@ -131,7 +131,7 @@ export default class ChatApi extends Service {
    */
   createChannel(data = {}) {
     return this.#postRequest("/channels", { channel: data }).then((response) =>
-      this.chatChannelsManager.store(response.channel)
+      this.chatChannelsManager.store(response.channel),
     );
   }
 
@@ -238,10 +238,10 @@ export default class ChatApi extends Service {
       `${this.#basePath}/channels/${channelId}/memberships`,
       (response) => {
         return response.memberships.map((membership) =>
-          UserChatChannelMembership.create(membership)
+          UserChatChannelMembership.create(membership),
         );
       },
-      params
+      params,
     );
   }
 
@@ -260,7 +260,7 @@ export default class ChatApi extends Service {
    */
   followChannel(channelId) {
     return this.#postRequest(`/channels/${channelId}/memberships/me`).then(
-      (result) => UserChatChannelMembership.create(result.membership)
+      (result) => UserChatChannelMembership.create(result.membership),
     );
   }
 
@@ -271,7 +271,7 @@ export default class ChatApi extends Service {
    */
   unfollowChannel(channelId) {
     return this.#deleteRequest(`/channels/${channelId}/memberships/me`).then(
-      (result) => UserChatChannelMembership.create(result.membership)
+      (result) => UserChatChannelMembership.create(result.membership),
     );
   }
 
@@ -287,7 +287,7 @@ export default class ChatApi extends Service {
   updateCurrentUserChannelNotificationsSettings(channelId, data = {}) {
     return this.#putRequest(
       `/channels/${channelId}/notifications-settings/me`,
-      { notifications_settings: data }
+      { notifications_settings: data },
     );
   }
 
@@ -303,7 +303,7 @@ export default class ChatApi extends Service {
   updateCurrentUserThreadNotificationsSettings(channelId, threadId, data) {
     return this.#putRequest(
       `/channels/${channelId}/threads/${threadId}/notifications-settings/me`,
-      { notification_level: data.notificationLevel }
+      { notification_level: data.notificationLevel },
     );
   }
 
@@ -360,7 +360,7 @@ export default class ChatApi extends Service {
    */
   restoreMessage(channelId, messageId) {
     return this.#putRequest(
-      `/channels/${channelId}/messages/${messageId}/restore`
+      `/channels/${channelId}/messages/${messageId}/restore`,
     );
   }
 

@@ -37,7 +37,7 @@ export default class extends Component {
 
     const ratio = Math.min(
       this.siteSettings.max_image_width / width,
-      this.siteSettings.max_image_height / height
+      this.siteSettings.max_image_height / height,
     );
     return { width: width * ratio, height: height * ratio };
   }

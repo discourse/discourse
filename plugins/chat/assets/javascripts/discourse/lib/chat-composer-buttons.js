@@ -37,7 +37,7 @@ export function registerChatComposerButton(button) {
     !normalizedButton.translatedLabel
   ) {
     throw new Error(
-      `Attempted to register a chat composer button: ${button.id} with no icon or label.`
+      `Attempted to register a chat composer button: ${button.id} with no icon or label.`,
     );
   }
 
@@ -62,7 +62,7 @@ export function chatComposerButtonsDependentKeys() {
   return [].concat(
     ...Object.values(_chatComposerButtons)
       .mapBy("dependentKeys")
-      .filter(Boolean)
+      .filter(Boolean),
   );
 }
 
@@ -94,7 +94,7 @@ export function chatComposerButtons(composer, position, context) {
         const translatedAriaLabel = computeButton(
           composer,
           button,
-          "translatedAriaLabel"
+          "translatedAriaLabel",
         );
         result.ariaLabel = translatedAriaLabel || result.label;
       }

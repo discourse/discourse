@@ -16,7 +16,7 @@ export function scrollListToTop(list) {
 export function scrollListToMessage(
   list,
   message,
-  opts = { highlight: false, position: "start", autoExpand: false }
+  opts = { highlight: false, position: "start", autoExpand: false },
 ) {
   if (!message) {
     return;
@@ -28,7 +28,7 @@ export function scrollListToMessage(
 
   schedule("afterRender", () => {
     const messageEl = list.querySelector(
-      `.chat-message-container[data-id='${message.id}']`
+      `.chat-message-container[data-id='${message.id}']`,
     );
 
     if (!messageEl) {

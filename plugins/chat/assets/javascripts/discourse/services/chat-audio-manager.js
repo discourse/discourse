@@ -67,7 +67,7 @@ export default class ChatAudioManager extends Service {
       if (!isTesting()) {
         // eslint-disable-next-line no-console
         console.info(
-          "[chat] User needs to interact with DOM before we can play notification sounds."
+          "[chat] User needs to interact with DOM before we can play notification sounds.",
         );
       }
     });

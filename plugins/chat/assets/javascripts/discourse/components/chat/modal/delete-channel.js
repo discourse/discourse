@@ -42,7 +42,7 @@ export default class ChatModalDeleteChannel extends Component {
     return htmlSafe(
       I18n.t("chat.channel_delete.instructions", {
         name: this.channel.escapedTitle,
-      })
+      }),
     );
   }
 

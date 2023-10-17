@@ -38,7 +38,7 @@ export default {
 
               get label() {
                 return formatUsername(
-                  this.notification.data.invited_by_username
+                  this.notification.data.invited_by_username,
                 );
               }
 
@@ -46,7 +46,7 @@ export default {
                 return I18n.t("notifications.chat_invitation");
               }
             };
-          }
+          },
         );
 
         api.registerNotificationTypeRenderer(
@@ -80,7 +80,7 @@ export default {
 
               get label() {
                 return formatUsername(
-                  this.notification.data.mentioned_by_username
+                  this.notification.data.mentioned_by_username,
                 );
               }
 
@@ -102,7 +102,7 @@ export default {
                 });
               }
             };
-          }
+          },
         );
       }
 

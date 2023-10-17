@@ -43,7 +43,7 @@ export default class ChatModalMoveMessageToChannel extends Component {
       I18n.t("chat.move_to_channel.instructions", {
         channelTitle: this.sourceChannel.escapedTitle,
         count: this.selectedMessageCount,
-      })
+      }),
     );
   }
 
@@ -60,7 +60,7 @@ export default class ChatModalMoveMessageToChannel extends Component {
           "chat.channel.near-message",
           "-",
           response.destination_channel_id,
-          response.first_moved_message_id
+          response.first_moved_message_id,
         );
       })
       .catch(popupAjaxError);

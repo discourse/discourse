@@ -84,7 +84,7 @@ export default class ChatStateManager extends Service {
       api.setSidebarPanel("main");
 
       const chatSeparateSidebarMode = getUserChatSeparateSidebarMode(
-        this.currentUser
+        this.currentUser,
       );
       if (chatSeparateSidebarMode.fullscreen) {
         api.setCombinedSidebarMode();

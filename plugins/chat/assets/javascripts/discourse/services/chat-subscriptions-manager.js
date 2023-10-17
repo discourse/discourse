@@ -37,16 +37,16 @@ export default class ChatSubscriptionsManager extends Service {
   stopChannelSubscription(channel) {
     this.messageBus.unsubscribe(
       `/chat/${channel.id}/new-messages`,
-      this._onNewMessages
+      this._onNewMessages,
     );
     if (!channel.isDirectMessageChannel) {
       this.messageBus.unsubscribe(
         `/chat/${channel.id}/new-mentions`,
-        this._onNewMentions
+        this._onNewMentions,
       );
       this.messageBus.unsubscribe(
         `/chat/${channel.id}/kick`,
-        this._onKickFromChannel
+        this._onKickFromChannel,
       );
     }
 
@@ -60,7 +60,7 @@ export default class ChatSubscriptionsManager extends Service {
     this._startChannelsEditsSubscription(messageBusIds.channel_edits);
     this._startChannelsStatusChangesSubscription(messageBusIds.channel_status);
     this._startChannelsMetadataChangesSubscription(
-      messageBusIds.channel_metadata
+      messageBusIds.channel_metadata,
     );
   }
 
@@ -82,7 +82,7 @@ export default class ChatSubscriptionsManager extends Service {
       this.messageBus.subscribe(
         "/chat/channel-archive-status",
         this._onChannelArchiveStatusUpdate,
-        lastId
+        lastId,
       );
     }
   }
@@ -91,7 +91,7 @@ export default class ChatSubscriptionsManager extends Service {
     if (this.currentUser.admin) {
       this.messageBus.unsubscribe(
         "/chat/channel-archive-status",
-        this._onChannelArchiveStatusUpdate
+        this._onChannelArchiveStatusUpdate,
       );
     }
   }
@@ -100,7 +100,7 @@ export default class ChatSubscriptionsManager extends Service {
     this.messageBus.subscribe(
       `/chat/${channel.id}/new-mentions`,
       this._onNewMentions,
-      channel.meta.message_bus_last_ids.new_mentions
+      channel.meta.message_bus_last_ids.new_mentions,
     );
   }
 
@@ -108,7 +108,7 @@ export default class ChatSubscriptionsManager extends Service {
     this.messageBus.subscribe(
       `/chat/${channel.id}/kick`,
       this._onKickFromChannel,
-      channel.meta.message_bus_last_ids.kick
+      channel.meta.message_bus_last_ids.kick,
     );
   }
 
@@ -151,7 +151,7 @@ export default class ChatSubscriptionsManager extends Service {
             if (firstChannel) {
               this.router.transitionTo(
                 "chat.channel",
-                ...firstChannel.routeModels
+                ...firstChannel.routeModels,
               );
             } else {
               this.router.transitionTo("chat.browse");
@@ -168,7 +168,7 @@ export default class ChatSubscriptionsManager extends Service {
     this.messageBus.subscribe(
       `/chat/${channel.id}/new-messages`,
       this._onNewMessages,
-      channel.meta.message_bus_last_ids.new_messages
+      channel.meta.message_bus_last_ids.new_messages,
     );
   }
 
@@ -213,7 +213,7 @@ export default class ChatSubscriptionsManager extends Service {
                 if (thread.currentUserMembership) {
                   channel.threadsManager.markThreadUnread(
                     busData.thread_id,
-                    busData.message.created_at
+                    busData.message.created_at,
                   );
                   this._updateActiveLastViewedAt(channel);
                 }
@@ -237,7 +237,7 @@ export default class ChatSubscriptionsManager extends Service {
             // Thread should no longer be considered unread.
             if (thread.currentUserMembership) {
               channel.threadsManager.unreadThreadOverview.delete(
-                parseInt(busData.thread_id, 10)
+                parseInt(busData.thread_id, 10),
               );
               thread.currentUserMembership.lastReadMessageId =
                 busData.message.id;
@@ -246,7 +246,7 @@ export default class ChatSubscriptionsManager extends Service {
             // Ignored user sent message, update tracking state to no unread
             if (
               this.currentUser.ignored_users.includes(
-                busData.message.user.username
+                busData.message.user.username,
               )
             ) {
               if (thread.currentUserMembership) {
@@ -263,7 +263,7 @@ export default class ChatSubscriptionsManager extends Service {
               ) {
                 channel.threadsManager.markThreadUnread(
                   busData.thread_id,
-                  busData.message.created_at
+                  busData.message.created_at,
                 );
                 thread.tracking.unreadCount++;
                 this._updateActiveLastViewedAt(channel);
@@ -290,12 +290,12 @@ export default class ChatSubscriptionsManager extends Service {
     this.messageBus.subscribe(
       `/chat/user-tracking-state/${this.currentUser.id}`,
       this._onUserTrackingStateUpdate,
-      lastId
+      lastId,
     );
     this.messageBus.subscribe(
       `/chat/bulk-user-tracking-state/${this.currentUser.id}`,
       this._onBulkUserTrackingStateUpdate,
-      lastId
+      lastId,
     );
   }
 
@@ -306,12 +306,12 @@ export default class ChatSubscriptionsManager extends Service {
 
     this.messageBus.unsubscribe(
       `/chat/user-tracking-state/${this.currentUser.id}`,
-      this._onUserTrackingStateUpdate
+      this._onUserTrackingStateUpdate,
     );
 
     this.messageBus.unsubscribe(
       `/chat/bulk-user-tracking-state/${this.currentUser.id}`,
-      this._onBulkUserTrackingStateUpdate
+      this._onBulkUserTrackingStateUpdate,
     );
   }
 
@@ -374,14 +374,14 @@ export default class ChatSubscriptionsManager extends Service {
     this.messageBus.subscribe(
       "/chat/new-channel",
       this._onNewChannelSubscription,
-      lastId
+      lastId,
     );
   }
 
   _stopNewChannelSubscription() {
     this.messageBus.unsubscribe(
       "/chat/new-channel",
-      this._onNewChannelSubscription
+      this._onNewChannelSubscription,
     );
   }
 
@@ -407,7 +407,7 @@ export default class ChatSubscriptionsManager extends Service {
     this.messageBus.subscribe(
       "/chat/channel-metadata",
       this._onChannelMetadata,
-      lastId
+      lastId,
     );
   }
 
@@ -415,7 +415,7 @@ export default class ChatSubscriptionsManager extends Service {
     this.messageBus.subscribe(
       "/chat/channel-edits",
       this._onChannelEdits,
-      lastId
+      lastId,
     );
   }
 
@@ -423,7 +423,7 @@ export default class ChatSubscriptionsManager extends Service {
     this.messageBus.subscribe(
       "/chat/channel-status",
       this._onChannelStatus,
-      lastId
+      lastId,
     );
   }
 
@@ -438,7 +438,7 @@ export default class ChatSubscriptionsManager extends Service {
   _stopChannelsMetadataChangesSubscription() {
     this.messageBus.unsubscribe(
       "/chat/channel-metadata",
-      this._onChannelMetadata
+      this._onChannelMetadata,
     );
   }
 

@@ -5,7 +5,7 @@ export default class ChatMessageSeparatorDate extends Component {
   @action
   onDateClick() {
     return this.args.fetchMessagesByDate?.(
-      this.args.message.firstMessageOfTheDayAt
+      this.args.message.firstMessageOfTheDayAt,
     );
   }
 }

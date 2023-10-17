@@ -179,7 +179,7 @@ export default class ChatChannel extends Component {
     const result = await this.messagesLoader.load(findArgs);
     this.messagesManager.messages = this.processMessages(
       this.args.channel,
-      result
+      result,
     );
 
     if (findArgs.target_message_id) {
@@ -247,7 +247,7 @@ export default class ChatChannel extends Component {
     this._debouncedFillPaneAttemptHandler = discourseDebounce(
       this,
       this.fillPaneAttempt,
-      500
+      500,
     );
   }
 
@@ -282,7 +282,7 @@ export default class ChatChannel extends Component {
     schedule("afterRender", () => {
       const firstMessageId = this.messagesManager.messages.firstObject?.id;
       const messageContainer = this.scrollable.querySelector(
-        `.chat-message-container[data-id="${firstMessageId}"]`
+        `.chat-message-container[data-id="${firstMessageId}"]`,
       );
       if (
         messageContainer &&
@@ -307,7 +307,7 @@ export default class ChatChannel extends Component {
         // the user who sent it, so we want to unconditionally hide it, even if
         // we are going directly to the target
         messageData.hidden = this.currentUser.ignored_users.includes(
-          messageData.user.username
+          messageData.user.username,
         );
       }
 
@@ -334,7 +334,7 @@ export default class ChatChannel extends Component {
       if (message.thread) {
         this.#preloadThreadTrackingState(
           message.thread,
-          result.tracking.thread_tracking
+          result.tracking.thread_tracking,
         );
       }
 
@@ -350,7 +350,7 @@ export default class ChatChannel extends Component {
       this.highlightOrFetchMessage,
       messageId,
       options,
-      100
+      100,
     );
   }
 
@@ -366,8 +366,8 @@ export default class ChatChannel extends Component {
             autoExpand: true,
             behavior: this.capabilities.isIOS ? "smooth" : null,
           },
-          options
-        )
+          options,
+        ),
       );
     } else {
       this.fetchMessages({ target_message_id: messageId });
@@ -378,7 +378,7 @@ export default class ChatChannel extends Component {
     this._debouncedUpdateLastReadMessageHandler = discourseDebounce(
       this,
       this.updateLastReadMessage,
-      READ_INTERVAL_MS
+      READ_INTERVAL_MS,
     );
   }
 
@@ -403,7 +403,7 @@ export default class ChatChannel extends Component {
       }
 
       let lastUnreadVisibleMessage = this.messagesManager.findMessage(
-        lastFullyVisibleMessageNode.dataset.id
+        lastFullyVisibleMessageNode.dataset.id,
       );
 
       if (!lastUnreadVisibleMessage) {
@@ -419,7 +419,7 @@ export default class ChatChannel extends Component {
 
       return this.chatApi.markChannelAsRead(
         this.args.channel.id,
-        lastUnreadVisibleMessage.id
+        lastUnreadVisibleMessage.id,
       );
     });
   }
@@ -491,7 +491,7 @@ export default class ChatChannel extends Component {
       const stagedMessage = handleStagedMessage(
         this.args.channel,
         this.messagesManager,
-        data
+        data,
       );
       if (stagedMessage) {
         return;
@@ -651,7 +651,7 @@ export default class ChatChannel extends Component {
     this.messageBus.subscribe(
       `/chat/${channel.id}`,
       this.onMessage,
-      channel.channelMessageBusLastId
+      channel.channelMessageBusLastId,
     );
     this.chatChannelPaneSubscriptionsManager.subscribe(channel);
   }
@@ -705,7 +705,7 @@ export default class ChatChannel extends Component {
         ...this.scrollable.querySelectorAll(".chat-message-separator-date"),
       ].reverse();
       const height = this.scrollable.querySelector(
-        ".chat-messages-container"
+        ".chat-messages-container",
       ).clientHeight;
 
       dates

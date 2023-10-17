@@ -17,10 +17,10 @@ export default {
     const chatStateManager = container.lookup("service:chat-state-manager");
     const chatThreadPane = container.lookup("service:chat-thread-pane");
     const chatThreadListPane = container.lookup(
-      "service:chat-thread-list-pane"
+      "service:chat-thread-list-pane",
     );
     const chatChannelsManager = container.lookup(
-      "service:chat-channels-manager"
+      "service:chat-channels-manager",
     );
     const openQuickChannelSelector = (e) => {
       e.preventDefault();
@@ -137,7 +137,7 @@ export default {
               keysDelimiter: "plus",
             },
           },
-        }
+        },
       );
       api.addKeyboardShortcut("alt+up", handleMoveUpShortcut, {
         global: true,
@@ -169,7 +169,7 @@ export default {
               keysDelimiter: "plus",
             },
           },
-        }
+        },
       );
       api.addKeyboardShortcut(
         `${PLATFORM_KEY_MODIFIER}+i`,
@@ -184,7 +184,7 @@ export default {
               keysDelimiter: "plus",
             },
           },
-        }
+        },
       );
       api.addKeyboardShortcut(
         `${PLATFORM_KEY_MODIFIER}+e`,
@@ -199,7 +199,7 @@ export default {
               keysDelimiter: "plus",
             },
           },
-        }
+        },
       );
       api.addKeyboardShortcut(
         `${PLATFORM_KEY_MODIFIER}+l`,
@@ -214,7 +214,7 @@ export default {
               keysDelimiter: "plus",
             },
           },
-        }
+        },
       );
       api.addKeyboardShortcut(`-`, (event) => openChatDrawer(event), {
         global: true,
@@ -249,7 +249,7 @@ export default {
               keysDelimiter: "plus",
             },
           },
-        }
+        },
       );
     });
   },

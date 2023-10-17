@@ -29,7 +29,7 @@ createWidgetFrom(DefaultNotificationItem, "chat-invitation-notification-item", {
     return h(
       "a",
       { attributes: { title, href, "data-auto-route": true } },
-      contents
+      contents,
     );
   },
 

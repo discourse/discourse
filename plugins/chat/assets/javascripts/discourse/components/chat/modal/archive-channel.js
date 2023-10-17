@@ -62,10 +62,10 @@ export default class ChatModalArchiveChannel extends Component {
   get instructionLabels() {
     const labels = {};
     labels[NEW_TOPIC_SELECTION] = I18n.t(
-      "chat.selection.new_topic.instructions_channel_archive"
+      "chat.selection.new_topic.instructions_channel_archive",
     );
     labels[EXISTING_TOPIC_SELECTION] = I18n.t(
-      "chat.selection.existing_topic.instructions_channel_archive"
+      "chat.selection.existing_topic.instructions_channel_archive",
     );
     return labels;
   }
@@ -74,7 +74,7 @@ export default class ChatModalArchiveChannel extends Component {
     return htmlSafe(
       I18n.t("chat.channel_archive.instructions", {
         channelTitle: this.channel.escapedTitle,
-      })
+      }),
     );
   }
 

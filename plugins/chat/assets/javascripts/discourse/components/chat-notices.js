@@ -6,7 +6,7 @@ export default class ChatNotices extends Component {
 
   get noticesForChannel() {
     return this.subscriptionsManager.notices.filter(
-      (notice) => notice.channelId === this.args.channel.id
+      (notice) => notice.channelId === this.args.channel.id,
     );
   }
 }

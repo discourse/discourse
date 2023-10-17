@@ -55,7 +55,7 @@ class Search {
 
         if (options.excludeUserId) {
           chatables = chatables.filter(
-            (item) => item.identifier !== `u-${options.excludeUserId}`
+            (item) => item.identifier !== `u-${options.excludeUserId}`,
           );
         }
 
@@ -92,14 +92,14 @@ class Search {
     switch (chatable.type) {
       case CHANNEL_TYPE:
         return this.chatChannelsManager.allChannels.find(
-          (channel) => channel.id === chatable.model.id
+          (channel) => channel.id === chatable.model.id,
         )?.tracking;
         break;
       case USER_TYPE:
         return this.chatChannelsManager.directMessageChannels.find(
           (channel) =>
             channel.chatable.users.length === 1 &&
-            channel.chatable.users[0].id === chatable.model.id
+            channel.chatable.users[0].id === chatable.model.id,
         )?.tracking;
         break;
     }
@@ -136,7 +136,7 @@ export default class ChatMessageCreator extends Component {
       }
     } else if (this.siteSettings.enable_public_channels) {
       return I18n.t(
-        "chat.new_message_modal.default_channel_search_placeholder"
+        "chat.new_message_modal.default_channel_search_placeholder",
       );
     } else if (this.chat.userCanDirectMessage) {
       if (this.hasSelectedUsers) {
@@ -171,7 +171,7 @@ export default class ChatMessageCreator extends Component {
     return htmlSafe(
       I18n.t("chat.new_message_modal.add_user_long", {
         username: escapeExpression(username),
-      })
+      }),
     );
   }
 
@@ -198,7 +198,7 @@ export default class ChatMessageCreator extends Component {
   get activeResult() {
     return this.searchRequest.value.findBy(
       "identifier",
-      this.activeResultIdentifier
+      this.activeResultIdentifier,
     );
   }
 
@@ -319,7 +319,7 @@ export default class ChatMessageCreator extends Component {
     const digit = this.#getDigit(event.code);
     if (event.ctrlKey && digit) {
       this._activeResultIdentifier = this.searchRequest.value.objectAt(
-        digit - 1
+        digit - 1,
       )?.identifier;
       event.preventDefault();
       return;
@@ -396,7 +396,7 @@ export default class ChatMessageCreator extends Component {
   @action
   removeSelection(identifier) {
     this.selection = this.selection.filter(
-      (selection) => selection.identifier !== identifier
+      (selection) => selection.identifier !== identifier,
     );
 
     this.#handleSelectionChange();
@@ -471,7 +471,7 @@ export default class ChatMessageCreator extends Component {
   #getPreviousSelection() {
     return this.#getPrevious(
       this.selection,
-      this.activeSelectionIdentifiers?.[0]
+      this.activeSelectionIdentifiers?.[0],
     );
   }
 
@@ -486,7 +486,7 @@ export default class ChatMessageCreator extends Component {
   #getPreviousResult() {
     return this.#getPrevious(
       this.searchRequest.value,
-      this.activeResultIdentifier
+      this.activeResultIdentifier,
     );
   }
 

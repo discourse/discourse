@@ -14,7 +14,7 @@ export default class ChatMessageRoute extends DiscourseRoute {
           "chat.channel.near-message",
           response.chat_channel_title,
           response.chat_channel_id,
-          params.messageId
+          params.messageId,
         );
       })
       .catch(() => this.router.replaceWith("/404"));

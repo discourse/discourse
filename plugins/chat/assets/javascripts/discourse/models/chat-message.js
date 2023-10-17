@@ -268,7 +268,7 @@ export default class ChatMessage {
   react(emoji, action, actor, currentUserId) {
     const selfReaction = actor.id === currentUserId;
     const existingReaction = this.reactions.find(
-      (reaction) => reaction.emoji === emoji
+      (reaction) => reaction.emoji === emoji,
     );
 
     if (existingReaction) {
@@ -290,7 +290,7 @@ export default class ChatMessage {
         existingReaction.users.pushObject(actor);
       } else {
         const existingUserReaction = existingReaction.users.find(
-          (user) => user.id === actor.id
+          (user) => user.id === actor.id,
         );
 
         if (!existingUserReaction) {
@@ -316,7 +316,7 @@ export default class ChatMessage {
             emoji,
             reacted: selfReaction,
             users: [actor],
-          })
+          }),
         );
       }
     }

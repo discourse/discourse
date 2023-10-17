@@ -47,7 +47,7 @@ export default class ChatRoute extends DiscourseRoute {
       if (transition.targetName.startsWith("chat.channel")) {
         url ??= this.router.urlFor(
           transition.targetName,
-          ...transition.intent.contexts
+          ...transition.intent.contexts,
         );
       } else {
         url ??= this.router.urlFor(transition.targetName);
@@ -65,7 +65,7 @@ export default class ChatRoute extends DiscourseRoute {
       api.setSidebarPanel("chat");
 
       const chatSeparateSidebarMode = getUserChatSeparateSidebarMode(
-        this.currentUser
+        this.currentUser,
       );
 
       if (chatSeparateSidebarMode.never) {

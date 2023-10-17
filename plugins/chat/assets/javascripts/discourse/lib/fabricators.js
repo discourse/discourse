@@ -35,8 +35,8 @@ function messageFabricator(args = {}) {
           "@discobot **abc**defghijklmnopqrstuvwxyz [discourse](discourse.org) :rocket: ",
         created_at: args.created_at || moment(),
       },
-      args
-    )
+      args,
+    ),
   );
 
   const excerptLength = 50;
@@ -103,7 +103,7 @@ function directMessageChannelFabricator(args = {}) {
       chatable_type: CHATABLE_TYPES.directMessageChannel,
       chatable_id: directMessage.id,
       chatable: directMessage,
-    })
+    }),
   );
 }
 

@@ -59,7 +59,7 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
     this.messageBus.subscribe(
       this.messageBusChannel,
       this.onMessage,
-      this.messageBusLastId
+      this.messageBusLastId,
     );
   }
 
@@ -217,7 +217,7 @@ export default class ChatPaneBaseSubscriptionsManager extends Service {
       .find(this.model.id, data.thread_id, { fetchIfNotFound: true })
       .then((thread) => {
         const channelOriginalMessage = this.model.messagesManager.findMessage(
-          thread.originalMessage.id
+          thread.originalMessage.id,
         );
 
         if (channelOriginalMessage) {

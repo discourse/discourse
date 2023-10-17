@@ -9,7 +9,7 @@ import TextareaTextManipulation from "discourse/mixins/textarea-text-manipulatio
 // using the existing TextareaTextManipulation mixin without using it directly
 // in the composer component. It will make future migration easier.
 export default class TextareaInteractor extends EmberObject.extend(
-  TextareaTextManipulation
+  TextareaTextManipulation,
 ) {
   @service capabilities;
   @service site;
@@ -81,7 +81,7 @@ export default class TextareaInteractor extends EmberObject.extend(
     schedule("afterRender", () => {
       this._textarea.setSelectionRange(
         this._textarea.value.length,
-        this._textarea.value.length
+        this._textarea.value.length,
       );
     });
   }

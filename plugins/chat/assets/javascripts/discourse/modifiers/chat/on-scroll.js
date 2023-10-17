@@ -25,7 +25,7 @@ export default class ChatOnScroll extends Modifier {
       this.callback,
       event,
       this.options.delay ?? 100,
-      this.options.immediate ?? false
+      this.options.immediate ?? false,
     );
   }
 

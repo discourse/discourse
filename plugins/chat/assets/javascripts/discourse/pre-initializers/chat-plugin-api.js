@@ -178,7 +178,7 @@ export default {
             value(...actionIds) {
               removeChatComposerSecondaryActions(actionIds);
             },
-          }
+          },
         );
       }
     });

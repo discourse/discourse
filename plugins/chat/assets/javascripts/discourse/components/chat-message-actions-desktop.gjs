@@ -45,7 +45,7 @@ export default class ChatMessageActionsDesktop extends Component {
     return new ChatMessageInteractor(
       getOwner(this),
       this.message,
-      this.context
+      this.context,
     );
   }
 
@@ -66,7 +66,7 @@ export default class ChatMessageActionsDesktop extends Component {
     schedule("afterRender", () => {
       const messageContainer = chatMessageContainer(
         this.message.id,
-        this.context
+        this.context,
       );
 
       if (!messageContainer) {

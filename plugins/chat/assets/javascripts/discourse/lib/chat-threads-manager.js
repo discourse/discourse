@@ -37,7 +37,7 @@ export default class ChatThreadsManager {
     this._unreadThreadOverview.clear();
 
     for (const [threadId, lastReplyCreatedAt] of Object.entries(
-      unreadThreadOverview
+      unreadThreadOverview,
     )) {
       this.markThreadUnread(threadId, lastReplyCreatedAt);
     }
@@ -46,7 +46,7 @@ export default class ChatThreadsManager {
   markThreadUnread(threadId, lastReplyCreatedAt) {
     this.unreadThreadOverview.set(
       parseInt(threadId, 10),
-      new Date(lastReplyCreatedAt)
+      new Date(lastReplyCreatedAt),
     );
   }
 

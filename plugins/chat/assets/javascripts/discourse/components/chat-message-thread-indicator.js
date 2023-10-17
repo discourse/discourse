@@ -80,7 +80,7 @@ export default class ChatMessageThreadIndicator extends Component {
 
     this.router.transitionTo(
       "chat.channel.thread",
-      ...this.args.message.thread.routeModels
+      ...this.args.message.thread.routeModels,
     );
   }
 }

@@ -110,7 +110,7 @@ export default class ChatMessage extends Component {
     return new ChatMessageInteractor(
       getOwner(this),
       this.args.message,
-      this.args.context
+      this.args.context,
     );
   }
 
@@ -156,7 +156,7 @@ export default class ChatMessage extends Component {
 
   get secondaryActionsIsExpanded() {
     return document.querySelector(
-      ".more-buttons.secondary-actions.is-expanded"
+      ".more-buttons.secondary-actions.is-expanded",
     );
   }
 
@@ -203,7 +203,7 @@ export default class ChatMessage extends Component {
       this.args.message.mentionedUsers.forEach((user) => {
         const href = `/u/${user.username.toLowerCase()}`;
         const mentions = this.messageContainer.querySelectorAll(
-          `a.mention[href="${href}"]`
+          `a.mention[href="${href}"]`,
         );
 
         mentions.forEach((mention) => {
@@ -237,7 +237,7 @@ export default class ChatMessage extends Component {
       this,
       this.decorateCookedMessage,
       this.args.message,
-      100
+      100,
     );
   }
 
@@ -285,7 +285,7 @@ export default class ChatMessage extends Component {
       this._onMouseEnterMessageDebouncedHandler = discourseDebounce(
         this,
         this._debouncedOnHoverMessage,
-        250
+        250,
       );
     }
   }
@@ -315,7 +315,7 @@ export default class ChatMessage extends Component {
 
     if (
       (event.toElement || event.relatedTarget)?.closest(
-        ".chat-message-actions-container"
+        ".chat-message-actions-container",
       )
     ) {
       return;
@@ -381,7 +381,7 @@ export default class ChatMessage extends Component {
     // this number has been chosen from testing but might need to be increased
     this._disableMessageActionsHandler = discourseLater(() => {
       document.documentElement.classList.remove(
-        "disable-message-actions-touch"
+        "disable-message-actions-touch",
       );
     }, 200);
   }
@@ -442,7 +442,7 @@ export default class ChatMessage extends Component {
 
     if (
       Math.abs(
-        new Date(message.createdAt) - new Date(previousMessage.createdAt)
+        new Date(message.createdAt) - new Date(previousMessage.createdAt),
       ) > 300000
     ) {
       return false;

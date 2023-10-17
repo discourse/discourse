@@ -46,7 +46,7 @@ export default {
       },
       {
         id: "onebox-github-scrolling",
-      }
+      },
     );
 
     api.decorateChatMessage(
@@ -54,9 +54,9 @@ export default {
         highlightSyntax(
           element,
           siteSettings,
-          container.lookup("service:session")
+          container.lookup("service:session"),
         ),
-      { id: "highlightSyntax" }
+      { id: "highlightSyntax" },
     );
 
     api.decorateChatMessage(this.renderChatTranscriptDates, {
@@ -77,7 +77,7 @@ export default {
         },
         {
           id: "experimental-chat-lightbox",
-        }
+        },
       );
     } else {
       api.decorateChatMessage(
@@ -85,7 +85,7 @@ export default {
           this.lightbox(element.querySelectorAll("img:not(.emoji, .avatar)")),
         {
           id: "lightbox",
-        }
+        },
       );
     }
     api.decorateChatMessage((element) => decorateHashtags(element, site), {
@@ -109,7 +109,7 @@ export default {
     element.querySelectorAll(".chat-transcript").forEach((transcriptEl) => {
       const dateTimeRaw = transcriptEl.dataset["datetime"];
       const dateTimeLinkEl = transcriptEl.querySelector(
-        ".chat-transcript-datetime a"
+        ".chat-transcript-datetime a",
       );
 
       // we only show date for first message
@@ -129,7 +129,7 @@ export default {
           .format(I18n.t("dates.long_no_year"));
       } else {
         dateTimeLinkEl.innerText = moment(dateTimeRaw).format(
-          I18n.t("dates.long_no_year")
+          I18n.t("dates.long_no_year"),
         );
       }
     });
@@ -137,7 +137,7 @@ export default {
 
   forceLinksToOpenNewTab(element) {
     const links = element.querySelectorAll(
-      ".chat-message-text a:not([target='_blank'])"
+      ".chat-message-text a:not([target='_blank'])",
     );
     for (let linkIndex = 0; linkIndex < links.length; linkIndex++) {
       const link = links[linkIndex];
@@ -170,7 +170,7 @@ export default {
   initialize(container) {
     if (container.lookup("service:chat").userCanChat) {
       withPluginApi("0.8.42", (api) =>
-        this.initializeWithPluginApi(api, container)
+        this.initializeWithPluginApi(api, container),
       );
     }
   },

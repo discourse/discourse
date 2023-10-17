@@ -27,7 +27,7 @@ export default class ChatTrackMessageSeparatorDate extends Modifier {
           entry.target.classList.remove(IS_PINNED_CLASS);
         }
       },
-      { threshold: [0, 1] }
+      { threshold: [0, 1] },
     );
 
     this.intersectionObserver.observe(element);

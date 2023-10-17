@@ -32,7 +32,7 @@ export default {
             switchButtonLabel = I18n.t("sidebar.panels.chat.label");
             switchButtonIcon = "d-chat";
             switchButtonDefaultUrl = getURL("/chat");
-          }
+          },
       );
 
       initSidebarState(api, api.getCurrentUser());
@@ -141,7 +141,7 @@ export default {
                 }
                 this.chatService = container.lookup("service:chat");
                 this.chatChannelsManager = container.lookup(
-                  "service:chat-channels-manager"
+                  "service:chat-channels-manager",
                 );
                 this.router = container.lookup("service:router");
               }
@@ -152,7 +152,7 @@ export default {
                     new SidebarChatChannelsSectionLink({
                       channel,
                       chatService: this.chatService,
-                    })
+                    }),
                 );
               }
 
@@ -196,7 +196,7 @@ export default {
 
             return SidebarChatChannelsSection;
           },
-          "chat"
+          "chat",
         );
       }
 
@@ -274,8 +274,8 @@ export default {
               if (this.oneOnOneMessage) {
                 return htmlSafe(
                   `${escapeExpression(username)}${decorateUsername(
-                    escapeExpression(username)
-                  )}`
+                    escapeExpression(username),
+                  )}`,
                 );
               } else {
                 return username;
@@ -294,7 +294,7 @@ export default {
               if (this.channel.chatable.users.length === 1) {
                 return avatarUrl(
                   this.channel.chatable.users[0].avatar_template,
-                  "tiny"
+                  "tiny",
                 );
               } else {
                 return this.channel.chatable.users.length;
@@ -362,7 +362,7 @@ export default {
               }
               this.chatService = container.lookup("service:chat");
               this.chatChannelsManager = container.lookup(
-                "service:chat-channels-manager"
+                "service:chat-channels-manager",
               );
             }
 
@@ -372,7 +372,7 @@ export default {
                   new SidebarChatDirectMessagesSectionLink({
                     channel,
                     chatService: this.chatService,
-                  })
+                  }),
               );
             }
 
@@ -419,7 +419,7 @@ export default {
 
           return SidebarChatDirectMessagesSection;
         },
-        "chat"
+        "chat",
       );
     });
   },

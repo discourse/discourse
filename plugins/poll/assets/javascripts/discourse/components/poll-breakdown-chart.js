@@ -73,7 +73,7 @@ export default class PollBreakdownChart extends Component {
 
     const totalVotes = transformedData.reduce((sum, votes) => sum + votes, 0);
     const colors = getColors(data.length).filter(
-      (color, index) => data[index] > 0
+      (color, index) => data[index] > 0,
     );
 
     return {
@@ -137,7 +137,7 @@ export default class PollBreakdownChart extends Component {
 
           const sliceIndex = activeElements[0].index;
           const optionIndex = Object.keys(this._optionToSlice).find(
-            (option) => this._optionToSlice[option] === sliceIndex
+            (option) => this._optionToSlice[option] === sliceIndex,
           );
 
           next(() => {

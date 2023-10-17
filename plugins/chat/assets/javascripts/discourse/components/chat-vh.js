@@ -33,7 +33,7 @@ export default class ChatVh extends Component {
     if ("virtualKeyboard" in navigator) {
       navigator.virtualKeyboard.removeEventListener(
         "geometrychange",
-        this.setVH
+        this.setVH,
       );
     }
   }

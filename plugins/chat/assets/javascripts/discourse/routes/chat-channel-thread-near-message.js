@@ -16,7 +16,7 @@ export default class ChatChannelThreadNearMessage extends DiscourseRoute {
     ) {
       this.controllerFor("chat-channel-thread").set(
         "targetMessageId",
-        messageId
+        messageId,
       );
     }
 

@@ -67,7 +67,7 @@ export default class Collection {
       endpoint = this.loadMoreURL;
     } else {
       const filteredQueryParams = Object.entries(params).filter(
-        ([, v]) => v !== undefined
+        ([, v]) => v !== undefined,
       );
 
       const queryString = new URLSearchParams(filteredQueryParams).toString();

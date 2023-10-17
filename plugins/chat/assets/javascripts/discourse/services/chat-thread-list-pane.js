@@ -11,14 +11,14 @@ export default class ChatThreadListPane extends Service {
   async close() {
     await this.router.transitionTo(
       "chat.channel",
-      ...this.chat.activeChannel.routeModels
+      ...this.chat.activeChannel.routeModels,
     );
   }
 
   async open() {
     await this.router.transitionTo(
       "chat.channel.threads",
-      ...this.chat.activeChannel.routeModels
+      ...this.chat.activeChannel.routeModels,
     );
   }
 }

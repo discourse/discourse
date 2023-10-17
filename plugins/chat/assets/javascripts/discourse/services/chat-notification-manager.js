@@ -23,11 +23,11 @@ export default class ChatNotificationManager extends Service {
 
     this.set(
       "_chatPresenceChannel",
-      this.presence.getChannel(`/chat-user/chat/${this.currentUser.id}`)
+      this.presence.getChannel(`/chat-user/chat/${this.currentUser.id}`),
     );
     this.set(
       "_corePresenceChannel",
-      this.presence.getChannel(`/chat-user/core/${this.currentUser.id}`)
+      this.presence.getChannel(`/chat-user/core/${this.currentUser.id}`),
     );
     this._chatPresenceChannel.subscribe();
     this._corePresenceChannel.subscribe();
@@ -40,11 +40,11 @@ export default class ChatNotificationManager extends Service {
 
     this._chatPresenceChannel.on(
       "change",
-      this._subscribeToCorrectNotifications
+      this._subscribeToCorrectNotifications,
     );
     this._corePresenceChannel.on(
       "change",
-      this._subscribeToCorrectNotifications
+      this._subscribeToCorrectNotifications,
     );
   }
 
@@ -57,14 +57,14 @@ export default class ChatNotificationManager extends Service {
 
     this._chatPresenceChannel.off(
       "change",
-      this._subscribeToCorrectNotifications
+      this._subscribeToCorrectNotifications,
     );
     this._chatPresenceChannel.unsubscribe();
     this._chatPresenceChannel.leave();
 
     this._corePresenceChannel.off(
       "change",
-      this._subscribeToCorrectNotifications
+      this._subscribeToCorrectNotifications,
     );
     this._corePresenceChannel.unsubscribe();
     this._corePresenceChannel.leave();

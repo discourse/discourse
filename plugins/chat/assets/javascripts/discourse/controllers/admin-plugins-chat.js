@@ -61,7 +61,7 @@ export default class AdminPluginsChatController extends Controller {
         const newWebhook = EmberObject.create(webhook);
         this.set(
           "model.incoming_chat_webhooks",
-          [newWebhook].concat(this.model.incoming_chat_webhooks)
+          [newWebhook].concat(this.model.incoming_chat_webhooks),
         );
         this.resetNewWebhook();
         this.setProperties({
@@ -133,7 +133,7 @@ export default class AdminPluginsChatController extends Controller {
   changeChatChannel(chatChannelId) {
     this.selectedWebhook.set(
       "chat_channel",
-      this.model.chat_channels.findBy("id", chatChannelId)
+      this.model.chat_channels.findBy("id", chatChannelId),
     );
   }
 }

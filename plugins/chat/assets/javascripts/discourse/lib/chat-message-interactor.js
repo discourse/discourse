@@ -233,11 +233,11 @@ export default class ChatMessageInteractor {
   bulkSelect(checked) {
     const manager = this.message.manager;
     const lastSelectedIndex = manager.findIndexOfMessage(
-      this.pane.lastSelectedMessage.id
+      this.pane.lastSelectedMessage.id,
     );
     const newlySelectedIndex = manager.findIndexOfMessage(this.message.id);
     const sortedIndices = [lastSelectedIndex, newlySelectedIndex].sort(
-      (a, b) => a - b
+      (a, b) => a - b,
     );
 
     for (let i = sortedIndices[0]; i <= sortedIndices[1]; i++) {
@@ -301,7 +301,7 @@ export default class ChatMessageInteractor {
       emoji,
       reactAction,
       this.currentUser,
-      this.currentUser.id
+      this.currentUser.id,
     );
 
     return this.chatApi
@@ -309,7 +309,7 @@ export default class ChatMessageInteractor {
         this.message.channel.id,
         this.message.id,
         emoji,
-        reactAction
+        reactAction,
       )
       .catch((errResult) => {
         popupAjaxError(errResult);
@@ -317,7 +317,7 @@ export default class ChatMessageInteractor {
           emoji,
           REACTIONS.remove,
           this.currentUser,
-          this.currentUser.id
+          this.currentUser.id,
         );
       })
       .finally(() => {
@@ -334,8 +334,8 @@ export default class ChatMessageInteractor {
             Bookmark.createFor(
               this.currentUser,
               "Chat::Message",
-              this.message.id
-            )
+              this.message.id,
+            ),
         ),
         afterSave: (savedData) => {
           const bookmark = Bookmark.create(savedData);
@@ -343,7 +343,7 @@ export default class ChatMessageInteractor {
           this.appEvents.trigger(
             "bookmarks:changed",
             savedData,
-            bookmark.attachedTo()
+            bookmark.attachedTo(),
           );
         },
         afterDelete: () => {

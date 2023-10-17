@@ -30,7 +30,7 @@ export default class ChatComposerPresenceManager extends Service {
       this._autoLeaveTimer = debounce(
         this,
         this.leave,
-        KEEP_ALIVE_DURATION_SECONDS * 1000
+        KEEP_ALIVE_DURATION_SECONDS * 1000,
       );
     }
   }

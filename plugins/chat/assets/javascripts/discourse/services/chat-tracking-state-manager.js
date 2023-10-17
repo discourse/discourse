@@ -52,14 +52,14 @@ export default class ChatTrackingStateManager extends Service {
       (mentionCount, channel) => {
         return mentionCount + channel.tracking.mentionCount;
       },
-      0
+      0,
     );
 
     let dmChannelUnreadCount = this.#directMessageChannels().reduce(
       (unreadCount, channel) => {
         return unreadCount + channel.tracking.unreadCount;
       },
-      0
+      0,
     );
 
     return publicChannelMentionCount + dmChannelUnreadCount;
@@ -80,7 +80,7 @@ export default class ChatTrackingStateManager extends Service {
     this._onTriggerNotificationDebounceHandler = discourseDebounce(
       this,
       this.#triggerNotificationsChanged,
-      100
+      100,
     );
   }
 

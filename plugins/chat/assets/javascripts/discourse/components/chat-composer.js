@@ -148,7 +148,7 @@ export default class ChatComposer extends Component {
     this.appEvents.on(
       "chat:open-insert-link-modal",
       this,
-      "openInsertLinkModal"
+      "openInsertLinkModal",
     );
   }
 
@@ -158,7 +158,7 @@ export default class ChatComposer extends Component {
     this.appEvents.off(
       "chat:open-insert-link-modal",
       this,
-      "openInsertLinkModal"
+      "openInsertLinkModal",
     );
     this.pane.sending = false;
   }
@@ -174,7 +174,7 @@ export default class ChatComposer extends Component {
         insertDate: (markup) => {
           this.composer.textarea.addText(
             this.composer.textarea.getSelected(),
-            markup
+            markup,
           );
           this.composer.focus();
         },
@@ -257,7 +257,7 @@ export default class ChatComposer extends Component {
 
     this.chatComposerPresenceManager.notifyState(
       this.presenceChannelName,
-      !this.currentMessage.editing && this.hasContent
+      !this.currentMessage.editing && this.hasContent,
     );
   }
 
@@ -382,7 +382,7 @@ export default class ChatComposer extends Component {
     if (this.hasContent) {
       this.chatComposerWarningsTracker.trackMentions(
         this.currentMessage,
-        opts.skipDebounce
+        opts.skipDebounce,
       );
     } else {
       this.chatComposerWarningsTracker.reset();
@@ -460,7 +460,7 @@ export default class ChatComposer extends Component {
           this.composer.textarea.value = text;
           this.composer.focus();
         },
-      }
+      },
     );
   }
 
@@ -481,7 +481,7 @@ export default class ChatComposer extends Component {
       onKeyUp: (text, cp) => {
         const matches =
           /(?:^|[\s.\?,@\/#!%&*;:\[\]{}=\-_()])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
-            text.substring(0, cp)
+            text.substring(0, cp),
           );
 
         if (matches && matches[1]) {
@@ -510,7 +510,7 @@ export default class ChatComposer extends Component {
           // typing, set minimal length to 2
           let minLength = Math.max(
             this.siteSettings.emoji_autocomplete_min_chars,
-            2
+            2,
           );
 
           if (term.length < minLength) {
@@ -520,7 +520,7 @@ export default class ChatComposer extends Component {
           // bypass :-p and other common typed smileys
           if (
             !term.match(
-              /[^-\{\}\[\]\(\)\*_\<\>\\\/].*[^-\{\}\[\]\(\)\*_\<\>\\\/]/
+              /[^-\{\}\[\]\(\)\*_\<\>\\\/].*[^-\{\}\[\]\(\)\*_\<\>\\\/]/,
             )
           ) {
             return resolve(SKIP);
@@ -546,7 +546,7 @@ export default class ChatComposer extends Component {
           const allTranslations = Object.assign(
             {},
             translations,
-            emojiTranslation
+            emojiTranslation,
           );
           if (allTranslations[full]) {
             return resolve([allTranslations[full]]);
@@ -599,7 +599,7 @@ export default class ChatComposer extends Component {
     new ChatMessageInteractor(
       getOwner(this),
       this.currentMessage,
-      this.context
+      this.context,
     ).delete();
     this.reset(this.args.channel, this.args.thread);
   }

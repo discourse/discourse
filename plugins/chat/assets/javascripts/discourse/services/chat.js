@@ -70,7 +70,7 @@ export default class Chat extends Service {
       this.currentUser.isInAnyGroups(
         (this.siteSettings.direct_message_enabled_groups || "11") // trust level 1 auto group
           .split("|")
-          .map((groupId) => parseInt(groupId, 10))
+          .map((groupId) => parseInt(groupId, 10)),
       )
     );
   }
@@ -114,7 +114,7 @@ export default class Chat extends Service {
       this.chatApi.listCurrentUserChannels().then((channelsView) => {
         this.chatSubscriptionsManager.stopChannelsSubscriptions();
         this.chatSubscriptionsManager.startChannelsSubscriptions(
-          channelsView.meta.message_bus_last_ids
+          channelsView.meta.message_bus_last_ids,
         );
 
         [
@@ -175,7 +175,7 @@ export default class Chat extends Service {
 
   setupWithPreloadedChannels(channelsView) {
     this.chatSubscriptionsManager.startChannelsSubscriptions(
-      channelsView.meta.message_bus_last_ids
+      channelsView.meta.message_bus_last_ids,
     );
     this.presenceChannel.subscribe(channelsView.global_presence_channel_state);
 
@@ -185,7 +185,7 @@ export default class Chat extends Service {
     ].forEach((channelObject) => {
       const storedChannel = this.chatChannelsManager.store(channelObject);
       const storedDraft = (this.currentUser?.chat_drafts || []).find(
-        (draft) => draft.channel_id === storedChannel.id
+        (draft) => draft.channel_id === storedChannel.id,
       );
 
       if (storedDraft) {
@@ -194,9 +194,9 @@ export default class Chat extends Service {
             storedChannel,
             Object.assign(
               { user: this.currentUser },
-              JSON.parse(storedDraft.data)
-            )
-          )
+              JSON.parse(storedDraft.data),
+            ),
+          ),
         );
       }
 
@@ -209,7 +209,7 @@ export default class Chat extends Service {
     });
 
     this.chatTrackingStateManager.setupWithPreloadedState(
-      channelsView.tracking
+      channelsView.tracking,
     );
   }
 
@@ -263,7 +263,7 @@ export default class Chat extends Service {
 
     const directionUp = direction === "up";
     const currentChannelIndex = currentList.findIndex(
-      (c) => c.id === activeChannel.id
+      (c) => c.id === activeChannel.id,
     );
 
     let nextChannelInSameList =
@@ -272,7 +272,7 @@ export default class Chat extends Service {
       // You're navigating in the same list of channels, just use index +- 1
       return this.router.transitionTo(
         "chat.channel",
-        ...nextChannelInSameList.routeModels
+        ...nextChannelInSameList.routeModels,
       );
     }
 
@@ -285,7 +285,7 @@ export default class Chat extends Service {
     if (nextChannel.id !== activeChannel.id) {
       return this.router.transitionTo(
         "chat.channel",
-        ...nextChannel.routeModels
+        ...nextChannel.routeModels,
       );
     }
   }
@@ -357,7 +357,7 @@ export default class Chat extends Service {
       ? this.router.transitionTo(
           "chat.channel.near-message",
           ...channel.routeModels,
-          messageId
+          messageId,
         )
       : this.router.transitionTo("chat.channel", ...channel.routeModels);
   }
@@ -410,7 +410,7 @@ export default class Chat extends Service {
 
   addToolbarButton() {
     deprecated(
-      "Use the new chat API `api.registerChatComposerButton` instead of `chat.addToolbarButton`"
+      "Use the new chat API `api.registerChatComposerButton` instead of `chat.addToolbarButton`",
     );
   }
 }
