@@ -1,46 +1,9 @@
-.caps-lock-warning {
-  color: var(--danger);
-  font-size: var(--font-down-1);
-  font-weight: bold;
-  margin-top: 0.5em;
-}
-
-.discourse-no-touch #login-form {
-  margin: 0;
-}
-
-.discourse-touch .caps-lock-warning {
-  display: none;
-}
-
-#discourse-modal.login-modal-body:not(.has-alt-auth) .modal-inner-container {
-  max-width: 28em; // prevents long alerts from expanding the modal width
-}
-
-.login-modal:not(.hidden).has-alt-auth.no-local-login {
-  min-width: fit-content;
-  background: var(--secondary);
-  #login-buttons:not(.hidden) {
-    .btn.btn-social,
-    .btn {
-      border: 1px solid var(--primary-low-mid);
-      &:hover,
-      &:focus {
-        background: var(--primary-very-low);
-      }
-    }
-  }
-}
-
 body.invite-page {
   background-color: var(--primary-50);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, Arial, sans-serif;
 }
 
-// Create Account + Login
-.d-modal.create-account,
-.d-modal.login-modal,
 .invites-show,
 .admin-invite-page {
   .modal-inner-container {
@@ -73,59 +36,15 @@ body.invite-page {
     overflow: hidden;
     display: inline;
   }
-  .login-welcome-header {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto 1fr;
-    max-width: 33em;
-    word-break: break-word;
-    .login-title {
-      margin-bottom: 0;
-    }
-    .login-subheader {
-      align-self: start;
-      grid-row-start: 2;
-      margin: 0;
-    }
-    .waving-hand {
-      width: 35px;
-      height: 35px;
-      margin-left: 0.5em;
-      align-self: center;
-    }
-  }
-  #login-buttons {
-    .btn {
-      background-color: #ffffff;
-      color: #000000;
-      justify-content: flex-start;
-      min-width: fit-content;
-      margin-bottom: 0.5em;
-    }
-  }
   .modal-footer {
     .inline-spinner {
       display: inline-flex;
     }
   }
-  .modal-body.no-local-login + .modal-footer {
-    display: none;
-  }
-  &.awaiting-approval {
-    display: none;
-  }
-
-  .no-local-logins {
-    // when third-party auth is available, but not local logins
-    .login-left-side,
-    .login-welcome-header {
-      padding: 3em 1em 3em 3em;
-    }
-  }
 }
 
 // Login Form Styles
-.login-modal:not(.hidden),
+.login-modal,
 .create-account,
 .invites-show {
   #login-form,
@@ -140,7 +59,6 @@ body.invite-page {
       .select-kit-header {
         padding: 0.75em 0.77em;
         min-width: 250px;
-        box-shadow: none;
         margin-bottom: 0.25em;
         width: 100%;
       }

@@ -1,0 +1,128 @@
+.d-modal.login-modal,
+.d-modal.create-account {
+  &.awaiting-approval {
+    display: none;
+  }
+
+  .d-modal {
+    &__container {
+      position: relative;
+    }
+    &__header {
+      border-bottom: none;
+      padding: 0;
+      position: absolute;
+      top: 0.75em;
+      right: 0.75em;
+      z-index: z("max");
+    }
+    &__body {
+      display: flex;
+      gap: 2rem;
+      padding: 0;
+
+      &.no-local-login + .modal-footer {
+        display: none;
+      }
+
+      .login-subheader {
+        font-size: var(--font-up-1);
+      }
+
+      .login-left-side {
+        padding: 3rem;
+
+        .login-welcome-header {
+          display: grid;
+          grid-template-columns: auto 1fr;
+          grid-template-rows: auto 1fr;
+          overflow-wrap: break-all;
+        }
+
+        .login-title {
+          font-size: var(--font-up-6);
+          margin: 0;
+        }
+        .login-subheader {
+          margin: 0;
+        }
+
+        .waving-hand {
+          width: 35px;
+          height: 35px;
+          margin-left: 0.5em;
+          align-self: center;
+        }
+
+        .modal-footer {
+          flex-wrap: nowrap;
+          padding: 0;
+          border: 0;
+
+          .inline-spinner {
+            display: inline-flex;
+          }
+        }
+      }
+      .login-right-side {
+        background: var(--tertiary-or-tertiary-low);
+        padding: 3.5rem 3rem;
+
+        #login-buttons {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 1rem;
+          height: 100%;
+          min-width: 200px;
+        }
+      }
+
+      #login-form {
+        margin: 3em 0 1.25em 0;
+      }
+    }
+  }
+
+  .tip.bad {
+    color: var(--danger);
+  }
+
+  .caps-lock-warning {
+    color: var(--danger);
+    font-size: var(--font-down-1);
+    font-weight: bold;
+    margin-top: 0.5em;
+  }
+
+  #modal-alert {
+    box-sizing: border-box;
+    display: inline-block;
+    // if you want to use flexbox here make sure child elements like <b> don't cause line breaks
+    padding: 1em 3.5em 1em 1em; // large right padding to make sure long text isn't under the close button
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 0;
+    min-height: 35px;
+
+    &:empty {
+      min-height: 0px;
+      padding: 0px;
+      overflow: hidden;
+      display: inline;
+    }
+  }
+  .no-local-logins {
+    // when third-party auth is available, but not local logins
+    .login-left-side,
+    .login-welcome-header {
+      padding: 3em 1em 3em 3em;
+    }
+  }
+
+  .discourse-touch {
+    .caps-lock-warning {
+      display: none;
+    }
+  }
+}
