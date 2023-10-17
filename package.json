@@ -24,7 +24,7 @@
     "ember-template-lint": "5.11.2",
     "esbuild": "^0.19.2",
     "eslint": "^8.37.0",
-    "eslint-config-discourse": "^5.0.0",
+    "eslint-config-discourse": "^5.1.0",
     "eslint-plugin-decorator-position": "^5.0.2",
     "eslint-plugin-ember": "11.11.1",
     "eslint-plugin-simple-import-sort": "^10.0.0",
