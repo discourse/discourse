@@ -216,5 +216,9 @@ export default function () {
   // site setting and are subject to constant change.
   this.route("admin-revamp", { resetNamespace: true }, function () {
     this.route("lobby", { path: "/" }, function () {});
+
+    this.route("config", { path: "config" }, function () {
+      this.route("area", { path: "/:area" });
+    });
   });
 }

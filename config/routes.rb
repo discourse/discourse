@@ -105,6 +105,7 @@ Discourse::Application.routes.draw do
               module: "admin",
               constraints: StaffConstraint.new do
       get "" => "admin#index"
+      get "config/:area" => "admin#index"
     end
 
     namespace :admin, constraints: StaffConstraint.new do

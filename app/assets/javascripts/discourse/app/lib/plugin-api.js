@@ -2208,8 +2208,8 @@ class PluginApi {
    * EXPERIMENTAL. Do not use.
    * Support for getting the current Sidebar panel.
    */
-  getSidearPanel() {
-    this._lookupContainer("service:sidebar-state")?.currentPanel;
+  getSidebarPanel() {
+    return this._lookupContainer("service:sidebar-state")?.currentPanel;
   }
 
   /**
