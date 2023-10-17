@@ -1,5 +1,5 @@
 import { renderIcon } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import DateWithZoneHelper from "./date-with-zone-helper";
 
 const DATETIME_FORMAT = "LLL";

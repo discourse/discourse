@@ -4,7 +4,7 @@ import { inject as service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { isTesting } from "discourse-common/config/environment";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import { CHAT_SOUNDS } from "discourse/plugins/chat/discourse/services/chat-audio-manager";
 
 const CHAT_ATTRS = [
