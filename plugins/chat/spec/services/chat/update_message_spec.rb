@@ -67,7 +67,7 @@ RSpec.describe Chat::UpdateMessage do
 
       expect do
         update =
-          Chat::UpdateMessage.call(
+          described_class.call(
             guardian: guardian,
             message_id: chat_message.id,
             message: new_message,
@@ -90,11 +90,7 @@ RSpec.describe Chat::UpdateMessage do
       new_message = "2 long" * 100
 
       expect do
-        Chat::UpdateMessage.call(
-          guardian: guardian,
-          message_id: chat_message.id,
-          message: new_message,
-        )
+        described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
       end.to raise_error(ActiveRecord::RecordInvalid).with_message(
         "Validation failed: " +
           I18n.t(
@@ -112,11 +108,7 @@ RSpec.describe Chat::UpdateMessage do
       new_message = "    "
 
       updater =
-        Chat::UpdateMessage.call(
-          guardian: guardian,
-          message_id: chat_message.id,
-          message: new_message,
-        )
+        described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
 
       expect(updater.contract).not_to be_valid
       expect(updater.contract.errors.added?(:message, :blank)).to be_truthy
@@ -128,7 +120,7 @@ RSpec.describe Chat::UpdateMessage do
       chat_message = create_chat_message(user1, og_message, public_chat_channel)
       new_message = "2 short"
       updater =
-        Chat::UpdateMessage.call(
+        described_class.call(
           guardian: Guardian.new(Fabricate(:user)),
           message_id: chat_message.id,
           message: new_message,
@@ -141,11 +133,7 @@ RSpec.describe Chat::UpdateMessage do
       chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
       new_message = "Change to this!"
 
-      Chat::UpdateMessage.call(
-        guardian: guardian,
-        message_id: chat_message.id,
-        message: new_message,
-      )
+      described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
       expect(chat_message.reload.message).to eq(new_message)
     end
 
@@ -153,7 +141,7 @@ RSpec.describe Chat::UpdateMessage do
       chat_message = create_chat_message(user1, "This will be changed", public_chat_channel)
       events =
         DiscourseEvent.track_events do
-          Chat::UpdateMessage.call(
+          described_class.call(
             guardian: guardian,
             message_id: chat_message.id,
             message: "Change to this!",
@@ -183,7 +171,7 @@ RSpec.describe Chat::UpdateMessage do
       it "sends notifications if a message was updated with new mentions" do
         message = create_chat_message(user1, "Mentioning @#{user2.username}", public_chat_channel)
 
-        Chat::UpdateMessage.call(
+        described_class.call(
           guardian: guardian,
           message_id: message.id,
           message: "Mentioning @#{user2.username} and @#{user3.username}",
@@ -197,7 +185,7 @@ RSpec.describe Chat::UpdateMessage do
         message = "ping @#{user2.username} @#{user3.username}"
         chat_message = create_chat_message(user1, message, public_chat_channel)
         expect {
-          Chat::UpdateMessage.call(
+          described_class.call(
             guardian: guardian,
             message_id: chat_message.id,
             message: message + " editedddd",
@@ -209,7 +197,7 @@ RSpec.describe Chat::UpdateMessage do
         message = "ping"
         chat_message = create_chat_message(user1, message, public_chat_channel)
 
-        Chat::UpdateMessage.call(
+        described_class.call(
           guardian: guardian,
           message_id: chat_message.id,
           message: message + " @#{user_without_memberships.username}",
@@ -227,7 +215,7 @@ RSpec.describe Chat::UpdateMessage do
             public_chat_channel,
           )
         expect {
-          Chat::UpdateMessage.call(
+          described_class.call(
             guardian: guardian,
             message_id: chat_message.id,
             message: "ping @#{user3.username}",
@@ -244,7 +232,7 @@ RSpec.describe Chat::UpdateMessage do
             "ping @#{user2.username} @#{user3.username}",
             public_chat_channel,
           )
-        Chat::UpdateMessage.call(
+        described_class.call(
           guardian: guardian,
           message_id: chat_message.id,
           message: "ping @#{user3.username} @#{user4.username}",
@@ -265,7 +253,7 @@ RSpec.describe Chat::UpdateMessage do
         direct_message_channel = result.channel
         message = create_chat_message(user1, "ping nobody", direct_message_channel)
 
-        Chat::UpdateMessage.call(
+        described_class.call(
           guardian: guardian,
           message_id: message.id,
           message: "ping @#{admin1.username}",
@@ -340,7 +328,7 @@ RSpec.describe Chat::UpdateMessage do
         it "updates the mention record" do
           chat_message = create_chat_message(user1, "ping @#{user2.username}", public_chat_channel)
 
-          Chat::UpdateMessage.call(
+          described_class.call(
             guardian: guardian,
             message_id: chat_message.id,
             message: "ping @#{user3.username}",
@@ -358,7 +346,7 @@ RSpec.describe Chat::UpdateMessage do
         it "creates a single mention record per user" do
           chat_message = create_chat_message(user1, "ping @#{user2.username}", public_chat_channel)
 
-          Chat::UpdateMessage.call(
+          described_class.call(
             guardian: guardian,
             message_id: chat_message.id,
             message: "ping @#{user2.username} @#{user2.username} edited",
@@ -372,7 +360,7 @@ RSpec.describe Chat::UpdateMessage do
         it "creates group mentions on update" do
           chat_message = create_chat_message(user1, "ping nobody", public_chat_channel)
           expect {
-            Chat::UpdateMessage.call(
+            described_class.call(
               guardian: guardian,
               message_id: chat_message.id,
               message: "ping @#{admin_group.name}",
@@ -386,7 +374,7 @@ RSpec.describe Chat::UpdateMessage do
         it "doesn't duplicate mentions when the user is already direct mentioned and then group mentioned" do
           chat_message = create_chat_message(user1, "ping @#{admin2.username}", public_chat_channel)
           expect {
-            Chat::UpdateMessage.call(
+            described_class.call(
               guardian: guardian,
               message_id: chat_message.id,
               message: "ping @#{admin_group.name} @#{admin2.username}",
@@ -400,7 +388,7 @@ RSpec.describe Chat::UpdateMessage do
           chat_message =
             create_chat_message(user1, "ping @#{admin_group.name}", public_chat_channel)
           expect {
-            Chat::UpdateMessage.call(
+            described_class.call(
               guardian: guardian,
               message_id: chat_message.id,
               message: "ping nobody anymore!",
@@ -421,14 +409,8 @@ RSpec.describe Chat::UpdateMessage do
       new_message = "Today is Thursday, it's almost the weekend already!"
       chat_message = create_chat_message(user1, old_message, public_chat_channel)
       updater =
-        Chat::UpdateMessage.call(
-          guardian: guardian,
-          message_id: chat_message.id,
-          message: new_message,
-        )
+        described_class.call(guardian: guardian, message_id: chat_message.id, message: new_message)
 
-      # sleep 1
-      # debugger
       revision = chat_message.revisions.last
       expect(revision.old_message).to eq(old_message)
       expect(revision.new_message).to eq(new_message)
@@ -459,7 +441,7 @@ RSpec.describe Chat::UpdateMessage do
         chat_message_2.update!(created_at: 20.seconds.ago)
 
         expect do
-          Chat::UpdateMessage.call(
+          described_class.call(
             guardian: guardian,
             message_id: chat_message_1.id,
             message: "another different chat message here",
@@ -480,7 +462,7 @@ RSpec.describe Chat::UpdateMessage do
         chat_message.update!(created_at: 30.seconds.ago)
 
         updater =
-          Chat::UpdateMessage.call(
+          described_class.call(
             guardian: guardian,
             message_id: chat_message.id,
             message: "this is some chat message",
@@ -504,7 +486,7 @@ RSpec.describe Chat::UpdateMessage do
             upload_ids: [upload1.id, upload2.id],
           )
         expect {
-          Chat::UpdateMessage.call(
+          described_class.call(
             guardian: guardian,
             message_id: chat_message.id,
             message: "I guess this is different",
@@ -523,7 +505,7 @@ RSpec.describe Chat::UpdateMessage do
           )
 
         expect {
-          Chat::UpdateMessage.call(
+          described_class.call(
             guardian: guardian,
             message_id: chat_message.id,
             message: "I guess this is different",
@@ -542,7 +524,7 @@ RSpec.describe Chat::UpdateMessage do
           )
 
         expect {
-          Chat::UpdateMessage.call(
+          described_class.call(
             guardian: guardian,
             message_id: chat_message.id,
             message: "I guess this is different",
@@ -554,7 +536,7 @@ RSpec.describe Chat::UpdateMessage do
       it "adds one upload if none exist" do
         chat_message = create_chat_message(user1, "something", public_chat_channel)
         expect {
-          Chat::UpdateMessage.call(
+          described_class.call(
             guardian: guardian,
             message_id: chat_message.id,
             message: "I guess this is different",
@@ -566,7 +548,7 @@ RSpec.describe Chat::UpdateMessage do
       it "adds multiple uploads if none exist" do
         chat_message = create_chat_message(user1, "something", public_chat_channel)
         expect {
-          Chat::UpdateMessage.call(
+          described_class.call(
             guardian: guardian,
             message_id: chat_message.id,
             message: "I guess this is different",
@@ -579,7 +561,7 @@ RSpec.describe Chat::UpdateMessage do
         chat_message =
           create_chat_message(user1, "something", public_chat_channel, upload_ids: [upload1.id])
         expect {
-          Chat::UpdateMessage.call(
+          described_class.call(
             guardian: guardian,
             message_id: chat_message,
             message: "I guess this is different",
@@ -592,7 +574,7 @@ RSpec.describe Chat::UpdateMessage do
         SiteSetting.chat_allow_uploads = false
         chat_message = create_chat_message(user1, "something", public_chat_channel)
         expect {
-          Chat::UpdateMessage.call(
+          described_class.call(
             guardian: guardian,
             message_id: chat_message.id,
             message: "I guess this is different",
@@ -611,7 +593,7 @@ RSpec.describe Chat::UpdateMessage do
             upload_ids: [upload1.id, upload2.id],
           )
         expect {
-          Chat::UpdateMessage.call(
+          described_class.call(
             guardian: guardian,
             message_id: chat_message.id,
             message: "I guess this is different",
@@ -630,7 +612,7 @@ RSpec.describe Chat::UpdateMessage do
           )
         SiteSetting.chat_minimum_message_length = 10
         new_message = "hi :)"
-        Chat::UpdateMessage.call(
+        described_class.call(
           guardian: guardian,
           message_id: chat_message.id,
           message: new_message,
@@ -653,7 +635,7 @@ RSpec.describe Chat::UpdateMessage do
       it "publishes a MessageBus event to update the original message metadata" do
         messages =
           MessageBus.track_publish("/chat/#{public_chat_channel.id}") do
-            Chat::UpdateMessage.call(
+            described_class.call(
               guardian: guardian,
               message_id: message.id,
               message: "some new updated content",
@@ -673,7 +655,7 @@ RSpec.describe Chat::UpdateMessage do
         msg = "Validation failed: " + I18n.t("contains_blocked_word", { word: watched_word.word })
 
         expect do
-          Chat::UpdateMessage.call(
+          described_class.call(
             guardian: guardian,
             message_id: chat_message.id,
             message: "bad word - #{watched_word.word}",
@@ -689,7 +671,7 @@ RSpec.describe Chat::UpdateMessage do
 
       def update_message(user)
         message.update!(user: user)
-        Chat::UpdateMessage.call(
+        described_class.call(
           guardian: Guardian.new(user),
           message_id: message.id,
           message: "I guess this is different",
