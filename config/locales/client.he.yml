@@ -507,6 +507,12 @@ he:
         type_bonus:
           name: "בונוס סוג"
           title: "לסוגים מסוימים של פריטים לסקירה ניתן להקצות בונוס על ידי הסגל כדי שהעדיפות שלהם תעלה."
+      revise_and_reject_post:
+        reason: "סיבה"
+        feedback: "משוב"
+        custom_reason: "הוספת תיאור ברור של הסיבה"
+        other_reason: "אחר…"
+        optional: "רשות"
       stale_help: "הפריט לסקירה נפתר על ידי <b>%{username}</b>."
       claim_help:
         optional: "באפשרותך לדרוש את הפריט כדי למנוע מאחרים לסקור אותו."
@@ -1516,8 +1522,6 @@ he:
           יש לסרוק את קוד ה־QR הזה ביישומון נתמך (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) ולהקליד את קוד האימות שלך.
         disable_description: "נא למלא את קוד האישור מהיישומון שלך"
         show_key_description: "הכנס ידנית"
-        short_description: |
-          הגנה על החשבון שלך עם קודים חד־פעמיים לאבטחה.
         extended_description: |
           אימות דו־שלבי מחזק את אבטחת המשתמש שלך באסימון אבטחה חד־פעמי בנוסף לסיסמה שלך. ניתן ליצור אסימונים על מכשירי <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> ו־<a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "לידיעתך, כניסות מרשתות חברתיות יושבתו לאחר הפעלת אימות דו־שלבי בחשבונך."
@@ -1556,6 +1560,10 @@ he:
           save: "שמירה"
           edit_description: "שם מפתח אבטחה פיזי"
           name_required_error: "עליך לציין שם למפתח האבטחה שלך."
+      passkeys:
+        save: "שמירה"
+        added_prefix: "הוסיף"
+        last_used_prefix: "שימוש אחרון"
       change_about:
         title: "שינוי בנוגע אליי"
         error: "ארעה שגיאה בשינוי ערך זה."
@@ -1840,6 +1848,10 @@ he:
           progress: "הועלו %{progress}%…"
           success: "הקובץ נשלח בהצלחה. תישלח אליך הודעה כשהתהליך יושלם."
           error: "הקובץ אמור להיות בתצורת CSV, עמך הסליחה."
+      confirm_access:
+        title: "אישור גישה"
+        incorrect_password: "הסיסמה שמילאת שגויה."
+        logged_in_as: "נכנסת בשם: "
       password:
         title: "סיסמה"
         too_short: "הסיסמה שלך קצרה מידי."
@@ -1849,6 +1861,7 @@ he:
         ok: "הסיסמה שלך נראית טוב."
         instructions: "לפחות %{count} תווים"
         required: "נא למלא סיסמה"
+        confirm: "אישור"
       summary:
         title: "סיכום"
         stats: "סטטיסטיקות"
@@ -2481,6 +2494,7 @@ he:
           desc: לחישות גלויות לחברי סגל בלבד
         create_topic:
           label: "נושא חדש"
+          desc: יצירת נושא חדש
         shared_draft:
           label: "טיוטה משותפת"
           desc: "יצירת טיוטה לנושא שרק משתמשים מורשים יוכלו לראות"
@@ -5202,7 +5216,7 @@ he:
         install: "התקנה"
         delete: "מחיקה"
         delete_confirm: 'למחוק את „%{theme_name}”?'
-        bulk_delete: 'להמשיך?'
+        bulk_delete: "להמשיך?"
         bulk_themes_delete_confirm: "פעולה זו תסיר את ערכות העיצוב הבאות, הן לא תהיינה זמינות לשימוש על ידי משתמשים באתר שלך:"
         bulk_components_delete_confirm: "פעולה זו תסיר את הרכיבים הבאים, הם לא יהיו זמינים לשימוש על ידי משתמשים באתר שלך:"
         color: "צבע"

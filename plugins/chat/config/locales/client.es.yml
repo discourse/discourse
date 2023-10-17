@@ -498,10 +498,7 @@ es:
           one: "%{commaSeparatedUsernames} y %{count} más está escribiendo"
           other: "%{commaSeparatedUsernames} y %{count} más están escribiendo"
       retention_reminders:
-        public:
-          one: "%{count} día"
-          other: "%{count} días"
-        dm:
+        short:
           one: "%{count} día"
           other: "%{count} días"
       flags:

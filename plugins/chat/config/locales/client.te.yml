@@ -79,10 +79,7 @@ te:
         existing_topic:
           title: "ఇప్పటికే ఉన్న విషయానికి జరుపు"
       retention_reminders:
-        public:
-          one: "%{count} రోజు"
-          other: "%{count} రోజులు"
-        dm:
+        short:
           one: "%{count} రోజు"
           other: "%{count} రోజులు"
       emoji_picker:

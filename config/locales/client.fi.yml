@@ -419,6 +419,9 @@ fi:
         type_bonus:
           name: "tyyppibonus"
           title: "Henkilökunta voi määrittää tietyille käsiteltävälle tyypeille bonuksen, jotta ne saavat korkeamman prioriteetin."
+      revise_and_reject_post:
+        reason: "Syy"
+        optional: "valinnainen"
       stale_help: "<b>%{username}</b> on ratkaissut tämän käsiteltävän kohteen."
       claim_help:
         optional: "Voit osoittaa tämän kohteen itsellesi, jolloin muut eivät voi käsitellä sitä."
@@ -1347,8 +1350,6 @@ fi:
           Skannaa QR-koodi tuetulla sovelluksella (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) ja syötä todennuskoodisi.
         disable_description: "Syötä sovelluksen tarjoama todennuskoodi"
         show_key_description: "Syötä manuaalisesti"
-        short_description: |
-          Suojaa tilisi kertakäyttöisillä turvakoodeilla.
         extended_description: |
           Kaksivaiheinen tunnistus lisää tilisi turvallisuutta vaatimalla kertakäyttöisen koodin salasanasi lisäksi. Koodeja voi luoda <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android-</a> ja <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>-laitteilla.
         oauth_enabled_warning: "Huomioi, ettet voi kirjautua some-tilien avulla, jos kaksivaiheinen tunnistus on käytössä tililläsi."
@@ -1387,6 +1388,10 @@ fi:
           save: "Tallenna"
           edit_description: "Tunnistautumislaitteen nimi"
           name_required_error: "Tunnistautumislaite tarvitsee nimen."
+      passkeys:
+        save: "Tallenna"
+        added_prefix: "Lisättiin"
+        last_used_prefix: "Viimeksi käytetty"
       change_about:
         title: "Muokkaa kuvaustasi"
         error: "Arvon muuttamisessa tapahtui virhe."
@@ -1670,6 +1675,7 @@ fi:
         ok: "Salasana vaikuttaa hyvältä."
         instructions: "vähintään %{count} merkkiä."
         required: "Syötä salasana"
+        confirm: "Vahvista"
       summary:
         title: "Yhteenveto"
         stats: "Tilastot"

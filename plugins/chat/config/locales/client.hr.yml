@@ -273,11 +273,7 @@ hr:
         new_message:
           title: "Premjestite u novu poruku"
       retention_reminders:
-        public:
-          one: "%{count} dan"
-          few: "%{count} dana"
-          other: "%{count} dana"
-        dm:
+        short:
           one: "%{count} dan"
           few: "%{count} dana"
           other: "%{count} dana"

@@ -498,10 +498,7 @@ nl:
           one: "%{commaSeparatedUsernames} en %{count} ander zijn aan het typen"
           other: "%{commaSeparatedUsernames} en %{count} anderen zijn aan het typen"
       retention_reminders:
-        public:
-          one: "%{count} dag"
-          other: "%{count} dagen"
-        dm:
+        short:
           one: "%{count} dag"
           other: "%{count} dagen"
       flags:

@@ -180,12 +180,7 @@ sk:
         existing_topic:
           title: "Presuň do existujúcej témy."
       retention_reminders:
-        public:
-          one: "%{count} deň"
-          few: "%{count} dni"
-          many: "%{count} dní"
-          other: "%{count} dní"
-        dm:
+        short:
           one: "%{count} deň"
           few: "%{count} dni"
           many: "%{count} dní"
