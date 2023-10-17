@@ -1,5 +1,96 @@
 // Modal wrappers
 
+.d-modal {
+  --modal-max-width: 47em; // set in ems to scale with user font-size
+  --modal-min-width: 10rem;
+  pointer-events: none; // Allow clicks through wrappers so they hit the adjacent backdrop element
+
+  &__wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    z-index: z("modal", "content");
+    overflow: auto;
+
+    html.keyboard-visible body.ios-safari-composer-hacks & {
+      height: calc(var(--composer-vh, 1vh) * 100);
+      .modal-inner-container {
+        max-height: 100%;
+        margin-bottom: 0px;
+      }
+    }
+  }
+
+  &__container {
+    flex-grow: 1;
+    pointer-events: auto;
+    box-sizing: border-box;
+    margin: 0 auto;
+    max-width: var(--modal-max-width);
+    max-height: 80vh;
+    background-color: var(--secondary);
+    box-shadow: var(--shadow-modal);
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  &__title-text,
+  &__subtitle-text {
+    margin: 0;
+  }
+
+  &__body {
+    overflow-y: auto;
+    padding: 1em;
+  }
+  &__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 1rem;
+    border-top: 1px solid var(--primary-low);
+    gap: 0.5rem 0;
+    // .btn {
+    //   margin: 0 0.75em 0 0;
+    //   &[href] {
+    //     min-height: unset;
+    //   }
+    // }
+  }
+  &__backdrop {
+    user-select: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: z("modal", "overlay");
+    background-color: #000;
+    opacity: 0;
+
+    &.fade.in {
+      animation: fade 0.3s;
+      opacity: 0.6;
+      filter: alpha(opacity=60);
+
+      @media (prefers-reduced-motion) {
+        animation-duration: 0s;
+      }
+    }
+  }
+}
+
+//legacy
+
 .fixed-modal:not(#discourse-modal) {
   // new <DModal /> only, not <DModalLegacy />
   pointer-events: none; // Allow clicks through wrappers so they hit the adjacent backdrop element
@@ -46,7 +137,7 @@
 
 .bootbox.modal {
   position: fixed;
-  z-index: z("modal", "content");
+  // z-index: z("modal", "content");
   overflow: auto;
   height: auto;
   background-color: var(--secondary);
@@ -518,7 +609,7 @@
   max-height: 450px;
   .flag-action-type-details {
     width: 100%;
-    max-width: 500px;
+    // max-width: 500px;
     line-height: var(--line-height-large);
   }
 }
