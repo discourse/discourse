@@ -102,8 +102,8 @@ module Chat
     end
 
     def save_revision(message:, guardian:, **)
-      return if !should_create_revision?(message: message, guardian: guardian)
       prev_message = message.message_before_last_save || message.message_was
+      return if !should_create_revision(message, prev_message, guardian)
 
       context.revision =
         message.revisions.create!(
@@ -113,10 +113,12 @@ module Chat
         )
     end
 
-    def should_create_revision?(message:, guardian:, **)
-      prev_message = message.message_before_last_save || message.message_was
-      maxSeconds = SiteSetting.chat_editing_grace_period
-      maxEditedChars =
+    def should_create_revision(new_message, prev_message, guardian)
+      max_seconds = SiteSetting.chat_editing_grace_period
+      seconds_since_created = Time.now.to_i - new_message&.created_at.iso8601.to_time.to_i
+      return true if seconds_since_created > max_seconds
+
+      max_edited_chars =
         (
           if guardian.user.has_trust_level?(TrustLevel[2])
             SiteSetting.chat_editing_grace_period_max_diff_high_trust
@@ -124,14 +126,13 @@ module Chat
             SiteSetting.chat_editing_grace_period_max_diff_low_trust
           end
         )
-      secondsSinceCreated = Time.now.to_i - message&.created_at.iso8601.to_time.to_i
-      charsEdited =
+      chars_edited =
         ONPDiff
-          .new(prev_message, message.message)
+          .new(prev_message, new_message.message)
           .short_diff
           .sum { |str, type| type == :common ? 0 : str.size }
 
-      secondsSinceCreated > maxSeconds || charsEdited > maxEditedChars
+      chars_edited > max_edited_chars
     end
 
     def publish(message:, guardian:, **)
