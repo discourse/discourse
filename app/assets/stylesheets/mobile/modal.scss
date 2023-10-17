@@ -1,5 +1,12 @@
 // base styles for every modal popup used in Discourse
 
+.d-modal {
+  &__container {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
 .modal-open #main {
   overflow: hidden;
 }
