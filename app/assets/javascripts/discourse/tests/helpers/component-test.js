@@ -1,5 +1,6 @@
 import { render } from "@ember/test-helpers";
 import { setupRenderingTest as emberSetupRenderingTest } from "ember-qunit";
+import $ from "jquery";
 import QUnit, { test } from "qunit";
 import { autoLoadModules } from "discourse/instance-initializers/auto-load-modules";
 import Session from "discourse/models/session";

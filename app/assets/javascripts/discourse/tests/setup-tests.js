@@ -9,9 +9,10 @@ import {
   setApplication,
   setResolver,
 } from "@ember/test-helpers";
+import "bootstrap/js/modal";
 import bootbox from "bootbox";
 import { addModuleExcludeMatcher } from "ember-cli-test-loader/test-support/index";
-import jQuery from "jquery";
+import $ from "jquery";
 import MessageBus from "message-bus-client";
 import QUnit from "qunit";
 import sinon from "sinon";
@@ -393,7 +394,7 @@ export default function setupTests(config) {
   addModuleExcludeMatcher((name) => !shouldLoadModule(name));
 
   // forces 0 as duration for all jquery animations
-  jQuery.fx.off = true;
+  $.fx.off = true;
 
   setupToolbar();
   reportMemoryUsageAfterTests();

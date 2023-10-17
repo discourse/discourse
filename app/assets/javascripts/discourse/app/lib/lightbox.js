@@ -1,3 +1,4 @@
+import $ from "jquery";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
 import loadScript from "discourse/lib/load-script";

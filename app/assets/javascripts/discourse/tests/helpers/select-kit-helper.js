@@ -1,6 +1,6 @@
 import { click, fillIn, triggerEvent } from "@ember/test-helpers";
 import { isEmpty } from "@ember/utils";
-import jQuery from "jquery";
+import $ from "jquery";
 import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
 
 function checkSelectKitIsNotExpanded(selector) {
@@ -65,7 +65,7 @@ async function keyboardHelper(value, target, selector) {
 
   if (value === "selectAll") {
     // special casing the only one not working with triggerEvent
-    const event = jQuery.Event("keydown");
+    const event = $.Event("keydown");
     event.key = "A";
     event.keyCode = 65;
     event.metaKey = true;

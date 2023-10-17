@@ -1,3 +1,4 @@
+import $ from "jquery";
 import interceptClick from "discourse/lib/intercept-click";
 import DiscourseURL from "discourse/lib/url";
 

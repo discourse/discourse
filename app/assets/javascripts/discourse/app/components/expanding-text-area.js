@@ -1,5 +1,6 @@
 import { TextArea } from "@ember/legacy-built-in-components";
 import { schedule } from "@ember/runloop";
+import $ from "jquery";
 import autosize from "discourse/lib/autosize";
 import { observes, on } from "discourse-common/utils/decorators";
 

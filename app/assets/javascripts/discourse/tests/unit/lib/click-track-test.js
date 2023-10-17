@@ -1,4 +1,5 @@
 import { setupTest } from "ember-qunit";
+import $ from "jquery";
 import { module, skip, test } from "qunit";
 import sinon from "sinon";
 import ClickTrack from "discourse/lib/click-track";

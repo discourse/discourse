@@ -1,4 +1,5 @@
 import { click, settled, visit, waitFor } from "@ember/test-helpers";
+import $ from "jquery";
 import { test } from "qunit";
 import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
 
