@@ -215,7 +215,7 @@ module SiteSettingExtension
   end
 
   def description(setting)
-    I18n.t("site_settings.#{setting}", base_path: Discourse.base_path, default: "")
+    I18n.t("site_settings.#{setting}", base_path: Discourse.base_path)
   end
 
   def placeholder(setting)
