@@ -115,7 +115,7 @@ export default class DButton extends GlimmerComponentWithDeprecatedParentView {
             this._target.send(actionVal, actionParam);
           } else {
             throw new Error(
-              "DButton could not find a target for the action. Use a closure action instead"
+              "DButton could not find a target for the action. Use a closure action instead",
             );
           }
         } else if (typeof actionVal === "object" && actionVal.value) {

@@ -23,7 +23,7 @@ export default class ChatThreadList extends Component {
     this.messageBus.subscribe(
       `/chat/${channel.id}`,
       this.onMessageBus,
-      channel.channelMessageBusLastId
+      channel.channelMessageBusLastId,
     );
 
     return () => {
@@ -80,7 +80,7 @@ export default class ChatThreadList extends Component {
     return this.threadsManager.threads
       .filter(
         (thread) =>
-          thread.currentUserMembership && !thread.originalMessage.deletedAt
+          thread.currentUserMembership && !thread.originalMessage.deletedAt,
       )
       .sort((threadA, threadB) => {
         // If both are unread we just want to sort by last reply date + time descending.
@@ -139,7 +139,7 @@ export default class ChatThreadList extends Component {
   handleDeleteMessage(data) {
     const deletedOriginalMessageThread = this.threadsManager.threads.findBy(
       "originalMessage.id",
-      data.deleted_id
+      data.deleted_id,
     );
 
     if (!deletedOriginalMessageThread) {
@@ -152,7 +152,7 @@ export default class ChatThreadList extends Component {
   handleRestoreMessage(data) {
     const restoredOriginalMessageThread = this.threadsManager.threads.findBy(
       "originalMessage.id",
-      data.chat_message.id
+      data.chat_message.id,
     );
 
     if (!restoredOriginalMessageThread) {
@@ -171,7 +171,7 @@ export default class ChatThreadList extends Component {
 
       this.chatTrackingStateManager.setupChannelThreadState(
         this.args.channel,
-        result.tracking
+        result.tracking,
       );
 
       return threadModel;

@@ -52,7 +52,7 @@ export default class ChatChannelMessageEmojiPicker extends Component {
             options: { padding: { top: headerOffset() } },
           },
         ],
-      }
+      },
     );
 
     element.classList.remove("hidden");

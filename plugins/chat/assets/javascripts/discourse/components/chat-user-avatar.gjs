@@ -9,7 +9,7 @@ export default class ChatUserAvatar extends Component {
 
   get avatar() {
     return htmlSafe(
-      renderAvatar(this.args.user, { imageSize: this.avatarSize })
+      renderAvatar(this.args.user, { imageSize: this.avatarSize }),
     );
   }
 
@@ -32,7 +32,7 @@ export default class ChatUserAvatar extends Component {
       this.showPresence &&
       !!users?.find(
         ({ id, username }) =>
-          this.args.user?.id === id || this.args.user?.username === username
+          this.args.user?.id === id || this.args.user?.username === username,
       )
     );
   }
