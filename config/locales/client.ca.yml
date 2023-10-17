@@ -370,6 +370,9 @@ ca:
         type_bonus:
           name: "bonificació tipus"
           title: "El personal pot assignar una bonificació a certs tipus revisables perquè tinguin una prioritat més alta."
+      revise_and_reject_post:
+        reason: "Motiu"
+        optional: "opcional"
       claim_help:
         optional: "Podeu reclamar aquest element per a impedir que altres el revisin."
         required: "Heu de reclamar elements abans de poder revisar-los"
@@ -1017,8 +1020,6 @@ ca:
           Escanegeu aquest codi QR en una aplicació permesa (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) i introduïu el vostre codi d'autenticació.
         disable_description: "Introduïu el codi d'autenticació des de la vostra aplicació."
         show_key_description: "Introduïu-lo manualment"
-        short_description: |
-          Protegiu el vostre compte amb codis de seguretat d'un sol ús.
         use: "Utilitza l'aplicació Authenticator"
         disable: "Desactiva"
         delete: "Suprimeix"
@@ -1035,6 +1036,10 @@ ca:
           not_allowed_error: "El procés de registre de claus de seguretat ha arribat al límit de temps o s'ha cancel·lat. "
           already_added_error: "Ja heu registrat aquesta clau de seguretat. No cal que la registreu de nou."
           save: "Desa"
+      passkeys:
+        save: "Desa"
+        added_prefix: "Afegit"
+        last_used_prefix: "Darrer utilitzat"
       change_about:
         title: "Canvia Quant a mi"
         error: "Hi ha hagut un error en canviar aquest valor"
@@ -1244,6 +1249,7 @@ ca:
         same_as_email: "La contrasenya és igual que el correu electrònic."
         ok: "La contrasenya té bon aspecte."
         instructions: "com a mínim %{count} caràcters"
+        confirm: "Confirma"
       summary:
         title: "Resum"
         stats: "Estadístiques"

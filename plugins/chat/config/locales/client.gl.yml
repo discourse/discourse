@@ -112,10 +112,7 @@ gl:
         new_message:
           title: "Mover a Nova mensaxe"
       retention_reminders:
-        public:
-          one: "%{count} día"
-          other: "%{count} días"
-        dm:
+        short:
           one: "%{count} día"
           other: "%{count} días"
       emoji_picker:

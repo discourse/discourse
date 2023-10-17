@@ -548,12 +548,7 @@ pl_PL:
           many: "%{commaSeparatedUsernames} i %{count} inni piszą"
           other: "%{commaSeparatedUsernames} i %{count} innych piszą"
       retention_reminders:
-        public:
-          one: "%{count} dzień"
-          few: "%{count} dni"
-          many: "%{count} dni"
-          other: "%{count} dni"
-        dm:
+        short:
           one: "%{count} dzień"
           few: "%{count} dni"
           many: "%{count} dni"

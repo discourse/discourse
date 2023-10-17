@@ -204,10 +204,7 @@ da:
       replying_indicator:
         single_user: "%{username} skriver"
       retention_reminders:
-        public:
-          one: "%{count} dag"
-          other: "%{count} dage"
-        dm:
+        short:
           one: "%{count} dag"
           other: "%{count} dage"
       emoji_picker:
