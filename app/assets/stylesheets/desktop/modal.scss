@@ -1,21 +1,15 @@
 .d-modal {
   --modal-max-width: 90vw;
   --modal-width: 30em; // set in ems to scale with user font-size
-  --modal-min-width: 500px;
+  --modal-min-width: 400px;
   &__container {
-    max-width: var(--modal-max-width);
+    max-width: 600px;
     min-width: var(--modal-min-width);
-    width: var(--modal-width);
-
-    &.-small {
-      width: auto;
-      min-width: unset;
-    }
-    &.-large {
+    .d-modal.-large & {
       max-width: 800px;
     }
-    &.-max {
-      max-width: var(--modal-max-width);
+    .d-modal.-max & {
+      max-width: 90vw;
     }
   }
 }
