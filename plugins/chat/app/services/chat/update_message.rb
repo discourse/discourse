@@ -80,10 +80,7 @@ module Chat
       return if !SiteSetting.chat_allow_uploads
 
       uploads = ::Upload.where(id: contract.upload_ids, user_id: guardian.user.id)
-      if uploads.size != contract.upload_ids.to_a.size
-        # User is passing upload_ids for uploads that they don't own. Don't change anything.
-        return { uploads: message.uploads, changed: false }
-      end
+      return if uploads.size != contract.upload_ids.to_a.size
 
       new_upload_ids = uploads.map(&:id)
       existing_upload_ids = message.upload_ids
