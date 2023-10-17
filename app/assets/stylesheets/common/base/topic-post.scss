@@ -208,6 +208,10 @@
       height: var(--calculated-height);
     }
   }
+
+  svg {
+    max-height: 2000px;
+  }
 }
 
 // add staff color
@@ -1008,6 +1012,7 @@ aside.quote {
 }
 
 pre {
+  max-height: 2000px;
   code {
     word-wrap: normal;
     display: block;
