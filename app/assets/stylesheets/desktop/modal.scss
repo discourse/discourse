@@ -1,3 +1,24 @@
+.d-modal {
+  --modal-max-width: 90vw;
+  --modal-width: 30em; // set in ems to scale with user font-size
+  --modal-min-width: 500px;
+  &__container {
+    max-width: var(--modal-max-width);
+    min-width: var(--modal-min-width);
+    width: var(--modal-width);
+
+    &.-small {
+      width: auto;
+      min-width: unset;
+    }
+    &.-large {
+      max-width: 800px;
+    }
+    &.-max {
+      max-width: var(--modal-max-width);
+    }
+  }
+}
 // Hardcode to be the same as before for now. I would recommend not using bootbox, or finding a way so the html structure can be the same
 .bootbox.modal {
   top: 50%;
