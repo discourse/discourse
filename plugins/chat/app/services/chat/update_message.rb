@@ -77,10 +77,13 @@ module Chat
       message.message = contract.message
       message.last_editor_id = guardian.user.id
 
-      return if contract.upload_ids.nil? || !SiteSetting.chat_allow_uploads
+      return if !SiteSetting.chat_allow_uploads
 
       uploads = ::Upload.where(id: contract.upload_ids, user_id: guardian.user.id)
-      return if uploads.count != contract.upload_ids.count
+      if uploads.size != contract.upload_ids.to_a.size
+        # User is passing upload_ids for uploads that they don't own. Don't change anything.
+        return { uploads: message.uploads, changed: false }
+      end
 
       new_upload_ids = uploads.map(&:id)
       existing_upload_ids = message.upload_ids
