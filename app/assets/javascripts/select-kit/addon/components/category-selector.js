@@ -1,10 +1,7 @@
-import EmberObject, { computed } from "@ember/object";
+import { computed } from "@ember/object";
 import { mapBy } from "@ember/object/computed";
-import { htmlSafe } from "@ember/template";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import Category from "discourse/models/category";
 import { makeArray } from "discourse-common/lib/helpers";
-import I18n from "I18n";
 import MultiSelectComponent from "select-kit/components/multi-select";
 
 export default MultiSelectComponent.extend({
@@ -56,42 +53,21 @@ export default MultiSelectComponent.extend({
     return "category-row";
   },
 
-  search(filter) {
-    const result = this._super(filter);
-    if (result.length === 1) {
-      const subcategoryIds = new Set([result[0].id]);
-      for (let i = 0; i < this.siteSettings.max_category_nesting; ++i) {
-        subcategoryIds.forEach((categoryId) => {
-          this.content.forEach((category) => {
-            if (category.parent_category_id === categoryId) {
-              subcategoryIds.add(category.id);
-            }
-          });
-        });
-      }
-
-      if (subcategoryIds.size > 1) {
-        result.push(
-          EmberObject.create({
-            multiCategory: [...subcategoryIds],
-            category: result[0],
-            title: I18n.t("category_row.plus_subcategories_title", {
-              name: result[0].name,
-              count: subcategoryIds.size - 1,
-            }),
-            label: htmlSafe(
-              categoryBadgeHTML(result[0], {
-                link: false,
-                recursive: true,
-                plusSubcategories: subcategoryIds.size - 1,
-              })
-            ),
-          })
-        );
-      }
-    }
-
-    return result;
+  async search(filter) {
+    return this.siteSettings.lazy_load_categories
+      ? await Category.asyncSearch(filter, {
+          includeUncategorized:
+            this.attrs.options?.allowUncategorized !== undefined
+              ? this.attrs.options.allowUncategorized
+              : this.selectKit.options.allowUncategorized,
+          selectCategoryIds: this.categories
+            ? this.categories.map((x) => x.id)
+            : null,
+          rejectCategoryIds: this.blockedCategories
+            ? this.blockedCategories.map((x) => x.id)
+            : null,
+        })
+      : this._super(filter);
   },
 
   select(value, item) {

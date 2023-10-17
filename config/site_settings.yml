@@ -2176,6 +2176,7 @@ developer:
     hidden: true
   lazy_load_categories:
     default: false
+    client: true
     hidden: true
 
 navigation:

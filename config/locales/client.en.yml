@@ -2312,12 +2312,6 @@ en:
       topic_count:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"
-      plus_subcategories_title:
-        one: "%{name} and one subcategory"
-        other: "%{name} and %{count} subcategories"
-      plus_subcategories:
-        one: "+ %{count} subcategory"
-        other: "+ %{count} subcategories"
 
     select_kit:
       delete_item: "Delete %{name}"

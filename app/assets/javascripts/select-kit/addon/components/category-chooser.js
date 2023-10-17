@@ -76,6 +76,13 @@ export default ComboBoxComponent.extend({
   },
 
   search(filter) {
+    if (this.siteSettings.lazy_load_categories) {
+      return Category.asyncSearch(this._normalize(filter), {
+        scopedCategoryId: this.selectKit.options?.scopedCategoryId,
+        prioritizedCategoryId: this.selectKit.options?.prioritizedCategoryId,
+      });
+    }
+
     if (filter) {
       filter = this._normalize(filter);
       return this.content.filter((item) => {
