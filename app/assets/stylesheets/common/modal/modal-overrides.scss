@@ -5,3 +5,110 @@
     }
   }
 }
+.insert-hyperlink-modal.d-modal {
+  .insert-link {
+    overflow-y: visible;
+    input {
+      min-width: 300px;
+    }
+
+    .inputs {
+      position: relative;
+      .spinner {
+        position: absolute;
+        right: 8px;
+        top: -15px;
+        width: 10px;
+        height: 10px;
+      }
+      .internal-link-results {
+        position: absolute;
+        top: 70%;
+        padding: 5px 10px;
+        box-shadow: var(--shadow-card);
+        z-index: 5;
+        background-color: var(--secondary);
+        max-height: 150px;
+        width: 90%;
+        overflow-y: auto;
+        > .search-link {
+          padding: 6px;
+          border-bottom: 1px solid var(--primary-low);
+          cursor: pointer;
+          display: block;
+          &:hover,
+          &:focus {
+            background-color: var(--highlight-bg);
+          }
+          .search-category {
+            display: flex;
+            align-items: center;
+          }
+          .discourse-tags {
+            font-size: var(--font-down-1);
+          }
+        }
+      }
+    }
+  }
+}
+
+.sidebar-section-form-modal {
+  .sidebar-section-form-link {
+    .select-kit {
+      width: 100%;
+    }
+  }
+}
+
+.jump-to-post-modal {
+  .modal-body,
+  .d-modal__body {
+    overflow-y: visible;
+    #post-jump {
+      margin: 0;
+      width: 100px;
+    }
+
+    .date-picker {
+      margin: 0;
+      width: 180px;
+    }
+
+    .input-hint-text {
+      color: var(--primary);
+    }
+
+    .jump-to-post-control .index {
+      color: var(--primary-medium);
+    }
+
+    .jump-to-date-control {
+      display: flex;
+      align-items: center;
+      .input-hint-text {
+        margin-left: 0;
+        margin-right: 0.5em;
+      }
+    }
+
+    .separator {
+      position: relative;
+      margin: 0.5em auto;
+
+      hr {
+        flex: 1 0 0px;
+      }
+
+      .text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: var(--secondary);
+        padding: 0.25rem 0.5rem;
+        color: var(--primary-medium);
+      }
+    }
+  }
+}
