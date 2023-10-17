@@ -1,7 +1,7 @@
 // Modal wrappers
 
 .d-modal {
-  --modal-max-width: 47em; // set in ems to scale with user font-size
+  --modal-max-width: 40em; // set in ems to scale with user font-size
   --modal-min-width: 10rem;
   pointer-events: none; // Allow clicks through wrappers so they hit the adjacent backdrop element
 
@@ -25,7 +25,6 @@
   }
 
   &__container {
-    flex-grow: 1;
     pointer-events: auto;
     box-sizing: border-box;
     margin: 0 auto;
@@ -33,12 +32,22 @@
     max-height: 80vh;
     background-color: var(--secondary);
     box-shadow: var(--shadow-modal);
+
+    &.-small {
+      max-width: 20em;
+    }
+    &.-large {
+      max-width: 60em;
+    }
+    &.-max {
+      max-width: 90vw;
+    }
   }
 
   &__header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     padding: 1rem;
     border-bottom: 1px solid var(--primary-low);
   }
@@ -75,16 +84,11 @@
     left: 0;
     z-index: z("modal", "overlay");
     background-color: #000;
-    opacity: 0;
+    animation: fade 0.3s forwards;
+    filter: alpha(opacity=70);
 
-    &.fade.in {
-      animation: fade 0.3s;
-      opacity: 0.6;
-      filter: alpha(opacity=60);
-
-      @media (prefers-reduced-motion) {
-        animation-duration: 0s;
-      }
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
     }
   }
 }
@@ -210,7 +214,7 @@
     opacity: 0;
   }
   to {
-    opacity: 0.9;
+    opacity: 0.7;
   }
 }
 
