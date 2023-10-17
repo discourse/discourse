@@ -14,6 +14,8 @@ export default class SimpleList extends Component {
   newValue = "";
   collection = null;
   values = null;
+  choices = null;
+  allowAny = false;
 
   @on("didReceiveAttrs")
   _setupCollection() {

@@ -57,6 +57,7 @@ module("Integration | Component | simple-list", function (hooks) {
     );
 
     await click(".add-value-input summary");
+    assert.strictEqual(count(".select-kit-row"), 1);
     await click(".select-kit-row");
 
     assert.strictEqual(
