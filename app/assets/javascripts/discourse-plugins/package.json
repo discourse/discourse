@@ -14,7 +14,7 @@
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
     "ember-template-imports": "^3.4.2",
-    "ember-this-fallback": "^0.3.1"
+    "ember-this-fallback": "^0.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.23.2",
