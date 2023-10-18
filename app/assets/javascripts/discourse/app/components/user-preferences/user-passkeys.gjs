@@ -25,20 +25,11 @@ export default class UserPasskeys extends Component {
   lastUsedPrefix = I18n.t("user.passkeys.last_used_prefix");
   neverUsed = I18n.t("user.passkeys.never_used");
 
-  isCurrentUser() {
-    return this.currentUser.id === this.args.model.id;
-  }
-
-  passkeyDefaultName() {
-    if (this.capabilities.isSafari) {
-      return I18n.t("user.passkeys.name.icloud_keychain");
-    }
-
-    if (this.capabilities.isAndroid || this.capabilities.isChrome) {
-      return I18n.t("user.passkeys.name.google_password_manager");
-    }
-
-    return I18n.t("user.passkeys.name.default");
+  get showActions() {
+    return (
+      this.currentUser.id === this.args.model.id &&
+      !this.capabilities.isAppWebview
+    );
   }
 
   async createPasskey() {
@@ -89,7 +80,7 @@ export default class UserPasskeys extends Component {
         type: credential.type,
         attestation: bufferToBase64(credential.response.attestationObject),
         clientData: bufferToBase64(credential.response.clientDataJSON),
-        name: this.passkeyDefaultName(),
+        name: I18n.t("user.passkeys.name.default"),
       };
 
       const registrationResponse = await this.args.model.registerPasskey(
@@ -111,6 +102,8 @@ export default class UserPasskeys extends Component {
         bodyComponentModel: registrationResponse,
       });
     } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
       this.errorMessage =
         error.name === "InvalidStateError"
           ? I18n.t("user.passkeys.already_added_error")
@@ -221,7 +214,7 @@ export default class UserPasskeys extends Component {
                 {{/if}}
               </div>
             </div>
-            {{#if this.isCurrentUser}}
+            {{#if this.showActions}}
               <div class="passkey-right">
                 <div class="actions">
                   <PasskeyOptionsDropdown
@@ -239,15 +232,15 @@ export default class UserPasskeys extends Component {
         {{/each}}
       </div>
 
-      <div class="controls pref-passkeys__add">
-        {{#if this.isCurrentUser}}
+      {{#if this.showActions}}
+        <div class="controls pref-passkeys__add">
           <DButton
             @action={{this.addPasskey}}
             @icon="plus"
             @label="user.passkeys.add_passkey"
           />
-        {{/if}}
-      </div>
+        </div>
+      {{/if}}
     </div>
   </template>
 }
