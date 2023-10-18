@@ -1,5 +1,6 @@
 import { cancel } from "@ember/runloop";
 import { createPopper } from "@popperjs/core";
+import $ from "jquery";
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { caretPosition, setCaretPosition } from "discourse/lib/utilities";
 import Site from "discourse/models/site";

@@ -340,6 +340,9 @@ hy:
         type_bonus:
           name: "բոնուսի տեսակը"
           title: "Որոշ ստուգվող տեսակների դեպքում, աշխատակիցներին կարող են բոնուս նշանակվել, որպեսզի նրանք գերակայության հասնեն: "
+      revise_and_reject_post:
+        reason: "Պատճառ"
+        optional: "ընտրովի"
       claim_help:
         optional: "Դուք կարող եք պահանջել այդ էլեմենտը, որպեսզի ուրիշները չկարողանան այն դիտել:  "
         required: "Դուք պետք է նախ՝ հայտ ներկայացնեք, որպեսզի կարողանաք այն դիտեք: "
@@ -940,8 +943,6 @@ hy:
           Սկանավորեք այս QR կոդը համապատասխան հավելվածում (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) և մուտքագրեք Ձեր նույնականացման կոդը:
         disable_description: "Խնդրում ենք Ձեր հավելվածից մուտքագրել վավերացման կոդը:"
         show_key_description: "Մուտքագրել ձեռքով"
-        short_description: |
-          Ձեր ակաունտը պաշտպանեք մեկանգամյա օգտագործման անվտանգության կոդերով:
         use: "Օգտագործեք Նույնականացման հավելվածը՝ ստուգման համար  "
         disable: "Անջատել"
         delete: "Ջնջել"
@@ -961,6 +962,10 @@ hy:
           already_added_error: "Դուք արդեն գրանցել եք այս անվտանգության բանալին: Պետք չէ այն նորից գրանցել:"
           save: "Պահպանել"
           name_required_error: "Դուք պետք է նշեք անվտանգության բանալու անվանումը "
+      passkeys:
+        save: "Պահպանել"
+        added_prefix: "Ավելացված"
+        last_used_prefix: "Վերջին Օգտագործվածը "
       change_about:
         title: "Փոփոխել Իմ Մասին բաժինը"
         error: "Այս արժեքը փոփոխելիս տեղի է ունեցել սխալ:"

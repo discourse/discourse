@@ -334,10 +334,7 @@ hu:
           one: "%{commaSeparatedUsernames} és még %{count} valaki gépel"
           other: "%{commaSeparatedUsernames} és még %{count} valaki gépel"
       retention_reminders:
-        public:
-          one: "%{count} nap"
-          other: "%{count} nap"
-        dm:
+        short:
           one: "%{count} nap"
           other: "%{count} nap"
       flagging:

@@ -185,11 +185,5 @@ export function defaultCategoryLinkRenderer(category, opts) {
   if (opts.topicCount && categoryStyle === "box") {
     afterBadgeWrapper += buildTopicCount(opts.topicCount);
   }
-  if (opts.plusSubcategories && opts.lastSubcategory) {
-    afterBadgeWrapper += `<span class="plus-subcategories">${I18n.t(
-      "category_row.plus_subcategories",
-      { count: opts.plusSubcategories }
-    )}</span>`;
-  }
   return `<${tagName} class="badge-wrapper ${extraClasses}" ${href}>${html}</${tagName}>${afterBadgeWrapper}`;
 }

@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import { on } from "@ember/object/evented";
 import { inject as service } from "@ember/service";
+import $ from "jquery";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ClickTrack from "discourse/lib/click-track";
 import DiscourseURL from "discourse/lib/url";

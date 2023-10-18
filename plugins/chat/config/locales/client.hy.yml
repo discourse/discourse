@@ -111,10 +111,7 @@ hy:
         new_message:
           title: "Տեղափոխել դեպի Նոր Հաղորդագրություն"
       retention_reminders:
-        public:
-          one: "%{count} օր"
-          other: "%{count} օր"
-        dm:
+        short:
           one: "%{count} օր"
           other: "%{count} օր"
       emoji_picker:

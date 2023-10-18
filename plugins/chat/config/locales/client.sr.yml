@@ -96,11 +96,7 @@ sr:
         existing_topic:
           title: "Prebaci u Postojeću Temu"
       retention_reminders:
-        public:
-          one: "%{count} дан"
-          few: "%{count} дана"
-          other: "%{count} дана"
-        dm:
+        short:
           one: "%{count} дан"
           few: "%{count} дана"
           other: "%{count} дана"

@@ -1,5 +1,6 @@
 import { schedule } from "@ember/runloop";
 import { hbs } from "ember-cli-htmlbars";
+import $ from "jquery";
 import { h } from "virtual-dom";
 import { addExtraUserClasses } from "discourse/helpers/user-avatar";
 import { wantsNewWindow } from "discourse/lib/intercept-click";

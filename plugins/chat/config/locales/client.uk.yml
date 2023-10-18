@@ -588,14 +588,8 @@ uk:
           many: "%{commaSeparatedUsernames} та %{count} інших набирають текст"
           other: "%{commaSeparatedUsernames} та %{count} інших набирають текст"
       retention_reminders:
-        public_none: "безстроково"
-        public:
-          one: "%{count} день"
-          few: "%{count} дні"
-          many: "%{count} днів"
-          other: "%{count} днів"
-        dm_none: "безстроково"
-        dm:
+        indefinitely_short: "безстроково"
+        short:
           one: "%{count} день"
           few: "%{count} дні"
           many: "%{count} днів"

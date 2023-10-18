@@ -445,10 +445,7 @@ fi:
           one: "%{commaSeparatedUsernames} ja %{count} muu kirjoittavat"
           other: "%{commaSeparatedUsernames} ja %{count} muuta kirjoittavat"
       retention_reminders:
-        public:
-          one: "%{count} päivä"
-          other: "%{count} päivää"
-        dm:
+        short:
           one: "%{count} päivä"
           other: "%{count} päivää"
       flags:
