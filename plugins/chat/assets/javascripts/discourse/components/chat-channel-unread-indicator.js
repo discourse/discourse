@@ -4,6 +4,7 @@ import { inject as service } from "@ember/service";
 export default class ChatChannelUnreadIndicator extends Component {
   @service chat;
   @service site;
+  @service currentUser;
 
   get showUnreadIndicator() {
     return (
@@ -16,17 +17,36 @@ export default class ChatChannelUnreadIndicator extends Component {
   }
 
   get unreadCount() {
+    if (this.#onlyMentions() && this.#hasChannelMentions()) {
+      return this.args.channel.tracking.mentionCount;
+    }
     return this.args.channel.tracking.unreadCount;
   }
 
   get isUrgent() {
+    if (this.#onlyMentions()) {
+      return this.#hasChannelMentions();
+    }
     return (
-      this.args.channel.isDirectMessageChannel ||
-      this.args.channel.tracking.mentionCount > 0
+      this.args.channel.isDirectMessageChannel || this.#hasChannelMentions()
     );
   }
 
   get showUnreadCount() {
+    if (this.#onlyMentions()) {
+      return this.#hasChannelMentions();
+    }
     return this.args.channel.isDirectMessageChannel || this.isUrgent;
+  }
+
+  #hasChannelMentions() {
+    return this.args.channel.tracking.mentionCount > 0;
+  }
+
+  #onlyMentions() {
+    return (
+      this.currentUser.user_option.chat_header_indicator_preference ===
+      "only_mentions"
+    );
   }
 }
