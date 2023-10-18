@@ -45,7 +45,7 @@
     "@glimmer/component": "^1.1.2",
     "@glimmer/tracking": "^1.1.2",
     "@popperjs/core": "^2.11.8",
-    "@types/ember": "^4.0.6",
+    "@types/ember": "^4.0.8",
     "@types/ember-resolver": "^9.0.0",
     "@types/ember__application": "^4.0.8",
     "@types/ember__array": "^4.0.6",

@@ -14,7 +14,7 @@
     "ember-cli-htmlbars": "^6.3.0"
   },
   "devDependencies": {
-    "@types/ember": "^4.0.6",
+    "@types/ember": "^4.0.8",
     "@types/ember__application": "^4.0.8",
     "@types/ember__array": "^4.0.6",
     "@types/ember__component": "^4.0.18",

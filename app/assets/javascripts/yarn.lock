@@ -1719,10 +1719,10 @@
   dependencies:
     ember-resolver "*"
 
-"@types/ember@*", "@types/ember@^4.0.6":
-  version "4.0.7"
-  resolved "https://registry.yarnpkg.com/@types/ember/-/ember-4.0.7.tgz#46e1b575d087eed223f36f11360209b0e8d0948e"
-  integrity sha512-TVarF9iFM2qBBaLPEEfbhhoIeI6ews/02tZx/DzL08qvjG5P/buGuFzoSc7fXB1ibb3RIY9NHpB7SHwL5uwA2A==
+"@types/ember@*", "@types/ember@^4.0.8":
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/@types/ember/-/ember-4.0.8.tgz#f337cc2924479096b455abaaf8d20a699b4a1e72"
+  integrity sha512-G0mI5i5ZUBKV8ONQGhpwQVPW67cjPI+R4qi5PkSXcAvMXu6UOxlVtuk/heoEUeBRpfp+jynajFhVTnePJ2KLnA==
   dependencies:
     "@types/ember__application" "*"
     "@types/ember__array" "*"
