@@ -165,7 +165,7 @@ describe "Composer Form Templates", type: :system do
       category_page.visit(category_no_template)
       category_page.new_topic_button.click
       composer.close
-      expect(composer).to be_not_opened
+      expect(composer).to be_closed
     end
 
     it "shows the modal if there is a draft on a topic without a template" do
@@ -181,7 +181,7 @@ describe "Composer Form Templates", type: :system do
       category_page.visit(category_topic_template)
       category_page.new_topic_button.click
       composer.close
-      expect(composer).to be_not_opened
+      expect(composer).to be_closed
     end
 
     it "shows the modal if there is a draft on a topic with a topic template" do
@@ -197,7 +197,7 @@ describe "Composer Form Templates", type: :system do
       category_page.visit(category_with_template_1)
       category_page.new_topic_button.click
       composer.close
-      expect(composer).to be_not_opened
+      expect(composer).to be_closed
     end
 
     context "when the default template has a topic template" do
@@ -217,7 +217,7 @@ describe "Composer Form Templates", type: :system do
         category_page.visit(default_category)
         category_page.new_topic_button.click
         composer.close
-        expect(composer).to be_not_opened
+        expect(composer).to be_closed
       end
 
       it "shows the modal if there is a draft" do

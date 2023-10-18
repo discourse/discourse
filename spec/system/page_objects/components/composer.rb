@@ -10,8 +10,8 @@ module PageObjects
         page.has_css?("#{COMPOSER_ID}.open")
       end
 
-      def not_opened?
-        page.has_no_css?("#{COMPOSER_ID}.open")
+      def closed?
+        page.has_css?("#{COMPOSER_ID}.closed", visible: :all)
       end
 
       def open_composer_actions
