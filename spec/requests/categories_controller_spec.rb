@@ -372,6 +372,82 @@ RSpec.describe CategoriesController do
         response.parsed_body["category_list"]["categories"].map { |x| x["id"] },
       ).not_to include(uncategorized.id)
     end
+
+    describe "with serialized category custom fields" do
+      class CategoryPlugin < Plugin::Instance
+        attr_accessor :enabled
+        def enabled?
+          @enabled
+        end
+      end
+
+      fab!(:plugin) { CategoryPlugin.new }
+
+      before do
+        plugin.enabled = false
+        clear_custom_fields
+      end
+
+      def add_custom_fields
+        plugin.enabled = true
+        plugin.add_to_serializer(:basic_category, :bob) { object.custom_fields["bob"] }
+        category.custom_fields["bob"] = "marley"
+        category.save
+      end
+
+      def clear_custom_fields
+        category.clear_custom_fields
+      end
+
+      def warmup
+        get "/categories.json"
+        expect(response.status).to eq(200)
+      end
+
+      def queries_without_custom_fields
+        track_sql_queries do
+          get "/categories.json"
+          expect(response.status).to eq(200)
+          expect(
+            response.parsed_body["category_list"]["categories"].map(&:keys).flatten,
+          ).not_to include("bob")
+        end
+      end
+
+      def queries_with_custom_fields
+        track_sql_queries do
+          get "/categories.json"
+          expect(response.status).to eq(200)
+          expect(
+            response.parsed_body["category_list"]["categories"].map(&:keys).flatten,
+          ).to include("bob")
+        end
+      end
+
+      context "when custom fields are not preloaded" do
+        before { CategoryList.preloaded_category_custom_fields = Set.new }
+
+        it "increases the query count" do
+          warmup
+          without_custom_fields = queries_without_custom_fields
+          add_custom_fields
+          with_custom_fields = queries_with_custom_fields
+          expect(with_custom_fields.count).to be > without_custom_fields.count
+        end
+      end
+
+      context "when custom fields are preloaded" do
+        before { CategoryList.preloaded_category_custom_fields << "bob" }
+
+        it "does not increase the query count" do
+          warmup
+          without_custom_fields = queries_without_custom_fields
+          add_custom_fields
+          with_custom_fields = queries_with_custom_fields
+          expect(with_custom_fields.count).to eq(without_custom_fields.count)
+        end
+      end
+    end
   end
 
   describe "extensibility event" do
