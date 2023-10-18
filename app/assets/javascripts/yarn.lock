@@ -1837,13 +1837,12 @@
     "@types/ember__routing" "*"
     "@types/ember__service" "*"
 
-"@types/ember__runloop@*", "@types/ember__runloop@^4.0.6":
-  version "4.0.6"
-  resolved "https://registry.yarnpkg.com/@types/ember__runloop/-/ember__runloop-4.0.6.tgz#aaf562f73ff5da377278d0c8d21bedebbb0feeca"
-  integrity sha512-Lh/4ViAiD4xcAEyhcTjz3p79j7cQSHc2Y+eZZyXhASugHjdKI5e0SzpZTWiJipE4n6aqB68BTdhiu5K8p5Zbrg==
+"@types/ember__runloop@*", "@types/ember__runloop@^4.0.7":
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/@types/ember__runloop/-/ember__runloop-4.0.7.tgz#ff5a940dc70f1afb69f4d42c66af290030f8b3ae"
+  integrity sha512-xMRuANKydjwy0zNnb2COyDSCRe2j/TpBnDYAy2MkjaPXFnHn8MSZUAurQmU+Mg5BMQx6PLhxaPmzFBPQ73+VrA==
   dependencies:
     "@types/ember" "*"
-    "@types/ember__runloop" "*"
 
 "@types/ember__service@*", "@types/ember__service@^4.0.5":
   version "4.0.6"
