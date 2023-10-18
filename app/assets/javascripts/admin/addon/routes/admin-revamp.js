@@ -25,6 +25,9 @@ export default class AdminRoute extends DiscourseRoute {
     }
 
     this.sidebarState.setPanel(ADMIN_PANEL);
+    this.sidebarState.setSeparatedMode();
+    this.sidebarState.hideSwitchPanelButtons();
+
     this.controllerFor("application").setProperties({
       showTop: false,
     });

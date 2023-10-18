@@ -130,10 +130,10 @@ export default {
               icon: "home",
             },
             {
-              name: "Advanced",
-              route: "adminSiteSettings",
-              text: "Advanced",
-              icon: "cog",
+              name: "legacy",
+              route: "admin",
+              text: "Legacy Admin",
+              icon: "wrench",
             },
           ],
         },
@@ -175,11 +175,6 @@ export default {
           ADMIN_PANEL
         );
       });
-
-      api.setSidebarPanel(ADMIN_PANEL);
-
-      api.setSeparatedSidebarMode();
-      api.hideSidebarSwitchPanelButtons();
     });
   },
 };
