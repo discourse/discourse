@@ -62,7 +62,7 @@
     "@types/ember__service": "^4.0.5",
     "@types/ember__string": "^3.0.11",
     "@types/ember__template": "^4.0.3",
-    "@types/ember__test": "^4.0.3",
+    "@types/ember__test": "^4.0.4",
     "@types/ember__utils": "^4.0.4",
     "@types/jquery": "^3.5.22",
     "@types/qunit": "^2.19.6",
