@@ -113,7 +113,6 @@
   }
 }
 
-// move-to topic modal
 .d-modal.choose-topic-modal {
   .d-modal {
     &__container {
@@ -151,6 +150,51 @@
     form {
       hr {
         margin-bottom: 0.5em;
+      }
+    }
+  }
+}
+
+.d-modal.publish-page-modal {
+  .d-modal {
+    &__body {
+      p.publish-description {
+        margin-top: 0;
+      }
+
+      .publish-url {
+        margin-bottom: 1em;
+        .example-url,
+        .invalid-slug {
+          font-weight: bold;
+        }
+      }
+
+      .publish-slug:disabled {
+        cursor: not-allowed;
+      }
+
+      .controls {
+        margin-bottom: 1em;
+
+        .description {
+          margin: 0;
+          display: flex;
+          align-items: center;
+
+          input[type="checkbox"] {
+            margin-top: 0;
+          }
+        }
+      }
+    }
+
+    &__footer {
+      display: flex;
+
+      .close-publish-page {
+        margin-left: auto;
+        margin-right: 0;
       }
     }
   }
