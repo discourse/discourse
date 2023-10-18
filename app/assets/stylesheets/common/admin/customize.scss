@@ -114,6 +114,10 @@
       display: flex;
       align-items: center;
 
+      span {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
       input {
         margin: 0;
       }
@@ -329,7 +333,7 @@
         overflow: hidden;
         display: flex;
         align-items: center;
-        height: 2em;
+        @include line-clamp(4);
         .icons {
           margin-left: auto;
         }
@@ -367,8 +371,13 @@
         }
       }
 
+      .components {
+        overflow-wrap: anywhere;
+      }
+
       .inner-wrapper {
-        padding: 10px;
+        box-sizing: border-box;
+        padding: 0.67em;
         cursor: pointer;
       }
 
