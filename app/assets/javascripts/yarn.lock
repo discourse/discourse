@@ -1952,10 +1952,10 @@
   resolved "https://registry.yarnpkg.com/@types/http-errors/-/http-errors-2.0.1.tgz#20172f9578b225f6c7da63446f56d4ce108d5a65"
   integrity sha512-/K3ds8TRAfBvi5vfjuz8y6+GiAYBZ0x4tXv1Av6CWBWn0IlADc+ZX9pMq7oU0fNQPnBwIZl3rmeLp6SBApbxSQ==
 
-"@types/jquery@^3.5.22":
-  version "3.5.23"
-  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.5.23.tgz#f99f08533ad5a5c4cb1d0dc131ecf5e2a73eb182"
-  integrity sha512-LwtD05mlY8iPF/1aB8dOZaYhRDothbHA7csnAxhyqMnQxj90Fo3J4nPhmHiA0OMTwHhjwZdE1Lpd6UK+b+C6Bw==
+"@types/jquery@^3.5.24":
+  version "3.5.24"
+  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.5.24.tgz#5b4d42654c4882a177d15ce755caf547bc2317c1"
+  integrity sha512-V/TG69ge5amcr8Ap7vY3SObqKfZlV7ttqcYnNcYnndI77ySIRi05+3GjvfwRtE2qalAC2ySLIL1ker512sI20g==
   dependencies:
     "@types/sizzle" "*"
 
