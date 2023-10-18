@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/application";
 import templateOnly from "@ember/component/template-only";
-import { action } from "@ember/object";
 import { click, render, settled } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
@@ -39,14 +38,14 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         this.appEvents.off("hi:sayHi", this, this.say);
       },
 
-      @action
-      say() {
-        this.set("hi", "hi!");
-      },
+      actions: {
+        say() {
+          this.set("hi", "hi!");
+        },
 
-      @action
-      sayHi() {
-        this.appEvents.trigger("hi:sayHi");
+        sayHi() {
+          this.appEvents.trigger("hi:sayHi");
+        },
       },
     });
 
