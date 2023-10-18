@@ -91,10 +91,9 @@ function defineAdminSection(
 
 export default {
   initialize(owner) {
-    this.site = owner.lookup("service:site");
     this.currentUser = owner.lookup("service:currentUser");
 
-    if (!this.currentUser.staff) {
+    if (!this.currentUser?.staff) {
       return;
     }
 
