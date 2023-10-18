@@ -12,7 +12,10 @@ import {
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { count, exists, query } from "discourse/tests/helpers/qunit-helpers";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
-import { withSilencedDeprecationsAsync } from "discourse-common/lib/deprecated";
+import {
+  withSilencedDeprecations,
+  withSilencedDeprecationsAsync,
+} from "discourse-common/lib/deprecated";
 
 const TEMPLATE_PREFIX = "discourse/plugins/some-plugin/templates/connectors";
 const CLASS_PREFIX = "discourse/plugins/some-plugin/connectors";
@@ -21,7 +24,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
-    extraConnectorClass("test-name/hello", {
+    registerTemporaryModule(`${CLASS_PREFIX}/test-name/hello`, {
       actions: {
         sayHello() {
           this.set("hello", `${this.hello || ""}hello!`);
@@ -29,7 +32,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
       },
     });
 
-    extraConnectorClass("test-name/hi", {
+    registerTemporaryModule(`${CLASS_PREFIX}/test-name/hi`, {
       setupComponent() {
         this.appEvents.on("hi:sayHi", this, this.say);
       },
@@ -49,7 +52,7 @@ module("Integration | Component | plugin-outlet", function (hooks) {
       },
     });
 
-    extraConnectorClass("test-name/conditional-render", {
+    registerTemporaryModule(`${CLASS_PREFIX}/test-name/conditional-render`, {
       shouldRender(args, context) {
         return args.shouldDisplay || context.siteSettings.always_display;
       },
@@ -124,17 +127,23 @@ module("Integration | Component | plugin-outlet", function (hooks) {
         this.set("yieldCore", false);
         this.set("enableClashingConnector", false);
 
-        extraConnectorClass("outlet-with-default/my-connector", {
-          shouldRender(args) {
-            return args.shouldDisplay;
-          },
-        });
+        registerTemporaryModule(
+          `${CLASS_PREFIX}/outlet-with-default/my-connector`,
+          {
+            shouldRender(args) {
+              return args.shouldDisplay;
+            },
+          }
+        );
 
-        extraConnectorClass("outlet-with-default/clashing-connector", {
-          shouldRender(args) {
-            return args.enableClashingConnector;
-          },
-        });
+        registerTemporaryModule(
+          `${CLASS_PREFIX}/outlet-with-default/clashing-connector`,
+          {
+            shouldRender(args) {
+              return args.enableClashingConnector;
+            },
+          }
+        );
 
         this.template = hbs`
       <PluginOutlet @name="outlet-with-default" @outletArgs={{hash shouldDisplay=this.shouldDisplay yieldCore=this.yieldCore enableClashingConnector=this.enableClashingConnector}}>
@@ -315,7 +324,7 @@ module(
     test("uses simple object if provided", async function (assert) {
       this.set("someBoolean", true);
 
-      extraConnectorClass("test-name/my-connector", {
+      registerTemporaryModule(`${CLASS_PREFIX}/test-name/my-connector`, {
         shouldRender(args) {
           return args.someBoolean;
         },
@@ -343,7 +352,7 @@ module(
     });
 
     test("ignores classic hooks for glimmer components", async function (assert) {
-      extraConnectorClass("test-name/my-connector", {
+      registerTemporaryModule(`${CLASS_PREFIX}/test-name/my-connector`, {
         setupComponent(args, component) {
           component.reopen({
             get hello() {
@@ -369,8 +378,8 @@ module(
     test("uses custom component class if provided", async function (assert) {
       this.set("someBoolean", true);
 
-      extraConnectorClass(
-        "test-name/my-connector",
+      registerTemporaryModule(
+        `${CLASS_PREFIX}/test-name/my-connector`,
         class MyOutlet extends Component {
           static shouldRender(args) {
             return args.someBoolean;
@@ -398,8 +407,8 @@ module(
     test("uses custom templateOnly() if provided", async function (assert) {
       this.set("someBoolean", true);
 
-      extraConnectorClass(
-        "test-name/my-connector",
+      registerTemporaryModule(
+        `${CLASS_PREFIX}/test-name/my-connector`,
         Object.assign(templateOnly(), {
           shouldRender(args) {
             return args.someBoolean;
@@ -472,3 +481,32 @@ module("Integration | Component | plugin-outlet | tagName", function (hooks) {
     assert.dom("div").exists();
   });
 });
+
+module(
+  "Integration | Component | plugin-outlet | legacy extraConnectorClass",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      registerTemporaryModule(
+        `${TEMPLATE_PREFIX}/test-name/my-legacy-connector`,
+        hbs`<span class='legacy-test'>Hello world {{this.someVar}}</span>`
+      );
+
+      withSilencedDeprecations(
+        "discourse.register-connector-class-legacy",
+        () =>
+          extraConnectorClass("test-name/my-legacy-connector", {
+            setupComponent(outletArgs, component) {
+              component.set("someVar", "from legacy");
+            },
+          })
+      );
+    });
+
+    test("links up template with extra connector class", async function (assert) {
+      await render(hbs`<PluginOutlet @name="test-name" />`);
+      assert.dom(".legacy-test").hasText("Hello world from legacy");
+    });
+  }
+);

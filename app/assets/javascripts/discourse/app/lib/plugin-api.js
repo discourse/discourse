@@ -949,6 +949,8 @@ class PluginApi {
   }
 
   /**
+   * @deprecated
+   *
    * Register a Connector class for a particular outlet and connector.
    *
    * For example, if the outlet is `user-profile-primary` and your connector
@@ -962,8 +964,8 @@ class PluginApi {
    * });
    * ```
    *
-   * For more information on connector classes, see:
-   * https://meta.discourse.org/t/important-changes-to-plugin-outlets-for-ember-2-10/54136
+   * This API is deprecated. See renderIntoOutlet instead.
+   *
    **/
   registerConnectorClass(outletName, connectorName, klass) {
     extraConnectorClass(`${outletName}/${connectorName}`, klass);
