@@ -49,12 +49,12 @@ updates:
     open-pull-requests-limit: 20
     versioning-strategy: increase
     groups:
-      ember-types:
-        patterns:
-          - "@types/ember*"
       babel:
         patterns:
           - "@babel*"
       embroider:
         patterns:
           - "@embroider*"
+      types:
+        patterns:
+          - "@types/*"
