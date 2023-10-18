@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  site_settings:
+    enable_markdown_footnotes: voetnootmarkdown inschakelen op deze site
+    display_footnotes_inline: inline uitbreiding van voetnoten inschakelen

@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  site_settings:
+    enable_markdown_footnotes: bu sitede dipnot işaretlemeyi etkinleştirin
+    display_footnotes_inline: dipnotların satır içi genişletilmesini etkinleştirin
