@@ -36,7 +36,7 @@
     "@types/ember": "^4.0.6",
     "@types/ember__application": "^4.0.8",
     "@types/ember__array": "^4.0.6",
-    "@types/ember__component": "^4.0.18",
+    "@types/ember__component": "^4.0.19",
     "@types/ember__controller": "^4.0.8",
     "@types/ember__debug": "^4.0.5",
     "@types/ember__destroyable": "^4.0.2",
