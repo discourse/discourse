@@ -1994,10 +1994,10 @@
   resolved "https://registry.yarnpkg.com/@types/qs/-/qs-6.9.7.tgz#63bb7d067db107cc1e457c303bc25d511febf6cb"
   integrity sha512-FGa1F62FT09qcrueBA6qYTrJPVDzah9a+493+o2PCXsesWHIn27G98TsSMs3WPNbZIEj4+VJf6saSFpvD+3Zsw==
 
-"@types/qunit@^2.19.6":
-  version "2.19.6"
-  resolved "https://registry.yarnpkg.com/@types/qunit/-/qunit-2.19.6.tgz#2c0af41f8afdc6db554a7f575a2b6df535b86bd0"
-  integrity sha512-bz9STa6EHurtpSfn5cNiScBladlw43bM+7luQA985Kd9YlF4dZaLmKt3c5/oSyN1AWAl50YBpqTq0BxCP64nGg==
+"@types/qunit@^2.19.7":
+  version "2.19.7"
+  resolved "https://registry.yarnpkg.com/@types/qunit/-/qunit-2.19.7.tgz#21b53509ae990aecfa5b1b86bc5fb5f3d72596e0"
+  integrity sha512-Vf1+zHCOhMyDqZqM6zlB++6n5mkMe1+pWH1l3fzbzakQ2VImMNeAKSQD++RAjpGTqPUio8Tre2a6kmq6O1tK/A==
 
 "@types/range-parser@*":
   version "1.2.4"
