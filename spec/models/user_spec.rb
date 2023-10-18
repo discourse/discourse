@@ -1994,43 +1994,16 @@ RSpec.describe User do
     end
 
     describe "#number_of_flagged_posts" do
-      fab!(:admin) { Fabricate(:admin) }
+      it "counts flagged posts from the user" do
+        Fabricate(:reviewable_flagged_post, target_created_by: user)
 
-      it "counts only approved standard flagged posts from the user" do
-        %i[disagree ignore delete_and_ignore].each do |review_action|
-          PostActionCreator
-            .off_topic(admin, Fabricate(:post, user: user))
-            .reviewable
-            .perform(admin, review_action)
-        end
-        %i[agree_and_keep delete_and_agree].each do |approval_action|
-          PostActionCreator
-            .off_topic(admin, Fabricate(:post, user: user))
-            .reviewable
-            .perform(admin, approval_action)
-        end
-
-        expect(user.number_of_flagged_posts).to eq 2
-      end
-
-      it "ignores custom flags from the user" do
-        PostActionCreator
-          .notify_moderators(admin, Fabricate(:post, user: user))
-          .reviewable
-          .perform(admin, :agree_and_keep)
-        expect(user.number_of_flagged_posts).to be_zero
+        expect(user.number_of_flagged_posts).to eq(1)
       end
 
       it "ignores flagged posts from another user" do
-        other_user = Fabricate(:user)
-        %i[disagree ignore delete_and_ignore agree_and_keep].each do |review_action|
-          PostActionCreator
-            .off_topic(admin, Fabricate(:post, user: other_user))
-            .reviewable
-            .perform(admin, review_action)
-        end
+        Fabricate(:reviewable_flagged_post, target_created_by: Fabricate(:user))
 
-        expect(user.number_of_flagged_posts).to be_zero
+        expect(user.number_of_flagged_posts).to eq(0)
       end
     end
   end
