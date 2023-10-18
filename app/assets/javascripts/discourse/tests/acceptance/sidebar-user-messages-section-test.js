@@ -10,7 +10,7 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 acceptance(
   "Sidebar - Logged on user - Messages Section - user does not have can_send_private_messages permission",

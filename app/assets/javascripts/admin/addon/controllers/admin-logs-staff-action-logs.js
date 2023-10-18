@@ -5,7 +5,7 @@ import { inject as service } from "@ember/service";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import StaffActionLogDetailsModal from "../components/modal/staff-action-log-details";
 import ThemeChangeModal from "../components/modal/theme-change";
 

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import icon from "discourse-common/helpers/d-icon";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class DToggleSwitch extends Component {
   <template>

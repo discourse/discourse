@@ -4,7 +4,7 @@ import hbs from "discourse/widgets/hbs-compiler";
 import { avatarFor } from "discourse/widgets/post";
 import { createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export function smallUserAtts(user) {
   return {

@@ -13,7 +13,7 @@ import {
 import { setDefaultOwner } from "discourse-common/lib/get-owner";
 import { setupS3CDN, setupURL } from "discourse-common/lib/get-url";
 import { setIconList } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default {
   // The very first initializer to run

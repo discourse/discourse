@@ -8,7 +8,7 @@ import {
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 module("Integration | Component | time-shortcut-picker", function (hooks) {
   setupRenderingTest(hooks);

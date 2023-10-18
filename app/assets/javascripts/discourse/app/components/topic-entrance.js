@@ -5,7 +5,7 @@ import $ from "jquery";
 import DiscourseURL from "discourse/lib/url";
 import CleansUp from "discourse/mixins/cleans-up";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 function entranceDate(dt, showTime) {
   const today = new Date();

@@ -10,7 +10,7 @@ import { ajax } from "discourse/lib/ajax";
 import { fmt, propertyNotEqual } from "discourse/lib/computed";
 import { splitString } from "discourse/lib/utilities";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import SiteSettingDefaultCategoriesModal from "../components/modal/site-setting-default-categories";
 
 const CUSTOM_TYPES = [

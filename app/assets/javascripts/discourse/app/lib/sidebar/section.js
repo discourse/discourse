@@ -5,7 +5,7 @@ import SidebarSectionForm from "discourse/components/modal/sidebar-section-form"
 import { ajax } from "discourse/lib/ajax";
 import SectionLink from "discourse/lib/sidebar/section-link";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class Section {
   @service currentUser;

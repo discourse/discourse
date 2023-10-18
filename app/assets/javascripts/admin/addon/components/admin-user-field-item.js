@@ -6,8 +6,8 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n, propertyEqual } from "discourse/lib/computed";
 import { bufferedProperty } from "discourse/mixins/buffered-content";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 import UserField from "admin/models/user-field";
-import I18n from "I18n";
 
 export default Component.extend(bufferedProperty("userField"), {
   tagName: "",

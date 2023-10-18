@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const DAYS = [
   "monday",

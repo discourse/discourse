@@ -8,7 +8,7 @@ import XHRUpload from "@uppy/xhr-upload";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import getUrl from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
   classNames: ["wizard-container__image-upload"],

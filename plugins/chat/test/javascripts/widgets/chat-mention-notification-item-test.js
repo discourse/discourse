@@ -6,7 +6,7 @@ import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notificati
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { query } from "discourse/tests/helpers/qunit-helpers";
 import { deepMerge } from "discourse-common/lib/object";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
 
 function getNotification(overrides = {}) {

@@ -4,7 +4,7 @@ import { empty, or } from "@ember/object/computed";
 import { propertyEqual } from "discourse/lib/computed";
 import { emailValid } from "discourse/lib/utilities";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Controller.extend({
   queryParams: ["new"],

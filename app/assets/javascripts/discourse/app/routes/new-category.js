@@ -2,7 +2,7 @@ import { inject as service } from "@ember/service";
 import { Promise } from "rsvp";
 import { SEARCH_PRIORITIES } from "discourse/lib/constants";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 let _newCategoryColor = "0088CC";
 let _newCategoryTextColor = "FFFFFF";

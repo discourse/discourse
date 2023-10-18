@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { focusSearchInput } from "discourse/components/search-menu";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const DEFAULT_QUICK_TIPS = [
   {

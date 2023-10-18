@@ -4,7 +4,7 @@ import { prioritizeNameInUx } from "discourse/lib/settings";
 import { formatUsername } from "discourse/lib/utilities";
 import { avatarImg } from "discourse-common/lib/avatar-utils";
 import { registerUnbound } from "discourse-common/lib/helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 let _customAvatarHelpers;
 

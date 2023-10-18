@@ -3,7 +3,7 @@ import { alias } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
 import { setting } from "discourse/lib/computed";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 @classNames("admin-report-storage-stats")
 export default class AdminReportStorageStats extends Component {

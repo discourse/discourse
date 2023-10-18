@@ -12,10 +12,10 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { url } from "discourse/lib/computed";
 import { makeArray } from "discourse-common/lib/helpers";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 import ThemeSettingsEditor from "admin/components/theme-settings-editor";
 import { COMPONENTS, THEMES } from "admin/models/theme";
 import ThemeSettings from "admin/models/theme-settings";
-import I18n from "I18n";
 import ThemeUploadAddModal from "../components/theme-upload-add";
 
 const THEME_UPLOAD_VAR = 2;

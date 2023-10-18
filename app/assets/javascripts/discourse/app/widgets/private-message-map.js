@@ -4,7 +4,7 @@ import { avatarFor, avatarImg } from "discourse/widgets/post";
 import { createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
 import { makeArray } from "discourse-common/lib/helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 createWidget("pm-remove-group-link", {
   tagName: "a.remove-invited.no-text.btn-icon.btn",

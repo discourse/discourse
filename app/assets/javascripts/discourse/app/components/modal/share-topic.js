@@ -12,7 +12,7 @@ import { getAbsoluteURL } from "discourse-common/lib/get-url";
 import discourseComputed, {
   afterRender,
 } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const ShareTopicModal = Component.extend(bufferedProperty("invite"), {
   topic: readOnly("model.topic"),

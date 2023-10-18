@@ -7,7 +7,7 @@ import {
   query,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 acceptance("Share and Invite modal", function (needs) {
   needs.user();

@@ -11,7 +11,7 @@ import {
 } from "discourse/lib/utilities";
 import Notification from "discourse/models/notification";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class UserMenuNotificationsList extends UserMenuItemsList {
   @service appEvents;

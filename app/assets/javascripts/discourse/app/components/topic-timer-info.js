@@ -7,7 +7,7 @@ import { isTesting } from "discourse-common/config/environment";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseLater from "discourse-common/lib/later";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
   classNames: ["topic-timer-info"],
