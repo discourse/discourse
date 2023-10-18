@@ -58,8 +58,8 @@ export function getColors(count, palette) {
           gradient[gradientKeys[baseGradientKeyIndex]][k] -
             (gradient[gradientKeys[baseGradientKeyIndex]][k] -
               gradient[gradientKeys[baseGradientKeyIndex + 1]][k]) *
-              differenceMultiplier,
-        ),
+              differenceMultiplier
+        )
       );
     }
     colors.push(`rgb(${color.toString()})`);

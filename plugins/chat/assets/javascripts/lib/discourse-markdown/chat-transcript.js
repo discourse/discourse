@@ -70,7 +70,7 @@ const chatTranscriptRule = {
     let avatarDivToken = state.push(
       "div_chat_transcript_user_avatar",
       "div",
-      1,
+      1
     );
     avatarDivToken.attrs = [["class", "chat-transcript-user-avatar"]];
 
@@ -164,7 +164,7 @@ const chatTranscriptRule = {
       let reactionsToken = state.push(
         "div_chat_transcript_reactions",
         "div",
-        1,
+        1
       );
       reactionsToken.attrs = [["class", "chat-transcript-reactions"]];
 
@@ -254,7 +254,7 @@ export function setup(helper) {
       },
       (customCookFn) => {
         customMarkdownCookFn = customCookFn;
-      },
+      }
     );
   });
 }

@@ -20,7 +20,7 @@ export default class ChatTrackMessage extends Modifier {
       {
         root: document,
         threshold: 0,
-      },
+      }
     );
 
     this.intersectionObserver.observe(element);

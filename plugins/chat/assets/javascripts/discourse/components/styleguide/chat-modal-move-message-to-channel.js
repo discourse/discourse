@@ -9,7 +9,7 @@ export default class ChatStyleguideChatModalMoveMessageToChannel extends Compone
 
   channel = fabricators.channel();
   selectedMessageIds = [fabricators.message({ channel: this.channel })].mapBy(
-    "id",
+    "id"
   );
 
   @action

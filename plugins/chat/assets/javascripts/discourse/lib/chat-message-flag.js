@@ -28,7 +28,7 @@ export default class ChatMessageFlag {
     return flags.map((flag) => {
       flag.set(
         "description",
-        I18n.t(`chat.flags.${flag.name_key}`, { basePath: getURL("") }),
+        I18n.t(`chat.flags.${flag.name_key}`, { basePath: getURL("") })
       );
       return flag;
     });
@@ -39,13 +39,13 @@ export default class ChatMessageFlag {
 
     flagsAvailable = flagsAvailable.filter((flag) => {
       return flagModal.args.model.flagModel.availableFlags.includes(
-        flag.name_key,
+        flag.name_key
       );
     });
 
     // "message user" option should be at the top
     const notifyUserIndex = flagsAvailable.indexOf(
-      flagsAvailable.filterBy("name_key", "notify_user")[0],
+      flagsAvailable.filterBy("name_key", "notify_user")[0]
     );
 
     if (notifyUserIndex !== -1) {

@@ -40,7 +40,7 @@ export default class DateWithZoneHelper {
         "minute",
         "second",
       ]),
-      this.timezone,
+      this.timezone
     );
   }
 
@@ -66,7 +66,7 @@ export default class DateWithZoneHelper {
     return this._fromDatetime(
       this.datetime.clone().add(count, unit),
       this.timezone,
-      this.localTimezone,
+      this.localTimezone
     );
   }
 
@@ -74,7 +74,7 @@ export default class DateWithZoneHelper {
     return this._fromDatetime(
       this.datetime.clone().subtract(count, unit),
       this.timezone,
-      this.localTimezone,
+      this.localTimezone
     );
   }
 

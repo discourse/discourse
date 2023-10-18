@@ -128,7 +128,7 @@ export default class PollUiBuilderModal extends Component {
     "pollStep",
     "pollGroups",
     "pollAutoClose",
-    "chartType",
+    "chartType"
   )
   pollOutput(
     pollType,
@@ -141,7 +141,7 @@ export default class PollUiBuilderModal extends Component {
     pollStep,
     pollGroups,
     pollAutoClose,
-    chartType,
+    chartType
   ) {
     let pollHeader = "[poll";
     let output = "";
@@ -242,7 +242,7 @@ export default class PollUiBuilderModal extends Component {
     "isNumber",
     "pollMin",
     "pollMax",
-    "pollStep",
+    "pollStep"
   )
   minMaxValueValidation(
     isMultiple,
@@ -250,7 +250,7 @@ export default class PollUiBuilderModal extends Component {
     isNumber,
     pollMin,
     pollMax,
-    pollStep,
+    pollStep
   ) {
     pollMin = parseInt(pollMin, 10) || 0;
     pollMax = parseInt(pollMax, 10) || 0;
@@ -323,7 +323,7 @@ export default class PollUiBuilderModal extends Component {
   onOptionsTextChange(e) {
     this.set(
       "pollOptions",
-      e.target.value.split("\n").map((value) => EmberObject.create({ value })),
+      e.target.value.split("\n").map((value) => EmberObject.create({ value }))
     );
   }
 
@@ -339,7 +339,7 @@ export default class PollUiBuilderModal extends Component {
     if (this.showAdvanced) {
       this.set(
         "pollOptionsText",
-        this.pollOptions.map((x) => x.value).join("\n"),
+        this.pollOptions.map((x) => x.value).join("\n")
       );
     }
   }

@@ -59,13 +59,13 @@ export default class ChatChannelComposer extends Service {
         this.loadingSlider.transitionStarted();
         const threadObject = await this.chatApi.createThread(
           message.channel.id,
-          message.id,
+          message.id
         );
         this.loadingSlider.transitionEnded();
 
         message.thread = message.channel.threadsManager.add(
           message.channel,
-          threadObject,
+          threadObject
         );
       }
 
@@ -73,7 +73,7 @@ export default class ChatChannelComposer extends Service {
 
       await this.router.transitionTo(
         "chat.channel.thread",
-        ...message.thread.routeModels,
+        ...message.thread.routeModels
       );
 
       this.threadComposer.focus({ ensureAtEnd: true, refreshHeight: true });

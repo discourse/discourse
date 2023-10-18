@@ -15,7 +15,7 @@ export default class ChatThreadPaneSubscriptionsManager extends ChatPaneBaseSubs
     if (data.chat_message.user.id === this.currentUser.id && data.staged_id) {
       const stagedMessage = this.handleStagedMessageInternal(
         this.model.channel,
-        data,
+        data
       );
       if (stagedMessage) {
         return;

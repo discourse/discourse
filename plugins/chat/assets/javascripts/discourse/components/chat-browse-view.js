@@ -48,7 +48,7 @@ export default class ChatBrowseView extends Component {
       this,
       this.channelsCollection.load,
       { filter: this.filter, status: this.status },
-      INPUT_DELAY,
+      INPUT_DELAY
     );
   }
 
@@ -60,7 +60,7 @@ export default class ChatBrowseView extends Component {
       this,
       this.channelsCollection.load,
       { filter: event.target.value, status: this.status },
-      INPUT_DELAY,
+      INPUT_DELAY
     );
   }
 

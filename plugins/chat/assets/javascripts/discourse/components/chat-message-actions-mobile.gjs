@@ -36,7 +36,7 @@ export default class ChatMessageActionsMobile extends Component {
     return new ChatMessageInteractor(
       getOwner(this),
       this.message,
-      this.context,
+      this.context
     );
   }
 

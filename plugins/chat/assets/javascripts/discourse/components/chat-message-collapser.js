@@ -21,14 +21,14 @@ export default class ChatMessageCollapser extends Component {
     }
     return htmlSafe(
       `<span class="chat-message-collapser-link-small">${escapeExpression(
-        name,
-      )}</span>`,
+        name
+      )}</span>`
     );
   }
 
   get cookedBodies() {
     const elements = Array.prototype.slice.call(
-      domFromString(this.args.cooked),
+      domFromString(this.args.cooked)
     );
 
     if (hasLazyVideo(elements)) {
@@ -54,7 +54,7 @@ export default class ChatMessageCollapser extends Component {
     return elements.reduce((acc, e) => {
       if (this.siteSettings.lazy_videos_enabled && lazyVideoPredicate(e)) {
         const getVideoAttributes = requirejs(
-          "discourse/plugins/discourse-lazy-videos/lib/lazy-video-attributes",
+          "discourse/plugins/discourse-lazy-videos/lib/lazy-video-attributes"
         ).default;
 
         const videoAttributes = getVideoAttributes(e);
@@ -63,7 +63,7 @@ export default class ChatMessageCollapser extends Component {
           const link = escapeExpression(videoAttributes.url);
           const title = videoAttributes.title;
           const header = htmlSafe(
-            `<a target="_blank" class="chat-message-collapser-link" rel="noopener noreferrer" href="${link}">${title}</a>`,
+            `<a target="_blank" class="chat-message-collapser-link" rel="noopener noreferrer" href="${link}">${title}</a>`
           );
 
           acc.push({ header, body: e, videoAttributes, needsCollapser: true });
@@ -86,7 +86,7 @@ export default class ChatMessageCollapser extends Component {
 
         link = escapeExpression(link);
         const header = htmlSafe(
-          `<a target="_blank" class="chat-message-collapser-link-small" rel="noopener noreferrer" href="${link}">${link}</a>`,
+          `<a target="_blank" class="chat-message-collapser-link-small" rel="noopener noreferrer" href="${link}">${link}</a>`
         );
         acc.push({ header, body: e, needsCollapser: true });
       } else {
@@ -104,7 +104,7 @@ export default class ChatMessageCollapser extends Component {
         const header = htmlSafe(
           `<a target="_blank" class="chat-message-collapser-link-small" rel="noopener noreferrer" href="${link}">${
             alt || link
-          }</a>`,
+          }</a>`
         );
         acc.push({ header, body: e, needsCollapser: true });
       } else {
@@ -119,11 +119,11 @@ export default class ChatMessageCollapser extends Component {
       if (galleryPredicate(e)) {
         const link = escapeExpression(e.firstElementChild.href);
         const title = escapeExpression(
-          e.firstElementChild.firstElementChild.textContent,
+          e.firstElementChild.firstElementChild.textContent
         );
         e.firstElementChild.removeChild(e.firstElementChild.firstElementChild);
         const header = htmlSafe(
-          `<a target="_blank" class="chat-message-collapser-link-small" rel="noopener noreferrer" href="${link}">${title}</a>`,
+          `<a target="_blank" class="chat-message-collapser-link-small" rel="noopener noreferrer" href="${link}">${title}</a>`
         );
         acc.push({ header, body: e, needsCollapser: true });
       } else {

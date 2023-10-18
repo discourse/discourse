@@ -84,7 +84,7 @@ export default class ChatThreadHeader extends Component {
       .updateCurrentUserThreadNotificationsSettings(
         this.args.thread.channel.id,
         this.args.thread.id,
-        { notificationLevel: newNotificationLevel },
+        { notificationLevel: newNotificationLevel }
       )
       .then((response) => {
         this.membership.last_read_message_id =

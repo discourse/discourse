@@ -11,7 +11,7 @@ export default class ChatChannelInfoRoute extends DiscourseRoute {
     const name = transition?.from?.name;
     if (name) {
       this.chatChannelInfoRouteOriginManager.origin = name.startsWith(
-        "chat.browse",
+        "chat.browse"
       )
         ? ORIGINS.browse
         : ORIGINS.channel;

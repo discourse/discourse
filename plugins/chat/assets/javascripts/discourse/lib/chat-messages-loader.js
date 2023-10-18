@@ -37,7 +37,7 @@ export default class ChatMessagesLoader {
 
     const nextTargetMessage = this.#computeNextTargetMessage(
       args.direction,
-      this.model,
+      this.model
     );
 
     args = {
@@ -95,7 +95,7 @@ export default class ChatMessagesLoader {
       return this.chatApi.channelThreadMessages(
         this.model.channel.id,
         this.model.id,
-        args,
+        args
       );
     }
   }

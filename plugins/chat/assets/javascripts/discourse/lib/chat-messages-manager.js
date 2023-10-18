@@ -35,7 +35,7 @@ export default class ChatMessagesManager {
 
   findMessage(messageId) {
     return this.messages.find(
-      (message) => message.id === parseInt(messageId, 10),
+      (message) => message.id === parseInt(messageId, 10)
     );
   }
 
@@ -44,7 +44,7 @@ export default class ChatMessagesManager {
       (b) =>
         a.getFullYear() === b.createdAt.getFullYear() &&
         a.getMonth() === b.createdAt.getMonth() &&
-        a.getDate() === b.createdAt.getDate(),
+        a.getDate() === b.createdAt.getDate()
     );
   }
 
@@ -54,7 +54,7 @@ export default class ChatMessagesManager {
 
   findStagedMessage(stagedMessageId) {
     return this.stagedMessages.find(
-      (message) => message.id === stagedMessageId,
+      (message) => message.id === stagedMessageId
     );
   }
 
@@ -68,7 +68,7 @@ export default class ChatMessagesManager {
 
   findLastUserMessage(user) {
     return this.messages.findLast(
-      (message) => message.user.id === user.id && !message.deletedAt,
+      (message) => message.user.id === user.id && !message.deletedAt
     );
   }
 }

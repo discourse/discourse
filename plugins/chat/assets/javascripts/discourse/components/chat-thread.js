@@ -67,7 +67,7 @@ export default class ChatThread extends Component {
     if (event.key === "Escape") {
       return this.router.transitionTo(
         "chat.channel",
-        ...this.args.thread.channel.routeModels,
+        ...this.args.thread.channel.routeModels
       );
     }
   }
@@ -145,7 +145,7 @@ export default class ChatThread extends Component {
     this._debounceUpdateLastReadMessageHandler = discourseDebounce(
       this,
       this.updateLastReadMessage,
-      READ_INTERVAL_MS,
+      READ_INTERVAL_MS
     );
   }
 
@@ -206,7 +206,7 @@ export default class ChatThread extends Component {
       this.scrollToMessageId(this.args.targetMessageId, { highlight: true });
     } else if (this.args.thread.currentUserMembership?.lastReadMessageId) {
       this.scrollToMessageId(
-        this.args.thread.currentUserMembership?.lastReadMessageId,
+        this.args.thread.currentUserMembership?.lastReadMessageId
       );
     } else {
       this.scrollToTop();
@@ -265,7 +265,7 @@ export default class ChatThread extends Component {
     this._debouncedFillPaneAttemptHandler = discourseDebounce(
       this,
       this.fillPaneAttempt,
-      500,
+      500
     );
   }
 
@@ -289,7 +289,7 @@ export default class ChatThread extends Component {
 
   scrollToMessageId(
     messageId,
-    opts = { highlight: false, position: "start", autoExpand: false },
+    opts = { highlight: false, position: "start", autoExpand: false }
   ) {
     this._ignoreNextScroll = true;
     const message = this.messagesManager.findMessage(messageId);
@@ -324,7 +324,7 @@ export default class ChatThread extends Component {
 
     return this.chatApi.markThreadAsRead(
       this.args.thread.channel.id,
-      this.args.thread.id,
+      this.args.thread.id
     );
   }
 
@@ -370,7 +370,7 @@ export default class ChatThread extends Component {
           staged_id: message.id,
           upload_ids: message.uploads.map((upload) => upload.id),
           thread_id: message.thread.id,
-        },
+        }
       );
 
       this.args.thread.currentUserMembership ??=
@@ -401,7 +401,7 @@ export default class ChatThread extends Component {
       return await this.chatApi.editMessage(
         message.channel.id,
         message.id,
-        data,
+        data
       );
     } catch (e) {
       popupAjaxError(e);

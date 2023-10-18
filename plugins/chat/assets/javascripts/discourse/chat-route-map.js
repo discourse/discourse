@@ -14,7 +14,7 @@ export default function () {
       function () {
         this.route("members", { path: "/members" });
         this.route("settings", { path: "/settings" });
-      },
+      }
     );
 
     this.route("browse", { path: "/browse" }, function () {

@@ -44,7 +44,7 @@ export default class ChatComposerChannel extends ChatComposer {
       this._debouncedPersistDraft,
       this.args.channel.id,
       this.currentMessage.toJSONDraft(),
-      2000,
+      2000
     );
   }
 
@@ -68,7 +68,7 @@ export default class ChatComposerChannel extends ChatComposer {
   get placeholder() {
     if (!this.args.channel.canModifyMessages(this.currentUser)) {
       return I18n.t(
-        `chat.placeholder_new_message_disallowed.${this.args.channel.status}`,
+        `chat.placeholder_new_message_disallowed.${this.args.channel.status}`
       );
     }
 

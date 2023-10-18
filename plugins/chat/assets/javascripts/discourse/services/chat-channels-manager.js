@@ -101,9 +101,9 @@ export default class ChatChannelsManager extends Service {
     return [...this.publicMessageChannels, ...this.directMessageChannels].sort(
       (a, b) => {
         return b?.currentUserMembership?.lastViewedAt?.localeCompare?.(
-          a?.currentUserMembership?.lastViewedAt,
+          a?.currentUserMembership?.lastViewedAt
         );
-      },
+      }
     );
   }
 
@@ -112,7 +112,7 @@ export default class ChatChannelsManager extends Service {
     return this.channels
       .filter(
         (channel) =>
-          channel.isCategoryChannel && channel.currentUserMembership.following,
+          channel.isCategoryChannel && channel.currentUserMembership.following
       )
       .sort((a, b) => a?.slug?.localeCompare?.(b?.slug));
   }
@@ -123,7 +123,7 @@ export default class ChatChannelsManager extends Service {
       this.channels.filter((channel) => {
         const membership = channel.currentUserMembership;
         return channel.isDirectMessageChannel && membership.following;
-      }),
+      })
     );
   }
 

@@ -108,8 +108,8 @@ export function createData(store) {
             { user: createUser() },
           ],
         },
-        attrs || {},
-      ),
+        attrs || {}
+      )
     );
   };
 

@@ -25,7 +25,7 @@ function cleanUpPolls() {
 function initializePolls(api) {
   const register = getRegister(api),
     pollGroupableUserFields = api.container.lookup(
-      "service:site-settings",
+      "service:site-settings"
     ).poll_groupable_user_fields;
   cleanUpPolls();
 
@@ -77,7 +77,7 @@ function initializePolls(api) {
   function attachPolls(elem, helper) {
     let pollNodes = [...elem.querySelectorAll(".poll")];
     pollNodes = pollNodes.filter(
-      (node) => node.parentNode.tagName !== "BLOCKQUOTE",
+      (node) => node.parentNode.tagName !== "BLOCKQUOTE"
     );
     if (!pollNodes.length || !helper) {
       return;

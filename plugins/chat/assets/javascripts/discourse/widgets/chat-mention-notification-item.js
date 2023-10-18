@@ -39,7 +39,7 @@ const chatNotificationItem = {
     return h(
       "a",
       { attributes: { title, href, "data-auto-route": true } },
-      contents,
+      contents
     );
   },
 
@@ -63,10 +63,10 @@ const chatNotificationItem = {
 createWidgetFrom(
   DefaultNotificationItem,
   "chat-mention-notification-item",
-  chatNotificationItem,
+  chatNotificationItem
 );
 createWidgetFrom(
   DefaultNotificationItem,
   "chat-group-mention-notification-item",
-  chatNotificationItem,
+  chatNotificationItem
 );

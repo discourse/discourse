@@ -4,7 +4,7 @@ export default function generateDateMarkup(
   fromDateTime,
   options,
   isRange,
-  toDateTime,
+  toDateTime
 ) {
   let text = ``;
 

@@ -24,7 +24,7 @@ export default class ChatThreadPane extends ChatChannelPane {
   async open(thread) {
     await this.router.transitionTo(
       "chat.channel.thread",
-      ...thread.routeModels,
+      ...thread.routeModels
     );
   }
 }

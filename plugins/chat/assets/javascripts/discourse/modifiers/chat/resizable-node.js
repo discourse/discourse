@@ -28,7 +28,7 @@ export default class ResizableNode extends Modifier {
     this.didResizeContainer = didResizeContainer;
     this.options = Object.assign(
       { vertical: true, horizontal: true, position: true, mutate: true },
-      options,
+      options
     );
 
     this.element
@@ -55,12 +55,12 @@ export default class ResizableNode extends Modifier {
     this._originalWidth = parseFloat(
       getComputedStyle(this.element, null)
         .getPropertyValue("width")
-        .replace("px", ""),
+        .replace("px", "")
     );
     this._originalHeight = parseFloat(
       getComputedStyle(this.element, null)
         .getPropertyValue("height")
-        .replace("px", ""),
+        .replace("px", "")
     );
     this._originalX = this.element.getBoundingClientRect().left;
     this._originalY = this.element.getBoundingClientRect().top;
@@ -102,7 +102,7 @@ export default class ResizableNode extends Modifier {
 
     const height = Math.ceil(
       this._originalHeight -
-        (this._eventValueForProperty(event, "pageY") - this._originalPageY),
+        (this._eventValueForProperty(event, "pageY") - this._originalPageY)
     );
 
     const newStyle = {};
@@ -115,7 +115,7 @@ export default class ResizableNode extends Modifier {
           Math.ceil(
             this._originalX +
               (this._eventValueForProperty(event, "pageX") -
-                this._originalPageX),
+                this._originalPageX)
           ) + "px";
       }
     }
@@ -128,7 +128,7 @@ export default class ResizableNode extends Modifier {
           Math.ceil(
             this._originalY +
               (this._eventValueForProperty(event, "pageY") -
-                this._originalPageY),
+                this._originalPageY)
           ) + "px";
       }
     }

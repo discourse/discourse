@@ -13,7 +13,7 @@ export default class ChatAdminExportMessages extends Component {
     try {
       await this.chatAdminApi.exportMessages();
       this.dialog.alert(
-        I18n.t("chat.admin.export_messages.export_has_started"),
+        I18n.t("chat.admin.export_messages.export_has_started")
       );
     } catch (error) {
       popupAjaxError(error);

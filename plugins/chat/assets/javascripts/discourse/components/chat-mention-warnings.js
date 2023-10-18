@@ -90,15 +90,15 @@ export default class ChatMentionWarnings extends Component {
         I18n.t("chat.mention_warning.too_many_mentions_admin", {
           count: this.siteSettings.max_mentions_per_chat_message,
           siteSettingUrl: getURL(
-            "/admin/site_settings/category/plugins?filter=max_mentions_per_chat_message",
+            "/admin/site_settings/category/plugins?filter=max_mentions_per_chat_message"
           ),
-        }),
+        })
       );
     } else {
       return htmlSafe(
         I18n.t("chat.mention_warning.too_many_mentions", {
           count: this.siteSettings.max_mentions_per_chat_message,
-        }),
+        })
       );
     }
   }
@@ -136,13 +136,13 @@ export default class ChatMentionWarnings extends Component {
         groupCount: this.overMembersLimitMentionsCount,
         isAdmin: this.currentUser.admin,
         siteSettingUrl: getURL(
-          "/admin/site_settings/category/plugins?filter=max_users_notified_per_group_mention",
+          "/admin/site_settings/category/plugins?filter=max_users_notified_per_group_mention"
         ),
         notificationLimit:
           this.siteSettings.max_users_notified_per_group_mention,
         group1: this.overMembersLimitGroupMentions[0],
         group2: this.overMembersLimitGroupMentions[1],
-      }),
+      })
     );
   }
 }

@@ -65,7 +65,7 @@ export default class ChatChannelRow extends Component {
       () => {
         this.chat.unfollowChannel(this.args.channel).catch(popupAjaxError);
       },
-      { once: true },
+      { once: true }
     );
 
     element.classList.add(FADEOUT_CLASS);

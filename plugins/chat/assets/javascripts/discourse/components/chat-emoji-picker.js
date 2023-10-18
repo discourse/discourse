@@ -85,7 +85,7 @@ export default class ChatEmojiPicker extends Component {
     return htmlSafe(
       `width: ${
         100 / Object.keys(this.groups).length
-      }%; transform: translateX(${index * 100}%);`,
+      }%; transform: translateX(${index * 100}%);`
     );
   }
 
@@ -112,7 +112,7 @@ export default class ChatEmojiPicker extends Component {
 
       document
         .querySelector(
-          `.chat-emoji-picker__scrollable-content .emoji[tabindex="0"]`,
+          `.chat-emoji-picker__scrollable-content .emoji[tabindex="0"]`
         )
         ?.focus();
     }
@@ -226,13 +226,13 @@ export default class ChatEmojiPicker extends Component {
       (emoji) =>
         emoji.name.toLowerCase().includes(filter) ||
         emoji.search_aliases?.any((alias) =>
-          alias.toLowerCase().includes(filter),
-        ),
+          alias.toLowerCase().includes(filter)
+        )
     );
 
     schedule("afterRender", () => {
       const scrollableContent = document.querySelector(
-        ".chat-emoji-picker__scrollable-content",
+        ".chat-emoji-picker__scrollable-content"
       );
 
       if (scrollableContent) {
@@ -266,7 +266,7 @@ export default class ChatEmojiPicker extends Component {
     };
     const allEmojis = () => [
       ...document.querySelectorAll(
-        ".chat-emoji-picker__section:not(.hidden) .emoji",
+        ".chat-emoji-picker__section:not(.hidden) .emoji"
       ),
     ];
 
@@ -360,7 +360,7 @@ export default class ChatEmojiPicker extends Component {
   @action
   didRequestSection(section) {
     const scrollableContent = document.querySelector(
-      ".chat-emoji-picker__scrollable-content",
+      ".chat-emoji-picker__scrollable-content"
     );
 
     this.filteredEmojis = null;
@@ -374,19 +374,19 @@ export default class ChatEmojiPicker extends Component {
     // iOS hack to avoid blank div when requesting section during momentum
     if (scrollableContent && this.capabilities.isIOS) {
       document.querySelector(
-        ".chat-emoji-picker__scrollable-content",
+        ".chat-emoji-picker__scrollable-content"
       ).style.overflow = "hidden";
     }
 
     schedule("afterRender", () => {
       const firstEmoji = document.querySelector(
-        `.chat-emoji-picker__section[data-section="${section}"] .emoji:nth-child(1)`,
+        `.chat-emoji-picker__section[data-section="${section}"] .emoji:nth-child(1)`
       );
 
       const targetEmoji =
         [
           ...document.querySelectorAll(
-            `.chat-emoji-picker__section[data-section="${section}"] .emoji`,
+            `.chat-emoji-picker__section[data-section="${section}"] .emoji`
           ),
         ].find((emoji) => emoji.offsetTop > firstEmoji.offsetTop) || firstEmoji;
 
@@ -396,7 +396,7 @@ export default class ChatEmojiPicker extends Component {
         // iOS hack to avoid blank div when requesting section during momentum
         if (scrollableContent && this.capabilities.isIOS) {
           document.querySelector(
-            ".chat-emoji-picker__scrollable-content",
+            ".chat-emoji-picker__scrollable-content"
           ).style.overflow = "scroll";
         }
 

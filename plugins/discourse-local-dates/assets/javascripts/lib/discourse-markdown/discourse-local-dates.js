@@ -93,7 +93,7 @@ function addSingleLocalDate(buffer, state, config) {
   const formattedDateTime = dateTime
     .tz("Etc/UTC")
     .format(
-      state.md.options.discourse.datesEmailFormat || moment.defaultFormat,
+      state.md.options.discourse.datesEmailFormat || moment.defaultFormat
     );
   token.attrs.push(["data-email-preview", `${formattedDateTime} UTC`]);
 
@@ -119,7 +119,7 @@ function parseTagAttributes(tag) {
   return parseBBCodeTag(
     "[date date" + matchString + "]",
     0,
-    matchString.length + 12,
+    matchString.length + 12
   );
 }
 

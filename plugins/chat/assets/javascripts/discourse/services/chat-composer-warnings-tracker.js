@@ -48,7 +48,7 @@ export default class ChatComposerWarningsTracker extends Service {
       this,
       this._trackMentions,
       currentMessage,
-      MENTION_DEBOUNCE_MS,
+      MENTION_DEBOUNCE_MS
     );
   }
 
@@ -67,7 +67,7 @@ export default class ChatComposerWarningsTracker extends Service {
 
         if (!this.tooManyMentions) {
           const newMentions = mentions.filter(
-            (mention) => !(mention in this._mentionWarningsSeen),
+            (mention) => !(mention in this._mentionWarningsSeen)
           );
 
           this.channelWideMentionDisallowed =
@@ -134,7 +134,7 @@ export default class ChatComposerWarningsTracker extends Service {
 
         return memo;
       },
-      [[], []],
+      [[], []]
     );
 
     this.unreachableGroupMentions = newWarnings[0];

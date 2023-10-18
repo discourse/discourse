@@ -31,7 +31,7 @@ export default class ChatSelectionManager extends Component {
   async generateQuote() {
     const { markdown } = await this.api.generateQuote(
       this.args.pane.channel.id,
-      this.args.pane.selectedMessageIds,
+      this.args.pane.selectedMessageIds
     );
 
     return new Blob([markdown], { type: "text/plain" });

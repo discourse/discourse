@@ -80,7 +80,7 @@ export default class Tooltips extends Component {
     this.tooltipInstance?.destroy();
     this.tooltipInstance = this.tooltip.register(
       document.querySelector("#tooltip-instance"),
-      this.options,
+      this.options
     );
   }
 
@@ -93,7 +93,7 @@ export default class Tooltips extends Component {
         ...this.options,
         component: DummyComponent,
         data: { foo: 1 },
-      },
+      }
     );
   }
 

@@ -26,14 +26,14 @@ function initLazyEmbed(api) {
           const lazyVideo = helper.renderGlimmer(
             "p.lazy-video-wrapper",
             hbs`<LazyVideo @videoAttributes={{@data.param}} @onLoadedVideo={{@data.onLoadedVideo}}/>`,
-            { param: videoAttributes, onLoadedVideo },
+            { param: videoAttributes, onLoadedVideo }
           );
 
           container.replaceWith(lazyVideo);
         }
       });
     },
-    { onlyStream: true },
+    { onlyStream: true }
   );
 }
 

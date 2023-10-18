@@ -39,7 +39,7 @@ export default function withChatChannel(extendedClass) {
 
         if (threadId) {
           const threadMessageId = this.paramsFor(
-            "chat.channel.thread.near-message",
+            "chat.channel.thread.near-message"
           ).messageId;
 
           if (threadMessageId) {
@@ -47,20 +47,20 @@ export default function withChatChannel(extendedClass) {
               "chat.channel.thread.near-message",
               ...model.routeModels,
               threadId,
-              threadMessageId,
+              threadMessageId
             );
           } else {
             this.router.replaceWith(
               "chat.channel.thread",
               ...model.routeModels,
-              threadId,
+              threadId
             );
           }
         } else if (messageId) {
           this.router.replaceWith(
             "chat.channel.near-message",
             ...model.routeModels,
-            messageId,
+            messageId
           );
         } else {
           this.router.replaceWith("chat.channel", ...model.routeModels);

@@ -51,7 +51,7 @@ export default class ChatThread {
 
     if (args.current_user_membership) {
       this.currentUserMembership = UserChatThreadMembership.create(
-        args.current_user_membership,
+        args.current_user_membership
       );
     }
 

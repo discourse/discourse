@@ -20,7 +20,7 @@ export default class EmojiPickerScrollObserver extends Service {
     const visibleSections = [
       ...document.querySelectorAll(".chat-emoji-picker__section"),
     ].filter((sectionElement) =>
-      this._isSectionVisibleInPicker(sectionElement, event.target),
+      this._isSectionVisibleInPicker(sectionElement, event.target)
     );
 
     if (visibleSections?.length) {
@@ -36,7 +36,7 @@ export default class EmojiPickerScrollObserver extends Service {
         sectionElement.dataset.section;
 
       this.chatEmojiPickerManager.addVisibleSections(
-        visibleSections.map((s) => s.dataset.section),
+        visibleSections.map((s) => s.dataset.section)
       );
     }
   }

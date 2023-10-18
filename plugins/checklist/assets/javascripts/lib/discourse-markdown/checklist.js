@@ -78,7 +78,7 @@ function processChecklist(state) {
           blockTokens[j].children = tokens = state.md.utils.arrayReplaceAt(
             tokens,
             i,
-            processed,
+            processed
           );
         }
       }
@@ -99,6 +99,6 @@ export function setup(helper) {
   ]);
 
   helper.registerPlugin((md) =>
-    md.core.ruler.push("checklist", processChecklist),
+    md.core.ruler.push("checklist", processChecklist)
   );
 }

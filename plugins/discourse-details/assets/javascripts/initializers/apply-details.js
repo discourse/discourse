@@ -12,7 +12,7 @@ function initializeDetails(api) {
         "\n" + `[details="${I18n.t("composer.details_title")}"]` + "\n",
         "\n[/details]\n",
         "details_text",
-        { multiline: false },
+        { multiline: false }
       );
     },
     icon: "caret-right",

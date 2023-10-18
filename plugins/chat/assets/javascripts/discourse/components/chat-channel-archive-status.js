@@ -25,7 +25,7 @@ export default class ChatChannelArchiveStatus extends Component {
         completed: archive.messages,
         total: archive.totalMessages,
         topic_url: this.topicUrl,
-      }),
+      })
     );
   }
 
@@ -33,7 +33,7 @@ export default class ChatChannelArchiveStatus extends Component {
     return htmlSafe(
       I18n.t("chat.channel_status.archive_completed", {
         topic_url: this.topicUrl,
-      }),
+      })
     );
   }
 

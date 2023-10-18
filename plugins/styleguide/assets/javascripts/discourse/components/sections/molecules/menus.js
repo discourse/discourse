@@ -80,7 +80,7 @@ export default class Menus extends Component {
     this.menuInstance?.destroy();
     this.menuInstance = this.menu.register(
       document.querySelector("#menu-instance"),
-      this.options,
+      this.options
     );
   }
 
@@ -93,7 +93,7 @@ export default class Menus extends Component {
         ...this.options,
         component: DummyComponent,
         data: { foo: 1 },
-      },
+      }
     );
   }
 

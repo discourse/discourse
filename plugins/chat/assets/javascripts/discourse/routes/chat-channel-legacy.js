@@ -6,7 +6,7 @@ export default class ChatChannelLegacyRoute extends DiscourseRoute {
 
   redirect() {
     const { channelTitle, channelId, messageId } = this.paramsFor(
-      this.routeName,
+      this.routeName
     );
 
     this.router.replaceWith("chat.channel", channelTitle, channelId, {

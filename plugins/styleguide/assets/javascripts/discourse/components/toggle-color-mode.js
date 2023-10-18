@@ -61,7 +61,7 @@ export default class ToggleColorMode extends Component {
         loadColorSchemeStylesheet(
           this.siteSettings.default_dark_mode_color_scheme_id,
           currentThemeId(),
-          true,
+          true
         );
       } else {
         // no dark color scheme available, hide button

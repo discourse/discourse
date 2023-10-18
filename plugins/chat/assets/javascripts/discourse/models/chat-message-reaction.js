@@ -29,7 +29,7 @@ export default class ChatMessageReaction {
         }
 
         return User.create(user);
-      }),
+      })
     );
   }
 }

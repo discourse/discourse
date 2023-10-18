@@ -34,7 +34,7 @@
     "moment": "2.29.4",
     "moment-timezone": "0.5.43",
     "pikaday": "1.8.2",
-    "prettier": "^3.0.3",
+    "prettier": "^2.8.8",
     "puppeteer-core": "^21.0.3",
     "squoosh": "discourse/squoosh#dc9649d",
     "tidy-jsdoc": "^1.4.1",

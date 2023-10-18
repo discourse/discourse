@@ -47,22 +47,22 @@ export default class ChatAboutScreen extends Component {
   descriptionSectionTitle = I18n.t("chat.about_view.description");
   titleSectionTitle = I18n.t("chat.about_view.title");
   descriptionPlaceholder = I18n.t(
-    "chat.channel_edit_description_modal.description",
+    "chat.channel_edit_description_modal.description"
   );
   toggleThreadingLabel = I18n.t("chat.settings.channel_threading_label");
   toggleThreadingDescription = I18n.t(
-    "chat.settings.channel_threading_description",
+    "chat.settings.channel_threading_description"
   );
   muteSectionLabel = I18n.t("chat.settings.mute");
   channelWideMentionsLabel = I18n.t(
-    "chat.settings.channel_wide_mentions_label",
+    "chat.settings.channel_wide_mentions_label"
   );
   autoJoinLabel = I18n.t("chat.settings.auto_join_users_label");
   desktopNotificationsLevelLabel = I18n.t(
-    "chat.settings.desktop_notification_level",
+    "chat.settings.desktop_notification_level"
   );
   mobileNotificationsLevelLabel = I18n.t(
-    "chat.settings.mobile_notification_level",
+    "chat.settings.mobile_notification_level"
   );
 
   get canEditChannel() {
@@ -145,7 +145,7 @@ export default class ChatAboutScreen extends Component {
       const result = await this._updateChannelProperty(
         this.args.channel,
         "allow_channel_wide_mentions",
-        newValue,
+        newValue
       );
 
       this.args.channel.allowChannelWideMentions =
@@ -176,7 +176,7 @@ export default class ChatAboutScreen extends Component {
       const result = await this._updateChannelProperty(
         this.args.channel,
         "auto_join_users",
-        false,
+        false
       );
 
       this.args.channel.autoJoinUsers = result.channel.auto_join_users;
@@ -200,7 +200,7 @@ export default class ChatAboutScreen extends Component {
           const result = await this._updateChannelProperty(
             this.args.channel,
             "auto_join_users",
-            true,
+            true
           );
 
           this.args.channel.autoJoinUsers = result.channel.auto_join_users;
@@ -232,7 +232,7 @@ export default class ChatAboutScreen extends Component {
       const result =
         await this.chatApi.updateCurrentUserChannelNotificationsSettings(
           this.args.channel.id,
-          settings,
+          settings
         );
 
       this.args.channel.currentUserMembership[frontendKey] =
@@ -263,7 +263,7 @@ export default class ChatAboutScreen extends Component {
       const result = await this._updateChannelProperty(
         this.args.channel,
         "threading_enabled",
-        !value,
+        !value
       );
       this.args.channel.threadingEnabled = result.channel.threading_enabled;
     } catch (error) {

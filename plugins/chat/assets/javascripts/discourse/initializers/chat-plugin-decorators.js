@@ -9,17 +9,17 @@ export default {
       (element) => {
         applyLocalDates(
           element.querySelectorAll(".discourse-local-date"),
-          siteSettings,
+          siteSettings
         );
       },
       {
         id: "local-dates",
-      },
+      }
     );
 
     if (siteSettings.spoiler_enabled) {
       const applySpoiler = requirejs(
-        "discourse/plugins/discourse-spoiler-alert/lib/apply-spoiler",
+        "discourse/plugins/discourse-spoiler-alert/lib/apply-spoiler"
       ).default;
       api.decorateChatMessage(
         (element) => {
@@ -31,7 +31,7 @@ export default {
         },
         {
           id: "spoiler",
-        },
+        }
       );
     }
   },
