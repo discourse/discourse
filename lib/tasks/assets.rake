@@ -310,8 +310,7 @@ task "assets:precompile:compress_js": "environment" do
 end
 
 task "assets:precompile:theme_transpiler": "environment" do
-  path = DiscourseJsProcessor::Transpiler.build_theme_transpiler
-  puts "Compiled theme-transpiler: #{path}"
+  DiscourseJsProcessor::Transpiler.build_theme_transpiler
 end
 
 # Run these tasks **before** Rails' "assets:precompile" task
