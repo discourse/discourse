@@ -55,43 +55,45 @@ module.exports = function (defaults) {
       // This forces the use of `fast-sourcemap-concat` which works in production.
       enabled: true,
     },
-    autoImport: {
-      forbidEval: true,
-      insertScriptsAt: "ember-auto-import-scripts",
-      watchDependencies: ["discourse-i18n"],
-      webpack: {
-        // Workarounds for https://github.com/ef4/ember-auto-import/issues/519 and https://github.com/ef4/ember-auto-import/issues/478
-        devtool: isProduction ? false : "source-map", // Sourcemaps contain reference to the ephemeral broccoli cache dir, which changes on every deploy
-        optimization: {
-          moduleIds: "size", // Consistent module references https://github.com/ef4/ember-auto-import/issues/478#issuecomment-1000526638
-        },
-        resolve: {
-          fallback: {
-            // Sinon needs a `util` polyfill
-            util: require.resolve("util/"),
-            // Also for sinon
-            timers: false,
-          },
-        },
-        module: {
-          rules: [
-            // Sinon/`util` polyfill accesses the `process` global,
-            // so we need to provide a mock
-            {
-              test: require.resolve("util/"),
-              use: [
+    autoImport: isEmbroider
+      ? {}
+      : {
+          forbidEval: true,
+          insertScriptsAt: "ember-auto-import-scripts",
+          watchDependencies: ["discourse-i18n"],
+          webpack: {
+            // Workarounds for https://github.com/ef4/ember-auto-import/issues/519 and https://github.com/ef4/ember-auto-import/issues/478
+            devtool: isProduction ? false : "source-map", // Sourcemaps contain reference to the ephemeral broccoli cache dir, which changes on every deploy
+            optimization: {
+              moduleIds: "size", // Consistent module references https://github.com/ef4/ember-auto-import/issues/478#issuecomment-1000526638
+            },
+            resolve: {
+              fallback: {
+                // Sinon needs a `util` polyfill
+                util: require.resolve("util/"),
+                // Also for sinon
+                timers: false,
+              },
+            },
+            module: {
+              rules: [
+                // Sinon/`util` polyfill accesses the `process` global,
+                // so we need to provide a mock
                 {
-                  loader: "imports-loader",
-                  options: {
-                    additionalCode: "var process = { env: {} };",
-                  },
+                  test: require.resolve("util/"),
+                  use: [
+                    {
+                      loader: "imports-loader",
+                      options: {
+                        additionalCode: "var process = { env: {} };",
+                      },
+                    },
+                  ],
                 },
               ],
             },
-          ],
+          },
         },
-      },
-    },
     fingerprint: {
       // Handled by Rails asset pipeline
       enabled: false,
