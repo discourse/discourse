@@ -9,7 +9,7 @@ import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import { isTesting } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
   classNames: ["title-input"],

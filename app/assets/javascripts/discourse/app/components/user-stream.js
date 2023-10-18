@@ -9,7 +9,7 @@ import LoadMore from "discourse/mixins/load-more";
 import { NEW_TOPIC_KEY } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import Post from "discourse/models/post";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Component.extend(LoadMore, {
   tagName: "ul",

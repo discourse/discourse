@@ -5,7 +5,7 @@ import {
   exists,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 acceptance("Sidebar - Anonymous user - Community Section", function (needs) {
   needs.settings({

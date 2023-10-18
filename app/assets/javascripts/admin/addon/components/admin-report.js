@@ -10,8 +10,8 @@ import ReportLoader from "discourse/lib/reports-loader";
 import { isTesting } from "discourse-common/config/environment";
 import { makeArray } from "discourse-common/lib/helpers";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 import Report, { DAILY_LIMIT_DAYS, SCHEMA_VERSION } from "admin/models/report";
-import I18n from "I18n";
 
 const TABLE_OPTIONS = {
   perPage: 8,

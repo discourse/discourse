@@ -8,7 +8,7 @@ import concatClass from "discourse/helpers/concat-class";
 import DiscourseURL from "discourse/lib/url";
 import icon from "discourse-common/helpers/d-icon";
 import deprecated from "discourse-common/lib/deprecated";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import or from "truth-helpers/helpers/or";
 
 const ACTION_AS_STRING_DEPRECATION_ARGS = [

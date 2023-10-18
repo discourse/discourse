@@ -3,7 +3,7 @@ import EmberObject, { action } from "@ember/object";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Controller.extend({
   application: controller(),

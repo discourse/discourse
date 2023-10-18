@@ -8,10 +8,9 @@ RSpec.describe "assets:precompile" do
 
   describe "assets:precompile:theme_transpiler" do
     it "compiles the js processor" do
-      out = capture_stdout { Rake::Task["assets:precompile:theme_transpiler"].invoke }
+      path = Rake::Task["assets:precompile:theme_transpiler"].actions.first.call
 
-      expect(out).to match(%r{Compiled theme-transpiler: tmp/theme-transpiler})
-      path = out.match(/: (.+)/)[1]
+      expect(path).to match(%r{tmp/theme-transpiler})
       expect(File.exist?(path)).to eq(true)
     end
   end

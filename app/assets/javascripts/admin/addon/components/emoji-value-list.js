@@ -5,7 +5,7 @@ import { classNameBindings } from "@ember-decorators/component";
 import { emojiUrlFor } from "discourse/lib/text";
 import discourseLater from "discourse-common/lib/later";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 @classNameBindings(":value-list", ":emoji-list")
 export default class EmojiValueList extends Component {

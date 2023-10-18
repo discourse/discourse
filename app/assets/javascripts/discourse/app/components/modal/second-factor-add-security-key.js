@@ -8,7 +8,7 @@ import {
   stringToBuffer,
 } from "discourse/lib/webauthn";
 import { MAX_SECOND_FACTOR_NAME_LENGTH } from "discourse/models/user";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class SecondFactorAddSecurityKey extends Component {
   @service capabilities;

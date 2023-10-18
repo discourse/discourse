@@ -2,7 +2,7 @@ import { computed } from "@ember/object";
 import { empty, or } from "@ember/object/computed";
 import { setting } from "discourse/lib/computed";
 import { makeArray } from "discourse-common/lib/helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import TagsMixin from "select-kit/mixins/tags";
 

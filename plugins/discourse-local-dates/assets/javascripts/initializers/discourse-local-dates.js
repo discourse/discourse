@@ -8,7 +8,7 @@ import {
 } from "discourse/lib/to-markdown";
 import { renderIcon } from "discourse-common/lib/icon-library";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 import LocalDatesCreateModal from "../discourse/components/modal/local-dates-create";
 import LocalDateBuilder from "../lib/local-date-builder";

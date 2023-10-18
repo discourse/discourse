@@ -1,5 +1,5 @@
 import { htmlSafe } from "@ember/template";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const TITLE_SUBS = {
   all: "all_time",

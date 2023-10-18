@@ -5,7 +5,7 @@ import { next } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
 import DiscourseURL from "discourse/lib/url";
 import Topic from "discourse/models/topic";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 // Modal related to changing the timestamp of posts
 export default class ChangeTimestamp extends Component {

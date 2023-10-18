@@ -1,5 +1,5 @@
 import { or } from "@ember/object/computed";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import NotificationOptionsComponent from "select-kit/components/notifications-button";
 
 export default NotificationOptionsComponent.extend({

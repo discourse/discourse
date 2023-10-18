@@ -8,7 +8,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { translateModKey } from "discourse/lib/utilities";
 import autoFocus from "discourse/modifiers/auto-focus";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class FastEdit extends Component {
   @tracked value = this.args.initialValue;

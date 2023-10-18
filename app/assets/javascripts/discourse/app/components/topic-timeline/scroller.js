@@ -4,7 +4,7 @@ import {
   SCROLLER_HEIGHT,
   timelineDate,
 } from "discourse/components/topic-timeline/container";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class TopicTimelineScroller extends Component {
   style = htmlSafe(`height: ${SCROLLER_HEIGHT}px`);

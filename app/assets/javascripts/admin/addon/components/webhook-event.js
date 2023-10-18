@@ -5,7 +5,7 @@ import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { ensureJSON, plainJSON, prettyJSON } from "discourse/lib/formatter";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class WebhookEvent extends Component {
   @service dialog;

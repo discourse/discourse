@@ -4,7 +4,7 @@ import { inject as service } from "@ember/service";
 import { capitalize } from "@ember/string";
 import GroupDeleteDialog from "discourse/components/dialog-messages/group-delete";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const Tab = EmberObject.extend({
   init() {

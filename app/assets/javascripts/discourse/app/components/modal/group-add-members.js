@@ -5,7 +5,7 @@ import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { extractError } from "discourse/lib/ajax-error";
 import { emailValid } from "discourse/lib/utilities";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class GroupAddMembers extends Component {
   @service currentUser;

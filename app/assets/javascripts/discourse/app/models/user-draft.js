@@ -7,7 +7,7 @@ import {
 import RestModel from "discourse/models/rest";
 import User from "discourse/models/user";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default RestModel.extend({
   @discourseComputed("draft_username")

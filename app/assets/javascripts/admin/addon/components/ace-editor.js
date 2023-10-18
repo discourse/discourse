@@ -6,7 +6,7 @@ import $ from "jquery";
 import loadScript from "discourse/lib/load-script";
 import getURL from "discourse-common/lib/get-url";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const COLOR_VARS_REGEX =
   /\$(primary|secondary|tertiary|quaternary|header_background|header_primary|highlight|danger|success|love)(\s|;|-(low|medium|high))/g;

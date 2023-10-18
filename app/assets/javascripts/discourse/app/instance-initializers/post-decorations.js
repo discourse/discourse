@@ -9,7 +9,7 @@ import { SELECTORS } from "discourse/lib/lightbox/constants";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setTextDirections } from "discourse/lib/text-direction";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default {
   initialize(owner) {

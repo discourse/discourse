@@ -12,7 +12,7 @@ import { isWebauthnSupported } from "discourse/lib/webauthn";
 import { findAll } from "discourse/models/login-method";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import escape from "discourse-common/lib/escape";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class Login extends Component {
   @service dialog;

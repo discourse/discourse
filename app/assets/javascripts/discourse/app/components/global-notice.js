@@ -5,7 +5,7 @@ import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const _pluginNotices = [];
 

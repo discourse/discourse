@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class extends Component {
   @tracked filter = "";

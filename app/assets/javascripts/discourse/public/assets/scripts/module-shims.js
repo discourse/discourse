@@ -5,9 +5,6 @@ define("I18n", [
 ], function (exports, I18n, deprecated) {
   exports.default = I18n.default;
 
-  exports.I18nMissingInterpolationArgument =
-    I18n.I18nMissingInterpolationArgument;
-
   exports.t = function () {
     deprecated.default(
       "Importing t from I18n is deprecated. Use the default export instead.",
