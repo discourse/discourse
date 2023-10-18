@@ -31,7 +31,7 @@
     "@types/ember__controller": "^4.0.8",
     "@types/ember__debug": "^4.0.5",
     "@types/ember__destroyable": "^4.0.2",
-    "@types/ember__engine": "^4.0.7",
+    "@types/ember__engine": "^4.0.8",
     "@types/ember__error": "^4.0.3",
     "@types/ember__object": "^4.0.8",
     "@types/ember__polyfills": "^4.0.3",

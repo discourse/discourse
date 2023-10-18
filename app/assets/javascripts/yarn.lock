@@ -1793,12 +1793,11 @@
   resolved "https://registry.yarnpkg.com/@types/ember__destroyable/-/ember__destroyable-4.0.3.tgz#7e7ae0e2a8fe9ba6ad6cdaa20bf3895129a20e1b"
   integrity sha512-82GteeJCDYNFXwyS4KkcbzpRr9Yz9GrhjuGKhme4n0cpuVheZ1TN5eE3eRsTnvsa8Pu1im6wiTbtbj7eIkQhEg==
 
-"@types/ember__engine@*", "@types/ember__engine@^4.0.7":
-  version "4.0.7"
-  resolved "https://registry.yarnpkg.com/@types/ember__engine/-/ember__engine-4.0.7.tgz#33bbc8fe3b6808a4e91523140e15768ac5828797"
-  integrity sha512-AxIrs9bsmgup7da6GHNFI6iU/YiUWhme3RRFID7eEU21tGtT2JjlHz1i2TxSk9SKYkUvpoTYR+nnxlpOD3VheA==
+"@types/ember__engine@*", "@types/ember__engine@^4.0.8":
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/@types/ember__engine/-/ember__engine-4.0.8.tgz#91149c098b3b9ae7a19161240585191c9c9a75f7"
+  integrity sha512-2+yzVXvFh3RoPKzEY76X9nv3yi8Kp6aaMPrQEoE+BrXRW1H8OfcKbORVV1RsFDWeT8ZTtTFPUcKA8HkbmIeacw==
   dependencies:
-    "@types/ember__engine" "*"
     "@types/ember__object" "*"
     "@types/ember__owner" "*"
 
