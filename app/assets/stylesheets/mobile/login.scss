@@ -3,96 +3,24 @@
 // create account modals
 .d-modal.login-modal:not(.hidden),
 .d-modal.create-account {
-  .modal-body {
-    padding: 0;
-  }
-  &.fixed-modal .modal-inner-container {
-    max-width: 350px;
-    max-height: 90vh;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .close {
-    padding: 0;
-  }
-
-  label {
-    margin: 0;
-  }
-
   .tip:not(:empty) {
     min-height: 1.4em; // prevents height jump when tips appear
   }
 
   .login-welcome-header {
     padding: 1.5em 1em;
-    margin: 0 auto;
   }
 
-  #login-buttons:not(.hidden) {
-    display: flex;
-    flex: 1 0 auto;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding: 0 1em;
-    margin: 0;
-    gap: 0 0.25em;
-
-    .btn {
-      padding: 0.5em;
-      border: 1px solid var(--primary-low);
-      flex: 1 1 47%;
-      font-size: var(--font-down-1);
-      white-space: nowrap;
-      &:last-child {
-        margin-right: 0;
-      }
-    }
-  }
-
-  @media screen and (max-width: 750px) {
-    #login-buttons:not(.hidden) {
-      justify-content: center;
-      .btn {
-        &:nth-child(even) {
-          margin: 0 0 0.5em 0;
-        }
-      }
-    }
-  }
-
-  #login-form,
-  .login-form {
-    padding: 1em;
-
-    form {
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-    }
-
-    .input-group {
-      input {
-        height: 2.5em;
-        margin-bottom: 0.25em;
-      }
-      margin-bottom: 1em;
-      label.alt-placeholder {
-        top: 8px;
-      }
-      input:focus + label,
-      input.value-entered + label.alt-placeholder {
-        top: -10px;
-      }
-      input.alt-placeholder:invalid {
-        color: var(--primary);
-      }
-      label.more-info {
-        color: var(--primary-medium);
-      }
-    }
-  }
+  // @media screen and (max-width: 750px) {
+  //   #login-buttons:not(.hidden) {
+  //     justify-content: center;
+  //     .btn {
+  //       &:nth-child(even) {
+  //         margin: 0 0 0.5em 0;
+  //       }
+  //     }
+  //   }
+  // }
 
   .user-fields .input-group {
     .text.user-field {
