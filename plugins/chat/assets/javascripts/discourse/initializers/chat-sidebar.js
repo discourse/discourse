@@ -9,7 +9,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { avatarUrl } from "discourse-common/lib/avatar-utils";
 import getURL from "discourse-common/lib/get-url";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import { initSidebarState } from "discourse/plugins/chat/discourse/lib/init-sidebar-state";
 

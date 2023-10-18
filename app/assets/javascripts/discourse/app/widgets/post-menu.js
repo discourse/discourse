@@ -13,7 +13,7 @@ import { smallUserAtts } from "discourse/widgets/actions-summary";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import discourseLater from "discourse-common/lib/later";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;

@@ -5,7 +5,7 @@ import {
   exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import { displayPollBuilderButton } from "discourse/plugins/poll/helpers/display-poll-builder-button";
 
 acceptance("Poll Builder - polls are enabled", function (needs) {

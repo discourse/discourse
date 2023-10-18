@@ -5,7 +5,7 @@ import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import { setting } from "discourse/lib/computed";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import ComboBoxComponent from "select-kit/components/combo-box";
 
 export default ComboBoxComponent.extend({

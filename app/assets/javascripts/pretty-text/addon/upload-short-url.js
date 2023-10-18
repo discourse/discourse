@@ -1,6 +1,6 @@
 import { Promise } from "rsvp";
 import discourseDebounce from "discourse-common/lib/debounce";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 let _cache = {};
 

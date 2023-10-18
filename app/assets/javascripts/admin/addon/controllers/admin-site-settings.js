@@ -6,7 +6,7 @@ import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { debounce } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class AdminSiteSettingsController extends Controller {
   @service router;

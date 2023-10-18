@@ -196,13 +196,6 @@ module.exports = function (defaults) {
     packagerOptions: {
       webpackConfig: {
         devtool: "source-map",
-        resolve: {
-          alias: {
-            // This is a build-time alias is for code in core only – plugins
-            // and legacy bundles go through the runtime loader.js shim
-            I18n: "discourse-i18n",
-          },
-        },
         externals: [
           function ({ request }, callback) {
             if (

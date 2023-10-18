@@ -1,5 +1,5 @@
 import Helper from "@ember/component/helper";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 function postActionTitle([id, nameKey]) {
   let title = I18n.t(`admin.flags.short_names.${nameKey}`, {

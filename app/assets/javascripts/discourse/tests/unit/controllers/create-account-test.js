@@ -1,7 +1,7 @@
 import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 module("Unit | Controller | create-account", function (hooks) {
   setupTest(hooks);

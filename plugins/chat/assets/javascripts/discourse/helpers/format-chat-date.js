@@ -2,7 +2,7 @@ import { htmlSafe } from "@ember/template";
 import User from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
 import { registerUnbound } from "discourse-common/lib/helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 registerUnbound("format-chat-date", function (message, mode) {
   const currentUser = User.current();

@@ -3,7 +3,7 @@ import { schedule } from "@ember/runloop";
 /* global Pikaday:true */
 import loadScript from "discourse/lib/load-script";
 import discourseComputed, { on } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const DATE_FORMAT = "YYYY-MM-DD";
 

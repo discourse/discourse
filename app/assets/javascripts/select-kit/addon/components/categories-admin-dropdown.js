@@ -1,6 +1,6 @@
 import { computed } from "@ember/object";
 import { setting } from "discourse/lib/computed";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 
 export default DropdownSelectBoxComponent.extend({

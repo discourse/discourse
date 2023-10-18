@@ -1,6 +1,6 @@
 import Controller from "@ember/controller";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Controller.extend({
   subpageTitle: I18n.t("user.preferences_nav.notifications"),

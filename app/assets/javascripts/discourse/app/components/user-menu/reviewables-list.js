@@ -4,7 +4,7 @@ import { ajax } from "discourse/lib/ajax";
 import UserMenuReviewableItem from "discourse/lib/user-menu/reviewable-item";
 import UserMenuReviewable from "discourse/models/user-menu-reviewable";
 import getUrl from "discourse-common/lib/get-url";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class UserMenuReviewablesList extends UserMenuItemsList {
   @service currentUser;

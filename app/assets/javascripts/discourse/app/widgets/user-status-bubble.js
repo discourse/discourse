@@ -1,5 +1,5 @@
 import { createWidget } from "discourse/widgets/widget";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default createWidget("user-status-bubble", {
   tagName: "div.user-status-background",

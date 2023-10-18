@@ -4,7 +4,7 @@ import {
   searchContextDescription,
   translateResults,
 } from "discourse/lib/search";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 module("Unit | Utility | search", function (hooks) {
   setupTest(hooks);

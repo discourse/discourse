@@ -5,7 +5,7 @@ import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Group from "discourse/models/group";
 import PermissionType from "discourse/models/permission-type";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Component.extend(bufferedProperty("model"), {
   router: service(),

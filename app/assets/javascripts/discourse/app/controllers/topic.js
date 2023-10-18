@@ -37,7 +37,7 @@ import discourseComputed, {
   bind,
   observes,
 } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 let customPostMessageCallbacks = {};
 

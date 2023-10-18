@@ -1,7 +1,7 @@
 import { computed } from "@ember/object";
 import { htmlSafe as htmlSafeTemplateHelper } from "@ember/template";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 function addonFmt(str, formats) {
   let cachedFormats = formats;

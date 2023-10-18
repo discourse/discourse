@@ -1,5 +1,5 @@
 import createPMRoute from "discourse/routes/build-private-messages-route";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default createPMRoute("tags", "private-messages-tags").extend({
   titleToken() {

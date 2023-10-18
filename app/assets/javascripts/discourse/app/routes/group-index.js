@@ -3,7 +3,7 @@ import { inject as service } from "@ember/service";
 import CreateInvite from "discourse/components/modal/create-invite";
 import GroupAddMembersModal from "discourse/components/modal/group-add-members";
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default DiscourseRoute.extend({
   modal: service(),

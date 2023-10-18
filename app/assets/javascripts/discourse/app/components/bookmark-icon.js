@@ -6,7 +6,7 @@ import {
   NO_REMINDER_ICON,
   WITH_REMINDER_ICON,
 } from "discourse/models/bookmark";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class BookmarkIcon extends Component {
   tagName = "";

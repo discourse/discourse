@@ -10,7 +10,7 @@ import PasskeyOptionsDropdown from "discourse/components/user-preferences/passke
 import RenamePasskey from "discourse/components/user-preferences/rename-passkey";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferToBase64, stringToBuffer } from "discourse/lib/webauthn";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class UserPasskeys extends Component {
   @service dialog;

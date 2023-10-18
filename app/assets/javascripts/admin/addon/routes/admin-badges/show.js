@@ -3,7 +3,7 @@ import Route from "@ember/routing/route";
 import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import Badge from "discourse/models/badge";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import BadgePreviewModal from "../../components/modal/badge-preview";
 import EditBadgeGroupingsModal from "../../components/modal/edit-badge-groupings";
 

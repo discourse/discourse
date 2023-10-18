@@ -8,7 +8,7 @@ import { modifier } from "ember-modifier";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import gt from "truth-helpers/helpers/gt";
 import ChatUserInfo from "discourse/plugins/chat/discourse/components/chat-user-info";
 import DcFilterInput from "discourse/plugins/chat/discourse/components/dc-filter-input";

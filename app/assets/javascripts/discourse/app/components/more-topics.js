@@ -4,7 +4,7 @@ import { inject as service } from "@ember/service";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class MoreTopics extends Component {
   @service site;
