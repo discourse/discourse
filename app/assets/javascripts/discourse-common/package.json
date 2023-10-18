@@ -53,7 +53,7 @@
     "@types/ember__utils": "^4.0.4",
     "@types/jquery": "^3.5.22",
     "@types/qunit": "^2.19.6",
-    "@types/rsvp": "^4.0.5",
+    "@types/rsvp": "^4.0.6",
     "broccoli-asset-rev": "^3.0.0",
     "ember-cli": "~5.0.0",
     "ember-cli-inject-live-reload": "^2.1.0",

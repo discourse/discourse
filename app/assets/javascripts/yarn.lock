@@ -2012,10 +2012,10 @@
     "@types/glob" "*"
     "@types/node" "*"
 
-"@types/rsvp@*", "@types/rsvp@^4.0.5":
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/@types/rsvp/-/rsvp-4.0.5.tgz#badc7df3b653a1184e456cde845c5a770120a15a"
-  integrity sha512-Vhmt0IASo026ZU20O3KP1nBZOCXduQ/Ei+vpgs0hfDZHysSIfhnMc61ZMIUuaazfYS0J9EhLz+jJsft6iYX4Kw==
+"@types/rsvp@*", "@types/rsvp@^4.0.6":
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/@types/rsvp/-/rsvp-4.0.6.tgz#cf66672a7e738425f09a81e0c7def2bd1c8b6c38"
+  integrity sha512-2CgsI0j74ULhrZrqcMwZ7nSvcyX767KaJDefxCnrNSp1D4MuLX8qxOPHwHz7/5b2FC94ILh3Db6du6QAvpc+Qw==
 
 "@types/send@*":
   version "0.17.1"
