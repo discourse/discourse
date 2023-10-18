@@ -1,6 +1,5 @@
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { all, Promise } from "rsvp";
 import {
   queryParams,
   resetParams,
@@ -26,57 +25,44 @@ class AbstractCategoryRoute extends DiscourseRoute {
   templateName = "discovery/list";
   controllerName = "discovery/list";
 
-  model(modelParams) {
+  async model(params, transition) {
     const category = Category.findBySlugPathWithID(
-      modelParams.category_slug_path_with_id
+      params.category_slug_path_with_id
     );
 
     if (!category) {
-      const parts = modelParams.category_slug_path_with_id.split("/");
-      if (parts.length > 0 && parts[parts.length - 1].match(/^\d+$/)) {
-        parts.pop();
-      }
-
-      return Category.reloadBySlugPath(parts.join("/")).then((result) => {
-        const record = this.store.createRecord("category", result.category);
-        record.setupGroupsAndPermissions();
-        this.site.updateCategory(record);
-        return { category: record, modelParams };
-      });
-    }
-
-    if (category) {
-      return { category, modelParams };
-    }
-  }
-
-  afterModel(model, transition) {
-    if (!model) {
       this.router.replaceWith("/404");
       return;
     }
-
-    const { category, modelParams } = model;
 
     if (
       this.routeConfig?.no_subcategories === undefined &&
       category.default_list_filter === "none" &&
       this.routeConfig?.filter === "default" &&
-      modelParams
+      params
     ) {
       // TODO: avoid throwing away preload data by redirecting on the server
       PreloadStore.getAndRemove("topic_list");
       this.router.replaceWith(
         "discovery.categoryNone",
-        modelParams.category_slug_path_with_id
+        params.category_slug_path_with_id
       );
       return;
     }
 
-    return all([
-      this._createSubcategoryList(category),
-      this._retrieveTopicList(category, transition, modelParams),
-    ]);
+    const subcategoryListPromise = this._createSubcategoryList(category);
+    const topicListPromise = this._retrieveTopicList(
+      category,
+      transition,
+      params
+    );
+
+    return {
+      category,
+      modelParams: params,
+      subcategoryList: await subcategoryListPromise,
+      list: await topicListPromise,
+    };
   }
 
   filter(category) {
@@ -97,20 +83,13 @@ class AbstractCategoryRoute extends DiscourseRoute {
     };
   }
 
-  _createSubcategoryList(category) {
-    this._categoryList = null;
-
+  async _createSubcategoryList(category) {
     if (category.isParent && category.show_subcategory_list) {
-      return CategoryList.listForParent(this.store, category).then(
-        (list) => (this._categoryList = list)
-      );
+      return CategoryList.listForParent(this.store, category);
     }
-
-    // If we're not loading a subcategory list just resolve
-    return Promise.resolve();
   }
 
-  _retrieveTopicList(category, transition, modelParams) {
+  async _retrieveTopicList(category, transition, modelParams) {
     const findOpts = filterQueryParams(modelParams, this.routeConfig);
     const extras = { cached: this.isPoppedState(transition) };
 
@@ -120,17 +99,16 @@ class AbstractCategoryRoute extends DiscourseRoute {
     }
     listFilter += `/l/${this.filter(category)}`;
 
-    return findTopicList(
+    const topicList = await findTopicList(
       this.store,
       this.topicTrackingState,
       listFilter,
       findOpts,
       extras
-    ).then((list) => {
-      TopicList.hideUniformCategory(list, category);
-      this.set("topics", list);
-      return list;
-    });
+    );
+    TopicList.hideUniformCategory(topicList, category);
+
+    return topicList;
   }
 
   titleToken() {
@@ -154,14 +132,13 @@ class AbstractCategoryRoute extends DiscourseRoute {
   }
 
   setupController(controller, model) {
-    const topics = this.topics,
-      category = model.category;
+    const category = model.category;
 
     const controllerOpts = {
       ...routeControlledPropDefaults,
       navigationArgs: this._navigationArgs(category),
-      subcategoryList: this._categoryList,
-      model: topics,
+      subcategoryList: model.subcategoryList,
+      model: model.list,
       category,
       noSubcategories: !!this.routeConfig?.no_subcategories,
       expandAllPinned: true,
@@ -178,7 +155,6 @@ class AbstractCategoryRoute extends DiscourseRoute {
     }
 
     this.searchService.searchContext = category.get("searchContext");
-    this.set("topics", null);
 
     controller.setProperties(controllerOpts);
     controller.bulkSelectHelper.clear();

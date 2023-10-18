@@ -38,14 +38,6 @@ export default class TagShowRoute extends DiscourseRoute {
     return this.routeConfig.noSubcategories;
   }
 
-  beforeModel() {
-    const controller = this.controllerFor(this.controllerName);
-    controller.setProperties({
-      loading: true,
-      showInfo: false,
-    });
-  }
-
   async model(params, transition) {
     const tag = this.store.createRecord("tag", {
       id: escapeExpression(params.tag_id),
