@@ -104,8 +104,8 @@ module("Integration | Component | d-modal", function (hooks) {
       />
     </template>);
 
-    assert.dom(".d-modal .modal-header").hasClass("my-header-class");
-    assert.dom(".d-modal .modal-body").hasClass("my-body-class");
+    assert.dom(".d-modal .d-modal__header").hasClass("my-header-class");
+    assert.dom(".d-modal .d-modal__body").hasClass("my-body-class");
   });
 
   test("as a form", async function (assert) {
