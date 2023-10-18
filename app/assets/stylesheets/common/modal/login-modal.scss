@@ -31,55 +31,56 @@
 
       .login-left-side {
         padding: 3rem;
+      }
 
-        .login-welcome-header {
-          display: grid;
-          grid-template-columns: auto 1fr;
-          grid-template-rows: auto 1fr;
-          overflow-wrap: break-all;
-        }
+      .login-welcome-header {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-template-rows: auto 1fr;
+        overflow-wrap: break-all;
+      }
 
-        .login-title {
-          font-size: var(--font-up-6);
-          margin: 0;
-        }
-        .login-subheader {
-          margin: 0;
-        }
+      .login-title {
+        font-size: var(--font-up-6);
+        margin: 0;
+      }
+      .login-subheader {
+        margin: 0;
+      }
 
-        .waving-hand {
-          width: 35px;
-          height: 35px;
-          margin-left: 0.5em;
-          align-self: center;
-        }
+      .waving-hand {
+        width: 35px;
+        height: 35px;
+        margin-left: 0.5em;
+        align-self: center;
+      }
 
-        .modal-footer {
-          flex-wrap: nowrap;
-          padding: 0;
-          border: 0;
+      .modal-footer {
+        flex-wrap: nowrap;
+        padding: 0;
+        border: 0;
 
-          .inline-spinner {
-            display: inline-flex;
-          }
+        .inline-spinner {
+          display: inline-flex;
         }
       }
+
       .login-right-side {
         background: var(--tertiary-or-tertiary-low);
         padding: 3.5rem 3rem;
+      }
 
-        #login-buttons {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          gap: 1rem;
-          height: 100%;
-          min-width: 200px;
-        }
+      #login-buttons {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 1rem;
+        height: 100%;
+        min-width: 200px;
       }
 
       #login-form {
-        margin: 3em 0 1.25em 0;
+        margin: 3em 0 2em 0;
       }
     }
   }
@@ -117,12 +118,6 @@
     .login-left-side,
     .login-welcome-header {
       padding: 3em 1em 3em 3em;
-    }
-  }
-
-  .discourse-touch {
-    .caps-lock-warning {
-      display: none;
     }
   }
 }
