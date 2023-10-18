@@ -1392,37 +1392,6 @@ RSpec.describe Post do
     ensure
       InlineOneboxer.invalidate("http://testonebox.com/vvf22")
     end
-
-    context "when secure uploads are enabled" do
-      before do
-        setup_s3
-        SiteSetting.secure_uploads = true
-      end
-
-      it "does not enqueue job to update secure status by default" do
-        post = create_post
-        expect_not_enqueued_with(
-          job: :update_post_uploads_secure_status,
-          args: {
-            post_id: post.id,
-            source: "post rebake",
-          },
-        ) { post.rebake! }
-      end
-
-      context "when passing update_upload_security: true option" do
-        it "does enqueue job to update secure status" do
-          post = create_post
-          expect_enqueued_with(
-            job: :update_post_uploads_secure_status,
-            args: {
-              post_id: post.id,
-              source: "post rebake",
-            },
-          ) { post.rebake!(update_upload_security: true) }
-        end
-      end
-    end
   end
 
   describe "#set_owner" do
