@@ -436,6 +436,9 @@ lt:
         type_bonus:
           name: "tipo premija"
           title: "Tam tikriems peržiūrėtiems tipams darbuotojai gali priskirti premiją, kad jie taptų aukštesniu prioritetu."
+      revise_and_reject_post:
+        reason: "Priežastis"
+        optional: "pasirinktinai"
       stale_help: "Ši peržiūra buvo išspręsta <b>%{username}</b>."
       claim_help:
         optional: "Galite pareikšti teises į šį elementą, kad kiti negalėtų jo peržiūrėti."
@@ -1212,8 +1215,6 @@ lt:
         rate_limit: "Prašome palaukti prieš bandydami kitą autentifikavimo kodą."
         disable_description: "Prašome įvesti autentifikavimo kodą iš savo programos"
         show_key_description: "Įveskite rankiniu būdu"
-        short_description: |
-          Apsaugokite paskyrą naudodami vienkartinius saugos kodus.
         oauth_enabled_warning: "Atminkite, kad socialiniai prisijungimai bus išjungti, kai jūsų paskyroje bus įgalintas dviejų veiksnių autentifikavimas."
         use: "Naudoti autentifikavimo programėlę"
         enforced_notice: "Prieš prisijungdami prie šios svetainės turite įjungti dviejų veiksnių autentifikavimą."
@@ -1236,6 +1237,10 @@ lt:
           already_added_error: "Jūs jau užregistravote šį saugos raktą. Jums nereikia jo užregistruoti dar kartą."
           save: "Saugoti"
           name_required_error: "Turite nurodyti saugos rakto pavadinimą."
+      passkeys:
+        save: "Išsaugoti"
+        added_prefix: "Pridėta"
+        last_used_prefix: "Paskutinis naudotas"
       change_about:
         title: "Keisti Apie Mane"
         error: "Rasta klaida bandant pakeisti reikšmę. Prašom patikslinti veiksmus."
@@ -1502,6 +1507,7 @@ lt:
         ok: "Jūsų slaptažodis yra tinkamas."
         instructions: "bent jau %{count}simboliai"
         required: "Įveskite slaptažodį"
+        confirm: "Patvirtinti"
       summary:
         title: "Aprašymas"
         stats: "Statistika"

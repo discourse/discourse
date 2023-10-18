@@ -9,7 +9,7 @@ import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { escapeExpression } from "discourse/lib/utilities";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import ChatChatable from "discourse/plugins/chat/discourse/models/chat-chatable";
 
 const MAX_RESULTS = 10;

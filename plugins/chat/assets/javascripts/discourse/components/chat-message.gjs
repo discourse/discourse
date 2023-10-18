@@ -17,7 +17,7 @@ import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-m
 import discourseDebounce from "discourse-common/lib/debounce";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import eq from "truth-helpers/helpers/eq";
 import not from "truth-helpers/helpers/not";
 import ChatMessageAvatar from "discourse/plugins/chat/discourse/components/chat/message/avatar";

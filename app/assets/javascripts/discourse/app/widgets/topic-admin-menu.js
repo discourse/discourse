@@ -1,3 +1,4 @@
+import $ from "jquery";
 import { h } from "virtual-dom";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 

@@ -109,11 +109,7 @@ lv:
         existing_topic:
           title: "Pārvietot uz esošu tēmu"
       retention_reminders:
-        public:
-          zero: "%{count} dienas"
-          one: "%{count} diena"
-          other: "%{count} dienas"
-        dm:
+        short:
           zero: "%{count} dienas"
           one: "%{count} diena"
           other: "%{count} dienas"

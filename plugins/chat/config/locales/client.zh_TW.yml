@@ -217,9 +217,7 @@ zh_TW:
         new_message:
           title: "移動到新訊息"
       retention_reminders:
-        public:
-          other: "%{count} 天"
-        dm:
+        short:
           other: "%{count} 天"
       flagging:
         action: "檢舉訊息"

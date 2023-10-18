@@ -119,9 +119,7 @@ vi:
         new_message:
           title: "Chuyển đến tin nhắn mới"
       retention_reminders:
-        public:
-          other: "%{count} ngày"
-        dm:
+        short:
           other: "%{count} ngày"
       flags:
         notify_moderators: "Thông báo này yêu cầu sự chú ý của nhân viên vì một lý do khác không được liệt kê ở trên."

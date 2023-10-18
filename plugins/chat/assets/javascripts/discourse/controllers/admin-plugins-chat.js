@@ -4,7 +4,7 @@ import { and } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class AdminPluginsChatController extends Controller {
   @service dialog;

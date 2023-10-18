@@ -346,6 +346,9 @@ sk:
       in_reply_to: "v odpovedi na"
       explain:
         total: "Celkovo"
+      revise_and_reject_post:
+        reason: "Dôvod"
+        optional: "nepovinné"
       delete: "Odstrániť"
       settings:
         saved: "Uložené"
@@ -852,6 +855,9 @@ sk:
         edit: "Upraviť"
         security_key:
           save: "Uložiť"
+      passkeys:
+        save: "Uložiť"
+        added_prefix: "Pridané"
       change_about:
         title: "Upraviť O mne"
         error: "Nastala chyba pri zmene tejto hodnoty."

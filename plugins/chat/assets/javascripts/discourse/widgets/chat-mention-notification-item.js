@@ -4,7 +4,7 @@ import { DefaultNotificationItem } from "discourse/widgets/default-notification-
 import RawHtml from "discourse/widgets/raw-html";
 import { createWidgetFrom } from "discourse/widgets/widget";
 import { iconNode } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import slugifyChannel from "discourse/plugins/chat/discourse/lib/slugify-channel";
 
 const chatNotificationItem = {

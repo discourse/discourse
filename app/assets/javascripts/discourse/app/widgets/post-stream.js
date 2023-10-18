@@ -1,3 +1,4 @@
+import $ from "jquery";
 import { h } from "virtual-dom";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { Placeholder } from "discourse/lib/posts-with-placeholders";
@@ -7,7 +8,7 @@ import { avatarFor } from "discourse/widgets/post";
 import { createWidget } from "discourse/widgets/widget";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { iconNode } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 let transformCallbacks = null;
 export function postTransformCallbacks(transformed) {

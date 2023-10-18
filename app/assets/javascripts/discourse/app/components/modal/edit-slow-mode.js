@@ -6,7 +6,7 @@ import { fromSeconds, toSeconds } from "discourse/helpers/slow-mode";
 import { extractError } from "discourse/lib/ajax-error";
 import { timeShortcuts } from "discourse/lib/time-shortcut";
 import Topic from "discourse/models/topic";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const SLOW_MODE_OPTIONS = [
   {

@@ -7,7 +7,7 @@ import DiscourseURL, {
   getEditCategoryUrl,
 } from "discourse/lib/url";
 import Category from "discourse/models/category";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import ComboBoxComponent from "select-kit/components/combo-box";
 
 export const NO_CATEGORIES_ID = "no-categories";
@@ -132,13 +132,15 @@ export default ComboBoxComponent.extend({
     }
   ),
 
-  search(filter) {
-    if (filter) {
-      let opts = {
-        parentCategoryId: this.options.parentCategory?.id,
-      };
-      let results = Category.search(filter, opts);
-      results = this._filterUncategorized(results).sort((a, b) => {
+  async search(filter) {
+    const opts = {
+      parentCategoryId: this.options.parentCategory?.id,
+      includeUncategorized: this.siteSettings.allow_uncategorized_topics,
+    };
+
+    if (this.siteSettings.lazy_load_categories) {
+      const results = await Category.asyncSearch(filter, { ...opts, limit: 5 });
+      return results.sort((a, b) => {
         if (a.parent_category_id && !b.parent_category_id) {
           return 1;
         } else if (!a.parent_category_id && b.parent_category_id) {
@@ -147,7 +149,19 @@ export default ComboBoxComponent.extend({
           return 0;
         }
       });
-      return results;
+    }
+
+    if (filter) {
+      let results = Category.search(filter, opts);
+      return this._filterUncategorized(results).sort((a, b) => {
+        if (a.parent_category_id && !b.parent_category_id) {
+          return 1;
+        } else if (!a.parent_category_id && b.parent_category_id) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
     } else {
       return this._filterUncategorized(this.content);
     }

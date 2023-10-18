@@ -2,6 +2,7 @@ import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
 import { schedule, scheduleOnce, throttle } from "@ember/runloop";
 import { isBlank } from "@ember/utils";
+import $ from "jquery";
 import ClickTrack from "discourse/lib/click-track";
 import DiscourseURL from "discourse/lib/url";
 import { highlightPost } from "discourse/lib/utilities";

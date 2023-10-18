@@ -6,7 +6,7 @@ import Category from "discourse/models/category";
 import getURL from "discourse-common/lib/get-url";
 import { helperContext, registerUnbound } from "discourse-common/lib/helpers";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 let _renderer = defaultCategoryLinkRenderer;
 
@@ -184,12 +184,6 @@ export function defaultCategoryLinkRenderer(category, opts) {
   let afterBadgeWrapper = "";
   if (opts.topicCount && categoryStyle === "box") {
     afterBadgeWrapper += buildTopicCount(opts.topicCount);
-  }
-  if (opts.plusSubcategories && opts.lastSubcategory) {
-    afterBadgeWrapper += `<span class="plus-subcategories">${I18n.t(
-      "category_row.plus_subcategories",
-      { count: opts.plusSubcategories }
-    )}</span>`;
   }
   return `<${tagName} class="badge-wrapper ${extraClasses}" ${href}>${html}</${tagName}>${afterBadgeWrapper}`;
 }

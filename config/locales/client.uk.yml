@@ -507,6 +507,9 @@ uk:
         type_bonus:
           name: "тип бонуса"
           title: "Деяким типам повідомлень, які переглядаються, учасники команди обслуговування можуть призначити бонуси, щоб зробити їх більш пріоритетними."
+      revise_and_reject_post:
+        reason: "Причина"
+        optional: "опціонально"
       stale_help: "<b>%{username}</b> розглянув це."
       claim_help:
         optional: "Ви можете заявити права на цей елемент, щоб інші не могли його розглядати."
@@ -1516,8 +1519,6 @@ uk:
           Проскануйте цей QR-код у застосунку (<a href="https://www.google.com/search?q=authenticator+apps+for+android" target="_blank">Android</a> – <a href="https://www.google.com/search?q=authenticator+apps+for+ios" target="_blank">iOS</a>) і введіть свій код автентифікації.
         disable_description: "Будь ласка, введіть код автентифікації з вашої програми"
         show_key_description: "Введіть вручну"
-        short_description: |
-          Захистіть свій обліковий запис одноразовими кодами безпеки.
         extended_description: |
           Двофакторна автентифікація краще захищає ваш обліковий запис, вимагаючи окрім вашого пароля ще й введення одноразового токена. Токени можна генерувати на пристроях з <a href="https://www.google.com/search?q=authenticator+apps+for+android" target='_blank'>Android</a> та <a href="https://www.google.com/search?q=authenticator+apps+for+ios">iOS</a>.
         oauth_enabled_warning: "Будь ласка, зверніть увагу, що вхід через соціальні мережі буде вимкнено, як тільки у вашому обліковому записі буде увімкнена двофакторна автентифікація."
@@ -1556,6 +1557,10 @@ uk:
           save: "Зберегти"
           edit_description: "Назва фізичного ключа безпеки"
           name_required_error: "Ви повинні вказати назву для вашого ключа безпеки."
+      passkeys:
+        save: "Зберегти"
+        added_prefix: "Додано"
+        last_used_prefix: "Використано"
       change_about:
         title: "Змінити інформацію про мене"
         error: "Сталася помилка під час цієї зміни."
@@ -1847,6 +1852,7 @@ uk:
         ok: "Ваш пароль виглядає добре."
         instructions: "не менше %{count} символів"
         required: "Будь ласка, введіть пароль"
+        confirm: "Підтвердити"
       summary:
         title: "Підсумок"
         stats: "Статистика"
@@ -5200,7 +5206,7 @@ uk:
         install: "Install"
         delete: "Видалити"
         delete_confirm: 'Ви впевнені, що хочете видалити "%{theme_name}"?'
-        bulk_delete: 'Ви впевнені?'
+        bulk_delete: "Ви впевнені?"
         bulk_themes_delete_confirm: "Це призведе до видалення наступних тем, вони більше не будуть доступні для користувачів вашого сайту:"
         bulk_components_delete_confirm: "Це призведе до видалення наступних компонентів, які більше не зможуть використовуватись користувачами вашого сайту:"
         color: "Колір"

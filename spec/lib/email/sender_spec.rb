@@ -651,7 +651,15 @@ RSpec.describe Email::Sender do
           )
           expect(message.html_part.body).to include("cid:")
           expect(message.html_part.body).to include("embedded-secure-image")
+        end
+
+        it "embeds an image with a secure URL that has an upload that is not secure" do
+          @secure_image.update_secure_status(override: false)
+          Email::Sender.new(message, :valid_type).send
           expect(message.attachments.length).to eq(4)
+          expect(message.attachments["logo.png"].body.raw_source.force_encoding("UTF-8")).to eq(
+            File.read(@secure_image_file),
+          )
         end
 
         it "uses correct UTF-8 encoding for the body of the email" do

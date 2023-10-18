@@ -2,7 +2,7 @@ import { htmlSafe } from "@ember/template";
 import { emojiUnescape } from "discourse/lib/text";
 import UserMenuBaseItem from "discourse/lib/user-menu/base-item";
 import { postUrl } from "discourse/lib/utilities";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class UserMenuMessageItem extends UserMenuBaseItem {
   constructor({ message }) {

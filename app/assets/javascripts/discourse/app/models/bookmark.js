@@ -12,7 +12,7 @@ import User from "discourse/models/user";
 import getURL from "discourse-common/lib/get-url";
 import categoryFromId from "discourse-common/utils/category-macro";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export const AUTO_DELETE_PREFERENCES = {
   NEVER: 0,

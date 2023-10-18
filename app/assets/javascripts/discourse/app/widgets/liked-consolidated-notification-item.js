@@ -3,7 +3,7 @@ import { userPath } from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
 import { DefaultNotificationItem } from "discourse/widgets/default-notification-item";
 import { createWidgetFrom } from "discourse/widgets/widget";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 createWidgetFrom(
   DefaultNotificationItem,

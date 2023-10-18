@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 import DiscourseURL from "discourse/lib/url";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class MergeUsersProgress extends Component {
   @service messageBus;

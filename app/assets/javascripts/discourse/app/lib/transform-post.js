@@ -1,7 +1,7 @@
 import { isEmpty } from "@ember/utils";
 import { userPath } from "discourse/lib/url";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const _additionalAttributes = [];
 

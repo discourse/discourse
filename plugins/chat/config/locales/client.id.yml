@@ -144,9 +144,7 @@ id:
         new_topic:
           title: "Pindahkan sebagai Topik Baru"
       retention_reminders:
-        public:
-          other: "%{count} hari"
-        dm:
+        short:
           other: "%{count} hari"
       emoji_picker:
         objects: "Objek"

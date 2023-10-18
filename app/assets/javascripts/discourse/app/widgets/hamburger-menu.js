@@ -5,7 +5,7 @@ import { NotificationLevels } from "discourse/lib/notification-levels";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { applyDecorators, createWidget } from "discourse/widgets/widget";
 import getURL from "discourse-common/lib/get-url";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const flatten = (array) => [].concat.apply([], array);
 

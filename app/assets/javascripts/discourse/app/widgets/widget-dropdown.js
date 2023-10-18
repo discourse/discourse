@@ -2,7 +2,7 @@ import { schedule } from "@ember/runloop";
 import { createPopper } from "@popperjs/core";
 import hbs from "discourse/widgets/hbs-compiler";
 import { createWidget } from "discourse/widgets/widget";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 /*
 

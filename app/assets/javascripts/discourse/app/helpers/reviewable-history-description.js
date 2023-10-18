@@ -2,7 +2,7 @@ import { htmlSafe } from "@ember/template";
 import { htmlStatus } from "discourse/helpers/reviewable-status";
 import { EDITED } from "discourse/models/reviewable-history";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default function reviewableHistoryDescription(rh) {
   switch (rh.reviewable_history_type) {

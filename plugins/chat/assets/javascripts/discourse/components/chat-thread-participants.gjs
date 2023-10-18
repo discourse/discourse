@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import ChatUserAvatar from "discourse/plugins/chat/discourse/components/chat-user-avatar";
 
 export default class ChatThreadParticipants extends Component {

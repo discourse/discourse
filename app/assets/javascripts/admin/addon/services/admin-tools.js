@@ -4,9 +4,9 @@ import Service, { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import I18n from "discourse-i18n";
 import PenalizeUserModal from "admin/components/modal/penalize-user";
 import AdminUser from "admin/models/admin-user";
-import I18n from "I18n";
 
 // A service that can act as a bridge between the front end Discourse application
 // and the admin application. Use this if you need front end code to access admin

@@ -7,6 +7,7 @@ import {
 } from "@ember/test-helpers";
 import { isEmpty } from "@ember/utils";
 import { setupApplicationTest } from "ember-qunit";
+import $ from "jquery";
 import MessageBus from "message-bus-client";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, skip, test } from "qunit";
@@ -91,7 +92,7 @@ import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { restoreBaseUri } from "discourse-common/lib/get-url";
 import { cloneJSON, deepMerge } from "discourse-common/lib/object";
 import { clearResolverOptions } from "discourse-common/resolver";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { cleanupTemporaryModuleRegistrations } from "./temporary-module-helper";
 

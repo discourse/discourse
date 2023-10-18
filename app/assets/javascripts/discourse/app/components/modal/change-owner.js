@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import DiscourseURL from "discourse/lib/url";
 import Topic from "discourse/models/topic";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class ChangeOwnerModal extends Component {
   @tracked saving = false;

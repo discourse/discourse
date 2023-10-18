@@ -1,5 +1,5 @@
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class AdminSectionLink extends BaseSectionLink {
   get name() {

@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class RequestGroupMembershipForm extends Component {
   @tracked loading = false;

@@ -2,13 +2,14 @@ import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
+import $ from "jquery";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import copyText from "discourse/lib/copy-text";
 import discourseLater from "discourse-common/lib/later";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 import AdminUser from "admin/models/admin-user";
-import I18n from "I18n";
 
 @classNames("ip-lookup")
 export default class IpLookup extends Component {

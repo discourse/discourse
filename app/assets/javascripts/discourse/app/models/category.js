@@ -652,6 +652,27 @@ Category.reopenClass({
 
     return data.sortBy("read_restricted");
   },
+
+  async asyncSearch(term, opts) {
+    opts ||= {};
+
+    const result = await ajax("/categories/search", {
+      data: {
+        term,
+        parent_category_id: opts.parentCategoryId,
+        include_uncategorized: opts.includeUncategorized,
+        select_category_ids: opts.selectCategoryIds,
+        reject_category_ids: opts.rejectCategoryIds,
+        include_subcategories: opts.includeSubcategories,
+        prioritized_category_id: opts.prioritizedCategoryId,
+        limit: opts.limit,
+      },
+    });
+
+    return result["categories"].map((category) =>
+      Site.current().updateCategory(category)
+    );
+  },
 });
 
 export default Category;

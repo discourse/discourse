@@ -5,7 +5,7 @@ import Sharing from "discourse/lib/sharing";
 import { escapeExpression } from "discourse/lib/utilities";
 import discourseLater from "discourse-common/lib/later";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
   tagName: null,

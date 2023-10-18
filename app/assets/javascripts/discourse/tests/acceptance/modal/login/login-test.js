@@ -1,7 +1,7 @@
 import { click, fillIn, tab, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 acceptance("Modal - Login", function () {
   test("You can tab to the login button", async function (assert) {

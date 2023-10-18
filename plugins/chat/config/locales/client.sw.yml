@@ -107,10 +107,7 @@ sw:
         existing_topic:
           title: "Hamisha kwenda kwenye Mada Iliyopo"
       retention_reminders:
-        public:
-          one: "siku %{count}"
-          other: "siku %{count}"
-        dm:
+        short:
           one: "siku %{count}"
           other: "siku %{count}"
       emoji_picker:

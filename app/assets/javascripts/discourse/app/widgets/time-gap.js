@@ -1,6 +1,6 @@
 import { h } from "virtual-dom";
 import { createWidget } from "discourse/widgets/widget";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 function description(attrs) {
   const daysSince = attrs.daysSince;

@@ -133,10 +133,7 @@ module.exports = function (defaults) {
   });
 
   // WARNING: We should only import scripts here if they are not in NPM.
-  // For example: our very specific version of bootstrap-modal.
   app.import(vendorJs + "bootbox.js");
-  app.import("node_modules/bootstrap/js/modal.js");
-  app.import(vendorJs + "caret_position.js");
   app.import("node_modules/ember-source/dist/ember-template-compiler.js", {
     type: "test",
   });
@@ -199,13 +196,6 @@ module.exports = function (defaults) {
     packagerOptions: {
       webpackConfig: {
         devtool: "source-map",
-        resolve: {
-          alias: {
-            // This is a build-time alias is for code in core only – plugins
-            // and legacy bundles go through the runtime loader.js shim
-            I18n: "discourse-i18n",
-          },
-        },
         externals: [
           function ({ request }, callback) {
             if (
