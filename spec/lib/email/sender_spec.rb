@@ -587,7 +587,7 @@ RSpec.describe Email::Sender do
         SiteSetting.secure_uploads_max_email_embed_image_size_kb = 5_000
 
         Jobs.run_immediately!
-        Jobs::PullHotlinkedImages.any_instance.expects(:execute)
+        Jobs::PullHotlinkedImages.any_instance.expects(:execute).at_least_once
         FileStore::S3Store.any_instance.expects(:has_been_uploaded?).returns(true).at_least_once
         CookedPostProcessor.any_instance.stubs(:get_size).returns([244, 66])
 
@@ -596,7 +596,9 @@ RSpec.describe Email::Sender do
           UploadCreator.new(@secure_image_file, "logo.png").create_for(Discourse.system_user.id)
         @secure_image.update_secure_status(override: true)
         @secure_image.update(access_control_post_id: reply.id)
-        reply.update(raw: reply.raw + "\n" + "#{UploadMarkdown.new(@secure_image).image_markdown}")
+        reply.update!(raw: reply.raw + "\n" + "#{UploadMarkdown.new(@secure_image).image_markdown}")
+        reply.uploads << @secure_image
+        reply.save
         reply.rebake!
       end
 
@@ -629,7 +631,14 @@ RSpec.describe Email::Sender do
           expect(message.to_s.scan(/cid:[\w\-@.]+/).uniq.length).to eq(2)
         end
 
-        it "does not attach images that are not marked as secure" do
+        it "does not attach images that are not marked as secure, in the case of a non-secure upload copied to a PM" do
+          SiteSetting.login_required = false
+          @secure_image.update_secure_status(override: false)
+          @secure_image.update!(access_control_post: Fabricate(:post))
+          pm_topic = Fabricate(:private_message_topic)
+          Fabricate(:post, topic: pm_topic)
+          reply.update(topic: pm_topic)
+          reply.rebake!
           Email::Sender.new(message, :valid_type).send
           expect(message.attachments.length).to eq(4)
         end
@@ -642,9 +651,9 @@ RSpec.describe Email::Sender do
 
         it "uses the email styles to inline secure images and attaches the secure image upload to the email" do
           Email::Sender.new(message, :valid_type).send
-          expect(message.attachments.length).to eq(4)
+          expect(message.attachments.length).to eq(5)
           expect(message.attachments.map(&:filename)).to contain_exactly(
-            *[small_pdf, large_pdf, csv_file, @secure_image].map(&:original_filename),
+            *[small_pdf, large_pdf, csv_file, image, @secure_image].map(&:original_filename),
           )
           expect(message.attachments["logo.png"].body.raw_source.force_encoding("UTF-8")).to eq(
             File.read(@secure_image_file),
@@ -656,7 +665,7 @@ RSpec.describe Email::Sender do
         it "embeds an image with a secure URL that has an upload that is not secure" do
           @secure_image.update_secure_status(override: false)
           Email::Sender.new(message, :valid_type).send
-          expect(message.attachments.length).to eq(4)
+          expect(message.attachments.length).to eq(5)
           expect(message.attachments["logo.png"].body.raw_source.force_encoding("UTF-8")).to eq(
             File.read(@secure_image_file),
           )
@@ -681,9 +690,9 @@ RSpec.describe Email::Sender do
 
           it "uses the email styles and the optimized image to inline secure images and attaches the secure image upload to the email" do
             Email::Sender.new(message, :valid_type).send
-            expect(message.attachments.length).to eq(4)
+            expect(message.attachments.length).to eq(5)
             expect(message.attachments.map(&:filename)).to contain_exactly(
-              *[small_pdf, large_pdf, csv_file, @secure_image].map(&:original_filename),
+              *[small_pdf, large_pdf, csv_file, image, @secure_image].map(&:original_filename),
             )
             expect(message.attachments["logo.png"].body.raw_source.force_encoding("UTF-8")).to eq(
               File.read(optimized_image_file),

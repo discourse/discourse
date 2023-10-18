@@ -516,8 +516,6 @@ RSpec.describe CookedPostProcessor do
 
           context "when the upload is attached to the correct post" do
             before do
-              FastImage.expects(:size).returns([1750, 2000])
-              OptimizedImage.expects(:resize).returns(true)
               Discourse
                 .store
                 .class
@@ -525,14 +523,50 @@ RSpec.describe CookedPostProcessor do
                 .expects(:has_been_uploaded?)
                 .at_least_once
                 .returns(true)
-              upload.update(secure: true, access_control_post: post)
+              upload.update!(secure: true, access_control_post: post)
+              post.link_post_uploads
             end
 
             # TODO fix this spec, it is sometimes getting CDN links when it runs concurrently
             xit "handles secure images with the correct lightbox link href" do
+              FastImage.expects(:size).returns([1750, 2000])
+              OptimizedImage.expects(:resize).returns(true)
               cpp.post_process
 
               expect(cpp.html).to match_html cooked_html
+            end
+
+            context "when the upload was not secure" do
+              before { upload.update!(secure: false) }
+
+              it "changes the secure status" do
+                cpp.post_process
+                expect(upload.reload.secure).to eq(true)
+              end
+            end
+
+            context "when the upload should no longer be considered secure" do
+              before { SiteSetting.login_required = false }
+
+              it "changes the secure status" do
+                cpp.post_process
+                expect(upload.reload.secure).to eq(false)
+              end
+
+              it "does not use a secure-uploads URL for the lightbox href" do
+                SiteSetting.create_thumbnails = false
+                SiteSetting.max_image_width = 10
+                SiteSetting.max_image_height = 10
+
+                cpp.post_process
+                expect(cpp.html).not_to have_tag(
+                  "a",
+                  with: {
+                    class: "lightbox",
+                    href: "//test.localhost/secure-uploads/original/1X/#{upload.sha1}.png",
+                  },
+                )
+              end
             end
           end
 
