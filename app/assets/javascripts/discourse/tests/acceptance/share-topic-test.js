@@ -54,6 +54,10 @@ acceptance("Share and Invite modal", function (needs) {
       exists(".link-share-actions .invite"),
       "it shows the invite button"
     );
+
+    await click(".link-share-actions .invite");
+
+    assert.dom(".create-invite-modal").exists();
   });
 
   test("Post date link", async function (assert) {

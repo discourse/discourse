@@ -5,6 +5,7 @@ import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import RestModel from "discourse/models/rest";
+import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
@@ -167,6 +168,12 @@ TopicList.reopenClass({
 
     const users = extractByKey(result.users, User);
     const groups = extractByKey(result.primary_groups, EmberObject);
+
+    if (result.topic_list.categories) {
+      result.topic_list.categories.forEach((c) => {
+        Site.current().updateCategory(c);
+      });
+    }
 
     return result.topic_list[listKey].map((t) => {
       t.posters.forEach((p) => {

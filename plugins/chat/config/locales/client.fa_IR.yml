@@ -274,10 +274,7 @@ fa_IR:
         single_user: "%{username} در حال نوشتن"
         multiple_users: "%{commaSeparatedUsernames} و %{lastUsername} در حال نوشتن"
       retention_reminders:
-        public:
-          one: "%{count} روز"
-          other: "%{count} روز"
-        dm:
+        short:
           one: "%{count} روز"
           other: "%{count} روز"
       emoji_picker:

@@ -1543,7 +1543,6 @@ pt_BR:
     must_approve_users: "A equipe deve aprovar novas contas de usuários(as) antes de receberem permissão para acessar o site."
     invite_code: "O(a) deve digitar este código para poder cadastrar a conta, é ignorado quando vazio (diferencia maiúsculas de minúsculas)"
     approve_suspect_users: "Adicione usuários(as) suspeitos(as) à fila de revisão. Usuários(as) suspeitos(as) inseriram um site/biografia, mas não têm atividade de leitura."
-    review_every_post: "Todas as postagens devem ser revisadas. AVISO! NÃO É RECOMENDADO PARA SITES CONGESTIONADOS."
     pending_users_reminder_delay_minutes: "Notifique os moderadores se novos(as) usuários(as) estiverem aguardando aprovação por mais de alguns minutos. Defina como -1 para desativar as notificações."
     persistent_sessions: "Os(as) usuários(as) permanecerão com a conta conectada ao fechar o navegador"
     maximum_session_age: "O(a) usuário(a) permanecerá com a conta conectada durante n horas desde o último acesso"
@@ -2163,7 +2162,6 @@ pt_BR:
     navigation_menu: "Determine qual menu de navegação usar. A barra lateral e a navegação no cabeçalho podem ser personalizadas pelos usuários. A opção legada está disponível para compatibilidade com versões anteriores."
     default_navigation_menu_categories: "As categorias selecionadas serão exibidas abaixo da seção de Categorias do Menu de Navegação por padrão."
     default_navigation_menu_tags: "As etiquetas selecionadas serão exibidas na seção Etiquetas do Menu de Navegação por padrão."
-    enable_experimental_hashtag_autocomplete: "EXPERIMENTAL: Use o novo sistema de complementação automática #hashtag para categorias e etiquetas que renderiza o item selecionado de maneira diferente e que tem melhorado a busca"
     experimental_new_new_view_groups: 'EXPERIMENTAL: ative uma nova lista de tópicos que combina tópicos novos e não lidos e faz o link "Tudo", localizado na barra lateral, apontar para ela.'
     enable_custom_sidebar_sections: "EXPERIMENTAL: ative seções personalizadas da barra lateral"
     experimental_topics_filter: "EXPERIMENTAL: ative a rota do filtro de tópicos experimentais em /filter"

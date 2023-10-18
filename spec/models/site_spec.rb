@@ -183,6 +183,17 @@ RSpec.describe Site do
         DiscoursePluginRegistry.clear_modifiers!
       end
     end
+
+    context "when lazy_load_categories" do
+      before { SiteSetting.lazy_load_categories = true }
+
+      it "limits the number of categories" do
+        stub_const(Site, "LAZY_LOAD_CATEGORIES_LIMIT", 1) do
+          categories = Site.new(Guardian.new).categories
+          expect(categories.size).to eq(1)
+        end
+      end
+    end
   end
 
   it "omits groups user can not see" do

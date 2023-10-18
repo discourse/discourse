@@ -97,10 +97,7 @@ sq:
         existing_topic:
           title: "Transfero tek një Temë tjetër"
       retention_reminders:
-        public:
-          one: "%{count} ditë"
-          other: "%{count} ditë"
-        dm:
+        short:
           one: "%{count} ditë"
           other: "%{count} ditë"
       emoji_picker:

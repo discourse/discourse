@@ -515,12 +515,8 @@ tr_TR:
           one: "%{commaSeparatedUsernames} ve %{count} kişi daha yazıyor"
           other: "%{commaSeparatedUsernames} ve %{count} kişi daha yazıyor"
       retention_reminders:
-        public_none: "süresiz olarak"
-        public:
-          one: "%{count} gün"
-          other: "%{count} gün"
-        dm_none: "süresiz olarak"
-        dm:
+        indefinitely_short: "süresiz olarak"
+        short:
           one: "%{count} gün"
           other: "%{count} gün"
       flags:

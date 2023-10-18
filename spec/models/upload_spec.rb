@@ -324,6 +324,32 @@ RSpec.describe Upload do
     end
   end
 
+  describe ".sha1_from_long_url" do
+    it "should be able to get the sha1 from a regular upload URL" do
+      expect(
+        Upload.sha1_from_long_url(
+          "https://cdn.test.com/test/original/4X/7/6/5/1b6453892473a467d07372d45eb05abc2031647a.png",
+        ),
+      ).to eq("1b6453892473a467d07372d45eb05abc2031647a")
+    end
+
+    it "should be able to get the sha1 from a secure upload URL" do
+      expect(
+        Upload.sha1_from_long_url(
+          "#{Discourse.base_url}\/secure-uploads/original/1X/1b6453892473a467d07372d45eb05abc2031647a.png",
+        ),
+      ).to eq("1b6453892473a467d07372d45eb05abc2031647a")
+    end
+
+    it "doesn't get a sha1 for a URL that does not match our scheme" do
+      expect(
+        Upload.sha1_from_long_url(
+          "#{Discourse.base_url}\/blah/1b6453892473a467d07372d45eb05abc2031647a.png",
+        ),
+      ).to eq(nil)
+    end
+  end
+
   describe "#base62_sha1" do
     it "should return the right value" do
       upload.update!(sha1: "0000c513e1da04f7b4e99230851ea2aafeb8cc4e")

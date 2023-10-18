@@ -111,10 +111,7 @@ el:
         new_message:
           title: "Μετακίνηση σε νέο μήνυμα"
       retention_reminders:
-        public:
-          one: "%{count} ημ"
-          other: "%{count} ημ"
-        dm:
+        short:
           one: "%{count} ημ"
           other: "%{count} ημ"
       emoji_picker:

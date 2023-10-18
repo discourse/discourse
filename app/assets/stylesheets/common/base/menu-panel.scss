@@ -592,19 +592,11 @@
   height: 100%;
   width: 100%;
   position: fixed;
-  background-color: black;
-  --opacity: 0.5;
-  opacity: var(--opacity);
+  background-color: rgba(0, 0, 0, 0.3);
   top: var(--header-top);
   left: 0;
   display: none;
   touch-action: pan-y pinch-zoom;
-
-  @media (prefers-reduced-motion: no-preference) {
-    &.animate {
-      transition: opacity 0.1s linear;
-    }
-  }
 }
 
 .menu-panel.slide-in {
@@ -617,6 +609,7 @@
   @supports (height: 100dvh) {
     --100dvh: 100dvh;
   }
+  box-shadow: 0px 0 30px -2px rgba(0, 0, 0, 0.5);
 
   --base-height: calc(var(--100dvh) - var(--header-top));
 
@@ -624,20 +617,5 @@
 
   body.footer-nav-ipad & {
     height: calc(var(--base-height) - var(--footer-nav-height));
-  }
-
-  transform: translateX(var(--offset));
-  @media (prefers-reduced-motion: no-preference) {
-    &.animate {
-      transition: transform 0.1s linear;
-    }
-  }
-  &.moving,
-  &.animate {
-    // PERF: only render first 20 items in a list to allow for smooth
-    // pan events
-    li:nth-child(n + 20) {
-      display: none;
-    }
   }
 }

@@ -1543,7 +1543,6 @@ nl:
     must_approve_users: "Medewerkers moeten alle nieuwe gebruikersaccounts goedkeuren voordat deze de website mogen bezoeken."
     invite_code: "Gebruiker moet deze code intypen voor accountregistratie, genegeerd wanneer leeg (niet hoofdlettergevoelig)"
     approve_suspect_users: "Verdachte gebruikers toevoegen aan de wachtrij voor beoordeling. Verdachte gebruikers hebben een bio/website ingevoerd, maar hebben geen leesactiviteit."
-    review_every_post: "Alle berichten moeten worden beoordeeld. WAARSCHUWING! NIET AANBEVOLEN VOOR DRUKKE WEBSITES."
     pending_users_reminder_delay_minutes: "Moderators informeren wanneer nieuwe gebruikers langer dan dit aantal uren op goedkeuring wachten. Stel dit in op -1 om meldingen uit te schakelen."
     persistent_sessions: "Gebruikers blijven aangemeld wanneer de webbrowser wordt gesloten"
     maximum_session_age: "Gebruikers blijven (n) uur na hun laatste bezoek aangemeld"
@@ -2163,7 +2162,6 @@ nl:
     navigation_menu: "Bepaal welk navigatiemenu u wilt gebruiken. Zijbalk- en kopnavigatie kunnen door gebruikers worden aangepast. Een legacyoptie is beschikbaar voor terugwaartse compatibiliteit."
     default_navigation_menu_categories: "De geselecteerde categorieën worden standaard weergegeven in de sectie Categorieën van het navigatiemenu."
     default_navigation_menu_tags: "De geselecteerde tags worden standaard weergegeven in de sectie Tags van het navigatiemenu."
-    enable_experimental_hashtag_autocomplete: "EXPERIMENTEEL: gebruik het nieuwe automatische #hashtag-aanvulsysteem voor categorieën en tags dat het geselecteerde item anders weergeeft en de zoekfunctie verbetert"
     experimental_new_new_view_groups: 'EXPERIMENTEEL: schakelt een nieuwe topicslijst in die ongelezen en nieuwe topics combineert en maak de link "Alles" ernaartoe in de zijbalk.'
     enable_custom_sidebar_sections: "EXPERIMENTEEL: schakelt aangepaste zijbalksecties in"
     experimental_topics_filter: "EXPERIMENTEEL: schakelt de filterroute voor experimentele topics in op /filter"

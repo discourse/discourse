@@ -3,6 +3,7 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { next } from "@ember/runloop";
+import $ from "jquery";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import DiscourseURL from "discourse/lib/url";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";

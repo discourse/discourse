@@ -2,11 +2,9 @@ import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
 import { inject as service } from "@ember/service";
+import $ from "jquery";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import PanEvents, {
-  SWIPE_DISTANCE_THRESHOLD,
-  SWIPE_VELOCITY_THRESHOLD,
-} from "discourse/mixins/pan-events";
+import SwipeEvents from "discourse/lib/swipe-events";
 import discourseDebounce from "discourse-common/lib/debounce";
 import discourseLater from "discourse-common/lib/later";
 import { bind, observes } from "discourse-common/utils/decorators";
@@ -15,7 +13,7 @@ import JumpToPost from "./modal/jump-to-post";
 const MIN_WIDTH_TIMELINE = 925;
 const MIN_HEIGHT_TIMELINE = 325;
 
-export default Component.extend(PanEvents, {
+export default Component.extend({
   modal: service(),
 
   classNameBindings: [
@@ -24,9 +22,9 @@ export default Component.extend(PanEvents, {
   ],
   composerOpen: null,
   info: null,
-  isPanning: false,
   canRender: true,
   _lastTopicId: null,
+  _swipeEvents: null,
 
   init() {
     this._super(...arguments);
@@ -110,7 +108,7 @@ export default Component.extend(PanEvents, {
     this._checkSize();
   },
 
-  _collapseFullscreen() {
+  _collapseFullscreen(delay = 500) {
     if (this.get("info.topicProgressExpanded")) {
       $(".timeline-fullscreen").removeClass("show");
       discourseLater(() => {
@@ -120,7 +118,7 @@ export default Component.extend(PanEvents, {
 
         this.set("info.topicProgressExpanded", false);
         this._checkSize();
-      }, 500);
+      }, delay);
     }
   },
 
@@ -136,67 +134,80 @@ export default Component.extend(PanEvents, {
     }
   },
 
-  _handlePanDone(offset, event) {
-    const $timelineContainer = $(".timeline-container");
-    const maxOffset = parseInt($timelineContainer.css("height"), 10);
-
-    $timelineContainer.addClass("animate");
-    if (this._shouldPanClose(event)) {
-      $timelineContainer.css("--offset", `${maxOffset}px`);
-      discourseLater(() => {
-        this._collapseFullscreen();
-        $timelineContainer.removeClass("animate");
-      }, 200);
-    } else {
-      $timelineContainer.css("--offset", 0);
-      discourseLater(() => {
-        $timelineContainer.removeClass("animate");
-      }, 200);
-    }
-  },
-
-  _shouldPanClose(e) {
-    return (
-      (e.deltaY > SWIPE_DISTANCE_THRESHOLD &&
-        e.velocityY > -SWIPE_VELOCITY_THRESHOLD) ||
-      e.velocityY > SWIPE_VELOCITY_THRESHOLD
-    );
-  },
-
-  panStart(e) {
+  @bind
+  onSwipeStart(event) {
+    const e = event.detail;
     const target = e.originalEvent.target;
 
     if (
       target.classList.contains("docked") ||
       !target.closest(".timeline-container")
     ) {
+      event.preventDefault();
       return;
     }
 
     e.originalEvent.preventDefault();
     const centeredElement = document.elementFromPoint(e.center.x, e.center.y);
     if (centeredElement.closest(".timeline-scrollarea-wrapper")) {
-      this.isPanning = false;
+      event.preventDefault();
     } else if (e.direction === "up" || e.direction === "down") {
-      this.isPanning = true;
+      this.movingElement = document.querySelector(".timeline-container");
     }
   },
 
-  panEnd(e) {
-    if (!this.isPanning) {
-      return;
-    }
-    e.originalEvent.preventDefault();
-    this.isPanning = false;
-    this._handlePanDone(e.deltaY, e);
+  @bind
+  onSwipeCancel() {
+    let durationMs = this._swipeEvents.getMaxAnimationTimeMs();
+    const timelineContainer = document.querySelector(".timeline-container");
+    timelineContainer.animate([{ transform: `translate3d(0, 0, 0)` }], {
+      duration: durationMs,
+      fill: "forwards",
+      easing: "ease-out",
+    });
   },
 
-  panMove(e) {
-    if (!this.isPanning) {
-      return;
+  @bind
+  onSwipeEnd(event) {
+    const e = event.detail;
+    const timelineContainer = document.querySelector(".timeline-container");
+    const maxOffset = timelineContainer.offsetHeight;
+
+    let durationMs = this._swipeEvents.getMaxAnimationTimeMs();
+    if (this._swipeEvents.shouldCloseMenu(e, "bottom")) {
+      const distancePx = maxOffset - this.pxClosed;
+      durationMs = this._swipeEvents.getMaxAnimationTimeMs(
+        distancePx / Math.abs(e.velocityY)
+      );
+      timelineContainer
+        .animate([{ transform: `translate3d(0, ${maxOffset}px, 0)` }], {
+          duration: durationMs,
+          fill: "forwards",
+        })
+        .finished.then(() => this._collapseFullscreen(0));
+    } else {
+      const distancePx = this.pxClosed;
+      durationMs = this._swipeEvents.getMaxAnimationTimeMs(
+        distancePx / Math.abs(e.velocityY)
+      );
+      timelineContainer.animate([{ transform: `translate3d(0, 0, 0)` }], {
+        duration: durationMs,
+        fill: "forwards",
+        easing: "ease-out",
+      });
     }
+  },
+
+  @bind
+  onSwipe(event) {
+    const e = event.detail;
     e.originalEvent.preventDefault();
-    $(".timeline-container").css("--offset", `${Math.max(0, e.deltaY)}px`);
+    this.pxClosed = Math.max(0, e.deltaY);
+
+    this.movingElement.animate(
+      [{ transform: `translate3d(0, ${this.pxClosed}px, 0)` }],
+      { fill: "forwards" }
+    );
   },
 
   didInsertElement() {
@@ -219,6 +230,14 @@ export default Component.extend(PanEvents, {
     }
 
     this._checkSize();
+    this._swipeEvents = new SwipeEvents(this.element);
+    if (this.site.mobileView) {
+      this._swipeEvents.addTouchListeners();
+      this.element.addEventListener("swipestart", this.onSwipeStart);
+      this.element.addEventListener("swipeend", this.onSwipeEnd);
+      this.element.addEventListener("swipecancel", this.onSwipeCancel);
+      this.element.addEventListener("swipe", this.onSwipe);
+    }
   },
 
   willDestroyElement() {
@@ -237,6 +256,13 @@ export default Component.extend(PanEvents, {
       this.appEvents.off("composer:resize-ended", this, this.composerOpened);
       this.appEvents.off("composer:closed", this, this.composerClosed);
       $("#reply-control").off("div-resized", this._checkSize);
+    }
+    if (this.site.mobileView) {
+      this.element.removeEventListener("swipestart", this.onSwipeStart);
+      this.element.removeEventListener("swipeend", this.onSwipeEnd);
+      this.element.removeEventListener("swipecancel", this.onSwipeCancel);
+      this.element.removeEventListener("swipe", this.onSwipe);
+      this._swipeEvents.removeTouchListeners();
     }
   },
 });

@@ -384,6 +384,8 @@ sr:
           title: "Kada se član osoblja odluči da preduzme akciju, zastavi će biti dodeljen bonus."
         user_accuracy_bonus:
           name: "tačnost člana"
+      revise_and_reject_post:
+        reason: "Razlog"
       awaiting_approval: "Čeka odobrenje"
       delete: "Obriši"
       settings:
@@ -745,6 +747,8 @@ sr:
         edit: "Izmeni"
         security_key:
           save: "Sačuvaj"
+      passkeys:
+        save: "Sačuvaj"
       change_about:
         title: "Promijeni O meni"
       change_username:

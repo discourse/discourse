@@ -1,26 +1,27 @@
-// TODO: This code should be moved to lib, it was heavily modified by us over the years, and mostly written by us
+import $ from "jquery";
+
+// This was heavily modified by us over the years, and mostly written by us
 // except for the little snippet from StackOverflow
 //
 // http://stackoverflow.com/questions/263743/how-to-get-caret-position-in-textarea
-var clone = null;
+let clone = null;
 
-$.fn.caret = function(elem) {
-  var getCaret = function(el) {
-    if (el.selectionStart) {
-      return el.selectionStart;
-    }
-    return 0;
-  };
+function getCaret(el) {
+  if (el.selectionStart) {
+    return el.selectionStart;
+  }
+  return 0;
+}
+
+export function caret(elem) {
   return getCaret(elem || this[0]);
-};
+}
 
 /**
-  This is a jQuery plugin to retrieve the caret position in a textarea
-
-  @module $.fn.caretPosition
+  retrieve the caret position in a textarea
 **/
-$.fn.caretPosition = function(options) {
-  var after,
+export function caretPosition(options) {
+  let after,
     before,
     getStyles,
     guard,
@@ -32,17 +33,15 @@ $.fn.caretPosition = function(options) {
     p,
     pPos,
     pos,
-    span,
     styles,
     textarea,
     val;
   if (clone) {
     clone.remove();
   }
-  span = $("#pos span");
   textarea = $(this);
 
-  getStyles = function(el) {
+  getStyles = function (el) {
     if (el.currentStyle) {
       return el.currentStyle;
     } else {
@@ -50,7 +49,7 @@ $.fn.caretPosition = function(options) {
     }
   };
 
-  important = function(prop) {
+  important = function (prop) {
     return styles.getPropertyValue(prop);
   };
 
@@ -58,7 +57,7 @@ $.fn.caretPosition = function(options) {
   clone = $("<div><p></p></div>").appendTo("body");
   p = clone.find("p");
 
-  var isRTL = $("html").hasClass("rtl");
+  let isRTL = $("html").hasClass("rtl");
   clone.css({
     border: "1px solid black",
     padding: important("padding"),
@@ -68,7 +67,7 @@ $.fn.caretPosition = function(options) {
     "word-wrap": "break-word",
     position: "absolute",
     left: isRTL ? "auto" : "-7000px",
-    right: isRTL ? "-7000px" : "auto"
+    right: isRTL ? "-7000px" : "auto",
   });
 
   p.css({
@@ -78,7 +77,7 @@ $.fn.caretPosition = function(options) {
     "letter-spacing": important("letter-spacing"),
     "font-family": important("font-family"),
     "font-size": important("font-size"),
-    "line-height": important("line-height")
+    "line-height": important("line-height"),
   });
 
   clone.width(textarea.width());
@@ -87,7 +86,7 @@ $.fn.caretPosition = function(options) {
   pos =
     options && (options.pos || options.pos === 0)
       ? options.pos
-      : $.caret(textarea[0]);
+      : getCaret(textarea[0]);
 
   val = textarea.val().replace("\r", "");
   if (options && options.key) {
@@ -102,18 +101,20 @@ $.fn.caretPosition = function(options) {
     insertSpaceAfterBefore = true;
   }
 
-  guard = function(v) {
-    var buf;
+  guard = function (v) {
+    let buf;
     buf = v.replace(/</g, "&lt;");
     buf = buf.replace(/>/g, "&gt;");
     buf = buf.replace(/[ ]/g, "&#x200b;&nbsp;&#x200b;");
     return buf.replace(/\n/g, "<br />");
   };
 
-  makeCursor = function(pos, klass, color) {
-    var l;
-    l = val.substring(pos, pos + 1);
-    if (l === "\n") return "<br>";
+  makeCursor = function (index, klass, color) {
+    let l;
+    l = val.substring(index, index + 1);
+    if (l === "\n") {
+      return "<br>";
+    }
     return (
       "<span class='" +
       klass +
@@ -152,11 +153,11 @@ $.fn.caretPosition = function(options) {
   }
 
   pPos = p.offset();
-  var position = {
+  let position = {
     left: pos.left - pPos.left,
-    top: pos.top - pPos.top - clone.scrollTop()
+    top: pos.top - pPos.top - clone.scrollTop(),
   };
 
   clone.remove();
   return position;
-};
+}

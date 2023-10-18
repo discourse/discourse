@@ -187,6 +187,8 @@ be:
     review:
       explain:
         total: "агульны"
+      revise_and_reject_post:
+        reason: "прычына"
       delete: "Выдаліць"
       settings:
         saved: "Захавана"
@@ -535,6 +537,8 @@ be:
           iphone_default_name: "iPhone"
           android_default_name: "Android"
           save: "Захаваць"
+      passkeys:
+        save: "захаваць"
       change_about:
         title: "Змяніць інфу аба мяне"
       change_username:

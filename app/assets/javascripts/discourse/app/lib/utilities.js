@@ -1,4 +1,5 @@
 import Handlebars from "handlebars";
+import $ from "jquery";
 import toMarkdown from "discourse/lib/to-markdown";
 import { capabilities } from "discourse/services/capabilities";
 import * as AvatarUtils from "discourse-common/lib/avatar-utils";

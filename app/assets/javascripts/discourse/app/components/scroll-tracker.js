@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import { next } from "@ember/runloop";
+import $ from "jquery";
 import Scrolling from "discourse/mixins/scrolling";
 
 export default Component.extend(Scrolling, {

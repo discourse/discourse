@@ -321,6 +321,9 @@ th:
         total: "ทั้งหมด"
         trust_level_bonus:
           name: "ระดับความไว้ใจ"
+      revise_and_reject_post:
+        reason: "เหตุผล"
+        optional: "ทางเลือก"
       awaiting_approval: "กำลังรอการยืนยัน"
       delete: "ลบ"
       settings:
@@ -854,6 +857,10 @@ th:
         security_key:
           register: "ลงทะเบียน"
           save: "บันทึก"
+      passkeys:
+        save: "บันทึก"
+        added_prefix: "เพิ่ม"
+        last_used_prefix: "ใช้ครั้งล่าสุด"
       change_about:
         title: "เปลี่ยนข้อมูลเกี่ยวกับฉัน"
         error: "เกิดความผิดพลาดในการแก้ไขค่านี้"

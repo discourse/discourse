@@ -1,4 +1,5 @@
 import { computed } from "@ember/object";
+import $ from "jquery";
 import { ajax } from "discourse/lib/ajax";
 import { isDevelopment } from "discourse-common/config/environment";
 import { makeArray } from "discourse-common/lib/helpers";

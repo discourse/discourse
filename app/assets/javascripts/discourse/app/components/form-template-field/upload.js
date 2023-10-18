@@ -15,6 +15,8 @@ export default class FormTemplateFieldUpload extends Component.extend(
   @tracked fileUploadElementId = `${dasherize(this.id)}-uploader`;
   @tracked fileInputSelector = `#${this.fileUploadElementId}`;
 
+  type = "composer";
+
   @computed("uploading", "uploadValue")
   get uploadStatus() {
     if (!this.uploading && !this.uploadValue) {
