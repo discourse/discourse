@@ -26,9 +26,8 @@ body.wizard {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 0 !important;
     padding-top: 1.5em;
-    background-image: url(../assets/bubble-bg.png);
+    background-image: url(../assets/bubbles-bg.png);
     height: 100%;
   }
 
@@ -110,7 +109,7 @@ body.wizard {
     text-align: center;
     font-weight: 700;
     color: var(--primary-high);
-    text-shadow: 1px 1px 12px white;
+    text-shadow: 1px 1px 12px var(--secondary);
   }
 
   &__step-description {
