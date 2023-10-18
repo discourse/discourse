@@ -37,6 +37,13 @@ module.exports = function (defaults) {
       // This forces the use of `fast-sourcemap-concat` which works in production.
       enabled: true,
     },
+    autoImport: {
+      webpack: {
+        optimization: {
+          moduleIds: "size", // Consistent module references https://github.com/ef4/ember-auto-import/issues/478#issuecomment-1000526638
+        },
+      },
+    },
     fingerprint: {
       // Handled by Rails asset pipeline
       enabled: false,
