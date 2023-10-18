@@ -1742,14 +1742,13 @@
     "@types/ember__utils" "*"
     "@types/rsvp" "*"
 
-"@types/ember__application@*", "@types/ember__application@^4.0.8":
-  version "4.0.8"
-  resolved "https://registry.yarnpkg.com/@types/ember__application/-/ember__application-4.0.8.tgz#e51a4a5a57cb9ffb46d660f73d6975a52f91e672"
-  integrity sha512-ruOQCPO4NrGsraja52wbu0lX/oXQxPvUc6pNr7v/5Lix6UdV3jkP9RW3HwWljMEj48gcCvIwuTt0HfIha4T0GQ==
+"@types/ember__application@*", "@types/ember__application@^4.0.9":
+  version "4.0.9"
+  resolved "https://registry.yarnpkg.com/@types/ember__application/-/ember__application-4.0.9.tgz#5d22f5e5f1b50ca59dd59ed2772710af60ab11d8"
+  integrity sha512-zNzwzxuLZrkOLvmfassiCY6vF5LSIIaKnZOzs6hv802pr0FGbUsnng7g21UY65s4X4AXmjH5WLVQBLFZYB4Kmg==
   dependencies:
     "@glimmer/component" "^1.1.0"
     "@types/ember" "*"
-    "@types/ember__application" "*"
     "@types/ember__engine" "*"
     "@types/ember__object" "*"
     "@types/ember__owner" "*"

@@ -26,7 +26,7 @@
     "@embroider/test-setup": "^3.0.2",
     "@glimmer/component": "^1.1.2",
     "@types/ember": "^4.0.6",
-    "@types/ember__application": "^4.0.8",
+    "@types/ember__application": "^4.0.9",
     "@types/ember__array": "^4.0.6",
     "@types/ember__component": "^4.0.18",
     "@types/ember__controller": "^4.0.8",
