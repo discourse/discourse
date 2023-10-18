@@ -323,7 +323,7 @@ acceptance(
       );
       await durationDropdown.expand();
       await durationDropdown.selectRowByIndex(0);
-      await click(".modal-footer .btn-primary");
+      await click(".d-modal__footer .btn-primary");
       await notificationLevelDropdown.expand();
       assert.strictEqual(
         notificationLevelDropdown.selectedRow().value(),

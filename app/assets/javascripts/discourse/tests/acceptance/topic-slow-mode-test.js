@@ -67,7 +67,7 @@ acceptance("Topic - Slow Mode - enabled", function (needs) {
     await click(".future-date-input-selector-header");
 
     assert.strictEqual(
-      query("div.modal-footer button.btn-primary span").innerText,
+      query("div.d-modal__footer button.btn-primary span").innerText,
       I18n.t("topic.slow_mode_update.enable"),
       "shows 'Enable' button when slow mode is disabled"
     );
@@ -78,7 +78,7 @@ acceptance("Topic - Slow Mode - enabled", function (needs) {
     await click(".future-date-input-selector-header");
 
     assert.strictEqual(
-      query("div.modal-footer button.btn-primary span").innerText,
+      query("div.d-modal__footer button.btn-primary span").innerText,
       I18n.t("topic.slow_mode_update.update"),
       "shows 'Update' button when slow mode is enabled"
     );
