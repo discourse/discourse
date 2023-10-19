@@ -38,6 +38,9 @@ module.exports = function (defaults) {
       enabled: true,
     },
     autoImport: {
+      // TODO: Ideally we shouldn't be relying on autoImport at all, but this tweak is still necessary for script/check_reproducible_assets.rb to pass
+      // Sounds like it's related to the `app.addonPostprocessTree` workaround we use below. Once that's removed, we should be
+      // able to remove this.
       webpack: {
         optimization: {
           moduleIds: "size", // Consistent module references https://github.com/ef4/ember-auto-import/issues/478#issuecomment-1000526638
