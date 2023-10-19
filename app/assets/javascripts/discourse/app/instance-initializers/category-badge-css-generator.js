@@ -1,5 +1,5 @@
-import Category from "discourse/models/category";
 import { get } from "@ember/object";
+import Category from "discourse/models/category";
 
 export default {
   after: "category-color-css-generator",
@@ -18,9 +18,9 @@ export default {
 
     const generatedCssClasses = this.site.categories.map((category) => {
       let parentCat = Category.findById(get(category, "parent_category_id"));
-      let badgeClass = `.badge-category.badge-category-${category.id}:before { background: var(--category-${category.id}-color); }`;
+      let badgeClass = `.badge-category.badge-category-${category.id} { --category-badge-color: var(--category-${category.id}-color); --category-badge-text-color: #${category.text_color} }`;
       if (parentCat) {
-        badgeClass += `.badge-category.badge-subcategory-${parentCat.id}:before { background: linear-gradient(90deg, var(--category-${parentCat.id}-color) 50%, var(--category-${category.id}-color) 50%); }`;
+        badgeClass += `.badge-category.badge-subcategory-${parentCat.id} { --parent-category-badge-color: var(--category-${parentCat.id}-color); }`;
       }
       return badgeClass;
     });
