@@ -52,6 +52,7 @@ class ApplicationController < ActionController::Base
                if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
   after_action :add_noindex_header_to_non_canonical, if: :spa_boot_request?
   after_action :set_cross_origin_opener_policy_header, if: :spa_boot_request?
+  after_action :clean_xml, if: :is_feed_response?
   around_action :link_preload, if: -> { spa_boot_request? && GlobalSetting.preload_link_header }
 
   HONEYPOT_KEY ||= "HONEYPOT_KEY"
@@ -968,6 +969,10 @@ class ApplicationController < ActionController::Base
     request.format.atom? || request.format.rss?
   end
 
+  def is_feed_response?
+    request.get? && response&.content_type&.match?(/(rss|atom)/)
+  end
+
   def add_noindex_header
     if request.get? && !response.headers["X-Robots-Tag"]
       if SiteSetting.allow_index_in_robots_txt
@@ -1119,5 +1124,9 @@ class ApplicationController < ActionController::Base
     else
       default
     end
+  end
+
+  def clean_xml
+    response.body.gsub!(XmlCleaner::INVALID_CHARACTERS, "")
   end
 end
