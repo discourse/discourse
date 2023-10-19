@@ -5,7 +5,9 @@ export default class BaseCustomSidebarPanel {
   sections = [];
 
   /**
-   * @returns {boolean} Controls whether the panel is hidden.
+   * @returns {boolean} Controls whether the panel is hidden, which means that
+   * it will not show up in combined sidebar mode, and its switch button will
+   * never show either.
    */
   get hidden() {
     return false;

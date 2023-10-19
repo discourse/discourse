@@ -11,7 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added `hidden` option to `addSidebarPanel`.
+- Added `hidden` option to `addSidebarPanel`, this can be used to remove the panel from combined sidebar mode as well as hiding its switch button. Useful for cases where only one sidebar should be shown at a time regardless of other panels.
+- Added `getSidebarPanel` function, which returns the current sidebar panel object for comparison.
 
 ## [1.14.0] - 2023-10-06
 

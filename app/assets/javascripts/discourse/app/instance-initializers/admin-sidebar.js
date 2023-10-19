@@ -46,7 +46,6 @@ function defineAdminSectionLink(BaseCustomSidebarSectionLink) {
 
 function defineAdminSection(
   adminNavSectionData,
-  container,
   BaseCustomSidebarSection,
   adminSectionLinkClass
 ) {
@@ -164,7 +163,6 @@ export default {
 
             return defineAdminSection(
               adminNavSectionData,
-              api.container,
               BaseCustomSidebarSection,
               adminSectionLinkClass
             );
