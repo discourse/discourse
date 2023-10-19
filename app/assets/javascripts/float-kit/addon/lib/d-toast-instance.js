@@ -46,6 +46,11 @@ export default class DToastInstance {
 
   @action
   cancelAutoClose() {
+    if (this.options.forceAutoClose) {
+      // Return early so that we do not cancel the autoClose timer.
+      return;
+    }
+
     cancel(this.autoCloseHandler);
   }
 }
