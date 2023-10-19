@@ -8,7 +8,7 @@ import { registerRawHelper } from "discourse-common/lib/helpers";
 **/
 
 registerRawHelper("format-date", formatDate);
-export default function formatDate(val, params) {
+export default function formatDate(val, params = {}) {
   let leaveAgo,
     format = "medium",
     title = true;
