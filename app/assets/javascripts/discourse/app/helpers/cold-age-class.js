@@ -1,11 +1,13 @@
-import { helperContext, registerUnbound } from "discourse-common/lib/helpers";
+import { helperContext, registerRawHelper } from "discourse-common/lib/helpers";
 
 function daysSinceEpoch(dt) {
   // 1000 * 60 * 60 * 24 = days since epoch
   return dt.getTime() / 86400000;
 }
 
-registerUnbound("cold-age-class", function (dt, params) {
+registerRawHelper("cold-age-class", coldAgeClass);
+
+export default function coldAgeClass(dt, params = {}) {
   let className = params["class"] || "age";
 
   if (!dt) {
@@ -30,6 +32,4 @@ registerUnbound("cold-age-class", function (dt, params) {
   }
 
   return className;
-});
-
-export { daysSinceEpoch };
+}
