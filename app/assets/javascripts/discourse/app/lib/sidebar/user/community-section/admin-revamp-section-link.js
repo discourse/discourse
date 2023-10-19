@@ -1,6 +1,6 @@
 import { inject as service } from "@ember/service";
-import I18n from "discourse-i18n";
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
+import I18n from "discourse-i18n";
 
 export default class AdminRevampSectionLink extends BaseSectionLink {
   @service siteSettings;
