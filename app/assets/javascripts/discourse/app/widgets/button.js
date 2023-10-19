@@ -3,7 +3,7 @@ import { h } from "virtual-dom";
 import DiscourseURL from "discourse/lib/url";
 import { createWidget } from "discourse/widgets/widget";
 import { iconNode } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export const ButtonClass = {
   tagName: "button.widget-button.btn",

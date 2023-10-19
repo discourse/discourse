@@ -10,7 +10,7 @@ import computed, {
   debounce,
   observes,
 } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 
 export default Component.extend({

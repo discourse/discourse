@@ -14,7 +14,7 @@ import UsernameValidation from "discourse/mixins/username-validation";
 import { findAll as findLoginMethods } from "discourse/models/login-method";
 import getUrl from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Controller.extend(
   PasswordValidation,

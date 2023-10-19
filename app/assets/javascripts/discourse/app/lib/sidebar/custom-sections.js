@@ -1,7 +1,7 @@
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 class MainSidebarPanel {
   sections = [];

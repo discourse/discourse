@@ -7,10 +7,10 @@ import User from "discourse/models/user";
 import DiscourseRoute from "discourse/routes/discourse";
 import getURL from "discourse-common/lib/get-url";
 import { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 import StartBackupModal from "admin/components/modal/start-backup";
 import Backup from "admin/models/backup";
 import BackupStatus from "admin/models/backup-status";
-import I18n from "I18n";
 
 const LOG_CHANNEL = "/admin/backups/logs";
 

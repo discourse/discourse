@@ -3,7 +3,7 @@ import { computed } from "@ember/object";
 import { not, readOnly } from "@ember/object/computed";
 import AssociatedGroup from "discourse/models/associated-group";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
   tokenSeparator: "|",

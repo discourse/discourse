@@ -55,3 +55,6 @@ updates:
       embroider:
         patterns:
           - "@embroider*"
+      types:
+        patterns:
+          - "@types/*"

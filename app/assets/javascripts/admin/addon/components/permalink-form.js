@@ -5,8 +5,8 @@ import { inject as service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import { fmt } from "discourse/lib/computed";
 import discourseComputed, { bind } from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 import Permalink from "admin/models/permalink";
-import I18n from "I18n";
 
 @tagName("")
 export default class PermalinkForm extends Component {

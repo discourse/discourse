@@ -12,7 +12,7 @@ import {
   paste,
   query,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 let uploadNumber = 1;
 

@@ -16,7 +16,7 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 acceptance("Sidebar - Plugin API", function (needs) {
   needs.user({});

@@ -7,7 +7,7 @@ import DiscourseURL, {
   getEditCategoryUrl,
 } from "discourse/lib/url";
 import Category from "discourse/models/category";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import ComboBoxComponent from "select-kit/components/combo-box";
 
 export const NO_CATEGORIES_ID = "no-categories";

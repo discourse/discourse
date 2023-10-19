@@ -1549,7 +1549,7 @@ RSpec.describe PostRevisor do
 
           expect(image5.reload.secure).to eq(false)
           expect(image5.security_last_changed_reason).to eq(
-            "access control post dictates security | source: post revisor",
+            "access control post dictates security | source: post processor",
           )
         end
 
@@ -1563,7 +1563,7 @@ RSpec.describe PostRevisor do
 
           expect(image5.reload.secure).to eq(true)
           expect(image5.security_last_changed_reason).to eq(
-            "access control post dictates security | source: post revisor",
+            "access control post dictates security | source: post processor",
           )
         end
       end

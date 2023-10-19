@@ -5,7 +5,7 @@ import { setting } from "discourse/lib/computed";
 import { SEARCH_PRIORITIES } from "discourse/lib/constants";
 import Group from "discourse/models/group";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const categorySortCriteria = [];
 export function addCategorySortCriteria(criteria) {

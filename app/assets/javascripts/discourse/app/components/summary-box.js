@@ -7,7 +7,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { shortDateNoYear } from "discourse/lib/formatter";
 import { cook } from "discourse/lib/text";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const MIN_POST_READ_TIME = 4;
 

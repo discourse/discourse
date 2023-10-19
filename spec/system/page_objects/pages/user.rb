@@ -52,28 +52,6 @@ module PageObjects
         self
       end
 
-      def has_reviewable_flagged_posts_path?(user)
-        params = {
-          status: "approved",
-          sort_order: "score",
-          type: "ReviewableFlaggedPost",
-          username: user.username,
-        }
-        page.has_current_path?("/review?#{params.to_query}")
-      end
-
-      def staff_info_flagged_posts_counter
-        page.find(".staff-counters .flagged-posts")
-      end
-
-      def has_staff_info_flagged_posts_count?(count:)
-        staff_info_flagged_posts_counter.text.to_i == count
-      end
-
-      def has_no_staff_info_flagged_posts_counter?
-        page.has_no_css?(".staff-counters .flagged-posts")
-      end
-
       private
 
       def primary_navigation_selector(name)

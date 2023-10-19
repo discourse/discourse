@@ -4,7 +4,7 @@ import { reads } from "@ember/object/computed";
 import { guidFor } from "@ember/object/internals";
 import { dasherize } from "@ember/string";
 import { makeArray } from "discourse-common/lib/helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import UtilsMixin from "select-kit/mixins/utils";
 
 export default Component.extend(UtilsMixin, {

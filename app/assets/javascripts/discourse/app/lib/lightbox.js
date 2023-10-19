@@ -9,7 +9,7 @@ import deprecated from "discourse-common/lib/deprecated";
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { helperContext } from "discourse-common/lib/helpers";
 import { renderIcon } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export async function setupLightboxes({ container, selector }) {
   const lightboxService = getOwnerWithFallback(this).lookup("service:lightbox");

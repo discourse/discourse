@@ -17,7 +17,7 @@ import {
 } from "discourse/routes/build-topic-route";
 import DiscourseRoute from "discourse/routes/discourse";
 import { makeArray } from "discourse-common/lib/helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const NONE = "none";
 const ALL = "all";

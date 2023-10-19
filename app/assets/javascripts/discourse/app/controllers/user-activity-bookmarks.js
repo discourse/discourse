@@ -8,7 +8,7 @@ import { ajax } from "discourse/lib/ajax";
 import Bookmark from "discourse/models/bookmark";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Controller.extend({
   queryParams: ["q"],

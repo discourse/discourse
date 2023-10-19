@@ -6,7 +6,7 @@ import Category from "discourse/models/category";
 import getURL from "discourse-common/lib/get-url";
 import { helperContext, registerUnbound } from "discourse-common/lib/helpers";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 let _renderer = defaultCategoryLinkRenderer;
 

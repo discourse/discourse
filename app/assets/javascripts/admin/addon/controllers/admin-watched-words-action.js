@@ -6,9 +6,9 @@ import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { fmt } from "discourse/lib/computed";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 import WatchedWordTestModal from "admin/components/modal/watched-word-test";
 import WatchedWord from "admin/models/watched-word";
-import I18n from "I18n";
 
 export default class AdminWatchedWordsActionController extends Controller {
   @service dialog;

@@ -1,6 +1,6 @@
 import TextField from "discourse/components/text-field";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const ALLOWED_KEYS = [
   "Enter",

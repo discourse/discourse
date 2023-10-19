@@ -1,5 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default DiscourseRoute.extend({
   titleToken() {

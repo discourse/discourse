@@ -1,5 +1,5 @@
 import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export function outputExportResult(result) {
   const dialog = getOwnerWithFallback(this).lookup("service:dialog");

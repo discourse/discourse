@@ -6,7 +6,7 @@ import { isBlank } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import ApiKeyUrlsModal from "../components/modal/api-key-urls";
 
 export default class AdminApiKeysNewController extends Controller {

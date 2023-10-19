@@ -8,8 +8,8 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import copyText from "discourse/lib/copy-text";
 import discourseLater from "discourse-common/lib/later";
 import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "discourse-i18n";
 import AdminUser from "admin/models/admin-user";
-import I18n from "I18n";
 
 @classNames("ip-lookup")
 export default class IpLookup extends Component {

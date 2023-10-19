@@ -12,7 +12,7 @@ import CanCheckEmails from "discourse/mixins/can-check-emails";
 import { findAll } from "discourse/models/login-method";
 import getURL from "discourse-common/lib/get-url";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Controller.extend(CanCheckEmails, {
   dialog: service(),

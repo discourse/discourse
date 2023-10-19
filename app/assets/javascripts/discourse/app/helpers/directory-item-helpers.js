@@ -1,7 +1,7 @@
 import { htmlSafe } from "@ember/template";
 import { number } from "discourse/lib/formatter";
 import { registerUnbound } from "discourse-common/lib/helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 registerUnbound("directory-item-label", function (args) {
   // Args should include key/values { item, column }

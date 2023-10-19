@@ -1,6 +1,6 @@
 import { action, computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 
 const UNPINNED = "unpinned";
