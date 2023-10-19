@@ -128,7 +128,7 @@ acceptance("User Preferences - Second Factor", function (needs) {
     );
 
     await click(".security-key-dropdown .select-kit-header");
-    await click("li[data-name='Disable'");
+    await click("li[data-name='Disable']");
 
     assert.strictEqual(
       query("#dialog-title").innerText.trim(),

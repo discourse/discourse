@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { getOwner } from "@ember/application";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
@@ -8,6 +7,7 @@ import DButton from "discourse/components/d-button";
 import ConfirmSession from "discourse/components/dialog-messages/confirm-session";
 import PasskeyOptionsDropdown from "discourse/components/user-preferences/passkey-options-dropdown";
 import RenamePasskey from "discourse/components/user-preferences/rename-passkey";
+import formatDate from "discourse/helpers/format-date";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bufferToBase64, stringToBuffer } from "discourse/lib/webauthn";
 import I18n from "discourse-i18n";
@@ -20,25 +20,15 @@ export default class UserPasskeys extends Component {
 
   instructions = I18n.t("user.passkeys.short_description");
   title = I18n.t("user.passkeys.title");
-  formatDate = getOwner(this).resolveRegistration("helper:format-date");
   addedPrefix = I18n.t("user.passkeys.added_prefix");
   lastUsedPrefix = I18n.t("user.passkeys.last_used_prefix");
   neverUsed = I18n.t("user.passkeys.never_used");
 
-  isCurrentUser() {
-    return this.currentUser.id === this.args.model.id;
-  }
-
-  passkeyDefaultName() {
-    if (this.capabilities.isSafari) {
-      return I18n.t("user.passkeys.name.icloud_keychain");
-    }
-
-    if (this.capabilities.isAndroid || this.capabilities.isChrome) {
-      return I18n.t("user.passkeys.name.google_password_manager");
-    }
-
-    return I18n.t("user.passkeys.name.default");
+  get showActions() {
+    return (
+      this.currentUser.id === this.args.model.id &&
+      !this.capabilities.isAppWebview
+    );
   }
 
   async createPasskey() {
@@ -89,7 +79,7 @@ export default class UserPasskeys extends Component {
         type: credential.type,
         attestation: bufferToBase64(credential.response.attestationObject),
         clientData: bufferToBase64(credential.response.clientDataJSON),
-        name: this.passkeyDefaultName(),
+        name: I18n.t("user.passkeys.name.default"),
       };
 
       const registrationResponse = await this.args.model.registerPasskey(
@@ -111,6 +101,8 @@ export default class UserPasskeys extends Component {
         bodyComponentModel: registrationResponse,
       });
     } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
       this.errorMessage =
         error.name === "InvalidStateError"
           ? I18n.t("user.passkeys.already_added_error")
@@ -200,7 +192,7 @@ export default class UserPasskeys extends Component {
                 <span class="prefix">
                   {{this.addedPrefix}}
                 </span>
-                {{this.formatDate
+                {{formatDate
                   passkey.created_at
                   format="medium"
                   leaveAgo="true"
@@ -211,7 +203,7 @@ export default class UserPasskeys extends Component {
                   <span class="prefix">
                     {{this.lastUsedPrefix}}
                   </span>
-                  {{this.formatDate
+                  {{formatDate
                     passkey.last_used
                     format="medium"
                     leaveAgo="true"
@@ -221,7 +213,7 @@ export default class UserPasskeys extends Component {
                 {{/if}}
               </div>
             </div>
-            {{#if this.isCurrentUser}}
+            {{#if this.showActions}}
               <div class="passkey-right">
                 <div class="actions">
                   <PasskeyOptionsDropdown
@@ -239,15 +231,15 @@ export default class UserPasskeys extends Component {
         {{/each}}
       </div>
 
-      <div class="controls pref-passkeys__add">
-        {{#if this.isCurrentUser}}
+      {{#if this.showActions}}
+        <div class="controls pref-passkeys__add">
           <DButton
             @action={{this.addPasskey}}
             @icon="plus"
             @label="user.passkeys.add_passkey"
           />
-        {{/if}}
-      </div>
+        </div>
+      {{/if}}
     </div>
   </template>
 }

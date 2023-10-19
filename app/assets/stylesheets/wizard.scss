@@ -22,13 +22,14 @@ body.wizard {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-top: 1.5em;
+    background-image: url(../assets/bubbles-bg.png);
+    height: 100%;
   }
 
-  @media screen and (max-height: 900px) {
-    .desktop-view & {
-      #main-outlet {
-        padding-top: 0;
-      }
+  .desktop-view & {
+    #main-outlet {
+      padding-top: 0;
     }
   }
 
@@ -103,7 +104,8 @@ body.wizard {
   &__step-counter {
     text-align: center;
     font-weight: 700;
-    color: var(--primary-medium);
+    color: var(--primary-high);
+    text-shadow: 1px 1px 12px var(--secondary);
   }
 
   &__step-description {

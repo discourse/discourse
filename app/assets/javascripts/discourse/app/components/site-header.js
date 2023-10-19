@@ -220,6 +220,8 @@ const SiteHeaderComponent = MountWidget.extend(
     },
 
     willRender() {
+      this._super(...arguments);
+
       if (this.get("currentUser.staff")) {
         document.body.classList.add("staff");
       }

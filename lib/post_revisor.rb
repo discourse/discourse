@@ -311,10 +311,6 @@ class PostRevisor
     # leading to corrupt state
     QuotedPost.extract_from(@post)
 
-    # This must be done before post_process_post, because that uses
-    # post upload security status to cook URLs.
-    @post.update_uploads_secure_status(source: "post revisor")
-
     post_process_post
 
     update_topic_word_counts

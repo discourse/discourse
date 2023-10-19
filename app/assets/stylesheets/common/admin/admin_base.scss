@@ -1052,3 +1052,6 @@ a.inline-editable-field {
 @import "common/admin/admin_intro";
 @import "common/admin/admin_emojis";
 @import "common/admin/mini_profiler";
+
+// EXPERIMENTAL: Revamped admin styles, probably can be split up later down the line.
+@import "common/admin/admin_revamp";

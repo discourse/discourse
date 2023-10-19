@@ -11,7 +11,10 @@ import getURL from "discourse-common/lib/get-url";
 import { bind } from "discourse-common/utils/decorators";
 import I18n from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
-import { initSidebarState } from "discourse/plugins/chat/discourse/lib/init-sidebar-state";
+import {
+  CHAT_PANEL,
+  initSidebarState,
+} from "discourse/plugins/chat/discourse/lib/init-sidebar-state";
 
 export default {
   name: "chat-sidebar",
@@ -28,7 +31,7 @@ export default {
       api.addSidebarPanel(
         (BaseCustomSidebarPanel) =>
           class ChatSidebarPanel extends BaseCustomSidebarPanel {
-            key = "chat";
+            key = CHAT_PANEL;
             switchButtonLabel = I18n.t("sidebar.panels.chat.label");
             switchButtonIcon = "d-chat";
             switchButtonDefaultUrl = getURL("/chat");
@@ -196,7 +199,7 @@ export default {
 
             return SidebarChatChannelsSection;
           },
-          "chat"
+          CHAT_PANEL
         );
       }
 

@@ -2091,7 +2091,7 @@ RSpec.describe PostCreator do
     end
   end
 
-  describe "secure uploads uploads" do
+  describe "secure uploads" do
     fab!(:image_upload) { Fabricate(:upload, secure: true) }
     fab!(:user2) { Fabricate(:user) }
     fab!(:public_topic) { Fabricate(:topic) }
@@ -2104,12 +2104,13 @@ RSpec.describe PostCreator do
     end
 
     it "links post uploads" do
-      _public_post =
+      public_post =
         PostCreator.create(
           user,
           topic_id: public_topic.id,
-          raw: "A public post with an image.\n![](#{image_upload.short_path})",
+          raw: "A public post with an image.\n![secure image](#{image_upload.short_path})",
         )
+      expect(public_post.reload.uploads.map(&:access_control_post_id)).to eq([public_post.id])
     end
   end
 

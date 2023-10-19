@@ -193,7 +193,6 @@ class PostCreator
         update_user_counts
         create_embedded_topic
         @post.link_post_uploads
-        @post.update_uploads_secure_status(source: "post creator")
         delete_owned_bookmarks
         ensure_in_allowed_users if guardian.is_staff?
         unarchive_message if !@opts[:import_mode]
