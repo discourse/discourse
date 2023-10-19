@@ -1,6 +1,6 @@
 import { htmlSafe } from "@ember/template";
-import { renderIcon } from "discourse-common/lib/icon-library";
 import { registerRawHelper } from "discourse-common/lib/helpers";
+import { renderIcon } from "discourse-common/lib/icon-library";
 
 registerRawHelper("check-icon", checkIcon);
 

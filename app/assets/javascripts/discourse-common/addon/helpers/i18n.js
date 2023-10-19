@@ -1,5 +1,5 @@
-import I18n from "I18n";
 import { registerRawHelper } from "discourse-common/lib/helpers";
+import I18n from "discourse-i18n";
 
 registerRawHelper("i18n-yes-no", i18nYesNo);
 

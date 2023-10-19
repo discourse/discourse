@@ -1,6 +1,6 @@
-import { registerRawHelper } from "discourse-common/lib/helpers";
-import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
 import { htmlSafe } from "@ember/template";
+import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
+import { registerRawHelper } from "discourse-common/lib/helpers";
 
 registerRawHelper("age-with-tooltip", ageWithTooltip);
 
