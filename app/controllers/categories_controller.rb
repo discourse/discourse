@@ -458,6 +458,7 @@ class CategoriesController < ApplicationController
             :uploaded_logo_id,
             :uploaded_logo_dark_id,
             :uploaded_background_id,
+            :uploaded_background_dark_id,
             :slug,
             :allow_badges,
             :topic_template,
