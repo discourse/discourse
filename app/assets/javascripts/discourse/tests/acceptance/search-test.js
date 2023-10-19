@@ -1,10 +1,4 @@
-import {
-  click,
-  fillIn,
-  settled,
-  triggerKeyEvent,
-  visit,
-} from "@ember/test-helpers";
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import {
@@ -497,7 +491,6 @@ acceptance("Search - Authenticated", function (needs) {
       "href"
     );
     await triggerKeyEvent(".search-menu", "keydown", "A");
-    await settled();
 
     assert.strictEqual(
       query("#reply-control textarea").value,
