@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-private-routing-service */
 import { h } from "virtual-dom";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL from "discourse/lib/url";

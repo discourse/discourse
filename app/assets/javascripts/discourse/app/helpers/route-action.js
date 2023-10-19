@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-private-routing-service */
 import { getOwner } from "@ember/application";
 import { A } from "@ember/array";
 import Helper from "@ember/component/helper";

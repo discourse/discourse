@@ -45,7 +45,7 @@ acceptance(
     });
 
     test("viewing group messages on subfolder setup", async function (assert) {
-      const router = this.container.lookup("router:main");
+      const router = this.container.lookup("service:router");
       const originalRootURL = router.rootURL;
 
       try {

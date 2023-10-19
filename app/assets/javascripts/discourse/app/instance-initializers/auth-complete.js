@@ -37,7 +37,7 @@ export default {
     }
 
     if (lastAuthResult) {
-      const router = owner.lookup("router:main");
+      const router = owner.lookup("service:router");
       router.one("didTransition", () => {
         next(() => {
           const options = JSON.parse(lastAuthResult);
