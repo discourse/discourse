@@ -240,6 +240,9 @@
         grid-row: 1;
         grid-column: 1 / span 2;
       }
+      .checkbox-label {
+        padding: 0 0 0.5em 0;
+      }
     }
     .reset-link,
     .delete {
