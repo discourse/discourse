@@ -277,7 +277,7 @@ class PostMover
     new_post.custom_fields = post.custom_fields
     new_post.save_custom_fields
 
-    DiscourseEvent.trigger(:post_moved, new_post, original_topic.id)
+    DiscourseEvent.trigger(:post_moved, new_post, original_topic.id, post.id)
 
     # we don't want to keep the old topic's OP bookmarked when we are
     # moving it into a new topic
@@ -301,7 +301,7 @@ class PostMover
     post.attributes = update
     post.save(validate: false)
 
-    DiscourseEvent.trigger(:post_moved, post, original_topic.id)
+    DiscourseEvent.trigger(:post_moved, post, original_topic.id, post.id)
 
     # Move any links from the post to the new topic
     post.topic_links.update_all(topic_id: destination_topic.id)
