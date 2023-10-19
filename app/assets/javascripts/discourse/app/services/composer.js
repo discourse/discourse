@@ -172,7 +172,7 @@ export default class ComposerService extends Service {
       return null;
     }
 
-    return this.model.category?.get("form_template_ids");
+    return this.model?.category?.get("form_template_ids");
   }
 
   get hasFormTemplate() {
