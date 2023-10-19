@@ -970,7 +970,7 @@ class ApplicationController < ActionController::Base
   end
 
   def is_feed_response?
-    response.content_type.include?(Mime[:atom]) || response.content_type.include?(Mime[:rss])
+    request.get? && response&.content_type&.match?(/(rss|atom)/)
   end
 
   def add_noindex_header
