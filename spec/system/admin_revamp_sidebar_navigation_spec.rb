@@ -12,7 +12,7 @@ describe "Admin Revamp | Sidebar Naviagion", type: :system do
 
   it "navigates to the admin revamp from the sidebar" do
     visit("/latest")
-    sidebar_page.click_section_link("admin-revamp")
+    sidebar_page.click_section_link("Admin Revamp")
     expect(page).to have_content("Admin Revamp Lobby")
   end
 end
