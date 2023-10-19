@@ -4,7 +4,10 @@ import { schedule } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import { shortDateNoYear } from "discourse/lib/formatter";
 import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
+import { cook } from "discourse/lib/text";
 import DiscourseURL from "discourse/lib/url";
 import { highlightPost } from "discourse/lib/utilities";
 import RestModel from "discourse/models/rest";
@@ -48,6 +51,7 @@ export default RestModel.extend({
   filterRepliesToPostNumber: null,
   filterUpwardsPostID: null,
   filter: null,
+  topicSummary: null,
 
   init() {
     this._identityMap = {};
@@ -71,6 +75,13 @@ export default RestModel.extend({
       loadingFilter: false,
       stagingPost: false,
       timelineLookup: [],
+      topicSummary: {
+        showSummaryBox: false,
+        canCollapseSummary: false,
+        regenerated: false,
+        outdated: false,
+        canRegenerate: false,
+      },
     });
   },
 
@@ -1257,6 +1268,77 @@ export default RestModel.extend({
     } else {
       topic.set("errorMessage", I18n.t("topic.server_error.description"));
       topic.set("noRetry", error.jqXHR.status === 403);
+    }
+  },
+
+  collapseSummary() {
+    this._updateSummary({ showSummaryBox: false, canCollapseSummary: false });
+  },
+
+  showSummary(currentUser) {
+    if (this.topicSummary.text && !this.topicSummary.canRegenerate) {
+      this._updateSummary({ showSummaryBox: true, canCollapseSummary: true });
+      return;
+    }
+
+    let fetchURL = `/t/${this.get("topic.id")}/strategy-summary?`;
+
+    if (currentUser) {
+      fetchURL += `stream=true`;
+
+      if (this.topicSummary.canRegenerate) {
+        fetchURL += "&skip_age_check=true";
+      }
+    }
+
+    ajax(fetchURL)
+      .then((data) => {
+        if (!currentUser) {
+          data.done = true;
+          this.processSummaryUpdate(data);
+        }
+
+        this._updateSummary({ showSummaryBox: true, loading: true });
+      })
+      .catch(popupAjaxError);
+  },
+
+  processSummaryUpdate(update) {
+    const topicSummary = update.topic_summary;
+    const updatedSummary = {};
+
+    cook(topicSummary.summarized_text)
+      .then((cooked) => {
+        updatedSummary.text = cooked;
+        updatedSummary.loading = false;
+      })
+      .then(() => {
+        if (update.done) {
+          updatedSummary.summarizedOn = shortDateNoYear(
+            topicSummary.summarized_on
+          );
+          updatedSummary.summarizedBy = topicSummary.algorithm;
+          updatedSummary.newPostsSinceSummary =
+            topicSummary.new_posts_since_summary;
+          updatedSummary.outdated = topicSummary.outdated;
+          updatedSummary.newPostsSinceSummary =
+            topicSummary.new_posts_since_summary;
+          updatedSummary.canRegenerate =
+            topicSummary.outdated && topicSummary.can_regenerate;
+        }
+
+        this._updateSummary(updatedSummary);
+      });
+  },
+
+  _updateSummary(attrs) {
+    const currentSummary = this.topicSummary;
+
+    this.set("topicSummary", { ...currentSummary, ...attrs });
+
+    const firstPost = this.posts.findBy("post_number", 1);
+    if (firstPost) {
+      this.appEvents.trigger("post-stream:refresh", { id: firstPost.id });
     }
   },
 
