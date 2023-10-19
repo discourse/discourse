@@ -301,7 +301,7 @@ class PostMover
     post.attributes = update
     post.save(validate: false)
 
-    DiscourseEvent.trigger(:post_moved, post, original_topic.id, post.id)
+    DiscourseEvent.trigger(:post_moved, post, original_topic.id)
 
     # Move any links from the post to the new topic
     post.topic_links.update_all(topic_id: destination_topic.id)
