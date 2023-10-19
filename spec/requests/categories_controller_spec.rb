@@ -385,7 +385,7 @@ RSpec.describe CategoriesController do
 
       before do
         plugin.enabled = false
-        clear_custom_fields
+        category.clear_custom_fields
       end
 
       def add_custom_fields
@@ -393,15 +393,6 @@ RSpec.describe CategoriesController do
         plugin.add_to_serializer(:basic_category, :bob) { object.custom_fields["bob"] }
         category.custom_fields["bob"] = "marley"
         category.save
-      end
-
-      def clear_custom_fields
-        category.clear_custom_fields
-      end
-
-      def warmup
-        get "/categories.json"
-        expect(response.status).to eq(200)
       end
 
       def queries_without_custom_fields
@@ -428,7 +419,10 @@ RSpec.describe CategoriesController do
         before { CategoryList.preloaded_category_custom_fields = Set.new }
 
         it "increases the query count" do
-          warmup
+          # warmup
+          get "/categories.json"
+          expect(response.status).to eq(200)
+
           without_custom_fields = queries_without_custom_fields
           add_custom_fields
           with_custom_fields = queries_with_custom_fields
@@ -440,7 +434,10 @@ RSpec.describe CategoriesController do
         before { CategoryList.preloaded_category_custom_fields << "bob" }
 
         it "does not increase the query count" do
-          warmup
+          # warmup
+          get "/categories.json"
+          expect(response.status).to eq(200)
+
           without_custom_fields = queries_without_custom_fields
           add_custom_fields
           with_custom_fields = queries_with_custom_fields
