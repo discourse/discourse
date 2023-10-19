@@ -387,6 +387,8 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
+
     if (!this.args.mobileView) {
       this.intersectionObserver?.disconnect();
       this.intersectionObserver = null;

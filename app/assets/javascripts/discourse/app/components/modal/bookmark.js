@@ -128,6 +128,7 @@ export default class BookmarkModal extends Component {
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
     this._itsatrap?.destroy();
     this._itsatrap = null;
     KeyboardShortcuts.unpause();
