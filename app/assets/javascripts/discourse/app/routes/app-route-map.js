@@ -16,12 +16,14 @@ export default function () {
     { path: "/t/:slug/:id", resetNamespace: true },
     function () {
       this.route("fromParams", { path: "/" });
-      this.route("fromParamsNear", { path: "/:near_post" });
+      // eslint-disable-next-line ember/routes-segments-snake-case
+      this.route("fromParamsNear", { path: "/:nearPost" });
     }
   );
 
+  // eslint-disable-next-line ember/routes-segments-snake-case
   this.route("topicBySlugOrId", {
-    path: "/t/:slug_or_id",
+    path: "/t/:slugOrId",
     resetNamespace: true,
   });
 
