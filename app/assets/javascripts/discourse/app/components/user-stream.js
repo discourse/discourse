@@ -1,6 +1,7 @@
 import Component from "@ember/component";
 import { on } from "@ember/object/evented";
 import { inject as service } from "@ember/service";
+import $ from "jquery";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ClickTrack from "discourse/lib/click-track";
 import DiscourseURL from "discourse/lib/url";
@@ -8,7 +9,7 @@ import LoadMore from "discourse/mixins/load-more";
 import { NEW_TOPIC_KEY } from "discourse/models/composer";
 import Draft from "discourse/models/draft";
 import Post from "discourse/models/post";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Component.extend(LoadMore, {
   tagName: "ul",

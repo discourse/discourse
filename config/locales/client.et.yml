@@ -312,6 +312,9 @@ et:
     review:
       explain:
         total: "Kokku"
+      revise_and_reject_post:
+        reason: "Põhjus"
+        optional: "valikuline"
       delete: "Kustuta"
       settings:
         saved: "Salvestatud"
@@ -897,6 +900,9 @@ et:
           iphone_default_name: "iPhone"
           android_default_name: "Android"
           save: "Salvesta"
+      passkeys:
+        save: "Salvesta"
+        added_prefix: "Lisatud"
       change_about:
         title: "Muuda minu andmeid"
         error: "Välja muutmisel tekkis viga."

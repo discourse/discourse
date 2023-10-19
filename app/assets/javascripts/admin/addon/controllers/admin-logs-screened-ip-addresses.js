@@ -6,8 +6,8 @@ import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
+import I18n from "discourse-i18n";
 import ScreenedIpAddress from "admin/models/screened-ip-address";
-import I18n from "I18n";
 
 export default class AdminLogsScreenedIpAddressesController extends Controller {
   @service dialog;

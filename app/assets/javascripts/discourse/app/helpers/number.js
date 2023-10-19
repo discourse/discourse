@@ -1,26 +1,12 @@
 import { htmlSafe } from "@ember/template";
-import {
-  autoUpdatingRelativeAge,
-  longDate,
-  number,
-} from "discourse/lib/formatter";
+import { number as numberFormatter } from "discourse/lib/formatter";
 import { escapeExpression } from "discourse/lib/utilities";
-import { registerUnbound } from "discourse-common/lib/helpers";
-import I18n from "I18n";
+import { registerRawHelper } from "discourse-common/lib/helpers";
+import I18n from "discourse-i18n";
 
-registerUnbound("raw-date", (dt) => htmlSafe(longDate(new Date(dt))));
+registerRawHelper("number", number);
 
-registerUnbound("age-with-tooltip", (dt, params) =>
-  htmlSafe(
-    autoUpdatingRelativeAge(new Date(dt), {
-      title: true,
-      addAgo: params.addAgo || false,
-      ...(params.defaultFormat && { defaultFormat: params.defaultFormat }),
-    })
-  )
-);
-
-registerUnbound("number", (orig, params) => {
+export default function number(orig, params = {}) {
   orig = Math.round(parseFloat(orig));
   if (isNaN(orig)) {
     orig = 0;
@@ -43,7 +29,7 @@ registerUnbound("number", (orig, params) => {
   let addTitle = params.noTitle ? false : true;
 
   // Round off the thousands to one decimal place
-  const n = number(orig);
+  const n = numberFormatter(orig);
   if (n.toString() !== title.toString() && addTitle) {
     result += " title='" + escapeExpression(title) + "'";
   }
@@ -55,4 +41,4 @@ registerUnbound("number", (orig, params) => {
   result += ">" + n + "</span>";
 
   return htmlSafe(result);
-});
+}

@@ -18,7 +18,7 @@ import {
 import { now, parseCustomDatetime, startOfDay } from "discourse/lib/time-utils";
 import { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import discourseLater from "discourse-common/lib/later";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const BOOKMARK_BINDINGS = {
   enter: { handler: "saveAndClose" },
@@ -128,6 +128,7 @@ export default class BookmarkModal extends Component {
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
     this._itsatrap?.destroy();
     this._itsatrap = null;
     KeyboardShortcuts.unpause();

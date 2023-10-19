@@ -3,6 +3,7 @@
   "rules": {
     "discourse-ember/global-ember": "error",
     "eol-last": "error",
-    "no-restricted-globals": "off"
+    "no-restricted-globals": "off",
+    "no-restricted-imports": ["error", { "paths": ["I18n"] }]
   }
 }

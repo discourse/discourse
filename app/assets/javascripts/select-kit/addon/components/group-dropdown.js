@@ -2,7 +2,7 @@ import { computed } from "@ember/object";
 import { gte, reads } from "@ember/object/computed";
 import { setting } from "discourse/lib/computed";
 import DiscourseURL from "discourse/lib/url";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import ComboBoxComponent from "select-kit/components/combo-box";
 
 export default ComboBoxComponent.extend({

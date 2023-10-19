@@ -6,7 +6,7 @@ import { dialog } from "discourse/lib/uploads";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { createFile } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 module("Integration | Component | watched-word-uploader", function (hooks) {
   setupRenderingTest(hooks);

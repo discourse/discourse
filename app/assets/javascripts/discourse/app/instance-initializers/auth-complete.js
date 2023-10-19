@@ -4,7 +4,7 @@ import LoginModal from "discourse/components/modal/login";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import showModal from "discourse/lib/show-modal";
 import DiscourseUrl from "discourse/lib/url";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 // This is happening outside of the app via popup
 const AuthErrors = [

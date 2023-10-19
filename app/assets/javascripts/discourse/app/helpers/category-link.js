@@ -4,9 +4,9 @@ import { isRTL } from "discourse/lib/text-direction";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import getURL from "discourse-common/lib/get-url";
-import { helperContext, registerUnbound } from "discourse-common/lib/helpers";
+import { helperContext, registerRawHelper } from "discourse-common/lib/helpers";
 import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 let _renderer = defaultCategoryLinkRenderer;
 
@@ -90,12 +90,13 @@ export function categoryLinkHTML(category, options) {
   return htmlSafe(categoryBadgeHTML(category, categoryOptions));
 }
 
-registerUnbound("category-link", categoryLinkHTML);
+export default categoryLinkHTML;
+registerRawHelper("category-link", categoryLinkHTML);
 
 function buildTopicCount(count) {
   return `<span class="topic-count" aria-label="${I18n.t(
     "category_row.topic_count",
-    { count }
+    { count },
   )}">&times; ${count}</span>`;
 }
 
@@ -170,7 +171,7 @@ export function defaultCategoryLinkRenderer(category, opts) {
   if (opts.plusSubcategories && opts.lastSubcategory) {
     afterBadgeWrapper += `<span class="plus-subcategories">${I18n.t(
       "category_row.plus_subcategories",
-      { count: opts.plusSubcategories }
+      { count: opts.plusSubcategories },
     )}</span>`;
   }
   return `<${tagName} class="badge-wrapper ${extraClasses}" ${href}>${html}</${tagName}>${afterBadgeWrapper}`;

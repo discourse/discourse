@@ -14,7 +14,7 @@ import CleansUp from "discourse/mixins/cleans-up";
 import User from "discourse/models/user";
 import { getURLWithCDN } from "discourse-common/lib/get-url";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Component.extend(CardContentsBase, CanCheckEmails, CleansUp, {
   elementId: "user-card",

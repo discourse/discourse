@@ -29,6 +29,7 @@ export default class SidebarUserTagsSection extends Component {
   }
 
   willDestroy() {
+    super.willDestroy(...arguments);
     this.topicTrackingState.offStateChange(this.callbackId);
   }
 

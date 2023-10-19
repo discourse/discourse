@@ -290,9 +290,7 @@ ko:
       replying_indicator:
         single_user: "%{username}님이 입력 중"
       retention_reminders:
-        public:
-          other: "%{count}일"
-        dm:
+        short:
           other: "%{count}일"
       flagging:
         action: "신고 메시지"

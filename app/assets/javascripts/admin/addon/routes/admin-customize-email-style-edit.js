@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
 import Route from "@ember/routing/route";
 import { inject as service } from "@ember/service";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class AdminCustomizeEmailStyleEditRoute extends Route {
   @service dialog;

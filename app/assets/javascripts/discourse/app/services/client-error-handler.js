@@ -1,6 +1,6 @@
 import { getOwner } from "@ember/application";
 import Service, { inject as service } from "@ember/service";
-import Ember from "ember";
+import $ from "jquery";
 import { getAndClearUnhandledThemeErrors } from "discourse/app";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import identifySource, {
@@ -10,7 +10,7 @@ import identifySource, {
 import escape from "discourse-common/lib/escape";
 import getURL from "discourse-common/lib/get-url";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const showingErrors = new Set();
 
@@ -108,7 +108,7 @@ function reportToLogster(name, error) {
   };
 
   // TODO: To be moved out into a logster-provided lib
-  Ember.$.ajax(getURL("/logs/report_js_error"), {
+  $.ajax(getURL("/logs/report_js_error"), {
     data,
     type: "POST",
   });

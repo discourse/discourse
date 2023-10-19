@@ -1,10 +1,4 @@
-import {
-  click,
-  fillIn,
-  settled,
-  triggerKeyEvent,
-  visit,
-} from "@ember/test-helpers";
+import { click, fillIn, triggerKeyEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
 import {
@@ -16,7 +10,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { DEFAULT_TYPE_FILTER } from "discourse/widgets/search-menu";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 acceptance("Search - Anonymous", function (needs) {
   needs.pretender((server, helper) => {
@@ -497,7 +491,6 @@ acceptance("Search - Authenticated", function (needs) {
       "href"
     );
     await triggerKeyEvent(".search-menu", "keydown", "A");
-    await settled();
 
     assert.strictEqual(
       query("#reply-control textarea").value,

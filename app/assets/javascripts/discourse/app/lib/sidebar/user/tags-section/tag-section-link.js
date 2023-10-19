@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import BaseTagSectionLink from "discourse/lib/sidebar/user/tags-section/base-tag-section-link";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class TagSectionLink extends BaseTagSectionLink {
   @tracked totalUnread = 0;

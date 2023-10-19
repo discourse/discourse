@@ -1,5 +1,6 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import $ from "jquery";
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse-common/lib/debounce";
 import getURL from "discourse-common/lib/get-url";
@@ -8,7 +9,7 @@ import discourseComputed, {
   observes,
   on,
 } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
   classNames: ["group-flair-inputs"],

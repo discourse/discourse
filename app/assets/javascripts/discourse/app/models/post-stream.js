@@ -13,7 +13,7 @@ import User from "discourse/models/user";
 import deprecated from "discourse-common/lib/deprecated";
 import { deepMerge } from "discourse-common/lib/object";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 let _lastEditNotificationClick = null;
 export function setLastEditNotificationClick(

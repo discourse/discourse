@@ -6,7 +6,7 @@ import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item"
 import { mergeSortedLists } from "discourse/lib/utilities";
 import Notification from "discourse/models/notification";
 import Topic from "discourse/models/topic";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class UserMenuMessagesList extends UserMenuNotificationsList {
   @service store;

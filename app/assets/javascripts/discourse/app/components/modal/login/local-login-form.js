@@ -9,7 +9,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { escapeExpression } from "discourse/lib/utilities";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class LocalLoginBody extends Component {
   @service modal;

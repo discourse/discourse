@@ -1,7 +1,7 @@
 import Component from "@ember/component";
 import { htmlSafe } from "@ember/template";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Component.extend({
   tagName: "button",

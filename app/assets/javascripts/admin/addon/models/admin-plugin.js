@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class AdminPlugin {
   static create(args = {}) {

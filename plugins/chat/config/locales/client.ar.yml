@@ -579,14 +579,7 @@ ar:
           many: "%{commaSeparatedUsernames} و%{count} آخرون يكتبون"
           other: "%{commaSeparatedUsernames} و%{count} آخرون يكتبون"
       retention_reminders:
-        public:
-          zero: "يومان (%{count})"
-          one: "يوم واحد (%{count})"
-          two: "يومان (%{count})"
-          few: "%{count} أيام"
-          many: "%{count} يومًا"
-          other: "%{count} يوم"
-        dm:
+        short:
           zero: "يومان (%{count})"
           one: "يوم واحد (%{count})"
           two: "يومان (%{count})"

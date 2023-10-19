@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import loadScript from "discourse/lib/load-script";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default class CalendarDateTimeInput extends Component {
   _timeFormat = this.args.timeFormat || "HH:mm:ss";

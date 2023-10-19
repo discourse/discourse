@@ -100,6 +100,14 @@ Discourse::Application.routes.draw do
     get "wizard/steps/:id" => "wizard#index"
     put "wizard/steps/:id" => "steps#update"
 
+    namespace :admin_revamp,
+              path: "admin-revamp",
+              module: "admin",
+              constraints: StaffConstraint.new do
+      get "" => "admin#index"
+      get "config/:area" => "admin#index"
+    end
+
     namespace :admin, constraints: StaffConstraint.new do
       get "" => "admin#index"
 
@@ -1155,6 +1163,7 @@ Discourse::Application.routes.draw do
 
     resources :categories, except: %i[show new edit]
     post "categories/reorder" => "categories#reorder"
+    get "categories/search" => "categories#search"
 
     scope path: "category/:category_id" do
       post "/move" => "categories#move"

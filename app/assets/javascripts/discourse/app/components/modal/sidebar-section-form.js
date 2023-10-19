@@ -10,7 +10,7 @@ import { SIDEBAR_SECTION, SIDEBAR_URL } from "discourse/lib/constants";
 import RouteInfoHelper from "discourse/lib/sidebar/route-info-helper";
 import { sanitize } from "discourse/lib/text";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const FULL_RELOAD_LINKS_REGEX = [
   /^\/my\/[a-z_\-\/]+$/,

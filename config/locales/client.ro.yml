@@ -401,6 +401,9 @@ ro:
         trust_level_bonus:
           name: "nivel de încredere"
           title: "Elementele care pot fi revizuite create de utilizatorii cu nivel mai înalt de încredere au un scor mai mare."
+      revise_and_reject_post:
+        reason: "Motiv"
+        optional: "opțional"
       claim_help:
         optional: "Puteți revendica acest element pentru a împiedica alte persoane să-l revizuiască."
         required: "Trebuie să revendici elementele înainte de a le putea revizui."
@@ -1101,8 +1104,6 @@ ro:
         enable: "Gestionează autentificarea în doi pași (2FA)"
         name: "Nume"
         disable_description: "Introdu codul de autentificare din aplicația 2FA"
-        short_description: |
-          Protejează-ți contul cu coduri de securitate de unică folosință.
         oauth_enabled_warning: "Atenție! Autentificarea cu rețelele sociale va fi dezactivată atunci când activezi autentificarea în doi pași (2FA)."
         disable: "Dezactivează"
         delete: "Șterge"
@@ -1113,6 +1114,9 @@ ro:
           default_name: "Cheie de securitate principală"
           save: "Salvează"
           name_required_error: "Trebuie să oferi un nume pentru cheia de securitate."
+      passkeys:
+        save: "Salvare"
+        added_prefix: "Adăugat"
       change_about:
         title: "Schimbare date personale"
         error: "A apărut o eroare la schimbarea acestei valori."

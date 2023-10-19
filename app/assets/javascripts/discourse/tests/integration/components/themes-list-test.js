@@ -8,8 +8,8 @@ import {
   query,
   queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "discourse-i18n";
 import Theme, { COMPONENTS, THEMES } from "admin/models/theme";
-import I18n from "I18n";
 
 function createThemes(itemsCount, customAttributesCallback) {
   return [...Array(itemsCount)].map((_, i) => {

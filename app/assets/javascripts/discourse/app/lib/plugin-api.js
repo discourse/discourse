@@ -1,3 +1,4 @@
+import $ from "jquery";
 import { h } from "virtual-dom";
 import {
   addComposerUploadHandler,
@@ -126,7 +127,7 @@ import {
   registerIconRenderer,
   replaceIcon,
 } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/mixins/plugin-api";
 
@@ -135,7 +136,7 @@ import { modifySelectKit } from "select-kit/mixins/plugin-api";
 // docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
 // using the format described at https://keepachangelog.com/en/1.0.0/.
 
-export const PLUGIN_API_VERSION = "1.14.0";
+export const PLUGIN_API_VERSION = "1.15.0";
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -948,6 +949,8 @@ class PluginApi {
   }
 
   /**
+   * @deprecated
+   *
    * Register a Connector class for a particular outlet and connector.
    *
    * For example, if the outlet is `user-profile-primary` and your connector
@@ -961,8 +964,8 @@ class PluginApi {
    * });
    * ```
    *
-   * For more information on connector classes, see:
-   * https://meta.discourse.org/t/important-changes-to-plugin-outlets-for-ember-2-10/54136
+   * This API is deprecated. See renderIntoOutlet instead.
+   *
    **/
   registerConnectorClass(outletName, connectorName, klass) {
     extraConnectorClass(`${outletName}/${connectorName}`, klass);
@@ -1920,6 +1923,7 @@ class PluginApi {
         pluginId: `${mountedComponent}/${widgetKey}/${appEvent}`,
 
         didInsertElement() {
+          // eslint-disable-next-line ember/no-ember-super-in-es-classes
           this._super();
           this.dispatch(appEvent, widgetKey);
         },
@@ -2202,6 +2206,14 @@ class PluginApi {
    */
   setSidebarPanel(name) {
     this._lookupContainer("service:sidebar-state")?.setPanel(name);
+  }
+
+  /**
+   * EXPERIMENTAL. Do not use.
+   * Support for getting the current Sidebar panel.
+   */
+  getSidebarPanel() {
+    return this._lookupContainer("service:sidebar-state")?.currentPanel;
   }
 
   /**

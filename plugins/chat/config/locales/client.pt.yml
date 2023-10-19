@@ -187,10 +187,7 @@ pt:
         new_message:
           title: "Mover para Nova Mensagem"
       retention_reminders:
-        public:
-          one: "%{count} dia"
-          other: "%{count} dias"
-        dm:
+        short:
           one: "%{count} dia"
           other: "%{count} dias"
       emoji_picker:

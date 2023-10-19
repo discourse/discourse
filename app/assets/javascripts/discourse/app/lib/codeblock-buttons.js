@@ -7,7 +7,7 @@ import { getOwnerWithFallback } from "discourse-common/lib/get-owner";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import discourseLater from "discourse-common/lib/later";
 import { bind } from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 // Use to attach copy/fullscreen buttons to a block of code, either
 // within the post stream or for a regular element that contains

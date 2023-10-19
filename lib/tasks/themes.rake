@@ -89,7 +89,7 @@ def update_themes
 end
 
 desc "Update themes & theme components"
-task "themes:update" => :environment do
+task "themes:update": %w[environment assets:precompile:theme_transpiler] do
   if ENV["RAILS_DB"].present?
     update_themes
   else

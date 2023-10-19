@@ -10,7 +10,7 @@ import { bufferedProperty } from "discourse/mixins/buffered-content";
 import Group from "discourse/models/group";
 import Invite from "discourse/models/invite";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 import { FORMAT } from "select-kit/components/future-date-input-selector";
 
 export default Component.extend(bufferedProperty("invite"), {

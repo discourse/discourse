@@ -6,7 +6,7 @@ import { tomorrow } from "discourse/lib/time-utils";
 import Bookmark from "discourse/models/bookmark";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { exists, query } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 module("Integration | Component | bookmark-icon", function (hooks) {
   setupRenderingTest(hooks);

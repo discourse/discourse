@@ -1,5 +1,5 @@
 import { next } from "@ember/runloop";
-import { click, fillIn, render, settled } from "@ember/test-helpers";
+import { click, fillIn, focus, render, settled } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
 import { module, test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -15,7 +15,7 @@ import {
   getTextareaSelection,
   setTextareaSelection,
 } from "discourse/tests/helpers/textarea-selection-helper";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 module("Integration | Component | d-editor", function (hooks) {
   setupRenderingTest(hooks);

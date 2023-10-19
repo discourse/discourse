@@ -8,7 +8,7 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 acceptance("User Preferences - Security", function (needs) {
   needs.user();
@@ -176,5 +176,34 @@ acceptance("User Preferences - Security", function (needs) {
       .exists(
         "displays a dialog to confirm the user's identity before adding a passkey"
       );
+  });
+
+  test("Viewing Passkeys - another user has a key", async function (assert) {
+    this.siteSettings.experimental_passkeys = true;
+
+    // user charlie has passkeys in fixtures
+    await visit("/u/charlie/preferences/security");
+
+    assert.strictEqual(
+      query(".pref-passkeys__rows .row-passkey__name").innerText.trim(),
+      "iCloud Keychain",
+      "displays the passkey name"
+    );
+
+    assert
+      .dom(".row-passkey__created-date")
+      .exists("displays the created at date for the passkey");
+
+    assert
+      .dom(".row-passkey__used-date")
+      .exists("displays the last used at date for the passkey");
+
+    assert
+      .dom(".pref-passkeys__add")
+      .doesNotExist("does not show add passkey button");
+
+    assert
+      .dom(".passkey-options-dropdown")
+      .doesNotExist("does not show passkey options dropdown");
   });
 });

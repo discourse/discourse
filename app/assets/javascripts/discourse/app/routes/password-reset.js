@@ -3,7 +3,7 @@ import PreloadStore from "discourse/lib/preload-store";
 import { userPath } from "discourse/lib/url";
 import DiscourseRoute from "discourse/routes/discourse";
 import { deepMerge } from "discourse-common/lib/object";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default DiscourseRoute.extend({
   titleToken() {

@@ -1518,15 +1518,13 @@ en:
         rename_passkey_instructions: "Pick a passkey name that will easily identify it for you, for example, use the name of your password manager."
         name:
           default: "Main Passkey"
-          google_password_manager: "Google Password Manager"
-          icloud_keychain: "iCloud Keychain"
         save: "Save"
         title: "Passkeys"
         short_description: "Passkeys are password replacements that validate your identity biometrically (e.g. touch, faceID) or via a device PIN/password."
         added_prefix: "Added"
         last_used_prefix: "Last Used"
         never_used: "Never Used"
-        not_allowed_error: "The passkey registration process either timed out or was cancelled."
+        not_allowed_error: "The passkey registration process either timed out, was cancelled or is not allowed."
         already_added_error: "You have already registered this passkey. You don’t have to register it again."
 
       change_about:
@@ -2312,12 +2310,6 @@ en:
       topic_count:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"
-      plus_subcategories_title:
-        one: "%{name} and one subcategory"
-        other: "%{name} and %{count} subcategories"
-      plus_subcategories:
-        one: "+ %{count} subcategory"
-        other: "+ %{count} subcategories"
 
     select_kit:
       delete_item: "Delete %{name}"
@@ -4501,7 +4493,7 @@ en:
           delete: "Delete"
           delete_confirm: "Are you sure you want to delete this section?"
           reset_confirm: "Are you sure you want to reset this section to default?"
-          public: "Make this section public and visible to everyone"
+          public: "Visible to everyone"
           always_public: "Content in this section is always public"
           more_menu: "More menu"
           links:

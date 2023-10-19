@@ -6,8 +6,8 @@ import { observes } from "@ember-decorators/object";
 import { clipboardCopy } from "discourse/lib/utilities";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
+import I18n from "discourse-i18n";
 import Permalink from "admin/models/permalink";
-import I18n from "I18n";
 
 export default class AdminPermalinksController extends Controller {
   @service dialog;

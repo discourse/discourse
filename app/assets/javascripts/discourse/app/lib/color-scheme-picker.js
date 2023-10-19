@@ -2,7 +2,7 @@ import { ajax } from "discourse/lib/ajax";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import Session from "discourse/models/session";
 import discourseLater from "discourse-common/lib/later";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export function listColorSchemes(site, options = {}) {
   let schemes = site.get("user_color_schemes");

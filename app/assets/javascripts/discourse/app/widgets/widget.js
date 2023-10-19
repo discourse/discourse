@@ -26,7 +26,7 @@ import {
 } from "discourse/widgets/hooks";
 import { isProduction } from "discourse-common/config/environment";
 import { deepMerge } from "discourse-common/lib/object";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 const _registry = {};
 

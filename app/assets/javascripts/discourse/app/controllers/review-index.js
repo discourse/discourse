@@ -3,7 +3,7 @@ import { next } from "@ember/runloop";
 import { underscore } from "@ember/string";
 import { isPresent } from "@ember/utils";
 import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import I18n from "discourse-i18n";
 
 export default Controller.extend({
   queryParams: [
