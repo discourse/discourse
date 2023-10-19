@@ -31,7 +31,7 @@ export default class Sidebar extends Component {
     }
 
     return this.sidebarState.panels.filter(
-      (panel) => panel !== this.sidebarState.currentPanel
+      (panel) => panel !== this.sidebarState.currentPanel && !panel.hidden
     );
   }
 
