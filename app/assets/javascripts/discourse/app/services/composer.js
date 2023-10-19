@@ -492,7 +492,13 @@ export default class ComposerService extends Service {
   @action
   async focusComposer(opts = {}) {
     await this._openComposerForFocus(opts);
-    this._focusAndInsertText(opts.insertText);
+
+    scheduleOnce(
+      "afterRender",
+      this,
+      this._focusAndInsertText,
+      opts.insertText
+    );
   }
 
   async _openComposerForFocus(opts) {
@@ -525,13 +531,11 @@ export default class ComposerService extends Service {
   }
 
   _focusAndInsertText(insertText) {
-    scheduleOnce("afterRender", () => {
-      document.querySelector("textarea.d-editor-input")?.focus();
+    document.querySelector("textarea.d-editor-input")?.focus();
 
-      if (insertText) {
-        this.model.appendText(insertText, null, { new_line: true });
-      }
-    });
+    if (insertText) {
+      this.model.appendText(insertText, null, { new_line: true });
+    }
   }
 
   @action
