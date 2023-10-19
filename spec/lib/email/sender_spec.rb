@@ -593,7 +593,9 @@ RSpec.describe Email::Sender do
 
         @secure_image_file = file_from_fixtures("logo.png", "images")
         @secure_image =
-          UploadCreator.new(@secure_image_file, "logo.png").create_for(Discourse.system_user.id)
+          UploadCreator.new(@secure_image_file, "secure_logo.png").create_for(
+            Discourse.system_user.id,
+          )
         @secure_image.update_secure_status(override: true)
         @secure_image.update(access_control_post_id: reply.id)
         reply.update!(raw: reply.raw + "\n" + "#{UploadMarkdown.new(@secure_image).image_markdown}")
@@ -612,9 +614,10 @@ RSpec.describe Email::Sender do
 
         it "can inline images with duplicate names" do
           @secure_image_2 =
-            UploadCreator.new(file_from_fixtures("logo-dev.png", "images"), "logo.png").create_for(
-              Discourse.system_user.id,
-            )
+            UploadCreator.new(
+              file_from_fixtures("logo-dev.png", "images"),
+              "secuere_logo_2.png",
+            ).create_for(Discourse.system_user.id)
           @secure_image_2.update_secure_status(override: true)
           @secure_image_2.update(access_control_post_id: reply.id)
 
@@ -694,9 +697,9 @@ RSpec.describe Email::Sender do
             expect(message.attachments.map(&:filename)).to contain_exactly(
               *[small_pdf, large_pdf, csv_file, image, @secure_image].map(&:original_filename),
             )
-            expect(message.attachments["logo.png"].body.raw_source.force_encoding("UTF-8")).to eq(
-              File.read(optimized_image_file),
-            )
+            expect(
+              message.attachments["secure_logo.png"].body.raw_source.force_encoding("UTF-8"),
+            ).to eq(File.read(optimized_image_file))
             expect(message.html_part.body).to include("cid:")
             expect(message.html_part.body).to include("embedded-secure-image")
           end
@@ -705,9 +708,9 @@ RSpec.describe Email::Sender do
             SiteSetting.email_total_attachment_size_limit_kb = 45
             Email::Sender.new(message, :valid_type).send
             expect(message.attachments.length).to eq(4)
-            expect(message.attachments["logo.png"].body.raw_source.force_encoding("UTF-8")).to eq(
-              File.read(optimized_image_file),
-            )
+            expect(
+              message.attachments["secure_logo.png"].body.raw_source.force_encoding("UTF-8"),
+            ).to eq(File.read(optimized_image_file))
           end
         end
       end
