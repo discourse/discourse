@@ -71,7 +71,7 @@ export default class SummaryBox extends Component {
   }
 
   get generateSummaryIcon() {
-    return this.canRegenerate ? "sync" : "magic";
+    return this.canRegenerate ? "sync" : "discourse-sparkles";
   }
 
   get outdatedSummaryWarningText() {
