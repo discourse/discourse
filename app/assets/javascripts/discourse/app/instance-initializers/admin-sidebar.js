@@ -1,6 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { ADMIN_PANEL } from "discourse/services/sidebar-state";
-import getURL from "discourse-common/lib/get-url";
 
 function defineAdminSectionLink(BaseCustomSidebarSectionLink) {
   const SidebarAdminSectionLink = class extends BaseCustomSidebarSectionLink {
@@ -102,9 +101,7 @@ export default {
         (BaseCustomSidebarPanel) =>
           class AdminSidebarPanel extends BaseCustomSidebarPanel {
             key = ADMIN_PANEL;
-            switchButtonLabel = "BLAH";
-            switchButtonIcon = "bolt";
-            switchButtonDefaultUrl = getURL("/admin-revamp");
+            hidden = true;
           }
       );
 
